@@ -12,22 +12,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class TimedText10 : SubtitleFormat
     {
-        public override string Extension
-        {
-            get { return ".xml"; }
-        }
+        public override string Extension => ".xml";
 
         public const string NameOfFormat = "Timed Text 1.0";
 
-        public override string Name
-        {
-            get { return NameOfFormat; }
-        }
+        public override string Name => NameOfFormat;
 
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
+        public override bool IsTimeBased => true;
 
         public override bool IsMine(List<string> lines, string fileName)
         {
@@ -49,7 +40,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     nsmgr.AddNamespace("ttml", "http://www.w3.org/ns/ttml");
                     var nds = xml.DocumentElement.SelectSingleNode("ttml:body", nsmgr);
                     var paragraphs = nds.SelectNodes("//ttml:p", nsmgr);
-                    return paragraphs.Count > 0;
+                    return paragraphs != null && paragraphs.Count > 0;
                 }
                 catch
                 {
@@ -61,10 +52,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         var nds = xml.DocumentElement.SelectSingleNode("ttml:body", nsmgr);
                         var paragraphs = nds.SelectNodes("//ttml:p", nsmgr);
 
-                        if (paragraphs.Count > 0 && new NetflixTimedText().IsMine(lines, fileName))
+                        if (paragraphs != null && (paragraphs.Count > 0 && new NetflixTimedText().IsMine(lines, fileName)))
                             return false;
 
-                        return paragraphs.Count > 0;
+                        if (paragraphs != null && (paragraphs.Count > 0 && new SmpteTt2052().IsMine(lines, fileName)))
+                            return false;
+
+                        return paragraphs != null && paragraphs.Count > 0;
                     }
                     catch (Exception ex)
                     {
@@ -813,7 +807,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             var list = paragraph.Effect.Split('|');
-            var sb = new StringBuilder();
             foreach (var s in list)
             {
                 var arr = s.Split('=');
