@@ -24,6 +24,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             SubtitleListview1.HideColumn(SubtitleListView.SubtitleColumn.CharactersPerSeconds);
             SubtitleListview1.HideColumn(SubtitleListView.SubtitleColumn.WordsPerMinute);
+            SubtitleListview1.SetCustomResize(SubtitleListView1_Resize);
 
             Text = Configuration.Settings.Language.DurationsBridgeGaps.Title;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
@@ -192,6 +193,19 @@ namespace Nikse.SubtitleEdit.Forms
         private void numericUpDownMinMsBetweenLines_KeyUp(object sender, KeyEventArgs e)
         {
             GeneratePreview();
+        }
+
+        private void SubtitleListView1_Resize(object sender, EventArgs e)
+        {
+            const int lastColumnWidth = 150;
+            var columnsCount = SubtitleListview1.Columns.Count - 1;
+            var width = 0;
+            for (int i = 0; i < columnsCount - 1; i++)
+            {
+                width += SubtitleListview1.Columns[i].Width;
+            }
+            SubtitleListview1.Columns[columnsCount - 1].Width = SubtitleListview1.Width - (width + lastColumnWidth);
+            SubtitleListview1.Columns[columnsCount].Width = lastColumnWidth;
         }
 
     }
