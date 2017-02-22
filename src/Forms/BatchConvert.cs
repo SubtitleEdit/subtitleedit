@@ -152,6 +152,7 @@ namespace Nikse.SubtitleEdit.Forms
                     _allFormats.Add(format);
                 }
             }
+            formatNames.Add("PAC");
             formatNames.Add(new Ayato().Name);
             formatNames.Add(l.PlainText);
             formatNames.Add(BluRaySubtitle);
