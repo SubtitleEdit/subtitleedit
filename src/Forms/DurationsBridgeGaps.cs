@@ -196,15 +196,16 @@ namespace Nikse.SubtitleEdit.Forms
         private void SubtitleListView1_Resize(object sender, EventArgs e)
         {
             // Store last column width 'cause it won't be changed
-            var columnsCount = SubtitleListview1.Columns.Count - 1;
-            var lastColumnWidth = SubtitleListview1.Columns[columnsCount].Width;
+            var lastColumnIndex = SubtitleListview1.Columns.Count - 1;
+            var lastColumnWidth = SubtitleListview1.Columns[lastColumnIndex].Width;
             var width = 0;
-            for (int i = 0; i < 3; i++)
+            // Sum folowing columns width: Number + StartTime + EndTime + Duration.
+            for (int i = 0; i < 4; i++)
             {
                 width += SubtitleListview1.Columns[i].Width;
             }
             SubtitleListview1.Columns[4].Width = SubtitleListview1.Width - (width + lastColumnWidth);
-            SubtitleListview1.Columns[columnsCount].Width = lastColumnWidth;
+            SubtitleListview1.Columns[lastColumnIndex].Width = lastColumnWidth;
         }
 
     }
