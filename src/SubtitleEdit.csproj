@@ -141,10 +141,10 @@
     <Compile Include="Forms\AddToNames.Designer.cs">
       <DependentUpon>AddToNames.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\AddToOcrReplaceList.cs">
+    <Compile Include="Forms\Ocr\AddToOcrReplaceList.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\AddToOcrReplaceList.Designer.cs">
+    <Compile Include="Forms\Ocr\AddToOcrReplaceList.Designer.cs">
       <DependentUpon>AddToOcrReplaceList.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\AddToUserDic.cs">
@@ -447,28 +447,28 @@
     <Compile Include="Forms\ModifySelection.Designer.cs">
       <DependentUpon>ModifySelection.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\NetworkChat.cs">
+    <Compile Include="Forms\Networking\NetworkChat.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\NetworkChat.Designer.cs">
+    <Compile Include="Forms\Networking\NetworkChat.Designer.cs">
       <DependentUpon>NetworkChat.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\NetworkJoin.cs">
+    <Compile Include="Forms\Networking\NetworkJoin.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\NetworkJoin.Designer.cs">
+    <Compile Include="Forms\Networking\NetworkJoin.Designer.cs">
       <DependentUpon>NetworkJoin.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\NetworkLogAndInfo.cs">
+    <Compile Include="Forms\Networking\NetworkLogAndInfo.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\NetworkLogAndInfo.Designer.cs">
+    <Compile Include="Forms\Networking\NetworkLogAndInfo.Designer.cs">
       <DependentUpon>NetworkLogAndInfo.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\NetworkStart.cs">
+    <Compile Include="Forms\Networking\NetworkStart.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\NetworkStart.Designer.cs">
+    <Compile Include="Forms\Networking\NetworkStart.Designer.cs">
       <DependentUpon>NetworkStart.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\OpenVideoDvd.cs">
@@ -558,10 +558,10 @@
     <Compile Include="Forms\MultipleReplace.Designer.cs">
       <DependentUpon>MultipleReplace.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\OCRSpellCheck.cs">
+    <Compile Include="Forms\Ocr\OCRSpellCheck.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\OCRSpellCheck.Designer.cs">
+    <Compile Include="Forms\Ocr\OCRSpellCheck.Designer.cs">
       <DependentUpon>OCRSpellCheck.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\RemoveTextFromHearImpaired.cs">
@@ -735,70 +735,70 @@
     <Compile Include="Forms\VisualSync.Designer.cs">
       <DependentUpon>VisualSync.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\VobSubCharactersImport.cs">
+    <Compile Include="Forms\Ocr\VobSubCharactersImport.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\VobSubCharactersImport.Designer.cs">
+    <Compile Include="Forms\Ocr\VobSubCharactersImport.Designer.cs">
       <DependentUpon>VobSubCharactersImport.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\VobSubEditCharacters.cs">
+    <Compile Include="Forms\Ocr\VobSubEditCharacters.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\VobSubEditCharacters.Designer.cs">
+    <Compile Include="Forms\Ocr\VobSubEditCharacters.Designer.cs">
       <DependentUpon>VobSubEditCharacters.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\VobSubNOcrCharacterInspect.cs">
+    <Compile Include="Forms\Ocr\VobSubNOcrCharacterInspect.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\VobSubNOcrCharacterInspect.Designer.cs">
+    <Compile Include="Forms\Ocr\VobSubNOcrCharacterInspect.Designer.cs">
       <DependentUpon>VobSubNOcrCharacterInspect.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\VobSubNOcrEdit.cs">
+    <Compile Include="Forms\Ocr\VobSubNOcrEdit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\VobSubNOcrEdit.Designer.cs">
+    <Compile Include="Forms\Ocr\VobSubNOcrEdit.Designer.cs">
       <DependentUpon>VobSubNOcrEdit.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\VobSubNOcrTrain.cs">
+    <Compile Include="Forms\Ocr\VobSubNOcrTrain.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\VobSubNOcrTrain.Designer.cs">
+    <Compile Include="Forms\Ocr\VobSubNOcrTrain.Designer.cs">
       <DependentUpon>VobSubNOcrTrain.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\VobSubOcr.cs">
+    <Compile Include="Forms\Ocr\VobSubOcr.cs">
       <SubType>form</SubType>
     </Compile>
-    <Compile Include="Forms\VobSubOcr.Designer.cs">
+    <Compile Include="Forms\Ocr\VobSubOcr.Designer.cs">
       <DependentUpon>VobSubOcr.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\VobSubOcrCharacter.cs">
+    <Compile Include="Forms\Ocr\VobSubOcrCharacter.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\VobSubOcrCharacter.Designer.cs">
+    <Compile Include="Forms\Ocr\VobSubOcrCharacter.Designer.cs">
       <DependentUpon>VobSubOcrCharacter.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\VobSubOcrCharacterInspect.cs">
+    <Compile Include="Forms\Ocr\VobSubOcrCharacterInspect.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\VobSubOcrCharacterInspect.Designer.cs">
+    <Compile Include="Forms\Ocr\VobSubOcrCharacterInspect.Designer.cs">
       <DependentUpon>VobSubOcrCharacterInspect.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\VobSubOcrNewFolder.cs">
+    <Compile Include="Forms\Ocr\VobSubOcrNewFolder.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\VobSubOcrNewFolder.Designer.cs">
+    <Compile Include="Forms\Ocr\VobSubOcrNewFolder.Designer.cs">
       <DependentUpon>VobSubOcrNewFolder.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\VobSubOcrNOcrCharacter.cs">
+    <Compile Include="Forms\Ocr\VobSubOcrNOcrCharacter.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\VobSubOcrNOcrCharacter.Designer.cs">
+    <Compile Include="Forms\Ocr\VobSubOcrNOcrCharacter.Designer.cs">
       <DependentUpon>VobSubOcrNOcrCharacter.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\VobSubOcrSetItalicFactor.cs">
+    <Compile Include="Forms\Ocr\VobSubOcrSetItalicFactor.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\VobSubOcrSetItalicFactor.Designer.cs">
+    <Compile Include="Forms\Ocr\VobSubOcrSetItalicFactor.Designer.cs">
       <DependentUpon>VobSubOcrSetItalicFactor.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Watermark.cs">
@@ -947,7 +947,7 @@
     <EmbeddedResource Include="Forms\AddToNames.resx">
       <DependentUpon>AddToNames.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\AddToOcrReplaceList.resx">
+    <EmbeddedResource Include="Forms\Ocr\AddToOcrReplaceList.resx">
       <DependentUpon>AddToOcrReplaceList.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\AddToUserDic.resx">
@@ -1098,16 +1098,16 @@
     <EmbeddedResource Include="Forms\ModifySelection.resx">
       <DependentUpon>ModifySelection.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\NetworkChat.resx">
+    <EmbeddedResource Include="Forms\Networking\NetworkChat.resx">
       <DependentUpon>NetworkChat.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\NetworkJoin.resx">
+    <EmbeddedResource Include="Forms\Networking\NetworkJoin.resx">
       <DependentUpon>NetworkJoin.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\NetworkLogAndInfo.resx">
+    <EmbeddedResource Include="Forms\Networking\NetworkLogAndInfo.resx">
       <DependentUpon>NetworkLogAndInfo.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\NetworkStart.resx">
+    <EmbeddedResource Include="Forms\Networking\NetworkStart.resx">
       <DependentUpon>NetworkStart.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\OpenVideoDvd.resx">
@@ -1236,37 +1236,37 @@
       <DependentUpon>VisualSync.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\VobSubCharactersImport.resx">
+    <EmbeddedResource Include="Forms\Ocr\VobSubCharactersImport.resx">
       <DependentUpon>VobSubCharactersImport.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\VobSubNOcrCharacterInspect.resx">
+    <EmbeddedResource Include="Forms\Ocr\VobSubNOcrCharacterInspect.resx">
       <DependentUpon>VobSubNOcrCharacterInspect.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\VobSubNOcrEdit.resx">
+    <EmbeddedResource Include="Forms\Ocr\VobSubNOcrEdit.resx">
       <DependentUpon>VobSubNOcrEdit.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\VobSubNOcrTrain.resx">
+    <EmbeddedResource Include="Forms\Ocr\VobSubNOcrTrain.resx">
       <DependentUpon>VobSubNOcrTrain.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\VobSubOcr.resx">
+    <EmbeddedResource Include="Forms\Ocr\VobSubOcr.resx">
       <DependentUpon>VobSubOcr.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\VobSubOcrCharacter.resx">
+    <EmbeddedResource Include="Forms\Ocr\VobSubOcrCharacter.resx">
       <DependentUpon>VobSubOcrCharacter.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\VobSubOcrCharacterInspect.resx">
+    <EmbeddedResource Include="Forms\Ocr\VobSubOcrCharacterInspect.resx">
       <DependentUpon>VobSubOcrCharacterInspect.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\VobSubOcrNewFolder.resx">
+    <EmbeddedResource Include="Forms\Ocr\VobSubOcrNewFolder.resx">
       <DependentUpon>VobSubOcrNewFolder.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\VobSubOcrNOcrCharacter.resx">
+    <EmbeddedResource Include="Forms\Ocr\VobSubOcrNOcrCharacter.resx">
       <DependentUpon>VobSubOcrNOcrCharacter.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\VobSubOcrSetItalicFactor.resx">
+    <EmbeddedResource Include="Forms\Ocr\VobSubOcrSetItalicFactor.resx">
       <DependentUpon>VobSubOcrSetItalicFactor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Watermark.resx">
@@ -1516,7 +1516,7 @@
       <DependentUpon>MultipleReplace.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\OCRSpellCheck.resx">
+    <EmbeddedResource Include="Forms\Ocr\OCRSpellCheck.resx">
       <DependentUpon>OCRSpellCheck.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -1528,7 +1528,7 @@
       <DependentUpon>VideoError.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\VobSubEditCharacters.resx">
+    <EmbeddedResource Include="Forms\Ocr\VobSubEditCharacters.resx">
       <DependentUpon>VobSubEditCharacters.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
