@@ -1609,9 +1609,9 @@
             this.groupBoxMainWindowVideoControls.Controls.Add(this.textBoxCustomSearchUrl1);
             this.groupBoxMainWindowVideoControls.Controls.Add(this.labelCustomSearch);
             this.groupBoxMainWindowVideoControls.Controls.Add(this.comboBoxCustomSearch1);
-            this.groupBoxMainWindowVideoControls.Location = new System.Drawing.Point(7, 239);
+            this.groupBoxMainWindowVideoControls.Location = new System.Drawing.Point(7, 259);
             this.groupBoxMainWindowVideoControls.Name = "groupBoxMainWindowVideoControls";
-            this.groupBoxMainWindowVideoControls.Size = new System.Drawing.Size(819, 223);
+            this.groupBoxMainWindowVideoControls.Size = new System.Drawing.Size(819, 203);
             this.groupBoxMainWindowVideoControls.TabIndex = 15;
             this.groupBoxMainWindowVideoControls.TabStop = false;
             this.groupBoxMainWindowVideoControls.Text = "Main window video controls";
@@ -1839,7 +1839,7 @@
             this.groupBoxVideoPlayerDefault.Controls.Add(this.labelVideoPlayerPreviewFontSize);
             this.groupBoxVideoPlayerDefault.Controls.Add(this.comboBoxlVideoPlayerPreviewFontSize);
             this.groupBoxVideoPlayerDefault.Controls.Add(this.checkBoxVideoPlayerShowStopButton);
-            this.groupBoxVideoPlayerDefault.Location = new System.Drawing.Point(7, 135);
+            this.groupBoxVideoPlayerDefault.Location = new System.Drawing.Point(7, 155);
             this.groupBoxVideoPlayerDefault.Name = "groupBoxVideoPlayerDefault";
             this.groupBoxVideoPlayerDefault.Size = new System.Drawing.Size(819, 98);
             this.groupBoxVideoPlayerDefault.TabIndex = 14;
@@ -1938,7 +1938,7 @@
             this.groupBoxVideoEngine.Controls.Add(this.radioButtonVideoPlayerMpcHc);
             this.groupBoxVideoEngine.Location = new System.Drawing.Point(6, 6);
             this.groupBoxVideoEngine.Name = "groupBoxVideoEngine";
-            this.groupBoxVideoEngine.Size = new System.Drawing.Size(820, 123);
+            this.groupBoxVideoEngine.Size = new System.Drawing.Size(820, 143);
             this.groupBoxVideoEngine.TabIndex = 0;
             this.groupBoxVideoEngine.TabStop = false;
             this.groupBoxVideoEngine.Text = "Video engine";
@@ -1946,7 +1946,7 @@
             // checkBoxMpvHandlesPreviewText
             // 
             this.checkBoxMpvHandlesPreviewText.AutoSize = true;
-            this.checkBoxMpvHandlesPreviewText.Location = new System.Drawing.Point(570, 90);
+            this.checkBoxMpvHandlesPreviewText.Location = new System.Drawing.Point(169, 107);
             this.checkBoxMpvHandlesPreviewText.Name = "checkBoxMpvHandlesPreviewText";
             this.checkBoxMpvHandlesPreviewText.Size = new System.Drawing.Size(150, 17);
             this.checkBoxMpvHandlesPreviewText.TabIndex = 31;
@@ -1958,7 +1958,7 @@
             this.labelMpvSettings.AutoSize = true;
             this.labelMpvSettings.Font = new System.Drawing.Font("Tahoma", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelMpvSettings.ForeColor = System.Drawing.Color.Gray;
-            this.labelMpvSettings.Location = new System.Drawing.Point(501, 93);
+            this.labelMpvSettings.Location = new System.Drawing.Point(651, 93);
             this.labelMpvSettings.Name = "labelMpvSettings";
             this.labelMpvSettings.Size = new System.Drawing.Size(33, 11);
             this.labelMpvSettings.TabIndex = 30;
@@ -1968,9 +1968,9 @@
             // 
             this.buttonMpvSettings.Location = new System.Drawing.Point(466, 87);
             this.buttonMpvSettings.Name = "buttonMpvSettings";
-            this.buttonMpvSettings.Size = new System.Drawing.Size(29, 21);
+            this.buttonMpvSettings.Size = new System.Drawing.Size(179, 21);
             this.buttonMpvSettings.TabIndex = 29;
-            this.buttonMpvSettings.Text = "...";
+            this.buttonMpvSettings.Text = "Download mpv dll";
             this.buttonMpvSettings.UseVisualStyleBackColor = true;
             this.buttonMpvSettings.Click += new System.EventHandler(this.buttonMpvSettings_Click);
             // 
