@@ -132,5 +132,38 @@ namespace Test.Logic
             Assert.IsTrue(Math.Abs(tc.TotalMilliseconds - (tc.TotalSeconds * 1000.0)) < 0.001);
         }
 
+        [TestMethod]
+        public void ToShortStringHhmmssff1()
+        {
+            Configuration.Settings.General.CurrentFrameRate = 25;
+            var res = new TimeCode(1, 2, 3, 0).ToShortStringHHMMSSFF();
+            Assert.AreEqual("01:02:03:00", res);
+        }
+
+        [TestMethod]
+        public void ToShortStringHhmmssff2()
+        {
+            Configuration.Settings.General.CurrentFrameRate = 25;
+            var res = new TimeCode(0, 2, 3, 0).ToShortStringHHMMSSFF();
+            Assert.AreEqual(res, "02:03:00", res);
+        }
+
+        [TestMethod]
+        public void ToShortStringHhmmssff3()
+        {
+            Configuration.Settings.General.CurrentFrameRate = 25;
+            var res = new TimeCode(0, 0, 3, 0).ToShortStringHHMMSSFF();
+            Assert.AreEqual("03:00", res);
+        }
+
+        [TestMethod]
+        public void ToShortStringHhmmssff4()
+        {
+            Configuration.Settings.General.CurrentFrameRate = 25;
+            var res = new TimeCode(0, 0, 0, 0).ToShortStringHHMMSSFF();
+            Assert.AreEqual("00:00", res);
+        }
+
+
     }
 }

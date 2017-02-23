@@ -214,12 +214,11 @@ namespace Nikse.SubtitleEdit.Core
         {
             string s = ToHHMMSSFF();
             int j = 0;
-            if (s.StartsWith("0:00:", StringComparison.Ordinal))
-                j = 5;
-            if (s.StartsWith("00:", StringComparison.Ordinal))
+            int len = s.Length;            
+            while (j + 6 < len && s[j] == '0' && s[j + 1] == '0' && s[j + 2] == ':')
+            {
                 j += 3;
-            if (s.StartsWith("00:", StringComparison.Ordinal))
-                j += 3;
+            }
             return j > 0 ? s.Substring(j) : s;
         }
 
