@@ -164,6 +164,5 @@ namespace Test.Logic
             Assert.AreEqual("00:00", res);
         }
 
-
     }
 }
