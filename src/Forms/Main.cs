@@ -809,12 +809,31 @@ namespace Nikse.SubtitleEdit.Forms
             if (beforeParagraph == null)
                 beforeParagraph = paragraph;
 
-            if (beforeParagraph.StartTime.TotalMilliseconds == paragraph.StartTime.TotalMilliseconds &&
-                beforeParagraph.EndTime.TotalMilliseconds == paragraph.EndTime.TotalMilliseconds)
+            if (Math.Abs(beforeParagraph.StartTime.TotalMilliseconds - paragraph.StartTime.TotalMilliseconds) < 0.01 &&
+                Math.Abs(beforeParagraph.EndTime.TotalMilliseconds - paragraph.EndTime.TotalMilliseconds) < 0.01)
                 _makeHistoryPaused = true;
 
             int selectedIndex = FirstSelectedIndex;
             int index = _subtitle.Paragraphs.IndexOf(paragraph);
+
+
+            // TODO: Moving selected lines
+            //if (e.MouseDownParagraphType == AudioVisualizer.MouseDownParagraphType.Whole && SubtitleListview1.SelectedIndices.Count > 1)
+            //{
+            //    foreach (int idx in SubtitleListview1.SelectedIndices)
+            //    {
+            //        var p = _subtitle.Paragraphs[idx];
+            //        if (p != paragraph)
+            //        {
+            //            var dur = p.Duration.TotalMilliseconds;
+            //            p.StartTime.TotalMilliseconds += e.AdjustMs;
+            //            p.EndTime.TotalMilliseconds += e.AdjustMs;
+            //            SubtitleListview1.SetStartTimeAndDuration(idx, p);
+            //        }
+            //    }
+            //}
+
+
             if (index == _subtitleListViewIndex)
             {
                 // Make history item for rollback (change paragraph back for history + change again)
@@ -3883,6 +3902,8 @@ namespace Nikse.SubtitleEdit.Forms
                                        Configuration.Settings.Tools.ListViewSyntaxErrorColor.ToArgb();
 
             var oldAllowEditOfOriginalSubtitle = Configuration.Settings.General.AllowEditOfOriginalSubtitle;
+            var oldShowColumnEndTime = Configuration.Settings.Tools.ListViewShowColumnEndTime;
+            var oldShowcolumnDuration = Configuration.Settings.Tools.ListViewShowColumnDuration;
             var oldShowColumnCharsPerSec = Configuration.Settings.Tools.ListViewShowColumnCharsPerSec;
             var oldShowWordsMinColumn = Configuration.Settings.Tools.ListViewShowColumnWordsPerMin;
             using (var settings = new Settings())
@@ -3938,13 +3959,26 @@ namespace Nikse.SubtitleEdit.Forms
                 Configuration.Settings.General.SubtitleFontColor.ToArgb() +
                 Configuration.Settings.General.SubtitleBackgroundColor.ToArgb() ||
                 oldSyntaxColoring != newSyntaxColoring ||
+                oldShowColumnEndTime != Configuration.Settings.Tools.ListViewShowColumnEndTime ||
+                oldShowcolumnDuration != Configuration.Settings.Tools.ListViewShowColumnDuration ||
                 oldShowColumnCharsPerSec != Configuration.Settings.Tools.ListViewShowColumnCharsPerSec ||
                 oldShowWordsMinColumn != Configuration.Settings.Tools.ListViewShowColumnWordsPerMin)
             {
+                if (Configuration.Settings.Tools.ListViewShowColumnEndTime)
+                    SubtitleListview1.ShowEndColumn(Configuration.Settings.Language.General.EndTime);
+                else
+                    SubtitleListview1.HideColumn(SubtitleListView.SubtitleColumn.End);
+
+                if (Configuration.Settings.Tools.ListViewShowColumnDuration)
+                    SubtitleListview1.ShowDurationColumn(Configuration.Settings.Language.General.Duration);
+                else
+                    SubtitleListview1.HideColumn(SubtitleListView.SubtitleColumn.Duration);
+
                 if (Configuration.Settings.Tools.ListViewShowColumnCharsPerSec)
                     SubtitleListview1.ShowCharsSecColumn(Configuration.Settings.Language.General.CharsPerSec);
                 else
                     SubtitleListview1.HideColumn(SubtitleListView.SubtitleColumn.CharactersPerSeconds);
+
                 if (Configuration.Settings.Tools.ListViewShowColumnWordsPerMin)
                     SubtitleListview1.ShowWordsMinColumn(Configuration.Settings.Language.General.WordsPerMin);
                 else
@@ -6104,6 +6138,105 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ContextMenuStripListviewOpening(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            var coordinates = SubtitleListview1.PointToClient(Cursor.Position);
+            var hitTest = SubtitleListview1.HitTest(coordinates);
+            if (coordinates.Y < 19 || (hitTest.Item != null && hitTest.Item.Index == 0 && coordinates.Y < hitTest.Item.Position.Y))
+            {
+                e.Cancel = true;
+                var cm = new ContextMenuStrip();
+                var contextMenuStripLvHeaderResizeToolStripMenuItem = new ToolStripMenuItem(Configuration.Settings.Language.Main.Menu.ContextMenu.SizeAllColumnsToFit); 
+                contextMenuStripLvHeaderResizeToolStripMenuItem.Click += (sender2, e2) =>
+                {
+                    SubtitleListview1.AutoSizeColumns();
+                };
+                cm.Items.Add(contextMenuStripLvHeaderResizeToolStripMenuItem);
+
+                cm.Items.Add(new ToolStripSeparator());
+
+                // End time
+                var contextMenuStripLvHeaderEndTimeToolStripMenuItem = new ToolStripMenuItem(Configuration.Settings.Language.General.EndTime);
+                contextMenuStripLvHeaderEndTimeToolStripMenuItem.CheckOnClick = true;
+                contextMenuStripLvHeaderEndTimeToolStripMenuItem.Checked = Configuration.Settings.Tools.ListViewShowColumnEndTime;
+                contextMenuStripLvHeaderEndTimeToolStripMenuItem.Click += (sender2, e2) =>
+                {
+                    SubtitleListview1.BeginUpdate();
+                    Configuration.Settings.Tools.ListViewShowColumnEndTime = contextMenuStripLvHeaderEndTimeToolStripMenuItem.Checked;
+                    if (Configuration.Settings.Tools.ListViewShowColumnEndTime)
+                        SubtitleListview1.ShowEndColumn(Configuration.Settings.Language.General.EndTime);
+                    else
+                        SubtitleListview1.HideColumn(SubtitleListView.SubtitleColumn.End);
+                    SaveSubtitleListviewIndices();
+                    UiUtil.InitializeSubtitleFont(SubtitleListview1);
+                    SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+                    RestoreSubtitleListviewIndices();
+                    SubtitleListview1.EndUpdate();
+                };
+                cm.Items.Add(contextMenuStripLvHeaderEndTimeToolStripMenuItem);
+
+                // Duration
+                var contextMenuStripLvHeaderDurationToolStripMenuItem = new ToolStripMenuItem(Configuration.Settings.Language.General.Duration);
+                contextMenuStripLvHeaderDurationToolStripMenuItem.CheckOnClick = true;
+                contextMenuStripLvHeaderDurationToolStripMenuItem.Checked = Configuration.Settings.Tools.ListViewShowColumnDuration;
+                contextMenuStripLvHeaderDurationToolStripMenuItem.Click += (sender2, e2) =>
+                {
+                    SubtitleListview1.BeginUpdate();
+                    Configuration.Settings.Tools.ListViewShowColumnDuration = contextMenuStripLvHeaderDurationToolStripMenuItem.Checked;
+                    if (Configuration.Settings.Tools.ListViewShowColumnDuration)
+                        SubtitleListview1.ShowDurationColumn(Configuration.Settings.Language.General.Duration);
+                    else
+                        SubtitleListview1.HideColumn(SubtitleListView.SubtitleColumn.Duration);
+                    SaveSubtitleListviewIndices();
+                    UiUtil.InitializeSubtitleFont(SubtitleListview1);
+                    SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+                    RestoreSubtitleListviewIndices();
+                    SubtitleListview1.EndUpdate();
+                };
+                cm.Items.Add(contextMenuStripLvHeaderDurationToolStripMenuItem);
+
+                // CPS
+                var contextMenuStripLvHeaderCpsToolStripMenuItem = new ToolStripMenuItem(Configuration.Settings.Language.General.CharsPerSec);
+                contextMenuStripLvHeaderCpsToolStripMenuItem.CheckOnClick = true;
+                contextMenuStripLvHeaderCpsToolStripMenuItem.Checked = Configuration.Settings.Tools.ListViewShowColumnCharsPerSec;
+                contextMenuStripLvHeaderCpsToolStripMenuItem.Click += (sender2, e2) =>
+                {
+                    SubtitleListview1.BeginUpdate();
+                    Configuration.Settings.Tools.ListViewShowColumnCharsPerSec = contextMenuStripLvHeaderCpsToolStripMenuItem.Checked;
+                    if (Configuration.Settings.Tools.ListViewShowColumnCharsPerSec)
+                        SubtitleListview1.ShowCharsSecColumn(Configuration.Settings.Language.General.CharsPerSec);
+                    else
+                        SubtitleListview1.HideColumn(SubtitleListView.SubtitleColumn.CharactersPerSeconds);
+                    SaveSubtitleListviewIndices();
+                    UiUtil.InitializeSubtitleFont(SubtitleListview1);
+                    SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+                    RestoreSubtitleListviewIndices();
+                    SubtitleListview1.EndUpdate();
+                };
+                cm.Items.Add(contextMenuStripLvHeaderCpsToolStripMenuItem);
+
+                // WPM
+                var contextMenuStripLvHeaderWpmToolStripMenuItem = new ToolStripMenuItem(Configuration.Settings.Language.General.WordsPerMin);
+                contextMenuStripLvHeaderWpmToolStripMenuItem.CheckOnClick = true;
+                contextMenuStripLvHeaderWpmToolStripMenuItem.Checked = Configuration.Settings.Tools.ListViewShowColumnWordsPerMin;
+                contextMenuStripLvHeaderWpmToolStripMenuItem.Click += (sender2, e2) =>
+                {
+                    SubtitleListview1.BeginUpdate();
+                    Configuration.Settings.Tools.ListViewShowColumnWordsPerMin = contextMenuStripLvHeaderWpmToolStripMenuItem.Checked;
+                    if (Configuration.Settings.Tools.ListViewShowColumnWordsPerMin)
+                        SubtitleListview1.ShowWordsMinColumn(Configuration.Settings.Language.General.WordsPerMin);
+                    else
+                        SubtitleListview1.HideColumn(SubtitleListView.SubtitleColumn.WordsPerMinute);
+                    SaveSubtitleListviewIndices();
+                    UiUtil.InitializeSubtitleFont(SubtitleListview1);
+                    SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+                    RestoreSubtitleListviewIndices();
+                    SubtitleListview1.EndUpdate();
+                };
+                cm.Items.Add(contextMenuStripLvHeaderWpmToolStripMenuItem);
+
+                cm.Show(SubtitleListview1, coordinates);
+                return;
+            }
+
             var format = GetCurrentSubtitleFormat();
             var formatType = format.GetType();
             toolStripMenuItemSetLanguage.Visible = false;
@@ -8694,11 +8827,26 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (Configuration.Settings.General.ListViewColumnsRememberSize)
             {
-                Configuration.Settings.General.ListViewNumberWidth = SubtitleListview1.Columns[0].Width;
-                Configuration.Settings.General.ListViewStartWidth = SubtitleListview1.Columns[1].Width;
-                Configuration.Settings.General.ListViewEndWidth = SubtitleListview1.Columns[2].Width;
-                Configuration.Settings.General.ListViewDurationWidth = SubtitleListview1.Columns[3].Width;
-                Configuration.Settings.General.ListViewTextWidth = SubtitleListview1.Columns[4].Width;
+                if (SubtitleListview1.ColumnIndexNumber >= 0)
+                    Configuration.Settings.General.ListViewNumberWidth = SubtitleListview1.Columns[SubtitleListview1.ColumnIndexNumber].Width;
+
+                if (SubtitleListview1.ColumnIndexStart >= 0)
+                    Configuration.Settings.General.ListViewStartWidth = SubtitleListview1.Columns[SubtitleListview1.ColumnIndexStart].Width;
+
+                if (SubtitleListview1.ColumnIndexEnd >= 0)
+                    Configuration.Settings.General.ListViewEndWidth = SubtitleListview1.Columns[SubtitleListview1.ColumnIndexEnd].Width;
+
+                if (SubtitleListview1.ColumnIndexDuration >= 0)
+                    Configuration.Settings.General.ListViewDurationWidth = SubtitleListview1.Columns[SubtitleListview1.ColumnIndexDuration].Width;
+
+                if (SubtitleListview1.ColumnIndexCps >= 0)
+                    Configuration.Settings.General.ListViewCpsWidth = SubtitleListview1.Columns[SubtitleListview1.ColumnIndexCps].Width;
+
+                if (SubtitleListview1.ColumnIndexWpm >= 0)
+                    Configuration.Settings.General.ListViewWpmWidth = SubtitleListview1.Columns[SubtitleListview1.ColumnIndexWpm].Width;
+
+                if (SubtitleListview1.ColumnIndexText >= 0)
+                    Configuration.Settings.General.ListViewTextWidth = SubtitleListview1.Columns[SubtitleListview1.ColumnIndexText].Width;
             }
         }
 

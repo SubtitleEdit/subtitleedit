@@ -1428,6 +1428,7 @@
 
                 public class ListViewContextMenu
                 {
+                    public string SizeAllColumnsToFit { get; set; }
                     public string AdvancedSubStationAlphaSetStyle { get; set; }
                     public string SubStationAlphaSetStyle { get; set; }
                     public string SubStationAlphaStyles { get; set; }

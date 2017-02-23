@@ -1064,6 +1064,7 @@ Note: Do check free disk space.</WaveFileMalformed>
         <ShowHideVideo>Show/hide video</ShowHideVideo>
       </ToolBar>
       <ContextMenu>
+        <SizeAllColumnsToFit>Size all columns to fit</SizeAllColumnsToFit>
         <AdvancedSubStationAlphaSetStyle>Advanced Sub Station Alpha - set style</AdvancedSubStationAlphaSetStyle>
         <SubStationAlphaSetStyle>Sub Station Alpha - set style</SubStationAlphaSetStyle>
         <SubStationAlphaStyles>Sub Station Alpha styles...</SubStationAlphaStyles>

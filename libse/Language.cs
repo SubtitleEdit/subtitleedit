@@ -1564,6 +1564,7 @@ namespace Nikse.SubtitleEdit.Core
 
                     ContextMenu = new LanguageStructure.Main.MainMenu.ListViewContextMenu
                     {
+                        SizeAllColumnsToFit = "Size all columns to fit",
                         AdvancedSubStationAlphaSetStyle = "Advanced Sub Station Alpha - set style",
                         SubStationAlphaSetStyle = "Sub Station Alpha - set style",
                         AdvancedSubStationAlphaStyles = "Advanced Sub Station Alpha styles...",
