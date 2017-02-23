@@ -148,6 +148,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (Logic.VideoPlayers.MpcHC.MpcHc.GetMpcHcFileName() == null)
                 radioButtonVideoPlayerMpcHc.Enabled = false;
             RefreshMpvSettings();
+            buttonMpvSettings.Text = Configuration.Settings.Language.SettingsMpv.DownloadMpv;
             checkBoxMpvHandlesPreviewText.Checked = gs.MpvHandlesPreviewText;
 
             textBoxVlcPath.Text = gs.VlcLocation;
@@ -2346,6 +2347,12 @@ namespace Nikse.SubtitleEdit.Forms
         private void RefreshMpvSettings()
         {
             radioButtonVideoPlayerMPV.Enabled = LibMpvDynamic.IsInstalled;
+            checkBoxMpvHandlesPreviewText.Enabled = radioButtonVideoPlayerMPV.Enabled;
+            if (!radioButtonVideoPlayerMPV.Enabled)
+            {
+                buttonMpvSettings.Font = new Font(buttonMpvSettings.Font.FontFamily, buttonMpvSettings.Font.Size, FontStyle.Bold);
+            }
+
             if (Configuration.IsRunningOnLinux() && Configuration.Settings.General.MpvVideoOutput.StartsWith("direct3d"))
                 labelMpvSettings.Text = "--vo=vaapi";
             else
