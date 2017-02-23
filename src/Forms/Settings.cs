@@ -2406,6 +2406,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (form.ShowDialog(this) == DialogResult.OK)
                 {
+                    Configuration.Settings.Tools.ListViewShowColumnEndTime = form.ShowEndTime;
+                    Configuration.Settings.Tools.ListViewShowColumnDuration = form.ShowDuration;
                     Configuration.Settings.Tools.ListViewShowColumnCharsPerSec = form.ShowCps;
                     Configuration.Settings.Tools.ListViewShowColumnWordsPerMin = form.ShowWpm;
                     buttonListviewColumns.Text = GetListViewColumns();

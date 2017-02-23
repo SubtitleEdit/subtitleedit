@@ -3598,6 +3598,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Main/Menu/ToolBar/ShowHideVideo":
                     language.Main.Menu.ToolBar.ShowHideVideo = reader.Value;
                     break;
+                case "Main/Menu/ContextMenu/SizeAllColumnsToFit":
+                    language.Main.Menu.ContextMenu.SizeAllColumnsToFit = reader.Value;
+                    break;
                 case "Main/Menu/ContextMenu/AdvancedSubStationAlphaSetStyle":
                     language.Main.Menu.ContextMenu.AdvancedSubStationAlphaSetStyle = reader.Value;
                     break;
