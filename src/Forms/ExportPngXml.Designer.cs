@@ -294,7 +294,7 @@
             // 
             this.numericUpDownLineSpacing.Location = new System.Drawing.Point(778, 130);
             this.numericUpDownLineSpacing.Maximum = new decimal(new int[] {
-            150,
+            500,
             0,
             0,
             0});
@@ -570,7 +570,7 @@
             "4K (4096x2160)",
             "UHD (3840x2160)",
             "2K (2048x1080)",
-            "DCI 2K Scope (2048x 858)",
+            "DCI 2K Scope (2048x858)",
             "DCI 2K Flat (1998x1080)",
             "1080p (1920x1080)",
             "1440x1080",
@@ -736,7 +736,24 @@
             "120",
             "130",
             "140",
-            "150"});
+            "150",
+            "160",
+            "170",
+            "180",
+            "190",
+            "200",
+            "225",
+            "250",
+            "275",
+            "300",
+            "325",
+            "350",
+            "375",
+            "400",
+            "425",
+            "450",
+            "475",
+            "500"});
             this.comboBoxSubtitleFontSize.Location = new System.Drawing.Point(100, 51);
             this.comboBoxSubtitleFontSize.Name = "comboBoxSubtitleFontSize";
             this.comboBoxSubtitleFontSize.Size = new System.Drawing.Size(121, 21);
