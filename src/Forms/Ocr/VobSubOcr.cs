@@ -351,12 +351,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             subtitleListView1.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
-            subtitleListView1.Columns[0].Width = 45;
-            subtitleListView1.Columns[1].Width = 90;
-            subtitleListView1.Columns[2].Width = 90;
-            subtitleListView1.Columns[3].Width = 70;
-            subtitleListView1.Columns[4].Width = 150;
-            subtitleListView1.InitializeTimestampColumnWidths(this);
+            subtitleListView1.AutoSizeColumns();
 
             groupBoxImagePalette.Text = language.ImagePalette;
             checkBoxCustomFourColors.Text = language.UseCustomColors;
