@@ -125,6 +125,7 @@
             this.toolStripMenuItemDost = new System.Windows.Forms.ToolStripMenuItem();
             this.DvdStudioProStl = new System.Windows.Forms.ToolStripMenuItem();
             this.eBUSTLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemEdl = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemEdlClipName = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemExportFcpIImage = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemImagePerFrame = new System.Windows.Forms.ToolStripMenuItem();
@@ -469,7 +470,6 @@
             this.imageListPlayRate = new System.Windows.Forms.ImageList(this.components);
             this.timerTextUndo = new System.Windows.Forms.Timer(this.components);
             this.timerAlternateTextUndo = new System.Windows.Forms.Timer(this.components);
-            this.toolStripMenuItemEdl = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -1318,6 +1318,13 @@
             this.eBUSTLToolStripMenuItem.Size = new System.Drawing.Size(258, 22);
             this.eBUSTLToolStripMenuItem.Text = "EBU STL...";
             this.eBUSTLToolStripMenuItem.Click += new System.EventHandler(this.EBustlToolStripMenuItemClick);
+            // 
+            // toolStripMenuItemEdl
+            // 
+            this.toolStripMenuItemEdl.Name = "toolStripMenuItemEdl";
+            this.toolStripMenuItemEdl.Size = new System.Drawing.Size(258, 22);
+            this.toolStripMenuItemEdl.Text = "EDL...";
+            this.toolStripMenuItemEdl.Click += new System.EventHandler(this.ExportToEdl);
             // 
             // toolStripMenuItemEdlClipName
             // 
@@ -3684,7 +3691,7 @@
             this.guessTimeCodesToolStripMenuItem,
             this.seekSilenceToolStripMenuItem});
             this.contextMenuStripWaveform.Name = "contextMenuStripWaveform";
-            this.contextMenuStripWaveform.Size = new System.Drawing.Size(275, 352);
+            this.contextMenuStripWaveform.Size = new System.Drawing.Size(275, 374);
             this.contextMenuStripWaveform.Closing += new System.Windows.Forms.ToolStripDropDownClosingEventHandler(this.contextMenuStripWaveform_Closing);
             this.contextMenuStripWaveform.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripWaveformOpening);
             // 
@@ -3895,6 +3902,7 @@
             // 
             // SubtitleListview1
             // 
+            this.SubtitleListview1.AllowColumnReorder = true;
             this.SubtitleListview1.AllowDrop = true;
             this.SubtitleListview1.ContextMenuStrip = this.contextMenuStripListview;
             this.SubtitleListview1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -3902,6 +3910,7 @@
             this.SubtitleListview1.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SubtitleListview1.FullRowSelect = true;
             this.SubtitleListview1.GridLines = true;
+            this.SubtitleListview1.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.SubtitleListview1.HideSelection = false;
             this.SubtitleListview1.Location = new System.Drawing.Point(0, 0);
             this.SubtitleListview1.Name = "SubtitleListview1";
@@ -4554,13 +4563,6 @@
             // 
             this.timerAlternateTextUndo.Interval = 700;
             this.timerAlternateTextUndo.Tick += new System.EventHandler(this.TimerAlternateTextUndoTick);
-            // 
-            // toolStripMenuItemEdl
-            // 
-            this.toolStripMenuItemEdl.Name = "toolStripMenuItemEdl";
-            this.toolStripMenuItemEdl.Size = new System.Drawing.Size(258, 22);
-            this.toolStripMenuItemEdl.Text = "EDL...";
-            this.toolStripMenuItemEdl.Click += new System.EventHandler(this.ExportToEdl);
             // 
             // Main
             // 

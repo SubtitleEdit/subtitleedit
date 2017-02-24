@@ -6087,17 +6087,15 @@ namespace Nikse.SubtitleEdit.Forms
                 while (startIndex >= 0 && startIndex < p.Text.Length && p.Text.Substring(startIndex).Contains(oldWord))
                 {
                     bool startOk = startIndex == 0 ||
-                                   " >-'\"[({¿".Contains(p.Text[startIndex - 1]) ||
+                                   " >-—+/'\"[({¿¡….".Contains(p.Text[startIndex - 1]) ||
                                    startIndex == p.Text.Length - oldWord.Length ||
-                                   Environment.NewLine.EndsWith(p.Text[startIndex - 1]) ||
-                                   (startIndex > 2 && p.Text.Substring(startIndex - 3, 3) == "...");
+                                   Environment.NewLine.EndsWith(p.Text[startIndex - 1]);
                     if (startOk)
                     {
                         int end = startIndex + oldWord.Length;
-                        if (end <= p.Text.Length)
+                        if (end <= p.Text.Length && end == p.Text.Length || (" ,.!?:;')<\"-—+/]}%&$£…\r\n").Contains(p.Text[end]))
                         {
-                            if (end == p.Text.Length || (" ,.!?:;')<\"-]}%&$£" + Environment.NewLine).Contains(p.Text[end]))
-                                p.Text = p.Text.Remove(startIndex, oldWord.Length).Insert(startIndex, changeWord);
+                            p.Text = p.Text.Remove(startIndex, oldWord.Length).Insert(startIndex, changeWord);
                         }
                     }
                     if (startIndex + 2 >= p.Text.Length)
@@ -6144,7 +6142,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 e.Cancel = true;
                 var cm = new ContextMenuStrip();
-                var contextMenuStripLvHeaderResizeToolStripMenuItem = new ToolStripMenuItem(Configuration.Settings.Language.Main.Menu.ContextMenu.SizeAllColumnsToFit); 
+                var contextMenuStripLvHeaderResizeToolStripMenuItem = new ToolStripMenuItem(Configuration.Settings.Language.Main.Menu.ContextMenu.SizeAllColumnsToFit);
                 contextMenuStripLvHeaderResizeToolStripMenuItem.Click += (sender2, e2) =>
                 {
                     SubtitleListview1.AutoSizeColumns();

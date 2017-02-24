@@ -88,10 +88,14 @@ namespace Nikse.SubtitleEdit.Forms
 
             subtitleListViewFrom.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
             subtitleListViewTo.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
+            subtitleListViewFrom.HideColumn(SubtitleListView.SubtitleColumn.CharactersPerSeconds);
+            subtitleListViewFrom.HideColumn(SubtitleListView.SubtitleColumn.WordsPerMinute);
+            subtitleListViewTo.HideColumn(SubtitleListView.SubtitleColumn.CharactersPerSeconds);
+            subtitleListViewTo.HideColumn(SubtitleListView.SubtitleColumn.WordsPerMinute);
             UiUtil.InitializeSubtitleFont(subtitleListViewFrom);
             UiUtil.InitializeSubtitleFont(subtitleListViewTo);
-            subtitleListViewFrom.AutoSizeAllColumns(this);
-            subtitleListViewTo.AutoSizeAllColumns(this);
+            subtitleListViewFrom.AutoSizeColumns();
+            subtitleListViewFrom.AutoSizeColumns();
             UiUtil.FixLargeFonts(this, buttonOK);
         }
 
