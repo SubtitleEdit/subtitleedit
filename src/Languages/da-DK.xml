@@ -349,6 +349,7 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <CodePageNumber>Code page number</CodePageNumber>
     <DiskFormatCode>Disk format code</DiskFormatCode>
     <DisplayStandardCode>Display standard code</DisplayStandardCode>
+    <ColorRequiresTeletext>Farver kræver teletext!</ColorRequiresTeletext>
     <CharacterCodeTable>Character table</CharacterCodeTable>
     <LanguageCode>Language code</LanguageCode>
     <OriginalProgramTitle>Original program title</OriginalProgramTitle>
@@ -1060,6 +1061,7 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
         <ShowHideVideo>Vis/skjul video</ShowHideVideo>
       </ToolBar>
       <ContextMenu>
+        <SizeAllColumnsToFit>Auto-tilpas kolonner</SizeAllColumnsToFit>
         <AdvancedSubStationAlphaSetStyle>Advanced Sub Station Alpha - vælg stilart</AdvancedSubStationAlphaSetStyle>
         <SubStationAlphaSetStyle>(Advanced) Sub Station Alpha - vælg stilart</SubStationAlphaSetStyle>
         <SubStationAlphaStyles>Sub Station Alpha stilarter...</SubStationAlphaStyles>
@@ -1736,6 +1738,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <MpcHcDescription>Media Player Classic - Home Cinema</MpcHcDescription>
     <MpvPlayer>mpv</MpvPlayer>
     <MpvPlayerDescription>https://mpv.io/ - gratis, open source og cross-platform medie afspiller</MpvPlayerDescription>
+    <MpvHandlesPreviewText>MPV håndterer tekstvisning</MpvHandlesPreviewText>
     <VlcMediaPlayer>VLC media player</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll fra VLC media player 1.1.0 eller nyere</VlcMediaPlayerDescription>
     <VlcBrowseToLabel>VLC sti (kun nødvendig, hvis du bruger den portable version af VLC)</VlcBrowseToLabel>

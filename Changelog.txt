@@ -16,6 +16,7 @@
    * Updated Korean translation - thx domddol
    * Updated Hungarian translation - thx ZityiSoft Team
    * Updated Swedish translation - thx Ted
+   * Updated Chinese translation - thx Leon
    * Minor improvements for format "Structured titles" - thx Yamato-ua
    * List view columns arrangable and non-clickable - thx Ingo
    * EBU STL: New settings regarding vertical position
@@ -42,6 +43,7 @@
    * Fixed "libmpv" re-open video issue
    * Fixed crash in TTML styles dialog with new TTML file - thx aucforum
    * Added support for "offset" in format "lrc" - thx Omar
+   * + Many minor fixes from ivandrofly
 
 
 3.5.1 (13th December 2016)
