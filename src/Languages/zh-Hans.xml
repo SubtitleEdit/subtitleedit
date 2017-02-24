@@ -24,6 +24,8 @@
     <StartTime>起始时间</StartTime>
     <EndTime>结束时间</EndTime>
     <Duration>时长</Duration>
+    <CharsPerSec>字/秒</CharsPerSec>
+    <WordsPerMin>词/分</WordsPerMin>
     <NumberSymbol>编号</NumberSymbol>
     <Number>编号</Number>
     <Text>文本</Text>
@@ -349,6 +351,7 @@ Command line: {1} {2}
     <CodePageNumber>代码页编号</CodePageNumber>
     <DiskFormatCode>磁盘格式代码</DiskFormatCode>
     <DisplayStandardCode>显示标准码</DisplayStandardCode>
+    <ColorRequiresTeletext>颜色需要电视文字广播</ColorRequiresTeletext>
     <CharacterCodeTable>字符表</CharacterCodeTable>
     <LanguageCode>语言代码</LanguageCode>
     <OriginalProgramTitle>原始程序标题</OriginalProgramTitle>
@@ -368,6 +371,10 @@ Command line: {1} {2}
     <Import>导入...</Import>
     <TextAndTimingInformation>文本和计时信息</TextAndTimingInformation>
     <JustificationCode>调整代码</JustificationCode>
+    <VerticalPosition>垂直位置</VerticalPosition>
+    <MarginTop>顶部加边（用于顶对齐的字幕）</MarginTop>
+    <MarginBottom>底部加边（用于底对齐的字幕）</MarginBottom>
+    <NewLineRows>新加字幕行的行数</NewLineRows>
     <Teletext>文字电视广播</Teletext>
     <UseBox>使用文字背景框</UseBox>
     <DoubleHeight>使用双倍字高</DoubleHeight>
@@ -1056,6 +1063,7 @@ Command line: {1} {2}
         <ShowHideVideo>显示/隐藏 视频</ShowHideVideo>
       </ToolBar>
       <ContextMenu>
+        <SizeAllColumnsToFit>自适应所有的列宽度</SizeAllColumnsToFit>
         <AdvancedSubStationAlphaSetStyle>高级 Sub Station Alpha - 设置样式</AdvancedSubStationAlphaSetStyle>
         <SubStationAlphaSetStyle>Sub Station Alpha - 设置样式</SubStationAlphaSetStyle>
         <SubStationAlphaStyles>Sub Station Alpha 样式...</SubStationAlphaStyles>
@@ -1676,7 +1684,8 @@ Command line: {1} {2}
     <DefaultFileEncoding>默认文件编码</DefaultFileEncoding>
     <AutoDetectAnsiEncoding>自动检测 ANSI 编码</AutoDetectAnsiEncoding>
     <SubtitleLineMaximumLength>单行最大长度</SubtitleLineMaximumLength>
-    <MaximumCharactersPerSecond>每秒最多字符</MaximumCharactersPerSecond>
+    <MaximumCharactersPerSecond>最大每秒字频</MaximumCharactersPerSecond>
+    <MaximumWordssPerMinute>最大每分词频 </MaximumWordssPerMinute>
     <AutoWrapWhileTyping>打字时自动换行</AutoWrapWhileTyping>
     <DurationMinimumMilliseconds>最小时长，毫秒</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>最大时长，毫秒</DurationMaximumMilliseconds>
@@ -1697,6 +1706,8 @@ Command line: {1} {2}
     <RemoveBlankLinesWhenOpening>打开字幕时删除空行</RemoveBlankLinesWhenOpening>
     <ShowLineBreaksAs>列表视图中的换行符显示为</ShowLineBreaksAs>
     <MainListViewDoubleClickAction>双击主窗口中的行时，列表视图将</MainListViewDoubleClickAction>
+    <MainListViewColumns>列表视图列</MainListViewColumns>
+    <MainListViewColumnsInfo>选择可见的列表视图列</MainListViewColumnsInfo>
     <MainListViewNothing>无</MainListViewNothing>
     <MainListViewVideoGoToPositionAndPause>转到视频位置并暂停</MainListViewVideoGoToPositionAndPause>
     <MainListViewVideoGoToPositionAndPlay>转到视频位置并播放</MainListViewVideoGoToPositionAndPlay>
@@ -1726,6 +1737,7 @@ Command line: {1} {2}
     <MpcHcDescription>Media Player Classic - Home Cinema</MpcHcDescription>
     <MpvPlayer>mpv</MpvPlayer>
     <MpvPlayerDescription>https://mpv.io/ - 免费、开源、跨平台的播放器</MpvPlayerDescription>
+    <MpvHandlesPreviewText>使用mpv处理预览文本</MpvHandlesPreviewText>
     <VlcMediaPlayer>VLC 媒体播放器</VlcMediaPlayer>
     <VlcMediaPlayerDescription>使用 VLC 媒体播放器 1.1.0 或更新版本的 libvlc.dll</VlcMediaPlayerDescription>
     <VlcBrowseToLabel>VLC程序路径 (仅在使用便携版VLC时有用)</VlcBrowseToLabel>
@@ -1738,8 +1750,11 @@ Command line: {1} {2}
     <WaveformAppearance>波形外观</WaveformAppearance>
     <WaveformGridColor>网格颜色</WaveformGridColor>
     <WaveformShowGridLines>显示网格线</WaveformShowGridLines>
+    <WaveformShowCps>显示每秒字频（CPS）</WaveformShowCps>
+    <WaveformShowWpm>显示每分词频（WPM）</WaveformShowWpm>
     <ReverseMouseWheelScrollDirection>反转鼠标滚动方向</ReverseMouseWheelScrollDirection>
     <WaveformAllowOverlap>允许重叠 (当移动/调整时长时)</WaveformAllowOverlap>
+    <WaveformSetVideoPosMoveStartEnd>移动开始/结束时间时设置视频位置</WaveformSetVideoPosMoveStartEnd>
     <WaveformFocusMouseEnter>鼠标滑过后设置焦点</WaveformFocusMouseEnter>
     <WaveformListViewFocusMouseEnter>允许当鼠标经过时将焦点设置到列表视图</WaveformListViewFocusMouseEnter>
     <WaveformBorderHitMs1>边界标记线的最短相接间隔需为</WaveformBorderHitMs1>
@@ -1830,6 +1845,7 @@ Command line: {1} {2}
     <GoToPrevious>转到上一行</GoToPrevious>
     <GoToCurrentSubtitleStart>转到当前行的起始时间点</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>转到当前行尾</GoToCurrentSubtitleEnd>
+    <GoToPreviousSubtitleAndFocusVideo>转到上一行并设置视频位置</GoToPreviousSubtitleAndFocusVideo>
     <GoToNextSubtitleAndFocusVideo>转到下一行并设置视频位置</GoToNextSubtitleAndFocusVideo>
     <ToggleFocus>在列表视图和文本窗口之间切换焦点</ToggleFocus>
     <ToggleDialogDashes>开关对话前的破折号</ToggleDialogDashes>
@@ -2284,6 +2300,8 @@ Command line: {1} {2}
     <RemoveSceneChange>移除场景变动</RemoveSceneChange>
     <GuessTimeCodes>猜测时间码...</GuessTimeCodes>
     <SeekSilence>搜索静音...</SeekSilence>
+    <CharsSecX>CPS: {0:0.00}</CharsSecX>
+    <WordsMinX>WPM: {0:0.00}</WordsMinX>
   </Waveform>
   <WaveformGenerateTimeCodes>
     <Title>猜测时间码</Title>
