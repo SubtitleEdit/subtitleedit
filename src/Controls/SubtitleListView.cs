@@ -50,23 +50,17 @@ namespace Nikse.SubtitleEdit.Controls
 
         public override bool RightToLeftLayout
         {
-            get { return base.RightToLeftLayout; }
+            get
+            {
+                return base.RightToLeftLayout;
+            }
             set
             {
-                if (value)
-                {
-                    if (ColumnIndexCps >= 0)
-                        Columns[ColumnIndexCps].TextAlign = HorizontalAlignment.Left;
-                    if (ColumnIndexWpm >= 0)
-                        Columns[ColumnIndexWpm].TextAlign = HorizontalAlignment.Left;
-                }
-                else
-                {
-                    if (ColumnIndexCps >= 0)
-                        Columns[ColumnIndexCps].TextAlign = HorizontalAlignment.Right;
-                    if (ColumnIndexWpm >= 0)
-                        Columns[ColumnIndexWpm].TextAlign = HorizontalAlignment.Right;
-                }
+                var hzAlignment = value ? HorizontalAlignment.Left : HorizontalAlignment.Right;
+                if (ColumnIndexCps >= 0)
+                    Columns[ColumnIndexCps].TextAlign = hzAlignment;
+                if (ColumnIndexWpm >= 0)
+                    Columns[ColumnIndexWpm].TextAlign = hzAlignment;
                 base.RightToLeftLayout = value;
             }
         }
