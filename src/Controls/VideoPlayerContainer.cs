@@ -292,15 +292,18 @@ namespace Nikse.SubtitleEdit.Controls
         public void SetSubtitleText(string text, Paragraph p, Subtitle subtitle)
         {
             var mpv = VideoPlayer as LibMpvDynamic;
+            LastParagraph = p;
             if (mpv != null && Configuration.Settings.General.MpvHandlesPreviewText)
             {
+                _subtitleText = text;
                 RefreshMpv(mpv, subtitle);
                 if (_subtitleTextBox.Text.Length > 0)
                     _subtitleTextBox.Text = string.Empty;
-                return;
             }
-            SubtitleText = text;
-            LastParagraph = p;
+            else
+            {
+                SubtitleText = text;
+            }
         }
 
         private Subtitle _subtitlePrev;
