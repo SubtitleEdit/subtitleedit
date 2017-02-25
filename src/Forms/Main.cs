@@ -7282,9 +7282,8 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (_subtitleListViewIndex >= 0)
             {
-                int numberOfNewLines = Utilities.GetNumberOfLines(textBoxListViewText.Text);
                 if (_doAutoBreakOnTextChanged)
-                    UiUtil.CheckAutoWrap(textBoxListViewText, new KeyEventArgs(Keys.None), numberOfNewLines);
+                    UiUtil.CheckAutoWrap(textBoxListViewText, new KeyEventArgs(Keys.None), Utilities.GetNumberOfLines(textBoxListViewText.Text));
 
                 // update _subtitle + listview
                 string text = textBoxListViewText.Text.TrimEnd();
