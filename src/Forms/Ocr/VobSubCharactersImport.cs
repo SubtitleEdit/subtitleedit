@@ -7,7 +7,7 @@ using System.Windows.Forms;
 using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Logic.Ocr.Binary;
 
-namespace Nikse.SubtitleEdit.Forms
+namespace Nikse.SubtitleEdit.Forms.Ocr
 {
     public sealed partial class VobSubCharactersImport : Form
     {

@@ -1,9 +1,9 @@
-﻿using Nikse.SubtitleEdit.Core;
-using System;
+﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Core;
 
-namespace Nikse.SubtitleEdit.Forms
+namespace Nikse.SubtitleEdit.Forms.Ocr
 {
     public sealed partial class VobSubOcrSetItalicFactor : Form
     {

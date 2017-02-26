@@ -1,18 +1,11 @@
-﻿using Nikse.SubtitleEdit.Core;
-using Nikse.SubtitleEdit.Core.BluRaySup;
-using Nikse.SubtitleEdit.Core.SubtitleFormats;
-using Nikse.SubtitleEdit.Core.TransportStream;
-using Nikse.SubtitleEdit.Core.VobSub;
-using Nikse.SubtitleEdit.Logic;
-using Nikse.SubtitleEdit.Logic.Ocr;
-using Nikse.SubtitleEdit.Logic.Ocr.Binary;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Text;
@@ -20,17 +13,25 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
+using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Core.BluRaySup;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.Core.TransportStream;
+using Nikse.SubtitleEdit.Core.VobSub;
+using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.Ocr;
+using Nikse.SubtitleEdit.Logic.Ocr.Binary;
 
-namespace Nikse.SubtitleEdit.Forms
+namespace Nikse.SubtitleEdit.Forms.Ocr
 {
     public sealed partial class VobSubOcr : PositionAndSizeForm
     {
         internal class CompareItem
         {
-            public ManagedBitmap Bitmap { get; private set; }
-            public string Name { get; private set; }
+            public ManagedBitmap Bitmap { get; }
+            public string Name { get; }
             public bool Italic { get; set; }
-            public int ExpandCount { get; private set; }
+            public int ExpandCount { get; }
             public int NumberOfForegroundColors { get; set; }
             public string Text { get; set; }
 
@@ -47,9 +48,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         internal class SubPicturesWithSeparateTimeCodes
         {
-            public SubPicture Picture { get; private set; }
-            public TimeSpan Start { get; private set; }
-            public TimeSpan End { get; private set; }
+            public SubPicture Picture { get; }
+            public TimeSpan Start { get; }
+            public TimeSpan End { get; }
 
             public SubPicturesWithSeparateTimeCodes(SubPicture subPicture, TimeSpan start, TimeSpan end)
             {
@@ -4226,10 +4227,14 @@ namespace Nikse.SubtitleEdit.Forms
             if (_ocrFixEngine == null)
                 LoadOcrFixEngine(null, LanguageString);
 
-            string line = string.Empty;
             var matches = new List<CompareMatch>();
             var parentBitmap = new NikseBitmap(bitmap);
             int minLineHeight = _binOcrLastLowercaseHeight - 3;
+            if (_binOcrLastLowercaseHeight == -1 && _nocrLastLowercaseHeight == -1)
+            { // try to guess lowercase height
+                var letters = NikseBitmapImageSplitter.SplitBitmapToLettersNew(parentBitmap, _numericUpDownPixelsIsSpace, checkBoxRightToLeft.Checked, Configuration.Settings.VobSubOcr.TopToBottom, 6, _ocrCount > 20 ? _ocrHeight : -1);
+                minLineHeight = (int)Math.Round(letters.Where(p => p.NikseBitmap != null).Average(p => p.NikseBitmap.Height) * 0.5);
+            }
             if (minLineHeight < 5)
                 minLineHeight = _nocrLastLowercaseHeight;
             if (minLineHeight < 5)
@@ -7787,7 +7792,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void inspectImageCompareMatchesForCurrentImageToolStripMenuItem_Click(object sender, EventArgs e)
+        private void InspectImageCompareMatchesForCurrentImageToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (subtitleListView1.SelectedItems.Count != 1)
                 return;
@@ -8851,7 +8856,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (subtitleListView1.SelectedItems.Count > 0 && (_ocrMethodIndex == _ocrMethodBinaryImageCompare || _ocrMethodIndex == _ocrMethodImageCompare))
             {
-                inspectImageCompareMatchesForCurrentImageToolStripMenuItem_Click(null, null);
+                InspectImageCompareMatchesForCurrentImageToolStripMenuItem_Click(null, null);
             }
         }
 
