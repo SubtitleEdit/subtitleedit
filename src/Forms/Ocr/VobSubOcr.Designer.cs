@@ -1,6 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Controls;
 
-namespace Nikse.SubtitleEdit.Forms
+namespace Nikse.SubtitleEdit.Forms.Ocr
 {
     sealed partial class VobSubOcr
     {
@@ -307,7 +307,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.inspectImageCompareMatchesForCurrentImageToolStripMenuItem.Name = "inspectImageCompareMatchesForCurrentImageToolStripMenuItem";
             this.inspectImageCompareMatchesForCurrentImageToolStripMenuItem.Size = new System.Drawing.Size(305, 22);
             this.inspectImageCompareMatchesForCurrentImageToolStripMenuItem.Text = "Inspect compare matches for current image";
-            this.inspectImageCompareMatchesForCurrentImageToolStripMenuItem.Click += new System.EventHandler(this.inspectImageCompareMatchesForCurrentImageToolStripMenuItem_Click);
+            this.inspectImageCompareMatchesForCurrentImageToolStripMenuItem.Click += new System.EventHandler(this.InspectImageCompareMatchesForCurrentImageToolStripMenuItem_Click);
             // 
             // EditLastAdditionsToolStripMenuItem
             // 

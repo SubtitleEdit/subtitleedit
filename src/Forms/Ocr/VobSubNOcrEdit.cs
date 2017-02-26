@@ -1,11 +1,11 @@
-﻿using Nikse.SubtitleEdit.Core;
-using Nikse.SubtitleEdit.Logic.Ocr;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Logic.Ocr;
 
-namespace Nikse.SubtitleEdit.Forms
+namespace Nikse.SubtitleEdit.Forms.Ocr
 {
     public partial class VobSubNOcrEdit : Form
     {
