@@ -4357,7 +4357,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 }
             }
 
-            line = GetStringWithItalicTags(matches);
+            string line = GetStringWithItalicTags(matches);
 
             if (checkBoxAutoFixCommonErrors.Checked && _ocrFixEngine != null)
                 line = _ocrFixEngine.FixOcrErrorsViaHardcodedRules(line, _lastLine, null); // TODO: Add abbreviations list
