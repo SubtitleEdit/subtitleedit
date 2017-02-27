@@ -4091,6 +4091,8 @@ namespace Nikse.SubtitleEdit.Forms
                 RefreshTimeCodeMode();
 
             SubtitleListview1.SyntaxColorAllLines(_subtitle);
+            mediaPlayer.LastParagraph = null;
+            UiUtil.ShowSubtitle(_subtitle, mediaPlayer);
         }
 
         private void CheckAndGetNewlyDownloadedMpvDlls()
@@ -19160,10 +19162,9 @@ namespace Nikse.SubtitleEdit.Forms
             }
             finally
             {
-                if (styles != null)
-                {
-                    styles.Dispose();
-                }
+                mediaPlayer.LastParagraph = null;
+                UiUtil.ShowSubtitle(_subtitle, mediaPlayer);
+                styles?.Dispose();
             }
         }
 

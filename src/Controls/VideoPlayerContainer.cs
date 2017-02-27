@@ -287,7 +287,7 @@ namespace Nikse.SubtitleEdit.Controls
             TogglePlayPause();
         }
 
-        public Paragraph LastParagraph { get; private set; }
+        public Paragraph LastParagraph { get; set; }
 
         public void SetSubtitleText(string text, Paragraph p, Subtitle subtitle)
         {
@@ -315,16 +315,24 @@ namespace Nikse.SubtitleEdit.Controls
                 return;
 
             try
-            {
-                SubtitleFormat format;
-                if (subtitle.Header != null && subtitle.Header.Contains("[V4+ Styles]"))
-                    format = new AdvancedSubStationAlpha();
-                else
-                    format = new SubRip();
+            {                
+                SubtitleFormat format = new AdvancedSubStationAlpha();
+                if (subtitle.Header == null || !subtitle.Header.Contains("[V4+ Styles]"))
+                {
+                    subtitle = new Subtitle(subtitle);
+                    var oldFontSize = Configuration.Settings.SubtitleSettings.SsaFontSize;
+                    var oldFontBold = Configuration.Settings.SubtitleSettings.SsaFontBold;
+                    Configuration.Settings.SubtitleSettings.SsaFontSize = Configuration.Settings.General.VideoPlayerPreviewFontSize;
+                    Configuration.Settings.SubtitleSettings.SsaFontBold = Configuration.Settings.General.VideoPlayerPreviewFontBold;
+                    subtitle.Header = AdvancedSubStationAlpha.DefaultHeader;
+                    Configuration.Settings.SubtitleSettings.SsaFontSize = oldFontSize;
+                    Configuration.Settings.SubtitleSettings.SsaFontBold = oldFontBold;
+                }
+
                 string text = subtitle.ToText(format);
                 if (text != _mpvTextOld || _mpvTextFileName == null)
                 {
-                    if (string.IsNullOrEmpty(_mpvTextFileName) || _subtitlePrev != subtitle)
+                    if (string.IsNullOrEmpty(_mpvTextFileName) || _subtitlePrev != subtitle || !_mpvTextFileName.EndsWith(format.Extension))
                     {
                         DeleteTempMpvFileName();
                         _mpvTextFileName = Path.GetTempFileName() + format.Extension;
