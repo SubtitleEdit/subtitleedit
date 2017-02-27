@@ -60,7 +60,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         private void NumericUpDownValueChanged(object sender, EventArgs e)
         {
-            double? milliseconds = GetTotalMilliseconds();
+            double? milliseconds = TimeCode?.TotalMilliseconds;
             if (milliseconds.HasValue)
             {
                 if (milliseconds.Value >= TimeCode.MaxTime.TotalMilliseconds - 0.1)
@@ -96,13 +96,7 @@ namespace Nikse.SubtitleEdit.Controls
             numericUpDown1.Value = NumericUpDownValue;
         }
 
-        public MaskedTextBox MaskedTextBox
-        {
-            get
-            {
-                return maskedTextBox1;
-            }
-        }
+        public MaskedTextBox MaskedTextBox => maskedTextBox1;
 
         public void SetTotalMilliseconds(double milliseconds)
         {
@@ -120,14 +114,6 @@ namespace Nikse.SubtitleEdit.Controls
                 var tc = new TimeCode(milliseconds);
                 maskedTextBox1.Text = tc.ToString().Substring(0, 9) + string.Format("{0:00}", Core.SubtitleFormats.SubtitleFormat.MillisecondsToFrames(tc.Milliseconds));
             }
-        }
-
-        public double? GetTotalMilliseconds()
-        {
-            TimeCode tc = TimeCode;
-            if (tc != null)
-                return tc.TotalMilliseconds;
-            return null;
         }
 
         public TimeCode TimeCode
