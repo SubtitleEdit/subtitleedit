@@ -427,17 +427,17 @@ https://github.com/SubtitleEdit/subtitleedit
     <Title>Экспорт BDN XML/PNG</Title>
     <ImageSettings>Настройки изображения</ImageSettings>
     <FontFamily>Шрифт:</FontFamily>
-    <FontSize>Размер шрифта:</FontSize>
+    <FontSize>Размер шрифта</FontSize>
     <FontColor>Цвет шрифта</FontColor>
     <BorderColor>Цвет границы</BorderColor>
     <BorderWidth>Ширина границы:</BorderWidth>
     <BorderStyle>Стиль границы</BorderStyle>
     <BorderStyleOneBox>Один контур</BorderStyleOneBox>
     <BorderStyleBoxForEachLine>Контур для каждой строки</BorderStyleBoxForEachLine>
-    <BorderStyleNormalWidthX>По умолчанию, Ширина={0}</BorderStyleNormalWidthX>
+    <BorderStyleNormalWidthX>Ширина={0}</BorderStyleNormalWidthX>
     <ShadowColor>Цвет тени</ShadowColor>
     <ShadowWidth>Ширина тени</ShadowWidth>
-    <Transparency>Альфа</Transparency>
+    <Transparency>Прозрачность</Transparency>
     <ImageFormat>Формат изображения</ImageFormat>
     <FullFrameImage>Заливка цветом</FullFrameImage>
     <SimpleRendering>Простая обработка</SimpleRendering>
@@ -533,7 +533,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <RemovedEmptyLine>Удалена пустая строка</RemovedEmptyLine>
     <RemovedEmptyLineAtTop>Удалена пустая строка сверху</RemovedEmptyLineAtTop>
     <RemovedEmptyLineAtBottom>Удалена пустая строка снизу</RemovedEmptyLineAtBottom>
-    <RemovedEmptyLinesUnsedLineBreaks>Удалены пустые строки/неиспользуемые разрывы строк</RemovedEmptyLinesUnsedLineBreaks>
+    <RemovedEmptyLinesUnsedLineBreaks>Удалить пустые строки/неиспользуемые разрывы строк</RemovedEmptyLinesUnsedLineBreaks>
     <EmptyLinesRemovedX>Удалено пустых строк: {0}</EmptyLinesRemovedX>
     <FixOverlappingDisplayTimes>Исправить временные наложения субтитров</FixOverlappingDisplayTimes>
     <FixShortDisplayTimes>Исправить короткое время отображения субтитров</FixShortDisplayTimes>
