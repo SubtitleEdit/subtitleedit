@@ -662,7 +662,7 @@ namespace Nikse.SubtitleEdit.Core
             SpellCheckLanguage = null;
             VideoPlayer = string.Empty;
             VideoPlayerDefaultVolume = 75;
-            VideoPlayerPreviewFontSize = 10;
+            VideoPlayerPreviewFontSize = 12;
             VideoPlayerPreviewFontBold = true;
             VideoPlayerShowStopButton = true;
             VideoPlayerShowMuteButton = true;
