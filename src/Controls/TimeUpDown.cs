@@ -243,18 +243,16 @@ namespace Nikse.SubtitleEdit.Controls
             if (e.KeyCode == Keys.Up)
             {
                 numericUpDown1.UpButton();
-                e.SuppressKeyPress = true;
             }
             else if (e.KeyCode == Keys.Down)
             {
                 numericUpDown1.DownButton();
-                e.SuppressKeyPress = true;
             }
             else if (e.KeyCode == Keys.Enter)
             {
                 TimeCodeChanged?.Invoke(this, e);
-                e.SuppressKeyPress = true;
             }
+            e.SuppressKeyPress = true;
         }
 
         private string GetMask(double val) => val >= 0 ? "00:00:00.000" : "-00:00:00.000";
