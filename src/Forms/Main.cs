@@ -1100,17 +1100,19 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-                var screen = Screen.FromControl(this);
+                var ctrlScreen = Screen.FromControl(this);
 
-                if (screen.Bounds.Width < Width)
-                    Width = screen.Bounds.Width;
-                if (screen.Bounds.Height < Height)
-                    Height = screen.Bounds.Height;
+                if (ctrlScreen.Bounds.Width < Width)
+                    Width = ctrlScreen.Bounds.Width;
+                if (ctrlScreen.Bounds.Height < Height)
+                    Height = ctrlScreen.Bounds.Height;
 
-                if (screen.Bounds.X + screen.Bounds.Width - 200 < Left)
-                    Left = screen.Bounds.X + screen.Bounds.Width - Width;
-                if (screen.Bounds.Y + screen.Bounds.Height - 100 < Top)
-                    Top = screen.Bounds.Y + screen.Bounds.Height - Height;
+                // Fix main window coordinate (Multi-Monitor issue)
+                if ((ctrlScreen.Bounds.Right < Left) || (ctrlScreen.Bounds.Bottom < Top) ||
+                    (ctrlScreen.Bounds.X > Right) || (ctrlScreen.Bounds.Y > Top))
+                {
+                    CenterToScreen();
+                }
             }
             else
             {
