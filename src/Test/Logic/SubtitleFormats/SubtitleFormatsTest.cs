@@ -358,7 +358,14 @@ Dialogue: 0,0:00:16.84,0:00:18.16,rechts,,0000,0000,0000,," + lineOneText;
             Assert.AreEqual(expected, actual);
         }
 
-
+        [TestMethod]
+        public void AssFontTagPlusDefault()
+        {
+            var s = new Subtitle();
+            s.Paragraphs.Add(new Paragraph("<font color=\"#ff0000\">Previously...</font> :)", 0, 2000));
+            var text = new AdvancedSubStationAlpha().ToText(s, string.Empty);
+            Assert.IsTrue(text.Contains("{\\c&H0000ff&}Previously...{\\c} :)"));
+        }
 
         #endregion Advanced Sub Station alpha (.ass)
 

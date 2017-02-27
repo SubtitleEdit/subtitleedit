@@ -442,7 +442,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                     if (indexOfEndFont > 0)
                     {
                         text = text.Remove(indexOfEndFont, 7);
-                        if (indexOfEndFont < text.Length - 9)
+                        if (indexOfEndFont < text.Length)
                         {
                             if (fontTag.Contains(" size="))
                             {
@@ -451,6 +451,10 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                             if (fontTag.Contains(" face="))
                             {
                                 text = text.Insert(indexOfEndFont, "{\\fn}");
+                            }
+                            if (fontTag.Contains(" color="))
+                            {
+                                text = text.Insert(indexOfEndFont, "{\\c}");
                             }
                         }
                     }
