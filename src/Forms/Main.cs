@@ -13978,7 +13978,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (textSize.Height > buttonPlayPrevious.Height - 4)
                 {
                     int newButtonHeight = 22; //(int)(textSize.Height + 7 + 0.5);
-                    UiUtil.SetButtonHeight(this, newButtonHeight, 1);
+                    UiUtil.SetButtonHeight(this, newButtonHeight, -4);
 
                     // List view
                     SubtitleListview1.InitializeTimestampColumnWidths(this);
