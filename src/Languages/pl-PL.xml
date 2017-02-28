@@ -1062,6 +1062,7 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
         <ShowHideVideo>Pokaż/ukryj wideo</ShowHideVideo>
       </ToolBar>
       <ContextMenu>
+        <SizeAllColumnsToFit>Dopasuj rozmiar wszystkich kolumn</SizeAllColumnsToFit>
         <AdvancedSubStationAlphaSetStyle>Advanced Sub Station Alpha - ustaw styl</AdvancedSubStationAlphaSetStyle>
         <SubStationAlphaSetStyle>Sub Station Alpha - ustaw styl</SubStationAlphaSetStyle>
         <SubStationAlphaStyles>Style Sub Station Alpha...</SubStationAlphaStyles>
