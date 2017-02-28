@@ -493,10 +493,10 @@ namespace Nikse.SubtitleEdit.Controls
                                 offset = -halfWaveformHeight;
                             return (float)(halfWaveformHeight - offset);
                         };
-                        var div = _wavePeaks.SampleRate / _zoomFactor;
+                        var div = _wavePeaks.SampleRate * _zoomFactor;
                         for (int x = 0; x < Width; x++)
                         {
-                            var pos = (x / div + _startPositionSeconds) * _wavePeaks.SampleRate;
+                            var pos = (_startPositionSeconds + x / div) * _wavePeaks.SampleRate;
                             int pos0 = (int)pos;
                             int pos1 = pos0;
                             pos1++;
