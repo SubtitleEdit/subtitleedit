@@ -14,7 +14,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     {
         public override string Extension
         {
-            get { return ".dfxp"; }
+            get { return ".xml"; }
         }
 
         public new const string NameOfFormat = "Netflix Timed Text";
