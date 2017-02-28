@@ -60,14 +60,14 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         private delegate UInt32 MpvClientApiVersion();
-        private MpvClientApiVersion _mpvClientApiVersion;        
+        private MpvClientApiVersion _mpvClientApiVersion;
 
         #endregion
 
         private IntPtr _libMpvDll;
         private IntPtr _mpvHandle;
         private Timer _videoLoadedTimer;
-//        private Timer _videoEndedTimer;
+        //        private Timer _videoEndedTimer;
 
         public override event EventHandler OnVideoLoaded;
         public override event EventHandler OnVideoEnded;
@@ -344,6 +344,11 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         public void LoadSubtitle(string fileName)
         {
             DoMpvCommand("sub-add", fileName, "select");
+        }
+
+        public void RemoveSubtitle()
+        {
+            DoMpvCommand("sub-remove");
         }
 
         public void ReloadSubtitle()

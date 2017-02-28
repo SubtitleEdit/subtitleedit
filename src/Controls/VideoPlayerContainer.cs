@@ -295,6 +295,11 @@ namespace Nikse.SubtitleEdit.Controls
             LastParagraph = p;
             if (mpv != null && Configuration.Settings.General.MpvHandlesPreviewText)
             {
+                if (_subtitlesHeight > 0)
+                {
+                    _subtitlesHeight = 0;
+                    VideoPlayerContainerResize(null, null);
+                }
                 _subtitleText = text;
                 RefreshMpv(mpv, subtitle);
                 if (_subtitleTextBox.Text.Length > 0)
@@ -302,6 +307,14 @@ namespace Nikse.SubtitleEdit.Controls
             }
             else
             {
+                if (!string.IsNullOrEmpty(_mpvTextFileName) || _subtitlesHeight == 0)
+                {
+                    mpv?.RemoveSubtitle();
+                    _subtitlesHeight = 57;
+                    VideoPlayerContainerResize(null, null);
+                    DeleteTempMpvFileName();
+                    _mpvTextFileName = null;
+                }
                 SubtitleText = text;
             }
         }
@@ -315,7 +328,7 @@ namespace Nikse.SubtitleEdit.Controls
                 return;
 
             try
-            {                
+            {
                 SubtitleFormat format = new AdvancedSubStationAlpha();
                 if (subtitle.Header == null || !subtitle.Header.Contains("[V4+ Styles]"))
                 {
