@@ -198,7 +198,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             "           <ttm:title></ttm:title>" + Environment.NewLine +
             "      </metadata>" + Environment.NewLine +
             "       <styling>" + Environment.NewLine +
-            "         <style id=\"s0\" tts:backgroundColor=\"black\" tts:fontStyle=\"normal\" tts:fontSize=\"16\" tts:fontFamily=\"sansSerif\" tts:color=\"white\" />" + Environment.NewLine +
+            "         <style xml:id=\"s0\" tts:backgroundColor=\"black\" tts:fontStyle=\"normal\" tts:fontSize=\"16px\" tts:fontFamily=\"sansSerif\" tts:color=\"white\" />" + Environment.NewLine +
             "      </styling>" + Environment.NewLine +
             "   </head>" + Environment.NewLine +
             "   <body style=\"s0\">" + Environment.NewLine +
@@ -307,11 +307,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         }
                     }
                 }
-
-                if (divParentNode != null && divParentNode.HasChildNodes && !divParentNode.FirstChild.HasChildNodes)
-                {
-                    divParentNode.RemoveChild(divParentNode.FirstChild);
-                }
             }
             else
             {
@@ -332,11 +327,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     XmlNode paragraph = MakeParagraph(subtitle, xml, defaultStyle, no, headerStyles, regions, p);
                     div.AppendChild(paragraph);
                     no++;
-                }
-
-                if (divParentNode != null && divParentNode.HasChildNodes && !divParentNode.FirstChild.HasChildNodes)
-                {
-                    divParentNode.RemoveChild(divParentNode.FirstChild);
                 }
             }
 
@@ -484,7 +474,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             start.InnerText = ConvertToTimeString(p.StartTime);
             paragraph.Attributes.Append(start);
 
-            XmlAttribute id = xml.CreateAttribute("id");
+            XmlAttribute id = xml.CreateAttribute("xml:id");
             id.InnerText = "p" + no;
             paragraph.Attributes.Append(id);
 
