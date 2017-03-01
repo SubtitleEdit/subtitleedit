@@ -20444,48 +20444,87 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void NetflixGlyphCheck(bool showSuccessMessage = true)
         {
-            // Get subtitle
             ReloadFromSourceView();
-            string subtitle = _subtitle.ToText(GetCurrentSubtitleFormat());
 
-            // Check
+            string fileName = string.IsNullOrEmpty(_fileName) ? "untitledSubtitle" : Path.GetFileNameWithoutExtension(_fileName);
+            List<string> messages = new List<string>();
+            string firstReportFile = null;
+
+
+            // Glyph check
             NetflixQualityReportBuilder glyphCheckReport = new NetflixQualityReportBuilder();
             NetflixGlyphChecker glyphChecker = new NetflixGlyphChecker();
             glyphChecker.Check(_subtitle, glyphCheckReport);
 
-            NetflixQualityReportBuilder whiteSpaceCheckReport = new NetflixQualityReportBuilder();
-            NetflixWhiteSpaceChecker whiteSpaceChecker = new NetflixWhiteSpaceChecker();
-            whiteSpaceChecker.Check(_subtitle, whiteSpaceCheckReport);
-
-            string fileName = string.IsNullOrEmpty(_fileName) ? "untitledSubtitle" : Path.GetFileNameWithoutExtension(_fileName);
-
-            List<string> messages = new List<string>();
-
-            if (!glyphCheckReport.IsEmpty)
+            if (!glyphCheckReport.IsEmpty)  // There are warnings
             {
                 string reportPath = Path.GetTempPath() + fileName + "_NetflixGlyphCheck.csv";
-                File.WriteAllText(reportPath, glyphCheckReport.ExportCSV());
-                messages.Add(string.Format(Configuration.Settings.Language.NetflixQualityCheck.GlyphCheckFailed, reportPath));
+
+                try
+                {
+                    File.WriteAllText(reportPath, glyphCheckReport.ExportCSV());
+
+                    string msgFormat = string.Format("{0} {1}",
+                        Configuration.Settings.Language.NetflixQualityCheck.GlyphCheckFailed,
+                        Configuration.Settings.Language.NetflixQualityCheck.ReportPrompt);
+                    messages.Add(string.Format(msgFormat , reportPath));
+
+                    firstReportFile = firstReportFile ?? reportPath;
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine(ex.ToString());
+                    messages.Add(string.Format("{0} {1}",
+                        Configuration.Settings.Language.NetflixQualityCheck.GlyphCheckFailed,
+                        Configuration.Settings.Language.NetflixQualityCheck.SavingError));
+                }
+
             }
-            else if (showSuccessMessage)
+            else if (showSuccessMessage)    // Success
             {
                 messages.Add(Configuration.Settings.Language.NetflixQualityCheck.GlyphCheckSuccessfull);
             }
 
-            if (!whiteSpaceCheckReport.IsEmpty)
+
+            // Space check
+            NetflixQualityReportBuilder whiteSpaceCheckReport = new NetflixQualityReportBuilder();
+            NetflixWhiteSpaceChecker whiteSpaceChecker = new NetflixWhiteSpaceChecker();
+            whiteSpaceChecker.Check(_subtitle, whiteSpaceCheckReport);
+
+            if (!whiteSpaceCheckReport.IsEmpty)  // There are warnings
             {
                 string reportPath = Path.GetTempPath() + fileName + "_NetflixWhiteSpaceCheck.csv";
-                File.WriteAllText(reportPath, whiteSpaceCheckReport.ExportCSV());
-                messages.Add(string.Format(Configuration.Settings.Language.NetflixQualityCheck.WhiteSpaceCheckFailed, reportPath));
+
+                try
+                {
+                    File.WriteAllText(reportPath, whiteSpaceCheckReport.ExportCSV());
+
+                    string msgFormat = string.Format("{0} {1}",
+                        Configuration.Settings.Language.NetflixQualityCheck.WhiteSpaceCheckFailed,
+                        Configuration.Settings.Language.NetflixQualityCheck.ReportPrompt);
+                    messages.Add(string.Format(msgFormat, reportPath));
+
+                    firstReportFile = firstReportFile ?? reportPath;
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine(ex.ToString());
+                    messages.Add(string.Format("{0} {1}",
+                        Configuration.Settings.Language.NetflixQualityCheck.WhiteSpaceCheckFailed,
+                        Configuration.Settings.Language.NetflixQualityCheck.SavingError));
+                }
+
             }
-            else if (showSuccessMessage)
+            else if (showSuccessMessage)    // Success
             {
                 messages.Add(Configuration.Settings.Language.NetflixQualityCheck.WhiteSpaceCheckSuccessfull);
             }
 
+            
             if (messages.Count != 0)
             {
-                MessageBox.Show(String.Join(Environment.NewLine, messages.ToArray()), Configuration.Settings.Language.Main.Menu.ToolBar.NetflixQualityCheck);
+                NetflixQCResult dialog = new NetflixQCResult(string.Join(Environment.NewLine, messages), firstReportFile);
+                dialog.ShowDialog(this);
             }
         }
 
