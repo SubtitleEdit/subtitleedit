@@ -348,6 +348,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <CodePageNumber>코드 페이지</CodePageNumber>
     <DiskFormatCode>디스크 포맷 코드</DiskFormatCode>
     <DisplayStandardCode>표준 코드 표시</DisplayStandardCode>
+    <ColorRequiresTeletext>텔레텍스트는 색상 필요!</ColorRequiresTeletext>
     <CharacterCodeTable>문자 코드 테이블</CharacterCodeTable>
     <LanguageCode>언어 코드</LanguageCode>
     <OriginalProgramTitle>원본 프로그램 제목</OriginalProgramTitle>
@@ -371,7 +372,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <MarginTop>상단 여백 (상단 정렬 자막용)</MarginTop>
     <MarginBottom>하단 여백 (하단 정렬 자막용)</MarginBottom>
     <NewLineRows>새 줄에 의해 추가된 행의 수</NewLineRows>
-    <Teletext>Teletext</Teletext>
+    <Teletext>텔레텍스트</Teletext>
     <UseBox>텍스트 주위에 상자 사용</UseBox>
     <DoubleHeight>더블 높이 사용</DoubleHeight>
     <Errors>오류</Errors>
@@ -1059,6 +1060,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
         <ShowHideVideo>비디오 표시 | 숨김</ShowHideVideo>
       </ToolBar>
       <ContextMenu>
+        <SizeAllColumnsToFit>모든 열의 크기 맞추기</SizeAllColumnsToFit>
         <AdvancedSubStationAlphaSetStyle>ASS의 스타일 설정</AdvancedSubStationAlphaSetStyle>
         <SubStationAlphaSetStyle>SSA의 스타일 설정</SubStationAlphaSetStyle>
         <SubStationAlphaStyles>SSA의 스타일...</SubStationAlphaStyles>
@@ -1738,6 +1740,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <MpcHcDescription>미디어 플레이어 클래식 - 홈 시네마</MpcHcDescription>
     <MpvPlayer>mpv</MpvPlayer>
     <MpvPlayerDescription>https://mpv.io/ - 무료, 오픈 소스, 크로스 플랫폼 미디어 플레이어</MpvPlayerDescription>
+    <MpvHandlesPreviewText>mpv가 미리보기 텍스트를 처리</MpvHandlesPreviewText>
     <VlcMediaPlayer>VLC 미디어 플레이어</VlcMediaPlayer>
     <VlcMediaPlayerDescription>VLC 미디어 플레이어 1.1.0 이후의 libvlc.dll</VlcMediaPlayerDescription>
     <VlcBrowseToLabel>VLC 경로 (VLC 포터블 버전을 사용하는 경우)</VlcBrowseToLabel>
