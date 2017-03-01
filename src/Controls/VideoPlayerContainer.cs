@@ -1323,6 +1323,7 @@ namespace Nikse.SubtitleEdit.Controls
             if (VideoPlayer != null)
             {
                 VideoPlayer.Pause();
+                VideoPlayer.CurrentPosition = 0;
                 HideAllPauseImages();
                 _pictureBoxPlay.Visible = true;
                 RefreshProgressBar();
