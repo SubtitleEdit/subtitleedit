@@ -2173,6 +2173,9 @@
             public string WhiteSpaceCheckSuccessfull { get; set; }
             public string WhiteSpaceCheckFailed { get; set; }
             public string WhiteSpaceCheckReport { get; set; }
+
+            public string ReportPrompt { get; set;  }
+            public string SavingError { get; set; }
         }
 
         public class Split

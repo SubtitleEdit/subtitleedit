@@ -2286,13 +2286,16 @@ can edit in same subtitle file (collaboration)",
 
             NetflixQualityCheck = new LanguageStructure.NetflixQualityCheck
             {
-                GlyphCheckSuccessfull = "Character validation successful.",
-                GlyphCheckFailed = "Character validation failed. Refer to the Netflix Glyph List for valid characters. Please see the full report here: {0}.",
-                GlyphCheckReport = "Invalid character {0} found at column {1}.",
+                GlyphCheckSuccessfull = "Character validation has been successful.",
+                GlyphCheckFailed = "Character validation has failed.",
+                GlyphCheckReport = "Invalid character {0} found at column {0}",
 
-                WhiteSpaceCheckSuccessfull = "White space validation successful.",
-                WhiteSpaceCheckFailed = "White space validation failed. Please see the full report here: {0}.",
-                WhiteSpaceCheckReport = "Invalid white space found at column {0}."
+                WhiteSpaceCheckSuccessfull = "White space validation has been successful.",
+                WhiteSpaceCheckFailed = "White space validation has failed.",
+                WhiteSpaceCheckReport = "Invalid white space found at column {0}.",
+
+                ReportPrompt = "Please see full report here: {0}.",
+                SavingError = "Report cannot be saved."
             };
 
             Split = new LanguageStructure.Split

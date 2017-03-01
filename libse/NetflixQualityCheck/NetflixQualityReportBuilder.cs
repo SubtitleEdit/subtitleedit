@@ -24,7 +24,7 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
             {
                 string safeContext = Context;
                 safeContext = safeContext.Replace("\"", "\"\"");
-                safeContext = safeContext.Replace("\r\n", "\n");
+                safeContext = safeContext.Replace("\r", "\\r");
                 safeContext = safeContext.Replace("\n", "\\n");
                 safeContext = string.Format("\"{0}\"", safeContext);
 

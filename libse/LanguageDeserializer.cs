@@ -5407,6 +5407,12 @@ namespace Nikse.SubtitleEdit.Core
                 case "NetflixQualityCheck/WhiteSpaceCheckReport":
                     language.NetflixQualityCheck.WhiteSpaceCheckReport = reader.Value;
                     break;
+                case "NetflixQualityCheck/ReportPrompt":
+                    language.NetflixQualityCheck.ReportPrompt = reader.Value;
+                    break;
+                case "NetflixQualityCheck/SavingError":
+                    language.NetflixQualityCheck.SavingError = reader.Value;
+                    break;
                 case "Split/Title":
                     language.Split.Title = reader.Value;
                     break;
