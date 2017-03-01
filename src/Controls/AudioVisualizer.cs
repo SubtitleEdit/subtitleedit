@@ -1298,6 +1298,16 @@ namespace Nikse.SubtitleEdit.Controls
                                 _mouseDownParagraph.StartTime.TotalMilliseconds = _wholeParagraphMinMilliseconds + 1;
                                 _mouseDownParagraph.EndTime.TotalMilliseconds = _mouseDownParagraph.StartTime.TotalMilliseconds + durationMilliseconds;
                             }
+
+                            if (PreventOverlap &&
+                                (_mouseDownParagraph.StartTime.TotalMilliseconds <= _wholeParagraphMinMilliseconds ||
+                                 _mouseDownParagraph.EndTime.TotalMilliseconds >= _wholeParagraphMaxMilliseconds))
+                            {
+                                _mouseDownParagraph.StartTime.TotalMilliseconds = oldStart;
+                                _mouseDownParagraph.EndTime.TotalMilliseconds = oldStart + durationMilliseconds;
+                                return;
+                            }
+
                             OnTimeChanged?.Invoke(this, new ParagraphEventArgs(seconds, _mouseDownParagraph, _oldParagraph, _mouseDownParagraphType) { AdjustMs = _mouseDownParagraph.StartTime.TotalMilliseconds - oldStart });
                         }
                     }
