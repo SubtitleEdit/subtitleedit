@@ -817,8 +817,8 @@ namespace Nikse.SubtitleEdit.Forms
             int selectedIndex = FirstSelectedIndex;
             int index = _subtitle.Paragraphs.IndexOf(paragraph);
 
-
             // TODO: Moving selected lines
+            // current idx must also be selected
             //if (e.MouseDownParagraphType == AudioVisualizer.MouseDownParagraphType.Whole && SubtitleListview1.SelectedIndices.Count > 1)
             //{
             //    foreach (int idx in SubtitleListview1.SelectedIndices)
@@ -833,7 +833,6 @@ namespace Nikse.SubtitleEdit.Forms
             //        }
             //    }
             //}
-
 
             if (index == _subtitleListViewIndex)
             {
@@ -2831,7 +2830,7 @@ namespace Nikse.SubtitleEdit.Forms
                     _findHelper = null;
                     _spellCheckForm = null;
 
-                    if (_resetVideo)
+                    if (_resetVideo && ModifierKeys != Keys.Shift)
                     {
                         _videoFileName = null;
                         _videoInfo = null;
@@ -3660,7 +3659,7 @@ namespace Nikse.SubtitleEdit.Forms
             FileNew();
         }
 
-        private void ResetSubtitle()
+        private void ResetSubtitle(bool forceVideoReload = false)
         {
             SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
 
@@ -3693,13 +3692,22 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripComboBoxFrameRate.Text = Configuration.Settings.General.DefaultFrameRate.ToString();
             _findHelper = null;
             _spellCheckForm = null;
-            _videoFileName = null;
-            _videoInfo = null;
-            _videoAudioTrackNumber = -1;
-            labelVideoInfo.Text = _languageGeneral.NoVideoLoaded;
-            audioVisualizer.WavePeaks = null;
-            audioVisualizer.Spectrogram = null;
-            audioVisualizer.SceneChanges = new List<double>();
+
+            if (ModifierKeys != Keys.Shift || forceVideoReload)
+            {
+                _videoFileName = null;
+                _videoInfo = null;
+                _videoAudioTrackNumber = -1;
+                labelVideoInfo.Text = _languageGeneral.NoVideoLoaded;
+                audioVisualizer.WavePeaks = null;
+                audioVisualizer.Spectrogram = null;
+                audioVisualizer.SceneChanges = new List<double>();
+                if (mediaPlayer.VideoPlayer != null)
+                {
+                    mediaPlayer.VideoPlayer.DisposeVideoPlayer();
+                    mediaPlayer.VideoPlayer = null;
+                }
+            }
 
             _sourceViewChange = false;
 
@@ -3714,12 +3722,6 @@ namespace Nikse.SubtitleEdit.Forms
             _listViewTextUndoLast = null;
             _listViewAlternateTextUndoLast = null;
             _listViewTextUndoIndex = -1;
-
-            if (mediaPlayer.VideoPlayer != null)
-            {
-                mediaPlayer.VideoPlayer.DisposeVideoPlayer();
-                mediaPlayer.VideoPlayer = null;
-            }
 
             _changeSubtitleToString = _subtitle.GetFastHashCode();
             _converted = false;
@@ -3751,7 +3753,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (ContinueNewOrExit())
             {
                 MakeHistoryForUndo(_language.BeforeNew);
-                ResetSubtitle();
+                ResetSubtitle(true);
             }
         }
 
@@ -7335,10 +7337,20 @@ namespace Nikse.SubtitleEdit.Forms
         private void TextBoxListViewTextKeyDown(object sender, KeyEventArgs e)
         {
             _listViewTextTicks = DateTime.UtcNow.Ticks;
+
             if (e.Modifiers == Keys.Shift && e.KeyCode == Keys.ShiftKey)
                 return;
             if (e.Modifiers == Keys.Control && e.KeyCode == (Keys.LButton | Keys.ShiftKey))
+            { // surround ctrl+v action with history (for undo) 
+                _listViewTextTicks = 0;
+                TimerTextUndoTick(sender, e);
+                Application.DoEvents();
+                System.Threading.Thread.Sleep(50);
+                Application.DoEvents();
+                _listViewTextTicks = 0;
+                TimerTextUndoTick(sender, e);
                 return;
+            }
 
             int numberOfLines = Utilities.GetNumberOfLines(textBoxListViewText.Text);
 
@@ -17558,6 +17570,20 @@ namespace Nikse.SubtitleEdit.Forms
             _listViewAlternateTextTicks = DateTime.UtcNow.Ticks;
             if (_subtitleAlternate == null || _subtitleAlternate.Paragraphs.Count < 1)
                 return;
+
+            if (e.Modifiers == Keys.Shift && e.KeyCode == Keys.ShiftKey)
+                return;
+            if (e.Modifiers == Keys.Control && e.KeyCode == (Keys.LButton | Keys.ShiftKey))
+            { // surround ctrl+v action with history (for undo) 
+                _listViewAlternateTextTicks = 0;
+                TimerAlternateTextUndoTick(sender, e);
+                Application.DoEvents();
+                System.Threading.Thread.Sleep(50);
+                Application.DoEvents();
+                _listViewAlternateTextTicks = 0;
+                TimerAlternateTextUndoTick(sender, e);
+                return;
+            }
 
             int numberOfLines = Utilities.GetNumberOfLines(textBoxListViewTextAlternate.Text);
 
