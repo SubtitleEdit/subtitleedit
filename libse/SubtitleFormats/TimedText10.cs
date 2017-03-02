@@ -200,6 +200,20 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             "       <styling>" + Environment.NewLine +
             "         <style id=\"s0\" tts:backgroundColor=\"black\" tts:fontStyle=\"normal\" tts:fontSize=\"16\" tts:fontFamily=\"sansSerif\" tts:color=\"white\" />" + Environment.NewLine +
             "      </styling>" + Environment.NewLine +
+            "       <layout>" + Environment.NewLine +
+            // Left column
+            "           <region tts:extent=\"80% 40%\" tts:origin=\"10% 10%\" tts:displayAlign=\"before\" tts:textAlign=\"start\" xml:id=\"topLeft\" />" + Environment.NewLine +
+            "           <region tts:extent=\"80% 40%\" tts:origin=\"10% 30%\" tts:displayAlign=\"center\" tts:textAlign=\"start\" xml:id=\"centerLeft\" />" + Environment.NewLine +
+            "           <region tts:extent=\"80% 40%\" tts:origin=\"10% 50%\" tts:displayAlign=\"after\" tts:textAlign=\"start\" xml:id=\"bottomLeft\" />" + Environment.NewLine +
+            // Midle column
+            "           <region tts:extent=\"80% 40%\" tts:origin=\"10% 10%\" tts:displayAlign=\"before\" tts:textAlign=\"center\" xml:id=\"topCenter\" />" + Environment.NewLine +
+            "           <region tts:extent=\"80% 40%\" tts:origin=\"10% 30%\" tts:displayAlign=\"center\" tts:textAlign=\"center\" xml:id=\"centerСenter\" />" + Environment.NewLine +
+            "           <region tts:extent=\"80% 40%\" tts:origin=\"10% 50%\" tts:displayAlign=\"after\" tts:textAlign=\"center\" xml:id=\"bottomCenter\" />" + Environment.NewLine +
+            // Right column
+            "           <region tts:extent=\"80% 40%\" tts:origin=\"10% 10%\" tts:displayAlign=\"before\" tts:textAlign=\"end\" xml:id=\"topRight\" />" + Environment.NewLine +
+            "           <region tts:extent=\"80% 40%\" tts:origin=\"10% 30%\" tts:displayAlign=\"center\" tts:textAlign=\"end\" xml:id=\"centerRight\" />" + Environment.NewLine +
+            "           <region tts:extent=\"80% 40%\" tts:origin=\"10% 50%\" tts:displayAlign=\"after\" tts:textAlign=\"end\" xml:id=\"bottomRight\" />" + Environment.NewLine +
+            "       </layout>" + Environment.NewLine +
             "   </head>" + Environment.NewLine +
             "   <body style=\"s0\">" + Environment.NewLine +
             "       <div />" + Environment.NewLine +
@@ -258,8 +272,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 div = xml.DocumentElement.SelectSingleNode("//ttml:body", nsmgr).FirstChild;
 
             int no = 0;
-            var headerStyles = GetStylesFromHeader(subtitle.Header);
-            var regions = GetRegionsFromHeader(subtitle.Header);
+            var headerStyles = GetStylesFromHeader(ToUtf8XmlString(xml));
+            var regions = GetRegionsFromHeader(ToUtf8XmlString(xml));
             var languages = GetUsedLanguages(subtitle);
             if (languages.Count > 0)
             {
@@ -456,12 +470,34 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             string text = p.Text.RemoveControlCharactersButWhiteSpace();
 
             string region = GetEffect(p, "region");
-            if (text.StartsWith("{\\an8}", StringComparison.Ordinal) && string.IsNullOrEmpty(region))
+            if (string.IsNullOrEmpty(region))
             {
-                if (regions.Contains("top"))
-                    region = "top";
-                else if (regions.Contains("topCenter"))
+                if (text.StartsWith("{\\an1}", StringComparison.Ordinal) && regions.Contains("bottomLeft"))
+                    region = "bottomLeft";
+
+                if (text.StartsWith("{\\an2}", StringComparison.Ordinal) && regions.Contains("bottomCenter"))
+                    region = "bottomCenter";
+
+                if (text.StartsWith("{\\an3}", StringComparison.Ordinal) && regions.Contains("bottomRight"))
+                    region = "bottomRight";
+
+                if (text.StartsWith("{\\an4}", StringComparison.Ordinal) && regions.Contains("centerLeft"))
+                    region = "centerLeft";
+
+                if (text.StartsWith("{\\an5}", StringComparison.Ordinal) && regions.Contains("centerСenter"))
+                    region = "centerСenter";
+
+                if (text.StartsWith("{\\an6}", StringComparison.Ordinal) && regions.Contains("centerRight"))
+                    region = "centerRight";
+
+                if (text.StartsWith("{\\an7}", StringComparison.Ordinal) && regions.Contains("topLeft"))
+                    region = "topLeft";
+
+                if (text.StartsWith("{\\an8}", StringComparison.Ordinal) && regions.Contains("topCenter"))
                     region = "topCenter";
+
+                if (text.StartsWith("{\\an9}", StringComparison.Ordinal) && regions.Contains("topRight"))
+                    region = "topRight";
             }
             text = Utilities.RemoveSsaTags(text);
             text = HtmlUtil.FixInvalidItalicTags(text);
@@ -641,7 +677,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     p.Style = LookupForAttribute("style", pNode, nsmgr);
 
                     List<string> effects = new List<string>();
-                    effects.Add("region");
                     effects.Add("xml:space");
                     effects.Add("tts:fontSize");
                     effects.Add("tts:fontFamily");
@@ -661,10 +696,37 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         }
                     }
 
-                    string region = GetEffect(p, "region");
-                    if (region == "top" || region == "topCenter" || topRegions.Contains(region))
+                    // Convert region to {\an} tag or add it to effects
+                    string region = LookupForAttribute("region", pNode, nsmgr);
+                    if (!string.IsNullOrEmpty(region))
                     {
-                        p.Text = "{\\an8}" + p.Text;
+                        bool regionCorrespondToTag = false;
+
+                        List<KeyValuePair<string, string>> regionTags = new List<KeyValuePair<string, string>>();
+                        regionTags.Add(new KeyValuePair<string, string>("bottomLeft", "{\\an1}"));
+                        regionTags.Add(new KeyValuePair<string, string>("bottomCenter", "{\\an2}"));
+                        regionTags.Add(new KeyValuePair<string, string>("bottomRight", "{\\an3}"));
+                        regionTags.Add(new KeyValuePair<string, string>("centerLeft", "{\\an4}"));
+                        regionTags.Add(new KeyValuePair<string, string>("centerСenter", "{\\an5}"));
+                        regionTags.Add(new KeyValuePair<string, string>("centerRight", "{\\an6}"));
+                        regionTags.Add(new KeyValuePair<string, string>("topLeft", "{\\an7}"));
+                        regionTags.Add(new KeyValuePair<string, string>("topCenter", "{\\an8}"));
+                        regionTags.Add(new KeyValuePair<string, string>("topRight", "{\\an9}"));
+
+                        foreach (var regionTag in regionTags)
+                        {
+                            if (region == regionTag.Key)
+                            {
+                                p.Text = regionTag.Value + p.Text;
+                                regionCorrespondToTag = true;
+                                break;
+                            }
+                        }
+                        
+                        if (!regionCorrespondToTag)
+                        {
+                            SetEffect(p, "region", region);
+                        }
                     }
 
                     string lang = LookupForAttribute("xml:lang", pNode, nsmgr);
