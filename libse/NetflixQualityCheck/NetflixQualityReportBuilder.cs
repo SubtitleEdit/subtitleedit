@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -55,6 +56,11 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
             Records.ForEach(r => csvBuilder.AppendLine(r.ToCSVRow()));
 
             return csvBuilder.ToString();
+        }
+
+        public void SaveCSV(string reportPath)
+        {
+            File.WriteAllText(reportPath, ExportCSV(), Encoding.UTF8);
         }
 
         public bool IsEmpty {
