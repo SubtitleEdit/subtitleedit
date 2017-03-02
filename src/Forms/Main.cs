@@ -14117,7 +14117,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             // current movie Position
             double videoPositionInMilliseconds = mediaPlayer.CurrentPosition * TimeCode.BaseUnit;
-            if (!mediaPlayer.IsPaused)
+            if (!mediaPlayer.IsPaused && videoPositionInMilliseconds > Configuration.Settings.General.SetStartEndHumanDelay)
                 videoPositionInMilliseconds -= Configuration.Settings.General.SetStartEndHumanDelay;
 
             var tc = new TimeCode(videoPositionInMilliseconds);

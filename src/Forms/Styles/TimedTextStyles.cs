@@ -321,8 +321,8 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
                     // normal | bold
                     comboBoxFontWeight.SelectedIndex = 0;
-                    if (fontStyle.Equals("bold", StringComparison.OrdinalIgnoreCase))
-                        comboBoxFontStyle.SelectedIndex = 1;
+                    if (fontWeight.Equals("bold", StringComparison.OrdinalIgnoreCase))
+                        comboBoxFontWeight.SelectedIndex = 1;
 
                     Color color = Color.White;
                     try
@@ -458,7 +458,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
                         if (attrToChange == null)
                         {
-                            attrToChange = _xml.CreateAttribute(tag);
+                            attrToChange = _xml.CreateAttribute(tag, TimedText10.TTMLStylingNamespace);
                             style.Attributes.Append(attrToChange);
                         }
 
