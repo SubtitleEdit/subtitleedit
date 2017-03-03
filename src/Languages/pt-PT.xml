@@ -2,7 +2,7 @@
 <Language Name="português (Portugal)">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.5.1</Version>
+    <Version>3.5.2</Version>
     <TranslatedBy>------------------------------------------------------------------------------------------------
 Traduzido para Português de Portugal, por moob
 Email: mailto:moob42341@gmail.com</TranslatedBy>
@@ -1691,7 +1691,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <AutoDetectAnsiEncoding>Auto detectar codificação ANSI</AutoDetectAnsiEncoding>
     <SubtitleLineMaximumLength>Comprimento máximo de única linha</SubtitleLineMaximumLength>
     <MaximumCharactersPerSecond>Máximo caracteres/seg</MaximumCharactersPerSecond>
-	<MaximumWordssPerMinute>Máximo palavras/min</MaximumWordssPerMinute>
+    <MaximumWordssPerMinute>Máximo palavras/min</MaximumWordssPerMinute>
     <AutoWrapWhileTyping>Moldar o texto ao escrever</AutoWrapWhileTyping>
     <DurationMinimumMilliseconds>Duração mínima milissegundos</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>Duração máxima milissegundos</DurationMaximumMilliseconds>
@@ -1743,7 +1743,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <MpcHcDescription>Media Player Classic - Home Cinema</MpcHcDescription>
     <MpvPlayer>mpv</MpvPlayer>
     <MpvPlayerDescription>https://mpv.io/ - leitor multimédia gratuito e de Código aberto</MpvPlayerDescription>
-	<MpvHandlesPreviewText>Visualização de texto no mpv</MpvHandlesPreviewText>
+    <MpvHandlesPreviewText>Visualização de texto no mpv</MpvHandlesPreviewText>
     <VlcMediaPlayer>VLC media player</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll do VLC media player 1.1.0 ou superior</VlcMediaPlayerDescription>
     <VlcBrowseToLabel>Directoria do VLC (só é necessário se estiver a usar a versão portátil do VLC)</VlcBrowseToLabel>
@@ -1760,7 +1760,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <WaveformShowWpm>Mostrar palavras/min</WaveformShowWpm>
     <ReverseMouseWheelScrollDirection>Inverter direcção da roda do rato</ReverseMouseWheelScrollDirection>
     <WaveformAllowOverlap>Permitir sobreposição ao mover ou redimensionar</WaveformAllowOverlap>
-	<WaveformSetVideoPosMoveStartEnd>Definir a posição do vídeo ao mover o início ou fim</WaveformSetVideoPosMoveStartEnd>
+    <WaveformSetVideoPosMoveStartEnd>Definir a posição do vídeo ao mover o início ou fim</WaveformSetVideoPosMoveStartEnd>
     <WaveformFocusMouseEnter>Destacar a entrada do cursor do rato</WaveformFocusMouseEnter>
     <WaveformListViewFocusMouseEnter>Destacar também a lista de visualização na entrada do cursor do rato</WaveformListViewFocusMouseEnter>
     <WaveformBorderHitMs1>O acerto da marca do contorno deve estar dentro</WaveformBorderHitMs1>
@@ -1851,7 +1851,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <GoToPrevious>Ir para a linha anterior</GoToPrevious>
     <GoToCurrentSubtitleStart>Ir para o início da linha actual</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>Ir para o final da linha actual</GoToCurrentSubtitleEnd>
-	<GoToPreviousSubtitleAndFocusVideo>Ir para a linha anterior e definir a posição do vídeo</GoToPreviousSubtitleAndFocusVideo>
+    <GoToPreviousSubtitleAndFocusVideo>Ir para a linha anterior e definir a posição do vídeo</GoToPreviousSubtitleAndFocusVideo>
     <GoToNextSubtitleAndFocusVideo>Ir para a próxima linha e definir a posição de vídeo</GoToNextSubtitleAndFocusVideo>
     <ToggleFocus>Alternar o realce entre a caixa de texto da legenda e o separador (Lista) na janela principal</ToggleFocus>
     <ToggleDialogDashes>Alternar hífens de diálogo</ToggleDialogDashes>
