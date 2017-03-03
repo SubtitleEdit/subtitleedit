@@ -138,7 +138,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static TimeCode DecodeTimeCode(byte[] buffer, int index)
         {
-            return new TimeCode(0, 0, 0, FramesToMilliseconds((buffer[index + 1] << 8) + buffer[index]));
+            return new TimeCode(0, 0, 0, (int)FramesToMilliseconds((buffer[index + 1] << 8) + buffer[index]));
         }
 
     }
