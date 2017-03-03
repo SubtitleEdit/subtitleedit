@@ -547,6 +547,7 @@ namespace Nikse.SubtitleEdit.Core
         public bool AutoWrapLineWhileTyping { get; set; }
         public double SubtitleMaximumCharactersPerSeconds { get; set; }
         public double SubtitleOptimalCharactersPerSeconds { get; set; }
+        public bool CharactersPerSecondsIgnoreWhiteSpace { get; set; }
         public double SubtitleMaximumWordsPerMinute { get; set; }
         public string SpellCheckLanguage { get; set; }
         public string VideoPlayer { get; set; }
@@ -1497,6 +1498,9 @@ namespace Nikse.SubtitleEdit.Core
             subNode = node.SelectSingleNode("SubtitleOptimalCharactersPerSeconds");
             if (subNode != null)
                 settings.General.SubtitleOptimalCharactersPerSeconds = Convert.ToDouble(subNode.InnerText, CultureInfo.InvariantCulture);
+            subNode = node.SelectSingleNode("CharactersPerSecondsIgnoreWhiteSpace");
+            if (subNode != null)
+                settings.General.CharactersPerSecondsIgnoreWhiteSpace = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("SubtitleMaximumWordsPerMinute");
             if (subNode != null)
                 settings.General.SubtitleMaximumWordsPerMinute = Convert.ToDouble(subNode.InnerText, CultureInfo.InvariantCulture);
@@ -3124,7 +3128,8 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("SetStartEndHumanDelay", settings.General.SetStartEndHumanDelay.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AutoWrapLineWhileTyping", settings.General.AutoWrapLineWhileTyping.ToString());
                 textWriter.WriteElementString("SubtitleMaximumCharactersPerSeconds", settings.General.SubtitleMaximumCharactersPerSeconds.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("SubtitleOptimalCharactersPerSeconds", settings.General.SubtitleOptimalCharactersPerSeconds.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("SubtitleOptimalCharactersPerSeconds", settings.General.SubtitleOptimalCharactersPerSeconds.ToString(CultureInfo.InvariantCulture));                
+                textWriter.WriteElementString("CharactersPerSecondsIgnoreWhiteSpace", settings.General.CharactersPerSecondsIgnoreWhiteSpace.ToString());
                 textWriter.WriteElementString("SubtitleMaximumWordsPerMinute", settings.General.SubtitleMaximumWordsPerMinute.ToString(CultureInfo.InvariantCulture));                
                 textWriter.WriteElementString("SpellCheckLanguage", settings.General.SpellCheckLanguage);
                 textWriter.WriteElementString("VideoPlayer", settings.General.VideoPlayer);
