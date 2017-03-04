@@ -7755,8 +7755,13 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 progressBar1.Visible = true;
                 int imagesSavedCount = 0;
                 var sb = new StringBuilder();
+                sb.AppendLine("<!DOCTYPE html>");
                 sb.AppendLine("<html>");
-                sb.AppendLine("<head><title>Subtitle images</title></head>");
+                sb.AppendLine("<head>");
+                sb.AppendLine("<title>Subtitle images</title></head>");
+                sb.AppendLine("   <meta charset=\"UTF - 8\" />");
+                sb.AppendLine("   <title>Subtitle images</title>");
+                sb.AppendLine("</head>");
                 sb.AppendLine("<body>");
                 _fromMenuItem = true;
                 for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
