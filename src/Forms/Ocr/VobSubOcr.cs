@@ -7758,7 +7758,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 sb.AppendLine("<!DOCTYPE html>");
                 sb.AppendLine("<html>");
                 sb.AppendLine("<head>");
-                sb.AppendLine("<title>Subtitle images</title></head>");
                 sb.AppendLine("   <meta charset=\"UTF - 8\" />");
                 sb.AppendLine("   <title>Subtitle images</title>");
                 sb.AppendLine("</head>");
