@@ -19,7 +19,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
         private string _videoCodecId;
 
         private int _subtitleRipTrackNumber;
-        private List<MatroskaSubtitle> _subtitleRip = new List<MatroskaSubtitle>();
+        private readonly List<MatroskaSubtitle> _subtitleRip = new List<MatroskaSubtitle>();
         private List<MatroskaTrackInfo> _tracks;
 
         private readonly Element _segmentElement;
@@ -137,7 +137,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
                 _stream.Seek(element.EndPosition, SeekOrigin.Begin);
             }
 
-            return (clusterTimeCode + trackStartTime) * _timecodeScale / 1000000;
+            return (long)Math.Round(GetTimescaledToMilliseconds(clusterTimeCode + trackStartTime));
         }
 
         private void ReadVideoElement(Element videoElement)
@@ -317,13 +317,18 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
                     case ElementId.Duration:
                         // Duration of the segment (based on TimecodeScale)
                         _duration = element.DataSize == 4 ? ReadFloat32() : ReadFloat64();
-                        _duration /= _timecodeScale * 1000000.0;
+                        _duration = GetTimescaledToMilliseconds(_duration);
                         break;
                     default:
                         _stream.Seek(element.DataSize, SeekOrigin.Current);
                         break;
                 }
             }
+        }
+
+        private double GetTimescaledToMilliseconds(double time)
+        {
+            return time * _timecodeScale / 1000000.0;
         }
 
         private void ReadTracksElement(Element tracksElement)
@@ -344,7 +349,14 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
             }
         }
 
-        /// <param name="duration">Duration of the segment in milliseconds.</param>
+        /// <summary>
+        /// Get info about matroska file
+        /// </summary>
+        /// <param name="frameRate">Frame rate</param>
+        /// <param name="pixelWidth">Width in pixels</param>
+        /// <param name="pixelHeight">Height in pixels</param>
+        /// <param name="duration">Duration in milliseconds</param>
+        /// <param name="videoCodec">Codec</param>
         public void GetInfo(out double frameRate, out int pixelWidth, out int pixelHeight, out double duration, out string videoCodec)
         {
             ReadSegmentInfoAndTracks();
@@ -406,7 +418,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
                         var duration = (long)ReadUInt((int)element.DataSize);
                         if (subtitle != null)
                         {
-                            subtitle.Duration = duration;
+                            subtitle.Duration = (long)Math.Round(GetTimescaledToMilliseconds(duration));
                         }
                         break;
                     default:
@@ -458,7 +470,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
             var data = new byte[dataLength];
             _stream.Read(data, 0, dataLength);
 
-            return new MatroskaSubtitle(data, clusterTimeCode + timeCode);
+            return new MatroskaSubtitle(data, (long)Math.Round(GetTimescaledToMilliseconds(clusterTimeCode + timeCode)));
         }
 
         public List<MatroskaSubtitle> GetSubtitle(int trackNumber, LoadMatroskaCallback progressCallback)
