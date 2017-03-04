@@ -67,6 +67,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         private IntPtr _libMpvDll;
         private IntPtr _mpvHandle;
         private Timer _videoLoadedTimer;
+        private double? _pausePosition = null; // Hack to hold precise seeking when paused
         //        private Timer _videoEndedTimer;
 
         public override event EventHandler OnVideoLoaded;
@@ -187,6 +188,13 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 if (_mpvHandle == IntPtr.Zero)
                     return 0;
 
+                if (_pausePosition != null)
+                {
+                    if (_pausePosition < 0)
+                        return 0;
+                    return _pausePosition.Value;
+                }
+
                 int mpvFormatDouble = 5;
                 double d = 0;
                 _mpvGetPropertyDouble(_mpvHandle, GetUtf8Bytes("time-pos"), mpvFormatDouble, ref d);
@@ -196,6 +204,9 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             {
                 if (_mpvHandle == IntPtr.Zero)
                     return;
+
+                if (IsPaused && value <= Duration)
+                    _pausePosition = value;
 
                 DoMpvCommand("seek", value.ToString(CultureInfo.InvariantCulture), "absolute");
             }
@@ -233,6 +244,8 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
         public override void Play()
         {
+            _pausePosition = null;
+
             if (_mpvHandle == IntPtr.Zero)
                 return;
 
@@ -252,6 +265,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         public override void Stop()
         {
             Pause();
+            _pausePosition = null;
             CurrentPosition = 0;
         }
 
