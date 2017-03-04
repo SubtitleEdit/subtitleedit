@@ -7777,7 +7777,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         sb.AppendFormat(CultureInfo.InvariantCulture, "#{3}:{0}->{1}<div style='text-align:center'><img src='{2}' />", p.StartTime.ToShortString(), p.EndTime.ToShortString(), fileName, i + 1);
                         if (!string.IsNullOrEmpty(p.Text))
                         {
-                            var backgroundColor = System.Drawing.ColorTranslator.ToHtml(subtitleListView1.GetBackgroundColor(i));
+                            var backgroundColor = ColorTranslator.ToHtml(subtitleListView1.GetBackgroundColor(i));
                             var text = WebUtility.HtmlEncode(p.Text.Replace("<i>", "@1__").Replace("</i>", "@2__")).Replace("@1__", "<i>").Replace("@2__", "</i>").Replace(Environment.NewLine, "<br />");
                             sb.Append("<br /><div style='font-size:22px; background-color:").Append(backgroundColor).Append("'>").Append(text).Append("</div>");
                         }
@@ -7789,7 +7789,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 sb.AppendLine("</body>");
                 sb.AppendLine("</html>");
                 var htmlFileName = Path.Combine(folderBrowserDialog1.SelectedPath, "index.html");
-                File.WriteAllText(htmlFileName, sb.ToString());
+                File.WriteAllText(htmlFileName, sb.ToString(), Encoding.UTF8);
                 progressBar1.Visible = false;
                 MessageBox.Show(string.Format("{0} images saved in {1}", imagesSavedCount, folderBrowserDialog1.SelectedPath));
                 Process.Start(htmlFileName);
