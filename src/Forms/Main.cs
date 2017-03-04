@@ -4059,12 +4059,9 @@ namespace Nikse.SubtitleEdit.Forms
             _timerAutoSave.Stop();
 
             CheckAndGetNewlyDownloadedMpvDlls();
-            mediaPlayer.VideoPlayerContainerResize(null, null);
 
-            if (!string.IsNullOrEmpty(_videoFileName) &&
-                (oldVideoPlayer != Configuration.Settings.General.VideoPlayer && mediaPlayer.VideoPlayer != null) ||
-                (oldMpvVideoOutput != Configuration.Settings.General.MpvVideoOutput && Configuration.Settings.General.VideoPlayer.Equals("MPV", StringComparison.OrdinalIgnoreCase))
-                )
+            if (!string.IsNullOrEmpty(_videoFileName) && oldVideoPlayer != Configuration.Settings.General.VideoPlayer && mediaPlayer.VideoPlayer != null ||
+                (oldMpvVideoOutput != Configuration.Settings.General.MpvVideoOutput && Configuration.Settings.General.VideoPlayer.Equals("MPV", StringComparison.OrdinalIgnoreCase)))
             {
                 string vfn = _videoFileName;
                 CloseVideoToolStripMenuItemClick(null, null);
@@ -4094,7 +4091,9 @@ namespace Nikse.SubtitleEdit.Forms
 
             SubtitleListview1.SyntaxColorAllLines(_subtitle);
             mediaPlayer.LastParagraph = null;
+            Application.DoEvents();
             UiUtil.ShowSubtitle(_subtitle, mediaPlayer);
+            mediaPlayer.VideoPlayerContainerResize(null, null);
         }
 
         private void CheckAndGetNewlyDownloadedMpvDlls()
