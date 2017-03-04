@@ -491,10 +491,19 @@ namespace Nikse.SubtitleEdit.Core
                             string rest = s.Substring(mid - j + 1).TrimStart();
                             if (rest.Length > 0 && char.IsUpper(rest[0]))
                             {
-                                if (mid - j > 5 && s[mid - j - 1] == ' ' && @"!?.".Contains(s[mid - j - 2]))
+                                if (mid - j > 5 && s[mid - j - 1] == ' ')
                                 {
-                                    splitPos = mid - j;
-                                    break;
+                                    if ("!?.".Contains(s[mid - j - 2]))
+                                    {
+                                        splitPos = mid - j;
+                                        break;
+                                    }
+                                    var first = s.Substring(0, mid - j - 1);
+                                    if (first.EndsWith(".\"", StringComparison.Ordinal) || first.EndsWith("!\"", StringComparison.Ordinal) || first.EndsWith("?\"", StringComparison.Ordinal))
+                                    {
+                                        splitPos = mid - j;
+                                        break;
+                                    }
                                 }
                             }
                         }
