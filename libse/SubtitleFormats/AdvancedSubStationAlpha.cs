@@ -504,11 +504,17 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                     string subTag = fontTag.Substring(fontStart + tag.Length, fontEnd - (fontStart + tag.Length));
                     if (tag.Contains("color"))
                     {
-                        subTag = subTag.Replace("#", string.Empty);
+                        Color c;
+                        try
+                        {
+                            c = ColorTranslator.FromHtml(subTag);
+                        }
+                        catch
+                        {
 
-                        // switch from rrggbb to bbggrr
-                        if (subTag.Length >= 6)
-                            subTag = subTag.Remove(subTag.Length - 6) + subTag.Substring(subTag.Length - 2, 2) + subTag.Substring(subTag.Length - 4, 2) + subTag.Substring(subTag.Length - 6, 2);
+                            c = Color.White;
+                        }                        
+                        subTag = c.B.ToString("X2") + c.G.ToString("X2") + c.R.ToString("X2"); // use bbggrr
                     }
                     fontTag = fontTag.Remove(fontStart, fontEnd - fontStart + 1);
                     if (start < text.Length)
