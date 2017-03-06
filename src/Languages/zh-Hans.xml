@@ -958,7 +958,7 @@ Command line: {1} {2}
         <DurationsBridgeGap>桥接行间间隔...</DurationsBridgeGap>
         <FixCommonErrors>修复常规错误(&amp;F)...</FixCommonErrors>
         <StartNumberingFrom>编号起始位置...</StartNumberingFrom>
-        <RemoveTextForHearingImpaired>删除妨碍听觉的文本...</RemoveTextForHearingImpaired>
+        <RemoveTextForHearingImpaired>删除听障辅助文本...</RemoveTextForHearingImpaired>
         <ChangeCasing>更改大小写...</ChangeCasing>
         <ChangeFrameRate>更改帧率...</ChangeFrameRate>
         <ChangeSpeedInPercent>更改速度 (百分比)...</ChangeSpeedInPercent>
@@ -1247,9 +1247,9 @@ Command line: {1} {2}
     <CommonErrorsFixed>常规错误已修复</CommonErrorsFixed>
     <BeforeRenumbering>重新编号之前</BeforeRenumbering>
     <RenumberedStartingFromX>重新编号起始位置: {0}</RenumberedStartingFromX>
-    <BeforeRemovalOfTextingForHearingImpaired>删除妨碍听觉的文本之前</BeforeRemovalOfTextingForHearingImpaired>
-    <TextingForHearingImpairedRemovedOneLine>已删除妨碍听觉的文本: 1 行</TextingForHearingImpairedRemovedOneLine>
-    <TextingForHearingImpairedRemovedXLines>已删除妨碍听觉的文本: {0} 行</TextingForHearingImpairedRemovedXLines>
+    <BeforeRemovalOfTextingForHearingImpaired>删除听障辅助文本之前</BeforeRemovalOfTextingForHearingImpaired>
+    <TextingForHearingImpairedRemovedOneLine>已删除听障辅助文本: 1 行</TextingForHearingImpairedRemovedOneLine>
+    <TextingForHearingImpairedRemovedXLines>已删除听障辅助文本: {0} 行</TextingForHearingImpairedRemovedXLines>
     <SubtitleSplitted>字幕已分割</SubtitleSplitted>
     <SubtitleAppendPrompt>这将追加一个已有的字幕到当前加载的字幕中，它应当
 已与视频文件同步。
@@ -1598,7 +1598,7 @@ Command line: {1} {2}
     <NotInCharacterGroup>未包含在字符组 ([test]) 中</NotInCharacterGroup>
   </RegularExpressionContextMenu>
   <RemoveTextFromHearImpaired>
-    <Title>删除妨碍听觉的文本</Title>
+    <Title>删除听障辅助文本</Title>
     <RemoveTextConditions>删除文本条件</RemoveTextConditions>
     <RemoveTextBetween>删除文本条件</RemoveTextBetween>
     <SquareBrackets>'[' 和 ']'</SquareBrackets>
