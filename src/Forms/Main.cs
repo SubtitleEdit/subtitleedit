@@ -2975,6 +2975,7 @@ namespace Nikse.SubtitleEdit.Forms
                     timer1.Stop();
                 }
                 ResetShowEarlierOrLater();
+                FixRightToLeftDependingOnLanguage();
             }
             else
             {
@@ -3731,6 +3732,29 @@ namespace Nikse.SubtitleEdit.Forms
             ShowStatus(_language.New);
 
             ResetShowEarlierOrLater();
+
+            // Set default RTL or LTR
+            if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0)
+            {
+                if (Configuration.Settings.General.RightToLeftMode)
+                {
+                    textBoxListViewTextAlternate.RightToLeft = RightToLeft.Yes;
+                }
+                else
+                {
+                    textBoxListViewTextAlternate.RightToLeft = RightToLeft.No;
+                }
+            }
+            if (Configuration.Settings.General.RightToLeftMode)
+            {
+                textBoxListViewText.RightToLeft = RightToLeft.Yes;
+                textBoxSource.RightToLeft = RightToLeft.Yes;
+            }
+            else
+            {
+                textBoxListViewText.RightToLeft = RightToLeft.No;
+                textBoxSource.RightToLeft = RightToLeft.No;
+            }
         }
 
         private void ResetShowEarlierOrLater()
@@ -13432,6 +13456,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, _videoFileName, _subtitleAlternateFileName, Configuration.Settings.General.CurrentVideoOffsetInMs);
                 Configuration.Settings.Save();
                 UpdateRecentFilesUI();
+                MainResize();
             }
         }
 
@@ -13567,6 +13592,7 @@ namespace Nikse.SubtitleEdit.Forms
                 _subtitleAlternate.CalculateFrameNumbersFromTimeCodes(CurrentFrameRate);
 
             SetupAlternateEdit();
+            FixRightToLeftDependingOnLanguage();
             return true;
         }
 
@@ -14063,28 +14089,92 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void MainResize()
         {
-            if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null &&
-                _subtitleAlternate.Paragraphs.Count > 0)
+            var tbText = textBoxListViewText;
+            var tbOriginal = textBoxListViewTextAlternate;
+            int firstLeft = 236;
+
+            var lbText = labelText;
+            var lbTextOriginal = labelAlternateText;
+
+            var lbSingleLine = labelTextLineLengths;
+            var lbSingleLineOriginal = labelTextAlternateLineLengths;
+
+            tbText.Left = firstLeft;
+            tbOriginal.Left = firstLeft;
+            lbText.Left = firstLeft;
+            lbTextOriginal.Left = firstLeft;
+            tbText.Width = groupBoxEdit.Width - (tbText.Left + 10 + (groupBoxEdit.Width - buttonUnBreak.Left));
+
+            if (Configuration.Settings.General.RightToLeftMode)
             {
-                textBoxListViewText.Width = (groupBoxEdit.Width - (textBoxListViewText.Left + 10)) / 2;
-                textBoxListViewTextAlternate.Left = textBoxListViewText.Left + textBoxListViewText.Width + 3;
-                labelAlternateText.Left = textBoxListViewTextAlternate.Left;
+                tbText = textBoxListViewTextAlternate;
+                tbOriginal = textBoxListViewText;
 
-                textBoxListViewTextAlternate.Width = textBoxListViewText.Width;
+                lbText = labelAlternateText;
+                lbTextOriginal = labelText;
 
-                labelAlternateCharactersPerSecond.Left = textBoxListViewTextAlternate.Left +
-                                                         (textBoxListViewTextAlternate.Width -
-                                                          labelAlternateCharactersPerSecond.Width);
-                labelTextAlternateLineLengths.Left = textBoxListViewTextAlternate.Left;
+                lbSingleLine = labelTextAlternateLineLengths;
+                lbSingleLineOriginal = labelTextLineLengths;
+            }
+            tbText.Left = firstLeft;
+            lbText.Left = firstLeft;
+            lbSingleLine.Left = firstLeft;
+
+            if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0)
+            {
+                tbText.Width = (groupBoxEdit.Width - (tbText.Left + 10)) / 2;
+                tbOriginal.Left = tbText.Left + tbText.Width + 3;
+                lbTextOriginal.Left = tbOriginal.Left;
+
+                tbOriginal.Width = tbText.Width;
+
+                labelAlternateCharactersPerSecond.Left = tbOriginal.Left + (tbOriginal.Width - labelAlternateCharactersPerSecond.Width);
+                lbSingleLineOriginal.Left = tbOriginal.Left;
                 labelAlternateSingleLine.Left = labelTextAlternateLineLengths.Left + labelTextAlternateLineLengths.Width;
-                labelTextAlternateLineTotal.Left = textBoxListViewTextAlternate.Left +
-                                                   (textBoxListViewTextAlternate.Width - labelTextAlternateLineTotal.Width);
+                labelTextAlternateLineTotal.Left = tbOriginal.Left + (tbOriginal.Width - labelTextAlternateLineTotal.Width);
             }
 
-            labelCharactersPerSecond.Left = textBoxListViewText.Left +
-                                            (textBoxListViewText.Width - labelCharactersPerSecond.Width);
-            labelTextLineTotal.Left = textBoxListViewText.Left + (textBoxListViewText.Width - labelTextLineTotal.Width);
+            labelAlternateCharactersPerSecond.Top = labelCharactersPerSecond.Top;
+            labelCharactersPerSecond.Left = tbText.Left + (tbText.Width - labelCharactersPerSecond.Width);
+            labelTextLineTotal.Left = tbText.Left + (tbText.Width - labelTextLineTotal.Width);
             SubtitleListview1.AutoSizeAllColumns(this);
+
+            FixRightToLeftDependingOnLanguage();
+        }
+
+        private void FixRightToLeftDependingOnLanguage()
+        {
+            if (Configuration.Settings.General.RightToLeftMode)
+            {
+                if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0)
+                {
+                    var la = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitleAlternate);
+                    if ((la == null && Configuration.Settings.General.RightToLeftMode) || la == "ar" || la == "he")
+                    {
+                        textBoxListViewTextAlternate.RightToLeft = RightToLeft.Yes;
+                    }
+                    else
+                    {
+                        textBoxListViewTextAlternate.RightToLeft = RightToLeft.No;
+                    }
+                }
+                var l = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle);
+                if ((l == null && Configuration.Settings.General.RightToLeftMode) || l == "ar" || l == "he")
+                {
+                    textBoxListViewText.RightToLeft = RightToLeft.Yes;
+                    textBoxSource.RightToLeft = RightToLeft.Yes;
+                }
+                else
+                {
+                    textBoxListViewText.RightToLeft = RightToLeft.No;
+                    textBoxSource.RightToLeft = RightToLeft.No;
+                }
+            }
+            else
+            {
+                textBoxListViewText.RightToLeft = RightToLeft.No;
+                textBoxSource.RightToLeft = RightToLeft.No;
+            }
         }
 
         private void PlayCurrent()
@@ -17743,9 +17833,7 @@ namespace Nikse.SubtitleEdit.Forms
             textBoxListViewText.Width = (groupBoxEdit.Width - (textBoxListViewText.Left + 8 + buttonUnBreak.Width));
             textBoxListViewText.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right | AnchorStyles.Bottom;
 
-            labelCharactersPerSecond.Left = textBoxListViewText.Left + (textBoxListViewText.Width - labelCharactersPerSecond.Width);
-            labelTextLineTotal.Left = textBoxListViewText.Left + (textBoxListViewText.Width - labelTextLineTotal.Width);
-
+            MainResize();
             SetTitle();
         }
 
@@ -18965,26 +19053,33 @@ namespace Nikse.SubtitleEdit.Forms
         private void ToolStripMenuItemRightToLeftModeClick(object sender, EventArgs e)
         {
             toolStripMenuItemRightToLeftMode.Checked = !toolStripMenuItemRightToLeftMode.Checked;
-            if (textBoxListViewText.RightToLeft == RightToLeft.Yes)
+            if (!toolStripMenuItemRightToLeftMode.Checked)
             {
                 RightToLeft = RightToLeft.No;
                 textBoxListViewText.RightToLeft = RightToLeft.No;
+                textBoxListViewTextAlternate.RightToLeft = RightToLeft.No;
                 SubtitleListview1.RightToLeft = RightToLeft.No;
                 SubtitleListview1.RightToLeftLayout = false;
                 textBoxSource.RightToLeft = RightToLeft.No;
                 mediaPlayer.TextRightToLeft = RightToLeft.No;
+                textBoxSearchWord.RightToLeft = RightToLeft.No;
                 Configuration.Settings.General.RightToLeftMode = false;
             }
             else
             {
                 //RightToLeft = RightToLeft.Yes; - is this better? TimeUpDown custom control needs to support RTL before enabling this
                 textBoxListViewText.RightToLeft = RightToLeft.Yes;
+                textBoxListViewTextAlternate.RightToLeft = RightToLeft.Yes;
                 SubtitleListview1.RightToLeft = RightToLeft.Yes;
                 SubtitleListview1.RightToLeftLayout = true;
                 textBoxSource.RightToLeft = RightToLeft.Yes;
                 mediaPlayer.TextRightToLeft = RightToLeft.Yes;
+                textBoxSearchWord.RightToLeft = RightToLeft.Yes;
                 Configuration.Settings.General.RightToLeftMode = true;
             }
+            MainResize();
+            TextBoxListViewTextTextChanged(null, null);
+            textBoxListViewTextAlternate_TextChanged(null, null);
         }
 
         private void joinSubtitlesToolStripMenuItem_Click(object sender, EventArgs e)

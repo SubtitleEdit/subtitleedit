@@ -118,6 +118,8 @@ namespace Nikse.SubtitleEdit.Forms
             string defaultFromLanguage = LanguageAutoDetect.AutoDetectGoogleLanguage(encoding); // Guess language via encoding
             if (string.IsNullOrEmpty(defaultFromLanguage))
                 defaultFromLanguage = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle); // Guess language based on subtitle contents
+            if (defaultFromLanguage == "he")
+                defaultFromLanguage = "iw";
 
             FillComboWithLanguages(comboBoxFrom);
             int i = 0;
