@@ -603,10 +603,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private static string HtmlToPlainText(string html)
         {
-            const string tagWhiteSpace = @"(>|$)(\W|\n|\r)+<"; //matches one or more (white space or line breaks) between '>' and '<'
-            const string stripFormatting = @"<[^>]*(>|$)"; //match any character between '<' and '>', even when end tag is missing
-            var stripFormattingRegex = new Regex(stripFormatting, RegexOptions.Multiline);
-            var tagWhiteSpaceRegex = new Regex(tagWhiteSpace, RegexOptions.Multiline);
+            var stripFormattingRegex = new Regex(@"<[^>]*(>|$)", RegexOptions.Multiline); // match any character between '<' and '>', even when end tag is missing
+            var tagWhiteSpaceRegex = new Regex(@"(>|$)(\W|\n|\r)+<", RegexOptions.Multiline); // matches one or more (white space or line breaks) between '>' and '<'
 
             // Decode html specific characters
             var text = System.Net.WebUtility.HtmlDecode(html);
@@ -615,6 +613,10 @@ namespace Nikse.SubtitleEdit.Forms
             text = tagWhiteSpaceRegex.Replace(text, "><");
 
             // Find new lines
+            text = text.Replace("<BR>", Environment.NewLine);
+            text = text.Replace("<br>", Environment.NewLine);
+            text = text.Replace("<br />", Environment.NewLine);
+            text = text.Replace("<br/>", Environment.NewLine);
             text = text.Replace("<HR>", Environment.NewLine + Environment.NewLine);
             text = text.Replace("<hr>", Environment.NewLine + Environment.NewLine);
             text = text.Replace("<hr />", Environment.NewLine + Environment.NewLine);
@@ -624,7 +626,6 @@ namespace Nikse.SubtitleEdit.Forms
             text = text.Replace(Environment.NewLine + Environment.NewLine + Environment.NewLine, Environment.NewLine + Environment.NewLine);
             text = text.Replace(Environment.NewLine + Environment.NewLine + Environment.NewLine, Environment.NewLine + Environment.NewLine);
 
-            // Strip formatting
             text = stripFormattingRegex.Replace(text, string.Empty);
 
             return text;
