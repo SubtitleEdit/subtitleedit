@@ -27,16 +27,43 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void InitUi()
         {
-            lblText.Text = Message;
+            bool isAnyLinks = FilesToLocate.Count != 0;
+            Label usedLabel;
 
-            FilesToLocate
-                .Where(Message.Contains)
-                .ToList()
-                .ForEach(s => lblText.Links.Add(Message.IndexOf(s), s.Length, s));
+            if (isAnyLinks)
+            {
+                lblText.Visible = false;
+                lnkLblText.Text = Message;
+                usedLabel = lnkLblText;
 
-            Width = Math.Max(lblText.Width + lblText.Left * 3, 300);
+                FilesToLocate
+                    .Where(Message.Contains)
+                    .ToList()
+                    .ForEach(s => lnkLblText.Links.Add(Message.IndexOf(s), s.Length, s));
+            }
+            else
+            {
+                lnkLblText.Visible = false;
+                lblText.Text = Message;
+                usedLabel = lblText;                
+            }
 
-            btnOpen.Visible = FilesToLocate.Count != 0;
+            Width = Math.Max(usedLabel.Width + usedLabel.Left * 3, 300);
+
+            btnOpen.Visible = isAnyLinks;
+            int buttonsPosMid;
+
+            if (isAnyLinks)
+            {
+                buttonsPosMid = btnOpen.Left + ((btnOk.Left + btnOk.Width) - btnOpen.Left) / 2;
+            }
+            else
+            {
+                buttonsPosMid = btnOk.Left + btnOk.Width / 2;
+            }
+            
+            btnOpen.Left = btnOpen.Left - buttonsPosMid + Width / 2;
+            btnOk.Left = btnOk.Left - buttonsPosMid + Width / 2;
         }
 
         protected override bool ProcessDialogKey(Keys keyData)
@@ -56,13 +83,18 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void btnOpen_Click(object sender, EventArgs e)
         {
-            Process.Start("explorer.exe", string.Format(@"/select,""{0}"" ", FilesToLocate[0]));
+            OpenFileLocation(FilesToLocate[0]);
             Close();
         }
 
         private void lblText_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Process.Start("explorer.exe", string.Format(@"/select,""{0}"" ", e.Link.LinkData));
+            OpenFileLocation(e.Link.LinkData as string);
+        }
+
+        private void OpenFileLocation(string filePath)
+        {
+            Process.Start("explorer.exe", string.Format(@"/select,""{0}"" ", filePath));
         }
     }
 }
