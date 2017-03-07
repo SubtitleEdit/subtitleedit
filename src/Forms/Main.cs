@@ -20462,7 +20462,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 try
                 {
-                    File.WriteAllText(reportPath, glyphCheckReport.ExportCSV());
+                    glyphCheckReport.SaveCSV(reportPath);
 
                     string msgFormat = string.Format("{0} {1}",
                         Configuration.Settings.Language.NetflixQualityCheck.GlyphCheckFailed,
@@ -20497,7 +20497,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 try
                 {
-                    File.WriteAllText(reportPath, whiteSpaceCheckReport.ExportCSV());
+                    whiteSpaceCheckReport.SaveCSV(reportPath);
 
                     string msgFormat = string.Format("{0} {1}",
                         Configuration.Settings.Language.NetflixQualityCheck.WhiteSpaceCheckFailed,
