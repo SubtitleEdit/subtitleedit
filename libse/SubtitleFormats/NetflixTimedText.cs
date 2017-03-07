@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 using System.Xml;
+using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
@@ -108,7 +109,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             nsmgr.AddNamespace("ttm", "http://www.w3.org/ns/10/ttml#metadata");
 
             const string xmlStructure = @"<?xml version='1.0' encoding='utf-8'?>
-<tt xmlns='http://www.w3.org/ns/ttml' xmlns:ttm='http://www.w3.org/ns/ttml#metadata' xmlns:tts='http://www.w3.org/ns/ttml#styling' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>
+<tt xmlns='http://www.w3.org/ns/ttml' xmlns:ttm='http://www.w3.org/ns/ttml#metadata' xmlns:tts='http://www.w3.org/ns/ttml#styling' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xml:lang='en'>
     <head>
         <metadata>
             <ttm:title>Netflix Subtitle</ttm:title>
@@ -299,6 +300,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             if (subtitle.Header == null)
                 subtitle.Header = xmlString;
             return xmlString;
+        }
+
+        public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
+        {
+            base.LoadSubtitle(subtitle, lines, fileName);
+
+            // Remove regions
+            subtitle.Paragraphs.ForEach(p => 
+                p.Text = Regex.Replace(p.Text, @"^({\\an[1-9]})", string.Empty));
         }
 
         public override bool HasStyleSupport
