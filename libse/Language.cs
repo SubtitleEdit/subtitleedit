@@ -2288,7 +2288,7 @@ can edit in same subtitle file (collaboration)",
             {
                 GlyphCheckSuccessfull = "Character validation has been successful.",
                 GlyphCheckFailed = "Character validation has failed.",
-                GlyphCheckReport = "Invalid character {0} found at column {0}",
+                GlyphCheckReport = "Invalid character {0} found at column {1}",
 
                 WhiteSpaceCheckSuccessfull = "White space validation has been successful.",
                 WhiteSpaceCheckFailed = "White space validation has failed.",
