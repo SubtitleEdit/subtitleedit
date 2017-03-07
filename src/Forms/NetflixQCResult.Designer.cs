@@ -30,12 +30,12 @@
         {
             this.btnOk = new System.Windows.Forms.Button();
             this.btnOpen = new System.Windows.Forms.Button();
-            this.lblText = new System.Windows.Forms.LinkLabel();
+            this.lnkLblText = new System.Windows.Forms.LinkLabel();
+            this.lblText = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // btnOk
             // 
-            this.btnOk.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.btnOk.Location = new System.Drawing.Point(162, 64);
             this.btnOk.Name = "btnOk";
             this.btnOk.Size = new System.Drawing.Size(75, 23);
@@ -46,7 +46,6 @@
             // 
             // btnOpen
             // 
-            this.btnOpen.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.btnOpen.Location = new System.Drawing.Point(46, 64);
             this.btnOpen.Name = "btnOpen";
             this.btnOpen.Size = new System.Drawing.Size(110, 23);
@@ -55,16 +54,25 @@
             this.btnOpen.UseVisualStyleBackColor = true;
             this.btnOpen.Click += new System.EventHandler(this.btnOpen_Click);
             // 
+            // lnkLblText
+            // 
+            this.lnkLblText.AutoSize = true;
+            this.lnkLblText.Location = new System.Drawing.Point(12, 9);
+            this.lnkLblText.Name = "lnkLblText";
+            this.lnkLblText.Size = new System.Drawing.Size(55, 13);
+            this.lnkLblText.TabIndex = 3;
+            this.lnkLblText.TabStop = true;
+            this.lnkLblText.Text = "linkLabel1";
+            this.lnkLblText.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lblText_LinkClicked);
+            // 
             // lblText
             // 
             this.lblText.AutoSize = true;
             this.lblText.Location = new System.Drawing.Point(12, 9);
             this.lblText.Name = "lblText";
-            this.lblText.Size = new System.Drawing.Size(55, 13);
-            this.lblText.TabIndex = 3;
-            this.lblText.TabStop = true;
-            this.lblText.Text = "linkLabel1";
-            this.lblText.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lblText_LinkClicked);
+            this.lblText.Size = new System.Drawing.Size(35, 13);
+            this.lblText.TabIndex = 4;
+            this.lblText.Text = "label1";
             // 
             // NetflixQCResult
             // 
@@ -72,6 +80,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(296, 99);
             this.Controls.Add(this.lblText);
+            this.Controls.Add(this.lnkLblText);
             this.Controls.Add(this.btnOpen);
             this.Controls.Add(this.btnOk);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
@@ -87,6 +96,7 @@
 
         private System.Windows.Forms.Button btnOk;
         private System.Windows.Forms.Button btnOpen;
-        private System.Windows.Forms.LinkLabel lblText;
+        private System.Windows.Forms.LinkLabel lnkLblText;
+        private System.Windows.Forms.Label lblText;
     }
 }
