@@ -12480,16 +12480,14 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (e.KeyCode == Keys.D && e.Modifiers == Keys.Control) //SelectFirstSelectedItemOnly
             {
-                if (SubtitleListview1.SelectedItems.Count > 0)
+                int itemsCount = SubtitleListview1.SelectedItems.Count - 1;
+                if (itemsCount > 0)
                 {
-                    bool skipFirst = true;
-                    foreach (ListViewItem item in SubtitleListview1.SelectedItems)
+                    do
                     {
-                        if (skipFirst)
-                            skipFirst = false;
-                        else
-                            item.Selected = false;
+                        SubtitleListview1.SelectedItems[itemsCount--].Selected = false;
                     }
+                    while (itemsCount > 0);
                     e.SuppressKeyPress = true;
                 }
             }
