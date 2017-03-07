@@ -20448,7 +20448,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             string fileName = string.IsNullOrEmpty(_fileName) ? "untitledSubtitle" : Path.GetFileNameWithoutExtension(_fileName);
             List<string> messages = new List<string>();
-            string firstReportFile = null;
+            List<string> reportFiles = new List<string>();
 
 
             // Glyph check
@@ -20469,7 +20469,7 @@ namespace Nikse.SubtitleEdit.Forms
                         Configuration.Settings.Language.NetflixQualityCheck.ReportPrompt);
                     messages.Add(string.Format(msgFormat , reportPath));
 
-                    firstReportFile = firstReportFile ?? reportPath;
+                    reportFiles.Add(reportPath);
                 }
                 catch (Exception ex)
                 {
@@ -20504,7 +20504,7 @@ namespace Nikse.SubtitleEdit.Forms
                         Configuration.Settings.Language.NetflixQualityCheck.ReportPrompt);
                     messages.Add(string.Format(msgFormat, reportPath));
 
-                    firstReportFile = firstReportFile ?? reportPath;
+                    reportFiles.Add(reportPath);
                 }
                 catch (Exception ex)
                 {
@@ -20523,7 +20523,7 @@ namespace Nikse.SubtitleEdit.Forms
             
             if (messages.Count != 0)
             {
-                NetflixQCResult dialog = new NetflixQCResult(string.Join(Environment.NewLine, messages), firstReportFile);
+                NetflixQCResult dialog = new NetflixQCResult(string.Join(Environment.NewLine, messages), reportFiles);
                 dialog.ShowDialog(this);
             }
         }
