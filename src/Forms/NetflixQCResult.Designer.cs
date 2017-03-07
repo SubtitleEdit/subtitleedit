@@ -30,7 +30,7 @@
         {
             this.btnOk = new System.Windows.Forms.Button();
             this.btnOpen = new System.Windows.Forms.Button();
-            this.lblText = new System.Windows.Forms.Label();
+            this.lblText = new System.Windows.Forms.LinkLabel();
             this.SuspendLayout();
             // 
             // btnOk
@@ -57,15 +57,14 @@
             // 
             // lblText
             // 
-            this.lblText.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.lblText.AutoSize = true;
             this.lblText.Location = new System.Drawing.Point(12, 9);
             this.lblText.Name = "lblText";
-            this.lblText.Size = new System.Drawing.Size(90, 13);
-            this.lblText.TabIndex = 2;
-            this.lblText.Text = "Message to show";
+            this.lblText.Size = new System.Drawing.Size(55, 13);
+            this.lblText.TabIndex = 3;
+            this.lblText.TabStop = true;
+            this.lblText.Text = "linkLabel1";
+            this.lblText.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lblText_LinkClicked);
             // 
             // NetflixQCResult
             // 
@@ -88,6 +87,6 @@
 
         private System.Windows.Forms.Button btnOk;
         private System.Windows.Forms.Button btnOpen;
-        private System.Windows.Forms.Label lblText;
+        private System.Windows.Forms.LinkLabel lblText;
     }
 }
