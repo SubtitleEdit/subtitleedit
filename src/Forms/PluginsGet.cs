@@ -67,10 +67,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             catch (Exception exception)
             {
-                labelPleaseWait.Text = string.Empty;
-                buttonOK.Enabled = true;
-                buttonDownload.Enabled = true;
-                listViewGetPlugins.Enabled = true;
+                ChangeControlsState(true);
                 MessageBox.Show(exception.Message + Environment.NewLine + Environment.NewLine + exception.StackTrace);
             }
         }
@@ -190,9 +187,7 @@ namespace Nikse.SubtitleEdit.Forms
             try
             {
                 labelPleaseWait.Text = Configuration.Settings.Language.General.PleaseWait;
-                buttonOK.Enabled = false;
-                buttonDownload.Enabled = false;
-                listViewGetPlugins.Enabled = false;
+                ChangeControlsState(false);
                 Refresh();
                 Cursor = Cursors.WaitCursor;
 
@@ -207,10 +202,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             catch (Exception exception)
             {
-                labelPleaseWait.Text = string.Empty;
-                buttonOK.Enabled = true;
-                buttonDownload.Enabled = true;
-                listViewGetPlugins.Enabled = true;
+                ChangeControlsState(true);
                 Cursor = Cursors.Default;
                 MessageBox.Show(exception.Message + Environment.NewLine + Environment.NewLine + exception.StackTrace);
             }
@@ -222,6 +214,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (e.Error != null)
             {
                 MessageBox.Show(Configuration.Settings.Language.GetTesseractDictionaries.DownloadFailed);
+                ChangeControlsState(true);
                 DialogResult = DialogResult.Cancel;
                 return;
             }
@@ -236,6 +229,7 @@ namespace Nikse.SubtitleEdit.Forms
                 catch (Exception exception)
                 {
                     MessageBox.Show("Unable to create plugin folder " + pluginsFolder + ": " + exception.Message);
+                    ChangeControlsState(true);
                     return;
                 }
             }
@@ -260,10 +254,7 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             MessageBox.Show(string.Format("{0} already exists - unable to overwrite it", fullPath));
                             Cursor = Cursors.Default;
-                            labelPleaseWait.Text = string.Empty;
-                            buttonOK.Enabled = true;
-                            buttonDownload.Enabled = true;
-                            listViewGetPlugins.Enabled = true;
+                            ChangeControlsState(true);
                             return;
                         }
                     }
@@ -271,10 +262,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             Cursor = Cursors.Default;
-            labelPleaseWait.Text = string.Empty;
-            buttonOK.Enabled = true;
-            buttonDownload.Enabled = true;
-            listViewGetPlugins.Enabled = true;
+            ChangeControlsState(true);
             if (_updatingAllPlugins)
             {
                 _updatingAllPluginsCount++;
@@ -288,6 +276,17 @@ namespace Nikse.SubtitleEdit.Forms
                 MessageBox.Show(string.Format(_language.PluginXDownloaded, _downloadedPluginName));
             }
             ShowInstalledPlugins();
+        }
+
+        private void ChangeControlsState(bool enable)
+        {
+            if (enable)
+            {
+                labelPleaseWait.Text = string.Empty;
+            }
+            buttonOK.Enabled = enable;
+            buttonDownload.Enabled = enable;
+            listViewGetPlugins.Enabled = enable;
         }
 
         private void linkLabelOpenDictionaryFolder_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -364,9 +363,7 @@ namespace Nikse.SubtitleEdit.Forms
             try
             {
                 labelPleaseWait.Text = Configuration.Settings.Language.General.PleaseWait;
-                buttonOK.Enabled = false;
-                buttonDownload.Enabled = false;
-                listViewGetPlugins.Enabled = false;
+                ChangeControlsState(false);
                 Refresh();
                 Cursor = Cursors.WaitCursor;
                 _updatingAllPluginsCount = 0;
@@ -381,10 +378,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             catch (Exception exception)
             {
-                labelPleaseWait.Text = string.Empty;
-                buttonOK.Enabled = true;
-                buttonDownload.Enabled = true;
-                listViewGetPlugins.Enabled = true;
+                ChangeControlsState(true);
                 Cursor = Cursors.Default;
                 MessageBox.Show(exception.Message + Environment.NewLine + Environment.NewLine + exception.StackTrace);
             }
