@@ -7235,8 +7235,7 @@ namespace Nikse.SubtitleEdit.Forms
                         // Remove music symbols.
                         p.Text = p.Text.Replace("♪", string.Empty);
                         p.Text = p.Text.Replace("♫", string.Empty);
-                        p.Text = HtmlUtil.RemoveHtmlTags(p.Text);
-                        p.Text = Utilities.RemoveSsaTags(p.Text).Trim();
+                        p.Text = HtmlUtil.RemoveHtmlTags(p.Text, true).Trim();
                         SubtitleListview1.SetText(item.Index, p.Text);
 
                         if (_subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
@@ -7246,8 +7245,7 @@ namespace Nikse.SubtitleEdit.Forms
                             {
                                 original.Text = original.Text.Replace("♪", string.Empty);
                                 original.Text = original.Text.Replace("♫", string.Empty);
-                                original.Text = HtmlUtil.RemoveHtmlTags(original.Text);
-                                original.Text = Utilities.RemoveSsaTags(original.Text).Trim();
+                                original.Text = HtmlUtil.RemoveHtmlTags(original.Text, true).Trim();
                                 SubtitleListview1.SetAlternateText(item.Index, original.Text);
                             }
                         }
