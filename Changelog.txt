@@ -1,6 +1,22 @@
 ﻿Subtitle Edit Changelog
 
 
+3.5.3 (xrd May 2017) BETA
+* NEW:
+   * New ...
+* IMPROVED:
+   * Updated Chinese translation - thx Leon
+   * Import plain text now also supports input as HTML 
+* FIXED:
+   * Fixed original file name bug in "Undo" - thx darnn
+   * Fixed non default timecode scales in MKV - thx mkver
+   * Fix layout of translator mode in RTL mode - thx darnn
+   * Fixed possible crash in "CleanAutoBackupFolder" - thx kaser2010
+   * Fix missing UTF-8 tag in OCR HTML export - thx dgonyier
+   * Fixed issue regarding "Fix dialogs on one line" - thx ingo
+   * Fixed possible crash in EBU STL - thx Elena
+
+
 3.5.2 (3rd March 2017)
 * NEW:
    * Added optional list view columns "chars/sec" + "words/min"
