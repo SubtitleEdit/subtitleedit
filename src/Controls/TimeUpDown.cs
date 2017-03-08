@@ -50,9 +50,14 @@ namespace Nikse.SubtitleEdit.Controls
             if (_splitChars == null)
             {
                 var splitChars = new List<char> { ':', ',', '.' };
-                if (CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator.Length == 1)
+                string cultureSeparator = CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator;
+                if (cultureSeparator.Length == 1)
                 {
-                    splitChars.Add(Convert.ToChar(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator));
+                    char ch = Convert.ToChar(cultureSeparator);
+                    if (!splitChars.Contains(ch))
+                    {
+                        splitChars.Add(ch);
+                    }
                 }
                 _splitChars = splitChars.ToArray();
             }
