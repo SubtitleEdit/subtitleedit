@@ -841,6 +841,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 //note that 0xC1—0xCF combines characters - http://en.wikipedia.org/wiki/ISO/IEC_6937
                 var encoding = Encoding.GetEncoding(20269);
+                if (index + 2 > buffer.Length)
+                    return string.Empty;
                 string next = encoding.GetString(buffer, index + 1, 1);
                 switch (buffer[index])
                 {
