@@ -15,7 +15,7 @@
    * Fix missing UTF-8 tag in OCR HTML export - thx dgonyier
    * Fixed issue regarding "Fix dialogs on one line" - thx ingo
    * Fixed possible crash in EBU STL - thx Elena
-
+   * Fixed crash in "Add to user dictionary" in OCR - thx alfix0
 
 3.5.2 (3rd March 2017)
 * NEW:
