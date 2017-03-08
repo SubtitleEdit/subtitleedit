@@ -198,7 +198,6 @@ namespace Nikse.SubtitleEdit.Forms
                 var wc = new WebClient { Proxy = Utilities.GetProxy() };
                 wc.DownloadDataCompleted += wc_DownloadDataCompleted;
                 wc.DownloadDataAsync(new Uri(url));
-                Cursor = Cursors.Default;
             }
             catch (Exception exception)
             {
@@ -215,6 +214,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 MessageBox.Show(Configuration.Settings.Language.GetTesseractDictionaries.DownloadFailed);
                 ChangeControlsState(true);
+                Cursor = Cursors.Default;
                 DialogResult = DialogResult.Cancel;
                 return;
             }
@@ -230,6 +230,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     MessageBox.Show("Unable to create plugin folder " + pluginsFolder + ": " + exception.Message);
                     ChangeControlsState(true);
+                    Cursor = Cursors.Default;
                     return;
                 }
             }
@@ -374,7 +375,6 @@ namespace Nikse.SubtitleEdit.Forms
                     wc.DownloadDataCompleted += wc_DownloadDataCompleted;
                     wc.DownloadDataAsync(new Uri(_updateAllListUrls[i]));
                 }
-                Cursor = Cursors.Default;
             }
             catch (Exception exception)
             {
