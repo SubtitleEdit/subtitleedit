@@ -6,7 +6,8 @@
    * New ...
 * IMPROVED:
    * Updated Chinese translation - thx Leon
-   * Import plain text now also supports input as HTML 
+   * Import plain text now also supports input as HTML
+   * Added "Total words" to statistics - thx Barbara
 * FIXED:
    * Fixed original file name bug in "Undo" - thx darnn
    * Fixed non default timecode scales in MKV - thx mkver

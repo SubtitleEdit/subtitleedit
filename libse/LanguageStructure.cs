@@ -2230,6 +2230,7 @@
             public string LengthInFormatXinCharactersY { get; set; }
             public string NumberOfCharactersInTextOnly { get; set; }
             public string TotalCharsPerSecond { get; set; }
+            public string TotalWords { get; set; }
             public string NumberOfItalicTags { get; set; }
             public string NumberOfBoldTags { get; set; }
             public string NumberOfUnderlineTags { get; set; }

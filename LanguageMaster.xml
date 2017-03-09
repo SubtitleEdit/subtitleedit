@@ -2048,6 +2048,7 @@ can edit in same subtitle file (collaboration)</Information>
     <LengthInFormatXinCharactersY>Number of characters as {0}: {1:#,###,##0}</LengthInFormatXinCharactersY>
     <NumberOfCharactersInTextOnly>Number of characters in text only: {0:#,###,##0}</NumberOfCharactersInTextOnly>
     <TotalCharsPerSecond>Total characters/second: {0:0.0} seconds</TotalCharsPerSecond>
+    <TotalWords>Total words in subtitle: {0}</TotalWords>
     <NumberOfItalicTags>Number of italic tags: {0}</NumberOfItalicTags>
     <NumberOfBoldTags>Number of bold tags: {0}</NumberOfBoldTags>
     <NumberOfUnderlineTags>Number of underline tags: {0}</NumberOfUnderlineTags>
