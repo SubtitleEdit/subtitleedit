@@ -24,6 +24,8 @@
     <StartTime>Temps initial</StartTime>
     <EndTime>Temps final</EndTime>
     <Duration>Durée</Duration>
+    <CharsPerSec>Carac./s.</CharsPerSec>
+    <WordsPerMin>Mots/min.</WordsPerMin>
     <NumberSymbol>#</NumberSymbol>
     <Number>Numéro</Number>
     <Text>Texte</Text>
@@ -350,6 +352,7 @@ Note: Vérifiez l'espace disque disponible.</WaveFileMalformed>
     <CodePageNumber>Numéro page de code</CodePageNumber>
     <DiskFormatCode>Code format de disque</DiskFormatCode>
     <DisplayStandardCode>Afficher code standard</DisplayStandardCode>
+    <ColorRequiresTeletext>Couleurs exigent Télétexte !</ColorRequiresTeletext>
     <CharacterCodeTable>Table de caractères</CharacterCodeTable>
     <LanguageCode>Code de langue</LanguageCode>
     <OriginalProgramTitle>Titre du programme original</OriginalProgramTitle>
@@ -369,6 +372,10 @@ Note: Vérifiez l'espace disque disponible.</WaveFileMalformed>
     <Import>Importer...</Import>
     <TextAndTimingInformation>Texte et informations de synchronisation</TextAndTimingInformation>
     <JustificationCode>Justification</JustificationCode>
+    <VerticalPosition>Position verticale</VerticalPosition>
+    <MarginTop>Haut de marge (pour les sous-titres alignés en haut)</MarginTop>
+    <MarginBottom>Bas de marge (pour les sous-titres alignés en bas)</MarginBottom>
+    <NewLineRows>Nombre de rangées ajoutées par une nouvelle ligne</NewLineRows>
     <Teletext>Télétexte</Teletext>
     <UseBox>Afficher le texte en boîte</UseBox>
     <DoubleHeight>Afficher le texte à double hauteur</DoubleHeight>
@@ -1057,6 +1064,7 @@ Note: Vérifiez l'espace disque disponible.</WaveFileMalformed>
         <ShowHideVideo>Montrer/cacher vidéo</ShowHideVideo>
       </ToolBar>
       <ContextMenu>
+        <SizeAllColumnsToFit>Ajuster la taille des colonnes</SizeAllColumnsToFit>
         <AdvancedSubStationAlphaSetStyle>Advanced SubStation Alpha - Configurer style</AdvancedSubStationAlphaSetStyle>
         <SubStationAlphaSetStyle>SubStation Alpha - Configurer style</SubStationAlphaSetStyle>
         <SubStationAlphaStyles>SubStation Alpha - styles...</SubStationAlphaStyles>
@@ -1691,6 +1699,7 @@ peuvent modifier le même fichier de sous-titres (collaboration)</Information>
     <AutoDetectAnsiEncoding>Codage ANSI détection auto.</AutoDetectAnsiEncoding>
     <SubtitleLineMaximumLength>Longueur maxi. de ligne</SubtitleLineMaximumLength>
     <MaximumCharactersPerSecond>Caractères maxi./seconde</MaximumCharactersPerSecond>
+    <MaximumWordssPerMinute>Mots maxi./minute</MaximumWordssPerMinute>
     <AutoWrapWhileTyping>Défilement auto. à la frappe</AutoWrapWhileTyping>
     <DurationMinimumMilliseconds>Durée mini. en millisecondes</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>Durée maxi. en millisecondes</DurationMaximumMilliseconds>
@@ -1711,6 +1720,8 @@ peuvent modifier le même fichier de sous-titres (collaboration)</Information>
     <RemoveBlankLinesWhenOpening>Supprimer les lignes vides lors de l'ouverture d'un sous-titre</RemoveBlankLinesWhenOpening>
     <ShowLineBreaksAs>Afficher les sauts de ligne en mode liste:</ShowLineBreaksAs>
     <MainListViewDoubleClickAction>Double-cliquer sur une ligne dans la fenêtre principale :</MainListViewDoubleClickAction>
+    <MainListViewColumns>Affichage des colonnes :</MainListViewColumns>
+    <MainListViewColumnsInfo>Gérer l'affichage des colonnes.</MainListViewColumnsInfo>
     <MainListViewNothing>Rien</MainListViewNothing>
     <MainListViewVideoGoToPositionAndPause>Aller à la position vidéo puis pause</MainListViewVideoGoToPositionAndPause>
     <MainListViewVideoGoToPositionAndPlay>Aller à la position vidéo puis lire</MainListViewVideoGoToPositionAndPlay>
@@ -1719,7 +1730,7 @@ peuvent modifier le même fichier de sous-titres (collaboration)</Information>
     <MainListViewVideoGoToPositionMinusHalfSecAndPause>Aller à la position vidéo -0,5 seconde et pause</MainListViewVideoGoToPositionMinusHalfSecAndPause>
     <MainListViewVideoGoToPositionMinus1SecAndPlay>Aller à la position vidéo -1 seconde et lire</MainListViewVideoGoToPositionMinus1SecAndPlay>
     <MainListViewEditTextAndPause>Aller à la boite d'édition de texte avec la position vidéo en pause</MainListViewEditTextAndPause>
-    <AutoBackup>Sauvegarde automatique :</AutoBackup>
+    <AutoBackup>Sauvegarde :</AutoBackup>
     <AutoBackupEveryMinute>Chaque minute</AutoBackupEveryMinute>
     <AutoBackupEveryFiveMinutes>Toutes les 5 minutes</AutoBackupEveryFiveMinutes>
     <AutoBackupEveryFifteenMinutes>Toutes les 15 minutes</AutoBackupEveryFifteenMinutes>
@@ -1740,6 +1751,7 @@ peuvent modifier le même fichier de sous-titres (collaboration)</Information>
     <MpcHcDescription>Media Player Classic - Home Cinema</MpcHcDescription>
     <MpvPlayer>mpv</MpvPlayer>
     <MpvPlayerDescription>https://mpv.io/ - lecteur multimédia multiplateforme, libre et à code source ouvert</MpvPlayerDescription>
+    <MpvHandlesPreviewText>mpv gère le texte de prévisualisation</MpvHandlesPreviewText>
     <VlcMediaPlayer>VLC media player</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll de VLC media player 1.1.0 ou plus récent</VlcMediaPlayerDescription>
     <VlcBrowseToLabel>Chemin uniquement pour la version portable de VLC :</VlcBrowseToLabel>
@@ -1752,8 +1764,11 @@ peuvent modifier le même fichier de sous-titres (collaboration)</Information>
     <WaveformAppearance>Apparence du spectrogramme</WaveformAppearance>
     <WaveformGridColor>Couleur de la grille</WaveformGridColor>
     <WaveformShowGridLines>Afficher le quadrillage</WaveformShowGridLines>
+    <WaveformShowCps>Afficher carac./s.</WaveformShowCps>
+    <WaveformShowWpm>Afficher mots/min.</WaveformShowWpm>
     <ReverseMouseWheelScrollDirection>Inverser sens roulette de la souris</ReverseMouseWheelScrollDirection>
     <WaveformAllowOverlap>Autoriser chevauchement (lors du déplacer/redimensionner)</WaveformAllowOverlap>
+    <WaveformSetVideoPosMoveStartEnd>Définir la position de la vidéo lors du déplacement début/fin</WaveformSetVideoPosMoveStartEnd>
     <WaveformFocusMouseEnter>Focus actif au passage de la souris</WaveformFocusMouseEnter>
     <WaveformListViewFocusMouseEnter>Focus actif dans le mode liste</WaveformListViewFocusMouseEnter>
     <WaveformBorderHitMs1>Repère de bordure compris entre</WaveformBorderHitMs1>
@@ -1839,11 +1854,12 @@ peuvent modifier le même fichier de sous-titres (collaboration)</Information>
     <AdjustExtendCurrentSubtitle>Prolonger la durée au sous-titre suivant ou durée maximum</AdjustExtendCurrentSubtitle>
     <RecalculateDurationOfCurrentSubtitle>Recalculer durée du sous-titre en cours</RecalculateDurationOfCurrentSubtitle>
     <MainCreateStartDownEndUp>Créez la durée de démarrage du début à la fin</MainCreateStartDownEndUp>
-    <MergeDialog>Participer à la conversation (Insert traits d'union)</MergeDialog>
+    <MergeDialog>Boîte de dialogue (insérer des tirets)</MergeDialog>
     <GoToNext>Aller à la ligne suivante</GoToNext>
     <GoToPrevious>Aller à la ligne précédente</GoToPrevious>
     <GoToCurrentSubtitleStart>Aller au début de la ligne active</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>Aller à la fin de la ligne active</GoToCurrentSubtitleEnd>
+    <GoToPreviousSubtitleAndFocusVideo>Aller à la ligne précédente et définir la position vidéo</GoToPreviousSubtitleAndFocusVideo>
     <GoToNextSubtitleAndFocusVideo>Aller à la ligne suivante et définir la position vidéo</GoToNextSubtitleAndFocusVideo>
     <ToggleFocus>Naviguer entre mode liste et zone de texte</ToggleFocus>
     <ToggleDialogDashes>Activer/Désactiver le son</ToggleDialogDashes>
@@ -2300,6 +2316,8 @@ Veuillez réessayer plus tard.</DownloadMpvFailed>
     <RemoveSceneChange>Supprimer changement de scène</RemoveSceneChange>
     <GuessTimeCodes>Supposer timecode...</GuessTimeCodes>
     <SeekSilence>Recherche silence...</SeekSilence>
+    <CharsSecX>CPS: {0:0.00}</CharsSecX>
+    <WordsMinX>MPM: {0:0.00}</WordsMinX>
   </Waveform>
   <WaveformGenerateTimeCodes>
     <Title>Deviner timecodes</Title>
