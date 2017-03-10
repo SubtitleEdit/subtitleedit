@@ -68,6 +68,11 @@ namespace Nikse.SubtitleEdit.Core
             FileName = subtitle.FileName;
         }
 
+        public Subtitle(List<Paragraph> paragraphs) : this()
+        {
+            _paragraphs = paragraphs;
+        }
+
         public List<Paragraph> Paragraphs
         {
             get

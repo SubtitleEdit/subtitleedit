@@ -145,7 +145,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             return pre + text;
         }
 
-        private static readonly string[] EndPlusDashList = { ". -", "! -", "? -", "— -", "-- -", ") -", "] -", "> -" };
+        private static readonly string[] EndPlusDashList = { ". -", "! -", "? -", "— -", "-- -", ") -", "] -", "> -", ".\" -", "!\" -", "?\" -", ")\" -", "]\" -" };
         private static readonly string[] EndPlusDashListShort = { ". -", "! -", "? -", "— -" };
 
         public static string FixDialogsOnOneLine(string text, string language)

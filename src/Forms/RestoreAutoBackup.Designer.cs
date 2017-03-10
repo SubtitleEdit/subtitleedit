@@ -1,6 +1,6 @@
 ﻿namespace Nikse.SubtitleEdit.Forms
 {
-    partial class RestoreAutoBackup
+    sealed partial class RestoreAutoBackup
     {
         /// <summary>
         /// Required designer variable.

@@ -48,24 +48,19 @@ namespace Nikse.SubtitleEdit.Controls
 
         private string _subtitleFontName = "Tahoma";
 
-        public override bool RightToLeftLayout {
-            get { return base.RightToLeftLayout; }
+        public override bool RightToLeftLayout
+        {
+            get
+            {
+                return base.RightToLeftLayout;
+            }
             set
             {
-                if (value)
-                {
-                    if (ColumnIndexCps >= 0)
-                        Columns[ColumnIndexCps].TextAlign = HorizontalAlignment.Left;
-                    if (ColumnIndexWpm >= 0)
-                        Columns[ColumnIndexWpm].TextAlign = HorizontalAlignment.Left;
-                }
-                else
-                {
-                    if (ColumnIndexCps >= 0)
-                        Columns[ColumnIndexCps].TextAlign = HorizontalAlignment.Right;
-                    if (ColumnIndexWpm >= 0)
-                        Columns[ColumnIndexWpm].TextAlign = HorizontalAlignment.Right;
-                }
+                var hzAlignment = value ? HorizontalAlignment.Left : HorizontalAlignment.Right;
+                if (ColumnIndexCps >= 0)
+                    Columns[ColumnIndexCps].TextAlign = hzAlignment;
+                if (ColumnIndexWpm >= 0)
+                    Columns[ColumnIndexWpm].TextAlign = hzAlignment;
                 base.RightToLeftLayout = value;
             }
         }
@@ -153,7 +148,7 @@ namespace Nikse.SubtitleEdit.Controls
             _settings = settings;
         }
 
-        public void InitializeTimestampColumnWidths(Form parentForm)
+        public void InitializeTimestampColumnWidths(Control parentForm)
         {
             if (_settings != null && _settings.General.ListViewColumnsRememberSize && _settings.General.ListViewNumberWidth > 1 &&
                 _settings.General.ListViewStartWidth > 1 && _settings.General.ListViewEndWidth > 1 && _settings.General.ListViewDurationWidth > 1)
@@ -235,7 +230,7 @@ namespace Nikse.SubtitleEdit.Controls
                 switch (c)
                 {
                     case SubtitleColumn.Number:
-                        Columns.Add(new ColumnHeader { Width = 55 });
+                        Columns.Add(new ColumnHeader { Width = 50 });
                         break;
                     case SubtitleColumn.Start:
                         Columns.Add(new ColumnHeader { Width = 80 });
@@ -247,10 +242,10 @@ namespace Nikse.SubtitleEdit.Controls
                         Columns.Add(new ColumnHeader { Width = 55 });
                         break;
                     case SubtitleColumn.CharactersPerSeconds:
-                        Columns.Add(new ColumnHeader { Width = 55 });
+                        Columns.Add(new ColumnHeader { Width = 60 });
                         break;
                     case SubtitleColumn.WordsPerMinute:
-                        Columns.Add(new ColumnHeader { Width = 55 });
+                        Columns.Add(new ColumnHeader { Width = 65 });
                         break;
                     case SubtitleColumn.Text:
                         Columns.Add(new ColumnHeader { Width = 300 });
@@ -258,7 +253,12 @@ namespace Nikse.SubtitleEdit.Controls
                 }
             }
 
-            // add optional columns
+            if (Configuration.Settings != null && !Configuration.Settings.Tools.ListViewShowColumnEndTime)
+                HideColumn(SubtitleColumn.End);
+
+            if (Configuration.Settings != null && !Configuration.Settings.Tools.ListViewShowColumnDuration)
+                HideColumn(SubtitleColumn.Duration);
+
             if (Configuration.Settings != null && Configuration.Settings.Tools.ListViewShowColumnCharsPerSec)
                 ShowCharsSecColumn(Configuration.Settings.Language.General.CharsPerSec);
 
@@ -360,8 +360,6 @@ namespace Nikse.SubtitleEdit.Controls
         {
             if (!Focused && (e.State & ListViewItemStates.Selected) != 0)
             {
-                //Rectangle r = new Rectangle(e.Bounds.Left + 1, e.Bounds.Top + 1, e.Bounds.Width - 2, e.Bounds.Height - 2);
-                //e.Graphics.FillRectangle(Brushes.LightGoldenrodYellow, r);
                 if (e.Item.Focused)
                     e.DrawFocusRectangle();
             }
@@ -406,18 +404,56 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        public void AutoSizeAllColumns(Form parentForm)
+        public void AutoSizeColumns()
         {
-            InitializeTimestampColumnWidths(parentForm);
-
-            // resize "number column"
             var numberIdx = GetColumnIndex(SubtitleColumn.Number);
-            if (numberIdx > 0)
+            if (numberIdx >= 0)
             {
-                if (_settings != null && _settings.General.ListViewColumnsRememberSize && _settings.General.ListViewNumberWidth > 1)
-                    Columns[numberIdx].Width = _settings.General.ListViewNumberWidth;
-                else
-                    Columns[numberIdx].Width = 55;
+                Columns[numberIdx].Width = 50;
+                Columns[numberIdx].Width = 50;
+            }
+
+            var startIdx = GetColumnIndex(SubtitleColumn.Start);
+            var endIdx = GetColumnIndex(SubtitleColumn.End);
+            var durationIdx = GetColumnIndex(SubtitleColumn.Duration);
+            int timeStampWidth;
+            try
+            {
+                using (var graphics = CreateGraphics())
+                {
+                    var timestampSizeF = graphics.MeasureString(new TimeCode(0, 0, 33, 527).ToDisplayString(), Font);
+                    timeStampWidth = (int)(timestampSizeF.Width + 0.5) + 11;
+                }
+            }
+            catch
+            {
+                timeStampWidth = 65;
+            }
+            if (startIdx >= 0)
+            {
+                Columns[startIdx].Width = timeStampWidth;
+            }
+            if (endIdx >= 0)
+            {
+                Columns[endIdx].Width = timeStampWidth;
+            }
+            if (durationIdx >= 0)
+            {
+                Columns[durationIdx].Width = (int)(timeStampWidth * 0.8);
+            }
+
+            var cpsIdx = GetColumnIndex(SubtitleColumn.CharactersPerSeconds);
+            if (cpsIdx >= 0)
+            {
+                Columns[cpsIdx].Width = 60;
+                Columns[cpsIdx].Width = 60;
+            }
+
+            var wpmIdx = GetColumnIndex(SubtitleColumn.WordsPerMinute);
+            if (wpmIdx >= 0)
+            {
+                Columns[wpmIdx].Width = 65;
+                Columns[wpmIdx].Width = 65;
             }
 
             int w = 0;
@@ -425,7 +461,72 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 var column = SubtitleColumns[index];
                 int cw = Columns[index].Width;
-                if (cw < 55 || column == SubtitleColumn.Extra || column == SubtitleColumn.Network)
+                if (column != SubtitleColumn.Text && column != SubtitleColumn.TextAlternate)
+                    w += cw;
+            }
+            int lengthAvailable = Width - w;
+            if (ColumnIndexTextAlternate >= 0)
+            {
+                lengthAvailable = lengthAvailable / 2;
+                Columns[ColumnIndexTextAlternate].Width = lengthAvailable;
+                Columns[ColumnIndexTextAlternate].Width = lengthAvailable;
+                Columns[ColumnIndexTextAlternate].Width = lengthAvailable;
+            }
+            Columns[ColumnIndexText].Width = lengthAvailable;
+            Columns[ColumnIndexText].Width = lengthAvailable;
+            Columns[ColumnIndexText].Width = lengthAvailable;
+            SubtitleListViewLastColumnFill(this, null);
+        }
+
+        public void AutoSizeAllColumns(Form parentForm)
+        {
+            InitializeTimestampColumnWidths(parentForm);
+
+            var numberIdx = GetColumnIndex(SubtitleColumn.Number);
+            if (numberIdx >= 0)
+            {
+                if (_settings != null && _settings.General.ListViewColumnsRememberSize && _settings.General.ListViewNumberWidth > 1)
+                    Columns[numberIdx].Width = _settings.General.ListViewNumberWidth;
+                else
+                    Columns[numberIdx].Width = 50;
+            }
+
+            var startIdx = GetColumnIndex(SubtitleColumn.Start);
+            var endIdx = GetColumnIndex(SubtitleColumn.End);
+            int timeStampWidth;
+            try
+            {
+                using (var graphics = CreateGraphics())
+                {
+                    var timestampSizeF = graphics.MeasureString(new TimeCode(0, 0, 33, 527).ToDisplayString(), Font);
+                    timeStampWidth = (int)(timestampSizeF.Width + 0.5) + 11;
+                }
+            }
+            catch
+            {
+                timeStampWidth = 65;
+            }
+            if (startIdx >= 0)
+            {
+                if (_settings != null && _settings.General.ListViewColumnsRememberSize && _settings.General.ListViewStartWidth > 1)
+                    Columns[startIdx].Width = _settings.General.ListViewStartWidth;
+                else
+                    Columns[startIdx].Width = timeStampWidth;
+            }
+            if (endIdx >= 0)
+            {
+                if (_settings != null && _settings.General.ListViewColumnsRememberSize && _settings.General.ListViewEndWidth > 1)
+                    Columns[endIdx].Width = _settings.General.ListViewEndWidth;
+                else
+                    Columns[endIdx].Width = timeStampWidth;
+            }
+
+            int w = 0;
+            for (int index = 0; index < SubtitleColumns.Count; index++)
+            {
+                var column = SubtitleColumns[index];
+                int cw = Columns[index].Width;
+                if (cw < 10 || column == SubtitleColumn.Extra || column == SubtitleColumn.Network)
                 {
                     cw = 55;
                     if (column == SubtitleColumn.CharactersPerSeconds)
@@ -433,7 +534,7 @@ namespace Nikse.SubtitleEdit.Controls
                     else if (column == SubtitleColumn.WordsPerMinute)
                         cw = 70;
                     else if (column != SubtitleColumn.Number)
-                            cw = 120;
+                        cw = 120;
                     Columns[index].Width = cw;
                     Columns[index].Width = cw;
                     Columns[index].Width = cw;
@@ -454,6 +555,91 @@ namespace Nikse.SubtitleEdit.Controls
             Columns[ColumnIndexText].Width = lengthAvailable;
             Columns[ColumnIndexText].Width = lengthAvailable;
             SubtitleListViewLastColumnFill(this, null);
+        }
+
+        public void ShowEndColumn(string title)
+        {
+            if (GetColumnIndex(SubtitleColumn.End) == -1)
+            {
+                var ch = new ColumnHeader { Text = title, TextAlign = RightToLeftLayout ? HorizontalAlignment.Right : HorizontalAlignment.Left };
+                if (ColumnIndexStart >= 0)
+                {
+                    SubtitleColumns.Insert(ColumnIndexStart + 1, SubtitleColumn.End);
+                    Columns.Insert(ColumnIndexStart + 1, ch);
+                }
+                else if (ColumnIndexNumber >= 0)
+                {
+                    SubtitleColumns.Insert(ColumnIndexNumber + 1, SubtitleColumn.End);
+                    Columns.Insert(ColumnIndexStart + 1, ch);
+                }
+                else
+                {
+                    SubtitleColumns.Add(SubtitleColumn.End);
+                    Columns.Insert(0, ch);
+                }
+                UpdateColumnIndexes();
+
+                try
+                {
+                    using (var graphics = Parent.CreateGraphics())
+                    {
+                        var timestampSizeF = graphics.MeasureString(new TimeCode(0, 0, 33, 527).ToDisplayString(), Font);
+                        var timestampWidth = (int)(timestampSizeF.Width + 0.5) + 11;
+                        Columns[ColumnIndexEnd].Width = timestampWidth;
+                    }
+                }
+                catch
+                {
+                    Columns[ColumnIndexEnd].Width = 65;
+                }
+
+                AutoSizeAllColumns(null);
+            }
+        }
+
+        public void ShowDurationColumn(string title)
+        {
+            if (GetColumnIndex(SubtitleColumn.Duration) == -1)
+            {
+                var ch = new ColumnHeader { Text = title, TextAlign = RightToLeftLayout ? HorizontalAlignment.Right : HorizontalAlignment.Left };
+                if (ColumnIndexEnd >= 0)
+                {
+                    SubtitleColumns.Insert(ColumnIndexEnd + 1, SubtitleColumn.Duration);
+                    Columns.Insert(ColumnIndexEnd + 1, ch);
+                }
+                else if (ColumnIndexStart >= 0)
+                {
+                    SubtitleColumns.Insert(ColumnIndexStart + 1, SubtitleColumn.Duration);
+                    Columns.Insert(ColumnIndexStart + 1, ch);
+                }
+                else if (ColumnIndexNumber >= 0)
+                {
+                    SubtitleColumns.Insert(ColumnIndexNumber + 1, SubtitleColumn.Duration);
+                    Columns.Insert(ColumnIndexStart + 1, ch);
+                }
+                else
+                {
+                    SubtitleColumns.Add(SubtitleColumn.Duration);
+                    Columns.Insert(0, ch);
+                }
+                UpdateColumnIndexes();
+
+                try
+                {
+                    using (var graphics = Parent.CreateGraphics())
+                    {
+                        var timestampSizeF = graphics.MeasureString(new TimeCode(0, 0, 33, 527).ToDisplayString(), Font);
+                        var timestampWidth = (int)(timestampSizeF.Width + 0.5) + 11;
+                        Columns[ColumnIndexDuration].Width = (int)(timestampWidth * 0.8);
+                    }
+                }
+                catch
+                {
+                    Columns[ColumnIndexDuration].Width = 55;
+                }
+
+                AutoSizeAllColumns(null);
+            }
         }
 
         public void ShowAlternateTextColumn(string title)
@@ -724,7 +910,7 @@ namespace Nikse.SubtitleEdit.Controls
                         {
                             item.SubItems[ColumnIndexCps].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
                         }
-                        else
+                        else if (ColumnIndexDuration >= 0)
                         {
                             item.SubItems[ColumnIndexDuration].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
                             durationChanged = true;
@@ -732,7 +918,10 @@ namespace Nikse.SubtitleEdit.Controls
                     }
                     else if (paragraph.Duration.TotalMilliseconds < Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds)
                     {
-                        item.SubItems[ColumnIndexDuration].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
+                        if (ColumnIndexDuration >= 0)
+                        {
+                            item.SubItems[ColumnIndexDuration].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
+                        }
                         durationChanged = true;
                     }
                 }
@@ -740,14 +929,17 @@ namespace Nikse.SubtitleEdit.Controls
                 {
                     if (paragraph.Duration.TotalMilliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
                     {
-                        item.SubItems[ColumnIndexDuration].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
+                        if (ColumnIndexDuration >= 0)
+                        {
+                            item.SubItems[ColumnIndexDuration].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
+                        }
                         durationChanged = true;
                     }
                 }
-                if (!durationChanged && item.SubItems[ColumnIndexDuration].BackColor != BackColor)
+                if (ColumnIndexDuration >= 0 && !durationChanged && item.SubItems[ColumnIndexDuration].BackColor != BackColor)
                     item.SubItems[ColumnIndexDuration].BackColor = BackColor;
 
-                if (_settings.Tools.ListViewSyntaxColorOverlap && i > 0 && i < paragraphs.Count)
+                if (_settings.Tools.ListViewSyntaxColorOverlap && i > 0 && i < paragraphs.Count && ColumnIndexEnd >= 0)
                 {
                     Paragraph prev = paragraphs[i - 1];
                     if (paragraph.StartTime.TotalMilliseconds < prev.EndTime.TotalMilliseconds)
@@ -766,7 +958,6 @@ namespace Nikse.SubtitleEdit.Controls
 
                 if (_settings.Tools.ListViewSyntaxColorLongLines)
                 {
-                    int noOfLines = paragraph.Text.Split(Environment.NewLine[0]).Length;
                     string s = HtmlUtil.RemoveHtmlTags(paragraph.Text, true);
                     foreach (string line in s.SplitToLines())
                     {
@@ -776,8 +967,10 @@ namespace Nikse.SubtitleEdit.Controls
                             return;
                         }
                     }
-                    s = s.Replace(Environment.NewLine, string.Empty); // we don't count new line in total length
-                    if (s.Length <= Configuration.Settings.General.SubtitleLineMaximumLength * noOfLines)
+                    int noOfLines = paragraph.NumberOfLines;
+                    // Length excluding new line characters. (\r\n)
+                    int len = noOfLines > 1 ? s.Length - Environment.NewLine.Length * (noOfLines - 1) : s.Length;
+                    if (len <= Configuration.Settings.General.SubtitleLineMaximumLength * noOfLines)
                     {
                         if (noOfLines > Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX && _settings.Tools.ListViewSyntaxMoreThanXLines)
                             item.SubItems[ColumnIndexText].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
@@ -792,8 +985,7 @@ namespace Nikse.SubtitleEdit.Controls
                 if (_settings.Tools.ListViewSyntaxMoreThanXLines &&
                     item.SubItems[ColumnIndexText].BackColor != Configuration.Settings.Tools.ListViewSyntaxErrorColor)
                 {
-                    int newLines = paragraph.Text.SplitToLines().Length;
-                    if (newLines > Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX)
+                    if (paragraph.NumberOfLines > Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX)
                         item.SubItems[ColumnIndexText].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
                 }
             }
@@ -905,10 +1097,12 @@ namespace Nikse.SubtitleEdit.Controls
             for (int index = 0; index < Items.Count; index++)
             {
                 ListViewItem item = Items[index];
-                if (item.Text == p.Number.ToString(CultureInfo.InvariantCulture) &&
-                    item.SubItems[ColumnIndexStart].Text == GetDisplayTime(p.StartTime) &&
-                    item.SubItems[ColumnIndexEnd].Text == GetDisplayTime(p.EndTime) &&
-                    item.SubItems[ColumnIndexText].Text == p.Text)
+                if (item.Tag as Paragraph == p ||
+                    (
+                    item.Text == p.Number.ToString(CultureInfo.InvariantCulture) &&
+                    (ColumnIndexStart < 0 || item.SubItems[ColumnIndexStart].Text == GetDisplayTime(p.StartTime)) &&
+                    (ColumnIndexEnd < 0 || item.SubItems[ColumnIndexEnd].Text == GetDisplayTime(p.EndTime)) &&
+                    item.SubItems[ColumnIndexText].Text == p.Text))
                 {
                     RestoreFirstVisibleIndex();
                     item.Selected = true;
@@ -939,13 +1133,13 @@ namespace Nikse.SubtitleEdit.Controls
             return null;
         }
 
-
         public void SetText(int index, string text)
         {
             if (IsValidIndex(index))
             {
                 ListViewItem item = Items[index];
-                item.SubItems[ColumnIndexText].Text = text.Replace(Environment.NewLine, _lineSeparatorString);
+                if (ColumnIndexText >= 0)
+                    item.SubItems[ColumnIndexText].Text = text.Replace(Environment.NewLine, _lineSeparatorString);
                 var paragraph = item.Tag as Paragraph;
                 if (paragraph != null)
                     UpdateCpsAndWpm(item, paragraph);
@@ -957,10 +1151,14 @@ namespace Nikse.SubtitleEdit.Controls
             if (IsValidIndex(index))
             {
                 ListViewItem item = Items[index];
-                item.SubItems[ColumnIndexStart].Text = GetDisplayTime(paragraph.StartTime);
-                item.SubItems[ColumnIndexEnd].Text = GetDisplayTime(paragraph.EndTime);
-                item.SubItems[ColumnIndexDuration].Text = paragraph.Duration.ToShortDisplayString();
-                item.SubItems[ColumnIndexText].Text = paragraph.Text.Replace(Environment.NewLine, _lineSeparatorString);
+                if (ColumnIndexStart >= 0)
+                    item.SubItems[ColumnIndexStart].Text = GetDisplayTime(paragraph.StartTime);
+                if (ColumnIndexEnd >= 0)
+                    item.SubItems[ColumnIndexEnd].Text = GetDisplayTime(paragraph.EndTime);
+                if (ColumnIndexDuration >= 0)
+                    item.SubItems[ColumnIndexDuration].Text = paragraph.Duration.ToShortDisplayString();
+                if (ColumnIndexText >= 0)
+                    item.SubItems[ColumnIndexText].Text = paragraph.Text.Replace(Environment.NewLine, _lineSeparatorString);
                 UpdateCpsAndWpm(item, paragraph);
             }
         }
@@ -988,10 +1186,13 @@ namespace Nikse.SubtitleEdit.Controls
                 while (ColumnIndexExtra >= Items[index].SubItems.Count)
                     Items[index].SubItems.Add(string.Empty);
 
-                Items[index].SubItems[ColumnIndexExtra].Text = text;
-                Items[index].UseItemStyleForSubItems = false;
-                Items[index].SubItems[ColumnIndexExtra].BackColor = Color.AntiqueWhite;
-                Items[index].SubItems[ColumnIndexExtra].ForeColor = color;
+                if (ColumnIndexExtra >= 0)
+                {
+                    Items[index].SubItems[ColumnIndexExtra].Text = text;
+                    Items[index].UseItemStyleForSubItems = false;
+                    Items[index].SubItems[ColumnIndexExtra].BackColor = Color.AntiqueWhite;
+                    Items[index].SubItems[ColumnIndexExtra].ForeColor = color;
+                }
             }
         }
 
@@ -1006,10 +1207,13 @@ namespace Nikse.SubtitleEdit.Controls
                 while (ColumnIndexNetwork >= Items[index].SubItems.Count)
                     Items[index].SubItems.Add(string.Empty);
 
-                Items[index].SubItems[ColumnIndexNetwork].Text = text;
-                Items[index].UseItemStyleForSubItems = false;
-                Items[index].SubItems[ColumnIndexNetwork].BackColor = Color.AntiqueWhite;
-                Items[index].SubItems[ColumnIndexNetwork].ForeColor = color;
+                if (ColumnIndexNetwork >= 0)
+                {
+                    Items[index].SubItems[ColumnIndexNetwork].Text = text;
+                    Items[index].UseItemStyleForSubItems = false;
+                    Items[index].SubItems[ColumnIndexNetwork].BackColor = Color.AntiqueWhite;
+                    Items[index].SubItems[ColumnIndexNetwork].ForeColor = color;
+                }
             }
         }
 
@@ -1024,9 +1228,12 @@ namespace Nikse.SubtitleEdit.Controls
                 while (ColumnIndexTextAlternate >= Items[index].SubItems.Count)
                     Items[index].SubItems.Add(string.Empty);
 
-                Items[index].SubItems[ColumnIndexTextAlternate].Text = text.Replace(Environment.NewLine, _lineSeparatorString);
-                Items[index].UseItemStyleForSubItems = false;
-                Items[index].SubItems[ColumnIndexTextAlternate].BackColor = Color.AntiqueWhite;
+                if (ColumnIndexTextAlternate >= 0)
+                {
+                    Items[index].SubItems[ColumnIndexTextAlternate].Text = text.Replace(Environment.NewLine, _lineSeparatorString);
+                    Items[index].UseItemStyleForSubItems = false;
+                    Items[index].SubItems[ColumnIndexTextAlternate].BackColor = Color.AntiqueWhite;
+                }
             }
         }
 
@@ -1035,18 +1242,19 @@ namespace Nikse.SubtitleEdit.Controls
             if (IsValidIndex(index))
             {
                 ListViewItem item = Items[index];
-                item.SubItems[ColumnIndexEnd].Text = GetDisplayTime(paragraph.EndTime);
-                item.SubItems[ColumnIndexDuration].Text = paragraph.Duration.ToShortDisplayString();
+                if (ColumnIndexEnd >= 0)
+                    item.SubItems[ColumnIndexEnd].Text = GetDisplayTime(paragraph.EndTime);
+                if (ColumnIndexDuration >= 0)
+                    item.SubItems[ColumnIndexDuration].Text = paragraph.Duration.ToShortDisplayString();
                 UpdateCpsAndWpm(item, paragraph);
             }
         }
 
         public void SetNumber(int index, string number)
         {
-            if (IsValidIndex(index))
+            if (IsValidIndex(index) && ColumnIndexNumber >= 0)
             {
-                ListViewItem item = Items[index];
-                item.SubItems[ColumnIndexNumber].Text = number;
+                Items[index].SubItems[ColumnIndexNumber].Text = number;
             }
         }
 
@@ -1061,9 +1269,12 @@ namespace Nikse.SubtitleEdit.Controls
                     {
                         Paragraph p = subtitle.Paragraphs[i];
                         ListViewItem item = Items[i];
-                        item.SubItems[ColumnIndexStart].Text = GetDisplayTime(p.StartTime);
-                        item.SubItems[ColumnIndexEnd].Text = GetDisplayTime(p.EndTime);
-                        item.SubItems[ColumnIndexDuration].Text = p.Duration.ToShortDisplayString();
+                        if (ColumnIndexStart >= 0)
+                            item.SubItems[ColumnIndexStart].Text = GetDisplayTime(p.StartTime);
+                        if (ColumnIndexEnd >= 0)
+                            item.SubItems[ColumnIndexEnd].Text = GetDisplayTime(p.EndTime);
+                        if (ColumnIndexDuration >= 0)
+                            item.SubItems[ColumnIndexDuration].Text = p.Duration.ToShortDisplayString();
                     }
                 }
                 EndUpdate();
@@ -1075,9 +1286,12 @@ namespace Nikse.SubtitleEdit.Controls
             if (IsValidIndex(index))
             {
                 ListViewItem item = Items[index];
-                item.SubItems[ColumnIndexStart].Text = GetDisplayTime(paragraph.StartTime);
-                item.SubItems[ColumnIndexEnd].Text = GetDisplayTime(paragraph.EndTime);
-                item.SubItems[ColumnIndexDuration].Text = paragraph.Duration.ToShortDisplayString();
+                if (ColumnIndexStart >= 0)
+                    item.SubItems[ColumnIndexStart].Text = GetDisplayTime(paragraph.StartTime);
+                if (ColumnIndexEnd >= 0)
+                    item.SubItems[ColumnIndexEnd].Text = GetDisplayTime(paragraph.EndTime);
+                if (ColumnIndexDuration >= 0)
+                    item.SubItems[ColumnIndexDuration].Text = paragraph.Duration.ToShortDisplayString();
                 UpdateCpsAndWpm(item, paragraph);
             }
         }
@@ -1100,10 +1314,18 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 ListViewItem item = Items[index];
                 item.BackColor = color;
-                Items[index].SubItems[ColumnIndexStart].BackColor = color;
-                Items[index].SubItems[ColumnIndexEnd].BackColor = color;
-                Items[index].SubItems[ColumnIndexDuration].BackColor = color;
-                Items[index].SubItems[ColumnIndexText].BackColor = color;
+                if (ColumnIndexStart >= 0)
+                    Items[index].SubItems[ColumnIndexStart].BackColor = color;
+                if (ColumnIndexEnd >= 0)
+                    Items[index].SubItems[ColumnIndexEnd].BackColor = color;
+                if (ColumnIndexDuration >= 0)
+                    Items[index].SubItems[ColumnIndexDuration].BackColor = color;
+                if (ColumnIndexCps >= 0)
+                    Items[index].SubItems[ColumnIndexCps].BackColor = color;
+                if (ColumnIndexWpm >= 0)
+                    Items[index].SubItems[ColumnIndexWpm].BackColor = color;
+                if (ColumnIndexText >= 0)
+                    Items[index].SubItems[ColumnIndexText].BackColor = color;
             }
         }
 
@@ -1128,25 +1350,27 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 ListViewItem item = Items[index];
                 item.Text = string.Empty;
-                item.SubItems[ColumnIndexStart].Text = string.Empty;
-                item.SubItems[ColumnIndexEnd].Text = string.Empty;
-                item.SubItems[ColumnIndexDuration].Text = string.Empty;
-                item.SubItems[ColumnIndexText].Text = string.Empty;
-
+                if (ColumnIndexStart >= 0)
+                    item.SubItems[ColumnIndexStart].Text = string.Empty;
+                if (ColumnIndexEnd >= 0)
+                    item.SubItems[ColumnIndexEnd].Text = string.Empty;
+                if (ColumnIndexDuration >= 0)
+                    item.SubItems[ColumnIndexDuration].Text = string.Empty;
+                if (ColumnIndexText >= 0)
+                    item.SubItems[ColumnIndexText].Text = string.Empty;
                 SetBackgroundColor(index, color);
             }
         }
 
         public void HideNonVobSubColumns()
         {
-            Columns[ColumnIndexNumber].Width = 0;
-            Columns[ColumnIndexEnd].Width = 0;
-            Columns[ColumnIndexDuration].Width = 0;
-            Columns[ColumnIndexText].Width = 0;
-            if (ColumnIndexCps >= 0)
-                Columns[ColumnIndexCps].Width = 0;
-            if (ColumnIndexWpm >= 0)
-                Columns[ColumnIndexWpm].Width = 0;
+            var numberIdx = GetColumnIndex(SubtitleColumn.Number);
+            if (numberIdx >= 0)
+                Columns[numberIdx].Width = 0;
+            HideColumn(SubtitleColumn.End);
+            HideColumn(SubtitleColumn.Duration);
+            HideColumn(SubtitleColumn.CharactersPerSeconds);
+            HideColumn(SubtitleColumn.WordsPerMinute);
         }
 
         public void SetCustomResize(EventHandler handler)
@@ -1159,7 +1383,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         private bool IsValidIndex(int index)
         {
-            return (index >= 0 && index < Items.Count);
+            return index >= 0 && index < Items.Count;
         }
 
         private FontStyle GetFontStyle() => SubtitleFontBold ? FontStyle.Bold : FontStyle.Regular;

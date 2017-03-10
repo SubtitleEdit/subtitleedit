@@ -7,6 +7,8 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class SettingsListViewColumns : Form
     {
+        public bool ShowEndTime { get; set; }
+        public bool ShowDuration { get; set; }
         public bool ShowCps { get; set; }
         public bool ShowWpm { get; set; }
 
@@ -40,6 +42,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
+            ShowEndTime = checkBoxShowEndTime.Checked;
+            ShowDuration = checkBoxShowDuration.Checked;
             ShowCps = checkBoxShowCps.Checked;
             ShowWpm = checkBoxShowWpm.Checked;
             DialogResult = DialogResult.OK;

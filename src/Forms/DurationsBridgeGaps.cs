@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Controls;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -21,7 +22,8 @@ namespace Nikse.SubtitleEdit.Forms
             InitializeComponent();
             UiUtil.FixLargeFonts(this, buttonOK);
 
-            // Remove SE's built-in ListView resize logic
+            SubtitleListview1.HideColumn(SubtitleListView.SubtitleColumn.CharactersPerSeconds);
+            SubtitleListview1.HideColumn(SubtitleListView.SubtitleColumn.WordsPerMinute);
             SubtitleListview1.SetCustomResize(SubtitleListView1_Resize);
 
             Text = Configuration.Settings.Language.DurationsBridgeGaps.Title;
@@ -195,15 +197,14 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SubtitleListView1_Resize(object sender, EventArgs e)
         {
-            // Store last column width 'cause it won't be changed
+            const int lastColumnWidth = 150;
             var columnsCount = SubtitleListview1.Columns.Count - 1;
-            var lastColumnWidth = SubtitleListview1.Columns[columnsCount].Width;
             var width = 0;
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < columnsCount - 1; i++)
             {
                 width += SubtitleListview1.Columns[i].Width;
             }
-            SubtitleListview1.Columns[4].Width = SubtitleListview1.Width - (width + lastColumnWidth);
+            SubtitleListview1.Columns[columnsCount - 1].Width = SubtitleListview1.Width - (width + lastColumnWidth);
             SubtitleListview1.Columns[columnsCount].Width = lastColumnWidth;
         }
 

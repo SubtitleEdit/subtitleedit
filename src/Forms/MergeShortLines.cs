@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Globalization;
 using System.Text;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Controls;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -20,6 +21,8 @@ namespace Nikse.SubtitleEdit.Forms
         {
             InitializeComponent();
             UiUtil.FixLargeFonts(this, buttonOK);
+            SubtitleListview1.HideColumn(SubtitleListView.SubtitleColumn.CharactersPerSeconds);
+            SubtitleListview1.HideColumn(SubtitleListView.SubtitleColumn.WordsPerMinute);
         }
 
         public Subtitle MergedSubtitle

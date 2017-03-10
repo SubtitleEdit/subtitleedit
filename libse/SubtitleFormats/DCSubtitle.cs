@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Text;
 using System.Xml;
 
@@ -23,6 +24,28 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
     public class DCSubtitle : SubtitleFormat
     {
+        internal class SubtitleLine
+        {
+            internal string VerticalPosition { get; set; }
+            internal string Text { get; set; }
+
+            internal SubtitleLine(string text, string verticalPosition)
+            {
+                Text = text;
+                VerticalPosition = verticalPosition;
+            }
+
+            internal int GetVerticalPositionAsNumber()
+            {
+                double d;
+                if (double.TryParse(VerticalPosition, out d))
+                {
+                    return (int)d;
+                }
+                return 0;
+            }
+        }
+
         public override string Extension
         {
             get { return ".xml"; }
@@ -163,7 +186,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     string text = Utilities.RemoveSsaTags(p.Text);
 
                     var lines = text.SplitToLines();
-                    int vPos = 1 + lines.Length * 7;
+                    int vPos;
                     int vPosFactor = (int)Math.Round(fontSize / 7.4);
                     if (alignVTop)
                     {
@@ -503,7 +526,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             foreach (XmlNode node in xml.DocumentElement.SelectNodes("//Subtitle"))
             {
                 try
-                {
+                {                    
+                    var textLines = new List<SubtitleLine>();
                     var pText = new StringBuilder();
                     string lastVPosition = string.Empty;
                     foreach (XmlNode innerNode in node.ChildNodes)
@@ -517,7 +541,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                     if (vPosition != lastVPosition)
                                     {
                                         if (pText.Length > 0 && lastVPosition.Length > 0)
-                                            pText.AppendLine();
+                                        {
+                                            textLines.Add(new SubtitleLine(pText.ToString(), lastVPosition));
+                                            pText.Clear();
+                                        }
                                         lastVPosition = vPosition;
                                     }
                                 }
@@ -612,21 +639,34 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 break;
                         }
                     }
+                    if (pText.Length > 0)
+                    {
+                        textLines.Add(new SubtitleLine(pText.ToString(), lastVPosition));
+                    }
+                    var text = string.Join(Environment.NewLine, textLines.OrderByDescending(p=>p.GetVerticalPositionAsNumber()).Select(p=>p.Text));
+                    text = text.Replace(Environment.NewLine + "{\\an1}", Environment.NewLine);
+                    text = text.Replace(Environment.NewLine + "{\\an2}", Environment.NewLine);
+                    text = text.Replace(Environment.NewLine + "{\\an3}", Environment.NewLine);
+                    text = text.Replace(Environment.NewLine + "{\\an4}", Environment.NewLine);
+                    text = text.Replace(Environment.NewLine + "{\\an5}", Environment.NewLine);
+                    text = text.Replace(Environment.NewLine + "{\\an6}", Environment.NewLine);
+                    text = text.Replace(Environment.NewLine + "{\\an7}", Environment.NewLine);
+                    text = text.Replace(Environment.NewLine + "{\\an8}", Environment.NewLine);
+                    text = text.Replace(Environment.NewLine + "{\\an9}", Environment.NewLine);
+
                     string start = node.Attributes["TimeIn"].InnerText;
                     string end = node.Attributes["TimeOut"].InnerText;
 
                     if (node.ParentNode.Name == "Font" && node.ParentNode.Attributes["Italic"] != null && node.ParentNode.Attributes["Italic"].InnerText.Equals("yes", StringComparison.OrdinalIgnoreCase) &&
-                        !pText.ToString().Contains("<i>"))
+                        !text.Contains("<i>"))
                     {
-                        string text = pText.ToString();
                         if (text.StartsWith("{\\an") && text.Length > 6)
                             text = text.Insert(6, "<i>") + "</i>";
                         else
                             text = "<i>" + text + "</i>";
-                        pText = new StringBuilder(text);
                     }
 
-                    subtitle.Paragraphs.Add(new Paragraph(GetTimeCode(start), GetTimeCode(end), pText.ToString()));
+                    subtitle.Paragraphs.Add(new Paragraph(GetTimeCode(start), GetTimeCode(end), text));
                 }
                 catch (Exception ex)
                 {
