@@ -895,6 +895,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "EbuSaveOptions/DisplayStandardCode":
                     language.EbuSaveOptions.DisplayStandardCode = reader.Value;
                     break;
+                case "EbuSaveOptions/ColorRequiresTeletext":
+                    language.EbuSaveOptions.ColorRequiresTeletext = reader.Value;
+                    break;
                 case "EbuSaveOptions/CharacterCodeTable":
                     language.EbuSaveOptions.CharacterCodeTable = reader.Value;
                     break;
@@ -3601,6 +3604,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Main/Menu/ToolBar/ShowHideVideo":
                     language.Main.Menu.ToolBar.ShowHideVideo = reader.Value;
                     break;
+                case "Main/Menu/ContextMenu/SizeAllColumnsToFit":
+                    language.Main.Menu.ContextMenu.SizeAllColumnsToFit = reader.Value;
+                    break;
                 case "Main/Menu/ContextMenu/AdvancedSubStationAlphaSetStyle":
                     language.Main.Menu.ContextMenu.AdvancedSubStationAlphaSetStyle = reader.Value;
                     break;
@@ -4681,6 +4687,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/MpvPlayerDescription":
                     language.Settings.MpvPlayerDescription = reader.Value;
                     break;
+                case "Settings/MpvHandlesPreviewText":
+                    language.Settings.MpvHandlesPreviewText = reader.Value;
+                    break;
                 case "Settings/VlcMediaPlayer":
                     language.Settings.VlcMediaPlayer = reader.Value;
                     break;
@@ -5556,6 +5565,9 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "Statistics/TotalCharsPerSecond":
                     language.Statistics.TotalCharsPerSecond = reader.Value;
+                    break;
+                case "Statistics/TotalWords":
+                    language.Statistics.TotalWords = reader.Value;
                     break;
                 case "Statistics/NumberOfItalicTags":
                     language.Statistics.NumberOfItalicTags = reader.Value;

@@ -28,6 +28,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelCodePageNumber.Text = language.CodePageNumber;
             labelDiskFormatCode.Text = language.DiskFormatCode;
             labelDisplayStandardCode.Text = language.DisplayStandardCode;
+            labelColorRequiresTeletext.Text = language.ColorRequiresTeletext;
             labelCharacterCodeTable.Text = language.CharacterCodeTable;
             labelLanguageCode.Text = language.LanguageCode;
             labelOriginalProgramTitle.Text = language.OriginalProgramTitle;
@@ -382,6 +383,22 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 comboBoxFrameRate.Text = (30).ToString(CultureInfo.CurrentCulture);
             }
+        }
+
+        private void comboBoxDisplayStandardCode_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (_subtitle != null && comboBoxDisplayStandardCode.SelectedIndex == 0)
+            {
+                foreach (var paragraph in _subtitle.Paragraphs)
+                {
+                    if (paragraph.Text.Contains("<font color", StringComparison.OrdinalIgnoreCase))
+                    {
+                        labelColorRequiresTeletext.Visible = true;
+                        return;
+                    }
+                }
+            }
+            labelColorRequiresTeletext.Visible = false;
         }
 
     }

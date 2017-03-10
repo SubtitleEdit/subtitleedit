@@ -13,6 +13,7 @@ using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Forms.Ocr;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -152,6 +153,7 @@ namespace Nikse.SubtitleEdit.Forms
                     _allFormats.Add(format);
                 }
             }
+            formatNames.Add("PAC");
             formatNames.Add(new Ayato().Name);
             formatNames.Add(l.PlainText);
             formatNames.Add(BluRaySubtitle);
@@ -308,6 +310,38 @@ namespace Nikse.SubtitleEdit.Forms
                         if (ayato.IsMine(null, fileName))
                         {
                             format = ayato;
+                        }
+                    }
+                    if (format == null)
+                    {
+                        var f = new PacUnicode();
+                        if (f.IsMine(null, fileName))
+                        {
+                            format = f;
+                        }
+                    }
+                    if (format == null)
+                    {
+                        var f = new IaiSub();
+                        if (f.IsMine(null, fileName))
+                        {
+                            format = f;
+                        }
+                    }
+                    if (format == null)
+                    {
+                        var f = new DlDd();
+                        if (f.IsMine(null, fileName))
+                        {
+                            format = f;
+                        }
+                    }
+                    if (format == null)
+                    {
+                        var f = new Ted20();
+                        if (f.IsMine(null, fileName))
+                        {
+                            format = f;
                         }
                     }
                     if (format == null)

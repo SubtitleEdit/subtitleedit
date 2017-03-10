@@ -192,12 +192,20 @@ namespace Nikse.SubtitleEdit.Core.VobSub
                 if (pack.SubPicture.Delay.TotalMilliseconds > 0)
                     pack.EndTime = pack.StartTime.Add(pack.SubPicture.Delay);
 
-                if (pack.EndTime < pack.StartTime || pack.EndTime.TotalSeconds - pack.StartTime.TotalSeconds > 10.0)
+                if (pack.EndTime < pack.StartTime || pack.EndTime.TotalMilliseconds - pack.StartTime.TotalMilliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
                 {
                     if (i + 1 < list.Count)
-                        pack.EndTime = TimeSpan.FromMilliseconds(list[i].StartTime.TotalMilliseconds - 100);
-                    else
+                    {
+                        pack.EndTime = TimeSpan.FromMilliseconds(list[i + 1].StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines);
+                        if (pack.EndTime.TotalMilliseconds - pack.StartTime.TotalMilliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
+                        {
+                            pack.EndTime = TimeSpan.FromMilliseconds(pack.StartTime.TotalMilliseconds + Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds);
+                        }
+                    }
+                     else
+                    {
                         pack.EndTime = TimeSpan.FromMilliseconds(pack.StartTime.TotalMilliseconds + 3000);
+                    }
                 }
             }
 

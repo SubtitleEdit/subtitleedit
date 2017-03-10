@@ -6,7 +6,7 @@ using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms.DCinema
 {
-    public sealed partial class DCinemaPropertiesInterop : DCinemaPropertiesForm
+    public sealed partial class DCinemaPropertiesInterop : PositionAndSizeForm
     {
         public DCinemaPropertiesInterop()
         {

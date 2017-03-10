@@ -14,84 +14,65 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class TimedText10 : SubtitleFormat
     {
-        public override string Extension
-        {
-            get { return ".xml"; }
-        }
+        public override string Extension => ".xml";
 
         public const string NameOfFormat = "Timed Text 1.0";
 
-        public override string Name
-        {
-            get { return NameOfFormat; }
-        }
+        public override string Name => NameOfFormat;
 
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
+        public override bool IsTimeBased => true;
 
         public static string TTMLNamespace = "http://www.w3.org/ns/ttml";
         public static string TTMLParameterNamespace = "http://www.w3.org/ns/ttml#parameter";
         public static string TTMLStylingNamespace = "http://www.w3.org/ns/ttml#styling";
         public static string TTMLMetadataNamespace = "http://www.w3.org/ns/ttml#metadata";
 
-        private bool HasTTMLParagraphs(string xmlAsStr)
-        {
-            XmlDocument xml = new XmlDocument { XmlResolver = null };
-
-            XmlNamespaceManager nsmgr = new XmlNamespaceManager(xml.NameTable);
-            nsmgr.AddNamespace("ttml", TTMLNamespace);
-
-            bool hasTTMLParagraphs = false;
-
-            try
-            {
-                xml.LoadXml(xmlAsStr);
-                var nds = xml.DocumentElement.SelectSingleNode("ttml:body", nsmgr);
-                var paragraphs = nds.SelectNodes("//ttml:p", nsmgr);
-
-                if (paragraphs.Count > 0)
-                {
-                    hasTTMLParagraphs = true;
-                }
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine(ex.ToString());
-            }
-
-            return hasTTMLParagraphs;
-        }
-
         public override bool IsMine(List<string> lines, string fileName)
         {
-            string xmlAsString = String.Join(Environment.NewLine, lines);
+            var sb = new StringBuilder();
+            lines.ForEach(line => sb.AppendLine(line));
+            string xmlAsString = sb.ToString().Trim();
 
             if (xmlAsString.Contains("xmlns:tts=\"http://www.w3.org/2006/04"))
-            {
                 return false;
-            }
 
-            if (!xmlAsString.Contains(TTMLNamespace))
+            if (xmlAsString.Contains("http://www.w3.org/ns/ttml"))
             {
-                return false;
+                xmlAsString = xmlAsString.RemoveControlCharactersButWhiteSpace();
+                var xml = new XmlDocument { XmlResolver = null };
+                try
+                {
+                    xml.LoadXml(xmlAsString);
+                    var nsmgr = new XmlNamespaceManager(xml.NameTable);
+                    nsmgr.AddNamespace("ttml", "http://www.w3.org/ns/ttml");
+                    var nds = xml.DocumentElement.SelectSingleNode("ttml:body", nsmgr);
+                    var paragraphs = nds.SelectNodes("//ttml:p", nsmgr);
+                    return paragraphs != null && paragraphs.Count > 0;
+                }
+                catch
+                {
+                    try
+                    {
+                        xml.LoadXml(xmlAsString.Replace(" & ", " &amp; ").Replace("Q&A", "Q&amp;A"));
+                        var nsmgr = new XmlNamespaceManager(xml.NameTable);
+                        nsmgr.AddNamespace("ttml", "http://www.w3.org/ns/ttml");
+                        var nds = xml.DocumentElement.SelectSingleNode("ttml:body", nsmgr);
+                        var paragraphs = nds.SelectNodes("//ttml:p", nsmgr);
+
+                        if (paragraphs != null && (paragraphs.Count > 0 && new NetflixTimedText().IsMine(lines, fileName)))
+                            return false;
+
+                        if (paragraphs != null && (paragraphs.Count > 0 && new SmpteTt2052().IsMine(lines, fileName)))
+                            return false;
+
+                        return paragraphs != null && paragraphs.Count > 0;
+                    }
+                    catch (Exception ex)
+                    {
+                        System.Diagnostics.Debug.WriteLine(ex.Message);
+                    }
+                }
             }
-
-            xmlAsString = xmlAsString.RemoveControlCharactersButWhiteSpace();
-
-            if (HasTTMLParagraphs(xmlAsString) && !new NetflixTimedText().IsMine(lines, fileName))
-            {
-                return true;
-            }
-
-            xmlAsString = xmlAsString.Replace(" & ", " &amp; ").Replace("Q&A", "Q&amp;A");
-
-            if (HasTTMLParagraphs(xmlAsString) && !new NetflixTimedText().IsMine(lines, fileName))
-            {
-                return true;
-            }
-
             return false;
         }
 
@@ -847,7 +828,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             var list = paragraph.Effect.Split('|');
-            var sb = new StringBuilder();
             foreach (var s in list)
             {
                 var arr = s.Split('=');

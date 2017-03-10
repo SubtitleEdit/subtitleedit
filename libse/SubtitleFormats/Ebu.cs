@@ -322,7 +322,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
                 else // teletext
                 {
-                    TextField = GetTextWithColors(TextField,  encoding);
+                    TextField = GetTextWithColors(TextField, encoding);
                 }
 
                 // newline
@@ -401,11 +401,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             private static string GetTextWithColors(string text, Encoding encoding)
             {
                 var sb = new StringBuilder();
-                string veryFirstColor = null;
+                var colorStack = new Stack<string>();
                 foreach (string line in text.SplitToLines())
                 {
                     var textWithcolorCodes = new StringBuilder(line.Length);
                     string firstColor = null;
+                    if (colorStack.Count > 0)
+                        firstColor = colorStack.Peek();
                     int i = 0;
                     while (i < line.Length)
                     {
@@ -431,16 +433,19 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                             var nearestColor = GetNearestEbuColorCode(color, encoding);
                                             if (nearestColor != string.Empty)
                                             {
-                                                if (firstColor != null || textWithcolorCodes.ToString().Trim().Length > 0)
+                                                colorStack.Push(nearestColor);
+                                                if (textWithcolorCodes.ToString().Trim().Length > 0)
                                                 {
                                                     textWithcolorCodes.Append(nearestColor);
                                                 }
-                                                else
+                                                else if (firstColor == null)
                                                 {
-                                                    if (veryFirstColor == null)
-                                                        veryFirstColor = nearestColor;
                                                     firstColor = nearestColor;
                                                 }
+                                            }
+                                            else
+                                            {
+                                                colorStack.Push(encoding.GetString(new byte[] { 0xff })); // white
                                             }
                                         }
                                     }
@@ -451,18 +456,27 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 i++;
                             }
                         }
+                        if (line.Substring(i).StartsWith("</font>", StringComparison.Ordinal))
+                        {
+                            if (colorStack.Count > 1)
+                                colorStack.Pop();
+                            textWithcolorCodes.Append(line[i]);
+                            i++;
+                        }
                         else
                         {
+                            if (colorStack.Count == 0 && textWithcolorCodes.ToString().Trim().Length == 0)
+                                colorStack.Push(encoding.GetString(new byte[] { 0xff })); // white
                             textWithcolorCodes.Append(line[i]);
                             i++;
                         }
                     }
 
                     byte colorByte = 255;
-                    if (!string.IsNullOrEmpty(veryFirstColor))
-                        colorByte = encoding.GetBytes(veryFirstColor)[0];
                     if (!string.IsNullOrEmpty(firstColor))
                         colorByte = encoding.GetBytes(firstColor)[0];
+                    else if (colorStack.Count > 0)
+                        colorByte = encoding.GetBytes(colorStack.Peek())[0];
                     string prefix = encoding.GetString(new byte[] { 0xd, colorByte, 0xb, 0xb });
                     if (colorByte != 255)
                         sb.Append(prefix);
@@ -586,11 +600,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             if (subtitle.Header != null && subtitle.Header.Length == 1024 && (subtitle.Header.Contains("STL24") || subtitle.Header.Contains("STL25") || subtitle.Header.Contains("STL29") || subtitle.Header.Contains("STL30")))
             {
                 header = ReadHeader(Encoding.UTF8.GetBytes(subtitle.Header));
-                EbuUiHelper.Initialize(header, 0, null, subtitle);
+                EbuUiHelper.Initialize(header, EbuUiHelper.JustificationCode, null, subtitle);
             }
             else
             {
-                EbuUiHelper.Initialize(header, 0, fileName, subtitle);
+                EbuUiHelper.Initialize(header, EbuUiHelper.JustificationCode, fileName, subtitle);
             }
 
             if (!batchMode && !EbuUiHelper.ShowDialogOk())
@@ -827,6 +841,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 //note that 0xC1—0xCF combines characters - http://en.wikipedia.org/wiki/ISO/IEC_6937
                 var encoding = Encoding.GetEncoding(20269);
+                if (index + 2 > buffer.Length)
+                    return string.Empty;
                 string next = encoding.GetString(buffer, index + 1, 1);
                 switch (buffer[index])
                 {
@@ -1163,7 +1179,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             }
                         }
                     }
-                    else if (b <= 0xf && (i == 0 || i == 2 || i == 3))
+                    else if (b <= 0xf && (i == 0 || i == 2 || (i == 3 && color != string.Empty)))
                     {
                         // not used, 0=0xd, 2=0xb, 3=0xb
                     }
@@ -1289,8 +1305,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return list;
         }
 
-        private string FixMissingSpacesBetweenFontTags(string text)
+        private static string FixMissingSpacesBetweenFontTags(string text)
         {
+            while (text.Contains("  </font>"))
+                text = text.Replace("  </font>", " </font>");
+
             var match = FontTagsNoSpace1.Match(text);
             while (match.Success)
             {

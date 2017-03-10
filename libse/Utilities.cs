@@ -28,11 +28,8 @@ namespace Nikse.SubtitleEdit.Core
         public static VideoInfo TryReadVideoInfoViaMatroskaHeader(string fileName)
         {
             var info = new VideoInfo { Success = false };
-
-            MatroskaFile matroska = null;
-            try
+            using (var matroska = new MatroskaFile(fileName))
             {
-                matroska = new MatroskaFile(fileName);
                 if (matroska.IsValid)
                 {
                     double frameRate;
@@ -52,14 +49,6 @@ namespace Nikse.SubtitleEdit.Core
                     info.VideoCodec = videoCodec;
                 }
             }
-            finally
-            {
-                if (matroska != null)
-                {
-                    matroska.Dispose();
-                }
-            }
-
             return info;
         }
 
@@ -502,10 +491,19 @@ namespace Nikse.SubtitleEdit.Core
                             string rest = s.Substring(mid - j + 1).TrimStart();
                             if (rest.Length > 0 && char.IsUpper(rest[0]))
                             {
-                                if (mid - j > 5 && s[mid - j - 1] == ' ' && @"!?.".Contains(s[mid - j - 2]))
+                                if (mid - j > 5 && s[mid - j - 1] == ' ')
                                 {
-                                    splitPos = mid - j;
-                                    break;
+                                    if ("!?.".Contains(s[mid - j - 2]))
+                                    {
+                                        splitPos = mid - j;
+                                        break;
+                                    }
+                                    var first = s.Substring(0, mid - j - 1);
+                                    if (first.EndsWith(".\"", StringComparison.Ordinal) || first.EndsWith("!\"", StringComparison.Ordinal) || first.EndsWith("?\"", StringComparison.Ordinal))
+                                    {
+                                        splitPos = mid - j;
+                                        break;
+                                    }
                                 }
                             }
                         }
@@ -786,6 +784,8 @@ namespace Nikse.SubtitleEdit.Core
             const string zeroWidthNoBreakSpace = "\uFEFF";
 
             string s = HtmlUtil.RemoveHtmlTags(paragraph.Text, true).Replace(Environment.NewLine, string.Empty).Replace(zeroWidthSpace, string.Empty).Replace(zeroWidthNoBreakSpace, string.Empty);
+            if (Configuration.Settings.General.CharactersPerSecondsIgnoreWhiteSpace)
+                s = s.Replace(" ", string.Empty);
             return s.Length / paragraph.Duration.TotalSeconds;
         }
 
