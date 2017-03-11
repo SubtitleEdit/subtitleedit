@@ -560,9 +560,9 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                             if (!correct)
                             {
-                                string removeUnicode = _currentWord.Replace(Char.ConvertFromUtf32(0x200b), string.Empty); // zero width space
-                                removeUnicode = removeUnicode.Replace(Char.ConvertFromUtf32(0x2060), string.Empty); // word joiner
-                                removeUnicode = removeUnicode.Replace(Char.ConvertFromUtf32(0xfeff), string.Empty); // zero width no-break space
+                                string removeUnicode = _currentWord.Replace("\u200b", string.Empty); // zero width space
+                                removeUnicode = removeUnicode.Replace("\u2060", string.Empty); // word joiner
+                                removeUnicode = removeUnicode.Replace("\ufeff", string.Empty); // zero width no-break space
                                 correct = DoSpell(removeUnicode);
                             }
                         }
@@ -645,7 +645,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     DoAction(SpellCheckAction.ChangeAll);
                                     return;
                                 }
-                                if (_currentWord.Length > 3 && _currentWord.StartsWith("mc", StringComparison.InvariantCultureIgnoreCase) && _spellCheckWordLists.HasName(char.ToUpper(_currentWord[0]) + _currentWord.Substring(1, 1 ) + char.ToUpper(_currentWord[2]) + _currentWord.Remove(0, 3)))
+                                if (_currentWord.Length > 3 && _currentWord.StartsWith("mc", StringComparison.InvariantCultureIgnoreCase) && _spellCheckWordLists.HasName(char.ToUpper(_currentWord[0]) + _currentWord.Substring(1, 1) + char.ToUpper(_currentWord[2]) + _currentWord.Remove(0, 3)))
                                 {
                                     ChangeWord = char.ToUpper(_currentWord[0]) + _currentWord.Substring(1, 1) + char.ToUpper(_currentWord[2]) + _currentWord.Remove(0, 3);
                                     DoAction(SpellCheckAction.ChangeAll);
