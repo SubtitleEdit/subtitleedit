@@ -19,11 +19,11 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
 
         private readonly NamesList _namesList;
         private readonly HashSet<string> _namesEtcList;
-        private readonly List<string> _namesEtcListUppercase = new List<string>();
-        private readonly List<string> _namesEtcListWithApostrophe = new List<string>();
-        private readonly List<string> _wordsWithDashesOrPeriods;
-        private readonly List<string> _userWordList;
-        private readonly List<string> _userPhraseList;
+        private readonly HashSet<string> _namesEtcListUppercase = new HashSet<string>();
+        private readonly HashSet<string> _namesEtcListWithApostrophe = new HashSet<string>();
+        private readonly HashSet<string> _wordsWithDashesOrPeriods = new HashSet<string>();
+        private readonly HashSet<string> _userWordList = new HashSet<string>();
+        private readonly HashSet<string> _userPhraseList = new HashSet<string>();
         private readonly string _languageName;
         private readonly IDoSpell _doSpell;
 
@@ -59,8 +59,6 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
                 }
             }
 
-            _userWordList = new List<string>();
-            _userPhraseList = new List<string>();
             if (File.Exists(dictionaryFolder + languageName + "_user.xml"))
             {
                 var userWordDictionary = new XmlDocument();
@@ -81,10 +79,12 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
                     }
                 }
             }
-
             // Add names/userdic with "." or " " or "-"
-            _wordsWithDashesOrPeriods = new List<string>();
-            _wordsWithDashesOrPeriods.AddRange(namesEtcMultiWordList);
+            foreach (var word in namesEtcMultiWordList)
+            {
+                if (word.Contains(PeriodAndDash))
+                    _wordsWithDashesOrPeriods.Add(word);
+            }
             foreach (string name in _namesEtcList)
             {
                 if (name.Contains(PeriodAndDash))
@@ -95,7 +95,11 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
                 if (word.Contains(PeriodAndDash))
                     _wordsWithDashesOrPeriods.Add(word);
             }
-            _wordsWithDashesOrPeriods.AddRange(_userPhraseList);
+            foreach (var phrase in _userPhraseList)
+            {
+                if (phrase.Contains(PeriodAndDash))
+                    _wordsWithDashesOrPeriods.Add(phrase);
+            }
         }
 
 
@@ -277,7 +281,7 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
                 return false;
 
             word = word.Trim().ToLower();
-            if (word.Length == 0 || _userWordList.IndexOf(word) >= 0)
+            if (word.Length == 0 || _userWordList.Contains(word))
                 return false;
 
             if (word.Contains(' '))
