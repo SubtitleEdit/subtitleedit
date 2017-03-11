@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <!-- This list contains names/words with specific casing - and specific to Russian only -->
-<ignore_list>
+<names>
   <name>Абакум</name>
   <name>Абакумович</name>
   <name>Абакумовна</name>
@@ -2891,4 +2891,7 @@
   <name>Ярославна</name>
   <name>Ярославович</name>
   <name>Ярославовна</name>
-</ignore_list>
+  <blacklist>
+    <name></name>
+  </blacklist>
+</names>

@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <!-- This list contains names/words with specific casing - and specific to English only -->
-<ignore_list>
+<names>
   <name>Abbie</name>
   <name>Abi</name>
   <name>Aimee</name>
@@ -35,4 +35,7 @@
   <name>Rose</name>
   <name>Tia</name>
   <name>Tom</name>
-</ignore_list>
+  <blacklist>
+    <name></name>
+  </blacklist>
+</names>

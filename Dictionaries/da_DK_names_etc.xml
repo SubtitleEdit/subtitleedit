@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <!-- This list contains names/words with specific casing - and specific to Danish only -->
-<ignore_list>
+<names>
   <name>Aquarium</name>
   <name>Armfeldt</name>
   <name>Asgård</name>
@@ -85,4 +85,7 @@
   <name>Wharton</name>
   <name>Wylie</name>
   <name>Yardley</name>
-</ignore_list>
+  <blacklist>
+    <names>Rabat</names>
+  </blacklist>
+</names>

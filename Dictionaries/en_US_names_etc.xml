@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <!-- This list contains names/words with specific casing - and specific to English only -->
-<ignore_list>
+<names>
   <name>Aarav</name>
   <name>Abbey</name>
   <name>Abbie</name>
@@ -1158,4 +1158,7 @@
   <name>Zion</name>
   <name>Zoie</name>
   <name>Zuri</name>
-</ignore_list>
+  <blacklist>
+    <name></name>
+  </blacklist>
+</names>
