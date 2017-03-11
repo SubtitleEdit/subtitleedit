@@ -223,7 +223,11 @@ This file is generated/updated by Multi Translator
   <name>Anabeth</name>
   <name>Anakin</name>
   <name>Ana's</name>
+  <name>MLB</name>
+  <name>FIFA</name>
+  <name>NBA</name>
   <name>Anastasia</name>
+  <name>Nascar</name>
   <name>Anchorage</name>
   <name>Anders</name>
   <name>Anderson</name>
@@ -733,6 +737,7 @@ This file is generated/updated by Multi Translator
   <name>Brandi</name>
   <name>Brandie</name>
   <name>Brando</name>
+  <name>Instagram</name>
   <name>Brandon</name>
   <name>Brandt</name>
   <name>Brandy</name>
@@ -1865,7 +1870,6 @@ This file is generated/updated by Multi Translator
   <name>Federal Bureau of Investigation</name>
   <name>Federated</name>
   <name>Felicia</name>
-  <name>Felicity</name>
   <name>Felipe</name>
   <name>Felix</name>
   <name>Femara</name>
@@ -1890,8 +1894,6 @@ This file is generated/updated by Multi Translator
   <name>Filipino</name>
   <name>Filippa</name>
   <name>Fillmore</name>
-  <name>filmfix</name>
-  <name>FilmFixSubCrew</name>
   <name>Finch</name>
   <name>Finland</name>
   <name>Finlay</name>
@@ -2751,6 +2753,7 @@ This file is generated/updated by Multi Translator
   <name>Jerri</name>
   <name>Jerrie</name>
   <name>Jerry</name>
+  <name>Usain Bolt</name>
   <name>Jerrys</name>
   <name>Jersey</name>
   <name>Jerusalem</name>
@@ -3457,7 +3460,6 @@ This file is generated/updated by Multi Translator
   <name>Maldives</name>
   <name>Maldivian</name>
   <name>Maldivians</name>
-  <name>Male</name>
   <name>Malekai</name>
   <name>Malfoy</name>
   <name>Mali</name>
@@ -3616,8 +3618,6 @@ This file is generated/updated by Multi Translator
   <name>Mauritania</name>
   <name>Mauritanian</name>
   <name>Mauritanians</name>
-  <name>Mauritian</name>
-  <name>Mauritians</name>
   <name>Mauritius</name>
   <name>Maury</name>
   <name>Maverick</name>
@@ -3929,6 +3929,8 @@ This file is generated/updated by Multi Translator
   <name>Muhammad Ali</name>
   <name>Muhammed</name>
   <name>Muhammeds</name>
+  <name>Robert Mugabe</name>
+  <name>Che Guevara</name>
   <name>Mulholland</name>
   <name>Mullholand</name>
   <name>Mumbai</name>
@@ -4250,6 +4252,7 @@ This file is generated/updated by Multi Translator
   <name>Owen</name>
   <name>Owens</name>
   <name>Oxford</name>
+  <name>University of Oxford</name>
   <name>Oxfords</name>
   <name>P.M.</name>
   <name>Pablo</name>
@@ -4706,6 +4709,7 @@ This file is generated/updated by Multi Translator
   <name>Romanovs</name>
   <name>Rome</name>
   <name>Romeo</name>
+  <name>Dalai Lama</name>
   <name>Romi</name>
   <name>Romilda</name>
   <name>Ron</name>
@@ -5173,6 +5177,10 @@ This file is generated/updated by Multi Translator
   <name>Stephens</name>
   <name>Steve</name>
   <name>Steve Jobs</name>
+  <name>Winnie Mandela</name>
+  <name>Morgan Freeman</name>
+  <name>Jacob Zuma</name>
+  <name>Mahatma Gandhi</name>
   <name>Steven</name>
   <name>Stevens</name>
   <name>Stevenson</name>
@@ -5509,6 +5517,7 @@ This file is generated/updated by Multi Translator
   <name>Turner</name>
   <name>Tuscany</name>
   <name>Tuvalu</name>
+  <name>NFL</name>
   <name>TV</name>
   <name>Twitter</name>
   <name>Ty</name>
@@ -5912,6 +5921,7 @@ This file is generated/updated by Multi Translator
   <name>Zoey</name>
   <name>Zoloft</name>
   <name>Zor-El</name>
+  <name>Nelson Mandela</name>
   <name>Zorg</name>
   <name>Zori</name>
   <name>Zork</name>
