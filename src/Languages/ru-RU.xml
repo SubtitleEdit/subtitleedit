@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Language Name="Русский">
   <General>
     <Title>Subtitle Edit</Title>
@@ -2066,6 +2066,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <LengthInFormatXinCharactersY>Число символов для {0}: {1:#,###,##0}</LengthInFormatXinCharactersY>
     <NumberOfCharactersInTextOnly>Число символов в тексте: {0:#,###,##0}</NumberOfCharactersInTextOnly>
     <TotalCharsPerSecond>Всего символов/секунду: {0:0.0} секунд</TotalCharsPerSecond>
+    <TotalWords>Всего слов в субтитрах: {0}</TotalWords>
     <NumberOfItalicTags>Число тегов курсива: {0}</NumberOfItalicTags>
     <NumberOfBoldTags>Число тегов полужирного: {0}</NumberOfBoldTags>
     <NumberOfUnderlineTags>Число тегов подчеркивания: {0}</NumberOfUnderlineTags>
