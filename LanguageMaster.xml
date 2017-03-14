@@ -1799,6 +1799,9 @@ can edit in same subtitle file (collaboration)</Information>
     <UseOnlineNamesEtc>Use online names etc xml file</UseOnlineNamesEtc>
     <WordAddedX>Word added: {0}</WordAddedX>
     <WordAlreadyExists>Word already exists!</WordAlreadyExists>
+    <NameOrWordMustBeGreaterThanOneCharacter>Name/word must be greater than one character!</NameOrWordMustBeGreaterThanOneCharacter>
+    <InvalidLanguageSelected>Invalid language selected!</InvalidLanguageSelected>
+    <InvalidKeyValue>Invalid key/value</InvalidKeyValue>
     <WordNotFound>Word not found</WordNotFound>
     <RemoveX>Remove {0}?</RemoveX>
     <CannotUpdateNamesEtcOnline>Cannot update NamesEtc.xml online!</CannotUpdateNamesEtcOnline>

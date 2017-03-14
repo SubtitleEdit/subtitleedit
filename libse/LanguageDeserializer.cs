@@ -4846,6 +4846,15 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/WordAlreadyExists":
                     language.Settings.WordAlreadyExists = reader.Value;
                     break;
+                case "Settings/NameOrWordMustBeGreaterThanOneCharacter":
+                    language.Settings.NameOrWordMustBeGreaterThanOneCharacter = reader.Value;
+                    break;
+                case "Settings/InvalidLanguageSelected":
+                    language.Settings.InvalidLanguageSelected = reader.Value;
+                    break;
+                case "Settings/InvalidKeyValue":
+                    language.Settings.InvalidKeyValue = reader.Value;
+                    break;
                 case "Settings/WordNotFound":
                     language.Settings.WordNotFound = reader.Value;
                     break;
