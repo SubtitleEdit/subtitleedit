@@ -1,7 +1,7 @@
 ﻿Subtitle Edit Changelog
 
 
-3.5.3 (xrd May 2017) BETA
+3.5.3 (xth May 2017) BETA
 * NEW:
    * New ...
 * IMPROVED:
