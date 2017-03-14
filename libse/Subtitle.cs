@@ -14,8 +14,8 @@ namespace Nikse.SubtitleEdit.Core
         private readonly List<HistoryItem> _history;
         private SubtitleFormat _format;
         private bool _wasLoadedWithFrameNumbers;
-        public string Header { get; set; } = "";
-        public string Footer { get; set; } = "";
+        public string Header { get; set; } = string.Empty;
+        public string Footer { get; set; } = string.Empty;
 
         public string FileName { get; set; }
 
