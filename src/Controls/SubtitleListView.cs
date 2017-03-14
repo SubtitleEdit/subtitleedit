@@ -794,7 +794,10 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 width += Columns[i].Width;
             }
-            Columns[Columns.Count - 1].Width = Width - (width + 25);
+            if (Columns.Count > 0)
+            {
+                Columns[Columns.Count - 1].Width = Width - (width + 25);
+            }
         }
 
         public void SaveFirstVisibleIndex()
