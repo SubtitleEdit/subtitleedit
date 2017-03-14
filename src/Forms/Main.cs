@@ -18288,8 +18288,6 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ToolsToolStripMenuItemDropDownOpening(object sender, EventArgs e)
         {
-            SubtitleFormat format = GetCurrentSubtitleFormat();
-
             if (_subtitle?.Paragraphs.Count > 0 && _networkSession == null)
             {
                 toolStripSeparator23.Visible = true;
@@ -18302,8 +18300,7 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripMenuItemMakeEmptyFromCurrent.Visible = false;
                 toolStripMenuItemShowOriginalInPreview.Checked = false;
             }
-
-            styleToolStripMenuItem.Visible = format.HasStyleSupport;
+            styleToolStripMenuItem.Visible = GetCurrentSubtitleFormat().HasStyleSupport;
         }
 
         private void ContextMenuStripWaveformOpening(object sender, System.ComponentModel.CancelEventArgs e)
