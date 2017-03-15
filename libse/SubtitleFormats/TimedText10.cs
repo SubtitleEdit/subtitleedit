@@ -377,31 +377,31 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             string region = GetEffect(p, "region");
             if (string.IsNullOrEmpty(region))
             {
-                if (text.StartsWith("{\\an1}", StringComparison.Ordinal) && regions.Contains("bottomLeft"))
+                if (text.StartsWith("{\\an1}", StringComparison.Ordinal) && AddDefaultRegionIfNotExists(xml, "bottomLeft"))
                     region = "bottomLeft";
 
-                if (text.StartsWith("{\\an2}", StringComparison.Ordinal) && regions.Contains("bottomCenter"))
+                if (text.StartsWith("{\\an2}", StringComparison.Ordinal) && AddDefaultRegionIfNotExists(xml, "bottomCenter"))
                     region = "bottomCenter";
 
-                if (text.StartsWith("{\\an3}", StringComparison.Ordinal) && regions.Contains("bottomRight"))
+                if (text.StartsWith("{\\an3}", StringComparison.Ordinal) && AddDefaultRegionIfNotExists(xml, "bottomRight"))
                     region = "bottomRight";
 
-                if (text.StartsWith("{\\an4}", StringComparison.Ordinal) && regions.Contains("centerLeft"))
+                if (text.StartsWith("{\\an4}", StringComparison.Ordinal) && AddDefaultRegionIfNotExists(xml, "centerLeft"))
                     region = "centerLeft";
 
-                if (text.StartsWith("{\\an5}", StringComparison.Ordinal) && regions.Contains("centerСenter"))
+                if (text.StartsWith("{\\an5}", StringComparison.Ordinal) && AddDefaultRegionIfNotExists(xml, "centerСenter"))
                     region = "centerСenter";
 
-                if (text.StartsWith("{\\an6}", StringComparison.Ordinal) && regions.Contains("centerRight"))
+                if (text.StartsWith("{\\an6}", StringComparison.Ordinal) && AddDefaultRegionIfNotExists(xml, "centerRight"))
                     region = "centerRight";
 
-                if (text.StartsWith("{\\an7}", StringComparison.Ordinal) && regions.Contains("topLeft"))
+                if (text.StartsWith("{\\an7}", StringComparison.Ordinal) && AddDefaultRegionIfNotExists(xml, "topLeft"))
                     region = "topLeft";
 
-                if (text.StartsWith("{\\an8}", StringComparison.Ordinal) && regions.Contains("topCenter"))
+                if (text.StartsWith("{\\an8}", StringComparison.Ordinal) && AddDefaultRegionIfNotExists(xml, "topCenter"))
                     region = "topCenter";
 
-                if (text.StartsWith("{\\an9}", StringComparison.Ordinal) && regions.Contains("topRight"))
+                if (text.StartsWith("{\\an9}", StringComparison.Ordinal) && AddDefaultRegionIfNotExists(xml, "topRight"))
                     region = "topRight";
             }
             text = Utilities.RemoveSsaTags(text);
@@ -582,10 +582,43 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
         }
 
+        public static bool AddDefaultRegionIfNotExists(XmlDocument xml, string region)
+        {
+            XmlNamespaceManager nsmgr = new XmlNamespaceManager(xml.NameTable);
+            nsmgr.AddNamespace("ttml", TTMLNamespace);
+
+            if (xml.DocumentElement.SelectSingleNode(string.Format("ttml:head//ttml:region[@xml:id='{0}']", region), nsmgr) != null)
+            {
+                return true;
+            }
+
+            XmlDocument defaultXml = new XmlDocument();
+            defaultXml.LoadXml(new TimedText10().ToText(new Subtitle(), "tt"));
+
+            XmlNode regionNode = defaultXml.DocumentElement
+                .SelectSingleNode(string.Format("ttml:head//ttml:region[@xml:id='{0}']", region), nsmgr);
+
+            if (regionNode == null)
+            {
+                return false;
+            }
+
+            XmlNode importedRegionNode = xml.ImportNode(regionNode, true);
+            XmlNode layoutNode = xml.DocumentElement.SelectSingleNode("ttml:head/ttml:layout", nsmgr);
+
+            if (layoutNode == null)
+            {
+                return false;
+            }
+
+            layoutNode.AppendChild(importedRegionNode);
+
+            return true;
+        }
+
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             _errorCount = 0;
-            double startSeconds = 0;
 
             var sb = new StringBuilder();
             lines.ForEach(line => sb.AppendLine(line));
@@ -639,7 +672,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             string defaultStyle = null;
             if (body.Attributes["style"] != null)
                 defaultStyle = body.Attributes["style"].InnerText;
-            XmlNode lastDiv = null;
 
             var topRegions = GetRegionsTopFromHeader(xml.OuterXml);
             var headerStyleNodes = new List<XmlNode>();
@@ -736,11 +768,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         }
                     }
 
+                    p.Extra = SetExtra(p);
+
                     p.Text = p.Text.Trim();
                     while (p.Text.Contains(Environment.NewLine + Environment.NewLine))
                         p.Text = p.Text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
-
-                    p.Extra = SetExtra(p);
 
                     subtitle.Paragraphs.Add(p);
                 }
