@@ -122,7 +122,6 @@ namespace Nikse.SubtitleEdit.Forms
                 var wc = new WebClient { Proxy = Utilities.GetProxy() };
                 wc.DownloadDataCompleted += wc_DownloadDataCompleted;
                 wc.DownloadDataAsync(new Uri(url));
-                Cursor = Cursors.Default;
             }
             catch (Exception exception)
             {
@@ -137,6 +136,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void wc_DownloadDataCompleted(object sender, DownloadDataCompletedEventArgs e)
         {
+            Cursor = Cursors.Default;
             if (e.Error != null && _xmlName == "Nikse.SubtitleEdit.Resources.HunspellDictionaries.xml.gz")
             {
                 MessageBox.Show("Unable to connect to extensions.services.openoffice.org... Switching host - please re-try!");
