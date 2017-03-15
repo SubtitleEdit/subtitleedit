@@ -15009,16 +15009,17 @@ namespace Nikse.SubtitleEdit.Forms
 
                 timeUpDownStartTime.MaskedTextBox.TextChanged -= MaskedTextBoxTextChanged;
                 int index = SubtitleListview1.SelectedItems[0].Index;
+                var oldP = new Paragraph(_subtitle.Paragraphs[index]);
                 if (!mediaPlayer.IsPaused)
                     videoPosition -= Configuration.Settings.General.SetStartEndHumanDelay / TimeCode.BaseUnit;
                 var tc = TimeCode.FromSeconds(videoPosition);
                 timeUpDownStartTime.TimeCode = tc;
 
-                MakeHistoryForUndo(_language.BeforeSetStartTimeAndOffsetTheRest + @"  " + _subtitle.Paragraphs[index].Number + @" - " + tc);
+                MakeHistoryForUndo(_language.BeforeSetStartTimeAndOffsetTheRest + @"  " + oldP.Number + @" - " + tc);
 
-                double offset = _subtitle.Paragraphs[index].StartTime.TotalMilliseconds - tc.TotalMilliseconds;
+                double offset = oldP.StartTime.TotalMilliseconds - tc.TotalMilliseconds;
 
-                if (_subtitle.Paragraphs[index].StartTime.IsMaxTime)
+                if (oldP.StartTime.IsMaxTime)
                 {
                     _subtitle.Paragraphs[index].StartTime.TotalSeconds = videoPosition;
                     _subtitle.Paragraphs[index].EndTime.TotalMilliseconds = _subtitle.Paragraphs[index].StartTime.TotalMilliseconds + Utilities.GetOptimalDisplayMilliseconds(_subtitle.Paragraphs[index].Text);
@@ -15044,7 +15045,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0)
                 {
-                    var original = Utilities.GetOriginalParagraph(index, _subtitle.Paragraphs[index], _subtitleAlternate.Paragraphs);
+                    var original = Utilities.GetOriginalParagraph(index, oldP, _subtitleAlternate.Paragraphs);
                     if (original != null)
                     {
                         index = _subtitleAlternate.GetIndex(original);
