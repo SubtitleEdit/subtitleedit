@@ -2390,14 +2390,7 @@ namespace Nikse.SubtitleEdit.Forms
             var helper = (ShortcutHelper)treeViewShortcuts.SelectedNode.Tag;
             if (helper.IsMenuItem)
             {
-                try
-                {
-                    new ToolStripMenuItem().ShortcutKeys = UiUtil.GetKeys(GetShortcut(shortcutText));
-                }
-                catch (InvalidEnumArgumentException)
-                {
-                    return false;
-                }
+                return UiUtil.GetKeys(GetShortcut(shortcutText)) != Keys.None;
             }
             return true;
         }
