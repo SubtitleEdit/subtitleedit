@@ -137,7 +137,6 @@
             this.checkBoxShowEndTime.AutoSize = true;
             this.checkBoxShowEndTime.Checked = true;
             this.checkBoxShowEndTime.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxShowEndTime.Enabled = false;
             this.checkBoxShowEndTime.Location = new System.Drawing.Point(44, 96);
             this.checkBoxShowEndTime.Name = "checkBoxShowEndTime";
             this.checkBoxShowEndTime.Size = new System.Drawing.Size(71, 17);
@@ -150,7 +149,6 @@
             this.checkBoxShowDuration.AutoSize = true;
             this.checkBoxShowDuration.Checked = true;
             this.checkBoxShowDuration.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxShowDuration.Enabled = false;
             this.checkBoxShowDuration.Location = new System.Drawing.Point(44, 119);
             this.checkBoxShowDuration.Name = "checkBoxShowDuration";
             this.checkBoxShowDuration.Size = new System.Drawing.Size(66, 17);

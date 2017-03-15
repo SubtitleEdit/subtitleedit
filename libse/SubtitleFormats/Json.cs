@@ -204,7 +204,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     oldStart++;
                 }
 
-                if (res[oldStart] == '"')
+                if (oldStart < res.Length && res[oldStart] == '"')
                 {
                     nextTag = res.IndexOf('"', oldStart + 1);
 
@@ -246,7 +246,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         }
                     }
                 }
-                else if (res[oldStart] != '[' && res[oldStart] != ']')
+                else if (oldStart < res.Length && res[oldStart] != '[' && res[oldStart] != ']')
                 {
                     nextTag = res.IndexOf(',', oldStart + 1);
                     if (nextTag > 0)

@@ -101,6 +101,8 @@ namespace Nikse.SubtitleEdit.Core
         public int ListViewSyntaxMoreThanXLinesX { get; set; }
         public Color ListViewSyntaxErrorColor { get; set; }
         public Color ListViewUnfocusedSelectedColor { get; set; }
+        public bool ListViewShowColumnEndTime { get; set; }
+        public bool ListViewShowColumnDuration { get; set; }
         public bool ListViewShowColumnCharsPerSec { get; set; }
         public bool ListViewShowColumnWordsPerMin { get; set; }
         public bool SplitAdvanced { get; set; }
@@ -215,6 +217,8 @@ namespace Nikse.SubtitleEdit.Core
             ListViewSyntaxMoreThanXLinesX = 2;
             ListViewSyntaxErrorColor = Color.FromArgb(255, 180, 150);
             ListViewUnfocusedSelectedColor = Color.LightBlue;
+            ListViewShowColumnEndTime = true;
+            ListViewShowColumnDuration = true;
             SplitAdvanced = false;
             SplitNumberOfParts = 3;
             SplitVia = "Lines";
@@ -544,6 +548,7 @@ namespace Nikse.SubtitleEdit.Core
         public bool AutoWrapLineWhileTyping { get; set; }
         public double SubtitleMaximumCharactersPerSeconds { get; set; }
         public double SubtitleOptimalCharactersPerSeconds { get; set; }
+        public bool CharactersPerSecondsIgnoreWhiteSpace { get; set; }
         public double SubtitleMaximumWordsPerMinute { get; set; }
         public string SpellCheckLanguage { get; set; }
         public string VideoPlayer { get; set; }
@@ -590,6 +595,7 @@ namespace Nikse.SubtitleEdit.Core
         public string VlcLocation { get; set; }
         public string VlcLocationRelative { get; set; }
         public string MpvVideoOutput { get; set; }
+        public bool MpvHandlesPreviewText { get; set; }
         public string MpcHcLocation { get; set; }
         public bool UseFFmpegForWaveExtraction { get; set; }
         public string FFmpegLocation { get; set; }
@@ -659,7 +665,7 @@ namespace Nikse.SubtitleEdit.Core
             SpellCheckLanguage = null;
             VideoPlayer = string.Empty;
             VideoPlayerDefaultVolume = 75;
-            VideoPlayerPreviewFontSize = 10;
+            VideoPlayerPreviewFontSize = 12;
             VideoPlayerPreviewFontBold = true;
             VideoPlayerShowStopButton = true;
             VideoPlayerShowMuteButton = true;
@@ -687,10 +693,8 @@ namespace Nikse.SubtitleEdit.Core
             OpenSubtitleExtraExtensions = "*.mp4;*.m4v;*.mkv;*.ts"; // matroska/mp4/m4v files (can contain subtitles)
             ListViewColumnsRememberSize = true;
             VlcWaveTranscodeSettings = "acodec=s16l"; // "acodec=s16l,channels=1,ab=64,samplerate=8000";
-            if (Configuration.IsRunningOnLinux())
-                MpvVideoOutput = "vaapi"; // mpv "vo" option
-            else
-                MpvVideoOutput = "direct3d_shaders";
+            MpvVideoOutput = Configuration.IsRunningOnLinux() ? "vaapi" : "direct3d";
+            MpvHandlesPreviewText = true;
             UseTimeFormatHHMMSSFF = false;
             ClearStatusBarAfterSeconds = 10;
             MoveVideo100Or500MsPlaySmallSample = false;
@@ -1499,6 +1503,9 @@ namespace Nikse.SubtitleEdit.Core
             subNode = node.SelectSingleNode("SubtitleOptimalCharactersPerSeconds");
             if (subNode != null)
                 settings.General.SubtitleOptimalCharactersPerSeconds = Convert.ToDouble(subNode.InnerText, CultureInfo.InvariantCulture);
+            subNode = node.SelectSingleNode("CharactersPerSecondsIgnoreWhiteSpace");
+            if (subNode != null)
+                settings.General.CharactersPerSecondsIgnoreWhiteSpace = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("SubtitleMaximumWordsPerMinute");
             if (subNode != null)
                 settings.General.SubtitleMaximumWordsPerMinute = Convert.ToDouble(subNode.InnerText, CultureInfo.InvariantCulture);
@@ -1637,6 +1644,9 @@ namespace Nikse.SubtitleEdit.Core
             subNode = node.SelectSingleNode("MpvVideoOutput");
             if (subNode != null)
                 settings.General.MpvVideoOutput = subNode.InnerText.Trim();
+            subNode = node.SelectSingleNode("MpvHandlesPreviewText");
+            if (subNode != null)
+                settings.General.MpvHandlesPreviewText = Convert.ToBoolean(subNode.InnerText.Trim());
             subNode = node.SelectSingleNode("MpcHcLocation");
             if (subNode != null)
                 settings.General.MpcHcLocation = subNode.InnerText.Trim();
@@ -1772,6 +1782,12 @@ namespace Nikse.SubtitleEdit.Core
             subNode = node.SelectSingleNode("ListViewUnfocusedSelectedColor");
             if (subNode != null)
                 settings.Tools.ListViewUnfocusedSelectedColor = Color.FromArgb(int.Parse(subNode.InnerText));
+            subNode = node.SelectSingleNode("ListViewShowColumnEndTime");
+            if (subNode != null)
+                settings.Tools.ListViewShowColumnEndTime = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("ListViewShowColumnDuration");
+            if (subNode != null)
+                settings.Tools.ListViewShowColumnDuration = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("ListViewShowColumnCharsPerSec");
             if (subNode != null)
                 settings.Tools.ListViewShowColumnCharsPerSec = Convert.ToBoolean(subNode.InnerText);
@@ -3118,7 +3134,8 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("SetStartEndHumanDelay", settings.General.SetStartEndHumanDelay.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AutoWrapLineWhileTyping", settings.General.AutoWrapLineWhileTyping.ToString());
                 textWriter.WriteElementString("SubtitleMaximumCharactersPerSeconds", settings.General.SubtitleMaximumCharactersPerSeconds.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("SubtitleOptimalCharactersPerSeconds", settings.General.SubtitleOptimalCharactersPerSeconds.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("SubtitleOptimalCharactersPerSeconds", settings.General.SubtitleOptimalCharactersPerSeconds.ToString(CultureInfo.InvariantCulture));                
+                textWriter.WriteElementString("CharactersPerSecondsIgnoreWhiteSpace", settings.General.CharactersPerSecondsIgnoreWhiteSpace.ToString());
                 textWriter.WriteElementString("SubtitleMaximumWordsPerMinute", settings.General.SubtitleMaximumWordsPerMinute.ToString(CultureInfo.InvariantCulture));                
                 textWriter.WriteElementString("SpellCheckLanguage", settings.General.SpellCheckLanguage);
                 textWriter.WriteElementString("VideoPlayer", settings.General.VideoPlayer);
@@ -3165,6 +3182,7 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("VlcLocation", settings.General.VlcLocation);
                 textWriter.WriteElementString("VlcLocationRelative", settings.General.VlcLocationRelative);
                 textWriter.WriteElementString("MpvVideoOutput", settings.General.MpvVideoOutput);
+                textWriter.WriteElementString("MpvHandlesPreviewText", settings.General.MpvHandlesPreviewText.ToString());
                 textWriter.WriteElementString("MpcHcLocation", settings.General.MpcHcLocation);
                 textWriter.WriteElementString("UseFFmpegForWaveExtraction", settings.General.UseFFmpegForWaveExtraction.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("FFmpegLocation", settings.General.FFmpegLocation);
@@ -3213,6 +3231,8 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("ListViewSyntaxColorOverlap", settings.Tools.ListViewSyntaxColorOverlap.ToString());
                 textWriter.WriteElementString("ListViewSyntaxErrorColor", settings.Tools.ListViewSyntaxErrorColor.ToArgb().ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewUnfocusedSelectedColor", settings.Tools.ListViewUnfocusedSelectedColor.ToArgb().ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ListViewShowColumnEndTime", settings.Tools.ListViewShowColumnEndTime.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ListViewShowColumnDuration", settings.Tools.ListViewShowColumnDuration.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewShowColumnCharsPerSec", settings.Tools.ListViewShowColumnCharsPerSec.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewShowColumnWordsPerMin", settings.Tools.ListViewShowColumnWordsPerMin.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("SplitAdvanced", settings.Tools.SplitAdvanced.ToString());

@@ -1,6 +1,6 @@
 ﻿namespace Nikse.SubtitleEdit.Forms
 {
-    partial class ApplyDurationLimits
+    sealed partial class ApplyDurationLimits
     {
         /// <summary>
         /// Required designer variable.

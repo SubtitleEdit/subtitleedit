@@ -2,7 +2,7 @@
 <Language Name="Polish">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.5.1</Version>
+    <Version>3.5.2</Version>
     <TranslatedBy>Tłumaczenie Adam Malich (mailto: adam_malich@gizycko.mm.pl)</TranslatedBy>
     <CultureName>pl-PL</CultureName>
     <HelpFile>http://potplayer.pl/ccount/click.php?id=10</HelpFile>
@@ -350,6 +350,7 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
     <CodePageNumber>Numer strony kodowej</CodePageNumber>
     <DiskFormatCode>Kod formatu dysku</DiskFormatCode>
     <DisplayStandardCode>Kod standardu wyświetlania</DisplayStandardCode>
+    <ColorRequiresTeletext>Teletekst wymaga kolorów!</ColorRequiresTeletext>
     <CharacterCodeTable>Tabela znaków</CharacterCodeTable>
     <LanguageCode>Kod języka</LanguageCode>
     <OriginalProgramTitle>Oryginalny tytuł programu</OriginalProgramTitle>
@@ -369,6 +370,10 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
     <Import>Importuj...</Import>
     <TextAndTimingInformation>Tekst i informacje o synchronizacji</TextAndTimingInformation>
     <JustificationCode>Kod justowania</JustificationCode>
+    <VerticalPosition>Pozycja w pionie</VerticalPosition>
+    <MarginTop>Górny margines (dla górnego wyrównania napisów)</MarginTop>
+    <MarginBottom>Dolny margines (dla dolnego wyrównania napisów)</MarginBottom>
+    <NewLineRows>Liczba wierszy dodanych przez nową linię</NewLineRows>
     <Teletext>Teletekst</Teletext>
     <UseBox>Użyj pola wokół tekstu</UseBox>
     <DoubleHeight>Użyj podwójnej wysokości tekstu</DoubleHeight>
@@ -600,7 +605,7 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
     <XMissingSpacesAdded>Dodano {0} brakujących spacji</XMissingSpacesAdded>
     <FixUppercaseIInsideLowercaseWord>Popraw wielką literę 'i' wewnątrz wyrazu pisanego małymi literami</FixUppercaseIInsideLowercaseWord>
     <XPeriodsAdded>Dodano {0} kropek.</XPeriodsAdded>
-    <FixMissingPeriodAtEndOfLine>Dodaj brakujący kropkę na końcu linii</FixMissingPeriodAtEndOfLine>
+    <FixMissingPeriodAtEndOfLine>Dodaj brakującą kropkę na końcu linii</FixMissingPeriodAtEndOfLine>
     <XDoubleApostrophesFixed>Poprawiono {0} podwójnych apostrofów.</XDoubleApostrophesFixed>
     <XUppercaseIsFoundInsideLowercaseWords>Znaleziono {0} wielkich liter 'i' wewnątrz wyrazów pisanych małymi literami</XUppercaseIsFoundInsideLowercaseWords>
     <RefreshFixes>Odśwież dostępne poprawki</RefreshFixes>
@@ -1057,6 +1062,7 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
         <ShowHideVideo>Pokaż/ukryj wideo</ShowHideVideo>
       </ToolBar>
       <ContextMenu>
+        <SizeAllColumnsToFit>Dopasuj rozmiar wszystkich kolumn</SizeAllColumnsToFit>
         <AdvancedSubStationAlphaSetStyle>Advanced Sub Station Alpha - ustaw styl</AdvancedSubStationAlphaSetStyle>
         <SubStationAlphaSetStyle>Sub Station Alpha - ustaw styl</SubStationAlphaSetStyle>
         <SubStationAlphaStyles>Style Sub Station Alpha...</SubStationAlphaStyles>
@@ -1735,6 +1741,7 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <MpcHcDescription>Media Player Classic - Home Cinema</MpcHcDescription>
     <MpvPlayer>mpv</MpvPlayer>
     <MpvPlayerDescription>https://mpv.io/ - darmowy, open source i wieloplatformowy odtwarzacz multimedialny</MpvPlayerDescription>
+    <MpvHandlesPreviewText>obsługa podgląd tekstu w mpv</MpvHandlesPreviewText>
     <VlcMediaPlayer>VLC media player</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll z VLC media player 1.1.0 lub nowszego</VlcMediaPlayerDescription>
     <VlcBrowseToLabel>Ścieżka do VLC (potrzebna tylko wtedy, gdy używasz wersji portable VLC)</VlcBrowseToLabel>

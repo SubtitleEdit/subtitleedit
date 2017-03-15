@@ -2,7 +2,7 @@
 <Language Name="Русский">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.5.1</Version>
+    <Version>3.5.2</Version>
     <TranslatedBy>Перевод на русский: Leserg (mailto:leserg@ua.fm)
 Дополнения и последующие доработки перевода: Elheym (http://forum.hqclub.net/) (https://hdclub.org/)</TranslatedBy>
     <CultureName>ru-RU</CultureName>
@@ -357,6 +357,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <CodePageNumber>Кодовая страница:</CodePageNumber>
     <DiskFormatCode>Код формата:</DiskFormatCode>
     <DisplayStandardCode>Код отображения:</DisplayStandardCode>
+    <ColorRequiresTeletext>Укажите цвета телетекста!</ColorRequiresTeletext>
     <CharacterCodeTable>Таблица символов:</CharacterCodeTable>
     <LanguageCode>Код языка:</LanguageCode>
     <OriginalProgramTitle>Название передачи:</OriginalProgramTitle>
@@ -367,15 +368,19 @@ https://github.com/SubtitleEdit/subtitleedit
     <SubtitleListReferenceCode>Код списка субтитров:</SubtitleListReferenceCode>
     <CountryOfOrigin>Страна происхождения:</CountryOfOrigin>
     <TimeCodeStatus>Статус временного кода</TimeCodeStatus>
-    <TimeCodeStartOfProgramme>Временной код: начат в программе</TimeCodeStartOfProgramme>
+    <TimeCodeStartOfProgramme>Временной код: начиная с</TimeCodeStartOfProgramme>
     <RevisionNumber>Номер редакции:</RevisionNumber>
     <MaxNoOfDisplayableChars>Макс. символов в строке:</MaxNoOfDisplayableChars>
     <MaxNumberOfDisplayableRows>Макс. количество строк:</MaxNumberOfDisplayableRows>
     <DiskSequenceNumber>Номер диска:</DiskSequenceNumber>
     <TotalNumberOfDisks>Общее число дисков:</TotalNumberOfDisks>
-    <Import>Импорт...</Import>
+    <Import>Открыть...</Import>
     <TextAndTimingInformation>Текст и сведения о синхронизации</TextAndTimingInformation>
     <JustificationCode>Размещение кода:</JustificationCode>
+    <VerticalPosition>Вертикальное построение</VerticalPosition>
+    <MarginTop>Верхний отступ (выравнивание субтитров от верха)</MarginTop>
+    <MarginBottom>Нижний отступ (выравнивание субтитров от низа)</MarginBottom>
+    <NewLineRows>Количество столбцов добавляемых в новую строку</NewLineRows>
     <Teletext>Телетекст</Teletext>
     <UseBox>Использовать обводку вокруг текста</UseBox>
     <DoubleHeight>Использовать двойную высоту для текста</DoubleHeight>
@@ -422,17 +427,17 @@ https://github.com/SubtitleEdit/subtitleedit
     <Title>Экспорт BDN XML/PNG</Title>
     <ImageSettings>Настройки изображения</ImageSettings>
     <FontFamily>Шрифт:</FontFamily>
-    <FontSize>Размер шрифта:</FontSize>
+    <FontSize>Размер шрифта</FontSize>
     <FontColor>Цвет шрифта</FontColor>
     <BorderColor>Цвет границы</BorderColor>
     <BorderWidth>Ширина границы:</BorderWidth>
     <BorderStyle>Стиль границы</BorderStyle>
     <BorderStyleOneBox>Один контур</BorderStyleOneBox>
     <BorderStyleBoxForEachLine>Контур для каждой строки</BorderStyleBoxForEachLine>
-    <BorderStyleNormalWidthX>По умолчанию, Ширина={0}</BorderStyleNormalWidthX>
+    <BorderStyleNormalWidthX>Ширина={0}</BorderStyleNormalWidthX>
     <ShadowColor>Цвет тени</ShadowColor>
     <ShadowWidth>Ширина тени</ShadowWidth>
-    <Transparency>Альфа</Transparency>
+    <Transparency>Прозрачность</Transparency>
     <ImageFormat>Формат изображения</ImageFormat>
     <FullFrameImage>Заливка цветом</FullFrameImage>
     <SimpleRendering>Простая обработка</SimpleRendering>
@@ -448,7 +453,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <Left>Слева</Left>
     <Right>Справа</Right>
     <Center>По центру</Center>
-    <BottomMargin>Нижнее поле</BottomMargin>
+    <BottomMargin>Отступ снизу</BottomMargin>
     <LeftRightMargin>Лев./Прав. поле</LeftRightMargin>
     <SaveBluRraySupAs>Выбор имени файла Blu-ray sup</SaveBluRraySupAs>
     <SaveVobSubAs>Выбор имени файла VobSub</SaveVobSubAs>
@@ -463,7 +468,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <LineHeight>Высота строки</LineHeight>
     <BoxSingleLine>Контур - одна линия</BoxSingleLine>
     <BoxMultiLine>Контур - несколько линий</BoxMultiLine>
-    <Forced>Forced</Forced>
+    <Forced>Включ.</Forced>
     <ChooseBackgroundColor>Выберите цвет фона</ChooseBackgroundColor>
     <SaveImageAs>Сохранить изображение как...</SaveImageAs>
   </ExportPngXml>
@@ -528,7 +533,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <RemovedEmptyLine>Удалена пустая строка</RemovedEmptyLine>
     <RemovedEmptyLineAtTop>Удалена пустая строка сверху</RemovedEmptyLineAtTop>
     <RemovedEmptyLineAtBottom>Удалена пустая строка снизу</RemovedEmptyLineAtBottom>
-    <RemovedEmptyLinesUnsedLineBreaks>Удалены пустые строки/неиспользуемые разрывы строк</RemovedEmptyLinesUnsedLineBreaks>
+    <RemovedEmptyLinesUnsedLineBreaks>Удалить пустые строки/неиспользуемые разрывы строк</RemovedEmptyLinesUnsedLineBreaks>
     <EmptyLinesRemovedX>Удалено пустых строк: {0}</EmptyLinesRemovedX>
     <FixOverlappingDisplayTimes>Исправить временные наложения субтитров</FixOverlappingDisplayTimes>
     <FixShortDisplayTimes>Исправить короткое время отображения субтитров</FixShortDisplayTimes>
@@ -680,7 +685,7 @@ https://github.com/SubtitleEdit/subtitleedit
 Пожалуйста, введите число в указанном диапазоне.</XIsNotAValidNumber>
   </GoToLine>
   <ImportImages>
-    <Title>Импорт изображений</Title>
+    <Title>Открыть изображения</Title>
     <ImageFiles>Файлы изображений</ImageFiles>
     <Input>Вход</Input>
     <InputDescription>Выберите входные файлы (поддерживается "Drag-n-Drop" перетягивание)</InputDescription>
@@ -688,7 +693,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <RemoveAll>Удалить все</RemoveAll>
   </ImportImages>
   <ImportSceneChanges>
-    <Title>Импорт изменений сцены</Title>
+    <Title>Открыть изменение сцен</Title>
     <OpenTextFile>Открыть файл...</OpenTextFile>
     <ImportOptions>Настройки импорта</ImportOptions>
     <TextFiles>Текстовые файлы</TextFiles>
@@ -699,7 +704,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <GetSceneChangesWithFfmpeg>Получить сцены изменений с помощью FFmpeg</GetSceneChangesWithFfmpeg>
   </ImportSceneChanges>
   <ImportText>
-    <Title>Импорт простого текста</Title>
+    <Title>Открыть простой текст</Title>
     <OneSubtitleIsOneFile>Несколько файлов - один файл является одним субтитром</OneSubtitleIsOneFile>
     <OpenTextFile>Открыть файл...</OpenTextFile>
     <OpenTextFiles>Загрузка текстовых файлов...</OpenTextFiles>
@@ -901,16 +906,16 @@ https://github.com/SubtitleEdit/subtitleedit
         <Compare>Сравнить...</Compare>
         <Statistics>Статистика...</Statistics>
         <Plugins>Плагины...</Plugins>
-        <ImportOcrFromDvd>Импорт/OCR субтитров из VOB/IFO (DVD)...</ImportOcrFromDvd>
-        <ImportOcrVobSubSubtitle>Импорт/OCR VobSub (sub/idx) субтитров...</ImportOcrVobSubSubtitle>
-        <ImportBluRaySupFile>Импорт/OCR файла Blu-ray sup...</ImportBluRaySupFile>
-        <ImportXSub>Импорт/OCR XSub из divx/avi...</ImportXSub>
-        <ImportSubtitleFromMatroskaFile>Импорт субтитров из файла Matroska (.mkv)...</ImportSubtitleFromMatroskaFile>
-        <ImportSubtitleWithManualChosenEncoding>Импорт субтитров с выбором кодировки...</ImportSubtitleWithManualChosenEncoding>
-        <ImportText>Импорт простого текста...</ImportText>
-        <ImportImages>Импорт изображений...</ImportImages>
-        <ImportTimecodes>Импорт временных меток...</ImportTimecodes>
-        <Export>Экспорт</Export>
+        <ImportOcrFromDvd>Открытие/OCR субтитров из VOB/IFO (DVD)...</ImportOcrFromDvd>
+        <ImportOcrVobSubSubtitle>Открытие/OCR VobSub (sub/idx) субтитров...</ImportOcrVobSubSubtitle>
+        <ImportBluRaySupFile>Открытие/OCR файла Blu-ray sup...</ImportBluRaySupFile>
+        <ImportXSub>Открытие/OCR XSub из divx/avi...</ImportXSub>
+        <ImportSubtitleFromMatroskaFile>Открытие субтитров из файла Matroska (.mkv)...</ImportSubtitleFromMatroskaFile>
+        <ImportSubtitleWithManualChosenEncoding>Открытие субтитров с выбором кодировки...</ImportSubtitleWithManualChosenEncoding>
+        <ImportText>Открытие простого текста...</ImportText>
+        <ImportImages>Открыть изображения...</ImportImages>
+        <ImportTimecodes>Открыть временные метки...</ImportTimecodes>
+        <Export>Сохранить в</Export>
         <ExportBdnXml>BDN xml/png...</ExportBdnXml>
         <ExportBluRaySup>Blu-ray sup...</ExportBluRaySup>
         <ExportVobSub>VobSub (sub/idx)...</ExportVobSub>
@@ -999,7 +1004,7 @@ https://github.com/SubtitleEdit/subtitleedit
         <ChooseAudioTrack>Выбор аудио трека</ChooseAudioTrack>
         <CloseVideo>Закрыть файл видео</CloseVideo>
         <SetVideoOffset>Задать видео задержку...</SetVideoOffset>
-        <ImportSceneChanges>Импорт изменений сцены...</ImportSceneChanges>
+        <ImportSceneChanges>Открытие изменений сцены...</ImportSceneChanges>
         <RemoveSceneChanges>Удалить изменения сцены</RemoveSceneChanges>
         <WaveformBatchGenerate>Пакетная обработка форм сигнала...</WaveformBatchGenerate>
         <ShowHideVideo>Показать/Скрыть видео</ShowHideVideo>
@@ -1066,6 +1071,7 @@ https://github.com/SubtitleEdit/subtitleedit
         <ShowHideVideo>Показать/Скрыть видео</ShowHideVideo>
       </ToolBar>
       <ContextMenu>
+        <SizeAllColumnsToFit>Подогнать по длине</SizeAllColumnsToFit>
         <AdvancedSubStationAlphaSetStyle>Настройка Sub Station Alpha - установка стиля</AdvancedSubStationAlphaSetStyle>
         <SubStationAlphaSetStyle>Sub Station Alpha - установка стиля</SubStationAlphaSetStyle>
         <SubStationAlphaStyles>Стили Sub Station Alpha...</SubStationAlphaStyles>
@@ -1092,7 +1098,7 @@ https://github.com/SubtitleEdit/subtitleedit
         <ColumnDeleteTextAndShiftCellsUp>Удалить текст со сдвигом вверх</ColumnDeleteTextAndShiftCellsUp>
         <ColumnInsertEmptyTextAndShiftCellsDown>Вставить пустой текст со сдвигом вниз</ColumnInsertEmptyTextAndShiftCellsDown>
         <ColumnInsertTextFromSubtitle>Вставить текст из субтитров...</ColumnInsertTextFromSubtitle>
-        <ColumnImportTextAndShiftCellsDown>Импорт текста со сдвигом вниз</ColumnImportTextAndShiftCellsDown>
+        <ColumnImportTextAndShiftCellsDown>Добавить текст со сдвигом вниз</ColumnImportTextAndShiftCellsDown>
         <ColumnPasteFromClipboard>Вставить из буфера обмена...</ColumnPasteFromClipboard>
         <ColumnCopyOriginalTextToCurrent>Копировать текст из оригинала</ColumnCopyOriginalTextToCurrent>
         <Split>Разделить</Split>
@@ -1419,7 +1425,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <SpellCheckCompletedXCorrections>Проверка орфографии завершена. Изменено строк: {0}.</SpellCheckCompletedXCorrections>
     <OpenOtherSubtitle>Открыть другие субтитры</OpenOtherSubtitle>
     <BeforeToggleDialogDashes>Перед переключением тире для диалога</BeforeToggleDialogDashes>
-    <ExportPlainTextAs>Экспорт простого текста как</ExportPlainTextAs>
+    <ExportPlainTextAs>Сохранить простой текст как</ExportPlainTextAs>
     <TextFiles>Текстовые файлы</TextFiles>
     <SubtitleExported>Выполнен экспорт субтитров</SubtitleExported>
     <LineNumberXErrorReadingFromSourceLineY>Строка {0} - ошибка чтения: {1}</LineNumberXErrorReadingFromSourceLineY>
@@ -1722,8 +1728,8 @@ https://github.com/SubtitleEdit/subtitleedit
     <RemoveBlankLinesWhenOpening>Удалить пустые строки при открытии субтитров</RemoveBlankLinesWhenOpening>
     <ShowLineBreaksAs>Показывать перенос строки как:</ShowLineBreaksAs>
     <MainListViewDoubleClickAction>При двойном клике по строке в списке выполнить</MainListViewDoubleClickAction>
-    <MainListViewColumns>Просмотреть в виде списка столбцов</MainListViewColumns>
-    <MainListViewColumnsInfo>Выберите видимый список столбцов</MainListViewColumnsInfo>
+    <MainListViewColumns>Отображаемый список столбцов</MainListViewColumns>
+    <MainListViewColumnsInfo>Выберите список столбцов для отображения</MainListViewColumnsInfo>
     <MainListViewNothing>Ничего</MainListViewNothing>
     <MainListViewVideoGoToPositionAndPause>Переход к позиции и сделать паузу</MainListViewVideoGoToPositionAndPause>
     <MainListViewVideoGoToPositionAndPlay>Переход к позиции и проиграть</MainListViewVideoGoToPositionAndPlay>
@@ -1742,7 +1748,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <AutoBackupDeleteAfterSixMonths>6 месяцев</AutoBackupDeleteAfterSixMonths>
     <CheckForUpdates>Проверка обновлений</CheckForUpdates>
     <AllowEditOfOriginalSubtitle>Разрешить редактировать исходные субтитры</AllowEditOfOriginalSubtitle>
-    <PromptDeleteLines>Выдать запрос перед удаление строк</PromptDeleteLines>
+    <PromptDeleteLines>Выдавать запрос перед удалением строк</PromptDeleteLines>
     <TimeCodeMode>Режим таймкода:</TimeCodeMode>
     <TimeCodeModeHHMMSSMS>ЧЧ:ММ:СС.МС (00:00:01.500)</TimeCodeModeHHMMSSMS>
     <TimeCodeModeHHMMSSFF>ЧЧ:ММ:СС:ФФ (00:00:01:12)</TimeCodeModeHHMMSSFF>
@@ -1752,8 +1758,8 @@ https://github.com/SubtitleEdit/subtitleedit
     <MpcHc>MPC-HC</MpcHc>
     <MpcHcDescription>Media Player Classic - Home Cinema</MpcHcDescription>
     <MpvPlayer>mpv проигрыватель</MpvPlayer>
-    <MpvPlayerDescription>https://mpv.io/ - свободно распространяемый,
-с открытым исходным кодом, кроссплатформенный медиа проигрыватель</MpvPlayerDescription>
+    <MpvPlayerDescription>https://mpv.io/ - бесплатный проигрыватель с откр. исх. кодом</MpvPlayerDescription>
+    <MpvHandlesPreviewText>mpv будет предварительно обрабатывать просмотр текста</MpvHandlesPreviewText>
     <VlcMediaPlayer>VLC медиа проигрыватель</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll из VLC media player 1.1.0 или новее</VlcMediaPlayerDescription>
     <VlcBrowseToLabel>Путь к VLC (только для переносной версии VLC)</VlcBrowseToLabel>
@@ -2060,6 +2066,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <LengthInFormatXinCharactersY>Число символов для {0}: {1:#,###,##0}</LengthInFormatXinCharactersY>
     <NumberOfCharactersInTextOnly>Число символов в тексте: {0:#,###,##0}</NumberOfCharactersInTextOnly>
     <TotalCharsPerSecond>Всего символов/секунду: {0:0.0} секунд</TotalCharsPerSecond>
+    <TotalWords>Всего слов в субтитрах: {0}</TotalWords>
     <NumberOfItalicTags>Число тегов курсива: {0}</NumberOfItalicTags>
     <NumberOfBoldTags>Число тегов полужирного: {0}</NumberOfBoldTags>
     <NumberOfUnderlineTags>Число тегов подчеркивания: {0}</NumberOfUnderlineTags>
@@ -2141,7 +2148,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <New>Новый</New>
     <Remove>Удалить</Remove>
     <RemoveAll>Удалить все</RemoveAll>
-    <ImportStyleFromFile>Импорт стиля из файла</ImportStyleFromFile>
+    <ImportStyleFromFile>Добавить стиль из файла</ImportStyleFromFile>
     <ExportStyleToFile>Экспорт стиля... (стиль будет добавлен, если файл существует)</ExportStyleToFile>
     <ChooseStyle>Выбрать стиль для импорта</ChooseStyle>
     <StyleAlreadyExits>Такой стиль существует: {0}</StyleAlreadyExits>
@@ -2201,8 +2208,8 @@ https://github.com/SubtitleEdit/subtitleedit
     <Image>Изображение</Image>
   </VobSubEditCharacters>
   <VobSubOcr>
-    <Title>Импорт / OCR VobSub (sub/idx) субтитров</Title>
-    <TitleBluRay>Импорт / OCR Blu-ray (.sup) субтитров</TitleBluRay>
+    <Title>Добавление / OCR VobSub (sub/idx) субтитров</Title>
+    <TitleBluRay>Сохранение / OCR Blu-ray (.sup) субтитров</TitleBluRay>
     <OcrMethod>Метод OCR</OcrMethod>
     <OcrViaModi>OCR с помощью Microsoft Office (MODI). Требуется установленный Microsoft Office</OcrViaModi>
     <OcrViaTesseract>OCR с помощью Tesseract</OcrViaTesseract>
@@ -2239,8 +2246,8 @@ https://github.com/SubtitleEdit/subtitleedit
     <UnknownWords>Неизвестные слова</UnknownWords>
     <OcrAutoCorrectionSpellChecking>Коррекция OCR / Орфография</OcrAutoCorrectionSpellChecking>
     <FixOcrErrors>Исправить OCR ошибки</FixOcrErrors>
-    <ImportTextWithMatchingTimeCodes>Импорт текста с подбором временных меток...</ImportTextWithMatchingTimeCodes>
-    <ImportNewTimeCodes>Импорт новых тайм кодов</ImportNewTimeCodes>
+    <ImportTextWithMatchingTimeCodes>Добавление текста с подбором временных меток...</ImportTextWithMatchingTimeCodes>
+    <ImportNewTimeCodes>Добавление новых тайм кодов</ImportNewTimeCodes>
     <SaveSubtitleImageAs>Сохранить изображение субтитра как...</SaveSubtitleImageAs>
     <SaveAllSubtitleImagesAsBdnXml>Сохранить все изображения (png/bdn xml)...</SaveAllSubtitleImagesAsBdnXml>
     <SaveAllSubtitleImagesWithHtml>Сохранить все изображения в индексный HTML файл...</SaveAllSubtitleImagesWithHtml>

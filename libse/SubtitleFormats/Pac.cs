@@ -70,8 +70,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             0x5c, // Æ
             0x5d, // Ø
             0x5e, // ÷
-            0x5f, // -
-            0x2d, // –
+            0x2d, // -
+            0x5f, // –
             0xE54f, // Ö
             0xE56f, // ö
             0xe541, // Ä

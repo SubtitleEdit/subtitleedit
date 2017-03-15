@@ -204,6 +204,8 @@
     <Compile Include="Subtitle.cs" />
     <Compile Include="SubtitleFormats\AribB36.cs" />
     <Compile Include="SubtitleFormats\AribB24Decoder.cs" />
+    <Compile Include="SubtitleFormats\SmpteTt2052.cs" />
+    <Compile Include="SubtitleFormats\Ted20.cs" />
     <Compile Include="SubtitleFormats\Csv4.cs" />
     <Compile Include="SubtitleFormats\Gremots.cs" />
     <Compile Include="SubtitleFormats\JsonType10.cs" />
@@ -493,6 +495,7 @@
     <Compile Include="TransportStream\SubtitleSegment.cs" />
     <Compile Include="TransportStream\TransportStreamParser.cs" />
     <Compile Include="TransportStream\TransportStreamSubtitle.cs" />
+    <Compile Include="UknownFormatImporterJson.cs" />
     <Compile Include="UknownFormatImporter.cs" />
     <Compile Include="Utilities.cs" />
     <Compile Include="VideoInfo.cs" />
