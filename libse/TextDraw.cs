@@ -39,20 +39,21 @@ namespace Nikse.SubtitleEdit.Core
             if (isUnderline)
                 fontStyle |= FontStyle.Underline;
 
+            string stringToDraw = sb.ToString();
             try
             {
-                path.AddString(sb.ToString(), font.FontFamily, (int)fontStyle, font.Size, next, sf);
+                path.AddString(stringToDraw, font.FontFamily, (int)fontStyle, font.Size, next, sf);
             }
             catch
             {
                 fontStyle = FontStyle.Regular;
                 try
                 {
-                    path.AddString(sb.ToString(), font.FontFamily, (int)fontStyle, font.Size, next, sf);
+                    path.AddString(stringToDraw, font.FontFamily, (int)fontStyle, font.Size, next, sf);
                 }
                 catch
                 {
-                    path.AddString(sb.ToString(), new FontFamily("Arial"), (int)fontStyle, font.Size, next, sf);
+                    path.AddString(stringToDraw, new FontFamily("Arial"), (int)fontStyle, font.Size, next, sf);
                 }
             }
             sb.Length = 0;
