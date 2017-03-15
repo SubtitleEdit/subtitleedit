@@ -15,6 +15,7 @@ namespace Nikse.SubtitleEdit.Forms
         private List<string> _dictionaryDownloadLinks = new List<string>();
         private List<string> _descriptions = new List<string>();
         private string _xmlName;
+        private readonly WebClient _webClient;
 
         public GetDictionaries()
         {
@@ -28,7 +29,8 @@ namespace Nikse.SubtitleEdit.Forms
             buttonDownload.Text = Configuration.Settings.Language.GetDictionaries.Download;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             labelPleaseWait.Text = string.Empty;
-
+            _webClient = new WebClient { Proxy = Utilities.GetProxy() };
+            _webClient.DownloadDataCompleted += wc_DownloadDataCompleted;
             LoadDictionaryList("Nikse.SubtitleEdit.Resources.HunspellDictionaries.xml.gz");
             FixLargeFonts();
         }
@@ -118,10 +120,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 int index = comboBoxDictionaries.SelectedIndex;
                 string url = _dictionaryDownloadLinks[index];
-
-                var wc = new WebClient { Proxy = Utilities.GetProxy() };
-                wc.DownloadDataCompleted += wc_DownloadDataCompleted;
-                wc.DownloadDataAsync(new Uri(url));
+                _webClient.DownloadDataAsync(new Uri(url));
             }
             catch (Exception exception)
             {
@@ -230,5 +229,20 @@ namespace Nikse.SubtitleEdit.Forms
             int index = comboBoxDictionaries.SelectedIndex;
             labelPleaseWait.Text = _descriptions[index];
         }
+
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                components?.Dispose();
+                _webClient?.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
     }
 }
