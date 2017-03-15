@@ -1525,6 +1525,15 @@ namespace Test
             Assert.AreEqual(result, target);
         }
 
+        [TestMethod]
+        public void FixDialogsOnOneLine4()
+        {
+            string source = "- Haiman, say: \"I love you.\" - So," + Environment.NewLine + "what are you up to? Another question!";
+            string target = "- Haiman, say: \"I love you.\"" + Environment.NewLine + "- So, what are you up to? Another question!"; 
+            string result = Helper.FixDialogsOnOneLine(source, "en");
+            Assert.AreEqual(result, target);
+        }        
+
         #endregion Fix dialogs on one line
 
         #region FixDoubleDash

@@ -27,22 +27,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     /// </summary>
     public class Pns : SubtitleFormat
     {
-        public override string Extension
-        {
-            get { return ".pns"; }
-        }
+        public override string Extension => ".pns";
 
         public const string NameOfFormat = "PNS";
 
-        public override string Name
-        {
-            get { return NameOfFormat; }
-        }
+        public override string Name => NameOfFormat;
 
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
+        public override bool IsTimeBased => true;
 
         public override bool IsMine(List<string> lines, string fileName)
         {
@@ -124,13 +115,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     buffer[index + 04] == 0 &&
                     buffer[index + 05] == 0 &&
                     //buffer[index + 06] == 0 && // start frame
-                    buffer[index + 07] == 1 &&
+                    buffer[index + 07] <= 1 &&
                     //buffer[index + 08] == 0 && // end min
                     //buffer[index + 09] == 0 &&
                     buffer[index + 10] == 0 &&
                     buffer[index + 11] == 0 &&
                     //buffer[index + 12] == 0 && // end frame
-                    buffer[index + 13] == 1 &&
+                    buffer[index + 13] <= 1 &&
                     //buffer[index + 14] == 0 && // text length
                     buffer[index + 15] == 0)
                 {
@@ -144,8 +135,16 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                     if (buffer.Length > index + 15 + textLength)
                     {
-                        string text = Encoding.UTF8.GetString(buffer, index + 16, textLength); // encoding?
+                        for (int j = index + 16; j < index + 16 + textLength; j++)
+                        {
+                            if (buffer[j] < 32 && buffer[j] != 0xd)
+                                buffer[j] = 0;
+                        }
+                        string text = Encoding.GetEncoding(1250).GetString(buffer, index + 16, textLength); // encoding?
+                        text = text.Replace("\0", string.Empty);
+                        text = text.Replace("\n", Environment.NewLine);
                         text = text.Replace("\r", Environment.NewLine);
+                        text = text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
                         index += (15 + textLength);
                         var p = new Paragraph(text, startSeconds * 1000 + FramesToMillisecondsMax999(startFrame), endSeconds * 1000 + FramesToMillisecondsMax999(endFrame));
                         return p;

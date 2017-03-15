@@ -29,12 +29,13 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            Nikse.SubtitleEdit.Core.TimeCode timeCode2 = new Nikse.SubtitleEdit.Core.TimeCode();
+            Nikse.SubtitleEdit.Core.TimeCode timeCode1 = new Nikse.SubtitleEdit.Core.TimeCode();
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPageHeader = new System.Windows.Forms.TabPage();
+            this.labelColorRequiresTeletext = new System.Windows.Forms.Label();
             this.labelFrameRate = new System.Windows.Forms.Label();
             this.comboBoxFrameRate = new System.Windows.Forms.ComboBox();
             this.labelTimeCodeStartOfProgramme = new System.Windows.Forms.Label();
@@ -86,10 +87,10 @@
             this.groupBoxVerticalPosition = new System.Windows.Forms.GroupBox();
             this.numericUpDownNewLineRows = new System.Windows.Forms.NumericUpDown();
             this.labelNewLineRows = new System.Windows.Forms.Label();
-            this.numericUpDownMarginBottom = new System.Windows.Forms.NumericUpDown();
-            this.labelMarginBottom = new System.Windows.Forms.Label();
-            this.numericUpDownMarginTop = new System.Windows.Forms.NumericUpDown();
             this.labelMarginTop = new System.Windows.Forms.Label();
+            this.numericUpDownMarginBottom = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownMarginTop = new System.Windows.Forms.NumericUpDown();
+            this.labelMarginBottom = new System.Windows.Forms.Label();
             this.groupBoxTeletext = new System.Windows.Forms.GroupBox();
             this.checkBoxTeletextDoubleHeight = new System.Windows.Forms.CheckBox();
             this.checkBoxTeletextBox = new System.Windows.Forms.CheckBox();
@@ -160,6 +161,7 @@
             // 
             // tabPageHeader
             // 
+            this.tabPageHeader.Controls.Add(this.labelColorRequiresTeletext);
             this.tabPageHeader.Controls.Add(this.labelFrameRate);
             this.tabPageHeader.Controls.Add(this.comboBoxFrameRate);
             this.tabPageHeader.Controls.Add(this.labelTimeCodeStartOfProgramme);
@@ -208,6 +210,17 @@
             this.tabPageHeader.TabIndex = 0;
             this.tabPageHeader.Text = "General subtitle information";
             this.tabPageHeader.UseVisualStyleBackColor = true;
+            // 
+            // labelColorRequiresTeletext
+            // 
+            this.labelColorRequiresTeletext.AutoSize = true;
+            this.labelColorRequiresTeletext.ForeColor = System.Drawing.Color.Red;
+            this.labelColorRequiresTeletext.Location = new System.Drawing.Point(388, 102);
+            this.labelColorRequiresTeletext.Name = "labelColorRequiresTeletext";
+            this.labelColorRequiresTeletext.Size = new System.Drawing.Size(146, 13);
+            this.labelColorRequiresTeletext.TabIndex = 72;
+            this.labelColorRequiresTeletext.Text = "Use teletext to include colors!";
+            this.labelColorRequiresTeletext.Visible = false;
             // 
             // labelFrameRate
             // 
@@ -265,14 +278,14 @@
             this.timeUpDownStartTime.Name = "timeUpDownStartTime";
             this.timeUpDownStartTime.Size = new System.Drawing.Size(96, 24);
             this.timeUpDownStartTime.TabIndex = 14;
-            timeCode2.Hours = 99;
-            timeCode2.Milliseconds = 999;
-            timeCode2.Minutes = 59;
-            timeCode2.Seconds = 59;
-            timeCode2.TimeSpan = System.TimeSpan.Parse("4.03:59:59.9990000");
-            timeCode2.TotalMilliseconds = 359999999D;
-            timeCode2.TotalSeconds = 359999.999D;
-            this.timeUpDownStartTime.TimeCode = timeCode2;
+            timeCode1.Hours = 99;
+            timeCode1.Milliseconds = 999;
+            timeCode1.Minutes = 59;
+            timeCode1.Seconds = 59;
+            timeCode1.TimeSpan = System.TimeSpan.Parse("4.03:59:59.9990000");
+            timeCode1.TotalMilliseconds = 359999999D;
+            timeCode1.TotalSeconds = 359999.999D;
+            this.timeUpDownStartTime.TimeCode = timeCode1;
             this.timeUpDownStartTime.UseVideoOffset = false;
             // 
             // comboBoxDisplayStandardCode
@@ -288,6 +301,7 @@
             this.comboBoxDisplayStandardCode.Name = "comboBoxDisplayStandardCode";
             this.comboBoxDisplayStandardCode.Size = new System.Drawing.Size(219, 21);
             this.comboBoxDisplayStandardCode.TabIndex = 3;
+            this.comboBoxDisplayStandardCode.SelectedIndexChanged += new System.EventHandler(this.comboBoxDisplayStandardCode_SelectedIndexChanged);
             // 
             // labelDisplayStandardCode
             // 
@@ -722,6 +736,15 @@
             this.labelNewLineRows.TabIndex = 53;
             this.labelNewLineRows.Text = "Number of rows added by a new line";
             // 
+            // labelMarginTop
+            // 
+            this.labelMarginTop.AutoSize = true;
+            this.labelMarginTop.Location = new System.Drawing.Point(13, 28);
+            this.labelMarginTop.Name = "labelMarginTop";
+            this.labelMarginTop.Size = new System.Drawing.Size(174, 13);
+            this.labelMarginTop.TabIndex = 49;
+            this.labelMarginTop.Text = "Margin top (for top aligned subtitles)";
+            // 
             // numericUpDownMarginBottom
             // 
             this.numericUpDownMarginBottom.Location = new System.Drawing.Point(256, 52);
@@ -733,15 +756,6 @@
             this.numericUpDownMarginBottom.Name = "numericUpDownMarginBottom";
             this.numericUpDownMarginBottom.Size = new System.Drawing.Size(56, 20);
             this.numericUpDownMarginBottom.TabIndex = 52;
-            // 
-            // labelMarginBottom
-            // 
-            this.labelMarginBottom.AutoSize = true;
-            this.labelMarginBottom.Location = new System.Drawing.Point(13, 54);
-            this.labelMarginBottom.Name = "labelMarginBottom";
-            this.labelMarginBottom.Size = new System.Drawing.Size(208, 13);
-            this.labelMarginBottom.TabIndex = 51;
-            this.labelMarginBottom.Text = "Margin bottom (for bottom aligned subtitles)";
             // 
             // numericUpDownMarginTop
             // 
@@ -755,14 +769,14 @@
             this.numericUpDownMarginTop.Size = new System.Drawing.Size(56, 20);
             this.numericUpDownMarginTop.TabIndex = 48;
             // 
-            // labelMarginTop
+            // labelMarginBottom
             // 
-            this.labelMarginTop.AutoSize = true;
-            this.labelMarginTop.Location = new System.Drawing.Point(13, 28);
-            this.labelMarginTop.Name = "labelMarginTop";
-            this.labelMarginTop.Size = new System.Drawing.Size(174, 13);
-            this.labelMarginTop.TabIndex = 49;
-            this.labelMarginTop.Text = "Margin top (for top aligned subtitles)";
+            this.labelMarginBottom.AutoSize = true;
+            this.labelMarginBottom.Location = new System.Drawing.Point(13, 54);
+            this.labelMarginBottom.Name = "labelMarginBottom";
+            this.labelMarginBottom.Size = new System.Drawing.Size(208, 13);
+            this.labelMarginBottom.TabIndex = 51;
+            this.labelMarginBottom.Text = "Margin bottom (for bottom aligned subtitles)";
             // 
             // groupBoxTeletext
             // 
@@ -963,5 +977,6 @@
         private System.Windows.Forms.NumericUpDown numericUpDownNewLineRows;
         private System.Windows.Forms.Label labelNewLineRows;
         private System.Windows.Forms.NumericUpDown numericUpDownMarginBottom;
+        private System.Windows.Forms.Label labelColorRequiresTeletext;
     }
 }

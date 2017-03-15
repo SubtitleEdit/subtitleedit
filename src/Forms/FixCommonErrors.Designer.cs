@@ -214,6 +214,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.columnHeader1,
             this.columnHeader2,
             this.columnHeader3});
+            this.listView1.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.listView1.FullRowSelect = true;
             this.listView1.Location = new System.Drawing.Point(6, 48);
             this.listView1.Name = "listView1";

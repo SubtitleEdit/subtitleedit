@@ -2,7 +2,7 @@
 <Language Name="English">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.5.1</Version>
+    <Version>3.5.2</Version>
     <TranslatedBy>Translated by Nikse</TranslatedBy>
     <CultureName>en-US</CultureName>
     <HelpFile />
@@ -352,6 +352,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <CodePageNumber>Code page number</CodePageNumber>
     <DiskFormatCode>Disk format code</DiskFormatCode>
     <DisplayStandardCode>Display standard code</DisplayStandardCode>
+    <ColorRequiresTeletext>Colors require teletext!</ColorRequiresTeletext>
     <CharacterCodeTable>Character table</CharacterCodeTable>
     <LanguageCode>Language code</LanguageCode>
     <OriginalProgramTitle>Original program title</OriginalProgramTitle>
@@ -1064,6 +1065,7 @@ Note: Do check free disk space.</WaveFileMalformed>
         <ShowHideVideo>Show/hide video</ShowHideVideo>
       </ToolBar>
       <ContextMenu>
+        <SizeAllColumnsToFit>Size all columns to fit</SizeAllColumnsToFit>
         <AdvancedSubStationAlphaSetStyle>Advanced Sub Station Alpha - set style</AdvancedSubStationAlphaSetStyle>
         <SubStationAlphaSetStyle>Sub Station Alpha - set style</SubStationAlphaSetStyle>
         <SubStationAlphaStyles>Sub Station Alpha styles...</SubStationAlphaStyles>
@@ -1743,6 +1745,7 @@ can edit in same subtitle file (collaboration)</Information>
     <MpcHcDescription>Media Player Classic - Home Cinema</MpcHcDescription>
     <MpvPlayer>mpv</MpvPlayer>
     <MpvPlayerDescription>https://mpv.io/ - free, open source, and cross-platform media player</MpvPlayerDescription>
+    <MpvHandlesPreviewText>mpv handles preview text</MpvHandlesPreviewText>
     <VlcMediaPlayer>VLC media player</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll from VLC media player 1.1.0 or newer</VlcMediaPlayerDescription>
     <VlcBrowseToLabel>VLC path (only needed if you're using the portable version of VLC)</VlcBrowseToLabel>
@@ -2057,6 +2060,7 @@ can edit in same subtitle file (collaboration)</Information>
     <LengthInFormatXinCharactersY>Number of characters as {0}: {1:#,###,##0}</LengthInFormatXinCharactersY>
     <NumberOfCharactersInTextOnly>Number of characters in text only: {0:#,###,##0}</NumberOfCharactersInTextOnly>
     <TotalCharsPerSecond>Total characters/second: {0:0.0} seconds</TotalCharsPerSecond>
+    <TotalWords>Total words in subtitle: {0}</TotalWords>
     <NumberOfItalicTags>Number of italic tags: {0}</NumberOfItalicTags>
     <NumberOfBoldTags>Number of bold tags: {0}</NumberOfBoldTags>
     <NumberOfUnderlineTags>Number of underline tags: {0}</NumberOfUnderlineTags>

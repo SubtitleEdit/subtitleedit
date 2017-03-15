@@ -394,6 +394,7 @@
             public string CodePageNumber { get; set; }
             public string DiskFormatCode { get; set; }
             public string DisplayStandardCode { get; set; }
+            public string ColorRequiresTeletext { get; set; }            
             public string CharacterCodeTable { get; set; }
             public string LanguageCode { get; set; }
             public string OriginalProgramTitle { get; set; }
@@ -1429,6 +1430,7 @@
 
                 public class ListViewContextMenu
                 {
+                    public string SizeAllColumnsToFit { get; set; }
                     public string AdvancedSubStationAlphaSetStyle { get; set; }
                     public string SubStationAlphaSetStyle { get; set; }
                     public string SubStationAlphaStyles { get; set; }
@@ -1907,6 +1909,7 @@
             public string MpcHcDescription { get; set; }
             public string MpvPlayer { get; set; }
             public string MpvPlayerDescription { get; set; }
+            public string MpvHandlesPreviewText { get; set; }            
             public string VlcMediaPlayer { get; set; }
             public string VlcMediaPlayerDescription { get; set; }
             public string VlcBrowseToLabel { get; set; }
@@ -2244,6 +2247,7 @@
             public string LengthInFormatXinCharactersY { get; set; }
             public string NumberOfCharactersInTextOnly { get; set; }
             public string TotalCharsPerSecond { get; set; }
+            public string TotalWords { get; set; }
             public string NumberOfItalicTags { get; set; }
             public string NumberOfBoldTags { get; set; }
             public string NumberOfUnderlineTags { get; set; }

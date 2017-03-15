@@ -2,7 +2,7 @@
 <Language Name="dansk">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.5.1</Version>
+    <Version>3.5.2</Version>
     <TranslatedBy>Oversat til dansk af Nikse (mailto:nikse.dk@gmail.com)</TranslatedBy>
     <CultureName>da-DK</CultureName>
     <HelpFile />
@@ -24,6 +24,8 @@
     <StartTime>Starttid</StartTime>
     <EndTime>Sluttid</EndTime>
     <Duration>Varighed</Duration>
+    <CharsPerSec>Tegn/sek</CharsPerSec>
+    <WordsPerMin>Ord/min</WordsPerMin>
     <NumberSymbol>#</NumberSymbol>
     <Number>Antal</Number>
     <Text>Tekst</Text>
@@ -347,6 +349,7 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <CodePageNumber>Code page number</CodePageNumber>
     <DiskFormatCode>Disk format code</DiskFormatCode>
     <DisplayStandardCode>Display standard code</DisplayStandardCode>
+    <ColorRequiresTeletext>Farver kræver teletext!</ColorRequiresTeletext>
     <CharacterCodeTable>Character table</CharacterCodeTable>
     <LanguageCode>Language code</LanguageCode>
     <OriginalProgramTitle>Original program title</OriginalProgramTitle>
@@ -366,6 +369,10 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <Import>Import...</Import>
     <TextAndTimingInformation>Text and timing information</TextAndTimingInformation>
     <JustificationCode>Justification code</JustificationCode>
+    <VerticalPosition>Lodret position</VerticalPosition>
+    <MarginTop>Margin top (for top justeret undertekster)</MarginTop>
+    <MarginBottom>Margin bund (til bund justeret undertekster)</MarginBottom>
+    <NewLineRows>Antal rækker tilføjet af en ny linje</NewLineRows>
     <Teletext>Teletext</Teletext>
     <UseBox>Brug boks omkring tekst</UseBox>
     <DoubleHeight>Brug dobbelt højde til tekst</DoubleHeight>
@@ -1054,6 +1061,7 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
         <ShowHideVideo>Vis/skjul video</ShowHideVideo>
       </ToolBar>
       <ContextMenu>
+        <SizeAllColumnsToFit>Auto-tilpas kolonner</SizeAllColumnsToFit>
         <AdvancedSubStationAlphaSetStyle>Advanced Sub Station Alpha - vælg stilart</AdvancedSubStationAlphaSetStyle>
         <SubStationAlphaSetStyle>(Advanced) Sub Station Alpha - vælg stilart</SubStationAlphaSetStyle>
         <SubStationAlphaStyles>Sub Station Alpha stilarter...</SubStationAlphaStyles>
@@ -1678,6 +1686,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <AutoDetectAnsiEncoding>Auto opdag ANSI-kodning</AutoDetectAnsiEncoding>
     <SubtitleLineMaximumLength>Linje max. længde</SubtitleLineMaximumLength>
     <MaximumCharactersPerSecond>Maks tegn/sek</MaximumCharactersPerSecond>
+    <MaximumWordssPerMinute>Maks ord/min</MaximumWordssPerMinute>
     <AutoWrapWhileTyping>Auto-ombryd tekst mens du skriver</AutoWrapWhileTyping>
     <DurationMinimumMilliseconds>Min. varighed, millisekunder</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>Max. varighed, millisekunder</DurationMaximumMilliseconds>
@@ -1698,6 +1707,8 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <RemoveBlankLinesWhenOpening>Fjern tomme linjer, når undertekst åbnes</RemoveBlankLinesWhenOpening>
     <ShowLineBreaksAs>Vis linjeskift i listevisning som</ShowLineBreaksAs>
     <MainListViewDoubleClickAction>Dobbeltklik på linje i hovedvinduet listevisning starter</MainListViewDoubleClickAction>
+    <MainListViewColumns>Listevisning kolonner</MainListViewColumns>
+    <MainListViewColumnsInfo>Vælg synlige listevisning kolonner</MainListViewColumnsInfo>
     <MainListViewNothing>Ingenting</MainListViewNothing>
     <MainListViewVideoGoToPositionAndPause>Gå til video pos og pause</MainListViewVideoGoToPositionAndPause>
     <MainListViewVideoGoToPositionAndPlay>Gå til video pos og afspi</MainListViewVideoGoToPositionAndPlay>
@@ -1727,6 +1738,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <MpcHcDescription>Media Player Classic - Home Cinema</MpcHcDescription>
     <MpvPlayer>mpv</MpvPlayer>
     <MpvPlayerDescription>https://mpv.io/ - gratis, open source og cross-platform medie afspiller</MpvPlayerDescription>
+    <MpvHandlesPreviewText>MPV håndterer tekstvisning</MpvHandlesPreviewText>
     <VlcMediaPlayer>VLC media player</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll fra VLC media player 1.1.0 eller nyere</VlcMediaPlayerDescription>
     <VlcBrowseToLabel>VLC sti (kun nødvendig, hvis du bruger den portable version af VLC)</VlcBrowseToLabel>
@@ -1739,8 +1751,11 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <WaveformAppearance>Lyd kurve udseende</WaveformAppearance>
     <WaveformGridColor>Gitter farve</WaveformGridColor>
     <WaveformShowGridLines>Vis gitterlinjer</WaveformShowGridLines>
+    <WaveformShowCps>Vis tegn/sek</WaveformShowCps>
+    <WaveformShowWpm>Vis ord/min</WaveformShowWpm>
     <ReverseMouseWheelScrollDirection>Skift musehjul rulle retning</ReverseMouseWheelScrollDirection>
     <WaveformAllowOverlap>Tillad overlapning (når du flytter/resizing)</WaveformAllowOverlap>
+    <WaveformSetVideoPosMoveStartEnd>Sæt video position, når du flytter start/slut</WaveformSetVideoPosMoveStartEnd>
     <WaveformFocusMouseEnter>Sæt fokus ved mus over</WaveformFocusMouseEnter>
     <WaveformListViewFocusMouseEnter>Set focus i listevisning ved mus over listevisning</WaveformListViewFocusMouseEnter>
     <WaveformBorderHitMs1>Grænse-markør ved flyt er aktiv inden for</WaveformBorderHitMs1>
@@ -1831,6 +1846,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <GoToPrevious>Gå til forrige line</GoToPrevious>
     <GoToCurrentSubtitleStart>Gå til nuværende linje start</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>Gå til nuværende linje slut</GoToCurrentSubtitleEnd>
+    <GoToPreviousSubtitleAndFocusVideo>Gå til foregående linje og indstil video position</GoToPreviousSubtitleAndFocusVideo>
     <GoToNextSubtitleAndFocusVideo>Gå til næste linje og sæt video position</GoToNextSubtitleAndFocusVideo>
     <ToggleFocus>Skift fokus imellem liste visning og undertekst tekstboks</ToggleFocus>
     <ToggleDialogDashes>Toggle dialog tankestreger</ToggleDialogDashes>
@@ -2285,6 +2301,8 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <RemoveSceneChange>Fjern sceneskift</RemoveSceneChange>
     <GuessTimeCodes>Gæt tidskoder...</GuessTimeCodes>
     <SeekSilence>Søg tavshed...</SeekSilence>
+    <CharsSecX>Tegn/sec: {0:0.00}</CharsSecX>
+    <WordsMinX>Ord/min: {0:0.00}</WordsMinX>
   </Waveform>
   <WaveformGenerateTimeCodes>
     <Title>Gæt tidskoder</Title>

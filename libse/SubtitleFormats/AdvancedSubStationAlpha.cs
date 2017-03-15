@@ -25,7 +25,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                 var ssa = Configuration.Settings.SubtitleSettings;
                 return "Style: Default," + ssa.SsaFontName + "," +
-                    ((int)ssa.SsaFontSize) + "," +
+                    (int)ssa.SsaFontSize + "," +
                     GetSsaColorString(Color.FromArgb(ssa.SsaFontColorArgb)) + "," +
                     "&H0300FFFF,&H00000000,&H02000000," + boldStyle + ",0,0,0,100,100,0,0," + borderStyle + "," + ssa.SsaOutline.ToString(CultureInfo.InvariantCulture) + "," +
                     Configuration.Settings.SubtitleSettings.SsaShadow.ToString(CultureInfo.InvariantCulture) + ",2," + ssa.SsaMarginLeft + "," + ssa.SsaMarginRight + "," + ssa.SsaMarginTopBottom + ",1";
@@ -442,7 +442,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                     if (indexOfEndFont > 0)
                     {
                         text = text.Remove(indexOfEndFont, 7);
-                        if (indexOfEndFont < text.Length - 9)
+                        if (indexOfEndFont < text.Length)
                         {
                             if (fontTag.Contains(" size="))
                             {
@@ -451,6 +451,10 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                             if (fontTag.Contains(" face="))
                             {
                                 text = text.Insert(indexOfEndFont, "{\\fn}");
+                            }
+                            if (fontTag.Contains(" color="))
+                            {
+                                text = text.Insert(indexOfEndFont, "{\\c}");
                             }
                         }
                     }
@@ -500,11 +504,16 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                     string subTag = fontTag.Substring(fontStart + tag.Length, fontEnd - (fontStart + tag.Length));
                     if (tag.Contains("color"))
                     {
-                        subTag = subTag.Replace("#", string.Empty);
-
-                        // switch from rrggbb to bbggrr
-                        if (subTag.Length >= 6)
-                            subTag = subTag.Remove(subTag.Length - 6) + subTag.Substring(subTag.Length - 2, 2) + subTag.Substring(subTag.Length - 4, 2) + subTag.Substring(subTag.Length - 6, 2);
+                        Color c;
+                        try
+                        {
+                            c = ColorTranslator.FromHtml(subTag);
+                        }
+                        catch
+                        {
+                            c = Color.White;
+                        }
+                        subTag = (c.B.ToString("X2") + c.G.ToString("X2") + c.R.ToString("X2")).ToLowerInvariant(); // use bbggrr
                     }
                     fontTag = fontTag.Remove(fontStart, fontEnd - fontStart + 1);
                     if (start < text.Length)

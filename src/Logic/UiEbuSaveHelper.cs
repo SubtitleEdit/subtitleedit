@@ -9,7 +9,7 @@ namespace Nikse.SubtitleEdit.Logic
     {
 
         private Ebu.EbuGeneralSubtitleInformation _header;
-        private byte _justificationCode;
+        private byte _justificationCode = 2;
         private string _fileName;
         private Subtitle _subtitle;
 

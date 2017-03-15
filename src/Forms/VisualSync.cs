@@ -255,7 +255,7 @@ namespace Nikse.SubtitleEdit.Forms
                         MediaPlayerStart.CurrentPosition = _startGoBackPosition;
                         _startStopPosition = -1;
                     }
-                    UiUtil.ShowSubtitle(_paragraphs, MediaPlayerStart);
+                    UiUtil.ShowSubtitle(new Subtitle(_paragraphs), MediaPlayerStart);
                 }
                 if (!MediaPlayerEnd.IsPaused)
                 {
@@ -266,7 +266,7 @@ namespace Nikse.SubtitleEdit.Forms
                         MediaPlayerEnd.CurrentPosition = _endGoBackPosition;
                         _endStopPosition = -1;
                     }
-                    UiUtil.ShowSubtitle(_paragraphs, MediaPlayerEnd);
+                    UiUtil.ShowSubtitle(new Subtitle(_paragraphs), MediaPlayerEnd);
                 }
             }
         }
@@ -453,8 +453,8 @@ namespace Nikse.SubtitleEdit.Forms
             if (mediaPlayer.CurrentPosition > seconds)
                 mediaPlayer.CurrentPosition -= seconds;
             else
-                mediaPlayer.CurrentPosition = 0;
-            UiUtil.ShowSubtitle(_paragraphs, mediaPlayer);
+                mediaPlayer.CurrentPosition = 0;            
+            UiUtil.ShowSubtitle(new Subtitle( _paragraphs), mediaPlayer);
         }
 
         private void ButtonStartHalfASecondBackClick(object sender, EventArgs e)

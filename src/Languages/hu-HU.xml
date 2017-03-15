@@ -2,7 +2,7 @@
 <Language Name="Hungarian">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.5.1</Version>
+    <Version>3.5.2</Version>
     <TranslatedBy>Fordító: Zityi's Translator Team (http://szoftverforditasok.hu)</TranslatedBy>
     <CultureName>hu-HU</CultureName>
     <HelpFile />
@@ -24,6 +24,8 @@
     <StartTime>Kezdési idő</StartTime>
     <EndTime>Befejezési idő</EndTime>
     <Duration>Időtartam</Duration>
+    <CharsPerSec>Karakter/mp</CharsPerSec>
+    <WordsPerMin>Szó/perc</WordsPerMin>
     <NumberSymbol>#</NumberSymbol>
     <Number>Szám</Number>
     <Text>Szöveg</Text>
@@ -369,6 +371,10 @@ Megjegyzés: Ellenőrizze a szabad merevlemez területet.</WaveFileMalformed>
     <Import>Importálás...</Import>
     <TextAndTimingInformation>Szöveg és időzítési információk</TextAndTimingInformation>
     <JustificationCode>Igazolási kód</JustificationCode>
+    <VerticalPosition>Függőleges pozíció</VerticalPosition>
+    <MarginTop>Felső margó (felső igazított feliratok esetén)</MarginTop>
+    <MarginBottom>Alsó margó (alsó igazított feliratok esetén)</MarginBottom>
+    <NewLineRows>Hozzáadott sorok száma egy új sor szerint</NewLineRows>
     <Teletext>Teletext</Teletext>
     <UseBox>Szövegdoboz megjelenítése</UseBox>
     <DoubleHeight>Dupla magasságú szöveg használata</DoubleHeight>
@@ -1683,6 +1689,7 @@ szerkesztheti ugyanazt a feliratfájlt</Information>
     <AutoDetectAnsiEncoding>ANSI kódolás automatikus észlelése</AutoDetectAnsiEncoding>
     <SubtitleLineMaximumLength>Felirat maximális hossza</SubtitleLineMaximumLength>
     <MaximumCharactersPerSecond>Max. karakter/mp</MaximumCharactersPerSecond>
+    <MaximumWordssPerMinute>Max. szó/perc</MaximumWordssPerMinute>
     <AutoWrapWhileTyping>Automatikus sortörés gépelés közben</AutoWrapWhileTyping>
     <DurationMinimumMilliseconds>Min. időtartam ezredmásodpercben</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>Max. időtartam ezredmásodpercben</DurationMaximumMilliseconds>
@@ -1703,6 +1710,8 @@ szerkesztheti ugyanazt a feliratfájlt</Information>
     <RemoveBlankLinesWhenOpening>Üres sorok eltávolítása egy felirat megnyitásakor</RemoveBlankLinesWhenOpening>
     <ShowLineBreaksAs>Sortörések megjelenítése listanézetben:</ShowLineBreaksAs>
     <MainListViewDoubleClickAction>A főablak listanézetében egy sorra való dupla kattintáskor:</MainListViewDoubleClickAction>
+    <MainListViewColumns>Listanézet oszlopok</MainListViewColumns>
+    <MainListViewColumnsInfo>Válassza ki a látható listanézet oszlopait</MainListViewColumnsInfo>
     <MainListViewNothing>Nincs művelet</MainListViewNothing>
     <MainListViewVideoGoToPositionAndPause>Ugrás a videópozícióra és szüneteltetés</MainListViewVideoGoToPositionAndPause>
     <MainListViewVideoGoToPositionAndPlay>Ugrás a videópozícióra és lejátszás</MainListViewVideoGoToPositionAndPlay>
@@ -1744,8 +1753,11 @@ szerkesztheti ugyanazt a feliratfájlt</Information>
     <WaveformAppearance>Hullámforma megjelenítése</WaveformAppearance>
     <WaveformGridColor>Rácsvonalak színe</WaveformGridColor>
     <WaveformShowGridLines>Rácsvonalak megjelenítése</WaveformShowGridLines>
+    <WaveformShowCps>Karakterek megjelenítése/mp</WaveformShowCps>
+    <WaveformShowWpm>Szavak megjelenítése/perc</WaveformShowWpm>
     <ReverseMouseWheelScrollDirection>Egér görgetési irány megfordítása</ReverseMouseWheelScrollDirection>
     <WaveformAllowOverlap>Átfedés engedélyezése (áthelyezéskor/átméretezéskor)</WaveformAllowOverlap>
+    <WaveformSetVideoPosMoveStartEnd>Állítsa be a videó pozícióját az elejére/végére ugráskor</WaveformSetVideoPosMoveStartEnd>
     <WaveformFocusMouseEnter>Fókusz beállítása az egér belépésekor</WaveformFocusMouseEnter>
     <WaveformListViewFocusMouseEnter>Listanézeti fókusz beállítása az egér listanézetbe való belépése esetén</WaveformListViewFocusMouseEnter>
     <WaveformBorderHitMs1>A határjelölő</WaveformBorderHitMs1>
@@ -1836,6 +1848,7 @@ szerkesztheti ugyanazt a feliratfájlt</Information>
     <GoToPrevious>Ugrás az előző sorra</GoToPrevious>
     <GoToCurrentSubtitleStart>Ugrás a jelenlegi sor elejére</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>Ugrás a jelenlegi sor végére</GoToCurrentSubtitleEnd>
+    <GoToPreviousSubtitleAndFocusVideo>Ugorjon az előző sorra és állítsa be a videó pozícióját</GoToPreviousSubtitleAndFocusVideo>
     <GoToNextSubtitleAndFocusVideo>Ugrás a következő sorra és videó pozíció beállítása</GoToNextSubtitleAndFocusVideo>
     <ToggleFocus>Fókuszváltás a listanézet és felirat szövegdoboz között</ToggleFocus>
     <ToggleDialogDashes>Párbeszéd gondolatjel váltó</ToggleDialogDashes>
@@ -2291,6 +2304,8 @@ Megtartja a módosításokat?</KeepChangesMessage>
     <RemoveSceneChange>Jelenet váltás eltávolítása</RemoveSceneChange>
     <GuessTimeCodes>Időkódok becslése...</GuessTimeCodes>
     <SeekSilence>Csend keresése...</SeekSilence>
+    <CharsSecX>CPS: {0:0.00}</CharsSecX>
+    <WordsMinX>WPM: {0:0.00}</WordsMinX>
   </Waveform>
   <WaveformGenerateTimeCodes>
     <Title>Időkódok becslése</Title>
