@@ -230,7 +230,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (comboBoxRule.SelectedIndex == FunctionRegEx) // regex
             {
-                textBox1.ContextMenu = FindReplaceDialogHelper.GetRegExContextMenu(textBox1);
+                textBox1.ContextMenu = UiUtil.GetRegExContextMenu(textBox1);
                 checkBoxCaseSensitive.Enabled = false;
             }
             else if (comboBoxRule.SelectedIndex == FunctionUnequal || comboBoxRule.SelectedIndex == FunctionEqual)

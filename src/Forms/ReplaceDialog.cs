@@ -129,7 +129,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void RadioButtonCheckedChanged(object sender, EventArgs e)
         {
             if (sender == radioButtonRegEx)
-                textBoxFind.ContextMenu = FindReplaceDialogHelper.GetRegExContextMenu(textBoxFind);
+                textBoxFind.ContextMenu = UiUtil.GetRegExContextMenu(textBoxFind);
             else
                 textBoxFind.ContextMenu = null;
         }
