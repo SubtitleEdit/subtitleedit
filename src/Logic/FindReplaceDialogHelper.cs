@@ -8,8 +8,8 @@ namespace Nikse.SubtitleEdit.Logic
 {
     public class FindReplaceDialogHelper
     {
-        private const string StartChars = " >-\"”“[]'‘`´¶(){}♪¿¡.…—\r\n\u2028";
-        private const string EndChars = " <-\"”“]'`´¶(){}♪,.!?:;…—\r\n\u2028";
+        // Sorted expected chars.
+        private const string ExpectedChars = "\n\r !\"'(),-.:;<>?[]`{}¡´¶¿—‘“”…\u2028";
         private readonly string _findText = string.Empty;
         private readonly string _replaceText = string.Empty;
         private Regex _regEx;
@@ -87,9 +87,8 @@ namespace Nikse.SubtitleEdit.Logic
                 {
                     if (MatchWholeWord)
                     {
-                        var startOk = idx == 0 || StartChars.Contains(text[idx - 1]);
-                        var endOk = idx + _findText.Length == text.Length || EndChars.Contains(text[idx + _findText.Length]);
-                        if (startOk && endOk)
+                        var startOk = idx == 0 || ExpectedChars.Contains(text[idx - 1]);
+                        if (startOk && (idx + _findText.Length == text.Length || ExpectedChars.Contains(text[idx + _findText.Length])))
                             return idx;
                     }
                     else
@@ -290,9 +289,8 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 if (matchWholeWord)
                 {
-                    var startOk = (idx == 0) || (StartChars.Contains(text[idx - 1]));
-                    var endOk = (idx + pattern.Length == text.Length) || (EndChars.Contains(text[idx + pattern.Length]));
-                    if (startOk && endOk)
+                    var startOk = (idx == 0) || (ExpectedChars.Contains(text[idx - 1]));
+                    if (startOk && (idx + pattern.Length == text.Length || ExpectedChars.Contains(text[idx + pattern.Length])))
                         count++;
                 }
                 else
