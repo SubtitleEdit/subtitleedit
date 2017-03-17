@@ -348,6 +348,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
+            if (fileName == null || !fileName.EndsWith(Extension, StringComparison.OrdinalIgnoreCase))
+                return false;
             if (!string.IsNullOrEmpty(fileName) && File.Exists(fileName))
             {
                 var fi = new FileInfo(fileName);

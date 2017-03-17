@@ -27,6 +27,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
+            if (fileName == null || !fileName.EndsWith(Extension, StringComparison.OrdinalIgnoreCase))
+                return false;
             var subtitle = new Subtitle();
             LoadSubtitle(subtitle, lines, fileName);
             return subtitle.Paragraphs.Count > 0;

@@ -101,7 +101,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
-            if (!string.IsNullOrEmpty(fileName) && File.Exists(fileName))
+            if (fileName == null || !fileName.EndsWith(Extension, StringComparison.OrdinalIgnoreCase))
+                return false;
+            if (File.Exists(fileName))
             {
                 if (!fileName.EndsWith(".cin", StringComparison.OrdinalIgnoreCase))
                     return false;
