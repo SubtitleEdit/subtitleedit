@@ -1059,13 +1059,9 @@ namespace Nikse.SubtitleEdit.Core
         public static int CountTagInText(string text, char tag)
         {
             int count = 0;
-            int index = text.IndexOf(tag);
-            while (index >= 0)
+            for (int i = text.Length - 1; i >= 0; i--)
             {
-                count++;
-                if ((index + 1) == text.Length)
-                    return count;
-                index = text.IndexOf(tag, index + 1);
+                if (text[i] == tag) count++;
             }
             return count;
         }
