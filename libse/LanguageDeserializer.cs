@@ -3934,6 +3934,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "MatroskaSubtitleChooser/Title":
                     language.MatroskaSubtitleChooser.Title = reader.Value;
                     break;
+                case "MatroskaSubtitleChooser/TitleMp4":
+                    language.MatroskaSubtitleChooser.TitleMp4 = reader.Value;
+                    break;
                 case "MatroskaSubtitleChooser/PleaseChoose":
                     language.MatroskaSubtitleChooser.PleaseChoose = reader.Value;
                     break;

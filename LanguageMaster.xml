@@ -1453,6 +1453,7 @@ If you have edited this file with Subtitle Edit you might be able to find a back
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Choose subtitle from Matroska file</Title>
+    <TitleMp4>Choose subtitle from MP4 file</TitleMp4>
     <PleaseChoose>More than one subtitle found - please choose</PleaseChoose>
     <TrackXLanguageYTypeZ>Track {0} - language: {1} - type: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>

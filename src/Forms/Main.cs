@@ -9318,7 +9318,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         if (subtitleList.Count > 1)
                         {
-                            using (var subtitleChooser = new MatroskaSubtitleChooser())
+                            using (var subtitleChooser = new MatroskaSubtitleChooser("mkv"))
                             {
                                 subtitleChooser.Initialize(subtitleList);
                                 if (_loading)
@@ -10219,7 +10219,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else
             {
-                using (var subtitleChooser = new MatroskaSubtitleChooser())
+                using (var subtitleChooser = new MatroskaSubtitleChooser("mp4"))
                 {
                     subtitleChooser.Initialize(mp4SubtitleTracks);
                     if (subtitleChooser.ShowDialog(this) == DialogResult.OK)
@@ -10516,7 +10516,7 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                             else if (subtitleList.Count > 1)
                             {
-                                using (var subtitleChooser = new MatroskaSubtitleChooser())
+                                using (var subtitleChooser = new MatroskaSubtitleChooser("mkv"))
                                 {
                                     subtitleChooser.Initialize(subtitleList);
                                     if (subtitleChooser.ShowDialog(this) == DialogResult.OK)
@@ -13244,7 +13244,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 var subtitleList = matroska.GetTracks(true);
                                 if (subtitleList.Count > 1)
                                 {
-                                    using (var subtitleChooser = new MatroskaSubtitleChooser())
+                                    using (var subtitleChooser = new MatroskaSubtitleChooser("mkv"))
                                     {
                                         subtitleChooser.Initialize(subtitleList);
                                         if (_loading)
@@ -13293,7 +13293,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         else
                         {
-                            using (var subtitleChooser = new MatroskaSubtitleChooser())
+                            using (var subtitleChooser = new MatroskaSubtitleChooser("mp4"))
                             {
                                 subtitleChooser.Initialize(mp4SubtitleTracks);
                                 if (subtitleChooser.ShowDialog(this) == DialogResult.OK)
