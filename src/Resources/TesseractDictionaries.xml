@@ -31,9 +31,9 @@
     <Description>Chinese (Traditional) language data for Tesseract 3.02</Description>
   </Dictionary>
   <Dictionary>
-    <EnglishName>Crotian</EnglishName>
+    <EnglishName>Croatian</EnglishName>
     <DownloadLink>https://github.com/tesseract-ocr/tessdata/raw/bf82613055ebc6e63d9e3b438a5c234bfd638c93/hrv.traineddata</DownloadLink>
-    <Description>Crotian language data for Tesseract 3.02</Description>
+    <Description>Croatian language data for Tesseract 3.02</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Czech</EnglishName>
@@ -81,9 +81,9 @@
     <Description>Greek language data for Tesseract 3.02</Description>
   </Dictionary>
   <Dictionary>
-    <EnglishName>Hebew</EnglishName>
+    <EnglishName>Hebrew</EnglishName>
     <DownloadLink>https://github.com/tesseract-ocr/tessdata/raw/bf82613055ebc6e63d9e3b438a5c234bfd638c93/heb.traineddata</DownloadLink>
-    <Description>Hindi language data for Tesseract 3.02</Description>
+    <Description>Hebrew language data for Tesseract 3.02</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Hindi</EnglishName>
