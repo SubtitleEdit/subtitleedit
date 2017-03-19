@@ -1576,6 +1576,7 @@
         public class MatroskaSubtitleChooser
         {
             public string Title { get; set; }
+            public string TitleMp4 { get; set; }
             public string PleaseChoose { get; set; }
             public string TrackXLanguageYTypeZ { get; set; }
         }

@@ -10,11 +10,11 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class MatroskaSubtitleChooser : Form
     {
-        public MatroskaSubtitleChooser()
+        public MatroskaSubtitleChooser(string fileType)
         {
             InitializeComponent();
 
-            Text = Configuration.Settings.Language.MatroskaSubtitleChooser.Title;
+            Text = fileType.Equals("mp4", StringComparison.Ordinal) ? Configuration.Settings.Language.MatroskaSubtitleChooser.TitleMp4 : Configuration.Settings.Language.MatroskaSubtitleChooser.Title;
             labelChoose.Text = Configuration.Settings.Language.MatroskaSubtitleChooser.PleaseChoose;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;

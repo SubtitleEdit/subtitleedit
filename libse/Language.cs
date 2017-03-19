@@ -1695,6 +1695,7 @@ namespace Nikse.SubtitleEdit.Core
             MatroskaSubtitleChooser = new LanguageStructure.MatroskaSubtitleChooser
             {
                 Title = "Choose subtitle from Matroska file",
+                TitleMp4 = "Choose subtitle from MP4 file",
                 PleaseChoose = "More than one subtitle found - please choose",
                 TrackXLanguageYTypeZ = "Track {0} - language: {1} - type: {2}",
             };
