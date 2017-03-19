@@ -39,7 +39,8 @@
     <EnglishName>Danish</EnglishName>
     <DownloadLink>https://github.com/tesseract-ocr/tessdata/raw/bf82613055ebc6e63d9e3b438a5c234bfd638c93/dan.traineddata</DownloadLink>
     <Description>Danish language data for Tesseract 3.02</Description>
-  </Dictionary>  <Dictionary>
+  </Dictionary>
+  <Dictionary>
     <EnglishName>Dutch</EnglishName>
     <DownloadLink>https://github.com/tesseract-ocr/tessdata/raw/bf82613055ebc6e63d9e3b438a5c234bfd638c93/nld.traineddata</DownloadLink>
     <Description>Dutch language data for Tesseract 3.02</Description>
@@ -133,6 +134,16 @@
     <EnglishName>Serbian (Latin)</EnglishName>
     <DownloadLink>https://github.com/tesseract-ocr/tessdata/raw/bf82613055ebc6e63d9e3b438a5c234bfd638c93/srp.traineddata</DownloadLink>
     <Description>Serbian (Latin) language data for Tesseract 3.02</Description>
+  </Dictionary>
+  <Dictionary>
+    <EnglishName>Slovak</EnglishName>
+    <DownloadLink>https://github.com/tesseract-ocr/tessdata/blob/bf82613055ebc6e63d9e3b438a5c234bfd638c93/slk.traineddata</DownloadLink>
+    <Description>Slovak language data for Tesseract 3.02</Description>
+  </Dictionary>
+  <Dictionary>
+    <EnglishName>Slovenian</EnglishName>
+    <DownloadLink>https://github.com/tesseract-ocr/tessdata/blob/bf82613055ebc6e63d9e3b438a5c234bfd638c93/slv.traineddata</DownloadLink>
+    <Description>Slovenian language data for Tesseract 3.02</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Spanish</EnglishName>

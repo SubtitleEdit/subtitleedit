@@ -103,7 +103,7 @@ namespace Nikse.SubtitleEdit.Forms
                 string url = _dictionaryDownloadLinks[index];
 
                 var wc = new WebClient { Proxy = Utilities.GetProxy() };
-                if (url.EndsWith(".traineddata", StringComparison.OrdinalIgnoreCase))
+                if (url.EndsWith(".traineddata", StringComparison.OrdinalIgnoreCase) || url.EndsWith(".traineddata?raw=true", StringComparison.OrdinalIgnoreCase))
                 {
                     _dictionaryFileName = Path.GetFileName(url);
                     wc.DownloadDataCompleted += wc_DownloadTrainedDataCompleted;
