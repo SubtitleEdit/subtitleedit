@@ -31,6 +31,11 @@
     <Description>Chinese (Traditional) language data for Tesseract 3.02</Description>
   </Dictionary>
   <Dictionary>
+    <EnglishName>Crotian</EnglishName>
+    <DownloadLink>https://github.com/tesseract-ocr/tessdata/raw/bf82613055ebc6e63d9e3b438a5c234bfd638c93/hrv.traineddata</DownloadLink>
+    <Description>Crotian language data for Tesseract 3.02</Description>
+  </Dictionary>
+  <Dictionary>
     <EnglishName>Czech</EnglishName>
     <DownloadLink>https://github.com/tesseract-ocr/tessdata/raw/bf82613055ebc6e63d9e3b438a5c234bfd638c93/ces.traineddata</DownloadLink>
     <Description>Czech language data for Tesseract 3.02</Description>
@@ -49,6 +54,11 @@
     <EnglishName>English</EnglishName>
     <DownloadLink>https://github.com/tesseract-ocr/tessdata/raw/bf82613055ebc6e63d9e3b438a5c234bfd638c93/eng.traineddata</DownloadLink>
     <Description>English language data for Tesseract 3.02</Description>
+  </Dictionary>
+  <Dictionary>
+    <EnglishName>Estonian</EnglishName>
+    <DownloadLink>https://github.com/tesseract-ocr/tessdata/raw/bf82613055ebc6e63d9e3b438a5c234bfd638c93/est.traineddata</DownloadLink>
+    <Description>Estonian language data for Tesseract 3.02</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Finnish</EnglishName>
@@ -71,6 +81,11 @@
     <Description>Greek language data for Tesseract 3.02</Description>
   </Dictionary>
   <Dictionary>
+    <EnglishName>Hebew</EnglishName>
+    <DownloadLink>https://github.com/tesseract-ocr/tessdata/raw/bf82613055ebc6e63d9e3b438a5c234bfd638c93/heb.traineddata</DownloadLink>
+    <Description>Hindi language data for Tesseract 3.02</Description>
+  </Dictionary>
+  <Dictionary>
     <EnglishName>Hindi</EnglishName>
     <DownloadLink>https://github.com/tesseract-ocr/tessdata/raw/bf82613055ebc6e63d9e3b438a5c234bfd638c93/hin.traineddata</DownloadLink>
     <Description>Hindi language data for Tesseract 3.02</Description>
@@ -84,6 +99,11 @@
     <EnglishName>Icelandic</EnglishName>
     <DownloadLink>https://github.com/tesseract-ocr/tessdata/raw/bf82613055ebc6e63d9e3b438a5c234bfd638c93/isl.traineddata</DownloadLink>
     <Description>Icelandic language data for Tesseract 3.02</Description>
+  </Dictionary>
+  <Dictionary>
+    <EnglishName>Indonesian</EnglishName>
+    <DownloadLink>https://github.com/tesseract-ocr/tessdata/raw/bf82613055ebc6e63d9e3b438a5c234bfd638c93/ind.traineddata</DownloadLink>
+    <Description>Indonesian language data for Tesseract 3.02</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Italian</EnglishName>
@@ -101,9 +121,19 @@
     <Description>Korean language data for Tesseract 3.02</Description>
   </Dictionary>
   <Dictionary>
+    <EnglishName>Latvian</EnglishName>
+    <DownloadLink>https://github.com/tesseract-ocr/tessdata/raw/bf82613055ebc6e63d9e3b438a5c234bfd638c93/lav.traineddata</DownloadLink>
+    <Description>Latvian language data for Tesseract 3.02</Description>
+  </Dictionary>
+  <Dictionary>
     <EnglishName>Lithuanian</EnglishName>
     <DownloadLink>https://github.com/tesseract-ocr/tessdata/raw/bf82613055ebc6e63d9e3b438a5c234bfd638c93/lit.traineddata</DownloadLink>
     <Description>Lithuanian language data for Tesseract 3.02</Description>
+  </Dictionary>
+  <Dictionary>
+    <EnglishName>Malay</EnglishName>
+    <DownloadLink>https://github.com/tesseract-ocr/tessdata/raw/bf82613055ebc6e63d9e3b438a5c234bfd638c93/msa.traineddata</DownloadLink>
+    <Description>Malay language data for Tesseract 3.02</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Norwegian</EnglishName>
