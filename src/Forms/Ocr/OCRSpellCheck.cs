@@ -88,19 +88,19 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         {
             if (word != null && richTextBoxParagraph.Text.Contains(word))
             {
-                const string ExpectedWordBoundaryChars = " <>-\"”“«»[]'‘`´¶()♪¿¡.…—!?,:;/\r\n";
+                const string expectedWordBoundaryChars = " <>-\"”„“«»[]'‘`´¶()♪¿¡.…—!?,:;/\r\n";
                 for (int i = 0; i < richTextBoxParagraph.Text.Length; i++)
                 {
                     if (richTextBoxParagraph.Text.Substring(i).StartsWith(word))
                     {
                         bool startOk = i == 0;
                         if (!startOk)
-                            startOk = ExpectedWordBoundaryChars.Contains(richTextBoxParagraph.Text[i - 1]);
+                            startOk = expectedWordBoundaryChars.Contains(richTextBoxParagraph.Text[i - 1]);
                         if (startOk)
                         {
                             bool endOk = (i + word.Length == richTextBoxParagraph.Text.Length);
                             if (!endOk)
-                                endOk = ExpectedWordBoundaryChars.Contains(richTextBoxParagraph.Text[i + word.Length]);
+                                endOk = expectedWordBoundaryChars.Contains(richTextBoxParagraph.Text[i + word.Length]);
                             if (endOk)
                             {
                                 richTextBoxParagraph.SelectionStart = i + 1;

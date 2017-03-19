@@ -17,7 +17,7 @@ namespace Nikse.SubtitleEdit.Core
         }
 
         public StrippableText(string text)
-            : this(text, " >-\"”“['‘`´¶(♪¿¡.…—", " -\"”“]'`´¶)♪.!?:…—")
+            : this(text, " >-\"„”“['‘`´¶(♪¿¡.…—", " -\"”“]'`´¶)♪.!?:…—")
         {
         }
 

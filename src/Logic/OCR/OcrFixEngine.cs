@@ -965,7 +965,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             //    }
             //}
 
-            const string p = @" ¡¿,.!?:;()[]{}+-$£""”“#&%…—♪";
+            const string p = @" ¡¿,.!?:;()[]{}+-$£""„”“#&%…—♪";
             foreach (string name in _namesEtcMultiWordList)
             {
                 int start = tempLine.FastIndexOf(name);
@@ -980,7 +980,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 }
             }
 
-            string[] words = tempLine.Replace("</i>", string.Empty).Split((Environment.NewLine + " ¡¿,.!?:;()[]{}+-£\"”“«»#&%…—♪").ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            string[] words = tempLine.Replace("</i>", string.Empty).Split((Environment.NewLine + " ¡¿,.!?:;()[]{}+-£\"„”“«»#&%…—♪").ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
             for (int i = 0; i < words.Length; i++)
             {
                 string word = words[i].TrimStart('\'');
@@ -1403,7 +1403,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 return 0;
 
             int wordsNotFound = 0;
-            var words = HtmlUtil.RemoveOpenCloseTags(line, HtmlUtil.TagItalic).Split((Environment.NewLine + " ¡¿,.!?:;()[]{}+-$£\"#&%…“”«»").ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            var words = HtmlUtil.RemoveOpenCloseTags(line, HtmlUtil.TagItalic).Split((Environment.NewLine + " ¡¿,.!?:;()[]{}+-$£\"#&%…„“”«»").ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
             for (int i = 0; i < words.Length; i++)
             {
                 string word = words[i];
