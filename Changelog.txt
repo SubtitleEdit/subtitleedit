@@ -8,7 +8,9 @@
    * Updated Chinese translation - thx Leon
    * Import plain text now also supports input as HTML
    * Added "Total words" to statistics - thx Barbara
+   * Added more Tesseract dictionaries - thx lucybook/Elheym
 * FIXED:
+   * Fixed crash in "Add to user dictionary" in OCR - thx alfix0
    * Fixed original file name bug in "Undo" - thx darnn
    * Fixed non default timecode scales in MKV - thx mkver
    * Fix layout of translator mode in RTL mode - thx darnn
@@ -16,7 +18,6 @@
    * Fix missing UTF-8 tag in OCR HTML export - thx dgonyier
    * Fixed issue regarding "Fix dialogs on one line" - thx ingo
    * Fixed possible crash in EBU STL - thx Elena
-   * Fixed crash in "Add to user dictionary" in OCR - thx alfix0
 
 3.5.2 (3rd March 2017)
 * NEW:

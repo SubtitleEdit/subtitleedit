@@ -167,8 +167,8 @@
   </Dictionary>
   <Dictionary>
     <EnglishName>Slovak</EnglishName>
-    <DownloadLink>https://github.com/tesseract-ocr/tessdata/blob/bf82613055ebc6e63d9e3b438a5c234bfd638c93/slk.traineddata</DownloadLink>
-    <Description>Slovak language data for Tesseract 3.02</Description>
+    <DownloadLink>https://github.com/tesseract-ocr/tessdata/raw/074c37215b01ab8cc47a0e06ff7356383883d775/slk.traineddata</DownloadLink>
+    <Description>Slovak language data for Tesseract 3.04</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Slovenian</EnglishName>
