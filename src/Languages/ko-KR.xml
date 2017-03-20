@@ -1450,6 +1450,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
   </Main>
   <MatroskaSubtitleChooser>
     <Title>MATROSKA 파일 안에 있는 자막 선택하기</Title>
+    <TitleMp4>MP4 파일에서 자막 선택하기</TitleMp4>
     <PleaseChoose>한 개 이상의 자막 발견! - 자막을 선택하십시오!</PleaseChoose>
     <TrackXLanguageYTypeZ>트랙 {0} - 언어: {1} - 종류: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
@@ -2045,6 +2046,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <LengthInFormatXinCharactersY>{0} 문자수: {1:#,###,##0}</LengthInFormatXinCharactersY>
     <NumberOfCharactersInTextOnly>텍스트 파트 안의 문자수: {0:#,###,##0}</NumberOfCharactersInTextOnly>
     <TotalCharsPerSecond>초당 총 문자수: {0:0.0}/초</TotalCharsPerSecond>
+    <TotalWords>자막 안의 총 단어수: {0}</TotalWords>
     <NumberOfItalicTags>기울임꼴 태그 수: {0}</NumberOfItalicTags>
     <NumberOfBoldTags>굵게(볼드) 태그 수: {0}</NumberOfBoldTags>
     <NumberOfUnderlineTags>밑줄 태그 수: {0}</NumberOfUnderlineTags>
