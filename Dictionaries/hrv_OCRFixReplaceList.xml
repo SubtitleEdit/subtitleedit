@@ -85,6 +85,8 @@
     <Word from="ćmo" to="ćemo" />
     <Word from="ćte" to="ćete" />
     <Word from="čuće" to="čut će" />
+    <Word from="Čućete" to="Čut ćete" />
+    <Word from="Čuće" to="Čut će" />
     <Word from="ćutao" to="šutio" />
     <Word from="Ćutao" to="Šutio" />
     <Word from="daga" to="da ga" />
@@ -661,6 +663,7 @@
     <Word from="trkanje" to="utrkivanje" />
     <Word from="trkanja" to="utrkivanja" />
     <Word from="trkao" to="utrkivao" />
+    <Word from="trouglove" to="trokute" />
     <Word from="trpeo" to="trpio" />
     <Word from="Trpeo" to="Trpio" />
     <Word from="tugi" to="tuzi" />
@@ -740,6 +743,7 @@
     <Word from="vještačku" to="umjetnu" />
     <Word from="vlo" to="vrlo" />
     <Word from="voliti" to="voljeti" />
+    <Word from="vredelo" to="vrijedilo" />
     <Word from="vrednom" to="vrijednom" />
     <Word from="vrednog" to="vrijednog" />
     <Word from="vreme" to="vrijeme" />
@@ -781,6 +785,9 @@
     <Word from="Darvinu" to="Darwinu" />
     <Word from="Darvinom" to="Darwinom" />
     <Word from="Dejv" to="Dave" />
+    <Word from="Dejva" to="Davea" />
+    <Word from="Dejvu" to="Daveu" />
+    <Word from="Dejvom" to="Daveom" />
     <Word from="Dru" to="Drew" />
     <Word from="Đošua" to="Joshua" />
     <Word from="Džes" to="Jess" />
@@ -836,10 +843,6 @@
     <Word from="Mart" to="Ožujak" />
     <Word from="april" to="travanj" />
     <Word from="April" to="Travanj" />
-    <Word from="Dejv" to="Dave" />
-    <Word from="Dejva" to="Davea" />
-    <Word from="Dejvu" to="Daveu" />
-    <Word from="Dejvom" to="Daveom" />
     <Word from="maj" to="svibanj" />
     <Word from="Maj" to="Svibanj" />
     <Word from="svibnjom" to="svibnjem" />
@@ -888,6 +891,7 @@
     <LinePart from="dali si" to="jesi li" />
     <LinePart from="da li će" to="hoće li" />
     <LinePart from="dali će" to="hoće li" />
+    <LinePart from="do srede" to="do srijede" />
     <LinePart from="Dobro veče" to="Dobra večer" />
     <LinePart from="Dobro večer" to="Dobra večer" />
     <LinePart from="Dobar večer" to="Dobra večer" />
@@ -904,6 +908,7 @@
     <LinePart from="Ja bi" to="Ja bih" />
     <LinePart from="Jel sam ti" to="Jesam li ti" />
     <LinePart from="Jeli se" to="Je li se" />
+    <LinePart from="Jeli sve" to="Je li sve" />
     <LinePart from="Jeli ti" to="Je li ti" />
     <LinePart from="ko zna" to="tko zna" />
     <LinePart from="moje saučešće" to="moja sućut" />
