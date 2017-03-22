@@ -1100,7 +1100,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                             }
                             foreach (string guess in guesses)
                             {
-                                if (IsWordOrWordsCorrect(guess) && !guess.StartsWith("f "))
+                                if (!guess.StartsWith("f ", StringComparison.Ordinal) && IsWordOrWordsCorrect(guess))
                                 {
                                     string replacedLine = OcrFixReplaceList.ReplaceWord(line, word, guess);
                                     if (replacedLine != line)
