@@ -48,6 +48,8 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
         private static readonly Regex RegexUppercaseI = new Regex("[a-zæøåöääöéèàùâêîôûëï]I.", RegexOptions.Compiled);
         private static readonly Regex RegexNumber1 = new Regex(@"(?<=\d) 1(?!/\d)", RegexOptions.Compiled);
 
+        private static readonly char[] SplitChars = { ' ', '¡', '¿', ',', '.', '!', '?', ':', ';', '(', ')', '[', ']', '{', '}', '+', '-', '£', '"', '„', '”', '“', '«', '»', '#', '&', '%', '…', '—', '♪', '\r', '\n' };
+
         public bool Abort { get; set; }
         public List<string> AutoGuessesUsed { get; set; }
         public List<string> UnknownWordsFound { get; set; }
@@ -965,22 +967,19 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             //    }
             //}
 
-            const string p = @" ¡¿,.!?:;()[]{}+-$£""„”“#&%…—♪";
+            const string p = " ¡¿,.!?:;()[]{}+-$£\"„”“#&%…—♪\r\n";
             foreach (string name in _namesEtcMultiWordList)
             {
                 int start = tempLine.FastIndexOf(name);
-                if (start >= 0)
+                if (start == 0 || (start > 0 && p.Contains(tempLine[start - 1])))
                 {
-                    if (start == 0 || (Environment.NewLine + p).Contains(tempLine[start - 1]))
-                    {
-                        int end = start + name.Length;
-                        if (end >= tempLine.Length || (Environment.NewLine + p).Contains(tempLine[end]))
-                            tempLine = tempLine.Remove(start, name.Length);
-                    }
+                    int end = start + name.Length;
+                    if (end == tempLine.Length || p.Contains(tempLine[end]))
+                        tempLine = tempLine.Remove(start, name.Length);
                 }
             }
 
-            string[] words = tempLine.Replace("</i>", string.Empty).Split((Environment.NewLine + " ¡¿,.!?:;()[]{}+-£\"„”“«»#&%…—♪").ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            string[] words = tempLine.Replace("</i>", string.Empty).Split(SplitChars, StringSplitOptions.RemoveEmptyEntries);
             for (int i = 0; i < words.Length; i++)
             {
                 string word = words[i].TrimStart('\'');
@@ -1100,7 +1099,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                             }
                             foreach (string guess in guesses)
                             {
-                                if (IsWordOrWordsCorrect(guess) && !guess.StartsWith("f "))
+                                if (!guess.StartsWith("f ", StringComparison.Ordinal) && IsWordOrWordsCorrect(guess))
                                 {
                                     string replacedLine = OcrFixReplaceList.ReplaceWord(line, word, guess);
                                     if (replacedLine != line)
