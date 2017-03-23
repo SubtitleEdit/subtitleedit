@@ -10,6 +10,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     /// <summary>
     /// Nexflix version of timed text - time code is "00:00:04.000", tag <br /> is converted to <br/>
     /// See https://backlothelp.netflix.com/hc/en-us/articles/215758617-Timed-Text-Style-Guide-General-Requirements
+    ///     https://backlothelp.netflix.com/hc/en-us/articles/115001869828-Announcement-Additional-TTML-Schema-Inspections
     /// </summary>
     public class NetflixTimedText : TimedText10
     {
@@ -37,7 +38,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             var sb = new StringBuilder();
             lines.ForEach(line => sb.AppendLine(line));
-            if (!sb.ToString().Contains("Netflix Subtitle"))
+            if (!sb.ToString().Contains(">Netflix Subtitle"))
                 return false;
 
             var subtitle = new Subtitle();

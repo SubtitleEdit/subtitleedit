@@ -1,13 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
 {
     public class NetflixWhiteSpaceChecker : INetflixQualityChecker
     {
+        private static readonly Regex LineEndingSpaceBefore = new Regex(@"^( |\n|\r\n)[^\s]", RegexOptions.Compiled);
+        private static readonly Regex LineEndingSpaceAfter = new Regex(@"[^\s]( |\n|\r\n)$", RegexOptions.Compiled);
+        private static readonly Regex SpacesBeforePunctuation = new Regex(@"[^\s]( |\n|\r\n)[!?).,]", RegexOptions.Compiled);
+        private static readonly Regex TwoPlusConsequentSpaces = new Regex(@"( |\n|\r\n){2,}", RegexOptions.Compiled);
+
         private void AddWhiteSpaceWarning(Paragraph p, NetflixQualityReportBuilder report, int pos)
         {
             string timecode = p.StartTime.ToHHMMSSFF();
@@ -22,24 +23,24 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 // Line endings
-                if (Regex.Match(p.Text, @"^( |\n|\r\n)[^\s]").Success)
+                if (LineEndingSpaceBefore.IsMatch(p.Text))
                 {
                     AddWhiteSpaceWarning(p, report, 1);
                 }
 
-                if (Regex.Match(p.Text, @"[^\s]( |\n|\r\n)$").Success)
+                if (LineEndingSpaceAfter.IsMatch(p.Text))
                 {
                     AddWhiteSpaceWarning(p, report, p.Text.Length);
                 }
 
                 // Spaces before punctuation
-                foreach (Match m in Regex.Matches(p.Text, @"[^\s]( |\n|\r\n)[!?).,]"))
+                foreach (Match m in SpacesBeforePunctuation.Matches(p.Text))
                 {
                     AddWhiteSpaceWarning(p, report, m.Index + 1);
                 }
 
                 // 2+ consequent spaces
-                foreach (Match m in Regex.Matches(p.Text, "( |\n|\r\n){2,}"))
+                foreach (Match m in TwoPlusConsequentSpaces.Matches(p.Text))
                 {
                     AddWhiteSpaceWarning(p, report, m.Index);
                 }
