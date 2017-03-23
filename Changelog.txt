@@ -3,7 +3,7 @@
 
 3.5.3 (xth May 2017) BETA
 * NEW:
-   * New ...
+   * New Netflix quality checker - thx askolesov/pavel-belenko
 * IMPROVED:
    * Updated Chinese translation - thx Leon
    * Import plain text now also supports input as HTML
@@ -18,6 +18,9 @@
    * Fix missing UTF-8 tag in OCR HTML export - thx dgonyier
    * Fixed issue regarding "Fix dialogs on one line" - thx ingo
    * Fixed possible crash in EBU STL - thx Elena
+   * Video player "Stop" resets playback position - thx askolesov/pavel-belenko
+   * Many fixes for Timed Text 1.0 and Netflix Timed Text - thx askolesov/pavel-belenko
+
 
 3.5.2 (3rd March 2017)
 * NEW:

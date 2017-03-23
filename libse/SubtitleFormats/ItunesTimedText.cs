@@ -31,6 +31,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             if (fileName != null && !fileName.EndsWith(Extension, StringComparison.OrdinalIgnoreCase))
                 return false;
 
+            if (new NetflixTimedText().IsMine(lines, fileName))
+                return false;
+
             return base.IsMine(lines, fileName);
         }
 
@@ -177,7 +180,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     hasTopRegion = true;
             }
 
-            int no = 0;
             var headerStyles = GetStylesFromHeader(subtitle.Header);
             foreach (Paragraph p in subtitle.Paragraphs)
             {
@@ -332,7 +334,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 paragraph.Attributes.Append(end);
 
                 div.AppendChild(paragraph);
-                no++;
             }
             string xmlString = ToUtf8XmlString(xml).Replace(" xmlns=\"\"", string.Empty).Replace(" xmlns:tts=\"http://www.w3.org/ns/10/ttml#style\">", ">").Replace("<br />", "<br/>");
             if (subtitle.Header == null)
