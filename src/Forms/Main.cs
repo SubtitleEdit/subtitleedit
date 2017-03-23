@@ -1980,13 +1980,17 @@ namespace Nikse.SubtitleEdit.Forms
                         return;
                 }
 
+                var tempSubtitle = new Subtitle(_subtitle, false);
                 if (_subtitle.HistoryItems.Count > 0 || _subtitle.Paragraphs.Count > 0)
                     MakeHistoryForUndo(string.Format(_language.BeforeLoadOf, Path.GetFileName(fileName)));
 
-                string _subtitleHash = _subtitle.GetFastHashCode();
-                bool hasChanged = (_changeSubtitleToString != _subtitleHash) && (_lastDoNotPrompt != _subtitleHash);
+                string subtitleHash = _subtitle.GetFastHashCode();
+                bool hasChanged = (_changeSubtitleToString != subtitleHash) && (_lastDoNotPrompt != subtitleHash);
 
                 SubtitleFormat format = _subtitle.LoadSubtitle(fileName, out encoding, encoding);
+                if (format == null)
+                    _subtitle = tempSubtitle;
+
                 if (!hasChanged)
                     _changeSubtitleToString = _subtitle.GetFastHashCode();
 
@@ -2633,14 +2637,16 @@ namespace Nikse.SubtitleEdit.Forms
                 // retry Matroska (file with wrong extension)
                 if (format == null && !string.IsNullOrWhiteSpace(fileName))
                 {
-                    var matroska = new MatroskaFile(fileName);
-                    if (matroska.IsValid)
+                    using (var matroska = new MatroskaFile(fileName))
                     {
-                        var subtitleList = matroska.GetTracks(true);
-                        if (subtitleList.Count > 0)
+                        if (matroska.IsValid)
                         {
-                            ImportSubtitleFromMatroskaFile(fileName);
-                            return;
+                            var subtitleList = matroska.GetTracks(true);
+                            if (subtitleList.Count > 0)
+                            {
+                                ImportSubtitleFromMatroskaFile(fileName);
+                                return;
+                            }
                         }
                     }
                 }
@@ -20741,7 +20747,7 @@ namespace Nikse.SubtitleEdit.Forms
                     string msgFormat = string.Format("{0} {1}",
                         Configuration.Settings.Language.NetflixQualityCheck.GlyphCheckFailed,
                         Configuration.Settings.Language.NetflixQualityCheck.ReportPrompt);
-                    messages.Add(string.Format(msgFormat , reportPath));
+                    messages.Add(string.Format(msgFormat, reportPath));
 
                     reportFiles.Add(reportPath);
                 }
@@ -20794,7 +20800,7 @@ namespace Nikse.SubtitleEdit.Forms
                 messages.Add(Configuration.Settings.Language.NetflixQualityCheck.WhiteSpaceCheckSuccessfull);
             }
 
-            
+
             if (messages.Count != 0)
             {
                 NetflixQCResult dialog = new NetflixQCResult(string.Join(Environment.NewLine, messages), reportFiles);
