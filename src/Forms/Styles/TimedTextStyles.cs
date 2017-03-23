@@ -321,8 +321,8 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
                     // normal | bold
                     comboBoxFontWeight.SelectedIndex = 0;
-                    if (fontStyle.Equals("bold", StringComparison.OrdinalIgnoreCase))
-                        comboBoxFontStyle.SelectedIndex = 1;
+                    if (fontWeight.Equals("bold", StringComparison.OrdinalIgnoreCase))
+                        comboBoxFontWeight.SelectedIndex = 1;
 
                     Color color = Color.White;
                     try
@@ -435,27 +435,34 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
         private void UpdateHeaderXml(string id, string tag, string value)
         {
-            foreach (XmlNode innerNode in _xmlHead)
+            XmlNodeList styles = _xml.DocumentElement.SelectNodes("//ttml:head//ttml:styling/ttml:style", _nsmgr);
+            
+            foreach (XmlNode style in styles)
             {
-                if (innerNode.Name == "styling")
+                XmlAttribute idAttr = style.Attributes["xml:id"];
+
+                if (idAttr == null)
                 {
-                    foreach (XmlNode innerInnerNode in innerNode)
+                    idAttr = style.Attributes["id"];
+                }
+
+                if (idAttr != null && idAttr.Value == id)
+                {
+                    if (tag == "id" || tag == "xml:id")
                     {
-                        if (innerInnerNode.Name == "style")
+                        idAttr.Value = value;
+                    }
+                    else
+                    {
+                        XmlAttribute attrToChange = style.Attributes[tag];
+
+                        if (attrToChange == null)
                         {
-                            XmlAttribute idAttr = innerInnerNode.Attributes["xml:id"];
-                            if (idAttr != null && idAttr.InnerText == id)
-                            {
-                                XmlAttribute attr = innerInnerNode.Attributes[tag];
-                                if (attr == null)
-                                {
-                                    attr = _xml.CreateAttribute("tts:fontSize", "http://www.w3.org/ns/10/ttml#style");
-                                    innerInnerNode.Attributes.Append(attr);
-                                }
-                                attr.InnerText = value;
-                                break;
-                            }
+                            attrToChange = _xml.CreateAttribute(tag, TimedText10.TTMLStylingNamespace);
+                            style.Attributes.Append(attrToChange);
                         }
+
+                        attrToChange.Value = value;
                     }
                 }
             }

@@ -1320,6 +1320,7 @@
                     public string SplitLongLines { get; set; }
                     public string MinimumDisplayTimeBetweenParagraphs { get; set; }
                     public string SortBy { get; set; }
+                    public string NetflixQualityCheck { get; set; }
                     public string Number { get; set; }
                     public string StartTime { get; set; }
                     public string EndTime { get; set; }
@@ -1420,6 +1421,7 @@
                     public string RemoveTextForHi { get; set; }
                     public string VisualSync { get; set; }
                     public string SpellCheck { get; set; }
+                    public string NetflixQualityCheck { get; set; }
                     public string Settings { get; set; }
                     public string Help { get; set; }
                     public string ShowHideWaveform { get; set; }
@@ -1845,6 +1847,7 @@
             public string Replace { get; set; }
             public string VisualSync { get; set; }
             public string SpellCheck { get; set; }
+            public string NetflixQualityCheck { get; set; }
             public string SettingsName { get; set; }
             public string Help { get; set; }
             public string ShowFrameRate { get; set; }
@@ -2163,6 +2166,20 @@
             public string SpellCheckCompleted { get; set; }
             public string SpellCheckAborted { get; set; }
             public string UndoX { get; set; }
+        }
+
+        public class NetflixQualityCheck
+        {
+            public string GlyphCheckSuccessfull { get; set; }
+            public string GlyphCheckFailed { get; set; }
+            public string GlyphCheckReport { get; set; }
+
+            public string WhiteSpaceCheckSuccessfull { get; set; }
+            public string WhiteSpaceCheckFailed { get; set; }
+            public string WhiteSpaceCheckReport { get; set; }
+
+            public string ReportPrompt { get; set;  }
+            public string SavingError { get; set; }
         }
 
         public class Split

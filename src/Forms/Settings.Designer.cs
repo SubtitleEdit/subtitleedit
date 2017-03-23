@@ -89,6 +89,9 @@
             this.labelDefaultFileEncoding = new System.Windows.Forms.Label();
             this.comboBoxFrameRate = new System.Windows.Forms.ComboBox();
             this.labelDefaultFrameRate = new System.Windows.Forms.Label();
+            this.labelTBNetflixQualityCheck = new System.Windows.Forms.Label();
+            this.pictureBoxNetflixQualityCheck = new System.Windows.Forms.PictureBox();
+            this.checkBoxNetflixQualityCheck = new System.Windows.Forms.CheckBox();
             this.tabPageShortcuts = new System.Windows.Forms.TabPage();
             this.groupBoxShortcuts = new System.Windows.Forms.GroupBox();
             this.comboBoxShortcutKey = new System.Windows.Forms.ComboBox();
@@ -338,6 +341,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxCharsSec)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDurationMax)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDurationMin)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxNetflixQualityCheck)).BeginInit();
             this.tabPageShortcuts.SuspendLayout();
             this.groupBoxShortcuts.SuspendLayout();
             this.tabPageSyntaxColoring.SuspendLayout();
@@ -1202,6 +1206,38 @@
             // 
             // comboBoxShortcutKey
             // 
+            this.groupBoxShowToolBarButtons.Controls.Add(this.labelTBNetflixQualityCheck);
+            this.groupBoxShowToolBarButtons.Controls.Add(this.pictureBoxNetflixQualityCheck);
+            this.groupBoxShowToolBarButtons.Controls.Add(this.checkBoxNetflixQualityCheck);
+            // 
+            // labelTBNetflixQualityCheck
+            // 
+            this.labelTBNetflixQualityCheck.AutoSize = true;
+            this.labelTBNetflixQualityCheck.Location = new System.Drawing.Point(636, 136);
+            this.labelTBNetflixQualityCheck.Name = "labelTBNetflixQualityCheck";
+            this.labelTBNetflixQualityCheck.Size = new System.Drawing.Size(103, 13);
+            this.labelTBNetflixQualityCheck.TabIndex = 42;
+            this.labelTBNetflixQualityCheck.Text = "Netflix quality check";
+            // 
+            // pictureBoxNetflixQualityCheck
+            // 
+            this.pictureBoxNetflixQualityCheck.Location = new System.Drawing.Point(649, 155);
+            this.pictureBoxNetflixQualityCheck.Name = "pictureBoxNetflixQualityCheck";
+            this.pictureBoxNetflixQualityCheck.Size = new System.Drawing.Size(32, 32);
+            this.pictureBoxNetflixQualityCheck.TabIndex = 41;
+            this.pictureBoxNetflixQualityCheck.TabStop = false;
+            // 
+            // checkBoxNetflixQualityCheck
+            // 
+            this.checkBoxNetflixQualityCheck.AutoSize = true;
+            this.checkBoxNetflixQualityCheck.Location = new System.Drawing.Point(652, 195);
+            this.checkBoxNetflixQualityCheck.Name = "checkBoxNetflixQualityCheck";
+            this.checkBoxNetflixQualityCheck.Size = new System.Drawing.Size(55, 17);
+            this.checkBoxNetflixQualityCheck.TabIndex = 40;
+            this.checkBoxNetflixQualityCheck.Text = "Visible";
+            this.checkBoxNetflixQualityCheck.UseVisualStyleBackColor = true;
+            // 
+            // labelTBRemoveTextForHi
             this.comboBoxShortcutKey.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxShortcutKey.Enabled = false;
             this.comboBoxShortcutKey.FormattingEnabled = true;
@@ -4341,6 +4377,9 @@
         private System.Windows.Forms.CheckBox checkBoxTBRemoveTextForHi;
         private System.Windows.Forms.NumericUpDown numericUpDownMaxNumberOfLines;
         private System.Windows.Forms.Label labelMaxLines;
+        private System.Windows.Forms.Label labelTBNetflixQualityCheck;
+        private System.Windows.Forms.PictureBox pictureBoxNetflixQualityCheck;
+        private System.Windows.Forms.CheckBox checkBoxNetflixQualityCheck;
         private System.Windows.Forms.CheckBox checkBoxWaveformSetVideoPosMoveStartEnd;
         private System.Windows.Forms.Button buttonListviewColumns;
         private System.Windows.Forms.Label labelListviewColumns;

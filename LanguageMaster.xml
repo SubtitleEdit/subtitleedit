@@ -1058,6 +1058,7 @@ Note: Do check free disk space.</WaveFileMalformed>
         <RemoveTextForHi>Remove text for hearing impaired</RemoveTextForHi>
         <VisualSync>Visual sync</VisualSync>
         <SpellCheck>Spell check</SpellCheck>
+        <NetflixQualityCheck>Netflix quality check</NetflixQualityCheck>
         <Settings>Settings</Settings>
         <Help>Help</Help>
         <ShowHideWaveform>Show/hide waveform</ShowHideWaveform>
@@ -1684,6 +1685,7 @@ can edit in same subtitle file (collaboration)</Information>
     <Replace>Replace</Replace>
     <VisualSync>Visual sync</VisualSync>
     <SpellCheck>Spell check</SpellCheck>
+    <NetflixQualityCheck>Netflix quality check</NetflixQualityCheck>
     <SettingsName>Settings</SettingsName>
     <Help>Help</Help>
     <ShowFrameRate>Show frame rate in toolbar</ShowFrameRate>
@@ -1992,6 +1994,16 @@ can edit in same subtitle file (collaboration)</Information>
     <SpellCheckAborted>Spell check aborted</SpellCheckAborted>
     <UndoX>Undo: {0}</UndoX>
   </SpellCheck>
+  <NetflixQualityCheck>
+    <GlyphCheckSuccessfull>Character validation has been successful.</GlyphCheckSuccessfull>
+    <GlyphCheckFailed>Character validation has failed.</GlyphCheckFailed>
+    <GlyphCheckReport>Invalid character {0} found at column {1}</GlyphCheckReport>
+    <WhiteSpaceCheckSuccessfull>White space validation has been successful.</WhiteSpaceCheckSuccessfull>
+    <WhiteSpaceCheckFailed>White space validation has failed.</WhiteSpaceCheckFailed>
+    <WhiteSpaceCheckReport>Invalid white space found at column {0}.</WhiteSpaceCheckReport>
+    <ReportPrompt>Please see full report here: {0}.</ReportPrompt>
+    <SavingError>Report cannot be saved.</SavingError>
+  </NetflixQualityCheck>
   <Split>
     <Title>Split</Title>
     <SplitOptions>Split options</SplitOptions>
