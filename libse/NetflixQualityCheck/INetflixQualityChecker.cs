@@ -2,6 +2,6 @@
 {
     public interface INetflixQualityChecker
     {
-        void Check(Subtitle subtitle, NetflixQualityReportBuilder report);
+        void Check(Subtitle subtitle, NetflixQualityController controller);
     }
 }

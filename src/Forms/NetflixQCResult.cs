@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using System.Diagnostics;
 
@@ -89,7 +85,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void lblText_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            OpenFileLocation(e.Link.LinkData as string);
+            Process.Start((string)e.Link.LinkData);
         }
 
         private void OpenFileLocation(string filePath)
