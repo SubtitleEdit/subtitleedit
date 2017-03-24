@@ -175,6 +175,7 @@
     <Compile Include="ManagedBitmap.cs" />
     <Compile Include="MurMurHash3.cs" />
     <Compile Include="NativeMethods.cs" />
+    <Compile Include="NetflixQualityCheck\NetflixCheckMaxLineLength.cs" />
     <Compile Include="NetflixQualityCheck\NetflixHelper.cs" />
     <Compile Include="NetflixQualityCheck\NetflixCheckNumbersOneToTenSpellOut.cs" />
     <Compile Include="NetflixQualityCheck\NetflixCheckStartNumberSpellOut.cs" />

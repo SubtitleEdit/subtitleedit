@@ -13,7 +13,7 @@
                 if (p.Text.SplitToLines().Length > 2)
                 {
                     var fixedParagraph = new Paragraph(p, false);
-                    fixedParagraph.Text = Utilities.AutoBreakLine(fixedParagraph.Text, 43, 40, controller.Language);
+                    fixedParagraph.Text = Utilities.AutoBreakLine(fixedParagraph.Text, controller.SingleLineMaxLength, controller.SingleLineMaxLength - 3, controller.Language);
                     if (fixedParagraph.Text.SplitToLines().Length > 2)
                     {
                         fixedParagraph = null; // cannot fix text

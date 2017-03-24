@@ -16,6 +16,52 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
 
         public double FrameRate { get; set; } = 24;
 
+        public int CharactersPerSecond
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(Language))
+                {
+                    if (Language == "ar") // Arabic
+                    {
+                        return 20;
+                    }
+                    if (Language == "ko") // Korean
+                    {
+                        return 12;
+                    }
+                    if (Language == "zh") // Chinese
+                    {
+                        return 9;
+                    }
+                }
+                return 17;
+            }
+        }
+
+        public int SingleLineMaxLength
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(Language))
+                {
+                    if (Language == "ja")
+                    {
+                        return 13;
+                    }
+                    if (Language == "ko") // Korean
+                    {
+                        return 16;
+                    }
+                    if (Language == "zh")
+                    {
+                        return 16;
+                    }
+                }
+                return 42;
+            }
+        }
+
 
         public class Record
         {
@@ -60,7 +106,7 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
 
         public void AddRecord(Paragraph originalParagraph, string timecod, string context, string comment)
         {
-            Records.Add(new Record(timecod, context, comment) { OriginalParagraph = originalParagraph } );
+            Records.Add(new Record(timecod, context, comment) { OriginalParagraph = originalParagraph });
         }
 
         public void AddRecord(Paragraph originalParagraph, string comment)
@@ -72,11 +118,12 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
                 Timecode = originalParagraph.StartTime.ToDisplayString()
             });
         }
-        public void AddRecord(Paragraph originalParagraph, Paragraph fixedParagraph, string comment)
+        public void AddRecord(Paragraph originalParagraph, Paragraph fixedParagraph, string comment, string context = "")
         {
             Records.Add(new Record
             {
                 Comment = comment,
+                Context = context,
                 OriginalParagraph = originalParagraph,
                 FixedParagraph = fixedParagraph,
                 Timecode = originalParagraph.StartTime.ToDisplayString()
@@ -118,6 +165,7 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
                 new NetflixCheckDialogeHyphenNoSpace(),
                 new NetflixCheckGlyph(),
                 new NetflixCheckMaxCps(),
+                new NetflixCheckMaxLineLength(),
                 new NetflixCheckMaxDuration(),
                 new NetflixCheckMinDuration(),
                 new NetflixCheckNumberOfLines(),
@@ -136,7 +184,7 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
             {
                 checker.Check(subtitle, this);
             }
-            Records = Records.OrderBy(p=> p.OriginalParagraph.Number).ToList();
+            Records = Records.OrderBy(p => p.OriginalParagraph.Number).ToList();
         }
 
     }

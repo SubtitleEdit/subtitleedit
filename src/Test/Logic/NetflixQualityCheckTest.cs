@@ -80,6 +80,25 @@ namespace Test.Logic
             Assert.AreEqual(reportBuilder.Records[0].OriginalParagraph, p1);
         }
 
+        
+        [TestMethod]
+        public void TestNetflixCheckMaxLineLength()
+        {
+            var sub = new Subtitle();
+            var p1 = new Paragraph("Lorem ipsum dolor sit amet lasdf lajsdf ljdsf asdf asf.", 0, 8000);
+            sub.Paragraphs.Add(p1);
+            var p2 = new Paragraph("Lorem ipsum.", 0, 7000);
+            sub.Paragraphs.Add(p2);
+
+            var reportBuilder = new NetflixQualityController();
+            var checker = new NetflixCheckMaxLineLength();
+
+            checker.Check(sub, reportBuilder);
+
+            Assert.AreEqual(1, reportBuilder.Records.Count);
+            Assert.AreEqual(reportBuilder.Records[0].OriginalParagraph, p1);
+        }
+
         [TestMethod]
         public void TestNetflixCheckMaxDuration()
         {
