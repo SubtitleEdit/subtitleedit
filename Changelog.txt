@@ -20,8 +20,8 @@
    * Fixed possible crash in EBU STL - thx Elena
    * Video player "Stop" resets playback position - thx askolesov/pavel-belenko
    * Many fixes for TTML 1.0 and Netflix Timed Text - thx askolesov/pavel-belenko
-   * Fixed locking of input subtitle (for unknown subtitles) - thx darnn
-   * Fixed crash after unsuccessful load of file - thx darnn
+   * Fixed locking of input subtitle file (for unknown subtitles) - thx darnn
+   * Fixed crash after unsuccessful load of subtitle file - thx darnn
 
 
 3.5.2 (3rd March 2017)

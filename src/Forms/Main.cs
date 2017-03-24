@@ -20710,101 +20710,52 @@ namespace Nikse.SubtitleEdit.Forms
         private void UpdateNetflixGlyphCheckToolsVisibility()
         {
             bool showTools = IsNetflixGlyphCheckAvailable();
-
             netflixQualityCheckToolStripMenuItem.Visible = showTools;
             toolStripButtonNetflixQualityCheck.Visible = showTools && Configuration.Settings.General.ShowToolbarNetflixGlyphCheck;
         }
 
         private bool IsNetflixGlyphCheckAvailable()
         {
-            SubtitleFormat format = GetCurrentSubtitleFormat();
-            bool showTool = format.GetType() == typeof(TimedText10) || format.GetType() == typeof(NetflixTimedText);
-            return showTool;
+            var formatType = GetCurrentSubtitleFormat().GetType();
+            return formatType == typeof(TimedText10) || formatType == typeof(NetflixTimedText);
         }
 
         private void NetflixGlyphCheck(bool showSuccessMessage = true)
         {
             ReloadFromSourceView();
 
-            string fileName = string.IsNullOrEmpty(_fileName) ? "untitledSubtitle" : Path.GetFileNameWithoutExtension(_fileName);
-            List<string> messages = new List<string>();
-            List<string> reportFiles = new List<string>();
+            string fileName = string.IsNullOrEmpty(_fileName) ? "UntitledSubtitle" : Path.GetFileNameWithoutExtension(_fileName);
+            string language = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle);
+            var messages = new List<string>();
+            var reportFiles = new List<string>();
 
-
-            // Glyph check
-            NetflixQualityReportBuilder glyphCheckReport = new NetflixQualityReportBuilder();
-            NetflixGlyphChecker glyphChecker = new NetflixGlyphChecker();
-            glyphChecker.Check(_subtitle, glyphCheckReport);
-
-            if (!glyphCheckReport.IsEmpty)  // There are warnings
+            var netflixController = new NetflixQualityController { Language = language };
+            if (!string.IsNullOrEmpty(_videoFileName) && _videoInfo != null && _videoInfo.FramesPerSecond > 20)
             {
-                string reportPath = Path.GetTempPath() + fileName + "_NetflixGlyphCheck.csv";
-
-                try
-                {
-                    glyphCheckReport.SaveCSV(reportPath);
-
-                    string msgFormat = string.Format("{0} {1}",
-                        Configuration.Settings.Language.NetflixQualityCheck.GlyphCheckFailed,
-                        Configuration.Settings.Language.NetflixQualityCheck.ReportPrompt);
-                    messages.Add(string.Format(msgFormat, reportPath));
-
-                    reportFiles.Add(reportPath);
-                }
-                catch (Exception ex)
-                {
-                    System.Diagnostics.Debug.WriteLine(ex.ToString());
-                    messages.Add(string.Format("{0} {1}",
-                        Configuration.Settings.Language.NetflixQualityCheck.GlyphCheckFailed,
-                        Configuration.Settings.Language.NetflixQualityCheck.SavingError));
-                }
-
+                netflixController.FrameRate = _videoInfo.FramesPerSecond;
             }
-            else if (showSuccessMessage)    // Success
+            netflixController.CheckAll(_subtitle);
+
+            if (netflixController.Records.Count > 0)
             {
-                messages.Add(Configuration.Settings.Language.NetflixQualityCheck.GlyphCheckSuccessfull);
-            }
-
-
-            // Space check
-            NetflixQualityReportBuilder whiteSpaceCheckReport = new NetflixQualityReportBuilder();
-            NetflixWhiteSpaceChecker whiteSpaceChecker = new NetflixWhiteSpaceChecker();
-            whiteSpaceChecker.Check(_subtitle, whiteSpaceCheckReport);
-
-            if (!whiteSpaceCheckReport.IsEmpty)  // There are warnings
-            {
-                string reportPath = Path.GetTempPath() + fileName + "_NetflixWhiteSpaceCheck.csv";
-
-                try
+                string reportPath = Path.GetTempPath() + fileName + "_NetflixQualityCheck.csv";
+                netflixController.SaveCsv(reportPath);
+                string msgFormat = string.Format("{0} {1}", "Netflix quality found " + netflixController.Records.Count + " issues." + Environment.NewLine,
+                                                 Configuration.Settings.Language.NetflixQualityCheck.ReportPrompt);
+                messages.Add(string.Format(msgFormat, reportPath));
+                reportFiles.Add(reportPath);
+                using (var dialog = new NetflixQCResult(string.Join(Environment.NewLine, messages), reportFiles))
                 {
-                    whiteSpaceCheckReport.SaveCSV(reportPath);
-
-                    string msgFormat = string.Format("{0} {1}",
-                        Configuration.Settings.Language.NetflixQualityCheck.WhiteSpaceCheckFailed,
-                        Configuration.Settings.Language.NetflixQualityCheck.ReportPrompt);
-                    messages.Add(string.Format(msgFormat, reportPath));
-
-                    reportFiles.Add(reportPath);
+                    dialog.ShowDialog(this);
                 }
-                catch (Exception ex)
+            }
+            else if (showSuccessMessage)
+            {
+                messages.Add("Netflix quality control is happy :)");
+                using (var dialog = new NetflixQCResult(string.Join(Environment.NewLine, messages), reportFiles))
                 {
-                    System.Diagnostics.Debug.WriteLine(ex.ToString());
-                    messages.Add(string.Format("{0} {1}",
-                        Configuration.Settings.Language.NetflixQualityCheck.WhiteSpaceCheckFailed,
-                        Configuration.Settings.Language.NetflixQualityCheck.SavingError));
+                    dialog.ShowDialog(this);
                 }
-
-            }
-            else if (showSuccessMessage)    // Success
-            {
-                messages.Add(Configuration.Settings.Language.NetflixQualityCheck.WhiteSpaceCheckSuccessfull);
-            }
-
-
-            if (messages.Count != 0)
-            {
-                NetflixQCResult dialog = new NetflixQCResult(string.Join(Environment.NewLine, messages), reportFiles);
-                dialog.ShowDialog(this);
             }
         }
 

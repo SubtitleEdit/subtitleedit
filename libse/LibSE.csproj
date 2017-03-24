@@ -175,10 +175,20 @@
     <Compile Include="ManagedBitmap.cs" />
     <Compile Include="MurMurHash3.cs" />
     <Compile Include="NativeMethods.cs" />
-    <Compile Include="NetflixQualityCheck\NetflixGlyphChecker.cs" />
+    <Compile Include="NetflixQualityCheck\NetflixHelper.cs" />
+    <Compile Include="NetflixQualityCheck\NetflixCheckNumbersOneToTenSpellOut.cs" />
+    <Compile Include="NetflixQualityCheck\NetflixCheckStartNumberSpellOut.cs" />
+    <Compile Include="NetflixQualityCheck\NetflixCheckGlyph.cs" />
     <Compile Include="NetflixQualityCheck\INetflixQualityChecker.cs" />
-    <Compile Include="NetflixQualityCheck\NetflixQualityReportBuilder.cs" />
-    <Compile Include="NetflixQualityCheck\NetflixWhiteSpaceChecker.cs" />
+    <Compile Include="NetflixQualityCheck\NetflixCheckTextForHiUseBrackets.cs" />
+    <Compile Include="NetflixQualityCheck\NetflixCheckDialogeHyphenNoSpace.cs" />
+    <Compile Include="NetflixQualityCheck\NetflixCheckMaxCps.cs" />
+    <Compile Include="NetflixQualityCheck\NetflixCheckTwoFramesGap.cs" />
+    <Compile Include="NetflixQualityCheck\NetflixCheckNumberOfLines.cs" />
+    <Compile Include="NetflixQualityCheck\NetflixCheckMinDuration.cs" />
+    <Compile Include="NetflixQualityCheck\NetflixQualityController.cs" />
+    <Compile Include="NetflixQualityCheck\NetflixCheckMaxDuration.cs" />
+    <Compile Include="NetflixQualityCheck\NetflixCheckWhiteSpace.cs" />
     <Compile Include="NikseBitmap.cs" />
     <Compile Include="NoBreakAfterItem.cs" />
     <Compile Include="Paragraph.cs" />
@@ -522,7 +532,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\NetflixAllowedGlyphs.bin" />
+    <None Include="Resources\NetflixAllowedGlyphs.bin.gz" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="BeforeCompile">
