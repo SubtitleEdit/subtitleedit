@@ -20,7 +20,7 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
         {
             get
             {
-                if (string.IsNullOrEmpty(Language))
+                if (!string.IsNullOrEmpty(Language))
                 {
                     if (Language == "ar") // Arabic
                     {
@@ -43,9 +43,9 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
         {
             get
             {
-                if (string.IsNullOrEmpty(Language))
+                if (!string.IsNullOrEmpty(Language))
                 {
-                    if (Language == "ja")
+                    if (Language == "ja") // Japanese
                     {
                         return 13;
                     }
@@ -53,7 +53,7 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
                     {
                         return 16;
                     }
-                    if (Language == "zh")
+                    if (Language == "zh") // Chinese
                     {
                         return 16;
                     }
@@ -62,6 +62,47 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
             }
         }
 
+        public bool AllowItalics
+        {
+            get
+            {
+                if (!string.IsNullOrEmpty(Language))
+                {
+                    if (Language == "ko") // Korean
+                    {
+                        return false;
+                    }
+                    if (Language == "zh") // Chinese
+                    {
+                        return false;
+                    }
+                }
+                return true;
+            }
+        }
+
+        public bool DualSpeakersHasHypenAndNoSplace
+        {
+            get
+            {
+                if (!string.IsNullOrEmpty(Language))
+                {
+                    if (Language == "cs") // Czech
+                    {
+                        return false;
+                    }
+                    if (Language == "fr") // French
+                    {
+                        return false;
+                    }
+                    if (Language == "ko") // Korean
+                    {
+                        return false;
+                    }
+                }
+                return true;
+            }
+        }
 
         public class Record
         {
@@ -173,7 +214,8 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
                 new NetflixCheckStartNumberSpellOut(),
                 new NetflixCheckTextForHiUseBrackets(),
                 new NetflixCheckTwoFramesGap(),
-                new NetflixCheckWhiteSpace()
+                new NetflixCheckWhiteSpace(),
+                new NetflixCheckItalics()
             };
         }
 

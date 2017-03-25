@@ -6,10 +6,15 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
     {
 
         /// <summary>
-        /// When a number begins a sentence, it should always be spelled out.
+        /// Use a hyphen without a space to indicate two speakers in one subtitle
         /// </summary>
         public void Check(Subtitle subtitle, NetflixQualityController controller)
         {
+            if (!controller.DualSpeakersHasHypenAndNoSplace)
+            {
+                return;
+            }
+
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 var arr = p.Text.SplitToLines();
