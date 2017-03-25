@@ -483,5 +483,33 @@ namespace Test.Logic
             Assert.AreEqual(Utilities.ReverseNumbers("Hallo 009 001 Bye"), "Hallo 900 100 Bye");
         }
 
+        #region Text start and end with tag.
+
+        [TestMethod]
+        public void StartsAndEndsWithTagTest1()
+        {
+            Assert.IsTrue(Utilities.StartsAndEndsWithTag("<i>... Foobar</i>!", "<i>", "</i>"));
+        }
+
+        [TestMethod]
+        public void StartsAndEndsWithTagTest2()
+        {
+            Assert.IsTrue(Utilities.StartsAndEndsWithTag("- <i>Foobar</i>...", "<i>", "</i>"));
+        }
+
+        [TestMethod]
+        public void StartsAndEndsWithTagTest3()
+        {
+            Assert.IsTrue(Utilities.StartsAndEndsWithTag("- ... <i>Foobar</i>-", "<i>", "</i>"));
+        }
+
+        [TestMethod]
+        public void StartsAndEndsWithTagTest4()
+        {
+            Assert.IsTrue(Utilities.StartsAndEndsWithTag("- ... <i>Foobar</i>-!?..", "<i>", "</i>"));
+        }
+
+        #endregion
+
     }
 }
