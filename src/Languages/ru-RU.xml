@@ -1470,7 +1470,7 @@ https://github.com/SubtitleEdit/subtitleedit
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Выбор субтитров из файла Matroska</Title>
-    <TitleMp4>Выбери субтитров из файла MP4</TitleMp4>
+    <TitleMp4>Выбор субтитров из файла MP4</TitleMp4>
     <PleaseChoose>Найдено несколько субтитров - пожалуйста, сделайте выбор:</PleaseChoose>
     <TrackXLanguageYTypeZ>Трек {0} - язык: {1} - тип: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
