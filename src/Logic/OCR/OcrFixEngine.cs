@@ -1030,22 +1030,26 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                         }
                     }
 
-                    if (!correct && word.Contains('/') && !word.Contains("//"))
+                    if (!correct)
                     {
-                        var slashedWords = word.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
-                        bool allSlashedCorrect = true;
-                        foreach (var slashedWord in slashedWords)
+                        if (word.Contains('/') && !word.Contains("//"))
                         {
-                            if (slashedWord.Length < 2)
-                                allSlashedCorrect = false;
-                            if (allSlashedCorrect && !(DoSpell(slashedWord) || IsWordKnownOrNumber(slashedWord, line)))
-                                allSlashedCorrect = false;
+                            var slashedWords = word.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+                            correct = true;
+                            foreach (var slashedWord in slashedWords)
+                            {
+                                if (slashedWord.Length < 2 || !(DoSpell(slashedWord) || IsWordKnownOrNumber(slashedWord, line)))
+                                {
+                                    correct = false;
+                                    break;
+                                }
+                            }
                         }
-                        correct = allSlashedCorrect;
+                        else if (word.Length == 0)
+                        {
+                            correct = true;
+                        }
                     }
-
-                    if (word.Length == 0)
-                        correct = true;
 
                     if (!correct)
                     {
