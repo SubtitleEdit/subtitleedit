@@ -11122,7 +11122,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (!toolStripMenuItemReverseRightToLeftStartEnd.Visible && _mainEditReverseStartAndEndingForRTL == e.KeyData && inListView)
             {
-                ReverseStartAndEndingForRTL();
+                ReverseStartAndEndingForRtl();
                 e.SuppressKeyPress = true;
             }
             else if (toolStripMenuItemUndo.ShortcutKeys == e.KeyData) // undo
@@ -12217,7 +12217,7 @@ namespace Nikse.SubtitleEdit.Forms
             RefreshSelectedParagraph();
         }
 
-        private void ReverseStartAndEndingForRTL()
+        private void ReverseStartAndEndingForRtl()
         {
             MakeHistoryForUndo(toolStripMenuItemReverseRightToLeftStartEnd.Text);
             int selectedIndex = FirstSelectedIndex;
@@ -19127,7 +19127,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void toolStripMenuItemReverseRightToLeftStartEnd_Click(object sender, EventArgs e)
         {
-            ReverseStartAndEndingForRTL();
+            ReverseStartAndEndingForRtl();
         }
 
         private void toolStripMenuItemExportCapMakerPlus_Click(object sender, EventArgs e)
