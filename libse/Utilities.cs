@@ -1142,16 +1142,23 @@ namespace Nikse.SubtitleEdit.Core
             return Uri.UnescapeDataString(text);
         }
 
-
-        private const string PrePostStringsToReverse = @"- !?.""،,():;[]";
         private static readonly Regex TwoOrMoreDigitsNumber = new Regex(@"\d\d+", RegexOptions.Compiled);
 
         public static string ReverseStartAndEndingForRightToLeft(string s)
         {
-            var lines = s.SplitToLines();
             var newLines = new StringBuilder();
             var pre = new StringBuilder();
             var post = new StringBuilder();
+            bool startsWithAssTag = false;
+            string assTag = string.Empty;
+            if (s.StartsWith("{\\", StringComparison.Ordinal) && s.IndexOf('}') < 22)
+            {
+                startsWithAssTag = true;
+                int end = s.IndexOf('}') + 1;
+                assTag = s.Substring(0, end);
+                s = s.Remove(0, end);
+            }
+            var lines = s.SplitToLines();
             foreach (var line in lines)
             {
                 string s2 = line;
@@ -1172,17 +1179,19 @@ namespace Nikse.SubtitleEdit.Core
                 pre.Clear();
                 post.Clear();
                 int i = 0;
-                while (i < s2.Length && PrePostStringsToReverse.Contains(s2[i]))
+                while (i < s2.Length && !char.IsLetterOrDigit(s2[i]) && s2[i] != '{')
                 {
                     pre.Append(s2[i]);
                     i++;
                 }
                 int j = s2.Length - 1;
-                while (j > i && PrePostStringsToReverse.Contains(s2[j]))
+                while (j > i && !char.IsLetterOrDigit(s2[j]) && s2[j] != '}')
                 {
                     post.Append(s2[j]);
                     j--;
                 }
+                if (startsWithAssTag)
+                    newLines.Append(assTag);
                 if (startsWithItalic)
                     newLines.Append("<i>");
                 newLines.Append(ReverseParenthesis(post.ToString()));
