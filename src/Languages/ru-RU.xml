@@ -1065,6 +1065,7 @@ https://github.com/SubtitleEdit/subtitleedit
         <RemoveTextForHi>Очистка текста для слабослышащих</RemoveTextForHi>
         <VisualSync>Визуальная синхронизация</VisualSync>
         <SpellCheck>Проверка орфографии</SpellCheck>
+        <NetflixQualityCheck>Проверка качества Netflix</NetflixQualityCheck>
         <Settings>Настройки</Settings>
         <Help>Справка</Help>
         <ShowHideWaveform>Показать/Скрыть форму сигнала</ShowHideWaveform>
@@ -1469,6 +1470,7 @@ https://github.com/SubtitleEdit/subtitleedit
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Выбор субтитров из файла Matroska</Title>
+    <TitleMp4>Выбор субтитров из файла MP4</TitleMp4>
     <PleaseChoose>Найдено несколько субтитров - пожалуйста, сделайте выбор:</PleaseChoose>
     <TrackXLanguageYTypeZ>Трек {0} - язык: {1} - тип: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
@@ -1699,6 +1701,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <Replace>Заменить</Replace>
     <VisualSync>Синхронизация</VisualSync>
     <SpellCheck>Орфография</SpellCheck>
+    <NetflixQualityCheck>Netflix проверка качества</NetflixQualityCheck>
     <SettingsName>Настройки</SettingsName>
     <Help>Справка</Help>
     <ShowFrameRate>Показывать частоту кадров в панели инструментов</ShowFrameRate>
@@ -2009,6 +2012,16 @@ https://github.com/SubtitleEdit/subtitleedit
     <SpellCheckAborted>Проверка орфографии прервана пользователем.</SpellCheckAborted>
     <UndoX>Отменить: {0}</UndoX>
   </SpellCheck>
+  <NetflixQualityCheck>
+    <GlyphCheckSuccessfull>Проверка символов прошла успешно.</GlyphCheckSuccessfull>
+    <GlyphCheckFailed>Не удалось проверить символы.</GlyphCheckFailed>
+    <GlyphCheckReport>Недопустимых символов {0} найдено в столбце {1}</GlyphCheckReport>
+    <WhiteSpaceCheckSuccessfull>Проверка пробелов прошла успешно.</WhiteSpaceCheckSuccessfull>
+    <WhiteSpaceCheckFailed>Не удалось проверить пробелы.</WhiteSpaceCheckFailed>
+    <WhiteSpaceCheckReport>Недопустимых пробелов найдено в столбце {0}.</WhiteSpaceCheckReport>
+    <ReportPrompt>См. Полный отчет здесь: {0}.</ReportPrompt>
+    <SavingError>Отчёт не может быть сохранён.</SavingError>
+  </NetflixQualityCheck>
   <Split>
     <Title>Разделить</Title>
     <SplitOptions>Параметры разделения</SplitOptions>
