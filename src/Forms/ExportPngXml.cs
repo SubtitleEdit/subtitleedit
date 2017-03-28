@@ -2,6 +2,7 @@
 using Nikse.SubtitleEdit.Core.BluRaySup;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Core.VobSub;
+using Nikse.SubtitleEdit.Forms.Ocr;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.VideoPlayers;
 using System;
@@ -18,7 +19,6 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
 using System.Xml;
-using Nikse.SubtitleEdit.Forms.Ocr;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -740,7 +740,16 @@ namespace Nikse.SubtitleEdit.Forms
     <ismasterclip>FALSE</ismasterclip>
   </sequence>
 </xmeml>";
-                    s = s.Replace("<timebase>25</timebase>", "<timebase>" + comboBoxFrameRate.Text + "</timebase>");
+                    if (comboBoxFrameRate.Text == "29.97")
+                    {
+                        s = s.Replace("<displayformat>NDF</displayformat>", "<displayformat>DF</displayformat>"); //Non Drop Frame or Drop Frame
+                        s = s.Replace("<timebase>25</timebase>", "<timebase>30</timebase>");
+                        s = s.Replace("<ntsc>FALSE</ntsc>", "<ntsc>TRUE</ntsc>");
+                    }
+                    else
+                    {
+                        s = s.Replace("<timebase>25</timebase>", "<timebase>" + comboBoxFrameRate.Text + "</timebase>");
+                    }
 
                     if (_subtitle.Paragraphs.Count > 0)
                     {
@@ -952,8 +961,11 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         xAndY = "HD-(960x720)";
                         break;
                     case "1920x1080":
-                        xAndY = "DVCPROHD-1080i60";
+                        xAndY = "FullHD 1920x1080";
                         break;
+                    //case "1920x1080":
+                    //    xAndY = "DVCPROHD-1080i60";
+                    //    break;
                     case "1280x1080":
                         xAndY = "HD-(1280x1080)";
                         break;
@@ -1021,6 +1033,13 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 {
                     width = 960;
                     height = 720;
+                    return;
+                }
+
+                if (text == "FullHD 1920x1080")
+                {
+                    width = 1920;
+                    height = 1080;
                     return;
                 }
 
@@ -1346,6 +1365,11 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         }
                         imagesSavedCount++;
 
+                        if (Math.Abs(param.FramesPerSeconds - 29.97) < 0.01)
+                        {
+                            param.FramesPerSeconds = 30 / 1.001;
+                        }
+
                         int duration = (int)Math.Round(param.P.Duration.TotalSeconds * param.FramesPerSeconds);
                         int start = (int)Math.Round(param.P.StartTime.TotalSeconds * param.FramesPerSeconds);
                         int end = (int)Math.Round(param.P.EndTime.TotalSeconds * param.FramesPerSeconds);
@@ -1422,10 +1446,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         int startFrame = (int)Math.Round(param.P.StartTime.TotalMilliseconds / (TimeCode.BaseUnit / param.FramesPerSeconds));
                         var empty = new Bitmap(param.ScreenWidth, param.ScreenHeight);
 
-                        if (imagesSavedCount == 0 && checkBoxSkipEmptyFrameAtStart.Checked)
-                        {
-                        }
-                        else
+                        if (imagesSavedCount != 0 || !checkBoxSkipEmptyFrameAtStart.Checked)
                         {
                             // Save empty picture for each frame up to start frame
                             for (int k = lastFrame + 1; k < startFrame; k++)
@@ -1444,7 +1465,9 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         g.Dispose();
 
                         if (imagesSavedCount > startFrame)
+                        {
                             startFrame = imagesSavedCount; // no overlapping
+                        }
 
                         // Save sub picture for each frame in duration
                         for (int k = startFrame; k <= endFrame; k++)
@@ -1985,7 +2008,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                 try
                                 {
                                     colorStack.Push(c); // save old color
-                                    if (fontColor.StartsWith("rgb("))
+                                    if (fontColor.StartsWith("rgb(", StringComparison.Ordinal))
                                     {
                                         arr = fontColor.Remove(0, 4).TrimEnd(')').Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
                                         c = Color.FromArgb(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]));
@@ -3319,6 +3342,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 comboBoxFrameRate.Items.Add("24");
                 comboBoxFrameRate.Items.Add("25");
                 comboBoxFrameRate.Items.Add("29.97");
+                comboBoxFrameRate.Items.Add("30");
                 comboBoxFrameRate.Items.Add("50");
                 comboBoxFrameRate.Items.Add("59.94");
                 comboBoxFrameRate.SelectedIndex = 1;
@@ -3334,6 +3358,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 comboBoxFrameRate.Items.Add("24");
                 comboBoxFrameRate.Items.Add("25");
                 comboBoxFrameRate.Items.Add("29.97");
+                comboBoxFrameRate.Items.Add("30");
                 comboBoxFrameRate.Items.Add("50");
                 comboBoxFrameRate.Items.Add("59.94");
                 comboBoxFrameRate.SelectedIndex = 1;
@@ -3346,6 +3371,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 comboBoxFrameRate.Items.Add("24");
                 comboBoxFrameRate.Items.Add("25");
                 comboBoxFrameRate.Items.Add("29.97");
+                comboBoxFrameRate.Items.Add("30");
                 comboBoxFrameRate.Items.Add("50");
                 comboBoxFrameRate.Items.Add("59.94");
                 comboBoxFrameRate.Items.Add("60");
@@ -3414,7 +3440,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 comboBoxResolution.SelectedIndex = comboBoxResolution.Items.Count - 1;
             }
 
-            if (_subtitleFontSize == Configuration.Settings.Tools.ExportLastFontSize && Configuration.Settings.Tools.ExportLastLineHeight >= numericUpDownLineSpacing.Minimum &&
+            if (Math.Abs(_subtitleFontSize - Configuration.Settings.Tools.ExportLastFontSize) < 0.01 && Configuration.Settings.Tools.ExportLastLineHeight >= numericUpDownLineSpacing.Minimum &&
                 Configuration.Settings.Tools.ExportLastLineHeight <= numericUpDownLineSpacing.Maximum && Configuration.Settings.Tools.ExportLastLineHeight > 0)
             {
                 numericUpDownLineSpacing.Value = Configuration.Settings.Tools.ExportLastLineHeight;
@@ -3428,6 +3454,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 }
                 catch
                 {
+                    // ignore error
                 }
             }
             _borderWidth = GetBorderWidth();
@@ -3459,9 +3486,10 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 comboBoxResolution.Items.Add("HD-(960x720)");
                 comboBoxResolution.Items.Add("DVCPROHD-1080i60");
                 comboBoxResolution.Items.Add("HD-(1280x1080)");
+                comboBoxResolution.Items.Add("FullHD 1920x1080");
                 comboBoxResolution.Items.Add("DVCPROHD-1080i50");
                 comboBoxResolution.Items.Add("HD-(1440x1080)");
-                comboBoxResolution.SelectedIndex = 3; // 720p
+                comboBoxResolution.SelectedIndex = 7; // FullHD
                 if ((_exportType == "FCP") && !string.IsNullOrEmpty(Configuration.Settings.Tools.ExportFcpVideoResolution))
                     SetResolution(Configuration.Settings.Tools.ExportFcpVideoResolution);
 
@@ -4074,7 +4102,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     else
                     {
                         int indexOfEndBracket = _subtitle.Paragraphs[i].Text.IndexOf('}');
-                        if (_subtitle.Paragraphs[i].Text.StartsWith("{\\") && indexOfEndBracket > 1 && indexOfEndBracket < 6)
+                        if (_subtitle.Paragraphs[i].Text.StartsWith("{\\", StringComparison.Ordinal) && indexOfEndBracket > 1 && indexOfEndBracket < 6)
                             _subtitle.Paragraphs[i].Text = string.Format("{2}<{0}>{1}</{0}>", tag, _subtitle.Paragraphs[i].Text.Remove(0, indexOfEndBracket + 1), _subtitle.Paragraphs[i].Text.Substring(0, indexOfEndBracket + 1));
                         else
                             _subtitle.Paragraphs[i].Text = string.Format("<{0}>{1}</{0}>", tag, _subtitle.Paragraphs[i].Text);
@@ -4116,7 +4144,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     if (p != null)
                     {
                         int indexOfEndBracket = p.Text.IndexOf('}');
-                        if (p.Text.StartsWith("{\\") && indexOfEndBracket > 1 && indexOfEndBracket < 6)
+                        if (p.Text.StartsWith("{\\", StringComparison.Ordinal) && indexOfEndBracket > 1 && indexOfEndBracket < 6)
                             p.Text = p.Text.Remove(0, indexOfEndBracket + 1);
                         p.Text = HtmlUtil.RemoveHtmlTags(p.Text);
                         p.Text = p.Text.Replace("<" + BoxSingleLineText + ">", string.Empty).Replace("</" + BoxSingleLineText + ">", string.Empty);
