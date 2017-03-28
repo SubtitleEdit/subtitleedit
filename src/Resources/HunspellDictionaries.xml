@@ -318,6 +318,12 @@
     <Description>Thai Spell Checker Dictionary</Description>
   </Dictionary>
   <Dictionary>
+    <EnglishName>Turkish</EnglishName>
+    <NativeName>Turkish</NativeName>
+    <DownloadLink>https://extensions.libreoffice.org/extensions/turkish-spellcheck-dictionary/1.2/@@download/file/oo-turkish-dict-v1-2.oxt</DownloadLink>
+    <Description>Turkish Spellcheck Dictionary - 1.2</Description>
+  </Dictionary>
+  <Dictionary>
     <EnglishName>Ukrainian</EnglishName>
     <NativeName>Українська</NativeName>
     <DownloadLink>http://downloads.sourceforge.net/project/aoo-extensions/975/6/dict-uk_ua-1.7.1.oxt?r=http%3A%2F%2Fextensions.openoffice.org%2Fen%2Fprojectrelease%2Fukrainian-dictionary-171&amp;ts=1435691238&amp;use_mirror=freefr</DownloadLink>
