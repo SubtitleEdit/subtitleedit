@@ -529,7 +529,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             while (start > 0)
             {
                 lastLine = HtmlUtil.RemoveHtmlTags(text.Substring(0, start)).TrimEnd().TrimEnd('-').TrimEnd();
-                endingBeforeThis = string.IsNullOrEmpty(lastLine) || lastLine.EndsWith('.') || lastLine.EndsWith('!') || lastLine.EndsWith('?') || lastLine.EndsWith(".</i>");
+                endingBeforeThis = string.IsNullOrEmpty(lastLine) || lastLine.EndsWith('.') || lastLine.EndsWith('!') || lastLine.EndsWith('?') || lastLine.EndsWith(".</i>", StringComparison.Ordinal);
                 if (start < text.Length - 5)
                 {
                     if (start > 1)
@@ -620,7 +620,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
                 input = input.Replace(Environment.NewLine + "~", Environment.NewLine + "- ").Replace("  ", " ");
 
-                if (input.Length < 10 && input.Length > 4 && !input.Contains(Environment.NewLine) && input.StartsWith("II") && input.EndsWith("II"))
+                if (input.Length < 10 && input.Length > 4 && !input.Contains(Environment.NewLine) && input.StartsWith("II", StringComparison.Ordinal) && input.EndsWith("II", StringComparison.Ordinal))
                 {
                     input = "\"" + input.Substring(2, input.Length - 4) + "\"";
                 }
@@ -704,7 +704,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
             input = input.Replace(",...", "...");
 
-            if (input.StartsWith("..") && !input.StartsWith("...", StringComparison.Ordinal))
+            if (input.StartsWith("..", StringComparison.Ordinal) && !input.StartsWith("...", StringComparison.Ordinal))
                 input = "." + input;
 
             string pre = string.Empty;
@@ -727,7 +727,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 if (input.Length > 7 && input.StartsWith("<i>..", StringComparison.Ordinal) && Utilities.AllLettersAndNumbers.Contains(input[5]))
                     input = "<i>..." + input.Remove(0, 5);
 
-                if (input.Length > 5 && input.StartsWith(".. ") && Utilities.AllLettersAndNumbers.Contains(input[3]))
+                if (input.Length > 5 && input.StartsWith(".. ", StringComparison.Ordinal) && Utilities.AllLettersAndNumbers.Contains(input[3]))
                     input = "..." + input.Remove(0, 3);
                 if (input.Length > 7 && input.StartsWith("<i>.. ", StringComparison.Ordinal) && Utilities.AllLettersAndNumbers.Contains(input[6]))
                     input = "<i>..." + input.Remove(0, 6);
@@ -740,7 +740,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                     input = "..." + input.Remove(0, 4);
                 if (input.StartsWith(".. .", StringComparison.Ordinal))
                     input = "..." + input.Remove(0, 4);
-                if (input.StartsWith(". . ."))
+                if (input.StartsWith(". . .", StringComparison.Ordinal))
                     input = "..." + input.Remove(0, 5);
                 if (input.StartsWith("... ", StringComparison.Ordinal))
                     input = input.Remove(3, 1);
@@ -843,7 +843,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 var st = new StrippableText(input);
                 if (lastLine == null || (!lastLine.EndsWith("...", StringComparison.Ordinal) && !EndsWithAbbreviation(lastLine, abbreviationList)))
                 {
-                    if (st.StrippedText.Length > 0 && !char.IsUpper(st.StrippedText[0]) && !st.Pre.EndsWith('[') && !st.Pre.EndsWith('(') && !st.Pre.EndsWith("..."))
+                    if (st.StrippedText.Length > 0 && !char.IsUpper(st.StrippedText[0]) && !st.Pre.EndsWith('[') && !st.Pre.EndsWith('(') && !st.Pre.EndsWith("...", StringComparison.Ordinal))
                     {
                         if (!HtmlUtil.StartsWithUrl(st.StrippedText))
                         {
@@ -990,7 +990,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                     bool correct = DoSpell(word);
                     if (!correct)
                         correct = DoSpell(word.Trim('\''));
-                    if (!correct && word.Length > 3 && !word.EndsWith("ss") && !string.IsNullOrEmpty(_threeLetterIsoLanguageName) &&
+                    if (!correct && word.Length > 3 && !word.EndsWith("ss", StringComparison.Ordinal) && !string.IsNullOrEmpty(_threeLetterIsoLanguageName) &&
                         (_threeLetterIsoLanguageName == "eng" || _threeLetterIsoLanguageName == "dan" || _threeLetterIsoLanguageName == "swe" || _threeLetterIsoLanguageName == "nld"))
                         correct = DoSpell(word.TrimEnd('s'));
                     if (!correct)
@@ -1002,7 +1002,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                         correct = true; // already fixed
 
                     if (!correct && Configuration.Settings.Tools.SpellCheckEnglishAllowInQuoteAsIng && wordNotEndTrimmed.EndsWith('\'') &&
-                        SpellCheckDictionaryName.StartsWith("en_") && word.EndsWith("in", StringComparison.OrdinalIgnoreCase))
+                        SpellCheckDictionaryName.StartsWith("en_", StringComparison.Ordinal) && word.EndsWith("in", StringComparison.OrdinalIgnoreCase))
                     {
                         correct = DoSpell(word + "g");
                     }
@@ -1131,10 +1131,10 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                                     suggestions = DoSuggest(word); // 0.9.6 fails on "Lt'S"
                             }
 
-                            if (word.StartsWith("<i>"))
+                            if (word.StartsWith("<i>", StringComparison.Ordinal))
                                 word = word.Remove(0, 3);
 
-                            if (word.EndsWith("</i>"))
+                            if (word.EndsWith("</i>", StringComparison.Ordinal))
                                 word = word.Remove(word.Length - 4, 4);
 
                             SpellCheckOcrTextResult res = SpellCheckOcrText(line, bitmap, word, suggestions);
@@ -1229,7 +1229,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                         {
                             _namesEtcList.Add(s);
                             _namesEtcListUppercase.Add(s.ToUpper());
-                            if (_fiveLetterWordListLanguageName.StartsWith("en"))
+                            if (_fiveLetterWordListLanguageName.StartsWith("en", StringComparison.Ordinal))
                             {
                                 if (!s.EndsWith('s'))
                                     _namesEtcListWithApostrophe.Add(s + "'s");

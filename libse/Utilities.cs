@@ -1110,7 +1110,7 @@ namespace Nikse.SubtitleEdit.Core
 
             foreach (Paragraph p in originalParagraphs)
             {
-                if (p.StartTime.TotalMilliseconds == paragraph.StartTime.TotalMilliseconds)
+                if (Math.Abs(p.StartTime.TotalMilliseconds - paragraph.StartTime.TotalMilliseconds) < 0.01)
                     return p;
             }
 
@@ -2023,7 +2023,7 @@ namespace Nikse.SubtitleEdit.Core
         public static SubtitleFormat LoadMatroskaTextSubtitle(MatroskaTrackInfo matroskaSubtitleInfo, MatroskaFile matroska, List<MatroskaSubtitle> sub, Subtitle subtitle)
         {
             if (subtitle == null)
-                throw new ArgumentNullException("subtitle");
+                throw new ArgumentNullException(nameof(subtitle));
             subtitle.Paragraphs.Clear();
 
             var isSsa = false;

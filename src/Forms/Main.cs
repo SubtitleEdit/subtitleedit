@@ -7648,7 +7648,7 @@ namespace Nikse.SubtitleEdit.Forms
                         p.Text = (idx > 0 ? s.Substring(0, idx).Trim() : string.Empty);
 
                         // If the first subtitle ends with a tag (</i>):
-                        String endTag = string.Empty;
+                        string endTag = string.Empty;
                         if (lastWord.EndsWith('>') && lastWord.Contains('<'))
                         {
                             // Save the end tag.
@@ -7658,7 +7658,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
 
                         // If the first subtitle ends with "...":
-                        Boolean firstSubtitleEndsWithEllipsis = lastWord.EndsWith("...", StringComparison.Ordinal);
+                        bool firstSubtitleEndsWithEllipsis = lastWord.EndsWith("...", StringComparison.Ordinal);
                         if (firstSubtitleEndsWithEllipsis)
                         {
                             // Remove "..." from the last word.
@@ -7666,7 +7666,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
 
                         // If the second subtitle (next) starts with a position tag, like {\an8}:
-                        String positionTag = string.Empty;
+                        string positionTag = string.Empty;
                         if (next.Text.StartsWith('{') && next.Text.Contains('}'))
                         {
                             // Save the start tag.
@@ -7676,7 +7676,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
 
                         // If the second subtitle (next) starts with a tag:
-                        String startTag = string.Empty;
+                        string startTag = string.Empty;
                         if (next.Text.StartsWith('<') && next.Text.Contains('>'))
                         {
                             // Save the start tag.
@@ -7686,7 +7686,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
 
                         // If the second subtitle (next) starts with a dialog ("-"):
-                        String dialogMarker = string.Empty;
+                        string dialogMarker = string.Empty;
                         if (next.Text.StartsWith('-'))
                         {
                             // Save the dialog marker ("-" or "- ").
@@ -7696,7 +7696,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
 
                         // If the second subtitle starts with "...":
-                        Boolean nextSubtitleStartsWithEllipsis = next.Text.StartsWith("...");
+                        bool nextSubtitleStartsWithEllipsis = next.Text.StartsWith("...", StringComparison.Ordinal);
                         if (nextSubtitleStartsWithEllipsis)
                         {
                             // Remove "..." from the beginning of 'next'.
@@ -7892,7 +7892,7 @@ namespace Nikse.SubtitleEdit.Forms
                             newParagraph.Text = "<b>" + newParagraph.Text;
                         }
                         if (currentParagraph.Text.StartsWith("<i>-", StringComparison.Ordinal) && (currentParagraph.Text.EndsWith(".</i>", StringComparison.Ordinal) || currentParagraph.Text.EndsWith("!</i>", StringComparison.Ordinal)) &&
-                            newParagraph.Text.StartsWith("<i>-", StringComparison.Ordinal) && (newParagraph.Text.EndsWith(".</i>") || newParagraph.Text.EndsWith("!</i>")))
+                            newParagraph.Text.StartsWith("<i>-", StringComparison.Ordinal) && (newParagraph.Text.EndsWith(".</i>", StringComparison.Ordinal) || newParagraph.Text.EndsWith("!</i>", StringComparison.Ordinal)))
                         {
                             currentParagraph.Text = currentParagraph.Text.Remove(3, 1);
                             newParagraph.Text = newParagraph.Text.Remove(3, 1);
@@ -8509,7 +8509,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (insertDash)
                 {
                     string s = Utilities.UnbreakLine(currentParagraph.Text);
-                    if (s.StartsWith('-') || s.StartsWith("<i>-"))
+                    if (s.StartsWith('-') || s.StartsWith("<i>-", StringComparison.Ordinal))
                         currentParagraph.Text = s;
                     else if (s.StartsWith("<i>", StringComparison.Ordinal))
                         currentParagraph.Text = s.Insert(3, "- ");
@@ -11508,7 +11508,7 @@ namespace Nikse.SubtitleEdit.Forms
                     SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
 
                     _subtitleListViewIndex = -1;
-                    if (firstIndex >= 0 && _subtitle.Paragraphs.Count > firstIndex && _subtitle.Paragraphs[firstIndex].StartTime.TotalMilliseconds == firstMs)
+                    if (firstIndex >= 0 && _subtitle.Paragraphs.Count > firstIndex && Math.Abs(_subtitle.Paragraphs[firstIndex].StartTime.TotalMilliseconds - firstMs) < 0.01)
                         SubtitleListview1.SelectIndexAndEnsureVisible(firstIndex);
                     else
                         RefreshSelectedParagraph();
@@ -12273,7 +12273,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var sb = new StringBuilder();
                 foreach (var line in lines)
                 {
-                    if (line.TrimStart().StartsWith('-') || line.TrimStart().StartsWith("<i>-") || line.TrimStart().StartsWith("<i> -"))
+                    if (line.TrimStart().StartsWith('-') || line.TrimStart().StartsWith("<i>-", StringComparison.Ordinal) || line.TrimStart().StartsWith("<i> -", StringComparison.Ordinal))
                         sb.AppendLine(line);
                     else if (line.TrimStart().StartsWith("<i>") && line.Trim().Length > 3)
                         sb.AppendLine("<i>- " + line.Substring(3).TrimStart());
@@ -15545,31 +15545,31 @@ namespace Nikse.SubtitleEdit.Forms
             for (int k = fileToolStripMenuItem.DropDownItems.Count - 1; k > 0; k--)
             {
                 ToolStripItem x = fileToolStripMenuItem.DropDownItems[k];
-                if (x.Name.StartsWith("Plugin"))
+                if (x.Name.StartsWith("Plugin", StringComparison.OrdinalIgnoreCase))
                     fileToolStripMenuItem.DropDownItems.Remove(x);
             }
             for (int k = toolsToolStripMenuItem.DropDownItems.Count - 1; k > 0; k--)
             {
                 ToolStripItem x = toolsToolStripMenuItem.DropDownItems[k];
-                if (x.Name.StartsWith("Plugin"))
+                if (x.Name.StartsWith("Plugin", StringComparison.OrdinalIgnoreCase))
                     toolsToolStripMenuItem.DropDownItems.Remove(x);
             }
             for (int k = toolStripMenuItemSpellCheckMain.DropDownItems.Count - 1; k > 0; k--)
             {
                 ToolStripItem x = toolStripMenuItemSpellCheckMain.DropDownItems[k];
-                if (x.Name.StartsWith("Plugin"))
+                if (x.Name.StartsWith("Plugin", StringComparison.OrdinalIgnoreCase))
                     toolStripMenuItemSpellCheckMain.DropDownItems.Remove(x);
             }
             for (int k = toolStripMenuItemSynchronization.DropDownItems.Count - 1; k > 0; k--)
             {
                 ToolStripItem x = toolStripMenuItemSynchronization.DropDownItems[k];
-                if (x.Name.StartsWith("Plugin"))
+                if (x.Name.StartsWith("Plugin", StringComparison.OrdinalIgnoreCase))
                     toolStripMenuItemSynchronization.DropDownItems.Remove(x);
             }
             for (int k = toolStripMenuItemAutoTranslate.DropDownItems.Count - 1; k > 0; k--)
             {
                 ToolStripItem x = toolStripMenuItemAutoTranslate.DropDownItems[k];
-                if (x.Name.StartsWith("Plugin"))
+                if (x.Name.StartsWith("Plugin", StringComparison.OrdinalIgnoreCase))
                     toolStripMenuItemAutoTranslate.DropDownItems.Remove(x);
             }
 
