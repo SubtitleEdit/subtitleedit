@@ -146,7 +146,7 @@ namespace Nikse.SubtitleEdit.Controls
                 startTime = startTime.Replace(' ', '0');
                 if (Mode == TimeMode.HHMMSSMS)
                 {
-                    if (startTime.EndsWith(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator))
+                    if (startTime.EndsWith(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, StringComparison.Ordinal))
                         startTime += "000";
 
                     string[] times = startTime.Split(_splitChars, StringSplitOptions.RemoveEmptyEntries);
@@ -182,7 +182,7 @@ namespace Nikse.SubtitleEdit.Controls
                 }
                 else
                 {
-                    if (startTime.EndsWith(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator) || startTime.EndsWith(':'))
+                    if (startTime.EndsWith(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, StringComparison.Ordinal) || startTime.EndsWith(':'))
                         startTime += "00";
 
                     string[] times = startTime.Split(_splitChars, StringSplitOptions.RemoveEmptyEntries);

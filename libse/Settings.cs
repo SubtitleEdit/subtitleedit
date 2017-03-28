@@ -2388,13 +2388,7 @@ namespace Nikse.SubtitleEdit.Core
                 settings.VideoControls.WaveformSeeksSilenceDurationSeconds = Convert.ToDouble(subNode.InnerText, CultureInfo.InvariantCulture);
             subNode = node.SelectSingleNode("WaveformSeeksSilenceMaxVolume");
             if (subNode != null)
-            {
                 settings.VideoControls.WaveformSeeksSilenceMaxVolume = Convert.ToDouble(subNode.InnerText, CultureInfo.InvariantCulture);
-                if (settings.VideoControls.WaveformSeeksSilenceMaxVolume == 10)
-                {
-                    settings.VideoControls.WaveformSeeksSilenceMaxVolume = 0.1; //TODO: Remove in 2017... 10 was old default value
-                }
-            }
 
             // Network
             node = doc.DocumentElement.SelectSingleNode("NetworkSettings");

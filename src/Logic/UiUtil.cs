@@ -90,7 +90,7 @@ namespace Nikse.SubtitleEdit.Logic
                         if (op != null)
                             text = text + Environment.NewLine + Environment.NewLine + op.Text.Replace("|", Environment.NewLine);
 
-                        bool isInfo = p == subtitle.Paragraphs[0] && p.StartTime.TotalMilliseconds == 0 && positionInMilliseconds > 3000;
+                        bool isInfo = p == subtitle.Paragraphs[0] && Math.Abs(p.StartTime.TotalMilliseconds) < 0.01 && positionInMilliseconds > 3000;
                         if (!isInfo)
                         {
                             if (videoPlayerContainer.LastParagraph != p)

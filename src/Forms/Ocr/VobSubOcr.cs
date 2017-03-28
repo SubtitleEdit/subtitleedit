@@ -1,4 +1,12 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Core.BluRaySup;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.Core.TransportStream;
+using Nikse.SubtitleEdit.Core.VobSub;
+using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.Ocr;
+using Nikse.SubtitleEdit.Logic.Ocr.Binary;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -13,14 +21,6 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
-using Nikse.SubtitleEdit.Core;
-using Nikse.SubtitleEdit.Core.BluRaySup;
-using Nikse.SubtitleEdit.Core.SubtitleFormats;
-using Nikse.SubtitleEdit.Core.TransportStream;
-using Nikse.SubtitleEdit.Core.VobSub;
-using Nikse.SubtitleEdit.Logic;
-using Nikse.SubtitleEdit.Logic.Ocr;
-using Nikse.SubtitleEdit.Logic.Ocr.Binary;
 
 namespace Nikse.SubtitleEdit.Forms.Ocr
 {
@@ -4731,11 +4731,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 if (line.StartsWith('l'))
                     line = @"I" + line.Substring(1);
-                if (line.StartsWith("<i>l"))
+                if (line.StartsWith("<i>l", StringComparison.Ordinal))
                     line = line.Remove(3, 1).Insert(3, "I");
-                if (line.StartsWith("- l"))
+                if (line.StartsWith("- l", StringComparison.Ordinal))
                     line = line.Remove(2, 1).Insert(2, "I");
-                if (line.StartsWith("-l"))
+                if (line.StartsWith("-l", StringComparison.Ordinal))
                     line = line.Remove(1, 1).Insert(1, "I");
                 line = line.Replace(". l", ". I");
                 line = line.Replace("? l", "? I");
@@ -4782,7 +4782,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             line = line.Replace(". .", "..");
             line = line.Replace(". .", "..");
             line = line.Replace(" ." + Environment.NewLine, "." + Environment.NewLine);
-            if (line.EndsWith(" ."))
+            if (line.EndsWith(" .", StringComparison.Ordinal))
                 line = line.Remove(line.Length - 2, 1);
 
             // fix no space before comma
@@ -6009,7 +6009,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private bool HasSingleLetters(string line)
         {
-            if (!_ocrFixEngine.IsDictionaryLoaded || !_ocrFixEngine.SpellCheckDictionaryName.StartsWith("en_"))
+            if (!_ocrFixEngine.IsDictionaryLoaded || !_ocrFixEngine.SpellCheckDictionaryName.StartsWith("en_", StringComparison.Ordinal))
                 return false;
 
             line = line.Replace("[", string.Empty);
@@ -6149,7 +6149,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     string newText = _ocrFixEngine.FixOcrErrors(newUnfixedText, index, _lastLine, true, GetAutoGuessLevel());
                     int newWordsNotFound = _ocrFixEngine.CountUnknownWordsViaDictionary(newText, out correctWords);
 
-                    if (wordsNotFound == 1 && newWordsNotFound == 1 && newUnfixedText.EndsWith("!!") && textWithOutFixes.EndsWith('u') && newText.Length > 1)
+                    if (wordsNotFound == 1 && newWordsNotFound == 1 && newUnfixedText.EndsWith("!!", StringComparison.Ordinal) && textWithOutFixes.EndsWith('u') && newText.Length > 1)
                     {
                         _ocrFixEngine.UnknownWordsFound.Clear();
                         newText = textWithOutFixes.Substring(0, textWithOutFixes.Length - 1) + "!!";
@@ -6162,14 +6162,14 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                              newWordsNotFound < wordsNotFound || (newWordsNotFound == wordsNotFound && newText.EndsWith('!') && textWithOutFixes.EndsWith('l')))
                     {
                         wordsNotFound = newWordsNotFound;
-                        if (textWithOutFixes.Length > 3 && textWithOutFixes.EndsWith("...") && !newText.EndsWith('.') && !newText.EndsWith(',') && !newText.EndsWith('!') &&
-                            !newText.EndsWith('?') && !newText.EndsWith("</i>"))
+                        if (textWithOutFixes.Length > 3 && textWithOutFixes.EndsWith("...", StringComparison.Ordinal) && !newText.EndsWith('.') && !newText.EndsWith(',') && !newText.EndsWith('!') &&
+                            !newText.EndsWith('?') && !newText.EndsWith("</i>", StringComparison.Ordinal))
                             newText = newText.TrimEnd() + "...";
                         else if (textWithOutFixes.Length > 0 && textWithOutFixes.EndsWith('.') && !newText.EndsWith('.') && !newText.EndsWith(',') && !newText.EndsWith('!') &&
-                            !newText.EndsWith('?') && !newText.EndsWith("</i>"))
+                            !newText.EndsWith('?') && !newText.EndsWith("</i>", StringComparison.Ordinal))
                             newText = newText.TrimEnd() + ".";
                         else if (textWithOutFixes.Length > 0 && textWithOutFixes.EndsWith('?') && !newText.EndsWith('.') && !newText.EndsWith(',') && !newText.EndsWith('!') &&
-                            !newText.EndsWith('?') && !newText.EndsWith("</i>"))
+                            !newText.EndsWith('?') && !newText.EndsWith("</i>", StringComparison.Ordinal))
                             newText = newText.TrimEnd() + "?";
 
                         textWithOutFixes = newUnfixedText;
@@ -6283,7 +6283,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                                 ok = wordsNotFound == modiWordsNotFound && unItalicText.EndsWith('!') && (line.EndsWith('l') || line.EndsWith('ﬂ'));
 
                             if (!ok)
-                                ok = wordsNotFound == modiWordsNotFound && line.StartsWith("<i>") && line.EndsWith("</i>");
+                                ok = wordsNotFound == modiWordsNotFound && line.StartsWith("<i>", StringComparison.Ordinal) && line.EndsWith("</i>", StringComparison.Ordinal);
 
                             if (ok && Utilities.CountTagInText(unItalicText, '/') > Utilities.CountTagInText(line, '/') + 1)
                                 ok = false;
@@ -6307,76 +6307,76 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
                                 line = HtmlUtil.RemoveOpenCloseTags(line, HtmlUtil.TagItalic).Trim();
 
-                                if (line.Length > 7 && unItalicText.Length > 7 && unItalicText.StartsWith("I ") &&
-                                    line.StartsWith(unItalicText.Remove(0, 2).Substring(0, 4)))
+                                if (line.Length > 7 && unItalicText.Length > 7 && unItalicText.StartsWith("I ", StringComparison.Ordinal) &&
+                                    line.StartsWith(unItalicText.Remove(0, 2).Substring(0, 4), StringComparison.Ordinal))
                                     unItalicText = unItalicText.Remove(0, 2);
 
                                 if (checkBoxTesseractMusicOn.Checked)
                                 {
-                                    if ((line.StartsWith("J' ") || line.StartsWith("J“ ") || line.StartsWith("J* ") || line.StartsWith("♪ ")) && unItalicText.Length > 3 && HtmlUtil.RemoveOpenCloseTags(unItalicText, HtmlUtil.TagItalic).Substring(1, 2) == "' ")
+                                    if ((line.StartsWith("J' ", StringComparison.Ordinal) || line.StartsWith("J“ ", StringComparison.Ordinal) || line.StartsWith("J* ", StringComparison.CurrentCulture) || line.StartsWith("♪ ", StringComparison.Ordinal)) && unItalicText.Length > 3 && HtmlUtil.RemoveOpenCloseTags(unItalicText, HtmlUtil.TagItalic).Substring(1, 2) == "' ")
                                     {
                                         unItalicText = "♪ " + unItalicText.Remove(0, 2).TrimStart();
                                     }
-                                    if ((line.StartsWith("J' ") || line.StartsWith("J“ ") || line.StartsWith("J* ") || line.StartsWith("♪ ")) && unItalicText.Length > 3 && HtmlUtil.RemoveOpenCloseTags(unItalicText, HtmlUtil.TagItalic)[1] == ' ')
+                                    if ((line.StartsWith("J' ", StringComparison.Ordinal) || line.StartsWith("J“ ", StringComparison.Ordinal) || line.StartsWith("J* ", StringComparison.Ordinal) || line.StartsWith("♪ ", StringComparison.Ordinal)) && unItalicText.Length > 3 && HtmlUtil.RemoveOpenCloseTags(unItalicText, HtmlUtil.TagItalic)[1] == ' ')
                                     {
-                                        bool ita = unItalicText.StartsWith("<i>") && unItalicText.EndsWith("</i>");
+                                        bool ita = unItalicText.StartsWith("<i>", StringComparison.Ordinal) && unItalicText.EndsWith("</i>", StringComparison.Ordinal);
                                         unItalicText = HtmlUtil.RemoveHtmlTags(unItalicText);
                                         unItalicText = "♪ " + unItalicText.Remove(0, 2).TrimStart();
                                         if (ita)
                                             unItalicText = "<i>" + unItalicText + "</i>";
                                     }
-                                    if ((line.StartsWith("J' ") || line.StartsWith("J“ ") || line.StartsWith("J* ") || line.StartsWith("♪ ")) && unItalicText.Length > 3 && HtmlUtil.RemoveOpenCloseTags(unItalicText, HtmlUtil.TagItalic)[2] == ' ')
+                                    if ((line.StartsWith("J' ", StringComparison.Ordinal) || line.StartsWith("J“ ", StringComparison.Ordinal) || line.StartsWith("J* ", StringComparison.Ordinal) || line.StartsWith("♪ ", StringComparison.Ordinal)) && unItalicText.Length > 3 && HtmlUtil.RemoveOpenCloseTags(unItalicText, HtmlUtil.TagItalic)[2] == ' ')
                                     {
-                                        bool ita = unItalicText.StartsWith("<i>") && unItalicText.EndsWith("</i>");
+                                        bool ita = unItalicText.StartsWith("<i>", StringComparison.Ordinal) && unItalicText.EndsWith("</i>", StringComparison.Ordinal);
                                         unItalicText = HtmlUtil.RemoveHtmlTags(unItalicText);
                                         unItalicText = "♪ " + unItalicText.Remove(0, 2).TrimStart();
                                         if (ita)
                                             unItalicText = "<i>" + unItalicText + "</i>";
                                     }
-                                    if (unItalicText.StartsWith("J'") && (line.StartsWith('♪') || textWithOutFixes.StartsWith('♪') || textWithOutFixes.StartsWith("<i>♪") || unItalicText.EndsWith('♪')))
+                                    if (unItalicText.StartsWith("J'", StringComparison.Ordinal) && (line.StartsWith('♪') || textWithOutFixes.StartsWith('♪') || textWithOutFixes.StartsWith("<i>♪", StringComparison.Ordinal) || unItalicText.EndsWith('♪')))
                                     {
-                                        bool ita = unItalicText.StartsWith("<i>") && unItalicText.EndsWith("</i>");
+                                        bool ita = unItalicText.StartsWith("<i>", StringComparison.Ordinal) && unItalicText.EndsWith("</i>", StringComparison.Ordinal);
                                         unItalicText = HtmlUtil.RemoveHtmlTags(unItalicText);
                                         unItalicText = "♪ " + unItalicText.Remove(0, 2).TrimStart();
                                         if (ita)
                                             unItalicText = "<i>" + unItalicText + "</i>";
                                     }
-                                    if ((line.StartsWith("J` ") || line.StartsWith("J“ ") || line.StartsWith("J' ") || line.StartsWith("J* ")) && unItalicText.StartsWith("S "))
+                                    if ((line.StartsWith("J` ", StringComparison.Ordinal) || line.StartsWith("J“ ", StringComparison.Ordinal) || line.StartsWith("J' ", StringComparison.Ordinal) || line.StartsWith("J* ", StringComparison.Ordinal)) && unItalicText.StartsWith("S ", StringComparison.Ordinal))
                                     {
-                                        bool ita = unItalicText.StartsWith("<i>") && unItalicText.EndsWith("</i>");
+                                        bool ita = unItalicText.StartsWith("<i>", StringComparison.Ordinal) && unItalicText.EndsWith("</i>", StringComparison.Ordinal);
                                         unItalicText = HtmlUtil.RemoveHtmlTags(unItalicText);
                                         unItalicText = "♪ " + unItalicText.Remove(0, 2).TrimStart();
                                         if (ita)
                                             unItalicText = "<i>" + unItalicText + "</i>";
                                     }
-                                    if ((line.StartsWith("J` ") || line.StartsWith("J“ ") || line.StartsWith("J' ") || line.StartsWith("J* ")) && unItalicText.StartsWith("<i>S</i> "))
+                                    if ((line.StartsWith("J` ", StringComparison.Ordinal) || line.StartsWith("J“ ", StringComparison.Ordinal) || line.StartsWith("J' ", StringComparison.Ordinal) || line.StartsWith("J* ", StringComparison.Ordinal)) && unItalicText.StartsWith("<i>S</i> ", StringComparison.Ordinal))
                                     {
-                                        bool ita = unItalicText.StartsWith("<i>") && unItalicText.EndsWith("</i>");
+                                        bool ita = unItalicText.StartsWith("<i>", StringComparison.Ordinal) && unItalicText.EndsWith("</i>", StringComparison.Ordinal);
                                         unItalicText = HtmlUtil.RemoveHtmlTags(unItalicText);
                                         unItalicText = "♪ " + unItalicText.Remove(0, 8).TrimStart();
                                         if (ita)
                                             unItalicText = "<i>" + unItalicText + "</i>";
                                     }
-                                    if (unItalicText.StartsWith(";'") && (line.StartsWith('♪') || textWithOutFixes.StartsWith('♪') || textWithOutFixes.StartsWith("<i>♪") || unItalicText.EndsWith('♪')))
+                                    if (unItalicText.StartsWith(";'", StringComparison.Ordinal) && (line.StartsWith('♪') || textWithOutFixes.StartsWith('♪') || textWithOutFixes.StartsWith("<i>♪", StringComparison.Ordinal) || unItalicText.EndsWith('♪')))
                                     {
-                                        bool ita = unItalicText.StartsWith("<i>") && unItalicText.EndsWith("</i>");
+                                        bool ita = unItalicText.StartsWith("<i>", StringComparison.Ordinal) && unItalicText.EndsWith("</i>", StringComparison.Ordinal);
                                         unItalicText = HtmlUtil.RemoveHtmlTags(unItalicText);
                                         unItalicText = "♪ " + unItalicText.Remove(0, 2).TrimStart();
                                         if (ita)
                                             unItalicText = "<i>" + unItalicText + "</i>";
                                     }
-                                    if (unItalicText.StartsWith(",{*") && (line.StartsWith('♪') || textWithOutFixes.StartsWith('♪') || textWithOutFixes.StartsWith("<i>♪") || unItalicText.EndsWith('♪')))
+                                    if (unItalicText.StartsWith(",{*", StringComparison.Ordinal) && (line.StartsWith('♪') || textWithOutFixes.StartsWith('♪') || textWithOutFixes.StartsWith("<i>♪", StringComparison.Ordinal) || unItalicText.EndsWith('♪')))
                                     {
-                                        bool ita = unItalicText.StartsWith("<i>") && unItalicText.EndsWith("</i>");
+                                        bool ita = unItalicText.StartsWith("<i>", StringComparison.Ordinal) && unItalicText.EndsWith("</i>", StringComparison.Ordinal);
                                         unItalicText = HtmlUtil.RemoveHtmlTags(unItalicText);
                                         unItalicText = "♪ " + unItalicText.Remove(0, 3).TrimStart();
                                         if (ita)
                                             unItalicText = "<i>" + unItalicText + "</i>";
                                     }
 
-                                    if (unItalicText.EndsWith("J'") && (line.EndsWith('♪') || textWithOutFixes.EndsWith('♪') || textWithOutFixes.EndsWith("♪</i>") || unItalicText.StartsWith('♪')))
+                                    if (unItalicText.EndsWith("J'", StringComparison.Ordinal) && (line.EndsWith('♪') || textWithOutFixes.EndsWith('♪') || textWithOutFixes.EndsWith("♪</i>", StringComparison.Ordinal) || unItalicText.StartsWith('♪')))
                                     {
-                                        bool ita = unItalicText.StartsWith("<i>") && unItalicText.EndsWith("</i>");
+                                        bool ita = unItalicText.StartsWith("<i>", StringComparison.Ordinal) && unItalicText.EndsWith("</i>", StringComparison.Ordinal);
                                         unItalicText = HtmlUtil.RemoveHtmlTags(unItalicText);
                                         unItalicText = unItalicText.Remove(unItalicText.Length - 3, 2).TrimEnd() + " ♪";
                                         if (ita)
@@ -6399,37 +6399,37 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                                 if (unItalicText.EndsWith('}') && !line.EndsWith('}'))
                                     unItalicText = unItalicText.TrimEnd('}');
 
-                                if (line.EndsWith("...") && unItalicText.EndsWith("”!"))
+                                if (line.EndsWith("...", StringComparison.Ordinal) && unItalicText.EndsWith("”!", StringComparison.Ordinal))
                                     unItalicText = unItalicText.TrimEnd('!').TrimEnd('”') + ".";
-                                if (line.EndsWith("...") && unItalicText.EndsWith("\"!"))
+                                if (line.EndsWith("...", StringComparison.Ordinal) && unItalicText.EndsWith("\"!", StringComparison.Ordinal))
                                     unItalicText = unItalicText.TrimEnd('!').TrimEnd('"') + ".";
 
-                                if (line.EndsWith('.') && !unItalicText.EndsWith('.') && !unItalicText.EndsWith(".</i>"))
+                                if (line.EndsWith('.') && !unItalicText.EndsWith('.') && !unItalicText.EndsWith(".</i>", StringComparison.Ordinal))
                                 {
                                     string post = string.Empty;
-                                    if (unItalicText.EndsWith("</i>"))
+                                    if (unItalicText.EndsWith("</i>", StringComparison.Ordinal))
                                     {
                                         post = "</i>";
                                         unItalicText = unItalicText.Remove(unItalicText.Length - 4);
                                     }
-                                    if (unItalicText.EndsWith('\'') && !line.EndsWith("'."))
+                                    if (unItalicText.EndsWith('\'') && !line.EndsWith("'.", StringComparison.Ordinal))
                                         unItalicText = unItalicText.TrimEnd('\'');
                                     unItalicText += "." + post;
                                 }
-                                if (unItalicText.EndsWith('.') && !unItalicText.EndsWith("...") && !unItalicText.EndsWith("...</i>") && line.EndsWith("..."))
+                                if (unItalicText.EndsWith('.') && !unItalicText.EndsWith("...", StringComparison.Ordinal) && !unItalicText.EndsWith("...</i>", StringComparison.Ordinal) && line.EndsWith("...", StringComparison.Ordinal))
                                 {
                                     string post = string.Empty;
-                                    if (unItalicText.EndsWith("</i>"))
+                                    if (unItalicText.EndsWith("</i>", StringComparison.Ordinal))
                                     {
                                         post = "</i>";
                                         unItalicText = unItalicText.Remove(unItalicText.Length - 4);
                                     }
                                     unItalicText += ".." + post;
                                 }
-                                if (unItalicText.EndsWith("..") && !unItalicText.EndsWith("...") && !unItalicText.EndsWith("...</i>") && line.EndsWith("..."))
+                                if (unItalicText.EndsWith("..", StringComparison.Ordinal) && !unItalicText.EndsWith("...", StringComparison.Ordinal) && !unItalicText.EndsWith("...</i>", StringComparison.Ordinal) && line.EndsWith("...", StringComparison.Ordinal))
                                 {
                                     string post = string.Empty;
-                                    if (unItalicText.EndsWith("</i>"))
+                                    if (unItalicText.EndsWith("</i>", StringComparison.Ordinal))
                                     {
                                         post = "</i>";
                                         unItalicText = unItalicText.Remove(unItalicText.Length - 4);
@@ -6437,15 +6437,15 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                                     unItalicText += "." + post;
                                 }
 
-                                if (line.EndsWith('!') && !unItalicText.EndsWith('!') && !unItalicText.EndsWith("!</i>"))
+                                if (line.EndsWith('!') && !unItalicText.EndsWith('!') && !unItalicText.EndsWith("!</i>", StringComparison.Ordinal))
                                 {
-                                    if (unItalicText.EndsWith("!'"))
+                                    if (unItalicText.EndsWith("!'", StringComparison.Ordinal))
                                     {
                                         unItalicText = unItalicText.TrimEnd('\'');
                                     }
                                     else
                                     {
-                                        if (unItalicText.EndsWith("l</i>") && _ocrFixEngine != null)
+                                        if (unItalicText.EndsWith("l</i>", StringComparison.Ordinal) && _ocrFixEngine != null)
                                         {
                                             string w = unItalicText.Substring(0, unItalicText.Length - 4);
                                             int wIdx = w.Length - 1;
@@ -6483,9 +6483,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                                         }
                                     }
                                 }
-                                if (line.EndsWith('?') && !unItalicText.EndsWith('?') && !unItalicText.EndsWith("?</i>"))
+                                if (line.EndsWith('?') && !unItalicText.EndsWith('?') && !unItalicText.EndsWith("?</i>", StringComparison.Ordinal))
                                 {
-                                    if (unItalicText.EndsWith("?'"))
+                                    if (unItalicText.EndsWith("?'", StringComparison.Ordinal))
                                         unItalicText = unItalicText.TrimEnd('\'');
                                     else
                                         unItalicText += "?";
@@ -6494,7 +6494,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                                 line = HtmlUtil.RemoveOpenCloseTags(unItalicText, HtmlUtil.TagItalic);
                                 if (checkBoxAutoFixCommonErrors.Checked)
                                 {
-                                    if (line.Contains("'.") && !textWithOutFixes.Contains("'.") && textWithOutFixes.Contains(':') && !line.EndsWith("'.") && Configuration.Settings.Tools.OcrFixUseHardcodedRules)
+                                    if (line.Contains("'.") && !textWithOutFixes.Contains("'.") && textWithOutFixes.Contains(':') && !line.EndsWith("'.", StringComparison.Ordinal) && Configuration.Settings.Tools.OcrFixUseHardcodedRules)
                                     {
                                         line = line.Replace("'.", ":");
                                     }
@@ -6526,27 +6526,27 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
                     line = line.Replace(" J' ", " ♪ ");
 
-                    if (line.StartsWith("J'"))
+                    if (line.StartsWith("J'", StringComparison.Ordinal))
                     {
                         line = "♪ " + line.Remove(0, 2).TrimStart();
                     }
-                    if (line.StartsWith("<i>J'"))
+                    if (line.StartsWith("<i>J'", StringComparison.Ordinal))
                     {
                         line = "<i>♪ " + line.Remove(0, 5).TrimStart();
                     }
-                    if (line.StartsWith("[J'"))
+                    if (line.StartsWith("[J'", StringComparison.Ordinal))
                     {
                         line = "[♪ " + line.Remove(0, 3).TrimStart();
                     }
-                    if (line.StartsWith("<i>[J'"))
+                    if (line.StartsWith("<i>[J'", StringComparison.Ordinal))
                     {
                         line = "<i>[♪ " + line.Remove(0, 6).TrimStart();
                     }
-                    if (line.EndsWith("J'"))
+                    if (line.EndsWith("J'", StringComparison.Ordinal))
                     {
                         line = line.Remove(line.Length - 2, 2).TrimEnd() + " ♪";
                     }
-                    if (line.EndsWith("J'</i>"))
+                    if (line.EndsWith("J'</i>", StringComparison.Ordinal))
                     {
                         line = line.Remove(line.Length - 6, 6).TrimEnd() + " ♪</i>";
                     }
@@ -6716,12 +6716,12 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             if (s.Contains("</i> / <i>"))
                 s = s.Replace("</i> / <i>", " I ").Replace("  ", " ");
-            if (s.StartsWith("/ <i>"))
+            if (s.StartsWith("/ <i>", StringComparison.Ordinal))
                 s = ("<i>I " + s.Remove(0, 5)).Replace("  ", " ");
-            if (s.StartsWith("I <i>"))
+            if (s.StartsWith("I <i>", StringComparison.Ordinal))
                 s = ("<i>I " + s.Remove(0, 5)).Replace("  ", " ");
             else if (italicStartCount == 1 && s.Length > 20 &&
-                     s.IndexOf("<i>", StringComparison.Ordinal) > 1 && s.IndexOf("<i>", StringComparison.Ordinal) < 10 && s.EndsWith("</i>"))
+                     s.IndexOf("<i>", StringComparison.Ordinal) > 1 && s.IndexOf("<i>", StringComparison.Ordinal) < 10 && s.EndsWith("</i>", StringComparison.Ordinal))
                 s = "<i>" + HtmlUtil.RemoveOpenCloseTags(s, HtmlUtil.TagItalic) + "</i>";
             s = s.Replace("</i>" + Environment.NewLine + "<i>", Environment.NewLine);
 
@@ -6771,7 +6771,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             modiThread.Join(3000); // wait max 3 seconds
             modiThread.Abort();
 
-            if (!string.IsNullOrEmpty(mp.Text) && mp.Text.Length > 3 && mp.Text.EndsWith(";0]"))
+            if (!string.IsNullOrEmpty(mp.Text) && mp.Text.Length > 3 && mp.Text.EndsWith(";0]", StringComparison.Ordinal))
                 mp.Text = mp.Text.Substring(0, mp.Text.Length - 3);
 
             // Try to avoid blank lines by resizing image
@@ -7518,8 +7518,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 Paragraph current = _subtitle.Paragraphs[i];
                 foreach (Paragraph old in oldSubtitle.Paragraphs)
                 {
-                    if (current.StartTime.TotalMilliseconds == old.StartTime.TotalMilliseconds &&
-                        current.Duration.TotalMilliseconds == old.Duration.TotalMilliseconds)
+                    if (Math.Abs(current.StartTime.TotalMilliseconds - old.StartTime.TotalMilliseconds) < 0.01 &&
+                        Math.Abs(current.Duration.TotalMilliseconds - old.Duration.TotalMilliseconds) < 0.01)
                     {
                         current.Text = old.Text;
                         break;
@@ -8254,7 +8254,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     while (i < _vobSubMergedPackistOriginal.Count)
                     {
                         var x2 = _vobSubMergedPackistOriginal[i];
-                        if (x2.StartTime.TotalMilliseconds == x1.StartTime.TotalMilliseconds)
+                        if (Math.Abs(x2.StartTime.TotalMilliseconds - x1.StartTime.TotalMilliseconds) < 0.01)
                         {
                             _vobSubMergedPackistOriginal.Remove(x2);
                             break;
