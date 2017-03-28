@@ -6,9 +6,12 @@
    * New Netflix quality checker - thx askolesov/pavel-belenko
 * IMPROVED:
    * Updated Chinese translation - thx Leon
+   * Updated French Translation - thx JM GBT
+   * Updated Rusian translation - thx Elheym
    * Import plain text now also supports input as HTML
    * Added "Total words" to statistics - thx Barbara
    * Added more Tesseract dictionaries - thx lucybook/Elheym
+   * Added "Video auto-load" to UI settings - thx mtarini
 * FIXED:
    * Fixed crash in "Add to user dictionary" in OCR - thx alfix0
    * Fixed original file name bug in "Undo" - thx darnn
@@ -22,6 +25,10 @@
    * Many fixes for TTML 1.0 and Netflix Timed Text - thx askolesov/pavel-belenko
    * Fixed locking of input subtitle file (for unknown subtitles) - thx darnn
    * Fixed crash after unsuccessful load of subtitle file - thx darnn
+   * Fixed possible crash in "Batch convert" - thx FreezinG117
+   * Fixed issue with the German open quotation mark - thx Ninelpienel
+   * Fixed bug in "Reverse RTL start/end" - thx darnn
+   * Fixed "FCP + image" export in frame rate 29.97 - thx chris   
 
 
 3.5.2 (3rd March 2017)

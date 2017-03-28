@@ -1915,7 +1915,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if ((ext == ".mp4" || ext == ".m4v" || ext == ".3gp") && file.Length > 10000)
                 {
-                    if (ImportSubtitleFromMp4(fileName))
+                    if (ImportSubtitleFromMp4(fileName) && !Configuration.Settings.General.DisableVideoAutoLoading)
                         OpenVideo(fileName);
                     return;
                 }
@@ -2857,11 +2857,13 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             if (!string.IsNullOrEmpty(videoFileName) && File.Exists(videoFileName))
                             {
-                                OpenVideo(videoFileName);
+                                if (!Configuration.Settings.General.DisableVideoAutoLoading)
+                                    OpenVideo(videoFileName);
                             }
                             else if (!string.IsNullOrEmpty(fileName) && (toolStripButtonToggleVideo.Checked || toolStripButtonToggleWaveform.Checked))
                             {
-                                TryToFindAndOpenVideoFile(Path.Combine(Path.GetDirectoryName(fileName), Path.GetFileNameWithoutExtension(fileName)));
+                                if (!Configuration.Settings.General.DisableVideoAutoLoading)
+                                    TryToFindAndOpenVideoFile(Path.Combine(Path.GetDirectoryName(fileName), Path.GetFileNameWithoutExtension(fileName)));
                             }
                             if (_videoFileName == null)
                             {

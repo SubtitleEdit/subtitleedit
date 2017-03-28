@@ -1703,6 +1703,7 @@ can edit in same subtitle file (collaboration)</Information>
     <SubtitleFont>Subtitle font</SubtitleFont>
     <SubtitleFontSize>Subtitle font size</SubtitleFontSize>
     <SubtitleBold>Bold</SubtitleBold>
+    <VideoAutoOpen>Auto-open video file when opening subtitle</VideoAutoOpen>
     <SubtitleCenter>Center</SubtitleCenter>
     <SubtitleFontColor>Subtitle font color</SubtitleFontColor>
     <SubtitleBackgroundColor>Subtitle background color</SubtitleBackgroundColor>
