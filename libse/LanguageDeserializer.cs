@@ -4561,6 +4561,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/SubtitleBold":
                     language.Settings.SubtitleBold = reader.Value;
                     break;
+                case "Settings/VideoAutoOpen":
+                    language.Settings.VideoAutoOpen = reader.Value;
+                    break;
                 case "Settings/SubtitleCenter":
                     language.Settings.SubtitleCenter = reader.Value;
                     break;

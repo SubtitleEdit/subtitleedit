@@ -169,6 +169,8 @@ namespace Nikse.SubtitleEdit.Forms
                 comboBoxlVideoPlayerPreviewFontSize.SelectedIndex = 3;
             checkBoxVideoPlayerPreviewFontBold.Checked = gs.VideoPlayerPreviewFontBold;
 
+            checkBoxVideoAutoOpen.Checked = !gs.DisableVideoAutoLoading;
+
             comboBoxCustomSearch1.Text = Configuration.Settings.VideoControls.CustomSearchText1;
             comboBoxCustomSearch2.Text = Configuration.Settings.VideoControls.CustomSearchText2;
             comboBoxCustomSearch3.Text = Configuration.Settings.VideoControls.CustomSearchText3;
@@ -379,6 +381,8 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxlVideoPlayerPreviewFontSize.Left = labelVideoPlayerPreviewFontSize.Left + labelVideoPlayerPreviewFontSize.Width;
             checkBoxVideoPlayerPreviewFontBold.Text = language.SubtitleBold;
             checkBoxVideoPlayerPreviewFontBold.Left = comboBoxlVideoPlayerPreviewFontSize.Left;
+
+            checkBoxVideoAutoOpen.Text = language.VideoAutoOpen;
 
             groupBoxMainWindowVideoControls.Text = language.MainWindowVideoControls;
             labelCustomSearch.Text = language.CustomSearchTextAndUrl;
@@ -1151,6 +1155,7 @@ namespace Nikse.SubtitleEdit.Forms
             gs.VideoPlayerShowFullscreenButton = checkBoxVideoPlayerShowFullscreenButton.Checked;
             gs.VideoPlayerPreviewFontSize = int.Parse(comboBoxlVideoPlayerPreviewFontSize.Items[0].ToString()) + comboBoxlVideoPlayerPreviewFontSize.SelectedIndex;
             gs.VideoPlayerPreviewFontBold = checkBoxVideoPlayerPreviewFontBold.Checked;
+            gs.DisableVideoAutoLoading = !checkBoxVideoAutoOpen.Checked;
 
             Configuration.Settings.VideoControls.CustomSearchText1 = comboBoxCustomSearch1.Text;
             Configuration.Settings.VideoControls.CustomSearchText2 = comboBoxCustomSearch2.Text;

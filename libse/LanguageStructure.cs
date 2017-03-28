@@ -1866,6 +1866,7 @@
             public string SubtitleFont { get; set; }
             public string SubtitleFontSize { get; set; }
             public string SubtitleBold { get; set; }
+            public string VideoAutoOpen { get; set; }            
             public string SubtitleCenter { get; set; }
             public string SubtitleFontColor { get; set; }
             public string SubtitleBackgroundColor { get; set; }

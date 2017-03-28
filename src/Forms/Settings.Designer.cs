@@ -89,9 +89,6 @@
             this.labelDefaultFileEncoding = new System.Windows.Forms.Label();
             this.comboBoxFrameRate = new System.Windows.Forms.ComboBox();
             this.labelDefaultFrameRate = new System.Windows.Forms.Label();
-            this.labelTBNetflixQualityCheck = new System.Windows.Forms.Label();
-            this.pictureBoxNetflixQualityCheck = new System.Windows.Forms.PictureBox();
-            this.checkBoxNetflixQualityCheck = new System.Windows.Forms.CheckBox();
             this.tabPageShortcuts = new System.Windows.Forms.TabPage();
             this.groupBoxShortcuts = new System.Windows.Forms.GroupBox();
             this.comboBoxShortcutKey = new System.Windows.Forms.ComboBox();
@@ -252,6 +249,9 @@
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.checkBoxShowFrameRate = new System.Windows.Forms.CheckBox();
             this.groupBoxShowToolBarButtons = new System.Windows.Forms.GroupBox();
+            this.labelTBNetflixQualityCheck = new System.Windows.Forms.Label();
+            this.pictureBoxNetflixQualityCheck = new System.Windows.Forms.PictureBox();
+            this.checkBoxNetflixQualityCheck = new System.Windows.Forms.CheckBox();
             this.labelTBRemoveTextForHi = new System.Windows.Forms.Label();
             this.pictureBoxTBRemoveTextForHi = new System.Windows.Forms.PictureBox();
             this.checkBoxTBRemoveTextForHi = new System.Windows.Forms.CheckBox();
@@ -331,6 +331,7 @@
             this.colorDialogSSAStyle = new System.Windows.Forms.ColorDialog();
             this.labelStatus = new System.Windows.Forms.Label();
             this.openFileDialogFFmpeg = new System.Windows.Forms.OpenFileDialog();
+            this.checkBoxVideoAutoOpen = new System.Windows.Forms.CheckBox();
             this.tabControlSettings.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
@@ -341,7 +342,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxCharsSec)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDurationMax)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDurationMin)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxNetflixQualityCheck)).BeginInit();
             this.tabPageShortcuts.SuspendLayout();
             this.groupBoxShortcuts.SuspendLayout();
             this.tabPageSyntaxColoring.SuspendLayout();
@@ -371,6 +371,7 @@
             this.tabPageToolBar.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBoxShowToolBarButtons.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxNetflixQualityCheck)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxTBRemoveTextForHi)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxTBFixCommonErrors)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxHelp)).BeginInit();
@@ -1206,38 +1207,6 @@
             // 
             // comboBoxShortcutKey
             // 
-            this.groupBoxShowToolBarButtons.Controls.Add(this.labelTBNetflixQualityCheck);
-            this.groupBoxShowToolBarButtons.Controls.Add(this.pictureBoxNetflixQualityCheck);
-            this.groupBoxShowToolBarButtons.Controls.Add(this.checkBoxNetflixQualityCheck);
-            // 
-            // labelTBNetflixQualityCheck
-            // 
-            this.labelTBNetflixQualityCheck.AutoSize = true;
-            this.labelTBNetflixQualityCheck.Location = new System.Drawing.Point(636, 136);
-            this.labelTBNetflixQualityCheck.Name = "labelTBNetflixQualityCheck";
-            this.labelTBNetflixQualityCheck.Size = new System.Drawing.Size(103, 13);
-            this.labelTBNetflixQualityCheck.TabIndex = 42;
-            this.labelTBNetflixQualityCheck.Text = "Netflix quality check";
-            // 
-            // pictureBoxNetflixQualityCheck
-            // 
-            this.pictureBoxNetflixQualityCheck.Location = new System.Drawing.Point(649, 155);
-            this.pictureBoxNetflixQualityCheck.Name = "pictureBoxNetflixQualityCheck";
-            this.pictureBoxNetflixQualityCheck.Size = new System.Drawing.Size(32, 32);
-            this.pictureBoxNetflixQualityCheck.TabIndex = 41;
-            this.pictureBoxNetflixQualityCheck.TabStop = false;
-            // 
-            // checkBoxNetflixQualityCheck
-            // 
-            this.checkBoxNetflixQualityCheck.AutoSize = true;
-            this.checkBoxNetflixQualityCheck.Location = new System.Drawing.Point(652, 195);
-            this.checkBoxNetflixQualityCheck.Name = "checkBoxNetflixQualityCheck";
-            this.checkBoxNetflixQualityCheck.Size = new System.Drawing.Size(55, 17);
-            this.checkBoxNetflixQualityCheck.TabIndex = 40;
-            this.checkBoxNetflixQualityCheck.Text = "Visible";
-            this.checkBoxNetflixQualityCheck.UseVisualStyleBackColor = true;
-            // 
-            // labelTBRemoveTextForHi
             this.comboBoxShortcutKey.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxShortcutKey.Enabled = false;
             this.comboBoxShortcutKey.FormattingEnabled = true;
@@ -1818,6 +1787,7 @@
             // 
             this.groupBoxVideoPlayerDefault.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxVideoPlayerDefault.Controls.Add(this.checkBoxVideoAutoOpen);
             this.groupBoxVideoPlayerDefault.Controls.Add(this.checkBoxVideoPlayerPreviewFontBold);
             this.groupBoxVideoPlayerDefault.Controls.Add(this.checkBoxVideoPlayerShowFullscreenButton);
             this.groupBoxVideoPlayerDefault.Controls.Add(this.checkBoxVideoPlayerShowMuteButton);
@@ -3151,6 +3121,9 @@
             // 
             this.groupBoxShowToolBarButtons.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxShowToolBarButtons.Controls.Add(this.labelTBNetflixQualityCheck);
+            this.groupBoxShowToolBarButtons.Controls.Add(this.pictureBoxNetflixQualityCheck);
+            this.groupBoxShowToolBarButtons.Controls.Add(this.checkBoxNetflixQualityCheck);
             this.groupBoxShowToolBarButtons.Controls.Add(this.labelTBRemoveTextForHi);
             this.groupBoxShowToolBarButtons.Controls.Add(this.pictureBoxTBRemoveTextForHi);
             this.groupBoxShowToolBarButtons.Controls.Add(this.checkBoxTBRemoveTextForHi);
@@ -3193,6 +3166,33 @@
             this.groupBoxShowToolBarButtons.TabIndex = 0;
             this.groupBoxShowToolBarButtons.TabStop = false;
             this.groupBoxShowToolBarButtons.Text = "Show toolbar buttons";
+            // 
+            // labelTBNetflixQualityCheck
+            // 
+            this.labelTBNetflixQualityCheck.AutoSize = true;
+            this.labelTBNetflixQualityCheck.Location = new System.Drawing.Point(636, 136);
+            this.labelTBNetflixQualityCheck.Name = "labelTBNetflixQualityCheck";
+            this.labelTBNetflixQualityCheck.Size = new System.Drawing.Size(103, 13);
+            this.labelTBNetflixQualityCheck.TabIndex = 42;
+            this.labelTBNetflixQualityCheck.Text = "Netflix quality check";
+            // 
+            // pictureBoxNetflixQualityCheck
+            // 
+            this.pictureBoxNetflixQualityCheck.Location = new System.Drawing.Point(649, 155);
+            this.pictureBoxNetflixQualityCheck.Name = "pictureBoxNetflixQualityCheck";
+            this.pictureBoxNetflixQualityCheck.Size = new System.Drawing.Size(32, 32);
+            this.pictureBoxNetflixQualityCheck.TabIndex = 41;
+            this.pictureBoxNetflixQualityCheck.TabStop = false;
+            // 
+            // checkBoxNetflixQualityCheck
+            // 
+            this.checkBoxNetflixQualityCheck.AutoSize = true;
+            this.checkBoxNetflixQualityCheck.Location = new System.Drawing.Point(652, 195);
+            this.checkBoxNetflixQualityCheck.Name = "checkBoxNetflixQualityCheck";
+            this.checkBoxNetflixQualityCheck.Size = new System.Drawing.Size(55, 17);
+            this.checkBoxNetflixQualityCheck.TabIndex = 40;
+            this.checkBoxNetflixQualityCheck.Text = "Visible";
+            this.checkBoxNetflixQualityCheck.UseVisualStyleBackColor = true;
             // 
             // labelTBRemoveTextForHi
             // 
@@ -3963,6 +3963,16 @@
             // 
             this.openFileDialogFFmpeg.FileName = "openFileDialog1";
             // 
+            // checkBoxVideoAutoOpen
+            // 
+            this.checkBoxVideoAutoOpen.AutoSize = true;
+            this.checkBoxVideoAutoOpen.Location = new System.Drawing.Point(334, 68);
+            this.checkBoxVideoAutoOpen.Name = "checkBoxVideoAutoOpen";
+            this.checkBoxVideoAutoOpen.Size = new System.Drawing.Size(213, 17);
+            this.checkBoxVideoAutoOpen.TabIndex = 24;
+            this.checkBoxVideoAutoOpen.Text = "Auto open video when opening subtitle";
+            this.checkBoxVideoAutoOpen.UseVisualStyleBackColor = true;
+            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -4043,6 +4053,7 @@
             this.groupBox2.PerformLayout();
             this.groupBoxShowToolBarButtons.ResumeLayout(false);
             this.groupBoxShowToolBarButtons.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxNetflixQualityCheck)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxTBRemoveTextForHi)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxTBFixCommonErrors)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxHelp)).EndInit();
@@ -4388,5 +4399,6 @@
         private System.Windows.Forms.NumericUpDown numericUpDownMaxWordsMin;
         private System.Windows.Forms.Label labelMaxWordsPerMin;
         private System.Windows.Forms.CheckBox checkBoxMpvHandlesPreviewText;
+        private System.Windows.Forms.CheckBox checkBoxVideoAutoOpen;
     }
 }
