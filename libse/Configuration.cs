@@ -161,7 +161,7 @@ namespace Nikse.SubtitleEdit.Core
                 if (Directory.Exists("/usr/share/tessdata"))
                     return "/usr/share/tessdata";
             }
-            return TesseractDirectory + "tessdata";
+            return Path.Combine(TesseractDirectory, "tessdata");
         }
 
         private static IEnumerable<Encoding> GetAvailableEncodings()
