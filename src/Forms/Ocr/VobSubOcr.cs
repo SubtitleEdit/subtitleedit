@@ -1043,67 +1043,67 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 for (int i = 0; i < comboBoxTesseractLanguages.Items.Count; i++)
                 {
                     var tl = (comboBoxTesseractLanguages.Items[i] as TesseractLanguage);
-                    if (tl.Text.StartsWith("Chinese") && (languageString.StartsWith("chinese") || languageString.StartsWith("中文")))
+                    if (tl.Text.StartsWith("Chinese", StringComparison.OrdinalIgnoreCase) && (languageString.StartsWith("chinese", StringComparison.OrdinalIgnoreCase) || languageString.StartsWith("中文", StringComparison.OrdinalIgnoreCase)))
                     {
                         comboBoxTesseractLanguages.SelectedIndex = i;
                         break;
                     }
-                    if (tl.Text.StartsWith("Korean") && (languageString.StartsWith("korean") || languageString.StartsWith("한국어")))
+                    if (tl.Text.StartsWith("Korean", StringComparison.OrdinalIgnoreCase) && (languageString.StartsWith("korean", StringComparison.OrdinalIgnoreCase) || languageString.StartsWith("한국어", StringComparison.OrdinalIgnoreCase)))
                     {
                         comboBoxTesseractLanguages.SelectedIndex = i;
                         break;
                     }
-                    else if (tl.Text.StartsWith("Swedish") && languageString.StartsWith("svenska"))
+                    else if (tl.Text.StartsWith("Swedish", StringComparison.OrdinalIgnoreCase) && languageString.StartsWith("svenska", StringComparison.OrdinalIgnoreCase))
                     {
                         comboBoxTesseractLanguages.SelectedIndex = i;
                         break;
                     }
-                    else if (tl.Text.StartsWith("Norwegian") && languageString.StartsWith("norsk"))
+                    else if (tl.Text.StartsWith("Norwegian", StringComparison.OrdinalIgnoreCase) && languageString.StartsWith("norsk", StringComparison.OrdinalIgnoreCase))
                     {
                         comboBoxTesseractLanguages.SelectedIndex = i;
                         break;
                     }
-                    else if (tl.Text.StartsWith("Dutch") && languageString.StartsWith("Nederlands"))
+                    else if (tl.Text.StartsWith("Dutch", StringComparison.OrdinalIgnoreCase) && languageString.StartsWith("Nederlands", StringComparison.OrdinalIgnoreCase))
                     {
                         comboBoxTesseractLanguages.SelectedIndex = i;
                         break;
                     }
-                    else if (tl.Text.StartsWith("Danish") && languageString.StartsWith("dansk"))
+                    else if (tl.Text.StartsWith("Danish", StringComparison.OrdinalIgnoreCase) && languageString.StartsWith("dansk", StringComparison.OrdinalIgnoreCase))
                     {
                         comboBoxTesseractLanguages.SelectedIndex = i;
                         break;
                     }
-                    else if (tl.Text.StartsWith("English") && languageString.StartsWith("English"))
+                    else if (tl.Text.StartsWith("English", StringComparison.OrdinalIgnoreCase) && languageString.StartsWith("English", StringComparison.OrdinalIgnoreCase))
                     {
                         comboBoxTesseractLanguages.SelectedIndex = i;
                         break;
                     }
-                    else if (tl.Text.StartsWith("French") && (languageString.StartsWith("french") || languageString.StartsWith("français")))
+                    else if (tl.Text.StartsWith("French", StringComparison.OrdinalIgnoreCase) && (languageString.StartsWith("french", StringComparison.OrdinalIgnoreCase) || languageString.StartsWith("français", StringComparison.OrdinalIgnoreCase)))
                     {
                         comboBoxTesseractLanguages.SelectedIndex = i;
                         break;
                     }
-                    else if (tl.Text.StartsWith("Spannish") && (languageString.StartsWith("spannish") || languageString.StartsWith("españo")))
+                    else if (tl.Text.StartsWith("Spannish", StringComparison.OrdinalIgnoreCase) && (languageString.StartsWith("spannish", StringComparison.OrdinalIgnoreCase) || languageString.StartsWith("españo", StringComparison.OrdinalIgnoreCase)))
                     {
                         comboBoxTesseractLanguages.SelectedIndex = i;
                         break;
                     }
-                    else if (tl.Text.StartsWith("Finnish") && languageString.StartsWith("suomi"))
+                    else if (tl.Text.StartsWith("Finnish", StringComparison.OrdinalIgnoreCase) && languageString.StartsWith("suomi", StringComparison.OrdinalIgnoreCase))
                     {
                         comboBoxTesseractLanguages.SelectedIndex = i;
                         break;
                     }
-                    else if (tl.Text.StartsWith("Italian") && languageString.StartsWith("itali"))
+                    else if (tl.Text.StartsWith("Italian", StringComparison.OrdinalIgnoreCase) && languageString.StartsWith("itali", StringComparison.OrdinalIgnoreCase))
                     {
                         comboBoxTesseractLanguages.SelectedIndex = i;
                         break;
                     }
-                    else if (tl.Text.StartsWith("German") && languageString.StartsWith("deutsch"))
+                    else if (tl.Text.StartsWith("German", StringComparison.OrdinalIgnoreCase) && languageString.StartsWith("deutsch", StringComparison.OrdinalIgnoreCase))
                     {
                         comboBoxTesseractLanguages.SelectedIndex = i;
                         break;
                     }
-                    else if (tl.Text.StartsWith("Portuguese") && languageString.StartsWith("português"))
+                    else if (tl.Text.StartsWith("Portuguese", StringComparison.OrdinalIgnoreCase) && languageString.StartsWith("português", StringComparison.OrdinalIgnoreCase))
                     {
                         comboBoxTesseractLanguages.SelectedIndex = i;
                         break;
@@ -6880,21 +6880,18 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private void InitializeTesseract()
         {
-            if (!Directory.Exists(Configuration.TesseractDirectory))
+            if (!Directory.Exists(Configuration.TesseractDirectory) && !Configuration.IsRunningOnLinux() && !Configuration.IsRunningOnMac())
             {
                 Directory.CreateDirectory(Configuration.TesseractDirectory);
-                if (!Configuration.IsRunningOnLinux() && !Configuration.IsRunningOnMac())
-                {
-                    Process process = new Process();
-                    ProcessStartInfo startInfo = new ProcessStartInfo();
-                    startInfo.WindowStyle = ProcessWindowStyle.Hidden;
-                    startInfo.FileName = "xcopy";
-                    startInfo.Arguments = "\"" + Path.Combine(Configuration.TesseractOriginalDirectory, "*.*") + "\" \"" + Configuration.TesseractDirectory + "\" /s";
-                    MessageBox.Show(startInfo.Arguments);
-                    process.StartInfo = startInfo;
-                    process.Start();
-                    process.WaitForExit();
-                }
+                Process process = new Process();
+                ProcessStartInfo startInfo = new ProcessStartInfo();
+                startInfo.WindowStyle = ProcessWindowStyle.Hidden;
+                startInfo.FileName = "xcopy";
+                startInfo.Arguments = "\"" + Path.Combine(Configuration.TesseractOriginalDirectory, "*.*") + "\" \"" + Configuration.TesseractDirectory + "\" /s";
+                MessageBox.Show(startInfo.Arguments);
+                process.StartInfo = startInfo;
+                process.Start();
+                process.WaitForExit();
             }
 
             string dir = Path.Combine(Configuration.TesseractDirectory, "tessdata");
@@ -6905,15 +6902,16 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 foreach (var culture in CultureInfo.GetCultures(CultureTypes.NeutralCultures))
                 {
                     string tesseractName = culture.ThreeLetterISOLanguageName;
-                    if (culture.LCID == 0x4 && !File.Exists(dir + Path.DirectorySeparatorChar + tesseractName + ".traineddata"))
+                    var trainDataFileName = Path.Combine(dir, tesseractName + ".traineddata");
+                    if (culture.LCID == 0x4 && !File.Exists(trainDataFileName))
                         tesseractName = "chi_sim";
-                    if (culture.Name == "zh-CHT" && !File.Exists(dir + Path.DirectorySeparatorChar + tesseractName + ".traineddata"))
+                    else if (culture.Name == "zh-CHT" && !File.Exists(trainDataFileName))
                         tesseractName = "chi_tra";
-                    if (tesseractName == "fas" && !File.Exists(dir + Path.DirectorySeparatorChar + tesseractName + ".traineddata"))
+                    else if (tesseractName == "fas" && !File.Exists(trainDataFileName))
                         tesseractName = "per";
-                    if (tesseractName == "nob" && !File.Exists(dir + Path.DirectorySeparatorChar + tesseractName + ".traineddata"))
+                    else if (tesseractName == "nob" && !File.Exists(trainDataFileName))
                         tesseractName = "nor";
-                    string trainDataFileName = dir + Path.DirectorySeparatorChar + tesseractName + ".traineddata";
+                    trainDataFileName = Path.Combine(dir, tesseractName + ".traineddata");
                     if (!list.Contains(culture.ThreeLetterISOLanguageName) && File.Exists(trainDataFileName))
                     {
                         if (culture.ThreeLetterISOLanguageName != "zho")
