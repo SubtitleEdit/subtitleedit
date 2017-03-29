@@ -6894,7 +6894,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 process.WaitForExit();
             }
 
-            string dir = Path.Combine(Configuration.TesseractDirectory, "tessdata");
+            string dir = Configuration.TesseractDataDirectory;
             if (Directory.Exists(dir))
             {
                 var list = new List<string>();
