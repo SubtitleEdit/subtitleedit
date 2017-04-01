@@ -8769,20 +8769,14 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private void nOcrTrainingToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            using (var form = new VobSubNOcrTrain())
+            /*using (var form = new VobSubNOcrTrain())
             {
                 form.Initialize(_nOcrDb);
                 form.Show(this);
-            }
+            }*/
         }
 
-        private OcrFixEngine.AutoGuessLevel GetAutoGuessLevel()
-        {
-            var autoGuessLevel = OcrFixEngine.AutoGuessLevel.None;
-            if (checkBoxGuessUnknownWords.Checked)
-                autoGuessLevel = OcrFixEngine.AutoGuessLevel.Aggressive;
-            return autoGuessLevel;
-        }
+        private OcrFixEngine.AutoGuessLevel GetAutoGuessLevel() =>  checkBoxGuessUnknownWords.Checked ? OcrFixEngine.AutoGuessLevel.Aggressive : OcrFixEngine.AutoGuessLevel.None;
 
         private void importNewTimeCodesToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -8792,11 +8786,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
             {
                 string fileName = openFileDialog1.FileName;
-                if (!File.Exists(fileName))
-                    return;
-
-                var fi = new FileInfo(fileName);
-                if (fi.Length > 1024 * 1024 * 10) // max 10 mb
+                if (new FileInfo(fileName).Length > 1024 * 1024 * 10) // max 10 mb
                 {
                     if (MessageBox.Show(string.Format(Configuration.Settings.Language.Main.FileXIsLargerThan10MB + Environment.NewLine +
                                                       Environment.NewLine +
@@ -8812,9 +8802,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     return;
 
                 int index = 0;
-                int newSubCount = sub.Paragraphs.Count;
-                int currentSubCount = _subtitle.Paragraphs.Count;
-                while (index < newSubCount && index < currentSubCount)
+                int minCount = Math.Min(sub.Paragraphs.Count, _subtitle.Paragraphs.Count);
+                while (index < minCount)
                 {
                     Paragraph newP = sub.Paragraphs[index];
                     Paragraph currentP = _subtitle.Paragraphs[index];
