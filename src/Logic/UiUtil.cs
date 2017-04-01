@@ -28,11 +28,11 @@ namespace Nikse.SubtitleEdit.Logic
             if (info.Success)
                 return info;
 
-            info = TryReadVideoInfoViaDirectShow(fileName);
+            info = Utilities.TryReadVideoInfoViaMp4(fileName);
             if (info.Success)
                 return info;
 
-            info = Utilities.TryReadVideoInfoViaMp4(fileName);
+            info = TryReadVideoInfoViaDirectShow(fileName);
             if (info.Success)
                 return info;
 
