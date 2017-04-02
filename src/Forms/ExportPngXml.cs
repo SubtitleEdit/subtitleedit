@@ -746,6 +746,19 @@ namespace Nikse.SubtitleEdit.Forms
                         s = s.Replace("<timebase>25</timebase>", "<timebase>30</timebase>");
                         s = s.Replace("<ntsc>FALSE</ntsc>", "<ntsc>TRUE</ntsc>");
                     }
+                    else if (comboBoxFrameRate.Text == "23.976")
+                    {
+                        s = s.Replace("<displayformat>NDF</displayformat>", "<displayformat>DF</displayformat>"); //Non Drop Frame or Drop Frame
+                        s = s.Replace("<timebase>25</timebase>", "<timebase>24</timebase>");
+                        s = s.Replace("<ntsc>FALSE</ntsc>", "<ntsc>TRUE</ntsc>");
+                    }
+                    else if (comboBoxFrameRate.Text == "59.94")
+                    {
+                        s = s.Replace("<displayformat>NDF</displayformat>", "<displayformat>DF</displayformat>"); //Non Drop Frame or Drop Frame
+                        s = s.Replace("<timebase>25</timebase>", "<timebase>60</timebase>");
+                        s = s.Replace("<ntsc>FALSE</ntsc>", "<ntsc>TRUE</ntsc>");
+                    }
+                    
                     else
                     {
                         s = s.Replace("<timebase>25</timebase>", "<timebase>" + comboBoxFrameRate.Text + "</timebase>");
@@ -1367,8 +1380,16 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
                         if (Math.Abs(param.FramesPerSeconds - 29.97) < 0.01)
                         {
-                            param.FramesPerSeconds = 30 / 1.001;
+                            param.FramesPerSeconds = 30.0 / 1.0001;
                         }
+                        else if (Math.Abs(param.FramesPerSeconds - 23.976) < 0.01)
+                        {
+                            param.FramesPerSeconds = 24.0 / 1.0001;
+                        }
+                        else if (Math.Abs(param.FramesPerSeconds - 59.94) < 0.01)
+                        {
+                            param.FramesPerSeconds = 60.0 / 1.0001;
+                        }                        
 
                         int duration = (int)Math.Round(param.P.Duration.TotalSeconds * param.FramesPerSeconds);
                         int start = (int)Math.Round(param.P.StartTime.TotalSeconds * param.FramesPerSeconds);
