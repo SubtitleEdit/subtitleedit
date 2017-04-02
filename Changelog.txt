@@ -29,9 +29,10 @@
    * Fixed possible crash in "Batch convert" - thx FreezinG117
    * Fixed issue with the German open quotation mark - thx Ninelpienel
    * Fixed bug in "Reverse RTL start/end" - thx darnn
-   * Fixed "FCP + image" export in frame rate 29.97 - thx chris
+   * Fixed "FCP + image" export for drop frame rates - thx chris
    * Fixed finding Tesseract traineddata files on Linux - thx mooop12
    * Fixed loading of "mks" files from cmd line - thx Charles
+   * Fixed auto-backup for "EBU STL" format - thx Mirka
 
 
 3.5.2 (3rd March 2017)
