@@ -6,8 +6,9 @@
    * New Netflix quality checker - thx askolesov/pavel-belenko
 * IMPROVED:
    * Updated Chinese translation - thx Leon
-   * Updated French Translation - thx JM GBT
+   * Updated French translation - thx JM GBT
    * Updated Rusian translation - thx Elheym
+   * Updated Finnish translation - thx 
    * Import plain text now also supports input as HTML
    * Added "Total words" to statistics - thx Barbara
    * Added more Tesseract dictionaries - thx lucybook/Elheym
@@ -28,7 +29,8 @@
    * Fixed possible crash in "Batch convert" - thx FreezinG117
    * Fixed issue with the German open quotation mark - thx Ninelpienel
    * Fixed bug in "Reverse RTL start/end" - thx darnn
-   * Fixed "FCP + image" export in frame rate 29.97 - thx chris   
+   * Fixed "FCP + image" export in frame rate 29.97 - thx chris
+   * Fixed finding Tesseract traineddata files on Linux - thx mooop12
 
 
 3.5.2 (3rd March 2017)

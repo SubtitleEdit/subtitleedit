@@ -214,18 +214,18 @@ fa.types_default=نصب پیشفرض
 ; Finnish
 fi.comp_translations=Käännökset
 fi.msg_AskToDownNET=Subtitle Edit tarvitsee .NET Framework 4.0. Lataa ja asenna .NET Framework ja suorita asennusohjelma uudelleen.%n%nHaluatko ladata .NET Framework 4.0 nyt?
-fi.msg_DeleteSettings=Haluatko myös poistaa Subtitle Edit'n asetukset ja mukautetut sanakirjoihin tehdyt muutokset?%n%nJos aiot uudelleenasentaa Subtitle Edit'n sinun ei tarvitse poistaa niitä.
+fi.msg_DeleteSettings=Haluatko myös poistaa Subtitle Edit:n asetukset ja mukautetut sanakirjoihin tehdyt muutokset?%n%nJos aiot uudelleenasentaa Subtitle Edit'n sinun ei tarvitse poistaa niitä.
 fi.msg_OptimizingPerformance=Optimoidaan suorituskykyä...
-fi.run_VisitWebsite=Vieraile Subtitle Edit'n verkkosivuilla
-fi.sm_com_Changelog=Subtitle Edit'n muutosloki
+fi.run_VisitWebsite=Vieraile Subtitle Edit:n verkkosivuilla
+fi.sm_com_Changelog=Subtitle Edit:n muutosloki
 fi.tsk_AllUsers=Kaikille käyttäjille
 fi.tsk_CurrentUser=Vain nykyiselle käyttäjälle
 fi.tsk_Other=Muuta:
 fi.tsk_ResetDictionaries=Tyhjennä sanakirjat ja poista kaikki mukautetut nimet
 fi.tsk_ResetSettings=Palauta Subtitle Edit'n asetukset
-fi.tsk_SetFileTypes=Associate SubRip Text (.srt) files with Subtitle Edit
+fi.tsk_SetFileTypes=Liitä SubRip Text (.srt) - tiedostot Subtitle Edit:iin
 fi.types_custom=Mukautettu asennus
-fi.types_default=Oletus asennus
+fi.types_default=Oletusasennus
 
 
 ; French
