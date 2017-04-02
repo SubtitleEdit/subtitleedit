@@ -9354,9 +9354,13 @@ namespace Nikse.SubtitleEdit.Forms
                                 if (subtitleChooser.ShowDialog(this) == DialogResult.OK)
                                 {
                                     if (LoadMatroskaSubtitle(subtitleList[subtitleChooser.SelectedIndex], matroska, false) &&
-                                        Path.GetExtension(matroska.Path).Equals(".mkv", StringComparison.OrdinalIgnoreCase))
+                                        (Path.GetExtension(matroska.Path).Equals(".mkv", StringComparison.OrdinalIgnoreCase) ||
+                                         Path.GetExtension(matroska.Path).Equals(".mks", StringComparison.OrdinalIgnoreCase)))
                                     {
-                                        OpenVideo(matroska.Path);
+                                        if (!Configuration.Settings.General.DisableVideoAutoLoading)
+                                        {
+                                            OpenVideo(matroska.Path);
+                                        }
                                     }
                                     else
                                     {
@@ -9368,9 +9372,13 @@ namespace Nikse.SubtitleEdit.Forms
                         else
                         {
                             if (LoadMatroskaSubtitle(subtitleList[0], matroska, false) &&
-                                Path.GetExtension(matroska.Path).Equals(".mkv", StringComparison.OrdinalIgnoreCase))
+                                (Path.GetExtension(matroska.Path).Equals(".mkv", StringComparison.OrdinalIgnoreCase) ||
+                                 Path.GetExtension(matroska.Path).Equals(".mks", StringComparison.OrdinalIgnoreCase)))
                             {
-                                OpenVideo(matroska.Path);
+                                if (!Configuration.Settings.General.DisableVideoAutoLoading)
+                                {
+                                    OpenVideo(matroska.Path);
+                                }
                             }
                             else
                             {
@@ -10546,7 +10554,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     if (subtitleChooser.ShowDialog(this) == DialogResult.OK)
                                     {
                                         if (LoadMatroskaSubtitle(subtitleList[subtitleChooser.SelectedIndex], matroska, false) &&
-                                            ext.Equals(".mkv", StringComparison.Ordinal))
+                                            (ext.Equals(".mkv", StringComparison.Ordinal)) || ext.Equals(".mks", StringComparison.Ordinal))
                                         {
                                             OpenVideo(fileName);
                                         }
@@ -10556,7 +10564,7 @@ namespace Nikse.SubtitleEdit.Forms
                             else
                             {
                                 if (LoadMatroskaSubtitle(subtitleList[0], matroska, false) &&
-                                    ext.Equals(".mkv", StringComparison.Ordinal))
+                                    (ext.Equals(".mkv", StringComparison.Ordinal) || ext.Equals(".mks", StringComparison.Ordinal)))
                                 {
                                     OpenVideo(fileName);
                                 }
