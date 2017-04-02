@@ -5039,7 +5039,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         public void ShowStatus(string message)
         {
-            labelStatus.Text = message;
+            labelStatus.Text = message.Replace("&", "&&");
             statusStrip1.Refresh();
             if (!string.IsNullOrEmpty(message))
             {
