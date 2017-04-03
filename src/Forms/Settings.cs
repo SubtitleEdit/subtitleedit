@@ -1421,13 +1421,11 @@ namespace Nikse.SubtitleEdit.Forms
             var cb = comboBoxWordListLanguage.Items[comboBoxWordListLanguage.SelectedIndex] as ComboBoxLanguage;
             if (cb == null)
                 return;
-
-            if (reloadListBox)
-                listBoxOcrFixList.Items.Clear();
             _ocrFixReplaceList = OcrFixReplaceList.FromLanguageId(cb.CultureInfo.ThreeLetterISOLanguageName);
             if (reloadListBox)
             {
                 listBoxOcrFixList.BeginUpdate();
+                listBoxOcrFixList.Items.Clear();
                 foreach (var pair in _ocrFixReplaceList.WordReplaceList)
                 {
                     listBoxOcrFixList.Items.Add(pair.Key + " --> " + pair.Value);
