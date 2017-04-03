@@ -3,7 +3,7 @@ Contains names that should not be translated.
 This file is case sensitive.
 This file is generated/updated by Multi Translator
 -->
-<ignore_list>
+<names>
   <name>1A</name>
   <name>2A</name>
   <name>3D</name>
@@ -5589,4 +5589,4 @@ This file is generated/updated by Multi Translator
   <name>www.filmfix.se</name>
   <name>zozlow</name>
   <name>Østrig</name>
-</ignore_list>
+</names>

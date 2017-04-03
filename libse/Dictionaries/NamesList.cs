@@ -10,6 +10,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
         private readonly string _dictionaryFolder;
         private readonly HashSet<string> _namesList;
         private readonly HashSet<string> _namesMultiList;
+        private readonly HashSet<string> _blackList;
         private readonly string _languageName;
 
         public NamesList(string dictionaryFolder, string languageName, bool useOnlineNamesEtc, string namesEtcUrl)
@@ -19,32 +20,39 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
 
             _namesList = new HashSet<string>();
             _namesMultiList = new HashSet<string>();
+            _blackList = new HashSet<string>();
+
+            // Should be called 1st in order to init blacklist.
+            LoadNamesList(GetLocalNamesFileName()); // e.g: en_names.xml (culture insensitive)
 
             if (useOnlineNamesEtc && !string.IsNullOrEmpty(namesEtcUrl))
             {
                 try
                 {
-                    var xml = Utilities.DownloadString(Configuration.Settings.WordLists.NamesEtcUrl);
-                    var namesDoc = new XmlDocument();
-                    namesDoc.LoadXml(xml);
-                    LoadNames(_namesList, _namesMultiList, namesDoc);
+                    // load name from https://raw.githubusercontent.com/SubtitleEdit/subtitleedit/master/Dictionaries/names.xml
+                    var xml = Utilities.DownloadString(Configuration.Settings.WordLists.NamesUrl);
+                    var nameListXml = new XmlDocument();
+                    nameListXml.LoadXml(xml);
+                    // name present in blacklist won't be loaded!
+                    LoadNamesList(nameListXml);
                 }
+#if DEBUG
                 catch (Exception exception)
                 {
-                    LoadNamesList(Path.Combine(_dictionaryFolder, "names_etc.xml"), _namesList, _namesMultiList);
                     System.Diagnostics.Debug.WriteLine(exception.Message);
                 }
+#else
+                catch
+                {
+                    // ignore
+                }
+#endif
             }
             else
             {
-                LoadNamesList(Path.Combine(_dictionaryFolder, "names_etc.xml"), _namesList, _namesMultiList);
+                // names present in blacklist won't be loaded!
+                LoadNamesList(Path.Combine(_dictionaryFolder, "names.xml"));
             }
-
-            LoadNamesList(GetLocalNamesFileName(), _namesList, _namesMultiList);
-
-            var userFile = GetLocalNamesUserFileName();
-            LoadNamesList(userFile, _namesList, _namesMultiList);
-            UnloadRemovedNames(userFile);
         }
 
         public List<string> GetAllNames()
@@ -65,78 +73,78 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             return _namesMultiList;
         }
 
-        private void UnloadRemovedNames(string fileName)
+        private void InitBlackList(XmlDocument namesXml)
         {
-            if (string.IsNullOrEmpty(fileName) || !File.Exists(fileName))
-                return;
-
-            var namesDoc = new XmlDocument();
-            namesDoc.Load(fileName);
-            if (namesDoc.DocumentElement == null)
-                return;
-
-            foreach (XmlNode node in namesDoc.DocumentElement.SelectNodes("removed_name"))
+            if (namesXml == null || namesXml.DocumentElement == null)
             {
-                string s = node.InnerText.Trim();
-                if (s.Contains(' '))
+                return;
+            }
+            XmlNode xnode = namesXml.DocumentElement.SelectSingleNode("blacklist");
+            // No blacklist element present.
+            if (xnode == null)
+            {
+                return;
+            }
+            foreach (XmlNode node in xnode.SelectNodes("name"))
+            {
+                string name = node.InnerText.Trim();
+                if (name.Length > 0)
                 {
-                    if (_namesMultiList.Contains(s))
-                        _namesMultiList.Remove(s);
-                }
-                else if (_namesList.Contains(s))
-                {
-                    _namesList.Remove(s);
+                    _blackList.Add(name);
                 }
             }
         }
 
+        /// <summary>
+        /// Returns two letters ISO language name (Neutral culture).
+        /// </summary>
+        /// <returns></returns>
         private string GetLocalNamesFileName()
         {
-            if (_languageName.Length == 2)
+            // Converts e.g en_US => en (Neutral culture).
+            string twoLetterISOLanguageName = _languageName;
+            if (_languageName.Length > 2)
             {
-                string[] files = Directory.GetFiles(_dictionaryFolder, _languageName + "_??_names_etc.xml");
-                if (files.Length > 0)
-                    return files[0];
+                twoLetterISOLanguageName = _languageName.Substring(0, 2);
             }
-            return Path.Combine(_dictionaryFolder, _languageName + "_names_etc.xml");
+            return Path.Combine(_dictionaryFolder, twoLetterISOLanguageName + "_names.xml");
         }
 
-        private string GetLocalNamesUserFileName()
+        private void LoadNamesList(string fileName)
         {
-            if (_languageName.Length == 2)
+            if (!File.Exists(fileName))
             {
-                string[] files = Directory.GetFiles(_dictionaryFolder, _languageName + "_??_names_etc_user.xml");
-                if (files.Length > 0)
-                    return files[0];
+                return;
             }
-            return Path.Combine(_dictionaryFolder, _languageName + "_names_etc_user.xml");
-        }
-
-        private static void LoadNamesList(string fileName, HashSet<string> namesList, HashSet<string> namesMultiList)
-        {
-            if (string.IsNullOrEmpty(fileName) || !File.Exists(fileName))
-                return;
-
-            var namesDoc = new XmlDocument();
-            namesDoc.Load(fileName);
-            if (namesDoc.DocumentElement == null)
-                return;
-
-            LoadNames(namesList, namesMultiList, namesDoc);
-        }
-
-        private static void LoadNames(HashSet<string> namesList, HashSet<string> namesMultiList, XmlDocument namesDoc)
-        {
-            foreach (XmlNode node in namesDoc.DocumentElement.SelectNodes("name"))
+            var nameListXml = new XmlDocument();
+            nameListXml.Load(fileName);
+            if (nameListXml.DocumentElement == null)
             {
-                string s = node.InnerText.Trim();
-                if (s.Contains(' ') && !namesMultiList.Contains(s))
+                return;
+            }
+            LoadNamesList(nameListXml);
+        }
+
+        private void LoadNamesList(XmlDocument nameListXml)
+        {
+            // Initialize blacklist.
+            InitBlackList(nameListXml);
+
+            foreach (XmlNode node in nameListXml.DocumentElement.SelectNodes("name"))
+            {
+                string name = node.InnerText.Trim();
+                // skip names in blacklist
+                if (_blackList.Contains(name))
                 {
-                    namesMultiList.Add(s);
+                    continue;
                 }
-                else if (!namesList.Contains(s))
+                if (name.Contains(' ') && !_namesMultiList.Contains(name))
                 {
-                    namesList.Add(s);
+                    _namesMultiList.Add(name);
+                }
+                else if (!_namesList.Contains(name))
+                {
+                    _namesList.Add(name);
                 }
             }
         }
@@ -146,48 +154,48 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             name = name.Trim();
             if (name.Length > 1 && _namesList.Contains(name) || _namesMultiList.Contains(name))
             {
-                if (_namesList.Contains(name))
-                    _namesList.Remove(name);
-                if (_namesMultiList.Contains(name))
-                    _namesMultiList.Remove(name);
+                // Try removing name from both lists
+                _namesList.Remove(name);
+                _namesMultiList.Remove(name);
 
-                var userList = new HashSet<string>();
-                var fileName = GetLocalNamesUserFileName();
-                LoadNamesList(fileName, userList, userList);
-
-                var namesDoc = new XmlDocument();
+                var fileName = GetLocalNamesFileName();
+                var nameListXml = new XmlDocument();
                 if (File.Exists(fileName))
                 {
-                    namesDoc.Load(fileName);
+                    nameListXml.Load(fileName);
                 }
                 else
                 {
-                    namesDoc.LoadXml("<ignore_words />");
+                    nameListXml.LoadXml("<names><blacklist></blacklist></names>");
                 }
 
-                if (userList.Contains(name))
+                // Add removed name to blacklist
+                XmlNode xnode = nameListXml.CreateElement("name");
+                xnode.InnerText = name;
+                nameListXml.DocumentElement.SelectSingleNode("blacklist").AppendChild(xnode);
+                XmlNode nodeToRemove = null;
+
+                // Remove remove-name from name-list
+                foreach (XmlNode node in nameListXml.DocumentElement.SelectNodes("name"))
                 {
-                    userList.Remove(name);
-                    XmlNode nodeToRemove = null;
-                    foreach (XmlNode node in namesDoc.DocumentElement.SelectNodes("name"))
+                    if (node.InnerText.Equals(name, StringComparison.Ordinal))
                     {
-                        if (node.InnerText == name)
-                        {
-                            nodeToRemove = node;
-                            break;
-                        }
+                        nodeToRemove = node;
+                        break;
                     }
-                    if (nodeToRemove != null)
-                        namesDoc.DocumentElement.RemoveChild(nodeToRemove);
                 }
-                else
+                if (nodeToRemove != null)
                 {
-                    XmlNode node = namesDoc.CreateElement("removed_name");
-                    node.InnerText = name;
-                    namesDoc.DocumentElement.AppendChild(node);
+                    nameListXml.DocumentElement.RemoveChild(nodeToRemove);
                 }
-                namesDoc.Save(fileName);
-                return true;
+                try
+                {
+                    nameListXml.Save(fileName);
+                    return true;
+                }
+                catch
+                {
+                }
             }
             return false;
         }
@@ -195,7 +203,11 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
         public bool Add(string name)
         {
             name = name.RemoveControlCharacters().Trim();
-            if (name.Length > 1 && name.ContainsLetter())
+            if (name.Length == 0 || _blackList.Contains(name))
+            {
+                return false;
+            }
+            if (name.ContainsLetter())
             {
                 if (name.Contains(' '))
                 {
@@ -207,20 +219,25 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                     _namesList.Add(name);
                 }
 
-                var fileName = GetLocalNamesUserFileName();
-                var namesEtcDoc = new XmlDocument();
+                // <neutral>_names.xml e.g: en_names.xml
+                var fileName = GetLocalNamesFileName();
+                var nameListXml = new XmlDocument();
                 if (File.Exists(fileName))
-                    namesEtcDoc.Load(fileName);
+                {
+                    nameListXml.Load(fileName);
+                }
                 else
-                    namesEtcDoc.LoadXml("<ignore_words />");
+                {
+                    nameListXml.LoadXml("<names><blacklist></blacklist></names>");
+                }
 
-                XmlNode de = namesEtcDoc.DocumentElement;
+                XmlNode de = nameListXml.DocumentElement;
                 if (de != null)
                 {
-                    XmlNode node = namesEtcDoc.CreateElement("name");
+                    XmlNode node = nameListXml.CreateElement("name");
                     node.InnerText = name;
                     de.AppendChild(node);
-                    namesEtcDoc.Save(fileName);
+                    nameListXml.Save(fileName);
                 }
                 return true;
             }

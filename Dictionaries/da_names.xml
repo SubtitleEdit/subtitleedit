@@ -86,6 +86,6 @@
   <name>Wylie</name>
   <name>Yardley</name>
   <blacklist>
-    <names>Rabat</names>
+    <name>Rabat</name>
   </blacklist>
 </names>

@@ -26,7 +26,7 @@ namespace Nikse.SubtitleEdit.Forms
         private int _ssaFontColor;
         private string _listBoxSearchString = string.Empty;
         private DateTime _listBoxSearchStringLastUsed = DateTime.Now;
-        private List<string> _wordListNamesEtc = new List<string>();
+        private List<string> _wordListNames = new List<string>();
         private List<string> _userWordList = new List<string>();
         private OcrFixReplaceList _ocrFixReplaceList;
         private readonly string _oldVlcLocation;
@@ -195,8 +195,8 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             var wordListSettings = Configuration.Settings.WordLists;
-            checkBoxNamesEtcOnline.Checked = wordListSettings.UseOnlineNamesEtc;
-            textBoxNamesEtcOnline.Text = wordListSettings.NamesEtcUrl;
+            checkBoxNamesEtcOnline.Checked = wordListSettings.UseOnlineNames;
+            textBoxNamesEtcOnline.Text = wordListSettings.NamesUrl;
 
             comboBoxFontName.Items.Clear();
             foreach (var x in FontFamily.Families)
@@ -647,7 +647,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
 
-            ListWordListLanguages();
+            InitComboxWordListLanguages();
 
             checkBoxWaveformShowGrid.Checked = Configuration.Settings.VideoControls.WaveformDrawGrid;
             checkBoxWaveformShowCps.Checked = Configuration.Settings.VideoControls.WaveformDrawCps;
@@ -1002,58 +1002,52 @@ namespace Nikse.SubtitleEdit.Forms
             pictureBoxHelp.Image = (Image)help.Clone();
         }
 
-        private void ListWordListLanguages()
+        private void InitComboxWordListLanguages()
         {
-            //Examples: da_DK_user.xml, eng_OCRFixReplaceList.xml, en_US_names_etc.xml
-
+            //Examples: da_DK_user.xml, eng_OCRFixReplaceList.xml, en_names.xml
             string dir = Utilities.DictionaryFolder;
-
             if (Directory.Exists(dir))
             {
                 var cultures = new List<CultureInfo>();
+                // Specific culture e.g: en-US, en-GB...
                 foreach (var culture in CultureInfo.GetCultures(CultureTypes.SpecificCultures))
                 {
-                    string name = culture.Name;
-
-                    if (!string.IsNullOrEmpty(name))
+                    if (File.Exists(Path.Combine(dir, culture.Name.Replace('-', '_') + "_user.xml")))
                     {
-                        if (Directory.GetFiles(dir, name.Replace('-', '_') + "_user.xml").Length == 1)
-                        {
-                            if (!cultures.Contains(culture))
-                                cultures.Add(culture);
-                        }
-
-                        if (Directory.GetFiles(dir, name.Replace('-', '_') + "_names_etc.xml").Length == 1)
-                        {
-                            if (!cultures.Contains(culture))
-                                cultures.Add(culture);
-                        }
+                        if (!cultures.Contains(culture))
+                            cultures.Add(culture);
                     }
                 }
-
+                // Neutral culture e.g: "en" for all (en-US, en-GB, en-JM...)
                 foreach (var culture in CultureInfo.GetCultures(CultureTypes.NeutralCultures))
                 {
-                    if (Directory.GetFiles(dir, culture.ThreeLetterISOLanguageName + "_OCRFixReplaceList.xml").Length == 1 ||
-                        Directory.GetFiles(dir, culture.ThreeLetterISOLanguageName + "_OCRFixReplaceList_User.xml").Length == 1)
+                    string ocrFixGeneralFile = Path.Combine(dir, culture.ThreeLetterISOLanguageName + "_OCRFixReplaceList.xml");
+                    string ocrFixUserFile = Path.Combine(dir, culture.ThreeLetterISOLanguageName + "_OCRFixReplaceList_User.xml");
+                    string namesFile = Path.Combine(dir, culture.TwoLetterISOLanguageName + "_names.xml");
+                    if (File.Exists(ocrFixGeneralFile) || File.Exists(ocrFixUserFile) || File.Exists(namesFile))
                     {
+                        bool alreadyInList = false;
                         foreach (var ci in cultures)
                         {
-                            if (ci.ThreeLetterISOLanguageName == culture.ThreeLetterISOLanguageName)
+                            // If culture is already added to the list, it doesn't matter if it's "culture specific" do not re-add.
+                            if (ci.ThreeLetterISOLanguageName.Equals(culture.ThreeLetterISOLanguageName, StringComparison.Ordinal))
                             {
-                                cultures.Add(culture);
+                                alreadyInList = true;
                                 break;
                             }
                         }
+                        if (!alreadyInList)
+                        {
+                            cultures.Add(culture);
+                        }
                     }
                 }
-
-                comboBoxWordListLanguage.Items.Clear();
-                if (Configuration.Settings.WordLists.LastLanguage == null)
-                    Configuration.Settings.WordLists.LastLanguage = "en-US";
+                // English is the default selected language.
+                Configuration.Settings.WordLists.LastLanguage = Configuration.Settings.WordLists.LastLanguage ?? "en-US";
                 foreach (var ci in cultures)
                 {
                     comboBoxWordListLanguage.Items.Add(new ComboBoxLanguage { CultureInfo = ci });
-                    if (ci.Name == Configuration.Settings.WordLists.LastLanguage)
+                    if (ci.Name.Equals(Configuration.Settings.WordLists.LastLanguage, StringComparison.Ordinal))
                         comboBoxWordListLanguage.SelectedIndex = comboBoxWordListLanguage.Items.Count - 1;
                 }
                 if (comboBoxWordListLanguage.Items.Count > 0 && comboBoxWordListLanguage.SelectedIndex == -1)
@@ -1206,8 +1200,8 @@ namespace Nikse.SubtitleEdit.Forms
             toolsSettings.MicrosoftBingClientSecret = textBoxBingClientSecret.Text.Trim();
 
             var wordListSettings = Configuration.Settings.WordLists;
-            wordListSettings.UseOnlineNamesEtc = checkBoxNamesEtcOnline.Checked;
-            wordListSettings.NamesEtcUrl = textBoxNamesEtcOnline.Text;
+            wordListSettings.UseOnlineNames = checkBoxNamesEtcOnline.Checked;
+            wordListSettings.NamesUrl = textBoxNamesEtcOnline.Text;
             if (comboBoxWordListLanguage.Items.Count > 0 && comboBoxWordListLanguage.SelectedIndex >= 0)
             {
                 var ci = comboBoxWordListLanguage.Items[comboBoxWordListLanguage.SelectedIndex] as ComboBoxLanguage;
@@ -1394,6 +1388,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonRemoveOcrFix.Enabled = false;
             buttonAddOcrFix.Enabled = false;
 
+            // TODO: Rename listBoxNamesEtc => listBoxNames
             listBoxNamesEtc.Items.Clear();
             listBoxUserWordLists.Items.Clear();
             listBoxOcrFixList.Items.Clear();
@@ -1412,7 +1407,7 @@ namespace Nikse.SubtitleEdit.Forms
                 // OCR fix words
                 LoadOcrFixList(true);
 
-                LoadNamesEtc(language, true);
+                LoadNames(language, true);
             }
         }
 
@@ -1455,15 +1450,15 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void LoadNamesEtc(string language, bool reloadListBox)
+        private void LoadNames(string language, bool reloadListBox)
         {
             var task = Task.Factory.StartNew(() =>
             {
                 // names etc
-                var namesList = new NamesList(Configuration.DictionariesDirectory, language, Configuration.Settings.WordLists.UseOnlineNamesEtc, Configuration.Settings.WordLists.NamesEtcUrl);
-                _wordListNamesEtc = namesList.GetAllNames();
-                _wordListNamesEtc.Sort();
-                return _wordListNamesEtc;
+                var namesList = new NamesList(Configuration.DictionariesDirectory, language, Configuration.Settings.WordLists.UseOnlineNames, Configuration.Settings.WordLists.NamesUrl);
+                _wordListNames = namesList.GetAllNames();
+                _wordListNames.Sort();
+                return _wordListNames;
             });
 
             if (reloadListBox)
@@ -1501,11 +1496,11 @@ namespace Nikse.SubtitleEdit.Forms
 
             string language = GetCurrentWordListLanguage();
             string text = textBoxNameEtc.Text.RemoveControlCharacters().Trim();
-            if (!string.IsNullOrEmpty(language) && text.Length > 1 && !_wordListNamesEtc.Contains(text))
+            if (!string.IsNullOrEmpty(language) && text.Length > 1 && !_wordListNames.Contains(text))
             {
-                var namesList = new NamesList(Configuration.DictionariesDirectory, language, Configuration.Settings.WordLists.UseOnlineNamesEtc, Configuration.Settings.WordLists.NamesEtcUrl);
+                var namesList = new NamesList(Configuration.DictionariesDirectory, language, Configuration.Settings.WordLists.UseOnlineNames, Configuration.Settings.WordLists.NamesUrl);
                 namesList.Add(text);
-                LoadNamesEtc(language, true);
+                LoadNames(language, true);
                 labelStatus.Text = string.Format(Configuration.Settings.Language.Settings.WordAddedX, text);
                 textBoxNameEtc.Text = string.Empty;
                 textBoxNameEtc.Focus();
@@ -1552,7 +1547,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (result == DialogResult.Yes)
                 {
                     int removeCount = 0;
-                    var namesList = new NamesList(Configuration.DictionariesDirectory, language, Configuration.Settings.WordLists.UseOnlineNamesEtc, Configuration.Settings.WordLists.NamesEtcUrl);
+                    var namesList = new NamesList(Configuration.DictionariesDirectory, language, Configuration.Settings.WordLists.UseOnlineNames, Configuration.Settings.WordLists.NamesUrl);
                     for (int idx = listBoxNamesEtc.SelectedIndices.Count - 1; idx >= 0; idx--)
                     {
                         index = listBoxNamesEtc.SelectedIndices[idx];
@@ -1564,7 +1559,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     if (removeCount > 0)
                     {
-                        LoadNamesEtc(language, true); // reload
+                        LoadNames(language, true); // reload
 
                         if (index < listBoxNamesEtc.Items.Count)
                             listBoxNamesEtc.SelectedIndex = index;
@@ -1576,7 +1571,7 @@ namespace Nikse.SubtitleEdit.Forms
                         return;
                     }
 
-                    if (removeCount < itemsToRemoveCount && Configuration.Settings.WordLists.UseOnlineNamesEtc && !string.IsNullOrEmpty(Configuration.Settings.WordLists.NamesEtcUrl))
+                    if (removeCount < itemsToRemoveCount && Configuration.Settings.WordLists.UseOnlineNames && !string.IsNullOrEmpty(Configuration.Settings.WordLists.NamesUrl))
                     {
                         MessageBox.Show(Configuration.Settings.Language.Settings.CannotUpdateNamesEtcOnline);
                         return;

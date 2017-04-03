@@ -59,7 +59,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         internal void FixCasing(Subtitle subtitle, string language)
         {
-            var namesList = new NamesList(Configuration.DictionariesDirectory, language, Configuration.Settings.WordLists.UseOnlineNamesEtc, Configuration.Settings.WordLists.NamesEtcUrl);
+            var namesList = new NamesList(Configuration.DictionariesDirectory, language, Configuration.Settings.WordLists.UseOnlineNames, Configuration.Settings.WordLists.NamesUrl);
             var namesEtc = namesList.GetAllNames();
 
             // Longer names must be first
@@ -97,7 +97,7 @@ namespace Nikse.SubtitleEdit.Forms
             return text;
         }
 
-        private string FixCasing(string text, string lastLine, List<string> namesEtc)
+        private string FixCasing(string text, string lastLine, List<string> nameList)
         {
             string original = text;
             if (radioButtonNormal.Checked)
@@ -111,7 +111,7 @@ namespace Nikse.SubtitleEdit.Forms
                     text = text.ToLower().Trim();
                     text = text.FixExtraSpaces();
                     var st = new StrippableText(text);
-                    st.FixCasing(namesEtc, false, true, true, lastLine); // fix all casing but names (that's a seperate option)
+                    st.FixCasing(nameList, false, true, true, lastLine); // fix all casing but names (that's a seperate option)
                     text = st.MergedString;
                 }
             }
