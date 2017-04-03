@@ -310,8 +310,9 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             lv.Items.Add(item);
         }
 
-        private void SetSsaStyle(string styleName, string propertyName, string propertyValue)
+        private bool SetSsaStyle(string styleName, string propertyName, string propertyValue, bool trimStyles = true)
         {
+            bool found = false;
             int propertyIndex = -1;
             int nameIndex = -1;
             var sb = new StringBuilder();
@@ -339,10 +340,12 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                     if (line.Length > 10)
                     {
                         bool correctLine = false;
-                        var format = line.Substring(6).Split(',');
+                        var format = line.Substring(6).Trim().Split(',');
                         for (int i = 0; i < format.Length; i++)
                         {
-                            string f = format[i].Trim();
+                            string f = format[i];
+                            if (trimStyles)
+                                f = f.Trim();
                             if (i == nameIndex)
                                 correctLine = f.Equals(styleName, StringComparison.OrdinalIgnoreCase);
                         }
@@ -354,9 +357,14 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                             {
                                 string f = format[i].Trim();
                                 if (i == propertyIndex)
+                                {
                                     sb.Append(propertyValue);
+                                    found = true;
+                                }
                                 else
+                                {
                                     sb.Append(f);
+                                }
                                 if (i < format.Length - 1)
                                     sb.Append(',');
                             }
@@ -378,6 +386,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 }
             }
             _header = sb.ToString().Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
+            return found;
         }
 
         private SsaStyle GetSsaStyle(string styleName)
@@ -789,7 +798,10 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                     {
                         textBoxStyleName.BackColor = listViewStyles.BackColor;
                         listViewStyles.SelectedItems[0].Text = textBoxStyleName.Text;
-                        SetSsaStyle(_oldSsaName, "name", textBoxStyleName.Text);
+                        bool found = SetSsaStyle(_oldSsaName, "name", textBoxStyleName.Text);
+                        if (!found)
+                            SetSsaStyle(_oldSsaName, "name", textBoxStyleName.Text, false);
+
                         _oldSsaName = textBoxStyleName.Text;
                     }
                     else
