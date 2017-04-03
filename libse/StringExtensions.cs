@@ -90,6 +90,11 @@ namespace Nikse.SubtitleEdit.Core
             return source.Replace("\r\r\n", "\n").Replace("\r\n", "\n").Replace('\r', '\n').Replace('\u2028', '\n').Split('\n');
         }
 
+        public static int CountWords(this string source)
+        {
+            return HtmlUtil.RemoveHtmlTags(source, true).Split(new[] { ' ', '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries).Length;
+        }
+
         // http://www.codeproject.com/Articles/43726/Optimizing-string-operations-in-C
         public static int FastIndexOf(this string source, string pattern)
         {

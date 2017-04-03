@@ -179,7 +179,6 @@ https://github.com/SubtitleEdit/subtitleedit
             foreach (string word in text.Split(ExpectedChars, StringSplitOptions.RemoveEmptyEntries))
             {
                 var s = word.Trim();
-                _totalWords++;
                 if (s.Length > 1 && hashtable.ContainsKey(s))
                 {
                     hashtable[s]++;
@@ -243,7 +242,10 @@ https://github.com/SubtitleEdit/subtitleedit
             var hashtable = new Dictionary<string, int>();
 
             foreach (Paragraph p in _subtitle.Paragraphs)
+            { 
                 MostUsedWordsAdd(hashtable, p.Text);
+                _totalWords += p.Text.CountWords();
+            }
 
             var sortedTable = new SortedDictionary<string, string>();
             foreach (KeyValuePair<string, int> item in hashtable)
