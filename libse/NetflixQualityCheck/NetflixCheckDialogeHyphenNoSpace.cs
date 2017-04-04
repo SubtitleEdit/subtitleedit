@@ -15,6 +15,7 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
                 return;
             }
 
+            const string comment = "Dual Speakers: Use a hyphen without a space";
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 var arr = p.Text.SplitToLines();
@@ -49,7 +50,6 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
                     if (newText != p.Text)
                     {
                         var fixedParagraph = new Paragraph(p, false) { Text = newText };
-                        string comment = "Dual Speakers: Use a hyphen without a space";
                         controller.AddRecord(p, fixedParagraph, comment);
                     }
                 }

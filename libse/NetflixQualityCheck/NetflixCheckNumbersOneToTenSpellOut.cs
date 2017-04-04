@@ -13,6 +13,7 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
         /// </summary>
         public void Check(Subtitle subtitle, NetflixQualityController controller)
         {
+            const string comment = "From 1 to 10, numbers should be written out: one, two, three, etc";
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 string newText = p.Text;
@@ -52,7 +53,6 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
                 if (newText != p.Text)
                 {
                     var fixedParagraph = new Paragraph(p, false) { Text = newText };
-                    string comment = "From 1 to 10, numbers should be written out: one, two, three, etc";
                     controller.AddRecord(p, fixedParagraph, comment);
                 }
             }

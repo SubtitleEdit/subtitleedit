@@ -10,6 +10,7 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
         /// </summary>
         public void Check(Subtitle subtitle, NetflixQualityController controller)
         {
+            const string comment = "Use brackets [ ] to enclose speaker IDs or sound effects";
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 string newText = p.Text;
@@ -38,7 +39,6 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
                 if (newText != p.Text)
                 {
                     var fixedParagraph = new Paragraph(p, false) { Text = newText };
-                    string comment = "Use brackets [ ] to enclose speaker IDs or sound effects";
                     controller.AddRecord(p, fixedParagraph, comment);
                 }
             }

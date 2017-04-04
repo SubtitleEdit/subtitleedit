@@ -9,6 +9,8 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
         /// </summary>
         public void Check(Subtitle subtitle, NetflixQualityController controller)
         {
+            // constant
+            string comment = "Maximum " + controller.CharactersPerSecond + " characters per second";
             var oldIgnoreWhiteSpace = Configuration.Settings.General.CharactersPerSecondsIgnoreWhiteSpace;
             try
             {
@@ -22,7 +24,6 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
                         {
                             fixedParagraph.EndTime.TotalMilliseconds++;
                         }
-                        string comment = "Maximum " + controller.CharactersPerSecond  + " characters per second";
                         controller.AddRecord(p, fixedParagraph, comment, charactersPerSeconds.ToString(CultureInfo.InvariantCulture));
                     }
                 }

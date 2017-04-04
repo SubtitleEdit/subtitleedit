@@ -8,17 +8,17 @@
         /// </summary>
         public void Check(Subtitle subtitle, NetflixQualityController controller)
         {
+            const string comment = "Two lines maximum";
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                if (p.Text.SplitToLines().Length > 2)
+                if (p.NumberOfLines > 2)
                 {
                     var fixedParagraph = new Paragraph(p, false);
                     fixedParagraph.Text = Utilities.AutoBreakLine(fixedParagraph.Text, controller.SingleLineMaxLength, controller.SingleLineMaxLength - 3, controller.Language);
-                    if (fixedParagraph.Text.SplitToLines().Length > 2)
+                    if (fixedParagraph.NumberOfLines > 2)
                     {
                         fixedParagraph = null; // cannot fix text
                     }
-                    string comment = "Two lines maximum";
                     controller.AddRecord(p, fixedParagraph, comment);
                 }
             }

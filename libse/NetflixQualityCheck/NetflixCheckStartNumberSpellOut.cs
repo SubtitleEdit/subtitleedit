@@ -13,6 +13,7 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
         /// </summary>
         public void Check(Subtitle subtitle, NetflixQualityController controller)
         {
+            const string comment = "When a number begins a sentence, it should always be spelled out";
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 string newText = p.Text;
@@ -44,7 +45,6 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
                 if (newText != p.Text)
                 {
                     var fixedParagraph = new Paragraph(p, false) { Text = newText };
-                    string comment = "When a number begins a sentence, it should always be spelled out";
                     controller.AddRecord(p, fixedParagraph, comment);
                 }
             }
