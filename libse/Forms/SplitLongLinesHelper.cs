@@ -5,6 +5,8 @@ namespace Nikse.SubtitleEdit.Core.Forms
 {
     public static class SplitLongLinesHelper
     {
+        private static readonly string[] SplitCharsDialog = { ". -", "! -", "? -" };
+
         public static bool QualifiesForSplit(string text, int singleLineMaxCharacters, int totalLineMaxCharacters)
         {
             string s = HtmlUtil.RemoveHtmlTags(text.Trim(), true);
@@ -19,9 +21,9 @@ namespace Nikse.SubtitleEdit.Core.Forms
             }
 
             var tempText = Utilities.UnbreakLine(text);
-            if (Utilities.CountTagInText(tempText, '-') == 2 && (text.StartsWith('-') || text.StartsWith("<i>-")))
+            if (Utilities.CountTagInText(tempText, '-') == 2 && (text.StartsWith('-') || text.StartsWith("<i>-", StringComparison.Ordinal)))
             {
-                var idx = tempText.IndexOfAny(new[] { ". -", "! -", "? -" }, StringComparison.Ordinal);
+                var idx = tempText.IndexOfAny(SplitCharsDialog, StringComparison.Ordinal);
                 if (idx > 1)
                 {
                     idx++;
@@ -98,17 +100,12 @@ namespace Nikse.SubtitleEdit.Core.Forms
                                     {
                                         if (newParagraph1.Text.EndsWith("</i>", StringComparison.Ordinal))
                                         {
-                                            const string post = "</i>";
-                                            newParagraph1.Text = newParagraph1.Text.Remove(newParagraph1.Text.Length - post.Length);
+                                            newParagraph1.Text = newParagraph1.Text.Remove(newParagraph1.Text.Length - 4);
                                         }
-                                        //newParagraph1.Text += comboBoxLineContinuationEnd.Text.TrimEnd() + post;
-
                                         if (newParagraph2.Text.StartsWith("<i>", StringComparison.Ordinal))
                                         {
-                                            const string pre = "<i>";
-                                            newParagraph2.Text = newParagraph2.Text.Remove(0, pre.Length);
+                                            newParagraph2.Text = newParagraph2.Text.Substring(3);
                                         }
-                                        //newParagraph2.Text = pre + comboBoxLineContinuationBegin.Text + newParagraph2.Text;
                                     }
 
                                     var indexOfItalicOpen1 = newParagraph1.Text.IndexOf("<i>", StringComparison.Ordinal);
