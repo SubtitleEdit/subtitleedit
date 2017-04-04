@@ -28,11 +28,11 @@ namespace Nikse.SubtitleEdit.Logic
             if (info.Success)
                 return info;
 
-            info = TryReadVideoInfoViaDirectShow(fileName);
+            info = Utilities.TryReadVideoInfoViaMp4(fileName);
             if (info.Success)
                 return info;
 
-            info = Utilities.TryReadVideoInfoViaMp4(fileName);
+            info = TryReadVideoInfoViaDirectShow(fileName);
             if (info.Success)
                 return info;
 
@@ -42,66 +42,45 @@ namespace Nikse.SubtitleEdit.Logic
         private static VideoInfo TryReadVideoInfoViaDirectShow(string fileName)
         {
             return QuartsPlayer.GetVideoInfo(fileName);
-        }
+        }      
 
-        public static int GetSubtitleIndex(List<Paragraph> paragraphs, VideoPlayerContainer videoPlayerContainer)
-        {
-            if (videoPlayerContainer.VideoPlayer != null)
-            {
-                double positionInMilliseconds = (videoPlayerContainer.VideoPlayer.CurrentPosition * TimeCode.BaseUnit) + 5;
-                for (int i = 0; i < paragraphs.Count; i++)
-                {
-                    var p = paragraphs[i];
-                    if (p.StartTime.TotalMilliseconds <= positionInMilliseconds && p.EndTime.TotalMilliseconds > positionInMilliseconds)
-                    {
-                        bool isInfo = p == paragraphs[0] && (p.StartTime.TotalMilliseconds == 0 && p.Duration.TotalMilliseconds == 0 || p.StartTime.TotalMilliseconds == Pac.PacNullTime.TotalMilliseconds);
-                        if (!isInfo)
-                            return i;
-                    }
-                }
-                if (!string.IsNullOrEmpty(videoPlayerContainer.SubtitleText))
-                    videoPlayerContainer.SetSubtitleText(string.Empty, null);
-            }
-            return -1;
-        }
-
-        public static int ShowSubtitle(List<Paragraph> paragraphs, VideoPlayerContainer videoPlayerContainer)
+        public static int ShowSubtitle(Subtitle subtitle, VideoPlayerContainer videoPlayerContainer)
         {
             if (videoPlayerContainer.VideoPlayer != null)
             {
                 double positionInMilliseconds = (videoPlayerContainer.CurrentPosition * TimeCode.BaseUnit) + 5;
-                for (int i = 0; i < paragraphs.Count; i++)
+                for (int i = 0; i < subtitle.Paragraphs.Count; i++)
                 {
-                    var p = paragraphs[i];
+                    var p = subtitle.Paragraphs[i];
                     if (p.StartTime.TotalMilliseconds <= positionInMilliseconds &&
                         p.EndTime.TotalMilliseconds > positionInMilliseconds)
                     {
                         string text = p.Text.Replace("|", Environment.NewLine);
-                        bool isInfo = p == paragraphs[0] && (p.StartTime.TotalMilliseconds == 0 && p.Duration.TotalMilliseconds == 0 || p.StartTime.TotalMilliseconds == Pac.PacNullTime.TotalMilliseconds);
+                        bool isInfo = p == subtitle.Paragraphs[0] && (p.StartTime.TotalMilliseconds == 0 && p.Duration.TotalMilliseconds == 0 || p.StartTime.TotalMilliseconds == Pac.PacNullTime.TotalMilliseconds);
                         if (!isInfo)
                         {
                             if (videoPlayerContainer.LastParagraph != p)
-                                videoPlayerContainer.SetSubtitleText(text, p);
+                                videoPlayerContainer.SetSubtitleText(text, p, subtitle);
                             else if (videoPlayerContainer.SubtitleText != text)
-                                videoPlayerContainer.SetSubtitleText(text, p);
+                                videoPlayerContainer.SetSubtitleText(text, p, subtitle);
                             return i;
                         }
                     }
                 }
                 if (!string.IsNullOrEmpty(videoPlayerContainer.SubtitleText))
-                    videoPlayerContainer.SetSubtitleText(string.Empty, null);
+                    videoPlayerContainer.SetSubtitleText(string.Empty, null, subtitle);
             }
             return -1;
         }
 
-        public static int ShowSubtitle(List<Paragraph> paragraphs, Subtitle original, VideoPlayerContainer videoPlayerContainer)
+        public static int ShowSubtitle(Subtitle subtitle, Subtitle original, VideoPlayerContainer videoPlayerContainer)
         {
             if (videoPlayerContainer.VideoPlayer != null)
             {
                 double positionInMilliseconds = (videoPlayerContainer.VideoPlayer.CurrentPosition * TimeCode.BaseUnit) + 15;
-                for (int i = 0; i < paragraphs.Count; i++)
+                for (int i = 0; i < subtitle.Paragraphs.Count; i++)
                 {
-                    var p = paragraphs[i];
+                    var p = subtitle.Paragraphs[i];
                     if (p.StartTime.TotalMilliseconds <= positionInMilliseconds &&
                         p.EndTime.TotalMilliseconds > positionInMilliseconds)
                     {
@@ -111,20 +90,20 @@ namespace Nikse.SubtitleEdit.Logic
                         if (op != null)
                             text = text + Environment.NewLine + Environment.NewLine + op.Text.Replace("|", Environment.NewLine);
 
-                        bool isInfo = p == paragraphs[0] && p.StartTime.TotalMilliseconds == 0 && positionInMilliseconds > 3000;
+                        bool isInfo = p == subtitle.Paragraphs[0] && Math.Abs(p.StartTime.TotalMilliseconds) < 0.01 && positionInMilliseconds > 3000;
                         if (!isInfo)
                         {
                             if (videoPlayerContainer.LastParagraph != p)
-                                videoPlayerContainer.SetSubtitleText(text, p);
+                                videoPlayerContainer.SetSubtitleText(text, p, subtitle);
                             else if (videoPlayerContainer.SubtitleText != text)
-                                videoPlayerContainer.SetSubtitleText(text, p);
+                                videoPlayerContainer.SetSubtitleText(text, p, subtitle);
                             return i;
                         }
                     }
                 }
             }
             if (!string.IsNullOrEmpty(videoPlayerContainer.SubtitleText))
-                videoPlayerContainer.SetSubtitleText(string.Empty, null);
+                videoPlayerContainer.SetSubtitleText(string.Empty, null, subtitle);
             return -1;
         }
 

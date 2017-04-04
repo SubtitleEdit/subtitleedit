@@ -31,6 +31,9 @@ namespace Nikse.SubtitleEdit.Forms
         private OcrFixReplaceList _ocrFixReplaceList;
         private readonly string _oldVlcLocation;
         private readonly string _oldVlcLocationRelative;
+        private readonly bool _oldListViewShowCps;
+        private readonly bool _oldListViewShowWpm;
+
         private readonly Dictionary<ShortcutHelper, string> _newShortcuts = new Dictionary<ShortcutHelper, string>();
 
         private class ComboBoxLanguage
@@ -38,7 +41,7 @@ namespace Nikse.SubtitleEdit.Forms
             public CultureInfo CultureInfo { get; set; }
             public override string ToString()
             {
-                return CultureInfo.NativeName;
+                return CultureInfo.NativeName.CapitalizeFirstLetter();
             }
         }
 
@@ -86,6 +89,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxVisualSync.Checked = gs.ShowToolbarVisualSync;
             checkBoxSettings.Checked = gs.ShowToolbarSettings;
             checkBoxSpellCheck.Checked = gs.ShowToolbarSpellCheck;
+            checkBoxNetflixQualityCheck.Checked = gs.ShowToolbarNetflixGlyphCheck;
             checkBoxHelp.Checked = gs.ShowToolbarHelp;
 
             comboBoxFrameRate.Items.Add((23.976).ToString(CultureInfo.CurrentCulture));
@@ -114,6 +118,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxRememberWindowPosition.Checked = gs.StartRememberPositionAndSize;
             numericUpDownSubtitleLineMaximumLength.Value = gs.SubtitleLineMaximumLength;
             numericUpDownMaxCharsSec.Value = (decimal)gs.SubtitleMaximumCharactersPerSeconds;
+            numericUpDownMaxWordsMin.Value = (decimal)gs.SubtitleMaximumWordsPerMinute;
             checkBoxAutoWrapWhileTyping.Checked = gs.AutoWrapLineWhileTyping;
             textBoxShowLineBreaksAs.Text = gs.ListViewLineSeparatorString;
 
@@ -144,6 +149,8 @@ namespace Nikse.SubtitleEdit.Forms
             if (Logic.VideoPlayers.MpcHC.MpcHc.GetMpcHcFileName() == null)
                 radioButtonVideoPlayerMpcHc.Enabled = false;
             RefreshMpvSettings();
+            buttonMpvSettings.Text = Configuration.Settings.Language.SettingsMpv.DownloadMpv;
+            checkBoxMpvHandlesPreviewText.Checked = gs.MpvHandlesPreviewText;
 
             textBoxVlcPath.Text = gs.VlcLocation;
             textBoxVlcPath.Left = labelVideoPlayerVLC.Left + labelVideoPlayerVLC.Width + 5;
@@ -161,6 +168,8 @@ namespace Nikse.SubtitleEdit.Forms
             else
                 comboBoxlVideoPlayerPreviewFontSize.SelectedIndex = 3;
             checkBoxVideoPlayerPreviewFontBold.Checked = gs.VideoPlayerPreviewFontBold;
+
+            checkBoxVideoAutoOpen.Checked = !gs.DisableVideoAutoLoading;
 
             comboBoxCustomSearch1.Text = Configuration.Settings.VideoControls.CustomSearchText1;
             comboBoxCustomSearch2.Text = Configuration.Settings.VideoControls.CustomSearchText2;
@@ -254,6 +263,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelTBRemoveTextForHi.Text = language.RemoveTextForHi;
             labelTBVisualSync.Text = language.VisualSync;
             labelTBSpellCheck.Text = language.SpellCheck;
+            labelTBNetflixQualityCheck.Text = language.NetflixQualityCheck;
             labelTBSettings.Text = language.SettingsName;
             labelTBHelp.Text = language.Help;
             checkBoxToolbarNew.Text = Configuration.Settings.Language.General.Visible;
@@ -266,6 +276,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxTBRemoveTextForHi.Text = Configuration.Settings.Language.General.Visible;
             checkBoxVisualSync.Text = Configuration.Settings.Language.General.Visible;
             checkBoxSpellCheck.Text = Configuration.Settings.Language.General.Visible;
+            checkBoxNetflixQualityCheck.Text = Configuration.Settings.Language.General.Visible;
             checkBoxSettings.Text = Configuration.Settings.Language.General.Visible;
             checkBoxHelp.Text = Configuration.Settings.Language.General.Visible;
 
@@ -276,6 +287,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelAutoDetectAnsiEncoding.Text = language.AutoDetectAnsiEncoding;
             labelSubMaxLen.Text = language.SubtitleLineMaximumLength;
             labelMaxCharsPerSecond.Text = language.MaximumCharactersPerSecond;
+            labelMaxWordsPerMin.Text = language.MaximumWordssPerMinute;
             checkBoxAutoWrapWhileTyping.Text = language.AutoWrapWhileTyping;
 
             labelMinDuration.Text = language.DurationMinimumMilliseconds;
@@ -286,6 +298,8 @@ namespace Nikse.SubtitleEdit.Forms
                 numericUpDownSubtitleLineMaximumLength.Left = labelSubMaxLen.Left + labelSubMaxLen.Width + 3;
             if (labelMaxCharsPerSecond.Left + labelMaxCharsPerSecond.Width > numericUpDownMaxCharsSec.Left)
                 numericUpDownMaxCharsSec.Left = labelMaxCharsPerSecond.Left + labelMaxCharsPerSecond.Width + 3;
+            if (labelMaxWordsPerMin.Left + labelMaxWordsPerMin.Width > numericUpDownMaxWordsMin.Left)
+                numericUpDownMaxWordsMin.Left = labelMaxWordsPerMin.Left + labelMaxWordsPerMin.Width + 3;
             if (labelMinDuration.Left + labelMinDuration.Width > numericUpDownDurationMin.Left)
                 numericUpDownDurationMin.Left = labelMinDuration.Left + labelMinDuration.Width + 3;
             if (labelMaxDuration.Left + labelMaxDuration.Width > numericUpDownDurationMax.Left)
@@ -314,6 +328,8 @@ namespace Nikse.SubtitleEdit.Forms
             labelShowLineBreaksAs.Text = language.ShowLineBreaksAs;
             textBoxShowLineBreaksAs.Left = labelShowLineBreaksAs.Left + labelShowLineBreaksAs.Width;
             labelListViewDoubleClickEvent.Text = language.MainListViewDoubleClickAction;
+            labelListviewColumns.Text = language.MainListViewColumns;
+            buttonListviewColumns.Text = GetListViewColumns();
             labelAutoBackup.Text = language.AutoBackup;
             labelAutoBackupDeleteAfter.Text = language.AutoBackupDeleteAfter;
             comboBoxAutoBackup.Left = labelAutoBackup.Left + labelAutoBackup.Width + 3;
@@ -351,6 +367,8 @@ namespace Nikse.SubtitleEdit.Forms
             labelVideoPlayerMPlayer.Text = language.MpvPlayerDescription;
             buttonMpvSettings.Left = labelVideoPlayerMPlayer.Left + labelVideoPlayerMPlayer.Width + 5;
             labelMpvSettings.Left = buttonMpvSettings.Left + buttonMpvSettings.Width + 5;
+            checkBoxMpvHandlesPreviewText.Text = language.MpvHandlesPreviewText;
+
             radioButtonVideoPlayerVLC.Text = language.VlcMediaPlayer;
             labelVideoPlayerVLC.Text = language.VlcMediaPlayerDescription;
             gs.VlcLocation = textBoxVlcPath.Text;
@@ -364,13 +382,18 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxVideoPlayerPreviewFontBold.Text = language.SubtitleBold;
             checkBoxVideoPlayerPreviewFontBold.Left = comboBoxlVideoPlayerPreviewFontSize.Left;
 
+            checkBoxVideoAutoOpen.Text = language.VideoAutoOpen;
+
             groupBoxMainWindowVideoControls.Text = language.MainWindowVideoControls;
             labelCustomSearch.Text = language.CustomSearchTextAndUrl;
 
             groupBoxWaveformAppearence.Text = language.WaveformAppearance;
             checkBoxWaveformShowGrid.Text = language.WaveformShowGridLines;
+            checkBoxWaveformShowCps.Text = language.WaveformShowCps;
+            checkBoxWaveformShowWpm.Text = language.WaveformShowWpm;
             checkBoxReverseMouseWheelScrollDirection.Text = language.ReverseMouseWheelScrollDirection;
             checkBoxAllowOverlap.Text = language.WaveformAllowOverlap;
+            checkBoxWaveformSetVideoPosMoveStartEnd.Text = language.WaveformSetVideoPosMoveStartEnd;
             checkBoxWaveformHoverFocus.Text = language.WaveformFocusMouseEnter;
             checkBoxListViewMouseEnterFocus.Text = language.WaveformListViewFocusMouseEnter;
             labelWaveformBorderHitMs1.Text = language.WaveformBorderHitMs1;
@@ -627,6 +650,8 @@ namespace Nikse.SubtitleEdit.Forms
             ListWordListLanguages();
 
             checkBoxWaveformShowGrid.Checked = Configuration.Settings.VideoControls.WaveformDrawGrid;
+            checkBoxWaveformShowCps.Checked = Configuration.Settings.VideoControls.WaveformDrawCps;
+            checkBoxWaveformShowWpm.Checked = Configuration.Settings.VideoControls.WaveformDrawWpm;
             panelWaveformGridColor.BackColor = Configuration.Settings.VideoControls.WaveformGridColor;
             panelWaveformSelectedColor.BackColor = Configuration.Settings.VideoControls.WaveformSelectedColor;
             panelWaveformColor.BackColor = Configuration.Settings.VideoControls.WaveformColor;
@@ -638,6 +663,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxWaveformTextBold.Checked = Configuration.Settings.VideoControls.WaveformTextBold;
             checkBoxReverseMouseWheelScrollDirection.Checked = Configuration.Settings.VideoControls.WaveformMouseWheelScrollUpIsForward;
             checkBoxAllowOverlap.Checked = Configuration.Settings.VideoControls.WaveformAllowOverlap;
+            checkBoxWaveformSetVideoPosMoveStartEnd.Checked = Configuration.Settings.VideoControls.WaveformSetVideoPositionOnMoveStartEnd;
             checkBoxWaveformHoverFocus.Checked = Configuration.Settings.VideoControls.WaveformFocusOnMouseEnter;
             checkBoxListViewMouseEnterFocus.Checked = Configuration.Settings.VideoControls.WaveformListViewFocusOnMouseEnter;
             checkBoxListViewMouseEnterFocus.Enabled = Configuration.Settings.VideoControls.WaveformFocusOnMouseEnter;
@@ -661,6 +687,7 @@ namespace Nikse.SubtitleEdit.Forms
             AddNode(generalNode, language.GoToPrevious, nameof(Configuration.Settings.Shortcuts.GeneralGoToPrevSubtitle));
             AddNode(generalNode, language.GoToCurrentSubtitleStart, nameof(Configuration.Settings.Shortcuts.GeneralGoToStartOfCurrentSubtitle));
             AddNode(generalNode, language.GoToCurrentSubtitleEnd, nameof(Configuration.Settings.Shortcuts.GeneralGoToEndOfCurrentSubtitle));
+            AddNode(generalNode, language.GoToPreviousSubtitleAndFocusVideo, nameof(Configuration.Settings.Shortcuts.GeneralGoToPreviousSubtitleAndFocusVideo));
             AddNode(generalNode, language.GoToNextSubtitleAndFocusVideo, nameof(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitleAndFocusVideo));
             AddNode(generalNode, language.Help, nameof(Configuration.Settings.Shortcuts.GeneralHelp));
             treeViewShortcuts.Nodes.Add(generalNode);
@@ -861,7 +888,25 @@ namespace Nikse.SubtitleEdit.Forms
             _oldVlcLocation = gs.VlcLocation;
             _oldVlcLocationRelative = gs.VlcLocationRelative;
 
+            _oldListViewShowCps = Configuration.Settings.Tools.ListViewShowColumnCharsPerSec;
+            _oldListViewShowWpm = Configuration.Settings.Tools.ListViewShowColumnWordsPerMin;
+
             labelPlatform.Text = (IntPtr.Size * 8) + "-bit";
+        }
+
+        private string GetListViewColumns()
+        {
+            var sb = new StringBuilder();
+            sb.Append(Configuration.Settings.Language.General.NumberSymbol + ", ");
+            sb.Append(Configuration.Settings.Language.General.StartTime + ", ");
+            sb.Append(Configuration.Settings.Language.General.EndTime + ", ");
+            sb.Append(Configuration.Settings.Language.General.Duration + ", ");
+            if (Configuration.Settings.Tools.ListViewShowColumnCharsPerSec)
+                sb.Append(Configuration.Settings.Language.General.CharsPerSec + ", ");
+            if (Configuration.Settings.Tools.ListViewShowColumnWordsPerMin)
+                sb.Append(Configuration.Settings.Language.General.WordsPerMin + ", ");
+            sb.Append(Configuration.Settings.Language.General.Text + ", ");
+            return sb.ToString().TrimEnd().TrimEnd(',');
         }
 
         private void AddNode(TreeNode node, string text, string shortcut, bool isMenuItem = false)
@@ -939,7 +984,7 @@ namespace Nikse.SubtitleEdit.Forms
         }
 
         public void Initialize(Icon icon, Image newFile, Image openFile, Image saveFile, Image saveFileAs, Image find, Image replace, Image fixCommonErrors, Image removeTextForHi,
-                               Image visualSync, Image spellCheck, Image settings, Image help)
+                               Image visualSync, Image spellCheck, Image NetflixGlyphCheck, Image settings, Image help)
         {
             Icon = (Icon)icon.Clone();
             pictureBoxNew.Image = (Image)newFile.Clone();
@@ -952,6 +997,7 @@ namespace Nikse.SubtitleEdit.Forms
             pictureBoxTBRemoveTextForHi.Image = (Image)removeTextForHi.Clone();
             pictureBoxVisualSync.Image = (Image)visualSync.Clone();
             pictureBoxSpellCheck.Image = (Image)spellCheck.Clone();
+            pictureBoxNetflixQualityCheck.Image = (Image)NetflixGlyphCheck.Clone();
             pictureBoxSettings.Image = (Image)settings.Clone();
             pictureBoxHelp.Image = (Image)help.Clone();
         }
@@ -1034,6 +1080,7 @@ namespace Nikse.SubtitleEdit.Forms
             gs.ShowToolbarVisualSync = checkBoxVisualSync.Checked;
             gs.ShowToolbarSettings = checkBoxSettings.Checked;
             gs.ShowToolbarSpellCheck = checkBoxSpellCheck.Checked;
+            gs.ShowToolbarNetflixGlyphCheck = checkBoxNetflixQualityCheck.Checked;
             gs.ShowToolbarHelp = checkBoxHelp.Checked;
 
             gs.ShowFrameRate = checkBoxShowFrameRate.Checked;
@@ -1085,10 +1132,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (comboBoxTimeCodeMode.Visible)
                 gs.UseTimeFormatHHMMSSFF = comboBoxTimeCodeMode.SelectedIndex == 1;
 
-            if (comboBoxSpellChecker.SelectedIndex == 1)
-                gs.SpellChecker = "word";
-            else
-                gs.SpellChecker = "hunspell";
+            gs.SpellChecker = comboBoxSpellChecker.SelectedIndex == 1 ? "word" : "hunspell";
 
             gs.AllowEditOfOriginalSubtitle = checkBoxAllowEditOfOriginalSubtitle.Checked;
             gs.PromptDeleteLines = checkBoxPromptDeleteLines.Checked;
@@ -1103,7 +1147,7 @@ namespace Nikse.SubtitleEdit.Forms
                 gs.VideoPlayer = "VLC";
             else
                 gs.VideoPlayer = "DirectShow";
-
+            gs.MpvHandlesPreviewText = checkBoxMpvHandlesPreviewText.Checked;
             gs.VlcLocation = textBoxVlcPath.Text;
 
             gs.VideoPlayerShowStopButton = checkBoxVideoPlayerShowStopButton.Checked;
@@ -1111,6 +1155,7 @@ namespace Nikse.SubtitleEdit.Forms
             gs.VideoPlayerShowFullscreenButton = checkBoxVideoPlayerShowFullscreenButton.Checked;
             gs.VideoPlayerPreviewFontSize = int.Parse(comboBoxlVideoPlayerPreviewFontSize.Items[0].ToString()) + comboBoxlVideoPlayerPreviewFontSize.SelectedIndex;
             gs.VideoPlayerPreviewFontBold = checkBoxVideoPlayerPreviewFontBold.Checked;
+            gs.DisableVideoAutoLoading = !checkBoxVideoAutoOpen.Checked;
 
             Configuration.Settings.VideoControls.CustomSearchText1 = comboBoxCustomSearch1.Text;
             Configuration.Settings.VideoControls.CustomSearchText2 = comboBoxCustomSearch2.Text;
@@ -1134,6 +1179,7 @@ namespace Nikse.SubtitleEdit.Forms
                 gs.SubtitleLineMaximumLength = 45;
 
             gs.SubtitleMaximumCharactersPerSeconds = (double)numericUpDownMaxCharsSec.Value;
+            gs.SubtitleMaximumWordsPerMinute = (double)numericUpDownMaxWordsMin.Value;
 
             gs.AutoWrapLineWhileTyping = checkBoxAutoWrapWhileTyping.Checked;
 
@@ -1201,6 +1247,8 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.Tools.ListViewSyntaxErrorColor = panelListViewSyntaxColorError.BackColor;
 
             Configuration.Settings.VideoControls.WaveformDrawGrid = checkBoxWaveformShowGrid.Checked;
+            Configuration.Settings.VideoControls.WaveformDrawCps = checkBoxWaveformShowCps.Checked;
+            Configuration.Settings.VideoControls.WaveformDrawWpm = checkBoxWaveformShowWpm.Checked;
             Configuration.Settings.VideoControls.WaveformGridColor = panelWaveformGridColor.BackColor;
             Configuration.Settings.VideoControls.WaveformSelectedColor = panelWaveformSelectedColor.BackColor;
             Configuration.Settings.VideoControls.WaveformColor = panelWaveformColor.BackColor;
@@ -1213,6 +1261,7 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.VideoControls.WaveformTextBold = checkBoxWaveformTextBold.Checked;
             Configuration.Settings.VideoControls.WaveformMouseWheelScrollUpIsForward = checkBoxReverseMouseWheelScrollDirection.Checked;
             Configuration.Settings.VideoControls.WaveformAllowOverlap = checkBoxAllowOverlap.Checked;
+            Configuration.Settings.VideoControls.WaveformSetVideoPositionOnMoveStartEnd = checkBoxWaveformSetVideoPosMoveStartEnd.Checked;
             Configuration.Settings.VideoControls.WaveformFocusOnMouseEnter = checkBoxWaveformHoverFocus.Checked;
             Configuration.Settings.VideoControls.WaveformListViewFocusOnMouseEnter = checkBoxListViewMouseEnterFocus.Checked;
             Configuration.Settings.VideoControls.WaveformBorderHitMs = Convert.ToInt32(numericUpDownWaveformBorderHitMs.Value);
@@ -1249,8 +1298,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void GeneratePreviewReal()
         {
-            if (pictureBoxPreview.Image != null)
-                pictureBoxPreview.Image.Dispose();
+            pictureBoxPreview.Image?.Dispose();
             var bmp = new Bitmap(pictureBoxPreview.Width, pictureBoxPreview.Height);
 
             using (var g = Graphics.FromImage(bmp))
@@ -1320,7 +1368,7 @@ namespace Nikse.SubtitleEdit.Forms
                     for (int i = 0; i < (int)numericUpDownSsaShadow.Value; i++)
                     {
                         var shadowPath = new GraphicsPath();
-                        sb = new StringBuilder();
+                        sb.Clear();
                         sb.Append("This is a test!");
                         int pathPointsStart2 = -1;
                         TextDraw.DrawText(font, sf, shadowPath, sb, false, checkBoxSsaFontBold.Checked, false, left + i + outline, top + i + outline, ref newLine, leftMargin, ref pathPointsStart2);
@@ -1373,13 +1421,11 @@ namespace Nikse.SubtitleEdit.Forms
             var cb = comboBoxWordListLanguage.Items[comboBoxWordListLanguage.SelectedIndex] as ComboBoxLanguage;
             if (cb == null)
                 return;
-
-            if (reloadListBox)
-                listBoxOcrFixList.Items.Clear();
             _ocrFixReplaceList = OcrFixReplaceList.FromLanguageId(cb.CultureInfo.ThreeLetterISOLanguageName);
             if (reloadListBox)
             {
                 listBoxOcrFixList.BeginUpdate();
+                listBoxOcrFixList.Items.Clear();
                 foreach (var pair in _ocrFixReplaceList.WordReplaceList)
                 {
                     listBoxOcrFixList.Items.Add(pair.Key + " --> " + pair.Value);
@@ -1439,12 +1485,20 @@ namespace Nikse.SubtitleEdit.Forms
 
         private string GetCurrentWordListLanguage()
         {
-            var cb = comboBoxWordListLanguage.Items[comboBoxWordListLanguage.SelectedIndex] as ComboBoxLanguage;
+            var idx = comboBoxWordListLanguage.SelectedIndex;
+            if (idx < 0)
+                return null;
+
+            var cb = comboBoxWordListLanguage.Items[idx] as ComboBoxLanguage;
             return cb?.CultureInfo.Name.Replace('-', '_');
         }
 
         private void ButtonAddNamesEtcClick(object sender, EventArgs e)
         {
+            var sidx = comboBoxWordListLanguage.SelectedIndex;
+            if (sidx < 0)
+                return;
+
             string language = GetCurrentWordListLanguage();
             string text = textBoxNameEtc.Text.RemoveControlCharacters().Trim();
             if (!string.IsNullOrEmpty(language) && text.Length > 1 && !_wordListNamesEtc.Contains(text))
@@ -1545,6 +1599,10 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonAddUserWordClick(object sender, EventArgs e)
         {
+            var sidx = comboBoxWordListLanguage.SelectedIndex;
+            if (sidx < 0)
+                return;
+
             string language = GetCurrentWordListLanguage();
             string text = textBoxUserWord.Text.RemoveControlCharacters().Trim().ToLower();
             if (!string.IsNullOrEmpty(language) && text.Length > 0 && !_userWordList.Contains(text))
@@ -1697,7 +1755,10 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonRemoveOcrFixClick(object sender, EventArgs e)
         {
-            var cb = comboBoxWordListLanguage.Items[comboBoxWordListLanguage.SelectedIndex] as ComboBoxLanguage;
+            var sidx = comboBoxWordListLanguage.SelectedIndex;
+            if (sidx < 0)
+                return;
+            var cb = comboBoxWordListLanguage.Items[sidx] as ComboBoxLanguage;
             if (cb == null)
                 return;
 
@@ -2187,6 +2248,9 @@ namespace Nikse.SubtitleEdit.Forms
         {
             Configuration.Settings.General.VlcLocation = _oldVlcLocation;
             Configuration.Settings.General.VlcLocationRelative = _oldVlcLocationRelative;
+            Configuration.Settings.Tools.ListViewShowColumnCharsPerSec = _oldListViewShowCps;
+            Configuration.Settings.Tools.ListViewShowColumnWordsPerMin = _oldListViewShowWpm;
+
             DialogResult = DialogResult.Cancel;
         }
 
@@ -2274,15 +2338,30 @@ namespace Nikse.SubtitleEdit.Forms
         {
             using (var form = new SettingsMpv())
             {
-                form.ShowDialog(this);
-                RefreshMpvSettings();
+                var oldMpvEnabled = radioButtonVideoPlayerMPV.Enabled;
+                if (form.ShowDialog(this) == DialogResult.OK)
+                {
+                    RefreshMpvSettings();
+                    if (radioButtonVideoPlayerMPV.Enabled && !oldMpvEnabled)
+                        radioButtonVideoPlayerMPV.Checked = true;
+                }
+                else
+                {
+                    RefreshMpvSettings();
+                }
             }
         }
 
         private void RefreshMpvSettings()
         {
             radioButtonVideoPlayerMPV.Enabled = LibMpvDynamic.IsInstalled;
-            if (Configuration.IsRunningOnLinux() && (Configuration.Settings.General.MpvVideoOutput == "direct3d_shaders"))
+            checkBoxMpvHandlesPreviewText.Enabled = radioButtonVideoPlayerMPV.Enabled;
+            if (!radioButtonVideoPlayerMPV.Enabled)
+            {
+                buttonMpvSettings.Font = new Font(buttonMpvSettings.Font.FontFamily, buttonMpvSettings.Font.Size, FontStyle.Bold);
+            }
+
+            if (Configuration.IsRunningOnLinux() && Configuration.Settings.General.MpvVideoOutput.StartsWith("direct3d"))
                 labelMpvSettings.Text = "--vo=vaapi";
             else
                 labelMpvSettings.Text = "--vo=" + Configuration.Settings.General.MpvVideoOutput;
@@ -2335,5 +2414,26 @@ namespace Nikse.SubtitleEdit.Forms
         {
             checkBoxSyntaxColorTextMoreThanTwoLines.Text = string.Format(Configuration.Settings.Language.Settings.SyntaxColorTextMoreThanMaxLines, numericUpDownMaxNumberOfLines.Value);
         }
+
+        private void buttonListviewColumns_Click(object sender, EventArgs e)
+        {
+            using (var form = new SettingsListViewColumns())
+            {
+                if (form.ShowDialog(this) == DialogResult.OK)
+                {
+                    Configuration.Settings.Tools.ListViewShowColumnEndTime = form.ShowEndTime;
+                    Configuration.Settings.Tools.ListViewShowColumnDuration = form.ShowDuration;
+                    Configuration.Settings.Tools.ListViewShowColumnCharsPerSec = form.ShowCps;
+                    Configuration.Settings.Tools.ListViewShowColumnWordsPerMin = form.ShowWpm;
+                    buttonListviewColumns.Text = GetListViewColumns();
+                }
+            }
+        }
+
+        private void radioButtonVideoPlayerMPV_CheckedChanged(object sender, EventArgs e)
+        {
+            checkBoxMpvHandlesPreviewText.Enabled = radioButtonVideoPlayerMPV.Checked;
+        }
+
     }
 }

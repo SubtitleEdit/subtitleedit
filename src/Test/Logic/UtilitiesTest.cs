@@ -206,6 +206,22 @@ namespace Test.Logic
         }
 
         [TestMethod]
+        public void FixInvalidItalicTags13()
+        {
+            var s1 = "<i>Hallo!</i>" + Environment.NewLine + "<i>Hallo!</i>" + Environment.NewLine + "<i>Hallo!</i>";
+            string s2 = HtmlUtil.FixInvalidItalicTags(s1);
+            Assert.AreEqual(s2, s1);
+        }
+
+        [TestMethod]
+        public void FixInvalidItalicTags14()
+        {
+            var s1 = "<i>Hallo!<i/>" + Environment.NewLine + "<i>Hallo!<i/>" + Environment.NewLine + "<i>Hallo!";
+            string s2 = HtmlUtil.FixInvalidItalicTags(s1);
+            Assert.AreEqual(s2, "<i>Hallo!" + Environment.NewLine + "Hallo!" + Environment.NewLine + "Hallo!</i>");
+        }
+
+        [TestMethod]
         public void FixUnneededSpacesDoubleSpace1()
         {
             const string s1 = "This is  a test";
@@ -465,6 +481,43 @@ namespace Test.Logic
         public void ReverseNumbers2()
         {
             Assert.AreEqual(Utilities.ReverseNumbers("Hallo 009 001 Bye"), "Hallo 900 100 Bye");
+        }
+
+        [TestMethod]
+        public void ReverseStartAndEndingForRightToLeft1()
+        {
+            Assert.AreEqual(Utilities.ReverseStartAndEndingForRightToLeft("-I have a big head."), ".I have a big head-");
+        }
+
+        [TestMethod]
+        public void ReverseStartAndEndingForRightToLeft2()
+        {
+            Assert.AreEqual(Utilities.ReverseStartAndEndingForRightToLeft("~So do I?"), "?So do I~");
+        }
+
+        [TestMethod]
+        public void ReverseStartAndEndingForRightToLeft3()
+        {
+            Assert.AreEqual(Utilities.ReverseStartAndEndingForRightToLeft("+I do too!"), "!I do too+");
+        }
+
+        [TestMethod]
+        public void ReverseStartAndEndingForRightToLeft4()
+        {
+            Assert.AreEqual(Utilities.ReverseStartAndEndingForRightToLeft("(Mom)" + Environment.NewLine + "What are you doing here?"), "(Mom)" + Environment.NewLine + "?What are you doing here");
+        }
+
+        [TestMethod]
+        public void ReverseStartAndEndingForRightToLeft5()
+        {
+            Assert.AreEqual(Utilities.ReverseStartAndEndingForRightToLeft("{\\an8}+I do too!"), "{\\an8}!I do too+");
+        }
+
+        [TestMethod]
+        public void ReverseStartAndEndingForRightToLeft6()
+        {
+            Assert.AreEqual(Utilities.ReverseStartAndEndingForRightToLeft("-I have a big head." + Environment.NewLine + "~So do I?" + Environment.NewLine + "+I do too!"),
+                                                                          ".I have a big head-" + Environment.NewLine + "?So do I~" + Environment.NewLine + "!I do too+");
         }
 
     }

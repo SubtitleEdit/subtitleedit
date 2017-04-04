@@ -1,7 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Core.Dictionaries;
 using Nikse.SubtitleEdit.Core.Forms.FixCommonErrors;
-using Nikse.SubtitleEdit.Forms;
 using Nikse.SubtitleEdit.Logic.SpellCheck;
 using System;
 using System.Collections.Generic;
@@ -12,6 +11,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Xml;
+using Nikse.SubtitleEdit.Forms.Ocr;
 
 namespace Nikse.SubtitleEdit.Logic.Ocr
 {
@@ -46,6 +46,8 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
         private static readonly Regex RegexLowercaseL = new Regex("[A-ZÆØÅÄÖÉÈÀÙÂÊÎÔÛËÏ]l[A-ZÆØÅÄÖÉÈÀÙÂÊÎÔÛËÏ]", RegexOptions.Compiled);
         private static readonly Regex RegexUppercaseI = new Regex("[a-zæøåöääöéèàùâêîôûëï]I.", RegexOptions.Compiled);
         private static readonly Regex RegexNumber1 = new Regex(@"(?<=\d) 1(?!/\d)", RegexOptions.Compiled);
+
+        private static readonly char[] SplitChars = { ' ', '¡', '¿', ',', '.', '!', '?', ':', ';', '(', ')', '[', ']', '{', '}', '+', '-', '£', '"', '„', '”', '“', '«', '»', '#', '&', '%', '…', '—', '♪', '\r', '\n' };
 
         public bool Abort { get; set; }
         public List<string> AutoGuessesUsed { get; set; }
@@ -355,15 +357,37 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 text = text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
             text = text.Trim();
 
-            var sb = new StringBuilder();
+            // Try to prevent resizing when fixing Ocr-hardcoded.
+            var sb = new StringBuilder(text.Length * 2);
             var word = new StringBuilder();
 
             if (Configuration.Settings.Tools.OcrFixUseHardcodedRules)
             {
-                text = text.Replace("ﬁ", "fi"); // fb01
-                text = text.Replace("ﬂ", "fl"); // fb02
-                text = text.Replace('ν', 'v'); // NOTE: first 'v' is a special unicode character!!!!
-                text = text.Replace('‚', ','); // #x201A (SINGLE LOW-9 QUOTATION MARK) to plain old comma
+                int len = text.Length;
+                for (int i = 0; i < len; i++)
+                {
+                    char ch = text[i];
+                    switch (ch)
+                    {
+                        case 'ﬁ':
+                            sb.Append("fi");
+                            break;
+                        case 'ﬂ': // fb02
+                            sb.Append("fl");
+                            break;
+                        case 'ν': // NOTE: Special unicode character!
+                            sb.Append('v');
+                            break;
+                        case '‚': // #x201A (SINGLE LOW-9 QUOTATION MARK) to plain old comma
+                            sb.Append(',');
+                            break;
+                        default:
+                            sb.Append(ch);
+                            break;
+                    }
+                }
+                text = sb.ToString();
+                sb.Clear();
             }
 
             text = ReplaceWordsBeforeLineFixes(text);
@@ -505,7 +529,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             while (start > 0)
             {
                 lastLine = HtmlUtil.RemoveHtmlTags(text.Substring(0, start)).TrimEnd().TrimEnd('-').TrimEnd();
-                endingBeforeThis = string.IsNullOrEmpty(lastLine) || lastLine.EndsWith('.') || lastLine.EndsWith('!') || lastLine.EndsWith('?') || lastLine.EndsWith(".</i>");
+                endingBeforeThis = string.IsNullOrEmpty(lastLine) || lastLine.EndsWith('.') || lastLine.EndsWith('!') || lastLine.EndsWith('?') || lastLine.EndsWith(".</i>", StringComparison.Ordinal);
                 if (start < text.Length - 5)
                 {
                     if (start > 1)
@@ -566,7 +590,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                             fixedWord = _ocrFixReplaceList.FixCommonWordErrorsQuick(word.ToString());
                         sb.Append(fixedWord);
                         lastWord = fixedWord;
-                        word = new StringBuilder();
+                        word.Clear();
                     }
                     sb.Append(text[i]);
                 }
@@ -596,7 +620,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
                 input = input.Replace(Environment.NewLine + "~", Environment.NewLine + "- ").Replace("  ", " ");
 
-                if (input.Length < 10 && input.Length > 4 && !input.Contains(Environment.NewLine) && input.StartsWith("II") && input.EndsWith("II"))
+                if (input.Length < 10 && input.Length > 4 && !input.Contains(Environment.NewLine) && input.StartsWith("II", StringComparison.Ordinal) && input.EndsWith("II", StringComparison.Ordinal))
                 {
                     input = "\"" + input.Substring(2, input.Length - 4) + "\"";
                 }
@@ -680,7 +704,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
             input = input.Replace(",...", "...");
 
-            if (input.StartsWith("..") && !input.StartsWith("...", StringComparison.Ordinal))
+            if (input.StartsWith("..", StringComparison.Ordinal) && !input.StartsWith("...", StringComparison.Ordinal))
                 input = "." + input;
 
             string pre = string.Empty;
@@ -703,7 +727,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 if (input.Length > 7 && input.StartsWith("<i>..", StringComparison.Ordinal) && Utilities.AllLettersAndNumbers.Contains(input[5]))
                     input = "<i>..." + input.Remove(0, 5);
 
-                if (input.Length > 5 && input.StartsWith(".. ") && Utilities.AllLettersAndNumbers.Contains(input[3]))
+                if (input.Length > 5 && input.StartsWith(".. ", StringComparison.Ordinal) && Utilities.AllLettersAndNumbers.Contains(input[3]))
                     input = "..." + input.Remove(0, 3);
                 if (input.Length > 7 && input.StartsWith("<i>.. ", StringComparison.Ordinal) && Utilities.AllLettersAndNumbers.Contains(input[6]))
                     input = "<i>..." + input.Remove(0, 6);
@@ -716,7 +740,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                     input = "..." + input.Remove(0, 4);
                 if (input.StartsWith(".. .", StringComparison.Ordinal))
                     input = "..." + input.Remove(0, 4);
-                if (input.StartsWith(". . ."))
+                if (input.StartsWith(". . .", StringComparison.Ordinal))
                     input = "..." + input.Remove(0, 5);
                 if (input.StartsWith("... ", StringComparison.Ordinal))
                     input = input.Remove(3, 1);
@@ -819,7 +843,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 var st = new StrippableText(input);
                 if (lastLine == null || (!lastLine.EndsWith("...", StringComparison.Ordinal) && !EndsWithAbbreviation(lastLine, abbreviationList)))
                 {
-                    if (st.StrippedText.Length > 0 && !char.IsUpper(st.StrippedText[0]) && !st.Pre.EndsWith('[') && !st.Pre.EndsWith('(') && !st.Pre.EndsWith("..."))
+                    if (st.StrippedText.Length > 0 && !char.IsUpper(st.StrippedText[0]) && !st.Pre.EndsWith('[') && !st.Pre.EndsWith('(') && !st.Pre.EndsWith("...", StringComparison.Ordinal))
                     {
                         if (!HtmlUtil.StartsWithUrl(st.StrippedText))
                         {
@@ -942,22 +966,19 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             //    }
             //}
 
-            const string p = @" ¡¿,.!?:;()[]{}+-$£""”“#&%…—♪";
+            const string p = " ¡¿,.!?:;()[]{}+-$£\"„”“#&%…—♪\r\n";
             foreach (string name in _namesEtcMultiWordList)
             {
                 int start = tempLine.FastIndexOf(name);
-                if (start >= 0)
+                if (start == 0 || (start > 0 && p.Contains(tempLine[start - 1])))
                 {
-                    if (start == 0 || (Environment.NewLine + p).Contains(tempLine[start - 1]))
-                    {
-                        int end = start + name.Length;
-                        if (end >= tempLine.Length || (Environment.NewLine + p).Contains(tempLine[end]))
-                            tempLine = tempLine.Remove(start, name.Length);
-                    }
+                    int end = start + name.Length;
+                    if (end == tempLine.Length || p.Contains(tempLine[end]))
+                        tempLine = tempLine.Remove(start, name.Length);
                 }
             }
 
-            string[] words = tempLine.Replace("</i>", string.Empty).Split((Environment.NewLine + " ¡¿,.!?:;()[]{}+-£\"”“«»#&%…—♪").ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            string[] words = tempLine.Replace("</i>", string.Empty).Split(SplitChars, StringSplitOptions.RemoveEmptyEntries);
             for (int i = 0; i < words.Length; i++)
             {
                 string word = words[i].TrimStart('\'');
@@ -969,7 +990,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                     bool correct = DoSpell(word);
                     if (!correct)
                         correct = DoSpell(word.Trim('\''));
-                    if (!correct && word.Length > 3 && !word.EndsWith("ss") && !string.IsNullOrEmpty(_threeLetterIsoLanguageName) &&
+                    if (!correct && word.Length > 3 && !word.EndsWith("ss", StringComparison.Ordinal) && !string.IsNullOrEmpty(_threeLetterIsoLanguageName) &&
                         (_threeLetterIsoLanguageName == "eng" || _threeLetterIsoLanguageName == "dan" || _threeLetterIsoLanguageName == "swe" || _threeLetterIsoLanguageName == "nld"))
                         correct = DoSpell(word.TrimEnd('s'));
                     if (!correct)
@@ -981,7 +1002,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                         correct = true; // already fixed
 
                     if (!correct && Configuration.Settings.Tools.SpellCheckEnglishAllowInQuoteAsIng && wordNotEndTrimmed.EndsWith('\'') &&
-                        SpellCheckDictionaryName.StartsWith("en_") && word.EndsWith("in", StringComparison.OrdinalIgnoreCase))
+                        SpellCheckDictionaryName.StartsWith("en_", StringComparison.Ordinal) && word.EndsWith("in", StringComparison.OrdinalIgnoreCase))
                     {
                         correct = DoSpell(word + "g");
                     }
@@ -1077,7 +1098,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                             }
                             foreach (string guess in guesses)
                             {
-                                if (IsWordOrWordsCorrect(guess) && !guess.StartsWith("f "))
+                                if (!guess.StartsWith("f ", StringComparison.Ordinal) && IsWordOrWordsCorrect(guess))
                                 {
                                     string replacedLine = OcrFixReplaceList.ReplaceWord(line, word, guess);
                                     if (replacedLine != line)
@@ -1110,10 +1131,10 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                                     suggestions = DoSuggest(word); // 0.9.6 fails on "Lt'S"
                             }
 
-                            if (word.StartsWith("<i>"))
+                            if (word.StartsWith("<i>", StringComparison.Ordinal))
                                 word = word.Remove(0, 3);
 
-                            if (word.EndsWith("</i>"))
+                            if (word.EndsWith("</i>", StringComparison.Ordinal))
                                 word = word.Remove(word.Length - 4, 4);
 
                             SpellCheckOcrTextResult res = SpellCheckOcrText(line, bitmap, word, suggestions);
@@ -1208,7 +1229,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                         {
                             _namesEtcList.Add(s);
                             _namesEtcListUppercase.Add(s.ToUpper());
-                            if (_fiveLetterWordListLanguageName.StartsWith("en"))
+                            if (_fiveLetterWordListLanguageName.StartsWith("en", StringComparison.Ordinal))
                             {
                                 if (!s.EndsWith('s'))
                                     _namesEtcListWithApostrophe.Add(s + "'s");
@@ -1380,7 +1401,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 return 0;
 
             int wordsNotFound = 0;
-            var words = HtmlUtil.RemoveOpenCloseTags(line, HtmlUtil.TagItalic).Split((Environment.NewLine + " ¡¿,.!?:;()[]{}+-$£\"#&%…“”«»").ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            var words = HtmlUtil.RemoveOpenCloseTags(line, HtmlUtil.TagItalic).Split((Environment.NewLine + " ¡¿,.!?:;()[]{}+-$£\"#&%…„“”«»").ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
             for (int i = 0; i < words.Length; i++)
             {
                 string word = words[i];

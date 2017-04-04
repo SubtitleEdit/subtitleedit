@@ -121,6 +121,12 @@ namespace Nikse.SubtitleEdit.Core
                 case "General/Duration":
                     language.General.Duration = reader.Value;
                     break;
+                case "General/CharsPerSec":
+                    language.General.CharsPerSec = reader.Value;
+                    break;
+                case "General/WordsPerMin":
+                    language.General.WordsPerMin = reader.Value;
+                    break;
                 case "General/NumberSymbol":
                     language.General.NumberSymbol = reader.Value;
                     break;
@@ -889,6 +895,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "EbuSaveOptions/DisplayStandardCode":
                     language.EbuSaveOptions.DisplayStandardCode = reader.Value;
                     break;
+                case "EbuSaveOptions/ColorRequiresTeletext":
+                    language.EbuSaveOptions.ColorRequiresTeletext = reader.Value;
+                    break;
                 case "EbuSaveOptions/CharacterCodeTable":
                     language.EbuSaveOptions.CharacterCodeTable = reader.Value;
                     break;
@@ -945,6 +954,18 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "EbuSaveOptions/JustificationCode":
                     language.EbuSaveOptions.JustificationCode = reader.Value;
+                    break;
+                case "EbuSaveOptions/VerticalPosition":
+                    language.EbuSaveOptions.VerticalPosition = reader.Value;
+                    break;
+                case "EbuSaveOptions/MarginTop":
+                    language.EbuSaveOptions.MarginTop = reader.Value;
+                    break;
+                case "EbuSaveOptions/MarginBottom":
+                    language.EbuSaveOptions.MarginBottom = reader.Value;
+                    break;
+                case "EbuSaveOptions/NewLineRows":
+                    language.EbuSaveOptions.NewLineRows = reader.Value;
                     break;
                 case "EbuSaveOptions/Teletext":
                     language.EbuSaveOptions.Teletext = reader.Value;
@@ -3346,6 +3367,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Main/Menu/Tools/SortBy":
                     language.Main.Menu.Tools.SortBy = reader.Value;
                     break;
+                case "Main/Menu/Tools/NetflixQualityCheck":
+                    language.Main.Menu.Tools.NetflixQualityCheck = reader.Value;
+                    break;
                 case "Main/Menu/Tools/Number":
                     language.Main.Menu.Tools.Number = reader.Value;
                     break;
@@ -3565,6 +3589,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Main/Menu/ToolBar/SpellCheck":
                     language.Main.Menu.ToolBar.SpellCheck = reader.Value;
                     break;
+                case "Main/Menu/ToolBar/NetflixQualityCheck":
+                    language.Main.Menu.ToolBar.NetflixQualityCheck = reader.Value;
+                    break;
                 case "Main/Menu/ToolBar/Settings":
                     language.Main.Menu.ToolBar.Settings = reader.Value;
                     break;
@@ -3576,6 +3603,9 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "Main/Menu/ToolBar/ShowHideVideo":
                     language.Main.Menu.ToolBar.ShowHideVideo = reader.Value;
+                    break;
+                case "Main/Menu/ContextMenu/SizeAllColumnsToFit":
+                    language.Main.Menu.ContextMenu.SizeAllColumnsToFit = reader.Value;
                     break;
                 case "Main/Menu/ContextMenu/AdvancedSubStationAlphaSetStyle":
                     language.Main.Menu.ContextMenu.AdvancedSubStationAlphaSetStyle = reader.Value;
@@ -3909,6 +3939,9 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "MatroskaSubtitleChooser/Title":
                     language.MatroskaSubtitleChooser.Title = reader.Value;
+                    break;
+                case "MatroskaSubtitleChooser/TitleMp4":
+                    language.MatroskaSubtitleChooser.TitleMp4 = reader.Value;
                     break;
                 case "MatroskaSubtitleChooser/PleaseChoose":
                     language.MatroskaSubtitleChooser.PleaseChoose = reader.Value;
@@ -4474,6 +4507,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/SpellCheck":
                     language.Settings.SpellCheck = reader.Value;
                     break;
+                case "Settings/NetflixQualityCheck":
+                    language.Settings.NetflixQualityCheck = reader.Value;
+                    break;
                 case "Settings/SettingsName":
                     language.Settings.SettingsName = reader.Value;
                     break;
@@ -4498,6 +4534,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/MaximumCharactersPerSecond":
                     language.Settings.MaximumCharactersPerSecond = reader.Value;
                     break;
+                case "Settings/MaximumWordssPerMinute":
+                    language.Settings.MaximumWordssPerMinute = reader.Value;
+                    break;
                 case "Settings/AutoWrapWhileTyping":
                     language.Settings.AutoWrapWhileTyping = reader.Value;
                     break;
@@ -4521,6 +4560,9 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "Settings/SubtitleBold":
                     language.Settings.SubtitleBold = reader.Value;
+                    break;
+                case "Settings/VideoAutoOpen":
+                    language.Settings.VideoAutoOpen = reader.Value;
                     break;
                 case "Settings/SubtitleCenter":
                     language.Settings.SubtitleCenter = reader.Value;
@@ -4557,6 +4599,12 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "Settings/MainListViewDoubleClickAction":
                     language.Settings.MainListViewDoubleClickAction = reader.Value;
+                    break;
+                case "Settings/MainListViewColumns":
+                    language.Settings.MainListViewColumns = reader.Value;
+                    break;
+                case "Settings/MainListViewColumnsInfo":
+                    language.Settings.MainListViewColumnsInfo = reader.Value;
                     break;
                 case "Settings/MainListViewNothing":
                     language.Settings.MainListViewNothing = reader.Value;
@@ -4645,6 +4693,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/MpvPlayerDescription":
                     language.Settings.MpvPlayerDescription = reader.Value;
                     break;
+                case "Settings/MpvHandlesPreviewText":
+                    language.Settings.MpvHandlesPreviewText = reader.Value;
+                    break;
                 case "Settings/VlcMediaPlayer":
                     language.Settings.VlcMediaPlayer = reader.Value;
                     break;
@@ -4681,11 +4732,20 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/WaveformShowGridLines":
                     language.Settings.WaveformShowGridLines = reader.Value;
                     break;
+                case "Settings/WaveformShowCps":
+                    language.Settings.WaveformShowCps = reader.Value;
+                    break;
+                case "Settings/WaveformShowWpm":
+                    language.Settings.WaveformShowWpm = reader.Value;
+                    break;
                 case "Settings/ReverseMouseWheelScrollDirection":
                     language.Settings.ReverseMouseWheelScrollDirection = reader.Value;
                     break;
                 case "Settings/WaveformAllowOverlap":
                     language.Settings.WaveformAllowOverlap = reader.Value;
+                    break;
+                case "Settings/WaveformSetVideoPosMoveStartEnd":
+                    language.Settings.WaveformSetVideoPosMoveStartEnd = reader.Value;
                     break;
                 case "Settings/WaveformFocusMouseEnter":
                     language.Settings.WaveformFocusMouseEnter = reader.Value;
@@ -4956,6 +5016,9 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "Settings/GoToCurrentSubtitleEnd":
                     language.Settings.GoToCurrentSubtitleEnd = reader.Value;
+                    break;
+                case "Settings/GoToPreviousSubtitleAndFocusVideo":
+                    language.Settings.GoToPreviousSubtitleAndFocusVideo = reader.Value;
                     break;
                 case "Settings/GoToNextSubtitleAndFocusVideo":
                     language.Settings.GoToNextSubtitleAndFocusVideo = reader.Value;
@@ -5341,6 +5404,30 @@ namespace Nikse.SubtitleEdit.Core
                 case "SpellCheck/UndoX":
                     language.SpellCheck.UndoX = reader.Value;
                     break;
+                case "NetflixQualityCheck/GlyphCheckSuccessfull":
+                    language.NetflixQualityCheck.GlyphCheckSuccessfull = reader.Value;
+                    break;
+                case "NetflixQualityCheck/GlyphCheckFailed":
+                    language.NetflixQualityCheck.GlyphCheckFailed = reader.Value;
+                    break;
+                case "NetflixQualityCheck/GlyphCheckReport":
+                    language.NetflixQualityCheck.GlyphCheckReport = reader.Value;
+                    break;
+                case "NetflixQualityCheck/WhiteSpaceCheckSuccessfull":
+                    language.NetflixQualityCheck.WhiteSpaceCheckSuccessfull = reader.Value;
+                    break;
+                case "NetflixQualityCheck/WhiteSpaceCheckFailed":
+                    language.NetflixQualityCheck.WhiteSpaceCheckFailed = reader.Value;
+                    break;
+                case "NetflixQualityCheck/WhiteSpaceCheckReport":
+                    language.NetflixQualityCheck.WhiteSpaceCheckReport = reader.Value;
+                    break;
+                case "NetflixQualityCheck/ReportPrompt":
+                    language.NetflixQualityCheck.ReportPrompt = reader.Value;
+                    break;
+                case "NetflixQualityCheck/SavingError":
+                    language.NetflixQualityCheck.SavingError = reader.Value;
+                    break;
                 case "Split/Title":
                     language.Split.Title = reader.Value;
                     break;
@@ -5484,6 +5571,9 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "Statistics/TotalCharsPerSecond":
                     language.Statistics.TotalCharsPerSecond = reader.Value;
+                    break;
+                case "Statistics/TotalWords":
+                    language.Statistics.TotalWords = reader.Value;
                     break;
                 case "Statistics/NumberOfItalicTags":
                     language.Statistics.NumberOfItalicTags = reader.Value;
@@ -6171,6 +6261,12 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "Waveform/SeekSilence":
                     language.Waveform.SeekSilence = reader.Value;
+                    break;
+                case "Waveform/CharsSecX":
+                    language.Waveform.CharsSecX = reader.Value;
+                    break;
+                case "Waveform/WordsMinX":
+                    language.Waveform.WordsMinX = reader.Value;
                     break;
                 case "WaveformGenerateTimeCodes/Title":
                     language.WaveformGenerateTimeCodes.Title = reader.Value;

@@ -23,16 +23,13 @@ namespace Nikse.SubtitleEdit.Core
         /// <summary>
         /// Cached environment new line characters for faster lookup.
         /// </summary>
-        public static readonly char[] NewLineChars = { '\r', '\n' };    
+        public static readonly char[] NewLineChars = { '\r', '\n' };
 
         public static VideoInfo TryReadVideoInfoViaMatroskaHeader(string fileName)
         {
             var info = new VideoInfo { Success = false };
-
-            MatroskaFile matroska = null;
-            try
+            using (var matroska = new MatroskaFile(fileName))
             {
-                matroska = new MatroskaFile(fileName);
                 if (matroska.IsValid)
                 {
                     double frameRate;
@@ -52,14 +49,6 @@ namespace Nikse.SubtitleEdit.Core
                     info.VideoCodec = videoCodec;
                 }
             }
-            finally
-            {
-                if (matroska != null)
-                {
-                    matroska.Dispose();
-                }
-            }
-
             return info;
         }
 
@@ -502,10 +491,19 @@ namespace Nikse.SubtitleEdit.Core
                             string rest = s.Substring(mid - j + 1).TrimStart();
                             if (rest.Length > 0 && char.IsUpper(rest[0]))
                             {
-                                if (mid - j > 5 && s[mid - j - 1] == ' ' && @"!?.".Contains(s[mid - j - 2]))
+                                if (mid - j > 5 && s[mid - j - 1] == ' ')
                                 {
-                                    splitPos = mid - j;
-                                    break;
+                                    if ("!?.".Contains(s[mid - j - 2]))
+                                    {
+                                        splitPos = mid - j;
+                                        break;
+                                    }
+                                    var first = s.Substring(0, mid - j - 1);
+                                    if (first.EndsWith(".\"", StringComparison.Ordinal) || first.EndsWith("!\"", StringComparison.Ordinal) || first.EndsWith("?\"", StringComparison.Ordinal))
+                                    {
+                                        splitPos = mid - j;
+                                        break;
+                                    }
                                 }
                             }
                         }
@@ -786,6 +784,8 @@ namespace Nikse.SubtitleEdit.Core
             const string zeroWidthNoBreakSpace = "\uFEFF";
 
             string s = HtmlUtil.RemoveHtmlTags(paragraph.Text, true).Replace(Environment.NewLine, string.Empty).Replace(zeroWidthSpace, string.Empty).Replace(zeroWidthNoBreakSpace, string.Empty);
+            if (Configuration.Settings.General.CharactersPerSecondsIgnoreWhiteSpace)
+                s = s.Replace(" ", string.Empty);
             return s.Length / paragraph.Duration.TotalSeconds;
         }
 
@@ -1110,7 +1110,7 @@ namespace Nikse.SubtitleEdit.Core
 
             foreach (Paragraph p in originalParagraphs)
             {
-                if (p.StartTime.TotalMilliseconds == paragraph.StartTime.TotalMilliseconds)
+                if (Math.Abs(p.StartTime.TotalMilliseconds - paragraph.StartTime.TotalMilliseconds) < 0.01)
                     return p;
             }
 
@@ -1142,16 +1142,23 @@ namespace Nikse.SubtitleEdit.Core
             return Uri.UnescapeDataString(text);
         }
 
-
-        private const string PrePostStringsToReverse = @"- !?.""،,():;[]";
         private static readonly Regex TwoOrMoreDigitsNumber = new Regex(@"\d\d+", RegexOptions.Compiled);
 
         public static string ReverseStartAndEndingForRightToLeft(string s)
         {
-            var lines = s.SplitToLines();
             var newLines = new StringBuilder();
             var pre = new StringBuilder();
             var post = new StringBuilder();
+            bool startsWithAssTag = false;
+            string assTag = string.Empty;
+            if (s.StartsWith("{\\", StringComparison.Ordinal) && s.IndexOf('}') < 22)
+            {
+                startsWithAssTag = true;
+                int end = s.IndexOf('}') + 1;
+                assTag = s.Substring(0, end);
+                s = s.Remove(0, end);
+            }
+            var lines = s.SplitToLines();
             foreach (var line in lines)
             {
                 string s2 = line;
@@ -1172,17 +1179,19 @@ namespace Nikse.SubtitleEdit.Core
                 pre.Clear();
                 post.Clear();
                 int i = 0;
-                while (i < s2.Length && PrePostStringsToReverse.Contains(s2[i]))
+                while (i < s2.Length && !char.IsLetterOrDigit(s2[i]) && s2[i] != '{')
                 {
                     pre.Append(s2[i]);
                     i++;
                 }
                 int j = s2.Length - 1;
-                while (j > i && PrePostStringsToReverse.Contains(s2[j]))
+                while (j > i && !char.IsLetterOrDigit(s2[j]) && s2[j] != '}')
                 {
                     post.Append(s2[j]);
                     j--;
                 }
+                if (startsWithAssTag)
+                    newLines.Append(assTag);
                 if (startsWithItalic)
                     newLines.Append("<i>");
                 newLines.Append(ReverseParenthesis(post.ToString()));
@@ -1702,19 +1711,37 @@ namespace Nikse.SubtitleEdit.Core
         /// <returns>text with unneeded spaces removed</returns>
         public static string RemoveUnneededSpaces(string text, string language)
         {
-            const string zeroWidthSpace = "\u200B";
-            const string zeroWidthNoBreakSpace = "\uFEFF";
-            const string noBreakSpace = "\u00A0";
-            const string operatingSystemCommand = "\u009D";
+            const char zeroWidthSpace = '\u200B';
+            const char zeroWidthNoBreakSpace = '\uFEFF';
+            const char noBreakSpace = '\u00A0';
+            const char operatingSystemCommand = '\u009D';
 
             text = text.Trim();
-
-            text = text.Replace(zeroWidthSpace, string.Empty);
-            text = text.Replace(zeroWidthNoBreakSpace, string.Empty);
-            text = text.Replace(noBreakSpace, " ");
-            text = text.Replace(operatingSystemCommand, string.Empty);
-            text = text.Replace('\t', ' ');
-
+            int len = text.Length;
+            int count = 0;
+            char[] textChars = new char[len];
+            for (int i = 0; i < len; i++)
+            {
+                char ch = text[i];
+                switch (ch)
+                {
+                    // Ignore: \u200B, \uFEFF and \u009D.
+                    case zeroWidthSpace:
+                    case zeroWidthNoBreakSpace:
+                    case operatingSystemCommand:
+                        break;
+                    // Replace: \t or \u00A0 with white-space.
+                    case '\t':
+                    case noBreakSpace:
+                        textChars[count++] = ' ';
+                        break;
+                    default:
+                        textChars[count++] = ch;
+                        break;
+                }
+            }
+            // Construct new string from textChars.
+            text = new string(textChars, 0, count);
             text = text.FixExtraSpaces();
 
             if (text.EndsWith(' '))
@@ -1996,7 +2023,7 @@ namespace Nikse.SubtitleEdit.Core
         public static SubtitleFormat LoadMatroskaTextSubtitle(MatroskaTrackInfo matroskaSubtitleInfo, MatroskaFile matroska, List<MatroskaSubtitle> sub, Subtitle subtitle)
         {
             if (subtitle == null)
-                throw new ArgumentNullException("subtitle");
+                throw new ArgumentNullException(nameof(subtitle));
             subtitle.Paragraphs.Clear();
 
             var isSsa = false;

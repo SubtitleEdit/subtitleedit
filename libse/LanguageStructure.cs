@@ -28,6 +28,8 @@
             public string StartTime { get; set; }
             public string EndTime { get; set; }
             public string Duration { get; set; }
+            public string CharsPerSec { get; set; }
+            public string WordsPerMin { get; set; }
             public string NumberSymbol { get; set; }
             public string Number { get; set; }
             public string Text { get; set; }
@@ -392,6 +394,7 @@
             public string CodePageNumber { get; set; }
             public string DiskFormatCode { get; set; }
             public string DisplayStandardCode { get; set; }
+            public string ColorRequiresTeletext { get; set; }            
             public string CharacterCodeTable { get; set; }
             public string LanguageCode { get; set; }
             public string OriginalProgramTitle { get; set; }
@@ -411,6 +414,10 @@
             public string Import { get; set; }
             public string TextAndTimingInformation { get; set; }
             public string JustificationCode { get; set; }
+            public string VerticalPosition { get; set; }
+            public string MarginTop { get; set; }
+            public string MarginBottom { get; set; }
+            public string NewLineRows { get; set; }
             public string Teletext { get; set; }
             public string UseBox { get; set; }
             public string DoubleHeight { get; set; }
@@ -1313,6 +1320,7 @@
                     public string SplitLongLines { get; set; }
                     public string MinimumDisplayTimeBetweenParagraphs { get; set; }
                     public string SortBy { get; set; }
+                    public string NetflixQualityCheck { get; set; }
                     public string Number { get; set; }
                     public string StartTime { get; set; }
                     public string EndTime { get; set; }
@@ -1413,6 +1421,7 @@
                     public string RemoveTextForHi { get; set; }
                     public string VisualSync { get; set; }
                     public string SpellCheck { get; set; }
+                    public string NetflixQualityCheck { get; set; }
                     public string Settings { get; set; }
                     public string Help { get; set; }
                     public string ShowHideWaveform { get; set; }
@@ -1421,6 +1430,7 @@
 
                 public class ListViewContextMenu
                 {
+                    public string SizeAllColumnsToFit { get; set; }
                     public string AdvancedSubStationAlphaSetStyle { get; set; }
                     public string SubStationAlphaSetStyle { get; set; }
                     public string SubStationAlphaStyles { get; set; }
@@ -1568,6 +1578,7 @@
         public class MatroskaSubtitleChooser
         {
             public string Title { get; set; }
+            public string TitleMp4 { get; set; }
             public string PleaseChoose { get; set; }
             public string TrackXLanguageYTypeZ { get; set; }
         }
@@ -1836,6 +1847,7 @@
             public string Replace { get; set; }
             public string VisualSync { get; set; }
             public string SpellCheck { get; set; }
+            public string NetflixQualityCheck { get; set; }
             public string SettingsName { get; set; }
             public string Help { get; set; }
             public string ShowFrameRate { get; set; }
@@ -1844,6 +1856,7 @@
             public string AutoDetectAnsiEncoding { get; set; }
             public string SubtitleLineMaximumLength { get; set; }
             public string MaximumCharactersPerSecond { get; set; }
+            public string MaximumWordssPerMinute { get; set; }
             public string AutoWrapWhileTyping { get; set; }
             public string DurationMinimumMilliseconds { get; set; }
             public string DurationMaximumMilliseconds { get; set; }
@@ -1853,6 +1866,7 @@
             public string SubtitleFont { get; set; }
             public string SubtitleFontSize { get; set; }
             public string SubtitleBold { get; set; }
+            public string VideoAutoOpen { get; set; }            
             public string SubtitleCenter { get; set; }
             public string SubtitleFontColor { get; set; }
             public string SubtitleBackgroundColor { get; set; }
@@ -1865,6 +1879,8 @@
             public string RemoveBlankLinesWhenOpening { get; set; }
             public string ShowLineBreaksAs { get; set; }
             public string MainListViewDoubleClickAction { get; set; }
+            public string MainListViewColumns { get; set; }
+            public string MainListViewColumnsInfo { get; set; }            
             public string MainListViewNothing { get; set; }
             public string MainListViewVideoGoToPositionAndPause { get; set; }
             public string MainListViewVideoGoToPositionAndPlay { get; set; }
@@ -1895,6 +1911,7 @@
             public string MpcHcDescription { get; set; }
             public string MpvPlayer { get; set; }
             public string MpvPlayerDescription { get; set; }
+            public string MpvHandlesPreviewText { get; set; }            
             public string VlcMediaPlayer { get; set; }
             public string VlcMediaPlayerDescription { get; set; }
             public string VlcBrowseToLabel { get; set; }
@@ -1907,8 +1924,11 @@
             public string WaveformAppearance { get; set; }
             public string WaveformGridColor { get; set; }
             public string WaveformShowGridLines { get; set; }
+            public string WaveformShowCps { get; set; }
+            public string WaveformShowWpm { get; set; }
             public string ReverseMouseWheelScrollDirection { get; set; }
             public string WaveformAllowOverlap { get; set; }
+            public string WaveformSetVideoPosMoveStartEnd { get; set; }            
             public string WaveformFocusMouseEnter { get; set; }
             public string WaveformListViewFocusMouseEnter { get; set; }
             public string WaveformBorderHitMs1 { get; set; }
@@ -1999,6 +2019,7 @@
             public string GoToPrevious { get; set; }
             public string GoToCurrentSubtitleStart { get; set; }
             public string GoToCurrentSubtitleEnd { get; set; }
+            public string GoToPreviousSubtitleAndFocusVideo { get; set; }
             public string GoToNextSubtitleAndFocusVideo { get; set; }
             public string ToggleFocus { get; set; }
             public string ToggleDialogDashes { get; set; }
@@ -2148,6 +2169,20 @@
             public string UndoX { get; set; }
         }
 
+        public class NetflixQualityCheck
+        {
+            public string GlyphCheckSuccessfull { get; set; }
+            public string GlyphCheckFailed { get; set; }
+            public string GlyphCheckReport { get; set; }
+
+            public string WhiteSpaceCheckSuccessfull { get; set; }
+            public string WhiteSpaceCheckFailed { get; set; }
+            public string WhiteSpaceCheckReport { get; set; }
+
+            public string ReportPrompt { get; set;  }
+            public string SavingError { get; set; }
+        }
+
         public class Split
         {
             public string Title { get; set; }
@@ -2214,6 +2249,7 @@
             public string LengthInFormatXinCharactersY { get; set; }
             public string NumberOfCharactersInTextOnly { get; set; }
             public string TotalCharsPerSecond { get; set; }
+            public string TotalWords { get; set; }
             public string NumberOfItalicTags { get; set; }
             public string NumberOfBoldTags { get; set; }
             public string NumberOfUnderlineTags { get; set; }
@@ -2499,6 +2535,8 @@
             public string RemoveSceneChange { get; set; }
             public string GuessTimeCodes { get; set; }
             public string SeekSilence { get; set; }
+            public string CharsSecX { get; set; }
+            public string WordsMinX { get; set; }
         }
 
         public class WaveformGenerateTimeCodes

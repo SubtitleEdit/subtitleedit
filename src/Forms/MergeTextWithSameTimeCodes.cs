@@ -214,7 +214,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (!removed.Contains(i) && lineNumbers.Length > 0 && clearFixes)
                 {
                     AddToListView(p, lineNumbers.ToString(), p.Text);
-                    lineNumbers = new StringBuilder();
+                    lineNumbers.Clear();
                 }
             }
             if (lineNumbers.Length > 0 && clearFixes && p != null)

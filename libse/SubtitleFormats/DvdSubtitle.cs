@@ -50,7 +50,7 @@ INFO=
 LICENSE=
 }";
 
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             sb.AppendLine(header);
             foreach (Paragraph p in subtitle.Paragraphs)
             {

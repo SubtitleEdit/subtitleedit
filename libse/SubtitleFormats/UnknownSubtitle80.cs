@@ -77,7 +77,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                             paragraph = new Paragraph { StartTime = DecodeTimeCodeFramesFourParts(startTimeParts), EndTime = DecodeTimeCodeFramesFourParts(endTimeParts) };
                             subtitle.Paragraphs.Add(paragraph);
-                            text = new StringBuilder();
+                            text.Clear();
                             s = s.Remove(0, 18 + lineParts[0].Length).Trim();
                             var idxA = s.IndexOf('＠');
                             if (idxA > 0)

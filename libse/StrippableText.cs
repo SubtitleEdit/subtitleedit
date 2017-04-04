@@ -17,7 +17,7 @@ namespace Nikse.SubtitleEdit.Core
         }
 
         public StrippableText(string text)
-            : this(text, " >-\"”“['‘`´¶(♪¿¡.…—", " -\"”“]'`´¶)♪.!?:…—")
+            : this(text, " >-\"„”“['‘`´¶(♪¿¡.…—", " -\"”“]'`´¶)♪.!?:…—")
         {
         }
 
@@ -130,7 +130,7 @@ namespace Nikse.SubtitleEdit.Core
                                    (lower[start - 1] == '"') || (lower[start - 1] == '\'') || (lower[start - 1] == '>') ||
                                    Environment.NewLine.EndsWith(lower[start - 1]);
 
-                    if (startOk && string.CompareOrdinal(name, "Don") == 0 && lower.Substring(start).StartsWith("don't"))
+                    if (startOk && string.CompareOrdinal(name, "Don") == 0 && lower.Substring(start).StartsWith("don't", StringComparison.Ordinal))
                         startOk = false;
 
                     if (startOk)

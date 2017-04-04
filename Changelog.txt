@@ -1,5 +1,85 @@
 ﻿Subtitle Edit Changelog
 
+
+3.5.3 (xth May 2017) BETA
+* NEW:
+   * New Netflix quality checker - thx askolesov/pavel-belenko
+* IMPROVED:
+   * Updated Chinese translation - thx Leon
+   * Updated French translation - thx JM GBT
+   * Updated Rusian translation - thx Elheym
+   * Updated Finnish translation - thx Teijo S.
+   * Import plain text now also supports input as HTML
+   * Added "Total words" to statistics - thx Barbara
+   * Added more Tesseract dictionaries - thx lucybook/Elheym
+   * Added "Video auto-load" to UI settings - thx mtarini
+* FIXED:
+   * Fixed crash in "Add to user dictionary" in OCR - thx alfix0
+   * Fixed original file name bug in "Undo" - thx darnn
+   * Fixed non default timecode scales in MKV - thx mkver
+   * Fix layout of translator mode in RTL mode - thx darnn
+   * Fixed possible crash in "CleanAutoBackupFolder" - thx kaser2010
+   * Fix missing UTF-8 tag in OCR HTML export - thx dgonyier
+   * Fixed issue regarding "Fix dialogs on one line" - thx ingo
+   * Fixed possible crash in EBU STL - thx Elena
+   * Video player "Stop" resets playback position - thx askolesov/pavel-belenko
+   * Many fixes for TTML 1.0 and Netflix Timed Text - thx askolesov/pavel-belenko
+   * Fixed locking of input subtitle file (for unknown subtitles) - thx darnn
+   * Fixed crash after unsuccessful load of subtitle file - thx darnn
+   * Fixed possible crash in "Batch convert" - thx FreezinG117
+   * Fixed issue with the German open quotation mark - thx Ninelpienel
+   * Fixed bug in "Reverse RTL start/end" - thx darnn
+   * Fixed "FCP + image" export for drop frame rates - thx chris
+   * Fixed finding Tesseract traineddata files on Linux - thx mooop12
+   * Fixed loading of "mks" files from cmd line - thx Charles
+   * Fixed auto-backup for "EBU STL" format - thx Mirka
+
+
+3.5.2 (3rd March 2017)
+* NEW:
+   * Added optional list view columns "chars/sec" + "words/min"
+   * New setting for waveform: Set video position when moving start/end
+   * Added new json subtitle format - thx Zhiyi
+   * Added new binary subtitle format - thx Suzanne
+   * Added shortcut "Go to previous line and set video position" - thx Mia
+* IMPROVED:
+   * Updated Russian translation - thx Elheym
+   * Updated Portuguese translation - thx moob
+   * Updated Polish translation - thx admas
+   * Updated Basque translation - thx Xabier
+   * Updated Korean translation - thx domddol
+   * Updated Hungarian translation - thx ZityiSoft Team
+   * Updated Swedish translation - thx Ted
+   * Updated Chinese translation - thx Leon
+   * Minor improvements for format "Structured titles" - thx Yamato-ua
+   * List view columns arrangable and non-clickable - thx Ingo
+   * EBU STL: New settings regarding vertical position
+   * EBU STL: New color picker dialog
+   * "libmpv" shows version number
+   * Added preview text inside video for "libmpv"
+   * Added format "PAC" to "Batch convert" - thx Amed
+* FIXED:
+   * Fixed play current/selection not stopping - thx rhazor
+   * Fixed fast forward waveform scrolling with mouse wheel
+   * Fixed bug in spell check "change word" regarding "¿?" - thx locotus
+   * Fix in "Fix common errors" regarding de-selected fixes - thx Tronar  
+   * Fix for MPC-HC 32-bit - thx ZoneX
+   * Fixed issue with importing "Unknown 53" format - thx darnn
+   * Fixed italic rendering issue in format DCinema SMPTE - thx Miga
+   * Fixed bug in image export - thx marb99
+   * Word spell check does not change format - thx Yamato-ua
+   * Better reading of top alignment in dfxp - thx Plazik
+   * "Fix common errors" - only delete/merge line still enables "OK" button
+   * "Batch convert" - don't clear ASS/SSA style after format change - thx Thunderbolt8
+   * Fix for multi-line italic in format TTML 1.0 - thx nathaniel1977
+   * EBU STL writing now works with multiple colors in samee line - thx George
+   * Fix for "-" vs "–" (switched) for format PAC - thx Bjørn
+   * Fixed "libmpv" re-open video issue
+   * Fixed crash in TTML styles dialog with new TTML file - thx aucforum
+   * Added support for "offset" in format "lrc" - thx Omar
+   * + Many minor fixes from ivandrofly
+
+
 3.5.1 (13th December 2016)
 * NEW:
    * "mpv" media player now works on Linux  - thx var1ap 

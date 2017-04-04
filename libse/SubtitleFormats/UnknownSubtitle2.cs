@@ -52,7 +52,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             const string paragraphWriteFormat = "Subtitle number: {0}\r\nStart time (or frames): {1}\r\nEnd time (or frames): {2}\r\nSubtitle text: {3}\r\n";
 
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 string startTime = string.Format("{0:00}:{1:00}:{2:00},{3:00}:0000000000", p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, p.StartTime.Milliseconds / 10);

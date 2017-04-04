@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 using System.Xml;
+using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     /// <summary>
     /// Nexflix version of timed text - time code is "00:00:04.000", tag <br /> is converted to <br/>
     /// See https://backlothelp.netflix.com/hc/en-us/articles/215758617-Timed-Text-Style-Guide-General-Requirements
+    ///     https://backlothelp.netflix.com/hc/en-us/articles/115001869828-Announcement-Additional-TTML-Schema-Inspections
     /// </summary>
     public class NetflixTimedText : TimedText10
     {
@@ -36,7 +38,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             var sb = new StringBuilder();
             lines.ForEach(line => sb.AppendLine(line));
-            if (!sb.ToString().Contains("Netflix Subtitle"))
+            if (!sb.ToString().Contains(">Netflix Subtitle"))
                 return false;
 
             var subtitle = new Subtitle();
@@ -108,7 +110,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             nsmgr.AddNamespace("ttm", "http://www.w3.org/ns/10/ttml#metadata");
 
             const string xmlStructure = @"<?xml version='1.0' encoding='utf-8'?>
-<tt xmlns='http://www.w3.org/ns/ttml' xmlns:ttm='http://www.w3.org/ns/ttml#metadata' xmlns:tts='http://www.w3.org/ns/ttml#styling' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>
+<tt xmlns='http://www.w3.org/ns/ttml' xmlns:ttm='http://www.w3.org/ns/ttml#metadata' xmlns:tts='http://www.w3.org/ns/ttml#styling' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xml:lang='en'>
     <head>
         <metadata>
             <ttm:title>Netflix Subtitle</ttm:title>
@@ -299,6 +301,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             if (subtitle.Header == null)
                 subtitle.Header = xmlString;
             return xmlString;
+        }
+
+        public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
+        {
+            base.LoadSubtitle(subtitle, lines, fileName);
+
+            // Remove regions
+            subtitle.Paragraphs.ForEach(p => 
+                p.Text = Regex.Replace(p.Text, @"^({\\an[1-9]})", string.Empty));
         }
 
         public override bool HasStyleSupport

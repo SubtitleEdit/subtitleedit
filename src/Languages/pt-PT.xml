@@ -2,7 +2,7 @@
 <Language Name="português (Portugal)">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.5.1</Version>
+    <Version>3.5.2</Version>
     <TranslatedBy>------------------------------------------------------------------------------------------------
 Traduzido para Português de Portugal, por moob
 Email: mailto:moob42341@gmail.com</TranslatedBy>
@@ -26,6 +26,8 @@ Email: mailto:moob42341@gmail.com</TranslatedBy>
     <StartTime>Tempo inicial</StartTime>
     <EndTime>Tempo final</EndTime>
     <Duration>Duração</Duration>
+    <CharsPerSec>Caracteres/seg</CharsPerSec>
+    <WordsPerMin>Palavras/min</WordsPerMin>
     <NumberSymbol>#</NumberSymbol>
     <Number>Número</Number>
     <Text>Texto</Text>
@@ -352,6 +354,7 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <CodePageNumber>Número de código da página</CodePageNumber>
     <DiskFormatCode>Código do formato do disco</DiskFormatCode>
     <DisplayStandardCode>Exibir o código padrão</DisplayStandardCode>
+    <ColorRequiresTeletext>Cores necessárias para teletexto!</ColorRequiresTeletext>
     <CharacterCodeTable>Tabela de caracteres</CharacterCodeTable>
     <LanguageCode>Código do idioma</LanguageCode>
     <OriginalProgramTitle>Título original do programa</OriginalProgramTitle>
@@ -371,6 +374,10 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <Import>Importar...</Import>
     <TextAndTimingInformation>Informação de tempo e texto</TextAndTimingInformation>
     <JustificationCode>Código de justificação</JustificationCode>
+    <VerticalPosition>Posição vertical</VerticalPosition>
+    <MarginTop>Margem superior (para linhas alinhadas no topo)</MarginTop>
+    <MarginBottom>Margem inferior (para linhas alinhadas em baixo)</MarginBottom>
+    <NewLineRows>Número de novas linhas adicionadas</NewLineRows>
     <Teletext>Teletexto</Teletext>
     <UseBox>Usar caixa à volta do texto</UseBox>
     <DoubleHeight>Usar o dobro da altura para o texto</DoubleHeight>
@@ -536,7 +543,7 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <RemoveLineBreaksAll>Remover quebras de linha em textos curtos (todos excepto diálogos)</RemoveLineBreaksAll>
     <FixUppercaseIInsindeLowercaseWords>Corrigir 'i' maiúscula em palavras em minúsculo (erro de OCR)</FixUppercaseIInsindeLowercaseWords>
     <FixDoubleApostrophes>Substituir apóstrofe dupla ('') por aspas (")</FixDoubleApostrophes>
-    <AddPeriods>Adicionar ponto final depois de linhas quando a seguinte começar com maiúscula</AddPeriods>
+    <AddPeriods>Adicionar ponto final quando a linha seguinte começar com maiúscula</AddPeriods>
     <StartWithUppercaseLetterAfterParagraph>Iniciar parágrafo com maiúscula</StartWithUppercaseLetterAfterParagraph>
     <StartWithUppercaseLetterAfterPeriodInsideParagraph>Iniciar com maiúscula depois de ponto final dentro do parágrafo</StartWithUppercaseLetterAfterPeriodInsideParagraph>
     <StartWithUppercaseLetterAfterColon>Iniciar com maiúscula depois de ":" ou ";"</StartWithUppercaseLetterAfterColon>
@@ -551,8 +558,8 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <FixSpanishInvertedQuestionAndExclamationMarks>Corrigir sinais invertidos (interrogação e exclamação) do espanhol</FixSpanishInvertedQuestionAndExclamationMarks>
     <AddMissingQuote>Adicionar aspa em falta (")</AddMissingQuote>
     <AddMissingQuotes>Adicionar aspas em falta (")</AddMissingQuotes>
-    <FixHyphens>Corrigir (remover hífen) em linhas que começam com hífen (-)</FixHyphens>
-    <FixHyphensAdd>Corrigir (adicionar hífen) em linhas duplas só com um hífen (-)</FixHyphensAdd>
+    <FixHyphens>Remover hífen em linhas que começam com hífen (-)</FixHyphens>
+    <FixHyphensAdd>Adicionar hífen em linhas duplas só com um hífen (-)</FixHyphensAdd>
     <FixHyphen>Corrigir linhas que começam com hífen (-)</FixHyphen>
     <XHyphensFixed>Hífens removidos: {0}</XHyphensFixed>
     <AddMissingQuotesExample>"Como estás -&gt; "Como estás?"</AddMissingQuotesExample>
@@ -575,7 +582,7 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <XLineBreaksAdded>{0} quebras de linha adicionadas</XLineBreaksAdded>
     <BreakLongLine>Dividir linha longa</BreakLongLine>
     <FixLongDisplayTime>Corrigir duração longa</FixLongDisplayTime>
-    <FixInvalidItalicTag>Corrigir tag itálica inválida</FixInvalidItalicTag>
+    <FixInvalidItalicTag>Corrigir etiqueta itálica inválida</FixInvalidItalicTag>
     <FixShortDisplayTime>Corrigir duração curta</FixShortDisplayTime>
     <FixOverlappingDisplayTime>Corrigir tempo sobreposto</FixOverlappingDisplayTime>
     <FixInvalidItalicTagsExample>&lt;i&gt;E eu com isso.&lt;i&gt; -&gt; &lt;i&gt;E eu com isso.&lt;/i&gt;</FixInvalidItalicTagsExample>
@@ -619,15 +626,15 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <XFixMissingOpenBracket>{0} [ omitidos na linha corrigidos</XFixMissingOpenBracket>
     <XFixMusicNotation>{0} nota musical na linha corrigida</XFixMusicNotation>
     <FixDoubleDashExample>'Whoa-- um yeah!' -&gt; 'Whoa... um yeah!'</FixDoubleDashExample>
-    <FixDoubleGreaterThanExample>'&gt;&gt; Robert: Sup dude!' -&gt; 'Robert: Sup dude!'</FixDoubleGreaterThanExample>
-    <FixEllipsesStartExample>'... and then we' -&gt; 'and then we'</FixEllipsesStartExample>
-    <FixMissingOpenBracketExample>'clanks] Look out!' -&gt; '[clanks] Look out!'</FixMissingOpenBracketExample>
-    <FixMusicNotationExample>'âTª sweet dreams are' -&gt; '♫ sweet dreams are'</FixMusicNotationExample>
+    <FixDoubleGreaterThanExample>'&gt;&gt; João: Sim, meu!' -&gt; 'João: Sim, meu!'</FixDoubleGreaterThanExample>
+    <FixEllipsesStartExample>'... e depois nós' -&gt; 'e depois nós'</FixEllipsesStartExample>
+    <FixMissingOpenBracketExample>'ruído] Cuidado!' -&gt; '[ruído] Cuidado!'</FixMissingOpenBracketExample>
+    <FixMusicNotationExample>'âTª bons sonhos são' -&gt; '♫ bons sonhos são'</FixMusicNotationExample>
     <NumberOfImportantLogMessages>{0} mensagens de log importantes!</NumberOfImportantLogMessages>
     <FixedOkXY>Corrigidos e OK - '{0}': {1}</FixedOkXY>
     <FixOcrErrorExample>NÃo -&gt; Não</FixOcrErrorExample>
     <FixSpaceBetweenNumbersExample>1 100 -&gt; 1100</FixSpaceBetweenNumbersExample>
-    <FixDialogsOneLineExample>Olá João! - Olá Ida! -&gt; Olá João!&lt;br /&gt;- Olá Ida!</FixDialogsOneLineExample>
+    <FixDialogsOneLineExample>Olá João! - Olá Olga! -&gt; Olá João!&lt;br /&gt;- Olá Olga!</FixDialogsOneLineExample>
   </FixCommonErrors>
   <GetDictionaries>
     <Title>Precisa de dicionários?</Title>
@@ -1586,11 +1593,11 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <NonWordBoundary>Sem delimitação de palavra (\B)</NonWordBoundary>
     <NewLine>Nova linha (\r\n)</NewLine>
     <NewLineShort>Nova linha (\n)</NewLineShort>
-    <AnyDigit>Qualquer dígito (\d)</AnyDigit>
-    <NonDigit>Sem ser dígito (\D)</NonDigit>
+    <AnyDigit>Qualquer número de 0 a 9 (\d)</AnyDigit>
+    <NonDigit>Sem ser número (\D)</NonDigit>
     <AnyCharacter>Qualquer caractere (.)</AnyCharacter>
     <AnyWhitespace>Qualquer espaço em branco (\s)</AnyWhitespace>
-    <NonSpaceCharacter>Sem ser Carácter de espaço (\S)</NonSpaceCharacter>
+    <NonSpaceCharacter>Sem ser espaço em espaço (\S)</NonSpaceCharacter>
     <ZeroOrMore>Zero ou mais (*)</ZeroOrMore>
     <OneOrMore>Um ou mais (+)</OneOrMore>
     <InCharacterGroup>Dentro do grupo de caracteres ([teste])</InCharacterGroup>
@@ -1683,10 +1690,11 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <DefaultFileEncoding>Codificação padrão do ficheiro</DefaultFileEncoding>
     <AutoDetectAnsiEncoding>Auto detectar codificação ANSI</AutoDetectAnsiEncoding>
     <SubtitleLineMaximumLength>Comprimento máximo de única linha</SubtitleLineMaximumLength>
-    <MaximumCharactersPerSecond>Máximo Caracteres/seg</MaximumCharactersPerSecond>
+    <MaximumCharactersPerSecond>Máximo caracteres/seg</MaximumCharactersPerSecond>
+    <MaximumWordssPerMinute>Máximo palavras/min</MaximumWordssPerMinute>
     <AutoWrapWhileTyping>Moldar o texto ao escrever</AutoWrapWhileTyping>
-    <DurationMinimumMilliseconds>Duração Mínima milissegundos</DurationMinimumMilliseconds>
-    <DurationMaximumMilliseconds>Duração Máxima milissegundos</DurationMaximumMilliseconds>
+    <DurationMinimumMilliseconds>Duração mínima milissegundos</DurationMinimumMilliseconds>
+    <DurationMaximumMilliseconds>Duração máxima milissegundos</DurationMaximumMilliseconds>
     <MinimumGapMilliseconds>Min. de intervalo entre legendas em ms</MinimumGapMilliseconds>
     <MaximumLines>Número máximo de linhas</MaximumLines>
     <SubtitleFont>Tipo de letra</SubtitleFont>
@@ -1704,6 +1712,8 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <RemoveBlankLinesWhenOpening>Eliminar linhas em branco ao abrir a legenda</RemoveBlankLinesWhenOpening>
     <ShowLineBreaksAs>Ver quebras de linha na "Lista" da janela principal como:</ShowLineBreaksAs>
     <MainListViewDoubleClickAction>Ao clicar duas vezes na linha de texto na janela principal irá...</MainListViewDoubleClickAction>
+    <MainListViewColumns>Colunas da lista</MainListViewColumns>
+    <MainListViewColumnsInfo>Escolher as colunas visíveis da lista</MainListViewColumnsInfo>
     <MainListViewNothing>Não faz nada</MainListViewNothing>
     <MainListViewVideoGoToPositionAndPause>... para posição do vídeo e pausar</MainListViewVideoGoToPositionAndPause>
     <MainListViewVideoGoToPositionAndPlay>... para posição do vídeo e reproduzir</MainListViewVideoGoToPositionAndPlay>
@@ -1733,6 +1743,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <MpcHcDescription>Media Player Classic - Home Cinema</MpcHcDescription>
     <MpvPlayer>mpv</MpvPlayer>
     <MpvPlayerDescription>https://mpv.io/ - leitor multimédia gratuito e de Código aberto</MpvPlayerDescription>
+    <MpvHandlesPreviewText>Visualização de texto no mpv</MpvHandlesPreviewText>
     <VlcMediaPlayer>VLC media player</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll do VLC media player 1.1.0 ou superior</VlcMediaPlayerDescription>
     <VlcBrowseToLabel>Directoria do VLC (só é necessário se estiver a usar a versão portátil do VLC)</VlcBrowseToLabel>
@@ -1745,8 +1756,11 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <WaveformAppearance>Aparência da forma de onda</WaveformAppearance>
     <WaveformGridColor>Cor da grelha</WaveformGridColor>
     <WaveformShowGridLines>Mostrar linhas na grelha</WaveformShowGridLines>
+    <WaveformShowCps>Mostrar caracteres/seg</WaveformShowCps>
+    <WaveformShowWpm>Mostrar palavras/min</WaveformShowWpm>
     <ReverseMouseWheelScrollDirection>Inverter direcção da roda do rato</ReverseMouseWheelScrollDirection>
-    <WaveformAllowOverlap>Permitir sobreposição (ao mover / redimensionar)</WaveformAllowOverlap>
+    <WaveformAllowOverlap>Permitir sobreposição ao mover ou redimensionar</WaveformAllowOverlap>
+    <WaveformSetVideoPosMoveStartEnd>Definir a posição do vídeo ao mover o início ou fim</WaveformSetVideoPosMoveStartEnd>
     <WaveformFocusMouseEnter>Destacar a entrada do cursor do rato</WaveformFocusMouseEnter>
     <WaveformListViewFocusMouseEnter>Destacar também a lista de visualização na entrada do cursor do rato</WaveformListViewFocusMouseEnter>
     <WaveformBorderHitMs1>O acerto da marca do contorno deve estar dentro</WaveformBorderHitMs1>
@@ -1837,6 +1851,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <GoToPrevious>Ir para a linha anterior</GoToPrevious>
     <GoToCurrentSubtitleStart>Ir para o início da linha actual</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>Ir para o final da linha actual</GoToCurrentSubtitleEnd>
+    <GoToPreviousSubtitleAndFocusVideo>Ir para a linha anterior e definir a posição do vídeo</GoToPreviousSubtitleAndFocusVideo>
     <GoToNextSubtitleAndFocusVideo>Ir para a próxima linha e definir a posição de vídeo</GoToNextSubtitleAndFocusVideo>
     <ToggleFocus>Alternar o realce entre a caixa de texto da legenda e o separador (Lista) na janela principal</ToggleFocus>
     <ToggleDialogDashes>Alternar hífens de diálogo</ToggleDialogDashes>
@@ -2292,6 +2307,8 @@ Manter as alterações?</KeepChangesMessage>
     <RemoveSceneChange>Eliminar mudança de cena</RemoveSceneChange>
     <GuessTimeCodes>Adivinhar os tempos...</GuessTimeCodes>
     <SeekSilence>Localizar silêncio no áudio...</SeekSilence>
+    <CharsSecX>CPS: {0:0.00}</CharsSecX>
+    <WordsMinX>PPM: {0:0.00}</WordsMinX>
   </Waveform>
   <WaveformGenerateTimeCodes>
     <Title>Adivinhar os tempos</Title>

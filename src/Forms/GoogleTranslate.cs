@@ -88,10 +88,14 @@ namespace Nikse.SubtitleEdit.Forms
 
             subtitleListViewFrom.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
             subtitleListViewTo.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
+            subtitleListViewFrom.HideColumn(SubtitleListView.SubtitleColumn.CharactersPerSeconds);
+            subtitleListViewFrom.HideColumn(SubtitleListView.SubtitleColumn.WordsPerMinute);
+            subtitleListViewTo.HideColumn(SubtitleListView.SubtitleColumn.CharactersPerSeconds);
+            subtitleListViewTo.HideColumn(SubtitleListView.SubtitleColumn.WordsPerMinute);
             UiUtil.InitializeSubtitleFont(subtitleListViewFrom);
             UiUtil.InitializeSubtitleFont(subtitleListViewTo);
-            subtitleListViewFrom.AutoSizeAllColumns(this);
-            subtitleListViewTo.AutoSizeAllColumns(this);
+            subtitleListViewFrom.AutoSizeColumns();
+            subtitleListViewFrom.AutoSizeColumns();
             UiUtil.FixLargeFonts(this, buttonOK);
         }
 
@@ -114,6 +118,8 @@ namespace Nikse.SubtitleEdit.Forms
             string defaultFromLanguage = LanguageAutoDetect.AutoDetectGoogleLanguage(encoding); // Guess language via encoding
             if (string.IsNullOrEmpty(defaultFromLanguage))
                 defaultFromLanguage = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle); // Guess language based on subtitle contents
+            if (defaultFromLanguage == "he")
+                defaultFromLanguage = "iw";
 
             FillComboWithLanguages(comboBoxFrom);
             int i = 0;
@@ -231,7 +237,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (Utilities.UrlEncode(sb + text).Length >= textMaxSize)
                     {
                         FillTranslatedText(DoTranslate(sb.ToString()), start, index - 1);
-                        sb = new StringBuilder();
+                        sb.Clear();
                         progressBar1.Refresh();
                         Application.DoEvents();
                         start = index;
@@ -1049,7 +1055,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 MessageBox.Show("Sorry, Microsoft is closing their free api: " + exception.Message);
                                 overQuota = true;
                             }
-                            sb = new StringBuilder();
+                            sb.Clear();
                             progressBar1.Refresh();
                             Application.DoEvents();
                             start = index;
@@ -1116,7 +1122,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 MessageBox.Show(exception.Message);
                                 overQuota = true;
                             }
-                            sb = new StringBuilder();
+                            sb.Clear();
                             progressBar1.Refresh();
                             Application.DoEvents();
                             start = index;

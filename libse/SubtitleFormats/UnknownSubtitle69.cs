@@ -86,7 +86,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             p.StartTime = DecodeTimeCodeFrames(start.Substring(0, 11), splitChars);
                             p.EndTime = DecodeTimeCodeFrames(end.Substring(0, 11), splitChars);
                             subtitle.Paragraphs.Add(p);
-                            text = new StringBuilder();
+                            text.Clear();
                         }
                         catch
                         {

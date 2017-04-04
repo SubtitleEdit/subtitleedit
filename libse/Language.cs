@@ -85,6 +85,7 @@ namespace Nikse.SubtitleEdit.Core
         public LanguageStructure.ShowEarlierLater ShowEarlierLater;
         public LanguageStructure.ShowHistory ShowHistory;
         public LanguageStructure.SpellCheck SpellCheck;
+        public LanguageStructure.NetflixQualityCheck NetflixQualityCheck;
         public LanguageStructure.Split Split;
         public LanguageStructure.SplitLongLines SplitLongLines;
         public LanguageStructure.SplitSubtitle SplitSubtitle;
@@ -136,6 +137,8 @@ namespace Nikse.SubtitleEdit.Core
                 StartTime = "Start time",
                 EndTime = "End time",
                 Duration = "Duration",
+                CharsPerSec = "Chars/sec",
+                WordsPerMin = "Words/min",
                 NumberSymbol = "#",
                 Number = "Number",
                 Text = "Text",
@@ -516,6 +519,7 @@ namespace Nikse.SubtitleEdit.Core
                 CodePageNumber = "Code page number",
                 DiskFormatCode = "Disk format code",
                 DisplayStandardCode = "Display standard code",
+                ColorRequiresTeletext = "Colors require teletext!",
                 CharacterCodeTable = "Character table",
                 LanguageCode = "Language code",
                 OriginalProgramTitle = "Original program title",
@@ -535,6 +539,10 @@ namespace Nikse.SubtitleEdit.Core
                 Import = "Import...",
                 TextAndTimingInformation = "Text and timing information",
                 JustificationCode = "Justification code",
+                VerticalPosition = "Vertical position",
+                MarginTop = "Margin top (for top aligned subtitles)",
+                MarginBottom = "Margin bottom (for bottom aligned subtitles)",
+                NewLineRows = "Number of rows added by a new line",
                 Teletext = "Teletext",
                 UseBox = "Use box around text",
                 DoubleHeight = "Use double height for text",
@@ -1549,6 +1557,7 @@ namespace Nikse.SubtitleEdit.Core
                         RemoveTextForHi = "Remove text for hearing impaired",
                         VisualSync = "Visual sync",
                         SpellCheck = "Spell check",
+                        NetflixQualityCheck = "Netflix quality check",
                         Settings = "Settings",
                         Help = "Help",
                         ShowHideWaveform = "Show/hide waveform",
@@ -1557,6 +1566,7 @@ namespace Nikse.SubtitleEdit.Core
 
                     ContextMenu = new LanguageStructure.Main.MainMenu.ListViewContextMenu
                     {
+                        SizeAllColumnsToFit = "Size all columns to fit",
                         AdvancedSubStationAlphaSetStyle = "Advanced Sub Station Alpha - set style",
                         SubStationAlphaSetStyle = "Sub Station Alpha - set style",
                         AdvancedSubStationAlphaStyles = "Advanced Sub Station Alpha styles...",
@@ -1687,6 +1697,7 @@ namespace Nikse.SubtitleEdit.Core
             MatroskaSubtitleChooser = new LanguageStructure.MatroskaSubtitleChooser
             {
                 Title = "Choose subtitle from Matroska file",
+                TitleMp4 = "Choose subtitle from MP4 file",
                 PleaseChoose = "More than one subtitle found - please choose",
                 TrackXLanguageYTypeZ = "Track {0} - language: {1} - type: {2}",
             };
@@ -1959,6 +1970,7 @@ can edit in same subtitle file (collaboration)",
                 Replace = "Replace",
                 VisualSync = "Visual sync",
                 SpellCheck = "Spell check",
+                NetflixQualityCheck = "Netflix quality check",
                 SettingsName = "Settings",
                 Help = "Help",
                 ShowFrameRate = "Show frame rate in toolbar",
@@ -1967,6 +1979,7 @@ can edit in same subtitle file (collaboration)",
                 AutoDetectAnsiEncoding = "Auto detect ANSI encoding",
                 SubtitleLineMaximumLength = "Single line max. length",
                 MaximumCharactersPerSecond = "Max. chars/sec",
+                MaximumWordssPerMinute = "Max. words/min",
                 AutoWrapWhileTyping = "Auto-wrap while typing",
                 DurationMinimumMilliseconds = "Min. duration, milliseconds",
                 DurationMaximumMilliseconds = "Max. duration, milliseconds",
@@ -1979,6 +1992,7 @@ can edit in same subtitle file (collaboration)",
                 SubtitleFontColor = "Subtitle font color",
                 SubtitleBackgroundColor = "Subtitle background color",
                 SpellChecker = "Spell checker",
+                VideoAutoOpen = "Auto-open video file when opening subtitle",
                 RememberRecentFiles = "Show recent files (for reopen)",
                 StartWithLastFileLoaded = "Start with last file loaded",
                 RememberSelectedLine = "Remember selected line",
@@ -1987,6 +2001,8 @@ can edit in same subtitle file (collaboration)",
                 RemoveBlankLinesWhenOpening = "Remove blank lines when opening a subtitle",
                 ShowLineBreaksAs = "Show line breaks in list view as",
                 MainListViewDoubleClickAction = "Double-clicking line in main window list view will",
+                MainListViewColumns = "List view columns",
+                MainListViewColumnsInfo = "Choose visible list view columns",
                 MainListViewNothing = "Nothing",
                 MainListViewVideoGoToPositionAndPause = "Go to video position and pause",
                 MainListViewVideoGoToPositionAndPlay = "Go to video position and play",
@@ -2016,6 +2032,7 @@ can edit in same subtitle file (collaboration)",
                 MpcHcDescription = "Media Player Classic - Home Cinema",
                 MpvPlayer = "mpv",
                 MpvPlayerDescription = "https://mpv.io/ - free, open source, and cross-platform media player",
+                MpvHandlesPreviewText = "mpv handles preview text",
                 VlcMediaPlayer = "VLC media player",
                 VlcMediaPlayerDescription = "libvlc.dll from VLC media player 1.1.0 or newer",
                 VlcBrowseToLabel = "VLC path (only needed if you're using the portable version of VLC)",
@@ -2028,8 +2045,11 @@ can edit in same subtitle file (collaboration)",
                 WaveformAppearance = "Waveform appearance",
                 WaveformGridColor = "Grid color",
                 WaveformShowGridLines = "Show grid lines",
+                WaveformShowCps = "Show chars/sec",
+                WaveformShowWpm = "Show words/min",
                 ReverseMouseWheelScrollDirection = "Reverse mouse wheel scroll direction",
                 WaveformAllowOverlap = "Allow overlap (when moving/resizing)",
+                WaveformSetVideoPosMoveStartEnd = "Set video position when moving start/end",
                 WaveformFocusMouseEnter = "Set focus on mouse enter",
                 WaveformListViewFocusMouseEnter = "Also set list view focus on mouse enter in list view",
                 WaveformBorderHitMs1 = "Border marker hit must be within",
@@ -2118,6 +2138,7 @@ can edit in same subtitle file (collaboration)",
                 GoToPrevious = "Go to previous line",
                 GoToCurrentSubtitleStart = "Go to current line start",
                 GoToCurrentSubtitleEnd = "Go to current line end",
+                GoToPreviousSubtitleAndFocusVideo = "Go to previous line and set video position",
                 GoToNextSubtitleAndFocusVideo = "Go to next line and set video position",
                 ToggleFocus = "Toggle focus between list view and subtitle text box",
                 ToggleDialogDashes = "Toggle dialog dashes",
@@ -2268,6 +2289,20 @@ can edit in same subtitle file (collaboration)",
                 UndoX = "Undo: {0}",
             };
 
+            NetflixQualityCheck = new LanguageStructure.NetflixQualityCheck
+            {
+                GlyphCheckSuccessfull = "Character validation has been successful.",
+                GlyphCheckFailed = "Character validation has failed.",
+                GlyphCheckReport = "Invalid character {0} found at column {1}",
+
+                WhiteSpaceCheckSuccessfull = "White space validation has been successful.",
+                WhiteSpaceCheckFailed = "White space validation has failed.",
+                WhiteSpaceCheckReport = "Invalid white space found at column {0}.",
+
+                ReportPrompt = "Please see full report here: {0}.",
+                SavingError = "Report cannot be saved."
+            };
+
             Split = new LanguageStructure.Split
             {
                 Title = "Split",
@@ -2335,6 +2370,7 @@ can edit in same subtitle file (collaboration)",
                 NumberOfCharactersInTextOnly = "Number of characters in text only: {0:#,###,##0}",
                 NumberOfItalicTags = "Number of italic tags: {0}",
                 TotalCharsPerSecond = "Total characters/second: {0:0.0} seconds",
+                TotalWords = "Total words in subtitle: {0}",
                 NumberOfBoldTags = "Number of bold tags: {0}",
                 NumberOfUnderlineTags = "Number of underline tags: {0}",
                 NumberOfFontTags = "Number of font tags: {0}",
@@ -2621,6 +2657,8 @@ Keep changes?",
                 RemoveSceneChange = "Remove scene change",
                 SeekSilence = "Seek silence...",
                 GuessTimeCodes = "Guess time codes...",
+                CharsSecX = "CPS: {0:0.00}",
+                WordsMinX = "WPM: {0:0.00}",
             };
 
             WaveformGenerateTimeCodes = new LanguageStructure.WaveformGenerateTimeCodes

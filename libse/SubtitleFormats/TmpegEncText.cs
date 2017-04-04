@@ -57,7 +57,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             //1,1,"00:01:57,269","00:01:59,169",0,"These hills here are full of Apaches."
 
-            StringBuilder temp = new StringBuilder();
+            var temp = new StringBuilder();
             foreach (string l in lines)
                 temp.Append(l);
             string all = temp.ToString();

@@ -13,6 +13,7 @@ using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Forms.Ocr;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -152,6 +153,7 @@ namespace Nikse.SubtitleEdit.Forms
                     _allFormats.Add(format);
                 }
             }
+            formatNames.Add("PAC");
             formatNames.Add(new Ayato().Name);
             formatNames.Add(l.PlainText);
             formatNames.Add(BluRaySubtitle);
@@ -308,6 +310,38 @@ namespace Nikse.SubtitleEdit.Forms
                         if (ayato.IsMine(null, fileName))
                         {
                             format = ayato;
+                        }
+                    }
+                    if (format == null)
+                    {
+                        var f = new PacUnicode();
+                        if (f.IsMine(null, fileName))
+                        {
+                            format = f;
+                        }
+                    }
+                    if (format == null)
+                    {
+                        var f = new IaiSub();
+                        if (f.IsMine(null, fileName))
+                        {
+                            format = f;
+                        }
+                    }
+                    if (format == null)
+                    {
+                        var f = new DlDd();
+                        if (f.IsMine(null, fileName))
+                        {
+                            format = f;
+                        }
+                    }
+                    if (format == null)
+                    {
+                        var f = new Ted20();
+                        if (f.IsMine(null, fileName))
+                        {
+                            format = f;
                         }
                     }
                     if (format == null)
@@ -887,6 +921,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 catch
                 {
+                    // ignored
                 }
                 System.Threading.Thread.Sleep(100);
             }
@@ -1117,8 +1152,6 @@ namespace Nikse.SubtitleEdit.Forms
                 buttonStyles.Visible = false;
                 comboBoxEncoding.Enabled = true;
             }
-            _assStyle = null;
-            _ssaStyle = null;
         }
 
         private void ButtonStylesClick(object sender, EventArgs e)
@@ -1241,10 +1274,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             finally
             {
-                if (form != null)
-                {
-                    form.Dispose();
-                }
+                form?.Dispose();
             }
         }
 
@@ -1489,6 +1519,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 catch
                 {
+                    // ignored
                 }
             }
             if (checkBoxScanFolderRecursive.Checked)

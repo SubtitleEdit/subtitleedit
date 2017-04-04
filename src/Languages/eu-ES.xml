@@ -2,7 +2,7 @@
 <Language Name="euskara">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.5.1</Version>
+    <Version>3.5.2</Version>
     <TranslatedBy>Itzultzailea: Xabier Aramendi</TranslatedBy>
     <CultureName>eu-ES</CultureName>
     <HelpFile>http://www.nikse.dk/SubtitleEdit/HelpEU</HelpFile>
@@ -24,6 +24,8 @@
     <StartTime>Hasiera denbora</StartTime>
     <EndTime>Amaiera denbora</EndTime>
     <Duration>Iraupena</Duration>
+    <CharsPerSec>Hizk/seg</CharsPerSec>
+    <WordsPerMin>Hitz/min</WordsPerMin>
     <NumberSymbol>Zenbakia</NumberSymbol>
     <Number>Zenbakia</Number>
     <Text>Idatzia</Text>
@@ -1670,6 +1672,7 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <AutoDetectAnsiEncoding>Berez atzeman ANSI kodeaketa:</AutoDetectAnsiEncoding>
     <SubtitleLineMaximumLength>Lerro bakarraren geh. luzera:</SubtitleLineMaximumLength>
     <MaximumCharactersPerSecond>Geh. hizkirri/seg:</MaximumCharactersPerSecond>
+    <MaximumWordssPerMinute>Geh. hitz/min</MaximumWordssPerMinute>
     <AutoWrapWhileTyping>Berez-bildu idazterakoan</AutoWrapWhileTyping>
     <DurationMinimumMilliseconds>Gutx. iraupena segundumilaenetan:</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>Geh. iraupena segundumilaenetan:</DurationMaximumMilliseconds>
@@ -1690,6 +1693,8 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <RemoveBlankLinesWhenOpening>Kendu lerro hutsak azpidatzia irekitzerakoan</RemoveBlankLinesWhenOpening>
     <ShowLineBreaksAs>Erakutsi lerro hautsiak zerrenda ikuspegian honela:</ShowLineBreaksAs>
     <MainListViewDoubleClickAction>Klik bikoitza lerroan leiho nagusian zerrenda ikuspegian izango da:</MainListViewDoubleClickAction>
+    <MainListViewColumns>Zerrenda ikuspegi zutabeak</MainListViewColumns>
+    <MainListViewColumnsInfo>Hautatu zerrenda ikuspegi zutabe ikusgarriak</MainListViewColumnsInfo>
     <MainListViewNothing>Ezer ez</MainListViewNothing>
     <MainListViewVideoGoToPositionAndPause>Joan bideo kokapenera eta pausatu</MainListViewVideoGoToPositionAndPause>
     <MainListViewVideoGoToPositionAndPlay>Joan bideo kokapenera eta irakurri</MainListViewVideoGoToPositionAndPlay>
@@ -1731,8 +1736,11 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <WaveformAppearance>Uhinera itxura</WaveformAppearance>
     <WaveformGridColor>Saretxo margoa</WaveformGridColor>
     <WaveformShowGridLines>Erakutsi saretxoaren marrak</WaveformShowGridLines>
+    <WaveformShowCps>Erakutsi hizk/seg</WaveformShowCps>
+    <WaveformShowWpm>Erakutsi hitz/min</WaveformShowWpm>
     <ReverseMouseWheelScrollDirection>Alderantzizkatu sagu-gurpilaren irristari norabidea</ReverseMouseWheelScrollDirection>
     <WaveformAllowOverlap>Ahalbidetu gainjartzea (mugitzean/birneurriratzean)</WaveformAllowOverlap>
+    <WaveformSetVideoPosMoveStartEnd>Ezarri bideo kokapena hasiera/amaiera mugitzerakoan</WaveformSetVideoPosMoveStartEnd>
     <WaveformFocusMouseEnter>Ezarri fokua sagua sartzerakoan</WaveformFocusMouseEnter>
     <WaveformListViewFocusMouseEnter>Ezarri zerrenda ikuspegi fokua sagua zerrenda ikuspegian sartzerakoan ere</WaveformListViewFocusMouseEnter>
     <WaveformBorderHitMs1>Hertz markatzailea izan behar da</WaveformBorderHitMs1>
@@ -1816,12 +1824,14 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <AdjustSetEndAndOffsetTheRest>Ezarri amaiera, orekatu gainontzekoa</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Ezarri amaiera, orekatu gainontzekoa eta joan hurrengora</AdjustSetEndAndOffsetTheRestAndGoToNext>
     <AdjustExtendCurrentSubtitle>Hedatu oraingo lerroa hurrengo azpidatzira edo geh iraupenera</AdjustExtendCurrentSubtitle>
+    <RecalculateDurationOfCurrentSubtitle>Ber-kalkulatu uneko azpidatziaren iraupena</RecalculateDurationOfCurrentSubtitle>
     <MainCreateStartDownEndUp>Sortu berria behera-tekla, ezarri amaiera denbora gora-tekla</MainCreateStartDownEndUp>
     <MergeDialog>Batu elkarrizketa (txertatu marratxoak)</MergeDialog>
     <GoToNext>Joan hurrengo lerrora</GoToNext>
     <GoToPrevious>Joan aurreko lerrora</GoToPrevious>
     <GoToCurrentSubtitleStart>Joan oraingo lerro hasierara</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>Joan oraingo lerro amaierara</GoToCurrentSubtitleEnd>
+    <GoToPreviousSubtitleAndFocusVideo>Joan aurreko lerrora eta ezarri bideo kokapena</GoToPreviousSubtitleAndFocusVideo>
     <GoToNextSubtitleAndFocusVideo>Joan hurrengo lerrora eta ezarri bideo kokapena</GoToNextSubtitleAndFocusVideo>
     <ToggleFocus>Aldatu fokoa zerrenda ikusi eta azpidatziaren idaz kutxa artean</ToggleFocus>
     <ToggleDialogDashes>Aldatu elkarrizketa marratxoak</ToggleDialogDashes>
@@ -1876,6 +1886,8 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <ToggleTranslationMode>Aldatu itzulpen modua</ToggleTranslationMode>
     <SwitchOriginalAndTranslation>Aldatu jatorrizkoa eta itzulpena</SwitchOriginalAndTranslation>
     <MergeOriginalAndTranslation>Batu jatorrizkoa eta itzulpena</MergeOriginalAndTranslation>
+    <MergeWithNext>Batu hurrengoarekin</MergeWithNext>
+    <MergeWithPrevious>Batu aurrekoarekin</MergeWithPrevious>
     <ShortcutIsAlreadyDefinedX>Lastertekla jadanik zehaztuta: {0}</ShortcutIsAlreadyDefinedX>
     <ToggleTranslationAndOriginalInPreviews>Aldatu itzulpena eta jatorrizkoa bideo/audio aurreikuspenean</ToggleTranslationAndOriginalInPreviews>
     <ListViewColumnDelete>Zutabea, ezabatu idatzia</ListViewColumnDelete>
@@ -2274,6 +2286,8 @@ Gorde aldaketak?</KeepChangesMessage>
     <RemoveSceneChange>Kendu agerraldi aldaketa</RemoveSceneChange>
     <GuessTimeCodes>Ustezko denbora kodeak...</GuessTimeCodes>
     <SeekSilence>Bilatu isiltasuna</SeekSilence>
+    <CharsSecX>HKSG-ko: {0:0.00}</CharsSecX>
+    <WordsMinX>HZMN-ko: {0:0.00}</WordsMinX>
   </Waveform>
   <WaveformGenerateTimeCodes>
     <Title>Ustezko denbora kodeak</Title>

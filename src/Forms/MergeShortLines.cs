@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Globalization;
 using System.Text;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Controls;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -20,6 +21,8 @@ namespace Nikse.SubtitleEdit.Forms
         {
             InitializeComponent();
             UiUtil.FixLargeFonts(this, buttonOK);
+            SubtitleListview1.HideColumn(SubtitleListView.SubtitleColumn.CharactersPerSeconds);
+            SubtitleListview1.HideColumn(SubtitleListView.SubtitleColumn.WordsPerMinute);
         }
 
         public Subtitle MergedSubtitle
@@ -175,7 +178,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (!lastMerged && lineNumbers.Length > 0 && clearFixes)
                 {
                     AddToListView(p, lineNumbers.ToString(), p.Text);
-                    lineNumbers = new StringBuilder();
+                    lineNumbers.Clear();
                 }
             }
             if (!lastMerged)
