@@ -10,10 +10,11 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class ChangeCasingNames : Form
     {
-        private readonly List<string> _usedNames = new List<string>();
+        // Used to make sure we don't add name twice in listview
+        private readonly HashSet<string> _usedNames = new HashSet<string>();
         private int _noOfLinesChanged;
         private Subtitle _subtitle;
-        private const string ExpectedEndChars = " ,.!?:;')<-\"\r\n";
+        private const string ExpectedEndChars = " ,.!?:;')]<-\"\r\n";
         public ChangeCasingNames()
         {
             InitializeComponent();
@@ -76,14 +77,21 @@ namespace Nikse.SubtitleEdit.Forms
             foreach (Paragraph p in _subtitle.Paragraphs)
             {
                 string text = p.Text;
+                if (string.IsNullOrEmpty(text) || text.Length == 1)
+                {
+                    continue;
+                }
                 foreach (ListViewItem item in listViewNames.Items)
                 {
+                    if (!item.Checked)
+                    {
+                        continue;
+                    }
                     string name = item.SubItems[1].Text;
-
-                    string textNoTags = HtmlUtil.RemoveHtmlTags(text);
+                    string textNoTags = HtmlUtil.RemoveHtmlTags(text, true);
                     if (textNoTags != textNoTags.ToUpper())
                     {
-                        if (item.Checked && text != null && text.Contains(name, StringComparison.OrdinalIgnoreCase) && name.Length > 1 && name != name.ToLower())
+                        if (text.Contains(name, StringComparison.OrdinalIgnoreCase))
                         {
                             var st = new StrippableText(text);
                             st.FixCasing(new List<string> { name }, true, false, false, string.Empty);
@@ -91,8 +99,10 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                     }
                 }
-                if (text != p.Text)
+                if (!text.Equals(p.Text, StringComparison.Ordinal))
+                {
                     AddToPreviewListView(p, text);
+                }
             }
             listViewFixes.EndUpdate();
             groupBoxLinesFound.Text = string.Format(Configuration.Settings.Language.ChangeCasingNames.LinesFoundX, listViewFixes.Items.Count);
@@ -126,41 +136,41 @@ namespace Nikse.SubtitleEdit.Forms
                 namesEtcList.Remove("Long");
                 namesEtcList.Remove("Don");
             }
-            string text = HtmlUtil.RemoveHtmlTags(_subtitle.GetAllTexts());
-            string textToLower = text.ToLower();
+            string textNoTags = HtmlUtil.RemoveHtmlTags(_subtitle.GetAllTexts(), true);
             listViewNames.BeginUpdate();
             foreach (string name in namesEtcList)
             {
-                int startIndex = textToLower.IndexOf(name.ToLower(), StringComparison.Ordinal);
-                if (startIndex >= 0)
+                if (name.Length <= 1 || name.ToLower().Equals(name, StringComparison.Ordinal))
                 {
-                    while (startIndex >= 0 && startIndex < text.Length &&
-                           textToLower.Substring(startIndex).Contains(name.ToLower()) && name.Length > 1 && name != name.ToLower())
+                    continue;
+                }
+
+                int startIndex = textNoTags.IndexOf(name, StringComparison.OrdinalIgnoreCase);
+                while (startIndex >= 0)
+                {
+                    // [\-" '>\n\r]
+                    bool startOk = (startIndex == 0) || (textNoTags[startIndex - 1] == ' ') || (textNoTags[startIndex - 1] == '-') ||
+                                   (textNoTags[startIndex - 1] == '"') || (textNoTags[startIndex - 1] == '\'') || (textNoTags[startIndex - 1] == '>') ||
+                                   (textNoTags[startIndex - 1] == '\n') || (textNoTags[startIndex - 1] == '\r');
+
+                    if (startOk)
                     {
-                        bool startOk = (startIndex == 0) || (text[startIndex - 1] == ' ') || (text[startIndex - 1] == '-') ||
-                                       (text[startIndex - 1] == '"') || (text[startIndex - 1] == '\'') || (text[startIndex - 1] == '>') ||
-                                       (Environment.NewLine.EndsWith(text[startIndex - 1].ToString(CultureInfo.InvariantCulture)));
-
-                        if (startOk)
+                        int endIdx = startIndex + name.Length;
+                        bool endOk = endIdx == textNoTags.Length || ExpectedEndChars.Contains(textNoTags[endIdx]);
+                        string nameInText = textNoTags.Substring(startIndex, name.Length);
+                        // do not add names where casing is already correct
+                        if (endOk && !nameInText.Equals(name, StringComparison.Ordinal))
                         {
-                            int end = startIndex + name.Length;
-                            bool endOk = end <= text.Length;
-                            if (endOk)
-                                endOk = end == text.Length || ExpectedEndChars.Contains(text[end]);
-
-                            if (endOk && text.Substring(startIndex, name.Length) != name) // do not add names where casing already is correct
+                            if (!_usedNames.Contains(name))
                             {
-                                if (!_usedNames.Contains(name))
-                                {
-                                    _usedNames.Add(name);
-                                    AddToListViewNames(name);
-                                    break; // break while
-                                }
+                                _usedNames.Add(name);
+                                AddToListViewNames(name);
+                                break; // break while
                             }
                         }
-
-                        startIndex = textToLower.IndexOf(name.ToLower(), startIndex + 2, StringComparison.Ordinal);
                     }
+                    // keep looking for unbalenced casing
+                    startIndex = textNoTags.IndexOf(name, startIndex + name.Length, StringComparison.OrdinalIgnoreCase);
                 }
             }
             listViewNames.EndUpdate();
@@ -174,32 +184,28 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
 
             string name = listViewNames.SelectedItems[0].SubItems[1].Text;
-            listViewFixes.BeginUpdate();
+            // invalid name
+            if (name.Length <= 1 || name.ToLower() == name)
+            {
+                return;
+            }
 
+            listViewFixes.BeginUpdate();
             foreach (ListViewItem item in listViewFixes.Items)
             {
                 item.Selected = false;
-
                 string text = item.SubItems[2].Text.Replace(Configuration.Settings.General.ListViewLineSeparatorString, Environment.NewLine);
-
-                string lower = text.ToLower();
-                if (lower.Contains(name.ToLower()) && name.Length > 1 && name != name.ToLower())
+                int start = text.IndexOf(name, StringComparison.OrdinalIgnoreCase);
+                if (start >= 0)
                 {
-                    int start = lower.IndexOf(name.ToLower(), StringComparison.Ordinal);
-                    if (start >= 0)
+                    bool startOk = (start == 0) || (text[start - 1] == ' ') || (text[start - 1] == '-') || (text[start - 1] == '"') ||
+                                   (text[start - 1] == '\'') || (text[start - 1] == '>') || (text[start - 1] == '\n') || (text[start - 1] == '\r');
+
+                    if (startOk)
                     {
-                        bool startOk = (start == 0) || (lower[start - 1] == ' ') || (lower[start - 1] == '-') || (lower[start - 1] == '"') ||
-                                       lower[start - 1] == '\'' || lower[start - 1] == '>' || Environment.NewLine.EndsWith(lower[start - 1]);
-
-                        if (startOk)
-                        {
-                            int end = start + name.Length;
-                            bool endOk = end <= lower.Length;
-                            if (endOk)
-                                endOk = end == lower.Length || ExpectedEndChars.Contains(lower[end]);
-
-                            item.Selected = endOk;
-                        }
+                        int end = start + name.Length;
+                        // ends ok
+                        item.Selected = end == text.Length || ExpectedEndChars.Contains(text[end]);
                     }
                 }
             }
