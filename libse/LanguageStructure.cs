@@ -2093,6 +2093,7 @@
             public string MainTextBoxUnbreak { get; set; }
             public string MainFileSaveAll { get; set; }
             public string Miscellaneous { get; set; }
+            public string CpsIncludesSpace { get; set; }
             public string UseDoNotBreakAfterList { get; set; }
             public string MicrosoftBingTranslator { get; set; }
             public string HowToSignUp { get; set; }

@@ -1929,6 +1929,7 @@ can edit in same subtitle file (collaboration)</Information>
     <MainTextBoxUnbreak>Unbreak text</MainTextBoxUnbreak>
     <MainFileSaveAll>Save all</MainFileSaveAll>
     <Miscellaneous>Misc.</Miscellaneous>
+    <CpsIncludesSpace>Chars/sec (CPS) includes spaces</CpsIncludesSpace>
     <UseDoNotBreakAfterList>Use do-not-break-after list (for auto-br)</UseDoNotBreakAfterList>
     <MicrosoftBingTranslator>Microsoft Bing Translator</MicrosoftBingTranslator>
     <HowToSignUp>How to sign up</HowToSignUp>

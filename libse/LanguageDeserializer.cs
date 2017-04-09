@@ -5239,6 +5239,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/Miscellaneous":
                     language.Settings.Miscellaneous = reader.Value;
                     break;
+                case "Settings/CpsIncludesSpace":
+                    language.Settings.CpsIncludesSpace = reader.Value;
+                    break;
                 case "Settings/UseDoNotBreakAfterList":
                     language.Settings.UseDoNotBreakAfterList = reader.Value;
                     break;
