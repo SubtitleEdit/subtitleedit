@@ -9,6 +9,7 @@
    * Updated French translation - thx JM GBT
    * Updated Rusian translation - thx Elheym
    * Updated Finnish translation - thx Teijo S.
+   * Updated Polish translation - thx admas
    * Import plain text now also supports input as HTML
    * Added "Total words" to statistics - thx Barbara
    * Added more Tesseract dictionaries - thx lucybook/Elheym
@@ -33,6 +34,8 @@
    * Fixed finding Tesseract traineddata files on Linux - thx mooop12
    * Fixed loading of "mks" files from cmd line - thx Charles
    * Fixed auto-backup for "EBU STL" format - thx Mirka
+   * Fixed new ASS/SSA style with space in name - thx hello_hello
+   * Fixed issue with empty time code in format "TT draft 2006-10" - thx Georg-J
 
 
 3.5.2 (3rd March 2017)
