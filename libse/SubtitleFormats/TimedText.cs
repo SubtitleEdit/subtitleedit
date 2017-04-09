@@ -233,7 +233,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     string text = pText.ToString();
                     text = text.Replace(Environment.NewLine + "</i>", "</i>" + Environment.NewLine);
                     text = text.Replace("<i></i>", string.Empty).Trim();
-                    if (end != null)
+                    if (!string.IsNullOrEmpty(end))
                     {
                         if (end.Length != 11 || end.Substring(8, 1) != ":" || start == null || start.Length != 11 || start.Substring(8, 1) != ":")
                         {
@@ -270,7 +270,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             }
                         }
                     }
-                    else if (dur != null)
+                    else if (!string.IsNullOrEmpty(dur))
                     {
                         if (dur.Length != 11 || dur.Substring(8, 1) != ":" || start == null || start.Length != 11 || start.Substring(8, 1) != ":")
                         {
