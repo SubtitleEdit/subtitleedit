@@ -361,7 +361,7 @@ namespace Nikse.SubtitleEdit.Core
                     containsEnUs = true;
                 if (name.Contains("[hr_HR]"))
                     containsHrHr = true;
-                if (name.Contains("[sr-Latn]"))
+                if (name.Contains("[sr_Latn]"))
                     containsSrLatn = true;
             }
 
@@ -523,7 +523,7 @@ namespace Nikse.SubtitleEdit.Core
                             }
                         }
                         break;
-                    case "sr-Latn": // Serbian (Latin)
+                    case "sr_Latn": // Serbian (Latin)
                         count = GetCount(text, AutoDetectWordsCroatianAndSerbian);
                         if (count > bestCount)
                         {
@@ -542,12 +542,8 @@ namespace Nikse.SubtitleEdit.Core
                         if (count > bestCount)
                             languageName = shortName;
                         break;
-                    case "pt_PT": // Portuguese
-                        count = GetCount(text, AutoDetectWordsPortuguese);
-                        if (count > bestCount)
-                            languageName = shortName;
-                        break;
-                    case "pt_BR": // Portuguese (Brasil)
+                    case "pt_PT": // Portuguese Portugal
+                    case "pt_BR": // Portuguese Brazil
                         count = GetCount(text, AutoDetectWordsPortuguese);
                         if (count > bestCount)
                             languageName = shortName;
@@ -579,7 +575,7 @@ namespace Nikse.SubtitleEdit.Core
                             languageName = shortName;
                         break;
                     case "lt_LT": // Lithuanian
-                    case "lt": // Lithuanian
+                    case "lt":    // Lithuanian (Neutral)
                         count = GetCount(text, AutoDetectWordsLithuanian);
                         if (count > bestCount)
                             languageName = shortName;
