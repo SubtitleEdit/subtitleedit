@@ -94,9 +94,16 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
         {
             if (_languageName.Length == 2)
             {
-                string[] files = Directory.GetFiles(_dictionaryFolder, _languageName + "_??_names_etc.xml");
-                if (files.Length > 0)
-                    return files[0];
+                try
+                {
+                    string[] files = Directory.GetFiles(_dictionaryFolder, _languageName + "_??_names_etc.xml");
+                    if (files.Length > 0)
+                        return files[0];
+                }
+                catch
+                {
+                    // Dictionary not installed
+                }
             }
             return Path.Combine(_dictionaryFolder, _languageName + "_names_etc.xml");
         }
@@ -105,9 +112,16 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
         {
             if (_languageName.Length == 2)
             {
-                string[] files = Directory.GetFiles(_dictionaryFolder, _languageName + "_??_names_etc_user.xml");
-                if (files.Length > 0)
-                    return files[0];
+                try
+                {
+                    string[] files = Directory.GetFiles(_dictionaryFolder, _languageName + "_??_names_etc_user.xml");
+                    if (files.Length > 0)
+                        return files[0];
+                }
+                catch
+                {
+                    // Dictionary not installed
+                }
             }
             return Path.Combine(_dictionaryFolder, _languageName + "_names_etc_user.xml");
         }
