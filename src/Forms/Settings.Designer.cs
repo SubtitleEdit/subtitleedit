@@ -130,6 +130,7 @@
             this.labelCustomSearch = new System.Windows.Forms.Label();
             this.comboBoxCustomSearch1 = new System.Windows.Forms.ComboBox();
             this.groupBoxVideoPlayerDefault = new System.Windows.Forms.GroupBox();
+            this.checkBoxVideoAutoOpen = new System.Windows.Forms.CheckBox();
             this.checkBoxVideoPlayerPreviewFontBold = new System.Windows.Forms.CheckBox();
             this.checkBoxVideoPlayerShowFullscreenButton = new System.Windows.Forms.CheckBox();
             this.checkBoxVideoPlayerShowMuteButton = new System.Windows.Forms.CheckBox();
@@ -331,7 +332,7 @@
             this.colorDialogSSAStyle = new System.Windows.Forms.ColorDialog();
             this.labelStatus = new System.Windows.Forms.Label();
             this.openFileDialogFFmpeg = new System.Windows.Forms.OpenFileDialog();
-            this.checkBoxVideoAutoOpen = new System.Windows.Forms.CheckBox();
+            this.checkBoxCpsIncludeWhiteSpace = new System.Windows.Forms.CheckBox();
             this.tabControlSettings.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
@@ -1800,6 +1801,16 @@
             this.groupBoxVideoPlayerDefault.TabIndex = 14;
             this.groupBoxVideoPlayerDefault.TabStop = false;
             // 
+            // checkBoxVideoAutoOpen
+            // 
+            this.checkBoxVideoAutoOpen.AutoSize = true;
+            this.checkBoxVideoAutoOpen.Location = new System.Drawing.Point(334, 68);
+            this.checkBoxVideoAutoOpen.Name = "checkBoxVideoAutoOpen";
+            this.checkBoxVideoAutoOpen.Size = new System.Drawing.Size(213, 17);
+            this.checkBoxVideoAutoOpen.TabIndex = 24;
+            this.checkBoxVideoAutoOpen.Text = "Auto open video when opening subtitle";
+            this.checkBoxVideoAutoOpen.UseVisualStyleBackColor = true;
+            // 
             // checkBoxVideoPlayerPreviewFontBold
             // 
             this.checkBoxVideoPlayerPreviewFontBold.AutoSize = true;
@@ -2574,6 +2585,7 @@
             // 
             // groupBoxToolsMisc
             // 
+            this.groupBoxToolsMisc.Controls.Add(this.checkBoxCpsIncludeWhiteSpace);
             this.groupBoxToolsMisc.Controls.Add(this.labelUserBingApiId);
             this.groupBoxToolsMisc.Controls.Add(this.buttonEditDoNotBreakAfterList);
             this.groupBoxToolsMisc.Controls.Add(this.checkBoxUseDoNotBreakAfterList);
@@ -2594,7 +2606,7 @@
             // 
             // buttonEditDoNotBreakAfterList
             // 
-            this.buttonEditDoNotBreakAfterList.Location = new System.Drawing.Point(34, 43);
+            this.buttonEditDoNotBreakAfterList.Location = new System.Drawing.Point(34, 76);
             this.buttonEditDoNotBreakAfterList.Name = "buttonEditDoNotBreakAfterList";
             this.buttonEditDoNotBreakAfterList.Size = new System.Drawing.Size(75, 23);
             this.buttonEditDoNotBreakAfterList.TabIndex = 23;
@@ -2605,10 +2617,10 @@
             // checkBoxUseDoNotBreakAfterList
             // 
             this.checkBoxUseDoNotBreakAfterList.AutoSize = true;
-            this.checkBoxUseDoNotBreakAfterList.Location = new System.Drawing.Point(15, 20);
+            this.checkBoxUseDoNotBreakAfterList.Location = new System.Drawing.Point(15, 53);
             this.checkBoxUseDoNotBreakAfterList.Name = "checkBoxUseDoNotBreakAfterList";
             this.checkBoxUseDoNotBreakAfterList.Size = new System.Drawing.Size(218, 17);
-            this.checkBoxUseDoNotBreakAfterList.TabIndex = 0;
+            this.checkBoxUseDoNotBreakAfterList.TabIndex = 1;
             this.checkBoxUseDoNotBreakAfterList.Text = "Use \'do-not-beak-after\' list (for auto-br)";
             this.checkBoxUseDoNotBreakAfterList.UseVisualStyleBackColor = true;
             // 
@@ -3963,15 +3975,15 @@
             // 
             this.openFileDialogFFmpeg.FileName = "openFileDialog1";
             // 
-            // checkBoxVideoAutoOpen
+            // checkBoxCpsIncludeWhiteSpace
             // 
-            this.checkBoxVideoAutoOpen.AutoSize = true;
-            this.checkBoxVideoAutoOpen.Location = new System.Drawing.Point(334, 68);
-            this.checkBoxVideoAutoOpen.Name = "checkBoxVideoAutoOpen";
-            this.checkBoxVideoAutoOpen.Size = new System.Drawing.Size(213, 17);
-            this.checkBoxVideoAutoOpen.TabIndex = 24;
-            this.checkBoxVideoAutoOpen.Text = "Auto open video when opening subtitle";
-            this.checkBoxVideoAutoOpen.UseVisualStyleBackColor = true;
+            this.checkBoxCpsIncludeWhiteSpace.AutoSize = true;
+            this.checkBoxCpsIncludeWhiteSpace.Location = new System.Drawing.Point(15, 21);
+            this.checkBoxCpsIncludeWhiteSpace.Name = "checkBoxCpsIncludeWhiteSpace";
+            this.checkBoxCpsIncludeWhiteSpace.Size = new System.Drawing.Size(274, 17);
+            this.checkBoxCpsIncludeWhiteSpace.TabIndex = 0;
+            this.checkBoxCpsIncludeWhiteSpace.Text = "Characters per second (CPS) includes  white spaces";
+            this.checkBoxCpsIncludeWhiteSpace.UseVisualStyleBackColor = true;
             // 
             // Settings
             // 
@@ -4400,5 +4412,6 @@
         private System.Windows.Forms.Label labelMaxWordsPerMin;
         private System.Windows.Forms.CheckBox checkBoxMpvHandlesPreviewText;
         private System.Windows.Forms.CheckBox checkBoxVideoAutoOpen;
+        private System.Windows.Forms.CheckBox checkBoxCpsIncludeWhiteSpace;
     }
 }

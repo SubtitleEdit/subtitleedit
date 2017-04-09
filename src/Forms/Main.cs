@@ -3933,6 +3933,7 @@ namespace Nikse.SubtitleEdit.Forms
             string oldVideoPlayer = Configuration.Settings.General.VideoPlayer;
             string oldMpvVideoOutput = Configuration.Settings.General.MpvVideoOutput;
             string oldListViewLineSeparatorString = Configuration.Settings.General.ListViewLineSeparatorString;
+            var oldCpsWhiteSpaceSetting = Configuration.Settings.General.CharactersPerSecondsIgnoreWhiteSpace;
             string oldSubtitleFontSettings = Configuration.Settings.General.SubtitleFontName +
                                              Configuration.Settings.General.SubtitleFontBold +
                                              Configuration.Settings.General.CenterSubtitleInTextBox +
@@ -4071,8 +4072,9 @@ namespace Nikse.SubtitleEdit.Forms
             mediaPlayer.ShowStopButton = Configuration.Settings.General.VideoPlayerShowStopButton;
             mediaPlayer.ShowMuteButton = Configuration.Settings.General.VideoPlayerShowMuteButton;
             mediaPlayer.ShowFullscreenButton = Configuration.Settings.General.VideoPlayerShowFullscreenButton;
-
-            if (oldListViewLineSeparatorString != Configuration.Settings.General.ListViewLineSeparatorString)
+            
+            if (oldListViewLineSeparatorString != Configuration.Settings.General.ListViewLineSeparatorString ||
+                oldCpsWhiteSpaceSetting != Configuration.Settings.General.CharactersPerSecondsIgnoreWhiteSpace)
             {
                 SubtitleListview1.InitializeLanguage(_languageGeneral, Configuration.Settings);
                 SaveSubtitleListviewIndices();

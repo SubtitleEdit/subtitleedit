@@ -512,6 +512,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             groupBoxToolsMisc.Text = language.Miscellaneous;
             checkBoxUseDoNotBreakAfterList.Text = language.UseDoNotBreakAfterList;
+            checkBoxCpsIncludeWhiteSpace.Text = language.CpsIncludesSpace;
             buttonEditDoNotBreakAfterList.Text = Configuration.Settings.Language.VobSubOcr.Edit;
 
             comboBoxListViewDoubleClickEvent.Items.Clear();
@@ -640,6 +641,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxSpellCheckOneLetterWords.Checked = toolsSettings.SpellCheckOneLetterWords;
             checkBoxTreatINQuoteAsING.Checked = toolsSettings.SpellCheckEnglishAllowInQuoteAsIng;
             checkBoxUseDoNotBreakAfterList.Checked = toolsSettings.UseNoLineBreakAfter;
+            checkBoxCpsIncludeWhiteSpace.Checked = !Configuration.Settings.General.CharactersPerSecondsIgnoreWhiteSpace;
 
             textBoxBingClientId.Text = Configuration.Settings.Tools.MicrosoftBingClientId;
             textBoxBingClientSecret.Text = Configuration.Settings.Tools.MicrosoftBingClientSecret;
@@ -1199,6 +1201,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolsSettings.SpellCheckOneLetterWords = checkBoxSpellCheckOneLetterWords.Checked;
             toolsSettings.SpellCheckEnglishAllowInQuoteAsIng = checkBoxTreatINQuoteAsING.Checked;
             toolsSettings.UseNoLineBreakAfter = checkBoxUseDoNotBreakAfterList.Checked;
+            Configuration.Settings.General.CharactersPerSecondsIgnoreWhiteSpace = !checkBoxCpsIncludeWhiteSpace.Checked;
             toolsSettings.OcrFixUseHardcodedRules = checkBoxFixCommonOcrErrorsUsingHardcodedRules.Checked;
             toolsSettings.FixShortDisplayTimesAllowMoveStartTime = checkBoxFixShortDisplayTimesAllowMoveStartTime.Checked;
             toolsSettings.FixCommonErrorsSkipStepOne = checkBoxFceSkipStep1.Checked;
