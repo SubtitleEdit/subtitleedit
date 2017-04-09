@@ -7,7 +7,7 @@
 * IMPROVED:
    * Updated Chinese translation - thx Leon
    * Updated French translation - thx JM GBT
-   * Updated Rusian translation - thx Elheym
+   * Updated Russian translation - thx Elheym
    * Updated Finnish translation - thx Teijo S.
    * Updated Polish translation - thx admas
    * Import plain text now also supports input as HTML
