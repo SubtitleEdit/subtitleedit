@@ -14,6 +14,8 @@
    * Added "Total words" to statistics - thx Barbara
    * Added more Tesseract dictionaries - thx lucybook/Elheym
    * Added "Video auto-load" to UI settings - thx mtarini
+   * "names_etc.xml" renamed to "names.xml" + local dictionaries
+     now has a "blacklist" - thx ivandrofly
 * FIXED:
    * Fixed crash in "Add to user dictionary" in OCR - thx alfix0
    * Fixed original file name bug in "Undo" - thx darnn
@@ -36,6 +38,7 @@
    * Fixed auto-backup for "EBU STL" format - thx Mirka
    * Fixed new ASS/SSA style with space in name - thx hello_hello
    * Fixed issue with empty time code in format "TT draft 2006-10" - thx Georg-J
+   * Fixed styling inside "span" in format TTML - thx Johan
 
 
 3.5.2 (3rd March 2017)
