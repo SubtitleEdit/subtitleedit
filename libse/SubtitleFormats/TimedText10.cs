@@ -693,7 +693,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     // Parse and convert paragraph text
                     var pText = new StringBuilder();
-                    ReadParagraph(pText, node);
+                    ReadParagraph(pText, node, styles, xml);
 
                     // Timecodes
                     TimeCode begin, end;
@@ -918,7 +918,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return string.Format("{0} / {1}", style, lang);
         }
 
-        private static void ReadParagraph(StringBuilder pText, XmlNode node)
+        private static void ReadParagraph(StringBuilder pText, XmlNode node, List<string> styles, XmlDocument xml)
         {
             foreach (XmlNode child in node.ChildNodes)
             {
@@ -939,6 +939,56 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     string color = null;
 
                     // Composing styles
+
+                    if (child.Attributes["style"] != null)
+                    {
+                        string styleName = child.Attributes["style"].Value;
+                        if (styles.Contains(styleName))
+                        {
+                            try
+                            {
+                                var nsmgr = new XmlNamespaceManager(xml.NameTable);
+                                nsmgr.AddNamespace("ttml", "http://www.w3.org/ns/ttml");
+                                XmlNode head = xml.DocumentElement.SelectSingleNode("ttml:head", nsmgr);
+                                foreach (XmlNode styleNode in head.SelectNodes("//ttml:style", nsmgr))
+                                {
+                                    string currentStyle = null;
+                                    if (styleNode.Attributes["xml:id"] != null)
+                                        currentStyle = styleNode.Attributes["xml:id"].Value;
+                                    else if (styleNode.Attributes["id"] != null)
+                                        currentStyle = styleNode.Attributes["id"].Value;
+                                    if (currentStyle == styleName)
+                                    {
+                                        if (styleNode.Attributes["tts:fontStyle"] != null && styleNode.Attributes["tts:fontStyle"].Value == "italic")
+                                        {
+                                            isItalic = true;
+                                        }
+                                        if (styleNode.Attributes["tts:fontWeight"] != null && styleNode.Attributes["tts:fontWeight"].Value == "bold")
+                                        {
+                                            isBold = true;
+                                        }
+                                        if (styleNode.Attributes["tts:textDecoration"] != null && styleNode.Attributes["tts:textDecoration"].Value == "underline")
+                                        {
+                                            isUnderlined = true;
+                                        }
+                                        if (styleNode.Attributes["tts:fontFamily"] != null)
+                                        {
+                                            fontFamily = styleNode.Attributes["tts:fontFamily"].Value;
+                                        }
+                                        if (styleNode.Attributes["tts:color"] != null && styleNode.Attributes["tts:color"].Value != "white")
+                                        {
+                                            color = styleNode.Attributes["tts:color"].Value;
+                                        }
+                                    }
+                                }
+                            }
+                            catch (Exception e)
+                            {
+                                System.Diagnostics.Debug.WriteLine(e);
+                            }
+                        }
+                    }
+
                     if (child.Attributes["tts:fontStyle"] != null && child.Attributes["tts:fontStyle"].Value == "italic")
                     {
                         isItalic = true;
@@ -964,6 +1014,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         color = child.Attributes["tts:color"].Value;
                     }
                     
+
                     // Applying styles
                     if (isItalic)
                     {
@@ -997,7 +1048,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         pText.Append(">");
                     }
 
-                    ReadParagraph(pText, child);
+                    ReadParagraph(pText, child, styles, xml);
 
                     if (!string.IsNullOrEmpty(fontFamily) || !string.IsNullOrEmpty(color))
                     {
