@@ -764,6 +764,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         
                         if (!regionCorrespondToTag)
                         {
+                            if (topRegions.Contains(region))
+                                p.Text = "{\\an8}" + p.Text;
                             SetEffect(p, "region", region);
                         }
                     }
@@ -1258,7 +1260,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             else if (styleNode.Attributes["origin"] != null)
                                 origin = styleNode.Attributes["origin"].Value;
                             var arr = origin.Split(' ');
-                            if (arr.Length == 2 && arr[0].EndsWith("%") && arr[1].EndsWith("%"))
+                            if (arr.Length == 2 && arr[0].EndsWith("%", StringComparison.Ordinal) && arr[1].EndsWith("%", StringComparison.Ordinal))
                             {
                                 var n1 = Convert.ToDouble(arr[0].TrimEnd('%'), CultureInfo.InvariantCulture);
                                 var n2 = Convert.ToDouble(arr[1].TrimEnd('%'), CultureInfo.InvariantCulture);
