@@ -89,10 +89,10 @@ namespace Test
                 }
             }
 
-            strm = asm.GetManifestResourceStream("Test.Dictionaries.names_etc.xml");
+            strm = asm.GetManifestResourceStream("Test.Dictionaries.names.xml");
             if (strm != null)
             {
-                using (Stream file = File.OpenWrite(Path.Combine("Dictionaries", "names_etc.xml")))
+                using (Stream file = File.OpenWrite(Path.Combine("Dictionaries", "names.xml")))
                 {
                     CopyStream(strm, file);
                 }

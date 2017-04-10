@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <!-- This list contains names/words with specific casing - and specific to Portuguese only -->
-<ignore_list>
+<names>
   <name>Aarão</name>
   <name>Abdénago</name>
   <name>Abedenego</name>
@@ -16,6 +16,7 @@
   <name>Abraim</name>
   <name>Abrão</name>
   <name>Absalão</name>
+  <name>Cabo Verde</name>
   <name>Abssilão</name>
   <name>Ácil</name>
   <name>Acilino</name>
@@ -95,6 +96,7 @@
   <name>Agostinho</name>
   <name>Águas</name>
   <name>Águeda</name>
+  <name>Guiné-Bissau</name>
   <name>Aguiar</name>
   <name>Aguinaldo</name>
   <name>Aiala</name>
@@ -4589,4 +4591,7 @@
   <name>Zurita</name>
   <name>Zuzela</name>
   <name>Zuzidine</name>
-</ignore_list>
+  <blacklist>
+    <name></name>
+  </blacklist>
+</names>
