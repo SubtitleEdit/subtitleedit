@@ -1491,36 +1491,38 @@ namespace Nikse.SubtitleEdit.Forms
             var idx = comboBoxWordListLanguage.SelectedIndex;
             if (idx < 0)
                 return null;
-
             var cb = comboBoxWordListLanguage.Items[idx] as ComboBoxLanguage;
             return cb?.CultureInfo.Name.Replace('-', '_');
         }
 
         private void ButtonAddNamesEtcClick(object sender, EventArgs e)
         {
-            var sidx = comboBoxWordListLanguage.SelectedIndex;
-            if (sidx < 0)
-                return;
-
             string language = GetCurrentWordListLanguage();
-            string text = textBoxNameEtc.Text.RemoveControlCharacters().Trim();
-            if (!string.IsNullOrEmpty(language) && text.Length > 1 && !_wordListNamesEtc.Contains(text))
+            if (string.IsNullOrEmpty(language))
+            {
+                MessageBox.Show(Configuration.Settings.Language.Settings.InvalidLanguageSelected, string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+            string name = textBoxNameEtc.Text.RemoveControlCharacters().Trim();
+            if (name.Length <= 1)
+            {
+                MessageBox.Show(Configuration.Settings.Language.Settings.NameOrWordMustBeGreaterThanOneCharacter, string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+            if (!_wordListNamesEtc.Contains(name))
             {
                 var namesList = new NamesList(Configuration.DictionariesDirectory, language, Configuration.Settings.WordLists.UseOnlineNamesEtc, Configuration.Settings.WordLists.NamesEtcUrl);
-                namesList.Add(text);
+                namesList.Add(name);
                 LoadNamesEtc(language, true);
-                labelStatus.Text = string.Format(Configuration.Settings.Language.Settings.WordAddedX, text);
+                labelStatus.Text = string.Format(Configuration.Settings.Language.Settings.WordAddedX, name);
                 textBoxNameEtc.Text = string.Empty;
                 textBoxNameEtc.Focus();
                 for (int i = 0; i < listBoxNamesEtc.Items.Count; i++)
                 {
-                    if (listBoxNamesEtc.Items[i].ToString() == text)
+                    if (listBoxNamesEtc.Items[i].ToString() == name)
                     {
                         listBoxNamesEtc.SelectedIndex = i;
-                        int top = i - 5;
-                        if (top < 0)
-                            top = 0;
-                        listBoxNamesEtc.TopIndex = top;
+                        listBoxNamesEtc.TopIndex = Math.Max(i - 5, 0); // top index
                         break;
                     }
                 }
@@ -1602,29 +1604,32 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonAddUserWordClick(object sender, EventArgs e)
         {
-            var sidx = comboBoxWordListLanguage.SelectedIndex;
-            if (sidx < 0)
-                return;
-
             string language = GetCurrentWordListLanguage();
-            string text = textBoxUserWord.Text.RemoveControlCharacters().Trim().ToLower();
-            if (!string.IsNullOrEmpty(language) && text.Length > 0 && !_userWordList.Contains(text))
+            if (language == null)
             {
-                Utilities.AddToUserDictionary(text, language);
+                MessageBox.Show(Configuration.Settings.Language.Settings.InvalidLanguageSelected, string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+            string word = textBoxUserWord.Text.RemoveControlCharacters().Trim().ToLower();
+            if (word.Length <= 1)
+            {
+                MessageBox.Show(Configuration.Settings.Language.Settings.NameOrWordMustBeGreaterThanOneCharacter, string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+            if (!_userWordList.Contains(word))
+            {
+                Utilities.AddToUserDictionary(word, language);
                 LoadUserWords(language, true);
-                labelStatus.Text = string.Format(Configuration.Settings.Language.Settings.WordAddedX, text);
+                labelStatus.Text = string.Format(Configuration.Settings.Language.Settings.WordAddedX, word);
                 textBoxUserWord.Text = string.Empty;
                 textBoxUserWord.Focus();
 
                 for (int i = 0; i < listBoxUserWordLists.Items.Count; i++)
                 {
-                    if (listBoxUserWordLists.Items[i].ToString() == text)
+                    if (listBoxUserWordLists.Items[i].ToString() == word)
                     {
                         listBoxUserWordLists.SelectedIndex = i;
-                        int top = i - 5;
-                        if (top < 0)
-                            top = 0;
-                        listBoxUserWordLists.TopIndex = top;
+                        listBoxUserWordLists.TopIndex = Math.Max(i - 5, 0); // top index
                         break;
                     }
                 }
@@ -1716,22 +1721,25 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonAddOcrFixClick(object sender, EventArgs e)
         {
+            string language = GetCurrentWordListLanguage();
+            if (language == null)
+            {
+                MessageBox.Show(Configuration.Settings.Language.Settings.InvalidLanguageSelected, string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
             string key = textBoxOcrFixKey.Text.RemoveControlCharacters().Trim();
             string value = textBoxOcrFixValue.Text.RemoveControlCharacters().Trim();
             if (key.Length == 0 || value.Length == 0 || key == value || Utilities.IsInteger(key))
+            {
+                MessageBox.Show(Configuration.Settings.Language.Settings.InvalidKeyValue, string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
-
-            var cb = comboBoxWordListLanguage.Items[comboBoxWordListLanguage.SelectedIndex] as ComboBoxLanguage;
-            if (cb == null)
-                return;
-
+            }
             var added = _ocrFixReplaceList.AddWordOrPartial(key, value);
             if (!added)
             {
-                MessageBox.Show(Configuration.Settings.Language.Settings.WordAlreadyExists);
+                MessageBox.Show(Configuration.Settings.Language.Settings.WordAlreadyExists, string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-
             LoadOcrFixList(true);
             textBoxOcrFixKey.Text = string.Empty;
             textBoxOcrFixValue.Text = string.Empty;
@@ -1742,10 +1750,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (listBoxOcrFixList.Items[i].ToString() == key + " --> " + value)
                 {
                     listBoxOcrFixList.SelectedIndex = i;
-                    int top = i - 5;
-                    if (top < 0)
-                        top = 0;
-                    listBoxOcrFixList.TopIndex = top;
+                    listBoxOcrFixList.TopIndex = Math.Max(i - 5, 0); // top index;
                     break;
                 }
             }

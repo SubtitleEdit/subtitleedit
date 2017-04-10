@@ -394,7 +394,7 @@
             public string CodePageNumber { get; set; }
             public string DiskFormatCode { get; set; }
             public string DisplayStandardCode { get; set; }
-            public string ColorRequiresTeletext { get; set; }            
+            public string ColorRequiresTeletext { get; set; }
             public string CharacterCodeTable { get; set; }
             public string LanguageCode { get; set; }
             public string OriginalProgramTitle { get; set; }
@@ -1880,7 +1880,7 @@
             public string ShowLineBreaksAs { get; set; }
             public string MainListViewDoubleClickAction { get; set; }
             public string MainListViewColumns { get; set; }
-            public string MainListViewColumnsInfo { get; set; }            
+            public string MainListViewColumnsInfo { get; set; }
             public string MainListViewNothing { get; set; }
             public string MainListViewVideoGoToPositionAndPause { get; set; }
             public string MainListViewVideoGoToPositionAndPlay { get; set; }
@@ -1911,7 +1911,7 @@
             public string MpcHcDescription { get; set; }
             public string MpvPlayer { get; set; }
             public string MpvPlayerDescription { get; set; }
-            public string MpvHandlesPreviewText { get; set; }            
+            public string MpvHandlesPreviewText { get; set; }
             public string VlcMediaPlayer { get; set; }
             public string VlcMediaPlayerDescription { get; set; }
             public string VlcBrowseToLabel { get; set; }
@@ -1928,7 +1928,7 @@
             public string WaveformShowWpm { get; set; }
             public string ReverseMouseWheelScrollDirection { get; set; }
             public string WaveformAllowOverlap { get; set; }
-            public string WaveformSetVideoPosMoveStartEnd { get; set; }            
+            public string WaveformSetVideoPosMoveStartEnd { get; set; }
             public string WaveformFocusMouseEnter { get; set; }
             public string WaveformListViewFocusMouseEnter { get; set; }
             public string WaveformBorderHitMs1 { get; set; }
@@ -1967,6 +1967,9 @@
             public string UseOnlineNamesEtc { get; set; }
             public string WordAddedX { get; set; }
             public string WordAlreadyExists { get; set; }
+            public string NameOrWordMustBeGreaterThanOneCharacter { get; set; }
+            public string InvalidLanguageSelected { get; set; }
+            public string InvalidKeyValue { get; set; }
             public string WordNotFound { get; set; }
             public string RemoveX { get; set; }
             public string CannotUpdateNamesEtcOnline { get; set; }
