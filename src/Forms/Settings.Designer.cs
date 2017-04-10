@@ -3013,7 +3013,7 @@
             this.checkBoxNamesEtcOnline.Name = "checkBoxNamesEtcOnline";
             this.checkBoxNamesEtcOnline.Size = new System.Drawing.Size(163, 17);
             this.checkBoxNamesEtcOnline.TabIndex = 26;
-            this.checkBoxNamesEtcOnline.Text = "Use online names etc xml file";
+            this.checkBoxNamesEtcOnline.Text = "Use online names xml file";
             this.checkBoxNamesEtcOnline.UseVisualStyleBackColor = true;
             // 
             // textBoxNamesEtcOnline

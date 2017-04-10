@@ -111,7 +111,7 @@ namespace Nikse.SubtitleEdit.Core
             return id;
         }
 
-        private void ReplaceNames1Remove(List<string> namesEtc, List<string> replaceIds, List<string> replaceNames, List<string> originalNames)
+        private void ReplaceNames1Remove(List<string> nameList, List<string> replaceIds, List<string> replaceNames, List<string> originalNames)
         {
             if (Post.StartsWith('.'))
             {
@@ -121,7 +121,7 @@ namespace Nikse.SubtitleEdit.Core
 
             string lower = StrippedText.ToLower();
             int idName = 0;
-            foreach (string name in namesEtc)
+            foreach (string name in nameList)
             {
                 int start = lower.IndexOf(name, StringComparison.OrdinalIgnoreCase);
                 while (start >= 0 && start < lower.Length)
@@ -172,12 +172,12 @@ namespace Nikse.SubtitleEdit.Core
         }
 
         private static readonly char[] ExpectedCharsArray = { '.', '!', '?', ':', ';', ')', ']', '}', '(', '[', '{' };
-        public void FixCasing(List<string> namesEtc, bool changeNameCases, bool makeUppercaseAfterBreak, bool checkLastLine, string lastLine)
+        public void FixCasing(List<string> nameList, bool changeNameCases, bool makeUppercaseAfterBreak, bool checkLastLine, string lastLine)
         {
             var replaceIds = new List<string>();
             var replaceNames = new List<string>();
             var originalNames = new List<string>();
-            ReplaceNames1Remove(namesEtc, replaceIds, replaceNames, originalNames);
+            ReplaceNames1Remove(nameList, replaceIds, replaceNames, originalNames);
 
             if (checkLastLine)
             {

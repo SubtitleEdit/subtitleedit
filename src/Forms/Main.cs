@@ -10709,7 +10709,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     bool saveChangeCaseChanges = true;
                     var casingNamesLinesChanged = 0;
-                    changeCasing.FixCasing(selectedLines, LanguageAutoDetect.AutoDetectLanguageName(Configuration.Settings.General.SpellCheckLanguage, _subtitle));
+                    changeCasing.FixCasing(selectedLines, LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle));
                     if (changeCasing.ChangeNamesToo)
                     {
                         using (var changeCasingNames = new ChangeCasingNames())

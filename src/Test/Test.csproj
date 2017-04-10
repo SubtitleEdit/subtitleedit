@@ -88,7 +88,7 @@
     <EmbeddedResource Include="Dictionaries\en_US.dic" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Dictionaries\names_etc.xml" />
+    <EmbeddedResource Include="Dictionaries\names.xml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Files\sample.tar">

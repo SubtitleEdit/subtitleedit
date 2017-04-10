@@ -266,13 +266,13 @@ namespace Nikse.SubtitleEdit.Core
     public class WordListSettings
     {
         public string LastLanguage { get; set; }
-        public string NamesEtcUrl { get; set; }
-        public bool UseOnlineNamesEtc { get; set; }
+        public string NamesUrl { get; set; }
+        public bool UseOnlineNames { get; set; }
 
         public WordListSettings()
         {
             LastLanguage = "en-US";
-            NamesEtcUrl = "https://raw.githubusercontent.com/SubtitleEdit/subtitleedit/master/Dictionaries/names_etc.xml";
+            NamesUrl = "https://raw.githubusercontent.com/SubtitleEdit/subtitleedit/master/Dictionaries/names.xml";
         }
     }
 
@@ -2159,12 +2159,12 @@ namespace Nikse.SubtitleEdit.Core
             subNode = node.SelectSingleNode("LastLanguage");
             if (subNode != null)
                 settings.WordLists.LastLanguage = subNode.InnerText;
-            subNode = node.SelectSingleNode("NamesEtcUrl");
+            subNode = node.SelectSingleNode("Names");
             if (subNode != null)
-                settings.WordLists.NamesEtcUrl = subNode.InnerText;
-            subNode = node.SelectSingleNode("UseOnlineNamesEtc");
+                settings.WordLists.NamesUrl = subNode.InnerText;
+            subNode = node.SelectSingleNode("UseOnlineNames");
             if (subNode != null)
-                settings.WordLists.UseOnlineNamesEtc = Convert.ToBoolean(subNode.InnerText);
+                settings.WordLists.UseOnlineNames = Convert.ToBoolean(subNode.InnerText);
 
             // Fix Common Errors
             node = doc.DocumentElement.SelectSingleNode("CommonErrors");
@@ -3367,8 +3367,8 @@ namespace Nikse.SubtitleEdit.Core
 
                 textWriter.WriteStartElement("WordLists", string.Empty);
                 textWriter.WriteElementString("LastLanguage", settings.WordLists.LastLanguage);
-                textWriter.WriteElementString("NamesEtcUrl", settings.WordLists.NamesEtcUrl);
-                textWriter.WriteElementString("UseOnlineNamesEtc", settings.WordLists.UseOnlineNamesEtc.ToString());
+                textWriter.WriteElementString("Names", settings.WordLists.NamesUrl);
+                textWriter.WriteElementString("UseOnlineNames", settings.WordLists.UseOnlineNames.ToString());
                 textWriter.WriteEndElement();
 
                 textWriter.WriteStartElement("CommonErrors", string.Empty);
