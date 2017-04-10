@@ -5,7 +5,11 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Windows.Forms;
+using static Nikse.SubtitleEdit.Forms.GoogleTranslate;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -65,6 +69,12 @@ namespace Nikse.SubtitleEdit.Forms
             subtitleListView2.AutoSizeAllColumns(this);
             UiUtil.FixLargeFonts(this, buttonOK);
             labelAdjustFactor.Text = string.Empty;
+
+            GoogleTranslate gt = new GoogleTranslate();
+            gt.FillComboWithGoogleLanguages(comboBoxOtherSubLanguage);
+            gt.FillComboWithGoogleLanguages(comboBoxSubToSyncLanguage);
+            comboBoxOtherSubLanguage.SelectedItem = comboBoxOtherSubLanguage.Items[19];
+            comboBoxSubToSyncLanguage.SelectedItem = comboBoxSubToSyncLanguage.Items[18];
         }
 
         public void Initialize(Subtitle subtitle, string subtitleFileName, string videoFileName, int audioTrackNumber)
@@ -466,5 +476,116 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        private void buttonAutoSync_Click(object sender, EventArgs e)
+        {
+            /*It should be possible to change these variables in a autosync settings menu*/
+            int TIME_MARGIN = 5;
+            int MINIMUM_WORDS_IN_PARAGRAPH = 1;
+            int TARGET_PERCENTAGE = 60;
+            labelAutoSyncing.Visible = true;
+            progressAutoSync.Visible = true;
+            AutoSync(_subtitle, _otherSubtitle, TIME_MARGIN, MINIMUM_WORDS_IN_PARAGRAPH, TARGET_PERCENTAGE, (comboBoxSubToSyncLanguage.SelectedItem as ComboBoxItem).Value, (comboBoxOtherSubLanguage.SelectedItem as ComboBoxItem).Value);
+            labelAutoSyncing.Visible = false;
+            progressAutoSync.Visible = false;
+        }
+
+        /*
+            This function will try to sync subtitles automatically by comparing the one subtitle with another google translated one.
+        */
+        private void AutoSync(Subtitle subtitleToSync, Subtitle refrence, int timeMargin, int minimumWordsInParagraph, int targetPercentage, string languageSubtileToSync, string languageRefrence)
+        {
+            //Tasks are used beceause translation process takes a long time
+            Task<Subtitle> taskTranslateOther = Task<Subtitle>.Factory.StartNew(() => TranslateSub(refrence, languageRefrence + "|" + languageSubtileToSync));
+            Task<Subtitle> taskTranslateSubtileToSync = Task<Subtitle>.Factory.StartNew(() => TranslateSub(subtitleToSync, languageSubtileToSync + "|" + languageRefrence));
+
+            int numberOfEqualWords;
+            int numberOfWrongWords;
+            int nextSyncPoint = 0;
+            string[] subtitleWords;
+            string[] translatedSubs;
+
+            Dictionary<int, int> syncPoints = new Dictionary<int, int>();
+
+            Subtitle subtitleWrong = new Subtitle(subtitleToSync, true);
+
+            var otherTranslated = taskTranslateOther.Result;
+
+            for (int z = 0; z < 2; z++)
+            {
+                //for each paragraph subtitle to sync
+                for (int i = 0; i < subtitleWrong.Paragraphs.Count; i++)
+                {
+                    subtitleWords = Regex.Matches(subtitleWrong.Paragraphs[i].Text.ToLower(), @"\w+").Cast<Match>().Select(x => x.Value).ToArray(); //_subtitle.Paragraphs[i].Text.Split(' ');
+                    //for each translated paragraph in range
+                    for (int j = nextSyncPoint; j < otherTranslated.Paragraphs.Count && (subtitleWrong.Paragraphs[i].StartTime.Minutes < otherTranslated.Paragraphs[j].StartTime.Minutes + timeMargin && subtitleWrong.Paragraphs[i].StartTime.Minutes > otherTranslated.Paragraphs[j].StartTime.Minutes - timeMargin); j++)
+                    {
+                        numberOfEqualWords = 0;
+                        numberOfWrongWords = 0;
+                        translatedSubs = Regex.Matches(otherTranslated.Paragraphs[j].Text.ToLower(), @"\w+").Cast<Match>().Select(x => x.Value).ToArray(); //otherTranslated.Paragraphs[j].Text.Split(' ');
+                        //for each word in paragrah
+                        foreach (var word in subtitleWords)
+                        {
+                            //for each word in translated paragraph
+                            foreach (var translatedWord in translatedSubs)
+                            {
+                                if (word.Equals(translatedWord))
+                                {
+                                    numberOfEqualWords++;
+                                }
+                                else
+                                {
+                                    numberOfWrongWords++;
+                                }
+                            }
+                        }
+                        int averageRightOriginal = (int)((numberOfEqualWords / (float)subtitleWords.Length) * 100);
+                        int averageRightTranslated = (int)((numberOfEqualWords / (float)translatedSubs.Length) * 100);
+                        //if targetpercentage right is met based on averageOriginal & translated. Also if the words in a paragraph are less than 4 the average should be 90%
+                        if ((((averageRightTranslated >= targetPercentage) && translatedSubs.Length > 4) || averageRightTranslated >= 90)
+                        && (((averageRightOriginal >= targetPercentage) && translatedSubs.Length > 4) || averageRightOriginal >= 90)
+                        && subtitleWords.Length >= minimumWordsInParagraph && translatedSubs.Length >= minimumWordsInParagraph && !syncPoints.ContainsKey(i))
+                        {
+                            syncPoints.Add(i, j);
+                            nextSyncPoint = j + 1;
+                            j = otherTranslated.Paragraphs.Count;
+                        }
+                    }
+                }
+                //if true the subtiles will be compared again but translated the other way around
+                if (z == 0)
+                {
+                    otherTranslated = refrence;
+                    subtitleWrong = taskTranslateSubtileToSync.Result;
+                    nextSyncPoint = 0;
+                }
+            }
+            //This should be made multithreaded
+            foreach(var point in syncPoints)
+            {
+                SetSyncPointAuto(point.Key, point.Value);
+            }
+        }
+        private void SetSyncPointAuto(int listVieuw1Index, int listVieuw2Index)
+        {
+            int index = listVieuw1Index;
+            int indexOther = listVieuw2Index;
+
+            if (_synchronizationPoints.ContainsKey(index))
+                _synchronizationPoints[index] = TimeSpan.FromMilliseconds(_otherSubtitle.Paragraphs[indexOther].StartTime.TotalMilliseconds);
+            else
+                _synchronizationPoints.Add(index, TimeSpan.FromMilliseconds(_otherSubtitle.Paragraphs[indexOther].StartTime.TotalMilliseconds));
+            RefreshSynchronizationPointsUI();
+            SetSyncFactorLabel();
+        }
+
+        private Subtitle TranslateSub(Subtitle subtitleToTranslate, string languagePair)
+        {
+            Subtitle otherTranslated = new Subtitle(subtitleToTranslate, true);
+            Parallel.For(0, otherTranslated.Paragraphs.Count, i =>
+            {
+                otherTranslated.Paragraphs[i].Text = GoogleTranslate.TranslateTextViaScreenScraping(subtitleToTranslate.Paragraphs[i].Text, languagePair, Encoding.Default, false);
+            });
+            return otherTranslated;
+        }
     }
 }
