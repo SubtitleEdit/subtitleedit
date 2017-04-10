@@ -225,7 +225,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <CheckingForUpdatesFailedX>Грешка при проверка за обновяване: {0}</CheckingForUpdatesFailedX>
     <CheckingForUpdatesNoneAvailable>Използвате последна версия на Subtitle Edit :)</CheckingForUpdatesNoneAvailable>
     <CheckingForUpdatesNewVersion>Налична е нова версия!</CheckingForUpdatesNewVersion>
-    <InstallUpdate>Към страницата за смъкване</InstallUpdate>
+    <InstallUpdate>Сваляне</InstallUpdate>
     <NoUpdates>Не обновявай</NoUpdates>
   </CheckForUpdates>
   <ChooseAudioTrack>
@@ -616,6 +616,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixMusicNotationExample>'âTª sweet dreams are' -&gt; '♫ sweet dreams are'</FixMusicNotationExample>
     <NumberOfImportantLogMessages>{0} важни съобщения с отчети!</NumberOfImportantLogMessages>
     <FixedOkXY>Поправено и OK - '{0}': {1}</FixedOkXY>
+    <FixOcrErrorExample></FixOcrErrorExample>
+    <FixSpaceBetweenNumbersExample></FixSpaceBetweenNumbersExample>
+    <FixDialogsOneLineExample></FixDialogsOneLineExample>
   </FixCommonErrors>
   <GetDictionaries>
     <Title>Кой речник желаете?</Title>
@@ -1027,6 +1030,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <BeforeVisualSync>Преди визуалната синхронизация</BeforeVisualSync>
     <VisualSyncPerformedOnSelectedLines>Визуалната синхронизация се отнася за избраните редове</VisualSyncPerformedOnSelectedLines>
     <VisualSyncPerformed>Визуалната синхронизация е направена</VisualSyncPerformed>
+    <ImportThisVobSubSubtitle>Импортиране на това от VobSub субтитрите?</ImportThisVobSubSubtitle>
     <FileXIsLargerThan10MB>Файлът е по-голям от 10 МВ: {0}</FileXIsLargerThan10MB>
     <ContinueAnyway>Искате ли да продължите?</ContinueAnyway>
     <BeforeLoadOf>Преди зареждането на {0}</BeforeLoadOf>
