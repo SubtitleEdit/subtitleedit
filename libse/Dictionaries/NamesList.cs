@@ -244,7 +244,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             return false;
         }
 
-        public bool IsInNamesEtcMultiWordList(string text, string word)
+        public bool IsInNamesMultiWordList(string text, string word)
         {
             if (string.IsNullOrEmpty(text))
                 return false;
