@@ -482,6 +482,7 @@ namespace Nikse.SubtitleEdit.Forms
             int TIME_MARGIN = 5;
             int MINIMUM_WORDS_IN_PARAGRAPH = 1;
             int TARGET_PERCENTAGE = 60;
+
             labelAutoSyncing.Visible = true;
             progressAutoSync.Visible = true;
             AutoSync(_subtitle, _otherSubtitle, TIME_MARGIN, MINIMUM_WORDS_IN_PARAGRAPH, TARGET_PERCENTAGE, (comboBoxSubToSyncLanguage.SelectedItem as ComboBoxItem).Value, (comboBoxOtherSubLanguage.SelectedItem as ComboBoxItem).Value);
@@ -504,11 +505,12 @@ namespace Nikse.SubtitleEdit.Forms
             string[] subtitleWords;
             string[] translatedSubs;
 
-            Dictionary<int, int> syncPoints = new Dictionary<int, int>();
+            SortedList<int, int> syncPoints = new SortedList<int, int>();
 
             Subtitle subtitleWrong = new Subtitle(subtitleToSync, true);
 
             var otherTranslated = taskTranslateOther.Result;
+
 
             for (int z = 0; z < 2; z++)
             {
@@ -560,9 +562,13 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             //This should be made multithreaded
-            foreach(var point in syncPoints)
+            foreach (var point in syncPoints)
             {
-                SetSyncPointAuto(point.Key, point.Value);
+                //This removes syncpoints with starttime bigger than the next syncpoint
+                if(syncPoints.IndexOfKey(point.Key) == syncPoints.Count - 1 || (syncPoints.IndexOfKey(point.Key) < syncPoints.Count && otherTranslated.Paragraphs[syncPoints.Values[syncPoints.IndexOfKey(point.Key) + 1]].StartTime.TotalMilliseconds > otherTranslated.Paragraphs[syncPoints.Values[syncPoints.IndexOfKey(point.Key)]].StartTime.TotalMilliseconds))
+                {
+                    SetSyncPointAuto(point.Key, point.Value);
+                }
             }
         }
         private void SetSyncPointAuto(int listVieuw1Index, int listVieuw2Index)
