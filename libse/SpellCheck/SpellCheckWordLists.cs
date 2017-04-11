@@ -299,7 +299,7 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
 
         public bool HasNameExtended(string word, string text)
         {
-            return _namesEtcListUppercase.Contains(word) || _namesEtcListWithApostrophe.Contains(word) || _namesList.IsInNamesEtcMultiWordList(text, word);
+            return _namesEtcListUppercase.Contains(word) || _namesEtcListWithApostrophe.Contains(word) || _namesList.IsInNamesMultiWordList(text, word);
         }
 
         public bool HasUserWord(string word)

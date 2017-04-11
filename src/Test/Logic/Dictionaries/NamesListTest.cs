@@ -43,7 +43,7 @@ namespace Test.Logic.Dictionaries
 
             // Act
             namesList.Add("Charlie Parker123");
-            var exists = namesList.IsInNamesEtcMultiWordList("This is Charlie Parker123!", "Charlie Parker123");
+            var exists = namesList.IsInNamesMultiWordList("This is Charlie Parker123!", "Charlie Parker123");
 
             // Assert
             Assert.IsTrue(exists);
