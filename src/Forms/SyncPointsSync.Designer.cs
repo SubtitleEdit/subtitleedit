@@ -29,6 +29,8 @@
         private void InitializeComponent()
         {
             this.groupBoxImportResult = new System.Windows.Forms.GroupBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.numericUpDownMatchPercentage = new System.Windows.Forms.NumericUpDown();
             this.labelAutoSyncing = new System.Windows.Forms.Label();
             this.progressAutoSync = new System.Windows.Forms.ProgressBar();
             this.label2 = new System.Windows.Forms.Label();
@@ -52,6 +54,7 @@
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
             this.groupBoxImportResult.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMatchPercentage)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBoxImportResult
@@ -59,6 +62,8 @@
             this.groupBoxImportResult.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxImportResult.Controls.Add(this.label3);
+            this.groupBoxImportResult.Controls.Add(this.numericUpDownMatchPercentage);
             this.groupBoxImportResult.Controls.Add(this.labelAutoSyncing);
             this.groupBoxImportResult.Controls.Add(this.progressAutoSync);
             this.groupBoxImportResult.Controls.Add(this.label2);
@@ -82,6 +87,31 @@
             this.groupBoxImportResult.Size = new System.Drawing.Size(1096, 434);
             this.groupBoxImportResult.TabIndex = 16;
             this.groupBoxImportResult.TabStop = false;
+            // 
+            // label3
+            // 
+            this.label3.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Tahoma", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.ForeColor = System.Drawing.Color.Gray;
+            this.label3.Location = new System.Drawing.Point(481, 412);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(56, 14);
+            this.label3.TabIndex = 43;
+            this.label3.Text = "% Match";
+            // 
+            // numericUpDownMatchPercentage
+            // 
+            this.numericUpDownMatchPercentage.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.numericUpDownMatchPercentage.Location = new System.Drawing.Point(544, 406);
+            this.numericUpDownMatchPercentage.Name = "numericUpDownMatchPercentage";
+            this.numericUpDownMatchPercentage.Size = new System.Drawing.Size(77, 24);
+            this.numericUpDownMatchPercentage.TabIndex = 42;
+            this.numericUpDownMatchPercentage.Value = new decimal(new int[] {
+            70,
+            0,
+            0,
+            0});
             // 
             // labelAutoSyncing
             // 
@@ -377,6 +407,7 @@
             this.Resize += new System.EventHandler(this.SyncPointsSyncResize);
             this.groupBoxImportResult.ResumeLayout(false);
             this.groupBoxImportResult.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMatchPercentage)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -407,5 +438,7 @@
         private System.Windows.Forms.ComboBox comboBoxSubToSyncLanguage;
         private System.Windows.Forms.Label labelAutoSyncing;
         private System.Windows.Forms.ProgressBar progressAutoSync;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.NumericUpDown numericUpDownMatchPercentage;
     }
 }

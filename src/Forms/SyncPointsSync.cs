@@ -481,7 +481,7 @@ namespace Nikse.SubtitleEdit.Forms
             /*It should be possible to change these variables in a autosync settings menu*/
             int TIME_MARGIN = 5;
             int MINIMUM_WORDS_IN_PARAGRAPH = 1;
-            int TARGET_PERCENTAGE = 60;
+            int TARGET_PERCENTAGE = (int)numericUpDownMatchPercentage.Value;
 
             labelAutoSyncing.Visible = true;
             progressAutoSync.Visible = true;
