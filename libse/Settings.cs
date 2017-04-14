@@ -153,10 +153,10 @@ namespace Nikse.SubtitleEdit.Core
         public Color ExportFontColor { get; set; }
         public Color ExportBorderColor { get; set; }
         public Color ExportShadowColor { get; set; }
-        public int ExportBottomMargin { get; set; }
-        public int ExportLeftRightMargin { get; set; }
+        public int ExportBottomMarginPercent { get; set; }
+        public int ExportLeftRightMarginPercent { get; set; }
         public int ExportHorizontalAlignment { get; set; }
-        public int ExportBluRayBottomMargin { get; set; }
+        public int ExportBluRayBottomMarginPercent { get; set; }
         public int ExportBluRayShadow { get; set; }
         public int Export3DType { get; set; }
         public int Export3DDepth { get; set; }
@@ -231,12 +231,12 @@ namespace Nikse.SubtitleEdit.Core
             ExportFontColor = Color.White;
             ExportBorderColor = Color.FromArgb(255, 0, 0, 0);
             ExportShadowColor = Color.FromArgb(255, 0, 0, 0);
-            ExportBottomMargin = 15;
-            ExportLeftRightMargin = 15;
+            ExportBottomMarginPercent = 5;
+            ExportLeftRightMarginPercent = 5;
             ExportHorizontalAlignment = 1; // 1=center (0=left, 2=right)
             ExportVobSubSimpleRendering = true;
             ExportVobAntiAliasingWithTransparency = true;
-            ExportBluRayBottomMargin = 20;
+            ExportBluRayBottomMarginPercent = 5;
             ExportBluRayShadow = 1;
             Export3DType = 0;
             Export3DDepth = 0;
@@ -1935,18 +1935,18 @@ namespace Nikse.SubtitleEdit.Core
             subNode = node.SelectSingleNode("ExportShadowColor");
             if (subNode != null)
                 settings.Tools.ExportShadowColor = Color.FromArgb(int.Parse(subNode.InnerText));
-            subNode = node.SelectSingleNode("ExportBottomMargin");
+            subNode = node.SelectSingleNode("ExportBottomMarginPercent");
             if (subNode != null)
-                settings.Tools.ExportBottomMargin = int.Parse(subNode.InnerText);
-            subNode = node.SelectSingleNode("ExportLeftRightMargin");
+                settings.Tools.ExportBottomMarginPercent = int.Parse(subNode.InnerText);
+            subNode = node.SelectSingleNode("ExportLeftRightMarginPercent");
             if (subNode != null)
-                settings.Tools.ExportLeftRightMargin = int.Parse(subNode.InnerText);
+                settings.Tools.ExportLeftRightMarginPercent = int.Parse(subNode.InnerText);
             subNode = node.SelectSingleNode("ExportHorizontalAlignment");
             if (subNode != null)
                 settings.Tools.ExportHorizontalAlignment = int.Parse(subNode.InnerText);
-            subNode = node.SelectSingleNode("ExportBluRayBottomMargin");
+            subNode = node.SelectSingleNode("ExportBluRayBottomMarginPercent");
             if (subNode != null)
-                settings.Tools.ExportBluRayBottomMargin = int.Parse(subNode.InnerText);
+                settings.Tools.ExportBluRayBottomMarginPercent = int.Parse(subNode.InnerText);
             subNode = node.SelectSingleNode("ExportBluRayShadow");
             if (subNode != null)
                 settings.Tools.ExportBluRayShadow = int.Parse(subNode.InnerText);
@@ -3276,10 +3276,10 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("ExportFontColor", settings.Tools.ExportFontColor.ToArgb().ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ExportBorderColor", settings.Tools.ExportBorderColor.ToArgb().ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ExportShadowColor", settings.Tools.ExportShadowColor.ToArgb().ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ExportBottomMargin", settings.Tools.ExportBottomMargin.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ExportLeftRightMargin", settings.Tools.ExportLeftRightMargin.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ExportBottomMarginPercent", settings.Tools.ExportBottomMarginPercent.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ExportLeftRightMarginPercent", settings.Tools.ExportLeftRightMarginPercent.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ExportHorizontalAlignment", settings.Tools.ExportHorizontalAlignment.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ExportBluRayBottomMargin", settings.Tools.ExportBluRayBottomMargin.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ExportBluRayBottomMarginPercent", settings.Tools.ExportBluRayBottomMarginPercent.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ExportBluRayShadow", settings.Tools.ExportBluRayShadow.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("Export3DType", settings.Tools.Export3DType.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("Export3DDepth", settings.Tools.Export3DDepth.ToString(CultureInfo.InvariantCulture));
