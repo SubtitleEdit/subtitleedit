@@ -13,7 +13,7 @@ namespace Nikse.SubtitleEdit.Forms
         private readonly HashSet<string> _usedNames = new HashSet<string>();
         private int _noOfLinesChanged;
         private Subtitle _subtitle;
-        private const string ExpectedEndChars = " ,.!?:;')<-\"\r\n";
+        private const string ExpectedEndChars = " ,.!?:;')]<-\"\r\n";
         public ChangeCasingNames()
         {
             InitializeComponent();
