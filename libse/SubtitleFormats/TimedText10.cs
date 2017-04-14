@@ -1267,9 +1267,26 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 if (Math.Abs(n1 - 10) < 2 && Math.Abs(n2 - 10) < 5)
                                 {
                                     top = true;
-                                    break;
                                 }
-                                break;
+                            }
+                        }                        
+                    }
+
+                    if (!top && node.Attributes != null)
+                    {
+                        var origin = string.Empty;
+                        if (node.Attributes["tts:origin"] != null)
+                            origin = node.Attributes["tts:origin"].Value;
+                        else if (node.Attributes["origin"] != null)
+                            origin = node.Attributes["origin"].Value;
+                        var arr = origin.Split(' ');
+                        if (arr.Length == 2 && arr[0].EndsWith("%", StringComparison.Ordinal) && arr[1].EndsWith("%", StringComparison.Ordinal))
+                        {
+                            var n1 = Convert.ToDouble(arr[0].TrimEnd('%'), CultureInfo.InvariantCulture);
+                            var n2 = Convert.ToDouble(arr[1].TrimEnd('%'), CultureInfo.InvariantCulture);
+                            if (Math.Abs(n1 - 10) < 2 && Math.Abs(n2 - 10) < 5)
+                            {
+                                top = true;
                             }
                         }
                     }
