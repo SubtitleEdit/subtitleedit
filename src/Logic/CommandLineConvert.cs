@@ -970,7 +970,7 @@ namespace Nikse.SubtitleEdit.Logic
 
                             var cfg = Configuration.Settings.Tools;
                             var language = DvdSubtitleLanguage.GetLanguageOrNull(LanguageAutoDetect.AutoDetectGoogleLanguage(sub)) ?? DvdSubtitleLanguage.English;
-                            using (var vobSubWriter = new VobSubWriter(outputFileName, width, height, cfg.ExportBottomMargin, cfg.ExportBottomMargin, 32, cfg.ExportFontColor, cfg.ExportBorderColor, !cfg.ExportVobAntiAliasingWithTransparency, language))
+                            using (var vobSubWriter = new VobSubWriter(outputFileName, width, height, (int)Math.Round(cfg.ExportBottomMarginPercent / 100.0 * width), (int)Math.Round(cfg.ExportBottomMarginPercent / 100.0 * height), 32, cfg.ExportFontColor, cfg.ExportBorderColor, !cfg.ExportVobAntiAliasingWithTransparency, language))
                             {
                                 for (int index = 0; index < sub.Paragraphs.Count; index++)
                                 {
