@@ -244,7 +244,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             return false;
         }
 
-        public bool IsInNamesEtcMultiWordList(string text, string word)
+        public bool IsInNamesMultiWordList(string text, string word)
         {
             if (string.IsNullOrEmpty(text))
                 return false;
@@ -252,13 +252,15 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             text = text.Replace(Environment.NewLine, " ");
             text = text.FixExtraSpaces();
 
-            foreach (string s in _namesMultiList)
+            if (_namesMultiList.Contains(word))
             {
-                if (s.Contains(word) && text.Contains(s))
+                return true;
+            }
+            foreach (string multiWordName in _namesMultiList)
+            {
+                if (text.Contains(multiWordName))
                 {
-                    if (s.StartsWith(word + " ", StringComparison.Ordinal) || s.EndsWith(" " + word, StringComparison.Ordinal) || s.Contains(" " + word + " "))
-                        return true;
-                    if (word == s)
+                    if (multiWordName.StartsWith(word + " ", StringComparison.Ordinal) || multiWordName.EndsWith(" " + word, StringComparison.Ordinal) || multiWordName.Contains(" " + word + " "))
                         return true;
                 }
             }
