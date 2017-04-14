@@ -91,6 +91,7 @@
             this.labelDefaultFrameRate = new System.Windows.Forms.Label();
             this.tabPageShortcuts = new System.Windows.Forms.TabPage();
             this.groupBoxShortcuts = new System.Windows.Forms.GroupBox();
+            this.buttonClearShortcut = new System.Windows.Forms.Button();
             this.comboBoxShortcutKey = new System.Windows.Forms.ComboBox();
             this.labelShortcutKey = new System.Windows.Forms.Label();
             this.checkBoxShortcutsShift = new System.Windows.Forms.CheckBox();
@@ -200,6 +201,7 @@
             this.linkLabelBingSubscribe = new System.Windows.Forms.LinkLabel();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBoxToolsMisc = new System.Windows.Forms.GroupBox();
+            this.checkBoxCpsIncludeWhiteSpace = new System.Windows.Forms.CheckBox();
             this.labelUserBingApiId = new System.Windows.Forms.Label();
             this.buttonEditDoNotBreakAfterList = new System.Windows.Forms.Button();
             this.checkBoxUseDoNotBreakAfterList = new System.Windows.Forms.CheckBox();
@@ -332,7 +334,6 @@
             this.colorDialogSSAStyle = new System.Windows.Forms.ColorDialog();
             this.labelStatus = new System.Windows.Forms.Label();
             this.openFileDialogFFmpeg = new System.Windows.Forms.OpenFileDialog();
-            this.checkBoxCpsIncludeWhiteSpace = new System.Windows.Forms.CheckBox();
             this.tabControlSettings.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
@@ -1191,6 +1192,7 @@
             this.groupBoxShortcuts.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxShortcuts.Controls.Add(this.buttonClearShortcut);
             this.groupBoxShortcuts.Controls.Add(this.comboBoxShortcutKey);
             this.groupBoxShortcuts.Controls.Add(this.labelShortcutKey);
             this.groupBoxShortcuts.Controls.Add(this.checkBoxShortcutsShift);
@@ -1205,6 +1207,17 @@
             this.groupBoxShortcuts.TabIndex = 2;
             this.groupBoxShortcuts.TabStop = false;
             this.groupBoxShortcuts.Text = "Shortcuts";
+            // 
+            // buttonClearShortcut
+            // 
+            this.buttonClearShortcut.Enabled = false;
+            this.buttonClearShortcut.Location = new System.Drawing.Point(582, 427);
+            this.buttonClearShortcut.Name = "buttonClearShortcut";
+            this.buttonClearShortcut.Size = new System.Drawing.Size(111, 23);
+            this.buttonClearShortcut.TabIndex = 6;
+            this.buttonClearShortcut.Text = "&Clear";
+            this.buttonClearShortcut.UseVisualStyleBackColor = true;
+            this.buttonClearShortcut.Click += new System.EventHandler(this.buttonClearShortcut_Click);
             // 
             // comboBoxShortcutKey
             // 
@@ -1400,7 +1413,7 @@
             // buttonUpdateShortcut
             // 
             this.buttonUpdateShortcut.Enabled = false;
-            this.buttonUpdateShortcut.Location = new System.Drawing.Point(485, 426);
+            this.buttonUpdateShortcut.Location = new System.Drawing.Point(465, 427);
             this.buttonUpdateShortcut.Name = "buttonUpdateShortcut";
             this.buttonUpdateShortcut.Size = new System.Drawing.Size(111, 23);
             this.buttonUpdateShortcut.TabIndex = 5;
@@ -2596,6 +2609,16 @@
             this.groupBoxToolsMisc.TabStop = false;
             this.groupBoxToolsMisc.Text = "Misc";
             // 
+            // checkBoxCpsIncludeWhiteSpace
+            // 
+            this.checkBoxCpsIncludeWhiteSpace.AutoSize = true;
+            this.checkBoxCpsIncludeWhiteSpace.Location = new System.Drawing.Point(15, 21);
+            this.checkBoxCpsIncludeWhiteSpace.Name = "checkBoxCpsIncludeWhiteSpace";
+            this.checkBoxCpsIncludeWhiteSpace.Size = new System.Drawing.Size(274, 17);
+            this.checkBoxCpsIncludeWhiteSpace.TabIndex = 0;
+            this.checkBoxCpsIncludeWhiteSpace.Text = "Characters per second (CPS) includes  white spaces";
+            this.checkBoxCpsIncludeWhiteSpace.UseVisualStyleBackColor = true;
+            // 
             // labelUserBingApiId
             // 
             this.labelUserBingApiId.AutoSize = true;
@@ -3011,7 +3034,7 @@
             this.checkBoxNamesEtcOnline.AutoSize = true;
             this.checkBoxNamesEtcOnline.Location = new System.Drawing.Point(7, 22);
             this.checkBoxNamesEtcOnline.Name = "checkBoxNamesEtcOnline";
-            this.checkBoxNamesEtcOnline.Size = new System.Drawing.Size(163, 17);
+            this.checkBoxNamesEtcOnline.Size = new System.Drawing.Size(145, 17);
             this.checkBoxNamesEtcOnline.TabIndex = 26;
             this.checkBoxNamesEtcOnline.Text = "Use online names xml file";
             this.checkBoxNamesEtcOnline.UseVisualStyleBackColor = true;
@@ -3975,16 +3998,6 @@
             // 
             this.openFileDialogFFmpeg.FileName = "openFileDialog1";
             // 
-            // checkBoxCpsIncludeWhiteSpace
-            // 
-            this.checkBoxCpsIncludeWhiteSpace.AutoSize = true;
-            this.checkBoxCpsIncludeWhiteSpace.Location = new System.Drawing.Point(15, 21);
-            this.checkBoxCpsIncludeWhiteSpace.Name = "checkBoxCpsIncludeWhiteSpace";
-            this.checkBoxCpsIncludeWhiteSpace.Size = new System.Drawing.Size(274, 17);
-            this.checkBoxCpsIncludeWhiteSpace.TabIndex = 0;
-            this.checkBoxCpsIncludeWhiteSpace.Text = "Characters per second (CPS) includes  white spaces";
-            this.checkBoxCpsIncludeWhiteSpace.UseVisualStyleBackColor = true;
-            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -4413,5 +4426,6 @@
         private System.Windows.Forms.CheckBox checkBoxMpvHandlesPreviewText;
         private System.Windows.Forms.CheckBox checkBoxVideoAutoOpen;
         private System.Windows.Forms.CheckBox checkBoxCpsIncludeWhiteSpace;
+        private System.Windows.Forms.Button buttonClearShortcut;
     }
 }

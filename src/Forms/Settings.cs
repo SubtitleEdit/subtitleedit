@@ -866,6 +866,8 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxShortcutsAlt.Text = language.Alt;
             checkBoxShortcutsShift.Text = language.Shift;
             buttonUpdateShortcut.Text = language.UpdateShortcut;
+            buttonClearShortcut.Text = Configuration.Settings.Language.DvdSubRip.Clear;
+
             labelShortcutKey.Text = language.Key;
             comboBoxShortcutKey.Left = labelShortcutKey.Left + labelShortcutKey.Width;
             comboBoxShortcutKey.Items[0] = Configuration.Settings.Language.General.None;
@@ -886,6 +888,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelShortcutKey.Left = checkBoxShortcutsShift.Left + checkBoxShortcutsShift.Width + 9;
             comboBoxShortcutKey.Left = labelShortcutKey.Left + labelShortcutKey.Width + 2;
             buttonUpdateShortcut.Left = comboBoxShortcutKey.Left + comboBoxShortcutKey.Width + 15;
+            buttonClearShortcut.Left = buttonUpdateShortcut.Left + buttonUpdateShortcut.Width + 15;
 
             _oldVlcLocation = gs.VlcLocation;
             _oldVlcLocationRelative = gs.VlcLocationRelative;
@@ -2043,6 +2046,7 @@ namespace Nikse.SubtitleEdit.Forms
                 comboBoxShortcutKey.SelectedIndex = 0;
                 comboBoxShortcutKey.Enabled = false;
                 buttonUpdateShortcut.Enabled = false;
+                buttonClearShortcut.Enabled = false;
             }
             else if (e.Node != null || e.Node.Nodes.Count == 0)
             {
@@ -2058,6 +2062,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 comboBoxShortcutKey.Enabled = true;
                 buttonUpdateShortcut.Enabled = true;
+                buttonClearShortcut.Enabled = true;
 
                 string shortcut = GetShortcut(e.Node.Text);
 
@@ -2431,6 +2436,15 @@ namespace Nikse.SubtitleEdit.Forms
         private void radioButtonVideoPlayerMPV_CheckedChanged(object sender, EventArgs e)
         {
             checkBoxMpvHandlesPreviewText.Enabled = radioButtonVideoPlayerMPV.Checked;
+        }
+
+        private void buttonClearShortcut_Click(object sender, EventArgs e)
+        {
+            checkBoxShortcutsControl.Checked = false;
+            checkBoxShortcutsAlt.Checked = false;
+            checkBoxShortcutsShift.Checked = false;
+            comboBoxShortcutKey.SelectedIndex = 0;
+            buttonUpdateShortcut_Click(null, null);
         }
 
     }
