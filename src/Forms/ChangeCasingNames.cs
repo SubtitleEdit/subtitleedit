@@ -80,7 +80,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     string name = item.SubItems[1].Text;
 
-                    string textNoTags = HtmlUtil.RemoveHtmlTags(text);
+                    string textNoTags = HtmlUtil.RemoveHtmlTags(text, true);
                     if (textNoTags != textNoTags.ToUpper())
                     {
                         if (item.Checked && text != null && text.Contains(name, StringComparison.OrdinalIgnoreCase) && name.Length > 1 && name != name.ToLower())
@@ -132,7 +132,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         bool startOk = (startIndex == 0) || (text[startIndex - 1] == ' ') || (text[startIndex - 1] == '-') ||
                                        (text[startIndex - 1] == '"') || (text[startIndex - 1] == '\'') || (text[startIndex - 1] == '>') ||
-                                       (Environment.NewLine.EndsWith(text[startIndex - 1].ToString(CultureInfo.InvariantCulture)));
+                                       (Environment.NewLine.EndsWith(text[startIndex - 1].ToString(CultureInfo.InvariantCulture), StringComparison.Ordinal));
 
                         if (startOk)
                         {
