@@ -49,42 +49,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 string start = string.Format(timeCodeFormatHours, p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, p.StartTime.Milliseconds);
                 string end = string.Format(timeCodeFormatHours, p.EndTime.Hours, p.EndTime.Minutes, p.EndTime.Seconds, p.EndTime.Milliseconds);
-                string positionInfo = string.Empty;
-
-                if (p.Text.StartsWith("{\\a", StringComparison.Ordinal))
-                {
-                    string position = null; // horizontal
-                    if (p.Text.StartsWith("{\\an1}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an4}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an7}", StringComparison.Ordinal)) // advanced sub station alpha
-                    {
-                        position = "20%"; //left
-                    }
-                    else if (p.Text.StartsWith("{\\an3}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an6}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an9}", StringComparison.Ordinal)) // advanced sub station alpha
-                    {
-                        position = "80%"; //right
-                    }
-
-                    string line = null;
-                    if (p.Text.StartsWith("{\\an7}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an8}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an9}", StringComparison.Ordinal)) // advanced sub station alpha
-                    {
-                        line = "20%"; //top
-                    }
-                    else if (p.Text.StartsWith("{\\an4}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an5}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an6}", StringComparison.Ordinal)) // advanced sub station alpha
-                    {
-                        line = "50%"; //middle
-                    }
-
-                    if (!string.IsNullOrEmpty(position))
-                    {
-                        positionInfo = " position:" + position;
-                    }
-                    if (!string.IsNullOrEmpty(line))
-                    {
-                        if (positionInfo == null)
-                            positionInfo = " line:" + line;
-                        else
-                            positionInfo = positionInfo += " line:" + line;
-                    }
-                }
+                string positionInfo = GetPositionInfoFromAssTag(p);
 
                 string style = string.Empty;
                 if (!string.IsNullOrEmpty(p.Extra) && subtitle.Header == "WEBVTT")
@@ -94,7 +59,49 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return sb.ToString().Trim();
         }
 
-        private static string FormatText(Paragraph p)
+        internal static string GetPositionInfoFromAssTag(Paragraph p)
+        {
+            string positionInfo = string.Empty;
+
+            if (p.Text.StartsWith("{\\a", StringComparison.Ordinal))
+            {
+                string position = null; // horizontal
+                if (p.Text.StartsWith("{\\an1}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an4}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an7}", StringComparison.Ordinal)) // advanced sub station alpha
+                {
+                    position = "20%"; //left
+                }
+                else if (p.Text.StartsWith("{\\an3}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an6}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an9}", StringComparison.Ordinal)) // advanced sub station alpha
+                {
+                    position = "80%"; //right
+                }
+
+                string line = null;
+                if (p.Text.StartsWith("{\\an7}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an8}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an9}", StringComparison.Ordinal)) // advanced sub station alpha
+                {
+                    line = "20%"; //top
+                }
+                else if (p.Text.StartsWith("{\\an4}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an5}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an6}", StringComparison.Ordinal)) // advanced sub station alpha
+                {
+                    line = "50%"; //middle
+                }
+
+                if (!string.IsNullOrEmpty(position))
+                {
+                    positionInfo = " position:" + position;
+                }
+                if (!string.IsNullOrEmpty(line))
+                {
+                    if (positionInfo == null)
+                        positionInfo = " line:" + line;
+                    else
+                        positionInfo = positionInfo += " line:" + line;
+                }
+            }
+
+            return positionInfo;
+        }
+
+        internal static string FormatText(Paragraph p)
         {
             string text = Utilities.RemoveSsaTags(p.Text);
             while (text.Contains(Environment.NewLine + Environment.NewLine))
@@ -165,7 +172,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             subtitle.Renumber();
         }
 
-        private string GetPositionInfo(string s)
+        internal static string GetPositionInfo(string s)
         {
             //position: x --- 0% = left, 100%=right (horizontal)
             //line: x --- 0 or -16 or 0%=top, 16 or -1 or 100% = bottom (vertical)
@@ -264,7 +271,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return positionInfo;
         }
 
-        private string GetTag(string s, string tag)
+        private static string GetTag(string s, string tag)
         {
             var pos = s.IndexOf(tag, StringComparison.Ordinal);
             if (pos >= 0)
