@@ -1054,6 +1054,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
         <RemoveTextForHi>청각 장애인용 텍스트 삭제</RemoveTextForHi>
         <VisualSync>시각 동기화</VisualSync>
         <SpellCheck>맞춤법 검사</SpellCheck>
+        <NetflixQualityCheck>Netflix 품질 검사</NetflixQualityCheck>
         <Settings>환경 설정</Settings>
         <Help>도움말</Help>
         <ShowHideWaveform>파형 표시 | 숨김</ShowHideWaveform>
@@ -1681,6 +1682,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <Replace>바꾸기</Replace>
     <VisualSync>시각 동기화</VisualSync>
     <SpellCheck>맞춤법</SpellCheck>
+    <NetflixQualityCheck>Netflix 품질 검사</NetflixQualityCheck>
     <SettingsName>환경 설정</SettingsName>
     <Help>도움말</Help>
     <ShowFrameRate>도구 모음에 프레임 속도 표시</ShowFrameRate>
@@ -1698,6 +1700,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <SubtitleFont>자막 글꼴</SubtitleFont>
     <SubtitleFontSize>글자 크기</SubtitleFontSize>
     <SubtitleBold>굵게</SubtitleBold>
+    <VideoAutoOpen>자막을 열 때 자동으로 비디오 파일 열기</VideoAutoOpen>
     <SubtitleCenter>가운데</SubtitleCenter>
     <SubtitleFontColor>글자 색</SubtitleFontColor>
     <SubtitleBackgroundColor>배경 색</SubtitleBackgroundColor>
@@ -1923,6 +1926,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <MainTextBoxUnbreak>줄바꿈 제거</MainTextBoxUnbreak>
     <MainFileSaveAll>모두 저장</MainFileSaveAll>
     <Miscellaneous>기타</Miscellaneous>
+    <CpsIncludesSpace>문자/초(CPS)는 공백을 포함</CpsIncludesSpace>
     <UseDoNotBreakAfterList>'뒤에 줄바꿈을 배제하는 목록' 사용 (자동 줄바꿈 用)</UseDoNotBreakAfterList>
     <MicrosoftBingTranslator>Microsoft Bing 번역기</MicrosoftBingTranslator>
     <HowToSignUp>가입 방법</HowToSignUp>
@@ -1989,6 +1993,16 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <SpellCheckAborted>맞춤법 검사 중지!</SpellCheckAborted>
     <UndoX>실행 취소: {0}</UndoX>
   </SpellCheck>
+  <NetflixQualityCheck>
+    <GlyphCheckSuccessfull>문자 유효성 검사에 성공했습니다.</GlyphCheckSuccessfull>
+    <GlyphCheckFailed>문자 유효성 검사에 실패했습니다.</GlyphCheckFailed>
+    <GlyphCheckReport>{1} 열에 잘못된 문자 {0}이(가) 발견되었습니다.</GlyphCheckReport>
+    <WhiteSpaceCheckSuccessfull>공백 유효성 검사에 성공했습니다.</WhiteSpaceCheckSuccessfull>
+    <WhiteSpaceCheckFailed>공백 유효성 검사에 실패했습니다.</WhiteSpaceCheckFailed>
+    <WhiteSpaceCheckReport>{0} 열에 잘못된 공백이 있습니다.</WhiteSpaceCheckReport>
+    <ReportPrompt>여기 전체 보고서를 참조하십시오: {0}.</ReportPrompt>
+    <SavingError>보고서를 저장할 수 없습니다.</SavingError>
+  </NetflixQualityCheck>
   <Split>
     <Title>* 자막 분할</Title>
     <SplitOptions>분할 옵션</SplitOptions>
