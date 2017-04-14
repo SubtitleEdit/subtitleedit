@@ -39,8 +39,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string ToText(Subtitle subtitle, string title)
         {
-            const string timeCodeFormatHours = "{0:00}:{1:00}:{2:00}.{3:000}"; // hh:mm:ss.cc
-            const string paragraphWriteFormat = "{0} --> {1}{4}{2}{3}{4}";
+            const string timeCodeFormatHours = "{0:00}:{1:00}:{2:00}.{3:000}"; // hh:mm:ss.mmm
+            const string paragraphWriteFormat = "{0}--> {1}{2}{5}{3}{4}{5}";
 
             var sb = new StringBuilder();
             sb.AppendLine("WEBVTT");
@@ -49,18 +49,54 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 string start = string.Format(timeCodeFormatHours, p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, p.StartTime.Milliseconds);
                 string end = string.Format(timeCodeFormatHours, p.EndTime.Hours, p.EndTime.Minutes, p.EndTime.Seconds, p.EndTime.Milliseconds);
+                string positionInfo = string.Empty;
+
+                if (p.Text.StartsWith("{\\a", StringComparison.Ordinal))
+                {
+                    string position = null; // horizontal
+                    if (p.Text.StartsWith("{\\an1}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an4}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an7}", StringComparison.Ordinal)) // advanced sub station alpha
+                    {
+                        position = "20%"; //left
+                    }
+                    else if (p.Text.StartsWith("{\\an3}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an6}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an9}", StringComparison.Ordinal)) // advanced sub station alpha
+                    {
+                        position = "80%"; //right
+                    }
+
+                    string line = null;
+                    if (p.Text.StartsWith("{\\an7}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an8}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an9}", StringComparison.Ordinal)) // advanced sub station alpha
+                    {
+                        line = "20%"; //top
+                    }
+                    else if (p.Text.StartsWith("{\\an4}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an5}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an6}", StringComparison.Ordinal)) // advanced sub station alpha
+                    {
+                        line = "50%"; //middle
+                    }
+
+                    if (!string.IsNullOrEmpty(position))
+                    {
+                        positionInfo = " position:" + position;
+                    }
+                    if (!string.IsNullOrEmpty(line))
+                    {
+                        if (positionInfo == null)
+                            positionInfo = " line:" + line;
+                        else
+                            positionInfo = positionInfo += " line:" + line;
+                    }
+                }
 
                 string style = string.Empty;
                 if (!string.IsNullOrEmpty(p.Extra) && subtitle.Header == "WEBVTT")
                     style = p.Extra;
-                sb.AppendLine(string.Format(paragraphWriteFormat, start, end, FormatText(p), style, Environment.NewLine));
+                sb.AppendLine(string.Format(paragraphWriteFormat, start, end, positionInfo, FormatText(p), style, Environment.NewLine));
             }
             return sb.ToString().Trim();
         }
 
         private static string FormatText(Paragraph p)
         {
-            string text = p.Text;
+            string text = Utilities.RemoveSsaTags(p.Text);
             while (text.Contains(Environment.NewLine + Environment.NewLine))
                 text = text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
             return text;
@@ -71,6 +107,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             _errorCount = 0;
             Paragraph p = null;
             bool textDone = true;
+            string positionInfo = string.Empty;
             foreach (string line in lines)
             {
                 string s = line;
@@ -98,6 +135,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         p = new Paragraph();
                         p.StartTime = GetTimeCodeFromString(parts[0]);
                         p.EndTime = GetTimeCodeFromString(parts[1]);
+                        positionInfo = GetPositionInfo(s);
                     }
                     catch (Exception exception)
                     {
@@ -112,9 +150,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
                 else if (p != null && !string.IsNullOrWhiteSpace(line))
                 {
-                    string text = line.Trim();
+                    string text = positionInfo + line.Trim();
                     if (!textDone)
                         p.Text = (p.Text + Environment.NewLine + text).Trim();
+                    positionInfo = string.Empty;
                 }
                 else if (line.Length == 0)
                 {
@@ -124,6 +163,126 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             if (p != null)
                 subtitle.Paragraphs.Add(p);
             subtitle.Renumber();
+        }
+
+        private string GetPositionInfo(string s)
+        {
+            //position: x --- 0% = left, 100%=right (horizontal)
+            //line: x --- 0 or -16 or 0%=top, 16 or -1 or 100% = bottom (vertical)
+            var pos = GetTag(s, "position:");
+            var line = GetTag(s, "line:");
+            var positionInfo = string.Empty;
+            bool hAlignLeft = false;
+            bool hAlignRight = false;
+            bool vAlignTop = false;
+            bool vAlignMiddle = false;
+
+            if (!string.IsNullOrEmpty(pos) && pos.EndsWith('%'))
+            {
+                double number;
+                if (double.TryParse(pos.TrimEnd('%'), out number))
+                {
+                    if (number < 25)
+                    {
+                        hAlignLeft = true;
+                    }
+                    else if (number > 75)
+                    {
+                        hAlignRight = true;
+                    }
+                }
+            }
+
+            if (!string.IsNullOrEmpty(line) && line.EndsWith('%'))
+            {
+
+                if (line.EndsWith('%'))
+                {
+                    double number;
+                    if (double.TryParse(line.TrimEnd('%'), out number))
+                    {
+                        if (number < 25)
+                        {
+                            vAlignTop = true;
+                        }
+                        else if (number < 75)
+                        {
+                            vAlignMiddle = true;
+                        }
+                    }
+                }
+                else
+                {
+                    double number;
+                    if (double.TryParse(line.TrimEnd('%'), out number))
+                    {
+                        if (number < 7)
+                        {
+                            vAlignTop = true;
+                        }
+                        else if (number < 11)
+                        {
+                            vAlignMiddle = true;
+                        }
+                    }
+                }
+            }
+
+            if (hAlignLeft)
+            {
+                if (vAlignTop)
+                {
+                    return "{\\an7}";
+                }
+                if (vAlignMiddle)
+                {
+                    return "{\\an4}";
+                }
+                return "{\\an1}";
+            }
+            else if (hAlignRight)
+            {
+                if (vAlignTop)
+                {
+                    return "{\\an9}";
+                }
+                if (vAlignMiddle)
+                {
+                    return "{\\an6}";
+                }
+                return "{\\an3}";
+            }
+            else if (vAlignTop)
+            {
+                return "{\\an8}";
+            }
+            else if (vAlignMiddle)
+            {
+                return "{\\an5}";
+            }
+
+            return positionInfo;
+        }
+
+        private string GetTag(string s, string tag)
+        {
+            var pos = s.IndexOf(tag, StringComparison.Ordinal);
+            if (pos >= 0)
+            {
+                var v = s.Substring(pos + tag.Length).Trim();
+                var end = v.IndexOf("%,", StringComparison.Ordinal);
+                if (end >= 0)
+                {
+                    v = v.Remove(end + 1);
+                }
+                end = v.IndexOf(' ');
+                if (end >= 0)
+                {
+                    v = v.Remove(end);
+                }
+                return v;
+            }
+            return null;
         }
 
         public override void RemoveNativeFormatting(Subtitle subtitle, SubtitleFormat newFormat)
