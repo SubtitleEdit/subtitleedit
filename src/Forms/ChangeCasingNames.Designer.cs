@@ -31,6 +31,8 @@
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.groupBoxNames = new System.Windows.Forms.GroupBox();
+            this.buttonInverseSelection = new System.Windows.Forms.Button();
+            this.buttonSelectAll = new System.Windows.Forms.Button();
             this.listViewNames = new System.Windows.Forms.ListView();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -41,8 +43,9 @@
             this.columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.labelXLinesSelected = new System.Windows.Forms.Label();
-            this.buttonInverseSelection = new System.Windows.Forms.Button();
-            this.buttonSelectAll = new System.Windows.Forms.Button();
+            this.labelExtraNames = new System.Windows.Forms.Label();
+            this.textBoxExtraNames = new System.Windows.Forms.TextBox();
+            this.buttonAddCustomNames = new System.Windows.Forms.Button();
             this.groupBoxNames.SuspendLayout();
             this.groupBoxLinesFound.SuspendLayout();
             this.SuspendLayout();
@@ -50,7 +53,7 @@
             // buttonOK
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonOK.Location = new System.Drawing.Point(570, 559);
+            this.buttonOK.Location = new System.Drawing.Point(591, 602);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 21);
             this.buttonOK.TabIndex = 14;
@@ -62,7 +65,7 @@
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(651, 559);
+            this.buttonCancel.Location = new System.Drawing.Point(672, 602);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 21);
             this.buttonCancel.TabIndex = 15;
@@ -73,15 +76,42 @@
             // 
             this.groupBoxNames.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxNames.Controls.Add(this.buttonAddCustomNames);
+            this.groupBoxNames.Controls.Add(this.textBoxExtraNames);
+            this.groupBoxNames.Controls.Add(this.labelExtraNames);
             this.groupBoxNames.Controls.Add(this.buttonInverseSelection);
             this.groupBoxNames.Controls.Add(this.buttonSelectAll);
             this.groupBoxNames.Controls.Add(this.listViewNames);
             this.groupBoxNames.Location = new System.Drawing.Point(5, 9);
             this.groupBoxNames.Name = "groupBoxNames";
-            this.groupBoxNames.Size = new System.Drawing.Size(726, 268);
+            this.groupBoxNames.Size = new System.Drawing.Size(747, 293);
             this.groupBoxNames.TabIndex = 12;
             this.groupBoxNames.TabStop = false;
             this.groupBoxNames.Text = "Names found in subtitle";
+            // 
+            // buttonInverseSelection
+            // 
+            this.buttonInverseSelection.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonInverseSelection.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.buttonInverseSelection.Location = new System.Drawing.Point(88, 202);
+            this.buttonInverseSelection.Name = "buttonInverseSelection";
+            this.buttonInverseSelection.Size = new System.Drawing.Size(100, 21);
+            this.buttonInverseSelection.TabIndex = 9;
+            this.buttonInverseSelection.Text = "Inverse selection";
+            this.buttonInverseSelection.UseVisualStyleBackColor = true;
+            this.buttonInverseSelection.Click += new System.EventHandler(this.buttonInverseSelection_Click);
+            // 
+            // buttonSelectAll
+            // 
+            this.buttonSelectAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonSelectAll.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.buttonSelectAll.Location = new System.Drawing.Point(7, 202);
+            this.buttonSelectAll.Name = "buttonSelectAll";
+            this.buttonSelectAll.Size = new System.Drawing.Size(75, 21);
+            this.buttonSelectAll.TabIndex = 8;
+            this.buttonSelectAll.Text = "Select all";
+            this.buttonSelectAll.UseVisualStyleBackColor = true;
+            this.buttonSelectAll.Click += new System.EventHandler(this.buttonSelectAll_Click);
             // 
             // listViewNames
             // 
@@ -96,7 +126,7 @@
             this.listViewNames.Location = new System.Drawing.Point(6, 19);
             this.listViewNames.MultiSelect = false;
             this.listViewNames.Name = "listViewNames";
-            this.listViewNames.Size = new System.Drawing.Size(714, 216);
+            this.listViewNames.Size = new System.Drawing.Size(735, 177);
             this.listViewNames.TabIndex = 7;
             this.listViewNames.UseCompatibleStateImageBehavior = false;
             this.listViewNames.View = System.Windows.Forms.View.Details;
@@ -118,9 +148,9 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxLinesFound.Controls.Add(this.listViewFixes);
-            this.groupBoxLinesFound.Location = new System.Drawing.Point(5, 283);
+            this.groupBoxLinesFound.Location = new System.Drawing.Point(5, 308);
             this.groupBoxLinesFound.Name = "groupBoxLinesFound";
-            this.groupBoxLinesFound.Size = new System.Drawing.Size(726, 268);
+            this.groupBoxLinesFound.Size = new System.Drawing.Size(747, 286);
             this.groupBoxLinesFound.TabIndex = 13;
             this.groupBoxLinesFound.TabStop = false;
             this.groupBoxLinesFound.Text = "Lines found: {0}";
@@ -140,7 +170,7 @@
             this.listViewFixes.HideSelection = false;
             this.listViewFixes.Location = new System.Drawing.Point(6, 23);
             this.listViewFixes.Name = "listViewFixes";
-            this.listViewFixes.Size = new System.Drawing.Size(714, 239);
+            this.listViewFixes.Size = new System.Drawing.Size(735, 257);
             this.listViewFixes.TabIndex = 9;
             this.listViewFixes.UseCompatibleStateImageBehavior = false;
             this.listViewFixes.View = System.Windows.Forms.View.Details;
@@ -170,41 +200,46 @@
             // 
             this.labelXLinesSelected.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelXLinesSelected.AutoSize = true;
-            this.labelXLinesSelected.Location = new System.Drawing.Point(5, 559);
+            this.labelXLinesSelected.Location = new System.Drawing.Point(5, 602);
             this.labelXLinesSelected.Name = "labelXLinesSelected";
             this.labelXLinesSelected.Size = new System.Drawing.Size(78, 13);
             this.labelXLinesSelected.TabIndex = 16;
             this.labelXLinesSelected.Text = "XLinesSelected";
             // 
-            // buttonInverseSelection
+            // labelExtraNames
             // 
-            this.buttonInverseSelection.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonInverseSelection.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonInverseSelection.Location = new System.Drawing.Point(88, 241);
-            this.buttonInverseSelection.Name = "buttonInverseSelection";
-            this.buttonInverseSelection.Size = new System.Drawing.Size(100, 21);
-            this.buttonInverseSelection.TabIndex = 9;
-            this.buttonInverseSelection.Text = "Inverse selection";
-            this.buttonInverseSelection.UseVisualStyleBackColor = true;
-            this.buttonInverseSelection.Click += new System.EventHandler(this.buttonInverseSelection_Click);
+            this.labelExtraNames.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.labelExtraNames.AutoSize = true;
+            this.labelExtraNames.Location = new System.Drawing.Point(7, 246);
+            this.labelExtraNames.Name = "labelExtraNames";
+            this.labelExtraNames.Size = new System.Drawing.Size(172, 13);
+            this.labelExtraNames.TabIndex = 17;
+            this.labelExtraNames.Text = "Extra names (separate by comma)";
             // 
-            // buttonSelectAll
+            // textBoxExtraNames
             // 
-            this.buttonSelectAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonSelectAll.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonSelectAll.Location = new System.Drawing.Point(7, 241);
-            this.buttonSelectAll.Name = "buttonSelectAll";
-            this.buttonSelectAll.Size = new System.Drawing.Size(75, 21);
-            this.buttonSelectAll.TabIndex = 8;
-            this.buttonSelectAll.Text = "Select all";
-            this.buttonSelectAll.UseVisualStyleBackColor = true;
-            this.buttonSelectAll.Click += new System.EventHandler(this.buttonSelectAll_Click);
+            this.textBoxExtraNames.Location = new System.Drawing.Point(10, 263);
+            this.textBoxExtraNames.Name = "textBoxExtraNames";
+            this.textBoxExtraNames.Size = new System.Drawing.Size(624, 21);
+            this.textBoxExtraNames.TabIndex = 10;
+            // 
+            // buttonAddCustomNames
+            // 
+            this.buttonAddCustomNames.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonAddCustomNames.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.buttonAddCustomNames.Location = new System.Drawing.Point(640, 262);
+            this.buttonAddCustomNames.Name = "buttonAddCustomNames";
+            this.buttonAddCustomNames.Size = new System.Drawing.Size(100, 21);
+            this.buttonAddCustomNames.TabIndex = 11;
+            this.buttonAddCustomNames.Text = "Add";
+            this.buttonAddCustomNames.UseVisualStyleBackColor = true;
+            this.buttonAddCustomNames.Click += new System.EventHandler(this.buttonAddCustomNames_Click);
             // 
             // ChangeCasingNames
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(736, 589);
+            this.ClientSize = new System.Drawing.Size(757, 632);
             this.Controls.Add(this.labelXLinesSelected);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.buttonCancel);
@@ -223,6 +258,7 @@
             this.Shown += new System.EventHandler(this.ChangeCasingNames_Shown);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ChangeCasingNames_KeyDown);
             this.groupBoxNames.ResumeLayout(false);
+            this.groupBoxNames.PerformLayout();
             this.groupBoxLinesFound.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -246,5 +282,8 @@
         private System.Windows.Forms.Label labelXLinesSelected;
         private System.Windows.Forms.Button buttonInverseSelection;
         private System.Windows.Forms.Button buttonSelectAll;
+        private System.Windows.Forms.Button buttonAddCustomNames;
+        private System.Windows.Forms.TextBox textBoxExtraNames;
+        private System.Windows.Forms.Label labelExtraNames;
     }
 }

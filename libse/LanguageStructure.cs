@@ -225,6 +225,7 @@
             public string Enabled { get; set; }
             public string Name { get; set; }
             public string LinesFoundX { get; set; }
+            public string ExtraNames { get; set; }
         }
 
         public class ChangeFrameRate

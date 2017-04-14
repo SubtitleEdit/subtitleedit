@@ -556,6 +556,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "ChangeCasingNames/LinesFoundX":
                     language.ChangeCasingNames.LinesFoundX = reader.Value;
                     break;
+                case "ChangeCasingNames/ExtraNames":
+                    language.ChangeCasingNames.ExtraNames = reader.Value;
+                    break;
                 case "ChangeFrameRate/Title":
                     language.ChangeFrameRate.Title = reader.Value;
                     break;
