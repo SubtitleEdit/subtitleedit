@@ -1388,7 +1388,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             if (word.Length > 2 && _namesEtcListWithApostrophe.Contains(word))
                 return true;
 
-            if (_namesList != null && _namesList.IsInNamesEtcMultiWordList(line, word))
+            if (_namesList != null && _namesList.IsInNamesMultiWordList(line, word))
                 return true;
 
             return false;
