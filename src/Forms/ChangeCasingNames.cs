@@ -10,7 +10,7 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class ChangeCasingNames : Form
     {
-        private readonly List<string> _usedNames = new List<string>();
+        private readonly HashSet<string> _usedNames = new HashSet<string>();
         private int _noOfLinesChanged;
         private Subtitle _subtitle;
         private const string ExpectedEndChars = " ,.!?:;')<-\"\r\n";
