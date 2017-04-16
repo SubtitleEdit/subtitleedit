@@ -6351,6 +6351,7 @@ namespace Nikse.SubtitleEdit.Forms
                     setStylesForSelectedLinesToolStripMenuItem.Text = _language.Menu.ContextMenu.SubStationAlphaSetStyle;
                 }
 
+                // actor
                 foreach (var p in _subtitle.Paragraphs)
                 {
                     if (!string.IsNullOrEmpty(p.Actor) && !actors.Contains(p.Actor))
@@ -6364,6 +6365,10 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     setActorForSelectedLinesToolStripMenuItem.DropDownItems.Add(actor, null, actor_Click);
                 }
+                setActorForSelectedLinesToolStripMenuItem.DropDownItems.Add(new ToolStripSeparator());
+                setActorForSelectedLinesToolStripMenuItem.DropDownItems.Add(_language.Menu.ContextMenu.NewActor, null, SetNewActor);
+                if (actors.Count > 0)
+                    setActorForSelectedLinesToolStripMenuItem.DropDownItems.Add(_language.Menu.ContextMenu.RemoveActors, null, RemoveActors);
             }
             else if (((formatType == typeof(TimedText10) && Configuration.Settings.SubtitleSettings.TimedText10ShowStyleAndLanguage) || formatType == typeof(ItunesTimedText)) && SubtitleListview1.SelectedItems.Count > 0)
             {
@@ -6662,11 +6667,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void WebVTTSetNewVoice(object sender, EventArgs e)
         {
-            using (var form = new WebVttNewVoice())
+            using (var form = new TextPrompt(Configuration.Settings.Language.WebVttNewVoice.Title, Configuration.Settings.Language.WebVttNewVoice.VoiceName))
             {
                 if (form.ShowDialog(this) == DialogResult.OK)
                 {
-                    string voice = form.VoiceName;
+                    string voice = form.InputText;
                     if (!string.IsNullOrEmpty(voice))
                     {
                         foreach (int index in SubtitleListview1.SelectedIndices)
@@ -6680,6 +6685,24 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
         }
+        private void SetNewActor(object sender, EventArgs e)
+        {
+            using (var form = new TextPrompt(Configuration.Settings.Language.Main.Menu.ContextMenu.NewActor.Replace("...", string.Empty), Configuration.Settings.Language.General.Actor))
+            {
+                if (form.ShowDialog(this) == DialogResult.OK)
+                {
+                    string actor = form.InputText;
+                    if (!string.IsNullOrEmpty(actor))
+                    {
+                        foreach (int index in SubtitleListview1.SelectedIndices)
+                        {
+                            _subtitle.Paragraphs[index].Actor = actor;
+                            SubtitleListview1.SetTimeAndText(index, _subtitle.Paragraphs[index]);
+                        }
+                    }
+                }
+            }
+        }
 
         private void WebVTTRemoveVoices(object sender, EventArgs e)
         {
@@ -6689,6 +6712,15 @@ namespace Nikse.SubtitleEdit.Forms
                 SubtitleListview1.SetText(index, _subtitle.Paragraphs[index].Text);
             }
             RefreshSelectedParagraph();
+        }
+
+        private void RemoveActors(object sender, EventArgs e)
+        {
+            foreach (int index in SubtitleListview1.SelectedIndices)
+            {
+                _subtitle.Paragraphs[index].Actor = null;
+                SubtitleListview1.SetTimeAndText(index, _subtitle.Paragraphs[index]);
+            }
         }
 
         private void WebVTTSetVoiceTextBox(object sender, EventArgs e)
@@ -6713,11 +6745,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void WebVTTSetNewVoiceTextBox(object sender, EventArgs e)
         {
-            using (var form = new WebVttNewVoice())
+            using (var form = new TextPrompt(Configuration.Settings.Language.WebVttNewVoice.Title, Configuration.Settings.Language.WebVttNewVoice.VoiceName))
             {
                 if (form.ShowDialog(this) == DialogResult.OK)
                 {
-                    string voice = form.VoiceName;
+                    string voice = form.InputText;
                     if (!string.IsNullOrEmpty(voice))
                     {
                         var tb = GetFocusedTextBox();

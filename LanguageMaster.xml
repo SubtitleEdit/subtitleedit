@@ -1121,6 +1121,8 @@ Note: Do check free disk space.</WaveFileMalformed>
         <SaveSelectedLines>Save selected lines as...</SaveSelectedLines>
         <WebVTTSetNewVoice>Set new voice...</WebVTTSetNewVoice>
         <WebVTTRemoveVoices>Remove voices</WebVTTRemoveVoices>
+        <NewActor>New actor...</NewActor>
+        <RemoveActors>Remove actors</RemoveActors>
       </ContextMenu>
     </Menu>
     <Controls>
