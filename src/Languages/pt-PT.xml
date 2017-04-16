@@ -1059,6 +1059,7 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
         <RemoveTextForHi>Eliminar texto para Deficientes Auditivos</RemoveTextForHi>
         <VisualSync>Sincronia visual</VisualSync>
         <SpellCheck>Verificação ortográfica</SpellCheck>
+		<NetflixQualityCheck>Verificar o estado da legenda Netflix</NetflixQualityCheck>
         <Settings>Configurações</Settings>
         <Help>Ajuda</Help>
         <ShowHideWaveform>Mostrar/ocultar forma de onda</ShowHideWaveform>
@@ -1453,6 +1454,7 @@ Se editou este ficheiro no Subtitle Edit é possível que encontre a cópia de s
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Seleccionar legenda através de um ficheiro Matroska (.mkv)</Title>
+	<TitleMp4>Seleccionar legenda através de um ficheiro MP4</TitleMp4>
     <PleaseChoose>Encontrada mais do que uma legenda - por favor, escolha uma</PleaseChoose>
     <TrackXLanguageYTypeZ>Faixa {0} - idioma: {1} - tipo: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
@@ -1683,6 +1685,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <Replace>Substituir</Replace>
     <VisualSync>Sincronia visual</VisualSync>
     <SpellCheck>Ortografia</SpellCheck>
+	<NetflixQualityCheck>Verificar o estado da legenda Netflix</NetflixQualityCheck>
     <SettingsName>Configurações</SettingsName>
     <Help>Ajuda</Help>
     <ShowFrameRate>Mostrar taxa de fotogramas na barra de ferramentas</ShowFrameRate>
@@ -1691,7 +1694,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <AutoDetectAnsiEncoding>Auto detectar codificação ANSI</AutoDetectAnsiEncoding>
     <SubtitleLineMaximumLength>Comprimento máximo de única linha</SubtitleLineMaximumLength>
     <MaximumCharactersPerSecond>Máximo caracteres/seg</MaximumCharactersPerSecond>
-    <MaximumWordssPerMinute>Máximo palavras/min</MaximumWordssPerMinute>
+	<MaximumWordssPerMinute>Máximo palavras/min</MaximumWordssPerMinute>
     <AutoWrapWhileTyping>Moldar o texto ao escrever</AutoWrapWhileTyping>
     <DurationMinimumMilliseconds>Duração mínima milissegundos</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>Duração máxima milissegundos</DurationMaximumMilliseconds>
@@ -1700,6 +1703,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <SubtitleFont>Tipo de letra</SubtitleFont>
     <SubtitleFontSize>Tamanho do tipo de letra da legenda</SubtitleFontSize>
     <SubtitleBold>Negrito</SubtitleBold>
+    <VideoAutoOpen>Abrir automaticamente o vídeo ao abrir a legenda</VideoAutoOpen>
     <SubtitleCenter>Centralizado</SubtitleCenter>
     <SubtitleFontColor>Cor do tipo de letra</SubtitleFontColor>
     <SubtitleBackgroundColor>Cor de fundo</SubtitleBackgroundColor>
@@ -1743,7 +1747,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <MpcHcDescription>Media Player Classic - Home Cinema</MpcHcDescription>
     <MpvPlayer>mpv</MpvPlayer>
     <MpvPlayerDescription>https://mpv.io/ - leitor multimédia gratuito e de Código aberto</MpvPlayerDescription>
-    <MpvHandlesPreviewText>Visualização de texto no mpv</MpvHandlesPreviewText>
+	<MpvHandlesPreviewText>Visualização de texto no mpv</MpvHandlesPreviewText>
     <VlcMediaPlayer>VLC media player</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll do VLC media player 1.1.0 ou superior</VlcMediaPlayerDescription>
     <VlcBrowseToLabel>Directoria do VLC (só é necessário se estiver a usar a versão portátil do VLC)</VlcBrowseToLabel>
@@ -1760,7 +1764,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <WaveformShowWpm>Mostrar palavras/min</WaveformShowWpm>
     <ReverseMouseWheelScrollDirection>Inverter direcção da roda do rato</ReverseMouseWheelScrollDirection>
     <WaveformAllowOverlap>Permitir sobreposição ao mover ou redimensionar</WaveformAllowOverlap>
-    <WaveformSetVideoPosMoveStartEnd>Definir a posição do vídeo ao mover o início ou fim</WaveformSetVideoPosMoveStartEnd>
+	<WaveformSetVideoPosMoveStartEnd>Definir a posição do vídeo ao mover o início ou fim</WaveformSetVideoPosMoveStartEnd>
     <WaveformFocusMouseEnter>Destacar a entrada do cursor do rato</WaveformFocusMouseEnter>
     <WaveformListViewFocusMouseEnter>Destacar também a lista de visualização na entrada do cursor do rato</WaveformListViewFocusMouseEnter>
     <WaveformBorderHitMs1>O acerto da marca do contorno deve estar dentro</WaveformBorderHitMs1>
@@ -1851,7 +1855,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <GoToPrevious>Ir para a linha anterior</GoToPrevious>
     <GoToCurrentSubtitleStart>Ir para o início da linha actual</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>Ir para o final da linha actual</GoToCurrentSubtitleEnd>
-    <GoToPreviousSubtitleAndFocusVideo>Ir para a linha anterior e definir a posição do vídeo</GoToPreviousSubtitleAndFocusVideo>
+	<GoToPreviousSubtitleAndFocusVideo>Ir para a linha anterior e definir a posição do vídeo</GoToPreviousSubtitleAndFocusVideo>
     <GoToNextSubtitleAndFocusVideo>Ir para a próxima linha e definir a posição de vídeo</GoToNextSubtitleAndFocusVideo>
     <ToggleFocus>Alternar o realce entre a caixa de texto da legenda e o separador (Lista) na janela principal</ToggleFocus>
     <ToggleDialogDashes>Alternar hífens de diálogo</ToggleDialogDashes>
@@ -1925,6 +1929,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <MainTextBoxUnbreak>Remover quebra de texto</MainTextBoxUnbreak>
     <MainFileSaveAll>Guardar tudo</MainFileSaveAll>
     <Miscellaneous>Diversos</Miscellaneous>
+	<CpsIncludesSpace>Carac/seg (CPS) incluindo espaços</CpsIncludesSpace>
     <UseDoNotBreakAfterList>Utilizar "não quebrar linha depois da lista" (para o ajuste-auto)</UseDoNotBreakAfterList>
     <MicrosoftBingTranslator>Tradutor Microsoft Bing</MicrosoftBingTranslator>
     <HowToSignUp>Como efectuar o registo</HowToSignUp>
@@ -1991,6 +1996,16 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <SpellCheckAborted>Verificação ortográfica cancelada</SpellCheckAborted>
     <UndoX>Anular: {0}</UndoX>
   </SpellCheck>
+  <NetflixQualityCheck>
+    <GlyphCheckSuccessfull>Validação de caracteres foi bem-sucedida.</GlyphCheckSuccessfull>
+    <GlyphCheckFailed>A validação de caracteres falhou.</GlyphCheckFailed>
+    <GlyphCheckReport>Caracter inválido {0} encontrado na coluna {1}</GlyphCheckReport>
+    <WhiteSpaceCheckSuccessfull>Validação de espaços em branco foi bem-sucedida.</WhiteSpaceCheckSuccessfull>
+    <WhiteSpaceCheckFailed>A validação de espaços em branco falhou.</WhiteSpaceCheckFailed>
+    <WhiteSpaceCheckReport>Foi encontrado um espaço em branco inválido na coluna {0}.</WhiteSpaceCheckReport>
+    <ReportPrompt>Ver o relatório completo aqui: {0}.</ReportPrompt>
+    <SavingError>O relatório não pode ser guardado.</SavingError>
+  </NetflixQualityCheck>
   <Split>
     <Title>Divisão</Title>
     <SplitOptions>Opções de divisão</SplitOptions>
@@ -2048,6 +2063,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <LengthInFormatXinCharactersY>Número de caracteres como {0}: {1:#,###,##0}</LengthInFormatXinCharactersY>
     <NumberOfCharactersInTextOnly>Número de caracteres só no texto: {0:#,###,##0}</NumberOfCharactersInTextOnly>
     <TotalCharsPerSecond>Total de caracteres/segundo: {0:0.0} segundos</TotalCharsPerSecond>
+	<TotalWords>Total de palavras na legenda: {0}</TotalWords>
     <NumberOfItalicTags>Número de etiquetas itálicas: {0}</NumberOfItalicTags>
     <NumberOfBoldTags>Número de etiquetas negritas: {0}</NumberOfBoldTags>
     <NumberOfUnderlineTags>Número de etiquetas sublinhadas: {0}</NumberOfUnderlineTags>
