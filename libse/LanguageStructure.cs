@@ -30,6 +30,7 @@
             public string Duration { get; set; }
             public string CharsPerSec { get; set; }
             public string WordsPerMin { get; set; }
+            public string Actor { get; set; }
             public string NumberSymbol { get; set; }
             public string Number { get; set; }
             public string Text { get; set; }
@@ -1434,6 +1435,7 @@
                     public string SizeAllColumnsToFit { get; set; }
                     public string AdvancedSubStationAlphaSetStyle { get; set; }
                     public string SubStationAlphaSetStyle { get; set; }
+                    public string SetActor { get; set; }
                     public string SubStationAlphaStyles { get; set; }
                     public string AdvancedSubStationAlphaStyles { get; set; }
                     public string TimedTextSetStyle { get; set; }

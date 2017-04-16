@@ -1321,6 +1321,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             toolStripMenuItemAssStyles.Text = _language.Menu.ContextMenu.SubStationAlphaStyles;
             setStylesForSelectedLinesToolStripMenuItem.Text = _language.Menu.ContextMenu.SubStationAlphaSetStyle;
+            setActorForSelectedLinesToolStripMenuItem.Text = _language.Menu.ContextMenu.SetActor;
 
             toolStripMenuItemDelete.Text = _language.Menu.ContextMenu.Delete;
             insertLineToolStripMenuItem.Text = _language.Menu.ContextMenu.InsertFirstLine;
@@ -3836,14 +3837,24 @@ namespace Nikse.SubtitleEdit.Forms
             ShowSource();
             if (format != null)
             {
+                var formatType = format.GetType();
                 ShowStatus(string.Format(_language.ConvertedToX, format.FriendlyName));
                 _oldSubtitleFormat = format;
                 Configuration.Settings.General.LastSaveAsFormat = format.Name;
 
+                if ((formatType == typeof(AdvancedSubStationAlpha) || formatType == typeof(SubStationAlpha)) &&
+                    Configuration.Settings.Tools.ListViewShowColumnActor)
+                {
+                    SubtitleListview1.ShowActorColumn(Configuration.Settings.Language.General.Actor);
+                }
+                else
+                {
+                    SubtitleListview1.HideColumn(SubtitleListView.SubtitleColumn.Actor);
+                }
+
                 if (format.HasStyleSupport)
                 {
                     var styles = new List<string>();
-                    var formatType = format.GetType();
                     if (formatType == typeof(AdvancedSubStationAlpha) || formatType == typeof(SubStationAlpha))
                         styles = AdvancedSubStationAlpha.GetStylesFromHeader(_subtitle.Header);
                     else if (formatType == typeof(TimedText10) || formatType == typeof(ItunesTimedText))
@@ -4072,7 +4083,7 @@ namespace Nikse.SubtitleEdit.Forms
             mediaPlayer.ShowStopButton = Configuration.Settings.General.VideoPlayerShowStopButton;
             mediaPlayer.ShowMuteButton = Configuration.Settings.General.VideoPlayerShowMuteButton;
             mediaPlayer.ShowFullscreenButton = Configuration.Settings.General.VideoPlayerShowFullscreenButton;
-            
+
             if (oldListViewLineSeparatorString != Configuration.Settings.General.ListViewLineSeparatorString ||
                 oldCpsWhiteSpaceSetting != Configuration.Settings.General.CharactersPerSecondsIgnoreWhiteSpace)
             {
@@ -6192,6 +6203,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ContextMenuStripListviewOpening(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            var format = GetCurrentSubtitleFormat();
+            var formatType = format.GetType();
             var coordinates = SubtitleListview1.PointToClient(Cursor.Position);
             var hitTest = SubtitleListview1.HitTest(coordinates);
             if (coordinates.Y < 19 || (hitTest.Item != null && hitTest.Item.Index == 0 && coordinates.Y < hitTest.Item.Position.Y))
@@ -6287,13 +6300,35 @@ namespace Nikse.SubtitleEdit.Forms
                 };
                 cm.Items.Add(contextMenuStripLvHeaderWpmToolStripMenuItem);
 
+                if (formatType == typeof(AdvancedSubStationAlpha) || formatType == typeof(SubStationAlpha))
+                {
+                    // ACTOR
+                    var contextMenuStripLvHeaderActorToolStripMenuItem = new ToolStripMenuItem(Configuration.Settings.Language.General.Actor);
+                    contextMenuStripLvHeaderActorToolStripMenuItem.CheckOnClick = true;
+                    contextMenuStripLvHeaderActorToolStripMenuItem.Checked = Configuration.Settings.Tools.ListViewShowColumnActor;
+                    contextMenuStripLvHeaderActorToolStripMenuItem.Click += (sender2, e2) =>
+                    {
+                        SubtitleListview1.BeginUpdate();
+                        Configuration.Settings.Tools.ListViewShowColumnActor = contextMenuStripLvHeaderActorToolStripMenuItem.Checked;
+                        if (Configuration.Settings.Tools.ListViewShowColumnActor)
+                            SubtitleListview1.ShowActorColumn(Configuration.Settings.Language.General.Actor);
+                        else
+                            SubtitleListview1.HideColumn(SubtitleListView.SubtitleColumn.Actor);
+                        SaveSubtitleListviewIndices();
+                        UiUtil.InitializeSubtitleFont(SubtitleListview1);
+                        SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+                        RestoreSubtitleListviewIndices();
+                        SubtitleListview1.EndUpdate();
+                    };
+                    cm.Items.Add(contextMenuStripLvHeaderActorToolStripMenuItem);
+                }
+
                 cm.Show(SubtitleListview1, coordinates);
                 return;
             }
 
-            var format = GetCurrentSubtitleFormat();
-            var formatType = format.GetType();
             toolStripMenuItemSetLanguage.Visible = false;
+            var actors = new List<string>();
             if ((formatType == typeof(AdvancedSubStationAlpha) || formatType == typeof(SubStationAlpha)) && SubtitleListview1.SelectedItems.Count > 0)
             {
                 toolStripMenuItemWebVTT.Visible = false;
@@ -6314,6 +6349,20 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     toolStripMenuItemAssStyles.Text = _language.Menu.ContextMenu.SubStationAlphaStyles;
                     setStylesForSelectedLinesToolStripMenuItem.Text = _language.Menu.ContextMenu.SubStationAlphaSetStyle;
+                }
+
+                foreach (var p in _subtitle.Paragraphs)
+                {
+                    if (!string.IsNullOrEmpty(p.Actor) && !actors.Contains(p.Actor))
+                    {
+                        actors.Add(p.Actor);
+                    }
+                    actors.Sort();
+                }
+                setActorForSelectedLinesToolStripMenuItem.DropDownItems.Clear();
+                foreach (var actor in actors)
+                {
+                    setActorForSelectedLinesToolStripMenuItem.DropDownItems.Add(actor, null, actor_Click);
                 }
             }
             else if (((formatType == typeof(TimedText10) && Configuration.Settings.SubtitleSettings.TimedText10ShowStyleAndLanguage) || formatType == typeof(ItunesTimedText)) && SubtitleListview1.SelectedItems.Count > 0)
@@ -6405,6 +6454,15 @@ namespace Nikse.SubtitleEdit.Forms
                 setStylesForSelectedLinesToolStripMenuItem.Visible = false;
                 toolStripMenuItemAssStyles.Visible = false;
                 toolStripMenuItemWebVTT.Visible = false;
+            }
+
+            if (actors.Count > 0)
+            {
+                setActorForSelectedLinesToolStripMenuItem.Visible = true;
+            }
+            else
+            {
+                setActorForSelectedLinesToolStripMenuItem.Visible = false;
             }
 
             toolStripMenuItemGoogleMicrosoftTranslateSelLine.Visible = false;
@@ -6534,6 +6592,21 @@ namespace Nikse.SubtitleEdit.Forms
                         _subtitle.Paragraphs[index].Extra = style;
                         SubtitleListview1.SetExtraText(index, style, SubtitleListview1.ForeColor);
                     }
+                }
+            }
+        }
+
+        private void actor_Click(object sender, EventArgs e)
+        {
+            string actor = (sender as ToolStripItem).Text;
+            if (!string.IsNullOrEmpty(actor))
+            {
+                MakeHistoryForUndo(Configuration.Settings.Language.Main.Menu.ContextMenu.SetActor + ": " + actor);
+
+                foreach (int index in SubtitleListview1.SelectedIndices)
+                {
+                    _subtitle.Paragraphs[index].Actor = actor;
+                    SubtitleListview1.SetTimeAndText(index, _subtitle.Paragraphs[index]);
                 }
             }
         }

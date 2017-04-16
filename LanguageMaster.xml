@@ -26,6 +26,7 @@
     <Duration>Duration</Duration>
     <CharsPerSec>Chars/sec</CharsPerSec>
     <WordsPerMin>Words/min</WordsPerMin>
+    <Actor>Actor</Actor>
     <NumberSymbol>#</NumberSymbol>
     <Number>Number</Number>
     <Text>Text</Text>
@@ -1068,6 +1069,7 @@ Note: Do check free disk space.</WaveFileMalformed>
         <SizeAllColumnsToFit>Size all columns to fit</SizeAllColumnsToFit>
         <AdvancedSubStationAlphaSetStyle>Advanced Sub Station Alpha - set style</AdvancedSubStationAlphaSetStyle>
         <SubStationAlphaSetStyle>Sub Station Alpha - set style</SubStationAlphaSetStyle>
+        <SetActor>Set actor</SetActor>
         <SubStationAlphaStyles>Sub Station Alpha styles...</SubStationAlphaStyles>
         <AdvancedSubStationAlphaStyles>Advanced Sub Station Alpha styles...</AdvancedSubStationAlphaStyles>
         <TimedTextSetStyle>Timed Text - set style</TimedTextSetStyle>
