@@ -4,6 +4,7 @@
 3.5.3 (xth May 2017) BETA
 * NEW:
    * New Netflix quality checker - thx askolesov/pavel-belenko
+   * Added optional list view column "Actor" for ASS/SSA - thx william
 * IMPROVED:
    * Updated Chinese translation - thx Leon
    * Updated French translation - thx JM GBT
@@ -16,6 +17,10 @@
    * Added "Video auto-load" to UI settings - thx mtarini
    * "names_etc.xml" renamed to "names.xml" + local dictionaries
      now has a "blacklist" - thx ivandrofly
+   * Some position support for WebVTT
+   * In "Change casing" it's now possible to add extra names
+   * Export image margins are now percentage - thx aaaxx/gorgorias
+   * Added "Clear shortcut" button to settings - thx Simon
 * FIXED:
    * Fixed crash in "Add to user dictionary" in OCR - thx alfix0
    * Fixed original file name bug in "Undo" - thx darnn
