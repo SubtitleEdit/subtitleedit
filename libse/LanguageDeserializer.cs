@@ -127,6 +127,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "General/WordsPerMin":
                     language.General.WordsPerMin = reader.Value;
                     break;
+                case "General/Actor":
+                    language.General.Actor = reader.Value;
+                    break;
                 case "General/NumberSymbol":
                     language.General.NumberSymbol = reader.Value;
                     break;
@@ -3615,6 +3618,9 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "Main/Menu/ContextMenu/SubStationAlphaSetStyle":
                     language.Main.Menu.ContextMenu.SubStationAlphaSetStyle = reader.Value;
+                    break;
+                case "Main/Menu/ContextMenu/SetActor":
+                    language.Main.Menu.ContextMenu.SetActor = reader.Value;
                     break;
                 case "Main/Menu/ContextMenu/SubStationAlphaStyles":
                     language.Main.Menu.ContextMenu.SubStationAlphaStyles = reader.Value;
