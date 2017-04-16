@@ -831,11 +831,11 @@
     <Compile Include="Forms\GoogleOrMicrosoftTranslate.Designer.cs">
       <DependentUpon>GoogleOrMicrosoftTranslate.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\WebVttNewVoice.cs">
+    <Compile Include="Forms\TextPrompt.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\WebVttNewVoice.Designer.cs">
-      <DependentUpon>WebVttNewVoice.cs</DependentUpon>
+    <Compile Include="Forms\TextPrompt.Designer.cs">
+      <DependentUpon>TextPrompt.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\YouTubeAnnotationsImport.cs">
       <SubType>Form</SubType>
@@ -1290,8 +1290,8 @@
     <EmbeddedResource Include="Forms\GoogleOrMicrosoftTranslate.resx">
       <DependentUpon>GoogleOrMicrosoftTranslate.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\WebVttNewVoice.resx">
-      <DependentUpon>WebVttNewVoice.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\TextPrompt.resx">
+      <DependentUpon>TextPrompt.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\YouTubeAnnotationsImport.resx">
       <DependentUpon>YouTubeAnnotationsImport.cs</DependentUpon>

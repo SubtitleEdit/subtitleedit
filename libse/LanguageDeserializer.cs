@@ -3775,6 +3775,12 @@ namespace Nikse.SubtitleEdit.Core
                 case "Main/Menu/ContextMenu/WebVTTRemoveVoices":
                     language.Main.Menu.ContextMenu.WebVTTRemoveVoices = reader.Value;
                     break;
+                case "Main/Menu/ContextMenu/NewActor":
+                    language.Main.Menu.ContextMenu.NewActor = reader.Value;
+                    break;
+                case "Main/Menu/ContextMenu/RemoveActors":
+                    language.Main.Menu.ContextMenu.RemoveActors = reader.Value;
+                    break;
                 case "Main/Controls/SubtitleFormat":
                     language.Main.Controls.SubtitleFormat = reader.Value;
                     break;

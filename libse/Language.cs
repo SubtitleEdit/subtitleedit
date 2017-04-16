@@ -1622,6 +1622,8 @@ namespace Nikse.SubtitleEdit.Core
                         SaveSelectedLines = "Save selected lines as...",
                         WebVTTSetNewVoice = "Set new voice...",
                         WebVTTRemoveVoices = "Remove voices",
+                        NewActor = "New actor...",
+                        RemoveActors = "Remove actors"
                     }
                 },
 

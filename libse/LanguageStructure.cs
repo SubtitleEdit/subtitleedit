@@ -1487,6 +1487,8 @@
                     public string SaveSelectedLines { get; set; }
                     public string WebVTTSetNewVoice { get; set; }
                     public string WebVTTRemoveVoices { get; set; }
+                    public string NewActor { get; set; }
+                    public string RemoveActors { get; set; }
                 }
 
                 public FileMenu File { get; set; }
