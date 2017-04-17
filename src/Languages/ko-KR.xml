@@ -26,6 +26,7 @@
     <Duration>길이</Duration>
     <CharsPerSec>문자/초</CharsPerSec>
     <WordsPerMin>단어/분</WordsPerMin>
+    <Actor>배우</Actor>
     <NumberSymbol>번호</NumberSymbol>
     <Number>번호</Number>
     <Text>텍스트</Text>
@@ -1064,6 +1065,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
         <SizeAllColumnsToFit>모든 열의 크기 맞추기</SizeAllColumnsToFit>
         <AdvancedSubStationAlphaSetStyle>ASS의 스타일 설정</AdvancedSubStationAlphaSetStyle>
         <SubStationAlphaSetStyle>SSA의 스타일 설정</SubStationAlphaSetStyle>
+        <SetActor>배우 설정</SetActor>
         <SubStationAlphaStyles>SSA의 스타일...</SubStationAlphaStyles>
         <AdvancedSubStationAlphaStyles>ASS의 스타일...</AdvancedSubStationAlphaStyles>
         <TimedTextSetStyle>시간 제한 텍스트 - 스타일 설정</TimedTextSetStyle>
@@ -1115,6 +1117,8 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
         <SaveSelectedLines>선택한 줄 저장...</SaveSelectedLines>
         <WebVTTSetNewVoice>새로운 음성 설정...</WebVTTSetNewVoice>
         <WebVTTRemoveVoices>음성 제거</WebVTTRemoveVoices>
+        <NewActor>새 배우...</NewActor>
+        <RemoveActors>배우 제거</RemoveActors>
       </ContextMenu>
     </Menu>
     <Controls>
@@ -1926,7 +1930,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <MainTextBoxUnbreak>줄바꿈 제거</MainTextBoxUnbreak>
     <MainFileSaveAll>모두 저장</MainFileSaveAll>
     <Miscellaneous>기타</Miscellaneous>
-    <CpsIncludesSpace>문자/초(CPS)는 공백을 포함</CpsIncludesSpace>
+    <CpsIncludesSpace>초당 문자수(CPS)에 공백도 포함</CpsIncludesSpace>
     <UseDoNotBreakAfterList>'뒤에 줄바꿈을 배제하는 목록' 사용 (자동 줄바꿈 用)</UseDoNotBreakAfterList>
     <MicrosoftBingTranslator>Microsoft Bing 번역기</MicrosoftBingTranslator>
     <HowToSignUp>가입 방법</HowToSignUp>
