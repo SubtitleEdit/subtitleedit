@@ -128,13 +128,15 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
 
             public string ToCsvRow()
             {
-                string safeContext = Context;
-                safeContext = safeContext.Replace("\"", "\"\"");
-                safeContext = safeContext.Replace("\r", "\\r");
-                safeContext = safeContext.Replace("\n", "\\n");
-                safeContext = $"\"{safeContext}\"";
+                return $"{Timecode},{CsvTextEncode(Context)},{CsvTextEncode(Comment)}";
+            }
 
-                return $"{Timecode},{safeContext},{Comment}";
+            private static string CsvTextEncode(string s)
+            {
+                s = s.Replace("\"", "\"\"");
+                s = s.Replace("\r", "\\r");
+                s = s.Replace("\n", "\\n");
+                return $"\"{s}\"";
             }
         }
 

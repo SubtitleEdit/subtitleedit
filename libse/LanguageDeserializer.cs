@@ -5422,20 +5422,8 @@ namespace Nikse.SubtitleEdit.Core
                 case "SpellCheck/UndoX":
                     language.SpellCheck.UndoX = reader.Value;
                     break;
-                case "NetflixQualityCheck/GlyphCheckSuccessfull":
-                    language.NetflixQualityCheck.GlyphCheckSuccessfull = reader.Value;
-                    break;
-                case "NetflixQualityCheck/GlyphCheckFailed":
-                    language.NetflixQualityCheck.GlyphCheckFailed = reader.Value;
-                    break;
                 case "NetflixQualityCheck/GlyphCheckReport":
                     language.NetflixQualityCheck.GlyphCheckReport = reader.Value;
-                    break;
-                case "NetflixQualityCheck/WhiteSpaceCheckSuccessfull":
-                    language.NetflixQualityCheck.WhiteSpaceCheckSuccessfull = reader.Value;
-                    break;
-                case "NetflixQualityCheck/WhiteSpaceCheckFailed":
-                    language.NetflixQualityCheck.WhiteSpaceCheckFailed = reader.Value;
                     break;
                 case "NetflixQualityCheck/WhiteSpaceCheckReport":
                     language.NetflixQualityCheck.WhiteSpaceCheckReport = reader.Value;
@@ -5443,8 +5431,11 @@ namespace Nikse.SubtitleEdit.Core
                 case "NetflixQualityCheck/ReportPrompt":
                     language.NetflixQualityCheck.ReportPrompt = reader.Value;
                     break;
-                case "NetflixQualityCheck/SavingError":
-                    language.NetflixQualityCheck.SavingError = reader.Value;
+                case "NetflixQualityCheck/FoundXIssues":
+                    language.NetflixQualityCheck.FoundXIssues = reader.Value;
+                    break;
+                case "NetflixQualityCheck/CheckOk":
+                    language.NetflixQualityCheck.CheckOk = reader.Value;
                     break;
                 case "Split/Title":
                     language.Split.Title = reader.Value;

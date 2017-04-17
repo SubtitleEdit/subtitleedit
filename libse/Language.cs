@@ -2296,16 +2296,11 @@ can edit in same subtitle file (collaboration)",
 
             NetflixQualityCheck = new LanguageStructure.NetflixQualityCheck
             {
-                GlyphCheckSuccessfull = "Character validation has been successful.",
-                GlyphCheckFailed = "Character validation has failed.",
                 GlyphCheckReport = "Invalid character {0} found at column {1}",
-
-                WhiteSpaceCheckSuccessfull = "White space validation has been successful.",
-                WhiteSpaceCheckFailed = "White space validation has failed.",
                 WhiteSpaceCheckReport = "Invalid white space found at column {0}.",
-
                 ReportPrompt = "Please see full report here: {0}.",
-                SavingError = "Report cannot be saved."
+                FoundXIssues = "Netflix quality check found {0} issues.",
+                CheckOk = "Netflix quality check OK :)",
             };
 
             Split = new LanguageStructure.Split
