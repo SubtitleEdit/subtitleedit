@@ -5,7 +5,7 @@
     <Version>3.5.2</Version>
     <TranslatedBy>Oversat til dansk af Nikse (mailto:nikse.dk@gmail.com)</TranslatedBy>
     <CultureName>da-DK</CultureName>
-    <HelpFile />
+    <HelpFile></HelpFile>
     <Ok>&amp;OK</Ok>
     <Cancel>&amp;Fortryd</Cancel>
     <Apply>Anvend</Apply>
@@ -26,6 +26,7 @@
     <Duration>Varighed</Duration>
     <CharsPerSec>Tegn/sek</CharsPerSec>
     <WordsPerMin>Ord/min</WordsPerMin>
+    <Actor>Taler</Actor>
     <NumberSymbol>#</NumberSymbol>
     <Number>Antal</Number>
     <Text>Tekst</Text>
@@ -1055,6 +1056,7 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
         <RemoveTextForHi>Fjern tekst for hørehæmmede</RemoveTextForHi>
         <VisualSync>Visuel synkroniser</VisualSync>
         <SpellCheck>Stavekontrol</SpellCheck>
+        <NetflixQualityCheck>Netflix kvalitetstjek</NetflixQualityCheck>
         <Settings>Indstillinger</Settings>
         <Help>Hjælp</Help>
         <ShowHideWaveform>Vis/skjul kurveform</ShowHideWaveform>
@@ -1064,6 +1066,7 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
         <SizeAllColumnsToFit>Auto-tilpas kolonner</SizeAllColumnsToFit>
         <AdvancedSubStationAlphaSetStyle>Advanced Sub Station Alpha - vælg stilart</AdvancedSubStationAlphaSetStyle>
         <SubStationAlphaSetStyle>(Advanced) Sub Station Alpha - vælg stilart</SubStationAlphaSetStyle>
+        <SetActor>Vælg taler</SetActor>
         <SubStationAlphaStyles>Sub Station Alpha stilarter...</SubStationAlphaStyles>
         <AdvancedSubStationAlphaStyles>Advanced Sub Station Alpha stilarter...</AdvancedSubStationAlphaStyles>
         <TimedTextSetStyle>Timed Text - sæt style</TimedTextSetStyle>
@@ -1115,6 +1118,8 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
         <SaveSelectedLines>Gem valgte linjer som...</SaveSelectedLines>
         <WebVTTSetNewVoice>Angiv ny stemme...</WebVTTSetNewVoice>
         <WebVTTRemoveVoices>Fjern stemmer</WebVTTRemoveVoices>
+        <NewActor>Ny taler</NewActor>
+        <RemoveActors>Fjern talere</RemoveActors>
       </ContextMenu>
     </Menu>
     <Controls>
@@ -1448,6 +1453,7 @@ Hvis du har redigeret denne fil med Subtitle Edit du måske finde en backup via 
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Vælg undertekst fra Matroska fil</Title>
+    <TitleMp4>Vælg undertekster fra MP4-fil</TitleMp4>
     <PleaseChoose>Mere end en undertekst fundet - så vælg</PleaseChoose>
     <TrackXLanguageYTypeZ>Spor {0} - sprog: {1} - type: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
@@ -1678,6 +1684,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <Replace>Erstat</Replace>
     <VisualSync>Visuel synk</VisualSync>
     <SpellCheck>Stavekontrol</SpellCheck>
+    <NetflixQualityCheck>Netflix kvalitetstjek</NetflixQualityCheck>
     <SettingsName>Indstillinger</SettingsName>
     <Help>Hjælp</Help>
     <ShowFrameRate>Vis frame rate i værktøjslinjen</ShowFrameRate>
@@ -1695,6 +1702,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <SubtitleFont>undertekst skrifttype</SubtitleFont>
     <SubtitleFontSize>undertekst skriftstørrelse</SubtitleFontSize>
     <SubtitleBold>Fed</SubtitleBold>
+    <VideoAutoOpen>Auto-åbn videofil ved åbning af undertekst</VideoAutoOpen>
     <SubtitleCenter>Centrer</SubtitleCenter>
     <SubtitleFontColor>Undertekst skriftfarve</SubtitleFontColor>
     <SubtitleBackgroundColor>Undertekst baggrundsfarve</SubtitleBackgroundColor>
@@ -1921,6 +1929,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <MainTextBoxUnbreak>Fjern linjeskift</MainTextBoxUnbreak>
     <MainFileSaveAll>Gem alle</MainFileSaveAll>
     <Miscellaneous>Diverse</Miscellaneous>
+    <CpsIncludesSpace>Tegn/sek (CPS) inkluderer mellemrum</CpsIncludesSpace>
     <UseDoNotBreakAfterList>Benyt skift-ikke-efter-liste (for auto-ombrydning)</UseDoNotBreakAfterList>
     <MicrosoftBingTranslator>Microsoft Bing Translator</MicrosoftBingTranslator>
     <HowToSignUp>Sådan tilmelder du dig</HowToSignUp>
@@ -1987,6 +1996,16 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <SpellCheckAborted>Stavekontrol afbrudt</SpellCheckAborted>
     <UndoX>Fortryd: {0}</UndoX>
   </SpellCheck>
+  <NetflixQualityCheck>
+    <GlyphCheckSuccessfull></GlyphCheckSuccessfull>
+    <GlyphCheckFailed></GlyphCheckFailed>
+    <GlyphCheckReport></GlyphCheckReport>
+    <WhiteSpaceCheckSuccessfull></WhiteSpaceCheckSuccessfull>
+    <WhiteSpaceCheckFailed></WhiteSpaceCheckFailed>
+    <WhiteSpaceCheckReport></WhiteSpaceCheckReport>
+    <ReportPrompt></ReportPrompt>
+    <SavingError></SavingError>
+  </NetflixQualityCheck>
   <Split>
     <Title>Split</Title>
     <SplitOptions>Split - indstillinger</SplitOptions>
@@ -2044,6 +2063,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <LengthInFormatXinCharactersY>Antal tegn som {0}: {1: ####, ##0}</LengthInFormatXinCharactersY>
     <NumberOfCharactersInTextOnly>Antal tegn (kun in tekst): {0:#,###,##0}</NumberOfCharactersInTextOnly>
     <TotalCharsPerSecond>Total antal karakterer per sekund: {0:0.0} sekunder</TotalCharsPerSecond>
+    <TotalWords>Total antal ord: {0}</TotalWords>
     <NumberOfItalicTags>Antal kursiv tags: {0}</NumberOfItalicTags>
     <NumberOfBoldTags>Antal fed tags: {0}</NumberOfBoldTags>
     <NumberOfUnderlineTags>Antal understreg tags: {0}</NumberOfUnderlineTags>
