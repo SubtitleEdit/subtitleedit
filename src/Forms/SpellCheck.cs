@@ -24,7 +24,7 @@ namespace Nikse.SubtitleEdit.Forms
         public bool AutoFixNames { get { return checkBoxAutoChangeNames.Checked; } }
 
         private SpellCheckWordLists _spellCheckWordLists;
-        private List<string> _skipAllList = new List<string>();
+        private HashSet<string> _skipAllList = new HashSet<string>();
         private Dictionary<string, string> _changeAllDictionary;
         private string _prefix = string.Empty;
         private string _postfix = string.Empty;
@@ -155,24 +155,18 @@ namespace Nikse.SubtitleEdit.Forms
             richTextBoxParagraph.SelectionColor = Color.Black;
             richTextBoxParagraph.SelectionLength = 0;
 
-            for (int i = 0; i < 10; i++)
+            string text = richTextBoxParagraph.Text;
+            if (word.Text.Length > text.Length)
+                return;
+
+            int lowerBound = Math.Max(word.Index - 10, 0);
+            int upperBound = Math.Min(word.Index + 10 + word.Text.Length, text.Length);
+            int index = text.IndexOf(word.Text, lowerBound, upperBound - lowerBound);
+            if (index >= 0)
             {
-                int idx = word.Index - i;
-                if (idx >= 0 && idx < richTextBoxParagraph.Text.Length && richTextBoxParagraph.Text.Substring(idx).StartsWith(word.Text))
-                {
-                    richTextBoxParagraph.SelectionStart = idx;
-                    richTextBoxParagraph.SelectionLength = word.Text.Length;
-                    richTextBoxParagraph.SelectionColor = Color.Red;
-                    break;
-                }
-                idx = word.Index + i;
-                if (idx >= 0 && idx < richTextBoxParagraph.Text.Length && richTextBoxParagraph.Text.Substring(idx).StartsWith(word.Text))
-                {
-                    richTextBoxParagraph.SelectionStart = idx;
-                    richTextBoxParagraph.SelectionLength = word.Text.Length;
-                    richTextBoxParagraph.SelectionColor = Color.Red;
-                    break;
-                }
+                richTextBoxParagraph.SelectionStart = index;
+                richTextBoxParagraph.SelectionLength = word.Text.Length;
+                richTextBoxParagraph.SelectionColor = Color.Red;
             }
         }
 
@@ -754,7 +748,7 @@ namespace Nikse.SubtitleEdit.Forms
             LanguageStructure.Main mainLanguage = Configuration.Settings.Language.Main;
             _mainWindow = mainWindow;
 
-            _skipAllList = new List<string>();
+            _skipAllList = new HashSet<string>();
 
             _noOfSkippedWords = 0;
             _noOfChangedWords = 0;
@@ -821,7 +815,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void LoadDictionaries(string dictionaryFolder, string dictionary, string languageName)
         {
             _changeAllDictionary = new Dictionary<string, string>();
-            _skipAllList = new List<string>();
+            _skipAllList = new HashSet<string>();
             _spellCheckWordLists = new SpellCheckWordLists(dictionaryFolder, languageName, this);
             LoadHunspell(dictionary);
         }
