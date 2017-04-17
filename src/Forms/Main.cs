@@ -3754,14 +3754,7 @@ namespace Nikse.SubtitleEdit.Forms
             // Set default RTL or LTR
             if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0)
             {
-                if (Configuration.Settings.General.RightToLeftMode)
-                {
-                    textBoxListViewTextAlternate.RightToLeft = RightToLeft.Yes;
-                }
-                else
-                {
-                    textBoxListViewTextAlternate.RightToLeft = RightToLeft.No;
-                }
+                textBoxListViewTextAlternate.RightToLeft = Configuration.Settings.General.RightToLeftMode ? RightToLeft.Yes : RightToLeft.No;
             }
             if (Configuration.Settings.General.RightToLeftMode)
             {
@@ -12390,7 +12383,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (line.TrimStart().StartsWith('-') || line.TrimStart().StartsWith("<i>-", StringComparison.Ordinal) || line.TrimStart().StartsWith("<i> -", StringComparison.Ordinal))
                         sb.AppendLine(line);
-                    else if (line.TrimStart().StartsWith("<i>") && line.Trim().Length > 3)
+                    else if (line.TrimStart().StartsWith("<i>", StringComparison.Ordinal) && line.Trim().Length > 3)
                         sb.AppendLine("<i>- " + line.Substring(3).TrimStart());
                     else
                         sb.AppendLine("- " + line);
