@@ -2177,16 +2177,13 @@
 
         public class NetflixQualityCheck
         {
-            public string GlyphCheckSuccessfull { get; set; }
-            public string GlyphCheckFailed { get; set; }
             public string GlyphCheckReport { get; set; }
 
-            public string WhiteSpaceCheckSuccessfull { get; set; }
-            public string WhiteSpaceCheckFailed { get; set; }
             public string WhiteSpaceCheckReport { get; set; }
 
             public string ReportPrompt { get; set;  }
-            public string SavingError { get; set; }
+            public string FoundXIssues { get; set; }
+            public string CheckOk { get; set; }
         }
 
         public class Split

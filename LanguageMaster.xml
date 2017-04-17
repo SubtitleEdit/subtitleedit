@@ -2001,14 +2001,11 @@ can edit in same subtitle file (collaboration)</Information>
     <UndoX>Undo: {0}</UndoX>
   </SpellCheck>
   <NetflixQualityCheck>
-    <GlyphCheckSuccessfull>Character validation has been successful.</GlyphCheckSuccessfull>
-    <GlyphCheckFailed>Character validation has failed.</GlyphCheckFailed>
     <GlyphCheckReport>Invalid character {0} found at column {1}</GlyphCheckReport>
-    <WhiteSpaceCheckSuccessfull>White space validation has been successful.</WhiteSpaceCheckSuccessfull>
-    <WhiteSpaceCheckFailed>White space validation has failed.</WhiteSpaceCheckFailed>
     <WhiteSpaceCheckReport>Invalid white space found at column {0}.</WhiteSpaceCheckReport>
     <ReportPrompt>Please see full report here: {0}.</ReportPrompt>
-    <SavingError>Report cannot be saved.</SavingError>
+    <FoundXIssues>Netflix quality check found {0} issues.</FoundXIssues>
+    <CheckOk>Netflix quality check OK :)</CheckOk>
   </NetflixQualityCheck>
   <Split>
     <Title>Split</Title>

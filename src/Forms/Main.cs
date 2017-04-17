@@ -20858,7 +20858,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 string reportPath = Path.GetTempPath() + fileName + "_NetflixQualityCheck.csv";
                 netflixController.SaveCsv(reportPath);
-                string msgFormat = string.Format("{0} {1}", "Netflix quality found " + netflixController.Records.Count + " issues." + Environment.NewLine,
+                string msgFormat = string.Format("{0}\r\n\r\n{1}", string.Format(Configuration.Settings.Language.NetflixQualityCheck.FoundXIssues, netflixController.Records.Count),
                                                  Configuration.Settings.Language.NetflixQualityCheck.ReportPrompt);
                 messages.Add(string.Format(msgFormat, reportPath));
                 reportFiles.Add(reportPath);
@@ -20869,7 +20869,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (showSuccessMessage)
             {
-                messages.Add("Netflix quality control is happy :)");
+                messages.Add(Configuration.Settings.Language.NetflixQualityCheck.CheckOk);
                 using (var dialog = new NetflixQCResult(string.Join(Environment.NewLine, messages), reportFiles))
                 {
                     dialog.ShowDialog(this);
