@@ -158,7 +158,7 @@ namespace Nikse.SubtitleEdit.Forms
             for (int i = 0; i < 10; i++)
             {
                 int idx = word.Index - i;
-                if (idx >= 0 && idx < richTextBoxParagraph.Text.Length && richTextBoxParagraph.Text.Substring(idx).StartsWith(word.Text))
+                if (idx >= 0 && idx < richTextBoxParagraph.Text.Length && richTextBoxParagraph.Text.Substring(idx).StartsWith(word.Text, StringComparison.Ordinal))
                 {
                     richTextBoxParagraph.SelectionStart = idx;
                     richTextBoxParagraph.SelectionLength = word.Text.Length;
@@ -166,7 +166,7 @@ namespace Nikse.SubtitleEdit.Forms
                     break;
                 }
                 idx = word.Index + i;
-                if (idx >= 0 && idx < richTextBoxParagraph.Text.Length && richTextBoxParagraph.Text.Substring(idx).StartsWith(word.Text))
+                if (idx >= 0 && idx < richTextBoxParagraph.Text.Length && richTextBoxParagraph.Text.Substring(idx).StartsWith(word.Text, StringComparison.Ordinal))
                 {
                     richTextBoxParagraph.SelectionStart = idx;
                     richTextBoxParagraph.SelectionLength = word.Text.Length;
@@ -593,7 +593,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                             var suggestions = new List<string>();
 
-                            if ((_currentWord == "Lt's" || _currentWord == "Lt'S") && _languageName.StartsWith("en_"))
+                            if ((_currentWord == "Lt's" || _currentWord == "Lt'S") && _languageName.StartsWith("en_", StringComparison.Ordinal))
                             {
                                 suggestions.Add("It's");
                             }
@@ -610,7 +610,7 @@ namespace Nikse.SubtitleEdit.Forms
                                         {
                                             for (int i = 0; i < suggestions.Count; i++)
                                             {
-                                                if (suggestions[i].StartsWith("L'") || suggestions[i].StartsWith("L’"))
+                                                if (suggestions[i].StartsWith("L'", StringComparison.Ordinal) || suggestions[i].StartsWith("L’", StringComparison.Ordinal))
                                                     suggestions[i] = @"l" + suggestions[i].Substring(1);
                                             }
                                         }
@@ -658,7 +658,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     return;
                                 }
                             }
-                            if (_prefix != null && _prefix == "''" && _currentWord.EndsWith("''"))
+                            if (_prefix != null && _prefix == "''" && _currentWord.EndsWith("''", StringComparison.Ordinal))
                             {
                                 _prefix = string.Empty;
                                 _currentSpellCheckWord.Index += 2;
