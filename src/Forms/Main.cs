@@ -1273,7 +1273,7 @@ namespace Nikse.SubtitleEdit.Forms
             findDoubleWordsToolStripMenuItem.Text = _language.Menu.SpellCheck.FindDoubleWords;
             FindDoubleLinesToolStripMenuItem.Text = _language.Menu.SpellCheck.FindDoubleLines;
             GetDictionariesToolStripMenuItem.Text = _language.Menu.SpellCheck.GetDictionaries;
-            addWordToNamesetcListToolStripMenuItem.Text = _language.Menu.SpellCheck.AddToNamesEtcList;
+            addWordToNamesetcListToolStripMenuItem.Text = _language.Menu.SpellCheck.AddToNameList;
 
             toolStripMenuItemSynchronization.Text = _language.Menu.Synchronization.Title;
             toolStripMenuItemAdjustAllTimes.Text = _language.Menu.Synchronization.AdjustAllTimes;
@@ -13274,9 +13274,9 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 addToNamesList.Initialize(_subtitle, textBoxListViewText.SelectedText);
                 if (addToNamesList.ShowDialog(this) == DialogResult.OK)
-                    ShowStatus(string.Format(_language.NameXAddedToNamesEtcList, addToNamesList.NewName));
+                    ShowStatus(string.Format(_language.NameXAddedToNameList, addToNamesList.NewName));
                 else if (!string.IsNullOrEmpty(addToNamesList.NewName))
-                    ShowStatus(string.Format(_language.NameXNotAddedToNamesEtcList, addToNamesList.NewName));
+                    ShowStatus(string.Format(_language.NameXNotAddedToNameList, addToNamesList.NewName));
             }
         }
 

@@ -8302,11 +8302,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         {
                             comboBoxDictionaries_SelectedIndexChanged(null, null);
                             UpdateUnknownWordColoring(form.NewName, StringComparison.Ordinal);
-                            ShowStatus(string.Format(Configuration.Settings.Language.Main.NameXAddedToNamesEtcList, form.NewName));
+                            ShowStatus(string.Format(Configuration.Settings.Language.Main.NameXAddedToNameList, form.NewName));
                         }
                         else if (!string.IsNullOrEmpty(form.NewName))
                         {
-                            MessageBox.Show(string.Format(Configuration.Settings.Language.Main.NameXNotAddedToNamesEtcList, form.NewName));
+                            MessageBox.Show(string.Format(Configuration.Settings.Language.Main.NameXNotAddedToNameList, form.NewName));
                         }
                     }
                 }

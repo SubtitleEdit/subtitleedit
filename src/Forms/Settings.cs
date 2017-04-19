@@ -465,7 +465,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonAddUserWord.Text = language.AddWord;
             buttonAddOcrFix.Text = language.AddPair;
             groupBoxWordListLocation.Text = language.Location;
-            checkBoxNamesEtcOnline.Text = language.UseOnlineNamesEtc;
+            checkBoxNamesEtcOnline.Text = language.UseOnlineNames;
             linkLabelOpenDictionaryFolder.Text = Configuration.Settings.Language.GetDictionaries.OpenDictionariesFolder;
 
             groupBoxProxySettings.Text = language.ProxyServerSettings;
@@ -751,7 +751,7 @@ namespace Nikse.SubtitleEdit.Forms
             var spellCheckNode = new TreeNode(Configuration.Settings.Language.Main.Menu.SpellCheck.Title);
             AddNode(spellCheckNode, Configuration.Settings.Language.Main.Menu.SpellCheck.Title, nameof(Configuration.Settings.Shortcuts.MainSpellCheck));
             AddNode(spellCheckNode, Configuration.Settings.Language.Main.Menu.SpellCheck.FindDoubleWords, nameof(Configuration.Settings.Shortcuts.MainSpellCheckFindDoubleWords));
-            AddNode(spellCheckNode, Configuration.Settings.Language.Main.Menu.SpellCheck.AddToNamesEtcList, nameof(Configuration.Settings.Shortcuts.MainSpellCheckAddWordToNames));
+            AddNode(spellCheckNode, Configuration.Settings.Language.Main.Menu.SpellCheck.AddToNameList, nameof(Configuration.Settings.Shortcuts.MainSpellCheckAddWordToNames));
             treeViewShortcuts.Nodes.Add(spellCheckNode);
 
             var syncNode = new TreeNode(Configuration.Settings.Language.Main.Menu.Synchronization.Title);
@@ -1580,7 +1580,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     if (removeCount < itemsToRemoveCount && Configuration.Settings.WordLists.UseOnlineNames && !string.IsNullOrEmpty(Configuration.Settings.WordLists.NamesUrl))
                     {
-                        MessageBox.Show(Configuration.Settings.Language.Settings.CannotUpdateNamesEtcOnline);
+                        MessageBox.Show(Configuration.Settings.Language.Settings.CannotUpdateNamesOnline);
                         return;
                     }
 
