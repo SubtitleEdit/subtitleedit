@@ -5,7 +5,9 @@
     <Version>3.5.2</Version>
     <TranslatedBy>------------------------------------------------------------------------------------------------
 Traduzido para Português de Portugal, por moob
-Email: mailto:moob42341@gmail.com</TranslatedBy>
+Email: mailto:moob42341@gmail.com
+Verificão e pequenas modificações, Por BlackSpirits
+Email: mailto:blackspirits@gmail.com</TranslatedBy>
     <CultureName>pt-PT</CultureName>
     <HelpFile />
     <Ok>&amp;OK</Ok>
@@ -123,7 +125,7 @@ Linha de comando: {1} {2}</WaveFileNotFound>
 Linha de comando: {1} {2}
 
 Nota: Verifique o espaço em disco.</WaveFileMalformed>
-    <LowDiskSpace>INSUFICIENTE ESPAÇO EM DISCO!</LowDiskSpace>
+    <LowDiskSpace>ESPAÇO EM DISCO INSUFICIENTE!</LowDiskSpace>
     <FreeDiskSpace>{0} livre</FreeDiskSpace>
   </AddWaveform>
   <AddWaveformBatch>
