@@ -9,7 +9,7 @@
         AddToDictionary,
         Abort,
         ChangeLanguage,
-        AddToNamesEtc,
+        AddToNames,
         ChangeWholeText
     }
 }
