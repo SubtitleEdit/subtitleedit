@@ -13,29 +13,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         //10:00:19:06{Bottom}{Open Caption}{Center}{White}{Font Arial GVP Bold}Lufa Farms as{N}an agrotechnology business
         private static readonly Regex RegexTimeCodes1 = new Regex(@"^\d\d:\d\d:\d\d:\d\d\{", RegexOptions.Compiled);
 
-        public override string Extension
-        {
-            get { return ".txt"; }
-        }
-
-        public override string Name
-        {
-            get { return "Oresme"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
+        public override string Extension => ".txt";
+        public override string Name => "Oresme";
+        public override bool IsTimeBased => true;
 
         public override bool IsMine(List<string> lines, string fileName)
         {
             var subtitle = new Subtitle();
-
-            var sb = new StringBuilder();
-            foreach (string line in lines)
-                sb.AppendLine(line);
-
             LoadSubtitle(subtitle, lines, fileName);
             return subtitle.Paragraphs.Count > _errorCount;
         }
@@ -63,12 +47,19 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             _errorCount = 0;
-
+            Func<string, double> OptimialTimeProvider = Utilities.GetOptimalDisplayMilliseconds;
             subtitle.Paragraphs.Clear();
+            var sb = new StringBuilder(50);
             char[] splitChars = { '.', ':' };
             foreach (string line in lines)
             {
                 string s = line.Trim();
+                // invalid line
+                if (s.Length < 12)
+                {
+                    _errorCount++;
+                    continue;
+                }
                 var match = RegexTimeCodes1.Match(s);
                 if (match.Success)
                 {
@@ -76,7 +67,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     try
                     {
                         p.StartTime = DecodeTimeCodeFrames(s.Substring(0, 11), splitChars);
-                        p.Text = GetText(line.Remove(0, 11));
+                        p.Text = GetText(line.Remove(0, 11), sb);
+                        p.EndTime = new TimeCode(OptimialTimeProvider(p.Text));
                         subtitle.Paragraphs.Add(p);
                     }
                     catch (Exception exception)
@@ -90,24 +82,32 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     _errorCount++;
                 }
 
-                for (int i = 0; i < subtitle.Paragraphs.Count - 1; i++)
-                {
-                    var p2 = subtitle.Paragraphs[i];
-                    var next = subtitle.Paragraphs[i + 1];
-                    p2.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
-                }
-                if (subtitle.Paragraphs.Count > 0)
-                    subtitle.Paragraphs[subtitle.Paragraphs.Count - 1].EndTime.TotalMilliseconds = subtitle.Paragraphs[subtitle.Paragraphs.Count - 1].StartTime.TotalMilliseconds +
-                         Utilities.GetOptimalDisplayMilliseconds(subtitle.Paragraphs[subtitle.Paragraphs.Count - 1].Text);
             }
-            subtitle.RemoveEmptyLines();
-            subtitle.Renumber();
+
+            // fix gaps between paragraphs
+            double gapsTime = Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+            for (int i = 0; i < subtitle.Paragraphs.Count - 1; i++)
+            {
+                Paragraph p = subtitle.Paragraphs[i];
+                Paragraph pN = subtitle.Paragraphs[i + 1];
+                if (pN.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds < gapsTime)
+                {
+                    pN.EndTime.TotalMilliseconds = pN.StartTime.TotalMilliseconds - gapsTime;
+                }
+            }
+
+            // only renumber if no paragraph were removed
+            // since RemoveEmptyLines also do Renumbering
+            if (subtitle.RemoveEmptyLines() == 0)
+            {
+                subtitle.Renumber();
+            }
         }
 
-        private static string GetText(string s)
+        private static string GetText(string s, StringBuilder sb)
         {
             s = s.Replace("{N}", Environment.NewLine);
-            var sb = new StringBuilder();
+            sb.Clear();
             bool tagOn = false;
             for (int i = 0; i < s.Length; i++)
             {
