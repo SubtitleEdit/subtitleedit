@@ -5,7 +5,7 @@
     <Version>3.5.2</Version>
     <TranslatedBy>Tłumaczenie Adam Malich (mailto: adam_malich@gizycko.mm.pl)</TranslatedBy>
     <CultureName>pl-PL</CultureName>
-    <HelpFile />
+    <HelpFile></HelpFile>
     <Ok>&amp;OK</Ok>
     <Cancel>&amp;Anuluj</Cancel>
     <Apply>Zastosuj</Apply>
@@ -26,6 +26,7 @@
     <Duration>Czas trwania</Duration>
     <CharsPerSec>Znaków/sek.</CharsPerSec>
     <WordsPerMin>Słów/min.</WordsPerMin>
+    <Actor>Aktor</Actor>
     <NumberSymbol>Nr</NumberSymbol>
     <Number>Numer</Number>
     <Text>Tekst</Text>
@@ -1066,6 +1067,7 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
         <SizeAllColumnsToFit>Dopasuj rozmiar wszystkich kolumn</SizeAllColumnsToFit>
         <AdvancedSubStationAlphaSetStyle>Advanced Sub Station Alpha - ustaw styl</AdvancedSubStationAlphaSetStyle>
         <SubStationAlphaSetStyle>Sub Station Alpha - ustaw styl</SubStationAlphaSetStyle>
+        <SetActor>Ustaw aktora</SetActor>
         <SubStationAlphaStyles>Style Sub Station Alpha...</SubStationAlphaStyles>
         <AdvancedSubStationAlphaStyles>Style Advanced Sub Station Alpha...</AdvancedSubStationAlphaStyles>
         <TimedTextSetStyle>Tekst synchroniczny - ustaw styl</TimedTextSetStyle>
@@ -1117,6 +1119,8 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
         <SaveSelectedLines>Zapisz zaznaczone linie jako...</SaveSelectedLines>
         <WebVTTSetNewVoice>Ustaw nowy głos...</WebVTTSetNewVoice>
         <WebVTTRemoveVoices>Usuń głosy</WebVTTRemoveVoices>
+        <NewActor>Nowy aktor...</NewActor>
+        <RemoveActors>Usuń aktorów</RemoveActors>
       </ContextMenu>
     </Menu>
     <Controls>
@@ -1927,6 +1931,7 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <MainTextBoxUnbreak>Cofnij łamanie tekstu</MainTextBoxUnbreak>
     <MainFileSaveAll>Zapisz wszystko</MainFileSaveAll>
     <Miscellaneous>Inne</Miscellaneous>
+    <CpsIncludesSpace>Znaków/sekundę (ZNS) włączając spacje</CpsIncludesSpace>
     <UseDoNotBreakAfterList>Użyj listy wykluczeń (dla automatycznego łamania linii)</UseDoNotBreakAfterList>
     <MicrosoftBingTranslator>Tłumacz Microsoft Bing</MicrosoftBingTranslator>
     <HowToSignUp>Jak się zarejestrować</HowToSignUp>
@@ -1994,14 +1999,11 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <UndoX>Cofnij: {0}</UndoX>
   </SpellCheck>
   <NetflixQualityCheck>
-    <GlyphCheckSuccessfull>Walidacja znaków zakończyła się sukcesem.</GlyphCheckSuccessfull>
-    <GlyphCheckFailed>Walidacja znaków nie powiodła się.</GlyphCheckFailed>
     <GlyphCheckReport>Nieprawidłowy znak {0} został znaleziony w kolumnie {1}</GlyphCheckReport>
-    <WhiteSpaceCheckSuccessfull>Walidacja spacji zakończyła się sukcesem.</WhiteSpaceCheckSuccessfull>
-    <WhiteSpaceCheckFailed>Walidacja spacji nie powiodła się.</WhiteSpaceCheckFailed>
     <WhiteSpaceCheckReport>Nieprawidłowa spacja znaleziona w kolumnie {0}.</WhiteSpaceCheckReport>
     <ReportPrompt>Przeczytaj pełny raport tutaj: {0}.</ReportPrompt>
-    <SavingError>Raport nie może zostać zapisany.</SavingError>
+    <FoundXIssues>Kontrola jakości Netflix znalazła {0} problem/ów.</FoundXIssues>
+    <CheckOk>Kontrola jakości Netflix OK :)</CheckOk>
   </NetflixQualityCheck>
   <Split>
     <Title>Podziel</Title>

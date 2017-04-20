@@ -28,6 +28,7 @@ Email: mailto:moob42341@gmail.com</TranslatedBy>
     <Duration>Duração</Duration>
     <CharsPerSec>Caracteres/seg</CharsPerSec>
     <WordsPerMin>Palavras/min</WordsPerMin>
+    <Actor>Actor</Actor>
     <NumberSymbol>#</NumberSymbol>
     <Number>Número</Number>
     <Text>Texto</Text>
@@ -123,7 +124,7 @@ Linha de comando: {1} {2}</WaveFileNotFound>
 Linha de comando: {1} {2}
 
 Nota: Verifique o espaço em disco.</WaveFileMalformed>
-    <LowDiskSpace>INSUFICIENTE ESPAÇO EM DISCO!</LowDiskSpace>
+    <LowDiskSpace>ESPAÇO INSUFICIENTE EM DISCO!</LowDiskSpace>
     <FreeDiskSpace>{0} livre</FreeDiskSpace>
   </AddWaveform>
   <AddWaveformBatch>
@@ -1059,7 +1060,7 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
         <RemoveTextForHi>Eliminar texto para Deficientes Auditivos</RemoveTextForHi>
         <VisualSync>Sincronia visual</VisualSync>
         <SpellCheck>Verificação ortográfica</SpellCheck>
-		<NetflixQualityCheck>Verificar o estado da legenda Netflix</NetflixQualityCheck>
+		<NetflixQualityCheck>Verificação de qualidade da legenda Netflix</NetflixQualityCheck>
         <Settings>Configurações</Settings>
         <Help>Ajuda</Help>
         <ShowHideWaveform>Mostrar/ocultar forma de onda</ShowHideWaveform>
@@ -1068,10 +1069,11 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
       <ContextMenu>
         <AdvancedSubStationAlphaSetStyle>Advanced Sub Station Alpha - Definir estilo</AdvancedSubStationAlphaSetStyle>
         <SubStationAlphaSetStyle>Sub Station Alpha - Definir estilo</SubStationAlphaSetStyle>
-        <SubStationAlphaStyles>Sub Station Alpha estilos...</SubStationAlphaStyles>
-        <AdvancedSubStationAlphaStyles>Advanced Sub Station Alpha estilos...</AdvancedSubStationAlphaStyles>
+        <SetActor>Estipular actor</SetActor>
+        <SubStationAlphaStyles>Estilos Sub Station Alpha...</SubStationAlphaStyles>
+        <AdvancedSubStationAlphaStyles>Estilos Advanced Sub Station Alpha...</AdvancedSubStationAlphaStyles>
         <TimedTextSetStyle>Texto cronometrado - Definir estilo</TimedTextSetStyle>
-        <TimedTextStyles>Texto cronometrado estilos...</TimedTextStyles>
+        <TimedTextStyles>Estilos Texto cronometrado...</TimedTextStyles>
         <TimedTextSetLanguage>Texto cronometrado - Definir o idioma</TimedTextSetLanguage>
         <SamiSetStyle>Sami - Definir classe</SamiSetStyle>
         <NuendoSetStyle>Nuendo - Definir caractere</NuendoSetStyle>
@@ -1119,6 +1121,8 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
         <SaveSelectedLines>Guardar linhas seleccionadas como...</SaveSelectedLines>
         <WebVTTSetNewVoice>Definir nova voz</WebVTTSetNewVoice>
         <WebVTTRemoveVoices>Remover vozes</WebVTTRemoveVoices>
+        <NewActor>Novo actor...</NewActor>
+        <RemoveActors>Remover actores</RemoveActors>
       </ContextMenu>
     </Menu>
     <Controls>
@@ -1685,7 +1689,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <Replace>Substituir</Replace>
     <VisualSync>Sincronia visual</VisualSync>
     <SpellCheck>Ortografia</SpellCheck>
-	<NetflixQualityCheck>Verificar o estado da legenda Netflix</NetflixQualityCheck>
+	<NetflixQualityCheck>Verificação de qualidade Netflix</NetflixQualityCheck>
     <SettingsName>Configurações</SettingsName>
     <Help>Ajuda</Help>
     <ShowFrameRate>Mostrar taxa de fotogramas na barra de ferramentas</ShowFrameRate>
@@ -1997,14 +2001,11 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <UndoX>Anular: {0}</UndoX>
   </SpellCheck>
   <NetflixQualityCheck>
-    <GlyphCheckSuccessfull>Validação de caracteres foi bem-sucedida.</GlyphCheckSuccessfull>
-    <GlyphCheckFailed>A validação de caracteres falhou.</GlyphCheckFailed>
     <GlyphCheckReport>Caracter inválido {0} encontrado na coluna {1}</GlyphCheckReport>
-    <WhiteSpaceCheckSuccessfull>Validação de espaços em branco foi bem-sucedida.</WhiteSpaceCheckSuccessfull>
-    <WhiteSpaceCheckFailed>A validação de espaços em branco falhou.</WhiteSpaceCheckFailed>
     <WhiteSpaceCheckReport>Foi encontrado um espaço em branco inválido na coluna {0}.</WhiteSpaceCheckReport>
     <ReportPrompt>Ver o relatório completo aqui: {0}.</ReportPrompt>
-    <SavingError>O relatório não pode ser guardado.</SavingError>
+    <FoundXIssues>Verificação de qualidade encontrou {0} problemas.</FoundXIssues>
+    <CheckOk>Verificação de qualidade Netflix OK :)</CheckOk>
   </NetflixQualityCheck>
   <Split>
     <Title>Divisão</Title>
@@ -2104,8 +2105,8 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <ScaleBorderAndShadow>Reduzir o contorno e sombreado</ScaleBorderAndShadow>
   </SubStationAlphaProperties>
   <SubStationAlphaStyles>
-    <Title>Advanced Sub Station Alpha estilos</Title>
-    <TitleSubstationAlpha>Sub Station Alpha estilos</TitleSubstationAlpha>
+    <Title>Estilos Advanced Sub Station Alpha</Title>
+    <TitleSubstationAlpha>Estilos Sub Station Alpha</TitleSubstationAlpha>
     <Styles>Estilos</Styles>
     <Properties>Propriedades</Properties>
     <Name>Nome</Name>
