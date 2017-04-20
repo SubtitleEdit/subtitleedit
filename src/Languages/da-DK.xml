@@ -1997,14 +1997,11 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <UndoX>Fortryd: {0}</UndoX>
   </SpellCheck>
   <NetflixQualityCheck>
-    <GlyphCheckSuccessfull></GlyphCheckSuccessfull>
-    <GlyphCheckFailed></GlyphCheckFailed>
-    <GlyphCheckReport></GlyphCheckReport>
-    <WhiteSpaceCheckSuccessfull></WhiteSpaceCheckSuccessfull>
-    <WhiteSpaceCheckFailed></WhiteSpaceCheckFailed>
-    <WhiteSpaceCheckReport></WhiteSpaceCheckReport>
-    <ReportPrompt></ReportPrompt>
-    <SavingError></SavingError>
+    <GlyphCheckReport>Ugyldigt tegn {0} findes i kolonne {1}</GlyphCheckReport>
+    <WhiteSpaceCheckReport>Ugyldigt mellemrum fundet ved kolonne {0}.</WhiteSpaceCheckReport>
+    <ReportPrompt>Se hele rapporten her: {0}.</ReportPrompt>
+    <FoundXIssues>Netflix kvalitetstjek fundet {0} problemstillinger.</FoundXIssues>
+    <CheckOk>Netflix kvalitetstjek OK :)</CheckOk>
   </NetflixQualityCheck>
   <Split>
     <Title>Split</Title>
