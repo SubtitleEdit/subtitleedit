@@ -38,6 +38,7 @@
   <word>bona fide</word>
   <word>boneyard</word>
   <word>boron</word>
+  <word>bradycardic</word>
   <word>braniac</word>
   <word>breakin'</word>
   <word>bromine</word>
@@ -53,6 +54,7 @@
   <word>calcium</word>
   <word>californium</word>
   <word>carbon</word>
+  <word>cardiothoracic</word>
   <word>catalogue</word>
   <word>catalogued</word>
   <word>'cause</word>
@@ -76,12 +78,14 @@
   <word>copperish</word>
   <word>cosy</word>
   <word>could've</word>
+  <word>craniotomy</word>
   <word>cryo</word>
   <word>cryotube</word>
   <word>cudgelled</word>
   <word>curium</word>
   <word>darmstadtium</word>
   <word>darndest</word>
+  <word>decompensating</word>
   <word>defendable</word>
   <word>dialogue</word>
   <word>dipshit</word>
@@ -111,6 +115,7 @@
   <word>fbi's</word>
   <word>fermium</word>
   <word>fiancé</word>
+  <word>fiancée</word>
   <word>financials</word>
   <word>flavour</word>
   <word>flavours</word>
@@ -128,6 +133,7 @@
   <word>germanium</word>
   <word>giancarlo</word>
   <word>gigabit</word>
+  <word>glioma</word>
   <word>glowy</word>
   <word>goddamned</word>
   <word>golconda</word>
@@ -151,13 +157,16 @@
   <word>how're</word>
   <word>humvee</word>
   <word>hydrogen</word>
+  <word>immunotherapy</word>
   <word>incontinentia</word>
   <word>indium</word>
   <word>intercostal</word>
+  <word>intrapericardial</word>
   <word>intubate</word>
   <word>iodine</word>
   <word>iridium</word>
   <word>iron</word>
+  <word>ischemia</word>
   <word>jeopardised</word>
   <word>jewellery</word>
   <word>jizz</word>
@@ -170,6 +179,8 @@
   <word>kuwabara-kun</word>
   <word>labelled</word>
   <word>lanthanum</word>
+  <word>laparoscopically</word>
+  <word>laparotomy</word>
   <word>laryngectomy</word>
   <word>lawrencium</word>
   <word>lead</word>
@@ -184,6 +195,7 @@
   <word>mendelevium</word>
   <word>men's</word>
   <word>mercury</word>
+  <word>mesenteric</word>
   <word>metres</word>
   <word>might've</word>
   <word>millennia</word>
@@ -212,6 +224,7 @@
   <word>ohh</word>
   <word>online</word>
   <word>or</word>
+  <word>oropharyngeal</word>
   <word>osmium</word>
   <word>other's</word>
   <word>oww</word>
@@ -221,6 +234,7 @@
   <word>palladium</word>
   <word>paprikash</word>
   <word>parents'</word>
+  <word>percutaneously</word>
   <word>phosphorus</word>
   <word>photoshopped</word>
   <word>platinum</word>
@@ -243,6 +257,8 @@
   <word>recalibrated</word>
   <word>recognise</word>
   <word>recognised</word>
+  <word>resect</word>
+  <word>retractor</word>
   <word>rhenium</word>
   <word>rhodium</word>
   <word>ringtone</word>
@@ -283,16 +299,22 @@
   <word>spilt</word>
   <word>spork</word>
   <word>spotteth</word>
+  <word>stent</word>
+  <word>stenting</word>
+  <word>sternotomy</word>
   <word>strontium</word>
+  <word>subdural hematoma</word>
   <word>sudoku</word>
   <word>sulfur</word>
   <word>sulphur</word>
   <word>synchronicity</word>
+  <word>syncopal</word>
   <word>tantalum</word>
   <word>taxies</word>
   <word>technetium</word>
   <word>teleporting</word>
   <word>tellurium</word>
+  <word>teratoma</word>
   <word>terbium</word>
   <word>terrorise</word>
   <word>texted</word>
@@ -308,6 +330,7 @@
   <word>there're</word>
   <word>this</word>
   <word>this'll</word>
+  <word>thoracotomy</word>
   <word>thorium</word>
   <word>thulium</word>
   <word>tin</word>
