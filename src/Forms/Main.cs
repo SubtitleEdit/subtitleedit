@@ -6391,19 +6391,39 @@ namespace Nikse.SubtitleEdit.Forms
                     toolStripMenuItemSetLanguage.DropDownItems.Add("-");
                 }
 
-                toolStripMenuItemSetLanguage.DropDownItems.Add(_language.New);
-                var newItem = (ToolStripMenuItem)toolStripMenuItemSetLanguage.DropDownItems[toolStripMenuItemSetLanguage.DropDownItems.Count - 1];
-                var moreLanguages = new List<string>();
-                foreach (CultureInfo x in CultureInfo.GetCultures(CultureTypes.NeutralCultures))
+                var newItem = new ToolStripMenuItem(_language.New);
+                toolStripMenuItemSetLanguage.DropDownItems.Add(newItem);
+                newItem.Click += (senderNew, eNew) =>
                 {
-                    if (!languages.Contains(x.TwoLetterISOLanguageName.ToLower()) && !languages.Contains(x.ThreeLetterISOLanguageName.ToLower()))
-                        moreLanguages.Add(x.TwoLetterISOLanguageName.ToLower());
-                }
-                moreLanguages.Sort();
-                foreach (var language in moreLanguages)
-                {
-                    newItem.DropDownItems.Add(language, null, AddLanguageClick);
-                }
+                    var moreLanguages = new List<CultureInfo>();
+                    foreach (CultureInfo x in CultureInfo.GetCultures(CultureTypes.NeutralCultures))
+                    {
+                        var twoLetterLower = x.TwoLetterISOLanguageName.ToLower();
+                        if (!languages.Contains(twoLetterLower) &&
+                            !languages.Contains(x.ThreeLetterISOLanguageName.ToLower()) &&
+                            twoLetterLower != "iv")
+                        {
+                            moreLanguages.Add(x);
+                        }
+                    }
+                    moreLanguages = moreLanguages.OrderBy(p => p.TwoLetterISOLanguageName).ToList();
+                    using (var form = new TimedTextNewLanguage(moreLanguages, LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle)))
+                    {
+                        if (form.ShowDialog(this) == DialogResult.OK)
+                        {
+                            if (!string.IsNullOrEmpty(form.Language))
+                            {
+                                MakeHistoryForUndo("Set language: " + form.Language);
+                                foreach (int index in SubtitleListview1.SelectedIndices)
+                                {
+                                    _subtitle.Paragraphs[index].Language = form.Language;
+                                    _subtitle.Paragraphs[index].Extra = TimedText10.SetExtra(_subtitle.Paragraphs[index]);
+                                    SubtitleListview1.SetExtraText(index, _subtitle.Paragraphs[index].Extra, SubtitleListview1.ForeColor);
+                                }
+                            }
+                        }
+                    }
+                };
             }
             else if ((formatType == typeof(Sami) || formatType == typeof(SamiModern)) && SubtitleListview1.SelectedItems.Count > 0)
             {

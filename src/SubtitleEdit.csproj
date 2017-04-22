@@ -693,6 +693,12 @@
     <Compile Include="Forms\Styles\SubStationAlphaStyles.Designer.cs">
       <DependentUpon>SubStationAlphaStyles.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\TimedTextNewLanguage.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\TimedTextNewLanguage.Designer.cs">
+      <DependentUpon>TimedTextNewLanguage.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\TimedTextProperties.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1221,6 +1227,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Styles\SubStationAlphaStyles.resx">
       <DependentUpon>SubStationAlphaStyles.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\TimedTextNewLanguage.resx">
+      <DependentUpon>TimedTextNewLanguage.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\TimedTextProperties.resx">
       <DependentUpon>TimedTextProperties.cs</DependentUpon>

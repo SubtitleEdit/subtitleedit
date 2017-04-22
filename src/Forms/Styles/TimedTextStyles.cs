@@ -177,7 +177,14 @@ namespace Nikse.SubtitleEdit.Forms.Styles
         private void InitializeListView()
         {
             XmlNode head = _xml.DocumentElement.SelectSingleNode("ttml:head", _nsmgr);
-            foreach (XmlNode node in head.SelectNodes("//ttml:style", _nsmgr))
+            if (head == null)
+                return;
+
+            XmlNode styling = head.SelectSingleNode("ttml:styling", _nsmgr);
+            if (styling == null)
+                return;
+
+            foreach (XmlNode node in styling.SelectNodes("ttml:style", _nsmgr))
             {
                 string name = "default";
                 if (node.Attributes["xml:id"] != null)
