@@ -245,7 +245,7 @@ namespace Nikse.SubtitleEdit.Core
         }
 
         /// <summary>
-        /// Calculate the time codes from frame number/frame rate
+        /// Calculate the time codes from frame.
         /// </summary>
         /// <param name="frameRate">Number of frames per second</param>
         /// <returns>True if times could be calculated</returns>
@@ -262,42 +262,26 @@ namespace Nikse.SubtitleEdit.Core
         }
 
         /// <summary>
-        /// Calculate the frame numbers from time codes/frame rate
+        /// Calculate the frame from time codes.
         /// </summary>
-        /// <param name="frameRate"></param>
-        /// <returns></returns>
-        public bool CalculateFrameNumbersFromTimeCodes(double frameRate)
+        public bool CalculateFrameNumbersFromTimeCodes(double frameRate, bool check = true)
         {
-            if (_format == null || _format.IsFrameBased)
+            if (check && (_format == null || _format.IsFrameBased))
                 return false;
 
-            foreach (Paragraph p in Paragraphs)
+            for (int i = 0; i < _paragraphs.Count; i++)
             {
+                Paragraph p = _paragraphs[i];
                 p.CalculateFrameNumbersFromTimeCodes(frameRate);
+                // Fix equals/overlapping frames.
+                if (i - 1 >= 0)
+                {
+                    Paragraph prev = _paragraphs[i - 1];
+                    if (prev.EndFrame == p.StartFrame || prev.EndFrame == p.StartFrame + 1)
+                        prev.EndFrame = p.StartFrame - 1;
+                }
             }
-
-            FixEqualOrJustOverlappingFrameNumbers();
-
             return true;
-        }
-
-        public void CalculateFrameNumbersFromTimeCodesNoCheck(double frameRate)
-        {
-            foreach (Paragraph p in Paragraphs)
-                p.CalculateFrameNumbersFromTimeCodes(frameRate);
-
-            FixEqualOrJustOverlappingFrameNumbers();
-        }
-
-        private void FixEqualOrJustOverlappingFrameNumbers()
-        {
-            for (int i = 0; i < Paragraphs.Count - 1; i++)
-            {
-                Paragraph p = Paragraphs[i];
-                Paragraph next = GetParagraphOrDefault(i + 1);
-                if (next != null && (p.EndFrame == next.StartFrame || p.EndFrame == next.StartFrame + 1))
-                    p.EndFrame = next.StartFrame - 1;
-            }
         }
 
         public void ChangeFrameRate(double oldFrameRate, double newFrameRate)

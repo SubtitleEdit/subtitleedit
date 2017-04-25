@@ -782,7 +782,7 @@ namespace Nikse.SubtitleEdit.Logic
                         outputFileName = FormatOutputFileNameForBatchConvert(fileName, sf.Extension, outputFolder, overwrite);
                         Write($"{count}: {Path.GetFileName(fileName)} -> {outputFileName}...");
                         if (sf.IsFrameBased && !sub.WasLoadedWithFrameNumbers)
-                            sub.CalculateFrameNumbersFromTimeCodesNoCheck(Configuration.Settings.General.CurrentFrameRate);
+                            sub.CalculateFrameNumbersFromTimeCodes(Configuration.Settings.General.CurrentFrameRate, false);
                         else if (sf.IsTimeBased && sub.WasLoadedWithFrameNumbers)
                             sub.CalculateTimeCodesFromFrameNumbers(Configuration.Settings.General.CurrentFrameRate);
 

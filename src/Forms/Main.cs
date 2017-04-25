@@ -1738,7 +1738,7 @@ namespace Nikse.SubtitleEdit.Forms
                         toolStripComboBoxFrameRate.Text = string.Format("{0:0.###}", visualSync.FrameRate);
                     if (IsFramesRelevant && CurrentFrameRate > 0)
                     {
-                        _subtitle.CalculateFrameNumbersFromTimeCodesNoCheck(CurrentFrameRate);
+                        _subtitle.CalculateFrameNumbersFromTimeCodes(CurrentFrameRate, false);
                         if (tabControlSubtitle.SelectedIndex == TabControlSourceView)
                             ShowSource();
                     }
@@ -3820,7 +3820,7 @@ namespace Nikse.SubtitleEdit.Forms
                 // Recalculate time.
                 if (!_oldSubtitleFormat.IsFrameBased && format.IsFrameBased)
                 {
-                    _subtitle.CalculateFrameNumbersFromTimeCodesNoCheck(CurrentFrameRate); // Milliseconds to frames
+                    _subtitle.CalculateFrameNumbersFromTimeCodes(CurrentFrameRate, false); // Milliseconds to frames
                 }
                 else if (_oldSubtitleFormat.IsFrameBased && !format.IsFrameBased)
                 {
@@ -5244,7 +5244,7 @@ namespace Nikse.SubtitleEdit.Forms
                     SaveSubtitleListviewIndices();
                     if (IsFramesRelevant && CurrentFrameRate > 0)
                     {
-                        _subtitle.CalculateFrameNumbersFromTimeCodesNoCheck(CurrentFrameRate);
+                        _subtitle.CalculateFrameNumbersFromTimeCodes(CurrentFrameRate, false);
                         if (tabControlSubtitle.SelectedIndex == TabControlSourceView)
                             ShowSource();
                     }
@@ -12257,7 +12257,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 if (IsFramesRelevant && CurrentFrameRate > 0)
                 {
-                    _subtitle.CalculateFrameNumbersFromTimeCodesNoCheck(CurrentFrameRate);
+                    _subtitle.CalculateFrameNumbersFromTimeCodes(CurrentFrameRate, false);
                     if (tabControlSubtitle.SelectedIndex == TabControlSourceView)
                         ShowSource();
                 }
@@ -13276,7 +13276,7 @@ namespace Nikse.SubtitleEdit.Forms
                     _subtitle.Paragraphs.Clear();
                     foreach (var p in setMinDisplayDiff.FixedSubtitle.Paragraphs)
                         _subtitle.Paragraphs.Add(p);
-                    _subtitle.CalculateFrameNumbersFromTimeCodesNoCheck(CurrentFrameRate);
+                    _subtitle.CalculateFrameNumbersFromTimeCodes(CurrentFrameRate, false);
                     ShowStatus(string.Format(_language.XMinimumDisplayTimeBetweenParagraphsChanged, setMinDisplayDiff.FixCount));
                     SaveSubtitleListviewIndices();
                     ShowSource();
@@ -13306,7 +13306,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                         _subtitleListViewIndex = -1;
                         _subtitle = importText.FixedSubtitle;
-                        _subtitle.CalculateFrameNumbersFromTimeCodesNoCheck(CurrentFrameRate);
+                        _subtitle.CalculateFrameNumbersFromTimeCodes(CurrentFrameRate, false);
                         ShowStatus(_language.TextImported);
                         ShowSource();
                         SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
@@ -13334,7 +13334,7 @@ namespace Nikse.SubtitleEdit.Forms
                     _subtitle.Paragraphs.Clear();
                     foreach (var p in pointSync.FixedSubtitle.Paragraphs)
                         _subtitle.Paragraphs.Add(p);
-                    _subtitle.CalculateFrameNumbersFromTimeCodesNoCheck(CurrentFrameRate);
+                    _subtitle.CalculateFrameNumbersFromTimeCodes(CurrentFrameRate, false);
                     ShowStatus(_language.PointSynchronizationDone);
                     ShowSource();
                     SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
@@ -13484,7 +13484,7 @@ namespace Nikse.SubtitleEdit.Forms
                         _subtitle.Paragraphs.Clear();
                         foreach (var p in pointSync.FixedSubtitle.Paragraphs)
                             _subtitle.Paragraphs.Add(p);
-                        _subtitle.CalculateFrameNumbersFromTimeCodesNoCheck(CurrentFrameRate);
+                        _subtitle.CalculateFrameNumbersFromTimeCodes(CurrentFrameRate, false);
                         ShowStatus(_language.PointSynchronizationDone);
                         ShowSource();
                         SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
@@ -14455,7 +14455,7 @@ namespace Nikse.SubtitleEdit.Forms
                 UpdateOriginalTimeCodes(oldParagraph);
                 if (IsFramesRelevant && CurrentFrameRate > 0)
                 {
-                    _subtitle.CalculateFrameNumbersFromTimeCodesNoCheck(CurrentFrameRate);
+                    _subtitle.CalculateFrameNumbersFromTimeCodes(CurrentFrameRate, false);
                     if (tabControlSubtitle.SelectedIndex == TabControlSourceView)
                         ShowSource();
                 }
@@ -14763,7 +14763,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             SubtitleListview1.EndUpdate();
             if (_subtitle.WasLoadedWithFrameNumbers)
-                _subtitle.CalculateFrameNumbersFromTimeCodesNoCheck(frameRate);
+                _subtitle.CalculateFrameNumbersFromTimeCodes(frameRate, false);
             RefreshSelectedParagraph();
             UpdateSourceView();
             UpdateListSyntaxColoring();
@@ -15213,7 +15213,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 if (IsFramesRelevant && CurrentFrameRate > 0)
                 {
-                    _subtitle.CalculateFrameNumbersFromTimeCodesNoCheck(CurrentFrameRate);
+                    _subtitle.CalculateFrameNumbersFromTimeCodes(CurrentFrameRate, false);
                     if (tabControlSubtitle.SelectedIndex == TabControlSourceView)
                         ShowSource();
                 }
@@ -15265,7 +15265,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     if (IsFramesRelevant && CurrentFrameRate > 0)
                     {
-                        _subtitle.CalculateFrameNumbersFromTimeCodesNoCheck(CurrentFrameRate);
+                        _subtitle.CalculateFrameNumbersFromTimeCodes(CurrentFrameRate, false);
                         if (tabControlSubtitle.SelectedIndex == TabControlSourceView)
                             ShowSource();
                     }
@@ -19173,7 +19173,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
 
                     if (IsFramesRelevant && CurrentFrameRate > 0)
-                        _subtitle.CalculateFrameNumbersFromTimeCodesNoCheck(CurrentFrameRate);
+                        _subtitle.CalculateFrameNumbersFromTimeCodes(CurrentFrameRate, false);
                     ShowSource();
                 }
             }
@@ -19198,7 +19198,7 @@ namespace Nikse.SubtitleEdit.Forms
                         SubtitleListview1.SelectIndexAndEnsureVisible(0);
 
                         if (IsFramesRelevant && CurrentFrameRate > 0)
-                            _subtitle.CalculateFrameNumbersFromTimeCodesNoCheck(CurrentFrameRate);
+                            _subtitle.CalculateFrameNumbersFromTimeCodes(CurrentFrameRate, false);
                         ShowSource();
 
                         OpenVideo(extractDateTimeInfo.VideoFileName);
@@ -19255,7 +19255,7 @@ namespace Nikse.SubtitleEdit.Forms
                     SubtitleListview1.SelectIndexAndEnsureVisible(0);
 
                     if (IsFramesRelevant && CurrentFrameRate > 0)
-                        _subtitle.CalculateFrameNumbersFromTimeCodesNoCheck(CurrentFrameRate);
+                        _subtitle.CalculateFrameNumbersFromTimeCodes(CurrentFrameRate, false);
                     ShowSource();
 
                     ShowStatus(_language.SubtitlesJoined);
@@ -19783,7 +19783,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     audioVisualizer.GenerateTimeCodes(_subtitle, startFromSeconds, form.BlockSize, form.VolumeMinimum, form.VolumeMaximum, form.DefaultMilliseconds);
                     if (IsFramesRelevant && CurrentFrameRate > 0)
-                        _subtitle.CalculateFrameNumbersFromTimeCodesNoCheck(CurrentFrameRate);
+                        _subtitle.CalculateFrameNumbersFromTimeCodes(CurrentFrameRate, false);
                     SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
                     RefreshSelectedParagraph();
                 }
@@ -20064,7 +20064,7 @@ namespace Nikse.SubtitleEdit.Forms
                     for (int i = 0; i + index < _subtitle.Paragraphs.Count && i < tmp.Paragraphs.Count; i++)
                         _subtitle.Paragraphs[index + i].Text = tmp.Paragraphs[i].Text;
                     if (IsFramesRelevant && CurrentFrameRate > 0)
-                        _subtitle.CalculateFrameNumbersFromTimeCodesNoCheck(CurrentFrameRate);
+                        _subtitle.CalculateFrameNumbersFromTimeCodes(CurrentFrameRate, false);
                     SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
                     SubtitleListview1.SelectIndexAndEnsureVisible(index, true);
                     RefreshSelectedParagraph();
@@ -20121,7 +20121,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                     }
                     if (IsFramesRelevant && CurrentFrameRate > 0)
-                        _subtitle.CalculateFrameNumbersFromTimeCodesNoCheck(CurrentFrameRate);
+                        _subtitle.CalculateFrameNumbersFromTimeCodes(CurrentFrameRate, false);
                     ShowSource();
                     SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
                     RestoreSubtitleListviewIndices();
