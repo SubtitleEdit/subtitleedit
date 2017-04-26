@@ -250,6 +250,7 @@
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStripListview = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.setStylesForSelectedLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.setActorForSelectedLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemAssStyles = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemSetLanguage = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemWebVTT = new System.Windows.Forms.ToolStripMenuItem();
@@ -472,7 +473,7 @@
             this.imageListPlayRate = new System.Windows.Forms.ImageList(this.components);
             this.timerTextUndo = new System.Windows.Forms.Timer(this.components);
             this.timerAlternateTextUndo = new System.Windows.Forms.Timer(this.components);
-            this.setActorForSelectedLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemSetRegion = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -2305,6 +2306,7 @@
             this.setStylesForSelectedLinesToolStripMenuItem,
             this.setActorForSelectedLinesToolStripMenuItem,
             this.toolStripMenuItemAssStyles,
+            this.toolStripMenuItemSetRegion,
             this.toolStripMenuItemSetLanguage,
             this.toolStripMenuItemWebVTT,
             this.toolStripMenuItemDelete,
@@ -2344,7 +2346,7 @@
             this.changeCasingForSelectedLinesToolStripMenuItem,
             this.toolStripMenuItemSaveSelectedLines});
             this.contextMenuStripListview.Name = "contextMenuStripListview";
-            this.contextMenuStripListview.Size = new System.Drawing.Size(285, 848);
+            this.contextMenuStripListview.Size = new System.Drawing.Size(285, 870);
             this.contextMenuStripListview.Closed += new System.Windows.Forms.ToolStripDropDownClosedEventHandler(this.MenuClosed);
             this.contextMenuStripListview.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripListviewOpening);
             this.contextMenuStripListview.Opened += new System.EventHandler(this.MenuOpened);
@@ -2354,6 +2356,12 @@
             this.setStylesForSelectedLinesToolStripMenuItem.Name = "setStylesForSelectedLinesToolStripMenuItem";
             this.setStylesForSelectedLinesToolStripMenuItem.Size = new System.Drawing.Size(284, 22);
             this.setStylesForSelectedLinesToolStripMenuItem.Text = "ASS: Set styles for selected lines...";
+            // 
+            // setActorForSelectedLinesToolStripMenuItem
+            // 
+            this.setActorForSelectedLinesToolStripMenuItem.Name = "setActorForSelectedLinesToolStripMenuItem";
+            this.setActorForSelectedLinesToolStripMenuItem.Size = new System.Drawing.Size(284, 22);
+            this.setActorForSelectedLinesToolStripMenuItem.Text = "ASS: Set styles for selected lines...";
             // 
             // toolStripMenuItemAssStyles
             // 
@@ -4589,11 +4597,11 @@
             this.timerAlternateTextUndo.Interval = 700;
             this.timerAlternateTextUndo.Tick += new System.EventHandler(this.TimerAlternateTextUndoTick);
             // 
-            // setActorForSelectedLinesToolStripMenuItem
+            // toolStripMenuItemSetRegion
             // 
-            this.setActorForSelectedLinesToolStripMenuItem.Name = "setActorForSelectedLinesToolStripMenuItem";
-            this.setActorForSelectedLinesToolStripMenuItem.Size = new System.Drawing.Size(284, 22);
-            this.setActorForSelectedLinesToolStripMenuItem.Text = "ASS: Set styles for selected lines...";
+            this.toolStripMenuItemSetRegion.Name = "toolStripMenuItemSetRegion";
+            this.toolStripMenuItemSetRegion.Size = new System.Drawing.Size(284, 22);
+            this.toolStripMenuItemSetRegion.Text = "Timed text - set region";
             // 
             // Main
             // 
@@ -5111,5 +5119,6 @@
         private System.Windows.Forms.ToolStripButton toolStripButtonNetflixQualityCheck;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemEdl;
         private System.Windows.Forms.ToolStripMenuItem setActorForSelectedLinesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSetRegion;
     }
 }

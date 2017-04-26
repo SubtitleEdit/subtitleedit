@@ -251,6 +251,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             if (div == null)
                 div = xml.DocumentElement.SelectSingleNode("//ttml:body", nsmgr).FirstChild;
 
+            if (div == null)
+            {                
+                div = xml.CreateElement("div");
+                body.AppendChild(div);
+            }
+
             int no = 0;
             var headerStyles = GetStylesFromHeader(ToUtf8XmlString(xml));
             var regions = GetRegionsFromHeader(ToUtf8XmlString(xml));
@@ -375,6 +381,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             string text = p.Text.RemoveControlCharactersButWhiteSpace();
 
             string region = GetEffect(p, "region");
+            if (p != null && !string.IsNullOrEmpty(p.Region) && regions.Contains(region))
+            {
+                region = p.Region;
+            }
+
             if (string.IsNullOrEmpty(region))
             {
                 if (text.StartsWith("{\\an1}", StringComparison.Ordinal) && AddDefaultRegionIfNotExists(xml, "bottomLeft"))
@@ -595,8 +606,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             XmlDocument defaultXml = new XmlDocument();
             defaultXml.LoadXml(new TimedText10().ToText(new Subtitle(), "tt"));
 
-            XmlNode regionNode = defaultXml.DocumentElement
-                .SelectSingleNode(string.Format("ttml:head//ttml:region[@xml:id='{0}']", region), nsmgr);
+            XmlNode regionNode = defaultXml.DocumentElement.SelectSingleNode(string.Format("ttml:head//ttml:region[@xml:id='{0}']", region), nsmgr);
 
             if (regionNode == null)
             {
@@ -712,6 +722,17 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     if (lang != null)
                     {
                         p.Language = lang;
+                    }
+
+                    // Region
+                    string regionP = LookupForAttribute("xml:region", node, nsmgr);
+                    if (regionP == null)
+                    {
+                        regionP = LookupForAttribute("region", node, nsmgr);
+                    }
+                    if (regionP != null)
+                    {
+                        p.Region = regionP;
                     }
 
                     // Saving attibutes

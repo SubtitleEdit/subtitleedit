@@ -27,6 +27,7 @@
     <CharsPerSec>Chars/sec</CharsPerSec>
     <WordsPerMin>Words/min</WordsPerMin>
     <Actor>Actor</Actor>
+    <Region>Region</Region>
     <NumberSymbol>#</NumberSymbol>
     <Number>Number</Number>
     <Text>Text</Text>
@@ -1072,6 +1073,7 @@ Note: Do check free disk space.</WaveFileMalformed>
         <SetActor>Set actor</SetActor>
         <SubStationAlphaStyles>Sub Station Alpha styles...</SubStationAlphaStyles>
         <AdvancedSubStationAlphaStyles>Advanced Sub Station Alpha styles...</AdvancedSubStationAlphaStyles>
+        <TimedTextSetRegion>Timed Text - set region</TimedTextSetRegion>
         <TimedTextSetStyle>Timed Text - set style</TimedTextSetStyle>
         <TimedTextStyles>Timed Text styles...</TimedTextStyles>
         <TimedTextSetLanguage>Timed Text - set language</TimedTextSetLanguage>

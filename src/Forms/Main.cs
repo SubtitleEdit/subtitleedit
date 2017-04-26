@@ -3845,6 +3845,15 @@ namespace Nikse.SubtitleEdit.Forms
                     SubtitleListview1.HideColumn(SubtitleListView.SubtitleColumn.Actor);
                 }
 
+                if (formatType == typeof(TimedText10) && Configuration.Settings.Tools.ListViewShowColumnRegion)
+                {
+                    SubtitleListview1.ShowRegionColumn(Configuration.Settings.Language.General.Region);
+                }
+                else
+                {
+                    SubtitleListview1.HideColumn(SubtitleListView.SubtitleColumn.Region);
+                }
+
                 if (format.HasStyleSupport)
                 {
                     var styles = new List<string>();
@@ -6316,10 +6325,34 @@ namespace Nikse.SubtitleEdit.Forms
                     cm.Items.Add(contextMenuStripLvHeaderActorToolStripMenuItem);
                 }
 
+                if (formatType == typeof(TimedText10))
+                {
+                    // REGION
+                    var contextMenuStripLvHeaderRegionToolStripMenuItem = new ToolStripMenuItem(Configuration.Settings.Language.General.Region);
+                    contextMenuStripLvHeaderRegionToolStripMenuItem.CheckOnClick = true;
+                    contextMenuStripLvHeaderRegionToolStripMenuItem.Checked = Configuration.Settings.Tools.ListViewShowColumnRegion;
+                    contextMenuStripLvHeaderRegionToolStripMenuItem.Click += (sender2, e2) =>
+                    {
+                        SubtitleListview1.BeginUpdate();
+                        Configuration.Settings.Tools.ListViewShowColumnRegion = contextMenuStripLvHeaderRegionToolStripMenuItem.Checked;
+                        if (Configuration.Settings.Tools.ListViewShowColumnRegion)
+                            SubtitleListview1.ShowRegionColumn(Configuration.Settings.Language.General.Region);
+                        else
+                            SubtitleListview1.HideColumn(SubtitleListView.SubtitleColumn.Region);
+                        SaveSubtitleListviewIndices();
+                        UiUtil.InitializeSubtitleFont(SubtitleListview1);
+                        SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+                        RestoreSubtitleListviewIndices();
+                        SubtitleListview1.EndUpdate();
+                    };
+                    cm.Items.Add(contextMenuStripLvHeaderRegionToolStripMenuItem);
+                }
+
                 cm.Show(SubtitleListview1, coordinates);
                 return;
             }
 
+            toolStripMenuItemSetRegion.Visible = false;
             toolStripMenuItemSetLanguage.Visible = false;
             var actors = new List<string>();
             if ((formatType == typeof(AdvancedSubStationAlpha) || formatType == typeof(SubStationAlpha)) && SubtitleListview1.SelectedItems.Count > 0)
@@ -6377,6 +6410,39 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripMenuItemAssStyles.Visible = true;
                 setStylesForSelectedLinesToolStripMenuItem.Text = _language.Menu.ContextMenu.TimedTextSetStyle;
 
+                // regions
+                if (string.IsNullOrEmpty(_subtitle.Header) || !_subtitle.Header.Contains("http://www.w3.org/ns/ttml"))
+                {
+                    _subtitle.Header = new TimedText10().ToText(_subtitle, string.Empty);
+                }
+                var regions = TimedText10.GetRegionsFromHeader(_subtitle.Header);
+                toolStripMenuItemSetRegion.DropDownItems.Clear();
+                toolStripMenuItemSetRegion.Text = _language.Menu.ContextMenu.TimedTextSetRegion;
+                if (regions.Count > 0)
+                {
+                    toolStripMenuItemSetRegion.Visible = true;
+                    foreach (var region in regions)
+                    {
+                        toolStripMenuItemSetRegion.DropDownItems.Add(region, null, SetRegionClick);
+                    }
+                    toolStripMenuItemSetRegion.DropDownItems.Add("-");
+                    var clear = new ToolStripMenuItem(Configuration.Settings.Language.DvdSubRip.Clear);
+                    toolStripMenuItemSetRegion.DropDownItems.Add(clear);
+                    clear.Click += (sender2, e2) =>
+                    {
+                        MakeHistoryForUndo("Set region: " + Configuration.Settings.Language.DvdSubRip.Clear);
+                        foreach (int index in SubtitleListview1.SelectedIndices)
+                        {
+                            _subtitle.Paragraphs[index].Region = null;
+                            SubtitleListview1.SetTimeAndText(index, _subtitle.Paragraphs[index]);
+                        }
+                    };
+                }
+                else
+                {
+                    toolStripMenuItemSetRegion.Visible = false;
+                }
+
                 // languages
                 var languages = TimedText10.GetUsedLanguages(_subtitle);
                 toolStripMenuItemSetLanguage.DropDownItems.Clear();
@@ -6424,6 +6490,22 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                     }
                 };
+
+                if (languages.Count > 0)
+                {
+                    var clearLanguage = new ToolStripMenuItem(Configuration.Settings.Language.DvdSubRip.Clear);
+                    toolStripMenuItemSetLanguage.DropDownItems.Add(clearLanguage);
+                    clearLanguage.Click += (sender2, e2) =>
+                    {
+                        MakeHistoryForUndo("Set language: " + Configuration.Settings.Language.DvdSubRip.Clear);
+                        foreach (int index in SubtitleListview1.SelectedIndices)
+                        {
+                            _subtitle.Paragraphs[index].Language = null;
+                            _subtitle.Paragraphs[index].Extra = TimedText10.SetExtra(_subtitle.Paragraphs[index]);
+                            SubtitleListview1.SetTimeAndText(index, _subtitle.Paragraphs[index]);
+                        }
+                    };
+                }
             }
             else if ((formatType == typeof(Sami) || formatType == typeof(SamiModern)) && SubtitleListview1.SelectedItems.Count > 0)
             {
@@ -6624,6 +6706,20 @@ namespace Nikse.SubtitleEdit.Forms
                 foreach (int index in SubtitleListview1.SelectedIndices)
                 {
                     _subtitle.Paragraphs[index].Actor = actor;
+                    SubtitleListview1.SetTimeAndText(index, _subtitle.Paragraphs[index]);
+                }
+            }
+        }
+
+        private void SetRegionClick(object sender, EventArgs e)
+        {
+            string region = (sender as ToolStripItem).Text;
+            if (!string.IsNullOrEmpty(region))
+            {
+                MakeHistoryForUndo("Set region: " + region);
+                foreach (int index in SubtitleListview1.SelectedIndices)
+                {
+                    _subtitle.Paragraphs[index].Region = region;
                     SubtitleListview1.SetTimeAndText(index, _subtitle.Paragraphs[index]);
                 }
             }
@@ -6974,6 +7070,13 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (styles.Count > 0)
                         newParagraph.Style = style;
+                    var c = _subtitle.GetParagraphOrDefault(firstSelectedIndex);
+                    if (c != null)
+                    {
+                        newParagraph.Style = c.Style;
+                        newParagraph.Region = c.Region;
+                        newParagraph.Language = c.Language;
+                    }
                     newParagraph.Extra = TimedText10.SetExtra(newParagraph);
                 }
             }
@@ -7082,6 +7185,13 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (styles.Count > 0)
                         newParagraph.Style = style;
+                    var c = _subtitle.GetParagraphOrDefault(FirstSelectedIndex);
+                    if (c != null)
+                    {
+                        newParagraph.Style = c.Style;
+                        newParagraph.Region = c.Region;
+                        newParagraph.Language = c.Language;
+                    }
                     newParagraph.Extra = TimedText10.SetExtra(newParagraph);
                 }
             }
@@ -16167,6 +16277,18 @@ namespace Nikse.SubtitleEdit.Forms
                     break;
                 }
                 index++;
+            }
+
+            if (format.GetType() == typeof(TimedText10) || format.GetType() == typeof(ItunesTimedText))
+            {
+                var c = _subtitle.GetParagraphOrDefault(index);
+                if (c != null)
+                {
+                    newParagraph.Style = c.Style;
+                    newParagraph.Region = c.Region;
+                    newParagraph.Language = c.Language;
+                    newParagraph.Extra = TimedText10.SetExtra(newParagraph);
+                }
             }
 
             MakeHistoryForUndo(_language.BeforeInsertLine);
