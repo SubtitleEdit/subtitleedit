@@ -106,6 +106,7 @@ namespace Nikse.SubtitleEdit.Core
         public bool ListViewShowColumnCharsPerSec { get; set; }
         public bool ListViewShowColumnWordsPerMin { get; set; }
         public bool ListViewShowColumnActor { get; set; }
+        public bool ListViewShowColumnRegion { get; set; }
         public bool SplitAdvanced { get; set; }
         public string SplitOutputFolder { get; set; }
         public int SplitNumberOfParts { get; set; }
@@ -592,6 +593,7 @@ namespace Nikse.SubtitleEdit.Core
         public int ListViewCpsWidth { get; set; }
         public int ListViewWpmWidth { get; set; }
         public int ListViewActorWidth { get; set; }
+        public int ListViewRegionWidth { get; set; }
         public int ListViewTextWidth { get; set; }
         public string VlcWaveTranscodeSettings { get; set; }
         public string VlcLocation { get; set; }
@@ -1634,6 +1636,9 @@ namespace Nikse.SubtitleEdit.Core
             subNode = node.SelectSingleNode("ListViewActorWidth");
             if (subNode != null)
                 settings.General.ListViewActorWidth = Convert.ToInt32(subNode.InnerText.Trim());
+            subNode = node.SelectSingleNode("ListViewRegionWidth");
+            if (subNode != null)
+                settings.General.ListViewRegionWidth = Convert.ToInt32(subNode.InnerText.Trim());
             subNode = node.SelectSingleNode("ListViewTextWidth");
             if (subNode != null)
                 settings.General.ListViewTextWidth = Convert.ToInt32(subNode.InnerText.Trim());
@@ -1802,6 +1807,9 @@ namespace Nikse.SubtitleEdit.Core
             subNode = node.SelectSingleNode("ListViewShowColumnActor");
             if (subNode != null)
                 settings.Tools.ListViewShowColumnActor = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("ListViewShowColumnRegion");
+            if (subNode != null)
+                settings.Tools.ListViewShowColumnRegion = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("SplitAdvanced");
             if (subNode != null)
                 settings.Tools.SplitAdvanced = Convert.ToBoolean(subNode.InnerText);
@@ -3180,7 +3188,7 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("ListViewCpsWidth", settings.General.ListViewCpsWidth.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewWpmWidth", settings.General.ListViewWpmWidth.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewActorWidth", settings.General.ListViewActorWidth.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ListViewTextWidth", settings.General.ListViewTextWidth.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ListViewRegionWidth", settings.General.ListViewRegionWidth.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("VlcWaveTranscodeSettings", settings.General.VlcWaveTranscodeSettings);
                 textWriter.WriteElementString("VlcLocation", settings.General.VlcLocation);
                 textWriter.WriteElementString("VlcLocationRelative", settings.General.VlcLocationRelative);
@@ -3239,6 +3247,7 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("ListViewShowColumnCharsPerSec", settings.Tools.ListViewShowColumnCharsPerSec.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewShowColumnWordsPerMin", settings.Tools.ListViewShowColumnWordsPerMin.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewShowColumnActor", settings.Tools.ListViewShowColumnActor.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ListViewShowColumnRegion", settings.Tools.ListViewShowColumnRegion.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("SplitAdvanced", settings.Tools.SplitAdvanced.ToString());
                 textWriter.WriteElementString("SplitOutputFolder", settings.Tools.SplitOutputFolder);
                 textWriter.WriteElementString("SplitNumberOfParts", settings.Tools.SplitNumberOfParts.ToString(CultureInfo.InvariantCulture));

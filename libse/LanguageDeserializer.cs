@@ -130,6 +130,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "General/Actor":
                     language.General.Actor = reader.Value;
                     break;
+                case "General/Region":
+                    language.General.Region = reader.Value;
+                    break;
                 case "General/NumberSymbol":
                     language.General.NumberSymbol = reader.Value;
                     break;
@@ -3627,6 +3630,9 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "Main/Menu/ContextMenu/AdvancedSubStationAlphaStyles":
                     language.Main.Menu.ContextMenu.AdvancedSubStationAlphaStyles = reader.Value;
+                    break;
+                case "Main/Menu/ContextMenu/TimedTextSetRegion":
+                    language.Main.Menu.ContextMenu.TimedTextSetRegion = reader.Value;
                     break;
                 case "Main/Menu/ContextMenu/TimedTextSetStyle":
                     language.Main.Menu.ContextMenu.TimedTextSetStyle = reader.Value;

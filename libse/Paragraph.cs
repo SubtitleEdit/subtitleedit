@@ -31,6 +31,7 @@ namespace Nikse.SubtitleEdit.Core
         public bool IsComment { get; set; }
 
         public string Actor { get; set; }
+        public string Region { get; set; }
 
         public string MarginL { get; set; }
         public string MarginR { get; set; }
@@ -81,6 +82,7 @@ namespace Nikse.SubtitleEdit.Core
             Extra = paragraph.Extra;
             IsComment = paragraph.IsComment;
             Actor = paragraph.Actor;
+            Region = paragraph.Region;
             MarginL = paragraph.MarginL;
             MarginR = paragraph.MarginR;
             MarginV = paragraph.MarginV;

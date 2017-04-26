@@ -31,6 +31,7 @@
             public string CharsPerSec { get; set; }
             public string WordsPerMin { get; set; }
             public string Actor { get; set; }
+            public string Region { get; set; }
             public string NumberSymbol { get; set; }
             public string Number { get; set; }
             public string Text { get; set; }
@@ -1438,6 +1439,7 @@
                     public string SetActor { get; set; }
                     public string SubStationAlphaStyles { get; set; }
                     public string AdvancedSubStationAlphaStyles { get; set; }
+                    public string TimedTextSetRegion { get; set; }
                     public string TimedTextSetStyle { get; set; }
                     public string TimedTextStyles { get; set; }
                     public string TimedTextSetLanguage { get; set; }
