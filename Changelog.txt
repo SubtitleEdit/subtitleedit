@@ -46,6 +46,7 @@
    * Fixed new ASS/SSA style with space in name - thx hello_hello
    * Fixed issue with empty time code in format "TT draft 2006-10" - thx Georg-J
    * Fixed styling inside "span" in format TTML - thx Johan
+   * Fixed hashtag character in "PAC" format - thx Nuri
 
 
 3.5.2 (3rd March 2017)

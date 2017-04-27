@@ -67,6 +67,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             0x7c, // æ
             0x7d, // ø
             0x7e, // §
+            0x80, // #
             0x5c, // Æ
             0x5d, // Ø
             0x5e, // ÷
@@ -216,6 +217,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             "æ",
             "ø",
             "§",
+            "#",
             "Æ",
             "Ø",
             "÷",
