@@ -6,6 +6,8 @@
    * New Netflix quality checker - thx askolesov/pavel-belenko
    * Added optional list view column "Actor" for ASS/SSA - thx william
    * Added new subtitle format - thx Merwyn
+   * Added new subtitle format - thx Philippe
+   * Added new subtitle fomrat - thx Eddy
 * IMPROVED:
    * Updated Chinese translation - thx Leon
    * Updated French translation - thx JM GBT
