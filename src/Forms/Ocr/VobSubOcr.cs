@@ -6878,7 +6878,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
         }
 
-        private void InitializeTesseract()
+        private void InitializeTesseract(string chosenLanguage = null)
         {
             if (!Directory.Exists(Configuration.TesseractDirectory) && !Configuration.IsRunningOnLinux() && !Configuration.IsRunningOnMac())
             {
@@ -6924,8 +6924,15 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 for (int i = 0; i < comboBoxTesseractLanguages.Items.Count; i++)
                 {
-                    if ((comboBoxTesseractLanguages.Items[i] as TesseractLanguage).Id == Configuration.Settings.VobSubOcr.TesseractLastLanguage)
+                    if (chosenLanguage != null && chosenLanguage == (comboBoxTesseractLanguages.Items[i] as TesseractLanguage).Text)
+                    {
                         comboBoxTesseractLanguages.SelectedIndex = i;
+                        break;
+                    }
+                    if ((comboBoxTesseractLanguages.Items[i] as TesseractLanguage).Id == Configuration.Settings.VobSubOcr.TesseractLastLanguage)
+                    { 
+                        comboBoxTesseractLanguages.SelectedIndex = i;
+                    }
                 }
 
                 if (comboBoxTesseractLanguages.SelectedIndex == -1)
@@ -8468,8 +8475,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             using (var form = new GetTesseractDictionaries())
             {
                 form.ShowDialog(this);
+                InitializeTesseract(form.ChosenLanguage);
             }
-            InitializeTesseract();
         }
 
         private void toolStripMenuItemInspectNOcrMatches_Click(object sender, EventArgs e)
