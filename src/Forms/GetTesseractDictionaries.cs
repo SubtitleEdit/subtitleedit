@@ -16,6 +16,7 @@ namespace Nikse.SubtitleEdit.Forms
         private List<string> _descriptions = new List<string>();
         private string _xmlName = null;
         private string _dictionaryFileName = null;
+        internal string ChosenLanguage { get; private set; }
 
         public GetTesseractDictionaries()
         {
@@ -101,6 +102,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 int index = comboBoxDictionaries.SelectedIndex;
                 string url = _dictionaryDownloadLinks[index];
+                ChosenLanguage = comboBoxDictionaries.Items[index].ToString();
 
                 var wc = new WebClient { Proxy = Utilities.GetProxy() };
                 if (url.EndsWith(".traineddata", StringComparison.OrdinalIgnoreCase) || url.EndsWith(".traineddata?raw=true", StringComparison.OrdinalIgnoreCase))
