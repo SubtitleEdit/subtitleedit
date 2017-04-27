@@ -148,8 +148,16 @@ namespace Nikse.SubtitleEdit.Core
                 if (count != buffer.Length)
                     return false;
 
-                return (buffer[0] == 0x47 && buffer[188] == 0x47) || // 47hex (71 dec or 'G') == TS sync byte
-                       (buffer[0] == 0x54 && buffer[1] == 0x46 && buffer[2] == 0x72 && buffer[3760] == 0x47); // Topfield REC TS file
+                // allow for some random bytes in the beginning
+                for (int i = 0; i < 255; i++)
+                {
+                    if (buffer[i] == Packet.SynchronizationByte && buffer[i + 188] == Packet.SynchronizationByte && buffer[i + 188 * 2] == Packet.SynchronizationByte)
+                    {
+                        return true;
+                    }
+                }
+
+                return buffer[0] == 0x54 && buffer[1] == 0x46 && buffer[2] == 0x72 && buffer[3760] == Packet.SynchronizationByte; // Topfield REC TS file
             }
         }
 
