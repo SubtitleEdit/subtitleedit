@@ -22,6 +22,7 @@
    * In "Change casing" it's now possible to add extra names
    * Export image margins are now percentage - thx aaaxx/gorgorias
    * Added "Clear shortcut" button to settings - thx Simon
+   * "Import plain text" now rembembers options - thx Leon
 * FIXED:
    * Fixed crash in "Add to user dictionary" in OCR - thx alfix0
    * Fixed original file name bug in "Undo" - thx darnn

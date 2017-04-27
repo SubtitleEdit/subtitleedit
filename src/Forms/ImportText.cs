@@ -69,10 +69,30 @@ namespace Nikse.SubtitleEdit.Forms
                 radioButtonSplitAtBlankLines.Checked = true;
             else if (Configuration.Settings.Tools.ImportTextSplitting.Equals("line", StringComparison.OrdinalIgnoreCase))
                 radioButtonLineMode.Checked = true;
-            checkBoxMergeShortLines.Checked = Configuration.Settings.Tools.ImportTextMergeShortLines;
             comboBoxLineBreak.Text = Configuration.Settings.Tools.ImportTextLineBreak;
-
+            checkBoxMergeShortLines.Checked = Configuration.Settings.Tools.ImportTextMergeShortLines;
+            checkBoxRemoveEmptyLines.Checked = Configuration.Settings.Tools.ImportTextRemoveEmptyLines;
+            checkBoxRemoveLinesWithoutLetters.Checked = Configuration.Settings.Tools.ImportTextRemoveLinesNoLetters;
+            checkBoxGenerateTimeCodes.Checked = Configuration.Settings.Tools.ImportTextGenerateTimeCodes;
+            checkBoxAutoBreak.Checked = Configuration.Settings.Tools.ImportTextAutoBreak;
+            if (Configuration.Settings.Tools.ImportTextGap >= numericUpDownGapBetweenLines.Minimum && Configuration.Settings.Tools.ImportTextGap <= numericUpDownGapBetweenLines.Maximum)
+            {
+                numericUpDownGapBetweenLines.Value = Configuration.Settings.Tools.ImportTextGap;
+            }
+            if (Configuration.Settings.Tools.ImportTextDurationAuto)
+            {
+                radioButtonDurationAuto.Checked = true;
+            }
+            else
+            {
+                radioButtonDurationFixed.Checked = true;
+            }
             numericUpDownDurationFixed.Enabled = radioButtonDurationFixed.Checked;
+            if (Configuration.Settings.Tools.ImportTextFixedDuration >= numericUpDownDurationFixed.Minimum && 
+                Configuration.Settings.Tools.ImportTextFixedDuration <= numericUpDownDurationFixed.Maximum)
+            {
+                numericUpDownDurationFixed.Value = Configuration.Settings.Tools.ImportTextFixedDuration;
+            }
             UiUtil.FixLargeFonts(this, buttonOK);
             _refreshTimer.Interval = 400;
             _refreshTimer.Tick += RefreshTimerTick;
@@ -766,8 +786,15 @@ namespace Nikse.SubtitleEdit.Forms
                 Configuration.Settings.Tools.ImportTextSplitting = "line";
             else
                 Configuration.Settings.Tools.ImportTextSplitting = "auto";
-            Configuration.Settings.Tools.ImportTextMergeShortLines = checkBoxMergeShortLines.Checked;
             Configuration.Settings.Tools.ImportTextLineBreak = comboBoxLineBreak.Text.Trim();
+            Configuration.Settings.Tools.ImportTextMergeShortLines = checkBoxMergeShortLines.Checked;
+            Configuration.Settings.Tools.ImportTextRemoveEmptyLines = checkBoxRemoveEmptyLines.Checked;
+            Configuration.Settings.Tools.ImportTextRemoveLinesNoLetters = checkBoxRemoveLinesWithoutLetters.Checked;
+            Configuration.Settings.Tools.ImportTextGenerateTimeCodes = checkBoxGenerateTimeCodes.Checked;
+            Configuration.Settings.Tools.ImportTextAutoBreak = checkBoxAutoBreak.Checked;
+            Configuration.Settings.Tools.ImportTextGap = numericUpDownGapBetweenLines.Value;
+            Configuration.Settings.Tools.ImportTextDurationAuto = radioButtonDurationAuto.Checked;
+            Configuration.Settings.Tools.ImportTextFixedDuration= numericUpDownDurationFixed.Value;
         }
 
         private void checkBoxMultipleFiles_CheckedChanged(object sender, EventArgs e)
