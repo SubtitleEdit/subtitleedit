@@ -9,6 +9,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     {
         private const string Separator = ",";
         private static readonly Regex TimeCodeRegex = new Regex(@"^\d\d:\d\d:\d\d\.\d\d$", RegexOptions.Compiled);
+        private static readonly char[] TimeCodeSplitChars = { ':', '.' };
 
         public override string Extension
         {
@@ -76,7 +77,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         {
                             try
                             {
-                                subtitle.Paragraphs.Add(new Paragraph(DecodeTimeCodeFrames(start, SplitCharColon), DecodeTimeCodeFrames(end, SplitCharColon), text));
+                                subtitle.Paragraphs.Add(new Paragraph(DecodeTimeCodeFrames(start, TimeCodeSplitChars), DecodeTimeCodeFrames(end, TimeCodeSplitChars), text));
                             }
                             catch
                             {
