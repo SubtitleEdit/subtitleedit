@@ -134,7 +134,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             xml.DocumentElement.SelectSingleNode("dcst:Language", nsmgr).InnerText = ss.CurrentDCinemaLanguage;
             if (ss.CurrentDCinemaEditRate == null && ss.CurrentDCinemaTimeCodeRate == null)
             {
-                if (Configuration.Settings.General.CurrentFrameRate == 24)
+                if (Math.Abs(Configuration.Settings.General.CurrentFrameRate - 24) < 0.01)
                 {
                     ss.CurrentDCinemaEditRate = "24 1";
                     ss.CurrentDCinemaTimeCodeRate = "24";
@@ -259,7 +259,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         XmlNode nodeTemp = xml.CreateElement("temp");
                         while (i < line.Length)
                         {
-                            if (!isItalic && line.Substring(i).StartsWith("<i>"))
+                            if (!isItalic && line.Substring(i).StartsWith("<i>", StringComparison.Ordinal))
                             {
                                 if (txt.Length > 0)
                                 {
@@ -270,7 +270,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 isItalic = true;
                                 i += 2;
                             }
-                            else if (isItalic && line.Substring(i).StartsWith("</i>"))
+                            else if (isItalic && line.Substring(i).StartsWith("</i>", StringComparison.Ordinal))
                             {
                                 if (txt.Length > 0)
                                 {
@@ -280,7 +280,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                     italic.InnerText = "yes";
                                     fontNode.Attributes.Append(italic);
 
-                                    if (line.Length > i + 5 && line.Substring(i + 4).StartsWith("</font>"))
+                                    if (line.Length > i + 5 && line.Substring(i + 4).StartsWith("</font>", StringComparison.Ordinal))
                                     {
                                         XmlAttribute fontColor = xml.CreateAttribute("Color");
                                         fontColor.InnerText = fontColors.Pop();
@@ -296,7 +296,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 isItalic = false;
                                 i += 3;
                             }
-                            else if (line.Substring(i).StartsWith("<font color=") && line.Substring(i + 3).Contains('>'))
+                            else if (line.Substring(i).StartsWith("<font color=", StringComparison.Ordinal) && line.Substring(i + 3).Contains('>'))
                             {
                                 int endOfFont = line.IndexOf('>', i);
                                 if (txt.Length > 0)
@@ -313,7 +313,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 fontNo++;
                                 i += endOfFont - i;
                             }
-                            else if (fontNo > 0 && line.Substring(i).StartsWith("</font>"))
+                            else if (fontNo > 0 && line.Substring(i).StartsWith("</font>", StringComparison.Ordinal))
                             {
                                 if (txt.Length > 0)
                                 {
@@ -323,7 +323,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                     fontColor.InnerText = fontColors.Pop();
                                     fontNode.Attributes.Append(fontColor);
 
-                                    if (line.Length > i + 9 && line.Substring(i + 7).StartsWith("</i>"))
+                                    if (line.Length > i + 9 && line.Substring(i + 7).StartsWith("</i>", StringComparison.Ordinal))
                                     {
                                         XmlAttribute italic = xml.CreateAttribute("Italic");
                                         italic.InnerText = "yes";
@@ -366,7 +366,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 fontNode.InnerText = HtmlUtil.RemoveHtmlTags(txt.ToString());
                                 html.Append(fontNode.OuterXml);
                             }
-                            else if (html.Length > 0 && html.ToString().StartsWith("<dcst:Font "))
+                            else if (html.Length > 0 && html.ToString().StartsWith("<dcst:Font ", StringComparison.Ordinal))
                             {
                                 XmlDocument temp = new XmlDocument();
                                 temp.LoadXml("<root>" + html.ToString().Replace("dcst:Font", "Font") + "</root>");
@@ -619,7 +619,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 }
                                 if (alignLeft || alignRight || alignVCenter || alignVTop)
                                 {
-                                    if (!pText.ToString().StartsWith("{\\an"))
+                                    if (!pText.ToString().StartsWith("{\\an", StringComparison.Ordinal))
                                     {
                                         string pre = string.Empty;
                                         if (alignVTop)
@@ -695,7 +695,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         !pText.ToString().Contains("<i>"))
                     {
                         string text = pText.ToString();
-                        if (text.StartsWith("{\\an") && text.Length > 6)
+                        if (text.StartsWith("{\\an", StringComparison.Ordinal) && text.Length > 6)
                             text = text.Insert(6, "<i>") + "</i>";
                         else
                             text = "<i>" + text + "</i>";
