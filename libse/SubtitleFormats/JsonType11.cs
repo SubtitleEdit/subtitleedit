@@ -66,12 +66,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     string text = Json.ReadTag(s, "line");
                     if (start != null && text != null)
                     {
-                        double startSeconds;
-                        if (double.TryParse(start, System.Globalization.NumberStyles.AllowDecimalPoint, System.Globalization.CultureInfo.InvariantCulture, out startSeconds))
+                        double startMilliseconds;
+                        if (double.TryParse(start, System.Globalization.NumberStyles.AllowDecimalPoint, System.Globalization.CultureInfo.InvariantCulture, out startMilliseconds))
                         {
                             var duration = Utilities.GetOptimalDisplayMilliseconds(text);
-                            var endMilliseconds = startSeconds * TimeCode.BaseUnit + duration;
-                            subtitle.Paragraphs.Add(new Paragraph(Json.DecodeJsonText(text), startSeconds * TimeCode.BaseUnit, endMilliseconds));
+                            var endMilliseconds = startMilliseconds + duration;
+                            subtitle.Paragraphs.Add(new Paragraph(Json.DecodeJsonText(text), startMilliseconds, endMilliseconds));
                         }
                         else
                         {
