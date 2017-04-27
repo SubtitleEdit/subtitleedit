@@ -5954,7 +5954,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 if (File.Exists(outputFileName))
                 {
-                    result = File.ReadAllText(outputFileName);
+                    result = File.ReadAllText(outputFileName, Encoding.UTF8);
                     result = ParseHocr(result);
                     File.Delete(outputFileName);
                 }

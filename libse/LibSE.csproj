@@ -216,6 +216,7 @@
     <Compile Include="Subtitle.cs" />
     <Compile Include="SubtitleFormats\AribB36.cs" />
     <Compile Include="SubtitleFormats\AribB24Decoder.cs" />
+    <Compile Include="SubtitleFormats\Csv5.cs" />
     <Compile Include="SubtitleFormats\JsonType11.cs" />
     <Compile Include="SubtitleFormats\SmpteTt2052.cs" />
     <Compile Include="SubtitleFormats\Ted20.cs" />
