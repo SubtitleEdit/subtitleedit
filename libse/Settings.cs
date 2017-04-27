@@ -169,8 +169,15 @@ namespace Nikse.SubtitleEdit.Core
         public bool FixCommonErrorsFixOverlapAllowEqualEndStart { get; set; }
         public bool FixCommonErrorsSkipStepOne { get; set; }
         public string ImportTextSplitting { get; set; }
-        public bool ImportTextMergeShortLines { get; set; }
         public string ImportTextLineBreak { get; set; }
+        public bool ImportTextMergeShortLines { get; set; }
+        public bool ImportTextRemoveEmptyLines { get; set; }
+        public bool ImportTextRemoveLinesNoLetters { get; set; }
+        public bool ImportTextGenerateTimeCodes { get; set; }
+        public bool ImportTextAutoBreak { get; set; }
+        public decimal ImportTextGap { get; set; }
+        public bool ImportTextDurationAuto { get; set; }
+        public decimal ImportTextFixedDuration { get; set; }
         public string GenerateTimeCodePatterns { get; set; }
         public string MusicSymbolStyle { get; set; }
         public int BridgeGapMilliseconds { get; set; }
@@ -1999,6 +2006,33 @@ namespace Nikse.SubtitleEdit.Core
             subNode = node.SelectSingleNode("ImportTextLineBreak");
             if (subNode != null)
                 settings.Tools.ImportTextLineBreak = subNode.InnerText;
+            subNode = node.SelectSingleNode("ImportTextMergeShortLines");
+            if (subNode != null)
+                settings.Tools.ImportTextMergeShortLines = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("ImportTextRemoveEmptyLines");
+            if (subNode != null)
+                settings.Tools.ImportTextRemoveEmptyLines = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("ImportTextRemoveLinesNoLetters");
+            if (subNode != null)
+                settings.Tools.ImportTextRemoveLinesNoLetters = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("ImportTextGenerateTimeCodes");
+            if (subNode != null)
+                settings.Tools.ImportTextGenerateTimeCodes = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("ImportTextAutoBreak");
+            if (subNode != null)
+                settings.Tools.ImportTextAutoBreak = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("ImportTextGap");
+            if (subNode != null)
+                settings.Tools.ImportTextGap = Convert.ToDecimal(subNode.InnerText);
+            subNode = node.SelectSingleNode("ImportTextDurationAuto");
+            if (subNode != null)
+                settings.Tools.ImportTextDurationAuto = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("ImportTextFixedDuration");
+            if (subNode != null)
+                settings.Tools.ImportTextFixedDuration = Convert.ToDecimal(subNode.InnerText);
+            subNode = node.SelectSingleNode("GenerateTimeCodePatterns");
+            if (subNode != null)
+                settings.Tools.GenerateTimeCodePatterns = subNode.InnerText;
             subNode = node.SelectSingleNode("GenerateTimeCodePatterns");
             if (subNode != null)
                 settings.Tools.GenerateTimeCodePatterns = subNode.InnerText;
@@ -3106,7 +3140,7 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("ShowToolbarRemoveTextForHi", settings.General.ShowToolbarRemoveTextForHi.ToString());
                 textWriter.WriteElementString("ShowToolbarVisualSync", settings.General.ShowToolbarVisualSync.ToString());
                 textWriter.WriteElementString("ShowToolbarSpellCheck", settings.General.ShowToolbarSpellCheck.ToString());
-                textWriter.WriteElementString("ShowToolbarNetflixGlyphCheck", settings.General.ShowToolbarNetflixGlyphCheck.ToString()); 
+                textWriter.WriteElementString("ShowToolbarNetflixGlyphCheck", settings.General.ShowToolbarNetflixGlyphCheck.ToString());
                 textWriter.WriteElementString("ShowToolbarSettings", settings.General.ShowToolbarSettings.ToString());
                 textWriter.WriteElementString("ShowToolbarHelp", settings.General.ShowToolbarHelp.ToString());
                 textWriter.WriteElementString("ShowFrameRate", settings.General.ShowFrameRate.ToString());
@@ -3118,7 +3152,7 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("DefaultSubtitleFormat", settings.General.DefaultSubtitleFormat);
                 textWriter.WriteElementString("DefaultEncoding", settings.General.DefaultEncoding);
                 textWriter.WriteElementString("AutoConvertToUtf8", settings.General.AutoConvertToUtf8.ToString());
-                textWriter.WriteElementString("WriteUtf8Bom", settings.General.WriteUtf8Bom.ToString());                
+                textWriter.WriteElementString("WriteUtf8Bom", settings.General.WriteUtf8Bom.ToString());
                 textWriter.WriteElementString("AutoGuessAnsiEncoding", settings.General.AutoGuessAnsiEncoding.ToString());
                 textWriter.WriteElementString("_subtitleFontName", settings.General.SubtitleFontName);
                 textWriter.WriteElementString("SubtitleFontSize", settings.General.SubtitleFontSize.ToString(CultureInfo.InvariantCulture));
@@ -3144,9 +3178,9 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("SetStartEndHumanDelay", settings.General.SetStartEndHumanDelay.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AutoWrapLineWhileTyping", settings.General.AutoWrapLineWhileTyping.ToString());
                 textWriter.WriteElementString("SubtitleMaximumCharactersPerSeconds", settings.General.SubtitleMaximumCharactersPerSeconds.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("SubtitleOptimalCharactersPerSeconds", settings.General.SubtitleOptimalCharactersPerSeconds.ToString(CultureInfo.InvariantCulture));                
+                textWriter.WriteElementString("SubtitleOptimalCharactersPerSeconds", settings.General.SubtitleOptimalCharactersPerSeconds.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("CharactersPerSecondsIgnoreWhiteSpace", settings.General.CharactersPerSecondsIgnoreWhiteSpace.ToString());
-                textWriter.WriteElementString("SubtitleMaximumWordsPerMinute", settings.General.SubtitleMaximumWordsPerMinute.ToString(CultureInfo.InvariantCulture));                
+                textWriter.WriteElementString("SubtitleMaximumWordsPerMinute", settings.General.SubtitleMaximumWordsPerMinute.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("SpellCheckLanguage", settings.General.SpellCheckLanguage);
                 textWriter.WriteElementString("VideoPlayer", settings.General.VideoPlayer);
                 textWriter.WriteElementString("VideoPlayerDefaultVolume", settings.General.VideoPlayerDefaultVolume.ToString(CultureInfo.InvariantCulture));
@@ -3311,6 +3345,15 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("ImportTextSplitting", settings.Tools.ImportTextSplitting);
                 textWriter.WriteElementString("ImportTextMergeShortLines", settings.Tools.ImportTextMergeShortLines.ToString());
                 textWriter.WriteElementString("ImportTextLineBreak", settings.Tools.ImportTextLineBreak);
+                textWriter.WriteElementString("ImportTextMergeShortLines", settings.Tools.ImportTextMergeShortLines.ToString());
+                textWriter.WriteElementString("ImportTextRemoveEmptyLines", settings.Tools.ImportTextRemoveEmptyLines.ToString());
+                textWriter.WriteElementString("ImportTextRemoveLinesNoLetters", settings.Tools.ImportTextRemoveLinesNoLetters.ToString());
+                textWriter.WriteElementString("ImportTextGenerateTimeCodes", settings.Tools.ImportTextGenerateTimeCodes.ToString());
+                textWriter.WriteElementString("ImportTextAutoBreak", settings.Tools.ImportTextAutoBreak.ToString());
+                textWriter.WriteElementString("ImportTextGap", settings.Tools.ImportTextGap.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ImportTextDurationAuto", settings.Tools.ImportTextDurationAuto.ToString());
+                textWriter.WriteElementString("ImportTextFixedDuration", settings.Tools.ImportTextFixedDuration.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("GenerateTimeCodePatterns", settings.Tools.GenerateTimeCodePatterns);
                 textWriter.WriteElementString("GenerateTimeCodePatterns", settings.Tools.GenerateTimeCodePatterns);
                 textWriter.WriteElementString("MusicSymbolStyle", settings.Tools.MusicSymbolStyle);
                 textWriter.WriteElementString("BridgeGapMilliseconds", settings.Tools.BridgeGapMilliseconds.ToString(CultureInfo.InvariantCulture));
