@@ -1921,42 +1921,39 @@ namespace Nikse.SubtitleEdit.Forms
                     return;
                 }
 
-                if (ext == ".mxf")
+                if (ext == ".mxf" && FileUtil.IsMaterialExchangeFormat(fileName))
                 {
-                    if (FileUtil.IsMaterialExchangeFormat(fileName))
+                    var parser = new MxfParser(fileName);
+                    if (parser.IsValid)
                     {
-                        var parser = new MxfParser(fileName);
-                        if (parser.IsValid)
+                        var subtitles = parser.GetSubtitles();
+                        if (subtitles.Count > 0)
                         {
-                            var subtitles = parser.GetSubtitles();
-                            if (subtitles.Count > 0)
-                            {
-                                SetEncoding(Configuration.Settings.General.DefaultEncoding);
-                                var list = new List<string>(subtitles[0].SplitToLines());
-                                _subtitle = new Subtitle();
-                                var mxfFormat = _subtitle.ReloadLoadSubtitle(list, null, null);
-                                SetCurrentFormat(mxfFormat);
-                                _fileName = Path.GetFileNameWithoutExtension(fileName);
-                                SetTitle();
-                                ShowStatus(string.Format(_language.LoadedSubtitleX, _fileName));
-                                _sourceViewChange = false;
-                                _changeSubtitleToString = _subtitle.GetFastHashCode();
-                                ResetHistory();
-                                SetUndockedWindowsTitle();
-                                _converted = true;
-                                ShowStatus(string.Format(_language.LoadedSubtitleX, _fileName) + " - " + string.Format(_language.ConvertedToX, mxfFormat.FriendlyName));
+                            SetEncoding(Configuration.Settings.General.DefaultEncoding);
+                            var list = new List<string>(subtitles[0].SplitToLines());
+                            _subtitle = new Subtitle();
+                            var mxfFormat = _subtitle.ReloadLoadSubtitle(list, null, null);
+                            SetCurrentFormat(mxfFormat);
+                            _fileName = Path.GetFileNameWithoutExtension(fileName);
+                            SetTitle();
+                            ShowStatus(string.Format(_language.LoadedSubtitleX, _fileName));
+                            _sourceViewChange = false;
+                            _changeSubtitleToString = _subtitle.GetFastHashCode();
+                            ResetHistory();
+                            SetUndockedWindowsTitle();
+                            _converted = true;
+                            ShowStatus(string.Format(_language.LoadedSubtitleX, _fileName) + " - " + string.Format(_language.ConvertedToX, mxfFormat.FriendlyName));
 
-                                ShowSource();
-                                SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
-                                _subtitleListViewIndex = -1;
-                                SubtitleListview1.FirstVisibleIndex = -1;
-                                SubtitleListview1.SelectIndexAndEnsureVisible(0);
+                            ShowSource();
+                            SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+                            _subtitleListViewIndex = -1;
+                            SubtitleListview1.FirstVisibleIndex = -1;
+                            SubtitleListview1.SelectIndexAndEnsureVisible(0);
 
-                                return;
-                            }
-                            MessageBox.Show("No subtitles found!");
                             return;
                         }
+                        MessageBox.Show("No subtitles found!");
+                        return;
                     }
                 }
 

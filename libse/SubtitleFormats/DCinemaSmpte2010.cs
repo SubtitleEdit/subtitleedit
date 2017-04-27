@@ -468,9 +468,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         internal static string FixDcsTextSameLine(string xml)
         {
             int index = xml.IndexOf("<dcst:Text", StringComparison.Ordinal);
-            while (index > 0)
+            int endIndex = 1;
+            while (index > 0 && endIndex > 0)
             {
-                int endIndex = xml.IndexOf("</dcst:Text>", index, StringComparison.Ordinal);
+                endIndex = xml.IndexOf("</dcst:Text>", index, StringComparison.Ordinal);
                 if (endIndex > 0)
                 {
                     var part = xml.Substring(index, endIndex - index);
