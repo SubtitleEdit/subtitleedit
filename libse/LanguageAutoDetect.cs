@@ -138,6 +138,7 @@ namespace Nikse.SubtitleEdit.Core
 
         private static readonly string[] AutoDetectWordsLatvian = { "Paldies", "neesmu ", "nezinu", "viòð", "viņš", "viņu", "kungs", "esmu", "Viņš", "Velns", "viņa", "dievs", "Pagaidi", "varonis", "agrāk", "varbūt" };
         private static readonly string[] AutoDetectWordsLithuanian = { "tavęs", "veidai", "apie", "jums", "Veidai", "Kaip", "kaip", "reikia", "Šūdas", "frensis", "Ačiū", "vilsonai", "Palauk", "Veidas", "viskas", "Tikrai", "manęs", "Tačiau", "žmogau", "Flagai", "Prašau", "Džiune", "Nakties", "šviesybe", "Supratau", "komanda", "reikia", "apie", "Kodėl", "mūsų", "Ačiū", "vyksta" };
+        private static readonly string[] AutoDetectWordsHindi = { "एक", "और", "को", "का", "यह", "सकते", "लिए", "करने", "भारतीय", "सकता", "भारत", "तकनीक", "कंप्यूटिंग", "उपकरण", "भाषाओं", "भाषा", "कंप्यूटर", "आप", "आपको", "अपने", "लेकिन", "करना", "सकता", "बहुत", "चाहते", "अच्छा", "वास्तव", "लगता", "इसलिए", "शेल्डन", "धन्यवाद।", "तरह", "करता", "चाहता", "कोशिश", "करते", "किया", "अजीब", "सिर्फ", "शुरू" };
 
         private static string AutoDetectGoogleLanguage(string text, int bestCount)
         {
@@ -320,6 +321,10 @@ namespace Nikse.SubtitleEdit.Core
             count = GetCount(text, AutoDetectWordsLithuanian);
             if (count > bestCount)
                 return "lt";
+
+            count = GetCount(text, AutoDetectWordsHindi);
+            if (count > bestCount * 1.2)
+                return "hi";
 
             return string.Empty;
         }
@@ -577,6 +582,12 @@ namespace Nikse.SubtitleEdit.Core
                     case "lt_LT": // Lithuanian
                     case "lt":    // Lithuanian (Neutral)
                         count = GetCount(text, AutoDetectWordsLithuanian);
+                        if (count > bestCount)
+                            languageName = shortName;
+                        break;
+                    case "hi_IN": // Hindi
+                    case "hi":
+                        count = GetCount(text, AutoDetectWordsHindi);
                         if (count > bestCount)
                             languageName = shortName;
                         break;
