@@ -4,7 +4,7 @@
     <Title>Subtitle Edit</Title>
     <Version>3.5.2</Version>
     <TranslatedBy>Перевод на русский: Leserg (mailto:leserg@ua.fm)
-Дополнения и последующие доработки перевода: Elheym (http://forum.hqclub.net/) (https://hdclub.org/)</TranslatedBy>
+Послед. дополнения перевода: Elheym (http://forum.hqclub.net/) (https://hdclub.org/)</TranslatedBy>
     <CultureName>ru-RU</CultureName>
     <HelpFile>http://www.nikse.dk/Content/SubtitleEdit/Help/RU/</HelpFile>
     <Ok>OK</Ok>
@@ -27,6 +27,8 @@
     <Duration>Длина</Duration>
     <CharsPerSec>Симв./сек.</CharsPerSec>
     <WordsPerMin>Слов/мин.</WordsPerMin>
+    <Actor>Актер</Actor>
+    <Region>Регион</Region>
     <NumberSymbol>№</NumberSymbol>
     <Number>Номер</Number>
     <Text>Текст</Text>
@@ -1075,8 +1077,10 @@ https://github.com/SubtitleEdit/subtitleedit
         <SizeAllColumnsToFit>Подогнать по длине</SizeAllColumnsToFit>
         <AdvancedSubStationAlphaSetStyle>Настройка Sub Station Alpha - установка стиля</AdvancedSubStationAlphaSetStyle>
         <SubStationAlphaSetStyle>Sub Station Alpha - установка стиля</SubStationAlphaSetStyle>
+        <SetActor>Указать актера</SetActor>
         <SubStationAlphaStyles>Стили Sub Station Alpha...</SubStationAlphaStyles>
         <AdvancedSubStationAlphaStyles>Настройка стилей Sub Station Alpha...</AdvancedSubStationAlphaStyles>
+        <TimedTextSetRegion>Временной текст - установка региона</TimedTextSetRegion>
         <TimedTextSetStyle>Синхронный текст - установка стиля</TimedTextSetStyle>
         <TimedTextStyles>Стили синхронного текста...</TimedTextStyles>
         <TimedTextSetLanguage>Синхронный текст - установка языка</TimedTextSetLanguage>
@@ -1126,6 +1130,8 @@ https://github.com/SubtitleEdit/subtitleedit
         <SaveSelectedLines>Сохранить выделенные строки как...</SaveSelectedLines>
         <WebVTTSetNewVoice>Задать новый голос...</WebVTTSetNewVoice>
         <WebVTTRemoveVoices>Удалить голоса</WebVTTRemoveVoices>
+        <NewActor>Новый актер...</NewActor>
+        <RemoveActors>Удалить актеров</RemoveActors>
       </ContextMenu>
     </Menu>
     <Controls>
@@ -1549,7 +1555,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <Rules>Экспорт правил</Rules>
     <MoveToTop>Поднять на самый верх</MoveToTop>
     <MoveToBottom>Опустить в самый низ</MoveToBottom>
-    <MoveSelectedRulesToGroup>Применить выбранные правила к группе</MoveSelectedRulesToGroup>
+    <MoveSelectedRulesToGroup>Переместить выбранное правило в группу</MoveSelectedRulesToGroup>
     <Groups>Группы</Groups>
     <RulesForGroupX>Правила для группы "{0}"</RulesForGroupX>
     <GroupName>Название группы</GroupName>
@@ -1719,6 +1725,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <SubtitleFont>Шрифт субтитров</SubtitleFont>
     <SubtitleFontSize>Размер шрифта субтитров</SubtitleFontSize>
     <SubtitleBold>Полужирный</SubtitleBold>
+    <VideoAutoOpen>Автоматически открывать видеофайл при открытии субтитров</VideoAutoOpen>
     <SubtitleCenter>По центру</SubtitleCenter>
     <SubtitleFontColor>Цвет шрифта субтитров</SubtitleFontColor>
     <SubtitleBackgroundColor>Цвет фона субтитров</SubtitleBackgroundColor>
@@ -1946,6 +1953,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <MainTextBoxUnbreak>Отменить перенос текста</MainTextBoxUnbreak>
     <MainFileSaveAll>Сохранить все</MainFileSaveAll>
     <Miscellaneous>Разное</Miscellaneous>
+    <CpsIncludesSpace>Символов/сек (CPS) включая пробелы</CpsIncludesSpace>
     <UseDoNotBreakAfterList>Применить список исключений (для автопереноса)</UseDoNotBreakAfterList>
     <MicrosoftBingTranslator>Переводчик Microsoft Bing</MicrosoftBingTranslator>
     <HowToSignUp>Как зарегистрироваться</HowToSignUp>
@@ -2013,14 +2021,11 @@ https://github.com/SubtitleEdit/subtitleedit
     <UndoX>Отменить: {0}</UndoX>
   </SpellCheck>
   <NetflixQualityCheck>
-    <GlyphCheckSuccessfull>Проверка символов прошла успешно.</GlyphCheckSuccessfull>
-    <GlyphCheckFailed>Не удалось проверить символы.</GlyphCheckFailed>
     <GlyphCheckReport>Недопустимых символов {0} найдено в столбце {1}</GlyphCheckReport>
-    <WhiteSpaceCheckSuccessfull>Проверка пробелов прошла успешно.</WhiteSpaceCheckSuccessfull>
-    <WhiteSpaceCheckFailed>Не удалось проверить пробелы.</WhiteSpaceCheckFailed>
     <WhiteSpaceCheckReport>Недопустимых пробелов найдено в столбце {0}.</WhiteSpaceCheckReport>
     <ReportPrompt>См. Полный отчет здесь: {0}.</ReportPrompt>
-    <SavingError>Отчёт не может быть сохранён.</SavingError>
+    <FoundXIssues>Проверка качества Netflix нашла {0} проблем.</FoundXIssues>
+    <CheckOk>Проверка качества Netflix OK :)</CheckOk>
   </NetflixQualityCheck>
   <Split>
     <Title>Разделить</Title>
