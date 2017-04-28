@@ -692,6 +692,7 @@
     <Word from="ubedjuju" to="uvjeravaju" />
     <Word from="uceni" to="učeni" />
     <Word from="uopce" to="uopće" />
+    <Word from="ugriscu" to="ugrist ću" />
     <Word from="Uopce" to="Uopće" />
     <Word from="Uopste" to="Uopće" />
     <Word from="uopste" to="uopće" />
@@ -764,7 +765,6 @@
     <Word from="zita" to="žita" />
     <Word from="zito" to="žito" />
     <Word from="zitu" to="žitu" />
-    <Word from="zvanican" to="služben" />
     <Word from="ziv" to="živ" />
     <Word from="ziva" to="živa" />
     <Word from="zive" to="žive" />
@@ -773,6 +773,7 @@
     <Word from="Živeo" to="Živio" />
     <Word from="zivjeo" to="živio" />
     <Word from="Zivjeo" to="Živio" />
+    <Word from="zmureo" to="žmirio" />
     <Word from="znacaj" to="značaj" />
     <Word from="znacaja" to="značaja" />
     <Word from="znace" to="znače" />
@@ -780,6 +781,8 @@
     <Word from="znas" to="znaš" />
     <Word from="Znas" to="Znaš" />
     <Word from="zuris" to="zuriš" />
+    <Word from="zvanican" to="služben" />
+
   </WholeWords>
   <PartialWordsAlways />
   <PartialWords />
