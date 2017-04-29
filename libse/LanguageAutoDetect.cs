@@ -389,8 +389,7 @@ namespace Nikse.SubtitleEdit.Core
                         if (count > bestCount)
                         {
                             int norwegianCount = GetCount(text, "ut", "deg", "meg", "merkelig", "mye", "spørre");
-                            int dutchCount = GetCount(text, AutoDetectWordsDutch);
-                            if (norwegianCount < 2 && dutchCount < count)
+                            if (norwegianCount < 2 && GetCount(text, AutoDetectWordsDutch) < count)
                                 languageName = shortName;
                         }
                         break;
@@ -399,9 +398,10 @@ namespace Nikse.SubtitleEdit.Core
                         if (count > bestCount)
                         {
                             int danishCount = GetCount(text, "siger", "dig", "mig", "mærkelig", "tilbage", "spørge");
-                            int dutchCount = GetCount(text, AutoDetectWordsDutch);
-                            if (danishCount < 2 && dutchCount < count)
+                            if (danishCount < 2 && GetCount(text, AutoDetectWordsDutch) < count)
+                            {
                                 languageName = shortName;
+                            }
                         }
                         break;
                     case "sv_SE":
@@ -411,19 +411,15 @@ namespace Nikse.SubtitleEdit.Core
                         break;
                     case "en_US":
                         count = GetCount(text, AutoDetectWordsEnglish);
-                        if (count > bestCount)
+                        if (count > bestCount && GetCount(text, AutoDetectWordsDutch) < count)
                         {
-                            int dutchCount = GetCount(text, AutoDetectWordsDutch);
-                            if (dutchCount < count)
+                            languageName = shortName;
+                            if (containsEnGb)
                             {
-                                languageName = shortName;
-                                if (containsEnGb)
-                                {
-                                    int usCount = GetCount(text, "color", "flavor", "honor", "humor", "neighbor", "honor");
-                                    int gbCount = GetCount(text, "colour", "flavour", "honour", "humour", "neighbour", "honour");
-                                    if (gbCount > usCount)
-                                        languageName = "en_GB";
-                                }
+                                int usCount = GetCount(text, "color", "flavor", "honor", "humor", "neighbor", "honor");
+                                int gbCount = GetCount(text, "colour", "flavour", "honour", "humour", "neighbour", "honour");
+                                if (gbCount > usCount)
+                                    languageName = "en_GB";
                             }
                         }
                         break;
@@ -450,10 +446,14 @@ namespace Nikse.SubtitleEdit.Core
                         if (count > bestCount)
                         {
                             int frenchCount = GetCount(text, "[Cc]'est", "pas", "vous", "pour", "suis", "Pourquoi", "maison", "souviens", "quelque"); // not spanish words
-                            int portugueseCount = GetCount(text, "[NnCc]ão", "Então", "h?ouve", "pessoal", "rapariga", "tivesse", "fizeste",
-                                                                 "jantar", "conheço", "atenção", "foste", "milhões", "devias", "ganhar", "raios"); // not spanish words
-                            if (frenchCount < 2 && portugueseCount < 2)
-                                languageName = shortName;
+                            if (frenchCount < 2)
+                            {
+                                int portugueseCount = GetCount(text, "[NnCc]ão", "Então", "h?ouve", "pessoal", "rapariga", "tivesse", "fizeste", "jantar", "conheço", "atenção", "foste", "milhões", "devias", "ganhar", "raios"); // not spanish words
+                                if (portugueseCount < 2)
+                                {
+                                    languageName = shortName;
+                                }
+                            }
                         }
                         break;
                     case "it_IT":
@@ -461,9 +461,14 @@ namespace Nikse.SubtitleEdit.Core
                         if (count > bestCount)
                         {
                             int frenchCount = GetCount(text, "[Cc]'est", "pas", "vous", "pour", "suis", "Pourquoi", "maison", "souviens", "quelque"); // not italian words
-                            int spanishCount = GetCount(text, "Hola", "nada", "Vamos", "pasa", "los", "como"); // not italian words
-                            if (frenchCount < 2 && spanishCount < 2)
-                                languageName = shortName;
+                            if (frenchCount < 2)
+                            {
+                                int spanishCount = GetCount(text, "Hola", "nada", "Vamos", "pasa", "los", "como"); // not italian words
+                                if (spanishCount < 2)
+                                {
+                                    languageName = shortName;
+                                }
+                            }
                         }
                         break;
                     case "fr_FR":
@@ -471,10 +476,14 @@ namespace Nikse.SubtitleEdit.Core
                         if (count > bestCount)
                         {
                             int romanianCount = GetCount(text, "[Vv]reau", "[Ss]înt", "[Aa]cum", "pentru", "domnule", "aici");
-                            int spanishCount = GetCount(text, "Hola", "nada", "Vamos", "pasa", "los", "como"); // not french words
-                            int italianCount = GetCount(text, AutoDetectWordsItalian);
-                            if (romanianCount < 5 && spanishCount < 2 && italianCount < 2)
-                                languageName = shortName;
+                            if (romanianCount < 5)
+                            {
+                                int spanishCount = GetCount(text, "Hola", "nada", "Vamos", "pasa", "los", "como"); // not french words
+                                if (spanishCount < 2 && GetCount(text, AutoDetectWordsItalian) < 2)
+                                {
+                                    languageName = shortName;
+                                }
+                            }
                         }
                         break;
                     case "de_DE":
