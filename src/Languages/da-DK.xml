@@ -27,6 +27,7 @@
     <CharsPerSec>Tegn/sek</CharsPerSec>
     <WordsPerMin>Ord/min</WordsPerMin>
     <Actor>Taler</Actor>
+    <Region>Region</Region>
     <NumberSymbol>#</NumberSymbol>
     <Number>Antal</Number>
     <Text>Tekst</Text>
@@ -1069,6 +1070,7 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
         <SetActor>Vælg taler</SetActor>
         <SubStationAlphaStyles>Sub Station Alpha stilarter...</SubStationAlphaStyles>
         <AdvancedSubStationAlphaStyles>Advanced Sub Station Alpha stilarter...</AdvancedSubStationAlphaStyles>
+        <TimedTextSetRegion>Timed Text - Sæt region</TimedTextSetRegion>
         <TimedTextSetStyle>Timed Text - sæt style</TimedTextSetStyle>
         <TimedTextStyles>Timed Text styles...</TimedTextStyles>
         <TimedTextSetLanguage>Timed Text - vælg sprog</TimedTextSetLanguage>
