@@ -15923,7 +15923,7 @@ namespace Nikse.SubtitleEdit.Forms
                 SubtitleFormat format = GetCurrentSubtitleFormat();
                 if (format != null)
                 {
-                    if (GetCurrentSubtitleFormat().IsFrameBased)
+                    if (format.IsFrameBased)
                         _subtitle.CalculateTimeCodesFromFrameNumbers(CurrentFrameRate);
                     else
                         _subtitle.CalculateFrameNumbersFromTimeCodes(CurrentFrameRate);
