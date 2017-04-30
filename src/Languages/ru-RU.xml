@@ -2347,6 +2347,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <RemoveSceneChange>Удалить изменение сцены</RemoveSceneChange>
     <GuessTimeCodes>Распознать таймкоды...</GuessTimeCodes>
     <SeekSilence>Поиск пауз...</SeekSilence>
+    <InsertSubtitleHere>Вставить субтитр здесь...</InsertSubtitleHere>
     <CharsSecX>Симв./сек.: {0:0.00}</CharsSecX>
     <WordsMinX>Слов/мин.: {0:0.00}</WordsMinX>
   </Waveform>
