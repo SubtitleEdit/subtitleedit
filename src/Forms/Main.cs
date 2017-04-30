@@ -1476,6 +1476,7 @@ namespace Nikse.SubtitleEdit.Forms
             showOnlyWaveformToolStripMenuItem.Text = languageWaveform.ShowWaveformOnly;
             showOnlySpectrogramToolStripMenuItem.Text = languageWaveform.ShowSpectrogramOnly;
             seekSilenceToolStripMenuItem.Text = languageWaveform.SeekSilence;
+            insertSubtitleHereToolStripMenuItem.Text = languageWaveform.InsertSubtitleHere;
             guessTimeCodesToolStripMenuItem.Text = languageWaveform.GuessTimeCodes;
             removeSceneChangeToolStripMenuItem.Text = languageWaveform.RemoveSceneChange;
             addSceneChangeToolStripMenuItem.Text = languageWaveform.AddSceneChange;
@@ -18600,6 +18601,7 @@ namespace Nikse.SubtitleEdit.Forms
                 showOnlySpectrogramToolStripMenuItem.Visible = false;
                 toolStripSeparatorGuessTimeCodes.Visible = false;
             }
+            insertSubtitleHereToolStripMenuItem.Visible = _subtitle.Paragraphs.Count == 0 || _subtitle.Paragraphs[_subtitle.Paragraphs.Count - 1].EndTime.TotalSeconds < mediaPlayer.CurrentPosition;
         }
 
         private void ShowWaveformAndSpectrogramToolStripMenuItemClick(object sender, EventArgs e)
@@ -21024,5 +21026,56 @@ namespace Nikse.SubtitleEdit.Forms
         {
             NetflixGlyphCheck();
         }
+
+        private void insertSubtitleHereToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            openFileDialog1.Title = _languageGeneral.OpenSubtitle;
+            openFileDialog1.FileName = string.Empty;
+            openFileDialog1.Filter = UiUtil.SubtitleExtensionFilter.Value;
+            if (openFileDialog1.ShowDialog(this) == DialogResult.OK && File.Exists(openFileDialog1.FileName))
+            {
+                var fi = new FileInfo(openFileDialog1.FileName);
+                if (fi.Length > 1024 * 1024 * 10) // max 10 mb
+                {
+                    var text = string.Format(_language.FileXIsLargerThan10MB + Environment.NewLine + Environment.NewLine + _language.ContinueAnyway, openFileDialog1.FileName);
+                    if (MessageBox.Show(this, text, Title, MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
+                        return;
+                }
+
+                Encoding encoding;
+                var subtitle = new Subtitle();
+                SubtitleFormat format = subtitle.LoadSubtitle(openFileDialog1.FileName, out encoding, null);
+                if (format != null && subtitle.Paragraphs.Count > 0)
+                {
+                    MakeHistoryForUndo(string.Format(_language.BeforeInsertSubtitleAtVideoPosition, openFileDialog1.FileName));
+                    SaveSubtitleListviewIndices();
+                    if (format.IsFrameBased)
+                        subtitle.CalculateTimeCodesFromFrameNumbers(CurrentFrameRate);
+                    else
+                        subtitle.CalculateFrameNumbersFromTimeCodes(CurrentFrameRate);
+
+                    if (Configuration.Settings.General.RemoveBlankLinesWhenOpening)
+                        subtitle.RemoveEmptyLines();
+
+                    int index = FirstSelectedIndex + 1;
+                    if (index < 0)
+                        index = 0;
+                    var adjustment = mediaPlayer.CurrentPosition - subtitle.Paragraphs[0].StartTime.TotalSeconds;
+                    if (adjustment < 0)
+                        adjustment = 0;
+                    foreach (var p in subtitle.Paragraphs)
+                    {
+                        p.Adjust(1.0d, adjustment);
+                        _subtitle.Paragraphs.Insert(index, new Paragraph(p));
+                        index++;
+                    }
+                    _subtitle.Renumber();
+                    ShowSource();
+                    SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+                    RestoreSubtitleListviewIndices();
+                }
+            }
+        }
+
     }
 }

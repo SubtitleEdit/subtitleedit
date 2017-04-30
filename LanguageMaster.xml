@@ -2326,6 +2326,7 @@ Keep changes?</KeepChangesMessage>
     <RemoveSceneChange>Remove scene change</RemoveSceneChange>
     <GuessTimeCodes>Guess time codes...</GuessTimeCodes>
     <SeekSilence>Seek silence...</SeekSilence>
+    <InsertSubtitleHere>Insert subtitle here...</InsertSubtitleHere>
     <CharsSecX>CPS: {0:0.00}</CharsSecX>
     <WordsMinX>WPM: {0:0.00}</WordsMinX>
   </Waveform>
