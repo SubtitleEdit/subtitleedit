@@ -6277,6 +6277,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Waveform/SeekSilence":
                     language.Waveform.SeekSilence = reader.Value;
                     break;
+                case "Waveform/InsertSubtitleHere":
+                    language.Waveform.InsertSubtitleHere = reader.Value;
+                    break;
                 case "Waveform/CharsSecX":
                     language.Waveform.CharsSecX = reader.Value;
                     break;

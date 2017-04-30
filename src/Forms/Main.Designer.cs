@@ -252,6 +252,7 @@
             this.setStylesForSelectedLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.setActorForSelectedLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemAssStyles = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemSetRegion = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemSetLanguage = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemWebVTT = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemDelete = new System.Windows.Forms.ToolStripMenuItem();
@@ -473,7 +474,7 @@
             this.imageListPlayRate = new System.Windows.Forms.ImageList(this.components);
             this.timerTextUndo = new System.Windows.Forms.Timer(this.components);
             this.timerAlternateTextUndo = new System.Windows.Forms.Timer(this.components);
-            this.toolStripMenuItemSetRegion = new System.Windows.Forms.ToolStripMenuItem();
+            this.insertSubtitleHereToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -2346,7 +2347,7 @@
             this.changeCasingForSelectedLinesToolStripMenuItem,
             this.toolStripMenuItemSaveSelectedLines});
             this.contextMenuStripListview.Name = "contextMenuStripListview";
-            this.contextMenuStripListview.Size = new System.Drawing.Size(285, 870);
+            this.contextMenuStripListview.Size = new System.Drawing.Size(285, 848);
             this.contextMenuStripListview.Closed += new System.Windows.Forms.ToolStripDropDownClosedEventHandler(this.MenuClosed);
             this.contextMenuStripListview.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripListviewOpening);
             this.contextMenuStripListview.Opened += new System.EventHandler(this.MenuOpened);
@@ -2369,6 +2370,12 @@
             this.toolStripMenuItemAssStyles.Size = new System.Drawing.Size(284, 22);
             this.toolStripMenuItemAssStyles.Text = "ASS: Styles...";
             this.toolStripMenuItemAssStyles.Click += new System.EventHandler(this.toolStripMenuItemAssStyles_Click);
+            // 
+            // toolStripMenuItemSetRegion
+            // 
+            this.toolStripMenuItemSetRegion.Name = "toolStripMenuItemSetRegion";
+            this.toolStripMenuItemSetRegion.Size = new System.Drawing.Size(284, 22);
+            this.toolStripMenuItemSetRegion.Text = "Timed text - set region";
             // 
             // toolStripMenuItemSetLanguage
             // 
@@ -3721,9 +3728,10 @@
             this.removeSceneChangeToolStripMenuItem,
             this.addSceneChangeToolStripMenuItem,
             this.guessTimeCodesToolStripMenuItem,
-            this.seekSilenceToolStripMenuItem});
+            this.seekSilenceToolStripMenuItem,
+            this.insertSubtitleHereToolStripMenuItem});
             this.contextMenuStripWaveform.Name = "contextMenuStripWaveform";
-            this.contextMenuStripWaveform.Size = new System.Drawing.Size(275, 352);
+            this.contextMenuStripWaveform.Size = new System.Drawing.Size(275, 396);
             this.contextMenuStripWaveform.Closing += new System.Windows.Forms.ToolStripDropDownClosingEventHandler(this.contextMenuStripWaveform_Closing);
             this.contextMenuStripWaveform.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripWaveformOpening);
             // 
@@ -4597,11 +4605,12 @@
             this.timerAlternateTextUndo.Interval = 700;
             this.timerAlternateTextUndo.Tick += new System.EventHandler(this.TimerAlternateTextUndoTick);
             // 
-            // toolStripMenuItemSetRegion
+            // insertSubtitleHereToolStripMenuItem
             // 
-            this.toolStripMenuItemSetRegion.Name = "toolStripMenuItemSetRegion";
-            this.toolStripMenuItemSetRegion.Size = new System.Drawing.Size(284, 22);
-            this.toolStripMenuItemSetRegion.Text = "Timed text - set region";
+            this.insertSubtitleHereToolStripMenuItem.Name = "insertSubtitleHereToolStripMenuItem";
+            this.insertSubtitleHereToolStripMenuItem.Size = new System.Drawing.Size(274, 22);
+            this.insertSubtitleHereToolStripMenuItem.Text = "Insert subtitle here...";
+            this.insertSubtitleHereToolStripMenuItem.Click += new System.EventHandler(this.insertSubtitleHereToolStripMenuItem_Click);
             // 
             // Main
             // 
@@ -5120,5 +5129,6 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemEdl;
         private System.Windows.Forms.ToolStripMenuItem setActorForSelectedLinesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSetRegion;
+        private System.Windows.Forms.ToolStripMenuItem insertSubtitleHereToolStripMenuItem;
     }
 }

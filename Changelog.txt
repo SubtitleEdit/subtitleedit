@@ -25,6 +25,7 @@
    * Export image margins are now percentage - thx aaaxx/gorgorias
    * Added "Clear shortcut" button to settings - thx Simon
    * "Import plain text" now rembembers options - thx Leon
+   * "Insert subtitle here..." added to waveform context menu
 * FIXED:
    * Fixed crash in "Add to user dictionary" in OCR - thx alfix0
    * Fixed original file name bug in "Undo" - thx darnn
