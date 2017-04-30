@@ -172,11 +172,6 @@ namespace Nikse.SubtitleEdit.Core
             _totalMilliseconds += timeSpan.TotalMilliseconds;
         }
 
-        public void AddTime(double milliseconds)
-        {
-            _totalMilliseconds += milliseconds;
-        }
-
         public override string ToString()
         {
             return ToString(false);
