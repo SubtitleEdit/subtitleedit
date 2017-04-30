@@ -67,7 +67,7 @@ namespace Test.Core
         public void FixInvalidItalicTags2()
         {
             string s = "<i>foobar?" + Environment.NewLine + "<i>foobar?";
-            Assert.AreEqual("<i>foobar?</i>" + Environment.NewLine + "<i>foobar?</i>", HtmlUtil.FixInvalidItalicTags(s));
+            Assert.AreEqual("<i>foobar?" + Environment.NewLine + "foobar?</i>", HtmlUtil.FixInvalidItalicTags(s));
         }
 
     }
