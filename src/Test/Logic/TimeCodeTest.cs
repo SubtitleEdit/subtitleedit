@@ -62,15 +62,6 @@ namespace Test.Logic
         }
 
         [TestMethod]
-        public void TimeCodeAddTime7()
-        {
-            var tc = new TimeCode(1000);
-            tc.AddTime(1000.0);
-
-            Assert.AreEqual(tc.TotalMilliseconds, 2000);
-        }
-
-        [TestMethod]
         public void TimeCodeDaysTest()
         {
             var tc = new TimeCode(24 * 3, 0, 0, 0)
