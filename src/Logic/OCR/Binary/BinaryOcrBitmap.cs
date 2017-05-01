@@ -356,6 +356,10 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Binary
             {
                 return false;
             }
+            if ((double)Height / Width < 2)
+            {
+                return false;
+            }
 
             if (Width > Height / 4)
             {
