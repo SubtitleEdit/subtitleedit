@@ -5095,6 +5095,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/WaveformFocusListView":
                     language.Settings.WaveformFocusListView = reader.Value;
                     break;
+                case "Settings/WaveformGoToNextSubtitle":
+                    language.Settings.WaveformGoToNextSubtitle = reader.Value;
+                    break;
                 case "Settings/WaveformGoToNextSceneChange":
                     language.Settings.WaveformGoToNextSceneChange = reader.Value;
                     break;

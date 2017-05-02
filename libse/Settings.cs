@@ -1000,6 +1000,7 @@ namespace Nikse.SubtitleEdit.Core
         public string WaveformAddTextHere { get; set; }
         public string WaveformAddTextHereFromClipboard { get; set; }
         public string WaveformFocusListView { get; set; }
+        public string WaveformGoToNextSubtitle { get; set; }
         public string WaveformGoToNextSceneChange { get; set; }
         public string WaveformToggleSceneChange { get; set; }
         public string MainTranslateCustomSearch1 { get; set; }
@@ -2993,6 +2994,9 @@ namespace Nikse.SubtitleEdit.Core
                 subNode = node.SelectSingleNode("WaveformFocusListView");
                 if (subNode != null)
                     settings.Shortcuts.WaveformFocusListView = subNode.InnerText;
+                subNode = node.SelectSingleNode("WaveformGoToNextSubtitle");
+                if (subNode != null)
+                    settings.Shortcuts.WaveformGoToNextSubtitle = subNode.InnerText;
                 subNode = node.SelectSingleNode("WaveformGoToNextSceneChange");
                 if (subNode != null)
                     settings.Shortcuts.WaveformGoToNextSceneChange = subNode.InnerText;
@@ -3695,6 +3699,7 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("WaveformAddTextHere", settings.Shortcuts.WaveformAddTextHere);
                 textWriter.WriteElementString("WaveformAddTextHereFromClipboard", settings.Shortcuts.WaveformAddTextHereFromClipboard);
                 textWriter.WriteElementString("WaveformFocusListView", settings.Shortcuts.WaveformFocusListView);
+                textWriter.WriteElementString("WaveformGoToNextSubtitle", settings.Shortcuts.WaveformGoToNextSubtitle);
                 textWriter.WriteElementString("WaveformGoToNextSceneChange", settings.Shortcuts.WaveformGoToNextSceneChange);
                 textWriter.WriteElementString("WaveformToggleSceneChange", settings.Shortcuts.WaveformToggleSceneChange);
                 textWriter.WriteElementString("MainTranslateCustomSearch1", settings.Shortcuts.MainTranslateCustomSearch1);
