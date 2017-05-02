@@ -4233,7 +4233,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             if (_binOcrLastLowercaseHeight == -1 && _nocrLastLowercaseHeight == -1)
             { // try to guess lowercase height
                 var letters = NikseBitmapImageSplitter.SplitBitmapToLettersNew(parentBitmap, _numericUpDownPixelsIsSpace, checkBoxRightToLeft.Checked, Configuration.Settings.VobSubOcr.TopToBottom, 6, _ocrCount > 20 ? _ocrHeight : -1);
-                minLineHeight = (int)Math.Round(letters.Where(p => p.NikseBitmap != null).Average(p => p.NikseBitmap.Height) * 0.5);
+                var actualLetters = letters.Where(p => p.NikseBitmap != null);
+                if (actualLetters.Count() > 0)
+                    minLineHeight = (int)Math.Round(actualLetters.Average(p => p.NikseBitmap.Height) * 0.5);
             }
             if (minLineHeight < 5)
                 minLineHeight = _nocrLastLowercaseHeight;
