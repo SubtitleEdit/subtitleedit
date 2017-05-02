@@ -1736,7 +1736,7 @@ can edit in same subtitle file (collaboration)</Information>
     <AutoBackupEveryMinute>Every minute</AutoBackupEveryMinute>
     <AutoBackupEveryFiveMinutes>Every 5th minute</AutoBackupEveryFiveMinutes>
     <AutoBackupEveryFifteenMinutes>Every 15th minute</AutoBackupEveryFifteenMinutes>
-    <AutoBackupDeleteAfter>Delete backup after</AutoBackupDeleteAfter>
+    <AutoBackupDeleteAfter>Delete after</AutoBackupDeleteAfter>
     <AutoBackupDeleteAfterOneMonth>1 month</AutoBackupDeleteAfterOneMonth>
     <AutoBackupDeleteAfterThreeMonths>3 months</AutoBackupDeleteAfterThreeMonths>
     <AutoBackupDeleteAfterSixMonths>6 months</AutoBackupDeleteAfterSixMonths>

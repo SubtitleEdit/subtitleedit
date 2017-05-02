@@ -10589,7 +10589,10 @@ namespace Nikse.SubtitleEdit.Forms
                     Text = Title;
 
                     Configuration.Settings.Save();
-                    OpenVideo(fileName);
+                    if (!Configuration.Settings.General.DisableVideoAutoLoading)
+                    {
+                        OpenVideo(fileName);
+                    }
                 }
             }
             return true;
@@ -10782,7 +10785,8 @@ namespace Nikse.SubtitleEdit.Forms
                                     if (subtitleChooser.ShowDialog(this) == DialogResult.OK)
                                     {
                                         if (LoadMatroskaSubtitle(subtitleList[subtitleChooser.SelectedIndex], matroska, false) &&
-                                            (ext.Equals(".mkv", StringComparison.Ordinal)) || ext.Equals(".mks", StringComparison.Ordinal))
+                                            (ext.Equals(".mkv", StringComparison.Ordinal) || ext.Equals(".mks", StringComparison.Ordinal)) &&
+                                            !Configuration.Settings.General.DisableVideoAutoLoading)
                                         {
                                             OpenVideo(fileName);
                                         }
@@ -10792,7 +10796,8 @@ namespace Nikse.SubtitleEdit.Forms
                             else
                             {
                                 if (LoadMatroskaSubtitle(subtitleList[0], matroska, false) &&
-                                    (ext.Equals(".mkv", StringComparison.Ordinal) || ext.Equals(".mks", StringComparison.Ordinal)))
+                                    (ext.Equals(".mkv", StringComparison.Ordinal) || ext.Equals(".mks", StringComparison.Ordinal)) &&
+                                    !Configuration.Settings.General.DisableVideoAutoLoading)
                                 {
                                     OpenVideo(fileName);
                                 }
@@ -11891,7 +11896,7 @@ namespace Nikse.SubtitleEdit.Forms
                         if (p.StartTime.TotalSeconds > audioVisualizer.EndPositionSeconds + 0.2)
                         {
                             audioVisualizer.StartPositionSeconds = mediaPlayer.CurrentPosition - 0.2;
-                        }                        
+                        }
                         break;
                     }
                 }
@@ -13425,7 +13430,10 @@ namespace Nikse.SubtitleEdit.Forms
                         ResetSubtitle();
                         if (!string.IsNullOrEmpty(importText.VideoFileName))
                         {
-                            OpenVideo(importText.VideoFileName);
+                            if (!Configuration.Settings.General.DisableVideoAutoLoading)
+                            {
+                                OpenVideo(importText.VideoFileName);
+                            }
                             _fileName = importText.VideoFileName;
                             _converted = true;
                         }
