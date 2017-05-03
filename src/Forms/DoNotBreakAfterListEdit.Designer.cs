@@ -105,7 +105,7 @@
             this.listBoxNoBreakAfter.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
             this.listBoxNoBreakAfter.Size = new System.Drawing.Size(218, 225);
             this.listBoxNoBreakAfter.TabIndex = 0;
-            this.listBoxNoBreakAfter.SelectedIndexChanged += new System.EventHandler(this.listBoxNamesEtc_SelectedIndexChanged);
+            this.listBoxNoBreakAfter.SelectedIndexChanged += new System.EventHandler(this.listBoxNames_SelectedIndexChanged);
             // 
             // textBoxNoBreakAfter
             // 
@@ -125,7 +125,7 @@
             this.buttonAddNoBreakAfter.TabIndex = 3;
             this.buttonAddNoBreakAfter.Text = "Add";
             this.buttonAddNoBreakAfter.UseVisualStyleBackColor = true;
-            this.buttonAddNoBreakAfter.Click += new System.EventHandler(this.buttonAddNamesEtc_Click);
+            this.buttonAddNoBreakAfter.Click += new System.EventHandler(this.buttonAddNames_Click);
             // 
             // comboBoxDictionaries
             // 

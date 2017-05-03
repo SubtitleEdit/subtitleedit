@@ -1273,7 +1273,7 @@ namespace Nikse.SubtitleEdit.Forms
             findDoubleWordsToolStripMenuItem.Text = _language.Menu.SpellCheck.FindDoubleWords;
             FindDoubleLinesToolStripMenuItem.Text = _language.Menu.SpellCheck.FindDoubleLines;
             GetDictionariesToolStripMenuItem.Text = _language.Menu.SpellCheck.GetDictionaries;
-            addWordToNamesetcListToolStripMenuItem.Text = _language.Menu.SpellCheck.AddToNameList;
+            addWordToNamesListToolStripMenuItem.Text = _language.Menu.SpellCheck.AddToNameList;
 
             toolStripMenuItemSynchronization.Text = _language.Menu.Synchronization.Title;
             toolStripMenuItemAdjustAllTimes.Text = _language.Menu.Synchronization.AdjustAllTimes;
@@ -13268,7 +13268,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void AddWordToNamesetcListToolStripMenuItemClick(object sender, EventArgs e)
+        private void AddWordToNamesListToolStripMenuItemClick(object sender, EventArgs e)
         {
             using (var addToNamesList = new AddToNamesList())
             {
@@ -15652,7 +15652,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             spellCheckToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainSpellCheck);
             findDoubleWordsToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainSpellCheckFindDoubleWords);
-            addWordToNamesetcListToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainSpellCheckAddWordToNames);
+            addWordToNamesListToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainSpellCheckAddWordToNames);
 
             toolStripMenuItemAdjustAllTimes.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainSynchronizationAdjustTimes);
             visualSyncToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainSynchronizationVisualSync);
@@ -18150,7 +18150,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             //toolStripSeparator9.Visible = true;
             //GetDictionariesToolStripMenuItem.Visible = true;
-            addWordToNamesetcListToolStripMenuItem.Visible = true;
+            addWordToNamesListToolStripMenuItem.Visible = true;
         }
 
         private void ToolStripMenuItemPlayRateSlowClick(object sender, EventArgs e)

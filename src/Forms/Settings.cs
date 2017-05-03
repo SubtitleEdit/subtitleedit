@@ -195,8 +195,8 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             var wordListSettings = Configuration.Settings.WordLists;
-            checkBoxNamesEtcOnline.Checked = wordListSettings.UseOnlineNames;
-            textBoxNamesEtcOnline.Text = wordListSettings.NamesUrl;
+            checkBoxNamesOnline.Checked = wordListSettings.UseOnlineNames;
+            textBoxNamesOnline.Text = wordListSettings.NamesUrl;
 
             comboBoxFontName.Items.Clear();
             foreach (var x in FontFamily.Families)
@@ -461,11 +461,11 @@ namespace Nikse.SubtitleEdit.Forms
             buttonRemoveNameEtc.Text = language.Remove;
             buttonRemoveUserWord.Text = language.Remove;
             buttonRemoveOcrFix.Text = language.Remove;
-            buttonAddNamesEtc.Text = language.AddNameEtc;
+            buttonAddNames.Text = language.AddNameEtc;
             buttonAddUserWord.Text = language.AddWord;
             buttonAddOcrFix.Text = language.AddPair;
             groupBoxWordListLocation.Text = language.Location;
-            checkBoxNamesEtcOnline.Text = language.UseOnlineNames;
+            checkBoxNamesOnline.Text = language.UseOnlineNames;
             linkLabelOpenDictionaryFolder.Text = Configuration.Settings.Language.GetDictionaries.OpenDictionariesFolder;
 
             groupBoxProxySettings.Text = language.ProxyServerSettings;
@@ -590,7 +590,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 float fontSize = comboBoxToolsMusicSymbol.Font.Size;
                 const string unicodeFontName = Utilities.WinXP2KUnicodeFontName;
-                listBoxNamesEtc.Font = new Font(unicodeFontName, fontSize);
+                listBoxNames.Font = new Font(unicodeFontName, fontSize);
                 listBoxUserWordLists.Font = new Font(unicodeFontName, fontSize);
                 listBoxOcrFixList.Font = new Font(unicodeFontName, fontSize);
                 comboBoxToolsMusicSymbol.Font = new Font(unicodeFontName, fontSize);
@@ -1207,8 +1207,8 @@ namespace Nikse.SubtitleEdit.Forms
             toolsSettings.MicrosoftBingClientSecret = textBoxBingClientSecret.Text.Trim();
 
             var wordListSettings = Configuration.Settings.WordLists;
-            wordListSettings.UseOnlineNames = checkBoxNamesEtcOnline.Checked;
-            wordListSettings.NamesUrl = textBoxNamesEtcOnline.Text;
+            wordListSettings.UseOnlineNames = checkBoxNamesOnline.Checked;
+            wordListSettings.NamesUrl = textBoxNamesOnline.Text;
             if (comboBoxWordListLanguage.Items.Count > 0 && comboBoxWordListLanguage.SelectedIndex >= 0)
             {
                 var ci = comboBoxWordListLanguage.Items[comboBoxWordListLanguage.SelectedIndex] as ComboBoxLanguage;
@@ -1389,14 +1389,12 @@ namespace Nikse.SubtitleEdit.Forms
         private void ComboBoxWordListLanguageSelectedIndexChanged(object sender, EventArgs e)
         {
             buttonRemoveNameEtc.Enabled = false;
-            buttonAddNamesEtc.Enabled = false;
+            buttonAddNames.Enabled = false;
             buttonRemoveUserWord.Enabled = false;
             buttonAddUserWord.Enabled = false;
             buttonRemoveOcrFix.Enabled = false;
             buttonAddOcrFix.Enabled = false;
-
-            // TODO: Rename listBoxNamesEtc => listBoxNames
-            listBoxNamesEtc.Items.Clear();
+            listBoxNames.Items.Clear();
             listBoxUserWordLists.Items.Clear();
             listBoxOcrFixList.Items.Clear();
             var cb = comboBoxWordListLanguage.Items[comboBoxWordListLanguage.SelectedIndex] as ComboBoxLanguage;
@@ -1404,7 +1402,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 string language = GetCurrentWordListLanguage();
 
-                buttonAddNamesEtc.Enabled = true;
+                buttonAddNames.Enabled = true;
                 buttonAddUserWord.Enabled = true;
                 buttonAddOcrFix.Enabled = true;
 
@@ -1474,13 +1472,13 @@ namespace Nikse.SubtitleEdit.Forms
                 var uiContext = TaskScheduler.FromCurrentSynchronizationContext();
                 task.ContinueWith(originalTask =>
                 {
-                    listBoxNamesEtc.BeginUpdate();
-                    listBoxNamesEtc.Items.Clear();
+                    listBoxNames.BeginUpdate();
+                    listBoxNames.Items.Clear();
                     foreach (var name in originalTask.Result)
                     {
-                        listBoxNamesEtc.Items.Add(name);
+                        listBoxNames.Items.Add(name);
                     }
-                    listBoxNamesEtc.EndUpdate();
+                    listBoxNames.EndUpdate();
                 }, uiContext);
             }
         }
@@ -1495,7 +1493,7 @@ namespace Nikse.SubtitleEdit.Forms
             return cb?.CultureInfo.Name.Replace('-', '_');
         }
 
-        private void ButtonAddNamesEtcClick(object sender, EventArgs e)
+        private void ButtonAddNamesClick(object sender, EventArgs e)
         {
             var sidx = comboBoxWordListLanguage.SelectedIndex;
             if (sidx < 0)
@@ -1511,15 +1509,15 @@ namespace Nikse.SubtitleEdit.Forms
                 labelStatus.Text = string.Format(Configuration.Settings.Language.Settings.WordAddedX, text);
                 textBoxNameEtc.Text = string.Empty;
                 textBoxNameEtc.Focus();
-                for (int i = 0; i < listBoxNamesEtc.Items.Count; i++)
+                for (int i = 0; i < listBoxNames.Items.Count; i++)
                 {
-                    if (listBoxNamesEtc.Items[i].ToString() == text)
+                    if (listBoxNames.Items[i].ToString() == text)
                     {
-                        listBoxNamesEtc.SelectedIndex = i;
+                        listBoxNames.SelectedIndex = i;
                         int top = i - 5;
                         if (top < 0)
                             top = 0;
-                        listBoxNamesEtc.TopIndex = top;
+                        listBoxNames.TopIndex = top;
                         break;
                     }
                 }
@@ -1530,20 +1528,20 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void ListBoxNamesEtcSelectedIndexChanged(object sender, EventArgs e)
+        private void ListBoxNamesSelectedIndexChanged(object sender, EventArgs e)
         {
-            buttonRemoveNameEtc.Enabled = listBoxNamesEtc.SelectedIndex >= 0;
+            buttonRemoveNameEtc.Enabled = listBoxNames.SelectedIndex >= 0;
         }
 
         private void ButtonRemoveNameEtcClick(object sender, EventArgs e)
         {
-            if (listBoxNamesEtc.SelectedIndices.Count == 0)
+            if (listBoxNames.SelectedIndices.Count == 0)
                 return;
 
             string language = GetCurrentWordListLanguage();
-            int index = listBoxNamesEtc.SelectedIndex;
-            string text = listBoxNamesEtc.Items[index].ToString();
-            int itemsToRemoveCount = listBoxNamesEtc.SelectedIndices.Count;
+            int index = listBoxNames.SelectedIndex;
+            string text = listBoxNames.Items[index].ToString();
+            int itemsToRemoveCount = listBoxNames.SelectedIndices.Count;
             if (!string.IsNullOrEmpty(language) && index >= 0)
             {
                 DialogResult result;
@@ -1555,24 +1553,24 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     int removeCount = 0;
                     var namesList = new NamesList(Configuration.DictionariesDirectory, language, Configuration.Settings.WordLists.UseOnlineNames, Configuration.Settings.WordLists.NamesUrl);
-                    for (int idx = listBoxNamesEtc.SelectedIndices.Count - 1; idx >= 0; idx--)
+                    for (int idx = listBoxNames.SelectedIndices.Count - 1; idx >= 0; idx--)
                     {
-                        index = listBoxNamesEtc.SelectedIndices[idx];
-                        text = listBoxNamesEtc.Items[index].ToString();
+                        index = listBoxNames.SelectedIndices[idx];
+                        text = listBoxNames.Items[index].ToString();
                         namesList.Remove(text);
                         removeCount++;
-                        listBoxNamesEtc.Items.RemoveAt(index);
+                        listBoxNames.Items.RemoveAt(index);
                     }
 
                     if (removeCount > 0)
                     {
                         LoadNames(language, true); // reload
 
-                        if (index < listBoxNamesEtc.Items.Count)
-                            listBoxNamesEtc.SelectedIndex = index;
-                        else if (listBoxNamesEtc.Items.Count > 0)
-                            listBoxNamesEtc.SelectedIndex = index - 1;
-                        listBoxNamesEtc.Focus();
+                        if (index < listBoxNames.Items.Count)
+                            listBoxNames.SelectedIndex = index;
+                        else if (listBoxNames.Items.Count > 0)
+                            listBoxNames.SelectedIndex = index - 1;
+                        listBoxNames.Focus();
 
                         buttonRemoveNameEtc.Enabled = false;
                         return;
@@ -1595,7 +1593,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (e.KeyCode == Keys.Enter)
             {
                 e.SuppressKeyPress = true;
-                ButtonAddNamesEtcClick(null, null);
+                ButtonAddNamesClick(null, null);
             }
         }
 

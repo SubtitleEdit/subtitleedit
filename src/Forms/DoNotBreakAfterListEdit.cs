@@ -138,7 +138,7 @@ namespace Nikse.SubtitleEdit.Forms
             DialogResult = DialogResult.OK;
         }
 
-        private void buttonAddNamesEtc_Click(object sender, EventArgs e)
+        private void buttonAddNames_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(textBoxNoBreakAfter.Text))
                 return;
@@ -190,7 +190,7 @@ namespace Nikse.SubtitleEdit.Forms
                 textBoxNoBreakAfter.ContextMenuStrip = null;
         }
 
-        private void listBoxNamesEtc_SelectedIndexChanged(object sender, EventArgs e)
+        private void listBoxNames_SelectedIndexChanged(object sender, EventArgs e)
         {
             int idx = listBoxNoBreakAfter.SelectedIndex;
             if (idx >= 0 && idx < _noBreakAfterList.Count)
@@ -206,7 +206,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void textBoxNoBreakAfter_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
-                buttonAddNamesEtc_Click(sender, e);
+                buttonAddNames_Click(sender, e);
         }
 
     }
