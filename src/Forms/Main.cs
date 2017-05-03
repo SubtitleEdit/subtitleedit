@@ -11381,7 +11381,7 @@ namespace Nikse.SubtitleEdit.Forms
             else if (e.KeyCode == Keys.Down && e.Modifiers == Keys.Alt)
             {
                 if (AutoRepeatContinueOn || AutoRepeatOn)
-                    Next();
+                    PlayNext();
                 else
                     ButtonNextClick(null, null);
             }
@@ -11391,10 +11391,15 @@ namespace Nikse.SubtitleEdit.Forms
                     PlayPrevious();
                 else
                     ButtonPreviousClick(null, null);
+                e.SuppressKeyPress = true;
+                e.Handled = true;
             }
             else if (_mainGeneralGoToNextSubtitle == e.KeyData)
             {
-                ButtonNextClick(null, null);
+                if (AutoRepeatContinueOn || AutoRepeatOn)
+                    PlayNext();
+                else
+                    ButtonNextClick(null, null);
                 e.SuppressKeyPress = true;
                 e.Handled = true;
             }
@@ -14484,7 +14489,7 @@ namespace Nikse.SubtitleEdit.Forms
                 labelStatus.Text = _language.VideoControls.Playing;
         }
 
-        private void Next()
+        private void PlayNext()
         {
             int newIndex = _subtitleListViewIndex + 1;
             if (newIndex < _subtitle.Paragraphs.Count)
@@ -15063,7 +15068,7 @@ namespace Nikse.SubtitleEdit.Forms
                 else
                 {
                     labelStatus.Text = string.Empty;
-                    Next();
+                    PlayNext();
                 }
             }
             else
@@ -15123,7 +15128,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonPlayNext_Click(object sender, EventArgs e)
         {
-            Next();
+            PlayNext();
         }
 
         private void buttonPlayPrevious_Click(object sender, EventArgs e)
