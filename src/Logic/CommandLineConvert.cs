@@ -526,7 +526,7 @@ namespace Nikse.SubtitleEdit.Logic
                             }
                         }
 
-                        if (format == null)
+                        if (!done && format == null)
                         {
                             if (fileInfo.Length < 1024 * 1024) // max 1 mb
                                 WriteLine($"{fileName}: {targetFormat} - input file format unknown!");
