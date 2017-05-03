@@ -26,6 +26,7 @@
    * Added "Clear shortcut" button to settings - thx Simon
    * "Import plain text" now rembembers options - thx Leon
    * "Insert subtitle here..." added to waveform context menu
+   * Added waveform shortcut for go to next sub - thx GeorgeM
 * FIXED:
    * Fixed crash in "Add to user dictionary" in OCR - thx alfix0
    * Fixed original file name bug in "Undo" - thx darnn
@@ -50,6 +51,8 @@
    * Fixed issue with empty time code in format "TT draft 2006-10" - thx Georg-J
    * Fixed styling inside "span" in format TTML - thx Johan
    * Fixed hashtag character in "PAC" format - thx Nuri
+   * Fix for "go to next" shortcut in translate mode - thx Alex
+   * Fixed crash in "Binary image compare" OCR with empty image
 
 
 3.5.2 (3rd March 2017)
