@@ -36,7 +36,7 @@ namespace Test.Logic.Dictionaries
         }
 
         [TestMethod]
-        public void NamesListIsInNamesEtcMultiWordList()
+        public void NamesListIsInNameMultiWordList()
         {
             // Arrange
             var namesList = new NamesList(Directory.GetCurrentDirectory(), "en", false, null);

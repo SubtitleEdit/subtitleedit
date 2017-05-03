@@ -207,7 +207,7 @@
             this.FindDoubleLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
             this.GetDictionariesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.addWordToNamesetcListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.addWordToNamesListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemVideo = new System.Windows.Forms.ToolStripMenuItem();
             this.openVideoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemOpenDvd = new System.Windows.Forms.ToolStripMenuItem();
@@ -1920,7 +1920,7 @@
             this.FindDoubleLinesToolStripMenuItem,
             this.toolStripSeparator9,
             this.GetDictionariesToolStripMenuItem,
-            this.addWordToNamesetcListToolStripMenuItem});
+            this.addWordToNamesListToolStripMenuItem});
             this.toolStripMenuItemSpellCheckMain.Name = "toolStripMenuItemSpellCheckMain";
             this.toolStripMenuItemSpellCheckMain.Size = new System.Drawing.Size(80, 20);
             this.toolStripMenuItemSpellCheckMain.Text = "Spell check";
@@ -1970,14 +1970,14 @@
             this.GetDictionariesToolStripMenuItem.Text = "Get dictionary...";
             this.GetDictionariesToolStripMenuItem.Click += new System.EventHandler(this.GetDictionariesToolStripMenuItem_Click);
             // 
-            // addWordToNamesetcListToolStripMenuItem
+            // addWordToNamesListToolStripMenuItem
             // 
-            this.addWordToNamesetcListToolStripMenuItem.Name = "addWordToNamesetcListToolStripMenuItem";
-            this.addWordToNamesetcListToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            this.addWordToNamesListToolStripMenuItem.Name = "addWordToNamesListToolStripMenuItem";
+            this.addWordToNamesListToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
             | System.Windows.Forms.Keys.L)));
-            this.addWordToNamesetcListToolStripMenuItem.Size = new System.Drawing.Size(296, 22);
-            this.addWordToNamesetcListToolStripMenuItem.Text = "Add word to names/etc list";
-            this.addWordToNamesetcListToolStripMenuItem.Click += new System.EventHandler(this.AddWordToNamesetcListToolStripMenuItemClick);
+            this.addWordToNamesListToolStripMenuItem.Size = new System.Drawing.Size(296, 22);
+            this.addWordToNamesListToolStripMenuItem.Text = "Add word to names list";
+            this.addWordToNamesListToolStripMenuItem.Click += new System.EventHandler(this.AddWordToNamesListToolStripMenuItemClick);
             // 
             // toolStripMenuItemVideo
             // 
@@ -4847,7 +4847,7 @@
         private System.Windows.Forms.ToolStripMenuItem findDoubleWordsToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator9;
         private System.Windows.Forms.ToolStripMenuItem GetDictionariesToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem addWordToNamesetcListToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem addWordToNamesListToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSynchronization;
         private System.Windows.Forms.ToolStripMenuItem visualSyncToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemPointSync;

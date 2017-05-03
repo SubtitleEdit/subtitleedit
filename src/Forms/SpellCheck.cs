@@ -40,7 +40,7 @@ namespace Nikse.SubtitleEdit.Forms
         private int _noOfSkippedWords;
         private int _noOfChangedWords;
         private int _noOfCorrectWords;
-        private int _noOfNamesEtc;
+        private int _noOfNames;
         private int _noOfAddedWords;
         private bool _firstChange = true;
         private string _languageName;
@@ -509,7 +509,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     if (_spellCheckWordLists.HasName(_currentWord))
                     {
-                        _noOfNamesEtc++;
+                        _noOfNames++;
                     }
                     else if (_skipAllList.Contains(_currentWord.ToUpper())
                         || (_currentWord.StartsWith('\'') || _currentWord.EndsWith('\'')) && _skipAllList.Contains(_currentWord.Trim('\'').ToUpper()))
@@ -532,7 +532,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else if (_spellCheckWordLists.HasNameExtended(_currentWord, _currentParagraph.Text)) // TODO: Verify this!
                     {
-                        _noOfNamesEtc++;
+                        _noOfNames++;
                     }
                     else if (_spellCheckWordLists.IsWordInUserPhrases(_wordsIndex, _words))
                     {
@@ -713,7 +713,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     string.Format(mainLanguage.NumberOfSkippedWords, _noOfSkippedWords) + Environment.NewLine +
                                     string.Format(mainLanguage.NumberOfCorrectWords, _noOfCorrectWords) + Environment.NewLine +
                                     string.Format(mainLanguage.NumberOfWordsAddedToDictionary, _noOfAddedWords) + Environment.NewLine +
-                                    string.Format(mainLanguage.NumberOfNameHits, _noOfNamesEtc));
+                                    string.Format(mainLanguage.NumberOfNameHits, _noOfNames));
                     form.ShowDialog(_mainWindow);
                     Configuration.Settings.Tools.SpellCheckShowCompletedMessage = !form.DoNoDisplayAgain;
                     form.Dispose();
@@ -759,7 +759,7 @@ namespace Nikse.SubtitleEdit.Forms
             _noOfSkippedWords = 0;
             _noOfChangedWords = 0;
             _noOfCorrectWords = 0;
-            _noOfNamesEtc = 0;
+            _noOfNames = 0;
             _noOfAddedWords = 0;
             _firstChange = true;
 
@@ -942,7 +942,7 @@ namespace Nikse.SubtitleEdit.Forms
                 NoOfSkippedWords = _noOfSkippedWords,
                 NoOfChangedWords = _noOfChangedWords,
                 NoOfCorrectWords = _noOfCorrectWords,
-                NoOfNames = _noOfNamesEtc,
+                NoOfNames = _noOfNames,
                 NoOfAddedWords = _noOfAddedWords,
             });
             buttonUndo.Text = undoText;
@@ -959,7 +959,7 @@ namespace Nikse.SubtitleEdit.Forms
                 _noOfSkippedWords = undo.NoOfSkippedWords;
                 _noOfChangedWords = undo.NoOfChangedWords;
                 _noOfCorrectWords = undo.NoOfCorrectWords;
-                _noOfNamesEtc = undo.NoOfNames;
+                _noOfNames = undo.NoOfNames;
                 _noOfAddedWords = undo.NoOfAddedWords;
 
                 switch (undo.Action)
