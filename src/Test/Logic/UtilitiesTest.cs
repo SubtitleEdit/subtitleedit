@@ -345,6 +345,20 @@ namespace Test.Logic
         }
 
         [TestMethod]
+        public void RemoveUnneededSpacesAfterQuote()
+        {
+            const string lang = "en";
+
+            // variant 1
+            string s = Utilities.RemoveUnneededSpaces("\" In five years the Corleone family\r\nwill be completely legitimate.\"", lang);
+            Assert.AreEqual("\"In five years the Corleone family\r\nwill be completely legitimate.\"", s);
+
+            // variant 2
+            s = Utilities.RemoveUnneededSpaces("Foobar? \" Foobar\".", lang);
+            Assert.AreEqual("Foobar? \"Foobar\".", s);
+        }
+
+        [TestMethod]
         public void CountTagInTextStringOneLetterString()
         {
             int count = Utilities.CountTagInText("HHH", "H");
