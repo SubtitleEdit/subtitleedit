@@ -779,7 +779,7 @@ namespace Test
                 Assert.AreEqual(_subtitle.Paragraphs[0].Text, "MARCUS: tycker det är bra.");
             }
         }
-        
+
         #endregion Fix missing spaces
 
         #region Fix unneeded spaces
@@ -1529,10 +1529,10 @@ namespace Test
         public void FixDialogsOnOneLine4()
         {
             string source = "- Haiman, say: \"I love you.\" - So," + Environment.NewLine + "what are you up to? Another question!";
-            string target = "- Haiman, say: \"I love you.\"" + Environment.NewLine + "- So, what are you up to? Another question!"; 
+            string target = "- Haiman, say: \"I love you.\"" + Environment.NewLine + "- So, what are you up to? Another question!";
             string result = Helper.FixDialogsOnOneLine(source, "en");
             Assert.AreEqual(result, target);
-        }        
+        }
 
         #endregion Fix dialogs on one line
 
@@ -1769,6 +1769,39 @@ namespace Test
         {
             string processedText = FixUnneededPeriods.RemoveDotAfterPunctuation("Foobar?. Foobar!.... Foobar");
             Assert.AreEqual("Foobar? Foobar! Foobar", processedText);
+        }
+
+        #endregion
+
+        #region Add missing quotes
+
+        [TestMethod]
+        public void AddMissingQuotesTest1()
+        {
+            // next paragraph contains balanced quotes
+            var paragraphs = new List<Paragraph>
+            {
+                new Paragraph("\"Foobar.", 1000, 3000),
+                new Paragraph("\"Foobar\" \"Foobar\".", 3024, 5024)
+            };
+
+            var subtitle = new Subtitle(paragraphs);
+            new AddMissingQuotes().Fix(subtitle, new EmptyFixCallback());
+            Assert.AreEqual("\"Foobar.\"", subtitle.Paragraphs[0].Text);
+        }
+
+        [TestMethod]
+        public void AddMissingQuotesTest2()
+        {
+            // previous paragraph contains balanced quotes
+            var paragraphs = new List<Paragraph>
+            {
+                new Paragraph("\"Foobar\" \"Foobar.\"", 1000, 3000),
+                new Paragraph("Foobar.\"", 3024, 5024)
+            };
+            var subtitle = new Subtitle(paragraphs);
+            new AddMissingQuotes().Fix(subtitle, new EmptyFixCallback());
+            Assert.AreEqual("\"Foobar.\"", subtitle.Paragraphs[1].Text);
         }
 
         #endregion
