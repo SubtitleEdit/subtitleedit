@@ -844,17 +844,21 @@ namespace Nikse.SubtitleEdit.Core.Forms
                         {
                             int index = match.Index;
                             string temp = text.Remove(index, s.Length);
-                            while (index == 0 && temp.StartsWith("... ", StringComparison.Ordinal))
+                            if (index == 0 && temp.StartsWith("... ", StringComparison.Ordinal))
                             {
-                                temp = temp.Remove(3, 1);
+                                temp = temp.Remove(0, 4);
                             }
-                            while (index == 3 && temp.StartsWith("<i>... ", StringComparison.Ordinal))
+                            if (index == 3 && temp.StartsWith("<i>... ", StringComparison.Ordinal))
                             {
-                                temp = temp.Remove(6, 1);
+                                temp = temp.Remove(3, 4);
                             }
-                            while (index > 2 && (" \r\n".Contains(text.Substring(index - 1, 1))) && temp.Substring(index).StartsWith("... ", StringComparison.Ordinal))
+                            if (index > 2 && (" \r\n".Contains(text.Substring(index - 1, 1))) && temp.Substring(index).StartsWith("... ", StringComparison.Ordinal))
                             {
-                                temp = temp.Remove(index + 3, 1);
+                                temp = temp.Remove(index, 4);
+                            }
+                            if (index > 4 && temp.Substring(index - 4).StartsWith("\n<i>... ", StringComparison.Ordinal))
+                            {
+                                temp = temp.Remove(index, 4);
                             }
 
                             if (temp.Remove(0, index) == " —" && temp.EndsWith("—  —", StringComparison.Ordinal))
@@ -905,6 +909,15 @@ namespace Nikse.SubtitleEdit.Core.Forms
                                     {
                                         temp = temp.Remove(subIndex, 2);
                                         removeAfter = false;
+                                    }
+                                    else if (subIndex > 3 && ".!?".Contains(temp.Substring(subIndex -1, 1)))
+                                    {
+                                        subTemp = temp.Substring(subIndex);
+                                        if (subTemp == " ..." || subTemp.StartsWith(" ..." + Environment.NewLine, StringComparison.InvariantCulture))
+                                        {
+                                            temp = temp.Remove(subIndex, 4).Trim();
+                                            removeAfter = false;
+                                        }
                                     }
                                 }
                                 if (removeAfter && temp.Length > index - s.Length + 2)
