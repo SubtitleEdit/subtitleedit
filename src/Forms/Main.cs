@@ -8766,14 +8766,13 @@ namespace Nikse.SubtitleEdit.Forms
                         old1.Length > Configuration.Settings.General.SubtitleLineMaximumLength || old2.Length > Configuration.Settings.General.SubtitleLineMaximumLength)
                         currentParagraph.Text = Utilities.AutoBreakLine(currentParagraph.Text, LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle));
 
-                    if (string.IsNullOrWhiteSpace(old1))
-                        currentParagraph.Text = currentParagraph.Text.TrimStart();
+                    if (string.IsNullOrWhiteSpace(old1) && old2 != null)
+                        currentParagraph.Text = old2.Trim();
 
-                    if (string.IsNullOrWhiteSpace(old2))
-                        currentParagraph.Text = currentParagraph.Text.TrimEnd();
+                    if (string.IsNullOrWhiteSpace(old2) && old1 != null)
+                        currentParagraph.Text = old1.Trim();
                 }
 
-                //currentParagraph.EndTime.TotalMilliseconds = currentParagraph.EndTime.TotalMilliseconds + nextParagraph.Duration.TotalMilliseconds; //nextParagraph.EndTime;
                 currentParagraph.EndTime.TotalMilliseconds = nextParagraph.EndTime.TotalMilliseconds;
 
                 if (_networkSession != null)
