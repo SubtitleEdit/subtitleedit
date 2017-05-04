@@ -632,6 +632,62 @@ namespace Test.Logic.Forms
         }
 
         [TestMethod]
+        public void RemoveInterjections14A()
+        {
+            var target = GetRemoveTextForHiLib();
+            target.Settings.RemoveIfAllUppercase = false;
+            target.Settings.OnlyIfInSeparateLine = false;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
+            target.Settings.ColonSeparateLine = false;
+            string text = "Hey! Uh...";
+            const string expected = "Hey!";
+            string actual = target.RemoveInterjections(text);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void RemoveInterjections14B()
+        {
+            var target = GetRemoveTextForHiLib();
+            target.Settings.RemoveIfAllUppercase = false;
+            target.Settings.OnlyIfInSeparateLine = false;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
+            target.Settings.ColonSeparateLine = false;
+            string text = "Hey! Uh..." + Environment.NewLine + "Bye.";
+            string expected = "Hey!" + Environment.NewLine + "Bye.";
+            string actual = target.RemoveInterjections(text);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void RemoveInterjections15A()
+        {
+            var target = GetRemoveTextForHiLib();
+            target.Settings.RemoveIfAllUppercase = false;
+            target.Settings.OnlyIfInSeparateLine = false;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
+            target.Settings.ColonSeparateLine = false;
+            string text =  "I think that..." + Environment.NewLine + "Uh... Hey!";
+            string expected = "I think that..." + Environment.NewLine + "Hey!";
+            string actual = target.RemoveInterjections(text);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void RemoveInterjections15B()
+        {
+            var target = GetRemoveTextForHiLib();
+            target.Settings.RemoveIfAllUppercase = false;
+            target.Settings.OnlyIfInSeparateLine = false;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
+            target.Settings.ColonSeparateLine = false;
+            string text = "I think that..." + Environment.NewLine + "<i>Uh... Hey!</i>";
+            string expected = "I think that..." + Environment.NewLine + "<i>Hey!</i>";
+            string actual = target.RemoveInterjections(text);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
         public void RemoveColonOnlyOnSeparateLine()
         {
             var target = GetRemoveTextForHiLib();
@@ -1507,7 +1563,7 @@ namespace Test.Logic.Forms
         public void RemoveInterjectionDotDotDot()
         {
             var target = GetRemoveTextForHiLib();
-            string expected = "...alright.";
+            string expected = "Alright.";
             string actual = target.RemoveInterjections("Oh... alright.");
             Assert.AreEqual(expected, actual);
         }
@@ -1516,7 +1572,7 @@ namespace Test.Logic.Forms
         public void RemoveInterjectionDotDotDotItalic()
         {
             var target = GetRemoveTextForHiLib();
-            string expected = "<i>...alright.</i>";
+            string expected = "<i>Alright.</i>";
             string actual = target.RemoveInterjections("<i>Oh... alright.</i>");
             Assert.AreEqual(expected, actual);
         }
@@ -1525,7 +1581,7 @@ namespace Test.Logic.Forms
         public void RemoveInterjectionDotDotDotSecondLineDialog()
         {
             var target = GetRemoveTextForHiLib();
-            string expected = "- OK." + Environment.NewLine + "- ...alright.";
+            string expected = "- OK." + Environment.NewLine + "- Alright.";
             string actual = target.RemoveInterjections("- OK." + Environment.NewLine + "- Oh... alright.");
             Assert.AreEqual(expected, actual);
         }
