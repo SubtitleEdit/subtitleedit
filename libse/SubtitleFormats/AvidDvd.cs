@@ -36,6 +36,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             if (fileName != null && fileName.EndsWith(".dost", StringComparison.OrdinalIgnoreCase))
                 return false;
 
+            if (fileName != null && fileName.EndsWith(".sst", StringComparison.OrdinalIgnoreCase) && new SonicScenaristBitmaps().IsMine(lines, fileName))
+                return false;
+
             var subtitle = new Subtitle();
             LoadSubtitle(subtitle, lines, fileName);
             return subtitle.Paragraphs.Count > _errorCount;
