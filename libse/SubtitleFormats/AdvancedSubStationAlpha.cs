@@ -420,15 +420,16 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
         public static string FormatText(Paragraph p)
         {
             string text = p.Text.Replace(Environment.NewLine, "\\N");
-            text = text.Replace("<i>", @"{\i1}");
-            text = text.Replace("</i>", @"{\i0}");
-            text = text.Replace("</i>", @"{\i}");
-            text = text.Replace("<u>", @"{\u1}");
-            text = text.Replace("</u>", @"{\u0}");
-            text = text.Replace("</u>", @"{\u}");
-            text = text.Replace("<b>", @"{\b1}");
-            text = text.Replace("</b>", @"{\b0}");
-            text = text.Replace("</b>", @"{\b}");
+            if (text.Contains('<'))
+            {
+                text = text.Replace("<i>", @"{\i1}");
+                text = text.Replace("</i>", @"{\i0}");
+                text = text.Replace("<u>", @"{\u1}");
+                text = text.Replace("</u>", @"{\u0}");
+                text = text.Replace("<b>", @"{\b1}");
+                text = text.Replace("</b>", @"{\b0}");
+            }
+
             int count = 0;
             while (text.Contains("<font ") && count < 10)
             {
@@ -473,22 +474,40 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                 }
                 count++;
             }
-            text = text.Replace("{\\c}", "@___@@").Replace("}{", string.Empty).Replace("@___@@", "{\\c}").Replace("{\\c}{\\c&", "{\\c&");
+
+            if (text.Contains("}{"))
+            {
+                text = text.Replace("{\\c}", "@___@@");
+                text = text.Replace("}{", string.Empty);
+                text = text.Replace("@___@@", "{\\c}");
+                text = text.Replace("{\\c}{\\c&", "{\\c&");
+            }
+
+            // text{\c} => text
             while (text.EndsWith("{\\c}", StringComparison.Ordinal))
             {
                 text = text.Remove(text.Length - 4);
             }
-            while (text.Contains("\\fs\\fs", StringComparison.Ordinal))
+            // foobar\fs\fs foobar => foobar \fs foobar
+            int patternIdx = text.IndexOf(@"\fs\fs", StringComparison.Ordinal);
+            while (patternIdx >= 0)
             {
-                text = text.Replace("\\fs\\fs", "\\fs");
+                text = text.Remove(patternIdx, 3);
+                patternIdx = text.IndexOf(@"\fs\fs", patternIdx);
             }
-            while (text.Contains("\\fn\\fn", StringComparison.Ordinal))
+            // foobar\fn\fn foobar => foobar \fn foobar
+            patternIdx = text.IndexOf(@"\fn\fn", StringComparison.Ordinal);
+            while (patternIdx >= 0)
             {
-                text = text.Replace("\\fn\\fn", "\\fn");
+                text = text.Remove(patternIdx, 3);
+                patternIdx = text.IndexOf(@"\fn\fn", patternIdx);
             }
-            while (text.Contains("\\c\\c&H", StringComparison.Ordinal))
+            // foobar\c\c&H foobar => foobar \c&H foobar
+            patternIdx = text.IndexOf(@"\c\c&H", StringComparison.Ordinal);
+            while (patternIdx >= 0)
             {
-                text = text.Replace("\\c\\c&H", "\\c&H");
+                text = text.Remove(patternIdx, 2);
+                patternIdx = text.IndexOf(@"\c\c&H", patternIdx);
             }
             return text;
         }
