@@ -33,11 +33,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
-            if (fileName != null && fileName.EndsWith(".dost", StringComparison.OrdinalIgnoreCase))
-                return false;
+            if (fileName != null)
+            {
+                if (fileName.EndsWith(".dost", StringComparison.OrdinalIgnoreCase))
+                    return false;
 
-            if (fileName != null && fileName.EndsWith(".sst", StringComparison.OrdinalIgnoreCase) && new SonicScenaristBitmaps().IsMine(lines, fileName))
-                return false;
+                if (fileName.EndsWith(".sst", StringComparison.OrdinalIgnoreCase) && new SonicScenaristBitmaps().IsMine(lines, fileName))
+                    return false;
+            }
 
             var subtitle = new Subtitle();
             LoadSubtitle(subtitle, lines, fileName);
