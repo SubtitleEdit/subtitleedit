@@ -8,24 +8,6 @@ namespace Test.Logic
     public class TimeCodeTest
     {
         [TestMethod]
-        public void TimeCodeAddTime1()
-        {
-            var tc = new TimeCode(1000);
-            tc.AddTime(1000);
-
-            Assert.AreEqual(tc.TotalMilliseconds, 2000);
-        }
-
-        [TestMethod]
-        public void TimeCodeAddTime2()
-        {
-            var tc = new TimeCode(1000);
-            tc.AddTime(-1000);
-
-            Assert.AreEqual(tc.TotalMilliseconds, 0);
-        }
-
-        [TestMethod]
         public void TimeCodeAddTime3()
         {
             var tc = new TimeCode(1000);
@@ -50,15 +32,6 @@ namespace Test.Logic
             tc.AddTime(0, 1, 0, 0);
 
             Assert.AreEqual(tc.TotalMilliseconds, 60000 + 1000);
-        }
-
-        [TestMethod]
-        public void TimeCodeAddTime6()
-        {
-            var tc = new TimeCode(1000);
-            tc.AddTime(TimeSpan.FromMilliseconds(1000));
-
-            Assert.AreEqual(tc.TotalMilliseconds, 2000);
         }
 
         [TestMethod]
