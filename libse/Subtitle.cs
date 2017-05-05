@@ -237,10 +237,11 @@ namespace Nikse.SubtitleEdit.Core
 
         public void AddTimeToAllParagraphs(TimeSpan time)
         {
+            double milliseconds = time.TotalMilliseconds;
             foreach (Paragraph p in Paragraphs)
             {
-                p.StartTime.AddTime(time);
-                p.EndTime.AddTime(time);
+                p.StartTime.TotalMilliseconds += milliseconds;
+                p.EndTime.TotalMilliseconds += milliseconds;
             }
         }
 

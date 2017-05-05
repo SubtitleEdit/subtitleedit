@@ -172,7 +172,7 @@ namespace Nikse.SubtitleEdit.Controls
 
                         if (UseVideoOffset)
                         {
-                            tc.AddTime(-Configuration.Settings.General.CurrentVideoOffsetInMs);
+                            tc.TotalMilliseconds -= Configuration.Settings.General.CurrentVideoOffsetInMs;
                         }
 
                         if (hours < 0 && tc.TotalMilliseconds > 0)
@@ -208,7 +208,7 @@ namespace Nikse.SubtitleEdit.Controls
 
                         if (UseVideoOffset)
                         {
-                            tc.AddTime(-Configuration.Settings.General.CurrentVideoOffsetInMs);
+                            tc.TotalMilliseconds -= Configuration.Settings.General.CurrentVideoOffsetInMs;
                         }
 
                         return tc;
@@ -227,7 +227,7 @@ namespace Nikse.SubtitleEdit.Controls
                 var v = new TimeCode(value.TotalMilliseconds);
                 if (UseVideoOffset)
                 {
-                    v.AddTime(Configuration.Settings.General.CurrentVideoOffsetInMs);
+                    v.TotalMilliseconds += Configuration.Settings.General.CurrentVideoOffsetInMs;
                 }
 
                 if (Mode == TimeMode.HHMMSSMS)

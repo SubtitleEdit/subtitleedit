@@ -58,7 +58,7 @@ namespace Nikse.SubtitleEdit.Core
             return 0;
         }
 
-        public TimeCode() : this(0)
+        public TimeCode()
         {
         }
 
@@ -162,20 +162,7 @@ namespace Nikse.SubtitleEdit.Core
             Milliseconds += milliseconds;
         }
 
-        public void AddTime(long milliseconds)
-        {
-            _totalMilliseconds += milliseconds;
-        }
-
-        public void AddTime(TimeSpan timeSpan)
-        {
-            _totalMilliseconds += timeSpan.TotalMilliseconds;
-        }
-
-        public override string ToString()
-        {
-            return ToString(false);
-        }
+        public override string ToString() => ToString(false);
 
         public string ToString(bool localize)
         {
@@ -209,7 +196,7 @@ namespace Nikse.SubtitleEdit.Core
         {
             string s = ToHHMMSSFF();
             int j = 0;
-            int len = s.Length;            
+            int len = s.Length;
             while (j + 6 < len && s[j] == '0' && s[j + 1] == '0' && s[j + 2] == ':')
             {
                 j += 3;
@@ -249,7 +236,7 @@ namespace Nikse.SubtitleEdit.Core
             if (IsMaxTime)
                 return "-";
 
-            if (Configuration.Settings != null && Configuration.Settings.General.UseTimeFormatHHMMSSFF)
+            if (Configuration.Settings?.General.UseTimeFormatHHMMSSFF == true)
                 return ToHHMMSSFF();
 
             return ToString(true);
@@ -260,7 +247,7 @@ namespace Nikse.SubtitleEdit.Core
             if (IsMaxTime)
                 return "-";
 
-            if (Configuration.Settings != null && Configuration.Settings.General.UseTimeFormatHHMMSSFF)
+            if (Configuration.Settings?.General.UseTimeFormatHHMMSSFF == true)
                 return ToShortStringHHMMSSFF();
 
             return ToShortString(true);
