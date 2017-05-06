@@ -110,27 +110,27 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
             Utilities.RemoveFromUserDictionary(word, _languageName);
         }
 
-        public void RemoveName(string word)
+        public void RemoveName(string name)
         {
-            if (word == null || word.Length <= 1 || !_namesEtcList.Contains(word))
+            if (name == null || name.Length <= 1 || !_namesEtcList.Contains(name))
                 return;
 
-            _namesEtcList.Remove(word);
-            _namesEtcListUppercase.Remove(word.ToUpper());
-            if (_languageName.StartsWith("en_", StringComparison.Ordinal) && !word.EndsWith('s'))
+            _namesEtcList.Remove(name);
+            _namesEtcListUppercase.Remove(name.ToUpper());
+            if (!name.EndsWith('s'))
             {
-                _namesEtcList.Remove(word + "s");
-                _namesEtcListUppercase.Remove(word.ToUpper() + "S");
+                if (_languageName.StartsWith("en_", StringComparison.Ordinal))
+                {
+                    _namesEtcList.Remove(name + "s");
+                    _namesEtcListUppercase.Remove(name.ToUpper() + "S");
+                }
+                _namesEtcListWithApostrophe.Remove(name + "'s");
+                _namesEtcListUppercase.Remove(name.ToUpper() + "'S");
             }
-            if (!word.EndsWith('s'))
-            {
-                _namesEtcListWithApostrophe.Remove(word + "'s");
-                _namesEtcListUppercase.Remove(word.ToUpper() + "'S");
-            }
-            if (!word.EndsWith('\''))
-                _namesEtcListWithApostrophe.Remove(word + "'");
+            if (!name.EndsWith('\''))
+                _namesEtcListWithApostrophe.Remove(name + "'");
 
-            _namesList.Remove(word);
+            _namesList.Remove(name);
         }
 
         public string ReplaceKnownWordsOrNamesWithBlanks(string s)
