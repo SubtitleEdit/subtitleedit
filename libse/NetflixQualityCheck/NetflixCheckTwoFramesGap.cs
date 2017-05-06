@@ -8,6 +8,7 @@
         /// </summary>
         public void Check(Subtitle subtitle, NetflixQualityController controller)
         {
+            const string comment = "Mininum two frames gap";
             for (int index = 0; index < subtitle.Paragraphs.Count; index++)
             {
                 Paragraph p = subtitle.Paragraphs[index];
@@ -18,7 +19,6 @@
                     var fixedParagraph = new Paragraph(p, false);
                     fixedParagraph.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - twoFramesGap;
                     //TODO: check for min time/speed?
-                    string comment = "Mininum two frames gap";
                     controller.AddRecord(p, fixedParagraph, comment);
                 }
             }

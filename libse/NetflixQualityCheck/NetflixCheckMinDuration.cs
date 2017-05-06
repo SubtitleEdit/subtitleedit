@@ -8,6 +8,7 @@
         /// </summary>
         public void Check(Subtitle subtitle, NetflixQualityController controller)
         {
+            const string comment = "Minimum duration: 5/6 second (833 ms)";
             for (int index = 0; index < subtitle.Paragraphs.Count; index++)
             {
                 Paragraph p = subtitle.Paragraphs[index];
@@ -21,7 +22,6 @@
                         fixedParagraph = new Paragraph(p, false);
                         fixedParagraph.Duration.TotalMilliseconds = 834;
                     }
-                    string comment = "Minimum duration: 5/6 second (833 ms)";
                     controller.AddRecord(p, fixedParagraph, comment);
                 }
             }

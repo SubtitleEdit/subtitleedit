@@ -8,6 +8,9 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
 
         public void Check(Subtitle subtitle, NetflixQualityController controller)
         {
+            // comments
+            const string fixedItalic = "Fixed italics";
+            const string italicNotAllowed = "Italics not allowed";
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 if (p.Text.Contains("i>", StringComparison.OrdinalIgnoreCase))
@@ -18,8 +21,7 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
                         fixedParagraph.Text = HtmlUtil.FixInvalidItalicTags(fixedParagraph.Text);
                         if (fixedParagraph.Text != p.Text)
                         {
-                            string comment = "Fixed italics";
-                            controller.AddRecord(p, fixedParagraph, comment);
+                            controller.AddRecord(p, fixedParagraph, fixedItalic);
                         }
                     }
                     else
@@ -28,8 +30,7 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
                         fixedParagraph.Text = HtmlUtil.RemoveHtmlTags(fixedParagraph.Text);
                         if (fixedParagraph.Text != p.Text)
                         {
-                            string comment = "Italics not allowed";
-                            controller.AddRecord(p, fixedParagraph, comment);
+                            controller.AddRecord(p, fixedParagraph, italicNotAllowed);
                         }
                     }
                 }

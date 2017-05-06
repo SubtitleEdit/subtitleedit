@@ -10,6 +10,8 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
         /// </summary>
         public void Check(Subtitle subtitle, NetflixQualityController controller)
         {
+            // constant
+            string comment = "Single line length > " + controller.SingleLineMaxLength;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 foreach (var line in p.Text.SplitToLines())
@@ -18,7 +20,6 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
                     {
                         var fixedParagraph = new Paragraph(p, false);
                         fixedParagraph.Text = Utilities.AutoBreakLine(fixedParagraph.Text, controller.SingleLineMaxLength, controller.SingleLineMaxLength - 3, controller.Language);
-                        string comment = "Single line length > " + controller.SingleLineMaxLength;
                         controller.AddRecord(p, fixedParagraph, comment, line.Length.ToString(CultureInfo.InvariantCulture));
                     }
                 }
