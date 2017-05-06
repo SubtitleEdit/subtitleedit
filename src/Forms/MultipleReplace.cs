@@ -254,7 +254,6 @@ namespace Nikse.SubtitleEdit.Forms
 
             foreach (Paragraph p in _subtitle.Paragraphs)
             {
-                bool hit = false;
                 string newText = p.Text;
                 foreach (ReplaceExpression item in replaceExpressions)
                 {
@@ -262,7 +261,6 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         if (newText.Contains(item.FindWhat))
                         {
-                            hit = true;
                             newText = newText.Replace(item.FindWhat, item.ReplaceWith);
                         }
                     }
@@ -271,26 +269,20 @@ namespace Nikse.SubtitleEdit.Forms
                         Regex r = _compiledRegExList[item.FindWhat];
                         if (r.IsMatch(newText))
                         {
-                            hit = true;
                             newText = r.Replace(newText, item.ReplaceWith);
                         }
                     }
                     else
                     {
                         int index = newText.IndexOf(item.FindWhat, StringComparison.OrdinalIgnoreCase);
-                        if (index >= 0)
+                        while (index >= 0)
                         {
-                            hit = true;
-                            do
-                            {
-                                newText = newText.Remove(index, item.FindWhat.Length).Insert(index, item.ReplaceWith);
-                                index = newText.IndexOf(item.FindWhat, index + item.ReplaceWith.Length, StringComparison.OrdinalIgnoreCase);
-                            }
-                            while (index >= 0);
+                            newText = newText.Remove(index, item.FindWhat.Length).Insert(index, item.ReplaceWith);
+                            index = newText.IndexOf(item.FindWhat, index + item.ReplaceWith.Length, StringComparison.OrdinalIgnoreCase);
                         }
                     }
                 }
-                if (hit && newText != p.Text)
+                if (newText != p.Text)
                 {
                     FixCount++;
                     AddToPreviewListView(p, newText);
