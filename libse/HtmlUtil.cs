@@ -719,5 +719,73 @@ namespace Nikse.SubtitleEdit.Core
             return text;
         }
 
+        public static string RemoveEmptyTags(string text)
+        {
+            const string emptyTag1 = "><";
+            int lowerBound = 0;
+            int j = -1;
+            int k = -1;
+            int idx = text.IndexOf(emptyTag1);
+            while (idx >= 0)
+            {
+                int len = text.Length;
+                for (j = idx - 1; j >= lowerBound; j--)
+                {
+                    if (text[j] == '>' || text[j] == '<') break;
+                }
+                for (k = idx + 2; k < len; k++)
+                {
+                    if (text[k] == '<' || text[k] == ' ' || text[k] == '>') break;
+                }
+
+                // No valid tag in text (Look no further).
+                if (k >= len) break;
+
+                if (j < 0)
+                {
+                    lowerBound = idx += 2;
+                    idx = lowerBound;
+                }
+                else if (j >= 0 && text[j] == '<' && k < len && text[k] == '>')
+                {
+                    bool startChecked = false;
+                    bool endChecked = false;
+                    // <i></i> or <font...></font>
+                    if (idx + 1 - j == 3 && IsValidTag(text[j + 1]))
+                    {
+                        startChecked = true;
+                    }
+                    else if (idx + 1 - j > 5 && text.Substring(j, 5).Equals("<font", StringComparison.Ordinal))
+                    {
+                        startChecked = true;
+                    }
+                    if (k + 1 - (idx + 1) == 4 && IsValidTag(text[idx + 3]))
+                    {
+                        endChecked = true;
+                    }
+                    else if (k + 1 - (idx + 1) == 7 && text.Substring(idx + 1, k + 1 - (idx + 1)).Equals("</font>", StringComparison.OrdinalIgnoreCase))
+                    {
+                        endChecked = true;
+                    }
+                    if (startChecked && endChecked)
+                    {
+                        text = text.Remove(j, k - j + 1);
+                        idx = j;
+                    }
+                    else
+                    {
+                        idx += 2;
+                    }
+                }
+                else
+                {
+                    idx += 2;
+                }
+                idx = text.IndexOf(emptyTag1, idx);
+            }
+            return text;
+        }
+
+        public static bool IsValidTag(char ch) => ch == 'i' || ch == 'I' || ch == 'b' || ch == 'B' || ch == 'u' || ch == 'U';
     }
 }
