@@ -742,6 +742,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (subtitleListView1.SelectedItems.Count == 0)
                 {
+                    subtitleListView2.SelectIndexAndEnsureVisible(_differences[0]);
                     subtitleListView1.SelectIndexAndEnsureVisible(_differences[0]);
                 }
                 else
@@ -750,8 +751,11 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         if (_differences.Contains(i))
                         {
+                            subtitleListView2.SelectIndexAndEnsureVisible(i - 2);
                             subtitleListView1.SelectIndexAndEnsureVisible(i - 2);
+                            subtitleListView2.SelectIndexAndEnsureVisible(i + 2);
                             subtitleListView1.SelectIndexAndEnsureVisible(i + 2);
+                            subtitleListView2.SelectIndexAndEnsureVisible(i);
                             subtitleListView1.SelectIndexAndEnsureVisible(i);
                             break;
                         }
@@ -766,6 +770,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (subtitleListView1.SelectedItems.Count == 0)
                 {
+                    subtitleListView2.SelectIndexAndEnsureVisible(_differences[0]);
                     subtitleListView1.SelectIndexAndEnsureVisible(_differences[0]);
                 }
                 else
@@ -774,10 +779,12 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         if (_differences.Contains(i))
                         {
+                            subtitleListView2.SelectIndexAndEnsureVisible(i - 2);
                             subtitleListView1.SelectIndexAndEnsureVisible(i - 2);
+                            subtitleListView2.SelectIndexAndEnsureVisible(i + 2);
                             subtitleListView1.SelectIndexAndEnsureVisible(i + 2);
+                            subtitleListView2.SelectIndexAndEnsureVisible(i);
                             subtitleListView1.SelectIndexAndEnsureVisible(i);
-                            subtitleListView1.Focus();
                             break;
                         }
                     }
