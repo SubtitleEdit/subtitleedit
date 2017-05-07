@@ -17,7 +17,7 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
         private static readonly char[] PeriodAndDash = { '.', '-' };
         private static readonly char[] SplitChars2 = { ' ', '.', ',', '?', '!', ':', ';', '"', '“', '”', '(', ')', '[', ']', '{', '}', '|', '<', '>', '/', '+', '\r', '\n', '¿', '¡', '…', '—', '–', '♪', '♫', '„', '“', '«', '»', '‹', '›' };
 
-        private readonly NamesList _namesList;
+        private readonly NameList _namesList;
         private readonly HashSet<string> _names;
         private readonly HashSet<string> _namesListUppercase = new HashSet<string>();
         private readonly HashSet<string> _namesListWithApostrophe = new HashSet<string>();
@@ -36,7 +36,7 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
 
             _languageName = languageName;
             _doSpell = doSpell;
-            _namesList = new NamesList(Configuration.DictionariesDirectory, languageName, Configuration.Settings.WordLists.UseOnlineNames, Configuration.Settings.WordLists.NamesUrl);
+            _namesList = new NameList(Configuration.DictionariesDirectory, languageName, Configuration.Settings.WordLists.UseOnlineNames, Configuration.Settings.WordLists.NamesUrl);
             _names = _namesList.GetNames();
             var namesMultiWordList = _namesList.GetMultiNames();
 
@@ -270,7 +270,7 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
             if (!word.EndsWith('\''))
                 _namesListWithApostrophe.Add(word + "'");
 
-            var namesList = new NamesList(Configuration.DictionariesDirectory, _languageName, Configuration.Settings.WordLists.UseOnlineNames, Configuration.Settings.WordLists.NamesUrl);
+            var namesList = new NameList(Configuration.DictionariesDirectory, _languageName, Configuration.Settings.WordLists.UseOnlineNames, Configuration.Settings.WordLists.NamesUrl);
             namesList.Add(word);
             return true;
         }

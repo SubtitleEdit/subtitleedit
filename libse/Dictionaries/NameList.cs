@@ -5,7 +5,7 @@ using System.Xml;
 
 namespace Nikse.SubtitleEdit.Core.Dictionaries
 {
-    public class NamesList
+    public class NameList
     {
         private readonly string _dictionaryFolder;
         private readonly HashSet<string> _namesList;
@@ -13,7 +13,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
         private readonly HashSet<string> _blackList;
         private readonly string _languageName;
 
-        public NamesList(string dictionaryFolder, string languageName, bool useOnlinenames, string namesUrl)
+        public NameList(string dictionaryFolder, string languageName, bool useOnlinenames, string namesUrl)
         {
             _dictionaryFolder = dictionaryFolder;
             _languageName = languageName;

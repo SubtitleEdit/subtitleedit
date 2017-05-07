@@ -1460,8 +1460,8 @@ namespace Nikse.SubtitleEdit.Forms
             var task = Task.Factory.StartNew(() =>
             {
                 // names etc
-                var namesList = new NamesList(Configuration.DictionariesDirectory, language, Configuration.Settings.WordLists.UseOnlineNames, Configuration.Settings.WordLists.NamesUrl);
-                _wordListNames = namesList.GetAllNames();
+                var nameList = new NameList(Configuration.DictionariesDirectory, language, Configuration.Settings.WordLists.UseOnlineNames, Configuration.Settings.WordLists.NamesUrl);
+                _wordListNames = nameList.GetAllNames();
                 _wordListNames.Sort();
                 return _wordListNames;
             });
@@ -1503,8 +1503,8 @@ namespace Nikse.SubtitleEdit.Forms
             string text = textBoxNameEtc.Text.RemoveControlCharacters().Trim();
             if (!string.IsNullOrEmpty(language) && text.Length > 1 && !_wordListNames.Contains(text))
             {
-                var namesList = new NamesList(Configuration.DictionariesDirectory, language, Configuration.Settings.WordLists.UseOnlineNames, Configuration.Settings.WordLists.NamesUrl);
-                namesList.Add(text);
+                var nameList = new NameList(Configuration.DictionariesDirectory, language, Configuration.Settings.WordLists.UseOnlineNames, Configuration.Settings.WordLists.NamesUrl);
+                nameList.Add(text);
                 LoadNames(language, true);
                 labelStatus.Text = string.Format(Configuration.Settings.Language.Settings.WordAddedX, text);
                 textBoxNameEtc.Text = string.Empty;
@@ -1552,7 +1552,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (result == DialogResult.Yes)
                 {
                     int removeCount = 0;
-                    var namesList = new NamesList(Configuration.DictionariesDirectory, language, Configuration.Settings.WordLists.UseOnlineNames, Configuration.Settings.WordLists.NamesUrl);
+                    var namesList = new NameList(Configuration.DictionariesDirectory, language, Configuration.Settings.WordLists.UseOnlineNames, Configuration.Settings.WordLists.NamesUrl);
                     for (int idx = listBoxNames.SelectedIndices.Count - 1; idx >= 0; idx--)
                     {
                         index = listBoxNames.SelectedIndices[idx];

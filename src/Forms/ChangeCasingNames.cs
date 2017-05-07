@@ -14,8 +14,8 @@ namespace Nikse.SubtitleEdit.Forms
         private int _noOfLinesChanged;
         private Subtitle _subtitle;
         private const string ExpectedEndChars = " ,.!?:;')]<-\"\r\n";
-        private NamesList _namesList;
-        private List<string> _namesListInclMulti;
+        private NameList _nameList;
+        private List<string> _nameListInclMulti;
 
         public ChangeCasingNames()
         {
@@ -73,8 +73,8 @@ namespace Nikse.SubtitleEdit.Forms
             if (string.IsNullOrEmpty(language))
                 language = "en_US";
 
-            _namesList = new NamesList(Configuration.DictionariesDirectory, language, Configuration.Settings.WordLists.UseOnlineNames, Configuration.Settings.WordLists.NamesUrl);
-            _namesListInclMulti = _namesList.GetAllNames(); // Will contains both one word names and multi names
+            _nameList = new NameList(Configuration.DictionariesDirectory, language, Configuration.Settings.WordLists.UseOnlineNames, Configuration.Settings.WordLists.NamesUrl);
+            _nameListInclMulti = _nameList.GetAllNames(); // Will contains both one word names and multi names
 
             FindAllNames();
             GeneratePreview();
@@ -125,9 +125,9 @@ namespace Nikse.SubtitleEdit.Forms
             foreach (string s in textBoxExtraNames.Text.Split(','))
             {
                 var name = s.Trim();
-                if (name.Length > 1 && !_namesListInclMulti.Contains(name))
+                if (name.Length > 1 && !_nameListInclMulti.Contains(name))
                 {
-                    _namesListInclMulti.Add(name);
+                    _nameListInclMulti.Add(name);
                 }
             }
         }
@@ -137,7 +137,7 @@ namespace Nikse.SubtitleEdit.Forms
             string text = HtmlUtil.RemoveHtmlTags(_subtitle.GetAllTexts());
             string textToLower = text.ToLower();
             listViewNames.BeginUpdate();
-            foreach (string name in _namesListInclMulti)
+            foreach (string name in _nameListInclMulti)
             {
                 int startIndex = textToLower.IndexOf(name.ToLower(), StringComparison.Ordinal);
                 if (startIndex >= 0)
