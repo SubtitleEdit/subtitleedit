@@ -59,8 +59,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         internal void FixCasing(Subtitle subtitle, string language)
         {
-            var namesList = new NamesList(Configuration.DictionariesDirectory, language, Configuration.Settings.WordLists.UseOnlineNames, Configuration.Settings.WordLists.NamesUrl);
-            var names = namesList.GetAllNames();
+            var nameList = new NameList(Configuration.DictionariesDirectory, language, Configuration.Settings.WordLists.UseOnlineNames, Configuration.Settings.WordLists.NamesUrl);
+            var names = nameList.GetAllNames();
 
             // Longer names must be first
             names.Sort((s1, s2) => s2.Length.CompareTo(s1.Length));

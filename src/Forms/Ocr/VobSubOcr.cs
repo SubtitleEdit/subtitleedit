@@ -8295,7 +8295,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         comboBoxDictionaries_SelectedIndexChanged(null, null);
 
                     text = text.Substring(text.IndexOf(':') + 1).Trim();
-                    using (var form = new AddToNamesList())
+                    using (var form = new AddToNameList())
                     {
                         form.Initialize(_subtitle, comboBoxDictionaries.Text, text);
                         if (form.ShowDialog(this) == DialogResult.OK)

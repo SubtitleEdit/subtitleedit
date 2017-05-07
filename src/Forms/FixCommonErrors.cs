@@ -522,17 +522,17 @@ namespace Nikse.SubtitleEdit.Forms
 
         public bool IsName(string candidate)
         {
-            MakeSureNamesListIsLoaded();
+            MakeSureNameListIsLoaded();
             return _nameList.Contains(candidate); // O(1)
         }
 
-        private void MakeSureNamesListIsLoaded()
+        private void MakeSureNameListIsLoaded()
         {
             if (_nameList == null)
             {
                 string languageTwoLetterCode = LanguageAutoDetect.AutoDetectGoogleLanguage(Subtitle);                
                 // Will contains both one word names and multi names
-                var namesList = new NamesList(Configuration.DictionariesDirectory, languageTwoLetterCode, Configuration.Settings.WordLists.UseOnlineNames, Configuration.Settings.WordLists.NamesUrl);
+                var namesList = new NameList(Configuration.DictionariesDirectory, languageTwoLetterCode, Configuration.Settings.WordLists.UseOnlineNames, Configuration.Settings.WordLists.NamesUrl);
                 _nameList = namesList.GetNames();
                 // Multi word names.
                 foreach (var name in namesList.GetMultiNames())
@@ -547,7 +547,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (_abbreviationList != null)
                 return _abbreviationList;
 
-            MakeSureNamesListIsLoaded();
+            MakeSureNameListIsLoaded();
             _abbreviationList = new HashSet<string>();
             foreach (string name in _nameList)
             {

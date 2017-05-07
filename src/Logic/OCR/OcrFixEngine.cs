@@ -28,7 +28,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
         private string _fiveLetterWordListLanguageName;
 
         private readonly OcrFixReplaceList _ocrFixReplaceList;
-        private NamesList _nameListObj;
+        private NameList _nameListObj;
         private HashSet<string> _nameList = new HashSet<string>();
         private HashSet<string> _nameListUppercase = new HashSet<string>();
         private HashSet<string> _nameListWithApostrophe = new HashSet<string>();
@@ -206,7 +206,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             }
 
             // Load names etc list (names/noise words)
-            _nameListObj = new NamesList(Configuration.DictionariesDirectory, _fiveLetterWordListLanguageName, Configuration.Settings.WordLists.UseOnlineNames, Configuration.Settings.WordLists.NamesUrl);
+            _nameListObj = new NameList(Configuration.DictionariesDirectory, _fiveLetterWordListLanguageName, Configuration.Settings.WordLists.UseOnlineNames, Configuration.Settings.WordLists.NamesUrl);
             _nameList = _nameListObj.GetNames();
             _nameMultiWordList = _nameListObj.GetMultiNames();
             _nameListUppercase = new HashSet<string>();

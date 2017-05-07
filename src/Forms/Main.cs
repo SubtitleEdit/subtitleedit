@@ -1273,7 +1273,7 @@ namespace Nikse.SubtitleEdit.Forms
             findDoubleWordsToolStripMenuItem.Text = _language.Menu.SpellCheck.FindDoubleWords;
             FindDoubleLinesToolStripMenuItem.Text = _language.Menu.SpellCheck.FindDoubleLines;
             GetDictionariesToolStripMenuItem.Text = _language.Menu.SpellCheck.GetDictionaries;
-            addWordToNamesListToolStripMenuItem.Text = _language.Menu.SpellCheck.AddToNameList;
+            addWordToNameListToolStripMenuItem.Text = _language.Menu.SpellCheck.AddToNameList;
 
             toolStripMenuItemSynchronization.Text = _language.Menu.Synchronization.Title;
             toolStripMenuItemAdjustAllTimes.Text = _language.Menu.Synchronization.AdjustAllTimes;
@@ -13268,9 +13268,9 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void AddWordToNamesListToolStripMenuItemClick(object sender, EventArgs e)
+        private void AddWordToNameListToolStripMenuItemClick(object sender, EventArgs e)
         {
-            using (var addToNamesList = new AddToNamesList())
+            using (var addToNamesList = new AddToNameList())
             {
                 addToNamesList.Initialize(_subtitle, textBoxListViewText.SelectedText);
                 if (addToNamesList.ShowDialog(this) == DialogResult.OK)
@@ -15652,7 +15652,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             spellCheckToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainSpellCheck);
             findDoubleWordsToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainSpellCheckFindDoubleWords);
-            addWordToNamesListToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainSpellCheckAddWordToNames);
+            addWordToNameListToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainSpellCheckAddWordToNames);
 
             toolStripMenuItemAdjustAllTimes.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainSynchronizationAdjustTimes);
             visualSyncToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainSynchronizationVisualSync);
@@ -18150,7 +18150,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             //toolStripSeparator9.Visible = true;
             //GetDictionariesToolStripMenuItem.Visible = true;
-            addWordToNamesListToolStripMenuItem.Visible = true;
+            addWordToNameListToolStripMenuItem.Visible = true;
         }
 
         private void ToolStripMenuItemPlayRateSlowClick(object sender, EventArgs e)
