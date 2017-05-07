@@ -779,7 +779,18 @@ namespace Test
                 Assert.AreEqual(_subtitle.Paragraphs[0].Text, "MARCUS: tycker det är bra.");
             }
         }
-        
+
+        [TestMethod]
+        public void FixMissingBetweenWords()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "that I would be proclaimed\r\nan \"Emblem ofFortitude,\"");
+                new FixMissingSpaces().Fix(_subtitle, new EmptyFixCallback { Language = "en" });
+                Assert.AreEqual("that I would be proclaimed\r\nan \"Emblem of Fortitude,\"", _subtitle.Paragraphs[0].Text);
+            }
+        }
+
         #endregion Fix missing spaces
 
         #region Fix unneeded spaces

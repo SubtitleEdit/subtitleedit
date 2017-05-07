@@ -326,7 +326,6 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         }
                         else
                         {
-                            // - Oh, God.
                             if (k > 0)
                             {
                                 // Do not add spaces after quote e.g: an "Emblem ofFortitude,"
