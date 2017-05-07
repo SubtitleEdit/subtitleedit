@@ -5,7 +5,7 @@
     <Version>3.5.2</Version>
     <TranslatedBy>Oversat til dansk af Nikse (mailto:nikse.dk@gmail.com)</TranslatedBy>
     <CultureName>da-DK</CultureName>
-    <HelpFile></HelpFile>
+    <HelpFile />
     <Ok>&amp;OK</Ok>
     <Cancel>&amp;Fortryd</Cancel>
     <Apply>Anvend</Apply>
@@ -1875,6 +1875,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <WaveformPlayNewSelectionEnd>Afspil slutningen af markering</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Spil første valgte undertekst</WaveformPlayFirstSelectedSubtitle>
     <WaveformFocusListView>Fokuser listevisning</WaveformFocusListView>
+    <WaveformGoToNextSubtitle>Gå til næste undertekst (fra video position)</WaveformGoToNextSubtitle>
     <WaveformGoToNextSceneChange>Gå til næste sceneskift</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>Toggle sceneskift</WaveformToggleSceneChange>
     <GoBack1Frame>En frame tilbage</GoBack1Frame>
@@ -2320,6 +2321,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <RemoveSceneChange>Fjern sceneskift</RemoveSceneChange>
     <GuessTimeCodes>Gæt tidskoder...</GuessTimeCodes>
     <SeekSilence>Søg tavshed...</SeekSilence>
+    <InsertSubtitleHere>Indsæt undertekst her...</InsertSubtitleHere>
     <CharsSecX>Tegn/sec: {0:0.00}</CharsSecX>
     <WordsMinX>Ord/min: {0:0.00}</WordsMinX>
   </Waveform>
