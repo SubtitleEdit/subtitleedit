@@ -27,6 +27,7 @@
     <CharsPerSec>Znaków/sek.</CharsPerSec>
     <WordsPerMin>Słów/min.</WordsPerMin>
     <Actor>Aktor</Actor>
+    <Region>Region</Region>
     <NumberSymbol>Nr</NumberSymbol>
     <Number>Numer</Number>
     <Text>Tekst</Text>
@@ -1070,6 +1071,7 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
         <SetActor>Ustaw aktora</SetActor>
         <SubStationAlphaStyles>Style Sub Station Alpha...</SubStationAlphaStyles>
         <AdvancedSubStationAlphaStyles>Style Advanced Sub Station Alpha...</AdvancedSubStationAlphaStyles>
+        <TimedTextSetRegion>Tekst synchroniczny - ustaw region</TimedTextSetRegion>
         <TimedTextSetStyle>Tekst synchroniczny - ustaw styl</TimedTextSetStyle>
         <TimedTextStyles>Style tekstu synchronicznego...</TimedTextStyles>
         <TimedTextSetLanguage>Tekst synchroniczny - ustaw język</TimedTextSetLanguage>
@@ -1876,6 +1878,7 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <WaveformPlayNewSelectionEnd>Odtwarzaj koniec zaznaczenia</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Odtwarzaj pierwsze zaznaczone napisy</WaveformPlayFirstSelectedSubtitle>
     <WaveformFocusListView>Koncentruj uwagę na "Widoku listy"</WaveformFocusListView>
+    <WaveformGoToNextSubtitle>Przejdź do następnych napisów (z pozycji wideo)</WaveformGoToNextSubtitle>
     <WaveformGoToNextSceneChange>Przejdź do następnej zmiany sceny</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>Przełącznik zmiany sceny</WaveformToggleSceneChange>
     <GoBack1Frame>Jedna klatka do tyłu</GoBack1Frame>
@@ -2322,6 +2325,7 @@ Utrzymać te zmiany?</KeepChangesMessage>
     <RemoveSceneChange>Usuń zmianę sceny</RemoveSceneChange>
     <GuessTimeCodes>Odgadnij kody czasowe...</GuessTimeCodes>
     <SeekSilence>Szukaj ciszy...</SeekSilence>
+    <InsertSubtitleHere>Wstaw napisy tutaj...</InsertSubtitleHere>
     <CharsSecX>ZNS: {0:0.00}</CharsSecX>
     <WordsMinX>SNM: {0:0.00}</WordsMinX>
   </Waveform>
