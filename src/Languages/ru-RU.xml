@@ -1850,7 +1850,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <FixCommonOcrErrorsUseHardcodedRules>Исправить ошибки OCR - применить жесткие правила</FixCommonOcrErrorsUseHardcodedRules>
     <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Испр. корот. время отображ. (разреш. измен. начал. времени)</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
     <FixCommonErrorsSkipStepOne>Пропустить 1-й шаг (выбрать правила исправления)</FixCommonErrorsSkipStepOne>
-    <Shortcuts>Клавишные команды</Shortcuts>
+    <Shortcuts>Горячие клавиши</Shortcuts>
     <Shortcut>Команда:</Shortcut>
     <Control>Ctrl</Control>
     <Alt>Alt</Alt>
@@ -1897,6 +1897,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <WaveformPlayNewSelectionEnd>Воспроизвести конец выделения</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Проиграть первый выделенный субтитр</WaveformPlayFirstSelectedSubtitle>
     <WaveformFocusListView>Фокус на списке</WaveformFocusListView>
+    <WaveformGoToNextSubtitle>Перейти к следующему субтитру (от позиции видео)</WaveformGoToNextSubtitle>
     <WaveformGoToNextSceneChange>Перейти к следующему изменению сцены</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>Переключить изменение сцен</WaveformToggleSceneChange>
     <GoBack1Frame>1 кадр назад</GoBack1Frame>
