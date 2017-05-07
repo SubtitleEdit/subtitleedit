@@ -183,7 +183,7 @@
     <Compile Include="NetflixQualityCheck\NetflixCheckGlyph.cs" />
     <Compile Include="NetflixQualityCheck\INetflixQualityChecker.cs" />
     <Compile Include="NetflixQualityCheck\NetflixCheckTextForHiUseBrackets.cs" />
-    <Compile Include="NetflixQualityCheck\NetflixCheckDialogeHyphenNoSpace.cs" />
+    <Compile Include="NetflixQualityCheck\NetflixCheckDialogeHyphenSpace.cs" />
     <Compile Include="NetflixQualityCheck\NetflixCheckMaxCps.cs" />
     <Compile Include="NetflixQualityCheck\NetflixCheckTwoFramesGap.cs" />
     <Compile Include="NetflixQualityCheck\NetflixCheckNumberOfLines.cs" />

@@ -54,12 +54,66 @@ namespace Test.Logic
             sub.Paragraphs.Add(p2);
 
             var controller = new NetflixQualityController();
-            var checker = new NetflixCheckDialogeHyphenNoSpace();
+            var checker = new NetflixCheckDialogeHyphenSpace();
 
             checker.Check(sub, controller);
 
             Assert.AreEqual(1, controller.Records.Count);
             Assert.AreEqual(controller.Records[0].FixedParagraph.Text, "-Lorem ipsum dolor sit" + Environment.NewLine + "-nelit focasia venlit dokalalam dilars.");
+        }
+
+        [TestMethod]
+        public void TestNetflixCheckDialogeHyphenNoSpaceItalic()
+        {
+            var sub = new Subtitle();
+            var p1 = new Paragraph("<i>- Lorem ipsum dolor sit</i>" + Environment.NewLine + "<i>- nelit focasia venlit dokalalam dilars.</i>", 0, 4000);
+            sub.Paragraphs.Add(p1);
+            var p2 = new Paragraph("Lorem - ipsum.", 0, 1000);
+            sub.Paragraphs.Add(p2);
+
+            var controller = new NetflixQualityController();
+            var checker = new NetflixCheckDialogeHyphenSpace();
+
+            checker.Check(sub, controller);
+
+            Assert.AreEqual(1, controller.Records.Count);
+            Assert.AreEqual(controller.Records[0].FixedParagraph.Text, "<i>-Lorem ipsum dolor sit</i>" + Environment.NewLine + "<i>-nelit focasia venlit dokalalam dilars.</i>");
+        }
+
+        [TestMethod]
+        public void TestNetflixCheckDialogeHyphenAddSpace()
+        {
+            var sub = new Subtitle();
+            var p1 = new Paragraph("-Lorem ipsum dolor sit." + Environment.NewLine + "-Nelit focasia venlit dokalalam dilars.", 0, 4000);
+            sub.Paragraphs.Add(p1);
+            var p2 = new Paragraph("Lorem-ipsum.", 0, 1000);
+            sub.Paragraphs.Add(p2);
+
+            var controller = new NetflixQualityController() { Language = "fr" };
+            var checker = new NetflixCheckDialogeHyphenSpace();
+
+            checker.Check(sub, controller);
+
+            Assert.AreEqual(1, controller.Records.Count);
+            Assert.AreEqual(controller.Records[0].FixedParagraph.Text, "- Lorem ipsum dolor sit." + Environment.NewLine + "- Nelit focasia venlit dokalalam dilars.");
+        }
+
+        [TestMethod]
+        public void TestNetflixCheckDialogeHyphenAddSpaceItalic()
+        {
+            var sub = new Subtitle();
+            var p1 = new Paragraph("<i>-Lorem ipsum dolor sit.</i>" + Environment.NewLine + "<i>-Nelit focasia venlit dokalalam dilars.</i>", 0, 4000);
+            sub.Paragraphs.Add(p1);
+            var p2 = new Paragraph("Lorem-ipsum.", 0, 1000);
+            sub.Paragraphs.Add(p2);
+
+            var controller = new NetflixQualityController() { Language = "fr" };
+            var checker = new NetflixCheckDialogeHyphenSpace();
+
+            checker.Check(sub, controller);
+
+            Assert.AreEqual(1, controller.Records.Count);
+            Assert.AreEqual(controller.Records[0].FixedParagraph.Text, "<i>- Lorem ipsum dolor sit.</i>" + Environment.NewLine + "<i>- Nelit focasia venlit dokalalam dilars.</i>");
         }
 
         [TestMethod]

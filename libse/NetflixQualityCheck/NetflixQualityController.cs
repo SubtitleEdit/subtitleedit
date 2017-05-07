@@ -10,7 +10,7 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
     {
 
         /// <summary>
-        /// Two letter language code
+        /// Two letter language code (e.g. "en" is English)
         /// </summary>
         public string Language { get; set; } = "en";
 
@@ -205,7 +205,7 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
         {
             return new List<INetflixQualityChecker>
             {
-                new NetflixCheckDialogeHyphenNoSpace(),
+                new NetflixCheckDialogeHyphenSpace(),
                 new NetflixCheckGlyph(),
                 new NetflixCheckMaxCps(),
                 new NetflixCheckMaxLineLength(),

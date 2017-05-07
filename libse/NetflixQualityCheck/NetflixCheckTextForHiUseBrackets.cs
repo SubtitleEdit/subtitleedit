@@ -22,13 +22,13 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
                 {
                     newText = "[" + newText.Substring(1, newText.Length - 2) + "]";
                 }
-                else if (arr.Length == 2 && arr[0].StartsWith("-") && arr[1].StartsWith("-"))
+                else if (arr.Length == 2 && arr[0].StartsWith("-", StringComparison.Ordinal) && arr[1].StartsWith("-", StringComparison.Ordinal))
                 {
-                    if ((arr[0].StartsWith("-(") && arr[0].EndsWith(")")) || (arr[0].StartsWith("-{") && arr[0].EndsWith("}")))
+                    if ((arr[0].StartsWith("-(", StringComparison.Ordinal) && arr[0].EndsWith(")", StringComparison.Ordinal)) || (arr[0].StartsWith("-{", StringComparison.Ordinal) && arr[0].EndsWith("}", StringComparison.Ordinal)))
                     {
                         arr[0] = "-[" + newText.Substring(2, newText.Length - 3) + "]";
                     }
-                    if ((arr[1].StartsWith("-(") && arr[1].EndsWith(")")) || (arr[1].StartsWith("-{") && arr[1].EndsWith("}")))
+                    if ((arr[1].StartsWith("-(", StringComparison.Ordinal) && arr[1].EndsWith(")", StringComparison.Ordinal)) || (arr[1].StartsWith("-{", StringComparison.Ordinal) && arr[1].EndsWith("}", StringComparison.Ordinal)))
                     {
                         arr[1] = "-[" + arr[1].Substring(2, arr[1].Length - 3) + "]";
                     }
