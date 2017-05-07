@@ -94,7 +94,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         if (languageCode == "sv" || languageCode == "fi")
                         {
                             var m = FixMissingSpacesReColonWithAfter.Match(p.Text, match.Index);
-                            skipSwedishOrFinish = IsSwedishSkipValue(languageCode, m) || IsFinnishSkipValue(languageCode, m);                            
+                            skipSwedishOrFinish = IsSwedishSkipValue(languageCode, m) || IsFinnishSkipValue(languageCode, m);
                         }
                         if (!skipSwedishOrFinish)
                         {
@@ -307,6 +307,53 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         missingSpaces++;
                         string oldText = p.Text;
                         p.Text = newText;
+                        callbacks.AddFixToListView(p, fixAction, oldText, p.Text);
+                    }
+                }
+
+                // fix missing spaces between tow words e.g: Emblem ofFortitude =>  Emblem of Fortitude
+                if (callbacks.AllowFix(p, fixAction))
+                {
+                    string text = p.Text;
+                    // upper case index
+                    int k = -1;
+                    for (int j = text.Length - 1; j >= 0; j--)
+                    {
+                        char ch = text[j];
+                        if (char.IsUpper(ch))
+                        {
+                            k = j;
+                        }
+                        else
+                        {
+                            // - Oh, God.
+                            if (k > 0)
+                            {
+                                // Do not add spaces after quote e.g: an "Emblem ofFortitude,"
+                                if (j + 1 == k && !char.IsLetter(ch))
+                                {
+                                    //  undo uppercase tracking index
+                                    k = -1;
+                                }
+                                else if (j - 1 >= 0 && (text[j - 1] == ' ' || text[j - 1] == '\n' || text[j - 1] == '\r'))
+                                {// gives "of" in ofFortitude
+                                    string word = text.Substring(j, k - j);
+                                    // ignore iPhone
+                                    if (!word.Equals("i", StringComparison.Ordinal))
+                                    {
+                                        // ofFortitude => of Fortitude
+                                        text = text.Insert(k, " ");
+                                        k = -1;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (text.Length != p.Text.Length)
+                    {
+                        missingSpaces++;
+                        string oldText = p.Text;
+                        p.Text = text;
                         callbacks.AddFixToListView(p, fixAction, oldText, p.Text);
                     }
                 }
