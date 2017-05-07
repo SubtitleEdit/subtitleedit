@@ -1006,7 +1006,7 @@ Ist genügend Plattenspeicherplatz verfügbar?</WaveFileMalformed>
         <FindDoubleWords>Doppelte Wörter finden</FindDoubleWords>
         <FindDoubleLines>Doppelte Texte finden</FindDoubleLines>
         <GetDictionaries>Wörterbücher herunterladen...</GetDictionaries>
-        <AddToNamesEtcList>Wort zur Namensliste hinzufügen</AddToNamesEtcList>
+        <AddToNameList>Wort zur Namensliste hinzufügen</AddToNameList>
       </SpellCheck>
       <Synchronization>
         <Title>Anpassung</Title>

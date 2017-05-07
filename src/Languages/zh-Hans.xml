@@ -1012,7 +1012,7 @@ Command line: {1} {2}
         <FindDoubleWords>查找重复词</FindDoubleWords>
         <FindDoubleLines>查找重复行</FindDoubleLines>
         <GetDictionaries>获取字典...</GetDictionaries>
-        <AddToNamesEtcList>添加单词到“名称”或“其它”列表</AddToNamesEtcList>
+        <AddToNameList>添加单词到“名称”或“其它”列表</AddToNameList>
       </SpellCheck>
       <Synchronization>
         <Title>同步(&amp;Y)</Title>

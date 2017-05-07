@@ -628,7 +628,7 @@
         <FindDoubleWords>Пронађи дуплиране &amp;речи</FindDoubleWords>
         <FindDoubleLines>Пронађи дуплиране &amp;линије</FindDoubleLines>
         <GetDictionaries>Пр&amp;еузми речнике...</GetDictionaries>
-        <AddToNamesEtcList>&amp;Додај реч у списак назива/изузетака...</AddToNamesEtcList>
+        <AddToNameList>&amp;Додај реч у списак назива/изузетака...</AddToNameList>
       </SpellCheck>
       <Synchronization>
         <Title>У&amp;склађивање</Title>

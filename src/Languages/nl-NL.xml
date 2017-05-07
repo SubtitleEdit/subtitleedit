@@ -1005,7 +1005,7 @@ Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
         <FindDoubleWords>Dubbele woorden zoeken</FindDoubleWords>
         <FindDoubleLines>Dubbele teksten zoeken</FindDoubleLines>
         <GetDictionaries>Woordenboeken downloaden...</GetDictionaries>
-        <AddToNamesEtcList>Woord aan naamlĳst toevoegen</AddToNamesEtcList>
+        <AddToNameList>Woord aan naamlĳst toevoegen</AddToNameList>
       </SpellCheck>
       <Synchronization>
         <Title>S&amp;ynchroniseren</Title>

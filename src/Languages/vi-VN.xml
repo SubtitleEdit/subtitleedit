@@ -791,7 +791,7 @@ Hộp thư: Gửi thư tới: nikse.dk@gmail.com</AboutText1>
         <FindDoubleWords>Tìm cặp từ</FindDoubleWords>
         <FindDoubleLines>Tìm dòng đôi</FindDoubleLines>
         <GetDictionaries>Bổ sung từ điển...</GetDictionaries>
-        <AddToNamesEtcList>Thêm từ ngữ đến tên/danh sách</AddToNamesEtcList>
+        <AddToNameList>Thêm từ ngữ đến tên/danh sách</AddToNameList>
       </SpellCheck>
       <Synchronization>
         <Title>Đồng bộ hóa</Title>
