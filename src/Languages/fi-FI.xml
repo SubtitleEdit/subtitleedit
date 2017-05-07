@@ -1008,7 +1008,7 @@ HUOM! Tarkista vapaa levytila.</WaveFileMalformed>
         <FindDoubleWords>Etsi kaksoissanoja</FindDoubleWords>
         <FindDoubleLines>Etsi kaksoisrivejä</FindDoubleLines>
         <GetDictionaries>Hae sanastoja</GetDictionaries>
-        <AddToNamesEtcList>Lisää sana nimet/etc -luetteloon</AddToNamesEtcList>
+        <AddToNameList>Lisää sana nimet -luetteloon</AddToNameList>
       </SpellCheck>
       <Synchronization>
         <Title>Tahdistus</Title>

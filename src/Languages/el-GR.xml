@@ -934,7 +934,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <FindDoubleWords>Εύρεση διπλών λέξεων</FindDoubleWords>
         <FindDoubleLines>Εύρεση διπλών γραμμών</FindDoubleLines>
         <GetDictionaries>Λάβετε λεξικά...</GetDictionaries>
-        <AddToNamesEtcList>Προσθήκη λέξης στη λίστα ονομάτων/ect</AddToNamesEtcList>
+        <AddToNameList>Προσθήκη λέξης στη λίστα ονομάτων</AddToNameList>
       </SpellCheck>
       <Synchronization>
         <Title>Συγχρονισμός</Title>

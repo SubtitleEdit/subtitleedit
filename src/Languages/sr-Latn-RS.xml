@@ -777,7 +777,7 @@ E-pošta:mailto:nikse.dk@gmail.com</AboutText1>
         <FindDoubleWords>Pronađi duple &amp;reči</FindDoubleWords>
         <FindDoubleLines>Pronađi duple &amp;linije</FindDoubleLines>
         <GetDictionaries>Preuzmi rečnike...</GetDictionaries>
-        <AddToNamesEtcList>&amp;Dodaj reč u popis naziva/izuzetaka...</AddToNamesEtcList>
+        <AddToNameList>&amp;Dodaj reč u popis naziva/izuzetaka...</AddToNameList>
       </SpellCheck>
       <Synchronization>
         <Title>Usklađivanje</Title>

@@ -1001,7 +1001,7 @@ Nota: comprobar el espacio libre en disco.</WaveFileMalformed>
         <FindDoubleWords>Buscar palabras dobles</FindDoubleWords>
         <FindDoubleLines>Buscar líneas dobles</FindDoubleLines>
         <GetDictionaries>Conseguir diccionarios...</GetDictionaries>
-        <AddToNamesEtcList>Añadir palabra al listado de nombres</AddToNamesEtcList>
+        <AddToNameList>Añadir palabra al listado de nombres</AddToNameList>
       </SpellCheck>
       <Synchronization>
         <Title>Sincronización</Title>

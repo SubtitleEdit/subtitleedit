@@ -1013,7 +1013,7 @@ Note: Vérifiez l'espace disque disponible.</WaveFileMalformed>
         <FindDoubleWords>Rechercher mots en doubles</FindDoubleWords>
         <FindDoubleLines>Rechercher lignes en doubles</FindDoubleLines>
         <GetDictionaries>Télécharger dictionnaires...</GetDictionaries>
-        <AddToNamesEtcList>Ajouter à la liste de noms/etc.</AddToNamesEtcList>
+        <AddToNameList>Ajouter à la liste de noms.</AddToNameList>
       </SpellCheck>
       <Synchronization>
         <Title>Synchronisation</Title>

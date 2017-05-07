@@ -852,7 +852,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <FindDoubleWords>Търсене на дублиращи се думи</FindDoubleWords>
         <FindDoubleLines>Търсене на дублиращи се редове</FindDoubleLines>
         <GetDictionaries>Изтеглете речници...</GetDictionaries>
-        <AddToNamesEtcList>Добавяне на думата към имена/игнорирани</AddToNamesEtcList>
+        <AddToNameList>Добавяне на думата към имена/игнорирани</AddToNameList>
       </SpellCheck>
       <Synchronization>
         <Title>Синхронизация</Title>

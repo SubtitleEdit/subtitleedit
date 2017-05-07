@@ -996,7 +996,7 @@ Poznámka: Zkontrolujte volné místo na disku.</WaveFileMalformed>
         <FindDoubleWords>Najít opakování slov</FindDoubleWords>
         <FindDoubleLines>Najít opakování řádků</FindDoubleLines>
         <GetDictionaries>Získat slovníky...</GetDictionaries>
-        <AddToNamesEtcList>Přidat slovo do seznamu jmen</AddToNamesEtcList>
+        <AddToNameList>Přidat slovo do seznamu jmen</AddToNameList>
       </SpellCheck>
       <Synchronization>
         <Title>Synchronizace</Title>

@@ -1502,7 +1502,7 @@ namespace Nikse.SubtitleEdit.Core
                         SpellCheck = "&Spell check...",
                         SpellCheckFromCurrentLine = "Spell check from current line...",
                         GetDictionaries = "Get dictionaries...",
-                        AddToNameList = "Add word to names/etc list",
+                        AddToNameList = "Add word to name list",
                     },
 
                     Synchronization = new LanguageStructure.Main.MainMenu.SynchronizationkMenu

@@ -1015,7 +1015,7 @@ Note: Do check free disk space.</WaveFileMalformed>
         <FindDoubleWords>Find double words</FindDoubleWords>
         <FindDoubleLines>Find double lines</FindDoubleLines>
         <GetDictionaries>Get dictionaries...</GetDictionaries>
-        <AddToNameList>Add word to names/etc list</AddToNameList>
+        <AddToNameList>Add word to name list</AddToNameList>
       </SpellCheck>
       <Synchronization>
         <Title>Synchronization</Title>

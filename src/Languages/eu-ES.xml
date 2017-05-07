@@ -1004,7 +1004,7 @@ Oharra: Egiaztatu diskako toki askea.</WaveFileMalformed>
         <FindDoubleWords>Bilatu &amp;hitz bikoitzak</FindDoubleWords>
         <FindDoubleLines>Bilatu &amp;lerro bikoitzak</FindDoubleLines>
         <GetDictionaries>&amp;Eskuratu hiztegiak...</GetDictionaries>
-        <AddToNamesEtcList>&amp;Gehitu hitza izen/etab. zerrendara</AddToNamesEtcList>
+        <AddToNameList>&amp;Gehitu hitza izen/etab. zerrendara</AddToNameList>
       </SpellCheck>
       <Synchronization>
         <Title>Aldibe&amp;retzea</Title>
