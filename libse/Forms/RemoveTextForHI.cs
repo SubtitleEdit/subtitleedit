@@ -379,7 +379,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                     {
                         indexOfDialogChar = second.IndexOf("- ", StringComparison.Ordinal);
                     }
-                    if ((indexOfDialogChar < 0 || indexOfDialogChar > 6) && !second.StartsWith('-'))
+                    if ((indexOfDialogChar < 0 || indexOfDialogChar > 6) && !(second.StartsWith('-') || second.StartsWith("<i>-", StringComparison.Ordinal)))
                     {
                         var st = new StrippableText(second, String.Empty, String.Empty);
                         second = st.Pre + "- " + st.StrippedText + st.Post;
