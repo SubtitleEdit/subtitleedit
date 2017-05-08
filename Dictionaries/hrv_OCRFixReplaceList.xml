@@ -175,6 +175,7 @@
     <Word from="ignorišite" to="ignorirajte" />
     <Word from="Ignorišite" to="Ignorirajte" />
     <Word from="ignorišu" to="ignoriraju" />
+    <Word from="interesuje" to="zanima" />
     <Word from="Interesuje" to="Zanima" />
     <Word from="Interesuju" to="Zanimaju" />
     <Word from="interesuju" to="zanimaju" />
@@ -277,6 +278,7 @@
     <Word from="lenji" to="lijeni" />
     <Word from="lenja" to="lijena" />
     <Word from="lešnik" to="lješnjak" />
+    <Word from="Leta" to="Ljeta" />
     <Word from="leto" to="ljeto" />
     <Word from="letiti" to="letjeti" />
     <Word from="leve" to="lijeve" />
@@ -396,6 +398,7 @@
     <Word from="ogladneo" to="ogladnio" />
     <Word from="organizuju" to="organiziraju" />
     <Word from="Organizuju" to="Organiziraju" />
+    <Word from="osjećanja" to="osjećaje" />
     <Word from="osmehne" to="osmjehne" />
     <Word from="ostrva" to="otoka" />
     <Word from="ostrvu" to="otoku" />
@@ -552,6 +555,8 @@
     <Word from="računare" to="računala" />
     <Word from="radijo" to="radio" />
     <Word from="rađe" to="radije" />
+    <Word from="ranac" to="ruksak" />
+    <Word from="rancu" to="ruksaku" />
     <Word from="rascep" to="rascjep" />
     <Word from="raspust" to="odmor" />
     <Word from="razgovrati" to="razgovarati" />
@@ -601,6 +606,7 @@
     <Word from="sleću" to="slijeću" />
     <Word from="slećemo" to="slijećemo" />
     <Word from="sleva" to="slijeva" />
+    <Word from="sećanjima" to="sjećanjima" />
     <Word from="seo" to="sjeo" />
     <Word from="Seo" to="Sjeo" />
     <Word from="sem" to="osim" />
@@ -1876,6 +1882,7 @@
     <RegEx find="(?&lt;!gl|[Nn])avić" replaceWith="avit ć" />
     <RegEx find="asnić" replaceWith="asnit ć" />
     <RegEx find="atrać" replaceWith="atrat ć" />
+    <RegEx find="aviknuće" replaceWith="aviknut će" />
     <RegEx find="avirin" replaceWith="abirin" />
     <RegEx find="(?&lt;![Ss]p)avać" replaceWith="avat ć" />
     <RegEx find="be[čć]aje" replaceWith="bećava" />
@@ -1997,6 +2004,7 @@
     <RegEx find="ržać" replaceWith="ržat ć" />
     <RegEx find="sčup" replaceWith="ščup" />
     <RegEx find="seden" replaceWith="sjeden" />
+    <RegEx find="smeva" replaceWith="smijava" />
     <RegEx find="stać(?!i)" replaceWith="stat ć" />
     <RegEx find="\bstaral" replaceWith="brinul" />
     <RegEx find="\bStaral" replaceWith="Brinul" />
