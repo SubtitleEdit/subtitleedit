@@ -1918,6 +1918,9 @@
     <Word from="ourpatient" to="our patient" />
     <Word from="oryou're" to="or you're" />
     <Word from="ofyourself" to="of yourself" />
+    <Word from="poweryour" to="power your" />
+    <Word from="Ofcourse" to="Of course" />
+    <Word from="Ofmy" to="Of my" />
   </WholeWords>
   <PartialWordsAlways>
     <!-- Will be replaced always -->
