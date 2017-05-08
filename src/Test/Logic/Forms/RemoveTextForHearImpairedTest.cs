@@ -1688,6 +1688,18 @@ namespace Test.Logic.Forms
             Assert.AreEqual("<i>—and trespassed into our star systems.</i>", actual);
         }
 
+        [TestMethod]
+        public void DontRemoveDialogueDashInSecondLineNoSpace()
+        {
+            var target = GetRemoveTextForHiLib();
+            target.Settings.RemoveTextBetweenSquares = true;
+            target.Settings.RemoveInterjections = false;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
+            target.Settings.RemoveTextBetweenCustomTags = false;
+            string actual = target.RemoveTextFromHearImpaired("<i> -JOHN: Hvordan går det?</i>" + Environment.NewLine + "<i>-Marry: Det går fint!</i>");
+            Assert.AreEqual("<i>- Hvordan går det?</i>" + Environment.NewLine + "<i>- Det går fint!</i>", actual);
+        }
+
         #region Additional test attributes
 
         //
