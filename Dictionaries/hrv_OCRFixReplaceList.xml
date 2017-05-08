@@ -2028,7 +2028,6 @@
     <RegEx find="tegri(sa|še)" replaceWith="tegrira" />
     <RegEx find="teriv" replaceWith="tjeriv" />
     <RegEx find="tnerk" replaceWith="tneric" />
-    <RegEx find="tarisa" replaceWith="tira" />
     <RegEx find="trisa" replaceWith="trira" />
     <RegEx find="triši" replaceWith="triraj" />
     <!-- ne diraj!!! - mijenja drugačije (komentira) -->
