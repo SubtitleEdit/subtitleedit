@@ -208,7 +208,7 @@ namespace Nikse.SubtitleEdit.Core
 
             AddToNames = new LanguageStructure.AddToNames
             {
-                Title = "Add to names/etc list",
+                Title = "Add to name list",
                 Description = "Add to names/noise list (case sensitive)",
             };
 
@@ -2084,7 +2084,7 @@ can edit in same subtitle file (collaboration)",
                 Testing123 = "Testing 123...",
                 Language = "Language",
                 NamesIgnoreLists = "Names/ignore list (case sensitive)",
-                AddNameEtc = "Add name",
+                AddName = "Add name",
                 AddWord = "Add word",
                 Remove = "Remove",
                 AddPair = "Add pair",

@@ -461,7 +461,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonRemoveNameEtc.Text = language.Remove;
             buttonRemoveUserWord.Text = language.Remove;
             buttonRemoveOcrFix.Text = language.Remove;
-            buttonAddNames.Text = language.AddNameEtc;
+            buttonAddNames.Text = language.AddName;
             buttonAddUserWord.Text = language.AddWord;
             buttonAddOcrFix.Text = language.AddPair;
             groupBoxWordListLocation.Text = language.Location;

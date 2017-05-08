@@ -17,7 +17,7 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
         private static readonly char[] PeriodAndDash = { '.', '-' };
         private static readonly char[] SplitChars2 = { ' ', '.', ',', '?', '!', ':', ';', '"', '“', '”', '(', ')', '[', ']', '{', '}', '|', '<', '>', '/', '+', '\r', '\n', '¿', '¡', '…', '—', '–', '♪', '♫', '„', '“', '«', '»', '‹', '›' };
 
-        private readonly NameList _namesList;
+        private readonly NameList _nameList;
         private readonly HashSet<string> _names;
         private readonly HashSet<string> _namesListUppercase = new HashSet<string>();
         private readonly HashSet<string> _namesListWithApostrophe = new HashSet<string>();
@@ -36,9 +36,9 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
 
             _languageName = languageName;
             _doSpell = doSpell;
-            _namesList = new NameList(Configuration.DictionariesDirectory, languageName, Configuration.Settings.WordLists.UseOnlineNames, Configuration.Settings.WordLists.NamesUrl);
-            _names = _namesList.GetNames();
-            var namesMultiWordList = _namesList.GetMultiNames();
+            _nameList = new NameList(Configuration.DictionariesDirectory, languageName, Configuration.Settings.WordLists.UseOnlineNames, Configuration.Settings.WordLists.NamesUrl);
+            _names = _nameList.GetNames();
+            var namesMultiWordList = _nameList.GetMultiNames();
 
             foreach (string namesItem in _names)
                 _namesListUppercase.Add(namesItem.ToUpper());
@@ -130,7 +130,7 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
             if (!word.EndsWith('\''))
                 _namesListWithApostrophe.Remove(word + "'");
 
-            _namesList.Remove(word);
+            _nameList.Remove(word);
         }
 
         public string ReplaceKnownWordsOrNamesWithBlanks(string s)
@@ -299,7 +299,7 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
 
         public bool HasNameExtended(string word, string text)
         {
-            return _namesListUppercase.Contains(word) || _namesListWithApostrophe.Contains(word) || _namesList.IsInNamesMultiWordList(text, word);
+            return _namesListUppercase.Contains(word) || _namesListWithApostrophe.Contains(word) || _nameList.IsInNamesMultiWordList(text, word);
         }
 
         public bool HasUserWord(string word)

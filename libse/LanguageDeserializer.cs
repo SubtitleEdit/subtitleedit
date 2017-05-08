@@ -4852,8 +4852,8 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/NamesIgnoreLists":
                     language.Settings.NamesIgnoreLists = reader.Value;
                     break;
-                case "Settings/AddNameEtc":
-                    language.Settings.AddNameEtc = reader.Value;
+                case "Settings/AddName":
+                    language.Settings.AddName = reader.Value;
                     break;
                 case "Settings/AddWord":
                     language.Settings.AddWord = reader.Value;

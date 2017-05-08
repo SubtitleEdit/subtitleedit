@@ -1964,7 +1964,7 @@
             public string Testing123 { get; set; }
             public string Language { get; set; }
             public string NamesIgnoreLists { get; set; }
-            public string AddNameEtc { get; set; }
+            public string AddName { get; set; }
             public string AddWord { get; set; }
             public string Remove { get; set; }
             public string AddPair { get; set; }
