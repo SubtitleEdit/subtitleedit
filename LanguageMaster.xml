@@ -91,7 +91,7 @@ Suggestions are very welcome.
 Email: mailto:nikse.dk@gmail.com</AboutText1>
   </About>
   <AddToNames>
-    <Title>Add to names/etc list</Title>
+    <Title>Add to name list</Title>
     <Description>Add to names/noise list (case sensitive)</Description>
   </AddToNames>
   <AddToOcrReplaceList>
@@ -1799,7 +1799,7 @@ can edit in same subtitle file (collaboration)</Information>
     <Testing123>Testing 123...</Testing123>
     <Language>Language</Language>
     <NamesIgnoreLists>Names/ignore list (case sensitive)</NamesIgnoreLists>
-    <AddNameEtc>Add name</AddNameEtc>
+    <AddName>Add name</AddName>
     <AddWord>Add word</AddWord>
     <Remove>Remove</Remove>
     <AddPair>Add pair</AddPair>
