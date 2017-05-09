@@ -1273,7 +1273,7 @@ namespace Nikse.SubtitleEdit.Forms
             findDoubleWordsToolStripMenuItem.Text = _language.Menu.SpellCheck.FindDoubleWords;
             FindDoubleLinesToolStripMenuItem.Text = _language.Menu.SpellCheck.FindDoubleLines;
             GetDictionariesToolStripMenuItem.Text = _language.Menu.SpellCheck.GetDictionaries;
-            addWordToNamesetcListToolStripMenuItem.Text = _language.Menu.SpellCheck.AddToNamesEtcList;
+            addWordToNameListToolStripMenuItem.Text = _language.Menu.SpellCheck.AddToNameList;
 
             toolStripMenuItemSynchronization.Text = _language.Menu.Synchronization.Title;
             toolStripMenuItemAdjustAllTimes.Text = _language.Menu.Synchronization.AdjustAllTimes;
@@ -13267,15 +13267,15 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void AddWordToNamesetcListToolStripMenuItemClick(object sender, EventArgs e)
+        private void AddWordToNameListToolStripMenuItemClick(object sender, EventArgs e)
         {
-            using (var addToNamesList = new AddToNamesList())
+            using (var addToNamesList = new AddToNameList())
             {
                 addToNamesList.Initialize(_subtitle, textBoxListViewText.SelectedText);
                 if (addToNamesList.ShowDialog(this) == DialogResult.OK)
-                    ShowStatus(string.Format(_language.NameXAddedToNamesEtcList, addToNamesList.NewName));
+                    ShowStatus(string.Format(_language.NameXAddedToNameList, addToNamesList.NewName));
                 else if (!string.IsNullOrEmpty(addToNamesList.NewName))
-                    ShowStatus(string.Format(_language.NameXNotAddedToNamesEtcList, addToNamesList.NewName));
+                    ShowStatus(string.Format(_language.NameXNotAddedToNameList, addToNamesList.NewName));
             }
         }
 
@@ -15651,7 +15651,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             spellCheckToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainSpellCheck);
             findDoubleWordsToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainSpellCheckFindDoubleWords);
-            addWordToNamesetcListToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainSpellCheckAddWordToNames);
+            addWordToNameListToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainSpellCheckAddWordToNames);
 
             toolStripMenuItemAdjustAllTimes.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainSynchronizationAdjustTimes);
             visualSyncToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainSynchronizationVisualSync);
@@ -18149,7 +18149,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             //toolStripSeparator9.Visible = true;
             //GetDictionariesToolStripMenuItem.Visible = true;
-            addWordToNamesetcListToolStripMenuItem.Visible = true;
+            addWordToNameListToolStripMenuItem.Visible = true;
         }
 
         private void ToolStripMenuItemPlayRateSlowClick(object sender, EventArgs e)

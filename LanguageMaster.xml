@@ -91,7 +91,7 @@ Suggestions are very welcome.
 Email: mailto:nikse.dk@gmail.com</AboutText1>
   </About>
   <AddToNames>
-    <Title>Add to names/etc list</Title>
+    <Title>Add to name list</Title>
     <Description>Add to names/noise list (case sensitive)</Description>
   </AddToNames>
   <AddToOcrReplaceList>
@@ -201,8 +201,8 @@ Note: Do check free disk space.</WaveFileMalformed>
     <Title>Change casing</Title>
     <ChangeCasingTo>Change casing to</ChangeCasingTo>
     <NormalCasing>Normal casing. Sentences begin with uppercase letter.</NormalCasing>
-    <FixNamesCasing>Fix names casing (via Dictionaries\NamesEtc.xml)</FixNamesCasing>
-    <FixOnlyNamesCasing>Fix only names casing (via Dictionaries\NamesEtc.xml)</FixOnlyNamesCasing>
+    <FixNamesCasing>Fix names casing (via Dictionaries\names.xml)</FixNamesCasing>
+    <FixOnlyNamesCasing>Fix only names casing (via Dictionaries\names.xml)</FixOnlyNamesCasing>
     <OnlyChangeAllUppercaseLines>Only change all upper case lines.</OnlyChangeAllUppercaseLines>
     <AllUppercase>ALL UPPERCASE</AllUppercase>
     <AllLowercase>all lowercase</AllLowercase>
@@ -1015,7 +1015,7 @@ Note: Do check free disk space.</WaveFileMalformed>
         <FindDoubleWords>Find double words</FindDoubleWords>
         <FindDoubleLines>Find double lines</FindDoubleLines>
         <GetDictionaries>Get dictionaries...</GetDictionaries>
-        <AddToNamesEtcList>Add word to names/etc list</AddToNamesEtcList>
+        <AddToNameList>Add word to name list</AddToNameList>
       </SpellCheck>
       <Synchronization>
         <Title>Synchronization</Title>
@@ -1370,8 +1370,8 @@ Continue?</SubtitleAppendPrompt>
     <NumberOfWithRemovedLineBreakX>Number of lines with removed line-break: {0}</NumberOfWithRemovedLineBreakX>
     <BeforeMultipleReplace>Before multiple replace</BeforeMultipleReplace>
     <NumberOfLinesReplacedX>Number of lines with text replaced: {0}</NumberOfLinesReplacedX>
-    <NameXAddedToNamesEtcList>The name '{0}' was added to names/etc list</NameXAddedToNamesEtcList>
-    <NameXNotAddedToNamesEtcList>The name '{0}' was NOT added to names/etc list</NameXNotAddedToNamesEtcList>
+    <NameXAddedToNameList>The name '{0}' was added to name list</NameXAddedToNameList>
+    <NameXNotAddedToNameList>The name '{0}' was NOT added to name list</NameXNotAddedToNameList>
     <WordXAddedToUserDic>The word '{0}' was added to the user dictionary</WordXAddedToUserDic>
     <WordXNotAddedToUserDic>The word '{0}' was NOT added to the user dictionary</WordXNotAddedToUserDic>
     <OcrReplacePairXAdded>The OCR replace list pair '{0} -&gt; {1}' was added to the OCR replace list</OcrReplacePairXAdded>
@@ -1799,19 +1799,19 @@ can edit in same subtitle file (collaboration)</Information>
     <Testing123>Testing 123...</Testing123>
     <Language>Language</Language>
     <NamesIgnoreLists>Names/ignore list (case sensitive)</NamesIgnoreLists>
-    <AddNameEtc>Add name</AddNameEtc>
+    <AddName>Add name</AddName>
     <AddWord>Add word</AddWord>
     <Remove>Remove</Remove>
     <AddPair>Add pair</AddPair>
     <UserWordList>User word list</UserWordList>
     <OcrFixList>OCR fix list</OcrFixList>
     <Location>Location</Location>
-    <UseOnlineNamesEtc>Use online names etc xml file</UseOnlineNamesEtc>
+    <UseOnlineNames>Use online names xml file</UseOnlineNames>
     <WordAddedX>Word added: {0}</WordAddedX>
     <WordAlreadyExists>Word already exists!</WordAlreadyExists>
     <WordNotFound>Word not found</WordNotFound>
     <RemoveX>Remove {0}?</RemoveX>
-    <CannotUpdateNamesEtcOnline>Cannot update NamesEtc.xml online!</CannotUpdateNamesEtcOnline>
+    <CannotUpdateNamesOnline>Cannot update names.xml online!</CannotUpdateNamesOnline>
     <ProxyServerSettings>Proxy server settings</ProxyServerSettings>
     <ProxyAddress>Proxy address</ProxyAddress>
     <ProxyAuthentication>Authentication</ProxyAuthentication>
@@ -1994,7 +1994,7 @@ can edit in same subtitle file (collaboration)</Information>
     <SpellCheckProgress>Spell check [{0}] - {1}</SpellCheckProgress>
     <EditWholeText>Edit whole text</EditWholeText>
     <EditWordOnly>Edit word only</EditWordOnly>
-    <AddXToNamesEtc>Add '{0}' to names/etc list</AddXToNamesEtc>
+    <AddXToNames>Add '{0}' to name list</AddXToNames>
     <AutoFixNames>Auto fix names where only casing differ</AutoFixNames>
     <CheckOneLetterWords>Prompt for unknown one letter words</CheckOneLetterWords>
     <TreatINQuoteAsING>Treat word ending " in' " as " ing " (English only)</TreatINQuoteAsING>

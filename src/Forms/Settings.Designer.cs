@@ -239,13 +239,13 @@
             this.textBoxUserWord = new System.Windows.Forms.TextBox();
             this.buttonAddUserWord = new System.Windows.Forms.Button();
             this.groupBoxWordListLocation = new System.Windows.Forms.GroupBox();
-            this.checkBoxNamesEtcOnline = new System.Windows.Forms.CheckBox();
-            this.textBoxNamesEtcOnline = new System.Windows.Forms.TextBox();
+            this.checkBoxNamesOnline = new System.Windows.Forms.CheckBox();
+            this.textBoxNamesOnline = new System.Windows.Forms.TextBox();
             this.groupBoxNamesIgonoreLists = new System.Windows.Forms.GroupBox();
             this.buttonRemoveNameEtc = new System.Windows.Forms.Button();
-            this.listBoxNamesEtc = new System.Windows.Forms.ListBox();
+            this.listBoxNames = new System.Windows.Forms.ListBox();
             this.textBoxNameEtc = new System.Windows.Forms.TextBox();
-            this.buttonAddNamesEtc = new System.Windows.Forms.Button();
+            this.buttonAddNames = new System.Windows.Forms.Button();
             this.labelWordListLanguage = new System.Windows.Forms.Label();
             this.comboBoxWordListLanguage = new System.Windows.Forms.ComboBox();
             this.tabPageToolBar = new System.Windows.Forms.TabPage();
@@ -3020,8 +3020,8 @@
             // 
             // groupBoxWordListLocation
             // 
-            this.groupBoxWordListLocation.Controls.Add(this.checkBoxNamesEtcOnline);
-            this.groupBoxWordListLocation.Controls.Add(this.textBoxNamesEtcOnline);
+            this.groupBoxWordListLocation.Controls.Add(this.checkBoxNamesOnline);
+            this.groupBoxWordListLocation.Controls.Add(this.textBoxNamesOnline);
             this.groupBoxWordListLocation.Location = new System.Drawing.Point(6, 316);
             this.groupBoxWordListLocation.Name = "groupBoxWordListLocation";
             this.groupBoxWordListLocation.Size = new System.Drawing.Size(797, 82);
@@ -3029,31 +3029,31 @@
             this.groupBoxWordListLocation.TabStop = false;
             this.groupBoxWordListLocation.Text = "Location";
             // 
-            // checkBoxNamesEtcOnline
+            // checkBoxNamesOnline
             // 
-            this.checkBoxNamesEtcOnline.AutoSize = true;
-            this.checkBoxNamesEtcOnline.Location = new System.Drawing.Point(7, 22);
-            this.checkBoxNamesEtcOnline.Name = "checkBoxNamesEtcOnline";
-            this.checkBoxNamesEtcOnline.Size = new System.Drawing.Size(145, 17);
-            this.checkBoxNamesEtcOnline.TabIndex = 26;
-            this.checkBoxNamesEtcOnline.Text = "Use online names xml file";
-            this.checkBoxNamesEtcOnline.UseVisualStyleBackColor = true;
+            this.checkBoxNamesOnline.AutoSize = true;
+            this.checkBoxNamesOnline.Location = new System.Drawing.Point(7, 22);
+            this.checkBoxNamesOnline.Name = "checkBoxNamesOnline";
+            this.checkBoxNamesOnline.Size = new System.Drawing.Size(145, 17);
+            this.checkBoxNamesOnline.TabIndex = 26;
+            this.checkBoxNamesOnline.Text = "Use online names xml file";
+            this.checkBoxNamesOnline.UseVisualStyleBackColor = true;
             // 
-            // textBoxNamesEtcOnline
+            // textBoxNamesOnline
             // 
-            this.textBoxNamesEtcOnline.Location = new System.Drawing.Point(6, 45);
-            this.textBoxNamesEtcOnline.Name = "textBoxNamesEtcOnline";
-            this.textBoxNamesEtcOnline.Size = new System.Drawing.Size(488, 21);
-            this.textBoxNamesEtcOnline.TabIndex = 28;
-            this.textBoxNamesEtcOnline.Text = "https://raw.githubusercontent.com/SubtitleEdit/subtitleedit/master/Dictionaries/n" +
-    "ames_etc.xml";
+            this.textBoxNamesOnline.Location = new System.Drawing.Point(6, 45);
+            this.textBoxNamesOnline.Name = "textBoxNamesOnline";
+            this.textBoxNamesOnline.Size = new System.Drawing.Size(488, 21);
+            this.textBoxNamesOnline.TabIndex = 28;
+            this.textBoxNamesOnline.Text = "https://raw.githubusercontent.com/SubtitleEdit/subtitleedit/master/Dictionaries/n" +
+    "ames.xml";
             // 
             // groupBoxNamesIgonoreLists
             // 
             this.groupBoxNamesIgonoreLists.Controls.Add(this.buttonRemoveNameEtc);
-            this.groupBoxNamesIgonoreLists.Controls.Add(this.listBoxNamesEtc);
+            this.groupBoxNamesIgonoreLists.Controls.Add(this.listBoxNames);
             this.groupBoxNamesIgonoreLists.Controls.Add(this.textBoxNameEtc);
-            this.groupBoxNamesIgonoreLists.Controls.Add(this.buttonAddNamesEtc);
+            this.groupBoxNamesIgonoreLists.Controls.Add(this.buttonAddNames);
             this.groupBoxNamesIgonoreLists.Location = new System.Drawing.Point(6, 43);
             this.groupBoxNamesIgonoreLists.Name = "groupBoxNamesIgonoreLists";
             this.groupBoxNamesIgonoreLists.Size = new System.Drawing.Size(241, 267);
@@ -3071,17 +3071,17 @@
             this.buttonRemoveNameEtc.UseVisualStyleBackColor = true;
             this.buttonRemoveNameEtc.Click += new System.EventHandler(this.ButtonRemoveNameEtcClick);
             // 
-            // listBoxNamesEtc
+            // listBoxNames
             // 
-            this.listBoxNamesEtc.FormattingEnabled = true;
-            this.listBoxNamesEtc.Location = new System.Drawing.Point(3, 16);
-            this.listBoxNamesEtc.Name = "listBoxNamesEtc";
-            this.listBoxNamesEtc.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.listBoxNamesEtc.Size = new System.Drawing.Size(150, 186);
-            this.listBoxNamesEtc.TabIndex = 20;
-            this.listBoxNamesEtc.SelectedIndexChanged += new System.EventHandler(this.ListBoxNamesEtcSelectedIndexChanged);
-            this.listBoxNamesEtc.Enter += new System.EventHandler(this.ListBoxSearchReset);
-            this.listBoxNamesEtc.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ListBoxKeyDownSearch);
+            this.listBoxNames.FormattingEnabled = true;
+            this.listBoxNames.Location = new System.Drawing.Point(3, 16);
+            this.listBoxNames.Name = "listBoxNames";
+            this.listBoxNames.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
+            this.listBoxNames.Size = new System.Drawing.Size(150, 186);
+            this.listBoxNames.TabIndex = 20;
+            this.listBoxNames.SelectedIndexChanged += new System.EventHandler(this.ListBoxNamesSelectedIndexChanged);
+            this.listBoxNames.Enter += new System.EventHandler(this.ListBoxSearchReset);
+            this.listBoxNames.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ListBoxKeyDownSearch);
             // 
             // textBoxNameEtc
             // 
@@ -3091,15 +3091,15 @@
             this.textBoxNameEtc.TabIndex = 24;
             this.textBoxNameEtc.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxNameEtcKeyDown);
             // 
-            // buttonAddNamesEtc
+            // buttonAddNames
             // 
-            this.buttonAddNamesEtc.Location = new System.Drawing.Point(160, 238);
-            this.buttonAddNamesEtc.Name = "buttonAddNamesEtc";
-            this.buttonAddNamesEtc.Size = new System.Drawing.Size(75, 23);
-            this.buttonAddNamesEtc.TabIndex = 26;
-            this.buttonAddNamesEtc.Text = "Add name";
-            this.buttonAddNamesEtc.UseVisualStyleBackColor = true;
-            this.buttonAddNamesEtc.Click += new System.EventHandler(this.ButtonAddNamesEtcClick);
+            this.buttonAddNames.Location = new System.Drawing.Point(160, 238);
+            this.buttonAddNames.Name = "buttonAddNames";
+            this.buttonAddNames.Size = new System.Drawing.Size(75, 23);
+            this.buttonAddNames.TabIndex = 26;
+            this.buttonAddNames.Text = "Add name";
+            this.buttonAddNames.UseVisualStyleBackColor = true;
+            this.buttonAddNames.Click += new System.EventHandler(this.ButtonAddNamesClick);
             // 
             // labelWordListLanguage
             // 
@@ -4192,10 +4192,10 @@
         private System.Windows.Forms.GroupBox groupBoxNamesIgonoreLists;
         private System.Windows.Forms.TextBox textBoxNameEtc;
         private System.Windows.Forms.Label labelWordListLanguage;
-        private System.Windows.Forms.Button buttonAddNamesEtc;
+        private System.Windows.Forms.Button buttonAddNames;
         private System.Windows.Forms.ComboBox comboBoxWordListLanguage;
         private System.Windows.Forms.Button buttonRemoveNameEtc;
-        private System.Windows.Forms.ListBox listBoxNamesEtc;
+        private System.Windows.Forms.ListBox listBoxNames;
         private System.Windows.Forms.Button buttonRemoveOcrFix;
         private System.Windows.Forms.ListBox listBoxOcrFixList;
         private System.Windows.Forms.TextBox textBoxOcrFixKey;
@@ -4213,8 +4213,8 @@
         private System.Windows.Forms.TextBox textBoxProxyPassword;
         private System.Windows.Forms.Label labelProxyAddress;
         private System.Windows.Forms.Label labelProxyUserName;
-        private System.Windows.Forms.CheckBox checkBoxNamesEtcOnline;
-        private System.Windows.Forms.TextBox textBoxNamesEtcOnline;
+        private System.Windows.Forms.CheckBox checkBoxNamesOnline;
+        private System.Windows.Forms.TextBox textBoxNamesOnline;
         private System.Windows.Forms.TextBox textBoxOcrFixValue;
         private System.Windows.Forms.TabPage tabPageTools;
         private System.Windows.Forms.GroupBox groupBoxToolsVisualSync;

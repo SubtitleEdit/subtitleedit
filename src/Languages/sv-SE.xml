@@ -1012,7 +1012,7 @@ Obs! Kontrollera ledigt utrymme.</WaveFileMalformed>
         <FindDoubleWords>Hitta dubbel ord</FindDoubleWords>
         <FindDoubleLines>Hitta dubbla linjer</FindDoubleLines>
         <GetDictionaries>Hämta lexikon</GetDictionaries>
-        <AddToNamesEtcList>Lägg ord till namn/ect</AddToNamesEtcList>
+        <AddToNameList>Lägg ord till namn/ect</AddToNameList>
       </SpellCheck>
       <Synchronization>
         <Title>Synkronisering</Title>

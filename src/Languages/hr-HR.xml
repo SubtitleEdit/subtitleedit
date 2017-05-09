@@ -987,7 +987,7 @@ Napomena: Provjeri slobodan prostor prostor na disku.</WaveFileMalformed>
         <FindDoubleWords>Pronađi duple &amp;riječi</FindDoubleWords>
         <FindDoubleLines>Pronađi duple &amp;linije</FindDoubleLines>
         <GetDictionaries>Pr&amp;euzmi rječnike…</GetDictionaries>
-        <AddToNamesEtcList>&amp;Dodaj riječ u popis naziva/izuzetaka…</AddToNamesEtcList>
+        <AddToNameList>&amp;Dodaj riječ u popis naziva/izuzetaka…</AddToNameList>
       </SpellCheck>
       <Synchronization>
         <Title>U&amp;sklađivanje</Title>

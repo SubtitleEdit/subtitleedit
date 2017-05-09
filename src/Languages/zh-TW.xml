@@ -931,7 +931,7 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
         <FindDoubleWords>尋找雙字</FindDoubleWords>
         <FindDoubleLines>尋找雙行</FindDoubleLines>
         <GetDictionaries>取得字典...</GetDictionaries>
-        <AddToNamesEtcList>加入單字到 名稱/其它 清單</AddToNamesEtcList>
+        <AddToNameList>加入單字到 名稱/其它 清單</AddToNameList>
       </SpellCheck>
       <Synchronization>
         <Title>同步</Title>

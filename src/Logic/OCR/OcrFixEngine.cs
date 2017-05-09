@@ -28,11 +28,11 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
         private string _fiveLetterWordListLanguageName;
 
         private readonly OcrFixReplaceList _ocrFixReplaceList;
-        private NamesList _namesList;
-        private HashSet<string> _namesEtcList = new HashSet<string>();
-        private HashSet<string> _namesEtcListUppercase = new HashSet<string>();
-        private HashSet<string> _namesEtcListWithApostrophe = new HashSet<string>();
-        private HashSet<string> _namesEtcMultiWordList = new HashSet<string>(); // case sensitive phrases
+        private NameList _nameListObj;
+        private HashSet<string> _nameList = new HashSet<string>();
+        private HashSet<string> _nameListUppercase = new HashSet<string>();
+        private HashSet<string> _nameListWithApostrophe = new HashSet<string>();
+        private HashSet<string> _nameMultiWordList = new HashSet<string>(); // case sensitive phrases
         private HashSet<string> _abbreviationList;
         private HashSet<string> _userWordList = new HashSet<string>();
         private HashSet<string> _wordSkipList = new HashSet<string>();
@@ -206,23 +206,23 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             }
 
             // Load names etc list (names/noise words)
-            _namesList = new NamesList(Configuration.DictionariesDirectory, _fiveLetterWordListLanguageName, Configuration.Settings.WordLists.UseOnlineNames, Configuration.Settings.WordLists.NamesUrl);
-            _namesEtcList = _namesList.GetNames();
-            _namesEtcMultiWordList = _namesList.GetMultiNames();
-            _namesEtcListUppercase = new HashSet<string>();
-            _namesEtcListWithApostrophe = new HashSet<string>();
+            _nameListObj = new NameList(Configuration.DictionariesDirectory, _fiveLetterWordListLanguageName, Configuration.Settings.WordLists.UseOnlineNames, Configuration.Settings.WordLists.NamesUrl);
+            _nameList = _nameListObj.GetNames();
+            _nameMultiWordList = _nameListObj.GetMultiNames();
+            _nameListUppercase = new HashSet<string>();
+            _nameListWithApostrophe = new HashSet<string>();
             _abbreviationList = new HashSet<string>();
 
             bool isEnglish = threeLetterIsoLanguageName.Equals("eng", StringComparison.OrdinalIgnoreCase);
-            foreach (string name in _namesEtcList)
+            foreach (string name in _nameList)
             {
-                _namesEtcListUppercase.Add(name.ToUpper());
+                _nameListUppercase.Add(name.ToUpper());
                 if (isEnglish)
                 {
                     if (!name.EndsWith('s'))
-                        _namesEtcListWithApostrophe.Add(name + "'s");
+                        _nameListWithApostrophe.Add(name + "'s");
                     else
-                        _namesEtcListWithApostrophe.Add(name + "'");
+                        _nameListWithApostrophe.Add(name + "'");
                 }
                 // Abbreviations.
                 if (name.EndsWith('.'))
@@ -952,7 +952,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 return line;
 
             string tempLine = line;
-            //foreach (string name in _namesEtcList)
+            //foreach (string name in _nameList)
             //{
             //    int start = tempLine.IndexOf(name);
             //    if (start >= 0)
@@ -967,7 +967,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             //}
 
             const string p = " ¡¿,.!?:;()[]{}+-$£\"„”“#&%…—♪\r\n";
-            foreach (string name in _namesEtcMultiWordList)
+            foreach (string name in _nameMultiWordList)
             {
                 int start = tempLine.FastIndexOf(name);
                 if (start == 0 || (start > 0 && p.Contains(tempLine[start - 1])))
@@ -1224,21 +1224,21 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                     {
                         string s = _spellCheck.Word.Trim();
                         if (s.Contains(' '))
-                            _namesEtcMultiWordList.Add(s);
+                            _nameMultiWordList.Add(s);
                         else
                         {
-                            _namesEtcList.Add(s);
-                            _namesEtcListUppercase.Add(s.ToUpper());
+                            _nameList.Add(s);
+                            _nameListUppercase.Add(s.ToUpper());
                             if (_fiveLetterWordListLanguageName.StartsWith("en", StringComparison.Ordinal))
                             {
                                 if (!s.EndsWith('s'))
-                                    _namesEtcListWithApostrophe.Add(s + "'s");
+                                    _nameListWithApostrophe.Add(s + "'s");
                                 else
-                                    _namesEtcListWithApostrophe.Add(s + "'");
+                                    _nameListWithApostrophe.Add(s + "'");
                             }
                         }
-                        if (_namesList != null)
-                            _namesList.Add(s);
+                        if (_nameListObj != null)
+                            _nameListObj.Add(s);
                     }
                     catch
                     {
@@ -1370,10 +1370,10 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             if (_wordSkipList.Contains(word))
                 return true;
 
-            if (_namesEtcList.Contains(word.Trim('\'')))
+            if (_nameList.Contains(word.Trim('\'')))
                 return true;
 
-            if (_namesEtcListUppercase.Contains(word.Trim('\'')))
+            if (_nameListUppercase.Contains(word.Trim('\'')))
                 return true;
 
             if (_userWordList.Contains(word.ToLower()))
@@ -1382,13 +1382,13 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             if (_userWordList.Contains(word.Trim('\'').ToLower()))
                 return true;
 
-            if (word.Length > 2 && _namesEtcListUppercase.Contains(word))
+            if (word.Length > 2 && _nameListUppercase.Contains(word))
                 return true;
 
-            if (word.Length > 2 && _namesEtcListWithApostrophe.Contains(word))
+            if (word.Length > 2 && _nameListWithApostrophe.Contains(word))
                 return true;
 
-            if (_namesList != null && _namesList.IsInNamesMultiWordList(line, word))
+            if (_nameListObj != null && _nameListObj.IsInNamesMultiWordList(line, word))
                 return true;
 
             return false;

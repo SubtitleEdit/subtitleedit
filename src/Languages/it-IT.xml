@@ -981,7 +981,7 @@ Nota: Controlla lo spazio libero sul disco.</WaveFileMalformed>
         <FindDoubleWords>Trova parole doppie</FindDoubleWords>
         <FindDoubleLines>Trova linee doppie</FindDoubleLines>
         <GetDictionaries>Scarica dizionari...</GetDictionaries>
-        <AddToNamesEtcList>Aggiungi parola alla lista nomi/ecc</AddToNamesEtcList>
+        <AddToNameList>Aggiungi parola alla lista nomi</AddToNameList>
       </SpellCheck>
       <Synchronization>
         <Title>Sincronizzazione</Title>

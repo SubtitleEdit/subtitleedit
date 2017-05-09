@@ -1,6 +1,6 @@
 ﻿namespace Nikse.SubtitleEdit.Forms
 {
-    sealed partial class AddToNamesList
+    sealed partial class AddToNameList
     {
         /// <summary>
         /// Clean up any resources being used.
@@ -83,7 +83,7 @@
             this.labelLanguage.TabIndex = 18;
             this.labelLanguage.Text = "Language";
             // 
-            // AddToNamesList
+            // AddToNameList
             // 
             this.AcceptButton = this.buttonOK;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -100,7 +100,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "AddToNamesList";
+            this.Name = "AddToNameList";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Add to Names List";

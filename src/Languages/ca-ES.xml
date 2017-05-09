@@ -997,7 +997,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <FindDoubleWords>Cerca mots dobles</FindDoubleWords>
         <FindDoubleLines>Cerca línies dobles</FindDoubleLines>
         <GetDictionaries>Obtén diccionaris...</GetDictionaries>
-        <AddToNamesEtcList>Afegeix mot a llista names/etc</AddToNamesEtcList>
+        <AddToNameList>Afegeix mot a llista names/etc</AddToNameList>
       </SpellCheck>
       <Synchronization>
         <Title>Sincronització</Title>

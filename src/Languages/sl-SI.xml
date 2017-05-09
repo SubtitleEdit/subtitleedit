@@ -907,7 +907,7 @@ E-pošta: hdhawkhd@gmail.com</AboutText1>
         <FindDoubleWords>Poišči dvojne besede</FindDoubleWords>
         <FindDoubleLines>Pošči dvojne vrstice</FindDoubleLines>
         <GetDictionaries>Slovarji...</GetDictionaries>
-        <AddToNamesEtcList>Dodaj besedo k imena/itd lista</AddToNamesEtcList>
+        <AddToNameList>Dodaj besedo k imena/itd lista</AddToNameList>
       </SpellCheck>
       <Synchronization>
         <Title>Sinhroniziraj</Title>

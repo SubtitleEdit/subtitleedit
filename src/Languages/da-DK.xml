@@ -1012,7 +1012,7 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
         <FindDoubleWords>Find dobbelt ord</FindDoubleWords>
         <FindDoubleLines>Find dobbelte linjer</FindDoubleLines>
         <GetDictionaries>Hent ordbøger...</GetDictionaries>
-        <AddToNamesEtcList>Tilføj ord til navne mv. liste</AddToNamesEtcList>
+        <AddToNameList>Tilføj ord til navne mv. liste</AddToNameList>
       </SpellCheck>
       <Synchronization>
         <Title>Synkronisering</Title>
