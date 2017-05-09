@@ -88,9 +88,9 @@
             this.radioButtonFixOnlyNames.AutoSize = true;
             this.radioButtonFixOnlyNames.Location = new System.Drawing.Point(11, 88);
             this.radioButtonFixOnlyNames.Name = "radioButtonFixOnlyNames";
-            this.radioButtonFixOnlyNames.Size = new System.Drawing.Size(283, 17);
+            this.radioButtonFixOnlyNames.Size = new System.Drawing.Size(267, 17);
             this.radioButtonFixOnlyNames.TabIndex = 6;
-            this.radioButtonFixOnlyNames.Text = "Fix only names casing (via Dictionaries\\NamesEtc.xml)";
+            this.radioButtonFixOnlyNames.Text = "Fix only names casing (via Dictionaries\\names.xml)";
             this.radioButtonFixOnlyNames.UseVisualStyleBackColor = true;
             this.radioButtonFixOnlyNames.CheckedChanged += new System.EventHandler(this.RadioButton_CheckedChanged);
             // 
@@ -101,9 +101,9 @@
             this.checkBoxFixNames.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxFixNames.Location = new System.Drawing.Point(23, 39);
             this.checkBoxFixNames.Name = "checkBoxFixNames";
-            this.checkBoxFixNames.Size = new System.Drawing.Size(261, 17);
+            this.checkBoxFixNames.Size = new System.Drawing.Size(245, 17);
             this.checkBoxFixNames.TabIndex = 2;
-            this.checkBoxFixNames.Text = "Fix names casing (via Dictionaries\\NamesEtc.xml)";
+            this.checkBoxFixNames.Text = "Fix names casing (via Dictionaries\\names.xml)";
             this.checkBoxFixNames.UseVisualStyleBackColor = true;
             // 
             // checkBoxOnlyAllUpper

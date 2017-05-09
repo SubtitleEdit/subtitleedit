@@ -937,7 +937,7 @@
         <FindDoubleWords>ค้นหาคำซ้ำ</FindDoubleWords>
         <FindDoubleLines>ค้นหาบรรทัดซ้ำ</FindDoubleLines>
         <GetDictionaries>ดาวน์โหลดพจนานุกรม...</GetDictionaries>
-        <AddToNamesEtcList>เพิ่มคำในรายการชื่อเฉพาะ/อื่นๆ</AddToNamesEtcList>
+        <AddToNameList>เพิ่มคำในรายการชื่อเฉพาะ/อื่นๆ</AddToNameList>
       </SpellCheck>
       <Synchronization>
         <Title>ซิงค์</Title>

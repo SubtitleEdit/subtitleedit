@@ -59,16 +59,16 @@ namespace Nikse.SubtitleEdit.Forms
 
         internal void FixCasing(Subtitle subtitle, string language)
         {
-            var namesList = new NamesList(Configuration.DictionariesDirectory, language, Configuration.Settings.WordLists.UseOnlineNames, Configuration.Settings.WordLists.NamesUrl);
-            var namesEtc = namesList.GetAllNames();
+            var nameList = new NameList(Configuration.DictionariesDirectory, language, Configuration.Settings.WordLists.UseOnlineNames, Configuration.Settings.WordLists.NamesUrl);
+            var names = nameList.GetAllNames();
 
             // Longer names must be first
-            namesEtc.Sort((s1, s2) => s2.Length.CompareTo(s1.Length));
+            names.Sort((s1, s2) => s2.Length.CompareTo(s1.Length));
 
             string lastLine = string.Empty;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                p.Text = FixCasing(p.Text, lastLine, namesEtc);
+                p.Text = FixCasing(p.Text, lastLine, names);
 
                 // fix casing of English alone i to I
                 if (radioButtonNormal.Checked && language.StartsWith("en", StringComparison.Ordinal))

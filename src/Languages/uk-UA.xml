@@ -991,7 +991,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <FindDoubleWords>Знайти слова, що дублюються</FindDoubleWords>
         <FindDoubleLines>Знайти рядки, що дублюються</FindDoubleLines>
         <GetDictionaries>Отримати словники...</GetDictionaries>
-        <AddToNamesEtcList>Додати слово до списку імен/шумів і т. п.</AddToNamesEtcList>
+        <AddToNameList>Додати слово до списку імен/шумів і т. п.</AddToNameList>
       </SpellCheck>
       <Synchronization>
         <Title>Синхронізація</Title>

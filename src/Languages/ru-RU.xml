@@ -1022,7 +1022,7 @@ https://github.com/SubtitleEdit/subtitleedit
         <FindDoubleWords>Найти дубликаты слов</FindDoubleWords>
         <FindDoubleLines>Найти дубликаты строк</FindDoubleLines>
         <GetDictionaries>Получение словарей...</GetDictionaries>
-        <AddToNamesEtcList>Добавить слово в список имен</AddToNamesEtcList>
+        <AddToNameList>Добавить слово в список имен</AddToNameList>
       </SpellCheck>
       <Synchronization>
         <Title>Сихронизация</Title>

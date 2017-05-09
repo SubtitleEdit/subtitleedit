@@ -638,7 +638,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <FindDoubleWords>العثور على الكلمات المزدوجة</FindDoubleWords>
         <FindDoubleLines>العثور على الأسطر المزدوجة</FindDoubleLines>
         <GetDictionaries>...الحصول على قواميس</GetDictionaries>
-        <AddToNamesEtcList>إضافة كلمة إلى الأسماء / قائمة إلخ</AddToNamesEtcList>
+        <AddToNameList>إضافة كلمة إلى الأسماء / قائمة إلخ</AddToNameList>
       </SpellCheck>
       <Synchronization>
         <Title>التزامن</Title>

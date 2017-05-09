@@ -643,7 +643,7 @@ http://soft98.ir
         <FindDoubleWords>جستجوی واژه دو</FindDoubleWords>
         <FindDoubleLines>پیدا کردن خط های دوبرابر</FindDoubleLines>
         <GetDictionaries>دریافت واژه نامه ها</GetDictionaries>
-        <AddToNamesEtcList>اضافه کردن کلمه به نام های/لیست الکتروشوک</AddToNamesEtcList>
+        <AddToNameList>اضافه کردن کلمه به نام های/لیست الکتروشوک</AddToNameList>
       </SpellCheck>
       <Synchronization>
         <Title>همگام سازی</Title>

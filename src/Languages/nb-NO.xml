@@ -1000,7 +1000,7 @@ Tips: Se om du har noe plass igjen på harddisken.</WaveFileMalformed>
         <FindDoubleWords>Finn dobbelord</FindDoubleWords>
         <FindDoubleLines>Finn dobbellinjer</FindDoubleLines>
         <GetDictionaries>Hent ordbøker...</GetDictionaries>
-        <AddToNamesEtcList>Legg til ord til listen over navn/osv.</AddToNamesEtcList>
+        <AddToNameList>Legg til ord til listen over navn/osv.</AddToNameList>
       </SpellCheck>
       <Synchronization>
         <Title>Synkronisering</Title>

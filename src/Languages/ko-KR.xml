@@ -1010,7 +1010,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
         <FindDoubleWords>더블 워드 찾기</FindDoubleWords>
         <FindDoubleLines>중복 라인 찾기</FindDoubleLines>
         <GetDictionaries>사전 가져오기</GetDictionaries>
-        <AddToNamesEtcList>이름/기타 목록에 단어 추가...</AddToNamesEtcList>
+        <AddToNameList>이름/기타 목록에 단어 추가...</AddToNameList>
       </SpellCheck>
       <Synchronization>
         <Title>동기화</Title>

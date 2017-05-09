@@ -17,10 +17,10 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
         private static readonly char[] PeriodAndDash = { '.', '-' };
         private static readonly char[] SplitChars2 = { ' ', '.', ',', '?', '!', ':', ';', '"', '“', '”', '(', ')', '[', ']', '{', '}', '|', '<', '>', '/', '+', '\r', '\n', '¿', '¡', '…', '—', '–', '♪', '♫', '„', '“', '«', '»', '‹', '›' };
 
-        private readonly NamesList _namesList;
-        private readonly HashSet<string> _namesEtcList;
-        private readonly HashSet<string> _namesEtcListUppercase = new HashSet<string>();
-        private readonly HashSet<string> _namesEtcListWithApostrophe = new HashSet<string>();
+        private readonly NameList _nameList;
+        private readonly HashSet<string> _names;
+        private readonly HashSet<string> _namesListUppercase = new HashSet<string>();
+        private readonly HashSet<string> _namesListWithApostrophe = new HashSet<string>();
         private readonly HashSet<string> _wordsWithDashesOrPeriods = new HashSet<string>();
         private readonly HashSet<string> _userWordList = new HashSet<string>();
         private readonly HashSet<string> _userPhraseList = new HashSet<string>();
@@ -36,25 +36,25 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
 
             _languageName = languageName;
             _doSpell = doSpell;
-            _namesList = new NamesList(Configuration.DictionariesDirectory, languageName, Configuration.Settings.WordLists.UseOnlineNames, Configuration.Settings.WordLists.NamesUrl);
-            _namesEtcList = _namesList.GetNames();
-            var namesEtcMultiWordList = _namesList.GetMultiNames();
+            _nameList = new NameList(Configuration.DictionariesDirectory, languageName, Configuration.Settings.WordLists.UseOnlineNames, Configuration.Settings.WordLists.NamesUrl);
+            _names = _nameList.GetNames();
+            var namesMultiWordList = _nameList.GetMultiNames();
 
-            foreach (string namesItem in _namesEtcList)
-                _namesEtcListUppercase.Add(namesItem.ToUpper());
+            foreach (string namesItem in _names)
+                _namesListUppercase.Add(namesItem.ToUpper());
 
             if (languageName.StartsWith("en_", StringComparison.OrdinalIgnoreCase))
             {
-                foreach (string namesItem in _namesEtcList)
+                foreach (string namesItem in _names)
                 {
                     if (!namesItem.EndsWith('s'))
                     {
-                        _namesEtcListWithApostrophe.Add(namesItem + "'s");
-                        _namesEtcListWithApostrophe.Add(namesItem + "’s");
+                        _namesListWithApostrophe.Add(namesItem + "'s");
+                        _namesListWithApostrophe.Add(namesItem + "’s");
                     }
                     else if (!namesItem.EndsWith('\''))
                     {
-                        _namesEtcListWithApostrophe.Add(namesItem + "'");
+                        _namesListWithApostrophe.Add(namesItem + "'");
                     }
                 }
             }
@@ -80,12 +80,12 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
                 }
             }
             // Add names/userdic with "." or " " or "-"
-            foreach (var word in namesEtcMultiWordList)
+            foreach (var word in namesMultiWordList)
             {
                 if (word.Contains(PeriodAndDash))
                     _wordsWithDashesOrPeriods.Add(word);
             }
-            foreach (string name in _namesEtcList)
+            foreach (string name in _names)
             {
                 if (name.Contains(PeriodAndDash))
                     _wordsWithDashesOrPeriods.Add(name);
@@ -112,25 +112,25 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
 
         public void RemoveName(string word)
         {
-            if (word == null || word.Length <= 1 || !_namesEtcList.Contains(word))
+            if (word == null || word.Length <= 1 || !_names.Contains(word))
                 return;
 
-            _namesEtcList.Remove(word);
-            _namesEtcListUppercase.Remove(word.ToUpper());
+            _names.Remove(word);
+            _namesListUppercase.Remove(word.ToUpper());
             if (_languageName.StartsWith("en_", StringComparison.Ordinal) && !word.EndsWith('s'))
             {
-                _namesEtcList.Remove(word + "s");
-                _namesEtcListUppercase.Remove(word.ToUpper() + "S");
+                _names.Remove(word + "s");
+                _namesListUppercase.Remove(word.ToUpper() + "S");
             }
             if (!word.EndsWith('s'))
             {
-                _namesEtcListWithApostrophe.Remove(word + "'s");
-                _namesEtcListUppercase.Remove(word.ToUpper() + "'S");
+                _namesListWithApostrophe.Remove(word + "'s");
+                _namesListUppercase.Remove(word.ToUpper() + "'S");
             }
             if (!word.EndsWith('\''))
-                _namesEtcListWithApostrophe.Remove(word + "'");
+                _namesListWithApostrophe.Remove(word + "'");
 
-            _namesList.Remove(word);
+            _nameList.Remove(word);
         }
 
         public string ReplaceKnownWordsOrNamesWithBlanks(string s)
@@ -252,25 +252,25 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
 
         public bool AddName(string word)
         {
-            if (string.IsNullOrEmpty(word) || _namesEtcList.Contains(word))
+            if (string.IsNullOrEmpty(word) || _names.Contains(word))
                 return false;
 
-            _namesEtcList.Add(word);
-            _namesEtcListUppercase.Add(word.ToUpper());
+            _names.Add(word);
+            _namesListUppercase.Add(word.ToUpper());
             if (_languageName.StartsWith("en_", StringComparison.Ordinal) && !word.EndsWith('s'))
             {
-                _namesEtcList.Add(word + "s");
-                _namesEtcListUppercase.Add(word.ToUpper() + "S");
+                _names.Add(word + "s");
+                _namesListUppercase.Add(word.ToUpper() + "S");
             }
             if (!word.EndsWith('s'))
             {
-                _namesEtcListWithApostrophe.Add(word + "'s");
-                _namesEtcListUppercase.Add(word.ToUpper() + "'S");
+                _namesListWithApostrophe.Add(word + "'s");
+                _namesListUppercase.Add(word.ToUpper() + "'S");
             }
             if (!word.EndsWith('\''))
-                _namesEtcListWithApostrophe.Add(word + "'");
+                _namesListWithApostrophe.Add(word + "'");
 
-            var namesList = new NamesList(Configuration.DictionariesDirectory, _languageName, Configuration.Settings.WordLists.UseOnlineNames, Configuration.Settings.WordLists.NamesUrl);
+            var namesList = new NameList(Configuration.DictionariesDirectory, _languageName, Configuration.Settings.WordLists.UseOnlineNames, Configuration.Settings.WordLists.NamesUrl);
             namesList.Add(word);
             return true;
         }
@@ -294,12 +294,12 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
 
         public bool HasName(string word)
         {
-            return _namesEtcList.Contains(word) || ((word.StartsWith('\'') || word.EndsWith('\'')) && _namesEtcList.Contains(word.Trim('\'')));
+            return _names.Contains(word) || ((word.StartsWith('\'') || word.EndsWith('\'')) && _names.Contains(word.Trim('\'')));
         }
 
         public bool HasNameExtended(string word, string text)
         {
-            return _namesEtcListUppercase.Contains(word) || _namesEtcListWithApostrophe.Contains(word) || _namesList.IsInNamesMultiWordList(text, word);
+            return _namesListUppercase.Contains(word) || _namesListWithApostrophe.Contains(word) || _nameList.IsInNamesMultiWordList(text, word);
         }
 
         public bool HasUserWord(string word)

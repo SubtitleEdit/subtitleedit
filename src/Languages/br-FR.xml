@@ -999,7 +999,7 @@ Notenn: Gwiriekit spas an disk vak.</WaveFileMalformed>
         <FindDoubleWords>Klask ar gerioù e doubl</FindDoubleWords>
         <FindDoubleLines>Klask al linennoù e doubl</FindDoubleLines>
         <GetDictionaries>Pellgargañ geriadurioù...</GetDictionaries>
-        <AddToNamesEtcList>Ouzhpennañ al listenn anvioù/hag-all hag-all.</AddToNamesEtcList>
+        <AddToNameList>Ouzhpennañ al listenn anvioù/hag-all hag-all.</AddToNameList>
       </SpellCheck>
       <AutoTranslate>
         <Title>Troidigezh</Title>

@@ -777,7 +777,7 @@ C# ソース コードは https://github.com/SubtitleEdit/subtitleedit にあり
         <FindDoubleWords>重複語の検索</FindDoubleWords>
         <FindDoubleLines>重複行の検索</FindDoubleLines>
         <GetDictionaries>辞書の取得...</GetDictionaries>
-        <AddToNamesEtcList>単語を names/etc の一覧に追加</AddToNamesEtcList>
+        <AddToNameList>単語を names/etc の一覧に追加</AddToNameList>
       </SpellCheck>
       <Synchronization>
         <Title>同期</Title>

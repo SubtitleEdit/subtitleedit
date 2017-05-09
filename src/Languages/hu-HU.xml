@@ -1012,7 +1012,7 @@ Megjegyzés: Ellenőrizze a szabad merevlemez területet.</WaveFileMalformed>
         <FindDoubleWords>Ismétlődő szavak keresése</FindDoubleWords>
         <FindDoubleLines>Ismétlődő sorok keresése</FindDoubleLines>
         <GetDictionaries>Szótárak letöltése...</GetDictionaries>
-        <AddToNamesEtcList>Szó hozzáadás a nevek/stb. listához</AddToNamesEtcList>
+        <AddToNameList>Szó hozzáadás a nevek/stb. listához</AddToNameList>
       </SpellCheck>
       <Synchronization>
         <Title>Szinkronizálás</Title>

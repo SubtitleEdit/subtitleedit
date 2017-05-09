@@ -939,7 +939,7 @@ E-posta: mailto:nikse.dk@gmail.com</AboutText1>
         <FindDoubleWords>Aynı kelimeyi bul</FindDoubleWords>
         <FindDoubleLines>Aynı satırı bul</FindDoubleLines>
         <GetDictionaries>Sözlük edin...</GetDictionaries>
-        <AddToNamesEtcList>İsim listesine kelime ekle</AddToNamesEtcList>
+        <AddToNameList>İsim listesine kelime ekle</AddToNameList>
       </SpellCheck>
       <Synchronization>
         <Title>Senkronizasyon</Title>

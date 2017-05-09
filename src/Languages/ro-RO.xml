@@ -1014,7 +1014,7 @@
         <FindDoubleWords>Găsește cuvinte duble</FindDoubleWords>
         <FindDoubleLines>Găsește linii duble</FindDoubleLines>
         <GetDictionaries>Obține dicționare...</GetDictionaries>
-        <AddToNamesEtcList>Adaugă cuvânt la lista de nume/etc.</AddToNamesEtcList>
+        <AddToNameList>Adaugă cuvânt la lista de nume/etc.</AddToNameList>
       </SpellCheck>
       <Synchronization>
         <Title>Sincronizare</Title>

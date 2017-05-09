@@ -1013,7 +1013,7 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
         <FindDoubleWords>Znajdź zdublowane słowa</FindDoubleWords>
         <FindDoubleLines>Znajdź zdublowane linie</FindDoubleLines>
         <GetDictionaries>Pobierz słowniki...</GetDictionaries>
-        <AddToNamesEtcList>Dodaj słowo do listy nazw własnych</AddToNamesEtcList>
+        <AddToNameList>Dodaj słowo do listy nazw własnych</AddToNameList>
       </SpellCheck>
       <Synchronization>
         <Title>Synchronizacja</Title>
