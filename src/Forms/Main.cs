@@ -1704,13 +1704,30 @@ namespace Nikse.SubtitleEdit.Forms
                 if (onlySelectedLines)
                 {
                     var selectedLines = new Subtitle { WasLoadedWithFrameNumbers = _subtitle.WasLoadedWithFrameNumbers };
+                    Subtitle selectedLinesAlternate = null;
+                    if (_subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0)
+                    {
+                        selectedLinesAlternate = new Subtitle { WasLoadedWithFrameNumbers = _subtitle.WasLoadedWithFrameNumbers };
+                    }
+
                     foreach (int index in SubtitleListview1.SelectedIndices)
-                        selectedLines.Paragraphs.Add(_subtitle.Paragraphs[index]);
-                    visualSync.Initialize(toolStripButtonVisualSync.Image as Bitmap, selectedLines, _fileName, _language.VisualSyncSelectedLines, CurrentFrameRate);
+                    {
+                        var p = _subtitle.Paragraphs[index];
+                        selectedLines.Paragraphs.Add(p);
+                        if (selectedLinesAlternate != null)
+                        {
+                            var original = Utilities.GetOriginalParagraph(index, p, _subtitleAlternate.Paragraphs);
+                            if (original != null)
+                            {
+                                selectedLinesAlternate.Paragraphs.Add(original);
+                            }
+                        }
+                    }
+                    visualSync.Initialize(toolStripButtonVisualSync.Image as Bitmap, selectedLines, selectedLinesAlternate, _fileName, _language.VisualSyncSelectedLines, CurrentFrameRate);
                 }
                 else
                 {
-                    visualSync.Initialize(toolStripButtonVisualSync.Image as Bitmap, _subtitle, _fileName, _language.VisualSyncTitle, CurrentFrameRate);
+                    visualSync.Initialize(toolStripButtonVisualSync.Image as Bitmap, _subtitle, _subtitleAlternate, _fileName, _language.VisualSyncTitle, CurrentFrameRate);
                 }
 
                 _endSeconds = -1;
@@ -1734,6 +1751,14 @@ namespace Nikse.SubtitleEdit.Forms
                         _subtitle.Paragraphs.Clear();
                         foreach (var p in visualSync.Paragraphs)
                             _subtitle.Paragraphs.Add(new Paragraph(p));
+
+                        if (_subtitleAlternate != null && visualSync.ParagraphsAlternate != null)
+                        {
+                            _subtitleAlternate.Paragraphs.Clear();
+                            foreach (var p in visualSync.ParagraphsAlternate)
+                                _subtitleAlternate.Paragraphs.Add(new Paragraph(p));
+                        }
+
                         ShowStatus(_language.VisualSyncPerformed);
                     }
                     if (visualSync.FrameRateChanged)
@@ -1741,6 +1766,8 @@ namespace Nikse.SubtitleEdit.Forms
                     if (IsFramesRelevant && CurrentFrameRate > 0)
                     {
                         _subtitle.CalculateFrameNumbersFromTimeCodesNoCheck(CurrentFrameRate);
+                        if (_subtitleAlternate != null)
+                            _subtitleAlternate.CalculateFrameNumbersFromTimeCodesNoCheck(CurrentFrameRate);
                         if (tabControlSubtitle.SelectedIndex == TabControlSourceView)
                             ShowSource();
                     }
@@ -5549,7 +5576,7 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             using (var visualSync = new VisualSync())
                             {
-                                visualSync.Initialize(toolStripButtonVisualSync.Image as Bitmap, subtitleToAppend, _fileName, _language.AppendViaVisualSyncTitle, CurrentFrameRate);
+                                visualSync.Initialize(toolStripButtonVisualSync.Image as Bitmap, subtitleToAppend, null, _fileName, _language.AppendViaVisualSyncTitle, CurrentFrameRate);
                                 visualSync.ShowDialog(this);
                                 if (visualSync.OkPressed)
                                 {
