@@ -9,34 +9,31 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             var language = Configuration.Settings.Language.FixCommonErrors;
             string fixAction = language.AddMissingQuote;
             int noOfFixes = 0;
+            const char quote = '"';
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
                 Paragraph p = subtitle.Paragraphs[i];
 
                 if (Utilities.CountTagInText(p.Text, '"') == 1)
                 {
-                    Paragraph next = subtitle.GetParagraphOrDefault(i + 1);
-                    if (next != null)
-                    {
-                        double betweenMilliseconds = next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds;
-                        if (betweenMilliseconds > 1500)
-                            next = null; // cannot be quote spanning several lines of more than 1.5 seconds between lines!
-                        else if (next.Text.Replace("<i>", string.Empty).TrimStart().TrimStart('-').TrimStart().StartsWith('"') &&
-                                 next.Text.Replace("</i>", string.Empty).TrimEnd().EndsWith('"') &&
-                                 Utilities.CountTagInText(next.Text, '"') == 2)
-                            next = null; // seems to have valid quotes, so no spanning
-                    }
+                    bool isPrevBalanced = true;
+                    bool isNextBalanced = true;
 
-                    Paragraph prev = subtitle.GetParagraphOrDefault(i - 1);
-                    if (prev != null)
+                    Paragraph a = subtitle.GetParagraphOrDefault(i - 1);
+                    if (a != null)
                     {
-                        double betweenMilliseconds = p.StartTime.TotalMilliseconds - prev.EndTime.TotalMilliseconds;
-                        if (betweenMilliseconds > 1500)
-                            prev = null; // cannot be quote spanning several lines of more than 1.5 seconds between lines!
-                        else if (prev.Text.Replace("<i>", string.Empty).TrimStart().TrimStart('-').TrimStart().StartsWith('"') &&
-                                 prev.Text.Replace("</i>", string.Empty).TrimEnd().EndsWith('"') &&
-                                 Utilities.CountTagInText(prev.Text, '"') == 2)
-                            prev = null; // seems to have valid quotes, so no spanning
+                        if ((Utilities.CountTagInText(a.Text, quote) % 2 != 0) || (p.StartTime.TotalSeconds - a.EndTime.TotalSeconds > 1.5))
+                        {
+                            isPrevBalanced = false;
+                        }
+                    }
+                    Paragraph b = subtitle.GetParagraphOrDefault(i + 1);
+                    if (b != null)
+                    {
+                        if ((Utilities.CountTagInText(b.Text, quote) % 2 != 0) || (b.StartTime.TotalSeconds - p.EndTime.TotalSeconds > 1.5))
+                        {
+                            isPrevBalanced = false;
+                        }
                     }
 
                     string oldText = p.Text;
@@ -99,28 +96,28 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     { // not dialog
                         if (p.Text.StartsWith('"'))
                         {
-                            if (next == null || !next.Text.Contains('"'))
+                            if (isNextBalanced)
                                 p.Text += "\"";
                         }
                         else if (p.Text.StartsWith("<i>\"", StringComparison.Ordinal) && p.Text.EndsWith("</i>", StringComparison.Ordinal) && Utilities.CountTagInText(p.Text, "</i>") == 1)
                         {
-                            if (next == null || !next.Text.Contains('"'))
+                            if (isNextBalanced)
                                 p.Text = p.Text.Replace("</i>", "\"</i>");
                         }
                         else if (p.Text.EndsWith('"'))
                         {
-                            if (prev == null || !prev.Text.Contains('"'))
+                            if (isPrevBalanced)
                                 p.Text = "\"" + p.Text;
                         }
                         else if (p.Text.Contains(Environment.NewLine + "\"") && Utilities.GetNumberOfLines(p.Text) == 2)
                         {
-                            if (next == null || !next.Text.Contains('"'))
+                            if (isNextBalanced)
                                 p.Text = p.Text + "\"";
                         }
                         else if ((p.Text.Contains(Environment.NewLine + "\"") || p.Text.Contains(Environment.NewLine + "-\"") || p.Text.Contains(Environment.NewLine + "- \"")) &&
                                  Utilities.GetNumberOfLines(p.Text) == 2 && p.Text.Length > 3)
                         {
-                            if (next == null || !next.Text.Contains('"'))
+                            if (isNextBalanced)
                             {
                                 if (p.Text.StartsWith("<i>", StringComparison.Ordinal) && p.Text.EndsWith("</i>", StringComparison.Ordinal) && Utilities.CountTagInText(p.Text, "</i>") == 1)
                                     p.Text = p.Text.Replace("</i>", "\"</i>");
@@ -130,7 +127,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         }
                         else if (p.Text.StartsWith("<i>", StringComparison.Ordinal) && p.Text.EndsWith("</i>", StringComparison.Ordinal) && Utilities.CountTagInText(p.Text, "<i>") == 1)
                         {
-                            if (prev == null || !prev.Text.Contains('"'))
+                            if (isPrevBalanced)
                                 p.Text = p.Text.Replace("<i>", "<i>\"");
                         }
                         else if (p.Text.Contains('"'))
