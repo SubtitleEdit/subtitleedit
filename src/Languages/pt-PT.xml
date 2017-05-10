@@ -29,6 +29,7 @@ Email: mailto:moob42341@gmail.com</TranslatedBy>
     <CharsPerSec>Caracteres/seg</CharsPerSec>
     <WordsPerMin>Palavras/min</WordsPerMin>
     <Actor>Actor</Actor>
+	<Region>Região</Region>
     <NumberSymbol>#</NumberSymbol>
     <Number>Número</Number>
     <Text>Texto</Text>
@@ -202,8 +203,8 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <Title>Inverter Maiúsculas/Minúsculas</Title>
     <ChangeCasingTo>Inverter maiúsculas para</ChangeCasingTo>
     <NormalCasing>Maiúsculas normais. Primeira letra de cada frase em maiúsculo.</NormalCasing>
-    <FixNamesCasing>Corrigir nomes em maiúsculas (por Dicionários\NomesEtc.xml)</FixNamesCasing>
-    <FixOnlyNamesCasing>Corrigir só nomes em maiúsculas (por Dicionários\NomesEtc.xml)</FixOnlyNamesCasing>
+    <FixNamesCasing>Corrigir nomes em maiúsculas (através de Dictionaries\names.xml)</FixNamesCasing>
+    <FixOnlyNamesCasing>Corrigir só nomes em maiúsculas (através de Dictionaries\names.xml)</FixOnlyNamesCasing>
     <OnlyChangeAllUppercaseLines>Alterar só linhas em maiúsculo.</OnlyChangeAllUppercaseLines>
     <AllUppercase>TODAS MAIÚSCULAS</AllUppercase>
     <AllLowercase>todas minúsculas</AllLowercase>
@@ -1067,14 +1068,16 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
         <ShowHideVideo>Mostrar/ocultar vídeo</ShowHideVideo>
       </ToolBar>
       <ContextMenu>
+        <SizeAllColumnsToFit>Ajustar o tamanho das colunas para caber</SizeAllColumnsToFit>
         <AdvancedSubStationAlphaSetStyle>Advanced Sub Station Alpha - Definir estilo</AdvancedSubStationAlphaSetStyle>
         <SubStationAlphaSetStyle>Sub Station Alpha - Definir estilo</SubStationAlphaSetStyle>
         <SetActor>Estipular actor</SetActor>
         <SubStationAlphaStyles>Estilos Sub Station Alpha...</SubStationAlphaStyles>
         <AdvancedSubStationAlphaStyles>Estilos Advanced Sub Station Alpha...</AdvancedSubStationAlphaStyles>
-        <TimedTextSetStyle>Texto cronometrado - Definir estilo</TimedTextSetStyle>
-        <TimedTextStyles>Estilos Texto cronometrado...</TimedTextStyles>
-        <TimedTextSetLanguage>Texto cronometrado - Definir o idioma</TimedTextSetLanguage>
+		<TimedTextSetRegion>Timed Text - Definir região</TimedTextSetRegion>
+        <TimedTextSetStyle>Timed Text - Definir estilo</TimedTextSetStyle>
+        <TimedTextStyles>Estilos Timed Text...</TimedTextStyles>
+        <TimedTextSetLanguage>Timed Text - Definir o idioma</TimedTextSetLanguage>
         <SamiSetStyle>Sami - Definir classe</SamiSetStyle>
         <NuendoSetStyle>Nuendo - Definir caractere</NuendoSetStyle>
         <Cut>Cortar</Cut>
@@ -1368,8 +1371,8 @@ Deseja continuar?</SubtitleAppendPrompt>
     <NumberOfWithRemovedLineBreakX>Número de linhas com quebra eliminadas: {0}</NumberOfWithRemovedLineBreakX>
     <BeforeMultipleReplace>Antes da substituição múltipla</BeforeMultipleReplace>
     <NumberOfLinesReplacedX>Número de linhas com texto substituído: {0}</NumberOfLinesReplacedX>
-    <NameXAddedToNamesEtcList>O nome '{0}' foi adicionado à lista de nomes</NameXAddedToNamesEtcList>
-    <NameXNotAddedToNamesEtcList>O nome '{0}' NÃO foi adicionado à lista de nomes</NameXNotAddedToNamesEtcList>
+    <NameXAddedToNameList>O nome '{0}' foi adicionado à lista de nomes</NameXAddedToNameList>
+    <NameXNotAddedToNameList>O nome '{0}' NÃO foi adicionado à lista de nomes</NameXNotAddedToNameList>
     <WordXAddedToUserDic>A palavra '{0}' foi adicionada ao dicionário de utilizador</WordXAddedToUserDic>
     <WordXNotAddedToUserDic>A palavra '{0}' NÃO foi adicionada ao dicionário de utilizador</WordXNotAddedToUserDic>
     <OcrReplacePairXAdded>O par OCR lista de substituição '{0} -&gt; {1}' foi adicionado à lista de substituição OCR</OcrReplacePairXAdded>
@@ -1606,8 +1609,8 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <NonSpaceCharacter>Sem ser espaço em espaço (\S)</NonSpaceCharacter>
     <ZeroOrMore>Zero ou mais (*)</ZeroOrMore>
     <OneOrMore>Um ou mais (+)</OneOrMore>
-    <InCharacterGroup>Dentro do grupo de caracteres ([teste])</InCharacterGroup>
-    <NotInCharacterGroup>Fora do grupo de caracteres ([^teste])</NotInCharacterGroup>
+    <InCharacterGroup>Lista de caracteres ([teste])</InCharacterGroup>
+    <NotInCharacterGroup>Lista negada de caracteres ([^teste])</NotInCharacterGroup>
   </RegularExpressionContextMenu>
   <RemoveTextFromHearImpaired>
     <Title>Eliminar texto para Deficientes Auditivos</Title>
@@ -1797,19 +1800,19 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <Testing123>Testando 123...</Testing123>
     <Language>Idioma</Language>
     <NamesIgnoreLists>Nomes ignorados (diferencia maiús/minús)</NamesIgnoreLists>
-    <AddNameEtc>Adicionar nome</AddNameEtc>
+    <AddName>Adicionar nome</AddName>
     <AddWord>Adicionar palavra</AddWord>
     <Remove>Remover</Remove>
     <AddPair>Adicionar par</AddPair>
     <UserWordList>Lista de palavras do utilizador</UserWordList>
     <OcrFixList>Lista de correcções OCR</OcrFixList>
     <Location>Localização</Location>
-    <UseOnlineNamesEtc>Usar lista de nomes XML online</UseOnlineNamesEtc>
+    <UseOnlineNames>Usar lista de nomes xml online</UseOnlineNames>
     <WordAddedX>Palavra adicionada: {0}</WordAddedX>
     <WordAlreadyExists>A palavra já existe!</WordAlreadyExists>
     <WordNotFound>Palavra não encontrada</WordNotFound>
     <RemoveX>Remover {0}?</RemoveX>
-    <CannotUpdateNamesEtcOnline>Não foi possível actualizar a lista de nomes XML online!</CannotUpdateNamesEtcOnline>
+    <CannotUpdateNamesOnline>Não foi possível actualizar a lista de nomes xml online!</CannotUpdateNamesOnline>
     <ProxyServerSettings>Configuração do servidor proxy</ProxyServerSettings>
     <ProxyAddress>Endereço proxy</ProxyAddress>
     <ProxyAuthentication>Autenticação</ProxyAuthentication>
@@ -1878,6 +1881,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <WaveformPlayNewSelectionEnd>Reproduzir a partir do fim da selecção</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Reproduzir a partir da primeira legenda selecionada</WaveformPlayFirstSelectedSubtitle>
     <WaveformFocusListView>Destacar a lista de visualização</WaveformFocusListView>
+	<WaveformGoToNextSubtitle>Ir para a próxima linha (a partir da posição do vídeo)</WaveformGoToNextSubtitle>
     <WaveformGoToNextSceneChange>Ir para a próxima mudança de cena</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>Alternar a mudança de cena</WaveformToggleSceneChange>
     <GoBack1Frame>Um fotograma para atrás</GoBack1Frame>
@@ -1991,7 +1995,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <SpellCheckProgress>Verificação ortográfica [{0}] - {1}</SpellCheckProgress>
     <EditWholeText>Editar todo o texto</EditWholeText>
     <EditWordOnly>Só editar palavra</EditWordOnly>
-    <AddXToNamesEtc>Adicionar '{0}' à lista de nomes</AddXToNamesEtc>
+    <AddXToNames>Adicionar '{0}' à lista de nomes</AddXToNames>
     <AutoFixNames>Corrigir automaticamente formato de nomes</AutoFixNames>
     <CheckOneLetterWords>Solicitar uma letra para uma palavra desconhecida</CheckOneLetterWords>
     <TreatINQuoteAsING>Considerar a palavra final " in' " como " ing " (apenas em Inglês)</TreatINQuoteAsING>
@@ -2324,6 +2328,7 @@ Manter as alterações?</KeepChangesMessage>
     <RemoveSceneChange>Eliminar mudança de cena</RemoveSceneChange>
     <GuessTimeCodes>Adivinhar os tempos...</GuessTimeCodes>
     <SeekSilence>Localizar silêncio no áudio...</SeekSilence>
+	<InsertSubtitleHere>Inserir legendagem aqui...</InsertSubtitleHere>
     <CharsSecX>CPS: {0:0.00}</CharsSecX>
     <WordsMinX>PPM: {0:0.00}</WordsMinX>
   </Waveform>
