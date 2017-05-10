@@ -1800,7 +1800,7 @@
     <Testing123>Testare 123...</Testing123>
     <Language>Limbă</Language>
     <NamesIgnoreLists>Listă de nume/ignorări (caractere identice)</NamesIgnoreLists>
-    <AddNameEtc>Adaugă nume</AddNameEtc>
+    <AddName>Adaugă nume</AddName>
     <AddWord>Adaugă cuvânt</AddWord>
     <Remove>Elimină</Remove>
     <AddPair>Adaugă pereche</AddPair>

@@ -1794,7 +1794,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <Testing123>Dette er en test 123...</Testing123>
     <Language>Sprog</Language>
     <NamesIgnoreLists>Navne/ignorer list</NamesIgnoreLists>
-    <AddNameEtc>Tilføj navn</AddNameEtc>
+    <AddName>Tilføj navn</AddName>
     <AddWord>Tilføj ord</AddWord>
     <Remove>Fjern</Remove>
     <AddPair>Tilføj par</AddPair>

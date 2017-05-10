@@ -1727,7 +1727,7 @@ modificare lo stesso file di sottotitolo (collaborazione)</Information>
     <Testing123>Esempio 123...</Testing123>
     <Language>Lingua</Language>
     <NamesIgnoreLists>Lista nomi/ecc (sensibile a MAIUSC/minusc)</NamesIgnoreLists>
-    <AddNameEtc>Aggiungi nome</AddNameEtc>
+    <AddName>Aggiungi nome</AddName>
     <AddWord>Aggiungi parola</AddWord>
     <Remove>Rimuovi</Remove>
     <AddPair>Aggiungi paio</AddPair>

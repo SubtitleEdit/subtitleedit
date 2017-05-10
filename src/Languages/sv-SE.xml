@@ -1786,7 +1786,7 @@ kan redigera i samma textningsfil (samarbete)</Information>
     <Testing123>Provning av text123 ♫</Testing123>
     <Language>Språk</Language>
     <NamesIgnoreLists>Namn/Ignor-lista (skiftlägeskänslig)</NamesIgnoreLists>
-    <AddNameEtc>Lägg till namn</AddNameEtc>
+    <AddName>Lägg till namn</AddName>
     <AddWord>Lägg till ord</AddWord>
     <Remove>Ta bort</Remove>
     <AddPair>Lägg till par</AddPair>

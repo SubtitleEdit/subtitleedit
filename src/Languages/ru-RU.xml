@@ -1815,7 +1815,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <Testing123>Программы на русском: WWW.WYLEK.RU</Testing123>
     <Language>Язык:</Language>
     <NamesIgnoreLists>Список имен (с учетом регистра)</NamesIgnoreLists>
-    <AddNameEtc>Добавить имя</AddNameEtc>
+    <AddName>Добавить имя</AddName>
     <AddWord>Добавить слово</AddWord>
     <Remove>Удалить</Remove>
     <AddPair>Добавить пару</AddPair>

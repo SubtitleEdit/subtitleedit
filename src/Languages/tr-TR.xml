@@ -1668,7 +1668,7 @@ Yeni oturum başlatın.</Information>
     <Testing123>Test ediliyor 123...</Testing123>
     <Language>Dil</Language>
     <NamesIgnoreLists>İsimler/önemsenmeyecek listesi (harf duyarlılığı)</NamesIgnoreLists>
-    <AddNameEtc>İsim ekle</AddNameEtc>
+    <AddName>İsim ekle</AddName>
     <AddWord>Kelime ekle</AddWord>
     <Remove>Temizle</Remove>
     <AddPair>Add pair</AddPair>

@@ -1778,7 +1778,7 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <Testing123>Testataan 123...Testataan 123...Testataan 123</Testing123>
     <Language>Kieli</Language>
     <NamesIgnoreLists>Nimet/ohituslista (sama kirjainkoko)</NamesIgnoreLists>
-    <AddNameEtc>Lisää nimi</AddNameEtc>
+    <AddName>Lisää nimi</AddName>
     <AddWord>Lisää sana</AddWord>
     <Remove>Poista</Remove>
     <AddPair>Lisää pari</AddPair>

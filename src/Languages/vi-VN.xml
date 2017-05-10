@@ -1409,7 +1409,7 @@ có thể chỉnh sửa trong cùng một tập tin phụ đề (hợp tác vớ
     <Testing123>Kiểm tra 123...</Testing123>
     <Language>Ngôn ngữ</Language>
     <NamesIgnoreLists>Tên/danh sách bỏ qua(THĐB)</NamesIgnoreLists>
-    <AddNameEtc>Thêm tên</AddNameEtc>
+    <AddName>Thêm tên</AddName>
     <AddWord>Thêm các từ</AddWord>
     <Remove>Gỡ bỏ</Remove>
     <AddPair>Thêm phần</AddPair>

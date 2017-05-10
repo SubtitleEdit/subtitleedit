@@ -1750,7 +1750,7 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <Testing123>Zkouška 123...</Testing123>
     <Language>Jazyk</Language>
     <NamesIgnoreLists>Seznam jmen (velikost písmen)</NamesIgnoreLists>
-    <AddNameEtc>Přidat jméno</AddNameEtc>
+    <AddName>Přidat jméno</AddName>
     <AddWord>Přidat slovo</AddWord>
     <Remove>Odebrat</Remove>
     <AddPair>Přidat dvojici</AddPair>

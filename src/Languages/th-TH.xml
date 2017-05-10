@@ -1657,7 +1657,7 @@
     <Testing123>Testing 123...</Testing123>
     <Language>ภาษา</Language>
     <NamesIgnoreLists>ชื่อเฉพาะ/ข้ามไป (ลักษณะตัวพิมพ์สำคัญ)</NamesIgnoreLists>
-    <AddNameEtc>เพิ่มชื่อ</AddNameEtc>
+    <AddName>เพิ่มชื่อ</AddName>
     <AddWord>เพิ่มคำ</AddWord>
     <Remove>ลบ</Remove>
     <AddPair>เพิ่มคู่</AddPair>

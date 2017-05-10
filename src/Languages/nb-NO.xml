@@ -1750,7 +1750,7 @@ Hvis du har redigert denne filen i Subtitle Edit, kan du kanskje finne en backup
     <Testing123>Tester 1-2-3...</Testing123>
     <Language>Språk</Language>
     <NamesIgnoreLists>Navn/skjule-listen (sensitiv for stor)</NamesIgnoreLists>
-    <AddNameEtc>Legg til navn</AddNameEtc>
+    <AddName>Legg til navn</AddName>
     <AddWord>Legg til ord</AddWord>
     <Remove>Fjern</Remove>
     <AddPair>Legg til par</AddPair>

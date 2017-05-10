@@ -1616,7 +1616,7 @@ popravlja en podnapis (sodelovanje)</Information>
     <Testing123>Testiranje 123...</Testing123>
     <Language>Jezik</Language>
     <NamesIgnoreLists>Imena/nikalni seznam (posebni primeri)</NamesIgnoreLists>
-    <AddNameEtc>Dodaj ime</AddNameEtc>
+    <AddName>Dodaj ime</AddName>
     <AddWord>Dodaj besedo</AddWord>
     <Remove>Odstrani</Remove>
     <AddPair>Dodaj par</AddPair>

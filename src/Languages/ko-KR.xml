@@ -1794,7 +1794,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <Testing123>테스트: 123 ABC ...</Testing123>
     <Language>언어</Language>
     <NamesIgnoreLists>이름/기타 목록 (대소문자 구분)</NamesIgnoreLists>
-    <AddNameEtc>추가</AddNameEtc>
+    <AddName>추가</AddName>
     <AddWord>추가</AddWord>
     <Remove>삭제</Remove>
     <AddPair>추가</AddPair>

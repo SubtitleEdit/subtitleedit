@@ -1774,7 +1774,7 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <Testing123>Test 123...</Testing123>
     <Language>Sprache</Language>
     <NamesIgnoreLists>Namen/Ignorierliste (Groß-/Kleinschreibung)</NamesIgnoreLists>
-    <AddNameEtc>Hinzufügen</AddNameEtc>
+    <AddName>Hinzufügen</AddName>
     <AddWord>Hinzufügen</AddWord>
     <Remove>Entfernen</Remove>
     <AddPair>Hinzufügen</AddPair>
