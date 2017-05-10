@@ -14,9 +14,11 @@ namespace Nikse.SubtitleEdit.Forms
     public sealed partial class VisualSync : PositionAndSizeForm
     {
         private List<Paragraph> _paragraphs;
+        private List<Paragraph> _paragraphsAlternate;
         private VideoInfo _videoInfo;
         private string _subtitleFileName;
-        private Subtitle _originalSubtitle;
+        private Subtitle _inputSubtitle;
+        private Subtitle _inputAlternateSubtitle;
         private double _oldFrameRate;
         private bool _frameRateChanged;
         private bool _isStartSceneActive;
@@ -52,6 +54,11 @@ namespace Nikse.SubtitleEdit.Forms
         public List<Paragraph> Paragraphs
         {
             get { return _paragraphs; }
+        }
+
+        public List<Paragraph> ParagraphsAlternate
+        {
+            get { return _paragraphsAlternate; }
         }
 
         public VisualSync()
@@ -147,11 +154,20 @@ namespace Nikse.SubtitleEdit.Forms
                 VideoInfo videoInfo = ShowVideoInfo(fileName);
 
                 // be sure to match frames with movie
-                if (_originalSubtitle.WasLoadedWithFrameNumbers) // frame based subtitles like MicroDVD
+                if (_inputSubtitle.WasLoadedWithFrameNumbers) // frame based subtitles like MicroDVD
                 {
                     if (Math.Abs(_videoInfo.FramesPerSecond - _oldFrameRate) > 0.02)
                     {
-                        _originalSubtitle.CalculateTimeCodesFromFrameNumbers(_videoInfo.FramesPerSecond);
+                        _inputSubtitle.CalculateTimeCodesFromFrameNumbers(_videoInfo.FramesPerSecond);
+                        LoadAndShowOriginalSubtitle();
+                        _frameRateChanged = true;
+                    }
+                }
+                if (_inputAlternateSubtitle != null && _inputAlternateSubtitle.WasLoadedWithFrameNumbers) // frame based subtitles like MicroDVD
+                {
+                    if (Math.Abs(_videoInfo.FramesPerSecond - _oldFrameRate) > 0.02)
+                    {
+                        _inputAlternateSubtitle.CalculateTimeCodesFromFrameNumbers(_videoInfo.FramesPerSecond);
                         LoadAndShowOriginalSubtitle();
                         _frameRateChanged = true;
                     }
@@ -285,7 +301,7 @@ namespace Nikse.SubtitleEdit.Forms
             bool change = false;
             for (int i = 0; i < _paragraphs.Count; i++)
             {
-                if (_paragraphs[i].ToString() != _originalSubtitle.Paragraphs[i].ToString())
+                if (_paragraphs[i].ToString() != _inputSubtitle.Paragraphs[i].ToString())
                 {
                     change = true;
                     break;
@@ -320,7 +336,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        internal void Initialize(Bitmap bitmap, Subtitle subtitle, string fileName, string title, double frameRate)
+        internal void Initialize(Bitmap bitmap, Subtitle subtitle, Subtitle alternate, string fileName, string title, double frameRate)
         {
             if (bitmap != null)
             {
@@ -328,7 +344,8 @@ namespace Nikse.SubtitleEdit.Forms
                 Icon = Icon.FromHandle(Hicon);
             }
 
-            _originalSubtitle = subtitle;
+            _inputSubtitle = subtitle;
+            _inputAlternateSubtitle = alternate;
             _oldFrameRate = frameRate;
             _subtitleFileName = fileName;
             Text = title;
@@ -337,8 +354,15 @@ namespace Nikse.SubtitleEdit.Forms
         private void LoadAndShowOriginalSubtitle()
         {
             _paragraphs = new List<Paragraph>();
-            foreach (Paragraph p in _originalSubtitle.Paragraphs)
+            foreach (Paragraph p in _inputSubtitle.Paragraphs)
                 _paragraphs.Add(new Paragraph(p));
+
+            if (_inputAlternateSubtitle != null)
+            {
+                _paragraphsAlternate = new List<Paragraph>();
+                foreach (Paragraph p in _inputAlternateSubtitle.Paragraphs)
+                    _paragraphsAlternate.Add(new Paragraph(p));
+            }
 
             FillStartAndEndTexts();
 
@@ -429,13 +453,30 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 p.Adjust(factor, adjust);
             }
+            if (_inputAlternateSubtitle != null)
+            {
+                foreach (Paragraph p in _paragraphsAlternate)
+                {
+                    p.Adjust(factor, adjust);
+                }
+            }
 
             // fix overlapping time codes
-            var tmpSubtitle = new Subtitle { WasLoadedWithFrameNumbers = _originalSubtitle.WasLoadedWithFrameNumbers };
+            var tmpSubtitle = new Subtitle { WasLoadedWithFrameNumbers = _inputSubtitle.WasLoadedWithFrameNumbers };
             foreach (Paragraph p in _paragraphs)
                 tmpSubtitle.Paragraphs.Add(new Paragraph(p));
             new FixOverlappingDisplayTimes().Fix(tmpSubtitle, new EmptyFixCallback());
             _paragraphs = tmpSubtitle.Paragraphs;
+
+            // fix overlapping time codes for alternate subtitle (translation)
+            if (_inputAlternateSubtitle != null)
+            {
+                tmpSubtitle = new Subtitle { WasLoadedWithFrameNumbers = _inputAlternateSubtitle.WasLoadedWithFrameNumbers };
+                foreach (Paragraph p in _paragraphsAlternate)
+                    tmpSubtitle.Paragraphs.Add(new Paragraph(p));
+                new FixOverlappingDisplayTimes().Fix(tmpSubtitle, new EmptyFixCallback());
+                _paragraphsAlternate = tmpSubtitle.Paragraphs;
+            }
 
             // update comboboxes
             int startSaveIdx = comboBoxStartTexts.SelectedIndex;
@@ -453,8 +494,8 @@ namespace Nikse.SubtitleEdit.Forms
             if (mediaPlayer.CurrentPosition > seconds)
                 mediaPlayer.CurrentPosition -= seconds;
             else
-                mediaPlayer.CurrentPosition = 0;            
-            UiUtil.ShowSubtitle(new Subtitle( _paragraphs), mediaPlayer);
+                mediaPlayer.CurrentPosition = 0;
+            UiUtil.ShowSubtitle(new Subtitle(_paragraphs), mediaPlayer);
         }
 
         private void ButtonStartHalfASecondBackClick(object sender, EventArgs e)
