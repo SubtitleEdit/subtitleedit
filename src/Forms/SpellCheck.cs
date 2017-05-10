@@ -25,6 +25,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private SpellCheckWordLists _spellCheckWordLists;
         private List<string> _skipAllList = new List<string>();
+        private HashSet<string> _skipOneList = new HashSet<string>();
         private Dictionary<string, string> _changeAllDictionary;
         private string _prefix = string.Empty;
         private string _postfix = string.Empty;
@@ -338,7 +339,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void ButtonSkipTextClick(object sender, EventArgs e)
         {
             PushUndo(string.Format("{0}", Configuration.Settings.Language.SpellCheck.SkipOnce), SpellCheckAction.Skip);
-            DoAction(SpellCheckAction.Skip);
+            DoAction(SpellCheckAction.SkipWholeLine);
         }
 
         private void ButtonChangeWholeTextClick(object sender, EventArgs e)
@@ -403,6 +404,12 @@ namespace Nikse.SubtitleEdit.Forms
                     break;
                 case SpellCheckAction.Skip:
                     _noOfSkippedWords++;
+                    string key = _currentIndex + "-" + _wordsIndex + "-" + _currentWord;
+                    if (!_skipOneList.Contains(key))
+                        _skipOneList.Add(key);
+                    break;
+                case SpellCheckAction.SkipWholeLine:
+                    _wordsIndex = int.MaxValue - 1; // Go to next line
                     break;
                 case SpellCheckAction.SkipAll:
                     _noOfSkippedWords++;
@@ -428,7 +435,8 @@ namespace Nikse.SubtitleEdit.Forms
                     _mainWindow.ShowStatus(string.Format(Configuration.Settings.Language.Main.SpellCheckChangedXToY, _currentParagraph.Text.Replace(Environment.NewLine, " "), ChangeWholeText.Replace(Environment.NewLine, " ")));
                     _currentParagraph.Text = ChangeWholeText;
                     _mainWindow.ChangeWholeTextMainPart(ref _noOfChangedWords, ref _firstChange, _currentIndex, _currentParagraph);
-
+                    _currentIndex--; // re-spellcheck current line
+                    _wordsIndex = int.MaxValue -1;
                     break;
             }
             labelActionInfo.Text = string.Empty;
@@ -461,6 +469,11 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
+                    if (_wordsIndex != int.MaxValue - 1 && _skipOneList.Count > 0)
+                    {
+                        _skipOneList = new HashSet<string>();
+                    }
+
                     if (_currentIndex + 1 < _subtitle.Paragraphs.Count)
                     {
                         _currentIndex++;
@@ -507,6 +520,7 @@ namespace Nikse.SubtitleEdit.Forms
                             _currentWord = _currentWord.Substring(1);
                         }
                     }
+                    string key = _currentIndex + "-" + _wordsIndex + "-" + _currentWord;
                     if (_spellCheckWordLists.HasName(_currentWord))
                     {
                         _noOfNames++;
@@ -515,6 +529,10 @@ namespace Nikse.SubtitleEdit.Forms
                         || (_currentWord.StartsWith('\'') || _currentWord.EndsWith('\'')) && _skipAllList.Contains(_currentWord.Trim('\'').ToUpper()))
                     {
                         _noOfSkippedWords++;
+                    }
+                    else if (_skipOneList.Contains(key))
+                    { 
+                        // "skip one" again (after change whole text)
                     }
                     else if (_spellCheckWordLists.HasUserWord(_currentWord))
                     {
