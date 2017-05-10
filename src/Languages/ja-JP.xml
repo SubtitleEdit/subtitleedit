@@ -1394,7 +1394,7 @@ C# ソース コードは https://github.com/SubtitleEdit/subtitleedit にあり
     <Testing123>テスト中 123...</Testing123>
     <Language>言語</Language>
     <NamesIgnoreLists>names/ignore の一覧 (大小区別)</NamesIgnoreLists>
-    <AddNameEtc>名前の追加</AddNameEtc>
+    <AddName>名前の追加</AddName>
     <AddWord>単語の追加</AddWord>
     <Remove>削除</Remove>
     <AddPair>組み合わせの追加</AddPair>

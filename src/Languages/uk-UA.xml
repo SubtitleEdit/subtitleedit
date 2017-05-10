@@ -1744,7 +1744,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Testing123>Тестування 123...</Testing123>
     <Language>Мова</Language>
     <NamesIgnoreLists>Список імен/ігнор. (чутливий до регістру)</NamesIgnoreLists>
-    <AddNameEtc>Додати ім'я</AddNameEtc>
+    <AddName>Додати ім'я</AddName>
     <AddWord>Додати слово</AddWord>
     <Remove>Видалити</Remove>
     <AddPair>Додати пару</AddPair>

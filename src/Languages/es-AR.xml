@@ -1598,7 +1598,7 @@ puede editar el mismo archivo de subtítulo (colaboración)</Information>
     <Testing123>Probando 123...</Testing123>
     <Language>Idioma</Language>
     <NamesIgnoreLists>Nombres a ignorar (sens. mayúsc.)</NamesIgnoreLists>
-    <AddNameEtc>Añadir nombre</AddNameEtc>
+    <AddName>Añadir nombre</AddName>
     <AddWord>Añadir palabra</AddWord>
     <Remove>Eliminar</Remove>
     <AddPair>Añadir pareja</AddPair>

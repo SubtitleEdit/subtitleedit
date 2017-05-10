@@ -1783,7 +1783,7 @@ Command line: {1} {2}
     <Testing123>正在测试 123...</Testing123>
     <Language>语言</Language>
     <NamesIgnoreLists>名称/忽略列表 (区分大小写)</NamesIgnoreLists>
-    <AddNameEtc>添加名称</AddNameEtc>
+    <AddName>添加名称</AddName>
     <AddWord>添加单词</AddWord>
     <Remove>删除</Remove>
     <AddPair>添加配对</AddPair>

@@ -1769,7 +1769,7 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <Testing123>Aztertzen 123...</Testing123>
     <Language>Hizkuntza:</Language>
     <NamesIgnoreLists>Izen/ezikusi zerrenda (larri-xehe artean)</NamesIgnoreLists>
-    <AddNameEtc>Gehitu izena</AddNameEtc>
+    <AddName>Gehitu izena</AddName>
     <AddWord>Gehitu hitza</AddWord>
     <Remove>Kendu</Remove>
     <AddPair>Gehitu parea</AddPair>

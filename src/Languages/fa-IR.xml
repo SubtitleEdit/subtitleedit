@@ -1154,7 +1154,7 @@ http://soft98.ir
     <Testing123>123 تست...</Testing123>
     <Language>زبان</Language>
     <NamesIgnoreLists>نام/لیست چشم پوشی -حساس به حروف کوچک</NamesIgnoreLists>
-    <AddNameEtc>اضافه کردن نام</AddNameEtc>
+    <AddName>اضافه کردن نام</AddName>
     <AddWord>اضافه کردن کلمه</AddWord>
     <Remove>گزارش</Remove>
     <AddPair>اضافه کردن جفت</AddPair>

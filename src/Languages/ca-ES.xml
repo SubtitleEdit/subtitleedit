@@ -1740,7 +1740,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Testing123>Comprovant 123...</Testing123>
     <Language>Idioma</Language>
     <NamesIgnoreLists>Llista Noms/ignorats (sensible majúscules)</NamesIgnoreLists>
-    <AddNameEtc>Afegeix nom</AddNameEtc>
+    <AddName>Afegeix nom</AddName>
     <AddWord>Afegeix mot</AddWord>
     <Remove>Suprimeix</Remove>
     <AddPair>Afegeix parell</AddPair>

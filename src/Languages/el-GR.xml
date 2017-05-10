@@ -1658,7 +1658,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Testing123>Δοκιμή 123...</Testing123>
     <Language>Γλώσσα</Language>
     <NamesIgnoreLists>Λίστα ονομάτων/παραλείψεων (διάκριση πεζών-κεφαλαίων)</NamesIgnoreLists>
-    <AddNameEtc>Προσθήκη ονόματος</AddNameEtc>
+    <AddName>Προσθήκη ονόματος</AddName>
     <AddWord>Προσθήκη λέξης</AddWord>
     <Remove>Αφαίρεση</Remove>
     <AddPair>Προσθήκη ζευγαριού</AddPair>

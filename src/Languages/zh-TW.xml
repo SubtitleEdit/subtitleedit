@@ -1657,7 +1657,7 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
     <Testing123>正在測試 123...</Testing123>
     <Language>語言</Language>
     <NamesIgnoreLists>名稱/忽略 清單 (區分大小寫)</NamesIgnoreLists>
-    <AddNameEtc>加入名稱</AddNameEtc>
+    <AddName>加入名稱</AddName>
     <AddWord>加入單字</AddWord>
     <Remove>移除</Remove>
     <AddPair>加入一對</AddPair>

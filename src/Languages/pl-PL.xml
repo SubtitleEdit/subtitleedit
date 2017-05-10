@@ -1797,7 +1797,7 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <Testing123>Daum PotPlayer po polsku - potplayer.pl</Testing123>
     <Language>Język</Language>
     <NamesIgnoreLists>Lista nazw własnych (wielkimi literami)</NamesIgnoreLists>
-    <AddNameEtc>Dodaj nazwę</AddNameEtc>
+    <AddName>Dodaj nazwę</AddName>
     <AddWord>Dodaj słowo</AddWord>
     <Remove>Usuń</Remove>
     <AddPair>Dodaj parę</AddPair>

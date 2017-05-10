@@ -1792,7 +1792,7 @@ podem editar o mesmo arquivo de legenda (colaboração)</Information>
 		<Testing123>Testando 123...</Testing123>
 		<Language>Idioma</Language>
 		<NamesIgnoreLists>Nomes a serem ignorados (caso sensitivo)</NamesIgnoreLists>
-		<AddNameEtc>Adicionar nome</AddNameEtc>
+		<AddName>Adicionar nome</AddName>
 		<AddWord>Adicionar palavra</AddWord>
 		<Remove>Remover</Remove>
 		<AddPair>Adicionar par</AddPair>

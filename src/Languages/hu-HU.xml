@@ -1786,7 +1786,7 @@ szerkesztheti ugyanazt a feliratfájlt</Information>
     <Testing123>Tesztelés 123...</Testing123>
     <Language>Nyelv</Language>
     <NamesIgnoreLists>Nevek/kihagyási lista (nagybetű érzékeny)</NamesIgnoreLists>
-    <AddNameEtc>Új név</AddNameEtc>
+    <AddName>Új név</AddName>
     <AddWord>Szó hozzáadása</AddWord>
     <Remove>Törlés</Remove>
     <AddPair>Pár hozzáadása</AddPair>

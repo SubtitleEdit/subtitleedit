@@ -1602,7 +1602,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Testing123>Тестване 123...</Testing123>
     <Language>Език</Language>
     <NamesIgnoreLists>Имена/списък с игнорирани</NamesIgnoreLists>
-    <AddNameEtc>Добавяне на име</AddNameEtc>
+    <AddName>Добавяне на име</AddName>
     <AddWord>Добавяне на дума</AddWord>
     <Remove>Изтриване</Remove>
     <AddPair>Добавяне на двойка</AddPair>
