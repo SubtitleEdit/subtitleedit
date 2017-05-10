@@ -1281,8 +1281,8 @@ Continue?</SubtitleAppendPrompt>
     <NumberOfWithRemovedLineBreakX>Number of lines with removed line-break: {0}</NumberOfWithRemovedLineBreakX>
     <BeforeMultipleReplace>Çoklu değiştirmeden önce</BeforeMultipleReplace>
     <NumberOfLinesReplacedX>Number of lines with text replaced: {0}</NumberOfLinesReplacedX>
-    <NameXAddedToNamesEtcList>The name '{0}' was added to names/etc list</NameXAddedToNamesEtcList>
-    <NameXNotAddedToNamesEtcList>The name '{0}' was NOT added to names/etc list</NameXNotAddedToNamesEtcList>
+    <NameXAddedToNameList>The name '{0}' was added to names/etc list</NameXAddedToNameList>
+    <NameXNotAddedToNameList>The name '{0}' was NOT added to names/etc list</NameXNotAddedToNameList>
     <WordXAddedToUserDic>'{0}' kelimesi kullanıcı sözlüğüne eklendi</WordXAddedToUserDic>
     <WordXNotAddedToUserDic>'{0}' ismi kullanıcı sözlüğüne eklenmedi</WordXNotAddedToUserDic>
     <OcrReplacePairXAdded>Ocr değiştirme listesi çifti '{0} -&gt; {1}' OCR değiştirme listesine eklendi</OcrReplacePairXAdded>
@@ -1675,12 +1675,12 @@ Yeni oturum başlatın.</Information>
     <UserWordList>Kullanıcı kelime listesi</UserWordList>
     <OcrFixList>OCR düzeltme listesi</OcrFixList>
     <Location>Konum</Location>
-    <UseOnlineNamesEtc>Çevrim içi isimler xml dosyasını kullan</UseOnlineNamesEtc>
+    <UseOnlineNames>Çevrim içi isimler xml dosyasını kullan</UseOnlineNames>
     <WordAddedX>Kelime eklendi: {0}</WordAddedX>
     <WordAlreadyExists>Kelime zaten var!</WordAlreadyExists>
     <WordNotFound>Kelime bulunamadı</WordNotFound>
     <RemoveX>{0} temizlensin mi?</RemoveX>
-    <CannotUpdateNamesEtcOnline>NamesEtc.xml çevrim içi güncellenemez!</CannotUpdateNamesEtcOnline>
+    <CannotUpdateNamesOnline>NamesEtc.xml çevrim içi güncellenemez!</CannotUpdateNamesOnline>
     <ProxyServerSettings>Proxy sunucu ayarları</ProxyServerSettings>
     <ProxyAddress>Proxy adresi</ProxyAddress>
     <ProxyAuthentication>Kimlik doğrulama</ProxyAuthentication>
@@ -1831,7 +1831,7 @@ Yeni oturum başlatın.</Information>
     <SpellCheckProgress>Yazımı doğrula [{0}] - {1}</SpellCheckProgress>
     <EditWholeText>Tam metni düzenle</EditWholeText>
     <EditWordOnly>Sadece kelimeyi düzenle</EditWordOnly>
-    <AddXToNamesEtc>İsimler listesine '{0}' ekle</AddXToNamesEtc>
+    <AddXToNames>İsimler listesine '{0}' ekle</AddXToNames>
     <AutoFixNames>Auto fix names where only casing differ</AutoFixNames>
     <CheckOneLetterWords>Bilinmeyen "tek harf"leri işaretle</CheckOneLetterWords>
     <TreatINQuoteAsING>Fiillerin sonundaki "ini "ing"e çevir (SAdece İngilizce'de)</TreatINQuoteAsING>

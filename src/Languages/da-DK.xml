@@ -1366,8 +1366,8 @@ Fortsæt?</SubtitleAppendPrompt>
     <NumberOfWithRemovedLineBreakX>Antallet af linjer med fjernet linjeskift: {0}</NumberOfWithRemovedLineBreakX>
     <BeforeMultipleReplace>Før multi søg og erstat</BeforeMultipleReplace>
     <NumberOfLinesReplacedX>Antal linjer hvor tekst er erstattet: {0}</NumberOfLinesReplacedX>
-    <NameXAddedToNamesEtcList>Navnet '{0}' blev tilføjet til navne mv, liste</NameXAddedToNamesEtcList>
-    <NameXNotAddedToNamesEtcList>Navnet '{0}' blev ikke tilføjet til navne mv. liste</NameXNotAddedToNamesEtcList>
+    <NameXAddedToNameList>Navnet '{0}' blev tilføjet til navne mv, liste</NameXAddedToNameList>
+    <NameXNotAddedToNameList>Navnet '{0}' blev ikke tilføjet til navne mv. liste</NameXNotAddedToNameList>
     <WordXAddedToUserDic>Ordet '{0}' blev tilføjet til brugerordbog</WordXAddedToUserDic>
     <WordXNotAddedToUserDic>Ordet '{0}' blev IKKE tilføjet til brugerordbogen</WordXNotAddedToUserDic>
     <OcrReplacePairXAdded>'{0} -&gt; {1}' blev tilføjet til OCR erstat listen</OcrReplacePairXAdded>
@@ -1801,12 +1801,12 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <UserWordList>Bruger ordliste</UserWordList>
     <OcrFixList>OCR fix liste</OcrFixList>
     <Location>Placering</Location>
-    <UseOnlineNamesEtc>Brug online navne etc xml-fil</UseOnlineNamesEtc>
+    <UseOnlineNames>Brug online navne etc xml-fil</UseOnlineNames>
     <WordAddedX>Ordet tilføjet: {0}</WordAddedX>
     <WordAlreadyExists>Ordet eksisterer allerede!</WordAlreadyExists>
     <WordNotFound>Ordet blev ikke fundet</WordNotFound>
     <RemoveX>Fjern {0}?</RemoveX>
-    <CannotUpdateNamesEtcOnline>Kan ikke opdatere NamesEtc.xml online!</CannotUpdateNamesEtcOnline>
+    <CannotUpdateNamesOnline>Kan ikke opdatere NamesEtc.xml online!</CannotUpdateNamesOnline>
     <ProxyServerSettings>Proxyserver indstillinger</ProxyServerSettings>
     <ProxyAddress>Proxy-adresse</ProxyAddress>
     <ProxyAuthentication>Autentifikation</ProxyAuthentication>
@@ -1990,7 +1990,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <SpellCheckProgress>Stavekontrol [{0}] - {1}</SpellCheckProgress>
     <EditWholeText>Rediger hele teksten</EditWholeText>
     <EditWordOnly>Rediger kun ord</EditWordOnly>
-    <AddXToNamesEtc>Tilføj '{0}' til navne mv. liste</AddXToNamesEtc>
+    <AddXToNames>Tilføj '{0}' til navne mv. liste</AddXToNames>
     <AutoFixNames>Auto fix navne, hvor kun små/store bogstaver udgør forskellen</AutoFixNames>
     <CheckOneLetterWords>Spørg ved enkeltbogstaver</CheckOneLetterWords>
     <TreatINQuoteAsING>Accepter ord der slutter med i' som ing (kun på engelsk)</TreatINQuoteAsING>

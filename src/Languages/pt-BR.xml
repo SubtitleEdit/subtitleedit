@@ -1364,8 +1364,8 @@ Deseja continuar?</SubtitleAppendPrompt>
 		<NumberOfWithRemovedLineBreakX>Numero de linhas com quebra eliminadas: {0}</NumberOfWithRemovedLineBreakX>
 		<BeforeMultipleReplace>Antes da múltipla substituição</BeforeMultipleReplace>
 		<NumberOfLinesReplacedX>Número de linhas com texto substituído: {0}</NumberOfLinesReplacedX>
-		<NameXAddedToNamesEtcList>O nome '{0}' foi adicionado à lista de nomes</NameXAddedToNamesEtcList>
-		<NameXNotAddedToNamesEtcList>O nome '{0}' NÃO foi adicionado à lista de nomes</NameXNotAddedToNamesEtcList>
+		<NameXAddedToNameList>O nome '{0}' foi adicionado à lista de nomes</NameXAddedToNameList>
+		<NameXNotAddedToNameList>O nome '{0}' NÃO foi adicionado à lista de nomes</NameXNotAddedToNameList>
 		<WordXAddedToUserDic>A palavra '{0}' NÃO foi adicionada ao dicionário do usuário</WordXAddedToUserDic>
 		<WordXNotAddedToUserDic>O nome '{0}' NÃO foi adicionada ao dicionário do usuário</WordXNotAddedToUserDic>
 		<OcrReplacePairXAdded>O par da lista de substituição OCR '{0} -&gt; {1}' foi adicionado à lista de substituição OCR</OcrReplacePairXAdded>
@@ -1799,12 +1799,12 @@ podem editar o mesmo arquivo de legenda (colaboração)</Information>
 		<UserWordList>Lista de palavras do usuário</UserWordList>
 		<OcrFixList>Lista de correções OCR</OcrFixList>
 		<Location>Localização</Location>
-		<UseOnlineNamesEtc>Usar lista de nomes xml online</UseOnlineNamesEtc>
+		<UseOnlineNames>Usar lista de nomes xml online</UseOnlineNames>
 		<WordAddedX>Palavra adicionada: {0}</WordAddedX>
 		<WordAlreadyExists>A palavra já existe!</WordAlreadyExists>
 		<WordNotFound>Palavra não encontrada</WordNotFound>
 		<RemoveX>Remover {0}?</RemoveX>
-		<CannotUpdateNamesEtcOnline>Não foi possível atualizar a lista de nomes xml online!</CannotUpdateNamesEtcOnline>
+		<CannotUpdateNamesOnline>Não foi possível atualizar a lista de nomes xml online!</CannotUpdateNamesOnline>
 		<ProxyServerSettings>Configuração do servidor proxy</ProxyServerSettings>
 		<ProxyAddress>Endereço proxy</ProxyAddress>
 		<ProxyAuthentication>Autenticação</ProxyAuthentication>
@@ -1986,7 +1986,7 @@ podem editar o mesmo arquivo de legenda (colaboração)</Information>
 		<SpellCheckProgress>Revisão ortográfica [{0}] - {1}</SpellCheckProgress>
 		<EditWholeText>Editar texto completo</EditWholeText>
 		<EditWordOnly>Editar somente palavra</EditWordOnly>
-		<AddXToNamesEtc>Adicionar '{0}' à lista de nomes</AddXToNamesEtc>
+		<AddXToNames>Adicionar '{0}' à lista de nomes</AddXToNames>
 		<AutoFixNames>Autocorrigir formato em nomes</AutoFixNames>
 		<CheckOneLetterWords>Perguntar por palavras de uma letra só desconhecidas</CheckOneLetterWords>
 		<TreatINQuoteAsING>Tratar fim da palavra " in' " como " ing " (somente Inglês)</TreatINQuoteAsING>

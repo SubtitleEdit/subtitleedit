@@ -1275,8 +1275,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <NumberOfWithRemovedLineBreakX>Σύνολο γραμμών που αφαιρέθηκαν αλλαγές γραμμής: {0}</NumberOfWithRemovedLineBreakX>
     <BeforeMultipleReplace>Πριν από πολλαπλή αντικατάσταση</BeforeMultipleReplace>
     <NumberOfLinesReplacedX>Σύνολο γραμμών που αντικαταστάθηκε κείμενο: {0}</NumberOfLinesReplacedX>
-    <NameXAddedToNamesEtcList>Το όνομα '{0}' προστέθηκε στη λίστα ονομάτων/κλπ.</NameXAddedToNamesEtcList>
-    <NameXNotAddedToNamesEtcList>Το όνομα '{0}' ΔΕΝ προστέθηκε στη λίστα ονομάτων/κλπ.</NameXNotAddedToNamesEtcList>
+    <NameXAddedToNameList>Το όνομα '{0}' προστέθηκε στη λίστα ονομάτων/κλπ.</NameXAddedToNameList>
+    <NameXNotAddedToNameList>Το όνομα '{0}' ΔΕΝ προστέθηκε στη λίστα ονομάτων/κλπ.</NameXNotAddedToNameList>
     <WordXAddedToUserDic>Η λέξη '{0}' προστέθηκε στο λεξικό του χρήστη</WordXAddedToUserDic>
     <WordXNotAddedToUserDic>Το όνομα '{0}' ΔΕΝ προστέθηκε στο λεξικό του χρήστη</WordXNotAddedToUserDic>
     <OcrReplacePairXAdded>Τα ζεύγη των λιστών αντικατάστασης του OCR '{0} -&gt; {1}' προστέθηκαν στις λίστες αντικατάστασης του OCR</OcrReplacePairXAdded>
@@ -1665,12 +1665,12 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <UserWordList>Λίστα λέξεων χρήστη</UserWordList>
     <OcrFixList>Λίστα επιδιορθώσεων OCR</OcrFixList>
     <Location>Τοποθεσία</Location>
-    <UseOnlineNamesEtc>Χρήση διαδικτυακού αρχείου xml ονομάτων/κλπ.</UseOnlineNamesEtc>
+    <UseOnlineNames>Χρήση διαδικτυακού αρχείου xml ονομάτων/κλπ.</UseOnlineNames>
     <WordAddedX>Λέξη προστέθηκε: {0}</WordAddedX>
     <WordAlreadyExists>Η λέξη υπάρχει ήδη !</WordAlreadyExists>
     <WordNotFound>Η λέξη δεν βρέθηκε</WordNotFound>
     <RemoveX>Αφαίρεση του {0};</RemoveX>
-    <CannotUpdateNamesEtcOnline>Αδυναμία ενημέρωσης του διαδικτυακού xml ονομάτων/κλπ.</CannotUpdateNamesEtcOnline>
+    <CannotUpdateNamesOnline>Αδυναμία ενημέρωσης του διαδικτυακού xml ονομάτων/κλπ.</CannotUpdateNamesOnline>
     <ProxyServerSettings>Ρυθμίσεις διακομιστή μεσολάβησης</ProxyServerSettings>
     <ProxyAddress>Διεύθυνση διακομιστή μεσολάβησης</ProxyAddress>
     <ProxyAuthentication>Επικύρωση</ProxyAuthentication>
@@ -1813,7 +1813,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SpellCheckProgress>Ορθογραφικός έλεγχος [{0}] - {1}</SpellCheckProgress>
     <EditWholeText>Επεξεργασία ολόκληρου του κειμένου</EditWholeText>
     <EditWordOnly>Επεξεργασία λέξης μόνο</EditWordOnly>
-    <AddXToNamesEtc>Προσθήκη '{0}' στη λίστα ονομάτων/κλπ.</AddXToNamesEtc>
+    <AddXToNames>Προσθήκη '{0}' στη λίστα ονομάτων/κλπ.</AddXToNames>
     <AutoFixNames>Αυτόματη επιδιόρθωση ονομάτων όπου υπάρχει μόνο διαφορά πεζών-κεφαλαίων</AutoFixNames>
     <CheckOneLetterWords>Ερώτηση για άγνωστες λέξεις ένός γράμματος</CheckOneLetterWords>
     <TreatINQuoteAsING>Αντιμετωπίστε το τέλος της λέξης " in' " ως " ing " (Μόνο στα Αγγλικά)</TreatINQuoteAsING>

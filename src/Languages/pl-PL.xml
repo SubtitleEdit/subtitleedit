@@ -1368,8 +1368,8 @@ Kontynuować?</SubtitleAppendPrompt>
     <NumberOfWithRemovedLineBreakX>Ilość linii z usuniętym łamaniem linii: {0}</NumberOfWithRemovedLineBreakX>
     <BeforeMultipleReplace>Przed wielokrotnymi zastąpieniami</BeforeMultipleReplace>
     <NumberOfLinesReplacedX>Ilość linii z zastąpionym tekstem: {0}</NumberOfLinesReplacedX>
-    <NameXAddedToNamesEtcList>Dodano "{0}" do listy nazw własnych</NameXAddedToNamesEtcList>
-    <NameXNotAddedToNamesEtcList>Nazwa własna "{0}" NIE ZOSTAŁA dodana do listy nazw własnych</NameXNotAddedToNamesEtcList>
+    <NameXAddedToNameList>Dodano "{0}" do listy nazw własnych</NameXAddedToNameList>
+    <NameXNotAddedToNameList>Nazwa własna "{0}" NIE ZOSTAŁA dodana do listy nazw własnych</NameXNotAddedToNameList>
     <WordXAddedToUserDic>Słowo '{0}' zostało dodane do słownika użytkownika</WordXAddedToUserDic>
     <WordXNotAddedToUserDic>Nazwa własna '{0}' NIE została dodana do słownika użytkownika</WordXNotAddedToUserDic>
     <OcrReplacePairXAdded>Lista par zamienników OCR '{0} -&gt; {1}' została dodana do listy zamienników OCR</OcrReplacePairXAdded>
@@ -1804,12 +1804,12 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <UserWordList>Lista słów użytkownika</UserWordList>
     <OcrFixList>Lista poprawek OCR</OcrFixList>
     <Location>Położenie</Location>
-    <UseOnlineNamesEtc>Użyj internetowej listy nazw własnych (plik xml)</UseOnlineNamesEtc>
+    <UseOnlineNames>Użyj internetowej listy nazw własnych (plik xml)</UseOnlineNames>
     <WordAddedX>Dodano słów: {0}</WordAddedX>
     <WordAlreadyExists>Słowo już istnieje!</WordAlreadyExists>
     <WordNotFound>Nie znaleziono słowa</WordNotFound>
     <RemoveX>Usunąć {0}?</RemoveX>
-    <CannotUpdateNamesEtcOnline>Nie można zaktualizować internetowego pliku NamesEtc.xml!</CannotUpdateNamesEtcOnline>
+    <CannotUpdateNamesOnline>Nie można zaktualizować internetowego pliku NamesEtc.xml!</CannotUpdateNamesOnline>
     <ProxyServerSettings>Ustawienia serwera pośredniczącego</ProxyServerSettings>
     <ProxyAddress>Adres serwera</ProxyAddress>
     <ProxyAuthentication>Identyfikacja</ProxyAuthentication>
@@ -1992,7 +1992,7 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <SpellCheckProgress>Sprawdzanie pisowni [{0}] - {1}</SpellCheckProgress>
     <EditWholeText>Edytuj cały tekst</EditWholeText>
     <EditWordOnly>Edytuj tylko słowo</EditWordOnly>
-    <AddXToNamesEtc>Dodaj "{0}" do listy nazw własnych</AddXToNamesEtc>
+    <AddXToNames>Dodaj "{0}" do listy nazw własnych</AddXToNames>
     <AutoFixNames>Popraw pisownię nazw własnych, tylko gdy różnią się budową</AutoFixNames>
     <CheckOneLetterWords>Pytaj o nieznaną pojedynczą literę słowa</CheckOneLetterWords>
     <TreatINQuoteAsING>Traktuj słowo kończące się " in' " jako " ing " (tylko angielski)</TreatINQuoteAsING>

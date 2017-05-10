@@ -1346,8 +1346,8 @@ Vil du fortsette?</SubtitleAppendPrompt>
     <NumberOfWithRemovedLineBreakX>Antall linjer med linjebrytingen fjernet: {0}</NumberOfWithRemovedLineBreakX>
     <BeforeMultipleReplace>Før erstatning av flere</BeforeMultipleReplace>
     <NumberOfLinesReplacedX>Antall tekstlinjer erstattet: {0}</NumberOfLinesReplacedX>
-    <NameXAddedToNamesEtcList>Navnet '{0}' ble lagt til i navn/osv. listen</NameXAddedToNamesEtcList>
-    <NameXNotAddedToNamesEtcList>Navnet '{0}' ble IKKE lagt til i navn/osv. listen</NameXNotAddedToNamesEtcList>
+    <NameXAddedToNameList>Navnet '{0}' ble lagt til i navn/osv. listen</NameXAddedToNameList>
+    <NameXNotAddedToNameList>Navnet '{0}' ble IKKE lagt til i navn/osv. listen</NameXNotAddedToNameList>
     <WordXAddedToUserDic>Ordet '{0}' ble lagt til i brukerordboken</WordXAddedToUserDic>
     <WordXNotAddedToUserDic>Ordet '{0}' ble IKKE lagt til i brukerordboken</WordXNotAddedToUserDic>
     <OcrReplacePairXAdded>OCR-erstatningslisteparet '{0} -&gt; {1}' ble lagt til OCR-erstatningslisten</OcrReplacePairXAdded>
@@ -1757,12 +1757,12 @@ Hvis du har redigert denne filen i Subtitle Edit, kan du kanskje finne en backup
     <UserWordList>Brukerordliste</UserWordList>
     <OcrFixList>OCR-korrigeringsliste</OcrFixList>
     <Location>Plassering</Location>
-    <UseOnlineNamesEtc>Bruk XML-fil på nettet for navn/osv.</UseOnlineNamesEtc>
+    <UseOnlineNames>Bruk XML-fil på nettet for navn/osv.</UseOnlineNames>
     <WordAddedX>{0} ord lagt til</WordAddedX>
     <WordAlreadyExists>Ordet finnes allerede!</WordAlreadyExists>
     <WordNotFound>Ordet ble ikke funnet</WordNotFound>
     <RemoveX>Vil du fjerne {0}?</RemoveX>
-    <CannotUpdateNamesEtcOnline>Kan ikke oppdatere NamesEtc.xml på nettet!</CannotUpdateNamesEtcOnline>
+    <CannotUpdateNamesOnline>Kan ikke oppdatere NamesEtc.xml på nettet!</CannotUpdateNamesOnline>
     <ProxyServerSettings>Proxy-serverinnstillinger</ProxyServerSettings>
     <ProxyAddress>Proxy-adresse</ProxyAddress>
     <ProxyAuthentication>Autentisering</ProxyAuthentication>
@@ -1920,7 +1920,7 @@ Hvis du har redigert denne filen i Subtitle Edit, kan du kanskje finne en backup
     <SpellCheckProgress>Sjekker [{0}] - {1}</SpellCheckProgress>
     <EditWholeText>Rediger hele teksten</EditWholeText>
     <EditWordOnly>Rediger kun dette ordet</EditWordOnly>
-    <AddXToNamesEtc>Legg til '{0}' i navn/osv. listen</AddXToNamesEtc>
+    <AddXToNames>Legg til '{0}' i navn/osv. listen</AddXToNames>
     <AutoFixNames>Autokorriger navn hvor bare små og stor bokstaver skiller dem</AutoFixNames>
     <CheckOneLetterWords>Varsle ved ukjente ettbokstavsord</CheckOneLetterWords>
     <TreatINQuoteAsING>Behandle ord some slutter med " in' " som " ing " (Kun i engelsk)</TreatINQuoteAsING>

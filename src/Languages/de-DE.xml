@@ -1355,8 +1355,8 @@ Fortfahren?</SubtitleAppendPrompt>
     <NumberOfWithRemovedLineBreakX>Texte mit entfernten Zeilenumbruch: {0}</NumberOfWithRemovedLineBreakX>
     <BeforeMultipleReplace>Vor mehrfachem Ersetzen</BeforeMultipleReplace>
     <NumberOfLinesReplacedX>Texte mit ersetzten Text: {0}</NumberOfLinesReplacedX>
-    <NameXAddedToNamesEtcList>Der Name '{0}' wurde zur Namensliste hinzugefügt.</NameXAddedToNamesEtcList>
-    <NameXNotAddedToNamesEtcList>Der Name '{0}' wurde NICHT zur Namensliste hinzugefügt.</NameXNotAddedToNamesEtcList>
+    <NameXAddedToNameList>Der Name '{0}' wurde zur Namensliste hinzugefügt.</NameXAddedToNameList>
+    <NameXNotAddedToNameList>Der Name '{0}' wurde NICHT zur Namensliste hinzugefügt.</NameXNotAddedToNameList>
     <WordXAddedToUserDic>Das Wort '{0}' wurde zur Benutzerwortliste hinzugefügt</WordXAddedToUserDic>
     <WordXNotAddedToUserDic>Das Wort '{0}' wurde NICHT zur Benutzerwortliste hinzugefügt</WordXNotAddedToUserDic>
     <OcrReplacePairXAdded>OCR Korrekturlisten Paar '{0} -&gt; {1}' wurde zur OCR Korrekturliste hinzugefügt</OcrReplacePairXAdded>
@@ -1781,12 +1781,12 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <UserWordList>Benutzer Wortliste</UserWordList>
     <OcrFixList>OCR Korrekturliste</OcrFixList>
     <Location>Ort</Location>
-    <UseOnlineNamesEtc>Online XML Datei für Namen verwenden</UseOnlineNamesEtc>
+    <UseOnlineNames>Online XML Datei für Namen verwenden</UseOnlineNames>
     <WordAddedX>Wort hinzugefügt: {0}</WordAddedX>
     <WordAlreadyExists>Wort existiert schon!</WordAlreadyExists>
     <WordNotFound>Word nicht gefunden</WordNotFound>
     <RemoveX>Entferne {0}?</RemoveX>
-    <CannotUpdateNamesEtcOnline>Kann XML Datei für Namen nicht online ändern!</CannotUpdateNamesEtcOnline>
+    <CannotUpdateNamesOnline>Kann XML Datei für Namen nicht online ändern!</CannotUpdateNamesOnline>
     <ProxyServerSettings>Proxy Server Einstellungen</ProxyServerSettings>
     <ProxyAddress>Proxy Adresse</ProxyAddress>
     <ProxyAuthentication>Authentifizierung</ProxyAuthentication>
@@ -1965,7 +1965,7 @@ Bitte versuchen Sie es später noch einmal.</DownloadMpvFailed>
     <SpellCheckProgress>Rechtschreibprüfung [{0}] - {1}</SpellCheckProgress>
     <EditWholeText>Gesamten Text bearbeiten</EditWholeText>
     <EditWordOnly>Nur Wort bearbeiten</EditWordOnly>
-    <AddXToNamesEtc>Füge '{0}' zur Namensliste hinzu</AddXToNamesEtc>
+    <AddXToNames>Füge '{0}' zur Namensliste hinzu</AddXToNames>
     <AutoFixNames>Namen Autokorrektur nur bei Groß-/Klein Unterschied</AutoFixNames>
     <CheckOneLetterWords>Abfrage für unbekannte ein Buchstaben Wörter</CheckOneLetterWords>
     <TreatINQuoteAsING>Wortende " in' " in " ing " ändern (Nur Englisch)</TreatINQuoteAsING>

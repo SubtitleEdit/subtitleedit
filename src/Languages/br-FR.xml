@@ -1338,8 +1338,8 @@ Kenderc'hel ?</SubtitleAppendPrompt>
     <NumberOfWithRemovedLineBreakX>Niver a linennoù gant an troc'hoù el linennoù tennet : {0}</NumberOfWithRemovedLineBreakX>
     <BeforeMultipleReplace>A-raok ar lieserlec'hier</BeforeMultipleReplace>
     <NumberOfLinesReplacedX>Niver a linennoù gant an destenn erlec'hiet : {0}</NumberOfLinesReplacedX>
-    <NameXAddedToNamesEtcList>An anv '{0}' a zo ouzhpennet d'al listenn anvioù/hag-all hag-all.</NameXAddedToNamesEtcList>
-    <NameXNotAddedToNamesEtcList>N'eo ket bet ouzhpennet '{0}' d'al listenn anvioù/hag-all hag-all.</NameXNotAddedToNamesEtcList>
+    <NameXAddedToNameList>An anv '{0}' a zo ouzhpennet d'al listenn anvioù/hag-all hag-all.</NameXAddedToNameList>
+    <NameXNotAddedToNameList>N'eo ket bet ouzhpennet '{0}' d'al listenn anvioù/hag-all hag-all.</NameXNotAddedToNameList>
     <WordXAddedToUserDic>Ar ger '{0}' a zo bet ouzhpennet da geriadur an implijer</WordXAddedToUserDic>
     <WordXNotAddedToUserDic>N'eo ket bet ouzhpennet '{0}' da geriadur an implijer</WordXNotAddedToUserDic>
     <OcrReplacePairXAdded>'{0} -&gt; {1}' a zo bet ouzhpennet d'al listenn reizhañ OCR</OcrReplacePairXAdded>
@@ -1746,12 +1746,12 @@ meur a zen ar memes restr istitloù (kenlabour)</Information>
     <UserWordList>Listenn an implijer</UserWordList>
     <OcrFixList>Listenn ar reizhañ OCR</OcrFixList>
     <Location>Lec'hiadur</Location>
-    <UseOnlineNamesEtc>Implijout ar restr web "Names_Etc.xml"</UseOnlineNamesEtc>
+    <UseOnlineNames>Implijout ar restr web "Names_Etc.xml"</UseOnlineNames>
     <WordAddedX>Ger ouzhpennet : {0}</WordAddedX>
     <WordAlreadyExists>Ar ger a zo dija anezhañ !</WordAlreadyExists>
     <WordNotFound>Ger digavus</WordNotFound>
     <RemoveX>Tennañ kuit {0} ?</RemoveX>
-    <CannotUpdateNamesEtcOnline>Dibosupl eo da hizivikaat "NamesEtc.xml" en-linenn !</CannotUpdateNamesEtcOnline>
+    <CannotUpdateNamesOnline>Dibosupl eo da hizivikaat "NamesEtc.xml" en-linenn !</CannotUpdateNamesOnline>
     <ProxyServerSettings>Arventennoù ar servijer proxy</ProxyServerSettings>
     <ProxyAddress>Chomlec'h ar proxy</ProxyAddress>
     <ProxyAuthentication>Dilesadur</ProxyAuthentication>
@@ -1920,7 +1920,7 @@ Adklaskit diwezhatoc'h mar-plij.</DownloadMpvFailed>
     <SpellCheckProgress>Reizhskrivadur [{0}] - {1}</SpellCheckProgress>
     <EditWholeText>Aozañ an destenn a-bezh</EditWholeText>
     <EditWordOnly>Aozañ ur ger</EditWordOnly>
-    <AddXToNamesEtc>Ouzhpennañ '{0}' d'al listenn anv/hag-all hag-all</AddXToNamesEtc>
+    <AddXToNames>Ouzhpennañ '{0}' d'al listenn anv/hag-all hag-all</AddXToNames>
     <AutoFixNames>Reizhadenn emgefreek ma cheñch ar c'hombod nemetken</AutoFixNames>
     <CheckOneLetterWords>Klask ar gerioù dianv gant ul lizherenn</CheckOneLetterWords>
     <TreatINQuoteAsING>Mezegañ ar gerioù oc'h echuiñ dre "in'" en "ing" (saozneg hepken)</TreatINQuoteAsING>

@@ -1379,8 +1379,8 @@ https://github.com/SubtitleEdit/subtitleedit
     <NumberOfWithRemovedLineBreakX>Число строк с удаленными разделителями: {0}</NumberOfWithRemovedLineBreakX>
     <BeforeMultipleReplace>Перед множественной заменой</BeforeMultipleReplace>
     <NumberOfLinesReplacedX>Число строк с замененным текстом: {0}</NumberOfLinesReplacedX>
-    <NameXAddedToNamesEtcList>Имя "{0}" было добавлено в список имен</NameXAddedToNamesEtcList>
-    <NameXNotAddedToNamesEtcList>Имя "{0}" НЕ БЫЛО добавлено в список имен</NameXNotAddedToNamesEtcList>
+    <NameXAddedToNameList>Имя "{0}" было добавлено в список имен</NameXAddedToNameList>
+    <NameXNotAddedToNameList>Имя "{0}" НЕ БЫЛО добавлено в список имен</NameXNotAddedToNameList>
     <WordXAddedToUserDic>Слово '{0}' было добавлено в словарь пользователя</WordXAddedToUserDic>
     <WordXNotAddedToUserDic>Имя '{0}' НЕ было добавлено в словарь пользователя</WordXNotAddedToUserDic>
     <OcrReplacePairXAdded>OCR пара '{0} -&gt; {1}' была добавлена в список замен</OcrReplacePairXAdded>
@@ -1822,12 +1822,12 @@ https://github.com/SubtitleEdit/subtitleedit
     <UserWordList>Пользовательский список слов</UserWordList>
     <OcrFixList>Список исправлений OCR</OcrFixList>
     <Location>Размещение</Location>
-    <UseOnlineNamesEtc>Использовать онлайн список имен (xml файл)</UseOnlineNamesEtc>
+    <UseOnlineNames>Использовать онлайн список имен (xml файл)</UseOnlineNames>
     <WordAddedX>Добавлено слово: {0}</WordAddedX>
     <WordAlreadyExists>Слово уже есть в списке!</WordAlreadyExists>
     <WordNotFound>Слово не найдено</WordNotFound>
     <RemoveX>Удалить {0}?</RemoveX>
-    <CannotUpdateNamesEtcOnline>Не удается выполнить обновление NamesEtc.xml!</CannotUpdateNamesEtcOnline>
+    <CannotUpdateNamesOnline>Не удается выполнить обновление NamesEtc.xml!</CannotUpdateNamesOnline>
     <ProxyServerSettings>Настройки прокси сервера</ProxyServerSettings>
     <ProxyAddress>Адрес сервера:</ProxyAddress>
     <ProxyAuthentication>Аутентификация</ProxyAuthentication>
@@ -2012,7 +2012,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <SpellCheckProgress>Проверить орфографию [{0}] - {1}</SpellCheckProgress>
     <EditWholeText>Правка всего текста</EditWholeText>
     <EditWordOnly>Правка только слова</EditWordOnly>
-    <AddXToNamesEtc>Добавить "{0}" в список имен</AddXToNamesEtc>
+    <AddXToNames>Добавить "{0}" в список имен</AddXToNames>
     <AutoFixNames>Исправить, если отличается только регистром</AutoFixNames>
     <CheckOneLetterWords>Запрос при неизвестных словах</CheckOneLetterWords>
     <TreatINQuoteAsING>Менять окончание слов " in' " на " ing " (только для English)</TreatINQuoteAsING>
