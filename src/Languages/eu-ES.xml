@@ -1348,8 +1348,8 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <NumberOfWithRemovedLineBreakX>Kendutako lerro-hautsiko lerro zenbatekoa: {0}</NumberOfWithRemovedLineBreakX>
     <BeforeMultipleReplace>Ordezte anitzaren aurretik</BeforeMultipleReplace>
     <NumberOfLinesReplacedX>Idatzia ordeztutako lerro zenbatekoa: {0}</NumberOfLinesReplacedX>
-    <NameXAddedToNamesEtcList>'{0}' izena gehitu da izen/etab. zerrendara</NameXAddedToNamesEtcList>
-    <NameXNotAddedToNamesEtcList>'{0}' izena EZ da izen/etab. zerrendara gehitu</NameXNotAddedToNamesEtcList>
+    <NameXAddedToNameList>'{0}' izena gehitu da izen/etab. zerrendara</NameXAddedToNameList>
+    <NameXNotAddedToNameList>'{0}' izena EZ da izen/etab. zerrendara gehitu</NameXNotAddedToNameList>
     <WordXAddedToUserDic>'{0}' hitza erabiltzaile hiztegira gehitu da</WordXAddedToUserDic>
     <WordXNotAddedToUserDic>'{0}' izena EZ da erabiltzaile hiztegira gehitu</WordXNotAddedToUserDic>
     <OcrReplacePairXAdded>'{0} -&gt; {1}' OCR ordezpen zerrenda parea OCR ordezpen zerrendara gehitu da</OcrReplacePairXAdded>
@@ -1776,12 +1776,12 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <UserWordList>Erabiltzaile hitz zerrenda</UserWordList>
     <OcrFixList>OCR zuzenketa zerrenda</OcrFixList>
     <Location>Helbidea</Location>
-    <UseOnlineNamesEtc>Erabili online izenak etab. xml agiriak</UseOnlineNamesEtc>
+    <UseOnlineNames>Erabili online izenak etab. xml agiriak</UseOnlineNames>
     <WordAddedX>Gehitutako hitza: {0}</WordAddedX>
     <WordAlreadyExists>Hitza jadanik badago!</WordAlreadyExists>
     <WordNotFound>Hitza ez da aurkitu</WordNotFound>
     <RemoveX>Kendu {0}?</RemoveX>
-    <CannotUpdateNamesEtcOnline>Ezin da eguneratu Izenak Etab.xml online!</CannotUpdateNamesEtcOnline>
+    <CannotUpdateNamesOnline>Ezin da eguneratu Izenak Etab.xml online!</CannotUpdateNamesOnline>
     <ProxyServerSettings>Proxy zerbitzari ezarpenak</ProxyServerSettings>
     <ProxyAddress>Proxy helbidea:</ProxyAddress>
     <ProxyAuthentication>Egiaztapena</ProxyAuthentication>
@@ -1962,7 +1962,7 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <SpellCheckProgress>Idaz egiaztapena [{0}] - {1}</SpellCheckProgress>
     <EditWholeText>Editatu idatzi &amp;osoa</EditWholeText>
     <EditWordOnly>Editatu hitza ba&amp;karrik</EditWordOnly>
-    <AddXToNamesEtc>Gehitu '{0}' izen/etab. zerrendara</AddXToNamesEtc>
+    <AddXToNames>Gehitu '{0}' izen/etab. zerrendara</AddXToNames>
     <AutoFixNames>Berez zuze&amp;ndu azalean bakarrik ezberd. diren izenak</AutoFixNames>
     <CheckOneLetterWords>Galdetu hizkirri ezezagunak</CheckOneLetterWords>
     <TreatINQuoteAsING>Tratatu " in' " hitz amaiera " ing " bezala (Ingelera bakarrik)</TreatINQuoteAsING>

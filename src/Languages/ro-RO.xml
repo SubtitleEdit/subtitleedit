@@ -1375,8 +1375,8 @@
     <NumberOfWithRemovedLineBreakX>Numărul liniilor cu pauze de linii eliminate: {0}</NumberOfWithRemovedLineBreakX>
     <BeforeMultipleReplace>Înaintea înlocuirilor multiple</BeforeMultipleReplace>
     <NumberOfLinesReplacedX>Numărul liniilor cu text înlocuit: {0}</NumberOfLinesReplacedX>
-    <NameXAddedToNamesEtcList>Numele '{0}' s-a adăugat listei de nume/etc.</NameXAddedToNamesEtcList>
-    <NameXNotAddedToNamesEtcList>Numele '{0}' NU s-a adăugat listei de nume/etc</NameXNotAddedToNamesEtcList>
+    <NameXAddedToNameList>Numele '{0}' s-a adăugat listei de nume/etc.</NameXAddedToNameList>
+    <NameXNotAddedToNameList>Numele '{0}' NU s-a adăugat listei de nume/etc</NameXNotAddedToNameList>
     <WordXAddedToUserDic>Cuvântul '{0}' s-a adăugat la dicționarul utilizatorului</WordXAddedToUserDic>
     <WordXNotAddedToUserDic>Cuvântul '{0}' NU s-a adăugat la dicționarul utilizatorului</WordXNotAddedToUserDic>
     <OcrReplacePairXAdded>Perechea listei relocării OCR '{0} -&gt; {1}' s-a adăugat listei relocării OCR</OcrReplacePairXAdded>
@@ -1807,12 +1807,12 @@
     <UserWordList>Listă cuvinte ale utilizatorului</UserWordList>
     <OcrFixList>Listă reparare OCR</OcrFixList>
     <Location>Locație</Location>
-    <UseOnlineNamesEtc>Folosește online fișier de nume etc xml</UseOnlineNamesEtc>
+    <UseOnlineNames>Folosește online fișier de nume etc xml</UseOnlineNames>
     <WordAddedX>Cuvânt adăugat: {0}</WordAddedX>
     <WordAlreadyExists>Cuvânt deja existent!</WordAlreadyExists>
     <WordNotFound>Cuvânt negăsit</WordNotFound>
     <RemoveX>Elimini {0}?</RemoveX>
-    <CannotUpdateNamesEtcOnline>Imposibilă actualizarea online NamesEtc.xml!</CannotUpdateNamesEtcOnline>
+    <CannotUpdateNamesOnline>Imposibilă actualizarea online NamesEtc.xml!</CannotUpdateNamesOnline>
     <ProxyServerSettings>Setări Proxy server</ProxyServerSettings>
     <ProxyAddress>Adresă Proxy</ProxyAddress>
     <ProxyAuthentication>Autentificare</ProxyAuthentication>
@@ -1992,7 +1992,7 @@
     <SpellCheckProgress>Verifică ortografia [{0}] - {1}</SpellCheckProgress>
     <EditWholeText>Editează întreg textul</EditWholeText>
     <EditWordOnly>Edit. doar cuvântul</EditWordOnly>
-    <AddXToNamesEtc>Adaugă '{0}' la lista nume/etc.</AddXToNamesEtc>
+    <AddXToNames>Adaugă '{0}' la lista nume/etc.</AddXToNames>
     <AutoFixNames>Auto-repară nume diferite (caractere identice)</AutoFixNames>
     <CheckOneLetterWords>Avizează o literă necunoscută din cuvinte</CheckOneLetterWords>
     <TreatINQuoteAsING>Modifică „in” în „ing” la finalul cuvântului (în engleză)</TreatINQuoteAsING>

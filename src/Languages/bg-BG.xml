@@ -1196,8 +1196,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <NumberOfWithRemovedLineBreakX>Брой редове с изтрито прекъсване на ред: {0}</NumberOfWithRemovedLineBreakX>
     <BeforeMultipleReplace>Преди множествената замяна</BeforeMultipleReplace>
     <NumberOfLinesReplacedX>Брой редове със заменен текст: {0}</NumberOfLinesReplacedX>
-    <NameXAddedToNamesEtcList>Името '{0}' беше добавено към имена/игнорирани</NameXAddedToNamesEtcList>
-    <NameXNotAddedToNamesEtcList>Името '{0}' НЕ беше добавено към имена/игнорирани</NameXNotAddedToNamesEtcList>
+    <NameXAddedToNameList>Името '{0}' беше добавено към имена/игнорирани</NameXAddedToNameList>
+    <NameXNotAddedToNameList>Името '{0}' НЕ беше добавено към имена/игнорирани</NameXNotAddedToNameList>
     <WordXAddedToUserDic>Думата '{0}' беше добавена в потребителския речник</WordXAddedToUserDic>
     <WordXNotAddedToUserDic>Името '{0}' НЕ беше добавено в потребителския речник</WordXNotAddedToUserDic>
     <OcrReplacePairXAdded>ОСR заменящия двоен списък '{0} -&gt; {1}' добавяйки към ОСR списъка за замяна</OcrReplacePairXAdded>
@@ -1609,12 +1609,12 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <UserWordList>Потребителски списък с думи</UserWordList>
     <OcrFixList>OCR списък с поправки</OcrFixList>
     <Location>Местоположение</Location>
-    <UseOnlineNamesEtc>Използване на имена от Интернет, например файла NamesEtc.xml</UseOnlineNamesEtc>
+    <UseOnlineNames>Използване на имена от Интернет, например файла NamesEtc.xml</UseOnlineNames>
     <WordAddedX>Добавени думи: {0}</WordAddedX>
     <WordAlreadyExists>Думата вече съществува!</WordAlreadyExists>
     <WordNotFound>Думата не е намерена</WordNotFound>
     <RemoveX>Да се изтрие ли {0}?</RemoveX>
-    <CannotUpdateNamesEtcOnline>Не може да се обнови NamesEtc.xml онлайн!</CannotUpdateNamesEtcOnline>
+    <CannotUpdateNamesOnline>Не може да се обнови NamesEtc.xml онлайн!</CannotUpdateNamesOnline>
     <ProxyServerSettings>Настройки на прокси сървър</ProxyServerSettings>
     <ProxyAddress>Адрес на прокси</ProxyAddress>
     <ProxyAuthentication>Идентификация</ProxyAuthentication>
@@ -1773,7 +1773,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SpellCheckProgress>Проверка на правопис [{0}] - {1}</SpellCheckProgress>
     <EditWholeText>Редактирай текста</EditWholeText>
     <EditWordOnly>Редактирай думата</EditWordOnly>
-    <AddXToNamesEtc>Добави '{0}' към списъка с имена</AddXToNamesEtc>
+    <AddXToNames>Добави '{0}' към списъка с имена</AddXToNames>
     <AutoFixNames>Поправи имена с различна големина на буквите</AutoFixNames>
     <CheckOneLetterWords>Питане за непозната буква</CheckOneLetterWords>
     <TreatINQuoteAsING>Приемане на крайно "in" за "ing" (Само за английски)</TreatINQuoteAsING>

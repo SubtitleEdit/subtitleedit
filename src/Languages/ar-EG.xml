@@ -938,8 +938,8 @@ Continue?</SubtitleAppendPrompt>
     <NumberOfWithRemovedLineBreakX>{عدد الأسطر مع إزالة كسر السطر : {0</NumberOfWithRemovedLineBreakX>
     <BeforeMultipleReplace>قبل أن يستبدل المضاعف</BeforeMultipleReplace>
     <NumberOfLinesReplacedX>{استبدال عدد من الأسطر مع النص : {0</NumberOfLinesReplacedX>
-    <NameXAddedToNamesEtcList>أضيف اسم '{0}' إلى أسماء / قائمة الخ</NameXAddedToNamesEtcList>
-    <NameXNotAddedToNamesEtcList>الاسم '{0}' لم يتم إضافة إلى أسماء / قائمة الخ</NameXNotAddedToNamesEtcList>
+    <NameXAddedToNameList>أضيف اسم '{0}' إلى أسماء / قائمة الخ</NameXAddedToNameList>
+    <NameXNotAddedToNameList>الاسم '{0}' لم يتم إضافة إلى أسماء / قائمة الخ</NameXNotAddedToNameList>
     <XLinesSelected>{0} أسطر مختارة</XLinesSelected>
     <UnicodeMusicSymbolsAnsiWarning>الترجمة تحتوي على ملاحظات الموسيقى يونيكود. سوف إنقاذ باستخدام  ترميز ملف تفقد هذه. تواصل مع حفظ؟</UnicodeMusicSymbolsAnsiWarning>
     <NegativeTimeWarning>الترجمة تحتوي على رموز الوقت سلبية. تواصل مع حفظ؟</NegativeTimeWarning>
@@ -1151,12 +1151,12 @@ Continue?</SubtitleAppendPrompt>
     <UserWordList>قائمة المستخدم كلمة</UserWordList>
     <OcrFixList>OCR إصلاح قائمة</OcrFixList>
     <Location>الموقع</Location>
-    <UseOnlineNamesEtc>الخ xml استخدام الانترنت أسماء ملف</UseOnlineNamesEtc>
+    <UseOnlineNames>الخ xml استخدام الانترنت أسماء ملف</UseOnlineNames>
     <WordAddedX>{أضاف الكلمة : {0</WordAddedX>
     <WordAlreadyExists>الكلمة موجودة بالفعل</WordAlreadyExists>
     <WordNotFound>لم يتم العثور على الكلمة</WordNotFound>
     <RemoveX>إزالة {0}؟</RemoveX>
-    <CannotUpdateNamesEtcOnline>Etc.xml! لا يمكن تحديث الأسماء على الانترنت</CannotUpdateNamesEtcOnline>
+    <CannotUpdateNamesOnline>Etc.xml! لا يمكن تحديث الأسماء على الانترنت</CannotUpdateNamesOnline>
     <ProxyServerSettings>إعدادات خادم الوكيل</ProxyServerSettings>
     <ProxyAddress>عنوان الوكيل</ProxyAddress>
     <ProxyAuthentication>التحقق</ProxyAuthentication>
@@ -1219,7 +1219,7 @@ Continue?</SubtitleAppendPrompt>
     <SpellCheckProgress>{التدقيق الإملائي [{0}] -- {1</SpellCheckProgress>
     <EditWholeText>تحرير النص بالكامل</EditWholeText>
     <EditWordOnly>تحرير كلمة واحدة</EditWordOnly>
-    <AddXToNamesEtc>اضافة '{0}' إلى أسماء / قائمة الخ</AddXToNamesEtc>
+    <AddXToNames>اضافة '{0}' إلى أسماء / قائمة الخ</AddXToNames>
     <AutoFixNames>إصلاح الأسماء تلقائى حيث الغلاف فقط يختلف</AutoFixNames>
     <ImageText>صورة نص</ImageText>
     <SpellCheckCompleted>أكتمل التدقيق الإملائي</SpellCheckCompleted>
