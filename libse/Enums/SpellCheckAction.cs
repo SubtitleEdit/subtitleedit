@@ -5,6 +5,7 @@
         Change,
         ChangeAll,
         Skip,
+        SkipWholeLine,
         SkipAll,
         AddToDictionary,
         Abort,
