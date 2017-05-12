@@ -53,7 +53,7 @@ IF /I "%BUILDTYPE%" == "Clean" GOTO END
 
 ECHO.
 ECHO ILRepack...
-"packages\ILRepack.2.0.11\tools\ILRepack.exe" /parallel /internalize /targetplatform:v4 /out:"bin\Release\SubtitleEdit.exe" "bin\Release\SubtitleEdit.exe" "bin\Release\libse.dll" "bin\Release\zlib.net.dll" "bin\Release\NHunspell.dll" "DLLs\Interop.QuartzTypeLib.dll"
+"packages\ILRepack.2.0.13\tools\ILRepack.exe" /parallel /internalize /targetplatform:v4 /out:"bin\Release\SubtitleEdit.exe" "bin\Release\SubtitleEdit.exe" "bin\Release\libse.dll" "bin\Release\zlib.net.dll" "bin\Release\NHunspell.dll" "DLLs\Interop.QuartzTypeLib.dll"
 ECHO.
 ECHO.
 POPD
