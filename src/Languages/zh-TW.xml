@@ -2,7 +2,7 @@
 <Language Name="中文(繁體)">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.5.2</Version>
+    <Version>3.5.3</Version>
     <TranslatedBy>翻譯: BAWAN【增補：風逸蘭】</TranslatedBy>
     <CultureName>zh-TW</CultureName>
     <HelpFile />
@@ -1273,7 +1273,7 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
     <BeforeMultipleReplace>多重取代之前</BeforeMultipleReplace>
     <NumberOfLinesReplacedX>已取代文字的行數: {0}</NumberOfLinesReplacedX>
     <NameXAddedToNameList>名稱 '{0}' 已被加入到 名稱/其它 清單</NameXAddedToNameList>
-    <NameXNotAddedToNameList>名稱 '{0}' 未被加入到 名稱/其它 清單/>NameXNotAddedToNameList>
+    <NameXNotAddedToNameList>名稱 '{0}' 未被加入到 名稱/其它 清單</NameXNotAddedToNameList>
     <WordXAddedToUserDic>單字 '{0}' 已被加入到使用者字典</WordXAddedToUserDic>
     <WordXNotAddedToUserDic>名稱 '{0}' 未被加入到使用者字典</WordXNotAddedToUserDic>
     <OcrReplacePairXAdded>OCR 取代清單對 '{0} -&gt; {1}' 已被加入到 OCR 取代清單</OcrReplacePairXAdded>
