@@ -27,7 +27,7 @@
    * "Import plain text" now rembembers options - thx Leon
    * "Insert subtitle here..." added to waveform context menu
    * Added waveform shortcut for go to next sub - thx GeorgeM
-   *  Drag'n'drop of subtitles now allows up to 10 MB - thx Silvena
+   * Drag'n'drop of subtitles now allows up to 10 MB - thx Silvena
 * FIXED:
    * Fixed crash in "Add to user dictionary" in OCR - thx alfix0
    * Fixed original file name bug in "Undo" - thx darnn
