@@ -2,7 +2,7 @@
 <Language Name="srpski">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.5.2</Version>
+    <Version>3.5.3</Version>
     <TranslatedBy>Prevod: Misa Forger</TranslatedBy>
     <CultureName>sr-Latn-RS</CultureName>
     <HelpFile />
@@ -1110,7 +1110,7 @@ koji bi trebao da bude usklađen sa Video datotekom.
     <BeforeMultipleReplace>Izvršena višestruka zamena</BeforeMultipleReplace>
     <NumberOfLinesReplacedX>Broj linija sa zamenjenim tekstom: {0}</NumberOfLinesReplacedX>
     <NameXAddedToNameList>Reč „{0}“ je dodata u popis naziva/izuzetaka.</NameXAddedToNameList>
-    <>NameXNotAddedToNameList>Ne mogu da dodam reč „{0}“ u popis naziva/izuzetaka.</>NameXNotAddedToNameList>
+    <NameXNotAddedToNameList>Ne mogu da dodam reč „{0}“ u popis naziva/izuzetaka.</NameXNotAddedToNameList>
     <WordXAddedToUserDic>Reč '{0}' je dodata u korisnički rečnik</WordXAddedToUserDic>
     <WordXNotAddedToUserDic>Reč '{0}' nije dodata u korisnički rečnik</WordXNotAddedToUserDic>
     <OcrReplacePairXAdded>Popis OCR zameniti par '{0} -&gt; {1}' je dodat na popis OCR zameniti</OcrReplacePairXAdded>

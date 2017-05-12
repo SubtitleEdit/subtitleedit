@@ -2,7 +2,7 @@
 <Language Name="Български">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.5.2</Version>
+    <Version>3.5.3</Version>
     <TranslatedBy>Превод на български: Ivo Ivanov и JJD</TranslatedBy>
     <CultureName>bg-BG</CultureName>
     <HelpFile />
@@ -616,9 +616,12 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixMusicNotationExample>'âTª sweet dreams are' -&gt; '♫ sweet dreams are'</FixMusicNotationExample>
     <NumberOfImportantLogMessages>{0} важни съобщения с отчети!</NumberOfImportantLogMessages>
     <FixedOkXY>Поправено и OK - '{0}': {1}</FixedOkXY>
-    <FixOcrErrorExample></FixOcrErrorExample>
-    <FixSpaceBetweenNumbersExample></FixSpaceBetweenNumbersExample>
-    <FixDialogsOneLineExample></FixDialogsOneLineExample>
+    <FixOcrErrorExample>
+    </FixOcrErrorExample>
+    <FixSpaceBetweenNumbersExample>
+    </FixSpaceBetweenNumbersExample>
+    <FixDialogsOneLineExample>
+    </FixDialogsOneLineExample>
   </FixCommonErrors>
   <GetDictionaries>
     <Title>Кой речник желаете?</Title>
