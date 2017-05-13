@@ -2884,13 +2884,11 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             if (!string.IsNullOrEmpty(videoFileName) && File.Exists(videoFileName))
                             {
-                                if (!Configuration.Settings.General.DisableVideoAutoLoading)
-                                    OpenVideo(videoFileName);
+                                OpenVideo(videoFileName);
                             }
                             else if (!string.IsNullOrEmpty(fileName) && (toolStripButtonToggleVideo.Checked || toolStripButtonToggleWaveform.Checked))
                             {
-                                if (!Configuration.Settings.General.DisableVideoAutoLoading)
-                                    TryToFindAndOpenVideoFile(Path.Combine(Path.GetDirectoryName(fileName), Path.GetFileNameWithoutExtension(fileName)));
+                                TryToFindAndOpenVideoFile(Path.Combine(Path.GetDirectoryName(fileName), Path.GetFileNameWithoutExtension(fileName)));
                             }
                             if (_videoFileName == null)
                             {
@@ -14253,7 +14251,7 @@ namespace Nikse.SubtitleEdit.Forms
                 trackBarWaveformPosition.Width = audioVisualizer.Left + audioVisualizer.Width - trackBarWaveformPosition.Left + 5;
             }
 
-            if (mediaPlayer.VideoPlayer == null && !string.IsNullOrEmpty(_fileName))
+            if (mediaPlayer.VideoPlayer == null && !string.IsNullOrEmpty(_fileName) && !Configuration.Settings.General.DisableVideoAutoLoading)
                 TryToFindAndOpenVideoFile(Path.Combine(Path.GetDirectoryName(_fileName), Path.GetFileNameWithoutExtension(_fileName)));
             Main_Resize(null, null);
         }
