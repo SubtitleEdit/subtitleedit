@@ -30,6 +30,8 @@
             public string Duration { get; set; }
             public string CharsPerSec { get; set; }
             public string WordsPerMin { get; set; }
+            public string Actor { get; set; }
+            public string Region { get; set; }
             public string NumberSymbol { get; set; }
             public string Number { get; set; }
             public string Text { get; set; }
@@ -225,6 +227,7 @@
             public string Enabled { get; set; }
             public string Name { get; set; }
             public string LinesFoundX { get; set; }
+            public string ExtraNames { get; set; }
         }
 
         public class ChangeFrameRate
@@ -1139,8 +1142,8 @@
             public string NumberOfWithRemovedLineBreakX { get; set; }
             public string BeforeMultipleReplace { get; set; }
             public string NumberOfLinesReplacedX { get; set; }
-            public string NameXAddedToNamesEtcList { get; set; }
-            public string NameXNotAddedToNamesEtcList { get; set; }
+            public string NameXAddedToNameList { get; set; }
+            public string NameXNotAddedToNameList { get; set; }
             public string WordXAddedToUserDic { get; set; }
             public string WordXNotAddedToUserDic { get; set; }
             public string OcrReplacePairXAdded { get; set; }
@@ -1367,7 +1370,7 @@
                     public string FindDoubleWords { get; set; }
                     public string FindDoubleLines { get; set; }
                     public string GetDictionaries { get; set; }
-                    public string AddToNamesEtcList { get; set; }
+                    public string AddToNameList { get; set; }
                 }
                 public class SynchronizationkMenu
                 {
@@ -1433,8 +1436,10 @@
                     public string SizeAllColumnsToFit { get; set; }
                     public string AdvancedSubStationAlphaSetStyle { get; set; }
                     public string SubStationAlphaSetStyle { get; set; }
+                    public string SetActor { get; set; }
                     public string SubStationAlphaStyles { get; set; }
                     public string AdvancedSubStationAlphaStyles { get; set; }
+                    public string TimedTextSetRegion { get; set; }
                     public string TimedTextSetStyle { get; set; }
                     public string TimedTextStyles { get; set; }
                     public string TimedTextSetLanguage { get; set; }
@@ -1484,6 +1489,8 @@
                     public string SaveSelectedLines { get; set; }
                     public string WebVTTSetNewVoice { get; set; }
                     public string WebVTTRemoveVoices { get; set; }
+                    public string NewActor { get; set; }
+                    public string RemoveActors { get; set; }
                 }
 
                 public FileMenu File { get; set; }
@@ -1957,19 +1964,19 @@
             public string Testing123 { get; set; }
             public string Language { get; set; }
             public string NamesIgnoreLists { get; set; }
-            public string AddNameEtc { get; set; }
+            public string AddName { get; set; }
             public string AddWord { get; set; }
             public string Remove { get; set; }
             public string AddPair { get; set; }
             public string UserWordList { get; set; }
             public string OcrFixList { get; set; }
             public string Location { get; set; }
-            public string UseOnlineNamesEtc { get; set; }
+            public string UseOnlineNames { get; set; }
             public string WordAddedX { get; set; }
             public string WordAlreadyExists { get; set; }
             public string WordNotFound { get; set; }
             public string RemoveX { get; set; }
-            public string CannotUpdateNamesEtcOnline { get; set; }
+            public string CannotUpdateNamesOnline { get; set; }
             public string ProxyServerSettings { get; set; }
             public string ProxyAddress { get; set; }
             public string ProxyAuthentication { get; set; }
@@ -2038,6 +2045,7 @@
             public string WaveformPlayNewSelectionEnd { get; set; }
             public string WaveformPlayFirstSelectedSubtitle { get; set; }
             public string WaveformFocusListView { get; set; }
+            public string WaveformGoToNextSubtitle { get; set; }
             public string WaveformGoToNextSceneChange { get; set; }
             public string WaveformToggleSceneChange { get; set; }
             public string GoBack1Frame { get; set; }
@@ -2093,6 +2101,7 @@
             public string MainTextBoxUnbreak { get; set; }
             public string MainFileSaveAll { get; set; }
             public string Miscellaneous { get; set; }
+            public string CpsIncludesSpace { get; set; }
             public string UseDoNotBreakAfterList { get; set; }
             public string MicrosoftBingTranslator { get; set; }
             public string HowToSignUp { get; set; }
@@ -2159,7 +2168,7 @@
             public string SpellCheckProgress { get; set; }
             public string EditWholeText { get; set; }
             public string EditWordOnly { get; set; }
-            public string AddXToNamesEtc { get; set; }
+            public string AddXToNames { get; set; }
             public string AutoFixNames { get; set; }
             public string CheckOneLetterWords { get; set; }
             public string TreatINQuoteAsING { get; set; }
@@ -2171,16 +2180,13 @@
 
         public class NetflixQualityCheck
         {
-            public string GlyphCheckSuccessfull { get; set; }
-            public string GlyphCheckFailed { get; set; }
             public string GlyphCheckReport { get; set; }
 
-            public string WhiteSpaceCheckSuccessfull { get; set; }
-            public string WhiteSpaceCheckFailed { get; set; }
             public string WhiteSpaceCheckReport { get; set; }
 
             public string ReportPrompt { get; set;  }
-            public string SavingError { get; set; }
+            public string FoundXIssues { get; set; }
+            public string CheckOk { get; set; }
         }
 
         public class Split
@@ -2535,6 +2541,7 @@
             public string RemoveSceneChange { get; set; }
             public string GuessTimeCodes { get; set; }
             public string SeekSilence { get; set; }
+            public string InsertSubtitleHere { get; set; }
             public string CharsSecX { get; set; }
             public string WordsMinX { get; set; }
         }

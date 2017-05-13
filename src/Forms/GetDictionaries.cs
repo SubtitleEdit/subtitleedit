@@ -15,6 +15,7 @@ namespace Nikse.SubtitleEdit.Forms
         private List<string> _dictionaryDownloadLinks = new List<string>();
         private List<string> _descriptions = new List<string>();
         private string _xmlName;
+        private int _testAllIndex = -1;
 
         public GetDictionaries()
         {
@@ -31,6 +32,9 @@ namespace Nikse.SubtitleEdit.Forms
 
             LoadDictionaryList("Nikse.SubtitleEdit.Resources.HunspellDictionaries.xml.gz");
             FixLargeFonts();
+#if DEBUG
+            buttonDownloadAll.Visible = true; // For testing all download links
+#endif
         }
 
         private void LoadDictionaryList(string xmlRessourceName)
@@ -112,6 +116,7 @@ namespace Nikse.SubtitleEdit.Forms
                 labelPleaseWait.Text = Configuration.Settings.Language.General.PleaseWait;
                 buttonOK.Enabled = false;
                 buttonDownload.Enabled = false;
+                buttonDownloadAll.Enabled = false;
                 comboBoxDictionaries.Enabled = false;
                 this.Refresh();
                 Cursor = Cursors.WaitCursor;
@@ -128,6 +133,7 @@ namespace Nikse.SubtitleEdit.Forms
                 labelPleaseWait.Text = string.Empty;
                 buttonOK.Enabled = true;
                 buttonDownload.Enabled = true;
+                buttonDownloadAll.Enabled = true;
                 comboBoxDictionaries.Enabled = true;
                 Cursor = Cursors.Default;
                 MessageBox.Show(exception.Message + Environment.NewLine + Environment.NewLine + exception.StackTrace);
@@ -144,6 +150,7 @@ namespace Nikse.SubtitleEdit.Forms
                 labelPleaseWait.Text = string.Empty;
                 buttonOK.Enabled = true;
                 buttonDownload.Enabled = true;
+                buttonDownloadAll.Enabled = true;
                 comboBoxDictionaries.Enabled = true;
                 Cursor = Cursors.Default;
                 return;
@@ -193,7 +200,13 @@ namespace Nikse.SubtitleEdit.Forms
             labelPleaseWait.Text = string.Empty;
             buttonOK.Enabled = true;
             buttonDownload.Enabled = true;
+            buttonDownloadAll.Enabled = true;
             comboBoxDictionaries.Enabled = true;
+            if (_testAllIndex >= 0)
+            {
+                DownloadNext();
+                return;
+            }
             MessageBox.Show(string.Format(Configuration.Settings.Language.GetDictionaries.XDownloaded, comboBoxDictionaries.Items[index]));
         }
 
@@ -230,5 +243,22 @@ namespace Nikse.SubtitleEdit.Forms
             int index = comboBoxDictionaries.SelectedIndex;
             labelPleaseWait.Text = _descriptions[index];
         }
+
+        private void buttonDownloadAll_Click(object sender, EventArgs e)
+        {
+            _testAllIndex = -1;
+            DownloadNext();
+        }
+
+        private void DownloadNext()
+        {
+            _testAllIndex++;
+            if (_testAllIndex < comboBoxDictionaries.Items.Count)
+            {
+                comboBoxDictionaries.SelectedIndex = _testAllIndex;
+                buttonDownload_Click(null, null);
+            }
+        }
+
     }
 }

@@ -2,7 +2,7 @@
 <Language Name="Български">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.5.2</Version>
+    <Version>3.5.3</Version>
     <TranslatedBy>Превод на български: Ivo Ivanov и JJD</TranslatedBy>
     <CultureName>bg-BG</CultureName>
     <HelpFile />
@@ -225,7 +225,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <CheckingForUpdatesFailedX>Грешка при проверка за обновяване: {0}</CheckingForUpdatesFailedX>
     <CheckingForUpdatesNoneAvailable>Използвате последна версия на Subtitle Edit :)</CheckingForUpdatesNoneAvailable>
     <CheckingForUpdatesNewVersion>Налична е нова версия!</CheckingForUpdatesNewVersion>
-    <InstallUpdate>Към страницата за смъкване</InstallUpdate>
+    <InstallUpdate>Сваляне</InstallUpdate>
     <NoUpdates>Не обновявай</NoUpdates>
   </CheckForUpdates>
   <ChooseAudioTrack>
@@ -616,6 +616,12 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixMusicNotationExample>'âTª sweet dreams are' -&gt; '♫ sweet dreams are'</FixMusicNotationExample>
     <NumberOfImportantLogMessages>{0} важни съобщения с отчети!</NumberOfImportantLogMessages>
     <FixedOkXY>Поправено и OK - '{0}': {1}</FixedOkXY>
+    <FixOcrErrorExample>
+    </FixOcrErrorExample>
+    <FixSpaceBetweenNumbersExample>
+    </FixSpaceBetweenNumbersExample>
+    <FixDialogsOneLineExample>
+    </FixDialogsOneLineExample>
   </FixCommonErrors>
   <GetDictionaries>
     <Title>Кой речник желаете?</Title>
@@ -849,7 +855,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <FindDoubleWords>Търсене на дублиращи се думи</FindDoubleWords>
         <FindDoubleLines>Търсене на дублиращи се редове</FindDoubleLines>
         <GetDictionaries>Изтеглете речници...</GetDictionaries>
-        <AddToNamesEtcList>Добавяне на думата към имена/игнорирани</AddToNamesEtcList>
+        <AddToNameList>Добавяне на думата към имена/игнорирани</AddToNameList>
       </SpellCheck>
       <Synchronization>
         <Title>Синхронизация</Title>
@@ -1027,6 +1033,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <BeforeVisualSync>Преди визуалната синхронизация</BeforeVisualSync>
     <VisualSyncPerformedOnSelectedLines>Визуалната синхронизация се отнася за избраните редове</VisualSyncPerformedOnSelectedLines>
     <VisualSyncPerformed>Визуалната синхронизация е направена</VisualSyncPerformed>
+    <ImportThisVobSubSubtitle>Импортиране на това от VobSub субтитрите?</ImportThisVobSubSubtitle>
     <FileXIsLargerThan10MB>Файлът е по-голям от 10 МВ: {0}</FileXIsLargerThan10MB>
     <ContinueAnyway>Искате ли да продължите?</ContinueAnyway>
     <BeforeLoadOf>Преди зареждането на {0}</BeforeLoadOf>
@@ -1192,8 +1199,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <NumberOfWithRemovedLineBreakX>Брой редове с изтрито прекъсване на ред: {0}</NumberOfWithRemovedLineBreakX>
     <BeforeMultipleReplace>Преди множествената замяна</BeforeMultipleReplace>
     <NumberOfLinesReplacedX>Брой редове със заменен текст: {0}</NumberOfLinesReplacedX>
-    <NameXAddedToNamesEtcList>Името '{0}' беше добавено към имена/игнорирани</NameXAddedToNamesEtcList>
-    <NameXNotAddedToNamesEtcList>Името '{0}' НЕ беше добавено към имена/игнорирани</NameXNotAddedToNamesEtcList>
+    <NameXAddedToNameList>Името '{0}' беше добавено към имена/игнорирани</NameXAddedToNameList>
+    <NameXNotAddedToNameList>Името '{0}' НЕ беше добавено към имена/игнорирани</NameXNotAddedToNameList>
     <WordXAddedToUserDic>Думата '{0}' беше добавена в потребителския речник</WordXAddedToUserDic>
     <WordXNotAddedToUserDic>Името '{0}' НЕ беше добавено в потребителския речник</WordXNotAddedToUserDic>
     <OcrReplacePairXAdded>ОСR заменящия двоен списък '{0} -&gt; {1}' добавяйки към ОСR списъка за замяна</OcrReplacePairXAdded>
@@ -1598,19 +1605,19 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Testing123>Тестване 123...</Testing123>
     <Language>Език</Language>
     <NamesIgnoreLists>Имена/списък с игнорирани</NamesIgnoreLists>
-    <AddNameEtc>Добавяне на име</AddNameEtc>
+    <AddName>Добавяне на име</AddName>
     <AddWord>Добавяне на дума</AddWord>
     <Remove>Изтриване</Remove>
     <AddPair>Добавяне на двойка</AddPair>
     <UserWordList>Потребителски списък с думи</UserWordList>
     <OcrFixList>OCR списък с поправки</OcrFixList>
     <Location>Местоположение</Location>
-    <UseOnlineNamesEtc>Използване на имена от Интернет, например файла NamesEtc.xml</UseOnlineNamesEtc>
+    <UseOnlineNames>Използване на имена от Интернет, например файла NamesEtc.xml</UseOnlineNames>
     <WordAddedX>Добавени думи: {0}</WordAddedX>
     <WordAlreadyExists>Думата вече съществува!</WordAlreadyExists>
     <WordNotFound>Думата не е намерена</WordNotFound>
     <RemoveX>Да се изтрие ли {0}?</RemoveX>
-    <CannotUpdateNamesEtcOnline>Не може да се обнови NamesEtc.xml онлайн!</CannotUpdateNamesEtcOnline>
+    <CannotUpdateNamesOnline>Не може да се обнови NamesEtc.xml онлайн!</CannotUpdateNamesOnline>
     <ProxyServerSettings>Настройки на прокси сървър</ProxyServerSettings>
     <ProxyAddress>Адрес на прокси</ProxyAddress>
     <ProxyAuthentication>Идентификация</ProxyAuthentication>
@@ -1769,7 +1776,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SpellCheckProgress>Проверка на правопис [{0}] - {1}</SpellCheckProgress>
     <EditWholeText>Редактирай текста</EditWholeText>
     <EditWordOnly>Редактирай думата</EditWordOnly>
-    <AddXToNamesEtc>Добави '{0}' към списъка с имена</AddXToNamesEtc>
+    <AddXToNames>Добави '{0}' към списъка с имена</AddXToNames>
     <AutoFixNames>Поправи имена с различна големина на буквите</AutoFixNames>
     <CheckOneLetterWords>Питане за непозната буква</CheckOneLetterWords>
     <TreatINQuoteAsING>Приемане на крайно "in" за "ing" (Само за английски)</TreatINQuoteAsING>

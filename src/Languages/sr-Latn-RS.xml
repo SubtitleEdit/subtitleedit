@@ -2,7 +2,7 @@
 <Language Name="srpski">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.5.2</Version>
+    <Version>3.5.3</Version>
     <TranslatedBy>Prevod: Misa Forger</TranslatedBy>
     <CultureName>sr-Latn-RS</CultureName>
     <HelpFile />
@@ -777,7 +777,7 @@ E-pošta:mailto:nikse.dk@gmail.com</AboutText1>
         <FindDoubleWords>Pronađi duple &amp;reči</FindDoubleWords>
         <FindDoubleLines>Pronađi duple &amp;linije</FindDoubleLines>
         <GetDictionaries>Preuzmi rečnike...</GetDictionaries>
-        <AddToNamesEtcList>&amp;Dodaj reč u popis naziva/izuzetaka...</AddToNamesEtcList>
+        <AddToNameList>&amp;Dodaj reč u popis naziva/izuzetaka...</AddToNameList>
       </SpellCheck>
       <Synchronization>
         <Title>Usklađivanje</Title>
@@ -1109,8 +1109,8 @@ koji bi trebao da bude usklađen sa Video datotekom.
     <NumberOfWithRemovedLineBreakX>Broj linija sa uklonjenim redom: {0}</NumberOfWithRemovedLineBreakX>
     <BeforeMultipleReplace>Izvršena višestruka zamena</BeforeMultipleReplace>
     <NumberOfLinesReplacedX>Broj linija sa zamenjenim tekstom: {0}</NumberOfLinesReplacedX>
-    <NameXAddedToNamesEtcList>Reč „{0}“ je dodata u popis naziva/izuzetaka.</NameXAddedToNamesEtcList>
-    <NameXNotAddedToNamesEtcList>Ne mogu da dodam reč „{0}“ u popis naziva/izuzetaka.</NameXNotAddedToNamesEtcList>
+    <NameXAddedToNameList>Reč „{0}“ je dodata u popis naziva/izuzetaka.</NameXAddedToNameList>
+    <NameXNotAddedToNameList>Ne mogu da dodam reč „{0}“ u popis naziva/izuzetaka.</NameXNotAddedToNameList>
     <WordXAddedToUserDic>Reč '{0}' je dodata u korisnički rečnik</WordXAddedToUserDic>
     <WordXNotAddedToUserDic>Reč '{0}' nije dodata u korisnički rečnik</WordXNotAddedToUserDic>
     <OcrReplacePairXAdded>Popis OCR zameniti par '{0} -&gt; {1}' je dodat na popis OCR zameniti</OcrReplacePairXAdded>
@@ -1394,19 +1394,19 @@ određeni prevod s drugim ljudima.</Information>
     <Testing123>Provera 123...</Testing123>
     <Language>Jezik:</Language>
     <NamesIgnoreLists>Nazivi/izuzeci</NamesIgnoreLists>
-    <AddNameEtc>Dodaj &amp;ime</AddNameEtc>
+    <AddName>Dodaj &amp;ime</AddName>
     <AddWord>Dodaj &amp;reč</AddWord>
     <Remove>U&amp;kloni</Remove>
     <AddPair>Dodaj &amp;par</AddPair>
     <UserWordList>Prilagođeni popis reči</UserWordList>
     <OcrFixList>Popis ispravki za OCR</OcrFixList>
     <Location>Adresa</Location>
-    <UseOnlineNamesEtc>Koristi &amp;datoteku na mreži</UseOnlineNamesEtc>
+    <UseOnlineNames>Koristi &amp;datoteku na mreži</UseOnlineNames>
     <WordAddedX>Dodato reči: {0}</WordAddedX>
     <WordAlreadyExists>Reč već postoji.</WordAlreadyExists>
     <WordNotFound>Reč nije pronađena.</WordNotFound>
     <RemoveX>Ukloniti</RemoveX>
-    <CannotUpdateNamesEtcOnline>Ne mogu ažurirati Online datoteku „NamesEtc.xml“.</CannotUpdateNamesEtcOnline>
+    <CannotUpdateNamesOnline>Ne mogu ažurirati Online datoteku „NamesEtc.xml“.</CannotUpdateNamesOnline>
     <ProxyServerSettings>Postavke posredničkog servera</ProxyServerSettings>
     <ProxyAddress>Adresa servera:</ProxyAddress>
     <ProxyAuthentication>Potvrda identiteta</ProxyAuthentication>
@@ -1525,7 +1525,7 @@ određeni prevod s drugim ljudima.</Information>
     <SpellCheckProgress>Provera pravopisa [{0}] – {1}</SpellCheckProgress>
     <EditWholeText>Uredi &amp;sav tekst</EditWholeText>
     <EditWordOnly>Uredi &amp;samo reč</EditWordOnly>
-    <AddXToNamesEtc>Dodaj „{0}“ u popis naziva/izuzetaka</AddXToNamesEtc>
+    <AddXToNames>Dodaj „{0}“ u popis naziva/izuzetaka</AddXToNames>
     <AutoFixNames>&amp;Ispravi reči gde je samo veličina slova različita</AutoFixNames>
     <ImageText>Tekst slike</ImageText>
     <SpellCheckCompleted>Provera pravopisa je završena.</SpellCheckCompleted>

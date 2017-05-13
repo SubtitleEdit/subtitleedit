@@ -2,7 +2,7 @@
 <Language Name="Hungarian">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.5.2</Version>
+    <Version>3.5.3</Version>
     <TranslatedBy>Fordító: Zityi's Translator Team (http://szoftverforditasok.hu)</TranslatedBy>
     <CultureName>hu-HU</CultureName>
     <HelpFile />
@@ -1012,7 +1012,7 @@ Megjegyzés: Ellenőrizze a szabad merevlemez területet.</WaveFileMalformed>
         <FindDoubleWords>Ismétlődő szavak keresése</FindDoubleWords>
         <FindDoubleLines>Ismétlődő sorok keresése</FindDoubleLines>
         <GetDictionaries>Szótárak letöltése...</GetDictionaries>
-        <AddToNamesEtcList>Szó hozzáadás a nevek/stb. listához</AddToNamesEtcList>
+        <AddToNameList>Szó hozzáadás a nevek/stb. listához</AddToNameList>
       </SpellCheck>
       <Synchronization>
         <Title>Szinkronizálás</Title>
@@ -1361,8 +1361,8 @@ Folytatja?</SubtitleAppendPrompt>
     <NumberOfWithRemovedLineBreakX>Sorok száma az eltávolított sortöréseknél: {0}</NumberOfWithRemovedLineBreakX>
     <BeforeMultipleReplace>A többszörös csere előtti állapotra</BeforeMultipleReplace>
     <NumberOfLinesReplacedX>Sorok száma a lecserélt szövegnél: {0}</NumberOfLinesReplacedX>
-    <NameXAddedToNamesEtcList>A(z) '{0}' név felkerült a nevek/stb. listára</NameXAddedToNamesEtcList>
-    <NameXNotAddedToNamesEtcList>A(z) '{0}' név NEM került fel a nevek/stb. listára</NameXNotAddedToNamesEtcList>
+    <NameXAddedToNameList>A(z) '{0}' név felkerült a nevek/stb. listára</NameXAddedToNameList>
+    <NameXNotAddedToNameList>A(z) '{0}' név NEM került fel a nevek/stb. listára</NameXNotAddedToNameList>
     <WordXAddedToUserDic>A(z) '{0}' szó bekerült a felhasználói szótárba</WordXAddedToUserDic>
     <WordXNotAddedToUserDic>A(z) '{0}' név NEM került be a felhasználói szótárba</WordXNotAddedToUserDic>
     <OcrReplacePairXAdded>Az OCR csere lista pár '{0} -&gt; {1}' felkerült az OCR csere listára</OcrReplacePairXAdded>
@@ -1786,19 +1786,19 @@ szerkesztheti ugyanazt a feliratfájlt</Information>
     <Testing123>Tesztelés 123...</Testing123>
     <Language>Nyelv</Language>
     <NamesIgnoreLists>Nevek/kihagyási lista (nagybetű érzékeny)</NamesIgnoreLists>
-    <AddNameEtc>Új név</AddNameEtc>
+    <AddName>Új név</AddName>
     <AddWord>Szó hozzáadása</AddWord>
     <Remove>Törlés</Remove>
     <AddPair>Pár hozzáadása</AddPair>
     <UserWordList>Felhasználói szólista</UserWordList>
     <OcrFixList>OCR javítási lista</OcrFixList>
     <Location>Hely</Location>
-    <UseOnlineNamesEtc>Online nevek etc.xml fájl használata</UseOnlineNamesEtc>
+    <UseOnlineNames>Online nevek etc.xml fájl használata</UseOnlineNames>
     <WordAddedX>Hozzáadott szó: {0}</WordAddedX>
     <WordAlreadyExists>A szó már létezik!</WordAlreadyExists>
     <WordNotFound>A szó nem található</WordNotFound>
     <RemoveX>Eltávolítja {0}?</RemoveX>
-    <CannotUpdateNamesEtcOnline>A NamesEtc.xml nem frissíthető online!</CannotUpdateNamesEtcOnline>
+    <CannotUpdateNamesOnline>A NamesEtc.xml nem frissíthető online!</CannotUpdateNamesOnline>
     <ProxyServerSettings>Proxykiszolgáló beállítások</ProxyServerSettings>
     <ProxyAddress>Proxy-cím</ProxyAddress>
     <ProxyAuthentication>Hitelesítés</ProxyAuthentication>
@@ -1979,7 +1979,7 @@ szerkesztheti ugyanazt a feliratfájlt</Information>
     <SpellCheckProgress>Helyesírás-ellenőrzés [{0}] - {1}</SpellCheckProgress>
     <EditWholeText>Teljes szöveg szerkesztése</EditWholeText>
     <EditWordOnly>Csak szavak szerkesztése</EditWordOnly>
-    <AddXToNamesEtc>A(z) '{0}' felvétele a nevek/stb. listára</AddXToNamesEtc>
+    <AddXToNames>A(z) '{0}' felvétele a nevek/stb. listára</AddXToNames>
     <AutoFixNames>Nevek auto-javítása, ahol csak a betűállás különbözik</AutoFixNames>
     <CheckOneLetterWords>Rákérdezés az ismeretlen egy betűs szavakra</CheckOneLetterWords>
     <TreatINQuoteAsING>Az " in' " szóvéget kezelje " ing "-ként (Csak angol nyelven)</TreatINQuoteAsING>

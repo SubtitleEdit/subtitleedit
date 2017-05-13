@@ -634,7 +634,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <FindDoubleWords>Buscar palabras dobles</FindDoubleWords>
         <FindDoubleLines>Buscar líneas dobles</FindDoubleLines>
         <GetDictionaries>Conseguir diccionarios...</GetDictionaries>
-        <AddToNamesEtcList>Añadir palabra al listado de nombres</AddToNamesEtcList>
+        <AddToNameList>Añadir palabra al listado de nombres</AddToNameList>
       </SpellCheck>
       <Synchronization>
         <Title>Sincronización</Title>
@@ -934,8 +934,8 @@ con el archivo de vídeo, al subtítulo actual cargado.
     <NumberOfWithRemovedLineBreakX>Numero de líneas con salto de línea eliminado: {0}</NumberOfWithRemovedLineBreakX>
     <BeforeMultipleReplace>Antes del reemplazo múltiple</BeforeMultipleReplace>
     <NumberOfLinesReplacedX>Numero de líneas con texto reemplazado: {0}</NumberOfLinesReplacedX>
-    <NameXAddedToNamesEtcList>El nombre '{0}' se ha añadido al listado de nombres</NameXAddedToNamesEtcList>
-    <NameXNotAddedToNamesEtcList>El nombre '{0}' NO se ha añadido al listado de nombres</NameXNotAddedToNamesEtcList>
+    <NameXAddedToNameList>El nombre '{0}' se ha añadido al listado de nombres</NameXAddedToNameList>
+    <NameXNotAddedToNameList>El nombre '{0}' NO se ha añadido al listado de nombres</NameXNotAddedToNameList>
     <XLinesSelected>{0} líneas seleccionadas</XLinesSelected>
     <UnicodeMusicSymbolsAnsiWarning>El subtítulo contiene notas musicales unicode. Guardar con codificación ANSI se las hará perder.¿Continuar?</UnicodeMusicSymbolsAnsiWarning>
     <NegativeTimeWarning>Subtítulo con códigos de tiempo negativos. ¿Continuar guardar?</NegativeTimeWarning>
@@ -1144,19 +1144,19 @@ puede editar el mismo archivo de subtítulo (colaboración)</Information>
     <Testing123>Probando 123...</Testing123>
     <Language>Idioma</Language>
     <NamesIgnoreLists>Nombres a ignorar (sens. mayúsc.)</NamesIgnoreLists>
-    <AddNameEtc>Añadir nombre</AddNameEtc>
+    <AddName>Añadir nombre</AddName>
     <AddWord>Añadir palabra</AddWord>
     <Remove>Eliminar</Remove>
     <AddPair>Añadir pareja</AddPair>
     <UserWordList>Lista de palabras de usuario</UserWordList>
     <OcrFixList>Lista de correcciones OCR</OcrFixList>
     <Location>Localización</Location>
-    <UseOnlineNamesEtc>Usar listado de nombre xml en línea</UseOnlineNamesEtc>
+    <UseOnlineNames>Usar listado de nombre xml en línea</UseOnlineNames>
     <WordAddedX>Palabra añadida: {0}</WordAddedX>
     <WordAlreadyExists>!La palabra ya existe!</WordAlreadyExists>
     <WordNotFound>Palabra no encontrada</WordNotFound>
     <RemoveX>¿Eliminar {0}?</RemoveX>
-    <CannotUpdateNamesEtcOnline>¡No se puede actualizar el listado de nombres xml en línea!</CannotUpdateNamesEtcOnline>
+    <CannotUpdateNamesOnline>¡No se puede actualizar el listado de nombres xml en línea!</CannotUpdateNamesOnline>
     <ProxyServerSettings>Configuración del servidor proxy</ProxyServerSettings>
     <ProxyAddress>Dirección proxy</ProxyAddress>
     <ProxyAuthentication>Autenticación</ProxyAuthentication>
@@ -1227,7 +1227,7 @@ puede editar el mismo archivo de subtítulo (colaboración)</Information>
     <SpellCheckProgress>Revisión ortográfica [{0}] - {1}</SpellCheckProgress>
     <EditWholeText>Editar texto completo</EditWholeText>
     <EditWordOnly>Editar sólo palabra</EditWordOnly>
-    <AddXToNamesEtc>Añadir '{0}' al listado de nombres</AddXToNamesEtc>
+    <AddXToNames>Añadir '{0}' al listado de nombres</AddXToNames>
     <AutoFixNames>Autocorregir formato en nombres</AutoFixNames>
     <ImageText>Imagen de texto</ImageText>
     <SpellCheckCompleted>Revisión ortográfica completada.</SpellCheckCompleted>

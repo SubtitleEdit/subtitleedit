@@ -4233,7 +4233,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             if (_binOcrLastLowercaseHeight == -1 && _nocrLastLowercaseHeight == -1)
             { // try to guess lowercase height
                 var letters = NikseBitmapImageSplitter.SplitBitmapToLettersNew(parentBitmap, _numericUpDownPixelsIsSpace, checkBoxRightToLeft.Checked, Configuration.Settings.VobSubOcr.TopToBottom, 6, _ocrCount > 20 ? _ocrHeight : -1);
-                minLineHeight = (int)Math.Round(letters.Where(p => p.NikseBitmap != null).Average(p => p.NikseBitmap.Height) * 0.5);
+                var actualLetters = letters.Where(p => p.NikseBitmap != null);
+                if (actualLetters.Any())
+                    minLineHeight = (int)Math.Round(actualLetters.Average(p => p.NikseBitmap.Height) * 0.5);
             }
             if (minLineHeight < 5)
                 minLineHeight = _nocrLastLowercaseHeight;
@@ -5954,7 +5956,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 if (File.Exists(outputFileName))
                 {
-                    result = File.ReadAllText(outputFileName);
+                    result = File.ReadAllText(outputFileName, Encoding.UTF8);
                     result = ParseHocr(result);
                     File.Delete(outputFileName);
                 }
@@ -6878,7 +6880,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
         }
 
-        private void InitializeTesseract()
+        private void InitializeTesseract(string chosenLanguage = null)
         {
             if (!Directory.Exists(Configuration.TesseractDirectory) && !Configuration.IsRunningOnLinux() && !Configuration.IsRunningOnMac())
             {
@@ -6924,8 +6926,15 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 for (int i = 0; i < comboBoxTesseractLanguages.Items.Count; i++)
                 {
-                    if ((comboBoxTesseractLanguages.Items[i] as TesseractLanguage).Id == Configuration.Settings.VobSubOcr.TesseractLastLanguage)
+                    if (chosenLanguage != null && chosenLanguage == (comboBoxTesseractLanguages.Items[i] as TesseractLanguage).Text)
+                    {
                         comboBoxTesseractLanguages.SelectedIndex = i;
+                        break;
+                    }
+                    if ((comboBoxTesseractLanguages.Items[i] as TesseractLanguage).Id == Configuration.Settings.VobSubOcr.TesseractLastLanguage)
+                    { 
+                        comboBoxTesseractLanguages.SelectedIndex = i;
+                    }
                 }
 
                 if (comboBoxTesseractLanguages.SelectedIndex == -1)
@@ -8286,18 +8295,18 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         comboBoxDictionaries_SelectedIndexChanged(null, null);
 
                     text = text.Substring(text.IndexOf(':') + 1).Trim();
-                    using (var form = new AddToNamesList())
+                    using (var form = new AddToNameList())
                     {
                         form.Initialize(_subtitle, comboBoxDictionaries.Text, text);
                         if (form.ShowDialog(this) == DialogResult.OK)
                         {
                             comboBoxDictionaries_SelectedIndexChanged(null, null);
                             UpdateUnknownWordColoring(form.NewName, StringComparison.Ordinal);
-                            ShowStatus(string.Format(Configuration.Settings.Language.Main.NameXAddedToNamesEtcList, form.NewName));
+                            ShowStatus(string.Format(Configuration.Settings.Language.Main.NameXAddedToNameList, form.NewName));
                         }
                         else if (!string.IsNullOrEmpty(form.NewName))
                         {
-                            MessageBox.Show(string.Format(Configuration.Settings.Language.Main.NameXNotAddedToNamesEtcList, form.NewName));
+                            MessageBox.Show(string.Format(Configuration.Settings.Language.Main.NameXNotAddedToNameList, form.NewName));
                         }
                     }
                 }
@@ -8468,8 +8477,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             using (var form = new GetTesseractDictionaries())
             {
                 form.ShowDialog(this);
+                InitializeTesseract(form.ChosenLanguage);
             }
-            InitializeTesseract();
         }
 
         private void toolStripMenuItemInspectNOcrMatches_Click(object sender, EventArgs e)

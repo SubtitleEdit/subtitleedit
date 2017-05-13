@@ -2,7 +2,7 @@
 <Language Name="Español (México)">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.5.2</Version>
+    <Version>3.5.3</Version>
     <TranslatedBy>Traducido por Francisco Naranjo (paconaranjo)</TranslatedBy>
     <CultureName>es-MX</CultureName>
     <HelpFile>http://www.nikse.dk/SubtitleEdit/HelpEs</HelpFile>
@@ -1001,7 +1001,7 @@ Nota: comprobar el espacio libre en disco.</WaveFileMalformed>
         <FindDoubleWords>Buscar palabras dobles</FindDoubleWords>
         <FindDoubleLines>Buscar líneas dobles</FindDoubleLines>
         <GetDictionaries>Conseguir diccionarios...</GetDictionaries>
-        <AddToNamesEtcList>Añadir palabra al listado de nombres</AddToNamesEtcList>
+        <AddToNameList>Añadir palabra al listado de nombres</AddToNameList>
       </SpellCheck>
       <Synchronization>
         <Title>Sincronización</Title>
@@ -1350,8 +1350,8 @@ con el archivo de video, al subtítulo actual cargado.
     <NumberOfWithRemovedLineBreakX>Numero de líneas con salto de línea eliminado: {0}</NumberOfWithRemovedLineBreakX>
     <BeforeMultipleReplace>Antes del reemplazado múltiple</BeforeMultipleReplace>
     <NumberOfLinesReplacedX>Numero de líneas con texto reemplazado: {0}</NumberOfLinesReplacedX>
-    <NameXAddedToNamesEtcList>El nombre «{0}» se ha añadido al listado de nombres</NameXAddedToNamesEtcList>
-    <NameXNotAddedToNamesEtcList>El nombre «{0}» NO se ha añadido al listado de nombres</NameXNotAddedToNamesEtcList>
+    <NameXAddedToNameList>El nombre «{0}» se ha añadido al listado de nombres</NameXAddedToNameList>
+    <NameXNotAddedToNameList>El nombre «{0}» NO se ha añadido al listado de nombres</NameXNotAddedToNameList>
     <WordXAddedToUserDic>La palabra «{0}» se ha añadido al diccionario de usuario</WordXAddedToUserDic>
     <WordXNotAddedToUserDic>«{0}» no está en el diccionario del usuario</WordXNotAddedToUserDic>
     <OcrReplacePairXAdded>El reemplazo OCR lista par «{0} -&gt; {1}» se ha añadido a la lista de reemplazo OCR</OcrReplacePairXAdded>
@@ -1770,19 +1770,19 @@ puedan editar el mismo archivo de subtítulo (colaboración)</Information>
     <Testing123>Probando 123...</Testing123>
     <Language>Idioma</Language>
     <NamesIgnoreLists>Nombres a ignorar (sensible a mayúsculas)</NamesIgnoreLists>
-    <AddNameEtc>Añadir nombre</AddNameEtc>
+    <AddName>Añadir nombre</AddName>
     <AddWord>Añadir palabra</AddWord>
     <Remove>Eliminar</Remove>
     <AddPair>Añadir pareja</AddPair>
     <UserWordList>Lista de palabras de usuario</UserWordList>
     <OcrFixList>Lista de correcciones OCR</OcrFixList>
     <Location>Localización</Location>
-    <UseOnlineNamesEtc>Usar listado de nombre xml en línea</UseOnlineNamesEtc>
+    <UseOnlineNames>Usar listado de nombre xml en línea</UseOnlineNames>
     <WordAddedX>Palabra añadida: {0}</WordAddedX>
     <WordAlreadyExists>¡La palabra ya existe!</WordAlreadyExists>
     <WordNotFound>Palabra no encontrada</WordNotFound>
     <RemoveX>¿Eliminar {0}?</RemoveX>
-    <CannotUpdateNamesEtcOnline>¡No se puede actualizar el listado de nombres xml en línea!</CannotUpdateNamesEtcOnline>
+    <CannotUpdateNamesOnline>¡No se puede actualizar el listado de nombres xml en línea!</CannotUpdateNamesOnline>
     <ProxyServerSettings>Configuración del servidor proxy</ProxyServerSettings>
     <ProxyAddress>Dirección proxy</ProxyAddress>
     <ProxyAuthentication>Autenticación</ProxyAuthentication>
@@ -1959,7 +1959,7 @@ puedan editar el mismo archivo de subtítulo (colaboración)</Information>
     <SpellCheckProgress>Revisión ortográfica [{0}] - {1}</SpellCheckProgress>
     <EditWholeText>Editar texto completo</EditWholeText>
     <EditWordOnly>Editar sólo palabra</EditWordOnly>
-    <AddXToNamesEtc>Añadir «{0}» al listado de nombres</AddXToNamesEtc>
+    <AddXToNames>Añadir «{0}» al listado de nombres</AddXToNames>
     <AutoFixNames>Autocorregir formato en nombres</AutoFixNames>
     <CheckOneLetterWords>Preguntar por palabras desconocidas de una letra</CheckOneLetterWords>
     <TreatINQuoteAsING>Tratar palabra terminada en "in" como "ing" (Inglés solamente)</TreatINQuoteAsING>

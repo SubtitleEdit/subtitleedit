@@ -2,7 +2,7 @@
 <Language Name="português (Portugal)">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.5.2</Version>
+    <Version>3.5.3</Version>
     <TranslatedBy>------------------------------------------------------------------------------------------------
 Traduzido para Português de Portugal, por moob
 Email: mailto:moob42341@gmail.com</TranslatedBy>
@@ -28,6 +28,8 @@ Email: mailto:moob42341@gmail.com</TranslatedBy>
     <Duration>Duração</Duration>
     <CharsPerSec>Caracteres/seg</CharsPerSec>
     <WordsPerMin>Palavras/min</WordsPerMin>
+    <Actor>Actor</Actor>
+    <Region>Região</Region>
     <NumberSymbol>#</NumberSymbol>
     <Number>Número</Number>
     <Text>Texto</Text>
@@ -123,7 +125,7 @@ Linha de comando: {1} {2}</WaveFileNotFound>
 Linha de comando: {1} {2}
 
 Nota: Verifique o espaço em disco.</WaveFileMalformed>
-    <LowDiskSpace>INSUFICIENTE ESPAÇO EM DISCO!</LowDiskSpace>
+    <LowDiskSpace>ESPAÇO INSUFICIENTE EM DISCO!</LowDiskSpace>
     <FreeDiskSpace>{0} livre</FreeDiskSpace>
   </AddWaveform>
   <AddWaveformBatch>
@@ -201,8 +203,8 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <Title>Inverter Maiúsculas/Minúsculas</Title>
     <ChangeCasingTo>Inverter maiúsculas para</ChangeCasingTo>
     <NormalCasing>Maiúsculas normais. Primeira letra de cada frase em maiúsculo.</NormalCasing>
-    <FixNamesCasing>Corrigir nomes em maiúsculas (por Dicionários\NomesEtc.xml)</FixNamesCasing>
-    <FixOnlyNamesCasing>Corrigir só nomes em maiúsculas (por Dicionários\NomesEtc.xml)</FixOnlyNamesCasing>
+    <FixNamesCasing>Corrigir nomes em maiúsculas (através de Dictionaries\names.xml)</FixNamesCasing>
+    <FixOnlyNamesCasing>Corrigir só nomes em maiúsculas (através de Dictionaries\names.xml)</FixOnlyNamesCasing>
     <OnlyChangeAllUppercaseLines>Alterar só linhas em maiúsculo.</OnlyChangeAllUppercaseLines>
     <AllUppercase>TODAS MAIÚSCULAS</AllUppercase>
     <AllLowercase>todas minúsculas</AllLowercase>
@@ -1014,7 +1016,7 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
         <FindDoubleWords>Localizar palavras duplicadas</FindDoubleWords>
         <FindDoubleLines>Localizar linhas repetidas</FindDoubleLines>
         <GetDictionaries>Obter dicionários...</GetDictionaries>
-        <AddToNamesEtcList>Adicionar palavra à lista de nomes</AddToNamesEtcList>
+        <AddToNameList>Adicionar palavra à lista de nomes</AddToNameList>
       </SpellCheck>
       <Synchronization>
         <Title>Sincronia</Title>
@@ -1059,19 +1061,23 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
         <RemoveTextForHi>Eliminar texto para Deficientes Auditivos</RemoveTextForHi>
         <VisualSync>Sincronia visual</VisualSync>
         <SpellCheck>Verificação ortográfica</SpellCheck>
+        <NetflixQualityCheck>Verificação de qualidade da legenda Netflix</NetflixQualityCheck>
         <Settings>Configurações</Settings>
         <Help>Ajuda</Help>
         <ShowHideWaveform>Mostrar/ocultar forma de onda</ShowHideWaveform>
         <ShowHideVideo>Mostrar/ocultar vídeo</ShowHideVideo>
       </ToolBar>
       <ContextMenu>
+        <SizeAllColumnsToFit>Ajustar o tamanho das colunas para caber</SizeAllColumnsToFit>
         <AdvancedSubStationAlphaSetStyle>Advanced Sub Station Alpha - Definir estilo</AdvancedSubStationAlphaSetStyle>
         <SubStationAlphaSetStyle>Sub Station Alpha - Definir estilo</SubStationAlphaSetStyle>
-        <SubStationAlphaStyles>Sub Station Alpha estilos...</SubStationAlphaStyles>
-        <AdvancedSubStationAlphaStyles>Advanced Sub Station Alpha estilos...</AdvancedSubStationAlphaStyles>
-        <TimedTextSetStyle>Texto cronometrado - Definir estilo</TimedTextSetStyle>
-        <TimedTextStyles>Texto cronometrado estilos...</TimedTextStyles>
-        <TimedTextSetLanguage>Texto cronometrado - Definir o idioma</TimedTextSetLanguage>
+        <SetActor>Estipular actor</SetActor>
+        <SubStationAlphaStyles>Estilos Sub Station Alpha...</SubStationAlphaStyles>
+        <AdvancedSubStationAlphaStyles>Estilos Advanced Sub Station Alpha...</AdvancedSubStationAlphaStyles>
+        <TimedTextSetRegion>Timed Text - Definir região</TimedTextSetRegion>
+        <TimedTextSetStyle>Timed Text - Definir estilo</TimedTextSetStyle>
+        <TimedTextStyles>Estilos Timed Text...</TimedTextStyles>
+        <TimedTextSetLanguage>Timed Text - Definir o idioma</TimedTextSetLanguage>
         <SamiSetStyle>Sami - Definir classe</SamiSetStyle>
         <NuendoSetStyle>Nuendo - Definir caractere</NuendoSetStyle>
         <Cut>Cortar</Cut>
@@ -1118,6 +1124,8 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
         <SaveSelectedLines>Guardar linhas seleccionadas como...</SaveSelectedLines>
         <WebVTTSetNewVoice>Definir nova voz</WebVTTSetNewVoice>
         <WebVTTRemoveVoices>Remover vozes</WebVTTRemoveVoices>
+        <NewActor>Novo actor...</NewActor>
+        <RemoveActors>Remover actores</RemoveActors>
       </ContextMenu>
     </Menu>
     <Controls>
@@ -1363,8 +1371,8 @@ Deseja continuar?</SubtitleAppendPrompt>
     <NumberOfWithRemovedLineBreakX>Número de linhas com quebra eliminadas: {0}</NumberOfWithRemovedLineBreakX>
     <BeforeMultipleReplace>Antes da substituição múltipla</BeforeMultipleReplace>
     <NumberOfLinesReplacedX>Número de linhas com texto substituído: {0}</NumberOfLinesReplacedX>
-    <NameXAddedToNamesEtcList>O nome '{0}' foi adicionado à lista de nomes</NameXAddedToNamesEtcList>
-    <NameXNotAddedToNamesEtcList>O nome '{0}' NÃO foi adicionado à lista de nomes</NameXNotAddedToNamesEtcList>
+    <NameXAddedToNameList>O nome '{0}' foi adicionado à lista de nomes</NameXAddedToNameList>
+    <NameXNotAddedToNameList>O nome '{0}' NÃO foi adicionado à lista de nomes</NameXNotAddedToNameList>
     <WordXAddedToUserDic>A palavra '{0}' foi adicionada ao dicionário de utilizador</WordXAddedToUserDic>
     <WordXNotAddedToUserDic>A palavra '{0}' NÃO foi adicionada ao dicionário de utilizador</WordXNotAddedToUserDic>
     <OcrReplacePairXAdded>O par OCR lista de substituição '{0} -&gt; {1}' foi adicionado à lista de substituição OCR</OcrReplacePairXAdded>
@@ -1453,6 +1461,7 @@ Se editou este ficheiro no Subtitle Edit é possível que encontre a cópia de s
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Seleccionar legenda através de um ficheiro Matroska (.mkv)</Title>
+    <TitleMp4>Seleccionar legenda através de um ficheiro MP4</TitleMp4>
     <PleaseChoose>Encontrada mais do que uma legenda - por favor, escolha uma</PleaseChoose>
     <TrackXLanguageYTypeZ>Faixa {0} - idioma: {1} - tipo: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
@@ -1600,8 +1609,8 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <NonSpaceCharacter>Sem ser espaço em espaço (\S)</NonSpaceCharacter>
     <ZeroOrMore>Zero ou mais (*)</ZeroOrMore>
     <OneOrMore>Um ou mais (+)</OneOrMore>
-    <InCharacterGroup>Dentro do grupo de caracteres ([teste])</InCharacterGroup>
-    <NotInCharacterGroup>Fora do grupo de caracteres ([^teste])</NotInCharacterGroup>
+    <InCharacterGroup>Lista de caracteres ([teste])</InCharacterGroup>
+    <NotInCharacterGroup>Lista negada de caracteres ([^teste])</NotInCharacterGroup>
   </RegularExpressionContextMenu>
   <RemoveTextFromHearImpaired>
     <Title>Eliminar texto para Deficientes Auditivos</Title>
@@ -1683,6 +1692,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <Replace>Substituir</Replace>
     <VisualSync>Sincronia visual</VisualSync>
     <SpellCheck>Ortografia</SpellCheck>
+    <NetflixQualityCheck>Verificação de qualidade Netflix</NetflixQualityCheck>
     <SettingsName>Configurações</SettingsName>
     <Help>Ajuda</Help>
     <ShowFrameRate>Mostrar taxa de fotogramas na barra de ferramentas</ShowFrameRate>
@@ -1700,6 +1710,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <SubtitleFont>Tipo de letra</SubtitleFont>
     <SubtitleFontSize>Tamanho do tipo de letra da legenda</SubtitleFontSize>
     <SubtitleBold>Negrito</SubtitleBold>
+    <VideoAutoOpen>Abrir automaticamente o vídeo ao abrir a legenda</VideoAutoOpen>
     <SubtitleCenter>Centralizado</SubtitleCenter>
     <SubtitleFontColor>Cor do tipo de letra</SubtitleFontColor>
     <SubtitleBackgroundColor>Cor de fundo</SubtitleBackgroundColor>
@@ -1789,19 +1800,19 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <Testing123>Testando 123...</Testing123>
     <Language>Idioma</Language>
     <NamesIgnoreLists>Nomes ignorados (diferencia maiús/minús)</NamesIgnoreLists>
-    <AddNameEtc>Adicionar nome</AddNameEtc>
+    <AddName>Adicionar nome</AddName>
     <AddWord>Adicionar palavra</AddWord>
     <Remove>Remover</Remove>
     <AddPair>Adicionar par</AddPair>
     <UserWordList>Lista de palavras do utilizador</UserWordList>
     <OcrFixList>Lista de correcções OCR</OcrFixList>
     <Location>Localização</Location>
-    <UseOnlineNamesEtc>Usar lista de nomes XML online</UseOnlineNamesEtc>
+    <UseOnlineNames>Usar lista de nomes xml online</UseOnlineNames>
     <WordAddedX>Palavra adicionada: {0}</WordAddedX>
     <WordAlreadyExists>A palavra já existe!</WordAlreadyExists>
     <WordNotFound>Palavra não encontrada</WordNotFound>
     <RemoveX>Remover {0}?</RemoveX>
-    <CannotUpdateNamesEtcOnline>Não foi possível actualizar a lista de nomes XML online!</CannotUpdateNamesEtcOnline>
+    <CannotUpdateNamesOnline>Não foi possível actualizar a lista de nomes xml online!</CannotUpdateNamesOnline>
     <ProxyServerSettings>Configuração do servidor proxy</ProxyServerSettings>
     <ProxyAddress>Endereço proxy</ProxyAddress>
     <ProxyAuthentication>Autenticação</ProxyAuthentication>
@@ -1870,6 +1881,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <WaveformPlayNewSelectionEnd>Reproduzir a partir do fim da selecção</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Reproduzir a partir da primeira legenda selecionada</WaveformPlayFirstSelectedSubtitle>
     <WaveformFocusListView>Destacar a lista de visualização</WaveformFocusListView>
+    <WaveformGoToNextSubtitle>Ir para a próxima linha (a partir da posição do vídeo)</WaveformGoToNextSubtitle>
     <WaveformGoToNextSceneChange>Ir para a próxima mudança de cena</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>Alternar a mudança de cena</WaveformToggleSceneChange>
     <GoBack1Frame>Um fotograma para atrás</GoBack1Frame>
@@ -1925,6 +1937,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <MainTextBoxUnbreak>Remover quebra de texto</MainTextBoxUnbreak>
     <MainFileSaveAll>Guardar tudo</MainFileSaveAll>
     <Miscellaneous>Diversos</Miscellaneous>
+    <CpsIncludesSpace>Carac/seg (CPS) incluindo espaços</CpsIncludesSpace>
     <UseDoNotBreakAfterList>Utilizar "não quebrar linha depois da lista" (para o ajuste-auto)</UseDoNotBreakAfterList>
     <MicrosoftBingTranslator>Tradutor Microsoft Bing</MicrosoftBingTranslator>
     <HowToSignUp>Como efectuar o registo</HowToSignUp>
@@ -1982,7 +1995,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <SpellCheckProgress>Verificação ortográfica [{0}] - {1}</SpellCheckProgress>
     <EditWholeText>Editar todo o texto</EditWholeText>
     <EditWordOnly>Só editar palavra</EditWordOnly>
-    <AddXToNamesEtc>Adicionar '{0}' à lista de nomes</AddXToNamesEtc>
+    <AddXToNames>Adicionar '{0}' à lista de nomes</AddXToNames>
     <AutoFixNames>Corrigir automaticamente formato de nomes</AutoFixNames>
     <CheckOneLetterWords>Solicitar uma letra para uma palavra desconhecida</CheckOneLetterWords>
     <TreatINQuoteAsING>Considerar a palavra final " in' " como " ing " (apenas em Inglês)</TreatINQuoteAsING>
@@ -1991,6 +2004,13 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <SpellCheckAborted>Verificação ortográfica cancelada</SpellCheckAborted>
     <UndoX>Anular: {0}</UndoX>
   </SpellCheck>
+  <NetflixQualityCheck>
+    <GlyphCheckReport>Caracter inválido {0} encontrado na coluna {1}</GlyphCheckReport>
+    <WhiteSpaceCheckReport>Foi encontrado um espaço em branco inválido na coluna {0}.</WhiteSpaceCheckReport>
+    <ReportPrompt>Ver o relatório completo aqui: {0}.</ReportPrompt>
+    <FoundXIssues>Verificação de qualidade encontrou {0} problemas.</FoundXIssues>
+    <CheckOk>Verificação de qualidade Netflix OK :)</CheckOk>
+  </NetflixQualityCheck>
   <Split>
     <Title>Divisão</Title>
     <SplitOptions>Opções de divisão</SplitOptions>
@@ -2048,6 +2068,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <LengthInFormatXinCharactersY>Número de caracteres como {0}: {1:#,###,##0}</LengthInFormatXinCharactersY>
     <NumberOfCharactersInTextOnly>Número de caracteres só no texto: {0:#,###,##0}</NumberOfCharactersInTextOnly>
     <TotalCharsPerSecond>Total de caracteres/segundo: {0:0.0} segundos</TotalCharsPerSecond>
+    <TotalWords>Total de palavras na legenda: {0}</TotalWords>
     <NumberOfItalicTags>Número de etiquetas itálicas: {0}</NumberOfItalicTags>
     <NumberOfBoldTags>Número de etiquetas negritas: {0}</NumberOfBoldTags>
     <NumberOfUnderlineTags>Número de etiquetas sublinhadas: {0}</NumberOfUnderlineTags>
@@ -2088,8 +2109,8 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <ScaleBorderAndShadow>Reduzir o contorno e sombreado</ScaleBorderAndShadow>
   </SubStationAlphaProperties>
   <SubStationAlphaStyles>
-    <Title>Advanced Sub Station Alpha estilos</Title>
-    <TitleSubstationAlpha>Sub Station Alpha estilos</TitleSubstationAlpha>
+    <Title>Estilos Advanced Sub Station Alpha</Title>
+    <TitleSubstationAlpha>Estilos Sub Station Alpha</TitleSubstationAlpha>
     <Styles>Estilos</Styles>
     <Properties>Propriedades</Properties>
     <Name>Nome</Name>
@@ -2307,6 +2328,7 @@ Manter as alterações?</KeepChangesMessage>
     <RemoveSceneChange>Eliminar mudança de cena</RemoveSceneChange>
     <GuessTimeCodes>Adivinhar os tempos...</GuessTimeCodes>
     <SeekSilence>Localizar silêncio no áudio...</SeekSilence>
+    <InsertSubtitleHere>Inserir legendagem aqui...</InsertSubtitleHere>
     <CharsSecX>CPS: {0:0.00}</CharsSecX>
     <WordsMinX>PPM: {0:0.00}</WordsMinX>
   </Waveform>

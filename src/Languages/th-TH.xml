@@ -2,7 +2,7 @@
 <Language Name="ไทย">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.5.2</Version>
+    <Version>3.5.3</Version>
     <TranslatedBy>ภาษาไทยโดย Bonfelder</TranslatedBy>
     <CultureName>th-TH</CultureName>
     <HelpFile />
@@ -937,7 +937,7 @@
         <FindDoubleWords>ค้นหาคำซ้ำ</FindDoubleWords>
         <FindDoubleLines>ค้นหาบรรทัดซ้ำ</FindDoubleLines>
         <GetDictionaries>ดาวน์โหลดพจนานุกรม...</GetDictionaries>
-        <AddToNamesEtcList>เพิ่มคำในรายการชื่อเฉพาะ/อื่นๆ</AddToNamesEtcList>
+        <AddToNameList>เพิ่มคำในรายการชื่อเฉพาะ/อื่นๆ</AddToNameList>
       </SpellCheck>
       <Synchronization>
         <Title>ซิงค์</Title>
@@ -1274,8 +1274,8 @@
     <NumberOfWithRemovedLineBreakX>จำนวนบรรทัดที่ตัวแบ่งบรรทัดถูกลบ: {0}</NumberOfWithRemovedLineBreakX>
     <BeforeMultipleReplace>ก่อนแทนที่เป็นชุด</BeforeMultipleReplace>
     <NumberOfLinesReplacedX>จำนวนบรรทัดที่แทนที่ข้อความ: {0}</NumberOfLinesReplacedX>
-    <NameXAddedToNamesEtcList>ชื่อ '{0}' ถูกเพิ่มในรายการ names/etc แล้ว</NameXAddedToNamesEtcList>
-    <NameXNotAddedToNamesEtcList>ชื่อ '{0}' ไม่ถูกเพิ่มในรายการ names/etc</NameXNotAddedToNamesEtcList>
+    <NameXAddedToNameList>ชื่อ '{0}' ถูกเพิ่มในรายการ names/etc แล้ว</NameXAddedToNameList>
+    <NameXNotAddedToNameList>ชื่อ '{0}' ไม่ถูกเพิ่มในรายการ names/etc</NameXNotAddedToNameList>
     <WordXAddedToUserDic>คำว่า '{0}' ถูกเพิ่มในพจนานุกรมผู้ใช้แล้ว</WordXAddedToUserDic>
     <WordXNotAddedToUserDic>ชื่อ '{0}' ไม่ถูกเพิ่มในพจนานุกรมผู้ใช้</WordXNotAddedToUserDic>
     <OcrReplacePairXAdded>คู่แทนคำโอซีอาร์ '{0} -&gt; {1}' ถูกเพิ่มในรายการคู่แทนคำโอซีอาร์แล้ว</OcrReplacePairXAdded>
@@ -1657,19 +1657,19 @@
     <Testing123>Testing 123...</Testing123>
     <Language>ภาษา</Language>
     <NamesIgnoreLists>ชื่อเฉพาะ/ข้ามไป (ลักษณะตัวพิมพ์สำคัญ)</NamesIgnoreLists>
-    <AddNameEtc>เพิ่มชื่อ</AddNameEtc>
+    <AddName>เพิ่มชื่อ</AddName>
     <AddWord>เพิ่มคำ</AddWord>
     <Remove>ลบ</Remove>
     <AddPair>เพิ่มคู่</AddPair>
     <UserWordList>คำเฉพาะของผู้ใช้</UserWordList>
     <OcrFixList>รายการแก้ไขโอซีอาร์</OcrFixList>
     <Location>ตำแหน่ง</Location>
-    <UseOnlineNamesEtc>ใช้ไฟล์ Names_Etc.xml แบบออน์ไลน์</UseOnlineNamesEtc>
+    <UseOnlineNames>ใช้ไฟล์ Names_Etc.xml แบบออน์ไลน์</UseOnlineNames>
     <WordAddedX>คำที่เพิ่มแล้ว: {0}</WordAddedX>
     <WordAlreadyExists>คำนี้มีอยู่แล้ว!</WordAlreadyExists>
     <WordNotFound>ไม่พบคำ</WordNotFound>
     <RemoveX>ลบ {0} หรือไม่</RemoveX>
-    <CannotUpdateNamesEtcOnline>ไม่สามารถอัพเดตไฟล์ออนไลน์ Names_Etc.xml ได้!</CannotUpdateNamesEtcOnline>
+    <CannotUpdateNamesOnline>ไม่สามารถอัพเดตไฟล์ออนไลน์ Names_Etc.xml ได้!</CannotUpdateNamesOnline>
     <ProxyServerSettings>ค่ากำหนดพร็อกซีเซิร์ฟเวอร์</ProxyServerSettings>
     <ProxyAddress>พร็อกซีแอดเดรส</ProxyAddress>
     <ProxyAuthentication>รูปแบบการพิสูจน์</ProxyAuthentication>
@@ -1819,7 +1819,7 @@
     <SpellCheckProgress>ตรวจคำ [{0}] - {1}</SpellCheckProgress>
     <EditWholeText>แก้ทั้งข้อความ</EditWholeText>
     <EditWordOnly>แก้เฉพาะคำ</EditWordOnly>
-    <AddXToNamesEtc>เพิ่ม '{0}' ไปยังรายการ names/etc</AddXToNamesEtc>
+    <AddXToNames>เพิ่ม '{0}' ไปยังรายการ names/etc</AddXToNames>
     <AutoFixNames>แก้ชื่ออัตโนมัติเมื่อลักษณะตัวพิมพ์ต่างกันเท่านั้น</AutoFixNames>
     <CheckOneLetterWords>ยืนยันคำอักษรเดียวที่ไม่รู้จัก</CheckOneLetterWords>
     <TreatINQuoteAsING>ถือว่าคำที่ลงท้ายด้วย " in' " เป็น " ing" (เฉพาะภาษาอังกฤษ)</TreatINQuoteAsING>

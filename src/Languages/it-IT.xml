@@ -2,7 +2,7 @@
 <Language Name="italiano">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.5.2</Version>
+    <Version>3.5.3</Version>
     <TranslatedBy>Traduzione Italiana SilverDrake (giurdi@katamail.com)</TranslatedBy>
     <CultureName>it-IT</CultureName>
     <HelpFile />
@@ -981,7 +981,7 @@ Nota: Controlla lo spazio libero sul disco.</WaveFileMalformed>
         <FindDoubleWords>Trova parole doppie</FindDoubleWords>
         <FindDoubleLines>Trova linee doppie</FindDoubleLines>
         <GetDictionaries>Scarica dizionari...</GetDictionaries>
-        <AddToNamesEtcList>Aggiungi parola alla lista nomi/ecc</AddToNamesEtcList>
+        <AddToNameList>Aggiungi parola alla lista nomi</AddToNameList>
       </SpellCheck>
       <Synchronization>
         <Title>Sincronizzazione</Title>
@@ -1328,8 +1328,8 @@ Continuare?</SubtitleAppendPrompt>
     <NumberOfWithRemovedLineBreakX>Numero di linee con divisione-linea rimossa: {0}</NumberOfWithRemovedLineBreakX>
     <BeforeMultipleReplace>Prima di sostituzione multipla</BeforeMultipleReplace>
     <NumberOfLinesReplacedX>Numero di linee con testo sostituito: {0}</NumberOfLinesReplacedX>
-    <NameXAddedToNamesEtcList>Il nome '{0}' è stato aggiunto a lista nomi/ecc</NameXAddedToNamesEtcList>
-    <NameXNotAddedToNamesEtcList>Il nome '{0}' NON è stato aggiunto a lista nomi/ecc</NameXNotAddedToNamesEtcList>
+    <NameXAddedToNameList>Il nome '{0}' è stato aggiunto a lista nomi/ecc</NameXAddedToNameList>
+    <NameXNotAddedToNameList>Il nome '{0}' NON è stato aggiunto a lista nomi/ecc</NameXNotAddedToNameList>
     <WordXAddedToUserDic>La parola '{0}' è stata aggiunta al dizionario utente</WordXAddedToUserDic>
     <WordXNotAddedToUserDic>La parola '{0}' NON è stata aggiunta al dizionario utente</WordXNotAddedToUserDic>
     <OcrReplacePairXAdded>La coppia di sostituzione '{0} -&gt; {1}' è stata aggiunta alla lista sostituzioni OCR</OcrReplacePairXAdded>
@@ -1727,19 +1727,19 @@ modificare lo stesso file di sottotitolo (collaborazione)</Information>
     <Testing123>Esempio 123...</Testing123>
     <Language>Lingua</Language>
     <NamesIgnoreLists>Lista nomi/ecc (sensibile a MAIUSC/minusc)</NamesIgnoreLists>
-    <AddNameEtc>Aggiungi nome</AddNameEtc>
+    <AddName>Aggiungi nome</AddName>
     <AddWord>Aggiungi parola</AddWord>
     <Remove>Rimuovi</Remove>
     <AddPair>Aggiungi paio</AddPair>
     <UserWordList>Lista parole utente</UserWordList>
     <OcrFixList>Lista correzioni OCR</OcrFixList>
     <Location>Posizione</Location>
-    <UseOnlineNamesEtc>Usa file xml online nomi/ecc</UseOnlineNamesEtc>
+    <UseOnlineNames>Usa file xml online nomi/ecc</UseOnlineNames>
     <WordAddedX>Parola aggiunta: {0}</WordAddedX>
     <WordAlreadyExists>La parola già esiste!</WordAlreadyExists>
     <WordNotFound>Parola non trovata</WordNotFound>
     <RemoveX>Rimuovere {0}?</RemoveX>
-    <CannotUpdateNamesEtcOnline>Impossibile aggiornare NamesEtc.xml online!</CannotUpdateNamesEtcOnline>
+    <CannotUpdateNamesOnline>Impossibile aggiornare NamesEtc.xml online!</CannotUpdateNamesOnline>
     <ProxyServerSettings>Impostazioni server proxy</ProxyServerSettings>
     <ProxyAddress>Indirizzo proxy</ProxyAddress>
     <ProxyAuthentication>Autenticazione</ProxyAuthentication>
@@ -1892,7 +1892,7 @@ modificare lo stesso file di sottotitolo (collaborazione)</Information>
     <SpellCheckProgress>Controllo ortografico [{0}] - {1}</SpellCheckProgress>
     <EditWholeText>Modifica l'intero testo</EditWholeText>
     <EditWordOnly>Modifica solo la parola</EditWordOnly>
-    <AddXToNamesEtc>Aggiungi '{0}' alla lista nomi/ecc</AddXToNamesEtc>
+    <AddXToNames>Aggiungi '{0}' alla lista nomi/ecc</AddXToNames>
     <AutoFixNames>Correggi i nomi quando differisce solo MAIUSC/minusc</AutoFixNames>
     <CheckOneLetterWords>Chiedi per parole di una lettera sconosciute</CheckOneLetterWords>
     <TreatINQuoteAsING>Tratta parole che finiscono con " in' " come " ing " (Solo inglese)</TreatINQuoteAsING>

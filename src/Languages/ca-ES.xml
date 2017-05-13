@@ -2,7 +2,7 @@
 <Language Name="català">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.5.2</Version>
+    <Version>3.5.3</Version>
     <TranslatedBy>Traduït per Juansa</TranslatedBy>
     <CultureName>ca-ES</CultureName>
     <HelpFile />
@@ -997,7 +997,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <FindDoubleWords>Cerca mots dobles</FindDoubleWords>
         <FindDoubleLines>Cerca línies dobles</FindDoubleLines>
         <GetDictionaries>Obtén diccionaris...</GetDictionaries>
-        <AddToNamesEtcList>Afegeix mot a llista names/etc</AddToNamesEtcList>
+        <AddToNameList>Afegeix mot a llista names/etc</AddToNameList>
       </SpellCheck>
       <Synchronization>
         <Title>Sincronització</Title>
@@ -1336,8 +1336,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <NumberOfWithRemovedLineBreakX>Nombre línies amb salts suprimits: {0}</NumberOfWithRemovedLineBreakX>
     <BeforeMultipleReplace>Abans substitució múltiple</BeforeMultipleReplace>
     <NumberOfLinesReplacedX>Nombre de línies amb text substituït: {0}</NumberOfLinesReplacedX>
-    <NameXAddedToNamesEtcList>El nom '{0}' s'afegit a la llista names/etc</NameXAddedToNamesEtcList>
-    <NameXNotAddedToNamesEtcList>El nom '{0}' NO s'afegit a la llista names/etc</NameXNotAddedToNamesEtcList>
+    <NameXAddedToNameList>El nom '{0}' s'afegit a la llista names/etc</NameXAddedToNameList>
+    <NameXNotAddedToNameList>El nom '{0}' NO s'afegit a la llista names/etc</NameXNotAddedToNameList>
     <WordXAddedToUserDic>El mot '{0}' s'afegit al diccionari d'usuari</WordXAddedToUserDic>
     <WordXNotAddedToUserDic>El mot '{0}' NO s'afegit al diccionari d'usuari</WordXNotAddedToUserDic>
     <OcrReplacePairXAdded>La substitució llista parells OCR '{0} -&gt; {1}' s'afegit a la llista substitució OCR</OcrReplacePairXAdded>
@@ -1740,19 +1740,19 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Testing123>Comprovant 123...</Testing123>
     <Language>Idioma</Language>
     <NamesIgnoreLists>Llista Noms/ignorats (sensible majúscules)</NamesIgnoreLists>
-    <AddNameEtc>Afegeix nom</AddNameEtc>
+    <AddName>Afegeix nom</AddName>
     <AddWord>Afegeix mot</AddWord>
     <Remove>Suprimeix</Remove>
     <AddPair>Afegeix parell</AddPair>
     <UserWordList>Llista mots d'usuari</UserWordList>
     <OcrFixList>Llista solucions OCR</OcrFixList>
     <Location>Ubicació</Location>
-    <UseOnlineNamesEtc>Empra fitxer NamesEtc.xml en línia</UseOnlineNamesEtc>
+    <UseOnlineNames>Empra fitxer NamesEtc.xml en línia</UseOnlineNames>
     <WordAddedX>Mots afegits: {0}</WordAddedX>
     <WordAlreadyExists>Mot ja existent!</WordAlreadyExists>
     <WordNotFound>Mot no trobat</WordNotFound>
     <RemoveX>Suprimeix {0}?</RemoveX>
-    <CannotUpdateNamesEtcOnline>No pot actualitzar-se NamesEtc.xml en línia!</CannotUpdateNamesEtcOnline>
+    <CannotUpdateNamesOnline>No pot actualitzar-se NamesEtc.xml en línia!</CannotUpdateNamesOnline>
     <ProxyServerSettings>Configuració servidor proxi</ProxyServerSettings>
     <ProxyAddress>Adreça proxi</ProxyAddress>
     <ProxyAuthentication>Autenticació</ProxyAuthentication>
@@ -1921,7 +1921,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SpellCheckProgress>Corrector ortogràfic [{0}] - {1}</SpellCheckProgress>
     <EditWholeText>Edita text complet</EditWholeText>
     <EditWordOnly>Edita només paraula</EditWordOnly>
-    <AddXToNamesEtc>Afegeix '{0}' a llista names/etc</AddXToNamesEtc>
+    <AddXToNames>Afegeix '{0}' a llista names/etc</AddXToNames>
     <AutoFixNames>Auto fixa format de noms</AutoFixNames>
     <CheckOneLetterWords>Comprova mots desconeguts d'una carta</CheckOneLetterWords>
     <TreatINQuoteAsING>Tracta final de paraula "in'" com "ing" (Anglès només)</TreatINQuoteAsING>

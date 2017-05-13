@@ -17,6 +17,8 @@ namespace Nikse.SubtitleEdit.Controls
             Duration,
             CharactersPerSeconds,
             WordsPerMinute,
+            Actor,
+            Region,
             Text,
             TextAlternate,
             Extra,
@@ -36,6 +38,8 @@ namespace Nikse.SubtitleEdit.Controls
         public int ColumnIndexDuration = -1;
         public int ColumnIndexCps = -1;
         public int ColumnIndexWpm = -1;
+        public int ColumnIndexActor = -1;
+        public int ColumnIndexRegion = -1;
         public int ColumnIndexText = -1;
         public int ColumnIndexTextAlternate = -1;
         public int ColumnIndexExtra = -1;
@@ -131,6 +135,14 @@ namespace Nikse.SubtitleEdit.Controls
             if (idx >= 0)
                 Columns[idx].Text = general.WordsPerMin;
 
+            idx = GetColumnIndex(SubtitleColumn.Actor);
+            if (idx >= 0)
+                Columns[idx].Text = general.Actor;
+
+            idx = GetColumnIndex(SubtitleColumn.Region);
+            if (idx >= 0)
+                Columns[idx].Text = general.Region;
+
             idx = GetColumnIndex(SubtitleColumn.Text);
             if (idx >= 0)
                 Columns[idx].Text = general.Text;
@@ -176,6 +188,14 @@ namespace Nikse.SubtitleEdit.Controls
                 idx = GetColumnIndex(SubtitleColumn.WordsPerMinute);
                 if (idx >= 0)
                     Columns[idx].Width = _settings.General.ListViewWpmWidth;
+
+                idx = GetColumnIndex(SubtitleColumn.Actor);
+                if (idx >= 0)
+                    Columns[idx].Width = _settings.General.ListViewActorWidth;
+
+                idx = GetColumnIndex(SubtitleColumn.Region);
+                if (idx >= 0)
+                    Columns[idx].Width = _settings.General.ListViewRegionWidth;
 
                 idx = GetColumnIndex(SubtitleColumn.Text);
                 if (idx >= 0)
@@ -247,6 +267,12 @@ namespace Nikse.SubtitleEdit.Controls
                     case SubtitleColumn.WordsPerMinute:
                         Columns.Add(new ColumnHeader { Width = 65 });
                         break;
+                    case SubtitleColumn.Actor:
+                        Columns.Add(new ColumnHeader { Width = 80 });
+                        break;
+                    case SubtitleColumn.Region:
+                        Columns.Add(new ColumnHeader { Width = 60 });
+                        break;
                     case SubtitleColumn.Text:
                         Columns.Add(new ColumnHeader { Width = 300 });
                         break;
@@ -286,6 +312,8 @@ namespace Nikse.SubtitleEdit.Controls
             ColumnIndexDuration = GetColumnIndex(SubtitleColumn.Duration);
             ColumnIndexCps = GetColumnIndex(SubtitleColumn.CharactersPerSeconds);
             ColumnIndexWpm = GetColumnIndex(SubtitleColumn.WordsPerMinute);
+            ColumnIndexActor = GetColumnIndex(SubtitleColumn.Actor);
+            ColumnIndexRegion = GetColumnIndex(SubtitleColumn.Region);
             ColumnIndexText = GetColumnIndex(SubtitleColumn.Text);
             ColumnIndexTextAlternate = GetColumnIndex(SubtitleColumn.TextAlternate);
             ColumnIndexExtra = GetColumnIndex(SubtitleColumn.Extra);
@@ -397,6 +425,14 @@ namespace Nikse.SubtitleEdit.Controls
                 {
                     Configuration.Settings.General.ListViewWpmWidth = Columns[ColumnIndexWpm].Width;
                 }
+                else if (e.ColumnIndex == ColumnIndexActor)
+                {
+                    Configuration.Settings.General.ListViewActorWidth = Columns[ColumnIndexActor].Width;
+                }
+                else if (e.ColumnIndex == ColumnIndexRegion)
+                {
+                    Configuration.Settings.General.ListViewRegionWidth = Columns[ColumnIndexRegion].Width;
+                }
                 if (e.ColumnIndex == ColumnIndexText)
                 {
                     Configuration.Settings.General.ListViewTextWidth = Columns[ColumnIndexText].Width;
@@ -454,6 +490,20 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 Columns[wpmIdx].Width = 65;
                 Columns[wpmIdx].Width = 65;
+            }
+
+            var actorIdx = GetColumnIndex(SubtitleColumn.Actor);
+            if (actorIdx >= 0)
+            {
+                Columns[actorIdx].Width = 80;
+                Columns[actorIdx].Width = 80;
+            }
+
+            var regionIdx = GetColumnIndex(SubtitleColumn.Region);
+            if (regionIdx >= 0)
+            {
+                Columns[regionIdx].Width = 60;
+                Columns[regionIdx].Width = 60;
             }
 
             int w = 0;
@@ -533,6 +583,10 @@ namespace Nikse.SubtitleEdit.Controls
                         cw = 65;
                     else if (column == SubtitleColumn.WordsPerMinute)
                         cw = 70;
+                    else if (column == SubtitleColumn.Actor)
+                        cw = 70;
+                    else if (column == SubtitleColumn.Region)
+                        cw = 60;
                     else if (column != SubtitleColumn.Number)
                         cw = 120;
                     Columns[index].Width = cw;
@@ -765,12 +819,101 @@ namespace Nikse.SubtitleEdit.Controls
                 }
                 else
                 {
-                    SubtitleColumns.Add(SubtitleColumn.CharactersPerSeconds);
+                    SubtitleColumns.Add(SubtitleColumn.WordsPerMinute);
                     Columns.Add(ch);
                 }
                 UpdateColumnIndexes();
                 Columns[ColumnIndexWpm].Width = 70;
                 Columns[ColumnIndexWpm].Width = 70;
+                AutoSizeAllColumns(null);
+            }
+        }
+
+        public void ShowActorColumn(string title)
+        {
+            if (GetColumnIndex(SubtitleColumn.Actor) == -1)
+            {
+                var ch = new ColumnHeader { Text = title };
+                if (ColumnIndexWpm >= 0)
+                {
+                    SubtitleColumns.Insert(ColumnIndexWpm + 1, SubtitleColumn.Actor);
+                    Columns.Insert(ColumnIndexWpm + 1, ch);
+                }
+                else if (ColumnIndexCps >= 0)
+                {
+                    SubtitleColumns.Insert(ColumnIndexCps + 1, SubtitleColumn.Actor);
+                    Columns.Insert(ColumnIndexCps + 1, ch);
+                }
+                else if (ColumnIndexDuration >= 0)
+                {
+                    SubtitleColumns.Insert(ColumnIndexDuration + 1, SubtitleColumn.Actor);
+                    Columns.Insert(ColumnIndexDuration + 1, ch);
+                }
+                else if (ColumnIndexEnd >= 0)
+                {
+                    SubtitleColumns.Insert(ColumnIndexEnd + 1, SubtitleColumn.Actor);
+                    Columns.Insert(ColumnIndexEnd + 1, ch);
+                }
+                else if (ColumnIndexStart >= 0)
+                {
+                    SubtitleColumns.Insert(ColumnIndexStart + 1, SubtitleColumn.Actor);
+                    Columns.Insert(ColumnIndexStart + 1, ch);
+                }
+                else
+                {
+                    SubtitleColumns.Add(SubtitleColumn.Actor);
+                    Columns.Add(ch);
+                }
+                UpdateColumnIndexes();
+                Columns[ColumnIndexActor].Width = 80;
+                Columns[ColumnIndexActor].Width = 80;
+                AutoSizeAllColumns(null);
+            }
+        }
+
+        public void ShowRegionColumn(string title)
+        {
+            if (GetColumnIndex(SubtitleColumn.Region) == -1)
+            {
+                var ch = new ColumnHeader { Text = title };
+                if (ColumnIndexActor >= 0)
+                {
+                    SubtitleColumns.Insert(ColumnIndexActor + 1, SubtitleColumn.Region);
+                    Columns.Insert(ColumnIndexActor + 1, ch);
+                }
+                else if (ColumnIndexWpm >= 0)
+                {
+                    SubtitleColumns.Insert(ColumnIndexWpm + 1, SubtitleColumn.Region);
+                    Columns.Insert(ColumnIndexWpm + 1, ch);
+                }
+                else if (ColumnIndexCps >= 0)
+                {
+                    SubtitleColumns.Insert(ColumnIndexCps + 1, SubtitleColumn.Region);
+                    Columns.Insert(ColumnIndexCps + 1, ch);
+                }
+                else if (ColumnIndexDuration >= 0)
+                {
+                    SubtitleColumns.Insert(ColumnIndexDuration + 1, SubtitleColumn.Region);
+                    Columns.Insert(ColumnIndexDuration + 1, ch);
+                }
+                else if (ColumnIndexEnd >= 0)
+                {
+                    SubtitleColumns.Insert(ColumnIndexEnd + 1, SubtitleColumn.Region);
+                    Columns.Insert(ColumnIndexEnd + 1, ch);
+                }
+                else if (ColumnIndexStart >= 0)
+                {
+                    SubtitleColumns.Insert(ColumnIndexStart + 1, SubtitleColumn.Region);
+                    Columns.Insert(ColumnIndexStart + 1, ch);
+                }
+                else
+                {
+                    SubtitleColumns.Add(SubtitleColumn.Region);
+                    Columns.Add(ch);
+                }
+                UpdateColumnIndexes();
+                Columns[ColumnIndexRegion].Width = 80;
+                Columns[ColumnIndexRegion].Width = 80;
                 AutoSizeAllColumns(null);
             }
         }
@@ -1023,6 +1166,12 @@ namespace Nikse.SubtitleEdit.Controls
                     case SubtitleColumn.WordsPerMinute:
                         item.SubItems.Add($"{paragraph.WordsPerMinute:0.00}");
                         break;
+                    case SubtitleColumn.Actor:
+                        item.SubItems.Add(paragraph.Actor);
+                        break;
+                    case SubtitleColumn.Region:
+                        item.SubItems.Add(paragraph.Region);
+                        break;
                     case SubtitleColumn.Text:
                         item.SubItems.Add(paragraph.Text.Replace(Environment.NewLine, _lineSeparatorString));
                         break;
@@ -1160,6 +1309,10 @@ namespace Nikse.SubtitleEdit.Controls
                     item.SubItems[ColumnIndexEnd].Text = GetDisplayTime(paragraph.EndTime);
                 if (ColumnIndexDuration >= 0)
                     item.SubItems[ColumnIndexDuration].Text = paragraph.Duration.ToShortDisplayString();
+                if (ColumnIndexActor >= 0)
+                    item.SubItems[ColumnIndexActor].Text = paragraph.Actor;
+                if (ColumnIndexRegion >= 0)
+                    item.SubItems[ColumnIndexRegion].Text = paragraph.Region;
                 if (ColumnIndexText >= 0)
                     item.SubItems[ColumnIndexText].Text = paragraph.Text.Replace(Environment.NewLine, _lineSeparatorString);
                 UpdateCpsAndWpm(item, paragraph);

@@ -2,7 +2,7 @@
 <Language Name="Nederlands">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.5.2</Version>
+    <Version>3.5.3</Version>
     <TranslatedBy>Vertaald door Quetsbeek en minouhse 11082014</TranslatedBy>
     <CultureName>nl-NL</CultureName>
     <HelpFile />
@@ -1005,7 +1005,7 @@ Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
         <FindDoubleWords>Dubbele woorden zoeken</FindDoubleWords>
         <FindDoubleLines>Dubbele teksten zoeken</FindDoubleLines>
         <GetDictionaries>Woordenboeken downloaden...</GetDictionaries>
-        <AddToNamesEtcList>Woord aan naamlĳst toevoegen</AddToNamesEtcList>
+        <AddToNameList>Woord aan naamlĳst toevoegen</AddToNameList>
       </SpellCheck>
       <Synchronization>
         <Title>S&amp;ynchroniseren</Title>
@@ -1353,8 +1353,8 @@ Verder gaan?</SubtitleAppendPrompt>
     <NumberOfWithRemovedLineBreakX>Aantal regels met verwĳderd regeleinde: {0}</NumberOfWithRemovedLineBreakX>
     <BeforeMultipleReplace>Vóór meerdere vervangen</BeforeMultipleReplace>
     <NumberOfLinesReplacedX>Aantal teksten met vervangingen: {0}</NumberOfLinesReplacedX>
-    <NameXAddedToNamesEtcList>De naam '{0}' is toegevoegd aan de naamlĳst</NameXAddedToNamesEtcList>
-    <NameXNotAddedToNamesEtcList>De naam '{0}' is NIET toegevoegd aan de naamlĳst</NameXNotAddedToNamesEtcList>
+    <NameXAddedToNameList>De naam '{0}' is toegevoegd aan de naamlĳst</NameXAddedToNameList>
+    <NameXNotAddedToNameList>De naam '{0}' is NIET toegevoegd aan de naamlĳst</NameXNotAddedToNameList>
     <WordXAddedToUserDic>Het woord '{0}' is toegevoegd aan het woordenboek</WordXAddedToUserDic>
     <WordXNotAddedToUserDic>Het woord '{0}' is NIET toegevoegd aan het woordenboek</WordXNotAddedToUserDic>
     <OcrReplacePairXAdded>Woordpaar '{0} -&gt; {1}' is toegevoegd aan de OCR-correctielĳst</OcrReplacePairXAdded>
@@ -1772,19 +1772,19 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <Testing123>Testing 123...</Testing123>
     <Language>Taal</Language>
     <NamesIgnoreLists>Naam/ruis-lĳst (hoofdlettergevoelig)</NamesIgnoreLists>
-    <AddNameEtc>Toevoegen</AddNameEtc>
+    <AddName>Toevoegen</AddName>
     <AddWord>Toevoegen</AddWord>
     <Remove>Verwĳderen</Remove>
     <AddPair>Toevoegen</AddPair>
     <UserWordList>Gebruikerswoordenlĳst</UserWordList>
     <OcrFixList>OCR-correctielĳst</OcrFixList>
     <Location>Plaats</Location>
-    <UseOnlineNamesEtc>Gebruik online naam/ruis-lĳst</UseOnlineNamesEtc>
+    <UseOnlineNames>Gebruik online naam/ruis-lĳst</UseOnlineNames>
     <WordAddedX>Woord toegevoegd: {0}</WordAddedX>
     <WordAlreadyExists>Woord bestaat al!</WordAlreadyExists>
     <WordNotFound>Woord niet gevonden</WordNotFound>
     <RemoveX>{0} verwĳderen?</RemoveX>
-    <CannotUpdateNamesEtcOnline>Kan NamesEtc.xml niet online bĳwerken!</CannotUpdateNamesEtcOnline>
+    <CannotUpdateNamesOnline>Kan NamesEtc.xml niet online bĳwerken!</CannotUpdateNamesOnline>
     <ProxyServerSettings>Proxyserver-instellingen</ProxyServerSettings>
     <ProxyAddress>Proxy-adres</ProxyAddress>
     <ProxyAuthentication>Authorisatie</ProxyAuthentication>
@@ -1963,7 +1963,7 @@ Probeer het later opnieuw a.u.b.</DownloadMpvFailed>
     <SpellCheckProgress>Spellingcontrole [{0}] - {1}</SpellCheckProgress>
     <EditWholeText>Hele tekst bewerken</EditWholeText>
     <EditWordOnly>Alleen woord bewerken</EditWordOnly>
-    <AddXToNamesEtc>Voeg '{0}' aan de naamlĳst toe</AddXToNamesEtc>
+    <AddXToNames>Voeg '{0}' aan de naamlĳst toe</AddXToNames>
     <AutoFixNames>Autocorrectie van hoofd-/kleine letters in namen</AutoFixNames>
     <CheckOneLetterWords>Vraag naar onbekende éénletterwoorden</CheckOneLetterWords>
     <TreatINQuoteAsING>Behandel woordeinde “in'” als “ing” (alleen Engels)</TreatINQuoteAsING>

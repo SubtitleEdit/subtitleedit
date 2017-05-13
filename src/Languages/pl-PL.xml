@@ -2,10 +2,11 @@
 <Language Name="Polish">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.5.2</Version>
+    <Version>3.5.3</Version>
     <TranslatedBy>Tłumaczenie Adam Malich (mailto: adam_malich@gizycko.mm.pl)</TranslatedBy>
     <CultureName>pl-PL</CultureName>
-    <HelpFile />
+    <HelpFile>
+    </HelpFile>
     <Ok>&amp;OK</Ok>
     <Cancel>&amp;Anuluj</Cancel>
     <Apply>Zastosuj</Apply>
@@ -26,6 +27,8 @@
     <Duration>Czas trwania</Duration>
     <CharsPerSec>Znaków/sek.</CharsPerSec>
     <WordsPerMin>Słów/min.</WordsPerMin>
+    <Actor>Aktor</Actor>
+    <Region>Region</Region>
     <NumberSymbol>Nr</NumberSymbol>
     <Number>Numer</Number>
     <Text>Tekst</Text>
@@ -1011,7 +1014,7 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
         <FindDoubleWords>Znajdź zdublowane słowa</FindDoubleWords>
         <FindDoubleLines>Znajdź zdublowane linie</FindDoubleLines>
         <GetDictionaries>Pobierz słowniki...</GetDictionaries>
-        <AddToNamesEtcList>Dodaj słowo do listy nazw własnych</AddToNamesEtcList>
+        <AddToNameList>Dodaj słowo do listy nazw własnych</AddToNameList>
       </SpellCheck>
       <Synchronization>
         <Title>Synchronizacja</Title>
@@ -1066,8 +1069,10 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
         <SizeAllColumnsToFit>Dopasuj rozmiar wszystkich kolumn</SizeAllColumnsToFit>
         <AdvancedSubStationAlphaSetStyle>Advanced Sub Station Alpha - ustaw styl</AdvancedSubStationAlphaSetStyle>
         <SubStationAlphaSetStyle>Sub Station Alpha - ustaw styl</SubStationAlphaSetStyle>
+        <SetActor>Ustaw aktora</SetActor>
         <SubStationAlphaStyles>Style Sub Station Alpha...</SubStationAlphaStyles>
         <AdvancedSubStationAlphaStyles>Style Advanced Sub Station Alpha...</AdvancedSubStationAlphaStyles>
+        <TimedTextSetRegion>Tekst synchroniczny - ustaw region</TimedTextSetRegion>
         <TimedTextSetStyle>Tekst synchroniczny - ustaw styl</TimedTextSetStyle>
         <TimedTextStyles>Style tekstu synchronicznego...</TimedTextStyles>
         <TimedTextSetLanguage>Tekst synchroniczny - ustaw język</TimedTextSetLanguage>
@@ -1117,6 +1122,8 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
         <SaveSelectedLines>Zapisz zaznaczone linie jako...</SaveSelectedLines>
         <WebVTTSetNewVoice>Ustaw nowy głos...</WebVTTSetNewVoice>
         <WebVTTRemoveVoices>Usuń głosy</WebVTTRemoveVoices>
+        <NewActor>Nowy aktor...</NewActor>
+        <RemoveActors>Usuń aktorów</RemoveActors>
       </ContextMenu>
     </Menu>
     <Controls>
@@ -1362,8 +1369,8 @@ Kontynuować?</SubtitleAppendPrompt>
     <NumberOfWithRemovedLineBreakX>Ilość linii z usuniętym łamaniem linii: {0}</NumberOfWithRemovedLineBreakX>
     <BeforeMultipleReplace>Przed wielokrotnymi zastąpieniami</BeforeMultipleReplace>
     <NumberOfLinesReplacedX>Ilość linii z zastąpionym tekstem: {0}</NumberOfLinesReplacedX>
-    <NameXAddedToNamesEtcList>Dodano "{0}" do listy nazw własnych</NameXAddedToNamesEtcList>
-    <NameXNotAddedToNamesEtcList>Nazwa własna "{0}" NIE ZOSTAŁA dodana do listy nazw własnych</NameXNotAddedToNamesEtcList>
+    <NameXAddedToNameList>Dodano "{0}" do listy nazw własnych</NameXAddedToNameList>
+    <NameXNotAddedToNameList>Nazwa własna "{0}" NIE ZOSTAŁA dodana do listy nazw własnych</NameXNotAddedToNameList>
     <WordXAddedToUserDic>Słowo '{0}' zostało dodane do słownika użytkownika</WordXAddedToUserDic>
     <WordXNotAddedToUserDic>Nazwa własna '{0}' NIE została dodana do słownika użytkownika</WordXNotAddedToUserDic>
     <OcrReplacePairXAdded>Lista par zamienników OCR '{0} -&gt; {1}' została dodana do listy zamienników OCR</OcrReplacePairXAdded>
@@ -1791,19 +1798,19 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <Testing123>Daum PotPlayer po polsku - potplayer.pl</Testing123>
     <Language>Język</Language>
     <NamesIgnoreLists>Lista nazw własnych (wielkimi literami)</NamesIgnoreLists>
-    <AddNameEtc>Dodaj nazwę</AddNameEtc>
+    <AddName>Dodaj nazwę</AddName>
     <AddWord>Dodaj słowo</AddWord>
     <Remove>Usuń</Remove>
     <AddPair>Dodaj parę</AddPair>
     <UserWordList>Lista słów użytkownika</UserWordList>
     <OcrFixList>Lista poprawek OCR</OcrFixList>
     <Location>Położenie</Location>
-    <UseOnlineNamesEtc>Użyj internetowej listy nazw własnych (plik xml)</UseOnlineNamesEtc>
+    <UseOnlineNames>Użyj internetowej listy nazw własnych (plik xml)</UseOnlineNames>
     <WordAddedX>Dodano słów: {0}</WordAddedX>
     <WordAlreadyExists>Słowo już istnieje!</WordAlreadyExists>
     <WordNotFound>Nie znaleziono słowa</WordNotFound>
     <RemoveX>Usunąć {0}?</RemoveX>
-    <CannotUpdateNamesEtcOnline>Nie można zaktualizować internetowego pliku NamesEtc.xml!</CannotUpdateNamesEtcOnline>
+    <CannotUpdateNamesOnline>Nie można zaktualizować internetowego pliku NamesEtc.xml!</CannotUpdateNamesOnline>
     <ProxyServerSettings>Ustawienia serwera pośredniczącego</ProxyServerSettings>
     <ProxyAddress>Adres serwera</ProxyAddress>
     <ProxyAuthentication>Identyfikacja</ProxyAuthentication>
@@ -1872,6 +1879,7 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <WaveformPlayNewSelectionEnd>Odtwarzaj koniec zaznaczenia</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Odtwarzaj pierwsze zaznaczone napisy</WaveformPlayFirstSelectedSubtitle>
     <WaveformFocusListView>Koncentruj uwagę na "Widoku listy"</WaveformFocusListView>
+    <WaveformGoToNextSubtitle>Przejdź do następnych napisów (z pozycji wideo)</WaveformGoToNextSubtitle>
     <WaveformGoToNextSceneChange>Przejdź do następnej zmiany sceny</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>Przełącznik zmiany sceny</WaveformToggleSceneChange>
     <GoBack1Frame>Jedna klatka do tyłu</GoBack1Frame>
@@ -1927,6 +1935,7 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <MainTextBoxUnbreak>Cofnij łamanie tekstu</MainTextBoxUnbreak>
     <MainFileSaveAll>Zapisz wszystko</MainFileSaveAll>
     <Miscellaneous>Inne</Miscellaneous>
+    <CpsIncludesSpace>Znaków/sekundę (ZNS) włączając spacje</CpsIncludesSpace>
     <UseDoNotBreakAfterList>Użyj listy wykluczeń (dla automatycznego łamania linii)</UseDoNotBreakAfterList>
     <MicrosoftBingTranslator>Tłumacz Microsoft Bing</MicrosoftBingTranslator>
     <HowToSignUp>Jak się zarejestrować</HowToSignUp>
@@ -1984,7 +1993,7 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <SpellCheckProgress>Sprawdzanie pisowni [{0}] - {1}</SpellCheckProgress>
     <EditWholeText>Edytuj cały tekst</EditWholeText>
     <EditWordOnly>Edytuj tylko słowo</EditWordOnly>
-    <AddXToNamesEtc>Dodaj "{0}" do listy nazw własnych</AddXToNamesEtc>
+    <AddXToNames>Dodaj "{0}" do listy nazw własnych</AddXToNames>
     <AutoFixNames>Popraw pisownię nazw własnych, tylko gdy różnią się budową</AutoFixNames>
     <CheckOneLetterWords>Pytaj o nieznaną pojedynczą literę słowa</CheckOneLetterWords>
     <TreatINQuoteAsING>Traktuj słowo kończące się " in' " jako " ing " (tylko angielski)</TreatINQuoteAsING>
@@ -1994,14 +2003,11 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <UndoX>Cofnij: {0}</UndoX>
   </SpellCheck>
   <NetflixQualityCheck>
-    <GlyphCheckSuccessfull>Walidacja znaków zakończyła się sukcesem.</GlyphCheckSuccessfull>
-    <GlyphCheckFailed>Walidacja znaków nie powiodła się.</GlyphCheckFailed>
     <GlyphCheckReport>Nieprawidłowy znak {0} został znaleziony w kolumnie {1}</GlyphCheckReport>
-    <WhiteSpaceCheckSuccessfull>Walidacja spacji zakończyła się sukcesem.</WhiteSpaceCheckSuccessfull>
-    <WhiteSpaceCheckFailed>Walidacja spacji nie powiodła się.</WhiteSpaceCheckFailed>
     <WhiteSpaceCheckReport>Nieprawidłowa spacja znaleziona w kolumnie {0}.</WhiteSpaceCheckReport>
     <ReportPrompt>Przeczytaj pełny raport tutaj: {0}.</ReportPrompt>
-    <SavingError>Raport nie może zostać zapisany.</SavingError>
+    <FoundXIssues>Kontrola jakości Netflix znalazła {0} problem/ów.</FoundXIssues>
+    <CheckOk>Kontrola jakości Netflix OK :)</CheckOk>
   </NetflixQualityCheck>
   <Split>
     <Title>Podziel</Title>
@@ -2320,6 +2326,7 @@ Utrzymać te zmiany?</KeepChangesMessage>
     <RemoveSceneChange>Usuń zmianę sceny</RemoveSceneChange>
     <GuessTimeCodes>Odgadnij kody czasowe...</GuessTimeCodes>
     <SeekSilence>Szukaj ciszy...</SeekSilence>
+    <InsertSubtitleHere>Wstaw napisy tutaj...</InsertSubtitleHere>
     <CharsSecX>ZNS: {0:0.00}</CharsSecX>
     <WordsMinX>SNM: {0:0.00}</WordsMinX>
   </Waveform>

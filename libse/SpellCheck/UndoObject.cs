@@ -13,7 +13,7 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
         public int NoOfSkippedWords { get; set; }
         public int NoOfChangedWords { get; set; }
         public int NoOfCorrectWords { get; set; }
-        public int NoOfNamesEtc { get; set; }
+        public int NoOfNames { get; set; }
         public int NoOfAddedWords { get; set; }
     }
 }

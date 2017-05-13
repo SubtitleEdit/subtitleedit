@@ -628,7 +628,7 @@
         <FindDoubleWords>Пронађи дуплиране &amp;речи</FindDoubleWords>
         <FindDoubleLines>Пронађи дуплиране &amp;линије</FindDoubleLines>
         <GetDictionaries>Пр&amp;еузми речнике...</GetDictionaries>
-        <AddToNamesEtcList>&amp;Додај реч у списак назива/изузетака...</AddToNamesEtcList>
+        <AddToNameList>&amp;Додај реч у списак назива/изузетака...</AddToNameList>
       </SpellCheck>
       <Synchronization>
         <Title>У&amp;склађивање</Title>
@@ -928,8 +928,8 @@
     <NumberOfWithRemovedLineBreakX>Број линија с уклоњеним редом: {0}</NumberOfWithRemovedLineBreakX>
     <BeforeMultipleReplace>Извршена вишеструка замена</BeforeMultipleReplace>
     <NumberOfLinesReplacedX>Број линија са замењеним текстом: {0}</NumberOfLinesReplacedX>
-    <NameXAddedToNamesEtcList>Реч „{0}“ је додата у списак назива/изузетака.</NameXAddedToNamesEtcList>
-    <NameXNotAddedToNamesEtcList>Не могу да додам реч „{0}“ у списак назива/изузетака.</NameXNotAddedToNamesEtcList>
+    <NameXAddedToNameList>Реч „{0}“ је додата у списак назива/изузетака.</NameXAddedToNameList>
+    <NameXNotAddedToNameList>Не могу да додам реч „{0}“ у списак назива/изузетака.</NameXNotAddedToNameList>
     <XLinesSelected>Изабрано линија: {0}</XLinesSelected>
     <UnicodeMusicSymbolsAnsiWarning>Титл садржи уникод музичке ноте. Ако га сачувате у кодном распореду ASCII, изгубићете их. Желите ли да наставите?</UnicodeMusicSymbolsAnsiWarning>
     <NegativeTimeWarning>Титл садржи негативне временске одреднице. Желите ли да наставите?</NegativeTimeWarning>
@@ -1134,19 +1134,19 @@
     <Testing123>Провера 123...</Testing123>
     <Language>Језик:</Language>
     <NamesIgnoreLists>Називи/изузеци</NamesIgnoreLists>
-    <AddNameEtc>Додај &amp;име</AddNameEtc>
+    <AddName>Додај &amp;име</AddName>
     <AddWord>Додај &amp;реч</AddWord>
     <Remove>У&amp;клони</Remove>
     <AddPair>Додај &amp;пар</AddPair>
     <UserWordList>Прилагођени списак речи</UserWordList>
     <OcrFixList>Списак исправки за OCR</OcrFixList>
     <Location>Адреса</Location>
-    <UseOnlineNamesEtc>Користи &amp;датотеку на мрежи</UseOnlineNamesEtc>
+    <UseOnlineNames>Користи &amp;датотеку на мрежи</UseOnlineNames>
     <WordAddedX>Додато речи: {0}</WordAddedX>
     <WordAlreadyExists>Реч већ постоји.</WordAlreadyExists>
     <WordNotFound>Реч није пронађена.</WordNotFound>
     <RemoveX>Желите ли да уклоните „{0}“?</RemoveX>
-    <CannotUpdateNamesEtcOnline>Не могу да ажурирам мрежну датотеку „NamesEtc.xml“.</CannotUpdateNamesEtcOnline>
+    <CannotUpdateNamesOnline>Не могу да ажурирам мрежну датотеку „NamesEtc.xml“.</CannotUpdateNamesOnline>
     <ProxyServerSettings>Поставке посредничког сервера</ProxyServerSettings>
     <ProxyAddress>Адреса сервера:</ProxyAddress>
     <ProxyAuthentication>Потврда идентитета</ProxyAuthentication>
@@ -1210,7 +1210,7 @@
     <SpellCheckProgress>Провера писања [{0}] – {1}</SpellCheckProgress>
     <EditWholeText>Уреди &amp;цео текст</EditWholeText>
     <EditWordOnly>Уреди &amp;само реч</EditWordOnly>
-    <AddXToNamesEtc>Додај „{0}“ у списак назива/изузетака</AddXToNamesEtc>
+    <AddXToNames>Додај „{0}“ у списак назива/изузетака</AddXToNames>
     <AutoFixNames>&amp;Исправи речи где је само величина слова различита</AutoFixNames>
     <ImageText>Текст слике</ImageText>
     <SpellCheckCompleted>Провера писања је завршена.</SpellCheckCompleted>

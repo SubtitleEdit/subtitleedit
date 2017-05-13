@@ -2,7 +2,7 @@
 <Language Name="English">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.5.2</Version>
+    <Version>3.5.3</Version>
     <TranslatedBy>Translated by Nikse</TranslatedBy>
     <CultureName>en-US</CultureName>
     <HelpFile />
@@ -26,6 +26,8 @@
     <Duration>Duration</Duration>
     <CharsPerSec>Chars/sec</CharsPerSec>
     <WordsPerMin>Words/min</WordsPerMin>
+    <Actor>Actor</Actor>
+    <Region>Region</Region>
     <NumberSymbol>#</NumberSymbol>
     <Number>Number</Number>
     <Text>Text</Text>
@@ -89,7 +91,7 @@ Suggestions are very welcome.
 Email: mailto:nikse.dk@gmail.com</AboutText1>
   </About>
   <AddToNames>
-    <Title>Add to names/etc list</Title>
+    <Title>Add to name list</Title>
     <Description>Add to names/noise list (case sensitive)</Description>
   </AddToNames>
   <AddToOcrReplaceList>
@@ -199,8 +201,8 @@ Note: Do check free disk space.</WaveFileMalformed>
     <Title>Change casing</Title>
     <ChangeCasingTo>Change casing to</ChangeCasingTo>
     <NormalCasing>Normal casing. Sentences begin with uppercase letter.</NormalCasing>
-    <FixNamesCasing>Fix names casing (via Dictionaries\NamesEtc.xml)</FixNamesCasing>
-    <FixOnlyNamesCasing>Fix only names casing (via Dictionaries\NamesEtc.xml)</FixOnlyNamesCasing>
+    <FixNamesCasing>Fix names casing (via Dictionaries\names.xml)</FixNamesCasing>
+    <FixOnlyNamesCasing>Fix only names casing (via Dictionaries\names.xml)</FixOnlyNamesCasing>
     <OnlyChangeAllUppercaseLines>Only change all upper case lines.</OnlyChangeAllUppercaseLines>
     <AllUppercase>ALL UPPERCASE</AllUppercase>
     <AllLowercase>all lowercase</AllLowercase>
@@ -1013,7 +1015,7 @@ Note: Do check free disk space.</WaveFileMalformed>
         <FindDoubleWords>Find double words</FindDoubleWords>
         <FindDoubleLines>Find double lines</FindDoubleLines>
         <GetDictionaries>Get dictionaries...</GetDictionaries>
-        <AddToNamesEtcList>Add word to names/etc list</AddToNamesEtcList>
+        <AddToNameList>Add word to name list</AddToNameList>
       </SpellCheck>
       <Synchronization>
         <Title>Synchronization</Title>
@@ -1068,8 +1070,10 @@ Note: Do check free disk space.</WaveFileMalformed>
         <SizeAllColumnsToFit>Size all columns to fit</SizeAllColumnsToFit>
         <AdvancedSubStationAlphaSetStyle>Advanced Sub Station Alpha - set style</AdvancedSubStationAlphaSetStyle>
         <SubStationAlphaSetStyle>Sub Station Alpha - set style</SubStationAlphaSetStyle>
+        <SetActor>Set actor</SetActor>
         <SubStationAlphaStyles>Sub Station Alpha styles...</SubStationAlphaStyles>
         <AdvancedSubStationAlphaStyles>Advanced Sub Station Alpha styles...</AdvancedSubStationAlphaStyles>
+        <TimedTextSetRegion>Timed Text - set region</TimedTextSetRegion>
         <TimedTextSetStyle>Timed Text - set style</TimedTextSetStyle>
         <TimedTextStyles>Timed Text styles...</TimedTextStyles>
         <TimedTextSetLanguage>Timed Text - set language</TimedTextSetLanguage>
@@ -1119,6 +1123,8 @@ Note: Do check free disk space.</WaveFileMalformed>
         <SaveSelectedLines>Save selected lines as...</SaveSelectedLines>
         <WebVTTSetNewVoice>Set new voice...</WebVTTSetNewVoice>
         <WebVTTRemoveVoices>Remove voices</WebVTTRemoveVoices>
+        <NewActor>New actor...</NewActor>
+        <RemoveActors>Remove actors</RemoveActors>
       </ContextMenu>
     </Menu>
     <Controls>
@@ -1364,8 +1370,8 @@ Continue?</SubtitleAppendPrompt>
     <NumberOfWithRemovedLineBreakX>Number of lines with removed line-break: {0}</NumberOfWithRemovedLineBreakX>
     <BeforeMultipleReplace>Before multiple replace</BeforeMultipleReplace>
     <NumberOfLinesReplacedX>Number of lines with text replaced: {0}</NumberOfLinesReplacedX>
-    <NameXAddedToNamesEtcList>The name '{0}' was added to names/etc list</NameXAddedToNamesEtcList>
-    <NameXNotAddedToNamesEtcList>The name '{0}' was NOT added to names/etc list</NameXNotAddedToNamesEtcList>
+    <NameXAddedToNameList>The name '{0}' was added to name list</NameXAddedToNameList>
+    <NameXNotAddedToNameList>The name '{0}' was NOT added to name list</NameXNotAddedToNameList>
     <WordXAddedToUserDic>The word '{0}' was added to the user dictionary</WordXAddedToUserDic>
     <WordXNotAddedToUserDic>The word '{0}' was NOT added to the user dictionary</WordXNotAddedToUserDic>
     <OcrReplacePairXAdded>The OCR replace list pair '{0} -&gt; {1}' was added to the OCR replace list</OcrReplacePairXAdded>
@@ -1793,19 +1799,19 @@ can edit in same subtitle file (collaboration)</Information>
     <Testing123>Testing 123...</Testing123>
     <Language>Language</Language>
     <NamesIgnoreLists>Names/ignore list (case sensitive)</NamesIgnoreLists>
-    <AddNameEtc>Add name</AddNameEtc>
+    <AddName>Add name</AddName>
     <AddWord>Add word</AddWord>
     <Remove>Remove</Remove>
     <AddPair>Add pair</AddPair>
     <UserWordList>User word list</UserWordList>
     <OcrFixList>OCR fix list</OcrFixList>
     <Location>Location</Location>
-    <UseOnlineNamesEtc>Use online names etc xml file</UseOnlineNamesEtc>
+    <UseOnlineNames>Use online names xml file</UseOnlineNames>
     <WordAddedX>Word added: {0}</WordAddedX>
     <WordAlreadyExists>Word already exists!</WordAlreadyExists>
     <WordNotFound>Word not found</WordNotFound>
     <RemoveX>Remove {0}?</RemoveX>
-    <CannotUpdateNamesEtcOnline>Cannot update NamesEtc.xml online!</CannotUpdateNamesEtcOnline>
+    <CannotUpdateNamesOnline>Cannot update names.xml online!</CannotUpdateNamesOnline>
     <ProxyServerSettings>Proxy server settings</ProxyServerSettings>
     <ProxyAddress>Proxy address</ProxyAddress>
     <ProxyAuthentication>Authentication</ProxyAuthentication>
@@ -1874,6 +1880,7 @@ can edit in same subtitle file (collaboration)</Information>
     <WaveformPlayNewSelectionEnd>Play end of selection</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Play first selected subtitle</WaveformPlayFirstSelectedSubtitle>
     <WaveformFocusListView>Focus list view</WaveformFocusListView>
+    <WaveformGoToNextSubtitle>Go to next subtitle (from video position)</WaveformGoToNextSubtitle>
     <WaveformGoToNextSceneChange>Go to next scene change</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>Toggle scene change</WaveformToggleSceneChange>
     <GoBack1Frame>One frame back</GoBack1Frame>
@@ -1929,6 +1936,7 @@ can edit in same subtitle file (collaboration)</Information>
     <MainTextBoxUnbreak>Unbreak text</MainTextBoxUnbreak>
     <MainFileSaveAll>Save all</MainFileSaveAll>
     <Miscellaneous>Misc.</Miscellaneous>
+    <CpsIncludesSpace>Chars/sec (CPS) includes spaces</CpsIncludesSpace>
     <UseDoNotBreakAfterList>Use do-not-break-after list (for auto-br)</UseDoNotBreakAfterList>
     <MicrosoftBingTranslator>Microsoft Bing Translator</MicrosoftBingTranslator>
     <HowToSignUp>How to sign up</HowToSignUp>
@@ -1986,7 +1994,7 @@ can edit in same subtitle file (collaboration)</Information>
     <SpellCheckProgress>Spell check [{0}] - {1}</SpellCheckProgress>
     <EditWholeText>Edit whole text</EditWholeText>
     <EditWordOnly>Edit word only</EditWordOnly>
-    <AddXToNamesEtc>Add '{0}' to names/etc list</AddXToNamesEtc>
+    <AddXToNames>Add '{0}' to name list</AddXToNames>
     <AutoFixNames>Auto fix names where only casing differ</AutoFixNames>
     <CheckOneLetterWords>Prompt for unknown one letter words</CheckOneLetterWords>
     <TreatINQuoteAsING>Treat word ending " in' " as " ing " (English only)</TreatINQuoteAsING>
@@ -1996,14 +2004,11 @@ can edit in same subtitle file (collaboration)</Information>
     <UndoX>Undo: {0}</UndoX>
   </SpellCheck>
   <NetflixQualityCheck>
-    <GlyphCheckSuccessfull>Character validation has been successful.</GlyphCheckSuccessfull>
-    <GlyphCheckFailed>Character validation has failed.</GlyphCheckFailed>
     <GlyphCheckReport>Invalid character {0} found at column {1}</GlyphCheckReport>
-    <WhiteSpaceCheckSuccessfull>White space validation has been successful.</WhiteSpaceCheckSuccessfull>
-    <WhiteSpaceCheckFailed>White space validation has failed.</WhiteSpaceCheckFailed>
     <WhiteSpaceCheckReport>Invalid white space found at column {0}.</WhiteSpaceCheckReport>
     <ReportPrompt>Please see full report here: {0}.</ReportPrompt>
-    <SavingError>Report cannot be saved.</SavingError>
+    <FoundXIssues>Netflix quality check found {0} issues.</FoundXIssues>
+    <CheckOk>Netflix quality check OK :)</CheckOk>
   </NetflixQualityCheck>
   <Split>
     <Title>Split</Title>
@@ -2322,6 +2327,7 @@ Keep changes?</KeepChangesMessage>
     <RemoveSceneChange>Remove scene change</RemoveSceneChange>
     <GuessTimeCodes>Guess time codes...</GuessTimeCodes>
     <SeekSilence>Seek silence...</SeekSilence>
+    <InsertSubtitleHere>Insert subtitle here...</InsertSubtitleHere>
     <CharsSecX>CPS: {0:0.00}</CharsSecX>
     <WordsMinX>WPM: {0:0.00}</WordsMinX>
   </Waveform>

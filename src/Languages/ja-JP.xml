@@ -2,7 +2,7 @@
 <Language Name="日本語">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.5.2</Version>
+    <Version>3.5.3</Version>
     <TranslatedBy>Nardog</TranslatedBy>
     <CultureName>ja-JP</CultureName>
     <HelpFile />
@@ -777,7 +777,7 @@ C# ソース コードは https://github.com/SubtitleEdit/subtitleedit にあり
         <FindDoubleWords>重複語の検索</FindDoubleWords>
         <FindDoubleLines>重複行の検索</FindDoubleLines>
         <GetDictionaries>辞書の取得...</GetDictionaries>
-        <AddToNamesEtcList>単語を names/etc の一覧に追加</AddToNamesEtcList>
+        <AddToNameList>単語を names/etc の一覧に追加</AddToNameList>
       </SpellCheck>
       <Synchronization>
         <Title>同期</Title>
@@ -1109,8 +1109,8 @@ C# ソース コードは https://github.com/SubtitleEdit/subtitleedit にあり
     <NumberOfWithRemovedLineBreakX>改行が削除された行の数: {0}</NumberOfWithRemovedLineBreakX>
     <BeforeMultipleReplace>一括置換の前</BeforeMultipleReplace>
     <NumberOfLinesReplacedX>テキストが置換された行の数: {0}</NumberOfLinesReplacedX>
-    <NameXAddedToNamesEtcList>名前 '{0}' が names/etc の一覧に追加されました</NameXAddedToNamesEtcList>
-    <NameXNotAddedToNamesEtcList>名前 '{0}' は names/etc の一覧に追加されませんでした</NameXNotAddedToNamesEtcList>
+    <NameXAddedToNameList>名前 '{0}' が names/etc の一覧に追加されました</NameXAddedToNameList>
+    <NameXNotAddedToNameList>名前 '{0}' は names/etc の一覧に追加されませんでした</NameXNotAddedToNameList>
     <WordXAddedToUserDic>単語 '{0}' はユーザー辞書に追加されました。</WordXAddedToUserDic>
     <WordXNotAddedToUserDic>名前 '{0}' はユーザー辞書に追加されませんでした。</WordXNotAddedToUserDic>
     <OcrReplacePairXAdded>組み合わせ '{0} -&gt; {1}' は OCR の置換の一覧に追加されました</OcrReplacePairXAdded>
@@ -1394,19 +1394,19 @@ C# ソース コードは https://github.com/SubtitleEdit/subtitleedit にあり
     <Testing123>テスト中 123...</Testing123>
     <Language>言語</Language>
     <NamesIgnoreLists>names/ignore の一覧 (大小区別)</NamesIgnoreLists>
-    <AddNameEtc>名前の追加</AddNameEtc>
+    <AddName>名前の追加</AddName>
     <AddWord>単語の追加</AddWord>
     <Remove>削除</Remove>
     <AddPair>組み合わせの追加</AddPair>
     <UserWordList>ユーザー単語の一覧</UserWordList>
     <OcrFixList>OCR 修正の一覧</OcrFixList>
     <Location>場所</Location>
-    <UseOnlineNamesEtc>オンラインの names etc XML ファイルを使用する</UseOnlineNamesEtc>
+    <UseOnlineNames>オンラインの names etc XML ファイルを使用する</UseOnlineNames>
     <WordAddedX>単語が追加されました: {0}</WordAddedX>
     <WordAlreadyExists>単語は既に存在します!</WordAlreadyExists>
     <WordNotFound>単語が見つかりません</WordNotFound>
     <RemoveX>{0} を削除しますか?</RemoveX>
-    <CannotUpdateNamesEtcOnline>オンラインで NamesEtc.xml を更新できません!</CannotUpdateNamesEtcOnline>
+    <CannotUpdateNamesOnline>オンラインで NamesEtc.xml を更新できません!</CannotUpdateNamesOnline>
     <ProxyServerSettings>プロキシ サーバーの設定</ProxyServerSettings>
     <ProxyAddress>プロキシ アドレス</ProxyAddress>
     <ProxyAuthentication>認証</ProxyAuthentication>
@@ -1524,7 +1524,7 @@ C# ソース コードは https://github.com/SubtitleEdit/subtitleedit にあり
     <SpellCheckProgress>スペル チェック [{0}] - {1}</SpellCheckProgress>
     <EditWholeText>テキスト全体の編集</EditWholeText>
     <EditWordOnly>単語のみ編集</EditWordOnly>
-    <AddXToNamesEtc>names/etc の一覧に '{0}' を追加</AddXToNamesEtc>
+    <AddXToNames>names/etc の一覧に '{0}' を追加</AddXToNames>
     <AutoFixNames>大文字と小文字のみ異なる名前を自動修正する</AutoFixNames>
     <ImageText>イメージ テキスト</ImageText>
     <SpellCheckCompleted>スペル チェックが完了しました。</SpellCheckCompleted>

@@ -2,7 +2,7 @@
 <Language Name="українська">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.5.2</Version>
+    <Version>3.5.3</Version>
     <TranslatedBy>Переклад: Максим Кобєлєв http://mazepa-studio.com</TranslatedBy>
     <CultureName>uk-UA</CultureName>
     <HelpFile />
@@ -991,7 +991,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <FindDoubleWords>Знайти слова, що дублюються</FindDoubleWords>
         <FindDoubleLines>Знайти рядки, що дублюються</FindDoubleLines>
         <GetDictionaries>Отримати словники...</GetDictionaries>
-        <AddToNamesEtcList>Додати слово до списку імен/шумів і т. п.</AddToNamesEtcList>
+        <AddToNameList>Додати слово до списку імен/шумів і т. п.</AddToNameList>
       </SpellCheck>
       <Synchronization>
         <Title>Синхронізація</Title>
@@ -1338,8 +1338,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <NumberOfWithRemovedLineBreakX>Кількість субтитрів з вилученим розбиттям рядків: {0}</NumberOfWithRemovedLineBreakX>
     <BeforeMultipleReplace>Перед множинною заміною</BeforeMultipleReplace>
     <NumberOfLinesReplacedX>Кількість рядків із заміненим текстом: {0}</NumberOfLinesReplacedX>
-    <NameXAddedToNamesEtcList>Ім'я '{0}' було додано до списку імен та ін.</NameXAddedToNamesEtcList>
-    <NameXNotAddedToNamesEtcList>Ім'я '{0}' НЕ було додано до списку імен та ін.</NameXNotAddedToNamesEtcList>
+    <NameXAddedToNameList>Ім'я '{0}' було додано до списку імен та ін.</NameXAddedToNameList>
+    <NameXNotAddedToNameList>Ім'я '{0}' НЕ було додано до списку імен та ін.</NameXNotAddedToNameList>
     <WordXAddedToUserDic>Слово '{0}' було додано до користувацького словника</WordXAddedToUserDic>
     <WordXNotAddedToUserDic>Слово '{0}' НЕ було додано до користувацького словника</WordXNotAddedToUserDic>
     <OcrReplacePairXAdded>Пару '{0} -&gt; {1}' було додано до списку замін при розпізнаванні</OcrReplacePairXAdded>
@@ -1744,19 +1744,19 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Testing123>Тестування 123...</Testing123>
     <Language>Мова</Language>
     <NamesIgnoreLists>Список імен/ігнор. (чутливий до регістру)</NamesIgnoreLists>
-    <AddNameEtc>Додати ім'я</AddNameEtc>
+    <AddName>Додати ім'я</AddName>
     <AddWord>Додати слово</AddWord>
     <Remove>Видалити</Remove>
     <AddPair>Додати пару</AddPair>
     <UserWordList>Користувацький список слів</UserWordList>
     <OcrFixList>Виправлення помилок розпізнавання тексту</OcrFixList>
     <Location>Розташування</Location>
-    <UseOnlineNamesEtc>Використовувати онлайн xml-файл імен</UseOnlineNamesEtc>
+    <UseOnlineNames>Використовувати онлайн xml-файл імен</UseOnlineNames>
     <WordAddedX>Слово додано: {0}</WordAddedX>
     <WordAlreadyExists>Слово вже існує!</WordAlreadyExists>
     <WordNotFound>Слово не знайдено</WordNotFound>
     <RemoveX>Видалити {0}?</RemoveX>
-    <CannotUpdateNamesEtcOnline>Не вдалося оновити онлайн-файл NamesEtc.xml!</CannotUpdateNamesEtcOnline>
+    <CannotUpdateNamesOnline>Не вдалося оновити онлайн-файл NamesEtc.xml!</CannotUpdateNamesOnline>
     <ProxyServerSettings>Налаштування сервера-прокладки</ProxyServerSettings>
     <ProxyAddress>Адреса прокладки</ProxyAddress>
     <ProxyAuthentication>Автентифікація</ProxyAuthentication>
@@ -1911,7 +1911,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SpellCheckProgress>Перевірка правопису [{0}] - {1}</SpellCheckProgress>
     <EditWholeText>Редагувати все</EditWholeText>
     <EditWordOnly>Редагувати слово</EditWordOnly>
-    <AddXToNamesEtc>Додати '{0}' до списку імен і т.п.</AddXToNamesEtc>
+    <AddXToNames>Додати '{0}' до списку імен і т.п.</AddXToNames>
     <AutoFixNames>Автомат. виправляти імена, де інший лише регістр</AutoFixNames>
     <CheckOneLetterWords>Запитувати щодо невідомих слів з однієї літери</CheckOneLetterWords>
     <TreatINQuoteAsING>Сприймати закінчення слова " in' " як " ing " (тільки англійська)</TreatINQuoteAsING>

@@ -89,10 +89,10 @@ namespace Test
                 }
             }
 
-            strm = asm.GetManifestResourceStream("Test.Dictionaries.names_etc.xml");
+            strm = asm.GetManifestResourceStream("Test.Dictionaries.names.xml");
             if (strm != null)
             {
-                using (Stream file = File.OpenWrite(Path.Combine("Dictionaries", "names_etc.xml")))
+                using (Stream file = File.OpenWrite(Path.Combine("Dictionaries", "names.xml")))
                 {
                     CopyStream(strm, file);
                 }
@@ -1770,6 +1770,54 @@ namespace Test
             string processedText = FixUnneededPeriods.RemoveDotAfterPunctuation("Foobar?. Foobar!.... Foobar");
             Assert.AreEqual("Foobar? Foobar! Foobar", processedText);
         }
+
+        #endregion
+
+        #region Fix Danish letter "i"
+
+        [TestMethod]
+        public void FixDanishLetterITest1()
+        {
+            const string ExpectedOuput = "Det må I undskylde.";
+            var p = new Paragraph("Det må i undskylde.", 1200, 5000);
+            var s = new Subtitle();
+            s.Paragraphs.Add(p);
+            new FixDanishLetterI().Fix(s, new EmptyFixCallback());
+            Assert.AreEqual(ExpectedOuput, p.Text);
+        }
+
+        [TestMethod]
+        public void FixDanishLetterITest2()
+        {
+            const string ExpectedOuput = "Det må I selv om.";
+            var p = new Paragraph("Det må i selv om.", 1200, 5000);
+            var s = new Subtitle();
+            s.Paragraphs.Add(p);
+            new FixDanishLetterI().Fix(s, new EmptyFixCallback());
+            Assert.AreEqual(ExpectedOuput, p.Text);
+        }
+
+        [TestMethod]
+        public void FixDanishLetterITest3()
+        {
+            const string ExpectedOuput = "I dag skal I hilse på";
+            var p = new Paragraph("I dag skal i hilse på", 1200, 5000);
+            var s = new Subtitle();
+            s.Paragraphs.Add(p);
+            new FixDanishLetterI().Fix(s, new EmptyFixCallback());
+            Assert.AreEqual(ExpectedOuput, p.Text);
+        }
+
+        [TestMethod]
+        public void FixDanishLetterITestNegative1()
+        {
+            const string ExpectedOuput = "Der vil jeg ikke gå i skole.";
+            var p = new Paragraph(ExpectedOuput, 1200, 5000);
+            var s = new Subtitle();
+            s.Paragraphs.Add(p);
+            new FixDanishLetterI().Fix(s, new EmptyFixCallback());
+            Assert.AreEqual(ExpectedOuput, p.Text);
+        }        
 
         #endregion
     }

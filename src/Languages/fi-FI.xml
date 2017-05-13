@@ -2,7 +2,7 @@
 <Language Name="suomi">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.5.2</Version>
+    <Version>3.5.3</Version>
     <TranslatedBy>Suomentanut vm, päivittänyt Teijo S. [31-03-2017]</TranslatedBy>
     <CultureName>fi-FI</CultureName>
     <HelpFile />
@@ -1008,7 +1008,7 @@ HUOM! Tarkista vapaa levytila.</WaveFileMalformed>
         <FindDoubleWords>Etsi kaksoissanoja</FindDoubleWords>
         <FindDoubleLines>Etsi kaksoisrivejä</FindDoubleLines>
         <GetDictionaries>Hae sanastoja</GetDictionaries>
-        <AddToNamesEtcList>Lisää sana nimet/etc -luetteloon</AddToNamesEtcList>
+        <AddToNameList>Lisää sana nimet -luetteloon</AddToNameList>
       </SpellCheck>
       <Synchronization>
         <Title>Tahdistus</Title>
@@ -1351,8 +1351,8 @@ Haluatko aloittaa asiakirjan alusta ja hakea kerran vielä?</FindContinue>
     <NumberOfWithRemovedLineBreakX>Rivit, joista rivinvaihto poistettu:: {0}</NumberOfWithRemovedLineBreakX>
     <BeforeMultipleReplace>Ennen useiden korvauksia</BeforeMultipleReplace>
     <NumberOfLinesReplacedX>Rivit, joissa tekstiä korvattu: {0}</NumberOfLinesReplacedX>
-    <NameXAddedToNamesEtcList>Nimi '{0}' lisätty nimet/etc-luetteloon</NameXAddedToNamesEtcList>
-    <NameXNotAddedToNamesEtcList>Nimeä {0} EI lisätty nimet/etc-luetteloon</NameXNotAddedToNamesEtcList>
+    <NameXAddedToNameList>Nimi '{0}' lisätty nimet/etc-luetteloon</NameXAddedToNameList>
+    <NameXNotAddedToNameList>Nimeä {0} EI lisätty nimet/etc-luetteloon</NameXNotAddedToNameList>
     <WordXAddedToUserDic>Sana '{0}' lisätty käyttäjän sanastoon</WordXAddedToUserDic>
     <WordXNotAddedToUserDic>Sanaa '{0}' EI lisätty käyttäjän sanastoon</WordXNotAddedToUserDic>
     <OcrReplacePairXAdded>Tekstintunnistuspari '{0} -&gt; {1}' lisättiin tekstintunnistuspariluetteloon</OcrReplacePairXAdded>
@@ -1778,19 +1778,19 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <Testing123>Testataan 123...Testataan 123...Testataan 123</Testing123>
     <Language>Kieli</Language>
     <NamesIgnoreLists>Nimet/ohituslista (sama kirjainkoko)</NamesIgnoreLists>
-    <AddNameEtc>Lisää nimi</AddNameEtc>
+    <AddName>Lisää nimi</AddName>
     <AddWord>Lisää sana</AddWord>
     <Remove>Poista</Remove>
     <AddPair>Lisää pari</AddPair>
     <UserWordList>Käyttäjän sanalista</UserWordList>
     <OcrFixList>Tekstintunnistusluettelo</OcrFixList>
     <Location>Sijainti</Location>
-    <UseOnlineNamesEtc>Käytä verkon 'NamesEtc.xml' -tiedostoa</UseOnlineNamesEtc>
+    <UseOnlineNames>Käytä verkon 'NamesEtc.xml' -tiedostoa</UseOnlineNames>
     <WordAddedX>Sana lisätty: {0}</WordAddedX>
     <WordAlreadyExists>Sana on jo olemassa!</WordAlreadyExists>
     <WordNotFound>Sanaa ei löydy</WordNotFound>
     <RemoveX>Poistetaanko {0}?</RemoveX>
-    <CannotUpdateNamesEtcOnline>Tiedostoa 'NamesEtc.xml' ei voi päivittää verkosta!</CannotUpdateNamesEtcOnline>
+    <CannotUpdateNamesOnline>Tiedostoa 'NamesEtc.xml' ei voi päivittää verkosta!</CannotUpdateNamesOnline>
     <ProxyServerSettings>Välityspalvelimen asetukset</ProxyServerSettings>
     <ProxyAddress>Palvelimen osoite</ProxyAddress>
     <ProxyAuthentication>Tunnistautumistiedot</ProxyAuthentication>
@@ -1971,7 +1971,7 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <SpellCheckProgress>Oikolue [{0}] - {1}</SpellCheckProgress>
     <EditWholeText>Muokkaa koko tekstiä</EditWholeText>
     <EditWordOnly>Muokkaa vain sanaa</EditWordOnly>
-    <AddXToNamesEtc>Lisää {0} nimi/etc -luetteloon</AddXToNamesEtc>
+    <AddXToNames>Lisää {0} nimi/etc -luetteloon</AddXToNames>
     <AutoFixNames>Korjaa automaattisesti nimet, joissa vain kirjainkoot eroavat</AutoFixNames>
     <CheckOneLetterWords>Kysy varmistus tuntemattomille, yksikirjaisimille sanoille</CheckOneLetterWords>
     <TreatINQuoteAsING>Kohtele 'in'-päätteisiä sanoja kuten 'ing'-päätteisiä (vain englanti)</TreatINQuoteAsING>

@@ -2,7 +2,7 @@
 <Language Name="中文(简体)">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.5.2</Version>
+    <Version>3.5.3</Version>
     <TranslatedBy>翻译: FeiXJ | Leon Cheung | larsenlouis</TranslatedBy>
     <CultureName>zh-Hans</CultureName>
     <HelpFile />
@@ -1012,7 +1012,7 @@ Command line: {1} {2}
         <FindDoubleWords>查找重复词</FindDoubleWords>
         <FindDoubleLines>查找重复行</FindDoubleLines>
         <GetDictionaries>获取字典...</GetDictionaries>
-        <AddToNamesEtcList>添加单词到“名称”或“其它”列表</AddToNamesEtcList>
+        <AddToNameList>添加单词到“名称”或“其它”列表</AddToNameList>
       </SpellCheck>
       <Synchronization>
         <Title>同步(&amp;Y)</Title>
@@ -1359,8 +1359,8 @@ Command line: {1} {2}
     <NumberOfWithRemovedLineBreakX>已删除换行符的行数: {0}</NumberOfWithRemovedLineBreakX>
     <BeforeMultipleReplace>多重替换之前</BeforeMultipleReplace>
     <NumberOfLinesReplacedX>已替换文本的行数: {0}</NumberOfLinesReplacedX>
-    <NameXAddedToNamesEtcList>名称 '{0}' 已被添加到 名称/其它 列表</NameXAddedToNamesEtcList>
-    <NameXNotAddedToNamesEtcList>名称 '{0}' 未被添加到 名称/其它 列表</NameXNotAddedToNamesEtcList>
+    <NameXAddedToNameList>名称 '{0}' 已被添加到 名称/其它 列表</NameXAddedToNameList>
+    <NameXNotAddedToNameList>名称 '{0}' 未被添加到 名称/其它 列表</NameXNotAddedToNameList>
     <WordXAddedToUserDic>单词 '{0}' 已被添加到用户词典</WordXAddedToUserDic>
     <WordXNotAddedToUserDic>名称 '{0}' 未被添加到用户词典</WordXNotAddedToUserDic>
     <OcrReplacePairXAdded>OCR 替换列表对 '{0} -&gt; {1}' 已被添加到 OCR 替换列表</OcrReplacePairXAdded>
@@ -1783,19 +1783,19 @@ Command line: {1} {2}
     <Testing123>正在测试 123...</Testing123>
     <Language>语言</Language>
     <NamesIgnoreLists>名称/忽略列表 (区分大小写)</NamesIgnoreLists>
-    <AddNameEtc>添加名称</AddNameEtc>
+    <AddName>添加名称</AddName>
     <AddWord>添加单词</AddWord>
     <Remove>删除</Remove>
     <AddPair>添加配对</AddPair>
     <UserWordList>用户词汇表</UserWordList>
     <OcrFixList>OCR 修复列表</OcrFixList>
     <Location>位置</Location>
-    <UseOnlineNamesEtc>使用网上的 名称/其它 XML 文件</UseOnlineNamesEtc>
+    <UseOnlineNames>使用网上的 名称/其它 XML 文件</UseOnlineNames>
     <WordAddedX>已添加单词: {0}</WordAddedX>
     <WordAlreadyExists>单词已经存在！</WordAlreadyExists>
     <WordNotFound>单词未找到</WordNotFound>
     <RemoveX>删除 "{0}" 吗？</RemoveX>
-    <CannotUpdateNamesEtcOnline>无法在线更新 NamesEtc.xml！</CannotUpdateNamesEtcOnline>
+    <CannotUpdateNamesOnline>无法在线更新 NamesEtc.xml！</CannotUpdateNamesOnline>
     <ProxyServerSettings>代理服务器设置</ProxyServerSettings>
     <ProxyAddress>代理服务器地址</ProxyAddress>
     <ProxyAuthentication>认证</ProxyAuthentication>
@@ -1977,7 +1977,7 @@ Command line: {1} {2}
     <SpellCheckProgress>拼写检查 [{0}] - {1}</SpellCheckProgress>
     <EditWholeText>编辑整个文本</EditWholeText>
     <EditWordOnly>仅编辑单词</EditWordOnly>
-    <AddXToNamesEtc>添加 '{0}' 到 名称/其它 列表</AddXToNamesEtc>
+    <AddXToNames>添加 '{0}' 到 名称/其它 列表</AddXToNames>
     <AutoFixNames>自动修复仅大小写不同处的名称</AutoFixNames>
     <CheckOneLetterWords>未能识别该字符</CheckOneLetterWords>
     <TreatINQuoteAsING>将词尾为‘in’‘as’‘ing’的词作视作同一个词 (仅对英文有效)</TreatINQuoteAsING>

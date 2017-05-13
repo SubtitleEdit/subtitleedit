@@ -643,7 +643,7 @@ http://soft98.ir
         <FindDoubleWords>جستجوی واژه دو</FindDoubleWords>
         <FindDoubleLines>پیدا کردن خط های دوبرابر</FindDoubleLines>
         <GetDictionaries>دریافت واژه نامه ها</GetDictionaries>
-        <AddToNamesEtcList>اضافه کردن کلمه به نام های/لیست الکتروشوک</AddToNamesEtcList>
+        <AddToNameList>اضافه کردن کلمه به نام های/لیست الکتروشوک</AddToNameList>
       </SpellCheck>
       <Synchronization>
         <Title>همگام سازی</Title>
@@ -944,8 +944,8 @@ http://soft98.ir
     <NumberOfWithRemovedLineBreakX>Number of lines with removed line-break: {0}</NumberOfWithRemovedLineBreakX>
     <BeforeMultipleReplace>قبل از اینکه چند جایگزین</BeforeMultipleReplace>
     <NumberOfLinesReplacedX>Number of lines with text replaced: {0}</NumberOfLinesReplacedX>
-    <NameXAddedToNamesEtcList>نام فایل '{0}' به نام/لیست و غیره اضافه شده است</NameXAddedToNamesEtcList>
-    <NameXNotAddedToNamesEtcList>نام فایل '{0}' بود نه به نام/لیست و غیره اضافه شده</NameXNotAddedToNamesEtcList>
+    <NameXAddedToNameList>نام فایل '{0}' به نام/لیست و غیره اضافه شده است</NameXAddedToNameList>
+    <NameXNotAddedToNameList>نام فایل '{0}' بود نه به نام/لیست و غیره اضافه شده</NameXNotAddedToNameList>
     <XLinesSelected>{0} انتخاب خطوط</XLinesSelected>
     <UnicodeMusicSymbolsAnsiWarning>نام شامل یادداشت موسیقی یونیکد. صرفه جویی در مصرف با استفاده از مؤسسه رمزگذاری فایل خواهد شد این از دست خواهد رفت. ادامه با صرفه جویی؟</UnicodeMusicSymbolsAnsiWarning>
     <NegativeTimeWarning>زیرنویس ها شامل کدهای ساعت هم منفی است. ادامه با صرفه جویی؟</NegativeTimeWarning>
@@ -1154,19 +1154,19 @@ http://soft98.ir
     <Testing123>123 تست...</Testing123>
     <Language>زبان</Language>
     <NamesIgnoreLists>نام/لیست چشم پوشی -حساس به حروف کوچک</NamesIgnoreLists>
-    <AddNameEtc>اضافه کردن نام</AddNameEtc>
+    <AddName>اضافه کردن نام</AddName>
     <AddWord>اضافه کردن کلمه</AddWord>
     <Remove>گزارش</Remove>
     <AddPair>اضافه کردن جفت</AddPair>
     <UserWordList>لیست کاربر کلمه</UserWordList>
     <OcrFixList>او سی آر لیست تعمیر</OcrFixList>
     <Location>محل</Location>
-    <UseOnlineNamesEtc>استفاده از نام فایل و غیره آنلاین کاپرفیلد</UseOnlineNamesEtc>
+    <UseOnlineNames>استفاده از نام فایل و غیره آنلاین کاپرفیلد</UseOnlineNames>
     <WordAddedX>Word added: {0}</WordAddedX>
     <WordAlreadyExists>ورد از قبل وجود دارد!</WordAlreadyExists>
     <WordNotFound>کلمه پیدا نشد</WordNotFound>
     <RemoveX>گزارش {0}؟</RemoveX>
-    <CannotUpdateNamesEtcOnline>آیا می توانم بروز رسانی آنلاین NamesEtc.xml نیست!</CannotUpdateNamesEtcOnline>
+    <CannotUpdateNamesOnline>آیا می توانم بروز رسانی آنلاین NamesEtc.xml نیست!</CannotUpdateNamesOnline>
     <ProxyServerSettings>تنظیمات پروکسی سرور</ProxyServerSettings>
     <ProxyAddress>آدرس پروکسی</ProxyAddress>
     <ProxyAuthentication>تصدیق</ProxyAuthentication>
@@ -1251,7 +1251,7 @@ http://soft98.ir
     <SpellCheckProgress>Spell check [{0}] - {1}</SpellCheckProgress>
     <EditWholeText>ویرایش کل متن</EditWholeText>
     <EditWordOnly>ویرایش واژه تنها</EditWordOnly>
-    <AddXToNamesEtc>اضافه کردن '{0}' به نام/لیست و غیره</AddXToNamesEtc>
+    <AddXToNames>اضافه کردن '{0}' به نام/لیست و غیره</AddXToNames>
     <AutoFixNames>تعمیر خودکار اسامی که در آن فقط پوشش متفاوت</AutoFixNames>
     <ImageText>متن تصویر</ImageText>
     <SpellCheckCompleted>املا چک به پایان رسید.</SpellCheckCompleted>

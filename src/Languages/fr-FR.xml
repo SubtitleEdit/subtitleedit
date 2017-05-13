@@ -2,7 +2,7 @@
 <Language Name="français">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.5.2</Version>
+    <Version>3.5.3</Version>
     <TranslatedBy>Traduction française par JM GBT</TranslatedBy>
     <CultureName>fr-FR</CultureName>
     <HelpFile />
@@ -1013,7 +1013,7 @@ Note: Vérifiez l'espace disque disponible.</WaveFileMalformed>
         <FindDoubleWords>Rechercher mots en doubles</FindDoubleWords>
         <FindDoubleLines>Rechercher lignes en doubles</FindDoubleLines>
         <GetDictionaries>Télécharger dictionnaires...</GetDictionaries>
-        <AddToNamesEtcList>Ajouter à la liste de noms/etc.</AddToNamesEtcList>
+        <AddToNameList>Ajouter à la liste de noms.</AddToNameList>
       </SpellCheck>
       <Synchronization>
         <Title>Synchronisation</Title>
@@ -1362,8 +1362,8 @@ Poursuivre ?</SubtitleAppendPrompt>
     <NumberOfWithRemovedLineBreakX>Nombre de lignes avec des coupures de lignes enlevés: {0}</NumberOfWithRemovedLineBreakX>
     <BeforeMultipleReplace>Avant le remplacement multiple</BeforeMultipleReplace>
     <NumberOfLinesReplacedX>Nombre de lignes avec du texte remplacé: {0}</NumberOfLinesReplacedX>
-    <NameXAddedToNamesEtcList>Le nom '{0}' a été ajouté à la liste de noms/etc.</NameXAddedToNamesEtcList>
-    <NameXNotAddedToNamesEtcList>Le nom '{0}' n'a pas été ajouté à la liste de noms/etc.</NameXNotAddedToNamesEtcList>
+    <NameXAddedToNameList>Le nom '{0}' a été ajouté à la liste de noms/etc.</NameXAddedToNameList>
+    <NameXNotAddedToNameList>Le nom '{0}' n'a pas été ajouté à la liste de noms/etc.</NameXNotAddedToNameList>
     <WordXAddedToUserDic>Le mot '{0}' a été ajouté au dictionnaire utilisateur</WordXAddedToUserDic>
     <WordXNotAddedToUserDic>Le mot '{0}' n'a pas été ajouté au dictionnaire utilisateur</WordXNotAddedToUserDic>
     <OcrReplacePairXAdded>'{0} -&gt; {1}' a été ajouté à la liste corrective OCR</OcrReplacePairXAdded>
@@ -1797,19 +1797,19 @@ peuvent modifier le même fichier de sous-titres (collaboration)</Information>
     <Testing123>Un petit texte 123...</Testing123>
     <Language>Langue</Language>
     <NamesIgnoreLists>Liste noms/bruits (respecter la casse)</NamesIgnoreLists>
-    <AddNameEtc>Ajouter nom</AddNameEtc>
+    <AddName>Ajouter nom</AddName>
     <AddWord>Ajouter mot</AddWord>
     <Remove>Enlever</Remove>
     <AddPair>Ajouter paire</AddPair>
     <UserWordList>Liste utilisateur</UserWordList>
     <OcrFixList>Liste corrective OCR</OcrFixList>
     <Location>Emplacement</Location>
-    <UseOnlineNamesEtc>Utiliser le fichier web "Names_Etc.xml"</UseOnlineNamesEtc>
+    <UseOnlineNames>Utiliser le fichier web "Names_Etc.xml"</UseOnlineNames>
     <WordAddedX>Mot ajouter: {0}</WordAddedX>
     <WordAlreadyExists>Le mot existe déjà !</WordAlreadyExists>
     <WordNotFound>Mot introuvable</WordNotFound>
     <RemoveX>Enlever {0} ?</RemoveX>
-    <CannotUpdateNamesEtcOnline>Impossible de mettre à jour "NamesEtc.xml" en ligne !</CannotUpdateNamesEtcOnline>
+    <CannotUpdateNamesOnline>Impossible de mettre à jour "NamesEtc.xml" en ligne !</CannotUpdateNamesOnline>
     <ProxyServerSettings>Configuration du serveur proxy</ProxyServerSettings>
     <ProxyAddress>Adresse du proxy</ProxyAddress>
     <ProxyAuthentication>Authentification</ProxyAuthentication>
@@ -1993,7 +1993,7 @@ Veuillez réessayer plus tard.</DownloadMpvFailed>
     <SpellCheckProgress>Orthographe [{0}] - {1}</SpellCheckProgress>
     <EditWholeText>Editer texte entier</EditWholeText>
     <EditWordOnly>Editer un mot</EditWordOnly>
-    <AddXToNamesEtc>Ajouter '{0}' à la liste nom/etc</AddXToNamesEtc>
+    <AddXToNames>Ajouter '{0}' à la liste nom/etc</AddXToNames>
     <AutoFixNames>Correction automatique seulement si la casse diffère</AutoFixNames>
     <CheckOneLetterWords>Rechercher les mots inconnus à une lettre</CheckOneLetterWords>
     <TreatINQuoteAsING>Traiter les mots terminant par "in'" en "ing" (anglais uniquement)</TreatINQuoteAsING>

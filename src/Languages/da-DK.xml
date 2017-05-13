@@ -2,7 +2,7 @@
 <Language Name="dansk">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.5.2</Version>
+    <Version>3.5.3</Version>
     <TranslatedBy>Oversat til dansk af Nikse (mailto:nikse.dk@gmail.com)</TranslatedBy>
     <CultureName>da-DK</CultureName>
     <HelpFile />
@@ -26,6 +26,8 @@
     <Duration>Varighed</Duration>
     <CharsPerSec>Tegn/sek</CharsPerSec>
     <WordsPerMin>Ord/min</WordsPerMin>
+    <Actor>Taler</Actor>
+    <Region>Region</Region>
     <NumberSymbol>#</NumberSymbol>
     <Number>Antal</Number>
     <Text>Tekst</Text>
@@ -1010,7 +1012,7 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
         <FindDoubleWords>Find dobbelt ord</FindDoubleWords>
         <FindDoubleLines>Find dobbelte linjer</FindDoubleLines>
         <GetDictionaries>Hent ordbøger...</GetDictionaries>
-        <AddToNamesEtcList>Tilføj ord til navne mv. liste</AddToNamesEtcList>
+        <AddToNameList>Tilføj ord til navne mv. liste</AddToNameList>
       </SpellCheck>
       <Synchronization>
         <Title>Synkronisering</Title>
@@ -1055,6 +1057,7 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
         <RemoveTextForHi>Fjern tekst for hørehæmmede</RemoveTextForHi>
         <VisualSync>Visuel synkroniser</VisualSync>
         <SpellCheck>Stavekontrol</SpellCheck>
+        <NetflixQualityCheck>Netflix kvalitetstjek</NetflixQualityCheck>
         <Settings>Indstillinger</Settings>
         <Help>Hjælp</Help>
         <ShowHideWaveform>Vis/skjul kurveform</ShowHideWaveform>
@@ -1064,8 +1067,10 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
         <SizeAllColumnsToFit>Auto-tilpas kolonner</SizeAllColumnsToFit>
         <AdvancedSubStationAlphaSetStyle>Advanced Sub Station Alpha - vælg stilart</AdvancedSubStationAlphaSetStyle>
         <SubStationAlphaSetStyle>(Advanced) Sub Station Alpha - vælg stilart</SubStationAlphaSetStyle>
+        <SetActor>Vælg taler</SetActor>
         <SubStationAlphaStyles>Sub Station Alpha stilarter...</SubStationAlphaStyles>
         <AdvancedSubStationAlphaStyles>Advanced Sub Station Alpha stilarter...</AdvancedSubStationAlphaStyles>
+        <TimedTextSetRegion>Timed Text - Sæt region</TimedTextSetRegion>
         <TimedTextSetStyle>Timed Text - sæt style</TimedTextSetStyle>
         <TimedTextStyles>Timed Text styles...</TimedTextStyles>
         <TimedTextSetLanguage>Timed Text - vælg sprog</TimedTextSetLanguage>
@@ -1115,6 +1120,8 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
         <SaveSelectedLines>Gem valgte linjer som...</SaveSelectedLines>
         <WebVTTSetNewVoice>Angiv ny stemme...</WebVTTSetNewVoice>
         <WebVTTRemoveVoices>Fjern stemmer</WebVTTRemoveVoices>
+        <NewActor>Ny taler</NewActor>
+        <RemoveActors>Fjern talere</RemoveActors>
       </ContextMenu>
     </Menu>
     <Controls>
@@ -1359,8 +1366,8 @@ Fortsæt?</SubtitleAppendPrompt>
     <NumberOfWithRemovedLineBreakX>Antallet af linjer med fjernet linjeskift: {0}</NumberOfWithRemovedLineBreakX>
     <BeforeMultipleReplace>Før multi søg og erstat</BeforeMultipleReplace>
     <NumberOfLinesReplacedX>Antal linjer hvor tekst er erstattet: {0}</NumberOfLinesReplacedX>
-    <NameXAddedToNamesEtcList>Navnet '{0}' blev tilføjet til navne mv, liste</NameXAddedToNamesEtcList>
-    <NameXNotAddedToNamesEtcList>Navnet '{0}' blev ikke tilføjet til navne mv. liste</NameXNotAddedToNamesEtcList>
+    <NameXAddedToNameList>Navnet '{0}' blev tilføjet til navne mv, liste</NameXAddedToNameList>
+    <NameXNotAddedToNameList>Navnet '{0}' blev ikke tilføjet til navne mv. liste</NameXNotAddedToNameList>
     <WordXAddedToUserDic>Ordet '{0}' blev tilføjet til brugerordbog</WordXAddedToUserDic>
     <WordXNotAddedToUserDic>Ordet '{0}' blev IKKE tilføjet til brugerordbogen</WordXNotAddedToUserDic>
     <OcrReplacePairXAdded>'{0} -&gt; {1}' blev tilføjet til OCR erstat listen</OcrReplacePairXAdded>
@@ -1448,6 +1455,7 @@ Hvis du har redigeret denne fil med Subtitle Edit du måske finde en backup via 
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Vælg undertekst fra Matroska fil</Title>
+    <TitleMp4>Vælg undertekster fra MP4-fil</TitleMp4>
     <PleaseChoose>Mere end en undertekst fundet - så vælg</PleaseChoose>
     <TrackXLanguageYTypeZ>Spor {0} - sprog: {1} - type: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
@@ -1678,6 +1686,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <Replace>Erstat</Replace>
     <VisualSync>Visuel synk</VisualSync>
     <SpellCheck>Stavekontrol</SpellCheck>
+    <NetflixQualityCheck>Netflix kvalitetstjek</NetflixQualityCheck>
     <SettingsName>Indstillinger</SettingsName>
     <Help>Hjælp</Help>
     <ShowFrameRate>Vis frame rate i værktøjslinjen</ShowFrameRate>
@@ -1695,6 +1704,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <SubtitleFont>undertekst skrifttype</SubtitleFont>
     <SubtitleFontSize>undertekst skriftstørrelse</SubtitleFontSize>
     <SubtitleBold>Fed</SubtitleBold>
+    <VideoAutoOpen>Auto-åbn videofil ved åbning af undertekst</VideoAutoOpen>
     <SubtitleCenter>Centrer</SubtitleCenter>
     <SubtitleFontColor>Undertekst skriftfarve</SubtitleFontColor>
     <SubtitleBackgroundColor>Undertekst baggrundsfarve</SubtitleBackgroundColor>
@@ -1784,19 +1794,19 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <Testing123>Dette er en test 123...</Testing123>
     <Language>Sprog</Language>
     <NamesIgnoreLists>Navne/ignorer list</NamesIgnoreLists>
-    <AddNameEtc>Tilføj navn</AddNameEtc>
+    <AddName>Tilføj navn</AddName>
     <AddWord>Tilføj ord</AddWord>
     <Remove>Fjern</Remove>
     <AddPair>Tilføj par</AddPair>
     <UserWordList>Bruger ordliste</UserWordList>
     <OcrFixList>OCR fix liste</OcrFixList>
     <Location>Placering</Location>
-    <UseOnlineNamesEtc>Brug online navne etc xml-fil</UseOnlineNamesEtc>
+    <UseOnlineNames>Brug online navne etc xml-fil</UseOnlineNames>
     <WordAddedX>Ordet tilføjet: {0}</WordAddedX>
     <WordAlreadyExists>Ordet eksisterer allerede!</WordAlreadyExists>
     <WordNotFound>Ordet blev ikke fundet</WordNotFound>
     <RemoveX>Fjern {0}?</RemoveX>
-    <CannotUpdateNamesEtcOnline>Kan ikke opdatere NamesEtc.xml online!</CannotUpdateNamesEtcOnline>
+    <CannotUpdateNamesOnline>Kan ikke opdatere NamesEtc.xml online!</CannotUpdateNamesOnline>
     <ProxyServerSettings>Proxyserver indstillinger</ProxyServerSettings>
     <ProxyAddress>Proxy-adresse</ProxyAddress>
     <ProxyAuthentication>Autentifikation</ProxyAuthentication>
@@ -1865,6 +1875,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <WaveformPlayNewSelectionEnd>Afspil slutningen af markering</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Spil første valgte undertekst</WaveformPlayFirstSelectedSubtitle>
     <WaveformFocusListView>Fokuser listevisning</WaveformFocusListView>
+    <WaveformGoToNextSubtitle>Gå til næste undertekst (fra video position)</WaveformGoToNextSubtitle>
     <WaveformGoToNextSceneChange>Gå til næste sceneskift</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>Toggle sceneskift</WaveformToggleSceneChange>
     <GoBack1Frame>En frame tilbage</GoBack1Frame>
@@ -1921,6 +1932,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <MainTextBoxUnbreak>Fjern linjeskift</MainTextBoxUnbreak>
     <MainFileSaveAll>Gem alle</MainFileSaveAll>
     <Miscellaneous>Diverse</Miscellaneous>
+    <CpsIncludesSpace>Tegn/sek (CPS) inkluderer mellemrum</CpsIncludesSpace>
     <UseDoNotBreakAfterList>Benyt skift-ikke-efter-liste (for auto-ombrydning)</UseDoNotBreakAfterList>
     <MicrosoftBingTranslator>Microsoft Bing Translator</MicrosoftBingTranslator>
     <HowToSignUp>Sådan tilmelder du dig</HowToSignUp>
@@ -1978,7 +1990,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <SpellCheckProgress>Stavekontrol [{0}] - {1}</SpellCheckProgress>
     <EditWholeText>Rediger hele teksten</EditWholeText>
     <EditWordOnly>Rediger kun ord</EditWordOnly>
-    <AddXToNamesEtc>Tilføj '{0}' til navne mv. liste</AddXToNamesEtc>
+    <AddXToNames>Tilføj '{0}' til navne mv. liste</AddXToNames>
     <AutoFixNames>Auto fix navne, hvor kun små/store bogstaver udgør forskellen</AutoFixNames>
     <CheckOneLetterWords>Spørg ved enkeltbogstaver</CheckOneLetterWords>
     <TreatINQuoteAsING>Accepter ord der slutter med i' som ing (kun på engelsk)</TreatINQuoteAsING>
@@ -1987,6 +1999,13 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <SpellCheckAborted>Stavekontrol afbrudt</SpellCheckAborted>
     <UndoX>Fortryd: {0}</UndoX>
   </SpellCheck>
+  <NetflixQualityCheck>
+    <GlyphCheckReport>Ugyldigt tegn {0} findes i kolonne {1}</GlyphCheckReport>
+    <WhiteSpaceCheckReport>Ugyldigt mellemrum fundet ved kolonne {0}.</WhiteSpaceCheckReport>
+    <ReportPrompt>Se hele rapporten her: {0}.</ReportPrompt>
+    <FoundXIssues>Netflix kvalitetstjek fundet {0} problemstillinger.</FoundXIssues>
+    <CheckOk>Netflix kvalitetstjek OK :)</CheckOk>
+  </NetflixQualityCheck>
   <Split>
     <Title>Split</Title>
     <SplitOptions>Split - indstillinger</SplitOptions>
@@ -2044,6 +2063,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <LengthInFormatXinCharactersY>Antal tegn som {0}: {1: ####, ##0}</LengthInFormatXinCharactersY>
     <NumberOfCharactersInTextOnly>Antal tegn (kun in tekst): {0:#,###,##0}</NumberOfCharactersInTextOnly>
     <TotalCharsPerSecond>Total antal karakterer per sekund: {0:0.0} sekunder</TotalCharsPerSecond>
+    <TotalWords>Total antal ord: {0}</TotalWords>
     <NumberOfItalicTags>Antal kursiv tags: {0}</NumberOfItalicTags>
     <NumberOfBoldTags>Antal fed tags: {0}</NumberOfBoldTags>
     <NumberOfUnderlineTags>Antal understreg tags: {0}</NumberOfUnderlineTags>
@@ -2301,6 +2321,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <RemoveSceneChange>Fjern sceneskift</RemoveSceneChange>
     <GuessTimeCodes>Gæt tidskoder...</GuessTimeCodes>
     <SeekSilence>Søg tavshed...</SeekSilence>
+    <InsertSubtitleHere>Indsæt undertekst her...</InsertSubtitleHere>
     <CharsSecX>Tegn/sec: {0:0.00}</CharsSecX>
     <WordsMinX>Ord/min: {0:0.00}</WordsMinX>
   </Waveform>

@@ -1,10 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Language Name="Русский">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.5.2</Version>
+    <Version>3.5.3</Version>
     <TranslatedBy>Перевод на русский: Leserg (mailto:leserg@ua.fm)
-Дополнения и последующие доработки перевода: Elheym (http://forum.hqclub.net/) (https://hdclub.org/)</TranslatedBy>
+Послед. дополнения перевода: Elheym (http://forum.hqclub.net/) (https://hdclub.org/)</TranslatedBy>
     <CultureName>ru-RU</CultureName>
     <HelpFile>http://www.nikse.dk/Content/SubtitleEdit/Help/RU/</HelpFile>
     <Ok>OK</Ok>
@@ -27,6 +27,8 @@
     <Duration>Длина</Duration>
     <CharsPerSec>Симв./сек.</CharsPerSec>
     <WordsPerMin>Слов/мин.</WordsPerMin>
+    <Actor>Актер</Actor>
+    <Region>Регион</Region>
     <NumberSymbol>№</NumberSymbol>
     <Number>Номер</Number>
     <Text>Текст</Text>
@@ -1020,7 +1022,7 @@ https://github.com/SubtitleEdit/subtitleedit
         <FindDoubleWords>Найти дубликаты слов</FindDoubleWords>
         <FindDoubleLines>Найти дубликаты строк</FindDoubleLines>
         <GetDictionaries>Получение словарей...</GetDictionaries>
-        <AddToNamesEtcList>Добавить слово в список имен</AddToNamesEtcList>
+        <AddToNameList>Добавить слово в список имен</AddToNameList>
       </SpellCheck>
       <Synchronization>
         <Title>Сихронизация</Title>
@@ -1075,8 +1077,10 @@ https://github.com/SubtitleEdit/subtitleedit
         <SizeAllColumnsToFit>Подогнать по длине</SizeAllColumnsToFit>
         <AdvancedSubStationAlphaSetStyle>Настройка Sub Station Alpha - установка стиля</AdvancedSubStationAlphaSetStyle>
         <SubStationAlphaSetStyle>Sub Station Alpha - установка стиля</SubStationAlphaSetStyle>
+        <SetActor>Указать актера</SetActor>
         <SubStationAlphaStyles>Стили Sub Station Alpha...</SubStationAlphaStyles>
         <AdvancedSubStationAlphaStyles>Настройка стилей Sub Station Alpha...</AdvancedSubStationAlphaStyles>
+        <TimedTextSetRegion>Временной текст - установка региона</TimedTextSetRegion>
         <TimedTextSetStyle>Синхронный текст - установка стиля</TimedTextSetStyle>
         <TimedTextStyles>Стили синхронного текста...</TimedTextStyles>
         <TimedTextSetLanguage>Синхронный текст - установка языка</TimedTextSetLanguage>
@@ -1126,6 +1130,8 @@ https://github.com/SubtitleEdit/subtitleedit
         <SaveSelectedLines>Сохранить выделенные строки как...</SaveSelectedLines>
         <WebVTTSetNewVoice>Задать новый голос...</WebVTTSetNewVoice>
         <WebVTTRemoveVoices>Удалить голоса</WebVTTRemoveVoices>
+        <NewActor>Новый актер...</NewActor>
+        <RemoveActors>Удалить актеров</RemoveActors>
       </ContextMenu>
     </Menu>
     <Controls>
@@ -1373,8 +1379,8 @@ https://github.com/SubtitleEdit/subtitleedit
     <NumberOfWithRemovedLineBreakX>Число строк с удаленными разделителями: {0}</NumberOfWithRemovedLineBreakX>
     <BeforeMultipleReplace>Перед множественной заменой</BeforeMultipleReplace>
     <NumberOfLinesReplacedX>Число строк с замененным текстом: {0}</NumberOfLinesReplacedX>
-    <NameXAddedToNamesEtcList>Имя "{0}" было добавлено в список имен</NameXAddedToNamesEtcList>
-    <NameXNotAddedToNamesEtcList>Имя "{0}" НЕ БЫЛО добавлено в список имен</NameXNotAddedToNamesEtcList>
+    <NameXAddedToNameList>Имя "{0}" было добавлено в список имен</NameXAddedToNameList>
+    <NameXNotAddedToNameList>Имя "{0}" НЕ БЫЛО добавлено в список имен</NameXNotAddedToNameList>
     <WordXAddedToUserDic>Слово '{0}' было добавлено в словарь пользователя</WordXAddedToUserDic>
     <WordXNotAddedToUserDic>Имя '{0}' НЕ было добавлено в словарь пользователя</WordXNotAddedToUserDic>
     <OcrReplacePairXAdded>OCR пара '{0} -&gt; {1}' была добавлена в список замен</OcrReplacePairXAdded>
@@ -1549,7 +1555,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <Rules>Экспорт правил</Rules>
     <MoveToTop>Поднять на самый верх</MoveToTop>
     <MoveToBottom>Опустить в самый низ</MoveToBottom>
-    <MoveSelectedRulesToGroup>Применить выбранные правила к группе</MoveSelectedRulesToGroup>
+    <MoveSelectedRulesToGroup>Переместить выбранное правило в группу</MoveSelectedRulesToGroup>
     <Groups>Группы</Groups>
     <RulesForGroupX>Правила для группы "{0}"</RulesForGroupX>
     <GroupName>Название группы</GroupName>
@@ -1719,6 +1725,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <SubtitleFont>Шрифт субтитров</SubtitleFont>
     <SubtitleFontSize>Размер шрифта субтитров</SubtitleFontSize>
     <SubtitleBold>Полужирный</SubtitleBold>
+    <VideoAutoOpen>Автоматически открывать видеофайл при открытии субтитров</VideoAutoOpen>
     <SubtitleCenter>По центру</SubtitleCenter>
     <SubtitleFontColor>Цвет шрифта субтитров</SubtitleFontColor>
     <SubtitleBackgroundColor>Цвет фона субтитров</SubtitleBackgroundColor>
@@ -1808,19 +1815,19 @@ https://github.com/SubtitleEdit/subtitleedit
     <Testing123>Программы на русском: WWW.WYLEK.RU</Testing123>
     <Language>Язык:</Language>
     <NamesIgnoreLists>Список имен (с учетом регистра)</NamesIgnoreLists>
-    <AddNameEtc>Добавить имя</AddNameEtc>
+    <AddName>Добавить имя</AddName>
     <AddWord>Добавить слово</AddWord>
     <Remove>Удалить</Remove>
     <AddPair>Добавить пару</AddPair>
     <UserWordList>Пользовательский список слов</UserWordList>
     <OcrFixList>Список исправлений OCR</OcrFixList>
     <Location>Размещение</Location>
-    <UseOnlineNamesEtc>Использовать онлайн список имен (xml файл)</UseOnlineNamesEtc>
+    <UseOnlineNames>Использовать онлайн список имен (xml файл)</UseOnlineNames>
     <WordAddedX>Добавлено слово: {0}</WordAddedX>
     <WordAlreadyExists>Слово уже есть в списке!</WordAlreadyExists>
     <WordNotFound>Слово не найдено</WordNotFound>
     <RemoveX>Удалить {0}?</RemoveX>
-    <CannotUpdateNamesEtcOnline>Не удается выполнить обновление NamesEtc.xml!</CannotUpdateNamesEtcOnline>
+    <CannotUpdateNamesOnline>Не удается выполнить обновление NamesEtc.xml!</CannotUpdateNamesOnline>
     <ProxyServerSettings>Настройки прокси сервера</ProxyServerSettings>
     <ProxyAddress>Адрес сервера:</ProxyAddress>
     <ProxyAuthentication>Аутентификация</ProxyAuthentication>
@@ -1843,7 +1850,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <FixCommonOcrErrorsUseHardcodedRules>Исправить ошибки OCR - применить жесткие правила</FixCommonOcrErrorsUseHardcodedRules>
     <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Испр. корот. время отображ. (разреш. измен. начал. времени)</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
     <FixCommonErrorsSkipStepOne>Пропустить 1-й шаг (выбрать правила исправления)</FixCommonErrorsSkipStepOne>
-    <Shortcuts>Клавишные команды</Shortcuts>
+    <Shortcuts>Горячие клавиши</Shortcuts>
     <Shortcut>Команда:</Shortcut>
     <Control>Ctrl</Control>
     <Alt>Alt</Alt>
@@ -1890,6 +1897,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <WaveformPlayNewSelectionEnd>Воспроизвести конец выделения</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Проиграть первый выделенный субтитр</WaveformPlayFirstSelectedSubtitle>
     <WaveformFocusListView>Фокус на списке</WaveformFocusListView>
+    <WaveformGoToNextSubtitle>Перейти к следующему субтитру (от позиции видео)</WaveformGoToNextSubtitle>
     <WaveformGoToNextSceneChange>Перейти к следующему изменению сцены</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>Переключить изменение сцен</WaveformToggleSceneChange>
     <GoBack1Frame>1 кадр назад</GoBack1Frame>
@@ -1946,6 +1954,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <MainTextBoxUnbreak>Отменить перенос текста</MainTextBoxUnbreak>
     <MainFileSaveAll>Сохранить все</MainFileSaveAll>
     <Miscellaneous>Разное</Miscellaneous>
+    <CpsIncludesSpace>Символов/сек (CPS) включая пробелы</CpsIncludesSpace>
     <UseDoNotBreakAfterList>Применить список исключений (для автопереноса)</UseDoNotBreakAfterList>
     <MicrosoftBingTranslator>Переводчик Microsoft Bing</MicrosoftBingTranslator>
     <HowToSignUp>Как зарегистрироваться</HowToSignUp>
@@ -2003,7 +2012,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <SpellCheckProgress>Проверить орфографию [{0}] - {1}</SpellCheckProgress>
     <EditWholeText>Правка всего текста</EditWholeText>
     <EditWordOnly>Правка только слова</EditWordOnly>
-    <AddXToNamesEtc>Добавить "{0}" в список имен</AddXToNamesEtc>
+    <AddXToNames>Добавить "{0}" в список имен</AddXToNames>
     <AutoFixNames>Исправить, если отличается только регистром</AutoFixNames>
     <CheckOneLetterWords>Запрос при неизвестных словах</CheckOneLetterWords>
     <TreatINQuoteAsING>Менять окончание слов " in' " на " ing " (только для English)</TreatINQuoteAsING>
@@ -2013,14 +2022,11 @@ https://github.com/SubtitleEdit/subtitleedit
     <UndoX>Отменить: {0}</UndoX>
   </SpellCheck>
   <NetflixQualityCheck>
-    <GlyphCheckSuccessfull>Проверка символов прошла успешно.</GlyphCheckSuccessfull>
-    <GlyphCheckFailed>Не удалось проверить символы.</GlyphCheckFailed>
     <GlyphCheckReport>Недопустимых символов {0} найдено в столбце {1}</GlyphCheckReport>
-    <WhiteSpaceCheckSuccessfull>Проверка пробелов прошла успешно.</WhiteSpaceCheckSuccessfull>
-    <WhiteSpaceCheckFailed>Не удалось проверить пробелы.</WhiteSpaceCheckFailed>
     <WhiteSpaceCheckReport>Недопустимых пробелов найдено в столбце {0}.</WhiteSpaceCheckReport>
     <ReportPrompt>См. Полный отчет здесь: {0}.</ReportPrompt>
-    <SavingError>Отчёт не может быть сохранён.</SavingError>
+    <FoundXIssues>Проверка качества Netflix нашла {0} проблем.</FoundXIssues>
+    <CheckOk>Проверка качества Netflix OK :)</CheckOk>
   </NetflixQualityCheck>
   <Split>
     <Title>Разделить</Title>
@@ -2342,6 +2348,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <RemoveSceneChange>Удалить изменение сцены</RemoveSceneChange>
     <GuessTimeCodes>Распознать таймкоды...</GuessTimeCodes>
     <SeekSilence>Поиск пауз...</SeekSilence>
+    <InsertSubtitleHere>Вставить субтитр здесь...</InsertSubtitleHere>
     <CharsSecX>Симв./сек.: {0:0.00}</CharsSecX>
     <WordsMinX>Слов/мин.: {0:0.00}</WordsMinX>
   </Waveform>

@@ -2,7 +2,7 @@
 <Language Name="中文(繁體)">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.5.2</Version>
+    <Version>3.5.3</Version>
     <TranslatedBy>翻譯: BAWAN【增補：風逸蘭】</TranslatedBy>
     <CultureName>zh-TW</CultureName>
     <HelpFile />
@@ -931,7 +931,7 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
         <FindDoubleWords>尋找雙字</FindDoubleWords>
         <FindDoubleLines>尋找雙行</FindDoubleLines>
         <GetDictionaries>取得字典...</GetDictionaries>
-        <AddToNamesEtcList>加入單字到 名稱/其它 清單</AddToNamesEtcList>
+        <AddToNameList>加入單字到 名稱/其它 清單</AddToNameList>
       </SpellCheck>
       <Synchronization>
         <Title>同步</Title>
@@ -1272,8 +1272,8 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
     <NumberOfWithRemovedLineBreakX>已移除換行字元的行數: {0}</NumberOfWithRemovedLineBreakX>
     <BeforeMultipleReplace>多重取代之前</BeforeMultipleReplace>
     <NumberOfLinesReplacedX>已取代文字的行數: {0}</NumberOfLinesReplacedX>
-    <NameXAddedToNamesEtcList>名稱 '{0}' 已被加入到 名稱/其它 清單</NameXAddedToNamesEtcList>
-    <NameXNotAddedToNamesEtcList>名稱 '{0}' 未被加入到 名稱/其它 清單</NameXNotAddedToNamesEtcList>
+    <NameXAddedToNameList>名稱 '{0}' 已被加入到 名稱/其它 清單</NameXAddedToNameList>
+    <NameXNotAddedToNameList>名稱 '{0}' 未被加入到 名稱/其它 清單</NameXNotAddedToNameList>
     <WordXAddedToUserDic>單字 '{0}' 已被加入到使用者字典</WordXAddedToUserDic>
     <WordXNotAddedToUserDic>名稱 '{0}' 未被加入到使用者字典</WordXNotAddedToUserDic>
     <OcrReplacePairXAdded>OCR 取代清單對 '{0} -&gt; {1}' 已被加入到 OCR 取代清單</OcrReplacePairXAdded>
@@ -1657,19 +1657,19 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
     <Testing123>正在測試 123...</Testing123>
     <Language>語言</Language>
     <NamesIgnoreLists>名稱/忽略 清單 (區分大小寫)</NamesIgnoreLists>
-    <AddNameEtc>加入名稱</AddNameEtc>
+    <AddName>加入名稱</AddName>
     <AddWord>加入單字</AddWord>
     <Remove>移除</Remove>
     <AddPair>加入一對</AddPair>
     <UserWordList>使用者字彙表</UserWordList>
     <OcrFixList>OCR 修復清單</OcrFixList>
     <Location>位置</Location>
-    <UseOnlineNamesEtc>使用網上的 名稱/其它 XML 檔案</UseOnlineNamesEtc>
+    <UseOnlineNames>使用網上的 名稱/其它 XML 檔案</UseOnlineNames>
     <WordAddedX>已加入單字: {0}</WordAddedX>
     <WordAlreadyExists>單字已經存在！</WordAlreadyExists>
     <WordNotFound>找不到單字</WordNotFound>
     <RemoveX>是否移除 "{0}"？</RemoveX>
-    <CannotUpdateNamesEtcOnline>無法線上更新 NamesEtc.xml！</CannotUpdateNamesEtcOnline>
+    <CannotUpdateNamesOnline>無法線上更新 NamesEtc.xml！</CannotUpdateNamesOnline>
     <ProxyServerSettings>代理伺服器設定</ProxyServerSettings>
     <ProxyAddress>代理伺服器位址</ProxyAddress>
     <ProxyAuthentication>身份驗證</ProxyAuthentication>
@@ -1812,7 +1812,7 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
     <SpellCheckProgress>拼寫檢查 [{0}] - {1}</SpellCheckProgress>
     <EditWholeText>編輯整個文字</EditWholeText>
     <EditWordOnly>僅編輯單字</EditWordOnly>
-    <AddXToNamesEtc>加入 '{0}' 到 名稱/其它 清單</AddXToNamesEtc>
+    <AddXToNames>加入 '{0}' 到 名稱/其它 清單</AddXToNames>
     <AutoFixNames>自動修復僅大小寫相異的名稱</AutoFixNames>
     <CheckOneLetterWords>提示未知單子母單字</CheckOneLetterWords>
     <TreatINQuoteAsING>將字尾 " in' " 視為 " ing " (僅用於英語)</TreatINQuoteAsING>

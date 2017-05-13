@@ -2,7 +2,7 @@
 <Language Name="Čeština">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.5.2</Version>
+    <Version>3.5.3</Version>
     <TranslatedBy>Překlad do češtiny: Trottel</TranslatedBy>
     <CultureName>cs-CZ</CultureName>
     <HelpFile />
@@ -996,7 +996,7 @@ Poznámka: Zkontrolujte volné místo na disku.</WaveFileMalformed>
         <FindDoubleWords>Najít opakování slov</FindDoubleWords>
         <FindDoubleLines>Najít opakování řádků</FindDoubleLines>
         <GetDictionaries>Získat slovníky...</GetDictionaries>
-        <AddToNamesEtcList>Přidat slovo do seznamu jmen</AddToNamesEtcList>
+        <AddToNameList>Přidat slovo do seznamu jmen</AddToNameList>
       </SpellCheck>
       <Synchronization>
         <Title>Synchronizace</Title>
@@ -1344,8 +1344,8 @@ Pokračovat?</SubtitleAppendPrompt>
     <NumberOfWithRemovedLineBreakX>Počet řádků s odebraným zalomením: {0}</NumberOfWithRemovedLineBreakX>
     <BeforeMultipleReplace>Před hromadným nahrazením</BeforeMultipleReplace>
     <NumberOfLinesReplacedX>Počet řádků s nahrazeným textem: {0}</NumberOfLinesReplacedX>
-    <NameXAddedToNamesEtcList>Jméno '{0}' bylo přidáno do seznamu jmen</NameXAddedToNamesEtcList>
-    <NameXNotAddedToNamesEtcList>Jméno '{0}' NEBYLO přidáno do seznamu jmen</NameXNotAddedToNamesEtcList>
+    <NameXAddedToNameList>Jméno '{0}' bylo přidáno do seznamu jmen</NameXAddedToNameList>
+    <NameXNotAddedToNameList>Jméno '{0}' NEBYLO přidáno do seznamu jmen</NameXNotAddedToNameList>
     <WordXAddedToUserDic>Slovo '{0}' bylo přidáno do vlastního slovníku</WordXAddedToUserDic>
     <WordXNotAddedToUserDic>Slovo '{0}' NEBYLO přidáno do vlastního slovníku</WordXNotAddedToUserDic>
     <OcrReplacePairXAdded>Dvojice seznamu náhrad OCR '{0} -&gt; {1}' byla přidána do seznamu náhrad OCR</OcrReplacePairXAdded>
@@ -1750,19 +1750,19 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <Testing123>Zkouška 123...</Testing123>
     <Language>Jazyk</Language>
     <NamesIgnoreLists>Seznam jmen (velikost písmen)</NamesIgnoreLists>
-    <AddNameEtc>Přidat jméno</AddNameEtc>
+    <AddName>Přidat jméno</AddName>
     <AddWord>Přidat slovo</AddWord>
     <Remove>Odebrat</Remove>
     <AddPair>Přidat dvojici</AddPair>
     <UserWordList>Seznam vlastních slov</UserWordList>
     <OcrFixList>Seznam oprav OCR</OcrFixList>
     <Location>Umístění</Location>
-    <UseOnlineNamesEtc>Použít online xml soubor jmen</UseOnlineNamesEtc>
+    <UseOnlineNames>Použít online xml soubor jmen</UseOnlineNames>
     <WordAddedX>Přidáno slovo: {0}</WordAddedX>
     <WordAlreadyExists>Slovo již existuje!</WordAlreadyExists>
     <WordNotFound>Slovo nenalezeno</WordNotFound>
     <RemoveX>Odebrat {0}?</RemoveX>
-    <CannotUpdateNamesEtcOnline>Nelze aktualizovat NamesEtc.xml online!</CannotUpdateNamesEtcOnline>
+    <CannotUpdateNamesOnline>Nelze aktualizovat NamesEtc.xml online!</CannotUpdateNamesOnline>
     <ProxyServerSettings>Nastavení proxy serveru</ProxyServerSettings>
     <ProxyAddress>Adresa proxy</ProxyAddress>
     <ProxyAuthentication>Ověření</ProxyAuthentication>
@@ -1918,7 +1918,7 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <SpellCheckProgress>Kontrola pravopisu [{0}] - {1}</SpellCheckProgress>
     <EditWholeText>Upravit celý text</EditWholeText>
     <EditWordOnly>Upravit pouze slovo</EditWordOnly>
-    <AddXToNamesEtc>Přidat '{0}' na seznam jmen</AddXToNamesEtc>
+    <AddXToNames>Přidat '{0}' na seznam jmen</AddXToNames>
     <AutoFixNames>Automaticky opravit jména pokud se liší pouze velikost písmen</AutoFixNames>
     <CheckOneLetterWords>Ptát se na neznámá jednopísmenná slova</CheckOneLetterWords>
     <TreatINQuoteAsING>Zacházet se slovy končícími na „ in' “ jako s „ ing “ (pouze angličtina)</TreatINQuoteAsING>

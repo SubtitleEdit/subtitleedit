@@ -111,7 +111,7 @@ namespace Nikse.SubtitleEdit.Core
             return id;
         }
 
-        private void ReplaceNames1Remove(List<string> namesEtc, List<string> replaceIds, List<string> replaceNames, List<string> originalNames)
+        private void ReplaceNames1Remove(List<string> nameList, List<string> replaceIds, List<string> replaceNames, List<string> originalNames)
         {
             if (Post.StartsWith('.'))
             {
@@ -121,7 +121,7 @@ namespace Nikse.SubtitleEdit.Core
 
             string lower = StrippedText.ToLower();
             int idName = 0;
-            foreach (string name in namesEtc)
+            foreach (string name in nameList)
             {
                 int start = lower.IndexOf(name, StringComparison.OrdinalIgnoreCase);
                 while (start >= 0 && start < lower.Length)
@@ -172,12 +172,12 @@ namespace Nikse.SubtitleEdit.Core
         }
 
         private static readonly char[] ExpectedCharsArray = { '.', '!', '?', ':', ';', ')', ']', '}', '(', '[', '{' };
-        public void FixCasing(List<string> namesEtc, bool changeNameCases, bool makeUppercaseAfterBreak, bool checkLastLine, string lastLine)
+        public void FixCasing(List<string> nameList, bool changeNameCases, bool makeUppercaseAfterBreak, bool checkLastLine, string lastLine)
         {
             var replaceIds = new List<string>();
             var replaceNames = new List<string>();
             var originalNames = new List<string>();
-            ReplaceNames1Remove(namesEtc, replaceIds, replaceNames, originalNames);
+            ReplaceNames1Remove(nameList, replaceIds, replaceNames, originalNames);
 
             if (checkLastLine)
             {
@@ -203,7 +203,11 @@ namespace Nikse.SubtitleEdit.Core
 
                 if (startWithUppercase && StrippedText.Length > 0 && !Pre.Contains("..."))
                 {
-                    StrippedText = char.ToUpper(StrippedText[0]) + StrippedText.Substring(1);
+                    if (!StrippedText.StartsWith("www.", StringComparison.OrdinalIgnoreCase) &&
+                        !StrippedText.StartsWith("http", StringComparison.OrdinalIgnoreCase))
+                    {
+                        StrippedText = char.ToUpper(StrippedText[0]) + StrippedText.Substring(1);
+                    }
                 }
             }
 
@@ -262,7 +266,11 @@ namespace Nikse.SubtitleEdit.Core
                             }
                             else
                             {
-                                lastWasBreak = true;
+                                idx = sb.ToString().LastIndexOf(' ');
+                                if (idx >= 0 && idx < sb.Length - 2 && !IsInMiddleOfUrl(i - idx, StrippedText.Substring(idx + 1)))
+                                {
+                                    lastWasBreak = true;
+                                }
                             }
                         }
                     }
@@ -271,6 +279,13 @@ namespace Nikse.SubtitleEdit.Core
             }
 
             ReplaceNames2Fix(replaceIds, changeNameCases ? replaceNames : originalNames);
+        }
+
+        private bool IsInMiddleOfUrl(int idx, string s)
+        {
+            if (idx < s.Length - 1 && (char.IsWhiteSpace(s[idx]) || char.IsPunctuation(s[idx])))
+                return false;
+            return s.StartsWith("www.", StringComparison.OrdinalIgnoreCase) || s.StartsWith("http", StringComparison.OrdinalIgnoreCase);
         }
 
         public string CombineWithPrePost(string text)

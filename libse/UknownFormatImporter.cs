@@ -431,7 +431,7 @@ namespace Nikse.SubtitleEdit.Core
                     foreach (Paragraph paragraph in subtitle.Paragraphs)
                     {
                         string text = paragraph.Text.Trim();
-                        if (text.StartsWith(prefix))
+                        if (text.StartsWith(prefix, StringComparison.Ordinal))
                             paragraph.Text = text.Remove(0, prefix.Length);
                     }
                 }

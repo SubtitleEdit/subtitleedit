@@ -115,5 +115,29 @@ namespace Test.Logic
             Assert.AreEqual(st.StrippedText, "Hi");
         }
 
+        [TestMethod]
+        public void StrippableTextChangeCasing()
+        {
+            var st = new StrippableText("this is for www.nikse.dk. thank you.");
+            st.FixCasing(new System.Collections.Generic.List<string>(), false, true, true, "Bye.");
+            Assert.AreEqual(st.MergedString, "This is for www.nikse.dk. Thank you.");
+        }
+
+        [TestMethod]
+        public void StrippableTextChangeCasing2()
+        {
+            var st = new StrippableText("this is for www.nikse.dk! thank you.");
+            st.FixCasing(new System.Collections.Generic.List<string>(), false, true, true, "Bye.");
+            Assert.AreEqual(st.MergedString, "This is for www.nikse.dk! Thank you.");
+        }
+
+        [TestMethod]
+        public void StrippableTextChangeCasing3()
+        {
+            var st = new StrippableText("www.nikse.dk");
+            st.FixCasing(new System.Collections.Generic.List<string>(), false, true, true, "Bye.");
+            Assert.AreEqual(st.MergedString, "www.nikse.dk");
+        }
+
     }
 }

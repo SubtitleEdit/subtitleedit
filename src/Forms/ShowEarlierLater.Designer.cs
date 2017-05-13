@@ -95,7 +95,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.radioButtonAllLines.TabStop = true;
             this.radioButtonAllLines.Text = "All lines";
             this.radioButtonAllLines.UseVisualStyleBackColor = true;
-            this.radioButtonAllLines.CheckedChanged += new System.EventHandler(this.radioButtonAllLines_CheckedChanged);
+            this.radioButtonAllLines.CheckedChanged += new System.EventHandler(this.RadioButtonCheckedChanged);
             // 
             // radioButtonSelectedLinesOnly
             // 
@@ -107,7 +107,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.radioButtonSelectedLinesOnly.TabStop = true;
             this.radioButtonSelectedLinesOnly.Text = "Selected lines only";
             this.radioButtonSelectedLinesOnly.UseVisualStyleBackColor = true;
-            this.radioButtonSelectedLinesOnly.CheckedChanged += new System.EventHandler(this.radioButtonAllLines_CheckedChanged);
+            this.radioButtonSelectedLinesOnly.CheckedChanged += new System.EventHandler(this.RadioButtonCheckedChanged);
             // 
             // timeUpDownAdjust
             // 
@@ -130,6 +130,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.radioButtonSelectedLineAndForward.TabStop = true;
             this.radioButtonSelectedLineAndForward.Text = "Selected line(s) and forward";
             this.radioButtonSelectedLineAndForward.UseVisualStyleBackColor = true;
+            this.radioButtonSelectedLineAndForward.CheckedChanged += new System.EventHandler(this.RadioButtonCheckedChanged);
             // 
             // buttonVideoSync
             // 

@@ -40,7 +40,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             const string timeCodeFormatNoHours = "{0:00}:{1:00}.{2:000}"; // h:mm:ss.cc
             const string timeCodeFormatHours = "{0}:{1:00}:{2:00}.{3:000}"; // h:mm:ss.cc
-            const string paragraphWriteFormat = "{0} --> {1}{4}{2}{3}{4}";
+            const string paragraphWriteFormat = "{0} --> {1}{2}{5}{3}{4}{5}";
 
             var sb = new StringBuilder();
             sb.AppendLine("WEBVTT FILE");
@@ -50,6 +50,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 string start = string.Format(timeCodeFormatNoHours, p.StartTime.Minutes, p.StartTime.Seconds, p.StartTime.Milliseconds);
                 string end = string.Format(timeCodeFormatNoHours, p.EndTime.Minutes, p.EndTime.Seconds, p.EndTime.Milliseconds);
+                string positionInfo = WebVTT.GetPositionInfoFromAssTag(p);
 
                 if (p.StartTime.Hours > 0 || p.EndTime.Hours > 0)
                 {
@@ -62,18 +63,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     style = p.Extra;
                 sb.Append(count);
                 sb.AppendLine();
-                sb.AppendLine(string.Format(paragraphWriteFormat, start, end, FormatText(p), style, Environment.NewLine));
+                sb.AppendLine(string.Format(paragraphWriteFormat, start, end, positionInfo, WebVTT.FormatText(p), style, Environment.NewLine));
                 count++;
             }
             return sb.ToString().Trim();
-        }
-
-        private static string FormatText(Paragraph p)
-        {
-            string text = p.Text;
-            while (text.Contains(Environment.NewLine + Environment.NewLine))
-                text = text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
-            return text;
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
@@ -81,6 +74,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             _errorCount = 0;
             Paragraph p = null;
             bool textDone = true;
+            string positionInfo = string.Empty;
             foreach (string line in lines)
             {
                 string s = line;
@@ -108,6 +102,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         p = new Paragraph();
                         p.StartTime = GetTimeCodeFromString(parts[0]);
                         p.EndTime = GetTimeCodeFromString(parts[1]);
+                        positionInfo = WebVTT.GetPositionInfo(s);
                     }
                     catch (Exception exception)
                     {
@@ -122,9 +117,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
                 else if (p != null && !string.IsNullOrWhiteSpace(line))
                 {
-                    string text = line.Trim();
+                    string text = positionInfo + line.Trim();
                     if (!textDone)
                         p.Text = (p.Text + Environment.NewLine + text).Trim();
+                    positionInfo = string.Empty;
                 }
                 else if (line.Length == 0)
                 {
@@ -143,63 +139,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override void RemoveNativeFormatting(Subtitle subtitle, SubtitleFormat newFormat)
         {
-            foreach (Paragraph p in subtitle.Paragraphs)
-            {
-                if (p.Text.Contains('<'))
-                {
-                    string text = p.Text;
-                    text = RemoveTag("v", text);
-                    text = RemoveTag("rt", text);
-                    text = RemoveTag("ruby", text);
-                    text = RemoveTag("c", text);
-                    text = RemoveTag("span", text);
-                    p.Text = text;
-                }
-            }
-        }
-
-        public static List<string> GetVoices(Subtitle subtitle)
-        {
-            var list = new List<string>();
-            if (subtitle != null && subtitle.Paragraphs != null)
-            {
-                foreach (Paragraph p in subtitle.Paragraphs)
-                {
-                    string s = p.Text;
-                    var startIndex = s.IndexOf("<v ", StringComparison.Ordinal);
-                    while (startIndex >= 0)
-                    {
-                        int endIndex = s.IndexOf('>', startIndex);
-                        if (endIndex > startIndex)
-                        {
-                            string voice = s.Substring(startIndex + 2, endIndex - startIndex - 2).Trim();
-                            if (!list.Contains(voice))
-                                list.Add(voice);
-                        }
-
-                        if (startIndex == s.Length - 1)
-                            startIndex = -1;
-                        else
-                            startIndex = s.IndexOf("<v ", startIndex + 1, StringComparison.Ordinal);
-                    }
-                }
-            }
-            return list;
-        }
-
-        public static string RemoveTag(string tag, string text)
-        {
-            int indexOfTag = text.IndexOf("<" + tag + " ", StringComparison.Ordinal);
-            if (indexOfTag >= 0)
-            {
-                int indexOfEnd = text.IndexOf('>', indexOfTag);
-                if (indexOfEnd > 0)
-                {
-                    text = text.Remove(indexOfTag, indexOfEnd - indexOfTag + 1);
-                    text = text.Replace("</" + tag + ">", string.Empty);
-                }
-            }
-            return text;
+            new WebVTT().RemoveNativeFormatting(subtitle, newFormat);
         }
 
         private static TimeCode GetTimeCodeFromString(string time)

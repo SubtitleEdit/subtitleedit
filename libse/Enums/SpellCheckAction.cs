@@ -5,11 +5,12 @@
         Change,
         ChangeAll,
         Skip,
+        SkipWholeLine,
         SkipAll,
         AddToDictionary,
         Abort,
         ChangeLanguage,
-        AddToNamesEtc,
+        AddToNames,
         ChangeWholeText
     }
 }

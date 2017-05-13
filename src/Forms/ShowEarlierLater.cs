@@ -104,12 +104,9 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void radioButtonAllLines_CheckedChanged(object sender, EventArgs e)
+        private void RadioButtonCheckedChanged(object sender, EventArgs e)
         {
-            if (radioButtonSelectedLinesOnly.Checked)
-                Text = Configuration.Settings.Language.ShowEarlierLater.Title;
-            else
-                Text = Configuration.Settings.Language.ShowEarlierLater.TitleAll;
+            Text = ((RadioButton)sender).Text;
         }
 
         private void ShowEarlierLater_FormClosing(object sender, FormClosingEventArgs e)

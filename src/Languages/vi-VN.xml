@@ -2,7 +2,7 @@
 <Language Name="Tiếng Việt">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.5.2</Version>
+    <Version>3.5.3</Version>
     <TranslatedBy>Dịch qua Tiếng Việt bởi by everytime
 Mọi góp ý về bản dịch vui lòng gửi thư tới hộp thư: handes1990@gmail.com
 Cảm ơn rất nhiều</TranslatedBy>
@@ -791,7 +791,7 @@ Hộp thư: Gửi thư tới: nikse.dk@gmail.com</AboutText1>
         <FindDoubleWords>Tìm cặp từ</FindDoubleWords>
         <FindDoubleLines>Tìm dòng đôi</FindDoubleLines>
         <GetDictionaries>Bổ sung từ điển...</GetDictionaries>
-        <AddToNamesEtcList>Thêm từ ngữ đến tên/danh sách</AddToNamesEtcList>
+        <AddToNameList>Thêm từ ngữ đến tên/danh sách</AddToNameList>
       </SpellCheck>
       <Synchronization>
         <Title>Đồng bộ hóa</Title>
@@ -1121,8 +1121,8 @@ Bạn có muốn bắt đầu từ phía trên cùng của tài liệu và tiế
     <NumberOfWithRemovedLineBreakX>Số dòng với loại bỏ dòng - bị ngắt: {0}</NumberOfWithRemovedLineBreakX>
     <BeforeMultipleReplace>Trước khi thay thế nhiều</BeforeMultipleReplace>
     <NumberOfLinesReplacedX>Số dòng với văn bản thay thế: {0}</NumberOfLinesReplacedX>
-    <NameXAddedToNamesEtcList>Tên '{0}' đã được thêm vào tên tập tin/ danh sách</NameXAddedToNamesEtcList>
-    <NameXNotAddedToNamesEtcList>Tên '{0}' KHÔNG thêm được vào tên tập tin/danh sách</NameXNotAddedToNamesEtcList>
+    <NameXAddedToNameList>Tên '{0}' đã được thêm vào tên tập tin/ danh sách</NameXAddedToNameList>
+    <NameXNotAddedToNameList>Tên '{0}' KHÔNG thêm được vào tên tập tin/danh sách</NameXNotAddedToNameList>
     <WordXAddedToUserDic>Từ '{0}' đã được thêm vào từ điển người dùng</WordXAddedToUserDic>
     <WordXNotAddedToUserDic>Từ '{0}' KHÔNG thêm được vào từ điển người dùng</WordXNotAddedToUserDic>
     <OcrReplacePairXAdded>Các orc thay thế cặp danh sách '{0} -&gt; {1}' đã được thêm vào danh sách thay thế orc</OcrReplacePairXAdded>
@@ -1409,19 +1409,19 @@ có thể chỉnh sửa trong cùng một tập tin phụ đề (hợp tác vớ
     <Testing123>Kiểm tra 123...</Testing123>
     <Language>Ngôn ngữ</Language>
     <NamesIgnoreLists>Tên/danh sách bỏ qua(THĐB)</NamesIgnoreLists>
-    <AddNameEtc>Thêm tên</AddNameEtc>
+    <AddName>Thêm tên</AddName>
     <AddWord>Thêm các từ</AddWord>
     <Remove>Gỡ bỏ</Remove>
     <AddPair>Thêm phần</AddPair>
     <UserWordList>Sử dụng danh sách các từ</UserWordList>
     <OcrFixList>Danh sách sửa chữa OCR</OcrFixList>
     <Location>Location</Location>
-    <UseOnlineNamesEtc>Sử dụng tên trực tuyến NameEtc.xml</UseOnlineNamesEtc>
+    <UseOnlineNames>Sử dụng tên trực tuyến NameEtc.xml</UseOnlineNames>
     <WordAddedX>Thêm các từ: {0}</WordAddedX>
     <WordAlreadyExists>Từ này đã tồn tại!</WordAlreadyExists>
     <WordNotFound>Không tìm thấy từ</WordNotFound>
     <RemoveX>Gỡ bỏ{0}?</RemoveX>
-    <CannotUpdateNamesEtcOnline>Không thể cập nhật NamesEtc.xml trực tuyến!</CannotUpdateNamesEtcOnline>
+    <CannotUpdateNamesOnline>Không thể cập nhật NamesEtc.xml trực tuyến!</CannotUpdateNamesOnline>
     <ProxyServerSettings>Cài đặt proxy server</ProxyServerSettings>
     <ProxyAddress>Thêm proxy</ProxyAddress>
     <ProxyAuthentication>Xác thực</ProxyAuthentication>
@@ -1539,7 +1539,7 @@ có thể chỉnh sửa trong cùng một tập tin phụ đề (hợp tác vớ
     <SpellCheckProgress>Kiểm tra chính tả [{0}] - {1}</SpellCheckProgress>
     <EditWholeText>Sửa toàn bộ văn bản</EditWholeText>
     <EditWordOnly>Sửa một từ duy nhất</EditWordOnly>
-    <AddXToNamesEtc>Thêm '{0}' tới tên/danh sách</AddXToNamesEtc>
+    <AddXToNames>Thêm '{0}' tới tên/danh sách</AddXToNames>
     <AutoFixNames>Tự động sửa lỗi tên khi có kiểu dáng khác nhau</AutoFixNames>
     <ImageText>Văn bản hình ảnh</ImageText>
     <SpellCheckCompleted>Kiểm tra chính tả.</SpellCheckCompleted>

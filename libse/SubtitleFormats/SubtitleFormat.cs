@@ -46,6 +46,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new Csv2(),
                     new Csv3(),
                     new Csv4(),
+                    new Csv5(),
                     new DCSubtitle(),
                     new DCinemaSmpte2010(),
                     new DCinemaSmpte2007(),
@@ -90,6 +91,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new JsonType8(),
                     new JsonType9(),
                     new JsonType10(),
+                    new JsonType11(),
                     new Lrc(),
                     new MacSub(),
                     new MediaTransData(),
@@ -252,6 +254,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new UnknownSubtitle81(),
                     new UnknownSubtitle82(),
                     new UnknownSubtitle83(),
+                    new UnknownSubtitle84(),
                 };
 
                 string path = Configuration.PluginsDirectory;

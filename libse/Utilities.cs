@@ -1261,15 +1261,7 @@ namespace Nikse.SubtitleEdit.Core
             var lines = text.SplitToLines();
             foreach (string line in lines)
             {
-                string s = line.Trim();
-                for (int i = 0; i < s.Length; i++)
-                {
-                    if (s[i] == ')')
-                        s = s.Remove(i, 1).Insert(i, "(");
-                    else if (s[i] == '(')
-                        s = s.Remove(i, 1).Insert(i, ")");
-                }
-
+                string s = ReverseParenthesis(line.Trim());
                 bool numbersOn = false;
                 string numbers = string.Empty;
                 for (int i = 0; i < s.Length; i++)
@@ -1930,6 +1922,26 @@ namespace Nikse.SubtitleEdit.Core
                     text = text.Remove(idx, 1);
                 }
             }
+
+            // Fix spaces after quotes
+            // e.g: Foobar. " Foobar" => Foobar. "Foobar"
+            string preText = string.Empty;
+            if (text.LineStartsWithHtmlTag(true, true))
+            {
+                int endIdx = text.IndexOf('>') + 1;
+                preText = text.Substring(0, endIdx);
+                text = text.Substring(endIdx);
+            }
+            if (text.StartsWith('"'))
+            {
+                text = '"' + text.Substring(1).TrimStart();
+            }
+            text = preText + text;
+            text = text.Replace(". \" ", ". \"");
+            text = text.Replace("? \" ", "? \"");
+            text = text.Replace("! \" ", "! \"");
+            text = text.Replace(") \" ", ") \"");
+            text = text.Replace("> \" ", "> \"");
             return text;
         }
 

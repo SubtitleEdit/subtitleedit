@@ -2,7 +2,7 @@
 <Language Name="slovenski">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.5.2</Version>
+    <Version>3.5.3</Version>
     <TranslatedBy>Prevedel: Hawk</TranslatedBy>
     <CultureName>sl-SI</CultureName>
     <HelpFile />
@@ -907,7 +907,7 @@ E-pošta: hdhawkhd@gmail.com</AboutText1>
         <FindDoubleWords>Poišči dvojne besede</FindDoubleWords>
         <FindDoubleLines>Pošči dvojne vrstice</FindDoubleLines>
         <GetDictionaries>Slovarji...</GetDictionaries>
-        <AddToNamesEtcList>Dodaj besedo k imena/itd lista</AddToNamesEtcList>
+        <AddToNameList>Dodaj besedo k imena/itd lista</AddToNameList>
       </SpellCheck>
       <Synchronization>
         <Title>Sinhroniziraj</Title>
@@ -1244,8 +1244,8 @@ Nadaljujem?</SubtitleAppendPrompt>
     <NumberOfWithRemovedLineBreakX>Število vrstic z odstranjenim lomom: {0}</NumberOfWithRemovedLineBreakX>
     <BeforeMultipleReplace>Pred množično zamenjavo</BeforeMultipleReplace>
     <NumberOfLinesReplacedX>Število vrstic z zamenjanim besedilom: {0}</NumberOfLinesReplacedX>
-    <NameXAddedToNamesEtcList>Ime '{0}' je bilo dodano v imena/itd listo</NameXAddedToNamesEtcList>
-    <NameXNotAddedToNamesEtcList>Ime '{0}' NI bilo dodano v imena/itd listo</NameXNotAddedToNamesEtcList>
+    <NameXAddedToNameList>Ime '{0}' je bilo dodano v imena/itd listo</NameXAddedToNameList>
+    <NameXNotAddedToNameList>Ime '{0}' NI bilo dodano v imena/itd listo</NameXNotAddedToNameList>
     <WordXAddedToUserDic>Beseda '{0}' je bila dodana v uporabnikov slovar</WordXAddedToUserDic>
     <WordXNotAddedToUserDic>Beseda '{0}'NI bila dodana v uporabnikov slovar</WordXNotAddedToUserDic>
     <OcrReplacePairXAdded>Par OCR liste '{0} -&gt; {1}' je bil dodan v OCR listo</OcrReplacePairXAdded>
@@ -1616,19 +1616,19 @@ popravlja en podnapis (sodelovanje)</Information>
     <Testing123>Testiranje 123...</Testing123>
     <Language>Jezik</Language>
     <NamesIgnoreLists>Imena/nikalni seznam (posebni primeri)</NamesIgnoreLists>
-    <AddNameEtc>Dodaj ime</AddNameEtc>
+    <AddName>Dodaj ime</AddName>
     <AddWord>Dodaj besedo</AddWord>
     <Remove>Odstrani</Remove>
     <AddPair>Dodaj par</AddPair>
     <UserWordList>Uporabi seznam besed</UserWordList>
     <OcrFixList>OCR seznam popravkov</OcrFixList>
     <Location>Lokacija</Location>
-    <UseOnlineNamesEtc>Uporabi on-line imena itd xml datoteka</UseOnlineNamesEtc>
+    <UseOnlineNames>Uporabi on-line imena itd xml datoteka</UseOnlineNames>
     <WordAddedX>Dodanih besed: {0}</WordAddedX>
     <WordAlreadyExists>Beseda že obstaja!</WordAlreadyExists>
     <WordNotFound>Nisem našel besede</WordNotFound>
     <RemoveX>Odstranim {0}?</RemoveX>
-    <CannotUpdateNamesEtcOnline>Ne morem posodobiti on-line imena itd xml datoteka!</CannotUpdateNamesEtcOnline>
+    <CannotUpdateNamesOnline>Ne morem posodobiti on-line imena itd xml datoteka!</CannotUpdateNamesOnline>
     <ProxyServerSettings>Nastavitve proxy strežnika</ProxyServerSettings>
     <ProxyAddress>Proxy naslov</ProxyAddress>
     <ProxyAuthentication>Avtentikacija</ProxyAuthentication>
@@ -1772,7 +1772,7 @@ popravlja en podnapis (sodelovanje)</Information>
     <SpellCheckProgress>Črkovanje [{0}] - {1}</SpellCheckProgress>
     <EditWholeText>Uredi celotno besedilo</EditWholeText>
     <EditWordOnly>Uredi samo besede</EditWordOnly>
-    <AddXToNamesEtc>Dodaj '{0}' v imena/itd seznam</AddXToNamesEtc>
+    <AddXToNames>Dodaj '{0}' v imena/itd seznam</AddXToNames>
     <AutoFixNames>Samodejno popravi imena kjer je primer drugačen</AutoFixNames>
     <CheckOneLetterWords>Opomni na neznane besede z eno črko</CheckOneLetterWords>
     <TreatINQuoteAsING>Obdelaj končnice besed " in' " kot " ing " (samo za angleščino)</TreatINQuoteAsING>

@@ -2,7 +2,7 @@
 <Language Name="svenska">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.5.2</Version>
+    <Version>3.5.3</Version>
     <TranslatedBy>Översätt av Ted</TranslatedBy>
     <CultureName>sv-SE</CultureName>
     <HelpFile />
@@ -1012,7 +1012,7 @@ Obs! Kontrollera ledigt utrymme.</WaveFileMalformed>
         <FindDoubleWords>Hitta dubbel ord</FindDoubleWords>
         <FindDoubleLines>Hitta dubbla linjer</FindDoubleLines>
         <GetDictionaries>Hämta lexikon</GetDictionaries>
-        <AddToNamesEtcList>Lägg ord till namn/ect</AddToNamesEtcList>
+        <AddToNameList>Lägg ord till namn/ect</AddToNameList>
       </SpellCheck>
       <Synchronization>
         <Title>Synkronisering</Title>
@@ -1360,8 +1360,8 @@ Fortsätta?</SubtitleAppendPrompt>
     <NumberOfWithRemovedLineBreakX>Antal rader med borttagna radbrytningar: {0}</NumberOfWithRemovedLineBreakX>
     <BeforeMultipleReplace>Före flera ersätta</BeforeMultipleReplace>
     <NumberOfLinesReplacedX>Antal rader där text ersätts: {0}</NumberOfLinesReplacedX>
-    <NameXAddedToNamesEtcList>Namnet '{0}' lades till i namn/etc</NameXAddedToNamesEtcList>
-    <NameXNotAddedToNamesEtcList>Namnet '{0}' har INTE lagts till i namn/etc</NameXNotAddedToNamesEtcList>
+    <NameXAddedToNameList>Namnet '{0}' lades till i namn/etc</NameXAddedToNameList>
+    <NameXNotAddedToNameList>Namnet '{0}' har INTE lagts till i namn/etc</NameXNotAddedToNameList>
     <WordXAddedToUserDic>Ordet '{0}' lades till i användarens ordlistan</WordXAddedToUserDic>
     <WordXNotAddedToUserDic>Namnet '{0}' har INTE lagt till i användaren ordlistan</WordXNotAddedToUserDic>
     <OcrReplacePairXAdded>OCR ersätt lista '{0} -&gt; {1}' lades till i OCR ersätt lista</OcrReplacePairXAdded>
@@ -1786,19 +1786,19 @@ kan redigera i samma textningsfil (samarbete)</Information>
     <Testing123>Provning av text123 ♫</Testing123>
     <Language>Språk</Language>
     <NamesIgnoreLists>Namn/Ignor-lista (skiftlägeskänslig)</NamesIgnoreLists>
-    <AddNameEtc>Lägg till namn</AddNameEtc>
+    <AddName>Lägg till namn</AddName>
     <AddWord>Lägg till ord</AddWord>
     <Remove>Ta bort</Remove>
     <AddPair>Lägg till par</AddPair>
     <UserWordList>Användare ordlista</UserWordList>
     <OcrFixList>OCR fix lista</OcrFixList>
     <Location>Plats</Location>
-    <UseOnlineNamesEtc>Använd online namn/etc xml-fil</UseOnlineNamesEtc>
+    <UseOnlineNames>Använd online namn/etc xml-fil</UseOnlineNames>
     <WordAddedX>Ord läggs till: {0}</WordAddedX>
     <WordAlreadyExists>Ordet finns redan!</WordAlreadyExists>
     <WordNotFound>Ordet hittades inte</WordNotFound>
     <RemoveX>Ta bort {0}?</RemoveX>
-    <CannotUpdateNamesEtcOnline>Kan inte uppdatera namn/etc.xml online!</CannotUpdateNamesEtcOnline>
+    <CannotUpdateNamesOnline>Kan inte uppdatera namn/etc.xml online!</CannotUpdateNamesOnline>
     <ProxyServerSettings>Proxyserverinställningar</ProxyServerSettings>
     <ProxyAddress>Proxy adress</ProxyAddress>
     <ProxyAuthentication>Autentisering</ProxyAuthentication>
@@ -1980,7 +1980,7 @@ kan redigera i samma textningsfil (samarbete)</Information>
     <SpellCheckProgress>Stavningskontroll [{0}] - {1}</SpellCheckProgress>
     <EditWholeText>Redigera all text</EditWholeText>
     <EditWordOnly>Redigera endast ord</EditWordOnly>
-    <AddXToNamesEtc>Lägg till '{0}' namn/etc</AddXToNamesEtc>
+    <AddXToNames>Lägg till '{0}' namn/etc</AddXToNames>
     <AutoFixNames>Auto fixa namn där endast skiftläge skiljer</AutoFixNames>
     <CheckOneLetterWords>Kolla efter okända ord med en bokstav</CheckOneLetterWords>
     <TreatINQuoteAsING>Behandla ord som slutar " in' " as " ing " (English only)</TreatINQuoteAsING>

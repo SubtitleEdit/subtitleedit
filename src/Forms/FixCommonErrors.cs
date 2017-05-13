@@ -87,7 +87,7 @@ namespace Nikse.SubtitleEdit.Forms
         private bool _onlyListFixes = true;
         private bool _batchMode;
         private string _autoDetectGoogleLanguage;
-        private HashSet<string> _namesEtcList;
+        private HashSet<string> _nameList;
         private HashSet<string> _abbreviationList;
         private readonly StringBuilder _newLog = new StringBuilder();
         private readonly StringBuilder _appliedLog = new StringBuilder();
@@ -522,22 +522,22 @@ namespace Nikse.SubtitleEdit.Forms
 
         public bool IsName(string candidate)
         {
-            MakeSureNamesListIsLoaded();
-            return _namesEtcList.Contains(candidate); // O(1)
+            MakeSureNameListIsLoaded();
+            return _nameList.Contains(candidate); // O(1)
         }
 
-        private void MakeSureNamesListIsLoaded()
+        private void MakeSureNameListIsLoaded()
         {
-            if (_namesEtcList == null)
+            if (_nameList == null)
             {
                 string languageTwoLetterCode = LanguageAutoDetect.AutoDetectGoogleLanguage(Subtitle);                
                 // Will contains both one word names and multi names
-                var namesList = new NamesList(Configuration.DictionariesDirectory, languageTwoLetterCode, Configuration.Settings.WordLists.UseOnlineNamesEtc, Configuration.Settings.WordLists.NamesEtcUrl);
-                _namesEtcList = namesList.GetNames();
+                var namesList = new NameList(Configuration.DictionariesDirectory, languageTwoLetterCode, Configuration.Settings.WordLists.UseOnlineNames, Configuration.Settings.WordLists.NamesUrl);
+                _nameList = namesList.GetNames();
                 // Multi word names.
                 foreach (var name in namesList.GetMultiNames())
                 {
-                    _namesEtcList.Add(name);
+                    _nameList.Add(name);
                 }
             }
         }
@@ -547,9 +547,9 @@ namespace Nikse.SubtitleEdit.Forms
             if (_abbreviationList != null)
                 return _abbreviationList;
 
-            MakeSureNamesListIsLoaded();
+            MakeSureNameListIsLoaded();
             _abbreviationList = new HashSet<string>();
-            foreach (string name in _namesEtcList)
+            foreach (string name in _nameList)
             {
                 if (name.EndsWith('.'))
                     _abbreviationList.Add(name);

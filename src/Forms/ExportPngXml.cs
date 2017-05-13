@@ -335,8 +335,8 @@ namespace Nikse.SubtitleEdit.Forms
                 VideoResolution = comboBoxResolution.Text,
                 Bitmap = null,
                 FramesPerSeconds = FrameRate,
-                BottomMargin = comboBoxBottomMargin.SelectedIndex,
-                LeftRightMargin = comboBoxLeftRightMargin.SelectedIndex,
+                BottomMargin = GetBottomMarginInPixels(),
+                LeftRightMargin = GetLeftRightMarginInPixels(),
                 Saved = false,
                 Alignment = ContentAlignment.BottomCenter,
                 Type3D = comboBox3D.SelectedIndex,
@@ -506,13 +506,13 @@ namespace Nikse.SubtitleEdit.Forms
                 if (_exportType == "BLURAYSUP")
                     binarySubtitleFile = new FileStream(saveFileDialog1.FileName, FileMode.Create);
                 else if (_exportType == "VOBSUB")
-                    vobSubWriter = new VobSubWriter(saveFileDialog1.FileName, width, height, comboBoxBottomMargin.SelectedIndex, comboBoxLeftRightMargin.SelectedIndex, 32, _subtitleColor, _borderColor, !checkBoxTransAntiAliase.Checked, (DvdSubtitleLanguage)comboBoxLanguage.SelectedItem);
+                    vobSubWriter = new VobSubWriter(saveFileDialog1.FileName, width, height, GetBottomMarginInPixels(), GetLeftRightMarginInPixels(), 32, _subtitleColor, _borderColor, !checkBoxTransAntiAliase.Checked, (DvdSubtitleLanguage)comboBoxLanguage.SelectedItem);
 
                 progressBar1.Value = 0;
                 progressBar1.Maximum = _subtitle.Paragraphs.Count - 1;
                 progressBar1.Visible = true;
 
-                int border = comboBoxBottomMargin.SelectedIndex;
+                int border = GetBottomMarginInPixels();
                 int imagesSavedCount = 0;
                 var sb = new StringBuilder();
                 if (_exportType == "STL")
@@ -758,7 +758,7 @@ namespace Nikse.SubtitleEdit.Forms
                         s = s.Replace("<timebase>25</timebase>", "<timebase>60</timebase>");
                         s = s.Replace("<ntsc>FALSE</ntsc>", "<ntsc>TRUE</ntsc>");
                     }
-                    
+
                     else
                     {
                         s = s.Replace("<timebase>25</timebase>", "<timebase>" + comboBoxFrameRate.Text + "</timebase>");
@@ -1389,7 +1389,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         else if (Math.Abs(param.FramesPerSeconds - 59.94) < 0.01)
                         {
                             param.FramesPerSeconds = 60.0 / 1.0001;
-                        }                        
+                        }
 
                         int duration = (int)Math.Round(param.P.Duration.TotalSeconds * param.FramesPerSeconds);
                         int start = (int)Math.Round(param.P.StartTime.TotalSeconds * param.FramesPerSeconds);
@@ -1924,7 +1924,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             mbp.VideoResolution = comboBoxResolution.Text;
             mbp.Type3D = comboBox3D.SelectedIndex;
             mbp.Depth3D = (int)numericUpDownDepth3D.Value;
-            mbp.BottomMargin = comboBoxBottomMargin.SelectedIndex;
+            mbp.BottomMargin = GetBottomMarginInPixels();
             mbp.ShadowWidth = comboBoxShadowWidth.SelectedIndex;
             mbp.ShadowAlpha = (int)numericUpDownShadowTransparency.Value;
             mbp.ShadowColor = panelShadowColor.BackColor;
@@ -3410,19 +3410,19 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             panelShadowColor.BackColor = Configuration.Settings.Tools.ExportShadowColor;
 
             comboBoxBottomMargin.Items.Clear();
-            for (int i = 0; i < 1000; i++)
-                comboBoxBottomMargin.Items.Add(i);
-            if (Configuration.Settings.Tools.ExportBottomMargin >= 0 && Configuration.Settings.Tools.ExportBottomMargin < comboBoxBottomMargin.Items.Count)
-                comboBoxBottomMargin.SelectedIndex = Configuration.Settings.Tools.ExportBottomMargin;
+            for (int i = 0; i < 25; i++)
+                comboBoxBottomMargin.Items.Add(i + "%");
+            if (Configuration.Settings.Tools.ExportBottomMarginPercent >= 0 && Configuration.Settings.Tools.ExportBottomMarginPercent < comboBoxBottomMargin.Items.Count)
+                comboBoxBottomMargin.SelectedIndex = Configuration.Settings.Tools.ExportBottomMarginPercent;
 
             comboBoxLeftRightMargin.Items.Clear();
-            for (int i = 0; i < 1000; i++)
-                comboBoxLeftRightMargin.Items.Add(i);
-            if (Configuration.Settings.Tools.ExportLeftRightMargin >= 0 && Configuration.Settings.Tools.ExportLeftRightMargin < comboBoxLeftRightMargin.Items.Count)
-                comboBoxLeftRightMargin.SelectedIndex = Configuration.Settings.Tools.ExportLeftRightMargin;
+            for (int i = 0; i < 25; i++)
+                comboBoxLeftRightMargin.Items.Add(i + "%");
+            if (Configuration.Settings.Tools.ExportLeftRightMarginPercent >= 0 && Configuration.Settings.Tools.ExportLeftRightMarginPercent < comboBoxLeftRightMargin.Items.Count)
+                comboBoxLeftRightMargin.SelectedIndex = Configuration.Settings.Tools.ExportLeftRightMarginPercent;
 
-            if (exportType == "BLURAYSUP" || exportType == "IMAGE/FRAME" && Configuration.Settings.Tools.ExportBluRayBottomMargin >= 0 && Configuration.Settings.Tools.ExportBluRayBottomMargin < comboBoxBottomMargin.Items.Count)
-                comboBoxBottomMargin.SelectedIndex = Configuration.Settings.Tools.ExportBluRayBottomMargin;
+            if (exportType == "BLURAYSUP" || exportType == "IMAGE/FRAME" && Configuration.Settings.Tools.ExportBluRayBottomMarginPercent >= 0 && Configuration.Settings.Tools.ExportBluRayBottomMarginPercent < comboBoxBottomMargin.Items.Count)
+                comboBoxBottomMargin.SelectedIndex = Configuration.Settings.Tools.ExportBluRayBottomMarginPercent;
 
             if (_exportType == "BLURAYSUP" || _exportType == "VOBSUB" || _exportType == "IMAGE/FRAME" || _exportType == "BDNXML" || _exportType == "DOST" || _exportType == "FAB" || _exportType == "EDL" || _exportType == "EDL_CLIPNAME")
             {
@@ -3647,6 +3647,24 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             _previewTimer.Start();
         }
 
+        private int GetBottomMarginInPixels()
+        {
+            var s = comboBoxBottomMargin.Text;
+            int width;
+            int height;
+            GetResolution(out width, out height);
+            return (int)Math.Round(int.Parse(s.TrimEnd('%')) / 100.0 * height);
+        }
+
+        private int GetLeftRightMarginInPixels()
+        {
+            var s = comboBoxLeftRightMargin.Text;
+            int width;
+            int height;
+            GetResolution(out width, out height);
+            return (int)Math.Round(int.Parse(s.TrimEnd('%')) / 100.0 * width);
+        }
+
         private void GeneratePreview()
         {
             SetupImageParameters();
@@ -3670,7 +3688,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 int w = groupBoxExportImage.Width - 4;
                 pictureBox1.Width = bmp.Width;
                 pictureBox1.Height = bmp.Height;
-                pictureBox1.Top = groupBoxExportImage.Height - bmp.Height - int.Parse(comboBoxBottomMargin.Text);
+                pictureBox1.Top = groupBoxExportImage.Height - bmp.Height - GetBottomMarginInPixels();
                 pictureBox1.Left = (w - bmp.Width) / 2;
                 var alignment = GetAlignmentFromParagraph(mbp, _format, _subtitle);
 
@@ -3692,15 +3710,15 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     if (comboBoxLeftRightMargin.Visible)
                     {
                         if (alignment == ContentAlignment.BottomLeft || alignment == ContentAlignment.MiddleLeft || alignment == ContentAlignment.TopLeft)
-                            pictureBox1.Left = int.Parse(comboBoxLeftRightMargin.Text);
+                            pictureBox1.Left = GetLeftRightMarginInPixels();
                         else if (alignment == ContentAlignment.BottomRight || alignment == ContentAlignment.MiddleRight || alignment == ContentAlignment.TopRight)
-                            pictureBox1.Left = w - bmp.Width - int.Parse(comboBoxLeftRightMargin.Text);
+                            pictureBox1.Left = w - bmp.Width - GetLeftRightMarginInPixels();
                     }
 
                     if (alignment == ContentAlignment.MiddleLeft || alignment == ContentAlignment.MiddleCenter || alignment == ContentAlignment.MiddleRight)
                         pictureBox1.Top = (groupBoxExportImage.Height - 4 - bmp.Height) / 2;
                     else if (comboBoxBottomMargin.Visible && alignment == ContentAlignment.TopLeft || alignment == ContentAlignment.TopCenter || alignment == ContentAlignment.TopRight)
-                        pictureBox1.Top = int.Parse(comboBoxBottomMargin.Text);
+                        pictureBox1.Top = GetBottomMarginInPixels();
                 }
                 if (bmp.Width > groupBoxExportImage.Width + 20 || bmp.Height > groupBoxExportImage.Height + 20)
                 {
@@ -3940,11 +3958,11 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             Configuration.Settings.Tools.ExportFontColor = _subtitleColor;
             Configuration.Settings.Tools.ExportBorderColor = _borderColor;
             if (_exportType == "BLURAYSUP" || _exportType == "DOST")
-                Configuration.Settings.Tools.ExportBluRayBottomMargin = comboBoxBottomMargin.SelectedIndex;
+                Configuration.Settings.Tools.ExportBluRayBottomMarginPercent = comboBoxBottomMargin.SelectedIndex;
             else
-                Configuration.Settings.Tools.ExportBottomMargin = comboBoxBottomMargin.SelectedIndex;
+                Configuration.Settings.Tools.ExportBottomMarginPercent = comboBoxBottomMargin.SelectedIndex;
 
-            Configuration.Settings.Tools.ExportLeftRightMargin = comboBoxLeftRightMargin.SelectedIndex;
+            Configuration.Settings.Tools.ExportLeftRightMarginPercent = comboBoxLeftRightMargin.SelectedIndex;
 
             Configuration.Settings.Tools.ExportHorizontalAlignment = comboBoxHAlign.SelectedIndex;
             Configuration.Settings.Tools.Export3DType = comboBox3D.SelectedIndex;
@@ -4458,19 +4476,19 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
                             int x = (bmp.Width - textBmp.Width) / 2;
                             if (alignment == ContentAlignment.BottomLeft || alignment == ContentAlignment.MiddleLeft || alignment == ContentAlignment.TopLeft)
-                                x = int.Parse(comboBoxBottomMargin.Text);
+                                x = GetBottomMarginInPixels();
                             else if (alignment == ContentAlignment.BottomRight || alignment == ContentAlignment.MiddleRight || alignment == ContentAlignment.TopRight)
-                                x = bmp.Width - textBmp.Width - int.Parse(comboBoxBottomMargin.Text);
+                                x = bmp.Width - textBmp.Width - GetBottomMarginInPixels();
 
-                            int y = bmp.Height - textBmp.Height - int.Parse(comboBoxBottomMargin.Text);
+                            int y = bmp.Height - textBmp.Height - GetBottomMarginInPixels();
                             if (alignment == ContentAlignment.BottomLeft || alignment == ContentAlignment.MiddleLeft || alignment == ContentAlignment.TopLeft)
-                                x = int.Parse(comboBoxBottomMargin.Text);
+                                x = GetBottomMarginInPixels();
                             else if (alignment == ContentAlignment.BottomRight || alignment == ContentAlignment.MiddleRight || alignment == ContentAlignment.TopRight)
-                                x = bmp.Width - textBmp.Width - int.Parse(comboBoxBottomMargin.Text);
+                                x = bmp.Width - textBmp.Width - GetBottomMarginInPixels();
                             if (alignment == ContentAlignment.MiddleLeft || alignment == ContentAlignment.MiddleCenter || alignment == ContentAlignment.MiddleRight)
                                 y = (groupBoxExportImage.Height - 4 - textBmp.Height) / 2;
                             else if (alignment == ContentAlignment.TopLeft || alignment == ContentAlignment.TopCenter || alignment == ContentAlignment.TopRight)
-                                y = int.Parse(comboBoxBottomMargin.Text);
+                                y = GetBottomMarginInPixels();
 
                             g.DrawImageUnscaled(textBmp, new Point(x, y));
                         }
@@ -4520,5 +4538,6 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             buttonExport.Visible = false;
             subtitleListView1.CheckBoxes = false;
         }
+
     }
 }

@@ -74,9 +74,9 @@ namespace Nikse.SubtitleEdit.Core
         }
 
         private static readonly string[] AutoDetectWordsEnglish = { "we", "are", "and", "your?", "what", "[TW]hat's", "You're", "(any|some|every)thing", "money", "because" };
-        private static readonly string[] AutoDetectWordsDanish = { "vi", "han", "og", "jeg", "var", "men", "gider", "bliver", "virkelig", "kommer", "tilbage", "Hej" };
-        private static readonly string[] AutoDetectWordsNorwegian = { "vi", "er", "og", "jeg", "var", "men" };
-        private static readonly string[] AutoDetectWordsSwedish = { "vi", "är", "och", "Jag", "inte", "för" };
+        private static readonly string[] AutoDetectWordsDanish = { "vi", "han", "og", "jeg", "var", "men", "gider", "bliver", "virkelig", "kommer", "tilbage", "Hej", "længere", "gjorde", "dig", "havde", "[Uu]ndskyld", "arbejder", "vidste", "troede", "stadigvæk", "[Mm]åske" };
+        private static readonly string[] AutoDetectWordsNorwegian = { "vi", "er", "og", "jeg", "var", "men", "igjen", "Nei", "Hei", "noen", "gjøre", "kanskje", "[Tt]renger", "tenker", "skjer", "møte", "veldig", "takk", "penger", "konsept", "hjelp" };
+        private static readonly string[] AutoDetectWordsSwedish = { "vi", "är", "och", "Jag", "inte", "för", "måste", "Öppna", "Förlåt", "nånting", "ingenting", "jävla", "Varför", "[Ss]nälla", "fattar", "själv", "säger", "öppna", "jävligt", "dörren" };
         private static readonly string[] AutoDetectWordsSpanish = { "qué", "eso", "muy", "estoy?", "ahora", "hay", "tú", "así", "cuando", "cómo", "él", "sólo", "quiero", "gracias", "puedo", "bueno", "soy", "hacer", "fue", "eres", "usted", "tienes", "puede",
                                                                     "[Ss]eñor", "ese", "voy", "quién", "creo", "hola", "dónde", "sus", "verdad", "quieres", "mucho", "entonces", "estaba", "tiempo", "esa", "mejor", "hombre", "hace", "dios", "también", "están",
                                                                     "siempre", "hasta", "ahí", "siento", "puedes" };
@@ -138,6 +138,7 @@ namespace Nikse.SubtitleEdit.Core
 
         private static readonly string[] AutoDetectWordsLatvian = { "Paldies", "neesmu ", "nezinu", "viòð", "viņš", "viņu", "kungs", "esmu", "Viņš", "Velns", "viņa", "dievs", "Pagaidi", "varonis", "agrāk", "varbūt" };
         private static readonly string[] AutoDetectWordsLithuanian = { "tavęs", "veidai", "apie", "jums", "Veidai", "Kaip", "kaip", "reikia", "Šūdas", "frensis", "Ačiū", "vilsonai", "Palauk", "Veidas", "viskas", "Tikrai", "manęs", "Tačiau", "žmogau", "Flagai", "Prašau", "Džiune", "Nakties", "šviesybe", "Supratau", "komanda", "reikia", "apie", "Kodėl", "mūsų", "Ačiū", "vyksta" };
+        private static readonly string[] AutoDetectWordsHindi = { "एक", "और", "को", "का", "यह", "सकते", "लिए", "करने", "भारतीय", "सकता", "भारत", "तकनीक", "कंप्यूटिंग", "उपकरण", "भाषाओं", "भाषा", "कंप्यूटर", "आप", "आपको", "अपने", "लेकिन", "करना", "सकता", "बहुत", "चाहते", "अच्छा", "वास्तव", "लगता", "इसलिए", "शेल्डन", "धन्यवाद।", "तरह", "करता", "चाहता", "कोशिश", "करते", "किया", "अजीब", "सिर्फ", "शुरू" };
 
         private static string AutoDetectGoogleLanguage(string text, int bestCount)
         {
@@ -321,6 +322,10 @@ namespace Nikse.SubtitleEdit.Core
             if (count > bestCount)
                 return "lt";
 
+            count = GetCount(text, AutoDetectWordsHindi);
+            if (count > bestCount * 1.2)
+                return "hi";
+
             return string.Empty;
         }
 
@@ -361,7 +366,7 @@ namespace Nikse.SubtitleEdit.Core
                     containsEnUs = true;
                 if (name.Contains("[hr_HR]"))
                     containsHrHr = true;
-                if (name.Contains("[sr-Latn]"))
+                if (name.Contains("[sr_Latn]"))
                     containsSrLatn = true;
             }
 
@@ -386,7 +391,10 @@ namespace Nikse.SubtitleEdit.Core
                             int norwegianCount = GetCount(text, "ut", "deg", "meg", "merkelig", "mye", "spørre");
                             int dutchCount = GetCount(text, AutoDetectWordsDutch);
                             if (norwegianCount < 2 && dutchCount < count)
+                            {
                                 languageName = shortName;
+                                bestCount = count;
+                            }
                         }
                         break;
                     case "nb_NO":
@@ -396,13 +404,19 @@ namespace Nikse.SubtitleEdit.Core
                             int danishCount = GetCount(text, "siger", "dig", "mig", "mærkelig", "tilbage", "spørge");
                             int dutchCount = GetCount(text, AutoDetectWordsDutch);
                             if (danishCount < 2 && dutchCount < count)
+                            {
                                 languageName = shortName;
+                                bestCount = count;
+                            }
                         }
                         break;
                     case "sv_SE":
                         count = GetCount(text, AutoDetectWordsSwedish);
                         if (count > bestCount)
+                        {
                             languageName = shortName;
+                            bestCount = count;
+                        }
                         break;
                     case "en_US":
                         count = GetCount(text, AutoDetectWordsEnglish);
@@ -412,6 +426,7 @@ namespace Nikse.SubtitleEdit.Core
                             if (dutchCount < count)
                             {
                                 languageName = shortName;
+                                bestCount = count;
                                 if (containsEnGb)
                                 {
                                     int usCount = GetCount(text, "color", "flavor", "honor", "humor", "neighbor", "honor");
@@ -430,6 +445,7 @@ namespace Nikse.SubtitleEdit.Core
                             if (dutchCount < count)
                             {
                                 languageName = shortName;
+                                bestCount = count;
                                 if (containsEnUs)
                                 {
                                     int usCount = GetCount(text, "color", "flavor", "honor", "humor", "neighbor", "honor");
@@ -448,7 +464,10 @@ namespace Nikse.SubtitleEdit.Core
                             int portugueseCount = GetCount(text, "[NnCc]ão", "Então", "h?ouve", "pessoal", "rapariga", "tivesse", "fizeste",
                                                                  "jantar", "conheço", "atenção", "foste", "milhões", "devias", "ganhar", "raios"); // not spanish words
                             if (frenchCount < 2 && portugueseCount < 2)
+                            {
                                 languageName = shortName;
+                                bestCount = count;
+                            }
                         }
                         break;
                     case "it_IT":
@@ -458,7 +477,10 @@ namespace Nikse.SubtitleEdit.Core
                             int frenchCount = GetCount(text, "[Cc]'est", "pas", "vous", "pour", "suis", "Pourquoi", "maison", "souviens", "quelque"); // not italian words
                             int spanishCount = GetCount(text, "Hola", "nada", "Vamos", "pasa", "los", "como"); // not italian words
                             if (frenchCount < 2 && spanishCount < 2)
+                            {
                                 languageName = shortName;
+                                bestCount = count;
+                            }
                         }
                         break;
                     case "fr_FR":
@@ -469,50 +491,75 @@ namespace Nikse.SubtitleEdit.Core
                             int spanishCount = GetCount(text, "Hola", "nada", "Vamos", "pasa", "los", "como"); // not french words
                             int italianCount = GetCount(text, AutoDetectWordsItalian);
                             if (romanianCount < 5 && spanishCount < 2 && italianCount < 2)
+                            {
                                 languageName = shortName;
+                                bestCount = count;
+                            }
                         }
                         break;
                     case "de_DE":
                         count = GetCount(text, AutoDetectWordsGerman);
                         if (count > bestCount)
+                        {
                             languageName = shortName;
+                            bestCount = count;
+                        }
                         break;
                     case "nl_NL":
                         count = GetCount(text, AutoDetectWordsDutch);
                         if (count > bestCount)
+                        {
                             languageName = shortName;
+                            bestCount = count;
+                        }
                         break;
                     case "pl_PL":
                         count = GetCount(text, AutoDetectWordsPolish);
                         if (count > bestCount)
+                        {
                             languageName = shortName;
+                            bestCount = count;
+                        }
                         break;
                     case "el_GR":
                         count = GetCount(text, AutoDetectWordsGreek);
                         if (count > bestCount)
+                        {
                             languageName = shortName;
+                            bestCount = count;
+                        }
                         break;
                     case "ru_RU":
                         count = GetCount(text, AutoDetectWordsRussian);
                         if (count > bestCount)
+                        {
                             languageName = shortName;
+                            bestCount = count;
+                        }
                         break;
                     case "uk_UA":
                         count = GetCount(text, AutoDetectWordsUkrainian);
                         if (count > bestCount)
+                        {
                             languageName = shortName;
+                            bestCount = count;
+                        }
                         break;
                     case "ro_RO":
                         count = GetCount(text, AutoDetectWordsRomanian1);
                         if (count <= bestCount)
                             count = GetCount(text, AutoDetectWordsRomanian2);
                         if (count > bestCount)
+                        {
                             languageName = shortName;
+                            bestCount = count;
+                        }
                         break;
                     case "hr_HR": // Croatian
                         count = GetCount(text, AutoDetectWordsCroatianAndSerbian);
                         if (count > bestCount)
                         {
+                            bestCount = count;
                             languageName = shortName;
                             if (containsSrLatn)
                             {
@@ -523,11 +570,12 @@ namespace Nikse.SubtitleEdit.Core
                             }
                         }
                         break;
-                    case "sr-Latn": // Serbian (Latin)
+                    case "sr_Latn": // Serbian (Latin)
                         count = GetCount(text, AutoDetectWordsCroatianAndSerbian);
                         if (count > bestCount)
                         {
                             languageName = shortName;
+                            bestCount = count;
                             if (containsHrHr)
                             {
                                 int croatianCount = GetCount(text, AutoDetectWordsCroatian);
@@ -540,22 +588,27 @@ namespace Nikse.SubtitleEdit.Core
                     case "sr": // Serbian (Cyrillic)
                         count = GetCount(text, AutoDetectWordsSerbianCyrillic);
                         if (count > bestCount)
+                        {
                             languageName = shortName;
+                            bestCount = count;
+                        }
                         break;
-                    case "pt_PT": // Portuguese
+                    case "pt_PT": // Portuguese Portugal
+                    case "pt_BR": // Portuguese Brazil
                         count = GetCount(text, AutoDetectWordsPortuguese);
                         if (count > bestCount)
+                        {
                             languageName = shortName;
-                        break;
-                    case "pt_BR": // Portuguese (Brasil)
-                        count = GetCount(text, AutoDetectWordsPortuguese);
-                        if (count > bestCount)
-                            languageName = shortName;
+                            bestCount = count;
+                        }
                         break;
                     case "hu_HU": // Hungarian
                         count = GetCount(text, AutoDetectWordsHungarian);
                         if (count > bestCount)
+                        {
                             languageName = shortName;
+                            bestCount = count;
+                        }
                         break;
                     case "cs_CZ": // Czech
                         count = GetCount(text, AutoDetectWordsCzech);
@@ -565,24 +618,43 @@ namespace Nikse.SubtitleEdit.Core
                             if (count > lithuanianCount)
                             {
                                 languageName = shortName;
+                                bestCount = count;
                             }
                         }
                         break;
                     case "sk_SK": // Slovak
                         count = GetCount(text, AutoDetectWordsSlovak);
                         if (count > bestCount)
+                        {
                             languageName = shortName;
+                            bestCount = count;
+                        }
                         break;
                     case "lv_LV": // Latvian
                         count = GetCount(text, AutoDetectWordsLatvian);
                         if (count > bestCount)
+                        {
                             languageName = shortName;
+                            bestCount = count;
+                        }
                         break;
                     case "lt_LT": // Lithuanian
-                    case "lt": // Lithuanian
+                    case "lt":    // Lithuanian (Neutral)
                         count = GetCount(text, AutoDetectWordsLithuanian);
                         if (count > bestCount)
+                        {
                             languageName = shortName;
+                            bestCount = count;
+                        }
+                        break;
+                    case "hi_IN": // Hindi
+                    case "hi":
+                        count = GetCount(text, AutoDetectWordsHindi);
+                        if (count > bestCount)
+                        {
+                            languageName = shortName;
+                            bestCount = count;
+                        }
                         break;
                 }
             }

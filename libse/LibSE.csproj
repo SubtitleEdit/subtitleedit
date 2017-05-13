@@ -112,7 +112,7 @@
     <Compile Include="DetectEncoding\Multilang\_RemotableHandle.cs" />
     <Compile Include="DetectEncoding\Multilang\_ULARGE_INTEGER.cs" />
     <Compile Include="DetectEncoding\Multilang\__MIDL_IWinTypes_0009.cs" />
-    <Compile Include="Dictionaries\NamesList.cs" />
+    <Compile Include="Dictionaries\NameList.cs" />
     <Compile Include="Dictionaries\OcrFixReplaceList.cs" />
     <Compile Include="DvdSubtitleLanguage.cs" />
     <Compile Include="Enums\FindType.cs" />
@@ -183,7 +183,7 @@
     <Compile Include="NetflixQualityCheck\NetflixCheckGlyph.cs" />
     <Compile Include="NetflixQualityCheck\INetflixQualityChecker.cs" />
     <Compile Include="NetflixQualityCheck\NetflixCheckTextForHiUseBrackets.cs" />
-    <Compile Include="NetflixQualityCheck\NetflixCheckDialogeHyphenNoSpace.cs" />
+    <Compile Include="NetflixQualityCheck\NetflixCheckDialogeHyphenSpace.cs" />
     <Compile Include="NetflixQualityCheck\NetflixCheckMaxCps.cs" />
     <Compile Include="NetflixQualityCheck\NetflixCheckTwoFramesGap.cs" />
     <Compile Include="NetflixQualityCheck\NetflixCheckNumberOfLines.cs" />
@@ -216,6 +216,8 @@
     <Compile Include="Subtitle.cs" />
     <Compile Include="SubtitleFormats\AribB36.cs" />
     <Compile Include="SubtitleFormats\AribB24Decoder.cs" />
+    <Compile Include="SubtitleFormats\Csv5.cs" />
+    <Compile Include="SubtitleFormats\JsonType11.cs" />
     <Compile Include="SubtitleFormats\SmpteTt2052.cs" />
     <Compile Include="SubtitleFormats\Ted20.cs" />
     <Compile Include="SubtitleFormats\Csv4.cs" />
@@ -398,6 +400,7 @@
     <Compile Include="SubtitleFormats\UnknownSubtitle21.cs" />
     <Compile Include="SubtitleFormats\UnknownSubtitle22.cs" />
     <Compile Include="SubtitleFormats\UnknownSubtitle23.cs" />
+    <Compile Include="SubtitleFormats\UnknownSubtitle84.cs" />
     <Compile Include="SubtitleFormats\UnknownSubtitle83.cs" />
     <Compile Include="SubtitleFormats\UnknownSubtitle24.cs" />
     <Compile Include="SubtitleFormats\UnknownSubtitle25.cs" />

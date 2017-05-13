@@ -7,12 +7,12 @@ using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public sealed partial class AddToNamesList : PositionAndSizeForm
+    public sealed partial class AddToNameList : PositionAndSizeForm
     {
         private LanguageStructure.Main _language;
         private Subtitle _subtitle;
 
-        public AddToNamesList()
+        public AddToNameList()
         {
             InitializeComponent();
             Text = Configuration.Settings.Language.AddToNames.Title;
@@ -127,8 +127,8 @@ namespace Nikse.SubtitleEdit.Forms
             if (string.IsNullOrEmpty(languageName))
                 languageName = "en_US";
 
-            var namesList = new NamesList(Configuration.DictionariesDirectory, languageName, Configuration.Settings.WordLists.UseOnlineNamesEtc, Configuration.Settings.WordLists.NamesEtcUrl);
-            if (namesList.Add(textBoxAddName.Text))
+            var nameList = new NameList(Configuration.DictionariesDirectory, languageName, Configuration.Settings.WordLists.UseOnlineNames, Configuration.Settings.WordLists.NamesUrl);
+            if (nameList.Add(textBoxAddName.Text))
                 DialogResult = DialogResult.OK;
             else
                 DialogResult = DialogResult.Cancel;

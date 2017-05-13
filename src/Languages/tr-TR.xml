@@ -2,7 +2,7 @@
 <Language Name="Türkçe">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.5.2</Version>
+    <Version>3.5.3</Version>
     <TranslatedBy>Çevirmen: mailto:kipekcioglu@gmail.com</TranslatedBy>
     <CultureName>tr-TR</CultureName>
     <HelpFile />
@@ -939,7 +939,7 @@ E-posta: mailto:nikse.dk@gmail.com</AboutText1>
         <FindDoubleWords>Aynı kelimeyi bul</FindDoubleWords>
         <FindDoubleLines>Aynı satırı bul</FindDoubleLines>
         <GetDictionaries>Sözlük edin...</GetDictionaries>
-        <AddToNamesEtcList>İsim listesine kelime ekle</AddToNamesEtcList>
+        <AddToNameList>İsim listesine kelime ekle</AddToNameList>
       </SpellCheck>
       <Synchronization>
         <Title>Senkronizasyon</Title>
@@ -1281,8 +1281,8 @@ Continue?</SubtitleAppendPrompt>
     <NumberOfWithRemovedLineBreakX>Number of lines with removed line-break: {0}</NumberOfWithRemovedLineBreakX>
     <BeforeMultipleReplace>Çoklu değiştirmeden önce</BeforeMultipleReplace>
     <NumberOfLinesReplacedX>Number of lines with text replaced: {0}</NumberOfLinesReplacedX>
-    <NameXAddedToNamesEtcList>The name '{0}' was added to names/etc list</NameXAddedToNamesEtcList>
-    <NameXNotAddedToNamesEtcList>The name '{0}' was NOT added to names/etc list</NameXNotAddedToNamesEtcList>
+    <NameXAddedToNameList>The name '{0}' was added to names/etc list</NameXAddedToNameList>
+    <NameXNotAddedToNameList>The name '{0}' was NOT added to names/etc list</NameXNotAddedToNameList>
     <WordXAddedToUserDic>'{0}' kelimesi kullanıcı sözlüğüne eklendi</WordXAddedToUserDic>
     <WordXNotAddedToUserDic>'{0}' ismi kullanıcı sözlüğüne eklenmedi</WordXNotAddedToUserDic>
     <OcrReplacePairXAdded>Ocr değiştirme listesi çifti '{0} -&gt; {1}' OCR değiştirme listesine eklendi</OcrReplacePairXAdded>
@@ -1668,19 +1668,19 @@ Yeni oturum başlatın.</Information>
     <Testing123>Test ediliyor 123...</Testing123>
     <Language>Dil</Language>
     <NamesIgnoreLists>İsimler/önemsenmeyecek listesi (harf duyarlılığı)</NamesIgnoreLists>
-    <AddNameEtc>İsim ekle</AddNameEtc>
+    <AddName>İsim ekle</AddName>
     <AddWord>Kelime ekle</AddWord>
     <Remove>Temizle</Remove>
     <AddPair>Add pair</AddPair>
     <UserWordList>Kullanıcı kelime listesi</UserWordList>
     <OcrFixList>OCR düzeltme listesi</OcrFixList>
     <Location>Konum</Location>
-    <UseOnlineNamesEtc>Çevrim içi isimler xml dosyasını kullan</UseOnlineNamesEtc>
+    <UseOnlineNames>Çevrim içi isimler xml dosyasını kullan</UseOnlineNames>
     <WordAddedX>Kelime eklendi: {0}</WordAddedX>
     <WordAlreadyExists>Kelime zaten var!</WordAlreadyExists>
     <WordNotFound>Kelime bulunamadı</WordNotFound>
     <RemoveX>{0} temizlensin mi?</RemoveX>
-    <CannotUpdateNamesEtcOnline>NamesEtc.xml çevrim içi güncellenemez!</CannotUpdateNamesEtcOnline>
+    <CannotUpdateNamesOnline>NamesEtc.xml çevrim içi güncellenemez!</CannotUpdateNamesOnline>
     <ProxyServerSettings>Proxy sunucu ayarları</ProxyServerSettings>
     <ProxyAddress>Proxy adresi</ProxyAddress>
     <ProxyAuthentication>Kimlik doğrulama</ProxyAuthentication>
@@ -1831,7 +1831,7 @@ Yeni oturum başlatın.</Information>
     <SpellCheckProgress>Yazımı doğrula [{0}] - {1}</SpellCheckProgress>
     <EditWholeText>Tam metni düzenle</EditWholeText>
     <EditWordOnly>Sadece kelimeyi düzenle</EditWordOnly>
-    <AddXToNamesEtc>İsimler listesine '{0}' ekle</AddXToNamesEtc>
+    <AddXToNames>İsimler listesine '{0}' ekle</AddXToNames>
     <AutoFixNames>Auto fix names where only casing differ</AutoFixNames>
     <CheckOneLetterWords>Bilinmeyen "tek harf"leri işaretle</CheckOneLetterWords>
     <TreatINQuoteAsING>Fiillerin sonundaki "ini "ing"e çevir (SAdece İngilizce'de)</TreatINQuoteAsING>

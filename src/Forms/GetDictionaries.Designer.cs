@@ -36,6 +36,7 @@
             this.buttonDownload = new System.Windows.Forms.Button();
             this.labelChooseLanguageAndClickDownload = new System.Windows.Forms.Label();
             this.labelPleaseWait = new System.Windows.Forms.Label();
+            this.buttonDownloadAll = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // buttonOK
@@ -106,7 +107,7 @@
             this.labelChooseLanguageAndClickDownload.AutoSize = true;
             this.labelChooseLanguageAndClickDownload.Location = new System.Drawing.Point(30, 79);
             this.labelChooseLanguageAndClickDownload.Name = "labelChooseLanguageAndClickDownload";
-            this.labelChooseLanguageAndClickDownload.Size = new System.Drawing.Size(201, 13);
+            this.labelChooseLanguageAndClickDownload.Size = new System.Drawing.Size(207, 13);
             this.labelChooseLanguageAndClickDownload.TabIndex = 11;
             this.labelChooseLanguageAndClickDownload.Text = "Choose your language and click download";
             // 
@@ -119,11 +120,25 @@
             this.labelPleaseWait.TabIndex = 12;
             this.labelPleaseWait.Text = "Please wait...";
             // 
+            // buttonDownloadAll
+            // 
+            this.buttonDownloadAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonDownloadAll.BackColor = System.Drawing.Color.Yellow;
+            this.buttonDownloadAll.Location = new System.Drawing.Point(296, 54);
+            this.buttonDownloadAll.Name = "buttonDownloadAll";
+            this.buttonDownloadAll.Size = new System.Drawing.Size(164, 25);
+            this.buttonDownloadAll.TabIndex = 21;
+            this.buttonDownloadAll.Text = "Download all [DEBUG ONLY]";
+            this.buttonDownloadAll.UseVisualStyleBackColor = false;
+            this.buttonDownloadAll.Visible = false;
+            this.buttonDownloadAll.Click += new System.EventHandler(this.buttonDownloadAll_Click);
+            // 
             // GetDictionaries
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(472, 195);
+            this.Controls.Add(this.buttonDownloadAll);
             this.Controls.Add(this.comboBoxDictionaries);
             this.Controls.Add(this.labelPleaseWait);
             this.Controls.Add(this.labelChooseLanguageAndClickDownload);
@@ -157,5 +172,6 @@
         private System.Windows.Forms.Button buttonDownload;
         private System.Windows.Forms.Label labelChooseLanguageAndClickDownload;
         private System.Windows.Forms.Label labelPleaseWait;
+        private System.Windows.Forms.Button buttonDownloadAll;
     }
 }

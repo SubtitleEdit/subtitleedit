@@ -12,6 +12,7 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
             var oldIgnoreWhiteSpace = Configuration.Settings.General.CharactersPerSecondsIgnoreWhiteSpace;
             try
             {
+                Configuration.Settings.General.CharactersPerSecondsIgnoreWhiteSpace = false;
                 foreach (Paragraph p in subtitle.Paragraphs)
                 {
                     var charactersPerSeconds = Utilities.GetCharactersPerSecond(p);

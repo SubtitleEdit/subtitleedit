@@ -25,6 +25,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private SpellCheckWordLists _spellCheckWordLists;
         private List<string> _skipAllList = new List<string>();
+        private HashSet<string> _skipOneList = new HashSet<string>();
         private Dictionary<string, string> _changeAllDictionary;
         private string _prefix = string.Empty;
         private string _postfix = string.Empty;
@@ -40,7 +41,7 @@ namespace Nikse.SubtitleEdit.Forms
         private int _noOfSkippedWords;
         private int _noOfChangedWords;
         private int _noOfCorrectWords;
-        private int _noOfNamesEtc;
+        private int _noOfNames;
         private int _noOfAddedWords;
         private bool _firstChange = true;
         private string _languageName;
@@ -158,7 +159,7 @@ namespace Nikse.SubtitleEdit.Forms
             for (int i = 0; i < 10; i++)
             {
                 int idx = word.Index - i;
-                if (idx >= 0 && idx < richTextBoxParagraph.Text.Length && richTextBoxParagraph.Text.Substring(idx).StartsWith(word.Text))
+                if (idx >= 0 && idx < richTextBoxParagraph.Text.Length && richTextBoxParagraph.Text.Substring(idx).StartsWith(word.Text, StringComparison.Ordinal))
                 {
                     richTextBoxParagraph.SelectionStart = idx;
                     richTextBoxParagraph.SelectionLength = word.Text.Length;
@@ -166,7 +167,7 @@ namespace Nikse.SubtitleEdit.Forms
                     break;
                 }
                 idx = word.Index + i;
-                if (idx >= 0 && idx < richTextBoxParagraph.Text.Length && richTextBoxParagraph.Text.Substring(idx).StartsWith(word.Text))
+                if (idx >= 0 && idx < richTextBoxParagraph.Text.Length && richTextBoxParagraph.Text.Substring(idx).StartsWith(word.Text, StringComparison.Ordinal))
                 {
                     richTextBoxParagraph.SelectionStart = idx;
                     richTextBoxParagraph.SelectionLength = word.Text.Length;
@@ -313,8 +314,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonAddToNamesClick(object sender, EventArgs e)
         {
-            PushUndo(string.Format("{0}: {1}", Configuration.Settings.Language.SpellCheck.AddToNamesAndIgnoreList, textBoxWord.Text), SpellCheckAction.AddToNamesEtc);
-            DoAction(SpellCheckAction.AddToNamesEtc);
+            PushUndo(string.Format("{0}: {1}", Configuration.Settings.Language.SpellCheck.AddToNamesAndIgnoreList, textBoxWord.Text), SpellCheckAction.AddToNames);
+            DoAction(SpellCheckAction.AddToNames);
         }
 
         private void ButtonEditWholeTextClick(object sender, EventArgs e)
@@ -338,7 +339,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void ButtonSkipTextClick(object sender, EventArgs e)
         {
             PushUndo(string.Format("{0}", Configuration.Settings.Language.SpellCheck.SkipOnce), SpellCheckAction.Skip);
-            DoAction(SpellCheckAction.Skip);
+            DoAction(SpellCheckAction.SkipWholeLine);
         }
 
         private void ButtonChangeWholeTextClick(object sender, EventArgs e)
@@ -352,7 +353,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (!string.IsNullOrWhiteSpace(richTextBoxParagraph.SelectedText))
             {
                 string word = richTextBoxParagraph.SelectedText.Trim();
-                addXToNamesnoiseListToolStripMenuItem.Text = string.Format(Configuration.Settings.Language.SpellCheck.AddXToNamesEtc, word);
+                addXToNamesnoiseListToolStripMenuItem.Text = string.Format(Configuration.Settings.Language.SpellCheck.AddXToNames, word);
             }
             else
             {
@@ -365,7 +366,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (!string.IsNullOrWhiteSpace(richTextBoxParagraph.SelectedText))
             {
                 ChangeWord = richTextBoxParagraph.SelectedText.Trim();
-                DoAction(SpellCheckAction.AddToNamesEtc);
+                DoAction(SpellCheckAction.AddToNames);
             }
         }
 
@@ -403,6 +404,12 @@ namespace Nikse.SubtitleEdit.Forms
                     break;
                 case SpellCheckAction.Skip:
                     _noOfSkippedWords++;
+                    string key = _currentIndex + "-" + _wordsIndex + "-" + _currentWord;
+                    if (!_skipOneList.Contains(key))
+                        _skipOneList.Add(key);
+                    break;
+                case SpellCheckAction.SkipWholeLine:
+                    _wordsIndex = int.MaxValue - 1; // Go to next line
                     break;
                 case SpellCheckAction.SkipAll:
                     _noOfSkippedWords++;
@@ -414,7 +421,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (_spellCheckWordLists.AddUserWord(ChangeWord))
                         _noOfAddedWords++;
                     break;
-                case SpellCheckAction.AddToNamesEtc:
+                case SpellCheckAction.AddToNames:
                     _spellCheckWordLists.AddName(ChangeWord);
                     if (string.Compare(ChangeWord, _currentWord, StringComparison.OrdinalIgnoreCase) != 0)
                         return; // don't prepare next word if change was more than just casing
@@ -428,7 +435,8 @@ namespace Nikse.SubtitleEdit.Forms
                     _mainWindow.ShowStatus(string.Format(Configuration.Settings.Language.Main.SpellCheckChangedXToY, _currentParagraph.Text.Replace(Environment.NewLine, " "), ChangeWholeText.Replace(Environment.NewLine, " ")));
                     _currentParagraph.Text = ChangeWholeText;
                     _mainWindow.ChangeWholeTextMainPart(ref _noOfChangedWords, ref _firstChange, _currentIndex, _currentParagraph);
-
+                    _currentIndex--; // re-spellcheck current line
+                    _wordsIndex = int.MaxValue -1;
                     break;
             }
             labelActionInfo.Text = string.Empty;
@@ -461,6 +469,11 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
+                    if (_wordsIndex != int.MaxValue - 1 && _skipOneList.Count > 0)
+                    {
+                        _skipOneList = new HashSet<string>();
+                    }
+
                     if (_currentIndex + 1 < _subtitle.Paragraphs.Count)
                     {
                         _currentIndex++;
@@ -507,14 +520,19 @@ namespace Nikse.SubtitleEdit.Forms
                             _currentWord = _currentWord.Substring(1);
                         }
                     }
+                    string key = _currentIndex + "-" + _wordsIndex + "-" + _currentWord;
                     if (_spellCheckWordLists.HasName(_currentWord))
                     {
-                        _noOfNamesEtc++;
+                        _noOfNames++;
                     }
                     else if (_skipAllList.Contains(_currentWord.ToUpper())
                         || (_currentWord.StartsWith('\'') || _currentWord.EndsWith('\'')) && _skipAllList.Contains(_currentWord.Trim('\'').ToUpper()))
                     {
                         _noOfSkippedWords++;
+                    }
+                    else if (_skipOneList.Contains(key))
+                    { 
+                        // "skip one" again (after change whole text)
                     }
                     else if (_spellCheckWordLists.HasUserWord(_currentWord))
                     {
@@ -532,7 +550,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else if (_spellCheckWordLists.HasNameExtended(_currentWord, _currentParagraph.Text)) // TODO: Verify this!
                     {
-                        _noOfNamesEtc++;
+                        _noOfNames++;
                     }
                     else if (_spellCheckWordLists.IsWordInUserPhrases(_wordsIndex, _words))
                     {
@@ -593,7 +611,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                             var suggestions = new List<string>();
 
-                            if ((_currentWord == "Lt's" || _currentWord == "Lt'S") && _languageName.StartsWith("en_"))
+                            if ((_currentWord == "Lt's" || _currentWord == "Lt'S") && _languageName.StartsWith("en_", StringComparison.Ordinal))
                             {
                                 suggestions.Add("It's");
                             }
@@ -610,7 +628,7 @@ namespace Nikse.SubtitleEdit.Forms
                                         {
                                             for (int i = 0; i < suggestions.Count; i++)
                                             {
-                                                if (suggestions[i].StartsWith("L'") || suggestions[i].StartsWith("L’"))
+                                                if (suggestions[i].StartsWith("L'", StringComparison.Ordinal) || suggestions[i].StartsWith("L’", StringComparison.Ordinal))
                                                     suggestions[i] = @"l" + suggestions[i].Substring(1);
                                             }
                                         }
@@ -658,7 +676,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     return;
                                 }
                             }
-                            if (_prefix != null && _prefix == "''" && _currentWord.EndsWith("''"))
+                            if (_prefix != null && _prefix == "''" && _currentWord.EndsWith("''", StringComparison.Ordinal))
                             {
                                 _prefix = string.Empty;
                                 _currentSpellCheckWord.Index += 2;
@@ -713,7 +731,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     string.Format(mainLanguage.NumberOfSkippedWords, _noOfSkippedWords) + Environment.NewLine +
                                     string.Format(mainLanguage.NumberOfCorrectWords, _noOfCorrectWords) + Environment.NewLine +
                                     string.Format(mainLanguage.NumberOfWordsAddedToDictionary, _noOfAddedWords) + Environment.NewLine +
-                                    string.Format(mainLanguage.NumberOfNameHits, _noOfNamesEtc));
+                                    string.Format(mainLanguage.NumberOfNameHits, _noOfNames));
                     form.ShowDialog(_mainWindow);
                     Configuration.Settings.Tools.SpellCheckShowCompletedMessage = !form.DoNoDisplayAgain;
                     form.Dispose();
@@ -759,7 +777,7 @@ namespace Nikse.SubtitleEdit.Forms
             _noOfSkippedWords = 0;
             _noOfChangedWords = 0;
             _noOfCorrectWords = 0;
-            _noOfNamesEtc = 0;
+            _noOfNames = 0;
             _noOfAddedWords = 0;
             _firstChange = true;
 
@@ -942,7 +960,7 @@ namespace Nikse.SubtitleEdit.Forms
                 NoOfSkippedWords = _noOfSkippedWords,
                 NoOfChangedWords = _noOfChangedWords,
                 NoOfCorrectWords = _noOfCorrectWords,
-                NoOfNamesEtc = _noOfNamesEtc,
+                NoOfNames = _noOfNames,
                 NoOfAddedWords = _noOfAddedWords,
             });
             buttonUndo.Text = undoText;
@@ -959,7 +977,7 @@ namespace Nikse.SubtitleEdit.Forms
                 _noOfSkippedWords = undo.NoOfSkippedWords;
                 _noOfChangedWords = undo.NoOfChangedWords;
                 _noOfCorrectWords = undo.NoOfCorrectWords;
-                _noOfNamesEtc = undo.NoOfNamesEtc;
+                _noOfNames = undo.NoOfNames;
                 _noOfAddedWords = undo.NoOfAddedWords;
 
                 switch (undo.Action)
@@ -981,7 +999,7 @@ namespace Nikse.SubtitleEdit.Forms
                     case SpellCheckAction.AddToDictionary:
                         _spellCheckWordLists.RemoveUserWord(undo.UndoWord);
                         break;
-                    case SpellCheckAction.AddToNamesEtc:
+                    case SpellCheckAction.AddToNames:
                         _spellCheckWordLists.RemoveName(undo.UndoWord);
                         break;
                     case SpellCheckAction.ChangeWholeText:
