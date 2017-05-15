@@ -7540,6 +7540,8 @@ namespace Nikse.SubtitleEdit.Forms
             if (_subtitleAlternate != null)
                 languageOriginal = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitleAlternate);
 
+            var textCaretPos = textBoxListViewText.SelectionStart;
+
             if (SubtitleListview1.SelectedItems.Count > 1)
             {
                 MakeHistoryForUndo(_language.BeforeRemoveLineBreaksInSelectedLines);
@@ -7573,6 +7575,13 @@ namespace Nikse.SubtitleEdit.Forms
                 if (_subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
                     textBoxListViewTextAlternate.Text = Utilities.AutoBreakLine(textBoxListViewTextAlternate.Text, languageOriginal);
             }
+            var startText = textBoxListViewText.Text.Substring(0, textCaretPos);
+            var numberOfNewLines = Utilities.CountTagInText(startText, Environment.NewLine);
+            textCaretPos += numberOfNewLines;
+            if (textBoxListViewText.Text.Length > textCaretPos && '\n' == textBoxListViewText.Text[textCaretPos])
+                textCaretPos--;
+            if (textCaretPos > 0)
+                textBoxListViewText.SelectionStart = textCaretPos;
         }
 
         private static void FixVerticalScrollBars(TextBox tb)
@@ -9174,6 +9183,12 @@ namespace Nikse.SubtitleEdit.Forms
         private void ButtonUnBreakClick(object sender, EventArgs e)
         {
             _doAutoBreakOnTextChanged = false;
+
+            var textCaretPos = textBoxListViewText.SelectionStart;
+            var startText = textBoxListViewText.Text.Substring(0, textCaretPos);
+            var numberOfNewLines = Utilities.CountTagInText(startText, Environment.NewLine);
+            textCaretPos -= numberOfNewLines;
+
             if (SubtitleListview1.SelectedItems.Count > 1)
             {
                 MakeHistoryForUndo(_language.BeforeRemoveLineBreaksInSelectedLines);
@@ -9193,6 +9208,7 @@ namespace Nikse.SubtitleEdit.Forms
                 textBoxListViewText.Text = Utilities.UnbreakLine(textBoxListViewText.Text);
             }
             _doAutoBreakOnTextChanged = true;
+            textBoxListViewText.SelectionStart = textCaretPos;
         }
 
         private void TabControlSubtitleSelectedIndexChanged(object sender, EventArgs e)
