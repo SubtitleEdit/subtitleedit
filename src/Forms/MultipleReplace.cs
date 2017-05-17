@@ -47,7 +47,6 @@ namespace Nikse.SubtitleEdit.Forms
         public List<int> DeleteIndices { get; private set; }
         public Subtitle FixedSubtitle { get; private set; }
         public int FixCount { get; private set; }
-        private bool _loading = true;
         private MultipleSearchAndReplaceGroup _currentGroup;
 
         public MultipleReplace()
@@ -141,13 +140,11 @@ namespace Nikse.SubtitleEdit.Forms
         internal void RunFromBatch(Subtitle subtitle)
         {
             Initialize(subtitle);
-            _loading = false;
             GeneratePreview();
         }
 
         internal void RunFromBatch(Subtitle subtitle, IEnumerable<string> importFileNames)
         {
-            _loading = false;
             var savedList = Configuration.Settings.MultipleSearchAndReplaceGroups;
             try
             {
@@ -217,9 +214,6 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void GeneratePreview()
         {
-            if (_loading)
-                return;
-
             Cursor = Cursors.WaitCursor;
             FixedSubtitle = new Subtitle(_subtitle);
             DeleteIndices = new List<int>();
@@ -596,7 +590,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (_currentGroup == null)
                 return;
-            
+
             var temp = _currentGroup.Rules[index];
             _currentGroup.Rules.Remove(temp);
             _currentGroup.Rules.Insert(0, temp);
@@ -652,7 +646,6 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void MultipleReplace_Shown(object sender, EventArgs e)
         {
-            _loading = false;
             GeneratePreview();
             listViewRules.ItemChecked += ListViewRulesItemChecked;
             listViewGroups.ItemChecked += listViewGroups_ItemChecked;
@@ -685,7 +678,6 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void UpdateViewFromModel(List<MultipleSearchAndReplaceGroup> groups, MultipleSearchAndReplaceGroup focusGroup)
         {
-            _loading = true;
             listViewGroups.BeginUpdate();
             listViewGroups.Items.Clear();
             for (int index = 0; index < groups.Count; index++)
@@ -699,7 +691,6 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             listViewGroups.EndUpdate();
-            _loading = false;
         }
 
         private void listViewGroups_SelectedIndexChanged(object sender, EventArgs e)
@@ -712,7 +703,6 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
 
             groupBoxReplaces.Text = string.Format(Configuration.Settings.Language.MultipleReplace.RulesForGroupX, _currentGroup.Name);
-            _loading = true;
             listViewRules.BeginUpdate();
             listViewRules.Items.Clear();
             foreach (var rule in _currentGroup.Rules)
@@ -729,14 +719,10 @@ namespace Nikse.SubtitleEdit.Forms
                 textBoxReplace.Text = string.Empty;
             }
             listViewRules.EndUpdate();
-            _loading = false;
         }
 
         private void listViewGroups_ItemChecked(object sender, ItemCheckedEventArgs e)
         {
-            if (_loading)
-                return;
-
             var group = e.Item.Tag as MultipleSearchAndReplaceGroup;
             if (group == null)
                 return;
@@ -747,9 +733,6 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ListViewRulesItemChecked(object sender, ItemCheckedEventArgs e)
         {
-            if (_loading)
-                return;
-
             var rule = e.Item.Tag as MultipleSearchAndReplaceSetting;
             if (rule == null)
                 return;
