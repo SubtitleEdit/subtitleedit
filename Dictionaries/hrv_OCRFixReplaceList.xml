@@ -353,6 +353,7 @@
     <Word from="Niko" to="Nitko" />
     <Word from="nisma" to="nisam" />
     <Word from="Nisma" to="Nisam" />
+    <Word from="nećš" to="nećeš" />
     <Word from="nejde" to="ne ide" />
     <Word from="neda" to="ne da" />
     <Word from="nedam" to="ne dam" />
@@ -393,7 +394,7 @@
     <Word from="odprilike" to="otprilike" />
     <Word from="odseo" to="odsjeo" />
     <Word from="odsela" to="odsjela" />
-    <Word from="odseli" to="odsjeli" />
+    <!-- odseli ne može - jer je riječ u hrv [da se odseli] -->
     <Word from="odupreti" to="oduprijeti" />
     <Word from="ogladneo" to="ogladnio" />
     <Word from="organizuju" to="organiziraju" />
