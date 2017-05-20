@@ -62,6 +62,11 @@ namespace Nikse.SubtitleEdit.Forms
         private void listViewParts_DragDrop(object sender, DragEventArgs e)
         {
             var files = (string[])e.Data.GetData(DataFormats.FileDrop);
+            LoadFiles(files);
+        }
+
+        private void LoadFiles(string[] files)
+        {
             foreach (string fileName in files)
             {
                 bool alreadyInList = false;
@@ -234,13 +239,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonRemoveVob_Click(object sender, EventArgs e)
         {
-            var indices = new List<int>();
-            foreach (int index in listViewParts.SelectedIndices)
-                indices.Add(index);
-            indices.Reverse();
-            foreach (int index in indices)
-                _fileNamesToJoin.RemoveAt(index);
-
+            for (int i = listViewParts.SelectedIndices.Count - 1; i >= 0; i--)
+            {
+                var index = listViewParts.SelectedIndices[i];
+                _fileNamesToJoin.RemoveAt(i);
+            }
             if (_fileNamesToJoin.Count == 0)
                 buttonClear_Click(null, null);
             else
@@ -257,6 +260,15 @@ namespace Nikse.SubtitleEdit.Forms
         private void JoinSubtitles_Shown(object sender, EventArgs e)
         {
             columnHeaderFileName.Width = -2;
+        }
+
+        private void listViewParts_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyData == (Keys.Control | Keys.V))
+            {
+                var files = Clipboard.GetData(DataFormats.FileDrop) as string[];
+                LoadFiles(files);
+            }
         }
 
     }

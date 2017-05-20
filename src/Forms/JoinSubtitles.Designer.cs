@@ -90,6 +90,7 @@
             this.listViewParts.View = System.Windows.Forms.View.Details;
             this.listViewParts.DragDrop += new System.Windows.Forms.DragEventHandler(this.listViewParts_DragDrop);
             this.listViewParts.DragEnter += new System.Windows.Forms.DragEventHandler(this.listViewParts_DragEnter);
+            this.listViewParts.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listViewParts_KeyDown);
             // 
             // columnHeaderLines
             // 
