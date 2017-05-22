@@ -1143,6 +1143,7 @@ namespace Nikse.SubtitleEdit.Core
         }
 
         private static readonly Regex TwoOrMoreDigitsNumber = new Regex(@"\d\d+", RegexOptions.Compiled);
+        private const string PrePostStringsToReverse = @"-— !?.""،,():;[]+~";
 
         public static string ReverseStartAndEndingForRightToLeft(string s)
         {
@@ -1179,13 +1180,13 @@ namespace Nikse.SubtitleEdit.Core
                 pre.Clear();
                 post.Clear();
                 int i = 0;
-                while (i < s2.Length && !char.IsLetterOrDigit(s2[i]) && s2[i] != '{')
+                while (i < s2.Length && PrePostStringsToReverse.Contains(s2[i]) && s2[i] != '{')
                 {
                     pre.Append(s2[i]);
                     i++;
                 }
                 int j = s2.Length - 1;
-                while (j > i && !char.IsLetterOrDigit(s2[j]) && s2[j] != '}')
+                while (j > i && PrePostStringsToReverse.Contains(s2[j]) && s2[j] != '}')
                 {
                     post.Append(s2[j]);
                     j--;
