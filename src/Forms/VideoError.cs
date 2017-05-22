@@ -27,19 +27,19 @@ namespace Nikse.SubtitleEdit.Forms
             bool isWindowsXpOrVista = Environment.OSVersion.Version.Major < 7;
 
             var sb = new StringBuilder();
-            sb.AppendLine("There seems to be missing a codec (or file is not a valid video file)!");
+            sb.AppendLine("There seems to be missing a codec (or file is not a valid video/audio file)!");
             sb.AppendLine();
             if (Configuration.Settings.General.VideoPlayer != "VLC")
             {
                 sb.AppendLine("You need to install/update LAV Filters - DirectShow Media Splitter and Decoders: https://github.com/Nevcairiel/LAVFilters/releases");
                 sb.AppendLine();
-                sb.AppendLine("NOTE: Subtitle Edit can also use VLC media player as built-in video player. See Options -> Settings -> Video Player");
+                sb.AppendLine("NOTE: Subtitle Edit can also use mpv, VLC or MPC-HC as built-in video player. See Options -> Settings -> Video Player");
                 sb.AppendLine("http://www.videolan.org/vlc/");
                 sb.AppendLine();
             }
             else
             {
-                sb.AppendLine("VLC media player was unable to play this file - you can change video player via Options -> Settings -> Video Player");
+                sb.AppendLine("VLC media player was unable to play this file (perhaps it's not a valid video/audio file) - you can change video player via Options -> Settings -> Video Player");
                 sb.AppendLine("Latest version of VLC is available here: http://www.videolan.org/vlc/");
                 sb.AppendLine();
             }
@@ -52,15 +52,9 @@ namespace Nikse.SubtitleEdit.Forms
 
             sb.AppendLine("");
 
-            sb.AppendLine("You can read more about codecs and media formats here:");
-            sb.AppendLine(" - http://www.free-codecs.com/guides/What_Codecs_Should_I_Use.htm");
-            sb.AppendLine("");
-
-            sb.AppendLine("Other useful utilities:");
+            sb.AppendLine("You can find a few useful tools below:");
             sb.AppendLine(" - http://mediaarea.net/MediaInfo");
             sb.AppendLine(" - http://www.free-codecs.com/download/Codec_Tweak_Tool.htm");
-            sb.AppendLine(" - http://www.free-codecs.com/download/DirectShow_Filter_Manager.htm");
-            sb.AppendLine(" - http://www.headbands.com/gspot/");
 
             sb.AppendLine("");
             sb.Append("Note that Subtitle Edit is a " + (IntPtr.Size * 8) + "-bit program, and hence requires " + (IntPtr.Size * 8) + "-bit codecs!");
