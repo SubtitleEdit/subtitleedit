@@ -27,6 +27,7 @@
     <CharsPerSec>문자/초</CharsPerSec>
     <WordsPerMin>단어/분</WordsPerMin>
     <Actor>배우</Actor>
+    <Region>지역</Region>
     <NumberSymbol>번호</NumberSymbol>
     <Number>번호</Number>
     <Text>텍스트</Text>
@@ -86,7 +87,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
 이메일 주소: mailto:nikse.dk@gmail.com</AboutText1>
   </About>
   <AddToNames>
-    <Title>이름/기타 목록에 단어 추가</Title>
+    <Title>이름 목록에 단어 추가</Title>
     <Description>단어 추가 (대/소문자 구분)</Description>
   </AddToNames>
   <AddToOcrReplaceList>
@@ -196,8 +197,8 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <Title>* 대/소문자 바꾸기</Title>
     <ChangeCasingTo>대/소문자 변경 기준</ChangeCasingTo>
     <NormalCasing>일반 대소문자 구분 (문장의 시작은 대문자로)</NormalCasing>
-    <FixNamesCasing>이름의 대소문자 수정 (Dictionaries\NamesEtc.xml을 통해)</FixNamesCasing>
-    <FixOnlyNamesCasing>고유 이름만 대소문자 수정 (Dictionaries\NamesEtc.xml을 통해)</FixOnlyNamesCasing>
+    <FixNamesCasing>이름의 대소문자 수정 (Dictionaries\Names.xml을 통해)</FixNamesCasing>
+    <FixOnlyNamesCasing>고유 이름만 대소문자 수정 (Dictionaries\Names.xml을 통해)</FixOnlyNamesCasing>
     <OnlyChangeAllUppercaseLines>줄 전체가 대문자인 경우 수정</OnlyChangeAllUppercaseLines>
     <AllUppercase>모두 대문자</AllUppercase>
     <AllLowercase>모두 소문자</AllLowercase>
@@ -1010,7 +1011,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
         <FindDoubleWords>더블 워드 찾기</FindDoubleWords>
         <FindDoubleLines>중복 라인 찾기</FindDoubleLines>
         <GetDictionaries>사전 가져오기</GetDictionaries>
-        <AddToNameList>이름/기타 목록에 단어 추가...</AddToNameList>
+        <AddToNameList>이름 목록에 단어 추가...</AddToNameList>
       </SpellCheck>
       <Synchronization>
         <Title>동기화</Title>
@@ -1068,6 +1069,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
         <SetActor>배우 설정</SetActor>
         <SubStationAlphaStyles>SSA의 스타일...</SubStationAlphaStyles>
         <AdvancedSubStationAlphaStyles>ASS의 스타일...</AdvancedSubStationAlphaStyles>
+        <TimedTextSetRegion>시간 제한 텍스트 - 지역 설정</TimedTextSetRegion>
         <TimedTextSetStyle>시간 제한 텍스트 - 스타일 설정</TimedTextSetStyle>
         <TimedTextStyles>시간 제한 텍스트 스타일...</TimedTextStyles>
         <TimedTextSetLanguage>시간 제한 텍스트 - 언어 설정</TimedTextSetLanguage>
@@ -1362,8 +1364,8 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <NumberOfWithRemovedLineBreakX>줄바꿈이 제거된 줄: {0}개</NumberOfWithRemovedLineBreakX>
     <BeforeMultipleReplace>다중 바꾸기 전</BeforeMultipleReplace>
     <NumberOfLinesReplacedX>텍스트가 교체된 줄: {0}개</NumberOfLinesReplacedX>
-    <NameXAddedToNameList>'{0}'를 이름/기타 목록에 추가했습니다.</NameXAddedToNameList>
-    <NameXNotAddedToNameList>'{0}'가 이름/기타 목록에 추가되지 않음.</NameXNotAddedToNameList>
+    <NameXAddedToNameList>'{0}'를 이름 목록에 추가했습니다.</NameXAddedToNameList>
+    <NameXNotAddedToNameList>'{0}'가 이름 목록에 추가되지 않음.</NameXNotAddedToNameList>
     <WordXAddedToUserDic>'{0}'를 사용자 사전에 추가했습니다.</WordXAddedToUserDic>
     <WordXNotAddedToUserDic>'{0}'가 사용자 사전에 추가되지 않음.</WordXNotAddedToUserDic>
     <OcrReplacePairXAdded>'{0} -&gt; {1}' (이)가 OCR 교체 목록에 추가됐습니다.</OcrReplacePairXAdded>
@@ -1793,7 +1795,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <SsaOpaqueBox>불투명 상자</SsaOpaqueBox>
     <Testing123>테스트: 123 ABC ...</Testing123>
     <Language>언어</Language>
-    <NamesIgnoreLists>이름/기타 목록 (대소문자 구분)</NamesIgnoreLists>
+    <NamesIgnoreLists>이름/무시 목록 (대소문자 구분)</NamesIgnoreLists>
     <AddName>추가</AddName>
     <AddWord>추가</AddWord>
     <Remove>삭제</Remove>
@@ -1801,12 +1803,12 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <UserWordList>사용자 단어 목록</UserWordList>
     <OcrFixList>OCR 수정 목록</OcrFixList>
     <Location>위치</Location>
-    <UseOnlineNames>NamesEtc.xml 파일 사용</UseOnlineNames>
+    <UseOnlineNames>온라인 names.xml 파일 사용</UseOnlineNames>
     <WordAddedX>단어 추가: {0}</WordAddedX>
     <WordAlreadyExists>단어가 이미 존재합니다!</WordAlreadyExists>
     <WordNotFound>단어를 찾을 수 없습니다!</WordNotFound>
     <RemoveX>{0}을 삭제하시겠습니까?</RemoveX>
-    <CannotUpdateNamesOnline>'NamesEtc.xml'을 업데이트할 수 없습니다!</CannotUpdateNamesOnline>
+    <CannotUpdateNamesOnline>'names.xml'을 업데이트할 수 없습니다!</CannotUpdateNamesOnline>
     <ProxyServerSettings>프록시 서버 설정</ProxyServerSettings>
     <ProxyAddress>프록시 주소:</ProxyAddress>
     <ProxyAuthentication>인증하기</ProxyAuthentication>
@@ -1875,6 +1877,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <WaveformPlayNewSelectionEnd>선택의 끝을 재생</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>처음 선택한 자막 재생</WaveformPlayFirstSelectedSubtitle>
     <WaveformFocusListView>「자막 보기」로 이동</WaveformFocusListView>
+    <WaveformGoToNextSubtitle>다음 자막으로 이동 (비디오 위치에서)</WaveformGoToNextSubtitle>
     <WaveformGoToNextSceneChange>다음 장면 전환으로 이동</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>장면 전환</WaveformToggleSceneChange>
     <GoBack1Frame>1프레임 뒤로</GoBack1Frame>
@@ -1979,7 +1982,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <SkipOnce>건너뛰기(&amp;O)</SkipOnce>
     <SkipAll>모두 건너뛰기(&amp;S)</SkipAll>
     <AddToUserDictionary>사용자 사전에 추가</AddToUserDictionary>
-    <AddToNamesAndIgnoreList>이름/기타 목록에 추가</AddToNamesAndIgnoreList>
+    <AddToNamesAndIgnoreList>이름/무시 목록에 추가</AddToNamesAndIgnoreList>
     <AddToOcrReplaceList>OCR 수정 목록에 추가</AddToOcrReplaceList>
     <Abort>중지</Abort>
     <Use>사용</Use>
@@ -1988,7 +1991,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <SpellCheckProgress>맞춤법 검사 [{0}] - {1}</SpellCheckProgress>
     <EditWholeText>모든 문자열 수정</EditWholeText>
     <EditWordOnly>단어만 수정</EditWordOnly>
-    <AddXToNames>이름/기타 목록에 '{0}' 추가</AddXToNames>
+    <AddXToNames>이름 목록에 '{0}' 추가</AddXToNames>
     <AutoFixNames>자동으로 이름의 대소문자 수정</AutoFixNames>
     <CheckOneLetterWords>알 수 없는 홑문자 단어 알림</CheckOneLetterWords>
     <TreatINQuoteAsING>단어 끝의 "in"→"ing"로 바꿈 (영어 전용)</TreatINQuoteAsING>
@@ -1998,14 +2001,11 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <UndoX>실행 취소: {0}</UndoX>
   </SpellCheck>
   <NetflixQualityCheck>
-    <GlyphCheckSuccessfull>문자 유효성 검사에 성공했습니다.</GlyphCheckSuccessfull>
-    <GlyphCheckFailed>문자 유효성 검사에 실패했습니다.</GlyphCheckFailed>
     <GlyphCheckReport>{1} 열에 잘못된 문자 {0}이(가) 발견되었습니다.</GlyphCheckReport>
-    <WhiteSpaceCheckSuccessfull>공백 유효성 검사에 성공했습니다.</WhiteSpaceCheckSuccessfull>
-    <WhiteSpaceCheckFailed>공백 유효성 검사에 실패했습니다.</WhiteSpaceCheckFailed>
     <WhiteSpaceCheckReport>{0} 열에 잘못된 공백이 있습니다.</WhiteSpaceCheckReport>
     <ReportPrompt>여기 전체 보고서를 참조하십시오: {0}.</ReportPrompt>
-    <SavingError>보고서를 저장할 수 없습니다.</SavingError>
+    <FoundXIssues>Netflix 품질 검사에서 {0} 문제가 발견되었습니다.</FoundXIssues>
+    <CheckOk>Netflix 품질 검사 OK :)</CheckOk>
   </NetflixQualityCheck>
   <Split>
     <Title>* 자막 분할</Title>
@@ -2323,6 +2323,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <RemoveSceneChange>장면 전환 제거</RemoveSceneChange>
     <GuessTimeCodes>타임코드 알아내기</GuessTimeCodes>
     <SeekSilence>무음 탐색...</SeekSilence>
+    <InsertSubtitleHere>여기에 자막 삽입...</InsertSubtitleHere>
     <CharsSecX>문자/초: {0:0.00}</CharsSecX>
     <WordsMinX>단어/분: {0:0.00}</WordsMinX>
   </Waveform>
