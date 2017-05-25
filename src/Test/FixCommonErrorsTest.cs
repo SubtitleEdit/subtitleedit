@@ -737,6 +737,28 @@ namespace Test
         }
 
         [TestMethod]
+        public void FixMissingSpacesAfterQuestionMark()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "Long made a plea deal?Did you know?");
+                new FixMissingSpaces().Fix(_subtitle, new EmptyFixCallback { Language = "en" });
+                Assert.AreEqual(_subtitle.Paragraphs[0].Text, "Long made a plea deal? Did you know?");
+            }
+        }
+
+        [TestMethod]
+        public void FixMissingSpacesAfterExclamationMark()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "Long made a plea deal!Did you know?");
+                new FixMissingSpaces().Fix(_subtitle, new EmptyFixCallback { Language = "en" });
+                Assert.AreEqual(_subtitle.Paragraphs[0].Text, "Long made a plea deal! Did you know?");
+            }
+        }
+
+        [TestMethod]
         public void FixMissingSwedish()
         {
             using (var target = GetFixCommonErrorsLib())
