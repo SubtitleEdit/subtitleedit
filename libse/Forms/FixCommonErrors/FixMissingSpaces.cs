@@ -5,11 +5,9 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 {
     public class FixMissingSpaces : IFixCommonError
     {
-
         private static readonly Regex FixMissingSpacesReComma = new Regex(@"[^\s\d],[^\s]", RegexOptions.Compiled);
         private static readonly Regex FixMissingSpacesRePeriod = new Regex(@"[a-z][a-z][.][a-zA-Z]", RegexOptions.Compiled);
-        private static readonly Regex FixMissingSpacesReQuestionMark = new Regex(@"[^\s\d]\?[a-zA-Z]", RegexOptions.Compiled);
-        private static readonly Regex FixMissingSpacesReExclamation = new Regex(@"[^\s\d]\![a-zA-Z]", RegexOptions.Compiled);
+        private static readonly Regex FixMissingSpacesReQuestionExclamationMark = new Regex(@"[^\s\d]([\?!])[a-zA-Z]", RegexOptions.Compiled);
         private static readonly Regex FixMissingSpacesReColon = new Regex(@"[^\s\d]\:[a-zA-Z]", RegexOptions.Compiled);
         private static readonly Regex FixMissingSpacesReColonWithAfter = new Regex(@"[^\s\d]\:[a-zA-Z]+", RegexOptions.Compiled);
         private static readonly Regex Url = new Regex(@"\w\.(?:com|net|org)\b", RegexOptions.Compiled);
@@ -46,33 +44,32 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
                 bool allowFix = callbacks.AllowFix(p, fixAction);
 
-                // missing space after "?"
-                match = FixMissingSpacesReQuestionMark.Match(p.Text);
+                // missing space after "?" or "!"
+                match = FixMissingSpacesReQuestionExclamationMark.Match(p.Text);
                 while (match.Success)
                 {
                     if (allowFix && !@"""<".Contains(p.Text[match.Index + 2]))
                     {
                         missingSpaces++;
                         string oldText = p.Text;
-                        p.Text = p.Text.Replace(match.Value, match.Value[0] + "? " + match.Value[match.Value.Length - 1]);
+                        p.Text = p.Text.Replace(match.Value, match.Value[0] + match.Groups[1].Value + " " + match.Value[match.Value.Length - 1]);
                         callbacks.AddFixToListView(p, fixAction, oldText, p.Text);
                     }
-                    match = FixMissingSpacesReQuestionMark.Match(p.Text, match.Index + 1);
+                    match = FixMissingSpacesReQuestionExclamationMark.Match(p.Text, match.Index + 1);
                 }
 
-                // missing space after "!"
-                match = FixMissingSpacesReExclamation.Match(p.Text);
-                while (match.Success)
+                if (allowFix)
                 {
-                    if (allowFix && !@"""<".Contains(p.Text[match.Index + 2]))
+                    string oldText = p.Text;
+                    // fix missing spaces after punctuations [!.?)]]
+                    p.Text = FixMissingSpacesAfterPunctuations(p.Text);
+                    if (oldText.Length != p.Text.Length)
                     {
-                        missingSpaces++;
-                        string oldText = p.Text;
-                        p.Text = p.Text.Replace(match.Value, match.Value[0] + "! " + match.Value[match.Value.Length - 1]);
+                        missingSpaces += Math.Abs(p.Text.Length - oldText.Length);
                         callbacks.AddFixToListView(p, fixAction, oldText, p.Text);
                     }
-                    match = FixMissingSpacesReExclamation.Match(p.Text, match.Index + 1);
                 }
+
 
                 // missing space after ":"
                 match = FixMissingSpacesReColon.Match(p.Text);
@@ -94,7 +91,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         if (languageCode == "sv" || languageCode == "fi")
                         {
                             var m = FixMissingSpacesReColonWithAfter.Match(p.Text, match.Index);
-                            skipSwedishOrFinish = IsSwedishSkipValue(languageCode, m) || IsFinnishSkipValue(languageCode, m);                            
+                            skipSwedishOrFinish = IsSwedishSkipValue(languageCode, m) || IsFinnishSkipValue(languageCode, m);
                         }
                         if (!skipSwedishOrFinish)
                         {
@@ -379,6 +376,76 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             }
 
             return text.Substring(startIndex, endIndex - startIndex + 1);
+        }
+
+        private static string FixMissingSpacesAfterPunctuations(string text)
+        {
+            if (text.Length < 3)
+            {
+                return text;
+            }
+            // foobar?<i>-foobar</i> => // foobar? <i>-foobar</i>
+            char[] punctuationsChars = { '!', '.', '?', ')', ']' };
+            int idx = text.LastIndexOfAny(punctuationsChars);
+            while (idx >= 2)
+            {
+                if (idx + 1 < text.Length)
+                {
+                    char postChar = text[idx + 1];
+                    if (!(postChar == ' ' || postChar == '!' || postChar == '?' || postChar == '.'))
+                    {
+                        bool skip = false;
+                        // ignore text like urls e.g: domain.extension
+                        // todo: add more domain extensions e.g: .dk, .gov...
+                        if (text[idx] == '.')
+                        {
+                            // skip abbreviations e.g: Go to the O.R. now!
+                            if (idx + 2 < text.Length && text[idx + 2] == '.' && char.IsLetter(text[idx + 1]))
+                            {
+                                skip = true;
+                            }
+
+                            // todo: skip urls
+                            if (!skip)
+                            {
+
+                                // skip if domain extension matched any (com, net, org, dk)
+                                string postText = text.Substring(idx);
+                                if (postText.StartsWith(".com", StringComparison.OrdinalIgnoreCase) ||
+                                    postText.StartsWith(".net", StringComparison.OrdinalIgnoreCase) ||
+                                    postText.StartsWith(".org", StringComparison.OrdinalIgnoreCase) ||
+                                    postText.StartsWith(".dk", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    skip = true;
+                                }
+
+                                // skip if text before "." is a sub-domain "www"
+                                if (idx >= 3 && text.Substring(idx - 3, 3).Equals("www", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    skip = true;
+                                }
+                            }
+                        }
+
+
+                        if (!skip)
+                        {
+                            var st = new StrippableText(text.Substring(idx + 1));
+                            if (st.StrippedText.Length > 0)
+                            {
+                                text = text.Insert(idx + 1, " ");
+                            }
+                        }
+                    }
+                }
+                if (idx - 1 < 0)
+                {
+                    break;
+                }
+                idx = text.LastIndexOfAny(punctuationsChars, idx - 1);
+            }
+            return text;
+            // todo: "¿" and "¡"
         }
 
     }

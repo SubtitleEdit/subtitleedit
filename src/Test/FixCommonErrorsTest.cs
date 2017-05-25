@@ -726,6 +726,50 @@ namespace Test
         }
 
         [TestMethod]
+        public void FixMissingSpacesHyphen()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "Etkö muista, teitkö murhan?-En.");
+                new FixMissingSpaces().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual(_subtitle.Paragraphs[0].Text, "Etkö muista, teitkö murhan? -En.");
+            }
+        }
+
+        [TestMethod]
+        public void FixMissingSpacesHyphenQuote()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "Etkö muista, teitkö murhan?-\"En.");
+                new FixMissingSpaces().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual(_subtitle.Paragraphs[0].Text, "Etkö muista, teitkö murhan? -\"En.");
+            }
+        }
+
+        [TestMethod]
+        public void FixMissingSpacesHyphenHtmlTag1()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "Etkö muista, teitkö murhan?-<i>En</i>.");
+                new FixMissingSpaces().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual(_subtitle.Paragraphs[0].Text, "Etkö muista, teitkö murhan? -<i>En</i>.");
+            }
+        }
+
+        [TestMethod]
+        public void FixMissingSpacesHyphenHtmlTag2()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "Etkö muista, teitkö murhan?<i>-En</i>.");
+                new FixMissingSpaces().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual(_subtitle.Paragraphs[0].Text, "Etkö muista, teitkö murhan? <i>-En</i>.");
+            }
+        }
+
+        [TestMethod]
         public void FixMissingSpacesOneLetterPlusDotDotDot()
         {
             using (var target = GetFixCommonErrorsLib())
