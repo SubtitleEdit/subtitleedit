@@ -719,7 +719,7 @@ namespace Nikse.SubtitleEdit.Core
                 foreach (string dic in Directory.GetFiles(DictionaryFolder, "*.dic"))
                 {
                     string name = Path.GetFileNameWithoutExtension(dic);
-                    if (!name.StartsWith("hyph", StringComparison.Ordinal))
+                    if (name != null && !name.StartsWith("hyph", StringComparison.Ordinal))
                     {
                         try
                         {
@@ -732,6 +732,41 @@ namespace Nikse.SubtitleEdit.Core
                             name = "[" + name + "]";
                         }
                         list.Add(name);
+                    }
+                }
+            }
+            return list;
+        }
+
+        public static List<string> GetDictionaryLanguagesCultureNeutral()
+        {
+            var list = new List<string>();
+            if (Directory.Exists(DictionaryFolder))
+            {
+                foreach (string dic in Directory.GetFiles(DictionaryFolder, "*.dic"))
+                {
+                    string name = Path.GetFileNameWithoutExtension(dic);
+                    if (name != null && !name.StartsWith("hyph", StringComparison.Ordinal))
+                    {
+                        try
+                        {
+                            var ci = CultureInfo.GetCultureInfo(name.Replace('_', '-'));
+                            var displayName = ci.DisplayName;
+                            if (displayName.Contains("("))
+                            {
+                                displayName = displayName.Remove(displayName.IndexOf('(')).TrimEnd();
+                            }
+                            name = displayName + " [" + ci.TwoLetterISOLanguageName + "]";
+                        }
+                        catch (Exception exception)
+                        {
+                            System.Diagnostics.Debug.WriteLine(exception.Message);
+                            name = "[" + name + "]";
+                        }
+                        if (!list.Contains(name))
+                        {
+                            list.Add(name);
+                        }
                     }
                 }
             }
