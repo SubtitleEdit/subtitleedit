@@ -15579,6 +15579,14 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (_exitWhenLoaded)
                 Application.Exit();
+
+            // Fix some large font issue
+            if (numericUpDownDuration.Left + numericUpDownDuration.Width > textBoxListViewText.Left)
+            {
+                numericUpDownDuration.Left = timeUpDownStartTime.Left + timeUpDownStartTime.Width + 5;
+                numericUpDownDuration.Width = textBoxListViewText.Left - numericUpDownDuration.Left - 5;
+                labelDuration.Left = numericUpDownDuration.Left;
+            }
         }
 
         private void TimerCheckForUpdatesTick(object sender, EventArgs e)
