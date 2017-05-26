@@ -199,10 +199,15 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                 {
                     if (!_namesMultiList.Contains(name))
                         _namesMultiList.Add(name);
+                    else
+                        return false;
                 }
-                else if (!_namesList.Contains(name))
+                else
                 {
-                    _namesList.Add(name);
+                    if (!_namesList.Contains(name))
+                        _namesList.Add(name);
+                    else
+                        return false;
                 }
 
                 // <neutral>_names.xml e.g: en_names.xml

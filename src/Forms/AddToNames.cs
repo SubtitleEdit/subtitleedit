@@ -2,14 +2,12 @@
 using Nikse.SubtitleEdit.Core.Dictionaries;
 using Nikse.SubtitleEdit.Logic;
 using System;
-using System.Collections.Generic;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class AddToNameList : PositionAndSizeForm
     {
-        private LanguageStructure.Main _language;
         private Subtitle _subtitle;
 
         public AddToNameList()
@@ -45,12 +43,18 @@ namespace Nikse.SubtitleEdit.Forms
 
             comboBoxDictionaries.Items.Clear();
             string languageName = LanguageAutoDetect.AutoDetectLanguageName(Configuration.Settings.General.SpellCheckLanguage, _subtitle);
-            foreach (string name in Utilities.GetDictionaryLanguages())
+            int selIndex = -1;
+            var dictionaries = Utilities.GetDictionaryLanguagesCultureNeutral(); 
+            for (var index = 0; index < dictionaries.Count; index++)
             {
+                string name = dictionaries[index];
                 comboBoxDictionaries.Items.Add(name);
-                if (name.Contains("[" + languageName + "]"))
-                    comboBoxDictionaries.SelectedIndex = comboBoxDictionaries.Items.Count - 1;
+                if (selIndex == -1 && languageName.Length > 1 &&  name.Contains("[" + languageName.Substring(0, 2) + "]"))
+                {
+                    selIndex = index;
+                }                
             }
+            comboBoxDictionaries.SelectedIndex = selIndex >= 0 ? selIndex : 0;
         }
 
         internal void Initialize(Subtitle subtitle, string hunspellName, string text)
@@ -75,63 +79,25 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonOkClick(object sender, EventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(textBoxAddName.Text))
+            if (string.IsNullOrWhiteSpace(textBoxAddName.Text) || comboBoxDictionaries.SelectedIndex < 0)
             {
                 return;
             }
 
             NewName = textBoxAddName.Text.RemoveControlCharacters().Trim();
-            string languageName = null;
-            _language = Configuration.Settings.Language.Main;
-
-            if (!string.IsNullOrEmpty(Configuration.Settings.General.SpellCheckLanguage))
+            string languageName;
+            try
             {
-                languageName = Configuration.Settings.General.SpellCheckLanguage;
+                languageName = comboBoxDictionaries.Items[comboBoxDictionaries.SelectedIndex].ToString();
+                languageName = languageName.Substring(languageName.LastIndexOf("[", StringComparison.Ordinal)).TrimStart('[').TrimEnd(']');
             }
-            else
+            catch
             {
-                List<string> list = Utilities.GetDictionaryLanguages();
-                if (list.Count > 0)
-                {
-                    string name = list[0];
-                    int start = name.LastIndexOf('[');
-                    int end = name.LastIndexOf(']');
-                    if (start > 0 && end > start)
-                    {
-                        start++;
-                        name = name.Substring(start, end - start);
-                        languageName = name;
-                    }
-                    else
-                    {
-                        MessageBox.Show(string.Format(_language.InvalidLanguageNameX, name));
-                        return;
-                    }
-                }
+                languageName = "en";
             }
-
-            languageName = LanguageAutoDetect.AutoDetectLanguageName(languageName, _subtitle);
-            if (comboBoxDictionaries.Items.Count > 0)
-            {
-                string name = comboBoxDictionaries.SelectedItem.ToString();
-                int start = name.LastIndexOf('[');
-                int end = name.LastIndexOf(']');
-                if (start >= 0 && end > start)
-                {
-                    start++;
-                    name = name.Substring(start, end - start);
-                    languageName = name;
-                }
-            }
-
-            if (string.IsNullOrEmpty(languageName))
-                languageName = "en_US";
 
             var nameList = new NameList(Configuration.DictionariesDirectory, languageName, Configuration.Settings.WordLists.UseOnlineNames, Configuration.Settings.WordLists.NamesUrl);
-            if (nameList.Add(textBoxAddName.Text))
-                DialogResult = DialogResult.OK;
-            else
-                DialogResult = DialogResult.Cancel;
+            DialogResult = nameList.Add(textBoxAddName.Text) ? DialogResult.OK : DialogResult.Cancel;
         }
 
     }
