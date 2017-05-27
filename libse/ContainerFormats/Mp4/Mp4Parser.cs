@@ -145,7 +145,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
             fs.Close();
         }
 
-        internal double FrameRate
+        public double FrameRate
         {
             get
             {
