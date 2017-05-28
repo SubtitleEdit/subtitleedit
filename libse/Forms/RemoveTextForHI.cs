@@ -800,11 +800,6 @@ namespace Nikse.SubtitleEdit.Core.Forms
             return result.Trim(' ', '(', ')', '[', ']', '?', '{', '}');
         }
 
-        private static int CompareLength(string a, string b)
-        {
-            return b.Length.CompareTo(a.Length);
-        }
-
         public string RemoveInterjections(string text)
         {
             if (_interjectionList == null)
@@ -825,7 +820,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 _interjectionList = new List<string>(interjectionList);
                 interjectionList.Clear();
                 interjectionList.TrimExcess();
-                _interjectionList.Sort(CompareLength);
+                _interjectionList.Sort((a, b) => b.Length.CompareTo(a.Length));
             }
 
             string oldText = text;
@@ -1290,7 +1285,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
             foreach (var line in text.SplitToLines())
             {
                 var lineNoHtml = HtmlUtil.RemoveHtmlTags(line, true);
-                if (lineNoHtml == lineNoHtml.ToUpper() && lineNoHtml != lineNoHtml.ToLower())
+                if (lineNoHtml == lineNoHtml.ToUpper() && lineNoHtml.ContainsLetter())
                 {
                     var temp = lineNoHtml.TrimEnd(endTrimChars).Trim().Trim(trimChars);
                     if (temp.Length == 1 || temp == "YES" || temp == "NO" || temp == "WHY" || temp == "HI" || temp == "OK")
