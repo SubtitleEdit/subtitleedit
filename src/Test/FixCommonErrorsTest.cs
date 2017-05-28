@@ -1001,6 +1001,25 @@ namespace Test
             Assert.AreEqual(s.Paragraphs[0].Text, "The house seemed desolate to me and");
         }
 
+        [TestMethod]
+        public void FixMissingPunctuationDialogTest1()
+        {
+            var s = new Subtitle();
+            s.Paragraphs.Add(new Paragraph("- Foobar\r\n- Foobar.", 0, 1000));
+            new FixMissingPeriodsAtEndOfLine().Fix(s, new EmptyFixCallback());
+            Assert.AreEqual("- Foobar.\r\n- Foobar.", s.Paragraphs[0].Text);
+        }
+
+
+        [TestMethod]
+        public void FixMissingPunctuationDialogTest2()
+        {
+            var s = new Subtitle();
+            s.Paragraphs.Add(new Paragraph("- ¿Foobar\r\n- Foobar.", 0, 1000));
+            new FixMissingPeriodsAtEndOfLine().Fix(s, new EmptyFixCallback());
+            Assert.AreEqual("- ¿Foobar?\r\n- Foobar.", s.Paragraphs[0].Text);
+        }
+
         #endregion Fix missing periods at end of line
 
         #region Start with uppercase after paragraph
