@@ -11,5 +11,11 @@
         {
             return (ch >= '0') && (ch <= '9');
         }
+
+        public static bool IsAsciiLetterOrDigit(char ch)
+        {
+            return IsDigit(ch) || (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z');
+        }
+
     }
 }
