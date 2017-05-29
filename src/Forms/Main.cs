@@ -620,7 +620,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripSeparator11.Visible = false;
             toolStripMenuItemWaveformPlaySelection.Visible = false;
             toolStripSeparator24.Visible = false;
-            if (GetSceneChangeIndex(e.Seconds) >= 0)
+            if (audioVisualizer?.GetSceneChangeIndex(e.Seconds) >= 0)
             {
                 removeSceneChangeToolStripMenuItem.Visible = true;
                 addSceneChangeToolStripMenuItem.Visible = false;
@@ -727,7 +727,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripSeparator11.Visible = true;
             toolStripMenuItemWaveformPlaySelection.Visible = true;
             toolStripSeparator24.Visible = true;
-            if (GetSceneChangeIndex(e.Seconds) >= 0)
+            if (audioVisualizer?.GetSceneChangeIndex(e.Seconds) >= 0)
             {
                 removeSceneChangeToolStripMenuItem.Visible = true;
                 addSceneChangeToolStripMenuItem.Visible = false;
@@ -741,39 +741,15 @@ namespace Nikse.SubtitleEdit.Forms
             contextMenuStripWaveform.Show(MousePosition.X, MousePosition.Y);
         }
 
-        private int GetSceneChangeIndex(double seconds)
-        {
-            if (audioVisualizer == null || audioVisualizer.SceneChanges == null)
-                return -1;
-
-            try
-            {
-                for (int index = 0; index < audioVisualizer.SceneChanges.Count; index++)
-                {
-                    var sceneChange = audioVisualizer.SceneChanges[index];
-                    if (Math.Abs(sceneChange - seconds) < 0.04)
-                    {
-                        return index;
-                    }
-                }
-            }
-            catch (Exception)
-            {
-                // ignored
-            }
-
-            return -1;
-        }
-
         private void removeSceneChangeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (!_audioWaveformRightClickSeconds.HasValue)
                 return;
 
-            var idx = GetSceneChangeIndex(_audioWaveformRightClickSeconds.Value);
+            var idx = audioVisualizer?.GetSceneChangeIndex(_audioWaveformRightClickSeconds.Value);
             if (idx >= 0 && idx < audioVisualizer.SceneChanges.Count)
             {
-                audioVisualizer.SceneChanges[idx] = -1;
+                audioVisualizer.SceneChanges[idx.Value] = -1;
                 SceneChangeHelper.SaveSceneChanges(_videoFileName, audioVisualizer.SceneChanges.Where(p => p > 0).ToList());
             }
         }
@@ -11963,12 +11939,12 @@ namespace Nikse.SubtitleEdit.Forms
             else if (audioVisualizer.SceneChanges != null && mediaPlayer.IsPaused && e.KeyData == _waveformToggleSceneChange)
             {
                 var cp = mediaPlayer.CurrentPosition;
-                var idx = GetSceneChangeIndex(cp);
+                var idx = audioVisualizer?.GetSceneChangeIndex(cp);
                 if (idx >= 0)
                 { // remove scene change
                     if (idx < audioVisualizer.SceneChanges.Count)
                     {
-                        audioVisualizer.SceneChanges[idx] = -1;
+                        audioVisualizer.SceneChanges[idx.Value] = -1;
                         SceneChangeHelper.SaveSceneChanges(_videoFileName, audioVisualizer.SceneChanges.Where(p => p > 0).ToList());
                     }
                 }
