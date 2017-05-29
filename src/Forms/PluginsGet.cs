@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Net;
+using System.Net.Cache;
 using System.Windows.Forms;
 using System.Xml;
 using Nikse.SubtitleEdit.Logic;
@@ -17,7 +18,6 @@ namespace Nikse.SubtitleEdit.Forms
         private string _downloadedPluginName;
         private readonly LanguageStructure.PluginsGet _language;
         private List<string> _updateAllListUrls;
-        private List<string> _updateAllListNames;
         private bool _updatingAllPlugins;
         private int _updatingAllPluginsCount;
 
@@ -60,7 +60,12 @@ namespace Nikse.SubtitleEdit.Forms
                 Refresh();
                 ShowInstalledPlugins();
                 string url = GetPluginXmlFileUrl();
-                var wc = new WebClient { Proxy = Utilities.GetProxy(), Encoding = System.Text.Encoding.UTF8 };
+                var wc = new WebClient
+                {
+                    Proxy = Utilities.GetProxy(),
+                    Encoding = System.Text.Encoding.UTF8,
+                    CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore)
+                };
                 wc.Headers.Add("Accept-Encoding", "");
                 wc.DownloadStringCompleted += wc_DownloadStringCompleted;
                 wc.DownloadStringAsync(new Uri(url));
@@ -85,7 +90,6 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
             _updateAllListUrls = new List<string>();
-            _updateAllListNames = new List<string>();
             listViewGetPlugins.BeginUpdate();
             try
             {
@@ -123,7 +127,6 @@ namespace Nikse.SubtitleEdit.Forms
                             installed.SubItems[1].Text = _language.UpdateAvailable + " " + installed.SubItems[1].Text;
                             buttonUpdateAll.Visible = true;
                             _updateAllListUrls.Add(node.SelectSingleNode("Url").InnerText);
-                            _updateAllListNames.Add(node.SelectSingleNode("Name").InnerText);
                         }
                     }
                 }
@@ -195,7 +198,7 @@ namespace Nikse.SubtitleEdit.Forms
                 string url = _pluginDoc.DocumentElement.SelectNodes("Plugin")[index].SelectSingleNode("Url").InnerText;
                 _downloadedPluginName = _pluginDoc.DocumentElement.SelectNodes("Plugin")[index].SelectSingleNode("Name").InnerText;
 
-                var wc = new WebClient { Proxy = Utilities.GetProxy() };
+                var wc = new WebClient { Proxy = Utilities.GetProxy(), CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore) };
                 wc.DownloadDataCompleted += wc_DownloadDataCompleted;
                 wc.DownloadDataAsync(new Uri(url));
             }
