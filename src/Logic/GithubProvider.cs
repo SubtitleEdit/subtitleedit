@@ -28,7 +28,7 @@ namespace Nikse.SubtitleEdit.Logic
 
             if (strm == null)
             {
-                throw new NullReferenceException("Resouce file stream");
+                throw new NullReferenceException("Resource file stream");
             }
 
             var doc = new XmlDocument();
@@ -77,6 +77,11 @@ namespace Nikse.SubtitleEdit.Logic
                 };
                 Dictionaries.Add(dicInfo);
             }
+        }
+
+        public void ProccessDownloadedData(string dictionaryFolder, byte[] data)
+        {
+
         }
     }
 }

@@ -37,10 +37,13 @@ namespace Nikse.SubtitleEdit.Forms
 #endif
 
             // initialize combobox providers
-
             foreach (DictionaryProvider dicProvider in GetProviders())
             {
                 comboBoxProviders.Items.Add(dicProvider);
+            }
+            if (comboBoxProviders.Items.Count > 0)
+            {
+                comboBoxProviders.SelectedIndex = 0;
             }
         }
 
@@ -94,12 +97,14 @@ namespace Nikse.SubtitleEdit.Forms
                 this.Refresh();
                 Cursor = Cursors.WaitCursor;
 
-                int index = comboBoxDictionaries.SelectedIndex;
-                string url = _dictionaryDownloadLinks[index];
-
                 var wc = new WebClient { Proxy = Utilities.GetProxy() };
                 wc.DownloadDataCompleted += wc_DownloadDataCompleted;
-                wc.DownloadDataAsync(new Uri(url));
+                var dicInfo = (DictionaryInfo)comboBoxDictionaries.SelectedItem;
+                foreach (Uri downloadLink in dicInfo.DownloadLinks)
+                {
+                    wc.DownloadDataAsync(downloadLink);
+                }
+
             }
             catch (Exception exception)
             {
@@ -116,57 +121,49 @@ namespace Nikse.SubtitleEdit.Forms
         private void wc_DownloadDataCompleted(object sender, DownloadDataCompletedEventArgs e)
         {
             Cursor = Cursors.Default;
-            if (e.Error != null && _xmlName == "Nikse.SubtitleEdit.Resources.HunspellDictionaries.xml.gz")
+
+            if (e.Error != null)
             {
-                MessageBox.Show("Unable to connect to extensions.services.openoffice.org... Switching host - please re-try!");
-                // TODO: LoadDictionaryList("Nikse.SubtitleEdit.Resources.HunspellBackupDictionaries.xml.gz");
-                labelPleaseWait.Text = string.Empty;
-                buttonOK.Enabled = true;
-                buttonDownload.Enabled = true;
-                buttonDownloadAll.Enabled = true;
-                comboBoxDictionaries.Enabled = true;
-                Cursor = Cursors.Default;
-                return;
-            }
-            else if (e.Error != null)
-            {
-                MessageBox.Show(Configuration.Settings.Language.GetTesseractDictionaries.DownloadFailed + Environment.NewLine +
+                // TODO:...
+
+                if (_xmlName.Equals("Nikse.SubtitleEdit.Resources.HunspellDictionaries.xml.gz", StringComparison.Ordinal))
+                {
+                    MessageBox.Show("Unable to connect to extensions.services.openoffice.org... Switching host - please re-try!");
+                    // TODO: LoadDictionaryList("Nikse.SubtitleEdit.Resources.HunspellBackupDictionaries.xml.gz");
+                    labelPleaseWait.Text = string.Empty;
+                    buttonOK.Enabled = true;
+                    buttonDownload.Enabled = true;
+                    buttonDownloadAll.Enabled = true;
+                    comboBoxDictionaries.Enabled = true;
+                    Cursor = Cursors.Default;
+                    return;
+                }
+                else
+                {
+                    MessageBox.Show(Configuration.Settings.Language.GetTesseractDictionaries.DownloadFailed + Environment.NewLine +
                                 Environment.NewLine +
                                 e.Error.Message);
-                DialogResult = DialogResult.Cancel;
-                return;
+                    DialogResult = DialogResult.Cancel;
+                    return;
+                }
             }
 
+            byte[] data = e.Result;
             string dictionaryFolder = Utilities.DictionaryFolder;
             if (!Directory.Exists(dictionaryFolder))
-                Directory.CreateDirectory(dictionaryFolder);
-
-            int index = comboBoxDictionaries.SelectedIndex;
-
-            using (var ms = new MemoryStream(e.Result))
-            using (ZipExtractor zip = ZipExtractor.Open(ms))
             {
-                List<ZipExtractor.ZipFileEntry> dir = zip.ReadCentralDir();
-                // Extract dic/aff files in dictionary folder
-                bool found = false;
-                ExtractDic(dictionaryFolder, zip, dir, ref found);
+                Directory.CreateDirectory(dictionaryFolder);
+            }
 
-                if (!found) // check zip inside zip
-                {
-                    foreach (ZipExtractor.ZipFileEntry entry in dir)
-                    {
-                        if (entry.FilenameInZip.EndsWith(".zip", StringComparison.OrdinalIgnoreCase))
-                        {
-                            using (var innerMs = new MemoryStream())
-                            {
-                                zip.ExtractFile(entry, innerMs);
-                                ZipExtractor innerZip = ZipExtractor.Open(innerMs);
-                                List<ZipExtractor.ZipFileEntry> innerDir = innerZip.ReadCentralDir();
-                                ExtractDic(dictionaryFolder, innerZip, innerDir, ref found);
-                            }
-                        }
-                    }
-                }
+            if (comboBoxProviders.SelectedItem is LibreOfficeProvider libreOfficeProvider)
+            {
+                libreOfficeProvider.ProccessDownloadedData(dictionaryFolder, data);
+            }
+            else
+            {
+                // github provider
+                var gitHubProvider = (GitHubProvider)comboBoxProviders.SelectedItem;
+                gitHubProvider.ProccessDownloadedData(dictionaryFolder, data);
             }
 
             Cursor = Cursors.Default;
@@ -180,36 +177,10 @@ namespace Nikse.SubtitleEdit.Forms
                 DownloadNext();
                 return;
             }
-            MessageBox.Show(string.Format(Configuration.Settings.Language.GetDictionaries.XDownloaded, comboBoxDictionaries.Items[index]));
+            // TODO: MessageBox.Show(string.Format(Configuration.Settings.Language.GetDictionaries.XDownloaded, comboBoxDictionaries.Items[index]));
         }
 
-        private static void ExtractDic(string dictionaryFolder, ZipExtractor zip, List<ZipExtractor.ZipFileEntry> dir, ref bool found)
-        {
-            foreach (ZipExtractor.ZipFileEntry entry in dir)
-            {
-                if (entry.FilenameInZip.EndsWith(".dic", StringComparison.OrdinalIgnoreCase) || entry.FilenameInZip.EndsWith(".aff", StringComparison.OrdinalIgnoreCase))
-                {
-                    string fileName = Path.GetFileName(entry.FilenameInZip);
 
-                    // French fix
-                    if (fileName.StartsWith("fr-moderne", StringComparison.Ordinal))
-                        fileName = fileName.Replace("fr-moderne", "fr_FR");
-
-                    // German fix
-                    if (fileName.StartsWith("de_DE_frami", StringComparison.Ordinal))
-                        fileName = fileName.Replace("de_DE_frami", "de_DE");
-
-                    // Russian fix
-                    if (fileName.StartsWith("russian-aot", StringComparison.Ordinal))
-                        fileName = fileName.Replace("russian-aot", "ru_RU");
-
-                    string path = Path.Combine(dictionaryFolder, fileName);
-                    zip.ExtractFile(entry, path);
-
-                    found = true;
-                }
-            }
-        }
 
         private void comboBoxDictionaries_SelectedIndexChanged(object sender, EventArgs e)
         {

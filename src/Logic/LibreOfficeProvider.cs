@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Models;
+﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -32,7 +33,7 @@ namespace Nikse.SubtitleEdit.Logic
 
             if (strm == null)
             {
-                throw new NullReferenceException("Resouce file stream");
+                throw new NullReferenceException("Resource file stream");
             }
 
             var doc = new XmlDocument();
@@ -67,6 +68,64 @@ namespace Nikse.SubtitleEdit.Logic
                 Dictionaries.Add(dicInfo);
             }
 
+        }
+
+        public void ProccessDownloadedData(string dictionaryFolder, byte[] data)
+        {
+            // TODO: Only extract if provider is Open Office
+            using (var ms = new MemoryStream(data))
+            using (ZipExtractor zip = ZipExtractor.Open(ms))
+            {
+                List<ZipExtractor.ZipFileEntry> dir = zip.ReadCentralDir();
+                // Extract dic/aff files in dictionary folder
+                bool found = false;
+                ExtractDic(dictionaryFolder, zip, dir, ref found);
+
+                if (!found) // check zip inside zip
+                {
+                    foreach (ZipExtractor.ZipFileEntry entry in dir)
+                    {
+                        if (entry.FilenameInZip.EndsWith(".zip", StringComparison.OrdinalIgnoreCase))
+                        {
+                            using (var innerMs = new MemoryStream())
+                            {
+                                zip.ExtractFile(entry, innerMs);
+                                ZipExtractor innerZip = ZipExtractor.Open(innerMs);
+                                List<ZipExtractor.ZipFileEntry> innerDir = innerZip.ReadCentralDir();
+                                ExtractDic(dictionaryFolder, innerZip, innerDir, ref found);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        private static void ExtractDic(string dictionaryFolder, ZipExtractor zip, List<ZipExtractor.ZipFileEntry> dir, ref bool found)
+        {
+            foreach (ZipExtractor.ZipFileEntry entry in dir)
+            {
+                if (entry.FilenameInZip.EndsWith(".dic", StringComparison.OrdinalIgnoreCase) || entry.FilenameInZip.EndsWith(".aff", StringComparison.OrdinalIgnoreCase))
+                {
+                    string fileName = Path.GetFileName(entry.FilenameInZip);
+
+                    // French fix
+                    if (fileName.StartsWith("fr-moderne", StringComparison.Ordinal))
+                        fileName = fileName.Replace("fr-moderne", "fr_FR");
+
+                    // German fix
+                    if (fileName.StartsWith("de_DE_frami", StringComparison.Ordinal))
+                        fileName = fileName.Replace("de_DE_frami", "de_DE");
+
+                    // Russian fix
+                    if (fileName.StartsWith("russian-aot", StringComparison.Ordinal))
+                        fileName = fileName.Replace("russian-aot", "ru_RU");
+
+                    string path = Path.Combine(dictionaryFolder, fileName);
+                    zip.ExtractFile(entry, path);
+
+                    found = true;
+                }
+            }
         }
     }
 }
