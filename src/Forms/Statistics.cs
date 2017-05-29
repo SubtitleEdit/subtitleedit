@@ -10,6 +10,25 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class Statistics : PositionAndSizeForm
     {
+
+        public class StingOrdinalComparer : IEqualityComparer<string>, IComparer<string>
+        {
+            public bool Equals(string x, string y)
+            {
+                return x.Equals(y, StringComparison.Ordinal);
+            }
+
+            public int GetHashCode(string x)
+            {
+                return x.GetHashCode();
+            }
+
+            public int Compare(string x, string y)
+            {
+                return string.CompareOrdinal(x, y);
+            }
+        }
+
         private readonly Subtitle _subtitle;
         private readonly SubtitleFormat _format;
         private readonly LanguageStructure.Statistics _l;
@@ -27,7 +46,7 @@ https://github.com/SubtitleEdit/subtitleedit
 ============================= Most Used Lines =============================
 {2}";
 
-        private static readonly char[] ExpectedChars = new[] { '♪', '(', ')', '[', ']', ' ', ',', '!', '?', '.', ':', ';', '-', '_', '@', '<', '>', '/', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+        private static readonly char[] ExpectedChars = { '♪', '♫', '"', '(', ')', '[', ']', ' ', ',', '!', '?', '.', ':', ';', '-', '_', '@', '<', '>', '/', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '،', '؟', '؛' };
 
         public Statistics(Subtitle subtitle, string fileName, SubtitleFormat format)
         {
@@ -239,7 +258,7 @@ https://github.com/SubtitleEdit/subtitleedit
 
         private void CalculateWordStatistics()
         {
-            var hashtable = new Dictionary<string, int>();
+            var hashtable = new Dictionary<string, int>(new StingOrdinalComparer());
 
             foreach (Paragraph p in _subtitle.Paragraphs)
             { 
@@ -247,7 +266,7 @@ https://github.com/SubtitleEdit/subtitleedit
                 _totalWords += p.Text.CountWords();
             }
 
-            var sortedTable = new SortedDictionary<string, string>();
+            var sortedTable = new SortedDictionary<string, string>(new StingOrdinalComparer());
             foreach (KeyValuePair<string, int> item in hashtable)
             {
                 if (item.Value > 1)
