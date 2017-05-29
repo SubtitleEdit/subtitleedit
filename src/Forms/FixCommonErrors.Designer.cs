@@ -80,6 +80,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.tabPageLog = new System.Windows.Forms.TabPage();
             this.textBoxFixedIssues = new System.Windows.Forms.TextBox();
             this.labelNumberOfImportantLogMessages = new System.Windows.Forms.Label();
+            this.buttonResetDefault = new System.Windows.Forms.Button();
             this.groupBoxStep1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -146,6 +147,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxStep1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxStep1.Controls.Add(this.buttonResetDefault);
             this.groupBoxStep1.Controls.Add(this.comboBoxLanguage);
             this.groupBoxStep1.Controls.Add(this.labelLanguage);
             this.groupBoxStep1.Controls.Add(this.buttonInverseSelection);
@@ -654,6 +656,16 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelNumberOfImportantLogMessages.TabIndex = 11;
             this.labelNumberOfImportantLogMessages.Text = "labelNumberOfImportantLogMessages";
             // 
+            // buttonResetDefault
+            // 
+            this.buttonResetDefault.Location = new System.Drawing.Point(6, 19);
+            this.buttonResetDefault.Name = "buttonResetDefault";
+            this.buttonResetDefault.Size = new System.Drawing.Size(85, 23);
+            this.buttonResetDefault.TabIndex = 12;
+            this.buttonResetDefault.Text = "Reset default";
+            this.buttonResetDefault.UseVisualStyleBackColor = true;
+            this.buttonResetDefault.Click += new System.EventHandler(this.buttonResetDefault_Click);
+            // 
             // FixCommonErrors
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -750,5 +762,6 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.Button buttonSplitLine;
         private System.Windows.Forms.ComboBox comboBoxLanguage;
         private System.Windows.Forms.Label labelLanguage;
+        private System.Windows.Forms.Button buttonResetDefault;
     }
 }

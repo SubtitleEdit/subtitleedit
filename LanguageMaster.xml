@@ -636,6 +636,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <FixOcrErrorExample>D0n't -&gt; Don't</FixOcrErrorExample>
     <FixSpaceBetweenNumbersExample>1 100 -&gt; 1100</FixSpaceBetweenNumbersExample>
     <FixDialogsOneLineExample>Hi John! - Hi Ida! -&gt; Hi John!&lt;br /&gt;- Hi Ida!</FixDialogsOneLineExample>
+    <ResetDefault>Reset default</ResetDefault>
   </FixCommonErrors>
   <GetDictionaries>
     <Title>Need dictionaries?</Title>
