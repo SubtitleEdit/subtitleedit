@@ -439,6 +439,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelLanguage.Text = Configuration.Settings.Language.ChooseLanguage.Language;
             toolStripMenuItemDelete.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.Delete;
             mergeSelectedLinesToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.MergeSelectedLines;
+            buttonResetDefault.Text = _language.ResetDefault;
 
             splitContainerStep2.Panel1MinSize = 110;
             splitContainerStep2.Panel2MinSize = 160;
@@ -530,7 +531,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (_nameList == null)
             {
-                string languageTwoLetterCode = LanguageAutoDetect.AutoDetectGoogleLanguage(Subtitle);                
+                string languageTwoLetterCode = LanguageAutoDetect.AutoDetectGoogleLanguage(Subtitle);
                 // Will contains both one word names and multi names
                 var namesList = new NameList(Configuration.DictionariesDirectory, languageTwoLetterCode, Configuration.Settings.WordLists.UseOnlineNames, Configuration.Settings.WordLists.NamesUrl);
                 _nameList = namesList.GetNames();
@@ -1608,5 +1609,10 @@ namespace Nikse.SubtitleEdit.Forms
             SaveConfiguration();
         }
 
+        private void buttonResetDefault_Click(object sender, EventArgs e)
+        {
+            Configuration.Settings.CommonErrors.LoadDeafultConfigs();
+            AddFixActions(CultureInfo.GetCultureInfo(_autoDetectGoogleLanguage).ThreeLetterISOLanguageName);
+        }
     }
 }
