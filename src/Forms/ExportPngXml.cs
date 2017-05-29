@@ -3319,6 +3319,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 comboBoxFrameRate.Items.Add("30");
                 comboBoxFrameRate.Items.Add("50");
                 comboBoxFrameRate.Items.Add("59.94");
+                comboBoxFrameRate.Items.Add("60");
                 comboBoxFrameRate.SelectedIndex = 2;
 
                 comboBoxImageFormat.Items.Clear();
@@ -3339,6 +3340,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 comboBoxFrameRate.Items.Add("29.97");
                 comboBoxFrameRate.Items.Add("30");
                 comboBoxFrameRate.Items.Add("59.94");
+                comboBoxFrameRate.Items.Add("60");
                 comboBoxFrameRate.SelectedIndex = 2;
             }
             else if (exportType == "IMAGE/FRAME")
@@ -3366,6 +3368,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 comboBoxFrameRate.Items.Add("30");
                 comboBoxFrameRate.Items.Add("50");
                 comboBoxFrameRate.Items.Add("59.94");
+                comboBoxFrameRate.Items.Add("60");
                 comboBoxFrameRate.SelectedIndex = 1;
                 comboBoxFrameRate.DropDownStyle = ComboBoxStyle.DropDownList;
 
@@ -3382,6 +3385,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 comboBoxFrameRate.Items.Add("30");
                 comboBoxFrameRate.Items.Add("50");
                 comboBoxFrameRate.Items.Add("59.94");
+                comboBoxFrameRate.Items.Add("60");
                 comboBoxFrameRate.SelectedIndex = 1;
                 comboBoxFrameRate.DropDownStyle = ComboBoxStyle.DropDownList;
             }
