@@ -1,5 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -30,54 +31,26 @@ namespace Nikse.SubtitleEdit.Forms
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             labelPleaseWait.Text = string.Empty;
 
-            LoadDictionaryList("Nikse.SubtitleEdit.Resources.HunspellDictionaries.xml.gz");
             FixLargeFonts();
 #if DEBUG
             buttonDownloadAll.Visible = true; // For testing all download links
 #endif
+
+            // initialize combobox providers
+
+            foreach (DictionaryProvider dicProvider in GetProviders())
+            {
+                comboBoxProviders.Items.Add(dicProvider);
+            }
         }
 
-        private void LoadDictionaryList(string xmlRessourceName)
+        private static IList<DictionaryProvider> GetProviders()
         {
-            _dictionaryDownloadLinks = new List<string>();
-            _descriptions = new List<string>();
-            _xmlName = xmlRessourceName;
-            System.Reflection.Assembly asm = System.Reflection.Assembly.GetExecutingAssembly();
-            var strm = asm.GetManifestResourceStream(_xmlName);
-            if (strm != null)
+            return new List<DictionaryProvider>
             {
-                comboBoxDictionaries.Items.Clear();
-                var doc = new XmlDocument();
-                using (var rdr = new StreamReader(strm))
-                using (var zip = new GZipStream(rdr.BaseStream, CompressionMode.Decompress))
-                using (var reader = XmlReader.Create(zip, new XmlReaderSettings { IgnoreProcessingInstructions = true }))
-                {
-                    doc.Load(reader);
-                }
-
-                foreach (XmlNode node in doc.DocumentElement.SelectNodes("Dictionary"))
-                {
-                    string englishName = node.SelectSingleNode("EnglishName").InnerText;
-                    string nativeName = node.SelectSingleNode("NativeName").InnerText;
-                    string downloadLink = node.SelectSingleNode("DownloadLink").InnerText;
-
-                    string description = string.Empty;
-                    if (node.SelectSingleNode("Description") != null)
-                        description = node.SelectSingleNode("Description").InnerText;
-
-                    if (!string.IsNullOrEmpty(downloadLink))
-                    {
-                        string name = englishName;
-                        if (!string.IsNullOrEmpty(nativeName))
-                            name += " - " + nativeName;
-
-                        comboBoxDictionaries.Items.Add(name);
-                        _dictionaryDownloadLinks.Add(downloadLink);
-                        _descriptions.Add(description);
-                    }
-                }
-                comboBoxDictionaries.SelectedIndex = 0;
-            }
+                new LibreOfficeProvider("Nikse.SubtitleEdit.Resources.HunspellDictionaries.xml.gz"),
+                new GitHubProvider("Nikse.SubtitleEdit.Resources.HunspellDictionaries-github.xml.gz")
+            };
         }
 
         private void FixLargeFonts()
@@ -146,7 +119,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (e.Error != null && _xmlName == "Nikse.SubtitleEdit.Resources.HunspellDictionaries.xml.gz")
             {
                 MessageBox.Show("Unable to connect to extensions.services.openoffice.org... Switching host - please re-try!");
-                LoadDictionaryList("Nikse.SubtitleEdit.Resources.HunspellBackupDictionaries.xml.gz");
+                // TODO: LoadDictionaryList("Nikse.SubtitleEdit.Resources.HunspellBackupDictionaries.xml.gz");
                 labelPleaseWait.Text = string.Empty;
                 buttonOK.Enabled = true;
                 buttonDownload.Enabled = true;
@@ -240,8 +213,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void comboBoxDictionaries_SelectedIndexChanged(object sender, EventArgs e)
         {
-            int index = comboBoxDictionaries.SelectedIndex;
-            labelPleaseWait.Text = _descriptions[index];
+            var dicInfo = (DictionaryInfo)comboBoxDictionaries.SelectedItem;
+            labelPleaseWait.Text = dicInfo.Description;
         }
 
         private void buttonDownloadAll_Click(object sender, EventArgs e)
@@ -260,5 +233,22 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        private void comboBoxProviders_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            DictionaryProvider dicProvider = (DictionaryProvider)comboBoxProviders.SelectedItem;
+            if (dicProvider == null)
+            {
+                throw new InvalidOperationException("Invalid provider selected!");
+            }
+            comboBoxDictionaries.Items.Clear();
+            foreach (DictionaryInfo dicInfo in dicProvider.Dictionaries)
+            {
+                comboBoxDictionaries.Items.Add(dicInfo);
+            }
+            if (comboBoxDictionaries.Items.Count > 0)
+            {
+                comboBoxDictionaries.SelectedIndex = 0;
+            }
+        }
     }
 }

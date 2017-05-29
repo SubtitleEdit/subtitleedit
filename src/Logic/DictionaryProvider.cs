@@ -11,12 +11,14 @@ namespace Nikse.SubtitleEdit.Logic
     {
         public List<DictionaryInfo> Dictionaries { get; protected set; }
 
+        public string Name { get; protected set; }
+
         public DictionaryProvider()
         {
-
         }
 
         protected abstract void LoadDictionary();
 
+        public override string ToString() => Name;
     }
 }

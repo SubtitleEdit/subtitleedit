@@ -12,5 +12,7 @@ namespace Nikse.SubtitleEdit.Models
         public string NativeName { get; set; }
         public string Description { get; set; }
         public List<Uri> DownloadLinks { get; set; }
+
+        public override string ToString() => EnglishName;
     }
 }

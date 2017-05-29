@@ -20,6 +20,8 @@ namespace Nikse.SubtitleEdit.Logic
                 resourceFile = "Nikse.SubtitleEdit.Resources.HunspellDictionaries.xml.gz";
             }
             ResourceFile = resourceFile;
+            Name = "Libre Office";
+            LoadDictionary();
         }
 
         protected override void LoadDictionary()
@@ -60,7 +62,7 @@ namespace Nikse.SubtitleEdit.Logic
                     EnglishName = englishName,
                     NativeName = nativeName,
                     Description = description,
-                    DownloadLinks = { downloadLink }
+                    DownloadLinks = new List<Uri>() { downloadLink }
                 };
                 Dictionaries.Add(dicInfo);
             }

@@ -16,6 +16,8 @@ namespace Nikse.SubtitleEdit.Logic
         public GitHubProvider(string resourceFile)
         {
             ResourceFile = resourceFile;
+            Name = "Github";
+            LoadDictionary();
         }
 
         protected override void LoadDictionary()
@@ -44,7 +46,7 @@ namespace Nikse.SubtitleEdit.Logic
                 foreach (XmlNode linksNode in node.SelectSingleNode("Links").SelectNodes("Link"))
                 {
                     // skip dictionary (invalid url)
-                    if (!Uri.TryCreate(node.SelectSingleNode("DownloadLink").InnerText, UriKind.Absolute, out Uri downloadLink))
+                    if (!Uri.TryCreate(linksNode.InnerText, UriKind.Absolute, out Uri downloadLink))
                     {
                         skipDictionary = true;
                         break;
@@ -59,7 +61,7 @@ namespace Nikse.SubtitleEdit.Logic
                 }
 
                 string englishName = node.SelectSingleNode("EnglishName").InnerText;
-                string nativeName = node.SelectSingleNode("NativeName").InnerText;
+                string nativeName = node.SelectSingleNode("NativeName")?.InnerText;
                 string description = node.SelectSingleNode("Description").InnerText;
                 string name = englishName;
                 if (!string.IsNullOrEmpty(nativeName))
