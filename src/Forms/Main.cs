@@ -11816,7 +11816,10 @@ namespace Nikse.SubtitleEdit.Forms
                             var newP = new Paragraph(p);
                             var original = Utilities.GetOriginalParagraph(_subtitle.GetIndex(p), p, _subtitleAlternate.Paragraphs);
                             if (original != null)
-                                newP.Text += Environment.NewLine + Environment.NewLine + original.Text;
+                            {
+                                string newText = (newP.Text + " " + original.Text).Trim();
+                                newP.Text = Utilities.AutoBreakLine(newText);
+                            }
                             subtitle.Paragraphs.Add(newP);
                         }
                         RemoveAlternate(true);
@@ -11826,7 +11829,6 @@ namespace Nikse.SubtitleEdit.Forms
                         ShowSource();
                         SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
                         SubtitleListview1.SelectIndexAndEnsureVisible(0);
-
                         e.SuppressKeyPress = true;
                     }
                 }
