@@ -439,7 +439,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelLanguage.Text = Configuration.Settings.Language.ChooseLanguage.Language;
             toolStripMenuItemDelete.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.Delete;
             mergeSelectedLinesToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.MergeSelectedLines;
-            buttonResetDefault.Text = _language.ResetDefault;
+            buttonResetDefault.Text = _language.SelectDefault;
 
             splitContainerStep2.Panel1MinSize = 110;
             splitContainerStep2.Panel2MinSize = 160;

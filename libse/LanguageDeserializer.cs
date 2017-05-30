@@ -1687,8 +1687,8 @@ namespace Nikse.SubtitleEdit.Core
                 case "FixCommonErrors/FixDialogsOneLineExample":
                     language.FixCommonErrors.FixDialogsOneLineExample = reader.Value;
                     break;
-                case "FixCommonErrors/ResetDefault":
-                    language.FixCommonErrors.ResetDefault = reader.Value;
+                case "FixCommonErrors/SelectDefault":
+                    language.FixCommonErrors.SelectDefault = reader.Value;
                     break;
                 case "GetDictionaries/Title":
                     language.GetDictionaries.Title = reader.Value;

@@ -822,7 +822,7 @@ namespace Nikse.SubtitleEdit.Core
                 FixOcrErrorExample = "D0n't -> Don't",
                 FixSpaceBetweenNumbersExample = "1 100 -> 1100",
                 FixDialogsOneLineExample = "Hi John! - Hi Ida! -> Hi John!<br />- Hi Ida!",
-                ResetDefault = "Reset default",
+                SelectDefault = "Select default",
             };
 
             GetDictionaries = new LanguageStructure.GetDictionaries
