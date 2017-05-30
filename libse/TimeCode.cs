@@ -153,15 +153,7 @@ namespace Nikse.SubtitleEdit.Core
                 _totalMilliseconds = value.TotalMilliseconds;
             }
         }
-
-        public void AddTime(int hours, int minutes, int seconds, int milliseconds)
-        {
-            Hours += hours;
-            Minutes += minutes;
-            Seconds += seconds;
-            Milliseconds += milliseconds;
-        }
-
+        
         public override string ToString() => ToString(false);
 
         public string ToString(bool localize)
