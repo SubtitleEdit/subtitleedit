@@ -15,7 +15,6 @@ namespace Nikse.SubtitleEdit.Forms
     {
         private List<string> _dictionaryDownloadLinks = new List<string>();
         private List<string> _descriptions = new List<string>();
-        private string _xmlName;
         private int _testAllIndex = -1;
 
         public GetDictionaries()
@@ -96,15 +95,15 @@ namespace Nikse.SubtitleEdit.Forms
                 comboBoxDictionaries.Enabled = false;
                 this.Refresh();
                 Cursor = Cursors.WaitCursor;
-
-                var wc = new WebClient { Proxy = Utilities.GetProxy() };
-                wc.DownloadDataCompleted += wc_DownloadDataCompleted;
                 var dicInfo = (DictionaryInfo)comboBoxDictionaries.SelectedItem;
-                foreach (Uri downloadLink in dicInfo.DownloadLinks)
+                GC.Collect();
+                // webclient doesn't support concurrent io, so keep this inside loop...
+                foreach (var downloadLink in dicInfo.DownloadLinks)
                 {
-                    wc.DownloadDataAsync(downloadLink);
+                    var client = new WebClient() { Proxy = Utilities.GetProxy() };
+                    client.DownloadDataCompleted += wc_DownloadDataCompleted;
+                    client.DownloadDataAsync(downloadLink, downloadLink.ToString().EndsWith(".dic", StringComparison.OrdinalIgnoreCase));
                 }
-
             }
             catch (Exception exception)
             {
@@ -121,38 +120,33 @@ namespace Nikse.SubtitleEdit.Forms
         private void wc_DownloadDataCompleted(object sender, DownloadDataCompletedEventArgs e)
         {
             Cursor = Cursors.Default;
-
             if (e.Error != null)
             {
-                // TODO:...
-
-                if (_xmlName.Equals("Nikse.SubtitleEdit.Resources.HunspellDictionaries.xml.gz", StringComparison.Ordinal))
-                {
-                    MessageBox.Show("Unable to connect to extensions.services.openoffice.org... Switching host - please re-try!");
-                    // TODO: LoadDictionaryList("Nikse.SubtitleEdit.Resources.HunspellBackupDictionaries.xml.gz");
-                    labelPleaseWait.Text = string.Empty;
-                    buttonOK.Enabled = true;
-                    buttonDownload.Enabled = true;
-                    buttonDownloadAll.Enabled = true;
-                    comboBoxDictionaries.Enabled = true;
-                    Cursor = Cursors.Default;
-                    return;
-                }
-                else
-                {
-                    MessageBox.Show(Configuration.Settings.Language.GetTesseractDictionaries.DownloadFailed + Environment.NewLine +
-                                Environment.NewLine +
-                                e.Error.Message);
-                    DialogResult = DialogResult.Cancel;
-                    return;
-                }
+                DictionaryProvider currentProvider = (DictionaryProvider)comboBoxProviders.SelectedItem;
+                // TODO: Localize
+                string failMessage = $"Unable to connect to {currentProvider.Name} provider... switch provider and try again!";
+                MessageBox.Show(failMessage);
+                labelPleaseWait.Text = string.Empty;
+                buttonOK.Enabled = true;
+                buttonDownload.Enabled = true;
+                buttonDownloadAll.Enabled = true;
+                comboBoxDictionaries.Enabled = true;
+                Cursor = Cursors.Default;
+                return;
             }
 
             byte[] data = e.Result;
             string dictionaryFolder = Utilities.DictionaryFolder;
             if (!Directory.Exists(dictionaryFolder))
             {
-                Directory.CreateDirectory(dictionaryFolder);
+                try
+                {
+                    Directory.CreateDirectory(dictionaryFolder);
+                }
+                catch
+                {
+                    return;
+                }
             }
 
             if (comboBoxProviders.SelectedItem is LibreOfficeProvider libreOfficeProvider)
@@ -163,7 +157,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 // github provider
                 var gitHubProvider = (GitHubProvider)comboBoxProviders.SelectedItem;
-                gitHubProvider.ProccessDownloadedData(dictionaryFolder, data);
+                var dicInfo = (DictionaryInfo)comboBoxDictionaries.SelectedItem;
+                gitHubProvider.ProccessDownloadedData(dictionaryFolder, dicInfo, data, (bool)e.UserState ? ".dic" : ".aff");
             }
 
             Cursor = Cursors.Default;
@@ -179,8 +174,6 @@ namespace Nikse.SubtitleEdit.Forms
             }
             // TODO: MessageBox.Show(string.Format(Configuration.Settings.Language.GetDictionaries.XDownloaded, comboBoxDictionaries.Items[index]));
         }
-
-
 
         private void comboBoxDictionaries_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -221,5 +214,6 @@ namespace Nikse.SubtitleEdit.Forms
                 comboBoxDictionaries.SelectedIndex = 0;
             }
         }
+
     }
 }

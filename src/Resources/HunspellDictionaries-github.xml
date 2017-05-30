@@ -1,18 +1,30 @@
 ﻿<OpenOfficeDictionaries>
-  <Dictionary>
-    <EnglishName>Armenian (Eastern)</EnglishName>
-    <Description>1.1.0: 2010-12-18 More words and corrections</Description>
+  <Dictionary culture="hy">
+    <Description>1.1.0: 2010-12-18 More words and corrections (Eastern)</Description>
     <Links>
       <Link>https://raw.githubusercontent.com/einsiol/Dictionaries/master/Armenian%20(Eastern).aff</Link>
       <Link>https://raw.githubusercontent.com/einsiol/Dictionaries/master/Armenian%20(Eastern).dic</Link>
     </Links>
   </Dictionary>
-  <Dictionary>
-    <EnglishName>Armenian (Western)</EnglishName>
+  <Dictionary culture="hy">
     <Description>1.0.0: 2010-12-18 Initial release of the Western Armenian Spellchecker Dictionary</Description>
     <Links>
       <Link>https://raw.githubusercontent.com/einsiol/Dictionaries/master/Armenian%20(Western).aff</Link>
       <Link>https://raw.githubusercontent.com/einsiol/Dictionaries/master/Armenian%20(Western).dic</Link>
+    </Links>
+  </Dictionary>
+  <Dictionary culture="eu">
+    <Description>2008/10/29</Description>
+    <Links>
+      <Link>https://raw.githubusercontent.com/einsiol/Dictionaries/master/Basque.aff</Link>
+      <Link>https://raw.githubusercontent.com/einsiol/Dictionaries/master/Basque.dic</Link>
+    </Links>
+  </Dictionary>
+  <Dictionary culture="bg">
+    <Description></Description>
+    <Links>
+      <Link>https://raw.githubusercontent.com/einsiol/Dictionaries/master/Bulgarian.aff</Link>
+      <Link>https://raw.githubusercontent.com/einsiol/Dictionaries/master/Bulgarian.dic</Link>
     </Links>
   </Dictionary>
 </OpenOfficeDictionaries>

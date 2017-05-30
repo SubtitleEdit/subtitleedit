@@ -1,6 +1,7 @@
 ﻿using Nikse.SubtitleEdit.Models;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.IO.Compression;
 using System.Reflection;
@@ -60,7 +61,10 @@ namespace Nikse.SubtitleEdit.Logic
                     continue;
                 }
 
-                string englishName = node.SelectSingleNode("EnglishName").InnerText;
+                string culture = node.Attributes["culture"]?.InnerText;
+                var ci = new CultureInfo(culture);
+
+                string englishName = node.SelectSingleNode("EnglishName")?.InnerText;
                 string nativeName = node.SelectSingleNode("NativeName")?.InnerText;
                 string description = node.SelectSingleNode("Description").InnerText;
                 string name = englishName;
@@ -70,6 +74,7 @@ namespace Nikse.SubtitleEdit.Logic
                 }
                 var dicInfo = new DictionaryInfo
                 {
+                    Culture = ci,
                     EnglishName = englishName,
                     NativeName = nativeName,
                     Description = description,
@@ -79,9 +84,18 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
-        public void ProccessDownloadedData(string dictionaryFolder, byte[] data)
+        public void ProccessDownloadedData(string dictionaryFolder, DictionaryInfo dicInfo, byte[] data, string ext)
         {
-
+            // formatting style: en_US.aff en_US.dic
+            string file = Path.Combine(dictionaryFolder, dicInfo.Culture.Name.Replace('-', '_') + ext);
+            try
+            {
+                File.WriteAllBytes(file, data);
+            }
+            catch
+            {
+                // ignore
+            }
         }
     }
 }
