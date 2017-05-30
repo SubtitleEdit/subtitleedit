@@ -949,11 +949,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     pText.Append(child.Value);
                 }
-                else if (child.Name == "br")
+                else if (child.Name == "br" || child.Name == "tt:br")
                 {
                     pText.AppendLine();
                 }
-                else if (child.Name == "span")
+                else if (child.Name == "span" || child.Name == "tt:span")
                 {
                     bool isItalic = false;
                     bool isBold = false;

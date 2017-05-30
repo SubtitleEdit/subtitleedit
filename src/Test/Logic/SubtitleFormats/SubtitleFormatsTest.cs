@@ -17,23 +17,11 @@ namespace Test.Logic.SubtitleFormats
     [TestClass]
     public class SubtitleFormatsTest
     {
-        private TestContext _testContextInstance;
-
         /// <summary>
         ///Gets or sets the test context which provides
         ///information about and functionality for the current test run.
         ///</summary>
-        public TestContext TestContext
-        {
-            get
-            {
-                return _testContextInstance;
-            }
-            set
-            {
-                _testContextInstance = value;
-            }
-        }
+        public TestContext TestContext { get; set; }
 
         #region Additional test attributes
 
@@ -931,6 +919,40 @@ and astronauts.“...""
             Assert.AreEqual(2, subtitle.Paragraphs[2].NumberOfLines);
             // Test frame.
             Assert.AreEqual(3082, subtitle.Paragraphs[1].StartFrame);
+        }
+
+        #endregion
+
+        #region TimedText       
+
+        [TestMethod]
+        public void TimedTextNameSpaceTt()
+        {
+            var target = new TimedText10();
+            var subtitle = new Subtitle();
+            string raw = @"
+<?xml version='1.0' encoding='UTF-8'?>
+<tt:tt xmlns:tt='http://www.w3.org/ns/ttml' xmlns:ttp='http://www.w3.org/ns/ttml#parameter' xmlns:tts='http://www.w3.org/ns/ttml#styling' xmlns:ebuttm='urn:ebu:tt:metadata' xmlns:ebutts='urn:ebu:tt:style' ttp:timeBase='media' xml:lang='ca-ES' ttp:cellResolution='40 25'>
+  <tt:head>
+    <tt:metadata>
+      <ebuttm:documentMetadata>
+        <ebuttm:conformsToStandard>urn:ebu:tt:distribution:2014-01</ebuttm:conformsToStandard>
+        <ebuttm:documentCountryOfOrigin>es</ebuttm:documentCountryOfOrigin>
+      </ebuttm:documentMetadata>
+    </tt:metadata>
+  </tt:head>
+  <tt:body>
+    <tt:div>
+      <tt:p xml:id='p1' region='r4' begin='00:00:04.400' end='00:00:08.520'>
+        <tt:span style='ss2'>Hallo world.</tt:span>
+      </tt:p>
+    </tt:div>
+  </tt:body>
+</tt:tt>".Replace("'", "\"");
+            target.LoadSubtitle(subtitle, raw.SplitToLines().ToList(), null);
+            string actual = subtitle.Paragraphs[0].Text;
+            const string expected = "Hallo world.";
+            Assert.AreEqual(expected, actual);
         }
 
         #endregion
