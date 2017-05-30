@@ -1327,6 +1327,7 @@
             "OemMinus",
             "OemPeriod",
             "OemQuestion",
+            "OemSemicolon",
             "Oemtilde",
             "OemOpenBrackets",
             "Oem5",
