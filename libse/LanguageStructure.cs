@@ -698,7 +698,7 @@
             public string FixOcrErrorExample { get; set; }
             public string FixSpaceBetweenNumbersExample { get; set; }
             public string FixDialogsOneLineExample { get; set; }
-            public string ResetDefault { get; set; }
+            public string SelectDefault { get; set; }
         }
 
         public class GetDictionaries

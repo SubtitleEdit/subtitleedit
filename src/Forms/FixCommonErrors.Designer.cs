@@ -36,6 +36,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelStatus = new System.Windows.Forms.Label();
             this.buttonBack = new System.Windows.Forms.Button();
             this.groupBoxStep1 = new System.Windows.Forms.GroupBox();
+            this.buttonResetDefault = new System.Windows.Forms.Button();
             this.comboBoxLanguage = new System.Windows.Forms.ComboBox();
             this.labelLanguage = new System.Windows.Forms.Label();
             this.buttonInverseSelection = new System.Windows.Forms.Button();
@@ -80,7 +81,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.tabPageLog = new System.Windows.Forms.TabPage();
             this.textBoxFixedIssues = new System.Windows.Forms.TextBox();
             this.labelNumberOfImportantLogMessages = new System.Windows.Forms.Label();
-            this.buttonResetDefault = new System.Windows.Forms.Button();
             this.groupBoxStep1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -159,6 +159,17 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxStep1.TabIndex = 9;
             this.groupBoxStep1.TabStop = false;
             this.groupBoxStep1.Text = "Step 1/2 - Choose which errors to fix";
+            // 
+            // buttonResetDefault
+            // 
+            this.buttonResetDefault.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonResetDefault.Location = new System.Drawing.Point(193, 514);
+            this.buttonResetDefault.Name = "buttonResetDefault";
+            this.buttonResetDefault.Size = new System.Drawing.Size(100, 21);
+            this.buttonResetDefault.TabIndex = 12;
+            this.buttonResetDefault.Text = "Select default";
+            this.buttonResetDefault.UseVisualStyleBackColor = true;
+            this.buttonResetDefault.Click += new System.EventHandler(this.buttonResetDefault_Click);
             // 
             // comboBoxLanguage
             // 
@@ -655,16 +666,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelNumberOfImportantLogMessages.Size = new System.Drawing.Size(190, 13);
             this.labelNumberOfImportantLogMessages.TabIndex = 11;
             this.labelNumberOfImportantLogMessages.Text = "labelNumberOfImportantLogMessages";
-            // 
-            // buttonResetDefault
-            // 
-            this.buttonResetDefault.Location = new System.Drawing.Point(6, 19);
-            this.buttonResetDefault.Name = "buttonResetDefault";
-            this.buttonResetDefault.Size = new System.Drawing.Size(85, 23);
-            this.buttonResetDefault.TabIndex = 12;
-            this.buttonResetDefault.Text = "Reset default";
-            this.buttonResetDefault.UseVisualStyleBackColor = true;
-            this.buttonResetDefault.Click += new System.EventHandler(this.buttonResetDefault_Click);
             // 
             // FixCommonErrors
             // 
