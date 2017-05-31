@@ -4,10 +4,8 @@ using Nikse.SubtitleEdit.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.IO.Compression;
 using System.Net;
 using System.Windows.Forms;
-using System.Xml;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -16,6 +14,7 @@ namespace Nikse.SubtitleEdit.Forms
         private List<string> _dictionaryDownloadLinks = new List<string>();
         private List<string> _descriptions = new List<string>();
         private int _testAllIndex = -1;
+        private volatile int _downloadCount;
 
         public GetDictionaries()
         {
@@ -89,17 +88,19 @@ namespace Nikse.SubtitleEdit.Forms
             try
             {
                 labelPleaseWait.Text = Configuration.Settings.Language.General.PleaseWait;
-                buttonOK.Enabled = false;
-                buttonDownload.Enabled = false;
-                buttonDownloadAll.Enabled = false;
-                comboBoxDictionaries.Enabled = false;
+                ControlsState(false);
                 this.Refresh();
                 Cursor = Cursors.WaitCursor;
                 var dicInfo = (DictionaryInfo)comboBoxDictionaries.SelectedItem;
-                GC.Collect();
-                // webclient doesn't support concurrent io, so keep this inside loop...
+                _downloadCount = 1;
+                if (comboBoxProviders.SelectedIndex > 0)
+                {
+                    _downloadCount++;
+                }
+                // GC.Collect();
                 foreach (var downloadLink in dicInfo.DownloadLinks)
                 {
+                    // WebClient doesn't support concurrent io, so keep this inside loop...
                     var client = new WebClient() { Proxy = Utilities.GetProxy() };
                     client.DownloadDataCompleted += wc_DownloadDataCompleted;
                     client.DownloadDataAsync(downloadLink, downloadLink.ToString().EndsWith(".dic", StringComparison.OrdinalIgnoreCase));
@@ -107,30 +108,41 @@ namespace Nikse.SubtitleEdit.Forms
             }
             catch (Exception exception)
             {
-                labelPleaseWait.Text = string.Empty;
-                buttonOK.Enabled = true;
-                buttonDownload.Enabled = true;
-                buttonDownloadAll.Enabled = true;
-                comboBoxDictionaries.Enabled = true;
-                Cursor = Cursors.Default;
-                MessageBox.Show(exception.Message + Environment.NewLine + Environment.NewLine + exception.StackTrace);
+                _downloadCount--;
+                if (_downloadCount == 0)
+                {
+                    labelPleaseWait.Text = string.Empty;
+                    ControlsState(true);
+                    Cursor = Cursors.Default;
+                    MessageBox.Show(exception.Message + Environment.NewLine + Environment.NewLine + exception.StackTrace);
+                }
             }
+        }
+
+        private void ControlsState(bool state)
+        {
+            buttonOK.Enabled = state;
+            buttonDownload.Enabled = state;
+            buttonDownloadAll.Enabled = state;
+            comboBoxDictionaries.Enabled = state;
         }
 
         private void wc_DownloadDataCompleted(object sender, DownloadDataCompletedEventArgs e)
         {
+            _downloadCount--;
             Cursor = Cursors.Default;
             if (e.Error != null)
             {
+                if (_downloadCount > 0)
+                {
+                    return;
+                }
+
                 DictionaryProvider currentProvider = (DictionaryProvider)comboBoxProviders.SelectedItem;
-                // TODO: Localize
                 string failMessage = $"Unable to connect to {currentProvider.Name} provider... switch provider and try again!";
                 MessageBox.Show(failMessage);
                 labelPleaseWait.Text = string.Empty;
-                buttonOK.Enabled = true;
-                buttonDownload.Enabled = true;
-                buttonDownloadAll.Enabled = true;
-                comboBoxDictionaries.Enabled = true;
+                ControlsState(true);
                 Cursor = Cursors.Default;
                 return;
             }
@@ -155,24 +167,23 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else
             {
-                // github provider
                 var gitHubProvider = (GitHubProvider)comboBoxProviders.SelectedItem;
                 var dicInfo = (DictionaryInfo)comboBoxDictionaries.SelectedItem;
                 gitHubProvider.ProccessDownloadedData(dictionaryFolder, dicInfo, data, (bool)e.UserState ? ".dic" : ".aff");
             }
 
-            Cursor = Cursors.Default;
-            labelPleaseWait.Text = string.Empty;
-            buttonOK.Enabled = true;
-            buttonDownload.Enabled = true;
-            buttonDownloadAll.Enabled = true;
-            comboBoxDictionaries.Enabled = true;
-            if (_testAllIndex >= 0)
+            if (_downloadCount == 0)
             {
-                DownloadNext();
-                return;
+                Cursor = Cursors.Default;
+                labelPleaseWait.Text = string.Empty;
+                ControlsState(true);
+                if (_testAllIndex >= 0)
+                {
+                    DownloadNext();
+                    return;
+                }
+                MessageBox.Show(string.Format(Configuration.Settings.Language.GetDictionaries.XDownloaded, comboBoxDictionaries.SelectedItem));
             }
-            // TODO: MessageBox.Show(string.Format(Configuration.Settings.Language.GetDictionaries.XDownloaded, comboBoxDictionaries.Items[index]));
         }
 
         private void comboBoxDictionaries_SelectedIndexChanged(object sender, EventArgs e)
