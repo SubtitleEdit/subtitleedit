@@ -477,10 +477,10 @@ namespace Nikse.SubtitleEdit.Core
 
         public FixCommonErrorsSettings()
         {
-            LoadDeafultConfigs();
+            SetDefaultFixes();
         }
 
-        public void LoadDeafultConfigs()
+        public void SetDefaultFixes()
         {
             EmptyLinesTicked = true;
             OverlappingDisplayTimeTicked = true;
