@@ -717,9 +717,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private Paragraph GetPacParagraph(ref int index, byte[] buffer)
         {
-            while (index < 15)
+            if (index < 15)
             {
-                index++;
+                index += 15 - index;
             }
             while (true)
             {
@@ -946,6 +946,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 int index = 0;
                 int count = 0;
                 _codePage = CodePageLatin;
+                const string ignoreChars = "[](1234567890, .!?-\r\n'\"):;&";
                 while (index < buffer.Length)
                 {
                     int start = index;
@@ -955,12 +956,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     if (count == 2)
                     {
                         _codePage = CodePageLatin;
-                        var sb = new StringBuilder("ABCDEFGHIJKLMNOPPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz(1234567890, .!?-\r\n'\"):;&");
+                        var sb = new StringBuilder("ABCDEFGHIJKLMNOPPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz" + ignoreChars);
                         foreach (var code in LatinCodes.Values)
                             sb.Append(code.Character);
                         var codePageLetters = sb.ToString();
+
+                        string textNoTags = HtmlUtil.RemoveHtmlTags(p.Text, true);
                         var allOk = true;
-                        foreach (char ch in HtmlUtil.RemoveHtmlTags(p?.Text, true))
+                        foreach (char ch in textNoTags)
                         {
                             if (!codePageLetters.Contains(ch))
                             {
@@ -974,9 +977,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         _codePage = CodePageGreek;
                         index = start;
                         p = GetPacParagraph(ref index, buffer);
-                        codePageLetters = "AαBβΓγΔδEϵεZζHηΘθIιKκΛλMμNνΞξOοΠπPρΣσςTτΥυΦϕφXχΨψΩω(1234567890, .!?-\r\n'\"):;&";
+                        codePageLetters = "AαBβΓγΔδEϵεZζHηΘθIιKκΛλMμNνΞξOοΠπPρΣσςTτΥυΦϕφXχΨψΩω" + ignoreChars;
                         allOk = true;
-                        foreach (char ch in HtmlUtil.RemoveHtmlTags(p.Text, true))
+                        foreach (char ch in textNoTags)
                         {
                             if (!codePageLetters.Contains(ch))
                             {
@@ -990,12 +993,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         _codePage = CodePageArabic;
                         index = start;
                         p = GetPacParagraph(ref index, buffer);
-                        sb = new StringBuilder("(1234567890, .!?-\r\n'\"):;&");
+                        sb = new StringBuilder(ignoreChars);
                         foreach (var code in ArabicCodes.Values)
                             sb.Append(code.Character);
                         codePageLetters = sb.ToString();
                         allOk = true;
-                        foreach (char ch in HtmlUtil.RemoveHtmlTags(p.Text, true))
+                        foreach (char ch in textNoTags)
                         {
                             if (!codePageLetters.Contains(ch))
                             {
@@ -1009,12 +1012,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         _codePage = CodePageHebrew;
                         index = start;
                         p = GetPacParagraph(ref index, buffer);
-                        sb = new StringBuilder("(1234567890, .!?-\r\n'\"):;&");
+                        sb = new StringBuilder(ignoreChars);
                         foreach (var code in HebrewCodes.Values)
                             sb.Append(code.Character);
                         codePageLetters = sb.ToString();
                         allOk = true;
-                        foreach (char ch in HtmlUtil.RemoveHtmlTags(p.Text, true))
+                        foreach (char ch in textNoTags)
                         {
                             if (!codePageLetters.Contains(ch))
                             {
@@ -1028,12 +1031,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         _codePage = CodePageCyrillic;
                         index = start;
                         p = GetPacParagraph(ref index, buffer);
-                        sb = new StringBuilder("(1234567890, .!?-\r\n'\"):;&");
+                        sb = new StringBuilder(ignoreChars);
                         foreach (var code in CyrillicCodes.Values)
                             sb.Append(code.Character);
                         codePageLetters = sb.ToString();
                         allOk = true;
-                        foreach (char ch in HtmlUtil.RemoveHtmlTags(p.Text, true))
+                        foreach (char ch in textNoTags)
                         {
                             if (!codePageLetters.Contains(ch))
                             {
@@ -1047,12 +1050,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         return CodePageLatin;
                     }
                 }
-                return CodePageLatin;
             }
             catch
             {
-                return CodePageLatin;
             }
+            return CodePageLatin;
         }
 
         private void GetCodePage(byte[] buffer, int index, int endDelimiter)
