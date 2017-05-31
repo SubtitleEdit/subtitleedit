@@ -1611,7 +1611,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonResetDefault_Click(object sender, EventArgs e)
         {
-            Configuration.Settings.CommonErrors.LoadDeafultConfigs();
+            Configuration.Settings.CommonErrors.SetDefaultFixes();
             AddFixActions(CultureInfo.GetCultureInfo(_autoDetectGoogleLanguage).ThreeLetterISOLanguageName);
         }
     }
