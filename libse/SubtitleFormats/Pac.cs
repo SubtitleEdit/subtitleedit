@@ -955,7 +955,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     if (count == 2)
                     {
                         _codePage = CodePageLatin;
-                        var sb = new StringBuilder("ABCDEFGHIJKLMNOPPQRSTUVWXYZÆØÅÄÖÜabcdefghijklmnopqrstuvwxyzæøäåü(1234567890, .!?-\r\n'\"):;&");
+                        var sb = new StringBuilder("ABCDEFGHIJKLMNOPPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz(1234567890, .!?-\r\n'\"):;&");
                         foreach (var code in LatinCodes.Values)
                             sb.Append(code.Character);
                         var codePageLetters = sb.ToString();
