@@ -477,6 +477,11 @@ namespace Nikse.SubtitleEdit.Core
 
         public FixCommonErrorsSettings()
         {
+            LoadDeafultConfigs();
+        }
+
+        public void LoadDeafultConfigs()
+        {
             EmptyLinesTicked = true;
             OverlappingDisplayTimeTicked = true;
             TooShortDisplayTimeTicked = true;
@@ -502,6 +507,7 @@ namespace Nikse.SubtitleEdit.Core
             FixMissingOpenBracketTicked = true;
             FixMusicNotationTicked = true;
         }
+
     }
 
     public class GeneralSettings
