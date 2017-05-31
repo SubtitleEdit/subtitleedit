@@ -218,7 +218,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             { 0xba, new SpecialCharacter("ת")},
             { 0x2c, new SpecialCharacter("،")}
         };
-        
+
         private static readonly Dictionary<int, SpecialCharacter> ArabicCodes = new Dictionary<int, SpecialCharacter> {
             { 0xe081, new SpecialCharacter("أ")},
             { 0xe09b, new SpecialCharacter("ؤ")},
@@ -423,7 +423,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             { 0x6938, new SpecialCharacter("ш")}
 
         };
-        
+
         private static readonly Dictionary<int, SpecialCharacter> KoreanCodes = new Dictionary<int, SpecialCharacter> {
             { 0x20, new SpecialCharacter(" ")}
         };
@@ -696,10 +696,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             _fileName = fileName;
+            LoadSubtitle(subtitle, FileUtil.ReadAllBytesShared(fileName));
+        }
+
+        public void LoadSubtitle(Subtitle subtitle, byte[] buffer)
+        {
             subtitle.Paragraphs.Clear();
             subtitle.Header = null;
-            byte[] buffer = FileUtil.ReadAllBytesShared(fileName);
-
+            subtitle.Paragraphs.Clear();
+            subtitle.Header = null;
             int index = 0;
             while (index < buffer.Length)
             {
@@ -1176,7 +1181,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return GetBytesViaLists(text, CyrillicCodes, alignment);
         }
 
-        private static byte[] GetBytesViaLists(string text, Dictionary<int,SpecialCharacter> codes, byte alignment)
+        private static byte[] GetBytesViaLists(string text, Dictionary<int, SpecialCharacter> codes, byte alignment)
         {
             int i = 0;
             var buffer = new byte[text.Length * 2];
@@ -1321,7 +1326,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
             }
 
-            return arabicCharacter.HasValue 
+            return arabicCharacter.HasValue
                 ? arabicCharacter.Value.Character
                 : string.Empty;
         }
