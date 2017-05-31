@@ -259,6 +259,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             { 0x9d, new SpecialCharacter("ة")},
             { 0x9f, new SpecialCharacter("ي")},
             { 0xa0, new SpecialCharacter("ء")},
+            { 63, new SpecialCharacter("؟")},
+            { 44, new SpecialCharacter("،")},
 
             { 231, new SpecialCharacter("\u064B", true)},
             { 232, new SpecialCharacter("\u064D", true)},
@@ -1304,25 +1306,24 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public static string GetArabicString(byte[] buffer, ref int index)
         {
-            byte b = buffer[index];
-            string letter = null;
-            if (b >= 0x20 && b < 0x70)
-                letter = Encoding.ASCII.GetString(buffer, index, 1);
-
             var arabicCharacter = GetNextArabicCharacter(buffer, ref index);
-            if (letter == null && arabicCharacter.HasValue)
-                letter = arabicCharacter.Value.Character;
 
-            // find out if the next character is some special character that needs to switch position.
-            var tempIndex = index + 1;
-            var nextArabicCharacter = GetNextArabicCharacter(buffer, ref tempIndex);
-            if (nextArabicCharacter.HasValue && nextArabicCharacter.Value.SwitchOrder)
+            if (arabicCharacter.HasValue && arabicCharacter.Value.SwitchOrder)
             {
-                index = tempIndex;
-                return $"{nextArabicCharacter.Value.Character}{letter}";
+                // if we have a special character we must fetch the next one and move it before the current special one
+                var tempIndex = index + 1;
+                var nextArabicCharacter = GetNextArabicCharacter(buffer, ref tempIndex);
+                if (nextArabicCharacter != null)
+                {
+                    index = tempIndex;
+                    var combined = $"{nextArabicCharacter.Value.Character}{arabicCharacter.Value.Character}";
+                    return combined;
+                }
             }
 
-            return letter ?? string.Empty;
+            return arabicCharacter.HasValue 
+                ? arabicCharacter.Value.Character
+                : string.Empty;
         }
 
         private static SpecialCharacter? GetNextArabicCharacter(byte[] buffer, ref int index)
@@ -1343,6 +1344,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     arabicCharacter = ArabicCodes[code];
                 }
             }
+
+            if (arabicCharacter == null && b >= 0x20 && b < 0x70)
+                return new SpecialCharacter(Encoding.ASCII.GetString(buffer, index, 1));
+
             return arabicCharacter;
         }
 
