@@ -190,6 +190,11 @@ namespace Nikse.SubtitleEdit.Forms
         {
             var dicInfo = (DictionaryInfo)comboBoxDictionaries.SelectedItem;
             labelPleaseWait.Text = dicInfo.Description;
+            if (labelPleaseWait.Width > comboBoxProviders.Width)
+            {
+                int len = labelPleaseWait.Text.Length;
+                labelPleaseWait.Text = labelPleaseWait.Text.Remove(len - 13) + "...";
+            }
         }
 
         private void buttonDownloadAll_Click(object sender, EventArgs e)
