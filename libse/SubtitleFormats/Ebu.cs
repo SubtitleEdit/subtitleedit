@@ -745,11 +745,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return "Not supported!";
         }
 
-        public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
+        public void LoadSubtitle(Subtitle subtitle, byte[] buffer)
         {
             subtitle.Paragraphs.Clear();
             subtitle.Header = null;
-            byte[] buffer = FileUtil.ReadAllBytesShared(fileName);
             EbuGeneralSubtitleInformation header = ReadHeader(buffer);
             subtitle.Header = Encoding.UTF8.GetString(buffer);
             Paragraph last = null;
@@ -784,6 +783,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
             subtitle.Renumber();
             Header = header;
+        }
+
+        public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
+        {
+            LoadSubtitle(subtitle, FileUtil.ReadAllBytesShared(fileName));
         }
 
         public static EbuGeneralSubtitleInformation ReadHeader(byte[] buffer)
