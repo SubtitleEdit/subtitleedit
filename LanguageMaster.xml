@@ -646,6 +646,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <OpenDictionariesFolder>Open 'Dictionaries' folder</OpenDictionariesFolder>
     <Download>Download</Download>
     <XDownloaded>{0} has been downloaded and installed</XDownloaded>
+    <Providers>Providers:</Providers>
   </GetDictionaries>
   <GetTesseractDictionaries>
     <Title>Need dictionaries?</Title>

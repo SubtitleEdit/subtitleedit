@@ -1711,6 +1711,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "GetDictionaries/XDownloaded":
                     language.GetDictionaries.XDownloaded = reader.Value;
                     break;
+                case "GetDictionaries/Providers":
+                    language.GetDictionaries.Providers = reader.Value;
+                    break;
                 case "GetTesseractDictionaries/Title":
                     language.GetTesseractDictionaries.Title = reader.Value;
                     break;
