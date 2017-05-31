@@ -953,7 +953,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             sb.Append(code.Character);
                         var codePageLetters = sb.ToString();
                         var allOk = true;
-                        foreach (char ch in HtmlUtil.RemoveHtmlTags(p.Text, true))
+                        foreach (char ch in HtmlUtil.RemoveHtmlTags(p?.Text, true))
                         {
                             if (!codePageLetters.Contains(ch))
                             {
@@ -1305,23 +1305,45 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public static string GetArabicString(byte[] buffer, ref int index)
         {
             byte b = buffer[index];
+            string letter = null;
             if (b >= 0x20 && b < 0x70)
-                return Encoding.ASCII.GetString(buffer, index, 1);
+                letter = Encoding.ASCII.GetString(buffer, index, 1);
 
+            var arabicCharacter = GetNextArabicCharacter(buffer, ref index);
+            if (letter == null && arabicCharacter.HasValue)
+                letter = arabicCharacter.Value.Character;
+
+            // find out if the next character is some special character that needs to switch position.
+            var tempIndex = index + 1;
+            var nextArabicCharacter = GetNextArabicCharacter(buffer, ref tempIndex);
+            if (nextArabicCharacter.HasValue && nextArabicCharacter.Value.SwitchOrder)
+            {
+                index = tempIndex;
+                return $"{nextArabicCharacter.Value.Character}{letter}";
+            }
+
+            return letter ?? string.Empty;
+        }
+
+        private static SpecialCharacter? GetNextArabicCharacter(byte[] buffer, ref int index)
+        {
+            if (index >= buffer.Length) return null;
+
+            byte b = buffer[index];
+            SpecialCharacter? arabicCharacter = null;
             if (ArabicCodes.ContainsKey(b))
-                return ArabicCodes[b].Character;
+                arabicCharacter = ArabicCodes[b];
 
-            if (buffer.Length > index + 1)
+            if (arabicCharacter != null && buffer.Length > index + 1)
             {
                 var code = b * 256 + buffer[index + 1];
                 if (ArabicCodes.ContainsKey(code))
                 {
                     index++;
-                    return ArabicCodes[code].Character;
+                    arabicCharacter = ArabicCodes[code];
                 }
             }
-
-            return string.Empty;// string.Format("({0})", b);
+            return arabicCharacter;
         }
 
         public static string GetHebrewString(byte[] buffer, ref int index)
