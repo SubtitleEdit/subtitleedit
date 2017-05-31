@@ -6,8 +6,10 @@ using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    // The PAC format was developed by Screen Electronics
-    // The PAC format save the contents, time code, position, justification, and italicization of each subtitle. The choice of font is not saved.
+    /// <summary>
+    /// The PAC format was developed by Screen Electronics
+    /// The PAC format save the contents, time code, position, justification, and italicization of each subtitle. The choice of font is not saved. 
+    /// </summary>
     public class Pac : SubtitleFormat
     {
         public interface IGetPacEncoding
@@ -43,7 +45,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         /// <summary>
         /// Contains Swedish, Danish, German, Spanish, and French letters
         /// </summary>
-        private static readonly Dictionary<int, SpecialCharacter> LatinCodes = new Dictionary<int, SpecialCharacter> {
+        private static readonly Dictionary<int, SpecialCharacter> LatinCodes = new Dictionary<int, SpecialCharacter>
+        {
             { 0xe041, new SpecialCharacter("Ã")},
             { 0xe04e, new SpecialCharacter("Ñ")},
             { 0xe04f, new SpecialCharacter("Õ")},
@@ -219,7 +222,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             { 0x2c, new SpecialCharacter("،")}
         };
 
-        private static readonly Dictionary<int, SpecialCharacter> ArabicCodes = new Dictionary<int, SpecialCharacter> {
+        private static readonly Dictionary<int, SpecialCharacter> ArabicCodes = new Dictionary<int, SpecialCharacter>
+        {
             { 0xe081, new SpecialCharacter("أ")},
             { 0xe09b, new SpecialCharacter("ؤ")},
             { 0xe09c, new SpecialCharacter("ئ")},
@@ -273,7 +277,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             { 225, new SpecialCharacter("\u0655", true)}
         };
 
-        private static readonly Dictionary<int, SpecialCharacter> CyrillicCodes = new Dictionary<int, SpecialCharacter> {
+        private static readonly Dictionary<int, SpecialCharacter> CyrillicCodes = new Dictionary<int, SpecialCharacter>
+        {
             { 0x20, new SpecialCharacter(" ")},
             { 0x21, new SpecialCharacter("!")},
             { 0x22, new SpecialCharacter("Э")},
@@ -421,54 +426,34 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             { 0xe272, new SpecialCharacter("ќ")},
             { 0xe596, new SpecialCharacter("ї")},
             { 0x6938, new SpecialCharacter("ш")}
-
         };
 
-        private static readonly Dictionary<int, SpecialCharacter> KoreanCodes = new Dictionary<int, SpecialCharacter> {
+        private static readonly Dictionary<int, SpecialCharacter> KoreanCodes = new Dictionary<int, SpecialCharacter>
+        {
             { 0x20, new SpecialCharacter(" ")}
         };
 
         private string _fileName = string.Empty;
-        private int _codePage = -1;
 
-        public int CodePage
-        {
-            get
-            {
-                return _codePage;
-            }
-            set
-            {
-                _codePage = value;
-            }
-        }
+        public int CodePage { get; set; } = -1;
 
-        public override string Extension
-        {
-            get { return ".pac"; }
-        }
+        public override string Extension => ".pac";
 
         public const string NameOfFormat = "PAC (Screen Electronics)";
 
-        public override string Name
-        {
-            get { return NameOfFormat; }
-        }
+        public override string Name => NameOfFormat;
 
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
+        public override bool IsTimeBased => true;
 
-        public bool Save(string fileName, Subtitle subtitle, bool batchMode = false)
+        public bool Save(string fileName, Subtitle subtitle)
         {
             using (var fs = new FileStream(fileName, FileMode.Create, FileAccess.Write))
             {
-                return Save(fileName, fs, subtitle, batchMode);
+                return Save(fileName, fs, subtitle);
             }
         }
 
-        public bool Save(string fileName, Stream stream, Subtitle subtitle, bool batchMode)
+        public bool Save(string fileName, Stream stream, Subtitle subtitle)
         {
             _fileName = fileName;
 
@@ -502,7 +487,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             WriteTimeCode(fs, p.StartTime);
             WriteTimeCode(fs, p.EndTime);
 
-            if (_codePage == -1)
+            if (CodePage == -1)
                 GetCodePage(null, 0, 0);
 
             byte alignment = 2; // center
@@ -530,26 +515,26 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 text = text.Remove(0, 6);
             text = MakePacItalicsAndRemoveOtherTags(text);
 
-            Encoding encoding = GetEncoding(_codePage);
+            Encoding encoding = GetEncoding(CodePage);
             byte[] textBuffer;
 
-            if (_codePage == CodePageArabic)
+            if (CodePage == CodePageArabic)
                 textBuffer = GetArabicBytes(Utilities.FixEnglishTextInRightToLeftLanguage(text, "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"), alignment);
-            else if (_codePage == CodePageHebrew)
+            else if (CodePage == CodePageHebrew)
                 textBuffer = GetHebrewBytes(Utilities.FixEnglishTextInRightToLeftLanguage(text, "0123456789abcdefghijklmnopqrstuvwxyz"), alignment);
-            else if (_codePage == CodePageLatin)
+            else if (CodePage == CodePageLatin)
                 textBuffer = GetLatinBytes(encoding, text, alignment);
-            else if (_codePage == CodePageCyrillic)
+            else if (CodePage == CodePageCyrillic)
                 textBuffer = GetCyrillicBytes(text, alignment);
-            else if (_codePage == CodePageChineseTraditional)
+            else if (CodePage == CodePageChineseTraditional)
                 textBuffer = GetW16Bytes(text, alignment, EncodingChineseTraditional);
-            else if (_codePage == CodePageChineseSimplified)
+            else if (CodePage == CodePageChineseSimplified)
                 textBuffer = GetW16Bytes(text, alignment, EncodingChineseSimplified);
-            else if (_codePage == CodePageKorean)
+            else if (CodePage == CodePageKorean)
                 textBuffer = GetW16Bytes(text, alignment, EncodingKorean);
-            else if (_codePage == CodePageJapanese)
+            else if (CodePage == CodePageJapanese)
                 textBuffer = GetW16Bytes(text, alignment, EncodingJapanese);
-            else if (_codePage == CodePageThai)
+            else if (CodePage == CodePageThai)
                 textBuffer = encoding.GetBytes(text.Replace('ต', '€'));
             else
                 textBuffer = encoding.GetBytes(text);
@@ -584,7 +569,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             text = text.Replace("<I>", "<i>");
             text = text.Replace("</I>", "</i>");
 
-            if (Utilities.CountTagInText(text, "<i>") == 1 && text.StartsWith("<i>") && text.EndsWith("</i>"))
+            if (Utilities.CountTagInText(text, "<i>") == 1 && text.StartsWith("<i>", StringComparison.Ordinal) && text.EndsWith("</i>", StringComparison.Ordinal))
                 return "<" + HtmlUtil.RemoveHtmlTags(text).Replace(Environment.NewLine, Environment.NewLine + "<");
 
             var sb = new StringBuilder();
@@ -592,7 +577,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             foreach (string line in parts)
             {
                 string s = line.Trim();
-                if (Utilities.CountTagInText(s, "<i>") == 1 && s.StartsWith("<i>") && s.EndsWith("</i>"))
+                if (Utilities.CountTagInText(s, "<i>") == 1 && s.StartsWith("<i>", StringComparison.Ordinal) && s.EndsWith("</i>", StringComparison.Ordinal))
                 {
                     sb.AppendLine("<" + HtmlUtil.RemoveHtmlTags(s));
                 }
@@ -612,9 +597,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         internal static void WriteTimeCode(Stream fs, TimeCode timeCode)
         {
             // write four bytes time code
-            string highPart = string.Format("{0:00}", timeCode.Hours) + string.Format("{0:00}", timeCode.Minutes);
+            string highPart = $"{timeCode.Hours:00}{timeCode.Minutes:00}";
             byte frames = (byte)MillisecondsToFramesMaxFrameRate(timeCode.Milliseconds);
-            string lowPart = string.Format("{0:00}", timeCode.Seconds) + string.Format("{0:00}", frames);
+            string lowPart = $"{timeCode.Seconds:00}{frames:00}";
 
             int high = int.Parse(highPart);
             if (high < 256)
@@ -717,9 +702,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private Paragraph GetPacParagraph(ref int index, byte[] buffer)
         {
-            while (index < 15)
+            if (index < 15)
             {
-                index++;
+                index = 15;
             }
             while (true)
             {
@@ -761,7 +746,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             byte verticalAlignment = buffer[timeStartIndex + 11];
 
-            if (_codePage == -1)
+            if (CodePage == -1)
                 GetCodePage(buffer, index, endDelimiter);
 
             var sb = new StringBuilder();
@@ -796,15 +781,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         }
                         else if (buffer.Length > index + 1)
                         {
-                            if (_codePage == CodePageChineseSimplified)
+                            if (CodePage == CodePageChineseSimplified)
                             {
                                 sb.Append(Encoding.GetEncoding(EncodingChineseSimplified).GetString(buffer, index, 2));
                             }
-                            else if (_codePage == CodePageKorean)
+                            else if (CodePage == CodePageKorean)
                             {
                                 sb.Append(Encoding.GetEncoding(EncodingKorean).GetString(buffer, index, 2));
                             }
-                            else if (_codePage == CodePageJapanese)
+                            else if (CodePage == CodePageJapanese)
                             {
                                 sb.Append(Encoding.GetEncoding(EncodingJapanese).GetString(buffer, index, 2));
                             }
@@ -825,18 +810,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     sb.AppendLine();
                     index += 2;
                 }
-                else if (_codePage == CodePageLatin)
-                    sb.Append(GetLatinString(GetEncoding(_codePage), buffer, ref index));
-                else if (_codePage == CodePageArabic)
+                else if (CodePage == CodePageLatin)
+                    sb.Append(GetLatinString(GetEncoding(CodePage), buffer, ref index));
+                else if (CodePage == CodePageArabic)
                     sb.Append(GetArabicString(buffer, ref index));
-                else if (_codePage == CodePageHebrew)
+                else if (CodePage == CodePageHebrew)
                     sb.Append(GetHebrewString(buffer, ref index));
-                else if (_codePage == CodePageCyrillic)
+                else if (CodePage == CodePageCyrillic)
                     sb.Append(GetCyrillicString(buffer, ref index));
-                else if (_codePage == CodePageThai)
-                    sb.Append(GetEncoding(_codePage).GetString(buffer, index, 1).Replace("€", "ต"));
+                else if (CodePage == CodePageThai)
+                    sb.Append(GetEncoding(CodePage).GetString(buffer, index, 1).Replace("€", "ต"));
                 else
-                    sb.Append(GetEncoding(_codePage).GetString(buffer, index, 1));
+                    sb.Append(GetEncoding(CodePage).GetString(buffer, index, 1));
                 index++;
             }
             if (index + 20 >= buffer.Length)
@@ -845,7 +830,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             p.Text = sb.ToString();
             p.Text = p.Text.Replace("\0", string.Empty);
             p.Text = FixItalics(p.Text);
-            if (_codePage == CodePageArabic)
+            if (CodePage == CodePageArabic)
                 p.Text = Utilities.FixEnglishTextInRightToLeftLanguage(p.Text, "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ");
 
             if (verticalAlignment < 5)
@@ -940,12 +925,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private int AutoDetectEncoding()
         {
+            const string ignoreChars = "[](1234567890, .!?-\r\n'\"):;&";
             try
             {
                 byte[] buffer = FileUtil.ReadAllBytesShared(_fileName);
                 int index = 0;
                 int count = 0;
-                _codePage = CodePageLatin;
+                CodePage = CodePageLatin;
                 while (index < buffer.Length)
                 {
                     int start = index;
@@ -954,8 +940,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         count++;
                     if (count == 2)
                     {
-                        _codePage = CodePageLatin;
-                        var sb = new StringBuilder("ABCDEFGHIJKLMNOPPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz(1234567890, .!?-\r\n'\"):;&");
+                        CodePage = CodePageLatin;
+                        var sb = new StringBuilder("ABCDEFGHIJKLMNOPPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz" + ignoreChars);
                         foreach (var code in LatinCodes.Values)
                             sb.Append(code.Character);
                         var codePageLetters = sb.ToString();
@@ -971,10 +957,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         if (allOk)
                             return CodePageLatin;
 
-                        _codePage = CodePageGreek;
+                        CodePage = CodePageGreek;
                         index = start;
                         p = GetPacParagraph(ref index, buffer);
-                        codePageLetters = "AαBβΓγΔδEϵεZζHηΘθIιKκΛλMμNνΞξOοΠπPρΣσςTτΥυΦϕφXχΨψΩω(1234567890, .!?-\r\n'\"):;&";
+                        codePageLetters = "AαBβΓγΔδEϵεZζHηΘθIιKκΛλMμNνΞξOοΠπPρΣσςTτΥυΦϕφXχΨψΩω" + ignoreChars;
                         allOk = true;
                         foreach (char ch in HtmlUtil.RemoveHtmlTags(p.Text, true))
                         {
@@ -987,10 +973,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         if (allOk)
                             return CodePageGreek;
 
-                        _codePage = CodePageArabic;
+                        CodePage = CodePageArabic;
                         index = start;
                         p = GetPacParagraph(ref index, buffer);
-                        sb = new StringBuilder("(1234567890, .!?-\r\n'\"):;&");
+                        sb = new StringBuilder(ignoreChars);
                         foreach (var code in ArabicCodes.Values)
                             sb.Append(code.Character);
                         codePageLetters = sb.ToString();
@@ -1006,10 +992,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         if (allOk)
                             return CodePageArabic;
 
-                        _codePage = CodePageHebrew;
+                        CodePage = CodePageHebrew;
                         index = start;
                         p = GetPacParagraph(ref index, buffer);
-                        sb = new StringBuilder("(1234567890, .!?-\r\n'\"):;&");
+                        sb = new StringBuilder(ignoreChars);
                         foreach (var code in HebrewCodes.Values)
                             sb.Append(code.Character);
                         codePageLetters = sb.ToString();
@@ -1025,10 +1011,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         if (allOk)
                             return CodePageHebrew;
 
-                        _codePage = CodePageCyrillic;
+                        CodePage = CodePageCyrillic;
                         index = start;
                         p = GetPacParagraph(ref index, buffer);
-                        sb = new StringBuilder("(1234567890, .!?-\r\n'\"):;&");
+                        sb = new StringBuilder(ignoreChars);
                         foreach (var code in CyrillicCodes.Values)
                             sb.Append(code.Character);
                         codePageLetters = sb.ToString();
@@ -1059,8 +1045,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             if (BatchMode)
             {
-                if (_codePage == -1)
-                    _codePage = AutoDetectEncoding();
+                if (CodePage == -1)
+                    CodePage = AutoDetectEncoding();
                 return;
             }
 
@@ -1101,11 +1087,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             if (GetPacEncodingImplementation != null)
             {
-                _codePage = GetPacEncodingImplementation.GetPacEncoding(previewBuffer, _fileName);
+                CodePage = GetPacEncodingImplementation.GetPacEncoding(previewBuffer, _fileName);
             }
             else
             {
-                _codePage = 2;
+                CodePage = 2;
             }
         }
 
@@ -1116,7 +1102,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             int extra = 0;
             while (i < text.Length)
             {
-                if (text.Substring(i).StartsWith(Environment.NewLine))
+                if (text.Substring(i).StartsWith(Environment.NewLine, StringComparison.Ordinal))
                 {
                     buffer[i + extra] = 0xfe;
                     i++;
@@ -1188,7 +1174,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             int extra = 0;
             while (i < text.Length)
             {
-                if (text.Substring(i).StartsWith(Environment.NewLine))
+                if (text.Substring(i).StartsWith(Environment.NewLine, StringComparison.Ordinal))
                 {
                     buffer[i + extra] = 0xfe;
                     i++;
@@ -1440,8 +1426,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             if (timeCodeIndex > 0)
             {
-                string highPart = string.Format("{0:000000}", buffer[timeCodeIndex] + buffer[timeCodeIndex + 1] * 256);
-                string lowPart = string.Format("{0:000000}", buffer[timeCodeIndex + 2] + buffer[timeCodeIndex + 3] * 256);
+                string highPart = $"{buffer[timeCodeIndex] + buffer[timeCodeIndex + 1] * 256:000000}";
+                string lowPart = $"{buffer[timeCodeIndex + 2] + buffer[timeCodeIndex + 3] * 256:000000}";
 
                 int hours = int.Parse(highPart.Substring(0, 4));
                 int minutes = int.Parse(highPart.Substring(4, 2));
