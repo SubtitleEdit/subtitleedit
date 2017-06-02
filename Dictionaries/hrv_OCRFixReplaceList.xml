@@ -372,6 +372,7 @@
     <Word from="njie" to="nije" />
     <Word from="njem" to="nijem" />
     <Word from="njeme" to="njene" />
+    <Word from="nsiam" to="nisam" />
     <Word from="obe" to="obje" />
     <Word from="Obe" to="Obje" />
     <Word from="obema" to="objema" />
@@ -388,6 +389,7 @@
     <Word from="odandje" to="odande" />
     <Word from="odavdje" to="odavde" />
     <Word from="odela" to="odjela" />
+    <Word from="odelu" to="odjelu" />
     <Word from="odeljak" to="odjeljak" />
     <Word from="odeljenje" to="odjel" />
     <Word from="Odeljenje" to="Odjel" />
@@ -1901,6 +1903,7 @@
     <RegEx find="(an|ru|men|mi)tovan" replaceWith="$1tiran" />
     <RegEx find="(?&lt;!gl|[Nn])avić" replaceWith="avit ć" />
     <RegEx find="asnić" replaceWith="asnit ć" />
+    <RegEx find="azać" replaceWith="azat ć" />
     <RegEx find="atrać" replaceWith="atrat ć" />
     <RegEx find="(?&lt;!s)avešć" replaceWith="avest ć" />
     <RegEx find="aviknuće" replaceWith="aviknut će" />
@@ -1950,6 +1953,7 @@
     <RegEx find="(?&lt;!hva)lisa([ol])" replaceWith="lira$1" />
     <RegEx find="(?&lt;!hva)lisati" replaceWith="lirati" />
     <RegEx find="jći" replaceWith="jući" />
+    <RegEx find="jdin" replaceWith="jedin" />
     <RegEx find="([kKpPvVtT])ratić" replaceWith="$1ratit ć" />
     <RegEx find="koriš[čć]a" replaceWith="korišta" />
     <!-- doktorica / profesorica -->
@@ -1959,8 +1963,9 @@
     <RegEx find="\bl([čćžzvsmrtpdbgkn])" replaceWith="i$1" />
     <RegEx find="\bL([čćžzvsmrtpdbgkn])" replaceWith="I$1" />
     <RegEx find="(?&lt;![Hh])omić" replaceWith="omit ć" />
-    <RegEx find="lepš" replaceWith="ljepš" />
     <RegEx find="laćać" replaceWith="laćat ć" />
+    <RegEx find="lj?epić" replaceWith="lijepit ć" />
+    <RegEx find="lepš" replaceWith="ljepš" />
     <RegEx find="lizankinj" replaceWith="lizank" />
     <RegEx find="ljubc" replaceWith="ljupc" />
     <RegEx find="l([ou])žić" replaceWith="l$1žit ć" />
@@ -2091,6 +2096,7 @@
     <RegEx find="zmern" replaceWith="zmjern" />
     <RegEx find="(?&lt;![Oo]bra|o)zova([lton])" replaceWith="zira$1" />
     <RegEx find="zuslov" replaceWith="zuvjet" />
+    <RegEx find="zvolić" replaceWith="zvolit ć" />
     <RegEx find="žalj?ev" replaceWith="žalijev" />
     <RegEx find="živać" replaceWith="živat ć" />
 
@@ -2140,6 +2146,7 @@
     <RegEx find="\bHolands" replaceWith="Nizozems" />
     <RegEx find="Holivud" replaceWith="Hollywood" />
     <RegEx find="Holms" replaceWith="Holmes" />
+    <RegEx find="indijan(?!s)" replaceWith="Indijan" />
     <RegEx find="Iraq" replaceWith="Irak" />
     <RegEx find="Itan" replaceWith="Ethan" />
     <RegEx find="Jejl" replaceWith="Yale" />
