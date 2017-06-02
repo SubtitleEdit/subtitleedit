@@ -40,7 +40,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override string ToText(Subtitle subtitle, string title)
         {
             const string timeCodeFormatHours = "{0:00}:{1:00}:{2:00}.{3:000}"; // hh:mm:ss.mmm
-            const string paragraphWriteFormat = "{0}--> {1}{2}{5}{3}{4}{5}";
+            const string paragraphWriteFormat = "{0} --> {1}{2}{5}{3}{4}{5}";
 
             var sb = new StringBuilder();
             sb.AppendLine("WEBVTT");
