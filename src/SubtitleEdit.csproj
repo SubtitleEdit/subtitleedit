@@ -857,7 +857,10 @@
     <Compile Include="Logic\CommandLineConvert.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Logic\DictionaryProvider.cs" />
     <Compile Include="Logic\FindReplaceDialogHelper.cs" />
+    <Compile Include="Logic\GitHubProvider.cs" />
+    <Compile Include="Logic\LibreOfficeProvider.cs" />
     <Compile Include="Logic\ListViewSorter.cs" />
     <Compile Include="Logic\NativeMethods.cs" />
     <Compile Include="Logic\NikseBitmapImageSplitter.cs" />
@@ -908,6 +911,7 @@
     <Compile Include="Logic\VideoPlayers\VideoPlayer.cs" />
     <Compile Include="Logic\VideoPlayers\WmpPlayer.cs" />
     <Compile Include="Logic\WordSpellChecker.cs" />
+    <Compile Include="Models\DictionaryInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Forms\SyncPointsSync.cs">
@@ -1343,6 +1347,7 @@
     <EmbeddedResource Include="Resources\HunspellDictionaries.xml.gz" />
     <EmbeddedResource Include="Resources\HunspellBackupDictionaries.xml.gz" />
     <EmbeddedResource Include="Resources\TesseractDictionaries.xml.gz" />
+    <EmbeddedResource Include="Resources\HunspellDictionaries-github.xml.gz" />
     <None Include="Resources\nOCR_TesseractHelper.xml.gz" />
     <None Include="Resources\SMPTE-428-7-2007-DCST.xsd">
       <SubType>Designer</SubType>
@@ -1579,6 +1584,7 @@
     <None Include="Resources\pictureBoxReverse.Image.png" />
     <None Include="Resources\pictureBoxReverseMouseDown.Image.png" />
     <None Include="Resources\pictureBoxReverseMouseOver.Image.png" />
+    <Content Include="Resources\HunspellDictionaries-github.xml" />
     <Content Include="Resources\TesseractDictionaries.xml">
       <SubType>Designer</SubType>
     </Content>
@@ -1677,6 +1683,7 @@
       <Visible>false</Visible>
     </HunspellAssemblies>
   </ItemGroup>
+  <ItemGroup />
   <Target Name="BeforeCompile">
     <XmlPeek XmlInputPath="$(PackagesConfig)" Query="//package[@id='NHunspell']/@version">
       <Output TaskParameter="Result" PropertyName="HunspellVersion" />

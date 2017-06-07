@@ -711,6 +711,7 @@
             public string OpenDictionariesFolder { get; set; }
             public string Download { get; set; }
             public string XDownloaded { get; set; }
+            public string Providers { get; set; }
         }
 
         public class GetTesseractDictionaries

@@ -1,12 +1,11 @@
 ﻿using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.IO.Compression;
 using System.Net;
 using System.Windows.Forms;
-using System.Xml;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -14,8 +13,8 @@ namespace Nikse.SubtitleEdit.Forms
     {
         private List<string> _dictionaryDownloadLinks = new List<string>();
         private List<string> _descriptions = new List<string>();
-        private string _xmlName;
         private int _testAllIndex = -1;
+        private volatile int _downloadCount;
 
         public GetDictionaries()
         {
@@ -30,54 +29,29 @@ namespace Nikse.SubtitleEdit.Forms
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             labelPleaseWait.Text = string.Empty;
 
-            LoadDictionaryList("Nikse.SubtitleEdit.Resources.HunspellDictionaries.xml.gz");
             FixLargeFonts();
 #if DEBUG
             buttonDownloadAll.Visible = true; // For testing all download links
 #endif
+
+            // initialize combobox providers
+            foreach (DictionaryProvider dicProvider in GetProviders())
+            {
+                comboBoxProviders.Items.Add(dicProvider);
+            }
+            if (comboBoxProviders.Items.Count > 0)
+            {
+                comboBoxProviders.SelectedIndex = 0;
+            }
         }
 
-        private void LoadDictionaryList(string xmlRessourceName)
+        private static IList<DictionaryProvider> GetProviders()
         {
-            _dictionaryDownloadLinks = new List<string>();
-            _descriptions = new List<string>();
-            _xmlName = xmlRessourceName;
-            System.Reflection.Assembly asm = System.Reflection.Assembly.GetExecutingAssembly();
-            var strm = asm.GetManifestResourceStream(_xmlName);
-            if (strm != null)
+            return new List<DictionaryProvider>
             {
-                comboBoxDictionaries.Items.Clear();
-                var doc = new XmlDocument();
-                using (var rdr = new StreamReader(strm))
-                using (var zip = new GZipStream(rdr.BaseStream, CompressionMode.Decompress))
-                using (var reader = XmlReader.Create(zip, new XmlReaderSettings { IgnoreProcessingInstructions = true }))
-                {
-                    doc.Load(reader);
-                }
-
-                foreach (XmlNode node in doc.DocumentElement.SelectNodes("Dictionary"))
-                {
-                    string englishName = node.SelectSingleNode("EnglishName").InnerText;
-                    string nativeName = node.SelectSingleNode("NativeName").InnerText;
-                    string downloadLink = node.SelectSingleNode("DownloadLink").InnerText;
-
-                    string description = string.Empty;
-                    if (node.SelectSingleNode("Description") != null)
-                        description = node.SelectSingleNode("Description").InnerText;
-
-                    if (!string.IsNullOrEmpty(downloadLink))
-                    {
-                        string name = englishName;
-                        if (!string.IsNullOrEmpty(nativeName))
-                            name += " - " + nativeName;
-
-                        comboBoxDictionaries.Items.Add(name);
-                        _dictionaryDownloadLinks.Add(downloadLink);
-                        _descriptions.Add(description);
-                    }
-                }
-                comboBoxDictionaries.SelectedIndex = 0;
-            }
+                new LibreOfficeProvider("Nikse.SubtitleEdit.Resources.HunspellDictionaries.xml.gz"),
+                new GitHubProvider("Nikse.SubtitleEdit.Resources.HunspellDictionaries-github.xml.gz")
+            };
         }
 
         private void FixLargeFonts()
@@ -114,134 +88,113 @@ namespace Nikse.SubtitleEdit.Forms
             try
             {
                 labelPleaseWait.Text = Configuration.Settings.Language.General.PleaseWait;
-                buttonOK.Enabled = false;
-                buttonDownload.Enabled = false;
-                buttonDownloadAll.Enabled = false;
-                comboBoxDictionaries.Enabled = false;
+                ControlsState(false);
                 this.Refresh();
                 Cursor = Cursors.WaitCursor;
-
-                int index = comboBoxDictionaries.SelectedIndex;
-                string url = _dictionaryDownloadLinks[index];
-
-                var wc = new WebClient { Proxy = Utilities.GetProxy() };
-                wc.DownloadDataCompleted += wc_DownloadDataCompleted;
-                wc.DownloadDataAsync(new Uri(url));
+                var dicInfo = (DictionaryInfo)comboBoxDictionaries.SelectedItem;
+                _downloadCount = 1;
+                if (comboBoxProviders.SelectedIndex > 0)
+                {
+                    _downloadCount++;
+                }
+                // GC.Collect();
+                foreach (var downloadLink in dicInfo.DownloadLinks)
+                {
+                    // WebClient doesn't support concurrent io, so keep this inside loop...
+                    var client = new WebClient() { Proxy = Utilities.GetProxy() };
+                    client.DownloadDataCompleted += wc_DownloadDataCompleted;
+                    client.DownloadDataAsync(downloadLink, downloadLink.ToString().EndsWith(".dic", StringComparison.OrdinalIgnoreCase));
+                }
             }
             catch (Exception exception)
             {
-                labelPleaseWait.Text = string.Empty;
-                buttonOK.Enabled = true;
-                buttonDownload.Enabled = true;
-                buttonDownloadAll.Enabled = true;
-                comboBoxDictionaries.Enabled = true;
-                Cursor = Cursors.Default;
-                MessageBox.Show(exception.Message + Environment.NewLine + Environment.NewLine + exception.StackTrace);
+                _downloadCount--;
+                if (_downloadCount == 0)
+                {
+                    labelPleaseWait.Text = string.Empty;
+                    ControlsState(true);
+                    Cursor = Cursors.Default;
+                    MessageBox.Show(exception.Message + Environment.NewLine + Environment.NewLine + exception.StackTrace);
+                }
             }
+        }
+
+        private void ControlsState(bool state)
+        {
+            buttonOK.Enabled = state;
+            buttonDownload.Enabled = state;
+            buttonDownloadAll.Enabled = state;
+            comboBoxDictionaries.Enabled = state;
         }
 
         private void wc_DownloadDataCompleted(object sender, DownloadDataCompletedEventArgs e)
         {
+            _downloadCount--;
             Cursor = Cursors.Default;
-            if (e.Error != null && _xmlName == "Nikse.SubtitleEdit.Resources.HunspellDictionaries.xml.gz")
+            if (e.Error != null)
             {
-                MessageBox.Show("Unable to connect to extensions.services.openoffice.org... Switching host - please re-try!");
-                LoadDictionaryList("Nikse.SubtitleEdit.Resources.HunspellBackupDictionaries.xml.gz");
+                if (_downloadCount > 0)
+                {
+                    return;
+                }
+
+                DictionaryProvider currentProvider = (DictionaryProvider)comboBoxProviders.SelectedItem;
+                string failMessage = $"Unable to connect to {currentProvider.Name} provider... switch provider and try again!";
+                MessageBox.Show(failMessage);
                 labelPleaseWait.Text = string.Empty;
-                buttonOK.Enabled = true;
-                buttonDownload.Enabled = true;
-                buttonDownloadAll.Enabled = true;
-                comboBoxDictionaries.Enabled = true;
+                ControlsState(true);
                 Cursor = Cursors.Default;
                 return;
             }
-            else if (e.Error != null)
-            {
-                MessageBox.Show(Configuration.Settings.Language.GetTesseractDictionaries.DownloadFailed + Environment.NewLine +
-                                Environment.NewLine +
-                                e.Error.Message);
-                DialogResult = DialogResult.Cancel;
-                return;
-            }
 
+            byte[] data = e.Result;
             string dictionaryFolder = Utilities.DictionaryFolder;
             if (!Directory.Exists(dictionaryFolder))
-                Directory.CreateDirectory(dictionaryFolder);
-
-            int index = comboBoxDictionaries.SelectedIndex;
-
-            using (var ms = new MemoryStream(e.Result))
-            using (ZipExtractor zip = ZipExtractor.Open(ms))
             {
-                List<ZipExtractor.ZipFileEntry> dir = zip.ReadCentralDir();
-                // Extract dic/aff files in dictionary folder
-                bool found = false;
-                ExtractDic(dictionaryFolder, zip, dir, ref found);
-
-                if (!found) // check zip inside zip
+                try
                 {
-                    foreach (ZipExtractor.ZipFileEntry entry in dir)
-                    {
-                        if (entry.FilenameInZip.EndsWith(".zip", StringComparison.OrdinalIgnoreCase))
-                        {
-                            using (var innerMs = new MemoryStream())
-                            {
-                                zip.ExtractFile(entry, innerMs);
-                                ZipExtractor innerZip = ZipExtractor.Open(innerMs);
-                                List<ZipExtractor.ZipFileEntry> innerDir = innerZip.ReadCentralDir();
-                                ExtractDic(dictionaryFolder, innerZip, innerDir, ref found);
-                            }
-                        }
-                    }
+                    Directory.CreateDirectory(dictionaryFolder);
+                }
+                catch
+                {
+                    return;
                 }
             }
 
-            Cursor = Cursors.Default;
-            labelPleaseWait.Text = string.Empty;
-            buttonOK.Enabled = true;
-            buttonDownload.Enabled = true;
-            buttonDownloadAll.Enabled = true;
-            comboBoxDictionaries.Enabled = true;
-            if (_testAllIndex >= 0)
+            if (comboBoxProviders.SelectedItem is LibreOfficeProvider libreOfficeProvider)
             {
-                DownloadNext();
-                return;
+                libreOfficeProvider.ProccessDownloadedData(dictionaryFolder, data);
             }
-            MessageBox.Show(string.Format(Configuration.Settings.Language.GetDictionaries.XDownloaded, comboBoxDictionaries.Items[index]));
-        }
-
-        private static void ExtractDic(string dictionaryFolder, ZipExtractor zip, List<ZipExtractor.ZipFileEntry> dir, ref bool found)
-        {
-            foreach (ZipExtractor.ZipFileEntry entry in dir)
+            else
             {
-                if (entry.FilenameInZip.EndsWith(".dic", StringComparison.OrdinalIgnoreCase) || entry.FilenameInZip.EndsWith(".aff", StringComparison.OrdinalIgnoreCase))
+                var gitHubProvider = (GitHubProvider)comboBoxProviders.SelectedItem;
+                var dicInfo = (DictionaryInfo)comboBoxDictionaries.SelectedItem;
+                gitHubProvider.ProccessDownloadedData(dictionaryFolder, dicInfo, data, (bool)e.UserState ? ".dic" : ".aff");
+            }
+
+            if (_downloadCount == 0)
+            {
+                Cursor = Cursors.Default;
+                labelPleaseWait.Text = string.Empty;
+                ControlsState(true);
+                if (_testAllIndex >= 0)
                 {
-                    string fileName = Path.GetFileName(entry.FilenameInZip);
-
-                    // French fix
-                    if (fileName.StartsWith("fr-moderne", StringComparison.Ordinal))
-                        fileName = fileName.Replace("fr-moderne", "fr_FR");
-
-                    // German fix
-                    if (fileName.StartsWith("de_DE_frami", StringComparison.Ordinal))
-                        fileName = fileName.Replace("de_DE_frami", "de_DE");
-
-                    // Russian fix
-                    if (fileName.StartsWith("russian-aot", StringComparison.Ordinal))
-                        fileName = fileName.Replace("russian-aot", "ru_RU");
-
-                    string path = Path.Combine(dictionaryFolder, fileName);
-                    zip.ExtractFile(entry, path);
-
-                    found = true;
+                    DownloadNext();
+                    return;
                 }
+                MessageBox.Show(string.Format(Configuration.Settings.Language.GetDictionaries.XDownloaded, comboBoxDictionaries.SelectedItem));
             }
         }
 
         private void comboBoxDictionaries_SelectedIndexChanged(object sender, EventArgs e)
         {
-            int index = comboBoxDictionaries.SelectedIndex;
-            labelPleaseWait.Text = _descriptions[index];
+            var dicInfo = (DictionaryInfo)comboBoxDictionaries.SelectedItem;
+            labelPleaseWait.Text = dicInfo.Description;
+            if (labelPleaseWait.Width > comboBoxProviders.Width)
+            {
+                int len = labelPleaseWait.Text.Length;
+                labelPleaseWait.Text = labelPleaseWait.Text.Remove(len - 13) + "...";
+            }
         }
 
         private void buttonDownloadAll_Click(object sender, EventArgs e)
@@ -257,6 +210,24 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 comboBoxDictionaries.SelectedIndex = _testAllIndex;
                 buttonDownload_Click(null, null);
+            }
+        }
+
+        private void comboBoxProviders_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            DictionaryProvider dicProvider = (DictionaryProvider)comboBoxProviders.SelectedItem;
+            if (dicProvider == null)
+            {
+                throw new InvalidOperationException("Invalid provider selected!");
+            }
+            comboBoxDictionaries.Items.Clear();
+            foreach (DictionaryInfo dicInfo in dicProvider.Dictionaries)
+            {
+                comboBoxDictionaries.Items.Add(dicInfo);
+            }
+            if (comboBoxDictionaries.Items.Count > 0)
+            {
+                comboBoxDictionaries.SelectedIndex = 0;
             }
         }
 

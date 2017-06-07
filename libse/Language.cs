@@ -835,6 +835,7 @@ namespace Nikse.SubtitleEdit.Core
                 Download = "Download",
                 ChooseLanguageAndClickDownload = "Choose your language and click download",
                 XDownloaded = "{0} has been downloaded and installed",
+                Providers = "Providers:",
             };
 
             GetTesseractDictionaries = new LanguageStructure.GetTesseractDictionaries
