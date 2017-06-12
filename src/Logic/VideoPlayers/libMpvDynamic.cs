@@ -232,6 +232,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 return;
 
             DoMpvCommand("frame-step");
+            _pausePosition = null;            
         }
 
         public void GetPreviousFrame()
@@ -240,6 +241,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 return;
 
             DoMpvCommand("frame-back-step");
+            _pausePosition = null;
         }
 
         public override void Play()
