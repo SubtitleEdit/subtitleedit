@@ -32,14 +32,10 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
         public static string FixAloneLowercaseIToUppercaseLine(Regex re, string oldText, string s, char target)
         {
             //html tags
-            if (s.Contains(">" + target + "</"))
-                s = s.Replace(">" + target + "</", ">I</");
-            if (s.Contains(">" + target + " "))
-                s = s.Replace(">" + target + " ", ">I ");
-            if (s.Contains(">" + target + "\u200B" + Environment.NewLine)) // Zero Width Space
-                s = s.Replace(">" + target + "\u200B" + Environment.NewLine, ">I" + Environment.NewLine);
-            if (s.Contains(">" + target + "\uFEFF" + Environment.NewLine)) // Zero Width No-Break Space
-                s = s.Replace(">" + target + "\uFEFF" + Environment.NewLine, ">I" + Environment.NewLine);
+            s = s.Replace(">" + target + "</", ">I</");
+            s = s.Replace(">" + target + " ", ">I ");
+            s = s.Replace(">" + target + "\u200B" + Environment.NewLine, ">I" + Environment.NewLine); // Zero Width Space
+            s = s.Replace(">" + target + "\uFEFF" + Environment.NewLine, ">I" + Environment.NewLine); // Zero Width No-Break Space
 
             // reg-ex
             Match match = re.Match(s);

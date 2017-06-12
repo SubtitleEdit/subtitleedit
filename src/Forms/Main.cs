@@ -2998,14 +2998,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ShowHideTextBasedFeatures(SubtitleFormat format)
         {
-            if (format != null && !format.IsTextBased)
-            {
-                textBoxSource.Enabled = false;
-            }
-            else
-            {
-                textBoxSource.Enabled = true;
-            }
+            textBoxSource.Enabled = format?.IsTextBased == true;
         }
 
         private void SetUndockedWindowsTitle()
