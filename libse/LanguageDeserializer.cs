@@ -5278,6 +5278,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/HowToSignUp":
                     language.Settings.HowToSignUp = reader.Value;
                     break;
+                case "Settings/GoogleTranslateUrl":
+                    language.Settings.GoogleTranslateUrl = reader.Value;
+                    break;
                 case "Settings/ClientId":
                     language.Settings.ClientId = reader.Value;
                     break;

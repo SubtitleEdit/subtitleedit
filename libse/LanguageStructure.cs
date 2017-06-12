@@ -2106,6 +2106,7 @@
             public string UseDoNotBreakAfterList { get; set; }
             public string MicrosoftBingTranslator { get; set; }
             public string HowToSignUp { get; set; }
+            public string GoogleTranslateUrl { get; set; }
             public string ClientId { get; set; }
             public string ClientSecret { get; set; }
         }

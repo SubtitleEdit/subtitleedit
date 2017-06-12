@@ -33,6 +33,23 @@ namespace Nikse.SubtitleEdit.Forms
             ItalicTwoLines
         }
 
+        private static string GoogleTranslateUrl
+        {
+            get
+            {
+                var url = Configuration.Settings.Tools.GoogleTranslateUrl;
+                if (string.IsNullOrEmpty(url) || !url.Contains(".google.", StringComparison.OrdinalIgnoreCase))
+                {
+                    return "https://translate.google.com/";
+                }
+                if (!url.StartsWith("http", StringComparison.OrdinalIgnoreCase))
+                {
+                    url = "https://" + url;
+                }
+                return url.TrimEnd('/') + '/';
+            }
+        }
+
         private FormattingType[] _formattingTypes;
         private bool[] _autoSplit;
 
@@ -478,7 +495,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             try
             {
-                string url = String.Format("https://translate.google.com/?hl=en&eotf=1&sl={0}&tl={1}&q={2}", languagePair.Substring(0, 2), languagePair.Substring(3), "123 456");
+                string url = String.Format(GoogleTranslateUrl + "?hl=en&eotf=1&sl={0}&tl={1}&q={2}", languagePair.Substring(0, 2), languagePair.Substring(3), "123 456");
                 var result = Utilities.DownloadString(url).ToLower();
                 int idx = result.IndexOf("charset", StringComparison.Ordinal);
                 int end = result.IndexOf('"', idx + 8);
@@ -493,7 +510,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         /// <summary>
         /// Translate Text using Google Translate API's
-        /// Google URL - https://www.google.com/translate_t?hl=en&amp;ie=UTF8&amp;text={0}&amp;langpair={1}
+        /// Google URL - https://translate.google.com/?hl=en&amp;ie=UTF8&amp;text={0}&amp;langpair={1}
         /// </summary>
         /// <param name="input">Input string</param>
         /// <param name="languagePair">2 letter Language Pair, delimited by "|".
@@ -503,7 +520,7 @@ namespace Nikse.SubtitleEdit.Forms
         /// <returns>Translated to String</returns>
         public static string TranslateTextViaScreenScraping(string input, string languagePair, Encoding encoding, bool romanji)
         {
-            string url = string.Format("https://translate.google.com/?hl=en&eotf=1&sl={0}&tl={1}&q={2}", languagePair.Substring(0, 2), languagePair.Substring(3), Utilities.UrlEncode(input));
+            string url = string.Format(GoogleTranslateUrl + "?hl=en&eotf=1&sl={0}&tl={1}&q={2}", languagePair.Substring(0, 2), languagePair.Substring(3), Utilities.UrlEncode(input));
             var result = Utilities.DownloadString(url, encoding);
 
             var sb = new StringBuilder();
@@ -768,10 +785,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void LinkLabel1LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            if (_googleTranslate)
-                System.Diagnostics.Process.Start("https://www.google.com/translate");
-            else
-                System.Diagnostics.Process.Start("http://www.microsofttranslator.com/");
+            System.Diagnostics.Process.Start(_googleTranslate ? GoogleTranslateUrl : "http://www.bing.com/translator");
         }
 
         private void ButtonOkClick(object sender, EventArgs e)

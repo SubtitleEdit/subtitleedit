@@ -2224,6 +2224,7 @@ can edit in same subtitle file (collaboration)",
                 CpsIncludesSpace = "Chars/sec (CPS) includes spaces",
                 MicrosoftBingTranslator = "Microsoft Bing Translator",
                 HowToSignUp = "How to sign up",
+                GoogleTranslateUrl = "Google translate url",
                 ClientId = "Client ID",
                 ClientSecret = "Client secret"
             };
