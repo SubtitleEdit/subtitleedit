@@ -334,6 +334,8 @@
             this.colorDialogSSAStyle = new System.Windows.Forms.ColorDialog();
             this.labelStatus = new System.Windows.Forms.Label();
             this.openFileDialogFFmpeg = new System.Windows.Forms.OpenFileDialog();
+            this.labelGoogleTranslateUrl = new System.Windows.Forms.Label();
+            this.comboBoxGoogleTranslateUrl = new System.Windows.Forms.ComboBox();
             this.tabControlSettings.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
@@ -2539,9 +2541,9 @@
             this.groupBoxBing.Controls.Add(this.labelClientId);
             this.groupBoxBing.Controls.Add(this.linkLabelBingSubscribe);
             this.groupBoxBing.Controls.Add(this.label1);
-            this.groupBoxBing.Location = new System.Drawing.Point(374, 259);
+            this.groupBoxBing.Location = new System.Drawing.Point(421, 331);
             this.groupBoxBing.Name = "groupBoxBing";
-            this.groupBoxBing.Size = new System.Drawing.Size(451, 203);
+            this.groupBoxBing.Size = new System.Drawing.Size(404, 131);
             this.groupBoxBing.TabIndex = 6;
             this.groupBoxBing.TabStop = false;
             this.groupBoxBing.Text = "Bing translator";
@@ -2550,7 +2552,7 @@
             // 
             this.textBoxBingClientId.Location = new System.Drawing.Point(94, 45);
             this.textBoxBingClientId.Name = "textBoxBingClientId";
-            this.textBoxBingClientId.Size = new System.Drawing.Size(331, 21);
+            this.textBoxBingClientId.Size = new System.Drawing.Size(304, 21);
             this.textBoxBingClientId.TabIndex = 25;
             // 
             // labelClientSecret
@@ -2566,7 +2568,7 @@
             // 
             this.textBoxBingClientSecret.Location = new System.Drawing.Point(94, 72);
             this.textBoxBingClientSecret.Name = "textBoxBingClientSecret";
-            this.textBoxBingClientSecret.Size = new System.Drawing.Size(331, 21);
+            this.textBoxBingClientSecret.Size = new System.Drawing.Size(304, 21);
             this.textBoxBingClientSecret.TabIndex = 26;
             // 
             // labelClientId
@@ -2580,7 +2582,7 @@
             // 
             // linkLabelBingSubscribe
             // 
-            this.linkLabelBingSubscribe.Location = new System.Drawing.Point(242, 17);
+            this.linkLabelBingSubscribe.Location = new System.Drawing.Point(201, 15);
             this.linkLabelBingSubscribe.Name = "linkLabelBingSubscribe";
             this.linkLabelBingSubscribe.Size = new System.Drawing.Size(183, 27);
             this.linkLabelBingSubscribe.TabIndex = 24;
@@ -2599,13 +2601,15 @@
             // 
             // groupBoxToolsMisc
             // 
+            this.groupBoxToolsMisc.Controls.Add(this.comboBoxGoogleTranslateUrl);
+            this.groupBoxToolsMisc.Controls.Add(this.labelGoogleTranslateUrl);
             this.groupBoxToolsMisc.Controls.Add(this.checkBoxCpsIncludeWhiteSpace);
             this.groupBoxToolsMisc.Controls.Add(this.labelUserBingApiId);
             this.groupBoxToolsMisc.Controls.Add(this.buttonEditDoNotBreakAfterList);
             this.groupBoxToolsMisc.Controls.Add(this.checkBoxUseDoNotBreakAfterList);
-            this.groupBoxToolsMisc.Location = new System.Drawing.Point(7, 331);
+            this.groupBoxToolsMisc.Location = new System.Drawing.Point(421, 130);
             this.groupBoxToolsMisc.Name = "groupBoxToolsMisc";
-            this.groupBoxToolsMisc.Size = new System.Drawing.Size(361, 131);
+            this.groupBoxToolsMisc.Size = new System.Drawing.Size(404, 195);
             this.groupBoxToolsMisc.TabIndex = 4;
             this.groupBoxToolsMisc.TabStop = false;
             this.groupBoxToolsMisc.Text = "Misc";
@@ -2655,9 +2659,9 @@
             this.groupBoxSpellCheck.Controls.Add(this.checkBoxTreatINQuoteAsING);
             this.groupBoxSpellCheck.Controls.Add(this.checkBoxSpellCheckOneLetterWords);
             this.groupBoxSpellCheck.Controls.Add(this.checkBoxSpellCheckAutoChangeNames);
-            this.groupBoxSpellCheck.Location = new System.Drawing.Point(374, 129);
+            this.groupBoxSpellCheck.Location = new System.Drawing.Point(7, 331);
             this.groupBoxSpellCheck.Name = "groupBoxSpellCheck";
-            this.groupBoxSpellCheck.Size = new System.Drawing.Size(451, 124);
+            this.groupBoxSpellCheck.Size = new System.Drawing.Size(408, 131);
             this.groupBoxSpellCheck.TabIndex = 5;
             this.groupBoxSpellCheck.TabStop = false;
             this.groupBoxSpellCheck.Text = "Spell check";
@@ -2703,7 +2707,7 @@
             this.groupBoxFixCommonErrors.Controls.Add(this.labelToolsMusicSymbol);
             this.groupBoxFixCommonErrors.Location = new System.Drawing.Point(7, 129);
             this.groupBoxFixCommonErrors.Name = "groupBoxFixCommonErrors";
-            this.groupBoxFixCommonErrors.Size = new System.Drawing.Size(361, 196);
+            this.groupBoxFixCommonErrors.Size = new System.Drawing.Size(408, 196);
             this.groupBoxFixCommonErrors.TabIndex = 3;
             this.groupBoxFixCommonErrors.TabStop = false;
             this.groupBoxFixCommonErrors.Text = "Fix common errors";
@@ -3999,6 +4003,26 @@
             // 
             this.openFileDialogFFmpeg.FileName = "openFileDialog1";
             // 
+            // labelGoogleTranslateUrl
+            // 
+            this.labelGoogleTranslateUrl.AutoSize = true;
+            this.labelGoogleTranslateUrl.Location = new System.Drawing.Point(12, 138);
+            this.labelGoogleTranslateUrl.Name = "labelGoogleTranslateUrl";
+            this.labelGoogleTranslateUrl.Size = new System.Drawing.Size(101, 13);
+            this.labelGoogleTranslateUrl.TabIndex = 33;
+            this.labelGoogleTranslateUrl.Text = "Google translate url";
+            // 
+            // comboBoxGoogleTranslateUrl
+            // 
+            this.comboBoxGoogleTranslateUrl.FormattingEnabled = true;
+            this.comboBoxGoogleTranslateUrl.Items.AddRange(new object[] {
+            "translate.google.com",
+            "translate.google.cn"});
+            this.comboBoxGoogleTranslateUrl.Location = new System.Drawing.Point(15, 155);
+            this.comboBoxGoogleTranslateUrl.Name = "comboBoxGoogleTranslateUrl";
+            this.comboBoxGoogleTranslateUrl.Size = new System.Drawing.Size(369, 21);
+            this.comboBoxGoogleTranslateUrl.TabIndex = 34;
+            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -4428,5 +4452,7 @@
         private System.Windows.Forms.CheckBox checkBoxVideoAutoOpen;
         private System.Windows.Forms.CheckBox checkBoxCpsIncludeWhiteSpace;
         private System.Windows.Forms.Button buttonClearShortcut;
+        private System.Windows.Forms.ComboBox comboBoxGoogleTranslateUrl;
+        private System.Windows.Forms.Label labelGoogleTranslateUrl;
     }
 }

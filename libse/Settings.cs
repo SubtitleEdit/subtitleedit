@@ -89,6 +89,7 @@ namespace Nikse.SubtitleEdit.Core
         public string MicrosoftBingApiId { get; set; }
         public string MicrosoftBingClientId { get; set; }
         public string MicrosoftBingClientSecret { get; set; }
+        public string GoogleTranslateUrl { get; set; }
         public string GoogleApiKey { get; set; }
         public bool UseGooleApiPaidService { get; set; }
         public string GoogleTranslateLastTargetLanguage { get; set; }
@@ -211,6 +212,7 @@ namespace Nikse.SubtitleEdit.Core
             OcrFixUseHardcodedRules = true;
             Interjections = "Ah;Ahh;Ahhh;Ahhhh;Eh;Ehh;Ehhh;Hm;Hmm;Hmmm;Huh;Mm;Mmm;Mmmm;Phew;Gah;Oh;Ohh;Ohhh;Ow;Oww;Owww;Ugh;Ughh;Uh;Uhh;Uhhh;Whew";
             MicrosoftBingApiId = "C2C2E9A508E6748F0494D68DFD92FAA1FF9B0BA4";
+            GoogleTranslateUrl = "translate.google.com";
             GoogleApiKey = "ABQIAAAA4j5cWwa3lDH0RkZceh7PjBTDmNAghl5kWSyuukQ0wtoJG8nFBxRPlalq-gAvbeCXMCkmrysqjXV1Gw";
             UseGooleApiPaidService = false;
             GoogleTranslateLastTargetLanguage = "en";
@@ -1770,6 +1772,9 @@ namespace Nikse.SubtitleEdit.Core
             subNode = node.SelectSingleNode("MicrosoftBingClientSecret");
             if (subNode != null)
                 settings.Tools.MicrosoftBingClientSecret = subNode.InnerText;
+            subNode = node.SelectSingleNode("GoogleTranslateUrl");
+            if (subNode != null)
+                settings.Tools.GoogleTranslateUrl = subNode.InnerText;
             subNode = node.SelectSingleNode("GoogleApiKey");
             if (subNode != null)
                 settings.Tools.GoogleApiKey = subNode.InnerText;
@@ -3274,6 +3279,7 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("MicrosoftBingApiId", settings.Tools.MicrosoftBingApiId);
                 textWriter.WriteElementString("MicrosoftBingClientId", settings.Tools.MicrosoftBingClientId);
                 textWriter.WriteElementString("MicrosoftBingClientSecret", settings.Tools.MicrosoftBingClientSecret);
+                textWriter.WriteElementString("GoogleTranslateUrl", settings.Tools.GoogleTranslateUrl);
                 textWriter.WriteElementString("GoogleApiKey", settings.Tools.GoogleApiKey);
                 textWriter.WriteElementString("UseGooleApiPaidService", settings.Tools.UseGooleApiPaidService.ToString());
                 textWriter.WriteElementString("GoogleTranslateLastTargetLanguage", settings.Tools.GoogleTranslateLastTargetLanguage);
