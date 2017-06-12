@@ -90,15 +90,17 @@ namespace Nikse.SubtitleEdit.Core
                                                                        "tens", "deus", "quê", "ainda", "noite" };
         private static readonly string[] AutoDetectWordsGerman = { "und", "auch", "sich", "bin", "hast", "möchte", "müssen", "weiß", "[Vv]ielleicht", "Warum", "jetzt" };
         private static readonly string[] AutoDetectWordsDutch = { "van", "een", "[Hh]et", "m(ij|ĳ)", "z(ij|ĳ)n", "hebben", "alleen", "Waarom" };
-        private static readonly string[] AutoDetectWordsPolish = { "Czy", "ale", "ty", "siê", "jest", "mnie" };
+        private static readonly string[] AutoDetectWordsPolish = { "Czy", "ale", "ty", "siê", "jest", "mnie", "Proszę", "życie", "statku", "życia", "Czyli", "Wszystko", "Wiem", "Przepraszam", "dobrze", "chciałam" };
         private static readonly string[] AutoDetectWordsGreek = { "μου", "[Εε]ίναι", "αυτό", "Τόμπυ", "καλά", "Ενταξει", "πρεπει", "Λοιπον", "τιποτα", "ξερεις" };
         private static readonly string[] AutoDetectWordsRussian = { "[Ээч]?то", "[Нн]е", "[ТтМмбв]ы", "Да", "[Нн]ет", "Он", "его", "тебя", "как", "меня", "Но", "всё", "мне", "вас", "знаю", "ещё", "за", "нас", "чтобы", "был" };
         private static readonly string[] AutoDetectWordsUkrainian = { "[Нн]і", "[Пп]ривіт", "[Цц]е", "[Щщ]о", "[Йй]ого", "[Вв]ін", "[Яя]к", "[Гг]аразд", "[Яя]кщо", "[Мм]ені", "[Тт]вій", "[Її]х", "[Вв]ітаю", "[Дд]якую", "вже", "було", "був", "цього",
                                                                       "нічого", "немає", "може", "знову", "бо", "щось", "щоб", "цим", "тобі", "хотів", "твоїх", "мої", "мій", "має", "їм", "йому", "дуже" };
         private static readonly string[] AutoDetectWordsBulgarian = { "[Кк]акво", "тук", "може", "Как", "Ваше" };
-        private static readonly string[] AutoDetectWordsArabic = { "من", "هل", "لا", "فى", "لقد", "ما" };
+        private static readonly string[] AutoDetectWordsAlbanian = { "është", "këtë", "Unë", "mirë", "shumë", "Çfarë", "çfarë", "duhet", "Është", "mbrapa", "Faleminderit", "vërtet", "diçka", "gjithashtu", "gjithe", "eshte", "shume", "vetem", "tënde", "çmendur", "vullnetin", "vdekur" };
+        private static readonly string[] AutoDetectWordsArabic = { "من", "هل", "لا", "فى", "لقد", "ما", "مذا", "افذٍ", "دٍلٍس", "افآل", "مذم", "ألت", "إلم", "غفٍلا", "لحل", "افأكر" };
+        private static readonly string[] AutoDetectWordsFarsi = { "این", "برای", "اون", "سیب", "کال", "رو", "خيلي", "آره", "بود", "اون", "نيست", "اينجا", "باشه", "سلام", "ميکني", "داري", "چيزي", "چرا", "خوبه" };
         private static readonly string[] AutoDetectWordsHebrew = { "אתה", "אולי", "הוא", "בסדר", "יודע", "טוב" };
-        private static readonly string[] AutoDetectWordsVietnamese = { "không", "[Tt]ôi", "anh", "đó", "ông" };
+        private static readonly string[] AutoDetectWordsVietnamese = { "không", "[Tt]ôi", "anh", "đó", "ông", "tôi", "phải", "người", "được", "Cậu", "chúng", "chuyện", "muốn", "những", "nhiều" };
         private static readonly string[] AutoDetectWordsHungarian = { "hogy", "lesz", "tudom", "vagy", "mondtam", "még" };
         private static readonly string[] AutoDetectWordsTurkish = { "için", "Tamam", "Hayır", "benim", "daha", "deðil", "önce", "lazým", "çalýþýyor", "burada", "efendim" };
         private static readonly string[] AutoDetectWordsCroatianAndSerbian = { "sam", "ali", "nije", "samo", "ovo", "kako", "dobro", "sve", "tako", "će", "mogu", "ću", "zašto", "nešto", "za" };
@@ -117,7 +119,8 @@ namespace Nikse.SubtitleEdit.Core
         private static readonly string[] AutoDetectWordsSerbianCyrillic = { "сам", "али", "није", "само", "ово", "како", "добро", "све", "тако", "ће", "могу", "ћу", "зашто", "нешто", "за", "шта", "овде" };
         private static readonly string[] AutoDetectWordsIndonesian = { "yang", "tahu", "bisa", "akan", "tahun", "tapi", "dengan", "untuk", "rumah", "dalam", "sudah", "bertemu" };
         private static readonly string[] AutoDetectWordsThai = { "โอ", "โรเบิร์ต", "วิตตอเรีย", "ดร", "คุณตำรวจ", "ราเชล", "ไม่", "เลดดิส", "พระเจ้า", "เท็ดดี้", "หัวหน้า", "แอนดรูว์" };
-        private static readonly string[] AutoDetectWordsKorean = { "그리고", "아니야", "하지만", "말이야", "그들은", "우리가" };
+        private static readonly string[] AutoDetectWordsKorean = { "사루", "거야", "엄마", "그리고", "아니야", "하지만", "말이야", "그들은", "우리가", "엄마가", "괜찮아", "일어나", "잘했어", "뭐라고" };
+        private static readonly string[] AutoDetectWordsMarcedonian = { "господине", "Нема", "господине", "работа", "вселената", "Може", "треба", "Треба", "слетување", "капсулата", "време", "Френдшип", "Прием", "Добро", "пресметки", "Благодарам", "нешто", "Благодарам", "орбитата", "инженер", "Харисон", "Фала", "тоалет", "орбита", "знаеме", "Супервизор", "жени", "Добра", "требаат" };
         private static readonly string[] AutoDetectWordsFinnish = { "että", "kuin", "minä", "mitään", "Mutta", "siitä", "täällä", "poika", "Kiitos", "enää", "vielä", "tässä" };
         private static readonly string[] AutoDetectWordsRomanian1 = { "pentru", "oamenii", "decât", "[Vv]reau", "[Ss]înt", "Asteaptã", "Fãrã", "aici", "domnule", "trãiascã", "niciodatã", "înseamnã", "vorbesti", "fãcut", "spune" };
         private static readonly string[] AutoDetectWordsRomanian2 = { "pentru", "oamenii", "decat", "[Tt]rebuie", "[Aa]cum", "Poate", "vrea", "soare", "nevoie", "daca", "echilibrul", "vorbesti", "zeului", "atunci", "memoria", "soarele" };
@@ -230,17 +233,26 @@ namespace Nikse.SubtitleEdit.Core
             if (count > bestCount)
                 return "bg"; // Bulgarian
 
+            count = GetCount(text, AutoDetectWordsAlbanian);
+            if (count > bestCount)
+                return "sq"; // Albanian
+
             count = GetCount(text, AutoDetectWordsArabic);
             if (count > bestCount)
             {
                 int hebrewCount = GetCount(text, AutoDetectWordsHebrew);
-                if (hebrewCount < count)
+                int farsiCount = GetCount(text, AutoDetectWordsFarsi);
+                if (hebrewCount < count && farsiCount < count)
                     return "ar"; // Arabic
             }
 
             count = GetCount(text, AutoDetectWordsHebrew);
             if (count > bestCount)
                 return "he"; // Hebrew
+
+            count = GetCount(text, AutoDetectWordsFarsi);
+            if (count > bestCount)
+                return "fa"; // Farsi (Persian)
 
             count = GetCount(text, AutoDetectWordsCroatianAndSerbian);
             if (count > bestCount)
@@ -323,8 +335,12 @@ namespace Nikse.SubtitleEdit.Core
                 return "lt";
 
             count = GetCount(text, AutoDetectWordsHindi);
-            if (count > bestCount * 1.2)
+            if (count > bestCount)
                 return "hi";
+
+            count = GetCount(text, AutoDetectWordsMarcedonian);
+            if (count > bestCount)
+                return "mk"; // Markedonian
 
             return string.Empty;
         }
@@ -382,9 +398,9 @@ namespace Nikse.SubtitleEdit.Core
                 }
 
                 int count;
-                switch (shortName)
+                switch (shortName.Replace("-", "_").ToLower())
                 {
-                    case "da_DK":
+                    case "da_dk":
                         count = GetCount(text, AutoDetectWordsDanish);
                         if (count > bestCount)
                         {
@@ -397,7 +413,7 @@ namespace Nikse.SubtitleEdit.Core
                             }
                         }
                         break;
-                    case "nb_NO":
+                    case "nb_no":
                         count = GetCount(text, AutoDetectWordsNorwegian);
                         if (count > bestCount)
                         {
@@ -410,7 +426,7 @@ namespace Nikse.SubtitleEdit.Core
                             }
                         }
                         break;
-                    case "sv_SE":
+                    case "sv_se":
                         count = GetCount(text, AutoDetectWordsSwedish);
                         if (count > bestCount)
                         {
@@ -418,7 +434,7 @@ namespace Nikse.SubtitleEdit.Core
                             bestCount = count;
                         }
                         break;
-                    case "en_US":
+                    case "en_us":
                         count = GetCount(text, AutoDetectWordsEnglish);
                         if (count > bestCount)
                         {
@@ -437,7 +453,7 @@ namespace Nikse.SubtitleEdit.Core
                             }
                         }
                         break;
-                    case "en_GB":
+                    case "en_gb":
                         count = GetCount(text, AutoDetectWordsEnglish);
                         if (count > bestCount)
                         {
@@ -456,13 +472,14 @@ namespace Nikse.SubtitleEdit.Core
                             }
                         }
                         break;
-                    case "es_ES":
+                    case "es_any":
+                    case "es_es":
                         count = GetCount(text, AutoDetectWordsSpanish);
                         if (count > bestCount)
                         {
                             int frenchCount = GetCount(text, "[Cc]'est", "pas", "vous", "pour", "suis", "Pourquoi", "maison", "souviens", "quelque"); // not spanish words
                             int portugueseCount = GetCount(text, "[NnCc]ão", "Então", "h?ouve", "pessoal", "rapariga", "tivesse", "fizeste",
-                                                                 "jantar", "conheço", "atenção", "foste", "milhões", "devias", "ganhar", "raios"); // not spanish words
+                                "jantar", "conheço", "atenção", "foste", "milhões", "devias", "ganhar", "raios"); // not spanish words
                             if (frenchCount < 2 && portugueseCount < 2)
                             {
                                 languageName = shortName;
@@ -470,7 +487,7 @@ namespace Nikse.SubtitleEdit.Core
                             }
                         }
                         break;
-                    case "it_IT":
+                    case "it_it":
                         count = GetCount(text, AutoDetectWordsItalian);
                         if (count > bestCount)
                         {
@@ -483,7 +500,7 @@ namespace Nikse.SubtitleEdit.Core
                             }
                         }
                         break;
-                    case "fr_FR":
+                    case "fr_fr":
                         count = GetCount(text, AutoDetectWordsFrench);
                         if (count > bestCount)
                         {
@@ -497,7 +514,7 @@ namespace Nikse.SubtitleEdit.Core
                             }
                         }
                         break;
-                    case "de_DE":
+                    case "de_de":
                         count = GetCount(text, AutoDetectWordsGerman);
                         if (count > bestCount)
                         {
@@ -505,7 +522,7 @@ namespace Nikse.SubtitleEdit.Core
                             bestCount = count;
                         }
                         break;
-                    case "nl_NL":
+                    case "nl_nl":
                         count = GetCount(text, AutoDetectWordsDutch);
                         if (count > bestCount)
                         {
@@ -513,7 +530,7 @@ namespace Nikse.SubtitleEdit.Core
                             bestCount = count;
                         }
                         break;
-                    case "pl_PL":
+                    case "pl_pl":
                         count = GetCount(text, AutoDetectWordsPolish);
                         if (count > bestCount)
                         {
@@ -521,7 +538,7 @@ namespace Nikse.SubtitleEdit.Core
                             bestCount = count;
                         }
                         break;
-                    case "el_GR":
+                    case "el_gr":
                         count = GetCount(text, AutoDetectWordsGreek);
                         if (count > bestCount)
                         {
@@ -529,7 +546,7 @@ namespace Nikse.SubtitleEdit.Core
                             bestCount = count;
                         }
                         break;
-                    case "ru_RU":
+                    case "ru_ru":
                         count = GetCount(text, AutoDetectWordsRussian);
                         if (count > bestCount)
                         {
@@ -537,7 +554,7 @@ namespace Nikse.SubtitleEdit.Core
                             bestCount = count;
                         }
                         break;
-                    case "uk_UA":
+                    case "uk_ua":
                         count = GetCount(text, AutoDetectWordsUkrainian);
                         if (count > bestCount)
                         {
@@ -545,7 +562,7 @@ namespace Nikse.SubtitleEdit.Core
                             bestCount = count;
                         }
                         break;
-                    case "ro_RO":
+                    case "ro_ro":
                         count = GetCount(text, AutoDetectWordsRomanian1);
                         if (count <= bestCount)
                             count = GetCount(text, AutoDetectWordsRomanian2);
@@ -555,7 +572,7 @@ namespace Nikse.SubtitleEdit.Core
                             bestCount = count;
                         }
                         break;
-                    case "hr_HR": // Croatian
+                    case "hr_hr": // Croatian
                         count = GetCount(text, AutoDetectWordsCroatianAndSerbian);
                         if (count > bestCount)
                         {
@@ -570,7 +587,7 @@ namespace Nikse.SubtitleEdit.Core
                             }
                         }
                         break;
-                    case "sr_Latn": // Serbian (Latin)
+                    case "sr_latn": // Serbian (Latin)
                         count = GetCount(text, AutoDetectWordsCroatianAndSerbian);
                         if (count > bestCount)
                         {
@@ -593,8 +610,8 @@ namespace Nikse.SubtitleEdit.Core
                             bestCount = count;
                         }
                         break;
-                    case "pt_PT": // Portuguese Portugal
-                    case "pt_BR": // Portuguese Brazil
+                    case "pt_pt": // Portuguese Portugal
+                    case "pt_br": // Portuguese Brazil
                         count = GetCount(text, AutoDetectWordsPortuguese);
                         if (count > bestCount)
                         {
@@ -602,7 +619,7 @@ namespace Nikse.SubtitleEdit.Core
                             bestCount = count;
                         }
                         break;
-                    case "hu_HU": // Hungarian
+                    case "hu_hu": // Hungarian
                         count = GetCount(text, AutoDetectWordsHungarian);
                         if (count > bestCount)
                         {
@@ -610,7 +627,7 @@ namespace Nikse.SubtitleEdit.Core
                             bestCount = count;
                         }
                         break;
-                    case "cs_CZ": // Czech
+                    case "cs_cz": // Czech
                         count = GetCount(text, AutoDetectWordsCzech);
                         if (count > bestCount)
                         {
@@ -622,7 +639,7 @@ namespace Nikse.SubtitleEdit.Core
                             }
                         }
                         break;
-                    case "sk_SK": // Slovak
+                    case "sk_sk": // Slovak
                         count = GetCount(text, AutoDetectWordsSlovak);
                         if (count > bestCount)
                         {
@@ -630,7 +647,7 @@ namespace Nikse.SubtitleEdit.Core
                             bestCount = count;
                         }
                         break;
-                    case "lv_LV": // Latvian
+                    case "lv_lv": // Latvian
                         count = GetCount(text, AutoDetectWordsLatvian);
                         if (count > bestCount)
                         {
@@ -638,7 +655,7 @@ namespace Nikse.SubtitleEdit.Core
                             bestCount = count;
                         }
                         break;
-                    case "lt_LT": // Lithuanian
+                    case "lt_lt": // Lithuanian
                     case "lt":    // Lithuanian (Neutral)
                         count = GetCount(text, AutoDetectWordsLithuanian);
                         if (count > bestCount)
@@ -647,9 +664,83 @@ namespace Nikse.SubtitleEdit.Core
                             bestCount = count;
                         }
                         break;
-                    case "hi_IN": // Hindi
+                    case "hi_in": // Hindi
                     case "hi":
                         count = GetCount(text, AutoDetectWordsHindi);
+                        if (count > bestCount)
+                        {
+                            languageName = shortName;
+                            bestCount = count;
+                        }
+                        break;
+                    case "tr_tr": // Turkish
+                        count = GetCount(text, AutoDetectWordsTurkish);
+                        if (count > bestCount)
+                        {
+                            languageName = shortName;
+                            bestCount = count;
+                        }
+                        break;
+                    case "he_il": // Hebrew
+                        count = GetCount(text, AutoDetectWordsHebrew);
+                        if (count > bestCount)
+                        {
+                            languageName = shortName;
+                            bestCount = count;
+                        }
+                        break;
+                    case "vi_vn": // Vietnamese
+                        count = GetCount(text, AutoDetectWordsVietnamese);
+                        if (count > bestCount)
+                        {
+                            languageName = shortName;
+                            bestCount = count;
+                        }
+                        break;
+                    case "ar": // Arabic
+                    case "ar_ar":
+                        count = GetCount(text, AutoDetectWordsArabic);
+                        if (count > bestCount)
+                        {
+                            languageName = shortName;
+                            bestCount = count;
+                        }
+                        break;
+                    case "sq_al": // Albanian
+                        count = GetCount(text, AutoDetectWordsAlbanian);
+                        if (count > bestCount)
+                        {
+                            languageName = shortName;
+                            bestCount = count;
+                        }
+                        break;
+                    case "id_id": // Indonesian
+                        count = GetCount(text, AutoDetectWordsIndonesian);
+                        if (count > bestCount)
+                        {
+                            languageName = shortName;
+                            bestCount = count;
+                        }
+                        break;
+                    case "ko_kr": // Korean
+                        count = GetCount(text, AutoDetectWordsKorean);
+                        if (count > bestCount)
+                        {
+                            languageName = shortName;
+                            bestCount = count;
+                        }
+                        break;
+                    case "mk_mk": // Markedonian
+                        count = GetCount(text, AutoDetectWordsMarcedonian);
+                        if (count > bestCount)
+                        {
+                            languageName = shortName;
+                            bestCount = count;
+                        }
+                        break;
+                    case "fa": // Farsi (Persian)
+                    case "fa_ir":
+                        count = GetCount(text, AutoDetectWordsFarsi);
                         if (count > bestCount)
                         {
                             languageName = shortName;
