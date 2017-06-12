@@ -6,6 +6,12 @@
     <Description>Afrikaans spell checker</Description>
   </Dictionary>
   <Dictionary>
+    <EnglishName>Albanian</EnglishName>
+    <NativeName>Shqip</NativeName>
+    <DownloadLink>https://sourceforge.net/projects/aoo-extensions/files/3393/1/dict-sq.oxt/download</DownloadLink>
+    <Description>Albanian Spell Checker Dictionary</Description>
+  </Dictionary>
+  <Dictionary>
     <EnglishName>Arabic</EnglishName>
     <NativeName>عربي</NativeName>
     <DownloadLink>https://extensions.libreoffice.org/extensions/arabic-spell-checker/3.2/@@download/file/dict_ar-3.2.oxt</DownloadLink>
