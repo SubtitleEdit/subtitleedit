@@ -1900,5 +1900,28 @@ namespace Nikse.SubtitleEdit.Controls
             return subtitleOn;
         }
 
+        public int GetSceneChangeIndex(double seconds)
+        {
+            if (SceneChanges == null)
+            {
+                return -1;
+            }
+            try
+            {
+                for (int index = 0; index < SceneChanges.Count; index++)
+                {
+                    var sceneChange = SceneChanges[index];
+                    if (Math.Abs(sceneChange - seconds) < 0.04)
+                    {
+                        return index;
+                    }
+                }
+            }
+            catch
+            {
+            }
+            return -1;
+        }
+
     }
 }
