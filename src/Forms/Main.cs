@@ -6967,7 +6967,7 @@ namespace Nikse.SubtitleEdit.Forms
                 int bound = _subtitleAlternate.Paragraphs.Count;
                 for (int i = alternateIndices.Count - 1; i >= 0; i--)
                 {
-                    if(i < bound)
+                    if (i < bound)
                     {
                         _subtitleAlternate.Paragraphs.RemoveAt(i);
                     }
@@ -6975,24 +6975,21 @@ namespace Nikse.SubtitleEdit.Forms
                 _subtitleAlternate.Renumber();
             }
 
-            var indices = new List<int>();
+            var removedIndices = new List<int>();
             foreach (ListViewItem item in SubtitleListview1.SelectedItems)
-                indices.Add(item.Index);
+                removedIndices.Add(item.Index);
             int firstIndex = SubtitleListview1.SelectedItems[0].Index;
 
             if (_networkSession != null)
             {
                 _networkSession.TimerStop();
-                NetworkGetSendUpdates(indices, 0, null);
+                NetworkGetSendUpdates(removedIndices, 0, null);
             }
             else
             {
-                indices.Reverse();
-                foreach (int i in indices)
+                for (int i = removedIndices.Count - 1; i >= 0; i--)
                 {
                     _subtitle.Paragraphs.RemoveAt(i);
-                    if (_networkSession != null && _networkSession.LastSubtitle != null && i < _networkSession.LastSubtitle.Paragraphs.Count)
-                        _networkSession.LastSubtitle.Paragraphs.RemoveAt(i);
                 }
                 _subtitle.Renumber();
                 SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
