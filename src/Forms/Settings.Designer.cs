@@ -201,6 +201,8 @@
             this.linkLabelBingSubscribe = new System.Windows.Forms.LinkLabel();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBoxToolsMisc = new System.Windows.Forms.GroupBox();
+            this.comboBoxGoogleTranslateUrl = new System.Windows.Forms.ComboBox();
+            this.labelGoogleTranslateUrl = new System.Windows.Forms.Label();
             this.checkBoxCpsIncludeWhiteSpace = new System.Windows.Forms.CheckBox();
             this.labelUserBingApiId = new System.Windows.Forms.Label();
             this.buttonEditDoNotBreakAfterList = new System.Windows.Forms.Button();
@@ -334,8 +336,6 @@
             this.colorDialogSSAStyle = new System.Windows.Forms.ColorDialog();
             this.labelStatus = new System.Windows.Forms.Label();
             this.openFileDialogFFmpeg = new System.Windows.Forms.OpenFileDialog();
-            this.labelGoogleTranslateUrl = new System.Windows.Forms.Label();
-            this.comboBoxGoogleTranslateUrl = new System.Windows.Forms.ComboBox();
             this.tabControlSettings.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
@@ -2610,9 +2610,29 @@
             this.groupBoxToolsMisc.Location = new System.Drawing.Point(421, 130);
             this.groupBoxToolsMisc.Name = "groupBoxToolsMisc";
             this.groupBoxToolsMisc.Size = new System.Drawing.Size(404, 195);
-            this.groupBoxToolsMisc.TabIndex = 4;
+            this.groupBoxToolsMisc.TabIndex = 5;
             this.groupBoxToolsMisc.TabStop = false;
             this.groupBoxToolsMisc.Text = "Misc";
+            // 
+            // comboBoxGoogleTranslateUrl
+            // 
+            this.comboBoxGoogleTranslateUrl.FormattingEnabled = true;
+            this.comboBoxGoogleTranslateUrl.Items.AddRange(new object[] {
+            "translate.google.com",
+            "translate.google.cn"});
+            this.comboBoxGoogleTranslateUrl.Location = new System.Drawing.Point(15, 155);
+            this.comboBoxGoogleTranslateUrl.Name = "comboBoxGoogleTranslateUrl";
+            this.comboBoxGoogleTranslateUrl.Size = new System.Drawing.Size(369, 21);
+            this.comboBoxGoogleTranslateUrl.TabIndex = 34;
+            // 
+            // labelGoogleTranslateUrl
+            // 
+            this.labelGoogleTranslateUrl.AutoSize = true;
+            this.labelGoogleTranslateUrl.Location = new System.Drawing.Point(12, 138);
+            this.labelGoogleTranslateUrl.Name = "labelGoogleTranslateUrl";
+            this.labelGoogleTranslateUrl.Size = new System.Drawing.Size(101, 13);
+            this.labelGoogleTranslateUrl.TabIndex = 33;
+            this.labelGoogleTranslateUrl.Text = "Google translate url";
             // 
             // checkBoxCpsIncludeWhiteSpace
             // 
@@ -2662,7 +2682,7 @@
             this.groupBoxSpellCheck.Location = new System.Drawing.Point(7, 331);
             this.groupBoxSpellCheck.Name = "groupBoxSpellCheck";
             this.groupBoxSpellCheck.Size = new System.Drawing.Size(408, 131);
-            this.groupBoxSpellCheck.TabIndex = 5;
+            this.groupBoxSpellCheck.TabIndex = 4;
             this.groupBoxSpellCheck.TabStop = false;
             this.groupBoxSpellCheck.Text = "Spell check";
             // 
@@ -4002,26 +4022,6 @@
             // openFileDialogFFmpeg
             // 
             this.openFileDialogFFmpeg.FileName = "openFileDialog1";
-            // 
-            // labelGoogleTranslateUrl
-            // 
-            this.labelGoogleTranslateUrl.AutoSize = true;
-            this.labelGoogleTranslateUrl.Location = new System.Drawing.Point(12, 138);
-            this.labelGoogleTranslateUrl.Name = "labelGoogleTranslateUrl";
-            this.labelGoogleTranslateUrl.Size = new System.Drawing.Size(101, 13);
-            this.labelGoogleTranslateUrl.TabIndex = 33;
-            this.labelGoogleTranslateUrl.Text = "Google translate url";
-            // 
-            // comboBoxGoogleTranslateUrl
-            // 
-            this.comboBoxGoogleTranslateUrl.FormattingEnabled = true;
-            this.comboBoxGoogleTranslateUrl.Items.AddRange(new object[] {
-            "translate.google.com",
-            "translate.google.cn"});
-            this.comboBoxGoogleTranslateUrl.Location = new System.Drawing.Point(15, 155);
-            this.comboBoxGoogleTranslateUrl.Name = "comboBoxGoogleTranslateUrl";
-            this.comboBoxGoogleTranslateUrl.Size = new System.Drawing.Size(369, 21);
-            this.comboBoxGoogleTranslateUrl.TabIndex = 34;
             // 
             // Settings
             // 
