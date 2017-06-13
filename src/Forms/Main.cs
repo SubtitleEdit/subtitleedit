@@ -7635,14 +7635,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (textBoxListViewText.SelectionLength == 0)
                 {
-                    if (textBoxListViewText.Text.Contains("<i>", StringComparison.Ordinal))
-                    {
-                        textBoxListViewText.Text = HtmlUtil.RemoveOpenCloseTags(textBoxListViewText.Text, HtmlUtil.TagItalic);
-                    }
-                    else
-                    {
-                        textBoxListViewText.Text = string.Format("<i>{0}</i>", textBoxListViewText.Text);
-                    }
+                    textBoxListViewText.Text = HtmlUtil.ToggleTag(textBoxListViewText.Text, HtmlUtil.TagItalic);
                 }
                 else
                 {
