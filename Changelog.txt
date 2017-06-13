@@ -1,5 +1,26 @@
 ﻿Subtitle Edit Changelog
 
+3.5.4 (xth May 2017) BETA
+* NEW:
+   * 
+* IMPROVED:
+   * Improved language auto detect
+   * Added simicolon as possible shortcut key - thx Allan
+   * Added 60 fps to export settings for several formats
+   * Google translate can now use google.cn (for Chinese ppl)
+* FIXED:
+   * Fixed missing space in format WebVTT
+   * Fixed support for combined Arabic characters in PAC - thx Zehelein
+   * mpv frame stepping now updates position - thx Flitskikker
+   * Fixed issue with TTML and namespace - thx PannenkoekenNL
+   * Fixed possible crash in "Statistics" - thx Masih
+   * Fix for Arabic spell check word split
+   * Fix for reverse RTL start/end
+   * Add to name to language list is now culture neutral
+   * Maintain cursor position during unbreak/break
+   * Fix for "disable auto open" of video files - thx Barneyk
+   * Fix for rare large font issue - thx Camille
+
 
 3.5.3 (12th May 2017)
 * NEW:
