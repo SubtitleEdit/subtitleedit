@@ -701,8 +701,9 @@ namespace Nikse.SubtitleEdit.Core
             {
                 text = text.Replace("<" + tag + ">", string.Empty);
                 text = text.Replace("</" + tag + ">", string.Empty);
-                text = text.Replace("<" + tag.ToUpper() + ">", string.Empty);
-                text = text.Replace("</" + tag.ToUpper() + ">", string.Empty);
+                // use invariant rule to avoid issue with turkish culture
+                text = text.Replace("<" + tag.ToUpper(System.Globalization.CultureInfo.InvariantCulture) + ">", string.Empty);
+                text = text.Replace("</" + tag.ToUpper(System.Globalization.CultureInfo.InvariantCulture) + ">", string.Empty);
             }
             else
             {
