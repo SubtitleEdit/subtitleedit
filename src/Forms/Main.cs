@@ -6824,24 +6824,25 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        private static void ToggleWebVTTVoice(string voice, TextBox tb)
+        {
+            if (string.IsNullOrWhiteSpace(voice))
+            {
+                return;
+            }
+            string selText = tb.SelectedText;
+            if (selText.Length == 0)
+            {
+                return;
+            }
+            string noTagText = WebVTT.RemoveTag("v", selText);
+            tb.SelectedText = (selText.Length == tb.SelectionLength) ? $"<v {voice}>{noTagText}" : $"<v {voice}>{noTagText}</v>";
+        }
+
         private void WebVTTSetVoiceTextBox(object sender, EventArgs e)
         {
             string voice = (sender as ToolStripItem).Text;
-            if (!string.IsNullOrEmpty(voice))
-            {
-                var tb = GetFocusedTextBox();
-
-                if (tb.SelectionLength > 0)
-                {
-                    string s = tb.SelectedText;
-                    s = WebVTT.RemoveTag("v", s);
-                    if (tb.SelectedText == tb.Text)
-                        s = string.Format("<v {0}>{1}", voice, s);
-                    else
-                        s = string.Format("<v {0}>{1}</v>", voice, s);
-                    tb.SelectedText = s;
-                }
-            }
+            ToggleWebVTTVoice(voice, GetFocusedTextBox());
         }
 
         private void WebVTTSetNewVoiceTextBox(object sender, EventArgs e)
@@ -6850,22 +6851,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (form.ShowDialog(this) == DialogResult.OK)
                 {
-                    string voice = form.InputText;
-                    if (!string.IsNullOrEmpty(voice))
-                    {
-                        var tb = GetFocusedTextBox();
-
-                        if (tb.SelectionLength > 0)
-                        {
-                            string s = tb.SelectedText;
-                            s = WebVTT.RemoveTag("v", s);
-                            if (tb.SelectedText == tb.Text)
-                                s = string.Format("<v {0}>{1}", voice, s);
-                            else
-                                s = string.Format("<v {0}>{1}</v>", voice, s);
-                            tb.SelectedText = s;
-                        }
-                    }
+                    ToggleWebVTTVoice(form.InputText, GetFocusedTextBox());
                 }
             }
         }
