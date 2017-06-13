@@ -6964,12 +6964,13 @@ namespace Nikse.SubtitleEdit.Forms
                             alternateIndices.Add(_subtitleAlternate.GetIndex(original));
                     }
                 }
-
-                alternateIndices.Reverse();
-                foreach (int i in alternateIndices)
+                int bound = _subtitleAlternate.Paragraphs.Count;
+                for (int i = alternateIndices.Count - 1; i >= 0; i--)
                 {
-                    if (i < _subtitleAlternate.Paragraphs.Count)
+                    if(i < bound)
+                    {
                         _subtitleAlternate.Paragraphs.RemoveAt(i);
+                    }
                 }
                 _subtitleAlternate.Renumber();
             }
