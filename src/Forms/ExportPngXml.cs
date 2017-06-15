@@ -24,6 +24,21 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class ExportPngXml : PositionAndSizeForm
     {
+        internal class ExportFormats
+        {
+            internal const string BluraySup = "BLURAYSUP";
+            internal const string VobSub = "VOBSUB";
+            internal const string Fab = "FAB";
+            internal const string Stl = "STL";
+            internal const string Fcp = "FCP";
+            internal const string Dost = "DOST";
+            internal const string DCinemaInterop = "DCINEMA_INTEROP";
+            internal const string BdnXml = "BDNXML";
+            internal const string Edl = "EDL";
+            internal const string EdlClipName = "EDL_CLIPNAME";
+            internal const string ImageFrame = "IMAGE/FRAME";
+            internal const string Spumux = "SPUMUX";
+        }
 
         internal class MakeBitmapParameter
         {
@@ -68,7 +83,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 BackgroundColor = Color.Transparent;
             }
-        }
+        }       
 
         private Subtitle _subtitle;
         private SubtitleFormat _format;
@@ -80,7 +95,7 @@ namespace Nikse.SubtitleEdit.Forms
         private Color _borderColor;
         private float _borderWidth = 2.0f;
         private bool _isLoading = true;
-        private string _exportType = "BDNXML";
+        private string _exportType = ExportFormats.BdnXml;
         private string _fileName;
         private VobSubOcr _vobSubOcr;
         private readonly System.Windows.Forms.Timer _previewTimer = new System.Windows.Forms.Timer();
@@ -252,7 +267,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             parameter.LineJoin = Configuration.Settings.Tools.ExportPenLineJoin;
             parameter.Bitmap = GenerateImageFromTextWithStyle(parameter);
-            if (parameter.Type == "BLURAYSUP")
+            if (parameter.Type == ExportFormats.BluraySup)
             {
                 MakeBluRaySupImage(parameter);
             }
@@ -427,56 +442,56 @@ namespace Nikse.SubtitleEdit.Forms
             if (!string.IsNullOrEmpty(_fileName))
                 saveFileDialog1.FileName = Path.GetFileNameWithoutExtension(_fileName);
 
-            if (_exportType == "BLURAYSUP")
+            if (_exportType == ExportFormats.BluraySup)
             {
                 saveFileDialog1.Title = Configuration.Settings.Language.ExportPngXml.SaveBluRraySupAs;
                 saveFileDialog1.DefaultExt = "*.sup";
                 saveFileDialog1.AddExtension = true;
                 saveFileDialog1.Filter = "Blu-Ray sup|*.sup";
             }
-            else if (_exportType == "VOBSUB")
+            else if (_exportType == ExportFormats.VobSub)
             {
                 saveFileDialog1.Title = Configuration.Settings.Language.ExportPngXml.SaveVobSubAs;
                 saveFileDialog1.DefaultExt = "*.sub";
                 saveFileDialog1.AddExtension = true;
                 saveFileDialog1.Filter = "VobSub|*.sub";
             }
-            else if (_exportType == "FAB")
+            else if (_exportType == ExportFormats.Fab)
             {
                 saveFileDialog1.Title = Configuration.Settings.Language.ExportPngXml.SaveFabImageScriptAs;
                 saveFileDialog1.DefaultExt = "*.txt";
                 saveFileDialog1.AddExtension = true;
                 saveFileDialog1.Filter = "FAB image scripts|*.txt";
             }
-            else if (_exportType == "STL")
+            else if (_exportType == ExportFormats.Stl)
             {
                 saveFileDialog1.Title = Configuration.Settings.Language.ExportPngXml.SaveDvdStudioProStlAs;
                 saveFileDialog1.DefaultExt = "*.txt";
                 saveFileDialog1.AddExtension = true;
                 saveFileDialog1.Filter = "DVD Studio Pro STL|*.stl";
             }
-            else if (_exportType == "FCP")
+            else if (_exportType == ExportFormats.Fcp)
             {
                 saveFileDialog1.Title = Configuration.Settings.Language.ExportPngXml.SaveFcpAs;
                 saveFileDialog1.DefaultExt = "*.xml";
                 saveFileDialog1.AddExtension = true;
                 saveFileDialog1.Filter = "Xml files|*.xml";
             }
-            else if (_exportType == "DOST")
+            else if (_exportType == ExportFormats.Dost)
             {
                 saveFileDialog1.Title = Configuration.Settings.Language.ExportPngXml.SaveDostAs;
                 saveFileDialog1.DefaultExt = "*.dost";
                 saveFileDialog1.AddExtension = true;
                 saveFileDialog1.Filter = "Dost files|*.dost";
             }
-            else if (_exportType == "DCINEMA_INTEROP")
+            else if (_exportType == ExportFormats.DCinemaInterop)
             {
                 saveFileDialog1.Title = Configuration.Settings.Language.ExportPngXml.SaveDigitalCinemaInteropAs;
                 saveFileDialog1.DefaultExt = "*.xml";
                 saveFileDialog1.AddExtension = true;
                 saveFileDialog1.Filter = "Xml files|*.xml";
             }
-            else if (_exportType == "EDL" || _exportType == "EDL_CLIPNAME")
+            else if (_exportType == ExportFormats.Edl || _exportType == ExportFormats.EdlClipName)
             {
                 saveFileDialog1.Title = Configuration.Settings.Language.ExportPngXml.SavePremiereEdlAs;
                 saveFileDialog1.DefaultExt = "*.edl";
@@ -484,18 +499,18 @@ namespace Nikse.SubtitleEdit.Forms
                 saveFileDialog1.Filter = "EDL files|*.edl";
             }
 
-            if (_exportType == "BLURAYSUP" && saveFileDialog1.ShowDialog(this) == DialogResult.OK ||
-                _exportType == "VOBSUB" && saveFileDialog1.ShowDialog(this) == DialogResult.OK ||
-                _exportType == "BDNXML" && folderBrowserDialog1.ShowDialog(this) == DialogResult.OK ||
-                _exportType == "FAB" && folderBrowserDialog1.ShowDialog(this) == DialogResult.OK ||
-                _exportType == "IMAGE/FRAME" && folderBrowserDialog1.ShowDialog(this) == DialogResult.OK ||
-                _exportType == "STL" && folderBrowserDialog1.ShowDialog(this) == DialogResult.OK ||
-                _exportType == "SPUMUX" && folderBrowserDialog1.ShowDialog(this) == DialogResult.OK ||
-                _exportType == "FCP" && saveFileDialog1.ShowDialog(this) == DialogResult.OK ||
-                _exportType == "DOST" && saveFileDialog1.ShowDialog(this) == DialogResult.OK ||
-                _exportType == "DCINEMA_INTEROP" && saveFileDialog1.ShowDialog(this) == DialogResult.OK ||
-                _exportType == "EDL_CLIPNAME" && saveFileDialog1.ShowDialog(this) == DialogResult.OK ||
-                _exportType == "EDL" && saveFileDialog1.ShowDialog(this) == DialogResult.OK)
+            if (_exportType == ExportFormats.BluraySup && saveFileDialog1.ShowDialog(this) == DialogResult.OK ||
+                _exportType == ExportFormats.VobSub && saveFileDialog1.ShowDialog(this) == DialogResult.OK ||
+                _exportType == ExportFormats.BdnXml && folderBrowserDialog1.ShowDialog(this) == DialogResult.OK ||
+                _exportType == ExportFormats.Fab && folderBrowserDialog1.ShowDialog(this) == DialogResult.OK ||
+                _exportType == ExportFormats.ImageFrame && folderBrowserDialog1.ShowDialog(this) == DialogResult.OK ||
+                _exportType == ExportFormats.Stl && folderBrowserDialog1.ShowDialog(this) == DialogResult.OK ||
+                _exportType == ExportFormats.Spumux && folderBrowserDialog1.ShowDialog(this) == DialogResult.OK ||
+                _exportType == ExportFormats.Fcp && saveFileDialog1.ShowDialog(this) == DialogResult.OK ||
+                _exportType == ExportFormats.Dost && saveFileDialog1.ShowDialog(this) == DialogResult.OK ||
+                _exportType == ExportFormats.DCinemaInterop && saveFileDialog1.ShowDialog(this) == DialogResult.OK ||
+                _exportType == ExportFormats.EdlClipName && saveFileDialog1.ShowDialog(this) == DialogResult.OK ||
+                _exportType == ExportFormats.Edl && saveFileDialog1.ShowDialog(this) == DialogResult.OK)
             {
                 int width;
                 int height;
@@ -503,9 +518,9 @@ namespace Nikse.SubtitleEdit.Forms
 
                 FileStream binarySubtitleFile = null;
                 VobSubWriter vobSubWriter = null;
-                if (_exportType == "BLURAYSUP")
+                if (_exportType == ExportFormats.BluraySup)
                     binarySubtitleFile = new FileStream(saveFileDialog1.FileName, FileMode.Create);
-                else if (_exportType == "VOBSUB")
+                else if (_exportType == ExportFormats.VobSub)
                     vobSubWriter = new VobSubWriter(saveFileDialog1.FileName, width, height, GetBottomMarginInPixels(), GetLeftRightMarginInPixels(), 32, _subtitleColor, _borderColor, !checkBoxTransAntiAliase.Checked, (DvdSubtitleLanguage)comboBoxLanguage.SelectedItem);
 
                 progressBar1.Value = 0;
@@ -515,7 +530,7 @@ namespace Nikse.SubtitleEdit.Forms
                 int border = GetBottomMarginInPixels();
                 int imagesSavedCount = 0;
                 var sb = new StringBuilder();
-                if (_exportType == "STL")
+                if (_exportType == ExportFormats.Stl)
                 {
                     sb.AppendLine("$SetFilePathToken =" + folderBrowserDialog1.SelectedPath);
                     sb.AppendLine();
@@ -528,7 +543,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         var mp = MakeMakeBitmapParameter(i, width, height);
                         mp.Bitmap = _vobSubOcr.GetSubtitleBitmap(i++);
-                        if (_exportType == "BLURAYSUP")
+                        if (_exportType == ExportFormats.BluraySup)
                         {
                             MakeBluRaySupImage(mp);
                         }
@@ -618,23 +633,23 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 progressBar1.Visible = false;
-                if (_exportType == "BLURAYSUP")
+                if (_exportType == ExportFormats.BluraySup)
                 {
                     binarySubtitleFile.Close();
                     MessageBox.Show(string.Format(Configuration.Settings.Language.Main.SavedSubtitleX, saveFileDialog1.FileName));
                 }
-                else if (_exportType == "VOBSUB")
+                else if (_exportType == ExportFormats.VobSub)
                 {
                     vobSubWriter.WriteIdxFile();
                     vobSubWriter.Dispose();
                     MessageBox.Show(string.Format(Configuration.Settings.Language.Main.SavedSubtitleX, saveFileDialog1.FileName));
                 }
-                else if (_exportType == "FAB")
+                else if (_exportType == ExportFormats.Fab)
                 {
                     File.WriteAllText(Path.Combine(folderBrowserDialog1.SelectedPath, "Fab_Image_script.txt"), sb.ToString());
                     MessageBox.Show(string.Format(Configuration.Settings.Language.ExportPngXml.XImagesSavedInY, imagesSavedCount, folderBrowserDialog1.SelectedPath));
                 }
-                else if (_exportType == "IMAGE/FRAME")
+                else if (_exportType == ExportFormats.ImageFrame)
                 {
                     var empty = new Bitmap(width, height);
                     imagesSavedCount++;
@@ -644,12 +659,12 @@ namespace Nikse.SubtitleEdit.Forms
 
                     MessageBox.Show(string.Format(Configuration.Settings.Language.ExportPngXml.XImagesSavedInY, imagesSavedCount, folderBrowserDialog1.SelectedPath));
                 }
-                else if (_exportType == "STL")
+                else if (_exportType == ExportFormats.Stl)
                 {
                     File.WriteAllText(Path.Combine(folderBrowserDialog1.SelectedPath, "DVD_Studio_Pro_Image_script.stl"), sb.ToString());
                     MessageBox.Show(string.Format(Configuration.Settings.Language.ExportPngXml.XImagesSavedInY, imagesSavedCount, folderBrowserDialog1.SelectedPath));
                 }
-                else if (_exportType == "SPUMUX")
+                else if (_exportType == ExportFormats.Spumux)
                 {
                     string s = "<subpictures>" + Environment.NewLine +
                                "\t<stream>" + Environment.NewLine +
@@ -659,7 +674,7 @@ namespace Nikse.SubtitleEdit.Forms
                     File.WriteAllText(Path.Combine(folderBrowserDialog1.SelectedPath, "spu.xml"), s);
                     MessageBox.Show(string.Format(Configuration.Settings.Language.ExportPngXml.XImagesSavedInY, imagesSavedCount, folderBrowserDialog1.SelectedPath));
                 }
-                else if (_exportType == "FCP")
+                else if (_exportType == ExportFormats.Fcp)
                 {
                     string fileNameNoPath = Path.GetFileName(saveFileDialog1.FileName);
                     string fileNameNoExt = Path.GetFileNameWithoutExtension(fileNameNoPath);
@@ -783,7 +798,7 @@ namespace Nikse.SubtitleEdit.Forms
                     File.WriteAllText(Path.Combine(folderBrowserDialog1.SelectedPath, saveFileDialog1.FileName), s);
                     MessageBox.Show(string.Format(Configuration.Settings.Language.ExportPngXml.XImagesSavedInY, imagesSavedCount, Path.GetDirectoryName(saveFileDialog1.FileName)));
                 }
-                else if (_exportType == "DOST")
+                else if (_exportType == ExportFormats.Dost)
                 {
                     string header = @"$FORMAT=480
 $VERSION=1.2
@@ -816,7 +831,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     File.WriteAllText(saveFileDialog1.FileName, header + Environment.NewLine + sb);
                     MessageBox.Show(string.Format(Configuration.Settings.Language.ExportPngXml.XImagesSavedInY, imagesSavedCount, Path.GetDirectoryName(saveFileDialog1.FileName)));
                 }
-                else if (_exportType == "DCINEMA_INTEROP")
+                else if (_exportType == ExportFormats.DCinemaInterop)
                 {
                     var doc = new XmlDocument();
                     string title = "unknown";
@@ -838,7 +853,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     File.WriteAllText(fName, SubtitleFormat.ToUtf8XmlString(doc));
                     MessageBox.Show(string.Format(Configuration.Settings.Language.ExportPngXml.XImagesSavedInY, imagesSavedCount, Path.GetDirectoryName(fName)));
                 }
-                else if (_exportType == "EDL" || _exportType == "EDL_CLIPNAME")
+                else if (_exportType == ExportFormats.Edl || _exportType == ExportFormats.EdlClipName)
                 {
                     var title = Path.GetFileNameWithoutExtension(saveFileDialog1.FileName);
                     if (string.IsNullOrEmpty(title))
@@ -847,7 +862,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     File.WriteAllText(saveFileDialog1.FileName, header + sb);
                     MessageBox.Show(string.Format(Configuration.Settings.Language.ExportPngXml.XImagesSavedInY, imagesSavedCount, Path.GetDirectoryName(saveFileDialog1.FileName)));
                 }
-                else if (_exportType == "DCINEMA_INTEROP")
+                else if (_exportType == ExportFormats.DCinemaInterop)
                 {
                     var doc = new XmlDocument();
                     string title = "unknown";
@@ -954,7 +969,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
             xAndY = xAndY.ToLower();
 
-            if (_exportType == "FCP")
+            if (_exportType == ExportFormats.Fcp)
             {
                 switch (xAndY)
                 {
@@ -988,7 +1003,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 }
             }
 
-            if (_exportType == "FCP" || Regex.IsMatch(xAndY, @"\d+x\d+", RegexOptions.IgnoreCase))
+            if (_exportType == ExportFormats.Fcp || Regex.IsMatch(xAndY, @"\d+x\d+", RegexOptions.IgnoreCase))
             {
                 for (int i = 0; i < comboBoxResolution.Items.Count; i++)
                 {
@@ -1012,7 +1027,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
             string text = comboBoxResolution.Text.Trim();
 
-            if (_exportType == "FCP")
+            if (_exportType == ExportFormats.Fcp)
             {
                 if (text == "NTSC-601")
                 {
@@ -1097,7 +1112,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
         {
             if (param.Bitmap != null)
             {
-                if (_exportType == "BLURAYSUP")
+                if (_exportType == ExportFormats.BluraySup)
                 {
                     if (!param.Saved)
                     {
@@ -1105,13 +1120,13 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     }
                     param.Saved = true;
                 }
-                else if (_exportType == "VOBSUB")
+                else if (_exportType == ExportFormats.VobSub)
                 {
                     if (!param.Saved)
                         vobSubWriter.WriteParagraph(param.P, param.Bitmap, param.Alignment);
                     param.Saved = true;
                 }
-                else if (_exportType == "FAB")
+                else if (_exportType == ExportFormats.Fab)
                 {
                     if (!param.Saved)
                     {
@@ -1200,7 +1215,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         param.Saved = true;
                     }
                 }
-                else if (_exportType == "STL")
+                else if (_exportType == ExportFormats.Stl)
                 {
                     if (!param.Saved)
                     {
@@ -1221,7 +1236,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         param.Saved = true;
                     }
                 }
-                else if (_exportType == "SPUMUX")
+                else if (_exportType == ExportFormats.Spumux)
                 {
                     if (!param.Saved)
                     {
@@ -1256,7 +1271,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         param.Saved = true;
                     }
                 }
-                else if (_exportType == "FCP")
+                else if (_exportType == ExportFormats.Fcp)
                 {
                     if (!param.Saved)
                     {
@@ -1405,7 +1420,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         param.Saved = true;
                     }
                 }
-                else if (_exportType == "DOST")
+                else if (_exportType == ExportFormats.Dost)
                 {
                     if (!param.Saved)
                     {
@@ -1457,7 +1472,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         param.Saved = true;
                     }
                 }
-                else if (_exportType == "IMAGE/FRAME")
+                else if (_exportType == ExportFormats.ImageFrame)
                 {
                     if (!param.Saved)
                     {
@@ -1502,7 +1517,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         param.Saved = true;
                     }
                 }
-                else if (_exportType == "DCINEMA_INTEROP")
+                else if (_exportType == ExportFormats.DCinemaInterop)
                 {
                     if (!param.Saved)
                     {
@@ -1570,7 +1585,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         sb.AppendLine("</Subtitle>");
                     }
                 }
-                else if (_exportType == "EDL" || _exportType == "EDL_CLIPNAME")
+                else if (_exportType == ExportFormats.Edl || _exportType == ExportFormats.EdlClipName)
                 {
                     if (!param.Saved)
                     {
@@ -1588,7 +1603,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
                         string line = string.Format("{0:000}  {1}  V     C        {2} {3} {4} {5}", i, fileName1, new TimeCode().ToHHMMSSFF(), param.P.Duration.ToHHMMSSFF(), param.P.StartTime.ToHHMMSSFF(), param.P.EndTime.ToHHMMSSFF());
                         sb.AppendLine(line);
-                        if (_exportType == "EDL_CLIPNAME")
+                        if (_exportType == ExportFormats.EdlClipName)
                         {
                             sb.AppendLine("* FROM CLIP NAME: " + fileName1 + ".PNG");
                         }
@@ -1932,7 +1947,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             mbp.Forced = subtitleListView1.Items[_subtitle.GetIndex(p)].Checked;
             mbp.LineJoin = Configuration.Settings.Tools.ExportPenLineJoin;
             var bmp = GenerateImageFromTextWithStyle(mbp);
-            if (_exportType == "VOBSUB" || _exportType == "STL" || _exportType == "SPUMUX")
+            if (_exportType == ExportFormats.VobSub || _exportType == ExportFormats.Stl || _exportType == ExportFormats.Spumux)
             {
                 var nbmp = new NikseBitmap(bmp);
                 nbmp.ConverToFourColors(Color.Transparent, _subtitleColor, _borderColor, !checkBoxTransAntiAliase.Checked);
@@ -3097,47 +3112,47 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             _fileName = fileName;
             _format = format;
             _videoFileName = videoFileName;
-            if (exportType == "BLURAYSUP")
+            if (exportType == ExportFormats.BluraySup)
                 Text = "Blu-ray SUP";
-            else if (exportType == "VOBSUB")
+            else if (exportType == ExportFormats.VobSub)
                 Text = "VobSub (sub/idx)";
-            else if (exportType == "FAB")
+            else if (exportType == ExportFormats.Fab)
                 Text = "FAB Image Script";
-            else if (exportType == "IMAGE/FRAME")
+            else if (exportType == ExportFormats.ImageFrame)
                 Text = "Image per frame";
-            else if (exportType == "STL")
+            else if (exportType == ExportFormats.Stl)
                 Text = "DVD Studio Pro STL";
-            else if (exportType == "FCP")
+            else if (exportType == ExportFormats.Fcp)
                 Text = "Final Cut Pro";
-            else if (exportType == "DOST")
-                Text = "DOST";
-            else if (exportType == "EDL")
-                Text = "EDL";
-            else if (_exportType == "EDL_CLIPNAME")
+            else if (exportType == ExportFormats.Dost)
+                Text = ExportFormats.Dost;
+            else if (exportType == ExportFormats.Edl)
+                Text = ExportFormats.Edl;
+            else if (_exportType == ExportFormats.EdlClipName)
                 Text = "EDL/CLIPNAME";
-            else if (exportType == "DCINEMA_INTEROP")
+            else if (exportType == ExportFormats.DCinemaInterop)
                 Text = "DCinema interop/png";
             else
                 Text = Configuration.Settings.Language.ExportPngXml.Title;
 
-            if (_exportType == "VOBSUB" && !string.IsNullOrEmpty(Configuration.Settings.Tools.ExportVobSubFontName))
+            if (_exportType == ExportFormats.VobSub && !string.IsNullOrEmpty(Configuration.Settings.Tools.ExportVobSubFontName))
                 _subtitleFontName = Configuration.Settings.Tools.ExportVobSubFontName;
-            else if ((_exportType == "BLURAYSUP" || _exportType == "DOST") && !string.IsNullOrEmpty(Configuration.Settings.Tools.ExportBluRayFontName))
+            else if ((_exportType == ExportFormats.BluraySup || _exportType == ExportFormats.Dost) && !string.IsNullOrEmpty(Configuration.Settings.Tools.ExportBluRayFontName))
                 _subtitleFontName = Configuration.Settings.Tools.ExportBluRayFontName;
-            else if (_exportType == "FCP" && !string.IsNullOrEmpty(Configuration.Settings.Tools.ExportFcpFontName))
+            else if (_exportType == ExportFormats.Fcp && !string.IsNullOrEmpty(Configuration.Settings.Tools.ExportFcpFontName))
                 _subtitleFontName = Configuration.Settings.Tools.ExportFcpFontName;
             else if (!string.IsNullOrEmpty(Configuration.Settings.Tools.ExportFontNameOther))
                 _subtitleFontName = Configuration.Settings.Tools.ExportFontNameOther;
-            if (_exportType == "VOBSUB" && Configuration.Settings.Tools.ExportVobSubFontSize > 0)
+            if (_exportType == ExportFormats.VobSub && Configuration.Settings.Tools.ExportVobSubFontSize > 0)
                 _subtitleFontSize = Configuration.Settings.Tools.ExportVobSubFontSize;
-            else if ((_exportType == "BLURAYSUP" || _exportType == "DOST") && Configuration.Settings.Tools.ExportBluRayFontSize > 0)
+            else if ((_exportType == ExportFormats.BluraySup || _exportType == ExportFormats.Dost) && Configuration.Settings.Tools.ExportBluRayFontSize > 0)
                 _subtitleFontSize = Configuration.Settings.Tools.ExportBluRayFontSize;
-            else if (_exportType == "FCP" && Configuration.Settings.Tools.ExportFcpFontSize > 0)
+            else if (_exportType == ExportFormats.Fcp && Configuration.Settings.Tools.ExportFcpFontSize > 0)
                 _subtitleFontSize = Configuration.Settings.Tools.ExportFcpFontSize;
             else if (Configuration.Settings.Tools.ExportLastFontSize > 0)
                 _subtitleFontSize = Configuration.Settings.Tools.ExportLastFontSize;
 
-            if (_exportType == "FCP")
+            if (_exportType == ExportFormats.Fcp)
             {
                 comboBoxImageFormat.Items.Add("8-bit png");
                 int i = 0;
@@ -3152,7 +3167,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 }
             }
 
-            if (_exportType == "VOBSUB")
+            if (_exportType == ExportFormats.VobSub)
             {
                 comboBoxSubtitleFontSize.SelectedIndex = 7;
                 int i = 0;
@@ -3168,7 +3183,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 checkBoxSimpleRender.Checked = Configuration.Settings.Tools.ExportVobSubSimpleRendering;
                 checkBoxTransAntiAliase.Checked = Configuration.Settings.Tools.ExportVobAntiAliasingWithTransparency;
             }
-            else if (_exportType == "BLURAYSUP" || _exportType == "DOST" || _exportType == "FCP")
+            else if (_exportType == ExportFormats.BluraySup || _exportType == ExportFormats.Dost || _exportType == ExportFormats.Fcp)
             {
                 comboBoxSubtitleFontSize.SelectedIndex = 16;
                 int i = 0;
@@ -3275,13 +3290,13 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 numericUpDownShadowTransparency.Value = Configuration.Settings.Tools.ExportLastShadowTransparency;
             }
 
-            if ((_exportType == "BLURAYSUP" || _exportType == "DOST") && !string.IsNullOrEmpty(Configuration.Settings.Tools.ExportBluRayVideoResolution))
+            if ((_exportType == ExportFormats.BluraySup || _exportType == ExportFormats.Dost) && !string.IsNullOrEmpty(Configuration.Settings.Tools.ExportBluRayVideoResolution))
                 SetResolution(Configuration.Settings.Tools.ExportBluRayVideoResolution);
 
-            if (exportType == "VOBSUB")
+            if (exportType == ExportFormats.VobSub)
             {
                 comboBoxBorderWidth.SelectedIndex = 6;
-                if (_exportType == "VOBSUB" && !string.IsNullOrEmpty(Configuration.Settings.Tools.ExportVobSubVideoResolution))
+                if (_exportType == ExportFormats.VobSub && !string.IsNullOrEmpty(Configuration.Settings.Tools.ExportVobSubVideoResolution))
                     SetResolution(Configuration.Settings.Tools.ExportVobSubVideoResolution);
                 else
                     comboBoxResolution.SelectedIndex = 8;
@@ -3301,14 +3316,14 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 comboBoxLanguage.SelectedIndex = index;
             }
 
-            bool showImageFormat = exportType == "FAB" || exportType == "IMAGE/FRAME" || exportType == "STL" || exportType == "FCP" || exportType == "BDNXML";
-            checkBoxFullFrameImage.Visible = exportType == "FAB" || exportType == "BLURAYSUP" || exportType == "FCP";
+            bool showImageFormat = exportType == ExportFormats.Fab || exportType == ExportFormats.ImageFrame || exportType == ExportFormats.Stl || exportType == ExportFormats.Fcp || exportType == ExportFormats.BdnXml;
+            checkBoxFullFrameImage.Visible = exportType == ExportFormats.Fab || exportType == ExportFormats.BluraySup || exportType == ExportFormats.Fcp;
             comboBoxImageFormat.Visible = showImageFormat;
             labelImageFormat.Visible = showImageFormat;
-            labelFrameRate.Visible = exportType == "BDNXML" || exportType == "BLURAYSUP" || exportType == "DOST" || exportType == "IMAGE/FRAME";
-            comboBoxFrameRate.Visible = exportType == "BDNXML" || exportType == "BLURAYSUP" || exportType == "DOST" || exportType == "IMAGE/FRAME" || exportType == "FAB" || exportType == "FCP";
-            checkBoxTransAntiAliase.Visible = exportType == "VOBSUB";
-            if (exportType == "BDNXML")
+            labelFrameRate.Visible = exportType == ExportFormats.BdnXml || exportType == ExportFormats.BluraySup || exportType == ExportFormats.Dost || exportType == ExportFormats.ImageFrame;
+            comboBoxFrameRate.Visible = exportType == ExportFormats.BdnXml || exportType == ExportFormats.BluraySup || exportType == ExportFormats.Dost || exportType == ExportFormats.ImageFrame || exportType == ExportFormats.Fab || exportType == ExportFormats.Fcp;
+            checkBoxTransAntiAliase.Visible = exportType == ExportFormats.VobSub;
+            if (exportType == ExportFormats.BdnXml)
             {
                 labelFrameRate.Top = labelLanguage.Top;
                 comboBoxFrameRate.Top = comboBoxLanguage.Top;
@@ -3330,7 +3345,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 else
                     comboBoxImageFormat.SelectedIndex = 0;
             }
-            else if (exportType == "DOST")
+            else if (exportType == ExportFormats.Dost)
             {
                 labelFrameRate.Top = labelLanguage.Top;
                 comboBoxFrameRate.Top = comboBoxLanguage.Top;
@@ -3343,7 +3358,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 comboBoxFrameRate.Items.Add("60");
                 comboBoxFrameRate.SelectedIndex = 2;
             }
-            else if (exportType == "IMAGE/FRAME")
+            else if (exportType == ExportFormats.ImageFrame)
             {
                 labelFrameRate.Top = labelLanguage.Top;
                 comboBoxFrameRate.Top = comboBoxLanguage.Top;
@@ -3357,7 +3372,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 comboBoxFrameRate.Items.Add("60");
                 comboBoxFrameRate.SelectedIndex = 2;
             }
-            else if (exportType == "BLURAYSUP")
+            else if (exportType == ExportFormats.BluraySup)
             {
                 labelFrameRate.Top = labelLanguage.Top;
                 comboBoxFrameRate.Top = comboBoxLanguage.Top;
@@ -3375,7 +3390,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 checkBoxFullFrameImage.Top = comboBoxImageFormat.Top + 2;
                 panelFullFrameBackground.Top = checkBoxFullFrameImage.Top;
             }
-            else if (exportType == "FAB")
+            else if (exportType == ExportFormats.Fab)
             {
                 labelFrameRate.Visible = true;
                 comboBoxFrameRate.Items.Add("23.976");
@@ -3389,7 +3404,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 comboBoxFrameRate.SelectedIndex = 1;
                 comboBoxFrameRate.DropDownStyle = ComboBoxStyle.DropDownList;
             }
-            else if (exportType == "FCP")
+            else if (exportType == ExportFormats.Fcp)
             {
                 labelFrameRate.Visible = true;
                 comboBoxFrameRate.Items.Add("23.976");
@@ -3417,7 +3432,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
             comboBoxLeftRightMarginUnit.SelectedIndex = Configuration.Settings.Tools.ExportLeftRightMarginUnit == "%" ? 0 : 1;
 
-            if (_exportType == "BLURAYSUP" || _exportType == "VOBSUB" || _exportType == "IMAGE/FRAME" || _exportType == "BDNXML" || _exportType == "DOST" || _exportType == "FAB" || _exportType == "EDL" || _exportType == "EDL_CLIPNAME")
+            if (_exportType == ExportFormats.BluraySup || _exportType == ExportFormats.VobSub || _exportType == ExportFormats.ImageFrame || _exportType == ExportFormats.BdnXml || _exportType == ExportFormats.Dost || _exportType == ExportFormats.Fab || _exportType == ExportFormats.Edl || _exportType == ExportFormats.EdlClipName)
             {
                 comboBoxBottomMarginUnit.Visible = true;
                 comboBoxBottomMargin.Visible = true;
@@ -3438,7 +3453,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 labelLeftRightMargin.Visible = false;
             }
 
-            checkBoxSkipEmptyFrameAtStart.Visible = exportType == "IMAGE/FRAME";
+            checkBoxSkipEmptyFrameAtStart.Visible = exportType == ExportFormats.ImageFrame;
 
             foreach (var x in FontFamily.Families)
             {
@@ -3486,7 +3501,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             if (Configuration.Settings.Tools.ExportHorizontalAlignment >= 0 && Configuration.Settings.Tools.ExportHorizontalAlignment < comboBoxHAlign.Items.Count)
                 comboBoxHAlign.SelectedIndex = Configuration.Settings.Tools.ExportHorizontalAlignment;
 
-            if (exportType == "DCINEMA_INTEROP")
+            if (exportType == ExportFormats.DCinemaInterop)
             {
                 comboBox3D.Visible = false;
                 numericUpDownDepth3D.Enabled = true;
@@ -3494,7 +3509,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 labelDepth.Text = Configuration.Settings.Language.DCinemaProperties.ZPosition;
             }
 
-            if (_exportType == "FCP")
+            if (_exportType == ExportFormats.Fcp)
             {
                 comboBoxResolution.Items.Clear();
                 comboBoxResolution.Items.Add("NTSC-601");
@@ -3508,7 +3523,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 comboBoxResolution.Items.Add("DVCPROHD-1080i50");
                 comboBoxResolution.Items.Add("HD-(1440x1080)");
                 comboBoxResolution.SelectedIndex = 7; // FullHD
-                if ((_exportType == "FCP") && !string.IsNullOrEmpty(Configuration.Settings.Tools.ExportFcpVideoResolution))
+                if ((_exportType == ExportFormats.Fcp) && !string.IsNullOrEmpty(Configuration.Settings.Tools.ExportFcpVideoResolution))
                     SetResolution(Configuration.Settings.Tools.ExportFcpVideoResolution);
 
                 buttonCustomResolution.Visible = true; // we still allow for custom resolutions
@@ -3527,7 +3542,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             }
 
             comboBoxShadowWidth.SelectedIndex = 0;
-            bool shadowVisible = _exportType == "BDNXML" || _exportType == "BLURAYSUP" || _exportType == "DOST" || _exportType == "IMAGE/FRAME" || _exportType == "FCP" || _exportType == "DCINEMA_INTEROP" || _exportType == "EDL" || _exportType == "EDL_CLIPNAME";
+            bool shadowVisible = _exportType == ExportFormats.BdnXml || _exportType == ExportFormats.BluraySup || _exportType == ExportFormats.Dost || _exportType == ExportFormats.ImageFrame || _exportType == ExportFormats.Fcp || _exportType == ExportFormats.DCinemaInterop || _exportType == ExportFormats.Edl || _exportType == ExportFormats.EdlClipName;
             labelShadowWidth.Visible = shadowVisible;
             buttonShadowColor.Visible = shadowVisible;
             comboBoxShadowWidth.Visible = shadowVisible;
@@ -3537,7 +3552,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             labelShadowTransparency.Visible = shadowVisible;
             numericUpDownShadowTransparency.Visible = shadowVisible;
 
-            if (exportType == "BLURAYSUP" || exportType == "VOBSUB" || exportType == "BDNXML")
+            if (exportType == ExportFormats.BluraySup || exportType == ExportFormats.VobSub || exportType == ExportFormats.BdnXml)
             {
                 subtitleListView1.CheckBoxes = true;
                 subtitleListView1.Columns.Insert(0, Configuration.Settings.Language.ExportPngXml.Forced);
@@ -3765,7 +3780,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
         private void buttonColor_Click(object sender, EventArgs e)
         {
-            bool showAlpha = _exportType == "FAB" || _exportType == "BDNXML";
+            bool showAlpha = _exportType == ExportFormats.Fab || _exportType == ExportFormats.BdnXml;
             using (var colorChooser = new ColorChooser { Color = panelColor.BackColor, ShowAlpha = showAlpha })
             {
                 if (colorChooser.ShowDialog() == DialogResult.OK)
@@ -3934,7 +3949,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             GetResolution(out width, out height);
             string res = string.Format("{0}x{1}", width, height);
 
-            if (_exportType == "VOBSUB")
+            if (_exportType == ExportFormats.VobSub)
             {
                 Configuration.Settings.Tools.ExportVobSubFontName = _subtitleFontName;
                 Configuration.Settings.Tools.ExportVobSubFontSize = (int)_subtitleFontSize;
@@ -3943,17 +3958,17 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 Configuration.Settings.Tools.ExportVobSubSimpleRendering = checkBoxSimpleRender.Checked;
                 Configuration.Settings.Tools.ExportVobAntiAliasingWithTransparency = checkBoxTransAntiAliase.Checked;
             }
-            else if (_exportType == "BLURAYSUP")
+            else if (_exportType == ExportFormats.BluraySup)
             {
                 Configuration.Settings.Tools.ExportBluRayFontName = _subtitleFontName;
                 Configuration.Settings.Tools.ExportBluRayFontSize = (int)_subtitleFontSize;
                 Configuration.Settings.Tools.ExportBluRayVideoResolution = res;
             }
-            else if (_exportType == "BDNXML")
+            else if (_exportType == ExportFormats.BdnXml)
             {
                 Configuration.Settings.Tools.ExportBdnXmlImageType = comboBoxImageFormat.SelectedItem.ToString();
             }
-            else if (_exportType == "FCP")
+            else if (_exportType == ExportFormats.Fcp)
             {
                 Configuration.Settings.Tools.ExportFcpFontName = _subtitleFontName;
                 Configuration.Settings.Tools.ExportFcpFontSize = (int)_subtitleFontSize;
@@ -3969,7 +3984,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             Configuration.Settings.Tools.ExportFontColor = _subtitleColor;
             Configuration.Settings.Tools.ExportBorderColor = _borderColor;
 
-            if (_exportType == "BLURAYSUP")
+            if (_exportType == ExportFormats.BluraySup)
             {
                 if (comboBoxBottomMarginUnit.SelectedIndex == 0) // %
                     Configuration.Settings.Tools.ExportBluRayBottomMarginPercent = comboBoxBottomMargin.SelectedIndex;
@@ -4578,17 +4593,17 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             comboBoxBottomMargin.Items.Clear();
             if (comboBoxBottomMarginUnit.SelectedIndex == 0)
             {
-                for (int i = 0; i <= 25; i++)
+                for (int i = 0; i <= 95; i++)
                     comboBoxBottomMargin.Items.Add(i);
-                var exportMarginPercent = _exportType == "BLURAYSUP" ? Configuration.Settings.Tools.ExportBluRayBottomMarginPercent : Configuration.Settings.Tools.ExportBottomMarginPercent;
+                var exportMarginPercent = _exportType == ExportFormats.BluraySup ? Configuration.Settings.Tools.ExportBluRayBottomMarginPercent : Configuration.Settings.Tools.ExportBottomMarginPercent;
                 if (exportMarginPercent >= 0 && exportMarginPercent < comboBoxBottomMargin.Items.Count)
                     comboBoxBottomMargin.SelectedIndex = exportMarginPercent;
             }
             else
             {
-                for (int i = 0; i <= 500; i++)
+                for (int i = 0; i <= 1000; i++)
                     comboBoxBottomMargin.Items.Add(i);
-                var exportMarginPixels = _exportType == "BLURAYSUP" ? Configuration.Settings.Tools.ExportBluRayBottomMarginPixels : Configuration.Settings.Tools.ExportBottomMarginPixels;
+                var exportMarginPixels = _exportType == ExportFormats.BluraySup ? Configuration.Settings.Tools.ExportBluRayBottomMarginPixels : Configuration.Settings.Tools.ExportBottomMarginPixels;
                 if (exportMarginPixels >= 0 && exportMarginPixels < comboBoxBottomMargin.Items.Count)
                     comboBoxBottomMargin.SelectedIndex = exportMarginPixels;
             }
@@ -4605,14 +4620,14 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             comboBoxLeftRightMargin.Items.Clear();
             if (comboBoxLeftRightMarginUnit.SelectedIndex == 0)
             {
-                for (int i = 0; i < 25; i++)
+                for (int i = 0; i < 95; i++)
                     comboBoxLeftRightMargin.Items.Add(i);
                 if (Configuration.Settings.Tools.ExportLeftRightMarginPercent >= 0 && Configuration.Settings.Tools.ExportLeftRightMarginPercent < comboBoxLeftRightMargin.Items.Count)
                     comboBoxLeftRightMargin.SelectedIndex = Configuration.Settings.Tools.ExportLeftRightMarginPercent;
             }
             else
             {
-                for (int i = 0; i <= 500; i++)
+                for (int i = 0; i <= 1000; i++)
                     comboBoxLeftRightMargin.Items.Add(i);
                 if (Configuration.Settings.Tools.ExportLeftRightMarginPixels >= 0 && Configuration.Settings.Tools.ExportLeftRightMarginPixels < comboBoxLeftRightMargin.Items.Count)
                     comboBoxLeftRightMargin.SelectedIndex = Configuration.Settings.Tools.ExportLeftRightMarginPixels;

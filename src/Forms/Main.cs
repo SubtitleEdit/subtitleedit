@@ -18923,7 +18923,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             using (var exportBdnXmlPng = new ExportPngXml())
             {
-                exportBdnXmlPng.Initialize(_subtitle, GetCurrentSubtitleFormat(), "BLURAYSUP", _fileName, _videoInfo, _videoFileName);
+                exportBdnXmlPng.Initialize(_subtitle, GetCurrentSubtitleFormat(), ExportPngXml.ExportFormats.BluraySup, _fileName, _videoInfo, _videoFileName);
                 exportBdnXmlPng.ShowDialog(this);
             }
         }
@@ -18932,7 +18932,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             using (var exportBdnXmlPng = new ExportPngXml())
             {
-                exportBdnXmlPng.Initialize(_subtitle, GetCurrentSubtitleFormat(), "VOBSUB", _fileName, _videoInfo, _videoFileName);
+                exportBdnXmlPng.Initialize(_subtitle, GetCurrentSubtitleFormat(), ExportPngXml.ExportFormats.VobSub, _fileName, _videoInfo, _videoFileName);
                 exportBdnXmlPng.ShowDialog(this);
             }
         }
@@ -19164,7 +19164,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             using (var exportBdnXmlPng = new ExportPngXml())
             {
-                exportBdnXmlPng.Initialize(_subtitle, GetCurrentSubtitleFormat(), "FAB", _fileName, _videoInfo, _videoFileName);
+                exportBdnXmlPng.Initialize(_subtitle, GetCurrentSubtitleFormat(), ExportPngXml.ExportFormats.Fab, _fileName, _videoInfo, _videoFileName);
                 exportBdnXmlPng.ShowDialog(this);
             }
         }
@@ -19283,7 +19283,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             using (var exportBdnXmlPng = new ExportPngXml())
             {
-                exportBdnXmlPng.Initialize(_subtitle, GetCurrentSubtitleFormat(), "IMAGE/FRAME", _fileName, _videoInfo, _videoFileName);
+                exportBdnXmlPng.Initialize(_subtitle, GetCurrentSubtitleFormat(), ExportPngXml.ExportFormats.ImageFrame, _fileName, _videoInfo, _videoFileName);
                 exportBdnXmlPng.ShowDialog(this);
             }
         }
@@ -20459,7 +20459,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             using (var exportBdnXmlPng = new ExportPngXml())
             {
-                exportBdnXmlPng.Initialize(_subtitle, GetCurrentSubtitleFormat(), "SPUMUX", _fileName, _videoInfo, _videoFileName);
+                exportBdnXmlPng.Initialize(_subtitle, GetCurrentSubtitleFormat(), ExportPngXml.ExportFormats.Spumux, _fileName, _videoInfo, _videoFileName);
                 exportBdnXmlPng.ShowDialog(this);
             }
         }
@@ -20537,7 +20537,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             using (var exportBdnXmlPng = new ExportPngXml())
             {
-                exportBdnXmlPng.Initialize(_subtitle, GetCurrentSubtitleFormat(), "FCP", _fileName, _videoInfo, _videoFileName);
+                exportBdnXmlPng.Initialize(_subtitle, GetCurrentSubtitleFormat(), ExportPngXml.ExportFormats.Fcp, _fileName, _videoInfo, _videoFileName);
                 exportBdnXmlPng.ShowDialog(this);
             }
         }
@@ -20557,7 +20557,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             using (var exportBdnXmlPng = new ExportPngXml())
             {
-                exportBdnXmlPng.Initialize(_subtitle, GetCurrentSubtitleFormat(), "DOST", _fileName, _videoInfo, _videoFileName);
+                exportBdnXmlPng.Initialize(_subtitle, GetCurrentSubtitleFormat(), ExportPngXml.ExportFormats.Dost, _fileName, _videoInfo, _videoFileName);
                 exportBdnXmlPng.ShowDialog(this);
             }
         }
@@ -20843,7 +20843,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             using (var exportBdnXmlPng = new ExportPngXml())
             {
-                exportBdnXmlPng.Initialize(_subtitle, GetCurrentSubtitleFormat(), "DCINEMA_INTEROP", _fileName, _videoInfo, _videoFileName);
+                exportBdnXmlPng.Initialize(_subtitle, GetCurrentSubtitleFormat(), ExportPngXml.ExportFormats.DCinemaInterop, _fileName, _videoInfo, _videoFileName);
                 exportBdnXmlPng.ShowDialog(this);
             }
         }
@@ -20955,7 +20955,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             using (var exportBdnXmlPng = new ExportPngXml())
             {
-                exportBdnXmlPng.Initialize(_subtitle, GetCurrentSubtitleFormat(), "EDL_CLIPNAME", _fileName, _videoInfo, _videoFileName);
+                exportBdnXmlPng.Initialize(_subtitle, GetCurrentSubtitleFormat(), ExportPngXml.ExportFormats.EdlClipName, _fileName, _videoInfo, _videoFileName);
                 exportBdnXmlPng.ShowDialog(this);
             }
         }
@@ -20964,7 +20964,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             using (var exportBdnXmlPng = new ExportPngXml())
             {
-                exportBdnXmlPng.Initialize(_subtitle, GetCurrentSubtitleFormat(), "EDL", _fileName, _videoInfo, _videoFileName);
+                exportBdnXmlPng.Initialize(_subtitle, GetCurrentSubtitleFormat(), ExportPngXml.ExportFormats.Edl, _fileName, _videoInfo, _videoFileName);
                 exportBdnXmlPng.ShowDialog(this);
             }
         }

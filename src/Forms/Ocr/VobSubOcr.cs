@@ -8433,12 +8433,12 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private void vobSubToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ExportToPngXml("VOBSUB");
+            ExportToPngXml(ExportPngXml.ExportFormats.VobSub);
         }
 
         private void bluraySupToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ExportToPngXml("BLURAYSUP");
+            ExportToPngXml(ExportPngXml.ExportFormats.BluraySup);
         }
 
         private void bDNXMLToolStripMenuItem_Click(object sender, EventArgs e)
@@ -8600,7 +8600,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             using (var exportBdnXmlPng = new ExportPngXml())
             {
                 _fromMenuItem = true;
-                exportBdnXmlPng.InitializeFromVobSubOcr(_subtitle, new SubRip(), "DOST", FileName, this, _importLanguageString);
+                exportBdnXmlPng.InitializeFromVobSubOcr(_subtitle, new SubRip(), ExportPngXml.ExportFormats.Dost, FileName, this, _importLanguageString);
                 exportBdnXmlPng.ShowDialog(this);
                 _fromMenuItem = false;
             }
