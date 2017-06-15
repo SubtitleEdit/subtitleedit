@@ -3413,34 +3413,27 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             checkBoxFullFrameImage.Checked = Configuration.Settings.Tools.ExportFullFrame;
             panelShadowColor.BackColor = Configuration.Settings.Tools.ExportShadowColor;
 
-            comboBoxBottomMargin.Items.Clear();
-            for (int i = 0; i < 25; i++)
-                comboBoxBottomMargin.Items.Add(i + "%");
-            if (Configuration.Settings.Tools.ExportBottomMarginPercent >= 0 && Configuration.Settings.Tools.ExportBottomMarginPercent < comboBoxBottomMargin.Items.Count)
-                comboBoxBottomMargin.SelectedIndex = Configuration.Settings.Tools.ExportBottomMarginPercent;
+            comboBoxBottomMarginUnit.SelectedIndex = Configuration.Settings.Tools.ExportBottomMarginUnit == "%" ? 0 : 1;
 
-            comboBoxLeftRightMargin.Items.Clear();
-            for (int i = 0; i < 25; i++)
-                comboBoxLeftRightMargin.Items.Add(i + "%");
-            if (Configuration.Settings.Tools.ExportLeftRightMarginPercent >= 0 && Configuration.Settings.Tools.ExportLeftRightMarginPercent < comboBoxLeftRightMargin.Items.Count)
-                comboBoxLeftRightMargin.SelectedIndex = Configuration.Settings.Tools.ExportLeftRightMarginPercent;
-
-            if (exportType == "BLURAYSUP" || exportType == "IMAGE/FRAME" && Configuration.Settings.Tools.ExportBluRayBottomMarginPercent >= 0 && Configuration.Settings.Tools.ExportBluRayBottomMarginPercent < comboBoxBottomMargin.Items.Count)
-                comboBoxBottomMargin.SelectedIndex = Configuration.Settings.Tools.ExportBluRayBottomMarginPercent;
+            comboBoxLeftRightMarginUnit.SelectedIndex = Configuration.Settings.Tools.ExportLeftRightMarginUnit == "%" ? 0 : 1;
 
             if (_exportType == "BLURAYSUP" || _exportType == "VOBSUB" || _exportType == "IMAGE/FRAME" || _exportType == "BDNXML" || _exportType == "DOST" || _exportType == "FAB" || _exportType == "EDL" || _exportType == "EDL_CLIPNAME")
             {
+                comboBoxBottomMarginUnit.Visible = true;
                 comboBoxBottomMargin.Visible = true;
                 labelBottomMargin.Visible = true;
 
+                comboBoxLeftRightMarginUnit.Visible = true;
                 comboBoxLeftRightMargin.Visible = true;
                 labelLeftRightMargin.Visible = true;
             }
             else
             {
+                comboBoxBottomMarginUnit.Visible = false;
                 comboBoxBottomMargin.Visible = false;
                 labelBottomMargin.Visible = false;
 
+                comboBoxLeftRightMarginUnit.Visible = false;
                 comboBoxLeftRightMargin.Visible = false;
                 labelLeftRightMargin.Visible = false;
             }
@@ -3654,19 +3647,33 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
         private int GetBottomMarginInPixels()
         {
             var s = comboBoxBottomMargin.Text;
-            int width;
-            int height;
-            GetResolution(out width, out height);
-            return (int)Math.Round(int.Parse(s.TrimEnd('%')) / 100.0 * height);
+            if (comboBoxBottomMarginUnit.SelectedIndex == 0) // %
+            {
+                int width;
+                int height;
+                GetResolution(out width, out height);
+                return (int)Math.Round(int.Parse(s.TrimEnd('%')) / 100.0 * height);
+            }
+            else // pixels
+            {
+                return int.Parse(s);
+            }
         }
 
         private int GetLeftRightMarginInPixels()
         {
             var s = comboBoxLeftRightMargin.Text;
-            int width;
-            int height;
-            GetResolution(out width, out height);
-            return (int)Math.Round(int.Parse(s.TrimEnd('%')) / 100.0 * width);
+            if (comboBoxLeftRightMarginUnit.SelectedIndex == 0) // %
+            {
+                int width;
+                int height;
+                GetResolution(out width, out height);
+                return (int)Math.Round(int.Parse(s) / 100.0 * width);
+            }
+            else // pixels
+            {
+                return int.Parse(s);
+            }
         }
 
         private void GeneratePreview()
@@ -3961,12 +3968,34 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             Configuration.Settings.Tools.ExportShadowColor = panelShadowColor.BackColor;
             Configuration.Settings.Tools.ExportFontColor = _subtitleColor;
             Configuration.Settings.Tools.ExportBorderColor = _borderColor;
-            if (_exportType == "BLURAYSUP" || _exportType == "DOST")
-                Configuration.Settings.Tools.ExportBluRayBottomMarginPercent = comboBoxBottomMargin.SelectedIndex;
-            else
-                Configuration.Settings.Tools.ExportBottomMarginPercent = comboBoxBottomMargin.SelectedIndex;
 
-            Configuration.Settings.Tools.ExportLeftRightMarginPercent = comboBoxLeftRightMargin.SelectedIndex;
+            if (_exportType == "BLURAYSUP")
+            {
+                if (comboBoxBottomMarginUnit.SelectedIndex == 0) // %
+                    Configuration.Settings.Tools.ExportBluRayBottomMarginPercent = comboBoxBottomMargin.SelectedIndex;
+                else // pixels
+                    Configuration.Settings.Tools.ExportBluRayBottomMarginPixels = comboBoxBottomMargin.SelectedIndex;
+            }
+            else if (comboBoxBottomMargin.Visible)
+            {
+                if (comboBoxBottomMarginUnit.SelectedIndex == 0) // %
+                    Configuration.Settings.Tools.ExportBottomMarginPercent = comboBoxBottomMargin.SelectedIndex;
+                else // pixels
+                    Configuration.Settings.Tools.ExportBottomMarginPixels = comboBoxBottomMargin.SelectedIndex;
+            }
+
+            if (comboBoxLeftRightMargin.Visible)
+            {
+                if (comboBoxLeftRightMarginUnit.SelectedIndex == 0) // %
+                    Configuration.Settings.Tools.ExportLeftRightMarginPercent = comboBoxLeftRightMargin.SelectedIndex;
+                else // pixels
+                    Configuration.Settings.Tools.ExportLeftRightMarginPixels = comboBoxLeftRightMargin.SelectedIndex;
+            }
+
+            if (comboBoxBottomMarginUnit.Visible)
+                Configuration.Settings.Tools.ExportBottomMarginUnit = comboBoxBottomMarginUnit.SelectedIndex == 0 ? "%" : "px";
+            if (comboBoxLeftRightMarginUnit.Visible)
+                Configuration.Settings.Tools.ExportLeftRightMarginUnit = comboBoxLeftRightMarginUnit.SelectedIndex == 0 ? "%" : "px";
 
             Configuration.Settings.Tools.ExportHorizontalAlignment = comboBoxHAlign.SelectedIndex;
             Configuration.Settings.Tools.Export3DType = comboBox3D.SelectedIndex;
@@ -4541,6 +4570,58 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
         {
             buttonExport.Visible = false;
             subtitleListView1.CheckBoxes = false;
+        }
+
+        private void comboBoxBottomMarginUnit_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            comboBoxBottomMargin.BeginUpdate();
+            comboBoxBottomMargin.Items.Clear();
+            if (comboBoxBottomMarginUnit.SelectedIndex == 0)
+            {
+                for (int i = 0; i <= 25; i++)
+                    comboBoxBottomMargin.Items.Add(i);
+                var exportMarginPercent = _exportType == "BLURAYSUP" ? Configuration.Settings.Tools.ExportBluRayBottomMarginPercent : Configuration.Settings.Tools.ExportBottomMarginPercent;
+                if (exportMarginPercent >= 0 && exportMarginPercent < comboBoxBottomMargin.Items.Count)
+                    comboBoxBottomMargin.SelectedIndex = exportMarginPercent;
+            }
+            else
+            {
+                for (int i = 0; i <= 500; i++)
+                    comboBoxBottomMargin.Items.Add(i);
+                var exportMarginPixels = _exportType == "BLURAYSUP" ? Configuration.Settings.Tools.ExportBluRayBottomMarginPixels : Configuration.Settings.Tools.ExportBottomMarginPixels;
+                if (exportMarginPixels >= 0 && exportMarginPixels < comboBoxBottomMargin.Items.Count)
+                    comboBoxBottomMargin.SelectedIndex = exportMarginPixels;
+            }
+            if (comboBoxBottomMargin.SelectedIndex == -1)
+            {
+                comboBoxBottomMargin.SelectedIndex = 0;
+            }
+            comboBoxBottomMargin.EndUpdate();
+        }
+
+        private void comboBoxLeftRightMarginUnit_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            comboBoxLeftRightMargin.BeginUpdate();
+            comboBoxLeftRightMargin.Items.Clear();
+            if (comboBoxLeftRightMarginUnit.SelectedIndex == 0)
+            {
+                for (int i = 0; i < 25; i++)
+                    comboBoxLeftRightMargin.Items.Add(i);
+                if (Configuration.Settings.Tools.ExportLeftRightMarginPercent >= 0 && Configuration.Settings.Tools.ExportLeftRightMarginPercent < comboBoxLeftRightMargin.Items.Count)
+                    comboBoxLeftRightMargin.SelectedIndex = Configuration.Settings.Tools.ExportLeftRightMarginPercent;
+            }
+            else
+            {
+                for (int i = 0; i <= 500; i++)
+                    comboBoxLeftRightMargin.Items.Add(i);
+                if (Configuration.Settings.Tools.ExportLeftRightMarginPixels >= 0 && Configuration.Settings.Tools.ExportLeftRightMarginPixels < comboBoxLeftRightMargin.Items.Count)
+                    comboBoxLeftRightMargin.SelectedIndex = Configuration.Settings.Tools.ExportLeftRightMarginPixels;
+            }
+            if (comboBoxLeftRightMargin.SelectedIndex == -1)
+            {
+                comboBoxLeftRightMargin.SelectedIndex = 0;
+            }
+            comboBoxLeftRightMargin.EndUpdate();
         }
 
     }
