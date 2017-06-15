@@ -957,7 +957,7 @@ namespace Nikse.SubtitleEdit.Logic
                         Write($"{count}: {Path.GetFileName(fileName)} -> {outputFileName}...");
                         using (var form = new ExportPngXml())
                         {
-                            form.Initialize(sub, format, "BLURAYSUP", fileName, null, null);
+                            form.Initialize(sub, format, ExportPngXml.ExportFormats.BluraySup, fileName, null, null);
                             int width = 1920;
                             int height = 1080;
                             var parts = Configuration.Settings.Tools.ExportBluRayVideoResolution.Split('x');
@@ -988,7 +988,7 @@ namespace Nikse.SubtitleEdit.Logic
                         Write($"{count}: {Path.GetFileName(fileName)} -> {outputFileName}...");
                         using (var form = new ExportPngXml())
                         {
-                            form.Initialize(sub, format, "VOBSUB", fileName, null, null);
+                            form.Initialize(sub, format, ExportPngXml.ExportFormats.VobSub, fileName, null, null);
                             int width = 720;
                             int height = 576;
                             var parts = Configuration.Settings.Tools.ExportVobSubVideoResolution.Split('x');

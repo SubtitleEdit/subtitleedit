@@ -184,7 +184,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 using (var exportBdnXmlPng = new ExportPngXml())
                 {
-                    exportBdnXmlPng.InitializeFromVobSubOcr(subtitle, new Core.SubtitleFormats.SubRip(), "VOBSUB", "DVD", formSubOcr, SelectedLanguageString);
+                    exportBdnXmlPng.InitializeFromVobSubOcr(subtitle, new Core.SubtitleFormats.SubRip(), ExportPngXml.ExportFormats.VobSub, "DVD", formSubOcr, SelectedLanguageString);
                     exportBdnXmlPng.ShowDialog(this);
                 }
             }

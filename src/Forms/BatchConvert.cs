@@ -1209,7 +1209,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 var s = new Subtitle();
                 s.Paragraphs.Add(new Paragraph("Test 123." + Environment.NewLine + "Test 456.", 0, 4000));
-                properties.Initialize(s, new SubRip(), "BLURAYSUP", null, null, null);
+                properties.Initialize(s, new SubRip(), ExportPngXml.ExportFormats.BluraySup, null, null, null);
                 properties.DisableSaveButtonAndCheckBoxes();
                 properties.ShowDialog(this);
             }
@@ -1221,7 +1221,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 var s = new Subtitle();
                 s.Paragraphs.Add(new Paragraph("Test 123." + Environment.NewLine + "Test 456.", 0, 4000));
-                properties.Initialize(s, new SubRip(), "VOBSUB", null, null, null);
+                properties.Initialize(s, new SubRip(), ExportPngXml.ExportFormats.VobSub, null, null, null);
                 properties.DisableSaveButtonAndCheckBoxes();
                 properties.ShowDialog(this);
             }
