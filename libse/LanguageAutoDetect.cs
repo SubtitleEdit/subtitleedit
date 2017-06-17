@@ -354,7 +354,7 @@ namespace Nikse.SubtitleEdit.Core
         {
             var s = new Subtitle(subtitle);
             s.RemoveEmptyLines();
-            string languageId = AutoDetectGoogleLanguage(s.GetAllTexts(), s.Paragraphs.Count / 14);
+            string languageId = AutoDetectGoogleLanguage(s.GetAllTexts(true), s.Paragraphs.Count / 14);
             if (string.IsNullOrEmpty(languageId))
                 languageId = null;
 
@@ -367,7 +367,7 @@ namespace Nikse.SubtitleEdit.Core
                 languageName = "en_US";
             int bestCount = subtitle.Paragraphs.Count / 14;
 
-            string text = subtitle.GetAllTexts();
+            string text = subtitle.GetAllTexts(true);
             List<string> dictionaryNames = Utilities.GetDictionaryLanguages();
 
             bool containsEnGb = false;
