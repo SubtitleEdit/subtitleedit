@@ -957,5 +957,29 @@ and astronauts.“...""
 
         #endregion
 
+        #region JacobSub
+        [TestMethod]
+        public void JacobSubSubtitleTest()
+        {
+            var jacobSub = new JacobSub();
+            var subtitle = new Subtitle();
+            const string text = @"1:55:52.16 1:55:53.20 D [Billy] That might have been my fault.
+1:55:53.20 1:55:55.13 D That might have been my fault,
+I'm so sorry.
+";
+            // Test text.
+            jacobSub.LoadSubtitle(subtitle, new List<string>(text.SplitToLines()), null);
+            Assert.AreEqual("[Billy] That might have been my fault.", subtitle.Paragraphs[0].Text);
+            Assert.AreEqual("That might have been my fault,\r\nI'm so sorry.", subtitle.Paragraphs[1].Text);
+
+            // Test time code.
+            double expectedTotalMilliseconds = new TimeCode(1, 55, 52, SubtitleFormat.FramesToMilliseconds(16)).TotalMilliseconds;
+            Assert.AreEqual(expectedTotalMilliseconds, subtitle.Paragraphs[0].StartTime.TotalMilliseconds);
+
+            // Test total lines.
+            Assert.AreEqual(2, subtitle.Paragraphs[1].NumberOfLines);
+
+        }
+        #endregion
     }
 }
