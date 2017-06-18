@@ -18477,7 +18477,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (currentFormat != null && !currentFormat.IsTextBased)
                     return;
 
-                SubtitleFormat format = new Subtitle().ReloadLoadSubtitle(textBoxSource.Lines.ToList(), null, currentFormat);
+                SubtitleFormat format = new Subtitle().ReloadLoadSubtitle(textBoxSource.Lines.ToList(), _fileName, currentFormat);
                 if (format == null)
                     e.Cancel = true;
             }

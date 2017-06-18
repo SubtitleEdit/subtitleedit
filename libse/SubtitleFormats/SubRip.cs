@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -48,6 +49,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             if (lines.Count > 0 && lines[0].StartsWith("WEBVTT", StringComparison.OrdinalIgnoreCase))
                 return false;
+
+            // JacobSub
+            if (File.Exists(fileName) && fileName.EndsWith(".jss", StringComparison.OrdinalIgnoreCase))
+            {
+                return false;
+            }
 
             var subtitle = new Subtitle();
             LoadSubtitle(subtitle, lines, fileName);
