@@ -509,9 +509,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             comboBoxDictionaries.SelectedIndexChanged += comboBoxDictionaries_SelectedIndexChanged;
         }
 
-        internal void InitializeBatch(string vobSubFileName, VobSubOcrSettings vobSubOcrSettings)
+        internal void InitializeBatch(string vobSubFileName, VobSubOcrSettings vobSubOcrSettings, bool forcedOnly)
         {
             Initialize(vobSubFileName, vobSubOcrSettings, null);
+            checkBoxShowOnlyForced.Checked = forcedOnly;
             FormVobSubOcr_Shown(null, null);
             checkBoxPromptForUnknownWords.Checked = false;
 
@@ -707,9 +708,15 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 _importLanguageString = _importLanguageString.Substring(0, languageString.IndexOf('(') - 1).Trim();
         }
 
-        internal void InitializeBatch(List<BluRaySupParser.PcsData> subtitles, VobSubOcrSettings vobSubOcrSettings, string fileName)
+        internal void InitializeBatch(List<BluRaySupParser.PcsData> subtitles, VobSubOcrSettings vobSubOcrSettings, string fileName, bool forcedOnly)
         {
             Initialize(subtitles, vobSubOcrSettings, fileName);
+            checkBoxShowOnlyForced.Checked = forcedOnly;
+            DoBatch();
+        }
+
+        private void DoBatch()
+        {
             FormVobSubOcr_Shown(null, null);
             checkBoxPromptForUnknownWords.Checked = false;
 
@@ -778,12 +785,25 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 Paragraph p = _subtitle.GetParagraphOrDefault(i);
                 if (p != null)
                     p.Text = text;
-                if (subtitleListView1.SelectedItems.Count == 1 && subtitleListView1.SelectedItems[0].Index == i)
-                    textBoxCurrentText.Text = text;
-                else
-                    subtitleListView1.SetText(i, text);
             }
-            SetButtonsEnabledAfterOcrDone();
+        }
+
+        internal void InitializeBatch(Subtitle imageListSubtitle, VobSubOcrSettings vobSubOcrSettings, bool isSon)
+        {
+            Initialize(imageListSubtitle, vobSubOcrSettings, isSon);
+            _bdnXmlOriginal = imageListSubtitle;
+            _bdnFileName = imageListSubtitle.FileName;
+            _isSon = isSon;
+            if (_isSon)
+            {
+                checkBoxCustomFourColors.Checked = true;
+                pictureBoxBackground.BackColor = Color.Transparent;
+                pictureBoxPattern.BackColor = Color.DarkGray;
+                pictureBoxEmphasis1.BackColor = Color.Black;
+                pictureBoxEmphasis2.BackColor = Color.White;
+            }
+
+            DoBatch();
         }
 
         internal void Initialize(List<BluRaySupParser.PcsData> subtitles, VobSubOcrSettings vobSubOcrSettings, string fileName)
@@ -6932,7 +6952,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         break;
                     }
                     if ((comboBoxTesseractLanguages.Items[i] as TesseractLanguage).Id == Configuration.Settings.VobSubOcr.TesseractLastLanguage)
-                    { 
+                    {
                         comboBoxTesseractLanguages.SelectedIndex = i;
                     }
                 }
