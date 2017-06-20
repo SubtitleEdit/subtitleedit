@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Language Name="Русский">
   <General>
     <Title>Subtitle Edit</Title>
@@ -641,6 +641,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <FixOcrErrorExample>D0n't -&gt; Don't</FixOcrErrorExample>
     <FixSpaceBetweenNumbersExample>1 100 -&gt; 1100</FixSpaceBetweenNumbersExample>
     <FixDialogsOneLineExample>Hi John! - Hi Ida! -&gt; Hi John!&lt;br /&gt;- Hi Ida!</FixDialogsOneLineExample>
+    <SelectDefault>По-умолчанию</SelectDefault>
   </FixCommonErrors>
   <GetDictionaries>
     <Title>Необходимы словари?</Title>
@@ -1958,6 +1959,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <UseDoNotBreakAfterList>Применить список исключений (для автопереноса)</UseDoNotBreakAfterList>
     <MicrosoftBingTranslator>Переводчик Microsoft Bing</MicrosoftBingTranslator>
     <HowToSignUp>Как зарегистрироваться</HowToSignUp>
+    <GoogleTranslateUrl>Источник для "Google translate"</GoogleTranslateUrl>
     <ClientId>Учетная запись (ID)</ClientId>
     <ClientSecret>Пароль</ClientSecret>
   </Settings>
