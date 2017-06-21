@@ -27,6 +27,7 @@
     <CharsPerSec>Caracteres/min</CharsPerSec>
     <WordsPerMin>Palavras/min</WordsPerMin>
     <Actor>Ator</Actor>
+    <Region>Região</Region>
     <NumberSymbol>#</NumberSymbol>
     <Number>Número</Number>
     <Text>Texto</Text>
@@ -198,8 +199,8 @@ Nota: Verifique o espaço livre em disco.</WaveFileMalformed>
     <Title>Inverter maiúsculas</Title>
     <ChangeCasingTo>Inverter maiúsculas para</ChangeCasingTo>
     <NormalCasing>Maiúsculas normais. Primeira letra de cada frase em maiúsculo.</NormalCasing>
-    <FixNamesCasing>Corrigir maiúsculas de nomes (por Dictionaries\NamesEtc.xml)</FixNamesCasing>
-    <FixOnlyNamesCasing>Corrigir somente maiúsculas de nomes (por Dictionaries\NamesEtc.xml)</FixOnlyNamesCasing>
+    <FixNamesCasing>Corrigir maiúsculas de nomes (via Dictionaries\names.xml)</FixNamesCasing>
+    <FixOnlyNamesCasing>Corrigir somente maiúsculas de nomes (via Dictionaries\names.xml)</FixOnlyNamesCasing>
     <OnlyChangeAllUppercaseLines>Alterar somente linhas em maiúsculo</OnlyChangeAllUppercaseLines>
     <AllUppercase>TODAS MAIÚSCULAS</AllUppercase>
     <AllLowercase>todas minúsculas</AllLowercase>
@@ -632,6 +633,7 @@ Nota: Verifique o espaço livre em disco.</WaveFileMalformed>
     <FixOcrErrorExample>D0n't -&gt; Don't</FixOcrErrorExample>
     <FixSpaceBetweenNumbersExample>1 100 -&gt; 1100</FixSpaceBetweenNumbersExample>
     <FixDialogsOneLineExample>Hi John! - Hi Ida! -&gt; Hi John!&lt;br /&gt;- Hi Ida!</FixDialogsOneLineExample>
+    <SelectDefault>Selecionar padrão</SelectDefault>
   </FixCommonErrors>
   <GetDictionaries>
     <Title>Precisa de dicionários?</Title>
@@ -1069,6 +1071,7 @@ Nota: Verifique o espaço livre em disco.</WaveFileMalformed>
         <SetActor>Definir ator</SetActor>
         <SubStationAlphaStyles>Estilos Sub Station Alpha...</SubStationAlphaStyles>
         <AdvancedSubStationAlphaStyles>Estilos Advanced Sub Station Alpha...</AdvancedSubStationAlphaStyles>
+        <TimedTextSetRegion>Texto Cronometrado - definir região</TimedTextSetRegion>
         <TimedTextSetStyle>Texto Cronometrado - definir estilo</TimedTextSetStyle>
         <TimedTextStyles>Estilos de Texto Cronometrado...</TimedTextStyles>
         <TimedTextSetLanguage>Texto Cronometrado - definir idioma</TimedTextSetLanguage>
@@ -1799,12 +1802,12 @@ podem editar o mesmo arquivo de legenda (colaboração)</Information>
     <UserWordList>Lista de palavras do usuário</UserWordList>
     <OcrFixList>Lista de correções OCR</OcrFixList>
     <Location>Localização</Location>
-    <UseOnlineNames>Usar lista de nomes xml online</UseOnlineNames>
+    <UseOnlineNames>Usar arquivo names.xml online</UseOnlineNames>
     <WordAddedX>Palavra adicionada: {0}</WordAddedX>
     <WordAlreadyExists>A palavra já existe!</WordAlreadyExists>
     <WordNotFound>Palavra não encontrada</WordNotFound>
     <RemoveX>Remover {0}?</RemoveX>
-    <CannotUpdateNamesOnline>Não foi possível atualizar a lista de nomes xml online!</CannotUpdateNamesOnline>
+    <CannotUpdateNamesOnline>Não foi possível atualizar names.xml online!</CannotUpdateNamesOnline>
     <ProxyServerSettings>Configuração do servidor proxy</ProxyServerSettings>
     <ProxyAddress>Endereço proxy</ProxyAddress>
     <ProxyAuthentication>Autenticação</ProxyAuthentication>
@@ -1873,6 +1876,7 @@ podem editar o mesmo arquivo de legenda (colaboração)</Information>
     <WaveformPlayNewSelectionEnd>Tocar final da seleção</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Tocar primeira legenda selecionada</WaveformPlayFirstSelectedSubtitle>
     <WaveformFocusListView>Foco da visualização em lista</WaveformFocusListView>
+    <WaveformGoToNextSubtitle>Ir para a próxima legenda (da posição do vídeo)</WaveformGoToNextSubtitle>
     <WaveformGoToNextSceneChange>Ir para próxima mudança de cena</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>Alternar mudança de cena</WaveformToggleSceneChange>
     <GoBack1Frame>Um quadro para trás</GoBack1Frame>
@@ -1932,6 +1936,7 @@ podem editar o mesmo arquivo de legenda (colaboração)</Information>
     <UseDoNotBreakAfterList>Usar lista não-quebrar-após (para auto-br)</UseDoNotBreakAfterList>
     <MicrosoftBingTranslator>Microsoft Bing Translator</MicrosoftBingTranslator>
     <HowToSignUp>Como fazer login</HowToSignUp>
+    <GoogleTranslateUrl>URL do Google Tradutor</GoogleTranslateUrl>
     <ClientId>ID do Cliente</ClientId>
     <ClientSecret>Segrado do cliente</ClientSecret>
   </Settings>
@@ -1996,14 +2001,11 @@ podem editar o mesmo arquivo de legenda (colaboração)</Information>
     <UndoX>Desfazer: {0}</UndoX>
   </SpellCheck>
   <NetflixQualityCheck>
-    <GlyphCheckSuccessfull>Validação de caracteres bem sucedida.</GlyphCheckSuccessfull>
-    <GlyphCheckFailed>A validação de caracteres falhou.</GlyphCheckFailed>
     <GlyphCheckReport>Caractere inválido {0} encontrado na coluna {1}</GlyphCheckReport>
-    <WhiteSpaceCheckSuccessfull>Validação de espaço em branco bem sucedida.</WhiteSpaceCheckSuccessfull>
-    <WhiteSpaceCheckFailed>A validação de espaço em branco falhou.</WhiteSpaceCheckFailed>
     <WhiteSpaceCheckReport>Espaço em branco inválido encontrado na coluna {0}.</WhiteSpaceCheckReport>
     <ReportPrompt>Por favor, veja o relatório completo aqui: {0}.</ReportPrompt>
-    <SavingError>O relatório não pôde ser salvo.</SavingError>
+    <FoundXIssues>A verificação de qualidade da Netflix encontrou {0} problemas.</FoundXIssues>
+    <CheckOk>Verificação de qualidade da Netflix OK :)</CheckOk>
   </NetflixQualityCheck>
   <Split>
     <Title>Dividir</Title>
@@ -2322,6 +2324,7 @@ Manter as alterações?</KeepChangesMessage>
     <RemoveSceneChange>Remover mudança de cena</RemoveSceneChange>
     <GuessTimeCodes>Identificar códigos de tempo...</GuessTimeCodes>
     <SeekSilence>Procurar silêncio...</SeekSilence>
+    <InsertSubtitleHere>Insira a legenda aqui...</InsertSubtitleHere>
     <CharsSecX>CPS: {0:0.00}</CharsSecX>
     <WordsMinX>WPM: {0:0.00}</WordsMinX>
   </Waveform>
