@@ -97,7 +97,7 @@ namespace Nikse.SubtitleEdit.Core
                                                                       "нічого", "немає", "може", "знову", "бо", "щось", "щоб", "цим", "тобі", "хотів", "твоїх", "мої", "мій", "має", "їм", "йому", "дуже" };
         private static readonly string[] AutoDetectWordsBulgarian = { "[Кк]акво", "тук", "може", "Как", "Ваше" };
         private static readonly string[] AutoDetectWordsAlbanian = { "është", "këtë", "Unë", "mirë", "shumë", "Çfarë", "çfarë", "duhet", "Është", "mbrapa", "Faleminderit", "vërtet", "diçka", "gjithashtu", "gjithe", "eshte", "shume", "vetem", "tënde", "çmendur", "vullnetin", "vdekur" };
-        private static readonly string[] AutoDetectWordsArabic = { "من", "هل", "لا", "فى", "لقد", "ما", "مذا", "افذٍ", "دٍلٍس", "افآل", "مذم", "ألت", "إلم", "غفٍلا", "لحل", "افأكر" };
+        private static readonly string[] AutoDetectWordsArabic = { "من", "هل", "لا", "في", "لقد", "ما", "ماذا", "يا", "هذا", "إلى", "على", "أنا", "أنت", "حسناً", "أيها", "كان", "كيف", "يكون", "هذه", "هذان", "الذي", "التي", "الذين", "هناك", "هنالك" };
         private static readonly string[] AutoDetectWordsFarsi = { "این", "برای", "اون", "سیب", "کال", "رو", "خيلي", "آره", "بود", "اون", "نيست", "اينجا", "باشه", "سلام", "ميکني", "داري", "چيزي", "چرا", "خوبه" };
         private static readonly string[] AutoDetectWordsHebrew = { "אתה", "אולי", "הוא", "בסדר", "יודע", "טוב" };
         private static readonly string[] AutoDetectWordsVietnamese = { "không", "[Tt]ôi", "anh", "đó", "ông", "tôi", "phải", "người", "được", "Cậu", "chúng", "chuyện", "muốn", "những", "nhiều" };
