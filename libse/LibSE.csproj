@@ -239,6 +239,7 @@
     <Compile Include="SubtitleFormats\AdobeEncoreLineTabs.cs" />
     <Compile Include="SubtitleFormats\AdobeEncoreTabs.cs" />
     <Compile Include="SubtitleFormats\AdobeEncoreWithLineNumbers.cs" />
+    <Compile Include="SubtitleFormats\LambdaCap.cs" />
     <Compile Include="SubtitleFormats\AdobeEncoreWithLineNumbersNtsc.cs" />
     <Compile Include="SubtitleFormats\AdvancedSubStationAlpha.cs" />
     <Compile Include="SubtitleFormats\AQTitle.cs" />
