@@ -925,7 +925,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private int AutoDetectEncoding()
         {
-            const string ignoreChars = "[](1234567890, .!?-\r\n'\"):;&";
+            const string ignoreChars = "[](1234567890, .!?-\r\n'\"):;&/";
             try
             {
                 byte[] buffer = FileUtil.ReadAllBytesShared(_fileName);
