@@ -11,5 +11,14 @@
         {
             return (ch >= '0') && (ch <= '9');
         }
+
+        /// <summary>
+        /// Checks if character matches [0-9A-Fa-f]
+        /// </summary>
+        public static bool IsHexDigit(char ch)
+        {
+            return (ch >= 'A' && ch <= 'F') || (ch >= 'a' && ch <= 'f') || (ch >= '0' && ch <= '9');
+        }
+
     }
 }

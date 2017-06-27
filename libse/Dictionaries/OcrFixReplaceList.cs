@@ -13,7 +13,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
         private static readonly Regex RegExIandZero = new Regex(@"[a-zæøåöääöéèàùâêîôûëï][I1]", RegexOptions.Compiled);
         private static readonly Regex RegExTime1 = new Regex(@"[a-zæøåöääöéèàùâêîôûëï]0", RegexOptions.Compiled);
         private static readonly Regex RegExTime2 = new Regex(@"0[a-zæøåöääöéèàùâêîôûëï]", RegexOptions.Compiled);
-        private static readonly Regex HexNumber = new Regex(@"^#?[\dABDEFabcdef]+$", RegexOptions.Compiled);
+        //private static readonly Regex HexNumber = new Regex(@"^#?[\dABDEFabcdef]+$", RegexOptions.Compiled);
         private static readonly Regex StartsAndEndsWithNumber = new Regex(@"^\d+.+\d$", RegexOptions.Compiled);
 
         public readonly Dictionary<string, string> WordReplaceList;
@@ -119,9 +119,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
 
         private static bool IsValidXmlDocument(XmlDocument doc, string elementName)
         {
-            if (doc.DocumentElement == null || doc.DocumentElement.SelectSingleNode(elementName) == null)
-                return false;
-            return true;
+            return doc.DocumentElement?.SelectSingleNode(elementName) != null;
         }
 
         private static bool HasValidAttributes(XmlNode node, bool isRegex)
@@ -471,11 +469,13 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             if (StartsAndEndsWithNumber.IsMatch(word))
                 return word;
 
-            if (word.Contains(new[] { '2', '3', '4', '5', '6', '7', '8', '9' }))
-                return word;
-
-            if (HexNumber.IsMatch(word))
-                return word;
+            foreach (char ch in word)
+            {
+                if (!(ch == '0' || ch == '1') && CharUtils.IsHexDigit(ch))
+                {
+                    return word;
+                }
+            }
 
             if (word.LastIndexOf('I') > 0 || word.LastIndexOf('1') > 0)
             {
@@ -507,17 +507,27 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             if (StartsAndEndsWithNumber.IsMatch(word))
                 return word;
 
-            if (word.Contains(new[] { '1', '2', '3', '4', '5', '6', '7', '8', '9' }) ||
-                word.EndsWith("a.m", StringComparison.Ordinal) ||
+            if (word.EndsWith("a.m", StringComparison.Ordinal) ||
                 word.EndsWith("p.m", StringComparison.Ordinal) ||
                 word.EndsWith("am", StringComparison.Ordinal) ||
                 word.EndsWith("pm", StringComparison.Ordinal))
                 return word;
 
-            if (HexNumber.IsMatch(word))
-                return word;
+            bool isZeroAElement = false;
+            for (int i = word.Length - 1; i >= 0; i--)
+            {
+                char ch = word[i];
+                if (CharUtils.IsHexDigit(ch) && ch != '0')
+                {
+                    return word;
+                }
+                else if (i > 0 && !isZeroAElement && ch == '0') // (0, n] do not include char at index zero.
+                {
+                    isZeroAElement = true;
+                }
+            }
 
-            if (word.LastIndexOf('0') > 0)
+            if (isZeroAElement)
             {
                 Match match = RegExTime1.Match(word);
                 while (match.Success)
