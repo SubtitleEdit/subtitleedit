@@ -56,6 +56,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 string line = lines[i].Trim();
                 string lineNext = string.Empty;
 
+                // skip line starting with '#' (comment)
+                if (line.StartsWith('#'))
+                {
+                    continue;
+                }
+
                 if (i + 1 < lineCount)
                 {
                     lineNext = lines[i + 1].Trim();
