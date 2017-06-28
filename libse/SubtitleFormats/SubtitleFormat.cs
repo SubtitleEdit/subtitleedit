@@ -81,6 +81,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new ImageLogicAutocaption(),
                     new IssXml(),
                     new ItunesTimedText(),
+                    new JacobSub(),
                     new Json(),
                     new JsonType2(),
                     new JsonType3(),

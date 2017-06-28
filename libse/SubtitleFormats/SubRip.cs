@@ -49,6 +49,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             if (lines.Count > 0 && lines[0].StartsWith("WEBVTT", StringComparison.OrdinalIgnoreCase))
                 return false;
 
+            // JacobSub
+            if (!string.IsNullOrEmpty(fileName) && fileName.EndsWith(".jss", StringComparison.OrdinalIgnoreCase))
+            {
+                return false;
+            }
+
             var subtitle = new Subtitle();
             LoadSubtitle(subtitle, lines, fileName);
             Errors = null;
