@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -31,11 +30,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
-            if (!File.Exists(fileName))
-            {
-                return false;
-            }
-            if (!fileName.EndsWith(Extension, StringComparison.OrdinalIgnoreCase))
+            // only validate/check file extension if file exists
+            if (File.Exists(fileName) && !fileName.EndsWith(Extension, StringComparison.OrdinalIgnoreCase))
             {
                 return false;
             }
@@ -84,7 +80,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     {
                         StartTime = DecodeTime(match.Groups[1].Value, timeSplitChar),
                         EndTime = DecodeTime(match.Groups[2].Value, timeSplitChar),
-                        Text = DecodeText(line.Substring(len)).Trim()
+                        Text = DecodeText(line.Substring(len))
                     };
                 }
                 else
@@ -95,7 +91,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                     else
                     {
-                        paragraph.Text += Environment.NewLine + DecodeText(line);
+                        paragraph.Text += (Environment.NewLine + DecodeText(line)).TrimEnd();
                     }
                 }
 
@@ -150,6 +146,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             input = input.Trim();
 
+            if (string.IsNullOrEmpty(input))
+            {
+                return string.Empty;
+            }
+
             // remove all comment
             int idx = input.IndexOf('{');
 
@@ -177,9 +178,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             Match matchDirective = RegexDirectives.Match(input);
             if (startsWithComment || !(matchDirective.Success && IsDirective(matchDirective.Value)))
             {
-                return input;
+                return input.Trim();
             }
-            return input.Substring(matchDirective.Value.Length).TrimStart();
+            return input.Substring(matchDirective.Value.Length).Trim();
         }
 
         /// <summary>
@@ -212,6 +213,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             //argument directives
 
             // time track
+
             return false;
         }
     }

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -51,7 +50,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 return false;
 
             // JacobSub
-            if (File.Exists(fileName) && fileName.EndsWith(".jss", StringComparison.OrdinalIgnoreCase))
+            if (!string.IsNullOrEmpty(fileName) && fileName.EndsWith(".jss", StringComparison.OrdinalIgnoreCase))
             {
                 return false;
             }
