@@ -957,20 +957,19 @@ and astronauts.“...""
 
         #endregion
 
-        #region JacobSub
+        #region JacoSub
         [TestMethod]
-        public void JacobSubSubtitleTest()
+        public void JacoSubSubtitleTest()
         {
-            var jacobSub = new JacobSub();
+            var jacobSub = new JacoSub();
             var subtitle = new Subtitle();
             const string text = @"1:55:52.16 1:55:53.20 D [Billy] That might have been my fault.
-1:55:53.20 1:55:55.13 D That might have been my fault,
-I'm so sorry.
-";
+1:55:53.20 1:55:55.13 D That might have been my fault,\nI'm so sorry.";
+
             // Test text.
             jacobSub.LoadSubtitle(subtitle, new List<string>(text.SplitToLines()), null);
             Assert.AreEqual("[Billy] That might have been my fault.", subtitle.Paragraphs[0].Text);
-            Assert.AreEqual("That might have been my fault,\r\nI'm so sorry.", subtitle.Paragraphs[1].Text);
+            Assert.AreEqual("That might have been my fault," + Environment.NewLine + "I'm so sorry.", subtitle.Paragraphs[1].Text);
 
             // Test time code.
             double expectedTotalMilliseconds = new TimeCode(1, 55, 52, SubtitleFormat.FramesToMilliseconds(16)).TotalMilliseconds;
@@ -978,8 +977,45 @@ I'm so sorry.
 
             // Test total lines.
             Assert.AreEqual(2, subtitle.Paragraphs[1].NumberOfLines);
+        }
 
+        public void JacoSubSubtitleTestItalicAndBold()
+        {
+            var jacobSub = new JacoSub();
+            var subtitle = new Subtitle();
+            const string text = @"1:55:52.16 1:55:53.20 D \BBillyb That might have been my fault.
+1:55:53.20 1:55:55.13 D That might have been my /Ifault/i.
+1:55:53.20 1:55:55.13 D That might have been my /Ifault/N.";
+
+            jacobSub.LoadSubtitle(subtitle, new List<string>(text.SplitToLines()), null);
+
+            Assert.AreEqual("<b>Billy</b> That might have been my fault.", subtitle.Paragraphs[0].Text);
+            Assert.AreEqual("That might have been my <i>fault</i>.", subtitle.Paragraphs[1].Text);
+            Assert.AreEqual("That might have been my <i>fault</i>.", subtitle.Paragraphs[2].Text);
         }
         #endregion
+
+        #region LambdaCap
+        [TestMethod]
+        public void LambdaCapTestItalic()
+        {
+            Configuration.Settings.General.CurrentFrameRate = 25;
+            var lambdaCap = new LambdaCap();
+            var subtitle = new Subtitle();
+            const string text = "Lambda字幕V4 DF0+1 SCENE\"和文標準\"" + @" 
+
+1	00000000/00000300	Line 1 with ＠斜３［italic］＠ word.
+2	00000900/00001200	Line 1
+				Line 2";
+
+            lambdaCap.LoadSubtitle(subtitle, new List<string>(text.SplitToLines()), null);
+
+            Assert.AreEqual("Line 1 with <i>italic</i> word.", subtitle.Paragraphs[0].Text);
+            Assert.AreEqual("Line 1" + Environment.NewLine + "Line 2", subtitle.Paragraphs[1].Text);
+            Assert.AreEqual(3000, subtitle.Paragraphs[0].EndTime.TotalMilliseconds);
+            Assert.AreEqual(2, subtitle.Paragraphs.Count);
+        }
+        #endregion
+
     }
 }
