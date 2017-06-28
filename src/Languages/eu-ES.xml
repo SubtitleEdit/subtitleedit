@@ -26,6 +26,8 @@
     <Duration>Iraupena</Duration>
     <CharsPerSec>Hizk/seg</CharsPerSec>
     <WordsPerMin>Hitz/min</WordsPerMin>
+    <Actor>Antzezlea</Actor>
+    <Region>Eskualdea</Region>
     <NumberSymbol>Zenbakia</NumberSymbol>
     <Number>Zenbakia</Number>
     <Text>Idatzia</Text>
@@ -349,6 +351,7 @@ Oharra: Egiaztatu diskako toki askea.</WaveFileMalformed>
     <CodePageNumber>Kode orrialde zenbakia</CodePageNumber>
     <DiskFormatCode>Diska heuskarri kodea</DiskFormatCode>
     <DisplayStandardCode>Erakutsi kode estandarra</DisplayStandardCode>
+    <ColorRequiresTeletext>Margoek teletestua behar dute</ColorRequiresTeletext>
     <CharacterCodeTable>Hizki taula</CharacterCodeTable>
     <LanguageCode>Hizkuntza kodea</LanguageCode>
     <OriginalProgramTitle>Jatorrizko programaren izenburua</OriginalProgramTitle>
@@ -361,13 +364,17 @@ Oharra: Egiaztatu diskako toki askea.</WaveFileMalformed>
     <TimeCodeStatus>Denbora kode egoera</TimeCodeStatus>
     <TimeCodeStartOfProgramme>Denbora kodea: Programaren hasiera</TimeCodeStartOfProgramme>
     <RevisionNumber>Berrikuspen zenbakia</RevisionNumber>
-    <MaxNoOfDisplayableChars>Geh hizkir lerroko zenbatekoa</MaxNoOfDisplayableChars>
+    <MaxNoOfDisplayableChars>Geh hizkir/lerroko zenbatekoa</MaxNoOfDisplayableChars>
     <MaxNumberOfDisplayableRows>Geh lerro zenbatekoa</MaxNumberOfDisplayableRows>
     <DiskSequenceNumber>Diska sekuentzia zenbakia</DiskSequenceNumber>
     <TotalNumberOfDisks>Diska zenbatekoa guztira</TotalNumberOfDisks>
     <Import>Inportatu...</Import>
     <TextAndTimingInformation>Idazki eta denborapen argibideak</TextAndTimingInformation>
     <JustificationCode>Bazter kodea</JustificationCode>
+    <VerticalPosition>Zutikako kokapena</VerticalPosition>
+    <MarginTop>Goiko bazterra (goian lerrokatutako azpidatzientzat)</MarginTop>
+    <MarginBottom>Beheko bazterra (behean lerrokatutako azpidatzientzat)</MarginBottom>
+    <NewLineRows>Lerro berri batera gehitutako lerro kopurua</NewLineRows>
     <Teletext>Teletestua</Teletext>
     <UseBox>Erabili kutxatila idazkiaren inguruan</UseBox>
     <DoubleHeight>Erabili garaiera bikoitza idazkirako</DoubleHeight>
@@ -625,6 +632,7 @@ Oharra: Egiaztatu diskako toki askea.</WaveFileMalformed>
     <FixOcrErrorExample>D0n't -&gt; Don't</FixOcrErrorExample>
     <FixSpaceBetweenNumbersExample>1 100 -&gt; 1100</FixSpaceBetweenNumbersExample>
     <FixDialogsOneLineExample>Kaixo Mikel! - Kaixo Ainhoa! -&gt; Kaixo Mikel!&lt;br /&gt;- Kaixo Ainhoa!</FixDialogsOneLineExample>
+    <SelectDefault>Hautatu berezkoa</SelectDefault>
   </FixCommonErrors>
   <GetDictionaries>
     <Title>Hiztegiak behar dituzu?</Title>
@@ -925,8 +933,8 @@ Oharra: Egiaztatu diskako toki askea.</WaveFileMalformed>
         <ShowUndoHistory>&amp;Erakutsi historia (desegiteko)</ShowUndoHistory>
         <InsertUnicodeSymbol>&amp;Sartu unicode ikurra</InsertUnicodeSymbol>
         <InsertUnicodeControlCharacters>Txertatu Unicode kontrol hizkiak</InsertUnicodeControlCharacters>
-        <InsertUnicodeControlCharactersLRM>Ezkerretik-eskuinra marka (EZESM)</InsertUnicodeControlCharactersLRM>
-        <InsertUnicodeControlCharactersRLM>Eskuinetik-ezkerrea marka (ESEZM)</InsertUnicodeControlCharactersRLM>
+        <InsertUnicodeControlCharactersLRM>Ezkerretik-eskuinera marka (EZESM)</InsertUnicodeControlCharactersLRM>
+        <InsertUnicodeControlCharactersRLM>Eskuinetik-ezkerrera marka (ESEZM)</InsertUnicodeControlCharactersRLM>
         <InsertUnicodeControlCharactersLRE>Hasi ezkerretik-eskuinera barneratuta (EZESB)</InsertUnicodeControlCharactersLRE>
         <InsertUnicodeControlCharactersRLE>Hasi eskuintik-ezkerrera  barneratuta (ESEZB)</InsertUnicodeControlCharactersRLE>
         <InsertUnicodeControlCharactersLRO>Hasi ezkerretik-eskuinera ezeztatu (EZESE)</InsertUnicodeControlCharactersLRO>
@@ -1049,20 +1057,24 @@ Oharra: Egiaztatu diskako toki askea.</WaveFileMalformed>
         <RemoveTextForHi>Kendu gorrentzako idazkia</RemoveTextForHi>
         <VisualSync>Ikus aldiberetzea</VisualSync>
         <SpellCheck>Idaz-egiaztapena</SpellCheck>
+        <NetflixQualityCheck>Netflix ontasun egiaztapena</NetflixQualityCheck>
         <Settings>Ezarpenak</Settings>
         <Help>Laguntza</Help>
         <ShowHideWaveform>Erakutsi/ezkutatu uhinera</ShowHideWaveform>
         <ShowHideVideo>Erakutsi/ezkutatu bideoa</ShowHideVideo>
       </ToolBar>
       <ContextMenu>
+        <SizeAllColumnsToFit>Neurritu zutabe guztiak finkatzeko</SizeAllColumnsToFit>
         <AdvancedSubStationAlphaSetStyle>Advanced &amp;Sub Station Alpha - Ezarri estiloa</AdvancedSubStationAlphaSetStyle>
         <SubStationAlphaSetStyle>Sub Station Alpha - Ezarri estiloa</SubStationAlphaSetStyle>
+        <SetActor>Ezarri antzezlea</SetActor>
         <SubStationAlphaStyles>S&amp;ub Station Alpha estiloak...</SubStationAlphaStyles>
         <AdvancedSubStationAlphaStyles>Advanced S&amp;ub Station Alpha estiloak...</AdvancedSubStationAlphaStyles>
-        <TimedTextSetStyle>Idatzi Denboratua - Ezarri estiloa</TimedTextSetStyle>
+        <TimedTextSetRegion>Idatzi Denboratua - ezarri eskualdea</TimedTextSetRegion>
+        <TimedTextSetStyle>Idatzi Denboratua - ezarri estiloa</TimedTextSetStyle>
         <TimedTextStyles>Idatzi Denboratu estiloak</TimedTextStyles>
-        <TimedTextSetLanguage>Idatzi Denboratua - Ezarri hizkuntza</TimedTextSetLanguage>
-        <SamiSetStyle>Sami - Ezarri klasea</SamiSetStyle>
+        <TimedTextSetLanguage>Idatzi Denboratua - ezarri hizkuntza</TimedTextSetLanguage>
+        <SamiSetStyle>Sami - ezarri klasea</SamiSetStyle>
         <NuendoSetStyle>Nuendo - ezarri hizkia</NuendoSetStyle>
         <Cut>Ebaki</Cut>
         <Copy>Kopiatu</Copy>
@@ -1108,6 +1120,8 @@ Oharra: Egiaztatu diskako toki askea.</WaveFileMalformed>
         <SaveSelectedLines>Gorde hautaturiko lerroak honela...</SaveSelectedLines>
         <WebVTTSetNewVoice>Ezarri ahots berria...</WebVTTSetNewVoice>
         <WebVTTRemoveVoices>Kendu ahotsak</WebVTTRemoveVoices>
+        <NewActor>Antzezle berria...</NewActor>
+        <RemoveActors>Kendu antzezleak</RemoveActors>
       </ContextMenu>
     </Menu>
     <Controls>
@@ -1436,6 +1450,7 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Hautatu azpidatzia Matroska agiritik</Title>
+    <TitleMp4>Hautatu azpidatzia MP4 agiritik</TitleMp4>
     <PleaseChoose>Azpidatzi bat baino gehiago aurkitu da - mesedez hautatu</PleaseChoose>
     <TrackXLanguageYTypeZ>Bidea {0} - Hizkuntza: {1} - Mota: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
@@ -1664,6 +1679,7 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <Replace>Ordeztu</Replace>
     <VisualSync>Ikus aldiberetzea</VisualSync>
     <SpellCheck>Idaz egiaztapena</SpellCheck>
+    <NetflixQualityCheck>Netflix ontasun egiaztapena</NetflixQualityCheck>
     <SettingsName>Ezarpenak</SettingsName>
     <Help>Laguntza</Help>
     <ShowFrameRate>Erakutsi frame neurria tresnabarran</ShowFrameRate>
@@ -1681,6 +1697,7 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <SubtitleFont>Azpidatzi hizkia:</SubtitleFont>
     <SubtitleFontSize>Azpidatzi hizki neurria:</SubtitleFontSize>
     <SubtitleBold>Lodia</SubtitleBold>
+    <VideoAutoOpen>Berez-ireki bideo agiria azpidatzia irekitzerakoan</VideoAutoOpen>
     <SubtitleCenter>Erdian</SubtitleCenter>
     <SubtitleFontColor>Azpidatzi hizki margoa:</SubtitleFontColor>
     <SubtitleBackgroundColor>Azpidatzi barren margoa:</SubtitleBackgroundColor>
@@ -1724,6 +1741,7 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <MpcHcDescription>Media Player Classic - Home Cinema</MpcHcDescription>
     <MpvPlayer>mpv</MpvPlayer>
     <MpvPlayerDescription>https://mpv.io/ -multimedia irakurgailu askea, iturburu irekikoa, eta plataforma-anitzerakoa</MpvPlayerDescription>
+    <MpvHandlesPreviewText>mpv-ek kudeatzen du aurreikuspen idazkia</MpvHandlesPreviewText>
     <VlcMediaPlayer>VLC Irakurgailua</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll VLC Irakurgailua 1.1.0 edo berriagoa</VlcMediaPlayerDescription>
     <VlcBrowseToLabel>VLC helburua (VLC bertsio eramangarria erabiltzen ari bazara besterik ez da beharrezkoa)</VlcBrowseToLabel>
@@ -1850,6 +1868,7 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <WaveformPlayNewSelectionEnd>Irakurri hautapenaren amaiera</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Irakurri lehenik hautaturiko azpidatzia</WaveformPlayFirstSelectedSubtitle>
     <WaveformFocusListView>Fokutu zerrenda ikuspegia</WaveformFocusListView>
+    <WaveformGoToNextSubtitle>Joan hurrengo azpidatzira (bideo kokapenetik)</WaveformGoToNextSubtitle>
     <WaveformGoToNextSceneChange>Joan hurrengo agerraldi aldaketara</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>Aldatu agerraldi aldaketa</WaveformToggleSceneChange>
     <GoBack1Frame>Frame bat atzera</GoBack1Frame>
@@ -1905,9 +1924,11 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <MainTextBoxUnbreak>Deshautsi idatzia</MainTextBoxUnbreak>
     <MainFileSaveAll>Gode denak</MainFileSaveAll>
     <Miscellaneous>Askotarikoa</Miscellaneous>
+    <CpsIncludesSpace>Hizkr/seg (HS-KO) tarteak barne</CpsIncludesSpace>
     <UseDoNotBreakAfterList>Erabili ez-hautsi zerrendaren ondoren (berez-hausterako)</UseDoNotBreakAfterList>
     <MicrosoftBingTranslator>Microsoft Bing Itzultzailea</MicrosoftBingTranslator>
     <HowToSignUp>Nola hasi saioa</HowToSignUp>
+    <GoogleTranslateUrl>Google itzultzailea url-a</GoogleTranslateUrl>
     <ClientId>Bezero ID-a</ClientId>
     <ClientSecret>Bezero sekretua</ClientSecret>
   </Settings>
@@ -1971,6 +1992,13 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <SpellCheckAborted>Idaz-egiaztapena utzita</SpellCheckAborted>
     <UndoX>Deseginda: {0}</UndoX>
   </SpellCheck>
+  <NetflixQualityCheck>
+    <GlyphCheckReport>{0} hizkirri baliogabea aurkitu da {1} zutabean</GlyphCheckReport>
+    <WhiteSpaceCheckReport>Zuriune baliogabea aurkitu da {0} zutabean.</WhiteSpaceCheckReport>
+    <ReportPrompt>Mesedez ikusi jakinarazpen osoa hemen: {0}.</ReportPrompt>
+    <FoundXIssues>Netflix ontasun egiaztapenak {0} arazo aurkitu ditu.</FoundXIssues>
+    <CheckOk>Netflix ontasun egiaztapena ONGI :)</CheckOk>
+  </NetflixQualityCheck>
   <Split>
     <Title>Banandu</Title>
     <SplitOptions>Banantze aukerak</SplitOptions>
@@ -2028,6 +2056,7 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <LengthInFormatXinCharactersY>{0} hizkirri zenbatekoa: {1:#,###,##0}</LengthInFormatXinCharactersY>
     <NumberOfCharactersInTextOnly>Hizkirri zenbatekoa idatzian bakarrik: {0:#,###,##0}</NumberOfCharactersInTextOnly>
     <TotalCharsPerSecond>Hizkirri/segunduko guztira: {0:0.0} segundu</TotalCharsPerSecond>
+    <TotalWords>Hitzak azpidatzian guztira: {0}</TotalWords>
     <NumberOfItalicTags>Etzana etiketa zenbatekoa: {0}</NumberOfItalicTags>
     <NumberOfBoldTags>Lodia etiketa zenbatekoa: {0}</NumberOfBoldTags>
     <NumberOfUnderlineTags>Azpimarratua etiketa zenbatekoa: {0}</NumberOfUnderlineTags>
@@ -2286,6 +2315,7 @@ Gorde aldaketak?</KeepChangesMessage>
     <RemoveSceneChange>Kendu agerraldi aldaketa</RemoveSceneChange>
     <GuessTimeCodes>Ustezko denbora kodeak...</GuessTimeCodes>
     <SeekSilence>Bilatu isiltasuna</SeekSilence>
+    <InsertSubtitleHere>Txertatu azpidatzia hemen...</InsertSubtitleHere>
     <CharsSecX>HKSG-ko: {0:0.00}</CharsSecX>
     <WordsMinX>HZMN-ko: {0:0.00}</WordsMinX>
   </Waveform>
