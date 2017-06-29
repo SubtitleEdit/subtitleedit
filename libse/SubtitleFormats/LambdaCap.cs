@@ -47,7 +47,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         private const string AlignHorizontalLeft = "＠縦左";
         private const string AlignHorizontalRight = "＠縦右";
         private const string JustifiedCenter = "＠中央";
-        private const string LongDash = "＠幅広［―］＠";
+        private const string LongDash1 = "＠幅広［―］＠";
+        private const string LongDash2 = "＠幅広［ー］＠";
+        private const string AsynchronousContinuation = "＠継続";
 
         public override string ToText(Subtitle subtitle, string title)
         {
@@ -73,6 +75,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static string EncodeStyle(string text)
         {
+            text = text.Replace("―", LongDash1);
+            text = text.Replace("ー", LongDash2);
+
             var verticalAlignTop = text.StartsWith("{\\an7}", StringComparison.Ordinal) || text.StartsWith("{\\an8}", StringComparison.Ordinal) || text.StartsWith("{\\an9}", StringComparison.Ordinal);
 //            var verticalAlignCenter = text.StartsWith("{\\an4}", StringComparison.Ordinal) || text.StartsWith("{\\an5}", StringComparison.Ordinal) || text.StartsWith("{\\an6}", StringComparison.Ordinal);
             var horizontalAlignLeft = text.StartsWith("{\\an1}", StringComparison.Ordinal) || text.StartsWith("{\\an4}", StringComparison.Ordinal) || text.StartsWith("{\\an7}", StringComparison.Ordinal);
@@ -210,7 +215,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
                 else
                 {
-                    sb.Append(ch);
+                    if (ch != '\t')
+                        sb.Append(ch);
                 }
                 i++;
             }
@@ -223,7 +229,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 s = s.Replace("＠斜３", string.Empty);
             }
 
-            s = s.Replace(LongDash, "―");
+            s = s.Replace(LongDash1, "―");
+            s = s.Replace(LongDash2, "ー");
+            s = s.Replace(AsynchronousContinuation, string.Empty);
 
             if (s.Contains(AlignVerticalTop))
             {
@@ -251,9 +259,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             s = s.Replace(AlignVerticalTop, string.Empty);
             s = s.Replace(AlignHorizontalLeft, string.Empty);
             s = s.Replace(AlignHorizontalRight, string.Empty);
-            s = s.Replace(JustifiedCenter, string.Empty);
+            s = s.Replace(JustifiedCenter, string.Empty).TrimEnd();
 
-            return s.TrimEnd();
+            if (s.EndsWith(" </i>", StringComparison.Ordinal))
+            {
+                s = s.Remove(s.Length - 5, 1);
+            }
+
+            return s;
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
