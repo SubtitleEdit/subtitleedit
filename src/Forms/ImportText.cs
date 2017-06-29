@@ -20,7 +20,7 @@ namespace Nikse.SubtitleEdit.Forms
         public Subtitle FixedSubtitle => _subtitle;
         public string VideoFileName => _videoFileName;
 
-        public ImportText()
+        public ImportText(string fileName = null)
         {
             InitializeComponent();
 
@@ -88,7 +88,7 @@ namespace Nikse.SubtitleEdit.Forms
                 radioButtonDurationFixed.Checked = true;
             }
             numericUpDownDurationFixed.Enabled = radioButtonDurationFixed.Checked;
-            if (Configuration.Settings.Tools.ImportTextFixedDuration >= numericUpDownDurationFixed.Minimum && 
+            if (Configuration.Settings.Tools.ImportTextFixedDuration >= numericUpDownDurationFixed.Minimum &&
                 Configuration.Settings.Tools.ImportTextFixedDuration <= numericUpDownDurationFixed.Maximum)
             {
                 numericUpDownDurationFixed.Value = Configuration.Settings.Tools.ImportTextFixedDuration;
@@ -96,6 +96,12 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.FixLargeFonts(this, buttonOK);
             _refreshTimer.Interval = 400;
             _refreshTimer.Tick += RefreshTimerTick;
+
+            if (fileName != null && File.Exists(fileName))
+            {
+                LoadTextFile(fileName);
+                GeneratePreview();
+            }
         }
 
         private void RefreshTimerTick(object sender, EventArgs e)
@@ -106,6 +112,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonOpenTextClick(object sender, EventArgs e)
         {
+            Text = Configuration.Settings.Language.ImportText.Title;
             openFileDialog1.Title = buttonOpenText.Text;
             if (checkBoxMultipleFiles.Visible && checkBoxMultipleFiles.Checked)
                 openFileDialog1.Filter = Configuration.Settings.Language.ImportText.TextFiles + "|*.txt|" + Configuration.Settings.Language.General.AllFiles + "|*.*";
@@ -122,15 +129,15 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
+                    string ext = string.Empty;
                     var extension = Path.GetExtension(openFileDialog1.FileName);
                     if (extension != null)
-                    {
-                        string ext = extension.ToLowerInvariant();
-                        if (ext == ".astx")
-                            LoadAdobeStory(openFileDialog1.FileName);
-                        else
-                            LoadTextFile(openFileDialog1.FileName);
-                    }
+                        ext = extension.ToLowerInvariant();
+
+                    if (ext == ".astx")
+                        LoadAdobeStory(openFileDialog1.FileName);
+                    else
+                        LoadTextFile(openFileDialog1.FileName);
                 }
                 GeneratePreview();
             }
@@ -572,10 +579,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonOkClick(object sender, EventArgs e)
         {
-            if (SubtitleListview1.Items.Count > 0)
-                DialogResult = DialogResult.OK;
-            else
-                DialogResult = DialogResult.Cancel;
+            DialogResult = SubtitleListview1.Items.Count > 0 ? DialogResult.OK : DialogResult.Cancel;
         }
 
         private void ButtonCancelClick(object sender, EventArgs e)
@@ -672,6 +676,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             textBoxText.Text = GetAllText(fileName);
             SetVideoFileName(fileName);
+            Text = Configuration.Settings.Language.ImportText.Title + " - " + fileName;
             GeneratePreview();
         }
 
@@ -690,6 +695,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 textBoxText.Text = sb.ToString();
                 SetVideoFileName(fileName);
+                Text = Configuration.Settings.Language.ImportText.Title + " - " + fileName;
             }
             catch (Exception ex)
             {
@@ -794,7 +800,7 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.Tools.ImportTextAutoBreak = checkBoxAutoBreak.Checked;
             Configuration.Settings.Tools.ImportTextGap = numericUpDownGapBetweenLines.Value;
             Configuration.Settings.Tools.ImportTextDurationAuto = radioButtonDurationAuto.Checked;
-            Configuration.Settings.Tools.ImportTextFixedDuration= numericUpDownDurationFixed.Value;
+            Configuration.Settings.Tools.ImportTextFixedDuration = numericUpDownDurationFixed.Value;
         }
 
         private void checkBoxMultipleFiles_CheckedChanged(object sender, EventArgs e)
@@ -837,8 +843,7 @@ namespace Nikse.SubtitleEdit.Forms
             try
             {
                 var fi = new FileInfo(fileName);
-                var item = new ListViewItem(fileName);
-                item.Tag = fileName;
+                var item = new ListViewItem(fileName) { Tag = fileName };
                 item.SubItems.Add(Utilities.FormatBytesToDisplayFileSize(fi.Length));
                 if (fi.Length < 1024 * 1024) // max 1 mb
                 {

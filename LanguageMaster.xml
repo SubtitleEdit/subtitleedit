@@ -1886,6 +1886,8 @@ can edit in same subtitle file (collaboration)</Information>
     <WaveformToggleSceneChange>Toggle scene change</WaveformToggleSceneChange>
     <GoBack1Frame>One frame back</GoBack1Frame>
     <GoForward1Frame>One frame forward</GoForward1Frame>
+    <GoBack1FrameWithPlay>One frame back (with play)</GoBack1FrameWithPlay>
+    <GoForward1FrameWithPlay>One frame forward (with play)</GoForward1FrameWithPlay>
     <GoBack100Milliseconds>100 ms back</GoBack100Milliseconds>
     <GoForward100Milliseconds>100 ms forward</GoForward100Milliseconds>
     <GoBack500Milliseconds>500 ms back</GoBack500Milliseconds>

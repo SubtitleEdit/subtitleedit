@@ -308,5 +308,50 @@ namespace Nikse.SubtitleEdit.Core
                 return false;
             return ((File.GetAttributes(path) & FileAttributes.Directory) == FileAttributes.Directory);
         }
+
+        public static bool IsPlainText(string fileName)
+        {
+            var fileInfo = new FileInfo(fileName);
+            if (fileInfo.Length < 20)
+                return false; // too short to be plain text
+            if (fileInfo.Length > 5000000)
+                return false; // too large to be plain text
+
+            var enc = LanguageAutoDetect.GetEncodingFromFile(fileName);
+            var s = File.ReadAllText(fileName, enc);
+
+            int numberCount = 0;
+            int binaryCount = 0;
+            int letterCount = 0;
+
+            for (int i = 0; i < s.Length; i++)
+            {
+                char ch = s[i];
+                if (char.IsLetter(ch) || " -,.!?[]()\r\n".Contains(ch))
+                {
+                    letterCount++;
+                }
+                else if (char.IsControl(ch) && ch != '\t')
+                {
+                    binaryCount++;
+                }
+                else if ("0123456789".Contains(ch))
+                {
+                    numberCount++;
+                }
+            }
+            if (binaryCount > 0)
+            {
+                return false;
+            }
+            if (s.Length < 100)
+            {
+                return numberCount < 5 && letterCount > 20;
+            }
+            var numberThreshold = (s.Length * 0.002) + 1;
+            var letterThreshold = s.Length * 0.8;
+            return numberCount < numberThreshold && letterCount > letterThreshold;
+        }
+
     }
 }
