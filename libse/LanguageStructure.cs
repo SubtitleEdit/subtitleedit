@@ -2051,6 +2051,8 @@
             public string WaveformToggleSceneChange { get; set; }
             public string GoBack1Frame { get; set; }
             public string GoForward1Frame { get; set; }
+            public string GoBack1FrameWithPlay { get; set; }
+            public string GoForward1FrameWithPlay { get; set; }
             public string GoBack100Milliseconds { get; set; }
             public string GoForward100Milliseconds { get; set; }
             public string GoBack500Milliseconds { get; set; }

@@ -1,13 +1,21 @@
 ﻿Subtitle Edit Changelog
 
-3.5.4 (xth May 2017) BETA
+3.5.4 (xth August 2017) BETA
 * NEW:
-   * 
+   * New subtitle format JacoSub - thx ivandrofly
+   * New subtitle format Lamda Cap (basic support) - thx Chie
+   * New shortcuts for frame forward/back with playing
 * IMPROVED:
+   * Updated Russian translation - thx Elheym
+   * Updated Brazilian translation - thx Igor
+   * Updated Basque translation - thx Xabier 
    * Improved language auto detect
-   * Added simicolon as possible shortcut key - thx Allan
+   * Added semicolon as possible shortcut key - thx Allan
    * Added 60 fps to export settings for several formats
    * Google translate can now use google.cn (for Chinese ppl)
+   * Export margins can now be percentage or pixels
+   * Added more subtitle formats to command line + batch convert
+   * If input file is unknown + plain text, "Import plain text" will open
 * FIXED:
    * Fixed missing space in format WebVTT
    * Fixed support for combined Arabic characters in PAC - thx Zehelein
@@ -20,6 +28,7 @@
    * Maintain cursor position during unbreak/break
    * Fix for "disable auto open" of video files - thx Barneyk
    * Fix for rare large font issue - thx Camille
+   * Fix for PAC language auto-detect - thx SirEllert
 
 
 3.5.3 (12th May 2017)

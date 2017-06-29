@@ -946,6 +946,8 @@ namespace Nikse.SubtitleEdit.Core
         public string MainVideoToggleVideoControls { get; set; }
         public string MainVideo1FrameLeft { get; set; }
         public string MainVideo1FrameRight { get; set; }
+        public string MainVideo1FrameLeftWithPlay { get; set; }
+        public string MainVideo1FrameRightWithPlay { get; set; }
         public string MainVideo100MsLeft { get; set; }
         public string MainVideo100MsRight { get; set; }
         public string MainVideo500MsLeft { get; set; }
@@ -2811,6 +2813,12 @@ namespace Nikse.SubtitleEdit.Core
                 subNode = node.SelectSingleNode("MainVideo1FrameRight");
                 if (subNode != null)
                     settings.Shortcuts.MainVideo1FrameRight = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainVideo1FrameLeftWithPlay");
+                if (subNode != null)
+                    settings.Shortcuts.MainVideo1FrameLeftWithPlay = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainVideo1FrameRightWithPlay");
+                if (subNode != null)
+                    settings.Shortcuts.MainVideo1FrameRightWithPlay = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainVideo100MsLeft");
                 if (subNode != null)
                     settings.Shortcuts.MainVideo100MsLeft = subNode.InnerText;
@@ -3668,6 +3676,8 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("MainVideoToggleVideoControls", settings.Shortcuts.MainVideoToggleVideoControls);
                 textWriter.WriteElementString("MainVideo1FrameLeft", settings.Shortcuts.MainVideo1FrameLeft);
                 textWriter.WriteElementString("MainVideo1FrameRight", settings.Shortcuts.MainVideo1FrameRight);
+                textWriter.WriteElementString("MainVideo1FrameLeftWithPlay", settings.Shortcuts.MainVideo1FrameLeftWithPlay);
+                textWriter.WriteElementString("MainVideo1FrameRightWithPlay", settings.Shortcuts.MainVideo1FrameRightWithPlay);
                 textWriter.WriteElementString("MainVideo100MsLeft", settings.Shortcuts.MainVideo100MsLeft);
                 textWriter.WriteElementString("MainVideo100MsRight", settings.Shortcuts.MainVideo100MsRight);
                 textWriter.WriteElementString("MainVideo500MsLeft", settings.Shortcuts.MainVideo500MsLeft);
