@@ -5,7 +5,7 @@
    * New subtitle format JacoSub - thx ivandrofly
    * New subtitle format Lamda Cap (basic support) - thx Chie
    * New shortcuts for frame forward/back with playing
-* IMPROVED:
+   * IMPROVED:
    * Updated Russian translation - thx Elheym
    * Updated Brazilian translation - thx Igor
    * Updated Basque translation - thx Xabier 
@@ -16,6 +16,7 @@
    * Export margins can now be percentage or pixels
    * Added more subtitle formats to command line + batch convert
    * If input file is unknown + plain text, "Import plain text" will open
+   * ASS now allows decimals for outline/shadow - thx Ninelpienel
 * FIXED:
    * Fixed missing space in format WebVTT
    * Fixed support for combined Arabic characters in PAC - thx Zehelein
