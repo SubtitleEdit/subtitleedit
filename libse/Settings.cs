@@ -303,8 +303,8 @@ namespace Nikse.SubtitleEdit.Core
         public double SsaFontSize { get; set; }
         public int SsaFontColorArgb { get; set; }
         public bool SsaFontBold { get; set; }
-        public int SsaOutline { get; set; }
-        public int SsaShadow { get; set; }
+        public decimal SsaOutline { get; set; }
+        public decimal SsaShadow { get; set; }
         public bool SsaOpaqueBox { get; set; }
         public int SsaMarginLeft { get; set; }
         public int SsaMarginRight { get; set; }
@@ -2150,10 +2150,10 @@ namespace Nikse.SubtitleEdit.Core
                     settings.SubtitleSettings.SsaFontBold = Convert.ToBoolean(subNode.InnerText);
                 subNode = node.SelectSingleNode("SsaOutline");
                 if (subNode != null)
-                    settings.SubtitleSettings.SsaOutline = Convert.ToInt32(subNode.InnerText);
+                    settings.SubtitleSettings.SsaOutline = Convert.ToDecimal(subNode.InnerText);
                 subNode = node.SelectSingleNode("SsaShadow");
                 if (subNode != null)
-                    settings.SubtitleSettings.SsaShadow = Convert.ToInt32(subNode.InnerText);
+                    settings.SubtitleSettings.SsaShadow = Convert.ToDecimal(subNode.InnerText);
                 subNode = node.SelectSingleNode("SsaOpaqueBox");
                 if (subNode != null)
                     settings.SubtitleSettings.SsaOpaqueBox = Convert.ToBoolean(subNode.InnerText);

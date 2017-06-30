@@ -1569,14 +1569,14 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                             }
                             else if (i == outlineIndex)
                             {
-                                int number;
-                                if (int.TryParse(f, out number))
+                                decimal number;
+                                if (decimal.TryParse(f, out number))
                                     style.OutlineWidth = number;
                             }
                             else if (i == shadowIndex)
                             {
-                                int number;
-                                if (int.TryParse(f, out number))
+                                decimal number;
+                                if (decimal.TryParse(f, out number))
                                     style.ShadowWidth = number;
                             }
                             else if (i == alignmentIndex)

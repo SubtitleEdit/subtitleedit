@@ -311,24 +311,36 @@
             // 
             // numericUpDownShadowWidth
             // 
-            this.numericUpDownShadowWidth.Location = new System.Drawing.Point(186, 18);
+            this.numericUpDownShadowWidth.DecimalPlaces = 1;
+            this.numericUpDownShadowWidth.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.numericUpDownShadowWidth.Location = new System.Drawing.Point(192, 18);
             this.numericUpDownShadowWidth.Name = "numericUpDownShadowWidth";
-            this.numericUpDownShadowWidth.Size = new System.Drawing.Size(44, 20);
+            this.numericUpDownShadowWidth.Size = new System.Drawing.Size(52, 20);
             this.numericUpDownShadowWidth.TabIndex = 3;
             this.numericUpDownShadowWidth.ValueChanged += new System.EventHandler(this.numericUpDownShadowWidth_ValueChanged);
             // 
             // numericUpDownOutline
             // 
+            this.numericUpDownOutline.DecimalPlaces = 1;
+            this.numericUpDownOutline.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
             this.numericUpDownOutline.Location = new System.Drawing.Point(76, 18);
             this.numericUpDownOutline.Name = "numericUpDownOutline";
-            this.numericUpDownOutline.Size = new System.Drawing.Size(44, 20);
+            this.numericUpDownOutline.Size = new System.Drawing.Size(52, 20);
             this.numericUpDownOutline.TabIndex = 1;
             this.numericUpDownOutline.ValueChanged += new System.EventHandler(this.numericUpDownOutline_ValueChanged);
             // 
             // labelShadow
             // 
             this.labelShadow.AutoSize = true;
-            this.labelShadow.Location = new System.Drawing.Point(126, 21);
+            this.labelShadow.Location = new System.Drawing.Point(132, 21);
             this.labelShadow.Name = "labelShadow";
             this.labelShadow.Size = new System.Drawing.Size(58, 13);
             this.labelShadow.TabIndex = 2;

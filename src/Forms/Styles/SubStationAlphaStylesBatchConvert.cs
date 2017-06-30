@@ -17,8 +17,6 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
         private string _header;
         private bool _doUpdate;
-        private string _oldSsaName;
-        private readonly SubtitleFormat _format;
         private readonly bool _isSubStationAlpha;
 
         public SubStationAlphaStylesBatchConvert(Subtitle subtitle, SubtitleFormat format)
@@ -29,8 +27,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             comboBoxWrapStyle.SelectedIndex = 2;
             comboBoxCollision.SelectedIndex = 0;
             _header = subtitle.Header;
-            _format = format;
-            _isSubStationAlpha = _format.Name == SubStationAlpha.NameOfFormat;
+            _isSubStationAlpha = format.Name == SubStationAlpha.NameOfFormat;
             if (_header == null || !_header.Contains("style:", StringComparison.OrdinalIgnoreCase))
                 ResetHeader();
 
@@ -84,6 +81,11 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 labelWrapStyle.Visible = false;
                 comboBoxWrapStyle.Visible = false;
                 checkBoxScaleBorderAndShadow.Visible = false;
+
+                numericUpDownOutline.Increment = 1;
+                numericUpDownOutline.DecimalPlaces = 1;
+                numericUpDownShadowWidth.Increment = 1;
+                numericUpDownShadowWidth.DecimalPlaces = 1;
             }
 
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
@@ -544,7 +546,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
         {
             if (_doUpdate)
             {
-                SetSsaStyle(CurrentStyleName, "marginl", numericUpDownMarginLeft.Value.ToString());
+                SetSsaStyle(CurrentStyleName, "marginl", numericUpDownMarginLeft.Value.ToString(CultureInfo.InvariantCulture));
                 GeneratePreviewAndUpdateRawHeader();
             }
         }
@@ -553,7 +555,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
         {
             if (_doUpdate)
             {
-                SetSsaStyle(CurrentStyleName, "marginr", numericUpDownMarginRight.Value.ToString());
+                SetSsaStyle(CurrentStyleName, "marginr", numericUpDownMarginRight.Value.ToString(CultureInfo.InvariantCulture));
                 GeneratePreviewAndUpdateRawHeader();
             }
         }
@@ -562,7 +564,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
         {
             if (_doUpdate)
             {
-                SetSsaStyle(CurrentStyleName, "marginv", numericUpDownMarginVertical.Value.ToString());
+                SetSsaStyle(CurrentStyleName, "marginv", numericUpDownMarginVertical.Value.ToString(CultureInfo.InvariantCulture));
                 GeneratePreviewAndUpdateRawHeader();
             }
         }
@@ -574,7 +576,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             {
                 numericUpDownShadowWidth.Value = 2;
                 string name = CurrentStyleName;
-                SetSsaStyle(name, "outline", numericUpDownOutline.Value.ToString());
+                SetSsaStyle(name, "outline", numericUpDownOutline.Value.ToString(CultureInfo.InvariantCulture));
                 SetSsaStyle(name, "borderstyle", "1");
                 GeneratePreviewAndUpdateRawHeader();
 
@@ -588,7 +590,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
         {
             if (_doUpdate)
             {
-                SetSsaStyle(CurrentStyleName, "outline", numericUpDownOutline.Value.ToString());
+                SetSsaStyle(CurrentStyleName, "outline", numericUpDownOutline.Value.ToString(CultureInfo.InvariantCulture));
                 GeneratePreviewAndUpdateRawHeader();
             }
         }
@@ -597,7 +599,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
         {
             if (_doUpdate)
             {
-                SetSsaStyle(CurrentStyleName, "shadow", numericUpDownShadowWidth.Value.ToString());
+                SetSsaStyle(CurrentStyleName, "shadow", numericUpDownShadowWidth.Value.ToString(CultureInfo.InvariantCulture));
                 GeneratePreviewAndUpdateRawHeader();
             }
         }
@@ -732,7 +734,6 @@ namespace Nikse.SubtitleEdit.Forms.Styles
         private void SubStationAlphaStylesBatchConvert_Shown(object sender, EventArgs e)
         {
             string styleName = CurrentStyleName;
-            _oldSsaName = styleName;
             SsaStyle style = GetSsaStyle(styleName);
             SetControlsFromStyle(style);
             SetControlsFromHeader();
@@ -949,7 +950,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 var measuredWidth = TextDraw.MeasureTextWidth(font, sb.ToString(), checkBoxFontBold.Checked) + 1;
                 var measuredHeight = TextDraw.MeasureTextHeight(font, sb.ToString(), checkBoxFontBold.Checked) + 1;
 
-                float left = 5;
+                float left;
                 if (radioButtonTopLeft.Checked || radioButtonMiddleLeft.Checked || radioButtonBottomLeft.Checked)
                     left = (float)numericUpDownMarginLeft.Value;
                 else if (radioButtonTopRight.Checked || radioButtonMiddleRight.Checked || radioButtonBottomRight.Checked)
@@ -957,7 +958,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 else
                     left = ((float)(bmp.Width - measuredWidth * 0.8 + 15) / 2);
 
-                float top = 2;
+                float top;
                 if (radioButtonTopLeft.Checked || radioButtonTopCenter.Checked || radioButtonTopRight.Checked)
                     top = (float)numericUpDownMarginVertical.Value;
                 else if (radioButtonMiddleLeft.Checked || radioButtonMiddleCenter.Checked || radioButtonMiddleRight.Checked)
