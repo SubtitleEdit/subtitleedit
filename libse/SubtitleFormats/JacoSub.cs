@@ -196,10 +196,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             }
                         case 'i':
                             {
-                                if (endTags.StartsWith("</i>", StringComparison.Ordinal))
-                                {
-                                    endTags = endTags.Remove(0, 4);
-                                }
+                                endTags = RemoveClosingTags(endTags, "</i>");
                                 sb.Append("</i>");
                                 i++;
                                 break;
@@ -213,10 +210,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             }
                         case 'b':
                             {
-                                if (endTags.StartsWith("</b>", StringComparison.Ordinal))
-                                {
-                                    endTags = endTags.Remove(0, 4);
-                                }
+                                endTags = RemoveClosingTags(endTags, "</b>");
                                 sb.Append("</b>");
                                 i++;
                                 break;
@@ -230,10 +224,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             }
                         case 'u':
                             {
-                                if (endTags.StartsWith("</u>", StringComparison.Ordinal))
-                                {
-                                    endTags = endTags.Remove(0, 4);
-                                }
+                                endTags = RemoveClosingTags(endTags, "</u>");
                                 sb.Append("</u>");
                                 i++;
                                 break;
@@ -265,5 +256,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return sb + endTags;
         }
 
+        private static string RemoveClosingTags(string input, string tag)
+        {
+            int idx = input.IndexOf(tag, StringComparison.Ordinal);
+            while (idx >= 0)
+            {
+                input = input.Remove(idx, tag.Length);
+                idx = input.IndexOf(tag, idx, StringComparison.Ordinal);
+            }
+            return input;
+        }
     }
 }
