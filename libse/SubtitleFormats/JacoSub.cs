@@ -233,14 +233,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
                 else if (ch == '{') // comment
                 {
-                    var endComment = input.IndexOf('}', i);
+                    var endComment = input.IndexOf('}', i + 1);
                     if (endComment < 0)
                     {
                         i = input.Length;
                     }
                     else
                     {
-                        i += endComment - i;
+                        i = endComment + 1;
                     }
                 }
                 else if (ch == '~') // hard space
