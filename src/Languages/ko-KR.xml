@@ -631,6 +631,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <FixOcrErrorExample>D0n't --&gt; Don't</FixOcrErrorExample>
     <FixSpaceBetweenNumbersExample>3 300 --&gt; 3300</FixSpaceBetweenNumbersExample>
     <FixDialogsOneLineExample>안녕 존! - 안녕 리나! --&gt; 안녕 존!&lt;br /&gt;- 안녕 리나!</FixDialogsOneLineExample>
+    <SelectDefault>기본값 선택</SelectDefault>
   </FixCommonErrors>
   <GetDictionaries>
     <Title>* 사전 다운로드</Title>
@@ -1882,6 +1883,8 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <WaveformToggleSceneChange>장면 전환</WaveformToggleSceneChange>
     <GoBack1Frame>1프레임 뒤로</GoBack1Frame>
     <GoForward1Frame>1프레임 앞으로</GoForward1Frame>
+    <GoBack1FrameWithPlay>1프레임 뒤로 (재생포함)</GoBack1FrameWithPlay>
+    <GoForward1FrameWithPlay>1프레임 앞으로 (재생포함)</GoForward1FrameWithPlay>
     <GoBack100Milliseconds>0.1초 뒤로</GoBack100Milliseconds>
     <GoForward100Milliseconds>0.1초 앞으로</GoForward100Milliseconds>
     <GoBack500Milliseconds>0.5초 뒤로</GoBack500Milliseconds>
@@ -1937,6 +1940,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <UseDoNotBreakAfterList>'뒤에 줄바꿈을 배제하는 목록' 사용 (자동 줄바꿈 用)</UseDoNotBreakAfterList>
     <MicrosoftBingTranslator>Microsoft Bing 번역기</MicrosoftBingTranslator>
     <HowToSignUp>가입 방법</HowToSignUp>
+    <GoogleTranslateUrl>Google 번역 URL</GoogleTranslateUrl>
     <ClientId>ID</ClientId>
     <ClientSecret>암호</ClientSecret>
   </Settings>
