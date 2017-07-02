@@ -979,19 +979,35 @@ and astronauts.“...""
             Assert.AreEqual(2, subtitle.Paragraphs[1].NumberOfLines);
         }
 
+        [TestMethod]
         public void JacoSubSubtitleTestItalicAndBold()
         {
             var jacobSub = new JacoSub();
             var subtitle = new Subtitle();
-            const string text = @"1:55:52.16 1:55:53.20 D \BBillyb That might have been my fault.
-1:55:53.20 1:55:55.13 D That might have been my /Ifault/i.
-1:55:53.20 1:55:55.13 D That might have been my /Ifault/N.";
+            const string text = @"1:55:52.16 1:55:53.20 D \BBilly\b That might have been my fault.
+1:55:53.20 1:55:55.13 D That might have been my \Ifault\i.
+1:55:53.20 1:55:55.13 D That might have been my \Ifault\N.
+1:55:53.20 1:55:55.13 D That might have been \Bmy \Ifault\i\b.";
 
             jacobSub.LoadSubtitle(subtitle, new List<string>(text.SplitToLines()), null);
 
             Assert.AreEqual("<b>Billy</b> That might have been my fault.", subtitle.Paragraphs[0].Text);
             Assert.AreEqual("That might have been my <i>fault</i>.", subtitle.Paragraphs[1].Text);
             Assert.AreEqual("That might have been my <i>fault</i>.", subtitle.Paragraphs[2].Text);
+            Assert.AreEqual("That might have been <b>my <i>fault</i></b>.", subtitle.Paragraphs[3].Text);
+        }
+
+        [TestMethod]
+        public void JacoSubSubtitleTestCommentRemoved()
+        {
+            var jacobSub = new JacoSub();
+            var subtitle = new Subtitle();
+            const string text = @"1:55:52.16 1:55:53.20 D Billy{billy is an actor} that might have been my fault.
+1:55:53.20 1:55:55.13 D Test.";
+
+            jacobSub.LoadSubtitle(subtitle, new List<string>(text.SplitToLines()), null);
+
+            Assert.AreEqual("Billy that might have been my fault.", subtitle.Paragraphs[0].Text);
         }
         #endregion
 

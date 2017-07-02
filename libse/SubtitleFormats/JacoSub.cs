@@ -164,19 +164,19 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             }
                         case '\\':
                             {
-                                sb.Append('\\');
+                                sb.Append('\\'); 
                                 i++;
                                 break;
                             }
                         case 'D':
                             {
-                                sb.Append(DateTime.Now.ToShortDateString()); // DD MMM YYYY, as in 2 Apr 1996
+                                sb.Append(DateTime.Now.ToString("dd MMM yyyy")); // DD MMM YYYY, as in 2 Apr 1996
                                 i++;
                                 break;
                             }
                         case 'T':
                             {
-                                sb.Append(DateTime.Now.ToShortTimeString()); // HH:MM (24-hour time)
+                                sb.Append(DateTime.Now.ToString("HH:MM")); // HH:MM (24-hour time)
                                 i++;
                                 break;
                             }
@@ -189,7 +189,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             }
                         case 'I':
                             {
-                                endTags = endTags + "</i>";
+                                endTags = "</i>" + endTags;
                                 sb.Append("<i>");
                                 i++;
                                 break;
@@ -206,7 +206,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             }
                         case 'B':
                             {
-                                endTags = endTags + "</b>";
+                                endTags = "</b>" + endTags;
                                 sb.Append("<b>");
                                 i++;
                                 break;
@@ -223,7 +223,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             }
                         case 'U':
                             {
-                                endTags = endTags + "</u>";
+                                endTags = "</u>" + endTags;
                                 sb.Append("<u>");
                                 i++;
                                 break;
