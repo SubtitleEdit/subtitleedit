@@ -4334,7 +4334,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
                     if (match == null)
                     {
-                        _vobSubOcrCharacter.Initialize(bitmap, item, _manualOcrDialogPosition, _italicCheckedLast, false, bestGuess, _lastAdditions, this);
+                        int nextIndex = index + 1;
+                        var allowExpand = nextIndex < list.Count && list[nextIndex].SpecialCharacter != Environment.NewLine;
+
+                        _vobSubOcrCharacter.Initialize(bitmap, item, _manualOcrDialogPosition, _italicCheckedLast, false, bestGuess, _lastAdditions, this, allowExpand);
                         DialogResult result = _vobSubOcrCharacter.ShowDialog(this);
                         _manualOcrDialogPosition = _vobSubOcrCharacter.FormPosition;
                         if (result == DialogResult.OK && _vobSubOcrCharacter.ExpandSelection)
