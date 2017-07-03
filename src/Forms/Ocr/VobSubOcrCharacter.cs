@@ -69,7 +69,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         public bool ShrinkSelection { get; private set; }
 
-        internal void Initialize(Bitmap vobSubImage, ImageSplitterItem character, Point position, bool italicChecked, bool showShrink, VobSubOcr.CompareMatch bestGuess, List<VobSubOcr.ImageCompareAddition> additions, VobSubOcr vobSubForm)
+        internal void Initialize(Bitmap vobSubImage, ImageSplitterItem character, Point position, bool italicChecked, bool showShrink, VobSubOcr.CompareMatch bestGuess, List<VobSubOcr.ImageCompareAddition> additions, VobSubOcr vobSubForm, bool allowExpand = true)
         {
             ShrinkSelection = false;
             ExpandSelection = false;
@@ -133,6 +133,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             pictureBoxCharacter.Top = labelCharacters.Top + 16;
             pictureBoxLastEdit.Left = buttonLastEdit.Left + buttonLastEdit.Width + 5;
+
+            if (!allowExpand)
+            {
+                buttonExpandSelection.Visible = false;
+            }
         }
 
         private void ButtonOkClick(object sender, EventArgs e)
