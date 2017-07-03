@@ -213,6 +213,15 @@ namespace Nikse.SubtitleEdit.Core.Forms
                                     var content = line.Substring(indexOfColon + 1).Trim();
                                     if (content.Length > 0)
                                     {
+                                        if (count == 0 && content[0].ToString() != content[0].ToString().ToUpperInvariant())
+                                        {
+                                            content = content[0].ToString().ToUpperInvariant() + content.Remove(0, 1);
+                                        }
+                                        else if (count == 1 && content[0].ToString() != content[0].ToString().ToUpperInvariant())
+                                        {
+                                            content = content[0].ToString().ToUpperInvariant() + content.Remove(0, 1);
+                                        }
+
                                         newText += Environment.NewLine;
                                         if (pre.Contains("<i>") && content.Contains("</i>"))
                                             newText += "<i>" + content;
