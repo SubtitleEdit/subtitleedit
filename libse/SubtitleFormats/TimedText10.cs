@@ -170,12 +170,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             nsmgr.AddNamespace("ttml", TtmlNamespace);
             nsmgr.AddNamespace("ttp", TtmlParameterNamespace);
             nsmgr.AddNamespace("tts", TtmlStylingNamespace);
-            nsmgr.AddNamespace("ttm", TtmlMetadataNamespace);
+            nsmgr.AddNamespace("ttml", TtmlMetadataNamespace);
             string xmlStructure = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>" + Environment.NewLine +
-            "<tt xmlns=\"" + TtmlNamespace + "\" xmlns:ttp=\"" + TtmlParameterNamespace + "\" ttp:timeBase=\"media\" xmlns:tts=\"" + TtmlStylingNamespace + "\" xml:lang=\"en\" xmlns:ttm=\"" + TtmlMetadataNamespace + "\">" + Environment.NewLine +
+            "<tt xmlns=\"" + TtmlNamespace + "\" xmlns:ttp=\"" + TtmlParameterNamespace + "\" ttp:timeBase=\"media\" xmlns:tts=\"" + TtmlStylingNamespace + "\" xml:lang=\"en\" xmlns:ttml=\"" + TtmlMetadataNamespace + "\">" + Environment.NewLine +
             "   <head>" + Environment.NewLine +
             "       <metadata>" + Environment.NewLine +
-            "           <ttm:title></ttm:title>" + Environment.NewLine +
+            "           <ttml:title></ttml:title>" + Environment.NewLine +
             "      </metadata>" + Environment.NewLine +
             "       <styling>" + Environment.NewLine +
             "         <style xml:id=\"s0\" tts:backgroundColor=\"black\" tts:fontStyle=\"normal\" tts:fontSize=\"16px\" tts:fontFamily=\"sansSerif\" tts:color=\"white\" />" + Environment.NewLine +
@@ -240,7 +240,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             xml.DocumentElement.SetAttribute("xmlns", TtmlNamespace);
             xml.DocumentElement.SetAttribute("xmlns:ttp", TtmlParameterNamespace);
             xml.DocumentElement.SetAttribute("xmlns:tts", TtmlStylingNamespace);
-            xml.DocumentElement.SetAttribute("xmlns:ttm", TtmlMetadataNamespace);
+            xml.DocumentElement.SetAttribute("xmlns:ttml", TtmlMetadataNamespace);
 
             XmlNode body = xml.DocumentElement.SelectSingleNode("ttml:body", nsmgr);
             string defaultStyle = Guid.NewGuid().ToString();
