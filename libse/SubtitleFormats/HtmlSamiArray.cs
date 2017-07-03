@@ -52,38 +52,49 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             _errorCount = 0;
             subtitle.Paragraphs.Clear();
+            var sb = new StringBuilder();
             foreach (string line in lines)
             {
                 var pos0 = line.IndexOf("[0] = ", StringComparison.Ordinal);
-                var pos1 = line.IndexOf("[1] = ", StringComparison.Ordinal);
-                var pos2 = line.IndexOf("[2] = ", StringComparison.Ordinal);
-                if (pos0 >= 0 && pos1 >= 0 && pos2 >= 0)
+                if (pos0 < 0)
                 {
-                    var p = new Paragraph();
-                    var sb = new StringBuilder();
-
-                    for (int i = pos0 + 6; i < line.Length && char.IsDigit(line[i]); i++)
-                    {
-                        sb.Append(line[i]);
-                    }
-                    p.StartTime.TotalMilliseconds = int.Parse(sb.ToString());
-
-                    sb.Clear();
-                    for (int i = pos1 + 7; i < line.Length && line[i] != '\''; i++)
-                    {
-                        sb.Append(line[i]);
-                    }
-                    if (sb.Length > 0)
-                        sb.AppendLine();
-                    for (int i = pos2 + 7; i < line.Length && line[i] != '\''; i++)
-                    {
-                        sb.Append(line[i]);
-                    }
-                    p.Text = sb.ToString().Trim();
-                    p.Text = WebUtility.HtmlDecode(p.Text);
-                    p.Text = ConvertJavaSpecialCharacters(p.Text);
-                    subtitle.Paragraphs.Add(p);
+                    continue;
                 }
+                var pos1 = line.IndexOf("[1] = ", StringComparison.Ordinal);
+                if (pos1 < 0)
+                {
+                    continue;
+                }
+                var pos2 = line.IndexOf("[2] = ", StringComparison.Ordinal);
+                if (pos2 < 0)
+                {
+                    continue;
+                }
+
+                var p = new Paragraph();
+                sb.Clear();
+
+                for (int i = pos0 + 6; i < line.Length && char.IsDigit(line[i]); i++)
+                {
+                    sb.Append(line[i]);
+                }
+                p.StartTime.TotalMilliseconds = int.Parse(sb.ToString());
+
+                sb.Clear();
+                for (int i = pos1 + 7; i < line.Length && line[i] != '\''; i++)
+                {
+                    sb.Append(line[i]);
+                }
+                if (sb.Length > 0)
+                    sb.AppendLine();
+                for (int i = pos2 + 7; i < line.Length && line[i] != '\''; i++)
+                {
+                    sb.Append(line[i]);
+                }
+                p.Text = sb.ToString().Trim();
+                p.Text = WebUtility.HtmlDecode(p.Text);
+                p.Text = ConvertJavaSpecialCharacters(p.Text);
+                subtitle.Paragraphs.Add(p);
             }
             for (int i = 1; i < subtitle.Paragraphs.Count; i++)
             {
