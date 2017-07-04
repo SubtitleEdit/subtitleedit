@@ -259,6 +259,26 @@ Dialogue: 0,0:00:16.84,0:00:18.16,rechts,,0000,0000,0000,," + lineOneText;
         }
 
         [TestMethod]
+        public void AssFontNameWithSpace()
+        {
+            var target = new AdvancedSubStationAlpha();
+            var subtitle = new Subtitle();
+            target.LoadSubtitle(subtitle, GetAssLines(@"{\fnArial Bold}Font"), null);
+            string actual = subtitle.Paragraphs[0].Text;
+            const string expected = "<font face=\"Arial Bold\">Font</font>";
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void AssFontNameWithSpaceOutput()
+        {
+            var s = new Subtitle();
+            s.Paragraphs.Add(new Paragraph("<font face=\"Arial Bold\">Previously...</font> :)", 0, 2000));
+            var text = new AdvancedSubStationAlpha().ToText(s, string.Empty);
+            Assert.IsTrue(text.Contains("{\\fnArial Bold}Previously...{\\fn} :)"));
+        }
+
+        [TestMethod]
         public void AssSimpleFontNameMultiple()
         {
             var target = new AdvancedSubStationAlpha();
