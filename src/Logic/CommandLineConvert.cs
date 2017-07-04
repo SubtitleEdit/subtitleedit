@@ -158,7 +158,7 @@ namespace Nikse.SubtitleEdit.Logic
                 {
                     targetFormat = NetflixTimedText.NameOfFormat.Replace(" ", string.Empty).ToLowerInvariant();
                 }
-                else if (targetFormat == "sup")
+                else if (targetFormat == "sup" || targetFormat == "bluray" || targetFormat == "blu-ray")
                 {
                     targetFormat = BatchConvert.BluRaySubtitle;
                 }
@@ -598,7 +598,7 @@ namespace Nikse.SubtitleEdit.Logic
                             if (format != null && IsImageBased(format))
                             {
                                 var tFormat = GetTargetformat(targetFormat, formats);
-                                if (!IsImageBased(tFormat))
+                                if (!IsImageBased(tFormat) && tFormat != null)
                                 {
                                     WriteLine("Found image based subtitle format: " + format.FriendlyName);
                                     var subtitle = new Subtitle();
@@ -608,8 +608,8 @@ namespace Nikse.SubtitleEdit.Logic
                                         subtitle.FileName = fileName;
                                         ConvertImageListSubtitle(fileName, subtitle, targetFormat, offset, targetEncoding, outputFolder, count, ref converted, ref errors, formats, overwrite, pacCodePage, targetFrameRate, multipleReplaceImportFiles, removeTextForHi, fixCommonErrors, redoCasing);
                                     }
+                                    done = true;
                                 }
-                                done = true;
                             }
                         }
 
@@ -953,7 +953,7 @@ namespace Nikse.SubtitleEdit.Logic
                             }
                             else
                             {
-                                File.WriteAllText(outputFileName, sub.ToText(sf), targetEncoding);
+                                File.WriteAllText(outputFileName, sub.ToText(sf), sf.Extension == ".rtf" ? Encoding.ASCII : targetEncoding);
                             }
                         }
                         catch (Exception ex)

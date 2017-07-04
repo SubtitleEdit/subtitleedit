@@ -3507,6 +3507,10 @@ namespace Nikse.SubtitleEdit.Forms
                     SetEncoding(Encoding.UTF8);
                     currentEncoding = Encoding.UTF8;
                 }
+                if (format.Extension == ".rtf")
+                {
+                    currentEncoding = Encoding.ASCII;
+                }
 
                 if (format.GetType() == typeof(NetflixTimedText))
                 {
@@ -11846,7 +11850,7 @@ namespace Nikse.SubtitleEdit.Forms
             else if (mediaPlayer.VideoPlayer != null && e.KeyData == _video1FrameLeftWithPlay)
             {
                 double startSeconds = mediaPlayer.CurrentPosition - (1.0 / Configuration.Settings.General.CurrentFrameRate);
-                _endSeconds = startSeconds + 0.1;
+                _endSeconds = startSeconds + (1.0 / Configuration.Settings.General.CurrentFrameRate);
                 _endSecondsNewPosition = startSeconds;
                 mediaPlayer.CurrentPosition = startSeconds;
                 UiUtil.ShowSubtitle(_subtitle, mediaPlayer);
@@ -11857,7 +11861,7 @@ namespace Nikse.SubtitleEdit.Forms
             else if (mediaPlayer.VideoPlayer != null && e.KeyData == _video1FrameRightWithPlay)
             {
                 double startSeconds = mediaPlayer.CurrentPosition + (1.0 / Configuration.Settings.General.CurrentFrameRate);
-                _endSeconds = startSeconds + 0.1;
+                _endSeconds = startSeconds + (1.0 / Configuration.Settings.General.CurrentFrameRate);
                 _endSecondsNewPosition = startSeconds;
                 mediaPlayer.CurrentPosition = startSeconds;
                 UiUtil.ShowSubtitle(_subtitle, mediaPlayer);
