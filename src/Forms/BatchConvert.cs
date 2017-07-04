@@ -1580,18 +1580,66 @@ namespace Nikse.SubtitleEdit.Forms
                                     if (avidStl.IsMine(null, fileName))
                                         format = avidStl;
                                 }
+
+                                var lines = new List<string>();
                                 if (format == null)
                                 {
+                                    lines = File.ReadAllText(fileName).SplitToLines().ToList();
                                     var timedTextImage = new TimedTextImage();
-                                    if (timedTextImage.IsMine(null, fileName))
+                                    if (timedTextImage.IsMine(lines, fileName))
                                         format = timedTextImage;
                                 }
                                 if (format == null)
                                 {
                                     var bdnXml = new BdnXml();
-                                    if (bdnXml.IsMine(null, fileName))
+                                    if (bdnXml.IsMine(lines, fileName))
                                         format = bdnXml;
                                 }
+                                if (format == null)
+                                {
+                                    var asc = new TimeLineFootageAscii();
+                                    if (asc.IsMine(lines, fileName))
+                                    {
+                                        format = asc;
+                                    }
+                                }
+                                if (format == null)
+                                {
+                                    var finalCutProImage = new FinalCutProImage();
+                                    if (finalCutProImage.IsMine(lines, fileName))
+                                    {
+                                        finalCutProImage.LoadSubtitle(sub, lines, fileName);
+                                        format = finalCutProImage;
+                                    }
+                                }
+                                if (format == null)
+                                {
+                                    var spuImage = new SpuImage();
+                                    if (spuImage.IsMine(lines, fileName))
+                                    {
+                                        spuImage.LoadSubtitle(sub, lines, fileName);
+                                        format = spuImage;
+                                    }
+                                }
+                                if (format == null)
+                                {
+                                    var dost = new Dost();
+                                    if (dost.IsMine(lines, fileName))
+                                    {
+                                        dost.LoadSubtitle(sub, lines, fileName);
+                                        format = dost;
+                                    }
+                                }
+                                if (format == null)
+                                {
+                                    var seImageHtmlIndex = new SeImageHtmlIndex();
+                                    if (seImageHtmlIndex.IsMine(lines, fileName))
+                                    {
+                                        seImageHtmlIndex.LoadSubtitle(sub, lines, fileName);
+                                        format = seImageHtmlIndex;
+                                    }
+                                }
+
 
                                 if (format != null)
                                 {
