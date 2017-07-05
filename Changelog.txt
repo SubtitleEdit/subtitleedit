@@ -4,25 +4,26 @@
 * NEW:
    * New subtitle format JacoSub - thx ivandrofly
    * New subtitle format Lamda Cap (basic support) - thx Chie
-   * New shortcuts for frame forward/back with playing
-   * IMPROVED:
-   * Updated Russian translation - thx Elheym
-   * Updated Brazilian translation - thx Igor
-   * Updated Basque translation - thx Xabier 
-   * Improved language auto detect
-   * Added semicolon as possible shortcut key - thx Allan
-   * Added 60 fps to export settings for several formats
+   * New shortcuts for frame forward/back with play
+* IMPROVED:
+   * Update Russian translation - thx Elheym
+   * Update Brazilian translation - thx Igor
+   * Update Basque translation - thx Xabier 
+   * Update Korean translaton - thx domddol
+   * Improve language auto detect
+   * Add semicolon as possible shortcut key - thx Allan
+   * Add 60 fps to export settings for several formats
    * Google translate can now use google.cn (for Chinese ppl)
    * Export margins can now be percentage or pixels
-   * Added more subtitle formats to command line + batch convert
+   * Add more subtitle formats to command line + batch convert
    * If input file is unknown + plain text, "Import plain text" will open
-   * ASS now allows decimals for outline/shadow - thx Ninelpienel
+   * ASS allows decimals for outline/shadow - thx Ninelpienel
 * FIXED:
-   * Fixed missing space in format WebVTT
-   * Fixed support for combined Arabic characters in PAC - thx Zehelein
+   * Fix missing space in format WebVTT
+   * Fix support for combined Arabic characters in PAC - thx Zehelein
    * mpv frame stepping now updates position - thx Flitskikker
-   * Fixed issue with TTML and namespace - thx PannenkoekenNL
-   * Fixed possible crash in "Statistics" - thx Masih
+   * Fix issue with TTML and namespace - thx PannenkoekenNL
+   * Fix possible crash in "Statistics" - thx Masih
    * Fix for Arabic spell check word split
    * Fix for reverse RTL start/end
    * Add to name to language list is now culture neutral
@@ -30,6 +31,9 @@
    * Fix for "disable auto open" of video files - thx Barneyk
    * Fix for rare large font issue - thx Camille
    * Fix for PAC language auto-detect - thx SirEllert
+   * Remove colon now leaves first letter in uppercase - thx aucforum
+   * Fix ASS font tag with space - thx OmarSi
+   * Fix possible crash in expand ocr match - thx Zoltán
 
 
 3.5.3 (12th May 2017)
