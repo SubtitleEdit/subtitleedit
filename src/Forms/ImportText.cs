@@ -721,13 +721,17 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else
             {
-                string[] files = Directory.GetFiles(Path.GetDirectoryName(fileName), Path.GetFileNameWithoutExtension(_videoFileName) + "*.avi");
-                if (files.Length == 0)
-                    files = Directory.GetFiles(Path.GetDirectoryName(fileName), "*.avi");
-                if (files.Length == 0)
-                    files = Directory.GetFiles(Path.GetDirectoryName(fileName), "*.mkv");
-                if (files.Length > 0)
-                    _videoFileName = files[0];
+                var dir = Path.GetDirectoryName(fileName);
+                if (dir != null)
+                {
+                    var files = Directory.GetFiles(dir, Path.GetFileNameWithoutExtension(_videoFileName) + "*.avi");
+                    if (files.Length == 0)
+                        files = Directory.GetFiles(dir, "*.avi");
+                    if (files.Length == 0)
+                        files = Directory.GetFiles(dir, "*.mkv");
+                    if (files.Length > 0)
+                        _videoFileName = files[0];
+                }
             }
         }
 
@@ -871,5 +875,10 @@ namespace Nikse.SubtitleEdit.Forms
             listViewInputFiles.Items.Clear();
         }
 
+        private void ImportText_Shown(object sender, EventArgs e)
+        {
+            if (textBoxText.Visible && textBoxText.Text.Length > 20)
+                buttonOK.Focus();
+        }
     }
 }
