@@ -321,35 +321,31 @@ namespace Nikse.SubtitleEdit.Core
             var s = File.ReadAllText(fileName, enc);
 
             int numberCount = 0;
-            int binaryCount = 0;
             int letterCount = 0;
+            int len = s.Length;
 
-            for (int i = 0; i < s.Length; i++)
+            for (int i = 0; i < len; i++)
             {
                 char ch = s[i];
                 if (char.IsLetter(ch) || " -,.!?[]()\r\n".Contains(ch))
                 {
                     letterCount++;
                 }
-                else if (char.IsControl(ch) && ch != '\t')
+                else if (char.IsControl(ch) && ch != '\t') // binary found
                 {
-                    binaryCount++;
+                    return false;
                 }
-                else if ("0123456789".Contains(ch))
+                else if (CharUtils.IsDigit(ch))
                 {
                     numberCount++;
                 }
             }
-            if (binaryCount > 0)
-            {
-                return false;
-            }
-            if (s.Length < 100)
+            if (len < 100)
             {
                 return numberCount < 5 && letterCount > 20;
             }
-            var numberThreshold = (s.Length * 0.002) + 1;
-            var letterThreshold = s.Length * 0.8;
+            var numberThreshold = len * 0.002 + 1;
+            var letterThreshold = len * 0.8;
             return numberCount < numberThreshold && letterCount > letterThreshold;
         }
 
