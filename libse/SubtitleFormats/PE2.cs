@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class PE2 : SubtitleFormat
+    public class Pe2 : SubtitleFormat
     {
         private static readonly Regex RegexTimeCode = new Regex(@"^\d\d:\d\d:\d\d:\d\d ", RegexOptions.Compiled);
         private static readonly Regex RegexTimeCodeEnd = new Regex(@"^\d\d:\d\d:\d\d:\d\d$", RegexOptions.Compiled);
@@ -17,20 +17,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             TimeEndOrText,
         }
 
-        public override string Extension
-        {
-            get { return ".txt"; }
-        }
+        public override string Extension => ".txt";
 
-        public override string Name
-        {
-            get { return "PE2"; }
-        }
+        public override string Name => "PE2";
 
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
+        public override bool IsTimeBased => true;
 
         public override bool IsMine(List<string> lines, string fileName)
         {
@@ -38,8 +29,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             foreach (string line in lines)
                 sb.AppendLine(line);
             string s = sb.ToString();
-            if (s.Contains("[HEADER]") && s.Contains("[BODY]"))
-                return false; // UnknownSubtitle17
+            if (!s.Contains("#PE2"))
+                return false; 
 
             var subtitle = new Subtitle();
             LoadSubtitle(subtitle, lines, fileName);
@@ -71,8 +62,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
-            var paragraph = new Paragraph();
-            ExpectingLine expecting = ExpectingLine.TimeStart;
+            Paragraph paragraph = null;
+            var expecting = ExpectingLine.TimeStart;
             _errorCount = 0;
 
             subtitle.Paragraphs.Clear();
@@ -86,39 +77,40 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         try
                         {
                             var tc = DecodeTimeCodeFramesFourParts(parts);
-                            if (expecting == ExpectingLine.TimeStart)
+                            if (paragraph != null)
                             {
-                                paragraph = new Paragraph();
-                                paragraph.StartTime = tc;
-                                expecting = ExpectingLine.Text;
-                                if (line.Length > 12)
-                                    paragraph.Text = line.Substring(12).Trim().Replace("//", Environment.NewLine);
+                                if (paragraph.EndTime.TotalMilliseconds < 0.001)
+                                    paragraph.EndTime.TotalMilliseconds = tc.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                                subtitle.Paragraphs.Add(paragraph);
                             }
+                            paragraph = new Paragraph { StartTime = tc };
+                            expecting = ExpectingLine.Text;
+                            if (line.Length > 12)
+                                paragraph.Text = line.Substring(12).Trim().Replace("//", Environment.NewLine);
                         }
                         catch
                         {
                             _errorCount++;
-                            expecting = ExpectingLine.TimeStart;
                         }
                     }
                 }
                 else if (RegexTimeCodeEnd.IsMatch(line))
                 {
                     string[] parts = line.Substring(0, 11).Split(SplitCharColon, StringSplitOptions.RemoveEmptyEntries);
-                    if (parts.Length == 4)
+                    if (parts.Length == 4 && paragraph != null)
                     {
                         var tc = DecodeTimeCodeFramesFourParts(parts);
                         paragraph.EndTime = tc;
                         subtitle.Paragraphs.Add(paragraph);
                         if (paragraph.StartTime.TotalMilliseconds < 0.001)
                             _errorCount++;
-                        paragraph = new Paragraph();
+                        paragraph = null;
                         expecting = ExpectingLine.TimeStart;
                     }
                 }
                 else
                 {
-                    if (expecting == ExpectingLine.Text)
+                    if (expecting == ExpectingLine.Text && paragraph != null)
                     {
                         if (line.Length > 0)
                         {
@@ -138,6 +130,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         _errorCount++;
                     }
                 }
+            }
+            if (!string.IsNullOrEmpty(paragraph?.Text) && paragraph.EndTime.TotalMilliseconds < 0.001)
+            {
+                paragraph.EndTime.TotalMilliseconds = 3000;
             }
             subtitle.Renumber();
         }

@@ -2516,6 +2516,27 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
+                if (format == null)
+                {
+                    try
+                    {
+                        var cmaf = new CmafImsc1();
+                        if (cmaf.IsMine(null, fileName))
+                        {
+                            cmaf.LoadSubtitle(_subtitle, null, fileName);
+                            SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
+                            SetEncoding(Configuration.Settings.General.DefaultEncoding);
+                            encoding = GetCurrentEncoding();
+                            justConverted = true;
+                            format = GetCurrentSubtitleFormat();
+                        }
+                    }
+                    catch
+                    {
+                        // ignore
+                    }
+                }
+
                 if (format == null || format.Name == Scenarist.NameOfFormat)
                 {
                     try
