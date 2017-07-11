@@ -105,7 +105,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new OpenDvt(),
                     new Oresme(),
                     new OresmeDocXDocument(),
-                    new PE2(),
+                    new Pe2(),
                     new PhoenixSubtitle(),
                     new PinnacleImpression(),
                     new PListCaption(),

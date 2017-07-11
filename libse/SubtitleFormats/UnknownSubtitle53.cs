@@ -6,27 +6,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class UnknownSubtitle53 : SubtitleFormat
     {
-
         private static readonly Regex RegexTimeCodes = new Regex(@"^\d\d\:\d\d\:\d\d\:\d\d .+", RegexOptions.Compiled);
+        private static readonly Regex RegexTimeCodesEnd = new Regex(@"^\d\d\:\d\d\:\d\d\:\d\d$", RegexOptions.Compiled);
 
-        public override string Extension
-        {
-            get { return ".txt"; }
-        }
+        public override string Extension => ".txt";
 
-        public override string Name
-        {
-            get { return "Unknown 53"; }
-        }
+        public override string Name => "Unknown 53";
 
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
+        public override bool IsTimeBased => true;
 
         public override bool IsMine(List<string> lines, string fileName)
         {
-            Subtitle subtitle = new Subtitle();
+            var subtitle = new Subtitle();
             LoadSubtitle(subtitle, lines, fileName);
             return subtitle.Paragraphs.Count > _errorCount;
         }
@@ -50,7 +41,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static string EncodeTimeCode(TimeCode timeCode)
         {
-            return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", timeCode.Hours, timeCode.Minutes, timeCode.Seconds, MillisecondsToFramesMaxFrameRate(timeCode.Milliseconds));
+            return $"{timeCode.Hours:00}:{timeCode.Minutes:00}:{timeCode.Seconds:00}:{MillisecondsToFramesMaxFrameRate(timeCode.Milliseconds):00}";
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
@@ -62,33 +53,34 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 string s = line.Trim();
                 if (RegexTimeCodes.Match(s).Success)
                 {
-                    if (p != null && !string.IsNullOrEmpty(p.Text))
+                    if (!string.IsNullOrEmpty(p?.Text))
                         subtitle.Paragraphs.Add(p);
                     p = new Paragraph();
 
                     try
                     {
-                        string[] arr = s.Substring(0, 11).Split(':');
-                        if (arr.Length == 4)
-                        {
-                            p.StartTime = DecodeTimeCodeFramesFourParts(arr);
-                            string text = s.Substring(11).Trim();
-                            p.Text = text;
-                            if (text.Length > 1 && Utilities.IsInteger(text.Substring(0, 2)))
-                                _errorCount++;
-                        }
+                        var arr = s.Substring(0, 11).Split(':');
+                        p.StartTime = DecodeTimeCodeFramesFourParts(arr);
+                        string text = s.Substring(11).Trim();
+                        p.Text = text;
+                        if (text.Length > 1 && Utilities.IsInteger(text.Substring(0, 2)))
+                            _errorCount++;
                     }
                     catch
                     {
                         _errorCount++;
                     }
                 }
+                else if (s.Length == 11 && RegexTimeCodesEnd.IsMatch(line) && p != null)
+                {
+                    p.EndTime = DecodeTimeCodeFramesFourParts(s.Split(':'));
+                }
                 else if (s.Length > 0)
                 {
                     _errorCount++;
                 }
             }
-            if (p != null && !string.IsNullOrEmpty(p.Text))
+            if (!string.IsNullOrEmpty(p?.Text))
                 subtitle.Paragraphs.Add(p);
 
             int index = 1;
@@ -97,11 +89,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 paragraph.Text = paragraph.Text.Replace("\\M", "♪");
 
                 Paragraph next = subtitle.GetParagraphOrDefault(index);
-                if (next != null)
+                if (next != null && paragraph.EndTime.TotalMilliseconds < 0.01)
                 {
                     paragraph.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - 1;
                 }
-                else
+                else if (next == null)
                 {
                     paragraph.EndTime.TotalMilliseconds = paragraph.StartTime.TotalMilliseconds + Utilities.GetOptimalDisplayMilliseconds(paragraph.Text);
                 }
