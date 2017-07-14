@@ -59,6 +59,10 @@
     <Compile Include="ContainerFormats\Matroska\MatroskaSubtitle.cs" />
     <Compile Include="ContainerFormats\Matroska\MatroskaTrackInfo.cs" />
     <Compile Include="ContainerFormats\Mp4\Boxes\Box.cs" />
+    <Compile Include="ContainerFormats\Mp4\Boxes\Moof.cs" />
+    <Compile Include="ContainerFormats\Mp4\Boxes\Tfdt.cs" />
+    <Compile Include="ContainerFormats\Mp4\Boxes\Trun.cs" />
+    <Compile Include="ContainerFormats\Mp4\Boxes\Traf.cs" />
     <Compile Include="ContainerFormats\Mp4\Boxes\Vttc.cs" />
     <Compile Include="ContainerFormats\Mp4\Boxes\Mdat.cs" />
     <Compile Include="ContainerFormats\Mp4\Boxes\Mdhd.cs" />
@@ -71,6 +75,7 @@
     <Compile Include="ContainerFormats\Mp4\Boxes\Trak.cs" />
     <Compile Include="ContainerFormats\Mp4\CmafParser.cs" />
     <Compile Include="ContainerFormats\Mp4\Mp4Parser.cs" />
+    <Compile Include="ContainerFormats\Mp4\TimeSegment.cs" />
     <Compile Include="ContainerFormats\RiffDecodeHeader.cs" />
     <Compile Include="ContainerFormats\RiffParser.cs" />
     <Compile Include="DetectEncoding\EncodingTools.cs" />

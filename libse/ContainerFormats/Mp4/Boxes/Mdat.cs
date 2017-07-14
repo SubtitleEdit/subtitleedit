@@ -17,19 +17,22 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                     return;
 
                 if (Name == "vtte")
+                {
                     Console.WriteLine("vtte");
+                }                
                 else if (Name == "vttc")
                 {
-                    Console.WriteLine("vttc");
                     var vttc = new Vttc(fs, Position);
                     if (vttc.Payload != null)
                     {
-                        Payloads.Add(vttc.Payload);
+                        Payloads.AddRange(vttc.Payload);
                     }
                 }
                 else if (Name == "payl")
+                {
                     Console.WriteLine("payl");
-                
+                }
+
                 fs.Seek((long)Position, SeekOrigin.Begin);
             }
         }

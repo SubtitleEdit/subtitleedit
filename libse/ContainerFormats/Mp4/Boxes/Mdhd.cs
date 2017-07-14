@@ -7,10 +7,10 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
     public class Mdhd : Box
     {
 
-        public readonly UInt64 CreationTime;
-        public readonly UInt64 ModificationTime;
-        public readonly UInt32 TimeScale;
-        public readonly UInt64 Duration;
+        public readonly ulong CreationTime;
+        public readonly ulong ModificationTime;
+        public readonly ulong TimeScale;
+        public readonly ulong Duration;
         public readonly string Iso639ThreeLetterCode;
         public readonly int Quality;
 
