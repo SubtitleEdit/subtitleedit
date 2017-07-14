@@ -4,5 +4,6 @@
     {
         public uint? Duration { get; set; }
         public uint? TimeOffset { get; set; }
+        public ulong BaseMediaDecodeTime { get; set; }
     }
 }
