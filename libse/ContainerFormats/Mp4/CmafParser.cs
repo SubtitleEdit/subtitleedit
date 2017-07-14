@@ -175,16 +175,9 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
 
             if (Moov?.Mvhd?.TimeScale > 0)
                 timeScale = Moov.Mvhd.TimeScale;
-            ulong baseTime = 0; // read from 'moof' -> 'traf' -> 'tfdt', like this:
-                                //box.version == 0 || box.version == 1,
-                                //'TFDT version can only be 0 or 1');
-                                //baseTime = (box.version == 0) ?
-                                //    box.reader.readUint32() :
-                                //    box.reader.readUint64();
-            baseTime = 40000000;
 
-            int max = Math.Min(samples.Count, payloads.Count);           
-            var currentTime = baseTime;
+            int max = Math.Min(samples.Count, payloads.Count);
+
             for (var i = 0; i < max; i++)
             {
                 var presentation = samples[i];
@@ -192,16 +185,15 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
 
                 if (presentation.Duration.HasValue)
                 {
-                    var startTime = presentation.TimeOffset.HasValue ? baseTime + presentation.TimeOffset : currentTime;
-
-                    currentTime = (ulong) startTime + presentation.Duration.Value;
+                    var startTime = presentation.TimeOffset.HasValue ? presentation.BaseMediaDecodeTime + presentation.TimeOffset : presentation.BaseMediaDecodeTime;
+                    var currentTime = (ulong)startTime + presentation.Duration.Value;
 
                     // The payload can be null as that would mean that it was a VTTE and
                     // was only inserted to keep the presentation times in sync with the
                     // payloads.
                     if (payload != null)
                     {
-                        Subtitle.Paragraphs.Add(new Paragraph(payload, (double) (timePeriodStart + startTime / timeScale), (double)(timePeriodStart + currentTime / timeScale)));
+                        Subtitle.Paragraphs.Add(new Paragraph(payload, (double)(timePeriodStart + startTime / timeScale), (double)(timePeriodStart + currentTime / timeScale)));
                     }
                 }
             }

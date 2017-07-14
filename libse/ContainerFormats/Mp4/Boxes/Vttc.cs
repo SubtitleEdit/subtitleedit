@@ -22,7 +22,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
 
                 if (Name == "payl")
                 {
-                    var length = (int) (max - fs.Position);
+                    var length = (int)(max - fs.Position);
                     if (length > 0 && length < 5000)
                     {
                         var buffer = new byte[length];

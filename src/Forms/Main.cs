@@ -8891,7 +8891,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (nextParagraph != null)
                 {
                     double durationMilliSeconds = GetDurationInMilliseconds();
-                    if (startTime.TotalMilliseconds + durationMilliSeconds > nextParagraph.StartTime.TotalMilliseconds && 
+                    if (startTime.TotalMilliseconds + durationMilliSeconds > nextParagraph.StartTime.TotalMilliseconds &&
                         Configuration.Settings.Tools.ListViewSyntaxColorOverlap &&
                         !startTime.IsMaxTime)
                     {
@@ -8899,7 +8899,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
 
                     if (startTimeWarning.Length == 0 &&
-                        startTime.TotalMilliseconds > nextParagraph.StartTime.TotalMilliseconds && 
+                        startTime.TotalMilliseconds > nextParagraph.StartTime.TotalMilliseconds &&
                         Configuration.Settings.Tools.ListViewSyntaxColorOverlap &&
                         !startTime.IsMaxTime)
                     {

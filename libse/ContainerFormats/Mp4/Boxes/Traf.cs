@@ -27,6 +27,13 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
 
                 fs.Seek((long)Position, SeekOrigin.Begin);
             }
+            if (Trun?.Samples != null && Tfdt != null)
+            {
+                foreach (var timeSegment in Trun.Samples)
+                {
+                    timeSegment.BaseMediaDecodeTime = Tfdt.BaseMediaDecodeTime;
+                }
+            }
         }
 
     }
