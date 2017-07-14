@@ -7,9 +7,6 @@
         /// </summary>
         /// <param name="ch"></param>
         /// <returns></returns>
-        public static bool IsDigit(char ch)
-        {
-            return (ch >= '0') && (ch <= '9');
-        }
+        public static bool IsDigit(char ch) => (ch >= '0') && (ch <= '9');
     }
 }
