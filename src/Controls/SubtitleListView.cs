@@ -1088,7 +1088,7 @@ namespace Nikse.SubtitleEdit.Controls
                 if (_settings.Tools.ListViewSyntaxColorOverlap && i > 0 && i < paragraphs.Count && ColumnIndexEnd >= 0)
                 {
                     Paragraph prev = paragraphs[i - 1];
-                    if (paragraph.StartTime.TotalMilliseconds < prev.EndTime.TotalMilliseconds)
+                    if (paragraph.StartTime.TotalMilliseconds < prev.EndTime.TotalMilliseconds && !prev.EndTime.IsMaxTime)
                     {
                         Items[i - 1].SubItems[ColumnIndexEnd].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
                         item.SubItems[ColumnIndexStart].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;

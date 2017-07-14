@@ -8884,20 +8884,24 @@ namespace Nikse.SubtitleEdit.Forms
                 int firstSelectedIndex = SubtitleListview1.SelectedItems[0].Index;
 
                 var prevParagraph = _subtitle.GetParagraphOrDefault(firstSelectedIndex - 1);
-                if (prevParagraph != null && prevParagraph.EndTime.TotalMilliseconds > startTime.TotalMilliseconds && Configuration.Settings.Tools.ListViewSyntaxColorOverlap)
+                if (prevParagraph != null && !prevParagraph.EndTime.IsMaxTime && prevParagraph.EndTime.TotalMilliseconds > startTime.TotalMilliseconds && Configuration.Settings.Tools.ListViewSyntaxColorOverlap)
                     startTimeWarning = string.Format(_languageGeneral.OverlapPreviousLineX, prevParagraph.EndTime.TotalSeconds - startTime.TotalSeconds);
 
                 var nextParagraph = _subtitle.GetParagraphOrDefault(firstSelectedIndex + 1);
                 if (nextParagraph != null)
                 {
                     double durationMilliSeconds = GetDurationInMilliseconds();
-                    if (startTime.TotalMilliseconds + durationMilliSeconds > nextParagraph.StartTime.TotalMilliseconds && Configuration.Settings.Tools.ListViewSyntaxColorOverlap)
+                    if (startTime.TotalMilliseconds + durationMilliSeconds > nextParagraph.StartTime.TotalMilliseconds && 
+                        Configuration.Settings.Tools.ListViewSyntaxColorOverlap &&
+                        !startTime.IsMaxTime)
                     {
                         durationWarning = string.Format(_languageGeneral.OverlapX, ((startTime.TotalMilliseconds + durationMilliSeconds) - nextParagraph.StartTime.TotalMilliseconds) / TimeCode.BaseUnit);
                     }
 
                     if (startTimeWarning.Length == 0 &&
-                        startTime.TotalMilliseconds > nextParagraph.StartTime.TotalMilliseconds && Configuration.Settings.Tools.ListViewSyntaxColorOverlap)
+                        startTime.TotalMilliseconds > nextParagraph.StartTime.TotalMilliseconds && 
+                        Configuration.Settings.Tools.ListViewSyntaxColorOverlap &&
+                        !startTime.IsMaxTime)
                     {
                         double di = (startTime.TotalMilliseconds - nextParagraph.StartTime.TotalMilliseconds) / TimeCode.BaseUnit;
                         startTimeWarning = string.Format(_languageGeneral.OverlapNextX, di);
@@ -21202,3 +21206,4 @@ namespace Nikse.SubtitleEdit.Forms
 
     }
 }
+
