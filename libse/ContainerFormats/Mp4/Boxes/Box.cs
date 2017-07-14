@@ -8,7 +8,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
         public byte[] Buffer;
         public ulong Position;
         public string Name;
-        public UInt64 Size;
+        public ulong Size;
 
         public static uint GetUInt(byte[] buffer, int index)
         {
@@ -20,16 +20,16 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
             return (uint)((Buffer[index] << 24) + (Buffer[index + 1] << 16) + (Buffer[index + 2] << 8) + Buffer[index + 3]);
         }
 
-        public UInt64 GetUInt64(int index)
+        public ulong GetUInt64(int index)
         {
-            return (UInt64)Buffer[index] << 56 | (UInt64)Buffer[index + 1] << 48 | (UInt64)Buffer[index + 2] << 40 | (UInt64)Buffer[index + 3] << 32 |
-                   (UInt64)Buffer[index + 4] << 24 | (UInt64)Buffer[index + 5] << 16 | (UInt64)Buffer[index + 6] << 8 | Buffer[index + 7];
+            return (ulong)Buffer[index] << 56 | (ulong)Buffer[index + 1] << 48 | (ulong)Buffer[index + 2] << 40 | (ulong)Buffer[index + 3] << 32 |
+                   (ulong)Buffer[index + 4] << 24 | (ulong)Buffer[index + 5] << 16 | (ulong)Buffer[index + 6] << 8 | Buffer[index + 7];
         }
 
-        public static UInt64 GetUInt64(byte[] buffer, int index)
+        public static ulong GetUInt64(byte[] buffer, int index)
         {
-            return (UInt64)buffer[index] << 56 | (UInt64)buffer[index + 1] << 48 | (UInt64)buffer[index + 2] << 40 | (UInt64)buffer[index + 3] << 32 |
-                   (UInt64)buffer[index + 4] << 24 | (UInt64)buffer[index + 5] << 16 | (UInt64)buffer[index + 6] << 8 | buffer[index + 7];
+            return (ulong)buffer[index] << 56 | (ulong)buffer[index + 1] << 48 | (ulong)buffer[index + 2] << 40 | (ulong)buffer[index + 3] << 32 |
+                   (ulong)buffer[index + 4] << 24 | (ulong)buffer[index + 5] << 16 | (ulong)buffer[index + 6] << 8 | buffer[index + 7];
         }
 
         public static int GetWord(byte[] buffer, int index)
@@ -65,7 +65,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
 
             if (Size == 0)
             {
-                Size = (UInt64)(fs.Length - fs.Position);
+                Size = (ulong)(fs.Length - fs.Position);
             }
             if (Size == 1)
             {
@@ -74,7 +74,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                     return false;
                 Size = GetUInt64(0) - 8;
             }
-            Position = ((ulong)(fs.Position)) + Size - 8;
+            Position = (ulong)fs.Position + Size - 8;
             return true;
         }
 

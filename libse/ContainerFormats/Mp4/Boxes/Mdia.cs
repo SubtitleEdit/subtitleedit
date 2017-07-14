@@ -10,30 +10,15 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
         public readonly string HandlerType = null;
         public readonly string HandlerName = string.Empty;
 
-        public bool IsTextSubtitle
-        {
-            get { return HandlerType == "sbtl" || HandlerType == "text"; }
-        }
+        public bool IsTextSubtitle => HandlerType == "sbtl" || HandlerType == "text";
 
-        public bool IsVobSubSubtitle
-        {
-            get { return HandlerType == "subp"; }
-        }
+        public bool IsVobSubSubtitle => HandlerType == "subp";
 
-        public bool IsClosedCaption
-        {
-            get { return HandlerType == "clcp"; }
-        }
+        public bool IsClosedCaption => HandlerType == "clcp";
 
-        public bool IsVideo
-        {
-            get { return HandlerType == "vide"; }
-        }
+        public bool IsVideo => HandlerType == "vide";
 
-        public bool IsAudio
-        {
-            get { return HandlerType == "soun"; }
-        }
+        public bool IsAudio => HandlerType == "soun";
 
         public Mdia(FileStream fs, ulong maximumLength)
         {
@@ -45,7 +30,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
 
                 if (Name == "minf" && IsTextSubtitle || IsVobSubSubtitle || IsClosedCaption || IsVideo)
                 {
-                    UInt32 timeScale = 90000;
+                    ulong timeScale = 90000;
                     if (Mdhd != null)
                         timeScale = Mdhd.TimeScale;
                     Minf = new Minf(fs, Position, timeScale, HandlerType, this);

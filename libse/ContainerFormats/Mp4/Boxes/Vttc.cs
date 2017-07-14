@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
@@ -7,12 +8,13 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
     public class Vttc : Box
     {
 
-        public string Payload { get; set; }
+        public List<string> Payload { get; set; }
 
         public Vttc(FileStream fs, ulong maximumLength)
         {
+            Payload = new List<string>();
             long max = (long)maximumLength;
-            StringBuilder sb = null;
+            int count = 0;
             while (fs.Position < max)
             {
                 if (!InitializeSizeAndName(fs))
@@ -20,25 +22,28 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
 
                 if (Name == "payl")
                 {
-                    Console.WriteLine("payl");
                     var length = (int) (max - fs.Position);
                     if (length > 0 && length < 5000)
                     {
-                        if (sb == null)
-                            sb = new StringBuilder();
-
                         var buffer = new byte[length];
                         fs.Read(buffer, 0, length);
                         var s = Encoding.UTF8.GetString(buffer);
-                        sb.AppendLine();
-                        sb.AppendLine(s);
+                        s = string.Join(Environment.NewLine, s.SplitToLines());
+                        Payload.Add(s.Trim());
+                        count++;
+                    }
+                    else
+                    {
+                        Payload.Add(string.Empty);
                     }
                 }
 
                 fs.Seek((long)Position, SeekOrigin.Begin);
             }
-            if (sb != null)
-                Payload = sb.ToString().Trim();
+            if (count == 0)
+            {
+                Payload.Add(null);
+            }
         }
     }
 }
