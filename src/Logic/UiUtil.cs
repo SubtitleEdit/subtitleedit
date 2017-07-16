@@ -42,7 +42,7 @@ namespace Nikse.SubtitleEdit.Logic
         private static VideoInfo TryReadVideoInfoViaDirectShow(string fileName)
         {
             return QuartsPlayer.GetVideoInfo(fileName);
-        }      
+        }
 
         public static int ShowSubtitle(Subtitle subtitle, VideoPlayerContainer videoPlayerContainer)
         {
@@ -366,7 +366,7 @@ namespace Nikse.SubtitleEdit.Logic
             saveFileDialog.Filter = sb.ToString().TrimEnd('|');
         }
 
-        public static void GetLineLengths(Label label, string text)
+        public static void FixMultiLinedText(Label label, string text)
         {
             label.ForeColor = Color.Black;
             var lines = HtmlUtil.RemoveHtmlTags(text, true).SplitToLines();
@@ -616,23 +616,23 @@ namespace Nikse.SubtitleEdit.Logic
                 foreach (string ext in s.AlternateExtensions)
                     AddExtension(sb, ext);
             }
-            AddExtension(sb, new Pac().Extension);
-            AddExtension(sb, new Cavena890().Extension);
-            AddExtension(sb, new Spt().Extension);
-            AddExtension(sb, new Wsb().Extension);
-            AddExtension(sb, new CheetahCaption().Extension);
+            AddExtension(sb, ".pac");
+            AddExtension(sb, ".890"); // Cavena890
+            AddExtension(sb, ".spt");
+            AddExtension(sb, ".WSB");
+            AddExtension(sb, ".cap"); // CheetahCaption
             AddExtension(sb, ".chk");
-            AddExtension(sb, new CaptionsInc().Extension);
-            AddExtension(sb, new Ultech130().Extension);
-            AddExtension(sb, new ELRStudioClosedCaption().Extension);
+            AddExtension(sb, ".cin"); // CaptionInc
+            AddExtension(sb, ".ult"); // Ultech130
+            AddExtension(sb, ".elr"); // ELRStudioClosedCaption
             AddExtension(sb, ".uld"); // Ultech drop frame
-            AddExtension(sb, new SonicScenaristBitmaps().Extension);
+            AddExtension(sb, ".sst"); // SonicScenaristBitmaps
             AddExtension(sb, ".mks");
             AddExtension(sb, ".mxf");
             AddExtension(sb, ".sup");
             AddExtension(sb, ".dost");
-            AddExtension(sb, new Ayato().Extension);
-            AddExtension(sb, new PacUnicode().Extension);
+            AddExtension(sb, ".aya"); // Ayato
+            AddExtension(sb, ".fpc"); // PacUnicode
 
             if (!string.IsNullOrEmpty(Configuration.Settings.General.OpenSubtitleExtraExtensions))
             {
