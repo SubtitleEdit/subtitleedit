@@ -2741,7 +2741,7 @@ namespace Nikse.SubtitleEdit.Forms
                     return;
                 }
 
-                if (format == null && file.Length < 500000)
+                if (format == null && file.Length < 1000000)
                 {
                     // check for valid timed text
                     if (ext == ".xml" || ext == ".dfxp")
