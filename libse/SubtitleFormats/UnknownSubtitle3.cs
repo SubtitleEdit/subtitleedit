@@ -4,10 +4,6 @@ using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    //Subtitle number: 1
-    //Start time (or frames): 00:00:48,862:0000001222
-    //End time (or frames): 00:00:50,786:0000001270
-    //Subtitle text: In preajma lacului Razel,
     public class UnknownSubtitle3 : SubtitleFormat
     {
         private static readonly char[] SplitChar = { '|' };
@@ -24,7 +20,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override bool IsTimeBased
         {
-            get { return true; }
+            get { return false; }
         }
 
         public override bool IsMine(List<string> lines, string fileName)
@@ -43,8 +39,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var sb = new StringBuilder();
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                if (!subtitle.WasLoadedWithFrameNumbers)
-                    p.CalculateFrameNumbersFromTimeCodes(Configuration.Settings.General.CurrentFrameRate);
                 sb.AppendLine(string.Format(paragraphWriteFormat, p.StartFrame, p.EndFrame, p.Text.Replace(Environment.NewLine, "\\~")));
             }
             return sb.ToString().Trim();
