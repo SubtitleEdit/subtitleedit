@@ -527,11 +527,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
                 {
                     _stream.Seek(element.DataSize, SeekOrigin.Current);
                 }
-
-                if (progressCallback != null)
-                {
-                    progressCallback.Invoke(element.EndPosition, _stream.Length);
-                }
+                progressCallback?.Invoke(element.EndPosition, _stream.Length);
             }
         }
 

@@ -9697,7 +9697,6 @@ namespace Nikse.SubtitleEdit.Forms
         private Subtitle LoadMatroskaSubtitleForSync(MatroskaTrackInfo matroskaSubtitleInfo, MatroskaFile matroska)
         {
             var subtitle = new Subtitle();
-            bool isSsa = false;
 
             if (matroskaSubtitleInfo.CodecId.Equals("S_VOBSUB", StringComparison.OrdinalIgnoreCase))
             {
@@ -9708,24 +9707,16 @@ namespace Nikse.SubtitleEdit.Forms
                 return subtitle;
             }
 
-            SubtitleFormat format;
+            var sub = matroska.GetSubtitle(matroskaSubtitleInfo.TrackNumber, MatroskaProgress);
+            TaskbarList.SetProgressState(Handle, TaskbarButtonProgressFlags.NoProgress);
             if (matroskaSubtitleInfo.CodecPrivate.Contains("[script info]", StringComparison.OrdinalIgnoreCase))
             {
+                SubtitleFormat format;
                 if (matroskaSubtitleInfo.CodecPrivate.Contains("[V4 Styles]", StringComparison.OrdinalIgnoreCase))
                     format = new SubStationAlpha();
                 else
                     format = new AdvancedSubStationAlpha();
-                isSsa = true;
-            }
-            else
-            {
-                format = new SubRip();
-            }
 
-            var sub = matroska.GetSubtitle(matroskaSubtitleInfo.TrackNumber, MatroskaProgress);
-            TaskbarList.SetProgressState(Handle, TaskbarButtonProgressFlags.NoProgress);
-            if (isSsa)
-            {
                 foreach (var p in Utilities.LoadMatroskaSSA(matroskaSubtitleInfo, matroska.Path, format, sub).Paragraphs)
                 {
                     subtitle.Paragraphs.Add(p);
