@@ -488,6 +488,7 @@
     <Compile Include="SubtitleFormats\VocapiaSplit.cs" />
     <Compile Include="SubtitleFormats\WebVTT.cs" />
     <Compile Include="SubtitleFormats\WebVTTFileWithLineNumber.cs" />
+    <Compile Include="SubtitleFormats\WinCaps32.cs" />
     <Compile Include="SubtitleFormats\Wsb.cs" />
     <Compile Include="SubtitleFormats\Xif.cs" />
     <Compile Include="SubtitleFormats\YouTubeAnnotations.cs" />

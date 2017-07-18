@@ -2641,6 +2641,22 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
+                if (format == null)
+                {
+                    var f = new WinCaps32();
+                    if (f.IsMine(null, fileName))
+                    {
+                        f.LoadSubtitle(_subtitle, null, fileName);
+                        _oldSubtitleFormat = f;
+                        SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
+                        SetEncoding(Configuration.Settings.General.DefaultEncoding);
+                        encoding = GetCurrentEncoding();
+                        justConverted = true;
+                        format = GetCurrentSubtitleFormat();
+                    }
+                }
+
+
                 // retry vobsub (file with wrong extension)
                 if (format == null && file.Length > 500 && IsVobSubFile(fileName, false))
                 {
@@ -3533,11 +3549,6 @@ namespace Nikse.SubtitleEdit.Forms
                     currentEncoding = Encoding.ASCII;
                 }
 
-                if (format.GetType() == typeof(NetflixTimedText))
-                {
-                    NetflixGlyphCheck(false);
-                }
-
                 if (ModifierKeys == (Keys.Control | Keys.Shift))
                     allText = allText.Replace("\r\n", "\n");
 
@@ -3586,6 +3597,10 @@ namespace Nikse.SubtitleEdit.Forms
                 Configuration.Settings.Save();
                 _fileDateTime = File.GetLastWriteTime(_fileName);
                 ShowStatus(string.Format(_language.SavedSubtitleX, _fileName));
+                if (format.GetType() == typeof(NetflixTimedText))
+                {
+                    NetflixGlyphCheck(true);
+                }
                 _changeSubtitleToString = _subtitle.GetFastHashCode();
                 return DialogResult.OK;
             }
@@ -21105,7 +21120,7 @@ namespace Nikse.SubtitleEdit.Forms
             return formatType == typeof(TimedText10) || formatType == typeof(NetflixTimedText);
         }
 
-        private void NetflixGlyphCheck(bool showSuccessMessage = true)
+        private void NetflixGlyphCheck(bool isSaving = true)
         {
             ReloadFromSourceView();
 
@@ -21131,10 +21146,18 @@ namespace Nikse.SubtitleEdit.Forms
                 reportFiles.Add(reportPath);
                 using (var dialog = new NetflixQCResult(string.Join(Environment.NewLine, messages), reportFiles))
                 {
-                    dialog.ShowDialog(this);
+                    if (!isSaving)
+                    {
+                        dialog.ShowDialog(this);
+                    }
+                    else
+                    {
+                        ShowStatus(string.Format(_language.SavedSubtitleX, _fileName) + " - " +
+                                   string.Format(Configuration.Settings.Language.NetflixQualityCheck.FoundXIssues, netflixController.Records.Count));
+                    }
                 }
             }
-            else if (showSuccessMessage)
+            else if (!isSaving)
             {
                 messages.Add(Configuration.Settings.Language.NetflixQualityCheck.CheckOk);
                 using (var dialog = new NetflixQCResult(string.Join(Environment.NewLine, messages), reportFiles))
