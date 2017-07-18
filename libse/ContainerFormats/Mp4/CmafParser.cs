@@ -77,9 +77,8 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
             }
             fs.Close();
 
-
             ulong timePeriodStart = 0; // ???
-            ulong timeScale = 0; // ??
+            ulong timeScale = 0;
             if (Moov?.Tracks[0].Mdia.Mdhd.TimeScale > 0)
                 timeScale = Moov.Tracks[0].Mdia.Mdhd.TimeScale;
 
@@ -95,15 +94,15 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
 
                 if (presentation.Duration.HasValue)
                 {
-                    var startTime = presentation.TimeOffset.HasValue ? presentation.BaseMediaDecodeTime + presentation.TimeOffset : presentation.BaseMediaDecodeTime;
-                    var currentTime = (ulong)startTime + presentation.Duration.Value;
+                    var startTime = presentation.TimeOffset.HasValue ? presentation.BaseMediaDecodeTime + presentation.TimeOffset.Value : presentation.BaseMediaDecodeTime;
+                    var currentTime = startTime + presentation.Duration.Value;
 
                     // The payload can be null as that would mean that it was a VTTE and
                     // was only inserted to keep the presentation times in sync with the
                     // payloads.
                     if (payload != null)
                     {
-                        Subtitle.Paragraphs.Add(new Paragraph(payload, (double)(timePeriodStart + startTime / timeScale), (double)(timePeriodStart + currentTime / timeScale)));
+                        Subtitle.Paragraphs.Add(new Paragraph(payload, timePeriodStart + startTime / timeScale, timePeriodStart + currentTime / timeScale));
                     }
                 }
             }
