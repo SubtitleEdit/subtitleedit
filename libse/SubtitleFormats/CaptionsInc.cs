@@ -7,20 +7,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class CaptionsInc : SubtitleFormat
     {
-        public override string Extension
-        {
-            get { return ".cin"; }
-        }
+        public override string Extension => ".cin";
 
-        public override string Name
-        {
-            get { return "Caption Inc"; }
-        }
+        public override string Name => "Caption Inc";
 
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
+        public override bool IsTimeBased => true;
 
         public static void Save(string fileName, Subtitle subtitle)
         {
@@ -36,7 +27,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 WriteTime(fs, subtitle.Paragraphs[0].StartTime, false); // first start time
                 WriteTime(fs, subtitle.Paragraphs[subtitle.Paragraphs.Count - 1].EndTime, false); // last end time
 
-                buffer = Encoding.ASCII.GetBytes("Generic Unknown Unknown \"\" Unknown Unknown Unknown                                                                                                                                                                                    ");
+                buffer = Encoding.ASCII.GetBytes("Generic Unknown Unknown \"\" Unknown Unknown Unknown".PadRight(180, ' '));
                 fs.Write(buffer, 0, buffer.Length);
 
                 // paragraphs
@@ -113,10 +104,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return false;
         }
 
-        public override string ToText(Subtitle subtitle, string title)
-        {
-            return "Not supported!";
-        }
+        public override string ToText(Subtitle subtitle, string title) => "Not supported!";
 
         private static TimeCode DecodeTimestamp(string timeCode)
         {
