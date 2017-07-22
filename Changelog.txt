@@ -5,11 +5,13 @@
    * New subtitle format JacoSub - thx ivandrofly
    * New subtitle format Lamda Cap (basic support) - thx Chie
    * New shortcuts for frame forward/back with play
+   * Persian translation - thx Nima
 * IMPROVED:
    * Update Russian translation - thx Elheym
    * Update Brazilian translation - thx Igor
    * Update Basque translation - thx Xabier 
    * Update Korean translaton - thx domddol
+   * Update Chinese Traditional translation - thx jackielam1997
    * Improve language auto detect
    * Add semicolon as possible shortcut key - thx Allan
    * Add 60 fps to export settings for several formats
@@ -35,6 +37,7 @@
    * Fix ASS font tag with space - thx OmarSi
    * Fix possible crash in expand ocr match - thx Zoltán
    * Allow for large unknown subtitle formats - thx Stefania
+   * Fix word split char for spell check - thx Boulder08
 
 
 3.5.3 (12th May 2017)
