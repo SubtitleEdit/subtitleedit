@@ -91,7 +91,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 const string expectedWordBoundaryChars = " <>-\"”„“«»[]'‘`´¶()♪¿¡.…—!?,:;/\r\n";
                 for (int i = 0; i < richTextBoxParagraph.Text.Length; i++)
                 {
-                    if (richTextBoxParagraph.Text.Substring(i).StartsWith(word))
+                    if (richTextBoxParagraph.Text.Substring(i).StartsWith(word, StringComparison.Ordinal))
                     {
                         bool startOk = i == 0;
                         if (!startOk)
