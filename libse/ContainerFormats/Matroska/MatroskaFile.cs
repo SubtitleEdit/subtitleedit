@@ -11,9 +11,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
     {
         public delegate void LoadMatroskaCallback(long position, long total);
 
-        private readonly string _path;
         private readonly FileStream _stream;
-        private readonly bool _valid;
         private int _pixelWidth, _pixelHeight;
         private double _frameRate;
         private string _videoCodecId;
@@ -28,7 +26,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
 
         public MatroskaFile(string path)
         {
-            _path = path;
+            Path = path;
             _stream = new FastFileStream(path);
 
             // read header
@@ -40,26 +38,14 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
                 _segmentElement = ReadElement();
                 if (_segmentElement != null && _segmentElement.Id == ElementId.Segment)
                 {
-                    _valid = true; // matroska file must start with ebml header and segment
+                    IsValid = true; // matroska file must start with ebml header and segment
                 }
             }
         }
 
-        public bool IsValid
-        {
-            get
-            {
-                return _valid;
-            }
-        }
+        public bool IsValid { get; }
 
-        public string Path
-        {
-            get
-            {
-                return _path;
-            }
-        }
+        public string Path { get; }
 
         public List<MatroskaTrackInfo> GetTracks(bool subtitleOnly = false)
         {
@@ -482,10 +468,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
 
         public void Dispose()
         {
-            if (_stream != null)
-            {
-                _stream.Dispose();
-            }
+            _stream?.Dispose();
         }
 
         private void ReadSegmentInfoAndTracks()
@@ -528,10 +511,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
                     _stream.Seek(element.DataSize, SeekOrigin.Current);
                 }
 
-                if (progressCallback != null)
-                {
-                    progressCallback.Invoke(element.EndPosition, _stream.Length);
-                }
+                progressCallback?.Invoke(element.EndPosition, _stream.Length);
             }
         }
 

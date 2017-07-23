@@ -2206,7 +2206,7 @@ namespace Nikse.SubtitleEdit.Core
                                    "[Events]" + Environment.NewLine +
                                    headerFormat + Environment.NewLine;
             }
-            else
+            else if (subtitle.Header.LastIndexOf("Format:", StringComparison.Ordinal) < subtitle.Header.IndexOf("[Events]", StringComparison.Ordinal))
             {
                 subtitle.Header = subtitle.Header.Remove(subtitle.Header.IndexOf("[Events]", StringComparison.Ordinal));
                 subtitle.Header = subtitle.Header.Trim() + Environment.NewLine +
@@ -2214,6 +2214,11 @@ namespace Nikse.SubtitleEdit.Core
                                    "[Events]" + Environment.NewLine +
                                    headerFormat + Environment.NewLine;
             }
+            else
+            {
+                subtitle.Header = subtitle.Header.Trim() + Environment.NewLine;
+            }
+
             lines = new List<string>();
             foreach (string l in subtitle.Header.Trim().SplitToLines())
                 lines.Add(l);
