@@ -875,6 +875,18 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                     string s = line.Trim().ToLower();
                     if (line.Length > 10 && s.StartsWith("format:", StringComparison.Ordinal))
                     {
+                        indexLayer = -1;
+                        indexStart = -1;
+                        indexEnd = -1;
+                        indexStyle = -1;
+                        indexActor = -1;
+                        indexMarginL = -1;
+                        indexMarginR = -1;
+                        indexMarginV = -1;
+                        indexEffect = -1;
+                        indexText = -1;
+
+
                         var format = s.Substring(8).Split(',');
                         for (int i = 0; i < format.Length; i++)
                         {
