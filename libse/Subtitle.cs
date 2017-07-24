@@ -581,9 +581,10 @@ namespace Nikse.SubtitleEdit.Core
         /// Fast hash code for subtitle (only includes start + end + text)
         /// </summary>
         /// <returns>Hash value that can be used for quick compare</returns>
-        public string GetFastHashCode()
+        public string GetFastHashCode(string pre)
         {
             var sb = new StringBuilder(Paragraphs.Count * 50);
+            sb.Append(pre);
             if (Header != null)
                 sb.Append(Header.Trim());
             for (int i = 0; i < Paragraphs.Count; i++)
