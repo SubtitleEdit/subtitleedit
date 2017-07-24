@@ -4,11 +4,14 @@ using System.IO;
 
 namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
 {
+    /// <summary>
+    /// Media Data Box
+    /// </summary>
     public class Mdat : Box
     {
         public List<string> Payloads { get; set; }
 
-        public Mdat(FileStream fs, ulong maximumLength)
+        public Mdat(Stream fs, ulong maximumLength)
         {
             Payloads = new List<string>();
             while (fs.Position < (long)maximumLength)

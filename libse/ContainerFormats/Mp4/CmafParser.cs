@@ -6,7 +6,7 @@ using System.IO;
 namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
 {
     /// <summary>
-    /// http://wiki.multimedia.cx/index.php?title=QuickTime_container
+    /// Common Media Application Format
     /// </summary>
     public class CmafParser : Box
     {
@@ -25,13 +25,13 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
             }
         }
 
-        public CmafParser(FileStream fs)
+        public CmafParser(Stream fs)
         {
             FileName = null;
             ParseCmaf(fs);
         }
 
-        private void ParseCmaf(FileStream fs)
+        private void ParseCmaf(Stream fs)
         {
             Subtitle = new Subtitle();
             int count = 0;

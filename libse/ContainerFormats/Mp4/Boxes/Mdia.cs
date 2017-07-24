@@ -1,8 +1,10 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 
 namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
 {
+    /// <summary>
+    /// Media Box 
+    /// </summary>
     public class Mdia : Box
     {
         public Mdhd Mdhd;
@@ -20,7 +22,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
 
         public bool IsAudio => HandlerType == "soun";
 
-        public Mdia(FileStream fs, ulong maximumLength)
+        public Mdia(Stream fs, ulong maximumLength)
         {
             Position = (ulong)fs.Position;
             while (fs.Position < (long)maximumLength)

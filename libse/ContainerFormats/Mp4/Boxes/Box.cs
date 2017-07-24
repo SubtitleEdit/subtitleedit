@@ -54,7 +54,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
             return Encoding.UTF8.GetString(buffer, index, count);
         }
 
-        internal bool InitializeSizeAndName(System.IO.FileStream fs)
+        internal bool InitializeSizeAndName(System.IO.Stream fs)
         {
             Buffer = new byte[8];
             var bytesRead = fs.Read(Buffer, 0, Buffer.Length);

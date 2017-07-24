@@ -2,6 +2,10 @@
 
 namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
 {
+    /// <summary>
+    /// Track Fragment Base Media Decode Time Box
+    /// Provide decode start time of the fragment
+    /// </summary>
     public class Tfdt : Box
     {
         public ulong BaseMediaDecodeTime { get; set; }

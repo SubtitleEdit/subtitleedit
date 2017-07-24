@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Text;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
@@ -9,12 +7,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     /// <summary>
     /// CMFT - "Common Media application Format Text"
     /// </summary>
-    public class CmafImsc1 : SubtitleFormat
+    public class Cmaft : SubtitleFormat
     {
 
         public override string Extension => ".cmft";
 
-        public const string NameOfFormat = "CmafImsc1";
+        public const string NameOfFormat = "CMAF Text";
 
         public override string Name => NameOfFormat;
 
@@ -38,6 +36,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             var parser = new CmafParser(fileName);
+            subtitle.Paragraphs.Clear();
             subtitle.Paragraphs.AddRange(parser.Subtitle.Paragraphs);
         }
 

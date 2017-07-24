@@ -2,13 +2,16 @@
 
 namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
 {
+    /// <summary>
+    /// Track Box
+    /// </summary>
     public class Trak : Box
     {
 
         public Mdia Mdia;
         public Tkhd Tkhd;
 
-        public Trak(FileStream fs, ulong maximumLength)
+        public Trak(Stream fs, ulong maximumLength)
         {
             Position = (ulong)fs.Position;
             while (fs.Position < (long)maximumLength)

@@ -5,12 +5,15 @@ using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
 {
+    /// <summary>
+    /// Web VTT Configuration Box
+    /// </summary>
     public class Vttc : Box
     {
 
         public List<string> Payload { get; set; }
 
-        public Vttc(FileStream fs, ulong maximumLength)
+        public Vttc(Stream fs, ulong maximumLength)
         {
             Payload = new List<string>();
             long max = (long)maximumLength;
