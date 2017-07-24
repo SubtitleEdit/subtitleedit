@@ -2,11 +2,14 @@
 
 namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
 {
+    /// <summary>
+    /// Movie Fragment Box
+    /// </summary>
     public class Moof : Box
     {
         public Traf Traf { get; set; }
 
-        public Moof(FileStream fs, ulong maximumLength)
+        public Moof(Stream fs, ulong maximumLength)
         {
             Position = (ulong)fs.Position;
             while (fs.Position < (long)maximumLength)

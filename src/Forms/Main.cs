@@ -2520,7 +2520,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     try
                     {
-                        var cmaf = new CmafImsc1();
+                        var cmaf = new Cmaft();
                         if (cmaf.IsMine(null, fileName))
                         {
                             cmaf.LoadSubtitle(_subtitle, null, fileName);

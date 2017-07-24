@@ -1,14 +1,16 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 
 namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
 {
+    /// <summary>
+    /// Media Information Box
+    /// </summary>
     public class Minf : Box
     {
 
         public Stbl Stbl;
 
-        public Minf(FileStream fs, ulong maximumLength, ulong timeScale, string handlerType, Mdia mdia)
+        public Minf(Stream fs, ulong maximumLength, ulong timeScale, string handlerType, Mdia mdia)
         {
             Position = (ulong)fs.Position;
             while (fs.Position < (long)maximumLength)

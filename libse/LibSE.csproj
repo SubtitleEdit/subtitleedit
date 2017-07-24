@@ -224,7 +224,7 @@
     <Compile Include="Subtitle.cs" />
     <Compile Include="SubtitleFormats\AribB36.cs" />
     <Compile Include="SubtitleFormats\AribB24Decoder.cs" />
-    <Compile Include="SubtitleFormats\CmafImsc1.cs" />
+    <Compile Include="SubtitleFormats\Cmaft.cs" />
     <Compile Include="SubtitleFormats\Csv5.cs" />
     <Compile Include="SubtitleFormats\JacoSub.cs" />
     <Compile Include="SubtitleFormats\JsonType11.cs" />

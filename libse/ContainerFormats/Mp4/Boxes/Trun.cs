@@ -4,6 +4,7 @@ using System.IO;
 namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
 {
     /// <summary>
+    /// Track Fragment Run Box
     /// https://msdn.microsoft.com/en-us/library/ff469478.aspx
     /// </summary>
     public class Trun : Box

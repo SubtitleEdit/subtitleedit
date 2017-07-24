@@ -2,6 +2,9 @@
 
 namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
 {
+    /// <summary>
+    /// Movie Header Box
+    /// </summary>
     public class Mvhd : Box
     {
         public readonly uint CreationTime;
@@ -9,7 +12,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
         public readonly uint Duration;
         public readonly uint TimeScale;
 
-        public Mvhd(FileStream fs)
+        public Mvhd(Stream fs)
         {
             Buffer = new byte[20];
             int bytesRead = fs.Read(Buffer, 0, Buffer.Length);

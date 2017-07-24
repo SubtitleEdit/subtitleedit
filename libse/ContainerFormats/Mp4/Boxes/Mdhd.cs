@@ -3,6 +3,9 @@ using System.IO;
 
 namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
 {
+    /// <summary>
+    /// Media Header Box
+    /// </summary>
     public class Mdhd : Box
     {
 
@@ -13,7 +16,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
         public readonly string Iso639ThreeLetterCode;
         public readonly int Quality;
 
-        public Mdhd(FileStream fs, ulong size)
+        public Mdhd(Stream fs, ulong size)
         {
             Buffer = new byte[size - 4];
             fs.Read(Buffer, 0, Buffer.Length);
