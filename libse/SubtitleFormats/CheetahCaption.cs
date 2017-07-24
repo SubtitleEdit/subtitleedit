@@ -7,70 +7,63 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class CheetahCaption : SubtitleFormat
     {
-        private static readonly List<int> LatinCodes = new List<int> {
-            0x81, // ♪
-            0x82, // á
-            0x83, // é
-            0x84, // í
-            0x85, // ó
-            0x86, // ú
-            0x87, // â
-            0x88, // ê
-            0x89, // î
-            0x8A, // ô
-            0x8B, // û
-            0x8C, // à
-            0x8D, // è
-            0x8E, // Ñ
-            0x8F, // ñ
-            0x90, // ç
-            0x91, // ¢
-            0x92, // £
-            0x93, // ¿
-            0x94, // ½
-            0x95, // ®
-          };
-
-        private static readonly IList<char> LatinLetters = new List<char> {
-            '♪',
-            'á',
-            'é',
-            'í',
-            'ó',
-            'ú',
-            'â',
-            'ê',
-            'î',
-            'ô',
-            'û',
-            'à',
-            'è',
-            'Ñ',
-            'ñ',
-            'ç',
-            '¢',
-            '£',
-            '¿',
-            '½',
-            '®',
+        private static readonly Dictionary<byte, char> _dicCodeLatin = new Dictionary<byte, char>
+        {
+            [0x81] = '♪',
+            [0x82] = 'á',
+            [0x83] = 'é',
+            [0x84] = 'í',
+            [0x85] = 'ó',
+            [0x86] = 'ú',
+            [0x87] = 'â',
+            [0x88] = 'ê',
+            [0x89] = 'î',
+            [0x8A] = 'ô',
+            [0x8B] = 'û',
+            [0x8C] = 'à',
+            [0x8D] = 'è',
+            [0x8E] = 'Ñ',
+            [0x8F] = 'ñ',
+            [0x90] = 'ç',
+            [0x91] = '¢',
+            [0x92] = '£',
+            [0x93] = '¿',
+            [0x94] = '½',
+            [0x95] = '®',
         };
 
-        public override string Extension
+        private static readonly Dictionary<char, byte> _dicLatinCode = new Dictionary<char, byte>
         {
-            get { return ".cap"; }
-        }
+            ['♪'] = 0x81,
+            ['á'] = 0x82,
+            ['é'] = 0x83,
+            ['í'] = 0x84,
+            ['ó'] = 0x85,
+            ['ú'] = 0x86,
+            ['â'] = 0x87,
+            ['ê'] = 0x88,
+            ['î'] = 0x89,
+            ['ô'] = 0x8A,
+            ['û'] = 0x8B,
+            ['à'] = 0x8C,
+            ['è'] = 0x8D,
+            ['Ñ'] = 0x8E,
+            ['ñ'] = 0x8F,
+            ['ç'] = 0x90,
+            ['¢'] = 0x91,
+            ['£'] = 0x92,
+            ['¿'] = 0x93,
+            ['½'] = 0x94,
+            ['®'] = 0x95,
+        };
+
+        public override string Extension => ".cap";
 
         public const string NameOfFormat = "Cheetah Caption";
 
-        public override string Name
-        {
-            get { return NameOfFormat; }
-        }
+        public override string Name => NameOfFormat;
 
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
+        public override bool IsTimeBased => true;
 
         public static void Save(string fileName, Subtitle subtitle)
         {
@@ -177,11 +170,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         }
                         else
                         {
-                            int idx = LatinLetters.IndexOf(text[j]);
-                            if (idx >= 0)
-                                textBytes.Add((byte)LatinCodes[idx]);
+                            if (_dicLatinCode.ContainsKey(text[j]))
+                            {
+                                textBytes.Add(_dicLatinCode[text[j]]);
+                            }
                             else
+                            {
                                 textBytes.Add(encoding.GetBytes(new[] { text[j] })[0]);
+                            }
 
                             j++;
                         }
@@ -260,10 +256,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return false;
         }
 
-        public override string ToText(Subtitle subtitle, string title)
-        {
-            return "Not supported!";
-        }
+        public override string ToText(Subtitle subtitle, string title) => "Not supported!";
 
         private static TimeCode DecodeTimestamp(byte[] buffer, int index)
         {
@@ -317,9 +310,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             if (!sb.ToString().EndsWith(Environment.NewLine))
                                 sb.AppendLine();
                         }
-                        else if (LatinCodes.Contains(buffer[index]))
+                        else if (_dicCodeLatin.ContainsKey(buffer[index]))
                         {
-                            sb.Append(LatinLetters[LatinCodes.IndexOf(buffer[index])]);
+                            sb.Append(_dicCodeLatin[(buffer[index])]);
                         }
                         else if (buffer[index] >= 0xC0 || buffer[index] <= 0x14) // codes/styles?
                         {
