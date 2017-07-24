@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class CheetahCaption : SubtitleFormat
     {
-        private static readonly Dictionary<byte, char> _dicCodeLatin = new Dictionary<byte, char>
+        private static readonly Dictionary<byte, char> DicCodeLatin = new Dictionary<byte, char>
         {
             [0x81] = '♪',
             [0x82] = 'á',
@@ -30,31 +31,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             [0x93] = '¿',
             [0x94] = '½',
             [0x95] = '®',
-        };
-
-        private static readonly Dictionary<char, byte> _dicLatinCode = new Dictionary<char, byte>
-        {
-            ['♪'] = 0x81,
-            ['á'] = 0x82,
-            ['é'] = 0x83,
-            ['í'] = 0x84,
-            ['ó'] = 0x85,
-            ['ú'] = 0x86,
-            ['â'] = 0x87,
-            ['ê'] = 0x88,
-            ['î'] = 0x89,
-            ['ô'] = 0x8A,
-            ['û'] = 0x8B,
-            ['à'] = 0x8C,
-            ['è'] = 0x8D,
-            ['Ñ'] = 0x8E,
-            ['ñ'] = 0x8F,
-            ['ç'] = 0x90,
-            ['¢'] = 0x91,
-            ['£'] = 0x92,
-            ['¿'] = 0x93,
-            ['½'] = 0x94,
-            ['®'] = 0x95,
         };
 
         public override string Extension => ".cap";
@@ -81,6 +57,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                 for (int i = 0; i < 118; i++)
                     fs.WriteByte(0);
+
+                var dictionaryLatinCode = DicCodeLatin.ToLookup(pair => pair.Value, pair => pair.Key);
 
                 // paragraphs
                 for (int index = 0; index < subtitle.Paragraphs.Count; index++)
@@ -158,7 +136,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     var encoding = Encoding.GetEncoding(1252);
                     while (j < text.Length)
                     {
-                        if (text.Substring(j).StartsWith(Environment.NewLine))
+                        if (text.Substring(j).StartsWith(Environment.NewLine, StringComparison.Ordinal))
                         {
                             j += Environment.NewLine.Length;
                             textBytes.Add(0);
@@ -170,9 +148,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         }
                         else
                         {
-                            if (_dicLatinCode.ContainsKey(text[j]))
+                            if (dictionaryLatinCode.Contains(text[j]))
                             {
-                                textBytes.Add(_dicLatinCode[text[j]]);
+                                textBytes.AddRange(dictionaryLatinCode[text[j]]);
                             }
                             else
                             {
@@ -307,12 +285,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             if (italics)
                                 sb.Append("</i>");
                             italics = false;
-                            if (!sb.ToString().EndsWith(Environment.NewLine))
+                            if (!sb.ToString().EndsWith(Environment.NewLine, StringComparison.Ordinal))
                                 sb.AppendLine();
                         }
-                        else if (_dicCodeLatin.ContainsKey(buffer[index]))
+                        else if (DicCodeLatin.ContainsKey(buffer[index]))
                         {
-                            sb.Append(_dicCodeLatin[(buffer[index])]);
+                            sb.Append(DicCodeLatin[buffer[index]]);
                         }
                         else if (buffer[index] >= 0xC0 || buffer[index] <= 0x14) // codes/styles?
                         {
