@@ -9,20 +9,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     {
         private static readonly Regex RegexTimeCodes = new Regex(@"^\d+:\d+:\d+:\d+,\d+:\d+:\d+:\d+, .*$", RegexOptions.Compiled);
 
-        public override string Extension
-        {
-            get { return ".STL"; }
-        }
+        public override string Extension => ".STL";
 
-        public override string Name
-        {
-            get { return "DVD Studio Pro with one space"; }
-        }
+        public override string Name => "DVD Studio Pro with one space";
 
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
+        public override bool IsTimeBased => true;
 
         public override bool IsMine(List<string> lines, string fileName)
         {

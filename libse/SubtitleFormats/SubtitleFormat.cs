@@ -53,6 +53,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new DigiBeta(),
                     new DvdStudioPro(),
                     new DvdStudioProSpaceOne(),
+                    new DvdStudioProSpaceOneSemicolon(),
                     new DvdStudioProSpace(),
                     new DvdSubtitle(),
                     new DvdSubtitleSystem(),

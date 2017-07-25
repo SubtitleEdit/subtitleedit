@@ -7,22 +7,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class DvdStudioProSpace : SubtitleFormat
     {
-        private static readonly Regex RegexTimeCodes = new Regex(@"^\d+:\d+:\d+:\d+ , \d+:\d+:\d+:\d+ , .*$", RegexOptions.Compiled);
+        private static readonly Regex RegexTimeCodes = new Regex(@"^\d+:\d+:\d+[:;]\d+ , \d+:\d+:\d+[:;]\d+ , .*$", RegexOptions.Compiled);
 
-        public override string Extension
-        {
-            get { return ".STL"; }
-        }
+        public override string Extension => ".STL";
 
-        public override string Name
-        {
-            get { return "DVD Studio Pro with space"; }
-        }
+        public override string Name => "DVD Studio Pro with space";
 
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
+        public override bool IsTimeBased => true;
 
         public override bool IsMine(List<string> lines, string fileName)
         {
@@ -74,7 +65,7 @@ $HorzAlign          =   Center
             int number = 0;
             foreach (string line in lines)
             {
-                if (!string.IsNullOrWhiteSpace(line) && line[0] != '$' && !line.StartsWith("//"))
+                if (!string.IsNullOrWhiteSpace(line) && line[0] != '$' && !line.StartsWith("//", StringComparison.Ordinal))
                 {
                     if (RegexTimeCodes.Match(line).Success)
                     {
