@@ -1509,7 +1509,7 @@ namespace Nikse.SubtitleEdit.Forms
         private bool ContinueNewOrExit()
         {
             string currentSubtitleHash = _subtitle.GetFastHashCode(GetCurrentEncoding().BodyName);
-            if (_changeSubtitleToString != currentSubtitleHash && _lastDoNotPrompt != currentSubtitleHash)
+            if (_changeSubtitleToString != currentSubtitleHash && _lastDoNotPrompt != currentSubtitleHash && _subtitle?.Paragraphs.Count > 0)
             {
                 string promptText = _language.SaveChangesToUntitled;
                 if (!string.IsNullOrEmpty(_fileName))
@@ -3731,7 +3731,7 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.General.CurrentVideoOffsetInMs = 0;
             _subtitle = new Subtitle(_subtitle.HistoryItems);
             _changeAlternateSubtitleToString = string.Empty;
-            _changeSubtitleToString = string.Empty;
+            _changeSubtitleToString = _subtitle.GetFastHashCode(GetCurrentEncoding().BodyName);
             _subtitleAlternateFileName = null;
             textBoxSource.Text = string.Empty;
             SubtitleListview1.Items.Clear();
@@ -15647,6 +15647,7 @@ namespace Nikse.SubtitleEdit.Forms
                 numericUpDownDuration.Width = textBoxListViewText.Left - numericUpDownDuration.Left - 5;
                 labelDuration.Left = numericUpDownDuration.Left;
             }
+            _changeSubtitleToString = _subtitle.GetFastHashCode(GetCurrentEncoding().BodyName);
         }
 
         private void TimerCheckForUpdatesTick(object sender, EventArgs e)
