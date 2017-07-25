@@ -9,20 +9,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     {
         private static readonly Regex RegexTimeCodes = new Regex(@"^\d\d\d\d\t\d\d:\d\d:\d\d:\d\d\t\d\d:\d\d:\d\d:\d\d\t", RegexOptions.Compiled);
 
-        public override string Extension
-        {
-            get { return ".dost"; }
-        }
+        public override string Extension => ".dost";
 
-        public override string Name
-        {
-            get { return "DOST"; }
-        }
+        public override string Name => "DOST";
 
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
+        public override bool IsTimeBased => true;
 
         public override bool IsMine(List<string> lines, string fileName)
         {
@@ -76,7 +67,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         }
                     }
                 }
-                else if (line.StartsWith("$DROP="))
+                else if (line.StartsWith("$DROP=", StringComparison.Ordinal))
                 {
                     s = s.Remove(0, "$DROP=".Length);
                     int frameRate;

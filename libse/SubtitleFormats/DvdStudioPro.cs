@@ -7,22 +7,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class DvdStudioPro : SubtitleFormat
     {
-        private static readonly Regex RegexTimeCodes = new Regex(@"^\d+:\d+:\d+:\d+\t,\t\d+:\d+:\d+:\d+\t,\t.*$", RegexOptions.Compiled);
+        private static readonly Regex RegexTimeCodes = new Regex(@"^\d+:\d+:\d+[:;]\d+\t,\t\d+:\d+:\d+[:;]\d+\t,\t.*$", RegexOptions.Compiled);
 
-        public override string Extension
-        {
-            get { return ".STL"; }
-        }
+        public override string Extension => ".STL";
 
-        public override string Name
-        {
-            get { return "DVD Studio Pro"; }
-        }
+        public override string Name => "DVD Studio Pro";
 
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
+        public override bool IsTimeBased => true;
 
         public override bool IsMine(List<string> lines, string fileName)
         {
@@ -113,7 +104,7 @@ $HorzAlign          =   Center
                 }
                 else
                 {
-                    if (text.Substring(i).StartsWith("^I"))
+                    if (text.Substring(i).StartsWith("^I", StringComparison.Ordinal))
                     {
                         if (!italicOn)
                             sb.Append("<i>");
@@ -122,7 +113,7 @@ $HorzAlign          =   Center
                         italicOn = !italicOn;
                         skipNext = true;
                     }
-                    else if (text.Substring(i).StartsWith("^B"))
+                    else if (text.Substring(i).StartsWith("^B", StringComparison.Ordinal))
                     {
                         if (!boldOn)
                             sb.Append("<b>");
@@ -144,7 +135,7 @@ $HorzAlign          =   Center
         {
             text = Utilities.RemoveSsaTags(text);
             text = text.Replace("<I>", "<i>").Replace("</I>", "</i>");
-            bool allItalic = text.StartsWith("<i>") && text.EndsWith("</i>") && Utilities.CountTagInText(text, "<i>") == 1;
+            bool allItalic = text.StartsWith("<i>", StringComparison.Ordinal) && text.EndsWith("</i>", StringComparison.Ordinal) && Utilities.CountTagInText(text, "<i>") == 1;
 
             text = text.Replace("<i>", "^I");
             text = text.Replace("<I>", "^I");
@@ -165,7 +156,7 @@ $HorzAlign          =   Center
         {
             try
             {
-                string[] timeParts = timeString.Split(':');
+                string[] timeParts = timeString.Split(':', ';');
                 timeCode.Hours = int.Parse(timeParts[0]);
                 timeCode.Minutes = int.Parse(timeParts[1]);
                 timeCode.Seconds = int.Parse(timeParts[2]);
