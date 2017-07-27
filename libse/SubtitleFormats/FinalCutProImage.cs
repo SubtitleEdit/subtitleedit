@@ -9,25 +9,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     {
         public double FrameRate { get; set; }
 
-        public override string Extension
-        {
-            get { return ".xml"; }
-        }
+        public override string Extension => ".xml";
 
-        public override string Name
-        {
-            get { return "Final Cut Pro Image"; }
-        }
+        public override string Name => "Final Cut Pro Image";
 
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
+        public override bool IsTimeBased => true;
 
         public override bool IsMine(List<string> lines, string fileName)
         {
             var subtitle = new Subtitle();
+            var oldFrameRate = Configuration.Settings.General.CurrentFrameRate;
             LoadSubtitle(subtitle, lines, fileName);
+            Configuration.Settings.General.CurrentFrameRate = oldFrameRate;
             return subtitle.Paragraphs.Count > 0;
         }
 
@@ -48,6 +41,23 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 xml.LoadXml(sb.ToString().Trim());
 
+                if (xml.DocumentElement.SelectSingleNode("sequence/rate") != null && xml.DocumentElement.SelectSingleNode("sequence/rate/timebase") != null)
+                {
+                    try
+                    {
+                        var frameRate = double.Parse(xml.DocumentElement.SelectSingleNode("sequence/rate/timebase").InnerText);
+                        if (frameRate > 10 && frameRate < 2000)
+                        {
+                            Configuration.Settings.General.CurrentFrameRate = frameRate;
+                        }
+                    }
+                    catch
+                    {
+                        // ignored
+                    }
+                }
+
+
                 foreach (XmlNode node in xml.DocumentElement.SelectNodes("sequence/media/video/track/clipitem"))
                 {
                     try
@@ -56,30 +66,29 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         if (fileNode != null)
                         {
                             XmlNode fileNameNode = fileNode.SelectSingleNode("name");
-                            XmlNode filePathNode = fileNode.SelectSingleNode("pathurl");
                             if (fileNameNode != null)
                             {
                                 var p = new Paragraph();
                                 p.Text = fileNameNode.InnerText;
                                 XmlNode inNode = node.SelectSingleNode("in");
                                 XmlNode startNode = node.SelectSingleNode("start");
-                                if (inNode != null)
-                                {
-                                    p.StartTime.TotalMilliseconds = FramesToMilliseconds(Convert.ToInt32(inNode.InnerText));
-                                }
-                                else if (startNode != null)
+                                if (startNode != null)
                                 {
                                     p.StartTime.TotalMilliseconds = FramesToMilliseconds(Convert.ToInt32(startNode.InnerText));
                                 }
+                                else if (inNode != null)
+                                {
+                                    p.StartTime.TotalMilliseconds = FramesToMilliseconds(Convert.ToInt32(inNode.InnerText));
+                                }
                                 XmlNode outNode = node.SelectSingleNode("out");
                                 XmlNode endNode = node.SelectSingleNode("end");
-                                if (outNode != null)
-                                {
-                                    p.EndTime.TotalMilliseconds = FramesToMilliseconds(Convert.ToInt32(outNode.InnerText));
-                                }
-                                else if (endNode != null)
+                                if (endNode != null)
                                 {
                                     p.EndTime.TotalMilliseconds = FramesToMilliseconds(Convert.ToInt32(endNode.InnerText));
+                                }
+                                else if (outNode != null)
+                                {
+                                    p.EndTime.TotalMilliseconds = FramesToMilliseconds(Convert.ToInt32(outNode.InnerText));
                                 }
                                 subtitle.Paragraphs.Add(p);
                             }
@@ -95,7 +104,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             catch
             {
                 _errorCount = 1;
-                return;
             }
         }
 
