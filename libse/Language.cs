@@ -304,6 +304,7 @@ namespace Nikse.SubtitleEdit.Core
                 RemoveFormatting = "Remove formatting tags",
                 Status = "Status",
                 Style = "Style...",
+                UseStyleFromSource = "Use style from source",
                 NothingToConvert = "Nothing to convert!",
                 PleaseChooseOutputFolder = "Please choose output folder",
                 NotConverted = "Failed",

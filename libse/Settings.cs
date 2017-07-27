@@ -129,6 +129,7 @@ namespace Nikse.SubtitleEdit.Core
         public string BatchConvertFormat { get; set; }
         public string BatchConvertAssStyles { get; set; }
         public string BatchConvertSsaStyles { get; set; }
+        public bool BatchConvertUseStyleFromSource { get; set; }        
         public string BatchConvertExportCustomTextTemplate { get; set; }
         public string ModifySelectionText { get; set; }
         public string ModifySelectionRule { get; set; }
@@ -1901,6 +1902,9 @@ namespace Nikse.SubtitleEdit.Core
             subNode = node.SelectSingleNode("BatchConvertSsaStyles");
             if (subNode != null)
                 settings.Tools.BatchConvertSsaStyles = subNode.InnerText;
+            subNode = node.SelectSingleNode("BatchConvertUseStyleFromSource");
+            if (subNode != null)
+                settings.Tools.BatchConvertUseStyleFromSource = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("BatchConvertExportCustomTextTemplate");
             if (subNode != null)
                 settings.Tools.BatchConvertExportCustomTextTemplate = subNode.InnerText;
@@ -3351,6 +3355,7 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("BatchConvertFormat", settings.Tools.BatchConvertFormat);
                 textWriter.WriteElementString("BatchConvertAssStyles", settings.Tools.BatchConvertAssStyles);
                 textWriter.WriteElementString("BatchConvertSsaStyles", settings.Tools.BatchConvertSsaStyles);
+                textWriter.WriteElementString("BatchConvertUseStyleFromSource", settings.Tools.BatchConvertUseStyleFromSource.ToString());                
                 textWriter.WriteElementString("BatchConvertExportCustomTextTemplate", settings.Tools.BatchConvertExportCustomTextTemplate);
                 textWriter.WriteElementString("ModifySelectionRule", settings.Tools.ModifySelectionRule);
                 textWriter.WriteElementString("ModifySelectionText", settings.Tools.ModifySelectionText);

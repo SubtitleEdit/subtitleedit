@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            Nikse.SubtitleEdit.Core.TimeCode timeCode1 = new Nikse.SubtitleEdit.Core.TimeCode();
             this.buttonConvert = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.groupBoxConvertOptions = new System.Windows.Forms.GroupBox();
@@ -91,6 +92,7 @@
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.labelStatus = new System.Windows.Forms.Label();
+            this.checkBoxUseStyleFromSource = new System.Windows.Forms.CheckBox();
             this.groupBoxConvertOptions.SuspendLayout();
             this.groupBoxSpeed.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPercent)).BeginInit();
@@ -406,6 +408,14 @@
             this.timeUpDownAdjust.Name = "timeUpDownAdjust";
             this.timeUpDownAdjust.Size = new System.Drawing.Size(96, 24);
             this.timeUpDownAdjust.TabIndex = 1;
+            timeCode1.Hours = 99;
+            timeCode1.Milliseconds = 999;
+            timeCode1.Minutes = 59;
+            timeCode1.Seconds = 59;
+            timeCode1.TimeSpan = System.TimeSpan.Parse("4.03:59:59.9990000");
+            timeCode1.TotalMilliseconds = 359999999D;
+            timeCode1.TotalSeconds = 359999.999D;
+            this.timeUpDownAdjust.TimeCode = timeCode1;
             this.timeUpDownAdjust.UseVideoOffset = false;
             // 
             // labelHourMinSecMilliSecond
@@ -451,6 +461,7 @@
             // 
             this.groupBoxOutput.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxOutput.Controls.Add(this.checkBoxUseStyleFromSource);
             this.groupBoxOutput.Controls.Add(this.checkBoxOverwriteOriginalFiles);
             this.groupBoxOutput.Controls.Add(this.linkLabelOpenOutputFolder);
             this.groupBoxOutput.Controls.Add(this.buttonStyles);
@@ -526,7 +537,7 @@
             // labelEncoding
             // 
             this.labelEncoding.AutoSize = true;
-            this.labelEncoding.Location = new System.Drawing.Point(10, 178);
+            this.labelEncoding.Location = new System.Drawing.Point(10, 201);
             this.labelEncoding.Name = "labelEncoding";
             this.labelEncoding.Size = new System.Drawing.Size(52, 13);
             this.labelEncoding.TabIndex = 9;
@@ -536,7 +547,7 @@
             // 
             this.comboBoxEncoding.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxEncoding.FormattingEnabled = true;
-            this.comboBoxEncoding.Location = new System.Drawing.Point(80, 175);
+            this.comboBoxEncoding.Location = new System.Drawing.Point(80, 198);
             this.comboBoxEncoding.Name = "comboBoxEncoding";
             this.comboBoxEncoding.Size = new System.Drawing.Size(225, 21);
             this.comboBoxEncoding.TabIndex = 10;
@@ -764,6 +775,17 @@
             this.labelStatus.TabIndex = 9;
             this.labelStatus.Text = "labelStatus";
             // 
+            // checkBoxUseStyleFromSource
+            // 
+            this.checkBoxUseStyleFromSource.AutoSize = true;
+            this.checkBoxUseStyleFromSource.Location = new System.Drawing.Point(80, 170);
+            this.checkBoxUseStyleFromSource.Name = "checkBoxUseStyleFromSource";
+            this.checkBoxUseStyleFromSource.Size = new System.Drawing.Size(127, 17);
+            this.checkBoxUseStyleFromSource.TabIndex = 9;
+            this.checkBoxUseStyleFromSource.Text = "Use style from source";
+            this.checkBoxUseStyleFromSource.UseVisualStyleBackColor = true;
+            this.checkBoxUseStyleFromSource.Visible = false;
+            // 
             // BatchConvert
             // 
             this.AllowDrop = true;
@@ -866,5 +888,6 @@
         private System.Windows.Forms.RadioButton radioButtonToDropFrame;
         private System.Windows.Forms.RadioButton radioButtonSpeedFromDropFrame;
         private System.Windows.Forms.RadioButton radioButtonSpeedCustom;
+        private System.Windows.Forms.CheckBox checkBoxUseStyleFromSource;
     }
 }

@@ -999,7 +999,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                         {
                                             fontFamily = styleNode.Attributes["tts:fontFamily"].Value;
                                         }
-                                        if (styleNode.Attributes["tts:color"] != null && styleNode.Attributes["tts:color"].Value != "white")
+                                        if (styleNode.Attributes["tts:color"] != null)
                                         {
                                             color = styleNode.Attributes["tts:color"].Value;
                                         }
