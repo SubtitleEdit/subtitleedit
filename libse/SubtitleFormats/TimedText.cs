@@ -8,20 +8,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class TimedText : SubtitleFormat
     {
-        public override string Extension
-        {
-            get { return ".xml"; }
-        }
+        public override string Extension => ".xml";
 
-        public override string Name
-        {
-            get { return "Timed Text draft 2006-10"; }
-        }
+        public override string Name => "Timed Text draft 2006-10";
 
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
+        public override bool IsTimeBased => true;
 
         public override bool IsMine(List<string> lines, string fileName)
         {
@@ -60,8 +51,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         private static string ConvertToTimeString(TimeCode time)
         {
             if (Configuration.Settings.SubtitleSettings.TimedText10TimeCodeFormatSource == "hh:mm:ss.ms-two-digits")
-                return string.Format("{0:00}:{1:00}:{2:00}.{3:0}", time.Hours, time.Minutes, time.Seconds, (int)(Math.Round(time.Milliseconds / 10.0)));
-            return string.Format("{0:00}:{1:00}:{2:00}.{3:000}", time.Hours, time.Minutes, time.Seconds, time.Milliseconds);
+                return $"{time.Hours:00}:{time.Minutes:00}:{time.Seconds:00}.{(int)Math.Round(time.Milliseconds / 10.0):0}";
+            return $"{time.Hours:00}:{time.Minutes:00}:{time.Seconds:00}.{time.Milliseconds:000}";
         }
 
         public override string ToText(Subtitle subtitle, string title)
@@ -136,6 +127,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             lines.ForEach(line => sb.AppendLine(line));
             var xml = new XmlDocument { XmlResolver = null };
             xml.LoadXml(sb.ToString().Replace(" & ", " &amp; ").Replace("Q&A", "Q&amp;A").RemoveControlCharactersButWhiteSpace().Trim());
+            subtitle.Header = xml.OuterXml;
 
             var nsmgr = new XmlNamespaceManager(xml.NameTable);
             nsmgr.AddNamespace("ttaf1", xml.DocumentElement.NamespaceURI);
@@ -159,6 +151,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 try
                 {
                     var pText = new StringBuilder();
+                    var styleName = string.Empty;
+                    if (node.Attributes["style"] != null)
+                    {
+                        styleName = node.Attributes["style"].Value;
+                    }
                     foreach (XmlNode innerNode in node.ChildNodes)
                     {
                         switch (innerNode.Name.Replace("tt:", string.Empty))
@@ -168,12 +165,22 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 break;
                             case "span":
                                 bool italic = false;
+                                bool font = false;
                                 if (innerNode.Attributes["style"] != null && styleDic.ContainsKey(innerNode.Attributes["style"].Value))
                                 {
                                     if (styleDic[innerNode.Attributes["style"].Value].Contains("italic"))
                                     {
                                         italic = true;
                                         pText.Append("<i>");
+                                    }                                    
+                                }
+                                if (innerNode.Attributes["tts:color"] != null)
+                                {
+                                    var colorAsString = innerNode.Attributes["tts:color"].Value;
+                                    if (colorAsString != "white")
+                                    {
+                                        pText.Append("<font color=\"" + colorAsString + "\">");
+                                        font = true;
                                     }
                                 }
                                 if (!italic && innerNode.Attributes != null)
@@ -205,6 +212,19 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 }
                                 if (italic)
                                     pText.Append("</i>");
+                                if (font)
+                                {
+                                    if (pText.EndsWith(' '))
+                                    {
+                                        pText = new StringBuilder(pText.ToString().TrimEnd());
+                                        pText.Append("</font> ");
+                                    }
+                                    else
+                                    {
+                                        pText.Append("</font>");
+                                    }
+                                }
+                                
                                 break;
                             case "i":
                                 pText.Append("<i>" + innerNode.InnerText + "</i>");
@@ -251,6 +271,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             double.TryParse(start, NumberStyles.Float, CultureInfo.InvariantCulture, out dBegin) && double.TryParse(end, NumberStyles.Float, CultureInfo.InvariantCulture, out dEnd))
                         {
                             subtitle.Paragraphs.Add(new Paragraph(text, dBegin * TimeCode.BaseUnit, dEnd * TimeCode.BaseUnit));
+                            if (!string.IsNullOrEmpty(styleName))
+                            {
+                                subtitle.Paragraphs[subtitle.Paragraphs.Count - 1].Extra = styleName;
+                            }
                         }
                         else
                         {
@@ -263,10 +287,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 p.EndTime = new TimeCode(int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), 0);
                                 p.Text = text;
                                 subtitle.Paragraphs.Add(p);
+                                if (!string.IsNullOrEmpty(styleName))
+                                {
+                                    p.Extra = styleName;
+                                }
                             }
                             else
                             {
                                 subtitle.Paragraphs.Add(new Paragraph(TimedText10.GetTimeCode(start, false), TimedText10.GetTimeCode(end, false), text));
+                                if (!string.IsNullOrEmpty(styleName))
+                                {
+                                    subtitle.Paragraphs[subtitle.Paragraphs.Count - 1].Extra = styleName;
+                                }
                             }
                         }
                     }
@@ -286,6 +318,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         TimeCode startTime = TimedText10.GetTimeCode(start, false);
                         var endTime = new TimeCode(startTime.TotalMilliseconds + duration.TotalMilliseconds);
                         subtitle.Paragraphs.Add(new Paragraph(startTime, endTime, text));
+                        if (!string.IsNullOrEmpty(styleName))
+                        {
+                            subtitle.Paragraphs[subtitle.Paragraphs.Count - 1].Extra = styleName;
+                        }
                     }
                 }
                 catch (Exception ex)
@@ -328,13 +364,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             subtitle.Renumber();
         }
 
-        public override List<string> AlternateExtensions
-        {
-            get
-            {
-                return new List<string> { ".tt" };
-            }
-        }
-
+        public override List<string> AlternateExtensions => new List<string> { ".tt" };
     }
 }

@@ -439,6 +439,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "BatchConvert/Style":
                     language.BatchConvert.Style = reader.Value;
                     break;
+                case "BatchConvert/UseStyleFromSource":
+                    language.BatchConvert.UseStyleFromSource = reader.Value;
+                    break;
                 case "BatchConvert/ConvertOptions":
                     language.BatchConvert.ConvertOptions = reader.Value;
                     break;

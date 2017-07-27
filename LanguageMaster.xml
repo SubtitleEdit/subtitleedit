@@ -166,6 +166,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <ChooseOutputFolder>Choose output folder</ChooseOutputFolder>
     <OverwriteExistingFiles>Overwrite existing files</OverwriteExistingFiles>
     <Style>Style...</Style>
+    <UseStyleFromSource>Use style from source</UseStyleFromSource>
     <ConvertOptions>Convert options</ConvertOptions>
     <RemoveFormatting>Remove formatting tags</RemoveFormatting>
     <RemoveTextForHI>Remove text for HI</RemoveTextForHI>

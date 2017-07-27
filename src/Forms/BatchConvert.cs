@@ -88,6 +88,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelOutputFormat.Text = Configuration.Settings.Language.Main.Controls.SubtitleFormat;
             labelEncoding.Text = Configuration.Settings.Language.Main.Controls.FileEncoding;
             buttonStyles.Text = l.Style;
+            checkBoxUseStyleFromSource.Text = l.UseStyleFromSource;
             groupBoxConvertOptions.Text = l.ConvertOptions;
             checkBoxRemoveFormatting.Text = l.RemoveFormatting;
             checkBoxFixCasing.Text = l.RedoCasing;
@@ -205,6 +206,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             _assStyle = Configuration.Settings.Tools.BatchConvertAssStyles;
             _ssaStyle = Configuration.Settings.Tools.BatchConvertSsaStyles;
+            checkBoxUseStyleFromSource.Checked = Configuration.Settings.Tools.BatchConvertUseStyleFromSource;
             _customTextTemplate = Configuration.Settings.Tools.BatchConvertExportCustomTextTemplate;
         }
 
@@ -911,12 +913,12 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         if (comboBoxSubtitleFormats.Text == AdvancedSubStationAlpha.NameOfFormat && _assStyle != null)
                         {
-                            if (!string.IsNullOrWhiteSpace(_assStyle))
+                            if (!string.IsNullOrWhiteSpace(_assStyle) && !checkBoxUseStyleFromSource.Checked)
                                 sub.Header = _assStyle;
                         }
                         else if (comboBoxSubtitleFormats.Text == SubStationAlpha.NameOfFormat && _ssaStyle != null)
                         {
-                            if (!string.IsNullOrWhiteSpace(_ssaStyle))
+                            if (!string.IsNullOrWhiteSpace(_ssaStyle) && !checkBoxUseStyleFromSource.Checked)
                                 sub.Header = _ssaStyle;
                         }
 
@@ -1196,11 +1198,14 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ComboBoxSubtitleFormatsSelectedIndexChanged(object sender, EventArgs e)
         {
+            checkBoxUseStyleFromSource.Visible = false;
             if (comboBoxSubtitleFormats.Text == AdvancedSubStationAlpha.NameOfFormat || comboBoxSubtitleFormats.Text == SubStationAlpha.NameOfFormat)
             {
                 buttonStyles.Text = Configuration.Settings.Language.BatchConvert.Style;
                 buttonStyles.Visible = true;
                 comboBoxEncoding.Enabled = true;
+                checkBoxUseStyleFromSource.Visible = true;
+                checkBoxUseStyleFromSource.Left = buttonStyles.Left + buttonStyles.Width - checkBoxUseStyleFromSource.Width;
             }
             else if (comboBoxSubtitleFormats.Text == Ebu.NameOfFormat)
             {
@@ -1442,6 +1447,7 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.Tools.BatchConvertFormat = comboBoxSubtitleFormats.SelectedItem.ToString();
             Configuration.Settings.Tools.BatchConvertAssStyles = _assStyle;
             Configuration.Settings.Tools.BatchConvertSsaStyles = _ssaStyle;
+            Configuration.Settings.Tools.BatchConvertUseStyleFromSource = checkBoxUseStyleFromSource.Checked;
             Configuration.Settings.Tools.BatchConvertExportCustomTextTemplate = _customTextTemplate;
         }
 

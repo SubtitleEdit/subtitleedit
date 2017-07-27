@@ -174,6 +174,7 @@
             public string ChooseOutputFolder { get; set; }
             public string OverwriteExistingFiles { get; set; }
             public string Style { get; set; }
+            public string UseStyleFromSource { get; set; }
             public string ConvertOptions { get; set; }
             public string RemoveFormatting { get; set; }
             public string RemoveTextForHI { get; set; }
