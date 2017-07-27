@@ -168,6 +168,7 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <ChooseOutputFolder>Seleccionar pasta de saída</ChooseOutputFolder>
     <OverwriteExistingFiles>Substituir os ficheiros existentes</OverwriteExistingFiles>
     <Style>Estilo...</Style>
+	<UseStyleFromSource>Usar o estilo da origem</UseStyleFromSource>
     <ConvertOptions>Opções de conversão</ConvertOptions>
     <RemoveFormatting>Remover etiquetas de formatação</RemoveFormatting>
     <RemoveTextForHI>Eliminar texto para Deficientes Auditivos</RemoveTextForHI>
@@ -184,7 +185,7 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <ScanFolder>Examinar pasta...</ScanFolder>
     <ScanningFolder>A examinar {0} e as sub-pastas por ficheiros de legendas...</ScanningFolder>
     <Recursive>Incluir sub-pastas</Recursive>
-    <SetMinMsBetweenSubtitles>Definir mínimo em (ms) entre as legendas</SetMinMsBetweenSubtitles>
+    <SetMinMsBetweenSubtitles>Definir mínimo em (ms) entre as linhas</SetMinMsBetweenSubtitles>
     <PlainText>Texto sem formatação</PlainText>
     <Ocr>OCR...</Ocr>
     <Filter>Filtro</Filter>
@@ -275,7 +276,7 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <Title>Comparar legendas</Title>
     <PreviousDifference>&amp;Diferença anterior</PreviousDifference>
     <NextDifference>&amp;Diferença seguinte</NextDifference>
-    <SubtitlesNotAlike>As legendas não são similares</SubtitlesNotAlike>
+    <SubtitlesNotAlike>As legendas não são semelhantes</SubtitlesNotAlike>
     <XNumberOfDifference>Número de diferenças: {0}</XNumberOfDifference>
     <XNumberOfDifferenceAndPercentChanged>Número de diferenças: {0} ({1}% de palavras alteradas)</XNumberOfDifferenceAndPercentChanged>
     <XNumberOfDifferenceAndPercentLettersChanged>Número de diferenças: {0} ({1}% de letras alteradas)</XNumberOfDifferenceAndPercentLettersChanged>
@@ -431,8 +432,8 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <BorderColor>Cor do contorno</BorderColor>
     <BorderWidth>Tamanho do contorno</BorderWidth>
     <BorderStyle>Estilo do contorno</BorderStyle>
-    <BorderStyleOneBox>Caixa por linha</BorderStyleOneBox>
-    <BorderStyleBoxForEachLine>Caixa por diálogo</BorderStyleBoxForEachLine>
+    <BorderStyleOneBox>Fundo preto linha</BorderStyleOneBox>
+    <BorderStyleBoxForEachLine>Fundo preto diálogo</BorderStyleBoxForEachLine>
     <BorderStyleNormalWidthX>Normal, largura={0}</BorderStyleNormalWidthX>
     <ShadowColor>Cor da sombra</ShadowColor>
     <ShadowWidth>Largura da sombra</ShadowWidth>
@@ -564,7 +565,7 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <FixHyphensAdd>Adicionar hífen em linhas duplas só com um hífen (-)</FixHyphensAdd>
     <FixHyphen>Corrigir linhas que começam com hífen (-)</FixHyphen>
     <XHyphensFixed>Hífens removidos: {0}</XHyphensFixed>
-    <AddMissingQuotesExample>"Como estás -&gt; "Como estás?"</AddMissingQuotesExample>
+    <AddMissingQuotesExample>"Como estás? -&gt; "Como estás?"</AddMissingQuotesExample>
     <XMissingQuotesAdded>Aspas em falta adicionadas: {0}</XMissingQuotesAdded>
     <Fix3PlusLines>Corrigir legendas com mais de duas linhas</Fix3PlusLines>
     <Fix3PlusLine>Corrigir legenda com mais de duas linhas</Fix3PlusLine>
@@ -637,6 +638,7 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <FixOcrErrorExample>NÃo -&gt; Não</FixOcrErrorExample>
     <FixSpaceBetweenNumbersExample>1 100 -&gt; 1100</FixSpaceBetweenNumbersExample>
     <FixDialogsOneLineExample>Olá João! - Olá Olga! -&gt; Olá João!&lt;br /&gt;- Olá Olga!</FixDialogsOneLineExample>
+    <SelectDefault>Predefinição</SelectDefault>
   </FixCommonErrors>
   <GetDictionaries>
     <Title>Precisa de dicionários?</Title>
@@ -714,7 +716,7 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <RemoveEmptyLines>Remover as linhas em branco</RemoveEmptyLines>
     <RemoveLinesWithoutLetters>Remover as linhas sem letras</RemoveLinesWithoutLetters>
     <GenerateTimeCodes>Gerar tempos</GenerateTimeCodes>
-    <GapBetweenSubtitles>Espaço entre legendas (milissegundos)</GapBetweenSubtitles>
+    <GapBetweenSubtitles>Espaço entre linhas (milissegundos)</GapBetweenSubtitles>
     <Auto>Auto</Auto>
     <Fixed>Corrigido</Fixed>
     <Refresh>&amp;Actualizar</Refresh>
@@ -970,7 +972,7 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
         <MergeDuplicateText>Combinar as linhas com o mesmo texto...</MergeDuplicateText>
         <MergeSameTimeCodes>Combinar linhas com os mesmos tempos...</MergeSameTimeCodes>
         <SplitLongLines>Dividir as linhas longas...</SplitLongLines>
-        <MinimumDisplayTimeBetweenParagraphs>Duração mínima entre legendas...</MinimumDisplayTimeBetweenParagraphs>
+        <MinimumDisplayTimeBetweenParagraphs>Duração mínima entre linhas...</MinimumDisplayTimeBetweenParagraphs>
         <SortBy>Ordenar por</SortBy>
         <Number>Ordem numérica</Number>
         <StartTime>Tempo inicial</StartTime>
@@ -1658,8 +1660,8 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <MaxVolume>Volume deve ser abaixo de...</MaxVolume>
   </SeekSilence>
   <SetMinimumDisplayTimeBetweenParagraphs>
-    <Title>Estabelecer tempo mínimo de visualização entre legendas</Title>
-    <PreviewLinesModifiedX>Pré-visualizar - legendas modificadas: {0}</PreviewLinesModifiedX>
+    <Title>Estabelecer tempo mínimo de visualização entre linhas</Title>
+    <PreviewLinesModifiedX>Pré-visualizar - linhas modificadas: {0}</PreviewLinesModifiedX>
     <ShowOnlyModifiedLines>Mostrar só linhas modificadas</ShowOnlyModifiedLines>
     <MinimumMillisecondsBetweenParagraphs>Milissegundos mínimos entre linhas</MinimumMillisecondsBetweenParagraphs>
     <FrameInfo>Informação da taxa de fotogramas</FrameInfo>
@@ -1886,6 +1888,8 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <WaveformToggleSceneChange>Alternar a mudança de cena</WaveformToggleSceneChange>
     <GoBack1Frame>Um fotograma para atrás</GoBack1Frame>
     <GoForward1Frame>Um fotograma para a frente</GoForward1Frame>
+    <GoBack1FrameWithPlay>Um fotograma para atrás (através do reprodutor)</GoBack1FrameWithPlay>
+    <GoForward1FrameWithPlay>Um fotograma para a frente (através do reprodutor)</GoForward1FrameWithPlay>
     <GoBack100Milliseconds>100 ms atrás</GoBack100Milliseconds>
     <GoForward100Milliseconds>100 ms adiante</GoForward100Milliseconds>
     <GoBack500Milliseconds>500 ms para atrás</GoBack500Milliseconds>
@@ -1937,10 +1941,11 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <MainTextBoxUnbreak>Remover quebra de texto</MainTextBoxUnbreak>
     <MainFileSaveAll>Guardar tudo</MainFileSaveAll>
     <Miscellaneous>Diversos</Miscellaneous>
-    <CpsIncludesSpace>Carac/seg (CPS) incluindo espaços</CpsIncludesSpace>
+    <CpsIncludesSpace>Caracteres/seg (CPS) incluindo espaços</CpsIncludesSpace>
     <UseDoNotBreakAfterList>Utilizar "não quebrar linha depois da lista" (para o ajuste-auto)</UseDoNotBreakAfterList>
     <MicrosoftBingTranslator>Tradutor Microsoft Bing</MicrosoftBingTranslator>
     <HowToSignUp>Como efectuar o registo</HowToSignUp>
+	<GoogleTranslateUrl>Endereço do tradutor do Google</GoogleTranslateUrl>
     <ClientId>Nome</ClientId>
     <ClientSecret>Palavra-passe</ClientSecret>
   </Settings>
