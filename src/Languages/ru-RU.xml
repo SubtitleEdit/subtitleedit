@@ -170,6 +170,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <ChooseOutputFolder>Выбор папки вывода</ChooseOutputFolder>
     <OverwriteExistingFiles>Перезаписать существующие файлы</OverwriteExistingFiles>
     <Style>Стиль...</Style>
+    <UseStyleFromSource>Использовать стиль из источника</UseStyleFromSource>
     <ConvertOptions>Параметры конвертирования</ConvertOptions>
     <RemoveFormatting>Удалить теги форматирования</RemoveFormatting>
     <RemoveTextForHI>Удалить текст для HI</RemoveTextForHI>
@@ -1903,6 +1904,8 @@ https://github.com/SubtitleEdit/subtitleedit
     <WaveformToggleSceneChange>Переключить изменение сцен</WaveformToggleSceneChange>
     <GoBack1Frame>1 кадр назад</GoBack1Frame>
     <GoForward1Frame>1 кадр вперед</GoForward1Frame>
+    <GoBack1FrameWithPlay>Один кадр назад (с воспроизведением)</GoBack1FrameWithPlay>
+    <GoForward1FrameWithPlay>Один кадр вперед (с воспроизведением)</GoForward1FrameWithPlay>
     <GoBack100Milliseconds>100 мс назад</GoBack100Milliseconds>
     <GoForward100Milliseconds>100 мс вперед</GoForward100Milliseconds>
     <GoBack500Milliseconds>500 мс назад</GoBack500Milliseconds>
