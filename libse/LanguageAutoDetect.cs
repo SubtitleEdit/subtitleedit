@@ -759,8 +759,6 @@ namespace Nikse.SubtitleEdit.Core
 
             try
             {
-                Encoding encoding = DetectEncoding.EncodingTools.DetectInputCodepage(buffer);
-
                 Encoding greekEncoding = Encoding.GetEncoding(1253); // Greek
                 if (GetCount(greekEncoding.GetString(buffer), AutoDetectWordsGreek) > 5)
                     return greekEncoding;
@@ -790,7 +788,7 @@ namespace Nikse.SubtitleEdit.Core
                 if (GetCount(hewbrewEncoding.GetString(buffer), AutoDetectWordsHebrew) > 5)
                     return hewbrewEncoding;
 
-                return encoding;
+                return DetectEncoding.EncodingTools.DetectInputCodepage(buffer);
             }
             catch
             {
