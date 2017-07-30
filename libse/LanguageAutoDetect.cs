@@ -872,7 +872,7 @@ namespace Nikse.SubtitleEdit.Core
                             if (GetCount(thaiEncoding.GetString(buffer), "โอ", "โรเบิร์ต", "วิตตอเรีย", "ดร", "คุณตำรวจ", "ราเชล", "ไม่", "เลดดิส", "พระเจ้า", "เท็ดดี้", "หัวหน้า", "แอนดรูว์") > 5)
                                 return thaiEncoding;
 
-                            Encoding arabicEncoding = Encoding.GetEncoding(28596); // Arabic
+                            Encoding arabicEncoding = Encoding.GetEncoding(1256); // Arabic
                             Encoding hewbrewEncoding = Encoding.GetEncoding(28598); // Hebrew
                             if (GetCount(arabicEncoding.GetString(buffer), AutoDetectWordsArabic) > 5)
                             {
