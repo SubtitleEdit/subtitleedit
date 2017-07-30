@@ -14,8 +14,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             TimeStart,
             Text,
-            TimeEndOrText,
+            TimeEnd,
         }
+
+        private static readonly Regex RegexTimeCode = new Regex(@"^\d\d:\d\d:\d\d:\d\d", RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -48,97 +50,75 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             //00:01:02:03
 
             const string paragraphWriteFormat = "{0} {2}{3}{1}\t";
-
             var sb = new StringBuilder();
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                sb.AppendLine(string.Format(paragraphWriteFormat, EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), p.Text, Environment.NewLine));
+                sb.AppendLine(string.Format(paragraphWriteFormat, p.StartTime.ToHHMMSSFF(), p.EndTime.ToHHMMSSFF(), p.Text, Environment.NewLine));
             }
             return sb.ToString();
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
-            var regexTimeCode = new Regex(@"^\d\d:\d\d:\d\d:\d\d ", RegexOptions.Compiled);
-            var regexTimeCodeEnd = new Regex(@"^\d\d:\d\d:\d\d:\d\d\t$", RegexOptions.Compiled);
-
             var paragraph = new Paragraph();
             var expecting = ExpectingLine.TimeStart;
             _errorCount = 0;
-
             subtitle.Paragraphs.Clear();
-            int count = 0;
+            int index = 0;
             foreach (string line in lines)
             {
-                count++;
-                if (regexTimeCode.IsMatch(line))
+                if (expecting == ExpectingLine.TimeStart && line.Length >= 12 && RegexTimeCode.IsMatch(line))
                 {
                     string[] parts = line.Substring(0, 11).Split(SplitCharColon, StringSplitOptions.RemoveEmptyEntries);
-                    if (parts.Length == 4)
+                    if (expecting == ExpectingLine.TimeStart)
                     {
-                        try
+                        paragraph = new Paragraph();
+                        paragraph.StartTime = DecodeTimeCodeFramesFourParts(parts);
+                        if (line.Length > 12)
                         {
-                            var tc = DecodeTimeCodeFramesFourParts(parts);
-                            if (expecting == ExpectingLine.TimeStart)
-                            {
-                                paragraph = new Paragraph();
-                                paragraph.StartTime = tc;
-                                expecting = ExpectingLine.Text;
-
-                                if (line.Length > 12)
-                                {
-                                    paragraph.Text = line.Substring(12).Trim();
-                                }
-                            }
+                            paragraph.Text = line.Substring(12).Trim();
                         }
-                        catch
+                        // Look if next-line is Text/TimeCode.
+                        if (index + 1 < lines.Count && RegexTimeCode.IsMatch(lines[index + 1].TrimStart()))
                         {
-                            _errorCount++;
-                            expecting = ExpectingLine.TimeStart;
+                            expecting = ExpectingLine.TimeEnd;
+                        }
+                        else
+                        {
+                            expecting = ExpectingLine.Text;
                         }
                     }
                 }
-                else if (regexTimeCodeEnd.IsMatch(line) || (count == lines.Count && regexTimeCodeEnd.IsMatch(line + "\t")))
+                else if (expecting == ExpectingLine.TimeEnd)
                 {
                     string[] parts = line.Substring(0, 11).Split(SplitCharColon, StringSplitOptions.RemoveEmptyEntries);
-                    if (parts.Length == 4)
+                    paragraph.EndTime = DecodeTimeCodeFramesFourParts(parts);
+                    subtitle.Paragraphs.Add(paragraph);
+                    paragraph = new Paragraph();
+                    expecting = ExpectingLine.TimeStart;
+                }
+                else if (expecting == ExpectingLine.Text)
+                {
+                    if (line.Length > 0)
                     {
-                        var tc = DecodeTimeCodeFramesFourParts(parts);
-                        paragraph.EndTime = tc;
-                        subtitle.Paragraphs.Add(paragraph);
-                        paragraph = new Paragraph();
-                        expecting = ExpectingLine.TimeStart;
+                        string text = line.Replace("|", Environment.NewLine);
+                        paragraph.Text = (paragraph.Text.Length > 0) ? Environment.NewLine + text : text;
+                        expecting = ExpectingLine.TimeEnd;
+                        if (paragraph.Text.Length > 2000)
+                        {
+                            _errorCount += 100;
+                            return;
+                        }
                     }
                 }
                 else
                 {
-                    if (expecting == ExpectingLine.Text)
-                    {
-                        if (line.Length > 0)
-                        {
-                            string text = line.Replace("|", Environment.NewLine);
-                            paragraph.Text += Environment.NewLine + text;
-                            expecting = ExpectingLine.TimeEndOrText;
-
-                            if (paragraph.Text.Length > 2000)
-                            {
-                                _errorCount += 100;
-                                return;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        _errorCount++;
-                    }
+                    _errorCount++;
                 }
+
+                index++;
             }
             subtitle.Renumber();
-        }
-
-        private static string EncodeTimeCode(TimeCode time)
-        {
-            return time.ToHHMMSSFF();
         }
 
     }
