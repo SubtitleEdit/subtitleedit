@@ -855,8 +855,6 @@ namespace Nikse.SubtitleEdit.Core
                         }
                         else if (Configuration.Settings.General.AutoGuessAnsiEncoding)
                         {
-                            encoding = DetectAnsiEncoding(buffer);
-
                             Encoding greekEncoding = Encoding.GetEncoding(1253); // Greek
                             if (GetCount(greekEncoding.GetString(buffer), AutoDetectWordsGreek) > 5)
                                 return greekEncoding;
@@ -892,6 +890,8 @@ namespace Nikse.SubtitleEdit.Core
                             Encoding koreanEncoding = Encoding.GetEncoding(949); // Korean
                             if (GetCount(koreanEncoding.GetString(buffer), "그리고", "아니야", "하지만", "말이야", "그들은", "우리가") > 5)
                                 return koreanEncoding;
+
+                            return DetectAnsiEncoding(buffer);
                         }
                     }
                 }
