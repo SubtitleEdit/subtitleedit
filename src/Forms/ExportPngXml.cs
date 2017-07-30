@@ -72,7 +72,7 @@ namespace Nikse.SubtitleEdit.Forms
             public string Error { get; set; }
             public string LineJoin { get; set; }
             public Color ShadowColor { get; set; }
-            public int ShadowWidth { get; set; }
+            public float ShadowWidth { get; set; }
             public int ShadowAlpha { get; set; }
             public Dictionary<string, int> LineHeight { get; set; }
             public bool Forced { get; set; }
@@ -359,7 +359,7 @@ namespace Nikse.SubtitleEdit.Forms
                 BackgroundColor = Color.Transparent,
                 SavDialogFileName = saveFileDialog1.FileName,
                 ShadowColor = panelShadowColor.BackColor,
-                ShadowWidth = comboBoxShadowWidth.SelectedIndex,
+                ShadowWidth = GetShadowWidth(),
                 ShadowAlpha = (int)numericUpDownShadowTransparency.Value,
                 LineHeight = _lineHeights,
                 FullFrame = checkBoxFullFrameImage.Checked,
@@ -386,6 +386,7 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             parameter.BackgroundColor = style.Background;
                         }
+                        parameter.ShadowColor = style.Outline;
                     }
                     else if (_format.GetType() == typeof(AdvancedSubStationAlpha))
                     {
@@ -399,6 +400,8 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             parameter.BackgroundColor = style.Outline;
                         }
+                        parameter.ShadowAlpha = style.Background.A;
+                        parameter.ShadowColor = style.Background;
                     }
                 }
 
@@ -415,8 +418,8 @@ namespace Nikse.SubtitleEdit.Forms
                     parameter.BorderWidth = 0;
                 }
                 else
-                {
-                    _borderWidth = float.Parse(Utilities.RemoveNonNumbers(comboBoxBorderWidth.SelectedItem.ToString()));
+                {                    
+                    _borderWidth = GetBorderWidth();
                 }
             }
             else
@@ -424,7 +427,7 @@ namespace Nikse.SubtitleEdit.Forms
                 parameter.P = null;
             }
             return parameter;
-        }
+        }       
 
         private void ButtonExportClick(object sender, EventArgs e)
         {
@@ -1751,8 +1754,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
         {
             if (subtitleListView1.SelectedItems.Count > 0 && _format.HasStyleSupport)
             {
-                Paragraph p = _subtitle.Paragraphs[subtitleListView1.SelectedItems[0].Index];
-                if (_format.GetType() == typeof(AdvancedSubStationAlpha) || _format.GetType() == typeof(SubStationAlpha))
+                Paragraph p = _subtitle.GetParagraphOrDefault(subtitleListView1.SelectedItems[0].Index);
+                if (p != null && _format.GetType() == typeof(AdvancedSubStationAlpha) || _format.GetType() == typeof(SubStationAlpha))
                 {
                     if (!string.IsNullOrEmpty(p.Extra))
                     {
@@ -1766,6 +1769,10 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         panelColor.Enabled = false;
                         comboBoxBorderWidth.Enabled = false;
                         comboBoxBottomMargin.Enabled = false;
+                        comboBoxShadowWidth.Enabled = false;
+                        buttonShadowColor.Enabled = false;
+                        panelShadowColor.Enabled = false;
+                        numericUpDownShadowTransparency.Enabled = _format.GetType() != typeof(AdvancedSubStationAlpha);
 
                         SsaStyle style = AdvancedSubStationAlpha.GetSsaStyle(p.Extra, _subtitle.Header);
                         if (style != null)
@@ -1788,10 +1795,22 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                     comboBoxSubtitleFontSize.SelectedIndex = i;
                             }
                             checkBoxBold.Checked = style.Bold;
-                            for (i = 0; i < comboBoxBorderWidth.Items.Count; i++)
+                            comboBoxBorderWidth.Items.Clear();
+                            comboBoxBorderWidth.Items.Add(style.OutlineWidth.ToString(CultureInfo.InvariantCulture));
+                            comboBoxBorderWidth.SelectedIndex = 0;
+
+                            comboBoxShadowWidth.Items.Clear();
+                            comboBoxShadowWidth.Items.Add(style.ShadowWidth.ToString(CultureInfo.InvariantCulture));
+                            comboBoxShadowWidth.SelectedIndex = 0;
+                            if (_format.GetType() == typeof(AdvancedSubStationAlpha))
                             {
-                                if (Utilities.RemoveNonNumbers(comboBoxBorderWidth.Items[i].ToString()).Equals(style.OutlineWidth.ToString(CultureInfo.InvariantCulture), StringComparison.OrdinalIgnoreCase))
-                                    comboBoxBorderWidth.SelectedIndex = i;
+                                panelShadowColor.BackColor = style.Background;
+                                numericUpDownShadowTransparency.Value = style.Background.A;
+                            }
+                            else
+                            {
+                                panelShadowColor.BackColor = style.Outline;
+                                numericUpDownShadowTransparency.Value = style.Outline.A;
                             }
                         }
                     }
@@ -1823,10 +1842,22 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             else
             {
                 float f;
+                if (float.TryParse(comboBoxBorderWidth.SelectedItem.ToString(), out f))
+                    return f;
                 if (float.TryParse(Utilities.RemoveNonNumbers(comboBoxBorderWidth.SelectedItem.ToString()), out f))
                     return f;
                 return 0;
             }
+        }
+
+        private float GetShadowWidth()
+        {
+            float f;
+            if (float.TryParse(comboBoxShadowWidth.SelectedItem.ToString(), out f))
+                return f;
+            if (float.TryParse(Utilities.RemoveNonNumbers(comboBoxShadowWidth.SelectedItem.ToString()), out f))
+                return f;
+            return 0;
         }
 
         private static Font SetFont(MakeBitmapParameter parameter, float fontSize)
@@ -1903,6 +1934,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     {
                         mbp.BackgroundColor = style.Background;
                     }
+                    mbp.ShadowColor = style.Outline;                    
                 }
                 else if (_format.GetType() == typeof(AdvancedSubStationAlpha))
                 {
@@ -1915,6 +1947,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     {
                         mbp.BackgroundColor = style.Outline;
                     }
+                    mbp.ShadowAlpha = style.Background.A;
+                    mbp.ShadowColor = style.Background;
                 }
             }
 
@@ -1940,7 +1974,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             mbp.Type3D = comboBox3D.SelectedIndex;
             mbp.Depth3D = (int)numericUpDownDepth3D.Value;
             mbp.BottomMargin = GetBottomMarginInPixels();
-            mbp.ShadowWidth = comboBoxShadowWidth.SelectedIndex;
+            mbp.ShadowWidth = GetShadowWidth();
             mbp.ShadowAlpha = (int)numericUpDownShadowTransparency.Value;
             mbp.ShadowColor = panelShadowColor.BackColor;
             mbp.LineHeight = _lineHeights;
@@ -3697,7 +3731,12 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             if (subtitleListView1.SelectedItems.Count > 0)
             {
                 MakeBitmapParameter mbp;
-                var bmp = GenerateImageFromTextWithStyle(_subtitle.Paragraphs[subtitleListView1.SelectedItems[0].Index], out mbp);
+                var p = _subtitle.GetParagraphOrDefault(subtitleListView1.SelectedItems[0].Index);
+                if (p == null)
+                {
+                    return;
+                }
+                var bmp = GenerateImageFromTextWithStyle(p, out mbp);
                 if (checkBoxFullFrameImage.Visible && checkBoxFullFrameImage.Checked)
                 {
                     var nbmp = new NikseBitmap(bmp);
@@ -4577,8 +4616,13 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
         {
             subtitleListView1_SelectedIndexChanged(null, null);
             panelFullFrameBackground.Visible = checkBoxFullFrameImage.Checked;
+            if (_exportType == ExportFormats.BluraySup || _exportType == ExportFormats.VobSub || _exportType == ExportFormats.ImageFrame || _exportType == ExportFormats.BdnXml || _exportType == ExportFormats.Dost || _exportType == ExportFormats.Fab || _exportType == ExportFormats.Edl || _exportType == ExportFormats.EdlClipName)
+            {
+                return;
+            }
             comboBoxBottomMargin.Visible = checkBoxFullFrameImage.Checked;
             labelBottomMargin.Visible = checkBoxFullFrameImage.Checked;
+            comboBoxBottomMarginUnit.Visible = checkBoxFullFrameImage.Checked;
         }
 
         public void DisableSaveButtonAndCheckBoxes()
