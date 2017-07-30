@@ -12,6 +12,7 @@
    * Update Basque translation - thx Xabier 
    * Update Korean translaton - thx domddol
    * Update Chinese Traditional translation - thx jackielam1997
+   * Update Portuguese translation - thx moob
    * Improve language auto detect
    * Add semicolon as possible shortcut key - thx Allan
    * Add 60 fps to export settings for several formats
@@ -20,6 +21,7 @@
    * Add more subtitle formats to command line + batch convert
    * If input file is unknown + plain text, "Import plain text" will open
    * ASS allows decimals for outline/shadow - thx Ninelpienel
+   * Add "actor" to custom text export - thx mellsaid
 * FIXED:
    * Fix missing space in format WebVTT
    * Fix support for combined Arabic characters in PAC - thx Zehelein
@@ -37,7 +39,11 @@
    * Fix ASS font tag with space - thx OmarSi
    * Fix possible crash in expand ocr match - thx Zoltán
    * Allow for large unknown subtitle formats - thx Stefania
-   * Fix word split char for spell check - thx Boulder08
+   * Fix shadow when exporting ASS/SSA to images - thx von Suppé
+   * Fix auto-detect Arabic encoding - thx OmarSi
+   * Fix time code reading for format FCP/Image - thx BeoZeBold
+   * Keep styles from ttml draft to ASS - thx Bill
+   * Fix minor issues for format DVD Studio Pro - thx Mike
 
 
 3.5.3 (12th May 2017)
