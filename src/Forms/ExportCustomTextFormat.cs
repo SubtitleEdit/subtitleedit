@@ -6,7 +6,7 @@ using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public partial class ExportCustomTextFormat : Form
+    public sealed partial class ExportCustomTextFormat : Form
     {
         public const string EnglishDoNotModify = "[Do not modify]";
         public string FormatOk { get; set; }
@@ -67,10 +67,10 @@ namespace Nikse.SubtitleEdit.Forms
         private void GeneratePreview()
         {
             var subtitle = new Subtitle();
-            var p1 = new Paragraph("Line 1a." + Environment.NewLine + "Line 1b.", 1000, 3500);
+            var p1 = new Paragraph("Line 1a." + Environment.NewLine + "Line 1b.", 1000, 3500) { Actor = "Joe" };
             var start1 = GetTimeCode(p1.StartTime, comboBoxTimeCode.Text);
             var end1 = GetTimeCode(p1.EndTime, comboBoxTimeCode.Text);
-            var p2 = new Paragraph("Line 2a." + Environment.NewLine + "Line 2b.", 1000, 3500);
+            var p2 = new Paragraph("Line 2a." + Environment.NewLine + "Line 2b.", 1000, 3500) { Actor = "Smith" };
             var start2 = GetTimeCode(p2.StartTime, comboBoxTimeCode.Text);
             var end2 = GetTimeCode(p2.EndTime, comboBoxTimeCode.Text);
             subtitle.Paragraphs.Add(p1);
@@ -80,8 +80,8 @@ namespace Nikse.SubtitleEdit.Forms
                 var newLine = comboBoxNewLine.Text.Replace(Configuration.Settings.Language.ExportCustomTextFormat.DoNotModify, EnglishDoNotModify);
                 var template = GetParagraphTemplate(textBoxParagraph.Text);
                 textBoxPreview.Text = GetHeaderOrFooter("Demo", subtitle, textBoxHeader.Text) +
-                                      GetParagraph(template, start1, end1, GetText(p1.Text, newLine), GetText("Line 1a." + Environment.NewLine + "Line 1b.", newLine), 0, p1.Duration, comboBoxTimeCode.Text) +
-                                      GetParagraph(template, start2, end2, GetText(p2.Text, newLine), GetText("Line 2a." + Environment.NewLine + "Line 2b.", newLine), 1, p2.Duration, comboBoxTimeCode.Text) +
+                                      GetParagraph(template, start1, end1, GetText(p1.Text, newLine), GetText("Line 1a." + Environment.NewLine + "Line 1b.", newLine), 0, p1.Actor, p1.Duration, comboBoxTimeCode.Text) +
+                                      GetParagraph(template, start2, end2, GetText(p2.Text, newLine), GetText("Line 2a." + Environment.NewLine + "Line 2b.", newLine), 1, p2.Actor, p2.Duration, comboBoxTimeCode.Text) +
                                       GetHeaderOrFooter("Demo", subtitle, textBoxFooter.Text);
             }
             catch (Exception ex)
@@ -101,6 +101,7 @@ namespace Nikse.SubtitleEdit.Forms
             template = template.Replace("{number-1}", "{5}");
             template = template.Replace("{number-1:", "{5:");
             template = template.Replace("{duration}", "{6}");
+            template = template.Replace("{actor}", "{7}");
             template = template.Replace("{tab}", "\t");
             return template;
         }
@@ -122,55 +123,55 @@ namespace Nikse.SubtitleEdit.Forms
         {
             var templateTrimmed = template.Trim();
             if (templateTrimmed == "ss")
-                template = template.Replace("ss", string.Format("{0:00}", timeCode.TotalSeconds));
+                template = template.Replace("ss", $"{timeCode.TotalSeconds:00}");
             if (templateTrimmed == "s")
-                template = template.Replace("s", string.Format("{0}", timeCode.TotalSeconds));
+                template = template.Replace("s", $"{timeCode.TotalSeconds}");
             if (templateTrimmed == "zzz")
-                template = template.Replace("zzz", string.Format("{0:000}", timeCode.TotalMilliseconds));
+                template = template.Replace("zzz", $"{timeCode.TotalMilliseconds:000}");
             if (templateTrimmed == "z")
-                template = template.Replace("z", string.Format("{0}", timeCode.TotalMilliseconds));
+                template = template.Replace("z", $"{timeCode.TotalMilliseconds}");
             if (templateTrimmed == "ff")
-                template = template.Replace("ff", string.Format("{0}", SubtitleFormat.MillisecondsToFrames(timeCode.TotalMilliseconds)));
+                template = template.Replace("ff", $"{SubtitleFormat.MillisecondsToFrames(timeCode.TotalMilliseconds)}");
 
             if (template.StartsWith("ssssssss", StringComparison.Ordinal))
-                template = template.Replace("ssssssss", string.Format("{0:00000000}", timeCode.TotalSeconds));
+                template = template.Replace("ssssssss", $"{timeCode.TotalSeconds:00000000}");
             if (template.StartsWith("sssssss", StringComparison.Ordinal))
-                template = template.Replace("sssssss", string.Format("{0:0000000}", timeCode.TotalSeconds));
+                template = template.Replace("sssssss", $"{timeCode.TotalSeconds:0000000}");
             if (template.StartsWith("ssssss", StringComparison.Ordinal))
-                template = template.Replace("ssssss", string.Format("{0:000000}", timeCode.TotalSeconds));
+                template = template.Replace("ssssss", $"{timeCode.TotalSeconds:000000}");
             if (template.StartsWith("sssss", StringComparison.Ordinal))
-                template = template.Replace("sssss", string.Format("{0:00000}", timeCode.TotalSeconds));
+                template = template.Replace("sssss", $"{timeCode.TotalSeconds:00000}");
             if (template.StartsWith("ssss", StringComparison.Ordinal))
-                template = template.Replace("ssss", string.Format("{0:0000}", timeCode.TotalSeconds));
+                template = template.Replace("ssss", $"{timeCode.TotalSeconds:0000}");
             if (template.StartsWith("sss", StringComparison.Ordinal))
-                template = template.Replace("sss", string.Format("{0:000}", timeCode.TotalSeconds));
+                template = template.Replace("sss", $"{timeCode.TotalSeconds:000}");
             if (template.StartsWith("ss", StringComparison.Ordinal))
-                template = template.Replace("ss", string.Format("{0:00}", timeCode.TotalSeconds));
+                template = template.Replace("ss", $"{timeCode.TotalSeconds:00}");
 
             if (template.StartsWith("zzzzzzzz", StringComparison.Ordinal))
-                template = template.Replace("zzzzzzzz", string.Format("{0:00000000}", timeCode.TotalMilliseconds));
+                template = template.Replace("zzzzzzzz", $"{timeCode.TotalMilliseconds:00000000}");
             if (template.StartsWith("zzzzzzz", StringComparison.Ordinal))
-                template = template.Replace("zzzzzzz", string.Format("{0:0000000}", timeCode.TotalMilliseconds));
+                template = template.Replace("zzzzzzz", $"{timeCode.TotalMilliseconds:0000000}");
             if (template.StartsWith("zzzzzz", StringComparison.Ordinal))
-                template = template.Replace("zzzzzz", string.Format("{0:000000}", timeCode.TotalMilliseconds));
+                template = template.Replace("zzzzzz", $"{timeCode.TotalMilliseconds:000000}");
             if (template.StartsWith("zzzzz", StringComparison.Ordinal))
-                template = template.Replace("zzzzz", string.Format("{0:00000}", timeCode.TotalMilliseconds));
+                template = template.Replace("zzzzz", $"{timeCode.TotalMilliseconds:00000}");
             if (template.StartsWith("zzzz", StringComparison.Ordinal))
-                template = template.Replace("zzzz", string.Format("{0:0000}", timeCode.TotalMilliseconds));
+                template = template.Replace("zzzz", $"{timeCode.TotalMilliseconds:0000}");
             if (template.StartsWith("zzz", StringComparison.Ordinal))
-                template = template.Replace("zzz", string.Format("{0:000}", timeCode.TotalMilliseconds));
+                template = template.Replace("zzz", $"{timeCode.TotalMilliseconds:000}");
 
-            template = template.Replace("hh", string.Format("{0:00}", timeCode.Hours));
-            template = template.Replace("h", string.Format("{0}", timeCode.Hours));
-            template = template.Replace("mm", string.Format("{0:00}", timeCode.Minutes));
-            template = template.Replace("m", string.Format("{0}", timeCode.Minutes));
-            template = template.Replace("ss", string.Format("{0:00}", timeCode.Seconds));
-            template = template.Replace("s", string.Format("{0}", timeCode.Seconds));
-            template = template.Replace("zzz", string.Format("{0:000}", timeCode.Milliseconds));
-            template = template.Replace("zz", string.Format("{0:00}", Math.Round(timeCode.Milliseconds / 10.0)));
-            template = template.Replace("z", string.Format("{0:0}", Math.Round(timeCode.Milliseconds / 100.0)));
-            template = template.Replace("ff", string.Format("{0:00}", SubtitleFormat.MillisecondsToFramesMaxFrameRate(timeCode.Milliseconds)));
-            template = template.Replace("f", string.Format("{0}", SubtitleFormat.MillisecondsToFramesMaxFrameRate(timeCode.Milliseconds)));
+            template = template.Replace("hh", $"{timeCode.Hours:00}");
+            template = template.Replace("h", $"{timeCode.Hours}");
+            template = template.Replace("mm", $"{timeCode.Minutes:00}");
+            template = template.Replace("m", $"{timeCode.Minutes}");
+            template = template.Replace("ss", $"{timeCode.Seconds:00}");
+            template = template.Replace("s", $"{timeCode.Seconds}");
+            template = template.Replace("zzz", $"{timeCode.Milliseconds:000}");
+            template = template.Replace("zz", $"{Math.Round(timeCode.Milliseconds / 10.0):00}");
+            template = template.Replace("z", $"{Math.Round(timeCode.Milliseconds / 100.0):0}");
+            template = template.Replace("ff", $"{SubtitleFormat.MillisecondsToFramesMaxFrameRate(timeCode.Milliseconds):00}");
+            template = template.Replace("f", $"{SubtitleFormat.MillisecondsToFramesMaxFrameRate(timeCode.Milliseconds)}");
             return template;
         }
 
@@ -243,7 +244,7 @@ namespace Nikse.SubtitleEdit.Forms
             return template;
         }
 
-        internal static string GetParagraph(string template, string start, string end, string text, string translation, int number, TimeCode duration, string timeCodeTemplate)
+        internal static string GetParagraph(string template, string start, string end, string text, string translation, int number, string actor, TimeCode duration, string timeCodeTemplate)
         {
             string d = duration.ToString();
             if (timeCodeTemplate == "ff" || timeCodeTemplate == "f")
@@ -253,38 +254,38 @@ namespace Nikse.SubtitleEdit.Forms
             if (timeCodeTemplate == "sss" || timeCodeTemplate == "ss" || timeCodeTemplate == "s")
                 d = duration.Seconds.ToString(CultureInfo.InvariantCulture);
             else if (timeCodeTemplate.EndsWith("ss.ff", StringComparison.Ordinal))
-                d = string.Format("{0:00}.{1:00}", duration.Seconds, SubtitleFormat.MillisecondsToFramesMaxFrameRate(duration.Milliseconds));
+                d = $"{duration.Seconds:00}.{SubtitleFormat.MillisecondsToFramesMaxFrameRate(duration.Milliseconds):00}";
             else if (timeCodeTemplate.EndsWith("ss:ff", StringComparison.Ordinal))
-                d = string.Format("{0:00}:{1:00}", duration.Seconds, SubtitleFormat.MillisecondsToFramesMaxFrameRate(duration.Milliseconds));
+                d = $"{duration.Seconds:00}:{SubtitleFormat.MillisecondsToFramesMaxFrameRate(duration.Milliseconds):00}";
             else if (timeCodeTemplate.EndsWith("ss,ff", StringComparison.Ordinal))
-                d = string.Format("{0:00},{1:00}", duration.Seconds, SubtitleFormat.MillisecondsToFramesMaxFrameRate(duration.Milliseconds));
+                d = $"{duration.Seconds:00},{SubtitleFormat.MillisecondsToFramesMaxFrameRate(duration.Milliseconds):00}";
             else if (timeCodeTemplate.EndsWith("ss;ff", StringComparison.Ordinal))
-                d = string.Format("{0:00};{1:00}", duration.Seconds, SubtitleFormat.MillisecondsToFramesMaxFrameRate(duration.Milliseconds));
+                d = $"{duration.Seconds:00};{SubtitleFormat.MillisecondsToFramesMaxFrameRate(duration.Milliseconds):00}";
             else if (timeCodeTemplate.EndsWith("ss;ff", StringComparison.Ordinal))
-                d = string.Format("{0:00};{1:00}", duration.Seconds, SubtitleFormat.MillisecondsToFramesMaxFrameRate(duration.Milliseconds));
+                d = $"{duration.Seconds:00};{SubtitleFormat.MillisecondsToFramesMaxFrameRate(duration.Milliseconds):00}";
             else if (timeCodeTemplate.EndsWith("ss.zzz", StringComparison.Ordinal))
-                d = string.Format("{0:00}.{1:000}", duration.Seconds, duration.Milliseconds);
+                d = $"{duration.Seconds:00}.{duration.Milliseconds:000}";
             else if (timeCodeTemplate.EndsWith("ss:zzz", StringComparison.Ordinal))
-                d = string.Format("{0:00}:{1:000}", duration.Seconds, duration.Milliseconds);
+                d = $"{duration.Seconds:00}:{duration.Milliseconds:000}";
             else if (timeCodeTemplate.EndsWith("ss,zzz", StringComparison.Ordinal))
-                d = string.Format("{0:00},{1:000}", duration.Seconds, duration.Milliseconds);
+                d = $"{duration.Seconds:00},{duration.Milliseconds:000}";
             else if (timeCodeTemplate.EndsWith("ss;zzz", StringComparison.Ordinal))
-                d = string.Format("{0:00};{1:000}", duration.Seconds, duration.Milliseconds);
+                d = $"{duration.Seconds:00};{duration.Milliseconds:000}";
             else if (timeCodeTemplate.EndsWith("ss;zzz", StringComparison.Ordinal))
-                d = string.Format("{0:00};{1:000}", duration.Seconds, duration.Milliseconds);
+                d = $"{duration.Seconds:00};{duration.Milliseconds:000}";
             else if (timeCodeTemplate.EndsWith("ss.zz", StringComparison.Ordinal))
-                d = string.Format("{0:00}.{1:00}", duration.Seconds, Math.Round(duration.Milliseconds / 10.0));
+                d = $"{duration.Seconds:00}.{Math.Round(duration.Milliseconds / 10.0):00}";
             else if (timeCodeTemplate.EndsWith("ss:zz", StringComparison.Ordinal))
-                d = string.Format("{0:00}:{1:00}", duration.Seconds, Math.Round(duration.Milliseconds / 10.0));
+                d = $"{duration.Seconds:00}:{Math.Round(duration.Milliseconds / 10.0):00}";
             else if (timeCodeTemplate.EndsWith("ss,zz", StringComparison.Ordinal))
-                d = string.Format("{0:00},{1:00}", duration.Seconds, Math.Round(duration.Milliseconds / 10.0));
+                d = $"{duration.Seconds:00},{Math.Round(duration.Milliseconds / 10.0):00}";
             else if (timeCodeTemplate.EndsWith("ss;zz", StringComparison.Ordinal))
-                d = string.Format("{0:00};{1:00}", duration.Seconds, Math.Round(duration.Milliseconds / 10.0));
+                d = $"{duration.Seconds:00};{Math.Round(duration.Milliseconds / 10.0):00}";
 
             string s = template;
             s = s.Replace("{{", "@@@@_@@@{");
             s = s.Replace("}}", "}@@@_@@@@");
-            s = string.Format(s, start, end, text, translation, number + 1, number, d);
+            s = string.Format(s, start, end, text, translation, number + 1, number, d, actor);
             s = s.Replace("@@@@_@@@", "{");
             s = s.Replace("@@@_@@@@", "}");
             return s;
