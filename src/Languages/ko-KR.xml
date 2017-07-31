@@ -162,6 +162,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <ChooseOutputFolder>출력 폴더 선택</ChooseOutputFolder>
     <OverwriteExistingFiles>기존 파일에 덮어쓰기</OverwriteExistingFiles>
     <Style>스타일...</Style>
+    <UseStyleFromSource>소스 스타일 사용</UseStyleFromSource>
     <ConvertOptions>변환 옵션</ConvertOptions>
     <RemoveFormatting>서식 태그 제거</RemoveFormatting>
     <RemoveTextForHI>청각 장애인용 텍스트 삭제</RemoveTextForHI>
