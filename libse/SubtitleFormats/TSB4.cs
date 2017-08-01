@@ -89,7 +89,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     string text = Encoding.GetEncoding(CodePage).GetString(array, textStart, length);
                     // text = Encoding.Default.GetString(array, i + 53, endOfText - 47);
                     text = text.Trim('\0').Replace("\0", " ").Trim();
-                    text = text.Replace("\r\n", "\n").Replace("\r", "\n").Replace("\n", "\r\n"); //conform to CRLF
+                    text = string.join(Environment.NewLine, text.SplitToLines()); //conform to CRLF
                     var item = new Paragraph(text, FramesToMilliseconds(start), FramesToMilliseconds(end));
                     subtitle.Paragraphs.Add(item);
                     i += endOfText + 5;
