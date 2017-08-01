@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Text;
+using System;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
@@ -89,7 +90,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     string text = Encoding.GetEncoding(CodePage).GetString(array, textStart, length);
                     // text = Encoding.Default.GetString(array, i + 53, endOfText - 47);
                     text = text.Trim('\0').Replace("\0", " ").Trim();
-                    text = string.join(Environment.NewLine, text.SplitToLines()); //conform to CRLF
+                    text = string.Join(Environment.NewLine, text.SplitToLines()); //conform to CRLF
                     var item = new Paragraph(text, FramesToMilliseconds(start), FramesToMilliseconds(end));
                     subtitle.Paragraphs.Add(item);
                     i += endOfText + 5;
