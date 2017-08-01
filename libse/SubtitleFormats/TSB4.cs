@@ -54,29 +54,39 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 return;
             }
+            
+            int CodePage = 0; // use default code page if not found
+            
             for (int i = 0; i < array.Length - 20; i++)
             {
+                if (array[i] == 67 && array[i + 1] == 80 && array[i + 2] == 65 && array[i + 3] == 71 && array[i + 4] == 4 && array[i + 5] == 0 && array[i + 6] == 0 && array[i + 7] == 0) // CPAG
+                {
+                  CodePage = array[i+8] + array[i+9]*256;
+                  i += 12;
+                }
                 if (array[i] == 84 && array[i + 1] == 73 && array[i + 2] == 84 && array[i + 3] == 76 && array[i + 8] == 84 && array[i + 9] == 73 && array[i + 10] == 77 && array[i + 11] == 69) // TITL + TIME
                 {
-                    int endOfText = array[i + 4];
+                    int endOfText = array[i + 4] + array[i+5]*256; // get only first two bytes of size
 
                     int start = array[i + 16] + array[i + 17] * 256;
-                    if (array[i + 18] != 32)
+                    // if (array[i + 18] != 32)
                         start += array[i + 18] * 256 * 256;
 
                     int end = array[i + 20] + array[i + 21] * 256;
-                    if (array[i + 22] != 32)
+                    // if (array[i + 22] != 32)
                         end += array[i + 22] * 256 * 256;
 
                     int textStart = i;
-                    while (textStart < i + endOfText && !(array[textStart] == 0x4C && array[textStart + 1] == 0x49 && array[textStart + 2] == 0x4E && array[textStart + 3] == 0x45)) // LINE
+                    while (textStart < i + endOfText - 8 && !(array[textStart] == 0x4C && array[textStart + 1] == 0x49 && array[textStart + 2] == 0x4E && array[textStart + 3] == 0x45)) // LINE
                     {
                         textStart++;
                     }
-                    int length = i + endOfText - textStart - 2;
+                    // int length = i + endOfText - textStart - 2;
+                    int length = array[textStart+4] + array[textStart+5]*256;
                     textStart += 8;
 
-                    string text = Encoding.Default.GetString(array, textStart, length);
+                    // string text = Encoding.Default.GetString(array, textStart, length);
+                    string text = Encoding(CodePage).GetString(array, textStart, length);
                     // text = Encoding.Default.GetString(array, i + 53, endOfText - 47);
                     text = text.Trim('\0').Replace("\0", " ").Trim();
                     var item = new Paragraph(text, FramesToMilliseconds(start), FramesToMilliseconds(end));
