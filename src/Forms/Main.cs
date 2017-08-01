@@ -14522,37 +14522,27 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void FixRightToLeftDependingOnLanguage()
         {
-            if (Configuration.Settings.General.RightToLeftMode)
-            {
-                if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0)
-                {
-                    var la = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitleAlternate);
-                    if ((la == null && Configuration.Settings.General.RightToLeftMode) || la == "ar" || la == "he")
-                    {
-                        textBoxListViewTextAlternate.RightToLeft = RightToLeft.Yes;
-                    }
-                    else
-                    {
-                        textBoxListViewTextAlternate.RightToLeft = RightToLeft.No;
-                    }
-                }
-                var l = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle);
-                if ((l == null && Configuration.Settings.General.RightToLeftMode) || l == "ar" || l == "he")
-                {
-                    textBoxListViewText.RightToLeft = RightToLeft.Yes;
-                    textBoxSource.RightToLeft = RightToLeft.Yes;
-                }
-                else
-                {
-                    textBoxListViewText.RightToLeft = RightToLeft.No;
-                    textBoxSource.RightToLeft = RightToLeft.No;
-                }
-            }
-            else
+            if (!Configuration.Settings.General.RightToLeftMode)
             {
                 textBoxListViewText.RightToLeft = RightToLeft.No;
                 textBoxSource.RightToLeft = RightToLeft.No;
+                textBoxListViewTextAlternate.RightToLeft = RightToLeft.No;
+                return;
             }
+
+            string lang = null;
+            // alternate textbox
+            if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate?.Paragraphs.Count > 0)
+            {
+                lang = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitleAlternate);
+                textBoxListViewTextAlternate.RightToLeft = lang == null || lang == "ar" || lang == "he" ? RightToLeft.Yes : RightToLeft.No;
+            }
+
+            // current/original textbox/listview
+            lang = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle);
+            RightToLeft rightToLeft = lang == null || lang == "ar" || lang == "he" ? RightToLeft.Yes : RightToLeft.No;
+            textBoxListViewText.RightToLeft = rightToLeft;
+            textBoxSource.RightToLeft = rightToLeft;
         }
 
         private void PlayCurrent()
