@@ -86,7 +86,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     textStart += 8;
 
                     // string text = Encoding.Default.GetString(array, textStart, length);
-                    string text = Encoding(CodePage).GetString(array, textStart, length);
+                    string text = Encoding.GetEncoding(CodePage).GetString(array, textStart, length);
                     // text = Encoding.Default.GetString(array, i + 53, endOfText - 47);
                     text = text.Trim('\0').Replace("\0", " ").Trim();
                     var item = new Paragraph(text, FramesToMilliseconds(start), FramesToMilliseconds(end));
