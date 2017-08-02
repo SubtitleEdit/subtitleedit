@@ -183,16 +183,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
-            // invalid extension
-            if (!(fileName.EndsWith(".ult", StringComparison.Ordinal) || fileName.EndsWith(".uld", StringComparison.Ordinal)))
+            if (string.IsNullOrEmpty(fileName) ||
+                !(fileName.EndsWith(".ult", StringComparison.Ordinal) || fileName.EndsWith(".uld", StringComparison.Ordinal)) ||
+                !File.Exists(fileName))
             {
                 return false;
             }
-            // file moved or deleted
-            if (!File.Exists(fileName))
-            {
-                return false;
-            }
+
             var fi = new FileInfo(fileName);
             // too short or too big
             if (fi.Length < 200 || fi.Length >= 1024000)
@@ -255,7 +252,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         {
                             byte b2 = buffer[k + 1];
                             skipCount = 1;
-                            if (sb.Length > 0 && !sb.ToString().EndsWith(Environment.NewLine) && !sb.EndsWith('>'))
+                            if (sb.Length > 0 && !sb.ToString().EndsWith(Environment.NewLine, StringComparison.Ordinal) && !sb.EndsWith('>'))
                             {
                                 //if (font)
                                 //    sb.Append("</font>");
