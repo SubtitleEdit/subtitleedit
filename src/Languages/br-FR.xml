@@ -689,7 +689,7 @@ Notenn: Gwiriekit spas an disk vak.</WaveFileMalformed>
     <OneSubtitleIsOneFile>Meur a restr 'zo - ur restr a zo un istitl</OneSubtitleIsOneFile>
     <OpenTextFile>Digeriñ restr an destenn...</OpenTextFile>
     <OpenTextFiles>Digeriñ restroù testenn...</OpenTextFiles>
-    <ImportOptions>Dibarzhioù emporzhiañ</ImportOptions>
+    <ImportOptions>Dibarzhioù enporzhiañ</ImportOptions>
     <Splitting>Rannañ</Splitting>
     <AutoSplitText>Troc'hañ emgefreek</AutoSplitText>
     <OneLineIsOneSubtitle>Ul linenn par ouzh un istitl</OneLineIsOneSubtitle>
@@ -698,172 +698,172 @@ Notenn: Gwiriekit spas an disk vak.</WaveFileMalformed>
     <MergeShortLines>Kendeuziñ al linennoù berr gant ar re a zeu o heul</MergeShortLines>
     <RemoveEmptyLines>Diverkañ al linennoù goullo</RemoveEmptyLines>
     <RemoveLinesWithoutLetters>Diverkañ al linennoù hep lizherennoù</RemoveLinesWithoutLetters>
-    <GenerateTimeCodes>Genel amzergod</GenerateTimeCodes>
-    <GapBetweenSubtitles>Distok etre an istitloù (e milieilennoù)</GapBetweenSubtitles>
-    <Auto>Emgef.</Auto>
+    <GenerateTimeCodes>Genel amzergodoù</GenerateTimeCodes>
+    <GapBetweenSubtitles>Distok etre an istitloù (e milisegondennoù)</GapBetweenSubtitles>
+    <Auto>Emgefreek</Auto>
     <Fixed>Stabilaet</Fixed>
-    <Refresh>&amp;Bremata</Refresh>
+    <Refresh>&amp;Freskaat</Refresh>
     <TextFiles>Restroù testenn</TextFiles>
-    <PreviewLinesModifiedX>Albez - istitloù kemmet : {0}</PreviewLinesModifiedX>
-    <TimeCodes>Amzerioù-kod</TimeCodes>
+    <PreviewLinesModifiedX>Rakwel - istitloù kemmet: {0}</PreviewLinesModifiedX>
+    <TimeCodes>Amzergodoù</TimeCodes>
   </ImportText>
   <Interjections>
-    <Title>Estlammadell</Title>
+    <Title>Estlammadennoù</Title>
   </Interjections>
   <JoinSubtitles>
-    <Title>Kendeuziñ analyser istitloù</Title>
-    <Information>Ouzhpennañ an istitloù da gendeuziñ (Stlej ha laosk kemeret e kont)</Information>
+    <Title>Stagañ istitloù</Title>
+    <Information>Ouzhpennañ an istitloù da stagañ (degemeret e vez ivez pa daoler)</Information>
     <NumberOfLines>#Linennoù</NumberOfLines>
-    <StartTime>Eurvezh penn-kentañ</StartTime>
+    <StartTime>Eurvezh loc'hañ</StartTime>
     <EndTime>Eurvezh fin</EndTime>
-    <FileName>Anv</FileName>
-    <Join>Krouiñ</Join>
-    <TotalNumberOfLinesX>Niver linennoù en holl : {0:#,###,###}</TotalNumberOfLinesX>
-    <Note>Notenn : Ret eo keidañ an amzerioù-kod a-raok kendeuziñ an istitloù</Note>
+    <FileName>Anv ar Restr</FileName>
+    <Join>Stagañ</Join>
+    <TotalNumberOfLinesX>Niver al linennoù en holl: {0:#,###,###}</TotalNumberOfLinesX>
+    <Note>Notenn: ar restroù a rank kaout amzergodoù mat</Note>
   </JoinSubtitles>
   <LanguageNames>
-    <NotSpecified>Amstrizh</NotSpecified>
+    <NotSpecified>Nann spisaet</NotSpecified>
     <UnknownCodeX>Dianav ({0})</UnknownCodeX>
-    <aaName>afar</aaName>
-    <abName>abkhazeg</abName>
-    <afName>afrikaans</afName>
-    <amName>amhareg</amName>
-    <arName>arabeg</arName>
-    <asName>asameg</asName>
-    <ayName>aymara</ayName>
-    <azName>azerbaidjaneg</azName>
-    <baName>bachkir</baName>
-    <beName>belaruseg</beName>
-    <bgName>bulgareg</bgName>
-    <bhName>bihari</bhName>
-    <biName>bislama</biName>
-    <bnName>bengali</bnName>
-    <boName>tibetaneg</boName>
-    <brName>brezhoneg</brName>
-    <caName>katalaneg</caName>
-    <coName>korseg</coName>
-    <csName>tchekeg</csName>
-    <cyName>kembraeg</cyName>
-    <daName>daneg</daName>
-    <deName>alamaneg</deName>
-    <dzName>dzongkha</dzName>
-    <elName>gresianeg</elName>
-    <enName>saozneg</enName>
-    <eoName>esperanteg</eoName>
-    <esName>spagnoleg</esName>
-    <etName>estoneg</etName>
-    <euName>euskareg</euName>
-    <faName>perseg</faName>
-    <fiName>finneg</fiName>
-    <fjName>fidjieg</fjName>
-    <foName>faeroeg</foName>
-    <frName>galleg</frName>
-    <fyName>frizeg ar Cʼhornôg</fyName>
-    <gaName>iwerzhoneg</gaName>
-    <gdName>skoseg</gdName>
-    <glName>galizeg</glName>
-    <gnName>guarani</gnName>
-    <guName>gujarati</guName>
-    <haName>haousa</haName>
-    <heName>hebraeg</heName>
-    <hiName>hindi</hiName>
-    <hrName>kroateg</hrName>
-    <huName>hungareg</huName>
-    <hyName>armenianeg</hyName>
-    <iaName>interlingua</iaName>
-    <idName>indonezeg</idName>
-    <ieName>interlingue</ieName>
-    <ikName>inupiaq</ikName>
-    <isName>islandeg</isName>
-    <itName>italianeg</itName>
-    <iuName>inuktitut</iuName>
-    <jaName>japaneg</jaName>
-    <jvName>javaneg</jvName>
-    <kaName>jorjianeg</kaName>
-    <kkName>kazak</kkName>
-    <klName>greunlandeg</klName>
-    <kmName>khmer</kmName>
-    <knName>kanareg</knName>
-    <koName>koreaneg</koName>
-    <ksName>kashmiri</ksName>
-    <kuName>kurdeg</kuName>
-    <kyName>kirgiz</kyName>
-    <laName>latin</laName>
-    <lbName>luksembourgeg</lbName>
-    <lnName>lingala</lnName>
-    <loName>laoseg</loName>
-    <ltName>lituaneg</ltName>
-    <lvName>latvieg</lvName>
-    <mgName>malgacheg</mgName>
-    <miName>maori</miName>
-    <mkName>makedoneg</mkName>
-    <mlName>malayalam</mlName>
-    <mnName>mongoleg</mnName>
-    <moName>moldoveg</moName>
-    <mrName>marathi</mrName>
-    <msName>malayseg</msName>
-    <mtName>malteg</mtName>
-    <myName>birmaneg</myName>
-    <naName>naurueg</naName>
-    <neName>nepaleg</neName>
-    <nlName>nederlandeg</nlName>
-    <noName>norvegeg</noName>
-    <ocName>okitaneg</ocName>
-    <omName>oromoeg</omName>
-    <orName>oriya</orName>
-    <paName>punjabi</paName>
-    <plName>poloneg</plName>
-    <psName>pachto</psName>
-    <ptName>portugaleg</ptName>
-    <quName>kechuaeg</quName>
-    <rmName>romañcheg</rmName>
-    <rnName>rundi</rnName>
-    <roName>roumaneg</roName>
-    <ruName>rusianeg</ruName>
-    <rwName>kinyarwanda</rwName>
-    <saName>sanskriteg</saName>
-    <sdName>sindhi</sdName>
-    <sgName>sango</sgName>
-    <shName>serb-kroateg</shName>
-    <siName>singhaleg</siName>
-    <skName>slovakeg</skName>
-    <slName>sloveneg</slName>
-    <smName>samoan</smName>
-    <snName>shona</snName>
-    <soName>somali</soName>
-    <sqName>albaneg</sqName>
-    <srName>serbeg</srName>
-    <ssName>swati</ssName>
-    <stName>sotho ar Su</stName>
-    <suName>sundaneg</suName>
-    <svName>svedeg</svName>
-    <swName>swahili</swName>
-    <taName>tamileg</taName>
-    <teName>telougou</teName>
-    <tgName>tadjik</tgName>
-    <thName>thai</thName>
-    <tiName>tigrigna</tiName>
-    <tkName>turkmeneg</tkName>
-    <tlName>tagalog</tlName>
-    <tnName>tswana</tnName>
-    <toName>tonga</toName>
-    <trName>turkeg</trName>
-    <tsName>tsonga</tsName>
-    <ttName>tatar</ttName>
-    <twName>twi</twName>
-    <ugName>ouigoureg</ugName>
-    <ukName>ukraineg</ukName>
-    <urName>ourdou</urName>
-    <uzName>ouzbekeg</uzName>
-    <viName>vietnameg</viName>
-    <voName>volapük</voName>
-    <woName>wolof</woName>
-    <xhName>xhosa</xhName>
-    <yiName>yiddish</yiName>
-    <yoName>yorouba</yoName>
-    <zaName>zhuang</zaName>
-    <zhName>sinaeg</zhName>
-    <zuName>zouloueg</zuName>
+    <aaName>Afar</aaName>
+    <abName>Abkhazeg</abName>
+    <afName>Afrikaaneg</afName>
+    <amName>Amhareg</amName>
+    <arName>Arabeg</arName>
+    <asName>Asameg</asName>
+    <ayName>Aymaraeg</ayName>
+    <azName>Azerbaidjaneg</azName>
+    <baName>Bachkireg</baName>
+    <beName>Belaruseg</beName>
+    <bgName>Bulgareg</bgName>
+    <bhName>Biharieg</bhName>
+    <biName>Bislamaeg</biName>
+    <bnName>Bengalieg</bnName>
+    <boName>Tibetaneg</boName>
+    <brName>Brezhoneg</brName>
+    <caName>Katalaneg</caName>
+    <coName>Korseg</coName>
+    <csName>Tchekeg</csName>
+    <cyName>Kembraeg</cyName>
+    <daName>Daneg</daName>
+    <deName>Alamaneg</deName>
+    <dzName>Dzongkhaeg</dzName>
+    <elName>Gresianeg</elName>
+    <enName>Saozneg</enName>
+    <eoName>Esperanteg</eoName>
+    <esName>Spagnoleg</esName>
+    <etName>Estoneg</etName>
+    <euName>Euskareg</euName>
+    <faName>Perseg</faName>
+    <fiName>Finneg</fiName>
+    <fjName>Fidjieg</fjName>
+    <foName>Faeroeg</foName>
+    <frName>Galleg</frName>
+    <fyName>Frizeg ar Cʼhornôg</fyName>
+    <gaName>Iwerzhoneg</gaName>
+    <gdName>Skoseg</gdName>
+    <glName>Galizeg</glName>
+    <gnName>Guaranieg</gnName>
+    <guName>Gujaratieg</guName>
+    <haName>Haousaeg</haName>
+    <heName>Hebraeg</heName>
+    <hiName>Hindieg</hiName>
+    <hrName>Kroateg</hrName>
+    <huName>Kungareg</huName>
+    <hyName>Armenianeg</hyName>
+    <iaName>Interlinguaeg</iaName>
+    <idName>Indonezeg</idName>
+    <ieName>Interlingueeg</ieName>
+    <ikName>Inupiaqeg</ikName>
+    <isName>Islandeg</isName>
+    <itName>Italianeg</itName>
+    <iuName>Inuktituteg</iuName>
+    <jaName>Japaneg</jaName>
+    <jvName>Javaneg</jvName>
+    <kaName>Jorjianeg</kaName>
+    <kkName>Kazakeg</kkName>
+    <klName>Greunlandeg</klName>
+    <kmName>Khmereg</kmName>
+    <knName>Kanareg</knName>
+    <koName>Koreaneg</koName>
+    <ksName>Kashmirieg</ksName>
+    <kuName>Kurdeg</kuName>
+    <kyName>Kirgizeg</kyName>
+    <laName>Latin</laName>
+    <lbName>Luksembourgeg</lbName>
+    <lnName>Lingalaeg</lnName>
+    <loName>Laoseg</loName>
+    <ltName>Lituaneg</ltName>
+    <lvName>Latvieg</lvName>
+    <mgName>Malgacheg</mgName>
+    <miName>Maorieg</miName>
+    <mkName>Makedoneg</mkName>
+    <mlName>Malayalameg</mlName>
+    <mnName>Mongoleg</mnName>
+    <moName>Moldoveg</moName>
+    <mrName>Marathieg</mrName>
+    <msName>Malayseg</msName>
+    <mtName>Malteg</mtName>
+    <myName>Birmaneg</myName>
+    <naName>Naurueg</naName>
+    <neName>Nepaleg</neName>
+    <nlName>Nederlandeg</nlName>
+    <noName>Norvegeg</noName>
+    <ocName>Okitaneg</ocName>
+    <omName>Oromoeg</omName>
+    <orName>Oriyaeg</orName>
+    <paName>Punjabieg</paName>
+    <plName>Poloneg</plName>
+    <psName>Pachtoeg</psName>
+    <ptName>Portugaleg</ptName>
+    <quName>Kechuaeg</quName>
+    <rmName>Romañcheg</rmName>
+    <rnName>Rundieg</rnName>
+    <roName>Roumaneg</roName>
+    <ruName>Rusianeg</ruName>
+    <rwName>Kinyarwandaeg</rwName>
+    <saName>Sanskriteg</saName>
+    <sdName>Sindhieg</sdName>
+    <sgName>Sangoeg</sgName>
+    <shName>Serb-kroateg</shName>
+    <siName>Singhaleg</siName>
+    <skName>Slovakeg</skName>
+    <slName>Sloveneg</slName>
+    <smName>Samoaneg</smName>
+    <snName>Shonaeg</snName>
+    <soName>Somalieg</soName>
+    <sqName>Albaneg</sqName>
+    <srName>Serbeg</srName>
+    <ssName>Swatieg</ssName>
+    <stName>Sothoeg ar Su</stName>
+    <suName>Sundaneg</suName>
+    <svName>Svedeg</svName>
+    <swName>Swahilieg</swName>
+    <taName>Tamileg</taName>
+    <teName>Telougou</teName>
+    <tgName>Tadjikeg</tgName>
+    <thName>Thaieg</thName>
+    <tiName>Tigrignaeg</tiName>
+    <tkName>Turkmeneg</tkName>
+    <tlName>Tagalogeg</tlName>
+    <tnName>Tswanaeg</tnName>
+    <toName>Tongaeg</toName>
+    <trName>Turkeg</trName>
+    <tsName>Tsongaeg</tsName>
+    <ttName>Tatareg</ttName>
+    <twName>Twieg</twName>
+    <ugName>Ouigoureg</ugName>
+    <ukName>Ukraineg</ukName>
+    <urName>Ourdoueg</urName>
+    <uzName>Ouzbekeg</uzName>
+    <viName>Vietnameg</viName>
+    <voName>Volapükeg</voName>
+    <woName>Wolofeg</woName>
+    <xhName>Xhosaeg</xhName>
+    <yiName>Yiddisheg</yiName>
+    <yoName>Yoroubaeg</yoName>
+    <zaName>Zhuangeg</zaName>
+    <zhName>Sinaeg</zhName>
+    <zuName>Zouloueg</zuName>
   </LanguageNames>
   <Main>
     <Menu>
@@ -871,24 +871,24 @@ Notenn: Gwiriekit spas an disk vak.</WaveFileMalformed>
         <Title>&amp;Restr</Title>
         <New>&amp;Nevez</New>
         <Open>&amp;Digeriñ</Open>
-        <OpenKeepVideo>Digeriñ (derc'hel video)</OpenKeepVideo>
-        <Reopen>&amp;Ad-digeriñ</Reopen>
+        <OpenKeepVideo>Digeriñ (derc'hel ar video)</OpenKeepVideo>
+        <Reopen>&amp;Addigeriñ</Reopen>
         <Save>&amp;Enrollañ</Save>
         <SaveAs>Enrollañ &amp;dindan...</SaveAs>
-        <RestoreAutoBackup>Ratraeañ adalek backupoù-emgefreek...</RestoreAutoBackup>
-        <AdvancedSubStationAlphaProperties>Perzhioù Advanced SubStation Alpha...</AdvancedSubStationAlphaProperties>
+        <RestoreAutoBackup>Assevel diouzh an enrolladenn-emgefreek...</RestoreAutoBackup>
+        <AdvancedSubStationAlphaProperties>Perzhioù Araokaet SubStation Alpha...</AdvancedSubStationAlphaProperties>
         <SubStationAlphaProperties>Perzhioù SubStation Alpha...</SubStationAlphaProperties>
         <EbuProperties>Perzhioù EBU STL...</EbuProperties>
         <PacProperties>Perzhioù PAC...</PacProperties>
-        <OpenOriginal>Digeriñ istitl orin (mod troidigezh)...</OpenOriginal>
-        <SaveOriginal>Enrollañ an orin</SaveOriginal>
-        <CloseOriginal>Tennañ an orin</CloseOriginal>
+        <OpenOriginal>Digeriñ an istitl orin (mod troer)...</OpenOriginal>
+        <SaveOriginal>Enrollañ an istitl orin</SaveOriginal>
+        <CloseOriginal>Serriñ an istitl orin</CloseOriginal>
         <OpenContainingFolder>Digeriñ ar c'havlec'h hag a endalc'h an istitloù</OpenContainingFolder>
         <Compare>&amp;Keñveriañ...</Compare>
         <Statistics>Stadegoù...</Statistics>
-        <Plugins>Plugin-où...</Plugins>
-        <ImportOcrFromDvd>Enporzhiañ an istitloù OCR da VOB/IFO (DVD)...</ImportOcrFromDvd>
-        <ImportOcrVobSubSubtitle>Enporzhiañ an istitloù OCR da VobSub (sub/idx)...</ImportOcrVobSubSubtitle>
+        <Plugins>Lugantoù...</Plugins>
+        <ImportOcrFromDvd>Enporzhiañ/OCR an istitloù diouzh VOB/IFO (DVD)...</ImportOcrFromDvd>
+        <ImportOcrVobSubSubtitle>Enporzhiañ/OCR an istitloù VobSub (sub/idx)...</ImportOcrVobSubSubtitle>
         <ImportBluRaySupFile>Enporzhiañ an istitloù OCR da Blu-ray (sup)...</ImportBluRaySupFile>
         <ImportXSub>Enporzhiañ an istitloù OCR da divx/avi (XSub)...</ImportXSub>
         <ImportSubtitleFromMatroskaFile>Enporzhiañ an istitloù ur restr Matroska...</ImportSubtitleFromMatroskaFile>
