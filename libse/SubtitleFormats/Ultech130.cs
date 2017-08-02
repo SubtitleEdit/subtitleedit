@@ -12,23 +12,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     public class Ultech130 : SubtitleFormat
     {
         private const string UltechId = "ULTECH\01.30";
-
-        public override string Extension
-        {
-            get { return ".ult"; }
-        }
-
         public const string NameOfFormat = "Ultech 1.30 Caption";
 
-        public override string Name
-        {
-            get { return NameOfFormat; }
-        }
+        public override string Extension => ".ult";
 
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
+        public override string Name => NameOfFormat;
+
+        public override bool IsTimeBased => true;
 
         public static void Save(string fileName, Subtitle subtitle)
         {
@@ -55,15 +45,19 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                 var footer = new byte[] { 0xF1, 0x0B, 0x00, 0x00, 0x00, 0x1B, 0x18, 0x14, 0x20, 0x14, 0x2E, 0x14, 0x2F, 0x00 }; // footer
 
+                // convert line breaks
+                var sb = new StringBuilder();
+                var line = new StringBuilder();
+
                 // paragraphs
                 foreach (Paragraph p in subtitle.Paragraphs)
                 {
-                    // convert line breaks
-                    var sb = new StringBuilder();
-                    var line = new StringBuilder();
+                    sb.Clear();
+                    line.Clear();
+
                     int skipCount = 0;
                     int numberOfNewLines = Utilities.GetNumberOfLines(p.Text);
-                    bool italic = p.Text.StartsWith("<i>") && p.Text.EndsWith("</i>");
+                    bool italic = p.Text.StartsWith("<i>", StringComparison.Ordinal) && p.Text.EndsWith("</i>", StringComparison.Ordinal);
                     string text = HtmlUtil.RemoveHtmlTags(p.Text, true);
                     if (italic)
                     {
@@ -189,26 +183,36 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
-            if (!string.IsNullOrEmpty(fileName) && File.Exists(fileName))
+            // invalid extension
+            if (!(fileName.EndsWith(".ult", StringComparison.Ordinal) || fileName.EndsWith(".uld", StringComparison.Ordinal)))
             {
-                var fi = new FileInfo(fileName);
-                if (fi.Length >= 200 && fi.Length < 1024000) // not too small or too big
-                {
-                    if (fileName.EndsWith(".ult", StringComparison.OrdinalIgnoreCase) || fileName.EndsWith(".uld", StringComparison.OrdinalIgnoreCase)) //  drop frame is often named uld, and ult for non-drop
-                    {
-                        byte[] buffer = FileUtil.ReadAllBytesShared(fileName);
-                        string id = Encoding.ASCII.GetString(buffer, 0, UltechId.Length);
-                        return id == UltechId;
-                    }
-                }
+                return false;
             }
-            return false;
+            // file moved or deleted
+            if (!File.Exists(fileName))
+            {
+                return false;
+            }
+            var fi = new FileInfo(fileName);
+            // too short or too big
+            if (fi.Length < 200 || fi.Length >= 1024000)
+            {
+                return false;
+            }
+            var buffer = new byte[UltechId.Length];
+            using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read))
+            {
+                int read = fs.Read(buffer, 0, UltechId.Length);
+                if (read != UltechId.Length)
+                {
+                    return false;
+                }
+                // Expected: ULTECH\01.30
+                return Encoding.ASCII.GetString(buffer).Equals(UltechId, StringComparison.OrdinalIgnoreCase);
+            }
         }
 
-        public override string ToText(Subtitle subtitle, string title)
-        {
-            return "Not supported!";
-        }
+        public override string ToText(Subtitle subtitle, string title) => "Not supported!";
 
         private static TimeCode DecodeTimestamp(byte[] buffer, int index)
         {
@@ -457,13 +461,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             subtitle.Renumber();
         }
 
-        public override List<string> AlternateExtensions
-        {
-            get
-            {
-                return new List<string>() { ".uld" }; // Ultech drop frame
-            }
-        }
+        public override List<string> AlternateExtensions => new List<string>() { ".uld" }; // Ultech drop frame
 
     }
 }
