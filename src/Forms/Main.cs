@@ -8886,9 +8886,14 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
 
             SubtitleListview1.SyntaxColorLine(_subtitle.Paragraphs, _subtitleListViewIndex, _subtitle.Paragraphs[_subtitleListViewIndex]);
-            var next = _subtitle.GetParagraphOrDefault(_subtitleListViewIndex + 1);
-            if (next != null)
-                SubtitleListview1.SyntaxColorLine(_subtitle.Paragraphs, _subtitleListViewIndex + 1, _subtitle.Paragraphs[_subtitleListViewIndex + 1]);
+            var idx = _subtitleListViewIndex + 1;
+            var p = _subtitle.GetParagraphOrDefault(idx);
+            if (p != null)
+                SubtitleListview1.SyntaxColorLine(_subtitle.Paragraphs, idx, p);
+            idx = _subtitleListViewIndex - 1;
+            p = _subtitle.GetParagraphOrDefault(idx);
+            if (p != null)
+                SubtitleListview1.SyntaxColorLine(_subtitle.Paragraphs, idx, p);
         }
 
         private void UpdateOverlapErrors(TimeCode startTime)
