@@ -44,6 +44,7 @@
    * Fix time code reading for format FCP/Image - thx BeoZeBold
    * Keep styles from ttml draft to ASS - thx Bill
    * Fix minor issues for format DVD Studio Pro - thx Mike
+   * Fix some issues regarding format TSB4 - thx kamenf
 
 
 3.5.3 (12th May 2017)
