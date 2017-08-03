@@ -9,15 +9,12 @@ namespace Nikse.SubtitleEdit.Core
         public string Pre { get; set; }
         public string Post { get; set; }
         public string StrippedText { get; set; }
-        public string OriginalText { get; private set; }
+        public string OriginalText { get; }
 
-        public string MergedString
-        {
-            get { return Pre + StrippedText + Post; }
-        }
+        public string MergedString => Pre + StrippedText + Post;
 
         public StrippableText(string text)
-            : this(text, " >-\"„”“['‘`´¶(♪¿¡.…—", " -\"”“]'`´¶)♪.!?:…—")
+            : this(text, " >-\"„”“['‘`´¶(♪¿¡.…—", " -\"”“]'`´¶)♪.!?:…—؛،؟")
         {
         }
 
