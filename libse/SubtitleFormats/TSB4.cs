@@ -122,6 +122,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         sb.Append(italicOn ? "</i>" : "<i>");
                         italicOn = !italicOn;
                         break;
+                    case '\r':
+                    case '\n':
+                        if (italicOn)
+                        {
+                            sb.Append("</i>");
+                            italicOn = false;
+                        }
+                        sb.Append(ch);
+                        break;
                     case '\0':
                         sb.Append(" ");
                         break;
