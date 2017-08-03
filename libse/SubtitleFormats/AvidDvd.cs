@@ -31,9 +31,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     return false;
             }
 
-            var subtitle = new Subtitle();
-            LoadSubtitle(subtitle, lines, fileName);
-            return subtitle.Paragraphs.Count > _errorCount;
+            return base.IsMine(lines, fileName);
         }
 
         private static string MakeTimeCode(TimeCode tc)

@@ -15,8 +15,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
-            var subtitle = new Subtitle();
-
             var sb = new StringBuilder();
             foreach (string line in lines)
                 sb.AppendLine(line);
@@ -25,8 +23,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             if (sb.ToString().Contains(Environment.NewLine + "SP_NUMBER     START        END       FILE_NAME"))
                 return false; // SON
 
-            LoadSubtitle(subtitle, lines, fileName);
-            return subtitle.Paragraphs.Count > _errorCount;
+            return base.IsMine(lines, fileName);
         }
 
         public override string ToText(Subtitle subtitle, string title)

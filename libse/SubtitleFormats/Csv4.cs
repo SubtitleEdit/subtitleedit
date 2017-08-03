@@ -21,9 +21,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 return false;
             }
 
-            var subtitle = new Subtitle();
-            LoadSubtitle(subtitle, lines, fileName);
-            return subtitle.Paragraphs.Count > 0;
+            return base.IsMine(lines, fileName);
         }
 
         public override string ToText(Subtitle subtitle, string title)

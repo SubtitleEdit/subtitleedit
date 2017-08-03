@@ -15,8 +15,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
-            var subtitle = new Subtitle();
-
             var sb = new StringBuilder();
             foreach (string line in lines)
                 sb.AppendLine(line);
