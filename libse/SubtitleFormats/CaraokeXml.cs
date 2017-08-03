@@ -7,27 +7,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class CaraokeXml : SubtitleFormat
     {
-        public override string Extension
-        {
-            get { return ".crk"; }
-        }
+        public override string Extension => ".crk";
 
-        public override string Name
-        {
-            get { return "Caraoke Xml"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
-
-        public override bool IsMine(List<string> lines, string fileName)
-        {
-            var subtitle = new Subtitle();
-            LoadSubtitle(subtitle, lines, fileName);
-            return subtitle.Paragraphs.Count > 0;
-        }
+        public override string Name => "Caraoke Xml";
 
         public override string ToText(Subtitle subtitle, string title)
         {

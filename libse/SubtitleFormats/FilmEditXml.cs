@@ -7,20 +7,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class FilmEditXml : SubtitleFormat
     {
-        public override string Extension
-        {
-            get { return ".xml"; }
-        }
+        public override string Extension => ".xml";
 
-        public override string Name
-        {
-            get { return "Film Edit xml"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
+        public override string Name => "Film Edit xml";
 
         public override bool IsMine(List<string> lines, string fileName)
         {
@@ -113,12 +102,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static string EncodeDuration(TimeCode timeCode)
         {
-            return string.Format("{0:00}:{1:00}", timeCode.Seconds, MillisecondsToFramesMaxFrameRate(timeCode.Milliseconds));
+            return $"{timeCode.Seconds:00}:{MillisecondsToFramesMaxFrameRate(timeCode.Milliseconds):00}";
         }
 
         private static string EncodeTimeCode(TimeCode timeCode)
         {
-            return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", timeCode.Hours, timeCode.Minutes, timeCode.Seconds, MillisecondsToFramesMaxFrameRate(timeCode.Milliseconds));
+            return $"{timeCode.Hours:00}:{timeCode.Minutes:00}:{timeCode.Seconds:00}:{MillisecondsToFramesMaxFrameRate(timeCode.Milliseconds):00}";
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)

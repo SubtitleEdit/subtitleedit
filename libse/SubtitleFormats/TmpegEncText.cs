@@ -6,27 +6,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class TmpegEncText : SubtitleFormat
     {
-        public override string Extension
-        {
-            get { return ".subtitle"; }
-        }
+        public override string Extension => ".subtitle";
 
-        public override string Name
-        {
-            get { return "Tmpeg Encoder Text"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
-
-        public override bool IsMine(List<string> lines, string fileName)
-        {
-            var subtitle = new Subtitle();
-            LoadSubtitle(subtitle, lines, fileName);
-            return subtitle.Paragraphs.Count > _errorCount;
-        }
+        public override string Name => "Tmpeg Encoder Text";
 
         public override string ToText(Subtitle subtitle, string title)
         {

@@ -10,31 +10,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     {
         private static readonly Regex RegexTimeCode1 = new Regex(@"^\s*\d+\t\d\d:\d\d:\d\d;\d\d", RegexOptions.Compiled);
 
-        public override string Extension
-        {
-            get { return ".rtf"; }
-        }
+        public override string Extension => ".rtf";
 
-        public override string Name
-        {
-            get { return "Unknown 21"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
-
-        public override bool IsMine(List<string> lines, string fileName)
-        {
-            var subtitle = new Subtitle();
-            LoadSubtitle(subtitle, lines, fileName);
-            return subtitle.Paragraphs.Count > _errorCount;
-        }
+        public override string Name => "Unknown 21";
 
         private static string MakeTimeCode(TimeCode tc)
         {
-            return string.Format("{0:00}:{1:00}:{2:00};{3:00}", tc.Hours, tc.Minutes, tc.Seconds, MillisecondsToFramesMaxFrameRate(tc.Milliseconds));
+            return $"{tc.Hours:00}:{tc.Minutes:00}:{tc.Seconds:00};{MillisecondsToFramesMaxFrameRate(tc.Milliseconds):00}";
         }
 
         public override string ToText(Subtitle subtitle, string title)
@@ -47,13 +29,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 Paragraph p = subtitle.Paragraphs[i];
                 string text = HtmlUtil.RemoveHtmlTags(p.Text);
-                sb.AppendLine(string.Format("{0}\t{1}\t{2}\t", count.ToString().PadLeft(5, ' '), MakeTimeCode(p.StartTime), text));
+                sb.AppendLine($"{count.ToString().PadLeft(5, ' ')}\t{MakeTimeCode(p.StartTime)}\t{text}\t");
                 sb.AppendLine("\t\t\t\t");
                 Paragraph next = subtitle.GetParagraphOrDefault(i + 1);
                 if (next == null || Math.Abs(p.EndTime.TotalMilliseconds - next.StartTime.TotalMilliseconds) > 50)
                 {
                     count++;
-                    sb.AppendLine(string.Format("{0}\t{1}", count.ToString().PadLeft(5, ' '), MakeTimeCode(p.EndTime)));
+                    sb.AppendLine($"{count.ToString().PadLeft(5, ' ')}\t{MakeTimeCode(p.EndTime)}");
                 }
                 count++;
             }

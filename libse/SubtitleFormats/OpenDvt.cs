@@ -7,20 +7,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class OpenDvt : SubtitleFormat
     {
-        public override string Extension
-        {
-            get { return ".xml"; }
-        }
+        public override string Extension => ".xml";
 
-        public override string Name
-        {
-            get { return "OpenDVT"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
+        public override string Name => "OpenDVT";
 
         public override bool IsMine(List<string> lines, string fileName)
         {

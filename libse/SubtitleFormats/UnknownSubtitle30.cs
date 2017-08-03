@@ -18,27 +18,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             Text
         }
 
-        public override string Extension
-        {
-            get { return ".asc"; }
-        }
+        public override string Extension => ".asc";
 
-        public override string Name
-        {
-            get { return "Unknown 30"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
-
-        public override bool IsMine(List<string> lines, string fileName)
-        {
-            var subtitle = new Subtitle();
-            LoadSubtitle(subtitle, lines, fileName);
-            return subtitle.Paragraphs.Count > _errorCount;
-        }
+        public override string Name => "Unknown 30";
 
         public override string ToText(Subtitle subtitle, string title)
         {

@@ -11,27 +11,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         private static readonly Regex RegexTimeCodesAm = new Regex(@"^\d\:\d\d\:\d\d\:\d\dAM", RegexOptions.Compiled);
         private static readonly Regex RegexTimeCodesPm = new Regex(@"^\d\:\d\d\:\d\d\:\d\dPM", RegexOptions.Compiled);
 
-        public override string Extension
-        {
-            get { return ".pst"; }
-        }
+        public override string Extension => ".pst";
 
-        public override string Name
-        {
-            get { return "Unknown 46"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
-
-        public override bool IsMine(List<string> lines, string fileName)
-        {
-            Subtitle subtitle = new Subtitle();
-            LoadSubtitle(subtitle, lines, fileName);
-            return subtitle.Paragraphs.Count > _errorCount;
-        }
+        public override string Name => "Unknown 46";
 
         public override string ToText(Subtitle subtitle, string title)
         {
@@ -48,7 +30,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static string EncodeTimeCode(TimeCode timeCode)
         {
-            return string.Format("{0}:{1:00}:{2:00}:{3:00}AM", timeCode.Hours, timeCode.Minutes, timeCode.Seconds, MillisecondsToFramesMaxFrameRate(timeCode.Milliseconds));
+            return $"{timeCode.Hours}:{timeCode.Minutes:00}:{timeCode.Seconds:00}:{MillisecondsToFramesMaxFrameRate(timeCode.Milliseconds):00}AM";
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)

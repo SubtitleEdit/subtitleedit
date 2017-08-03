@@ -7,27 +7,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class VocapiaSplit : SubtitleFormat
     {
-        public override string Extension
-        {
-            get { return ".xml"; }
-        }
+        public override string Extension => ".xml";
 
-        public override string Name
-        {
-            get { return "Vocapia Split"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
-
-        public override bool IsMine(List<string> lines, string fileName)
-        {
-            var subtitle = new Subtitle();
-            LoadSubtitle(subtitle, lines, fileName);
-            return subtitle.Paragraphs.Count > 0;
-        }
+        public override string Name => "Vocapia Split";
 
         public override string ToText(Subtitle subtitle, string title)
         {
@@ -87,7 +69,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static string ToTimeCode(double totalMilliseconds)
         {
-            return string.Format("{0:0##}", totalMilliseconds / TimeCode.BaseUnit);
+            return $"{totalMilliseconds / TimeCode.BaseUnit:0##}";
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)

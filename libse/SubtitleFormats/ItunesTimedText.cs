@@ -9,22 +9,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     /// </summary>
     public class ItunesTimedText : TimedText10
     {
-        public override string Extension
-        {
-            get { return ".itt"; }
-        }
+        public override string Extension => ".itt";
 
         public new const string NameOfFormat = "iTunes Timed Text";
 
-        public override string Name
-        {
-            get { return NameOfFormat; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
+        public override string Name => NameOfFormat;
 
         public override bool IsMine(List<string> lines, string fileName)
         {
@@ -82,6 +71,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         }
                         catch
                         {
+                            // ignored
                         }
                     }
                     subtitle.Header = x.OuterXml; // save new xml with styles in header

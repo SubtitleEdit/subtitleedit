@@ -994,20 +994,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         private const byte SegmentTypeDialogStyle = 0x81;
         private const byte SegmentTypeDialogPresentation = 0x82;
 
-        public override string Extension
-        {
-            get { return ".m2ts"; }
-        }
+        public override string Extension => ".m2ts";
 
-        public override string Name
-        {
-            get { return "Blu-ray TextST"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
+        public override string Name => "Blu-ray TextST";
 
         public override bool IsMine(List<string> lines, string fileName)
         {

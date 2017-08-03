@@ -7,27 +7,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class FLVCoreCuePoints : SubtitleFormat
     {
-        public override string Extension
-        {
-            get { return ".xml"; }
-        }
+        public override string Extension => ".xml";
 
-        public override string Name
-        {
-            get { return "FLVCoreCuePoints"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
-
-        public override bool IsMine(List<string> lines, string fileName)
-        {
-            var subtitle = new Subtitle();
-            LoadSubtitle(subtitle, lines, fileName);
-            return subtitle.Paragraphs.Count > 0;
-        }
+        public override string Name => "FLVCoreCuePoints";
 
         public override string ToText(Subtitle subtitle, string title)
         {

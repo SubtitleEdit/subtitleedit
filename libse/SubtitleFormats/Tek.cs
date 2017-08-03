@@ -9,27 +9,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     {
         private static readonly Regex RegexTimeCode = new Regex(@"^\d+ \d+ \d \d \d$", RegexOptions.Compiled);
 
-        public override string Extension
-        {
-            get { return ".tek"; }
-        }
+        public override string Extension => ".tek";
 
-        public override string Name
-        {
-            get { return "TEK"; }
-        }
+        public override string Name => "TEK";
 
-        public override bool IsTimeBased
-        {
-            get { return false; }
-        }
-
-        public override bool IsMine(List<string> lines, string fileName)
-        {
-            var subtitle = new Subtitle();
-            LoadSubtitle(subtitle, lines, fileName);
-            return subtitle.Paragraphs.Count > _errorCount;
-        }
+        public override bool IsTimeBased => false;
 
         public override string ToText(Subtitle subtitle, string title)
         {

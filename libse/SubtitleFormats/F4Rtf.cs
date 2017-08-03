@@ -6,29 +6,16 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class F4Rtf : F4Text
     {
-        public override string Extension
-        {
-            get { return ".rtf"; }
-        }
+        public override string Extension => ".rtf";
 
-        public override string Name
-        {
-            get { return "F4 Rich Text Format"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
+        public override string Name => "F4 Rich Text Format";
 
         public override bool IsMine(List<string> lines, string fileName)
         {
             if (fileName != null && !fileName.EndsWith(Extension, StringComparison.OrdinalIgnoreCase))
                 return false;
 
-            var subtitle = new Subtitle();
-            LoadSubtitle(subtitle, lines, fileName);
-            return subtitle.Paragraphs.Count > _errorCount;
+            return base.IsMine(lines, fileName);
         }
 
         public override string ToText(Subtitle subtitle, string title)

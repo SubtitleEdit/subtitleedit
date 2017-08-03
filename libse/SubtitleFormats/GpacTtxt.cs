@@ -7,27 +7,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class GpacTtxt : SubtitleFormat
     {
-        public override string Extension
-        {
-            get { return ".ttxt"; }
-        }
+        public override string Extension => ".ttxt";
 
-        public override string Name
-        {
-            get { return "GPAC TTXT"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
-
-        public override bool IsMine(List<string> lines, string fileName)
-        {
-            var subtitle = new Subtitle();
-            LoadSubtitle(subtitle, lines, fileName);
-            return subtitle.Paragraphs.Count > 0;
-        }
+        public override string Name => "GPAC TTXT";
 
         public override string ToText(Subtitle subtitle, string title)
         {

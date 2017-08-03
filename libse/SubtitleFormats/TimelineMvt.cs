@@ -10,27 +10,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     /// </summary>
     public class TimeLineMvt : SubtitleFormat
     {
-        public override string Extension
-        {
-            get { return ".mvt"; }
-        }
+        public override string Extension => ".mvt";
 
-        public override string Name
-        {
-            get { return "Timeline mvt"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
-
-        public override bool IsMine(List<string> lines, string fileName)
-        {
-            var subtitle = new Subtitle();
-            LoadSubtitle(subtitle, lines, fileName);
-            return subtitle.Paragraphs.Count > _errorCount;
-        }
+        public override string Name => "Timeline mvt";
 
         public override string ToText(Subtitle subtitle, string title)
         {

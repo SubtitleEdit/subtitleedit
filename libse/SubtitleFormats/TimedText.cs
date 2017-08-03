@@ -12,8 +12,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string Name => "Timed Text draft 2006-10";
 
-        public override bool IsTimeBased => true;
-
         public override bool IsMine(List<string> lines, string fileName)
         {
             var sb = new StringBuilder();

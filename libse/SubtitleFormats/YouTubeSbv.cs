@@ -20,27 +20,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         private ExpectingLine _expecting = ExpectingLine.TimeCodes;
         private static readonly Regex RegexTimeCodes = new Regex(@"^-?\d+:-?\d+:-?\d+[:,.]-?\d+,\d+:-?\d+:-?\d+[:,.]-?\d+$", RegexOptions.Compiled);
 
-        public override string Extension
-        {
-            get { return ".sbv"; }
-        }
+        public override string Extension => ".sbv";
 
-        public override string Name
-        {
-            get { return "YouTube sbv"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
-
-        public override bool IsMine(List<string> lines, string fileName)
-        {
-            var subtitle = new Subtitle();
-            LoadSubtitle(subtitle, lines, fileName);
-            return subtitle.Paragraphs.Count > _errorCount;
-        }
+        public override string Name => "YouTube sbv";
 
         public override string ToText(Subtitle subtitle, string title)
         {
@@ -56,7 +38,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static string FormatTime(TimeCode timeCode)
         {
-            return string.Format("{0}:{1:00}:{2:00}.{3:000}", timeCode.Hours, timeCode.Minutes, timeCode.Seconds, timeCode.Milliseconds);
+            return $"{timeCode.Hours}:{timeCode.Minutes:00}:{timeCode.Seconds:00}.{timeCode.Milliseconds:000}";
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)

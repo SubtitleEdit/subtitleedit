@@ -10,27 +10,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         //* 1 : 01:01:31:19 01:01:33:04 22c
         private static readonly Regex RegexTimeCodes = new Regex(@"^\* \d+ :\t\d\d:\d\d:\d\d:\d\d\t\d\d:\d\d:\d\d:\d\d\t\d+c", RegexOptions.Compiled);
 
-        public override string Extension
-        {
-            get { return ".txt"; }
-        }
+        public override string Extension => ".txt";
 
-        public override string Name
-        {
-            get { return "Titra"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
-
-        public override bool IsMine(List<string> lines, string fileName)
-        {
-            var subtitle = new Subtitle();
-            LoadSubtitle(subtitle, lines, fileName);
-            return subtitle.Paragraphs.Count > _errorCount;
-        }
+        public override string Name => "Titra";
 
         private static int GetMaxCharsForDuration(double durationSeconds)
         {

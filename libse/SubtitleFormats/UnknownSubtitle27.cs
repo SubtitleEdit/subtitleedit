@@ -9,31 +9,17 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     {
         private static readonly Regex RegexTimeCodes = new Regex(@"^\d\d:\d\d:\d\d:  ", RegexOptions.Compiled);
 
-        public override string Extension
-        {
-            get { return ".txt"; }
-        }
+        public override string Extension => ".txt";
 
-        public override string Name
-        {
-            get { return "Unknown 27"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
+        public override string Name => "Unknown 27";
 
         public override bool IsMine(List<string> lines, string fileName)
         {
-            var subtitle = new Subtitle();
-
             var sb = new StringBuilder();
             foreach (string line in lines)
                 sb.AppendLine(line);
 
-            LoadSubtitle(subtitle, lines, fileName);
-            return subtitle.Paragraphs.Count > _errorCount;
+            return base.IsMine(lines, fileName);
         }
 
         public override string ToText(Subtitle subtitle, string title)
@@ -44,7 +30,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 //00:18:02:  (斉藤)失礼な大人って！  (悠子)何言ってんのあんた？
                 string text = HtmlUtil.RemoveHtmlTags(p.Text);
                 text = text.Replace(Environment.NewLine, "  ");
-                sb.AppendLine(string.Format("{0}  {1}", EncodeTimeCode(p.StartTime), text));
+                sb.AppendLine($"{EncodeTimeCode(p.StartTime)}  {text}");
                 sb.AppendLine();
             }
             return sb.ToString();
@@ -56,7 +42,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             int sec = time.Seconds;
             if (time.Milliseconds >= 500)
                 sec++;
-            return string.Format("{0:00}:{1:00}:{2:00}:", time.Hours, time.Minutes, sec);
+            return $"{time.Hours:00}:{time.Minutes:00}:{sec:00}:";
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)

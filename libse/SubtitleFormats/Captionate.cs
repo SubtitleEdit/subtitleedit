@@ -8,29 +8,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class Captionate : SubtitleFormat
     {
-        public override string Extension
-        {
-            get { return ".xml"; }
-        }
+        public override string Extension => ".xml";
 
         public const string NameOfFormat = "Captionate";
 
-        public override string Name
-        {
-            get { return NameOfFormat; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
-
-        public override bool IsMine(List<string> lines, string fileName)
-        {
-            var subtitle = new Subtitle();
-            LoadSubtitle(subtitle, lines, fileName);
-            return subtitle.Paragraphs.Count > 0;
-        }
+        public override string Name => NameOfFormat;
 
         public override string ToText(Subtitle subtitle, string title)
         {
@@ -168,7 +150,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static string EncodeTime(TimeCode time)
         {
-            return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", time.Hours, time.Minutes, time.Seconds, time.Milliseconds / 10.0);
+            return $"{time.Hours:00}:{time.Minutes:00}:{time.Seconds:00}:{time.Milliseconds / 10.0:00}";
         }
 
     }

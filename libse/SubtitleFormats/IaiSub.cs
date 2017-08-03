@@ -7,20 +7,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class IaiSub : SubtitleFormat
     {
-        public override string Extension
-        {
-            get { return ".sub"; }
-        }
+        public override string Extension => ".sub";
 
-        public override string Name
-        {
-            get { return "IAI subtitle"; }
-        }
+        public override string Name => "IAI subtitle";
 
-        public override bool IsTimeBased
-        {
-            get { return false; }
-        }
+        public override bool IsTimeBased => false;
 
         public override bool IsMine(List<string> lines, string fileName)
         {

@@ -9,20 +9,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     {
         private static readonly Regex RegexTimeCodes = new Regex(@"^\d{1,4}\s+\d\d:\d\d:\d\d:\d\d\s+\d\d:\d\d:\d\d:\d\d\s+.+\.(tif|tiff|png|bmp|TIF|TIFF|PNG|BMP)", RegexOptions.Compiled);
 
-        public override string Extension
-        {
-            get { return ".sst"; }
-        }
+        public override string Extension => ".sst";
 
-        public override string Name
-        {
-            get { return "Sonic Scenarist Bitmaps"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
+        public override string Name => "Sonic Scenarist Bitmaps";
 
         public override bool IsMine(List<string> lines, string fileName)
         {
@@ -30,9 +19,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             if (extension != null && extension.ToLowerInvariant() != ".sst")
                 return false;
 
-            var subtitle = new Subtitle();
-            LoadSubtitle(subtitle, lines, fileName);
-            return subtitle.Paragraphs.Count > _errorCount;
+            return base.IsMine(lines, fileName);
         }
 
         public override string ToText(Subtitle subtitle, string title)

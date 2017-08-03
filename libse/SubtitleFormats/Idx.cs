@@ -14,20 +14,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public Hashtable NonTimeCodes = new Hashtable();
 
-        public override string Extension
-        {
-            get { return ".idx"; }
-        }
+        public override string Extension => ".idx";
 
-        public override string Name
-        {
-            get { return "VobSub index file"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
+        public override string Name => "VobSub index file";
 
         public override bool IsMine(List<string> lines, string fileName)
         {

@@ -7,31 +7,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class OresmeDocXDocument : SubtitleFormat
     {
-        public override string Extension
-        {
-            get { return ".xml"; }
-        }
+        public override string Extension => ".xml";
 
-        public override string Name
-        {
-            get { return "Oresme Docx document"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
+        public override string Name => "Oresme Docx document";
 
         public override bool IsMine(List<string> lines, string fileName)
         {
             var sb = new StringBuilder();
             lines.ForEach(line => sb.AppendLine(line));
             string xmlAsString = sb.ToString().Trim();
-            if ((xmlAsString.Contains("<w:tc>")))
+            if (xmlAsString.Contains("<w:tc>"))
             {
-                var subtitle = new Subtitle();
-                LoadSubtitle(subtitle, lines, fileName);
-                return subtitle.Paragraphs.Count > _errorCount;
+                return base.IsMine(lines, fileName);
             }
             return false;
         }
@@ -272,7 +259,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             subtitle.RemoveEmptyLines();
             for (int i = 0; i < subtitle.Paragraphs.Count - 1; i++)
             {
-                if (subtitle.Paragraphs[i].EndTime.TotalMilliseconds == subtitle.Paragraphs[i + 1].StartTime.TotalMilliseconds)
+                if (Math.Abs(subtitle.Paragraphs[i].EndTime.TotalMilliseconds - subtitle.Paragraphs[i + 1].StartTime.TotalMilliseconds) < 0.01)
                     subtitle.Paragraphs[i].EndTime.TotalMilliseconds = subtitle.Paragraphs[i + 1].StartTime.TotalMilliseconds - 1;
             }
             subtitle.Renumber();

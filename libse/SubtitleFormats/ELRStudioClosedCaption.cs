@@ -7,20 +7,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class ELRStudioClosedCaption : SubtitleFormat
     {
-        public override string Extension
-        {
-            get { return ".elr"; }
-        }
+        public override string Extension => ".elr";
 
-        public override string Name
-        {
-            get { return "ELRStudio Closed Caption"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
+        public override string Name => "ELRStudio Closed Caption";
 
         public static void Save(string fileName)
         {

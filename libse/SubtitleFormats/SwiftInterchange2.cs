@@ -10,20 +10,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         private const string ItalicPrefix = "<fontstyle-italic>";
         private string _fileName;
 
-        public override string Extension
-        {
-            get { return ".sif"; }
-        }
+        public override string Extension => ".sif";
 
-        public override string Name
-        {
-            get { return "Swift Interchange File V2"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
+        public override string Name => "Swift Interchange File V2";
 
         public override bool IsMine(List<string> lines, string fileName)
         {
@@ -31,9 +20,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 return false;
 
             _fileName = fileName;
-            var subtitle = new Subtitle();
-            LoadSubtitle(subtitle, lines, fileName);
-            return subtitle.Paragraphs.Count > _errorCount;
+            return base.IsMine(lines, fileName);
         }
 
         private string GetOriginatingSwift(Subtitle subtitle)
@@ -117,7 +104,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 string duration = string.Format("{0:00}:{1:00}", p.Duration.Seconds, MillisecondsToFramesMaxFrameRate(p.Duration.Milliseconds));
                 sb.AppendLine(string.Format(paragraphWriteFormat, startTime, duration, endTime, count));
                 string text = HtmlUtil.RemoveHtmlTags(p.Text);
-                if (p.Text.StartsWith("<i>") && p.Text.EndsWith("</i>"))
+                if (p.Text.StartsWith("<i>", StringComparison.Ordinal) && p.Text.EndsWith("</i>", StringComparison.Ordinal))
                 {
                     text = ItalicPrefix + text;
                 }
@@ -146,19 +133,19 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             Paragraph p = null;
             foreach (string line in lines)
             {
-                if (line.StartsWith("# SUBTITLE"))
+                if (line.StartsWith("# SUBTITLE", StringComparison.Ordinal))
                 {
                     if (p != null)
                         subtitle.Paragraphs.Add(p);
                     p = new Paragraph();
                 }
-                else if (p != null && line.StartsWith("# TIMEIN"))
+                else if (p != null && line.StartsWith("# TIMEIN", StringComparison.Ordinal))
                 {
                     string timeCode = line.Remove(0, 8).Trim();
                     if (timeCode != "--:--:--:--" && !GetTimeCode(p.StartTime, timeCode))
                         _errorCount++;
                 }
-                else if (p != null && line.StartsWith("# DURATION"))
+                else if (p != null && line.StartsWith("# DURATION", StringComparison.Ordinal))
                 {
                     // # DURATION 01:17 AUTO
                     string timecode = line.Remove(0, 10).Replace("AUTO", string.Empty).Trim();
@@ -177,7 +164,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         }
                     }
                 }
-                else if (p != null && line.StartsWith("# TIMEOUT"))
+                else if (p != null && line.StartsWith("# TIMEOUT", StringComparison.Ordinal))
                 {
                     string timeCode = line.Remove(0, 9).Trim();
                     if (timeCode != "--:--:--:--" && !GetTimeCode(p.EndTime, timeCode))
@@ -200,7 +187,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             foreach (var paragraph in subtitle.Paragraphs)
             {
-                if (paragraph.Text.StartsWith(ItalicPrefix))
+                if (paragraph.Text.StartsWith(ItalicPrefix, StringComparison.Ordinal))
                 {
                     paragraph.Text = "<i>" + paragraph.Text.Remove(0, ItalicPrefix.Length).TrimStart() + "</i>";
                 }

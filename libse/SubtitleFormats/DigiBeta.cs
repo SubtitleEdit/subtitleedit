@@ -9,27 +9,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     {
         private static readonly Regex RegexTimeCode = new Regex(@"^\d\d \d\d \d\d \d\d\t\d\d \d\d \d\d \d\d\t", RegexOptions.Compiled);
 
-        public override string Extension
-        {
-            get { return ".txt"; }
-        }
+        public override string Extension => ".txt";
 
-        public override string Name
-        {
-            get { return "DigiBeta"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
-
-        public override bool IsMine(List<string> lines, string fileName)
-        {
-            Subtitle subtitle = new Subtitle();
-            LoadSubtitle(subtitle, lines, fileName);
-            return subtitle.Paragraphs.Count > _errorCount;
-        }
+        public override string Name => "DigiBeta";
 
         public override string ToText(Subtitle subtitle, string title)
         {
@@ -46,7 +28,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
-            var paragraph = new Paragraph();
             _errorCount = 0;
 
             subtitle.Paragraphs.Clear();
@@ -62,11 +43,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             var start = DecodeTimeCodeFramesFourParts(parts);
                             parts = line.Substring(12, 11).Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                             var end = DecodeTimeCodeFramesFourParts(parts);
-                            paragraph = new Paragraph();
-                            paragraph.StartTime = start;
-                            paragraph.EndTime = end;
+                            var paragraph = new Paragraph
+                            {
+                                StartTime = start,
+                                EndTime = end,
+                                Text = line.Substring(24).Trim().Replace("\t", Environment.NewLine)
+                            };
 
-                            paragraph.Text = line.Substring(24).Trim().Replace("\t", Environment.NewLine);
                             subtitle.Paragraphs.Add(paragraph);
                         }
                         catch
@@ -81,7 +64,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static string EncodeTimeCode(TimeCode time)
         {
-            return string.Format("{0:00} {1:00} {2:00} {3:00}", time.Hours, time.Minutes, time.Seconds, MillisecondsToFramesMaxFrameRate(time.Milliseconds));
+            return $"{time.Hours:00} {time.Minutes:00} {time.Seconds:00} {MillisecondsToFramesMaxFrameRate(time.Milliseconds):00}";
         }
 
     }

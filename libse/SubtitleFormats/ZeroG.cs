@@ -10,27 +10,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         //E 1 0:50:05.42 0:50:10.06 Default NTP
         private static readonly Regex RegexTimeCodes = new Regex(@"^E 1 \d:\d\d:\d\d.\d\d \d:\d\d:\d\d.\d\d Default NTP ", RegexOptions.Compiled);
 
-        public override string Extension
-        {
-            get { return ".zeg"; }
-        }
+        public override string Extension => ".zeg";
 
-        public override string Name
-        {
-            get { return "Zero G"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
-
-        public override bool IsMine(List<string> lines, string fileName)
-        {
-            var subtitle = new Subtitle();
-            LoadSubtitle(subtitle, lines, fileName);
-            return subtitle.Paragraphs.Count > _errorCount;
-        }
+        public override string Name => "Zero G";
 
         public override string ToText(Subtitle subtitle, string title)
         {

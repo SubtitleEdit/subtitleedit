@@ -9,33 +9,19 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     {
         private static readonly Regex RegexTimeCodes = new Regex(@"^\d\d:\d\d:\d\d:\d\d,\t[ ]?\d\d:\d\d:\d\d:\d\d,\t[ ]?", RegexOptions.Compiled);
 
-        public override string Extension
-        {
-            get { return ".txt"; }
-        }
+        public override string Extension => ".txt";
 
-        public override string Name
-        {
-            get { return "TitleExchange Pro"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
+        public override string Name => "TitleExchange Pro";
 
         public override bool IsMine(List<string> lines, string fileName)
         {
-            var subtitle = new Subtitle();
-
-            var sb = new StringBuilder();
+           var sb = new StringBuilder();
             foreach (string line in lines)
                 sb.AppendLine(line);
             if (sb.ToString().Contains(Environment.NewLine + "SP_NUMBER\tSTART\tEND\tFILE_NAME"))
                 return false; // SON
 
-            LoadSubtitle(subtitle, lines, fileName);
-            return subtitle.Paragraphs.Count > _errorCount;
+            return base.IsMine(lines, fileName);
         }
 
         public override string ToText(Subtitle subtitle, string title)
@@ -48,7 +34,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 text = text.Replace("<i>", "@Italic@");
                 text = text.Replace("</i>", "@Italic@");
                 text = text.Replace(Environment.NewLine, "//");
-                sb.AppendLine(string.Format("{0},\t{1},\t{2}", EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), HtmlUtil.RemoveHtmlTags(text)));
+                sb.AppendLine($"{EncodeTimeCode(p.StartTime)},\t{EncodeTimeCode(p.EndTime)},\t{HtmlUtil.RemoveHtmlTags(text)}");
             }
             return sb.ToString();
         }
@@ -56,7 +42,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         private static string EncodeTimeCode(TimeCode time)
         {
             //00:03:15:22 (last is frame)
-            return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", time.Hours, time.Minutes, time.Seconds, MillisecondsToFramesMaxFrameRate(time.Milliseconds));
+            return $"{time.Hours:00}:{time.Minutes:00}:{time.Seconds:00}:{MillisecondsToFramesMaxFrameRate(time.Milliseconds):00}";
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)

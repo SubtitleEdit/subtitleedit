@@ -21,8 +21,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string Name => "PE2";
 
-        public override bool IsTimeBased => true;
-
         public override bool IsMine(List<string> lines, string fileName)
         {
             var sb = new StringBuilder();
@@ -30,11 +28,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 sb.AppendLine(line);
             string s = sb.ToString();
             if (!s.Contains("#PE2"))
-                return false; 
+                return false;
 
-            var subtitle = new Subtitle();
-            LoadSubtitle(subtitle, lines, fileName);
-            return subtitle.Paragraphs.Count > _errorCount;
+            return base.IsMine(lines, fileName);
         }
 
         public override string ToText(Subtitle subtitle, string title)

@@ -7,27 +7,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class HtmlSamiArray : SubtitleFormat
     {
-        public override string Extension
-        {
-            get { return ".html"; }
-        }
+        public override string Extension => ".html";
 
-        public override string Name
-        {
-            get { return "Html javascript sami array"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
-
-        public override bool IsMine(List<string> lines, string fileName)
-        {
-            var subtitle = new Subtitle();
-            LoadSubtitle(subtitle, lines, fileName);
-            return subtitle.Paragraphs.Count > 0;
-        }
+        public override string Name => "Html javascript sami array";
 
         public override string ToText(Subtitle subtitle, string title)
         {

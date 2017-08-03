@@ -10,27 +10,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static readonly Regex RegexTimeCodes = new Regex(@"^\d\d:\d\d:\d\d:\d\d, \d\d:\d\d:\d\d:\d\d,.+", RegexOptions.Compiled);
 
-        public override string Extension
-        {
-            get { return ".stl"; }
-        }
+        public override string Extension => ".stl";
 
-        public override string Name
-        {
-            get { return "Spruce Subtitle With Space"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
-
-        public override bool IsMine(List<string> lines, string fileName)
-        {
-            var subtitle = new Subtitle();
-            LoadSubtitle(subtitle, lines, fileName);
-            return subtitle.Paragraphs.Count > _errorCount;
-        }
+        public override string Name => "Spruce Subtitle With Space";
 
         public override string ToText(Subtitle subtitle, string title)
         {

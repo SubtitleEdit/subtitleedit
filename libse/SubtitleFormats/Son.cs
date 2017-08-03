@@ -7,27 +7,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class Son : SubtitleFormat
     {
-        public override string Extension
-        {
-            get { return ".son"; }
-        }
+        public override string Extension => ".son";
 
-        public override string Name
-        {
-            get { return "SON"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
-
-        public override bool IsMine(List<string> lines, string fileName)
-        {
-            var subtitle = new Subtitle();
-            LoadSubtitle(subtitle, lines, fileName);
-            return subtitle.Paragraphs.Count > _errorCount;
-        }
+        public override string Name => "SON";
 
         public override string ToText(Subtitle subtitle, string title)
         {

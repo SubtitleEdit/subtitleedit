@@ -8,20 +8,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class UnknownSubtitle76 : SubtitleFormat
     {
-        public override string Extension
-        {
-            get { return ".xml"; }
-        }
+        public override string Extension => ".xml";
 
-        public override string Name
-        {
-            get { return "Unknown 76"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
+        public override string Name => "Unknown 76";
 
         public override bool IsMine(List<string> lines, string fileName)
         {

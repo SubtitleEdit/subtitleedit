@@ -7,27 +7,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class UnknownSubtitle5 : SubtitleFormat
     {
-        public override string Extension
-        {
-            get { return ".xml"; }
-        }
+        public override string Extension => ".xml";
 
-        public override string Name
-        {
-            get { return "Unknown 5"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
-
-        public override bool IsMine(List<string> lines, string fileName)
-        {
-            var subtitle = new Subtitle();
-            LoadSubtitle(subtitle, lines, fileName);
-            return subtitle.Paragraphs.Count > 0;
-        }
+        public override string Name => "Unknown 5";
 
         public override string ToText(Subtitle subtitle, string title)
         {
@@ -43,11 +25,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 XmlNode paragraph = xml.CreateElement("text");
 
                 XmlAttribute start = xml.CreateAttribute("start");
-                start.InnerText = string.Format("{0}", p.StartTime.TotalMilliseconds / 1000).Replace(',', '.');
+                start.InnerText = $"{p.StartTime.TotalMilliseconds / 1000}".Replace(',', '.');
                 paragraph.Attributes.Append(start);
 
                 XmlAttribute duration = xml.CreateAttribute("dur");
-                duration.InnerText = string.Format("{0}", p.Duration.TotalMilliseconds / 1000).Replace(',', '.');
+                duration.InnerText = $"{p.Duration.TotalMilliseconds / 1000}".Replace(',', '.');
                 paragraph.Attributes.Append(duration);
 
                 paragraph.InnerText = p.Text;

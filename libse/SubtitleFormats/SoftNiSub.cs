@@ -12,27 +12,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     {
         private static readonly Regex RegexTimeCodes = new Regex(@"^\d\d:\d\d:\d\d\.\d\d\\\d\d:\d\d:\d\d\.\d\d$", RegexOptions.Compiled);
 
-        public override string Extension
-        {
-            get { return ".sub"; }
-        }
+        public override string Extension => ".sub";
 
-        public override string Name
-        {
-            get { return "SoftNi sub"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
-
-        public override bool IsMine(List<string> lines, string fileName)
-        {
-            var subtitle = new Subtitle();
-            DoLoadSubtitle(subtitle, lines);
-            return subtitle.Paragraphs.Count > _errorCount;
-        }
+        public override string Name => "SoftNi sub";
 
         public override string ToText(Subtitle subtitle, string title)
         {
@@ -74,7 +56,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         nextLineInItalics = false;
                     }
 
-                    if (tempLine.StartsWith("<i>") && tempLine.EndsWith("</i>"))
+                    if (tempLine.StartsWith("<i>", StringComparison.Ordinal) && tempLine.EndsWith("</i>", StringComparison.Ordinal))
                     {
                         // Whole line is in italics
                         // Remove <i> from the beginning

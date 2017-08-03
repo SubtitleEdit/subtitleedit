@@ -13,32 +13,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         private static readonly Regex RegexTimeCodes1 = new Regex(@" \d\d:\d\d:\d\d:\d\d$", RegexOptions.Compiled);
         private static readonly Regex RegexTimeCodes2 = new Regex(@" \d\d:\d\d:\d\d:\d\d         +\d+$", RegexOptions.Compiled);
 
-        public override string Extension
-        {
-            get { return ".txt"; }
-        }
+        public override string Extension => ".txt";
 
-        public override string Name
-        {
-            get { return "Unknown 44"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
-
-        public override bool IsMine(List<string> lines, string fileName)
-        {
-            var subtitle = new Subtitle();
-
-            var sb = new StringBuilder();
-            foreach (string line in lines)
-                sb.AppendLine(line);
-
-            LoadSubtitle(subtitle, lines, fileName);
-            return subtitle.Paragraphs.Count > _errorCount;
-        }
+        public override string Name => "Unknown 44";
 
         public override string ToText(Subtitle subtitle, string title)
         {

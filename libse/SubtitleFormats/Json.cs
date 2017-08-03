@@ -6,27 +6,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class Json : SubtitleFormat
     {
-        public override string Extension
-        {
-            get { return ".json"; }
-        }
+        public override string Extension => ".json";
 
-        public override string Name
-        {
-            get { return "JSON"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
-
-        public override bool IsMine(List<string> lines, string fileName)
-        {
-            var subtitle = new Subtitle();
-            LoadSubtitle(subtitle, lines, fileName);
-            return subtitle.Paragraphs.Count > _errorCount;
-        }
+        public override string Name => "JSON";
 
         public static string EncodeJsonText(string text)
         {
@@ -163,7 +145,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     endIndex = endAlternate;
                 else if (endAlternate > 0 && endAlternate < endIndex)
                     endIndex = endAlternate;
-                if (endIndex < 0 && res.EndsWith("\""))
+                if (endIndex < 0 && res.EndsWith("\"", StringComparison.Ordinal))
                     endIndex = res.Length - 1;
                 if (endIndex < 0)
                     return null;

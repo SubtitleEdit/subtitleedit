@@ -12,27 +12,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         private static readonly Regex RegexTimeCode = new Regex(@"^\/tc \d\d:\d\d:\d\d:\d\d \d\d:\d\d:\d\d:\d\d", RegexOptions.Compiled);
         private static readonly Regex RegexFileNum = new Regex(@"^\/file\s+\d+$", RegexOptions.Compiled);
 
-        public override string Extension
-        {
-            get { return ".stp"; }
-        }
+        public override string Extension => ".stp";
 
-        public override string Name
-        {
-            get { return "Belle Nuit Subtitler"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
-
-        public override bool IsMine(List<string> lines, string fileName)
-        {
-            var subtitle = new Subtitle();
-            LoadSubtitle(subtitle, lines, fileName);
-            return subtitle.Paragraphs.Count > _errorCount;
-        }
+        public override string Name => "Belle Nuit Subtitler";
 
         public override string ToText(Subtitle subtitle, string title)
         {
@@ -325,7 +307,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static string EncodeTimeCode(TimeCode time)
         {
-            return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", time.Hours, time.Minutes, time.Seconds, MillisecondsToFramesMaxFrameRate(time.Milliseconds));
+            return $"{time.Hours:00}:{time.Minutes:00}:{time.Seconds:00}:{MillisecondsToFramesMaxFrameRate(time.Milliseconds):00}";
         }
 
     }

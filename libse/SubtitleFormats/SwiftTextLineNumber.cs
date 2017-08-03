@@ -18,29 +18,16 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static readonly Regex RegexTimeCodes = new Regex(@"^SUBTITLE: \d+\s+TIMEIN:\s*[0123456789-]+:[0123456789-]+:[0123456789-]+:[0123456789-]+\s*TIMEOUT:\s*[0123456789-]+:[0123456789-]+:[0123456789-]+:[0123456789-]+$", RegexOptions.Compiled);
 
-        public override string Extension
-        {
-            get { return ".txt"; }
-        }
+        public override string Extension => ".txt";
 
-        public override string Name
-        {
-            get { return "Swift text line#"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
+        public override string Name => "Swift text line#";
 
         public override bool IsMine(List<string> lines, string fileName)
         {
             if (lines == null || lines.Count > 2 && !string.IsNullOrEmpty(lines[0]) && lines[0].Contains("{QTtext}"))
                 return false;
 
-            var subtitle = new Subtitle();
-            LoadSubtitle(subtitle, lines, fileName);
-            return subtitle.Paragraphs.Count > _errorCount;
+            return base.IsMine(lines, fileName);
         }
 
         public override string ToText(Subtitle subtitle, string title)
@@ -62,8 +49,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             int count = 1;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                string startTime = string.Format("{0:00}:{1:00}:{2:00}:{3:00}", p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, MillisecondsToFramesMaxFrameRate(p.StartTime.Milliseconds));
-                string timeOut = string.Format("{0:00}:{1:00}:{2:00}:{3:00}", p.EndTime.Hours, p.EndTime.Minutes, p.EndTime.Seconds, MillisecondsToFramesMaxFrameRate(p.EndTime.Milliseconds));
+                string startTime = $"{p.StartTime.Hours:00}:{p.StartTime.Minutes:00}:{p.StartTime.Seconds:00}:{MillisecondsToFramesMaxFrameRate(p.StartTime.Milliseconds):00}";
+                string timeOut = $"{p.EndTime.Hours:00}:{p.EndTime.Minutes:00}:{p.EndTime.Seconds:00}:{MillisecondsToFramesMaxFrameRate(p.EndTime.Milliseconds):00}";
                 sb.AppendLine(string.Format(paragraphWriteFormat, startTime, count, timeOut, p.Text));
                 count++;
             }

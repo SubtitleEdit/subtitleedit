@@ -7,20 +7,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class UnknownSubtitle43 : SubtitleFormat
     {
-        public override string Extension
-        {
-            get { return ".xml"; }
-        }
+        public override string Extension => ".xml";
 
-        public override string Name
-        {
-            get { return "Unknown 43"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
+        public override string Name => "Unknown 43";
 
         public override bool IsMine(List<string> lines, string fileName)
         {
@@ -48,7 +37,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         internal static string ConvertToTimeString(TimeCode time)
         {
-            return string.Format("{0}:{1:00}", (int)(time.TotalSeconds / 60), (int)(time.TotalSeconds % 60));
+            return $"{(int)(time.TotalSeconds / 60)}:{(int)(time.TotalSeconds % 60):00}";
         }
 
         public override string ToText(Subtitle subtitle, string title)

@@ -9,32 +9,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     {
         private static readonly Regex RegexTimeCodes = new Regex(@"^\d\d:\d\d:\d\d:\d\d \d\d:\d\d:\d\d:\d\d$", RegexOptions.Compiled);
 
-        public override string Extension
-        {
-            get { return ".txt"; }
-        }
+        public override string Extension => ".txt";
 
-        public override string Name
-        {
-            get { return "Avid Caption"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
-
-        public override bool IsMine(List<string> lines, string fileName)
-        {
-            var subtitle = new Subtitle();
-            LoadSubtitle(subtitle, lines, fileName);
-            return subtitle.Paragraphs.Count > _errorCount;
-        }
+        public override string Name => "Avid Caption";
 
         public override string ToText(Subtitle subtitle, string title)
         {
             var sb = new StringBuilder();
-            int index = 0;
             sb.AppendLine("@ This file written with the Avid Caption plugin, version 1");
             sb.AppendLine();
             sb.AppendLine("<begin subtitles>");
@@ -45,7 +26,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 //00:50:34:22 00:50:39:13
                 //Ich muss dafür sorgen,
                 //dass die Epsteins weiterleben
-                index++;
             }
             sb.AppendLine("<end subtitles>");
             return sb.ToString();
@@ -59,10 +39,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             if (Math.Abs(Configuration.Settings.General.CurrentFrameRate - 23.976) < 0.01 ||
                 Math.Abs(Configuration.Settings.General.CurrentFrameRate - 24) < 0.01)
             {
-                var frames = SubtitleFormat.MillisecondsToFramesMaxFrameRate(time.Milliseconds);
+                var frames = MillisecondsToFramesMaxFrameRate(time.Milliseconds);
                 if (frames == 2 || frames == 7 || frames == 12 || frames == 17 || frames == 22 || frames == 27)
                     frames--;
-                return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", time.Hours, time.Minutes, time.Seconds, frames);
+                return $"{time.Hours:00}:{time.Minutes:00}:{time.Seconds:00}:{frames:00}";
             }
             else
             {

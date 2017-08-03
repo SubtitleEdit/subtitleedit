@@ -13,29 +13,16 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     {
         private static readonly Regex regexTimeCodes = new Regex(@"^\d\d:\d\d:\d\d-\d$", RegexOptions.Compiled);
 
-        public override string Extension
-        {
-            get { return ".txt"; }
-        }
+        public override string Extension => ".txt";
 
-        public override string Name
-        {
-            get { return "F4 Text"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
+        public override string Name => "F4 Text";
 
         public override bool IsMine(List<string> lines, string fileName)
         {
             if (fileName != null && !fileName.EndsWith(Extension, StringComparison.OrdinalIgnoreCase))
                 return false;
 
-            var subtitle = new Subtitle();
-            LoadSubtitle(subtitle, lines, fileName);
-            return subtitle.Paragraphs.Count > _errorCount;
+            return base.IsMine(lines, fileName);
         }
 
         public static string ToF4Text(Subtitle subtitle)
@@ -61,7 +48,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static string EncodeTimeCode(TimeCode time)
         {
-            return string.Format(" #{0:00}:{1:00}:{2:00}-{3:0}# ", time.Hours, time.Minutes, time.Seconds, Math.Round(time.Milliseconds / 100.0, 0));
+            return $" #{time.Hours:00}:{time.Minutes:00}:{time.Seconds:00}-{Math.Round(time.Milliseconds / 100.0, 0):0}# ";
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
@@ -97,7 +84,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             p = new Paragraph();
                         }
                     }
-                    if (p.StartTime.TotalMilliseconds == 0 || currentText.Length == 0)
+                    if (Math.Abs(p.StartTime.TotalMilliseconds) < 0.01 || currentText.Length == 0)
                     {
                         p.StartTime = DecodeTimeCode(line.Split(new[] { ':', '-' }, StringSplitOptions.RemoveEmptyEntries));
                     }

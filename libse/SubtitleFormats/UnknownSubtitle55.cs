@@ -11,32 +11,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         //  338:  00:24:34.00  00:24:37.10   [51]
         private static readonly Regex RegexTimeCodes = new Regex(@"^\d+:\s+\d\d:\d\d:\d\d\.\d\d\s+\d\d:\d\d:\d\d\.\d\d\s+\[\d+\]$", RegexOptions.Compiled);
 
-        public override string Extension
-        {
-            get { return ".rtf"; }
-        }
+        public override string Extension => ".rtf";
 
-        public override string Name
-        {
-            get { return "Unknown 55"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
-
-        public override bool IsMine(List<string> lines, string fileName)
-        {
-            var subtitle = new Subtitle();
-
-            var sb = new StringBuilder();
-            foreach (string line in lines)
-                sb.AppendLine(line);
-
-            LoadSubtitle(subtitle, lines, fileName);
-            return subtitle.Paragraphs.Count > _errorCount;
-        }
+        public override string Name => "Unknown 55";
 
         public override string ToText(Subtitle subtitle, string title)
         {

@@ -9,7 +9,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     {
         public override string Extension => ".w32";
         public override string Name => "Wincaps W32";
-        public override bool IsTimeBased => true;
         public override bool IsMine(List<string> lines, string fileName)
         {
             if (!string.IsNullOrEmpty(fileName) && File.Exists(fileName) && fileName.EndsWith(Extension, StringComparison.OrdinalIgnoreCase))

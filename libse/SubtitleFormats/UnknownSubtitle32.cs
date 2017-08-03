@@ -10,27 +10,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         //1:  02:25:07.24  02:25:10.19
         private static readonly Regex RegexTimeCode = new Regex(@"^\d+:\s+\d\d:\d\d:\d\d\.\d\d  \d\d:\d\d:\d\d\.\d\d$", RegexOptions.Compiled);
 
-        public override string Extension
-        {
-            get { return ".txt"; }
-        }
+        public override string Extension => ".txt";
 
-        public override string Name
-        {
-            get { return "Unknown 32"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
-
-        public override bool IsMine(List<string> lines, string fileName)
-        {
-            var subtitle = new Subtitle();
-            LoadSubtitle(subtitle, lines, fileName);
-            return subtitle.Paragraphs.Count > _errorCount;
-        }
+        public override string Name => "Unknown 32";
 
         public override string ToText(Subtitle subtitle, string title)
         {

@@ -14,27 +14,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             TimeEndOrText,
         }
 
-        public override string Extension
-        {
-            get { return ".aqt"; }
-        }
+        public override string Extension => ".aqt";
 
-        public override string Name
-        {
-            get { return "AQTitle"; }
-        }
+        public override string Name => "AQTitle";
 
-        public override bool IsTimeBased
-        {
-            get { return false; }
-        }
-
-        public override bool IsMine(List<string> lines, string fileName)
-        {
-            var subtitle = new Subtitle();
-            LoadSubtitle(subtitle, lines, fileName);
-            return subtitle.Paragraphs.Count > _errorCount;
-        }
+        public override bool IsTimeBased => false;
 
         public override string ToText(Subtitle subtitle, string title)
         {

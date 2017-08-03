@@ -7,10 +7,6 @@
             UseCDataForParagraphText = true;
         }
 
-        public override string Name
-        {
-            get { return "Timed Text draft 2006-04 CDATA"; }
-        }
-
+        public override string Name => "Timed Text draft 2006-04 CDATA";
     }
 }

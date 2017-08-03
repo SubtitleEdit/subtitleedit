@@ -10,34 +10,16 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         // 0:01 – 0:03
         private static readonly Regex RegexTimeCodes = new Regex(@"^\d+:\d\d – \d+:\d\d$", RegexOptions.Compiled);
 
-        public override string Extension
-        {
-            get { return ".txt"; }
-        }
+        public override string Extension => ".txt";
 
-        public override string Name
-        {
-            get { return "Unknown 40"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
-
-        public override bool IsMine(List<string> lines, string fileName)
-        {
-            var subtitle = new Subtitle();
-            LoadSubtitle(subtitle, lines, fileName);
-            return subtitle.Paragraphs.Count > _errorCount;
-        }
+        public override string Name => "Unknown 40";
 
         public override string ToText(Subtitle subtitle, string title)
         {
             var sb = new StringBuilder();
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                sb.AppendLine(string.Format("{0} – {1}{2}{3}", EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), Environment.NewLine, HtmlUtil.RemoveHtmlTags(p.Text)));
+                sb.AppendLine($"{EncodeTimeCode(p.StartTime)} – {EncodeTimeCode(p.EndTime)}{Environment.NewLine}{HtmlUtil.RemoveHtmlTags(p.Text)}");
             }
             return sb.ToString();
         }
@@ -48,7 +30,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             int seconds = time.Seconds;
             if (time.Milliseconds >= 500)
                 seconds++;
-            return string.Format("{0}:{1:00}", time.Hours * 60 + time.Minutes, time.Seconds);
+            return $"{time.Hours * 60 + time.Minutes}:{time.Seconds:00}";
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)

@@ -9,27 +9,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     {
         private static readonly Regex RegexTimeCode = new Regex(@"^\d+\) \d\d:\d\d:\d\d:\d\d \d\d:\d\d:\d\d:\d\d Durée : \d\d:\d\d", RegexOptions.Compiled); //10:00:02F00
 
-        public override string Extension
-        {
-            get { return ".txt"; }
-        }
+        public override string Extension => ".txt";
 
-        public override string Name
-        {
-            get { return "Unknown 69"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
-
-        public override bool IsMine(List<string> lines, string fileName)
-        {
-            var subtitle = new Subtitle();
-            LoadSubtitle(subtitle, lines, fileName);
-            return subtitle.Paragraphs.Count > _errorCount;
-        }
+        public override string Name => "Unknown 69";
 
         public override string ToText(Subtitle subtitle, string title)
         {
@@ -47,7 +29,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 string text = HtmlUtil.RemoveHtmlTags(p.Text, true);
                 string start = p.StartTime.ToHHMMSSFF();
                 string end = p.EndTime.ToHHMMSSFF();
-                string duration = string.Format("{0:00}:{1:00}", p.Duration.Seconds, MillisecondsToFramesMaxFrameRate(p.Duration.Milliseconds));
+                string duration = $"{p.Duration.Seconds:00}:{MillisecondsToFramesMaxFrameRate(p.Duration.Milliseconds):00}";
                 const string readability = "011";
                 const string interval = "06:14";
                 string nbc = text.Length.ToString().PadLeft(3, '0');

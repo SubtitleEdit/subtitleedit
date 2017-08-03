@@ -9,20 +9,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     {
         private static readonly Regex RegexTimeCodes = new Regex(@"^\d\d\d\d\t\d\d:\d\d:\d\d:\d\d\t\d\d:\d\d:\d\d:\d\d\t", RegexOptions.Compiled);
 
-        public override string Extension
-        {
-            get { return ".txt"; }
-        }
+        public override string Extension => ".txt";
 
-        public override string Name
-        {
-            get { return "Adobe Encore (line/tabs)"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
+        public override string Name => "Adobe Encore (line/tabs)";
 
         public override bool IsMine(List<string> lines, string fileName)
         {
@@ -52,7 +41,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 text = text.Replace("<i>", "@Italic@");
                 text = text.Replace("</i>", "@Italic@");
                 text = text.Replace(Environment.NewLine, "//");
-                sb.AppendLine(string.Format("{0:0000}\t{1}\t{2}\t{3}", index, EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), HtmlUtil.RemoveHtmlTags(text, true)));
+                sb.AppendLine($"{index:0000}\t{EncodeTimeCode(p.StartTime)}\t{EncodeTimeCode(p.EndTime)}\t{HtmlUtil.RemoveHtmlTags(text, true)}");
             }
             return sb.ToString();
         }

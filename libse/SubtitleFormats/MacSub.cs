@@ -17,36 +17,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             EndFrame
         }
 
-        public override string Extension
-        {
-            get
-            {
-                return ".txt";
-            }
-        }
+        public override string Extension => ".txt";
 
-        public override bool IsTimeBased
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public override bool IsTimeBased => false;
 
-        public override string Name
-        {
-            get
-            {
-                return "MacSub";
-            }
-        }
-
-        public override bool IsMine(List<string> lines, string fileName)
-        {
-            var macSub = new Subtitle();
-            LoadSubtitle(macSub, lines, fileName);
-            return macSub.Paragraphs.Count > _errorCount;
-        }
+        public override string Name => "MacSub";
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {

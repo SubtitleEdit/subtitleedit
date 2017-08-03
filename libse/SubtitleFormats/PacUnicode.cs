@@ -11,20 +11,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     public class PacUnicode : SubtitleFormat
     {
 
-        public override string Extension
-        {
-            get { return ".fpc"; }
-        }
+        public override string Extension => ".fpc";
 
-        public override string Name
-        {
-            get { return "PAC Unicode (UniPac)"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
+        public override string Name => "PAC Unicode (UniPac)";
 
         public override bool IsMine(List<string> lines, string fileName)
         {

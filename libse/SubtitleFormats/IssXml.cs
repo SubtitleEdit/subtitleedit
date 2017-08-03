@@ -10,29 +10,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     {
         private static readonly Regex RegexTimeCodes = new Regex(@"^\d\d:\d\d:\d\d:\d\d$", RegexOptions.Compiled); //00:02:56:02
 
-        public override string Extension
-        {
-            get { return ".ats"; }
-        }
+        public override string Extension => ".ats";
 
-        public override string Name
-        {
-            get { return "ATS ISS"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
-
-        public override bool IsMine(List<string> lines, string fileName)
-        {
-            var subtitle = new Subtitle();
-            var oldFrameRate = Configuration.Settings.General.CurrentFrameRate;
-            LoadSubtitle(subtitle, lines, fileName);
-            Configuration.Settings.General.CurrentFrameRate = oldFrameRate;
-            return subtitle.Paragraphs.Count > 0;
-        }
+        public override string Name => "ATS ISS";
 
         public override string ToText(Subtitle subtitle, string title)
         {

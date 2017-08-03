@@ -10,27 +10,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         // #0:03:03.23,0:03:08.05
         private static readonly Regex RegexTimeCode = new Regex(@"^#\d\d?:\d\d:\d\d\.\d\d,\d:\d\d:\d\d\.\d\d$", RegexOptions.Compiled);
 
-        public override string Extension
-        {
-            get { return ".utx"; }
-        }
+        public override string Extension => ".utx";
 
-        public override string Name
-        {
-            get { return "UTX"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
-
-        public override bool IsMine(List<string> lines, string fileName)
-        {
-            var subtitle = new Subtitle();
-            LoadSubtitle(subtitle, lines, fileName);
-            return subtitle.Paragraphs.Count > _errorCount;
-        }
+        public override string Name => "UTX";
 
         public override string ToText(Subtitle subtitle, string title)
         {
@@ -94,7 +76,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         private static string EncodeTimeCode(TimeCode time)
         {
             //0:03:02.15
-            return string.Format("{0}:{1:00}:{2:00}.{3:00}", time.Hours, time.Minutes, time.Seconds, MillisecondsToFramesMaxFrameRate(time.Milliseconds));
+            return $"{time.Hours}:{time.Minutes:00}:{time.Seconds:00}.{MillisecondsToFramesMaxFrameRate(time.Milliseconds):00}";
         }
 
     }

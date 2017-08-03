@@ -13,15 +13,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string Name => "TSB4";
 
-        public override bool IsTimeBased => true;
-
-        public override bool IsMine(List<string> lines, string fileName)
-        {
-            var subtitle = new Subtitle();
-            LoadSubtitle(subtitle, lines, fileName);
-            return subtitle.Paragraphs.Count > _errorCount;
-        }
-
         public override string ToText(Subtitle subtitle, string title)
         {
             return "Not supported!";

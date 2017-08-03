@@ -19,20 +19,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             Text
         }
 
-        public override string Extension
-        {
-            get { return ".txt"; }
-        }
+        public override string Extension => ".txt";
 
-        public override string Name
-        {
-            get { return "Unknown 17"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
+        public override string Name => "Unknown 17";
 
         public override bool IsMine(List<string> lines, string fileName)
         {
@@ -43,9 +32,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             if (!s.Contains("[HEADER]") || !s.Contains("[BODY]"))
                 return false;
 
-            var subtitle = new Subtitle();
-            LoadSubtitle(subtitle, lines, fileName);
-            return subtitle.Paragraphs.Count > _errorCount;
+            return base.IsMine(lines, fileName);
         }
 
         public override string ToText(Subtitle subtitle, string title)
@@ -176,7 +163,7 @@ DIGITAL_CINEMA=YES
 
         private static string EncodeTimeCode(TimeCode time)
         {
-            return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", time.Hours, time.Minutes, time.Seconds, MillisecondsToFramesMaxFrameRate(time.Milliseconds));
+            return $"{time.Hours:00}:{time.Minutes:00}:{time.Seconds:00}:{MillisecondsToFramesMaxFrameRate(time.Milliseconds):00}";
         }
     }
 }

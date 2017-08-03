@@ -7,29 +7,16 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class F4Xml : F4Text
     {
-        public override string Extension
-        {
-            get { return ".xml"; }
-        }
+        public override string Extension => ".xml";
 
-        public override string Name
-        {
-            get { return "F4 Xml"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
+        public override string Name => "F4 Xml";
 
         public override bool IsMine(List<string> lines, string fileName)
         {
             if (fileName != null && !fileName.EndsWith(Extension, StringComparison.OrdinalIgnoreCase))
                 return false;
 
-            var subtitle = new Subtitle();
-            LoadSubtitle(subtitle, lines, fileName);
-            return subtitle.Paragraphs.Count > _errorCount;
+            return base.IsMine(lines, fileName);
         }
 
         public override string ToText(Subtitle subtitle, string title)

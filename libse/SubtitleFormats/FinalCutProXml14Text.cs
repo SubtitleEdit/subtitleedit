@@ -10,27 +10,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     {
         public double FrameRate { get; set; }
 
-        public override string Extension
-        {
-            get { return ".fcpxml"; }
-        }
+        public override string Extension => ".fcpxml";
 
-        public override string Name
-        {
-            get { return "Final Cut Pro Xml 1.4 Text"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
-
-        public override bool IsMine(List<string> lines, string fileName)
-        {
-            var subtitle = new Subtitle();
-            LoadSubtitle(subtitle, lines, fileName);
-            return subtitle.Paragraphs.Count > 0;
-        }
+        public override string Name => "Final Cut Pro Xml 1.4 Text";
 
         public override string ToText(Subtitle subtitle, string title)
         {

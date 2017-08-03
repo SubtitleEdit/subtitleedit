@@ -16,20 +16,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static readonly Regex RegexTimeCode = new Regex(@"^\d+\t\d\d:\d\d:\d\d:\d\d\t\d\d:\d\d:\d\d:\d\d\t.+$", RegexOptions.Compiled);
 
-        public override string Extension
-        {
-            get { return ".txt"; }
-        }
+        public override string Extension => ".txt";
 
-        public override string Name
-        {
-            get { return "Avid DVD"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
+        public override string Name => "Avid DVD";
 
         public override bool IsMine(List<string> lines, string fileName)
         {
@@ -78,7 +67,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
 
                 text = HtmlUtil.RemoveHtmlTags(text, true);
-                sb.AppendLine(string.Format("{0}\t{1}\t{2}\t{3}", count, MakeTimeCode(p.StartTime), MakeTimeCode(p.EndTime), text.Replace(Environment.NewLine, "|")));
+                sb.AppendLine($"{count}\t{MakeTimeCode(p.StartTime)}\t{MakeTimeCode(p.EndTime)}\t{text.Replace(Environment.NewLine, "|")}");
                 sb.AppendLine();
                 count++;
             }

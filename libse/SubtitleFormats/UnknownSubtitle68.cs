@@ -9,27 +9,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     {
         private static readonly Regex RegexTimeCode = new Regex(@"^\d\d:\d\d:\d\dF\d\d", RegexOptions.Compiled); //10:00:02F00
 
-        public override string Extension
-        {
-            get { return ".txt"; }
-        }
+        public override string Extension => ".txt";
 
-        public override string Name
-        {
-            get { return "Unknown 68"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
-
-        public override bool IsMine(List<string> lines, string fileName)
-        {
-            var subtitle = new Subtitle();
-            LoadSubtitle(subtitle, lines, fileName);
-            return subtitle.Paragraphs.Count > _errorCount;
-        }
+        public override string Name => "Unknown 68";
 
         public override string ToText(Subtitle subtitle, string title)
         {
@@ -86,9 +68,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 string text = p.Text.Replace("♪", "|");
-                if (text.StartsWith("<i>"))
+                if (text.StartsWith("<i>", StringComparison.Ordinal))
                     text = ",b" + Environment.NewLine + text;
-                if (text.StartsWith("{\\an8}"))
+                if (text.StartsWith("{\\an8}", StringComparison.Ordinal))
                     text = ",12" + Environment.NewLine + text;
                 text = HtmlUtil.RemoveHtmlTags(text, true);
                 sb.AppendLine(string.Format(paragraphWriteFormat, text, Environment.NewLine, EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime)));
@@ -122,7 +104,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             if (p != null && Math.Abs(p.EndTime.TotalMilliseconds) < 0.001)
                                 p.EndTime.TotalMilliseconds = start.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
                             TimeCode end = new TimeCode();
-                            p = MakeTextParagraph(text, p, start, end);
+                            p = MakeTextParagraph(text, start, end);
                             subtitle.Paragraphs.Add(p);
                             text.Clear();
                         }
@@ -139,7 +121,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             if (p != null && Math.Abs(p.EndTime.TotalMilliseconds) < 0.001)
                                 p.EndTime.TotalMilliseconds = start.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
                             TimeCode end = DecodeTimeCodeFrames(timeParts[1].Substring(0, 11), splitChars);
-                            p = MakeTextParagraph(text, p, start, end);
+                            p = MakeTextParagraph(text, start, end);
                             subtitle.Paragraphs.Add(p);
                             text.Clear();
                         }
@@ -164,21 +146,21 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             subtitle.Renumber();
         }
 
-        private static Paragraph MakeTextParagraph(StringBuilder text, Paragraph p, TimeCode start, TimeCode end)
+        private static Paragraph MakeTextParagraph(StringBuilder text, TimeCode start, TimeCode end)
         {
-            p = new Paragraph(start, end, text.ToString().Trim());
-            if (p.Text.StartsWith(",b" + Environment.NewLine))
+            var p = new Paragraph(start, end, text.ToString().Trim());
+            if (p.Text.StartsWith(",b" + Environment.NewLine, StringComparison.Ordinal))
                 p.Text = "<i>" + p.Text.Remove(0, 2).Trim() + "</i>";
-            else if (p.Text.StartsWith(",1" + Environment.NewLine))
+            else if (p.Text.StartsWith(",1" + Environment.NewLine, StringComparison.Ordinal))
                 p.Text = "{\\an8}" + p.Text.Remove(0, 2).Trim();
-            else if (p.Text.StartsWith(",12" + Environment.NewLine))
+            else if (p.Text.StartsWith(",12" + Environment.NewLine, StringComparison.Ordinal))
                 p.Text = "{\\an8}" + p.Text.Remove(0, 3).Trim();
             return p;
         }
 
         private static string EncodeTimeCode(TimeCode time)
         {
-            return string.Format("{0:00}:{1:00}:{2:00}F{3:00}", time.Hours, time.Minutes, time.Seconds, MillisecondsToFramesMaxFrameRate(time.Milliseconds));
+            return $"{time.Hours:00}:{time.Minutes:00}:{time.Seconds:00}F{MillisecondsToFramesMaxFrameRate(time.Milliseconds):00}";
         }
 
     }

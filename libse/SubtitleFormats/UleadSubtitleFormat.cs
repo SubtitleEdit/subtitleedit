@@ -9,27 +9,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     {
         private static readonly Regex RegexTimeCodes = new Regex(@"^#\d+ \d\d;\d\d;\d\d;\d\d \d\d;\d\d;\d\d;\d\d", RegexOptions.Compiled);
 
-        public override string Extension
-        {
-            get { return ".txt"; }
-        }
+        public override string Extension => ".txt";
 
-        public override string Name
-        {
-            get { return "Ulead subtitle format"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
-
-        public override bool IsMine(List<string> lines, string fileName)
-        {
-            var subtitle = new Subtitle();
-            LoadSubtitle(subtitle, lines, fileName);
-            return subtitle.Paragraphs.Count > _errorCount;
-        }
+        public override string Name => "Ulead subtitle format";
 
         public override string ToText(Subtitle subtitle, string title)
         {
@@ -41,7 +23,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
 #Subtitle text begin";
 
-            const string Footer = @"#Subtitle text end
+            const string footer = @"#Subtitle text end
 #Subtitle text attribute begin
 #/R:1,{0} /FP:8  /FS:24
 #Subtitle text attribute end";
@@ -59,7 +41,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 sb.AppendLine(HtmlUtil.RemoveHtmlTags(p.Text, true));
                 index++;
             }
-            sb.AppendLine(string.Format(Footer, subtitle.Paragraphs.Count));
+            sb.AppendLine(string.Format(footer, subtitle.Paragraphs.Count));
             return sb.ToString();
         }
 
@@ -67,7 +49,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             //00;04;27;05
             int frames = time.Milliseconds / (1000 / 25);
-            return string.Format("{0:00};{1:00};{2:00};{3:00}", time.Hours, time.Minutes, time.Seconds, frames);
+            return $"{time.Hours:00};{time.Minutes:00};{time.Seconds:00};{frames:00}";
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)

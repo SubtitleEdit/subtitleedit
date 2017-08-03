@@ -10,22 +10,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     {
         public string Errors { get; private set; }
 
-        public override string Extension
-        {
-            get { return ".ssa"; }
-        }
+        public override string Extension => ".ssa";
 
         public const string NameOfFormat = "Sub Station Alpha";
 
-        public override string Name
-        {
-            get { return NameOfFormat; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
+        public override string Name => NameOfFormat;
 
         public override bool IsMine(List<string> lines, string fileName)
         {

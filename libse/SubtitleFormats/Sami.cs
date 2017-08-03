@@ -9,20 +9,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class Sami : SubtitleFormat
     {
-        public override string Extension
-        {
-            get { return ".smi"; }
-        }
+        public override string Extension => ".smi";
 
-        public override string Name
-        {
-            get { return "SAMI"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
+        public override string Name => "SAMI";
 
         public override bool IsMine(List<string> lines, string fileName)
         {
@@ -32,18 +21,16 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             if (sb.ToString().Contains("</SYNC>"))
                 return false;
 
-            var subtitle = new Subtitle();
-            LoadSubtitle(subtitle, lines, fileName);
-            return subtitle.Paragraphs.Count > _errorCount;
+            return base.IsMine(lines, fileName);
         }
 
         public override string ToText(Subtitle subtitle, string title)
         {
             string language = LanguageAutoDetect.AutoDetectLanguageName("en_US", subtitle);
             var ci = CultureInfo.GetCultureInfo(language.Replace("_", "-"));
-            string languageTag = string.Format("{0}CC", language.Replace("_", string.Empty).ToUpper());
+            string languageTag = $"{language.Replace("_", string.Empty).ToUpper()}CC";
             string languageName = ci.Parent.EnglishName;
-            string languageStyle = string.Format(".{0} [ name: {1}; lang: {2} ; SAMIType: CC ; ]", languageTag, languageName, language.Replace("_", "-"));
+            string languageStyle = $".{languageTag} [ name: {languageName}; lang: {language.Replace("_", "-")} ; SAMIType: CC ; ]";
             languageStyle = languageStyle.Replace("[", "{").Replace("]", "}");
 
             string header =
@@ -341,7 +328,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                 if (text.Contains("<font color=") && !text.Contains("</font>"))
                     text += "</font>";
-                if (text.StartsWith("<FONT COLOR=") && !text.Contains("</font>") && !text.Contains("</FONT>"))
+                if (text.StartsWith("<FONT COLOR=", StringComparison.Ordinal) && !text.Contains("</font>") && !text.Contains("</FONT>"))
                     text += "</FONT>";
 
                 if (text.Contains('<') && text.Contains('>'))
@@ -460,10 +447,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return text;
         }
 
-        public override bool HasStyleSupport
-        {
-            get { return true; }
-        }
-
+        public override bool HasStyleSupport => true;
     }
 }

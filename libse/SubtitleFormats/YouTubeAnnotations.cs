@@ -17,22 +17,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private bool _promtForStyles = true;
 
-        public override string Extension
-        {
-            get { return ".xml"; }
-        }
+        public override string Extension => ".xml";
 
         public const string NameOfFormat = "YouTube Annotations";
 
-        public override string Name
-        {
-            get { return NameOfFormat; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
+        public override string Name => NameOfFormat;
 
         public override bool IsMine(List<string> lines, string fileName)
         {
@@ -242,7 +231,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         private static string EncodeTime(TimeCode timeCode)
         {
             //0:01:08.0
-            return string.Format("{0}:{1:00}:{2:00}.{3}", timeCode.Hours, timeCode.Minutes, timeCode.Seconds, timeCode.Milliseconds);
+            return $"{timeCode.Hours}:{timeCode.Minutes:00}:{timeCode.Seconds:00}.{timeCode.Milliseconds}";
         }
 
     }

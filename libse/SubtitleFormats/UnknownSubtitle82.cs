@@ -7,29 +7,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     internal class UnknownSubtitle82 : SubtitleFormat
     {
-        public override string Extension
-        {
-            get { return ".xml"; }
-        }
+        public override string Extension => ".xml";
 
-        public override string Name
-        {
-            get { return "Unknown 82"; }
-        }
+        public override string Name => "Unknown 82";
 
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
-
-        public override bool IsMine(List<string> lines, string fileName)
-        {
-            var subtitle = new Subtitle();
-            LoadSubtitle(subtitle, lines, fileName);
-            return subtitle.Paragraphs.Count > _errorCount;
-        }
-
-        public override string ToText(Subtitle subtitle, string title)
+   public override string ToText(Subtitle subtitle, string title)
         {
             const string xmpTemplate = @"<?xml version='1.0' encoding='utf-8'?>
 <timedtext format='3'>

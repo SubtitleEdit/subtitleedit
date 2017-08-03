@@ -550,22 +550,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
         }
 
-        public override string Extension
-        {
-            get { return ".stl"; }
-        }
+        public override string Extension => ".stl";
 
         public const string NameOfFormat = "EBU STL";
 
-        public override string Name
-        {
-            get { return NameOfFormat; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
+        public override string Name => NameOfFormat;
 
         public bool Save(string fileName, Subtitle subtitle)
         {

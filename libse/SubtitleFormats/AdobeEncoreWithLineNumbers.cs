@@ -9,20 +9,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     {
         private static readonly Regex RegexTimeCodes = new Regex(@"^\d+ \d\d:\d\d:\d\d:\d\d \d\d:\d\d:\d\d:\d\d ", RegexOptions.Compiled);
 
-        public override string Extension
-        {
-            get { return ".txt"; }
-        }
+        public override string Extension => ".txt";
 
-        public override string Name
-        {
-            get { return "Adobe Encore w. line#"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
+        public override string Name => "Adobe Encore w. line#";
 
         public override bool IsMine(List<string> lines, string fileName)
         {
@@ -33,7 +22,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 sb.AppendLine(line);
             if (sb.ToString().Contains("#INPOINT OUTPOINT PATH"))
                 return false; // Pinnacle Impression
-            if (sb.ToString().StartsWith("{{\\rtf1"))
+            if (sb.ToString().StartsWith("{{\\rtf1", StringComparison.Ordinal))
                 return false;
 
             LoadSubtitle(subtitle, lines, fileName);
@@ -48,7 +37,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 //00:03:15:22 00:03:23:10 This is line one.
                 //This is line two.
-                sb.AppendLine(string.Format("{0} {1} {2} {3}", index + 1, EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), HtmlUtil.RemoveHtmlTags(p.Text, true)));
+                sb.AppendLine($"{index + 1} {EncodeTimeCode(p.StartTime)} {EncodeTimeCode(p.EndTime)} {HtmlUtil.RemoveHtmlTags(p.Text, true)}");
                 index++;
             }
             return sb.ToString();

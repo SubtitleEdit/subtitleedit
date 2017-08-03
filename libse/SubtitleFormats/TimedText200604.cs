@@ -7,20 +7,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class TimedText200604 : SubtitleFormat
     {
-        public override string Extension
-        {
-            get { return ".xml"; }
-        }
+        public override string Extension => ".xml";
 
-        public override string Name
-        {
-            get { return "Timed Text draft 2006-04"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
+        public override string Name => "Timed Text draft 2006-04";
 
         public bool UseCDataForParagraphText { get; set; }
 

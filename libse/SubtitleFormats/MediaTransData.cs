@@ -7,27 +7,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     internal class MediaTransData : SubtitleFormat
     {
-        public override string Extension
-        {
-            get { return ".imtpro"; }
-        }
+        public override string Extension => ".imtpro";
 
-        public override string Name
-        {
-            get { return "MediaTransData"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
-
-        public override bool IsMine(List<string> lines, string fileName)
-        {
-            var subtitle = new Subtitle();
-            LoadSubtitle(subtitle, lines, fileName);
-            return subtitle.Paragraphs.Count > _errorCount;
-        }
+        public override string Name => "MediaTransData";
 
         public override string ToText(Subtitle subtitle, string title)
         {
