@@ -13,8 +13,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string Name => "DOST";
 
-        public override bool IsTimeBased => true;
-
         public override bool IsMine(List<string> lines, string fileName)
         {
             var subtitle = new Subtitle();
@@ -27,10 +25,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             if (!sb.ToString().Contains("$FORMAT"))
                 return false;
 
-            var oldFrameRate = Configuration.Settings.General.CurrentFrameRate;
-            LoadSubtitle(subtitle, lines, fileName);
-            Configuration.Settings.General.CurrentFrameRate = oldFrameRate;
-            return subtitle.Paragraphs.Count > _errorCount;
+            return base.IsMine(lines, fileName);
         }
 
         public override string ToText(Subtitle subtitle, string title)

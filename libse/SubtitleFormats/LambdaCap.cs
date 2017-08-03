@@ -16,8 +16,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string Name => "Lambda Cap";
 
-        public override bool IsTimeBased => true;
-
         public string Header {
             get
             {
@@ -31,16 +29,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
-            var subtitle = new Subtitle();
-
             var sb = new StringBuilder();
             foreach (string line in lines)
                 sb.AppendLine(line);
             if (sb.ToString().StartsWith("{{\\rtf1", StringComparison.Ordinal))
                 return false;
 
-            LoadSubtitle(subtitle, lines, fileName);
-            return subtitle.Paragraphs.Count > _errorCount;
+            return base.IsMine(lines, fileName);
         }
 
         private const string AlignVerticalTop = "＠行頭";

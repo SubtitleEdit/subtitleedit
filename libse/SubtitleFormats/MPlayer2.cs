@@ -9,20 +9,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     {
         private static readonly Regex RegexMPlayer2Line = new Regex(@"^\[-?\d+]\[-?\d+].*$", RegexOptions.Compiled);
 
-        public override string Extension
-        {
-            get { return ".mpl"; }
-        }
+        public override string Extension => ".mpl";
 
-        public override string Name
-        {
-            get { return "MPlayer2"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
+        public override string Name => "MPlayer2";
 
         public override bool IsMine(List<string> lines, string fileName)
         {
@@ -92,7 +81,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     if (count > 0)
                         sb.Append('|');
 
-                    if (line.StartsWith("<i>") || italicOn)
+                    if (line.StartsWith("<i>", StringComparison.Ordinal) || italicOn)
                     {
                         italicOn = true;
                         sb.Append('/');

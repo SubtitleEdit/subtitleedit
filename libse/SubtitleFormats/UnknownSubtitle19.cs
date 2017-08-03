@@ -7,31 +7,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class UnknownSubtitle19 : SubtitleFormat
     {
-        public override string Extension
-        {
-            get { return ".xml"; }
-        }
+        public override string Extension => ".xml";
 
-        public override string Name
-        {
-            get { return "Unknown 19"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
-
-        public override bool IsMine(List<string> lines, string fileName)
-        {
-            var subtitle = new Subtitle();
-            LoadSubtitle(subtitle, lines, fileName);
-            return subtitle.Paragraphs.Count > 0;
-        }
+        public override string Name => "Unknown 19";
 
         private static string ToTimeCode(TimeCode time)
         {
-            return string.Format("{0:0.0}", time.TotalSeconds);
+            return $"{time.TotalSeconds:0.0}";
         }
 
         private static TimeCode DecodeTimeCode(string s)

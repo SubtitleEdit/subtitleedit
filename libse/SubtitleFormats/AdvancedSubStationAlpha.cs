@@ -55,8 +55,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string Name => NameOfFormat;
 
-        public override bool IsTimeBased => true;
-
         public override bool IsMine(List<string> lines, string fileName)
         {
             var subtitle = new Subtitle();

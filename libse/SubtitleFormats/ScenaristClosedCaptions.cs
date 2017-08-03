@@ -34,7 +34,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         //00:01:00:29   9420 9420 94ae 94ae 94d0 94d0 4920 f761 7320 ...    semi colon (instead of colon) before frame number is used to indicate drop frame
         private const string TimeCodeRegEx = @"^\d+:\d\d:\d\d[:,]\d\d\t";
         private static readonly Regex Regex = new Regex(TimeCodeRegEx, RegexOptions.Compiled);
-        protected virtual Regex RegexTimeCodes { get { return Regex; } }
+        protected virtual Regex RegexTimeCodes => Regex;
         protected bool DropFrame = false;
 
         private static readonly List<string> Letters = new List<string>
@@ -548,27 +548,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                                                          };
 
-        public override string Extension
-        {
-            get { return ".scc"; }
-        }
+        public override string Extension => ".scc";
 
-        public override string Name
-        {
-            get { return "Scenarist Closed Captions"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
-
-        public override bool IsMine(List<string> lines, string fileName)
-        {
-            var subtitle = new Subtitle();
-            LoadSubtitle(subtitle, lines, fileName);
-            return subtitle.Paragraphs.Count > _errorCount;
-        }
+        public override string Name => "Scenarist Closed Captions";
 
         private static string FixMax4LinesAndMax32CharsPerLine(string text, string language)
         {

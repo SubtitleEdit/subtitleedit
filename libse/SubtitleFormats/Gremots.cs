@@ -10,27 +10,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     /// </summary>
     public class Gremots : SubtitleFormat
     {
-        public override string Extension
-        {
-            get { return ".gst"; }
-        }
+        public override string Extension => ".gst";
 
-        public override string Name
-        {
-            get { return "Gremots json"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
-
-        public override bool IsMine(List<string> lines, string fileName)
-        {
-            var subtitle = new Subtitle();
-            LoadSubtitle(subtitle, lines, fileName);
-            return subtitle.Paragraphs.Count > _errorCount;
-        }
+        public override string Name => "Gremots json";
 
         public override string ToText(Subtitle subtitle, string title)
         {

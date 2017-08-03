@@ -7,27 +7,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class CaptionAssistant : SubtitleFormat
     {
-        public override string Extension
-        {
-            get { return ".cac"; }
-        }
+        public override string Extension => ".cac";
 
-        public override string Name
-        {
-            get { return "Caption Assistant"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
-
-        public override bool IsMine(List<string> lines, string fileName)
-        {
-            var subtitle = new Subtitle();
-            LoadSubtitle(subtitle, lines, fileName);
-            return subtitle.Paragraphs.Count > 0;
-        }
+        public override string Name => "Caption Assistant";
 
         private static string ToTimeCode(TimeCode time)
         {

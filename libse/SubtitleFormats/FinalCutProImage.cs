@@ -13,17 +13,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string Name => "Final Cut Pro Image";
 
-        public override bool IsTimeBased => true;
-
-        public override bool IsMine(List<string> lines, string fileName)
-        {
-            var subtitle = new Subtitle();
-            var oldFrameRate = Configuration.Settings.General.CurrentFrameRate;
-            LoadSubtitle(subtitle, lines, fileName);
-            Configuration.Settings.General.CurrentFrameRate = oldFrameRate;
-            return subtitle.Paragraphs.Count > 0;
-        }
-
         public override string ToText(Subtitle subtitle, string title)
         {
             throw new NotImplementedException();

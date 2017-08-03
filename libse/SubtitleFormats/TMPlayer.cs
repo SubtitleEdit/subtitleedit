@@ -9,20 +9,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     {
         private static readonly Regex RegexTimeCodes = new Regex(@"^\d+:\d\d:\d\d[: ].*$", RegexOptions.Compiled); // accept a " " instead of the last ":" too
 
-        public override string Extension
-        {
-            get { return ".txt"; }
-        }
+        public override string Extension => ".txt";
 
-        public override string Name
-        {
-            get { return "TMPlayer"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
+        public override string Name => "TMPlayer";
 
         public override bool IsMine(List<string> lines, string fileName)
         {
@@ -59,10 +48,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 string text = HtmlUtil.RemoveHtmlTags(p.Text);
                 text = text.Replace(Environment.NewLine, "|");
-                sb.AppendLine(string.Format("{0:00}:{1:00}:{2:00}:{3}", p.StartTime.Hours,
-                                                               p.StartTime.Minutes,
-                                                               p.StartTime.Seconds,
-                                                               text));
+                sb.AppendLine($"{p.StartTime.Hours:00}:{p.StartTime.Minutes:00}:{p.StartTime.Seconds:00}:{text}");
             }
             return sb.ToString().Trim();
         }

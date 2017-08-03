@@ -13,17 +13,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string Name => "DVD Studio Pro with one space/semicolon";
 
-        public override bool IsTimeBased => true;
-
-        public override bool IsMine(List<string> lines, string fileName)
-        {
-            var subtitle = new Subtitle();
-            var oldFrameRate = Configuration.Settings.General.CurrentFrameRate;
-            LoadSubtitle(subtitle, lines, fileName);
-            Configuration.Settings.General.CurrentFrameRate = oldFrameRate;
-            return subtitle.Paragraphs.Count > _errorCount;
-        }
-
         public override string ToText(Subtitle subtitle, string title)
         {
             const string paragraphWriteFormat = "{0},{1}, {2}\r\n";

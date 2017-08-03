@@ -8,20 +8,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class TimedTextImage : SubtitleFormat
     {
-        public override string Extension
-        {
-            get { return ".xml"; }
-        }
+        public override string Extension => ".xml";
 
-        public override string Name
-        {
-            get { return "Timed Text Image"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
+        public override string Name => "Timed Text Image";
 
         public override bool IsMine(List<string> lines, string fileName)
         {

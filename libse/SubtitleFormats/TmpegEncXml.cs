@@ -17,20 +17,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
     public class TmpegEncXml : SubtitleFormat
     {
-        public override string Extension
-        {
-            get { return ".xsubtitle"; }
-        }
+        public override string Extension => ".xsubtitle";
 
-        public override string Name
-        {
-            get { return "TMPGEnc VME"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
+        public override string Name => "TMPGEnc VME";
 
         public override bool IsMine(List<string> lines, string fileName)
         {
@@ -39,9 +28,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             string xmlAsString = sb.ToString().Trim();
             if ((xmlAsString.Contains("<TMPGEncVMESubtitleTextFormat>") || xmlAsString.Contains("<SubtitleItem ")) && (xmlAsString.Contains("<Subtitle")))
             {
-                var subtitle = new Subtitle();
-                LoadSubtitle(subtitle, lines, fileName);
-                return subtitle.Paragraphs.Count > _errorCount;
+                return base.IsMine(lines, fileName);
             }
             return false;
         }
@@ -377,7 +364,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 s = s.TrimEnd('s');
                 return TimeCode.FromSeconds(double.Parse(s));
             }
-            string[] parts = s.Split(new[] { ':', '.', ',' });
+            string[] parts = s.Split(':', '.', ',');
             return new TimeCode(int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), int.Parse(parts[3]));
         }
     }

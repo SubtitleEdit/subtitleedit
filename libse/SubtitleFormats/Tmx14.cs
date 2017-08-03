@@ -7,27 +7,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class Tmx14 : SubtitleFormat
     {
-        public override string Extension
-        {
-            get { return ".tmx"; }
-        }
+        public override string Extension => ".tmx";
 
-        public override string Name
-        {
-            get { return "Translation Memory xml"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
-
-        public override bool IsMine(List<string> lines, string fileName)
-        {
-            var subtitle = new Subtitle();
-            LoadSubtitle(subtitle, lines, fileName);
-            return subtitle.Paragraphs.Count > 0;
-        }
+        public override string Name => "Translation Memory xml";
 
         public override string ToText(Subtitle subtitle, string title)
         {
@@ -41,7 +23,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 "</tmx>";
 
             string lang = LanguageAutoDetect.AutoDetectLanguageName("en_US", subtitle);
-            if (lang.StartsWith("en_"))
+            if (lang.StartsWith("en_", StringComparison.Ordinal))
                 lang = "EN";
             else if (lang.Length == 5)
                 lang = lang.Substring(3);

@@ -7,27 +7,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class AbcIViewer : SubtitleFormat
     {
-        public override string Extension
-        {
-            get { return ".xml"; }
-        }
+        public override string Extension => ".xml";
 
-        public override string Name
-        {
-            get { return "ABC iView"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
-
-        public override bool IsMine(List<string> lines, string fileName)
-        {
-            var subtitle = new Subtitle();
-            LoadSubtitle(subtitle, lines, fileName);
-            return subtitle.Paragraphs.Count > 0;
-        }
+        public override string Name => "ABC iView";
 
         public override string ToText(Subtitle subtitle, string title)
         {
@@ -127,7 +109,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static double ParseTimeCode(string start)
         {
-            string[] arr = start.Split(':');
+            var arr = start.Split(':');
             return new TimeSpan(0, int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]), int.Parse(arr[3])).TotalMilliseconds;
         }
 

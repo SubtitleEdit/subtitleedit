@@ -443,8 +443,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string Name => NameOfFormat;
 
-        public override bool IsTimeBased => true;
-
         public bool Save(string fileName, Subtitle subtitle)
         {
             using (var fs = new FileStream(fileName, FileMode.Create, FileAccess.Write))

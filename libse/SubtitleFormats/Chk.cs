@@ -12,22 +12,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         private readonly Encoding _codePage = Encoding.GetEncoding(850);
         // private string _languageId = "DEN"; // English
 
-        public override string Extension
-        {
-            get { return ".chk"; }
-        }
+        public override string Extension => ".chk";
 
         public const string NameOfFormat = "CHK";
 
-        public override string Name
-        {
-            get { return NameOfFormat; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
+        public override string Name => NameOfFormat;
 
         public override bool IsMine(List<string> lines, string fileName)
         {

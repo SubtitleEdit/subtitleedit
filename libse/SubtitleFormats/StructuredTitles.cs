@@ -11,31 +11,17 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         private static readonly Regex RegexSomeCodes = new Regex(@"^\d\d \d\d \d\d", RegexOptions.Compiled);
         private static readonly Regex RegexText = new Regex(@"^[A-Z]\d[A-Z]\d\d ", RegexOptions.Compiled);
 
-        public override string Extension
-        {
-            get { return ".txt"; }
-        }
+        public override string Extension => ".txt";
 
-        public override string Name
-        {
-            get { return "Structured titles"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
+        public override string Name => "Structured titles";
 
         public override bool IsMine(List<string> lines, string fileName)
         {
-            var subtitle = new Subtitle();
-
             var sb = new StringBuilder();
             foreach (string line in lines)
                 sb.AppendLine(line);
 
-            LoadSubtitle(subtitle, lines, fileName);
-            return subtitle.Paragraphs.Count > _errorCount;
+            return base.IsMine(lines, fileName);
         }
 
         public override string ToText(Subtitle subtitle, string title)
@@ -57,7 +43,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 if (Utilities.GetNumberOfLines(p.Text) == 1)
                     numberOfLinesCode = "11"; // two lines
 
-                sb.AppendLine(string.Format("{0:0000} : {1},{2},{3}", index + 1, EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), numberOfLinesCode));
+                sb.AppendLine($"{index + 1:0000} : {EncodeTimeCode(p.StartTime)},{EncodeTimeCode(p.EndTime)},{numberOfLinesCode}");
                 sb.AppendLine("80 80 80");
                 for (int i = 0; i < p.Text.SplitToLines().Length; i++)
                 {
@@ -67,7 +53,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 sb.AppendLine();
                 index++;
             }
-            sb.AppendLine(string.Format("{0:0000}", index + 1) + @" : --:--:--:--,--:--:--:--,-1
+            sb.AppendLine($"{index + 1:0000}" + @" : --:--:--:--,--:--:--:--,-1
 80 80 80");
             return sb.ToString();
         }
@@ -86,7 +72,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         private static string EncodeTimeCode(TimeCode time)
         {
             //00:03:15:22 (last is frame)
-            return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", time.Hours, time.Minutes, time.Seconds, MillisecondsToFramesMaxFrameRate(time.Milliseconds));
+            return $"{time.Hours:00}:{time.Minutes:00}:{time.Seconds:00}:{MillisecondsToFramesMaxFrameRate(time.Milliseconds):00}";
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)

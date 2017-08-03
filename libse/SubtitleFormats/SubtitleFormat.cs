@@ -288,6 +288,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         }
                         catch
                         {
+                            // ignored
                         }
                     }
                 }
@@ -298,70 +299,44 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         protected int _errorCount;
 
-        abstract public string Extension
+        public abstract string Extension
         {
             get;
         }
 
-        abstract public string Name
+        public abstract string Name
         {
             get;
         }
 
-        abstract public bool IsTimeBased
+        public virtual bool IsTimeBased => true;
+
+        public bool IsFrameBased => !IsTimeBased;
+
+        public string FriendlyName => $"{Name} ({Extension})";
+
+        public int ErrorCount => _errorCount;
+
+        public virtual bool IsMine(List<string> lines, string fileName)
         {
-            get;
+            var subtitle = new Subtitle();
+            var oldFrameRate = Configuration.Settings.General.CurrentFrameRate;
+            LoadSubtitle(subtitle, lines, fileName);
+            Configuration.Settings.General.CurrentFrameRate = oldFrameRate;
+            return subtitle.Paragraphs.Count > _errorCount;
         }
 
-        public bool IsFrameBased
-        {
-            get
-            {
-                return !IsTimeBased;
-            }
-        }
+        public abstract string ToText(Subtitle subtitle, string title);
 
-        public string FriendlyName
-        {
-            get
-            {
-                return string.Format("{0} ({1})", Name, Extension);
-            }
-        }
+        public abstract void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName);
 
-        public int ErrorCount
-        {
-            get
-            {
-                return _errorCount;
-            }
-        }
-
-        abstract public bool IsMine(List<string> lines, string fileName);
-
-        abstract public string ToText(Subtitle subtitle, string title);
-
-        abstract public void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName);
-
-        public bool IsVobSubIndexFile
-        {
-            get
-            {
-                return Extension.Equals(".idx", StringComparison.Ordinal);
-            }
-        }
+        public bool IsVobSubIndexFile => Extension.Equals(".idx", StringComparison.Ordinal);
 
         public virtual void RemoveNativeFormatting(Subtitle subtitle, SubtitleFormat newFormat)
         {
         }
 
-        public virtual List<string> AlternateExtensions
-        {
-            get
-            {
-                return new List<string>();
-            }
-        }
+        public virtual List<string> AlternateExtensions => new List<string>();
 
         public static int MillisecondsToFrames(double milliseconds)
         {
@@ -387,13 +362,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return Math.Min(ms, 999);
         }
 
-        public virtual bool HasStyleSupport
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public virtual bool HasStyleSupport => false;
 
         public bool BatchMode { get; set; }
         public double? BatchSourceFrameRate { get; set; }
@@ -415,13 +384,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return result.ToString().Replace(" encoding=\"utf-16\"", " encoding=\"utf-8\"").Trim();
         }
 
-        public virtual bool IsTextBased
-        {
-            get
-            {
-                return true;
-            }
-        }
+        public virtual bool IsTextBased => true;
 
         protected TimeCode DecodeTimeCodeFramesTwoParts(string[] tokens)
         {

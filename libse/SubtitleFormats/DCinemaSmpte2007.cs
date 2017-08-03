@@ -36,20 +36,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public int Version { get; set; }
 
-        public override string Extension
-        {
-            get { return ".xml"; }
-        }
+        public override string Extension => ".xml";
 
-        public override string Name
-        {
-            get { return "D-Cinema SMPTE 2007"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
+        public override string Name => "D-Cinema SMPTE 2007";
 
         public override bool IsMine(List<string> lines, string fileName)
         {

@@ -6,27 +6,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class UtxFrames : SubtitleFormat
     {
-        public override string Extension
-        {
-            get { return ".utx"; }
-        }
+        public override string Extension => ".utx";
 
-        public override string Name
-        {
-            get { return "UTX (frames)"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
-
-        public override bool IsMine(List<string> lines, string fileName)
-        {
-            var subtitle = new Subtitle();
-            LoadSubtitle(subtitle, lines, fileName);
-            return subtitle.Paragraphs.Count > _errorCount;
-        }
+        public override string Name => "UTX (frames)";
 
         public override string ToText(Subtitle subtitle, string title)
         {

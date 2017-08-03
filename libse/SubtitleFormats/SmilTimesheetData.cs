@@ -10,20 +10,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     /// </summary>
     public class SmilTimesheetData : SubtitleFormat
     {
-        public override string Extension
-        {
-            get { return ".html"; }
-        }
+        public override string Extension => ".html";
 
-        public override string Name
-        {
-            get { return "SMIL Timesheet"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
+        public override string Name => "SMIL Timesheet";
 
         public override bool IsMine(List<string> lines, string fileName)
         {
@@ -33,9 +22,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             if (!sb.ToString().Contains(" data-begin"))
                 return false;
 
-            var subtitle = new Subtitle();
-            LoadSubtitle(subtitle, lines, fileName);
-            return subtitle.Paragraphs.Count > _errorCount;
+            return base.IsMine(lines, fileName);
         }
 
         public override string ToText(Subtitle subtitle, string title)
@@ -81,10 +68,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             //3:15:22
             if (time.Hours > 0)
-                return string.Format("{0:00}:{1:00}:{2:00}.{3:00}", time.Hours, time.Minutes, time.Seconds, time.Milliseconds / 10);
+                return $"{time.Hours:00}:{time.Minutes:00}:{time.Seconds:00}.{time.Milliseconds / 10:00}";
             if (time.Minutes > 9)
-                return string.Format("{0:00}:{1:00}.{2:00}", time.Minutes, time.Seconds, time.Milliseconds / 10);
-            return string.Format("{0}:{1:00}.{2:00}", time.Minutes, time.Seconds, time.Milliseconds / 10);
+                return $"{time.Minutes:00}:{time.Seconds:00}.{time.Milliseconds / 10:00}";
+            return $"{time.Minutes}:{time.Seconds:00}.{time.Milliseconds / 10:00}";
         }
 
         private static TimeCode DecodeTimeCode(string[] s)
@@ -158,8 +145,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         var arr = tcBegin.ToString().Split(splitChars, StringSplitOptions.RemoveEmptyEntries);
                         if (arr.Length == 3 || arr.Length == 4)
                         {
-                            var p = new Paragraph();
-                            p.Text = text;
+                            var p = new Paragraph { Text = text };
                             try
                             {
                                 p.StartTime = DecodeTimeCode(arr);

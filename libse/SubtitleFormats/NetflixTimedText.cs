@@ -14,22 +14,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     /// </summary>
     public class NetflixTimedText : TimedText10
     {
-        public override string Extension
-        {
-            get { return ".dfxp"; }
-        }
+        public override string Extension => ".dfxp";
 
         public new const string NameOfFormat = "Netflix Timed Text";
 
-        public override string Name
-        {
-            get { return NameOfFormat; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
+        public override string Name => NameOfFormat;
 
         public override bool IsMine(List<string> lines, string fileName)
         {
@@ -41,9 +30,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             if (!sb.ToString().Contains(">Netflix Subtitle"))
                 return false;
 
-            var subtitle = new Subtitle();
-            LoadSubtitle(subtitle, lines, fileName);
-            return subtitle.Paragraphs.Count > 0;
+            return base.IsMine(lines, fileName);
         }
 
         public override string ToText(Subtitle subtitle, string title)

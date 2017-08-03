@@ -13,8 +13,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string Name => "QuickTime text";
 
-        public override bool IsTimeBased => true;
-
         public override bool IsMine(List<string> lines, string fileName)
         {
             if (lines != null && lines.Count > 0 && lines[0].StartsWith("{\\rtf", StringComparison.Ordinal))

@@ -171,22 +171,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             "х",
         };
 
-        public override string Extension
-        {
-            get { return ".890"; }
-        }
+        public override string Extension => ".890";
 
         public const string NameOfFormat = "Cavena 890";
 
-        public override string Name
-        {
-            get { return NameOfFormat; }
-        }
+        public override string Name => NameOfFormat;
 
-        public override bool IsTimeBased
-        {
-            get { return false; }
-        }
+        public override bool IsTimeBased => false;
 
         private int _languageIdLine1 = LanguageIdEnglish;
         private int _languageIdLine2 = LanguageIdEnglish;

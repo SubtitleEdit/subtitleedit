@@ -11,29 +11,16 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     {
         private static readonly Regex RegexTimeCodes = new Regex(@"^#\d+:\d+", RegexOptions.Compiled);
 
-        public override string Extension
-        {
-            get { return ".html"; }
-        }
+        public override string Extension => ".html";
 
-        public override string Name
-        {
-            get { return "SE image HTML index"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
+        public override string Name => "SE image HTML index";
 
         public override bool IsMine(List<string> lines, string fileName)
         {
             if (fileName != null && !fileName.EndsWith(Extension, StringComparison.OrdinalIgnoreCase))
                 return false;
 
-            var subtitle = new Subtitle();
-            LoadSubtitle(subtitle, lines, fileName);
-            return subtitle.Paragraphs.Count > _errorCount;
+            return base.IsMine(lines, fileName);
         }
 
         public override string ToText(Subtitle subtitle, string title)

@@ -9,20 +9,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     {
         private static readonly Regex RegexTimeCodes = new Regex(@"^\d+ \d\d;\d\d;\d\d;\d\d \d\d;\d\d;\d\d;\d\d ", RegexOptions.Compiled);
 
-        public override string Extension
-        {
-            get { return ".txt"; }
-        }
+        public override string Extension => ".txt";
 
-        public override string Name
-        {
-            get { return "Adobe Encore NTSC"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
+        public override string Name => "Adobe Encore NTSC";
 
         public override bool IsMine(List<string> lines, string fileName)
         {
@@ -46,7 +35,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 //00:03:15:22 00:03:23:10 This is line one.
                 //This is line two.
-                sb.AppendLine(string.Format("{0} {1} {2} {3}", index, EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), HtmlUtil.RemoveHtmlTags(p.Text, true)));
+                sb.AppendLine($"{index} {EncodeTimeCode(p.StartTime)} {EncodeTimeCode(p.EndTime)} {HtmlUtil.RemoveHtmlTags(p.Text, true)}");
                 index++;
             }
             return sb.ToString();
@@ -55,7 +44,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         private static string EncodeTimeCode(TimeCode time)
         {
             //00;03;15;22 (last is frame)
-            return string.Format("{0:00};{1:00};{2:00};{3:00}", time.Hours, time.Minutes, time.Seconds, MillisecondsToFramesMaxFrameRate(time.Milliseconds));
+            return $"{time.Hours:00};{time.Minutes:00};{time.Seconds:00};{MillisecondsToFramesMaxFrameRate(time.Milliseconds):00}";
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)

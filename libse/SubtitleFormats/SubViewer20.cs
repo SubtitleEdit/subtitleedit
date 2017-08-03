@@ -15,20 +15,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static readonly Regex RegexTimeCodes = new Regex(@"^\d\d:\d\d:\d\d.\d+,\d\d:\d\d:\d\d.\d+$", RegexOptions.Compiled);
 
-        public override string Extension
-        {
-            get { return ".sub"; }
-        }
+        public override string Extension => ".sub";
 
-        public override string Name
-        {
-            get { return "SubViewer 2.0"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
+        public override string Name => "SubViewer 2.0";
 
         public override bool IsMine(List<string> lines, string fileName)
         {
@@ -36,9 +25,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             if (sbv.IsMine(lines, fileName) && !string.Join(string.Empty, lines.ToArray()).Contains("[br]"))
                 return false;
 
-            var subtitle = new Subtitle();
-            LoadSubtitle(subtitle, lines, fileName);
-            return subtitle.Paragraphs.Count > _errorCount;
+            return base.IsMine(lines, fileName);
         }
 
         public override string ToText(Subtitle subtitle, string title)
@@ -109,7 +96,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var header = new StringBuilder();
             foreach (string line in lines)
             {
-                if (subtitle.Paragraphs.Count == 0 && expecting == ExpectingLine.TimeCodes && line.StartsWith("["))
+                if (subtitle.Paragraphs.Count == 0 && expecting == ExpectingLine.TimeCodes && line.StartsWith("[", StringComparison.Ordinal))
                 {
                     header.AppendLine(line);
                 }

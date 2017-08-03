@@ -16,31 +16,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static readonly Regex RegexTimeCode = new Regex(@"^\d\d\d\d\.\d\d-\d\d\d\d\.\d\d$", RegexOptions.Compiled);
 
-        public override string Extension
-        {
-            get { return ".txt"; }
-        }
+        public override string Extension => ".txt";
 
-        public override string Name
-        {
-            get { return "Unknown 35"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
-
-        public override bool IsMine(List<string> lines, string fileName)
-        {
-            var subtitle = new Subtitle();
-            LoadSubtitle(subtitle, lines, fileName);
-            return subtitle.Paragraphs.Count > _errorCount;
-        }
+        public override string Name => "Unknown 35";
 
         private static string MakeTimeCode(TimeCode tc)
         {
-            return string.Format("{0:0000}.{1:00}", (int)tc.TotalSeconds, MillisecondsToFramesMaxFrameRate(tc.Milliseconds));
+            return $"{(int)tc.TotalSeconds:0000}.{MillisecondsToFramesMaxFrameRate(tc.Milliseconds):00}";
         }
 
         public override string ToText(Subtitle subtitle, string title)
@@ -50,7 +32,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 Paragraph p = subtitle.Paragraphs[i];
                 string text = HtmlUtil.RemoveHtmlTags(p.Text);
-                sb.AppendLine(string.Format("{0}-{1}\r\n{2}\r\n", MakeTimeCode(p.StartTime), MakeTimeCode(p.EndTime), text));
+                sb.AppendLine($"{MakeTimeCode(p.StartTime)}-{MakeTimeCode(p.EndTime)}\r\n{text}\r\n");
             }
             return sb.ToString();
         }

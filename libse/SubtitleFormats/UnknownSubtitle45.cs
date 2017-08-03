@@ -11,29 +11,16 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         //*         00138.10-00143.05 00.00 00.0 1 0003 00 16-090-090
         private static readonly Regex RegexTimeCodes = new Regex(@"^\*\s+\d\d\d\d\d\.\d\d-\d\d\d\d\d\.\d\d \d\d.\d\d \d\d.\d\ \d \d\d\d\d \d\d \d\d-\d\d\d-\d\d\d$", RegexOptions.Compiled);
 
-        public override string Extension
-        {
-            get { return ".rtf"; }
-        }
+        public override string Extension => ".rtf";
 
-        public override string Name
-        {
-            get { return "Unknown 45"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
+        public override string Name => "Unknown 45";
 
         public override bool IsMine(List<string> lines, string fileName)
         {
             if (fileName != null && !fileName.EndsWith(Extension, StringComparison.OrdinalIgnoreCase))
                 return false;
 
-            var subtitle = new Subtitle();
-            LoadSubtitle(subtitle, lines, fileName);
-            return subtitle.Paragraphs.Count > _errorCount;
+            return base.IsMine(lines, fileName);
         }
 
         public override string ToText(Subtitle subtitle, string title)
@@ -58,7 +45,7 @@ ST 0 EB 3.10
 
         private static string EncodeTimeCode(TimeCode time)
         {
-            return string.Format("{0:00000}.{1:00}", time.TotalSeconds, MillisecondsToFramesMaxFrameRate(time.Milliseconds));
+            return $"{time.TotalSeconds:00000}.{MillisecondsToFramesMaxFrameRate(time.Milliseconds):00}";
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)

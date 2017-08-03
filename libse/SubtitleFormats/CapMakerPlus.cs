@@ -10,22 +10,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     {
         private static readonly Regex RegexTimeCodes = new Regex(@"^\d\d:\d\d:\d\d:\d\d$", RegexOptions.Compiled);
 
-        public override string Extension
-        {
-            get { return ".cap"; }
-        }
+        public override string Extension => ".cap";
 
         public const string NameOfFormat = "CapMaker Plus";
 
-        public override string Name
-        {
-            get { return NameOfFormat; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
+        public override string Name => NameOfFormat;
 
         public static void Save(string fileName, Subtitle subtitle)
         {
@@ -260,6 +249,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
                 catch
                 {
+                    // ignored
                 }
             }
         }

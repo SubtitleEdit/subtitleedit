@@ -25,20 +25,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     /// </summary>
     public class PListCaption : SubtitleFormat
     {
-        public override string Extension
-        {
-            get { return ".caption"; }
-        }
+        public override string Extension => ".caption";
 
-        public override string Name
-        {
-            get { return "PList Caption xml"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
+        public override string Name => "PList Caption xml";
 
         public override bool IsMine(List<string> lines, string fileName)
         {
@@ -83,7 +72,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 paragraph.AppendChild(keyNode);
 
                 XmlNode valueNode = xml.CreateElement("real");
-                valueNode.InnerText = string.Format("{0:0.0###############}", p.StartTime.TotalSeconds); // 3.1600000000000001
+                valueNode.InnerText = $"{p.StartTime.TotalSeconds:0.0###############}"; // 3.1600000000000001
                 paragraph.AppendChild(valueNode);
 
                 keyNode = xml.CreateElement("key");
@@ -91,7 +80,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 paragraph.AppendChild(keyNode);
 
                 valueNode = xml.CreateElement("real");
-                valueNode.InnerText = string.Format("{0:0.0###############}", p.EndTime.TotalSeconds); // 3.1600000000000001
+                valueNode.InnerText = $"{p.EndTime.TotalSeconds:0.0###############}"; // 3.1600000000000001
                 paragraph.AppendChild(valueNode);
 
                 int textNo = 0;

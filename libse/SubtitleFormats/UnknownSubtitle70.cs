@@ -12,20 +12,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         private StringBuilder _errors;
         private int _lineNumber;
 
-        public override string Extension
-        {
-            get { return ".txt"; }
-        }
+        public override string Extension => ".txt";
 
-        public override string Name
-        {
-            get { return "Unknown 70"; }
-        }
+        public override string Name => "Unknown 70";
 
-        public override bool IsTimeBased
-        {
-            get { return false; }
-        }
+        public override bool IsTimeBased => false;
 
         public override bool IsMine(List<string> lines, string fileName)
         {
@@ -121,7 +112,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             pre.Append("{y:i}"); // italic single line
                             alreadyItalic = false;
                         }
-                        else if (s.StartsWith("<i>"))
+                        else if (s.StartsWith("<i>", StringComparison.Ordinal))
                         {
                             italicOn = true;
                             boldOn = false;
@@ -137,7 +128,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             underlineOn = false;
                             pre.Append("{y:b}"); // bold single line
                         }
-                        else if (s.StartsWith("<b>"))
+                        else if (s.StartsWith("<b>", StringComparison.Ordinal))
                         {
                             italicOn = false;
                             boldOn = true;
@@ -153,7 +144,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             underlineOn = true;
                             pre.Append("{y:u}"); // underline single line
                         }
-                        else if (s.StartsWith("<u>"))
+                        else if (s.StartsWith("<u>", StringComparison.Ordinal))
                         {
                             italicOn = false;
                             boldOn = false;
@@ -163,7 +154,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             s = s.Remove(0, 3);
                         }
 
-                        if (s.StartsWith("<font "))
+                        if (s.StartsWith("<font ", StringComparison.Ordinal))
                         {
                             int end = s.IndexOf('>');
                             if (end > 0)
@@ -246,23 +237,23 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
                 string text = lineSb.ToString();
                 int noOfLines = Utilities.CountTagInText(text, '|') + 1;
-                if (Utilities.CountTagInText(text, "{y:i}") == noOfLines && text.StartsWith("{y:i}"))
+                if (Utilities.CountTagInText(text, "{y:i}") == noOfLines && text.StartsWith("{y:i}", StringComparison.Ordinal))
                     text = "{Y:i}" + text.Replace("{y:i}", string.Empty);
-                else if (Utilities.CountTagInText(text, "{y:b}") == noOfLines && text.StartsWith("{y:b}"))
+                else if (Utilities.CountTagInText(text, "{y:b}") == noOfLines && text.StartsWith("{y:b}", StringComparison.Ordinal))
                     text = "{Y:b}" + text.Replace("{y:b}", string.Empty);
-                else if (Utilities.CountTagInText(text, "{y:u}") == noOfLines && text.StartsWith("{y:u}"))
+                else if (Utilities.CountTagInText(text, "{y:u}") == noOfLines && text.StartsWith("{y:u}", StringComparison.Ordinal))
                     text = "{Y:u}" + text.Replace("{y:u}", string.Empty);
-                else if (Utilities.CountTagInText(text, "{y:u}{y:i}") == noOfLines && text.StartsWith("{y:u}{y:i}"))
+                else if (Utilities.CountTagInText(text, "{y:u}{y:i}") == noOfLines && text.StartsWith("{y:u}{y:i}", StringComparison.Ordinal))
                     text = "{Y:u}{Y:i}" + text.Replace("{y:u}", string.Empty).Replace("{y:i}", string.Empty);
-                else if (Utilities.CountTagInText(text, "{y:i}{y:u}") == noOfLines && text.StartsWith("{y:i}{y:u}"))
+                else if (Utilities.CountTagInText(text, "{y:i}{y:u}") == noOfLines && text.StartsWith("{y:i}{y:u}", StringComparison.Ordinal))
                     text = "{Y:i}{Y:u}" + text.Replace("{y:i}", string.Empty).Replace("{y:u}", string.Empty);
-                else if (Utilities.CountTagInText(text, "{y:i}{y:b}") == noOfLines && text.StartsWith("{y:i}{y:b}"))
+                else if (Utilities.CountTagInText(text, "{y:i}{y:b}") == noOfLines && text.StartsWith("{y:i}{y:b}", StringComparison.Ordinal))
                     text = "{Y:i}{Y:b}" + text.Replace("{y:i}", string.Empty).Replace("{y:b}", string.Empty);
-                else if (Utilities.CountTagInText(text, "{y:b}{y:i}") == noOfLines && text.StartsWith("{y:b}{y:i}"))
+                else if (Utilities.CountTagInText(text, "{y:b}{y:i}") == noOfLines && text.StartsWith("{y:b}{y:i}", StringComparison.Ordinal))
                     text = "{Y:b}{Y:i}" + text.Replace("{y:i}", string.Empty).Replace("{y:b}", string.Empty);
-                else if (Utilities.CountTagInText(text, "{y:b}{y:u}") == noOfLines && text.StartsWith("{y:b}{y:u}"))
+                else if (Utilities.CountTagInText(text, "{y:b}{y:u}") == noOfLines && text.StartsWith("{y:b}{y:u}", StringComparison.Ordinal))
                     text = "{Y:b}{Y:u}" + text.Replace("{y:b}", string.Empty).Replace("{y:u}", string.Empty);
-                else if (Utilities.CountTagInText(text, "{y:u}{y:b}") == noOfLines && text.StartsWith("{y:u}{y:b}"))
+                else if (Utilities.CountTagInText(text, "{y:u}{y:b}") == noOfLines && text.StartsWith("{y:u}{y:b}", StringComparison.Ordinal))
                     text = "{Y:u}{Y:b}" + text.Replace("{y:u}", string.Empty).Replace("{y:b}", string.Empty);
 
                 if (Utilities.CountTagInText(text, "{y:i}") == 1 && noOfLines == 1)
@@ -317,91 +308,91 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 string singlePost = string.Empty;
                                 for (int i = 0; i < 5; i++)
                                 {
-                                    if (s.StartsWith("{Y:i}"))
+                                    if (s.StartsWith("{Y:i}", StringComparison.Ordinal))
                                     {
                                         s = s.Remove(0, 5);
                                         pre.Append("<i>");
                                         post = "</i>" + post;
                                     }
-                                    else if (s.StartsWith("{Y:b}"))
+                                    else if (s.StartsWith("{Y:b}", StringComparison.Ordinal))
                                     {
                                         s = s.Remove(0, 5);
                                         pre.Append("<b>");
                                         post = "</b>" + post;
                                     }
-                                    else if (s.StartsWith("{Y:u}"))
+                                    else if (s.StartsWith("{Y:u}", StringComparison.Ordinal))
                                     {
                                         s = s.Remove(0, 5);
                                         pre.Append("<u>");
                                         post = "</u>" + post;
                                     }
-                                    else if (s.StartsWith("{y:i}"))
+                                    else if (s.StartsWith("{y:i}", StringComparison.Ordinal))
                                     {
                                         s = s.Remove(0, 5);
                                         singlePost = "</i>" + singlePost;
                                         pre.Append("<i>");
                                     }
-                                    else if (s.StartsWith("{y:b}"))
+                                    else if (s.StartsWith("{y:b}", StringComparison.Ordinal))
                                     {
                                         s = s.Remove(0, 5);
                                         singlePost = "</b>" + singlePost;
                                         pre.Append("<b>");
                                     }
-                                    else if (s.StartsWith("{y:u}"))
+                                    else if (s.StartsWith("{y:u}", StringComparison.Ordinal))
                                     {
                                         s = s.Remove(0, 5);
                                         singlePost = "</u>" + singlePost;
                                         pre.Append("<u>");
                                     }
-                                    else if (s.StartsWith("{y:b,u}"))
+                                    else if (s.StartsWith("{y:b,u}", StringComparison.Ordinal))
                                     {
                                         s = s.Remove(0, 7);
                                         singlePost = "</u></b>" + singlePost;
                                         pre.Append("<b><u>");
                                     }
-                                    else if (s.StartsWith("{y:u,b}"))
+                                    else if (s.StartsWith("{y:u,b}", StringComparison.Ordinal))
                                     {
                                         s = s.Remove(0, 7);
                                         singlePost = "</b></u>" + singlePost;
                                         pre.Append("<u><b>");
                                     }
-                                    else if (s.StartsWith("{y:b,i}"))
+                                    else if (s.StartsWith("{y:b,i}", StringComparison.Ordinal))
                                     {
                                         s = s.Remove(0, 7);
                                         singlePost = "</i></b>" + singlePost;
                                         pre.Append("<b><i>");
                                     }
-                                    else if (s.StartsWith("{y:i,b}"))
+                                    else if (s.StartsWith("{y:i,b}", StringComparison.Ordinal))
                                     {
                                         s = s.Remove(0, 7);
                                         singlePost = "</b></i>" + singlePost;
                                         pre.Append("<i><b>");
                                     }
-                                    else if (s.StartsWith("{y:i,u}"))
+                                    else if (s.StartsWith("{y:i,u}", StringComparison.Ordinal))
                                     {
                                         s = s.Remove(0, 7);
                                         singlePost = "</u></i>" + singlePost;
                                         pre.Append("<i><u>");
                                     }
-                                    else if (s.StartsWith("{y:u,i}"))
+                                    else if (s.StartsWith("{y:u,i}", StringComparison.Ordinal))
                                     {
                                         s = s.Remove(0, 7);
                                         singlePost = "</i></u>" + singlePost;
                                         pre.Append("<><i>");
                                     }
-                                    else if (s.StartsWith("{Y:b,u}") || s.StartsWith("{Y:u,b}"))
+                                    else if (s.StartsWith("{Y:b,u}", StringComparison.Ordinal) || s.StartsWith("{Y:u,b}", StringComparison.Ordinal))
                                     {
                                         s = s.Remove(0, 7);
                                         pre.Append("<b><u>");
                                         post = "</u></b>" + post;
                                     }
-                                    else if (s.StartsWith("{Y:b,i}") || s.StartsWith("{Y:i,b}"))
+                                    else if (s.StartsWith("{Y:b,i}", StringComparison.Ordinal) || s.StartsWith("{Y:i,b}", StringComparison.Ordinal))
                                     {
                                         s = s.Remove(0, 7);
                                         pre.Append("<b><i>");
                                         post = "</i></b>" + post;
                                     }
-                                    else if (s.StartsWith("{Y:i,u}") || s.StartsWith("{Y:u,i}"))
+                                    else if (s.StartsWith("{Y:i,u}", StringComparison.Ordinal) || s.StartsWith("{Y:u,i}", StringComparison.Ordinal))
                                     {
                                         s = s.Remove(0, 7);
                                         pre.Append("<i><u>");

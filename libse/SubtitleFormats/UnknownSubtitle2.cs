@@ -21,27 +21,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         private Paragraph _paragraph;
         private ExpectingLine _expecting = ExpectingLine.Number;
 
-        public override string Extension
-        {
-            get { return ".txt"; }
-        }
+        public override string Extension => ".txt";
 
-        public override string Name
-        {
-            get { return "Unknown 2"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
-
-        public override bool IsMine(List<string> lines, string fileName)
-        {
-            Subtitle subtitle = new Subtitle();
-            LoadSubtitle(subtitle, lines, fileName);
-            return subtitle.Paragraphs.Count > _errorCount;
-        }
+        public override string Name => "Unknown 2";
 
         public override string ToText(Subtitle subtitle, string title)
         {

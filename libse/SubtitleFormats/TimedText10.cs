@@ -19,8 +19,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string Name => NameOfFormat;
 
-        public override bool IsTimeBased => true;
-
         public static string TtmlNamespace = "http://www.w3.org/ns/ttml";
         public static string TtmlParameterNamespace = "http://www.w3.org/ns/ttml#parameter";
         public static string TtmlStylingNamespace = "http://www.w3.org/ns/ttml#styling";

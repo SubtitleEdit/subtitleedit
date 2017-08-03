@@ -6,27 +6,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class RealTime : SubtitleFormat
     {
-        public override string Extension
-        {
-            get { return ".rt"; }
-        }
+        public override string Extension => ".rt";
 
-        public override string Name
-        {
-            get { return "RealTime"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
-
-        public override bool IsMine(List<string> lines, string fileName)
-        {
-            var subtitle = new Subtitle();
-            LoadSubtitle(subtitle, lines, fileName);
-            return subtitle.Paragraphs.Count > _errorCount;
-        }
+        public override string Name => "RealTime";
 
         public override string ToText(Subtitle subtitle, string title)
         {
@@ -59,7 +41,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         private static string EncodeTimeCode(TimeCode time)
         {
             //0:03:24.8
-            return string.Format("{0:0}:{1:00}:{2:00}.{3:0}", time.Hours, time.Minutes, time.Seconds, time.Milliseconds / 100);
+            return $"{time.Hours:0}:{time.Minutes:00}:{time.Seconds:00}.{time.Milliseconds / 100:0}";
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
