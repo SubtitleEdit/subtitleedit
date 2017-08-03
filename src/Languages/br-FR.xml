@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.5.3</Version>
-    <TranslatedBy>Lakaet e Brezhoneg gant WaniBzh29.</TranslatedBy>
+    <TranslatedBy>Troet gant WaniBzh29.</TranslatedBy>
     <CultureName>br-FR</CultureName>
     <HelpFile />
     <Ok>Mat e&amp;o</Ok>
@@ -21,17 +21,17 @@
     <OpenVideoFileTitle>Digeriñ ur restr video...</OpenVideoFileTitle>
     <NoVideoLoaded>Video ebet karget</NoVideoLoaded>
     <VideoInformation>Titouroù ar video</VideoInformation>
-    <StartTime>Amzer deraouek</StartTime>
-    <EndTime>Amzer dibenn</EndTime>
+    <StartTime>Amzer loc'hañ</StartTime>
+    <EndTime>Amzer fin</EndTime>
     <Duration>Padelezh</Duration>
-    <CharsPerSec>Arou./eil.</CharsPerSec>
+    <CharsPerSec>Arouez/seg.</CharsPerSec>
     <WordsPerMin>Ger/mun.</WordsPerMin>
     <Actor>Aktour</Actor>
     <Region>Rannvro</Region>
     <NumberSymbol>#</NumberSymbol>
     <Number>Niver</Number>
     <Text>Skrid</Text>
-    <HourMinutesSecondsMilliseconds>eurvezh:mun:eil:m-eil</HourMinutesSecondsMilliseconds>
+    <HourMinutesSecondsMilliseconds>eurvezh:mun:seg:m-seg</HourMinutesSecondsMilliseconds>
     <Bold>Druz</Bold>
     <Italic>Stouet</Italic>
     <Underline>Islinennañ</Underline>
@@ -45,9 +45,9 @@
     <VideoEncodingX>Enkodañ ar video: {0}</VideoEncodingX>
     <SingleLineLengths>Hirder al linenn:</SingleLineLengths>
     <TotalLengthX>Hirder en holl: {0}</TotalLengthX>
-    <TotalLengthXSplitLine>Hirder en holl: {0} (troc'hit al linenn !)</TotalLengthXSplitLine>
+    <TotalLengthXSplitLine>Hirder en holl: {0} (troc'hit al linenn!)</TotalLengthXSplitLine>
     <SplitLine>Rannañ!</SplitLine>
-    <NotAvailable>Ne zegouezh ket</NotAvailable>
+    <NotAvailable>Dizimplijadus</NotAvailable>
     <OverlapPreviousLineX>Marc'hadur al linenn gent ({0:#,##0.###})</OverlapPreviousLineX>
     <OverlapX>O varc'hañ ({0:#,##0.###})</OverlapX>
     <OverlapNextX>O varc'hañ war an hini da-heul ({0:#,##0.###})</OverlapNextX>
@@ -60,7 +60,7 @@
     <PleaseWait>Gortozit mar plij...</PleaseWait>
     <SessionKey>Alc'hwez an dalc'h</SessionKey>
     <UserName>Anv an implijer</UserName>
-    <UserNameAlreadyInUse>Anv an implijer a zo implijet dija</UserNameAlreadyInUse>
+    <UserNameAlreadyInUse>Anv implijer implijet dija</UserNameAlreadyInUse>
     <WebServiceUrl>Webservij URL</WebServiceUrl>
     <IP>IP</IP>
     <VideoWindowTitle>Video - {0}</VideoWindowTitle>
@@ -111,7 +111,7 @@ Postel: mailto:nikse.dk@gmail.com</AboutText1>
     <VlcMediaPlayerNotFound>Subtitle Edit en deus ezhomm eus VLC media player 1.1.x pe nevesoc'h evit eztennañ ar roadennoù klevel</VlcMediaPlayerNotFound>
     <GoToVlcMediaPlayerHomePage>Ha fellout a ra deoc'h mont war lec'hienn VLC media player?</GoToVlcMediaPlayerHomePage>
     <GeneratingPeakFile>Geneladur restr ar pikoù...</GeneratingPeakFile>
-    <GeneratingSpectrogram>Krouadur ar skalfadlun...</GeneratingSpectrogram>
+    <GeneratingSpectrogram>Krouadur ar spektrogram...</GeneratingSpectrogram>
     <ExtractingSeconds>Eztennadenn ar c'hlev: {0:0.0} eilenn</ExtractingSeconds>
     <ExtractingMinutes>Eztennadenn ar c'hlev: {0}:{1:00} eilenn</ExtractingMinutes>
     <WaveFileNotFound>Restr stumm gwagenn digavus!
@@ -123,7 +123,7 @@ Linenn urzhiañ: {1} {2}</WaveFileNotFound>
 Linenn urzhiañ: {1} {2}
 
 Notenn: Gwiriekit spas an disk vak.</WaveFileMalformed>
-    <LowDiskSpace>SPAS AN DISK GWANN</LowDiskSpace>
+    <LowDiskSpace>SPAS AN DISK A ZO GWANN</LowDiskSpace>
     <FreeDiskSpace>{0} vak</FreeDiskSpace>
   </AddWaveform>
   <AddWaveformBatch>
@@ -151,7 +151,7 @@ Notenn: Gwiriekit spas an disk vak.</WaveFileMalformed>
     <UnableToFix>Divarrek da stagañ: {0}</UnableToFix>
   </ApplyDurationLimits>
   <AutoBreakUnbreakLines>
-    <TitleAutoBreak>Linennoù diuzet kempouezet en un doare emgefreek</TitleAutoBreak>
+    <TitleAutoBreak>Linennoù diuzet em-gempouezet</TitleAutoBreak>
     <TitleUnbreak>Diverkañ al lamm linenn e-barzh an diuzadenn</TitleUnbreak>
     <LinesFoundX>Linennoù kavet: {0}</LinesFoundX>
     <OnlyBreakLinesLongerThan>Lamm linenn evit al linennoù hiroc'h evit</OnlyBreakLinesLongerThan>
@@ -178,11 +178,11 @@ Notenn: Gwiriekit spas an disk vak.</WaveFileMalformed>
     <Converted>Amdroet</Converted>
     <Settings>Arventennoù</Settings>
     <SplitLongLines>Rannañ hirder al linennoù</SplitLongLines>
-    <AutoBalance>Kempouezañ al linennoù en un doare emgefreek</AutoBalance>
-    <ScanFolder>Skan teul...</ScanFolder>
+    <AutoBalance>Emgempouezañ al linennoù</AutoBalance>
+    <ScanFolder>Skan an Teul...</ScanFolder>
     <ScanningFolder>O skaniñ {0} hag an isteulioù evit restroù istitl...</ScanningFolder>
     <Recursive>Enderc'hel an isteulioù</Recursive>
-    <SetMinMsBetweenSubtitles>Termeniñ ar mini mili-eil. etre an istitloù</SetMinMsBetweenSubtitles>
+    <SetMinMsBetweenSubtitles>Termeniñ ar mini mili-seg. etre an istitloù</SetMinMsBetweenSubtitles>
     <PlainText>Testenn diaoz</PlainText>
     <Ocr>OCR...</Ocr>
     <Filter>Sil</Filter>
@@ -190,9 +190,9 @@ Notenn: Gwiriekit spas an disk vak.</WaveFileMalformed>
     <FilterSrtNoUtf8BOM>Restroù istitl (.srt) hep talbenn gas utf-8</FilterSrtNoUtf8BOM>
     <FilterMoreThanTwoLines>Istitloù hiroc'h evit div linenn</FilterMoreThanTwoLines>
     <FilterContains>An destenn a endalc'h...</FilterContains>
-    <FixCommonErrorsErrorX>Reizhañ ar fazioù boas: {0}</FixCommonErrorsErrorX>
+    <FixCommonErrorsErrorX>Reizhañ ar fazioù boaz: {0}</FixCommonErrorsErrorX>
     <MultipleReplaceErrorX>Erlec'hiadennoù lies: {0}</MultipleReplaceErrorX>
-    <AutoBalanceErrorX>Mentel emgefreek: {0}</AutoBalanceErrorX>
+    <AutoBalanceErrorX>Pouezerez emgefreek: {0}</AutoBalanceErrorX>
   </BatchConvert>
   <Beamer>
     <Title>Istitl an arvester</Title>
@@ -200,10 +200,10 @@ Notenn: Gwiriekit spas an disk vak.</WaveFileMalformed>
   <ChangeCasing>
     <Title>Cheñch al log</Title>
     <ChangeCasingTo>Cheñch al log</ChangeCasingTo>
-    <NormalCasing>Log normal. Ar frazennoù a grog gant pennlizherennoù.</NormalCasing>
+    <NormalCasing>Log normal. Ar frazennoù a grog gant pennlizherennoù</NormalCasing>
     <FixNamesCasing>Stabilaat log an anvioù (dre Dictionaries\NamesEtc.xml)</FixNamesCasing>
     <FixOnlyNamesCasing>Stabilaat log an anvioù (dre Dictionaries\NamesEtc.xml)</FixOnlyNamesCasing>
-    <OnlyChangeAllUppercaseLines>Al linennoù gant pennlizherennoù nemetken.</OnlyChangeAllUppercaseLines>
+    <OnlyChangeAllUppercaseLines>Al linennoù gant pennlizherennoù nemetken</OnlyChangeAllUppercaseLines>
     <AllUppercase>PEP-TRA E PENNLIZHERENNOÙ</AllUppercase>
     <AllLowercase>Pep-tra e lizherennoù munut</AllLowercase>
   </ChangeCasing>
@@ -215,10 +215,10 @@ Notenn: Gwiriekit spas an disk vak.</WaveFileMalformed>
     <LinesFoundX>Linennoù kavet: {0}</LinesFoundX>
   </ChangeCasingNames>
   <ChangeFrameRate>
-    <Title>Kemmañ kadañs ar steuñvenn (fps)</Title>
+    <Title>Cheñch kadañs ar steuñvenn (fps)</Title>
     <ConvertFrameRateOfSubtitle>Amdreiñ kadañs steuñvenn an istitl</ConvertFrameRateOfSubtitle>
     <FromFrameRate>Kadañs loc'hañ</FromFrameRate>
-    <ToFrameRate>Kadañs c'hoantaeet</ToFrameRate>
+    <ToFrameRate>Kadañs c'hoantaet</ToFrameRate>
     <FrameRateNotCorrect>Kadañs ar steuñvenn (fps) direizh</FrameRateNotCorrect>
     <FrameRateNotChanged>Kadañs ar steuñvenn (fps) heñvel - amdroadur ebet</FrameRateNotChanged>
   </ChangeFrameRate>
@@ -232,7 +232,7 @@ Notenn: Gwiriekit spas an disk vak.</WaveFileMalformed>
   </ChangeSpeedInPercent>
   <CheckForUpdates>
     <Title>Klask war-lerc'h hizivadurioù</Title>
-    <CheckingForUpdates>O klask war-lerc'h hizivadur...</CheckingForUpdates>
+    <CheckingForUpdates>O klask war-lerc'h hizivadurioù...</CheckingForUpdates>
     <CheckingForUpdatesFailedX>An enklask war-lerc'h hizivadurioù a zo c'hwitet: {0}</CheckingForUpdatesFailedX>
     <CheckingForUpdatesNoneAvailable>Ober a rit ar stumm diwezhañ eus Subtitle Edit :)</CheckingForUpdatesNoneAvailable>
     <CheckingForUpdatesNewVersion>Stumm nevez hegerz!</CheckingForUpdatesNewVersion>
@@ -293,8 +293,8 @@ Notenn: Gwiriekit spas an disk vak.</WaveFileMalformed>
     <IssueDate>Deiziad an embann</IssueDate>
     <EditRate>Feur an embann</EditRate>
     <TimeCodeRate>Feur an amzergod</TimeCodeRate>
-    <StartTime>Eurvezh ar penn-kentañ</StartTime>
-    <Font>Nodrezh</Font>
+    <StartTime>Eurvezh al loc'hañ</StartTime>
+    <Font>Font</Font>
     <FontId>ID</FontId>
     <FontUri>URI</FontUri>
     <FontColor>Liv</FontColor>
@@ -311,12 +311,12 @@ Notenn: Gwiriekit spas an disk vak.</WaveFileMalformed>
   </DCinemaProperties>
   <DurationsBridgeGaps>
     <Title>Leuniañ an distokoùigoù etre ar padelezhioù</Title>
-    <GapsBridgedX>Niver a zistokoùigoù leuniet : {0}</GapsBridgedX>
-    <GapToNext>Distok betek an hini da-heul en eilennoù</GapToNext>
-    <BridgeGapsSmallerThanXPart1>Leuniañ ar spasoù bihanoc'h eget</BridgeGapsSmallerThanXPart1>
-    <BridgeGapsSmallerThanXPart2>mili-eilennoù</BridgeGapsSmallerThanXPart2>
-    <MinMillisecondsBetweenLines>Mili-eilennoù minimom etre al linennoù</MinMillisecondsBetweenLines>
-    <ProlongEndTime>An destenn-raok a gemer e amzer</ProlongEndTime>
+    <GapsBridgedX>Niver a zistokoùigoù leuniet: {0}</GapsBridgedX>
+    <GapToNext>Distok betek an hini da-heul e segondennoù</GapToNext>
+    <BridgeGapsSmallerThanXPart1>Leuniañ ar spasoù bihanoc'h evit</BridgeGapsSmallerThanXPart1>
+    <BridgeGapsSmallerThanXPart2>mili-segondennoù</BridgeGapsSmallerThanXPart2>
+    <MinMillisecondsBetweenLines>Mili-segondennoù minimom etre al linennoù</MinMillisecondsBetweenLines>
+    <ProlongEndTime>An destenn a-raok a gemer e amzer</ProlongEndTime>
     <DivideEven>An testennoù a rann amzer an distok</DivideEven>
   </DurationsBridgeGaps>
   <DvdSubRip>
@@ -368,17 +368,17 @@ Notenn: Gwiriekit spas an disk vak.</WaveFileMalformed>
     <RevisionNumber>Niverenn adwelout</RevisionNumber>
     <MaxNoOfDisplayableChars>Arouezioù max. dre linenn</MaxNoOfDisplayableChars>
     <MaxNumberOfDisplayableRows>Linennoù max.</MaxNumberOfDisplayableRows>
-    <DiskSequenceNumber>N° kemalenn ar bladenn</DiskSequenceNumber>
+    <DiskSequenceNumber>N° sekañs ar bladenn</DiskSequenceNumber>
     <TotalNumberOfDisks>Niver ar pladennoù en holl</TotalNumberOfDisks>
     <Import>Enporzhiañ...</Import>
-    <TextAndTimingInformation>Testenn ha titouroù ar goubredañ</TextAndTimingInformation>
+    <TextAndTimingInformation>Titouroù an destenn hag an amzeriañ</TextAndTimingInformation>
     <JustificationCode>Kantreizhadur</JustificationCode>
-    <Teletext>Skindestenn</Teletext>
+    <Teletext>Pelldestenn</Teletext>
     <UseBox>Diskouez an destenn er voest</UseBox>
     <DoubleHeight>Diskouez an destenn war daou uhelder</DoubleHeight>
     <Errors>Fazioù</Errors>
-    <ErrorsX>Fazioù : {0}</ErrorsX>
-    <MaxLengthError>Linenn {0} a zibas an hirder max. ({1}) à {2}: {3}</MaxLengthError>
+    <ErrorsX>Fazioù: {0}</ErrorsX>
+    <MaxLengthError>Al linenn {0} a zibas an hirder max. ({1}) eus {2}: {3}</MaxLengthError>
     <TextUnchangedPresentation>Kinnigadur digemm</TextUnchangedPresentation>
     <TextLeftJustifiedText>Testenn marzekaet a-gleiz</TextLeftJustifiedText>
     <TextCenteredText>Testenn kreizet</TextCenteredText>
@@ -387,13 +387,13 @@ Notenn: Gwiriekit spas an disk vak.</WaveFileMalformed>
   <EffectKaraoke>
     <Title>Efed Karaoke</Title>
     <ChooseColor>Dibabit al liv:</ChooseColor>
-    <TotalMilliseconds>Milieilennoù en holl :</TotalMilliseconds>
-    <EndDelayInMilliseconds>Termen an dibenn e milieilennoù:</EndDelayInMilliseconds>
+    <TotalMilliseconds>Mili-segondennoù en holl:</TotalMilliseconds>
+    <EndDelayInMilliseconds>Termen an dibenn e mili-segondennoù:</EndDelayInMilliseconds>
   </EffectKaraoke>
   <EffectTypewriter>
     <Title>Efed skriverezh</Title>
-    <TotalMilliseconds>Milieilennoù en holl :</TotalMilliseconds>
-    <EndDelayInMilliseconds>Termen an dibenn e milieilennoù:</EndDelayInMilliseconds>
+    <TotalMilliseconds>Mili-segondennoù en holl:</TotalMilliseconds>
+    <EndDelayInMilliseconds>Termen an dibenn e mili-segondennoù:</EndDelayInMilliseconds>
   </EffectTypewriter>
   <ExportCustomText>
     <Title>Ezporzhiañ stumm an destenn personalizet</Title>
@@ -403,49 +403,49 @@ Notenn: Gwiriekit spas an disk vak.</WaveFileMalformed>
     <Delete>Diverkañ</Delete>
     <SaveAs>S&amp;Erollañ dindan...</SaveAs>
     <SaveSubtitleAs>Enrollañ an istitloù...</SaveSubtitleAs>
-    <SubtitleExportedInCustomFormatToX>Ezporzhiañ istitloù er stumm personalizet : {0}</SubtitleExportedInCustomFormatToX>
+    <SubtitleExportedInCustomFormatToX>Ezporzhiañ istitloù er stumm personalizet: {0}</SubtitleExportedInCustomFormatToX>
   </ExportCustomText>
   <ExportCustomTextFormat>
     <Title>Skouer stumm an destenn personalizet</Title>
     <Template>Skouer</Template>
-    <Header>En-tête</Header>
+    <Header>Talbenn</Header>
     <TextLine>Linenn an destenn (rannbennad)</TextLine>
     <TimeCode>Amzergod</TimeCode>
     <NewLine>Linenn nevez</NewLine>
-    <Footer>Pied da page</Footer>
+    <Footer>Traoñ pajenn</Footer>
     <DoNotModify>[Chom hep kemm]</DoNotModify>
   </ExportCustomTextFormat>
   <ExportPngXml>
     <Title>Ezporzhiañ BDN XML/PNG</Title>
-    <ImageSettings>Dibarzhioù ar skeudenn</ImageSettings>
-    <FontFamily>Nodrezh</FontFamily>
-    <FontSize>Ment an nodrezh</FontSize>
-    <FontColor>Liv an nodrezh</FontColor>
+    <ImageSettings>Arventennoù ar skeudenn</ImageSettings>
+    <FontFamily>Familh ar Font</FontFamily>
+    <FontSize>Ment ar font</FontSize>
+    <FontColor>Liv ar font</FontColor>
     <BorderColor>Liv ar vevenn</BorderColor>
     <BorderWidth>Tevder ar vevenn</BorderWidth>
     <BorderStyle>Stil ar vevenn</BorderStyle>
-    <BorderStyleOneBox>Boest unel</BorderStyleOneBox>
-    <BorderStyleBoxForEachLine>Boest lies-linenn</BorderStyleBoxForEachLine>
+    <BorderStyleOneBox>Boest nemetañ</BorderStyleOneBox>
+    <BorderStyleBoxForEachLine>Boest evit pep linenn</BorderStyleBoxForEachLine>
     <BorderStyleNormalWidthX>Normal, tevder={0}</BorderStyleNormalWidthX>
     <ShadowColor>Liv ar skeud</ShadowColor>
     <ShadowWidth>Tevder ar skeud</ShadowWidth>
     <Transparency>Treuzwelusted</Transparency>
     <ImageFormat>Stumm ar skeudenn</ImageFormat>
     <FullFrameImage>Skeudenn a-bezh</FullFrameImage>
-    <SimpleRendering>Rentañ-eeun</SimpleRendering>
-    <AntiAliasingWithTransparency>Anti-aliasing gant treuzwelusted</AntiAliasingWithTransparency>
+    <SimpleRendering>Skeudennadur-eeun</SimpleRendering>
+    <AntiAliasingWithTransparency>Enep-aliasing gant treuzwelusted</AntiAliasingWithTransparency>
     <Text3D>3D</Text3D>
     <SideBySide3D>Tu-pe-du</SideBySide3D>
     <HalfTopBottom3D>Top-Bottom</HalfTopBottom3D>
-    <Depth>Dskinr</Depth>
+    <Depth>Donder</Depth>
     <ExportAllLines>Ezporzhiañ an holl...</ExportAllLines>
     <XImagesSavedInY>{0} skeudennoù enrollet e-barzh {1}</XImagesSavedInY>
-    <VideoResolution>Diarunusted ar video</VideoResolution>
-    <Align>Alignañ</Align>
+    <VideoResolution>Spister ar video</VideoResolution>
+    <Align>Steudañ</Align>
     <Left>Kleiz</Left>
     <Right>Dehou</Right>
     <Center>Kreiz</Center>
-    <BottomMargin>Marz izelel</BottomMargin>
+    <BottomMargin>Marzoù izelel</BottomMargin>
     <LeftRightMargin>Marzoù kostezel</LeftRightMargin>
     <SaveBluRraySupAs>Enrollañ evel Blu-ray sup</SaveBluRraySupAs>
     <SaveVobSubAs>Enrollañ evel VobSub</SaveVobSubAs>
@@ -455,11 +455,11 @@ Notenn: Gwiriekit spas an disk vak.</WaveFileMalformed>
     <SavePremiereEdlAs>Enrollañ evel Premiere Edl</SavePremiereEdlAs>
     <SaveFcpAs>Enrollañ evel Final Cut Pro xml</SaveFcpAs>
     <SaveDostAs>Enrollañ evel DoStudio dost</SaveDostAs>
-    <SomeLinesWereTooLongX>Linennoù 'zo a zo re hir :
+    <SomeLinesWereTooLongX>Linennoù 'zo a zo re hir:
 {0}</SomeLinesWereTooLongX>
     <LineHeight>Uhelder al linenn</LineHeight>
-    <BoxSingleLine>Boest unel</BoxSingleLine>
-    <BoxMultiLine>Boest lies-linennoù</BoxMultiLine>
+    <BoxSingleLine>Boest - linenn nemetañ</BoxSingleLine>
+    <BoxMultiLine>Boest - linennoù-lies</BoxMultiLine>
     <Forced>Dre an nerzh</Forced>
     <ChooseBackgroundColor>Dibabit liv ar foñs</ChooseBackgroundColor>
     <SaveImageAs>Enrollañ ar skeudenn dindan...</SaveImageAs>
@@ -467,7 +467,7 @@ Notenn: Gwiriekit spas an disk vak.</WaveFileMalformed>
   <ExportText>
     <Title>Ezporzhiañ testenn</Title>
     <Preview>Rakweladenn</Preview>
-    <ExportOptions>Dibarzhioù ezporzhiañ</ExportOptions>
+    <ExportOptions>Dibarzhioù an ezporzhiañ</ExportOptions>
     <FormatText>Stumm an destenn</FormatText>
     <None>Hini ebet</None>
     <MergeAllLines>Kendeuziñ an holl linennoù</MergeAllLines>
@@ -475,15 +475,15 @@ Notenn: Gwiriekit spas an disk vak.</WaveFileMalformed>
     <RemoveStyling>Diverkañ ar mentrezhañ</RemoveStyling>
     <ShowLineNumbers>Diskouez niverenn al linenn</ShowLineNumbers>
     <AddNewLineAfterLineNumber>Ouzhpennañ ul lamm-linenn nevez</AddNewLineAfterLineNumber>
-    <ShowTimeCode>Diskouez amzergod</ShowTimeCode>
+    <ShowTimeCode>Diskouez an amzergod</ShowTimeCode>
     <AddNewLineAfterTimeCode>Ouzhpennañ ul lamm-linenn nevez</AddNewLineAfterTimeCode>
     <AddNewLineAfterTexts>Ouzhpennañ ul lamm-linenn goude an destenn</AddNewLineAfterTexts>
     <AddNewLineBetweenSubtitles>Ouzhpennañ ul lamm-linenn etre an istitloù</AddNewLineBetweenSubtitles>
     <TimeCodeFormat>Stumm an amzergod</TimeCodeFormat>
     <Srt>.srt</Srt>
-    <Milliseconds>Milieilennoù</Milliseconds>
+    <Milliseconds>Mili-segondennoù</Milliseconds>
     <HHMMSSFF>HH:MM:SS:FF</HHMMSSFF>
-    <TimeCodeSeparator>Disranner :</TimeCodeSeparator>
+    <TimeCodeSeparator>Disranner amzergod:</TimeCodeSeparator>
   </ExportText>
   <ExtractDateTimeInfo>
     <Example>Skouer</Example>
@@ -494,14 +494,14 @@ Notenn: Gwiriekit spas an disk vak.</WaveFileMalformed>
     <Normal>Normal</Normal>
     <CaseSensitive>Kizidik ouzh ar c'hombod</CaseSensitive>
     <RegularExpression>Tro-lavar reoliataet</RegularExpression>
-    <WholeWord>Ger klok nemetken</WholeWord>
+    <WholeWord>Ger klok hepken</WholeWord>
     <Count>Kontañ</Count>
-    <XNumberOfMatches>{0:#,##0} disoc'hoù</XNumberOfMatches>
+    <XNumberOfMatches>{0:#,##0} disoc'h</XNumberOfMatches>
     <OneMatch>Un disoc'h hepken</OneMatch>
   </FindDialog>
   <FindSubtitleLine>
     <Title>Klask linenn an istitl</Title>
-    <Find>Re&amp;Klask</Find>
+    <Find>&amp;AdKlask</Find>
     <FindNext>&amp;Da-heul</FindNext>
   </FindSubtitleLine>
   <FixCommonErrors>
@@ -515,20 +515,20 @@ Notenn: Gwiriekit spas an disk vak.</WaveFileMalformed>
     <Next>&amp;Goude&gt;</Next>
     <Step2>Pazenn 2/2 - Gwiriekadenn ar reizhadennoù</Step2>
     <Fixes>Reizhadennoù</Fixes>
-    <Log>Rapport</Log>
-    <Function>Fonction</Function>
-    <RemovedEmptyLine>Linenn goullo lemmet kuit</RemovedEmptyLine>
-    <RemovedEmptyLineAtTop>Linenn goullo lemmet ar penn kentañ</RemovedEmptyLineAtTop>
-    <RemovedEmptyLineAtBottom>Linenn goullo lemmet war ar fin</RemovedEmptyLineAtBottom>
+    <Log>Danevell</Log>
+    <Function>Arc'hwel</Function>
+    <RemovedEmptyLine>Dilemel al linenn c'houllo</RemovedEmptyLine>
+    <RemovedEmptyLineAtTop>Dilemel al linenn c'houllo e krec'h</RemovedEmptyLineAtTop>
+    <RemovedEmptyLineAtBottom>Dilemel al linenn c'houllo er fin</RemovedEmptyLineAtBottom>
     <RemovedEmptyLinesUnsedLineBreaks>Diverkañ al linennoù goullo/lamm linennoù diezhomm</RemovedEmptyLinesUnsedLineBreaks>
-    <EmptyLinesRemovedX>Linennoù goullo lemmet kuit : {0}</EmptyLinesRemovedX>
-    <FixOverlappingDisplayTimes>Reizhañ an amzer diskouez a zo o varc'hañ</FixOverlappingDisplayTimes>
+    <EmptyLinesRemovedX>Linennoù goullo lemmet kuit: {0}</EmptyLinesRemovedX>
+    <FixOverlappingDisplayTimes>Reizhañ an amzer ziskouez a zo o varc'hañ</FixOverlappingDisplayTimes>
     <FixShortDisplayTimes>Reizhañ an amzer ziskouez re verr</FixShortDisplayTimes>
     <FixLongDisplayTimes>Reizhañ an amzer ziskouez re hir</FixLongDisplayTimes>
     <FixInvalidItalicTags>Reizhañ ar marzhiañ stouet diwiriek</FixInvalidItalicTags>
     <RemoveUnneededSpaces>Diverkañ ar spasoù diwiriek</RemoveUnneededSpaces>
-    <RemoveUnneededPeriods>Diverkañ ar poetadur diwiriek</RemoveUnneededPeriods>
-    <FixMissingSpaces>Rajouter ar spasoù a ra diouer</FixMissingSpaces>
+    <RemoveUnneededPeriods>Diverkañ ar poentadur diwiriek</RemoveUnneededPeriods>
+    <FixMissingSpaces>Ouzhpennañ ar spasoù a ra diouer</FixMissingSpaces>
     <BreakLongLines>Troc'hañ al linennoù hir</BreakLongLines>
     <RemoveLineBreaks>Diverkañ al lammoù-linennoù e-barzh ar rannbennadoù berr gant ur frazenn</RemoveLineBreaks>
     <RemoveLineBreaksAll>Tennañ an distro al linenn e-barzh an testennoù berr (war-bouez an divizoù)</RemoveLineBreaksAll>
@@ -536,40 +536,40 @@ Notenn: Gwiriekit spas an disk vak.</WaveFileMalformed>
     <AddPeriods>Ouzhpennañ ur poent pa grog al linenn da-heul gant ur bennlizherenn</AddPeriods>
     <StartWithUppercaseLetterAfterParagraph>Kregiñ gant ur bennlizherenn goude ur rannbennad</StartWithUppercaseLetterAfterParagraph>
     <StartWithUppercaseLetterAfterPeriodInsideParagraph>Lakaat pennlizherennoù goude ur poent e-barzh ur rannbennad</StartWithUppercaseLetterAfterPeriodInsideParagraph>
-    <StartWithUppercaseLetterAfterColon>Lakaat ur bennlizherenn goude daou poent</StartWithUppercaseLetterAfterColon>
+    <StartWithUppercaseLetterAfterColon>Lakaat ur bennlizherenn goude daou boent</StartWithUppercaseLetterAfterColon>
     <FixLowercaseIToUppercaseI>Erlec'hiit al lizherenn i munut e-unan dre un I (Saozneg)</FixLowercaseIToUppercaseI>
     <FixCommonOcrErrors>Reizhañ ar fazioù OCR reoliek (diwar al listenn reizhañ OCR)</FixCommonOcrErrors>
     <CommonOcrErrorsFixed>Fazioù OCR reoliek reizhet (diwar ar restr OcrReplaceList): {0}</CommonOcrErrorsFixed>
-    <RemoveSpaceBetweenNumber>Diverkañ ar spacoù etre an niveroù</RemoveSpaceBetweenNumber>
+    <RemoveSpaceBetweenNumber>Diverkañ ar spasoù etre an niveroù</RemoveSpaceBetweenNumber>
     <FixDialogsOnOneLine>Reizhañ diviz ul linenn</FixDialogsOnOneLine>
-    <RemoveSpaceBetweenNumbersFixed>Lemmel kuit ar spasoù etre an niveroù : {0}</RemoveSpaceBetweenNumbersFixed>
+    <RemoveSpaceBetweenNumbersFixed>Lemmel kuit ar spasoù etre an niveroù: {0}</RemoveSpaceBetweenNumbersFixed>
     <FixTurkishAnsi>Reizhañ an Turkeg ANSI gant an unikod</FixTurkishAnsi>
     <FixDanishLetterI>Reizhañ an 'i' Daneg</FixDanishLetterI>
-    <FixSpanishInvertedQuestionAndExclamationMarks>Erlec'hiañ ar poentoù Spagnalad estlamma ha goulennata</FixSpanishInvertedQuestionAndExclamationMarks>
-    <AddMissingQuote>Ouzhpennadenn eus an askenn (") a vank</AddMissingQuote>
+    <FixSpanishInvertedQuestionAndExclamationMarks>Erlec'hiañ ar poentoù Spagnolat estlammañ ha goulennatañ</FixSpanishInvertedQuestionAndExclamationMarks>
+    <AddMissingQuote>Ouzhpennadenn an askenn (") a vank</AddMissingQuote>
     <AddMissingQuotes>Ouzhpennañ askennoù (") a vank</AddMissingQuotes>
     <FixHyphens>Reizhañ al linennoù a grog gant ur varennig (-)</FixHyphens>
     <FixHyphensAdd>Reizhañ (skript ezvont) al linennoù kerent gant ur varennig eeun (-)</FixHyphensAdd>
     <FixHyphen>Reizhadenn al linenn o kregiñ gant ur varennig (-)</FixHyphen>
-    <XHyphensFixed>Barennigoù reizhet : {0}</XHyphensFixed>
-    <AddMissingQuotesExample>"Penaos emañ ar bed ? -&gt; "Penaos emañ ar bed ?"</AddMissingQuotesExample>
-    <XMissingQuotesAdded>Askennoù ouzhpennet : {0}</XMissingQuotesAdded>
+    <XHyphensFixed>Barennigoù reizhet: {0}</XHyphensFixed>
+    <AddMissingQuotesExample>"Penaos emañ ar bed? -&gt; "Penaos emañ ar bed?"</AddMissingQuotesExample>
+    <XMissingQuotesAdded>Askennoù ouzhpennet: {0}</XMissingQuotesAdded>
     <Fix3PlusLines>Reizhañ an istitloù hiroc'h evit div linenn</Fix3PlusLines>
     <Fix3PlusLine>Reizhadenn an istitl hiroc'h evit div linenn</Fix3PlusLine>
-    <X3PlusLinesFixed>Niver a istitloù hiroc'h evit div linenn reizhet : {0}</X3PlusLinesFixed>
+    <X3PlusLinesFixed>Niver a istitloù hiroc'h evit div linenn reizhet: {0}</X3PlusLinesFixed>
     <Analysing>O tielfennañ...</Analysing>
     <NothingToFix>Mann da reizhañ :)</NothingToFix>
-    <FixesFoundX>Reizhadennoù kavet : {0}</FixesFoundX>
-    <XFixesApplied>Reizhadennoù graet : {0}</XFixesApplied>
-    <NothingToFixBut>Mann da reizhañ un nebeut poentoù a c'hallfe bezañ gwellaet koulskoude - gwelet ur c'hemennadur</NothingToFixBut>
+    <FixesFoundX>Reizhadennoù kavet: {0}</FixesFoundX>
+    <XFixesApplied>Reizhadennoù graet: {0}</XFixesApplied>
+    <NothingToFixBut>Mann da reizhañ un nebeut poentoù a c'hallfe bezañ gwellaet koulskoude - gwelet ar c'herzhlevr evit muioc'h a ditouroù</NothingToFixBut>
     <Continue>Kenderc'hel</Continue>
-    <ContinueAnyway>Kenderc'hel memestra ?</ContinueAnyway>
-    <UncheckedFixLowercaseIToUppercaseI>Dihoskiñ "Erlec'hiit lizherennoù munut 'i' e-unan gant 'I' (Saozneg nemetken)"</UncheckedFixLowercaseIToUppercaseI>
+    <ContinueAnyway>Kenderc'hel memestra?</ContinueAnyway>
+    <UncheckedFixLowercaseIToUppercaseI>Chomet diwiriet "Erlec'hiañ lizherennoù munut 'i' e-unan gant 'I' (Saozneg nemetken)"</UncheckedFixLowercaseIToUppercaseI>
     <XIsChangedToUppercase>{0} i lakaet e pennlizherennoù</XIsChangedToUppercase>
     <FixFirstLetterToUppercaseAfterParagraph>Lakaat al lizherenn gentañ e pennlizherennoù goude ur rannbennad</FixFirstLetterToUppercaseAfterParagraph>
-    <MergeShortLine>Kendeuziñ al linennoù-berr</MergeShortLine>
+    <MergeShortLine>Kendeuziñ al linennoù berr</MergeShortLine>
     <MergeShortLineAll>Kenstagañ al linennoù berr (war-bouez an diviz)</MergeShortLineAll>
-    <XLineBreaksAdded>{0} lamm-linennoù ouzhpennet</XLineBreaksAdded>
+    <XLineBreaksAdded>{0} lamm-linenn ouzhpennet</XLineBreaksAdded>
     <BreakLongLine>Troc'hañ al linennoù hir</BreakLongLine>
     <FixLongDisplayTime>Reizhañ an amzerioù hir</FixLongDisplayTime>
     <FixInvalidItalicTag>Reizhañ stouet</FixInvalidItalicTag>
