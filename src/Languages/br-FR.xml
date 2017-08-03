@@ -569,21 +569,21 @@ Notenn: Gwiriekit spas an disk vak.</WaveFileMalformed>
     <FixFirstLetterToUppercaseAfterParagraph>Lakaat al lizherenn gentañ e pennlizherennoù goude ur rannbennad</FixFirstLetterToUppercaseAfterParagraph>
     <MergeShortLine>Kendeuziñ al linennoù-berr</MergeShortLine>
     <MergeShortLineAll>Kenstagañ al linennoù berr (war-bouez an diviz)</MergeShortLineAll>
-    <XLineBreaksAdded>{0} lamm-linennoù ouzhpennet</XLineBreaksAdded>
+    <XLineBreaksAdded>{0} lamm-linenn ouzhpennet</XLineBreaksAdded>
     <BreakLongLine>Troc'hañ al linennoù hir</BreakLongLine>
     <FixLongDisplayTime>Reizhañ an amzerioù hir</FixLongDisplayTime>
-    <FixInvalidItalicTag>Reizhañ stouet</FixInvalidItalicTag>
+    <FixInvalidItalicTag>Reizhañ al liketennoù stouet fall</FixInvalidItalicTag>
     <FixShortDisplayTime>Reizhañ an amzerioù berr</FixShortDisplayTime>
-    <FixOverlappingDisplayTime>Reizhañ ar varc'hadennoù amzeriel</FixOverlappingDisplayTime>
+    <FixOverlappingDisplayTime>Reizhañ ar marc'hadennoù amzeriel</FixOverlappingDisplayTime>
     <FixInvalidItalicTagsExample>&lt;i&gt;P'ra 'ra forzh.&lt;i&gt; -&gt; &lt;i&gt;Petra a ra forzh.&lt;/i&gt;</FixInvalidItalicTagsExample>
     <RemoveUnneededSpacesExample>Hey tu , du se. -&gt; Hey te, du-se.</RemoveUnneededSpacesExample>
-    <RemoveUnneededPeriodsExample>He te !. -&gt; He te !</RemoveUnneededPeriodsExample>
+    <RemoveUnneededPeriodsExample>He te!. -&gt; He te!</RemoveUnneededPeriodsExample>
     <FixMissingSpacesExample>He.Te. -&gt; He. Te.</FixMissingSpacesExample>
-    <FixUppercaseIInsindeLowercaseWordsExample>Tost emañ ar fIn. -&gt; Tost emañ ar fin.</FixUppercaseIInsindeLowercaseWordsExample>
+    <FixUppercaseIInsindeLowercaseWordsExample>Ar fIn 'zo tost. -&gt; Ar fin 'zo tost.</FixUppercaseIInsindeLowercaseWordsExample>
     <FixLowercaseIToUppercaseIExample>What do i care. -&gt; What do I care.</FixLowercaseIToUppercaseIExample>
-    <StartTimeLaterThanEndTime>Testenn n°{0}: An amzer deraouek a zeu war-lerc'h an amzer fin : {4}{1} -&gt; {2} {3}</StartTimeLaterThanEndTime>
-    <UnableToFixStartTimeLaterThanEndTime>Dibosupl da reizhañ an destenn n°{0}: amzer deraoeuk &gt; amzer fin : {1}</UnableToFixStartTimeLaterThanEndTime>
-    <XFixedToYZ>{0} Reizhet e : {1}{2}</XFixedToYZ>
+    <StartTimeLaterThanEndTime>Testenn n°{0}: An amzer loc'hañ a zeu war-lerc'h an amzer fin: {4}{1} -&gt; {2} {3}</StartTimeLaterThanEndTime>
+    <UnableToFixStartTimeLaterThanEndTime>Dibosupl eo da reizhañ an destenn n°{0}: amzer loc'hañ &gt; amzer fin: {1}</UnableToFixStartTimeLaterThanEndTime>
+    <XFixedToYZ>{0} Reizhet e: {1}{2}</XFixedToYZ>
     <UnableToFixTextXY>Dibosupl da reizhañ an destenn n°{0}: {1}</UnableToFixTextXY>
     <XOverlappingTimestampsFixed>{0} Marc'hadenn amzeriek reizhet</XOverlappingTimestampsFixed>
     <XInvalidHtmlTagsFixed>{0} merkaj HTML reizhet</XInvalidHtmlTagsFixed>
@@ -595,110 +595,110 @@ Notenn: Gwiriekit spas an disk vak.</WaveFileMalformed>
     <XUnneededPeriodsRemoved>{0} poent diezhomm tennet kuit</XUnneededPeriodsRemoved>
     <FixMissingSpace>Reizhañ ar spasoù a vank</FixMissingSpace>
     <XMissingSpacesAdded>{0} spasoù a vank ouzhpennet</XMissingSpacesAdded>
-    <FixUppercaseIInsideLowercaseWord>Reizhadenn eus ar 'i' pennlizherennoù e-barzh ur ger en lizherenn vunut</FixUppercaseIInsideLowercaseWord>
-    <XPeriodsAdded>{0} poent ouzhepnnet.</XPeriodsAdded>
+    <FixUppercaseIInsideLowercaseWord>Reizhadenn an 'i' e pennlizherenn e-barzh ur ger en lizherenn vunut</FixUppercaseIInsideLowercaseWord>
+    <XPeriodsAdded>{0} poent ouzhpennet</XPeriodsAdded>
     <FixMissingPeriodAtEndOfLine>Ouzhpennadenn ar poent fin</FixMissingPeriodAtEndOfLine>
     <XUppercaseIsFoundInsideLowercaseWords>{0} 'i' pennlizherennoù kavet e-barzh ur ger e lizherennoù munut</XUppercaseIsFoundInsideLowercaseWords>
     <RefreshFixes>Freskaat ar reizhadennoù</RefreshFixes>
     <ApplyFixes>Kas ar reizhadennoù diuzet da-benn</ApplyFixes>
-    <AutoBreak>&amp;Troc'hañ</AutoBreak>
-    <Unbreak>&amp;Kenstagañ</Unbreak>
+    <AutoBreak>Em&amp;droc'hañ</AutoBreak>
+    <Unbreak>&amp;Kempenn</Unbreak>
     <FixDoubleDash>Reizhadenn '--' -&gt; '...'</FixDoubleDash>
-    <FixDoubleGreaterThan>Lemmel kuit ar/al/an &gt;&gt;</FixDoubleGreaterThan>
-    <FixEllipsesStart>Lemmel kuit ar/al/an '...' e penn-kentañ al linenn</FixEllipsesStart>
-    <FixMissingOpenBracket>Parat ar/al/an [ e-barzh ul linenn</FixMissingOpenBracket>
-    <FixMusicNotation>Erlec'hiit an arouezhioù sonerezhel (i.e. âTª) gant un arouez karetaet</FixMusicNotation>
+    <FixDoubleGreaterThan>Dilemel &gt;&gt;</FixDoubleGreaterThan>
+    <FixEllipsesStart>Dilemel '...' e penn-kentañ al linenn</FixEllipsesStart>
+    <FixMissingOpenBracket>Stabilaat [ e-barzh ul linenn</FixMissingOpenBracket>
+    <FixMusicNotation>Erlec'hiañ an arouezhioù sonerezhel (i.e. âTª) gant un arouez karetaet</FixMusicNotation>
     <XFixDoubleDash>{0} '--' reizhet</XFixDoubleDash>
     <XFixDoubleGreaterThan>{0} &gt;&gt; diverkañ</XFixDoubleGreaterThan>
-    <XFixEllipsesStart>{0} '...' tennet e penn-kentañ al linennoù</XFixEllipsesStart>
+    <XFixEllipsesStart>{0} '...' diverkañ al loc'hañ</XFixEllipsesStart>
     <XFixMissingOpenBracket>{0} [ a vank e-barzh ul linenn ouzhpennet</XFixMissingOpenBracket>
     <XFixMusicNotation>{0} notenn sonerezhel e-barzh ul linenn reizhet</XFixMusicNotation>
     <FixDoubleDashExample>'Whoa-- um yeah!' -&gt; 'Whoa... um yeah!'</FixDoubleDashExample>
-    <FixDoubleGreaterThanExample>'&gt;&gt; Robert : c'hoari 'ra !' -&gt; 'Robert : c'hoari 'ra !'</FixDoubleGreaterThanExample>
-    <FixEllipsesStartExample>'... ha da c'houde e raimp' -&gt; 'ha da c'houde e raimp'</FixEllipsesStartExample>
-    <FixMissingOpenBracketExample>'clic] Diwallit !' -&gt; '[clic] Diwallit !'</FixMissingOpenBracketExample>
+    <FixDoubleGreaterThanExample>'&gt;&gt; Robert: Sup den!' -&gt; 'Robert : Sup den!'</FixDoubleGreaterThanExample>
+    <FixEllipsesStartExample>'... ha goude e raimp' -&gt; 'ha goude e raimp'</FixEllipsesStartExample>
+    <FixMissingOpenBracketExample>'clic] Diwallit!' -&gt; '[clic] Diwallit!'</FixMissingOpenBracketExample>
     <FixMusicNotationExample>'âTª sweet dreams are' -&gt; '♫ sweet dreams are'</FixMusicNotationExample>
-    <NumberOfImportantLogMessages>{0} roud kemennadenn a-bouez !</NumberOfImportantLogMessages>
+    <NumberOfImportantLogMessages>{0} roud kemennadenn a-bouez!</NumberOfImportantLogMessages>
     <FixedOkXY>Reizhet da vat - '{0}': {1}</FixedOkXY>
     <FixOcrErrorExample>D0n't -&gt; Don't</FixOcrErrorExample>
     <FixSpaceBetweenNumbersExample>1 100 -&gt; 1100</FixSpaceBetweenNumbersExample>
     <FixDialogsOneLineExample>Hi John! - Hi Ida! -&gt; Hi John!&lt;br /&gt;- Hi Ida!</FixDialogsOneLineExample>
   </FixCommonErrors>
   <GetDictionaries>
-    <Title>Geriadurioù ho peus ezhomm ?</Title>
-    <DescriptionLine1>Reizher reizhskrivadurel Subtitle Edit a zo diazezet war ar c'heflusker</DescriptionLine1>
+    <Title>Ezhomm ho peus geriadurioù?</Title>
+    <DescriptionLine1>Reizher reizhskrivadurel Subtitle Edit a zo diazezet war ar meziant</DescriptionLine1>
     <DescriptionLine2>NHunspell a implij geriadurioù Open Office.</DescriptionLine2>
-    <GetDictionariesHere>Kavit ar geriadurioù amañ :</GetDictionariesHere>
+    <GetDictionariesHere>Kavit ar geriadurioù amañ:</GetDictionariesHere>
     <ChooseLanguageAndClickDownload>Dibabit ho yezh ha klikit war pellgargañ</ChooseLanguageAndClickDownload>
     <OpenDictionariesFolder>Digeriñ an teul 'Dictionaries'</OpenDictionariesFolder>
     <Download>Pellgargañ</Download>
     <XDownloaded>{0} a zo bet pellgarget ha staliet</XDownloaded>
   </GetDictionaries>
   <GetTesseractDictionaries>
-    <Title>Geriadurioù ho peus ezhomm ?</Title>
+    <Title>Ezhomm ho peus geriadurioù?</Title>
     <DescriptionLine1>Pellgargañ ur geriadur Tesseract OCR</DescriptionLine1>
-    <DownloadFailed>C'hwitet eo ar bellgargadenn !</DownloadFailed>
-    <GetDictionariesHere>Pellgargañ ar geriadurioù amañ :</GetDictionariesHere>
-    <ChooseLanguageAndClickDownload>Diuzit ho yezh ha klikit war "Pellgargañ"</ChooseLanguageAndClickDownload>
-    <OpenDictionariesFolder>Digeriñ ar c'havlec'h "Geriadurioù"</OpenDictionariesFolder>
+    <DownloadFailed>C'hwitet eo ar bellgargadenn!</DownloadFailed>
+    <GetDictionariesHere>Pellgargañ ar geriadurioù amañ:</GetDictionariesHere>
+    <ChooseLanguageAndClickDownload>Dibabit ho yezh ha klikit war "Pellgargañ"</ChooseLanguageAndClickDownload>
+    <OpenDictionariesFolder>Digeriñ an teul 'Dictionaries'</OpenDictionariesFolder>
     <Download>Pellgargañ</Download>
     <XDownloaded>"{0}" a zo pellgarget ha staliet</XDownloaded>
   </GetTesseractDictionaries>
   <GoogleTranslate>
     <Title>Treiñ gant Google</Title>
-    <From>Diouzh :</From>
-    <To>Da :</To>
+    <From>Adalek:</From>
+    <To>Da:</To>
     <Translate>Treiñ</Translate>
-    <PleaseWait>Gortozit mar-plij... Ur serten amzer e c'hall padout</PleaseWait>
-    <PoweredByGoogleTranslate>Graet gant Google Treiñ</PoweredByGoogleTranslate>
-    <PoweredByMicrosoftTranslate>Graet gant Microsoft Treiñ</PoweredByMicrosoftTranslate>
+    <PleaseWait>Gortozit mar plij... Gellout a ra padout ur serten amzer</PleaseWait>
+    <PoweredByGoogleTranslate>Troet gant Google Translate</PoweredByGoogleTranslate>
+    <PoweredByMicrosoftTranslate>Troet gant Microsoft Translate</PoweredByMicrosoftTranslate>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
-    <Title>Google vs Microsoft troidigezh</Title>
-    <From>Diouzh :</From>
-    <To>Da :</To>
+    <Title>Google vs Microsoft Translate</Title>
+    <From>Adalek:</From>
+    <To>Da:</To>
     <Translate>Treiñ</Translate>
     <SourceText>Mammenn an destenn</SourceText>
-    <GoogleTranslate>Troidigezh gant Google</GoogleTranslate>
-    <MicrosoftTranslate>Troidigezh gant Microsoft</MicrosoftTranslate>
+    <GoogleTranslate>Google Translate</GoogleTranslate>
+    <MicrosoftTranslate>Microsoft Translate</MicrosoftTranslate>
   </GoogleOrMicrosoftTranslate>
   <GoToLine>
-    <Title>Mont an istitl niverenn</Title>
-    <XIsNotAValidNumber>{0} n'eo ket un niverenn gweredekaus</XIsNotAValidNumber>
+    <Title>Mont d'an istitl niverenn</Title>
+    <XIsNotAValidNumber>{0} n'eo ket un niverenn mat</XIsNotAValidNumber>
   </GoToLine>
   <ImportImages>
     <Title>Enporzhiañ skeudennoù</Title>
-    <ImageFiles>Restr skeudenn</ImageFiles>
+    <ImageFiles>Restroù skeudenn</ImageFiles>
     <Input>Kas</Input>
-    <InputDescription>Kas restroù (gwedeiñ pe stlej-ha-laosk)</InputDescription>
-    <Remove>Lemmel kuit</Remove>
-    <RemoveAll>Tennañ kuit an holl</RemoveAll>
+    <InputDescription>Kas restroù (merdeiñ pe rinklañ-dilec'hiañ)</InputDescription>
+    <Remove>Dilemel</Remove>
+    <RemoveAll>Dilemel an holl</RemoveAll>
   </ImportImages>
   <ImportSceneChanges>
     <Title>Enporzhiañ ar c'hemmoù sen</Title>
     <OpenTextFile>Digeriñ restr an destenn...</OpenTextFile>
-    <ImportOptions>Dibarzhioù emporzhiañ</ImportOptions>
+    <ImportOptions>Dibarzhioù an enporzhiañ</ImportOptions>
     <TextFiles>Restroù testenn</TextFiles>
-    <TimeCodes>Amzergod</TimeCodes>
-    <Frames>Frames</Frames>
-    <Seconds>Eilennoù</Seconds>
-    <Milliseconds>Milieilennoù</Milliseconds>
+    <TimeCodes>Amzergodoù</TimeCodes>
+    <Frames>Framm</Frames>
+    <Seconds>Segondenn</Seconds>
+    <Milliseconds>Mili-segondennoù</Milliseconds>
   </ImportSceneChanges>
   <ImportText>
-    <Title>Enporzhiañ testenn</Title>
+    <Title>Enporzhiañ testenn kriz</Title>
     <OneSubtitleIsOneFile>Meur a restr 'zo - ur restr a zo un istitl</OneSubtitleIsOneFile>
     <OpenTextFile>Digeriñ restr an destenn...</OpenTextFile>
     <OpenTextFiles>Digeriñ restroù testenn...</OpenTextFiles>
-    <ImportOptions>Dibarzhioù emporzhiañ</ImportOptions>
+    <ImportOptions>Dibarzhioù an enporzhiañ</ImportOptions>
     <Splitting>Rannañ</Splitting>
-    <AutoSplitText>Troc'hañ emgefreek</AutoSplitText>
-    <OneLineIsOneSubtitle>Ul linenn par ouzh un istitl</OneLineIsOneSubtitle>
+    <AutoSplitText>Emdroc'hañ</AutoSplitText>
+    <OneLineIsOneSubtitle>Ul linenn a zo un istitl</OneLineIsOneSubtitle>
     <LineBreak>Lamm-linenn</LineBreak>
     <SplitAtBlankLines>Rannañ al linennoù goullo</SplitAtBlankLines>
-    <MergeShortLines>Kendeuziñ al linennoù berr gant ar re a zeu o heul</MergeShortLines>
+    <MergeShortLines>Kendeuziñ al linennoù berr gant ar re a zeu war-lerc'h</MergeShortLines>
     <RemoveEmptyLines>Diverkañ al linennoù goullo</RemoveEmptyLines>
-    <RemoveLinesWithoutLetters>Diverkañ al linennoù hep lizherennoù</RemoveLinesWithoutLetters>
-    <GenerateTimeCodes>Genel amzergod</GenerateTimeCodes>
+    <RemoveLinesWithoutLetters>Diverkañ al linennoù hep lizherenn ebet</RemoveLinesWithoutLetters>
+    <GenerateTimeCodes>Genel amzergodoù</GenerateTimeCodes>
     <GapBetweenSubtitles>Distok etre an istitloù (e milieilennoù)</GapBetweenSubtitles>
     <Auto>Emgef.</Auto>
     <Fixed>Stabilaet</Fixed>
