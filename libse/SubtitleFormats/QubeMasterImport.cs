@@ -18,16 +18,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override string Extension => ".txt";
 
         public override string Name => "QubeMasterPro Import";
-
-        public override bool IsMine(List<string> lines, string fileName)
-        {
-            var sb = new StringBuilder();
-            foreach (string line in lines)
-                sb.AppendLine(line);
-
-            return base.IsMine(lines, fileName);
-        }
-
+        
         public override string ToText(Subtitle subtitle, string title)
         {
             var sb = new StringBuilder();

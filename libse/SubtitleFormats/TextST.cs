@@ -1003,12 +1003,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             if (string.IsNullOrEmpty(fileName))
                 return false;
 
-            if ((fileName.EndsWith(".m2ts", StringComparison.OrdinalIgnoreCase) && FileUtil.IsM2TransportStream(fileName)) ||
-                (fileName.EndsWith(".textst", StringComparison.OrdinalIgnoreCase) && FileUtil.IsMpeg2PrivateStream2(fileName)))
+            if (fileName.EndsWith(".m2ts", StringComparison.OrdinalIgnoreCase) && FileUtil.IsM2TransportStream(fileName) ||
+                fileName.EndsWith(".textst", StringComparison.OrdinalIgnoreCase) && FileUtil.IsMpeg2PrivateStream2(fileName))
             {
-                var subtitle = new Subtitle();
-                LoadSubtitle(subtitle, lines, fileName);
-                return subtitle.Paragraphs.Count > 0;
+                return base.IsMine(lines, fileName);
             }
             return false;
         }

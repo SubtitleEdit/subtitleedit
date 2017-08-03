@@ -862,9 +862,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     if (!fileName.EndsWith(".890", StringComparison.Ordinal))
                         return false;
 
-                    var sub = new Subtitle();
-                    LoadSubtitle(sub, lines, fileName);
-                    return sub.Paragraphs.Count > 0;
+                    return base.IsMine(lines, fileName);
                 }
             }
             return false;
