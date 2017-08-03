@@ -7,20 +7,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class OresmeDocXDocument : SubtitleFormat
     {
-        public override string Extension
-        {
-            get { return ".xml"; }
-        }
-
-        public override string Name
-        {
-            get { return "Oresme Docx document"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
+        public override string Extension => ".xml";
+        public override string Name => "Oresme Docx document";
+        public override bool IsTimeBased => true;
 
         public override bool IsMine(List<string> lines, string fileName)
         {
@@ -91,9 +80,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     div.AppendChild(CreateXmlParagraph(xml, endP));
                 }
             }
-
-            string s = ToUtf8XmlString(xml);
-            return s;
+            return ToUtf8XmlString(xml);
         }
 
         private static XmlNode CreateXmlParagraph(XmlDocument xml, Paragraph p)
@@ -228,6 +215,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             xml.LoadXml(sb.ToString().Trim());
             var nsmgr = new XmlNamespaceManager(xml.NameTable);
             nsmgr.AddNamespace("w", "http://schemas.openxmlformats.org/wordprocessingml/2006/main");
+
+            Func<string, double> OptimalTimeProvider = Utilities.GetOptimalDisplayMilliseconds;
             foreach (XmlNode node in xml.DocumentElement.SelectNodes("//w:tr", nsmgr))
             {
                 try
@@ -255,6 +244,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             }
                         }
                         p.Text = sb.ToString();
+                        p.EndTime = new TimeCode(OptimalTimeProvider(p.Text));
                         subtitle.Paragraphs.Add(p);
                     }
                 }
@@ -264,17 +254,19 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     _errorCount++;
                 }
             }
-            for (int i = 0; i < subtitle.Paragraphs.Count - 1; i++)
+
+            int count = subtitle.Paragraphs.Count - 1;
+            double gapsTime = Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+            for (int i = 0; i < count; i++)
             {
-                subtitle.Paragraphs[i].EndTime.TotalMilliseconds = subtitle.Paragraphs[i + 1].StartTime.TotalMilliseconds;
+                Paragraph p = subtitle.Paragraphs[i];
+                Paragraph pN = subtitle.Paragraphs[i + 1];
+                if (pN.EndTime.TotalMilliseconds - p.StartTime.TotalMilliseconds < gapsTime)
+                {
+                    p.EndTime.TotalMilliseconds = pN.EndTime.TotalMilliseconds - gapsTime;
+                }
             }
-            subtitle.Paragraphs[subtitle.Paragraphs.Count - 1].EndTime.TotalMilliseconds = 2500;
             subtitle.RemoveEmptyLines();
-            for (int i = 0; i < subtitle.Paragraphs.Count - 1; i++)
-            {
-                if (subtitle.Paragraphs[i].EndTime.TotalMilliseconds == subtitle.Paragraphs[i + 1].StartTime.TotalMilliseconds)
-                    subtitle.Paragraphs[i].EndTime.TotalMilliseconds = subtitle.Paragraphs[i + 1].StartTime.TotalMilliseconds - 1;
-            }
             subtitle.Renumber();
         }
 
