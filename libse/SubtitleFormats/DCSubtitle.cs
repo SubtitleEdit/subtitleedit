@@ -63,12 +63,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     xml.LoadXml(xmlAsString);
 
                     var subtitles = xml.DocumentElement.SelectNodes("//Subtitle");
-                    return subtitles != null && subtitles.Count > 0;
+                    return subtitles?.Count > 0;
                 }
                 catch (Exception ex)
                 {
                     System.Diagnostics.Debug.WriteLine(ex.Message);
-                    return false;
                 }
             }
             return false;
@@ -76,7 +75,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string ToText(Subtitle subtitle, string title)
         {
-            string languageEnglishName;
+            string languageEnglishName = "English";
             try
             {
                 string languageShortName = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle);
@@ -88,7 +87,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
             catch
             {
-                languageEnglishName = "English";
             }
 
             string hex = Guid.NewGuid().ToString().Replace("-", string.Empty);
@@ -512,10 +510,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 System.Diagnostics.Debug.WriteLine(exception.Message);
             }
 
+            char[] splitChars = { ':', '.', ',' };
             foreach (XmlNode node in xml.DocumentElement.SelectNodes("//Subtitle"))
             {
                 try
-                {                    
+                {
                     var textLines = new List<SubtitleLine>();
                     var pText = new StringBuilder();
                     string lastVPosition = string.Empty;
@@ -632,7 +631,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     {
                         textLines.Add(new SubtitleLine(pText.ToString(), lastVPosition));
                     }
-                    var text = string.Join(Environment.NewLine, textLines.OrderByDescending(p=>p.GetVerticalPositionAsNumber()).Select(p=>p.Text));
+                    var text = string.Join(Environment.NewLine, textLines.OrderByDescending(p => p.GetVerticalPositionAsNumber()).Select(p => p.Text));
                     text = text.Replace(Environment.NewLine + "{\\an1}", Environment.NewLine);
                     text = text.Replace(Environment.NewLine + "{\\an2}", Environment.NewLine);
                     text = text.Replace(Environment.NewLine + "{\\an3}", Environment.NewLine);
@@ -655,7 +654,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             text = "<i>" + text + "</i>";
                     }
 
-                    subtitle.Paragraphs.Add(new Paragraph(GetTimeCode(start), GetTimeCode(end), text));
+                    subtitle.Paragraphs.Add(new Paragraph(GetTimeCode(start, splitChars), GetTimeCode(end, splitChars), text));
                 }
                 catch (Exception ex)
                 {
@@ -696,17 +695,16 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return "#" + new string(chars);
         }
 
-        private static TimeCode GetTimeCode(string s)
+        private static TimeCode GetTimeCode(string timestamp, char[] splitChars)
         {
-            var parts = s.Split(':', '.', ',');
-
-            int milliseconds = int.Parse(parts[3]) * 4; // 000 to 249
-            if (s.Contains('.'))
-                milliseconds = int.Parse(parts[3].PadRight(3, '0'));
+            string[] tokens = timestamp.Split(splitChars);
+            // 000 to 249
+            int milliseconds = timestamp.Contains('.') ? int.Parse(tokens[3].PadRight(3, '0')) : int.Parse(tokens[3]) * 4;
             if (milliseconds > 999)
+            {
                 milliseconds = 999;
-
-            return new TimeCode(int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), milliseconds);
+            }
+            return new TimeCode(int.Parse(tokens[0]), int.Parse(tokens[1]), int.Parse(tokens[2]), milliseconds);
         }
 
         public static string ConvertToTimeString(TimeCode time)
