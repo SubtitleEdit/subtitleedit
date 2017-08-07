@@ -670,30 +670,22 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             subtitle.Renumber();
         }
 
-        private static string GetColorStringFromDCinema(string s)
+        internal static string GetColorStringFromDCinema(string s)
         {
             if (string.IsNullOrWhiteSpace(s))
             {
                 return s;
             }
-            if (s[0] == '#')
-            {
-                s = s.Substring(1);
-            }
-            var chars = new char[s.Length];
+
+            var hex = s.TrimStart('#');
             for (int i = s.Length - 1; i >= 0; i--)
             {
-                char ch = s[i];
-                if (CharUtils.IsHexadecimal(ch))
-                {
-                    chars[i] = ch;
-                }
-                else
+                if (!CharUtils.IsHexadecimal(s[i]))
                 {
                     return s;
                 }
             }
-            return "#" + new string(chars);
+            return "#" + hex;
         }
 
         private static TimeCode GetTimeCode(string s)

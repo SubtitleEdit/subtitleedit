@@ -654,16 +654,16 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                             innerInnerNode.Attributes["Italic"].InnerText.Equals("yes", StringComparison.OrdinalIgnoreCase))
                                         {
                                             if (innerInnerNode.Attributes["Color"] != null)
-                                                pText.Append("<i><font color=\"" + GetColorStringFromDCinema(innerInnerNode.Attributes["Color"].Value) + "\">" + innerInnerNode.InnerText + "</font><i>");
+                                                pText.Append("<i><font color=\"" + DCSubtitle.GetColorStringFromDCinema(innerInnerNode.Attributes["Color"].Value) + "\">" + innerInnerNode.InnerText + "</font><i>");
                                             else
                                                 pText.Append("<i>" + innerInnerNode.InnerText + "</i>");
                                         }
                                         else if (innerInnerNode.Name == "Font" && innerInnerNode.Attributes["Color"] != null)
                                         {
                                             if (innerInnerNode.Attributes["Italic"] != null && innerInnerNode.Attributes["Italic"].InnerText.Equals("yes", StringComparison.OrdinalIgnoreCase))
-                                                pText.Append("<i><font color=\"" + GetColorStringFromDCinema(innerInnerNode.Attributes["Color"].Value) + "\">" + innerInnerNode.InnerText + "</font><i>");
+                                                pText.Append("<i><font color=\"" + DCSubtitle.GetColorStringFromDCinema(innerInnerNode.Attributes["Color"].Value) + "\">" + innerInnerNode.InnerText + "</font><i>");
                                             else
-                                                pText.Append("<font color=\"" + GetColorStringFromDCinema(innerInnerNode.Attributes["Color"].Value) + "\">" + innerInnerNode.InnerText + "</font>");
+                                                pText.Append("<font color=\"" + DCSubtitle.GetColorStringFromDCinema(innerInnerNode.Attributes["Color"].Value) + "\">" + innerInnerNode.InnerText + "</font>");
                                         }
                                         else
                                         {
@@ -704,34 +704,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 subtitle.Header = xml.OuterXml; // save id/language/font for later use
 
             subtitle.Renumber();
-        }
-
-        private static string GetColorStringFromDCinema(string p)
-        {
-            string s = p.ToLower().Trim();
-            if (s.Replace("#", string.Empty).
-                Replace("0", string.Empty).
-                Replace("1", string.Empty).
-                Replace("2", string.Empty).
-                Replace("3", string.Empty).
-                Replace("4", string.Empty).
-                Replace("5", string.Empty).
-                Replace("6", string.Empty).
-                Replace("7", string.Empty).
-                Replace("8", string.Empty).
-                Replace("9", string.Empty).
-                Replace("a", string.Empty).
-                Replace("b", string.Empty).
-                Replace("c", string.Empty).
-                Replace("d", string.Empty).
-                Replace("e", string.Empty).
-                Replace("f", string.Empty).Length == 0)
-            {
-                if (s.StartsWith('#'))
-                    return s;
-                return "#" + s;
-            }
-            return p;
         }
 
         private TimeCode GetTimeCode(string s)
