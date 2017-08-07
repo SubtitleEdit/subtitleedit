@@ -680,20 +680,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 s = s.Substring(1);
             }
-            var chars = new char[s.Length];
             for (int i = s.Length - 1; i >= 0; i--)
             {
-                char ch = s[i];
-                if (CharUtils.IsHexadecimal(ch))
-                {
-                    chars[i] = ch;
-                }
-                else
+                if (!CharUtils.IsHexadecimal(s[i]))
                 {
                     return s;
                 }
             }
-            return "#" + new string(chars);
+            return "#" + s;
         }
 
         private static TimeCode GetTimeCode(string s)
