@@ -394,7 +394,7 @@ namespace Nikse.SubtitleEdit.Forms
                     isItalic = false;
                     i += 3;
                 }
-                else if (text.Substring(i).StartsWith(Environment.NewLine))
+                else if (text.Substring(i).StartsWith(Environment.NewLine, StringComparison.Ordinal))
                 {
                     TextDraw.DrawText(font, sf, path, sb, isItalic, subtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
 

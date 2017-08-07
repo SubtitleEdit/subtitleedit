@@ -295,7 +295,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                 word = word.Replace('´', '\'');
                 word = word.Replace('‘', '\'');
                 word = word.Replace('—', '-');
-                while(word.Contains("--"))
+                while (word.Contains("--"))
                     word = word.Replace("--", "-");
                 word = word.Replace('|', 'l');
                 word = word.Replace("vx/", "w");
@@ -349,7 +349,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                 pre += "<i>";
                 word = word.Remove(0, 3);
             }
-            while (word.Length > 2 && word.EndsWith(Environment.NewLine))
+            while (word.Length > 2 && word.EndsWith(Environment.NewLine, StringComparison.Ordinal))
             {
                 post += Environment.NewLine;
                 word = word.Substring(0, word.Length - 2);
@@ -484,8 +484,8 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                 {
                     if (word[match.Index + 1] == 'I' || word[match.Index + 1] == '1')
                     {
-                        bool doFix = word[match.Index + 1] != 'I' && match.Index >= 1 && word.Substring(match.Index - 1).StartsWith("Mc");
-                        if (word[match.Index + 1] == 'I' && match.Index >= 2 && word.Substring(match.Index - 2).StartsWith("Mac"))
+                        bool doFix = word[match.Index + 1] != 'I' && match.Index >= 1 && word.Substring(match.Index - 1).StartsWith("Mc", StringComparison.Ordinal);
+                        if (word[match.Index + 1] == 'I' && match.Index >= 2 && word.Substring(match.Index - 2).StartsWith("Mac", StringComparison.Ordinal))
                             doFix = false;
 
                         if (doFix)
@@ -566,7 +566,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                 pre += "<i>";
                 word = word.Remove(0, 3);
             }
-            while (word.StartsWith(Environment.NewLine) && word.Length > 2)
+            while (word.StartsWith(Environment.NewLine, StringComparison.Ordinal) && word.Length > 2)
             {
                 pre += Environment.NewLine;
                 word = word.Substring(2);
@@ -597,7 +597,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                 pre += "<i>";
                 word = word.Remove(0, 3);
             }
-            while (word.EndsWith(Environment.NewLine) && word.Length > 2)
+            while (word.EndsWith(Environment.NewLine, StringComparison.Ordinal) && word.Length > 2)
             {
                 post += Environment.NewLine;
                 word = word.Substring(0, word.Length - 2);
@@ -911,7 +911,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                 int appendFrom = 0;
                 for (int i = 0; i < text.Length; i++)
                 {
-                    if (text.Substring(i).StartsWith(word) && i >= appendFrom)
+                    if (text.Substring(i).StartsWith(word, StringComparison.Ordinal) && i >= appendFrom)
                     {
                         bool startOk = i == 0;
                         if (!startOk)
