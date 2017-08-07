@@ -670,32 +670,30 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             subtitle.Renumber();
         }
 
-        private static string GetColorStringFromDCinema(string p)
+        private static string GetColorStringFromDCinema(string s)
         {
-            string s = p.ToLower().Trim();
-            if (s.Replace("#", string.Empty).
-                Replace("0", string.Empty).
-                Replace("1", string.Empty).
-                Replace("2", string.Empty).
-                Replace("3", string.Empty).
-                Replace("4", string.Empty).
-                Replace("5", string.Empty).
-                Replace("6", string.Empty).
-                Replace("7", string.Empty).
-                Replace("8", string.Empty).
-                Replace("9", string.Empty).
-                Replace("a", string.Empty).
-                Replace("b", string.Empty).
-                Replace("c", string.Empty).
-                Replace("d", string.Empty).
-                Replace("e", string.Empty).
-                Replace("f", string.Empty).Length == 0)
+            if (string.IsNullOrWhiteSpace(s))
             {
-                if (s.StartsWith('#'))
-                    return s;
-                return "#" + s;
+                return s;
             }
-            return p;
+            if (s[0] == '#')
+            {
+                s = s.Substring(1);
+            }
+            var chars = new char[s.Length];
+            for (int i = s.Length - 1; i >= 0; i--)
+            {
+                char ch = s[i];
+                if (CharUtils.IsHexadecimal(ch))
+                {
+                    chars[i] = ch;
+                }
+                else
+                {
+                    return s;
+                }
+            }
+            return "#" + new string(chars);
         }
 
         private static TimeCode GetTimeCode(string s)
