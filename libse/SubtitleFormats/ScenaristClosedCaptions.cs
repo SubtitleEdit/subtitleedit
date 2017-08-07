@@ -710,19 +710,19 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     string s = text.Substring(i, 1);
                     int index = Letters.IndexOf(s);
                     string newCode;
-                    if (text.Substring(i).StartsWith("<i>"))
+                    if (text.Substring(i).StartsWith("<i>", StringComparison.Ordinal))
                     {
                         newCode = "91ae";
                         i += 2;
                         italic++;
                     }
-                    else if (text.Substring(i).StartsWith("</i>") && italic > 0)
+                    else if (text.Substring(i).StartsWith("</i>", StringComparison.Ordinal) && italic > 0)
                     {
                         newCode = "9120";
                         i += 3;
                         italic--;
                     }
-                    else if (text.Substring(i).StartsWith("’"))
+                    else if (text[i] == '’')
                     {
                         if (code.Length == 4)
                         {
@@ -1691,7 +1691,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         var cp = GetColorAndPosition(part);
                         if (cp != null)
                         {
-                            if (cp.Y > 0 && y >= 0 && cp.Y > y && !sb.ToString().EndsWith(Environment.NewLine) && !string.IsNullOrWhiteSpace(sb.ToString()))
+                            if (cp.Y > 0 && y >= 0 && cp.Y > y && !sb.ToString().EndsWith(Environment.NewLine, StringComparison.Ordinal) && !string.IsNullOrWhiteSpace(sb.ToString()))
                                 sb.AppendLine();
                             if (cp.Y > 0)
                                 y = cp.Y;
@@ -1712,7 +1712,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             {
                                 case "9440":
                                 case "94e0":
-                                    if (!sb.ToString().EndsWith(Environment.NewLine))
+                                    if (!sb.ToString().EndsWith(Environment.NewLine, StringComparison.Ordinal))
                                         sb.AppendLine();
                                     break;
                                 case "2c75":

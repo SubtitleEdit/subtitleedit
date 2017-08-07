@@ -16909,14 +16909,14 @@ namespace Nikse.SubtitleEdit.Forms
                 string pre = string.Empty;
                 // There is text selected
                 text = tb.SelectedText;
-                while (text.EndsWith(' ') || text.EndsWith(Environment.NewLine) || text.StartsWith(' ') || text.StartsWith(Environment.NewLine))
+                while (text.EndsWith(' ') || text.EndsWith(Environment.NewLine, StringComparison.Ordinal) || text.StartsWith(' ') || text.StartsWith(Environment.NewLine, StringComparison.Ordinal))
                 {
                     if (text.EndsWith(' '))
                     {
                         post += " ";
                         text = text.Remove(text.Length - 1);
                     }
-                    if (text.EndsWith(Environment.NewLine))
+                    if (text.EndsWith(Environment.NewLine, StringComparison.Ordinal))
                     {
                         post += Environment.NewLine;
                         text = text.Remove(text.Length - 2);
@@ -16926,7 +16926,7 @@ namespace Nikse.SubtitleEdit.Forms
                         pre += " ";
                         text = text.Remove(0, 1);
                     }
-                    if (text.StartsWith(Environment.NewLine))
+                    if (text.StartsWith(Environment.NewLine, StringComparison.Ordinal))
                     {
                         pre += Environment.NewLine;
                         text = text.Remove(0, 2);
