@@ -393,6 +393,7 @@
     <Compile Include="SubtitleFormats\TranscriberXml.cs" />
     <Compile Include="SubtitleFormats\TSB4.cs" />
     <Compile Include="SubtitleFormats\TurboTitler.cs" />
+    <Compile Include="SubtitleFormats\Tx3gTextOnly.cs" />
     <Compile Include="SubtitleFormats\UleadSubtitleFormat.cs" />
     <Compile Include="SubtitleFormats\Ultech130.cs" />
     <Compile Include="SubtitleFormats\UniversalSubtitleFormat.cs" />

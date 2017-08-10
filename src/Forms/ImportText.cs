@@ -8,6 +8,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Xml;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -99,8 +100,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (fileName != null && File.Exists(fileName))
             {
-                LoadTextFile(fileName);
-                GeneratePreview();
+                LoadSingleFile(fileName);
             }
         }
 
@@ -117,7 +117,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (checkBoxMultipleFiles.Visible && checkBoxMultipleFiles.Checked)
                 openFileDialog1.Filter = Configuration.Settings.Language.ImportText.TextFiles + "|*.txt|" + Configuration.Settings.Language.General.AllFiles + "|*.*";
             else
-                openFileDialog1.Filter = Configuration.Settings.Language.ImportText.TextFiles + "|*.txt|Adobe Story|*.astx|" + Configuration.Settings.Language.General.AllFiles + "|*.*";
+                openFileDialog1.Filter = Configuration.Settings.Language.ImportText.TextFiles + "|*.txt;*.tx3g|Adobe Story|*.astx|" + Configuration.Settings.Language.General.AllFiles + "|*.*";
             openFileDialog1.FileName = string.Empty;
             openFileDialog1.Multiselect = checkBoxMultipleFiles.Visible && checkBoxMultipleFiles.Checked;
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
@@ -129,18 +129,25 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
-                    string ext = string.Empty;
-                    var extension = Path.GetExtension(openFileDialog1.FileName);
-                    if (extension != null)
-                        ext = extension.ToLowerInvariant();
-
-                    if (ext == ".astx")
-                        LoadAdobeStory(openFileDialog1.FileName);
-                    else
-                        LoadTextFile(openFileDialog1.FileName);
+                    LoadSingleFile(openFileDialog1.FileName);
                 }
                 GeneratePreview();
             }
+        }
+
+        private void LoadSingleFile(string fileName)
+        {
+            string ext = string.Empty;
+            var extension = Path.GetExtension(fileName);
+            if (extension != null)
+                ext = extension.ToLowerInvariant();
+
+            if (ext == ".astx")
+                LoadAdobeStory(fileName);
+            else if (ext == ".tx3g" && new Tx3GTextOnly().IsMine(null, fileName))
+                LoadTx3G(fileName);
+            else
+                LoadTextFile(fileName);
         }
 
         private void GeneratePreview()
@@ -677,6 +684,29 @@ namespace Nikse.SubtitleEdit.Forms
             textBoxText.Text = GetAllText(fileName);
             SetVideoFileName(fileName);
             Text = Configuration.Settings.Language.ImportText.Title + " - " + fileName;
+            GeneratePreview();
+        }
+
+        private void LoadTx3G(string fileName)
+        {
+            try
+            {
+                var sb = new StringBuilder();
+                var sub = new Subtitle();
+                new Tx3GTextOnly().LoadSubtitle(sub, null, fileName);
+                foreach (var paragraph in sub.Paragraphs)
+                {
+                    sb.AppendLine(paragraph.Text);
+                    sb.AppendLine();
+                }
+                textBoxText.Text = sb.ToString();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            radioButtonSplitAtBlankLines.Checked = true;
+            checkBoxMergeShortLines.Checked = false;
             GeneratePreview();
         }
 
