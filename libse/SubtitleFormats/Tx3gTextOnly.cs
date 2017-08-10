@@ -11,9 +11,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string Name => "tx3g";
 
-        public override string ToText(Subtitle subtitle, string title) => throw new NotImplementedException();
+        public override string ToText(Subtitle subtitle, string title)
+        {
+            throw new NotImplementedException();
+        }
 
-        public static int GetUInt(byte[] buffer, int index) => (buffer[index] << 24) + (buffer[index + 1] << 16) + (buffer[index + 2] << 8) + buffer[index + 3];
+        public static int GetUInt(byte[] buffer, int index)
+        {
+            return (buffer[index] << 24) + (buffer[index + 1] << 16) + (buffer[index + 2] << 8) + buffer[index + 3];
+        }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
