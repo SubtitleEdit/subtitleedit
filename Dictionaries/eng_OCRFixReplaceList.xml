@@ -1921,6 +1921,18 @@
     <Word from="poweryour" to="power your" />
     <Word from="Ofcourse" to="Of course" />
     <Word from="Ofmy" to="Of my" />
+    <Word from="EIlen" to="Ellen" />
+    <Word from="Don'tget" to="Don't get" />
+    <Word from="tellme" to="tell me" />
+    <Word from="ofdecision" to="of decision" />
+    <Word from="itgoing" to="it going" />
+    <Word from="artificialgravity" to="artificial gravity" />
+    <Word from="shouldknow" to="should know" />
+    <Word from="Hasn'tgot" to="Hasn't got" />
+    <Word from="thirdjunction" to="third junction" />
+    <Word from="somebodypicks" to="somebody picks" />
+    <Word from="Willyou" to="Will you" />
+    <Word from="can'tget" to="can't get" />
   </WholeWords>
   <PartialWordsAlways>
     <!-- Will be replaced always -->
