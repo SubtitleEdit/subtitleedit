@@ -801,7 +801,7 @@ namespace Test
                 Assert.AreEqual(_subtitle.Paragraphs[0].Text, "MARCUS: tycker det är bra.");
             }
         }
-        
+
         #endregion Fix missing spaces
 
         #region Fix unneeded spaces
@@ -1154,6 +1154,26 @@ namespace Test
             s.Paragraphs.Add((p));
             new FixStartWithUppercaseLetterAfterParagraph().Fix(s, new EmptyFixCallback());
             Assert.AreEqual(p.Text, "- moss!" + Environment.NewLine + " - Bye.");
+        }
+
+        [TestMethod]
+        public void StartWithUppercaseAfterParagraphNormalUrl()
+        {
+            string expectedText = "- I'm sorry, what?" + Environment.NewLine + "- passionpairing.com.";
+            var s = new Subtitle();
+            s.Paragraphs.Add(new Paragraph(expectedText, 1200, 5000));
+            new FixStartWithUppercaseLetterAfterParagraph().Fix(s, new EmptyFixCallback());
+            Assert.AreEqual(expectedText, s.Paragraphs[0].Text);
+        }
+
+        [TestMethod]
+        public void StartWithUppercaseAfterParagraphNoChanges()
+        {
+            string expectedText = "O fantasma digital do\r\nmundo, 24h, diariamente.";
+            var s = new Subtitle();
+            s.Paragraphs.Add(new Paragraph(expectedText, 1200, 5000));
+            new FixStartWithUppercaseLetterAfterParagraph().Fix(s, new EmptyFixCallback());
+            Assert.AreEqual(expectedText, s.Paragraphs[0].Text);
         }
 
         #endregion Start with uppercase after paragraph
@@ -1551,10 +1571,10 @@ namespace Test
         public void FixDialogsOnOneLine4()
         {
             string source = "- Haiman, say: \"I love you.\" - So," + Environment.NewLine + "what are you up to? Another question!";
-            string target = "- Haiman, say: \"I love you.\"" + Environment.NewLine + "- So, what are you up to? Another question!"; 
+            string target = "- Haiman, say: \"I love you.\"" + Environment.NewLine + "- So, what are you up to? Another question!";
             string result = Helper.FixDialogsOnOneLine(source, "en");
             Assert.AreEqual(result, target);
-        }        
+        }
 
         #endregion Fix dialogs on one line
 
@@ -1839,7 +1859,7 @@ namespace Test
             s.Paragraphs.Add(p);
             new FixDanishLetterI().Fix(s, new EmptyFixCallback());
             Assert.AreEqual(ExpectedOuput, p.Text);
-        }        
+        }
 
         #endregion
     }

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 
@@ -6,9 +8,12 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 {
     public class FixStartWithUppercaseLetterAfterParagraph : IFixCommonError
     {
+        private static bool _isEnglish;
+
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
         {
             var language = Configuration.Settings.Language.FixCommonErrors;
+            _isEnglish = callbacks.Language.Equals("en", StringComparison.Ordinal);
             string fixAction = language.FixFirstLetterToUppercaseAfterParagraph;
             int fixedStartWithUppercaseLetterAfterParagraphTicked = 0;
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
@@ -31,249 +36,166 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
         private static string DoFix(Paragraph p, Paragraph prev, Encoding encoding, string language)
         {
-            if (p.Text != null && p.Text.Length > 1)
+            string preTextNoTags = null;
+            bool isPrevParagraphClosed = IsPreParagraphClose(prev, p);
+            if (isPrevParagraphClosed && prev != null)
             {
-                string text = p.Text;
-                string pre = string.Empty;
-                if (text.Length > 4 && text.StartsWith("<i> ", StringComparison.Ordinal))
+                preTextNoTags = HtmlUtil.RemoveHtmlTags(prev.Text, true);
+            }
+            string[] lines = p.Text.SplitToLines();
+            for (int i = 0; i < lines.Length; i++)
+            {
+                if (i == 0)
                 {
-                    pre = "<i> ";
-                    text = text.Substring(4);
-                }
-                if (text.Length > 3 && text.StartsWith("<i>", StringComparison.Ordinal))
-                {
-                    pre = "<i>";
-                    text = text.Substring(3);
-                }
-                if (text.Length > 4 && text.StartsWith("<I> ", StringComparison.Ordinal))
-                {
-                    pre = "<I> ";
-                    text = text.Substring(4);
-                }
-                if (text.Length > 3 && text.StartsWith("<I>", StringComparison.Ordinal))
-                {
-                    pre = "<I>";
-                    text = text.Substring(3);
-                }
-                if (text.Length > 2 && text.StartsWith('♪'))
-                {
-                    pre = pre + "♪";
-                    text = text.Substring(1);
-                }
-                if (text.Length > 2 && text.StartsWith(' '))
-                {
-                    pre = pre + " ";
-                    text = text.Substring(1);
-                }
-                if (text.Length > 2 && text.StartsWith('♫'))
-                {
-                    pre = pre + "♫";
-                    text = text.Substring(1);
-                }
-                if (text.Length > 2 && text.StartsWith(' '))
-                {
-                    pre = pre + " ";
-                    text = text.Substring(1);
-                }
-
-                var firstLetter = text[0];
-
-                string prevText = " .";
-                if (prev != null)
-                    prevText = HtmlUtil.RemoveHtmlTags(prev.Text);
-
-                bool isPrevEndOfLine = Helper.IsPreviousTextEndOfParagraph(prevText);
-                if (prevText == " .")
-                    isPrevEndOfLine = true;
-                if ((!text.StartsWith("www.", StringComparison.Ordinal) && !text.StartsWith("http:", StringComparison.Ordinal) && !text.StartsWith("https:", StringComparison.Ordinal)) &&
-                    (char.IsLower(firstLetter) || Helper.IsTurkishLittleI(firstLetter, encoding, language)) &&
-                    !char.IsDigit(firstLetter) &&
-                    isPrevEndOfLine)
-                {
-                    bool isMatchInKnowAbbreviations = language == "en" &&
-                        (prevText.EndsWith(" o.r.", StringComparison.Ordinal) ||
-                         prevText.EndsWith(" a.m.", StringComparison.Ordinal) ||
-                         prevText.EndsWith(" p.m.", StringComparison.Ordinal));
-
-                    if (!isMatchInKnowAbbreviations)
+                    if (!isPrevParagraphClosed)
                     {
-                        if (Helper.IsTurkishLittleI(firstLetter, encoding, language))
-                            p.Text = pre + Helper.GetTurkishUppercaseLetter(firstLetter, encoding) + text.Substring(1);
-                        else if (language == "en" && (text.StartsWith("l ", StringComparison.Ordinal) || text.StartsWith("l-I", StringComparison.Ordinal) || text.StartsWith("ls ", StringComparison.Ordinal) || text.StartsWith("lnterested") ||
-                                                      text.StartsWith("lsn't ", StringComparison.Ordinal) || text.StartsWith("ldiot", StringComparison.Ordinal) || text.StartsWith("ln", StringComparison.Ordinal) || text.StartsWith("lm", StringComparison.Ordinal) ||
-                                                      text.StartsWith("ls", StringComparison.Ordinal) || text.StartsWith("lt", StringComparison.Ordinal) || text.StartsWith("lf ", StringComparison.Ordinal) || text.StartsWith("lc", StringComparison.Ordinal) || text.StartsWith("l'm ", StringComparison.Ordinal)) || text.StartsWith("l am ", StringComparison.Ordinal)) // l > I
-                            p.Text = pre + "I" + text.Substring(1);
-                        else
-                            p.Text = pre + char.ToUpper(firstLetter) + text.Substring(1);
+                        continue;
                     }
+                    if (preTextNoTags != null && IsEndWithAbbreviation(preTextNoTags))
+                    {
+                        continue;
+                    }
+                }
+                if (i > 0 && !IsLineClosed(lines[i - 1]))
+                {
+                    continue;
+                }
+                string line = lines[i];
+                var st = new StrippableText(line);
+                string preText = st.Pre;
+                if (preText.Contains("...", StringComparison.Ordinal) || preText.EndsWith('[') || preText.EndsWith('('))
+                {
+                    continue;
+                }
+                string strippedText = st.StrippedText;
+                if (strippedText.Length == 0)
+                {
+                    continue;
+                }
+                if (IsUrl(strippedText))
+                {
+                    continue;
+                }
+                if (_isEnglish)
+                {
+                    if (IsLowerCaseLInPlaceofI(strippedText))
+                    {
+                        strippedText = strippedText.Remove(0, 1);
+                        strippedText = strippedText.Insert(0, "I");
+                    }
+                }
+                if (Helper.IsTurkishLittleI(strippedText[0], encoding, language))
+                {
+                    strippedText = strippedText.Remove(0, 1);
+                    string turkishChar = Helper.GetTurkishUppercaseLetter(strippedText[0], encoding).ToString();
+                    strippedText = strippedText.Insert(0, turkishChar);
+                }
+                strippedText = strippedText.CapitalizeFirstLetter();
+                lines[i] = st.CombineWithPrePost(strippedText);
+            }
+            return string.Join(Environment.NewLine, lines);
+        }
+
+        private static bool IsLineClosed(string line)
+        {
+            line = HtmlUtil.RemoveHtmlTags(line, true);
+            if (line.Length == 0)
+            {
+                return true;
+            }
+            char lastChar = line[line.Length - 1];
+            if (lastChar == '!' || lastChar == '?' || lastChar == ')' || lastChar == ']')
+            {
+                return true;
+            }
+            if (lastChar != '.')
+            {
+                return false;
+            }
+            return !(IsEndWithAbbreviation(line) || line.EndsWith("...", StringComparison.Ordinal));
+        }
+
+        private static bool IsPreParagraphClose(Paragraph prev, Paragraph p)
+        {
+            if (prev == null)
+            {
+                return true;
+            }
+            if (IsLineClosed(prev.Text))
+            {
+                return true;
+            }
+            double timeGaps = Math.Abs(prev.EndTime.TotalMilliseconds - p.StartTime.TotalMilliseconds);
+            // if gaps is greater than 5 seconds then pre-paragraph is close.
+            return timeGaps > 5 * TimeCode.BaseUnit; ;
+        }
+
+        private static bool IsUrl(string input)
+        {
+            // passionpairing.com. | www.passionpairing.com. | http://passionpairing.com. | https://passionpairing.com.
+            input = HtmlUtil.RemoveHtmlTags(input, true).TrimEnd('.', '!', '?', ')', ']');
+            return HtmlUtil.IsUrl(input);
+        }
+
+        private static bool IsEndWithAbbreviation(string input)
+        {
+            if (string.IsNullOrEmpty(input))
+            {
+                return false;
+            }
+            foreach (var abbreviation in GetKnownAbbreviations())
+            {
+                if (input.EndsWith(abbreviation, StringComparison.Ordinal))
+                {
+                    return true;
                 }
             }
+            return false;
+        }
 
-            if (p.Text != null && p.Text.Contains(Environment.NewLine))
+        private static bool IsLowerCaseLInPlaceofI(string input)
+        {
+            if (string.IsNullOrEmpty(input))
             {
-                var arr = p.Text.SplitToLines();
-                if (arr.Length == 2 && arr[1].Length > 1)
+                return false;
+            }
+            if (input[0] != 'l')
+            {
+                return false;
+            }
+            foreach (string ocrError in GetEnglishOcrErrors())
+            {
+                if (input.StartsWith(ocrError, StringComparison.Ordinal))
                 {
-                    string text = arr[1];
-                    string pre = string.Empty;
-                    if (text.Length > 4 && text.StartsWith("<i> ", StringComparison.Ordinal))
-                    {
-                        pre = "<i> ";
-                        text = text.Substring(4);
-                    }
-                    if (text.Length > 3 && text.StartsWith("<i>", StringComparison.Ordinal))
-                    {
-                        pre = "<i>";
-                        text = text.Substring(3);
-                    }
-                    if (text.Length > 4 && text.StartsWith("<I> ", StringComparison.Ordinal))
-                    {
-                        pre = "<I> ";
-                        text = text.Substring(4);
-                    }
-                    if (text.Length > 3 && text.StartsWith("<I>", StringComparison.Ordinal))
-                    {
-                        pre = "<I>";
-                        text = text.Substring(3);
-                    }
-                    if (text.Length > 2 && text.StartsWith('♪'))
-                    {
-                        pre = pre + "♪";
-                        text = text.Substring(1);
-                    }
-                    if (text.Length > 2 && text.StartsWith(' '))
-                    {
-                        pre = pre + " ";
-                        text = text.Substring(1);
-                    }
-                    if (text.Length > 2 && text.StartsWith('♫'))
-                    {
-                        pre = pre + "♫";
-                        text = text.Substring(1);
-                    }
-                    if (text.Length > 2 && text.StartsWith(' '))
-                    {
-                        pre = pre + " ";
-                        text = text.Substring(1);
-                    }
-
-                    char firstLetter = text[0];
-                    string prevText = HtmlUtil.RemoveHtmlTags(arr[0]);
-                    bool isPrevEndOfLine = Helper.IsPreviousTextEndOfParagraph(prevText);
-                    if ((!text.StartsWith("www.", StringComparison.Ordinal) && !text.StartsWith("http:", StringComparison.Ordinal) && !text.StartsWith("https:", StringComparison.Ordinal)) &&
-                        (char.IsLower(firstLetter) || Helper.IsTurkishLittleI(firstLetter, encoding, language)) &&
-                        !prevText.EndsWith("...", StringComparison.Ordinal) &&
-                        isPrevEndOfLine)
-                    {
-                        bool isMatchInKnowAbbreviations = language == "en" &&
-                            (prevText.EndsWith(" o.r.", StringComparison.Ordinal) ||
-                             prevText.EndsWith(" a.m.", StringComparison.Ordinal) ||
-                             prevText.EndsWith(" p.m.", StringComparison.Ordinal));
-
-                        if (!isMatchInKnowAbbreviations)
-                        {
-                            if (Helper.IsTurkishLittleI(firstLetter, encoding, language))
-                                text = pre + Helper.GetTurkishUppercaseLetter(firstLetter, encoding) + text.Substring(1);
-                            else if (language == "en" && (text.StartsWith("l ", StringComparison.Ordinal) || text.StartsWith("l-I", StringComparison.Ordinal) || text.StartsWith("ls ") || text.StartsWith("lnterested") ||
-                                                     text.StartsWith("lsn't ", StringComparison.Ordinal) || text.StartsWith("ldiot", StringComparison.Ordinal) || text.StartsWith("ln", StringComparison.Ordinal) || text.StartsWith("lm", StringComparison.Ordinal) ||
-                                                     text.StartsWith("ls", StringComparison.Ordinal) || text.StartsWith("lt", StringComparison.Ordinal) || text.StartsWith("lf ", StringComparison.Ordinal) || text.StartsWith("lc", StringComparison.Ordinal) || text.StartsWith("l'm ", StringComparison.Ordinal)) || text.StartsWith("l am ", StringComparison.Ordinal)) // l > I
-                                text = pre + "I" + text.Substring(1);
-                            else
-                                text = pre + char.ToUpper(firstLetter) + text.Substring(1);
-                            p.Text = arr[0] + Environment.NewLine + text;
-                        }
-                    }
-
-                    arr = p.Text.SplitToLines();
-                    if ((arr[0].StartsWith('-') || arr[0].StartsWith("<i>-", StringComparison.Ordinal)) &&
-                        (arr[1].StartsWith('-') || arr[1].StartsWith("<i>-", StringComparison.Ordinal)) &&
-                        !arr[0].StartsWith("--", StringComparison.Ordinal) && !arr[0].StartsWith("<i>--", StringComparison.Ordinal) &&
-                        !arr[1].StartsWith("--", StringComparison.Ordinal) && !arr[1].StartsWith("<i>--", StringComparison.Ordinal))
-                    {
-                        if (isPrevEndOfLine && arr[1].StartsWith("<i>- ", StringComparison.Ordinal) && arr[1].Length > 6)
-                        {
-                            p.Text = arr[0] + Environment.NewLine + "<i>- " + char.ToUpper(arr[1][5]) + arr[1].Remove(0, 6);
-                        }
-                        else if (isPrevEndOfLine && arr[1].StartsWith("- ", StringComparison.Ordinal) && arr[1].Length > 3)
-                        {
-                            p.Text = arr[0] + Environment.NewLine + "- " + char.ToUpper(arr[1][2]) + arr[1].Remove(0, 3);
-                        }
-                        arr = p.Text.SplitToLines();
-
-                        prevText = " .";
-                        if (prev != null && p.StartTime.TotalMilliseconds - 10000 < prev.EndTime.TotalMilliseconds)
-                            prevText = HtmlUtil.RemoveHtmlTags(prev.Text);
-                        bool isPrevLineEndOfLine = Helper.IsPreviousTextEndOfParagraph(prevText);
-                        if (isPrevLineEndOfLine && arr[0].StartsWith("<i>- ", StringComparison.Ordinal) && arr[0].Length > 6)
-                        {
-                            p.Text = "<i>- " + char.ToUpper(arr[0][5]) + arr[0].Remove(0, 6) + Environment.NewLine + arr[1];
-                        }
-                        else if (isPrevLineEndOfLine && arr[0].StartsWith("- ", StringComparison.Ordinal) && arr[0].Length > 3)
-                        {
-                            p.Text = "- " + char.ToUpper(arr[0][2]) + arr[0].Remove(0, 3) + Environment.NewLine + arr[1];
-                        }
-                    }
+                    return true;
                 }
             }
+            return false;
+        }
 
-            if (p.Text != null && p.Text.Length > 4)
-            {
-                int len = 0;
-                int indexOfNewLine = p.Text.IndexOf(Environment.NewLine + " -", 1, StringComparison.Ordinal);
-                if (indexOfNewLine < 0)
-                {
-                    indexOfNewLine = p.Text.IndexOf(Environment.NewLine + "- <i> ♪", 1, StringComparison.Ordinal);
-                    len = "- <i> ♪".Length;
-                }
-                if (indexOfNewLine < 0)
-                {
-                    indexOfNewLine = p.Text.IndexOf(Environment.NewLine + "-", 1, StringComparison.Ordinal);
-                    len = "-".Length;
-                }
-                if (indexOfNewLine < 0)
-                {
-                    indexOfNewLine = p.Text.IndexOf(Environment.NewLine + "<i>-", 1, StringComparison.Ordinal);
-                    len = "<i>-".Length;
-                }
-                if (indexOfNewLine < 0)
-                {
-                    indexOfNewLine = p.Text.IndexOf(Environment.NewLine + "<i> -", 1, StringComparison.Ordinal);
-                    len = "<i> -".Length;
-                }
-                if (indexOfNewLine < 0)
-                {
-                    indexOfNewLine = p.Text.IndexOf(Environment.NewLine + "♪ -", 1, StringComparison.Ordinal);
-                    len = "♪ -".Length;
-                }
-                if (indexOfNewLine < 0)
-                {
-                    indexOfNewLine = p.Text.IndexOf(Environment.NewLine + "♪ <i> -", 1, StringComparison.Ordinal);
-                    len = "♪ <i> -".Length;
-                }
-                if (indexOfNewLine < 0)
-                {
-                    indexOfNewLine = p.Text.IndexOf(Environment.NewLine + "♪ <i>-", 1, StringComparison.Ordinal);
-                    len = "♪ <i>-".Length;
-                }
+        private static IEnumerable<string> GetEnglishOcrErrors()
+        {
+            yield return "lnterested";
+            yield return "lsn't ";
+            yield return "l'm  ";
+            yield return "l am ";
+            yield return "l-I";
+            yield return "lm";
+            yield return "lc ";
+            yield return "l ";
+            yield return "ls ";
+            yield return "ln";
+            yield return "ls ";
+            yield return "ls";
+            yield return "lt ";
+            yield return "lf ";
+        }
 
-                if (indexOfNewLine > 0)
-                {
-                    string text = p.Text.Substring(indexOfNewLine + len);
-                    var st = new StrippableText(text);
-
-                    if (st.StrippedText.Length > 0 && Helper.IsTurkishLittleI(st.StrippedText[0], encoding, language) && !st.Pre.EndsWith('[') && !st.Pre.Contains("..."))
-                    {
-                        text = st.Pre + Helper.GetTurkishUppercaseLetter(st.StrippedText[0], encoding) + st.StrippedText.Substring(1) + st.Post;
-                        p.Text = p.Text.Remove(indexOfNewLine + len).Insert(indexOfNewLine + len, text);
-                    }
-                    else if (st.StrippedText.Length > 0 && st.StrippedText[0] != char.ToUpper(st.StrippedText[0]) && !st.Pre.EndsWith('[') && !st.Pre.Contains("..."))
-                    {
-                        text = st.Pre + char.ToUpper(st.StrippedText[0]) + st.StrippedText.Substring(1) + st.Post;
-                        p.Text = p.Text.Remove(indexOfNewLine + len).Insert(indexOfNewLine + len, text);
-                    }
-                }
-            }
-            return p.Text;
+        private static IEnumerable<string> GetKnownAbbreviations()
+        {
+            yield return " o.r.";
+            yield return " a.m.";
+            yield return " p.m.";
         }
 
     }
