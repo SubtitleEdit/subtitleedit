@@ -3215,11 +3215,29 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             if (bob.IsPeriod())
             {
-                return new CompareMatch(".", false, 0, null);
+                ImageSplitterItem next = null;
+                if (listIndex + 1 < list.Count)
+                    next = list[listIndex + 1];
+
+                if (next == null || next.NikseBitmap == null)
+                    return new CompareMatch(".", false, 0, null);
+
+                var nextBob = new BinaryOcrBitmap(next.NikseBitmap) { X = next.X, Y = next.Top };
+                if (!nextBob.IsPeriodAtTop(_binOcrLastLowercaseHeight)) // avoid italic ":"
+                    return new CompareMatch(".", false, 0, null);
             }
             if (bob.IsComma())
             {
-                return new CompareMatch(",", false, 0, null);
+                ImageSplitterItem next = null;
+                if (listIndex + 1 < list.Count)
+                    next = list[listIndex + 1];
+
+                if (next == null || next.NikseBitmap == null)
+                    return new CompareMatch(",", false, 0, null);
+
+                var nextBob = new BinaryOcrBitmap(next.NikseBitmap) { X = next.X, Y = next.Top };
+                if (!nextBob.IsPeriodAtTop(_binOcrLastLowercaseHeight)) // avoid italic ";"
+                    return new CompareMatch(",", false, 0, null);
             }
             if (maxDiff > 0 && bob.IsApostrophe())
             {
