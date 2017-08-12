@@ -313,10 +313,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private bool _autoBreakLines;
 
         private int _ocrMethodTesseract = 0;
-        private int _ocrMethodImageCompare = 1;
+        private int _ocrMethodImageCompare = -2; //TODO: Remove
         private int _ocrMethodModi = 2;
-        private int _ocrMethodBinaryImageCompare = 3;
-        private int _ocrMethodNocr = 4;
+        private int _ocrMethodBinaryImageCompare = 1;
+        private int _ocrMethodNocr = 3;
 
         public static void SetDoubleBuffered(Control c)
         {
@@ -407,9 +407,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             comboBoxOcrMethod.Items.Clear();
             comboBoxOcrMethod.Items.Add(language.OcrViaTesseract);
-            comboBoxOcrMethod.Items.Add(language.OcrViaImageCompare);
-            comboBoxOcrMethod.Items.Add(language.OcrViaModi);
+            //            comboBoxOcrMethod.Items.Add(language.OcrViaImageCompare);
             comboBoxOcrMethod.Items.Add("Binary image compare");
+            comboBoxOcrMethod.Items.Add(language.OcrViaModi);
             if (Configuration.Settings.General.ShowBetaStuff)
             {
                 comboBoxOcrMethod.Items.Add(language.OcrViaNOCR);
@@ -6915,9 +6915,14 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
             if (!_modiEnabled)
             {
-                comboBoxOcrMethod.Items.RemoveAt(2);
-                _ocrMethodBinaryImageCompare--;
-                _ocrMethodNocr--;
+                comboBoxOcrMethod.Items.RemoveAt(_ocrMethodModi);
+
+                if (_ocrMethodTesseract > _ocrMethodModi)
+                    _ocrMethodTesseract--;
+                if (_ocrMethodBinaryImageCompare > _ocrMethodModi)
+                    _ocrMethodBinaryImageCompare--;
+                if (_ocrMethodNocr > _ocrMethodModi)
+                    _ocrMethodNocr--;
             }
         }
 
