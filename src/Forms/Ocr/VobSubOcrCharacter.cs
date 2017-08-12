@@ -134,10 +134,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             pictureBoxCharacter.Top = labelCharacters.Top + 16;
             pictureBoxLastEdit.Left = buttonLastEdit.Left + buttonLastEdit.Width + 5;
 
-            if (!allowExpand)
-            {
-                buttonExpandSelection.Visible = false;
-            }
+            buttonExpandSelection.Visible = allowExpand;
         }
 
         private void ButtonOkClick(object sender, EventArgs e)
