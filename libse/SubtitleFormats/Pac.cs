@@ -921,122 +921,42 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
         }
 
-        private int AutoDetectEncoding()
+        public static int AutoDetectEncoding(string fileName)
         {
-            const string ignoreChars = "[](1234567890, .!?-\r\n'\"):;&/";
+            var pac = new Pac();
             try
             {
-                byte[] buffer = FileUtil.ReadAllBytesShared(_fileName);
-                int index = 0;
-                int count = 0;
-                CodePage = CodePageLatin;
-                while (index < buffer.Length)
+                var dictionary = new Dictionary<int, string>
                 {
-                    int start = index;
-                    Paragraph p = GetPacParagraph(ref index, buffer);
-                    if (p != null)
-                        count++;
-                    if (count == 2)
+                    { CodePageLatin, "en-da-no-sv-es-it-fr-pt-de-nl-pl-bg-sq-hr" },
+                    { CodePageGreek, "el" },
+                    { CodePageLatinCzech, "cz" },
+                    { CodePageArabic, "ar" },
+                    { CodePageHebrew, "he" },
+                    { CodePageThai, "th" },
+                    { CodePageCyrillic, "ru-uk-mk" },
+                    { CodePageChineseTraditional, "zh" },
+                    { CodePageChineseSimplified, "zh" },
+                    { CodePageKorean, "ko" },
+                    { CodePageJapanese, "ja" }
+                };
+                foreach (var kvp in dictionary)
+                {
+                    var sub = new Subtitle();
+                    pac.CodePage = kvp.Key;
+                    pac.LoadSubtitle(sub, null, fileName);
+                    var languageCode = LanguageAutoDetect.AutoDetectGoogleLanguageOrNull(sub);
+                    if (languageCode != null && kvp.Value.Contains(languageCode))
                     {
-                        CodePage = CodePageLatin;
-                        var sb = new StringBuilder("ABCDEFGHIJKLMNOPPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz" + ignoreChars);
-                        foreach (var code in LatinCodes.Values)
-                            sb.Append(code.Character);
-                        var codePageLetters = sb.ToString();
-                        var allOk = true;
-                        foreach (char ch in HtmlUtil.RemoveHtmlTags(p?.Text, true))
-                        {
-                            if (!codePageLetters.Contains(ch))
-                            {
-                                allOk = false;
-                                break;
-                            }
-                        }
-                        if (allOk)
-                            return CodePageLatin;
-
-                        CodePage = CodePageGreek;
-                        index = start;
-                        p = GetPacParagraph(ref index, buffer);
-                        codePageLetters = "AαBβΓγΔδEϵεZζHηΘθIιKκΛλMμNνΞξOοΠπPρΣσςTτΥυΦϕφXχΨψΩω" + ignoreChars;
-                        allOk = true;
-                        foreach (char ch in HtmlUtil.RemoveHtmlTags(p.Text, true))
-                        {
-                            if (!codePageLetters.Contains(ch))
-                            {
-                                allOk = false;
-                                break;
-                            }
-                        }
-                        if (allOk)
-                            return CodePageGreek;
-
-                        CodePage = CodePageArabic;
-                        index = start;
-                        p = GetPacParagraph(ref index, buffer);
-                        sb = new StringBuilder(ignoreChars);
-                        foreach (var code in ArabicCodes.Values)
-                            sb.Append(code.Character);
-                        codePageLetters = sb.ToString();
-                        allOk = true;
-                        foreach (char ch in HtmlUtil.RemoveHtmlTags(p.Text, true))
-                        {
-                            if (!codePageLetters.Contains(ch))
-                            {
-                                allOk = false;
-                                break;
-                            }
-                        }
-                        if (allOk)
-                            return CodePageArabic;
-
-                        CodePage = CodePageHebrew;
-                        index = start;
-                        p = GetPacParagraph(ref index, buffer);
-                        sb = new StringBuilder(ignoreChars);
-                        foreach (var code in HebrewCodes.Values)
-                            sb.Append(code.Character);
-                        codePageLetters = sb.ToString();
-                        allOk = true;
-                        foreach (char ch in HtmlUtil.RemoveHtmlTags(p.Text, true))
-                        {
-                            if (!codePageLetters.Contains(ch))
-                            {
-                                allOk = false;
-                                break;
-                            }
-                        }
-                        if (allOk)
-                            return CodePageHebrew;
-
-                        CodePage = CodePageCyrillic;
-                        index = start;
-                        p = GetPacParagraph(ref index, buffer);
-                        sb = new StringBuilder(ignoreChars);
-                        foreach (var code in CyrillicCodes.Values)
-                            sb.Append(code.Character);
-                        codePageLetters = sb.ToString();
-                        allOk = true;
-                        foreach (char ch in HtmlUtil.RemoveHtmlTags(p.Text, true))
-                        {
-                            if (!codePageLetters.Contains(ch))
-                            {
-                                allOk = false;
-                                break;
-                            }
-                        }
-                        if (allOk)
-                            return CodePageCyrillic;
-
-                        return CodePageLatin;
+                        return kvp.Key;
                     }
                 }
-                return CodePageLatin;
             }
             catch
             {
-                return CodePageLatin;
+                // ignored
             }
+            return CodePageLatin;
         }
 
         private void GetCodePage(byte[] buffer, int index, int endDelimiter)
@@ -1044,7 +964,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             if (BatchMode)
             {
                 if (CodePage == -1)
-                    CodePage = AutoDetectEncoding();
+                    CodePage = AutoDetectEncoding(_fileName);
                 return;
             }
 
