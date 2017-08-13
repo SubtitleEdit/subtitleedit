@@ -856,7 +856,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         isVobSub = true;
                     }
-                    else if (format == null && (fileName.EndsWith(".mkv", StringComparison.OrdinalIgnoreCase) || fileName.EndsWith(".mks", StringComparison.OrdinalIgnoreCase)) && item.SubItems[2].Text.StartsWith("Matroska"))
+                    else if (format == null && (fileName.EndsWith(".mkv", StringComparison.OrdinalIgnoreCase) || fileName.EndsWith(".mks", StringComparison.OrdinalIgnoreCase)) && item.SubItems[2].Text.StartsWith("Matroska", StringComparison.Ordinal))
                     {
                         isMatroska = true;
                     }
@@ -1182,14 +1182,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     success = CommandLineConvert.BatchConvertSave(targetFormat, null, GetCurrentEncoding(), textBoxOutputFolder.Text, _count, ref _converted, ref _errors, _allFormats.ToList(), p.FileName, p.Subtitle, p.SourceFormat, checkBoxOverwrite.Checked, -1, null, null, false, false, false);
                 }
-                if (success)
-                {
-                    p.Item.SubItems[3].Text = Configuration.Settings.Language.BatchConvert.Converted;
-                }
-                else
-                {
-                    p.Item.SubItems[3].Text = Configuration.Settings.Language.BatchConvert.NotConverted;
-                }
+                p.Item.SubItems[3].Text = success ? Configuration.Settings.Language.BatchConvert.Converted : Configuration.Settings.Language.BatchConvert.NotConverted;
                 IncrementAndShowProgress();
                 if (progressBar1.Value == progressBar1.Maximum)
                     labelStatus.Text = string.Empty;
