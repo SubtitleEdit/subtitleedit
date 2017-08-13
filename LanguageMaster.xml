@@ -1918,7 +1918,7 @@ can edit in same subtitle file (collaboration)</Information>
     <GoToNextEmptyLine>Go to next empty line</GoToNextEmptyLine>
     <MergeSelectedLines>Merge selected lines</MergeSelectedLines>
     <MergeSelectedLinesOnlyFirstText>Merge selected lines, keep only first non-empty text</MergeSelectedLinesOnlyFirstText>
-    <ToggleTranslationMode>Toggle translation mode</ToggleTranslationMode>
+    <ToggleTranslationMode>Toggle translator mode</ToggleTranslationMode>
     <SwitchOriginalAndTranslation>Switch original and translation</SwitchOriginalAndTranslation>
     <MergeOriginalAndTranslation>Merge original and translation</MergeOriginalAndTranslation>
     <MergeWithNext>Merge with next</MergeWithNext>
