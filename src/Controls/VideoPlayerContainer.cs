@@ -333,6 +333,13 @@ namespace Nikse.SubtitleEdit.Controls
                 if (subtitle.Header == null || !subtitle.Header.Contains("[V4+ Styles]"))
                 {
                     subtitle = new Subtitle(subtitle);
+                    if (RightToLeft == TextRightToLeft)
+                    {
+                        foreach (var paragraph in subtitle.Paragraphs)
+                        {
+                            paragraph.Text = Utilities.ReverseStartAndEndingForRightToLeft(paragraph.Text);
+                        }
+                    }
                     var oldFontSize = Configuration.Settings.SubtitleSettings.SsaFontSize;
                     var oldFontBold = Configuration.Settings.SubtitleSettings.SsaFontBold;
                     Configuration.Settings.SubtitleSettings.SsaFontSize = Configuration.Settings.General.VideoPlayerPreviewFontSize;
