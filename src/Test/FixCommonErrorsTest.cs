@@ -801,7 +801,89 @@ namespace Test
                 Assert.AreEqual(_subtitle.Paragraphs[0].Text, "MARCUS: tycker det är bra.");
             }
         }
-        
+
+        [TestMethod]
+        public void FixMissingSpacesMusicSymbolsFirst()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                const string input = "♪Dream, little one ♪";
+                const string expected = "♪ Dream, little one ♪";
+                InitializeFixCommonErrorsLine(target, input);
+                new FixMissingSpaces().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual(_subtitle.Paragraphs[0].Text, expected);
+            }
+        }
+
+        [TestMethod]
+        public void FixMissingSpacesMusicSymbolsLast()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                const string input = "♪ Dream, little one♪";
+                const string expected = "♪ Dream, little one ♪";
+                InitializeFixCommonErrorsLine(target, input);
+                new FixMissingSpaces().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual(_subtitle.Paragraphs[0].Text, expected);
+            }
+        }
+
+        [TestMethod]
+        public void FixMissingSpacesMusicSymbolsItalicFirst()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                const string input = "<i>♪Dream, little one ♪</i>";
+                const string expected = "<i>♪ Dream, little one ♪</i>";
+                InitializeFixCommonErrorsLine(target, input);
+                new FixMissingSpaces().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual(_subtitle.Paragraphs[0].Text, expected);
+            }
+        }
+
+        [TestMethod]
+        public void FixMissingSpacesMusicSymbolsItalicLast()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                const string input = "<i>♪ Dream, little one♪</i>";
+                const string expected = "<i>♪ Dream, little one ♪</i>";
+                InitializeFixCommonErrorsLine(target, input);
+                new FixMissingSpaces().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual(_subtitle.Paragraphs[0].Text, expected);
+            }
+        }
+
+        [TestMethod]
+        public void FixMissingSpacesMusicTwoLines()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                string input = "♪ Dream, little one♪" + Environment.NewLine +
+                               "♪ Dream, little one♪";
+                string expected = "♪ Dream, little one ♪" + Environment.NewLine +
+                                  "♪ Dream, little one ♪";
+                InitializeFixCommonErrorsLine(target, input);
+                new FixMissingSpaces().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual(_subtitle.Paragraphs[0].Text, expected);
+            }
+        }
+
+        [TestMethod]
+        public void FixMissingSpacesMusicTwoLinesItalic()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                string input = "<i>♪Dream, little one♪</i>" + Environment.NewLine +
+                               "<i>♪Dream, little one♪</i>";
+                string expected = "<i>♪ Dream, little one ♪</i>" + Environment.NewLine +
+                                  "<i>♪ Dream, little one ♪</i>";
+                InitializeFixCommonErrorsLine(target, input);
+                new FixMissingSpaces().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual(_subtitle.Paragraphs[0].Text, expected);
+            }
+        }
+
         #endregion Fix missing spaces
 
         #region Fix unneeded spaces
@@ -1551,10 +1633,10 @@ namespace Test
         public void FixDialogsOnOneLine4()
         {
             string source = "- Haiman, say: \"I love you.\" - So," + Environment.NewLine + "what are you up to? Another question!";
-            string target = "- Haiman, say: \"I love you.\"" + Environment.NewLine + "- So, what are you up to? Another question!"; 
+            string target = "- Haiman, say: \"I love you.\"" + Environment.NewLine + "- So, what are you up to? Another question!";
             string result = Helper.FixDialogsOnOneLine(source, "en");
             Assert.AreEqual(result, target);
-        }        
+        }
 
         #endregion Fix dialogs on one line
 
@@ -1839,7 +1921,7 @@ namespace Test
             s.Paragraphs.Add(p);
             new FixDanishLetterI().Fix(s, new EmptyFixCallback());
             Assert.AreEqual(ExpectedOuput, p.Text);
-        }        
+        }
 
         #endregion
     }
