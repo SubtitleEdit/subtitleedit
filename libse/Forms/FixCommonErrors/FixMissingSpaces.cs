@@ -94,7 +94,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         if (languageCode == "sv" || languageCode == "fi")
                         {
                             var m = FixMissingSpacesReColonWithAfter.Match(p.Text, match.Index);
-                            skipSwedishOrFinish = IsSwedishSkipValue(languageCode, m) || IsFinnishSkipValue(languageCode, m);                            
+                            skipSwedishOrFinish = IsSwedishSkipValue(languageCode, m) || IsFinnishSkipValue(languageCode, m);
                         }
                         if (!skipSwedishOrFinish)
                         {
@@ -199,16 +199,18 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 }
 
                 //fix missing spaces before/after music quotes - #He's so happy# -> #He's so happy#
-                if (p.Text.Length > 5 && p.Text.Contains(new[] { '#', '♪', '♫' }))
+                var musicSymbols = new[] { '#', '♪', '♫' };
+                if (p.Text.Length > 5 && p.Text.Contains(musicSymbols))
                 {
-                    string newText = p.Text;
-                    if (@"#♪♫".Contains(newText[0]) && !@" <".Contains(newText[1]) && !newText.Substring(1).StartsWith(Environment.NewLine, StringComparison.Ordinal) &&
-                        !newText.Substring(1).StartsWith('♪') && !newText.Substring(1).StartsWith('♫'))
-                        newText = newText.Insert(1, " ");
-                    if (@"#♪♫".Contains(newText[newText.Length - 1]) && !@" >".Contains(newText[newText.Length - 2]) &&
-                        !newText.Substring(0, newText.Length - 1).EndsWith(Environment.NewLine, StringComparison.Ordinal) && !newText.Substring(0, newText.Length - 1).EndsWith('♪') &&
-                        !newText.Substring(0, newText.Length - 1).EndsWith('♫'))
-                        newText = newText.Insert(newText.Length - 1, " ");
+                    var lines = p.Text.SplitToLines();
+                    for (var lineIndex = 0; lineIndex < lines.Length; lineIndex++)
+                    {
+                        foreach (var musicSymbol in musicSymbols)
+                        {
+                            lines[lineIndex] = FixMissingSpaceBeforeAfterMusicQuotes(lines[lineIndex], musicSymbol);
+                        }
+                    }
+                    string newText = string.Join(Environment.NewLine, lines);
                     if (newText != p.Text && callbacks.AllowFix(p, fixAction))
                     {
                         missingSpaces++;
@@ -312,6 +314,31 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 }
             }
             callbacks.UpdateFixStatus(missingSpaces, language.FixMissingSpaces, string.Format(language.XMissingSpacesAdded, missingSpaces));
+        }
+
+        private static string FixMissingSpaceBeforeAfterMusicQuotes(string text, char musicSymbol)
+        {
+            // start
+            if (text.StartsWith(musicSymbol) && !" \r#♪♫".Contains(text[1]))
+            {
+                text = text.Insert(1, " ");
+            }
+            else if (text.StartsWith("<i>" + musicSymbol, StringComparison.Ordinal) && !" \r#♪♫".Contains(text[4]))
+            {
+                text = text.Insert(4, " ");
+            }
+
+            // end
+            if (text.EndsWith(musicSymbol) && !" \n#♪♫".Contains(text[text.Length - 2]))
+            {
+                text = text.Insert(text.Length - 1, " ");
+            }
+            if (text.EndsWith(musicSymbol + "</i>", StringComparison.Ordinal) && !" \r#♪♫".Contains(text[text.Length - 6]))
+            {
+                text = text.Insert(text.Length - 5, " ");
+            }
+
+            return text;
         }
 
         private static bool IsSwedishSkipValue(string languageCode, Match match)
