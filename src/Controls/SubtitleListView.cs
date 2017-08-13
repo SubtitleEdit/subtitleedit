@@ -45,7 +45,7 @@ namespace Nikse.SubtitleEdit.Controls
         public int ColumnIndexExtra = -1;
         public int ColumnIndexNetwork = -1;
 
-        public bool IsAlternateTextColumnVisible;
+        public bool IsAlternateTextColumnVisible => ColumnIndexTextAlternate >= 0;
         private string _lineSeparatorString = " || ";
 
         private Font _subtitleFont = new Font("Tahoma", 8.25F);
@@ -714,7 +714,6 @@ namespace Nikse.SubtitleEdit.Controls
                 Columns[ColumnIndexTextAlternate].Width = 300;
                 Columns[ColumnIndexTextAlternate].Width = 300;
                 Columns[ColumnIndexTextAlternate].Width = 300;
-                IsAlternateTextColumnVisible = true;
                 AutoSizeAllColumns(null);
             }
             else
