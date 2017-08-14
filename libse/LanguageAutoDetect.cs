@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using Nikse.SubtitleEdit.Core.DetectEncoding;
 
 namespace Nikse.SubtitleEdit.Core
 {
@@ -796,7 +798,7 @@ namespace Nikse.SubtitleEdit.Core
                 if (GetCount(hewbrewEncoding.GetString(buffer), AutoDetectWordsHebrew) > 5)
                     return hewbrewEncoding;
 
-                return DetectEncoding.EncodingTools.DetectInputCodepage(buffer);
+                return EncodingTools.DetectInputCodepage(buffer);
             }
             catch
             {
@@ -953,6 +955,34 @@ namespace Nikse.SubtitleEdit.Core
                 return false; // not utf-8 (no characters utf-8 encoded...)
 
             return true;
+        }
+
+        public static bool CouldBeRightToLeftLanguge(Subtitle subtitle)
+        {
+            var text = subtitle.GetAllTexts();
+            if (text.Length > 1000)
+            {
+                int arabicCount = GetCount(text, AutoDetectWordsArabic);
+                if (arabicCount > 1)
+                    return true;
+
+                int hebrewCount = GetCount(text, AutoDetectWordsHebrew);
+                if (hebrewCount > 1)
+                    return true;
+
+                int farsiCount = GetCount(text, AutoDetectWordsFarsi);
+                if (farsiCount > 1)
+                    return true;
+            }
+            else
+            {
+                foreach (var letter in string.Join(string.Empty, AutoDetectWordsArabic.Concat(AutoDetectWordsHebrew).Concat(AutoDetectWordsFarsi)).Distinct())
+                {
+                    if (text.Contains(letter))
+                        return true;
+                }
+            }
+            return false;
         }
 
     }
