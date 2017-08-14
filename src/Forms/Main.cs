@@ -14538,8 +14538,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0)
                 {
-                    var la = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitleAlternate);
-                    if ((la == null && Configuration.Settings.General.RightToLeftMode) || la == "ar" || la == "he")
+                    if (LanguageAutoDetect.CouldBeRightToLeftLanguge(_subtitleAlternate))
                     {
                         textBoxListViewTextAlternate.RightToLeft = RightToLeft.Yes;
                     }
@@ -14548,14 +14547,14 @@ namespace Nikse.SubtitleEdit.Forms
                         textBoxListViewTextAlternate.RightToLeft = RightToLeft.No;
                     }
                 }
-                var l = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle);
-                if ((l == null && Configuration.Settings.General.RightToLeftMode) || l == "ar" || l == "he")
+                if (LanguageAutoDetect.CouldBeRightToLeftLanguge(_subtitle))
                 {
                     textBoxListViewText.RightToLeft = RightToLeft.Yes;
                     textBoxSource.RightToLeft = RightToLeft.Yes;
                 }
                 else
                 {
+
                     textBoxListViewText.RightToLeft = RightToLeft.No;
                     textBoxSource.RightToLeft = RightToLeft.No;
                 }
