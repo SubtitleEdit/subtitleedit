@@ -44,7 +44,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         public VideoPlayer VideoPlayer
         {
-            get => _videoPlayer;
+            get { return _videoPlayer; }
             set
             {
                 _videoPlayer = value;
@@ -107,7 +107,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         public RightToLeft TextRightToLeft
         {
-            get => _subtitleTextBox.RightToLeft;
+            get { return _subtitleTextBox.RightToLeft; }
             set
             {
                 _subtitleTextBox.RightToLeft = value;
@@ -118,7 +118,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         public bool ShowStopButton
         {
-            get => _pictureBoxStop.Visible || _pictureBoxStopOver.Visible || _pictureBoxStopDown.Visible;
+            get { return _pictureBoxStop.Visible || _pictureBoxStopOver.Visible || _pictureBoxStopDown.Visible; }
             set
             {
                 if (value)
@@ -134,7 +134,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         public bool ShowMuteButton
         {
-            get => _pictureBoxMute.Visible || _pictureBoxMuteOver.Visible || _pictureBoxMuteDown.Visible;
+            get { return _pictureBoxMute.Visible || _pictureBoxMuteOver.Visible || _pictureBoxMuteDown.Visible; }
             set
             {
                 if (value)
@@ -150,7 +150,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         public bool ShowFullscreenButton
         {
-            get => _pictureBoxFullscreen.Visible || _pictureBoxFullscreenOver.Visible || _pictureBoxFullscreenDown.Visible;
+            get { return _pictureBoxFullscreen.Visible || _pictureBoxFullscreenOver.Visible || _pictureBoxFullscreenDown.Visible; }
             set
             {
                 if (value)
@@ -379,7 +379,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         public string SubtitleText
         {
-            get => _subtitleText;
+            get { return _subtitleText; }
             set
             {
                 _subtitleText = value;
