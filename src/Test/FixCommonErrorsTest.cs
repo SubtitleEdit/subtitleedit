@@ -884,6 +884,33 @@ namespace Test
             }
         }
 
+        [TestMethod]
+        public void FixMissingSpacesMusicDoNotChange()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                string input = "♪♫ Dream, little one ♫♪";
+                string expected = input;
+                InitializeFixCommonErrorsLine(target, input);
+                new FixMissingSpaces().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual(_subtitle.Paragraphs[0].Text, expected);
+            }
+        }
+
+        [TestMethod]
+        public void FixMissingSpacesMusicDoNotChange2()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                string input = "♪♪ ! ♪♪" + Environment.NewLine +
+                               "♪";
+                string expected = input;
+                InitializeFixCommonErrorsLine(target, input);
+                new FixMissingSpaces().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual(_subtitle.Paragraphs[0].Text, expected);
+            }
+        }
+
         #endregion Fix missing spaces
 
         #region Fix unneeded spaces

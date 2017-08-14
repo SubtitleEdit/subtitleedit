@@ -319,21 +319,21 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
         private static string FixMissingSpaceBeforeAfterMusicQuotes(string text, char musicSymbol)
         {
             // start
-            if (text.StartsWith(musicSymbol) && !" \r#♪♫".Contains(text[1]))
+            if (text.Length > 2 && text.StartsWith(musicSymbol) && !" \r\n#♪♫".Contains(text[1]))
             {
                 text = text.Insert(1, " ");
             }
-            else if (text.StartsWith("<i>" + musicSymbol, StringComparison.Ordinal) && !" \r#♪♫".Contains(text[4]))
+            else if (text.Length > 4 && text.StartsWith("<i>" + musicSymbol, StringComparison.Ordinal) && !" \r\n#♪♫".Contains(text[4]))
             {
                 text = text.Insert(4, " ");
             }
 
             // end
-            if (text.EndsWith(musicSymbol) && !" \n#♪♫".Contains(text[text.Length - 2]))
+            if (text.Length > 2 && text.EndsWith(musicSymbol) && !" \n\n#♪♫".Contains(text[text.Length - 2]))
             {
                 text = text.Insert(text.Length - 1, " ");
             }
-            if (text.EndsWith(musicSymbol + "</i>", StringComparison.Ordinal) && !" \r#♪♫".Contains(text[text.Length - 6]))
+            if (text.Length > 5 && text.EndsWith(musicSymbol + "</i>", StringComparison.Ordinal) && !" \r\n#♪♫".Contains(text[text.Length - 6]))
             {
                 text = text.Insert(text.Length - 5, " ");
             }
