@@ -531,7 +531,14 @@ namespace Test.Logic
         public void ReverseStartAndEndingForRightToLeft6()
         {
             Assert.AreEqual(Utilities.ReverseStartAndEndingForRightToLeft("-I have a big head." + Environment.NewLine + "~So do I?" + Environment.NewLine + "+I do too!"),
-                                                                          ".I have a big head-" + Environment.NewLine + "?So do I~" + Environment.NewLine + "!I do too+");
+                ".I have a big head-" + Environment.NewLine + "?So do I~" + Environment.NewLine + "!I do too+");
+        }
+
+        [TestMethod]
+        public void ReverseStartAndEndingForRightToLeft7HtmlTags()
+        {
+            Assert.AreEqual(Utilities.ReverseStartAndEndingForRightToLeft("<i>-I have a big head.</i>" + Environment.NewLine + "<font color='red'>~So do I?</font>" + Environment.NewLine + "+I do too!"),
+                "<i>.I have a big head-</i>" + Environment.NewLine + "<font color='red'>?So do I~</font>" + Environment.NewLine + "!I do too+");
         }
 
     }

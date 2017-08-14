@@ -44,7 +44,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         public VideoPlayer VideoPlayer
         {
-            get { return _videoPlayer; }
+            get => _videoPlayer;
             set
             {
                 _videoPlayer = value;
@@ -107,10 +107,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         public RightToLeft TextRightToLeft
         {
-            get
-            {
-                return _subtitleTextBox.RightToLeft;
-            }
+            get => _subtitleTextBox.RightToLeft;
             set
             {
                 _subtitleTextBox.RightToLeft = value;
@@ -121,10 +118,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         public bool ShowStopButton
         {
-            get
-            {
-                return _pictureBoxStop.Visible || _pictureBoxStopOver.Visible || _pictureBoxStopDown.Visible;
-            }
+            get => _pictureBoxStop.Visible || _pictureBoxStopOver.Visible || _pictureBoxStopDown.Visible;
             set
             {
                 if (value)
@@ -140,10 +134,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         public bool ShowMuteButton
         {
-            get
-            {
-                return _pictureBoxMute.Visible || _pictureBoxMuteOver.Visible || _pictureBoxMuteDown.Visible;
-            }
+            get => _pictureBoxMute.Visible || _pictureBoxMuteOver.Visible || _pictureBoxMuteDown.Visible;
             set
             {
                 if (value)
@@ -159,10 +150,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         public bool ShowFullscreenButton
         {
-            get
-            {
-                return _pictureBoxFullscreen.Visible || _pictureBoxFullscreenOver.Visible || _pictureBoxFullscreenDown.Visible;
-            }
+            get => _pictureBoxFullscreen.Visible || _pictureBoxFullscreenOver.Visible || _pictureBoxFullscreenDown.Visible;
             set
             {
                 if (value)
@@ -352,7 +340,7 @@ namespace Nikse.SubtitleEdit.Controls
                 string text = subtitle.ToText(format);
                 if (text != _mpvTextOld || _mpvTextFileName == null)
                 {
-                    if (string.IsNullOrEmpty(_mpvTextFileName) || _subtitlePrev != subtitle || !_mpvTextFileName.EndsWith(format.Extension))
+                    if (string.IsNullOrEmpty(_mpvTextFileName) || _subtitlePrev != subtitle || !_mpvTextFileName.EndsWith(format.Extension, StringComparison.Ordinal))
                     {
                         DeleteTempMpvFileName();
                         _mpvTextFileName = Path.GetTempFileName() + format.Extension;
@@ -391,10 +379,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         public string SubtitleText
         {
-            get
-            {
-                return _subtitleText;
-            }
+            get => _subtitleText;
             set
             {
                 _subtitleText = value;

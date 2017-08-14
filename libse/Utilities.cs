@@ -1205,6 +1205,23 @@ namespace Nikse.SubtitleEdit.Core
                     startsWithItalic = true;
                     s2 = s2.Remove(0, 3);
                 }
+
+                var startFontTag = string.Empty;
+                if (s2.StartsWith("<font ", StringComparison.Ordinal) && s2.IndexOf('>') > 0)
+                {
+                    int idx = s2.IndexOf('>');
+                    idx++;
+                    startFontTag = s2.Substring(0, idx);
+                    s2 = s2.Remove(0, idx);
+                }
+
+                var endFontTag = string.Empty;
+                if (s2.EndsWith("</font>", StringComparison.Ordinal))
+                {
+                    endFontTag = "</font>";
+                    s2 = s2.Remove(s2.Length - endFontTag.Length);
+                }
+
                 bool endsWithItalic = false;
                 if (s2.EndsWith("</i>", StringComparison.Ordinal))
                 {
@@ -1230,9 +1247,11 @@ namespace Nikse.SubtitleEdit.Core
                     newLines.Append(assTag);
                 if (startsWithItalic)
                     newLines.Append("<i>");
+                newLines.Append(startFontTag);
                 newLines.Append(ReverseParenthesis(post.ToString()));
                 newLines.Append(s2.Substring(pre.Length, s2.Length - (pre.Length + post.Length)));
                 newLines.Append(ReverseParenthesis(ReverseString(pre.ToString())));
+                newLines.Append(endFontTag);
                 if (endsWithItalic)
                     newLines.Append("</i>");
                 newLines.AppendLine();
