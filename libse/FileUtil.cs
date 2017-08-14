@@ -53,6 +53,22 @@ namespace Nikse.SubtitleEdit.Core
                     && buffer[3] == 0x04; // (EOT)
             }
         }
+        public static bool Is7Zip(string fileName)
+        {
+            using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            {
+                var buffer = new byte[6];
+                var count = fs.Read(buffer, 0, buffer.Length);
+                if (count != buffer.Length)
+                    return false;
+                return buffer[0] == 0x37     // 7
+                       && buffer[1] == 0x7a  // z
+                       && buffer[2] == 0xbc
+                       && buffer[3] == 0xaf
+                       && buffer[4] == 0x27
+                       && buffer[5] == 0x1c;
+            }
+        }
 
         public static bool IsRar(string fileName)
         {

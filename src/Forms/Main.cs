@@ -2716,6 +2716,13 @@ namespace Nikse.SubtitleEdit.Forms
                     return;
                 }
 
+                // check for .7z file
+                if (format == null && file.Length > 100 && FileUtil.Is7Zip(fileName))
+                {
+                    MessageBox.Show(_language.ErrorLoad7Zip);
+                    return;
+                }
+
                 // check for .png file
                 if (format == null && file.Length > 100 && FileUtil.IsPng(fileName))
                 {
