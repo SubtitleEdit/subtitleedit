@@ -152,7 +152,7 @@ namespace Nikse.SubtitleEdit.Core
         private static readonly string[] AutoDetectWordsLatvian = { "Paldies", "neesmu ", "nezinu", "viòð", "viņš", "viņu", "kungs", "esmu", "Viņš", "Velns", "viņa", "dievs", "Pagaidi", "varonis", "agrāk", "varbūt" };
         private static readonly string[] AutoDetectWordsLithuanian = { "tavęs", "veidai", "apie", "jums", "Veidai", "Kaip", "kaip", "reikia", "Šūdas", "frensis", "Ačiū", "vilsonai", "Palauk", "Veidas", "viskas", "Tikrai", "manęs", "Tačiau", "žmogau", "Flagai", "Prašau", "Džiune", "Nakties", "šviesybe", "Supratau", "komanda", "reikia", "apie", "Kodėl", "mūsų", "Ačiū", "vyksta" };
         private static readonly string[] AutoDetectWordsHindi = { "एक", "और", "को", "का", "यह", "सकते", "लिए", "करने", "भारतीय", "सकता", "भारत", "तकनीक", "कंप्यूटिंग", "उपकरण", "भाषाओं", "भाषा", "कंप्यूटर", "आप", "आपको", "अपने", "लेकिन", "करना", "सकता", "बहुत", "चाहते", "अच्छा", "वास्तव", "लगता", "इसलिए", "शेल्डन", "धन्यवाद।", "तरह", "करता", "चाहता", "कोशिश", "करते", "किया", "अजीब", "सिर्फ", "शुरू" };
-
+        private static readonly string[] AutoDetectWordsUrdu = { "نہیں", "ایک", "ہیں", "کیا", "اور", "لئے", "ٹھیک", "ہوں", "مجھے", "تھا", "کرنے", "صرف", "ارے", "یہاں", "بہت", "لیکن", "ساتھ", "اپنے", "اچھا", "میرے", "چاہتا", "انہوں", "تمہیں" };
         private static string AutoDetectGoogleLanguage(string text, int bestCount)
         {
             int count = GetCount(text, AutoDetectWordsEnglish);
@@ -347,6 +347,10 @@ namespace Nikse.SubtitleEdit.Core
             count = GetCount(text, AutoDetectWordsHindi);
             if (count > bestCount)
                 return "hi";
+
+            count = GetCount(text, AutoDetectWordsUrdu);
+            if (count > bestCount)
+                return "ur";
 
             count = GetCount(text, AutoDetectWordsMarcedonian);
             if (count > bestCount)
@@ -683,6 +687,15 @@ namespace Nikse.SubtitleEdit.Core
                             bestCount = count;
                         }
                         break;
+                    case "ur_ur": // Urdu
+                    case "ur":
+                        count = GetCount(text, AutoDetectWordsUrdu);
+                        if (count > bestCount)
+                        {
+                            languageName = shortName;
+                            bestCount = count;
+                        }
+                        break;
                     case "tr_tr": // Turkish
                         count = GetCount(text, AutoDetectWordsTurkish);
                         if (count > bestCount)
@@ -973,10 +986,14 @@ namespace Nikse.SubtitleEdit.Core
                 int farsiCount = GetCount(text, AutoDetectWordsFarsi);
                 if (farsiCount > 1)
                     return true;
+
+                int urduCount = GetCount(text, AutoDetectWordsUrdu);
+                if (urduCount > 1)
+                    return true;
             }
             else
             {
-                foreach (var letter in string.Join(string.Empty, AutoDetectWordsArabic.Concat(AutoDetectWordsHebrew).Concat(AutoDetectWordsFarsi)).Distinct())
+                foreach (var letter in string.Join(string.Empty, AutoDetectWordsArabic.Concat(AutoDetectWordsHebrew).Concat(AutoDetectWordsFarsi).Concat(AutoDetectWordsUrdu)).Distinct())
                 {
                     if (text.Contains(letter))
                         return true;
