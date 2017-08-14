@@ -333,7 +333,7 @@ namespace Nikse.SubtitleEdit.Controls
                 if (subtitle.Header == null || !subtitle.Header.Contains("[V4+ Styles]"))
                 {
                     subtitle = new Subtitle(subtitle);
-                    if (RightToLeft == TextRightToLeft)
+                    if (_subtitleTextBox.RightToLeft == RightToLeft.Yes)
                     {
                         foreach (var paragraph in subtitle.Paragraphs)
                         {
