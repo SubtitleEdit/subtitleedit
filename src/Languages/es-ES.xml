@@ -956,7 +956,7 @@ Nota: comprobar el espacio libre en disco.</WaveFileMalformed>
         <AdjustDisplayDuration>&amp;Ajustar duraciones...</AdjustDisplayDuration>
         <ApplyDurationLimits>Aplicar límites de duración...</ApplyDurationLimits>
         <DurationsBridgeGap>Puentear intervalos en duraciones...</DurationsBridgeGap>
-        <FixCommonErrors>&amp;Fijar errores comunes...</FixCommonErrors>
+        <FixCommonErrors>Corregir errores comunes...</FixCommonErrors>
         <StartNumberingFrom>Iniciar numeración desde...</StartNumberingFrom>
         <RemoveTextForHearingImpaired>Eliminar texto para sordos...</RemoveTextForHearingImpaired>
         <ChangeCasing>Cambiar mayúsculas...</ChangeCasing>
