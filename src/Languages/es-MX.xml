@@ -21,8 +21,8 @@
     <OpenVideoFileTitle>Abrir video...</OpenVideoFileTitle>
     <NoVideoLoaded>Ningún video cargado</NoVideoLoaded>
     <VideoInformation>Información del video</VideoInformation>
-    <StartTime>Tiempo Inicial</StartTime>
-    <EndTime>Tiempo Final</EndTime>
+    <StartTime>Tiempo inicial</StartTime>
+    <EndTime>Tiempo final</EndTime>
     <Duration>Duración</Duration>
     <CharsPerSec>Caracteres/s</CharsPerSec>
     <WordsPerMin>Palabras/min</WordsPerMin>
@@ -91,7 +91,7 @@ Se agradecen sugerencias.
 Email: mailto:nikse.dk@gmail.com</AboutText1>
   </About>
   <AddToNames>
-    <Title>Añadir al listado de nombres/etc lista</Title>
+    <Title>Añadir al listado de nombres</Title>
     <Description>Añadir a la lista nombres/varios (sensible a mayúsculas)</Description>
   </AddToNames>
   <AddToOcrReplaceList>
@@ -164,7 +164,7 @@ Nota: comprobar el espacio libre en disco.</WaveFileMalformed>
     <UseStyleFromSource>Usar estilo desde fuente</UseStyleFromSource>
     <ConvertOptions>Opciones de conversión</ConvertOptions>
     <RemoveFormatting>Quitar las etiquetas de formato</RemoveFormatting>
-    <RemoveTextForHI>Quitar texto para HI</RemoveTextForHI>
+    <RemoveTextForHI>Quitar texto para sordos</RemoveTextForHI>
     <OverwriteOriginalFiles>Sobrescribir los archivos originales (nueva extensión si se cambia el formato)</OverwriteOriginalFiles>
     <RedoCasing>Rehacer</RedoCasing>
     <Convert>Convertir</Convert>
@@ -194,7 +194,7 @@ Nota: comprobar el espacio libre en disco.</WaveFileMalformed>
     <Title>Videoproyector</Title>
   </Beamer>
   <ChangeCasing>
-    <Title>Cambiar</Title>
+    <Title>Cambiar mayúsculas</Title>
     <ChangeCasingTo>Cambiar mayúsculas a</ChangeCasingTo>
     <NormalCasing>Mayúsculas normales. Primera letra de cada frase en mayúscula.</NormalCasing>
     <FixNamesCasing>Corregir mayúsculas de nombres (vía Dictionaries\NamesEtc.xml)</FixNamesCasing>
@@ -981,7 +981,7 @@ Nota: comprobar el espacio libre en disco.</WaveFileMalformed>
         <Style>Estílo</Style>
         <Ascending>Ascendente</Ascending>
         <Descending>Descendente</Descending>
-        <MakeNewEmptyTranslationFromCurrentSubtitle>Nueva traducción desde el principio del subtítulo actual</MakeNewEmptyTranslationFromCurrentSubtitle>
+        <MakeNewEmptyTranslationFromCurrentSubtitle>Nueva traducción desde el comienzo del subtítulo actual</MakeNewEmptyTranslationFromCurrentSubtitle>
         <BatchConvert>Convertir lote...</BatchConvert>
         <GenerateTimeAsText>Generar tiempo como texto...</GenerateTimeAsText>
         <MeasurementConverter>Conversor de medidas...</MeasurementConverter>
@@ -1755,7 +1755,7 @@ puedan editar el mismo archivo de subtítulo (colaboración)</Information>
     <VlcMediaPlayer>VLC media player</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll de VLC media player 1.1.0 o superior</VlcMediaPlayerDescription>
     <VlcBrowseToLabel>Ruta del VLC (solo se necesita si se usa la versión portable del VLC)</VlcBrowseToLabel>
-    <ShowStopButton>Mostrar botón «Play/Pausa»</ShowStopButton>
+    <ShowStopButton>Mostrar botón «Parar»</ShowStopButton>
     <ShowMuteButton>Mostrar botón «Silencio»</ShowMuteButton>
     <ShowFullscreenButton>Mostrar botón «Pantalla completa»</ShowFullscreenButton>
     <PreviewFontSize>Tamaño de fuente en vista previa del subtítulo</PreviewFontSize>
@@ -1862,7 +1862,7 @@ puedan editar el mismo archivo de subtítulo (colaboración)</Information>
     <GoToPreviousSubtitleAndFocusVideo>Ir a la línea anterior y establecer la posición del video</GoToPreviousSubtitleAndFocusVideo>
     <GoToNextSubtitleAndFocusVideo>Ir a la siguiente línea y definir la posición del video</GoToNextSubtitleAndFocusVideo>
     <ToggleFocus>Alternar el enfoque entre la vista de lista y cuadro de texto del subtítulo</ToggleFocus>
-    <ToggleDialogDashes>Cambiar guiones del diálogo</ToggleDialogDashes>
+    <ToggleDialogDashes>Cambiar guiones de diálogo</ToggleDialogDashes>
     <Alignment>Alineación (líneas seleccionadas)</Alignment>
     <CopyTextOnly>Copia solo el texto al portapapeles (líneas seleccionadas)</CopyTextOnly>
     <CopyTextOnlyFromOriginalToCurrent>Copia el texto del original al actual</CopyTextOnlyFromOriginalToCurrent>
@@ -1941,8 +1941,8 @@ puedan editar el mismo archivo de subtítulo (colaboración)</Information>
     <MicrosoftBingTranslator>Traductor Microsoft Bing</MicrosoftBingTranslator>
     <HowToSignUp>Cómo inscribirse</HowToSignUp>
     <GoogleTranslateUrl>Página del traductor Google</GoogleTranslateUrl>
-    <ClientId>ID del usuario</ClientId>
-    <ClientSecret>Clave secreta</ClientSecret>
+    <ClientId>Usuario</ClientId>
+    <ClientSecret>Contraseña</ClientSecret>
   </Settings>
   <SettingsMpv>
     <Title>Ajustes para mpv</Title>
@@ -2014,7 +2014,7 @@ puedan editar el mismo archivo de subtítulo (colaboración)</Information>
   <Split>
     <Title>Separar</Title>
     <SplitOptions>Opciones de separación</SplitOptions>
-    <Lines>Lineas</Lines>
+    <Lines>Líneas</Lines>
     <Characters>Caracteres</Characters>
     <NumberOfEqualParts>Número de partes iguales</NumberOfEqualParts>
     <SubtitleInfo>Información del subtítulo</SubtitleInfo>
