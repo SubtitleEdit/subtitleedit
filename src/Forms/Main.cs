@@ -19484,6 +19484,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ToolStripMenuItemRightToLeftModeClick(object sender, EventArgs e)
         {
+            var focusedItem = SubtitleListview1.FocusedItem;
             toolStripMenuItemRightToLeftMode.Checked = !toolStripMenuItemRightToLeftMode.Checked;
             if (!toolStripMenuItemRightToLeftMode.Checked)
             {
@@ -19512,6 +19513,7 @@ namespace Nikse.SubtitleEdit.Forms
             MainResize();
             TextBoxListViewTextTextChanged(null, null);
             textBoxListViewTextAlternate_TextChanged(null, null);
+            SubtitleListview1.FocusedItem = focusedItem;
         }
 
         private void joinSubtitlesToolStripMenuItem_Click(object sender, EventArgs e)
