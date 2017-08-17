@@ -591,7 +591,9 @@ namespace Nikse.SubtitleEdit.Controls
                         if (currentRegionWidth > 40)
                         {
                             using (var brush = new SolidBrush(Color.Turquoise))
-                                graphics.DrawString(string.Format("{0:0.###} {1}", ((double)currentRegionWidth / _wavePeaks.SampleRate / _zoomFactor), Configuration.Settings.Language.Waveform.Seconds), Font, brush, new PointF(currentRegionLeft + 3, Height - 32));
+                            {
+                                graphics.DrawString($"{(double)currentRegionWidth / _wavePeaks.SampleRate / _zoomFactor:0.###} {Configuration.Settings.Language.Waveform.Seconds}", Font, brush, new PointF(currentRegionLeft + 3, Height - 32), new StringFormat(StringFormatFlags.DirectionRightToLeft));
+                            }
                         }
                     }
                 }
@@ -741,6 +743,8 @@ namespace Nikse.SubtitleEdit.Controls
                 if (n > 80)
                 {
                     string text = HtmlUtil.RemoveHtmlTags(paragraph.Text, true).Replace(Environment.NewLine, "  ");
+                    if (Configuration.Settings.General.RightToLeftMode)
+                        text = Utilities.ReverseStartAndEndingForRightToLeft(text);
                     int removeLength = 1;
                     while (text.Length > removeLength && graphics.MeasureString(text, font).Width > currentRegionWidth - padding - 1)
                     {
