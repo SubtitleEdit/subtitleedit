@@ -45,6 +45,10 @@ namespace Nikse.SubtitleEdit.Forms
                     Configuration.Settings.SubtitleSettings.CurrentCavena89LanguageId = Cavena890.LanguageIdRussian;
                     comboBoxLanguage.SelectedIndex = 6;
                     break;
+                case "ro":
+                    Configuration.Settings.SubtitleSettings.CurrentCavena89LanguageId = Cavena890.LanguageIdRomanian;
+                    comboBoxLanguage.SelectedIndex = 7;
+                    break;
                 case "zh":
                     Configuration.Settings.SubtitleSettings.CurrentCavena89LanguageId = Cavena890.LanguageIdChineseSimplified;
                     comboBoxLanguage.SelectedIndex = 2;
@@ -154,6 +158,10 @@ namespace Nikse.SubtitleEdit.Forms
                         case Cavena890.LanguageIdDanish:
                             Configuration.Settings.SubtitleSettings.CurrentCavena89LanguageId = Cavena890.LanguageIdDanish;
                             comboBoxLanguage.SelectedIndex = 1;
+                            break;
+                        case Cavena890.LanguageIdRomanian:
+                            Configuration.Settings.SubtitleSettings.CurrentCavena89LanguageId = Cavena890.LanguageIdRomanian;
+                            comboBoxLanguage.SelectedIndex = 7;
                             break;
                         default:
                             Configuration.Settings.SubtitleSettings.CurrentCavena89LanguageId = Cavena890.LanguageIdEnglish;
