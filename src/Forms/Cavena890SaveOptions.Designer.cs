@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            Nikse.SubtitleEdit.Core.TimeCode timeCode1 = new Nikse.SubtitleEdit.Core.TimeCode();
             this.labelTimeCodeStartOfProgramme = new System.Windows.Forms.Label();
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
@@ -173,6 +174,14 @@
             this.timeUpDownStartTime.Name = "timeUpDownStartTime";
             this.timeUpDownStartTime.Size = new System.Drawing.Size(96, 24);
             this.timeUpDownStartTime.TabIndex = 11;
+            timeCode1.Hours = 99;
+            timeCode1.Milliseconds = 999;
+            timeCode1.Minutes = 59;
+            timeCode1.Seconds = 59;
+            timeCode1.TimeSpan = System.TimeSpan.Parse("4.03:59:59.9990000");
+            timeCode1.TotalMilliseconds = 359999999D;
+            timeCode1.TotalSeconds = 359999.999D;
+            this.timeUpDownStartTime.TimeCode = timeCode1;
             this.timeUpDownStartTime.UseVideoOffset = false;
             // 
             // comboBoxLanguage
@@ -186,7 +195,8 @@
             "Chinese Traditional",
             "English",
             "Hebrew",
-            "Russian"});
+            "Russian",
+            "Romanian"});
             this.comboBoxLanguage.Location = new System.Drawing.Point(185, 147);
             this.comboBoxLanguage.Name = "comboBoxLanguage";
             this.comboBoxLanguage.Size = new System.Drawing.Size(219, 21);

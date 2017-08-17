@@ -16,6 +16,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public const int LanguageIdHebrew = 0x8f;
         public const int LanguageIdChineseTraditional = 0x90;
         public const int LanguageIdChineseSimplified = 0x91;
+        public const int LanguageIdRomanian = 0x22;
 
         private static readonly List<int> HebrewCodes = new List<int> {
             0x40, // א
