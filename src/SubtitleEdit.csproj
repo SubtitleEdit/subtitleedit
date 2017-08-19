@@ -908,6 +908,7 @@
     <Compile Include="Logic\VideoPlayers\VideoPlayer.cs" />
     <Compile Include="Logic\VideoPlayers\WmpPlayer.cs" />
     <Compile Include="Logic\WordSpellChecker.cs" />
+    <Compile Include="Models\VideoInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Forms\SyncPointsSync.cs">
