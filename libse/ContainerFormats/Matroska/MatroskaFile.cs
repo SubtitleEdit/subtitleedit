@@ -599,13 +599,23 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
         /// position of the stream by four bytes.
         /// </summary>
         /// <returns>A 4-byte floating point value read from the current stream.</returns>
-        private unsafe float ReadFloat32()
+        private float ReadFloat32()
         {
             var data = new byte[4];
             _stream.Read(data, 0, 4);
 
-            var result = data[0] << 24 | data[1] << 16 | data[2] << 8 | data[3];
-            return *(float*)&result;
+            // old unsafe code
+            //            var result = data[0] << 24 | data[1] << 16 | data[2] << 8 | data[3];
+            //            return *(float*)&result;
+            if (BitConverter.IsLittleEndian)
+            {
+                var data2 = new[] { data[3], data[2], data[1], data[0] };
+                return BitConverter.ToSingle(data2, 0);
+            }
+            else
+            {
+                return BitConverter.ToSingle(data, 0);
+            }
         }
 
         /// <summary>
@@ -613,15 +623,25 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
         /// position of the stream by eight bytes.
         /// </summary>
         /// <returns>A 8-byte floating point value read from the current stream.</returns>
-        private unsafe double ReadFloat64()
+        private double ReadFloat64()
         {
             var data = new byte[8];
             _stream.Read(data, 0, 8);
 
-            var lo = data[0] << 24 | data[1] << 16 | data[2] << 8 | data[3];
-            var hi = data[4] << 24 | data[5] << 16 | data[6] << 8 | data[7];
-            var result = (uint)hi | (long)lo << 32;
-            return *(double*)&result;
+            // old unsafe code
+            //var lo = data[0] << 24 | data[1] << 16 | data[2] << 8 | data[3];
+            //var hi = data[4] << 24 | data[5] << 16 | data[6] << 8 | data[7];
+            //var result = (uint)hi | (long)lo << 32;
+            //return *(double*)&result;
+            if (BitConverter.IsLittleEndian)
+            {
+                var data2 = new[] { data[7], data[6], data[5], data[4], data[3], data[2], data[1], data[0] };
+                return BitConverter.ToDouble(data2, 0);
+            }
+            else
+            {
+                return BitConverter.ToDouble(data, 0);
+            }
         }
 
         /// <summary>
