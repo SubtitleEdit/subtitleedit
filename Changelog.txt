@@ -7,6 +7,7 @@
    * New shortcuts for frame forward/back with play
    * Persian translation - thx Nima
 * IMPROVED:
+   * Update Spanish + Mexican + Argentinian translations - thx paconaranjo
    * Update Russian translation - thx Elheym
    * Update Brazilian translation - thx Igor
    * Update Basque translation - thx Xabier 
@@ -22,6 +23,7 @@
    * If input file is unknown + plain text, "Import plain text" will open
    * ASS allows decimals for outline/shadow - thx Ninelpienel
    * Add "actor" to custom text export - thx mellsaid
+   * Improve RTL support - thx OmrSi/darnn
 * FIXED:
    * Fix missing space in format WebVTT
    * Fix support for combined Arabic characters in PAC - thx Zehelein
@@ -45,6 +47,7 @@
    * Keep styles from ttml draft to ASS - thx Bill
    * Fix minor issues for format DVD Studio Pro - thx Mike
    * Fix some issues regarding format TSB4 - thx kamenf
+   * Fix "Translation mode" Shortcut not working - thx OmrSi/darnn
 
 
 3.5.3 (12th May 2017)
