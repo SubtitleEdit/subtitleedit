@@ -1443,6 +1443,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <ErrorLoadIdx>Idx 파일은 읽거나 편집할 수 없습니다. Idx 파일은 한 쌍으로 이루어진 VobSub(sub/idx) 파일의 서브 파일일 뿐입니다. .sub 파일로 여시기 바랍니다.</ErrorLoadIdx>
     <ErrorLoadRar>이 파일은 압축된 .rar 파일 같습니다. Subtitle Edit는 압축된 파일을 열 수 없습니다.</ErrorLoadRar>
     <ErrorLoadZip>이 파일은 압축된 .zip 파일 같습니다. Subtitle Edit는 압축된 파일을 열 수 없습니다.</ErrorLoadZip>
+    <ErrorLoad7Zip>이 파일은 압축된 7-Zip 파일 같습니다. Subtitle Edit는 압축된 파일을 열 수 없습니다.</ErrorLoad7Zip>
     <ErrorLoadPng>이 파일은 PNG 이미지 파일 같습니다. Subtitle Edit는 PNG 파일을 열 수 없습니다.</ErrorLoadPng>
     <ErrorLoadJpg>이 파일은 JPG 이미지 파일 같습니다. Subtitle Edit는 JPG 파일을 열 수 없습니다.</ErrorLoadJpg>
     <ErrorLoadSrr>이 파일은 ReScene.srr 파일인 것 같습니다 - 자막 파일이 아닙니다.</ErrorLoadSrr>
