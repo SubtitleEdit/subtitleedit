@@ -60,11 +60,11 @@ namespace Nikse.SubtitleEdit.Core
             {
                 using (var rp = new RiffParser())
                 {
-                    if (rp.TryOpenFile(fileName) && rp.FileType == RiffParser.ckidAVI)
+                    if (rp.TryOpenFile(fileName) && rp.FileType == RiffParser.CkidAvi)
                     {
                         var dh = new RiffDecodeHeader(rp);
-                        dh.ProcessMainAVI();
-                        info.FileType = RiffParser.FromFourCC(rp.FileType);
+                        dh.ProcessMainAvi();
+                        info.FileType = RiffParser.FromFourCc(rp.FileType);
                         info.Width = dh.Width;
                         info.Height = dh.Height;
                         info.FramesPerSecond = dh.FrameRate;
