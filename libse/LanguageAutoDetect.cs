@@ -975,28 +975,44 @@ namespace Nikse.SubtitleEdit.Core
             var text = subtitle.GetAllTexts();
             if (text.Length > 1000)
             {
-                int arabicCount = GetCount(text, AutoDetectWordsArabic);
-                if (arabicCount > 1)
+                // arabic
+                if (GetCount(text, AutoDetectWordsArabic) > 1)
                     return true;
 
-                int hebrewCount = GetCount(text, AutoDetectWordsHebrew);
-                if (hebrewCount > 1)
+                // hebrew
+                if (GetCount(text, AutoDetectWordsHebrew) > 1)
                     return true;
 
-                int farsiCount = GetCount(text, AutoDetectWordsFarsi);
-                if (farsiCount > 1)
+                // farsi
+                if (GetCount(text, AutoDetectWordsFarsi) > 1)
                     return true;
 
-                int urduCount = GetCount(text, AutoDetectWordsUrdu);
-                if (urduCount > 1)
+                // urbu
+                if (GetCount(text, AutoDetectWordsUrdu) > 1)
                     return true;
             }
             else
             {
-                foreach (var letter in string.Join(string.Empty, AutoDetectWordsArabic.Concat(AutoDetectWordsHebrew).Concat(AutoDetectWordsFarsi).Concat(AutoDetectWordsUrdu)).Distinct())
+                var hashChars = new HashSet<char>();
+                int len = text.Length;
+                for (int i = 0; i < len; i++)
                 {
-                    if (text.Contains(letter))
+                    char ch = text[i];
+                    if (char.IsWhiteSpace(ch))
+                    {
+                        continue;
+                    }
+                    if (!hashChars.Contains(ch))
+                    {
+                        hashChars.Add(ch);
+                    }
+                }
+                foreach (char ch in string.Join(string.Empty, AutoDetectWordsArabic.Union(AutoDetectWordsHebrew).Union(AutoDetectWordsFarsi).Union(AutoDetectWordsUrdu).Select(s => s)))
+                {
+                    if (hashChars.Contains(ch))
+                    {
                         return true;
+                    }
                 }
             }
             return false;
