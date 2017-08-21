@@ -970,34 +970,19 @@ namespace Nikse.SubtitleEdit.Core
             return true;
         }
 
+        private static readonly char[] RightToLeftLetters = string.Join(string.Empty, AutoDetectWordsArabic.Concat(AutoDetectWordsHebrew).Concat(AutoDetectWordsFarsi).Concat(AutoDetectWordsUrdu)).Distinct().ToArray();
+
         public static bool CouldBeRightToLeftLanguge(Subtitle subtitle)
         {
             var text = subtitle.GetAllTexts();
             if (text.Length > 1000)
             {
-                int arabicCount = GetCount(text, AutoDetectWordsArabic);
-                if (arabicCount > 1)
-                    return true;
-
-                int hebrewCount = GetCount(text, AutoDetectWordsHebrew);
-                if (hebrewCount > 1)
-                    return true;
-
-                int farsiCount = GetCount(text, AutoDetectWordsFarsi);
-                if (farsiCount > 1)
-                    return true;
-
-                int urduCount = GetCount(text, AutoDetectWordsUrdu);
-                if (urduCount > 1)
-                    return true;
+                return GetCount(text, AutoDetectWordsArabic.Concat(AutoDetectWordsHebrew).Concat(AutoDetectWordsFarsi).Concat(AutoDetectWordsUrdu).ToArray()) > 1;
             }
-            else
+            foreach (var letter in RightToLeftLetters)
             {
-                foreach (var letter in string.Join(string.Empty, AutoDetectWordsArabic.Concat(AutoDetectWordsHebrew).Concat(AutoDetectWordsFarsi).Concat(AutoDetectWordsUrdu)).Distinct())
-                {
-                    if (text.Contains(letter))
-                        return true;
-                }
+                if (text.Contains(letter))
+                    return true;
             }
             return false;
         }
