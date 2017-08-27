@@ -196,6 +196,11 @@
     <Description>Norwegian language data for Tesseract 3.02</Description>
   </Dictionary>
   <Dictionary>
+    <EnglishName>Persian</EnglishName>
+    <DownloadLink>https://github.com/SubtitleEdit/support-files/raw/master/tessdata/tesseract-ocr-3.02.fas.tar.gz</DownloadLink>
+    <Description>Persian/Farsi language data for Tesseract 3.02</Description>
+  </Dictionary>
+  <Dictionary>
     <EnglishName>Polish</EnglishName>
     <DownloadLink>https://github.com/SubtitleEdit/support-files/raw/master/tessdata/tesseract-ocr-3.02.pol.tar.gz</DownloadLink>
     <Description>Polish language data for Tesseract 3.02</Description>
