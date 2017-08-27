@@ -7715,7 +7715,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private void SetOcrMethod()
         {
             if (Configuration.Settings.VobSubOcr.LastOcrMethod == "BitmapCompare" && comboBoxOcrMethod.Items.Count > 1)
-                comboBoxOcrMethod.SelectedIndex = _ocrMethodImageCompare;
+                comboBoxOcrMethod.SelectedIndex = _ocrMethodBinaryImageCompare; //_ocrMethodImageCompare;
             else if (Configuration.Settings.VobSubOcr.LastOcrMethod == "BinaryImageCompare" && comboBoxOcrMethod.Items.Count > 2)
                 comboBoxOcrMethod.SelectedIndex = _ocrMethodBinaryImageCompare;
             else if (Configuration.Settings.VobSubOcr.LastOcrMethod == "MODI" && comboBoxOcrMethod.Items.Count > 2)
