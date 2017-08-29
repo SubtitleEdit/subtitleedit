@@ -476,6 +476,8 @@ namespace Nikse.SubtitleEdit.Logic
                 comboBox.SelectedItem = selectedItem;
             comboBox.EndUpdate();
             Configuration.Settings.General.DefaultEncoding = (comboBox.SelectedItem as TextEncodingListItem).Encoding.WebName;
+            comboBox.AutoCompleteSource = AutoCompleteSource.ListItems;
+            comboBox.AutoCompleteMode = AutoCompleteMode.Append;
         }
 
         public static Encoding GetTextEncodingComboBoxCurrentEncoding(ComboBox comboBox)

@@ -80,6 +80,8 @@ namespace Nikse.SubtitleEdit.Forms
                     comboBoxDictionaries.SelectedIndex = 0;
                 }
             }
+            comboBoxDictionaries.AutoCompleteSource = AutoCompleteSource.ListItems;
+            comboBoxDictionaries.AutoCompleteMode = AutoCompleteMode.Append;
         }
 
         private void FixLargeFonts()

@@ -15659,6 +15659,9 @@ namespace Nikse.SubtitleEdit.Forms
                 labelDuration.Left = numericUpDownDuration.Left;
             }
             _changeSubtitleToString = _subtitle.GetFastHashCode(GetCurrentEncoding().BodyName);
+
+            comboBoxSubtitleFormats.AutoCompleteSource = AutoCompleteSource.ListItems;
+            comboBoxSubtitleFormats.AutoCompleteMode = AutoCompleteMode.Append;
         }
 
         private void TimerCheckForUpdatesTick(object sender, EventArgs e)
