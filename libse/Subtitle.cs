@@ -528,37 +528,37 @@ namespace Nikse.SubtitleEdit.Core
             switch (sortCriteria)
             {
                 case SubtitleSortCriteria.Number:
-                    _paragraphs.Sort((p1, p2) => p1.Number.CompareTo(p2.Number));
+                    _paragraphs = _paragraphs.OrderBy(p => p.Number).ThenBy(p => p.StartTime.TotalMilliseconds).ToList();
                     break;
                 case SubtitleSortCriteria.StartTime:
-                    _paragraphs.Sort((p1, p2) => p1.StartTime.TotalMilliseconds.CompareTo(p2.StartTime.TotalMilliseconds));
+                    _paragraphs = _paragraphs.OrderBy(p=>p.StartTime.TotalMilliseconds).ThenBy(p=>p.Number).ToList();
                     break;
                 case SubtitleSortCriteria.EndTime:
-                    _paragraphs.Sort((p1, p2) => p1.EndTime.TotalMilliseconds.CompareTo(p2.EndTime.TotalMilliseconds));
+                    _paragraphs = _paragraphs.OrderBy(p => p.EndTime.TotalMilliseconds).ThenBy(p => p.Number).ToList();
                     break;
                 case SubtitleSortCriteria.Duration:
-                    _paragraphs.Sort((p1, p2) => p1.Duration.TotalMilliseconds.CompareTo(p2.Duration.TotalMilliseconds));
+                    _paragraphs = _paragraphs.OrderBy(p => p.Duration.TotalMilliseconds).ThenBy(p => p.Number).ToList();
                     break;
                 case SubtitleSortCriteria.Text:
-                    _paragraphs.Sort((p1, p2) => string.Compare(p1.Text, p2.Text, StringComparison.Ordinal));
+                    _paragraphs = _paragraphs.OrderBy(p => p.Text, StringComparer.Ordinal).ThenBy(p => p.Number).ToList();
                     break;
                 case SubtitleSortCriteria.TextMaxLineLength:
-                    _paragraphs.Sort((p1, p2) => Utilities.GetMaxLineLength(p1.Text).CompareTo(Utilities.GetMaxLineLength(p2.Text)));
+                    _paragraphs = _paragraphs.OrderBy(p => Utilities.GetMaxLineLength(p.Text)).ThenBy(p => p.Number).ToList();
                     break;
                 case SubtitleSortCriteria.TextTotalLength:
-                    _paragraphs.Sort((p1, p2) => p1.Text.Length.CompareTo(p2.Text.Length));
+                    _paragraphs = _paragraphs.OrderBy(p => p.Text.Length).ThenBy(p => p.Number).ToList();
                     break;
                 case SubtitleSortCriteria.TextNumberOfLines:
-                    _paragraphs.Sort((p1, p2) => p1.NumberOfLines.CompareTo(p2.NumberOfLines));
+                    _paragraphs = _paragraphs.OrderBy(p => p.NumberOfLines).ThenBy(p => p.Number).ToList();
                     break;
                 case SubtitleSortCriteria.TextCharactersPerSeconds:
-                    _paragraphs.Sort((p1, p2) => Utilities.GetCharactersPerSecond(p1).CompareTo(Utilities.GetCharactersPerSecond(p2)));
+                    _paragraphs = _paragraphs.OrderBy(Utilities.GetCharactersPerSecond).ThenBy(p => p.Number).ToList();
                     break;
                 case SubtitleSortCriteria.WordsPerMinute:
-                    _paragraphs.Sort((p1, p2) => p1.WordsPerMinute.CompareTo(p2.WordsPerMinute));
+                    _paragraphs = _paragraphs.OrderBy(p => p.WordsPerMinute).ThenBy(p => p.Number).ToList();
                     break;
                 case SubtitleSortCriteria.Style:
-                    _paragraphs.Sort((p1, p2) => string.Compare(p1.Extra, p2.Extra, StringComparison.Ordinal));
+                    _paragraphs = _paragraphs.OrderBy(p => p.Extra, StringComparer.Ordinal).ThenBy(p => p.Number).ToList();
                     break;
             }
         }
