@@ -147,6 +147,8 @@ namespace Nikse.SubtitleEdit.Forms
                 if (name.Contains("[" + languageName + "]"))
                     comboBoxDictionaries.SelectedIndex = comboBoxDictionaries.Items.Count - 1;
             }
+            comboBoxDictionaries.AutoCompleteSource = AutoCompleteSource.ListItems;
+            comboBoxDictionaries.AutoCompleteMode = AutoCompleteMode.Append;
             comboBoxDictionaries.SelectedIndexChanged += ComboBoxDictionariesSelectedIndexChanged;
         }
 

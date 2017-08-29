@@ -208,6 +208,9 @@ namespace Nikse.SubtitleEdit.Forms
             _ssaStyle = Configuration.Settings.Tools.BatchConvertSsaStyles;
             checkBoxUseStyleFromSource.Checked = Configuration.Settings.Tools.BatchConvertUseStyleFromSource;
             _customTextTemplate = Configuration.Settings.Tools.BatchConvertExportCustomTextTemplate;
+
+            comboBoxSubtitleFormats.AutoCompleteSource = AutoCompleteSource.ListItems;
+            comboBoxSubtitleFormats.AutoCompleteMode = AutoCompleteMode.Append;
         }
 
         private void buttonChooseFolder_Click(object sender, EventArgs e)
