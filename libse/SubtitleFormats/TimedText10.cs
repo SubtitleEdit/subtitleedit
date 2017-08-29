@@ -250,7 +250,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 div = xml.DocumentElement.SelectSingleNode("//ttml:body", nsmgr).FirstChild;
 
             if (div == null)
-            {                
+            {
                 div = xml.CreateElement("div");
                 body.AppendChild(div);
             }
@@ -781,7 +781,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 break;
                             }
                         }
-                        
+
                         if (!regionCorrespondToTag)
                         {
                             if (topRegions.Contains(region))
@@ -1035,7 +1035,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     {
                         color = child.Attributes["tts:color"].Value;
                     }
-                    
+
 
                     // Applying styles
                     if (isItalic)
@@ -1123,7 +1123,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 Configuration.Settings.SubtitleSettings.TimedText10TimeCodeFormatSource = "hh:mm:ss.ms";
             }
-            else if (s.Length == 12 && s[2] == ':' && s[5] == ':' && s[8] == ',') // 00:01:39.946
+            else if (s.Length == 12 && s[2] == ':' && s[5] == ':' && s[8] == ',') // 00:01:39,946
             {
                 Configuration.Settings.SubtitleSettings.TimedText10TimeCodeFormatSource = "hh:mm:ss,ms";
             }
@@ -1138,7 +1138,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 Configuration.Settings.SubtitleSettings.TimedText10TimeCodeFormatSource = "frames";
                 return new TimeCode(int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), FramesToMillisecondsMax999(int.Parse(parts[3])));
             }
-            return new TimeCode(int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), int.Parse(parts[3]));
+            return new TimeCode(int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), parts.Length > 3 ? int.Parse(parts[3]) : 0);
         }
 
         public override List<string> AlternateExtensions => new List<string> { ".itt", ".dfxp", ".ttml" };
@@ -1167,7 +1167,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
             }
             return list;
-        }      
+        }
 
         public static List<string> GetRegionsFromHeader(string xmlAsString)
         {
@@ -1225,7 +1225,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                     top = true;
                                 }
                             }
-                        }                        
+                        }
                     }
 
                     if (!top && node.Attributes != null)

@@ -121,6 +121,19 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         }
                         else
                         {
+                            if (!couldBeFrames)
+                            {
+                                if (end.Length == 11 && end[8] == '.') // 00:05:36.92
+                                    end += "0";
+                                else if (end.Length == 10 && end[8] == '.') // 00:05:36.9
+                                    end += "00";
+                                if (start.Length == 11 && start[8] == '.') // 00:05:36.92
+                                    start += "0";
+                                else if (start.Length == 10 && start[8] == '.') // 00:05:36.9
+                                    start += "00";
+                                couldBeMillisecondsWithMissingLastDigit = false;
+                            }
+
                             if (start.Length == 8 && start[2] == ':' && start[5] == ':' &&
                                 end.Length == 8 && end[2] == ':' && end[5] == ':')
                             {
