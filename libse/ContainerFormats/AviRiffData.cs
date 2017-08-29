@@ -70,23 +70,23 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats
         public int cFrames;
     }
 
-    internal struct TIMECODEDATA
-    {
-        private TIMECODE time;
-        public int dwSMPTEflags;
-        public int dwUser;
-    }
+    //internal struct TIMECODEDATA
+    //{
+    //    private TIMECODE time;
+    //    public int dwSMPTEflags;
+    //    public int dwUser;
+    //}
 
-    internal struct WAVEFORMATEX
-    {
-        public short wFormatTag;
-        public short nChannels;
-        public int nSamplesPerSec;
-        public int nAvgBytesPerSec;
-        public short nBlockAlign;
-        public short wBitsPerSample;
-        public short cbSize;
-    }
+    //internal struct WAVEFORMATEX
+    //{
+    //    public short wFormatTag;
+    //    public short nChannels;
+    //    public int nSamplesPerSec;
+    //    public int nAvgBytesPerSec;
+    //    public short nBlockAlign;
+    //    public short wBitsPerSample;
+    //    public short cbSize;
+    //}
 
     internal static class AviRiffData
     {
