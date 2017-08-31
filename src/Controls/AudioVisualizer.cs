@@ -746,10 +746,17 @@ namespace Nikse.SubtitleEdit.Controls
                     if (Configuration.Settings.General.RightToLeftMode && LanguageAutoDetect.CouldBeRightToLeftLanguge(new Subtitle(_displayableParagraphs)))
                         text = Utilities.ReverseStartAndEndingForRightToLeft(text);
                     int removeLength = 1;
+                    if (text.Length > 500)
+                        text = text.Substring(0, 500); // don't now allow very long texts as they can make SE unresponsive - see https://github.com/SubtitleEdit/subtitleedit/issues/2536
                     while (text.Length > removeLength && graphics.MeasureString(text, font).Width > currentRegionWidth - padding - 1)
                     {
                         text = text.Remove(text.Length - removeLength).TrimEnd() + "…";
-                        removeLength = 2;
+                        if (text.Length > 200)
+                            removeLength = 21;
+                        else if (text.Length > 100)
+                            removeLength = 11;
+                        else
+                            removeLength = 2;
                     }
                     drawStringOutlined(text, currentRegionLeft + padding, padding);
                 }
