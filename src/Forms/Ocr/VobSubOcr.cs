@@ -7714,13 +7714,13 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private void SetOcrMethod()
         {
-            if (Configuration.Settings.VobSubOcr.LastOcrMethod == "BitmapCompare" && comboBoxOcrMethod.Items.Count > 1)
+            if (Configuration.Settings.VobSubOcr.LastOcrMethod == "BitmapCompare" && comboBoxOcrMethod.Items.Count > _ocrMethodBinaryImageCompare)
                 comboBoxOcrMethod.SelectedIndex = _ocrMethodBinaryImageCompare; //_ocrMethodImageCompare;
-            else if (Configuration.Settings.VobSubOcr.LastOcrMethod == "BinaryImageCompare" && comboBoxOcrMethod.Items.Count > 2)
+            else if (Configuration.Settings.VobSubOcr.LastOcrMethod == "BinaryImageCompare" && comboBoxOcrMethod.Items.Count > _ocrMethodBinaryImageCompare)
                 comboBoxOcrMethod.SelectedIndex = _ocrMethodBinaryImageCompare;
-            else if (Configuration.Settings.VobSubOcr.LastOcrMethod == "MODI" && comboBoxOcrMethod.Items.Count > 2)
+            else if (Configuration.Settings.VobSubOcr.LastOcrMethod == "MODI" && comboBoxOcrMethod.Items.Count > _ocrMethodModi)
                 comboBoxOcrMethod.SelectedIndex = _ocrMethodModi;
-            else if (Configuration.Settings.VobSubOcr.LastOcrMethod == "nOCR" && comboBoxOcrMethod.Items.Count > 3)
+            else if (Configuration.Settings.VobSubOcr.LastOcrMethod == "nOCR" && comboBoxOcrMethod.Items.Count > _ocrMethodNocr)
                 comboBoxOcrMethod.SelectedIndex = _ocrMethodNocr;
             else
                 comboBoxOcrMethod.SelectedIndex = 0;
