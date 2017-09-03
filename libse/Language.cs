@@ -236,7 +236,7 @@ namespace Nikse.SubtitleEdit.Core
                 GeneratingPeakFile = "Generating peak file...",
                 GeneratingSpectrogram = "Generating spectrogram...",
                 ExtractingSeconds = "Extracting audio: {0:0.0} seconds",
-                ExtractingMinutes = "Extracting audio: {0}.{1:00} minutes",
+                ExtractingMinutes = "Extracting audio: {0}:{1:00} minutes",
                 WaveFileNotFound = "Could not find extracted wave file!" + Environment.NewLine +
                                    "This feature requires VLC media player 1.1.x or newer ({0}-bit)." + Environment.NewLine +
                                    Environment.NewLine +
