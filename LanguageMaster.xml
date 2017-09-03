@@ -113,7 +113,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <GeneratingPeakFile>Generating peak file...</GeneratingPeakFile>
     <GeneratingSpectrogram>Generating spectrogram...</GeneratingSpectrogram>
     <ExtractingSeconds>Extracting audio: {0:0.0} seconds</ExtractingSeconds>
-    <ExtractingMinutes>Extracting audio: {0}.{1:00} minutes</ExtractingMinutes>
+    <ExtractingMinutes>Extracting audio: {0}:{1:00} minutes</ExtractingMinutes>
     <WaveFileNotFound>Could not find extracted wave file!
 This feature requires VLC media player 1.1.x or newer ({0}-bit).
 
