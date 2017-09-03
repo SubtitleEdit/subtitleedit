@@ -70,6 +70,7 @@ namespace Nikse.SubtitleEdit.Forms
         public const string BluRaySubtitle = "Blu-ray sup";
         public const string VobSubSubtitle = "VobSub";
         private string _customTextTemplate;
+        private readonly DurationsBridgeGaps _bridgeGaps;
 
         public BatchConvert(Icon icon)
         {
@@ -178,6 +179,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxAutoBalance.Checked = Configuration.Settings.Tools.BatchConvertAutoBalance;
             checkBoxRemoveFormatting.Checked = Configuration.Settings.Tools.BatchConvertRemoveFormatting;
             checkBoxRemoveTextForHI.Checked = Configuration.Settings.Tools.BatchConvertRemoveTextForHI;
+            checkBoxBridgeGaps.Checked = Configuration.Settings.Tools.BatchConvertBridgeGaps;
             checkBoxSetMinimumDisplayTimeBetweenSubs.Checked = Configuration.Settings.Tools.BatchConvertSetMinDisplayTimeBetweenSubtitles;
             buttonRemoveTextForHiSettings.Text = l.Settings;
             buttonFixCommonErrorSettings.Text = l.Settings;
@@ -192,6 +194,7 @@ namespace Nikse.SubtitleEdit.Forms
             radioButtonSpeedFromDropFrame.Text = Configuration.Settings.Language.ChangeSpeedInPercent.FromDropFrame;
             radioButtonToDropFrame.Text = Configuration.Settings.Language.ChangeSpeedInPercent.ToDropFrame;
             checkBoxSetMinimumDisplayTimeBetweenSubs.Text = l.SetMinMsBetweenSubtitles;
+            checkBoxBridgeGaps.Text = l.BridgeGaps;
 
             _removeTextForHearingImpaired = new RemoveTextForHI(new RemoveTextForHISettings());
 
@@ -211,6 +214,9 @@ namespace Nikse.SubtitleEdit.Forms
 
             comboBoxSubtitleFormats.AutoCompleteSource = AutoCompleteSource.ListItems;
             comboBoxSubtitleFormats.AutoCompleteMode = AutoCompleteMode.Append;
+
+            _bridgeGaps = new DurationsBridgeGaps(null);
+            _bridgeGaps.InitializeSettingsOnly();
         }
 
         private void buttonChooseFolder_Click(object sender, EventArgs e)
@@ -532,6 +538,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             catch
             {
+                // ignored
             }
         }
 
@@ -932,6 +939,11 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         else
                         {
+                            if (checkBoxBridgeGaps.Checked)
+                            {
+                                Core.Forms.DurationsBridgeGaps.BridgeGaps(sub, _bridgeGaps.MinMsBetweenLines, !_bridgeGaps.PreviousSubtitleTakesAllTime, Configuration.Settings.Tools.BridgeGapMilliseconds, null, null);
+                            }
+
                             Paragraph prev = sub.Paragraphs[0];
                             bool first = true;
                             foreach (Paragraph p in sub.Paragraphs)
@@ -944,7 +956,6 @@ namespace Nikse.SubtitleEdit.Forms
                                 {
                                     p.Text = HtmlUtil.RemoveHtmlTags(p.Text, true);
                                 }
-
                                 if (!numericUpDownPercent.Value.Equals(100))
                                 {
                                     double toSpeedPercentage = Convert.ToDouble(numericUpDownPercent.Value) / 100.0;
@@ -1435,6 +1446,7 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.Tools.BatchConvertSplitLongLines = checkBoxSplitLongLines.Checked;
             Configuration.Settings.Tools.BatchConvertAutoBalance = checkBoxAutoBalance.Checked;
             Configuration.Settings.Tools.BatchConvertRemoveFormatting = checkBoxRemoveFormatting.Checked;
+            Configuration.Settings.Tools.BatchConvertBridgeGaps = checkBoxBridgeGaps.Checked;
             Configuration.Settings.Tools.BatchConvertRemoveTextForHI = checkBoxRemoveTextForHI.Checked;
             Configuration.Settings.Tools.BatchConvertSetMinDisplayTimeBetweenSubtitles = checkBoxSetMinimumDisplayTimeBetweenSubs.Checked;
             Configuration.Settings.Tools.BatchConvertOutputFolder = textBoxOutputFolder.Text;
@@ -1726,5 +1738,9 @@ namespace Nikse.SubtitleEdit.Forms
             textBoxFilter.Visible = comboBoxFilter.SelectedIndex == 3;
         }
 
+        private void buttonBridgeGapsSettings_Click(object sender, EventArgs e)
+        {
+            _bridgeGaps.ShowDialog(this);
+        }
     }
 }

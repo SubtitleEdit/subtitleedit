@@ -113,7 +113,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <GeneratingPeakFile>Generating peak file...</GeneratingPeakFile>
     <GeneratingSpectrogram>Generating spectrogram...</GeneratingSpectrogram>
     <ExtractingSeconds>Extracting audio: {0:0.0} seconds</ExtractingSeconds>
-    <ExtractingMinutes>Extracting audio: {0}:{1:00} minutes</ExtractingMinutes>
+    <ExtractingMinutes>Extracting audio: {0}.{1:00} minutes</ExtractingMinutes>
     <WaveFileNotFound>Could not find extracted wave file!
 This feature requires VLC media player 1.1.x or newer ({0}-bit).
 
@@ -184,6 +184,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <ScanningFolder>Scanning {0} and subfolders for subtitle files...</ScanningFolder>
     <Recursive>Include sub folders</Recursive>
     <SetMinMsBetweenSubtitles>Set min. milliseconds between subtitles</SetMinMsBetweenSubtitles>
+    <BridgeGaps>Bridge gaps</BridgeGaps>
     <PlainText>Plain text</PlainText>
     <Ocr>OCR...</Ocr>
     <Filter>Filter</Filter>

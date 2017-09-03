@@ -493,6 +493,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "BatchConvert/SetMinMsBetweenSubtitles":
                     language.BatchConvert.SetMinMsBetweenSubtitles = reader.Value;
                     break;
+                case "BatchConvert/BridgeGaps":
+                    language.BatchConvert.BridgeGaps = reader.Value;
+                    break;
                 case "BatchConvert/PlainText":
                     language.BatchConvert.PlainText = reader.Value;
                     break;

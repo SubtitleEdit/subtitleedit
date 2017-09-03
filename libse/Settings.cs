@@ -118,6 +118,7 @@ namespace Nikse.SubtitleEdit.Core
         public bool BatchConvertOverwriteExisting { get; set; }
         public bool BatchConvertOverwriteOriginal { get; set; }
         public bool BatchConvertRemoveFormatting { get; set; }
+        public bool BatchConvertBridgeGaps { get; set; }
         public bool BatchConvertFixCasing { get; set; }
         public bool BatchConvertRemoveTextForHI { get; set; }
         public bool BatchConvertFixCommonErrors { get; set; }
@@ -1869,6 +1870,9 @@ namespace Nikse.SubtitleEdit.Core
             subNode = node.SelectSingleNode("BatchConvertRemoveFormatting");
             if (subNode != null)
                 settings.Tools.BatchConvertRemoveFormatting = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("BatchConvertBridgeGaps");
+            if (subNode != null)
+                settings.Tools.BatchConvertBridgeGaps = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("BatchConvertFixCasing");
             if (subNode != null)
                 settings.Tools.BatchConvertFixCasing = Convert.ToBoolean(subNode.InnerText);
@@ -3344,6 +3348,7 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("BatchConvertOverwriteExisting", settings.Tools.BatchConvertOverwriteExisting.ToString());
                 textWriter.WriteElementString("BatchConvertOverwriteOriginal", settings.Tools.BatchConvertOverwriteOriginal.ToString());
                 textWriter.WriteElementString("BatchConvertRemoveFormatting", settings.Tools.BatchConvertRemoveFormatting.ToString());
+                textWriter.WriteElementString("BatchConvertBridgeGaps", settings.Tools.BatchConvertBridgeGaps.ToString());
                 textWriter.WriteElementString("BatchConvertFixCasing", settings.Tools.BatchConvertFixCasing.ToString());
                 textWriter.WriteElementString("BatchConvertRemoveTextForHI", settings.Tools.BatchConvertRemoveTextForHI.ToString());
                 textWriter.WriteElementString("BatchConvertSplitLongLines", settings.Tools.BatchConvertSplitLongLines.ToString());
