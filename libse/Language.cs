@@ -317,6 +317,7 @@ namespace Nikse.SubtitleEdit.Core
                 ScanningFolder = "Scanning {0} and subfolders for subtitle files...",
                 Recursive = "Include sub folders",
                 SetMinMsBetweenSubtitles = "Set min. milliseconds between subtitles",
+                BridgeGaps = "Bridge gaps",
                 PlainText = "Plain text",
                 Ocr = "OCR...",
                 Filter = "Filter",

@@ -192,6 +192,7 @@
             public string ScanningFolder { get; set; }
             public string Recursive { get; set; }
             public string SetMinMsBetweenSubtitles { get; set; }
+            public string BridgeGaps { get; set; }
             public string PlainText { get; set; }
             public string Ocr { get; set; }
             public string Filter { get; set; }

@@ -131,6 +131,7 @@
     <Compile Include="FastFileStream.cs" />
     <Compile Include="FileUtil.cs" />
     <Compile Include="Forms\CheckForUpdatesHelper.cs" />
+    <Compile Include="Forms\DurationsBridgeGaps.cs" />
     <Compile Include="Forms\FixCommonErrors\AddMissingQuotes.cs" />
     <Compile Include="Forms\FixCommonErrors\EmptyFixCallback.cs" />
     <Compile Include="Forms\FixCommonErrors\Fix3PlusLines.cs" />
