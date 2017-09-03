@@ -27,6 +27,7 @@
    * Add "Persian" Tesseract OCR dictionary - thx NoRRt
    * Change some combo boxes to allow for better searching
    * Make "sort by" more consistant - thx Skrity
+   * Add "Bridge gaps" (in durations) to "Batch convert"
 * FIXED:
    * Fix missing space in format WebVTT
    * Fix support for combined Arabic characters in PAC - thx Zehelein
