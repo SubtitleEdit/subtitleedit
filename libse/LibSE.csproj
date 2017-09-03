@@ -229,6 +229,7 @@
     <Compile Include="SubtitleFormats\DvdStudioProSpaceOneSemicolon.cs" />
     <Compile Include="SubtitleFormats\JacoSub.cs" />
     <Compile Include="SubtitleFormats\JsonType11.cs" />
+    <Compile Include="SubtitleFormats\TimeCodesOnly1.cs" />
     <Compile Include="SubtitleFormats\SmpteTt2052.cs" />
     <Compile Include="SubtitleFormats\Ted20.cs" />
     <Compile Include="SubtitleFormats\Csv4.cs" />
