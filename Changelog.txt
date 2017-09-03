@@ -1,6 +1,6 @@
 ﻿Subtitle Edit Changelog
 
-3.5.4 (xth August 2017) BETA
+3.5.4 (xth September 2017) BETA
 * NEW:
    * New subtitle format JacoSub - thx ivandrofly
    * New subtitle format Lamda Cap (basic support) - thx Chie
@@ -24,6 +24,9 @@
    * ASS allows decimals for outline/shadow - thx Ninelpienel
    * Add "actor" to custom text export - thx mellsaid
    * Improve RTL support - thx OmrSi/darnn
+   * Add "Persian" Tesseract OCR dictionary - thx NoRRt
+   * Change some combo boxes to allow for better searching
+   * Make "sort by" more consistant - thx Skrity
 * FIXED:
    * Fix missing space in format WebVTT
    * Fix support for combined Arabic characters in PAC - thx Zehelein
@@ -48,6 +51,7 @@
    * Fix minor issues for format DVD Studio Pro - thx Mike
    * Fix some issues regarding format TSB4 - thx kamenf
    * Fix "Translation mode" Shortcut not working - thx OmrSi/darnn
+   * Fix waveform performance for long texts - thx Skrity 
 
 
 3.5.3 (12th May 2017)
