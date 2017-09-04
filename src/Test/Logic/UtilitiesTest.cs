@@ -541,5 +541,12 @@ namespace Test.Logic
                 "<i>.I have a big head-</i>" + Environment.NewLine + "<font color='red'>?So do I~</font>" + Environment.NewLine + "!I do too+");
         }
 
+        [TestMethod]
+        public void ReverseStartAndEndingForRightToLeft8BoldTag()
+        {
+            Assert.AreEqual(Utilities.ReverseStartAndEndingForRightToLeft("<b>-I have a big head.</b>" + Environment.NewLine + "<font color='red'>~So do I?</font>" + Environment.NewLine + "+I do too!"),
+                "<b>.I have a big head-</b>" + Environment.NewLine + "<font color='red'>?So do I~</font>" + Environment.NewLine + "!I do too+");
+        }
+
     }
 }
