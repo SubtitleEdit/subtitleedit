@@ -228,6 +228,7 @@
     <Compile Include="SubtitleFormats\Cmaft.cs" />
     <Compile Include="SubtitleFormats\Csv5.cs" />
     <Compile Include="SubtitleFormats\DvdStudioProSpaceOneSemicolon.cs" />
+    <Compile Include="SubtitleFormats\UnknownSubtitle85.cs" />
     <Compile Include="SubtitleFormats\JacoSub.cs" />
     <Compile Include="SubtitleFormats\JsonType11.cs" />
     <Compile Include="SubtitleFormats\TimeCodesOnly1.cs" />

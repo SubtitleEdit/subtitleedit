@@ -246,6 +246,11 @@ namespace Nikse.SubtitleEdit.Core
 
         public static string ToRtf(this string value)
         {
+            return @"{\rtf1\ansi\ansicpg1252\deff0{\fonttbl\f0\fswiss Helvetica;}\f0\pard " + value.ToRtfPart() + @"\par" + Environment.NewLine + "}";
+        }
+
+        public static string ToRtfPart(this string value)
+        {
             // special RTF chars
             var backslashed = new StringBuilder(value);
             backslashed.Replace(@"\", @"\\");
@@ -262,8 +267,7 @@ namespace Nikse.SubtitleEdit.Core
                 else
                     sb.Append("\\u" + Convert.ToUInt32(character) + "?");
             }
-
-            return @"{\rtf1\ansi\ansicpg1252\deff0{\fonttbl\f0\fswiss Helvetica;}\f0\pard " + sb + @"\par" + Environment.NewLine + "}";
+            return sb.ToString();
         }
 
         public static string FromRtf(this string value)
