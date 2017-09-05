@@ -181,6 +181,7 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <ScanningFolder>Scanner {0} og undermapper for undertekster...</ScanningFolder>
     <Recursive>Medtag undermapper</Recursive>
     <SetMinMsBetweenSubtitles>Indstil min. msek mellem undertekster</SetMinMsBetweenSubtitles>
+    <BridgeGaps>Lap små huller</BridgeGaps>
     <PlainText>Almindelig tekst</PlainText>
     <Ocr>OCR...</Ocr>
     <Filter>Filter</Filter>
