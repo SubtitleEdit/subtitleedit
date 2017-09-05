@@ -14,6 +14,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string Name => "Unknown 47";
 
+        public override bool IsMine(List<string> lines, string fileName)
+        {
+            return base.IsMine(lines, fileName) && !new TimeCodesOnly2().IsMine(lines, fileName);
+        }
+
         public override string ToText(Subtitle subtitle, string title)
         {
             var sb = new StringBuilder();
