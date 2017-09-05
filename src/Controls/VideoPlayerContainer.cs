@@ -340,8 +340,9 @@ namespace Nikse.SubtitleEdit.Controls
                 string text = subtitle.ToText(format);
                 if (text != _mpvTextOld || _mpvTextFileName == null)
                 {
-                    if (string.IsNullOrEmpty(_mpvTextFileName) || _subtitlePrev != subtitle || !_mpvTextFileName.EndsWith(format.Extension, StringComparison.Ordinal))
+                    if (string.IsNullOrEmpty(_mpvTextFileName) || _subtitlePrev.FileName != subtitle.FileName || !_mpvTextFileName.EndsWith(format.Extension, StringComparison.Ordinal))
                     {
+                        mpv.RemoveSubtitle();
                         DeleteTempMpvFileName();
                         _mpvTextFileName = Path.GetTempFileName() + format.Extension;
                         File.WriteAllText(_mpvTextFileName, text);
