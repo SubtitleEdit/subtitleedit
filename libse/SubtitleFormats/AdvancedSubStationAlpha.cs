@@ -554,6 +554,10 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
         public static string FormatText(Paragraph p)
         {
             string text = p.Text.Replace(Environment.NewLine, "\\N");
+
+            if (!text.Contains('<'))
+                return text;
+
             text = text.Replace("<i>", @"{\i1}");
             text = text.Replace("</i>", @"{\i0}");
             text = text.Replace("</i>", @"{\i}");
