@@ -114,6 +114,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new QuickTimeText(),
                     new RealTime(),
                     new RhozetHarmonic(),
+                    new Rtf1(),
+                    new Rtf2(),
                     new Sami(),
                     new SamiAvDicPlayer(),
                     new SamiModern(),
@@ -258,7 +260,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new UnknownSubtitle82(),
                     new UnknownSubtitle83(),
                     new UnknownSubtitle84(),
-                    new UnknownSubtitle85(),
                 };
 
                 string path = Configuration.PluginsDirectory;

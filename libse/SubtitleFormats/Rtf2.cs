@@ -6,14 +6,14 @@ using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class UnknownSubtitle85 : SubtitleFormat
+    public class Rtf2 : SubtitleFormat
     {
-        // 0001 00:00:30:10 00:00:33:11 27
-        private static readonly Regex RegexTimeCode1 = new Regex(@"\d+ \d\d:\d\d:\d\d:\d\d \d\d:\d\d:\d\d:\d\d \d+", RegexOptions.Compiled);
+        // 0001 00:00:30:10 00:00:33:11 (same as 85 but without "reading speed")
+        private static readonly Regex RegexTimeCode1 = new Regex(@"\d+ \d\d:\d\d:\d\d:\d\d \d\d:\d\d:\d\d:\d\d", RegexOptions.Compiled);
 
         public override string Extension => ".rtf";
 
-        public override string Name => "Unknown 85";
+        public override string Name => "RTF 2";
 
         private static string MakeTimeCode(TimeCode tc)
         {
@@ -27,8 +27,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {\colortbl ;\red0\green0\blue0;}
 \viewkind4\uc1\pard\b\f0\fs24 [Header]\par
 Max Characters Per Line: 36\par
-Frame Rate: 25 fps\par
-TimeCode Format: 25 frames/sec\par
+Frame Rate: " + Configuration.Settings.General.CurrentFrameRate + @" fps\par
+TimeCode Format: " + Configuration.Settings.General.CurrentFrameRate + @" frames/sec\par
 [/Header]\par
 \par
 \par");
@@ -37,7 +37,7 @@ TimeCode Format: 25 frames/sec\par
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 string text = HtmlUtil.RemoveHtmlTags(p.Text);
-                sb.AppendLine($"\\pard {count:0000} {MakeTimeCode(p.StartTime)} {MakeTimeCode(p.EndTime)} 27 \\par"); // \pard 0001 00:00:30:10 00:00:33:11 27\par
+                sb.AppendLine($"\\pard {count:0000} {MakeTimeCode(p.StartTime)} {MakeTimeCode(p.EndTime)} \\par"); // \pard 0001 00:00:30:10 00:00:33:11 27\par
                 sb.AppendLine("\\par");
                 sb.AppendLine($"\\pard\\qc\\cf1\\outl {text.ToRtfPart()}\\par");
                 sb.AppendLine("\\cf0\\outl0\\par");
