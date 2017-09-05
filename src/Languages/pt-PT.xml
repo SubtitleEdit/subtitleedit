@@ -115,7 +115,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <GeneratingPeakFile>A gerar o ficheiro de pico...</GeneratingPeakFile>
     <GeneratingSpectrogram>A gerar o espectrograma...</GeneratingSpectrogram>
     <ExtractingSeconds>A extrair o áudio: {0:0.0} segundos</ExtractingSeconds>
-    <ExtractingMinutes>A extrair o áudio: {0}.{1:00} minutos</ExtractingMinutes>
+    <ExtractingMinutes>A extrair o áudio: {0}:{1:00} minutos</ExtractingMinutes>
     <WaveFileNotFound>Não é possível encontrar o ficheiro wav que foi extraído!
 É necessário o VLC media player 1.1.x ({0}-bit) ou superior para executar esta operação.
 
@@ -186,6 +186,7 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <ScanningFolder>A examinar {0} e as sub-pastas por ficheiros de legendas...</ScanningFolder>
     <Recursive>Incluir sub-pastas</Recursive>
     <SetMinMsBetweenSubtitles>Definir mínimo em (ms) entre as linhas</SetMinMsBetweenSubtitles>
+	<BridgeGaps>Unir intervalos</BridgeGaps>
     <PlainText>Texto sem formatação</PlainText>
     <Ocr>OCR...</Ocr>
     <Filter>Filtro</Filter>
@@ -1386,7 +1387,7 @@ Deseja continuar?</SubtitleAppendPrompt>
     <BeforeMergeShortLines>Antes de combinar as linhas curtas</BeforeMergeShortLines>
     <BeforeSplitLongLines>Antes de dividir linhas longas</BeforeSplitLongLines>
     <MergedShortLinesX>Número de linhas combinadas: {0}</MergedShortLinesX>
-    <BeforeDurationsBridgeGap>Antes de ligar pequenos intervalos</BeforeDurationsBridgeGap>
+    <BeforeDurationsBridgeGap>Antes de unir pequenos intervalos</BeforeDurationsBridgeGap>
     <BeforeSetMinimumDisplayTimeBetweenParagraphs>Antes de estabelecer o tempo de visualização mínimo entre legendas</BeforeSetMinimumDisplayTimeBetweenParagraphs>
     <XMinimumDisplayTimeBetweenParagraphsChanged>Número de linhas com tempo de visualização mínimo entre legendas alteradas: {0}</XMinimumDisplayTimeBetweenParagraphsChanged>
     <BeforeImportText>Antes de importar texto sem formatação</BeforeImportText>
@@ -1447,6 +1448,7 @@ Deseja continuar?</SubtitleAppendPrompt>
     <ErrorLoadIdx>Não foi possível ler/editar o ficheiro idx. Os ficheiros idx são parte de um par de ficheiros idx/sub (também conhecidos como VobSub) e o Subtitle Edit pode abrir o ficheiro sub.</ErrorLoadIdx>
     <ErrorLoadRar>Este ficheiro parece ser um ficheiro comprimido .rar. O Subtitle Edit não pode abrir ficheiros comprimidos.</ErrorLoadRar>
     <ErrorLoadZip>Este ficheiro parece ser um ficheiro comprimido .zip. O Subtitle Edit não pode abrir ficheiros comprimidos.</ErrorLoadZip>
+	<ErrorLoad7Zip>Este ficheiro parece ser um ficheiro comprimido 7-Zip. O Subtitle Edit não pode abrir ficheiros comprimidos.</ErrorLoad7Zip>
     <ErrorLoadPng>Este ficheiro parece ser um ficheiro de imagem no formato PNG. O Subtitle Edit não pode abrir ficheiros PNG.</ErrorLoadPng>
     <ErrorLoadJpg>Este ficheiro parece ser um ficheiro de imagem no formato JPG. O Subtitle Edit não pode abrir ficheiros JPG.</ErrorLoadJpg>
     <ErrorLoadSrr>Este ficheiro parece ser um ficheiro ReScene (.srr) - não é um ficheiro de legenda.</ErrorLoadSrr>
@@ -1919,7 +1921,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <GoToNextEmptyLine>Ir para a próxima linha em branco</GoToNextEmptyLine>
     <MergeSelectedLines>Combinar as linhas seleccionadas</MergeSelectedLines>
     <MergeSelectedLinesOnlyFirstText>Combinar as linhas seleccionadas, manter só o primeiro texto que não esteja em branco</MergeSelectedLinesOnlyFirstText>
-    <ToggleTranslationMode>Alternar o modo de tradução</ToggleTranslationMode>
+    <ToggleTranslationMode>Alternar o modo de tradutor</ToggleTranslationMode>
     <SwitchOriginalAndTranslation>Mudar entre original e tradução</SwitchOriginalAndTranslation>
     <MergeOriginalAndTranslation>Combinar o orginal com o traduzido</MergeOriginalAndTranslation>
     <MergeWithNext>Combinar com a próxima</MergeWithNext>
