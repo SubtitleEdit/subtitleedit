@@ -362,7 +362,7 @@ Dialogue: 0,0:00:16.84,0:00:18.16,rechts,,0000,0000,0000,," + lineOneText;
             var subtitle = new Subtitle();
             target.LoadSubtitle(subtitle, GetAssLines(@"{\fs20\pos(1,1)\blur5}Bla-bla-bla"), null);
             string actual = subtitle.Paragraphs[0].Text;
-            const string expected = "<font size=\"20\">{\\pos(1,1)\\blur5}Bla-bla-bla</font>";
+            const string expected = @"{\fs20\pos(1,1)\blur5}Bla-bla-bla";
             Assert.AreEqual(expected, actual);
         }
 
