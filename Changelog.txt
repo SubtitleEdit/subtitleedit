@@ -4,6 +4,7 @@
 * NEW:
    * New subtitle format JacoSub - thx ivandrofly
    * New subtitle format Lamda Cap (basic support) - thx Chie
+   * New subtitle format - thx Gunnar
    * New shortcuts for frame forward/back with play
    * Persian translation - thx Nima
 * IMPROVED:
@@ -29,6 +30,7 @@
    * Make "sort by" more consistant - thx Skrity
    * Add "Bridge gaps" (in durations) to "Batch convert"
 * FIXED:
+   * Fix memory leak regarding "mpv" + subtitle change - thx darnn
    * Fix missing space in format WebVTT
    * Fix support for combined Arabic characters in PAC - thx Zehelein
    * mpv frame stepping now updates position - thx Flitskikker
@@ -52,7 +54,8 @@
    * Fix minor issues for format DVD Studio Pro - thx Mike
    * Fix some issues regarding format TSB4 - thx kamenf
    * Fix "Translation mode" Shortcut not working - thx OmrSi/darnn
-   * Fix waveform performance for long texts - thx Skrity 
+   * Fix waveform performance for long texts - thx Skrity
+   * Improve handling of advanced ASS tags - thx Skrity
 
 
 3.5.3 (12th May 2017)
