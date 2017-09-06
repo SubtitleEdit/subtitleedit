@@ -19724,6 +19724,11 @@ namespace Nikse.SubtitleEdit.Forms
                     styles = new SubStationAlphaStyles(_subtitle, format);
                     if (styles.ShowDialog(this) == DialogResult.OK)
                     {
+                        if (_subtitle.Header != styles.Header)
+                        {
+                            MakeHistoryForUndo(styles.Text);
+                        }
+
                         _subtitle.Header = styles.Header;
                         var styleList = AdvancedSubStationAlpha.GetStylesFromHeader(_subtitle.Header);
                         if (styleList.Count > 0)
@@ -19745,6 +19750,10 @@ namespace Nikse.SubtitleEdit.Forms
                     styles = new TimedTextStyles(_subtitle);
                     if (styles.ShowDialog(this) == DialogResult.OK)
                     {
+                        if (_subtitle.Header != styles.Header)
+                        {
+                            MakeHistoryForUndo(styles.Text);
+                        }
                         _subtitle.Header = styles.Header;
                     }
                 }
