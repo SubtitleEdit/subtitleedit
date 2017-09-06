@@ -38,7 +38,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     try
                     {
                         if (path != null && File.Exists(Path.Combine(path, text)))
+                        {
                             text = Path.Combine(path, text);
+                        }
+                        else if (path != null)
+                        {
+                            int indexOfSlash = text.LastIndexOf("/", StringComparison.Ordinal);
+                            if (indexOfSlash >= 0 && File.Exists(Path.Combine(path, text.Remove(0, indexOfSlash + 1))))
+                                text = Path.Combine(path, text.Remove(0, indexOfSlash + 1));
+                        }
                         p = new Paragraph(DecodeTimeCode(start), DecodeTimeCode(end), text);
                         subtitle.Paragraphs.Add(p);
                     }
