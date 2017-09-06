@@ -71,6 +71,7 @@ namespace Nikse.SubtitleEdit.Forms
         public const string VobSubSubtitle = "VobSub";
         private string _customTextTemplate;
         private readonly DurationsBridgeGaps _bridgeGaps;
+        private const int ConvertMaxFileSize = 1024 * 1024 * 10; // 10 MB
 
         public BatchConvert(Icon icon)
         {
@@ -271,7 +272,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 SubtitleFormat format = null;
                 var sub = new Subtitle();
-                if (fi.Length < 1024 * 1024 * 10) // max 10 mb
+                if (fi.Length < ConvertMaxFileSize)
                 {
                     if (!FileUtil.IsBluRaySup(fileName) && !FileUtil.IsVobSub(fileName))
                     {
@@ -677,7 +678,7 @@ namespace Nikse.SubtitleEdit.Forms
                     SubtitleFormat format = null;
                     var sub = new Subtitle();
                     var fi = new FileInfo(fileName);
-                    if (fi.Length < 1024 * 1024 * 10) // max 10 mb
+                    if (fi.Length < ConvertMaxFileSize)
                     {
                         Encoding encoding;
                         format = sub.LoadSubtitle(fileName, out encoding, null);
@@ -1528,7 +1529,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         else
                         {
-                            if (fi.Length < 1024 * 1024) // max 1 mb
+                            if (fi.Length < ConvertMaxFileSize)
                             {
                                 Encoding encoding;
                                 var sub = new Subtitle();
