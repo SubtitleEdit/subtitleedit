@@ -757,8 +757,9 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             var sb = new StringBuilder();
             foreach (var line in _header.Split(new[] { Environment.NewLine }, StringSplitOptions.None))
             {
-                if (!line.ToLower().Replace(" ", string.Empty).StartsWith("style:" + name.ToLower().Replace(" ", string.Empty) + ",", StringComparison.Ordinal) &&
-                    !line.ToLower().Contains(name.ToLower()))
+                var lineIsStyle = line.ToLower().Replace(" ", string.Empty).StartsWith("style:" + name.ToLower().Replace(" ", string.Empty) + ",", StringComparison.Ordinal) &&
+                                  line.ToLower().Contains(name.ToLower());
+                if (!lineIsStyle)
                     sb.AppendLine(line);
             }
             _header = sb.ToString();
