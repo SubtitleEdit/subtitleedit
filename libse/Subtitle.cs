@@ -221,6 +221,7 @@ namespace Nikse.SubtitleEdit.Core
             fileModified = _history[index].FileModified;
             originalSubtitle = new Subtitle(_history[index].OriginalSubtitle);
             originalSubtitleFileName = _history[index].OriginalSubtitleFileName;
+            Header = _history[index].Subtitle.Header;
 
             return FileName;
         }
