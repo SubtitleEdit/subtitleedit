@@ -2032,7 +2032,7 @@
     <RegEx find="ilišu" replaceWith="iliziraju" />
     <RegEx find="ćič" replaceWith="čić" />
     <RegEx find="dilova" replaceWith="dila" />
-    <RegEx find="([ed])ditov" replaceWith="$1itir" />
+    <RegEx find="citov" replaceWith="citir" />
     <RegEx find="dnačin" replaceWith="dnadžb" />
     <RegEx find="\bdral" replaceWith="deral" />
     <RegEx find="dranj" replaceWith="deranj" />
@@ -2040,6 +2040,7 @@
     <RegEx find="[dt]cj?en(i|jen)" replaceWith="dcijen$1" />
     <RegEx find="(?&lt;![dt])cj?enim" replaceWith="cijenim" />
     <RegEx find="ebać" replaceWith="ebat ć" />
+    <RegEx find="editov" replaceWith="editir" />
     <RegEx find="edituje" replaceWith="editira" />
     <RegEx find="edituju" replaceWith="editiraju" />
     <RegEx find="edh" replaceWith="eth" />
