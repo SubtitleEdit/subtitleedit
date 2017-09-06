@@ -1185,19 +1185,20 @@ namespace Nikse.SubtitleEdit.Core
             var newLines = new StringBuilder();
             var pre = new StringBuilder();
             var post = new StringBuilder();
-            bool startsWithAssTag = false;
-            string assTag = string.Empty;
-            if (s.StartsWith("{\\", StringComparison.Ordinal) && s.IndexOf('}') < 22)
-            {
-                startsWithAssTag = true;
-                int end = s.IndexOf('}') + 1;
-                assTag = s.Substring(0, end);
-                s = s.Remove(0, end);
-            }
             var lines = s.SplitToLines();
             foreach (var line in lines)
             {
                 string s2 = line;
+
+                bool startsWithAssTag = false;
+                string assTag = string.Empty;
+                if (s2.StartsWith("{\\", StringComparison.Ordinal) && s.IndexOf('}') < 22)
+                {
+                    startsWithAssTag = true;
+                    int end = s2.IndexOf('}') + 1;
+                    assTag = s2.Substring(0, end);
+                    s2 = s2.Remove(0, end);
+                }
 
                 bool startsWithItalic = false;
                 if (s2.StartsWith("<i>", StringComparison.Ordinal))
