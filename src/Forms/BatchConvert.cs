@@ -677,7 +677,7 @@ namespace Nikse.SubtitleEdit.Forms
                     SubtitleFormat format = null;
                     var sub = new Subtitle();
                     var fi = new FileInfo(fileName);
-                    if (fi.Length < 1024 * 1024) // max 1 mb
+                    if (fi.Length < 1024 * 1024 * 10) // max 10 mb
                     {
                         Encoding encoding;
                         format = sub.LoadSubtitle(fileName, out encoding, null);
