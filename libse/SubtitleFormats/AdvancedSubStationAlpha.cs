@@ -1148,7 +1148,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                             else if (i == indexEffect)
                                 effect = splittedLine[i].Trim();
                             else if (i == indexLayer)
-                                int.TryParse(splittedLine[i].Trim(), out layer);
+                                int.TryParse(splittedLine[i].Replace("Comment:", string.Empty) .Trim(), out layer);
                             else if (i == indexText)
                                 text = splittedLine[i];
                             else if (i > indexText)

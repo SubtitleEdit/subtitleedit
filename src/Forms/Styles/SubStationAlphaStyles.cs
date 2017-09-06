@@ -757,7 +757,8 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             var sb = new StringBuilder();
             foreach (var line in _header.Split(new[] { Environment.NewLine }, StringSplitOptions.None))
             {
-                if (!line.ToLower().Replace(" ", string.Empty).StartsWith("style:" + name.ToLower() + ","))
+                if (!line.ToLower().Replace(" ", string.Empty).StartsWith("style:" + name.ToLower().Replace(" ", string.Empty) + ",", StringComparison.Ordinal) &&
+                    !line.ToLower().Contains(name.ToLower()))
                     sb.AppendLine(line);
             }
             _header = sb.ToString();
@@ -1338,7 +1339,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                     {
                         if (line.StartsWith("style:", StringComparison.OrdinalIgnoreCase))
                         {
-                            if (line.ToLower().Replace(" ", string.Empty).StartsWith("style:" + styleName.ToLower().Trim()))
+                            if (line.ToLower().Replace(" ", string.Empty).StartsWith("style:" + styleName.ToLower().Trim(), StringComparison.Ordinal))
                                 sb.AppendLine(line);
                         }
                         else
@@ -1347,7 +1348,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                         }
                     }
                     string content = sb.ToString();
-                    if (content.TrimEnd().EndsWith("[Events]"))
+                    if (content.TrimEnd().EndsWith("[Events]", StringComparison.Ordinal))
                     {
                         content = content.Trim() + Environment.NewLine +
                             "Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text" + Environment.NewLine +
