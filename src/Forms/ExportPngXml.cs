@@ -3214,7 +3214,6 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     }
                     i++;
                 }
-                checkBoxSimpleRender.Checked = Configuration.Settings.Tools.ExportVobSubSimpleRendering;
                 checkBoxTransAntiAliase.Checked = Configuration.Settings.Tools.ExportVobAntiAliasingWithTransparency;
             }
             else if (_exportType == ExportFormats.BluraySup || _exportType == ExportFormats.Dost || _exportType == ExportFormats.Fcp)
@@ -3585,6 +3584,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             panelShadowColor.Visible = shadowVisible;
             labelShadowTransparency.Visible = shadowVisible;
             numericUpDownShadowTransparency.Visible = shadowVisible;
+            if (checkBoxSimpleRender.Enabled)
+                checkBoxSimpleRender.Checked = Configuration.Settings.Tools.ExportVobSubSimpleRendering;
 
             if (exportType == ExportFormats.BluraySup || exportType == ExportFormats.VobSub || exportType == ExportFormats.BdnXml)
             {
@@ -3994,7 +3995,6 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 Configuration.Settings.Tools.ExportVobSubFontSize = (int)_subtitleFontSize;
                 Configuration.Settings.Tools.ExportVobSubVideoResolution = res;
                 Configuration.Settings.Tools.ExportVobSubLanguage = comboBoxLanguage.Text;
-                Configuration.Settings.Tools.ExportVobSubSimpleRendering = checkBoxSimpleRender.Checked;
                 Configuration.Settings.Tools.ExportVobAntiAliasingWithTransparency = checkBoxTransAntiAliase.Checked;
             }
             else if (_exportType == ExportFormats.BluraySup)
@@ -4022,6 +4022,9 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             Configuration.Settings.Tools.ExportShadowColor = panelShadowColor.BackColor;
             Configuration.Settings.Tools.ExportFontColor = _subtitleColor;
             Configuration.Settings.Tools.ExportBorderColor = _borderColor;
+
+            if (checkBoxSimpleRender.Enabled)
+                Configuration.Settings.Tools.ExportVobSubSimpleRendering = checkBoxSimpleRender.Checked;
 
             if (_exportType == ExportFormats.BluraySup)
             {
