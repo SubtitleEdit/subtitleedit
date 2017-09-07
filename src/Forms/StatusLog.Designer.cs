@@ -1,6 +1,6 @@
 ﻿namespace Nikse.SubtitleEdit.Forms
 {
-    partial class StatusLog
+    sealed partial class StatusLog
     {
         /// <summary>
         /// Required designer variable.
@@ -28,8 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.buttonOK = new System.Windows.Forms.Button();
             this.textBoxStatusLog = new System.Windows.Forms.TextBox();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
             // 
             // buttonOK
@@ -42,6 +44,7 @@
             this.buttonOK.TabIndex = 1;
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
+            this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
             // 
             // textBoxStatusLog
             // 
@@ -55,6 +58,11 @@
             this.textBoxStatusLog.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.textBoxStatusLog.Size = new System.Drawing.Size(939, 388);
             this.textBoxStatusLog.TabIndex = 2;
+            // 
+            // timer1
+            // 
+            this.timer1.Interval = 1000;
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // StatusLog
             // 
@@ -82,5 +90,6 @@
 
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.TextBox textBoxStatusLog;
+        private System.Windows.Forms.Timer timer1;
     }
 }

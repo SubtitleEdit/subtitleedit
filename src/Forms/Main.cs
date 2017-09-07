@@ -100,7 +100,8 @@ namespace Nikse.SubtitleEdit.Forms
         private Timer _timerClearStatus = new Timer();
         private string _textAutoSave;
         private string _textAutoSaveOriginal;
-        private StringBuilder _statusLog = new StringBuilder();
+        private List<string> _statusLog = new List<string>();
+        private StatusLog _statusLogForm;
         private bool _makeHistoryPaused;
         private bool _saveAsCalled;
 
@@ -329,7 +330,7 @@ namespace Nikse.SubtitleEdit.Forms
             try
             {
                 InitializeComponent();
-                Icon = Properties.Resources.SubtitleEditFormIcon;
+                Icon = Properties.Resources.SubtitleEditFormIcon;                
 
                 textBoxListViewTextAlternate.Visible = false;
                 labelAlternateText.Visible = false;
@@ -5142,7 +5143,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (!string.IsNullOrEmpty(message))
             {
                 _timerClearStatus.Stop();
-                _statusLog.AppendLine(string.Format("{0:0000}-{1:00}-{2:00} {3}: {4}", DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.ToLongTimeString(), message));
+                _statusLog.Add(string.Format("{0:0000}-{1:00}-{2:00} {3}: {4}", DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.ToLongTimeString(), message));
                 _timerClearStatus.Start();
             }
             ShowSourceLineNumber();
@@ -19937,14 +19938,19 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void labelStatus_Click(object sender, EventArgs e)
         {
-            if (_statusLog.Length == 0)
+            if (_statusLog.Count == 0)
             {
                 return;
             }
 
-            using (var statusLog = new StatusLog(_statusLog.ToString()))
+            if (_statusLogForm == null || _statusLogForm.IsDisposed)
             {
-                statusLog.ShowDialog(this);
+                _statusLogForm = new StatusLog(_statusLog);
+                _statusLogForm.Show(this);
+            }
+            else
+            {
+                _statusLogForm.Show();
             }
         }
 
