@@ -330,7 +330,7 @@ namespace Nikse.SubtitleEdit.Forms
             try
             {
                 InitializeComponent();
-                Icon = Properties.Resources.SubtitleEditFormIcon;                
+                Icon = Properties.Resources.SubtitleEditFormIcon;
 
                 textBoxListViewTextAlternate.Visible = false;
                 labelAlternateText.Visible = false;
@@ -5143,6 +5143,10 @@ namespace Nikse.SubtitleEdit.Forms
             if (!string.IsNullOrEmpty(message))
             {
                 _timerClearStatus.Stop();
+                if (_statusLog.Count == 100)
+                {
+                    _statusLog.RemoveAt(0);
+                }
                 _statusLog.Add(string.Format("{0:0000}-{1:00}-{2:00} {3}: {4}", DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.ToLongTimeString(), message));
                 _timerClearStatus.Start();
             }
@@ -19942,16 +19946,11 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 return;
             }
-
             if (_statusLogForm == null || _statusLogForm.IsDisposed)
             {
                 _statusLogForm = new StatusLog(_statusLog);
-                _statusLogForm.Show(this);
             }
-            else
-            {
-                _statusLogForm.Show();
-            }
+            _statusLogForm.Show();
         }
 
         private void toolStripMenuItemStatistics_Click(object sender, EventArgs e)

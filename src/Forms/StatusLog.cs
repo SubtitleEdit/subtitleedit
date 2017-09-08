@@ -6,18 +6,22 @@ using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public sealed partial class StatusLog : PositionAndSizeForm
+    public partial class StatusLog : PositionAndSizeForm
     {
-        private readonly List<string> _log;
+        private readonly IList<string> _log;
         private int _logCount = -1;
 
-        public StatusLog(List<string> log)
+        public StatusLog(IList<string> log)
         {
             InitializeComponent();
             Text = Configuration.Settings.Language.Main.StatusLog;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             _log = log;
             timer1_Tick(null, null);
+
+            // Handle timer when the form is active/inactive
+            Shown += delegate { timer1?.Start(); };
+            FormClosed += delegate { timer1?.Stop(); };
         }
 
         private void StatusLog_KeyDown(object sender, KeyEventArgs e)
@@ -32,13 +36,14 @@ namespace Nikse.SubtitleEdit.Forms
             if (_logCount != _log.Count)
             {
                 var sb = new StringBuilder();
-                foreach (var logEntry in _log.AsEnumerable().Reverse())
+                for (int i = _log.Count - 1; i >= 0; i--)
                 {
-                    sb.AppendLine(logEntry);
+                    // Start from the most recent log
+                    sb.AppendLine(_log[i]);
                 }
                 textBoxStatusLog.Text = sb.ToString();
+                _logCount = _log.Count;
             }
-            _logCount = _log.Count;
             timer1.Start();
         }
 
