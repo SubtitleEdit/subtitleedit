@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using Nikse.SubtitleEdit.Core;
 using System.Windows.Forms;
@@ -31,14 +30,14 @@ namespace Nikse.SubtitleEdit.Forms
             timer1.Stop();
             if (_logCount != _log.Count)
             {
+                _logCount = _log.Count;
                 var sb = new StringBuilder();
-                foreach (var logEntry in _log.AsEnumerable().Reverse())
+                for (int i = _logCount - 1; i >= 0; i--)
                 {
-                    sb.AppendLine(logEntry);
+                    sb.AppendLine(_log[i]);
                 }
                 textBoxStatusLog.Text = sb.ToString();
             }
-            _logCount = _log.Count;
             timer1.Start();
         }
 
