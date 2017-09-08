@@ -10042,7 +10042,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             using (var formSubOcr = new VobSubOcr())
             {
-                formSubOcr.Initialize(subtitle, subtitleImages, Configuration.Settings.VobSubOcr, null); // TODO: language???
+                formSubOcr.Initialize(subtitle, subtitleImages, Configuration.Settings.VobSubOcr); // TODO: language???
                 if (_loading)
                 {
                     formSubOcr.Icon = (Icon)Icon.Clone();
@@ -17031,7 +17031,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             bool done = false;
             string s = text;
-            if (s.StartsWith("<font "))
+            if (s.StartsWith("<font ", StringComparison.Ordinal))
             {
                 int end = s.IndexOf('>');
                 if (end > 0)
@@ -17076,7 +17076,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 bool done = false;
 
-                if (text.StartsWith("<font "))
+                if (text.StartsWith("<font ", StringComparison.Ordinal))
                 {
                     int end = text.IndexOf('>');
                     if (end > 0)

@@ -17,6 +17,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         public XmlDocument ImageCompareDocument { get; private set; }
         private List<VobSubOcr.CompareMatch> _matches;
         private List<Bitmap> _imageSources;
+        private List<ImageSplitterItem> _splitterItems;
         private string _directoryPath;
         private XmlNode _selectedCompareNode;
         private BinaryOcrBitmap _selectedCompareBinaryOcrBitmap;
@@ -44,11 +45,12 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             UiUtil.FixLargeFonts(this, buttonOK);
         }
 
-        internal void Initialize(string databaseFolderName, List<VobSubOcr.CompareMatch> matches, List<Bitmap> imageSources, BinaryOcrDb binOcrDb)
+        internal void Initialize(string databaseFolderName, List<VobSubOcr.CompareMatch> matches, List<Bitmap> imageSources, BinaryOcrDb binOcrDb, List<ImageSplitterItem> splitterItems)
         {
             _binOcrDb = binOcrDb;
             _matches = matches;
             _imageSources = imageSources;
+            _splitterItems = splitterItems;
 
             if (_binOcrDb == null)
             {
@@ -313,7 +315,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 var nbmp = new NikseBitmap((pictureBoxInspectItem.Image as Bitmap));
                 int x = 0;
                 int y = 0;
-                if (_selectedMatch != null && _selectedMatch.ImageSplitterItem != null)
+                if (_selectedMatch?.ImageSplitterItem != null)
                 {
                     if (_selectedMatch.ImageSplitterItem != null)
                     {
@@ -417,6 +419,48 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             if (e.KeyCode == Keys.Escape)
             {
                 DialogResult = DialogResult.Cancel;
+            }
+        }
+
+        private void contextMenuStripAddBetterMultiMatch_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (listBoxInspectItems.SelectedIndex < 0 ||
+                listBoxInspectItems.SelectedIndex == listBoxInspectItems.Items.Count - 1 ||
+                _selectedCompareBinaryOcrBitmap == null ||
+                _binOcrDb == null ||
+                _selectedCompareBinaryOcrBitmap.ExpandCount > 1)
+            {
+                e.Cancel = true;
+            }
+
+            var next = _matches[listBoxInspectItems.SelectedIndex + 1];
+            if (next.ExpandCount > 0)
+            {
+                e.Cancel = true;
+                return;
+            }
+
+            if (next.Text == Configuration.Settings.Language.VobSubOcr.NoMatch)
+            {
+                return;
+            }
+
+            if (next.ImageSplitterItem?.NikseBitmap == null || !string.IsNullOrWhiteSpace(next.ImageSplitterItem.SpecialCharacter))
+            {
+                e.Cancel = true;
+            }
+        }
+
+        private void addBetterMultiMatchToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (var form = new AddBeterMultiMatch())
+            {
+                form.Initialize(listBoxInspectItems.SelectedIndex, _matches, _splitterItems);
+                if (form.ShowDialog(this) == DialogResult.OK)
+                {
+                    _binOcrDb.Add(form.ExpandedMatch);
+                    DialogResult = DialogResult.OK;
+                }
             }
         }
 
