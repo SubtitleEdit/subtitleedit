@@ -78,7 +78,6 @@
             this.Name = "StatusLog";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Status messages";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.StatusLog_KeyDown);
             this.ResumeLayout(false);

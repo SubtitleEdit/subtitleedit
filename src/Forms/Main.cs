@@ -330,7 +330,7 @@ namespace Nikse.SubtitleEdit.Forms
             try
             {
                 InitializeComponent();
-                Icon = Properties.Resources.SubtitleEditFormIcon;                
+                Icon = Properties.Resources.SubtitleEditFormIcon;
 
                 textBoxListViewTextAlternate.Visible = false;
                 labelAlternateText.Visible = false;
@@ -19942,16 +19942,11 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 return;
             }
-
             if (_statusLogForm == null || _statusLogForm.IsDisposed)
             {
                 _statusLogForm = new StatusLog(_statusLog);
-                _statusLogForm.Show(this);
             }
-            else
-            {
-                _statusLogForm.Show();
-            }
+            _statusLogForm.Show();
         }
 
         private void toolStripMenuItemStatistics_Click(object sender, EventArgs e)
