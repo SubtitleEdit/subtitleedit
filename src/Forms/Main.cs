@@ -5143,6 +5143,10 @@ namespace Nikse.SubtitleEdit.Forms
             if (!string.IsNullOrEmpty(message))
             {
                 _timerClearStatus.Stop();
+                if (_statusLog.Count == 100)
+                {
+                    _statusLog.RemoveAt(0);
+                }
                 _statusLog.Add(string.Format("{0:0000}-{1:00}-{2:00} {3}: {4}", DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.ToLongTimeString(), message));
                 _timerClearStatus.Start();
             }

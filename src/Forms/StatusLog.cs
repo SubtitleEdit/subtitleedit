@@ -11,7 +11,7 @@ namespace Nikse.SubtitleEdit.Forms
         private readonly IList<string> _log;
         private int _logCount = -1;
 
-        public StatusLog(List<string> log)
+        public StatusLog(IList<string> log)
         {
             InitializeComponent();
             Text = Configuration.Settings.Language.Main.StatusLog;
