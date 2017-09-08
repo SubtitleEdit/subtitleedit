@@ -19549,7 +19549,11 @@ namespace Nikse.SubtitleEdit.Forms
             MainResize();
             TextBoxListViewTextTextChanged(null, null);
             textBoxListViewTextAlternate_TextChanged(null, null);
-            SubtitleListview1.FocusedItem = focusedItem;
+            if(focusedItem != null)
+            {
+                SubtitleListview1.FocusedItem = focusedItem;
+                SubtitleListview1.SelectIndexAndEnsureVisible(SubtitleListview1.FocusedItem.Index);
+            }
         }
 
         private void joinSubtitlesToolStripMenuItem_Click(object sender, EventArgs e)
