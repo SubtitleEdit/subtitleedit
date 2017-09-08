@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.groupBoxCurrentCompareImage = new System.Windows.Forms.GroupBox();
             this.buttonAddBetterMatch = new System.Windows.Forms.Button();
@@ -42,6 +43,8 @@
             this.pictureBoxCompareBitmap = new System.Windows.Forms.PictureBox();
             this.buttonOK = new System.Windows.Forms.Button();
             this.listBoxInspectItems = new System.Windows.Forms.ListBox();
+            this.contextMenuStripAddBetterMultiMatch = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.addBetterMultiMatchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBoxInspectItems = new System.Windows.Forms.GroupBox();
             this.labelExpandCount = new System.Windows.Forms.Label();
             this.pictureBoxInspectItem = new System.Windows.Forms.PictureBox();
@@ -49,6 +52,7 @@
             this.groupBoxCurrentCompareImage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCompareBitmapDouble)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCompareBitmap)).BeginInit();
+            this.contextMenuStripAddBetterMultiMatch.SuspendLayout();
             this.groupBoxInspectItems.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxInspectItem)).BeginInit();
             this.SuspendLayout();
@@ -198,6 +202,7 @@
             // 
             // listBoxInspectItems
             // 
+            this.listBoxInspectItems.ContextMenuStrip = this.contextMenuStripAddBetterMultiMatch;
             this.listBoxInspectItems.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.listBoxInspectItems.FormattingEnabled = true;
             this.listBoxInspectItems.Location = new System.Drawing.Point(6, 19);
@@ -205,6 +210,21 @@
             this.listBoxInspectItems.Size = new System.Drawing.Size(240, 251);
             this.listBoxInspectItems.TabIndex = 12;
             this.listBoxInspectItems.SelectedIndexChanged += new System.EventHandler(this.listBoxInspectItems_SelectedIndexChanged);
+            // 
+            // contextMenuStripAddBetterMultiMatch
+            // 
+            this.contextMenuStripAddBetterMultiMatch.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.addBetterMultiMatchToolStripMenuItem});
+            this.contextMenuStripAddBetterMultiMatch.Name = "contextMenuStripAddBetterMultiMatch";
+            this.contextMenuStripAddBetterMultiMatch.Size = new System.Drawing.Size(199, 48);
+            this.contextMenuStripAddBetterMultiMatch.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripAddBetterMultiMatch_Opening);
+            // 
+            // addBetterMultiMatchToolStripMenuItem
+            // 
+            this.addBetterMultiMatchToolStripMenuItem.Name = "addBetterMultiMatchToolStripMenuItem";
+            this.addBetterMultiMatchToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
+            this.addBetterMultiMatchToolStripMenuItem.Text = "Add better multi match";
+            this.addBetterMultiMatchToolStripMenuItem.Click += new System.EventHandler(this.addBetterMultiMatchToolStripMenuItem_Click);
             // 
             // groupBoxInspectItems
             // 
@@ -271,6 +291,7 @@
             this.groupBoxCurrentCompareImage.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCompareBitmapDouble)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCompareBitmap)).EndInit();
+            this.contextMenuStripAddBetterMultiMatch.ResumeLayout(false);
             this.groupBoxInspectItems.ResumeLayout(false);
             this.groupBoxInspectItems.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxInspectItem)).EndInit();
@@ -299,5 +320,7 @@
         private System.Windows.Forms.Button buttonAddBetterMatch;
         private System.Windows.Forms.Label labelExpandCount;
         private System.Windows.Forms.Label labelCount;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStripAddBetterMultiMatch;
+        private System.Windows.Forms.ToolStripMenuItem addBetterMultiMatchToolStripMenuItem;
     }
 }
