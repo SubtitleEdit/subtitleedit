@@ -157,6 +157,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
             string language = "eng"; // default value
             string codecId = string.Empty;
             string codecPrivate = string.Empty;
+            byte[] codecPrivateRaw = null;
             //var biCompression = string.Empty;
             int contentCompressionAlgorithm = -1;
             int contentEncodingType = -1;
@@ -203,7 +204,9 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
                         }
                         break;
                     case ElementId.CodecPrivate:
-                        codecPrivate = ReadString((int)element.DataSize, Encoding.UTF8);
+                        codecPrivateRaw = new byte[element.DataSize];
+                        _stream.Read(codecPrivateRaw, 0, codecPrivateRaw.Length);
+                        codecPrivate = Encoding.UTF8.GetString(codecPrivateRaw);
                         //if (codecPrivate.Length > 20)
                         //    biCompression = codecPrivate.Substring(16, 4);
                         break;
@@ -230,6 +233,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
                 Language = language,
                 CodecId = codecId,
                 CodecPrivate = codecPrivate,
+                CodecPrivateRaw = codecPrivateRaw,
                 Name = name,
                 ContentEncodingType = contentEncodingType,
                 ContentCompressionAlgorithm = contentCompressionAlgorithm
