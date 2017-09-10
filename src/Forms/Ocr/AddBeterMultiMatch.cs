@@ -78,5 +78,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             ExpandedMatch = null;
             DialogResult = DialogResult.Cancel;
         }
+
+        private void AddBeterMultiMatch_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Escape)
+                DialogResult = DialogResult.Cancel;
+        }
     }
 }
