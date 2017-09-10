@@ -330,7 +330,7 @@ namespace Nikse.SubtitleEdit.Forms
             try
             {
                 InitializeComponent();
-                Icon = Properties.Resources.SubtitleEditFormIcon;                
+                Icon = Properties.Resources.SubtitleEditFormIcon;
 
                 textBoxListViewTextAlternate.Visible = false;
                 labelAlternateText.Visible = false;
@@ -9770,9 +9770,10 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             SubtitleFormat format;
-            if (matroskaSubtitleInfo.CodecPrivate.Contains("[script info]", StringComparison.OrdinalIgnoreCase))
+            var codecPrivate = matroskaSubtitleInfo.GetCodecPrivate();
+            if (codecPrivate.Contains("[script info]", StringComparison.OrdinalIgnoreCase))
             {
-                if (matroskaSubtitleInfo.CodecPrivate.Contains("[V4 Styles]", StringComparison.OrdinalIgnoreCase))
+                if (codecPrivate.Contains("[V4 Styles]", StringComparison.OrdinalIgnoreCase))
                     format = new SubStationAlpha();
                 else
                     format = new AdvancedSubStationAlpha();
@@ -9796,7 +9797,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 foreach (var p in sub)
                 {
-                    subtitle.Paragraphs.Add(new Paragraph(p.Text, p.Start, p.End));
+                    subtitle.Paragraphs.Add(new Paragraph(p.GetText(matroskaSubtitleInfo), p.Start, p.End));
                 }
             }
             return subtitle;
@@ -9844,7 +9845,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             var format = Utilities.LoadMatroskaTextSubtitle(matroskaSubtitleInfo, matroska, sub, _subtitle);
 
-            if (matroskaSubtitleInfo.CodecPrivate.Contains("[script info]", StringComparison.OrdinalIgnoreCase))
+            if (matroskaSubtitleInfo.GetCodecPrivate().Contains("[script info]", StringComparison.OrdinalIgnoreCase))
             {
                 if (_networkSession == null)
                 {
@@ -9908,9 +9909,10 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     var msub = sub[index];
                     int idx = -6; // MakeMKV starts at DialogPresentationSegment
-                    if (VobSubParser.IsPrivateStream2(msub.Data, 0))
+                    var data = msub.GetData(matroskaSubtitleInfo);
+                    if (VobSubParser.IsPrivateStream2(data, 0))
                         idx = 0; //  starts with MPEG2 private stream 2 (just to be sure)
-                    var dps = new TextST.DialogPresentationSegment(msub.Data, idx);
+                    var dps = new TextST.DialogPresentationSegment(data, idx);
                     _subtitle.Paragraphs[index].Text = dps.Text;
                 }
                 catch (Exception exception)
@@ -9975,26 +9977,27 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     var msub = sub[index];
                     DvbSubPes pes = null;
-                    if (msub.Data.Length > 9 && msub.Data[0] == 15 && msub.Data[1] >= SubtitleSegment.PageCompositionSegment && msub.Data[1] <= SubtitleSegment.DisplayDefinitionSegment) // sync byte + segment id
+                    var data = msub.GetData(matroskaSubtitleInfo);
+                    if (data != null && data.Length > 9 && data[0] == 15 && data[1] >= SubtitleSegment.PageCompositionSegment && data[1] <= SubtitleSegment.DisplayDefinitionSegment) // sync byte + segment id
                     {
-                        var buffer = new byte[msub.Data.Length + 3];
-                        Buffer.BlockCopy(msub.Data, 0, buffer, 2, msub.Data.Length);
+                        var buffer = new byte[data.Length + 3];
+                        Buffer.BlockCopy(data, 0, buffer, 2, data.Length);
                         buffer[0] = 32;
                         buffer[1] = 0;
                         buffer[buffer.Length - 1] = 255;
                         pes = new DvbSubPes(0, buffer);
                     }
-                    else if (VobSubParser.IsMpeg2PackHeader(msub.Data))
+                    else if (VobSubParser.IsMpeg2PackHeader(data))
                     {
-                        pes = new DvbSubPes(msub.Data, Mpeg2Header.Length);
+                        pes = new DvbSubPes(data, Mpeg2Header.Length);
                     }
-                    else if (VobSubParser.IsPrivateStream1(msub.Data, 0))
+                    else if (VobSubParser.IsPrivateStream1(data, 0))
                     {
-                        pes = new DvbSubPes(msub.Data, 0);
+                        pes = new DvbSubPes(data, 0);
                     }
-                    else if (msub.Data.Length > 9 && msub.Data[0] == 32 && msub.Data[1] == 0 && msub.Data[2] == 14 && msub.Data[3] == 16)
+                    else if (data.Length > 9 && data[0] == 32 && data[1] == 0 && data[2] == 14 && data[3] == 16)
                     {
-                        pes = new DvbSubPes(0, msub.Data);
+                        pes = new DvbSubPes(0, data);
                     }
 
                     if (pes == null && subtitle.Paragraphs.Count > 0)
@@ -10104,41 +10107,10 @@ namespace Nikse.SubtitleEdit.Forms
             _subtitle.Paragraphs.Clear();
 
             List<VobSubMergedPack> mergedVobSubPacks = new List<VobSubMergedPack>();
-            var idx = new Core.VobSub.Idx(matroskaSubtitleInfo.CodecPrivate.SplitToLines());
+            var idx = new Core.VobSub.Idx(matroskaSubtitleInfo.GetCodecPrivate().SplitToLines());
             foreach (var p in sub)
             {
-                if (matroskaSubtitleInfo.ContentEncodingType == 0) // compressed with zlib
-                {
-                    bool error = false;
-                    var outStream = new MemoryStream();
-                    var outZStream = new zlib.ZOutputStream(outStream);
-                    var inStream = new MemoryStream(p.Data);
-                    byte[] buffer = null;
-                    try
-                    {
-                        CopyStream(inStream, outZStream);
-                        buffer = new byte[outZStream.TotalOut];
-                        outStream.Position = 0;
-                        outStream.Read(buffer, 0, buffer.Length);
-                    }
-                    catch (Exception exception)
-                    {
-                        MessageBox.Show(exception.Message + Environment.NewLine + Environment.NewLine + exception.StackTrace);
-                        error = true;
-                    }
-                    finally
-                    {
-                        outZStream.Close();
-                        inStream.Close();
-                    }
-
-                    if (!error && buffer.Length > 2)
-                        mergedVobSubPacks.Add(new VobSubMergedPack(buffer, TimeSpan.FromMilliseconds(p.Start), 32, null));
-                }
-                else
-                {
-                    mergedVobSubPacks.Add(new VobSubMergedPack(p.Data, TimeSpan.FromMilliseconds(p.Start), 32, null));
-                }
+                mergedVobSubPacks.Add(new VobSubMergedPack(p.GetData(matroskaSubtitleInfo), TimeSpan.FromMilliseconds(p.Start), 32, null));
                 if (mergedVobSubPacks.Count > 0)
                     mergedVobSubPacks[mergedVobSubPacks.Count - 1].EndTime = TimeSpan.FromMilliseconds(p.End);
 
@@ -10205,35 +10177,7 @@ namespace Nikse.SubtitleEdit.Forms
             var clusterStream = new MemoryStream();
             foreach (var p in sub)
             {
-                byte[] buffer = null;
-                if (matroskaSubtitleInfo.ContentEncodingType == 0) // compressed with zlib
-                {
-                    var outStream = new MemoryStream();
-                    var outZStream = new zlib.ZOutputStream(outStream);
-                    var inStream = new MemoryStream(p.Data);
-                    try
-                    {
-                        CopyStream(inStream, outZStream);
-                        buffer = new byte[outZStream.TotalOut];
-                        outStream.Position = 0;
-                        outStream.Read(buffer, 0, buffer.Length);
-                    }
-                    catch (Exception exception)
-                    {
-                        var tc = new TimeCode(p.Start);
-                        lastError = tc + ": " + exception.Message + ": " + exception.StackTrace;
-                        noOfErrors++;
-                    }
-                    finally
-                    {
-                        outZStream.Close();
-                        inStream.Close();
-                    }
-                }
-                else
-                {
-                    buffer = p.Data;
-                }
+                byte[] buffer = p.GetData(matroskaSubtitleInfo);
                 if (buffer != null && buffer.Length > 2)
                 {
                     clusterStream.Write(buffer, 0, buffer.Length);
@@ -19549,10 +19493,9 @@ namespace Nikse.SubtitleEdit.Forms
             MainResize();
             TextBoxListViewTextTextChanged(null, null);
             textBoxListViewTextAlternate_TextChanged(null, null);
-            if(focusedItem != null)
+            if (focusedItem != null)
             {
-                SubtitleListview1.FocusedItem = focusedItem;
-                SubtitleListview1.SelectIndexAndEnsureVisible(SubtitleListview1.FocusedItem.Index);
+                SubtitleListview1.SelectIndexAndEnsureVisible(focusedItem.Index, true);
             }
         }
 

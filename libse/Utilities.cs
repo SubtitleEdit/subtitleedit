@@ -2114,9 +2114,10 @@ namespace Nikse.SubtitleEdit.Core
 
             var isSsa = false;
             SubtitleFormat format = new SubRip();
-            if (matroskaSubtitleInfo.CodecPrivate.Contains("[script info]", StringComparison.OrdinalIgnoreCase))
+            var codecPrivate = matroskaSubtitleInfo.GetCodecPrivate();
+            if (codecPrivate.Contains("[script info]", StringComparison.OrdinalIgnoreCase))
             {
-                if (matroskaSubtitleInfo.CodecPrivate.Contains("[V4 Styles]", StringComparison.OrdinalIgnoreCase))
+                if (codecPrivate.Contains("[V4 Styles]", StringComparison.OrdinalIgnoreCase))
                     format = new SubStationAlpha();
                 else
                     format = new AdvancedSubStationAlpha();
@@ -2130,13 +2131,13 @@ namespace Nikse.SubtitleEdit.Core
                     subtitle.Paragraphs.Add(p);
                 }
 
-                if (!string.IsNullOrEmpty(matroskaSubtitleInfo.CodecPrivate))
+                if (!string.IsNullOrEmpty(codecPrivate))
                 {
                     bool eventsStarted = false;
                     bool fontsStarted = false;
                     bool graphicsStarted = false;
                     var header = new StringBuilder();
-                    foreach (string line in matroskaSubtitleInfo.CodecPrivate.Replace(Environment.NewLine, "\n").Split('\n'))
+                    foreach (string line in codecPrivate.Replace(Environment.NewLine, "\n").Split('\n'))
                     {
                         if (!eventsStarted && !fontsStarted && !graphicsStarted)
                         {
@@ -2179,7 +2180,7 @@ namespace Nikse.SubtitleEdit.Core
             {
                 foreach (var p in sub)
                 {
-                    subtitle.Paragraphs.Add(new Paragraph(p.Text, p.Start, p.End));
+                    subtitle.Paragraphs.Add(new Paragraph(p.GetText(matroskaSubtitleInfo), p.Start, p.End));
                 }
             }
             subtitle.Renumber();
@@ -2188,13 +2189,14 @@ namespace Nikse.SubtitleEdit.Core
 
         public static Subtitle LoadMatroskaSSA(MatroskaTrackInfo matroskaSubtitleInfo, string fileName, SubtitleFormat format, List<MatroskaSubtitle> sub)
         {
-            var subtitle = new Subtitle { Header = matroskaSubtitleInfo.CodecPrivate };
+            var codecPrivate = matroskaSubtitleInfo.GetCodecPrivate();
+            var subtitle = new Subtitle { Header = codecPrivate };
             var lines = new List<string>();
             foreach (string l in subtitle.Header.Trim().SplitToLines())
                 lines.Add(l);
             var footer = new StringBuilder();
             var comments = new Subtitle();
-            if (!string.IsNullOrEmpty(matroskaSubtitleInfo.CodecPrivate))
+            if (!string.IsNullOrEmpty(codecPrivate))
             {
                 bool footerOn = false;
                 char[] splitChars = { ':', '.' };
@@ -2283,7 +2285,7 @@ namespace Nikse.SubtitleEdit.Core
                         comments.Paragraphs.RemoveAt(commentIndex);
                 }
 
-                string text = mp.Text.Replace(Environment.NewLine, "\\N");
+                string text = mp.GetText(matroskaSubtitleInfo).Replace(Environment.NewLine, "\\N");
                 int idx = text.IndexOf(',') + 1;
                 if (idx > 0 && idx < text.Length)
                 {

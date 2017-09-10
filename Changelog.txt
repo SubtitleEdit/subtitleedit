@@ -29,6 +29,8 @@
    * Change some combo boxes to allow for better searching
    * Make "sort by" more consistant - thx Skrity
    * Add "Bridge gaps" (in durations) to "Batch convert"
+   * Minor improvements for "Binary image compare" OCR - thx Boulder
+   * Make "Status log" window non-modal - thx Skrity
 * FIXED:
    * Fix memory leak regarding "mpv" + subtitle change - thx darnn
    * Fix missing space in format WebVTT
@@ -56,6 +58,7 @@
    * Fix "Translation mode" Shortcut not working - thx OmrSi/darnn
    * Fix waveform performance for long texts - thx Skrity
    * Improve handling of advanced ASS tags - thx Skrity
+   * Improve handling of zlib compression in Matroska - thx mkver
 
 
 3.5.3 (12th May 2017)

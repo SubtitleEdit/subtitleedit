@@ -1,10 +1,11 @@
 ﻿using System;
+using System.IO;
 
 namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
 {
     public class MatroskaSubtitle
     {
-        public byte[] Data { get; set; }
+        internal byte[] Data { get; set; }
         public long Start { get; set; }
         public long Duration { get; set; }
 
@@ -13,6 +14,38 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
             Data = data;
             Start = start;
             Duration = duration;
+        }
+
+        /// <summary>
+        /// Get data, if contentEncodingType == 0, then data is compressed with zlib
+        /// </summary>
+        /// <param name="matroskaTrackInfo"></param>
+        /// <returns>Data byte array (uncompressed)</returns>
+        public byte[] GetData(MatroskaTrackInfo matroskaTrackInfo)
+        {
+            if (matroskaTrackInfo.ContentEncodingType != MatroskaTrackInfo.ContentEncodingTypeCompression)
+            {
+                return Data;
+            }
+
+            var outStream = new MemoryStream();
+            var outZStream = new zlib.ZOutputStream(outStream);
+            var inStream = new MemoryStream(Data);
+            byte[] buffer;
+            try
+            {
+                MatroskaTrackInfo.CopyStream(inStream, outZStream);
+                //inStream.CopyTo(outZStream);
+                buffer = new byte[outZStream.TotalOut];
+                outStream.Position = 0;
+                outStream.Read(buffer, 0, buffer.Length);
+            }
+            finally
+            {
+                outZStream.Close();
+                inStream.Close();
+            }
+            return buffer;
         }
 
         public MatroskaSubtitle(byte[] data, long start)
@@ -28,14 +61,12 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
             }
         }
 
-        public string Text
+        public string GetText(MatroskaTrackInfo matroskaTrackInfo)
         {
-            get
-            {
-                if (Data != null)
-                    return System.Text.Encoding.UTF8.GetString(Data).Replace("\\N", Environment.NewLine);
-                return string.Empty;
-            }
+            var data = GetData(matroskaTrackInfo);
+            if (data != null)
+                return System.Text.Encoding.UTF8.GetString(data).Replace("\\N", Environment.NewLine);
+            return string.Empty;
         }
     }
 }
