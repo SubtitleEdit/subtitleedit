@@ -3145,6 +3145,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             _exportType = exportType;
             _fileName = fileName;
             _format = format;
+            _formatName = _format != null ? _format.Name : string.Empty;
             _videoFileName = videoFileName;
             if (exportType == ExportFormats.BluraySup)
                 Text = "Blu-ray SUP";
@@ -3883,6 +3884,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     SizeF textSize = g.MeasureString("Hj!", font);
                     int lineHeight = (int)Math.Round(textSize.Height * 0.64f);
 
+
+                    numericUpDownLineSpacing.ValueChanged -= numericUpDownLineSpacing_ValueChanged;
                     var style = string.Empty;
                     if (subtitleListView1.SelectedIndices.Count > 0)
                         style = GetStyleName(_subtitle.Paragraphs[subtitleListView1.SelectedItems[0].Index]);
@@ -3892,6 +3895,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         numericUpDownLineSpacing.Value = lineHeight;
                     else if (lineHeight > numericUpDownLineSpacing.Maximum)
                         numericUpDownLineSpacing.Value = numericUpDownLineSpacing.Maximum;
+                    numericUpDownLineSpacing.ValueChanged += numericUpDownLineSpacing_ValueChanged;
+                    labelLineHeightStyle.Text = style;
                 }
             }
         }
@@ -3935,8 +3940,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
         private void ExportPngXml_Shown(object sender, EventArgs e)
         {
             _isLoading = false;
-            subtitleListView1_SelectedIndexChanged(null, null);
-            _formatName = _format != null ? _format.Name : string.Empty;
+            subtitleListView1_SelectedIndexChanged(null, null);            
         }
 
         private void comboBoxHAlign_SelectedIndexChanged(object sender, EventArgs e)
@@ -4174,8 +4178,10 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
                 SizeF textSize = g.MeasureString("Hj!", font);
                 int lineHeight = (int)Math.Round(textSize.Height * 0.64f);
+                numericUpDownLineSpacing.ValueChanged -= numericUpDownLineSpacing_ValueChanged;
                 if (lineHeight >= numericUpDownLineSpacing.Minimum && lineHeight <= numericUpDownLineSpacing.Maximum && lineHeight != numericUpDownLineSpacing.Value)
                     numericUpDownLineSpacing.Value = lineHeight;
+                numericUpDownLineSpacing.ValueChanged += numericUpDownLineSpacing_ValueChanged;
             }
             subtitleListView1_SelectedIndexChanged(null, null);
         }
@@ -4190,7 +4196,6 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 _lineHeights[style] = value;
             else
                 _lineHeights.Add(style, value);
-            labelLineHeightStyle.Text = style;
             subtitleListView1_SelectedIndexChanged(null, null);
         }
 
