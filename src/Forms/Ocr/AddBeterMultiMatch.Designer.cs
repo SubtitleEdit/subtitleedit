@@ -185,9 +185,16 @@
             this.Controls.Add(this.groupBoxInspectItems);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOK);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.KeyPreview = true;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "AddBeterMultiMatch";
+            this.ShowIcon = false;
+            this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "AddBeterMultiMatch";
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.AddBeterMultiMatch_KeyDown);
             this.groupBoxInspectItems.ResumeLayout(false);
             this.groupBoxInspectItems.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownExpandCount)).EndInit();
