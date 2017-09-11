@@ -6,7 +6,8 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
     public class MatroskaTrackInfo
     {
         public const int ContentEncodingTypeCompression = 0;
-        private const int ContentEncodingScopePrivateDate = 2;
+        internal const int ContentEncodingScopeTracks = 1;
+        internal const int ContentEncodingScopePrivateDate = 2;
 
         public int TrackNumber { get; set; }
         public string Uid { get; set; }
@@ -47,7 +48,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
                 return string.Empty;
             }
 
-            if (ContentEncodingType == ContentEncodingTypeCompression && 
+            if (ContentEncodingType == ContentEncodingTypeCompression &&
                 (ContentEncodingScope & ContentEncodingScopePrivateDate) > 0 && // second bit set = private data encoded
                 CodecPrivateRaw.Length > 2)
             {
