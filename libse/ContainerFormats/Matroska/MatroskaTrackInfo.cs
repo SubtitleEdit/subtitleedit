@@ -6,6 +6,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
     public class MatroskaTrackInfo
     {
         public const int ContentEncodingTypeCompression = 0;
+        private const int ContentEncodingScopePrivateDate = 2;
 
         public int TrackNumber { get; set; }
         public string Uid { get; set; }
@@ -13,7 +14,6 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
         public bool IsAudio { get; set; }
         public bool IsSubtitle { get; set; }
         public string CodecId { get; set; }
-        internal string CodecPrivate { get; set; }
         internal byte[] CodecPrivateRaw { get; set; }
         public int DefaultDuration { get; set; }
         public string Language { get; set; }
@@ -27,6 +27,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
         /// </summary>
         public int ContentCompressionAlgorithm { get; set; }
         public int ContentEncodingType { get; set; }
+        public uint ContentEncodingScope { get; set; }
 
         internal static void CopyStream(Stream input, Stream output)
         {
@@ -41,32 +42,37 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
 
         public string GetCodecPrivate()
         {
-            if (ContentEncodingType != ContentEncodingTypeCompression || CodecPrivateRaw == null || CodecPrivateRaw.Length < 3)
+            if (CodecPrivateRaw == null || CodecPrivateRaw.Length == 0)
             {
-                return CodecPrivate;
+                return string.Empty;
             }
 
-            var outStream = new MemoryStream();
-            var outZStream = new zlib.ZOutputStream(outStream);
-            var inStream = new MemoryStream(CodecPrivateRaw);
-            try
+            if (ContentEncodingType == ContentEncodingTypeCompression && 
+                (ContentEncodingScope & ContentEncodingScopePrivateDate) > 0 && // second bit set = private data encoded
+                CodecPrivateRaw.Length > 2)
             {
-                //inStream.CopyTo(outZStream);
-                CopyStream(inStream, outZStream);
-                var buffer = new byte[outZStream.TotalOut];
-                outStream.Position = 0;
-                outStream.Read(buffer, 0, buffer.Length);
-                return Encoding.UTF8.GetString(buffer);
+                var outStream = new MemoryStream();
+                var outZStream = new zlib.ZOutputStream(outStream);
+                var inStream = new MemoryStream(CodecPrivateRaw);
+                try
+                {
+                    CopyStream(inStream, outZStream);
+                    var buffer = new byte[outZStream.TotalOut];
+                    outStream.Position = 0;
+                    outStream.Read(buffer, 0, buffer.Length);
+                    return Encoding.UTF8.GetString(buffer);
+                }
+                catch
+                {
+                    return Encoding.UTF8.GetString(CodecPrivateRaw);
+                }
+                finally
+                {
+                    outZStream.Close();
+                    inStream.Close();
+                }
             }
-            catch
-            {
-                return CodecPrivate;
-            }
-            finally
-            {
-                outZStream.Close();
-                inStream.Close();
-            }
+            return Encoding.UTF8.GetString(CodecPrivateRaw);
         }
     }
 }

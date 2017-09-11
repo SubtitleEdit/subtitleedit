@@ -156,11 +156,10 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
             string name = string.Empty;
             string language = "eng"; // default value
             string codecId = string.Empty;
-            string codecPrivate = string.Empty;
             byte[] codecPrivateRaw = null;
-            //var biCompression = string.Empty;
             int contentCompressionAlgorithm = -1;
             int contentEncodingType = -1;
+            uint contentEncodingScope = 1;
 
             Element element;
             while (_stream.Position < trackEntryElement.EndPosition && (element = ReadElement()) != null)
@@ -206,9 +205,6 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
                     case ElementId.CodecPrivate:
                         codecPrivateRaw = new byte[element.DataSize];
                         _stream.Read(codecPrivateRaw, 0, codecPrivateRaw.Length);
-                        codecPrivate = Encoding.UTF8.GetString(codecPrivateRaw);
-                        //if (codecPrivate.Length > 20)
-                        //    biCompression = codecPrivate.Substring(16, 4);
                         break;
                     case ElementId.ContentEncodings:
                         contentCompressionAlgorithm = 0; // default value
@@ -217,7 +213,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
                         var contentEncodingElement = ReadElement();
                         if (contentEncodingElement != null && contentEncodingElement.Id == ElementId.ContentEncoding)
                         {
-                            ReadContentEncodingElement(element, ref contentCompressionAlgorithm, ref contentEncodingType);
+                            ReadContentEncodingElement(element, ref contentCompressionAlgorithm, ref contentEncodingType, ref contentEncodingScope);
                         }
                         break;
                 }
@@ -232,11 +228,11 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
                 IsSubtitle = isSubtitle,
                 Language = language,
                 CodecId = codecId,
-                CodecPrivate = codecPrivate,
                 CodecPrivateRaw = codecPrivateRaw,
                 Name = name,
                 ContentEncodingType = contentEncodingType,
-                ContentCompressionAlgorithm = contentCompressionAlgorithm
+                ContentCompressionAlgorithm = contentCompressionAlgorithm,
+                ContentEncodingScope = contentEncodingScope
             });
 
             if (isVideo)
@@ -249,7 +245,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
             }
         }
 
-        private void ReadContentEncodingElement(Element contentEncodingElement, ref int contentCompressionAlgorithm, ref int contentEncodingType)
+        private void ReadContentEncodingElement(Element contentEncodingElement, ref int contentCompressionAlgorithm, ref int contentEncodingType, ref uint contentEncodingScope)
         {
             Element element;
             while (_stream.Position < contentEncodingElement.EndPosition && (element = ReadElement()) != null)
@@ -261,7 +257,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
                         System.Diagnostics.Debug.WriteLine("ContentEncodingOrder: " + contentEncodingOrder);
                         break;
                     case ElementId.ContentEncodingScope:
-                        var contentEncodingScope = ReadUInt((int)element.DataSize);
+                        contentEncodingScope = (uint)ReadUInt((int)element.DataSize);
                         System.Diagnostics.Debug.WriteLine("ContentEncodingScope: " + contentEncodingScope);
                         break;
                     case ElementId.ContentEncodingType:
