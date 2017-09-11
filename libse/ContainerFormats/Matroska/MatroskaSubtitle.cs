@@ -23,7 +23,8 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
         /// <returns>Data byte array (uncompressed)</returns>
         public byte[] GetData(MatroskaTrackInfo matroskaTrackInfo)
         {
-            if (matroskaTrackInfo.ContentEncodingType != MatroskaTrackInfo.ContentEncodingTypeCompression)
+            if (matroskaTrackInfo.ContentEncodingType != MatroskaTrackInfo.ContentEncodingTypeCompression ||  // no compression
+                (matroskaTrackInfo.ContentEncodingScope & MatroskaTrackInfo.ContentEncodingScopeTracks) == 0) // tracks not compressed
             {
                 return Data;
             }
@@ -35,7 +36,6 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
             try
             {
                 MatroskaTrackInfo.CopyStream(inStream, outZStream);
-                //inStream.CopyTo(outZStream);
                 buffer = new byte[outZStream.TotalOut];
                 outStream.Position = 0;
                 outStream.Read(buffer, 0, buffer.Length);
