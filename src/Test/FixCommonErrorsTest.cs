@@ -484,6 +484,7 @@ namespace Test
         }
 
         [TestMethod]
+        [TestCategory("Local")]
         public void FixCommonOcrErrorsSlashIsL() // requires hardcoded rules enabled
         {
             using (var target = GetFixCommonErrorsLib())
