@@ -80,7 +80,14 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             _selectedCompareNode = null;
             _selectedCompareBinaryOcrBitmap = null;
 
-            pictureBoxInspectItem.Image = _imageSources[listBoxInspectItems.SelectedIndex];
+            var img = _imageSources[listBoxInspectItems.SelectedIndex];
+            pictureBoxInspectItem.Image = img;
+            if (img != null)
+            {
+                pictureBoxInspectItem.Width = img.Width;
+                pictureBoxInspectItem.Height = img.Height;
+            }
+
             pictureBoxCompareBitmap.Image = null;
             pictureBoxCompareBitmapDouble.Image = null;
 
@@ -99,13 +106,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                             textBoxText.Text = bob.Text;
                             checkBoxItalic.Checked = bob.Italic;
                             _selectedCompareBinaryOcrBitmap = bob;
-
-                            var bitmap = bob.ToOldBitmap();
-                            pictureBoxCompareBitmap.Image = bitmap;
-                            pictureBoxCompareBitmapDouble.Width = bitmap.Width * 2;
-                            pictureBoxCompareBitmapDouble.Height = bitmap.Height * 2;
-                            pictureBoxCompareBitmapDouble.Image = bitmap;
-
+                            SetDbItemView(bob.ToOldBitmap());
                             var matchBob = new BinaryOcrBitmap(new NikseBitmap(_imageSources[listBoxInspectItems.SelectedIndex]));
                             if (matchBob.Hash == bob.Hash && matchBob.Width == bob.Width && matchBob.Height == bob.Height && matchBob.NumberOfColoredPixels == bob.NumberOfColoredPixels)
                             {
@@ -115,7 +116,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                             {
                                 buttonAddBetterMatch.Enabled = true;
                             }
-
                             bobFound = true;
                             break;
                         }
@@ -129,14 +129,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                                 textBoxText.Text = bob.Text;
                                 checkBoxItalic.Checked = bob.Italic;
                                 _selectedCompareBinaryOcrBitmap = bob;
-
-                                var bitmap = bob.ToOldBitmap();
-                                pictureBoxCompareBitmap.Image = bitmap;
-                                pictureBoxCompareBitmapDouble.Width = bitmap.Width * 2;
-                                pictureBoxCompareBitmapDouble.Height = bitmap.Height * 2;
-                                pictureBoxCompareBitmapDouble.Image = bitmap;
+                                SetDbItemView(bob.ToOldBitmap());
                                 buttonAddBetterMatch.Enabled = false; // exact match
-                                labelExpandCount.Text = string.Format("Expand count: {0}", bob.ExpandCount);
+                                labelExpandCount.Text = $"Expand count: {bob.ExpandCount}";
                                 break;
                             }
                         }
@@ -161,10 +156,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                                     f.Position = pos;
                                     var mbmp = new ManagedBitmap(f);
                                     var bitmap = mbmp.ToOldBitmap();
-                                    pictureBoxCompareBitmap.Image = bitmap;
-                                    pictureBoxCompareBitmapDouble.Width = bitmap.Width * 2;
-                                    pictureBoxCompareBitmapDouble.Height = bitmap.Height * 2;
-                                    pictureBoxCompareBitmapDouble.Image = bitmap;
+                                    SetDbItemView(mbmp.ToOldBitmap());
                                     labelImageInfo.Text = string.Format(Configuration.Settings.Language.VobSubEditCharacters.Image + " - {0}x{1}", bitmap.Width, bitmap.Height);
                                 }
                                 catch (Exception exception)
@@ -210,6 +202,16 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 textBoxText.Enabled = true;
                 checkBoxItalic.Enabled = true;
             }
+        }
+
+        private void SetDbItemView(Bitmap bitmap)
+        {
+            pictureBoxCompareBitmap.Image = bitmap;
+            pictureBoxCompareBitmap.Width = bitmap.Width;
+            pictureBoxCompareBitmap.Height = bitmap.Height;
+            pictureBoxCompareBitmapDouble.Width = bitmap.Width * 2;
+            pictureBoxCompareBitmapDouble.Height = bitmap.Height * 2;
+            pictureBoxCompareBitmapDouble.Image = bitmap;
         }
 
         private void buttonUpdate_Click(object sender, EventArgs e)
