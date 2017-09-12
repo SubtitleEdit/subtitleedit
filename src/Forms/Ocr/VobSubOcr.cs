@@ -3087,7 +3087,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             secondBestGuess = null;
             int index = 0;
             int smallestDifference = 10000;
-            int smallestIndex = -1;
+            BinaryOcrBitmap hit = null;
             var target = targetItem.NikseBitmap;
             if (_binaryOcrDb == null)
             {
@@ -3135,33 +3135,31 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 }
             }
 
-            FindBestMatchNew(ref index, ref smallestDifference, ref smallestIndex, target, _binaryOcrDb, bob, maxDiff);
+            FindBestMatchNew(ref index, ref smallestDifference, out hit, target, _binaryOcrDb, bob, maxDiff);
             if (maxDiff > 0)
             {
-                if (target.Width > 16 && target.Height > 16 && (smallestIndex == -1 || smallestDifference * 100.0 / (target.Width * target.Height) > maxDiff))
+                if (target.Width > 16 && target.Height > 16 && (hit == null || smallestDifference * 100.0 / (target.Width * target.Height) > maxDiff))
                 {
                     var t2 = target.CopyRectangle(new Rectangle(0, 1, target.Width, target.Height - 1));
-                    FindBestMatchNew(ref index, ref smallestDifference, ref smallestIndex, t2, _binaryOcrDb, bob, maxDiff);
+                    FindBestMatchNew(ref index, ref smallestDifference, out hit, t2, _binaryOcrDb, bob, maxDiff);
                 }
-                if (target.Width > 16 && target.Height > 16 && (smallestIndex == -1 || smallestDifference * 100.0 / (target.Width * target.Height) > maxDiff))
+                if (target.Width > 16 && target.Height > 16 && (hit == null || smallestDifference * 100.0 / (target.Width * target.Height) > maxDiff))
                 {
                     var t2 = target.CopyRectangle(new Rectangle(1, 0, target.Width - 1, target.Height));
-                    FindBestMatchNew(ref index, ref smallestDifference, ref smallestIndex, t2, _binaryOcrDb, bob, maxDiff);
+                    FindBestMatchNew(ref index, ref smallestDifference, out hit, t2, _binaryOcrDb, bob, maxDiff);
                 }
-                if (target.Width > 16 && target.Height > 16 && (smallestIndex == -1 || smallestDifference * 100.0 / (target.Width * target.Height) > maxDiff))
+                if (target.Width > 16 && target.Height > 16 && (hit == null || smallestDifference * 100.0 / (target.Width * target.Height) > maxDiff))
                 {
                     var t2 = target.CopyRectangle(new Rectangle(0, 0, target.Width - 1, target.Height));
-                    FindBestMatchNew(ref index, ref smallestDifference, ref smallestIndex, t2, _binaryOcrDb, bob, maxDiff);
+                    FindBestMatchNew(ref index, ref smallestDifference, out hit, t2, _binaryOcrDb, bob, maxDiff);
                 }
             }
 
-            if (smallestIndex >= 0)
+            if (hit != null)
             {
                 double differencePercentage = smallestDifference * 100.0 / (target.Width * target.Height);
                 if (differencePercentage <= maxDiff)
                 {
-                    var hit = _binaryOcrDb.CompareImages[smallestIndex];
-
                     string text = hit.Text;
                     if (smallestDifference > 0)
                     {
@@ -3209,9 +3207,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         return new CompareMatch(text, hit.Italic, hit.ExpandCount, hit.Key);
                     }
                 }
-
-                var guess = _binaryOcrDb.CompareImages[smallestIndex];
-                secondBestGuess = new CompareMatch(guess.Text, guess.Italic, guess.ExpandCount, guess.Key);
+                if (hit != null)
+                    secondBestGuess = new CompareMatch(hit.Text, hit.Italic, hit.ExpandCount, hit.Key);
             }
 
             if (bob.IsPeriod())
@@ -3309,14 +3306,15 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             return bmp;
         }
 
-        private static void FindBestMatchNew(ref int index, ref int smallestDifference, ref int smallestIndex, NikseBitmap target, BinaryOcrDb binOcrDb, BinaryOcrBitmap bob, double maxDiff)
+        private static void FindBestMatchNew(ref int index, ref int smallestDifference, out BinaryOcrBitmap hit, NikseBitmap target, BinaryOcrDb binOcrDb, BinaryOcrBitmap bob, double maxDiff)
         {
+            hit = null;
             var bobExactMatch = binOcrDb.FindExactMatch(bob);
             if (bobExactMatch >= 0)
             {
                 index = bobExactMatch;
                 smallestDifference = 0;
-                smallestIndex = bobExactMatch;
+                hit = binOcrDb.CompareImages[bobExactMatch];
                 return;
             }
 
@@ -3326,7 +3324,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             int numberOfForegroundColors = bob.NumberOfColoredPixels;
             const int minForeColorMatch = 90;
 
-            index = 0;
             foreach (var compareItem in binOcrDb.CompareImages)
             {
                 if (compareItem.Width == target.Width && compareItem.Height == target.Height) // precise math in size
@@ -3338,10 +3335,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         {
                             if (compareItem.Text != null && (compareItem.Text == "," || compareItem.Text == "'") &&
                                 Math.Min(compareItem.Y, bob.Y) < 9 && Math.Max(compareItem.Y, bob.Y) > 30)
-                                    continue;
+                                continue;
 
                             smallestDifference = dif;
-                            smallestIndex = index;
+                            hit = compareItem;
                             if (dif < 3)
                             {
                                 break; // foreach ending
@@ -3349,12 +3346,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         }
                     }
                 }
-                index++;
             }
 
             if (smallestDifference > 1)
             {
-                index = 0;
                 foreach (var compareItem in binOcrDb.CompareImages)
                 {
                     if (compareItem.Width == target.Width && compareItem.Height == target.Height) // precise math in size
@@ -3369,7 +3364,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                                     continue;
 
                                 smallestDifference = dif;
-                                smallestIndex = index;
+                                hit = compareItem;
                                 if (dif == 0)
                                 {
                                     break; // foreach ending
@@ -3377,13 +3372,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                             }
                         }
                     }
-                    index++;
                 }
             }
 
             if (target.Width > 16 && target.Height > 16 && smallestDifference > 2) // for other than very narrow letter (like 'i' and 'l' and 'I'), try more sizes
             {
-                index = 0;
                 foreach (var compareItem in binOcrDb.CompareImages)
                 {
                     if (compareItem.Width == target.Width && compareItem.Height == target.Height - 1)
@@ -3398,18 +3391,16 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                                     continue;
 
                                 smallestDifference = dif;
-                                smallestIndex = index;
+                                hit = compareItem;
                                 if (dif == 0)
                                     break; // foreach ending
                             }
                         }
                     }
-                    index++;
                 }
 
                 if (smallestDifference > 2)
                 {
-                    index = 0;
                     foreach (var compareItem in binOcrDb.CompareImages)
                     {
                         if (compareItem.Width == target.Width && compareItem.Height == target.Height + 1)
@@ -3424,19 +3415,17 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                                         continue;
 
                                     smallestDifference = dif;
-                                    smallestIndex = index;
+                                    hit = compareItem;
                                     if (dif == 0)
                                         break; // foreach ending
                                 }
                             }
                         }
-                        index++;
                     }
                 }
 
                 if (smallestDifference > 3)
                 {
-                    index = 0;
                     foreach (var compareItem in binOcrDb.CompareImages)
                     {
                         if (compareItem.Width == target.Width + 1 && compareItem.Height == target.Height + 1)
@@ -3451,19 +3440,17 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                                         continue;
 
                                     smallestDifference = dif;
-                                    smallestIndex = index;
+                                    hit = compareItem;
                                     if (dif == 0)
                                         break; // foreach ending
                                 }
                             }
                         }
-                        index++;
                     }
                 }
 
                 if (smallestDifference > 5)
                 {
-                    index = 0;
                     foreach (var compareItem in binOcrDb.CompareImages)
                     {
                         if (compareItem.Width == target.Width - 1 && compareItem.Height == target.Height - 1)
@@ -3478,19 +3465,17 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                                         continue;
 
                                     smallestDifference = dif;
-                                    smallestIndex = index;
+                                    hit = compareItem;
                                     if (dif == 0)
                                         break; // foreach ending
                                 }
                             }
                         }
-                        index++;
                     }
                 }
 
                 if (smallestDifference > 5)
                 {
-                    index = 0;
                     foreach (var compareItem in binOcrDb.CompareImages)
                     {
                         if (compareItem.Width - 1 == target.Width && compareItem.Height == target.Height)
@@ -3505,19 +3490,17 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                                         continue;
 
                                     smallestDifference = dif;
-                                    smallestIndex = index;
+                                    hit = compareItem;
                                     if (dif == 0)
                                         break; // foreach ending
                                 }
                             }
                         }
-                        index++;
                     }
                 }
 
                 if (smallestDifference > 9 && target.Width > 11)
                 {
-                    index = 0;
                     foreach (var compareItem in binOcrDb.CompareImages)
                     {
                         if (compareItem.Width == target.Width - 2 && compareItem.Height == target.Height)
@@ -3532,19 +3515,17 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                                         continue;
 
                                     smallestDifference = dif;
-                                    smallestIndex = index;
+                                    hit = compareItem;
                                     if (dif == 0)
                                         break; // foreach ending
                                 }
                             }
                         }
-                        index++;
                     }
                 }
 
                 if (smallestDifference > 9 && target.Width > 14)
                 {
-                    index = 0;
                     foreach (var compareItem in binOcrDb.CompareImages)
                     {
                         if (compareItem.Width == target.Width - 3 && compareItem.Height == target.Height)
@@ -3559,19 +3540,17 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                                         continue;
 
                                     smallestDifference = dif;
-                                    smallestIndex = index;
+                                    hit = compareItem;
                                     if (dif == 0)
                                         break; // foreach ending
                                 }
                             }
                         }
-                        index++;
                     }
                 }
 
                 if (smallestDifference > 9 && target.Width > 14)
                 {
-                    index = 0;
                     foreach (var compareItem in binOcrDb.CompareImages)
                     {
                         if (compareItem.Width == target.Width && compareItem.Height == target.Height - 3)
@@ -3586,19 +3565,17 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                                         continue;
 
                                     smallestDifference = dif;
-                                    smallestIndex = index;
+                                    hit = compareItem;
                                     if (dif == 0)
                                         break; // foreach ending
                                 }
                             }
                         }
-                        index++;
                     }
                 }
 
                 if (smallestDifference > 9 && target.Width > 14)
                 {
-                    index = 0;
                     foreach (var compareItem in binOcrDb.CompareImages)
                     {
                         if (compareItem.Width - 2 == target.Width && compareItem.Height == target.Height)
@@ -3613,29 +3590,31 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                                         continue;
 
                                     smallestDifference = dif;
-                                    smallestIndex = index;
+                                    hit = compareItem;
                                     if (dif == 0)
                                         break; // foreach ending
                                 }
                             }
                         }
-                        index++;
                     }
                 }
             }
 
             if (smallestDifference == 0)
             {
-                if (smallestIndex > 200)
+                if (binOcrDb.CompareImages.IndexOf(hit) > 200)
                 {
-                    var hit = binOcrDb.CompareImages[smallestIndex];
-                    binOcrDb.CompareImages.RemoveAt(smallestIndex);
-                    binOcrDb.CompareImages.Insert(0, hit);
-                    smallestIndex = 0;
-                    index = 0;
+                    lock (BinOcrDbMoveFirstLock)
+                    {
+                        binOcrDb.CompareImages.Remove(hit);
+                        binOcrDb.CompareImages.Insert(0, hit);
+                        index = 0;
+                    }
                 }
             }
         }
+
+        private static readonly object BinOcrDbMoveFirstLock = new object();
 
         private static void FindBestMatch(ref int index, ref int smallestDifference, ref int smallestIndex, NikseBitmap target, List<CompareItem> compareBitmaps)
         {
