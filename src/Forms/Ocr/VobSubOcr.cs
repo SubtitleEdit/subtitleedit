@@ -21,6 +21,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
+using Nikse.SubtitleEdit.Controls;
 
 namespace Nikse.SubtitleEdit.Forms.Ocr
 {
@@ -352,6 +353,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             subtitleListView1.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
+            subtitleListView1.HideColumn(SubtitleListView.SubtitleColumn.CharactersPerSeconds);
+            subtitleListView1.HideColumn(SubtitleListView.SubtitleColumn.Actor);
+            subtitleListView1.HideColumn(SubtitleListView.SubtitleColumn.WordsPerMinute);
+            subtitleListView1.HideColumn(SubtitleListView.SubtitleColumn.Region);
             subtitleListView1.AutoSizeColumns();
 
             groupBoxImagePalette.Text = language.ImagePalette;

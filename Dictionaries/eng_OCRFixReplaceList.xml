@@ -994,8 +994,10 @@
     <Word from="ofa" to="of a" />
     <Word from="ofajudge" to="of a judge" />
     <Word from="ofall" to="of all" />
+    <Word from="Ofall" to="Of all" />
     <Word from="ofBedford" to="of Bedford" />
     <Word from="ofcourse" to="of course" />
+    <Word from="Ofcourse" to="Of course" />
     <Word from="ofeach" to="of each" />
     <Word from="ofeither" to="of either" />
     <Word from="Offioer's" to="Officer's" />
@@ -1068,6 +1070,7 @@
     <Word from="orjust" to="or just" />
     <Word from="Orjust" to="Or just" />
     <Word from="Orthat" to="Or that" />
+    <Word from="orwould" to="or would" />
     <Word from="Orwould" to="Or would" />
     <Word from="Othenzvise" to="Otherwise" />
     <Word from="our joumey" to="our journey" />
@@ -1942,6 +1945,18 @@
     <Word from="ifit's" to="if it's" />
     <Word from="ornot" to="or not" />
     <Word from="myposition" to="my position" />
+    <Word from="lndistinct" to="Indistinct" />
+    <Word from="anybiscuits" to="any biscuits" />
+    <Word from="Andifyou" to="And if you" />
+    <Word from="lfwe" to="If we" />
+    <Word from="yourarm" to="your arm" />
+    <Word from="lnteresting" to="Interesting" />
+    <Word from="findit" to="find it" />
+    <Word from="it'llstart" to="it'll start" />
+    <Word from="holdit" to="hold it" />
+    <Word from="ofkilling" to="of killing" />
+    <Word from="Howyou" to="How you" />
+    <Word from="lnhales" to="Inhales" />
   </WholeWords>
   <PartialWordsAlways>
     <!-- Will be replaced always -->
