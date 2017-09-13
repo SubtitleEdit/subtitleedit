@@ -375,6 +375,36 @@ Dialogue: 0,0:00:16.84,0:00:18.16,rechts,,0000,0000,0000,," + lineOneText;
             Assert.IsTrue(text.Contains("{\\c&H0000ff&}Previously...{\\c} :)"));
         }
 
+        [TestMethod]
+        public void AssFontEventsLast()
+        {
+            var text = @"[Script Info]
+; test
+
+[Aegisub Project Garbage]
+Last Style Storage: Default
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Segoe Script Red shadow alpha 160,Segoe Script,77,&H006EBAB4,&H0300FFFF,&H00000000,&HA00000FF,0,0,0,0,100,100,0,0,1,5,5,2,170,170,29,1
+
+[Fonts]
+fontname: AGENCYR_0.TTF
+!!%
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:00:01.80,0:00:04.93,Segoe Script Red shadow alpha 160,,0,0,0,,Die met de zuurstof\Ngezichtsbehandeling? Geweldig!
+Dialogue: 0,0:00:05.02,0:00:07.94,Segoe Script Red shadow alpha 160,,0,0,0,,Dit wordt de trip van ons leven.";
+            var target = new AdvancedSubStationAlpha();
+            var subtitle = new Subtitle();
+            target.LoadSubtitle(subtitle, text.SplitToLines().ToList(), null);
+            var output = new AdvancedSubStationAlpha().ToText(subtitle, string.Empty);
+            Assert.IsTrue(output.Contains("[Events]"));
+            Assert.AreEqual(2, subtitle.Paragraphs.Count);
+        }
+
+
         #endregion Advanced Sub Station alpha (.ass)
 
         #region Sub Station Alpha (.ssa)
