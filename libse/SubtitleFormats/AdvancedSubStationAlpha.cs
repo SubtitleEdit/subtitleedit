@@ -26,10 +26,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                 var ssa = Configuration.Settings.SubtitleSettings;
                 return "Style: Default," + ssa.SsaFontName + "," +
-                    (int)ssa.SsaFontSize + "," +
-                    GetSsaColorString(Color.FromArgb(ssa.SsaFontColorArgb)) + "," +
-                    "&H0300FFFF,&H00000000,&H02000000," + boldStyle + ",0,0,0,100,100,0,0," + borderStyle + "," + ssa.SsaOutline.ToString(CultureInfo.InvariantCulture) + "," +
-                    Configuration.Settings.SubtitleSettings.SsaShadow.ToString(CultureInfo.InvariantCulture) + ",2," + ssa.SsaMarginLeft + "," + ssa.SsaMarginRight + "," + ssa.SsaMarginTopBottom + ",1";
+                       (int)ssa.SsaFontSize + "," +
+                       GetSsaColorString(Color.FromArgb(ssa.SsaFontColorArgb)) + "," +
+                       "&H0300FFFF,&H00000000,&H02000000," + boldStyle + ",0,0,0,100,100,0,0," + borderStyle + "," + ssa.SsaOutline.ToString(CultureInfo.InvariantCulture) + "," +
+                       Configuration.Settings.SubtitleSettings.SsaShadow.ToString(CultureInfo.InvariantCulture) + ",2," + ssa.SsaMarginLeft + "," + ssa.SsaMarginRight + "," + ssa.SsaMarginTopBottom + ",1";
             }
         }
 
@@ -254,8 +254,8 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                             }
 
                             ttStyles.AppendLine(string.Format(styleFormat, ssaStyle.Name, ssaStyle.FontName, ssaStyle.FontSize, GetSsaColorString(ssaStyle.Primary), GetSsaColorString(ssaStyle.Secondary),
-                                                GetSsaColorString(ssaStyle.Outline), GetSsaColorString(ssaStyle.Background), bold, italic, underline, ssaStyle.BorderStyle, ssaStyle.OutlineWidth, ssaStyle.ShadowWidth,
-                                                newAlignment, ssaStyle.MarginLeft, ssaStyle.MarginRight, ssaStyle.MarginVertical));
+                                GetSsaColorString(ssaStyle.Outline), GetSsaColorString(ssaStyle.Background), bold, italic, underline, ssaStyle.BorderStyle, ssaStyle.OutlineWidth, ssaStyle.ShadowWidth,
+                                newAlignment, ssaStyle.MarginLeft, ssaStyle.MarginRight, ssaStyle.MarginVertical));
                             styleFound = true;
                         }
                     }
@@ -1016,7 +1016,9 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
             foreach (string line in lines)
             {
                 lineNumber++;
-                if (!eventsStarted && !fontsStarted && !graphicsStarted)
+                if (!eventsStarted && !fontsStarted && !graphicsStarted &&
+                    !line.Trim().Equals("[fonts]", StringComparison.InvariantCultureIgnoreCase) &&
+                    !line.Trim().Equals("[graphics]", StringComparison.InvariantCultureIgnoreCase))
                     header.AppendLine(line);
 
                 if (string.IsNullOrWhiteSpace(line) || line.TrimStart().StartsWith(';'))
@@ -1032,6 +1034,14 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
 
                 if (line.Trim().Equals("[events]", StringComparison.OrdinalIgnoreCase))
                 {
+                    if (header.ToString().IndexOf(Environment.NewLine + "[events]", StringComparison.OrdinalIgnoreCase) < 0)
+                    {
+                        var h = header.ToString().TrimEnd();
+                        header.Clear();
+                        header.AppendLine(h);
+                        header.AppendLine();
+                        header.AppendLine("[Events]");
+                    }
                     eventsStarted = true;
                     fontsStarted = false;
                     graphicsStarted = false;
@@ -1076,7 +1086,6 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                         indexMarginV = -1;
                         indexEffect = -1;
                         indexText = -1;
-
 
                         var format = s.Substring(8).Split(',');
                         for (int i = 0; i < format.Length; i++)
@@ -1148,7 +1157,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                             else if (i == indexEffect)
                                 effect = splittedLine[i].Trim();
                             else if (i == indexLayer)
-                                int.TryParse(splittedLine[i].Replace("Comment:", string.Empty) .Trim(), out layer);
+                                int.TryParse(splittedLine[i].Replace("Comment:", string.Empty).Trim(), out layer);
                             else if (i == indexText)
                                 text = splittedLine[i];
                             else if (i > indexText)
@@ -1202,9 +1211,9 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
             // h:mm:ss.cc
             string[] timeCode = time.Split(':', '.');
             return new TimeCode(int.Parse(timeCode[0]),
-                                int.Parse(timeCode[1]),
-                                int.Parse(timeCode[2]),
-                                int.Parse(timeCode[3]) * 10);
+                int.Parse(timeCode[1]),
+                int.Parse(timeCode[2]),
+                int.Parse(timeCode[3]) * 10);
         }
 
         public override void RemoveNativeFormatting(Subtitle subtitle, SubtitleFormat newFormat)
@@ -1270,14 +1279,14 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                             pre = s.Substring(0, 6);
                         }
                         else if (s.StartsWith("{\\an1\\", StringComparison.Ordinal) ||
-                            s.StartsWith("{\\an2\\", StringComparison.Ordinal) ||
-                            s.StartsWith("{\\an3\\", StringComparison.Ordinal) ||
-                            s.StartsWith("{\\an4\\", StringComparison.Ordinal) ||
-                            s.StartsWith("{\\an5\\", StringComparison.Ordinal) ||
-                            s.StartsWith("{\\an6\\", StringComparison.Ordinal) ||
-                            s.StartsWith("{\\an7\\", StringComparison.Ordinal) ||
-                            s.StartsWith("{\\an8\\", StringComparison.Ordinal) ||
-                            s.StartsWith("{\\an9\\", StringComparison.Ordinal))
+                                 s.StartsWith("{\\an2\\", StringComparison.Ordinal) ||
+                                 s.StartsWith("{\\an3\\", StringComparison.Ordinal) ||
+                                 s.StartsWith("{\\an4\\", StringComparison.Ordinal) ||
+                                 s.StartsWith("{\\an5\\", StringComparison.Ordinal) ||
+                                 s.StartsWith("{\\an6\\", StringComparison.Ordinal) ||
+                                 s.StartsWith("{\\an7\\", StringComparison.Ordinal) ||
+                                 s.StartsWith("{\\an8\\", StringComparison.Ordinal) ||
+                                 s.StartsWith("{\\an9\\", StringComparison.Ordinal))
                         {
                             pre = s.Substring(0, 5) + "}";
                         }
@@ -1822,7 +1831,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                         }
                     }
                     if (styleName != null && style.Name != null && (styleName.Equals(style.Name, StringComparison.OrdinalIgnoreCase) ||
-                        (styleName.Equals("*Default", StringComparison.OrdinalIgnoreCase) && style.Name.Equals("Default", StringComparison.OrdinalIgnoreCase))))
+                                                                    (styleName.Equals("*Default", StringComparison.OrdinalIgnoreCase) && style.Name.Equals("Default", StringComparison.OrdinalIgnoreCase))))
                     {
                         style.LoadedFromHeader = true;
                         return style;
