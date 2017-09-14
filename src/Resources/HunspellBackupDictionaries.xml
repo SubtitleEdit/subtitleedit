@@ -61,10 +61,10 @@
     <Description>US English Spell Checking Dictionary</Description>
   </Dictionary>
   <Dictionary>
-    <EnglishName>English (UK)</EnglishName>
-    <NativeName>English (UK)</NativeName>
-    <DownloadLink>http://ftp.nluug.nl/office/openoffice/contrib/dictionaries/en_UK.zip</DownloadLink>
-    <Description>US English Spell Checking Dictionary</Description>
+    <EnglishName>English (GB)</EnglishName>
+    <NativeName>English (GB)</NativeName>
+    <DownloadLink>http://ftp.nluug.nl/office/openoffice/contrib/dictionaries/en_GB.zip</DownloadLink>
+    <Description>GB English Spell Checking Dictionary</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>English (Canada)</EnglishName>
@@ -139,12 +139,6 @@
     <Description>Indonesian dictionary - Kamus Indonesia</Description>
   </Dictionary>
   <Dictionary>
-    <EnglishName>Interlingua</EnglishName>
-    <NativeName>Interlingua</NativeName>
-    <DownloadLink>http://ftp.nluug.nl/office/openoffice/contrib/dictionaries/ia_ANY.zip</DownloadLink>
-    <Description>Interlingua - Dictionario orthographic</Description>
-  </Dictionary>
-  <Dictionary>
     <EnglishName>Irish</EnglishName>
     <NativeName>Gaeilge</NativeName>
     <DownloadLink>http://ftp.nluug.nl/office/openoffice/contrib/dictionaries/ga_IE.zip</DownloadLink>
@@ -159,8 +153,8 @@
   <Dictionary>
     <EnglishName>Korean</EnglishName>
     <NativeName>한글</NativeName>
-    <DownloadLink>http://spellcheck-ko.googlecode.com/files/ko-aff-dic-0.5.4.zip</DownloadLink>
-    <Description>Korean spellchecker</Description>
+    <DownloadLink>https://github.com/spellcheck-ko/hunspell-dict-ko/releases/download/0.6.4/ko-aff-dic-0.6.4.zip</DownloadLink>
+    <Description>Korean spellchecker 0.6.4</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Kurdish</EnglishName>
