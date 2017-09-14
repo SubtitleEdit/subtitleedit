@@ -427,10 +427,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private void contextMenuStripAddBetterMultiMatch_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
             if (listBoxInspectItems.SelectedIndex < 0 ||
-                listBoxInspectItems.SelectedIndex == listBoxInspectItems.Items.Count - 1 ||
-                _selectedCompareBinaryOcrBitmap == null ||
+                listBoxInspectItems.SelectedIndex == listBoxInspectItems.Items.Count - 1 ||                
                 _binOcrDb == null ||
-                _selectedCompareBinaryOcrBitmap.ExpandCount > 1)
+                (_selectedCompareBinaryOcrBitmap != null &&_selectedCompareBinaryOcrBitmap.ExpandCount > 1))
             {
                 e.Cancel = true;
             }

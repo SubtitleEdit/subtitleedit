@@ -202,6 +202,7 @@
             this.Controls.Add(this.buttonImport);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.listView1);
+            this.MinimumSize = new System.Drawing.Size(800, 500);
             this.Name = "VobSubCharactersImport";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;

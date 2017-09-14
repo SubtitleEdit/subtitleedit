@@ -170,7 +170,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 dataGridView1.Font = new Font(dataGridView1.Font.FontFamily, dataGridView1.Font.Size);
                 labelItalicOn.Visible = false;
                 checkBoxItalic.Font = new Font(checkBoxItalic.Font.FontFamily, checkBoxItalic.Font.Size);
-                checkBoxItalic.ForeColor = Control.DefaultForeColor;
+                checkBoxItalic.ForeColor = DefaultForeColor;
             }
         }
 
