@@ -224,12 +224,6 @@
   <Dictionary>
     <EnglishName>Norwegian</EnglishName>
     <NativeName>Norsk</NativeName>
-    <DownloadLink>http://svn.skolelinux.org/websvn/filedetails.php?repname=skolelinux&amp;path=%2Ftrunk%2Fi18n%2Fopenoffice%2Futils%2Fdictionary-no-NO-1.0.oxt</DownloadLink>
-    <Description>Norwegian dictionaries (spell checker, thesaurus and hyphenation)</Description>
-  </Dictionary>
-  <Dictionary>
-    <EnglishName>Norwegian</EnglishName>
-    <NativeName>Norsk</NativeName>
     <DownloadLink>https://extensions.libreoffice.org/extensions/norsk-stavekontroll-bokmal-og-nynorsk/2.0.10/@@download/file/dictionary-no-no-1.0.oxt</DownloadLink>
     <Description>Norsk stavekontroll (bokmål og nynorsk) 2.0.10</Description>
   </Dictionary>
@@ -346,5 +340,23 @@
     <NativeName>Tiếng Việt</NativeName>
     <DownloadLink>http://downloads.sourceforge.net/project/aoo-extensions/917/3/vi_spellchecker_ooo3.oxt?r=http%3A%2F%2Fextensions.services.openoffice.org%2Fen%2Fproject%2Fvietnamese-spellchecker&amp;ts=1373917708&amp;use_mirror=kent</DownloadLink>
     <Description>Vietnamese SpellChecker</Description>
+  </Dictionary>
+  <Dictionary>
+    <EnglishName>Welsh (Wales)</EnglishName>
+    <NativeName>Welsh (Wales)</NativeName>
+    <DownloadLink>https://downloads.sourceforge.net/project/aoo-extensions/1583/1/geiriadur-cy.oxt</DownloadLink>
+    <Description>Xhosa spell checker</Description>
+  </Dictionary>
+  <Dictionary>
+    <EnglishName>Xhosa (South Africa)</EnglishName>
+    <NativeName>Xhosa (South Africa)</NativeName>
+    <DownloadLink>https://sourceforge.net/projects/aoo-extensions/files/3133/0/dict-xh_za-2009.10.30.oxt/download</DownloadLink>
+    <Description>Xhosa spell checker</Description>
+  </Dictionary>
+  <Dictionary>
+    <EnglishName>Zulu</EnglishName>
+    <NativeName>IsiZulu</NativeName>
+    <DownloadLink>https://sourceforge.net/projects/aoo-extensions/files/3132/3/dict-zu_za-2010.01.26.oxt/download</DownloadLink>
+    <Description>Zulu spell checker</Description>
   </Dictionary>
 </OpenOfficeDictionaries>
