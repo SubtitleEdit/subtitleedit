@@ -314,10 +314,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private bool _autoBreakLines;
 
         private int _ocrMethodTesseract = 0;
-        private int _ocrMethodImageCompare = -2; //TODO: Remove
         private int _ocrMethodModi = 2;
         private int _ocrMethodBinaryImageCompare = 1;
         private int _ocrMethodNocr = 3;
+        private int _ocrMethodImageCompare = -2; //TODO: Remove
 
         public static void SetDoubleBuffered(Control c)
         {
@@ -406,18 +406,20 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             checkBoxAutoFixCommonErrors.Text = language.FixOcrErrors;
             checkBoxRightToLeft.Text = language.RightToLeft;
             checkBoxRightToLeft.Left = numericUpDownPixelsIsSpace.Left;
+            //TODO: fix language tag labelMinLineSplitHeight.Text = 
             groupBoxOCRControls.Text = string.Empty;
 
             FillSpellCheckDictionaries();
 
             comboBoxOcrMethod.Items.Clear();
             comboBoxOcrMethod.Items.Add(language.OcrViaTesseract);
-            //            comboBoxOcrMethod.Items.Add(language.OcrViaImageCompare);
             comboBoxOcrMethod.Items.Add("Binary image compare");
             comboBoxOcrMethod.Items.Add(language.OcrViaModi);
             if (Configuration.Settings.General.ShowBetaStuff)
             {
                 comboBoxOcrMethod.Items.Add(language.OcrViaNOCR);
+                comboBoxOcrMethod.Items.Add(language.OcrViaImageCompare);
+                _ocrMethodImageCompare = 4;
             }
 
             checkBoxUseModiInTesseractForUnknownWords.Text = language.TryModiForUnknownWords;
@@ -500,6 +502,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 numericUpDownMaxErrorPct.Value = 1.1m;
             }
+            comboBoxLineSplitMinLineHeight.SelectedIndex = 0;
         }
 
         private void FillSpellCheckDictionaries()
@@ -4308,6 +4311,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 minLineHeight = _nocrLastLowercaseHeight;
             if (minLineHeight < 5)
                 minLineHeight = 6;
+            if (comboBoxLineSplitMinLineHeight.SelectedIndex > 0)
+            {
+                minLineHeight = int.Parse(comboBoxLineSplitMinLineHeight.Items[comboBoxLineSplitMinLineHeight.SelectedIndex].ToString());
+            }
             var list = NikseBitmapImageSplitter.SplitBitmapToLettersNew(parentBitmap, _numericUpDownPixelsIsSpace, checkBoxRightToLeft.Checked, Configuration.Settings.VobSubOcr.TopToBottom, minLineHeight, _ocrCount > 20 ? _ocrHeight : -1);
             int index = 0;
             bool expandSelection = false;
@@ -4995,6 +5002,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     minimumY = item.Y;
                 if (item.Y + item.NikseBitmap.Height > maximumY)
                     maximumY = item.Y + item.NikseBitmap.Height;
+                if (item.X < minimumX)
+                    minimumX = item.X;
+                if (item.X + item.NikseBitmap.Width > maximumX)
+                    maximumX = item.X + item.NikseBitmap.Width;
             }
             nbmp.CropTransparentSidesAndBottom(0, true);
             int topCropping;
@@ -6952,6 +6963,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     _ocrMethodBinaryImageCompare--;
                 if (_ocrMethodNocr > _ocrMethodModi)
                     _ocrMethodNocr--;
+                if (_ocrMethodImageCompare > _ocrMethodModi)
+                    _ocrMethodImageCompare--;
             }
         }
 
@@ -7145,6 +7158,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             LoadImageCompareBitmaps();
             if (_vobSubOcrSettings != null)
                 _vobSubOcrSettings.LastImageCompareFolder = comboBoxCharacterDatabase.SelectedItem.ToString();
+
+            bool lineWidthVisible = !comboBoxCharacterDatabase.SelectedItem.ToString().Equals("Latin", StringComparison.Ordinal);
+            labelMinLineSplitHeight.Visible = lineWidthVisible;
+            comboBoxLineSplitMinLineHeight.Visible = lineWidthVisible;
         }
 
         private void ComboBoxModiLanguageSelectedIndexChanged(object sender, EventArgs e)
