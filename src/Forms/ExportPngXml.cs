@@ -63,7 +63,8 @@ namespace Nikse.SubtitleEdit.Forms
             public int Depth3D { get; set; }
             public double FramesPerSeconds { get; set; }
             public int BottomMargin { get; set; }
-            public int LeftRightMargin { get; set; }
+            public int LeftMargin { get; set; }
+            public int RightMargin { get; set; }
             public bool Saved { get; set; }
             public ContentAlignment Alignment { get; set; }
             public Point? OverridePosition { get; set; }
@@ -299,9 +300,9 @@ namespace Nikse.SubtitleEdit.Forms
                         using (var fullSize = b.GetBitmap())
                         {
                             if (param.Alignment == ContentAlignment.BottomLeft || param.Alignment == ContentAlignment.MiddleLeft || param.Alignment == ContentAlignment.TopLeft)
-                                left = param.LeftRightMargin;
+                                left = param.LeftMargin;
                             else if (param.Alignment == ContentAlignment.BottomRight || param.Alignment == ContentAlignment.MiddleRight || param.Alignment == ContentAlignment.TopRight)
-                                left = param.ScreenWidth - param.Bitmap.Width - param.LeftRightMargin;
+                                left = param.ScreenWidth - param.Bitmap.Width - param.RightMargin;
                             if (param.Alignment == ContentAlignment.TopLeft || param.Alignment == ContentAlignment.TopCenter || param.Alignment == ContentAlignment.TopRight)
                                 top = param.BottomMargin;
                             if (param.Alignment == ContentAlignment.MiddleLeft || param.Alignment == ContentAlignment.MiddleCenter || param.Alignment == ContentAlignment.MiddleRight)
@@ -327,7 +328,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else
             {
-                param.Buffer = BluRaySupPicture.CreateSupFrame(brSub, param.Bitmap, param.FramesPerSeconds, param.BottomMargin, param.LeftRightMargin, param.Alignment, param.OverridePosition);
+                param.Buffer = BluRaySupPicture.CreateSupFrame(brSub, param.Bitmap, param.FramesPerSeconds, param.BottomMargin, param.LeftMargin, param.Alignment, param.OverridePosition);
             }
         }
 
@@ -352,7 +353,8 @@ namespace Nikse.SubtitleEdit.Forms
                 Bitmap = null,
                 FramesPerSeconds = FrameRate,
                 BottomMargin = GetBottomMarginInPixels(p),
-                LeftRightMargin = GetLeftRightMarginInPixels(p),
+                LeftMargin = GetLeftMarginInPixels(p),
+                RightMargin = GetRightMarginInPixels(p),
                 Saved = false,
                 Alignment = ContentAlignment.BottomCenter,
                 Type3D = comboBox3D.SelectedIndex,
@@ -528,7 +530,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (_exportType == ExportFormats.BluraySup)
                     binarySubtitleFile = new FileStream(saveFileDialog1.FileName, FileMode.Create);
                 else if (_exportType == ExportFormats.VobSub)
-                    vobSubWriter = new VobSubWriter(saveFileDialog1.FileName, width, height, GetBottomMarginInPixels(p), GetLeftRightMarginInPixels(p), 32, _subtitleColor, _borderColor, !checkBoxTransAntiAliase.Checked, (DvdSubtitleLanguage)comboBoxLanguage.SelectedItem);
+                    vobSubWriter = new VobSubWriter(saveFileDialog1.FileName, width, height, GetBottomMarginInPixels(p), GetLeftMarginInPixels(p), 32, _subtitleColor, _borderColor, !checkBoxTransAntiAliase.Checked, (DvdSubtitleLanguage)comboBoxLanguage.SelectedItem);
 
                 progressBar1.Value = 0;
                 progressBar1.Maximum = _subtitle.Paragraphs.Count - 1;
@@ -1162,9 +1164,9 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                     using (var fullSize = b.GetBitmap())
                                     {
                                         if (param.Alignment == ContentAlignment.BottomLeft || param.Alignment == ContentAlignment.MiddleLeft || param.Alignment == ContentAlignment.TopLeft)
-                                            left = param.LeftRightMargin;
+                                            left = param.LeftMargin;
                                         else if (param.Alignment == ContentAlignment.BottomRight || param.Alignment == ContentAlignment.MiddleRight || param.Alignment == ContentAlignment.TopRight)
-                                            left = param.ScreenWidth - param.Bitmap.Width - param.LeftRightMargin;
+                                            left = param.ScreenWidth - param.Bitmap.Width - param.RightMargin;
                                         if (param.Alignment == ContentAlignment.TopLeft || param.Alignment == ContentAlignment.TopCenter || param.Alignment == ContentAlignment.TopRight)
                                             top = param.BottomMargin;
                                         if (param.Alignment == ContentAlignment.MiddleLeft || param.Alignment == ContentAlignment.MiddleCenter || param.Alignment == ContentAlignment.MiddleRight)
@@ -1203,9 +1205,9 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                             int left = (param.ScreenWidth - param.Bitmap.Width) / 2;
 
                             if (param.Alignment == ContentAlignment.BottomLeft || param.Alignment == ContentAlignment.MiddleLeft || param.Alignment == ContentAlignment.TopLeft)
-                                left = param.LeftRightMargin;
+                                left = param.LeftMargin;
                             else if (param.Alignment == ContentAlignment.BottomRight || param.Alignment == ContentAlignment.MiddleRight || param.Alignment == ContentAlignment.TopRight)
-                                left = param.ScreenWidth - param.Bitmap.Width - param.LeftRightMargin;
+                                left = param.ScreenWidth - param.Bitmap.Width - param.RightMargin;
                             if (param.Alignment == ContentAlignment.TopLeft || param.Alignment == ContentAlignment.TopCenter || param.Alignment == ContentAlignment.TopRight)
                                 top = param.BottomMargin;
                             if (param.Alignment == ContentAlignment.MiddleLeft || param.Alignment == ContentAlignment.MiddleCenter || param.Alignment == ContentAlignment.MiddleRight)
@@ -1350,9 +1352,9 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                     outBitmap = b.GetBitmap();
                                     {
                                         if (param.Alignment == ContentAlignment.BottomLeft || param.Alignment == ContentAlignment.MiddleLeft || param.Alignment == ContentAlignment.TopLeft)
-                                            left = param.LeftRightMargin;
+                                            left = param.LeftMargin;
                                         else if (param.Alignment == ContentAlignment.BottomRight || param.Alignment == ContentAlignment.MiddleRight || param.Alignment == ContentAlignment.TopRight)
-                                            left = param.ScreenWidth - param.Bitmap.Width - param.LeftRightMargin;
+                                            left = param.ScreenWidth - param.Bitmap.Width - param.RightMargin;
                                         if (param.Alignment == ContentAlignment.TopLeft || param.Alignment == ContentAlignment.TopCenter || param.Alignment == ContentAlignment.TopRight)
                                             top = param.BottomMargin;
                                         if (param.Alignment == ContentAlignment.MiddleLeft || param.Alignment == ContentAlignment.MiddleCenter || param.Alignment == ContentAlignment.MiddleRight)
@@ -1457,9 +1459,9 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         int top = param.ScreenHeight - (param.Bitmap.Height + param.BottomMargin);
                         int left = (param.ScreenWidth - param.Bitmap.Width) / 2;
                         if (param.Alignment == ContentAlignment.BottomLeft || param.Alignment == ContentAlignment.MiddleLeft || param.Alignment == ContentAlignment.TopLeft)
-                            left = param.LeftRightMargin;
+                            left = param.LeftMargin;
                         else if (param.Alignment == ContentAlignment.BottomRight || param.Alignment == ContentAlignment.MiddleRight || param.Alignment == ContentAlignment.TopRight)
-                            left = param.ScreenWidth - param.Bitmap.Width - param.LeftRightMargin;
+                            left = param.ScreenWidth - param.Bitmap.Width - param.RightMargin;
                         if (param.Alignment == ContentAlignment.TopLeft || param.Alignment == ContentAlignment.TopCenter || param.Alignment == ContentAlignment.TopRight)
                             top = param.BottomMargin;
                         if (param.Alignment == ContentAlignment.MiddleLeft || param.Alignment == ContentAlignment.MiddleCenter || param.Alignment == ContentAlignment.MiddleRight)
@@ -3813,7 +3815,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             }
         }
 
-        private int GetLeftRightMarginInPixels(Paragraph p)
+        private int GetLeftMarginInPixels(Paragraph p)
         {
             if (p != null && !string.IsNullOrEmpty(p.Extra) && _formatName == AdvancedSubStationAlpha.NameOfFormat || _formatName == SubStationAlpha.NameOfFormat)
             {
@@ -3834,6 +3836,18 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 return int.Parse(s);
             }
         }
+
+        private int GetRightMarginInPixels(Paragraph p)
+        {
+            if (p != null && !string.IsNullOrEmpty(p.Extra) && _formatName == AdvancedSubStationAlpha.NameOfFormat || _formatName == SubStationAlpha.NameOfFormat)
+            {
+                var style = AdvancedSubStationAlpha.GetSsaStyle(p.Extra, _subtitle.Header);
+                return style.MarginRight;
+            }
+            return GetLeftMarginInPixels(p);
+        }
+
+
 
         private void GeneratePreview()
         {
@@ -3885,9 +3899,9 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     if (comboBoxLeftRightMargin.Visible)
                     {
                         if (alignment == ContentAlignment.BottomLeft || alignment == ContentAlignment.MiddleLeft || alignment == ContentAlignment.TopLeft)
-                            pictureBox1.Left = GetLeftRightMarginInPixels(p);
+                            pictureBox1.Left = GetLeftMarginInPixels(p);
                         else if (alignment == ContentAlignment.BottomRight || alignment == ContentAlignment.MiddleRight || alignment == ContentAlignment.TopRight)
-                            pictureBox1.Left = w - bmp.Width - GetLeftRightMarginInPixels(p);
+                            pictureBox1.Left = w - bmp.Width - GetRightMarginInPixels(p);
                     }
 
                     if (alignment == ContentAlignment.MiddleLeft || alignment == ContentAlignment.MiddleCenter || alignment == ContentAlignment.MiddleRight)
@@ -3907,7 +3921,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 {
                     pictureBox1.SizeMode = PictureBoxSizeMode.Normal;
                 }
-                groupBoxExportImage.Text = string.Format("{0}x{1}", bmp.Width, bmp.Height);
+                groupBoxExportImage.Text = $"{bmp.Width}x{bmp.Height}";
                 if (!string.IsNullOrEmpty(mbp.Error))
                 {
                     groupBoxExportImage.BackColor = Color.Red;
