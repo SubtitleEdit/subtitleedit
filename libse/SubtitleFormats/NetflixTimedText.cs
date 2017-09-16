@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 using System.Xml;
-using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
@@ -295,8 +294,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             base.LoadSubtitle(subtitle, lines, fileName);
 
             // Remove regions
-            subtitle.Paragraphs.ForEach(p => 
-                p.Text = Regex.Replace(p.Text, @"^({\\an[1-9]})", string.Empty));
+            //Will loose top/bottom alignment: subtitle.Paragraphs.ForEach(p => p.Text = Regex.Replace(p.Text, @"^({\\an[1-9]})", string.Empty));
         }
 
         public override bool HasStyleSupport

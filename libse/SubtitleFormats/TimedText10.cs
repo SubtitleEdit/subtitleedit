@@ -1208,43 +1208,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     bool top = false;
                     foreach (XmlNode styleNode in node.ChildNodes)
                     {
-                        if (styleNode.Attributes != null)
-                        {
-                            var origin = string.Empty;
-                            if (styleNode.Attributes["tts:origin"] != null)
-                                origin = styleNode.Attributes["tts:origin"].Value;
-                            else if (styleNode.Attributes["origin"] != null)
-                                origin = styleNode.Attributes["origin"].Value;
-                            var arr = origin.Split(' ');
-                            if (arr.Length == 2 && arr[0].EndsWith("%", StringComparison.Ordinal) && arr[1].EndsWith("%", StringComparison.Ordinal))
-                            {
-                                var n1 = Convert.ToDouble(arr[0].TrimEnd('%'), CultureInfo.InvariantCulture);
-                                var n2 = Convert.ToDouble(arr[1].TrimEnd('%'), CultureInfo.InvariantCulture);
-                                if (Math.Abs(n1 - 10) < 2 && Math.Abs(n2 - 10) < 5)
-                                {
-                                    top = true;
-                                }
-                            }
-                        }
+                        top = GetIfTopAligned(styleNode);
+                        if (top)
+                            break;
                     }
 
                     if (!top && node.Attributes != null)
                     {
-                        var origin = string.Empty;
-                        if (node.Attributes["tts:origin"] != null)
-                            origin = node.Attributes["tts:origin"].Value;
-                        else if (node.Attributes["origin"] != null)
-                            origin = node.Attributes["origin"].Value;
-                        var arr = origin.Split(' ');
-                        if (arr.Length == 2 && arr[0].EndsWith("%", StringComparison.Ordinal) && arr[1].EndsWith("%", StringComparison.Ordinal))
-                        {
-                            var n1 = Convert.ToDouble(arr[0].TrimEnd('%'), CultureInfo.InvariantCulture);
-                            var n2 = Convert.ToDouble(arr[1].TrimEnd('%'), CultureInfo.InvariantCulture);
-                            if (Math.Abs(n1 - 10) < 2 && Math.Abs(n2 - 10) < 5)
-                            {
-                                top = true;
-                            }
-                        }
+                        top = GetIfTopAligned(node);
                     }
 
                     if (top)
@@ -1260,6 +1231,49 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
             }
             return list;
+        }
+
+        private static bool GetIfTopAligned(XmlNode styleNode)
+        {
+            if (styleNode?.Attributes == null)
+                return false;
+
+            var origin = string.Empty;
+            if (styleNode.Attributes["tts:origin"] != null)
+                origin = styleNode.Attributes["tts:origin"].Value;
+            else if (styleNode.Attributes["origin"] != null)
+                origin = styleNode.Attributes["origin"].Value;
+            var originArr = origin.Split(' ');
+
+            var extent = string.Empty;
+            if (styleNode.Attributes["tts:extent"] != null)
+                extent = styleNode.Attributes["tts:extent"].Value;
+            else if (styleNode.Attributes["extent"] != null)
+                extent = styleNode.Attributes["extent"].Value;
+            var extentArr = extent.Split(' ');
+
+            var displayAlign = string.Empty;
+            if (styleNode.Attributes["tts:displayAlign"] != null)
+                displayAlign = styleNode.Attributes["tts:displayAlign"].Value;
+            else if (styleNode.Attributes["displayAlign"] != null)
+                displayAlign = styleNode.Attributes["displayAlign"].Value;
+
+            if (originArr.Length == 2 && originArr[0].EndsWith("%", StringComparison.Ordinal) && originArr[1].EndsWith("%", StringComparison.Ordinal) &&
+                extentArr.Length == 2 && extentArr[0].EndsWith("%", StringComparison.Ordinal) && extentArr[1].EndsWith("%", StringComparison.Ordinal) &&
+                !string.IsNullOrEmpty(displayAlign))
+            {
+                var yPos = Convert.ToDouble(originArr[1].TrimEnd('%'), CultureInfo.InvariantCulture);
+                var yExtent = Convert.ToDouble(extentArr[1].TrimEnd('%'), CultureInfo.InvariantCulture);
+                if (yPos <= 15 && yExtent < 40)
+                {
+                    return true;
+                }
+                else if (yPos <= 25 && displayAlign == "before") // before = top align
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         public static List<string> GetUsedLanguages(Subtitle subtitle)
