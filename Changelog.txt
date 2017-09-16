@@ -49,7 +49,6 @@
    * Fix ASS font tag with space - thx OmarSi
    * Fix possible crash in expand ocr match - thx Zoltán
    * Allow for large unknown subtitle formats - thx Stefania
-   * Fix shadow when exporting ASS/SSA to images - thx von Suppé
    * Fix auto-detect Arabic encoding - thx OmarSi
    * Fix time code reading for format FCP/Image - thx BeoZeBold
    * Keep styles from ttml draft to ASS - thx Bill
@@ -59,6 +58,9 @@
    * Fix waveform performance for long texts - thx Skrity
    * Improve handling of advanced ASS tags - thx Skrity
    * Improve handling of zlib compression in Matroska - thx mkver
+   * Fix some broken spell check dictionary links
+   * Fix reading of ASSA with not normal section order - thx von Suppé
+   * Fix some ASSA issues in export to images - thx von Suppé
 
 
 3.5.3 (12th May 2017)
