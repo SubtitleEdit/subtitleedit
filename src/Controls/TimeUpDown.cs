@@ -142,8 +142,10 @@ namespace Nikse.SubtitleEdit.Controls
                 if (string.IsNullOrWhiteSpace(maskedTextBox1.Text.Replace(".", string.Empty).Replace(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, string.Empty).Replace(",", string.Empty).Replace(":", string.Empty)))
                     return TimeCode.MaxTime;
 
+
                 string startTime = maskedTextBox1.Text;
-                startTime = startTime.Replace(' ', '0');
+                bool isNegative = startTime.StartsWith('-');
+                startTime = startTime.TrimStart('-').Replace(' ', '0');
                 if (Mode == TimeMode.HHMMSSMS)
                 {
                     if (startTime.EndsWith(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, StringComparison.Ordinal))
@@ -175,7 +177,7 @@ namespace Nikse.SubtitleEdit.Controls
                             tc.TotalMilliseconds -= Configuration.Settings.General.CurrentVideoOffsetInMs;
                         }
 
-                        if (hours < 0 && tc.TotalMilliseconds > 0)
+                        if (isNegative)
                             tc.TotalMilliseconds *= -1;
                         return tc;
                     }
@@ -211,6 +213,8 @@ namespace Nikse.SubtitleEdit.Controls
                             tc.TotalMilliseconds -= Configuration.Settings.General.CurrentVideoOffsetInMs;
                         }
 
+                        if (isNegative)
+                            tc.TotalMilliseconds *= -1;
                         return tc;
                     }
                 }
