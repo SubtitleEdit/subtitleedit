@@ -337,6 +337,7 @@
             0,
             0});
             this.numericUpDownLineSpacing.ValueChanged += new System.EventHandler(this.numericUpDownLineSpacing_ValueChanged);
+            this.numericUpDownLineSpacing.KeyUp += new System.Windows.Forms.KeyEventHandler(this.numericUpDownLineSpacing_KeyUp);
             // 
             // numericUpDownShadowTransparency
             // 

@@ -134,7 +134,7 @@
             this.pACScreenElectronicsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.uniPacExportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.plainTextToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemSpumux = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemExportUltech130 = new System.Windows.Forms.ToolStripMenuItem();
             this.vobSubsubidxToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparatorExportCustomText = new System.Windows.Forms.ToolStripSeparator();
@@ -1229,7 +1229,7 @@
             this.pACScreenElectronicsToolStripMenuItem,
             this.uniPacExportToolStripMenuItem,
             this.plainTextToolStripMenuItem,
-            this.toolStripMenuItem2,
+            this.toolStripMenuItemSpumux,
             this.toolStripMenuItemExportUltech130,
             this.vobSubsubidxToolStripMenuItem,
             this.toolStripSeparatorExportCustomText,
@@ -1393,12 +1393,12 @@
             this.plainTextToolStripMenuItem.Text = "Plain text...";
             this.plainTextToolStripMenuItem.Click += new System.EventHandler(this.PlainTextToolStripMenuItemClick);
             // 
-            // toolStripMenuItem2
+            // toolStripMenuItemSpumux
             // 
-            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(258, 22);
-            this.toolStripMenuItem2.Text = "Spumux...";
-            this.toolStripMenuItem2.Click += new System.EventHandler(this.toolStripMenuItem2_Click);
+            this.toolStripMenuItemSpumux.Name = "toolStripMenuItemSpumux";
+            this.toolStripMenuItemSpumux.Size = new System.Drawing.Size(258, 22);
+            this.toolStripMenuItemSpumux.Text = "Spumux...";
+            this.toolStripMenuItemSpumux.Click += new System.EventHandler(this.toolStripMenuItem2_Click);
             // 
             // toolStripMenuItemExportUltech130
             // 
@@ -5073,7 +5073,7 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemBatchConvert;
         private System.Windows.Forms.ToolStripMenuItem copyOriginalTextToCurrentToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemMergeDuplicateText;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem2;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSpumux;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemWebVTT;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemWebVttVoice;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparatorWebVTT;
