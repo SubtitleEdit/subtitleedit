@@ -538,15 +538,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
             System.Threading.Thread.Sleep(1000);
             subtitleListView1.SelectedIndexChanged -= SubtitleListView1SelectedIndexChanged;
+            textBoxCurrentText.TextChanged -= TextBoxCurrentTextTextChanged;
+
             for (int i = 0; i < max; i++)
             {
-                Application.DoEvents();
-                if (_abort)
-                {
-                    SetButtonsEnabledAfterOcrDone();
-                    return;
-                }
-
+                _selectedIndex = i;
                 subtitleListView1.SelectIndexAndEnsureVisible(i);
 
                 string text = OcrViaTesseract(GetSubtitleBitmap(i), i);
@@ -574,27 +570,20 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         text = Utilities.AutoBreakLine(text);
                 }
 
-                Application.DoEvents();
-                if (_abort)
-                {
-                    textBoxCurrentText.Text = text;
-                    SetButtonsEnabledAfterOcrDone();
-                    return;
-                }
-
                 text = text.Trim();
                 text = text.Replace("  ", " ");
                 text = text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
                 text = text.Replace("  ", " ");
                 text = text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
 
-                Paragraph p = _subtitle.GetParagraphOrDefault(i);
-                if (p != null)
-                    p.Text = text;
-                if (subtitleListView1.SelectedItems.Count == 1 && subtitleListView1.SelectedItems[0].Index == i)
-                    textBoxCurrentText.Text = text;
-                else
-                    subtitleListView1.SetText(i, text);
+                _subtitle.Paragraphs[i].Text = text;
+
+                Application.DoEvents();
+                if (_abort)
+                {
+                    SetButtonsEnabledAfterOcrDone();
+                    return;
+                }
             }
             SetButtonsEnabledAfterOcrDone();
         }
@@ -742,8 +731,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
             System.Threading.Thread.Sleep(1000);
             subtitleListView1.SelectedIndexChanged -= SubtitleListView1SelectedIndexChanged;
+            textBoxCurrentText.TextChanged -= TextBoxCurrentTextTextChanged;
             for (int i = 0; i < max; i++)
             {
+                _selectedIndex = i;
                 Application.DoEvents();
                 if (_abort)
                 {
@@ -776,23 +767,21 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         text = Utilities.AutoBreakLine(text);
                 }
 
-                Application.DoEvents();
-                if (_abort)
-                {
-                    textBoxCurrentText.Text = text;
-                    SetButtonsEnabledAfterOcrDone();
-                    return;
-                }
-
                 text = text.Trim();
                 text = text.Replace("  ", " ");
                 text = text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
                 text = text.Replace("  ", " ");
                 text = text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
 
-                Paragraph p = _subtitle.GetParagraphOrDefault(i);
-                if (p != null)
-                    p.Text = text;
+                _subtitle.Paragraphs[i].Text = text;
+
+                Application.DoEvents();
+                if (_abort)
+                {
+                    SetButtonsEnabledAfterOcrDone();
+                    return;
+                }
+
             }
         }
 
