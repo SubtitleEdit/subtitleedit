@@ -68,6 +68,8 @@ namespace Nikse.SubtitleEdit.Forms
                             sb.Append(Pac.GetHebrewString(_previewBuffer, ref index));
                         else if (CodePageIndex == Pac.CodePageCyrillic)
                             sb.Append(Pac.GetCyrillicString(_previewBuffer, ref index));
+                        else if (CodePageIndex == Pac.CodePageGreek)
+                            sb.Append(Pac.GetGreekString(_previewBuffer, ref index));
                         else
                             sb.Append(encoding.GetString(_previewBuffer, index, 1));
 

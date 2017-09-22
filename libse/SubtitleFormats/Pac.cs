@@ -433,6 +433,216 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             { 0x20, new SpecialCharacter(" ")}
         };
 
+        private static readonly Dictionary<int, SpecialCharacter> GreekCodes = new Dictionary<int, SpecialCharacter>
+        {
+            { 0x20, new SpecialCharacter(" ") },
+            { 0x21, new SpecialCharacter("!") },
+            { 0x22, new SpecialCharacter("\"") },
+            { 0x23, new SpecialCharacter("£") },
+            { 0x24, new SpecialCharacter("$") },
+            { 0x25, new SpecialCharacter("%") },
+            { 0x26, new SpecialCharacter("&") },
+            { 0x27, new SpecialCharacter("'") },
+            { 0x28, new SpecialCharacter("(") },
+            { 0x29, new SpecialCharacter(")") },
+            { 0x2A, new SpecialCharacter("*") },
+            { 0x2C, new SpecialCharacter(",") },
+            { 0x2E, new SpecialCharacter(".") },
+            { 0x2F, new SpecialCharacter("/") },
+            { 0x3A, new SpecialCharacter(":") },
+            { 0x3B, new SpecialCharacter(";") },
+            { 0x3D, new SpecialCharacter("=") },
+            { 0x3F, new SpecialCharacter("?") },
+            { 0x40, new SpecialCharacter("@") },
+            { 0x41, new SpecialCharacter("A") },
+            { 0x42, new SpecialCharacter("Β") },
+            { 0x43, new SpecialCharacter("Γ") },
+            { 0x44, new SpecialCharacter("Δ") },
+            { 0x45, new SpecialCharacter("E") },
+            { 0x46, new SpecialCharacter("Ζ") },
+            { 0x47, new SpecialCharacter("Η") },
+            { 0x48, new SpecialCharacter("Θ") },
+            { 0x49, new SpecialCharacter("Ι") },
+            { 0x4A, new SpecialCharacter("Κ") },
+            { 0x4B, new SpecialCharacter("Λ") },
+            { 0x4C, new SpecialCharacter("Μ") },
+            { 0x4D, new SpecialCharacter("Ν") },
+            { 0x4E, new SpecialCharacter("Ξ") },
+            { 0x4F, new SpecialCharacter("Ο") },
+            { 0x50, new SpecialCharacter("Π") },
+            { 0x51, new SpecialCharacter("Ρ") },
+
+            { 0x53, new SpecialCharacter("Σ") },
+            { 0x54, new SpecialCharacter("T") },
+            { 0x55, new SpecialCharacter("Υ") },
+            { 0x56, new SpecialCharacter("Φ") },
+            { 0x57, new SpecialCharacter("Χ") },
+            { 0x58, new SpecialCharacter("Ψ") },
+            { 0x59, new SpecialCharacter("Ω") },
+
+            { 0x5F, new SpecialCharacter("-") },
+
+            { 0x61, new SpecialCharacter("α") },
+            { 0x62, new SpecialCharacter("β") },
+            { 0x63, new SpecialCharacter("γ") },
+            { 0x64, new SpecialCharacter("δ") },
+            { 0x65, new SpecialCharacter("ε") },
+            { 0x66, new SpecialCharacter("ζ") },
+            { 0x67, new SpecialCharacter("η") },
+            { 0x68, new SpecialCharacter("θ") },
+            { 0x69, new SpecialCharacter("ι") },
+            { 0x6A, new SpecialCharacter("κ") },
+            { 0x6B, new SpecialCharacter("λ") },
+            { 0x6C, new SpecialCharacter("μ") },
+            { 0x6D, new SpecialCharacter("ν") },
+            { 0x6E, new SpecialCharacter("ξ") },
+            { 0x6F, new SpecialCharacter("ο") },
+            { 0x70, new SpecialCharacter("π") },
+            { 0x71, new SpecialCharacter("ρ") },
+            { 0x72, new SpecialCharacter("ς") },
+            { 0x73, new SpecialCharacter("σ") },
+            { 0x74, new SpecialCharacter("τ") },
+            { 0x75, new SpecialCharacter("υ") },
+            { 0x76, new SpecialCharacter("φ") },
+            { 0x77, new SpecialCharacter("χ") },
+            { 0x78, new SpecialCharacter("ψ") },
+            { 0x79, new SpecialCharacter("ω") },
+            { 0x80, new SpecialCharacter("#") },
+            { 0x81, new SpecialCharacter("ß") },
+            { 0x82, new SpecialCharacter("²") },
+            { 0x83, new SpecialCharacter("³") },
+            { 0x84, new SpecialCharacter("½") },
+            { 0x85, new SpecialCharacter("ŧ") },
+            { 0x86, new SpecialCharacter("Ŧ") },
+            { 0x87, new SpecialCharacter("þ") },
+            { 0x88, new SpecialCharacter("Þ") },
+            { 0x89, new SpecialCharacter("ð") },
+
+            { 0x8C, new SpecialCharacter("A") },
+            { 0x8D, new SpecialCharacter("B") },
+            { 0x8E, new SpecialCharacter("C") },
+            { 0x8F, new SpecialCharacter("D") },
+            { 0x90, new SpecialCharacter("E") },
+            { 0x91, new SpecialCharacter("F") },
+            { 0x92, new SpecialCharacter("G") },
+            { 0x93, new SpecialCharacter("H") },
+            { 0x94, new SpecialCharacter("I") },
+            { 0x95, new SpecialCharacter("J") },
+            { 0x96, new SpecialCharacter("K") },
+            { 0x97, new SpecialCharacter("L") },
+            { 0x98, new SpecialCharacter("M") },
+            { 0x99, new SpecialCharacter("N") },
+            { 0x9A, new SpecialCharacter("O") },
+            { 0x9B, new SpecialCharacter("P") },
+            { 0x9C, new SpecialCharacter("Q") },
+            { 0x9D, new SpecialCharacter("R") },
+            { 0x9E, new SpecialCharacter("S") },
+            { 0x9F, new SpecialCharacter("T") },
+            { 0xA0, new SpecialCharacter("U") },
+            { 0xA1, new SpecialCharacter("V") },
+            { 0xA2, new SpecialCharacter("W") },
+            { 0xA3, new SpecialCharacter("X") },
+            { 0xA4, new SpecialCharacter("Y") },
+            { 0xA5, new SpecialCharacter("Z") },
+            { 0xAC, new SpecialCharacter("a") },
+            { 0xAD, new SpecialCharacter("b") },
+            { 0xAE, new SpecialCharacter("c") },
+            { 0xAF, new SpecialCharacter("d") },
+            { 0xB0, new SpecialCharacter("e") },
+            { 0xB1, new SpecialCharacter("f") },
+            { 0xB2, new SpecialCharacter("g") },
+            { 0xB3, new SpecialCharacter("h") },
+            { 0xB4, new SpecialCharacter("i") },
+            { 0xB5, new SpecialCharacter("j") },
+            { 0xB6, new SpecialCharacter("k") },
+            { 0xB7, new SpecialCharacter("l") },
+            { 0xB8, new SpecialCharacter("m") },
+            { 0xB9, new SpecialCharacter("n") },
+            { 0xBA, new SpecialCharacter("o") },
+            { 0xBB, new SpecialCharacter("p") },
+            { 0xBC, new SpecialCharacter("q") },
+            { 0xBD, new SpecialCharacter("r") },
+            { 0xBE, new SpecialCharacter("s") },
+            { 0xBF, new SpecialCharacter("t") },
+            { 0xC0, new SpecialCharacter("u") },
+            { 0xC1, new SpecialCharacter("v") },
+            { 0xC2, new SpecialCharacter("w") },
+            { 0xC3, new SpecialCharacter("x") },
+            { 0xC4, new SpecialCharacter("y") },
+            { 0xC5, new SpecialCharacter("z") },
+
+            { 0x202A, new SpecialCharacter("®") },
+            { 0xE241, new SpecialCharacter("Ά") },
+            { 0xE242, new SpecialCharacter("Β́") },
+            { 0xE243, new SpecialCharacter("Γ́") },
+            { 0xE244, new SpecialCharacter("Δ́") },
+            { 0xE245, new SpecialCharacter("Έ") },
+            { 0xE246, new SpecialCharacter("Ζ́") },
+            { 0xE247, new SpecialCharacter("Ή") },
+            { 0xE248, new SpecialCharacter("Θ́") },
+            { 0xE249, new SpecialCharacter("Ί") },
+            { 0xE24A, new SpecialCharacter("Κ́") },
+            { 0xE24B, new SpecialCharacter("Λ́") },
+            { 0xE24C, new SpecialCharacter("Μ́") },
+            { 0xE24D, new SpecialCharacter("Ν́") },
+            { 0xE24E, new SpecialCharacter("Ξ́") },
+            { 0xE24F, new SpecialCharacter("Ό") },
+            { 0xE258, new SpecialCharacter("Ψ́") },
+            { 0xE259, new SpecialCharacter("Ώ") },
+            { 0xE261, new SpecialCharacter("ά") },
+            { 0xE262, new SpecialCharacter("β́") },
+            { 0xE263, new SpecialCharacter("γ́") },
+            { 0xE264, new SpecialCharacter("δ́") },
+            { 0xE265, new SpecialCharacter("έ") },
+            { 0xE266, new SpecialCharacter("ζ") },
+            { 0xE267, new SpecialCharacter("ή") },
+            { 0xE268, new SpecialCharacter("θ́") },
+            { 0xE269, new SpecialCharacter("ί") },
+            { 0xE26A, new SpecialCharacter("κ́") },
+            { 0xE26B, new SpecialCharacter("λ́") },
+            { 0xE26C, new SpecialCharacter("μ́") },
+            { 0xE26D, new SpecialCharacter("ν́") },
+            { 0xE26E, new SpecialCharacter("ξ") },
+            { 0xE26F, new SpecialCharacter("ό") },
+            { 0xE270, new SpecialCharacter("π") },
+            { 0xE271, new SpecialCharacter("ρ́") },
+            { 0xE272, new SpecialCharacter("ς́") },
+            { 0xE273, new SpecialCharacter("σ́") },
+            { 0xE274, new SpecialCharacter("τ́") },
+            { 0xE275, new SpecialCharacter("ύ") },
+            { 0xE276, new SpecialCharacter("φ́") },
+            { 0xE277, new SpecialCharacter("χ́") },
+            { 0xE278, new SpecialCharacter("ψ́") },
+            { 0xE279, new SpecialCharacter("ώ") },
+            { 0xE27B, new SpecialCharacter("ί") },
+            { 0xE561, new SpecialCharacter("α̈") },
+            { 0xE562, new SpecialCharacter("β̈") },
+            { 0xE563, new SpecialCharacter("γ̈") },
+            { 0xE564, new SpecialCharacter("δ̈") },
+            { 0xE565, new SpecialCharacter("ε̈") },
+            { 0xE566, new SpecialCharacter("ζ̈") },
+            { 0xE567, new SpecialCharacter("η̈") },
+            { 0xE568, new SpecialCharacter("θ̈") },
+            { 0xE569, new SpecialCharacter("ΐ") },
+            { 0xE56A, new SpecialCharacter("κ̈") },
+            { 0xE56B, new SpecialCharacter("λ̈") },
+            { 0xE56C, new SpecialCharacter("μ̈") },
+            { 0xE56D, new SpecialCharacter("ν̈") },
+            { 0xE56E, new SpecialCharacter("ξ̈") },
+            { 0xE56F, new SpecialCharacter("ο̈") },
+            { 0xE570, new SpecialCharacter("π̈") },
+            { 0xE571, new SpecialCharacter("ρ") },
+            { 0xE572, new SpecialCharacter("ς̈") },
+            { 0xE573, new SpecialCharacter("σ̈") },
+            { 0xE574, new SpecialCharacter("τ̈") },
+            { 0xE575, new SpecialCharacter("ϋ") },
+            { 0xE576, new SpecialCharacter("φ̈") },
+            { 0xE577, new SpecialCharacter("χ̈") },
+            { 0xE578, new SpecialCharacter("ψ̈") },
+            { 0xE579, new SpecialCharacter("ω̈") },
+            { 0xE57B, new SpecialCharacter("ϊ") },
+        };
+
         private string _fileName = string.Empty;
 
         public int CodePage { get; set; } = -1;
@@ -524,6 +734,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 textBuffer = GetLatinBytes(encoding, text, alignment);
             else if (CodePage == CodePageCyrillic)
                 textBuffer = GetCyrillicBytes(text, alignment);
+            else if (CodePage == CodePageGreek)
+                textBuffer = GetGreekBytes(text, alignment);
             else if (CodePage == CodePageChineseTraditional)
                 textBuffer = GetW16Bytes(text, alignment, EncodingChineseTraditional);
             else if (CodePage == CodePageChineseSimplified)
@@ -816,6 +1028,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     sb.Append(GetHebrewString(buffer, ref index));
                 else if (CodePage == CodePageCyrillic)
                     sb.Append(GetCyrillicString(buffer, ref index));
+                else if (CodePage == CodePageGreek)
+                    sb.Append(GetGreekString(buffer, ref index));
                 else if (CodePage == CodePageThai)
                     sb.Append(GetEncoding(CodePage).GetString(buffer, index, 1).Replace("€", "ต"));
                 else
@@ -1085,8 +1299,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return GetBytesViaLists(text, CyrillicCodes, alignment);
         }
 
+        private static byte[] GetGreekBytes(string text, byte alignment)
+        {
+            return GetBytesViaLists(text, GreekCodes, alignment);
+        }
+
         private static byte[] GetBytesViaLists(string text, Dictionary<int, SpecialCharacter> codes, byte alignment)
         {
+            text = text.Replace("’", "'");
             int i = 0;
             var buffer = new byte[text.Length * 2];
             int extra = 0;
@@ -1315,6 +1535,28 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             return string.Empty;//string.Format("({0})", b);
+        }
+
+        public static string GetGreekString(byte[] buffer, ref int index)
+        {
+            byte b = buffer[index];
+
+            if (b >= 0x30 && b <= 0x39) // decimal digits
+                return Encoding.ASCII.GetString(buffer, index, 1);
+
+            if (GreekCodes.ContainsKey(b))
+                return GreekCodes[b].Character;
+
+            if (buffer.Length > index + 1)
+            {
+                var code = b * 256 + buffer[index + 1];
+                if (GreekCodes.ContainsKey(code))
+                {
+                    index++;
+                    return GreekCodes[code].Character;
+                }
+            }
+            return string.Empty;
         }
 
         public static string GetKoreanString(byte[] buffer, ref int index)
