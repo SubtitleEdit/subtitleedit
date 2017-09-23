@@ -5296,11 +5296,8 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/GoogleTranslateUrl":
                     language.Settings.GoogleTranslateUrl = reader.Value;
                     break;
-                case "Settings/ClientId":
-                    language.Settings.ClientId = reader.Value;
-                    break;
-                case "Settings/ClientSecret":
-                    language.Settings.ClientSecret = reader.Value;
+                case "Settings/MicrosoftTranslateApiKey":
+                    language.Settings.MicrosoftTranslateApiKey = reader.Value;
                     break;
                 case "SettingsMpv/Title":
                     language.SettingsMpv.Title = reader.Value;

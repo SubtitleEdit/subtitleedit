@@ -1265,8 +1265,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemAutoTranslate.Text = _language.Menu.AutoTranslate.Title;
             translateByGoogleToolStripMenuItem.Text = _language.Menu.AutoTranslate.TranslatePoweredByGoogle;
             translatepoweredByMicrosoftToolStripMenuItem.Text = _language.Menu.AutoTranslate.TranslatePoweredByMicrosoft;
-            translatepoweredByMicrosoftToolStripMenuItem.Visible = !string.IsNullOrEmpty(Configuration.Settings.Tools.MicrosoftBingClientId) &&
-                                                                   !string.IsNullOrEmpty(Configuration.Settings.Tools.MicrosoftBingClientSecret);
+            translatepoweredByMicrosoftToolStripMenuItem.Visible = !string.IsNullOrEmpty(Configuration.Settings.Tools.MicrosoftTranslatorApiKey);
             translateFromSwedishToDanishToolStripMenuItem.Text = _language.Menu.AutoTranslate.TranslateFromSwedishToDanish;
 
             optionsToolStripMenuItem.Text = _language.Menu.Options.Title;
@@ -4194,8 +4193,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             SetShortcuts();
 
-            translatepoweredByMicrosoftToolStripMenuItem.Visible = !string.IsNullOrEmpty(Configuration.Settings.Tools.MicrosoftBingClientId) &&
-                                                                   !string.IsNullOrEmpty(Configuration.Settings.Tools.MicrosoftBingClientSecret);
+            translatepoweredByMicrosoftToolStripMenuItem.Visible = !string.IsNullOrEmpty(Configuration.Settings.Tools.MicrosoftTranslatorApiKey);
 
             _timerAutoSave.Stop();
 

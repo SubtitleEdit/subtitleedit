@@ -528,8 +528,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             groupBoxBing.Text = language.MicrosoftBingTranslator;
             linkLabelBingSubscribe.Text = language.HowToSignUp;
-            labelClientId.Text = language.ClientId;
-            labelClientSecret.Text = language.ClientSecret;
+            labelClientSecret.Text = language.MicrosoftTranslateApiKey;
 
             if (gs.ListViewDoubleClickAction >= 0 && gs.ListViewDoubleClickAction < comboBoxListViewDoubleClickEvent.Items.Count)
                 comboBoxListViewDoubleClickEvent.SelectedIndex = gs.ListViewDoubleClickAction;
@@ -644,8 +643,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxUseDoNotBreakAfterList.Checked = toolsSettings.UseNoLineBreakAfter;
             checkBoxCpsIncludeWhiteSpace.Checked = !Configuration.Settings.General.CharactersPerSecondsIgnoreWhiteSpace;
 
-            textBoxBingClientId.Text = Configuration.Settings.Tools.MicrosoftBingClientId;
-            textBoxBingClientSecret.Text = Configuration.Settings.Tools.MicrosoftBingClientSecret;
+            textBoxBingClientSecret.Text = Configuration.Settings.Tools.MicrosoftTranslatorApiKey;
             comboBoxGoogleTranslateUrl.Text = Configuration.Settings.Tools.GoogleTranslateUrl;
 
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
@@ -1207,8 +1205,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolsSettings.OcrFixUseHardcodedRules = checkBoxFixCommonOcrErrorsUsingHardcodedRules.Checked;
             toolsSettings.FixShortDisplayTimesAllowMoveStartTime = checkBoxFixShortDisplayTimesAllowMoveStartTime.Checked;
             toolsSettings.FixCommonErrorsSkipStepOne = checkBoxFceSkipStep1.Checked;
-            toolsSettings.MicrosoftBingClientId = textBoxBingClientId.Text.Trim();
-            toolsSettings.MicrosoftBingClientSecret = textBoxBingClientSecret.Text.Trim();
+            toolsSettings.MicrosoftTranslatorApiKey = textBoxBingClientSecret.Text.Trim();
             toolsSettings.GoogleTranslateUrl = comboBoxGoogleTranslateUrl.Text.Trim();
 
             var wordListSettings = Configuration.Settings.WordLists;
@@ -2376,7 +2373,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void linkLabelBingSubscribe_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Process.Start("http://blogs.msdn.com/b/translation/p/gettingstarted1.aspx");
+            Process.Start("https://www.microsoft.com/en-us/translator/getstarted.aspx");
         }
 
         private void ValidateShortcut(object sender, EventArgs e)
