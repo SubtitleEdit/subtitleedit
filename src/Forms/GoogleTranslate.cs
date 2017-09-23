@@ -210,11 +210,11 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 string from = (comboBoxFrom.SelectedItem as ComboBoxItem).Value;
                 string to = _targetTwoLetterIsoLanguageName;
-                if (!string.IsNullOrEmpty(Configuration.Settings.Tools.MicrosoftBingClientId) && !string.IsNullOrEmpty(Configuration.Settings.Tools.MicrosoftBingClientSecret))
+                if (!string.IsNullOrEmpty(Configuration.Settings.Tools.MicrosoftTranslatorApiKey))
                 {
                     try
                     {
-                        _bingAccessToken = GetBingAccesstoken(Configuration.Settings.Tools.MicrosoftBingClientId, Configuration.Settings.Tools.MicrosoftBingClientSecret);
+                        _bingAccessToken = GetBingAccesstoken(Configuration.Settings.Tools.MicrosoftTranslatorApiKey);
                     }
                     catch (Exception exception)
                     {
@@ -975,7 +975,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private string BingTranslateViaAccessToken(string accessToken, string text, string fromLanguage, string toLanguage)
         {
-            string url = string.Format("http://api.microsofttranslator.com/v2/Http.svc/Translate?text={0}&from={1}&to={2}", Utilities.UrlEncode(text), fromLanguage, toLanguage);
+            //max 10000 chars!
+            string url = string.Format("https://api.microsofttranslator.com/V2/Http.svc/Translate?appid=&text={0}&from={1}&to={2}", Utilities.UrlEncode(text), fromLanguage, toLanguage);
             var req = WebRequest.Create(url);
             req.Method = "GET";
             req.Headers["Authorization"] = "Bearer " + accessToken;
@@ -999,19 +1000,14 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private string GetBingAccesstoken(string clientId, string clientSecret)
+        private string GetBingAccesstoken(string clientSecret)
         {
-            string datamarketAccessUri = "https://datamarket.accesscontrol.windows.net/v2/OAuth2-13";
-            string requestDetails = string.Format("grant_type=client_credentials&client_id={0}&client_secret={1}&scope=http://api.microsofttranslator.com", Utilities.UrlEncode(clientId), Utilities.UrlEncode(clientSecret));
+            string datamarketAccessUri = "https://api.cognitive.microsoft.com/sts/v1.0/issueToken";
             var webRequest = WebRequest.Create(datamarketAccessUri);
             webRequest.ContentType = "application/x-www-form-urlencoded";
             webRequest.Method = "POST";
-            var bytes = Encoding.ASCII.GetBytes(requestDetails);
-            webRequest.ContentLength = bytes.Length;
-            using (Stream outputStream = webRequest.GetRequestStream())
-            {
-                outputStream.Write(bytes, 0, bytes.Length);
-            }
+            webRequest.Headers.Add("Ocp-Apim-Subscription-Key", clientSecret);
+            webRequest.ContentLength = 0;
             using (WebResponse webResponse = webRequest.GetResponse())
             {
                 var responseStream = webResponse.GetResponseStream();
@@ -1021,21 +1017,10 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 using (var reader = new StreamReader(responseStream, Encoding.UTF8))
                 {
-                    string json = reader.ReadToEnd();
-                    int startIndex = json.IndexOf("access_token", StringComparison.Ordinal) + 12;
-                    if (startIndex > 0)
-                    {
-                        string s = json.Substring(startIndex).TrimStart(':', ' ', '"');
-                        int endIndex = s.IndexOf("\"", StringComparison.Ordinal);
-                        if (endIndex > 0)
-                        {
-                            return s.Substring(0, endIndex);
-                        }
-                    }
+                    return reader.ReadToEnd(); // raw access token
                 }
             }
-            return null;
-        }
+        }          
 
         public void DoMicrosoftTranslate(string from, string to)
         {

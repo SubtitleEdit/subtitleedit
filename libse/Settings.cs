@@ -87,8 +87,7 @@ namespace Nikse.SubtitleEdit.Core
         public bool OcrFixUseHardcodedRules { get; set; }
         public string Interjections { get; set; }
         public string MicrosoftBingApiId { get; set; }
-        public string MicrosoftBingClientId { get; set; }
-        public string MicrosoftBingClientSecret { get; set; }
+        public string MicrosoftTranslatorApiKey { get; set; }
         public string GoogleTranslateUrl { get; set; }
         public string GoogleApiKey { get; set; }
         public bool UseGooleApiPaidService { get; set; }
@@ -1780,12 +1779,9 @@ namespace Nikse.SubtitleEdit.Core
             subNode = node.SelectSingleNode("MicrosoftBingApiId");
             if (subNode != null)
                 settings.Tools.MicrosoftBingApiId = subNode.InnerText;
-            subNode = node.SelectSingleNode("MicrosoftBingClientId");
+            subNode = node.SelectSingleNode("MicrosoftTranslatorApiKey");
             if (subNode != null)
-                settings.Tools.MicrosoftBingClientId = subNode.InnerText;
-            subNode = node.SelectSingleNode("MicrosoftBingClientSecret");
-            if (subNode != null)
-                settings.Tools.MicrosoftBingClientSecret = subNode.InnerText;
+                settings.Tools.MicrosoftTranslatorApiKey = subNode.InnerText;
             subNode = node.SelectSingleNode("GoogleTranslateUrl");
             if (subNode != null)
                 settings.Tools.GoogleTranslateUrl = subNode.InnerText;
@@ -3318,8 +3314,7 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("OcrFixUseHardcodedRules", settings.Tools.OcrFixUseHardcodedRules.ToString());
                 textWriter.WriteElementString("Interjections", settings.Tools.Interjections);
                 textWriter.WriteElementString("MicrosoftBingApiId", settings.Tools.MicrosoftBingApiId);
-                textWriter.WriteElementString("MicrosoftBingClientId", settings.Tools.MicrosoftBingClientId);
-                textWriter.WriteElementString("MicrosoftBingClientSecret", settings.Tools.MicrosoftBingClientSecret);
+                textWriter.WriteElementString("MicrosoftTranslatorApiKey", settings.Tools.MicrosoftTranslatorApiKey);
                 textWriter.WriteElementString("GoogleTranslateUrl", settings.Tools.GoogleTranslateUrl);
                 textWriter.WriteElementString("GoogleApiKey", settings.Tools.GoogleApiKey);
                 textWriter.WriteElementString("UseGooleApiPaidService", settings.Tools.UseGooleApiPaidService.ToString());

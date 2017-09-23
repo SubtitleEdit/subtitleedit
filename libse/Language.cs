@@ -2230,8 +2230,7 @@ can edit in same subtitle file (collaboration)",
                 MicrosoftBingTranslator = "Microsoft Bing Translator",
                 HowToSignUp = "How to sign up",
                 GoogleTranslateUrl = "Google translate url",
-                ClientId = "Client ID",
-                ClientSecret = "Client secret"
+                MicrosoftTranslateApiKey = "Key"
             };
 
             SettingsMpv = new LanguageStructure.SettingsMpv

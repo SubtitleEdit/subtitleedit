@@ -194,10 +194,8 @@
             this.checkBoxWaveformShowGrid = new System.Windows.Forms.CheckBox();
             this.tabPageTools = new System.Windows.Forms.TabPage();
             this.groupBoxBing = new System.Windows.Forms.GroupBox();
-            this.textBoxBingClientId = new System.Windows.Forms.TextBox();
             this.labelClientSecret = new System.Windows.Forms.Label();
             this.textBoxBingClientSecret = new System.Windows.Forms.TextBox();
-            this.labelClientId = new System.Windows.Forms.Label();
             this.linkLabelBingSubscribe = new System.Windows.Forms.LinkLabel();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBoxToolsMisc = new System.Windows.Forms.GroupBox();
@@ -2535,10 +2533,8 @@
             // 
             this.groupBoxBing.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBoxBing.Controls.Add(this.textBoxBingClientId);
             this.groupBoxBing.Controls.Add(this.labelClientSecret);
             this.groupBoxBing.Controls.Add(this.textBoxBingClientSecret);
-            this.groupBoxBing.Controls.Add(this.labelClientId);
             this.groupBoxBing.Controls.Add(this.linkLabelBingSubscribe);
             this.groupBoxBing.Controls.Add(this.label1);
             this.groupBoxBing.Location = new System.Drawing.Point(421, 331);
@@ -2548,17 +2544,10 @@
             this.groupBoxBing.TabStop = false;
             this.groupBoxBing.Text = "Bing translator";
             // 
-            // textBoxBingClientId
-            // 
-            this.textBoxBingClientId.Location = new System.Drawing.Point(94, 45);
-            this.textBoxBingClientId.Name = "textBoxBingClientId";
-            this.textBoxBingClientId.Size = new System.Drawing.Size(304, 21);
-            this.textBoxBingClientId.TabIndex = 25;
-            // 
             // labelClientSecret
             // 
             this.labelClientSecret.AutoSize = true;
-            this.labelClientSecret.Location = new System.Drawing.Point(13, 72);
+            this.labelClientSecret.Location = new System.Drawing.Point(13, 47);
             this.labelClientSecret.Name = "labelClientSecret";
             this.labelClientSecret.Size = new System.Drawing.Size(67, 13);
             this.labelClientSecret.TabIndex = 30;
@@ -2566,19 +2555,10 @@
             // 
             // textBoxBingClientSecret
             // 
-            this.textBoxBingClientSecret.Location = new System.Drawing.Point(94, 72);
+            this.textBoxBingClientSecret.Location = new System.Drawing.Point(94, 47);
             this.textBoxBingClientSecret.Name = "textBoxBingClientSecret";
             this.textBoxBingClientSecret.Size = new System.Drawing.Size(304, 21);
             this.textBoxBingClientSecret.TabIndex = 26;
-            // 
-            // labelClientId
-            // 
-            this.labelClientId.AutoSize = true;
-            this.labelClientId.Location = new System.Drawing.Point(12, 47);
-            this.labelClientId.Name = "labelClientId";
-            this.labelClientId.Size = new System.Drawing.Size(48, 13);
-            this.labelClientId.TabIndex = 28;
-            this.labelClientId.Text = "Client ID";
             // 
             // linkLabelBingSubscribe
             // 
@@ -4425,11 +4405,9 @@
         private System.Windows.Forms.Label labelMpvSettings;
         private System.Windows.Forms.LinkLabel linkLabelBingSubscribe;
         private System.Windows.Forms.Label labelUserBingApiId;
-        private System.Windows.Forms.TextBox textBoxBingClientId;
         private System.Windows.Forms.GroupBox groupBoxBing;
         private System.Windows.Forms.Label labelClientSecret;
         private System.Windows.Forms.TextBox textBoxBingClientSecret;
-        private System.Windows.Forms.Label labelClientId;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ComboBox comboBoxAutoBackupDeleteAfter;
         private System.Windows.Forms.Label labelAutoBackupDeleteAfter;
