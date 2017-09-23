@@ -1126,6 +1126,7 @@
     <LinePart from="smeli da" to="smjeli" />
     <LinePart from="Što ej" to="Što je" />
     <LinePart from="što ej" to="što je" />
+    <LinePart from="to j" to="to je" />
     <LinePart from="to ej" to="to je" />
     <LinePart from="To ej" to="To je" />
     <LinePart from="tamo natrag" to="tamo iza" />
@@ -1163,7 +1164,6 @@
     <RegEx find="\b[aA]las([kc])" replaceWith="Aljas$1" />
     <RegEx find="([dnl])ijum" replaceWith="$1ij" />
     <RegEx find="ngažov" replaceWith="ngažir" />
-    <RegEx find="aredjenj" replaceWith="aređenj" />
     <RegEx find="armij" replaceWith="vojsk" />
     <RegEx find="Armij" replaceWith="Vojsk" />
     <RegEx find="svalt" replaceWith="sfalt" />
@@ -2144,6 +2144,7 @@
     <RegEx find="očmi" replaceWith="očni" />
     <RegEx find="odsetni" replaceWith="odsjetni" />
     <RegEx find="oješć" replaceWith="ojest ć" />
+    <RegEx find="ojtn" replaceWith="ojatn" />
     <RegEx find="oletn" replaceWith="oljetn" />
     <RegEx find="(?&lt;![nt])opić" replaceWith="opit ć" />
     <RegEx find="oriće(mo|te)" replaceWith="orit će$1" />
@@ -2362,6 +2363,7 @@
     <RegEx find="Vejn" replaceWith="Wayne" />
     <RegEx find="Vejder" replaceWith="Vader" />
     <RegEx find="Vilijams" replaceWith="Williams" />
+    <RegEx find="Vinči" replaceWith="Vinci" />
     <RegEx find="Vinsent" replaceWith="Vincent" />
     <RegEx find="Viskonsin" replaceWith="Wisconsin" />
     <RegEx find="Volter" replaceWith="Walter" />
