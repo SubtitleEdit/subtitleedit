@@ -163,6 +163,7 @@ Oharra: Egiaztatu diskako toki askea.</WaveFileMalformed>
     <ChooseOutputFolder>Hautatu irteera agiritegia:</ChooseOutputFolder>
     <OverwriteExistingFiles>&amp;Gainidatzi dauden agiriak</OverwriteExistingFiles>
     <Style>Estiloa...</Style>
+    <UseStyleFromSource>Erabili estiloa iturburutik</UseStyleFromSource>
     <ConvertOptions>Bihurketa aukerak</ConvertOptions>
     <RemoveFormatting>Kendu heuskarri etiketak</RemoveFormatting>
     <RemoveTextForHI>Kendu GA idazkia</RemoveTextForHI>
@@ -180,6 +181,7 @@ Oharra: Egiaztatu diskako toki askea.</WaveFileMalformed>
     <ScanningFolder>Mihatzen {0} eta azpiagiritegiak azpidatzi agirien bila...</ScanningFolder>
     <Recursive>Barneratu azpi agiritegiak</Recursive>
     <SetMinMsBetweenSubtitles>Ezarri gutx. segmil azpidatzi artean</SetMinMsBetweenSubtitles>
+    <BridgeGaps>Zubitu hutsuneak</BridgeGaps>
     <PlainText>Idazki laua</PlainText>
     <Ocr>OCR...</Ocr>
     <Filter>Iragazkia</Filter>
@@ -1873,6 +1875,8 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <WaveformToggleSceneChange>Aldatu agerraldi aldaketa</WaveformToggleSceneChange>
     <GoBack1Frame>Frame bat atzera</GoBack1Frame>
     <GoForward1Frame>Frame bat aurrera</GoForward1Frame>
+    <GoBack1FrameWithPlay>Frame bat atzera (irakurtzen)</GoBack1FrameWithPlay>
+    <GoForward1FrameWithPlay>Frame bat aurrera (irakurtzen)</GoForward1FrameWithPlay>
     <GoBack100Milliseconds>100 sm atzera</GoBack100Milliseconds>
     <GoForward100Milliseconds>100 sm aurrera</GoForward100Milliseconds>
     <GoBack500Milliseconds>500 sm atzera</GoBack500Milliseconds>
