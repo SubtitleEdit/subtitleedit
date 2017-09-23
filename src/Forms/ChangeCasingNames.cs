@@ -142,10 +142,7 @@ namespace Nikse.SubtitleEdit.Forms
                     while (startIndex >= 0 && startIndex < text.Length &&
                            textToLower.Substring(startIndex).Contains(name.ToLower()) && name.Length > 1 && name != name.ToLower())
                     {
-                        bool startOk = (startIndex == 0) || (text[startIndex - 1] == ' ') || (text[startIndex - 1] == '-') ||
-                                       (text[startIndex - 1] == '"') || (text[startIndex - 1] == '\'') || (text[startIndex - 1] == '>') ||
-                                       (Environment.NewLine.EndsWith(text[startIndex - 1].ToString(CultureInfo.InvariantCulture), StringComparison.Ordinal));
-
+                        bool startOk = startIndex == 0 || "([ --'>\r\n¿¡".Contains(text[startIndex - 1]);
                         if (startOk)
                         {
                             int end = startIndex + name.Length;
