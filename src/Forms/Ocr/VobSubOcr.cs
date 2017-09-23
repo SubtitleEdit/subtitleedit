@@ -5005,9 +5005,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private static string GetStringWithItalicTags(List<CompareMatch> matches)
         {
-            StringBuilder paragraph = new StringBuilder();
-            StringBuilder line = new StringBuilder();
-            StringBuilder word = new StringBuilder();
+            var paragraph = new StringBuilder();
+            var line = new StringBuilder();
+            var word = new StringBuilder();
             int lettersItalics = 0;
             int lettersNonItalics = 0;
             int lineLettersNonItalics = 0;
@@ -5015,12 +5015,65 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             int wordNonItalics = 0;
             bool isItalic = false;
             bool allItalic = true;
+
+            
+            for (int i = 0; i < matches.Count; i++)
+            {
+                string text = matches[i].Text;
+                if (text != null)
+                {
+                    if (text == "-" || text == "—" || text == "." || text == "'" || text == " " || text == Environment.NewLine)
+                    {
+                    }
+                    else if (matches[i].Italic)
+                    {
+                        lettersItalics++;
+                    }
+                    else
+                    {
+                        lettersItalics = 0;
+                        break;
+                    }
+                }
+            }
+            bool convertAllToItalic = lettersItalics > 0;
+            lettersItalics = 0;
+
+
+            for (int i = 0; i < matches.Count; i++)
+            {
+                string text = matches[i].Text;
+                if (text != null)
+                {
+                    if (text == "-" || text == "—" || text == "." || text == "'" || text == " " || text == Environment.NewLine)
+                    {
+                    }
+                    else if (matches[i].Italic)
+                    {
+                        lettersNonItalics = 0;
+                        break;
+                    }
+                    else
+                    {
+                        lettersNonItalics++;
+                    }
+                }
+            }
+            bool convertAllToNonItalic = lettersNonItalics > 0;
+            lettersNonItalics = 0;
+
+
             for (int i = 0; i < matches.Count; i++)
             {
                 string text = matches[i].Text;
                 if (text != null)
                 {
                     bool italic = matches[i].Italic;
+                    if (convertAllToItalic)
+                        italic = true;
+                    if (convertAllToNonItalic)
+                        italic = false;
+
                     if (text == " ")
                     {
                         ItalicsWord(line, ref word, ref lettersItalics, ref lettersNonItalics, ref wordItalics, ref wordNonItalics, ref isItalic, " ");
@@ -5031,16 +5084,29 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         ItalianLine(paragraph, ref line, ref allItalic, ref wordItalics, ref wordNonItalics, ref isItalic, Environment.NewLine, lineLettersNonItalics);
                         lineLettersNonItalics = 0;
                     }
-                    else if (italic)
-                    {
-                        word.Append(text);
-                        lettersItalics += text.Length;
-                        lineLettersNonItalics += text.Length;
-                    }
                     else
                     {
-                        word.Append(text);
-                        lettersNonItalics += text.Length;
+                        if (!convertAllToItalic && !convertAllToNonItalic)
+                        {
+                            bool italicOrNot = false;
+                            bool isMixedCaseWithoutDashAndAlike = IsMixedCaseWithoutDashAndAlike(matches, i, out italicOrNot);
+                            if ((text == "-" || text == "—" || text == "." || text == "'") && !isMixedCaseWithoutDashAndAlike)
+                            {
+                                italic = italicOrNot;
+                            }
+                        }
+
+                        if (italic)
+                        {
+                            word.Append(text);
+                            lettersItalics += text.Length;
+                        }
+                        else
+                        {
+                            word.Append(text);
+                            lettersNonItalics += text.Length;
+                            lineLettersNonItalics += text.Length;
+                        }
                     }
                 }
             }
@@ -5060,6 +5126,39 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
 
             return paragraph.ToString();
+        }
+
+        private static bool IsMixedCaseWithoutDashAndAlike(List<CompareMatch> matches, int startIndex, out bool italicOrNot)
+        {
+            while (startIndex > 0 && (matches[startIndex - 1].Text == " " || matches[startIndex - 1].Text == Environment.NewLine))
+            {
+                startIndex--;
+            }
+
+            int italicCount = 0;
+            int nonItalicCount = 0;
+            for (int i = startIndex; i < matches.Count; i++)
+            {
+                var m = matches[i];
+                if (m.Text != null)
+                {
+                    if (m.Text == "-" || m.Text == "—" || m.Text == "." || m.Text == "'")
+                    {
+                    }
+                    else if (m.Italic)
+                    {
+                        italicCount++;
+                    }
+                    else
+                    {
+                        nonItalicCount++;
+                    }
+                    if (m.Text == " " || m.Text == Environment.NewLine)
+                        break;
+                }
+            }
+            italicOrNot = italicCount > 0;
+            return italicCount > 0 && nonItalicCount > 0;
         }
 
         private static void ItalianLine(StringBuilder paragraph, ref StringBuilder line, ref bool allItalic, ref int wordItalics, ref int wordNonItalics, ref bool isItalic, string appendString, int lineLettersNonItalics)
