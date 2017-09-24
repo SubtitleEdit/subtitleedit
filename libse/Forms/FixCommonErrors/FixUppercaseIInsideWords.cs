@@ -17,6 +17,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             {
                 Paragraph p = subtitle.Paragraphs[i];
                 string oldText = p.Text;
+                var st = new StrippableText(p.Text);
 
                 Match match = ReAfterLowercaseLetter.Match(p.Text);
                 while (match.Success)
@@ -25,17 +26,20 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         && p.Text[match.Index + 1] == 'I'
                         && callbacks.AllowFix(p, fixAction))
                     {
-                        p.Text = p.Text.Substring(0, match.Index + 1) + "l";
-                        if (match.Index + 2 < oldText.Length)
-                            p.Text += oldText.Substring(match.Index + 2);
+                        string word = GetWholeWord(st.StrippedText, match.Index);
+                        if (!callbacks.IsName(word))
+                        {
+                            p.Text = p.Text.Substring(0, match.Index + 1) + "l";
+                            if (match.Index + 2 < oldText.Length)
+                                p.Text += oldText.Substring(match.Index + 2);
 
-                        uppercaseIsInsideLowercaseWords++;
-                        callbacks.AddFixToListView(p, fixAction, oldText, p.Text);
+                            uppercaseIsInsideLowercaseWords++;
+                            callbacks.AddFixToListView(p, fixAction, oldText, p.Text);
+                        }
                     }
                     match = match.NextMatch();
                 }
 
-                var st = new StrippableText(p.Text);
                 match = ReBeforeLowercaseLetter.Match(st.StrippedText);
                 while (match.Success)
                 {
@@ -128,12 +132,18 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
         private static string GetWholeWord(string text, int index)
         {
             int start = index;
-            while (start > 0 && !(Environment.NewLine + @" ,.!?""'=()/-").Contains(text[start - 1]))
+            while (start > 0 && !(Environment.NewLine + @" ,.!?""'=()[]/-¿¡«»“”>—").Contains(text[start - 1]) ||
+                   start > 1 && text[start - 1] == '\'' && char.IsLetter(text[start - 2]))
+            {
                 start--;
+            }
 
             int end = index;
-            while (end + 1 < text.Length && !(Environment.NewLine + @" ,.!?""'=()/-").Contains(text[end + 1]))
+            while (end + 1 < text.Length && !(Environment.NewLine + @" ,.!?:;""'=()[]/-«»“”<—").Contains(text[end + 1]) ||
+                   end + 2 < text.Length && text[end + 1] == '\'' && char.IsLetter(text[end + 2]))
+            {
                 end++;
+            }
 
             return text.Substring(start, end - start + 1);
         }
