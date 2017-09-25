@@ -15,7 +15,6 @@ namespace Nikse.SubtitleEdit.Forms
         private readonly LanguageStructure.RemoveTextFromHearImpaired _language;
         private readonly RemoveTextForHI _removeTextForHiLib;
         private Dictionary<Paragraph, string> _fixes;
-        private int _removeCount;
         private readonly Main _mainForm;
         private readonly List<Paragraph> _unchecked = new List<Paragraph>();
 
@@ -149,8 +148,11 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (Subtitle != null)
             {
-                RemoveTextFromHearImpaired();
-                Subtitle.Renumber();
+                int count = Subtitle.Paragraphs.Count;
+                if (RemoveTextFromHearImpaired() > 0 && count < Subtitle.Paragraphs.Count)
+                {
+                    Subtitle.Renumber();
+                }
                 if (_mainForm != null)
                 {
                     _mainForm.ReloadFromSubtitle(Subtitle);
@@ -162,6 +164,7 @@ namespace Nikse.SubtitleEdit.Forms
         public int RemoveTextFromHearImpaired()
         {
             _unchecked.Clear();
+            int removeCount = 0;
             for (int i = listViewFixes.Items.Count - 1; i >= 0; i--)
             {
                 var item = listViewFixes.Items[i];
@@ -177,14 +180,14 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         p.Text = newText;
                     }
-                    _removeCount++;
+                    removeCount++;
                 }
                 else
                 {
                     _unchecked.Add(p);
                 }
             }
-            return _removeCount;
+            return removeCount;
         }
 
         private void CheckBoxRemoveTextBetweenCheckedChanged(object sender, EventArgs e)
