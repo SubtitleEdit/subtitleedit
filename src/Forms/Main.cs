@@ -16003,7 +16003,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 tss.Name = "PluginSepTranslate";
                                 toolStripMenuItemAutoTranslate.DropDownItems.Add(tss);
                             }
-                            item.Click += PluginClickNoFormatChange;
+                            item.Click += PluginClickTranslate;
                             toolStripMenuItemAutoTranslate.DropDownItems.Add(item);
                             syncPluginCount++;
                         }
@@ -16030,15 +16030,20 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void PluginToolClick(object sender, EventArgs e)
         {
-            CallPlugin(sender, true);
+            CallPlugin(sender, true, false);
         }
 
         private void PluginClickNoFormatChange(object sender, EventArgs e)
         {
-            CallPlugin(sender, false);
+            CallPlugin(sender, false, false);
         }
 
-        private void CallPlugin(object sender, bool allowChangeFormat)
+        private void PluginClickTranslate(object sender, EventArgs e)
+        {
+            CallPlugin(sender, false, true);
+        }
+
+        private void CallPlugin(object sender, bool allowChangeFormat, bool translate)
         {
             try
             {
@@ -16093,6 +16098,27 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                     }
 
+                    if (translate)
+                    {
+                        _subtitleAlternate = new Subtitle(_subtitle);
+                        _subtitleAlternateFileName = _fileName;
+                        _fileName = null;
+                        _subtitle.Paragraphs.Clear();
+                        foreach (var p in s.Paragraphs)
+                            _subtitle.Paragraphs.Add(new Paragraph(p));
+                        ShowStatus(_language.SubtitleTranslated);
+                        ShowSource();
+                        SubtitleListview1.ShowAlternateTextColumn(_languageGeneral.OriginalText);
+                        SubtitleListview1.AutoSizeAllColumns(this);
+                        SetupAlternateEdit();
+                        SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+                        ResetHistory();
+                        RestoreSubtitleListviewIndices();
+                        _converted = true;
+                        SetTitle();
+                        return;
+                    }
+
                     if (newFormat != null)
                     {
                         if (!allowChangeFormat && IsOnlyTextChanged(_subtitle, s))
@@ -16129,7 +16155,11 @@ namespace Nikse.SubtitleEdit.Forms
             }
             catch (Exception exception)
             {
-                MessageBox.Show(exception.Message);
+                MessageBox.Show(exception.Message + Environment.NewLine + exception.StackTrace);
+                if (exception.InnerException != null)
+                {
+                    MessageBox.Show(exception.InnerException.Message + Environment.NewLine + exception.InnerException.StackTrace);
+                }
             }
         }
 
