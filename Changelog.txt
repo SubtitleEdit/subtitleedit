@@ -61,6 +61,9 @@
    * Fix some broken spell check dictionary links
    * Fix reading of ASSA with not normal section order - thx von Suppé
    * Fix some ASSA issues in export to images - thx von Suppé
+   * Fix for first line in cmd/batch OCR - thx Jamakmake
+   * Fix Microsoft translator via API key - thx Acir
+   * Fix Greek encoding for format PAC
 
 
 3.5.3 (12th May 2017)
