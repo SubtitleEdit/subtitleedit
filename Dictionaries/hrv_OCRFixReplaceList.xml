@@ -983,6 +983,7 @@
     <Word from="Kloe" to="Chloe" />
     <Word from="Kortni" to="Courtney" />
     <Word from="Krejg" to="Craig" />
+    <Word from="Kristi" to="Christie" />
     <Word from="Lajf" to="Life" />
     <Word from="Lusi" to="Lucy" />
     <Word from="Majk" to="Mike" />
@@ -1691,6 +1692,7 @@
     <RegEx find="([pP])romj?eni([mštol])" replaceWith="$1romijeni$2" />
     <RegEx find="([pP])rj?eti([mštol])" replaceWith="$1rijeti$2" />
     <RegEx find="r[io]davnic" replaceWith="rodavaonic" />
+    <RegEx find="roglašuje" replaceWith="roglašava" />
     <RegEx find="roklestv" replaceWith="rokletstv" />
     <RegEx find="([pP])role(ć|t[no])" replaceWith="$1rolje$2" />
     <RegEx find="romen(?!ad)" replaceWith="romjen" />
@@ -2148,6 +2150,7 @@
     <RegEx find="ojtn" replaceWith="ojatn" />
     <RegEx find="oletn" replaceWith="oljetn" />
     <RegEx find="(?&lt;![nt])opić" replaceWith="opit ć" />
+    <RegEx find="([eoa])pisać" replaceWith="$1pisat ć" />
     <RegEx find="oriće(mo|te)" replaceWith="orit će$1" />
     <RegEx find="o([dbjpv])ać(?!o)" replaceWith="o$1at ć" />
     <RegEx find="sj?etić" replaceWith="sjetit ć" />
