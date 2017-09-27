@@ -4502,7 +4502,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (_clearLastFind)
                 {
                     _clearLastFind = false;
-                    _findHelper.FindType = _clearLastFindType;
+                    _findHelper.FindReplaceType.FindType = _clearLastFindType;
                     selectedText = _clearLastFindText;
                 }
                 else
@@ -4972,9 +4972,9 @@ namespace Nikse.SubtitleEdit.Forms
                     else if (!replaceDialog.FindOnly) // replace once only
                     {
                         string msg = string.Empty;
-                        if (_findHelper.FindType == FindType.RegEx && _findHelper.Success)
+                        if (_findHelper.FindReplaceType.FindType == FindType.RegEx && _findHelper.Success)
                         {
-                            if (_findHelper.FindType == FindType.RegEx)
+                            if (_findHelper.FindReplaceType.FindType == FindType.RegEx)
                             {
                                 ReplaceViaRegularExpression();
                             }
@@ -5110,7 +5110,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     textBoxListViewText.SelectionStart = _findHelper.SelectedPosition;
                     textBoxListViewText.SelectionLength = _findHelper.FindTextLength;
-                    if (_findHelper.FindType == FindType.RegEx)
+                    if (_findHelper.FindReplaceType.FindType == FindType.RegEx)
                     {
                         ReplaceViaRegularExpression();
                     }
@@ -12977,10 +12977,10 @@ namespace Nikse.SubtitleEdit.Forms
             _clearLastFind = true;
             if (_findHelper != null)
             {
-                _clearLastFindType = _findHelper.FindType;
+                _clearLastFindType = _findHelper.FindReplaceType.FindType;
                 _clearLastFindText = _findHelper.FindText;
             }
-            _findHelper = new FindReplaceDialogHelper(FindType.RegEx, false, string.Format(_language.DoubleWordsViaRegEx, regex), regex, string.Empty, _subtitleListViewIndex);
+            _findHelper = new FindReplaceDialogHelper(new ReplaceType { FindType = FindType.RegEx }, string.Format(_language.DoubleWordsViaRegEx, regex), regex, string.Empty, _subtitleListViewIndex);
 
             ReloadFromSourceView();
             FindNext();

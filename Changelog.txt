@@ -16,6 +16,7 @@
    * Update Chinese Traditional translation - thx jackielam1997
    * Update Portuguese translation - thx moob
    * Improve language auto detect
+   * Add "Whole word" in "Replace" window - thx OmrSi
    * Add semicolon as possible shortcut key - thx Allan
    * Add 60 fps to export settings for several formats
    * Google translate can now use google.cn (for Chinese ppl)
