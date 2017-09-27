@@ -3393,7 +3393,14 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SaveToolStripMenuItemClick(object sender, EventArgs e)
         {
-            ToolStripButtonSaveClick(sender, e);
+            if (!IsSubtitleLoaded)
+            {
+                return;
+            }
+
+            ReloadFromSourceView();
+            _saveAsCalled = false;
+            SaveSubtitle(GetCurrentSubtitleFormat());
         }
 
         private void SaveAsToolStripMenuItemClick(object sender, EventArgs e)
