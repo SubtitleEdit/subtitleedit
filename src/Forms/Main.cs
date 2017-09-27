@@ -13751,6 +13751,19 @@ namespace Nikse.SubtitleEdit.Forms
                     existing.EndTime.TotalMilliseconds = newTimeCode.EndTime.TotalMilliseconds;
                     existing.StartFrame = newTimeCode.StartFrame;
                     existing.EndFrame = newTimeCode.EndFrame;
+
+                    if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0)
+                    {
+                        var original = Utilities.GetOriginalParagraph(i, existing, _subtitleAlternate.Paragraphs);
+                        if (original != null)
+                        {
+                            original.StartTime.TotalMilliseconds = newTimeCode.StartTime.TotalMilliseconds;
+                            original.EndTime.TotalMilliseconds = newTimeCode.EndTime.TotalMilliseconds;
+                            original.StartFrame = newTimeCode.StartFrame;
+                            original.EndFrame = newTimeCode.EndFrame;
+                        }
+                    }
+
                     count++;
                 }
                 ShowStatus(string.Format(_language.TimeCodeImportedFromXY, Path.GetFileName(openFileDialog1.FileName), count));
