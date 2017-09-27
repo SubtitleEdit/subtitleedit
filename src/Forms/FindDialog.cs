@@ -33,19 +33,23 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.FixLargeFonts(this, buttonCancel);
         }
 
-        private FindType FindType
+        private ReplaceType FindReplaceType
         {
             get
             {
+                var result = new ReplaceType();
                 if (radioButtonNormal.Checked)
-                    return FindType.Normal;
-                if (radioButtonCaseSensitive.Checked)
-                    return FindType.CaseSensitive;
-                return FindType.RegEx;
+                    result.FindType = FindType.Normal;
+                else if (radioButtonCaseSensitive.Checked)
+                    result.FindType = FindType.CaseSensitive;
+                else
+                    result.FindType = FindType.RegEx;
+                result.WholeWord = checkBoxWholeWord.Checked;
+                return result;
             }
             set
             {
-                switch (value)
+                switch (value.FindType)
                 {
                     case FindType.Normal:
                         radioButtonNormal.Checked = true;
@@ -72,7 +76,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         public FindReplaceDialogHelper GetFindDialogHelper(int startLineIndex)
         {
-            return new FindReplaceDialogHelper(FindType, checkBoxWholeWord.Checked, FindText, _regEx, string.Empty, startLineIndex);
+            return new FindReplaceDialogHelper(FindReplaceType, FindText, _regEx, string.Empty, startLineIndex);
         }
 
         private void FormFindDialog_KeyDown(object sender, KeyEventArgs e)
@@ -175,9 +179,9 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (findHelper != null)
             {
-                FindType = findHelper.FindType;
-                checkBoxWholeWord.Checked = findHelper.MatchWholeWord;
-                checkBoxWholeWord.Enabled = FindType != FindType.RegEx;
+                FindReplaceType = findHelper.FindReplaceType;
+                checkBoxWholeWord.Checked = findHelper.FindReplaceType.WholeWord;
+                checkBoxWholeWord.Enabled = FindReplaceType.FindType != FindType.RegEx;
             }
         }
 

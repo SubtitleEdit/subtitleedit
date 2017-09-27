@@ -126,6 +126,7 @@
     <Compile Include="Dictionaries\NameList.cs" />
     <Compile Include="Dictionaries\OcrFixReplaceList.cs" />
     <Compile Include="DvdSubtitleLanguage.cs" />
+    <Compile Include="Enums\ReplaceType.cs" />
     <Compile Include="Enums\FindType.cs" />
     <Compile Include="Enums\SelectionChoice.cs" />
     <Compile Include="Enums\SpellCheckAction.cs" />

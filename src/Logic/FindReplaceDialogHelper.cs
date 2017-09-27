@@ -16,8 +16,7 @@ namespace Nikse.SubtitleEdit.Logic
         private int _findTextLenght;
 
         public bool Success { get; set; }
-        public FindType FindType { get; set; }
-        public bool MatchWholeWord { get; set; }
+        public ReplaceType FindReplaceType { get; set; }        
         public int SelectedIndex { get; set; }
         public int SelectedPosition { get; set; }
         public int StartLineIndex { get; set; }
@@ -47,9 +46,9 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
-        public FindReplaceDialogHelper(FindType findType, bool matchWholeWord, string findText, Regex regEx, string replaceText, int startLineIndex)
+        public FindReplaceDialogHelper(ReplaceType findType, string findText, Regex regEx, string replaceText, int startLineIndex)
         {
-            FindType = findType;
+            FindReplaceType = findType;
             _findText = findText;
 
             _replaceText = replaceText;
@@ -61,7 +60,6 @@ namespace Nikse.SubtitleEdit.Logic
             _regEx = regEx;
             _findTextLenght = findText.Length;
             StartLineIndex = startLineIndex;
-            MatchWholeWord = matchWholeWord;
         }
 
         public bool Find(Subtitle subtitle, Subtitle originalSubtitle, int startIndex, int startPosition = 0)
@@ -76,16 +74,16 @@ namespace Nikse.SubtitleEdit.Logic
 
         private int FindPositionInText(string text, int startIndex)
         {
-            if (startIndex >= text.Length && !(FindType == FindType.RegEx && startIndex == 0))
+            if (startIndex >= text.Length && !(FindReplaceType.FindType == FindType.RegEx && startIndex == 0))
                 return -1;
 
-            if (FindType == FindType.CaseSensitive || FindType == FindType.Normal)
+            if (FindReplaceType.FindType == FindType.CaseSensitive || FindReplaceType.FindType == FindType.Normal)
             {
-                var comparison = FindType == FindType.CaseSensitive ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase;
+                var comparison = FindReplaceType.FindType == FindType.CaseSensitive ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase;
                 var idx = text.IndexOf(_findText, startIndex, comparison);
                 while (idx >= 0)
                 {
-                    if (MatchWholeWord)
+                    if (FindReplaceType.WholeWord)
                     {
                         var startOk = idx == 0 || StartChars.Contains(text[idx - 1]);
                         var endOk = idx + _findText.Length == text.Length || EndChars.Contains(text[idx + _findText.Length]);
@@ -215,7 +213,7 @@ namespace Nikse.SubtitleEdit.Logic
             startIndex++;
             if (startIndex < text.Length)
             {
-                if (FindType == FindType.RegEx)
+                if (FindReplaceType.FindType == FindType.RegEx)
                 {
                     Match match = _regEx.Match(text, startIndex);
                     if (match.Success)
@@ -250,7 +248,7 @@ namespace Nikse.SubtitleEdit.Logic
         {
             var count = 0;
             //  validate pattern if find type is regex
-            if (FindType == FindType.RegEx)
+            if (FindReplaceType.FindType == FindType.RegEx)
             {
                 if (!Utilities.IsValidRegex(FindText))
                 {
@@ -266,7 +264,7 @@ namespace Nikse.SubtitleEdit.Logic
                 if (p.Text.Length < FindText.Length)
                     continue;
 
-                switch (FindType)
+                switch (FindReplaceType.FindType)
                 {
                     case FindType.Normal:
                         count += GetWordCount(p.Text, _findText, wholeWord, StringComparison.OrdinalIgnoreCase);
