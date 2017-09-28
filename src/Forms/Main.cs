@@ -13751,6 +13751,8 @@ namespace Nikse.SubtitleEdit.Forms
                 for (int i = 0; i < timeCodeSubtitle.Paragraphs.Count; i++)
                 {
                     var existing = _subtitle.GetParagraphOrDefault(i);
+                    var oldExisting = new Paragraph(existing);                    
+
                     var newTimeCode = timeCodeSubtitle.GetParagraphOrDefault(i);
                     if (existing == null || newTimeCode == null)
                         break;
@@ -13761,7 +13763,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0)
                     {
-                        var original = Utilities.GetOriginalParagraph(i, existing, _subtitleAlternate.Paragraphs);
+                        var original = Utilities.GetOriginalParagraph(i, oldExisting, _subtitleAlternate.Paragraphs);
                         if (original != null)
                         {
                             original.StartTime.TotalMilliseconds = newTimeCode.StartTime.TotalMilliseconds;
