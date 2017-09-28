@@ -1966,7 +1966,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-                if (file.Length > 1024 * 1024 * 10) // max 10 mb
+                if (file.Length > 1024 * 1024 * 20) // max 20 mb
                 {
                     // retry Blu-ray sup (file with wrong extension)
                     if (FileUtil.IsBluRaySup(fileName))
@@ -10882,7 +10882,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-                if (file.Length < 1024 * 1024 * 10) // max 10 mb
+                if (file.Length < 1024 * 1024 * 20) // max 20 mb
                 {
                     OpenSubtitle(fileName, null);
                 }
@@ -16289,7 +16289,7 @@ namespace Nikse.SubtitleEdit.Forms
                     try
                     {
                         var fi = new FileInfo(fileName);
-                        if (fi.Length < 1024 * 500)
+                        if (fi.Length < 1024 * 1024 * 20) // max 20 mb
                         {
                             var lines = new List<string>(File.ReadAllLines(fileName));
                             foreach (SubtitleFormat format in SubtitleFormat.AllSubtitleFormats)
