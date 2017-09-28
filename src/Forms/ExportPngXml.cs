@@ -1296,8 +1296,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                           @"            <name>" + System.Security.SecurityElement.Escape(fileNameNoPath) + @"</name>
             <duration>[DURATION]</duration>
             <rate>
-              <ntsc>FALSE</ntsc>
-              <timebase>25</timebase>
+              <ntsc>[NTSC]</ntsc>
+              <timebase>[TIMEBASE]</timebase>
             </rate>
             <in>[IN]</in>
             <out>[OUT]</out>
@@ -1312,7 +1312,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
               <name>" + System.Security.SecurityElement.Escape(fileNameNoPath) + @"</name>
               <pathurl>" + Utilities.UrlEncode(fileNameNoPath) + @"</pathurl>
               <rate>
-                <timebase>25</timebase>
+                <timebase>[TIMEBASE]</timebase>
               </rate>
               <duration>[DURATION]</duration>
               <width>" + param.ScreenWidth + @"</width>
@@ -1403,17 +1403,27 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         }
                         imagesSavedCount++;
 
+                        int timeBase = 25;
+                        string ntsc = "FALSE";
+                        if (comboBoxLanguage.SelectedItem.ToString().Equals("NTSC", StringComparison.Ordinal))
+                            ntsc = "TRUE";
                         if (Math.Abs(param.FramesPerSeconds - 29.97) < 0.01)
                         {
                             param.FramesPerSeconds = 30.0 / 1.0001;
+                            timeBase = 30;
+                            ntsc = "TRUE";
                         }
                         else if (Math.Abs(param.FramesPerSeconds - 23.976) < 0.01)
                         {
                             param.FramesPerSeconds = 24.0 / 1.0001;
+                            timeBase = 24;
+                            ntsc = "TRUE";
                         }
                         else if (Math.Abs(param.FramesPerSeconds - 59.94) < 0.01)
                         {
                             param.FramesPerSeconds = 60.0 / 1.0001;
+                            timeBase = 60;
+                            ntsc = "TRUE";
                         }
 
                         int duration = (int)Math.Round(param.P.Duration.TotalSeconds * param.FramesPerSeconds);
@@ -1425,6 +1435,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         template = template.Replace("[OUT]", end.ToString(CultureInfo.InvariantCulture));
                         template = template.Replace("[START]", start.ToString(CultureInfo.InvariantCulture));
                         template = template.Replace("[END]", end.ToString(CultureInfo.InvariantCulture));
+                        template = template.Replace("[TIMEBASE]", timeBase.ToString(CultureInfo.InvariantCulture));
+                        template = template.Replace("[NTSC]", ntsc);
                         sb.AppendLine(template);
 
                         param.Saved = true;
@@ -3086,6 +3098,10 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
         {
             if (parameter.ShadowWidth > 0)
             {
+                var shadowAlpha = parameter.ShadowAlpha;
+                if (parameter.ShadowWidth > 1)
+                    shadowAlpha = (int)Math.Round(shadowAlpha * 0.8);
+
                 var shadowPath = (GraphicsPath)path.Clone();
                 for (int k = 0; k < parameter.ShadowWidth; k++)
                 {
@@ -3093,7 +3109,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     translateMatrix.Translate(1, 1);
                     shadowPath.Transform(translateMatrix);
 
-                    using (var p1 = new Pen(Color.FromArgb(parameter.ShadowAlpha, parameter.ShadowColor), parameter.BorderWidth))
+                    using (var p1 = new Pen(new SolidBrush(Color.FromArgb(shadowAlpha, parameter.ShadowColor)), parameter.BorderWidth))
                     {
                         SetLineJoin(parameter.LineJoin, p1);
                         g.DrawPath(p1, shadowPath);
@@ -3103,7 +3119,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
             if (parameter.BorderWidth > 0)
             {
-                var p1 = new Pen(parameter.BorderColor, parameter.BorderWidth);
+                var p1 = new Pen(parameter.BorderColor, (float) (parameter.BorderWidth * 1.1));
                 SetLineJoin(parameter.LineJoin, p1);
                 g.DrawPath(p1, path);
                 p1.Dispose();
