@@ -17,6 +17,7 @@
    * Update Portuguese translation - thx moob
    * Improve language auto detect
    * Add "Whole word" in "Replace" window - thx OmrSi
+   * Use system default font for all windows - thx sheppaul
    * Add semicolon as possible shortcut key - thx Allan
    * Add 60 fps to export settings for several formats
    * Google translate can now use google.cn (for Chinese ppl)
@@ -32,6 +33,7 @@
    * Add "Bridge gaps" (in durations) to "Batch convert"
    * Minor improvements for "Binary image compare" OCR - thx Boulder
    * Make "Status log" window non-modal - thx Skrity
+   * Add undo/redo for single line auto-br/un-br
 * FIXED:
    * Fix memory leak regarding "mpv" + subtitle change - thx darnn
    * Fix missing space in format WebVTT
@@ -65,6 +67,8 @@
    * Fix for first line in cmd/batch OCR - thx Jamakmake
    * Fix Microsoft translator via API key - thx Acir
    * Fix Greek encoding for format PAC
+   * Fix minor issue in "auto-break line" - thx SvenErik1968
+   * Fix import time codes in translator mode - thx darnn
 
 
 3.5.3 (12th May 2017)
