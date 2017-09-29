@@ -14,7 +14,10 @@ namespace Nikse.SubtitleEdit.Forms
 
         public NetworkStart()
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
+
             labelStatus.Text = string.Empty;
             Text = Configuration.Settings.Language.NetworkStart.Title;
             labelInfo.Text = Configuration.Settings.Language.NetworkStart.Information;

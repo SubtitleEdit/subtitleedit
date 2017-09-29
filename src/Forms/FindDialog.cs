@@ -14,7 +14,9 @@ namespace Nikse.SubtitleEdit.Forms
         private readonly Subtitle _subtitle;
         public FindDialog(Subtitle subtitle)
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
 
             Text = Configuration.Settings.Language.FindDialog.Title;
             buttonFind.Text = Configuration.Settings.Language.FindDialog.Find;

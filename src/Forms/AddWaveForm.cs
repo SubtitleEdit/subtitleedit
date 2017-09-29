@@ -28,10 +28,13 @@ namespace Nikse.SubtitleEdit.Forms
 
         public AddWaveform()
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
             labelProgress.Text = string.Empty;
             buttonCancel.Visible = false;
             labelInfo.Text = string.Empty;
+            UiUtil.FixLargeFonts(this, buttonCancel);
         }
 
         public void Initialize(string videoFile, string peakWaveFileName, string spectrogramDirectory, int audioTrackNumber)

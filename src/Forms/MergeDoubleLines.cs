@@ -20,7 +20,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public MergeDoubleLines()
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
             _previewTimer.Tick += previewTimer_Tick;
             _previewTimer.Interval = 250;
             UiUtil.FixLargeFonts(this, buttonOK);

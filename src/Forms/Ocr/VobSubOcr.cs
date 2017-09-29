@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Core;
+﻿using Nikse.SubtitleEdit.Controls;
+using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Core.BluRaySup;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Core.TransportStream;
@@ -21,7 +22,6 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
-using Nikse.SubtitleEdit.Controls;
 
 namespace Nikse.SubtitleEdit.Forms.Ocr
 {
@@ -331,8 +331,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         public VobSubOcr()
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
-            //this.DoubleBuffered = true;
+            UiUtil.FixFonts(this);
             SetDoubleBuffered(subtitleListView1);
 
             var language = Configuration.Settings.Language.VobSubOcr;
@@ -7933,7 +7934,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
         }
 
-        private void saveAllImagesWithHtmlIndexViewToolStripMenuItem_Click(object sender, EventArgs e)
+        internal void SaveAllImagesWithHtmlIndexViewToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (folderBrowserDialog1.ShowDialog(this) == DialogResult.OK)
             {
@@ -8611,17 +8612,17 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
         }
 
-        private void vobSubToolStripMenuItem_Click(object sender, EventArgs e)
+        internal void VobSubToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ExportToPngXml(ExportPngXml.ExportFormats.VobSub);
         }
 
-        private void bluraySupToolStripMenuItem_Click(object sender, EventArgs e)
+        internal void BluraySupToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ExportToPngXml(ExportPngXml.ExportFormats.BluraySup);
         }
 
-        private void bDNXMLToolStripMenuItem_Click(object sender, EventArgs e)
+        internal void BDNXMLToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ExportToPngXml("BDNXML");
         }
@@ -8775,7 +8776,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             labelStatus.Text = string.Empty;
         }
 
-        private void dOSTToolStripMenuItem_Click(object sender, EventArgs e)
+        internal void DOSTToolStripMenuItem_Click(object sender, EventArgs e)
         {
             using (var exportBdnXmlPng = new ExportPngXml())
             {

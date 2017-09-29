@@ -21,7 +21,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public FormRemoveTextForHearImpaired(Main main)
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
 
             _mainForm = main;
             _removeTextForHiLib = new RemoveTextForHI(GetSettings());

@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Drawing;
-using System.Windows.Forms;
-using Nikse.SubtitleEdit.Core;
+﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Ocr.Binary;
+using System.Collections.Generic;
+using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms.Ocr
 {
@@ -10,7 +10,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
     {
         public AddBeterMultiMatch()
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
         }
 
         public BinaryOcrBitmap ExpandedMatch { get; set; }

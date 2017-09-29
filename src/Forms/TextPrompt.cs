@@ -11,7 +11,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public TextPrompt(string title, string label)
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
             Text = title;
             labelDescription.Text = label;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;

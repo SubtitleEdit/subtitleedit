@@ -24,7 +24,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public HardSubExtract(string videoFileName)
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
             _videoFileName = videoFileName;
             labelClickOnTextColor.Visible = false;
             SubtitleFromOcr = new Subtitle();

@@ -12,7 +12,9 @@ namespace Nikse.SubtitleEdit.Forms
     {
         public VideoError()
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
             UiUtil.FixLargeFonts(this, buttonCancel);
         }
 

@@ -1931,7 +1931,7 @@
             // checkBoxMpvHandlesPreviewText
             // 
             this.checkBoxMpvHandlesPreviewText.AutoSize = true;
-            this.checkBoxMpvHandlesPreviewText.Location = new System.Drawing.Point(169, 107);
+            this.checkBoxMpvHandlesPreviewText.Location = new System.Drawing.Point(169, 111);
             this.checkBoxMpvHandlesPreviewText.Name = "checkBoxMpvHandlesPreviewText";
             this.checkBoxMpvHandlesPreviewText.Size = new System.Drawing.Size(150, 17);
             this.checkBoxMpvHandlesPreviewText.TabIndex = 31;
@@ -1941,17 +1941,17 @@
             // labelMpvSettings
             // 
             this.labelMpvSettings.AutoSize = true;
-            this.labelMpvSettings.Font = new System.Drawing.Font("Tahoma", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelMpvSettings.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelMpvSettings.ForeColor = System.Drawing.Color.Gray;
-            this.labelMpvSettings.Location = new System.Drawing.Point(651, 93);
+            this.labelMpvSettings.Location = new System.Drawing.Point(709, 93);
             this.labelMpvSettings.Name = "labelMpvSettings";
-            this.labelMpvSettings.Size = new System.Drawing.Size(33, 11);
+            this.labelMpvSettings.Size = new System.Drawing.Size(40, 13);
             this.labelMpvSettings.TabIndex = 30;
             this.labelMpvSettings.Text = "--vo=?";
             // 
             // buttonMpvSettings
             // 
-            this.buttonMpvSettings.Location = new System.Drawing.Point(466, 87);
+            this.buttonMpvSettings.Location = new System.Drawing.Point(510, 89);
             this.buttonMpvSettings.Name = "buttonMpvSettings";
             this.buttonMpvSettings.Size = new System.Drawing.Size(179, 21);
             this.buttonMpvSettings.TabIndex = 29;
@@ -1982,10 +1982,10 @@
             // 
             // textBoxVlcPath
             // 
-            this.textBoxVlcPath.Location = new System.Drawing.Point(382, 45);
+            this.textBoxVlcPath.Location = new System.Drawing.Point(410, 45);
             this.textBoxVlcPath.MaxLength = 1000;
             this.textBoxVlcPath.Name = "textBoxVlcPath";
-            this.textBoxVlcPath.Size = new System.Drawing.Size(390, 21);
+            this.textBoxVlcPath.Size = new System.Drawing.Size(362, 21);
             this.textBoxVlcPath.TabIndex = 25;
             this.textBoxVlcPath.MouseLeave += new System.EventHandler(this.textBoxVlcPath_MouseLeave);
             // 
@@ -2001,11 +2001,11 @@
             // labelVideoPlayerVLC
             // 
             this.labelVideoPlayerVLC.AutoSize = true;
-            this.labelVideoPlayerVLC.Font = new System.Drawing.Font("Tahoma", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelVideoPlayerVLC.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelVideoPlayerVLC.ForeColor = System.Drawing.Color.Gray;
             this.labelVideoPlayerVLC.Location = new System.Drawing.Point(167, 49);
             this.labelVideoPlayerVLC.Name = "labelVideoPlayerVLC";
-            this.labelVideoPlayerVLC.Size = new System.Drawing.Size(208, 11);
+            this.labelVideoPlayerVLC.Size = new System.Drawing.Size(237, 13);
             this.labelVideoPlayerVLC.TabIndex = 13;
             this.labelVideoPlayerVLC.Text = "libvlc.dll from VLC media player (1.1.0 or newer)";
             // 
@@ -2023,33 +2023,33 @@
             // labelVideoPlayerMPlayer
             // 
             this.labelVideoPlayerMPlayer.AutoSize = true;
-            this.labelVideoPlayerMPlayer.Font = new System.Drawing.Font("Tahoma", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelVideoPlayerMPlayer.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelVideoPlayerMPlayer.ForeColor = System.Drawing.Color.Gray;
             this.labelVideoPlayerMPlayer.Location = new System.Drawing.Point(167, 93);
             this.labelVideoPlayerMPlayer.Name = "labelVideoPlayerMPlayer";
-            this.labelVideoPlayerMPlayer.Size = new System.Drawing.Size(284, 11);
+            this.labelVideoPlayerMPlayer.Size = new System.Drawing.Size(337, 13);
             this.labelVideoPlayerMPlayer.TabIndex = 11;
             this.labelVideoPlayerMPlayer.Text = "https://mpv.io/ - free, open source, and cross-platform media player";
             // 
             // labelDirectShowDescription
             // 
             this.labelDirectShowDescription.AutoSize = true;
-            this.labelDirectShowDescription.Font = new System.Drawing.Font("Tahoma", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelDirectShowDescription.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelDirectShowDescription.ForeColor = System.Drawing.Color.Gray;
             this.labelDirectShowDescription.Location = new System.Drawing.Point(167, 26);
             this.labelDirectShowDescription.Name = "labelDirectShowDescription";
-            this.labelDirectShowDescription.Size = new System.Drawing.Size(98, 11);
+            this.labelDirectShowDescription.Size = new System.Drawing.Size(114, 13);
             this.labelDirectShowDescription.TabIndex = 10;
             this.labelDirectShowDescription.Text = "Quartz.dll in system32";
             // 
             // labelMpcHcDescription
             // 
             this.labelMpcHcDescription.AutoSize = true;
-            this.labelMpcHcDescription.Font = new System.Drawing.Font("Tahoma", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelMpcHcDescription.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelMpcHcDescription.ForeColor = System.Drawing.Color.Gray;
             this.labelMpcHcDescription.Location = new System.Drawing.Point(167, 70);
             this.labelMpcHcDescription.Name = "labelMpcHcDescription";
-            this.labelMpcHcDescription.Size = new System.Drawing.Size(160, 11);
+            this.labelMpcHcDescription.Size = new System.Drawing.Size(178, 13);
             this.labelMpcHcDescription.TabIndex = 9;
             this.labelMpcHcDescription.Text = "Media Player Classic - Home Cinema";
             // 

@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Logic;
+using System;
 using System.IO;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Core;
-using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Forms.Ocr
 {
@@ -12,7 +12,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private bool _vobSub = false;
         public VobSubOcrNewFolder(bool vobsub)
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
             FolderName = null;
             _vobSub = vobsub;
 

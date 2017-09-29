@@ -18,7 +18,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public SubStationAlphaProperties(Subtitle subtitle, SubtitleFormat format, string videoFileName, string subtitleFileName)
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
             _subtitle = subtitle;
             _isSubStationAlpha = format.Name == SubStationAlpha.NameOfFormat;
             _videoFileName = videoFileName;

@@ -251,7 +251,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.saveAllImagesWithHtmlIndexViewToolStripMenuItem.Name = "saveAllImagesWithHtmlIndexViewToolStripMenuItem";
             this.saveAllImagesWithHtmlIndexViewToolStripMenuItem.Size = new System.Drawing.Size(305, 22);
             this.saveAllImagesWithHtmlIndexViewToolStripMenuItem.Text = "Save all images with HTML index view...";
-            this.saveAllImagesWithHtmlIndexViewToolStripMenuItem.Click += new System.EventHandler(this.saveAllImagesWithHtmlIndexViewToolStripMenuItem_Click);
+            this.saveAllImagesWithHtmlIndexViewToolStripMenuItem.Click += new System.EventHandler(this.SaveAllImagesWithHtmlIndexViewToolStripMenuItem_Click);
             // 
             // toolStripMenuItemExport
             // 
@@ -269,28 +269,28 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.bDNXMLToolStripMenuItem.Name = "bDNXMLToolStripMenuItem";
             this.bDNXMLToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
             this.bDNXMLToolStripMenuItem.Text = "BDN XML...";
-            this.bDNXMLToolStripMenuItem.Click += new System.EventHandler(this.bDNXMLToolStripMenuItem_Click);
+            this.bDNXMLToolStripMenuItem.Click += new System.EventHandler(this.BDNXMLToolStripMenuItem_Click);
             // 
             // bluraySupToolStripMenuItem
             // 
             this.bluraySupToolStripMenuItem.Name = "bluraySupToolStripMenuItem";
             this.bluraySupToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
             this.bluraySupToolStripMenuItem.Text = "Blu-ray sup...";
-            this.bluraySupToolStripMenuItem.Click += new System.EventHandler(this.bluraySupToolStripMenuItem_Click);
+            this.bluraySupToolStripMenuItem.Click += new System.EventHandler(this.BluraySupToolStripMenuItem_Click);
             // 
             // vobSubToolStripMenuItem
             // 
             this.vobSubToolStripMenuItem.Name = "vobSubToolStripMenuItem";
             this.vobSubToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
             this.vobSubToolStripMenuItem.Text = "VobSub...";
-            this.vobSubToolStripMenuItem.Click += new System.EventHandler(this.vobSubToolStripMenuItem_Click);
+            this.vobSubToolStripMenuItem.Click += new System.EventHandler(this.VobSubToolStripMenuItem_Click);
             // 
             // dOSTToolStripMenuItem
             // 
             this.dOSTToolStripMenuItem.Name = "dOSTToolStripMenuItem";
             this.dOSTToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
             this.dOSTToolStripMenuItem.Text = "DOST...";
-            this.dOSTToolStripMenuItem.Click += new System.EventHandler(this.dOSTToolStripMenuItem_Click);
+            this.dOSTToolStripMenuItem.Click += new System.EventHandler(this.DOSTToolStripMenuItem_Click);
             // 
             // toolStripSeparatorImageCompare
             // 

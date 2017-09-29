@@ -16,7 +16,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public EffectTypewriter()
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
 
             Text = Configuration.Settings.Language.EffectTypewriter.Title;
             labelTM.Text = Configuration.Settings.Language.EffectKaraoke.TotalMilliseconds;

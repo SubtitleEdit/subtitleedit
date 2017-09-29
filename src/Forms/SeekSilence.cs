@@ -13,7 +13,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public SeekSilence()
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
 
             Text = Configuration.Settings.Language.SeekSilence.Title;
             groupBoxSearchDirection.Text = Configuration.Settings.Language.SeekSilence.SearchDirection;

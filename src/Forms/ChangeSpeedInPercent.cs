@@ -1,6 +1,7 @@
 ﻿using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Logic;
 using System;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
@@ -13,7 +14,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public ChangeSpeedInPercent(int numberOfSelectedLines)
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
             Text = Configuration.Settings.Language.ChangeSpeedInPercent.Title;
             groupBoxInfo.Text = Configuration.Settings.Language.ChangeSpeedInPercent.Info;
             radioButtonAllLines.Text = Configuration.Settings.Language.ShowEarlierLater.AllLines;

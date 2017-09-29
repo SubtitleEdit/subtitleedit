@@ -24,7 +24,9 @@ namespace Nikse.SubtitleEdit.Forms.Styles
         public SubStationAlphaStyles(Subtitle subtitle, SubtitleFormat format)
             : base(subtitle)
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
 
             labelStatus.Text = string.Empty;
             _header = subtitle.Header;

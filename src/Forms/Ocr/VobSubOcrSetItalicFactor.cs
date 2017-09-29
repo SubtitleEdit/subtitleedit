@@ -1,7 +1,8 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Logic;
+using System;
 using System.Drawing;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Core;
 
 namespace Nikse.SubtitleEdit.Forms.Ocr
 {
@@ -12,7 +13,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         public VobSubOcrSetItalicFactor(Bitmap bmp, double factor)
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
 
             _bmp = bmp;
             _factor = factor;

@@ -1,5 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -37,7 +38,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public ExportTextST(Subtitle subtitle)
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
 
             SetGroupBoxProperties(groupBoxPropertiesPalette);
             SetGroupBoxProperties(groupBoxPropertiesRegionStyle);

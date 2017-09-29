@@ -28,7 +28,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public AutoBreakUnbreakLines()
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
             groupBoxLinesFound.Text = string.Empty;
             listViewFixes.Columns[2].Width = 290;
             listViewFixes.Columns[3].Width = 290;

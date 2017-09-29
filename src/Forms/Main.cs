@@ -7,9 +7,12 @@ using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes;
 using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.Forms;
+using Nikse.SubtitleEdit.Core.NetflixQualityCheck;
+using Nikse.SubtitleEdit.Core.SpellCheck;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Core.TransportStream;
 using Nikse.SubtitleEdit.Core.VobSub;
+using Nikse.SubtitleEdit.Forms.Ocr;
 using Nikse.SubtitleEdit.Forms.Styles;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Networking;
@@ -24,9 +27,6 @@ using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Core.SpellCheck;
-using Nikse.SubtitleEdit.Core.NetflixQualityCheck;
-using Nikse.SubtitleEdit.Forms.Ocr;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -329,7 +329,9 @@ namespace Nikse.SubtitleEdit.Forms
                 NativeMethods.setlocale(NativeMethods.LC_NUMERIC, "C");
             try
             {
+                UiUtil.PreInitialize(this);
                 InitializeComponent();
+                UiUtil.FixFonts(this);
                 Icon = Properties.Resources.SubtitleEditFormIcon;
 
                 textBoxListViewTextAlternate.Visible = false;
@@ -13751,26 +13753,29 @@ namespace Nikse.SubtitleEdit.Forms
                 for (int i = 0; i < timeCodeSubtitle.Paragraphs.Count; i++)
                 {
                     var existing = _subtitle.GetParagraphOrDefault(i);
-                    var oldExisting = new Paragraph(existing);                    
 
                     var newTimeCode = timeCodeSubtitle.GetParagraphOrDefault(i);
                     if (existing == null || newTimeCode == null)
                         break;
+
+                    Paragraph original = null;
+                    if (existing != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle && 
+                        _subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0)
+                    {
+                        original = Utilities.GetOriginalParagraph(i, existing, _subtitleAlternate.Paragraphs);
+                    }
+
                     existing.StartTime.TotalMilliseconds = newTimeCode.StartTime.TotalMilliseconds;
                     existing.EndTime.TotalMilliseconds = newTimeCode.EndTime.TotalMilliseconds;
                     existing.StartFrame = newTimeCode.StartFrame;
                     existing.EndFrame = newTimeCode.EndFrame;
 
-                    if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0)
+                    if (original != null)
                     {
-                        var original = Utilities.GetOriginalParagraph(i, oldExisting, _subtitleAlternate.Paragraphs);
-                        if (original != null)
-                        {
-                            original.StartTime.TotalMilliseconds = newTimeCode.StartTime.TotalMilliseconds;
-                            original.EndTime.TotalMilliseconds = newTimeCode.EndTime.TotalMilliseconds;
-                            original.StartFrame = newTimeCode.StartFrame;
-                            original.EndFrame = newTimeCode.EndFrame;
-                        }
+                        original.StartTime.TotalMilliseconds = newTimeCode.StartTime.TotalMilliseconds;
+                        original.EndTime.TotalMilliseconds = newTimeCode.EndTime.TotalMilliseconds;
+                        original.StartFrame = newTimeCode.StartFrame;
+                        original.EndFrame = newTimeCode.EndFrame;
                     }
 
                     count++;

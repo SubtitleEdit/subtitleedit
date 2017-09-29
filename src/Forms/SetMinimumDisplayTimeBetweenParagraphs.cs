@@ -17,7 +17,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public SetMinimumDisplayTimeBetweenParagraphs()
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
 
             Text = Configuration.Settings.Language.SetMinimumDisplayTimeBetweenParagraphs.Title;
             labelMaxMillisecondsBetweenLines.Text = Configuration.Settings.Language.SetMinimumDisplayTimeBetweenParagraphs.MinimumMillisecondsBetweenParagraphs;

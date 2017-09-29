@@ -17,7 +17,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public DoNotBreakAfterListEdit()
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
 
             Text = Configuration.Settings.Language.Settings.UseDoNotBreakAfterList;
             labelLanguage.Text = Configuration.Settings.Language.ChooseLanguage.Language;

@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
@@ -11,7 +12,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public AlignmentPicker()
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
             Text = Configuration.Settings.Language.SubStationAlphaStyles.Alignment;
 
             button1.Text = Configuration.Settings.Language.SubStationAlphaStyles.TopLeft;
@@ -25,6 +28,8 @@ namespace Nikse.SubtitleEdit.Forms
             button7.Text = Configuration.Settings.Language.SubStationAlphaStyles.BottomLeft;
             button8.Text = Configuration.Settings.Language.SubStationAlphaStyles.BottomCenter;
             button9.Text = Configuration.Settings.Language.SubStationAlphaStyles.BottomRight;
+
+            UiUtil.FixLargeFonts(this, button1);
         }
 
         public void Done()

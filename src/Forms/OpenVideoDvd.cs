@@ -13,7 +13,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public OpenVideoDvd()
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
             Text = Configuration.Settings.Language.OpenVideoDvd.Title;
             groupBoxOpenDvdFrom.Text = Configuration.Settings.Language.OpenVideoDvd.OpenDvdFrom;
             radioButtonDisc.Text = Configuration.Settings.Language.OpenVideoDvd.Disc;

@@ -11,7 +11,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public GoogleOrMicrosoftTranslate()
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
             using (var gt = new GoogleTranslate())
             {
                 gt.FillComboWithGoogleLanguages(comboBoxFrom);

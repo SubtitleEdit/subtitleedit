@@ -13,7 +13,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public Interjections()
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
         }
 
         public string GetInterjectionsSemiColonSeperatedString()

@@ -75,7 +75,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public BatchConvert(Icon icon)
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
             Icon = (Icon)icon.Clone();
 
             progressBar1.Visible = false;

@@ -10,7 +10,9 @@ namespace Nikse.SubtitleEdit.Forms
     {
         public AddToUserDic()
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
             Text = Configuration.Settings.Language.AddToUserDictionary.Title;
             labelDescription.Text = Configuration.Settings.Language.AddToUserDictionary.Description;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;

@@ -19,7 +19,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public GetDictionaries()
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
 
             Text = Configuration.Settings.Language.GetDictionaries.Title;
             labelDescription1.Text = Configuration.Settings.Language.GetDictionaries.DescriptionLine1;

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Core;
+using System.Drawing;
+using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -11,7 +13,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public EbuColorPicker()
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
             Text = Configuration.Settings.Language.ColorChooser.Title;
         }
 

@@ -1,5 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Globalization;
 using System.Windows.Forms;
@@ -16,7 +17,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public TimedTextProperties(Subtitle subtitle)
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
             Application.DoEvents();
 
             _subtitle = subtitle;

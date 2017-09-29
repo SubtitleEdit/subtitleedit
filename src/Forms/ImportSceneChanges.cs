@@ -23,7 +23,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public ImportSceneChanges(VideoInfo videoInfo, string videoFileName)
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
             if (videoInfo != null && videoInfo.FramesPerSecond > 1)
                 _frameRate = videoInfo.FramesPerSecond;
             _videoFileName = videoFileName;

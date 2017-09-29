@@ -28,7 +28,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public SetVideoOffset()
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
             _videoOffset = new TimeCode();
             checkBoxKeepTimeCodes.Checked = Configuration.Settings.Tools.VideoOffsetKeepTimeCodes;
             Text = Configuration.Settings.Language.SetVideoOffset.Title;

@@ -1,5 +1,7 @@
 ﻿using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Core.Enums;
+using Nikse.SubtitleEdit.Core.Interfaces;
+using Nikse.SubtitleEdit.Core.SpellCheck;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.SpellCheck;
 using System;
@@ -7,8 +9,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Core.Interfaces;
-using Nikse.SubtitleEdit.Core.SpellCheck;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -85,7 +85,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public SpellCheck()
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
             labelActionInfo.Text = string.Empty;
             Text = Configuration.Settings.Language.SpellCheck.Title;
             labelFullText.Text = Configuration.Settings.Language.SpellCheck.FullText;

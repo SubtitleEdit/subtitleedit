@@ -22,7 +22,9 @@ namespace Nikse.SubtitleEdit.Forms.Styles
         public SubStationAlphaStylesBatchConvert(Subtitle subtitle, SubtitleFormat format)
             : base(subtitle)
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
 
             comboBoxWrapStyle.SelectedIndex = 2;
             comboBoxCollision.SelectedIndex = 0;

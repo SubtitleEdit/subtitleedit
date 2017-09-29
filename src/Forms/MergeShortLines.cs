@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Core;
+﻿using Nikse.SubtitleEdit.Controls;
+using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
@@ -6,7 +7,6 @@ using System.Drawing;
 using System.Globalization;
 using System.Text;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Controls;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -19,7 +19,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public MergeShortLines()
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
             UiUtil.FixLargeFonts(this, buttonOK);
             SubtitleListview1.HideColumn(SubtitleListView.SubtitleColumn.CharactersPerSeconds);
             SubtitleListview1.HideColumn(SubtitleListView.SubtitleColumn.WordsPerMinute);

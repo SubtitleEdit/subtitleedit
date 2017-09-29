@@ -15,7 +15,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public ReplaceDialog()
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
 
             Text = Configuration.Settings.Language.ReplaceDialog.Title;
             labelFindWhat.Text = Configuration.Settings.Language.ReplaceDialog.FindWhat;

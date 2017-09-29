@@ -1,7 +1,7 @@
-﻿using System;
-using System.Windows.Forms;
-using Nikse.SubtitleEdit.Core;
+﻿using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Logic;
+using System;
+using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -14,7 +14,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public SettingsListViewColumns()
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
             checkBoxShowCps.Checked = Configuration.Settings.Tools.ListViewShowColumnCharsPerSec;
             checkBoxShowWpm.Checked = Configuration.Settings.Tools.ListViewShowColumnWordsPerMin;
 

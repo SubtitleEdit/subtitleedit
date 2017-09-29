@@ -12,7 +12,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public DialogDoNotShowAgain(string title, string text)
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
 
             Rectangle screenRectangle = RectangleToScreen(ClientRectangle);
             int titleBarHeight = screenRectangle.Top - Top;

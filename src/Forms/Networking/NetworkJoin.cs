@@ -14,7 +14,10 @@ namespace Nikse.SubtitleEdit.Forms
 
         public NetworkJoin()
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
+
             labelStatus.Text = string.Empty;
             Text = Configuration.Settings.Language.NetworkJoin.Title;
             labelInfo.Text = Configuration.Settings.Language.NetworkJoin.Information;

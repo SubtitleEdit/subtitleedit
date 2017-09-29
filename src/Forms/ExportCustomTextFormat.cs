@@ -1,5 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Globalization;
 using System.Windows.Forms;
@@ -13,7 +14,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public ExportCustomTextFormat(string format)
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
             var l = Configuration.Settings.Language.ExportCustomTextFormat;
             comboBoxNewLine.Items.Clear();
             comboBoxNewLine.Items.Add(l.DoNotModify);

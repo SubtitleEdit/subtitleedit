@@ -1,6 +1,7 @@
 ﻿using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Logic;
 using System;
+using System.Drawing;
 using System.Globalization;
 using System.Windows.Forms;
 
@@ -10,7 +11,9 @@ namespace Nikse.SubtitleEdit.Forms.DCinema
     {
         public DCinemaPropertiesSmpte()
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
 
             var l = Configuration.Settings.Language.DCinemaProperties;
             Text = l.TitleSmpte;

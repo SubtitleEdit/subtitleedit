@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Logic;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Core;
-using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Forms.Ocr
 {
@@ -15,7 +15,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         public VobSubOcrCharacter()
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
 
             var language = Configuration.Settings.Language.VobSubOcrCharacter;
             Text = language.Title;

@@ -1,6 +1,8 @@
 ﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Globalization;
 using System.Windows.Forms;
 
@@ -42,7 +44,10 @@ namespace Nikse.SubtitleEdit.Controls
 
         public TimeUpDown()
         {
+            AutoScaleMode = AutoScaleMode.Dpi;
+            Font = SystemFonts.MessageBoxFont;
             InitializeComponent();
+            UiUtil.FixFonts(this);
             numericUpDown1.ValueChanged += NumericUpDownValueChanged;
             numericUpDown1.Value = NumericUpDownValue;
             maskedTextBox1.InsertKeyMode = InsertKeyMode.Overwrite;

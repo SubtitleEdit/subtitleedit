@@ -11,7 +11,9 @@ namespace Nikse.SubtitleEdit.Forms
         private readonly Color _defaultBackColor = Color.White;
         public MeasurementConverter()
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
 
             var l = Configuration.Settings.Language.MeasurementConverter;
             Text = l.Title;

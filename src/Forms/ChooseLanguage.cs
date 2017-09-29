@@ -76,7 +76,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public ChooseLanguage()
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
 
             var defaultLanguage = new Language();
             DefaultTranslation = new TranslationInfo(defaultLanguage.General.CultureName, defaultLanguage.Name);

@@ -23,7 +23,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public ModifySelection(Subtitle subtitle, SubtitleListView subtitleListView)
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
             _loading = true;
             _subtitle = subtitle;
             _subtitleListView = subtitleListView;

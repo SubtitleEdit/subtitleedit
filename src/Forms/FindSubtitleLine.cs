@@ -21,7 +21,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public FindSubtitleLine()
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
             Icon = Nikse.SubtitleEdit.Properties.Resources.SubtitleEditFormIcon;
 
             Text = Configuration.Settings.Language.FindSubtitleLine.Title;

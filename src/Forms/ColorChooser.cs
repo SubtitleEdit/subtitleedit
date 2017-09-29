@@ -18,6 +18,7 @@
 #region Using directives
 
 using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.ColorChooser;
 using System;
 using System.Drawing;
@@ -72,7 +73,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public ColorChooser()
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
 
             Text = Configuration.Settings.Language.ColorChooser.Title;
             labelRed.Text = Configuration.Settings.Language.ColorChooser.Red;

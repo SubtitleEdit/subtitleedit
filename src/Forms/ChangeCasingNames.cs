@@ -19,7 +19,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public ChangeCasingNames()
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
             labelXLinesSelected.Text = string.Empty;
             Text = Configuration.Settings.Language.ChangeCasingNames.Title;
             groupBoxNames.Text = string.Empty;

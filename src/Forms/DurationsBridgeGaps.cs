@@ -30,7 +30,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public DurationsBridgeGaps(Subtitle subtitle)
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
             UiUtil.FixLargeFonts(this, buttonOK);
 
             SubtitleListview1.HideColumn(SubtitleListView.SubtitleColumn.CharactersPerSeconds);

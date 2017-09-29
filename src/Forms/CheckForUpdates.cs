@@ -1,5 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Core.Forms;
+using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Windows.Forms;
 
@@ -14,7 +15,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public CheckForUpdates(Main mainForm)
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
 
             _mainForm = mainForm;
             InitLanguage();
@@ -37,13 +40,16 @@ namespace Nikse.SubtitleEdit.Forms
 
         public CheckForUpdates(Main mainForm, CheckForUpdatesHelper checkForUpdatesHelper)
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
 
             _mainForm = mainForm;
             _updatesHelper = checkForUpdatesHelper;
             InitLanguage();
             ShowAvailableUpdate(true);
             _performCheckOnShown = false;
+            UiUtil.FixLargeFonts(this, buttonOK);
         }
 
         private void CheckForUpdates_KeyDown(object sender, KeyEventArgs e)

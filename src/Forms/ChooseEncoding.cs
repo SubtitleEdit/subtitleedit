@@ -14,7 +14,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public ChooseEncoding()
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
 
             LanguageStructure.ChooseEncoding language = Configuration.Settings.Language.ChooseEncoding;
             Text = language.Title;

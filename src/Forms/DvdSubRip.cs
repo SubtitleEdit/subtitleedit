@@ -37,7 +37,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public DvdSubRip(IntPtr taskbarFormHandle, string initialFileName)
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
             _taskbarFormHandle = taskbarFormHandle;
             _initialFileName = initialFileName;
             labelStatus.Text = string.Empty;

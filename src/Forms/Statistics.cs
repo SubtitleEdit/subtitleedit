@@ -50,7 +50,9 @@ https://github.com/SubtitleEdit/subtitleedit
 
         public Statistics(Subtitle subtitle, string fileName, SubtitleFormat format)
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
 
             _subtitle = subtitle;
             _format = format;
