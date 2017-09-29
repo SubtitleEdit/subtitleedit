@@ -55,6 +55,24 @@ namespace Test.Logic
         }
 
         [TestMethod]
+        public void AutoBreakLine5DoNoBreakAtArabicDialogue()
+        {
+            Configuration.Settings.General.SubtitleLineMaximumLength = 43;
+            string s1 = "!دعه -" + Environment.NewLine + "!دعه أنت -";
+            string s2 = Utilities.AutoBreakLine(s1, "ar");
+            Assert.AreEqual(s1, s2);
+        }
+
+        [TestMethod]
+        public void AutoBreakLine5DoNoBreakAtTwoMusicTaggedLines()
+        {
+            Configuration.Settings.General.SubtitleLineMaximumLength = 43;
+            string s1 = "♪ Yo ♪" + Environment.NewLine + "♪ Yo yo ♪";
+            string s2 = Utilities.AutoBreakLine(s1);
+            Assert.AreEqual(s1, s2);
+        }
+
+        [TestMethod]
         public void AutoBreakLine5DoNoBreakAtPeriod()
         {
             Configuration.Settings.General.SubtitleLineMaximumLength = 43;
