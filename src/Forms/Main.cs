@@ -7604,7 +7604,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (SubtitleListview1.SelectedItems.Count > 1)
             {
-                MakeHistoryForUndo(_language.BeforeRemoveLineBreaksInSelectedLines);
+                MakeHistoryForUndo(_language.Controls.AutoBreak);
                 SubtitleListview1.BeginUpdate();
                 foreach (int index in SubtitleListview1.SelectedIndices)
                 {
@@ -7631,9 +7631,25 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else
             {
-                textBoxListViewText.Text = Utilities.AutoBreakLine(textBoxListViewText.Text, language);
+                var fixedText = Utilities.AutoBreakLine(textBoxListViewText.Text, language);
+                var makeHistory = textBoxListViewText.Text != fixedText;
                 if (_subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
-                    textBoxListViewTextAlternate.Text = Utilities.AutoBreakLine(textBoxListViewTextAlternate.Text, languageOriginal);
+                {
+                    var alternateFixedText = Utilities.AutoBreakLine(textBoxListViewTextAlternate.Text, languageOriginal);
+                    if (!makeHistory)
+                        makeHistory = textBoxListViewTextAlternate.Text != alternateFixedText;
+                    if (makeHistory)
+                    {
+                        MakeHistoryForUndo(_language.Controls.AutoBreak.Replace("&", string.Empty));
+                        textBoxListViewText.Text = fixedText;
+                    }
+                    textBoxListViewTextAlternate.Text = alternateFixedText;
+                }
+                else if (makeHistory)
+                {
+                    MakeHistoryForUndo(_language.Controls.AutoBreak.Replace("&", string.Empty));
+                    textBoxListViewText.Text = fixedText;
+                }
             }
             var startText = textBoxListViewText.Text.Substring(0, textCaretPos);
             var numberOfNewLines = Utilities.CountTagInText(startText, Environment.NewLine);
@@ -9268,13 +9284,41 @@ namespace Nikse.SubtitleEdit.Forms
                     var p = _subtitle.GetParagraphOrDefault(index);
                     p.Text = Utilities.UnbreakLine(p.Text);
                     SubtitleListview1.SetText(index, p.Text);
+
+                    if (_subtitleAlternate != null && SubtitleListview1.IsAlternateTextColumnVisible && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
+                    {
+                        var original = Utilities.GetOriginalParagraph(index, p, _subtitleAlternate.Paragraphs);
+                        if (original != null)
+                        {
+                            original.Text = Utilities.UnbreakLine(original.Text);
+                            SubtitleListview1.SetAlternateText(index, original.Text);
+                        }
+                    }
                 }
                 SubtitleListview1.EndUpdate();
                 RefreshSelectedParagraph();
             }
             else
             {
-                textBoxListViewText.Text = Utilities.UnbreakLine(textBoxListViewText.Text);
+                var fixedText = Utilities.UnbreakLine(textBoxListViewText.Text);
+                var makeHistory = textBoxListViewText.Text != fixedText;
+                if (_subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
+                {
+                    var alternateFixedText = Utilities.UnbreakLine(textBoxListViewTextAlternate.Text);
+                    if (!makeHistory)
+                        makeHistory = textBoxListViewTextAlternate.Text != alternateFixedText;
+                    if (makeHistory)
+                    {
+                        MakeHistoryForUndo(_language.BeforeRemoveLineBreaksInSelectedLines);
+                        textBoxListViewText.Text = fixedText;
+                    }
+                    textBoxListViewTextAlternate.Text = alternateFixedText;
+                }
+                else if (makeHistory)
+                {
+                    MakeHistoryForUndo(_language.BeforeRemoveLineBreaksInSelectedLines);
+                    textBoxListViewText.Text = fixedText;
+                }
             }
             _doAutoBreakOnTextChanged = true;
             textBoxListViewText.SelectionStart = textCaretPos;
@@ -13759,7 +13803,7 @@ namespace Nikse.SubtitleEdit.Forms
                         break;
 
                     Paragraph original = null;
-                    if (existing != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle && 
+                    if (existing != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle &&
                         _subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0)
                     {
                         original = Utilities.GetOriginalParagraph(i, existing, _subtitleAlternate.Paragraphs);
