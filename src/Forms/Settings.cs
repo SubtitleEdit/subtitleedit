@@ -72,7 +72,10 @@ namespace Nikse.SubtitleEdit.Forms
 
         public Settings()
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
+
 
             labelStatus.Text = string.Empty;
 

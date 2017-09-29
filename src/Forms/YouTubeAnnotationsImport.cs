@@ -9,7 +9,9 @@ namespace Nikse.SubtitleEdit.Forms
     {
         public YouTubeAnnotationsImport(Dictionary<string, int> stylesWithCount)
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
 
             Text = "YouTube Annotations";
             buttonOK.Text = Configuration.Settings.Language.General.Ok;

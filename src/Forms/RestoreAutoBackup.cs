@@ -17,7 +17,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public RestoreAutoBackup()
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
             labelStatus.Text = string.Empty;
 
             var l = Configuration.Settings.Language.RestoreAutoBackup;

@@ -17,7 +17,10 @@ namespace Nikse.SubtitleEdit.Forms
 
         public NetworkChat()
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
+
             buttonSendChat.Text = Configuration.Settings.Language.NetworkChat.Send;
             listViewUsers.Columns[0].Text = Configuration.Settings.Language.General.UserName;
             listViewUsers.Columns[1].Text = Configuration.Settings.Language.General.IP;

@@ -12,7 +12,9 @@ namespace Nikse.SubtitleEdit.Forms
     {
         public MatroskaSubtitleChooser(string fileType)
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
 
             Text = fileType.Equals("mp4", StringComparison.Ordinal) ? Configuration.Settings.Language.MatroskaSubtitleChooser.TitleMp4 : Configuration.Settings.Language.MatroskaSubtitleChooser.Title;
             labelChoose.Text = Configuration.Settings.Language.MatroskaSubtitleChooser.PleaseChoose;

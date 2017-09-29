@@ -23,7 +23,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public SplitLongLines()
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
             UiUtil.FixLargeFonts(this, buttonOK);
         }
 

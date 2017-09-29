@@ -24,7 +24,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public VideoPlayerUndocked(Main main, Controls.VideoPlayerContainer videoPlayerContainer)
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
             _mainForm = main;
             this.Icon = (Icon)_mainForm.Icon.Clone();
             _videoPlayerContainer = videoPlayerContainer;

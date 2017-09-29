@@ -13,7 +13,10 @@ namespace Nikse.SubtitleEdit.Forms
 
         public About()
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
+            UiUtil.FixLargeFonts(this, okButton);
         }
 
         public void Initialize()
@@ -47,9 +50,12 @@ namespace Nikse.SubtitleEdit.Forms
             }
             richTextBoxAbout1.Text = aboutText;
 
-            double height = TextDraw.MeasureTextHeight(richTextBoxAbout1.Font, richTextBoxAbout1.Text, false) * 1.4 + 80;
-            richTextBoxAbout1.Height = (int)height;
-            Height = richTextBoxAbout1.Top + richTextBoxAbout1.Height + 90;
+            using (var g = CreateGraphics())
+            {
+                double height = g.MeasureString("lH", richTextBoxAbout1.Font).Height * 1.4 + 80;
+                richTextBoxAbout1.Height = (int)height;
+                Height = richTextBoxAbout1.Top + richTextBoxAbout1.Height + 90;
+            }
         }
 
         private void OkButtonClick(object sender, EventArgs e)

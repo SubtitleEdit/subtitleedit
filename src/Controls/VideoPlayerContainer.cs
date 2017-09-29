@@ -907,15 +907,15 @@ namespace Nikse.SubtitleEdit.Controls
 
             _labelTimeCode.Location = new Point(280, 28);
             _labelTimeCode.ForeColor = Color.Gray;
-            _labelTimeCode.Font = new Font(_labelTimeCode.Font.FontFamily, 7);
+            _labelTimeCode.Font = new Font(_labelTimeCode.Font.FontFamily, 8);
             _labelTimeCode.AutoSize = true;
             _panelcontrols.Controls.Add(_labelTimeCode);
 
-            _labelVideoPlayerName.Location = new Point(280, 17);
+            _labelVideoPlayerName.Location = new Point(282, 17);
             _labelVideoPlayerName.ForeColor = Color.Gray;
             _labelVideoPlayerName.BackColor = Color.FromArgb(67, 75, 93);
             _labelVideoPlayerName.AutoSize = true;
-            _labelVideoPlayerName.Font = new Font(_labelTimeCode.Font.FontFamily, 5);
+            _labelVideoPlayerName.Font = new Font(_labelTimeCode.Font.FontFamily, 6);
 
             _panelcontrols.Controls.Add(_labelVideoPlayerName);
 

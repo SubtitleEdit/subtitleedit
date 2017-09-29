@@ -1,13 +1,13 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.Ocr.Binary;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Windows.Forms;
 using System.Xml;
-using Nikse.SubtitleEdit.Core;
-using Nikse.SubtitleEdit.Logic;
-using Nikse.SubtitleEdit.Logic.Ocr.Binary;
 
 namespace Nikse.SubtitleEdit.Forms.Ocr
 {
@@ -26,7 +26,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         public VobSubOcrCharacterInspect()
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
 
             labelCount.Text = string.Empty;
             labelExpandCount.Text = string.Empty;

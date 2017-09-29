@@ -18,7 +18,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public SplitSubtitle()
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
 
             Text = Configuration.Settings.Language.SplitSubtitle.Title;
             label1.Text = Configuration.Settings.Language.SplitSubtitle.Description1;

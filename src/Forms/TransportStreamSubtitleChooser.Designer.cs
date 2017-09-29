@@ -28,12 +28,21 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.labelChoose = new System.Windows.Forms.Label();
             this.listBoxTracks = new System.Windows.Forms.ListBox();
+            this.contextMenuStripListview = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.toolStripMenuItemExport = new System.Windows.Forms.ToolStripMenuItem();
+            this.bDNXMLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.bluraySupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.vobSubToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.dOSTToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveAllImagesWithHtmlIndexViewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
             this.listBoxSubtitles = new System.Windows.Forms.ListBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.contextMenuStripListview.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -50,12 +59,67 @@
             // 
             this.listBoxTracks.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.listBoxTracks.ContextMenuStrip = this.contextMenuStripListview;
             this.listBoxTracks.FormattingEnabled = true;
             this.listBoxTracks.Location = new System.Drawing.Point(13, 31);
             this.listBoxTracks.Name = "listBoxTracks";
             this.listBoxTracks.Size = new System.Drawing.Size(589, 82);
             this.listBoxTracks.TabIndex = 51;
             this.listBoxTracks.SelectedIndexChanged += new System.EventHandler(this.listBoxTracks_SelectedIndexChanged);
+            // 
+            // contextMenuStripListview
+            // 
+            this.contextMenuStripListview.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItemExport,
+            this.saveAllImagesWithHtmlIndexViewToolStripMenuItem});
+            this.contextMenuStripListview.Name = "contextMenuStripListview";
+            this.contextMenuStripListview.Size = new System.Drawing.Size(284, 48);
+            // 
+            // toolStripMenuItemExport
+            // 
+            this.toolStripMenuItemExport.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.bDNXMLToolStripMenuItem,
+            this.bluraySupToolStripMenuItem,
+            this.vobSubToolStripMenuItem,
+            this.dOSTToolStripMenuItem});
+            this.toolStripMenuItemExport.Name = "toolStripMenuItemExport";
+            this.toolStripMenuItemExport.Size = new System.Drawing.Size(283, 22);
+            this.toolStripMenuItemExport.Text = "Export all images as...";
+            // 
+            // bDNXMLToolStripMenuItem
+            // 
+            this.bDNXMLToolStripMenuItem.Name = "bDNXMLToolStripMenuItem";
+            this.bDNXMLToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
+            this.bDNXMLToolStripMenuItem.Text = "BDN XML...";
+            this.bDNXMLToolStripMenuItem.Click += new System.EventHandler(this.BDNXMLToolStripMenuItem_Click);
+            // 
+            // bluraySupToolStripMenuItem
+            // 
+            this.bluraySupToolStripMenuItem.Name = "bluraySupToolStripMenuItem";
+            this.bluraySupToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
+            this.bluraySupToolStripMenuItem.Text = "Blu-ray sup...";
+            this.bluraySupToolStripMenuItem.Click += new System.EventHandler(this.BluraySupToolStripMenuItem_Click);
+            // 
+            // vobSubToolStripMenuItem
+            // 
+            this.vobSubToolStripMenuItem.Name = "vobSubToolStripMenuItem";
+            this.vobSubToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
+            this.vobSubToolStripMenuItem.Text = "VobSub...";
+            this.vobSubToolStripMenuItem.Click += new System.EventHandler(this.VobSubToolStripMenuItem_Click);
+            // 
+            // dOSTToolStripMenuItem
+            // 
+            this.dOSTToolStripMenuItem.Name = "dOSTToolStripMenuItem";
+            this.dOSTToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
+            this.dOSTToolStripMenuItem.Text = "DOST...";
+            this.dOSTToolStripMenuItem.Click += new System.EventHandler(this.DOSTToolStripMenuItem_Click);
+            // 
+            // saveAllImagesWithHtmlIndexViewToolStripMenuItem
+            // 
+            this.saveAllImagesWithHtmlIndexViewToolStripMenuItem.Name = "saveAllImagesWithHtmlIndexViewToolStripMenuItem";
+            this.saveAllImagesWithHtmlIndexViewToolStripMenuItem.Size = new System.Drawing.Size(283, 22);
+            this.saveAllImagesWithHtmlIndexViewToolStripMenuItem.Text = "Save all images with HTML index view...";
+            this.saveAllImagesWithHtmlIndexViewToolStripMenuItem.Click += new System.EventHandler(this.SaveAllImagesWithHtmlIndexViewToolStripMenuItem_Click);
             // 
             // buttonCancel
             // 
@@ -65,7 +129,7 @@
             this.buttonCancel.Location = new System.Drawing.Point(526, 450);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 21);
-            this.buttonCancel.TabIndex = 50;
+            this.buttonCancel.TabIndex = 60;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = false;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
@@ -76,7 +140,7 @@
             this.buttonOK.Location = new System.Drawing.Point(445, 450);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 21);
-            this.buttonOK.TabIndex = 49;
+            this.buttonOK.TabIndex = 54;
             this.buttonOK.Text = "OK";
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
@@ -124,6 +188,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Transport stream subtitle chooser";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TransportStreamSubtitleChooser_KeyDown);
+            this.contextMenuStripListview.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -138,5 +203,12 @@
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.ListBox listBoxSubtitles;
         private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStripListview;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemExport;
+        private System.Windows.Forms.ToolStripMenuItem bDNXMLToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem bluraySupToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem vobSubToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem dOSTToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem saveAllImagesWithHtmlIndexViewToolStripMenuItem;
     }
 }

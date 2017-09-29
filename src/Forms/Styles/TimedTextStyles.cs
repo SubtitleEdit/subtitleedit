@@ -1,5 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -20,7 +21,9 @@ namespace Nikse.SubtitleEdit.Forms.Styles
         public TimedTextStyles(Subtitle subtitle)
             : base(subtitle)
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
 
             _xml = new XmlDocument();
             try

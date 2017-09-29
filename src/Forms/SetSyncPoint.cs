@@ -22,7 +22,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public SetSyncPoint()
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
 
             groupBoxSyncPointTimeCode.Text = Configuration.Settings.Language.SetSyncPoint.SyncPointTimeCode;
             buttonThreeSecondsBack.Text = Configuration.Settings.Language.SetSyncPoint.ThreeSecondsBack;

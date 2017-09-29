@@ -33,7 +33,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public Beamer(Main main, Subtitle subtitle, int index)
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
             _main = main;
             _subtitle = subtitle;
             _index = index;

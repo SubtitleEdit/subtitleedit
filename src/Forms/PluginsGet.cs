@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -8,7 +9,6 @@ using System.Net;
 using System.Net.Cache;
 using System.Windows.Forms;
 using System.Xml;
-using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -30,7 +30,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public PluginsGet()
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
             _language = Configuration.Settings.Language.PluginsGet;
             Text = _language.Title;
             tabPageInstalledPlugins.Text = _language.InstalledPlugins;

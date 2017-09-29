@@ -8,7 +8,9 @@ namespace Nikse.SubtitleEdit.Forms
     {
         public UnknownSubtitle()
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
 
             Text = Configuration.Settings.Language.UnknownSubtitle.Title;
             labelTitle.Text = Configuration.Settings.Language.UnknownSubtitle.Title;

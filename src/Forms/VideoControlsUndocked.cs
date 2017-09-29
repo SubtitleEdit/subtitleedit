@@ -20,7 +20,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public VideoControlsUndocked(Main mainForm)
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
             _mainForm = mainForm;
             this.Icon = (Icon)mainForm.Icon.Clone();
             _redockKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoToggleVideoControls);

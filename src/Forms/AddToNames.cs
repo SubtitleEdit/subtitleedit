@@ -12,7 +12,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public AddToNameList()
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
             Text = Configuration.Settings.Language.AddToNames.Title;
             labelDescription.Text = Configuration.Settings.Language.AddToNames.Description;
             labelLanguage.Text = Configuration.Settings.Language.SpellCheck.Language;

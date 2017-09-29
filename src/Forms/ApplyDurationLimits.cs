@@ -18,7 +18,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public ApplyDurationLimits()
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
             Text = Configuration.Settings.Language.ApplyDurationLimits.Title;
             labelMinDuration.Text = Configuration.Settings.Language.Settings.DurationMinimumMilliseconds;
             labelMaxDuration.Text = Configuration.Settings.Language.Settings.DurationMaximumMilliseconds;
@@ -35,6 +37,7 @@ namespace Nikse.SubtitleEdit.Forms
             FixLargeFonts();
             _refreshTimer.Interval = 400;
             _refreshTimer.Tick += RefreshTimerTick;
+            UiUtil.FixLargeFonts(this, buttonOK);
         }
 
         private void RefreshTimerTick(object sender, EventArgs e)

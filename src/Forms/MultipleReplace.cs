@@ -51,7 +51,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public MultipleReplace()
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
 
             openFileDialog1.FileName = string.Empty;
             saveFileDialog1.FileName = string.Empty;

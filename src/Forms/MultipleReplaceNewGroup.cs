@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Windows.Forms;
 
@@ -8,7 +9,9 @@ namespace Nikse.SubtitleEdit.Forms
     {
         public MultipleReplaceNewGroup(string name)
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
             textBox1.Text = name;
             GroupName = name;
             label1.Text = Configuration.Settings.Language.MultipleReplace.GroupName;

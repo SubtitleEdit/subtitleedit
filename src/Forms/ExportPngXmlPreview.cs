@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Logic;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -11,7 +12,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public ExportPngXmlPreview(Bitmap bmp)
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
 
             DoubleBuffered = true;
 

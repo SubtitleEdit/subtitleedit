@@ -25,7 +25,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public Compare()
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
 
             labelSubtitle2.Text = string.Empty;
             Text = Configuration.Settings.Language.CompareSubtitles.Title;

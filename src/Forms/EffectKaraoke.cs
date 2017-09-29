@@ -16,7 +16,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public EffectKaraoke()
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
 
             Text = Configuration.Settings.Language.EffectKaraoke.Title;
             labelChooseColor.Text = Configuration.Settings.Language.EffectKaraoke.ChooseColor;

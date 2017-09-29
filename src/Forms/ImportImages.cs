@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -17,7 +18,9 @@ namespace Nikse.SubtitleEdit.Forms
         private readonly HashSet<string> _filesAlreadyInList;
         public ImportImages()
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
             Subtitle = new Subtitle();
             Text = Configuration.Settings.Language.ImportImages.Title;
             groupBoxInput.Text = Configuration.Settings.Language.ImportImages.Input;

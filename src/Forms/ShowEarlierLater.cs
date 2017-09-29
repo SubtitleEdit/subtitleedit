@@ -15,7 +15,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public ShowEarlierLater()
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
             ResetTotalAdjustment();
             timeUpDownAdjust.MaskedTextBox.Text = "000000000";
 

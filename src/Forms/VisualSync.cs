@@ -63,7 +63,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public VisualSync()
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
 
             openFileDialog1.InitialDirectory = string.Empty;
 

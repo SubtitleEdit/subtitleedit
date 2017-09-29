@@ -401,7 +401,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public FixCommonErrors()
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
 
             labelStartTimeWarning.Text = string.Empty;
             labelDurationWarning.Text = string.Empty;

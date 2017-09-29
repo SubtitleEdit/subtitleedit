@@ -319,7 +319,11 @@ namespace Nikse.SubtitleEdit.Controls
 
         public AudioVisualizer()
         {
+            AutoScaleMode = AutoScaleMode.Dpi;
+            Font = SystemFonts.MessageBoxFont;
             InitializeComponent();
+            UiUtil.FixFonts(this);
+
             _displayableParagraphs = new List<Paragraph>();
             _allSelectedParagraphs = new List<Paragraph>();
 

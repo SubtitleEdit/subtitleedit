@@ -20,7 +20,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public ExportCustomText(Subtitle subtitle, Subtitle original, string title)
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
 
             if (original == null || original.Paragraphs == null || original.Paragraphs.Count == 0)
             {

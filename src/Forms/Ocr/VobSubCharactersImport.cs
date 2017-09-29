@@ -1,11 +1,12 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.Ocr.Binary;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Core;
-using Nikse.SubtitleEdit.Logic.Ocr.Binary;
 
 namespace Nikse.SubtitleEdit.Forms.Ocr
 {
@@ -24,7 +25,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         public VobSubCharactersImport(BinaryOcrDb binaryOcrDb)
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
 
             _existingDb = binaryOcrDb;
 

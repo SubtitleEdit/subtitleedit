@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
@@ -9,7 +10,9 @@ namespace Nikse.SubtitleEdit.Forms
     {
         public ChooseAudioTrack(List<string> tracks, int defaultTrack)
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
             foreach (string track in tracks)
             {
                 listBoxTracks.Items.Add(track);
@@ -21,6 +24,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             Text = Configuration.Settings.Language.ChooseAudioTrack.Title;
             labelDescr.Text = Configuration.Settings.Language.ChooseAudioTrack.Title;
+            UiUtil.FixLargeFonts(this, buttonOK);
         }
 
         public int SelectedTrack { get; set; }

@@ -44,7 +44,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public SyncPointsSync()
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
 
             buttonSetSyncPoint.Text = Configuration.Settings.Language.PointSync.SetSyncPoint;
             buttonRemoveSyncPoint.Text = Configuration.Settings.Language.PointSync.RemoveSyncPoint;

@@ -19,7 +19,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public Watermark()
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
 
             _language = Configuration.Settings.Language.Watermark;
             Text = _language.Title;

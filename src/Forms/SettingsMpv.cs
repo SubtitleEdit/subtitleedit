@@ -1,9 +1,10 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Logic;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Core;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -12,7 +13,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public SettingsMpv()
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
             labelPleaseWait.Text = string.Empty;
             if (Configuration.IsRunningOnLinux() && Configuration.Settings.General.MpvVideoOutput == "direct3d")
                 comboBoxVideoOutput.Text = "vaapi";
@@ -30,6 +33,7 @@ namespace Nikse.SubtitleEdit.Forms
                 comboBoxVideoOutput.Items.AddRange(new object[] { "vaapi", "opengl", "sdl", "vdpau" });
                 Controls.Remove(buttonDownload);
             }
+            UiUtil.FixLargeFonts(this, buttonOK);
         }
 
         private void wc_DownloadDataCompleted(object sender, DownloadDataCompletedEventArgs e)

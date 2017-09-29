@@ -1,6 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Logic;
+using System.Collections.Generic;
 using System.Text;
-using Nikse.SubtitleEdit.Core;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
@@ -12,7 +13,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public StatusLog(List<string> log)
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
             Text = Configuration.Settings.Language.Main.StatusLog;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             _log = log;

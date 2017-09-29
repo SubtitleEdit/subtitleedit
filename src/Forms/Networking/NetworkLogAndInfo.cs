@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Windows.Forms;
 
@@ -8,7 +9,10 @@ namespace Nikse.SubtitleEdit.Forms
     {
         public NetworkLogAndInfo()
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
+
             Text = Configuration.Settings.Language.NetworkLogAndInfo.Title;
             labelSessionKey.Text = Configuration.Settings.Language.General.SessionKey;
             labelUserName.Text = Configuration.Settings.Language.General.UserName;

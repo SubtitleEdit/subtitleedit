@@ -1,6 +1,7 @@
 ﻿using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Logic;
 using System;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
@@ -9,7 +10,9 @@ namespace Nikse.SubtitleEdit.Forms
     {
         public ChangeFrameRate()
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
 
             comboBoxFrameRateFrom.Items.Add(23.976);
             comboBoxFrameRateFrom.Items.Add(24.0);

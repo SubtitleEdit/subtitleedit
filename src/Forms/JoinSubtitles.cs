@@ -16,7 +16,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public JoinSubtitles()
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
             JoinedSubtitle = new Subtitle();
             labelTotalLines.Text = string.Empty;
 

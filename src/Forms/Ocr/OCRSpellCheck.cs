@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Logic;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Core;
-using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Forms.Ocr
 {
@@ -34,7 +34,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         public OcrSpellCheck()
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
 
             Text = Configuration.Settings.Language.SpellCheck.Title;
             buttonAddToDictionary.Text = Configuration.Settings.Language.SpellCheck.AddToUserDictionary;

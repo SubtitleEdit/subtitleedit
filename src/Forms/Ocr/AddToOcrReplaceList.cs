@@ -1,9 +1,9 @@
-﻿using System;
-using System.Globalization;
-using System.Windows.Forms;
-using Nikse.SubtitleEdit.Core;
+﻿using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Core.Dictionaries;
 using Nikse.SubtitleEdit.Logic;
+using System;
+using System.Globalization;
+using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms.Ocr
 {
@@ -13,7 +13,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         public AddToOcrReplaceList()
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
+
             Text = Configuration.Settings.Language.AddToOcrReplaceList.Title;
             labelDescription.Text = Configuration.Settings.Language.AddToOcrReplaceList.Description;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;

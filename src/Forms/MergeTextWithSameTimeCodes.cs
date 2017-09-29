@@ -25,7 +25,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public MergeTextWithSameTimeCodes()
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
 
             _previewTimer.Tick += previewTimer_Tick;
             _previewTimer.Interval = 250;

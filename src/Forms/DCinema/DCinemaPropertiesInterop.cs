@@ -10,7 +10,9 @@ namespace Nikse.SubtitleEdit.Forms.DCinema
     {
         public DCinemaPropertiesInterop()
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
 
             var l = Configuration.Settings.Language.DCinemaProperties;
             Text = l.Title;

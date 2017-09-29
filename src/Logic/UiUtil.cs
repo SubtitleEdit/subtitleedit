@@ -56,7 +56,7 @@ namespace Nikse.SubtitleEdit.Logic
                         p.EndTime.TotalMilliseconds > positionInMilliseconds)
                     {
                         string text = p.Text.Replace("|", Environment.NewLine);
-                        bool isInfo = p == subtitle.Paragraphs[0] && (p.StartTime.TotalMilliseconds == 0 && p.Duration.TotalMilliseconds == 0 || p.StartTime.TotalMilliseconds == Pac.PacNullTime.TotalMilliseconds);
+                        bool isInfo = p == subtitle.Paragraphs[0] && (Math.Abs(p.StartTime.TotalMilliseconds) < 0.01 && Math.Abs(p.Duration.TotalMilliseconds) < 0.01 || Math.Abs(p.StartTime.TotalMilliseconds - Pac.PacNullTime.TotalMilliseconds) < 0.01);
                         if (!isInfo)
                         {
                             if (videoPlayerContainer.LastParagraph != p)
@@ -337,6 +337,20 @@ namespace Nikse.SubtitleEdit.Logic
             }
             catch
             {
+            }
+        }
+
+        internal static void PreInitialize(Form form)
+        {
+            form.AutoScaleMode = AutoScaleMode.Dpi;
+            form.Font = SystemFonts.MessageBoxFont;
+        }
+
+        public static void FixFonts(Control form)
+        {
+            foreach (Control c in form.Controls)
+            {
+                c.Font = SystemFonts.MessageBoxFont;
             }
         }
 

@@ -108,7 +108,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public ExportPngXml()
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
 
             var toolTip = new ToolTip { ShowAlways = true };
             toolTip.SetToolTip(panelFullFrameBackground, Configuration.Settings.Language.ExportPngXml.ChooseBackgroundColor);

@@ -3,6 +3,7 @@ using System.IO;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -10,7 +11,9 @@ namespace Nikse.SubtitleEdit.Forms
     {
         public Cavena890SaveOptions(Subtitle subtitle, string subtitleFileName)
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
 
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;

@@ -20,7 +20,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public GetTesseractDictionaries()
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
 
             Text = Configuration.Settings.Language.GetTesseractDictionaries.Title;
             labelDescription1.Text = Configuration.Settings.Language.GetTesseractDictionaries.DescriptionLine1;
