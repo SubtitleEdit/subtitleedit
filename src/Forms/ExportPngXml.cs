@@ -102,6 +102,7 @@ namespace Nikse.SubtitleEdit.Forms
         private readonly System.Windows.Forms.Timer _previewTimer = new System.Windows.Forms.Timer();
         private string _videoFileName;
         private readonly Dictionary<string, int> _lineHeights;
+        private static int _boxBorderSize = 5;
 
         private const string BoxMultiLineText = "BoxMultiLine";
         private const string BoxSingleLineText = "BoxSingleLine";
@@ -118,6 +119,7 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxImageFormat.SelectedIndex = 4;
             _subtitleColor = Color.FromArgb(byte.MaxValue, Configuration.Settings.Tools.ExportFontColor);
             _borderColor = Configuration.Settings.Tools.ExportBorderColor;
+            _boxBorderSize = Configuration.Settings.Tools.ExportBoxBorderSize;
             _previewTimer.Tick += previewTimer_Tick;
             _previewTimer.Interval = 100;
             labelLineHeightStyle.Text = string.Empty;
@@ -2442,7 +2444,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     sizeY = 1;
                 if (parameter.BackgroundColor != Color.Transparent)
                 {
-                    var nbmpTemp = new NikseBitmap(sizeX, sizeY);
+                    var nbmpTemp = new NikseBitmap(sizeX, sizeY + _boxBorderSize * 2); // make room for box border above+under text
                     nbmpTemp.Fill(parameter.BackgroundColor);
                     bmp = nbmpTemp.GetBitmap();
                 }
@@ -2663,6 +2665,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         if (lefts.Count > 0)
                             left = lefts[0];
                         float top = 5;
+                        if (top < _boxBorderSize && parameter.BackgroundColor != Color.Transparent)
+                            top = _boxBorderSize; // make text down so box border will be satisfied
                         bool newLine = false;
                         int lineNumber = 0;
                         float leftMargin = left;
@@ -2953,8 +2957,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 }
                 else
                 {
-                    nbmp.CropSidesAndBottom(4, parameter.BackgroundColor, true);
-                    nbmp.CropTop(4, parameter.BackgroundColor);
+                    nbmp.CropSidesAndBottom(_boxBorderSize, parameter.BackgroundColor, true);
+                    nbmp.CropTop(_boxBorderSize, parameter.BackgroundColor);
                 }
 
                 if (nbmp.Width > parameter.ScreenWidth)
@@ -2980,7 +2984,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     if (parameter.BackgroundColor == Color.Transparent)
                         nbmp.CropTransparentSidesAndBottom(2, true);
                     else
-                        nbmp.CropSidesAndBottom(4, parameter.BackgroundColor, true);
+                        nbmp.CropSidesAndBottom(_boxBorderSize, parameter.BackgroundColor, true);
                 }
                 else if (parameter.Type3D == 2) // Half-Top/Bottom 3D
                 {
@@ -3090,8 +3094,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             }
             else
             {
-                nbmp.CropTop(4, parameter.BackgroundColor);
-                nbmp.CropSidesAndBottom(4, parameter.BackgroundColor, false);
+                nbmp.CropTop(_boxBorderSize, parameter.BackgroundColor);
+                nbmp.CropSidesAndBottom(_boxBorderSize, parameter.BackgroundColor, false);
             }
             return nbmp;
         }
