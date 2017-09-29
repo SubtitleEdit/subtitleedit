@@ -73,6 +73,15 @@ namespace Test.Logic
         }
 
         [TestMethod]
+        public void AutoBreakLine5DoNoBreakAtOneMusicTaggedLine()
+        {
+            Configuration.Settings.General.SubtitleLineMaximumLength = 43;
+            string s1 = "♪ Yo ♪" + Environment.NewLine + "Hallo.";
+            string s2 = Utilities.AutoBreakLine(s1);
+            Assert.AreEqual(s1, s2);
+        }
+
+        [TestMethod]
         public void AutoBreakLine5DoNoBreakAtPeriod()
         {
             Configuration.Settings.General.SubtitleLineMaximumLength = 43;

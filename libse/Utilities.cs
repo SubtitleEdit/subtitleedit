@@ -422,7 +422,7 @@ namespace Nikse.SubtitleEdit.Core
                         if (arr0.StartsWith('-') && noTagLines[1].TrimStart().StartsWith('-') && arr0.Length > 1 && (".?!)]".Contains(arr0[arr0.Length - 1]) || arr0.EndsWith("--", StringComparison.Ordinal) || arr0.EndsWith('–')))
                             return text;
                     }
-                    if (noTagLines[0].StartsWith('♪') && noTagLines[0].EndsWith('♪') && noTagLines[1].StartsWith('♪') && noTagLines[0].EndsWith('♪'))
+                    if (noTagLines[0].StartsWith('♪') && noTagLines[0].EndsWith('♪') || noTagLines[1].StartsWith('♪') && noTagLines[0].EndsWith('♪'))
                         return text;
                 }
             }
