@@ -180,6 +180,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <ScanningFolder>{0} 및 자막 파일에 대한 하위 폴더 검색...</ScanningFolder>
     <Recursive>하위 폴더 포함</Recursive>
     <SetMinMsBetweenSubtitles>자막 사이의 분과 밀리초 설정</SetMinMsBetweenSubtitles>
+    <BridgeGaps>브리지 간격</BridgeGaps>
     <PlainText>일반 텍스트</PlainText>
     <Ocr>OCR...</Ocr>
     <Filter>필터</Filter>
@@ -1943,8 +1944,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <MicrosoftBingTranslator>Microsoft Bing 번역기</MicrosoftBingTranslator>
     <HowToSignUp>가입 방법</HowToSignUp>
     <GoogleTranslateUrl>Google 번역 URL</GoogleTranslateUrl>
-    <ClientId>ID</ClientId>
-    <ClientSecret>암호</ClientSecret>
+    <MicrosoftTranslateApiKey>키</MicrosoftTranslateApiKey>
   </Settings>
   <SettingsMpv>
     <Title>mpv 설정</Title>
