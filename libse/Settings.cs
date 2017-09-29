@@ -156,7 +156,8 @@ namespace Nikse.SubtitleEdit.Core
         public string ExportFcpVideoResolution { get; set; }
         public Color ExportFontColor { get; set; }
         public Color ExportBorderColor { get; set; }
-        public Color ExportShadowColor { get; set; }
+        public Color ExportShadowColor { get; set; }        
+        public int ExportBoxBorderSize { get; set; }
         public string ExportBottomMarginUnit { get; set; }
         public int ExportBottomMarginPercent { get; set; }
         public int ExportBottomMarginPixels { get; set; }
@@ -248,6 +249,7 @@ namespace Nikse.SubtitleEdit.Core
             ExportFontColor = Color.White;
             ExportBorderColor = Color.FromArgb(255, 0, 0, 0);
             ExportShadowColor = Color.FromArgb(255, 0, 0, 0);
+            ExportBoxBorderSize = 5;
             ExportBottomMarginUnit = "%";
             ExportBottomMarginPercent = 5;
             ExportBottomMarginPixels = 15;
@@ -1986,6 +1988,9 @@ namespace Nikse.SubtitleEdit.Core
             subNode = node.SelectSingleNode("ExportShadowColor");
             if (subNode != null)
                 settings.Tools.ExportShadowColor = Color.FromArgb(int.Parse(subNode.InnerText));
+            subNode = node.SelectSingleNode("ExportBoxBorderSize");
+            if (subNode != null)
+                settings.Tools.ExportBoxBorderSize = int.Parse(subNode.InnerText);
             subNode = node.SelectSingleNode("ExportBottomMarginUnit");
             if (subNode != null)
                 settings.Tools.ExportBottomMarginUnit = subNode.InnerText;
@@ -3383,6 +3388,7 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("ExportFontColor", settings.Tools.ExportFontColor.ToArgb().ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ExportBorderColor", settings.Tools.ExportBorderColor.ToArgb().ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ExportShadowColor", settings.Tools.ExportShadowColor.ToArgb().ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ExportBoxBorderSize", settings.Tools.ExportBoxBorderSize.ToString(CultureInfo.InvariantCulture));                
                 textWriter.WriteElementString("ExportBottomMarginUnit", settings.Tools.ExportBottomMarginUnit);
                 textWriter.WriteElementString("ExportBottomMarginPercent", settings.Tools.ExportBottomMarginPercent.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ExportBottomMarginPixels", settings.Tools.ExportBottomMarginPixels.ToString(CultureInfo.InvariantCulture));
