@@ -340,17 +340,29 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
+        private static Font GetDefaultFont()
+        {
+            return SystemFonts.MessageBoxFont;
+        }
+
         internal static void PreInitialize(Form form)
         {
             form.AutoScaleMode = AutoScaleMode.Dpi;
-            form.Font = SystemFonts.MessageBoxFont;
+            form.Font = GetDefaultFont();
         }
 
-        public static void FixFonts(Control form)
+        public static void FixFonts(Control form, int iterations = 5)
         {
+            if (iterations < 1)
+                return;
+
             foreach (Control c in form.Controls)
             {
-                c.Font = SystemFonts.MessageBoxFont;
+                c.Font = GetDefaultFont();
+                foreach (Control inner in c.Controls)
+                {
+                    FixFonts(inner, iterations - 1);
+                }
             }
         }
 
