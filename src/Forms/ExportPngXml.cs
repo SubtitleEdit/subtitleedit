@@ -102,7 +102,7 @@ namespace Nikse.SubtitleEdit.Forms
         private readonly System.Windows.Forms.Timer _previewTimer = new System.Windows.Forms.Timer();
         private string _videoFileName;
         private readonly Dictionary<string, int> _lineHeights;
-        private static int _boxBorderSize = 5;
+        private static int _boxBorderSize = 8;
 
         private const string BoxMultiLineText = "BoxMultiLine";
         private const string BoxSingleLineText = "BoxSingleLine";
