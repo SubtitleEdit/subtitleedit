@@ -249,7 +249,7 @@ namespace Nikse.SubtitleEdit.Core
             ExportFontColor = Color.White;
             ExportBorderColor = Color.FromArgb(255, 0, 0, 0);
             ExportShadowColor = Color.FromArgb(255, 0, 0, 0);
-            ExportBoxBorderSize = 5;
+            ExportBoxBorderSize = 8;
             ExportBottomMarginUnit = "%";
             ExportBottomMarginPercent = 5;
             ExportBottomMarginPixels = 15;
