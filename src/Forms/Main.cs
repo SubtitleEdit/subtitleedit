@@ -7184,7 +7184,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (next != null)
             {
-                newParagraph.StartTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - 2001;
+                newParagraph.StartTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - 2000;
                 newParagraph.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - 1;
             }
             else

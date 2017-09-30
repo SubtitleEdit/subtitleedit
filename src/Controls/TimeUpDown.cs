@@ -95,10 +95,7 @@ namespace Nikse.SubtitleEdit.Controls
                     }
                     else if (numericUpDown1.Value < NumericUpDownValue)
                     {
-                        if (milliseconds.Value - 100 > 0)
-                            SetTotalMilliseconds(milliseconds.Value - Core.SubtitleFormats.SubtitleFormat.FramesToMilliseconds(1));
-                        else if (milliseconds.Value > 0)
-                            SetTotalMilliseconds(0);
+                        SetTotalMilliseconds(milliseconds.Value - Core.SubtitleFormats.SubtitleFormat.FramesToMilliseconds(1));
                     }
                 }
                 TimeCodeChanged?.Invoke(this, e);
@@ -128,6 +125,7 @@ namespace Nikse.SubtitleEdit.Controls
             else
             {
                 var tc = new TimeCode(milliseconds);
+                maskedTextBox1.Mask = GetMaskFrames(milliseconds);
                 maskedTextBox1.Text = tc.ToString().Substring(0, 9) + string.Format("{0:00}", Core.SubtitleFormats.SubtitleFormat.MillisecondsToFrames(tc.Milliseconds));
             }
         }
@@ -246,7 +244,7 @@ namespace Nikse.SubtitleEdit.Controls
                 }
                 else
                 {
-                    maskedTextBox1.Mask = "00:00:00:00";
+                    maskedTextBox1.Mask = GetMaskFrames(v.TotalMilliseconds);
                     maskedTextBox1.Text = v.ToHHMMSSFF();
                 }
             }
@@ -272,5 +270,8 @@ namespace Nikse.SubtitleEdit.Controls
         }
 
         private string GetMask(double val) => val >= 0 ? "00:00:00.000" : "-00:00:00.000";
+
+        private string GetMaskFrames(double val) => val >= 0 ? "00:00:00:00" : "-00:00:00:00";
+
     }
 }
