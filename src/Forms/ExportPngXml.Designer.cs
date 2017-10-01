@@ -99,6 +99,8 @@
             this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.comboBoxResizePercentage = new System.Windows.Forms.ComboBox();
+            this.labelResize = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
             this.groupBoxImageSettings.SuspendLayout();
@@ -170,6 +172,8 @@
             // 
             this.groupBoxImageSettings.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxImageSettings.Controls.Add(this.labelResize);
+            this.groupBoxImageSettings.Controls.Add(this.comboBoxResizePercentage);
             this.groupBoxImageSettings.Controls.Add(this.comboBoxBottomMarginUnit);
             this.groupBoxImageSettings.Controls.Add(this.comboBoxLeftRightMarginUnit);
             this.groupBoxImageSettings.Controls.Add(this.labelLineHeightStyle);
@@ -988,6 +992,27 @@
             this.subtitleListView1.SelectedIndexChanged += new System.EventHandler(this.subtitleListView1_SelectedIndexChanged);
             this.subtitleListView1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.subtitleListView1_KeyDown);
             // 
+            // comboBoxResizePercentage
+            // 
+            this.comboBoxResizePercentage.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxResizePercentage.FormattingEnabled = true;
+            this.comboBoxResizePercentage.Location = new System.Drawing.Point(296, 5);
+            this.comboBoxResizePercentage.Name = "comboBoxResizePercentage";
+            this.comboBoxResizePercentage.Size = new System.Drawing.Size(77, 21);
+            this.comboBoxResizePercentage.TabIndex = 18;
+            this.comboBoxResizePercentage.Visible = false;
+            this.comboBoxResizePercentage.SelectedIndexChanged += new System.EventHandler(this.comboBoxResizePercentage_SelectedIndexChanged);
+            // 
+            // labelResize
+            // 
+            this.labelResize.AutoSize = true;
+            this.labelResize.Location = new System.Drawing.Point(251, 8);
+            this.labelResize.Name = "labelResize";
+            this.labelResize.Size = new System.Drawing.Size(39, 13);
+            this.labelResize.TabIndex = 61;
+            this.labelResize.Text = "Resize";
+            this.labelResize.Visible = false;
+            // 
             // ExportPngXml
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1098,5 +1123,7 @@
         private System.Windows.Forms.Label labelLineHeightStyle;
         private System.Windows.Forms.ComboBox comboBoxBottomMarginUnit;
         private System.Windows.Forms.ComboBox comboBoxLeftRightMarginUnit;
+        private System.Windows.Forms.ComboBox comboBoxResizePercentage;
+        private System.Windows.Forms.Label labelResize;
     }
 }

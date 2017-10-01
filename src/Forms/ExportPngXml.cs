@@ -557,6 +557,13 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         var mp = MakeMakeBitmapParameter(i, width, height);
                         mp.Bitmap = _vobSubOcr.GetSubtitleBitmap(i++);
+                        var exp = GetResizeScale();
+                        if (Math.Abs(exp - 1) > 0.01)
+                        {
+                            var resizedBitmap = ResizeBitmap(mp.Bitmap, (int)Math.Round(mp.Bitmap.Width * exp), (int)Math.Round(mp.Bitmap.Height * exp));
+                            mp.Bitmap.Dispose();
+                            mp.Bitmap = resizedBitmap;
+                        }
                         if (_exportType == ExportFormats.BluraySup)
                         {
                             MakeBluRaySupImage(mp);
@@ -1945,6 +1952,15 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             return font;
         }
 
+        private double GetResizeScale()
+        {
+            if (comboBoxResizePercentage.SelectedItem == null)
+                return 1.0;
+
+            var p = int.Parse(comboBoxResizePercentage.SelectedItem.ToString().Replace("%", string.Empty));
+            return p / 100.0;
+        }
+
         private Bitmap GenerateImageFromTextWithStyle(Paragraph p, out MakeBitmapParameter mbp)
         {
             mbp = new MakeBitmapParameter { P = p };
@@ -1953,7 +1969,18 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             {
                 var index = _subtitle.GetIndex(p);
                 if (index >= 0)
-                    return _vobSubOcr.GetSubtitleBitmap(index);
+                {
+                    var b = _vobSubOcr.GetSubtitleBitmap(index);
+                    var exp = GetResizeScale();
+                    if (Math.Abs(exp - 1) > 0.01)
+                    {
+                        var resizedBitmap = ResizeBitmap(b, (int)Math.Round(b.Width * exp), (int)Math.Round(b.Height * exp));
+                        b.Dispose();
+                        return resizedBitmap;
+                    }
+                    return b;
+                }
+                    
             }
 
             mbp.AlignLeft = comboBoxHAlign.SelectedIndex == 0;
@@ -3763,6 +3790,28 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
         internal void InitializeFromVobSubOcr(Subtitle subtitle, SubtitleFormat format, string exportType, string fileName, VobSubOcr vobSubOcr, string languageString)
         {
             _vobSubOcr = vobSubOcr;
+            if (_vobSubOcr != null && exportType != ExportFormats.VobSub)
+            {
+                comboBoxResizePercentage.Items.Clear();
+                for (int i = 50; i < 400; i++)
+                {
+                    comboBoxResizePercentage.Items.Add(i + "%");
+                }
+                comboBoxResizePercentage.Items.Add("500%");
+                comboBoxResizePercentage.SelectedIndex = 50;
+                comboBoxResizePercentage.Visible = true;
+                labelResize.Visible = true;
+                labelResize.Left = buttonColor.Left;
+                labelResize.Top = buttonColor.Top;
+                comboBoxResizePercentage.Left = labelResize.Left + labelResize.Width + 5;
+                comboBoxResizePercentage.Top = labelResize.Top - 4;
+            }
+            else
+            {
+                comboBoxResizePercentage.Visible = false;
+                labelResize.Visible = false;
+            }
+
             Initialize(subtitle, format, exportType, fileName, null, _videoFileName);
 
             //set language
@@ -4900,6 +4949,24 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
         private void numericUpDownLineSpacing_KeyUp(object sender, KeyEventArgs e)
         {
             _previewTimer.Start();
+        }
+
+        public static Bitmap ResizeBitmap(Bitmap b, int width, int height)
+        {
+            Bitmap newImage = new Bitmap(width, height);
+            using (var g = Graphics.FromImage(newImage))
+            {
+                g.SmoothingMode = SmoothingMode.HighQuality;
+                g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                g.PixelOffsetMode = PixelOffsetMode.HighQuality;
+                g.DrawImage(b, new Rectangle(0, 0, width, height));
+            }
+            return newImage;
+        }
+
+        private void comboBoxResizePercentage_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            subtitleListView1_SelectedIndexChanged(null, null);
         }
     }
 }
