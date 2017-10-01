@@ -2580,7 +2580,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         surface.InterpolationMode = InterpolationMode.Default;
                         surface.SmoothingMode = SmoothingMode.HighSpeed;
                         surface.TextRenderingHint = TextRenderingHint.AntiAliasGridFit;
-                        var newFontSize = (float)(0.439 * font.Size + 6.23); // make simple rendering close to same size as normal renderer
+                        var newFontSize = (float)(font.Size * 0.7); // make simple rendering close to same size as normal renderer
                         using (var newFont = new Font(font.FontFamily, newFontSize, font.Style))
                         {
                             for (int j = 0; j < parameter.BorderWidth; j++)
@@ -3719,7 +3719,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                 SubtitleFontSize = style.FontSize,
                                 SubtitleFontBold = style.Bold
                             };
-                            var fontSize = (float)(mbp.SubtitleFontSize * TextDraw.GetFontSizeFactor(mbp.SubtitleFontSize));
+                            var fontSize = (float) TextDraw.GetFontSize(mbp.SubtitleFontSize);
                             Font font = SetFont(mbp, fontSize);
                             SizeF textSize = g.MeasureString("Hj!", font);
                             int lineHeight = (int)Math.Round(textSize.Height * 0.64f);
@@ -4019,7 +4019,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                             SubtitleFontBold = checkBoxBold.Checked
                         };
 
-                        var fontSize = (float)(mbp.SubtitleFontSize * TextDraw.GetFontSizeFactor(mbp.SubtitleFontSize));
+                        var fontSize = (float)TextDraw.GetFontSize(mbp.SubtitleFontSize);
                         Font font = SetFont(mbp, fontSize);
                         SizeF textSize = g.MeasureString("Hj!", font);
                         int lineHeight = (int)Math.Round(textSize.Height * 0.64f);
@@ -4325,7 +4325,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     SubtitleFontSize = float.Parse(comboBoxSubtitleFontSize.SelectedItem.ToString()),
                     SubtitleFontBold = _subtitleFontBold
                 };
-                var fontSize = (float)(mbp.SubtitleFontSize * TextDraw.GetFontSizeFactor(mbp.SubtitleFontSize));
+                var fontSize = (float)TextDraw.GetFontSize(mbp.SubtitleFontSize);
                 Font font = SetFont(mbp, fontSize);
 
                 SizeF textSize = g.MeasureString("Hj!", font);

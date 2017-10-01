@@ -7,9 +7,9 @@ namespace Nikse.SubtitleEdit.Core
     public static class TextDraw
     {
 
-        public static double GetFontSizeFactor(double fontSize)
+        public static double GetFontSize(double fontSize)
         {
-            return fontSize / (1.614 * fontSize - 10.3);
+            return fontSize * 0.895d; // font rendered in video players like vlc/mpv are a little smaller than .net, so we adjust font size a bit down
         }
 
         public static void DrawText(Font font, StringFormat sf, GraphicsPath path, StringBuilder sb, bool isItalic, bool isBold, bool isUnderline, float left, float top, ref bool newLine, float leftMargin, ref int pathPointsStart)
@@ -45,7 +45,7 @@ namespace Nikse.SubtitleEdit.Core
             if (isUnderline)
                 fontStyle |= FontStyle.Underline;
 
-            var fontSize = (float) (font.Size * GetFontSizeFactor(font.Size));
+            var fontSize = (float) GetFontSize(font.Size);
             try
             {
                 path.AddString(sb.ToString(), font.FontFamily, (int)fontStyle, fontSize, next, sf);
