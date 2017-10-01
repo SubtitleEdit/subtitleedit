@@ -5503,7 +5503,7 @@ namespace Nikse.SubtitleEdit.Forms
                     int count = removeTextFromHearImpaired.TotalFixes;
                     if (count == 1)
                         ShowStatus(_language.TextingForHearingImpairedRemovedOneLine);
-                    else if (count >= 1)
+                    else if (count > 1)
                         ShowStatus(string.Format(_language.TextingForHearingImpairedRemovedXLines, count));
                 }
             }
