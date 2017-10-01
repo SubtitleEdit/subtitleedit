@@ -323,7 +323,7 @@ namespace Nikse.SubtitleEdit.Logic
             var gs = Configuration.Settings.General;
 
             if (string.IsNullOrEmpty(gs.SubtitleFontName))
-                gs.SubtitleFontName = "Tahoma";
+                gs.SubtitleFontName = SystemFonts.MessageBoxFont.Name;
 
             try
             {
@@ -342,7 +342,20 @@ namespace Nikse.SubtitleEdit.Logic
 
         private static Font GetDefaultFont()
         {
-            return SystemFonts.MessageBoxFont;
+            var gs = Configuration.Settings.General;
+            if (string.IsNullOrEmpty(gs.SystemSubtitleFontNameOverride) || gs.SystemSubtitleFontSizeOverride < 5)
+            {
+                return SystemFonts.MessageBoxFont;
+            }
+
+            try
+            {
+                return new Font(gs.SystemSubtitleFontNameOverride, gs.SystemSubtitleFontSizeOverride);
+            }
+            catch
+            {
+                return SystemFonts.MessageBoxFont;
+            }
         }
 
         internal static void PreInitialize(Form form)
