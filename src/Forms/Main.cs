@@ -3485,9 +3485,11 @@ namespace Nikse.SubtitleEdit.Forms
                             Configuration.Settings.General.LastSaveAsFormat = format.Name;
                             SetCurrentFormat(format);
                         }
+                        break;
                     }
                     index++;
                 }
+                _converted = false;
             }
             return result;
         }
