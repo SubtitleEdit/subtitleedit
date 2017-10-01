@@ -332,7 +332,10 @@ namespace Nikse.SubtitleEdit.Controls
                     var oldFontBold = Configuration.Settings.SubtitleSettings.SsaFontBold;
                     Configuration.Settings.SubtitleSettings.SsaFontSize = Configuration.Settings.General.VideoPlayerPreviewFontSize;
                     Configuration.Settings.SubtitleSettings.SsaFontBold = Configuration.Settings.General.VideoPlayerPreviewFontBold;
-                    subtitle.Header = AdvancedSubStationAlpha.DefaultHeader;
+                    subtitle.Header = AdvancedSubStationAlpha.DefaultHeader.Replace("PlayDepth: 0", "PlayDepth: 0" + Environment.NewLine +
+                    "PlayResX: " + VideoWidth + Environment.NewLine +
+                    "PlayResY: " + VideoHeight);
+
                     Configuration.Settings.SubtitleSettings.SsaFontSize = oldFontSize;
                     Configuration.Settings.SubtitleSettings.SsaFontBold = oldFontBold;
                 }
