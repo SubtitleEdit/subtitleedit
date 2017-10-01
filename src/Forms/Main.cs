@@ -5474,8 +5474,9 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        internal void ReloadFromSubtitle(Subtitle subtitle)
+        internal void ReloadFromSubtitle(Subtitle subtitle, string messageForUndo)
         {
+            MakeHistoryForUndo(messageForUndo);
             _subtitle.Paragraphs.Clear();
             _subtitle.Paragraphs.AddRange(subtitle.Paragraphs);
             _subtitleListViewIndex = -1;
@@ -5496,18 +5497,14 @@ namespace Nikse.SubtitleEdit.Forms
             ReloadFromSourceView();
             using (var removeTextFromHearImpaired = new FormRemoveTextForHearImpaired(this))
             {
-                MakeHistoryForUndo(_language.BeforeRemovalOfTextingForHearingImpaired);
                 removeTextFromHearImpaired.Initialize(_subtitle);
                 if (removeTextFromHearImpaired.ShowDialog(this) == DialogResult.OK)
                 {
-                    int count = removeTextFromHearImpaired.RemoveTextFromHearImpaired();
-                    if (count > 0)
-                    {
-                        if (count == 1)
-                            ShowStatus(_language.TextingForHearingImpairedRemovedOneLine);
-                        else
-                            ShowStatus(string.Format(_language.TextingForHearingImpairedRemovedXLines, count));
-                    }
+                    int count = removeTextFromHearImpaired.TotalFixes;
+                    if (count == 1)
+                        ShowStatus(_language.TextingForHearingImpairedRemovedOneLine);
+                    else if (count >= 1)
+                        ShowStatus(string.Format(_language.TextingForHearingImpairedRemovedXLines, count));
                 }
             }
         }
