@@ -5506,6 +5506,12 @@ namespace Nikse.SubtitleEdit.Forms
                     else if (count >= 1)
                         ShowStatus(string.Format(_language.TextingForHearingImpairedRemovedXLines, count));
                 }
+                else
+                {
+                    // Do not keep roolback if changes were discarded
+                    int lastHistoryItemIndex = _subtitle.HistoryItems.Count - 1;
+                    _subtitle.HistoryItems.RemoveAt(lastHistoryItemIndex);
+                }
             }
         }
 
