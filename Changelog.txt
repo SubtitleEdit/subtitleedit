@@ -69,6 +69,7 @@
    * Fix Greek encoding for format PAC
    * Fix minor issue in "auto-break line" - thx SvenErik1968
    * Fix import time codes in translator mode - thx darnn
+   * Remove save dialog after "Save as..." + "Save" - thx darnn
 
 
 3.5.3 (12th May 2017)
