@@ -42,7 +42,11 @@ namespace Nikse.SubtitleEdit.Forms
             subtitleListView1.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
             subtitleListView2.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
             UiUtil.InitializeSubtitleFont(subtitleListView1);
+            subtitleListView1.HideColumn(SubtitleListView.SubtitleColumn.CharactersPerSeconds);
+            subtitleListView1.HideColumn(SubtitleListView.SubtitleColumn.WordsPerMinute);
             UiUtil.InitializeSubtitleFont(subtitleListView2);
+            subtitleListView2.HideColumn(SubtitleListView.SubtitleColumn.CharactersPerSeconds);
+            subtitleListView2.HideColumn(SubtitleListView.SubtitleColumn.WordsPerMinute);
             UiUtil.FixLargeFonts(this, buttonOK);
             subtitleListView1.UseSyntaxColoring = false;
             subtitleListView2.UseSyntaxColoring = false;
