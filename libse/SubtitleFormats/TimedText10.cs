@@ -659,12 +659,23 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     var frameRateMultiplier = xml.DocumentElement.Attributes["ttp:frameRateMultiplier"];
                     if (frameRateMultiplier != null)
                     {
-                        var arr = frameRateMultiplier.InnerText.Split();
-                        if (arr.Length == 2 && Utilities.IsInteger(arr[0]) && Utilities.IsInteger(arr[1]) && int.Parse(arr[1]) > 0)
+                        if (frameRateMultiplier.InnerText == "999 1000" && Math.Abs(fr - 30) < 0.01)
                         {
-                            fr = double.Parse(arr[0]) / double.Parse(arr[1]);
-                            if (fr > 20 && fr < 100)
-                                Configuration.Settings.General.CurrentFrameRate = fr;
+                            Configuration.Settings.General.CurrentFrameRate = 29.97;
+                        }
+                        else if (frameRateMultiplier.InnerText == "999 1000" && Math.Abs(fr - 24) < 0.01)
+                        {
+                            Configuration.Settings.General.CurrentFrameRate = 23.976;
+                        }
+                        else
+                        {
+                            var arr = frameRateMultiplier.InnerText.Split();
+                            if (arr.Length == 2 && Utilities.IsInteger(arr[0]) && Utilities.IsInteger(arr[1]) && int.Parse(arr[1]) > 0)
+                            {
+                                fr = double.Parse(arr[0]) / double.Parse(arr[1]);
+                                if (fr > 20 && fr < 100)
+                                    Configuration.Settings.General.CurrentFrameRate = fr;
+                            }
                         }
                     }
                 }
@@ -1118,7 +1129,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 return new TimeCode(ts.TotalMilliseconds);
             }
 
-            var parts = s.Split(':', '.', ',');
+            var parts = s.Split(':', '.', ',', ';');
             if (s.Length == 12 && s[2] == ':' && s[5] == ':' && s[8] == '.') // 00:01:39.946
             {
                 Configuration.Settings.SubtitleSettings.TimedText10TimeCodeFormatSource = "hh:mm:ss.ms";
