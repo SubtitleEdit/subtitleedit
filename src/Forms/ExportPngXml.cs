@@ -121,7 +121,7 @@ namespace Nikse.SubtitleEdit.Forms
             _borderColor = Configuration.Settings.Tools.ExportBorderColor;
             _boxBorderSize = Configuration.Settings.Tools.ExportBoxBorderSize;
             _previewTimer.Tick += previewTimer_Tick;
-            _previewTimer.Interval = 100;
+            _previewTimer.Interval = 100;            
             labelLineHeightStyle.Text = string.Empty;
         }
 
@@ -3366,7 +3366,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             checkBoxBold.Text = Configuration.Settings.Language.General.Bold;
             checkBoxSimpleRender.Text = Configuration.Settings.Language.ExportPngXml.SimpleRendering;
             checkBoxTransAntiAliase.Text = Configuration.Settings.Language.ExportPngXml.AntiAliasingWithTransparency;
-
+            labelResize.Text = Configuration.Settings.Language.General.Size;
             normalToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.Normal;
             italicToolStripMenuItem.Text = Configuration.Settings.Language.General.Italic;
             boxSingleLineToolStripMenuItem.Text = Configuration.Settings.Language.ExportPngXml.BoxSingleLine;
