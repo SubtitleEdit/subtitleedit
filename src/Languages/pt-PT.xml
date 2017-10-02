@@ -2,7 +2,7 @@
 <Language Name="português (Portugal)">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.5.3</Version>
+    <Version>3.5.4</Version>
     <TranslatedBy>------------------------------------------------------------------------------------------------
 Traduzido para Português de Portugal, por moob
 Email: mailto:moob42341@gmail.com</TranslatedBy>
@@ -168,7 +168,7 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <ChooseOutputFolder>Seleccionar pasta de saída</ChooseOutputFolder>
     <OverwriteExistingFiles>Substituir os ficheiros existentes</OverwriteExistingFiles>
     <Style>Estilo...</Style>
-	<UseStyleFromSource>Usar o estilo da origem</UseStyleFromSource>
+    <UseStyleFromSource>Usar o estilo da origem</UseStyleFromSource>
     <ConvertOptions>Opções de conversão</ConvertOptions>
     <RemoveFormatting>Remover etiquetas de formatação</RemoveFormatting>
     <RemoveTextForHI>Eliminar texto para Deficientes Auditivos</RemoveTextForHI>
@@ -186,7 +186,7 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <ScanningFolder>A examinar {0} e as sub-pastas por ficheiros de legendas...</ScanningFolder>
     <Recursive>Incluir sub-pastas</Recursive>
     <SetMinMsBetweenSubtitles>Definir mínimo em (ms) entre as linhas</SetMinMsBetweenSubtitles>
-	<BridgeGaps>Unir intervalos</BridgeGaps>
+    <BridgeGaps>Unir intervalos</BridgeGaps>
     <PlainText>Texto sem formatação</PlainText>
     <Ocr>OCR...</Ocr>
     <Filter>Filtro</Filter>
@@ -1448,7 +1448,7 @@ Deseja continuar?</SubtitleAppendPrompt>
     <ErrorLoadIdx>Não foi possível ler/editar o ficheiro idx. Os ficheiros idx são parte de um par de ficheiros idx/sub (também conhecidos como VobSub) e o Subtitle Edit pode abrir o ficheiro sub.</ErrorLoadIdx>
     <ErrorLoadRar>Este ficheiro parece ser um ficheiro comprimido .rar. O Subtitle Edit não pode abrir ficheiros comprimidos.</ErrorLoadRar>
     <ErrorLoadZip>Este ficheiro parece ser um ficheiro comprimido .zip. O Subtitle Edit não pode abrir ficheiros comprimidos.</ErrorLoadZip>
-	<ErrorLoad7Zip>Este ficheiro parece ser um ficheiro comprimido 7-Zip. O Subtitle Edit não pode abrir ficheiros comprimidos.</ErrorLoad7Zip>
+    <ErrorLoad7Zip>Este ficheiro parece ser um ficheiro comprimido 7-Zip. O Subtitle Edit não pode abrir ficheiros comprimidos.</ErrorLoad7Zip>
     <ErrorLoadPng>Este ficheiro parece ser um ficheiro de imagem no formato PNG. O Subtitle Edit não pode abrir ficheiros PNG.</ErrorLoadPng>
     <ErrorLoadJpg>Este ficheiro parece ser um ficheiro de imagem no formato JPG. O Subtitle Edit não pode abrir ficheiros JPG.</ErrorLoadJpg>
     <ErrorLoadSrr>Este ficheiro parece ser um ficheiro ReScene (.srr) - não é um ficheiro de legenda.</ErrorLoadSrr>
@@ -1947,7 +1947,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <UseDoNotBreakAfterList>Utilizar "não quebrar linha depois da lista" (para o ajuste-auto)</UseDoNotBreakAfterList>
     <MicrosoftBingTranslator>Tradutor Microsoft Bing</MicrosoftBingTranslator>
     <HowToSignUp>Como efectuar o registo</HowToSignUp>
-	<GoogleTranslateUrl>Endereço do tradutor do Google</GoogleTranslateUrl>
+    <GoogleTranslateUrl>Endereço do tradutor do Google</GoogleTranslateUrl>
     <ClientId>Nome</ClientId>
     <ClientSecret>Palavra-passe</ClientSecret>
   </Settings>

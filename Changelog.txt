@@ -1,6 +1,6 @@
 ﻿Subtitle Edit Changelog
 
-3.5.4 (xth September 2017) BETA
+3.5.4 (2nd October 2017)
 * NEW:
    * New subtitle format JacoSub - thx ivandrofly
    * New subtitle format Lamda Cap (basic support) - thx Chie
@@ -34,6 +34,7 @@
    * Minor improvements for "Binary image compare" OCR - thx Boulder
    * Make "Status log" window non-modal - thx Skrity
    * Add undo/redo for single line auto-br/un-br
+   * Add image resizing when re-exporting image based formats
 * FIXED:
    * Fix memory leak regarding "mpv" + subtitle change - thx darnn
    * Fix missing space in format WebVTT
