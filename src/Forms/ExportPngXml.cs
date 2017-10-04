@@ -1,5 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Core.BluRaySup;
+using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Core.VobSub;
 using Nikse.SubtitleEdit.Forms.Ocr;
@@ -121,7 +122,7 @@ namespace Nikse.SubtitleEdit.Forms
             _borderColor = Configuration.Settings.Tools.ExportBorderColor;
             _boxBorderSize = Configuration.Settings.Tools.ExportBoxBorderSize;
             _previewTimer.Tick += previewTimer_Tick;
-            _previewTimer.Interval = 100;            
+            _previewTimer.Interval = 100;
             labelLineHeightStyle.Text = string.Empty;
         }
 
@@ -1980,7 +1981,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     }
                     return b;
                 }
-                    
+
             }
 
             mbp.AlignLeft = comboBoxHAlign.SelectedIndex == 0;
@@ -3152,7 +3153,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
             if (parameter.BorderWidth > 0)
             {
-                var p1 = new Pen(parameter.BorderColor, (float) (parameter.BorderWidth * 1.1));
+                var p1 = new Pen(parameter.BorderColor, (float)(parameter.BorderWidth * 1.1));
                 SetLineJoin(parameter.LineJoin, p1);
                 g.DrawPath(p1, path);
                 p1.Dispose();
@@ -3371,6 +3372,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             italicToolStripMenuItem.Text = Configuration.Settings.Language.General.Italic;
             boxSingleLineToolStripMenuItem.Text = Configuration.Settings.Language.ExportPngXml.BoxSingleLine;
             boxMultiLineToolStripMenuItem.Text = Configuration.Settings.Language.ExportPngXml.BoxMultiLine;
+            adjustTimeCodesToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.Synchronization.AdjustAllTimes;
 
             comboBox3D.Items.Clear();
             comboBox3D.Items.Add(Configuration.Settings.Language.General.None);
@@ -3746,7 +3748,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                 SubtitleFontSize = style.FontSize,
                                 SubtitleFontBold = style.Bold
                             };
-                            var fontSize = (float) TextDraw.GetFontSize(mbp.SubtitleFontSize);
+                            var fontSize = (float)TextDraw.GetFontSize(mbp.SubtitleFontSize);
                             Font font = SetFont(mbp, fontSize);
                             SizeF textSize = g.MeasureString("Hj!", font);
                             int lineHeight = (int)Math.Round(textSize.Height * 0.64f);
@@ -4968,5 +4970,77 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
         {
             subtitleListView1_SelectedIndexChanged(null, null);
         }
+
+        private void adjustTimeCodesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (var showEarlierOrLater = new ShowEarlierLater())
+            {
+                showEarlierOrLater.Initialize(ShowEarlierOrLater, false);
+                showEarlierOrLater.ShowDialog(this);
+            }
+        }
+
+        public void ShowEarlierOrLater(double adjustMilliseconds, SelectionChoice selection)
+        {
+            adjustMilliseconds /= TimeCode.BaseUnit;
+            subtitleListView1.BeginUpdate();
+            int startFrom = 0;
+            if (selection == SelectionChoice.SelectionAndForward)
+            {
+                if (subtitleListView1.SelectedItems.Count > 0)
+                    startFrom = subtitleListView1.SelectedItems[0].Index;
+                else
+                    startFrom = _subtitle.Paragraphs.Count;
+            }
+            for (int i = startFrom; i < _subtitle.Paragraphs.Count; i++)
+            {
+                switch (selection)
+                {
+                    case SelectionChoice.SelectionOnly:
+                        if (subtitleListView1.Items[i].Selected)
+                        {
+                            _subtitle.Paragraphs[i].Adjust(1.0, adjustMilliseconds);
+                            ShowTimeInListView(i);
+                        }
+                        break;
+                    case SelectionChoice.AllLines:
+                    case SelectionChoice.SelectionAndForward:
+                        _subtitle.Paragraphs[i].Adjust(1.0, adjustMilliseconds);
+                        ShowTimeInListView(i);
+                        break;
+                }
+            }
+            subtitleListView1.EndUpdate();
+            if (_subtitle.WasLoadedWithFrameNumbers)
+                _subtitle.CalculateFrameNumbersFromTimeCodesNoCheck(Configuration.Settings.General.CurrentFrameRate);
+        }
+
+        private void ShowTimeInListView(int index)
+        {
+            int startIndex = 1;
+            if (subtitleListView1.CheckBoxes)
+            {
+                startIndex++;
+            }
+            subtitleListView1.Items[index].SubItems[startIndex].Text = _subtitle.Paragraphs[index].StartTime.ToDisplayString();
+            subtitleListView1.Items[index].SubItems[startIndex + 1].Text = _subtitle.Paragraphs[index].EndTime.ToDisplayString();
+            subtitleListView1.Items[index].SubItems[startIndex + 2].Text = _subtitle.Paragraphs[index].Duration.ToShortDisplayString();
+        }
+
+        private void contextMenuStripListView_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (_vobSubOcr == null)
+            {
+                toolStripSeparatorAdjust.Visible = false;
+                adjustTimeCodesToolStripMenuItem.Visible = false;
+            }
+            else
+            {
+                toolStripSeparatorAdjust.Visible = true;
+                adjustTimeCodesToolStripMenuItem.Visible = true;
+            }
+        }
     }
+
 }
+
