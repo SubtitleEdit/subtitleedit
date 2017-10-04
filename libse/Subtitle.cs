@@ -10,6 +10,8 @@ namespace Nikse.SubtitleEdit.Core
 {
     public class Subtitle
     {
+        public const int MaxFileSize = 1024 * 1024 * 20; // 20 MB
+
         private List<Paragraph> _paragraphs;
         private readonly List<HistoryItem> _history;
         private SubtitleFormat _format;
