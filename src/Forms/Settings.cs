@@ -705,7 +705,10 @@ namespace Nikse.SubtitleEdit.Forms
             AddNode(fileNode, Configuration.Settings.Language.Main.Menu.File.SaveAs, nameof(Configuration.Settings.Shortcuts.MainFileSaveAs), true);
             AddNode(fileNode, Configuration.Settings.Language.Main.Menu.File.SaveOriginal, nameof(Configuration.Settings.Shortcuts.MainFileSaveOriginal), true);
             AddNode(fileNode, Configuration.Settings.Language.Main.SaveOriginalSubtitleAs, nameof(Configuration.Settings.Shortcuts.MainFileSaveOriginalAs), true);
+            AddNode(fileNode, Configuration.Settings.Language.Main.Menu.File.CloseOriginal, nameof(Configuration.Settings.Shortcuts.MainFileCloseOriginal), true);
             AddNode(fileNode, language.MainFileSaveAll, nameof(Configuration.Settings.Shortcuts.MainFileSaveAll));
+            AddNode(fileNode, Configuration.Settings.Language.Main.Menu.File.ImportText, nameof(Configuration.Settings.Shortcuts.MainFileCloseOriginal), true);
+            AddNode(fileNode, Configuration.Settings.Language.Main.Menu.File.ImportTimecodes, nameof(Configuration.Settings.Shortcuts.MainFileCloseOriginal), true);
             AddNode(fileNode, Configuration.Settings.Language.Main.Menu.File.Export + " -> " + Configuration.Settings.Language.Main.Menu.File.ExportEbu, nameof(Configuration.Settings.Shortcuts.MainFileExportEbu), true);
             treeViewShortcuts.Nodes.Add(fileNode);
 
@@ -727,6 +730,7 @@ namespace Nikse.SubtitleEdit.Forms
             AddNode(toolsNode, Configuration.Settings.Language.Main.Menu.Tools.StartNumberingFrom, nameof(Configuration.Settings.Shortcuts.MainToolsRenumber), true);
             AddNode(toolsNode, Configuration.Settings.Language.Main.Menu.Tools.RemoveTextForHearingImpaired, nameof(Configuration.Settings.Shortcuts.MainToolsRemoveTextForHI), true);
             AddNode(toolsNode, Configuration.Settings.Language.Main.Menu.Tools.ChangeCasing, nameof(Configuration.Settings.Shortcuts.MainToolsChangeCasing), true);
+            AddNode(toolsNode, Configuration.Settings.Language.Main.Menu.Tools.MakeNewEmptyTranslationFromCurrentSubtitle, nameof(Configuration.Settings.Shortcuts.MainToolsMakeEmptyFromCurrent), true);
             AddNode(toolsNode, Configuration.Settings.Language.Main.Menu.Tools.SplitLongLines, nameof(Configuration.Settings.Shortcuts.MainToolsSplitLongLines), true);
             AddNode(toolsNode, Configuration.Settings.Language.Main.Menu.Tools.MergeShortLines, nameof(Configuration.Settings.Shortcuts.MainToolsMergeShortLines), true);
             AddNode(toolsNode, Configuration.Settings.Language.Main.Menu.ContextMenu.AutoDurationCurrentLine, nameof(Configuration.Settings.Shortcuts.MainToolsAutoDuration));
@@ -734,6 +738,8 @@ namespace Nikse.SubtitleEdit.Forms
             treeViewShortcuts.Nodes.Add(toolsNode);
 
             var videoNode = new TreeNode(Configuration.Settings.Language.Main.Menu.Video.Title);
+            AddNode(videoNode, Configuration.Settings.Language.Main.Menu.Video.OpenVideo, nameof(Configuration.Settings.Shortcuts.MainVideoOpen), true);
+            AddNode(videoNode, Configuration.Settings.Language.Main.Menu.Video.CloseVideo, nameof(Configuration.Settings.Shortcuts.MainVideoClose), true);
             AddNode(videoNode, language.TogglePlayPause, nameof(Configuration.Settings.Shortcuts.MainVideoPlayPauseToggle));
             AddNode(videoNode, language.Pause, nameof(Configuration.Settings.Shortcuts.MainVideoPause));
             AddNode(videoNode, Configuration.Settings.Language.Main.Menu.Video.ShowHideVideo, nameof(Configuration.Settings.Shortcuts.MainVideoShowHideVideo), true);
@@ -763,6 +769,7 @@ namespace Nikse.SubtitleEdit.Forms
             AddNode(syncNode, Configuration.Settings.Language.Main.Menu.Synchronization.AdjustAllTimes, nameof(Configuration.Settings.Shortcuts.MainSynchronizationAdjustTimes), true);
             AddNode(syncNode, Configuration.Settings.Language.Main.Menu.Synchronization.VisualSync, nameof(Configuration.Settings.Shortcuts.MainSynchronizationVisualSync), true);
             AddNode(syncNode, Configuration.Settings.Language.Main.Menu.Synchronization.PointSync, nameof(Configuration.Settings.Shortcuts.MainSynchronizationPointSync), true);
+            AddNode(syncNode, Configuration.Settings.Language.Main.Menu.Synchronization.PointSyncViaOtherSubtitle, nameof(Configuration.Settings.Shortcuts.MainSynchronizationPointSyncViaFile), true);
             AddNode(syncNode, Configuration.Settings.Language.Main.Menu.Tools.ChangeFrameRate, nameof(Configuration.Settings.Shortcuts.MainSynchronizationChangeFrameRate), true);
             treeViewShortcuts.Nodes.Add(syncNode);
 
