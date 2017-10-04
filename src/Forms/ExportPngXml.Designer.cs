@@ -37,6 +37,8 @@
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.groupBoxImageSettings = new System.Windows.Forms.GroupBox();
+            this.labelResize = new System.Windows.Forms.Label();
+            this.comboBoxResizePercentage = new System.Windows.Forms.ComboBox();
             this.comboBoxBottomMarginUnit = new System.Windows.Forms.ComboBox();
             this.comboBoxLeftRightMarginUnit = new System.Windows.Forms.ComboBox();
             this.labelLineHeightStyle = new System.Windows.Forms.Label();
@@ -93,14 +95,14 @@
             this.italicToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.boxSingleLineToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.boxMultiLineToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.adjustTimeCodesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.subtitleListView1 = new System.Windows.Forms.ListView();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.comboBoxResizePercentage = new System.Windows.Forms.ComboBox();
-            this.labelResize = new System.Windows.Forms.Label();
+            this.toolStripSeparatorAdjust = new System.Windows.Forms.ToolStripSeparator();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
             this.groupBoxImageSettings.SuspendLayout();
@@ -226,6 +228,27 @@
             this.groupBoxImageSettings.TabIndex = 3;
             this.groupBoxImageSettings.TabStop = false;
             this.groupBoxImageSettings.Text = "Image settings";
+            // 
+            // labelResize
+            // 
+            this.labelResize.AutoSize = true;
+            this.labelResize.Location = new System.Drawing.Point(251, 8);
+            this.labelResize.Name = "labelResize";
+            this.labelResize.Size = new System.Drawing.Size(39, 13);
+            this.labelResize.TabIndex = 61;
+            this.labelResize.Text = "Resize";
+            this.labelResize.Visible = false;
+            // 
+            // comboBoxResizePercentage
+            // 
+            this.comboBoxResizePercentage.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxResizePercentage.FormattingEnabled = true;
+            this.comboBoxResizePercentage.Location = new System.Drawing.Point(296, 5);
+            this.comboBoxResizePercentage.Name = "comboBoxResizePercentage";
+            this.comboBoxResizePercentage.Size = new System.Drawing.Size(77, 21);
+            this.comboBoxResizePercentage.TabIndex = 18;
+            this.comboBoxResizePercentage.Visible = false;
+            this.comboBoxResizePercentage.SelectedIndexChanged += new System.EventHandler(this.comboBoxResizePercentage_SelectedIndexChanged);
             // 
             // comboBoxBottomMarginUnit
             // 
@@ -937,37 +960,47 @@
             this.normalToolStripMenuItem,
             this.italicToolStripMenuItem,
             this.boxSingleLineToolStripMenuItem,
-            this.boxMultiLineToolStripMenuItem});
+            this.boxMultiLineToolStripMenuItem,
+            this.toolStripSeparatorAdjust,
+            this.adjustTimeCodesToolStripMenuItem});
             this.contextMenuStripListView.Name = "contextMenuStripListView";
-            this.contextMenuStripListView.Size = new System.Drawing.Size(158, 92);
+            this.contextMenuStripListView.Size = new System.Drawing.Size(179, 142);
+            this.contextMenuStripListView.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripListView_Opening);
             // 
             // normalToolStripMenuItem
             // 
             this.normalToolStripMenuItem.Name = "normalToolStripMenuItem";
-            this.normalToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
+            this.normalToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
             this.normalToolStripMenuItem.Text = "Normal";
             this.normalToolStripMenuItem.Click += new System.EventHandler(this.normalToolStripMenuItem_Click);
             // 
             // italicToolStripMenuItem
             // 
             this.italicToolStripMenuItem.Name = "italicToolStripMenuItem";
-            this.italicToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
+            this.italicToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
             this.italicToolStripMenuItem.Text = "Italic";
             this.italicToolStripMenuItem.Click += new System.EventHandler(this.italicToolStripMenuItem_Click);
             // 
             // boxSingleLineToolStripMenuItem
             // 
             this.boxSingleLineToolStripMenuItem.Name = "boxSingleLineToolStripMenuItem";
-            this.boxSingleLineToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
+            this.boxSingleLineToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
             this.boxSingleLineToolStripMenuItem.Text = "Box - single line";
             this.boxSingleLineToolStripMenuItem.Click += new System.EventHandler(this.boxSingleLineToolStripMenuItem_Click);
             // 
             // boxMultiLineToolStripMenuItem
             // 
             this.boxMultiLineToolStripMenuItem.Name = "boxMultiLineToolStripMenuItem";
-            this.boxMultiLineToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
+            this.boxMultiLineToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
             this.boxMultiLineToolStripMenuItem.Text = "Box - multi line";
             this.boxMultiLineToolStripMenuItem.Click += new System.EventHandler(this.boxMultiLineToolStripMenuItem_Click);
+            // 
+            // adjustTimeCodesToolStripMenuItem
+            // 
+            this.adjustTimeCodesToolStripMenuItem.Name = "adjustTimeCodesToolStripMenuItem";
+            this.adjustTimeCodesToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
+            this.adjustTimeCodesToolStripMenuItem.Text = "Adjust time codes...";
+            this.adjustTimeCodesToolStripMenuItem.Click += new System.EventHandler(this.adjustTimeCodesToolStripMenuItem_Click);
             // 
             // subtitleListView1
             // 
@@ -992,26 +1025,10 @@
             this.subtitleListView1.SelectedIndexChanged += new System.EventHandler(this.subtitleListView1_SelectedIndexChanged);
             this.subtitleListView1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.subtitleListView1_KeyDown);
             // 
-            // comboBoxResizePercentage
+            // toolStripSeparatorAdjust
             // 
-            this.comboBoxResizePercentage.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxResizePercentage.FormattingEnabled = true;
-            this.comboBoxResizePercentage.Location = new System.Drawing.Point(296, 5);
-            this.comboBoxResizePercentage.Name = "comboBoxResizePercentage";
-            this.comboBoxResizePercentage.Size = new System.Drawing.Size(77, 21);
-            this.comboBoxResizePercentage.TabIndex = 18;
-            this.comboBoxResizePercentage.Visible = false;
-            this.comboBoxResizePercentage.SelectedIndexChanged += new System.EventHandler(this.comboBoxResizePercentage_SelectedIndexChanged);
-            // 
-            // labelResize
-            // 
-            this.labelResize.AutoSize = true;
-            this.labelResize.Location = new System.Drawing.Point(251, 8);
-            this.labelResize.Name = "labelResize";
-            this.labelResize.Size = new System.Drawing.Size(39, 13);
-            this.labelResize.TabIndex = 61;
-            this.labelResize.Text = "Resize";
-            this.labelResize.Visible = false;
+            this.toolStripSeparatorAdjust.Name = "toolStripSeparatorAdjust";
+            this.toolStripSeparatorAdjust.Size = new System.Drawing.Size(175, 6);
             // 
             // ExportPngXml
             // 
@@ -1125,5 +1142,7 @@
         private System.Windows.Forms.ComboBox comboBoxLeftRightMarginUnit;
         private System.Windows.Forms.ComboBox comboBoxResizePercentage;
         private System.Windows.Forms.Label labelResize;
+        private System.Windows.Forms.ToolStripMenuItem adjustTimeCodesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparatorAdjust;
     }
 }

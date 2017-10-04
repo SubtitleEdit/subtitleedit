@@ -5017,7 +5017,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             bool isItalic = false;
             bool allItalic = true;
 
-            
+
             for (int i = 0; i < matches.Count; i++)
             {
                 string text = matches[i].Text;
@@ -8624,7 +8624,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         internal void BDNXMLToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ExportToPngXml("BDNXML");
+            ExportToPngXml(ExportPngXml.ExportFormats.BdnXml);
         }
 
         private void ExportToPngXml(string exportType)

@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Core.TransportStream;
 using Nikse.SubtitleEdit.Forms.Ocr;
 using Nikse.SubtitleEdit.Logic;
@@ -137,44 +138,25 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void BluraySupToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var subtitles = GetSelectedSubtitles();
-            if (subtitles == null)
-                return;
-
-            using (var formSubOcr = new VobSubOcr())
-            {
-                formSubOcr.Initialize(subtitles, Configuration.Settings.VobSubOcr, _fileName);
-                formSubOcr.BluraySupToolStripMenuItem_Click(sender, e);
-            }
+            ExportTo(ExportPngXml.ExportFormats.BluraySup);
         }
 
         private void BDNXMLToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var subtitles = GetSelectedSubtitles();
-            if (subtitles == null)
-                return;
-
-            using (var formSubOcr = new VobSubOcr())
-            {
-                formSubOcr.Initialize(subtitles, Configuration.Settings.VobSubOcr, _fileName);
-                formSubOcr.BDNXMLToolStripMenuItem_Click(sender, e);
-            }
+            ExportTo(ExportPngXml.ExportFormats.BdnXml);
         }
 
         private void VobSubToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var subtitles = GetSelectedSubtitles();
-            if (subtitles == null)
-                return;
-
-            using (var formSubOcr = new VobSubOcr())
-            {
-                formSubOcr.Initialize(subtitles, Configuration.Settings.VobSubOcr, _fileName);
-                formSubOcr.VobSubToolStripMenuItem_Click(sender, e);
-            }
+            ExportTo(ExportPngXml.ExportFormats.VobSub);
         }
 
         private void DOSTToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ExportTo(ExportPngXml.ExportFormats.Dost);
+        }
+
+        private void ExportTo(string exportType)
         {
             var subtitles = GetSelectedSubtitles();
             if (subtitles == null)
@@ -183,8 +165,13 @@ namespace Nikse.SubtitleEdit.Forms
             using (var formSubOcr = new VobSubOcr())
             {
                 formSubOcr.Initialize(subtitles, Configuration.Settings.VobSubOcr, _fileName);
-                formSubOcr.DOSTToolStripMenuItem_Click(sender, e);
+                using (var exportBdnXmlPng = new ExportPngXml())
+                {
+                    exportBdnXmlPng.InitializeFromVobSubOcr(formSubOcr.SubtitleFromOcr, new SubRip(), exportType, _fileName, formSubOcr, null);
+                    exportBdnXmlPng.ShowDialog(this);
+                }
             }
+
         }
 
         private void SaveAllImagesWithHtmlIndexViewToolStripMenuItem_Click(object sender, EventArgs e)
