@@ -332,12 +332,7 @@ namespace Nikse.SubtitleEdit.Controls
                     var oldFontBold = Configuration.Settings.SubtitleSettings.SsaFontBold;
                     Configuration.Settings.SubtitleSettings.SsaFontSize = Configuration.Settings.General.VideoPlayerPreviewFontSize;
                     Configuration.Settings.SubtitleSettings.SsaFontBold = Configuration.Settings.General.VideoPlayerPreviewFontBold;
-
-                    // show subtitle at 1:1 ratio requires correct PlayResX + PlayResY
-                    subtitle.Header = AdvancedSubStationAlpha.DefaultHeader.Replace("PlayDepth: 0", "PlayDepth: 0" + Environment.NewLine +
-                    "PlayResX: " + VideoWidth + Environment.NewLine +
-                    "PlayResY: " + VideoHeight);
-
+                    subtitle.Header = AdvancedSubStationAlpha.DefaultHeader;
                     Configuration.Settings.SubtitleSettings.SsaFontSize = oldFontSize;
                     Configuration.Settings.SubtitleSettings.SsaFontBold = oldFontBold;
                 }
