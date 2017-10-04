@@ -1968,7 +1968,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-                if (file.Length > 1024 * 1024 * 20) // max 20 mb
+                if (file.Length > Subtitle.MaxFileSize)
                 {
                     // retry Blu-ray sup (file with wrong extension)
                     if (FileUtil.IsBluRaySup(fileName))
@@ -5570,13 +5570,14 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 openFileDialog1.Title = _language.OpenSubtitleToAppend;
                 openFileDialog1.FileName = string.Empty;
-                openFileDialog1.Filter = UiUtil.SubtitleExtensionFilter.Value;
+                openFileDialog1.Filter = UiUtil.SubtitleExtensionFilter.Value;                
                 if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
                 {
                     bool success = false;
                     string fileName = openFileDialog1.FileName;
                     if (File.Exists(fileName))
                     {
+                        var fileInfo = new FileInfo(fileName);
                         var subtitleToAppend = new Subtitle();
                         SubtitleFormat format = null;
 
@@ -5590,7 +5591,7 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             format = null;
                         }
-                        else
+                        else if (fileInfo.Length < Subtitle.MaxFileSize)
                         {
                             Encoding encoding;
                             format = subtitleToAppend.LoadSubtitle(fileName, out encoding, null);
@@ -5627,6 +5628,11 @@ namespace Nikse.SubtitleEdit.Forms
                                 subtitleToAppend.CalculateTimeCodesFromFrameNumbers(CurrentFrameRate);
                             else
                                 subtitleToAppend.CalculateFrameNumbersFromTimeCodes(CurrentFrameRate);
+                        }
+                        else
+                        {
+                            MessageBox.Show(string.Format(_language.FileXIsLargerThan10MB, fileName));
+                            return;
                         }
 
                         if (format != null && subtitleToAppend.Paragraphs.Count > 1)
@@ -10927,7 +10933,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-                if (file.Length < 1024 * 1024 * 20) // max 20 mb
+                if (file.Length < Subtitle.MaxFileSize)
                 {
                     OpenSubtitle(fileName, null);
                 }
@@ -16344,7 +16350,7 @@ namespace Nikse.SubtitleEdit.Forms
                     try
                     {
                         var fi = new FileInfo(fileName);
-                        if (fi.Length < 1024 * 1024 * 20) // max 20 mb
+                        if (fi.Length < Subtitle.MaxFileSize)
                         {
                             var lines = new List<string>(File.ReadAllLines(fileName));
                             foreach (SubtitleFormat format in SubtitleFormat.AllSubtitleFormats)
