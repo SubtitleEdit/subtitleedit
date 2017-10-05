@@ -808,28 +808,32 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                     input = input.Remove(0, 1);
             }
 
-            if (input.Length > 2 && input[0] == '-' && char.IsUpper(input[1]))
+            // Add missing space after hyphen. e.g: -foobar. => - foobar.
+            string[] lines = input.SplitToLines();
+            for (int i = 0; i < lines.Length; i++)
             {
-                input = input.Insert(1, " ");
+                string line = lines[i];
+                if (line.Length > 2 && line[0] == '-' && char.IsLetterOrDigit(line[1]))
+                {
+                    line = line.Insert(1, " ");
+                }
+                // <i> or <font...>
+                if (line.LineStartsWithHtmlTag(true, true))
+                {
+                    int tagCloseIdx = line.IndexOf('>');
+                    if (tagCloseIdx + 2 >= line.Length || line[tagCloseIdx + 1] != '-')
+                    {
+                        continue;
+                    }
+                    // <i>-foobar => <i>- foobar.
+                    if (char.IsLetterOrDigit(line[tagCloseIdx + 2]))
+                    {
+                        line = line.Insert(tagCloseIdx + 2, " ");
+                    }
+                }
+                lines[i] = line;
             }
-
-            if (input.Length > 5 && input.StartsWith("<i>-", StringComparison.Ordinal) && char.IsUpper(input[4]))
-            {
-                input = input.Insert(4, " ");
-            }
-
-            int nlLen = Environment.NewLine.Length;
-            int idx = input.IndexOf(Environment.NewLine + "-", StringComparison.Ordinal);
-            if (idx > 0 && idx + nlLen + 1 < input.Length && char.IsUpper(input[idx + nlLen + 1]))
-            {
-                input = input.Insert(idx + Environment.NewLine.Length + 1, " ");
-            }
-
-            idx = input.IndexOf(Environment.NewLine + "<i>-", StringComparison.Ordinal);
-            if (idx > 0 && idx + nlLen + 4 < input.Length && char.IsUpper(input[idx + nlLen + 4]))
-            {
-                input = input.Insert(idx + nlLen + 4, " ");
-            }
+            input = string.Join(Environment.NewLine, lines);
 
             if (string.IsNullOrEmpty(lastLine) ||
                 lastLine.EndsWith('.') ||
