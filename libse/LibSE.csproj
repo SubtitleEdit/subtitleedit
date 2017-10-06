@@ -49,6 +49,15 @@
     <Compile Include="BluRaySup\PaletteInfo.cs" />
     <Compile Include="BluRaySup\ToolBox.cs" />
     <Compile Include="BmpReader.cs" />
+    <Compile Include="Casing\CasingContext.cs" />
+    <Compile Include="Casing\CasingOptions.cs" />
+    <Compile Include="Casing\CasingResult.cs" />
+    <Compile Include="Casing\CaseConverter.cs" />
+    <Compile Include="Casing\LowerCaseConverter.cs" />
+    <Compile Include="Casing\NameCaseConverter.cs" />
+    <Compile Include="Casing\NormalCaseConverter.cs" />
+    <Compile Include="Casing\TextChangedEventArgs.cs" />
+    <Compile Include="Casing\UpperCaseConverter.cs" />
     <Compile Include="CharUtils.cs" />
     <Compile Include="Configuration.cs" />
     <Compile Include="ContainerFormats\AviRiffData.cs" />

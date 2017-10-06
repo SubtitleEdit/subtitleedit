@@ -15,6 +15,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Forms.Ocr;
+using Nikse.SubtitleEdit.Core.Casing;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -57,9 +58,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private string _assStyle;
         private string _ssaStyle;
-        private readonly RemoveTextForHI _removeTextForHearingImpaired;
         private readonly ChangeCasing _changeCasing = new ChangeCasing();
-        private readonly ChangeCasingNames _changeCasingNames = new ChangeCasingNames();
+        private readonly RemoveTextForHI _removeTextForHearingImpaired;
         private bool _converting;
         private int _count;
         private int _converted;
@@ -980,9 +980,14 @@ namespace Nikse.SubtitleEdit.Forms
                             sub.RemoveEmptyLines();
                             if (checkBoxFixCasing.Checked)
                             {
-                                _changeCasing.FixCasing(sub, LanguageAutoDetect.AutoDetectGoogleLanguage(sub));
-                                _changeCasingNames.Initialize(sub);
-                                _changeCasingNames.FixCasing();
+                                string language = LanguageAutoDetect.AutoDetectGoogleLanguage(sub);
+                                var context = new CasingContext()
+                                {
+                                    Language = language,
+                                    Culture = CultureInfo.CurrentCulture
+                                };
+                                CaseConverter converter = _changeCasing.GetCaseConverter(language);
+                                converter.Convert(sub, context);
                             }
                             double fromFrameRate;
                             double toFrameRate;
@@ -1529,7 +1534,7 @@ namespace Nikse.SubtitleEdit.Forms
                 try
                 {
                     string ext = Path.GetExtension(fileName).ToLowerInvariant();
-                    if (ext != "" && 
+                    if (ext != "" &&
                         ext != ".png" &&
                         ext != ".jpg" &&
                         ext != ".docx" &&

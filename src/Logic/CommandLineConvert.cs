@@ -12,6 +12,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Nikse.SubtitleEdit.Forms.Ocr;
+using Nikse.SubtitleEdit.Core.Casing;
 
 namespace Nikse.SubtitleEdit.Logic
 {
@@ -891,12 +892,13 @@ namespace Nikse.SubtitleEdit.Logic
                 {
                     using (var changeCasing = new ChangeCasing())
                     {
-                        changeCasing.FixCasing(sub, LanguageAutoDetect.AutoDetectGoogleLanguage(sub));
-                    }
-                    using (var changeCasingNames = new ChangeCasingNames())
-                    {
-                        changeCasingNames.Initialize(sub);
-                        changeCasingNames.FixCasing();
+                        var casingContext = new CasingContext()
+                        {
+                            Culture = CultureInfo.CurrentCulture,
+                            Language = LanguageAutoDetect.AutoDetectGoogleLanguage(sub),
+                        };
+                        CaseConverter converter = changeCasing.GetCaseConverter(LanguageAutoDetect.AutoDetectGoogleLanguage(sub));
+                        converter.Convert(sub, casingContext);
                     }
                 }
                 if (multipleReplaceImportFiles != null)

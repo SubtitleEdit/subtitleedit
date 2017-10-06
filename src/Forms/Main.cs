@@ -11046,21 +11046,22 @@ namespace Nikse.SubtitleEdit.Forms
 
                     bool saveChangeCaseChanges = true;
                     var casingNamesLinesChanged = 0;
-                    changeCasing.FixCasing(selectedLines, LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle));
-                    if (changeCasing.ChangeNamesToo)
+                    string language = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle);
+                    Core.Casing.CaseConverter caseConverter = changeCasing.GetCaseConverter(language);
+                    if (caseConverter is Core.Casing.NameCaseConverter)
                     {
                         using (var changeCasingNames = new ChangeCasingNames())
                         {
-                            changeCasingNames.Initialize(selectedLines);
+                            changeCasingNames.Initialize(selectedLines, (Core.Casing.NameCaseConverter)caseConverter);
                             if (changeCasingNames.ShowDialog(this) == DialogResult.OK)
                             {
                                 changeCasingNames.FixCasing();
                                 casingNamesLinesChanged = changeCasingNames.LinesChanged;
 
-                                if (changeCasing.LinesChanged == 0)
+                                if (caseConverter.Count == 0)
                                     ShowStatus(string.Format(_language.CasingCompleteMessageOnlyNames, casingNamesLinesChanged, _subtitle.Paragraphs.Count));
                                 else
-                                    ShowStatus(string.Format(_language.CasingCompleteMessage, changeCasing.LinesChanged, _subtitle.Paragraphs.Count, casingNamesLinesChanged));
+                                    ShowStatus(string.Format(_language.CasingCompleteMessage, caseConverter.Count, _subtitle.Paragraphs.Count, casingNamesLinesChanged));
                             }
                             else
                             {
@@ -11070,7 +11071,14 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else
                     {
-                        ShowStatus(string.Format(_language.CasingCompleteMessageNoNames, changeCasing.LinesChanged, _subtitle.Paragraphs.Count));
+                        var context = new Core.Casing.CasingContext()
+                        {
+                            Culture = CultureInfo.CurrentCulture,
+                            Language = language
+                        };
+
+                        caseConverter.Convert(selectedLines, context);
+                        ShowStatus(string.Format(_language.CasingCompleteMessageNoNames, caseConverter.Count, _subtitle.Paragraphs.Count));
                     }
 
                     if (saveChangeCaseChanges)
@@ -11093,7 +11101,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         ShowSource();
                         SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
-                        if (changeCasing.LinesChanged > 0 || casingNamesLinesChanged > 0)
+                        if (caseConverter.Count > 0 || casingNamesLinesChanged > 0)
                         {
                             _subtitleListViewIndex = -1;
                             RestoreSubtitleListviewIndices();
