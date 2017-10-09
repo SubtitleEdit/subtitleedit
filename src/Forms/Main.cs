@@ -1220,6 +1220,7 @@ namespace Nikse.SubtitleEdit.Forms
             textCharssecToolStripMenuItem.Text = _language.Menu.Tools.TextNumberOfCharactersPerSeconds;
             textWordsPerMinutewpmToolStripMenuItem.Text = _language.Menu.Tools.WordsPerMinute;
             styleToolStripMenuItem.Text = _language.Menu.Tools.Style;
+            actorToolStripMenuItem.Text = Configuration.Settings.Language.General.Actor;
 
             toolStripMenuItemShowOriginalInPreview.Text = _language.Menu.Edit.ShowOriginalTextInAudioAndVideoPreview;
             toolStripMenuItemMakeEmptyFromCurrent.Text = _language.Menu.Tools.MakeNewEmptyTranslationFromCurrentSubtitle;
@@ -18803,7 +18804,10 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripMenuItemMakeEmptyFromCurrent.Visible = false;
                 toolStripMenuItemShowOriginalInPreview.Checked = false;
             }
-            styleToolStripMenuItem.Visible = GetCurrentSubtitleFormat().HasStyleSupport;
+            var f = GetCurrentSubtitleFormat();
+            styleToolStripMenuItem.Visible = f.HasStyleSupport;
+            var formatType = f.GetType();
+            actorToolStripMenuItem.Visible = formatType == typeof(AdvancedSubStationAlpha) || formatType == typeof(SubStationAlpha);
         }
 
         private void ContextMenuStripWaveformOpening(object sender, System.ComponentModel.CancelEventArgs e)
@@ -21343,6 +21347,10 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        private void actorToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            SortSubtitle(SubtitleSortCriteria.Actor, (sender as ToolStripItem).Text);
+        }
     }
 }
 

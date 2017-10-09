@@ -12,6 +12,7 @@
         TextNumberOfLines,
         TextCharactersPerSeconds,
         WordsPerMinute,
+        Actor,
         Style,
     }
 }

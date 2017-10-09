@@ -563,6 +563,9 @@ namespace Nikse.SubtitleEdit.Core
                 case SubtitleSortCriteria.Style:
                     _paragraphs = _paragraphs.OrderBy(p => p.Extra, StringComparer.Ordinal).ThenBy(p => p.Number).ToList();
                     break;
+                case SubtitleSortCriteria.Actor:
+                    _paragraphs = _paragraphs.OrderBy(p => p.Actor, StringComparer.Ordinal).ThenBy(p => p.Number).ToList();
+                    break;
             }
         }
 
