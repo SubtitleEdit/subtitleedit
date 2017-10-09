@@ -186,6 +186,7 @@
             this.sortTextNumberOfLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.textCharssecToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.textWordsPerMinutewpmToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.actorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.styleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparatorAscOrDesc = new System.Windows.Forms.ToolStripSeparator();
             this.AscendingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -1739,6 +1740,7 @@
             this.sortTextNumberOfLinesToolStripMenuItem,
             this.textCharssecToolStripMenuItem,
             this.textWordsPerMinutewpmToolStripMenuItem,
+            this.actorToolStripMenuItem,
             this.styleToolStripMenuItem,
             this.toolStripSeparatorAscOrDesc,
             this.AscendingToolStripMenuItem,
@@ -1816,6 +1818,13 @@
             this.textWordsPerMinutewpmToolStripMenuItem.Size = new System.Drawing.Size(250, 22);
             this.textWordsPerMinutewpmToolStripMenuItem.Text = "Text - words per minute (wpm)";
             this.textWordsPerMinutewpmToolStripMenuItem.Click += new System.EventHandler(this.textWordsPerMinutewpmToolStripMenuItem_Click);
+            // 
+            // actorToolStripMenuItem
+            // 
+            this.actorToolStripMenuItem.Name = "actorToolStripMenuItem";
+            this.actorToolStripMenuItem.Size = new System.Drawing.Size(250, 22);
+            this.actorToolStripMenuItem.Text = "Actor";
+            this.actorToolStripMenuItem.Click += new System.EventHandler(this.actorToolStripMenuItemClick);
             // 
             // styleToolStripMenuItem
             // 
@@ -2732,6 +2741,7 @@
             this.audioVisualizer.BackColor = System.Drawing.Color.Black;
             this.audioVisualizer.BackgroundColor = System.Drawing.Color.Black;
             this.audioVisualizer.Color = System.Drawing.Color.GreenYellow;
+            this.audioVisualizer.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.audioVisualizer.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(18)))));
             this.audioVisualizer.Location = new System.Drawing.Point(472, 32);
             this.audioVisualizer.Margin = new System.Windows.Forms.Padding(0);
@@ -3222,10 +3232,11 @@
             // 
             this.timeUpDownVideoPosition.AutoSize = true;
             this.timeUpDownVideoPosition.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.timeUpDownVideoPosition.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.timeUpDownVideoPosition.Location = new System.Drawing.Point(96, 191);
             this.timeUpDownVideoPosition.Margin = new System.Windows.Forms.Padding(4);
             this.timeUpDownVideoPosition.Name = "timeUpDownVideoPosition";
-            this.timeUpDownVideoPosition.Size = new System.Drawing.Size(96, 25);
+            this.timeUpDownVideoPosition.Size = new System.Drawing.Size(96, 27);
             this.timeUpDownVideoPosition.TabIndex = 12;
             timeCode1.Hours = 99;
             timeCode1.Milliseconds = 999;
@@ -3675,10 +3686,11 @@
             // 
             this.timeUpDownVideoPositionAdjust.AutoSize = true;
             this.timeUpDownVideoPositionAdjust.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.timeUpDownVideoPositionAdjust.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.timeUpDownVideoPositionAdjust.Location = new System.Drawing.Point(96, 213);
             this.timeUpDownVideoPositionAdjust.Margin = new System.Windows.Forms.Padding(4);
             this.timeUpDownVideoPositionAdjust.Name = "timeUpDownVideoPositionAdjust";
-            this.timeUpDownVideoPositionAdjust.Size = new System.Drawing.Size(96, 25);
+            this.timeUpDownVideoPositionAdjust.Size = new System.Drawing.Size(96, 27);
             this.timeUpDownVideoPositionAdjust.TabIndex = 13;
             this.timeUpDownVideoPositionAdjust.TimeCode = timeCode1;
             this.timeUpDownVideoPositionAdjust.UseVideoOffset = false;
@@ -4410,10 +4422,11 @@
             // 
             this.timeUpDownStartTime.AutoSize = true;
             this.timeUpDownStartTime.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.timeUpDownStartTime.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.timeUpDownStartTime.Location = new System.Drawing.Point(9, 26);
             this.timeUpDownStartTime.Margin = new System.Windows.Forms.Padding(4);
             this.timeUpDownStartTime.Name = "timeUpDownStartTime";
-            this.timeUpDownStartTime.Size = new System.Drawing.Size(96, 25);
+            this.timeUpDownStartTime.Size = new System.Drawing.Size(96, 27);
             this.timeUpDownStartTime.TabIndex = 0;
             this.timeUpDownStartTime.TimeCode = timeCode1;
             this.timeUpDownStartTime.UseVideoOffset = false;
@@ -5130,5 +5143,6 @@
         private System.Windows.Forms.ToolStripMenuItem setActorForSelectedLinesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSetRegion;
         private System.Windows.Forms.ToolStripMenuItem insertSubtitleHereToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem actorToolStripMenuItem;
     }
 }
