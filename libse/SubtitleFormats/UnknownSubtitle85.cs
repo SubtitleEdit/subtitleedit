@@ -30,7 +30,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             sb.AppendLine();
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
-                sb.AppendLine((i+1).ToString(CultureInfo.InvariantCulture));
+                sb.AppendLine((i + 1).ToString(CultureInfo.InvariantCulture));
                 Paragraph p = subtitle.Paragraphs[i];
                 sb.AppendLine(string.Format("{0} {1}", EncodeTimeCode(p.StartTime), HtmlUtil.RemoveHtmlTags(p.Text.Replace(Environment.NewLine, "\\N"), true)));
                 sb.AppendLine();
