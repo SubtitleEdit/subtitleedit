@@ -228,10 +228,20 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                     var c = bitmap.GetPixel(x, y);
                     if (c != Color.Transparent)
                     {
-                        if (pal.Count < 200 && !pal.ContainsKey(c))
+                        if (pal.Count < 100)
+                        {
+                            if (!HasCloseColor(c, pal, 1))
+                                pal.Add(c, pal.Count);
+                        }
+                        else if (pal.Count < 240)
+                        {
+                            if (!HasCloseColor(c, pal, 5))
+                                pal.Add(c, pal.Count);
+                        }
+                        else if (pal.Count < 254 && !HasCloseColor(c, pal, 25))
+                        { 
                             pal.Add(c, pal.Count);
-                        else if (pal.Count < 254 && !HasCloseColor(c, pal, 5))
-                            pal.Add(c, pal.Count);
+                        }
                     }
                 }
             }
