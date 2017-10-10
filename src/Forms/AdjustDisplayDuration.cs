@@ -146,5 +146,15 @@ namespace Nikse.SubtitleEdit.Forms
         {
             FixEnabled();
         }
+
+        public void HideRecalculate()
+        {
+            if (radioButtonAutoRecalculate.Checked)
+                radioButtonSeconds.Checked = true;
+            radioButtonAutoRecalculate.Visible = false;
+            labelMaxCharsPerSecond.Visible = false;
+            numericUpDownMaxCharsSec.Visible = false;
+        }
+
     }
 }

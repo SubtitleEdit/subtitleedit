@@ -95,6 +95,7 @@
             this.italicToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.boxSingleLineToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.boxMultiLineToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparatorAdjust = new System.Windows.Forms.ToolStripSeparator();
             this.adjustTimeCodesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.subtitleListView1 = new System.Windows.Forms.ListView();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -102,7 +103,7 @@
             this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.toolStripSeparatorAdjust = new System.Windows.Forms.ToolStripSeparator();
+            this.adjustDisplayTimeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
             this.groupBoxImageSettings.SuspendLayout();
@@ -962,43 +963,49 @@
             this.boxSingleLineToolStripMenuItem,
             this.boxMultiLineToolStripMenuItem,
             this.toolStripSeparatorAdjust,
+            this.adjustDisplayTimeToolStripMenuItem,
             this.adjustTimeCodesToolStripMenuItem});
             this.contextMenuStripListView.Name = "contextMenuStripListView";
-            this.contextMenuStripListView.Size = new System.Drawing.Size(179, 142);
+            this.contextMenuStripListView.Size = new System.Drawing.Size(185, 164);
             this.contextMenuStripListView.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripListView_Opening);
             // 
             // normalToolStripMenuItem
             // 
             this.normalToolStripMenuItem.Name = "normalToolStripMenuItem";
-            this.normalToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
+            this.normalToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
             this.normalToolStripMenuItem.Text = "Normal";
             this.normalToolStripMenuItem.Click += new System.EventHandler(this.normalToolStripMenuItem_Click);
             // 
             // italicToolStripMenuItem
             // 
             this.italicToolStripMenuItem.Name = "italicToolStripMenuItem";
-            this.italicToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
+            this.italicToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
             this.italicToolStripMenuItem.Text = "Italic";
             this.italicToolStripMenuItem.Click += new System.EventHandler(this.italicToolStripMenuItem_Click);
             // 
             // boxSingleLineToolStripMenuItem
             // 
             this.boxSingleLineToolStripMenuItem.Name = "boxSingleLineToolStripMenuItem";
-            this.boxSingleLineToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
+            this.boxSingleLineToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
             this.boxSingleLineToolStripMenuItem.Text = "Box - single line";
             this.boxSingleLineToolStripMenuItem.Click += new System.EventHandler(this.boxSingleLineToolStripMenuItem_Click);
             // 
             // boxMultiLineToolStripMenuItem
             // 
             this.boxMultiLineToolStripMenuItem.Name = "boxMultiLineToolStripMenuItem";
-            this.boxMultiLineToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
+            this.boxMultiLineToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
             this.boxMultiLineToolStripMenuItem.Text = "Box - multi line";
             this.boxMultiLineToolStripMenuItem.Click += new System.EventHandler(this.boxMultiLineToolStripMenuItem_Click);
+            // 
+            // toolStripSeparatorAdjust
+            // 
+            this.toolStripSeparatorAdjust.Name = "toolStripSeparatorAdjust";
+            this.toolStripSeparatorAdjust.Size = new System.Drawing.Size(181, 6);
             // 
             // adjustTimeCodesToolStripMenuItem
             // 
             this.adjustTimeCodesToolStripMenuItem.Name = "adjustTimeCodesToolStripMenuItem";
-            this.adjustTimeCodesToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
+            this.adjustTimeCodesToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
             this.adjustTimeCodesToolStripMenuItem.Text = "Adjust time codes...";
             this.adjustTimeCodesToolStripMenuItem.Click += new System.EventHandler(this.adjustTimeCodesToolStripMenuItem_Click);
             // 
@@ -1025,10 +1032,12 @@
             this.subtitleListView1.SelectedIndexChanged += new System.EventHandler(this.subtitleListView1_SelectedIndexChanged);
             this.subtitleListView1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.subtitleListView1_KeyDown);
             // 
-            // toolStripSeparatorAdjust
+            // adjustDisplayTimeToolStripMenuItem
             // 
-            this.toolStripSeparatorAdjust.Name = "toolStripSeparatorAdjust";
-            this.toolStripSeparatorAdjust.Size = new System.Drawing.Size(175, 6);
+            this.adjustDisplayTimeToolStripMenuItem.Name = "adjustDisplayTimeToolStripMenuItem";
+            this.adjustDisplayTimeToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
+            this.adjustDisplayTimeToolStripMenuItem.Text = "Adjust display time...";
+            this.adjustDisplayTimeToolStripMenuItem.Click += new System.EventHandler(this.adjustDisplayTimeToolStripMenuItem_Click);
             // 
             // ExportPngXml
             // 
@@ -1144,5 +1153,6 @@
         private System.Windows.Forms.Label labelResize;
         private System.Windows.Forms.ToolStripMenuItem adjustTimeCodesToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparatorAdjust;
+        private System.Windows.Forms.ToolStripMenuItem adjustDisplayTimeToolStripMenuItem;
     }
 }

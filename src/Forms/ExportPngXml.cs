@@ -3373,6 +3373,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             boxSingleLineToolStripMenuItem.Text = Configuration.Settings.Language.ExportPngXml.BoxSingleLine;
             boxMultiLineToolStripMenuItem.Text = Configuration.Settings.Language.ExportPngXml.BoxMultiLine;
             adjustTimeCodesToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.Synchronization.AdjustAllTimes;
+            adjustDisplayTimeToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.Tools.AdjustDisplayDuration;
 
             comboBox3D.Items.Clear();
             comboBox3D.Items.Add(Configuration.Settings.Language.General.None);
@@ -5029,17 +5030,46 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
         private void contextMenuStripListView_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if (_vobSubOcr == null)
-            {
-                toolStripSeparatorAdjust.Visible = false;
-                adjustTimeCodesToolStripMenuItem.Visible = false;
-            }
-            else
-            {
-                toolStripSeparatorAdjust.Visible = true;
-                adjustTimeCodesToolStripMenuItem.Visible = true;
-            }
+            bool showImageExportMenuItems = _vobSubOcr != null;
+            toolStripSeparatorAdjust.Visible = showImageExportMenuItems;
+            adjustTimeCodesToolStripMenuItem.Visible = showImageExportMenuItems;
+            adjustDisplayTimeToolStripMenuItem.Visible = showImageExportMenuItems;
         }
+
+        private void adjustDisplayTimeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (var adjustDisplayTime = new AdjustDisplayDuration())
+            {
+                adjustDisplayTime.HideRecalculate();
+                if (adjustDisplayTime.ShowDialog(this) == DialogResult.OK)
+                {
+                    if (adjustDisplayTime.AdjustUsingPercent)
+                    {
+                        double percent = double.Parse(adjustDisplayTime.AdjustValue);
+                        _subtitle.AdjustDisplayTimeUsingPercent(percent, null);
+                    }
+                    else if (adjustDisplayTime.AdjustUsingSeconds)
+                    {
+                        double seconds = double.Parse(adjustDisplayTime.AdjustValue);
+                        _subtitle.AdjustDisplayTimeUsingSeconds(seconds, null);
+                    }
+                    else
+                    { // recalculate durations!!!
+                        double maxCharSeconds = (double)(adjustDisplayTime.MaxCharactersPerSecond);
+                        _subtitle.RecalculateDisplayTimes(maxCharSeconds, null);
+                    }
+                }
+            }
+            subtitleListView1.BeginUpdate();
+            for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
+            {
+                ShowTimeInListView(i);
+            }
+            subtitleListView1.EndUpdate();
+            if (_subtitle.WasLoadedWithFrameNumbers)
+                _subtitle.CalculateFrameNumbersFromTimeCodesNoCheck(Configuration.Settings.General.CurrentFrameRate);
+        }
+
     }
 
 }
