@@ -710,6 +710,7 @@ namespace Nikse.SubtitleEdit.Forms
             AddNode(fileNode, Configuration.Settings.Language.Main.Menu.File.ImportText, nameof(Configuration.Settings.Shortcuts.MainFileImportPlainText), true);
             AddNode(fileNode, Configuration.Settings.Language.Main.Menu.File.ImportTimecodes, nameof(Configuration.Settings.Shortcuts.MainFileImportTimeCodes), true);
             AddNode(fileNode, Configuration.Settings.Language.Main.Menu.File.Export + " -> " + Configuration.Settings.Language.Main.Menu.File.ExportEbu, nameof(Configuration.Settings.Shortcuts.MainFileExportEbu), true);
+            AddNode(fileNode, Configuration.Settings.Language.Main.Menu.File.Export + " -> " + Configuration.Settings.Language.Main.Menu.File.ExportPlainText, nameof(Configuration.Settings.Shortcuts.MainFileExportPlainText), true);
             treeViewShortcuts.Nodes.Add(fileNode);
 
             var editNode = new TreeNode(Configuration.Settings.Language.Main.Menu.Edit.Title);

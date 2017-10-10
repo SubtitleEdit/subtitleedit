@@ -15779,6 +15779,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemImportText.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainFileImportPlainText);
             toolStripMenuItemImportTimeCodes.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainFileImportTimeCodes);
             eBUSTLToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainFileExportEbu);
+            plainTextToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainFileExportPlainText);
 
             toolStripMenuItemUndo.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainEditUndo);
             toolStripMenuItemRedo.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainEditRedo);
