@@ -437,9 +437,13 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 _mpvSetOptionString(_mpvHandle, GetUtf8Bytes("no-sub"), GetUtf8Bytes("")); // don't load subtitles
                 if (ownerControl != null)
                 {
-                    int mpvFormatInt64 = 4;
-                    var windowId = ownerControl.Handle.ToInt64();
-                    _mpvSetOption(_mpvHandle, GetUtf8Bytes("wid"), mpvFormatInt64, ref windowId);
+                    for (int i = 0; i < 3; i++)
+                    {
+                        Application.DoEvents();
+                        int mpvFormatInt64 = 4;
+                        var windowId = ownerControl.Handle.ToInt64();
+                        _mpvSetOption(_mpvHandle, GetUtf8Bytes("wid"), mpvFormatInt64, ref windowId);
+                    }
                 }
                 DoMpvCommand("loadfile", videoFileName);
 
