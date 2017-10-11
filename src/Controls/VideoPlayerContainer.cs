@@ -59,6 +59,7 @@ namespace Nikse.SubtitleEdit.Controls
                     _subtitlesHeight = 57;
                 }
                 _mpvTextFileName = null;
+                VideoPlayerContainerResize(this, null);
             }
         }
 
