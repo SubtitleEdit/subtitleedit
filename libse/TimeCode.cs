@@ -209,9 +209,9 @@ namespace Nikse.SubtitleEdit.Core
             var ts = TimeSpan;
             var frames = Math.Round(ts.Milliseconds / (BaseUnit / Configuration.Settings.General.CurrentFrameRate));
             if (frames >= Configuration.Settings.General.CurrentFrameRate - 0.001)
-                s = string.Format("{0:00}:{1:00}:{2:00}:{3:00}", ts.Hours, ts.Minutes, ts.Seconds + 1, 0);
+                s = string.Format("{0:00}:{1:00}:{2:00}:{3:00}", ts.Days * 24 + ts.Hours, ts.Minutes, ts.Seconds + 1, 0);
             else
-                s = string.Format("{0:00}:{1:00}:{2:00}:{3:00}", ts.Hours, ts.Minutes, ts.Seconds, SubtitleFormat.MillisecondsToFramesMaxFrameRate(ts.Milliseconds));
+                s = string.Format("{0:00}:{1:00}:{2:00}:{3:00}", ts.Days * 24 + ts.Hours, ts.Minutes, ts.Seconds, SubtitleFormat.MillisecondsToFramesMaxFrameRate(ts.Milliseconds));
 
             if (TotalMilliseconds >= 0)
                 return s;
@@ -239,9 +239,9 @@ namespace Nikse.SubtitleEdit.Core
             var ts = TimeSpan;
             var frames = Math.Round(ts.Milliseconds / (BaseUnit / Configuration.Settings.General.CurrentFrameRate));
             if (frames >= Configuration.Settings.General.CurrentFrameRate - 0.001)
-                s = string.Format("{0:00}:{1:00}:{2:00}.{3:00}", ts.Hours, ts.Minutes, ts.Seconds + 1, 0);
+                s = string.Format("{0:00}:{1:00}:{2:00}.{3:00}", ts.Days * 24 + ts.Hours, ts.Minutes, ts.Seconds + 1, 0);
             else
-                s = string.Format("{0:00}:{1:00}:{2:00}.{3:00}", ts.Hours, ts.Minutes, ts.Seconds, SubtitleFormat.MillisecondsToFramesMaxFrameRate(ts.Milliseconds));
+                s = string.Format("{0:00}:{1:00}:{2:00}.{3:00}", ts.Days * 24 + ts.Hours, ts.Minutes, ts.Seconds, SubtitleFormat.MillisecondsToFramesMaxFrameRate(ts.Milliseconds));
 
             if (TotalMilliseconds >= 0)
                 return s;
