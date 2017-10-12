@@ -1,5 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -71,6 +72,14 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         private delegate int libvlc_audio_get_track_count(IntPtr mediaPlayer);
         private libvlc_audio_get_track_count _libvlc_audio_get_track_count;
+
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate IntPtr libvlc_audio_get_track_description(IntPtr mediaPlayer);
+        private libvlc_audio_get_track_description _libvlc_audio_get_track_description;
+
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate void libvlc_track_description_release(IntPtr mediaPlayer);
+        private libvlc_track_description_release _libvlc_track_description_release;
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         private delegate int libvlc_audio_get_track(IntPtr mediaPlayer);
@@ -206,6 +215,8 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
             _libvlc_video_get_size = (libvlc_video_get_size)GetDllType(typeof(libvlc_video_get_size), "libvlc_video_get_size");
             _libvlc_audio_get_track_count = (libvlc_audio_get_track_count)GetDllType(typeof(libvlc_audio_get_track_count), "libvlc_audio_get_track_count");
+            _libvlc_audio_get_track_description = (libvlc_audio_get_track_description)GetDllType(typeof(libvlc_audio_get_track_description), "libvlc_audio_get_track_description");
+            _libvlc_track_description_release = (libvlc_track_description_release)GetDllType(typeof(libvlc_track_description_release), "libvlc_track_description_release");
             _libvlc_audio_get_track = (libvlc_audio_get_track)GetDllType(typeof(libvlc_audio_get_track), "libvlc_audio_get_track");
             _libvlc_audio_set_track = (libvlc_audio_set_track)GetDllType(typeof(libvlc_audio_set_track), "libvlc_audio_set_track");
             _libvlc_video_take_snapshot = (libvlc_video_take_snapshot)GetDllType(typeof(libvlc_video_take_snapshot), "libvlc_video_take_snapshot");
@@ -396,11 +407,42 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             }
         }
 
+        private struct TrackDescription
+        {
+            public int Id { get; set; }
+            public IntPtr Name { get; set; }
+            public IntPtr PNext { get; set; }
+        }
+
+        public List<KeyValuePair<int, string>> GetAudioTracks()
+        {
+            int count = _libvlc_audio_get_track_count(_mediaPlayer);
+            var trackDescriptionsPointer = _libvlc_audio_get_track_description(_mediaPlayer);
+            var trackDescriptionList = new List<KeyValuePair<int, string>>();
+            IntPtr trackDescriptionPointer = trackDescriptionsPointer;
+            while (trackDescriptionPointer != IntPtr.Zero)
+            {
+                var trackDescription = (TrackDescription)Marshal.PtrToStructure(trackDescriptionPointer, typeof(TrackDescription));
+                string s = Marshal.PtrToStringAnsi(trackDescription.Name);
+                if (trackDescription.Id != -1) // not disable
+                {
+                    trackDescriptionList.Add(new KeyValuePair<int, string>(trackDescription.Id, s));
+                }
+                trackDescriptionPointer = trackDescription.PNext;
+            }
+            if (trackDescriptionsPointer != IntPtr.Zero)
+            {
+                _libvlc_track_description_release(trackDescriptionsPointer);
+            }
+            return trackDescriptionList;
+        }
+
         public int AudioTrackCount
         {
             get
             {
-                return _libvlc_audio_get_track_count(_mediaPlayer) - 1;
+                var x = _libvlc_audio_get_track_count(_mediaPlayer) - 1;
+                return x;
             }
         }
 
@@ -408,11 +450,12 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         {
             get
             {
-                return _libvlc_audio_get_track(_mediaPlayer) - 1;
+                var x = _libvlc_audio_get_track(_mediaPlayer);
+                return x;
             }
             set
             {
-                _libvlc_audio_set_track(_mediaPlayer, value + 1);
+                _libvlc_audio_set_track(_mediaPlayer, value);
             }
         }
 
