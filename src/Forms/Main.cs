@@ -18088,15 +18088,17 @@ namespace Nikse.SubtitleEdit.Forms
             var libMpv = mediaPlayer.VideoPlayer as LibMpvDynamic;
             if (libVlc != null)
             {
-                int numberOfTracks = libVlc.AudioTrackCount;
+                var audioTracks = libVlc.GetAudioTracks();
                 _videoAudioTrackNumber = libVlc.AudioTrackNumber;
-                if (numberOfTracks > 1)
+                if (audioTracks.Count > 1)
                 {
                     toolStripMenuItemSetAudioTrack.DropDownItems.Clear();
-                    for (int i = 0; i < numberOfTracks; i++)
+                    for (int i = 0; i < audioTracks.Count; i++)
                     {
-                        toolStripMenuItemSetAudioTrack.DropDownItems.Add((i + 1).ToString(CultureInfo.InvariantCulture), null, ChooseAudioTrack);
-                        if (i == _videoAudioTrackNumber)
+                        var at = audioTracks[i];
+                        toolStripMenuItemSetAudioTrack.DropDownItems.Add(string.IsNullOrWhiteSpace(at.Value) ? at.Key.ToString(CultureInfo.InvariantCulture) : at.Value, null, ChooseAudioTrack);
+                        toolStripMenuItemSetAudioTrack.DropDownItems[toolStripMenuItemSetAudioTrack.DropDownItems.Count - 1].Tag = at.Key.ToString(CultureInfo.InvariantCulture);
+                        if (at.Key == _videoAudioTrackNumber)
                             toolStripMenuItemSetAudioTrack.DropDownItems[toolStripMenuItemSetAudioTrack.DropDownItems.Count - 1].Select();
                     }
                     toolStripMenuItemSetAudioTrack.Visible = true;
@@ -18138,8 +18140,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (libVlc != null)
             {
                 var item = sender as ToolStripItem;
-                int number = int.Parse(item.Text);
-                number--;
+                int number = int.Parse(item.Tag.ToString());
                 libVlc.AudioTrackNumber = number;
                 _videoAudioTrackNumber = number;
             }
