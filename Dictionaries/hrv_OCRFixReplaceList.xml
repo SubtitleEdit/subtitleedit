@@ -166,6 +166,7 @@
     <Word from="fotografišu" to="fotografiraju" />
     <Word from="gde" to="gdje" />
     <Word from="Gde" to="Gdje" />
+    <Word from="gluhonem" to="gluhonijem" />
     <Word from="greše" to="griješe" />
     <Word from="greški" to="grešci" />
     <Word from="grijehova" to="grijeha" />
@@ -322,6 +323,7 @@
     <Word from="loži" to="pali" />
     <Word from="lza" to="Iza" />
     <Word from="majca" to="majica" />
+    <Word from="majce" to="majice" />
     <Word from="majcu" to="majicu" />
     <Word from="majcom" to="majicom" />
     <Word from="Malopre" to="Malo prije" />
@@ -454,6 +456,7 @@
     <Word from="organizuju" to="organiziraju" />
     <Word from="Organizuju" to="Organiziraju" />
     <Word from="osjećanja" to="osjećaje" />
+    <Word from="osmehe" to="osmijehe" />
     <Word from="osmehne" to="osmjehne" />
     <Word from="osobenosti" to="osobnosti" />
     <Word from="ostrva" to="otoka" />
@@ -652,8 +655,8 @@
     <Word from="Resetujte" to="Resetirajte" />
     <Word from="rijeđi" to="rjeđi" />
     <Word from="Rizikuj" to="Riskiraj" />
+    <Word from="rokenrol" to="rock'n'roll" />
     <Word from="ronioc" to="ronilac" />
-    <Word from="Rouz" to="Rose" />
     <Word from="saviješću" to="savješću" />
     <Word from="savešću" to="savješću" />
     <Word from="sedećeš" to="sjedit ćeš" />
@@ -792,6 +795,7 @@
     <Word from="točak" to="kotač" />
     <Word from="Točak" to="Kotač" />
     <Word from="toha" to="toga" />
+    <Word from="tovj" to="tvoj" />
     <Word from="trabam" to="trebam" />
     <Word from="trkanje" to="utrkivanje" />
     <Word from="trkanja" to="utrkivanja" />
@@ -1003,6 +1007,7 @@
     <Word from="Pem" to="Pam" />
     <Word from="Pejdž" to="Paige" />
     <Word from="Rejčel" to="Rachel" />
+    <Word from="Rouz" to="Rose" />
     <Word from="Stejt" to="State" />
     <Word from="Stejsi" to="Stacy" />
     <Word from="Šeron" to="Sharon" />
@@ -2152,6 +2157,8 @@
     <RegEx find="(?&lt;![nt])opić" replaceWith="opit ć" />
     <RegEx find="([eoa])pisać" replaceWith="$1pisat ć" />
     <RegEx find="oriće(mo|te)" replaceWith="orit će$1" />
+    <RegEx find="orks" replaceWith="orsk" />
+    <RegEx find="osejan" replaceWith="osijan" />
     <RegEx find="o([dbjpv])ać(?!o)" replaceWith="o$1at ć" />
     <RegEx find="sj?etić" replaceWith="sjetit ć" />
     <RegEx find="osb" replaceWith="osob" />
