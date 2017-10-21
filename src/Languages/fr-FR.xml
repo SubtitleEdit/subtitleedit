@@ -26,6 +26,8 @@
     <Duration>Durée</Duration>
     <CharsPerSec>Carac./s.</CharsPerSec>
     <WordsPerMin>Mots/min.</WordsPerMin>
+    <Actor>Acteur</Actor>
+    <Region>Région</Region>
     <NumberSymbol>#</NumberSymbol>
     <Number>Numéro</Number>
     <Text>Texte</Text>
@@ -164,6 +166,7 @@ Note: Vérifiez l'espace disque disponible.</WaveFileMalformed>
     <ChooseOutputFolder>Sélectionner le dossier de sortie</ChooseOutputFolder>
     <OverwriteExistingFiles>Remplacer les fichiers existants</OverwriteExistingFiles>
     <Style>Style...</Style>
+    <UseStyleFromSource>Utilisez le style de la source</UseStyleFromSource>
     <ConvertOptions>Autre paramètres</ConvertOptions>
     <RemoveFormatting>Supprimer les balises de mise en forme</RemoveFormatting>
     <RemoveTextForHI>Supprimer texte surdité</RemoveTextForHI>
@@ -181,6 +184,7 @@ Note: Vérifiez l'espace disque disponible.</WaveFileMalformed>
     <ScanningFolder>Scan {0} et les sous-dossiers...</ScanningFolder>
     <Recursive>Inclus les sous-dossiers</Recursive>
     <SetMinMsBetweenSubtitles>Définir mini millisec. entre les sous-titres</SetMinMsBetweenSubtitles>
+    <BridgeGaps>Combler les lacunes</BridgeGaps>
     <PlainText>Texte brut</PlainText>
     <Ocr>OCR...</Ocr>
     <Filter>Filtre</Filter>
@@ -634,6 +638,7 @@ Note: Vérifiez l'espace disque disponible.</WaveFileMalformed>
     <FixOcrErrorExample>D0n't -&gt; Don't</FixOcrErrorExample>
     <FixSpaceBetweenNumbersExample>1 100 -&gt; 1100</FixSpaceBetweenNumbersExample>
     <FixDialogsOneLineExample>Hi John! - Hi Ida! -&gt; Hi John!&lt;br /&gt;- Hi Ida!</FixDialogsOneLineExample>
+    <SelectDefault>Défaut sélect.</SelectDefault>
   </FixCommonErrors>
   <GetDictionaries>
     <Title>Besoin de dictionnaires ?</Title>
@@ -1058,6 +1063,7 @@ Note: Vérifiez l'espace disque disponible.</WaveFileMalformed>
         <RemoveTextForHi>Supprimer texte surdité</RemoveTextForHi>
         <VisualSync>Synchronisation visuelle</VisualSync>
         <SpellCheck>Correcteur d'orthographe</SpellCheck>
+        <NetflixQualityCheck>Netflix contrôle qualité</NetflixQualityCheck>
         <Settings>Configuration</Settings>
         <Help>Aide</Help>
         <ShowHideWaveform>Montrer/cacher forme sonore</ShowHideWaveform>
@@ -1067,8 +1073,10 @@ Note: Vérifiez l'espace disque disponible.</WaveFileMalformed>
         <SizeAllColumnsToFit>Ajuster la taille des colonnes</SizeAllColumnsToFit>
         <AdvancedSubStationAlphaSetStyle>Advanced SubStation Alpha - Configurer style</AdvancedSubStationAlphaSetStyle>
         <SubStationAlphaSetStyle>SubStation Alpha - Configurer style</SubStationAlphaSetStyle>
+        <SetActor>Configurer acteur</SetActor>
         <SubStationAlphaStyles>SubStation Alpha - styles...</SubStationAlphaStyles>
         <AdvancedSubStationAlphaStyles>Advanced SubStation Alpha - styles...</AdvancedSubStationAlphaStyles>
+        <TimedTextSetRegion>Timed Text - Configurer région</TimedTextSetRegion>
         <TimedTextSetStyle>Timed Text - Configurer style</TimedTextSetStyle>
         <TimedTextStyles>Timed Text - styles...</TimedTextStyles>
         <TimedTextSetLanguage>Timed Text - Configurer langue</TimedTextSetLanguage>
@@ -1118,6 +1126,8 @@ Note: Vérifiez l'espace disque disponible.</WaveFileMalformed>
         <SaveSelectedLines>Enregistrer les lignes sélectionnées sous...</SaveSelectedLines>
         <WebVTTSetNewVoice>Définir nouvelle voix...</WebVTTSetNewVoice>
         <WebVTTRemoveVoices>Supprimer voix</WebVTTRemoveVoices>
+        <NewActor>Nouvel acteur...</NewActor>
+        <RemoveActors>Supprimer acteurs</RemoveActors>
       </ContextMenu>
     </Menu>
     <Controls>
@@ -1442,6 +1452,8 @@ Continuer ?</ImportTimeCodesDifferentNumberOfLinesWarning>
 - Subtitle Edit ne peut pas ouvrir les fichiers compressés.</ErrorLoadRar>
     <ErrorLoadZip>Ce fichier est une archive .zip :
 - Subtitle Edit ne peut pas ouvrir les fichiers compressés.</ErrorLoadZip>
+    <ErrorLoad7Zip>Ce fichier semble être un fichier 7-Zip compressé :
+- Subtitle Edit ne peut pas ouvrir les fichiers compressés.</ErrorLoad7Zip>
     <ErrorLoadPng>Ce fichier semble être un fichier image .png :
 - Subtitle Edit ne peut pas ouvrir les fichiers PNG.</ErrorLoadPng>
     <ErrorLoadJpg>Ce fichier semble être un fichier image .jpg :
@@ -1461,6 +1473,7 @@ Si vous avez modifié ce fichier avec Subtitle Edit vous pourriez trouver une sa
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Choisir les sous-titres du fichier Matroska</Title>
+    <TitleMp4>Choisir les sous-titres du fichier MP4</TitleMp4>
     <PleaseChoose>Plus d'un sous-titre trouvé - choisir svp</PleaseChoose>
     <TrackXLanguageYTypeZ>Piste {0} - langue: {1} - type: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
@@ -1691,6 +1704,7 @@ peuvent modifier le même fichier de sous-titres (collaboration)</Information>
     <Replace>Remplacer</Replace>
     <VisualSync>Synchro. visuelle</VisualSync>
     <SpellCheck>Orthographe</SpellCheck>
+    <NetflixQualityCheck>Netflix contrôle qualité</NetflixQualityCheck>
     <SettingsName>Config.</SettingsName>
     <Help>Aide</Help>
     <ShowFrameRate>Afficher la cadence de trame</ShowFrameRate>
@@ -1708,6 +1722,7 @@ peuvent modifier le même fichier de sous-titres (collaboration)</Information>
     <SubtitleFont>Police de sous-titre</SubtitleFont>
     <SubtitleFontSize>Taille de police</SubtitleFontSize>
     <SubtitleBold>Gras</SubtitleBold>
+    <VideoAutoOpen>Lecture automatique de la vidéo à l'ouverture des sous-titres</VideoAutoOpen>
     <SubtitleCenter>Centrer</SubtitleCenter>
     <SubtitleFontColor>Couleur de police</SubtitleFontColor>
     <SubtitleBackgroundColor>Couleur de fond</SubtitleBackgroundColor>
@@ -1878,10 +1893,13 @@ peuvent modifier le même fichier de sous-titres (collaboration)</Information>
     <WaveformPlayNewSelectionEnd>Lecture de la fin de la sélection</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Lecture du premier sous-titre sélectionné</WaveformPlayFirstSelectedSubtitle>
     <WaveformFocusListView>Focus du mode liste</WaveformFocusListView>
+    <WaveformGoToNextSubtitle>Aller au sous-titre suivant (même position vidéo)</WaveformGoToNextSubtitle>
     <WaveformGoToNextSceneChange>Aller au changement de scène suivant</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>Alterner changement de scène</WaveformToggleSceneChange>
     <GoBack1Frame>Une image arrière</GoBack1Frame>
     <GoForward1Frame>Une image avant</GoForward1Frame>
+    <GoBack1FrameWithPlay>Une image arrière (avec lecture)</GoBack1FrameWithPlay>
+    <GoForward1FrameWithPlay>Une image avant (avec lecture)</GoForward1FrameWithPlay>
     <GoBack100Milliseconds>100 ms en arrière</GoBack100Milliseconds>
     <GoForward100Milliseconds>100 ms en avant</GoForward100Milliseconds>
     <GoBack500Milliseconds>500 ms en arrière</GoBack500Milliseconds>
@@ -1934,11 +1952,12 @@ peuvent modifier le même fichier de sous-titres (collaboration)</Information>
     <MainTextBoxUnbreak>Fusionner texte</MainTextBoxUnbreak>
     <MainFileSaveAll>Tout enregistrer</MainFileSaveAll>
     <Miscellaneous>Divers</Miscellaneous>
+    <CpsIncludesSpace>Caractères/sec (CPS) comprend les espaces</CpsIncludesSpace>
     <UseDoNotBreakAfterList>Sans pause après la liste (pause automatique)</UseDoNotBreakAfterList>
     <MicrosoftBingTranslator>Microsoft Bing Traducteur</MicrosoftBingTranslator>
     <HowToSignUp>Comment s'inscrire ?</HowToSignUp>
-    <ClientId>ID de client</ClientId>
-    <ClientSecret>Secret de client</ClientSecret>
+    <GoogleTranslateUrl>Google URL de traduction</GoogleTranslateUrl>
+    <MicrosoftTranslateApiKey>Key</MicrosoftTranslateApiKey>
   </Settings>
   <SettingsMpv>
     <Title>Configuration de mpv</Title>
@@ -2002,6 +2021,13 @@ Veuillez réessayer plus tard.</DownloadMpvFailed>
     <SpellCheckAborted>Vérification d'orthographe interrompue</SpellCheckAborted>
     <UndoX>Annuler : {0}</UndoX>
   </SpellCheck>
+  <NetflixQualityCheck>
+    <GlyphCheckReport>Caractère non valide {0} trouvé à la colonne {1}</GlyphCheckReport>
+    <WhiteSpaceCheckReport>Espace blanc non valide trouvé à la colonne {0}.</WhiteSpaceCheckReport>
+    <ReportPrompt>Veuillez consulter le rapport complet ici: {0}.</ReportPrompt>
+    <FoundXIssues>Vérification de la qualité Netflix a trouvé {0} problèmes.</FoundXIssues>
+    <CheckOk>Netflix contrôle de la qualité OK :)</CheckOk>
+  </NetflixQualityCheck>
   <Split>
     <Title>Diviser sous-titres</Title>
     <SplitOptions>Options de division</SplitOptions>
@@ -2059,6 +2085,7 @@ Veuillez réessayer plus tard.</DownloadMpvFailed>
     <LengthInFormatXinCharactersY>Nombre de caractères {0}: {1: ####, ##0}</LengthInFormatXinCharactersY>
     <NumberOfCharactersInTextOnly>Nombre de caractères (seulement dans le texte): {0:#,###,##0}</NumberOfCharactersInTextOnly>
     <TotalCharsPerSecond>Nombre total de caractères par seconde: {0:0.0}</TotalCharsPerSecond>
+    <TotalWords>Nombre total de mots dans les sous-titres: {0}</TotalWords>
     <NumberOfItalicTags>Nombre balises italique: {0}</NumberOfItalicTags>
     <NumberOfBoldTags>Nombre balises gras: {0}</NumberOfBoldTags>
     <NumberOfUnderlineTags>Nombre balises souligné: {0}</NumberOfUnderlineTags>
@@ -2316,6 +2343,7 @@ Veuillez réessayer plus tard.</DownloadMpvFailed>
     <RemoveSceneChange>Supprimer changement de scène</RemoveSceneChange>
     <GuessTimeCodes>Supposer timecode...</GuessTimeCodes>
     <SeekSilence>Recherche silence...</SeekSilence>
+    <InsertSubtitleHere>Insérer le sous-titre ici...</InsertSubtitleHere>
     <CharsSecX>CPS: {0:0.00}</CharsSecX>
     <WordsMinX>MPM: {0:0.00}</WordsMinX>
   </Waveform>
