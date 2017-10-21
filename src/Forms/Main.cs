@@ -5572,7 +5572,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 openFileDialog1.Title = _language.OpenSubtitleToAppend;
                 openFileDialog1.FileName = string.Empty;
-                openFileDialog1.Filter = UiUtil.SubtitleExtensionFilter.Value;                
+                openFileDialog1.Filter = UiUtil.SubtitleExtensionFilter.Value;
                 if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
                 {
                     bool success = false;
@@ -7658,10 +7658,11 @@ namespace Nikse.SubtitleEdit.Forms
                     textBoxListViewText.Text = fixedText;
                 }
             }
-            var startText = textBoxListViewText.Text.Substring(0, textCaretPos);
+            var s = textBoxListViewText.Text;
+            var startText = s.Substring(0, Math.Min(textCaretPos, s.Length));
             var numberOfNewLines = Utilities.CountTagInText(startText, Environment.NewLine);
             textCaretPos += numberOfNewLines;
-            if (textBoxListViewText.Text.Length > textCaretPos && '\n' == textBoxListViewText.Text[textCaretPos])
+            if (s.Length > textCaretPos && '\n' == s[textCaretPos])
                 textCaretPos--;
             if (textCaretPos > 0)
                 textBoxListViewText.SelectionStart = textCaretPos;
