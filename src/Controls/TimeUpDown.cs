@@ -73,7 +73,7 @@ namespace Nikse.SubtitleEdit.Controls
             double? milliseconds = GetTotalMilliseconds();
             if (milliseconds.HasValue)
             {
-                if (milliseconds.Value >= TimeCode.MaxTime.TotalMilliseconds - 0.1)
+                if (milliseconds.Value >= TimeCode.MaxReadOnlyTimeCode.TotalMilliseconds - 0.1)
                     milliseconds = 0;
 
                 if (Mode == TimeMode.HHMMSSMS)
@@ -143,7 +143,7 @@ namespace Nikse.SubtitleEdit.Controls
             get
             {
                 if (string.IsNullOrWhiteSpace(maskedTextBox1.Text.Replace(".", string.Empty).Replace(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, string.Empty).Replace(",", string.Empty).Replace(":", string.Empty)))
-                    return TimeCode.MaxTime;
+                    return TimeCode.MaxReadOnlyTimeCode.MaxTimeCode;
 
 
                 string startTime = maskedTextBox1.Text;
@@ -225,7 +225,7 @@ namespace Nikse.SubtitleEdit.Controls
             }
             set
             {
-                if (value == null || value.TotalMilliseconds >= TimeCode.MaxTime.TotalMilliseconds - 0.1)
+                if (value == null || value.TotalMilliseconds >= TimeCode.MaxReadOnlyTimeCode.TotalMilliseconds - 0.1)
                 {
                     maskedTextBox1.Text = string.Empty;
                     return;
