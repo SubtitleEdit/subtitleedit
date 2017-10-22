@@ -3209,56 +3209,59 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     secondBestGuess = new CompareMatch(hit.Text, hit.Italic, hit.ExpandCount, hit.Key);
             }
 
-            if (bob.IsPeriod())
-            {
-                ImageSplitterItem next = null;
-                if (listIndex + 1 < list.Count)
-                    next = list[listIndex + 1];
+            if (maxDiff > 0.1)
+            { 
+                if (bob.IsPeriod())
+                {
+                    ImageSplitterItem next = null;
+                    if (listIndex + 1 < list.Count)
+                        next = list[listIndex + 1];
 
-                if (next == null || next.NikseBitmap == null)
-                    return new CompareMatch(".", false, 0, null);
+                    if (next == null || next.NikseBitmap == null)
+                        return new CompareMatch(".", false, 0, null);
 
-                var nextBob = new BinaryOcrBitmap(next.NikseBitmap) { X = next.X, Y = next.Top };
-                if (!nextBob.IsPeriodAtTop(_binOcrLastLowercaseHeight)) // avoid italic ":"
-                    return new CompareMatch(".", false, 0, null);
-            }
-            if (bob.IsComma())
-            {
-                ImageSplitterItem next = null;
-                if (listIndex + 1 < list.Count)
-                    next = list[listIndex + 1];
+                    var nextBob = new BinaryOcrBitmap(next.NikseBitmap) { X = next.X, Y = next.Top };
+                    if (!nextBob.IsPeriodAtTop(_binOcrLastLowercaseHeight)) // avoid italic ":"
+                        return new CompareMatch(".", false, 0, null);
+                }
+                if (bob.IsComma())
+                {
+                    ImageSplitterItem next = null;
+                    if (listIndex + 1 < list.Count)
+                        next = list[listIndex + 1];
 
-                if (next == null || next.NikseBitmap == null)
-                    return new CompareMatch(",", false, 0, null);
+                    if (next == null || next.NikseBitmap == null)
+                        return new CompareMatch(",", false, 0, null);
 
-                var nextBob = new BinaryOcrBitmap(next.NikseBitmap) { X = next.X, Y = next.Top };
-                if (!nextBob.IsPeriodAtTop(_binOcrLastLowercaseHeight)) // avoid italic ";"
-                    return new CompareMatch(",", false, 0, null);
-            }
-            if (maxDiff > 0 && bob.IsApostrophe())
-            {
-                return new CompareMatch("'", false, 0, null);
-            }
-            if (bob.IsLowercaseJ()) // "j" detection must be before "i"
-            {
-                return new CompareMatch("j", false, 0, null);
-            }
-            bool italicLowercaseI;
-            if (bob.IsLowercaseI(out italicLowercaseI))
-            {
-                return new CompareMatch("i", italicLowercaseI, 0, null);
-            }
-            if (bob.IsColon())
-            {
-                return new CompareMatch(":", false, 0, null);
-            }
-            if (bob.IsExclamationMark())
-            {
-                return new CompareMatch("!", false, 0, null);
-            }
-            if (bob.IsDash())
-            {
-                return new CompareMatch("-", false, 0, null);
+                    var nextBob = new BinaryOcrBitmap(next.NikseBitmap) { X = next.X, Y = next.Top };
+                    if (!nextBob.IsPeriodAtTop(_binOcrLastLowercaseHeight)) // avoid italic ";"
+                        return new CompareMatch(",", false, 0, null);
+                }
+                if (bob.IsApostrophe())
+                {
+                    return new CompareMatch("'", false, 0, null);
+                }
+                if (bob.IsLowercaseJ()) // "j" detection must be before "i"
+                {
+                    return new CompareMatch("j", false, 0, null);
+                }
+                bool italicLowercaseI;
+                if (bob.IsLowercaseI(out italicLowercaseI))
+                {
+                    return new CompareMatch("i", italicLowercaseI, 0, null);
+                }
+                if (bob.IsColon())
+                {
+                    return new CompareMatch(":", false, 0, null);
+                }
+                if (bob.IsExclamationMark())
+                {
+                    return new CompareMatch("!", false, 0, null);
+                }
+                if (bob.IsDash())
+                {
+                    return new CompareMatch("-", false, 0, null);
+                }
             }
 
             return null;
