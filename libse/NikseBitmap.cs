@@ -17,17 +17,31 @@ namespace Nikse.SubtitleEdit.Core
 
     public class NikseBitmap
     {
-        public int Width { get; private set; }
+        private int _width;
+        public int Width
+        {
+            get
+            {
+                return _width;
+            }
+            private set
+            {
+                _width = value;
+                _withX4 = _width * 4;
+            }
+        }
+
         public int Height { get; private set; }
 
         private byte[] _bitmapData;
         private int _pixelAddress;
+        private int _withX4;
 
         public NikseBitmap(int width, int height)
         {
             Width = width;
             Height = height;
-            _bitmapData = new byte[Width * Height * 4];
+            _bitmapData = new byte[Height * _withX4];
         }
 
         public NikseBitmap(int width, int height, byte[] bitmapData)
@@ -813,7 +827,7 @@ namespace Nikse.SubtitleEdit.Core
                     var c = GetPixel(x, y);
                     if (c != transparentColor && c.A != 0)
                     {
-                       return cropping;
+                        return cropping;
                     }
                     x++;
                 }
@@ -836,18 +850,18 @@ namespace Nikse.SubtitleEdit.Core
 
         public int GetAlpha(int x, int y)
         {
-            return _bitmapData[(x * 4) + (y * 4 * Width) + 3];
+            return _bitmapData[(x * 4) + (y * _withX4) + 3];
         }
 
         public Color GetPixel(int x, int y)
         {
-            _pixelAddress = (x * 4) + (y * 4 * Width);
+            _pixelAddress = (x * 4) + (y * _withX4);
             return Color.FromArgb(_bitmapData[_pixelAddress + 3], _bitmapData[_pixelAddress + 2], _bitmapData[_pixelAddress + 1], _bitmapData[_pixelAddress]);
         }
 
         public byte[] GetPixelColors(int x, int y)
         {
-            _pixelAddress = (x * 4) + (y * 4 * Width);
+            _pixelAddress = (x * 4) + (y * _withX4);
             return new[] { _bitmapData[_pixelAddress + 3], _bitmapData[_pixelAddress + 2], _bitmapData[_pixelAddress + 1], _bitmapData[_pixelAddress] };
         }
 
@@ -859,7 +873,7 @@ namespace Nikse.SubtitleEdit.Core
 
         public void SetPixel(int x, int y, Color color)
         {
-            _pixelAddress = (x * 4) + (y * 4 * Width);
+            _pixelAddress = (x * 4) + (y * _withX4);
             _bitmapData[_pixelAddress] = color.B;
             _bitmapData[_pixelAddress + 1] = color.G;
             _bitmapData[_pixelAddress + 2] = color.R;
@@ -1106,8 +1120,8 @@ namespace Nikse.SubtitleEdit.Core
             int index = 0;
             for (int y = 0; y < Height; y++)
             {
-                int pixelAddress = (0 * 4) + (y * 4 * Width);
-                Buffer.BlockCopy(_bitmapData, pixelAddress, newBitmapData, index, 4 * Width);
+                int pixelAddress = (0 * 4) + (y * _withX4);
+                Buffer.BlockCopy(_bitmapData, pixelAddress, newBitmapData, index, _withX4);
                 index += 4 * newWidth;
             }
             Width = newWidth;
