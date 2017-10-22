@@ -2,6 +2,7 @@
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Globalization;
 using System.Windows.Forms;
@@ -15,6 +16,8 @@ namespace Nikse.SubtitleEdit.Controls
             HHMMSSMS,
             HHMMSSFF
         }
+
+        private bool _designMode = LicenseManager.UsageMode == LicenseUsageMode.Designtime;
 
         private const int NumericUpDownValue = 50;
 
@@ -142,6 +145,9 @@ namespace Nikse.SubtitleEdit.Controls
         {
             get
             {
+                if (_designMode)
+                    return new TimeCode();
+
                 if (string.IsNullOrWhiteSpace(maskedTextBox1.Text.Replace(".", string.Empty).Replace(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, string.Empty).Replace(",", string.Empty).Replace(":", string.Empty)))
                     return TimeCode.MaxTime;
 
@@ -225,6 +231,9 @@ namespace Nikse.SubtitleEdit.Controls
             }
             set
             {
+                if (_designMode)
+                    return;
+
                 if (value == null || value.TotalMilliseconds >= TimeCode.MaxTime.TotalMilliseconds - 0.1)
                 {
                     maskedTextBox1.Text = string.Empty;

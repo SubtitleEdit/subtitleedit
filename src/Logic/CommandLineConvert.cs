@@ -87,6 +87,9 @@ namespace Nikse.SubtitleEdit.Logic
                     WriteLine("    " + Ultech130.NameOfFormat);
                     WriteLine("- For Blu-ray .sup output use: '" + BatchConvert.BluRaySubtitle.Replace(" ", string.Empty) + "'");
                     WriteLine("- For VobSub .sub output use: '" + BatchConvert.VobSubSubtitle.Replace(" ", string.Empty) + "'");
+                    WriteLine("- For DOST/image .dost/image output use: '" + BatchConvert.DostImageSubtitle.Replace(" ", string.Empty) + "'");
+                    WriteLine("- For BDN/XML .xml/image output use: '" + BatchConvert.BdnXmlSubtitle.Replace(" ", string.Empty) + "'");
+                    WriteLine("- For FCP/image .xml/image output use: '" + BatchConvert.FcpImageSubtitle.Replace(" ", string.Empty) + "'");
                 }
                 else
                 {
@@ -1101,16 +1104,19 @@ namespace Nikse.SubtitleEdit.Logic
                             form.Initialize(sub, format, ExportPngXml.ExportFormats.BluraySup, fileName, null, null);
                             int width = 1920;
                             int height = 1080;
-                            var parts = Configuration.Settings.Tools.ExportBluRayVideoResolution.Split('x');
-                            if (parts.Length == 2 && Utilities.IsInteger(parts[0]) && Utilities.IsInteger(parts[1]))
+                            if (!string.IsNullOrEmpty(Configuration.Settings.Tools.ExportBluRayVideoResolution))
                             {
-                                width = int.Parse(parts[0]);
-                                height = int.Parse(parts[1]);
-                            }
-                            if (res != null)
-                            {
-                                width = res.Value.X;
-                                height = res.Value.Y;
+                                var parts = Configuration.Settings.Tools.ExportBluRayVideoResolution.Split('x');
+                                if (parts.Length == 2 && Utilities.IsInteger(parts[0]) && Utilities.IsInteger(parts[1]))
+                                {
+                                    width = int.Parse(parts[0]);
+                                    height = int.Parse(parts[1]);
+                                }
+                                if (res != null)
+                                {
+                                    width = res.Value.X;
+                                    height = res.Value.Y;
+                                }
                             }
 
                             using (var binarySubtitleFile = new FileStream(outputFileName, FileMode.Create))
@@ -1157,11 +1163,15 @@ namespace Nikse.SubtitleEdit.Logic
                             form.Initialize(sub, format, ExportPngXml.ExportFormats.VobSub, fileName, null, null);
                             int width = 720;
                             int height = 576;
-                            var parts = Configuration.Settings.Tools.ExportVobSubVideoResolution.Split('x');
-                            if (parts.Length == 2 && Utilities.IsInteger(parts[0]) && Utilities.IsInteger(parts[1]))
+
+                            if (!string.IsNullOrEmpty(Configuration.Settings.Tools.ExportVobSubVideoResolution))
                             {
-                                width = int.Parse(parts[0]);
-                                height = int.Parse(parts[1]);
+                                var parts = Configuration.Settings.Tools.ExportVobSubVideoResolution.Split('x');
+                                if (parts.Length == 2 && Utilities.IsInteger(parts[0]) && Utilities.IsInteger(parts[1]))
+                                {
+                                    width = int.Parse(parts[0]);
+                                    height = int.Parse(parts[1]);
+                                }
                             }
 
                             var cfg = Configuration.Settings.Tools;
@@ -1204,6 +1214,169 @@ namespace Nikse.SubtitleEdit.Logic
                         }
                         WriteLine(" done.");
                     }
+
+                    else if (BatchConvert.DostImageSubtitle.Replace(" ", string.Empty).Equals(targetFormat.Replace(" ", string.Empty), StringComparison.OrdinalIgnoreCase))
+                    {
+                        targetFormatFound = true;
+                        outputFileName = FormatOutputFileNameForBatchConvert(fileName, ".dost", outputFolder, overwrite);
+                        Write($"{count}: {Path.GetFileName(fileName)} -> {outputFileName}...");
+                        using (var form = new ExportPngXml())
+                        {
+                            form.Initialize(sub, format, ExportPngXml.ExportFormats.Dost, fileName, null, null);
+                            int width = 1920;
+                            int height = 1080;
+                            if (!string.IsNullOrEmpty(Configuration.Settings.Tools.ExportBluRayVideoResolution))
+                            {
+                                var parts = Configuration.Settings.Tools.ExportBluRayVideoResolution.Split('x');
+                                if (parts.Length == 2 && Utilities.IsInteger(parts[0]) && Utilities.IsInteger(parts[1]))
+                                {
+                                    width = int.Parse(parts[0]);
+                                    height = int.Parse(parts[1]);
+                                }
+                            }
+                            if (res != null)
+                            {
+                                width = res.Value.X;
+                                height = res.Value.Y;
+                            }
+
+                            var sb = new StringBuilder();
+                            var imagesSavedCount = 0;
+                            var isImageBased = IsImageBased(format);
+                            for (int index = 0; index < sub.Paragraphs.Count; index++)
+                            {
+                                var mp = form.MakeMakeBitmapParameter(index, width, height);
+                                mp.LineJoin = Configuration.Settings.Tools.ExportPenLineJoin;
+                                if (isImageBased)
+                                {
+                                    using (var ms = new MemoryStream(File.ReadAllBytes(Path.Combine(Path.GetDirectoryName(fileName), sub.Paragraphs[index].Text))))
+                                    {
+                                        mp.Bitmap = (Bitmap)Image.FromStream(ms);
+                                    }
+                                }
+                                else
+                                {
+                                    mp.Bitmap = ExportPngXml.GenerateImageFromTextWithStyle(mp);
+                                }
+                                form.WriteParagraphDost(sb, imagesSavedCount, mp, index, outputFileName);
+
+                                if (index % 50 == 0)
+                                {
+                                    System.Windows.Forms.Application.DoEvents();
+                                }
+                            }
+                            form.WriteDostFile(outputFileName, sb.ToString());
+                        }
+                        WriteLine(" done.");
+                    }
+
+                    else if (BatchConvert.BdnXmlSubtitle.Replace(" ", string.Empty).Equals(targetFormat.Replace(" ", string.Empty), StringComparison.OrdinalIgnoreCase))
+                    {
+                        targetFormatFound = true;
+                        outputFileName = FormatOutputFileNameForBatchConvert(fileName, ".xml", outputFolder, overwrite);
+                        Write($"{count}: {Path.GetFileName(fileName)} -> {outputFileName}...");
+                        using (var form = new ExportPngXml())
+                        {
+                            form.Initialize(sub, format, ExportPngXml.ExportFormats.BdnXml, fileName, null, null);
+                            int width = 1920;
+                            int height = 1080;
+                            if (!string.IsNullOrEmpty(Configuration.Settings.Tools.ExportBluRayVideoResolution))
+                            {
+                                var parts = Configuration.Settings.Tools.ExportBluRayVideoResolution.Split('x');
+                                if (parts.Length == 2 && Utilities.IsInteger(parts[0]) && Utilities.IsInteger(parts[1]))
+                                {
+                                    width = int.Parse(parts[0]);
+                                    height = int.Parse(parts[1]);
+                                }
+                            }
+                            if (res != null)
+                            {
+                                width = res.Value.X;
+                                height = res.Value.Y;
+                            }
+
+                            var sb = new StringBuilder();
+                            var imagesSavedCount = 0;
+                            var isImageBased = IsImageBased(format);
+                            for (int index = 0; index < sub.Paragraphs.Count; index++)
+                            {
+                                var mp = form.MakeMakeBitmapParameter(index, width, height);
+                                mp.LineJoin = Configuration.Settings.Tools.ExportPenLineJoin;
+                                if (isImageBased)
+                                {
+                                    using (var ms = new MemoryStream(File.ReadAllBytes(Path.Combine(Path.GetDirectoryName(fileName), sub.Paragraphs[index].Text))))
+                                    {
+                                        mp.Bitmap = (Bitmap)Image.FromStream(ms);
+                                    }
+                                }
+                                else
+                                {
+                                    mp.Bitmap = ExportPngXml.GenerateImageFromTextWithStyle(mp);
+                                }
+                                imagesSavedCount = form.WriteBdnXmlParagraph(width, sb, form.GetBottomMarginInPixels(sub.Paragraphs[index]), height, imagesSavedCount, mp, index, Path.GetDirectoryName(outputFileName));
+
+                                if (index % 50 == 0)
+                                {
+                                    System.Windows.Forms.Application.DoEvents();
+                                }
+                            }
+                            form.WriteBdnXmlFile(imagesSavedCount, sb, outputFileName);
+                        }
+                        WriteLine(" done.");
+                    }
+
+                    else if (BatchConvert.FcpImageSubtitle.Replace(" ", string.Empty).Equals(targetFormat.Replace(" ", string.Empty), StringComparison.OrdinalIgnoreCase))
+                    {
+                        targetFormatFound = true;
+                        outputFileName = FormatOutputFileNameForBatchConvert(fileName, ".xml", outputFolder, overwrite);
+                        Write($"{count}: {Path.GetFileName(fileName)} -> {outputFileName}...");
+                        using (var form = new ExportPngXml())
+                        {
+                            form.Initialize(sub, format, ExportPngXml.ExportFormats.Fcp, fileName, null, null);
+                            int width = 1920;
+                            int height = 1080;
+                            var parts = Configuration.Settings.Tools.ExportFcpVideoResolution.Split('x');
+                            if (parts.Length == 2 && Utilities.IsInteger(parts[0]) && Utilities.IsInteger(parts[1]))
+                            {
+                                width = int.Parse(parts[0]);
+                                height = int.Parse(parts[1]);
+                            }
+                            if (res != null)
+                            {
+                                width = res.Value.X;
+                                height = res.Value.Y;
+                            }
+
+                            var sb = new StringBuilder();
+                            var imagesSavedCount = 0;
+                            var isImageBased = IsImageBased(format);
+                            for (int index = 0; index < sub.Paragraphs.Count; index++)
+                            {
+                                var mp = form.MakeMakeBitmapParameter(index, width, height);
+                                mp.LineJoin = Configuration.Settings.Tools.ExportPenLineJoin;
+                                if (isImageBased)
+                                {
+                                    using (var ms = new MemoryStream(File.ReadAllBytes(Path.Combine(Path.GetDirectoryName(fileName), sub.Paragraphs[index].Text))))
+                                    {
+                                        mp.Bitmap = (Bitmap)Image.FromStream(ms);
+                                    }
+                                }
+                                else
+                                {
+                                    mp.Bitmap = ExportPngXml.GenerateImageFromTextWithStyle(mp);
+                                }
+                                form.WriteFcpParagraph(sb, imagesSavedCount, mp, index, outputFileName);
+
+                                if (index % 50 == 0)
+                                {
+                                    System.Windows.Forms.Application.DoEvents();
+                                }
+                            }
+                            form.WriteFcpFile(width, height, sb, outputFileName);
+                        }
+                        WriteLine(" done.");
+                    }
+
                     else if (!targetFormatFound && targetFormat.StartsWith("CustomText:", StringComparison.OrdinalIgnoreCase))
                     {
                         if (!string.IsNullOrEmpty(Configuration.Settings.Tools.ExportCustomTemplates))

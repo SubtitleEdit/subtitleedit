@@ -32,7 +32,7 @@ namespace Nikse.SubtitleEdit.Forms
             internal const string Fab = "FAB";
             internal const string Stl = "STL";
             internal const string Fcp = "FCP";
-            internal const string Dost = "DOST";
+            internal const string Dost = "DOSTIMAGE";
             internal const string DCinemaInterop = "DCINEMA_INTEROP";
             internal const string BdnXml = "BDNXML";
             internal const string Edl = "EDL";
@@ -699,18 +699,95 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else if (_exportType == ExportFormats.Fcp)
                 {
-                    string fileNameNoPath = Path.GetFileName(saveFileDialog1.FileName);
-                    string fileNameNoExt = Path.GetFileNameWithoutExtension(fileNameNoPath);
+                    WriteFcpFile(width, height, sb, saveFileDialog1.FileName);
+                    MessageBox.Show(string.Format(Configuration.Settings.Language.ExportPngXml.XImagesSavedInY, imagesSavedCount, Path.GetDirectoryName(saveFileDialog1.FileName)));
+                }
+                else if (_exportType == ExportFormats.Dost)
+                {
+                    WriteDostFile(saveFileDialog1.FileName, sb.ToString());
+                    MessageBox.Show(string.Format(Configuration.Settings.Language.ExportPngXml.XImagesSavedInY, imagesSavedCount, Path.GetDirectoryName(saveFileDialog1.FileName)));
+                }
+                else if (_exportType == ExportFormats.DCinemaInterop)
+                {
+                    var doc = new XmlDocument();
+                    string title = "unknown";
+                    if (!string.IsNullOrEmpty(_fileName))
+                        title = Path.GetFileNameWithoutExtension(_fileName);
 
-                    int duration = 0;
-                    if (_subtitle.Paragraphs.Count > 0)
-                        duration = (int)Math.Round(_subtitle.Paragraphs[_subtitle.Paragraphs.Count - 1].EndTime.TotalSeconds * 25.0);
-                    string s = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
-                               "<!DOCTYPE xmeml[]>" + Environment.NewLine +
-                               "<xmeml version=\"4\">" + Environment.NewLine +
-                               "  <sequence id=\"" + System.Security.SecurityElement.Escape(fileNameNoExt) + "\">" + Environment.NewLine +
-                               "    <updatebehavior>add</updatebehavior>" + Environment.NewLine +
-                               "    <name>" + System.Security.SecurityElement.Escape(fileNameNoExt) + @"</name>
+                    string guid = Guid.NewGuid().ToString().Replace("-", string.Empty).Insert(8, "-").Insert(13, "-").Insert(18, "-").Insert(23, "-");
+                    doc.LoadXml("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + Environment.NewLine +
+                                "<DCSubtitle Version=\"1.1\">" + Environment.NewLine +
+                                "<SubtitleID>" + guid + "</SubtitleID>" + Environment.NewLine +
+                                "<MovieTitle>" + title + "</MovieTitle>" + Environment.NewLine +
+                                "<ReelNumber>1</ReelNumber>" + Environment.NewLine +
+                                "<Language>English</Language>" + Environment.NewLine +
+                                sb +
+                                "</DCSubtitle>");
+                    string fName = saveFileDialog1.FileName;
+                    if (!fName.EndsWith(".xml", StringComparison.OrdinalIgnoreCase))
+                        fName += ".xml";
+                    File.WriteAllText(fName, SubtitleFormat.ToUtf8XmlString(doc));
+                    MessageBox.Show(string.Format(Configuration.Settings.Language.ExportPngXml.XImagesSavedInY, imagesSavedCount, Path.GetDirectoryName(fName)));
+                }
+                else if (_exportType == ExportFormats.Edl || _exportType == ExportFormats.EdlClipName)
+                {
+                    var title = Path.GetFileNameWithoutExtension(saveFileDialog1.FileName);
+                    if (string.IsNullOrEmpty(title))
+                        title = "( no title )";
+                    string header = "TITLE: " + title + Environment.NewLine + Environment.NewLine;
+                    File.WriteAllText(saveFileDialog1.FileName, header + sb);
+                    MessageBox.Show(string.Format(Configuration.Settings.Language.ExportPngXml.XImagesSavedInY, imagesSavedCount, Path.GetDirectoryName(saveFileDialog1.FileName)));
+                }
+                else if (_exportType == ExportFormats.DCinemaInterop)
+                {
+                    var doc = new XmlDocument();
+                    string title = "unknown";
+                    if (!string.IsNullOrEmpty(_fileName))
+                        title = Path.GetFileNameWithoutExtension(_fileName);
+
+                    string guid = Guid.NewGuid().ToString().Replace("-", string.Empty).Insert(8, "-").Insert(13, "-").Insert(18, "-").Insert(23, "-");
+                    doc.LoadXml("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + Environment.NewLine +
+                                "<DCSubtitle Version=\"1.1\">" + Environment.NewLine +
+                                "<SubtitleID>" + guid + "</SubtitleID>" + Environment.NewLine +
+                                "<MovieTitle>" + title + "</MovieTitle>" + Environment.NewLine +
+                                "<ReelNumber>1</ReelNumber>" + Environment.NewLine +
+                                "<Language>English</Language>" + Environment.NewLine +
+                                sb +
+                                "</DCSubtitle>");
+                    string fName = saveFileDialog1.FileName;
+                    if (!fName.EndsWith(".xml", StringComparison.OrdinalIgnoreCase))
+                        fName += ".xml";
+                    File.WriteAllText(fName, SubtitleFormat.ToUtf8XmlString(doc));
+                    MessageBox.Show(string.Format(Configuration.Settings.Language.ExportPngXml.XImagesSavedInY, imagesSavedCount, Path.GetDirectoryName(fName)));
+                }
+                else
+                {
+                    WriteBdnXmlFile(imagesSavedCount, sb, Path.Combine(folderBrowserDialog1.SelectedPath, "BDN_Index.xml"));
+                    MessageBox.Show(string.Format(Configuration.Settings.Language.ExportPngXml.XImagesSavedInY, imagesSavedCount, folderBrowserDialog1.SelectedPath));
+                }
+            }
+            buttonExport.Enabled = true;
+
+            if (Configuration.Settings.General.CurrentVideoOffsetInMs > 0)
+            {
+                _subtitle.AddTimeToAllParagraphs(TimeSpan.FromMilliseconds(-Configuration.Settings.General.CurrentVideoOffsetInMs));
+            }
+        }
+
+        internal void WriteFcpFile(int width, int height, StringBuilder sb, string fileName)
+        {
+            string fileNameNoPath = Path.GetFileName(fileName);
+            string fileNameNoExt = Path.GetFileNameWithoutExtension(fileNameNoPath);
+
+            int duration = 0;
+            if (_subtitle.Paragraphs.Count > 0)
+                duration = (int)Math.Round(_subtitle.Paragraphs[_subtitle.Paragraphs.Count - 1].EndTime.TotalSeconds * 25.0);
+            string s = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
+                       "<!DOCTYPE xmeml[]>" + Environment.NewLine +
+                       "<xmeml version=\"4\">" + Environment.NewLine +
+                       "  <sequence id=\"" + System.Security.SecurityElement.Escape(fileNameNoExt) + "\">" + Environment.NewLine +
+                       "    <updatebehavior>add</updatebehavior>" + Environment.NewLine +
+                       "    <name>" + System.Security.SecurityElement.Escape(fileNameNoExt) + @"</name>
     <duration>" + duration.ToString(CultureInfo.InvariantCulture) + @"</duration>
     <rate>
       <ntsc>FALSE</ntsc>
@@ -778,177 +855,115 @@ namespace Nikse.SubtitleEdit.Forms
     <ismasterclip>FALSE</ismasterclip>
   </sequence>
 </xmeml>";
-                    if (comboBoxFrameRate.Text == "29.97")
-                    {
-                        s = s.Replace("<displayformat>NDF</displayformat>", "<displayformat>DF</displayformat>"); //Non Drop Frame or Drop Frame
-                        s = s.Replace("<timebase>25</timebase>", "<timebase>30</timebase>");
-                        s = s.Replace("<ntsc>FALSE</ntsc>", "<ntsc>TRUE</ntsc>");
-                    }
-                    else if (comboBoxFrameRate.Text == "23.976")
-                    {
-                        s = s.Replace("<displayformat>NDF</displayformat>", "<displayformat>DF</displayformat>"); //Non Drop Frame or Drop Frame
-                        s = s.Replace("<timebase>25</timebase>", "<timebase>24</timebase>");
-                        s = s.Replace("<ntsc>FALSE</ntsc>", "<ntsc>TRUE</ntsc>");
-                    }
-                    else if (comboBoxFrameRate.Text == "59.94")
-                    {
-                        s = s.Replace("<displayformat>NDF</displayformat>", "<displayformat>DF</displayformat>"); //Non Drop Frame or Drop Frame
-                        s = s.Replace("<timebase>25</timebase>", "<timebase>60</timebase>");
-                        s = s.Replace("<ntsc>FALSE</ntsc>", "<ntsc>TRUE</ntsc>");
-                    }
+            if (comboBoxFrameRate.Text == "29.97")
+            {
+                s = s.Replace("<displayformat>NDF</displayformat>", "<displayformat>DF</displayformat>"); //Non Drop Frame or Drop Frame
+                s = s.Replace("<timebase>25</timebase>", "<timebase>30</timebase>");
+                s = s.Replace("<ntsc>FALSE</ntsc>", "<ntsc>TRUE</ntsc>");
+            }
+            else if (comboBoxFrameRate.Text == "23.976")
+            {
+                s = s.Replace("<displayformat>NDF</displayformat>", "<displayformat>DF</displayformat>"); //Non Drop Frame or Drop Frame
+                s = s.Replace("<timebase>25</timebase>", "<timebase>24</timebase>");
+                s = s.Replace("<ntsc>FALSE</ntsc>", "<ntsc>TRUE</ntsc>");
+            }
+            else if (comboBoxFrameRate.Text == "59.94")
+            {
+                s = s.Replace("<displayformat>NDF</displayformat>", "<displayformat>DF</displayformat>"); //Non Drop Frame or Drop Frame
+                s = s.Replace("<timebase>25</timebase>", "<timebase>60</timebase>");
+                s = s.Replace("<ntsc>FALSE</ntsc>", "<ntsc>TRUE</ntsc>");
+            }
 
-                    else
-                    {
-                        s = s.Replace("<timebase>25</timebase>", "<timebase>" + comboBoxFrameRate.Text + "</timebase>");
-                    }
+            else
+            {
+                s = s.Replace("<timebase>25</timebase>", "<timebase>" + comboBoxFrameRate.Text + "</timebase>");
+            }
 
-                    if (_subtitle.Paragraphs.Count > 0)
-                    {
-                        var end = (int)Math.Round(_subtitle.Paragraphs[_subtitle.Paragraphs.Count - 1].EndTime.TotalSeconds * FrameRate);
-                        end++;
-                        s = s.Replace("[OUT]", end.ToString(CultureInfo.InvariantCulture));
-                    }
+            if (_subtitle.Paragraphs.Count > 0)
+            {
+                var end = (int)Math.Round(_subtitle.Paragraphs[_subtitle.Paragraphs.Count - 1].EndTime.TotalSeconds * FrameRate);
+                end++;
+                s = s.Replace("[OUT]", end.ToString(CultureInfo.InvariantCulture));
+            }
 
-                    if (comboBoxLanguage.Text == "NTSC")
-                        s = s.Replace("<ntsc>FALSE</ntsc>", "<ntsc>TRUE</ntsc>");
+            if (comboBoxLanguage.Text == "NTSC")
+                s = s.Replace("<ntsc>FALSE</ntsc>", "<ntsc>TRUE</ntsc>");
 
-                    s = s.Replace("<width>1920</width>", "<width>" + width.ToString(CultureInfo.InvariantCulture) + "</width>");
-                    s = s.Replace("<height>1080</height>", "<height>" + height.ToString(CultureInfo.InvariantCulture) + "</height>");
+            s = s.Replace("<width>1920</width>", "<width>" + width.ToString(CultureInfo.InvariantCulture) + "</width>");
+            s = s.Replace("<height>1080</height>", "<height>" + height.ToString(CultureInfo.InvariantCulture) + "</height>");
 
-                    if (comboBoxImageFormat.Text.Contains("8-bit"))
-                        s = s.Replace("<colordepth>32</colordepth>", "<colordepth>8</colordepth>");
+            if (comboBoxImageFormat.Text.Contains("8-bit"))
+                s = s.Replace("<colordepth>32</colordepth>", "<colordepth>8</colordepth>");
 
-                    File.WriteAllText(Path.Combine(folderBrowserDialog1.SelectedPath, saveFileDialog1.FileName), s);
-                    MessageBox.Show(string.Format(Configuration.Settings.Language.ExportPngXml.XImagesSavedInY, imagesSavedCount, Path.GetDirectoryName(saveFileDialog1.FileName)));
-                }
-                else if (_exportType == ExportFormats.Dost)
-                {
-                    string header = @"$FORMAT=480
+            File.WriteAllText(fileName, s);
+        }
+
+        internal void WriteBdnXmlFile(int imagesSavedCount, StringBuilder sb, string fileName)
+        {
+            int resW;
+            int resH;
+            GetResolution(out resW, out resH);
+            string videoFormat = "1080p";
+            if (resW == 1920 && resH == 1080)
+                videoFormat = "1080p";
+            else if (resW == 1280 && resH == 720)
+                videoFormat = "720p";
+            else if (resW == 848 && resH == 480)
+                videoFormat = "480p";
+            else if (resW > 0 && resH > 0)
+                videoFormat = resW + "x" + resH;
+
+            var doc = new XmlDocument();
+            Paragraph first = _subtitle.Paragraphs[0];
+            Paragraph last = _subtitle.Paragraphs[_subtitle.Paragraphs.Count - 1];
+            doc.LoadXml("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + Environment.NewLine +
+                        "<BDN Version=\"0.93\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:noNamespaceSchemaLocation=\"BD-03-006-0093b BDN File Format.xsd\">" + Environment.NewLine +
+                        "<Description>" + Environment.NewLine +
+                        "<Name Title=\"subtitle_exp\" Content=\"\"/>" + Environment.NewLine +
+                        "<Language Code=\"eng\"/>" + Environment.NewLine +
+                        "<Format VideoFormat=\"" + videoFormat + "\" FrameRate=\"" + FrameRate.ToString(CultureInfo.InvariantCulture) + "\" DropFrame=\"False\"/>" + Environment.NewLine +
+                        "<Events Type=\"Graphic\" FirstEventInTC=\"" + ToHHMMSSFF(first.StartTime) + "\" LastEventOutTC=\"" + ToHHMMSSFF(last.EndTime) + "\" NumberofEvents=\"" + imagesSavedCount.ToString(CultureInfo.InvariantCulture) + "\"/>" + Environment.NewLine +
+                        "</Description>" + Environment.NewLine +
+                        "<Events>" + Environment.NewLine +
+                        "</Events>" + Environment.NewLine +
+                        "</BDN>");
+            XmlNode events = doc.DocumentElement.SelectSingleNode("Events");
+            doc.PreserveWhitespace = true;
+            events.InnerXml = sb.ToString();
+            File.WriteAllText(fileName, FormatUtf8Xml(doc), Encoding.UTF8);
+        }
+
+        internal void WriteDostFile(string fileName, string body)
+        {
+            string header = @"$FORMAT=480
 $VERSION=1.2
 $ULEAD=TRUE
 $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
-                                    "NO\tINTIME\t\tOUTTIME\t\tXPOS\tYPOS\tFILENAME\tFADEIN\tFADEOUT";
+                                                "NO\tINTIME\t\tOUTTIME\t\tXPOS\tYPOS\tFILENAME\tFADEIN\tFADEOUT";
 
-                    string dropValue = "30000";
-                    if (comboBoxFrameRate.SelectedIndex == -1)
-                    {
-                        var numberAsString = comboBoxFrameRate.Text.Trim().Replace(".", string.Empty).Replace(",", string.Empty).Replace(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, string.Empty);
-                        if (numberAsString.Length > 0 && Utilities.IsInteger(numberAsString))
-                            dropValue = numberAsString;
-                    }
-                    else if (comboBoxFrameRate.Items[comboBoxFrameRate.SelectedIndex].ToString() == "23.98")
-                        dropValue = "23976";
-                    else if (comboBoxFrameRate.Items[comboBoxFrameRate.SelectedIndex].ToString() == "24")
-                        dropValue = "24000";
-                    else if (comboBoxFrameRate.Items[comboBoxFrameRate.SelectedIndex].ToString() == "25")
-                        dropValue = "25000";
-                    else if (comboBoxFrameRate.Items[comboBoxFrameRate.SelectedIndex].ToString() == "29.97")
-                        dropValue = "29970";
-                    else if (comboBoxFrameRate.Items[comboBoxFrameRate.SelectedIndex].ToString() == "30")
-                        dropValue = "30000";
-                    else if (comboBoxFrameRate.Items[comboBoxFrameRate.SelectedIndex].ToString() == "59.94")
-                        dropValue = "59940";
-                    header = header.Replace("[DROPVALUE]", dropValue);
-                    comboBoxFrameRate.SelectedIndex = 0;
-
-                    File.WriteAllText(saveFileDialog1.FileName, header + Environment.NewLine + sb);
-                    MessageBox.Show(string.Format(Configuration.Settings.Language.ExportPngXml.XImagesSavedInY, imagesSavedCount, Path.GetDirectoryName(saveFileDialog1.FileName)));
-                }
-                else if (_exportType == ExportFormats.DCinemaInterop)
-                {
-                    var doc = new XmlDocument();
-                    string title = "unknown";
-                    if (!string.IsNullOrEmpty(_fileName))
-                        title = Path.GetFileNameWithoutExtension(_fileName);
-
-                    string guid = Guid.NewGuid().ToString().Replace("-", string.Empty).Insert(8, "-").Insert(13, "-").Insert(18, "-").Insert(23, "-");
-                    doc.LoadXml("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + Environment.NewLine +
-                                "<DCSubtitle Version=\"1.1\">" + Environment.NewLine +
-                                "<SubtitleID>" + guid + "</SubtitleID>" + Environment.NewLine +
-                                "<MovieTitle>" + title + "</MovieTitle>" + Environment.NewLine +
-                                "<ReelNumber>1</ReelNumber>" + Environment.NewLine +
-                                "<Language>English</Language>" + Environment.NewLine +
-                                sb +
-                                "</DCSubtitle>");
-                    string fName = saveFileDialog1.FileName;
-                    if (!fName.EndsWith(".xml", StringComparison.OrdinalIgnoreCase))
-                        fName += ".xml";
-                    File.WriteAllText(fName, SubtitleFormat.ToUtf8XmlString(doc));
-                    MessageBox.Show(string.Format(Configuration.Settings.Language.ExportPngXml.XImagesSavedInY, imagesSavedCount, Path.GetDirectoryName(fName)));
-                }
-                else if (_exportType == ExportFormats.Edl || _exportType == ExportFormats.EdlClipName)
-                {
-                    var title = Path.GetFileNameWithoutExtension(saveFileDialog1.FileName);
-                    if (string.IsNullOrEmpty(title))
-                        title = "( no title )";
-                    string header = "TITLE: " + title + Environment.NewLine + Environment.NewLine;
-                    File.WriteAllText(saveFileDialog1.FileName, header + sb);
-                    MessageBox.Show(string.Format(Configuration.Settings.Language.ExportPngXml.XImagesSavedInY, imagesSavedCount, Path.GetDirectoryName(saveFileDialog1.FileName)));
-                }
-                else if (_exportType == ExportFormats.DCinemaInterop)
-                {
-                    var doc = new XmlDocument();
-                    string title = "unknown";
-                    if (!string.IsNullOrEmpty(_fileName))
-                        title = Path.GetFileNameWithoutExtension(_fileName);
-
-                    string guid = Guid.NewGuid().ToString().Replace("-", string.Empty).Insert(8, "-").Insert(13, "-").Insert(18, "-").Insert(23, "-");
-                    doc.LoadXml("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + Environment.NewLine +
-                                "<DCSubtitle Version=\"1.1\">" + Environment.NewLine +
-                                "<SubtitleID>" + guid + "</SubtitleID>" + Environment.NewLine +
-                                "<MovieTitle>" + title + "</MovieTitle>" + Environment.NewLine +
-                                "<ReelNumber>1</ReelNumber>" + Environment.NewLine +
-                                "<Language>English</Language>" + Environment.NewLine +
-                                sb +
-                                "</DCSubtitle>");
-                    string fName = saveFileDialog1.FileName;
-                    if (!fName.EndsWith(".xml", StringComparison.OrdinalIgnoreCase))
-                        fName += ".xml";
-                    File.WriteAllText(fName, SubtitleFormat.ToUtf8XmlString(doc));
-                    MessageBox.Show(string.Format(Configuration.Settings.Language.ExportPngXml.XImagesSavedInY, imagesSavedCount, Path.GetDirectoryName(fName)));
-                }
-                else
-                {
-                    int resW;
-                    int resH;
-                    GetResolution(out resW, out resH);
-                    string videoFormat = "1080p";
-                    if (resW == 1920 && resH == 1080)
-                        videoFormat = "1080p";
-                    else if (resW == 1280 && resH == 720)
-                        videoFormat = "720p";
-                    else if (resW == 848 && resH == 480)
-                        videoFormat = "480p";
-                    else if (resW > 0 && resH > 0)
-                        videoFormat = resW + "x" + resH;
-
-                    var doc = new XmlDocument();
-                    Paragraph first = _subtitle.Paragraphs[0];
-                    Paragraph last = _subtitle.Paragraphs[_subtitle.Paragraphs.Count - 1];
-                    doc.LoadXml("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + Environment.NewLine +
-                                "<BDN Version=\"0.93\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:noNamespaceSchemaLocation=\"BD-03-006-0093b BDN File Format.xsd\">" + Environment.NewLine +
-                                "<Description>" + Environment.NewLine +
-                                "<Name Title=\"subtitle_exp\" Content=\"\"/>" + Environment.NewLine +
-                                "<Language Code=\"eng\"/>" + Environment.NewLine +
-                                "<Format VideoFormat=\"" + videoFormat + "\" FrameRate=\"" + FrameRate.ToString(CultureInfo.InvariantCulture) + "\" DropFrame=\"False\"/>" + Environment.NewLine +
-                                "<Events Type=\"Graphic\" FirstEventInTC=\"" + ToHHMMSSFF(first.StartTime) + "\" LastEventOutTC=\"" + ToHHMMSSFF(last.EndTime) + "\" NumberofEvents=\"" + imagesSavedCount.ToString(CultureInfo.InvariantCulture) + "\"/>" + Environment.NewLine +
-                                "</Description>" + Environment.NewLine +
-                                "<Events>" + Environment.NewLine +
-                                "</Events>" + Environment.NewLine +
-                                "</BDN>");
-                    XmlNode events = doc.DocumentElement.SelectSingleNode("Events");
-                    doc.PreserveWhitespace = true;
-                    events.InnerXml = sb.ToString();
-                    File.WriteAllText(Path.Combine(folderBrowserDialog1.SelectedPath, "BDN_Index.xml"), FormatUtf8Xml(doc), Encoding.UTF8);
-                    MessageBox.Show(string.Format(Configuration.Settings.Language.ExportPngXml.XImagesSavedInY, imagesSavedCount, folderBrowserDialog1.SelectedPath));
-                }
-            }
-            buttonExport.Enabled = true;
-
-            if (Configuration.Settings.General.CurrentVideoOffsetInMs > 0)
+            string dropValue = "30000";
+            if (comboBoxFrameRate.SelectedIndex == -1)
             {
-                _subtitle.AddTimeToAllParagraphs(TimeSpan.FromMilliseconds(-Configuration.Settings.General.CurrentVideoOffsetInMs));
+                var numberAsString = comboBoxFrameRate.Text.Trim().Replace(".", string.Empty).Replace(",", string.Empty).Replace(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, string.Empty);
+                if (numberAsString.Length > 0 && Utilities.IsInteger(numberAsString))
+                    dropValue = numberAsString;
             }
+            else if (comboBoxFrameRate.Items[comboBoxFrameRate.SelectedIndex].ToString() == "23.98")
+                dropValue = "23976";
+            else if (comboBoxFrameRate.Items[comboBoxFrameRate.SelectedIndex].ToString() == "24")
+                dropValue = "24000";
+            else if (comboBoxFrameRate.Items[comboBoxFrameRate.SelectedIndex].ToString() == "25")
+                dropValue = "25000";
+            else if (comboBoxFrameRate.Items[comboBoxFrameRate.SelectedIndex].ToString() == "29.97")
+                dropValue = "29970";
+            else if (comboBoxFrameRate.Items[comboBoxFrameRate.SelectedIndex].ToString() == "30")
+                dropValue = "30000";
+            else if (comboBoxFrameRate.Items[comboBoxFrameRate.SelectedIndex].ToString() == "59.94")
+                dropValue = "59940";
+            header = header.Replace("[DROPVALUE]", dropValue);
+            comboBoxFrameRate.SelectedIndex = 0;
+
+            File.WriteAllText(fileName, header + Environment.NewLine + body);
         }
 
         private static string FormatUtf8Xml(XmlDocument doc)
@@ -1297,159 +1312,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 {
                     if (!param.Saved)
                     {
-                        string numberString = string.Format(Path.GetFileNameWithoutExtension(Path.GetFileName(param.SavDialogFileName)) + "{0:0000}", i);
-                        string fileName = numberString + "." + comboBoxImageFormat.Text.ToLower();
-                        string fileNameNoPath = Path.GetFileName(fileName);
-                        string fileNameNoExt = Path.GetFileNameWithoutExtension(fileNameNoPath);
-                        string template = " <clipitem id=\"" + System.Security.SecurityElement.Escape(fileNameNoPath) + "\">" + Environment.NewLine +
-
-                                          // <pathurl>file://localhost/" + fileNameNoPath.Replace(" ", "%20") + @"</pathurl>
-
-                                          @"            <name>" + System.Security.SecurityElement.Escape(fileNameNoPath) + @"</name>
-            <duration>[DURATION]</duration>
-            <rate>
-              <ntsc>[NTSC]</ntsc>
-              <timebase>[TIMEBASE]</timebase>
-            </rate>
-            <in>[IN]</in>
-            <out>[OUT]</out>
-            <start>[START]</start>
-            <end>[END]</end>
-            <pixelaspectratio>" + param.VideoResolution + @"</pixelaspectratio>
-            <stillframe>TRUE</stillframe>
-            <anamorphic>FALSE</anamorphic>
-            <alphatype>straight</alphatype>
-            <masterclipid>" + System.Security.SecurityElement.Escape(fileNameNoPath) + @"1</masterclipid>" + Environment.NewLine +
-                                          "           <file id=\"" + fileNameNoExt + "\">" + @"
-              <name>" + System.Security.SecurityElement.Escape(fileNameNoPath) + @"</name>
-              <pathurl>" + Utilities.UrlEncode(fileNameNoPath) + @"</pathurl>
-              <rate>
-                <timebase>[TIMEBASE]</timebase>
-              </rate>
-              <duration>[DURATION]</duration>
-              <width>" + param.ScreenWidth + @"</width>
-              <height>" + param.ScreenHeight + @"</height>
-              <media>
-                <video>
-                  <duration>[DURATION]</duration>
-                  <stillframe>TRUE</stillframe>
-                  <samplecharacteristics>
-                    <width>" + param.ScreenWidth + @"</width>
-                    <height>" + param.ScreenHeight + @"</height>
-                  </samplecharacteristics>
-                </video>
-              </media>
-            </file>
-            <sourcetrack>
-              <mediatype>video</mediatype>
-            </sourcetrack>
-            <fielddominance>none</fielddominance>
-          </clipitem>";
-
-                        fileName = Path.Combine(Path.GetDirectoryName(param.SavDialogFileName), fileName);
-
-                        var outBitmap = param.Bitmap;
-                        if (checkBoxFullFrameImage.Visible && checkBoxFullFrameImage.Checked)
-                        {
-                            var nbmp = new NikseBitmap(param.Bitmap);
-                            nbmp.ReplaceTransparentWith(panelFullFrameBackground.BackColor);
-                            using (var bmp = nbmp.GetBitmap())
-                            {
-                                int top = param.ScreenHeight - (param.Bitmap.Height + param.BottomMargin);
-                                int left = (param.ScreenWidth - param.Bitmap.Width) / 2;
-
-                                var b = new NikseBitmap(param.ScreenWidth, param.ScreenHeight);
-                                {
-                                    b.Fill(panelFullFrameBackground.BackColor);
-                                    outBitmap = b.GetBitmap();
-                                    {
-                                        if (param.Alignment == ContentAlignment.BottomLeft || param.Alignment == ContentAlignment.MiddleLeft || param.Alignment == ContentAlignment.TopLeft)
-                                            left = param.LeftMargin;
-                                        else if (param.Alignment == ContentAlignment.BottomRight || param.Alignment == ContentAlignment.MiddleRight || param.Alignment == ContentAlignment.TopRight)
-                                            left = param.ScreenWidth - param.Bitmap.Width - param.RightMargin;
-                                        if (param.Alignment == ContentAlignment.TopLeft || param.Alignment == ContentAlignment.TopCenter || param.Alignment == ContentAlignment.TopRight)
-                                            top = param.BottomMargin;
-                                        if (param.Alignment == ContentAlignment.MiddleLeft || param.Alignment == ContentAlignment.MiddleCenter || param.Alignment == ContentAlignment.MiddleRight)
-                                            top = (param.ScreenHeight - param.Bitmap.Height) / 2;
-
-                                        if (param.OverridePosition.HasValue &&
-                                            param.OverridePosition.Value.X >= 0 && param.OverridePosition.Value.X < param.Bitmap.Width &&
-                                            param.OverridePosition.Value.Y >= 0 && param.OverridePosition.Value.Y < param.Bitmap.Height)
-                                        {
-                                            left = param.OverridePosition.Value.X;
-                                            top = param.OverridePosition.Value.Y;
-                                        }
-
-                                        using (var g = Graphics.FromImage(outBitmap))
-                                        {
-                                            g.DrawImage(bmp, left, top);
-                                            g.Dispose();
-                                        }
-                                    }
-                                }
-                            }
-                        }
-
-
-                        if (comboBoxImageFormat.Text == "8-bit png")
-                        {
-                            foreach (var encoder in ImageCodecInfo.GetImageEncoders())
-                            {
-                                if (encoder.FormatID == ImageFormat.Png.Guid)
-                                {
-                                    var parameters = new EncoderParameters();
-                                    parameters.Param[0] = new EncoderParameter(System.Drawing.Imaging.Encoder.ColorDepth, 8);
-
-                                    var nbmp = new NikseBitmap(outBitmap);
-                                    var b = nbmp.ConverTo8BitsPerPixel();
-                                    b.Save(fileName, encoder, parameters);
-                                    b.Dispose();
-
-                                    break;
-                                }
-                            }
-                        }
-                        else
-                        {
-                            SaveImage(outBitmap, fileName, ImageFormat);
-                        }
-                        imagesSavedCount++;
-
-                        int timeBase = 25;
-                        string ntsc = "FALSE";
-                        if (comboBoxLanguage.SelectedItem.ToString().Equals("NTSC", StringComparison.Ordinal))
-                            ntsc = "TRUE";
-                        if (Math.Abs(param.FramesPerSeconds - 29.97) < 0.01)
-                        {
-                            param.FramesPerSeconds = 30.0 / 1.0001;
-                            timeBase = 30;
-                            ntsc = "TRUE";
-                        }
-                        else if (Math.Abs(param.FramesPerSeconds - 23.976) < 0.01)
-                        {
-                            param.FramesPerSeconds = 24.0 / 1.0001;
-                            timeBase = 24;
-                            ntsc = "TRUE";
-                        }
-                        else if (Math.Abs(param.FramesPerSeconds - 59.94) < 0.01)
-                        {
-                            param.FramesPerSeconds = 60.0 / 1.0001;
-                            timeBase = 60;
-                            ntsc = "TRUE";
-                        }
-
-                        int duration = (int)Math.Round(param.P.Duration.TotalSeconds * param.FramesPerSeconds);
-                        int start = (int)Math.Round(param.P.StartTime.TotalSeconds * param.FramesPerSeconds);
-                        int end = (int)Math.Round(param.P.EndTime.TotalSeconds * param.FramesPerSeconds);
-
-                        template = template.Replace("[DURATION]", duration.ToString(CultureInfo.InvariantCulture));
-                        template = template.Replace("[IN]", start.ToString(CultureInfo.InvariantCulture));
-                        template = template.Replace("[OUT]", end.ToString(CultureInfo.InvariantCulture));
-                        template = template.Replace("[START]", start.ToString(CultureInfo.InvariantCulture));
-                        template = template.Replace("[END]", end.ToString(CultureInfo.InvariantCulture));
-                        template = template.Replace("[TIMEBASE]", timeBase.ToString(CultureInfo.InvariantCulture));
-                        template = template.Replace("[NTSC]", ntsc);
-                        sb.AppendLine(template);
+                        imagesSavedCount = WriteFcpParagraph(sb, imagesSavedCount, param, i, param.SavDialogFileName);
 
                         param.Saved = true;
                     }
@@ -1458,51 +1321,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 {
                     if (!param.Saved)
                     {
-                        string numberString = string.Format("{0:0000}", i);
-                        string fileName = Path.Combine(Path.GetDirectoryName(saveFileDialog1.FileName), Path.GetFileNameWithoutExtension(saveFileDialog1.FileName).Replace(" ", "_")) + "_" + numberString + ".png";
-
-                        foreach (var encoder in ImageCodecInfo.GetImageEncoders())
-                        {
-                            if (encoder.FormatID == ImageFormat.Png.Guid)
-                            {
-                                var parameters = new EncoderParameters();
-                                parameters.Param[0] = new EncoderParameter(System.Drawing.Imaging.Encoder.ColorDepth, 8);
-
-                                var nbmp = new NikseBitmap(param.Bitmap);
-                                var b = nbmp.ConverTo8BitsPerPixel();
-                                b.Save(fileName, encoder, parameters);
-                                b.Dispose();
-
-                                break;
-                            }
-                        }
-                        imagesSavedCount++;
-
-                        const string paragraphWriteFormat = "{0}\t{1}\t{2}\t{4}\t{5}\t{3}\t0\t0";
-
-                        int top = param.ScreenHeight - (param.Bitmap.Height + param.BottomMargin);
-                        int left = (param.ScreenWidth - param.Bitmap.Width) / 2;
-                        if (param.Alignment == ContentAlignment.BottomLeft || param.Alignment == ContentAlignment.MiddleLeft || param.Alignment == ContentAlignment.TopLeft)
-                            left = param.LeftMargin;
-                        else if (param.Alignment == ContentAlignment.BottomRight || param.Alignment == ContentAlignment.MiddleRight || param.Alignment == ContentAlignment.TopRight)
-                            left = param.ScreenWidth - param.Bitmap.Width - param.RightMargin;
-                        if (param.Alignment == ContentAlignment.TopLeft || param.Alignment == ContentAlignment.TopCenter || param.Alignment == ContentAlignment.TopRight)
-                            top = param.BottomMargin;
-                        if (param.Alignment == ContentAlignment.MiddleLeft || param.Alignment == ContentAlignment.MiddleCenter || param.Alignment == ContentAlignment.MiddleRight)
-                            top = param.ScreenHeight - (param.Bitmap.Height / 2);
-
-                        if (param.OverridePosition.HasValue &&
-                            param.OverridePosition.Value.X >= 0 && param.OverridePosition.Value.X < param.Bitmap.Width &&
-                            param.OverridePosition.Value.Y >= 0 && param.OverridePosition.Value.Y < param.Bitmap.Height)
-                        {
-                            left = param.OverridePosition.Value.X;
-                            top = param.OverridePosition.Value.Y;
-                        }
-
-                        string startTime = ToHHMMSSFF(param.P.StartTime);
-                        string endTime = ToHHMMSSFF(param.P.EndTime);
-                        sb.AppendLine(string.Format(paragraphWriteFormat, numberString, startTime, endTime, Path.GetFileName(fileName), left, top));
-
+                        imagesSavedCount = WriteParagraphDost(sb, imagesSavedCount, param, i, saveFileDialog1.FileName);
                         param.Saved = true;
                     }
                 }
@@ -1651,94 +1470,307 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 {
                     if (!param.Saved)
                     {
-                        string numberString = string.Format("{0:0000}", i);
-                        string fileName = Path.Combine(folderBrowserDialog1.SelectedPath, numberString + ".png");
-
-                        if (comboBoxImageFormat.Text == "Png 8-bit")
-                        {
-                            foreach (var encoder in ImageCodecInfo.GetImageEncoders())
-                            {
-                                if (encoder.FormatID == ImageFormat.Png.Guid)
-                                {
-                                    var parameters = new EncoderParameters();
-                                    parameters.Param[0] = new EncoderParameter(System.Drawing.Imaging.Encoder.ColorDepth, 8);
-
-                                    var nbmp = new NikseBitmap(param.Bitmap);
-                                    var b = nbmp.ConverTo8BitsPerPixel();
-                                    b.Save(fileName, encoder, parameters);
-                                    b.Dispose();
-
-                                    break;
-                                }
-                            }
-                        }
-                        else
-                        {
-                            param.Bitmap.Save(fileName, ImageFormat.Png);
-                        }
-
-                        imagesSavedCount++;
-
-                        //<Event InTC="00:00:24:07" OutTC="00:00:31:13" Forced="False">
-                        //  <Graphic Width="696" Height="111" X="612" Y="930">subtitle_exp_0001.png</Graphic>
-                        //</Event>
-                        sb.AppendLine("<Event InTC=\"" + ToHHMMSSFF(param.P.StartTime) + "\" OutTC=\"" +
-                                      ToHHMMSSFF(param.P.EndTime) + "\" Forced=\"" + param.Forced.ToString().ToLower() + "\">");
-
-                        int x = (width - param.Bitmap.Width) / 2;
-                        int y = height - (param.Bitmap.Height + param.BottomMargin);
-                        switch (param.Alignment)
-                        {
-                            case ContentAlignment.BottomLeft:
-                                x = border;
-                                y = height - (param.Bitmap.Height + param.BottomMargin);
-                                break;
-                            case ContentAlignment.BottomRight:
-                                x = height - param.Bitmap.Width - border;
-                                y = height - (param.Bitmap.Height + param.BottomMargin);
-                                break;
-                            case ContentAlignment.MiddleCenter:
-                                x = (width - param.Bitmap.Width) / 2;
-                                y = (height - param.Bitmap.Height) / 2;
-                                break;
-                            case ContentAlignment.MiddleLeft:
-                                x = border;
-                                y = (height - param.Bitmap.Height) / 2;
-                                break;
-                            case ContentAlignment.MiddleRight:
-                                x = width - param.Bitmap.Width - border;
-                                y = (height - param.Bitmap.Height) / 2;
-                                break;
-                            case ContentAlignment.TopCenter:
-                                x = (width - param.Bitmap.Width) / 2;
-                                y = border;
-                                break;
-                            case ContentAlignment.TopLeft:
-                                x = border;
-                                y = border;
-                                break;
-                            case ContentAlignment.TopRight:
-                                x = width - param.Bitmap.Width - border;
-                                y = border;
-                                break;
-                        }
-
-                        if (param.OverridePosition.HasValue &&
-                            param.OverridePosition.Value.X >= 0 && param.OverridePosition.Value.X < param.Bitmap.Width &&
-                            param.OverridePosition.Value.Y >= 0 && param.OverridePosition.Value.Y < param.Bitmap.Height)
-                        {
-                            x = param.OverridePosition.Value.X;
-                            y = param.OverridePosition.Value.Y;
-                        }
-
-                        sb.AppendLine("  <Graphic Width=\"" + param.Bitmap.Width.ToString(CultureInfo.InvariantCulture) + "\" Height=\"" +
-                                      param.Bitmap.Height.ToString(CultureInfo.InvariantCulture) + "\" X=\"" + x.ToString(CultureInfo.InvariantCulture) + "\" Y=\"" + y.ToString(CultureInfo.InvariantCulture) +
-                                      "\">" + numberString + ".png</Graphic>");
-                        sb.AppendLine("</Event>");
+                        imagesSavedCount = WriteBdnXmlParagraph(width, sb, border, height, imagesSavedCount, param, i, folderBrowserDialog1.SelectedPath);
                         param.Saved = true;
                     }
                 }
             }
+            return imagesSavedCount;
+        }
+
+        internal int WriteFcpParagraph(StringBuilder sb, int imagesSavedCount, MakeBitmapParameter param, int i, string fileName)
+        {
+            string numberString = string.Format(Path.GetFileNameWithoutExtension(Path.GetFileName(fileName)) + "{0:0000}", i);
+            fileName = numberString + "." + comboBoxImageFormat.Text.ToLower();
+            string fileNameNoPath = Path.GetFileName(fileName);
+            string fileNameNoExt = Path.GetFileNameWithoutExtension(fileNameNoPath);
+            string template = " <clipitem id=\"" + System.Security.SecurityElement.Escape(fileNameNoPath) + "\">" + Environment.NewLine +
+
+                              // <pathurl>file://localhost/" + fileNameNoPath.Replace(" ", "%20") + @"</pathurl>
+
+                              @"            <name>" + System.Security.SecurityElement.Escape(fileNameNoPath) + @"</name>
+            <duration>[DURATION]</duration>
+            <rate>
+              <ntsc>[NTSC]</ntsc>
+              <timebase>[TIMEBASE]</timebase>
+            </rate>
+            <in>[IN]</in>
+            <out>[OUT]</out>
+            <start>[START]</start>
+            <end>[END]</end>
+            <pixelaspectratio>" + param.VideoResolution + @"</pixelaspectratio>
+            <stillframe>TRUE</stillframe>
+            <anamorphic>FALSE</anamorphic>
+            <alphatype>straight</alphatype>
+            <masterclipid>" + System.Security.SecurityElement.Escape(fileNameNoPath) + @"1</masterclipid>" + Environment.NewLine +
+                              "           <file id=\"" + fileNameNoExt + "\">" + @"
+              <name>" + System.Security.SecurityElement.Escape(fileNameNoPath) + @"</name>
+              <pathurl>" + Utilities.UrlEncode(fileNameNoPath) + @"</pathurl>
+              <rate>
+                <timebase>[TIMEBASE]</timebase>
+              </rate>
+              <duration>[DURATION]</duration>
+              <width>" + param.ScreenWidth + @"</width>
+              <height>" + param.ScreenHeight + @"</height>
+              <media>
+                <video>
+                  <duration>[DURATION]</duration>
+                  <stillframe>TRUE</stillframe>
+                  <samplecharacteristics>
+                    <width>" + param.ScreenWidth + @"</width>
+                    <height>" + param.ScreenHeight + @"</height>
+                  </samplecharacteristics>
+                </video>
+              </media>
+            </file>
+            <sourcetrack>
+              <mediatype>video</mediatype>
+            </sourcetrack>
+            <fielddominance>none</fielddominance>
+          </clipitem>";
+
+            fileName = Path.Combine(Path.GetDirectoryName(param.SavDialogFileName), fileName);
+
+            var outBitmap = param.Bitmap;
+            if (checkBoxFullFrameImage.Visible && checkBoxFullFrameImage.Checked)
+            {
+                var nbmp = new NikseBitmap(param.Bitmap);
+                nbmp.ReplaceTransparentWith(panelFullFrameBackground.BackColor);
+                using (var bmp = nbmp.GetBitmap())
+                {
+                    int top = param.ScreenHeight - (param.Bitmap.Height + param.BottomMargin);
+                    int left = (param.ScreenWidth - param.Bitmap.Width) / 2;
+
+                    var b = new NikseBitmap(param.ScreenWidth, param.ScreenHeight);
+                    {
+                        b.Fill(panelFullFrameBackground.BackColor);
+                        outBitmap = b.GetBitmap();
+                        {
+                            if (param.Alignment == ContentAlignment.BottomLeft || param.Alignment == ContentAlignment.MiddleLeft || param.Alignment == ContentAlignment.TopLeft)
+                                left = param.LeftMargin;
+                            else if (param.Alignment == ContentAlignment.BottomRight || param.Alignment == ContentAlignment.MiddleRight || param.Alignment == ContentAlignment.TopRight)
+                                left = param.ScreenWidth - param.Bitmap.Width - param.RightMargin;
+                            if (param.Alignment == ContentAlignment.TopLeft || param.Alignment == ContentAlignment.TopCenter || param.Alignment == ContentAlignment.TopRight)
+                                top = param.BottomMargin;
+                            if (param.Alignment == ContentAlignment.MiddleLeft || param.Alignment == ContentAlignment.MiddleCenter || param.Alignment == ContentAlignment.MiddleRight)
+                                top = (param.ScreenHeight - param.Bitmap.Height) / 2;
+
+                            if (param.OverridePosition.HasValue &&
+                                param.OverridePosition.Value.X >= 0 && param.OverridePosition.Value.X < param.Bitmap.Width &&
+                                param.OverridePosition.Value.Y >= 0 && param.OverridePosition.Value.Y < param.Bitmap.Height)
+                            {
+                                left = param.OverridePosition.Value.X;
+                                top = param.OverridePosition.Value.Y;
+                            }
+
+                            using (var g = Graphics.FromImage(outBitmap))
+                            {
+                                g.DrawImage(bmp, left, top);
+                                g.Dispose();
+                            }
+                        }
+                    }
+                }
+            }
+
+
+            if (comboBoxImageFormat.Text == "8-bit png")
+            {
+                foreach (var encoder in ImageCodecInfo.GetImageEncoders())
+                {
+                    if (encoder.FormatID == ImageFormat.Png.Guid)
+                    {
+                        var parameters = new EncoderParameters();
+                        parameters.Param[0] = new EncoderParameter(System.Drawing.Imaging.Encoder.ColorDepth, 8);
+
+                        var nbmp = new NikseBitmap(outBitmap);
+                        var b = nbmp.ConverTo8BitsPerPixel();
+                        b.Save(fileName, encoder, parameters);
+                        b.Dispose();
+
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                SaveImage(outBitmap, fileName, ImageFormat);
+            }
+            imagesSavedCount++;
+
+            int timeBase = 25;
+            string ntsc = "FALSE";
+            if (comboBoxLanguage.SelectedItem.ToString().Equals("NTSC", StringComparison.Ordinal))
+                ntsc = "TRUE";
+            if (Math.Abs(param.FramesPerSeconds - 29.97) < 0.01)
+            {
+                param.FramesPerSeconds = 30.0 / 1.0001;
+                timeBase = 30;
+                ntsc = "TRUE";
+            }
+            else if (Math.Abs(param.FramesPerSeconds - 23.976) < 0.01)
+            {
+                param.FramesPerSeconds = 24.0 / 1.0001;
+                timeBase = 24;
+                ntsc = "TRUE";
+            }
+            else if (Math.Abs(param.FramesPerSeconds - 59.94) < 0.01)
+            {
+                param.FramesPerSeconds = 60.0 / 1.0001;
+                timeBase = 60;
+                ntsc = "TRUE";
+            }
+
+            int duration = (int)Math.Round(param.P.Duration.TotalSeconds * param.FramesPerSeconds);
+            int start = (int)Math.Round(param.P.StartTime.TotalSeconds * param.FramesPerSeconds);
+            int end = (int)Math.Round(param.P.EndTime.TotalSeconds * param.FramesPerSeconds);
+
+            template = template.Replace("[DURATION]", duration.ToString(CultureInfo.InvariantCulture));
+            template = template.Replace("[IN]", start.ToString(CultureInfo.InvariantCulture));
+            template = template.Replace("[OUT]", end.ToString(CultureInfo.InvariantCulture));
+            template = template.Replace("[START]", start.ToString(CultureInfo.InvariantCulture));
+            template = template.Replace("[END]", end.ToString(CultureInfo.InvariantCulture));
+            template = template.Replace("[TIMEBASE]", timeBase.ToString(CultureInfo.InvariantCulture));
+            template = template.Replace("[NTSC]", ntsc);
+            sb.AppendLine(template);
+            return imagesSavedCount;
+        }
+
+        internal int WriteBdnXmlParagraph(int width, StringBuilder sb, int border, int height, int imagesSavedCount, MakeBitmapParameter param, int i, string path)
+        {
+            string numberString = string.Format("{0:0000}", i);
+            string fileName = Path.Combine(path, numberString + ".png");
+
+            if (comboBoxImageFormat.Text == "Png 8-bit")
+            {
+                foreach (var encoder in ImageCodecInfo.GetImageEncoders())
+                {
+                    if (encoder.FormatID == ImageFormat.Png.Guid)
+                    {
+                        var parameters = new EncoderParameters();
+                        parameters.Param[0] = new EncoderParameter(System.Drawing.Imaging.Encoder.ColorDepth, 8);
+
+                        var nbmp = new NikseBitmap(param.Bitmap);
+                        var b = nbmp.ConverTo8BitsPerPixel();
+                        b.Save(fileName, encoder, parameters);
+                        b.Dispose();
+
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                param.Bitmap.Save(fileName, ImageFormat.Png);
+            }
+
+            imagesSavedCount++;
+
+            //<Event InTC="00:00:24:07" OutTC="00:00:31:13" Forced="False">
+            //  <Graphic Width="696" Height="111" X="612" Y="930">subtitle_exp_0001.png</Graphic>
+            //</Event>
+            sb.AppendLine("<Event InTC=\"" + ToHHMMSSFF(param.P.StartTime) + "\" OutTC=\"" +
+                          ToHHMMSSFF(param.P.EndTime) + "\" Forced=\"" + param.Forced.ToString().ToLower() + "\">");
+
+            int x = (width - param.Bitmap.Width) / 2;
+            int y = height - (param.Bitmap.Height + param.BottomMargin);
+            switch (param.Alignment)
+            {
+                case ContentAlignment.BottomLeft:
+                    x = border;
+                    y = height - (param.Bitmap.Height + param.BottomMargin);
+                    break;
+                case ContentAlignment.BottomRight:
+                    x = height - param.Bitmap.Width - border;
+                    y = height - (param.Bitmap.Height + param.BottomMargin);
+                    break;
+                case ContentAlignment.MiddleCenter:
+                    x = (width - param.Bitmap.Width) / 2;
+                    y = (height - param.Bitmap.Height) / 2;
+                    break;
+                case ContentAlignment.MiddleLeft:
+                    x = border;
+                    y = (height - param.Bitmap.Height) / 2;
+                    break;
+                case ContentAlignment.MiddleRight:
+                    x = width - param.Bitmap.Width - border;
+                    y = (height - param.Bitmap.Height) / 2;
+                    break;
+                case ContentAlignment.TopCenter:
+                    x = (width - param.Bitmap.Width) / 2;
+                    y = border;
+                    break;
+                case ContentAlignment.TopLeft:
+                    x = border;
+                    y = border;
+                    break;
+                case ContentAlignment.TopRight:
+                    x = width - param.Bitmap.Width - border;
+                    y = border;
+                    break;
+            }
+
+            if (param.OverridePosition.HasValue &&
+                param.OverridePosition.Value.X >= 0 && param.OverridePosition.Value.X < param.Bitmap.Width &&
+                param.OverridePosition.Value.Y >= 0 && param.OverridePosition.Value.Y < param.Bitmap.Height)
+            {
+                x = param.OverridePosition.Value.X;
+                y = param.OverridePosition.Value.Y;
+            }
+
+            sb.AppendLine("  <Graphic Width=\"" + param.Bitmap.Width.ToString(CultureInfo.InvariantCulture) + "\" Height=\"" +
+                          param.Bitmap.Height.ToString(CultureInfo.InvariantCulture) + "\" X=\"" + x.ToString(CultureInfo.InvariantCulture) + "\" Y=\"" + y.ToString(CultureInfo.InvariantCulture) +
+                          "\">" + numberString + ".png</Graphic>");
+            sb.AppendLine("</Event>");
+            return imagesSavedCount;
+        }
+
+        internal int WriteParagraphDost(StringBuilder sb, int imagesSavedCount, MakeBitmapParameter param, int i, string fileName)
+        {
+            string numberString = string.Format("{0:0000}", i);
+            fileName = Path.Combine(Path.GetDirectoryName(fileName), Path.GetFileNameWithoutExtension(fileName).Replace(" ", "_")) + "_" + numberString + ".png";
+
+            foreach (var encoder in ImageCodecInfo.GetImageEncoders())
+            {
+                if (encoder.FormatID == ImageFormat.Png.Guid)
+                {
+                    var parameters = new EncoderParameters();
+                    parameters.Param[0] = new EncoderParameter(System.Drawing.Imaging.Encoder.ColorDepth, 8);
+
+                    var nbmp = new NikseBitmap(param.Bitmap);
+                    var b = nbmp.ConverTo8BitsPerPixel();
+                    b.Save(fileName, encoder, parameters);
+                    b.Dispose();
+
+                    break;
+                }
+            }
+            imagesSavedCount++;
+
+            const string paragraphWriteFormat = "{0}\t{1}\t{2}\t{4}\t{5}\t{3}\t0\t0";
+
+            int top = param.ScreenHeight - (param.Bitmap.Height + param.BottomMargin);
+            int left = (param.ScreenWidth - param.Bitmap.Width) / 2;
+            if (param.Alignment == ContentAlignment.BottomLeft || param.Alignment == ContentAlignment.MiddleLeft || param.Alignment == ContentAlignment.TopLeft)
+                left = param.LeftMargin;
+            else if (param.Alignment == ContentAlignment.BottomRight || param.Alignment == ContentAlignment.MiddleRight || param.Alignment == ContentAlignment.TopRight)
+                left = param.ScreenWidth - param.Bitmap.Width - param.RightMargin;
+            if (param.Alignment == ContentAlignment.TopLeft || param.Alignment == ContentAlignment.TopCenter || param.Alignment == ContentAlignment.TopRight)
+                top = param.BottomMargin;
+            if (param.Alignment == ContentAlignment.MiddleLeft || param.Alignment == ContentAlignment.MiddleCenter || param.Alignment == ContentAlignment.MiddleRight)
+                top = param.ScreenHeight - (param.Bitmap.Height / 2);
+
+            if (param.OverridePosition.HasValue &&
+                param.OverridePosition.Value.X >= 0 && param.OverridePosition.Value.X < param.Bitmap.Width &&
+                param.OverridePosition.Value.Y >= 0 && param.OverridePosition.Value.Y < param.Bitmap.Height)
+            {
+                left = param.OverridePosition.Value.X;
+                top = param.OverridePosition.Value.Y;
+            }
+
+            string startTime = ToHHMMSSFF(param.P.StartTime);
+            string endTime = ToHHMMSSFF(param.P.EndTime);
+            sb.AppendLine(string.Format(paragraphWriteFormat, numberString, startTime, endTime, Path.GetFileName(fileName), left, top));
             return imagesSavedCount;
         }
 
@@ -3868,7 +3900,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             _previewTimer.Start();
         }
 
-        private int GetBottomMarginInPixels(Paragraph p)
+        internal int GetBottomMarginInPixels(Paragraph p)
         {
             if (p != null && !string.IsNullOrEmpty(p.Extra) && _formatName == AdvancedSubStationAlpha.NameOfFormat || _formatName == SubStationAlpha.NameOfFormat)
             {
@@ -4200,7 +4232,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 Configuration.Settings.Tools.ExportVobSubLanguage = comboBoxLanguage.Text;
                 Configuration.Settings.Tools.ExportVobAntiAliasingWithTransparency = checkBoxTransAntiAliase.Checked;
             }
-            else if (_exportType == ExportFormats.BluraySup)
+            else if (_exportType == ExportFormats.BluraySup || _exportType == ExportFormats.Dost)
             {
                 Configuration.Settings.Tools.ExportBluRayFontName = _subtitleFontName;
                 Configuration.Settings.Tools.ExportBluRayFontSize = (int)_subtitleFontSize;
