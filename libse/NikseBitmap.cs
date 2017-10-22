@@ -27,7 +27,7 @@ namespace Nikse.SubtitleEdit.Core
             private set
             {
                 _width = value;
-                _withX4 = _width * 4;
+                _widthX4 = _width * 4;
             }
         }
 
@@ -35,13 +35,13 @@ namespace Nikse.SubtitleEdit.Core
 
         private byte[] _bitmapData;
         private int _pixelAddress;
-        private int _withX4;
+        private int _widthX4;
 
         public NikseBitmap(int width, int height)
         {
             Width = width;
             Height = height;
-            _bitmapData = new byte[Height * _withX4];
+            _bitmapData = new byte[Height * _widthX4];
         }
 
         public NikseBitmap(int width, int height, byte[] bitmapData)
@@ -850,18 +850,18 @@ namespace Nikse.SubtitleEdit.Core
 
         public int GetAlpha(int x, int y)
         {
-            return _bitmapData[(x * 4) + (y * _withX4) + 3];
+            return _bitmapData[(x * 4) + (y * _widthX4) + 3];
         }
 
         public Color GetPixel(int x, int y)
         {
-            _pixelAddress = (x * 4) + (y * _withX4);
+            _pixelAddress = (x * 4) + (y * _widthX4);
             return Color.FromArgb(_bitmapData[_pixelAddress + 3], _bitmapData[_pixelAddress + 2], _bitmapData[_pixelAddress + 1], _bitmapData[_pixelAddress]);
         }
 
         public byte[] GetPixelColors(int x, int y)
         {
-            _pixelAddress = (x * 4) + (y * _withX4);
+            _pixelAddress = (x * 4) + (y * _widthX4);
             return new[] { _bitmapData[_pixelAddress + 3], _bitmapData[_pixelAddress + 2], _bitmapData[_pixelAddress + 1], _bitmapData[_pixelAddress] };
         }
 
@@ -873,7 +873,7 @@ namespace Nikse.SubtitleEdit.Core
 
         public void SetPixel(int x, int y, Color color)
         {
-            _pixelAddress = (x * 4) + (y * _withX4);
+            _pixelAddress = (x * 4) + (y * _widthX4);
             _bitmapData[_pixelAddress] = color.B;
             _bitmapData[_pixelAddress + 1] = color.G;
             _bitmapData[_pixelAddress + 2] = color.R;
@@ -1120,8 +1120,8 @@ namespace Nikse.SubtitleEdit.Core
             int index = 0;
             for (int y = 0; y < Height; y++)
             {
-                int pixelAddress = (0 * 4) + (y * _withX4);
-                Buffer.BlockCopy(_bitmapData, pixelAddress, newBitmapData, index, _withX4);
+                int pixelAddress = (0 * 4) + (y * _widthX4);
+                Buffer.BlockCopy(_bitmapData, pixelAddress, newBitmapData, index, _widthX4);
                 index += 4 * newWidth;
             }
             Width = newWidth;
