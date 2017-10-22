@@ -86,6 +86,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonNewGroup.Text = Configuration.Settings.Language.MultipleReplace.NewGroup;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+            buttonApply.Text = Configuration.Settings.Language.General.Apply;
             buttonReplacesSelectAll.Text = Configuration.Settings.Language.FixCommonErrors.SelectAll;
             buttonReplacesInverseSelection.Text = Configuration.Settings.Language.FixCommonErrors.InverseSelection;
             UiUtil.FixLargeFonts(this, buttonOK);
@@ -946,6 +947,12 @@ namespace Nikse.SubtitleEdit.Forms
                 if (item != newToolStripMenuItem)
                     item.Visible = doShow;
             }
+        }
+
+        private void buttonApply_Click(object sender, EventArgs e)
+        {
+            _subtitle = new Subtitle(FixedSubtitle);
+            GeneratePreview();
         }
 
     }
