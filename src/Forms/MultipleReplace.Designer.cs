@@ -519,7 +519,6 @@
             this.listViewGroups.TabIndex = 0;
             this.listViewGroups.UseCompatibleStateImageBehavior = false;
             this.listViewGroups.View = System.Windows.Forms.View.Details;
-            this.listViewGroups.SelectedIndexChanged += new System.EventHandler(this.listViewGroups_SelectedIndexChanged);
             this.listViewGroups.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listViewGroups_KeyDown);
             // 
             // columnHeaderForName
@@ -539,7 +538,7 @@
             this.moveToTopToolStripMenuItem,
             this.moveToBottomToolStripMenuItem});
             this.contextMenuStripGroups.Name = "contextMenuStripGroups";
-            this.contextMenuStripGroups.Size = new System.Drawing.Size(162, 186);
+            this.contextMenuStripGroups.Size = new System.Drawing.Size(162, 164);
             this.contextMenuStripGroups.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripGroups_Opening);
             // 
             // newToolStripMenuItem

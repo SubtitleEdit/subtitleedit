@@ -48,7 +48,7 @@ namespace Nikse.SubtitleEdit.Forms
         public Subtitle FixedSubtitle { get; private set; }
         public int FixCount { get; private set; }
         private MultipleSearchAndReplaceGroup _currentGroup;
-
+        
         public MultipleReplace()
         {
             UiUtil.PreInitialize(this);
@@ -248,6 +248,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
+            var fixes = new List<ListViewItem>();
             foreach (Paragraph p in _subtitle.Paragraphs)
             {
                 bool hit = false;
@@ -289,7 +290,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (hit && newText != p.Text)
                 {
                     FixCount++;
-                    AddToPreviewListView(p, newText);
+                    fixes.Add(MakePreviewListItem(p, newText));
                     int index = _subtitle.GetIndex(p);
                     FixedSubtitle.Paragraphs[index].Text = newText;
                     if (!string.IsNullOrWhiteSpace(p.Text) && (string.IsNullOrWhiteSpace(newText) || string.IsNullOrWhiteSpace(HtmlUtil.RemoveHtmlTags(newText, true))))
@@ -298,6 +299,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
+            listViewFixes.Items.AddRange(fixes.ToArray());
             listViewFixes.EndUpdate();
             groupBoxLinesFound.Text = string.Format(Configuration.Settings.Language.MultipleReplace.LinesFoundX, FixCount);
             Cursor = Cursors.Default;
@@ -313,13 +315,13 @@ namespace Nikse.SubtitleEdit.Forms
             listViewRules.Items.Add(item);
         }
 
-        private void AddToPreviewListView(Paragraph p, string newText)
+        private ListViewItem MakePreviewListItem(Paragraph p, string newText)
         {
             var item = new ListViewItem(string.Empty) { Tag = p, Checked = true };
             item.SubItems.Add(p.Number.ToString(CultureInfo.InvariantCulture));
             item.SubItems.Add(p.Text.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
             item.SubItems.Add(newText.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
-            listViewFixes.Items.Add(item);
+            return item;
         }
 
         private static string LocalSearchTypeToEnglish(string searchType)
@@ -651,7 +653,9 @@ namespace Nikse.SubtitleEdit.Forms
             GeneratePreview();
             listViewRules.ItemChecked += ListViewRulesItemChecked;
             listViewGroups.ItemChecked += listViewGroups_ItemChecked;
+            listViewGroups.SelectedIndexChanged += listViewGroups_SelectedIndexChanged;
             MultipleReplace_ResizeEnd(sender, null);
+            listViewGroups_SelectedIndexChanged(null, null);
         }
 
         private void buttonCancel_Click(object sender, EventArgs e)
@@ -704,8 +708,10 @@ namespace Nikse.SubtitleEdit.Forms
             if (_currentGroup == null)
                 return;
 
-            groupBoxReplaces.Text = string.Format(Configuration.Settings.Language.MultipleReplace.RulesForGroupX, _currentGroup.Name);
+            listViewRules.ItemChecked -= ListViewRulesItemChecked;
+            listViewGroups.ItemChecked -= listViewGroups_ItemChecked;
             listViewRules.BeginUpdate();
+            groupBoxReplaces.Text = string.Format(Configuration.Settings.Language.MultipleReplace.RulesForGroupX, _currentGroup.Name);
             listViewRules.Items.Clear();
             foreach (var rule in _currentGroup.Rules)
             {
@@ -721,6 +727,8 @@ namespace Nikse.SubtitleEdit.Forms
                 textBoxReplace.Text = string.Empty;
             }
             listViewRules.EndUpdate();
+            listViewRules.ItemChecked += ListViewRulesItemChecked;
+            listViewGroups.ItemChecked += listViewGroups_ItemChecked;
         }
 
         private void listViewGroups_ItemChecked(object sender, ItemCheckedEventArgs e)
