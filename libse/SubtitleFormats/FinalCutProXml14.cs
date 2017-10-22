@@ -135,7 +135,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             if (subtitle.Paragraphs.Count > 0)
                             {
                                 var prev = subtitle.Paragraphs[subtitle.Paragraphs.Count - 1];
-                                if (prev.Text == p.Text && prev.StartTime.TotalMilliseconds == p.StartTime.TotalMilliseconds)
+                                if (prev.Text == p.Text && Math.Abs(prev.StartTime.TotalMilliseconds - p.StartTime.TotalMilliseconds) < 0.01)
                                     add = false;
                             }
                             if (add)
