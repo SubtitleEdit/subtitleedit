@@ -363,7 +363,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Binary
             {
                 return false;
             }
-            if ((double)Height / Width < 2)
+            if ((double)Height / Width < 2) // aspect ratio
             {
                 return false;
             }
@@ -378,7 +378,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Binary
             {
                 return false;
             }
-            if ((double)Height / Width < 2)
+            if ((double)Height / Width < 2) // aspect ratio
             {
                 return false;
             }
@@ -598,6 +598,11 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Binary
         public bool IsExclamationMark()
         {
             if (ExpandCount > 0 || Y > 20 || Height < Width + 10 || Width < 3 || Width > 17 || Height < 21 || Height > 50)
+            {
+                return false;
+            }
+
+            if ((double)Height / Width < 2) // aspect ratio
             {
                 return false;
             }

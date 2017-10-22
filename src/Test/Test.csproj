@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Include="Core\LanguageAutoDetectTest.cs" />
     <Compile Include="Core\StringExtensionsTest.cs" />
+    <Compile Include="Core\NikseBitmapTest.cs" />
     <Compile Include="Core\SubtitleTest.cs" />
     <Compile Include="Core\RichTextToPlainTextTest.cs" />
     <Compile Include="Logic\NetflixQualityCheckTest.cs" />
