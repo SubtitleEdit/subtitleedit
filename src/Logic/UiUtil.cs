@@ -371,7 +371,10 @@ namespace Nikse.SubtitleEdit.Logic
 
             foreach (Control c in form.Controls)
             {
-                c.Font = GetDefaultFont();
+                if (!c.Font.Name.Equals("Tahoma", StringComparison.Ordinal))
+                {
+                    c.Font = GetDefaultFont();
+                }
                 foreach (Control inner in c.Controls)
                 {
                     FixFonts(inner, iterations - 1);
