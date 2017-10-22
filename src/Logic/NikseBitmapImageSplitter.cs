@@ -750,8 +750,13 @@ namespace Nikse.SubtitleEdit.Logic
                 if (right && points != null)
                 {
                     int add = FindMaxX(points, x) - x;
-                    width = width + add;
+                    width += add;
                     subtractSpacePixels = add;
+                }
+
+                if (clean && startX + 1 < x)
+                {
+                    width++;
                 }
 
                 if (points == null)
@@ -833,6 +838,7 @@ namespace Nikse.SubtitleEdit.Logic
             var points = new List<Point>();
             int y = 0;
             int maxSlide = bmp.Height / 4;
+
             while (y < bmp.Height)
             {
                 if (bmp.GetAlpha(x, y) > 100)
