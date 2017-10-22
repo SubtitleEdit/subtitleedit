@@ -5,12 +5,14 @@
    * Add new subtitle format - thx Karim
    * Add sync options when re-exporting image formats - thx Music Fan
    * Add new shortcuts - thx darnn
+   * Add more image based formats to batch/cmd-line convert
 * IMPROVED:
    * Update Bulgarian translation - thx Maknol
    * Update Hungarian translation - thx ZityiSoft Team
    * Update French translatin - thx JM GBT
    * Save/restore "Auto continue delay" from UI - thx Hideaki
    * Add sort by "Actor" - thx von Suppé
+   * Add "Apply" button to "Multiple replace" - thx Finduilas
 * FIXED:
    * Fix mpv preview font size (regression from 3.5.4) - thx OmrSi
    * Fix issue with video preview size with libmpv - thx darnn
@@ -22,6 +24,10 @@
    * Check subtitle max file size in append - thx Sopor
    * Make "Go to next error" work with CPS and WPM
    * Fix crash in "auto-br" - thx Mihael
+   * Fix slowness in "Multiple replace" - thx Finduilas
+   * Fix missing letters in "Binary image compare" - thx Flitskikker
+   * Fix bold for batch converting to image based formats - thx nstefy
+
 
 3.5.4 (2nd October 2017)
 * NEW:
