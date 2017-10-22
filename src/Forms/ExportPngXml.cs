@@ -3645,6 +3645,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             }
             _borderWidth = GetBorderWidth();
             checkBoxBold.Checked = Configuration.Settings.Tools.ExportLastFontBold;
+            _subtitleFontBold = Configuration.Settings.Tools.ExportLastFontBold;
 
             if (Configuration.Settings.Tools.Export3DType >= 0 && Configuration.Settings.Tools.Export3DType < comboBox3D.Items.Count)
                 comboBox3D.SelectedIndex = Configuration.Settings.Tools.Export3DType;
