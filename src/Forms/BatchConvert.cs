@@ -69,6 +69,9 @@ namespace Nikse.SubtitleEdit.Forms
         private Ebu.EbuGeneralSubtitleInformation _ebuGeneralInformation;
         public const string BluRaySubtitle = "Blu-ray sup";
         public const string VobSubSubtitle = "VobSub";
+        public const string DostImageSubtitle = "Dost-image";
+        public const string BdnXmlSubtitle = "BDN-XML";
+        public const string FcpImageSubtitle = "FCP-image";
         private string _customTextTemplate;
         private readonly DurationsBridgeGaps _bridgeGaps;
         private const int ConvertMaxFileSize = 1024 * 1024 * 10; // 10 MB
@@ -164,6 +167,9 @@ namespace Nikse.SubtitleEdit.Forms
             formatNames.Add(l.PlainText);
             formatNames.Add(BluRaySubtitle);
             formatNames.Add(VobSubSubtitle);
+            formatNames.Add(DostImageSubtitle);
+            formatNames.Add(BdnXmlSubtitle);
+            formatNames.Add(FcpImageSubtitle);
             formatNames.Add(Configuration.Settings.Language.ExportCustomText.Title);
             UiUtil.InitializeSubtitleFormatComboBox(comboBoxSubtitleFormats, formatNames, Configuration.Settings.Tools.BatchConvertFormat);
 
@@ -1236,19 +1242,12 @@ namespace Nikse.SubtitleEdit.Forms
                     _ebuGeneralInformation = new Ebu.EbuGeneralSubtitleInformation();
                 comboBoxEncoding.Enabled = true;
             }
-            else if (comboBoxSubtitleFormats.Text == BluRaySubtitle)
-            {
-                buttonStyles.Text = Configuration.Settings.Language.BatchConvert.Settings;
-                buttonStyles.Visible = true;
-                comboBoxEncoding.Enabled = false;
-            }
-            else if (comboBoxSubtitleFormats.Text == VobSubSubtitle)
-            {
-                buttonStyles.Text = Configuration.Settings.Language.BatchConvert.Settings;
-                buttonStyles.Visible = true;
-                comboBoxEncoding.Enabled = false;
-            }
-            else if (comboBoxSubtitleFormats.Text == Configuration.Settings.Language.ExportCustomText.Title)
+            else if (comboBoxSubtitleFormats.Text == BluRaySubtitle ||
+                     comboBoxSubtitleFormats.Text == VobSubSubtitle ||
+                     comboBoxSubtitleFormats.Text == DostImageSubtitle ||
+                     comboBoxSubtitleFormats.Text == BdnXmlSubtitle ||
+                     comboBoxSubtitleFormats.Text == FcpImageSubtitle ||
+                     comboBoxSubtitleFormats.Text == Configuration.Settings.Language.ExportCustomText.Title)
             {
                 buttonStyles.Text = Configuration.Settings.Language.BatchConvert.Settings;
                 buttonStyles.Visible = true;
@@ -1279,11 +1278,23 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (comboBoxSubtitleFormats.Text == BluRaySubtitle)
             {
-                ShowBluraySettings();
+                ImageExportSettings(ExportPngXml.ExportFormats.BluraySup);
             }
             else if (comboBoxSubtitleFormats.Text == VobSubSubtitle)
             {
-                VobSubSettings();
+                ImageExportSettings(ExportPngXml.ExportFormats.VobSub);
+            }
+            else if (comboBoxSubtitleFormats.Text == DostImageSubtitle)
+            {
+                ImageExportSettings(ExportPngXml.ExportFormats.Dost);
+            }
+            else if (comboBoxSubtitleFormats.Text == BdnXmlSubtitle)
+            {
+                ImageExportSettings(ExportPngXml.ExportFormats.BdnXml);
+            }
+            else if (comboBoxSubtitleFormats.Text == FcpImageSubtitle)
+            {
+                ImageExportSettings(ExportPngXml.ExportFormats.Fcp);
             }
             else if (comboBoxSubtitleFormats.Text == Configuration.Settings.Language.BatchConvert.PlainText)
             {
@@ -1316,25 +1327,13 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void ShowBluraySettings()
+        private void ImageExportSettings(string format)
         {
             using (var properties = new ExportPngXml())
             {
                 var s = new Subtitle();
                 s.Paragraphs.Add(new Paragraph("Test 123." + Environment.NewLine + "Test 456.", 0, 4000));
-                properties.Initialize(s, new SubRip(), ExportPngXml.ExportFormats.BluraySup, null, null, null);
-                properties.DisableSaveButtonAndCheckBoxes();
-                properties.ShowDialog(this);
-            }
-        }
-
-        private void VobSubSettings()
-        {
-            using (var properties = new ExportPngXml())
-            {
-                var s = new Subtitle();
-                s.Paragraphs.Add(new Paragraph("Test 123." + Environment.NewLine + "Test 456.", 0, 4000));
-                properties.Initialize(s, new SubRip(), ExportPngXml.ExportFormats.VobSub, null, null, null);
+                properties.Initialize(s, new SubRip(), format, null, null, null);
                 properties.DisableSaveButtonAndCheckBoxes();
                 properties.ShowDialog(this);
             }
