@@ -39,6 +39,7 @@ namespace Nikse.SubtitleEdit.Forms
             linkLabelGitBuildHash.Left = labelProduct.Left + labelProduct.Width - 5;
             linkLabelGitBuildHash.Text = revisionNumber;
             tooltip.SetToolTip(linkLabelGitBuildHash, GetGitHubHashLink());
+            linkLabelGitBuildHash.Font = labelProduct.Font;
 
             string aboutText = _language.AboutText1.TrimEnd() + Environment.NewLine +
                                Environment.NewLine +
@@ -52,9 +53,9 @@ namespace Nikse.SubtitleEdit.Forms
 
             using (var g = CreateGraphics())
             {
-                double height = g.MeasureString("lH", richTextBoxAbout1.Font).Height * 1.4 + 80;
+                double height = g.MeasureString("lH", richTextBoxAbout1.Font).Height * aboutText.SplitToLines().Length;
                 richTextBoxAbout1.Height = (int)height;
-                Height = richTextBoxAbout1.Top + richTextBoxAbout1.Height + 90;
+                Height = richTextBoxAbout1.Top + richTextBoxAbout1.Height + 50;
             }
         }
 
