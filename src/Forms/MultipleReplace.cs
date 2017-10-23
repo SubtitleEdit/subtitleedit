@@ -951,6 +951,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonApply_Click(object sender, EventArgs e)
         {
+            ResetUncheckLines();
             _subtitle = new Subtitle(FixedSubtitle);
             GeneratePreview();
         }
