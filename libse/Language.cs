@@ -328,6 +328,7 @@ namespace Nikse.SubtitleEdit.Core
                 FixCommonErrorsErrorX = "Fix common errors: {0}",
                 MultipleReplaceErrorX = "Multiple replace: {0}",
                 AutoBalanceErrorX = "Auto balance: {0}",
+                OffsetTimeCodes = "Offset time codes",
             };
 
             Beamer = new LanguageStructure.Beamer

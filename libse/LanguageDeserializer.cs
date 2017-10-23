@@ -526,6 +526,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "BatchConvert/AutoBalanceErrorX":
                     language.BatchConvert.AutoBalanceErrorX = reader.Value;
                     break;
+                case "BatchConvert/OffsetTimeCodes":
+                    language.BatchConvert.OffsetTimeCodes = reader.Value;
+                    break;
                 case "Beamer/Title":
                     language.Beamer.Title = reader.Value;
                     break;
