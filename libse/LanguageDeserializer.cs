@@ -6145,6 +6145,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "VobSubOcr/DiscardText":
                     language.VobSubOcr.DiscardText = reader.Value;
                     break;
+                case "VobSubOcr/MinLineSplitHeight":
+                    language.VobSubOcr.MinLineSplitHeight = reader.Value;
+                    break;
                 case "VobSubOcrCharacter/Title":
                     language.VobSubOcrCharacter.Title = reader.Value;
                     break;

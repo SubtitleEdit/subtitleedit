@@ -2591,6 +2591,7 @@ Keep changes?",
                 SetUnitalicFactor = "Set un-italic factor...",
                 DiscardTitle = "Discard changes made in OCR?",
                 DiscardText = "Do you want to discard changes made in current OCR session?",
+                MinLineSplitHeight = "Min. line height (split)",
             };
 
             VobSubOcrCharacter = new LanguageStructure.VobSubOcrCharacter

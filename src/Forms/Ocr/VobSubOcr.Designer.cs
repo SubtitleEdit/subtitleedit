@@ -1236,7 +1236,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.groupBoxImagePalette.Controls.Add(this.checkBoxCustomFourColors);
             this.groupBoxImagePalette.Location = new System.Drawing.Point(13, 16);
             this.groupBoxImagePalette.Name = "groupBoxImagePalette";
-            this.groupBoxImagePalette.Size = new System.Drawing.Size(636, 38);
+            this.groupBoxImagePalette.Size = new System.Drawing.Size(644, 38);
             this.groupBoxImagePalette.TabIndex = 35;
             this.groupBoxImagePalette.TabStop = false;
             this.groupBoxImagePalette.Text = "Image palette";
@@ -1353,7 +1353,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.groupBoxSubtitleImage.Controls.Add(this.pictureBoxSubtitleImage);
             this.groupBoxSubtitleImage.Location = new System.Drawing.Point(412, 6);
             this.groupBoxSubtitleImage.Name = "groupBoxSubtitleImage";
-            this.groupBoxSubtitleImage.Size = new System.Drawing.Size(657, 191);
+            this.groupBoxSubtitleImage.Size = new System.Drawing.Size(665, 191);
             this.groupBoxSubtitleImage.TabIndex = 36;
             this.groupBoxSubtitleImage.TabStop = false;
             this.groupBoxSubtitleImage.Text = "Subtitle image";
@@ -1362,7 +1362,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // 
             this.labelMinAlpha.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.labelMinAlpha.AutoSize = true;
-            this.labelMinAlpha.Location = new System.Drawing.Point(176, 171);
+            this.labelMinAlpha.Location = new System.Drawing.Point(184, 171);
             this.labelMinAlpha.Name = "labelMinAlpha";
             this.labelMinAlpha.Size = new System.Drawing.Size(252, 13);
             this.labelMinAlpha.TabIndex = 40;
@@ -1373,7 +1373,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // numericUpDownAutoTransparentAlphaMax
             // 
             this.numericUpDownAutoTransparentAlphaMax.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.numericUpDownAutoTransparentAlphaMax.Location = new System.Drawing.Point(432, 169);
+            this.numericUpDownAutoTransparentAlphaMax.Location = new System.Drawing.Point(440, 169);
             this.numericUpDownAutoTransparentAlphaMax.Maximum = new decimal(new int[] {
             255,
             0,
@@ -1398,7 +1398,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.groupBoxTransportStream.Controls.Add(this.checkBoxTransportStreamGrayscale);
             this.groupBoxTransportStream.Location = new System.Drawing.Point(94, 6);
             this.groupBoxTransportStream.Name = "groupBoxTransportStream";
-            this.groupBoxTransportStream.Size = new System.Drawing.Size(636, 38);
+            this.groupBoxTransportStream.Size = new System.Drawing.Size(644, 38);
             this.groupBoxTransportStream.TabIndex = 36;
             this.groupBoxTransportStream.TabStop = false;
             this.groupBoxTransportStream.Text = "Transport stream";
@@ -1430,7 +1430,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // 
             this.checkBoxAutoTransparentBackground.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.checkBoxAutoTransparentBackground.AutoSize = true;
-            this.checkBoxAutoTransparentBackground.Location = new System.Drawing.Point(481, 170);
+            this.checkBoxAutoTransparentBackground.Location = new System.Drawing.Point(489, 170);
             this.checkBoxAutoTransparentBackground.Name = "checkBoxAutoTransparentBackground";
             this.checkBoxAutoTransparentBackground.Size = new System.Drawing.Size(168, 17);
             this.checkBoxAutoTransparentBackground.TabIndex = 36;
@@ -1447,7 +1447,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.pictureBoxSubtitleImage.ContextMenuStrip = this.contextMenuStripImage;
             this.pictureBoxSubtitleImage.Location = new System.Drawing.Point(13, 60);
             this.pictureBoxSubtitleImage.Name = "pictureBoxSubtitleImage";
-            this.pictureBoxSubtitleImage.Size = new System.Drawing.Size(636, 127);
+            this.pictureBoxSubtitleImage.Size = new System.Drawing.Size(644, 127);
             this.pictureBoxSubtitleImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBoxSubtitleImage.TabIndex = 3;
             this.pictureBoxSubtitleImage.TabStop = false;

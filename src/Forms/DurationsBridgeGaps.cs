@@ -55,6 +55,7 @@ namespace Nikse.SubtitleEdit.Forms
             numericUpDownMinMsBetweenLines.Left = labelMinMsBetweenLines.Left + labelMinMsBetweenLines.Width + 4;
             radioButtonProlongEndTime.Text = Configuration.Settings.Language.DurationsBridgeGaps.ProlongEndTime;
             radioButtonDivideEven.Text = Configuration.Settings.Language.DurationsBridgeGaps.DivideEven;
+            groupBoxLinesFound.Text = string.Empty;
 
             _subtitle = subtitle;
             try
@@ -110,6 +111,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void GeneratePreviewReal()
         {
+            groupBoxLinesFound.Text = string.Empty;
             if (_subtitle == null)
                 return;
 

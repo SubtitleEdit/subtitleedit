@@ -2270,6 +2270,7 @@ Keep changes?</KeepChangesMessage>
     <SetUnitalicFactor>Set un-italic factor...</SetUnitalicFactor>
     <DiscardTitle>Discard changes made in OCR?</DiscardTitle>
     <DiscardText>Do you want to discard changes made in current OCR session?</DiscardText>
+    <MinLineSplitHeight>Min. line height (split)</MinLineSplitHeight>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub - Manual image to text</Title>
