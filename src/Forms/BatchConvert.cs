@@ -113,7 +113,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxScanFolderRecursive.Left = buttonSearchFolder.Left - checkBoxScanFolderRecursive.Width - 5;
 
             groupBoxChangeFrameRate.Text = Configuration.Settings.Language.ChangeFrameRate.Title;
-            groupBoxOffsetTimeCodes.Text = Configuration.Settings.Language.ShowEarlierLater.TitleAll;
+            groupBoxOffsetTimeCodes.Text = l.OffsetTimeCodes;
             groupBoxSpeed.Text = Configuration.Settings.Language.ChangeSpeedInPercent.TitleShort;
             labelFromFrameRate.Text = Configuration.Settings.Language.ChangeFrameRate.FromFrameRate;
             labelToFrameRate.Text = Configuration.Settings.Language.ChangeFrameRate.ToFrameRate;
@@ -191,6 +191,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxBridgeGaps.Checked = Configuration.Settings.Tools.BatchConvertBridgeGaps;
             checkBoxSetMinimumDisplayTimeBetweenSubs.Checked = Configuration.Settings.Tools.BatchConvertSetMinDisplayTimeBetweenSubtitles;
             buttonRemoveTextForHiSettings.Text = l.Settings;
+            buttonBridgeGapsSettings.Text = l.Settings;
             buttonFixCommonErrorSettings.Text = l.Settings;
             buttonMultipleReplaceSettings.Text = l.Settings;
             checkBoxFixCommonErrors.Text = Configuration.Settings.Language.FixCommonErrors.Title;

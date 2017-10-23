@@ -195,6 +195,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <FixCommonErrorsErrorX>Fix common errors: {0}</FixCommonErrorsErrorX>
     <MultipleReplaceErrorX>Multiple replace: {0}</MultipleReplaceErrorX>
     <AutoBalanceErrorX>Auto balance: {0}</AutoBalanceErrorX>
+    <OffsetTimeCodes>Offset time codes</OffsetTimeCodes>
   </BatchConvert>
   <Beamer>
     <Title>Beamer</Title>
