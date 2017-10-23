@@ -3313,10 +3313,18 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             var bobExactMatch = binOcrDb.FindExactMatch(bob);
             if (bobExactMatch >= 0)
             {
-                index = bobExactMatch;
-                smallestDifference = 0;
-                hit = binOcrDb.CompareImages[bobExactMatch];
-                return;
+                var m = binOcrDb.CompareImages[bobExactMatch];
+                if (m.Text != null && (m.Text == "," || m.Text == "'") && Math.Min(m.Y, bob.Y) < 9 && Math.Max(m.Y, bob.Y) > 30)
+                {
+                    // don't confuse "'" and ","
+                }
+                else
+                {
+                    index = bobExactMatch;
+                    smallestDifference = 0;
+                    hit = m;
+                    return;
+                }
             }
 
             if (maxDiff < 0.2 || target.Width < 3 || target.Height < 5)
