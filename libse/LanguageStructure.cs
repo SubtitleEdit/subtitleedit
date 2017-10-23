@@ -2472,6 +2472,7 @@
             public string SetUnitalicFactor { get; set; }
             public string DiscardTitle { get; set; }
             public string DiscardText { get; set; }
+            public string MinLineSplitHeight { get; set; }
         }
 
         public class VobSubOcrCharacter

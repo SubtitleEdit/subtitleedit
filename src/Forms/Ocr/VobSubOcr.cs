@@ -407,7 +407,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             checkBoxAutoFixCommonErrors.Text = language.FixOcrErrors;
             checkBoxRightToLeft.Text = language.RightToLeft;
             checkBoxRightToLeft.Left = numericUpDownPixelsIsSpace.Left;
-            //TODO: fix language tag labelMinLineSplitHeight.Text = 
+            if (checkBoxRightToLeft.Left + checkBoxRightToLeft.Width > labelMinLineSplitHeight.Left)
+                checkBoxRightToLeft.Left = labelMaxErrorPercent.Left;
+            labelMinLineSplitHeight.Text = language.MinLineSplitHeight;          
             groupBoxOCRControls.Text = string.Empty;
 
             FillSpellCheckDictionaries();
