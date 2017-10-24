@@ -108,7 +108,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Binary
             for (int i = 0; i < CompareImages.Count; i++)
             {
                 var b = CompareImages[i];
-                if (bob.Hash == b.Hash && bob.Width == b.Width && bob.Height == b.Height && bob.NumberOfColoredPixels == b.NumberOfColoredPixels)
+                if (bob.Hash == b.Hash && bob.Width == b.Width && bob.Height == b.Height && bob.NumberOfColoredPixels == b.NumberOfColoredPixels && Math.Abs(bob.Y - b.Y) < 30)
                     return i;
             }
             return -1;

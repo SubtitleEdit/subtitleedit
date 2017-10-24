@@ -378,7 +378,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Binary
             {
                 return false;
             }
-            if ((double)Height / Width < 2) // aspect ratio
+            if ((double)Height / Width < 2.2) // aspect ratio
             {
                 return false;
             }
@@ -602,7 +602,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Binary
                 return false;
             }
 
-            if ((double)Height / Width < 2) // aspect ratio
+            if ((double)Height / Width < 2.3) // aspect ratio
             {
                 return false;
             }

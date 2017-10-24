@@ -135,6 +135,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             public ImageSplitterItem ImageSplitterItem { get; set; }
             public int X { get; set; }
             public int Y { get; set; }
+            public List<ImageSplitterItem> Extra { get; set; }
 
             public CompareMatch(string text, bool italic, int expandCount, string name)
             {
@@ -3096,10 +3097,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             var bob = new BinaryOcrBitmap(target) { X = targetItem.X, Y = targetItem.Top };
 
+            // precise match
             for (int k = 0; k < _binaryOcrDb.CompareImagesExpanded.Count; k++)
             {
                 var b = _binaryOcrDb.CompareImagesExpanded[k];
-                if ((bob.Hash == b.Hash && bob.Width == b.Width && bob.Height == b.Height && bob.NumberOfColoredPixels == b.NumberOfColoredPixels) || GetPixelDifPercentage(b, bob, target) <= maxDiff)
+                if ((bob.Hash == b.Hash && bob.Width == b.Width && bob.Height == b.Height && bob.NumberOfColoredPixels == b.NumberOfColoredPixels) || GetPixelDifPercentage(b, bob, target, 0) == 0)
                 {
                     bool ok = false;
                     for (int i = 0; i < b.ExpandedList.Count; i++)
@@ -3112,7 +3114,47 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                                 ok = true;
                             }
                             else if (Math.Abs(b.ExpandedList[i].Y - bobNext.Y) < 6 &&
-                                     GetPixelDifPercentage(b.ExpandedList[i], bobNext, list[listIndex + i + 1].NikseBitmap) <= maxDiff)
+                                     GetPixelDifPercentage(b.ExpandedList[i], bobNext, list[listIndex + i + 1].NikseBitmap, 0) == 0)
+                            {
+                                ok = true;
+                            }
+                            else
+                            {
+                                ok = false;
+                                break;
+                            }
+                        }
+                        else
+                        {
+                            ok = false;
+                            break;
+                        }
+                    }
+                    if (ok)
+                    {
+                        return new CompareMatch(b.Text, b.Italic, b.ExpandCount, b.Key);
+                    }
+                }
+            }
+
+            // allow for error %
+            for (int k = 0; k < _binaryOcrDb.CompareImagesExpanded.Count; k++)
+            {
+                var b = _binaryOcrDb.CompareImagesExpanded[k];
+                if ((bob.Hash == b.Hash && bob.Width == b.Width && bob.Height == b.Height && bob.NumberOfColoredPixels == b.NumberOfColoredPixels) || GetPixelDifPercentage(b, bob, target, maxDiff) <= maxDiff)
+                {
+                    bool ok = false;
+                    for (int i = 0; i < b.ExpandedList.Count; i++)
+                    {
+                        if (listIndex + i + 1 < list.Count && list[listIndex + i + 1].NikseBitmap != null)
+                        {
+                            var bobNext = new BinaryOcrBitmap(list[listIndex + i + 1].NikseBitmap);
+                            if (b.ExpandedList[i].Hash == bobNext.Hash)
+                            {
+                                ok = true;
+                            }
+                            else if (Math.Abs(b.ExpandedList[i].Y - bobNext.Y) < 6 &&
+                                     GetPixelDifPercentage(b.ExpandedList[i], bobNext, list[listIndex + i + 1].NikseBitmap, maxDiff) <= maxDiff)
                             {
                                 ok = true;
                             }
@@ -3269,7 +3311,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             return null;
         }
 
-        private double GetPixelDifPercentage(BinaryOcrBitmap expanded, BinaryOcrBitmap bobNext, NikseBitmap nbmpNext)
+        private double GetPixelDifPercentage(BinaryOcrBitmap expanded, BinaryOcrBitmap bobNext, NikseBitmap nbmpNext, double maxDiff)
         {
             var difColoredPercentage = (Math.Abs(expanded.NumberOfColoredPixels - bobNext.NumberOfColoredPixels)) * 100.0 / (bobNext.Width * bobNext.Height);
             if (difColoredPercentage > 1 && expanded.Width < 3 || bobNext.Width < 3)
@@ -3280,21 +3322,24 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 dif = NikseBitmapImageSplitter.IsBitmapsAlike(nbmpNext, expanded);
             }
-            else if (expanded.Height == bobNext.Height && expanded.Width == bobNext.Width + 1)
-            {
-                dif = NikseBitmapImageSplitter.IsBitmapsAlike(nbmpNext, expanded);
-            }
-            else if (expanded.Height == bobNext.Height && expanded.Width == bobNext.Width - 1)
-            {
-                dif = NikseBitmapImageSplitter.IsBitmapsAlike(expanded, nbmpNext);
-            }
-            else if (expanded.Width == bobNext.Width && expanded.Height == bobNext.Height + 1)
-            {
-                dif = NikseBitmapImageSplitter.IsBitmapsAlike(nbmpNext, expanded);
-            }
-            else if (expanded.Width == bobNext.Width && expanded.Height == bobNext.Height - 1)
-            {
-                dif = NikseBitmapImageSplitter.IsBitmapsAlike(expanded, nbmpNext);
+            else if (maxDiff > 0)
+            { 
+                if (expanded.Height == bobNext.Height && expanded.Width == bobNext.Width + 1)
+                {
+                    dif = NikseBitmapImageSplitter.IsBitmapsAlike(nbmpNext, expanded);
+                }
+                else if (expanded.Height == bobNext.Height && expanded.Width == bobNext.Width - 1)
+                {
+                    dif = NikseBitmapImageSplitter.IsBitmapsAlike(expanded, nbmpNext);
+                }
+                else if (expanded.Width == bobNext.Width && expanded.Height == bobNext.Height + 1)
+                {
+                    dif = NikseBitmapImageSplitter.IsBitmapsAlike(nbmpNext, expanded);
+                }
+                else if (expanded.Width == bobNext.Width && expanded.Height == bobNext.Height - 1)
+                {
+                    dif = NikseBitmapImageSplitter.IsBitmapsAlike(expanded, nbmpNext);
+                }
             }
             var percentage = dif * 100.0 / (bobNext.Width * bobNext.Height);
             return percentage;
@@ -8009,25 +8054,25 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             Bitmap bitmap = GetSubtitleBitmap(subtitleListView1.SelectedItems[0].Index);
             NikseBitmap parentBitmap = new NikseBitmap(bitmap);
             var matches = new List<CompareMatch>();
-            List<ImageSplitterItem> list;
+            List<ImageSplitterItem> sourceList;
 
             if (_binaryOcrDb == null)
             {
-                list = NikseBitmapImageSplitter.SplitBitmapToLetters(parentBitmap, (int)numericUpDownPixelsIsSpace.Value, checkBoxRightToLeft.Checked, Configuration.Settings.VobSubOcr.TopToBottom);
+                sourceList = NikseBitmapImageSplitter.SplitBitmapToLetters(parentBitmap, (int)numericUpDownPixelsIsSpace.Value, checkBoxRightToLeft.Checked, Configuration.Settings.VobSubOcr.TopToBottom);
             }
             else
             {
                 int minLineHeight = _binOcrLastLowercaseHeight - 3;
                 if (minLineHeight < 5)
                     minLineHeight = 5;
-                list = NikseBitmapImageSplitter.SplitBitmapToLettersNew(parentBitmap, (int)numericUpDownPixelsIsSpace.Value, checkBoxRightToLeft.Checked, Configuration.Settings.VobSubOcr.TopToBottom, minLineHeight);
+                sourceList = NikseBitmapImageSplitter.SplitBitmapToLettersNew(parentBitmap, (int)numericUpDownPixelsIsSpace.Value, checkBoxRightToLeft.Checked, Configuration.Settings.VobSubOcr.TopToBottom, minLineHeight);
             }
 
             int index = 0;
             var imageSources = new List<Bitmap>();
-            while (index < list.Count)
+            while (index < sourceList.Count)
             {
-                ImageSplitterItem item = list[index];
+                ImageSplitterItem item = sourceList[index];
                 if (item.NikseBitmap == null)
                 {
                     matches.Add(new CompareMatch(item.SpecialCharacter, false, 0, null));
@@ -8038,9 +8083,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     CompareMatch bestGuess;
                     CompareMatch match;
                     if (_binaryOcrDb != null)
-                        match = GetCompareMatchNew(item, out bestGuess, list, index);
+                        match = GetCompareMatchNew(item, out bestGuess, sourceList, index);
                     else
-                        match = GetCompareMatch(item, parentBitmap, out bestGuess, list, index);
+                        match = GetCompareMatch(item, parentBitmap, out bestGuess, sourceList, index);
                     if (match == null)
                     {
                         matches.Add(new CompareMatch(Configuration.Settings.Language.VobSubOcr.NoMatch, false, 0, null));
@@ -8053,10 +8098,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                             List<ImageSplitterItem> expandSelectionList = new List<ImageSplitterItem>();
                             for (int i = 0; i < match.ExpandCount; i++)
                             {
-                                expandSelectionList.Add(list[index + i]);
+                                expandSelectionList.Add(sourceList[index + i]);
                             }
                             item = GetExpandedSelectionNew(parentBitmap, expandSelectionList);
-                            matches.Add(new CompareMatch(match.Text, match.Italic, 0, match.Name, item));
+                            matches.Add(new CompareMatch(match.Text, match.Italic, 0, match.Name, item) { Extra = expandSelectionList });
                             imageSources.Add(item.NikseBitmap.GetBitmap());
                         }
                         else
@@ -8074,7 +8119,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             Cursor = Cursors.Default;
             using (var inspect = new VobSubOcrCharacterInspect())
             {
-                inspect.Initialize(comboBoxCharacterDatabase.SelectedItem.ToString(), matches, imageSources, _binaryOcrDb, list);
+                inspect.Initialize(comboBoxCharacterDatabase.SelectedItem.ToString(), matches, imageSources, _binaryOcrDb, sourceList);
                 if (inspect.ShowDialog(this) == DialogResult.OK)
                 {
                     Cursor = Cursors.WaitCursor;

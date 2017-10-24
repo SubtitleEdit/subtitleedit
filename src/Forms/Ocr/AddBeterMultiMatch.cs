@@ -53,12 +53,16 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private void MakeExpandImage()
         {
             var splitterItem = _splitterItems[_startIndex];
+            if (splitterItem.NikseBitmap == null)
+                return;
             ExpandedMatch = new BinaryOcrBitmap(new NikseBitmap(splitterItem.NikseBitmap), false, (int)numericUpDownExpandCount.Value, string.Empty, splitterItem.X, splitterItem.Y) { ExpandedList = new List<BinaryOcrBitmap>() };
             for (int i = 1; i < listBoxInspectItems.Items.Count; i++)
             {
                 if (i < numericUpDownExpandCount.Value)
                 {
                     splitterItem = _splitterItems[_startIndex + i];
+                    if (splitterItem.NikseBitmap == null)
+                        break;
                     ExpandedMatch.ExpandedList.Add(new BinaryOcrBitmap(splitterItem.NikseBitmap, false, 0, null, splitterItem.X, splitterItem.Y));
                 }
             }
