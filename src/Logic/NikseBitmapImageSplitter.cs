@@ -759,11 +759,12 @@ namespace Nikse.SubtitleEdit.Logic
                     width++;
                 }
 
+                var newStartX = points != null ? FindMinX(points, x) : 0;
                 if (points == null)
                 {
                     width++;
                 }
-                else if (width > 1)
+                else if (width > 1 || (width == 1 && newStartX > startX + 1 && spacePixels == 0))
                 {
                     var bmp0 = new NikseBitmap(bmp);
                     // remove pixels after current;
@@ -800,7 +801,7 @@ namespace Nikse.SubtitleEdit.Logic
                 else
                 {
                     width = 1;
-                    startX = FindMinX(points, x);
+                    startX = newStartX;
                 }
             }
             return parts;

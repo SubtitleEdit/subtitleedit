@@ -131,8 +131,13 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                                 textBoxText.Text = bob.Text;
                                 checkBoxItalic.Checked = bob.Italic;
                                 _selectedCompareBinaryOcrBitmap = bob;
-                                SetDbItemView(bob.ToOldBitmap());
-                                buttonAddBetterMatch.Enabled = false; // exact match
+
+                                var oldBitmap = bob.ToOldBitmap();
+                                SetDbItemView(oldBitmap);
+
+                                int dif = NikseBitmapImageSplitter.IsBitmapsAlike(oldBitmap, match.ImageSplitterItem.NikseBitmap.GetBitmap());
+                                buttonAddBetterMatch.Enabled = dif > 0; // if exact match then don't allow "Add better match"
+
                                 labelExpandCount.Text = $"Expand count: {bob.ExpandCount}";
                                 break;
                             }
@@ -185,6 +190,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 textBoxText.Enabled = true;
                 textBoxText.Text = string.Empty;
                 checkBoxItalic.Enabled = true;
+                pictureBoxCompareBitmap.Visible = true;
+                pictureBoxCompareBitmapDouble.Visible = true;
+                labelDoubleSize.Visible = true;
             }
             else if (_selectedCompareNode == null && _selectedCompareBinaryOcrBitmap == null)
             {
@@ -194,6 +202,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 textBoxText.Enabled = true;
                 textBoxText.Text = string.Empty;
                 checkBoxItalic.Enabled = false;
+                pictureBoxCompareBitmap.Visible = false;
+                pictureBoxCompareBitmapDouble.Visible = false;
+                labelDoubleSize.Visible = false;
             }
             else
             {
@@ -203,6 +214,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     buttonAddBetterMatch.Enabled = true;
                 textBoxText.Enabled = true;
                 checkBoxItalic.Enabled = true;
+                pictureBoxCompareBitmap.Visible = true;
+                pictureBoxCompareBitmapDouble.Visible = true;
+                labelDoubleSize.Visible = true;
             }
         }
 
@@ -316,28 +330,46 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             if (_selectedCompareBinaryOcrBitmap != null || (_binOcrDb != null && (_selectedMatch.Text == Configuration.Settings.Language.VobSubOcr.NoMatch || _selectedMatch.NOcrCharacter == null)))
             {
-                var nbmp = new NikseBitmap((pictureBoxInspectItem.Image as Bitmap));
-                int x = 0;
-                int y = 0;
-                if (_selectedMatch?.ImageSplitterItem != null)
+                BinaryOcrBitmap bob;
+                int expandCount = 0;
+                if (_selectedCompareBinaryOcrBitmap != null &&_selectedCompareBinaryOcrBitmap.ExpandCount > 0 && _selectedMatch.Extra != null && _selectedMatch.Extra.Count > 1)
                 {
-                    if (_selectedMatch.ImageSplitterItem != null)
+                    expandCount = _selectedMatch.Extra.Count;
+                    var first = _selectedMatch.Extra[0];
+                    bob = new BinaryOcrBitmap(first.NikseBitmap, checkBoxItalic.Checked, _selectedMatch.Extra.Count, textBoxText.Text, first.X, first.Top);
+                    bob.ExpandedList = new List<BinaryOcrBitmap>();
+                    for (int i = 1; i < _selectedMatch.Extra.Count; i++)
                     {
-                        x = _selectedMatch.ImageSplitterItem.X;
-                        y = _selectedMatch.ImageSplitterItem.Top;
-                    }
-                    else
-                    {
-                        x = _selectedMatch.X;
-                        y = _selectedMatch.Y;
+                        var element = _selectedMatch.Extra[i];
+                        bob.ExpandedList.Add(new BinaryOcrBitmap(element.NikseBitmap, checkBoxItalic.Checked, 0, null, element.X, element.Top));
                     }
                 }
-                var bob = new BinaryOcrBitmap(nbmp, checkBoxItalic.Checked, 0, textBoxText.Text, x, y);
+                else
+                {
+                    int x = 0;
+                    int y = 0;
+                    var nbmp = new NikseBitmap(pictureBoxInspectItem.Image as Bitmap);
+                    if (_selectedMatch?.ImageSplitterItem != null)
+                    {
+                        if (_selectedMatch.ImageSplitterItem != null)
+                        {
+                            x = _selectedMatch.ImageSplitterItem.X;
+                            y = _selectedMatch.ImageSplitterItem.Top;
+                        }
+                        else
+                        {
+                            x = _selectedMatch.X;
+                            y = _selectedMatch.Y;
+                        }
+                    }
+                    bob = new BinaryOcrBitmap(nbmp, checkBoxItalic.Checked, 0, textBoxText.Text, x, y);
+                }
+
                 _binOcrDb.Add(bob);
 
                 int index = listBoxInspectItems.SelectedIndex;
                 _matches[index].Name = bob.Key;
-                _matches[index].ExpandCount = 0;
+                _matches[index].ExpandCount = expandCount;
                 _matches[index].Italic = checkBoxItalic.Checked;
                 _matches[index].Text = textBoxText.Text;
                 listBoxInspectItems.Items.Clear();
@@ -429,11 +461,18 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private void contextMenuStripAddBetterMultiMatch_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
             if (listBoxInspectItems.SelectedIndex < 0 ||
-                listBoxInspectItems.SelectedIndex == listBoxInspectItems.Items.Count - 1 ||                
+                listBoxInspectItems.SelectedIndex == listBoxInspectItems.Items.Count - 1 ||
                 _binOcrDb == null ||
-                (_selectedCompareBinaryOcrBitmap != null &&_selectedCompareBinaryOcrBitmap.ExpandCount > 1))
+                (_selectedCompareBinaryOcrBitmap != null && _selectedCompareBinaryOcrBitmap.ExpandCount > 1))
             {
                 e.Cancel = true;
+                return;
+            }
+
+            if (_matches[listBoxInspectItems.SelectedIndex].ImageSplitterItem == null)
+            {
+                e.Cancel = true;
+                return;
             }
 
             var next = _matches[listBoxInspectItems.SelectedIndex + 1];
