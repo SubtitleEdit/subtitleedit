@@ -43,7 +43,7 @@
             // 
             this.okButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.okButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.okButton.Location = new System.Drawing.Point(355, 342);
+            this.okButton.Location = new System.Drawing.Point(374, 342);
             this.okButton.Name = "okButton";
             this.okButton.Size = new System.Drawing.Size(83, 21);
             this.okButton.TabIndex = 0;
@@ -63,7 +63,7 @@
             // pictureBox1
             // 
             this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(368, 14);
+            this.pictureBox1.Location = new System.Drawing.Point(399, 14);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(70, 64);
             this.pictureBox1.TabIndex = 27;
@@ -78,7 +78,7 @@
             this.richTextBoxAbout1.Name = "richTextBoxAbout1";
             this.richTextBoxAbout1.ReadOnly = true;
             this.richTextBoxAbout1.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
-            this.richTextBoxAbout1.Size = new System.Drawing.Size(429, 266);
+            this.richTextBoxAbout1.Size = new System.Drawing.Size(448, 266);
             this.richTextBoxAbout1.TabIndex = 40;
             this.richTextBoxAbout1.TabStop = false;
             this.richTextBoxAbout1.Text = "About...";
@@ -118,7 +118,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(457, 372);
+            this.ClientSize = new System.Drawing.Size(476, 372);
             this.Controls.Add(this.linkLabelGitBuildHash);
             this.Controls.Add(this.buttonDonate);
             this.Controls.Add(this.okButton);
@@ -135,6 +135,7 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "About Subtitle Edit";
+            this.Shown += new System.EventHandler(this.About_Shown);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.About_KeyDown);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);

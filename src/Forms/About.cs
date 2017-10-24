@@ -51,11 +51,16 @@ namespace Nikse.SubtitleEdit.Forms
             }
             richTextBoxAbout1.Text = aboutText;
 
+            SetHeight();
+        }
+
+        private void SetHeight()
+        {
             using (var g = CreateGraphics())
             {
-                double height = g.MeasureString("lH", richTextBoxAbout1.Font).Height * aboutText.SplitToLines().Length;
+                double height = g.MeasureString(richTextBoxAbout1.Text, richTextBoxAbout1.Font).Height + 5;
                 richTextBoxAbout1.Height = (int)height;
-                Height = richTextBoxAbout1.Top + richTextBoxAbout1.Height + 50;
+                Height = richTextBoxAbout1.Top + richTextBoxAbout1.Height + 90;
             }
         }
 
@@ -109,5 +114,9 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        private void About_Shown(object sender, EventArgs e)
+        {
+            SetHeight();
+        }
     }
 }
