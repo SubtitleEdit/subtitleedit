@@ -1312,7 +1312,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 {
                     if (!param.Saved)
                     {
-                        imagesSavedCount = WriteFcpParagraph(sb, imagesSavedCount, param, i, param.SavDialogFileName);
+                        imagesSavedCount = WriteFcpParagraph(sb, imagesSavedCount, param, i, saveFileDialog1.FileName);
 
                         param.Saved = true;
                     }
@@ -1481,14 +1481,14 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
         internal int WriteFcpParagraph(StringBuilder sb, int imagesSavedCount, MakeBitmapParameter param, int i, string fileName)
         {
             string numberString = string.Format(Path.GetFileNameWithoutExtension(Path.GetFileName(fileName)) + "{0:0000}", i);
-            fileName = numberString + "." + comboBoxImageFormat.Text.ToLower();
-            string fileNameNoPath = Path.GetFileName(fileName);
+            var fileNameShort = numberString + "." + comboBoxImageFormat.Text.ToLower();
+            var targetImageFileName = Path.Combine(Path.GetDirectoryName(fileName), fileNameShort);
+            string fileNameNoPath = Path.GetFileName(fileNameShort);
             string fileNameNoExt = Path.GetFileNameWithoutExtension(fileNameNoPath);
+            string pathUrl = "file://localhost/" + targetImageFileName.Replace("\\", "/").Replace(" ", "%20");
+
             string template = " <clipitem id=\"" + System.Security.SecurityElement.Escape(fileNameNoPath) + "\">" + Environment.NewLine +
-
-                              // <pathurl>file://localhost/" + fileNameNoPath.Replace(" ", "%20") + @"</pathurl>
-
-                              @"            <name>" + System.Security.SecurityElement.Escape(fileNameNoPath) + @"</name>
+@"            <name>" + System.Security.SecurityElement.Escape(fileNameNoPath) + @"</name>
             <duration>[DURATION]</duration>
             <rate>
               <ntsc>[NTSC]</ntsc>
@@ -1505,7 +1505,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             <masterclipid>" + System.Security.SecurityElement.Escape(fileNameNoPath) + @"1</masterclipid>" + Environment.NewLine +
                               "           <file id=\"" + fileNameNoExt + "\">" + @"
               <name>" + System.Security.SecurityElement.Escape(fileNameNoPath) + @"</name>
-              <pathurl>" + Utilities.UrlEncode(fileNameNoPath) + @"</pathurl>
+              <pathurl>" + pathUrl + @"</pathurl>
               <rate>
                 <timebase>[TIMEBASE]</timebase>
               </rate>
@@ -1528,8 +1528,6 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             </sourcetrack>
             <fielddominance>none</fielddominance>
           </clipitem>";
-
-            fileName = Path.Combine(Path.GetDirectoryName(param.SavDialogFileName), fileName);
 
             var outBitmap = param.Bitmap;
             if (checkBoxFullFrameImage.Visible && checkBoxFullFrameImage.Checked)
@@ -1585,7 +1583,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
                         var nbmp = new NikseBitmap(outBitmap);
                         var b = nbmp.ConverTo8BitsPerPixel();
-                        b.Save(fileName, encoder, parameters);
+                        b.Save(targetImageFileName, encoder, parameters);
                         b.Dispose();
 
                         break;
@@ -1594,7 +1592,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             }
             else
             {
-                SaveImage(outBitmap, fileName, ImageFormat);
+                SaveImage(outBitmap, targetImageFileName, ImageFormat);
             }
             imagesSavedCount++;
 
@@ -4238,7 +4236,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 Configuration.Settings.Tools.ExportBluRayFontSize = (int)_subtitleFontSize;
                 Configuration.Settings.Tools.ExportBluRayVideoResolution = res;
             }
-            else if (_exportType == ExportFormats.BdnXml)
+            else if (_exportType == ExportFormats.BdnXml || _exportType == ExportFormats.Fcp)
             {
                 Configuration.Settings.Tools.ExportBdnXmlImageType = comboBoxImageFormat.SelectedItem.ToString();
             }

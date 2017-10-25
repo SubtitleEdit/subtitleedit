@@ -17,7 +17,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 if (count > 0)
-                    sb.Append(',');
+                    sb.Append(", ");
                 sb.Append("{\"t1\":");
                 sb.Append(p.StartTime.TotalMilliseconds.ToString(System.Globalization.CultureInfo.InvariantCulture));
                 sb.Append(",\"t2\":");
