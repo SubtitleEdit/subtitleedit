@@ -58,7 +58,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             using (var g = CreateGraphics())
             {
-                double height = g.MeasureString(richTextBoxAbout1.Text, richTextBoxAbout1.Font).Height + 5;
+                double height = g.MeasureString(richTextBoxAbout1.Text, richTextBoxAbout1.Font).Height + 15;
                 richTextBoxAbout1.Height = (int)height;
                 Height = richTextBoxAbout1.Top + richTextBoxAbout1.Height + 90;
             }

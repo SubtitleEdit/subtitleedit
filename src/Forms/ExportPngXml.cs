@@ -2374,6 +2374,10 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         parameter.P.Text = "<i>" + parameter.P.Text;
                     }
                     italicOn = parameter.P.Text.Contains("<i>") && !parameter.P.Text.Contains("</i>");
+                    if (italicOn)
+                    {
+                        parameter.P.Text += "</i>";
+                    }
 
                     parameter.P.Text = fontTag + parameter.P.Text;
                     if (parameter.P.Text.Contains("<font ") && !parameter.P.Text.Contains("</font>"))
