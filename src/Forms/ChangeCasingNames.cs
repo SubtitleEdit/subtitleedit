@@ -114,8 +114,8 @@ namespace Nikse.SubtitleEdit.Forms
         {
             var item = new ListViewItem(string.Empty) { Tag = p, Checked = true };
             item.SubItems.Add(p.Number.ToString(CultureInfo.InvariantCulture));
-            item.SubItems.Add(p.Text.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
-            item.SubItems.Add(newText.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
+            item.SubItems.Add(UiUtil.GetListViewTextFromString(p.Text));
+            item.SubItems.Add(UiUtil.GetListViewTextFromString(newText));
             listViewFixes.Items.Add(item);
         }
 
@@ -188,7 +188,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 item.Selected = false;
 
-                string text = item.SubItems[2].Text.Replace(Configuration.Settings.General.ListViewLineSeparatorString, Environment.NewLine);
+                string text = UiUtil.GetStringFromListViewText(item.SubItems[2].Text);
 
                 string lower = text.ToLower();
                 if (lower.Contains(name.ToLower()) && name.Length > 1 && name != name.ToLower())
@@ -237,7 +237,7 @@ namespace Nikse.SubtitleEdit.Forms
                     LinesChanged++;
                     var p = item.Tag as Paragraph;
                     if (p != null)
-                        p.Text = item.SubItems[3].Text.Replace(Configuration.Settings.General.ListViewLineSeparatorString, Environment.NewLine);
+                        p.Text = UiUtil.GetStringFromListViewText(item.SubItems[3].Text);
                 }
             }
         }

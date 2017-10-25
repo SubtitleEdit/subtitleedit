@@ -72,7 +72,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             var subItem = new ListViewItem.ListViewSubItem(item, lineNumbers.TrimEnd(','));
             item.SubItems.Add(subItem);
-            subItem = new ListViewItem.ListViewSubItem(item, newText.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
+            subItem = new ListViewItem.ListViewSubItem(item, UiUtil.GetListViewTextFromString(newText));
             item.SubItems.Add(subItem);
 
             listViewFixes.Items.Add(item);
