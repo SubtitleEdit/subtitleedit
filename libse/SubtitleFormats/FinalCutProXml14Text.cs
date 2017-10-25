@@ -27,14 +27,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 Environment.NewLine +
                 "<fcpxml version=\"1.4\">" + Environment.NewLine +
                 "   <resources>" + Environment.NewLine +
-                "       <format height=\"1080\" width=\"1440\" frameDuration=\"100/2400s\" id=\"r1\"/>" + Environment.NewLine +
+                "       <format height=\"1080\" width=\"1440\" frameDuration=\"" + FinalCutProXml15.GetFrameDuration() + "\" id=\"r1\"/>" + Environment.NewLine +
                 "       <effect id=\"r2\" uid=\".../Titles.localized/Bumper:Opener.localized/Basic Title.localized/Basic Title.moti\" name=\"Basic Title\"/>" + Environment.NewLine +
-                //"       <effect id=\"r4\" name=\"Basic Subtitles\" uid=\"~/Generators.localized/My FCPeffects - BG/BG Basic Subtitles/Basic Subtitles.motn\"/>" + Environment.NewLine +
                 "   </resources>" + Environment.NewLine +
                 "   <library location=\"\">" + Environment.NewLine +
                 "       <event name=\"Title\" uid=\"15A02C43-1B7A-4CF8-8007-5C266E77A91E\">" + Environment.NewLine +
                 "           <project name=\"SUBTITLES\" uid=\"E04A4539-1369-47C8-AC44-F459A96AC90F\">" + Environment.NewLine +
-                "               <sequence duration=\"929s\" format=\"r1\" tcStart=\"0s\" tcFormat=\"NDF\" audioLayout=\"stereo\" audioRate=\"48k\">" + Environment.NewLine +
+                "               <sequence duration=\"929s\" format=\"r1\" tcStart=\"0s\" tcFormat=\"" + FinalCutProXml15.GetNdfDf() + "\" audioLayout=\"stereo\" audioRate=\"48k\">" + Environment.NewLine +
                 "                   <spine>" + Environment.NewLine +
                 "                       <gap name=\"Gap\" offset=\"0s\" duration=\"929s\" start=\"3600s\">" + Environment.NewLine +
                 "                       </gap>" + Environment.NewLine +
@@ -76,17 +75,17 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 if (IsNearleWholeNumber(p.StartTime.TotalSeconds))
                     generatorNode.Attributes["offset"].Value = Convert.ToInt64(p.StartTime.TotalSeconds) + "s";
                 else
-                    generatorNode.Attributes["offset"].Value = Convert.ToInt64(p.StartTime.TotalSeconds * 2400000) + "/2400000s";
+                    generatorNode.Attributes["offset"].Value = FinalCutProXml15.GetFrameTime(p.StartTime);
 
                 if (IsNearleWholeNumber(p.Duration.TotalSeconds))
                     generatorNode.Attributes["duration"].Value = Convert.ToInt64(p.Duration.TotalSeconds) + "s";
                 else
-                    generatorNode.Attributes["duration"].Value = Convert.ToInt64(p.Duration.TotalSeconds * 2400000) + "/2400000s";
+                    generatorNode.Attributes["duration"].Value = FinalCutProXml15.GetFrameTime(p.Duration);
 
                 if (IsNearleWholeNumber(p.StartTime.TotalSeconds))
                     generatorNode.Attributes["start"].Value = Convert.ToInt64(p.StartTime.TotalSeconds) + "s";
                 else
-                    generatorNode.Attributes["start"].Value = Convert.ToInt64(p.StartTime.TotalSeconds * 2400000) + "/2400000s";
+                    generatorNode.Attributes["start"].Value = FinalCutProXml15.GetFrameTime(p.StartTime);
 
                 XmlNode param = video.SelectSingleNode("title/text/text-style");
                 param.InnerText = HtmlUtil.RemoveHtmlTags(p.Text);
@@ -115,7 +114,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var sb = new StringBuilder();
             lines.ForEach(line => sb.AppendLine(line));
             string x = sb.ToString();
-            if (!x.Contains("<fcpxml version=\"1.4\">") && !x.Contains("<fcpxml version=\"1.5\">"))
+            if (!x.Contains("<fcpxml version=\"1.4\">"))
                 return;
 
             var xml = new XmlDocument();
@@ -125,7 +124,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                 if (subtitle.Paragraphs.Count == 0)
                 {
-                    foreach (XmlNode node in xml.SelectNodes("//project/sequence/spine/gap/title/text"))
+                    var textNodes = xml.SelectNodes("//project/sequence/spine/title/text");
+                    if (textNodes.Count == 0)
+                    {
+                        textNodes = xml.SelectNodes("//project/sequence/spine/gap/title/text");                                     
+                    }
+                    foreach (XmlNode node in textNodes)
                     {
                         try
                         {
