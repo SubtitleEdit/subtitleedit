@@ -17434,7 +17434,7 @@ namespace Nikse.SubtitleEdit.Forms
                             _subtitle.Paragraphs.Insert(update.Index, p);
                             if (_networkSession.LastSubtitle != null)
                                 _networkSession.LastSubtitle.Paragraphs.Insert(update.Index, new Paragraph(p));
-                            _networkSession.AppendToLog(string.Format(_language.NetworkInsert, update.User.UserName, update.User.Ip, update.Index, update.Text.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString)));
+                            _networkSession.AppendToLog(string.Format(_language.NetworkInsert, update.User.UserName, update.User.Ip, update.Index, UiUtil.GetListViewTextFromString(update.Text)));
                             _networkSession.AddToWsUserLog(update.User, update.Index, update.Action, false);
                             updateListViewStatus = true;
                             _networkSession.AdjustUpdateLogToInsert(update.Index);
@@ -17463,7 +17463,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 p.EndTime.TotalMilliseconds = update.EndMilliseconds;
                                 p.Text = update.Text;
                                 SubtitleListview1.SetTimeAndText(update.Index, p);
-                                _networkSession.AppendToLog(string.Format(_language.NetworkUpdate, update.User.UserName, update.User.Ip, update.Index, update.Text.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString)));
+                                _networkSession.AppendToLog(string.Format(_language.NetworkUpdate, update.User.UserName, update.User.Ip, update.Index, UiUtil.GetListViewTextFromString(update.Text)));
                                 _networkSession.AddToWsUserLog(update.User, update.Index, update.Action, true);
                                 updateListViewStatus = true;
                             }
