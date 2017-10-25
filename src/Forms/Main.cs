@@ -17828,16 +17828,18 @@ namespace Nikse.SubtitleEdit.Forms
 
             Configuration.Settings.General.Undocked = true;
 
+            var top = Math.Max(Top, 0);
+            var left = Math.Max(Left, 0);
             UnDockVideoPlayer();
             splitContainerListViewAndText.SplitterDistance = splitContainerListViewAndText.Height - 109;
             if (toolStripButtonToggleVideo.Checked)
             {
                 _videoPlayerUndocked.Show(this);
-                if (_videoPlayerUndocked.Top < -999 || _videoPlayerUndocked.Left < -999)
+                if (_videoPlayerUndocked.Top < -9 || _videoPlayerUndocked.Left < -9)
                 {
                     _videoPlayerUndocked.WindowState = FormWindowState.Minimized;
-                    _videoPlayerUndocked.Top = Top + 40;
-                    _videoPlayerUndocked.Left = Math.Abs(Left - 20);
+                    _videoPlayerUndocked.Top = top + 40;
+                    _videoPlayerUndocked.Left = Math.Abs(left - 20);
                     _videoPlayerUndocked.Width = 600;
                     _videoPlayerUndocked.Height = 400;
                 }
@@ -17847,11 +17849,11 @@ namespace Nikse.SubtitleEdit.Forms
             if (toolStripButtonToggleWaveform.Checked)
             {
                 _waveformUndocked.Show(this);
-                if (_waveformUndocked.Top < -999 || _waveformUndocked.Left < -999)
+                if (_waveformUndocked.Top < -9 || _waveformUndocked.Left < -9)
                 {
                     _waveformUndocked.WindowState = FormWindowState.Minimized;
-                    _waveformUndocked.Top = Top + 60;
-                    _waveformUndocked.Left = Math.Abs(Left - 15);
+                    _waveformUndocked.Top = top + 60;
+                    _waveformUndocked.Left = Math.Abs(left - 15);
                     _waveformUndocked.Width = 600;
                     _waveformUndocked.Height = 200;
                 }
@@ -17859,11 +17861,11 @@ namespace Nikse.SubtitleEdit.Forms
 
             UnDockVideoButtons();
             _videoControlsUndocked.Show(this);
-            if (_videoControlsUndocked.Top < -999 || _videoControlsUndocked.Left < -999)
+            if (_videoControlsUndocked.Top < -9 || _videoControlsUndocked.Left < -9)
             {
                 _videoControlsUndocked.WindowState = FormWindowState.Minimized;
-                _videoControlsUndocked.Top = Top + 40;
-                _videoControlsUndocked.Left = Math.Abs(Left - 10);
+                _videoControlsUndocked.Top = top + 40;
+                _videoControlsUndocked.Left = Math.Abs(left - 10);
                 _videoControlsUndocked.Width = tabControlButtons.Width + 20;
                 _videoControlsUndocked.Height = tabControlButtons.Height + 65;
             }
@@ -17875,6 +17877,7 @@ namespace Nikse.SubtitleEdit.Forms
             redockVideoControlsToolStripMenuItem.Visible = true;
 
             tabControl1_SelectedIndexChanged(null, null);
+            _videoControlsUndocked.Refresh();
         }
 
         public void RedockVideoControlsToolStripMenuItemClick(object sender, EventArgs e)
