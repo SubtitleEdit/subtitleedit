@@ -33,6 +33,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                             if (match.Index + 2 < oldText.Length)
                                 p.Text += oldText.Substring(match.Index + 2);
 
+                            st = new StrippableText(p.Text);
                             uppercaseIsInsideLowercaseWords++;
                             callbacks.AddFixToListView(p, fixAction, oldText, p.Text);
                         }
