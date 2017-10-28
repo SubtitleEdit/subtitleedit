@@ -1480,12 +1480,16 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
         internal int WriteFcpParagraph(StringBuilder sb, int imagesSavedCount, MakeBitmapParameter param, int i, string fileName)
         {
-            string numberString = string.Format(Path.GetFileNameWithoutExtension(Path.GetFileName(fileName)) + "{0:0000}", i);
+            string numberString = string.Format(Path.GetFileNameWithoutExtension(Path.GetFileName(fileName)) + "{0:0000}", i).Replace(" ", string.Empty);
             var fileNameShort = numberString + "." + comboBoxImageFormat.Text.ToLower();
             var targetImageFileName = Path.Combine(Path.GetDirectoryName(fileName), fileNameShort);
             string fileNameNoPath = Path.GetFileName(fileNameShort);
             string fileNameNoExt = Path.GetFileNameWithoutExtension(fileNameNoPath);
             string pathUrl = "file://localhost/" + targetImageFileName.Replace("\\", "/").Replace(" ", "%20");
+            if (!checkBoxFcpFullPathUrl.Checked)
+            {
+                pathUrl = fileNameShort;
+            }
 
             string template = " <clipitem id=\"" + System.Security.SecurityElement.Escape(fileNameNoPath) + "\">" + Environment.NewLine +
 @"            <name>" + System.Security.SecurityElement.Escape(fileNameNoPath) + @"</name>
@@ -3409,6 +3413,11 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             adjustTimeCodesToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.Synchronization.AdjustAllTimes;
             adjustDisplayTimeToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.Tools.AdjustDisplayDuration;
 
+            checkBoxFcpFullPathUrl.Text = Configuration.Settings.Language.ExportPngXml.FcpUseFullPathUrl;
+            checkBoxFcpFullPathUrl.Visible = exportType == ExportFormats.Fcp;
+            checkBoxFcpFullPathUrl.Checked = Configuration.Settings.Tools.ExportFcpFullPathUrl;
+
+
             comboBox3D.Items.Clear();
             comboBox3D.Items.Add(Configuration.Settings.Language.General.None);
             comboBox3D.Items.Add(Configuration.Settings.Language.ExportPngXml.SideBySide3D);
@@ -4253,6 +4262,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 Configuration.Settings.Tools.ExportFcpVideoResolution = res;
                 Configuration.Settings.Tools.ExportFcpPalNtsc = comboBoxLanguage.SelectedIndex == 0 ? "PAL" : "NTSC";
             }
+            Configuration.Settings.Tools.ExportFcpFullPathUrl = checkBoxFcpFullPathUrl.Checked;
             Configuration.Settings.Tools.ExportLastShadowTransparency = (int)numericUpDownShadowTransparency.Value;
             Configuration.Settings.Tools.ExportLastFrameRate = FrameRate;
             Configuration.Settings.Tools.ExportFullFrame = checkBoxFullFrameImage.Checked;
