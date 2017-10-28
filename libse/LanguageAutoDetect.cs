@@ -132,8 +132,9 @@ namespace Nikse.SubtitleEdit.Core
             "што", "дeкa", "eшe", "кучe", "Руиз", "кучeто", "кучињa", "Бјути", "имa", "многу", "кучињaтa", "AДЗЖ", "Животни", "моЖe", "мaчe", "мecто", "имaмe", "мaчињa", "пpвото", "пpaвaт", "нeшто", "колку"
         };
         private static readonly string[] AutoDetectWordsFinnish = { "että", "kuin", "minä", "mitään", "Mutta", "siitä", "täällä", "poika", "Kiitos", "enää", "vielä", "tässä" };
-        private static readonly string[] AutoDetectWordsRomanian1 = { "pentru", "oamenii", "decât", "[Vv]reau", "[Ss]înt", "Asteaptã", "Fãrã", "aici", "domnule", "trãiascã", "niciodatã", "înseamnã", "vorbesti", "fãcut", "spune" };
-        private static readonly string[] AutoDetectWordsRomanian2 = { "pentru", "oamenii", "decat", "[Tt]rebuie", "[Aa]cum", "Poate", "vrea", "soare", "nevoie", "daca", "echilibrul", "vorbesti", "zeului", "atunci", "memoria", "soarele" };
+
+        private static readonly string[] AutoDetectWordsRomanian = { "pentru", "oamenii", "decât", "[Vv]reau", "[Ss]înt", "Asteaptã", "Fãrã", "aici", "domnule", "trãiascã", "niciodatã", "înseamnã", "vorbesti", "fãcut", "spune", "făcut", "când", "aici", "Asta", "văzut", "dacă", "câteva","amândoi", "Când", "totuși", "mașină", "aceeași", "întâmplat", "niște", "ziua", "noastră", "cunoscut",
+                                                                     "decat", "[Tt]rebuie", "[Aa]cum", "Poate", "vrea", "soare", "nevoie", "daca", "echilibrul", "vorbesti", "zeului", "atunci", "memoria", "soarele" };
 
         // Czech and Slovak languages have many common words (especially when non flexed)
         private static readonly string[] AutoDetectWordsCzechAndSlovak = {  "[Oo]n[ao]?", "[Jj]?si",
@@ -302,9 +303,7 @@ namespace Nikse.SubtitleEdit.Core
             if (count > bestCount)
                 return "fi"; // Finnish
 
-            count = GetCount(text, AutoDetectWordsRomanian1);
-            if (count <= bestCount)
-                count = GetCount(text, AutoDetectWordsRomanian2);
+            count = GetCount(text, AutoDetectWordsRomanian);
             if (count > bestCount)
                 return "ro"; // Romanian
 
@@ -577,9 +576,7 @@ namespace Nikse.SubtitleEdit.Core
                         }
                         break;
                     case "ro_ro":
-                        count = GetCount(text, AutoDetectWordsRomanian1);
-                        if (count <= bestCount)
-                            count = GetCount(text, AutoDetectWordsRomanian2);
+                        count = GetCount(text, AutoDetectWordsRomanian);
                         if (count > bestCount)
                         {
                             languageName = shortName;
