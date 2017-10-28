@@ -471,6 +471,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <Forced>Forced</Forced>
     <ChooseBackgroundColor>Choose background color</ChooseBackgroundColor>
     <SaveImageAs>Save image as...</SaveImageAs>
+    <FcpUseFullPathUrl>Use full image path url in FCP xml</FcpUseFullPathUrl>
   </ExportPngXml>
   <ExportText>
     <Title>Export text</Title>

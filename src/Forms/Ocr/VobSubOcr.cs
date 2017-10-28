@@ -819,7 +819,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             progressBar1.Visible = false;
             progressBar1.Maximum = 100;
             progressBar1.Value = 0;
-            numericUpDownPixelsIsSpace.Value = 11; // vobSubOcrSettings.XOrMorePixelsMakesSpace;
+            numericUpDownPixelsIsSpace.Value = vobSubOcrSettings.XOrMorePixelsMakesSpace;
             numericUpDownNumberOfPixelsIsSpaceNOCR.Value = 11;
             _vobSubOcrSettings = vobSubOcrSettings;
 
@@ -3354,6 +3354,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             return bmp;
         }
 
+        
         private static void FindBestMatchNew(ref int index, ref int smallestDifference, out BinaryOcrBitmap hit, NikseBitmap target, BinaryOcrDb binOcrDb, BinaryOcrBitmap bob, double maxDiff)
         {
             hit = null;
@@ -3361,17 +3362,13 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             if (bobExactMatch >= 0)
             {
                 var m = binOcrDb.CompareImages[bobExactMatch];
-                if (m.Text != null && (m.Text == "," || m.Text == "'") && Math.Min(m.Y, bob.Y) < 9 && Math.Max(m.Y, bob.Y) > 30)
-                {
-                    // don't confuse "'" and ","
-                }
-                else
-                {
+                //if (BinaryOcrDb.AllowEqual(m, bob))
+                //{
                     index = bobExactMatch;
                     smallestDifference = 0;
                     hit = m;
                     return;
-                }
+                //}
             }
 
             if (maxDiff < 0.2 || target.Width < 3 || target.Height < 5)
@@ -3389,8 +3386,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         int dif = NikseBitmapImageSplitter.IsBitmapsAlike(compareItem, target);
                         if (dif < smallestDifference)
                         {
-                            if (compareItem.Text != null && (compareItem.Text == "," || compareItem.Text == "'") &&
-                                Math.Min(compareItem.Y, bob.Y) < 9 && Math.Max(compareItem.Y, bob.Y) > 30)
+                            if (!BinaryOcrDb.AllowEqual(compareItem, bob))
                                 continue;
 
                             smallestDifference = dif;
@@ -3415,8 +3411,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                             int dif = NikseBitmapImageSplitter.IsBitmapsAlike(compareItem, target);
                             if (dif < smallestDifference)
                             {
-                                if (compareItem.Text != null && (compareItem.Text == "," || compareItem.Text == "'") &&
-                                    Math.Min(compareItem.Y, bob.Y) < 9 && Math.Max(compareItem.Y, bob.Y) > 30)
+                                if (!BinaryOcrDb.AllowEqual(compareItem, bob))
                                     continue;
 
                                 smallestDifference = dif;
@@ -3442,8 +3437,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                             int dif = NikseBitmapImageSplitter.IsBitmapsAlike(compareItem, target);
                             if (dif < smallestDifference)
                             {
-                                if (compareItem.Text != null && (compareItem.Text == "," || compareItem.Text == "'") &&
-                                    Math.Min(compareItem.Y, bob.Y) < 9 && Math.Max(compareItem.Y, bob.Y) > 30)
+                                if (!BinaryOcrDb.AllowEqual(compareItem, bob))
                                     continue;
 
                                 smallestDifference = dif;
@@ -3466,8 +3460,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                                 int dif = NikseBitmapImageSplitter.IsBitmapsAlike(target, compareItem);
                                 if (dif < smallestDifference)
                                 {
-                                    if (compareItem.Text != null && (compareItem.Text == "," || compareItem.Text == "'") &&
-                                        Math.Min(compareItem.Y, bob.Y) < 9 && Math.Max(compareItem.Y, bob.Y) > 30)
+                                    if (!BinaryOcrDb.AllowEqual(compareItem, bob))
                                         continue;
 
                                     smallestDifference = dif;
@@ -3491,8 +3484,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                                 int dif = NikseBitmapImageSplitter.IsBitmapsAlike(target, compareItem);
                                 if (dif < smallestDifference)
                                 {
-                                    if (compareItem.Text != null && (compareItem.Text == "," || compareItem.Text == "'") &&
-                                        Math.Min(compareItem.Y, bob.Y) < 9 && Math.Max(compareItem.Y, bob.Y) > 30)
+                                    if (!BinaryOcrDb.AllowEqual(compareItem, bob))
                                         continue;
 
                                     smallestDifference = dif;
@@ -3516,8 +3508,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                                 int dif = NikseBitmapImageSplitter.IsBitmapsAlike(compareItem, target);
                                 if (dif < smallestDifference)
                                 {
-                                    if (compareItem.Text != null && (compareItem.Text == "," || compareItem.Text == "'") &&
-                                        Math.Min(compareItem.Y, bob.Y) < 9 && Math.Max(compareItem.Y, bob.Y) > 30)
+                                    if (!BinaryOcrDb.AllowEqual(compareItem, bob))
                                         continue;
 
                                     smallestDifference = dif;
@@ -3541,8 +3532,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                                 int dif = NikseBitmapImageSplitter.IsBitmapsAlike(target, compareItem);
                                 if (dif < smallestDifference)
                                 {
-                                    if (compareItem.Text != null && (compareItem.Text == "," || compareItem.Text == "'") &&
-                                        Math.Min(compareItem.Y, bob.Y) < 9 && Math.Max(compareItem.Y, bob.Y) > 30)
+                                    if (!BinaryOcrDb.AllowEqual(compareItem, bob))
                                         continue;
 
                                     smallestDifference = dif;
@@ -3566,8 +3556,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                                 int dif = NikseBitmapImageSplitter.IsBitmapsAlike(compareItem, target);
                                 if (dif < smallestDifference)
                                 {
-                                    if (compareItem.Text != null && (compareItem.Text == "," || compareItem.Text == "'") &&
-                                        Math.Min(compareItem.Y, bob.Y) < 9 && Math.Max(compareItem.Y, bob.Y) > 30)
+                                    if (!BinaryOcrDb.AllowEqual(compareItem, bob))
                                         continue;
 
                                     smallestDifference = dif;
@@ -3591,8 +3580,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                                 int dif = NikseBitmapImageSplitter.IsBitmapsAlike(compareItem, target);
                                 if (dif < smallestDifference)
                                 {
-                                    if (compareItem.Text != null && (compareItem.Text == "," || compareItem.Text == "'") &&
-                                        Math.Min(compareItem.Y, bob.Y) < 9 && Math.Max(compareItem.Y, bob.Y) > 30)
+                                    if (!BinaryOcrDb.AllowEqual(compareItem, bob))
                                         continue;
 
                                     smallestDifference = dif;
@@ -3616,8 +3604,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                                 int dif = NikseBitmapImageSplitter.IsBitmapsAlike(compareItem, target);
                                 if (dif < smallestDifference)
                                 {
-                                    if (compareItem.Text != null && (compareItem.Text == "," || compareItem.Text == "'") &&
-                                        Math.Min(compareItem.Y, bob.Y) < 9 && Math.Max(compareItem.Y, bob.Y) > 30)
+                                    if (!BinaryOcrDb.AllowEqual(compareItem, bob))
                                         continue;
 
                                     smallestDifference = dif;
@@ -3641,8 +3628,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                                 int dif = NikseBitmapImageSplitter.IsBitmapsAlike(target, compareItem);
                                 if (dif < smallestDifference)
                                 {
-                                    if (compareItem.Text != null && (compareItem.Text == "," || compareItem.Text == "'") &&
-                                        Math.Min(compareItem.Y, bob.Y) < 9 && Math.Max(compareItem.Y, bob.Y) > 30)
+                                    if (!BinaryOcrDb.AllowEqual(compareItem, bob))
                                         continue;
 
                                     smallestDifference = dif;

@@ -173,6 +173,7 @@ namespace Nikse.SubtitleEdit.Core
         public int ExportLastShadowTransparency { get; set; }
         public double ExportLastFrameRate { get; set; }
         public bool ExportFullFrame { get; set; }
+        public bool ExportFcpFullPathUrl { get; set; }
         public string ExportPenLineJoin { get; set; }
         public bool FixCommonErrorsFixOverlapAllowEqualEndStart { get; set; }
         public bool FixCommonErrorsSkipStepOne { get; set; }
@@ -2058,6 +2059,9 @@ namespace Nikse.SubtitleEdit.Core
             subNode = node.SelectSingleNode("ExportFullFrame");
             if (subNode != null)
                 settings.Tools.ExportFullFrame = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("ExportFcpFullPathUrl");
+            if (subNode != null)
+                settings.Tools.ExportFcpFullPathUrl = Convert.ToBoolean(subNode.InnerText);          
             subNode = node.SelectSingleNode("ExportPenLineJoin");
             if (subNode != null)
                 settings.Tools.ExportPenLineJoin = subNode.InnerText;
@@ -3453,6 +3457,7 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("ExportLastShadowTransparency", settings.Tools.ExportLastShadowTransparency.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ExportLastFrameRate", settings.Tools.ExportLastFrameRate.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ExportFullFrame", settings.Tools.ExportFullFrame.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ExportFcpFullPathUrl", settings.Tools.ExportFcpFullPathUrl.ToString(CultureInfo.InvariantCulture));                
                 textWriter.WriteElementString("ExportPenLineJoin", settings.Tools.ExportPenLineJoin);
                 textWriter.WriteElementString("FixCommonErrorsFixOverlapAllowEqualEndStart", settings.Tools.FixCommonErrorsFixOverlapAllowEqualEndStart.ToString());
                 textWriter.WriteElementString("FixCommonErrorsSkipStepOne", settings.Tools.FixCommonErrorsSkipStepOne.ToString());
