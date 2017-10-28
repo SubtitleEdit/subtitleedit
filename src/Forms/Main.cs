@@ -6997,17 +6997,21 @@ namespace Nikse.SubtitleEdit.Forms
                 SubtitleListview1.BeginUpdate();
                 foreach (int i in indices)
                 {
-                    if (_subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
+                    var p = _subtitle.GetParagraphOrDefault(i);
+                    if (p != null)
                     {
-                        var original = Utilities.GetOriginalParagraph(i, _subtitle.Paragraphs[i], _subtitleAlternate.Paragraphs);
-                        if (original != null)
+                        if (_subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
                         {
-                            original.Text = HtmlUtil.ToggleTag(original.Text, tag);
-                            SubtitleListview1.SetAlternateText(i, original.Text);
+                            var original = Utilities.GetOriginalParagraph(i, p, _subtitleAlternate.Paragraphs);
+                            if (original != null)
+                            {
+                                original.Text = HtmlUtil.ToggleTag(original.Text, tag);
+                                SubtitleListview1.SetAlternateText(i, original.Text);
+                            }
                         }
+                        p.Text = HtmlUtil.ToggleTag(p.Text, tag);
+                        SubtitleListview1.SetText(i, p.Text);
                     }
-                    _subtitle.Paragraphs[i].Text = HtmlUtil.ToggleTag(_subtitle.Paragraphs[i].Text, tag);
-                    SubtitleListview1.SetText(i, _subtitle.Paragraphs[i].Text);
                 }
                 SubtitleListview1.EndUpdate();
 
@@ -17835,9 +17839,9 @@ namespace Nikse.SubtitleEdit.Forms
             if (toolStripButtonToggleVideo.Checked)
             {
                 _videoPlayerUndocked.Show(this);
-                if (_videoPlayerUndocked.Top < -9 || _videoPlayerUndocked.Left < -9)
+                if (_videoPlayerUndocked.Top < 0 || _videoPlayerUndocked.Left < 0)
                 {
-                    _videoPlayerUndocked.WindowState = FormWindowState.Minimized;
+                    _videoPlayerUndocked.WindowState = FormWindowState.Normal;
                     _videoPlayerUndocked.Top = top + 40;
                     _videoPlayerUndocked.Left = Math.Abs(left - 20);
                     _videoPlayerUndocked.Width = 600;
@@ -17849,9 +17853,9 @@ namespace Nikse.SubtitleEdit.Forms
             if (toolStripButtonToggleWaveform.Checked)
             {
                 _waveformUndocked.Show(this);
-                if (_waveformUndocked.Top < -9 || _waveformUndocked.Left < -9)
+                if (_waveformUndocked.Top < 0 || _waveformUndocked.Left < 0)
                 {
-                    _waveformUndocked.WindowState = FormWindowState.Minimized;
+                    _waveformUndocked.WindowState = FormWindowState.Normal;
                     _waveformUndocked.Top = top + 60;
                     _waveformUndocked.Left = Math.Abs(left - 15);
                     _waveformUndocked.Width = 600;
@@ -17861,9 +17865,9 @@ namespace Nikse.SubtitleEdit.Forms
 
             UnDockVideoButtons();
             _videoControlsUndocked.Show(this);
-            if (_videoControlsUndocked.Top < -9 || _videoControlsUndocked.Left < -9)
+            if (_videoControlsUndocked.Top < 0 || _videoControlsUndocked.Left < 0)
             {
-                _videoControlsUndocked.WindowState = FormWindowState.Minimized;
+                _videoControlsUndocked.WindowState = FormWindowState.Normal;
                 _videoControlsUndocked.Top = top + 40;
                 _videoControlsUndocked.Left = Math.Abs(left - 10);
                 _videoControlsUndocked.Width = tabControlButtons.Width + 20;
