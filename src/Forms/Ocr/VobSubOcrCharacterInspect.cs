@@ -135,9 +135,12 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                                 var oldBitmap = bob.ToOldBitmap();
                                 SetDbItemView(oldBitmap);
 
-                                int dif = NikseBitmapImageSplitter.IsBitmapsAlike(oldBitmap, match.ImageSplitterItem.NikseBitmap.GetBitmap());
+                                int dif = 1;
+                                if (oldBitmap.Width == match.ImageSplitterItem.NikseBitmap.Width && oldBitmap.Height == match.ImageSplitterItem.NikseBitmap.Height)
+                                {
+                                    dif = NikseBitmapImageSplitter.IsBitmapsAlike(match.ImageSplitterItem.NikseBitmap, oldBitmap);
+                                }
                                 buttonAddBetterMatch.Enabled = dif > 0; // if exact match then don't allow "Add better match"
-
                                 labelExpandCount.Text = $"Expand count: {bob.ExpandCount}";
                                 break;
                             }
@@ -332,7 +335,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 BinaryOcrBitmap bob;
                 int expandCount = 0;
-                if (_selectedCompareBinaryOcrBitmap != null &&_selectedCompareBinaryOcrBitmap.ExpandCount > 0 && _selectedMatch.Extra != null && _selectedMatch.Extra.Count > 1)
+                if (_selectedCompareBinaryOcrBitmap != null && _selectedCompareBinaryOcrBitmap.ExpandCount > 0 && _selectedMatch.Extra != null && _selectedMatch.Extra.Count > 1)
                 {
                     expandCount = _selectedMatch.Extra.Count;
                     var first = _selectedMatch.Extra[0];

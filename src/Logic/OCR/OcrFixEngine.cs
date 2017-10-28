@@ -1237,7 +1237,9 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                             }
                         }
                         if (_nameListObj != null)
-                            _nameListObj.Add(s);
+                        { 
+                            _nameListObj.Add(s);                            
+                        }
                     }
                     catch
                     {

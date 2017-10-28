@@ -12,11 +12,15 @@ namespace Nikse.SubtitleEdit.Logic
             if (a.A < 120 && b.A < 120)
                 return true; // transparent
 
+            var alphaDiff = (int)Math.Abs(a.A - b.A);
+            if (alphaDiff > 50)
+                return false; // different alpha levels
+
             if (a.A > 250 && a.R > 90 && a.G > 90 && a.B > 90 &&
                 b.A > 250 && b.R > 90 && b.G > 90 && b.B > 90)
                 return true; // dark, non transparent
 
-            int diff = (a.R + a.G + a.B) - (b.R + b.G + b.B);
+            int diff = (a.R + a.G + a.B) - (b.R + b.G + b.B);                        
             return diff < tolerance && diff > -tolerance;
         }
 
@@ -431,17 +435,33 @@ namespace Nikse.SubtitleEdit.Logic
         {
             int different = 0;
             int maxDiff = bmp1.Width * bmp1.Height / 5;
-
-            for (int x = 1; x < bmp1.Width; x++)
+            for (int y = 0; y < bmp1.Height; y++)
             {
-                for (int y = 1; y < bmp1.Height; y++)
+                for (int x = 0; x < bmp1.Width; x++)
                 {
                     if (!IsColorClose(bmp1.GetPixel(x, y), bmp2.GetPixel(x, y), 20))
                         different++;
                 }
-                if (different > maxDiff)
-                    return different + 10;
             }
+            if (different > maxDiff)
+                return different + 10;
+            return different;
+        }
+
+        public static int IsBitmapsAlike(NikseBitmap bmp1, Bitmap bmp2)
+        {
+            int different = 0;
+            int maxDiff = bmp1.Width * bmp1.Height / 5;
+            for (int y = 0; y < bmp1.Height; y++)
+            {
+                for (int x = 0; x < bmp1.Width; x++)
+                {
+                    if (!IsColorClose(bmp1.GetPixel(x, y), bmp2.GetPixel(x, y), 20))
+                        different++;
+                }
+            }
+            if (different > maxDiff)
+                return different + 10;
             return different;
         }
 

@@ -523,6 +523,7 @@
             public string Forced { get; set; }
             public string ChooseBackgroundColor { get; set; }
             public string SaveImageAs { get; set; }
+            public string FcpUseFullPathUrl { get; set; }
         }
 
         public class ExportText
@@ -2182,6 +2183,7 @@
             public string ImageText { get; set; }
             public string SpellCheckCompleted { get; set; }
             public string SpellCheckAborted { get; set; }
+            public string SpacesNotAllowed { get; set; }
             public string UndoX { get; set; }
         }
 

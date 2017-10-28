@@ -1957,6 +1957,15 @@
     <Word from="Howyou" to="How you" />
     <Word from="lnhales" to="Inhales" />
     <Word from="lgot" to="I got" />
+    <Word from="CIip" to="Clip" />
+    <Word from="what'II" to="what'll" />
+    <Word from="road'II" to="road'll" />
+    <Word from="girI" to="girl" />
+    <Word from="LIoyd" to="Lloyd" />
+    <Word from="BIake" to="Blake" />
+    <Word from="reaI" to="real" />
+    <Word from="Foryour" to="For your" />
+    <Word from="yourpublic" to="your public" />
   </WholeWords>
   <PartialWordsAlways>
     <!-- Will be replaced always -->
@@ -2250,6 +2259,7 @@
     <LinePart from=" Don,t " to=" Don't " />
     <LinePart from="wouldn 'tyou" to="wouldn't you" />
     <LinePart from=" lgot it" to=" I got it" />
+    <LinePart from=" you,ve " to=" you've " />
   </PartialLines>
   <PartialLinesAlways>
     <LinePart from="forbest act" to="for best act" />

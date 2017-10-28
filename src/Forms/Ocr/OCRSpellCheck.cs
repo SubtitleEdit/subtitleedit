@@ -228,8 +228,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             Word = s;
             if (s.Length == 0 || s.Contains(' '))
             {
-                // TODO: Localize!
-                MessageBox.Show("Word should be one single word");
+                MessageBox.Show(Configuration.Settings.Language.SpellCheck.SpacesNotAllowed);
                 ActionResult = Action.SkipOnce;
                 return;
             }

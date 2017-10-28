@@ -1222,6 +1222,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "ExportPngXml/SaveImageAs":
                     language.ExportPngXml.SaveImageAs = reader.Value;
                     break;
+                case "ExportPngXml/FcpUseFullPathUrl":
+                    language.ExportPngXml.FcpUseFullPathUrl = reader.Value;
+                    break;
                 case "ExportText/Title":
                     language.ExportText.Title = reader.Value;
                     break;

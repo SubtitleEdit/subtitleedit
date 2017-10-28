@@ -105,6 +105,9 @@ namespace Nikse.SubtitleEdit.Forms
             template = template.Replace("{number-1:", "{5:");
             template = template.Replace("{duration}", "{6}");
             template = template.Replace("{actor}", "{7}");
+            template = template.Replace("{text-line-1}", "{8}");
+            template = template.Replace("{text-line-2}", "{9}");
+            template = template.Replace("{actor}", "{7}");
             template = template.Replace("{tab}", "\t");
             return template;
         }
@@ -285,10 +288,18 @@ namespace Nikse.SubtitleEdit.Forms
             else if (timeCodeTemplate.EndsWith("ss;zz", StringComparison.Ordinal))
                 d = $"{duration.Seconds:00};{Math.Round(duration.Milliseconds / 10.0):00}";
 
+            var lines = text.SplitToLines();
+            var line1 = string.Empty;
+            var line2 = string.Empty;
+            if (lines.Length > 0)
+                line1 = lines[0];
+            if (lines.Length > 1)
+                line2 = lines[1];
+
             string s = template;
             s = s.Replace("{{", "@@@@_@@@{");
             s = s.Replace("}}", "}@@@_@@@@");
-            s = string.Format(s, start, end, text, translation, number + 1, number, d, actor);
+            s = string.Format(s, start, end, text, translation, number + 1, number, d, actor, line1, line2);
             s = s.Replace("@@@@_@@@", "{");
             s = s.Replace("@@@_@@@@", "}");
             return s;

@@ -647,6 +647,7 @@ namespace Nikse.SubtitleEdit.Core
                 Forced = "Forced",
                 ChooseBackgroundColor = "Choose background color",
                 SaveImageAs = "Save image as...",
+                FcpUseFullPathUrl = "Use full image path url in FCP xml",
             };
 
             ExportText = new LanguageStructure.ExportText
@@ -2301,6 +2302,7 @@ can edit in same subtitle file (collaboration)",
                 ImageText = "Image text",
                 SpellCheckCompleted = "Spell check completed",
                 SpellCheckAborted = "Spell check aborted",
+                SpacesNotAllowed = "Spaces not allowed in single word!",
                 UndoX = "Undo: {0}",
             };
 
