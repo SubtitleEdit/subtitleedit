@@ -41,6 +41,7 @@ namespace Nikse.SubtitleEdit.Core
         public LanguageStructure.EffectTypewriter EffectTypewriter;
         public LanguageStructure.ExportCustomText ExportCustomText;
         public LanguageStructure.ExportCustomTextFormat ExportCustomTextFormat;
+        public LanguageStructure.ExportFcpXmlAdvanced ExportFcpXmlAdvanced;
         public LanguageStructure.ExportPngXml ExportPngXml;
         public LanguageStructure.ExportText ExportText;
         public LanguageStructure.ExtractDateTimeInfo ExtractDateTimeInfo;
@@ -597,6 +598,16 @@ namespace Nikse.SubtitleEdit.Core
                 NewLine = "New line",
                 Footer = "Footer",
                 DoNotModify = "[Do not modify]",
+            };
+
+            ExportFcpXmlAdvanced = new LanguageStructure.ExportFcpXmlAdvanced
+            {
+                Title = "Export Final Cut Pro XML advanced",
+                FontName = "Font name",
+                FontSize = "Font size",
+                FontFace = "Font face",
+                Alignment = "Alignment",
+                Baseline = "Baseline",
             };
 
             ExportPngXml = new LanguageStructure.ExportPngXml

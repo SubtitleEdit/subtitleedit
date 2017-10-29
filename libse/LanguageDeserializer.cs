@@ -1084,6 +1084,24 @@ namespace Nikse.SubtitleEdit.Core
                 case "ExportCustomTextFormat/DoNotModify":
                     language.ExportCustomTextFormat.DoNotModify = reader.Value;
                     break;
+                case "ExportFcpXmlAdvanced/Title":
+                    language.ExportFcpXmlAdvanced.Title = reader.Value;
+                    break;
+                case "ExportFcpXmlAdvanced/FontName":
+                    language.ExportFcpXmlAdvanced.FontName = reader.Value;
+                    break;
+                case "ExportFcpXmlAdvanced/FontSize":
+                    language.ExportFcpXmlAdvanced.FontSize = reader.Value;
+                    break;
+                case "ExportFcpXmlAdvanced/FontFace":
+                    language.ExportFcpXmlAdvanced.FontFace = reader.Value;
+                    break;
+                case "ExportFcpXmlAdvanced/Alignment":
+                    language.ExportFcpXmlAdvanced.Alignment = reader.Value;
+                    break;
+                case "ExportFcpXmlAdvanced/Baseline":
+                    language.ExportFcpXmlAdvanced.Baseline = reader.Value;
+                    break;
                 case "ExportPngXml/Title":
                     language.ExportPngXml.Title = reader.Value;
                     break;
@@ -5451,6 +5469,9 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "SpellCheck/SpellCheckAborted":
                     language.SpellCheck.SpellCheckAborted = reader.Value;
+                    break;
+                case "SpellCheck/SpacesNotAllowed":
+                    language.SpellCheck.SpacesNotAllowed = reader.Value;
                     break;
                 case "SpellCheck/UndoX":
                     language.SpellCheck.UndoX = reader.Value;

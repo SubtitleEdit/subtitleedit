@@ -423,6 +423,14 @@ Note: Do check free disk space.</WaveFileMalformed>
     <Footer>Footer</Footer>
     <DoNotModify>[Do not modify]</DoNotModify>
   </ExportCustomTextFormat>
+  <ExportFcpXmlAdvanced>
+    <Title>Export Final Cut Pro XML advanced</Title>
+    <FontName>Font name</FontName>
+    <FontSize>Font size</FontSize>
+    <FontFace>Font face</FontFace>
+    <Alignment>Alignment</Alignment>
+    <Baseline>Baseline</Baseline>
+  </ExportFcpXmlAdvanced>
   <ExportPngXml>
     <Title>Export BDN XML/PNG</Title>
     <ImageSettings>Image settings</ImageSettings>
@@ -2009,6 +2017,7 @@ can edit in same subtitle file (collaboration)</Information>
     <ImageText>Image text</ImageText>
     <SpellCheckCompleted>Spell check completed</SpellCheckCompleted>
     <SpellCheckAborted>Spell check aborted</SpellCheckAborted>
+    <SpacesNotAllowed>Spaces not allowed in single word!</SpacesNotAllowed>
     <UndoX>Undo: {0}</UndoX>
   </SpellCheck>
   <NetflixQualityCheck>

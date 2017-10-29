@@ -1,13 +1,62 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Globalization;
 using System.Text;
 using System.Xml;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
+    public class FcpXmlStyle
+    {
+        public string FontName { get; set; }
+        public int FontSize { get; set; }
+        public string FontFace { get; set; }
+        public Color FontColor { get; set; }
+        public string Alignment { get; set; }
+        public int Baseline { get; set; }
+        public bool Italic { get; set; }
+        public bool Bold { get; set; }
+        public int Width { get; set; }
+        public int Height { get; set; }
+
+        public FcpXmlStyle()
+        {
+        }
+
+        public FcpXmlStyle(FcpXmlStyle style)
+        {
+            FontName = style.FontName;
+            FontSize = style.FontSize;
+            FontFace = style.FontFace;
+            FontColor = style.FontColor;
+            Alignment = style.Alignment;
+            Baseline = style.Baseline;
+            Italic = style.Italic;
+            Bold = style.Bold;
+        }
+    }
+
     public class FinalCutProXml15 : SubtitleFormat
     {
+
+        public FinalCutProXml15()
+        {
+            DefaultStyle = new FcpXmlStyle
+            {
+                FontName = "Lucida Sans",
+                FontSize = 36,
+                FontFace = "Regular",
+                FontColor = Color.WhiteSmoke,
+                Alignment = "center",
+                Baseline = 29,
+                Width = 1980,
+                Height = 1024
+            };
+        }
+
+        public FcpXmlStyle DefaultStyle { get; set; }
+
         public double FrameRate { get; set; }
 
         public override string Extension => ".fcpxml";
@@ -103,7 +152,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>" + Environment.NewLine +
                 "<fcpxml version=\"1.5\">" + Environment.NewLine +
                 "   <resources>" + Environment.NewLine +
-                "       <format height=\"1080\" width=\"1920\" frameDuration=\"" + GetFrameDuration() + "\" id=\"r1\"/>" + Environment.NewLine +
+                "       <format height=\"[HEIGHT]\" width=\"[WIDTH]\" frameDuration=\"" + GetFrameDuration() + "\" id=\"r1\"/>" + Environment.NewLine +
                 "       <effect id=\"r2\" uid=\".../Titles.localized/Bumper:Opener.localized/Basic Title.localized/Basic Title.moti\" name=\"Basic Title\"/>" + Environment.NewLine +
                 "   </resources>" + Environment.NewLine +
                 "   <library location=\"\">" + Environment.NewLine +
@@ -118,24 +167,17 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 "    </library>" + Environment.NewLine +
                 "</fcpxml>";
 
-            string xmlClipStructure =
-                "<title name=\"Basic Title: [TITLEID]\" lane=\"1\" offset=\"8665300/2400s\" ref=\"r2\" duration=\"13400/2400s\" start=\"3600s\">" + Environment.NewLine +
-                "    <param name=\"Position\" key=\"9999/999166631/999166633/1/100/101\" value=\"-1.67499 -470.934\"/>" + Environment.NewLine +
-                "    <text>" + Environment.NewLine +
-                "        <text-style ref=\"ts[NUMBER]\">THE NOISEMAKER</text-style>" + Environment.NewLine +
-                "    </text>" + Environment.NewLine +
-                "    <text-style-def id=\"ts[NUMBER]\">" + Environment.NewLine +
-                "        <text-style font=\"Lucida Grande\" fontSize=\"36\" fontFace=\"Regular\" fontColor=\"0.793266 0.793391 0.793221 1\" baseline=\"29\" shadowColor=\"0 0 0 1\" shadowOffset=\"5 315\" alignment=\"center\"/>" + Environment.NewLine +
-                "    </text-style-def>" + Environment.NewLine +
-                "</title>";
-
             var xml = new XmlDocument();
             var sequenceDuration = 10;
             if (subtitle.Paragraphs.Count > 0)
             {
                 sequenceDuration = (int)Math.Round(subtitle.Paragraphs[subtitle.Paragraphs.Count - 1].EndTime.TotalSeconds);
             }
-            xml.LoadXml(xmlStructure.Replace("[SEQUENCE_DURATION]", sequenceDuration.ToString(CultureInfo.InvariantCulture)));
+            xml.LoadXml(xmlStructure
+                .Replace("[WIDTH]", DefaultStyle.Width.ToString(CultureInfo.InvariantCulture))
+                .Replace("[HEIGHT]", DefaultStyle.Height.ToString(CultureInfo.InvariantCulture))
+                .Replace("[SEQUENCE_DURATION]", sequenceDuration.ToString(CultureInfo.InvariantCulture)))
+                ;
             XmlNode videoNode = xml.DocumentElement.SelectSingleNode("//project/sequence/spine");
             int number = 1;
             foreach (Paragraph p in subtitle.Paragraphs)
@@ -148,37 +190,223 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         trimmedTitle.Append(ch.ToString(CultureInfo.InvariantCulture));
                 }
 
-                string temp = xmlClipStructure.Replace("[NUMBER]", number.ToString(CultureInfo.InvariantCulture)).Replace("[TITLEID]", trimmedTitle.ToString());
-                video.InnerXml = temp;
-                var text = Utilities.RemoveSsaTags(p.Text).Replace("<b>", string.Empty).Replace("</b>", string.Empty).Trim();
-                var italic = text.StartsWith("<i>", StringComparison.OrdinalIgnoreCase) && text.EndsWith("</i>", StringComparison.OrdinalIgnoreCase);
-                if (italic)
+                var styles = new List<FcpXmlStyle>() { DefaultStyle };
+                var text = Utilities.RemoveSsaTags(p.Text).Trim();
+                var sb = new StringBuilder();
+                int i = 0;
+                var italicIndexesBefore = new Stack<int>();
+                var boldIndexesBefore = new Stack<int>();
+                var fontIndexesBefore = new Stack<int>();
+                var styleTextPairs = new Dictionary<int, string>();
+                while (i < text.Length)
                 {
-                    XmlAttribute fontItalic = xml.CreateAttribute("italic");
-                    fontItalic.InnerText = "1";
-                    video.SelectSingleNode("title").SelectSingleNode("text-style-def").SelectSingleNode("text-style").Attributes.Append(fontItalic);
+                    var ch = text[i];
+                    if (ch == '<' && text.Substring(i).StartsWith("<i>", StringComparison.OrdinalIgnoreCase))
+                    {
+                        AddTextAndStyle(styles, sb, styleTextPairs);
+                        italicIndexesBefore.Push(styles.Count - 1);
+                        var newStyle = new FcpXmlStyle(styles[styles.Count - 1]) { Italic = true };
+                        styles.Add(newStyle);
+                        i += 2;
+                    }
+                    else if (ch == '<' && text.Substring(i).StartsWith("<b>", StringComparison.OrdinalIgnoreCase))
+                    {
+                        AddTextAndStyle(styles, sb, styleTextPairs);
+                        boldIndexesBefore.Push(styles.Count - 1);
+                        var newStyle = new FcpXmlStyle(styles[styles.Count - 1]) { Bold = true };
+                        styles.Add(newStyle);
+                        i += 2;
+                    }
+                    else if (ch == '<' && text.Substring(i).StartsWith("<font ", StringComparison.OrdinalIgnoreCase))
+                    {
+                        AddTextAndStyle(styles, sb, styleTextPairs);
+                        fontIndexesBefore.Push(styles.Count - 1);
+                        var s = text.Substring(i);
+                        int end = s.IndexOf('>');
+                        if (end > 0)
+                        {
+                            string f = s.Substring(0, end);
+                            var colorStart = f.IndexOf(" color=", StringComparison.OrdinalIgnoreCase);
+                            if (colorStart >= 0)
+                            {
+                                int colorEnd = colorStart + " color=".Length + 1;
+                                if (colorEnd < f.Length)
+                                {
+                                    colorEnd = f.IndexOf('"', colorEnd);
+                                    if (colorEnd > 0 || colorEnd == -1)
+                                    {
+                                        if (colorEnd == -1)
+                                            s = f.Substring(colorStart);
+                                        else
+                                            s = f.Substring(colorStart, colorEnd - colorStart);
+                                        s = s.Remove(0, " color=".Length);
+                                        s = s.Trim('"');
+                                        s = s.Trim('\'');
+                                        try
+                                        {
+                                            var fontColor = ColorTranslator.FromHtml(s);
+                                            var newStyle = new FcpXmlStyle(styles[styles.Count - 1]);
+                                            newStyle.FontColor = fontColor;
+                                            styles.Add(newStyle);
+                                        }
+                                        catch
+                                        {
+                                            // just re-add last style
+                                            styles.Add(new FcpXmlStyle(styles[styles.Count - 1]));
+                                        }
+                                    }
+                                }
+                            }
+                            i += end;
+                        }
+                        else
+                        {
+                            i += text.Length;
+                        }
+                    }
+                    else if (ch == '<' && text.Substring(i).StartsWith("</i>", StringComparison.OrdinalIgnoreCase))
+                    {
+                        AddTextAndStyle(styles, sb, styleTextPairs);
+                        var newStyle = new FcpXmlStyle(styles[styles.Count - 1]);
+                        if (italicIndexesBefore.Count > 0)
+                        {
+                            var beforeIdx = italicIndexesBefore.Pop();
+                            newStyle.Italic = styles[beforeIdx].Italic;
+                        }
+                        styles.Add(newStyle);
+                        i += 3;
+                    }
+                    else if (ch == '<' && text.Substring(i).StartsWith("</b>", StringComparison.OrdinalIgnoreCase))
+                    {
+                        AddTextAndStyle(styles, sb, styleTextPairs);
+                        var newStyle = new FcpXmlStyle(styles[styles.Count - 1]);
+                        if (boldIndexesBefore.Count > 0)
+                        {
+                            var beforeIdx = boldIndexesBefore.Pop();
+                            newStyle.Bold = styles[beforeIdx].Bold;
+                        }
+                        styles.Add(newStyle);
+                        i += 3;
+                    }
+                    else if (ch == '<' && text.Substring(i).StartsWith("</font>", StringComparison.OrdinalIgnoreCase))
+                    {
+                        AddTextAndStyle(styles, sb, styleTextPairs);
+                        var newStyle = new FcpXmlStyle(styles[styles.Count - 1]);
+                        if (fontIndexesBefore.Count > 0)
+                        {
+                            var beforeIdx = fontIndexesBefore.Pop();
+                            newStyle.FontColor = styles[beforeIdx].FontColor;
+                            newStyle.FontSize = styles[beforeIdx].FontSize;
+                        }
+                        styles.Add(newStyle);
+                        i += 6;
+                    }
+                    else
+                    {
+                        sb.Append(ch);
+                    }
+                    i++;
                 }
-                text = Utilities.RemoveSsaTags(p.Text).Replace("<i>", string.Empty).Replace("</i>", string.Empty).Trim();
-                var bold = text.StartsWith("<b>", StringComparison.OrdinalIgnoreCase) && text.EndsWith("</b>", StringComparison.OrdinalIgnoreCase);
-                if (bold)
-                {
-                    XmlAttribute fontBold = xml.CreateAttribute("bold");
-                    fontBold.InnerText = "1";
-                    video.SelectSingleNode("title").SelectSingleNode("text-style-def").SelectSingleNode("text-style").Attributes.Append(fontBold);
-                }
-
+                AddTextAndStyle(styles, sb, styleTextPairs);
+                WriteCurrentTextSegment(styles, styleTextPairs, video, number, trimmedTitle.ToString(), xml);
                 XmlNode generatorNode = video.SelectSingleNode("title");
                 generatorNode.Attributes["offset"].Value = GetFrameTime(p.StartTime);
                 generatorNode.Attributes["duration"].Value = GetFrameTime(p.Duration);
                 generatorNode.Attributes["start"].Value = GetFrameTime(p.StartTime);
-
-                XmlNode param = video.SelectSingleNode("title/text/text-style");
-                param.InnerText = HtmlUtil.RemoveHtmlTags(p.Text, true);
-
                 videoNode.AppendChild(generatorNode);
                 number++;
             }
             return ToUtf8XmlString(xml);
+        }
+
+        private static void AddTextAndStyle(List<FcpXmlStyle> styles, StringBuilder sb, Dictionary<int, string> styleTextPairs)
+        {
+            if (sb.Length > 0)
+            {
+                if (styleTextPairs.ContainsKey(styles.Count - 1))
+                    styles.Add(styles[styles.Count - 1]);
+
+                styleTextPairs.Add(styles.Count - 1, sb.ToString());
+                sb.Clear();
+            }
+        }
+
+        private void WriteCurrentTextSegment(List<FcpXmlStyle> styles, Dictionary<int, string> styleTextPairs, XmlNode video, int number, string title, XmlDocument xml)
+        {
+            string xmlClipStructure =
+                "<title name=\"Basic Title: [TITLEID]\" lane=\"1\" offset=\"8665300/2400s\" ref=\"r2\" duration=\"13400/2400s\" start=\"3600s\">" + Environment.NewLine +
+                "    <param name=\"Position\" key=\"9999/999166631/999166633/1/100/101\" value=\"-1.67499 -470.934\"/>" + Environment.NewLine +
+                "    <text>" + Environment.NewLine +
+                //"        <text-style ref=\"ts[NUMBER]\">THE NOISEMAKER</text-style>" + Environment.NewLine +
+                "    </text>" + Environment.NewLine +
+                //"    <text-style-def id=\"ts[NUMBER]\">" + Environment.NewLine +
+                //"        <text-style font=\"[FONT_NAME]\" fontSize=\"[FONT_SIZE]\" fontFace=\"[FONT_FACE]\" fontColor=\"[FONT_COLOR]\" baseline=\"[BASELINE]\" shadowColor=\"0 0 0 1\" shadowOffset=\"5 315\" alignment=\"center\"/>" + Environment.NewLine +
+                //"    </text-style-def>" + Environment.NewLine +
+                "</title>";
+
+            var textStyleStructure = "<text-style font=\"[FONT_NAME]\" fontSize=\"[FONT_SIZE]\" fontFace=\"[FONT_FACE]\" fontColor=\"[FONT_COLOR]\" baseline=\"[BASELINE]\" shadowColor=\"0 0 0 1\" shadowOffset=\"5 315\" alignment=\"[ALIGNMENT]\" [ITALIC] [BOLD] />";
+
+            string temp = xmlClipStructure.Replace("[TITLEID]", title);
+            video.InnerXml = temp;
+
+            var titleNode = video.SelectSingleNode("//title");
+            var textNode = video.SelectSingleNode("//text");
+            var styleCount = 1;
+            foreach (var pair in styleTextPairs)
+            {
+                var id = "ts" + number + "-" + styleCount;
+                XmlNode textStyleNode = xml.CreateElement("text-style");
+                XmlAttribute refAttribute = xml.CreateAttribute("ref");
+                refAttribute.InnerText = id;
+                textStyleNode.Attributes.Append(refAttribute);
+                textStyleNode.InnerText = pair.Value;
+                textNode.AppendChild(textStyleNode);
+
+                XmlNode styleNode = xml.CreateElement("text-style-def");
+                XmlAttribute idAttribute = xml.CreateAttribute("id");
+                idAttribute.InnerText = id;
+                styleNode.Attributes.Append(idAttribute);
+                var tempStr = textStyleStructure;
+                if (styles[pair.Key].Italic)
+                {
+                    tempStr = tempStr.Replace("[ITALIC]", "italic=\"1\"");
+                }
+                else
+                {
+                    tempStr = tempStr.Replace(" [ITALIC]", string.Empty);
+                }
+                if (styles[pair.Key].Bold)
+                {
+                    tempStr = tempStr.Replace("[BOLD]", "bold=\"1\"");
+                }
+                else
+                {
+                    tempStr = tempStr.Replace(" [BOLD]", string.Empty);
+                }
+                styleNode.InnerXml = tempStr
+                .Replace("[NUMBER]", number.ToString(CultureInfo.InvariantCulture) + "-" + styleCount)
+                .Replace("[TITLEID]", title)
+                .Replace("[FONT_NAME]", styles[pair.Key].FontName)
+                .Replace("[FONT_SIZE]", styles[pair.Key].FontSize.ToString(CultureInfo.InvariantCulture))
+                .Replace("[FONT_FACE]", styles[pair.Key].FontFace)
+                .Replace("[FONT_COLOR]", ToColorString(styles[pair.Key].FontColor))
+                .Replace("[ALIGNMENT]", styles[pair.Key].Alignment)
+                .Replace("[BASELINE]", styles[pair.Key].Baseline.ToString(CultureInfo.InvariantCulture));
+                titleNode.AppendChild(styleNode);
+                styleCount++;
+            }
+        }
+
+        private string ToColorString(Color fontColor)
+        {
+            //  0.793266 0.793391 0.793221 1
+
+            var r = (double)fontColor.R / byte.MaxValue;
+            var g = (double)fontColor.G / byte.MaxValue;
+            var b = (double)fontColor.B / byte.MaxValue;
+            var a = (double)fontColor.A / byte.MaxValue;
+            var result = $"{r:0.######} {g:0.######} {b:0.######} {a:0.######}";
+            return result;
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)

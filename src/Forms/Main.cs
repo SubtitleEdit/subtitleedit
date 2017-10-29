@@ -21363,6 +21363,14 @@ namespace Nikse.SubtitleEdit.Forms
         {
             SortSubtitle(SubtitleSortCriteria.Actor, (sender as ToolStripItem).Text);
         }
+
+        private void toolStripMenuItemFcpXmlAdvanced_Click(object sender, EventArgs e)
+        {
+            using (var dialog = new ExportFcpXmlAdvanced(_subtitle, _videoFileName))
+            {
+                dialog.ShowDialog(this);
+            }          
+        }
     }
 }
 
