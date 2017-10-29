@@ -140,6 +140,12 @@
     <Compile Include="Forms\AddToNames.Designer.cs">
       <DependentUpon>AddToNames.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\ExportFcpXmlAdvanced.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ExportFcpXmlAdvanced.Designer.cs">
+      <DependentUpon>ExportFcpXmlAdvanced.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Ocr\AddBeterMultiMatch.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -963,6 +969,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\AddToNames.resx">
       <DependentUpon>AddToNames.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ExportFcpXmlAdvanced.resx">
+      <DependentUpon>ExportFcpXmlAdvanced.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Ocr\AddBeterMultiMatch.resx">
       <DependentUpon>AddBeterMultiMatch.cs</DependentUpon>

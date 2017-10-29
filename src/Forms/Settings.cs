@@ -100,6 +100,9 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxFrameRate.Items.Add((25.0).ToString(CultureInfo.CurrentCulture));
             comboBoxFrameRate.Items.Add((29.97).ToString(CultureInfo.CurrentCulture));
             comboBoxFrameRate.Items.Add((30.00).ToString(CultureInfo.CurrentCulture));
+            comboBoxFrameRate.Items.Add((50.00).ToString(CultureInfo.CurrentCulture));
+            comboBoxFrameRate.Items.Add((59.94).ToString(CultureInfo.CurrentCulture));
+            comboBoxFrameRate.Items.Add((60.00).ToString(CultureInfo.CurrentCulture));
 
             checkBoxShowFrameRate.Checked = gs.ShowFrameRate;
             comboBoxFrameRate.Text = gs.DefaultFrameRate.ToString(CultureInfo.CurrentCulture);

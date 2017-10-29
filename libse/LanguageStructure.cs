@@ -203,7 +203,7 @@
             public string FixCommonErrorsErrorX { get; set; }
             public string MultipleReplaceErrorX { get; set; }
             public string AutoBalanceErrorX { get; set; }
-            public string OffsetTimeCodes { get; set; }            
+            public string OffsetTimeCodes { get; set; }
         }
 
         public class Beamer
@@ -400,7 +400,7 @@
             public string CodePageNumber { get; set; }
             public string DiskFormatCode { get; set; }
             public string DisplayStandardCode { get; set; }
-            public string ColorRequiresTeletext { get; set; }            
+            public string ColorRequiresTeletext { get; set; }
             public string CharacterCodeTable { get; set; }
             public string LanguageCode { get; set; }
             public string OriginalProgramTitle { get; set; }
@@ -473,6 +473,16 @@
             public string NewLine { get; set; }
             public string Footer { get; set; }
             public string DoNotModify { get; set; }
+        }
+
+        public class ExportFcpXmlAdvanced
+        {
+            public string Title { get; set; }
+            public string FontName { get; set; }
+            public string FontSize { get; set; }
+            public string FontFace { get; set; }
+            public string Alignment { get; set; }
+            public string Baseline { get; set; }
         }
 
         public class ExportPngXml
@@ -1879,7 +1889,7 @@
             public string SubtitleFont { get; set; }
             public string SubtitleFontSize { get; set; }
             public string SubtitleBold { get; set; }
-            public string VideoAutoOpen { get; set; }            
+            public string VideoAutoOpen { get; set; }
             public string SubtitleCenter { get; set; }
             public string SubtitleFontColor { get; set; }
             public string SubtitleBackgroundColor { get; set; }
@@ -1893,7 +1903,7 @@
             public string ShowLineBreaksAs { get; set; }
             public string MainListViewDoubleClickAction { get; set; }
             public string MainListViewColumns { get; set; }
-            public string MainListViewColumnsInfo { get; set; }            
+            public string MainListViewColumnsInfo { get; set; }
             public string MainListViewNothing { get; set; }
             public string MainListViewVideoGoToPositionAndPause { get; set; }
             public string MainListViewVideoGoToPositionAndPlay { get; set; }
@@ -1924,7 +1934,7 @@
             public string MpcHcDescription { get; set; }
             public string MpvPlayer { get; set; }
             public string MpvPlayerDescription { get; set; }
-            public string MpvHandlesPreviewText { get; set; }            
+            public string MpvHandlesPreviewText { get; set; }
             public string VlcMediaPlayer { get; set; }
             public string VlcMediaPlayerDescription { get; set; }
             public string VlcBrowseToLabel { get; set; }
@@ -1941,7 +1951,7 @@
             public string WaveformShowWpm { get; set; }
             public string ReverseMouseWheelScrollDirection { get; set; }
             public string WaveformAllowOverlap { get; set; }
-            public string WaveformSetVideoPosMoveStartEnd { get; set; }            
+            public string WaveformSetVideoPosMoveStartEnd { get; set; }
             public string WaveformFocusMouseEnter { get; set; }
             public string WaveformListViewFocusMouseEnter { get; set; }
             public string WaveformBorderHitMs1 { get; set; }
@@ -2193,7 +2203,7 @@
 
             public string WhiteSpaceCheckReport { get; set; }
 
-            public string ReportPrompt { get; set;  }
+            public string ReportPrompt { get; set; }
             public string FoundXIssues { get; set; }
             public string CheckOk { get; set; }
         }
