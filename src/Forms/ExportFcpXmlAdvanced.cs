@@ -92,11 +92,51 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxResolution.Items.Add("HD-(1440x1080)");
             comboBoxResolution.SelectedIndex = 7; // FullHD
 
+            comboBoxFontName.SelectedIndex = 0;
+            for (int i = 0; i < comboBoxFontName.Items.Count; i++)
+            {
+                if (Configuration.Settings.FcpExportSettings.FontName == comboBoxFontName.Items[i].ToString())
+                {
+                    comboBoxFontName.SelectedIndex = i;
+                    break;
+                }
+            }
+
             comboBoxFontSize.SelectedIndex = 21;
+            for (int i = 0; i < comboBoxFontSize.Items.Count; i++)
+            {
+                if (Configuration.Settings.FcpExportSettings.FontSize == int.Parse(comboBoxFontSize.Items[i].ToString()))
+                {
+                    comboBoxFontSize.SelectedIndex = i;
+                    break;
+                }
+            }
+
             comboBoxFontFace.SelectedIndex = 0;
+
             comboBoxHAlign.SelectedIndex = 1;
+            for (int i = 0; i < comboBoxHAlign.Items.Count; i++)
+            {
+                if (Configuration.Settings.FcpExportSettings.Alignment == comboBoxHAlign.Items[i].ToString())
+                {
+                    comboBoxHAlign.SelectedIndex = i;
+                    break;
+                }
+            }
+
             comboBoxBaseline.SelectedIndex = 27;
+            for (int i = 0; i < comboBoxBaseline.Items.Count; i++)
+            {
+                if (Configuration.Settings.FcpExportSettings.Baseline == int.Parse(comboBoxBaseline.Items[i].ToString()))
+                {
+                    comboBoxBaseline.SelectedIndex = i;
+                    break;
+                }
+            }
+
             comboBoxFrameRate.SelectedItem = Configuration.Settings.General.CurrentFrameRate.ToString(CultureInfo.CurrentCulture);
+
+            panelColor.BackColor = Configuration.Settings.FcpExportSettings.Color;
 
             SubtitleListview.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
             SubtitleListview.InitializeTimestampColumnWidths(this);
@@ -294,9 +334,6 @@ namespace Nikse.SubtitleEdit.Forms
                 case "1920x1080":
                     xAndY = "FullHD 1920x1080";
                     break;
-                //case "1920x1080":
-                //    xAndY = "DVCPROHD-1080i60";
-                //    break;
                 case "1280x1080":
                     xAndY = "HD-(1280x1080)";
                     break;
@@ -335,6 +372,15 @@ namespace Nikse.SubtitleEdit.Forms
                     SetResolution($"{videoInfo.Width}x{videoInfo.Height}");
                 }
             }
+        }
+
+        private void ExportFcpXmlAdvanced_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Configuration.Settings.FcpExportSettings.FontName = comboBoxFontName.SelectedItem.ToString();
+            Configuration.Settings.FcpExportSettings.FontSize = int.Parse(comboBoxFontSize.SelectedItem.ToString());
+            Configuration.Settings.FcpExportSettings.Baseline = int.Parse(comboBoxBaseline.SelectedItem.ToString());
+            Configuration.Settings.FcpExportSettings.Alignment = comboBoxHAlign.SelectedItem.ToString();
+            Configuration.Settings.FcpExportSettings.Color = panelColor.BackColor;
         }
     }
 }

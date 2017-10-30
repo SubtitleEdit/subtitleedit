@@ -288,6 +288,25 @@ namespace Nikse.SubtitleEdit.Core
 
     }
 
+    public class FcpExportSettings
+    {
+        public string FontName { get; set; }
+        public int FontSize { get; set; }
+        public string Alignment { get; set; }
+        public int Baseline { get; set; }
+        public Color Color { get; set; }
+
+        public FcpExportSettings()
+        {
+            FontName = "Lucida Sans";
+            FontSize = 36;
+            Alignment = "center";
+            Baseline = 29;
+            Color = Color.WhiteSmoke;
+        }
+    }
+
+
     public class WordListSettings
     {
         public string LastLanguage { get; set; }
@@ -1225,6 +1244,7 @@ namespace Nikse.SubtitleEdit.Core
         public RecentFilesSettings RecentFiles { get; set; }
         public GeneralSettings General { get; set; }
         public ToolsSettings Tools { get; set; }
+        public FcpExportSettings FcpExportSettings { get; set; }
         public SubtitleSettings SubtitleSettings { get; set; }
         public ProxySettings Proxy { get; set; }
         public WordListSettings WordLists { get; set; }
@@ -1245,6 +1265,7 @@ namespace Nikse.SubtitleEdit.Core
             RecentFiles = new RecentFilesSettings();
             General = new GeneralSettings();
             Tools = new ToolsSettings();
+            FcpExportSettings = new FcpExportSettings();
             WordLists = new WordListSettings();
             SubtitleSettings = new SubtitleSettings();
             Proxy = new ProxySettings();
@@ -2061,7 +2082,7 @@ namespace Nikse.SubtitleEdit.Core
                 settings.Tools.ExportFullFrame = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("ExportFcpFullPathUrl");
             if (subNode != null)
-                settings.Tools.ExportFcpFullPathUrl = Convert.ToBoolean(subNode.InnerText);          
+                settings.Tools.ExportFcpFullPathUrl = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("ExportPenLineJoin");
             if (subNode != null)
                 settings.Tools.ExportPenLineJoin = subNode.InnerText;
@@ -2277,6 +2298,27 @@ namespace Nikse.SubtitleEdit.Core
             subNode = node.SelectSingleNode("Domain");
             if (subNode != null)
                 settings.Proxy.Domain = subNode.InnerText;
+
+            // Fxp xml export settings
+            node = doc.DocumentElement.SelectSingleNode("FcpExportSettings");
+            if (node != null)
+            {
+                subNode = node.SelectSingleNode("FontName");
+                if (subNode != null)
+                    settings.FcpExportSettings.FontName = subNode.InnerText;
+                subNode = node.SelectSingleNode("FontSize");
+                if (subNode != null)
+                    settings.FcpExportSettings.FontSize = int.Parse(subNode.InnerText);
+                subNode = node.SelectSingleNode("Alignment");
+                if (subNode != null)
+                    settings.FcpExportSettings.Alignment = subNode.InnerText;
+                subNode = node.SelectSingleNode("Baseline");
+                if (subNode != null)
+                    settings.FcpExportSettings.Baseline = int.Parse(subNode.InnerText);
+                subNode = node.SelectSingleNode("Color");
+                if (subNode != null)
+                    settings.FcpExportSettings.Color = Color.FromArgb(int.Parse(subNode.InnerText));
+            }
 
             // Word List
             node = doc.DocumentElement.SelectSingleNode("WordLists");
@@ -3457,7 +3499,7 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("ExportLastShadowTransparency", settings.Tools.ExportLastShadowTransparency.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ExportLastFrameRate", settings.Tools.ExportLastFrameRate.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ExportFullFrame", settings.Tools.ExportFullFrame.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("ExportFcpFullPathUrl", settings.Tools.ExportFcpFullPathUrl.ToString(CultureInfo.InvariantCulture));                
+                textWriter.WriteElementString("ExportFcpFullPathUrl", settings.Tools.ExportFcpFullPathUrl.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ExportPenLineJoin", settings.Tools.ExportPenLineJoin);
                 textWriter.WriteElementString("FixCommonErrorsFixOverlapAllowEqualEndStart", settings.Tools.FixCommonErrorsFixOverlapAllowEqualEndStart.ToString());
                 textWriter.WriteElementString("FixCommonErrorsSkipStepOne", settings.Tools.FixCommonErrorsSkipStepOne.ToString());
@@ -3550,6 +3592,14 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("LastLanguage", settings.WordLists.LastLanguage);
                 textWriter.WriteElementString("Names", settings.WordLists.NamesUrl);
                 textWriter.WriteElementString("UseOnlineNames", settings.WordLists.UseOnlineNames.ToString());
+                textWriter.WriteEndElement();
+
+                textWriter.WriteStartElement("FcpExportSettings", string.Empty);
+                textWriter.WriteElementString("FontName", settings.FcpExportSettings.FontName);
+                textWriter.WriteElementString("FontSize", settings.FcpExportSettings.FontSize.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("Alignment", settings.FcpExportSettings.Alignment);
+                textWriter.WriteElementString("Baseline", settings.FcpExportSettings.Baseline.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("Color", settings.FcpExportSettings.Color.ToArgb().ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteEndElement();
 
                 textWriter.WriteStartElement("CommonErrors", string.Empty);
