@@ -31,6 +31,13 @@
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonSave = new System.Windows.Forms.Button();
             this.groupBoxImageSettings = new System.Windows.Forms.GroupBox();
+            this.buttonCustomResolution = new System.Windows.Forms.Button();
+            this.labelResolution = new System.Windows.Forms.Label();
+            this.comboBoxResolution = new System.Windows.Forms.ComboBox();
+            this.comboBoxFrameRate = new System.Windows.Forms.ComboBox();
+            this.labelFrameRate = new System.Windows.Forms.Label();
+            this.labelBaseline = new System.Windows.Forms.Label();
+            this.comboBoxBaseline = new System.Windows.Forms.ComboBox();
             this.labelSubtitleFontFace = new System.Windows.Forms.Label();
             this.comboBoxFontFace = new System.Windows.Forms.ComboBox();
             this.comboBoxHAlign = new System.Windows.Forms.ComboBox();
@@ -42,14 +49,7 @@
             this.panelColor = new System.Windows.Forms.Panel();
             this.buttonColor = new System.Windows.Forms.Button();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
-            this.labelBaseline = new System.Windows.Forms.Label();
-            this.comboBoxBaseline = new System.Windows.Forms.ComboBox();
             this.SubtitleListview = new Nikse.SubtitleEdit.Controls.SubtitleListView();
-            this.comboBoxFrameRate = new System.Windows.Forms.ComboBox();
-            this.labelFrameRate = new System.Windows.Forms.Label();
-            this.buttonCustomResolution = new System.Windows.Forms.Button();
-            this.labelResolution = new System.Windows.Forms.Label();
-            this.comboBoxResolution = new System.Windows.Forms.ComboBox();
             this.groupBoxImageSettings.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -104,6 +104,185 @@
             this.groupBoxImageSettings.TabIndex = 9;
             this.groupBoxImageSettings.TabStop = false;
             this.groupBoxImageSettings.Text = "Image settings";
+            // 
+            // buttonCustomResolution
+            // 
+            this.buttonCustomResolution.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.buttonCustomResolution.Location = new System.Drawing.Point(589, 54);
+            this.buttonCustomResolution.Name = "buttonCustomResolution";
+            this.buttonCustomResolution.Size = new System.Drawing.Size(24, 21);
+            this.buttonCustomResolution.TabIndex = 51;
+            this.buttonCustomResolution.Text = "...";
+            this.buttonCustomResolution.UseVisualStyleBackColor = true;
+            this.buttonCustomResolution.Click += new System.EventHandler(this.buttonCustomResolution_Click);
+            // 
+            // labelResolution
+            // 
+            this.labelResolution.AutoSize = true;
+            this.labelResolution.Location = new System.Drawing.Point(363, 57);
+            this.labelResolution.Name = "labelResolution";
+            this.labelResolution.Size = new System.Drawing.Size(51, 13);
+            this.labelResolution.TabIndex = 49;
+            this.labelResolution.Text = "Video res";
+            // 
+            // comboBoxResolution
+            // 
+            this.comboBoxResolution.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxResolution.FormattingEnabled = true;
+            this.comboBoxResolution.Items.AddRange(new object[] {
+            "4K (4096x2160)",
+            "UHD (3840x2160)",
+            "2K (2048x1080)",
+            "DCI 2K Scope (2048x858)",
+            "DCI 2K Flat (1998x1080)",
+            "1080p (1920x1080)",
+            "1440x1080",
+            "720p (1280x720)",
+            "960x720",
+            "480p (848x480)",
+            "PAL (720x576)",
+            "NTSC (720x480)",
+            "640x352",
+            "640x272"});
+            this.comboBoxResolution.Location = new System.Drawing.Point(465, 54);
+            this.comboBoxResolution.Name = "comboBoxResolution";
+            this.comboBoxResolution.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxResolution.TabIndex = 50;
+            // 
+            // comboBoxFrameRate
+            // 
+            this.comboBoxFrameRate.FormattingEnabled = true;
+            this.comboBoxFrameRate.Location = new System.Drawing.Point(465, 24);
+            this.comboBoxFrameRate.Name = "comboBoxFrameRate";
+            this.comboBoxFrameRate.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxFrameRate.TabIndex = 48;
+            // 
+            // labelFrameRate
+            // 
+            this.labelFrameRate.AutoSize = true;
+            this.labelFrameRate.Location = new System.Drawing.Point(363, 27);
+            this.labelFrameRate.Name = "labelFrameRate";
+            this.labelFrameRate.Size = new System.Drawing.Size(57, 13);
+            this.labelFrameRate.TabIndex = 47;
+            this.labelFrameRate.Text = "Frame rate";
+            // 
+            // labelBaseline
+            // 
+            this.labelBaseline.AutoSize = true;
+            this.labelBaseline.Location = new System.Drawing.Point(10, 173);
+            this.labelBaseline.Name = "labelBaseline";
+            this.labelBaseline.Size = new System.Drawing.Size(47, 13);
+            this.labelBaseline.TabIndex = 45;
+            this.labelBaseline.Text = "Baseline";
+            // 
+            // comboBoxBaseline
+            // 
+            this.comboBoxBaseline.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxBaseline.FormattingEnabled = true;
+            this.comboBoxBaseline.Items.AddRange(new object[] {
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10",
+            "11",
+            "12",
+            "13",
+            "14",
+            "15",
+            "16",
+            "18",
+            "19",
+            "20",
+            "21",
+            "22",
+            "23",
+            "24",
+            "25",
+            "26",
+            "27",
+            "28",
+            "29",
+            "30",
+            "31",
+            "32",
+            "33",
+            "34",
+            "35",
+            "36",
+            "37",
+            "38",
+            "39",
+            "40",
+            "41",
+            "42",
+            "43",
+            "44",
+            "45",
+            "46",
+            "47",
+            "48",
+            "49",
+            "50",
+            "51",
+            "52",
+            "53",
+            "54",
+            "55",
+            "56",
+            "57",
+            "58",
+            "59",
+            "60",
+            "61",
+            "62",
+            "63",
+            "64",
+            "65",
+            "66",
+            "67",
+            "68",
+            "69",
+            "70",
+            "71",
+            "72",
+            "73",
+            "74",
+            "75",
+            "76",
+            "77",
+            "78",
+            "79",
+            "80",
+            "81",
+            "82",
+            "83",
+            "84",
+            "85",
+            "86",
+            "87",
+            "88",
+            "89",
+            "90",
+            "91",
+            "92",
+            "93",
+            "94",
+            "95",
+            "96",
+            "97",
+            "98",
+            "99",
+            "100"});
+            this.comboBoxBaseline.Location = new System.Drawing.Point(112, 170);
+            this.comboBoxBaseline.Name = "comboBoxBaseline";
+            this.comboBoxBaseline.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxBaseline.TabIndex = 46;
             // 
             // labelSubtitleFontFace
             // 
@@ -312,124 +491,6 @@
             this.buttonColor.UseVisualStyleBackColor = true;
             this.buttonColor.Click += new System.EventHandler(this.buttonColor_Click);
             // 
-            // labelBaseline
-            // 
-            this.labelBaseline.AutoSize = true;
-            this.labelBaseline.Location = new System.Drawing.Point(10, 173);
-            this.labelBaseline.Name = "labelBaseline";
-            this.labelBaseline.Size = new System.Drawing.Size(47, 13);
-            this.labelBaseline.TabIndex = 45;
-            this.labelBaseline.Text = "Baseline";
-            // 
-            // comboBoxBaseline
-            // 
-            this.comboBoxBaseline.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxBaseline.FormattingEnabled = true;
-            this.comboBoxBaseline.Items.AddRange(new object[] {
-            "1",
-            "2",
-            "3",
-            "4",
-            "5",
-            "6",
-            "7",
-            "8",
-            "9",
-            "10",
-            "11",
-            "12",
-            "13",
-            "14",
-            "15",
-            "16",
-            "18",
-            "19",
-            "20",
-            "21",
-            "22",
-            "23",
-            "24",
-            "25",
-            "26",
-            "27",
-            "28",
-            "29",
-            "30",
-            "31",
-            "32",
-            "33",
-            "34",
-            "35",
-            "36",
-            "37",
-            "38",
-            "39",
-            "40",
-            "41",
-            "42",
-            "43",
-            "44",
-            "45",
-            "46",
-            "47",
-            "48",
-            "49",
-            "50",
-            "51",
-            "52",
-            "53",
-            "54",
-            "55",
-            "56",
-            "57",
-            "58",
-            "59",
-            "60",
-            "61",
-            "62",
-            "63",
-            "64",
-            "65",
-            "66",
-            "67",
-            "68",
-            "69",
-            "70",
-            "71",
-            "72",
-            "73",
-            "74",
-            "75",
-            "76",
-            "77",
-            "78",
-            "79",
-            "80",
-            "81",
-            "82",
-            "83",
-            "84",
-            "85",
-            "86",
-            "87",
-            "88",
-            "89",
-            "90",
-            "91",
-            "92",
-            "93",
-            "94",
-            "95",
-            "96",
-            "97",
-            "98",
-            "99",
-            "100"});
-            this.comboBoxBaseline.Location = new System.Drawing.Point(112, 170);
-            this.comboBoxBaseline.Name = "comboBoxBaseline";
-            this.comboBoxBaseline.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxBaseline.TabIndex = 46;
-            // 
             // SubtitleListview
             // 
             this.SubtitleListview.AllowColumnReorder = true;
@@ -456,67 +517,6 @@
             this.SubtitleListview.UseSyntaxColoring = true;
             this.SubtitleListview.View = System.Windows.Forms.View.Details;
             // 
-            // comboBoxFrameRate
-            // 
-            this.comboBoxFrameRate.FormattingEnabled = true;
-            this.comboBoxFrameRate.Location = new System.Drawing.Point(465, 24);
-            this.comboBoxFrameRate.Name = "comboBoxFrameRate";
-            this.comboBoxFrameRate.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxFrameRate.TabIndex = 48;
-            // 
-            // labelFrameRate
-            // 
-            this.labelFrameRate.AutoSize = true;
-            this.labelFrameRate.Location = new System.Drawing.Point(363, 27);
-            this.labelFrameRate.Name = "labelFrameRate";
-            this.labelFrameRate.Size = new System.Drawing.Size(57, 13);
-            this.labelFrameRate.TabIndex = 47;
-            this.labelFrameRate.Text = "Frame rate";
-            // 
-            // buttonCustomResolution
-            // 
-            this.buttonCustomResolution.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCustomResolution.Location = new System.Drawing.Point(589, 54);
-            this.buttonCustomResolution.Name = "buttonCustomResolution";
-            this.buttonCustomResolution.Size = new System.Drawing.Size(24, 21);
-            this.buttonCustomResolution.TabIndex = 51;
-            this.buttonCustomResolution.Text = "...";
-            this.buttonCustomResolution.UseVisualStyleBackColor = true;
-            this.buttonCustomResolution.Click += new System.EventHandler(this.buttonCustomResolution_Click);
-            // 
-            // labelResolution
-            // 
-            this.labelResolution.AutoSize = true;
-            this.labelResolution.Location = new System.Drawing.Point(363, 57);
-            this.labelResolution.Name = "labelResolution";
-            this.labelResolution.Size = new System.Drawing.Size(51, 13);
-            this.labelResolution.TabIndex = 49;
-            this.labelResolution.Text = "Video res";
-            // 
-            // comboBoxResolution
-            // 
-            this.comboBoxResolution.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxResolution.FormattingEnabled = true;
-            this.comboBoxResolution.Items.AddRange(new object[] {
-            "4K (4096x2160)",
-            "UHD (3840x2160)",
-            "2K (2048x1080)",
-            "DCI 2K Scope (2048x858)",
-            "DCI 2K Flat (1998x1080)",
-            "1080p (1920x1080)",
-            "1440x1080",
-            "720p (1280x720)",
-            "960x720",
-            "480p (848x480)",
-            "PAL (720x576)",
-            "NTSC (720x480)",
-            "640x352",
-            "640x272"});
-            this.comboBoxResolution.Location = new System.Drawing.Point(465, 54);
-            this.comboBoxResolution.Name = "comboBoxResolution";
-            this.comboBoxResolution.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxResolution.TabIndex = 50;
-            // 
             // ExportFcpXmlAdvanced
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -535,6 +535,7 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "ExportFcpXmlAdvanced";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ExportFcpXmlAdvanced_FormClosing);
             this.Load += new System.EventHandler(this.ExportFcpXmlAdvanced_Load);
             this.Shown += new System.EventHandler(this.ExportFcpXmlAdvanced_Shown);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ExportFcpXmlAdvanced_KeyDown);
