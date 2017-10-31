@@ -147,7 +147,7 @@ namespace Nikse.SubtitleEdit.Core.VobSub
                             commandIndex += 3;
                             break;
                         case (int)DisplayControlCommand.SetDisplayArea: // 5
-                            if (_data.Length > commandIndex + 6)
+                            if (_data.Length > commandIndex + 6 && ImageDisplayArea.Width == 0 && ImageDisplayArea.Height == 0)
                             {
                                 int startingX = (_data[commandIndex + 1] << 8 | _data[commandIndex + 2]) >> 4;
                                 int endingX = (_data[commandIndex + 2] & Helper.B00001111) << 8 | _data[commandIndex + 3];
