@@ -191,6 +191,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <FixCommonErrorsErrorX>일반적인 오류 수정: {0}</FixCommonErrorsErrorX>
     <MultipleReplaceErrorX>다중 바꾸기: {0}</MultipleReplaceErrorX>
     <AutoBalanceErrorX>자동 조정: {0}</AutoBalanceErrorX>
+    <OffsetTimeCodes>오프셋 타임 코드</OffsetTimeCodes>
   </BatchConvert>
   <Beamer>
     <Title>프로젝터</Title>
@@ -418,6 +419,14 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <Footer>바닥글</Footer>
     <DoNotModify>[변경 없음]</DoNotModify>
   </ExportCustomTextFormat>
+  <ExportFcpXmlAdvanced>
+    <Title>Final Cut Pro XML 고급 내보내기</Title>
+    <FontName>글꼴 이름</FontName>
+    <FontSize>글꼴 크기</FontSize>
+    <FontFace>글꼴 모양</FontFace>
+    <Alignment>정렬</Alignment>
+    <Baseline>기준선</Baseline>
+  </ExportFcpXmlAdvanced>
   <ExportPngXml>
     <Title>BDN (xml/png) 내보내기</Title>
     <ImageSettings>이미지 설정</ImageSettings>
@@ -465,6 +474,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <Forced>적용됨</Forced>
     <ChooseBackgroundColor>배경색 선택</ChooseBackgroundColor>
     <SaveImageAs>다른 이름으로 이미지 저장...</SaveImageAs>
+    <FcpUseFullPathUrl>FCP xml에서 전체 이미지 경로 URL 사용</FcpUseFullPathUrl>
   </ExportPngXml>
   <ExportText>
     <Title>텍스트로 내보내기</Title>
@@ -2004,6 +2014,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <ImageText>이미지 텍스트</ImageText>
     <SpellCheckCompleted>맞춤법 검사 완료!</SpellCheckCompleted>
     <SpellCheckAborted>맞춤법 검사 중지!</SpellCheckAborted>
+    <SpacesNotAllowed>한 단어에서 공백은 허용되지 않습니다!</SpacesNotAllowed>
     <UndoX>실행 취소: {0}</UndoX>
   </SpellCheck>
   <NetflixQualityCheck>
@@ -2265,6 +2276,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <SetUnitalicFactor>기울임꼴 인자 설정...</SetUnitalicFactor>
     <DiscardTitle>OCR의 변경 사항을 폐기하시겠습니까?</DiscardTitle>
     <DiscardText>현재 OCR 세션의 변경 사항을 폐기하시겠습니까?</DiscardText>
+    <MinLineSplitHeight>최소 줄 높이 (분할)</MinLineSplitHeight>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub의 이미지 자막을 텍스트로...</Title>
