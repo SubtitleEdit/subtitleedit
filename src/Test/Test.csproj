@@ -45,6 +45,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CasingTest.cs" />
     <Compile Include="Core\LanguageAutoDetectTest.cs" />
     <Compile Include="Core\StringExtensionsTest.cs" />
     <Compile Include="Core\NikseBitmapTest.cs" />
@@ -129,6 +130,9 @@
     <Content Include="Files\auto_detect_Russian.srt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Casing\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

@@ -1,8 +1,7 @@
 ﻿using Nikse.SubtitleEdit.Core;
-using Nikse.SubtitleEdit.Core.Dictionaries;
+using Nikse.SubtitleEdit.Core.Casing;
 using Nikse.SubtitleEdit.Logic;
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Windows.Forms;
 
@@ -10,11 +9,9 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class ChangeCasingNames : Form
     {
-        private readonly HashSet<string> _usedNames = new HashSet<string>();
         private Subtitle _subtitle;
-        private const string ExpectedEndChars = " ,.!?:;')]<-\"\r\n";
-        private NameList _nameList;
-        private List<string> _nameListInclMulti;
+        private NameCaseConverter _nameConverter;
+        //private const string ExpectedEndChars = " ,.!?:;')]<-\"\r\n";
         private string _language;
 
         public ChangeCasingNames()
@@ -57,25 +54,18 @@ namespace Nikse.SubtitleEdit.Forms
                 DialogResult = DialogResult.Cancel;
         }
 
-        private void AddToListViewNames(string name)
-        {
-            var item = new ListViewItem(string.Empty) { Checked = true };
-            item.SubItems.Add(name);
-            listViewNames.Items.Add(item);
-        }
-
-        public void Initialize(Subtitle subtitle)
+        public void Initialize(Subtitle subtitle, NameCaseConverter nameConverter)
         {
             _subtitle = subtitle;
+            _nameConverter = nameConverter;
+
+            // hook text changed handler
+            nameConverter.TextChanged += (s, e) => AddToPreviewListView(e);
 
             _language = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle);
             if (string.IsNullOrEmpty(_language))
                 _language = "en_US";
 
-            _nameList = new NameList(Configuration.DictionariesDirectory, _language, Configuration.Settings.WordLists.UseOnlineNames, Configuration.Settings.WordLists.NamesUrl);
-            _nameListInclMulti = _nameList.GetAllNames(); // Will contains both one word names and multi names
-
-            FindAllNames();
             GeneratePreview();
         }
 
@@ -84,38 +74,28 @@ namespace Nikse.SubtitleEdit.Forms
             Cursor = Cursors.WaitCursor;
             listViewFixes.BeginUpdate();
             listViewFixes.Items.Clear();
-            foreach (Paragraph p in _subtitle.Paragraphs)
-            {
-                string text = p.Text;
-                foreach (ListViewItem item in listViewNames.Items)
-                {
-                    string name = item.SubItems[1].Text;
 
-                    string textNoTags = HtmlUtil.RemoveHtmlTags(text, true);
-                    if (textNoTags != textNoTags.ToUpper())
-                    {
-                        if (item.Checked && text != null && text.Contains(name, StringComparison.OrdinalIgnoreCase) && name.Length > 1 && name != name.ToLower())
-                        {
-                            var st = new StrippableText(text);
-                            st.FixCasing(new List<string> { name }, true, false, false, string.Empty);
-                            text = st.MergedString;
-                        }
-                    }
-                }
-                if (text != p.Text)
-                    AddToPreviewListView(p, text);
-            }
+            var context = new CasingContext()
+            {
+                Culture = CultureInfo.CurrentCulture,
+                Language = _language
+            };
+
+            _nameConverter.Convert(_subtitle, context);
+            FindAllNames();
+
             listViewFixes.EndUpdate();
-            groupBoxLinesFound.Text = string.Format(Configuration.Settings.Language.ChangeCasingNames.LinesFoundX, listViewFixes.Items.Count);
+            groupBoxLinesFound.Text = string.Format(Configuration.Settings.Language.ChangeCasingNames.LinesFoundX, _nameConverter.Count);
             Cursor = Cursors.Default;
         }
 
-        private void AddToPreviewListView(Paragraph p, string newText)
+        private void AddToPreviewListView(TextChangedEventArgs textChanged)
         {
-            var item = new ListViewItem(string.Empty) { Tag = p, Checked = true };
+            Paragraph p = textChanged.Paragraph;
+            var item = new ListViewItem(string.Empty) { Tag = textChanged, Checked = true };
             item.SubItems.Add(p.Number.ToString(CultureInfo.InvariantCulture));
-            item.SubItems.Add(p.Text.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
-            item.SubItems.Add(newText.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
+            item.SubItems.Add(textChanged.Before.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
+            item.SubItems.Add(textChanged.After.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
             listViewFixes.Items.Add(item);
         }
 
@@ -124,52 +104,21 @@ namespace Nikse.SubtitleEdit.Forms
             foreach (string s in textBoxExtraNames.Text.Split(','))
             {
                 var name = s.Trim();
-                if (name.Length > 1 && !_nameListInclMulti.Contains(name))
+                if (name.Length > 1 && !_nameConverter.NamesInSubtitle.Contains(name))
                 {
-                    _nameListInclMulti.Add(name);
+                    _nameConverter.NamesInSubtitle.Add(name);
                 }
             }
         }
 
         private void FindAllNames()
         {
-            string text = HtmlUtil.RemoveHtmlTags(_subtitle.GetAllTexts());
-            string textToLower = text.ToLower();
             listViewNames.BeginUpdate();
-            foreach (string name in _nameListInclMulti)
+            foreach (var name in _nameConverter.NamesInSubtitle)
             {
-                int startIndex = textToLower.IndexOf(name.ToLower(), StringComparison.Ordinal);
-                if (startIndex >= 0)
-                {
-                    while (startIndex >= 0 && startIndex < text.Length &&
-                           textToLower.Substring(startIndex).Contains(name.ToLower()) && name.Length > 1 && name != name.ToLower())
-                    {
-                        bool startOk = startIndex == 0 || "([ --'>\r\n¿¡".Contains(text[startIndex - 1]);
-                        if (startOk)
-                        {
-                            int end = startIndex + name.Length;
-                            bool endOk = end <= text.Length;
-                            if (endOk)
-                                endOk = end == text.Length || ExpectedEndChars.Contains(text[end]);
-
-                            if (endOk && text.Substring(startIndex, name.Length) != name) // do not add names where casing already is correct
-                            {
-                                if (!_usedNames.Contains(name))
-                                {
-                                    var isDont = _language.StartsWith("en", StringComparison.OrdinalIgnoreCase) && text.Substring(startIndex).StartsWith("don't", StringComparison.InvariantCultureIgnoreCase);
-                                    if (!isDont)
-                                    {
-                                        _usedNames.Add(name);
-                                        AddToListViewNames(name);
-                                        break; // break while
-                                    }
-                                }
-                            }
-                        }
-
-                        startIndex = textToLower.IndexOf(name.ToLower(), startIndex + 2, StringComparison.Ordinal);
-                    }
-                }
+                var lvi = new ListViewItem(string.Empty) { Checked = true };
+                lvi.SubItems.Add(name);
+                listViewNames.Items.Add(lvi);
             }
             listViewNames.EndUpdate();
             groupBoxNames.Text = string.Format(Configuration.Settings.Language.ChangeCasingNames.NamesFoundInSubtitleX, listViewNames.Items.Count);
@@ -190,26 +139,39 @@ namespace Nikse.SubtitleEdit.Forms
 
                 string text = item.SubItems[2].Text.Replace(Configuration.Settings.General.ListViewLineSeparatorString, Environment.NewLine);
 
-                string lower = text.ToLower();
-                if (lower.Contains(name.ToLower()) && name.Length > 1 && name != name.ToLower())
+                // ignore... could be number
+                if (name.Length <= 1 || name.ToLower().Equals(name))
                 {
-                    int start = lower.IndexOf(name.ToLower(), StringComparison.Ordinal);
-                    if (start >= 0)
+                    continue;
+                }
+
+                int idx = text.IndexOf(name, StringComparison.Ordinal);
+
+                // name not present in text
+                if (idx < 0)
+                {
+                    continue;
+                }
+
+                if (idx > 0)
+                {
+                    // check if character before first character in name is non-word boundary char
+                    if (!NameCaseConverter.RegexNonWordChar.IsMatch(text[idx - 1].ToString()))
                     {
-                        bool startOk = (start == 0) || (lower[start - 1] == ' ') || (lower[start - 1] == '-') || (lower[start - 1] == '"') ||
-                                       lower[start - 1] == '\'' || lower[start - 1] == '>' || Environment.NewLine.EndsWith(lower[start - 1]);
-
-                        if (startOk)
-                        {
-                            int end = start + name.Length;
-                            bool endOk = end <= lower.Length;
-                            if (endOk)
-                                endOk = end == lower.Length || ExpectedEndChars.Contains(lower[end]);
-
-                            item.Selected = endOk;
-                        }
+                        continue;
                     }
                 }
+
+                if (idx + name.Length < text.Length)
+                {
+                    // check the character after last character in *name
+                    if (!NameCaseConverter.RegexNonWordChar.IsMatch(text[idx + name.Length].ToString()))
+                    {
+                        continue;
+                    }
+                }
+
+                item.Selected = true;
             }
 
             listViewFixes.EndUpdate();
@@ -235,17 +197,15 @@ namespace Nikse.SubtitleEdit.Forms
                 if (item.Checked)
                 {
                     LinesChanged++;
-                    var p = item.Tag as Paragraph;
-                    if (p != null)
-                        p.Text = item.SubItems[3].Text.Replace(Configuration.Settings.General.ListViewLineSeparatorString, Environment.NewLine);
+                    if (item.Tag is TextChangedEventArgs textChangedEventArgs)
+                    {
+                        textChangedEventArgs.Paragraph.Text = textChangedEventArgs.After;
+                    }
                 }
             }
         }
 
-        private void ButtonOkClick(object sender, EventArgs e)
-        {
-            DialogResult = DialogResult.OK;
-        }
+        private void ButtonOkClick(object sender, EventArgs e) => DialogResult = DialogResult.OK;
 
         private void listViewFixes_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -255,15 +215,9 @@ namespace Nikse.SubtitleEdit.Forms
                 labelXLinesSelected.Text = string.Empty;
         }
 
-        private void buttonSelectAll_Click(object sender, EventArgs e)
-        {
-            DoSelection(true);
-        }
+        private void buttonSelectAll_Click(object sender, EventArgs e) => DoSelection(true);
 
-        private void buttonInverseSelection_Click(object sender, EventArgs e)
-        {
-            DoSelection(false);
-        }
+        private void buttonInverseSelection_Click(object sender, EventArgs e) => DoSelection(false);
 
         private void DoSelection(bool selectAll)
         {
