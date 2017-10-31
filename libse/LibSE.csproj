@@ -399,6 +399,7 @@
     <Compile Include="SubtitleFormats\TmpegEncAW5.cs" />
     <Compile Include="SubtitleFormats\TmpegEncText.cs" />
     <Compile Include="SubtitleFormats\TmpegEncXml.cs" />
+    <Compile Include="SubtitleFormats\UnknownSubtitle86.cs" />
     <Compile Include="SubtitleFormats\TMPlayer.cs" />
     <Compile Include="SubtitleFormats\Tmx14.cs" />
     <Compile Include="SubtitleFormats\TranscriberXml.cs" />
