@@ -1929,9 +1929,12 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if ((ext == ".mp4" || ext == ".m4v" || ext == ".3gp") && file.Length > 10000)
                 {
-                    if (ImportSubtitleFromMp4(fileName) && !Configuration.Settings.General.DisableVideoAutoLoading)
-                        OpenVideo(fileName);
-                    return;
+                    if (!new IsmtDfxp().IsMine(null, fileName))
+                    {
+                        if (ImportSubtitleFromMp4(fileName) && !Configuration.Settings.General.DisableVideoAutoLoading)
+                            OpenVideo(fileName);
+                        return;
+                    }
                 }
 
                 if (ext == ".mxf" && FileUtil.IsMaterialExchangeFormat(fileName))
@@ -2692,6 +2695,20 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
+                if (format == null)
+                {
+                    var f = new IsmtDfxp();
+                    if (f.IsMine(null, fileName))
+                    {
+                        f.LoadSubtitle(_subtitle, null, fileName);
+                        _oldSubtitleFormat = f;
+                        SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
+                        SetEncoding(Configuration.Settings.General.DefaultEncoding);
+                        encoding = GetCurrentEncoding();
+                        justConverted = true;
+                        format = GetCurrentSubtitleFormat();
+                    }
+                }
 
                 // retry vobsub (file with wrong extension)
                 if (format == null && file.Length > 500 && IsVobSubFile(fileName, false))
