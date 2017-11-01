@@ -1354,6 +1354,7 @@ namespace Nikse.SubtitleEdit.Forms
             cutToolStripMenuItem.Text = _language.Menu.ContextMenu.Cut;
             copyToolStripMenuItem.Text = _language.Menu.ContextMenu.Copy;
             pasteToolStripMenuItem.Text = _language.Menu.ContextMenu.Paste;
+            pasteToolStripMenuItemEmpty.Text = _language.Menu.ContextMenu.Paste;
             deleteToolStripMenuItem.Text = _language.Menu.ContextMenu.Delete;
             toolStripMenuItemSplitTextAtCursor.Text = _language.Menu.ContextMenu.SplitLineAtCursorPosition;
             selectAllToolStripMenuItem.Text = _language.Menu.ContextMenu.SelectAll;
@@ -6658,6 +6659,14 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemGoogleMicrosoftTranslateSelLine.Visible = false;
             if (SubtitleListview1.SelectedItems.Count == 0)
             {
+                if (!contextMenuStripEmpty.Items.Contains(pasteToolStripMenuItemEmpty))
+                {
+                    contextMenuStripEmpty.Items.Add(pasteToolStripMenuItemEmpty);
+                }
+                if (!Clipboard.ContainsText() || SubtitleListview1.Items.Count > 0)
+                {
+                    contextMenuStripEmpty.Items.Remove(pasteToolStripMenuItemEmpty);
+                }
                 contextMenuStripEmpty.Show(MousePosition.X, MousePosition.Y);
                 e.Cancel = true;
             }
@@ -12782,99 +12791,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (e.KeyCode == Keys.V && e.Modifiers == Keys.Control) //Ctrl+V = Paste from clipboard
             {
-                if (Clipboard.ContainsText())
-                {
-                    var text = Clipboard.GetText();
-                    var tmp = new Subtitle();
-                    var format = new SubRip();
-                    var list = new List<string>(text.SplitToLines());
-                    format.LoadSubtitle(tmp, list, null);
-                    if (SubtitleListview1.SelectedItems.Count == 1 && tmp.Paragraphs.Count > 0)
-                    {
-                        MakeHistoryForUndo(_language.BeforeInsertLine);
-                        _makeHistoryPaused = true;
-                        Paragraph lastParagraph = null;
-                        Paragraph lastTempParagraph = null;
-                        var selectedIndices = new List<int>();
-                        int firstIndex = FirstSelectedIndex;
-                        foreach (var p in tmp.Paragraphs)
-                        {
-                            firstIndex++;
-                            selectedIndices.Add(firstIndex);
-                            InsertAfter();
-                            textBoxListViewText.Text = p.Text;
-                            if (lastParagraph != null)
-                            {
-                                double millisecondsBetween = p.StartTime.TotalMilliseconds - lastTempParagraph.EndTime.TotalMilliseconds;
-                                timeUpDownStartTime.TimeCode = new TimeCode(lastParagraph.EndTime.TotalMilliseconds + millisecondsBetween);
-                            }
-                            SetDurationInSeconds(p.Duration.TotalSeconds);
-                            lastParagraph = _subtitle.GetParagraphOrDefault(_subtitleListViewIndex);
-                            lastTempParagraph = p;
-                        }
-                        SubtitleListview1.SelectIndexAndEnsureVisible(selectedIndices[0], true);
-                        foreach (var idx in selectedIndices)
-                        {
-                            SubtitleListview1.Items[idx].Selected = true;
-                        }
-                        RestartHistory();
-                    }
-                    else if (SubtitleListview1.Items.Count == 0 && tmp.Paragraphs.Count > 0)
-                    { // insert into empty subtitle
-                        MakeHistoryForUndo(_language.BeforeInsertLine);
-                        foreach (var p in tmp.Paragraphs)
-                        {
-                            _subtitle.Paragraphs.Add(p);
-                        }
-                        SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
-                        SubtitleListview1.SelectIndexAndEnsureVisible(0, true);
-                    }
-                    else if (SubtitleListview1.Items.Count > 1 && tmp.Paragraphs.Count > 0)
-                    {
-                        // multiple lines selected - first delete, then insert
-                        int firstIndex = FirstSelectedIndex;
-                        if (firstIndex >= 0)
-                        {
-                            MakeHistoryForUndo(_language.BeforeInsertLine);
-                            _makeHistoryPaused = true;
-
-                            DeleteSelectedLines();
-                            var selectedIndices = new List<int>();
-                            foreach (var p in tmp.Paragraphs)
-                            {
-                                _subtitle.Paragraphs.Insert(firstIndex, p);
-                                selectedIndices.Add(firstIndex);
-                                firstIndex++;
-                            }
-                            SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
-                            SubtitleListview1.SelectIndexAndEnsureVisible(selectedIndices[0], true);
-                            foreach (var idx in selectedIndices)
-                            {
-                                SubtitleListview1.Items[idx].Selected = true;
-                            }
-                            RestartHistory();
-                        }
-                    }
-                    else if (list.Count >= 1 && list.Count < 4)
-                    {
-                        // less than 4 lines of text, just insert into first selected
-                        textBoxListViewText.Text = text.Trim();
-                    }
-                    else if (list.Count > 1 && list.Count < 2000)
-                    {
-                        MakeHistoryForUndo(_language.BeforeInsertLine);
-                        _makeHistoryPaused = true;
-                        foreach (var line in list)
-                        {
-                            if (!string.IsNullOrWhiteSpace(line))
-                            {
-                                InsertAfter();
-                                textBoxListViewText.Text = Utilities.AutoBreakLine(line);
-                            }
-                        }
-                        RestartHistory();
-                    }
-                }
+                PasteTextFromClipboard();
                 e.SuppressKeyPress = true;
             }
             else if (e.KeyCode == Keys.X && e.Modifiers == Keys.Control) //Ctrl+X = Cut to clipboard
@@ -12937,6 +12854,105 @@ namespace Nikse.SubtitleEdit.Forms
             else if (e.Modifiers == Keys.None && e.KeyCode == Keys.Enter)
             {
                 SubtitleListview1_MouseDoubleClick(null, null);
+            }
+        }
+
+        private void PasteTextFromClipboard()
+        {
+            if (!Clipboard.ContainsText())
+            {
+                return;
+            }
+
+            var text = Clipboard.GetText();
+            var tmp = new Subtitle();
+            var format = new SubRip();
+            var list = new List<string>(text.SplitToLines());
+            format.LoadSubtitle(tmp, list, null);
+            if (SubtitleListview1.SelectedItems.Count == 1 && tmp.Paragraphs.Count > 0)
+            {
+                MakeHistoryForUndo(_language.BeforeInsertLine);
+                _makeHistoryPaused = true;
+                Paragraph lastParagraph = null;
+                Paragraph lastTempParagraph = null;
+                var selectedIndices = new List<int>();
+                int firstIndex = FirstSelectedIndex;
+                foreach (var p in tmp.Paragraphs)
+                {
+                    firstIndex++;
+                    selectedIndices.Add(firstIndex);
+                    InsertAfter();
+                    textBoxListViewText.Text = p.Text;
+                    if (lastParagraph != null)
+                    {
+                        double millisecondsBetween = p.StartTime.TotalMilliseconds - lastTempParagraph.EndTime.TotalMilliseconds;
+                        timeUpDownStartTime.TimeCode = new TimeCode(lastParagraph.EndTime.TotalMilliseconds + millisecondsBetween);
+                    }
+                    SetDurationInSeconds(p.Duration.TotalSeconds);
+                    lastParagraph = _subtitle.GetParagraphOrDefault(_subtitleListViewIndex);
+                    lastTempParagraph = p;
+                }
+                SubtitleListview1.SelectIndexAndEnsureVisible(selectedIndices[0], true);
+                foreach (var idx in selectedIndices)
+                {
+                    SubtitleListview1.Items[idx].Selected = true;
+                }
+                RestartHistory();
+            }
+            else if (SubtitleListview1.Items.Count == 0 && tmp.Paragraphs.Count > 0)
+            { // insert into empty subtitle
+                MakeHistoryForUndo(_language.BeforeInsertLine);
+                foreach (var p in tmp.Paragraphs)
+                {
+                    _subtitle.Paragraphs.Add(p);
+                }
+                SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+                SubtitleListview1.SelectIndexAndEnsureVisible(0, true);
+            }
+            else if (SubtitleListview1.Items.Count > 1 && tmp.Paragraphs.Count > 0)
+            {
+                // multiple lines selected - first delete, then insert
+                int firstIndex = FirstSelectedIndex;
+                if (firstIndex >= 0)
+                {
+                    MakeHistoryForUndo(_language.BeforeInsertLine);
+                    _makeHistoryPaused = true;
+
+                    DeleteSelectedLines();
+                    var selectedIndices = new List<int>();
+                    foreach (var p in tmp.Paragraphs)
+                    {
+                        _subtitle.Paragraphs.Insert(firstIndex, p);
+                        selectedIndices.Add(firstIndex);
+                        firstIndex++;
+                    }
+                    SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+                    SubtitleListview1.SelectIndexAndEnsureVisible(selectedIndices[0], true);
+                    foreach (var idx in selectedIndices)
+                    {
+                        SubtitleListview1.Items[idx].Selected = true;
+                    }
+                    RestartHistory();
+                }
+            }
+            else if (list.Count >= 1 && list.Count < 4)
+            {
+                // less than 4 lines of text, just insert into first selected
+                textBoxListViewText.Text = text.Trim();
+            }
+            else if (list.Count > 1 && list.Count < 2000)
+            {
+                MakeHistoryForUndo(_language.BeforeInsertLine);
+                _makeHistoryPaused = true;
+                foreach (var line in list)
+                {
+                    if (!string.IsNullOrWhiteSpace(line))
+                    {
+                        InsertAfter();
+                        textBoxListViewText.Text = Utilities.AutoBreakLine(line);
+                    }
+                }
+                RestartHistory();
             }
         }
 
@@ -21369,7 +21385,12 @@ namespace Nikse.SubtitleEdit.Forms
             using (var dialog = new ExportFcpXmlAdvanced(_subtitle, _videoFileName))
             {
                 dialog.ShowDialog(this);
-            }          
+            }
+        }
+
+        private void pasteToolStripMenuItemEmpty_Click(object sender, EventArgs e)
+        {
+            PasteTextFromClipboard();
         }
     }
 }
