@@ -169,6 +169,7 @@
     <Compile Include="Forms\FixCommonErrors\FixUnneededSpaces.cs" />
     <Compile Include="Forms\FixCommonErrors\FixUppercaseIInsideWords.cs" />
     <Compile Include="Forms\FixCommonErrors\Helper.cs" />
+    <Compile Include="Forms\MergeLinesWithSameTimeCodes.cs" />
     <Compile Include="Interfaces\IBinaryPersistableSubtitle.cs" />
     <Compile Include="Interfaces\IFixCallbacks.cs" />
     <Compile Include="Interfaces\IFixCommonError.cs" />
@@ -233,6 +234,7 @@
     <Compile Include="SubtitleFormats\Csv5.cs" />
     <Compile Include="SubtitleFormats\DvdStudioProSpaceOneSemicolon.cs" />
     <Compile Include="SubtitleFormats\FinalCutProXml15.cs" />
+    <Compile Include="SubtitleFormats\IsmtDfxp.cs" />
     <Compile Include="SubtitleFormats\JsonType12.cs" />
     <Compile Include="SubtitleFormats\TimeCodesOnly2.cs" />
     <Compile Include="SubtitleFormats\Rtf1.cs" />

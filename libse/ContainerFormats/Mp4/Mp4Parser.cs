@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
 {
@@ -162,6 +163,41 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
                 }
                 return 0;
             }
+        }
+
+        public List<string> GetMdatsAsStrings()
+        {
+            var list = new List<string>();
+            using (var fs = new FileStream(FileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            {
+                Position = 0;
+                fs.Seek(0, SeekOrigin.Begin);
+                bool moreBytes = true;
+                while (moreBytes)
+                {
+                    moreBytes = InitializeSizeAndName(fs);
+                    if (Size < 8)
+                        return list;
+
+                    if (Name == "mdat")
+                    {
+                        var before = (long)fs.Position;
+                        var readLength = ((long)Position) - before;
+                        if (readLength > 10)
+                        {
+                            var buffer = new byte[readLength];
+                            fs.Read(buffer, 0, (int)readLength);
+                            list.Add(Encoding.UTF8.GetString(buffer));
+                        }
+                    }
+
+                    if (Position > (ulong)fs.Length)
+                        break;
+                    fs.Seek((long)Position, SeekOrigin.Begin);
+                }
+                fs.Close();
+            }
+            return list;
         }
 
     }
