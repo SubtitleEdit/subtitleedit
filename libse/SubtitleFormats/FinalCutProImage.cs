@@ -55,10 +55,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         if (fileNode != null)
                         {
                             XmlNode fileNameNode = fileNode.SelectSingleNode("name");
+                            XmlNode pathurlNode = fileNode.SelectSingleNode("pathurl");
                             if (fileNameNode != null)
                             {
                                 var p = new Paragraph();
                                 p.Text = fileNameNode.InnerText;
+                                if (pathurlNode != null)
+                                    p.Extra = pathurlNode.InnerText;
+
                                 XmlNode inNode = node.SelectSingleNode("in");
                                 XmlNode startNode = node.SelectSingleNode("start");
                                 if (startNode != null)

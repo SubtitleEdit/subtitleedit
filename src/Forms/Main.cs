@@ -13803,6 +13803,27 @@ namespace Nikse.SubtitleEdit.Forms
                 Encoding encoding;
                 var timeCodeSubtitle = new Subtitle();
                 SubtitleFormat format = timeCodeSubtitle.LoadSubtitle(openFileDialog1.FileName, out encoding, null);
+
+                if (format == null)
+                {
+                    var imageFormat = new FinalCutProImage();
+                    var list = new List<string>(File.ReadAllLines(openFileDialog1.FileName, LanguageAutoDetect.GetEncodingFromFile(openFileDialog1.FileName)));
+                    if (imageFormat.IsMine(list, openFileDialog1.FileName))
+                    {
+                        imageFormat.LoadSubtitle(timeCodeSubtitle, list, openFileDialog1.FileName);
+                        format = imageFormat;
+                    }
+                }
+                if (format == null)
+                {
+                    var imageFormat = new SpuImage();
+                    var list = new List<string>(File.ReadAllLines(openFileDialog1.FileName, LanguageAutoDetect.GetEncodingFromFile(openFileDialog1.FileName)));
+                    if (imageFormat.IsMine(list, openFileDialog1.FileName))
+                    {
+                        imageFormat.LoadSubtitle(timeCodeSubtitle, list, openFileDialog1.FileName);
+                        format = imageFormat;
+                    }
+                }
                 if (format == null)
                 {
                     ShowUnknownSubtitle();
