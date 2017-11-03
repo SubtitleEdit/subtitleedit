@@ -5134,6 +5134,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/WaveformGoToNextSubtitle":
                     language.Settings.WaveformGoToNextSubtitle = reader.Value;
                     break;
+                case "Settings/WaveformGoToPreviousSceneChange":
+                    language.Settings.WaveformGoToPreviousSceneChange = reader.Value;
+                    break;
                 case "Settings/WaveformGoToNextSceneChange":
                     language.Settings.WaveformGoToNextSceneChange = reader.Value;
                     break;

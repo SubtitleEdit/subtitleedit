@@ -213,6 +213,7 @@ namespace Nikse.SubtitleEdit.Forms
         private Keys _waveformAddTextAtHereFromClipboard = Keys.None;
         private Keys _waveformFocusListView = Keys.None;
         private Keys _waveformGoToNextSubtitle = Keys.None;
+        private Keys _waveformGoToPreviousSceneChange = Keys.None;
         private Keys _waveformGoToNextSceneChange = Keys.None;
         private Keys _waveformToggleSceneChange = Keys.None;
         private Keys _mainTranslateCustomSearch1 = Keys.None;
@@ -12056,6 +12057,19 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 e.SuppressKeyPress = true;
             }
+            else if (audioVisualizer.SceneChanges != null && e.KeyData == _waveformGoToPreviousSceneChange)
+            {
+                var cp = mediaPlayer.CurrentPosition - 0.01;
+                foreach (var sceneChange in audioVisualizer.SceneChanges.Reverse<double>())
+                {
+                    if (sceneChange < cp)
+                    {
+                        mediaPlayer.CurrentPosition = sceneChange;
+                        break;
+                    }
+                }
+                e.SuppressKeyPress = true;
+            }
             else if (audioVisualizer.SceneChanges != null && e.KeyData == _waveformGoToNextSceneChange)
             {
                 var cp = mediaPlayer.CurrentPosition + 0.01;
@@ -15941,6 +15955,7 @@ namespace Nikse.SubtitleEdit.Forms
             _waveformAddTextAtHereFromClipboard = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformAddTextHereFromClipboard);
             _waveformFocusListView = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformFocusListView);
             _waveformGoToNextSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformGoToNextSubtitle);
+            _waveformGoToPreviousSceneChange = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformGoToPreviousSceneChange);
             _waveformGoToNextSceneChange = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformGoToNextSceneChange);
             _waveformToggleSceneChange = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformToggleSceneChange);
 
