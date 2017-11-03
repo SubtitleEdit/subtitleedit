@@ -3,18 +3,23 @@
 3.5.5 (xth December 2017) BETA
 * NEW:
    * Add new subtitle format - thx Karim
+   * Add new subtitle format - thx Wojtek
    * Add sync options when re-exporting image formats - thx Music Fan
    * Add new shortcuts - thx darnn
+   * Add shortcut "Go to prev scene change" shortcut - thx Ingo
    * Add more image based formats to batch/cmd-line convert
+   * Add advanced FCP XML 1.5 export
 * IMPROVED:
    * Update Bulgarian translation - thx Maknol
    * Update Hungarian translation - thx ZityiSoft Team
    * Update French translatin - thx JM GBT
+   * Update Portuguese translation - thx moob
    * Save/restore "Auto continue delay" from UI - thx Hideaki
    * Add sort by "Actor" - thx von Suppé
    * Add "Apply" button to "Multiple replace" - thx Finduilas
 * FIXED:
    * Fix mpv preview font size (regression from 3.5.4) - thx OmrSi
+   * Fix many binary OCR issues - thx Jamakmake
    * Fix issue with video preview size with libmpv - thx darnn
    * Fix for high hours in HHMMSSFF time code mode - thx darnn
    * Fix for creating Blu-ray sup palette - thx Music Fan
@@ -27,6 +32,9 @@
    * Fix slowness in "Multiple replace" - thx Finduilas
    * Fix missing letters in "Binary image compare" - thx Flitskikker
    * Fix bold for batch converting to image based formats - thx nstefy
+   * Fix some accented characters in SCC - thx thehulk
+   * Improve Romanian language auto-detect - thx Mihai
+   * Fix some minor issues with space/translation - thx Jamakmake
 
 
 3.5.4 (2nd October 2017)
