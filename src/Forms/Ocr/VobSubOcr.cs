@@ -410,7 +410,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             checkBoxRightToLeft.Left = numericUpDownPixelsIsSpace.Left;
             if (checkBoxRightToLeft.Left + checkBoxRightToLeft.Width > labelMinLineSplitHeight.Left)
                 checkBoxRightToLeft.Left = labelMaxErrorPercent.Left;
-            labelMinLineSplitHeight.Text = language.MinLineSplitHeight;          
+            labelMinLineSplitHeight.Text = language.MinLineSplitHeight;
             groupBoxOCRControls.Text = string.Empty;
 
             FillSpellCheckDictionaries();
@@ -1368,91 +1368,113 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     int maxWidth = 0;
                     int totalHeight = 0;
 
-                    foreach (string fn in fileNames)
+                    string fullFileName = string.Empty;
+                    if (!string.IsNullOrEmpty(_bdnXmlSubtitle.Paragraphs[index].Extra))
                     {
-                        string fullFileName = Path.Combine(Path.GetDirectoryName(_bdnFileName), fn);
-                        if (!File.Exists(fullFileName))
-                        {
-                            // fix AVISubDetector lines
-                            int idxOfIEquals = fn.IndexOf("i=", StringComparison.OrdinalIgnoreCase);
-                            if (idxOfIEquals >= 0)
-                            {
-                                int idxOfSpace = fn.IndexOf(' ', idxOfIEquals);
-                                if (idxOfSpace > 0)
-                                {
-                                    fullFileName = Path.Combine(Path.GetDirectoryName(_bdnFileName), fn.Remove(0, idxOfSpace).Trim());
-                                }
-                            }
-                        }
-                        if (File.Exists(fullFileName))
-                        {
-                            try
-                            {
-                                var temp = new Bitmap(fullFileName);
-                                if (temp.Width > maxWidth)
-                                    maxWidth = temp.Width;
-                                totalHeight += temp.Height;
-                                bitmaps.Add(temp);
-                            }
-                            catch
-                            {
-                                return null;
-                            }
-                        }
+                        fullFileName = Path.Combine(Path.GetDirectoryName(_bdnFileName), _bdnXmlSubtitle.Paragraphs[index].Extra.Replace("file://", string.Empty));
                     }
-
-                    Bitmap b = null;
-                    if (bitmaps.Count > 1)
+                    if (File.Exists(fullFileName))
                     {
-                        var merged = new Bitmap(maxWidth, totalHeight + 7 * bitmaps.Count);
-                        int y = 0;
-                        for (int k = 0; k < bitmaps.Count; k++)
+                        try
                         {
-                            Bitmap part = bitmaps[k];
+                            returnBmp = new Bitmap(fullFileName);
                             if (checkBoxAutoTransparentBackground.Checked)
-                                part.MakeTransparent();
-                            using (var g = Graphics.FromImage(merged))
-                                g.DrawImage(part, 0, y);
-                            y += part.Height + 7;
-                            part.Dispose();
+                                returnBmp.MakeTransparent();
                         }
-                        b = merged;
-                    }
-                    else if (bitmaps.Count == 1)
-                    {
-                        b = bitmaps[0];
-                    }
-
-                    if (b != null)
-                    {
-                        if (_isSon && checkBoxCustomFourColors.Checked)
+                        catch
                         {
-                            GetCustomColors(out background, out pattern, out emphasis1, out emphasis2);
+                            // ignore
+                        }
+                    }
+                    else
+                    {
 
-                            FastBitmap fbmp = new FastBitmap(b);
-                            fbmp.LockImage();
-                            for (int x = 0; x < fbmp.Width; x++)
+                        foreach (string fn in fileNames)
+                        {
+                            fullFileName = Path.Combine(Path.GetDirectoryName(_bdnFileName), fn);
+                            if (!File.Exists(fullFileName))
                             {
-                                for (int y = 0; y < fbmp.Height; y++)
+                                // fix AVISubDetector lines
+                                int idxOfIEquals = fn.IndexOf("i=", StringComparison.OrdinalIgnoreCase);
+                                if (idxOfIEquals >= 0)
                                 {
-                                    Color c = fbmp.GetPixel(x, y);
-                                    if (c.R == Color.Red.R && c.G == Color.Red.G && c.B == Color.Red.B) // normally anti-alias
-                                        fbmp.SetPixel(x, y, emphasis2);
-                                    else if (c.R == Color.Blue.R && c.G == Color.Blue.G && c.B == Color.Blue.B) // normally text?
-                                        fbmp.SetPixel(x, y, pattern);
-                                    else if (c.R == Color.White.R && c.G == Color.White.G && c.B == Color.White.B) // normally background
-                                        fbmp.SetPixel(x, y, background);
-                                    else if (c.R == Color.Black.R && c.G == Color.Black.G && c.B == Color.Black.B) // outline/border
-                                        fbmp.SetPixel(x, y, emphasis1);
-                                    else
-                                        fbmp.SetPixel(x, y, c);
+                                    int idxOfSpace = fn.IndexOf(' ', idxOfIEquals);
+                                    if (idxOfSpace > 0)
+                                    {
+                                        fullFileName = Path.Combine(Path.GetDirectoryName(_bdnFileName), fn.Remove(0, idxOfSpace).Trim());
+                                    }
                                 }
                             }
-                            fbmp.UnlockImage();
+                            if (File.Exists(fullFileName))
+                            {
+                                try
+                                {
+                                    var temp = new Bitmap(fullFileName);
+                                    if (temp.Width > maxWidth)
+                                        maxWidth = temp.Width;
+                                    totalHeight += temp.Height;
+                                    bitmaps.Add(temp);
+                                }
+                                catch
+                                {
+                                    return null;
+                                }
+                            }
                         }
-                        if (checkBoxAutoTransparentBackground.Checked)
-                            b.MakeTransparent();
-                        returnBmp = b;
+
+                        Bitmap b = null;
+                        if (bitmaps.Count > 1)
+                        {
+                            var merged = new Bitmap(maxWidth, totalHeight + 7 * bitmaps.Count);
+                            int y = 0;
+                            for (int k = 0; k < bitmaps.Count; k++)
+                            {
+                                Bitmap part = bitmaps[k];
+                                if (checkBoxAutoTransparentBackground.Checked)
+                                    part.MakeTransparent();
+                                using (var g = Graphics.FromImage(merged))
+                                    g.DrawImage(part, 0, y);
+                                y += part.Height + 7;
+                                part.Dispose();
+                            }
+                            b = merged;
+                        }
+                        else if (bitmaps.Count == 1)
+                        {
+                            b = bitmaps[0];
+                        }
+
+                        if (b != null)
+                        {
+                            if (_isSon && checkBoxCustomFourColors.Checked)
+                            {
+                                GetCustomColors(out background, out pattern, out emphasis1, out emphasis2);
+
+                                FastBitmap fbmp = new FastBitmap(b);
+                                fbmp.LockImage();
+                                for (int x = 0; x < fbmp.Width; x++)
+                                {
+                                    for (int y = 0; y < fbmp.Height; y++)
+                                    {
+                                        Color c = fbmp.GetPixel(x, y);
+                                        if (c.R == Color.Red.R && c.G == Color.Red.G && c.B == Color.Red.B) // normally anti-alias
+                                            fbmp.SetPixel(x, y, emphasis2);
+                                        else if (c.R == Color.Blue.R && c.G == Color.Blue.G && c.B == Color.Blue.B) // normally text?
+                                            fbmp.SetPixel(x, y, pattern);
+                                        else if (c.R == Color.White.R && c.G == Color.White.G && c.B == Color.White.B) // normally background
+                                            fbmp.SetPixel(x, y, background);
+                                        else if (c.R == Color.Black.R && c.G == Color.Black.G && c.B == Color.Black.B) // outline/border
+                                            fbmp.SetPixel(x, y, emphasis1);
+                                        else
+                                            fbmp.SetPixel(x, y, c);
+                                    }
+                                }
+                                fbmp.UnlockImage();
+                            }
+                            if (checkBoxAutoTransparentBackground.Checked)
+                                b.MakeTransparent();
+                            returnBmp = b;
+                        }
                     }
                 }
             }
@@ -3254,7 +3276,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
 
             if (maxDiff > 0.1)
-            { 
+            {
                 if (bob.IsPeriod())
                 {
                     ImageSplitterItem next = null;
@@ -3323,7 +3345,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 dif = NikseBitmapImageSplitter.IsBitmapsAlike(nbmpNext, expanded);
             }
             else if (maxDiff > 0)
-            { 
+            {
                 if (expanded.Height == bobNext.Height && expanded.Width == bobNext.Width + 1)
                 {
                     dif = NikseBitmapImageSplitter.IsBitmapsAlike(nbmpNext, expanded);
@@ -3354,7 +3376,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             return bmp;
         }
 
-        
+
         private static void FindBestMatchNew(ref int index, ref int smallestDifference, out BinaryOcrBitmap hit, NikseBitmap target, BinaryOcrDb binOcrDb, BinaryOcrBitmap bob, double maxDiff)
         {
             hit = null;
@@ -3364,10 +3386,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 var m = binOcrDb.CompareImages[bobExactMatch];
                 //if (BinaryOcrDb.AllowEqual(m, bob))
                 //{
-                    index = bobExactMatch;
-                    smallestDifference = 0;
-                    hit = m;
-                    return;
+                index = bobExactMatch;
+                smallestDifference = 0;
+                hit = m;
+                return;
                 //}
             }
 
