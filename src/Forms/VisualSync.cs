@@ -383,7 +383,7 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxEndTexts.Items.Clear();
             foreach (Paragraph p in _paragraphs)
             {
-                string s = p.StartTime + " - " + p.Text.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString);
+                string s = p.StartTime + " - " + UiUtil.GetListViewTextFromString(p.Text);
                 comboBoxStartTexts.Items.Add(s);
                 comboBoxEndTexts.Items.Add(s);
             }
