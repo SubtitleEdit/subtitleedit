@@ -424,6 +424,14 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <Footer>Rodapé</Footer>
     <DoNotModify>[Não alterar]</DoNotModify>
   </ExportCustomTextFormat>
+  <ExportFcpXmlAdvanced>
+    <Title>Exportar Final Cut Pro XML advanced</Title>
+    <FontName>Tipo de letra</FontName>
+    <FontSize>Tamanho</FontSize>
+    <FontFace>Rosto de fonte</FontFace>
+    <Alignment>Alinhamento</Alignment>
+    <Baseline>Linha de base</Baseline>
+  </ExportFcpXmlAdvanced>
   <ExportPngXml>
     <Title>Exportar BDN XML/PNG</Title>
     <ImageSettings>Ajuste de imagem</ImageSettings>
@@ -471,6 +479,7 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <Forced>Forçado</Forced>
     <ChooseBackgroundColor>Escolha a cor do fundo</ChooseBackgroundColor>
     <SaveImageAs>Guardar imagem como...</SaveImageAs>
+	<FcpUseFullPathUrl>Utilizar o caminho completo do endereço no FCP xml</FcpUseFullPathUrl>
   </ExportPngXml>
   <ExportText>
     <Title>Exportar texto</Title>
@@ -1886,6 +1895,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <WaveformPlayFirstSelectedSubtitle>Reproduzir a partir da primeira legenda selecionada</WaveformPlayFirstSelectedSubtitle>
     <WaveformFocusListView>Destacar a lista de visualização</WaveformFocusListView>
     <WaveformGoToNextSubtitle>Ir para a próxima linha (a partir da posição do vídeo)</WaveformGoToNextSubtitle>
+	<WaveformGoToPreviousSceneChange>Ir para a mudança de cena anterior</WaveformGoToPreviousSceneChange>
     <WaveformGoToNextSceneChange>Ir para a próxima mudança de cena</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>Alternar a mudança de cena</WaveformToggleSceneChange>
     <GoBack1Frame>Um fotograma para atrás</GoBack1Frame>
@@ -2008,6 +2018,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <ImageText>Imagem de texto</ImageText>
     <SpellCheckCompleted>Verificação ortográfica terminada</SpellCheckCompleted>
     <SpellCheckAborted>Verificação ortográfica cancelada</SpellCheckAborted>
+	<SpacesNotAllowed>Espaços não permitidos numa única palavra!</SpacesNotAllowed>
     <UndoX>Anular: {0}</UndoX>
   </SpellCheck>
   <NetflixQualityCheck>
