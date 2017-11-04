@@ -4671,7 +4671,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             subItem = new ListViewItem.ListViewSubItem(item, paragraph.Duration.ToShortDisplayString());
             item.SubItems.Add(subItem);
 
-            subItem = new ListViewItem.ListViewSubItem(item, paragraph.Text.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
+            subItem = new ListViewItem.ListViewSubItem(item, UiUtil.GetListViewTextFromString(paragraph.Text));
             try
             {
                 if (_formatName == AdvancedSubStationAlpha.NameOfFormat || _formatName == SubStationAlpha.NameOfFormat)
@@ -4789,7 +4789,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 columnIndexText++;
             }
 
-            subtitleListView1.Items[index].SubItems[columnIndexText].Text = text.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString);
+            subtitleListView1.Items[index].SubItems[columnIndexText].Text = UiUtil.GetListViewTextFromString(text);
         }
 
         private void FillPreviewBackground(Bitmap bmp, Graphics g, Paragraph p)

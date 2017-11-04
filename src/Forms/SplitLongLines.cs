@@ -63,7 +63,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             var item = new ListViewItem(string.Empty) { Tag = p, Checked = true };
             item.SubItems.Add(lineNumbers);
-            item.SubItems.Add(newText.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
+            item.SubItems.Add(UiUtil.GetListViewTextFromString(newText));
             listViewFixes.Items.Add(item);
         }
 

@@ -481,8 +481,8 @@ namespace Nikse.SubtitleEdit.Forms
                 var item = new ListViewItem(string.Empty) { Checked = true, Tag = p };
                 item.SubItems.Add(p.Number.ToString(CultureInfo.InvariantCulture));
                 item.SubItems.Add(action);
-                item.SubItems.Add(before.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
-                item.SubItems.Add(after.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
+                item.SubItems.Add(UiUtil.GetListViewTextFromString(before));
+                item.SubItems.Add(UiUtil.GetListViewTextFromString(after));
                 listViewFixes.Items.Add(item);
             }
         }

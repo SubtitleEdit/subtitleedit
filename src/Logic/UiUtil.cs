@@ -42,7 +42,7 @@ namespace Nikse.SubtitleEdit.Logic
         private static VideoInfo TryReadVideoInfoViaDirectShow(string fileName)
         {
             return QuartsPlayer.GetVideoInfo(fileName);
-        }      
+        }
 
         public static int ShowSubtitle(Subtitle subtitle, VideoPlayerContainer videoPlayerContainer)
         {
@@ -696,5 +696,8 @@ namespace Nikse.SubtitleEdit.Logic
             return sb.ToString();
         }
 
+        public static string GetListViewTextFromString(string s) => s.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString);
+
+        public static string GetStringFromListViewText(string lviText) => lviText.Replace(Configuration.Settings.General.ListViewLineSeparatorString, Environment.NewLine);
     }
 }

@@ -48,7 +48,7 @@ namespace Nikse.SubtitleEdit.Forms
         public Subtitle FixedSubtitle { get; private set; }
         public int FixCount { get; private set; }
         private MultipleSearchAndReplaceGroup _currentGroup;
-        
+
         public MultipleReplace()
         {
             UiUtil.PreInitialize(this);
@@ -320,8 +320,8 @@ namespace Nikse.SubtitleEdit.Forms
         {
             var item = new ListViewItem(string.Empty) { Tag = p, Checked = true };
             item.SubItems.Add(p.Number.ToString(CultureInfo.InvariantCulture));
-            item.SubItems.Add(p.Text.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
-            item.SubItems.Add(newText.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
+            item.SubItems.Add(UiUtil.GetListViewTextFromString(p.Text));
+            item.SubItems.Add(UiUtil.GetListViewTextFromString(newText));
             return item;
         }
 
