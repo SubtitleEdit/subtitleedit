@@ -310,10 +310,15 @@ namespace Nikse.SubtitleEdit.Forms
                 int x, y;
                 if (arr.Length == 2 && int.TryParse(arr[0], out x) && int.TryParse(arr[1], out y))
                 {
-                    if (x > 0 && x < Screen.PrimaryScreen.WorkingArea.Width && y > 0 && y < Screen.PrimaryScreen.WorkingArea.Height)
+                    var screen = Screen.FromPoint(Cursor.Position);
+                    if (screen != null && x > 0 && x < screen.WorkingArea.Width && y > 0 && y < screen.WorkingArea.Height)
                     {
                         Left = x;
                         Top = y;
+                    }
+                    else
+                    {
+                        StartPosition = FormStartPosition.CenterParent;
                     }
                 }
             }
