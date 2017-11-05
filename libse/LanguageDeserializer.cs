@@ -3112,6 +3112,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Main/XPercentCompleted":
                     language.Main.XPercentCompleted = reader.Value;
                     break;
+                case "Main/NextX":
+                    language.Main.NextX = reader.Value;
+                    break;
                 case "Main/ErrorLoadIdx":
                     language.Main.ErrorLoadIdx = reader.Value;
                     break;

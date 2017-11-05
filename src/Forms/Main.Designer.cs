@@ -131,6 +131,7 @@
             this.toolStripMenuItemEdl = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemEdlClipName = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemExportFcpIImage = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemFcpXmlAdvanced = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemImagePerFrame = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemTextTimeCodePair = new System.Windows.Forms.ToolStripMenuItem();
             this.pACScreenElectronicsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -470,7 +471,7 @@
             this.imageListPlayRate = new System.Windows.Forms.ImageList(this.components);
             this.timerTextUndo = new System.Windows.Forms.Timer(this.components);
             this.timerAlternateTextUndo = new System.Windows.Forms.Timer(this.components);
-            this.toolStripMenuItemFcpXmlAdvanced = new System.Windows.Forms.ToolStripMenuItem();
+            this.labelNextWord = new System.Windows.Forms.Label();
             this.SubtitleListview1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.textBoxListViewTextAlternate = new Nikse.SubtitleEdit.Controls.SETextBox();
             this.timeUpDownStartTime = new Nikse.SubtitleEdit.Controls.TimeUpDown();
@@ -1361,6 +1362,13 @@
             this.toolStripMenuItemExportFcpIImage.Size = new System.Drawing.Size(258, 22);
             this.toolStripMenuItemExportFcpIImage.Text = "Final Cut Pro + image...";
             this.toolStripMenuItemExportFcpIImage.Click += new System.EventHandler(this.toolStripMenuItemExportFcpIImage_Click);
+            // 
+            // toolStripMenuItemFcpXmlAdvanced
+            // 
+            this.toolStripMenuItemFcpXmlAdvanced.Name = "toolStripMenuItemFcpXmlAdvanced";
+            this.toolStripMenuItemFcpXmlAdvanced.Size = new System.Drawing.Size(258, 22);
+            this.toolStripMenuItemFcpXmlAdvanced.Text = "Final cut Pro XML advanced...";
+            this.toolStripMenuItemFcpXmlAdvanced.Click += new System.EventHandler(this.toolStripMenuItemFcpXmlAdvanced_Click);
             // 
             // toolStripMenuItemImagePerFrame
             // 
@@ -2718,6 +2726,7 @@
             // 
             // groupBoxVideo
             // 
+            this.groupBoxVideo.Controls.Add(this.labelNextWord);
             this.groupBoxVideo.Controls.Add(this.audioVisualizer);
             this.groupBoxVideo.Controls.Add(this.checkBoxSyncListViewWithVideoWhilePlaying);
             this.groupBoxVideo.Controls.Add(this.labelVideoInfo);
@@ -4444,12 +4453,17 @@
             this.timerAlternateTextUndo.Interval = 700;
             this.timerAlternateTextUndo.Tick += new System.EventHandler(this.TimerAlternateTextUndoTick);
             // 
-            // toolStripMenuItemFcpXmlAdvanced
+            // labelNextWord
             // 
-            this.toolStripMenuItemFcpXmlAdvanced.Name = "toolStripMenuItemFcpXmlAdvanced";
-            this.toolStripMenuItemFcpXmlAdvanced.Size = new System.Drawing.Size(258, 22);
-            this.toolStripMenuItemFcpXmlAdvanced.Text = "Final cut Pro XML advanced...";
-            this.toolStripMenuItemFcpXmlAdvanced.Click += new System.EventHandler(this.toolStripMenuItemFcpXmlAdvanced_Click);
+            this.labelNextWord.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.labelNextWord.AutoSize = true;
+            this.labelNextWord.Font = new System.Drawing.Font("Tahoma", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelNextWord.Location = new System.Drawing.Point(401, 9);
+            this.labelNextWord.Name = "labelNextWord";
+            this.labelNextWord.Size = new System.Drawing.Size(74, 17);
+            this.labelNextWord.TabIndex = 13;
+            this.labelNextWord.Text = "Next: xxx";
+            this.labelNextWord.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // SubtitleListview1
             // 
@@ -5170,5 +5184,6 @@
         private System.Windows.Forms.ToolStripMenuItem insertSubtitleHereToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem actorToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemFcpXmlAdvanced;
+        private System.Windows.Forms.Label labelNextWord;
     }
 }
