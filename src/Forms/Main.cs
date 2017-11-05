@@ -235,6 +235,8 @@ namespace Nikse.SubtitleEdit.Forms
         private static object _syncUndo = new object();
         private string[] _dragAndDropFiles;
         private readonly Timer _dragAndDropTimer = new Timer(); // to prevent locking windows explorer
+        private long _labelNextTicks = -1;
+
         public bool IsMenuOpen { get; private set; }
 
         private bool AutoRepeatContinueOn
@@ -341,6 +343,7 @@ namespace Nikse.SubtitleEdit.Forms
                 labelTextAlternateLineLengths.Visible = false;
                 labelAlternateSingleLine.Visible = false;
                 labelTextAlternateLineTotal.Visible = false;
+                labelNextWord.Visible = false;
 
                 SetLanguage(Configuration.Settings.General.Language);
                 toolStripStatusNetworking.Visible = false;
@@ -3853,6 +3856,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             SetUndockedWindowsTitle();
             mediaPlayer.SubtitleText = string.Empty;
+            labelNextWord.Visible = false;
             ShowStatus(_language.New);
 
             ResetShowEarlierOrLater();
@@ -12204,6 +12208,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else if (_mainAdjustSetEndAndGotoNext == e.KeyData)
                     {
+                        ShowNextSubtitleLabel();
                         ButtonSetEndAndGoToNextClick(null, null);
                         e.SuppressKeyPress = true;
                     }
@@ -12214,6 +12219,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else if (e.Modifiers == Keys.None && e.KeyCode == Keys.F10)
                     {
+                        ShowNextSubtitleLabel();
                         ButtonSetEndAndGoToNextClick(null, null);
                         e.SuppressKeyPress = true;
                     }
@@ -12240,21 +12246,25 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else if (_mainAdjustInsertViaEndAutoStartAndGoToNext == e.KeyData)
                     {
+                        ShowNextSubtitleLabel();
                         SetCurrentViaEndPositionAndGotoNext(FirstSelectedIndex);
                         e.SuppressKeyPress = true;
                     }
                     else if (_mainAdjustSetStartAutoDurationAndGoToNext == e.KeyData)
                     {
+                        ShowNextSubtitleLabel();
                         SetCurrentStartAutoDurationAndGotoNext(FirstSelectedIndex);
                         e.SuppressKeyPress = true;
                     }
                     else if (_mainAdjustSetEndNextStartAndGoToNext == e.KeyData)
                     {
+                        ShowNextSubtitleLabel();
                         SetCurrentEndNextStartAndGoToNext(FirstSelectedIndex);
                         e.SuppressKeyPress = true;
                     }
                     else if (_mainAdjustStartDownEndUpAndGoToNext == e.KeyData && _mainAdjustStartDownEndUpAndGoToNextParagraph == null)
                     {
+                        ShowNextSubtitleLabel();
                         _mainAdjustStartDownEndUpAndGoToNextParagraph = _subtitle.GetParagraphOrDefault(FirstSelectedIndex);
                         SetStartTime(true);
                         e.SuppressKeyPress = true;
@@ -12383,6 +12393,30 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             // put new entries above tabs
+        }
+
+        private void ShowNextSubtitleLabel()
+        {
+            if (audioVisualizer.Visible && audioVisualizer.WavePeaks != null && audioVisualizer.Width > 300 && _subtitleListViewIndex >= 0)
+            {
+                var next = _subtitle.GetParagraphOrDefault(_subtitleListViewIndex + 1);
+                if (next != null && !string.IsNullOrEmpty(next.Text))
+                {
+                    labelNextWord.Top = audioVisualizer.Top;
+                    labelNextWord.Text = string.Format(_language.NextX, next.Text.Replace(Environment.NewLine, " "));
+                    labelNextWord.Left = audioVisualizer.Width / 2 - labelNextWord.Width / 2 + audioVisualizer.Left;
+                    labelNextWord.Visible = true;
+                    _labelNextTicks = DateTime.UtcNow.Ticks;
+                }
+                else
+                {
+                    labelNextWord.Visible = false;
+                }
+            }
+            else
+            {
+                labelNextWord.Visible = false;
+            }
         }
 
         private void MergeSelectedLinesOnlyFirstText()
@@ -15254,6 +15288,11 @@ namespace Nikse.SubtitleEdit.Forms
                     value = trackBarWaveformPosition.Minimum;
                 trackBarWaveformPosition.Value = value;
                 trackBarWaveformPosition.ValueChanged += trackBarWaveformPosition_ValueChanged;
+
+                if (labelNextWord.Visible && _labelNextTicks + 100000000 < DateTime.UtcNow.Ticks)
+                {
+                    labelNextWord.Visible = false;
+                }
             }
         }
 
@@ -21422,7 +21461,7 @@ namespace Nikse.SubtitleEdit.Forms
             using (var dialog = new ExportFcpXmlAdvanced(_subtitle, _videoFileName))
             {
                 dialog.ShowDialog(this);
-            }          
+            }
         }
     }
 }
