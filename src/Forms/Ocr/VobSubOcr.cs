@@ -9076,7 +9076,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     Paragraph currentP = _subtitle.Paragraphs[index];
                     currentP.StartTime.TotalMilliseconds = newP.StartTime.TotalMilliseconds;
                     currentP.EndTime.TotalMilliseconds = newP.EndTime.TotalMilliseconds;
-                    subtitleListView1.SetStartTimeAndDuration(index, currentP);
+                    subtitleListView1.SetStartTimeAndDuration(index, currentP, _subtitle.GetParagraphOrDefault(index + 1));
                     index++;
                 }
             }

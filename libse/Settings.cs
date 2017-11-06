@@ -105,6 +105,7 @@ namespace Nikse.SubtitleEdit.Core
         public bool ListViewShowColumnDuration { get; set; }
         public bool ListViewShowColumnCharsPerSec { get; set; }
         public bool ListViewShowColumnWordsPerMin { get; set; }
+        public bool ListViewShowColumnGap { get; set; }
         public bool ListViewShowColumnActor { get; set; }
         public bool ListViewShowColumnRegion { get; set; }
         public bool SplitAdvanced { get; set; }
@@ -204,6 +205,7 @@ namespace Nikse.SubtitleEdit.Core
         public bool ExportTextNewLineAfterText { get; set; }
         public bool ExportTextNewLineBetweenSubtitles { get; set; }
         public bool VideoOffsetKeepTimeCodes { get; set; }
+        public int MoveStartEndMs { get; set; }
 
 
         public ToolsSettings()
@@ -284,6 +286,7 @@ namespace Nikse.SubtitleEdit.Core
             ExportTextNewLineAfterText = true;
             ExportTextNewLineBetweenSubtitles = true;
             ImportTextLineBreak = "|";
+            MoveStartEndMs = 100;
         }
 
     }
@@ -644,6 +647,7 @@ namespace Nikse.SubtitleEdit.Core
         public int ListViewDurationWidth { get; set; }
         public int ListViewCpsWidth { get; set; }
         public int ListViewWpmWidth { get; set; }
+        public int ListViewGapWidth { get; set; }
         public int ListViewActorWidth { get; set; }
         public int ListViewRegionWidth { get; set; }
         public int ListViewTextWidth { get; set; }
@@ -1037,6 +1041,10 @@ namespace Nikse.SubtitleEdit.Core
         public string MainAdjustSetEnd { get; set; }
         public string MainAdjustSelected100MsForward { get; set; }
         public string MainAdjustSelected100MsBack { get; set; }
+        public string MainAdjustStartXMsBack { get; set; }
+        public string MainAdjustStartXMsForward { get; set; }
+        public string MainAdjustEndXMsBack { get; set; }
+        public string MainAdjustEndXMsForward { get; set; }
         public string MainInsertAfter { get; set; }
         public string MainTextBoxInsertAfter { get; set; }
         public string MainTextBoxAutoBreak { get; set; }
@@ -1709,6 +1717,9 @@ namespace Nikse.SubtitleEdit.Core
             subNode = node.SelectSingleNode("ListViewWpmWidth");
             if (subNode != null)
                 settings.General.ListViewWpmWidth = Convert.ToInt32(subNode.InnerText.Trim());
+            subNode = node.SelectSingleNode("ListViewGapWidth");
+            if (subNode != null)
+                settings.General.ListViewGapWidth = Convert.ToInt32(subNode.InnerText.Trim());
             subNode = node.SelectSingleNode("ListViewActorWidth");
             if (subNode != null)
                 settings.General.ListViewActorWidth = Convert.ToInt32(subNode.InnerText.Trim());
@@ -1880,6 +1891,9 @@ namespace Nikse.SubtitleEdit.Core
             subNode = node.SelectSingleNode("ListViewShowColumnWordsPerMin");
             if (subNode != null)
                 settings.Tools.ListViewShowColumnWordsPerMin = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("ListViewShowColumnGap");
+            if (subNode != null)
+                settings.Tools.ListViewShowColumnGap = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("ListViewShowColumnActor");
             if (subNode != null)
                 settings.Tools.ListViewShowColumnActor = Convert.ToBoolean(subNode.InnerText);
@@ -2177,6 +2191,9 @@ namespace Nikse.SubtitleEdit.Core
             subNode = node.SelectSingleNode("VideoOffsetKeepTimeCodes");
             if (subNode != null)
                 settings.Tools.VideoOffsetKeepTimeCodes = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("MoveStartEndMs");
+            if (subNode != null)
+                settings.Tools.MoveStartEndMs = Convert.ToInt32(subNode.InnerText);
             subNode = node.SelectSingleNode("FindHistory");
             if (subNode != null)
             {
@@ -3083,6 +3100,18 @@ namespace Nikse.SubtitleEdit.Core
                 subNode = node.SelectSingleNode("MainAdjustSelected100MsBack");
                 if (subNode != null)
                     settings.Shortcuts.MainAdjustSelected100MsBack = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainAdjustStartXMsBack");
+                if (subNode != null)
+                    settings.Shortcuts.MainAdjustStartXMsBack = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainAdjustStartXMsForward");
+                if (subNode != null)
+                    settings.Shortcuts.MainAdjustStartXMsForward = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainAdjustEndXMsBack");
+                if (subNode != null)
+                    settings.Shortcuts.MainAdjustEndXMsBack = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainAdjustEndXMsForward");
+                if (subNode != null)
+                    settings.Shortcuts.MainAdjustEndXMsForward = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainInsertAfter");
                 if (subNode != null)
                     settings.Shortcuts.MainInsertAfter = subNode.InnerText;
@@ -3377,6 +3406,7 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("ListViewDurationWidth", settings.General.ListViewDurationWidth.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewCpsWidth", settings.General.ListViewCpsWidth.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewWpmWidth", settings.General.ListViewWpmWidth.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ListViewGapWidth", settings.General.ListViewGapWidth.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewActorWidth", settings.General.ListViewActorWidth.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewRegionWidth", settings.General.ListViewRegionWidth.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("VlcWaveTranscodeSettings", settings.General.VlcWaveTranscodeSettings);
@@ -3436,6 +3466,7 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("ListViewShowColumnDuration", settings.Tools.ListViewShowColumnDuration.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewShowColumnCharsPerSec", settings.Tools.ListViewShowColumnCharsPerSec.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewShowColumnWordsPerMin", settings.Tools.ListViewShowColumnWordsPerMin.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ListViewShowColumnGap", settings.Tools.ListViewShowColumnGap.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewShowColumnActor", settings.Tools.ListViewShowColumnActor.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewShowColumnRegion", settings.Tools.ListViewShowColumnRegion.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("SplitAdvanced", settings.Tools.SplitAdvanced.ToString());
@@ -3535,6 +3566,7 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("ExportTextNewLineAfterText", settings.Tools.ExportTextNewLineAfterText.ToString());
                 textWriter.WriteElementString("ExportTextNewLineBetweenSubtitles", settings.Tools.ExportTextNewLineBetweenSubtitles.ToString());
                 textWriter.WriteElementString("VideoOffsetKeepTimeCodes", settings.Tools.VideoOffsetKeepTimeCodes.ToString());
+                textWriter.WriteElementString("MoveStartEndMs", settings.Tools.MoveStartEndMs.ToString(CultureInfo.InvariantCulture));
 
                 if (settings.Tools.FindHistory != null && settings.Tools.FindHistory.Count > 0)
                 {
@@ -3860,6 +3892,10 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("MainAdjustSetEnd", settings.Shortcuts.MainAdjustSetEnd);
                 textWriter.WriteElementString("MainAdjustSelected100MsForward", settings.Shortcuts.MainAdjustSelected100MsForward);
                 textWriter.WriteElementString("MainAdjustSelected100MsBack", settings.Shortcuts.MainAdjustSelected100MsBack);
+                textWriter.WriteElementString("MainAdjustStartXMsBack", settings.Shortcuts.MainAdjustStartXMsBack);
+                textWriter.WriteElementString("MainAdjustStartXMsForward", settings.Shortcuts.MainAdjustStartXMsForward);
+                textWriter.WriteElementString("MainAdjustEndXMsBack", settings.Shortcuts.MainAdjustEndXMsBack);
+                textWriter.WriteElementString("MainAdjustEndXMsForward", settings.Shortcuts.MainAdjustEndXMsForward);
                 textWriter.WriteElementString("MainInsertAfter", settings.Shortcuts.MainInsertAfter);
                 textWriter.WriteElementString("MainTextBoxInsertAfter", settings.Shortcuts.MainTextBoxInsertAfter);
                 textWriter.WriteElementString("MainTextBoxAutoBreak", settings.Shortcuts.MainTextBoxAutoBreak);

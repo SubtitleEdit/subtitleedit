@@ -35,8 +35,6 @@
             this.groupBoxMiscellaneous = new System.Windows.Forms.GroupBox();
             this.numericUpDownMaxWordsMin = new System.Windows.Forms.NumericUpDown();
             this.labelMaxWordsPerMin = new System.Windows.Forms.Label();
-            this.labelListviewColumns = new System.Windows.Forms.Label();
-            this.buttonListviewColumns = new System.Windows.Forms.Button();
             this.numericUpDownMaxNumberOfLines = new System.Windows.Forms.NumericUpDown();
             this.labelMaxLines = new System.Windows.Forms.Label();
             this.comboBoxAutoBackupDeleteAfter = new System.Windows.Forms.ComboBox();
@@ -469,8 +467,6 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxMiscellaneous.Controls.Add(this.numericUpDownMaxWordsMin);
             this.groupBoxMiscellaneous.Controls.Add(this.labelMaxWordsPerMin);
-            this.groupBoxMiscellaneous.Controls.Add(this.labelListviewColumns);
-            this.groupBoxMiscellaneous.Controls.Add(this.buttonListviewColumns);
             this.groupBoxMiscellaneous.Controls.Add(this.numericUpDownMaxNumberOfLines);
             this.groupBoxMiscellaneous.Controls.Add(this.labelMaxLines);
             this.groupBoxMiscellaneous.Controls.Add(this.comboBoxAutoBackupDeleteAfter);
@@ -561,25 +557,6 @@
             this.labelMaxWordsPerMin.TabIndex = 49;
             this.labelMaxWordsPerMin.Text = "Max. words/min";
             // 
-            // labelListviewColumns
-            // 
-            this.labelListviewColumns.AutoSize = true;
-            this.labelListviewColumns.Location = new System.Drawing.Point(439, 342);
-            this.labelListviewColumns.Name = "labelListviewColumns";
-            this.labelListviewColumns.Size = new System.Drawing.Size(86, 13);
-            this.labelListviewColumns.TabIndex = 48;
-            this.labelListviewColumns.Text = "Listview columns";
-            // 
-            // buttonListviewColumns
-            // 
-            this.buttonListviewColumns.Location = new System.Drawing.Point(441, 358);
-            this.buttonListviewColumns.Name = "buttonListviewColumns";
-            this.buttonListviewColumns.Size = new System.Drawing.Size(372, 23);
-            this.buttonListviewColumns.TabIndex = 43;
-            this.buttonListviewColumns.Text = "#, Start time, End time, duration, cps, wpm, text";
-            this.buttonListviewColumns.UseVisualStyleBackColor = true;
-            this.buttonListviewColumns.Click += new System.EventHandler(this.buttonListviewColumns_Click);
-            // 
             // numericUpDownMaxNumberOfLines
             // 
             this.numericUpDownMaxNumberOfLines.Location = new System.Drawing.Point(205, 270);
@@ -620,7 +597,7 @@
             "1 month",
             "3 months",
             "6 months"});
-            this.comboBoxAutoBackupDeleteAfter.Location = new System.Drawing.Point(707, 397);
+            this.comboBoxAutoBackupDeleteAfter.Location = new System.Drawing.Point(707, 357);
             this.comboBoxAutoBackupDeleteAfter.Name = "comboBoxAutoBackupDeleteAfter";
             this.comboBoxAutoBackupDeleteAfter.Size = new System.Drawing.Size(88, 21);
             this.comboBoxAutoBackupDeleteAfter.TabIndex = 45;
@@ -628,7 +605,7 @@
             // labelAutoBackupDeleteAfter
             // 
             this.labelAutoBackupDeleteAfter.AutoSize = true;
-            this.labelAutoBackupDeleteAfter.Location = new System.Drawing.Point(639, 400);
+            this.labelAutoBackupDeleteAfter.Location = new System.Drawing.Point(639, 360);
             this.labelAutoBackupDeleteAfter.Name = "labelAutoBackupDeleteAfter";
             this.labelAutoBackupDeleteAfter.Size = new System.Drawing.Size(65, 13);
             this.labelAutoBackupDeleteAfter.TabIndex = 46;
@@ -637,7 +614,7 @@
             // checkBoxCheckForUpdates
             // 
             this.checkBoxCheckForUpdates.AutoSize = true;
-            this.checkBoxCheckForUpdates.Location = new System.Drawing.Point(441, 427);
+            this.checkBoxCheckForUpdates.Location = new System.Drawing.Point(441, 397);
             this.checkBoxCheckForUpdates.Name = "checkBoxCheckForUpdates";
             this.checkBoxCheckForUpdates.Size = new System.Drawing.Size(114, 17);
             this.checkBoxCheckForUpdates.TabIndex = 46;
@@ -964,7 +941,7 @@
             "Every minute",
             "Every 5 minutes",
             "Every 15 minutes"});
-            this.comboBoxAutoBackup.Location = new System.Drawing.Point(512, 397);
+            this.comboBoxAutoBackup.Location = new System.Drawing.Point(512, 357);
             this.comboBoxAutoBackup.Name = "comboBoxAutoBackup";
             this.comboBoxAutoBackup.Size = new System.Drawing.Size(121, 21);
             this.comboBoxAutoBackup.TabIndex = 44;
@@ -972,7 +949,7 @@
             // labelAutoBackup
             // 
             this.labelAutoBackup.AutoSize = true;
-            this.labelAutoBackup.Location = new System.Drawing.Point(438, 400);
+            this.labelAutoBackup.Location = new System.Drawing.Point(438, 360);
             this.labelAutoBackup.Name = "labelAutoBackup";
             this.labelAutoBackup.Size = new System.Drawing.Size(68, 13);
             this.labelAutoBackup.TabIndex = 43;
@@ -1016,7 +993,7 @@
             "UTF-7",
             "UTF-8",
             "Unicode"});
-            this.comboBoxListViewDoubleClickEvent.Location = new System.Drawing.Point(441, 311);
+            this.comboBoxListViewDoubleClickEvent.Location = new System.Drawing.Point(441, 314);
             this.comboBoxListViewDoubleClickEvent.Name = "comboBoxListViewDoubleClickEvent";
             this.comboBoxListViewDoubleClickEvent.Size = new System.Drawing.Size(332, 21);
             this.comboBoxListViewDoubleClickEvent.TabIndex = 42;
@@ -1024,7 +1001,7 @@
             // labelListViewDoubleClickEvent
             // 
             this.labelListViewDoubleClickEvent.AutoSize = true;
-            this.labelListViewDoubleClickEvent.Location = new System.Drawing.Point(438, 295);
+            this.labelListViewDoubleClickEvent.Location = new System.Drawing.Point(438, 298);
             this.labelListViewDoubleClickEvent.Name = "labelListViewDoubleClickEvent";
             this.labelListViewDoubleClickEvent.Size = new System.Drawing.Size(227, 13);
             this.labelListViewDoubleClickEvent.TabIndex = 41;
@@ -4425,8 +4402,6 @@
         private System.Windows.Forms.PictureBox pictureBoxNetflixQualityCheck;
         private System.Windows.Forms.CheckBox checkBoxNetflixQualityCheck;
         private System.Windows.Forms.CheckBox checkBoxWaveformSetVideoPosMoveStartEnd;
-        private System.Windows.Forms.Button buttonListviewColumns;
-        private System.Windows.Forms.Label labelListviewColumns;
         private System.Windows.Forms.CheckBox checkBoxWaveformShowWpm;
         private System.Windows.Forms.CheckBox checkBoxWaveformShowCps;
         private System.Windows.Forms.NumericUpDown numericUpDownMaxWordsMin;

@@ -31,6 +31,7 @@
             public string CharsPerSec { get; set; }
             public string WordsPerMin { get; set; }
             public string Actor { get; set; }
+            public string Gap { get; set; }
             public string Region { get; set; }
             public string NumberSymbol { get; set; }
             public string Number { get; set; }
@@ -1903,7 +1904,6 @@
             public string RemoveBlankLinesWhenOpening { get; set; }
             public string ShowLineBreaksAs { get; set; }
             public string MainListViewDoubleClickAction { get; set; }
-            public string MainListViewColumns { get; set; }
             public string MainListViewColumnsInfo { get; set; }
             public string MainListViewNothing { get; set; }
             public string MainListViewVideoGoToPositionAndPause { get; set; }
@@ -2032,6 +2032,10 @@
             public string AdjustStartDownEndUpAndGoToNext { get; set; }
             public string AdjustSelected100MsForward { get; set; }
             public string AdjustSelected100MsBack { get; set; }
+            public string AdjustStartXMsBack { get; set; }
+            public string AdjustStartXMsForward { get; set; }
+            public string AdjustEndXMsBack { get; set; }
+            public string AdjustEndXMsForward { get; set; }
             public string AdjustSetStartTimeKeepDuration { get; set; }
             public string AdjustSetEndAndOffsetTheRest { get; set; }
             public string AdjustSetEndAndOffsetTheRestAndGoToNext { get; set; }

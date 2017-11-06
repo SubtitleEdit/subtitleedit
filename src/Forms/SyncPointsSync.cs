@@ -151,7 +151,7 @@ namespace Nikse.SubtitleEdit.Forms
                     var p = new Paragraph();
                     p.StartTime.TotalMilliseconds = _synchronizationPoints[i].TotalMilliseconds;
                     p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + _subtitle.Paragraphs[i].Duration.TotalMilliseconds;
-                    SubtitleListview1.SetStartTimeAndDuration(i, p);
+                    SubtitleListview1.SetStartTimeAndDuration(i, p, _subtitle.GetParagraphOrDefault(i + 1));
 
                     var item = new ListBoxSyncPoint { Index = i, Text = _subtitle.Paragraphs[i].Number + " - " + p.StartTime };
                     listBoxSyncPoints.Items.Add(item);
@@ -162,7 +162,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     SubtitleListview1.SetBackgroundColor(i, SubtitleListview1.BackColor);
                     SubtitleListview1.SetNumber(i, _subtitle.Paragraphs[i].Number.ToString(CultureInfo.InvariantCulture));
-                    SubtitleListview1.SetStartTimeAndDuration(i, _subtitle.Paragraphs[i]);
+                    SubtitleListview1.SetStartTimeAndDuration(i, _subtitle.Paragraphs[i], _subtitle.GetParagraphOrDefault(i + 1));
                 }
             }
         }
