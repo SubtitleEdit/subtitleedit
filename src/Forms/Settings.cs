@@ -334,8 +334,6 @@ namespace Nikse.SubtitleEdit.Forms
             labelShowLineBreaksAs.Text = language.ShowLineBreaksAs;
             textBoxShowLineBreaksAs.Left = labelShowLineBreaksAs.Left + labelShowLineBreaksAs.Width;
             labelListViewDoubleClickEvent.Text = language.MainListViewDoubleClickAction;
-            labelListviewColumns.Text = language.MainListViewColumns;
-            buttonListviewColumns.Text = GetListViewColumns();
             labelAutoBackup.Text = language.AutoBackup;
             labelAutoBackupDeleteAfter.Text = language.AutoBackupDeleteAfter;
             comboBoxAutoBackup.Left = labelAutoBackup.Left + labelAutoBackup.Width + 3;
@@ -838,6 +836,10 @@ namespace Nikse.SubtitleEdit.Forms
             AddNode(adjustNode, Configuration.Settings.Language.Main.VideoControls.SetEndTime, nameof(Configuration.Settings.Shortcuts.MainAdjustSetEnd));
             AddNode(adjustNode, language.AdjustSelected100MsForward, nameof(Configuration.Settings.Shortcuts.MainAdjustSelected100MsForward));
             AddNode(adjustNode, language.AdjustSelected100MsBack, nameof(Configuration.Settings.Shortcuts.MainAdjustSelected100MsBack));
+            AddNode(adjustNode, string.Format(language.AdjustStartXMsBack, Configuration.Settings.Tools.MoveStartEndMs), nameof(Configuration.Settings.Shortcuts.MainAdjustStartXMsBack));
+            AddNode(adjustNode, string.Format(language.AdjustStartXMsForward, Configuration.Settings.Tools.MoveStartEndMs), nameof(Configuration.Settings.Shortcuts.MainAdjustStartXMsForward));
+            AddNode(adjustNode, string.Format(language.AdjustEndXMsBack, Configuration.Settings.Tools.MoveStartEndMs), nameof(Configuration.Settings.Shortcuts.MainAdjustEndXMsBack));
+            AddNode(adjustNode, string.Format(language.AdjustEndXMsForward, Configuration.Settings.Tools.MoveStartEndMs), nameof(Configuration.Settings.Shortcuts.MainAdjustEndXMsForward));
             AddNode(adjustNode, language.AdjustSetEndAndOffsetTheRest, nameof(Configuration.Settings.Shortcuts.MainAdjustSetEndAndOffsetTheRest));
             AddNode(adjustNode, language.AdjustSetEndAndOffsetTheRestAndGoToNext, nameof(Configuration.Settings.Shortcuts.MainAdjustSetEndAndOffsetTheRestAndGoToNext));
             AddNode(adjustNode, language.AdjustExtendCurrentSubtitle, nameof(Configuration.Settings.Shortcuts.GeneralExtendCurrentSubtitle));
@@ -2432,21 +2434,6 @@ namespace Nikse.SubtitleEdit.Forms
         private void numericUpDownMaxNumberOfLines_ValueChanged(object sender, EventArgs e)
         {
             checkBoxSyntaxColorTextMoreThanTwoLines.Text = string.Format(Configuration.Settings.Language.Settings.SyntaxColorTextMoreThanMaxLines, numericUpDownMaxNumberOfLines.Value);
-        }
-
-        private void buttonListviewColumns_Click(object sender, EventArgs e)
-        {
-            using (var form = new SettingsListViewColumns())
-            {
-                if (form.ShowDialog(this) == DialogResult.OK)
-                {
-                    Configuration.Settings.Tools.ListViewShowColumnEndTime = form.ShowEndTime;
-                    Configuration.Settings.Tools.ListViewShowColumnDuration = form.ShowDuration;
-                    Configuration.Settings.Tools.ListViewShowColumnCharsPerSec = form.ShowCps;
-                    Configuration.Settings.Tools.ListViewShowColumnWordsPerMin = form.ShowWpm;
-                    buttonListviewColumns.Text = GetListViewColumns();
-                }
-            }
         }
 
         private void radioButtonVideoPlayerMPV_CheckedChanged(object sender, EventArgs e)

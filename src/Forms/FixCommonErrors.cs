@@ -1102,7 +1102,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     // update _subtitle + listview
                     currentParagraph.EndTime.TotalMilliseconds = currentParagraph.StartTime.TotalMilliseconds + ((double)numericUpDownDuration.Value * TimeCode.BaseUnit);
-                    subtitleListView1.SetDuration(firstSelectedIndex, currentParagraph);
+                    subtitleListView1.SetDuration(firstSelectedIndex, currentParagraph, _originalSubtitle.GetParagraphOrDefault(firstSelectedIndex + 1));
                 }
             }
         }
@@ -1173,7 +1173,7 @@ namespace Nikse.SubtitleEdit.Forms
                 _originalSubtitle.Paragraphs[_subtitleListViewIndex].EndTime.TotalMilliseconds +=
                     (startTime.TotalMilliseconds - _originalSubtitle.Paragraphs[_subtitleListViewIndex].StartTime.TotalMilliseconds);
                 _originalSubtitle.Paragraphs[_subtitleListViewIndex].StartTime = startTime;
-                subtitleListView1.SetStartTimeAndDuration(_subtitleListViewIndex, _originalSubtitle.Paragraphs[_subtitleListViewIndex]);
+                subtitleListView1.SetStartTimeAndDuration(_subtitleListViewIndex, _originalSubtitle.Paragraphs[_subtitleListViewIndex], _originalSubtitle.GetParagraphOrDefault(_subtitleListViewIndex + 1));
             }
         }
 

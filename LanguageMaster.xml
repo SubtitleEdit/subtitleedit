@@ -27,6 +27,7 @@
     <CharsPerSec>Chars/sec</CharsPerSec>
     <WordsPerMin>Words/min</WordsPerMin>
     <Actor>Actor</Actor>
+    <Gap>Gap</Gap>
     <Region>Region</Region>
     <NumberSymbol>#</NumberSymbol>
     <Number>Number</Number>
@@ -1737,7 +1738,6 @@ can edit in same subtitle file (collaboration)</Information>
     <RemoveBlankLinesWhenOpening>Remove blank lines when opening a subtitle</RemoveBlankLinesWhenOpening>
     <ShowLineBreaksAs>Show line breaks in list view as</ShowLineBreaksAs>
     <MainListViewDoubleClickAction>Double-clicking line in main window list view will</MainListViewDoubleClickAction>
-    <MainListViewColumns>List view columns</MainListViewColumns>
     <MainListViewColumnsInfo>Choose visible list view columns</MainListViewColumnsInfo>
     <MainListViewNothing>Nothing</MainListViewNothing>
     <MainListViewVideoGoToPositionAndPause>Go to video position and pause</MainListViewVideoGoToPositionAndPause>
@@ -1865,6 +1865,10 @@ can edit in same subtitle file (collaboration)</Information>
     <AdjustStartDownEndUpAndGoToNext>Key down=set start, Key up=set end and go to next</AdjustStartDownEndUpAndGoToNext>
     <AdjustSelected100MsForward>Move selected lines 100 ms forward</AdjustSelected100MsForward>
     <AdjustSelected100MsBack>Move selected lines 100 ms back</AdjustSelected100MsBack>
+    <AdjustStartXMsBack>Move start {0} ms back</AdjustStartXMsBack>
+    <AdjustStartXMsForward>Move start {0} ms forward</AdjustStartXMsForward>
+    <AdjustEndXMsBack>Move end {0} ms back</AdjustEndXMsBack>
+    <AdjustEndXMsForward>Move end {0} ms forward</AdjustEndXMsForward>
     <AdjustSetStartTimeKeepDuration>Set start time, keep duration</AdjustSetStartTimeKeepDuration>
     <AdjustSetEndAndOffsetTheRest>Set end, offset the rest</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Set end, offset the rest and go to next</AdjustSetEndAndOffsetTheRestAndGoToNext>

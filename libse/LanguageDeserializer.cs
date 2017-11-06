@@ -130,6 +130,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "General/Actor":
                     language.General.Actor = reader.Value;
                     break;
+                case "General/Gap":
+                    language.General.Gap = reader.Value;
+                    break;
                 case "General/Region":
                     language.General.Region = reader.Value;
                     break;
@@ -4660,9 +4663,6 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/MainListViewDoubleClickAction":
                     language.Settings.MainListViewDoubleClickAction = reader.Value;
                     break;
-                case "Settings/MainListViewColumns":
-                    language.Settings.MainListViewColumns = reader.Value;
-                    break;
                 case "Settings/MainListViewColumnsInfo":
                     language.Settings.MainListViewColumnsInfo = reader.Value;
                     break;
@@ -5043,6 +5043,18 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "Settings/AdjustSelected100MsBack":
                     language.Settings.AdjustSelected100MsBack = reader.Value;
+                    break;
+                case "Settings/AdjustStartXMsBack":
+                    language.Settings.AdjustStartXMsBack = reader.Value;
+                    break;
+                case "Settings/AdjustStartXMsForward":
+                    language.Settings.AdjustStartXMsForward = reader.Value;
+                    break;
+                case "Settings/AdjustEndXMsBack":
+                    language.Settings.AdjustEndXMsBack = reader.Value;
+                    break;
+                case "Settings/AdjustEndXMsForward":
+                    language.Settings.AdjustEndXMsForward = reader.Value;
                     break;
                 case "Settings/AdjustSetStartTimeKeepDuration":
                     language.Settings.AdjustSetStartTimeKeepDuration = reader.Value;
