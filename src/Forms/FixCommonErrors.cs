@@ -1173,7 +1173,7 @@ namespace Nikse.SubtitleEdit.Forms
                 _originalSubtitle.Paragraphs[_subtitleListViewIndex].EndTime.TotalMilliseconds +=
                     (startTime.TotalMilliseconds - _originalSubtitle.Paragraphs[_subtitleListViewIndex].StartTime.TotalMilliseconds);
                 _originalSubtitle.Paragraphs[_subtitleListViewIndex].StartTime = startTime;
-                subtitleListView1.SetStartTimeAndDuration(_subtitleListViewIndex, _originalSubtitle.Paragraphs[_subtitleListViewIndex], _originalSubtitle.GetParagraphOrDefault(_subtitleListViewIndex + 1));
+                subtitleListView1.SetStartTimeAndDuration(_subtitleListViewIndex, _originalSubtitle.Paragraphs[_subtitleListViewIndex], _originalSubtitle.GetParagraphOrDefault(_subtitleListViewIndex + 1), _originalSubtitle.GetParagraphOrDefault(_subtitleListViewIndex - 1));
             }
         }
 
