@@ -18,7 +18,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public ApplyDurationLimits()
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
             Text = Configuration.Settings.Language.ApplyDurationLimits.Title;
             labelMinDuration.Text = Configuration.Settings.Language.Settings.DurationMinimumMilliseconds;
             labelMaxDuration.Text = Configuration.Settings.Language.Settings.DurationMaximumMilliseconds;
@@ -28,6 +30,8 @@ namespace Nikse.SubtitleEdit.Forms
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             subtitleListView1.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
+            UiUtil.InitializeSubtitleFont(subtitleListView1);
+            subtitleListView1.AutoSizeAllColumns(this);
             listViewFixes.Columns[0].Text = Configuration.Settings.Language.General.Apply;
             listViewFixes.Columns[1].Text = Configuration.Settings.Language.General.LineNumber;
             listViewFixes.Columns[2].Text = Configuration.Settings.Language.General.Before;
@@ -35,6 +39,7 @@ namespace Nikse.SubtitleEdit.Forms
             FixLargeFonts();
             _refreshTimer.Interval = 400;
             _refreshTimer.Tick += RefreshTimerTick;
+            UiUtil.FixLargeFonts(this, buttonOK);
         }
 
         private void RefreshTimerTick(object sender, EventArgs e)
@@ -88,8 +93,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 var item = new ListViewItem(string.Empty) { Checked = true, Tag = p, BackColor = backgroundColor };
                 item.SubItems.Add(p.Number.ToString());
-                item.SubItems.Add(before.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
-                item.SubItems.Add(after.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
+                item.SubItems.Add(UiUtil.GetListViewTextFromString(before));
+                item.SubItems.Add(UiUtil.GetListViewTextFromString(after));
                 listViewFixes.Items.Add(item);
             }
         }
@@ -222,6 +227,6 @@ namespace Nikse.SubtitleEdit.Forms
         {
             listViewFixes.Focus();
         }
-        
+
     }
 }

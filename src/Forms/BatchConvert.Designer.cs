@@ -29,9 +29,12 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            Nikse.SubtitleEdit.Core.TimeCode timeCode2 = new Nikse.SubtitleEdit.Core.TimeCode();
             this.buttonConvert = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.groupBoxConvertOptions = new System.Windows.Forms.GroupBox();
+            this.buttonBridgeGapsSettings = new System.Windows.Forms.Button();
+            this.checkBoxBridgeGaps = new System.Windows.Forms.CheckBox();
             this.groupBoxSpeed = new System.Windows.Forms.GroupBox();
             this.radioButtonToDropFrame = new System.Windows.Forms.RadioButton();
             this.radioButtonSpeedFromDropFrame = new System.Windows.Forms.RadioButton();
@@ -60,6 +63,7 @@
             this.checkBoxRemoveTextForHI = new System.Windows.Forms.CheckBox();
             this.checkBoxRemoveFormatting = new System.Windows.Forms.CheckBox();
             this.groupBoxOutput = new System.Windows.Forms.GroupBox();
+            this.checkBoxUseStyleFromSource = new System.Windows.Forms.CheckBox();
             this.checkBoxOverwriteOriginalFiles = new System.Windows.Forms.CheckBox();
             this.linkLabelOpenOutputFolder = new System.Windows.Forms.LinkLabel();
             this.buttonStyles = new System.Windows.Forms.Button();
@@ -105,7 +109,7 @@
             // 
             this.buttonConvert.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonConvert.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonConvert.Location = new System.Drawing.Point(817, 578);
+            this.buttonConvert.Location = new System.Drawing.Point(844, 598);
             this.buttonConvert.Name = "buttonConvert";
             this.buttonConvert.Size = new System.Drawing.Size(98, 21);
             this.buttonConvert.TabIndex = 2;
@@ -117,7 +121,7 @@
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(921, 578);
+            this.buttonCancel.Location = new System.Drawing.Point(948, 598);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 21);
             this.buttonCancel.TabIndex = 3;
@@ -129,6 +133,8 @@
             // 
             this.groupBoxConvertOptions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxConvertOptions.Controls.Add(this.buttonBridgeGapsSettings);
+            this.groupBoxConvertOptions.Controls.Add(this.checkBoxBridgeGaps);
             this.groupBoxConvertOptions.Controls.Add(this.groupBoxSpeed);
             this.groupBoxConvertOptions.Controls.Add(this.checkBoxSplitLongLines);
             this.groupBoxConvertOptions.Controls.Add(this.buttonRemoveTextForHiSettings);
@@ -143,12 +149,33 @@
             this.groupBoxConvertOptions.Controls.Add(this.checkBoxFixCasing);
             this.groupBoxConvertOptions.Controls.Add(this.checkBoxRemoveTextForHI);
             this.groupBoxConvertOptions.Controls.Add(this.checkBoxRemoveFormatting);
-            this.groupBoxConvertOptions.Location = new System.Drawing.Point(439, 19);
+            this.groupBoxConvertOptions.Location = new System.Drawing.Point(422, 19);
             this.groupBoxConvertOptions.Name = "groupBoxConvertOptions";
-            this.groupBoxConvertOptions.Size = new System.Drawing.Size(539, 210);
+            this.groupBoxConvertOptions.Size = new System.Drawing.Size(583, 234);
             this.groupBoxConvertOptions.TabIndex = 11;
             this.groupBoxConvertOptions.TabStop = false;
             this.groupBoxConvertOptions.Text = "Convert options";
+            // 
+            // buttonBridgeGapsSettings
+            // 
+            this.buttonBridgeGapsSettings.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.buttonBridgeGapsSettings.Location = new System.Drawing.Point(183, 92);
+            this.buttonBridgeGapsSettings.Name = "buttonBridgeGapsSettings";
+            this.buttonBridgeGapsSettings.Size = new System.Drawing.Size(104, 21);
+            this.buttonBridgeGapsSettings.TabIndex = 10;
+            this.buttonBridgeGapsSettings.Text = "Settings...";
+            this.buttonBridgeGapsSettings.UseVisualStyleBackColor = true;
+            this.buttonBridgeGapsSettings.Click += new System.EventHandler(this.buttonBridgeGapsSettings_Click);
+            // 
+            // checkBoxBridgeGaps
+            // 
+            this.checkBoxBridgeGaps.AutoSize = true;
+            this.checkBoxBridgeGaps.Location = new System.Drawing.Point(15, 96);
+            this.checkBoxBridgeGaps.Name = "checkBoxBridgeGaps";
+            this.checkBoxBridgeGaps.Size = new System.Drawing.Size(139, 17);
+            this.checkBoxBridgeGaps.TabIndex = 7;
+            this.checkBoxBridgeGaps.Text = "Bridge gaps in durations";
+            this.checkBoxBridgeGaps.UseVisualStyleBackColor = true;
             // 
             // groupBoxSpeed
             // 
@@ -157,9 +184,9 @@
             this.groupBoxSpeed.Controls.Add(this.radioButtonSpeedCustom);
             this.groupBoxSpeed.Controls.Add(this.numericUpDownPercent);
             this.groupBoxSpeed.Controls.Add(this.labelPercent);
-            this.groupBoxSpeed.Location = new System.Drawing.Point(429, 89);
+            this.groupBoxSpeed.Location = new System.Drawing.Point(444, 89);
             this.groupBoxSpeed.Name = "groupBoxSpeed";
-            this.groupBoxSpeed.Size = new System.Drawing.Size(110, 115);
+            this.groupBoxSpeed.Size = new System.Drawing.Size(132, 115);
             this.groupBoxSpeed.TabIndex = 12;
             this.groupBoxSpeed.TabStop = false;
             this.groupBoxSpeed.Text = "Change speed";
@@ -235,17 +262,17 @@
             // checkBoxSplitLongLines
             // 
             this.checkBoxSplitLongLines.AutoSize = true;
-            this.checkBoxSplitLongLines.Location = new System.Drawing.Point(15, 145);
+            this.checkBoxSplitLongLines.Location = new System.Drawing.Point(15, 167);
             this.checkBoxSplitLongLines.Name = "checkBoxSplitLongLines";
             this.checkBoxSplitLongLines.Size = new System.Drawing.Size(93, 17);
-            this.checkBoxSplitLongLines.TabIndex = 8;
+            this.checkBoxSplitLongLines.TabIndex = 40;
             this.checkBoxSplitLongLines.Text = "Split long lines";
             this.checkBoxSplitLongLines.UseVisualStyleBackColor = true;
             // 
             // buttonRemoveTextForHiSettings
             // 
             this.buttonRemoveTextForHiSettings.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonRemoveTextForHiSettings.Location = new System.Drawing.Point(170, 69);
+            this.buttonRemoveTextForHiSettings.Location = new System.Drawing.Point(183, 69);
             this.buttonRemoveTextForHiSettings.Name = "buttonRemoveTextForHiSettings";
             this.buttonRemoveTextForHiSettings.Size = new System.Drawing.Size(104, 21);
             this.buttonRemoveTextForHiSettings.TabIndex = 3;
@@ -256,30 +283,30 @@
             // checkBoxSetMinimumDisplayTimeBetweenSubs
             // 
             this.checkBoxSetMinimumDisplayTimeBetweenSubs.AutoSize = true;
-            this.checkBoxSetMinimumDisplayTimeBetweenSubs.Location = new System.Drawing.Point(15, 191);
+            this.checkBoxSetMinimumDisplayTimeBetweenSubs.Location = new System.Drawing.Point(15, 213);
             this.checkBoxSetMinimumDisplayTimeBetweenSubs.Name = "checkBoxSetMinimumDisplayTimeBetweenSubs";
             this.checkBoxSetMinimumDisplayTimeBetweenSubs.Size = new System.Drawing.Size(208, 17);
-            this.checkBoxSetMinimumDisplayTimeBetweenSubs.TabIndex = 9;
+            this.checkBoxSetMinimumDisplayTimeBetweenSubs.TabIndex = 50;
             this.checkBoxSetMinimumDisplayTimeBetweenSubs.Text = "Set min. milliseconds between subtitles";
             this.checkBoxSetMinimumDisplayTimeBetweenSubs.UseVisualStyleBackColor = true;
             // 
             // checkBoxAutoBalance
             // 
             this.checkBoxAutoBalance.AutoSize = true;
-            this.checkBoxAutoBalance.Location = new System.Drawing.Point(15, 168);
+            this.checkBoxAutoBalance.Location = new System.Drawing.Point(15, 190);
             this.checkBoxAutoBalance.Name = "checkBoxAutoBalance";
             this.checkBoxAutoBalance.Size = new System.Drawing.Size(113, 17);
-            this.checkBoxAutoBalance.TabIndex = 8;
+            this.checkBoxAutoBalance.TabIndex = 45;
             this.checkBoxAutoBalance.Text = "Auto balance lines";
             this.checkBoxAutoBalance.UseVisualStyleBackColor = true;
             // 
             // buttonMultipleReplaceSettings
             // 
             this.buttonMultipleReplaceSettings.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonMultipleReplaceSettings.Location = new System.Drawing.Point(170, 119);
+            this.buttonMultipleReplaceSettings.Location = new System.Drawing.Point(183, 141);
             this.buttonMultipleReplaceSettings.Name = "buttonMultipleReplaceSettings";
             this.buttonMultipleReplaceSettings.Size = new System.Drawing.Size(104, 21);
-            this.buttonMultipleReplaceSettings.TabIndex = 7;
+            this.buttonMultipleReplaceSettings.TabIndex = 30;
             this.buttonMultipleReplaceSettings.Text = "Settings...";
             this.buttonMultipleReplaceSettings.UseVisualStyleBackColor = true;
             this.buttonMultipleReplaceSettings.Click += new System.EventHandler(this.buttonMultipleReplaceSettings_Click);
@@ -287,30 +314,30 @@
             // checkBoxMultipleReplace
             // 
             this.checkBoxMultipleReplace.AutoSize = true;
-            this.checkBoxMultipleReplace.Location = new System.Drawing.Point(15, 122);
+            this.checkBoxMultipleReplace.Location = new System.Drawing.Point(15, 144);
             this.checkBoxMultipleReplace.Name = "checkBoxMultipleReplace";
             this.checkBoxMultipleReplace.Size = new System.Drawing.Size(100, 17);
-            this.checkBoxMultipleReplace.TabIndex = 6;
+            this.checkBoxMultipleReplace.TabIndex = 25;
             this.checkBoxMultipleReplace.Text = "Multiple replace";
             this.checkBoxMultipleReplace.UseVisualStyleBackColor = true;
             // 
             // checkBoxFixCommonErrors
             // 
             this.checkBoxFixCommonErrors.AutoSize = true;
-            this.checkBoxFixCommonErrors.Location = new System.Drawing.Point(15, 97);
+            this.checkBoxFixCommonErrors.Location = new System.Drawing.Point(15, 119);
             this.checkBoxFixCommonErrors.Name = "checkBoxFixCommonErrors";
             this.checkBoxFixCommonErrors.Size = new System.Drawing.Size(111, 17);
-            this.checkBoxFixCommonErrors.TabIndex = 4;
+            this.checkBoxFixCommonErrors.TabIndex = 15;
             this.checkBoxFixCommonErrors.Text = "Fix common errors";
             this.checkBoxFixCommonErrors.UseVisualStyleBackColor = true;
             // 
             // buttonFixCommonErrorSettings
             // 
             this.buttonFixCommonErrorSettings.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonFixCommonErrorSettings.Location = new System.Drawing.Point(170, 94);
+            this.buttonFixCommonErrorSettings.Location = new System.Drawing.Point(183, 116);
             this.buttonFixCommonErrorSettings.Name = "buttonFixCommonErrorSettings";
             this.buttonFixCommonErrorSettings.Size = new System.Drawing.Size(104, 21);
-            this.buttonFixCommonErrorSettings.TabIndex = 5;
+            this.buttonFixCommonErrorSettings.TabIndex = 20;
             this.buttonFixCommonErrorSettings.Text = "Settings...";
             this.buttonFixCommonErrorSettings.UseVisualStyleBackColor = true;
             this.buttonFixCommonErrorSettings.Click += new System.EventHandler(this.buttonFixCommonErrorSettings_Click);
@@ -321,9 +348,9 @@
             this.groupBoxChangeFrameRate.Controls.Add(this.labelToFrameRate);
             this.groupBoxChangeFrameRate.Controls.Add(this.comboBoxFrameRateFrom);
             this.groupBoxChangeFrameRate.Controls.Add(this.labelFromFrameRate);
-            this.groupBoxChangeFrameRate.Location = new System.Drawing.Point(280, 12);
+            this.groupBoxChangeFrameRate.Location = new System.Drawing.Point(295, 12);
             this.groupBoxChangeFrameRate.Name = "groupBoxChangeFrameRate";
-            this.groupBoxChangeFrameRate.Size = new System.Drawing.Size(259, 73);
+            this.groupBoxChangeFrameRate.Size = new System.Drawing.Size(281, 73);
             this.groupBoxChangeFrameRate.TabIndex = 10;
             this.groupBoxChangeFrameRate.TabStop = false;
             this.groupBoxChangeFrameRate.Text = "Change frame rate";
@@ -331,7 +358,7 @@
             // comboBoxFrameRateTo
             // 
             this.comboBoxFrameRateTo.FormattingEnabled = true;
-            this.comboBoxFrameRateTo.Location = new System.Drawing.Point(132, 46);
+            this.comboBoxFrameRateTo.Location = new System.Drawing.Point(130, 46);
             this.comboBoxFrameRateTo.Name = "comboBoxFrameRateTo";
             this.comboBoxFrameRateTo.Size = new System.Drawing.Size(121, 21);
             this.comboBoxFrameRateTo.TabIndex = 3;
@@ -348,7 +375,7 @@
             // comboBoxFrameRateFrom
             // 
             this.comboBoxFrameRateFrom.FormattingEnabled = true;
-            this.comboBoxFrameRateFrom.Location = new System.Drawing.Point(132, 17);
+            this.comboBoxFrameRateFrom.Location = new System.Drawing.Point(130, 17);
             this.comboBoxFrameRateFrom.Name = "comboBoxFrameRateFrom";
             this.comboBoxFrameRateFrom.Size = new System.Drawing.Size(121, 21);
             this.comboBoxFrameRateFrom.TabIndex = 1;
@@ -368,9 +395,9 @@
             this.groupBoxOffsetTimeCodes.Controls.Add(this.radioButtonShowEarlier);
             this.groupBoxOffsetTimeCodes.Controls.Add(this.timeUpDownAdjust);
             this.groupBoxOffsetTimeCodes.Controls.Add(this.labelHourMinSecMilliSecond);
-            this.groupBoxOffsetTimeCodes.Location = new System.Drawing.Point(280, 89);
+            this.groupBoxOffsetTimeCodes.Location = new System.Drawing.Point(295, 89);
             this.groupBoxOffsetTimeCodes.Name = "groupBoxOffsetTimeCodes";
-            this.groupBoxOffsetTimeCodes.Size = new System.Drawing.Size(143, 115);
+            this.groupBoxOffsetTimeCodes.Size = new System.Drawing.Size(143, 119);
             this.groupBoxOffsetTimeCodes.TabIndex = 11;
             this.groupBoxOffsetTimeCodes.TabStop = false;
             this.groupBoxOffsetTimeCodes.Text = "Offset time codes";
@@ -401,11 +428,20 @@
             // 
             this.timeUpDownAdjust.AutoSize = true;
             this.timeUpDownAdjust.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.timeUpDownAdjust.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.timeUpDownAdjust.Location = new System.Drawing.Point(7, 37);
             this.timeUpDownAdjust.Margin = new System.Windows.Forms.Padding(4);
             this.timeUpDownAdjust.Name = "timeUpDownAdjust";
-            this.timeUpDownAdjust.Size = new System.Drawing.Size(96, 24);
+            this.timeUpDownAdjust.Size = new System.Drawing.Size(96, 27);
             this.timeUpDownAdjust.TabIndex = 1;
+            timeCode2.Hours = 0;
+            timeCode2.Milliseconds = 0;
+            timeCode2.Minutes = 0;
+            timeCode2.Seconds = 0;
+            timeCode2.TimeSpan = System.TimeSpan.Parse("00:00:00");
+            timeCode2.TotalMilliseconds = 0D;
+            timeCode2.TotalSeconds = 0D;
+            this.timeUpDownAdjust.TimeCode = timeCode2;
             this.timeUpDownAdjust.UseVideoOffset = false;
             // 
             // labelHourMinSecMilliSecond
@@ -451,6 +487,7 @@
             // 
             this.groupBoxOutput.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxOutput.Controls.Add(this.checkBoxUseStyleFromSource);
             this.groupBoxOutput.Controls.Add(this.checkBoxOverwriteOriginalFiles);
             this.groupBoxOutput.Controls.Add(this.linkLabelOpenOutputFolder);
             this.groupBoxOutput.Controls.Add(this.buttonStyles);
@@ -463,12 +500,23 @@
             this.groupBoxOutput.Controls.Add(this.labelChooseOutputFolder);
             this.groupBoxOutput.Controls.Add(this.buttonChooseFolder);
             this.groupBoxOutput.Controls.Add(this.textBoxOutputFolder);
-            this.groupBoxOutput.Location = new System.Drawing.Point(12, 330);
+            this.groupBoxOutput.Location = new System.Drawing.Point(12, 326);
             this.groupBoxOutput.Name = "groupBoxOutput";
-            this.groupBoxOutput.Size = new System.Drawing.Size(987, 235);
+            this.groupBoxOutput.Size = new System.Drawing.Size(1014, 259);
             this.groupBoxOutput.TabIndex = 1;
             this.groupBoxOutput.TabStop = false;
             this.groupBoxOutput.Text = "Output";
+            // 
+            // checkBoxUseStyleFromSource
+            // 
+            this.checkBoxUseStyleFromSource.AutoSize = true;
+            this.checkBoxUseStyleFromSource.Location = new System.Drawing.Point(80, 170);
+            this.checkBoxUseStyleFromSource.Name = "checkBoxUseStyleFromSource";
+            this.checkBoxUseStyleFromSource.Size = new System.Drawing.Size(127, 17);
+            this.checkBoxUseStyleFromSource.TabIndex = 9;
+            this.checkBoxUseStyleFromSource.Text = "Use style from source";
+            this.checkBoxUseStyleFromSource.UseVisualStyleBackColor = true;
+            this.checkBoxUseStyleFromSource.Visible = false;
             // 
             // checkBoxOverwriteOriginalFiles
             // 
@@ -484,7 +532,7 @@
             // linkLabelOpenOutputFolder
             // 
             this.linkLabelOpenOutputFolder.AutoSize = true;
-            this.linkLabelOpenOutputFolder.Location = new System.Drawing.Point(385, 74);
+            this.linkLabelOpenOutputFolder.Location = new System.Drawing.Point(368, 74);
             this.linkLabelOpenOutputFolder.Name = "linkLabelOpenOutputFolder";
             this.linkLabelOpenOutputFolder.Size = new System.Drawing.Size(42, 13);
             this.linkLabelOpenOutputFolder.TabIndex = 4;
@@ -494,7 +542,7 @@
             // 
             // buttonStyles
             // 
-            this.buttonStyles.Location = new System.Drawing.Point(311, 141);
+            this.buttonStyles.Location = new System.Drawing.Point(300, 141);
             this.buttonStyles.Name = "buttonStyles";
             this.buttonStyles.Size = new System.Drawing.Size(116, 23);
             this.buttonStyles.TabIndex = 8;
@@ -519,14 +567,14 @@
             this.comboBoxSubtitleFormats.FormattingEnabled = true;
             this.comboBoxSubtitleFormats.Location = new System.Drawing.Point(80, 143);
             this.comboBoxSubtitleFormats.Name = "comboBoxSubtitleFormats";
-            this.comboBoxSubtitleFormats.Size = new System.Drawing.Size(225, 21);
+            this.comboBoxSubtitleFormats.Size = new System.Drawing.Size(214, 21);
             this.comboBoxSubtitleFormats.TabIndex = 7;
             this.comboBoxSubtitleFormats.SelectedIndexChanged += new System.EventHandler(this.ComboBoxSubtitleFormatsSelectedIndexChanged);
             // 
             // labelEncoding
             // 
             this.labelEncoding.AutoSize = true;
-            this.labelEncoding.Location = new System.Drawing.Point(10, 178);
+            this.labelEncoding.Location = new System.Drawing.Point(10, 201);
             this.labelEncoding.Name = "labelEncoding";
             this.labelEncoding.Size = new System.Drawing.Size(52, 13);
             this.labelEncoding.TabIndex = 9;
@@ -536,9 +584,9 @@
             // 
             this.comboBoxEncoding.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxEncoding.FormattingEnabled = true;
-            this.comboBoxEncoding.Location = new System.Drawing.Point(80, 175);
+            this.comboBoxEncoding.Location = new System.Drawing.Point(80, 198);
             this.comboBoxEncoding.Name = "comboBoxEncoding";
-            this.comboBoxEncoding.Size = new System.Drawing.Size(225, 21);
+            this.comboBoxEncoding.Size = new System.Drawing.Size(214, 21);
             this.comboBoxEncoding.TabIndex = 10;
             // 
             // labelOutputFormat
@@ -561,7 +609,7 @@
             // 
             // buttonChooseFolder
             // 
-            this.buttonChooseFolder.Location = new System.Drawing.Point(353, 68);
+            this.buttonChooseFolder.Location = new System.Drawing.Point(338, 69);
             this.buttonChooseFolder.Name = "buttonChooseFolder";
             this.buttonChooseFolder.Size = new System.Drawing.Size(26, 23);
             this.buttonChooseFolder.TabIndex = 3;
@@ -573,7 +621,7 @@
             // 
             this.textBoxOutputFolder.Location = new System.Drawing.Point(11, 71);
             this.textBoxOutputFolder.Name = "textBoxOutputFolder";
-            this.textBoxOutputFolder.Size = new System.Drawing.Size(336, 20);
+            this.textBoxOutputFolder.Size = new System.Drawing.Size(322, 20);
             this.textBoxOutputFolder.TabIndex = 2;
             // 
             // groupBoxInput
@@ -591,7 +639,7 @@
             this.groupBoxInput.Controls.Add(this.listViewInputFiles);
             this.groupBoxInput.Location = new System.Drawing.Point(15, 12);
             this.groupBoxInput.Name = "groupBoxInput";
-            this.groupBoxInput.Size = new System.Drawing.Size(984, 312);
+            this.groupBoxInput.Size = new System.Drawing.Size(1011, 308);
             this.groupBoxInput.TabIndex = 0;
             this.groupBoxInput.TabStop = false;
             this.groupBoxInput.Text = "Input";
@@ -599,7 +647,7 @@
             // textBoxFilter
             // 
             this.textBoxFilter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.textBoxFilter.Location = new System.Drawing.Point(422, 283);
+            this.textBoxFilter.Location = new System.Drawing.Point(422, 279);
             this.textBoxFilter.Name = "textBoxFilter";
             this.textBoxFilter.Size = new System.Drawing.Size(158, 20);
             this.textBoxFilter.TabIndex = 13;
@@ -608,7 +656,7 @@
             // 
             this.labelFilter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelFilter.AutoSize = true;
-            this.labelFilter.Location = new System.Drawing.Point(11, 286);
+            this.labelFilter.Location = new System.Drawing.Point(11, 282);
             this.labelFilter.Name = "labelFilter";
             this.labelFilter.Size = new System.Drawing.Size(29, 13);
             this.labelFilter.TabIndex = 11;
@@ -624,7 +672,7 @@
             "SubRip .srt files without BOM header",
             "Files with subtitle with more than two lines",
             "Files that contains..."});
-            this.comboBoxFilter.Location = new System.Drawing.Point(81, 283);
+            this.comboBoxFilter.Location = new System.Drawing.Point(81, 279);
             this.comboBoxFilter.Name = "comboBoxFilter";
             this.comboBoxFilter.Size = new System.Drawing.Size(335, 21);
             this.comboBoxFilter.TabIndex = 12;
@@ -636,7 +684,7 @@
             this.checkBoxScanFolderRecursive.AutoSize = true;
             this.checkBoxScanFolderRecursive.Checked = true;
             this.checkBoxScanFolderRecursive.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxScanFolderRecursive.Location = new System.Drawing.Point(748, 16);
+            this.checkBoxScanFolderRecursive.Location = new System.Drawing.Point(775, 16);
             this.checkBoxScanFolderRecursive.Name = "checkBoxScanFolderRecursive";
             this.checkBoxScanFolderRecursive.Size = new System.Drawing.Size(74, 17);
             this.checkBoxScanFolderRecursive.TabIndex = 0;
@@ -646,7 +694,7 @@
             // buttonSearchFolder
             // 
             this.buttonSearchFolder.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonSearchFolder.Location = new System.Drawing.Point(828, 12);
+            this.buttonSearchFolder.Location = new System.Drawing.Point(855, 12);
             this.buttonSearchFolder.Name = "buttonSearchFolder";
             this.buttonSearchFolder.Size = new System.Drawing.Size(116, 23);
             this.buttonSearchFolder.TabIndex = 1;
@@ -657,7 +705,7 @@
             // buttonInputBrowse
             // 
             this.buttonInputBrowse.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonInputBrowse.Location = new System.Drawing.Point(949, 41);
+            this.buttonInputBrowse.Location = new System.Drawing.Point(976, 41);
             this.buttonInputBrowse.Name = "buttonInputBrowse";
             this.buttonInputBrowse.Size = new System.Drawing.Size(26, 23);
             this.buttonInputBrowse.TabIndex = 3;
@@ -690,7 +738,7 @@
             this.listViewInputFiles.HideSelection = false;
             this.listViewInputFiles.Location = new System.Drawing.Point(6, 41);
             this.listViewInputFiles.Name = "listViewInputFiles";
-            this.listViewInputFiles.Size = new System.Drawing.Size(938, 236);
+            this.listViewInputFiles.Size = new System.Drawing.Size(965, 232);
             this.listViewInputFiles.TabIndex = 2;
             this.listViewInputFiles.UseCompatibleStateImageBehavior = false;
             this.listViewInputFiles.View = System.Windows.Forms.View.Details;
@@ -749,16 +797,16 @@
             // 
             this.progressBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.progressBar1.Location = new System.Drawing.Point(15, 587);
+            this.progressBar1.Location = new System.Drawing.Point(15, 607);
             this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(793, 10);
+            this.progressBar1.Size = new System.Drawing.Size(820, 10);
             this.progressBar1.TabIndex = 8;
             // 
             // labelStatus
             // 
             this.labelStatus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelStatus.AutoSize = true;
-            this.labelStatus.Location = new System.Drawing.Point(12, 571);
+            this.labelStatus.Location = new System.Drawing.Point(12, 591);
             this.labelStatus.Name = "labelStatus";
             this.labelStatus.Size = new System.Drawing.Size(59, 13);
             this.labelStatus.TabIndex = 9;
@@ -769,7 +817,7 @@
             this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1008, 611);
+            this.ClientSize = new System.Drawing.Size(1035, 631);
             this.Controls.Add(this.labelStatus);
             this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.groupBoxOutput);
@@ -866,5 +914,8 @@
         private System.Windows.Forms.RadioButton radioButtonToDropFrame;
         private System.Windows.Forms.RadioButton radioButtonSpeedFromDropFrame;
         private System.Windows.Forms.RadioButton radioButtonSpeedCustom;
+        private System.Windows.Forms.CheckBox checkBoxUseStyleFromSource;
+        private System.Windows.Forms.CheckBox checkBoxBridgeGaps;
+        private System.Windows.Forms.Button buttonBridgeGapsSettings;
     }
 }

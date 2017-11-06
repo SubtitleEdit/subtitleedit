@@ -321,6 +321,28 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Binary
             return true;
         }
 
+        public bool IsPeriodAtTop(int lowercaseHeight)
+        {
+            if (ExpandCount > 0 || Y > lowercaseHeight * 0.7)
+                return false;
+
+            if (Width == 4 && Height == 5 && NumberOfColoredPixels == 20)
+                return true;
+
+            if (Width == 5 && Height == 6 && NumberOfColoredPixels >= 28)
+                return true;
+
+            if (Width == 6 && Height == 7 && NumberOfColoredPixels >= 40)
+                return true;
+
+            if (Width < Height || Width < 5 || Width > 10 || Height < 3 || Height > 9)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
         public bool IsComma()
         {
             if (ExpandCount > 0 || Y < 20 || Height < Width || Width < 4 || Width > 12 || Height < 8 || Height > 15)
@@ -341,7 +363,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Binary
             {
                 return false;
             }
-            if ((double)Height / Width < 2)
+            if ((double)Height / Width < 2) // aspect ratio
             {
                 return false;
             }
@@ -356,7 +378,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Binary
             {
                 return false;
             }
-            if ((double)Height / Width < 2)
+            if ((double)Height / Width < 2.2) // aspect ratio
             {
                 return false;
             }
@@ -576,6 +598,11 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Binary
         public bool IsExclamationMark()
         {
             if (ExpandCount > 0 || Y > 20 || Height < Width + 10 || Width < 3 || Width > 17 || Height < 21 || Height > 50)
+            {
+                return false;
+            }
+
+            if ((double)Height / Width < 2.3) // aspect ratio
             {
                 return false;
             }

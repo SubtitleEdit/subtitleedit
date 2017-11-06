@@ -10,25 +10,23 @@ namespace Nikse.SubtitleEdit.Forms
     public partial class AutoBreakUnbreakLines : PositionAndSizeForm
     {
         private List<Paragraph> _paragraphs;
-        private int _changes;
         private bool _modeAutoBalance;
         private HashSet<string> _notAllowedFixes = new HashSet<string>();
 
         private Dictionary<string, string> _fixedText = new Dictionary<string, string>();
+
+        private string _language;
 
         public Dictionary<string, string> FixedText
         {
             get { return _fixedText; }
         }
 
-        public int Changes
-        {
-            get { return _changes; }
-        }
-
         public AutoBreakUnbreakLines()
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
             groupBoxLinesFound.Text = string.Empty;
             listViewFixes.Columns[2].Width = 290;
             listViewFixes.Columns[3].Width = 290;
@@ -44,6 +42,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         public void Initialize(Subtitle subtitle, bool autoBalance)
         {
+            _language = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle);
             _modeAutoBalance = autoBalance;
             _paragraphs = new List<Paragraph>();
 
@@ -104,10 +103,6 @@ namespace Nikse.SubtitleEdit.Forms
             int minLength = MinimumLength;
             Text = Configuration.Settings.Language.AutoBreakUnbreakLines.TitleAutoBreak;
 
-            var sub = new Subtitle();
-            foreach (Paragraph p in _paragraphs)
-                sub.Paragraphs.Add(p);
-            var language = LanguageAutoDetect.AutoDetectGoogleLanguage(sub);
 
             listViewFixes.BeginUpdate();
             listViewFixes.Items.Clear();
@@ -115,12 +110,11 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (HtmlUtil.RemoveHtmlTags(p.Text, true).Length > minLength || p.Text.Contains(Environment.NewLine))
                 {
-                    var text = Utilities.AutoBreakLine(p.Text, 5, MergeLinesShorterThan, language);
+                    var text = Utilities.AutoBreakLine(p.Text, 5, MergeLinesShorterThan, _language);
                     if (text != p.Text)
                     {
                         AddToListView(p, text);
                         _fixedText.Add(p.ID, text);
-                        _changes++;
                     }
                 }
             }
@@ -140,14 +134,13 @@ namespace Nikse.SubtitleEdit.Forms
             listViewFixes.Items.Clear();
             foreach (Paragraph p in _paragraphs)
             {
-                if (p.Text != null && p.Text.Contains(Environment.NewLine) && HtmlUtil.RemoveHtmlTags(p.Text, true).Length > minLength)
+                if (p.Text.Contains(Environment.NewLine) && HtmlUtil.RemoveHtmlTags(p.Text, true).Length > minLength)
                 {
                     var text = Utilities.UnbreakLine(p.Text);
                     if (text != p.Text)
                     {
                         AddToListView(p, text);
                         _fixedText.Add(p.ID, text);
-                        _changes++;
                     }
                 }
             }
@@ -166,8 +159,8 @@ namespace Nikse.SubtitleEdit.Forms
         {
             var item = new ListViewItem(string.Empty) { Tag = p, Checked = true };
             item.SubItems.Add(p.Number.ToString(CultureInfo.InvariantCulture));
-            item.SubItems.Add(p.Text.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
-            item.SubItems.Add(newText.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
+            item.SubItems.Add(UiUtil.GetListViewTextFromString(p.Text));
+            item.SubItems.Add(UiUtil.GetListViewTextFromString(newText));
             listViewFixes.Items.Add(item);
         }
 

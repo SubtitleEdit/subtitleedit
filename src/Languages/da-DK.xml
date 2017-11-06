@@ -2,10 +2,10 @@
 <Language Name="dansk">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.5.3</Version>
+    <Version>3.5.4</Version>
     <TranslatedBy>Oversat til dansk af Nikse (mailto:nikse.dk@gmail.com)</TranslatedBy>
     <CultureName>da-DK</CultureName>
-    <HelpFile />
+    <HelpFile></HelpFile>
     <Ok>&amp;OK</Ok>
     <Cancel>&amp;Fortryd</Cancel>
     <Apply>Anvend</Apply>
@@ -163,9 +163,10 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <ChooseOutputFolder>Vælg output mappe</ChooseOutputFolder>
     <OverwriteExistingFiles>Overskriv eksisterende filer</OverwriteExistingFiles>
     <Style>Style...</Style>
+    <UseStyleFromSource>Benyt "style" fra kilde</UseStyleFromSource>
     <ConvertOptions>Konverter indstillinger</ConvertOptions>
     <RemoveFormatting>Fjern formaterings- tags</RemoveFormatting>
-    <RemoveTextForHI>fjerne tekst for høre-hæmmede</RemoveTextForHI>
+    <RemoveTextForHI>Fjern tekst for høre-hæmmede</RemoveTextForHI>
     <OverwriteOriginalFiles>Overskriv originale filer (kun hvis format ikke ændres)</OverwriteOriginalFiles>
     <RedoCasing>Sæt store/små bogstaver</RedoCasing>
     <Convert>Konverter</Convert>
@@ -180,6 +181,7 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <ScanningFolder>Scanner {0} og undermapper for undertekster...</ScanningFolder>
     <Recursive>Medtag undermapper</Recursive>
     <SetMinMsBetweenSubtitles>Indstil min. msek mellem undertekster</SetMinMsBetweenSubtitles>
+    <BridgeGaps>Lap små huller</BridgeGaps>
     <PlainText>Almindelig tekst</PlainText>
     <Ocr>OCR...</Ocr>
     <Filter>Filter</Filter>
@@ -190,6 +192,7 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <FixCommonErrorsErrorX>Fix almindelige fejl: {0}</FixCommonErrorsErrorX>
     <MultipleReplaceErrorX>Multiple erstatte: {0}</MultipleReplaceErrorX>
     <AutoBalanceErrorX>Auto balance: {0}</AutoBalanceErrorX>
+    <OffsetTimeCodes>Offset tidskoder</OffsetTimeCodes>
   </BatchConvert>
   <Beamer>
     <Title>Undertekst fremviser</Title>
@@ -633,6 +636,7 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <FixOcrErrorExample>D0n't -&gt; Don't</FixOcrErrorExample>
     <FixSpaceBetweenNumbersExample>1 100 -&gt; 1100</FixSpaceBetweenNumbersExample>
     <FixDialogsOneLineExample>Hej John! - Hej Ida! -&gt; Hej John!&lt;br /&gt;- Hej Ida!</FixDialogsOneLineExample>
+    <SelectDefault>Vælg standard</SelectDefault>
   </FixCommonErrors>
   <GetDictionaries>
     <Title>Mangler ordbøger?</Title>
@@ -1440,6 +1444,7 @@ Fortsæt?</SubtitleAppendPrompt>
     <ErrorLoadIdx>Subtitle Edit kan ikke læse/redigere .idx filer. Idx filer er en del af et idx/sub fil par (også kaldet VobSub), og Subtitle Edit kan kun åbne .sub filen.</ErrorLoadIdx>
     <ErrorLoadRar>Denne fil er sandsynligvis en komprimeret .rar fil. Subtitle Edit kan ikke åbne komprimerede filer.</ErrorLoadRar>
     <ErrorLoadZip>Denne fil er sandsynligvis en komprimeret .zip fil. Subtitle Edit kan ikke åbne komprimerede filer.</ErrorLoadZip>
+    <ErrorLoad7Zip>Denne fil er sandsynligvis en komprimeret 7-Zip-fil. Subtitle Edit kan ikke åbne komprimerede filer.</ErrorLoad7Zip>
     <ErrorLoadPng>Denne fil er sandsynligvis en PNG billedfil. Subtitle Edit kan ikke åbne PNG-filer.</ErrorLoadPng>
     <ErrorLoadJpg>Denne fil er sandsynligvis en JPG billedfil. Subtitle Edit kan ikke åbne JPG-filer.</ErrorLoadJpg>
     <ErrorLoadSrr>Denne fil synes at være en ReScene .srr fil - ikke en undertekst fil.</ErrorLoadSrr>
@@ -1880,6 +1885,8 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <WaveformToggleSceneChange>Toggle sceneskift</WaveformToggleSceneChange>
     <GoBack1Frame>En frame tilbage</GoBack1Frame>
     <GoForward1Frame>En frame frem</GoForward1Frame>
+    <GoBack1FrameWithPlay>En frame tilbage (med afspilning)</GoBack1FrameWithPlay>
+    <GoForward1FrameWithPlay>En frame fremad (med afspilning)</GoForward1FrameWithPlay>
     <GoBack100Milliseconds>100 ms tilbage</GoBack100Milliseconds>
     <GoForward100Milliseconds>100 ms frem</GoForward100Milliseconds>
     <GoBack500Milliseconds>500 ms tilbage</GoBack500Milliseconds>
@@ -1936,8 +1943,8 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <UseDoNotBreakAfterList>Benyt skift-ikke-efter-liste (for auto-ombrydning)</UseDoNotBreakAfterList>
     <MicrosoftBingTranslator>Microsoft Bing Translator</MicrosoftBingTranslator>
     <HowToSignUp>Sådan tilmelder du dig</HowToSignUp>
-    <ClientId>Client ID</ClientId>
-    <ClientSecret>Client secret</ClientSecret>
+    <GoogleTranslateUrl>Google oversæt url</GoogleTranslateUrl>
+    <MicrosoftTranslateApiKey>Nøgle</MicrosoftTranslateApiKey>
   </Settings>
   <SettingsMpv>
     <Title>Indstillinger for MPV</Title>

@@ -19,7 +19,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public GetDictionaries()
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
 
             Text = Configuration.Settings.Language.GetDictionaries.Title;
             labelDescription1.Text = Configuration.Settings.Language.GetDictionaries.DescriptionLine1;
@@ -78,6 +80,8 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 comboBoxDictionaries.SelectedIndex = 0;
             }
+            comboBoxDictionaries.AutoCompleteSource = AutoCompleteSource.ListItems;
+            comboBoxDictionaries.AutoCompleteMode = AutoCompleteMode.Append;
         }
 
         private void FixLargeFonts()
@@ -246,7 +250,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonDownloadAll_Click(object sender, EventArgs e)
         {
-            _testAllIndex = -1;
+            _testAllIndex = comboBoxDictionaries.SelectedIndex - 1;
+            if (_testAllIndex < -1)
+                _testAllIndex = -1;
             DownloadNext();
         }
 
@@ -258,6 +264,10 @@ namespace Nikse.SubtitleEdit.Forms
                 comboBoxDictionaries.SelectedIndex = _testAllIndex;
                 buttonDownload_Click(null, null);
             }
+            else
+            {
+                LoadDictionaryList("Nikse.SubtitleEdit.Resources.HunspellBackupDictionaries.xml.gz");
+            }            
         }
 
     }

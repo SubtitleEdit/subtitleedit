@@ -2,7 +2,7 @@
 <Language Name="English">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.5.3</Version>
+    <Version>3.5.4</Version>
     <TranslatedBy>Translated by Nikse</TranslatedBy>
     <CultureName>en-US</CultureName>
     <HelpFile />
@@ -27,6 +27,7 @@
     <CharsPerSec>Chars/sec</CharsPerSec>
     <WordsPerMin>Words/min</WordsPerMin>
     <Actor>Actor</Actor>
+    <Gap>Gap</Gap>
     <Region>Region</Region>
     <NumberSymbol>#</NumberSymbol>
     <Number>Number</Number>
@@ -113,7 +114,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <GeneratingPeakFile>Generating peak file...</GeneratingPeakFile>
     <GeneratingSpectrogram>Generating spectrogram...</GeneratingSpectrogram>
     <ExtractingSeconds>Extracting audio: {0:0.0} seconds</ExtractingSeconds>
-    <ExtractingMinutes>Extracting audio: {0}.{1:00} minutes</ExtractingMinutes>
+    <ExtractingMinutes>Extracting audio: {0}:{1:00} minutes</ExtractingMinutes>
     <WaveFileNotFound>Could not find extracted wave file!
 This feature requires VLC media player 1.1.x or newer ({0}-bit).
 
@@ -166,6 +167,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <ChooseOutputFolder>Choose output folder</ChooseOutputFolder>
     <OverwriteExistingFiles>Overwrite existing files</OverwriteExistingFiles>
     <Style>Style...</Style>
+    <UseStyleFromSource>Use style from source</UseStyleFromSource>
     <ConvertOptions>Convert options</ConvertOptions>
     <RemoveFormatting>Remove formatting tags</RemoveFormatting>
     <RemoveTextForHI>Remove text for HI</RemoveTextForHI>
@@ -183,6 +185,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <ScanningFolder>Scanning {0} and subfolders for subtitle files...</ScanningFolder>
     <Recursive>Include sub folders</Recursive>
     <SetMinMsBetweenSubtitles>Set min. milliseconds between subtitles</SetMinMsBetweenSubtitles>
+    <BridgeGaps>Bridge gaps</BridgeGaps>
     <PlainText>Plain text</PlainText>
     <Ocr>OCR...</Ocr>
     <Filter>Filter</Filter>
@@ -193,6 +196,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <FixCommonErrorsErrorX>Fix common errors: {0}</FixCommonErrorsErrorX>
     <MultipleReplaceErrorX>Multiple replace: {0}</MultipleReplaceErrorX>
     <AutoBalanceErrorX>Auto balance: {0}</AutoBalanceErrorX>
+    <OffsetTimeCodes>Offset time codes</OffsetTimeCodes>
   </BatchConvert>
   <Beamer>
     <Title>Beamer</Title>
@@ -420,6 +424,14 @@ Note: Do check free disk space.</WaveFileMalformed>
     <Footer>Footer</Footer>
     <DoNotModify>[Do not modify]</DoNotModify>
   </ExportCustomTextFormat>
+  <ExportFcpXmlAdvanced>
+    <Title>Export Final Cut Pro XML advanced</Title>
+    <FontName>Font name</FontName>
+    <FontSize>Font size</FontSize>
+    <FontFace>Font face</FontFace>
+    <Alignment>Alignment</Alignment>
+    <Baseline>Baseline</Baseline>
+  </ExportFcpXmlAdvanced>
   <ExportPngXml>
     <Title>Export BDN XML/PNG</Title>
     <ImageSettings>Image settings</ImageSettings>
@@ -468,6 +480,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <Forced>Forced</Forced>
     <ChooseBackgroundColor>Choose background color</ChooseBackgroundColor>
     <SaveImageAs>Save image as...</SaveImageAs>
+    <FcpUseFullPathUrl>Use full image path url in FCP xml</FcpUseFullPathUrl>
   </ExportPngXml>
   <ExportText>
     <Title>Export text</Title>
@@ -636,6 +649,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <FixOcrErrorExample>D0n't -&gt; Don't</FixOcrErrorExample>
     <FixSpaceBetweenNumbersExample>1 100 -&gt; 1100</FixSpaceBetweenNumbersExample>
     <FixDialogsOneLineExample>Hi John! - Hi Ida! -&gt; Hi John!&lt;br /&gt;- Hi Ida!</FixDialogsOneLineExample>
+    <SelectDefault>Select default</SelectDefault>
   </FixCommonErrors>
   <GetDictionaries>
     <Title>Need dictionaries?</Title>
@@ -1441,9 +1455,11 @@ Continue?</SubtitleAppendPrompt>
     <ImportTimeCodesDifferentNumberOfLinesWarning>Subtitle with time codes has a different number of lines ({0}) than current subtitle ({1}) - continue anyway?</ImportTimeCodesDifferentNumberOfLinesWarning>
     <ParsingTransportStream>Parsing transport stream - please wait...</ParsingTransportStream>
     <XPercentCompleted>{0}% completed</XPercentCompleted>
+    <NextX>Next: {0}</NextX>
     <ErrorLoadIdx>Cannot read/edit .idx files. Idx files are a part of an idx/sub file pair (also called VobSub), and Subtitle Edit can open the .sub file.</ErrorLoadIdx>
     <ErrorLoadRar>This file seems to be a compressed .rar file. Subtitle Edit cannot open compressed files.</ErrorLoadRar>
     <ErrorLoadZip>This file seems to be a compressed .zip file. Subtitle Edit cannot open compressed files.</ErrorLoadZip>
+    <ErrorLoad7Zip>This file seems to be a compressed 7-Zip file. Subtitle Edit cannot open compressed files.</ErrorLoad7Zip>
     <ErrorLoadPng>This file seems to be a PNG image file. Subtitle Edit cannot open PNG files.</ErrorLoadPng>
     <ErrorLoadJpg>This file seems to be a JPG image file. Subtitle Edit cannot open JPG files.</ErrorLoadJpg>
     <ErrorLoadSrr>This file seems to be a ReScene .srr file - not a subtitle file.</ErrorLoadSrr>
@@ -1722,7 +1738,6 @@ can edit in same subtitle file (collaboration)</Information>
     <RemoveBlankLinesWhenOpening>Remove blank lines when opening a subtitle</RemoveBlankLinesWhenOpening>
     <ShowLineBreaksAs>Show line breaks in list view as</ShowLineBreaksAs>
     <MainListViewDoubleClickAction>Double-clicking line in main window list view will</MainListViewDoubleClickAction>
-    <MainListViewColumns>List view columns</MainListViewColumns>
     <MainListViewColumnsInfo>Choose visible list view columns</MainListViewColumnsInfo>
     <MainListViewNothing>Nothing</MainListViewNothing>
     <MainListViewVideoGoToPositionAndPause>Go to video position and pause</MainListViewVideoGoToPositionAndPause>
@@ -1850,6 +1865,10 @@ can edit in same subtitle file (collaboration)</Information>
     <AdjustStartDownEndUpAndGoToNext>Key down=set start, Key up=set end and go to next</AdjustStartDownEndUpAndGoToNext>
     <AdjustSelected100MsForward>Move selected lines 100 ms forward</AdjustSelected100MsForward>
     <AdjustSelected100MsBack>Move selected lines 100 ms back</AdjustSelected100MsBack>
+    <AdjustStartXMsBack>Move start {0} ms back</AdjustStartXMsBack>
+    <AdjustStartXMsForward>Move start {0} ms forward</AdjustStartXMsForward>
+    <AdjustEndXMsBack>Move end {0} ms back</AdjustEndXMsBack>
+    <AdjustEndXMsForward>Move end {0} ms forward</AdjustEndXMsForward>
     <AdjustSetStartTimeKeepDuration>Set start time, keep duration</AdjustSetStartTimeKeepDuration>
     <AdjustSetEndAndOffsetTheRest>Set end, offset the rest</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Set end, offset the rest and go to next</AdjustSetEndAndOffsetTheRestAndGoToNext>
@@ -1881,10 +1900,13 @@ can edit in same subtitle file (collaboration)</Information>
     <WaveformPlayFirstSelectedSubtitle>Play first selected subtitle</WaveformPlayFirstSelectedSubtitle>
     <WaveformFocusListView>Focus list view</WaveformFocusListView>
     <WaveformGoToNextSubtitle>Go to next subtitle (from video position)</WaveformGoToNextSubtitle>
+    <WaveformGoToPreviousSceneChange>Go to prevoius scene change</WaveformGoToPreviousSceneChange>
     <WaveformGoToNextSceneChange>Go to next scene change</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>Toggle scene change</WaveformToggleSceneChange>
     <GoBack1Frame>One frame back</GoBack1Frame>
     <GoForward1Frame>One frame forward</GoForward1Frame>
+    <GoBack1FrameWithPlay>One frame back (with play)</GoBack1FrameWithPlay>
+    <GoForward1FrameWithPlay>One frame forward (with play)</GoForward1FrameWithPlay>
     <GoBack100Milliseconds>100 ms back</GoBack100Milliseconds>
     <GoForward100Milliseconds>100 ms forward</GoForward100Milliseconds>
     <GoBack500Milliseconds>500 ms back</GoBack500Milliseconds>
@@ -1914,7 +1936,7 @@ can edit in same subtitle file (collaboration)</Information>
     <GoToNextEmptyLine>Go to next empty line</GoToNextEmptyLine>
     <MergeSelectedLines>Merge selected lines</MergeSelectedLines>
     <MergeSelectedLinesOnlyFirstText>Merge selected lines, keep only first non-empty text</MergeSelectedLinesOnlyFirstText>
-    <ToggleTranslationMode>Toggle translation mode</ToggleTranslationMode>
+    <ToggleTranslationMode>Toggle translator mode</ToggleTranslationMode>
     <SwitchOriginalAndTranslation>Switch original and translation</SwitchOriginalAndTranslation>
     <MergeOriginalAndTranslation>Merge original and translation</MergeOriginalAndTranslation>
     <MergeWithNext>Merge with next</MergeWithNext>
@@ -1940,8 +1962,8 @@ can edit in same subtitle file (collaboration)</Information>
     <UseDoNotBreakAfterList>Use do-not-break-after list (for auto-br)</UseDoNotBreakAfterList>
     <MicrosoftBingTranslator>Microsoft Bing Translator</MicrosoftBingTranslator>
     <HowToSignUp>How to sign up</HowToSignUp>
-    <ClientId>Client ID</ClientId>
-    <ClientSecret>Client secret</ClientSecret>
+    <GoogleTranslateUrl>Google translate url</GoogleTranslateUrl>
+    <MicrosoftTranslateApiKey>Key</MicrosoftTranslateApiKey>
   </Settings>
   <SettingsMpv>
     <Title>Settings for mpv</Title>
@@ -2001,6 +2023,7 @@ can edit in same subtitle file (collaboration)</Information>
     <ImageText>Image text</ImageText>
     <SpellCheckCompleted>Spell check completed</SpellCheckCompleted>
     <SpellCheckAborted>Spell check aborted</SpellCheckAborted>
+    <SpacesNotAllowed>Spaces not allowed in single word!</SpacesNotAllowed>
     <UndoX>Undo: {0}</UndoX>
   </SpellCheck>
   <NetflixQualityCheck>
@@ -2263,6 +2286,7 @@ Keep changes?</KeepChangesMessage>
     <SetUnitalicFactor>Set un-italic factor...</SetUnitalicFactor>
     <DiscardTitle>Discard changes made in OCR?</DiscardTitle>
     <DiscardText>Do you want to discard changes made in current OCR session?</DiscardText>
+    <MinLineSplitHeight>Min. line height (split)</MinLineSplitHeight>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub - Manual image to text</Title>

@@ -994,32 +994,19 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         private const byte SegmentTypeDialogStyle = 0x81;
         private const byte SegmentTypeDialogPresentation = 0x82;
 
-        public override string Extension
-        {
-            get { return ".m2ts"; }
-        }
+        public override string Extension => ".m2ts";
 
-        public override string Name
-        {
-            get { return "Blu-ray TextST"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
+        public override string Name => "Blu-ray TextST";
 
         public override bool IsMine(List<string> lines, string fileName)
         {
             if (string.IsNullOrEmpty(fileName))
                 return false;
 
-            if ((fileName.EndsWith(".m2ts", StringComparison.OrdinalIgnoreCase) && FileUtil.IsM2TransportStream(fileName)) ||
-                (fileName.EndsWith(".textst", StringComparison.OrdinalIgnoreCase) && FileUtil.IsMpeg2PrivateStream2(fileName)))
+            if (fileName.EndsWith(".m2ts", StringComparison.OrdinalIgnoreCase) && FileUtil.IsM2TransportStream(fileName) ||
+                fileName.EndsWith(".textst", StringComparison.OrdinalIgnoreCase) && FileUtil.IsMpeg2PrivateStream2(fileName))
             {
-                var subtitle = new Subtitle();
-                LoadSubtitle(subtitle, lines, fileName);
-                return subtitle.Paragraphs.Count > 0;
+                return base.IsMine(lines, fileName);
             }
             return false;
         }

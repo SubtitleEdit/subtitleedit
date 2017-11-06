@@ -7,114 +7,61 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class UnknownSubtitle80 : SubtitleFormat
     {
-        // 1<HT>01033902/01034028<HT>xxx
-        private static readonly Regex RegexTimeCode = new Regex(@"^\d+\t\d+\/\d+\t", RegexOptions.Compiled);
+        // [00:02:08.21]abc 123[00:02:13.01]
+        private static readonly Regex RegexTimeCode = new Regex(@"^\[\d\d:\d\d:\d\d.\d\d\].*\[\d\d:\d\d:\d\d.\d\d\]$", RegexOptions.Compiled);
 
-        public override string Extension
-        {
-            get { return ".cap"; }
-        }
+        public override string Extension => ".txt";
 
-        public override string Name
-        {
-            get { return "Unknown 80"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
-
-        public override bool IsMine(List<string> lines, string fileName)
-        {
-            var subtitle = new Subtitle();
-            LoadSubtitle(subtitle, lines, fileName);
-            return subtitle.Paragraphs.Count > _errorCount;
-        }
+        public override string Name => "Unknown 80";
 
         public override string ToText(Subtitle subtitle, string title)
         {
-            const string paragraphWriteFormat = "{0}\t{1}/{2}\t{3}";
             var sb = new StringBuilder();
-            sb.AppendLine("Lambda字幕V4\tDF1+1\tSCENE\"和文標準\"");
-            sb.AppendLine();
-            int count = 1;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                var text = HtmlUtil.RemoveHtmlTags(p.Text.Trim()).Replace(Environment.NewLine, Environment.NewLine + "\t\t\t\t");
-                sb.AppendLine(string.Format(paragraphWriteFormat, count, EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), text));
-                count++;
+                var text = HtmlUtil.RemoveHtmlTags(p.Text.Trim()).Replace(Environment.NewLine, "//");
+                sb.AppendLine(EncodeTimeCode(p.StartTime) + text +  EncodeTimeCode(p.EndTime));
             }
             return sb.ToString();
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
-            Paragraph paragraph = null;
+            var splitChars = new[] { ':', '.' };
             _errorCount = 0;
             subtitle.Paragraphs.Clear();
-            var text = new StringBuilder();
             foreach (string line in lines)
             {
                 string s = line.Trim();
-                if (s.Length > 19 && RegexTimeCode.IsMatch(s))
+                if (s.Length > 25 && RegexTimeCode.IsMatch(s))
                 {
-                    var lineParts = s.Split('\t');
-                    var parts = lineParts[1].Split('/');
-                    if (parts.Length == 2)
                     {
-                        if (text.Length > 0 && paragraph != null)
-                        {
-                            paragraph.Text = text.ToString().Trim();
-                        }
                         try
                         {
-                            var startTime = parts[0].Trim();
-                            var endTime = parts[1].Trim();
+                            var text = line.Substring(13, line.Length - 26).Replace("//", Environment.NewLine);
 
-                            string[] startTimeParts = { startTime.Substring(0, 2), startTime.Substring(2, 2), startTime.Substring(4, 2), startTime.Substring(6, 2) };
-                            string[] endTimeParts = { endTime.Substring(0, 2), endTime.Substring(2, 2), endTime.Substring(4, 2), endTime.Substring(6, 2) };
+                            var startTime = line.Substring(1, 11);
+                            var endTime = line.Substring(line.Length - 12, 11);
 
-                            paragraph = new Paragraph { StartTime = DecodeTimeCodeFramesFourParts(startTimeParts), EndTime = DecodeTimeCodeFramesFourParts(endTimeParts) };
+                            var startTimeParts = startTime.Split(splitChars);
+                            var endTimeParts = endTime.Split(splitChars);
+
+                            var paragraph = new Paragraph { StartTime = DecodeTimeCodeFramesFourParts(startTimeParts), EndTime = DecodeTimeCodeFramesFourParts(endTimeParts), Text = text };
                             subtitle.Paragraphs.Add(paragraph);
-                            text.Clear();
-                            s = s.Remove(0, 18 + lineParts[0].Length).Trim();
-                            var idxA = s.IndexOf('＠');
-                            if (idxA > 0)
-                            {
-                                s = s.Substring(0, idxA - 1).Trim();
-                            }
-                            text.Append(s);
+
                         }
                         catch (Exception)
                         {
                             _errorCount++;
                         }
                     }
-                    else
-                    {
-                        _errorCount++;
-                    }
                 }
-                else if (paragraph != null && text.Length < 150)
-                {
-                    var idxA = s.IndexOf('＠');
-                    if (idxA > 0)
-                    {
-                        s = s.Substring(0, idxA - 1).Trim();
-                    }
-                    text.Append(Environment.NewLine + s);
-                }
-                else
+                else if (s.Length > 0)
                 {
                     _errorCount++;
                     if (_errorCount > 10)
                         return;
                 }
-            }
-            if (text.Length > 0 && paragraph != null)
-            {
-                paragraph.Text = text.ToString().Trim();
             }
             subtitle.RemoveEmptyLines();
             subtitle.Renumber();
@@ -122,7 +69,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static string EncodeTimeCode(TimeCode time)
         {
-            return time.ToHHMMSSFF().Replace(":", string.Empty);
+            return "[" + time.ToHHMMSSFF().Remove(8,1).Insert(8, ".") + "]";
         }
 
     }

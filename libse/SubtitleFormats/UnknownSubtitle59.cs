@@ -12,27 +12,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         private static readonly Regex RegexStartOnly = new Regex(@"^\d\d\:\d\d\:\d\d\t.+$", RegexOptions.Compiled);
         private static readonly Regex RegexEndOnly = new Regex(@"\d\d\:\d\d\:\d\d$", RegexOptions.Compiled);
 
-        public override string Extension
-        {
-            get { return ".txt"; }
-        }
+        public override string Extension => ".txt";
 
-        public override string Name
-        {
-            get { return "Unknown 59"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
-
-        public override bool IsMine(List<string> lines, string fileName)
-        {
-            Subtitle subtitle = new Subtitle();
-            LoadSubtitle(subtitle, lines, fileName);
-            return subtitle.Paragraphs.Count > _errorCount;
-        }
+        public override string Name => "Unknown 59";
 
         public override string ToText(Subtitle subtitle, string title)
         {
@@ -152,7 +134,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         _errorCount++;
                     }
                 }
-                else if (line.StartsWith("\t") && p != null)
+                else if (line.StartsWith("\t", StringComparison.Ordinal) && p != null)
                 {
                     if (p.Text.Length > 1000)
                     {

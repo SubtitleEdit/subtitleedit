@@ -28,8 +28,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string Name => "LRC Lyrics";
 
-        public override bool IsTimeBased => true;
-
         public override bool IsMine(List<string> lines, string fileName)
         {
             var subtitle = new Subtitle();

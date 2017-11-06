@@ -42,7 +42,7 @@ namespace Nikse.SubtitleEdit.Logic
         private static VideoInfo TryReadVideoInfoViaDirectShow(string fileName)
         {
             return QuartsPlayer.GetVideoInfo(fileName);
-        }      
+        }
 
         public static int ShowSubtitle(Subtitle subtitle, VideoPlayerContainer videoPlayerContainer)
         {
@@ -56,7 +56,7 @@ namespace Nikse.SubtitleEdit.Logic
                         p.EndTime.TotalMilliseconds > positionInMilliseconds)
                     {
                         string text = p.Text.Replace("|", Environment.NewLine);
-                        bool isInfo = p == subtitle.Paragraphs[0] && (p.StartTime.TotalMilliseconds == 0 && p.Duration.TotalMilliseconds == 0 || p.StartTime.TotalMilliseconds == Pac.PacNullTime.TotalMilliseconds);
+                        bool isInfo = p == subtitle.Paragraphs[0] && (Math.Abs(p.StartTime.TotalMilliseconds) < 0.01 && Math.Abs(p.Duration.TotalMilliseconds) < 0.01 || Math.Abs(p.StartTime.TotalMilliseconds - Pac.PacNullTime.TotalMilliseconds) < 0.01);
                         if (!isInfo)
                         {
                             if (videoPlayerContainer.LastParagraph != p)
@@ -323,7 +323,7 @@ namespace Nikse.SubtitleEdit.Logic
             var gs = Configuration.Settings.General;
 
             if (string.IsNullOrEmpty(gs.SubtitleFontName))
-                gs.SubtitleFontName = "Tahoma";
+                gs.SubtitleFontName = SystemFonts.MessageBoxFont.Name;
 
             try
             {
@@ -337,6 +337,48 @@ namespace Nikse.SubtitleEdit.Logic
             }
             catch
             {
+            }
+        }
+
+        private static Font GetDefaultFont()
+        {
+            var gs = Configuration.Settings.General;
+            if (string.IsNullOrEmpty(gs.SystemSubtitleFontNameOverride) || gs.SystemSubtitleFontSizeOverride < 5)
+            {
+                return SystemFonts.MessageBoxFont;
+            }
+
+            try
+            {
+                return new Font(gs.SystemSubtitleFontNameOverride, gs.SystemSubtitleFontSizeOverride);
+            }
+            catch
+            {
+                return SystemFonts.MessageBoxFont;
+            }
+        }
+
+        internal static void PreInitialize(Form form)
+        {
+            form.AutoScaleMode = AutoScaleMode.Dpi;
+            form.Font = GetDefaultFont();
+        }
+
+        public static void FixFonts(Control form, int iterations = 5)
+        {
+            if (iterations < 1)
+                return;
+
+            foreach (Control c in form.Controls)
+            {
+                if (!c.Font.Name.Equals("Tahoma", StringComparison.Ordinal))
+                {
+                    c.Font = GetDefaultFont();
+                }
+                foreach (Control inner in c.Controls)
+                {
+                    FixFonts(inner, iterations - 1);
+                }
             }
         }
 
@@ -476,6 +518,8 @@ namespace Nikse.SubtitleEdit.Logic
                 comboBox.SelectedItem = selectedItem;
             comboBox.EndUpdate();
             Configuration.Settings.General.DefaultEncoding = (comboBox.SelectedItem as TextEncodingListItem).Encoding.WebName;
+            comboBox.AutoCompleteSource = AutoCompleteSource.ListItems;
+            comboBox.AutoCompleteMode = AutoCompleteMode.Append;
         }
 
         public static Encoding GetTextEncodingComboBoxCurrentEncoding(ComboBox comboBox)
@@ -633,6 +677,7 @@ namespace Nikse.SubtitleEdit.Logic
             AddExtension(sb, ".dost");
             AddExtension(sb, new Ayato().Extension);
             AddExtension(sb, new PacUnicode().Extension);
+            AddExtension(sb, new WinCaps32().Extension);
 
             if (!string.IsNullOrEmpty(Configuration.Settings.General.OpenSubtitleExtraExtensions))
             {
@@ -651,5 +696,8 @@ namespace Nikse.SubtitleEdit.Logic
             return sb.ToString();
         }
 
+        public static string GetListViewTextFromString(string s) => s.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString);
+
+        public static string GetStringFromListViewText(string lviText) => lviText.Replace(Configuration.Settings.General.ListViewLineSeparatorString, Environment.NewLine);
     }
 }

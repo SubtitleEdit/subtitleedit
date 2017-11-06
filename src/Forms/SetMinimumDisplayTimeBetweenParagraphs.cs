@@ -17,7 +17,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public SetMinimumDisplayTimeBetweenParagraphs()
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
 
             Text = Configuration.Settings.Language.SetMinimumDisplayTimeBetweenParagraphs.Title;
             labelMaxMillisecondsBetweenLines.Text = Configuration.Settings.Language.SetMinimumDisplayTimeBetweenParagraphs.MinimumMillisecondsBetweenParagraphs;
@@ -25,7 +27,8 @@ namespace Nikse.SubtitleEdit.Forms
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             SubtitleListview1.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
-            SubtitleListview1.InitializeTimestampColumnWidths(this);
+            UiUtil.InitializeSubtitleFont(SubtitleListview1);
+            SubtitleListview1.AutoSizeAllColumns(this);
             UiUtil.FixLargeFonts(this, buttonOK);
 
             groupBoxFrameInfo.Text = Configuration.Settings.Language.SetMinimumDisplayTimeBetweenParagraphs.FrameInfo;
@@ -35,6 +38,7 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxFrameRate.Items.Add((29.97).ToString());
             comboBoxFrameRate.Items.Add((30.0).ToString());
             comboBoxFrameRate.Items.Add((59.94).ToString());
+            comboBoxFrameRate.Items.Add((60).ToString());
             if (Math.Abs(Configuration.Settings.General.CurrentFrameRate - 23.976) < 0.1)
                 comboBoxFrameRate.SelectedIndex = 0;
             else if (Math.Abs(Configuration.Settings.General.CurrentFrameRate - 24) < 0.1)
@@ -47,6 +51,8 @@ namespace Nikse.SubtitleEdit.Forms
                 comboBoxFrameRate.SelectedIndex = 4;
             else if (Math.Abs(Configuration.Settings.General.CurrentFrameRate - 59.94) < 0.1)
                 comboBoxFrameRate.SelectedIndex = 5;
+            else if (Math.Abs(Configuration.Settings.General.CurrentFrameRate - 60) < 0.1)
+                comboBoxFrameRate.SelectedIndex = 6;
             else
                 comboBoxFrameRate.SelectedIndex = 3;
         }

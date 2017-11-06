@@ -13,7 +13,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public ChangeCasing()
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
 
             LanguageStructure.ChangeCasing language = Configuration.Settings.Language.ChangeCasing;
             Text = language.Title;

@@ -684,10 +684,9 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             if (string.IsNullOrEmpty(line) || abbreviationList == null)
                 return false;
 
-            line = line.ToLower();
             foreach (string abbreviation in abbreviationList)
             {
-                if (line.EndsWith(" " + abbreviation.ToLower()))
+                if (line.EndsWith(" " + abbreviation, StringComparison.OrdinalIgnoreCase))
                     return true;
             }
 
@@ -1062,7 +1061,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                             var guesses = new List<string>();
                             if (word.Length > 5 && autoGuess == AutoGuessLevel.Aggressive)
                             {
-                                guesses = (List<string>)CreateGuessesFromLetters(word);
+                                guesses = (List<string>)_ocrFixReplaceList.CreateGuessesFromLetters(word);
 
                                 if (word[0] == 'L')
                                     guesses.Add("I" + word.Substring(1));
@@ -1238,7 +1237,9 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                             }
                         }
                         if (_nameListObj != null)
-                            _nameListObj.Add(s);
+                        { 
+                            _nameListObj.Add(s);                            
+                        }
                     }
                     catch
                     {
@@ -1354,11 +1355,6 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 }
             }
             return true;
-        }
-
-        public IEnumerable<string> CreateGuessesFromLetters(string word)
-        {
-            return _ocrFixReplaceList.CreateGuessesFromLetters(word);
         }
 
         public bool IsWordKnownOrNumber(string word, string line)

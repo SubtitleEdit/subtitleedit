@@ -17,23 +17,11 @@ namespace Test.Logic.SubtitleFormats
     [TestClass]
     public class SubtitleFormatsTest
     {
-        private TestContext _testContextInstance;
-
         /// <summary>
         ///Gets or sets the test context which provides
         ///information about and functionality for the current test run.
         ///</summary>
-        public TestContext TestContext
-        {
-            get
-            {
-                return _testContextInstance;
-            }
-            set
-            {
-                _testContextInstance = value;
-            }
-        }
+        public TestContext TestContext { get; set; }
 
         #region Additional test attributes
 
@@ -271,6 +259,26 @@ Dialogue: 0,0:00:16.84,0:00:18.16,rechts,,0000,0000,0000,," + lineOneText;
         }
 
         [TestMethod]
+        public void AssFontNameWithSpace()
+        {
+            var target = new AdvancedSubStationAlpha();
+            var subtitle = new Subtitle();
+            target.LoadSubtitle(subtitle, GetAssLines(@"{\fnArial Bold}Font"), null);
+            string actual = subtitle.Paragraphs[0].Text;
+            const string expected = "<font face=\"Arial Bold\">Font</font>";
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void AssFontNameWithSpaceOutput()
+        {
+            var s = new Subtitle();
+            s.Paragraphs.Add(new Paragraph("<font face=\"Arial Bold\">Previously...</font> :)", 0, 2000));
+            var text = new AdvancedSubStationAlpha().ToText(s, string.Empty);
+            Assert.IsTrue(text.Contains("{\\fnArial Bold}Previously...{\\fn} :)"));
+        }
+
+        [TestMethod]
         public void AssSimpleFontNameMultiple()
         {
             var target = new AdvancedSubStationAlpha();
@@ -354,7 +362,7 @@ Dialogue: 0,0:00:16.84,0:00:18.16,rechts,,0000,0000,0000,," + lineOneText;
             var subtitle = new Subtitle();
             target.LoadSubtitle(subtitle, GetAssLines(@"{\fs20\pos(1,1)\blur5}Bla-bla-bla"), null);
             string actual = subtitle.Paragraphs[0].Text;
-            const string expected = "<font size=\"20\">{\\pos(1,1)\\blur5}Bla-bla-bla</font>";
+            const string expected = @"{\fs20\pos(1,1)\blur5}Bla-bla-bla";
             Assert.AreEqual(expected, actual);
         }
 
@@ -366,6 +374,36 @@ Dialogue: 0,0:00:16.84,0:00:18.16,rechts,,0000,0000,0000,," + lineOneText;
             var text = new AdvancedSubStationAlpha().ToText(s, string.Empty);
             Assert.IsTrue(text.Contains("{\\c&H0000ff&}Previously...{\\c} :)"));
         }
+
+        [TestMethod]
+        public void AssFontEventsLast()
+        {
+            var text = @"[Script Info]
+; test
+
+[Aegisub Project Garbage]
+Last Style Storage: Default
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Segoe Script Red shadow alpha 160,Segoe Script,77,&H006EBAB4,&H0300FFFF,&H00000000,&HA00000FF,0,0,0,0,100,100,0,0,1,5,5,2,170,170,29,1
+
+[Fonts]
+fontname: AGENCYR_0.TTF
+!!%
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:00:01.80,0:00:04.93,Segoe Script Red shadow alpha 160,,0,0,0,,Die met de zuurstof\Ngezichtsbehandeling? Geweldig!
+Dialogue: 0,0:00:05.02,0:00:07.94,Segoe Script Red shadow alpha 160,,0,0,0,,Dit wordt de trip van ons leven.";
+            var target = new AdvancedSubStationAlpha();
+            var subtitle = new Subtitle();
+            target.LoadSubtitle(subtitle, text.SplitToLines().ToList(), null);
+            var output = new AdvancedSubStationAlpha().ToText(subtitle, string.Empty);
+            Assert.IsTrue(output.Contains("[Events]"));
+            Assert.AreEqual(2, subtitle.Paragraphs.Count);
+        }
+
 
         #endregion Advanced Sub Station alpha (.ass)
 
@@ -933,6 +971,116 @@ and astronauts.“...""
             Assert.AreEqual(3082, subtitle.Paragraphs[1].StartFrame);
         }
 
+        #endregion
+
+        #region TimedText       
+
+        [TestMethod]
+        public void TimedTextNameSpaceTt()
+        {
+            var target = new TimedText10();
+            var subtitle = new Subtitle();
+            string raw = @"
+<?xml version='1.0' encoding='UTF-8'?>
+<tt:tt xmlns:tt='http://www.w3.org/ns/ttml' xmlns:ttp='http://www.w3.org/ns/ttml#parameter' xmlns:tts='http://www.w3.org/ns/ttml#styling' xmlns:ebuttm='urn:ebu:tt:metadata' xmlns:ebutts='urn:ebu:tt:style' ttp:timeBase='media' xml:lang='ca-ES' ttp:cellResolution='40 25'>
+  <tt:head>
+    <tt:metadata>
+      <ebuttm:documentMetadata>
+        <ebuttm:conformsToStandard>urn:ebu:tt:distribution:2014-01</ebuttm:conformsToStandard>
+        <ebuttm:documentCountryOfOrigin>es</ebuttm:documentCountryOfOrigin>
+      </ebuttm:documentMetadata>
+    </tt:metadata>
+  </tt:head>
+  <tt:body>
+    <tt:div>
+      <tt:p xml:id='p1' region='r4' begin='00:00:04.400' end='00:00:08.520'>
+        <tt:span style='ss2'>Hallo world.</tt:span>
+      </tt:p>
+    </tt:div>
+  </tt:body>
+</tt:tt>".Replace("'", "\"");
+            target.LoadSubtitle(subtitle, raw.SplitToLines().ToList(), null);
+            string actual = subtitle.Paragraphs[0].Text;
+            const string expected = "Hallo world.";
+            Assert.AreEqual(expected, actual);
+        }
+
+        #endregion
+
+        #region JacoSub
+        [TestMethod]
+        public void JacoSubSubtitleTest()
+        {
+            var jacobSub = new JacoSub();
+            var subtitle = new Subtitle();
+            const string text = @"1:55:52.16 1:55:53.20 D [Billy] That might have been my fault.
+1:55:53.20 1:55:55.13 D That might have been my fault,\nI'm so sorry.";
+
+            // Test text.
+            jacobSub.LoadSubtitle(subtitle, new List<string>(text.SplitToLines()), null);
+            Assert.AreEqual("[Billy] That might have been my fault.", subtitle.Paragraphs[0].Text);
+            Assert.AreEqual("That might have been my fault," + Environment.NewLine + "I'm so sorry.", subtitle.Paragraphs[1].Text);
+
+            // Test time code.
+            double expectedTotalMilliseconds = new TimeCode(1, 55, 52, SubtitleFormat.FramesToMilliseconds(16)).TotalMilliseconds;
+            Assert.AreEqual(expectedTotalMilliseconds, subtitle.Paragraphs[0].StartTime.TotalMilliseconds);
+
+            // Test total lines.
+            Assert.AreEqual(2, subtitle.Paragraphs[1].NumberOfLines);
+        }
+
+        [TestMethod]
+        public void JacoSubSubtitleTestItalicAndBold()
+        {
+            var jacobSub = new JacoSub();
+            var subtitle = new Subtitle();
+            const string text = @"1:55:52.16 1:55:53.20 D \BBilly\b That might have been my fault.
+1:55:53.20 1:55:55.13 D That might have been my \Ifault\i.
+1:55:53.20 1:55:55.13 D That might have been my \Ifault\N.
+1:55:53.20 1:55:55.13 D That might have been \Bmy \Ifault\i\b.";
+
+            jacobSub.LoadSubtitle(subtitle, new List<string>(text.SplitToLines()), null);
+
+            Assert.AreEqual("<b>Billy</b> That might have been my fault.", subtitle.Paragraphs[0].Text);
+            Assert.AreEqual("That might have been my <i>fault</i>.", subtitle.Paragraphs[1].Text);
+            Assert.AreEqual("That might have been my <i>fault</i>.", subtitle.Paragraphs[2].Text);
+            Assert.AreEqual("That might have been <b>my <i>fault</i></b>.", subtitle.Paragraphs[3].Text);
+        }
+
+        [TestMethod]
+        public void JacoSubSubtitleTestCommentRemoved()
+        {
+            var jacobSub = new JacoSub();
+            var subtitle = new Subtitle();
+            const string text = @"1:55:52.16 1:55:53.20 D Billy{billy is an actor} that might have been my fault.
+1:55:53.20 1:55:55.13 D Test.";
+
+            jacobSub.LoadSubtitle(subtitle, new List<string>(text.SplitToLines()), null);
+
+            Assert.AreEqual("Billy that might have been my fault.", subtitle.Paragraphs[0].Text);
+        }
+        #endregion
+
+        #region LambdaCap
+        [TestMethod]
+        public void LambdaCapTestItalic()
+        {
+            Configuration.Settings.General.CurrentFrameRate = 25;
+            var lambdaCap = new LambdaCap();
+            var subtitle = new Subtitle();
+            const string text = "Lambda字幕V4 DF0+1 SCENE\"和文標準\"" + @" 
+
+1	00000000/00000300	Line 1 with ＠斜３［italic］＠ word.
+2	00000900/00001200	Line 1
+				Line 2";
+
+            lambdaCap.LoadSubtitle(subtitle, new List<string>(text.SplitToLines()), null);
+
+            Assert.AreEqual("Line 1 with <i>italic</i> word.", subtitle.Paragraphs[0].Text);
+            Assert.AreEqual("Line 1" + Environment.NewLine + "Line 2", subtitle.Paragraphs[1].Text);
+            Assert.AreEqual(3000, subtitle.Paragraphs[0].EndTime.TotalMilliseconds);
+            Assert.AreEqual(2, subtitle.Paragraphs.Count);
+        }
         #endregion
 
     }

@@ -8,27 +8,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class Xif : SubtitleFormat
     {
-        public override string Extension
-        {
-            get { return ".xif"; }
-        }
+        public override string Extension => ".xif";
 
-        public override string Name
-        {
-            get { return "XIF"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
-
-        public override bool IsMine(List<string> lines, string fileName)
-        {
-            var subtitle = new Subtitle();
-            LoadSubtitle(subtitle, lines, fileName);
-            return subtitle.Paragraphs.Count > _errorCount;
-        }
+        public override string Name => "XIF";
 
         public override string ToText(Subtitle subtitle, string title)
         {

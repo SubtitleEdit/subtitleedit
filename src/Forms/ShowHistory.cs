@@ -14,7 +14,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public ShowHistory()
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
 
             Text = Configuration.Settings.Language.ShowHistory.Title;
             label1.Text = Configuration.Settings.Language.ShowHistory.SelectRollbackPoint;

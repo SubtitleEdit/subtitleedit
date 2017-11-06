@@ -15,32 +15,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         private static readonly Regex RegexTimeCodesMiddle = new Regex(@"^-?\d+:-?\d+\.-?\d+\s*-->\s*-?\d+:-?\d+:-?\d+\.-?\d+", RegexOptions.Compiled);
         private static readonly Regex RegexTimeCodesShort = new Regex(@"^-?\d+:-?\d+\.-?\d+\s*-->\s*-?\d+:-?\d+\.-?\d+", RegexOptions.Compiled);
 
-        public override string Extension
-        {
-            get { return ".vtt"; }
-        }
+        public override string Extension => ".vtt";
 
-        public override string Name
-        {
-            get { return "WebVTT"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
-
-        public override bool IsMine(List<string> lines, string fileName)
-        {
-            var subtitle = new Subtitle();
-            LoadSubtitle(subtitle, lines, fileName);
-            return subtitle.Paragraphs.Count > _errorCount;
-        }
+        public override string Name => "WebVTT";
 
         public override string ToText(Subtitle subtitle, string title)
         {
             const string timeCodeFormatHours = "{0:00}:{1:00}:{2:00}.{3:000}"; // hh:mm:ss.mmm
-            const string paragraphWriteFormat = "{0}--> {1}{2}{5}{3}{4}{5}";
+            const string paragraphWriteFormat = "{0} --> {1}{2}{5}{3}{4}{5}";
 
             var sb = new StringBuilder();
             sb.AppendLine("WEBVTT");

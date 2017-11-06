@@ -8,27 +8,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class DlDd : SubtitleFormat
     {
-        public override string Extension
-        {
-            get { return ".htm"; }
-        }
+        public override string Extension => ".htm";
 
-        public override string Name
-        {
-            get { return "dl dd span"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
-
-        public override bool IsMine(List<string> lines, string fileName)
-        {
-            var subtitle = new Subtitle();
-            LoadSubtitle(subtitle, lines, fileName);
-            return subtitle.Paragraphs.Count > _errorCount;
-        }
+        public override string Name => "dl dd span";
 
         public override string ToText(Subtitle subtitle, string title)
         {

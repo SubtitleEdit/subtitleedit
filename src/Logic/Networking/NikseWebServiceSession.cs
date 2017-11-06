@@ -195,7 +195,7 @@ namespace Nikse.SubtitleEdit.Logic.Networking
         public void AppendToLog(string text)
         {
             string timestamp = DateTime.Now.ToLongTimeString();
-            Log.AppendLine(timestamp + ": " + text.TrimEnd().Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
+            Log.AppendLine(timestamp + ": " + UiUtil.GetListViewTextFromString(text.TrimEnd()));
         }
 
         public string GetLog()
@@ -281,7 +281,7 @@ namespace Nikse.SubtitleEdit.Logic.Networking
         internal void InsertLine(int index, Paragraph newParagraph)
         {
             _seWs.InsertLine(SessionId, index, (int)newParagraph.StartTime.TotalMilliseconds, (int)newParagraph.EndTime.TotalMilliseconds, newParagraph.Text, CurrentUser);
-            AppendToLog(string.Format(Configuration.Settings.Language.Main.NetworkInsert, CurrentUser.UserName, CurrentUser.Ip, index, newParagraph.Text.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString)));
+            AppendToLog(string.Format(Configuration.Settings.Language.Main.NetworkInsert, CurrentUser.UserName, CurrentUser.Ip, index, UiUtil.GetListViewTextFromString(newParagraph.Text)));
         }
 
         internal void AdjustUpdateLogToInsert(int index)

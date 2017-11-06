@@ -3,6 +3,7 @@ using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Forms.Styles;
 using Nikse.SubtitleEdit.Logic;
 using System;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
@@ -17,7 +18,9 @@ namespace Nikse.SubtitleEdit.Forms
         public ChooseStyle(Subtitle subtitle, bool isSubStationAlpha)
         {
             SelectedStyleName = null;
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
             _subtitle = subtitle;
             _isSubStationAlpha = isSubStationAlpha;
 

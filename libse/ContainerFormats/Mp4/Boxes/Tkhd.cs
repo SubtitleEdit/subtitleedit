@@ -2,6 +2,9 @@
 
 namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
 {
+    /// <summary>
+    /// Track Header Box
+    /// </summary>
     public class Tkhd : Box
     {
         public readonly uint TrackId;
@@ -9,7 +12,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
         public readonly uint Width;
         public readonly uint Height;
 
-        public Tkhd(FileStream fs)
+        public Tkhd(Stream fs)
         {
             Buffer = new byte[84];
             int bytesRead = fs.Read(Buffer, 0, Buffer.Length);

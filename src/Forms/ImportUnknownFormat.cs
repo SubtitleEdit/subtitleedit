@@ -15,7 +15,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public ImportUnknownFormat(string fileName)
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
             _refreshTimer.Interval = 400;
             _refreshTimer.Tick += RefreshTimerTick;
 

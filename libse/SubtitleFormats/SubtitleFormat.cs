@@ -53,6 +53,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new DigiBeta(),
                     new DvdStudioPro(),
                     new DvdStudioProSpaceOne(),
+                    new DvdStudioProSpaceOneSemicolon(),
                     new DvdStudioProSpace(),
                     new DvdSubtitle(),
                     new DvdSubtitleSystem(),
@@ -71,6 +72,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new FinalCutProXml13(),
                     new FinalCutProXml14(),
                     new FinalCutProXml14Text(),
+                    new FinalCutProXml15(),
                     new FinalCutProTestXml(),
                     new FinalCutProTest2Xml(),
                     new FlashXml(),
@@ -81,6 +83,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new ImageLogicAutocaption(),
                     new IssXml(),
                     new ItunesTimedText(),
+                    new JacoSub(),
                     new Json(),
                     new JsonType2(),
                     new JsonType3(),
@@ -92,6 +95,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new JsonType9(),
                     new JsonType10(),
                     new JsonType11(),
+                    new JsonType12(),
+                    new LambdaCap(),
                     new Lrc(),
                     new MacSub(),
                     new MediaTransData(),
@@ -103,7 +108,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new OpenDvt(),
                     new Oresme(),
                     new OresmeDocXDocument(),
-                    new PE2(),
+                    new Pe2(),
                     new PhoenixSubtitle(),
                     new PinnacleImpression(),
                     new PListCaption(),
@@ -111,6 +116,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new QuickTimeText(),
                     new RealTime(),
                     new RhozetHarmonic(),
+                    new Rtf1(),
+                    new Rtf2(),
                     new Sami(),
                     new SamiAvDicPlayer(),
                     new SamiModern(),
@@ -255,6 +262,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new UnknownSubtitle82(),
                     new UnknownSubtitle83(),
                     new UnknownSubtitle84(),
+                    new UnknownSubtitle85(),
+                    new UnknownSubtitle86(),
                 };
 
                 string path = Configuration.PluginsDirectory;
@@ -285,6 +294,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         }
                         catch
                         {
+                            // ignored
                         }
                     }
                 }
@@ -295,70 +305,44 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         protected int _errorCount;
 
-        abstract public string Extension
+        public abstract string Extension
         {
             get;
         }
 
-        abstract public string Name
+        public abstract string Name
         {
             get;
         }
 
-        abstract public bool IsTimeBased
+        public virtual bool IsTimeBased => true;
+
+        public bool IsFrameBased => !IsTimeBased;
+
+        public string FriendlyName => $"{Name} ({Extension})";
+
+        public int ErrorCount => _errorCount;
+
+        public virtual bool IsMine(List<string> lines, string fileName)
         {
-            get;
+            var subtitle = new Subtitle();
+            var oldFrameRate = Configuration.Settings.General.CurrentFrameRate;
+            LoadSubtitle(subtitle, lines, fileName);
+            Configuration.Settings.General.CurrentFrameRate = oldFrameRate;
+            return subtitle.Paragraphs.Count > _errorCount;
         }
 
-        public bool IsFrameBased
-        {
-            get
-            {
-                return !IsTimeBased;
-            }
-        }
+        public abstract string ToText(Subtitle subtitle, string title);
 
-        public string FriendlyName
-        {
-            get
-            {
-                return string.Format("{0} ({1})", Name, Extension);
-            }
-        }
+        public abstract void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName);
 
-        public int ErrorCount
-        {
-            get
-            {
-                return _errorCount;
-            }
-        }
-
-        abstract public bool IsMine(List<string> lines, string fileName);
-
-        abstract public string ToText(Subtitle subtitle, string title);
-
-        abstract public void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName);
-
-        public bool IsVobSubIndexFile
-        {
-            get
-            {
-                return Extension.Equals(".idx", StringComparison.Ordinal);
-            }
-        }
+        public bool IsVobSubIndexFile => Extension.Equals(".idx", StringComparison.Ordinal);
 
         public virtual void RemoveNativeFormatting(Subtitle subtitle, SubtitleFormat newFormat)
         {
         }
 
-        public virtual List<string> AlternateExtensions
-        {
-            get
-            {
-                return new List<string>();
-            }
-        }
+        public virtual List<string> AlternateExtensions => new List<string>();
 
         public static int MillisecondsToFrames(double milliseconds)
         {
@@ -384,13 +368,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return Math.Min(ms, 999);
         }
 
-        public virtual bool HasStyleSupport
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public virtual bool HasStyleSupport => false;
 
         public bool BatchMode { get; set; }
         public double? BatchSourceFrameRate { get; set; }
@@ -412,13 +390,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return result.ToString().Replace(" encoding=\"utf-16\"", " encoding=\"utf-8\"").Trim();
         }
 
-        public virtual bool IsTextBased
-        {
-            get
-            {
-                return true;
-            }
-        }
+        public virtual bool IsTextBased => true;
 
         protected TimeCode DecodeTimeCodeFramesTwoParts(string[] tokens)
         {

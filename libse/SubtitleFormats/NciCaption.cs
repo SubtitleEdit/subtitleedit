@@ -7,22 +7,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class NciCaption : SubtitleFormat
     {
-        public override string Extension
-        {
-            get { return ".cap"; }
-        }
+        public override string Extension => ".cap";
 
         public const string NameOfFormat = "NCI Caption";
 
-        public override string Name
-        {
-            get { return NameOfFormat; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
+        public override string Name => NameOfFormat;
 
         public static void Save(string fileName)
         {
@@ -235,7 +224,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 Paragraph p = subtitle.GetParagraphOrDefault(i);
                 Paragraph next = subtitle.GetParagraphOrDefault(i + 1);
-                if (next != null && p.EndTime.TotalMilliseconds == 0)
+                if (next != null && Math.Abs(p.EndTime.TotalMilliseconds) < 0.01)
                     p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - 1;
             }
 

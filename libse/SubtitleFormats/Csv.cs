@@ -10,20 +10,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         private const string Separator = ";";
         private static readonly Regex CsvLine = new Regex(@"^""?\d+""?" + Separator + @"""?\d+""?" + Separator + @"""?\d+""?" + Separator + @"""?[^""]*""?$", RegexOptions.Compiled);
 
-        public override string Extension
-        {
-            get { return ".csv"; }
-        }
+        public override string Extension => ".csv";
 
-        public override string Name
-        {
-            get { return "Csv"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
+        public override string Name => "Csv";
 
         public override bool IsMine(List<string> lines, string fileName)
         {

@@ -10,27 +10,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static readonly Regex RegexTimeCodes = new Regex(@"^\{T \d+:\d+:\d+:\d+$", RegexOptions.Compiled);
 
-        public override string Extension
-        {
-            get { return ".sub"; }
-        }
+        public override string Extension => ".sub";
 
-        public override string Name
-        {
-            get { return "DVDSubtitle"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
-
-        public override bool IsMine(List<string> lines, string fileName)
-        {
-            Subtitle subtitle = new Subtitle();
-            LoadSubtitle(subtitle, lines, fileName);
-            return subtitle.Paragraphs.Count > _errorCount;
-        }
+        public override string Name => "DVDSubtitle";
 
         public override string ToText(Subtitle subtitle, string title)
         {
@@ -81,10 +63,12 @@ LICENSE=
                 {
                     if (line.Trim() == "}")
                     {
-                        Paragraph p = new Paragraph();
-                        p.Text = text;
-                        p.StartTime = new TimeCode(start.TotalMilliseconds);
-                        p.EndTime = new TimeCode(end.TotalMilliseconds);
+                        Paragraph p = new Paragraph
+                        {
+                            Text = text,
+                            StartTime = new TimeCode(start.TotalMilliseconds),
+                            EndTime = new TimeCode(end.TotalMilliseconds)
+                        };
 
                         subtitle.Paragraphs.Add(p);
 

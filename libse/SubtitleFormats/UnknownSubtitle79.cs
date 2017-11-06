@@ -11,27 +11,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         // SUB [0 N 00:00:00:00>00:00:00:00]
         private static readonly Regex RegexTimeCode = new Regex(@"^SUB \[\d [NIB] \d\d:\d\d:\d\d:\d\d>\d\d:\d\d:\d\d\:\d\d\]", RegexOptions.Compiled);
 
-        public override string Extension
-        {
-            get { return ".txt"; }
-        }
+        public override string Extension => ".txt";
 
-        public override string Name
-        {
-            get { return "Unknown 79"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
-
-        public override bool IsMine(List<string> lines, string fileName)
-        {
-            var subtitle = new Subtitle();
-            LoadSubtitle(subtitle, lines, fileName);
-            return subtitle.Paragraphs.Count > _errorCount;
-        }
+        public override string Name => "Unknown 79";
 
         public override string ToText(Subtitle subtitle, string title)
         {
@@ -49,20 +31,20 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 var text = p.Text.Trim();
 
                 string verticalAlignment = "0";
-                if (text.StartsWith("{\\an7}") || text.StartsWith("{\\an8}") || text.StartsWith("{\\an9}"))
+                if (text.StartsWith("{\\an7}", StringComparison.Ordinal) || text.StartsWith("{\\an8}", StringComparison.Ordinal) || text.StartsWith("{\\an9}", StringComparison.Ordinal))
                 {
                     verticalAlignment = "9";
                 }
-                else if (text.StartsWith("{\\an4}") || text.StartsWith("{\\an5}") || text.StartsWith("{\\an6}"))
+                else if (text.StartsWith("{\\an4}", StringComparison.Ordinal) || text.StartsWith("{\\an5}", StringComparison.Ordinal) || text.StartsWith("{\\an6}", StringComparison.Ordinal))
                 {
                     verticalAlignment = "5";
                 }
 
                 text = Utilities.RemoveSsaTags(text);
                 string formatting = "N";
-                if (text.StartsWith("<i>"))
+                if (text.StartsWith("<i>", StringComparison.Ordinal))
                     formatting = "I";
-                else if (text.StartsWith("<b>"))
+                else if (text.StartsWith("<b>", StringComparison.Ordinal))
                     formatting = "B";
                 text = HtmlUtil.RemoveHtmlTags(text);
 

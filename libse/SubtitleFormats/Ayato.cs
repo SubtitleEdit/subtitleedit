@@ -7,20 +7,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class Ayato : SubtitleFormat
     {
-        public override string Extension
-        {
-            get { return ".aya"; }
-        }
+        public override string Extension => ".aya";
 
-        public override string Name
-        {
-            get { return "Ayato"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
+        public override string Name => "Ayato";
 
         public override bool IsMine(List<string> lines, string fileName)
         {
@@ -32,9 +21,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     if (!fileName.EndsWith(Extension, StringComparison.OrdinalIgnoreCase))
                         return false;
 
-                    var sub = new Subtitle();
-                    LoadSubtitle(sub, lines, fileName);
-                    return sub.Paragraphs.Count > 0;
+                    return base.IsMine(lines, fileName);
                 }
             }
             return false;

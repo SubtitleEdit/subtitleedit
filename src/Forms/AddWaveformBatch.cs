@@ -1,5 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
+using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -17,7 +18,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public AddWaveformBatch()
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
             labelProgress.Text = string.Empty;
             labelInfo.Text = string.Empty;
             progressBar1.Visible = false;
@@ -36,6 +39,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonSearchFolder.Text = l.ScanFolder;
             checkBoxScanFolderRecursive.Text = l.Recursive;
             checkBoxScanFolderRecursive.Left = buttonSearchFolder.Left - checkBoxScanFolderRecursive.Width - 5;
+            UiUtil.FixLargeFonts(this, buttonDone);
         }
 
         private void removeToolStripMenuItem_Click(object sender, EventArgs e)

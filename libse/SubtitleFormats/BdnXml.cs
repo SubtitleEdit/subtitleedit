@@ -9,27 +9,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class BdnXml : SubtitleFormat
     {
-        public override string Extension
-        {
-            get { return ".xml"; }
-        }
+        public override string Extension => ".xml";
 
-        public override string Name
-        {
-            get { return "BDN Xml"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
-
-        public override bool IsMine(List<string> lines, string fileName)
-        {
-            var subtitle = new Subtitle();
-            LoadSubtitle(subtitle, lines, fileName);
-            return subtitle.Paragraphs.Count > 0;
-        }
+        public override string Name => "BDN Xml";
 
         public override string ToText(Subtitle subtitle, string title)
         {
@@ -62,7 +44,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                 xml.DocumentElement.AppendChild(paragraph);
             }
-            var textUtf8 = string.Empty;
+            string textUtf8;
             using (var ms = new MemoryStream())
             {
                 var writer = new XmlTextWriter(ms, Encoding.UTF8) { Formatting = Formatting.Indented };

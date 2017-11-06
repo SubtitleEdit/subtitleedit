@@ -20,7 +20,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public ExportCustomText(Subtitle subtitle, Subtitle original, string title)
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
 
             if (original == null || original.Paragraphs == null || original.Paragraphs.Count == 0)
             {
@@ -249,7 +251,7 @@ namespace Nikse.SubtitleEdit.Forms
                         translationText = trans.Text;
                     }
                 }
-                string paragraph = ExportCustomTextFormat.GetParagraph(template, start, end, text, translationText, i, p.Duration, arr[3]);
+                string paragraph = ExportCustomTextFormat.GetParagraph(template, start, end, text, translationText, i, p.Actor, p.Duration, arr[3]);
                 sb.Append(paragraph);
             }
             sb.Append(ExportCustomTextFormat.GetHeaderOrFooter(title, subtitle, arr[5]));

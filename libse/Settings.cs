@@ -87,8 +87,8 @@ namespace Nikse.SubtitleEdit.Core
         public bool OcrFixUseHardcodedRules { get; set; }
         public string Interjections { get; set; }
         public string MicrosoftBingApiId { get; set; }
-        public string MicrosoftBingClientId { get; set; }
-        public string MicrosoftBingClientSecret { get; set; }
+        public string MicrosoftTranslatorApiKey { get; set; }
+        public string GoogleTranslateUrl { get; set; }
         public string GoogleApiKey { get; set; }
         public bool UseGooleApiPaidService { get; set; }
         public string GoogleTranslateLastTargetLanguage { get; set; }
@@ -105,6 +105,7 @@ namespace Nikse.SubtitleEdit.Core
         public bool ListViewShowColumnDuration { get; set; }
         public bool ListViewShowColumnCharsPerSec { get; set; }
         public bool ListViewShowColumnWordsPerMin { get; set; }
+        public bool ListViewShowColumnGap { get; set; }
         public bool ListViewShowColumnActor { get; set; }
         public bool ListViewShowColumnRegion { get; set; }
         public bool SplitAdvanced { get; set; }
@@ -117,6 +118,7 @@ namespace Nikse.SubtitleEdit.Core
         public bool BatchConvertOverwriteExisting { get; set; }
         public bool BatchConvertOverwriteOriginal { get; set; }
         public bool BatchConvertRemoveFormatting { get; set; }
+        public bool BatchConvertBridgeGaps { get; set; }
         public bool BatchConvertFixCasing { get; set; }
         public bool BatchConvertRemoveTextForHI { get; set; }
         public bool BatchConvertFixCommonErrors { get; set; }
@@ -128,6 +130,7 @@ namespace Nikse.SubtitleEdit.Core
         public string BatchConvertFormat { get; set; }
         public string BatchConvertAssStyles { get; set; }
         public string BatchConvertSsaStyles { get; set; }
+        public bool BatchConvertUseStyleFromSource { get; set; }
         public string BatchConvertExportCustomTextTemplate { get; set; }
         public string ModifySelectionText { get; set; }
         public string ModifySelectionRule { get; set; }
@@ -155,16 +158,23 @@ namespace Nikse.SubtitleEdit.Core
         public Color ExportFontColor { get; set; }
         public Color ExportBorderColor { get; set; }
         public Color ExportShadowColor { get; set; }
+        public int ExportBoxBorderSize { get; set; }
+        public string ExportBottomMarginUnit { get; set; }
         public int ExportBottomMarginPercent { get; set; }
+        public int ExportBottomMarginPixels { get; set; }
+        public string ExportLeftRightMarginUnit { get; set; }
         public int ExportLeftRightMarginPercent { get; set; }
+        public int ExportLeftRightMarginPixels { get; set; }
         public int ExportHorizontalAlignment { get; set; }
         public int ExportBluRayBottomMarginPercent { get; set; }
+        public int ExportBluRayBottomMarginPixels { get; set; }
         public int ExportBluRayShadow { get; set; }
         public int Export3DType { get; set; }
         public int Export3DDepth { get; set; }
         public int ExportLastShadowTransparency { get; set; }
         public double ExportLastFrameRate { get; set; }
         public bool ExportFullFrame { get; set; }
+        public bool ExportFcpFullPathUrl { get; set; }
         public string ExportPenLineJoin { get; set; }
         public bool FixCommonErrorsFixOverlapAllowEqualEndStart { get; set; }
         public bool FixCommonErrorsSkipStepOne { get; set; }
@@ -195,6 +205,7 @@ namespace Nikse.SubtitleEdit.Core
         public bool ExportTextNewLineAfterText { get; set; }
         public bool ExportTextNewLineBetweenSubtitles { get; set; }
         public bool VideoOffsetKeepTimeCodes { get; set; }
+        public int MoveStartEndMs { get; set; }
 
 
         public ToolsSettings()
@@ -211,6 +222,7 @@ namespace Nikse.SubtitleEdit.Core
             OcrFixUseHardcodedRules = true;
             Interjections = "Ah;Ahh;Ahhh;Ahhhh;Eh;Ehh;Ehhh;Hm;Hmm;Hmmm;Huh;Mm;Mmm;Mmmm;Phew;Gah;Oh;Ohh;Ohhh;Ow;Oww;Owww;Ugh;Ughh;Uh;Uhh;Uhhh;Whew";
             MicrosoftBingApiId = "C2C2E9A508E6748F0494D68DFD92FAA1FF9B0BA4";
+            GoogleTranslateUrl = "translate.google.com";
             GoogleApiKey = "ABQIAAAA4j5cWwa3lDH0RkZceh7PjBTDmNAghl5kWSyuukQ0wtoJG8nFBxRPlalq-gAvbeCXMCkmrysqjXV1Gw";
             UseGooleApiPaidService = false;
             GoogleTranslateLastTargetLanguage = "en";
@@ -240,12 +252,18 @@ namespace Nikse.SubtitleEdit.Core
             ExportFontColor = Color.White;
             ExportBorderColor = Color.FromArgb(255, 0, 0, 0);
             ExportShadowColor = Color.FromArgb(255, 0, 0, 0);
+            ExportBoxBorderSize = 8;
+            ExportBottomMarginUnit = "%";
             ExportBottomMarginPercent = 5;
+            ExportBottomMarginPixels = 15;
+            ExportLeftRightMarginUnit = "%";
             ExportLeftRightMarginPercent = 5;
+            ExportLeftRightMarginPixels = 15;
             ExportHorizontalAlignment = 1; // 1=center (0=left, 2=right)
             ExportVobSubSimpleRendering = true;
             ExportVobAntiAliasingWithTransparency = true;
             ExportBluRayBottomMarginPercent = 5;
+            ExportBluRayBottomMarginPixels = 20;
             ExportBluRayShadow = 1;
             Export3DType = 0;
             Export3DDepth = 0;
@@ -268,9 +286,29 @@ namespace Nikse.SubtitleEdit.Core
             ExportTextNewLineAfterText = true;
             ExportTextNewLineBetweenSubtitles = true;
             ImportTextLineBreak = "|";
+            MoveStartEndMs = 100;
         }
 
     }
+
+    public class FcpExportSettings
+    {
+        public string FontName { get; set; }
+        public int FontSize { get; set; }
+        public string Alignment { get; set; }
+        public int Baseline { get; set; }
+        public Color Color { get; set; }
+
+        public FcpExportSettings()
+        {
+            FontName = "Lucida Sans";
+            FontSize = 36;
+            Alignment = "center";
+            Baseline = 29;
+            Color = Color.WhiteSmoke;
+        }
+    }
+
 
     public class WordListSettings
     {
@@ -291,8 +329,8 @@ namespace Nikse.SubtitleEdit.Core
         public double SsaFontSize { get; set; }
         public int SsaFontColorArgb { get; set; }
         public bool SsaFontBold { get; set; }
-        public int SsaOutline { get; set; }
-        public int SsaShadow { get; set; }
+        public decimal SsaOutline { get; set; }
+        public decimal SsaShadow { get; set; }
         public bool SsaOpaqueBox { get; set; }
         public int SsaMarginLeft { get; set; }
         public int SsaMarginRight { get; set; }
@@ -477,6 +515,11 @@ namespace Nikse.SubtitleEdit.Core
 
         public FixCommonErrorsSettings()
         {
+            SetDefaultFixes();
+        }
+
+        public void SetDefaultFixes()
+        {
             EmptyLinesTicked = true;
             OverlappingDisplayTimeTicked = true;
             TooShortDisplayTimeTicked = true;
@@ -502,6 +545,7 @@ namespace Nikse.SubtitleEdit.Core
             FixMissingOpenBracketTicked = true;
             FixMusicNotationTicked = true;
         }
+
     }
 
     public class GeneralSettings
@@ -532,6 +576,9 @@ namespace Nikse.SubtitleEdit.Core
         public bool AutoConvertToUtf8 { get; set; }
         public bool WriteUtf8Bom { get; set; }
         public bool AutoGuessAnsiEncoding { get; set; }
+        public string SystemSubtitleFontNameOverride { get; set; }
+        public int SystemSubtitleFontSizeOverride { get; set; }
+
         public string SubtitleFontName { get; set; }
         public int SubtitleFontSize { get; set; }
         public bool SubtitleFontBold { get; set; }
@@ -575,6 +622,7 @@ namespace Nikse.SubtitleEdit.Core
         public bool AutoRepeatOn { get; set; }
         public int AutoRepeatCount { get; set; }
         public bool AutoContinueOn { get; set; }
+        public int AutoContinueDelay { get; set; }
         public bool SyncListViewWithVideoWhilePlaying { get; set; }
         public int AutoBackupSeconds { get; set; }
         public int AutoBackupDeleteAfterMonths { get; set; }
@@ -599,6 +647,7 @@ namespace Nikse.SubtitleEdit.Core
         public int ListViewDurationWidth { get; set; }
         public int ListViewCpsWidth { get; set; }
         public int ListViewWpmWidth { get; set; }
+        public int ListViewGapWidth { get; set; }
         public int ListViewActorWidth { get; set; }
         public int ListViewRegionWidth { get; set; }
         public int ListViewTextWidth { get; set; }
@@ -688,6 +737,7 @@ namespace Nikse.SubtitleEdit.Core
             AutoRepeatOn = true;
             AutoRepeatCount = 2;
             AutoContinueOn = false;
+            AutoContinueDelay = 2;
             SyncListViewWithVideoWhilePlaying = false;
             AutoBackupSeconds = 60 * 15;
             AutoBackupDeleteAfterMonths = 6;
@@ -899,7 +949,11 @@ namespace Nikse.SubtitleEdit.Core
         public string MainFileSaveOriginalAs { get; set; }
         public string MainFileSaveAs { get; set; }
         public string MainFileSaveAll { get; set; }
+        public string MainFileCloseOriginal { get; set; }
+        public string MainFileImportPlainText { get; set; }
+        public string MainFileImportTimeCodes { get; set; }
         public string MainFileExportEbu { get; set; }
+        public string MainFileExportPlainText { get; set; }
         public string MainEditUndo { get; set; }
         public string MainEditRedo { get; set; }
         public string MainEditFind { get; set; }
@@ -915,6 +969,7 @@ namespace Nikse.SubtitleEdit.Core
         public string MainToolsFixCommonErrors { get; set; }
         public string MainToolsFixCommonErrorsPreview { get; set; }
         public string MainToolsMergeShortLines { get; set; }
+        public string MainToolsMakeEmptyFromCurrent { get; set; }
         public string MainToolsSplitLongLines { get; set; }
         public string MainToolsRenumber { get; set; }
         public string MainToolsRemoveTextForHI { get; set; }
@@ -922,12 +977,16 @@ namespace Nikse.SubtitleEdit.Core
         public string MainToolsAutoDuration { get; set; }
         public string MainToolsBatchConvert { get; set; }
         public string MainToolsBeamer { get; set; }
+        public string MainVideoOpen { get; set; }
+        public string MainVideoClose { get; set; }
         public string MainVideoPause { get; set; }
         public string MainVideoPlayPauseToggle { get; set; }
         public string MainVideoShowHideVideo { get; set; }
         public string MainVideoToggleVideoControls { get; set; }
         public string MainVideo1FrameLeft { get; set; }
         public string MainVideo1FrameRight { get; set; }
+        public string MainVideo1FrameLeftWithPlay { get; set; }
+        public string MainVideo1FrameRightWithPlay { get; set; }
         public string MainVideo100MsLeft { get; set; }
         public string MainVideo100MsRight { get; set; }
         public string MainVideo500MsLeft { get; set; }
@@ -943,6 +1002,7 @@ namespace Nikse.SubtitleEdit.Core
         public string MainSynchronizationAdjustTimes { get; set; }
         public string MainSynchronizationVisualSync { get; set; }
         public string MainSynchronizationPointSync { get; set; }
+        public string MainSynchronizationPointSyncViaFile { get; set; }
         public string MainSynchronizationChangeFrameRate { get; set; }
         public string MainListViewItalic { get; set; }
         public string MainListViewToggleDashes { get; set; }
@@ -981,6 +1041,10 @@ namespace Nikse.SubtitleEdit.Core
         public string MainAdjustSetEnd { get; set; }
         public string MainAdjustSelected100MsForward { get; set; }
         public string MainAdjustSelected100MsBack { get; set; }
+        public string MainAdjustStartXMsBack { get; set; }
+        public string MainAdjustStartXMsForward { get; set; }
+        public string MainAdjustEndXMsBack { get; set; }
+        public string MainAdjustEndXMsForward { get; set; }
         public string MainInsertAfter { get; set; }
         public string MainTextBoxInsertAfter { get; set; }
         public string MainTextBoxAutoBreak { get; set; }
@@ -1001,6 +1065,7 @@ namespace Nikse.SubtitleEdit.Core
         public string WaveformAddTextHereFromClipboard { get; set; }
         public string WaveformFocusListView { get; set; }
         public string WaveformGoToNextSubtitle { get; set; }
+        public string WaveformGoToPreviousSceneChange { get; set; }
         public string WaveformGoToNextSceneChange { get; set; }
         public string WaveformToggleSceneChange { get; set; }
         public string MainTranslateCustomSearch1 { get; set; }
@@ -1188,6 +1253,7 @@ namespace Nikse.SubtitleEdit.Core
         public RecentFilesSettings RecentFiles { get; set; }
         public GeneralSettings General { get; set; }
         public ToolsSettings Tools { get; set; }
+        public FcpExportSettings FcpExportSettings { get; set; }
         public SubtitleSettings SubtitleSettings { get; set; }
         public ProxySettings Proxy { get; set; }
         public WordListSettings WordLists { get; set; }
@@ -1208,6 +1274,7 @@ namespace Nikse.SubtitleEdit.Core
             RecentFiles = new RecentFilesSettings();
             General = new GeneralSettings();
             Tools = new ToolsSettings();
+            FcpExportSettings = new FcpExportSettings();
             WordLists = new WordListSettings();
             SubtitleSettings = new SubtitleSettings();
             Proxy = new ProxySettings();
@@ -1438,6 +1505,12 @@ namespace Nikse.SubtitleEdit.Core
             subNode = node.SelectSingleNode("AutoGuessAnsiEncoding");
             if (subNode != null)
                 settings.General.AutoGuessAnsiEncoding = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("SystemSubtitleFontNameOverride");
+            if (subNode != null)
+                settings.General.SystemSubtitleFontNameOverride = subNode.InnerText;
+            subNode = node.SelectSingleNode("SystemSubtitleFontSizeOverride");
+            if (subNode != null && !string.IsNullOrEmpty(subNode.InnerText))
+                settings.General.SystemSubtitleFontSizeOverride = Convert.ToInt32(subNode.InnerText);
             subNode = node.SelectSingleNode("_subtitleFontName");
             if (subNode != null)
                 settings.General.SubtitleFontName = subNode.InnerText;
@@ -1569,6 +1642,9 @@ namespace Nikse.SubtitleEdit.Core
             subNode = node.SelectSingleNode("SyncListViewWithVideoWhilePlaying");
             if (subNode != null)
                 settings.General.SyncListViewWithVideoWhilePlaying = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("AutoContinueDelay");
+            if (subNode != null)
+                settings.General.AutoContinueDelay = Convert.ToInt32(subNode.InnerText);
             subNode = node.SelectSingleNode("AutoContinueOn");
             if (subNode != null)
                 settings.General.AutoContinueOn = Convert.ToBoolean(subNode.InnerText);
@@ -1641,6 +1717,9 @@ namespace Nikse.SubtitleEdit.Core
             subNode = node.SelectSingleNode("ListViewWpmWidth");
             if (subNode != null)
                 settings.General.ListViewWpmWidth = Convert.ToInt32(subNode.InnerText.Trim());
+            subNode = node.SelectSingleNode("ListViewGapWidth");
+            if (subNode != null)
+                settings.General.ListViewGapWidth = Convert.ToInt32(subNode.InnerText.Trim());
             subNode = node.SelectSingleNode("ListViewActorWidth");
             if (subNode != null)
                 settings.General.ListViewActorWidth = Convert.ToInt32(subNode.InnerText.Trim());
@@ -1758,12 +1837,12 @@ namespace Nikse.SubtitleEdit.Core
             subNode = node.SelectSingleNode("MicrosoftBingApiId");
             if (subNode != null)
                 settings.Tools.MicrosoftBingApiId = subNode.InnerText;
-            subNode = node.SelectSingleNode("MicrosoftBingClientId");
+            subNode = node.SelectSingleNode("MicrosoftTranslatorApiKey");
             if (subNode != null)
-                settings.Tools.MicrosoftBingClientId = subNode.InnerText;
-            subNode = node.SelectSingleNode("MicrosoftBingClientSecret");
+                settings.Tools.MicrosoftTranslatorApiKey = subNode.InnerText;
+            subNode = node.SelectSingleNode("GoogleTranslateUrl");
             if (subNode != null)
-                settings.Tools.MicrosoftBingClientSecret = subNode.InnerText;
+                settings.Tools.GoogleTranslateUrl = subNode.InnerText;
             subNode = node.SelectSingleNode("GoogleApiKey");
             if (subNode != null)
                 settings.Tools.GoogleApiKey = subNode.InnerText;
@@ -1812,6 +1891,9 @@ namespace Nikse.SubtitleEdit.Core
             subNode = node.SelectSingleNode("ListViewShowColumnWordsPerMin");
             if (subNode != null)
                 settings.Tools.ListViewShowColumnWordsPerMin = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("ListViewShowColumnGap");
+            if (subNode != null)
+                settings.Tools.ListViewShowColumnGap = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("ListViewShowColumnActor");
             if (subNode != null)
                 settings.Tools.ListViewShowColumnActor = Convert.ToBoolean(subNode.InnerText);
@@ -1845,6 +1927,9 @@ namespace Nikse.SubtitleEdit.Core
             subNode = node.SelectSingleNode("BatchConvertRemoveFormatting");
             if (subNode != null)
                 settings.Tools.BatchConvertRemoveFormatting = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("BatchConvertBridgeGaps");
+            if (subNode != null)
+                settings.Tools.BatchConvertBridgeGaps = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("BatchConvertFixCasing");
             if (subNode != null)
                 settings.Tools.BatchConvertFixCasing = Convert.ToBoolean(subNode.InnerText);
@@ -1878,6 +1963,9 @@ namespace Nikse.SubtitleEdit.Core
             subNode = node.SelectSingleNode("BatchConvertSsaStyles");
             if (subNode != null)
                 settings.Tools.BatchConvertSsaStyles = subNode.InnerText;
+            subNode = node.SelectSingleNode("BatchConvertUseStyleFromSource");
+            if (subNode != null)
+                settings.Tools.BatchConvertUseStyleFromSource = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("BatchConvertExportCustomTextTemplate");
             if (subNode != null)
                 settings.Tools.BatchConvertExportCustomTextTemplate = subNode.InnerText;
@@ -1959,18 +2047,36 @@ namespace Nikse.SubtitleEdit.Core
             subNode = node.SelectSingleNode("ExportShadowColor");
             if (subNode != null)
                 settings.Tools.ExportShadowColor = Color.FromArgb(int.Parse(subNode.InnerText));
+            subNode = node.SelectSingleNode("ExportBoxBorderSize");
+            if (subNode != null)
+                settings.Tools.ExportBoxBorderSize = int.Parse(subNode.InnerText);
+            subNode = node.SelectSingleNode("ExportBottomMarginUnit");
+            if (subNode != null)
+                settings.Tools.ExportBottomMarginUnit = subNode.InnerText;
             subNode = node.SelectSingleNode("ExportBottomMarginPercent");
             if (subNode != null)
                 settings.Tools.ExportBottomMarginPercent = int.Parse(subNode.InnerText);
+            subNode = node.SelectSingleNode("ExportBottomMarginPixels");
+            if (subNode != null)
+                settings.Tools.ExportBottomMarginPercent = int.Parse(subNode.InnerText);
+            subNode = node.SelectSingleNode("ExportLeftRightMarginUnit");
+            if (subNode != null)
+                settings.Tools.ExportLeftRightMarginUnit = subNode.InnerText;
             subNode = node.SelectSingleNode("ExportLeftRightMarginPercent");
             if (subNode != null)
                 settings.Tools.ExportLeftRightMarginPercent = int.Parse(subNode.InnerText);
+            subNode = node.SelectSingleNode("ExportLeftRightMarginPixels");
+            if (subNode != null)
+                settings.Tools.ExportLeftRightMarginPixels = int.Parse(subNode.InnerText);
             subNode = node.SelectSingleNode("ExportHorizontalAlignment");
             if (subNode != null)
                 settings.Tools.ExportHorizontalAlignment = int.Parse(subNode.InnerText);
             subNode = node.SelectSingleNode("ExportBluRayBottomMarginPercent");
             if (subNode != null)
                 settings.Tools.ExportBluRayBottomMarginPercent = int.Parse(subNode.InnerText);
+            subNode = node.SelectSingleNode("ExportBluRayBottomMarginPixels");
+            if (subNode != null)
+                settings.Tools.ExportBluRayBottomMarginPixels = int.Parse(subNode.InnerText);
             subNode = node.SelectSingleNode("ExportBluRayShadow");
             if (subNode != null)
                 settings.Tools.ExportBluRayShadow = int.Parse(subNode.InnerText);
@@ -1989,6 +2095,9 @@ namespace Nikse.SubtitleEdit.Core
             subNode = node.SelectSingleNode("ExportFullFrame");
             if (subNode != null)
                 settings.Tools.ExportFullFrame = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("ExportFcpFullPathUrl");
+            if (subNode != null)
+                settings.Tools.ExportFcpFullPathUrl = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("ExportPenLineJoin");
             if (subNode != null)
                 settings.Tools.ExportPenLineJoin = subNode.InnerText;
@@ -2082,6 +2191,9 @@ namespace Nikse.SubtitleEdit.Core
             subNode = node.SelectSingleNode("VideoOffsetKeepTimeCodes");
             if (subNode != null)
                 settings.Tools.VideoOffsetKeepTimeCodes = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("MoveStartEndMs");
+            if (subNode != null)
+                settings.Tools.MoveStartEndMs = Convert.ToInt32(subNode.InnerText);
             subNode = node.SelectSingleNode("FindHistory");
             if (subNode != null)
             {
@@ -2112,10 +2224,10 @@ namespace Nikse.SubtitleEdit.Core
                     settings.SubtitleSettings.SsaFontBold = Convert.ToBoolean(subNode.InnerText);
                 subNode = node.SelectSingleNode("SsaOutline");
                 if (subNode != null)
-                    settings.SubtitleSettings.SsaOutline = Convert.ToInt32(subNode.InnerText);
+                    settings.SubtitleSettings.SsaOutline = Convert.ToDecimal(subNode.InnerText);
                 subNode = node.SelectSingleNode("SsaShadow");
                 if (subNode != null)
-                    settings.SubtitleSettings.SsaShadow = Convert.ToInt32(subNode.InnerText);
+                    settings.SubtitleSettings.SsaShadow = Convert.ToDecimal(subNode.InnerText);
                 subNode = node.SelectSingleNode("SsaOpaqueBox");
                 if (subNode != null)
                     settings.SubtitleSettings.SsaOpaqueBox = Convert.ToBoolean(subNode.InnerText);
@@ -2204,6 +2316,27 @@ namespace Nikse.SubtitleEdit.Core
             subNode = node.SelectSingleNode("Domain");
             if (subNode != null)
                 settings.Proxy.Domain = subNode.InnerText;
+
+            // Fxp xml export settings
+            node = doc.DocumentElement.SelectSingleNode("FcpExportSettings");
+            if (node != null)
+            {
+                subNode = node.SelectSingleNode("FontName");
+                if (subNode != null)
+                    settings.FcpExportSettings.FontName = subNode.InnerText;
+                subNode = node.SelectSingleNode("FontSize");
+                if (subNode != null)
+                    settings.FcpExportSettings.FontSize = int.Parse(subNode.InnerText);
+                subNode = node.SelectSingleNode("Alignment");
+                if (subNode != null)
+                    settings.FcpExportSettings.Alignment = subNode.InnerText;
+                subNode = node.SelectSingleNode("Baseline");
+                if (subNode != null)
+                    settings.FcpExportSettings.Baseline = int.Parse(subNode.InnerText);
+                subNode = node.SelectSingleNode("Color");
+                if (subNode != null)
+                    settings.FcpExportSettings.Color = Color.FromArgb(int.Parse(subNode.InnerText));
+            }
 
             // Word List
             node = doc.DocumentElement.SelectSingleNode("WordLists");
@@ -2691,9 +2824,21 @@ namespace Nikse.SubtitleEdit.Core
                 subNode = node.SelectSingleNode("MainFileSaveAll");
                 if (subNode != null)
                     settings.Shortcuts.MainFileSaveAll = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainFileCloseOriginal");
+                if (subNode != null)
+                    settings.Shortcuts.MainFileCloseOriginal = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainFileImportPlainText");
+                if (subNode != null)
+                    settings.Shortcuts.MainFileImportPlainText = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainFileImportTimeCodes");
+                if (subNode != null)
+                    settings.Shortcuts.MainFileImportTimeCodes = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainFileExportEbu");
                 if (subNode != null)
                     settings.Shortcuts.MainFileExportEbu = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainFileExportPlainText");
+                if (subNode != null)
+                    settings.Shortcuts.MainFileExportPlainText = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainEditUndo");
                 if (subNode != null)
                     settings.Shortcuts.MainEditUndo = subNode.InnerText;
@@ -2727,6 +2872,9 @@ namespace Nikse.SubtitleEdit.Core
                 subNode = node.SelectSingleNode("MainToolsMergeShortLines");
                 if (subNode != null)
                     settings.Shortcuts.MainToolsMergeShortLines = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainToolsMakeEmptyFromCurrent");
+                if (subNode != null)
+                    settings.Shortcuts.MainToolsMakeEmptyFromCurrent = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainToolsSplitLongLines");
                 if (subNode != null)
                     settings.Shortcuts.MainToolsSplitLongLines = subNode.InnerText;
@@ -2757,6 +2905,12 @@ namespace Nikse.SubtitleEdit.Core
                 subNode = node.SelectSingleNode("MainEditModifySelection");
                 if (subNode != null)
                     settings.Shortcuts.MainEditModifySelection = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainVideoOpen");
+                if (subNode != null)
+                    settings.Shortcuts.MainVideoOpen = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainVideoClose");
+                if (subNode != null)
+                    settings.Shortcuts.MainVideoClose = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainVideoPause");
                 if (subNode != null)
                     settings.Shortcuts.MainVideoPause = subNode.InnerText;
@@ -2775,6 +2929,12 @@ namespace Nikse.SubtitleEdit.Core
                 subNode = node.SelectSingleNode("MainVideo1FrameRight");
                 if (subNode != null)
                     settings.Shortcuts.MainVideo1FrameRight = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainVideo1FrameLeftWithPlay");
+                if (subNode != null)
+                    settings.Shortcuts.MainVideo1FrameLeftWithPlay = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainVideo1FrameRightWithPlay");
+                if (subNode != null)
+                    settings.Shortcuts.MainVideo1FrameRightWithPlay = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainVideo100MsLeft");
                 if (subNode != null)
                     settings.Shortcuts.MainVideo100MsLeft = subNode.InnerText;
@@ -2820,6 +2980,9 @@ namespace Nikse.SubtitleEdit.Core
                 subNode = node.SelectSingleNode("MainSynchronizationPointSync");
                 if (subNode != null)
                     settings.Shortcuts.MainSynchronizationPointSync = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainSynchronizationPointSyncViaFile");
+                if (subNode != null)
+                    settings.Shortcuts.MainSynchronizationPointSyncViaFile = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainSynchronizationChangeFrameRate");
                 if (subNode != null)
                     settings.Shortcuts.MainSynchronizationChangeFrameRate = subNode.InnerText;
@@ -2937,6 +3100,18 @@ namespace Nikse.SubtitleEdit.Core
                 subNode = node.SelectSingleNode("MainAdjustSelected100MsBack");
                 if (subNode != null)
                     settings.Shortcuts.MainAdjustSelected100MsBack = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainAdjustStartXMsBack");
+                if (subNode != null)
+                    settings.Shortcuts.MainAdjustStartXMsBack = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainAdjustStartXMsForward");
+                if (subNode != null)
+                    settings.Shortcuts.MainAdjustStartXMsForward = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainAdjustEndXMsBack");
+                if (subNode != null)
+                    settings.Shortcuts.MainAdjustEndXMsBack = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainAdjustEndXMsForward");
+                if (subNode != null)
+                    settings.Shortcuts.MainAdjustEndXMsForward = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainInsertAfter");
                 if (subNode != null)
                     settings.Shortcuts.MainInsertAfter = subNode.InnerText;
@@ -2997,6 +3172,9 @@ namespace Nikse.SubtitleEdit.Core
                 subNode = node.SelectSingleNode("WaveformGoToNextSubtitle");
                 if (subNode != null)
                     settings.Shortcuts.WaveformGoToNextSubtitle = subNode.InnerText;
+                subNode = node.SelectSingleNode("WaveformGoToPreviousSceneChange");
+                if (subNode != null)
+                    settings.Shortcuts.WaveformGoToPreviousSceneChange = subNode.InnerText;
                 subNode = node.SelectSingleNode("WaveformGoToNextSceneChange");
                 if (subNode != null)
                     settings.Shortcuts.WaveformGoToNextSceneChange = subNode.InnerText;
@@ -3158,6 +3336,8 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("AutoConvertToUtf8", settings.General.AutoConvertToUtf8.ToString());
                 textWriter.WriteElementString("WriteUtf8Bom", settings.General.WriteUtf8Bom.ToString());
                 textWriter.WriteElementString("AutoGuessAnsiEncoding", settings.General.AutoGuessAnsiEncoding.ToString());
+                textWriter.WriteElementString("SystemSubtitleFontNameOverride", settings.General.SystemSubtitleFontNameOverride);
+                textWriter.WriteElementString("SystemSubtitleFontSizeOverride", settings.General.SystemSubtitleFontSizeOverride.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("_subtitleFontName", settings.General.SubtitleFontName);
                 textWriter.WriteElementString("SubtitleFontSize", settings.General.SubtitleFontSize.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("SubtitleFontBold", settings.General.SubtitleFontBold.ToString());
@@ -3201,6 +3381,7 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("AutoRepeatOn", settings.General.AutoRepeatOn.ToString());
                 textWriter.WriteElementString("AutoRepeatCount", settings.General.AutoRepeatCount.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AutoContinueOn", settings.General.AutoContinueOn.ToString());
+                textWriter.WriteElementString("AutoContinueDelay", settings.General.AutoContinueDelay.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("SyncListViewWithVideoWhilePlaying", settings.General.SyncListViewWithVideoWhilePlaying.ToString());
                 textWriter.WriteElementString("AutoBackupSeconds", settings.General.AutoBackupSeconds.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AutoBackupDeleteAfterMonths", settings.General.AutoBackupDeleteAfterMonths.ToString(CultureInfo.InvariantCulture));
@@ -3225,6 +3406,7 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("ListViewDurationWidth", settings.General.ListViewDurationWidth.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewCpsWidth", settings.General.ListViewCpsWidth.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewWpmWidth", settings.General.ListViewWpmWidth.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ListViewGapWidth", settings.General.ListViewGapWidth.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewActorWidth", settings.General.ListViewActorWidth.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewRegionWidth", settings.General.ListViewRegionWidth.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("VlcWaveTranscodeSettings", settings.General.VlcWaveTranscodeSettings);
@@ -3266,8 +3448,8 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("OcrFixUseHardcodedRules", settings.Tools.OcrFixUseHardcodedRules.ToString());
                 textWriter.WriteElementString("Interjections", settings.Tools.Interjections);
                 textWriter.WriteElementString("MicrosoftBingApiId", settings.Tools.MicrosoftBingApiId);
-                textWriter.WriteElementString("MicrosoftBingClientId", settings.Tools.MicrosoftBingClientId);
-                textWriter.WriteElementString("MicrosoftBingClientSecret", settings.Tools.MicrosoftBingClientSecret);
+                textWriter.WriteElementString("MicrosoftTranslatorApiKey", settings.Tools.MicrosoftTranslatorApiKey);
+                textWriter.WriteElementString("GoogleTranslateUrl", settings.Tools.GoogleTranslateUrl);
                 textWriter.WriteElementString("GoogleApiKey", settings.Tools.GoogleApiKey);
                 textWriter.WriteElementString("UseGooleApiPaidService", settings.Tools.UseGooleApiPaidService.ToString());
                 textWriter.WriteElementString("GoogleTranslateLastTargetLanguage", settings.Tools.GoogleTranslateLastTargetLanguage);
@@ -3284,6 +3466,7 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("ListViewShowColumnDuration", settings.Tools.ListViewShowColumnDuration.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewShowColumnCharsPerSec", settings.Tools.ListViewShowColumnCharsPerSec.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewShowColumnWordsPerMin", settings.Tools.ListViewShowColumnWordsPerMin.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ListViewShowColumnGap", settings.Tools.ListViewShowColumnGap.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewShowColumnActor", settings.Tools.ListViewShowColumnActor.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewShowColumnRegion", settings.Tools.ListViewShowColumnRegion.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("SplitAdvanced", settings.Tools.SplitAdvanced.ToString());
@@ -3295,6 +3478,7 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("BatchConvertOverwriteExisting", settings.Tools.BatchConvertOverwriteExisting.ToString());
                 textWriter.WriteElementString("BatchConvertOverwriteOriginal", settings.Tools.BatchConvertOverwriteOriginal.ToString());
                 textWriter.WriteElementString("BatchConvertRemoveFormatting", settings.Tools.BatchConvertRemoveFormatting.ToString());
+                textWriter.WriteElementString("BatchConvertBridgeGaps", settings.Tools.BatchConvertBridgeGaps.ToString());
                 textWriter.WriteElementString("BatchConvertFixCasing", settings.Tools.BatchConvertFixCasing.ToString());
                 textWriter.WriteElementString("BatchConvertRemoveTextForHI", settings.Tools.BatchConvertRemoveTextForHI.ToString());
                 textWriter.WriteElementString("BatchConvertSplitLongLines", settings.Tools.BatchConvertSplitLongLines.ToString());
@@ -3306,6 +3490,7 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("BatchConvertFormat", settings.Tools.BatchConvertFormat);
                 textWriter.WriteElementString("BatchConvertAssStyles", settings.Tools.BatchConvertAssStyles);
                 textWriter.WriteElementString("BatchConvertSsaStyles", settings.Tools.BatchConvertSsaStyles);
+                textWriter.WriteElementString("BatchConvertUseStyleFromSource", settings.Tools.BatchConvertUseStyleFromSource.ToString());
                 textWriter.WriteElementString("BatchConvertExportCustomTextTemplate", settings.Tools.BatchConvertExportCustomTextTemplate);
                 textWriter.WriteElementString("ModifySelectionRule", settings.Tools.ModifySelectionRule);
                 textWriter.WriteElementString("ModifySelectionText", settings.Tools.ModifySelectionText);
@@ -3333,16 +3518,23 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("ExportFontColor", settings.Tools.ExportFontColor.ToArgb().ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ExportBorderColor", settings.Tools.ExportBorderColor.ToArgb().ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ExportShadowColor", settings.Tools.ExportShadowColor.ToArgb().ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ExportBoxBorderSize", settings.Tools.ExportBoxBorderSize.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ExportBottomMarginUnit", settings.Tools.ExportBottomMarginUnit);
                 textWriter.WriteElementString("ExportBottomMarginPercent", settings.Tools.ExportBottomMarginPercent.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ExportBottomMarginPixels", settings.Tools.ExportBottomMarginPixels.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ExportLeftRightMarginUnit", settings.Tools.ExportLeftRightMarginUnit);
                 textWriter.WriteElementString("ExportLeftRightMarginPercent", settings.Tools.ExportLeftRightMarginPercent.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ExportLeftRightMarginPixels", settings.Tools.ExportLeftRightMarginPixels.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ExportHorizontalAlignment", settings.Tools.ExportHorizontalAlignment.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ExportBluRayBottomMarginPercent", settings.Tools.ExportBluRayBottomMarginPercent.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ExportBluRayBottomMarginPixels", settings.Tools.ExportBluRayBottomMarginPixels.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ExportBluRayShadow", settings.Tools.ExportBluRayShadow.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("Export3DType", settings.Tools.Export3DType.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("Export3DDepth", settings.Tools.Export3DDepth.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ExportLastShadowTransparency", settings.Tools.ExportLastShadowTransparency.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ExportLastFrameRate", settings.Tools.ExportLastFrameRate.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ExportFullFrame", settings.Tools.ExportFullFrame.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ExportFcpFullPathUrl", settings.Tools.ExportFcpFullPathUrl.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ExportPenLineJoin", settings.Tools.ExportPenLineJoin);
                 textWriter.WriteElementString("FixCommonErrorsFixOverlapAllowEqualEndStart", settings.Tools.FixCommonErrorsFixOverlapAllowEqualEndStart.ToString());
                 textWriter.WriteElementString("FixCommonErrorsSkipStepOne", settings.Tools.FixCommonErrorsSkipStepOne.ToString());
@@ -3374,6 +3566,7 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("ExportTextNewLineAfterText", settings.Tools.ExportTextNewLineAfterText.ToString());
                 textWriter.WriteElementString("ExportTextNewLineBetweenSubtitles", settings.Tools.ExportTextNewLineBetweenSubtitles.ToString());
                 textWriter.WriteElementString("VideoOffsetKeepTimeCodes", settings.Tools.VideoOffsetKeepTimeCodes.ToString());
+                textWriter.WriteElementString("MoveStartEndMs", settings.Tools.MoveStartEndMs.ToString(CultureInfo.InvariantCulture));
 
                 if (settings.Tools.FindHistory != null && settings.Tools.FindHistory.Count > 0)
                 {
@@ -3435,6 +3628,14 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("LastLanguage", settings.WordLists.LastLanguage);
                 textWriter.WriteElementString("Names", settings.WordLists.NamesUrl);
                 textWriter.WriteElementString("UseOnlineNames", settings.WordLists.UseOnlineNames.ToString());
+                textWriter.WriteEndElement();
+
+                textWriter.WriteStartElement("FcpExportSettings", string.Empty);
+                textWriter.WriteElementString("FontName", settings.FcpExportSettings.FontName);
+                textWriter.WriteElementString("FontSize", settings.FcpExportSettings.FontSize.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("Alignment", settings.FcpExportSettings.Alignment);
+                textWriter.WriteElementString("Baseline", settings.FcpExportSettings.Baseline.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("Color", settings.FcpExportSettings.Color.ToArgb().ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteEndElement();
 
                 textWriter.WriteStartElement("CommonErrors", string.Empty);
@@ -3597,7 +3798,12 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("MainFileSaveOriginal", settings.Shortcuts.MainFileSaveOriginal);
                 textWriter.WriteElementString("MainFileSaveOriginalAs", settings.Shortcuts.MainFileSaveOriginalAs);
                 textWriter.WriteElementString("MainFileSaveAs", settings.Shortcuts.MainFileSaveAs);
+                textWriter.WriteElementString("MainFileCloseOriginal", settings.Shortcuts.MainFileCloseOriginal);
                 textWriter.WriteElementString("MainFileSaveAll", settings.Shortcuts.MainFileSaveAll);
+                textWriter.WriteElementString("MainFileImportPlainText", settings.Shortcuts.MainFileImportPlainText);
+                textWriter.WriteElementString("MainFileImportTimeCodes", settings.Shortcuts.MainFileImportTimeCodes);
+                textWriter.WriteElementString("MainFileExportEbu", settings.Shortcuts.MainFileExportEbu);
+                textWriter.WriteElementString("MainFileExportPlainText", settings.Shortcuts.MainFileExportPlainText);
                 textWriter.WriteElementString("MainFileExportEbu", settings.Shortcuts.MainFileExportEbu);
                 textWriter.WriteElementString("MainEditUndo", settings.Shortcuts.MainEditUndo);
                 textWriter.WriteElementString("MainEditRedo", settings.Shortcuts.MainEditRedo);
@@ -3610,6 +3816,7 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("MainToolsFixCommonErrors", settings.Shortcuts.MainToolsFixCommonErrors);
                 textWriter.WriteElementString("MainToolsFixCommonErrorsPreview", settings.Shortcuts.MainToolsFixCommonErrorsPreview);
                 textWriter.WriteElementString("MainToolsMergeShortLines", settings.Shortcuts.MainToolsMergeShortLines);
+                textWriter.WriteElementString("MainToolsMakeEmptyFromCurrent", settings.Shortcuts.MainToolsMakeEmptyFromCurrent);
                 textWriter.WriteElementString("MainToolsSplitLongLines", settings.Shortcuts.MainToolsSplitLongLines);
                 textWriter.WriteElementString("MainToolsRenumber", settings.Shortcuts.MainToolsRenumber);
                 textWriter.WriteElementString("MainToolsRemoveTextForHI", settings.Shortcuts.MainToolsRemoveTextForHI);
@@ -3620,12 +3827,16 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("MainToolsToggleTranslationOriginalInPreviews", settings.Shortcuts.MainEditToggleTranslationOriginalInPreviews);
                 textWriter.WriteElementString("MainEditInverseSelection", settings.Shortcuts.MainEditInverseSelection);
                 textWriter.WriteElementString("MainEditModifySelection", settings.Shortcuts.MainEditModifySelection);
+                textWriter.WriteElementString("MainVideoOpen", settings.Shortcuts.MainVideoOpen);
+                textWriter.WriteElementString("MainVideoClose", settings.Shortcuts.MainVideoClose);
                 textWriter.WriteElementString("MainVideoPause", settings.Shortcuts.MainVideoPause);
                 textWriter.WriteElementString("MainVideoPlayPauseToggle", settings.Shortcuts.MainVideoPlayPauseToggle);
                 textWriter.WriteElementString("MainVideoShowHideVideo", settings.Shortcuts.MainVideoShowHideVideo);
                 textWriter.WriteElementString("MainVideoToggleVideoControls", settings.Shortcuts.MainVideoToggleVideoControls);
                 textWriter.WriteElementString("MainVideo1FrameLeft", settings.Shortcuts.MainVideo1FrameLeft);
                 textWriter.WriteElementString("MainVideo1FrameRight", settings.Shortcuts.MainVideo1FrameRight);
+                textWriter.WriteElementString("MainVideo1FrameLeftWithPlay", settings.Shortcuts.MainVideo1FrameLeftWithPlay);
+                textWriter.WriteElementString("MainVideo1FrameRightWithPlay", settings.Shortcuts.MainVideo1FrameRightWithPlay);
                 textWriter.WriteElementString("MainVideo100MsLeft", settings.Shortcuts.MainVideo100MsLeft);
                 textWriter.WriteElementString("MainVideo100MsRight", settings.Shortcuts.MainVideo100MsRight);
                 textWriter.WriteElementString("MainVideo500MsLeft", settings.Shortcuts.MainVideo500MsLeft);
@@ -3641,6 +3852,7 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("MainSynchronizationAdjustTimes", settings.Shortcuts.MainSynchronizationAdjustTimes);
                 textWriter.WriteElementString("MainSynchronizationVisualSync", settings.Shortcuts.MainSynchronizationVisualSync);
                 textWriter.WriteElementString("MainSynchronizationPointSync", settings.Shortcuts.MainSynchronizationPointSync);
+                textWriter.WriteElementString("MainSynchronizationPointSyncViaFile", settings.Shortcuts.MainSynchronizationPointSyncViaFile);
                 textWriter.WriteElementString("MainSynchronizationChangeFrameRate", settings.Shortcuts.MainSynchronizationChangeFrameRate);
                 textWriter.WriteElementString("MainListViewItalic", settings.Shortcuts.MainListViewItalic);
                 textWriter.WriteElementString("MainListViewToggleDashes", settings.Shortcuts.MainListViewToggleDashes);
@@ -3680,6 +3892,10 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("MainAdjustSetEnd", settings.Shortcuts.MainAdjustSetEnd);
                 textWriter.WriteElementString("MainAdjustSelected100MsForward", settings.Shortcuts.MainAdjustSelected100MsForward);
                 textWriter.WriteElementString("MainAdjustSelected100MsBack", settings.Shortcuts.MainAdjustSelected100MsBack);
+                textWriter.WriteElementString("MainAdjustStartXMsBack", settings.Shortcuts.MainAdjustStartXMsBack);
+                textWriter.WriteElementString("MainAdjustStartXMsForward", settings.Shortcuts.MainAdjustStartXMsForward);
+                textWriter.WriteElementString("MainAdjustEndXMsBack", settings.Shortcuts.MainAdjustEndXMsBack);
+                textWriter.WriteElementString("MainAdjustEndXMsForward", settings.Shortcuts.MainAdjustEndXMsForward);
                 textWriter.WriteElementString("MainInsertAfter", settings.Shortcuts.MainInsertAfter);
                 textWriter.WriteElementString("MainTextBoxInsertAfter", settings.Shortcuts.MainTextBoxInsertAfter);
                 textWriter.WriteElementString("MainTextBoxAutoBreak", settings.Shortcuts.MainTextBoxAutoBreak);
@@ -3700,6 +3916,7 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("WaveformAddTextHereFromClipboard", settings.Shortcuts.WaveformAddTextHereFromClipboard);
                 textWriter.WriteElementString("WaveformFocusListView", settings.Shortcuts.WaveformFocusListView);
                 textWriter.WriteElementString("WaveformGoToNextSubtitle", settings.Shortcuts.WaveformGoToNextSubtitle);
+                textWriter.WriteElementString("WaveformGoToPreviousSceneChange", settings.Shortcuts.WaveformGoToPreviousSceneChange);
                 textWriter.WriteElementString("WaveformGoToNextSceneChange", settings.Shortcuts.WaveformGoToNextSceneChange);
                 textWriter.WriteElementString("WaveformToggleSceneChange", settings.Shortcuts.WaveformToggleSceneChange);
                 textWriter.WriteElementString("MainTranslateCustomSearch1", settings.Shortcuts.MainTranslateCustomSearch1);

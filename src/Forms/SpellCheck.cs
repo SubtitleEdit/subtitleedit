@@ -1,5 +1,7 @@
 ﻿using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Core.Enums;
+using Nikse.SubtitleEdit.Core.Interfaces;
+using Nikse.SubtitleEdit.Core.SpellCheck;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.SpellCheck;
 using System;
@@ -7,8 +9,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Core.Interfaces;
-using Nikse.SubtitleEdit.Core.SpellCheck;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -85,7 +85,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public SpellCheck()
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
             labelActionInfo.Text = string.Empty;
             Text = Configuration.Settings.Language.SpellCheck.Title;
             labelFullText.Text = Configuration.Settings.Language.SpellCheck.FullText;
@@ -147,6 +149,8 @@ namespace Nikse.SubtitleEdit.Forms
                 if (name.Contains("[" + languageName + "]"))
                     comboBoxDictionaries.SelectedIndex = comboBoxDictionaries.Items.Count - 1;
             }
+            comboBoxDictionaries.AutoCompleteSource = AutoCompleteSource.ListItems;
+            comboBoxDictionaries.AutoCompleteMode = AutoCompleteMode.Append;
             comboBoxDictionaries.SelectedIndexChanged += ComboBoxDictionariesSelectedIndexChanged;
         }
 
@@ -436,7 +440,7 @@ namespace Nikse.SubtitleEdit.Forms
                     _currentParagraph.Text = ChangeWholeText;
                     _mainWindow.ChangeWholeTextMainPart(ref _noOfChangedWords, ref _firstChange, _currentIndex, _currentParagraph);
                     _currentIndex--; // re-spellcheck current line
-                    _wordsIndex = int.MaxValue -1;
+                    _wordsIndex = int.MaxValue - 1;
                     break;
             }
             labelActionInfo.Text = string.Empty;
@@ -502,8 +506,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (Configuration.Settings.Tools.SpellCheckOneLetterWords)
                     minLength = 1;
 
-                if (_currentWord.Trim().Length >= minLength &&
-                    !_currentWord.Contains(ExpectedChars))
+                if (_currentWord.Trim().Length >= minLength && !_currentWord.Contains(ExpectedChars))
                 {
                     _prefix = string.Empty;
                     _postfix = string.Empty;
@@ -531,7 +534,7 @@ namespace Nikse.SubtitleEdit.Forms
                         _noOfSkippedWords++;
                     }
                     else if (_skipOneList.Contains(key))
-                    { 
+                    {
                         // "skip one" again (after change whole text)
                     }
                     else if (_spellCheckWordLists.HasUserWord(_currentWord))
@@ -582,6 +585,44 @@ namespace Nikse.SubtitleEdit.Forms
                                 removeUnicode = removeUnicode.Replace("\u2060", string.Empty); // word joiner
                                 removeUnicode = removeUnicode.Replace("\ufeff", string.Empty); // zero width no-break space
                                 correct = DoSpell(removeUnicode);
+                            }
+
+                            // check if dash concatenated word with previous or next word is in spell check dictionary
+                            if (!correct && _wordsIndex > 0 && (_currentParagraph.Text[_currentSpellCheckWord.Index - 1] == '-' || _currentParagraph.Text[_currentSpellCheckWord.Index - 1] == '‑'))
+                            {
+                                var wordWithDash = _words[_wordsIndex - 1].Text + "-" + _currentWord;
+                                correct = DoSpell(wordWithDash);
+                                if (!correct)
+                                {
+                                    wordWithDash = _words[_wordsIndex - 1].Text + "‑" + _currentWord; // non break hyphen
+                                    correct = DoSpell(wordWithDash);
+                                }
+                                if (!correct)
+                                {
+                                    correct = _spellCheckWordLists.HasUserWord(wordWithDash);
+                                }
+                                if (!correct)
+                                {
+                                    correct = _spellCheckWordLists.HasUserWord(wordWithDash.Replace("‑", "-"));
+                                }
+                            }
+                            if (!correct && _wordsIndex < _words.Count - 1 && (_currentParagraph.Text[_words[_wordsIndex + 1].Index - 1] == '-' || _currentParagraph.Text[_words[_wordsIndex + 1].Index - 1] == '‑'))
+                            {
+                                var wordWithDash = _currentWord + "-" + _words[_wordsIndex + 1].Text;
+                                correct = DoSpell(wordWithDash);
+                                if (!correct)
+                                {
+                                    wordWithDash = _currentWord + "‑" + _words[_wordsIndex + 1].Text; // non break hyphen
+                                    correct = DoSpell(wordWithDash);
+                                }
+                                if (!correct)
+                                {
+                                    correct = _spellCheckWordLists.HasUserWord(wordWithDash);
+                                }
+                                if (!correct)
+                                {
+                                    correct = _spellCheckWordLists.HasUserWord(wordWithDash.Replace("‑", "-"));
+                                }
                             }
                         }
                         else

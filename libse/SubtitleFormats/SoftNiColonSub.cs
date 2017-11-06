@@ -12,27 +12,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     {
         private static readonly Regex regexTimeCodes = new Regex(@"^\d\d:\d\d:\d\d:\d\d\\\d\d:\d\d:\d\d:\d\d$", RegexOptions.Compiled);
 
-        public override string Extension
-        {
-            get { return ".sub"; }
-        }
+        public override string Extension => ".sub";
 
-        public override string Name
-        {
-            get { return "SoftNi colon sub"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
-
-        public override bool IsMine(List<string> lines, string fileName)
-        {
-            var subtitle = new Subtitle();
-            DoLoadSubtitle(subtitle, lines);
-            return subtitle.Paragraphs.Count > _errorCount;
-        }
+        public override string Name => "SoftNi colon sub";
 
         public override string ToText(Subtitle subtitle, string title)
         {
@@ -73,7 +55,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         nextLineInItalics = false;
                     }
 
-                    if (tempLine.StartsWith("<i>") && tempLine.EndsWith("</i>"))
+                    if (tempLine.StartsWith("<i>", StringComparison.Ordinal) && tempLine.EndsWith("</i>", StringComparison.Ordinal))
                     {
                         // Whole line is in italics
                         // Remove <i> from the beginning
@@ -83,7 +65,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         // Add new italics tag at the beginning
                         tempLine = "[" + tempLine;
                     }
-                    else if (tempLine.StartsWith("<i>") && Utilities.CountTagInText(tempLine, "<i>") > Utilities.CountTagInText(tempLine, "</i>"))
+                    else if (tempLine.StartsWith("<i>", StringComparison.Ordinal) && Utilities.CountTagInText(tempLine, "<i>") > Utilities.CountTagInText(tempLine, "</i>"))
                     {
                         // Line starts with <i> but italics are not closed. So the next line should be in italics
                         nextLineInItalics = true;
@@ -102,7 +84,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 if (positionTop)
                     text = "}" + text;
 
-                sb.AppendLine(string.Format("{0}{1}{2}\\{3}", text, Environment.NewLine, p.StartTime.ToHHMMSSPeriodFF().Replace(".", ":"), p.EndTime.ToHHMMSSPeriodFF().Replace(".", ":")));
+                sb.AppendLine($"{text}{Environment.NewLine}{p.StartTime.ToHHMMSSPeriodFF().Replace(".", ":")}\\{p.EndTime.ToHHMMSSPeriodFF().Replace(".", ":")}");
             }
             sb.AppendLine(@"*END*");
             sb.AppendLine(@"...........\...........");
@@ -157,9 +139,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         {
                             try
                             {
-                                p = new Paragraph();
-                                p.StartTime = DecodeTimeCodeFramesFourParts(startParts);
-                                p.EndTime = DecodeTimeCodeFramesFourParts(endParts);
+                                p = new Paragraph
+                                {
+                                    StartTime = DecodeTimeCodeFramesFourParts(startParts),
+                                    EndTime = DecodeTimeCodeFramesFourParts(endParts)
+                                };
                                 string text = sb.ToString().Trim();
 
                                 bool positionTop = false;

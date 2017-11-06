@@ -7,10 +7,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class TmpegEncAW5 : TmpegEncXml
     {
-        public override string Name
-        {
-            get { return "TMPGEnc AW5"; }
-        }
+        public override string Name => "TMPGEnc AW5";
 
         public override string ToText(Subtitle subtitle, string title)
         {
@@ -29,7 +26,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 paragraph.InnerXml = "<Text><![CDATA[" + paragraph.InnerXml.Replace(Environment.NewLine, "\\n") + "\\n]]></Text>";
 
                 XmlAttribute layoutIndex = xml.CreateAttribute("layoutindex");
-                if (p.Text.TrimStart().StartsWith("<i>") && p.Text.TrimEnd().EndsWith("</i>"))
+                if (p.Text.TrimStart().StartsWith("<i>", StringComparison.Ordinal) && p.Text.TrimEnd().EndsWith("</i>", StringComparison.Ordinal))
                     layoutIndex.InnerText = "4";
                 else
                     layoutIndex.InnerText = "0";
@@ -65,9 +62,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             string xmlAsString = sb.ToString().Trim();
             if ((xmlAsString.Contains("<TMPGEncVMESubtitleTextFormat>") || xmlAsString.Contains("<SubtitleItem ")) && (xmlAsString.Contains("<Subtitle")))
             {
-                var subtitle = new Subtitle();
-                LoadSubtitle(subtitle, lines, fileName);
-                return subtitle.Paragraphs.Count > _errorCount;
+                return base.IsMine(lines, fileName);
             }
             return false;
         }

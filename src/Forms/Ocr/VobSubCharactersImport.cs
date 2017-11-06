@@ -1,11 +1,12 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.Ocr.Binary;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Core;
-using Nikse.SubtitleEdit.Logic.Ocr.Binary;
 
 namespace Nikse.SubtitleEdit.Forms.Ocr
 {
@@ -24,13 +25,15 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         public VobSubCharactersImport(BinaryOcrDb binaryOcrDb)
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
 
             _existingDb = binaryOcrDb;
 
             labelInfo.Text = string.Empty;
             labelCurrentImage.Text = string.Empty;
-            Text = string.Format("Import OCR images into \"{0}\"", Path.GetFileName(_existingDb.FileName));
+            Text = $"Import OCR images into \"{Path.GetFileName(_existingDb.FileName)}\"";
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
         }
 
@@ -82,7 +85,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 listView1.Items[0].Selected = true;
                 listView1.Items[0].Focused = true;
             }
-            labelInfo.Text = string.Format("Images found not in current db: {0:#,##0} ({1:#,##0} matches already in current db)", imageList1.Images.Count, existingMatches);
+            labelInfo.Text = $"Images found not in current db: {imageList1.Images.Count:#,##0} ({existingMatches:#,##0} matches already in current db)";
         }
 
         private void AddToListView(BinaryOcrBitmap bob)
@@ -204,7 +207,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 }
             }
             _existingDb.Save();
-            MessageBox.Show(string.Format("{0:#,##0} images imported", count));
+            MessageBox.Show($"{count:#,##0} images imported");
 
             // reload
             listView1.ItemChecked -= listView1_ItemChecked;

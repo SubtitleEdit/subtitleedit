@@ -36,6 +36,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelStatus = new System.Windows.Forms.Label();
             this.buttonBack = new System.Windows.Forms.Button();
             this.groupBoxStep1 = new System.Windows.Forms.GroupBox();
+            this.buttonResetDefault = new System.Windows.Forms.Button();
             this.comboBoxLanguage = new System.Windows.Forms.ComboBox();
             this.labelLanguage = new System.Windows.Forms.Label();
             this.buttonInverseSelection = new System.Windows.Forms.Button();
@@ -146,6 +147,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxStep1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxStep1.Controls.Add(this.buttonResetDefault);
             this.groupBoxStep1.Controls.Add(this.comboBoxLanguage);
             this.groupBoxStep1.Controls.Add(this.labelLanguage);
             this.groupBoxStep1.Controls.Add(this.buttonInverseSelection);
@@ -157,6 +159,17 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxStep1.TabIndex = 9;
             this.groupBoxStep1.TabStop = false;
             this.groupBoxStep1.Text = "Step 1/2 - Choose which errors to fix";
+            // 
+            // buttonResetDefault
+            // 
+            this.buttonResetDefault.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonResetDefault.Location = new System.Drawing.Point(193, 514);
+            this.buttonResetDefault.Name = "buttonResetDefault";
+            this.buttonResetDefault.Size = new System.Drawing.Size(100, 21);
+            this.buttonResetDefault.TabIndex = 12;
+            this.buttonResetDefault.Text = "Select default";
+            this.buttonResetDefault.UseVisualStyleBackColor = true;
+            this.buttonResetDefault.Click += new System.EventHandler(this.buttonResetDefault_Click);
             // 
             // comboBoxLanguage
             // 
@@ -750,5 +763,6 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.Button buttonSplitLine;
         private System.Windows.Forms.ComboBox comboBoxLanguage;
         private System.Windows.Forms.Label labelLanguage;
+        private System.Windows.Forms.Button buttonResetDefault;
     }
 }

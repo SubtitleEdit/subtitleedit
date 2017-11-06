@@ -6,6 +6,12 @@ namespace Nikse.SubtitleEdit.Core
 {
     public static class TextDraw
     {
+
+        public static double GetFontSize(double fontSize)
+        {
+            return fontSize * 0.895d; // font rendered in video players like vlc/mpv are a little smaller than .net, so we adjust font size a bit down
+        }
+
         public static void DrawText(Font font, StringFormat sf, GraphicsPath path, StringBuilder sb, bool isItalic, bool isBold, bool isUnderline, float left, float top, ref bool newLine, float leftMargin, ref int pathPointsStart)
         {
             var next = new PointF(left, top);
@@ -19,7 +25,7 @@ namespace Nikse.SubtitleEdit.Core
                     if (list[i].X > next.X)
                         next.X = list[i].X;
                     k++;
-                    if ((k > 60) || (i <= pathPointsStart && pathPointsStart != -1))
+                    if (k > 60 || i <= pathPointsStart && pathPointsStart != -1)
                         break;
                 }
             }
@@ -39,20 +45,21 @@ namespace Nikse.SubtitleEdit.Core
             if (isUnderline)
                 fontStyle |= FontStyle.Underline;
 
+            var fontSize = (float) GetFontSize(font.Size);
             try
             {
-                path.AddString(sb.ToString(), font.FontFamily, (int)fontStyle, font.Size, next, sf);
+                path.AddString(sb.ToString(), font.FontFamily, (int)fontStyle, fontSize, next, sf);
             }
             catch
             {
                 fontStyle = FontStyle.Regular;
                 try
                 {
-                    path.AddString(sb.ToString(), font.FontFamily, (int)fontStyle, font.Size, next, sf);
+                    path.AddString(sb.ToString(), font.FontFamily, (int)fontStyle, fontSize, next, sf);
                 }
                 catch
                 {
-                    path.AddString(sb.ToString(), new FontFamily("Arial"), (int)fontStyle, font.Size, next, sf);
+                    path.AddString(sb.ToString(), new FontFamily("Arial"), (int)fontStyle, fontSize, next, sf);
                 }
             }
             sb.Length = 0;

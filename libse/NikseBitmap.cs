@@ -17,17 +17,31 @@ namespace Nikse.SubtitleEdit.Core
 
     public class NikseBitmap
     {
-        public int Width { get; private set; }
+        private int _width;
+        public int Width
+        {
+            get
+            {
+                return _width;
+            }
+            private set
+            {
+                _width = value;
+                _widthX4 = _width * 4;
+            }
+        }
+
         public int Height { get; private set; }
 
         private byte[] _bitmapData;
         private int _pixelAddress;
+        private int _widthX4;
 
         public NikseBitmap(int width, int height)
         {
             Width = width;
             Height = height;
-            _bitmapData = new byte[Width * Height * 4];
+            _bitmapData = new byte[Height * _widthX4];
         }
 
         public NikseBitmap(int width, int height, byte[] bitmapData)
@@ -618,11 +632,12 @@ namespace Nikse.SubtitleEdit.Core
 
             var newBitmapData = new byte[newWidth * newHeight * 4];
             int index = 0;
+            var newWidthX4 = 4 * newWidth;
             for (y = 0; y < newHeight; y++)
             {
-                int pixelAddress = (leftStart * 4) + (y * 4 * Width);
-                Buffer.BlockCopy(_bitmapData, pixelAddress, newBitmapData, index, 4 * newWidth);
-                index += 4 * newWidth;
+                int pixelAddress = (leftStart * 4) + (y * _widthX4);
+                Buffer.BlockCopy(_bitmapData, pixelAddress, newBitmapData, index, newWidthX4);
+                index += newWidthX4;
             }
             Width = newWidth;
             Height = newHeight;
@@ -711,11 +726,12 @@ namespace Nikse.SubtitleEdit.Core
 
             var newBitmapData = new byte[newWidth * newHeight * 4];
             int index = 0;
+            var newWidthX4 = 4 * newWidth;
             for (y = 0; y < newHeight; y++)
             {
-                int pixelAddress = (leftStart * 4) + (y * 4 * Width);
-                Buffer.BlockCopy(_bitmapData, pixelAddress, newBitmapData, index, 4 * newWidth);
-                index += 4 * newWidth;
+                int pixelAddress = (leftStart * 4) + (y * _widthX4);
+                Buffer.BlockCopy(_bitmapData, pixelAddress, newBitmapData, index, newWidthX4);
+                index += newWidthX4;
             }
             Width = newWidth;
             Height = newHeight;
@@ -749,13 +765,13 @@ namespace Nikse.SubtitleEdit.Core
                 return;
 
             int newHeight = Height - newTop;
-            var newBitmapData = new byte[Width * newHeight * 4];
+            var newBitmapData = new byte[newHeight * _widthX4];
             int index = 0;
             for (y = newTop; y < Height; y++)
             {
-                int pixelAddress = y * 4 * Width;
-                Buffer.BlockCopy(_bitmapData, pixelAddress, newBitmapData, index, 4 * Width);
-                index += 4 * Width;
+                int pixelAddress = y * _widthX4;
+                Buffer.BlockCopy(_bitmapData, pixelAddress, newBitmapData, index, _widthX4);
+                index += _widthX4;
             }
             Height = newHeight;
             _bitmapData = newBitmapData;
@@ -788,13 +804,13 @@ namespace Nikse.SubtitleEdit.Core
                 return 0;
 
             int newHeight = Height - newTop;
-            var newBitmapData = new byte[Width * newHeight * 4];
+            var newBitmapData = new byte[newHeight * _widthX4];
             int index = 0;
             for (y = newTop; y < Height; y++)
             {
-                int pixelAddress = y * 4 * Width;
-                Buffer.BlockCopy(_bitmapData, pixelAddress, newBitmapData, index, 4 * Width);
-                index += 4 * Width;
+                int pixelAddress = y * _widthX4;
+                Buffer.BlockCopy(_bitmapData, pixelAddress, newBitmapData, index, _widthX4);
+                index += _widthX4;
             }
             Height = newHeight;
             _bitmapData = newBitmapData;
@@ -813,7 +829,7 @@ namespace Nikse.SubtitleEdit.Core
                     var c = GetPixel(x, y);
                     if (c != transparentColor && c.A != 0)
                     {
-                       return cropping;
+                        return cropping;
                     }
                     x++;
                 }
@@ -836,18 +852,18 @@ namespace Nikse.SubtitleEdit.Core
 
         public int GetAlpha(int x, int y)
         {
-            return _bitmapData[(x * 4) + (y * 4 * Width) + 3];
+            return _bitmapData[(x * 4) + (y * _widthX4) + 3];
         }
 
         public Color GetPixel(int x, int y)
         {
-            _pixelAddress = (x * 4) + (y * 4 * Width);
+            _pixelAddress = (x * 4) + (y * _widthX4);
             return Color.FromArgb(_bitmapData[_pixelAddress + 3], _bitmapData[_pixelAddress + 2], _bitmapData[_pixelAddress + 1], _bitmapData[_pixelAddress]);
         }
 
         public byte[] GetPixelColors(int x, int y)
         {
-            _pixelAddress = (x * 4) + (y * 4 * Width);
+            _pixelAddress = (x * 4) + (y * _widthX4);
             return new[] { _bitmapData[_pixelAddress + 3], _bitmapData[_pixelAddress + 2], _bitmapData[_pixelAddress + 1], _bitmapData[_pixelAddress] };
         }
 
@@ -859,7 +875,7 @@ namespace Nikse.SubtitleEdit.Core
 
         public void SetPixel(int x, int y, Color color)
         {
-            _pixelAddress = (x * 4) + (y * 4 * Width);
+            _pixelAddress = (x * 4) + (y * _widthX4);
             _bitmapData[_pixelAddress] = color.B;
             _bitmapData[_pixelAddress + 1] = color.G;
             _bitmapData[_pixelAddress + 2] = color.R;
@@ -978,11 +994,13 @@ namespace Nikse.SubtitleEdit.Core
                 section = new Rectangle(section.Left, section.Top, Width - section.Left, section.Height);
             var newBitmapData = new byte[section.Width * section.Height * 4];
             int index = 0;
+            var sectionWidthX4 = 4 * section.Width;
+            var sectionLeftX4 = 4 * section.Left;
             for (int y = section.Top; y < section.Bottom; y++)
             {
-                int pixelAddress = (section.Left * 4) + (y * 4 * Width);
-                Buffer.BlockCopy(_bitmapData, pixelAddress, newBitmapData, index, 4 * section.Width);
-                index += 4 * section.Width;
+                int pixelAddress = sectionLeftX4 + (y * _widthX4);
+                Buffer.BlockCopy(_bitmapData, pixelAddress, newBitmapData, index, sectionWidthX4);
+                index += sectionWidthX4;
             }
             return new NikseBitmap(section.Width, section.Height, newBitmapData);
         }
@@ -1089,8 +1107,8 @@ namespace Nikse.SubtitleEdit.Core
             if (xStart < 0)
                 xStart = 0;
 
-            int i = (xStart * 4) + (y * 4 * Width);
-            int end = (xEnd * 4) + (y * 4 * Width) + 4;
+            int i = (xStart * 4) + (y * _widthX4);
+            int end = (xEnd * 4) + (y * _widthX4) + 4;
             while (i < end)
             {
                 _bitmapData[i] = 0;
@@ -1106,8 +1124,8 @@ namespace Nikse.SubtitleEdit.Core
             int index = 0;
             for (int y = 0; y < Height; y++)
             {
-                int pixelAddress = (0 * 4) + (y * 4 * Width);
-                Buffer.BlockCopy(_bitmapData, pixelAddress, newBitmapData, index, 4 * Width);
+                int pixelAddress = (0 * 4) + (y * _widthX4);
+                Buffer.BlockCopy(_bitmapData, pixelAddress, newBitmapData, index, _widthX4);
                 index += 4 * newWidth;
             }
             Width = newWidth;

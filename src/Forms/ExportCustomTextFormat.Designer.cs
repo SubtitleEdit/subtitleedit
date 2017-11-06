@@ -1,6 +1,6 @@
 ﻿namespace Nikse.SubtitleEdit.Forms
 {
-    partial class ExportCustomTextFormat
+    sealed partial class ExportCustomTextFormat
     {
         /// <summary>
         /// Required designer variable.
@@ -51,6 +51,7 @@
             this.insertdurationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.textToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.translationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemActor = new System.Windows.Forms.ToolStripMenuItem();
             this.tabToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.labelHeader = new System.Windows.Forms.Label();
             this.textBoxHeader = new System.Windows.Forms.TextBox();
@@ -62,6 +63,8 @@
             this.buttonOK = new System.Windows.Forms.Button();
             this.groupBoxPreview = new System.Windows.Forms.GroupBox();
             this.textBoxPreview = new System.Windows.Forms.TextBox();
+            this.textToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.textline2ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBoxTemplate.SuspendLayout();
             this.contextMenuStripFooter.SuspendLayout();
             this.contextMenuStripParagraph.SuspendLayout();
@@ -87,7 +90,7 @@
             this.groupBoxTemplate.Controls.Add(this.textBoxHeader);
             this.groupBoxTemplate.Location = new System.Drawing.Point(12, 12);
             this.groupBoxTemplate.Name = "groupBoxTemplate";
-            this.groupBoxTemplate.Size = new System.Drawing.Size(330, 393);
+            this.groupBoxTemplate.Size = new System.Drawing.Size(346, 393);
             this.groupBoxTemplate.TabIndex = 0;
             this.groupBoxTemplate.TabStop = false;
             this.groupBoxTemplate.Text = "Current template";
@@ -96,7 +99,7 @@
             // 
             this.textBoxName.Location = new System.Drawing.Point(49, 30);
             this.textBoxName.Name = "textBoxName";
-            this.textBoxName.Size = new System.Drawing.Size(275, 20);
+            this.textBoxName.Size = new System.Drawing.Size(291, 20);
             this.textBoxName.TabIndex = 1;
             // 
             // labelName
@@ -116,7 +119,7 @@
             "[Do not modify]",
             "||",
             "[Only newline (hex char 0xd)]"});
-            this.comboBoxNewLine.Location = new System.Drawing.Point(225, 264);
+            this.comboBoxNewLine.Location = new System.Drawing.Point(241, 266);
             this.comboBoxNewLine.Name = "comboBoxNewLine";
             this.comboBoxNewLine.Size = new System.Drawing.Size(99, 21);
             this.comboBoxNewLine.TabIndex = 9;
@@ -135,7 +138,7 @@
             "ff",
             "zzz",
             "ss"});
-            this.comboBoxTimeCode.Location = new System.Drawing.Point(63, 264);
+            this.comboBoxTimeCode.Location = new System.Drawing.Point(69, 266);
             this.comboBoxTimeCode.Name = "comboBoxTimeCode";
             this.comboBoxTimeCode.Size = new System.Drawing.Size(92, 21);
             this.comboBoxTimeCode.TabIndex = 7;
@@ -146,7 +149,7 @@
             // 
             this.labelNewLine.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelNewLine.AutoSize = true;
-            this.labelNewLine.Location = new System.Drawing.Point(176, 267);
+            this.labelNewLine.Location = new System.Drawing.Point(185, 267);
             this.labelNewLine.Name = "labelNewLine";
             this.labelNewLine.Size = new System.Drawing.Size(48, 13);
             this.labelNewLine.TabIndex = 8;
@@ -169,7 +172,7 @@
             this.textBoxFooter.Location = new System.Drawing.Point(6, 313);
             this.textBoxFooter.Multiline = true;
             this.textBoxFooter.Name = "textBoxFooter";
-            this.textBoxFooter.Size = new System.Drawing.Size(318, 70);
+            this.textBoxFooter.Size = new System.Drawing.Size(334, 70);
             this.textBoxFooter.TabIndex = 11;
             this.textBoxFooter.TextChanged += new System.EventHandler(this.TextBoxParagraphTextChanged);
             // 
@@ -230,7 +233,7 @@
             this.textBoxParagraph.Location = new System.Drawing.Point(6, 175);
             this.textBoxParagraph.Multiline = true;
             this.textBoxParagraph.Name = "textBoxParagraph";
-            this.textBoxParagraph.Size = new System.Drawing.Size(318, 85);
+            this.textBoxParagraph.Size = new System.Drawing.Size(334, 85);
             this.textBoxParagraph.TabIndex = 5;
             this.textBoxParagraph.Text = "{number}\r\n{start} --> {end}\r\n{text}\r\n\r\n";
             this.textBoxParagraph.TextChanged += new System.EventHandler(this.TextBoxParagraphTextChanged);
@@ -244,56 +247,66 @@
             this.insertdurationToolStripMenuItem,
             this.textToolStripMenuItem,
             this.translationToolStripMenuItem,
-            this.tabToolStripMenuItem});
+            this.toolStripMenuItemActor,
+            this.tabToolStripMenuItem,
+            this.textToolStripMenuItem1,
+            this.textline2ToolStripMenuItem});
             this.contextMenuStripParagraph.Name = "contextMenuStrip1";
-            this.contextMenuStripParagraph.Size = new System.Drawing.Size(139, 158);
+            this.contextMenuStripParagraph.Size = new System.Drawing.Size(139, 224);
             // 
             // insertHHMMSSMSToolStripMenuItem
             // 
             this.insertHHMMSSMSToolStripMenuItem.Name = "insertHHMMSSMSToolStripMenuItem";
-            this.insertHHMMSSMSToolStripMenuItem.Size = new System.Drawing.Size(138, 22);
+            this.insertHHMMSSMSToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.insertHHMMSSMSToolStripMenuItem.Text = "{start}";
             this.insertHHMMSSMSToolStripMenuItem.Click += new System.EventHandler(this.InsertTag);
             // 
             // insertendToolStripMenuItem
             // 
             this.insertendToolStripMenuItem.Name = "insertendToolStripMenuItem";
-            this.insertendToolStripMenuItem.Size = new System.Drawing.Size(138, 22);
+            this.insertendToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.insertendToolStripMenuItem.Text = "{end}";
             this.insertendToolStripMenuItem.Click += new System.EventHandler(this.InsertTag);
             // 
             // insertnumberToolStripMenuItem
             // 
             this.insertnumberToolStripMenuItem.Name = "insertnumberToolStripMenuItem";
-            this.insertnumberToolStripMenuItem.Size = new System.Drawing.Size(138, 22);
+            this.insertnumberToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.insertnumberToolStripMenuItem.Text = "{number}";
             this.insertnumberToolStripMenuItem.Click += new System.EventHandler(this.InsertTag);
             // 
             // insertdurationToolStripMenuItem
             // 
             this.insertdurationToolStripMenuItem.Name = "insertdurationToolStripMenuItem";
-            this.insertdurationToolStripMenuItem.Size = new System.Drawing.Size(138, 22);
+            this.insertdurationToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.insertdurationToolStripMenuItem.Text = "{duration}";
             this.insertdurationToolStripMenuItem.Click += new System.EventHandler(this.InsertTag);
             // 
             // textToolStripMenuItem
             // 
             this.textToolStripMenuItem.Name = "textToolStripMenuItem";
-            this.textToolStripMenuItem.Size = new System.Drawing.Size(138, 22);
+            this.textToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.textToolStripMenuItem.Text = "{text}";
             this.textToolStripMenuItem.Click += new System.EventHandler(this.InsertTag);
             // 
             // translationToolStripMenuItem
             // 
             this.translationToolStripMenuItem.Name = "translationToolStripMenuItem";
-            this.translationToolStripMenuItem.Size = new System.Drawing.Size(138, 22);
+            this.translationToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.translationToolStripMenuItem.Text = "{translation}";
             this.translationToolStripMenuItem.Click += new System.EventHandler(this.InsertTag);
+            // 
+            // toolStripMenuItemActor
+            // 
+            this.toolStripMenuItemActor.Name = "toolStripMenuItemActor";
+            this.toolStripMenuItemActor.Size = new System.Drawing.Size(152, 22);
+            this.toolStripMenuItemActor.Text = "{actor}";
+            this.toolStripMenuItemActor.Click += new System.EventHandler(this.InsertTag);
             // 
             // tabToolStripMenuItem
             // 
             this.tabToolStripMenuItem.Name = "tabToolStripMenuItem";
-            this.tabToolStripMenuItem.Size = new System.Drawing.Size(138, 22);
+            this.tabToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.tabToolStripMenuItem.Text = "{tab}";
             this.tabToolStripMenuItem.Click += new System.EventHandler(this.InsertTag);
             // 
@@ -312,7 +325,7 @@
             this.textBoxHeader.Location = new System.Drawing.Point(6, 80);
             this.textBoxHeader.Multiline = true;
             this.textBoxHeader.Name = "textBoxHeader";
-            this.textBoxHeader.Size = new System.Drawing.Size(318, 64);
+            this.textBoxHeader.Size = new System.Drawing.Size(334, 64);
             this.textBoxHeader.TabIndex = 3;
             this.textBoxHeader.TextChanged += new System.EventHandler(this.TextBoxParagraphTextChanged);
             // 
@@ -350,7 +363,7 @@
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(617, 412);
+            this.buttonCancel.Location = new System.Drawing.Point(628, 412);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 21);
             this.buttonCancel.TabIndex = 3;
@@ -362,7 +375,7 @@
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(536, 412);
+            this.buttonOK.Location = new System.Drawing.Point(547, 412);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 21);
             this.buttonOK.TabIndex = 2;
@@ -376,9 +389,9 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxPreview.Controls.Add(this.textBoxPreview);
-            this.groupBoxPreview.Location = new System.Drawing.Point(348, 12);
+            this.groupBoxPreview.Location = new System.Drawing.Point(364, 12);
             this.groupBoxPreview.Name = "groupBoxPreview";
-            this.groupBoxPreview.Size = new System.Drawing.Size(351, 393);
+            this.groupBoxPreview.Size = new System.Drawing.Size(346, 393);
             this.groupBoxPreview.TabIndex = 1;
             this.groupBoxPreview.TabStop = false;
             this.groupBoxPreview.Text = "Preview";
@@ -390,14 +403,28 @@
             this.textBoxPreview.Multiline = true;
             this.textBoxPreview.Name = "textBoxPreview";
             this.textBoxPreview.ReadOnly = true;
-            this.textBoxPreview.Size = new System.Drawing.Size(345, 374);
+            this.textBoxPreview.Size = new System.Drawing.Size(340, 374);
             this.textBoxPreview.TabIndex = 0;
+            // 
+            // textToolStripMenuItem1
+            // 
+            this.textToolStripMenuItem1.Name = "textToolStripMenuItem1";
+            this.textToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+            this.textToolStripMenuItem1.Text = "{text-line-1}";
+            this.textToolStripMenuItem1.Click += new System.EventHandler(this.InsertTag);
+            // 
+            // textline2ToolStripMenuItem
+            // 
+            this.textline2ToolStripMenuItem.Name = "textline2ToolStripMenuItem";
+            this.textline2ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.textline2ToolStripMenuItem.Text = "{text-line-2}";
+            this.textline2ToolStripMenuItem.Click += new System.EventHandler(this.InsertTag);
             // 
             // ExportCustomTextFormat
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(704, 445);
+            this.ClientSize = new System.Drawing.Size(715, 445);
             this.Controls.Add(this.groupBoxPreview);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOK);
@@ -458,5 +485,8 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem3;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem4;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem5;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemActor;
+        private System.Windows.Forms.ToolStripMenuItem textToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem textline2ToolStripMenuItem;
     }
 }

@@ -18,7 +18,9 @@ namespace Nikse.SubtitleEdit.Forms
         public PacEncoding(byte[] previewBuffer, string fileName)
         {
             CodePageIndex = Configuration.Settings.General.LastPacCodePage;
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
             Text = System.IO.Path.GetFileName(fileName);
             _previewBuffer = previewBuffer;
             if (CodePageIndex >= 0 && CodePageIndex < comboBoxCodePage.Items.Count)
@@ -68,6 +70,8 @@ namespace Nikse.SubtitleEdit.Forms
                             sb.Append(Pac.GetHebrewString(_previewBuffer, ref index));
                         else if (CodePageIndex == Pac.CodePageCyrillic)
                             sb.Append(Pac.GetCyrillicString(_previewBuffer, ref index));
+                        else if (CodePageIndex == Pac.CodePageGreek)
+                            sb.Append(Pac.GetGreekString(_previewBuffer, ref index));
                         else
                             sb.Append(encoding.GetString(_previewBuffer, index, 1));
 

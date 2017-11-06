@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Logic;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Core;
-using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Forms.Ocr
 {
@@ -15,7 +15,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         public VobSubOcrCharacter()
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
 
             var language = Configuration.Settings.Language.VobSubOcrCharacter;
             Text = language.Title;
@@ -69,7 +71,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         public bool ShrinkSelection { get; private set; }
 
-        internal void Initialize(Bitmap vobSubImage, ImageSplitterItem character, Point position, bool italicChecked, bool showShrink, VobSubOcr.CompareMatch bestGuess, List<VobSubOcr.ImageCompareAddition> additions, VobSubOcr vobSubForm)
+        internal void Initialize(Bitmap vobSubImage, ImageSplitterItem character, Point position, bool italicChecked, bool showShrink, VobSubOcr.CompareMatch bestGuess, List<VobSubOcr.ImageCompareAddition> additions, VobSubOcr vobSubForm, bool allowExpand = true)
         {
             ShrinkSelection = false;
             ExpandSelection = false;
@@ -133,6 +135,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             pictureBoxCharacter.Top = labelCharacters.Top + 16;
             pictureBoxLastEdit.Left = buttonLastEdit.Left + buttonLastEdit.Width + 5;
+
+            buttonExpandSelection.Visible = allowExpand;
         }
 
         private void ButtonOkClick(object sender, EventArgs e)
@@ -168,7 +172,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 dataGridView1.Font = new Font(dataGridView1.Font.FontFamily, dataGridView1.Font.Size);
                 labelItalicOn.Visible = false;
                 checkBoxItalic.Font = new Font(checkBoxItalic.Font.FontFamily, checkBoxItalic.Font.Size);
-                checkBoxItalic.ForeColor = Control.DefaultForeColor;
+                checkBoxItalic.ForeColor = DefaultForeColor;
             }
         }
 

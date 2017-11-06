@@ -13,7 +13,10 @@ namespace Nikse.SubtitleEdit.Forms
 
         public About()
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
+            UiUtil.FixLargeFonts(this, okButton);
         }
 
         public void Initialize()
@@ -36,6 +39,7 @@ namespace Nikse.SubtitleEdit.Forms
             linkLabelGitBuildHash.Left = labelProduct.Left + labelProduct.Width - 5;
             linkLabelGitBuildHash.Text = revisionNumber;
             tooltip.SetToolTip(linkLabelGitBuildHash, GetGitHubHashLink());
+            linkLabelGitBuildHash.Font = labelProduct.Font;
 
             string aboutText = _language.AboutText1.TrimEnd() + Environment.NewLine +
                                Environment.NewLine +
@@ -47,9 +51,17 @@ namespace Nikse.SubtitleEdit.Forms
             }
             richTextBoxAbout1.Text = aboutText;
 
-            double height = TextDraw.MeasureTextHeight(richTextBoxAbout1.Font, richTextBoxAbout1.Text, false) * 1.4 + 80;
-            richTextBoxAbout1.Height = (int)height;
-            Height = richTextBoxAbout1.Top + richTextBoxAbout1.Height + 90;
+            SetHeight();
+        }
+
+        private void SetHeight()
+        {
+            using (var g = CreateGraphics())
+            {
+                double height = g.MeasureString(richTextBoxAbout1.Text, richTextBoxAbout1.Font).Height + 15;
+                richTextBoxAbout1.Height = (int)height;
+                Height = richTextBoxAbout1.Top + richTextBoxAbout1.Height + 90;
+            }
         }
 
         private void OkButtonClick(object sender, EventArgs e)
@@ -102,5 +114,9 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        private void About_Shown(object sender, EventArgs e)
+        {
+            SetHeight();
+        }
     }
 }

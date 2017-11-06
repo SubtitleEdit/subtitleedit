@@ -17,7 +17,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public ExtractDateTimeInfo()
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
             comboBoxDateTimeFormats.SelectedIndex = 0;
             labelVideoFileName.Text = string.Empty;
             timeUpDownStartTime.TimeCode = new TimeCode();

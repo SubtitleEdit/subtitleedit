@@ -50,8 +50,8 @@ namespace Test.Logic.VideoFormats
                 var tracks = parser.GetTracks(true);
                 var subtitles = parser.GetSubtitle(Convert.ToInt32(tracks[0].TrackNumber), null);
                 Assert.IsTrue(subtitles.Count == 2);
-                Assert.IsTrue(subtitles[0].Text == "Line 1");
-                Assert.IsTrue(subtitles[1].Text == "Line 2");
+                Assert.IsTrue(subtitles[0].GetText(tracks[0]) == "Line 1");
+                Assert.IsTrue(subtitles[1].GetText(tracks[0]) == "Line 2");
             }
         }
 

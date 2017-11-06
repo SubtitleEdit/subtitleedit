@@ -23,7 +23,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public SplitLongLines()
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
             UiUtil.FixLargeFonts(this, buttonOK);
         }
 
@@ -61,7 +63,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             var item = new ListViewItem(string.Empty) { Tag = p, Checked = true };
             item.SubItems.Add(lineNumbers);
-            item.SubItems.Add(newText.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
+            item.SubItems.Add(UiUtil.GetListViewTextFromString(newText));
             listViewFixes.Items.Add(item);
         }
 

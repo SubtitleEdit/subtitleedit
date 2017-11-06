@@ -7,20 +7,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class CaptionsInc : SubtitleFormat
     {
-        public override string Extension
-        {
-            get { return ".cin"; }
-        }
+        public override string Extension => ".cin";
 
-        public override string Name
-        {
-            get { return "Caption Inc"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
+        public override string Name => "Caption Inc";
 
         public static void Save(string fileName, Subtitle subtitle)
         {
@@ -36,7 +25,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 WriteTime(fs, subtitle.Paragraphs[0].StartTime, false); // first start time
                 WriteTime(fs, subtitle.Paragraphs[subtitle.Paragraphs.Count - 1].EndTime, false); // last end time
 
-                buffer = Encoding.ASCII.GetBytes("Generic Unknown Unknown \"\" Unknown Unknown Unknown                                                                                                                                                                                    ");
+                buffer = Encoding.ASCII.GetBytes("Generic Unknown Unknown \"\" Unknown Unknown Unknown".PadRight(230, ' '));
                 fs.Write(buffer, 0, buffer.Length);
 
                 // paragraphs
@@ -106,9 +95,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 if (!fileName.EndsWith(".cin", StringComparison.OrdinalIgnoreCase))
                     return false;
 
-                var sub = new Subtitle();
-                LoadSubtitle(sub, lines, fileName);
-                return sub.Paragraphs.Count > 0;
+                return base.IsMine(lines, fileName);
             }
             return false;
         }
@@ -191,7 +178,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             textEnd = true;
                         else if (buffer[i] <= 0x17)
                         {
-                            if (!sb.ToString().EndsWith(Environment.NewLine))
+                            if (!sb.ToString().EndsWith(Environment.NewLine, StringComparison.Ordinal))
                                 sb.Append(Environment.NewLine);
                             i++;
                         }

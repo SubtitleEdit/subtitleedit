@@ -1,7 +1,10 @@
 ﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Core.TransportStream;
+using Nikse.SubtitleEdit.Forms.Ocr;
 using Nikse.SubtitleEdit.Logic;
 using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
@@ -9,13 +12,21 @@ namespace Nikse.SubtitleEdit.Forms
     public partial class TransportStreamSubtitleChooser : PositionAndSizeForm
     {
         private TransportStreamParser _tsParser;
+        private string _fileName;
 
         public TransportStreamSubtitleChooser()
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
             labelChoose.Text = Configuration.Settings.Language.MatroskaSubtitleChooser.PleaseChoose;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+            toolStripMenuItemExport.Text = Configuration.Settings.Language.Main.Menu.File.Export;
+            vobSubToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.File.ExportVobSub;
+            bDNXMLToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.File.ExportBdnXml;
+            bluraySupToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.File.ExportBluRaySup;
+            saveAllImagesWithHtmlIndexViewToolStripMenuItem.Text = Configuration.Settings.Language.VobSubOcr.SaveAllSubtitleImagesWithHtml;
             UiUtil.FixLargeFonts(this, buttonOK);
         }
 
@@ -38,6 +49,7 @@ namespace Nikse.SubtitleEdit.Forms
         internal void Initialize(TransportStreamParser tsParser, string fileName)
         {
             _tsParser = tsParser;
+            _fileName = fileName;
             Text = string.Format(Configuration.Settings.Language.TransportStreamSubtitleChooser.Title, fileName);
 
             foreach (int id in tsParser.SubtitlePacketIds)
@@ -96,5 +108,83 @@ namespace Nikse.SubtitleEdit.Forms
                 oldImage.Dispose();
         }
 
+        private void buttonSaveAs_Click(object sender, EventArgs e)
+        {
+            var subtitles = GetSelectedSubtitles();
+            if (subtitles == null)
+                return;
+
+            using (var formSubOcr = new VobSubOcr())
+            {
+                formSubOcr.Initialize(subtitles, Configuration.Settings.VobSubOcr, _fileName);
+                var subtitle = formSubOcr.ReadyVobSubRip();
+                using (var exportBdnXmlPng = new ExportPngXml())
+                {
+                    exportBdnXmlPng.InitializeFromVobSubOcr(subtitle, new Core.SubtitleFormats.SubRip(), ExportPngXml.ExportFormats.BluraySup, _fileName, formSubOcr, null);
+                    exportBdnXmlPng.ShowDialog(this);
+                }
+            }
+        }
+
+        private List<TransportStreamSubtitle> GetSelectedSubtitles()
+        {
+            int idx = listBoxSubtitles.SelectedIndex;
+            if (idx < 0)
+                return null;
+
+            int pid = _tsParser.SubtitlePacketIds[listBoxTracks.SelectedIndex];
+            return _tsParser.GetDvbSubtitles(pid);
+        }
+
+        private void BluraySupToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ExportTo(ExportPngXml.ExportFormats.BluraySup);
+        }
+
+        private void BDNXMLToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ExportTo(ExportPngXml.ExportFormats.BdnXml);
+        }
+
+        private void VobSubToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ExportTo(ExportPngXml.ExportFormats.VobSub);
+        }
+
+        private void DOSTToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ExportTo(ExportPngXml.ExportFormats.Dost);
+        }
+
+        private void ExportTo(string exportType)
+        {
+            var subtitles = GetSelectedSubtitles();
+            if (subtitles == null)
+                return;
+
+            using (var formSubOcr = new VobSubOcr())
+            {
+                formSubOcr.Initialize(subtitles, Configuration.Settings.VobSubOcr, _fileName);
+                using (var exportBdnXmlPng = new ExportPngXml())
+                {
+                    exportBdnXmlPng.InitializeFromVobSubOcr(formSubOcr.SubtitleFromOcr, new SubRip(), exportType, _fileName, formSubOcr, null);
+                    exportBdnXmlPng.ShowDialog(this);
+                }
+            }
+
+        }
+
+        private void SaveAllImagesWithHtmlIndexViewToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var subtitles = GetSelectedSubtitles();
+            if (subtitles == null)
+                return;
+
+            using (var formSubOcr = new VobSubOcr())
+            {
+                formSubOcr.Initialize(subtitles, Configuration.Settings.VobSubOcr, _fileName);
+                formSubOcr.SaveAllImagesWithHtmlIndexViewToolStripMenuItem_Click(sender, e);
+            }
+        }
     }
 }

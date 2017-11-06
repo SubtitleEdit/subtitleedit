@@ -1,4 +1,6 @@
-﻿using Nikse.SubtitleEdit.Core;
+﻿using Nikse.SubtitleEdit.Controls;
+using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
@@ -9,8 +11,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Xml;
-using Nikse.SubtitleEdit.Controls;
-using Nikse.SubtitleEdit.Core.SubtitleFormats;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -31,6 +31,23 @@ namespace Nikse.SubtitleEdit.Forms
             None,
             Italic,
             ItalicTwoLines
+        }
+
+        private static string GoogleTranslateUrl
+        {
+            get
+            {
+                var url = Configuration.Settings.Tools.GoogleTranslateUrl;
+                if (string.IsNullOrEmpty(url) || !url.Contains(".google.", StringComparison.OrdinalIgnoreCase))
+                {
+                    return "https://translate.google.com/";
+                }
+                if (!url.StartsWith("http", StringComparison.OrdinalIgnoreCase))
+                {
+                    url = "https://" + url;
+                }
+                return url.TrimEnd('/') + '/';
+            }
         }
 
         private FormattingType[] _formattingTypes;
@@ -75,7 +92,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public GoogleTranslate()
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
 
             Text = Configuration.Settings.Language.GoogleTranslate.Title;
             labelFrom.Text = Configuration.Settings.Language.GoogleTranslate.From;
@@ -193,11 +212,11 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 string from = (comboBoxFrom.SelectedItem as ComboBoxItem).Value;
                 string to = _targetTwoLetterIsoLanguageName;
-                if (!string.IsNullOrEmpty(Configuration.Settings.Tools.MicrosoftBingClientId) && !string.IsNullOrEmpty(Configuration.Settings.Tools.MicrosoftBingClientSecret))
+                if (!string.IsNullOrEmpty(Configuration.Settings.Tools.MicrosoftTranslatorApiKey))
                 {
                     try
                     {
-                        _bingAccessToken = GetBingAccesstoken(Configuration.Settings.Tools.MicrosoftBingClientId, Configuration.Settings.Tools.MicrosoftBingClientSecret);
+                        _bingAccessToken = GetBingAccesstoken(Configuration.Settings.Tools.MicrosoftTranslatorApiKey);
                     }
                     catch (Exception exception)
                     {
@@ -478,7 +497,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             try
             {
-                string url = String.Format("https://translate.google.com/?hl=en&eotf=1&sl={0}&tl={1}&q={2}", languagePair.Substring(0, 2), languagePair.Substring(3), "123 456");
+                string url = String.Format(GoogleTranslateUrl + "?hl=en&eotf=1&sl={0}&tl={1}&q={2}", languagePair.Substring(0, 2), languagePair.Substring(3), "123 456");
                 var result = Utilities.DownloadString(url).ToLower();
                 int idx = result.IndexOf("charset", StringComparison.Ordinal);
                 int end = result.IndexOf('"', idx + 8);
@@ -493,7 +512,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         /// <summary>
         /// Translate Text using Google Translate API's
-        /// Google URL - https://www.google.com/translate_t?hl=en&amp;ie=UTF8&amp;text={0}&amp;langpair={1}
+        /// Google URL - https://translate.google.com/?hl=en&amp;ie=UTF8&amp;text={0}&amp;langpair={1}
         /// </summary>
         /// <param name="input">Input string</param>
         /// <param name="languagePair">2 letter Language Pair, delimited by "|".
@@ -503,7 +522,7 @@ namespace Nikse.SubtitleEdit.Forms
         /// <returns>Translated to String</returns>
         public static string TranslateTextViaScreenScraping(string input, string languagePair, Encoding encoding, bool romanji)
         {
-            string url = string.Format("https://translate.google.com/?hl=en&eotf=1&sl={0}&tl={1}&q={2}", languagePair.Substring(0, 2), languagePair.Substring(3), Utilities.UrlEncode(input));
+            string url = string.Format(GoogleTranslateUrl + "?hl=en&eotf=1&sl={0}&tl={1}&q={2}", languagePair.Substring(0, 2), languagePair.Substring(3), Utilities.UrlEncode(input));
             var result = Utilities.DownloadString(url, encoding);
 
             var sb = new StringBuilder();
@@ -598,22 +617,28 @@ namespace Nikse.SubtitleEdit.Forms
         {
             return new Dictionary<string, string>
             {
+                {"af", "Afrikaans"},
                 {"ar", "Arabic"},
+                {"bn", "Bangla"},
                 { "bs-Latn", "Bosnian (Latin)"},
                 { "bg", "Bulgarian"},
+                { "yue", "Cantonese (Traditional)"},
                 { "ca", "Catalan"},
                 { "zh-CHS", "Chinese Simplified"},
                 { "zh-CHT", "Chinese Traditional"},
                 { "hr", "Croatian"},
                 { "cs", "Czech"},
                 { "da", "Danish"},
+                { "nl", "Dutch"},
                 { "en", "English"},
                 { "et", "Estonian"},
+                { "fj", "Fijian"},
+                { "fil", "Filipino"},
                 { "fi", "Finnish"},
                 { "fr", "French"},
                 { "de", "German"},
                 { "el", "Greek"},
-                { "ht", " Haitian Creole"},
+                { "ht", "Haitian Creole"},
                 { "he", "Hebrew"},
                 { "hi", "Hindi"},
                 { "mww", "Hmong Daw"},
@@ -636,13 +661,16 @@ namespace Nikse.SubtitleEdit.Forms
                 { "otq", "Querétaro Otomi"},
                 { "ro", "Romanian"},
                 { "ru", "Russian"},
+                { "sm", "Samoan"},
                 { "sr-Cyrl", "Serbian (Cyrillic)"},
                 { "sr-Latn", "Serbian (Latin)"},
                 { "sk", "Slovak"},
                 { "sl", "Slovenian"},
                 { "es", "Spanish"},
                 { "sv", "Swedish"},
+                { "ty", "Tahitian"},
                 { "th", "Thai"},
+                { "to", "Tongan"},
                 { "tr", "Turkish"},
                 { "uk", "Ukrainian"},
                 { "ur", "Urdu"},
@@ -768,10 +796,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void LinkLabel1LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            if (_googleTranslate)
-                System.Diagnostics.Process.Start("https://www.google.com/translate");
-            else
-                System.Diagnostics.Process.Start("http://www.microsofttranslator.com/");
+            System.Diagnostics.Process.Start(_googleTranslate ? GoogleTranslateUrl : "http://www.bing.com/translator");
         }
 
         private void ButtonOkClick(object sender, EventArgs e)
@@ -961,7 +986,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private string BingTranslateViaAccessToken(string accessToken, string text, string fromLanguage, string toLanguage)
         {
-            string url = string.Format("http://api.microsofttranslator.com/v2/Http.svc/Translate?text={0}&from={1}&to={2}", Utilities.UrlEncode(text), fromLanguage, toLanguage);
+            //max 10000 chars!
+            string url = string.Format("https://api.microsofttranslator.com/V2/Http.svc/Translate?appid=&text={0}&from={1}&to={2}", Utilities.UrlEncode(text), fromLanguage, toLanguage);
             var req = WebRequest.Create(url);
             req.Method = "GET";
             req.Headers["Authorization"] = "Bearer " + accessToken;
@@ -985,19 +1011,14 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private string GetBingAccesstoken(string clientId, string clientSecret)
+        private string GetBingAccesstoken(string clientSecret)
         {
-            string datamarketAccessUri = "https://datamarket.accesscontrol.windows.net/v2/OAuth2-13";
-            string requestDetails = string.Format("grant_type=client_credentials&client_id={0}&client_secret={1}&scope=http://api.microsofttranslator.com", Utilities.UrlEncode(clientId), Utilities.UrlEncode(clientSecret));
+            string datamarketAccessUri = "https://api.cognitive.microsoft.com/sts/v1.0/issueToken";
             var webRequest = WebRequest.Create(datamarketAccessUri);
             webRequest.ContentType = "application/x-www-form-urlencoded";
             webRequest.Method = "POST";
-            var bytes = Encoding.ASCII.GetBytes(requestDetails);
-            webRequest.ContentLength = bytes.Length;
-            using (Stream outputStream = webRequest.GetRequestStream())
-            {
-                outputStream.Write(bytes, 0, bytes.Length);
-            }
+            webRequest.Headers.Add("Ocp-Apim-Subscription-Key", clientSecret);
+            webRequest.ContentLength = 0;
             using (WebResponse webResponse = webRequest.GetResponse())
             {
                 var responseStream = webResponse.GetResponseStream();
@@ -1007,21 +1028,10 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 using (var reader = new StreamReader(responseStream, Encoding.UTF8))
                 {
-                    string json = reader.ReadToEnd();
-                    int startIndex = json.IndexOf("access_token", StringComparison.Ordinal) + 12;
-                    if (startIndex > 0)
-                    {
-                        string s = json.Substring(startIndex).TrimStart(':', ' ', '"');
-                        int endIndex = s.IndexOf("\"", StringComparison.Ordinal);
-                        if (endIndex > 0)
-                        {
-                            return s.Substring(0, endIndex);
-                        }
-                    }
+                    return reader.ReadToEnd(); // raw access token
                 }
             }
-            return null;
-        }
+        }          
 
         public void DoMicrosoftTranslate(string from, string to)
         {

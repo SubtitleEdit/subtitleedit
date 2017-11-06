@@ -550,22 +550,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
         }
 
-        public override string Extension
-        {
-            get { return ".stl"; }
-        }
+        public override string Extension => ".stl";
 
         public const string NameOfFormat = "EBU STL";
 
-        public override string Name
-        {
-            get { return NameOfFormat; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
+        public override string Name => NameOfFormat;
 
         public bool Save(string fileName, Subtitle subtitle)
         {
@@ -745,11 +734,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return "Not supported!";
         }
 
-        public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
+        public void LoadSubtitle(Subtitle subtitle, byte[] buffer)
         {
             subtitle.Paragraphs.Clear();
             subtitle.Header = null;
-            byte[] buffer = FileUtil.ReadAllBytesShared(fileName);
             EbuGeneralSubtitleInformation header = ReadHeader(buffer);
             subtitle.Header = Encoding.UTF8.GetString(buffer);
             Paragraph last = null;
@@ -784,6 +772,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
             subtitle.Renumber();
             Header = header;
+        }
+
+        public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
+        {
+            LoadSubtitle(subtitle, FileUtil.ReadAllBytesShared(fileName));
         }
 
         public static EbuGeneralSubtitleInformation ReadHeader(byte[] buffer)

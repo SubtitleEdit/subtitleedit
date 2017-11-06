@@ -31,7 +31,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public ExportText()
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
             var l = Configuration.Settings.Language.ExportText;
             Text = l.Title;
             labelPreview.Text = l.Preview;

@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Windows.Forms;
 
@@ -16,7 +17,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public WaveformGenerateTimeCodes()
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
 
             var l = Configuration.Settings.Language.WaveformGenerateTimeCodes;
             Text = l.Title;
@@ -47,6 +50,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+            UiUtil.FixLargeFonts(this, buttonOK);
         }
 
         private void buttonOK_Click(object sender, EventArgs e)

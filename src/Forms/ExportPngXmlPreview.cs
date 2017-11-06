@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Logic;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -11,7 +12,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public ExportPngXmlPreview(Bitmap bmp)
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
 
             DoubleBuffered = true;
 
@@ -20,8 +23,9 @@ namespace Nikse.SubtitleEdit.Forms
             pictureBox1.Width = bmp.Width;
             pictureBox1.Height = bmp.Height;
             MaximumSize = new Size(bmp.Width + (Width - ClientSize.Width), bmp.Height + (Height - ClientSize.Height));
-            if (Screen.PrimaryScreen.Bounds.Width > bmp.Width &&
-                Screen.PrimaryScreen.Bounds.Height > bmp.Height)
+            var screen = Screen.FromPoint(Cursor.Position);
+            if (screen.Bounds.Width > bmp.Width &&
+                screen.Bounds.Height > bmp.Height)
             {
                 ClientSize = new Size(bmp.Width, bmp.Height);
             }

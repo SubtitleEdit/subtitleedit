@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Windows.Forms;
 
@@ -11,7 +12,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public FcpProperties()
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
             textBoxFontName.Text = Configuration.Settings.SubtitleSettings.FcpFontName;
             try
             {

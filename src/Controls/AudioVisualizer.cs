@@ -319,7 +319,11 @@ namespace Nikse.SubtitleEdit.Controls
 
         public AudioVisualizer()
         {
+            AutoScaleMode = AutoScaleMode.Dpi;
+            Font = SystemFonts.MessageBoxFont;
             InitializeComponent();
+            UiUtil.FixFonts(this);
+
             _displayableParagraphs = new List<Paragraph>();
             _allSelectedParagraphs = new List<Paragraph>();
 
@@ -591,7 +595,9 @@ namespace Nikse.SubtitleEdit.Controls
                         if (currentRegionWidth > 40)
                         {
                             using (var brush = new SolidBrush(Color.Turquoise))
-                                graphics.DrawString(string.Format("{0:0.###} {1}", ((double)currentRegionWidth / _wavePeaks.SampleRate / _zoomFactor), Configuration.Settings.Language.Waveform.Seconds), Font, brush, new PointF(currentRegionLeft + 3, Height - 32));
+                            {
+                                graphics.DrawString($"{(double)currentRegionWidth / _wavePeaks.SampleRate / _zoomFactor:0.###} {Configuration.Settings.Language.Waveform.Seconds}", Font, brush, new PointF(currentRegionLeft + 3, Height - 32));
+                            }
                         }
                     }
                 }
@@ -698,8 +704,8 @@ namespace Nikse.SubtitleEdit.Controls
             if (ts.Minutes == 0 && ts.Hours == 0)
                 return ts.Seconds.ToString(CultureInfo.InvariantCulture);
             if (ts.Hours == 0)
-                return string.Format("{0:00}:{1:00}", ts.Minutes, ts.Seconds);
-            return string.Format("{0:00}:{1:00}:{2:00}", ts.Hours, ts.Minutes, ts.Seconds);
+                return $"{ts.Minutes:00}:{ts.Seconds:00}";
+            return $"{ts.Hours:00}:{ts.Minutes:00}:{ts.Seconds:00}";
         }
 
         private void DrawParagraph(Paragraph paragraph, Graphics graphics)
@@ -741,11 +747,20 @@ namespace Nikse.SubtitleEdit.Controls
                 if (n > 80)
                 {
                     string text = HtmlUtil.RemoveHtmlTags(paragraph.Text, true).Replace(Environment.NewLine, "  ");
+                    if (Configuration.Settings.General.RightToLeftMode && LanguageAutoDetect.CouldBeRightToLeftLanguge(new Subtitle(_displayableParagraphs)))
+                        text = Utilities.ReverseStartAndEndingForRightToLeft(text);
                     int removeLength = 1;
+                    if (text.Length > 500)
+                        text = text.Substring(0, 500); // don't now allow very long texts as they can make SE unresponsive - see https://github.com/SubtitleEdit/subtitleedit/issues/2536
                     while (text.Length > removeLength && graphics.MeasureString(text, font).Width > currentRegionWidth - padding - 1)
                     {
                         text = text.Remove(text.Length - removeLength).TrimEnd() + "…";
-                        removeLength = 2;
+                        if (text.Length > 200)
+                            removeLength = 21;
+                        else if (text.Length > 100)
+                            removeLength = 11;
+                        else
+                            removeLength = 2;
                     }
                     drawStringOutlined(text, currentRegionLeft + padding, padding);
                 }
@@ -832,35 +847,36 @@ namespace Nikse.SubtitleEdit.Controls
                 else if (SetParagrapBorderHit(milliseconds, _selectedParagraph) ||
                          SetParagrapBorderHit(milliseconds, _displayableParagraphs))
                 {
-                    if (_mouseDownParagraph != null)
-                        oldMouseDownParagraph = new Paragraph(_mouseDownParagraph);
                     NewSelectionParagraph = null;
-
-                    int curIdx = _subtitle.Paragraphs.IndexOf(_mouseDownParagraph);
-                    if (_mouseDownParagraphType == MouseDownParagraphType.Start)
+                    if (_mouseDownParagraph != null)
                     {
-                        if (curIdx > 0)
+                        oldMouseDownParagraph = new Paragraph(_mouseDownParagraph);
+                        int curIdx = _subtitle.Paragraphs.IndexOf(_mouseDownParagraph);
+                        if (_mouseDownParagraphType == MouseDownParagraphType.Start)
                         {
-                            var prev = _subtitle.Paragraphs[curIdx - 1];
-                            if (prev.EndTime.TotalMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines < milliseconds)
+                            if (curIdx > 0)
+                            {
+                                var prev = _subtitle.Paragraphs[curIdx - 1];
+                                if (prev.EndTime.TotalMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines < milliseconds)
+                                    _mouseDownParagraph.StartTime.TotalMilliseconds = milliseconds;
+                            }
+                            else
+                            {
                                 _mouseDownParagraph.StartTime.TotalMilliseconds = milliseconds;
+                            }
                         }
                         else
                         {
-                            _mouseDownParagraph.StartTime.TotalMilliseconds = milliseconds;
-                        }
-                    }
-                    else
-                    {
-                        if (curIdx < _subtitle.Paragraphs.Count - 1)
-                        {
-                            var next = _subtitle.Paragraphs[curIdx + 1];
-                            if (milliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines < next.StartTime.TotalMilliseconds)
+                            if (curIdx < _subtitle.Paragraphs.Count - 1)
+                            {
+                                var next = _subtitle.Paragraphs[curIdx + 1];
+                                if (milliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines < next.StartTime.TotalMilliseconds)
+                                    _mouseDownParagraph.EndTime.TotalMilliseconds = milliseconds;
+                            }
+                            else
+                            {
                                 _mouseDownParagraph.EndTime.TotalMilliseconds = milliseconds;
-                        }
-                        else
-                        {
-                            _mouseDownParagraph.EndTime.TotalMilliseconds = milliseconds;
+                            }
                         }
                     }
                     SetMinAndMax();
@@ -1898,6 +1914,29 @@ namespace Nikse.SubtitleEdit.Controls
                 subtitleOn = false;
             }
             return subtitleOn;
+        }
+
+        public int GetSceneChangeIndex(double seconds)
+        {
+            if (SceneChanges == null)
+            {
+                return -1;
+            }
+            try
+            {
+                for (int index = 0; index < SceneChanges.Count; index++)
+                {
+                    var sceneChange = SceneChanges[index];
+                    if (Math.Abs(sceneChange - seconds) < 0.04)
+                    {
+                        return index;
+                    }
+                }
+            }
+            catch
+            {
+            }
+            return -1;
         }
 
     }

@@ -19,29 +19,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         private static readonly Regex RegexTimeCodes = new Regex(@"^(\d+),\s*(\d+),", RegexOptions.Compiled);
         private static readonly char[] TrimChars = { ' ', '"' };
 
-        public override string Extension
-        {
-            get
-            {
-                return ".pjs";
-            }
-        }
+        public override string Extension => ".pjs";
 
-        public override bool IsTimeBased
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public override bool IsTimeBased => false;
 
-        public override string Name
-        {
-            get
-            {
-                return "Phoenix Subtitle";
-            }
-        }
+        public override string Name => "Phoenix Subtitle";
 
         public override bool IsMine(List<string> lines, string fileName)
         {
@@ -49,9 +31,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 return false;
             }
-            var sub = new Subtitle();
-            LoadSubtitle(sub, lines, fileName);
-            return sub.Paragraphs.Count > _errorCount;
+            return base.IsMine(lines, fileName);
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)

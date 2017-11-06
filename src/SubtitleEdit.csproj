@@ -66,9 +66,6 @@
     <Reference Include="System.Web.Services" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="zlib.net">
-      <HintPath>packages\zlib.net.1.0.4.0\lib\zlib.net.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controls\SETextBox.cs">
@@ -142,6 +139,18 @@
     </Compile>
     <Compile Include="Forms\AddToNames.Designer.cs">
       <DependentUpon>AddToNames.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ExportFcpXmlAdvanced.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ExportFcpXmlAdvanced.Designer.cs">
+      <DependentUpon>ExportFcpXmlAdvanced.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Ocr\AddBeterMultiMatch.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Ocr\AddBeterMultiMatch.Designer.cs">
+      <DependentUpon>AddBeterMultiMatch.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Ocr\AddToOcrReplaceList.cs">
       <SubType>Form</SubType>
@@ -596,12 +605,6 @@
     <Compile Include="Forms\Settings.Designer.cs">
       <DependentUpon>Settings.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\SettingsListViewColumns.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\SettingsListViewColumns.Designer.cs">
-      <DependentUpon>SettingsListViewColumns.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\SettingsMpv.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -961,6 +964,12 @@
     <EmbeddedResource Include="Forms\AddToNames.resx">
       <DependentUpon>AddToNames.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ExportFcpXmlAdvanced.resx">
+      <DependentUpon>ExportFcpXmlAdvanced.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Ocr\AddBeterMultiMatch.resx">
+      <DependentUpon>AddBeterMultiMatch.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Ocr\AddToOcrReplaceList.resx">
       <DependentUpon>AddToOcrReplaceList.cs</DependentUpon>
     </EmbeddedResource>
@@ -1180,9 +1189,6 @@
     <EmbeddedResource Include="Forms\Settings.resx">
       <DependentUpon>Settings.cs</DependentUpon>
       <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\SettingsListViewColumns.resx">
-      <DependentUpon>SettingsListViewColumns.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\SettingsMpv.resx">
       <DependentUpon>SettingsMpv.cs</DependentUpon>

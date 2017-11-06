@@ -94,7 +94,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         if (languageCode == "sv" || languageCode == "fi")
                         {
                             var m = FixMissingSpacesReColonWithAfter.Match(p.Text, match.Index);
-                            skipSwedishOrFinish = IsSwedishSkipValue(languageCode, m) || IsFinnishSkipValue(languageCode, m);                            
+                            skipSwedishOrFinish = IsSwedishSkipValue(languageCode, m) || IsFinnishSkipValue(languageCode, m);
                         }
                         if (!skipSwedishOrFinish)
                         {
@@ -199,16 +199,18 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 }
 
                 //fix missing spaces before/after music quotes - #He's so happy# -> #He's so happy#
-                if (p.Text.Length > 5 && p.Text.Contains(new[] { '#', '♪', '♫' }))
+                var musicSymbols = new[] { '#', '♪', '♫' };
+                if (p.Text.Length > 5 && p.Text.Contains(musicSymbols))
                 {
-                    string newText = p.Text;
-                    if (@"#♪♫".Contains(newText[0]) && !@" <".Contains(newText[1]) && !newText.Substring(1).StartsWith(Environment.NewLine) &&
-                        !newText.Substring(1).StartsWith('♪') && !newText.Substring(1).StartsWith('♫'))
-                        newText = newText.Insert(1, " ");
-                    if (@"#♪♫".Contains(newText[newText.Length - 1]) && !@" >".Contains(newText[newText.Length - 2]) &&
-                        !newText.Substring(0, newText.Length - 1).EndsWith(Environment.NewLine, StringComparison.Ordinal) && !newText.Substring(0, newText.Length - 1).EndsWith('♪') &&
-                        !newText.Substring(0, newText.Length - 1).EndsWith('♫'))
-                        newText = newText.Insert(newText.Length - 1, " ");
+                    var lines = p.Text.SplitToLines();
+                    for (var lineIndex = 0; lineIndex < lines.Length; lineIndex++)
+                    {
+                        foreach (var musicSymbol in musicSymbols)
+                        {
+                            lines[lineIndex] = FixMissingSpaceBeforeAfterMusicQuotes(lines[lineIndex], musicSymbol);
+                        }
+                    }
+                    string newText = string.Join(Environment.NewLine, lines);
                     if (newText != p.Text && callbacks.AllowFix(p, fixAction))
                     {
                         missingSpaces++;
@@ -314,47 +316,72 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             callbacks.UpdateFixStatus(missingSpaces, language.FixMissingSpaces, string.Format(language.XMissingSpacesAdded, missingSpaces));
         }
 
+        private static string FixMissingSpaceBeforeAfterMusicQuotes(string text, char musicSymbol)
+        {
+            // start
+            if (text.Length > 2 && text.StartsWith(musicSymbol) && !" \r\n#♪♫".Contains(text[1]))
+            {
+                text = text.Insert(1, " ");
+            }
+            else if (text.Length > 4 && text.StartsWith("<i>" + musicSymbol, StringComparison.Ordinal) && !" \r\n#♪♫".Contains(text[4]))
+            {
+                text = text.Insert(4, " ");
+            }
+
+            // end
+            if (text.Length > 2 && text.EndsWith(musicSymbol) && !" \n\n#♪♫".Contains(text[text.Length - 2]))
+            {
+                text = text.Insert(text.Length - 1, " ");
+            }
+            if (text.Length > 5 && text.EndsWith(musicSymbol + "</i>", StringComparison.Ordinal) && !" \r\n#♪♫".Contains(text[text.Length - 6]))
+            {
+                text = text.Insert(text.Length - 5, " ");
+            }
+
+            return text;
+        }
+
         private static bool IsSwedishSkipValue(string languageCode, Match match)
         {
-            return languageCode == "sv" && (match.Value.EndsWith(":e") ||
-                                            match.Value.EndsWith(":a") ||
-                                            match.Value.EndsWith(":et") ||
-                                            match.Value.EndsWith(":en") ||
-                                            match.Value.EndsWith(":n") ||
-                                            match.Value.EndsWith(":s"));
+            return languageCode == "sv" && (match.Value.EndsWith(":e", StringComparison.Ordinal) ||
+                                            match.Value.EndsWith(":a", StringComparison.Ordinal) ||
+                                            match.Value.EndsWith(":et", StringComparison.Ordinal) ||
+                                            match.Value.EndsWith(":en", StringComparison.Ordinal) ||
+                                            match.Value.EndsWith(":n", StringComparison.Ordinal) ||
+                                            match.Value.EndsWith(":s", StringComparison.Ordinal));
         }
         private static bool IsFinnishSkipValue(string languageCode, Match match)
         {
-            return languageCode == "fi" && (match.Value.EndsWith(":aa") ||
-                                            match.Value.EndsWith(":aan") ||
-                                            match.Value.EndsWith(":een") ||
-                                            match.Value.EndsWith(":ia") ||
-                                            match.Value.EndsWith(":ien") ||
-                                            match.Value.EndsWith(":iksi") ||
-                                            match.Value.EndsWith(":ille") ||
-                                            match.Value.EndsWith(":een") ||
-                                            match.Value.EndsWith(":in") ||
-                                            match.Value.EndsWith(":ina") ||
-                                            match.Value.EndsWith(":inä") ||
-                                            match.Value.EndsWith(":itta") ||
-                                            match.Value.EndsWith(":ittä") ||
-                                            match.Value.EndsWith(":iä") ||
-                                            match.Value.EndsWith(":ksi") ||
-                                            match.Value.EndsWith(":lta") ||
-                                            match.Value.EndsWith(":ltä") ||
-                                            match.Value.EndsWith(":n") ||
-                                            match.Value.EndsWith(":nä") ||
-                                            match.Value.EndsWith(":ssa") ||
-                                            match.Value.EndsWith(":ssä") ||
-                                            match.Value.EndsWith(":sta") ||
-                                            match.Value.EndsWith(":stä") ||
-                                            match.Value.EndsWith(":t") ||
-                                            match.Value.EndsWith(":ta") ||
-                                            match.Value.EndsWith(":tta") ||
-                                            match.Value.EndsWith(":ttä") ||
-                                            match.Value.EndsWith(":tä") ||
-                                            match.Value.EndsWith(":ää") ||
-                                            match.Value.EndsWith(":ään"));
+            return languageCode == "fi" && (match.Value.EndsWith(":aa", StringComparison.Ordinal) ||
+                                            match.Value.EndsWith(":aan", StringComparison.Ordinal) ||
+                                            match.Value.EndsWith(":een", StringComparison.Ordinal) ||
+                                            match.Value.EndsWith(":ia", StringComparison.Ordinal) ||
+                                            match.Value.EndsWith(":ien", StringComparison.Ordinal) ||
+                                            match.Value.EndsWith(":iksi", StringComparison.Ordinal) ||
+                                            match.Value.EndsWith(":ille", StringComparison.Ordinal) ||
+                                            match.Value.EndsWith(":een", StringComparison.Ordinal) ||
+                                            match.Value.EndsWith(":in", StringComparison.Ordinal) ||
+                                            match.Value.EndsWith(":ina", StringComparison.Ordinal) ||
+                                            match.Value.EndsWith(":inä", StringComparison.Ordinal) ||
+                                            match.Value.EndsWith(":itta", StringComparison.Ordinal) ||
+                                            match.Value.EndsWith(":ittä", StringComparison.Ordinal) ||
+                                            match.Value.EndsWith(":iä", StringComparison.Ordinal) ||
+                                            match.Value.EndsWith(":ksi", StringComparison.Ordinal) ||
+                                            match.Value.EndsWith(":lta", StringComparison.Ordinal) ||
+                                            match.Value.EndsWith(":ltä", StringComparison.Ordinal) ||
+                                            match.Value.EndsWith(":n", StringComparison.Ordinal) ||
+                                            match.Value.EndsWith(":nä", StringComparison.Ordinal) ||
+                                            match.Value.EndsWith(":ssa", StringComparison.Ordinal) ||
+                                            match.Value.EndsWith(":ssä", StringComparison.Ordinal) ||
+                                            match.Value.EndsWith(":sta", StringComparison.Ordinal) ||
+                                            match.Value.EndsWith(":stä", StringComparison.Ordinal) ||
+                                            match.Value.EndsWith(":t", StringComparison.Ordinal) ||
+                                            match.Value.EndsWith(":ta", StringComparison.Ordinal) ||
+                                            match.Value.EndsWith(":tta", StringComparison.Ordinal) ||
+                                            match.Value.EndsWith(":ttä", StringComparison.Ordinal) ||
+                                            match.Value.EndsWith(":tä", StringComparison.Ordinal) ||
+                                            match.Value.EndsWith(":ää", StringComparison.Ordinal) ||
+                                            match.Value.EndsWith(":ään", StringComparison.Ordinal));
         }
 
         private static string GetWordFromIndex(string text, int index)

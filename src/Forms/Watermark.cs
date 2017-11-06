@@ -19,7 +19,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public Watermark()
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
 
             _language = Configuration.Settings.Language.Watermark;
             Text = _language.Title;
@@ -51,7 +53,7 @@ namespace Nikse.SubtitleEdit.Forms
             var current = subtitle.GetParagraphOrDefault(_firstSelectedIndex);
             if (current != null)
             {
-                radioButtonCurrentLine.Text = string.Format(_language.CurrentLineOnlyX, current.Text.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
+                radioButtonCurrentLine.Text = string.Format(_language.CurrentLineOnlyX, UiUtil.GetListViewTextFromString(current.Text));
             }
             else
             {

@@ -20,7 +20,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public GetTesseractDictionaries()
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
 
             Text = Configuration.Settings.Language.GetTesseractDictionaries.Title;
             labelDescription1.Text = Configuration.Settings.Language.GetTesseractDictionaries.DescriptionLine1;
@@ -80,6 +82,8 @@ namespace Nikse.SubtitleEdit.Forms
                     comboBoxDictionaries.SelectedIndex = 0;
                 }
             }
+            comboBoxDictionaries.AutoCompleteSource = AutoCompleteSource.ListItems;
+            comboBoxDictionaries.AutoCompleteMode = AutoCompleteMode.Append;
         }
 
         private void FixLargeFonts()

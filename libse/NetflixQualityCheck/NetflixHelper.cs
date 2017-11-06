@@ -71,9 +71,41 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
                 if (value.StartsWith("90", StringComparison.Ordinal)) value = "halvfems";
                 if (value.StartsWith("100", StringComparison.Ordinal)) value = "ethunderede";
             }
+            if (language == "pt")
+            {
+                if (value.Equals("0", StringComparison.Ordinal)) value = "zero";
+                if (value.Equals("1", StringComparison.Ordinal)) value = "um";
+                if (value.Equals("2", StringComparison.Ordinal)) value = "dois";
+                if (value.Equals("3", StringComparison.Ordinal)) value = "três";
+                if (value.Equals("4", StringComparison.Ordinal)) value = "quatro";
+                if (value.Equals("5", StringComparison.Ordinal)) value = "cinco";
+                if (value.Equals("6", StringComparison.Ordinal)) value = "seis";
+                if (value.Equals("7", StringComparison.Ordinal)) value = "sete";
+                if (value.Equals("8", StringComparison.Ordinal)) value = "oito";
+                if (value.Equals("9", StringComparison.Ordinal)) value = "nove";
+                if (value.Equals("10", StringComparison.Ordinal)) value = "dez";
+                if (value.Equals("11", StringComparison.Ordinal)) value = "onze";
+                if (value.StartsWith("12", StringComparison.Ordinal)) value = "doze";
+                if (value.StartsWith("13", StringComparison.Ordinal)) value = "treze";
+                if (value.StartsWith("14", StringComparison.Ordinal)) value = "quatorze";
+                if (value.StartsWith("15", StringComparison.Ordinal)) value = "quinze";
+                if (value.StartsWith("16", StringComparison.Ordinal)) value = "dezesseis";
+                if (value.StartsWith("17", StringComparison.Ordinal)) value = "dezessete";
+                if (value.StartsWith("18", StringComparison.Ordinal)) value = "dezoito";
+                if (value.StartsWith("19", StringComparison.Ordinal)) value = "dezenove";
+                if (value.StartsWith("20", StringComparison.Ordinal)) value = "vinte";
+                if (value.StartsWith("30", StringComparison.Ordinal)) value = "trinta";
+                if (value.StartsWith("40", StringComparison.Ordinal)) value = "quarenta";
+                if (value.StartsWith("50", StringComparison.Ordinal)) value = "cinquenta";
+                if (value.StartsWith("60", StringComparison.Ordinal)) value = "sessenta";
+                if (value.StartsWith("70", StringComparison.Ordinal)) value = "setenta";
+                if (value.StartsWith("80", StringComparison.Ordinal)) value = "oitenta";
+                if (value.StartsWith("90", StringComparison.Ordinal)) value = "noventa";
+                if (value.StartsWith("100", StringComparison.Ordinal)) value = "cem";
+            }
             if (startWithUppercase && value.Length > 0)
             {
-                value = value[0].ToString().ToUpper()[0] + value.Remove(0, 1);
+                return value.CapitalizeFirstLetter();
             }
             return value;
         }

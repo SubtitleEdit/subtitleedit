@@ -74,22 +74,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             fs.WriteByte((byte)(MillisecondsToFramesMaxFrameRate(tc.Milliseconds)));
         }
 
-        public override string Extension
-        {
-            get { return ".stl"; }
-        }
+        public override string Extension => ".stl";
 
         public const string NameOfFormat = "Avid STL";
 
-        public override string Name
-        {
-            get { return NameOfFormat; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
+        public override string Name => NameOfFormat;
 
         public static void Save(string fileName, Subtitle subtitle)
         {

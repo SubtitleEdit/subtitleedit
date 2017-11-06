@@ -310,10 +310,15 @@ namespace Nikse.SubtitleEdit.Forms
                 int x, y;
                 if (arr.Length == 2 && int.TryParse(arr[0], out x) && int.TryParse(arr[1], out y))
                 {
-                    if (x > 0 && x < Screen.PrimaryScreen.WorkingArea.Width && y > 0 && y < Screen.PrimaryScreen.WorkingArea.Height)
+                    var screen = Screen.FromPoint(Cursor.Position);
+                    if (screen != null && x > 0 && x < screen.WorkingArea.Width && y > 0 && y < screen.WorkingArea.Height)
                     {
                         Left = x;
                         Top = y;
+                    }
+                    else
+                    {
+                        StartPosition = FormStartPosition.CenterParent;
                     }
                 }
             }
@@ -401,7 +406,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public FixCommonErrors()
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
 
             labelStartTimeWarning.Text = string.Empty;
             labelDurationWarning.Text = string.Empty;
@@ -439,6 +446,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelLanguage.Text = Configuration.Settings.Language.ChooseLanguage.Language;
             toolStripMenuItemDelete.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.Delete;
             mergeSelectedLinesToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.MergeSelectedLines;
+            buttonResetDefault.Text = _language.SelectDefault;
 
             splitContainerStep2.Panel1MinSize = 110;
             splitContainerStep2.Panel2MinSize = 160;
@@ -478,8 +486,8 @@ namespace Nikse.SubtitleEdit.Forms
                 var item = new ListViewItem(string.Empty) { Checked = true, Tag = p };
                 item.SubItems.Add(p.Number.ToString(CultureInfo.InvariantCulture));
                 item.SubItems.Add(action);
-                item.SubItems.Add(before.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
-                item.SubItems.Add(after.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
+                item.SubItems.Add(UiUtil.GetListViewTextFromString(before));
+                item.SubItems.Add(UiUtil.GetListViewTextFromString(after));
                 listViewFixes.Items.Add(item);
             }
         }
@@ -530,7 +538,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (_nameList == null)
             {
-                string languageTwoLetterCode = LanguageAutoDetect.AutoDetectGoogleLanguage(Subtitle);                
+                string languageTwoLetterCode = LanguageAutoDetect.AutoDetectGoogleLanguage(Subtitle);
                 // Will contains both one word names and multi names
                 var namesList = new NameList(Configuration.DictionariesDirectory, languageTwoLetterCode, Configuration.Settings.WordLists.UseOnlineNames, Configuration.Settings.WordLists.NamesUrl);
                 _nameList = namesList.GetNames();
@@ -1094,7 +1102,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     // update _subtitle + listview
                     currentParagraph.EndTime.TotalMilliseconds = currentParagraph.StartTime.TotalMilliseconds + ((double)numericUpDownDuration.Value * TimeCode.BaseUnit);
-                    subtitleListView1.SetDuration(firstSelectedIndex, currentParagraph);
+                    subtitleListView1.SetDuration(firstSelectedIndex, currentParagraph, _originalSubtitle.GetParagraphOrDefault(firstSelectedIndex + 1));
                 }
             }
         }
@@ -1165,7 +1173,7 @@ namespace Nikse.SubtitleEdit.Forms
                 _originalSubtitle.Paragraphs[_subtitleListViewIndex].EndTime.TotalMilliseconds +=
                     (startTime.TotalMilliseconds - _originalSubtitle.Paragraphs[_subtitleListViewIndex].StartTime.TotalMilliseconds);
                 _originalSubtitle.Paragraphs[_subtitleListViewIndex].StartTime = startTime;
-                subtitleListView1.SetStartTimeAndDuration(_subtitleListViewIndex, _originalSubtitle.Paragraphs[_subtitleListViewIndex]);
+                subtitleListView1.SetStartTimeAndDuration(_subtitleListViewIndex, _originalSubtitle.Paragraphs[_subtitleListViewIndex], _originalSubtitle.GetParagraphOrDefault(_subtitleListViewIndex + 1), _originalSubtitle.GetParagraphOrDefault(_subtitleListViewIndex - 1));
             }
         }
 
@@ -1608,5 +1616,10 @@ namespace Nikse.SubtitleEdit.Forms
             SaveConfiguration();
         }
 
+        private void buttonResetDefault_Click(object sender, EventArgs e)
+        {
+            Configuration.Settings.CommonErrors.SetDefaultFixes();
+            AddFixActions(CultureInfo.GetCultureInfo(_autoDetectGoogleLanguage).ThreeLetterISOLanguageName);
+        }
     }
 }

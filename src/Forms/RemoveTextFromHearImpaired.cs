@@ -12,16 +12,18 @@ namespace Nikse.SubtitleEdit.Forms
     public sealed partial class FormRemoveTextForHearImpaired : PositionAndSizeForm
     {
         public Subtitle Subtitle;
+        public int TotalFixes { get; private set; }
         private readonly LanguageStructure.RemoveTextFromHearImpaired _language;
         private readonly RemoveTextForHI _removeTextForHiLib;
         private Dictionary<Paragraph, string> _fixes;
-        private int _removeCount;
         private readonly Main _mainForm;
         private readonly List<Paragraph> _unchecked = new List<Paragraph>();
 
         public FormRemoveTextForHearImpaired(Main main)
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
 
             _mainForm = main;
             _removeTextForHiLib = new RemoveTextForHI(GetSettings());
@@ -132,8 +134,8 @@ namespace Nikse.SubtitleEdit.Forms
                 item.BackColor = Color.PeachPuff;
             }
             item.SubItems.Add(p.Number.ToString(CultureInfo.InvariantCulture));
-            item.SubItems.Add(p.Text.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
-            item.SubItems.Add(newText.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
+            item.SubItems.Add(UiUtil.GetListViewTextFromString(p.Text));
+            item.SubItems.Add(UiUtil.GetListViewTextFromString(newText));
             listViewFixes.Items.Add(item);
         }
 
@@ -147,21 +149,34 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonOkClick(object sender, EventArgs e)
         {
-            if (Subtitle != null)
-            {
-                RemoveTextFromHearImpaired();
-                Subtitle.Renumber();
-                if (_mainForm != null)
-                {
-                    _mainForm.ReloadFromSubtitle(Subtitle);
-                }
-            }
+            ApplyChanges();
             DialogResult = DialogResult.OK;
+        }
+
+        private void buttonApply_Click(object sender, EventArgs e)
+        {
+            ApplyChanges();
+            GeneratePreview();
+        }
+
+        private void ApplyChanges()
+        {
+            if (Subtitle == null)
+                return;
+            int fixes = RemoveTextFromHearImpaired();
+            Subtitle.Renumber();
+            if (_mainForm != null && fixes > 0)
+            {
+                TotalFixes += fixes;
+                _mainForm.ReloadFromSubtitle(new Subtitle(Subtitle), Configuration.Settings.Language.Main.BeforeRemovalOfTextingForHearingImpaired);
+            }
         }
 
         public int RemoveTextFromHearImpaired()
         {
             _unchecked.Clear();
+            int fixes = 0;
+
             for (int i = listViewFixes.Items.Count - 1; i >= 0; i--)
             {
                 var item = listViewFixes.Items[i];
@@ -177,14 +192,14 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         p.Text = newText;
                     }
-                    _removeCount++;
+                    fixes++;
                 }
                 else
                 {
                     _unchecked.Add(p);
                 }
             }
-            return _removeCount;
+            return fixes;
         }
 
         private void CheckBoxRemoveTextBetweenCheckedChanged(object sender, EventArgs e)
@@ -306,19 +321,6 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 item.Checked = selectAll ? selectAll : !item.Checked;
             }
-        }
-
-        private void buttonApply_Click(object sender, EventArgs e)
-        {
-            if (Subtitle == null)
-                return;
-            RemoveTextFromHearImpaired();
-            Subtitle.Renumber();
-            if (_mainForm != null)
-            {
-                _mainForm.ReloadFromSubtitle(Subtitle);
-            }
-            GeneratePreview();
         }
 
         private void listViewFixes_ItemChecked(object sender, ItemCheckedEventArgs e)

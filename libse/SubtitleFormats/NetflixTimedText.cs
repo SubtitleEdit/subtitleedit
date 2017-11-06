@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
-using System.Xml;
 using System.Text.RegularExpressions;
+using System.Xml;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
@@ -14,22 +14,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     /// </summary>
     public class NetflixTimedText : TimedText10
     {
-        public override string Extension
-        {
-            get { return ".dfxp"; }
-        }
+        public override string Extension => ".dfxp";
 
         public new const string NameOfFormat = "Netflix Timed Text";
 
-        public override string Name
-        {
-            get { return NameOfFormat; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
+        public override string Name => NameOfFormat;
 
         public override bool IsMine(List<string> lines, string fileName)
         {
@@ -41,9 +30,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             if (!sb.ToString().Contains(">Netflix Subtitle"))
                 return false;
 
-            var subtitle = new Subtitle();
-            LoadSubtitle(subtitle, lines, fileName);
-            return subtitle.Paragraphs.Count > 0;
+            return base.IsMine(lines, fileName);
         }
 
         public override string ToText(Subtitle subtitle, string title)
@@ -307,9 +294,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             base.LoadSubtitle(subtitle, lines, fileName);
 
-            // Remove regions
-            subtitle.Paragraphs.ForEach(p => 
-                p.Text = Regex.Replace(p.Text, @"^({\\an[1-9]})", string.Empty));
+            // Remove regions (except top center)
+            subtitle.Paragraphs.ForEach(p => p.Text = Regex.Replace(p.Text, @"^({\\an[1-7,9]})", string.Empty));
         }
 
         public override bool HasStyleSupport

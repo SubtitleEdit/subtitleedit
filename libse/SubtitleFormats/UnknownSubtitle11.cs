@@ -12,20 +12,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     {
         private static readonly Regex RegexMicroDvdLine = new Regex(@"^\{-?\d+:\d+:\d+}\{-?\d+:\d+:\d+}.*$", RegexOptions.Compiled);
 
-        public override string Extension
-        {
-            get { return ".sub"; }
-        }
+        public override string Extension => ".sub";
 
-        public override string Name
-        {
-            get { return "Unknown 11"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
+        public override string Name => "Unknown 11";
 
         public override bool IsMine(List<string> lines, string fileName)
         {

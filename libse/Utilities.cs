@@ -60,11 +60,11 @@ namespace Nikse.SubtitleEdit.Core
             {
                 using (var rp = new RiffParser())
                 {
-                    if (rp.TryOpenFile(fileName) && rp.FileType == RiffParser.ckidAVI)
+                    if (rp.TryOpenFile(fileName) && rp.FileType == RiffParser.CkidAvi)
                     {
                         var dh = new RiffDecodeHeader(rp);
-                        dh.ProcessMainAVI();
-                        info.FileType = RiffParser.FromFourCC(rp.FileType);
+                        dh.ProcessMainAvi();
+                        info.FileType = RiffParser.FromFourCc(rp.FileType);
                         info.Width = dh.Width;
                         info.Height = dh.Height;
                         info.FramesPerSecond = dh.FrameRate;
@@ -405,14 +405,24 @@ namespace Nikse.SubtitleEdit.Core
             if (text == null || text.Length < 3)
                 return text;
 
-            // do not autobreak dialogs
-            if (text.Contains('-') && text.Contains(Environment.NewLine))
+            // do not autobreak dialogs or music symbol
+            if (text.Contains(Environment.NewLine) && (text.Contains('-') || text.Contains('♪')))
             {
                 var noTagLines = HtmlUtil.RemoveHtmlTags(text, true).SplitToLines();
                 if (noTagLines.Length == 2)
                 {
                     var arr0 = noTagLines[0].Trim().TrimEnd('"', '\'').TrimEnd();
-                    if (arr0.StartsWith('-') && noTagLines[1].TrimStart().StartsWith('-') && arr0.Length > 1 && (".?!)]".Contains(arr0[arr0.Length - 1]) || arr0.EndsWith("--", StringComparison.Ordinal) || arr0.EndsWith('–')))
+                    if (language == "ar")
+                    {
+                        if (arr0.EndsWith('-') && noTagLines[1].TrimStart().EndsWith('-') && arr0.Length > 1 && (".?!)]".Contains(arr0[0]) || arr0.StartsWith("--", StringComparison.Ordinal) || arr0.StartsWith('–')))
+                            return text;
+                    }
+                    else
+                    {
+                        if (arr0.StartsWith('-') && noTagLines[1].TrimStart().StartsWith('-') && arr0.Length > 1 && (".?!)]".Contains(arr0[arr0.Length - 1]) || arr0.EndsWith("--", StringComparison.Ordinal) || arr0.EndsWith('–')))
+                            return text;
+                    }
+                    if (noTagLines[0].StartsWith('♪') && noTagLines[0].EndsWith('♪') || noTagLines[1].StartsWith('♪') && noTagLines[0].EndsWith('♪'))
                         return text;
                 }
             }
@@ -719,7 +729,7 @@ namespace Nikse.SubtitleEdit.Core
                 foreach (string dic in Directory.GetFiles(DictionaryFolder, "*.dic"))
                 {
                     string name = Path.GetFileNameWithoutExtension(dic);
-                    if (!name.StartsWith("hyph", StringComparison.Ordinal))
+                    if (name != null && !name.StartsWith("hyph", StringComparison.Ordinal))
                     {
                         try
                         {
@@ -732,6 +742,41 @@ namespace Nikse.SubtitleEdit.Core
                             name = "[" + name + "]";
                         }
                         list.Add(name);
+                    }
+                }
+            }
+            return list;
+        }
+
+        public static List<string> GetDictionaryLanguagesCultureNeutral()
+        {
+            var list = new List<string>();
+            if (Directory.Exists(DictionaryFolder))
+            {
+                foreach (string dic in Directory.GetFiles(DictionaryFolder, "*.dic"))
+                {
+                    string name = Path.GetFileNameWithoutExtension(dic);
+                    if (name != null && !name.StartsWith("hyph", StringComparison.Ordinal))
+                    {
+                        try
+                        {
+                            var ci = CultureInfo.GetCultureInfo(name.Replace('_', '-'));
+                            var displayName = ci.DisplayName;
+                            if (displayName.Contains("("))
+                            {
+                                displayName = displayName.Remove(displayName.IndexOf('(')).TrimEnd();
+                            }
+                            name = displayName + " [" + ci.TwoLetterISOLanguageName + "]";
+                        }
+                        catch (Exception exception)
+                        {
+                            System.Diagnostics.Debug.WriteLine(exception.Message);
+                            name = "[" + name + "]";
+                        }
+                        if (!list.Contains(name))
+                        {
+                            list.Add(name);
+                        }
                     }
                 }
             }
@@ -1143,25 +1188,27 @@ namespace Nikse.SubtitleEdit.Core
         }
 
         private static readonly Regex TwoOrMoreDigitsNumber = new Regex(@"\d\d+", RegexOptions.Compiled);
+        private const string PrePostStringsToReverse = @"-— !?.""،,():;[]+~";
 
         public static string ReverseStartAndEndingForRightToLeft(string s)
         {
             var newLines = new StringBuilder();
             var pre = new StringBuilder();
             var post = new StringBuilder();
-            bool startsWithAssTag = false;
-            string assTag = string.Empty;
-            if (s.StartsWith("{\\", StringComparison.Ordinal) && s.IndexOf('}') < 22)
-            {
-                startsWithAssTag = true;
-                int end = s.IndexOf('}') + 1;
-                assTag = s.Substring(0, end);
-                s = s.Remove(0, end);
-            }
             var lines = s.SplitToLines();
             foreach (var line in lines)
             {
                 string s2 = line;
+
+                bool startsWithAssTag = false;
+                string assTag = string.Empty;
+                if (s2.StartsWith("{\\", StringComparison.Ordinal) && s.IndexOf('}') < 22)
+                {
+                    startsWithAssTag = true;
+                    int end = s2.IndexOf('}') + 1;
+                    assTag = s2.Substring(0, end);
+                    s2 = s2.Remove(0, end);
+                }
 
                 bool startsWithItalic = false;
                 if (s2.StartsWith("<i>", StringComparison.Ordinal))
@@ -1169,6 +1216,37 @@ namespace Nikse.SubtitleEdit.Core
                     startsWithItalic = true;
                     s2 = s2.Remove(0, 3);
                 }
+
+                bool startsWithBold = false;
+                if (s2.StartsWith("<b>", StringComparison.Ordinal))
+                {
+                    startsWithBold = true;
+                    s2 = s2.Remove(0, 3);
+                }
+
+                var startFontTag = string.Empty;
+                if (s2.StartsWith("<font ", StringComparison.Ordinal) && s2.IndexOf('>') > 0)
+                {
+                    int idx = s2.IndexOf('>');
+                    idx++;
+                    startFontTag = s2.Substring(0, idx);
+                    s2 = s2.Remove(0, idx);
+                }
+
+                var endFontTag = string.Empty;
+                if (s2.EndsWith("</font>", StringComparison.Ordinal))
+                {
+                    endFontTag = "</font>";
+                    s2 = s2.Remove(s2.Length - endFontTag.Length);
+                }
+
+                bool endsWithBold = false;
+                if (s2.EndsWith("</b>", StringComparison.Ordinal))
+                {
+                    endsWithBold = true;
+                    s2 = s2.Remove(s2.Length - 4, 4);
+                }
+
                 bool endsWithItalic = false;
                 if (s2.EndsWith("</i>", StringComparison.Ordinal))
                 {
@@ -1179,13 +1257,13 @@ namespace Nikse.SubtitleEdit.Core
                 pre.Clear();
                 post.Clear();
                 int i = 0;
-                while (i < s2.Length && !char.IsLetterOrDigit(s2[i]) && s2[i] != '{')
+                while (i < s2.Length && PrePostStringsToReverse.Contains(s2[i]) && s2[i] != '{')
                 {
                     pre.Append(s2[i]);
                     i++;
                 }
                 int j = s2.Length - 1;
-                while (j > i && !char.IsLetterOrDigit(s2[j]) && s2[j] != '}')
+                while (j > i && PrePostStringsToReverse.Contains(s2[j]) && s2[j] != '}')
                 {
                     post.Append(s2[j]);
                     j--;
@@ -1194,9 +1272,15 @@ namespace Nikse.SubtitleEdit.Core
                     newLines.Append(assTag);
                 if (startsWithItalic)
                     newLines.Append("<i>");
+                if (startsWithBold)
+                    newLines.Append("<b>");
+                newLines.Append(startFontTag);
                 newLines.Append(ReverseParenthesis(post.ToString()));
                 newLines.Append(s2.Substring(pre.Length, s2.Length - (pre.Length + post.Length)));
                 newLines.Append(ReverseParenthesis(ReverseString(pre.ToString())));
+                newLines.Append(endFontTag);
+                if (endsWithBold)
+                    newLines.Append("</b>");
                 if (endsWithItalic)
                     newLines.Append("</i>");
                 newLines.AppendLine();
@@ -2040,9 +2124,10 @@ namespace Nikse.SubtitleEdit.Core
 
             var isSsa = false;
             SubtitleFormat format = new SubRip();
-            if (matroskaSubtitleInfo.CodecPrivate.Contains("[script info]", StringComparison.OrdinalIgnoreCase))
+            var codecPrivate = matroskaSubtitleInfo.GetCodecPrivate();
+            if (codecPrivate.Contains("[script info]", StringComparison.OrdinalIgnoreCase))
             {
-                if (matroskaSubtitleInfo.CodecPrivate.Contains("[V4 Styles]", StringComparison.OrdinalIgnoreCase))
+                if (codecPrivate.Contains("[V4 Styles]", StringComparison.OrdinalIgnoreCase))
                     format = new SubStationAlpha();
                 else
                     format = new AdvancedSubStationAlpha();
@@ -2056,13 +2141,13 @@ namespace Nikse.SubtitleEdit.Core
                     subtitle.Paragraphs.Add(p);
                 }
 
-                if (!string.IsNullOrEmpty(matroskaSubtitleInfo.CodecPrivate))
+                if (!string.IsNullOrEmpty(codecPrivate))
                 {
                     bool eventsStarted = false;
                     bool fontsStarted = false;
                     bool graphicsStarted = false;
                     var header = new StringBuilder();
-                    foreach (string line in matroskaSubtitleInfo.CodecPrivate.Replace(Environment.NewLine, "\n").Split('\n'))
+                    foreach (string line in codecPrivate.Replace(Environment.NewLine, "\n").Split('\n'))
                     {
                         if (!eventsStarted && !fontsStarted && !graphicsStarted)
                         {
@@ -2105,7 +2190,7 @@ namespace Nikse.SubtitleEdit.Core
             {
                 foreach (var p in sub)
                 {
-                    subtitle.Paragraphs.Add(new Paragraph(p.Text, p.Start, p.End));
+                    subtitle.Paragraphs.Add(new Paragraph(p.GetText(matroskaSubtitleInfo), p.Start, p.End));
                 }
             }
             subtitle.Renumber();
@@ -2114,13 +2199,14 @@ namespace Nikse.SubtitleEdit.Core
 
         public static Subtitle LoadMatroskaSSA(MatroskaTrackInfo matroskaSubtitleInfo, string fileName, SubtitleFormat format, List<MatroskaSubtitle> sub)
         {
-            var subtitle = new Subtitle { Header = matroskaSubtitleInfo.CodecPrivate };
+            var codecPrivate = matroskaSubtitleInfo.GetCodecPrivate();
+            var subtitle = new Subtitle { Header = codecPrivate };
             var lines = new List<string>();
             foreach (string l in subtitle.Header.Trim().SplitToLines())
                 lines.Add(l);
             var footer = new StringBuilder();
             var comments = new Subtitle();
-            if (!string.IsNullOrEmpty(matroskaSubtitleInfo.CodecPrivate))
+            if (!string.IsNullOrEmpty(codecPrivate))
             {
                 bool footerOn = false;
                 char[] splitChars = { ':', '.' };
@@ -2170,7 +2256,7 @@ namespace Nikse.SubtitleEdit.Core
                                    "[Events]" + Environment.NewLine +
                                    headerFormat + Environment.NewLine;
             }
-            else
+            else if (subtitle.Header.LastIndexOf("Format:", StringComparison.Ordinal) < subtitle.Header.IndexOf("[Events]", StringComparison.Ordinal))
             {
                 subtitle.Header = subtitle.Header.Remove(subtitle.Header.IndexOf("[Events]", StringComparison.Ordinal));
                 subtitle.Header = subtitle.Header.Trim() + Environment.NewLine +
@@ -2178,6 +2264,11 @@ namespace Nikse.SubtitleEdit.Core
                                    "[Events]" + Environment.NewLine +
                                    headerFormat + Environment.NewLine;
             }
+            else
+            {
+                subtitle.Header = subtitle.Header.Trim() + Environment.NewLine;
+            }
+
             lines = new List<string>();
             foreach (string l in subtitle.Header.Trim().SplitToLines())
                 lines.Add(l);
@@ -2204,7 +2295,7 @@ namespace Nikse.SubtitleEdit.Core
                         comments.Paragraphs.RemoveAt(commentIndex);
                 }
 
-                string text = mp.Text.Replace(Environment.NewLine, "\\N");
+                string text = mp.GetText(matroskaSubtitleInfo).Replace(Environment.NewLine, "\\N");
                 int idx = text.IndexOf(',') + 1;
                 if (idx > 0 && idx < text.Length)
                 {

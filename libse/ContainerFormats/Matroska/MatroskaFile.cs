@@ -11,9 +11,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
     {
         public delegate void LoadMatroskaCallback(long position, long total);
 
-        private readonly string _path;
         private readonly FileStream _stream;
-        private readonly bool _valid;
         private int _pixelWidth, _pixelHeight;
         private double _frameRate;
         private string _videoCodecId;
@@ -28,7 +26,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
 
         public MatroskaFile(string path)
         {
-            _path = path;
+            Path = path;
             _stream = new FastFileStream(path);
 
             // read header
@@ -40,26 +38,14 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
                 _segmentElement = ReadElement();
                 if (_segmentElement != null && _segmentElement.Id == ElementId.Segment)
                 {
-                    _valid = true; // matroska file must start with ebml header and segment
+                    IsValid = true; // matroska file must start with ebml header and segment
                 }
             }
         }
 
-        public bool IsValid
-        {
-            get
-            {
-                return _valid;
-            }
-        }
+        public bool IsValid { get; }
 
-        public string Path
-        {
-            get
-            {
-                return _path;
-            }
-        }
+        public string Path { get; }
 
         public List<MatroskaTrackInfo> GetTracks(bool subtitleOnly = false)
         {
@@ -170,10 +156,10 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
             string name = string.Empty;
             string language = "eng"; // default value
             string codecId = string.Empty;
-            string codecPrivate = string.Empty;
-            //var biCompression = string.Empty;
+            byte[] codecPrivateRaw = null;
             int contentCompressionAlgorithm = -1;
             int contentEncodingType = -1;
+            uint contentEncodingScope = 1;
 
             Element element;
             while (_stream.Position < trackEntryElement.EndPosition && (element = ReadElement()) != null)
@@ -217,9 +203,8 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
                         }
                         break;
                     case ElementId.CodecPrivate:
-                        codecPrivate = ReadString((int)element.DataSize, Encoding.UTF8);
-                        //if (codecPrivate.Length > 20)
-                        //    biCompression = codecPrivate.Substring(16, 4);
+                        codecPrivateRaw = new byte[element.DataSize];
+                        _stream.Read(codecPrivateRaw, 0, codecPrivateRaw.Length);
                         break;
                     case ElementId.ContentEncodings:
                         contentCompressionAlgorithm = 0; // default value
@@ -228,7 +213,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
                         var contentEncodingElement = ReadElement();
                         if (contentEncodingElement != null && contentEncodingElement.Id == ElementId.ContentEncoding)
                         {
-                            ReadContentEncodingElement(element, ref contentCompressionAlgorithm, ref contentEncodingType);
+                            ReadContentEncodingElement(element, ref contentCompressionAlgorithm, ref contentEncodingType, ref contentEncodingScope);
                         }
                         break;
                 }
@@ -243,10 +228,11 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
                 IsSubtitle = isSubtitle,
                 Language = language,
                 CodecId = codecId,
-                CodecPrivate = codecPrivate,
+                CodecPrivateRaw = codecPrivateRaw,
                 Name = name,
                 ContentEncodingType = contentEncodingType,
-                ContentCompressionAlgorithm = contentCompressionAlgorithm
+                ContentCompressionAlgorithm = contentCompressionAlgorithm,
+                ContentEncodingScope = contentEncodingScope
             });
 
             if (isVideo)
@@ -259,7 +245,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
             }
         }
 
-        private void ReadContentEncodingElement(Element contentEncodingElement, ref int contentCompressionAlgorithm, ref int contentEncodingType)
+        private void ReadContentEncodingElement(Element contentEncodingElement, ref int contentCompressionAlgorithm, ref int contentEncodingType, ref uint contentEncodingScope)
         {
             Element element;
             while (_stream.Position < contentEncodingElement.EndPosition && (element = ReadElement()) != null)
@@ -271,7 +257,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
                         System.Diagnostics.Debug.WriteLine("ContentEncodingOrder: " + contentEncodingOrder);
                         break;
                     case ElementId.ContentEncodingScope:
-                        var contentEncodingScope = ReadUInt((int)element.DataSize);
+                        contentEncodingScope = (uint)ReadUInt((int)element.DataSize);
                         System.Diagnostics.Debug.WriteLine("ContentEncodingScope: " + contentEncodingScope);
                         break;
                     case ElementId.ContentEncodingType:
@@ -482,10 +468,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
 
         public void Dispose()
         {
-            if (_stream != null)
-            {
-                _stream.Dispose();
-            }
+            _stream?.Dispose();
         }
 
         private void ReadSegmentInfoAndTracks()
@@ -528,10 +511,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
                     _stream.Seek(element.DataSize, SeekOrigin.Current);
                 }
 
-                if (progressCallback != null)
-                {
-                    progressCallback.Invoke(element.EndPosition, _stream.Length);
-                }
+                progressCallback?.Invoke(element.EndPosition, _stream.Length);
             }
         }
 
@@ -619,13 +599,23 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
         /// position of the stream by four bytes.
         /// </summary>
         /// <returns>A 4-byte floating point value read from the current stream.</returns>
-        private unsafe float ReadFloat32()
+        private float ReadFloat32()
         {
             var data = new byte[4];
             _stream.Read(data, 0, 4);
 
-            var result = data[0] << 24 | data[1] << 16 | data[2] << 8 | data[3];
-            return *(float*)&result;
+            // old unsafe code
+            //            var result = data[0] << 24 | data[1] << 16 | data[2] << 8 | data[3];
+            //            return *(float*)&result;
+            if (BitConverter.IsLittleEndian)
+            {
+                var data2 = new[] { data[3], data[2], data[1], data[0] };
+                return BitConverter.ToSingle(data2, 0);
+            }
+            else
+            {
+                return BitConverter.ToSingle(data, 0);
+            }
         }
 
         /// <summary>
@@ -633,15 +623,25 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
         /// position of the stream by eight bytes.
         /// </summary>
         /// <returns>A 8-byte floating point value read from the current stream.</returns>
-        private unsafe double ReadFloat64()
+        private double ReadFloat64()
         {
             var data = new byte[8];
             _stream.Read(data, 0, 8);
 
-            var lo = data[0] << 24 | data[1] << 16 | data[2] << 8 | data[3];
-            var hi = data[4] << 24 | data[5] << 16 | data[6] << 8 | data[7];
-            var result = (uint)hi | (long)lo << 32;
-            return *(double*)&result;
+            // old unsafe code
+            //var lo = data[0] << 24 | data[1] << 16 | data[2] << 8 | data[3];
+            //var hi = data[4] << 24 | data[5] << 16 | data[6] << 8 | data[7];
+            //var result = (uint)hi | (long)lo << 32;
+            //return *(double*)&result;
+            if (BitConverter.IsLittleEndian)
+            {
+                var data2 = new[] { data[7], data[6], data[5], data[4], data[3], data[2], data[1], data[0] };
+                return BitConverter.ToDouble(data2, 0);
+            }
+            else
+            {
+                return BitConverter.ToDouble(data, 0);
+            }
         }
 
         /// <summary>

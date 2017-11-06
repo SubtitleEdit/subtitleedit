@@ -14,15 +14,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string Name => "Unknown 84";
 
-        public override bool IsTimeBased => true;
-
-        public override bool IsMine(List<string> lines, string fileName)
-        {
-            var subtitle = new Subtitle();
-            LoadSubtitle(subtitle, lines, fileName);
-            return subtitle.Paragraphs.Count > _errorCount;
-        }
-
         public override string ToText(Subtitle subtitle, string title)
         {
             const string writeFormat = "{3}{2}<{0}><{1}>{2}";

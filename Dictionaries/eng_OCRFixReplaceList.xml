@@ -994,8 +994,10 @@
     <Word from="ofa" to="of a" />
     <Word from="ofajudge" to="of a judge" />
     <Word from="ofall" to="of all" />
+    <Word from="Ofall" to="Of all" />
     <Word from="ofBedford" to="of Bedford" />
     <Word from="ofcourse" to="of course" />
+    <Word from="Ofcourse" to="Of course" />
     <Word from="ofeach" to="of each" />
     <Word from="ofeither" to="of either" />
     <Word from="Offioer's" to="Officer's" />
@@ -1068,6 +1070,7 @@
     <Word from="orjust" to="or just" />
     <Word from="Orjust" to="Or just" />
     <Word from="Orthat" to="Or that" />
+    <Word from="orwould" to="or would" />
     <Word from="Orwould" to="Or would" />
     <Word from="Othenzvise" to="Otherwise" />
     <Word from="our joumey" to="our journey" />
@@ -1919,8 +1922,50 @@
     <Word from="oryou're" to="or you're" />
     <Word from="ofyourself" to="of yourself" />
     <Word from="poweryour" to="power your" />
-    <Word from="Ofcourse" to="Of course" />
     <Word from="Ofmy" to="Of my" />
+    <Word from="EIlen" to="Ellen" />
+    <Word from="Don'tget" to="Don't get" />
+    <Word from="tellme" to="tell me" />
+    <Word from="ofdecision" to="of decision" />
+    <Word from="itgoing" to="it going" />
+    <Word from="artificialgravity" to="artificial gravity" />
+    <Word from="shouldknow" to="should know" />
+    <Word from="Hasn'tgot" to="Hasn't got" />
+    <Word from="thirdjunction" to="third junction" />
+    <Word from="somebodypicks" to="somebody picks" />
+    <Word from="Willyou" to="Will you" />
+    <Word from="can'tget" to="can't get" />
+    <Word from="BuZZes" to="Buzzes" />
+    <Word from="wouldn'tyou" to="wouldn't you" />
+    <Word from="Wellbelow" to="Well below" />
+    <Word from="What'dyou" to="What'd you" />
+    <Word from="decipheredpart" to="deciphered part" />
+    <Word from="they'llknow" to="they'll know" />
+    <Word from="ifit's" to="if it's" />
+    <Word from="ornot" to="or not" />
+    <Word from="myposition" to="my position" />
+    <Word from="lndistinct" to="Indistinct" />
+    <Word from="anybiscuits" to="any biscuits" />
+    <Word from="Andifyou" to="And if you" />
+    <Word from="lfwe" to="If we" />
+    <Word from="yourarm" to="your arm" />
+    <Word from="lnteresting" to="Interesting" />
+    <Word from="findit" to="find it" />
+    <Word from="it'llstart" to="it'll start" />
+    <Word from="holdit" to="hold it" />
+    <Word from="ofkilling" to="of killing" />
+    <Word from="Howyou" to="How you" />
+    <Word from="lnhales" to="Inhales" />
+    <Word from="lgot" to="I got" />
+    <Word from="CIip" to="Clip" />
+    <Word from="what'II" to="what'll" />
+    <Word from="road'II" to="road'll" />
+    <Word from="girI" to="girl" />
+    <Word from="LIoyd" to="Lloyd" />
+    <Word from="BIake" to="Blake" />
+    <Word from="reaI" to="real" />
+    <Word from="Foryour" to="For your" />
+    <Word from="yourpublic" to="your public" />
   </WholeWords>
   <PartialWordsAlways>
     <!-- Will be replaced always -->
@@ -2212,11 +2257,15 @@
     <LinePart from=" Can,t " to=" Can't " />
     <LinePart from=" don,t " to=" don't " />
     <LinePart from=" Don,t " to=" Don't " />
+    <LinePart from="wouldn 'tyou" to="wouldn't you" />
+    <LinePart from=" lgot it" to=" I got it" />
+    <LinePart from=" you,ve " to=" you've " />
   </PartialLines>
   <PartialLinesAlways>
     <LinePart from="forbest act" to="for best act" />
   </PartialLinesAlways>
   <BeginLines>
+    <Beginning from="lgot it" to="I got it" />
     <Beginning from="Don,t " to="Don't " />
     <Beginning from="Can,t " to="Can't " />
     <Beginning from="Let,s " to="Let's " />

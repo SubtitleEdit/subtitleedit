@@ -3,6 +3,7 @@ using System.IO;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -10,7 +11,9 @@ namespace Nikse.SubtitleEdit.Forms
     {
         public Cavena890SaveOptions(Subtitle subtitle, string subtitleFileName)
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
 
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
@@ -44,6 +47,10 @@ namespace Nikse.SubtitleEdit.Forms
                 case "ru":
                     Configuration.Settings.SubtitleSettings.CurrentCavena89LanguageId = Cavena890.LanguageIdRussian;
                     comboBoxLanguage.SelectedIndex = 6;
+                    break;
+                case "ro":
+                    Configuration.Settings.SubtitleSettings.CurrentCavena89LanguageId = Cavena890.LanguageIdRomanian;
+                    comboBoxLanguage.SelectedIndex = 7;
                     break;
                 case "zh":
                     Configuration.Settings.SubtitleSettings.CurrentCavena89LanguageId = Cavena890.LanguageIdChineseSimplified;
@@ -154,6 +161,10 @@ namespace Nikse.SubtitleEdit.Forms
                         case Cavena890.LanguageIdDanish:
                             Configuration.Settings.SubtitleSettings.CurrentCavena89LanguageId = Cavena890.LanguageIdDanish;
                             comboBoxLanguage.SelectedIndex = 1;
+                            break;
+                        case Cavena890.LanguageIdRomanian:
+                            Configuration.Settings.SubtitleSettings.CurrentCavena89LanguageId = Cavena890.LanguageIdRomanian;
+                            comboBoxLanguage.SelectedIndex = 7;
                             break;
                         default:
                             Configuration.Settings.SubtitleSettings.CurrentCavena89LanguageId = Cavena890.LanguageIdEnglish;

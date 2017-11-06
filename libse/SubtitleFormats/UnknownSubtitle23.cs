@@ -12,27 +12,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         //1:  01:00:19.04  01:00:21.05
         private static readonly Regex RegexTimeCode1 = new Regex(@"^\s*\d+:\s+\d\d:\d\d:\d\d.\d\d\s+\d\d:\d\d:\d\d.\d\d\s*$", RegexOptions.Compiled);
 
-        public override string Extension
-        {
-            get { return ".rtf"; }
-        }
+        public override string Extension => ".rtf";
 
-        public override string Name
-        {
-            get { return "Unknown 23"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
-
-        public override bool IsMine(List<string> lines, string fileName)
-        {
-            var subtitle = new Subtitle();
-            LoadSubtitle(subtitle, lines, fileName);
-            return subtitle.Paragraphs.Count > _errorCount;
-        }
+        public override string Name => "Unknown 23";
 
         public override string ToText(Subtitle subtitle, string title)
         {
@@ -57,7 +39,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             int count = 1;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                sb.AppendLine(string.Format("{0}:  {1}  {2}\r\n{3}", count.ToString(CultureInfo.InvariantCulture).PadLeft(9, ' '), MakeTimeCode(p.StartTime), MakeTimeCode(p.EndTime), p.Text));
+                sb.AppendLine($"{count.ToString(CultureInfo.InvariantCulture).PadLeft(9, ' ')}:  {MakeTimeCode(p.StartTime)}  {MakeTimeCode(p.EndTime)}\r\n{p.Text}");
                 count++;
             }
 

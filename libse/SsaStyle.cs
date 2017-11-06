@@ -18,8 +18,8 @@ namespace Nikse.SubtitleEdit.Core
         public Color Tertiary { get; set; }
         public Color Outline { get; set; }
         public Color Background { get; set; }
-        public int ShadowWidth { get; set; }
-        public int OutlineWidth { get; set; }
+        public decimal ShadowWidth { get; set; }
+        public decimal OutlineWidth { get; set; }
         public string Alignment { get; set; }
         public int MarginLeft { get; set; }
         public int MarginRight { get; set; }

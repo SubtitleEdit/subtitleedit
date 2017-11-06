@@ -3,12 +3,15 @@ using System.IO;
 
 namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
 {
+    /// <summary>
+    /// Movie Box
+    /// </summary>
     public class Moov : Box
     {
         public Mvhd Mvhd;
         public List<Trak> Tracks;
 
-        public Moov(FileStream fs, ulong maximumLength)
+        public Moov(Stream fs, ulong maximumLength)
         {
             Tracks = new List<Trak>();
             Position = (ulong)fs.Position;

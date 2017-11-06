@@ -16,7 +16,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
         public ulong StszSampleCount = 0;
         private Mdia _mdia;
 
-        public Stbl(FileStream fs, ulong maximumLength, UInt32 timeScale, string handlerType, Mdia mdia)
+        public Stbl(Stream fs, ulong maximumLength, ulong timeScale, string handlerType, Mdia mdia)
         {
             _mdia = mdia;
             Position = (ulong)fs.Position;
@@ -133,7 +133,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
             }
         }
 
-        private void ReadText(FileStream fs, ulong offset, string handlerType)
+        private void ReadText(Stream fs, ulong offset, string handlerType)
         {
             fs.Seek((long)offset, SeekOrigin.Begin);
             var data = new byte[4];
@@ -180,9 +180,9 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                         text = ScenaristClosedCaptions.GetSccText(hex, ref errorCount);
                         if (text.StartsWith('n') && text.Length > 1)
                             text = "<i>" + text.Substring(1) + "</i>";
-                        if (text.StartsWith("-n"))
+                        if (text.StartsWith("-n", StringComparison.Ordinal))
                             text = text.Remove(0, 2);
-                        if (text.StartsWith("-N"))
+                        if (text.StartsWith("-N", StringComparison.Ordinal))
                             text = text.Remove(0, 2);
                         if (text.StartsWith('-') && !text.Contains(Environment.NewLine + "-"))
                             text = text.Remove(0, 1);

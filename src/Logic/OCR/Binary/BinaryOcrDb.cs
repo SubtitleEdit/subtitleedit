@@ -103,13 +103,30 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Binary
             CompareImagesExpanded = expandList;
         }
 
+        private static int MinYDiffPair = 9;
+        private static int MaxYDiffPair = 20;
+
+
+        public static bool AllowEqual(BinaryOcrBitmap match, BinaryOcrBitmap newBob)
+        {
+            if (match.Text != null && (match.Text == "," || match.Text == "'") && 
+                Math.Min(match.Y, newBob.Y) < MinYDiffPair && Math.Max(match.Y, newBob.Y) > MaxYDiffPair)
+            {
+                return false;
+            }
+            return true;
+        }
+
         public int FindExactMatch(BinaryOcrBitmap bob)
         {
             for (int i = 0; i < CompareImages.Count; i++)
             {
                 var b = CompareImages[i];
                 if (bob.Hash == b.Hash && bob.Width == b.Width && bob.Height == b.Height && bob.NumberOfColoredPixels == b.NumberOfColoredPixels)
-                    return i;
+                {
+                    if (AllowEqual(b, bob))
+                        return i;
+                }                   
             }
             return -1;
         }
@@ -151,18 +168,26 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Binary
                             throw new Exception("BinaryOcrDb.Add: sub image should have null text");
                     }
                     if (!allAlike)
+                    {
                         CompareImagesExpanded.Add(bob);
+                    }
                     else
+                    { 
                         throw new Exception("BinaryOcrDb.Add: Expanded image already in db!");
+                    }
                 }
             }
             else
             {
                 index = FindExactMatch(bob);
                 if (index == -1)
+                {
                     CompareImages.Add(bob);
+                }
                 else
+                {
                     throw new Exception("BinaryOcrDb.Add: Image already in db!");
+                }
             }
             return index;
         }

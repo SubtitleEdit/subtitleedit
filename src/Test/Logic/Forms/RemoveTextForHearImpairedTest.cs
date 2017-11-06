@@ -1700,6 +1700,36 @@ namespace Test.Logic.Forms
             Assert.AreEqual("<i>- Hvordan går det?</i>" + Environment.NewLine + "<i>- Det går fint!</i>", actual);
         }
 
+        [TestMethod]
+        public void StartWithUppercaseLetterAfterSemicolon()
+        {
+            var target = GetRemoveTextForHiLib();
+            target.Settings.RemoveTextBeforeColon = true;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
+            string actual = target.RemoveColon("Robert: what do you think about this new car?");
+            Assert.AreEqual("What do you think about this new car?", actual);
+        }
+
+        [TestMethod]
+        public void StartWithUppercaseLetterAfterSemicolonWithItalic()
+        {
+            var target = GetRemoveTextForHiLib();
+            target.Settings.RemoveTextBeforeColon = true;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
+            string actual = target.RemoveColon("<i>Robert: what do you think about this new car?</i>");
+            Assert.AreEqual("<i>What do you think about this new car?</i>", actual);
+        }
+
+        [TestMethod]
+        public void StartWithUppercaseLetterAfterSemicolonSecondLine()
+        {
+            var target = GetRemoveTextForHiLib();
+            target.Settings.RemoveTextBeforeColon = true;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
+            string actual = target.RemoveColon("Hallo!" + Environment.NewLine + "Robert: what do you think about this new car?");
+            Assert.IsTrue(actual.Contains("What do you think about this new car?"));
+        }
+
         #region Additional test attributes
 
         //

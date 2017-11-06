@@ -25,7 +25,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public MergeTextWithSameTimeCodes()
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
 
             _previewTimer.Tick += previewTimer_Tick;
             _previewTimer.Interval = 250;
@@ -70,7 +72,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             var subItem = new ListViewItem.ListViewSubItem(item, lineNumbers.TrimEnd(','));
             item.SubItems.Add(subItem);
-            subItem = new ListViewItem.ListViewSubItem(item, newText.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
+            subItem = new ListViewItem.ListViewSubItem(item, UiUtil.GetListViewTextFromString(newText));
             item.SubItems.Add(subItem);
 
             listViewFixes.Items.Add(item);
@@ -94,7 +96,7 @@ namespace Nikse.SubtitleEdit.Forms
             SubtitleListview1.Items.Clear();
             SubtitleListview1.BeginUpdate();
             int count;
-            _mergedSubtitle = MergeLinesWithSameTimeCodes(_subtitle, mergedIndexes, out count, true, checkBoxAutoBreakOn.Checked, (int)numericUpDownMaxMillisecondsBetweenLines.Value);
+            _mergedSubtitle = MergeLinesWithSameTimeCodes(_subtitle, mergedIndexes, out count, true, checkBoxAutoBreakOn.Checked, (int)numericUpDownMaxMillisecondsBetweenLines.Value, _language);
             NumberOfMerges = count;
 
             SubtitleListview1.Fill(_subtitle);
@@ -104,13 +106,6 @@ namespace Nikse.SubtitleEdit.Forms
             }
             SubtitleListview1.EndUpdate();
             groupBoxLinesFound.Text = string.Format(Configuration.Settings.Language.MergeTextWithSameTimeCodes.NumberOfMergesX, NumberOfMerges);
-        }
-
-        private bool IsFixAllowed(Paragraph p)
-        {
-            if (_isFixAllowedList.ContainsKey(p.Number))
-                return _isFixAllowedList[p.Number];
-            return true;
         }
 
         private void listViewFixes_ItemChecked(object sender, ItemCheckedEventArgs e)
@@ -132,7 +127,7 @@ namespace Nikse.SubtitleEdit.Forms
             SubtitleListview1.Items.Clear();
             SubtitleListview1.BeginUpdate();
             int count;
-            _mergedSubtitle = MergeLinesWithSameTimeCodes(_subtitle, mergedIndexes, out count, false, checkBoxAutoBreakOn.Checked, (int)numericUpDownMaxMillisecondsBetweenLines.Value);
+            _mergedSubtitle = MergeLinesWithSameTimeCodes(_subtitle, mergedIndexes, out count, false, checkBoxAutoBreakOn.Checked, (int)numericUpDownMaxMillisecondsBetweenLines.Value, _language);
             NumberOfMerges = count;
             SubtitleListview1.Fill(_subtitle);
             foreach (var index in mergedIndexes)
@@ -144,7 +139,7 @@ namespace Nikse.SubtitleEdit.Forms
             groupBoxLinesFound.Text = string.Format(Configuration.Settings.Language.MergeTextWithSameTimeCodes.NumberOfMergesX, NumberOfMerges);
         }
 
-        public Subtitle MergeLinesWithSameTimeCodes(Subtitle subtitle, List<int> mergedIndexes, out int numberOfMerges, bool clearFixes, bool reBreak, int maxMsBetween)
+        public Subtitle MergeLinesWithSameTimeCodes(Subtitle subtitle, List<int> mergedIndexes, out int numberOfMerges, bool clearFixes, bool reBreak, int maxMsBetween, string language)
         {
             listViewFixes.BeginUpdate();
             var removed = new List<int>();
@@ -155,90 +150,16 @@ namespace Nikse.SubtitleEdit.Forms
                 listViewFixes.Items.Clear();
                 _isFixAllowedList = new Dictionary<int, bool>();
             }
-            numberOfMerges = 0;
-            var mergedSubtitle = new Subtitle();
-            bool lastMerged = false;
-            Paragraph p = null;
-            var lineNumbers = new StringBuilder();
-            for (int i = 1; i < subtitle.Paragraphs.Count; i++)
+            var info = new Subtitle();
+            var mergedSub = Core.Forms.MergeLinesWithSameTimeCodes.Merge(subtitle, mergedIndexes, out numberOfMerges, clearFixes, reBreak, maxMsBetween, language, removed, _isFixAllowedList, info);
+            foreach (var p in info.Paragraphs)
             {
-                if (!lastMerged)
-                {
-                    p = new Paragraph(subtitle.GetParagraphOrDefault(i - 1));
-                    mergedSubtitle.Paragraphs.Add(p);
-                }
-                Paragraph next = subtitle.GetParagraphOrDefault(i);
-                if (next != null)
-                {
-                    if (QualifiesForMerge(p, next, maxMsBetween) && IsFixAllowed(p))
-                    {
-                        if (p.Text.StartsWith("<i>", StringComparison.Ordinal) && p.Text.EndsWith("</i>", StringComparison.Ordinal) && next.Text.StartsWith("<i>", StringComparison.Ordinal) && next.Text.EndsWith("</i>", StringComparison.Ordinal))
-                        {
-                            p.Text = p.Text.Remove(p.Text.Length - 4) + Environment.NewLine + next.Text.Remove(0, 3);
-                        }
-                        else
-                        {
-                            p.Text = p.Text + Environment.NewLine + next.Text;
-                        }
-                        if (reBreak)
-                            p.Text = Utilities.AutoBreakLine(p.Text, _language);
-                        lastMerged = true;
-                        removed.Add(i);
-                        numberOfMerges++;
-                        if (!mergedIndexes.Contains(i))
-                            mergedIndexes.Add(i);
-                        if (!mergedIndexes.Contains(i - 1))
-                            mergedIndexes.Add(i - 1);
-
-                        if (!("," + lineNumbers).Contains("," + p.Number + ","))
-                        {
-                            lineNumbers.Append(p.Number);
-                            lineNumbers.Append(',');
-                        }
-                        if (!("," + lineNumbers).Contains("," + next.Number + ","))
-                        {
-                            lineNumbers.Append(next.Number);
-                            lineNumbers.Append(',');
-                        }
-                    }
-                    else
-                    {
-                        lastMerged = false;
-                    }
-                }
-                else
-                {
-                    lastMerged = false;
-                }
-
-                if (!removed.Contains(i) && lineNumbers.Length > 0 && clearFixes)
-                {
-                    AddToListView(p, lineNumbers.ToString(), p.Text);
-                    lineNumbers.Clear();
-                }
+                AddToListView(p, p.Extra, p.Text);
             }
-            if (lineNumbers.Length > 0 && clearFixes && p != null)
-            {
-                AddToListView(p, lineNumbers.ToString(), p.Text);
-            }
-            if (!lastMerged)
-                mergedSubtitle.Paragraphs.Add(new Paragraph(subtitle.GetParagraphOrDefault(subtitle.Paragraphs.Count - 1)));
-
             listViewFixes.EndUpdate();
             if (!_loading)
                 listViewFixes.ItemChecked += listViewFixes_ItemChecked;
-
-            mergedSubtitle.Renumber();
-            return mergedSubtitle;
-        }
-
-        private static bool QualifiesForMerge(Paragraph p, Paragraph next, int maxMsBetween)
-        {
-            if (p == null || next == null)
-                return false;
-
-            return Math.Abs(next.StartTime.TotalMilliseconds - p.StartTime.TotalMilliseconds) <= maxMsBetween &&
-                   Math.Abs(next.EndTime.TotalMilliseconds - p.EndTime.TotalMilliseconds) <= maxMsBetween;
+            return mergedSub;
         }
 
         private void MergeTextWithSameTimeCodes_KeyDown(object sender, KeyEventArgs e)

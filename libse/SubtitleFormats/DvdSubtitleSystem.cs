@@ -9,33 +9,19 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     {
         private static readonly Regex RegexTimeCodes = new Regex(@"^\d\d:\d\d:\d\d:\d\d \d\d:\d\d:\d\d:\d\d ", RegexOptions.Compiled);
 
-        public override string Extension
-        {
-            get { return ".txt"; }
-        }
+        public override string Extension => ".txt";
 
-        public override string Name
-        {
-            get { return "DVD Subtitle System"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
+        public override string Name => "DVD Subtitle System";
 
         public override bool IsMine(List<string> lines, string fileName)
         {
-            var subtitle = new Subtitle();
-
             var sb = new StringBuilder();
             foreach (string line in lines)
                 sb.AppendLine(line);
             if (sb.ToString().Contains("#INPOINT OUTPOINT PATH"))
                 return false; // Pinnacle Impression
 
-            LoadSubtitle(subtitle, lines, fileName);
-            return subtitle.Paragraphs.Count > _errorCount;
+            return base.IsMine(lines, fileName);
         }
 
         public override string ToText(Subtitle subtitle, string title)
@@ -64,25 +50,27 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             _errorCount = 0;
             foreach (string line in lines)
             {
-                if (RegexTimeCodes.IsMatch(line))
+                // line must contain atleast 24 characters (time-code)...
+                if (line.Length < 24)
                 {
-                    string temp = line.Substring(0, RegexTimeCodes.Match(line).Length);
+                    _errorCount += 10;
+                    continue;
+                }
+
+                Match match = RegexTimeCodes.Match(line);
+
+                if (match.Success)
+                {
+                    string temp = line.Substring(0, match.Length);
                     string start = temp.Substring(0, 11);
                     string end = temp.Substring(12, 11);
 
                     string[] startParts = start.Split(SplitCharColon, StringSplitOptions.RemoveEmptyEntries);
                     string[] endParts = end.Split(SplitCharColon, StringSplitOptions.RemoveEmptyEntries);
-                    if (startParts.Length == 4 && endParts.Length == 4)
-                    {
-                        string text = line.Remove(0, RegexTimeCodes.Match(line).Length - 1).Trim();
-                        text = text.Replace("//", Environment.NewLine);
-                        var p = new Paragraph(DecodeTimeCodeFramesFourParts(startParts), DecodeTimeCodeFramesFourParts(endParts), text);
-                        subtitle.Paragraphs.Add(p);
-                    }
-                }
-                else
-                {
-                    _errorCount += 10;
+                    string text = line.Substring(match.Length).Trim();
+                    text = text.Replace("//", Environment.NewLine);
+                    var p = new Paragraph(DecodeTimeCodeFramesFourParts(startParts), DecodeTimeCodeFramesFourParts(endParts), text);
+                    subtitle.Paragraphs.Add(p);
                 }
             }
 

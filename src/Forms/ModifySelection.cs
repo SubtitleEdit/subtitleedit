@@ -23,7 +23,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public ModifySelection(Subtitle subtitle, SubtitleListView subtitleListView)
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
             _loading = true;
             _subtitle = subtitle;
             _subtitleListView = subtitleListView;
@@ -110,7 +112,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             var item = new ListViewItem(string.Empty) { Tag = index, Checked = true };
             item.SubItems.Add(p.Number.ToString());
-            item.SubItems.Add(p.Text.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
+            item.SubItems.Add(UiUtil.GetListViewTextFromString(p.Text));
             listViewFixes.Items.Add(item);
         }
 

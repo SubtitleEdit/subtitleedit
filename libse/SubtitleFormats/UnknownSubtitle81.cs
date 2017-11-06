@@ -10,27 +10,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static readonly Regex RegexTimeCodes = new Regex(@"^\d+a?:\s+\**\d\d:\d\d:\d\d\.\d\d\s+\d\d:\d\d:\d\d\.\d\d\**\s+\d\d\.\d\d\s+\d+$", RegexOptions.Compiled);
 
-        public override string Extension
-        {
-            get { return ".txt"; }
-        }
+        public override string Extension => ".txt";
 
-        public override string Name
-        {
-            get { return "Unknown 81"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
-
-        public override bool IsMine(List<string> lines, string fileName)
-        {
-            var subtitle = new Subtitle();
-            LoadSubtitle(subtitle, lines, fileName);
-            return subtitle.Paragraphs.Count > _errorCount;
-        }
+        public override string Name => "Unknown 81";
 
         public override string ToText(Subtitle subtitle, string title)
         {
@@ -59,7 +41,7 @@ WB,GDMX,1:33,4x3
             int count = 1;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                sb.AppendLine(string.Format("     {0}:  {1}  {2}  {3:00}.{4:00}  {5}", count, p.StartTime.ToHHMMSSPeriodFF(), p.EndTime.ToHHMMSSPeriodFF(), p.Duration.Seconds, MillisecondsToFrames(p.Duration.Milliseconds), p.Text.Length));
+                sb.AppendLine($"     {count}:  {p.StartTime.ToHHMMSSPeriodFF()}  {p.EndTime.ToHHMMSSPeriodFF()}  {p.Duration.Seconds:00}.{MillisecondsToFrames(p.Duration.Milliseconds):00}  {p.Text.Length}");
                 foreach (var line in EncodeText(p.Text).SplitToLines())
                 {
                     sb.AppendLine("        " + line);

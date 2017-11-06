@@ -8,20 +8,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class SubtitleEditorProject : SubtitleFormat
     {
-        public override string Extension
-        {
-            get { return ".xml"; }
-        }
+        public override string Extension => ".xml";
 
-        public override string Name
-        {
-            get { return "Subtitle Editor Project"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
+        public override string Name => "Subtitle Editor Project";
 
         public override bool IsMine(List<string> lines, string fileName)
         {

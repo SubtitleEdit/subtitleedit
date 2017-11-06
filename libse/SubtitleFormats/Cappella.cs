@@ -7,27 +7,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class Cappella : SubtitleFormat
     {
-        public override string Extension
-        {
-            get { return ".detx"; }
-        }
+        public override string Extension => ".detx";
 
-        public override string Name
-        {
-            get { return "Cappella"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
-
-        public override bool IsMine(List<string> lines, string fileName)
-        {
-            var subtitle = new Subtitle();
-            LoadSubtitle(subtitle, lines, fileName);
-            return subtitle.Paragraphs.Count > 0;
-        }
+        public override string Name => "Cappella";
 
         public override string ToText(Subtitle subtitle, string title)
         {

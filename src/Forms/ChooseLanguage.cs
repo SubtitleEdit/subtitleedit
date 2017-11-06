@@ -76,7 +76,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public ChooseLanguage()
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
 
             var defaultLanguage = new Language();
             DefaultTranslation = new TranslationInfo(defaultLanguage.General.CultureName, defaultLanguage.Name);
@@ -127,6 +129,8 @@ namespace Nikse.SubtitleEdit.Forms
                     index = i;
             }
             comboBoxLanguages.SelectedIndex = index;
+            comboBoxLanguages.AutoCompleteSource = AutoCompleteSource.ListItems;
+            comboBoxLanguages.AutoCompleteMode = AutoCompleteMode.Append;
 
             Text = Configuration.Settings.Language.ChooseLanguage.Title;
             labelLanguage.Text = Configuration.Settings.Language.ChooseLanguage.Language;

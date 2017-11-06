@@ -53,6 +53,22 @@ namespace Nikse.SubtitleEdit.Core
                     && buffer[3] == 0x04; // (EOT)
             }
         }
+        public static bool Is7Zip(string fileName)
+        {
+            using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            {
+                var buffer = new byte[6];
+                var count = fs.Read(buffer, 0, buffer.Length);
+                if (count != buffer.Length)
+                    return false;
+                return buffer[0] == 0x37     // 7
+                       && buffer[1] == 0x7a  // z
+                       && buffer[2] == 0xbc
+                       && buffer[3] == 0xaf
+                       && buffer[4] == 0x27
+                       && buffer[5] == 0x1c;
+            }
+        }
 
         public static bool IsRar(string fileName)
         {
@@ -308,5 +324,46 @@ namespace Nikse.SubtitleEdit.Core
                 return false;
             return ((File.GetAttributes(path) & FileAttributes.Directory) == FileAttributes.Directory);
         }
+
+        public static bool IsPlainText(string fileName)
+        {
+            var fileInfo = new FileInfo(fileName);
+            if (fileInfo.Length < 20)
+                return false; // too short to be plain text
+            if (fileInfo.Length > 5000000)
+                return false; // too large to be plain text
+
+            var enc = LanguageAutoDetect.GetEncodingFromFile(fileName);
+            var s = File.ReadAllText(fileName, enc);
+
+            int numberCount = 0;
+            int letterCount = 0;
+            int len = s.Length;
+
+            for (int i = 0; i < len; i++)
+            {
+                char ch = s[i];
+                if (char.IsLetter(ch) || " -,.!?[]()\r\n".Contains(ch))
+                {
+                    letterCount++;
+                }
+                else if (char.IsControl(ch) && ch != '\t') // binary found
+                {
+                    return false;
+                }
+                else if (CharUtils.IsDigit(ch))
+                {
+                    numberCount++;
+                }
+            }
+            if (len < 100)
+            {
+                return numberCount < 5 && letterCount > 20;
+            }
+            var numberThreshold = len * 0.002 + 1;
+            var letterThreshold = len * 0.8;
+            return numberCount < numberThreshold && letterCount > letterThreshold;
+        }
+
     }
 }

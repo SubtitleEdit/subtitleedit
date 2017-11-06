@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
@@ -11,7 +12,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public NuendoProperties()
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
             labelStatus.Text = string.Empty;
             textBoxCharacterFile.Text = Configuration.Settings.SubtitleSettings.NuendoCharacterListFile;
         }

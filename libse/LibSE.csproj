@@ -35,6 +35,9 @@
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
+    <Reference Include="zlib.net, Version=1.0.3.0, Culture=neutral, PublicKeyToken=47d7877cb3620160">
+      <HintPath>..\src\packages\zlib.net.1.0.4.0\lib\zlib.net.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BluRaySup\BluRaySupPalette.cs" />
@@ -59,6 +62,12 @@
     <Compile Include="ContainerFormats\Matroska\MatroskaSubtitle.cs" />
     <Compile Include="ContainerFormats\Matroska\MatroskaTrackInfo.cs" />
     <Compile Include="ContainerFormats\Mp4\Boxes\Box.cs" />
+    <Compile Include="ContainerFormats\Mp4\Boxes\Moof.cs" />
+    <Compile Include="ContainerFormats\Mp4\Boxes\Tfdt.cs" />
+    <Compile Include="ContainerFormats\Mp4\Boxes\Trun.cs" />
+    <Compile Include="ContainerFormats\Mp4\Boxes\Traf.cs" />
+    <Compile Include="ContainerFormats\Mp4\Boxes\Vttc.cs" />
+    <Compile Include="ContainerFormats\Mp4\Boxes\Mdat.cs" />
     <Compile Include="ContainerFormats\Mp4\Boxes\Mdhd.cs" />
     <Compile Include="ContainerFormats\Mp4\Boxes\Mdia.cs" />
     <Compile Include="ContainerFormats\Mp4\Boxes\Minf.cs" />
@@ -67,7 +76,9 @@
     <Compile Include="ContainerFormats\Mp4\Boxes\Stbl.cs" />
     <Compile Include="ContainerFormats\Mp4\Boxes\Tkhd.cs" />
     <Compile Include="ContainerFormats\Mp4\Boxes\Trak.cs" />
+    <Compile Include="ContainerFormats\Mp4\CmafParser.cs" />
     <Compile Include="ContainerFormats\Mp4\Mp4Parser.cs" />
+    <Compile Include="ContainerFormats\Mp4\TimeSegment.cs" />
     <Compile Include="ContainerFormats\RiffDecodeHeader.cs" />
     <Compile Include="ContainerFormats\RiffParser.cs" />
     <Compile Include="DetectEncoding\EncodingTools.cs" />
@@ -115,6 +126,7 @@
     <Compile Include="Dictionaries\NameList.cs" />
     <Compile Include="Dictionaries\OcrFixReplaceList.cs" />
     <Compile Include="DvdSubtitleLanguage.cs" />
+    <Compile Include="Enums\ReplaceType.cs" />
     <Compile Include="Enums\FindType.cs" />
     <Compile Include="Enums\SelectionChoice.cs" />
     <Compile Include="Enums\SpellCheckAction.cs" />
@@ -123,6 +135,7 @@
     <Compile Include="FastFileStream.cs" />
     <Compile Include="FileUtil.cs" />
     <Compile Include="Forms\CheckForUpdatesHelper.cs" />
+    <Compile Include="Forms\DurationsBridgeGaps.cs" />
     <Compile Include="Forms\FixCommonErrors\AddMissingQuotes.cs" />
     <Compile Include="Forms\FixCommonErrors\EmptyFixCallback.cs" />
     <Compile Include="Forms\FixCommonErrors\Fix3PlusLines.cs" />
@@ -156,6 +169,7 @@
     <Compile Include="Forms\FixCommonErrors\FixUnneededSpaces.cs" />
     <Compile Include="Forms\FixCommonErrors\FixUppercaseIInsideWords.cs" />
     <Compile Include="Forms\FixCommonErrors\Helper.cs" />
+    <Compile Include="Forms\MergeLinesWithSameTimeCodes.cs" />
     <Compile Include="Interfaces\IBinaryPersistableSubtitle.cs" />
     <Compile Include="Interfaces\IFixCallbacks.cs" />
     <Compile Include="Interfaces\IFixCommonError.cs" />
@@ -216,8 +230,18 @@
     <Compile Include="Subtitle.cs" />
     <Compile Include="SubtitleFormats\AribB36.cs" />
     <Compile Include="SubtitleFormats\AribB24Decoder.cs" />
+    <Compile Include="SubtitleFormats\Cmaft.cs" />
     <Compile Include="SubtitleFormats\Csv5.cs" />
+    <Compile Include="SubtitleFormats\DvdStudioProSpaceOneSemicolon.cs" />
+    <Compile Include="SubtitleFormats\FinalCutProXml15.cs" />
+    <Compile Include="SubtitleFormats\IsmtDfxp.cs" />
+    <Compile Include="SubtitleFormats\JsonType12.cs" />
+    <Compile Include="SubtitleFormats\TimeCodesOnly2.cs" />
+    <Compile Include="SubtitleFormats\Rtf1.cs" />
+    <Compile Include="SubtitleFormats\Rtf2.cs" />
+    <Compile Include="SubtitleFormats\JacoSub.cs" />
     <Compile Include="SubtitleFormats\JsonType11.cs" />
+    <Compile Include="SubtitleFormats\TimeCodesOnly1.cs" />
     <Compile Include="SubtitleFormats\SmpteTt2052.cs" />
     <Compile Include="SubtitleFormats\Ted20.cs" />
     <Compile Include="SubtitleFormats\Csv4.cs" />
@@ -239,6 +263,7 @@
     <Compile Include="SubtitleFormats\AdobeEncoreLineTabs.cs" />
     <Compile Include="SubtitleFormats\AdobeEncoreTabs.cs" />
     <Compile Include="SubtitleFormats\AdobeEncoreWithLineNumbers.cs" />
+    <Compile Include="SubtitleFormats\LambdaCap.cs" />
     <Compile Include="SubtitleFormats\AdobeEncoreWithLineNumbersNtsc.cs" />
     <Compile Include="SubtitleFormats\AdvancedSubStationAlpha.cs" />
     <Compile Include="SubtitleFormats\AQTitle.cs" />
@@ -376,11 +401,13 @@
     <Compile Include="SubtitleFormats\TmpegEncAW5.cs" />
     <Compile Include="SubtitleFormats\TmpegEncText.cs" />
     <Compile Include="SubtitleFormats\TmpegEncXml.cs" />
+    <Compile Include="SubtitleFormats\UnknownSubtitle86.cs" />
     <Compile Include="SubtitleFormats\TMPlayer.cs" />
     <Compile Include="SubtitleFormats\Tmx14.cs" />
     <Compile Include="SubtitleFormats\TranscriberXml.cs" />
     <Compile Include="SubtitleFormats\TSB4.cs" />
     <Compile Include="SubtitleFormats\TurboTitler.cs" />
+    <Compile Include="SubtitleFormats\Tx3gTextOnly.cs" />
     <Compile Include="SubtitleFormats\UleadSubtitleFormat.cs" />
     <Compile Include="SubtitleFormats\Ultech130.cs" />
     <Compile Include="SubtitleFormats\UniversalSubtitleFormat.cs" />
@@ -400,6 +427,7 @@
     <Compile Include="SubtitleFormats\UnknownSubtitle21.cs" />
     <Compile Include="SubtitleFormats\UnknownSubtitle22.cs" />
     <Compile Include="SubtitleFormats\UnknownSubtitle23.cs" />
+    <Compile Include="SubtitleFormats\UnknownSubtitle85.cs" />
     <Compile Include="SubtitleFormats\UnknownSubtitle84.cs" />
     <Compile Include="SubtitleFormats\UnknownSubtitle83.cs" />
     <Compile Include="SubtitleFormats\UnknownSubtitle24.cs" />
@@ -477,6 +505,7 @@
     <Compile Include="SubtitleFormats\VocapiaSplit.cs" />
     <Compile Include="SubtitleFormats\WebVTT.cs" />
     <Compile Include="SubtitleFormats\WebVTTFileWithLineNumber.cs" />
+    <Compile Include="SubtitleFormats\WinCaps32.cs" />
     <Compile Include="SubtitleFormats\Wsb.cs" />
     <Compile Include="SubtitleFormats\Xif.cs" />
     <Compile Include="SubtitleFormats\YouTubeAnnotations.cs" />
@@ -537,6 +566,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <None Include="packages.config" />
     <None Include="Resources\NetflixAllowedGlyphs.bin.gz" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

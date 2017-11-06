@@ -11,7 +11,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public StartNumberingFrom()
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
 
             Text = Configuration.Settings.Language.StartNumberingFrom.Title;
             label1.Text = Configuration.Settings.Language.StartNumberingFrom.StartFromNumber;

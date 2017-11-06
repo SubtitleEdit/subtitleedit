@@ -2,9 +2,10 @@
 <Language Name="Русский">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.5.3</Version>
+    <Version>3.5.4</Version>
     <TranslatedBy>Перевод на русский: Leserg (mailto:leserg@ua.fm)
-Послед. дополнения перевода: Elheym (http://forum.hqclub.net/) (https://hdclub.org/)</TranslatedBy>
+Последующие правки и дополнения перевода: Elheym (http://forum.hqclub.net/)
+(https://hdclub.org/) (https://elitehd.org/)</TranslatedBy>
     <CultureName>ru-RU</CultureName>
     <HelpFile>http://www.nikse.dk/Content/SubtitleEdit/Help/RU/</HelpFile>
     <Ok>OK</Ok>
@@ -170,6 +171,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <ChooseOutputFolder>Выбор папки вывода</ChooseOutputFolder>
     <OverwriteExistingFiles>Перезаписать существующие файлы</OverwriteExistingFiles>
     <Style>Стиль...</Style>
+    <UseStyleFromSource>Использовать стиль из источника</UseStyleFromSource>
     <ConvertOptions>Параметры конвертирования</ConvertOptions>
     <RemoveFormatting>Удалить теги форматирования</RemoveFormatting>
     <RemoveTextForHI>Удалить текст для HI</RemoveTextForHI>
@@ -187,6 +189,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <ScanningFolder>Поиск субтитров в папке {0}...</ScanningFolder>
     <Recursive>Включая подкаталоги</Recursive>
     <SetMinMsBetweenSubtitles>Задать мин. время (мс) между субтитрами</SetMinMsBetweenSubtitles>
+    <BridgeGaps>Устранить разрывы</BridgeGaps>
     <PlainText>Обычный текст</PlainText>
     <Ocr>OCR...</Ocr>
     <Filter>Фильтр</Filter>
@@ -641,6 +644,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <FixOcrErrorExample>D0n't -&gt; Don't</FixOcrErrorExample>
     <FixSpaceBetweenNumbersExample>1 100 -&gt; 1100</FixSpaceBetweenNumbersExample>
     <FixDialogsOneLineExample>Hi John! - Hi Ida! -&gt; Hi John!&lt;br /&gt;- Hi Ida!</FixDialogsOneLineExample>
+    <SelectDefault>По-умолчанию</SelectDefault>
   </FixCommonErrors>
   <GetDictionaries>
     <Title>Необходимы словари?</Title>
@@ -1461,6 +1465,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <ErrorLoadIdx>Не удается прочитать/изменить файлы .idx. Эти файлы являются частью idx/sub (называемые VobSub) и Subtitle Edit может открыть файл .sub.</ErrorLoadIdx>
     <ErrorLoadRar>Возможно файл является архивом .rar. Subtitle Edit не поддерживает загрузку сжатых файлов.</ErrorLoadRar>
     <ErrorLoadZip>Возможно файл является архивом .zip. Subtitle Edit не поддерживает загрузку сжатых файлов.</ErrorLoadZip>
+    <ErrorLoad7Zip>Возможно файл является архивом 7-Zip. Subtitle Edit не поддерживает загрузку сжатых файлов.</ErrorLoad7Zip>
     <ErrorLoadPng>Вероятно, это PNG - файл изображения. Subtitle Edit не поддерживает открытие PNG файлов.</ErrorLoadPng>
     <ErrorLoadJpg>Вероятно, это JPG - файл изображения. Subtitle Edit не поддерживает открытие JPG файлов.</ErrorLoadJpg>
     <ErrorLoadSrr>Вероятно, это ReScene .srr файл - не файл субтитров.</ErrorLoadSrr>
@@ -1902,6 +1907,8 @@ https://github.com/SubtitleEdit/subtitleedit
     <WaveformToggleSceneChange>Переключить изменение сцен</WaveformToggleSceneChange>
     <GoBack1Frame>1 кадр назад</GoBack1Frame>
     <GoForward1Frame>1 кадр вперед</GoForward1Frame>
+    <GoBack1FrameWithPlay>Один кадр назад (с воспроизведением)</GoBack1FrameWithPlay>
+    <GoForward1FrameWithPlay>Один кадр вперед (с воспроизведением)</GoForward1FrameWithPlay>
     <GoBack100Milliseconds>100 мс назад</GoBack100Milliseconds>
     <GoForward100Milliseconds>100 мс вперед</GoForward100Milliseconds>
     <GoBack500Milliseconds>500 мс назад</GoBack500Milliseconds>
@@ -1958,8 +1965,8 @@ https://github.com/SubtitleEdit/subtitleedit
     <UseDoNotBreakAfterList>Применить список исключений (для автопереноса)</UseDoNotBreakAfterList>
     <MicrosoftBingTranslator>Переводчик Microsoft Bing</MicrosoftBingTranslator>
     <HowToSignUp>Как зарегистрироваться</HowToSignUp>
-    <ClientId>Учетная запись (ID)</ClientId>
-    <ClientSecret>Пароль</ClientSecret>
+    <GoogleTranslateUrl>Источник для "Google translate"</GoogleTranslateUrl>
+    <MicrosoftTranslateApiKey>Ключ</MicrosoftTranslateApiKey>
   </Settings>
   <SettingsMpv>
     <Title>Настройки для mpv</Title>

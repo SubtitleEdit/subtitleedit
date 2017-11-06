@@ -16,7 +16,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public ColumnPaste(bool isOriginalAvailable, bool onlyText)
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
             UiUtil.FixLargeFonts(this, buttonOK);
 
             radioButtonAll.Enabled = !onlyText;

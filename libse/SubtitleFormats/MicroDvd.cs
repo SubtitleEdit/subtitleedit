@@ -12,20 +12,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         private StringBuilder _errors;
         private int _lineNumber;
 
-        public override string Extension
-        {
-            get { return ".sub"; }
-        }
+        public override string Extension => ".sub";
 
-        public override string Name
-        {
-            get { return "MicroDVD"; }
-        }
+        public override string Name => "MicroDVD";
 
-        public override bool IsTimeBased
-        {
-            get { return false; }
-        }
+        public override bool IsTimeBased => false;
 
         public override bool IsMine(List<string> lines, string fileName)
         {

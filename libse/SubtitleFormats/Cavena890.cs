@@ -16,6 +16,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public const int LanguageIdHebrew = 0x8f;
         public const int LanguageIdChineseTraditional = 0x90;
         public const int LanguageIdChineseSimplified = 0x91;
+        public const int LanguageIdRomanian = 0x22;
 
         private static readonly List<int> HebrewCodes = new List<int> {
             0x40, // א
@@ -171,22 +172,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             "х",
         };
 
-        public override string Extension
-        {
-            get { return ".890"; }
-        }
+        public override string Extension => ".890";
 
         public const string NameOfFormat = "Cavena 890";
 
-        public override string Name
-        {
-            get { return NameOfFormat; }
-        }
+        public override string Name => NameOfFormat;
 
-        public override bool IsTimeBased
-        {
-            get { return false; }
-        }
+        public override bool IsTimeBased => false;
 
         private int _languageIdLine1 = LanguageIdEnglish;
         private int _languageIdLine2 = LanguageIdEnglish;
@@ -871,9 +863,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     if (!fileName.EndsWith(".890", StringComparison.Ordinal))
                         return false;
 
-                    var sub = new Subtitle();
-                    LoadSubtitle(sub, lines, fileName);
-                    return sub.Paragraphs.Count > 0;
+                    return base.IsMine(lines, fileName);
                 }
             }
             return false;

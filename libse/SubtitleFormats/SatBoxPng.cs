@@ -10,27 +10,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     /// </summary>
     public class SatBoxPng : SubtitleFormat
     {
-        public override string Extension
-        {
-            get { return ".txt"; }
-        }
+        public override string Extension => ".txt";
 
-        public override string Name
-        {
-            get { return "SatBox png"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
-
-        public override bool IsMine(List<string> lines, string fileName)
-        {
-            var subtitle = new Subtitle();
-            LoadSubtitle(subtitle, lines, fileName);
-            return subtitle.Paragraphs.Count > _errorCount;
-        }
+        public override string Name => "SatBox png";
 
         public override string ToText(Subtitle subtitle, string title)
         {
@@ -56,7 +38,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     try
                     {
                         if (path != null && File.Exists(Path.Combine(path, text)))
+                        {
                             text = Path.Combine(path, text);
+                        }
+                        else if (path != null)
+                        {
+                            int indexOfSlash = text.LastIndexOf("/", StringComparison.Ordinal);
+                            if (indexOfSlash >= 0 && File.Exists(Path.Combine(path, text.Remove(0, indexOfSlash + 1))))
+                                text = Path.Combine(path, text.Remove(0, indexOfSlash + 1));
+                        }
                         p = new Paragraph(DecodeTimeCode(start), DecodeTimeCode(end), text);
                         subtitle.Paragraphs.Add(p);
                     }

@@ -8,29 +8,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     //  - Mom, when you were my age&#13;what did you want to do?
     public class FinalCutProTestXml : SubtitleFormat
     {
-        public override string Extension
-        {
-            get { return ".xml"; }
-        }
+        public override string Extension => ".xml";
 
-        public override string Name
-        {
-            get { return "Final Cut Pro Test Xml"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
-
-        public override bool IsMine(List<string> lines, string fileName)
-        {
-            var subtitle = new Subtitle();
-            var oldFrameRate = Configuration.Settings.General.CurrentFrameRate;
-            LoadSubtitle(subtitle, lines, fileName);
-            Configuration.Settings.General.CurrentFrameRate = oldFrameRate;
-            return subtitle.Paragraphs.Count > 0;
-        }
+        public override string Name => "Final Cut Pro Test Xml";
 
         public static string GetFrameRateAsString()
         {

@@ -3,6 +3,7 @@ using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using System.Windows.Forms;
 
@@ -16,7 +17,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public JoinSubtitles()
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
             JoinedSubtitle = new Subtitle();
             labelTotalLines.Text = string.Empty;
 
@@ -209,7 +212,7 @@ namespace Nikse.SubtitleEdit.Forms
             columnHeaderFileName.Width = -2;
         }
 
-        private void buttonAddVobFile_Click(object sender, EventArgs e)
+        private void ButtonAddSubtitleClick(object sender, EventArgs e)
         {
             openFileDialog1.Title = Configuration.Settings.Language.General.OpenSubtitle;
             openFileDialog1.FileName = string.Empty;
@@ -217,18 +220,34 @@ namespace Nikse.SubtitleEdit.Forms
             openFileDialog1.Multiselect = true;
             if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
             {
+                var sb = new StringBuilder();
                 foreach (string fileName in openFileDialog1.FileNames)
                 {
-                    bool alreadyInList = false;
-                    foreach (string existingFileName in _fileNamesToJoin)
+                    if (File.Exists(fileName))
                     {
-                        if (existingFileName.Equals(fileName, StringComparison.OrdinalIgnoreCase))
-                            alreadyInList = true;
+                        var fileInfo = new FileInfo(fileName);
+                        if (fileInfo.Length < Subtitle.MaxFileSize)
+                        {
+                            bool alreadyInList = false;
+                            foreach (string existingFileName in _fileNamesToJoin)
+                            {
+                                if (existingFileName.Equals(fileName, StringComparison.OrdinalIgnoreCase))
+                                    alreadyInList = true;
+                            }
+                            if (!alreadyInList)
+                                _fileNamesToJoin.Add(fileName);
+                        }
+                        else
+                        {
+                            sb.AppendLine(string.Format(Configuration.Settings.Language.Main.FileXIsLargerThan10MB, fileName));
+                        }
                     }
-                    if (!alreadyInList)
-                        _fileNamesToJoin.Add(fileName);
                 }
                 SortAndLoad();
+                if (sb.Length > 0)
+                {
+                    MessageBox.Show(sb.ToString());
+                }
             }
         }
 

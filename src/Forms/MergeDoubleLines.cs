@@ -20,7 +20,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public MergeDoubleLines()
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
             _previewTimer.Tick += previewTimer_Tick;
             _previewTimer.Interval = 250;
             UiUtil.FixLargeFonts(this, buttonOK);
@@ -60,7 +62,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             var item = new ListViewItem(string.Empty) { Tag = p, Checked = true };
             item.SubItems.Add(lineNumbers.TrimEnd(','));
-            item.SubItems.Add(newText.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
+            item.SubItems.Add(UiUtil.GetListViewTextFromString(newText));
             listViewFixes.Items.Add(item);
         }
 

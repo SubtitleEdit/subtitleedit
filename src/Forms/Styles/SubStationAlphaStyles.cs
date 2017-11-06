@@ -6,13 +6,14 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Text;
+using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms.Styles
 {
-    public partial class SubStationAlphaStyles : StylesForm
+    public sealed partial class SubStationAlphaStyles : StylesForm
     {
         private string _header;
         private bool _doUpdate;
@@ -23,7 +24,9 @@ namespace Nikse.SubtitleEdit.Forms.Styles
         public SubStationAlphaStyles(Subtitle subtitle, SubtitleFormat format)
             : base(subtitle)
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
 
             labelStatus.Text = string.Empty;
             _header = subtitle.Header;
@@ -99,6 +102,10 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 buttonBackColor.Text = l.Back;
                 listViewStyles.Columns[5].Text = l.Back;
                 checkBoxFontUnderline.Visible = false;
+                numericUpDownOutline.Increment = 1;
+                numericUpDownOutline.DecimalPlaces = 1;
+                numericUpDownShadowWidth.Increment = 1;
+                numericUpDownShadowWidth.DecimalPlaces = 1;
             }
 
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
@@ -135,8 +142,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             if (listViewStyles.SelectedItems.Count != 1)
                 return;
 
-            if (pictureBoxPreview.Image != null)
-                pictureBoxPreview.Image.Dispose();
+            pictureBoxPreview.Image?.Dispose();
             var bmp = new Bitmap(pictureBoxPreview.Width, pictureBoxPreview.Height);
 
             using (Graphics g = Graphics.FromImage(bmp))
@@ -184,7 +190,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 var measuredWidth = TextDraw.MeasureTextWidth(font, sb.ToString(), checkBoxFontBold.Checked) + 1;
                 var measuredHeight = TextDraw.MeasureTextHeight(font, sb.ToString(), checkBoxFontBold.Checked) + 1;
 
-                float left = 5;
+                float left;
                 if (radioButtonTopLeft.Checked || radioButtonMiddleLeft.Checked || radioButtonBottomLeft.Checked)
                     left = (float)numericUpDownMarginLeft.Value;
                 else if (radioButtonTopRight.Checked || radioButtonMiddleRight.Checked || radioButtonBottomRight.Checked)
@@ -192,7 +198,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 else
                     left = ((float)(bmp.Width - measuredWidth * 0.8 + 15) / 2);
 
-                float top = 2;
+                float top;
                 if (radioButtonTopLeft.Checked || radioButtonTopCenter.Checked || radioButtonTopRight.Checked)
                     top = (float)numericUpDownMarginVertical.Value;
                 else if (radioButtonMiddleLeft.Checked || radioButtonMiddleCenter.Checked || radioButtonMiddleRight.Checked)
@@ -753,7 +759,9 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             var sb = new StringBuilder();
             foreach (var line in _header.Split(new[] { Environment.NewLine }, StringSplitOptions.None))
             {
-                if (!line.ToLower().Replace(" ", string.Empty).StartsWith("style:" + name.ToLower() + ","))
+                var lineIsStyle = line.ToLower().Replace(" ", string.Empty).StartsWith("style:" + name.ToLower().Replace(" ", string.Empty) + ",", StringComparison.Ordinal) &&
+                                  line.ToLower().Contains(name.ToLower());
+                if (!lineIsStyle)
                     sb.AppendLine(line);
             }
             _header = sb.ToString();
@@ -890,9 +898,9 @@ namespace Nikse.SubtitleEdit.Forms.Styles
         {
             if (listViewStyles.SelectedItems.Count == 1 && _doUpdate)
             {
-                listViewStyles.SelectedItems[0].SubItems[2].Text = numericUpDownFontSize.Value.ToString();
+                listViewStyles.SelectedItems[0].SubItems[2].Text = numericUpDownFontSize.Value.ToString(CultureInfo.InvariantCulture);
                 string name = listViewStyles.SelectedItems[0].Text;
-                SetSsaStyle(name, "fontsize", numericUpDownFontSize.Value.ToString());
+                SetSsaStyle(name, "fontsize", numericUpDownFontSize.Value.ToString(CultureInfo.InvariantCulture));
                 GeneratePreview();
             }
         }
@@ -1049,7 +1057,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             if (listViewStyles.SelectedItems.Count == 1 && _doUpdate)
             {
                 string name = listViewStyles.SelectedItems[0].Text;
-                SetSsaStyle(name, "marginl", numericUpDownMarginLeft.Value.ToString());
+                SetSsaStyle(name, "marginl", numericUpDownMarginLeft.Value.ToString(CultureInfo.InvariantCulture));
                 GeneratePreview();
             }
         }
@@ -1059,7 +1067,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             if (listViewStyles.SelectedItems.Count == 1 && _doUpdate)
             {
                 string name = listViewStyles.SelectedItems[0].Text;
-                SetSsaStyle(name, "marginr", numericUpDownMarginRight.Value.ToString());
+                SetSsaStyle(name, "marginr", numericUpDownMarginRight.Value.ToString(CultureInfo.InvariantCulture));
                 GeneratePreview();
             }
         }
@@ -1069,7 +1077,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             if (listViewStyles.SelectedItems.Count == 1 && _doUpdate)
             {
                 string name = listViewStyles.SelectedItems[0].Text;
-                SetSsaStyle(name, "marginv", numericUpDownMarginVertical.Value.ToString());
+                SetSsaStyle(name, "marginv", numericUpDownMarginVertical.Value.ToString(CultureInfo.InvariantCulture));
                 GeneratePreview();
             }
         }
@@ -1085,7 +1093,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             if (listViewStyles.SelectedItems.Count == 1 && _doUpdate)
             {
                 string name = listViewStyles.SelectedItems[0].Text;
-                SetSsaStyle(name, "outline", numericUpDownOutline.Value.ToString());
+                SetSsaStyle(name, "outline", numericUpDownOutline.Value.ToString(CultureInfo.InvariantCulture));
                 GeneratePreview();
             }
         }
@@ -1095,7 +1103,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             if (listViewStyles.SelectedItems.Count == 1 && _doUpdate)
             {
                 string name = listViewStyles.SelectedItems[0].Text;
-                SetSsaStyle(name, "shadow", numericUpDownShadowWidth.Value.ToString());
+                SetSsaStyle(name, "shadow", numericUpDownShadowWidth.Value.ToString(CultureInfo.InvariantCulture));
                 GeneratePreview();
             }
         }
@@ -1107,7 +1115,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             {
                 numericUpDownShadowWidth.Value = 2;
                 string name = listViewStyles.SelectedItems[0].Text;
-                SetSsaStyle(name, "outline", numericUpDownOutline.Value.ToString());
+                SetSsaStyle(name, "outline", numericUpDownOutline.Value.ToString(CultureInfo.InvariantCulture));
                 SetSsaStyle(name, "borderstyle", "1");
                 GeneratePreview();
 
@@ -1124,7 +1132,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             {
                 numericUpDownShadowWidth.Value = 0;
                 string name = listViewStyles.SelectedItems[0].Text;
-                SetSsaStyle(name, "outline", numericUpDownOutline.Value.ToString());
+                SetSsaStyle(name, "outline", numericUpDownOutline.Value.ToString(CultureInfo.InvariantCulture));
                 SetSsaStyle(name, "borderstyle", "3");
                 GeneratePreview();
 
@@ -1195,7 +1203,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
             if (openFileDialogImport.ShowDialog(this) == DialogResult.OK)
             {
-                Encoding encoding = null;
+                Encoding encoding;
                 var s = new Subtitle();
                 var format = s.LoadSubtitle(openFileDialogImport.FileName, out encoding, null);
                 if (format != null && format.HasStyleSupport)
@@ -1222,9 +1230,8 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
                             _doUpdate = false;
                             AddStyle(listViewStyles, style, Subtitle, _isSubStationAlpha);
-                            SsaStyle oldStyle = GetSsaStyle(listViewStyles.Items[0].Text);
                             _header = _header.Trim();
-                            if (_header.EndsWith("[Events]"))
+                            if (_header.EndsWith("[Events]", StringComparison.Ordinal))
                             {
                                 _header = _header.Substring(0, _header.Length - "[Events]".Length).Trim();
                                 _header += Environment.NewLine + style.RawLine;
@@ -1335,7 +1342,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                     {
                         if (line.StartsWith("style:", StringComparison.OrdinalIgnoreCase))
                         {
-                            if (line.ToLower().Replace(" ", string.Empty).StartsWith("style:" + styleName.ToLower().Trim()))
+                            if (line.ToLower().Replace(" ", string.Empty).StartsWith("style:" + styleName.ToLower().Trim(), StringComparison.Ordinal))
                                 sb.AppendLine(line);
                         }
                         else
@@ -1344,7 +1351,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                         }
                     }
                     string content = sb.ToString();
-                    if (content.TrimEnd().EndsWith("[Events]"))
+                    if (content.TrimEnd().EndsWith("[Events]", StringComparison.Ordinal))
                     {
                         content = content.Trim() + Environment.NewLine +
                             "Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text" + Environment.NewLine +

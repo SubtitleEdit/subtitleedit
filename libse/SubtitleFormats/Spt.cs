@@ -7,22 +7,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class Spt : SubtitleFormat
     {
-        public override string Extension
-        {
-            get { return ".spt"; }
-        }
+        public override string Extension => ".spt";
 
         public const string NameOfFormat = "spt";
 
-        public override string Name
-        {
-            get { return NameOfFormat; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
+        public override string Name => NameOfFormat;
 
         public static void Save(string fileName, Subtitle subtitle)
         {

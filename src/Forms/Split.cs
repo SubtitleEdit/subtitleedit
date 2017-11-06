@@ -20,7 +20,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public Split()
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
 
             var l = Configuration.Settings.Language.Split;
             Text = l.Title;

@@ -35,8 +35,6 @@
             this.groupBoxMiscellaneous = new System.Windows.Forms.GroupBox();
             this.numericUpDownMaxWordsMin = new System.Windows.Forms.NumericUpDown();
             this.labelMaxWordsPerMin = new System.Windows.Forms.Label();
-            this.labelListviewColumns = new System.Windows.Forms.Label();
-            this.buttonListviewColumns = new System.Windows.Forms.Button();
             this.numericUpDownMaxNumberOfLines = new System.Windows.Forms.NumericUpDown();
             this.labelMaxLines = new System.Windows.Forms.Label();
             this.comboBoxAutoBackupDeleteAfter = new System.Windows.Forms.ComboBox();
@@ -194,13 +192,13 @@
             this.checkBoxWaveformShowGrid = new System.Windows.Forms.CheckBox();
             this.tabPageTools = new System.Windows.Forms.TabPage();
             this.groupBoxBing = new System.Windows.Forms.GroupBox();
-            this.textBoxBingClientId = new System.Windows.Forms.TextBox();
             this.labelClientSecret = new System.Windows.Forms.Label();
             this.textBoxBingClientSecret = new System.Windows.Forms.TextBox();
-            this.labelClientId = new System.Windows.Forms.Label();
             this.linkLabelBingSubscribe = new System.Windows.Forms.LinkLabel();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBoxToolsMisc = new System.Windows.Forms.GroupBox();
+            this.comboBoxGoogleTranslateUrl = new System.Windows.Forms.ComboBox();
+            this.labelGoogleTranslateUrl = new System.Windows.Forms.Label();
             this.checkBoxCpsIncludeWhiteSpace = new System.Windows.Forms.CheckBox();
             this.labelUserBingApiId = new System.Windows.Forms.Label();
             this.buttonEditDoNotBreakAfterList = new System.Windows.Forms.Button();
@@ -469,8 +467,6 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxMiscellaneous.Controls.Add(this.numericUpDownMaxWordsMin);
             this.groupBoxMiscellaneous.Controls.Add(this.labelMaxWordsPerMin);
-            this.groupBoxMiscellaneous.Controls.Add(this.labelListviewColumns);
-            this.groupBoxMiscellaneous.Controls.Add(this.buttonListviewColumns);
             this.groupBoxMiscellaneous.Controls.Add(this.numericUpDownMaxNumberOfLines);
             this.groupBoxMiscellaneous.Controls.Add(this.labelMaxLines);
             this.groupBoxMiscellaneous.Controls.Add(this.comboBoxAutoBackupDeleteAfter);
@@ -561,25 +557,6 @@
             this.labelMaxWordsPerMin.TabIndex = 49;
             this.labelMaxWordsPerMin.Text = "Max. words/min";
             // 
-            // labelListviewColumns
-            // 
-            this.labelListviewColumns.AutoSize = true;
-            this.labelListviewColumns.Location = new System.Drawing.Point(439, 342);
-            this.labelListviewColumns.Name = "labelListviewColumns";
-            this.labelListviewColumns.Size = new System.Drawing.Size(86, 13);
-            this.labelListviewColumns.TabIndex = 48;
-            this.labelListviewColumns.Text = "Listview columns";
-            // 
-            // buttonListviewColumns
-            // 
-            this.buttonListviewColumns.Location = new System.Drawing.Point(441, 358);
-            this.buttonListviewColumns.Name = "buttonListviewColumns";
-            this.buttonListviewColumns.Size = new System.Drawing.Size(372, 23);
-            this.buttonListviewColumns.TabIndex = 43;
-            this.buttonListviewColumns.Text = "#, Start time, End time, duration, cps, wpm, text";
-            this.buttonListviewColumns.UseVisualStyleBackColor = true;
-            this.buttonListviewColumns.Click += new System.EventHandler(this.buttonListviewColumns_Click);
-            // 
             // numericUpDownMaxNumberOfLines
             // 
             this.numericUpDownMaxNumberOfLines.Location = new System.Drawing.Point(205, 270);
@@ -620,7 +597,7 @@
             "1 month",
             "3 months",
             "6 months"});
-            this.comboBoxAutoBackupDeleteAfter.Location = new System.Drawing.Point(707, 397);
+            this.comboBoxAutoBackupDeleteAfter.Location = new System.Drawing.Point(707, 357);
             this.comboBoxAutoBackupDeleteAfter.Name = "comboBoxAutoBackupDeleteAfter";
             this.comboBoxAutoBackupDeleteAfter.Size = new System.Drawing.Size(88, 21);
             this.comboBoxAutoBackupDeleteAfter.TabIndex = 45;
@@ -628,7 +605,7 @@
             // labelAutoBackupDeleteAfter
             // 
             this.labelAutoBackupDeleteAfter.AutoSize = true;
-            this.labelAutoBackupDeleteAfter.Location = new System.Drawing.Point(639, 400);
+            this.labelAutoBackupDeleteAfter.Location = new System.Drawing.Point(639, 360);
             this.labelAutoBackupDeleteAfter.Name = "labelAutoBackupDeleteAfter";
             this.labelAutoBackupDeleteAfter.Size = new System.Drawing.Size(65, 13);
             this.labelAutoBackupDeleteAfter.TabIndex = 46;
@@ -637,7 +614,7 @@
             // checkBoxCheckForUpdates
             // 
             this.checkBoxCheckForUpdates.AutoSize = true;
-            this.checkBoxCheckForUpdates.Location = new System.Drawing.Point(441, 427);
+            this.checkBoxCheckForUpdates.Location = new System.Drawing.Point(441, 397);
             this.checkBoxCheckForUpdates.Name = "checkBoxCheckForUpdates";
             this.checkBoxCheckForUpdates.Size = new System.Drawing.Size(114, 17);
             this.checkBoxCheckForUpdates.TabIndex = 46;
@@ -964,7 +941,7 @@
             "Every minute",
             "Every 5 minutes",
             "Every 15 minutes"});
-            this.comboBoxAutoBackup.Location = new System.Drawing.Point(512, 397);
+            this.comboBoxAutoBackup.Location = new System.Drawing.Point(512, 357);
             this.comboBoxAutoBackup.Name = "comboBoxAutoBackup";
             this.comboBoxAutoBackup.Size = new System.Drawing.Size(121, 21);
             this.comboBoxAutoBackup.TabIndex = 44;
@@ -972,7 +949,7 @@
             // labelAutoBackup
             // 
             this.labelAutoBackup.AutoSize = true;
-            this.labelAutoBackup.Location = new System.Drawing.Point(438, 400);
+            this.labelAutoBackup.Location = new System.Drawing.Point(438, 360);
             this.labelAutoBackup.Name = "labelAutoBackup";
             this.labelAutoBackup.Size = new System.Drawing.Size(68, 13);
             this.labelAutoBackup.TabIndex = 43;
@@ -1016,7 +993,7 @@
             "UTF-7",
             "UTF-8",
             "Unicode"});
-            this.comboBoxListViewDoubleClickEvent.Location = new System.Drawing.Point(441, 311);
+            this.comboBoxListViewDoubleClickEvent.Location = new System.Drawing.Point(441, 314);
             this.comboBoxListViewDoubleClickEvent.Name = "comboBoxListViewDoubleClickEvent";
             this.comboBoxListViewDoubleClickEvent.Size = new System.Drawing.Size(332, 21);
             this.comboBoxListViewDoubleClickEvent.TabIndex = 42;
@@ -1024,7 +1001,7 @@
             // labelListViewDoubleClickEvent
             // 
             this.labelListViewDoubleClickEvent.AutoSize = true;
-            this.labelListViewDoubleClickEvent.Location = new System.Drawing.Point(438, 295);
+            this.labelListViewDoubleClickEvent.Location = new System.Drawing.Point(438, 298);
             this.labelListViewDoubleClickEvent.Name = "labelListViewDoubleClickEvent";
             this.labelListViewDoubleClickEvent.Size = new System.Drawing.Size(227, 13);
             this.labelListViewDoubleClickEvent.TabIndex = 41;
@@ -1327,6 +1304,7 @@
             "OemMinus",
             "OemPeriod",
             "OemQuestion",
+            "OemSemicolon",
             "Oemtilde",
             "OemOpenBrackets",
             "Oem5",
@@ -1885,7 +1863,12 @@
             "22",
             "23",
             "24",
-            "25"});
+            "25",
+            "26",
+            "27",
+            "28",
+            "29",
+            "30"});
             this.comboBoxlVideoPlayerPreviewFontSize.Location = new System.Drawing.Point(465, 18);
             this.comboBoxlVideoPlayerPreviewFontSize.Name = "comboBoxlVideoPlayerPreviewFontSize";
             this.comboBoxlVideoPlayerPreviewFontSize.Size = new System.Drawing.Size(121, 21);
@@ -1930,7 +1913,7 @@
             // checkBoxMpvHandlesPreviewText
             // 
             this.checkBoxMpvHandlesPreviewText.AutoSize = true;
-            this.checkBoxMpvHandlesPreviewText.Location = new System.Drawing.Point(169, 107);
+            this.checkBoxMpvHandlesPreviewText.Location = new System.Drawing.Point(169, 111);
             this.checkBoxMpvHandlesPreviewText.Name = "checkBoxMpvHandlesPreviewText";
             this.checkBoxMpvHandlesPreviewText.Size = new System.Drawing.Size(150, 17);
             this.checkBoxMpvHandlesPreviewText.TabIndex = 31;
@@ -1940,17 +1923,17 @@
             // labelMpvSettings
             // 
             this.labelMpvSettings.AutoSize = true;
-            this.labelMpvSettings.Font = new System.Drawing.Font("Tahoma", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelMpvSettings.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelMpvSettings.ForeColor = System.Drawing.Color.Gray;
-            this.labelMpvSettings.Location = new System.Drawing.Point(651, 93);
+            this.labelMpvSettings.Location = new System.Drawing.Point(709, 93);
             this.labelMpvSettings.Name = "labelMpvSettings";
-            this.labelMpvSettings.Size = new System.Drawing.Size(33, 11);
+            this.labelMpvSettings.Size = new System.Drawing.Size(40, 13);
             this.labelMpvSettings.TabIndex = 30;
             this.labelMpvSettings.Text = "--vo=?";
             // 
             // buttonMpvSettings
             // 
-            this.buttonMpvSettings.Location = new System.Drawing.Point(466, 87);
+            this.buttonMpvSettings.Location = new System.Drawing.Point(510, 89);
             this.buttonMpvSettings.Name = "buttonMpvSettings";
             this.buttonMpvSettings.Size = new System.Drawing.Size(179, 21);
             this.buttonMpvSettings.TabIndex = 29;
@@ -1981,10 +1964,10 @@
             // 
             // textBoxVlcPath
             // 
-            this.textBoxVlcPath.Location = new System.Drawing.Point(382, 45);
+            this.textBoxVlcPath.Location = new System.Drawing.Point(410, 45);
             this.textBoxVlcPath.MaxLength = 1000;
             this.textBoxVlcPath.Name = "textBoxVlcPath";
-            this.textBoxVlcPath.Size = new System.Drawing.Size(390, 21);
+            this.textBoxVlcPath.Size = new System.Drawing.Size(362, 21);
             this.textBoxVlcPath.TabIndex = 25;
             this.textBoxVlcPath.MouseLeave += new System.EventHandler(this.textBoxVlcPath_MouseLeave);
             // 
@@ -2000,11 +1983,11 @@
             // labelVideoPlayerVLC
             // 
             this.labelVideoPlayerVLC.AutoSize = true;
-            this.labelVideoPlayerVLC.Font = new System.Drawing.Font("Tahoma", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelVideoPlayerVLC.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelVideoPlayerVLC.ForeColor = System.Drawing.Color.Gray;
             this.labelVideoPlayerVLC.Location = new System.Drawing.Point(167, 49);
             this.labelVideoPlayerVLC.Name = "labelVideoPlayerVLC";
-            this.labelVideoPlayerVLC.Size = new System.Drawing.Size(208, 11);
+            this.labelVideoPlayerVLC.Size = new System.Drawing.Size(237, 13);
             this.labelVideoPlayerVLC.TabIndex = 13;
             this.labelVideoPlayerVLC.Text = "libvlc.dll from VLC media player (1.1.0 or newer)";
             // 
@@ -2022,33 +2005,33 @@
             // labelVideoPlayerMPlayer
             // 
             this.labelVideoPlayerMPlayer.AutoSize = true;
-            this.labelVideoPlayerMPlayer.Font = new System.Drawing.Font("Tahoma", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelVideoPlayerMPlayer.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelVideoPlayerMPlayer.ForeColor = System.Drawing.Color.Gray;
             this.labelVideoPlayerMPlayer.Location = new System.Drawing.Point(167, 93);
             this.labelVideoPlayerMPlayer.Name = "labelVideoPlayerMPlayer";
-            this.labelVideoPlayerMPlayer.Size = new System.Drawing.Size(284, 11);
+            this.labelVideoPlayerMPlayer.Size = new System.Drawing.Size(337, 13);
             this.labelVideoPlayerMPlayer.TabIndex = 11;
             this.labelVideoPlayerMPlayer.Text = "https://mpv.io/ - free, open source, and cross-platform media player";
             // 
             // labelDirectShowDescription
             // 
             this.labelDirectShowDescription.AutoSize = true;
-            this.labelDirectShowDescription.Font = new System.Drawing.Font("Tahoma", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelDirectShowDescription.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelDirectShowDescription.ForeColor = System.Drawing.Color.Gray;
             this.labelDirectShowDescription.Location = new System.Drawing.Point(167, 26);
             this.labelDirectShowDescription.Name = "labelDirectShowDescription";
-            this.labelDirectShowDescription.Size = new System.Drawing.Size(98, 11);
+            this.labelDirectShowDescription.Size = new System.Drawing.Size(114, 13);
             this.labelDirectShowDescription.TabIndex = 10;
             this.labelDirectShowDescription.Text = "Quartz.dll in system32";
             // 
             // labelMpcHcDescription
             // 
             this.labelMpcHcDescription.AutoSize = true;
-            this.labelMpcHcDescription.Font = new System.Drawing.Font("Tahoma", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelMpcHcDescription.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelMpcHcDescription.ForeColor = System.Drawing.Color.Gray;
             this.labelMpcHcDescription.Location = new System.Drawing.Point(167, 70);
             this.labelMpcHcDescription.Name = "labelMpcHcDescription";
-            this.labelMpcHcDescription.Size = new System.Drawing.Size(160, 11);
+            this.labelMpcHcDescription.Size = new System.Drawing.Size(178, 13);
             this.labelMpcHcDescription.TabIndex = 9;
             this.labelMpcHcDescription.Text = "Media Player Classic - Home Cinema";
             // 
@@ -2532,30 +2515,21 @@
             // 
             this.groupBoxBing.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBoxBing.Controls.Add(this.textBoxBingClientId);
             this.groupBoxBing.Controls.Add(this.labelClientSecret);
             this.groupBoxBing.Controls.Add(this.textBoxBingClientSecret);
-            this.groupBoxBing.Controls.Add(this.labelClientId);
             this.groupBoxBing.Controls.Add(this.linkLabelBingSubscribe);
             this.groupBoxBing.Controls.Add(this.label1);
-            this.groupBoxBing.Location = new System.Drawing.Point(374, 259);
+            this.groupBoxBing.Location = new System.Drawing.Point(421, 331);
             this.groupBoxBing.Name = "groupBoxBing";
-            this.groupBoxBing.Size = new System.Drawing.Size(451, 203);
+            this.groupBoxBing.Size = new System.Drawing.Size(404, 131);
             this.groupBoxBing.TabIndex = 6;
             this.groupBoxBing.TabStop = false;
             this.groupBoxBing.Text = "Bing translator";
             // 
-            // textBoxBingClientId
-            // 
-            this.textBoxBingClientId.Location = new System.Drawing.Point(94, 45);
-            this.textBoxBingClientId.Name = "textBoxBingClientId";
-            this.textBoxBingClientId.Size = new System.Drawing.Size(331, 21);
-            this.textBoxBingClientId.TabIndex = 25;
-            // 
             // labelClientSecret
             // 
             this.labelClientSecret.AutoSize = true;
-            this.labelClientSecret.Location = new System.Drawing.Point(13, 72);
+            this.labelClientSecret.Location = new System.Drawing.Point(13, 47);
             this.labelClientSecret.Name = "labelClientSecret";
             this.labelClientSecret.Size = new System.Drawing.Size(67, 13);
             this.labelClientSecret.TabIndex = 30;
@@ -2563,23 +2537,14 @@
             // 
             // textBoxBingClientSecret
             // 
-            this.textBoxBingClientSecret.Location = new System.Drawing.Point(94, 72);
+            this.textBoxBingClientSecret.Location = new System.Drawing.Point(94, 47);
             this.textBoxBingClientSecret.Name = "textBoxBingClientSecret";
-            this.textBoxBingClientSecret.Size = new System.Drawing.Size(331, 21);
+            this.textBoxBingClientSecret.Size = new System.Drawing.Size(304, 21);
             this.textBoxBingClientSecret.TabIndex = 26;
-            // 
-            // labelClientId
-            // 
-            this.labelClientId.AutoSize = true;
-            this.labelClientId.Location = new System.Drawing.Point(12, 47);
-            this.labelClientId.Name = "labelClientId";
-            this.labelClientId.Size = new System.Drawing.Size(48, 13);
-            this.labelClientId.TabIndex = 28;
-            this.labelClientId.Text = "Client ID";
             // 
             // linkLabelBingSubscribe
             // 
-            this.linkLabelBingSubscribe.Location = new System.Drawing.Point(242, 17);
+            this.linkLabelBingSubscribe.Location = new System.Drawing.Point(201, 15);
             this.linkLabelBingSubscribe.Name = "linkLabelBingSubscribe";
             this.linkLabelBingSubscribe.Size = new System.Drawing.Size(183, 27);
             this.linkLabelBingSubscribe.TabIndex = 24;
@@ -2598,16 +2563,38 @@
             // 
             // groupBoxToolsMisc
             // 
+            this.groupBoxToolsMisc.Controls.Add(this.comboBoxGoogleTranslateUrl);
+            this.groupBoxToolsMisc.Controls.Add(this.labelGoogleTranslateUrl);
             this.groupBoxToolsMisc.Controls.Add(this.checkBoxCpsIncludeWhiteSpace);
             this.groupBoxToolsMisc.Controls.Add(this.labelUserBingApiId);
             this.groupBoxToolsMisc.Controls.Add(this.buttonEditDoNotBreakAfterList);
             this.groupBoxToolsMisc.Controls.Add(this.checkBoxUseDoNotBreakAfterList);
-            this.groupBoxToolsMisc.Location = new System.Drawing.Point(7, 331);
+            this.groupBoxToolsMisc.Location = new System.Drawing.Point(421, 130);
             this.groupBoxToolsMisc.Name = "groupBoxToolsMisc";
-            this.groupBoxToolsMisc.Size = new System.Drawing.Size(361, 131);
-            this.groupBoxToolsMisc.TabIndex = 4;
+            this.groupBoxToolsMisc.Size = new System.Drawing.Size(404, 195);
+            this.groupBoxToolsMisc.TabIndex = 5;
             this.groupBoxToolsMisc.TabStop = false;
             this.groupBoxToolsMisc.Text = "Misc";
+            // 
+            // comboBoxGoogleTranslateUrl
+            // 
+            this.comboBoxGoogleTranslateUrl.FormattingEnabled = true;
+            this.comboBoxGoogleTranslateUrl.Items.AddRange(new object[] {
+            "translate.google.com",
+            "translate.google.cn"});
+            this.comboBoxGoogleTranslateUrl.Location = new System.Drawing.Point(15, 155);
+            this.comboBoxGoogleTranslateUrl.Name = "comboBoxGoogleTranslateUrl";
+            this.comboBoxGoogleTranslateUrl.Size = new System.Drawing.Size(369, 21);
+            this.comboBoxGoogleTranslateUrl.TabIndex = 34;
+            // 
+            // labelGoogleTranslateUrl
+            // 
+            this.labelGoogleTranslateUrl.AutoSize = true;
+            this.labelGoogleTranslateUrl.Location = new System.Drawing.Point(12, 138);
+            this.labelGoogleTranslateUrl.Name = "labelGoogleTranslateUrl";
+            this.labelGoogleTranslateUrl.Size = new System.Drawing.Size(101, 13);
+            this.labelGoogleTranslateUrl.TabIndex = 33;
+            this.labelGoogleTranslateUrl.Text = "Google translate url";
             // 
             // checkBoxCpsIncludeWhiteSpace
             // 
@@ -2654,10 +2641,10 @@
             this.groupBoxSpellCheck.Controls.Add(this.checkBoxTreatINQuoteAsING);
             this.groupBoxSpellCheck.Controls.Add(this.checkBoxSpellCheckOneLetterWords);
             this.groupBoxSpellCheck.Controls.Add(this.checkBoxSpellCheckAutoChangeNames);
-            this.groupBoxSpellCheck.Location = new System.Drawing.Point(374, 129);
+            this.groupBoxSpellCheck.Location = new System.Drawing.Point(7, 331);
             this.groupBoxSpellCheck.Name = "groupBoxSpellCheck";
-            this.groupBoxSpellCheck.Size = new System.Drawing.Size(451, 124);
-            this.groupBoxSpellCheck.TabIndex = 5;
+            this.groupBoxSpellCheck.Size = new System.Drawing.Size(408, 131);
+            this.groupBoxSpellCheck.TabIndex = 4;
             this.groupBoxSpellCheck.TabStop = false;
             this.groupBoxSpellCheck.Text = "Spell check";
             // 
@@ -2702,7 +2689,7 @@
             this.groupBoxFixCommonErrors.Controls.Add(this.labelToolsMusicSymbol);
             this.groupBoxFixCommonErrors.Location = new System.Drawing.Point(7, 129);
             this.groupBoxFixCommonErrors.Name = "groupBoxFixCommonErrors";
-            this.groupBoxFixCommonErrors.Size = new System.Drawing.Size(361, 196);
+            this.groupBoxFixCommonErrors.Size = new System.Drawing.Size(408, 196);
             this.groupBoxFixCommonErrors.TabIndex = 3;
             this.groupBoxFixCommonErrors.TabStop = false;
             this.groupBoxFixCommonErrors.Text = "Fix common errors";
@@ -4400,11 +4387,9 @@
         private System.Windows.Forms.Label labelMpvSettings;
         private System.Windows.Forms.LinkLabel linkLabelBingSubscribe;
         private System.Windows.Forms.Label labelUserBingApiId;
-        private System.Windows.Forms.TextBox textBoxBingClientId;
         private System.Windows.Forms.GroupBox groupBoxBing;
         private System.Windows.Forms.Label labelClientSecret;
         private System.Windows.Forms.TextBox textBoxBingClientSecret;
-        private System.Windows.Forms.Label labelClientId;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ComboBox comboBoxAutoBackupDeleteAfter;
         private System.Windows.Forms.Label labelAutoBackupDeleteAfter;
@@ -4417,8 +4402,6 @@
         private System.Windows.Forms.PictureBox pictureBoxNetflixQualityCheck;
         private System.Windows.Forms.CheckBox checkBoxNetflixQualityCheck;
         private System.Windows.Forms.CheckBox checkBoxWaveformSetVideoPosMoveStartEnd;
-        private System.Windows.Forms.Button buttonListviewColumns;
-        private System.Windows.Forms.Label labelListviewColumns;
         private System.Windows.Forms.CheckBox checkBoxWaveformShowWpm;
         private System.Windows.Forms.CheckBox checkBoxWaveformShowCps;
         private System.Windows.Forms.NumericUpDown numericUpDownMaxWordsMin;
@@ -4427,5 +4410,7 @@
         private System.Windows.Forms.CheckBox checkBoxVideoAutoOpen;
         private System.Windows.Forms.CheckBox checkBoxCpsIncludeWhiteSpace;
         private System.Windows.Forms.Button buttonClearShortcut;
+        private System.Windows.Forms.ComboBox comboBoxGoogleTranslateUrl;
+        private System.Windows.Forms.Label labelGoogleTranslateUrl;
     }
 }

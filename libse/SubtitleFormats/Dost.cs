@@ -9,25 +9,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     {
         private static readonly Regex RegexTimeCodes = new Regex(@"^\d\d\d\d\t\d\d:\d\d:\d\d:\d\d\t\d\d:\d\d:\d\d:\d\d\t", RegexOptions.Compiled);
 
-        public override string Extension
-        {
-            get { return ".dost"; }
-        }
+        public override string Extension => ".dost";
 
-        public override string Name
-        {
-            get { return "DOST"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
+        public override string Name => "DOST";
 
         public override bool IsMine(List<string> lines, string fileName)
         {
-            var subtitle = new Subtitle();
-
             var sb = new StringBuilder();
             foreach (string line in lines)
                 sb.AppendLine(line);
@@ -36,10 +23,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             if (!sb.ToString().Contains("$FORMAT"))
                 return false;
 
-            var oldFrameRate = Configuration.Settings.General.CurrentFrameRate;
-            LoadSubtitle(subtitle, lines, fileName);
-            Configuration.Settings.General.CurrentFrameRate = oldFrameRate;
-            return subtitle.Paragraphs.Count > _errorCount;
+            return base.IsMine(lines, fileName);
         }
 
         public override string ToText(Subtitle subtitle, string title)
@@ -76,7 +60,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         }
                     }
                 }
-                else if (line.StartsWith("$DROP="))
+                else if (line.StartsWith("$DROP=", StringComparison.Ordinal))
                 {
                     s = s.Remove(0, "$DROP=".Length);
                     int frameRate;

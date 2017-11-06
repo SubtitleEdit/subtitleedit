@@ -6,27 +6,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class JsonType4 : SubtitleFormat
     {
-        public override string Extension
-        {
-            get { return ".json"; }
-        }
+        public override string Extension => ".json";
 
-        public override string Name
-        {
-            get { return "JSON Type 4"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
-
-        public override bool IsMine(List<string> lines, string fileName)
-        {
-            var subtitle = new Subtitle();
-            LoadSubtitle(subtitle, lines, fileName);
-            return subtitle.Paragraphs.Count > _errorCount;
-        }
+        public override string Name => "JSON Type 4";
 
         public override string ToText(Subtitle subtitle, string title)
         {

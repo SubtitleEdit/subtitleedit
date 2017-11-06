@@ -178,7 +178,7 @@ namespace Nikse.SubtitleEdit.Core
                     // though advertised, this code page is not supported
                 }
             }
-            return encodings.ToArray();
+            return encodings;
         }
 
     }

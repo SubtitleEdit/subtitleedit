@@ -1,12 +1,12 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.Ocr.Binary;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 using System.Xml;
-using Nikse.SubtitleEdit.Core;
-using Nikse.SubtitleEdit.Logic;
-using Nikse.SubtitleEdit.Logic.Ocr.Binary;
 
 namespace Nikse.SubtitleEdit.Forms.Ocr
 {
@@ -22,7 +22,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         internal VobSubEditCharacters(string databaseFolderName, List<VobSubOcr.ImageCompareAddition> additions, BinaryOcrDb binOcrDb)
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
+
             labelExpandCount.Text = string.Empty;
             _binOcrDb = binOcrDb;
             labelCount.Text = string.Empty;
@@ -331,7 +334,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     string target = GetSelectedFileName();
                     foreach (var a in Additions)
                     {
-                        if (target.StartsWith(a.Name))
+                        if (target.StartsWith(a.Name, StringComparison.Ordinal))
                         {
                             textBoxText.Text = a.Text;
                             break;
@@ -427,7 +430,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 {
                     foreach (var a in Additions)
                     {
-                        if (target.StartsWith(a.Name))
+                        if (target.StartsWith(a.Name, StringComparison.Ordinal))
                         {
                             a.Text = newText;
                             a.Italic = checkBoxItalic.Checked;
@@ -463,7 +466,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                             comboBoxTexts.SelectedIndex = i;
                             for (int j = 0; j < listBoxFileNames.Items.Count; j++)
                             {
-                                if (GetFileName(j).StartsWith(target))
+                                if (GetFileName(j).StartsWith(target, StringComparison.Ordinal))
                                     listBoxFileNames.SelectedIndex = j;
                             }
                             return;
@@ -568,7 +571,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         {
                             for (int j = 0; j < listBoxFileNames.Items.Count; j++)
                             {
-                                if (GetFileName(j).StartsWith(name))
+                                if (GetFileName(j).StartsWith(name, StringComparison.Ordinal))
                                     listBoxFileNames.SelectedIndex = j;
                             }
                         }

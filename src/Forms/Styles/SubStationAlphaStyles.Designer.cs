@@ -1,6 +1,6 @@
 ﻿namespace Nikse.SubtitleEdit.Forms.Styles
 {
-    partial class SubStationAlphaStyles
+    sealed partial class SubStationAlphaStyles
     {
         /// <summary>
         /// Required designer variable.
@@ -186,28 +186,28 @@
             // copyToolStripMenuItem
             // 
             this.copyToolStripMenuItem.Name = "copyToolStripMenuItem";
-            this.copyToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.copyToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
             this.copyToolStripMenuItem.Text = "Copy";
             this.copyToolStripMenuItem.Click += new System.EventHandler(this.copyToolStripMenuItem_Click);
             // 
             // newToolStripMenuItem
             // 
             this.newToolStripMenuItem.Name = "newToolStripMenuItem";
-            this.newToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.newToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
             this.newToolStripMenuItem.Text = "New";
             this.newToolStripMenuItem.Click += new System.EventHandler(this.newToolStripMenuItem_Click);
             // 
             // removeToolStripMenuItem
             // 
             this.removeToolStripMenuItem.Name = "removeToolStripMenuItem";
-            this.removeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.removeToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
             this.removeToolStripMenuItem.Text = "Remove";
             this.removeToolStripMenuItem.Click += new System.EventHandler(this.removeToolStripMenuItem_Click);
             // 
             // removeAllToolStripMenuItem
             // 
             this.removeAllToolStripMenuItem.Name = "removeAllToolStripMenuItem";
-            this.removeAllToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.removeAllToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
             this.removeAllToolStripMenuItem.Text = "Remove all";
             this.removeAllToolStripMenuItem.Click += new System.EventHandler(this.removeAllToolStripMenuItem_Click);
             // 
@@ -384,24 +384,36 @@
             // 
             // numericUpDownShadowWidth
             // 
-            this.numericUpDownShadowWidth.Location = new System.Drawing.Point(186, 18);
+            this.numericUpDownShadowWidth.DecimalPlaces = 1;
+            this.numericUpDownShadowWidth.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.numericUpDownShadowWidth.Location = new System.Drawing.Point(194, 18);
             this.numericUpDownShadowWidth.Name = "numericUpDownShadowWidth";
-            this.numericUpDownShadowWidth.Size = new System.Drawing.Size(44, 20);
+            this.numericUpDownShadowWidth.Size = new System.Drawing.Size(52, 20);
             this.numericUpDownShadowWidth.TabIndex = 3;
             this.numericUpDownShadowWidth.ValueChanged += new System.EventHandler(this.numericUpDownShadowWidth_ValueChanged);
             // 
             // numericUpDownOutline
             // 
+            this.numericUpDownOutline.DecimalPlaces = 1;
+            this.numericUpDownOutline.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
             this.numericUpDownOutline.Location = new System.Drawing.Point(76, 18);
             this.numericUpDownOutline.Name = "numericUpDownOutline";
-            this.numericUpDownOutline.Size = new System.Drawing.Size(44, 20);
+            this.numericUpDownOutline.Size = new System.Drawing.Size(52, 20);
             this.numericUpDownOutline.TabIndex = 1;
             this.numericUpDownOutline.ValueChanged += new System.EventHandler(this.numericUpDownOutline_ValueChanged);
             // 
             // labelShadow
             // 
             this.labelShadow.AutoSize = true;
-            this.labelShadow.Location = new System.Drawing.Point(126, 21);
+            this.labelShadow.Location = new System.Drawing.Point(134, 21);
             this.labelShadow.Name = "labelShadow";
             this.labelShadow.Size = new System.Drawing.Size(58, 13);
             this.labelShadow.TabIndex = 2;

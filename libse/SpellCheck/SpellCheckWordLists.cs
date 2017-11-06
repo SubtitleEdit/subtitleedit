@@ -12,10 +12,10 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
     public class SpellCheckWordLists
     {
 
-        public static readonly string SplitChars = " -.,?!:;\"“”()[]{}|<>/+\r\n¿¡…—–♪♫„“«»‹›";
+        public static readonly string SplitChars = " -.,?!:;\"“”()[]{}|<>/+\r\n¿¡…—–♪♫„«»‹›؛،؟";
 
         private static readonly char[] PeriodAndDash = { '.', '-' };
-        private static readonly char[] SplitChars2 = { ' ', '.', ',', '?', '!', ':', ';', '"', '“', '”', '(', ')', '[', ']', '{', '}', '|', '<', '>', '/', '+', '\r', '\n', '¿', '¡', '…', '—', '–', '♪', '♫', '„', '“', '«', '»', '‹', '›' };
+        private static readonly char[] SplitChars2 = { ' ', '.', ',', '?', '!', ':', ';', '"', '“', '”', '(', ')', '[', ']', '{', '}', '|', '<', '>', '/', '+', '\r', '\n', '¿', '¡', '…', '—', '–', '♪', '♫', '„', '«', '»', '‹', '›', '؛', '،', '؟' };
 
         private readonly NameList _nameList;
         private readonly HashSet<string> _names;
@@ -30,9 +30,9 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
         public SpellCheckWordLists(string dictionaryFolder, string languageName, IDoSpell doSpell)
         {
             if (languageName == null)
-                throw new NullReferenceException("languageName");
+                throw new NullReferenceException(nameof(languageName));
             if (doSpell == null)
-                throw new NullReferenceException("doSpell");
+                throw new NullReferenceException(nameof(doSpell));
 
             _languageName = languageName;
             _doSpell = doSpell;

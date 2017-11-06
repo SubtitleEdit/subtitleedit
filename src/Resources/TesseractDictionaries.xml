@@ -62,7 +62,7 @@
   </Dictionary>
   <Dictionary>
     <EnglishName>Croatian</EnglishName>
-    <DownloadLink>https://github.com/SubtitleEdit/support-files/raw/master/tessdata/tesseract-ocr-3.02.hvr.tar.gz</DownloadLink>
+    <DownloadLink>https://github.com/SubtitleEdit/support-files/raw/master/tessdata/tesseract-ocr-3.02.hrv.tar.gz</DownloadLink>
     <Description>Croatian language data for Tesseract 3.02</Description>
   </Dictionary>
   <Dictionary>
@@ -194,6 +194,11 @@
     <EnglishName>Norwegian</EnglishName>
     <DownloadLink>https://github.com/SubtitleEdit/support-files/raw/master/tessdata/tesseract-ocr-3.02.nor.tar.gz</DownloadLink>
     <Description>Norwegian language data for Tesseract 3.02</Description>
+  </Dictionary>
+  <Dictionary>
+    <EnglishName>Persian</EnglishName>
+    <DownloadLink>https://github.com/SubtitleEdit/support-files/raw/master/tessdata/tesseract-ocr-3.02.fas.tar.gz</DownloadLink>
+    <Description>Persian/Farsi language data for Tesseract 3.02</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Polish</EnglishName>

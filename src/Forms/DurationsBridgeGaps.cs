@@ -14,12 +14,25 @@ namespace Nikse.SubtitleEdit.Forms
         private Subtitle _fixedSubtitle;
         private Dictionary<string, string> _dic;
         private readonly Timer _refreshTimer = new Timer();
-        public Subtitle FixedSubtitle { get { return _fixedSubtitle; } }
+        public Subtitle FixedSubtitle => _fixedSubtitle;
         public int FixedCount { get; private set; }
+        public int MinMsBetweenLines
+        {
+            get { return (int)numericUpDownMinMsBetweenLines.Value; }
+            set { numericUpDownMinMsBetweenLines.Value = value; }
+        }
+
+        public bool PreviousSubtitleTakesAllTime
+        {
+            get { return radioButtonProlongEndTime.Checked; }
+            set { radioButtonProlongEndTime.Checked = value; }
+        }
 
         public DurationsBridgeGaps(Subtitle subtitle)
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
             UiUtil.FixLargeFonts(this, buttonOK);
 
             SubtitleListview1.HideColumn(SubtitleListView.SubtitleColumn.CharactersPerSeconds);
@@ -42,6 +55,7 @@ namespace Nikse.SubtitleEdit.Forms
             numericUpDownMinMsBetweenLines.Left = labelMinMsBetweenLines.Left + labelMinMsBetweenLines.Width + 4;
             radioButtonProlongEndTime.Text = Configuration.Settings.Language.DurationsBridgeGaps.ProlongEndTime;
             radioButtonDivideEven.Text = Configuration.Settings.Language.DurationsBridgeGaps.DivideEven;
+            groupBoxLinesFound.Text = string.Empty;
 
             _subtitle = subtitle;
             try
@@ -55,9 +69,12 @@ namespace Nikse.SubtitleEdit.Forms
             if (Configuration.Settings.General.MinimumMillisecondsBetweenLines >= 1 && Configuration.Settings.General.MinimumMillisecondsBetweenLines <= numericUpDownMinMsBetweenLines.Maximum)
                 numericUpDownMinMsBetweenLines.Value = Configuration.Settings.General.MinimumMillisecondsBetweenLines;
 
-            _refreshTimer.Interval = 400;
-            _refreshTimer.Tick += RefreshTimerTick;
-            GeneratePreview();
+            if (subtitle != null)
+            {
+                _refreshTimer.Interval = 400;
+                _refreshTimer.Tick += RefreshTimerTick;
+                GeneratePreview();
+            }
         }
 
         private void RefreshTimerTick(object sender, EventArgs e)
@@ -94,48 +111,19 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void GeneratePreviewReal()
         {
+            groupBoxLinesFound.Text = string.Empty;
             if (_subtitle == null)
                 return;
 
             Cursor = Cursors.WaitCursor;
             SubtitleListview1.Items.Clear();
             SubtitleListview1.BeginUpdate();
-            FixedCount = 0;
             _fixedSubtitle = new Subtitle(_subtitle);
             _dic = new Dictionary<string, string>();
             var fixedIndexes = new List<int>(_fixedSubtitle.Paragraphs.Count);
 
             var minMsBetweenLines = (int)numericUpDownMinMsBetweenLines.Value;
-            for (int i = 0; i < _fixedSubtitle.Paragraphs.Count - 1; i++)
-            {
-                Paragraph cur = _fixedSubtitle.Paragraphs[i];
-                Paragraph next = _fixedSubtitle.Paragraphs[i + 1];
-                string before = null;
-                var difMs = Math.Abs(cur.EndTime.TotalMilliseconds - next.StartTime.TotalMilliseconds);
-                if (difMs < (double)numericUpDownMaxMs.Value && difMs > minMsBetweenLines && numericUpDownMaxMs.Value > minMsBetweenLines)
-                {
-                    before = string.Format("{0:0.000}", (next.StartTime.TotalMilliseconds - cur.EndTime.TotalMilliseconds) / TimeCode.BaseUnit);
-                    if (radioButtonDivideEven.Checked && next.StartTime.TotalMilliseconds > cur.EndTime.TotalMilliseconds)
-                    {
-                        double half = (next.StartTime.TotalMilliseconds - cur.EndTime.TotalMilliseconds) / 2.0;
-                        next.StartTime.TotalMilliseconds -= half;
-                    }
-                    cur.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - minMsBetweenLines;
-                    fixedIndexes.Add(i);
-                    fixedIndexes.Add(i + 1);
-                    FixedCount++;
-                }
-                var msToNext = next.StartTime.TotalMilliseconds - cur.EndTime.TotalMilliseconds;
-                if (msToNext < 2000)
-                {
-                    string info;
-                    if (!string.IsNullOrEmpty(before))
-                        info = string.Format("{0} => {1:0.000}", before, msToNext / TimeCode.BaseUnit);
-                    else
-                        info = string.Format("{0:0.000}", msToNext / TimeCode.BaseUnit);
-                    _dic.Add(cur.ID, info);
-                }
-            }
+            FixedCount = Core.Forms.DurationsBridgeGaps.BridgeGaps(_fixedSubtitle, minMsBetweenLines, radioButtonDivideEven.Checked, (double)numericUpDownMaxMs.Value, fixedIndexes, _dic);
 
             SubtitleListview1.Fill(_fixedSubtitle);
             for (int i = 0; i < _fixedSubtitle.Paragraphs.Count - 1; i++)
@@ -208,5 +196,12 @@ namespace Nikse.SubtitleEdit.Forms
             SubtitleListview1.Columns[columnsCount].Width = lastColumnWidth;
         }
 
+        public void InitializeSettingsOnly()
+        {
+            groupBoxLinesFound.Enabled = false;
+            Height = MinimumSize.Height;
+            MaximizeBox = false;
+            MinimizeBox = false;
+        }
     }
 }

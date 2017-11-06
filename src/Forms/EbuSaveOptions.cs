@@ -1,5 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Globalization;
 using System.IO;
@@ -17,7 +18,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public EbuSaveOptions()
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
 
             var language = Configuration.Settings.Language.EbuSaveOptions;
             Text = language.Title;

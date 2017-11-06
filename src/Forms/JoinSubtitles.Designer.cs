@@ -169,7 +169,7 @@
             this.buttonAddVobFile.TabIndex = 102;
             this.buttonAddVobFile.Text = "Add...";
             this.buttonAddVobFile.UseVisualStyleBackColor = true;
-            this.buttonAddVobFile.Click += new System.EventHandler(this.buttonAddVobFile_Click);
+            this.buttonAddVobFile.Click += new System.EventHandler(this.ButtonAddSubtitleClick);
             // 
             // openFileDialog1
             // 

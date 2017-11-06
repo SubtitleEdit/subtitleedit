@@ -9,32 +9,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     {
         private static readonly Regex RegexTimeCodes = new Regex(@"^\d\d:\d\d:\d\d:\d\d\t\d\d:\d\d:\d\d:\d\d\t", RegexOptions.Compiled);
 
-        public override string Extension
-        {
-            get { return ".txt"; }
-        }
+        public override string Extension => ".txt";
 
-        public override string Name
-        {
-            get { return "Adobe Encore (tabs)"; }
-        }
-
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
-
-        public override bool IsMine(List<string> lines, string fileName)
-        {
-            var subtitle = new Subtitle();
-
-            var sb = new StringBuilder();
-            foreach (string line in lines)
-                sb.AppendLine(line);
-
-            LoadSubtitle(subtitle, lines, fileName);
-            return subtitle.Paragraphs.Count > _errorCount;
-        }
+        public override string Name => "Adobe Encore (tabs)";
 
         public override string ToText(Subtitle subtitle, string title)
         {
@@ -42,7 +19,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 //00:00:54:08   00:00:58:06 - Saucers... - ... a dry lake bed.  (newline is \r)
-                sb.AppendLine(string.Format("{0}\t{1}\t{2}", EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), HtmlUtil.RemoveHtmlTags(p.Text, true).Replace(Environment.NewLine, "\r")));
+                sb.AppendLine($"{EncodeTimeCode(p.StartTime)}\t{EncodeTimeCode(p.EndTime)}\t{HtmlUtil.RemoveHtmlTags(p.Text, true).Replace(Environment.NewLine, "\r")}");
             }
             return sb.ToString();
         }
@@ -82,9 +59,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 else if (string.IsNullOrWhiteSpace(line))
                 {
                 }
-                else if (p != null)
+                else
                 {
-                    if (p.Text.Length < 200)
+                    if (p?.Text.Length < 200)
                         p.Text = (p.Text + Environment.NewLine + line).Trim();
                 }
             }

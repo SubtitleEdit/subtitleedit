@@ -1,8 +1,9 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Logic;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows.Forms;
-using System.Diagnostics;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -13,7 +14,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public NetflixQCResult(string message, List<string> filesToLocate)
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
 
             Message = message;
             FilesToLocate = filesToLocate;

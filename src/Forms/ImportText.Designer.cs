@@ -34,6 +34,8 @@
             this.listViewInputFiles = new System.Windows.Forms.ListView();
             this.columnHeaderFName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderSize = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.contextMenuStripListView = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.clearToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.checkBoxMultipleFiles = new System.Windows.Forms.CheckBox();
             this.textBoxText = new System.Windows.Forms.TextBox();
             this.groupBoxImportOptions = new System.Windows.Forms.GroupBox();
@@ -57,13 +59,12 @@
             this.radioButtonLineMode = new System.Windows.Forms.RadioButton();
             this.checkBoxRemoveEmptyLines = new System.Windows.Forms.CheckBox();
             this.groupBoxImportResult = new System.Windows.Forms.GroupBox();
+            this.SubtitleListview1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
-            this.contextMenuStripListView = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.clearToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.SubtitleListview1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.groupBoxImportText.SuspendLayout();
+            this.contextMenuStripListView.SuspendLayout();
             this.groupBoxImportOptions.SuspendLayout();
             this.groupBoxTimeCodes.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownGapBetweenLines)).BeginInit();
@@ -71,7 +72,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDurationFixed)).BeginInit();
             this.groupBoxSplitting.SuspendLayout();
             this.groupBoxImportResult.SuspendLayout();
-            this.contextMenuStripListView.SuspendLayout();
             this.SuspendLayout();
             // 
             // buttonOpenText
@@ -130,6 +130,20 @@
             // 
             this.columnHeaderSize.Text = "Size";
             this.columnHeaderSize.Width = 81;
+            // 
+            // contextMenuStripListView
+            // 
+            this.contextMenuStripListView.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.clearToolStripMenuItem});
+            this.contextMenuStripListView.Name = "contextMenuStripListView";
+            this.contextMenuStripListView.Size = new System.Drawing.Size(102, 26);
+            // 
+            // clearToolStripMenuItem
+            // 
+            this.clearToolStripMenuItem.Name = "clearToolStripMenuItem";
+            this.clearToolStripMenuItem.Size = new System.Drawing.Size(101, 22);
+            this.clearToolStripMenuItem.Text = "Clear";
+            this.clearToolStripMenuItem.Click += new System.EventHandler(this.clearToolStripMenuItem_Click);
             // 
             // checkBoxMultipleFiles
             // 
@@ -437,6 +451,32 @@
             this.groupBoxImportResult.TabStop = false;
             this.groupBoxImportResult.Text = "Preview";
             // 
+            // SubtitleListview1
+            // 
+            this.SubtitleListview1.AllowColumnReorder = true;
+            this.SubtitleListview1.AllowDrop = true;
+            this.SubtitleListview1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.SubtitleListview1.FirstVisibleIndex = -1;
+            this.SubtitleListview1.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SubtitleListview1.FullRowSelect = true;
+            this.SubtitleListview1.GridLines = true;
+            this.SubtitleListview1.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            this.SubtitleListview1.HideSelection = false;
+            this.SubtitleListview1.Location = new System.Drawing.Point(6, 19);
+            this.SubtitleListview1.MultiSelect = false;
+            this.SubtitleListview1.Name = "SubtitleListview1";
+            this.SubtitleListview1.OwnerDraw = true;
+            this.SubtitleListview1.Size = new System.Drawing.Size(882, 204);
+            this.SubtitleListview1.SubtitleFontBold = false;
+            this.SubtitleListview1.SubtitleFontName = "Tahoma";
+            this.SubtitleListview1.SubtitleFontSize = 8;
+            this.SubtitleListview1.TabIndex = 0;
+            this.SubtitleListview1.UseCompatibleStateImageBehavior = false;
+            this.SubtitleListview1.UseSyntaxColoring = true;
+            this.SubtitleListview1.View = System.Windows.Forms.View.Details;
+            // 
             // openFileDialog1
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
@@ -465,46 +505,6 @@
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.ButtonOkClick);
             // 
-            // contextMenuStripListView
-            // 
-            this.contextMenuStripListView.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.clearToolStripMenuItem});
-            this.contextMenuStripListView.Name = "contextMenuStripListView";
-            this.contextMenuStripListView.Size = new System.Drawing.Size(102, 26);
-            // 
-            // clearToolStripMenuItem
-            // 
-            this.clearToolStripMenuItem.Name = "clearToolStripMenuItem";
-            this.clearToolStripMenuItem.Size = new System.Drawing.Size(101, 22);
-            this.clearToolStripMenuItem.Text = "Clear";
-            this.clearToolStripMenuItem.Click += new System.EventHandler(this.clearToolStripMenuItem_Click);
-            // 
-            // SubtitleListview1
-            // 
-            this.SubtitleListview1.AllowColumnReorder = true;
-            this.SubtitleListview1.AllowDrop = true;
-            this.SubtitleListview1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.SubtitleListview1.FirstVisibleIndex = -1;
-            this.SubtitleListview1.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SubtitleListview1.FullRowSelect = true;
-            this.SubtitleListview1.GridLines = true;
-            this.SubtitleListview1.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-            this.SubtitleListview1.HideSelection = false;
-            this.SubtitleListview1.Location = new System.Drawing.Point(6, 19);
-            this.SubtitleListview1.MultiSelect = false;
-            this.SubtitleListview1.Name = "SubtitleListview1";
-            this.SubtitleListview1.OwnerDraw = true;
-            this.SubtitleListview1.Size = new System.Drawing.Size(882, 204);
-            this.SubtitleListview1.SubtitleFontBold = false;
-            this.SubtitleListview1.SubtitleFontName = "Tahoma";
-            this.SubtitleListview1.SubtitleFontSize = 8;
-            this.SubtitleListview1.TabIndex = 0;
-            this.SubtitleListview1.UseCompatibleStateImageBehavior = false;
-            this.SubtitleListview1.UseSyntaxColoring = true;
-            this.SubtitleListview1.View = System.Windows.Forms.View.Details;
-            // 
             // ImportText
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -524,9 +524,11 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Import text";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ImportText_FormClosing);
+            this.Shown += new System.EventHandler(this.ImportText_Shown);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ImportTextKeyDown);
             this.groupBoxImportText.ResumeLayout(false);
             this.groupBoxImportText.PerformLayout();
+            this.contextMenuStripListView.ResumeLayout(false);
             this.groupBoxImportOptions.ResumeLayout(false);
             this.groupBoxImportOptions.PerformLayout();
             this.groupBoxTimeCodes.ResumeLayout(false);
@@ -538,7 +540,6 @@
             this.groupBoxSplitting.ResumeLayout(false);
             this.groupBoxSplitting.PerformLayout();
             this.groupBoxImportResult.ResumeLayout(false);
-            this.contextMenuStripListView.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
