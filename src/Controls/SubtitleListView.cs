@@ -1251,14 +1251,7 @@ namespace Nikse.SubtitleEdit.Controls
                         item.SubItems.Add($"{paragraph.WordsPerMinute:0.00}");
                         break;
                     case SubtitleColumn.Gap:
-                        if (next == null)
-                        {
-                            item.SubItems.Add(string.Empty);
-                        }
-                        else
-                        {
-                            item.SubItems.Add(new TimeCode(next.StartTime.TotalMilliseconds - paragraph.EndTime.TotalMilliseconds).ToShortDisplayString());
-                        }
+                        item.SubItems.Add(GetGap(paragraph, next));
                         break;
                     case SubtitleColumn.Actor:
                         item.SubItems.Add(paragraph.Actor);
@@ -1404,14 +1397,7 @@ namespace Nikse.SubtitleEdit.Controls
                 if (ColumnIndexDuration >= 0)
                     item.SubItems[ColumnIndexDuration].Text = paragraph.Duration.ToShortDisplayString();
                 if (ColumnIndexGap >= 0)
-                    if (next == null)
-                    {
-                        item.SubItems[ColumnIndexGap].Text = string.Empty;
-                    }
-                    else
-                    {
-                        item.SubItems[ColumnIndexGap].Text = new TimeCode(next.StartTime.TotalMilliseconds - paragraph.EndTime.TotalMilliseconds).ToShortDisplayString();
-                    }
+                    item.SubItems[ColumnIndexGap].Text = GetGap(paragraph, next);
                 if (ColumnIndexActor >= 0)
                     item.SubItems[ColumnIndexActor].Text = paragraph.Actor;
                 if (ColumnIndexRegion >= 0)
@@ -1506,16 +1492,7 @@ namespace Nikse.SubtitleEdit.Controls
                 if (ColumnIndexDuration >= 0)
                     item.SubItems[ColumnIndexDuration].Text = paragraph.Duration.ToShortDisplayString();
                 if (ColumnIndexGap >= 0)
-                {
-                    if (next == null)
-                    {
-                        item.SubItems[ColumnIndexGap].Text = string.Empty;
-                    }
-                    else
-                    {
-                        item.SubItems[ColumnIndexGap].Text = new TimeCode(next.StartTime.TotalMilliseconds - paragraph.EndTime.TotalMilliseconds).ToShortDisplayString();
-                    }
-                }
+                  item.SubItems[ColumnIndexGap].Text = GetGap(paragraph, next);
                 UpdateCpsAndWpm(item, paragraph);
             }
         }
@@ -1551,7 +1528,7 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        public void SetStartTimeAndDuration(int index, Paragraph paragraph, Paragraph next)
+        public void SetStartTimeAndDuration(int index, Paragraph paragraph, Paragraph next, Paragraph prev)
         {
             if (IsValidIndex(index))
             {
@@ -1563,17 +1540,31 @@ namespace Nikse.SubtitleEdit.Controls
                 if (ColumnIndexDuration >= 0)
                     item.SubItems[ColumnIndexDuration].Text = paragraph.Duration.ToShortDisplayString();
                 if (ColumnIndexGap >= 0)
-                {
-                    if (next == null)
-                    {
-                        item.SubItems[ColumnIndexGap].Text = string.Empty;
-                    }
-                    else
-                    {
-                        item.SubItems[ColumnIndexGap].Text = new TimeCode(next.StartTime.TotalMilliseconds - paragraph.EndTime.TotalMilliseconds).ToShortDisplayString();
-                    }
-                }
+                    item.SubItems[ColumnIndexGap].Text = GetGap(paragraph, next);
                 UpdateCpsAndWpm(item, paragraph);
+            }
+            SetGap(index - 1, prev, paragraph);
+        }
+
+        private void SetGap(int index, Paragraph paragraph, Paragraph next)
+        {
+            if (IsValidIndex(index))
+            {
+                ListViewItem item = Items[index];
+                if (ColumnIndexGap >= 0)
+                    item.SubItems[ColumnIndexGap].Text = GetGap(paragraph, next);
+            }
+        }
+
+        private string GetGap(Paragraph paragraph, Paragraph next)
+        {
+            if (next == null || next.StartTime.IsMaxTime || paragraph.EndTime.IsMaxTime)
+            {
+                return string.Empty;
+            }
+            else
+            {
+                return new TimeCode(next.StartTime.TotalMilliseconds - paragraph.EndTime.TotalMilliseconds).ToShortDisplayString();
             }
         }
 
