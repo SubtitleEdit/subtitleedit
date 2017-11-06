@@ -52,7 +52,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        internal void Initialize(AdjustEventHandler adjustCallback, bool onlySelected, DeltaVideoEventHandler deltaCallback)
+        internal void Initialize(AdjustEventHandler adjustCallback, bool onlySelected, DeltaVideoEventHandler deltaCallback=null)
         {
             if (onlySelected)
                 radioButtonSelectedLinesOnly.Checked = true;
@@ -118,7 +118,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonVideoSync_Click(object sender, EventArgs e)
         {
-            TimeCode delta = _deltaCallback.Invoke();
+            TimeCode delta = _deltaCallback?.Invoke();
             if (delta != null)
             {
                 TimeCode reactiontime = timeUpDownAdjust.TimeCode;
