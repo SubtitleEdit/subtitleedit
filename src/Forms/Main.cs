@@ -6809,21 +6809,17 @@ namespace Nikse.SubtitleEdit.Forms
             if (!string.IsNullOrEmpty(style))
             {
                 MakeHistoryForUndo("Set style: " + style);
-
-                var format = GetCurrentSubtitleFormat();
-                var formatType = format.GetType();
-                if ((formatType == typeof(TimedText10) || formatType == typeof(ItunesTimedText)))
+                var formatType = GetCurrentSubtitleFormat().GetType();
+                bool isTimedText = formatType == typeof(TimedText10) || formatType == typeof(ItunesTimedText);
+                foreach (int index in SubtitleListview1.SelectedIndices)
                 {
-                    foreach (int index in SubtitleListview1.SelectedIndices)
+                    if (isTimedText)
                     {
                         _subtitle.Paragraphs[index].Style = style;
                         _subtitle.Paragraphs[index].Extra = TimedText10.SetExtra(_subtitle.Paragraphs[index]);
                         SubtitleListview1.SetExtraText(index, _subtitle.Paragraphs[index].Extra, SubtitleListview1.ForeColor);
                     }
-                }
-                else
-                {
-                    foreach (int index in SubtitleListview1.SelectedIndices)
+                    else
                     {
                         _subtitle.Paragraphs[index].Extra = style;
                         SubtitleListview1.SetExtraText(index, style, SubtitleListview1.ForeColor);
@@ -7148,11 +7144,11 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else
             {
-                indices.Reverse();
-                foreach (int i in indices)
+                for (int i = indices.Count - 1; i >= 0; i--)
                 {
-                    _subtitle.Paragraphs.RemoveAt(i);
-                    if (_networkSession != null && _networkSession.LastSubtitle != null && i < _networkSession.LastSubtitle.Paragraphs.Count)
+                    int idx = indices[i];
+                    _subtitle.Paragraphs.RemoveAt(idx);
+                    if (_networkSession?.LastSubtitle?.Paragraphs.Count > idx)
                         _networkSession.LastSubtitle.Paragraphs.RemoveAt(i);
                 }
                 _subtitle.Renumber();
