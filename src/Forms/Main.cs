@@ -15842,12 +15842,16 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else
             {
-                SubtitleListview1.Focus();
                 int index = FirstSelectedIndex;
-                if (index > 0 && SubtitleListview1.Items.Count > index)
+                if (index > 0)
                 {
                     SubtitleListview1.Focus();
                     SubtitleListview1.Items[index].Focused = true;
+                }
+                else
+                {
+                    InsertBefore();
+                    textBoxListViewText.Focus();
                 }
             }
             MainResize();
