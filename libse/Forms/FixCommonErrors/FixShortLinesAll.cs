@@ -8,27 +8,29 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
         {
             var language = Configuration.Settings.Language.FixCommonErrors;
             string fixAction = language.MergeShortLineAll;
-            int noOfShortLines = 0;
+            int fixCount = 0;
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
                 Paragraph p = subtitle.Paragraphs[i];
-                if (callbacks.AllowFix(p, fixAction))
+                string text = p.Text;
+                if (callbacks.AllowFix(p, fixAction) && text.Contains(Environment.NewLine))
                 {
-                    string s = HtmlUtil.RemoveHtmlTags(p.Text, true);
-                    if (s.Replace(Environment.NewLine, " ").Replace("  ", " ").Length < Configuration.Settings.Tools.MergeLinesShorterThan && p.Text.Contains(Environment.NewLine))
+                    text = HtmlUtil.RemoveHtmlTags(text, true);
+                    text = text.Replace(Environment.NewLine, " ");
+                    text = text.FixExtraSpaces();
+                    if (text.Length < Configuration.Settings.Tools.MergeLinesShorterThan)
                     {
-                        s = Utilities.AutoBreakLine(p.Text, callbacks.Language);
-                        if (s != p.Text)
+                        text = Utilities.AutoBreakLine(p.Text, callbacks.Language);
+                        if (text != p.Text)
                         {
-                            string oldCurrent = p.Text;
-                            p.Text = s;
-                            noOfShortLines++;
-                            callbacks.AddFixToListView(p, fixAction, oldCurrent, p.Text);
+                            fixCount++;
+                            callbacks.AddFixToListView(p, fixAction, p.Text, text);
+                            p.Text = text;
                         }
                     }
                 }
             }
-            callbacks.UpdateFixStatus(noOfShortLines, language.RemoveLineBreaks, string.Format(language.XLinesUnbreaked, noOfShortLines));
+            callbacks.UpdateFixStatus(fixCount, language.RemoveLineBreaks, string.Format(language.XLinesUnbreaked, fixCount));
         }
     }
 }
