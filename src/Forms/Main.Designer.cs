@@ -843,6 +843,7 @@
             this.comboBoxSubtitleFormats.DropDownClosed += new System.EventHandler(this.MenuClosed);
             this.comboBoxSubtitleFormats.SelectedIndexChanged += new System.EventHandler(this.ComboBoxSubtitleFormatsSelectedIndexChanged);
             this.comboBoxSubtitleFormats.Enter += new System.EventHandler(this.ComboBoxSubtitleFormatsEnter);
+            this.comboBoxSubtitleFormats.Leave += new System.EventHandler(this.ComboBoxSubtitleFormatsLeave);
             // 
             // toolStripSeparatorEncoding
             // 
