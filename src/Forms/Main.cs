@@ -3337,10 +3337,12 @@ namespace Nikse.SubtitleEdit.Forms
                 RecentFileEntry rfe = null;
                 foreach (var file in Configuration.Settings.RecentFiles.Files)
                 {
-                    if (file.FileName == item.Text)
+                    if (file.FileName.Equals(item.Text, StringComparison.OrdinalIgnoreCase))
+                    {
                         rfe = file;
+                        break;
+                    }
                 }
-                SubtitleListview1.BeginUpdate();
                 if (rfe == null)
                 {
                     OpenSubtitle(item.Text, null);
@@ -3358,7 +3360,6 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 GotoSubPosAndPause();
                 SetRecentIndices(item.Text);
-                SubtitleListview1.EndUpdate();
                 if (rfe != null && !string.IsNullOrEmpty(rfe.VideoFileName))
                 {
                     var p = _subtitle.GetParagraphOrDefault(rfe.FirstSelectedIndex);
