@@ -3,6 +3,7 @@ using Nikse.SubtitleEdit.Core.Dictionaries;
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
@@ -63,6 +64,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             var nameList = new NameList(Configuration.DictionariesDirectory, language, Configuration.Settings.WordLists.UseOnlineNames, Configuration.Settings.WordLists.NamesUrl);
             var names = nameList.GetAllNames();
+            var subCulture = GetCultureInfoFromLanguage(language);
 
             // Longer names must be first
             names.Sort((s1, s2) => s2.Length.CompareTo(s1.Length));
@@ -70,7 +72,7 @@ namespace Nikse.SubtitleEdit.Forms
             string lastLine = string.Empty;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                p.Text = FixCasing(p.Text, lastLine, names);
+                p.Text = FixCasing(p.Text, lastLine, names, subCulture);
 
                 // fix casing of English alone i to I
                 if (radioButtonNormal.Checked && language.StartsWith("en", StringComparison.Ordinal))
@@ -79,6 +81,18 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 lastLine = p.Text;
+            }
+        }
+
+        private CultureInfo GetCultureInfoFromLanguage(string language)
+        {
+            try
+            {
+                return CultureInfo.GetCultureInfo(language);
+            }
+            catch
+            {
+                return CultureInfo.CurrentUICulture;
             }
         }
 
@@ -99,18 +113,18 @@ namespace Nikse.SubtitleEdit.Forms
             return text;
         }
 
-        private string FixCasing(string text, string lastLine, List<string> nameList)
+        private string FixCasing(string text, string lastLine, List<string> nameList, CultureInfo subtitleCulture)
         {
             string original = text;
             if (radioButtonNormal.Checked)
             {
-                if (checkBoxOnlyAllUpper.Checked && text != text.ToUpper())
+                if (checkBoxOnlyAllUpper.Checked && text != text.ToUpper(subtitleCulture))
                     return text;
 
                 if (text.Length > 1)
                 {
                     // first all to lower
-                    text = text.ToLower().Trim();
+                    text = text.ToLower(subtitleCulture).Trim();
                     text = text.FixExtraSpaces();
                     var st = new StrippableText(text);
                     st.FixCasing(nameList, false, true, true, lastLine); // fix all casing but names (that's a seperate option)
@@ -120,7 +134,7 @@ namespace Nikse.SubtitleEdit.Forms
             else if (radioButtonUppercase.Checked)
             {
                 var st = new StrippableText(text);
-                text = st.Pre + st.StrippedText.ToUpper() + st.Post;
+                text = st.Pre + st.StrippedText.ToUpper(subtitleCulture) + st.Post;
                 text = HtmlUtil.FixUpperTags(text); // tags inside text
             }
             else if (radioButtonLowercase.Checked)
