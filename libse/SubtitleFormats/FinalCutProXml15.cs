@@ -186,8 +186,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 var trimmedTitle = new StringBuilder();
                 foreach (var ch in HtmlUtil.RemoveHtmlTags(p.Text, true))
                 {
-                    if ("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".Contains(ch.ToString(CultureInfo.InvariantCulture)))
-                        trimmedTitle.Append(ch.ToString(CultureInfo.InvariantCulture));
+                    if (CharUtils.IsEnglishAlphabet(ch) || char.IsDigit(ch))
+                    {
+                        trimmedTitle.Append(ch);
+                    }
                 }
 
                 var styles = new List<FcpXmlStyle>() { DefaultStyle };
