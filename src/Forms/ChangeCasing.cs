@@ -10,6 +10,8 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class ChangeCasing : PositionAndSizeForm
     {
+        private const string Pre = " >¡¿♪♫([";
+        private const string Post = " <!?.:;,♪♫)]";
         private int _noOfLinesChanged;
 
         public ChangeCasing()
@@ -69,13 +71,15 @@ namespace Nikse.SubtitleEdit.Forms
             // Longer names must be first
             names.Sort((s1, s2) => s2.Length.CompareTo(s1.Length));
 
+            bool fixLowercaseI = language.StartsWith("en", StringComparison.Ordinal) && radioButtonNormal.Checked;
+
             string lastLine = string.Empty;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 p.Text = FixCasing(p.Text, lastLine, names, subCulture);
 
                 // fix casing of English alone i to I
-                if (radioButtonNormal.Checked && language.StartsWith("en", StringComparison.Ordinal))
+                if (fixLowercaseI)
                 {
                     p.Text = FixEnglishAloneILowerToUpper(p.Text);
                 }
@@ -98,13 +102,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         public static string FixEnglishAloneILowerToUpper(string text)
         {
-            const string pre = " >¡¿♪♫([";
-            const string post = " <!?.:;,♪♫)]";
             for (var indexOfI = text.IndexOf('i'); indexOfI >= 0; indexOfI = text.IndexOf('i', indexOfI + 1))
             {
-                if (indexOfI == 0 || pre.Contains(text[indexOfI - 1]))
+                if (indexOfI == 0 || Pre.Contains(text[indexOfI - 1]))
                 {
-                    if (indexOfI + 1 == text.Length || post.Contains(text[indexOfI + 1]))
+                    if (indexOfI + 1 == text.Length || Post.Contains(text[indexOfI + 1]))
                     {
                         text = text.Remove(indexOfI, 1).Insert(indexOfI, "I");
                     }
