@@ -180,10 +180,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 ;
             XmlNode videoNode = xml.DocumentElement.SelectSingleNode("//project/sequence/spine");
             int number = 1;
+            var trimmedTitle = new StringBuilder();
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 XmlNode video = xml.CreateElement("video");
-                var trimmedTitle = new StringBuilder();
+                trimmedTitle.Clear();
                 foreach (var ch in HtmlUtil.RemoveHtmlTags(p.Text, true))
                 {
                     if (CharUtils.IsEnglishAlphabet(ch) || char.IsDigit(ch))
@@ -195,15 +196,21 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 var styles = new List<FcpXmlStyle>() { DefaultStyle };
                 var text = Utilities.RemoveSsaTags(p.Text).Trim();
                 var sb = new StringBuilder();
-                int i = 0;
                 var italicIndexesBefore = new Stack<int>();
                 var boldIndexesBefore = new Stack<int>();
                 var fontIndexesBefore = new Stack<int>();
                 var styleTextPairs = new Dictionary<int, string>();
-                while (i < text.Length)
+                int textLen = text.Length;
+                for (int i = 0; i < textLen; i++)
                 {
-                    var ch = text[i];
-                    if (ch == '<' && text.Substring(i).StartsWith("<i>", StringComparison.OrdinalIgnoreCase))
+                    char ch = text[i];
+                    if (ch != '<')
+                    {
+                        sb.Append(ch);
+                        continue;
+                    }
+                    string tempText = text.Substring(i);
+                    if (tempText.StartsWith("<i>", StringComparison.OrdinalIgnoreCase))
                     {
                         AddTextAndStyle(styles, sb, styleTextPairs);
                         italicIndexesBefore.Push(styles.Count - 1);
@@ -211,7 +218,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         styles.Add(newStyle);
                         i += 2;
                     }
-                    else if (ch == '<' && text.Substring(i).StartsWith("<b>", StringComparison.OrdinalIgnoreCase))
+                    else if (tempText.StartsWith("<b>", StringComparison.OrdinalIgnoreCase))
                     {
                         AddTextAndStyle(styles, sb, styleTextPairs);
                         boldIndexesBefore.Push(styles.Count - 1);
@@ -219,11 +226,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         styles.Add(newStyle);
                         i += 2;
                     }
-                    else if (ch == '<' && text.Substring(i).StartsWith("<font ", StringComparison.OrdinalIgnoreCase))
+                    else if (tempText.StartsWith("<font ", StringComparison.OrdinalIgnoreCase))
                     {
                         AddTextAndStyle(styles, sb, styleTextPairs);
                         fontIndexesBefore.Push(styles.Count - 1);
-                        var s = text.Substring(i);
+                        var s = tempText;
                         int end = s.IndexOf('>');
                         if (end > 0)
                         {
@@ -266,7 +273,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             i += text.Length;
                         }
                     }
-                    else if (ch == '<' && text.Substring(i).StartsWith("</i>", StringComparison.OrdinalIgnoreCase))
+                    else if (tempText.StartsWith("</i>", StringComparison.OrdinalIgnoreCase))
                     {
                         AddTextAndStyle(styles, sb, styleTextPairs);
                         var newStyle = new FcpXmlStyle(styles[styles.Count - 1]);
@@ -278,7 +285,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         styles.Add(newStyle);
                         i += 3;
                     }
-                    else if (ch == '<' && text.Substring(i).StartsWith("</b>", StringComparison.OrdinalIgnoreCase))
+                    else if (tempText.StartsWith("</b>", StringComparison.OrdinalIgnoreCase))
                     {
                         AddTextAndStyle(styles, sb, styleTextPairs);
                         var newStyle = new FcpXmlStyle(styles[styles.Count - 1]);
@@ -290,7 +297,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         styles.Add(newStyle);
                         i += 3;
                     }
-                    else if (ch == '<' && text.Substring(i).StartsWith("</font>", StringComparison.OrdinalIgnoreCase))
+                    else if (tempText.StartsWith("</font>", StringComparison.OrdinalIgnoreCase))
                     {
                         AddTextAndStyle(styles, sb, styleTextPairs);
                         var newStyle = new FcpXmlStyle(styles[styles.Count - 1]);
@@ -307,14 +314,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     {
                         sb.Append(ch);
                     }
-                    i++;
                 }
                 AddTextAndStyle(styles, sb, styleTextPairs);
                 WriteCurrentTextSegment(styles, styleTextPairs, video, number, trimmedTitle.ToString(), xml);
                 XmlNode generatorNode = video.SelectSingleNode("title");
-                generatorNode.Attributes["offset"].Value = GetFrameTime(p.StartTime);
+                string frameTime = GetFrameTime(p.StartTime);
+                generatorNode.Attributes["offset"].Value = frameTime;
                 generatorNode.Attributes["duration"].Value = GetFrameTime(p.Duration);
-                generatorNode.Attributes["start"].Value = GetFrameTime(p.StartTime);
+                generatorNode.Attributes["start"].Value = frameTime;
                 videoNode.AppendChild(generatorNode);
                 number++;
             }
@@ -407,8 +414,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var g = (double)fontColor.G / byte.MaxValue;
             var b = (double)fontColor.B / byte.MaxValue;
             var a = (double)fontColor.A / byte.MaxValue;
-            var result = $"{r:0.######} {g:0.######} {b:0.######} {a:0.######}";
-            return result;
+            return $"{r:0.######} {g:0.######} {b:0.######} {a:0.######}";
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
@@ -438,24 +444,24 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     {
                         try
                         {
-                            string text = node.ParentNode.InnerText.Replace("\r\r", "\r");
-                            var p = new Paragraph();
-                            p.Text = text.Trim();
+                            string text = node.ParentNode.InnerText.Replace("\r\r", "\r").Trim();
                             if (node.ParentNode.InnerXml.Contains("bold=\"1\""))
-                                p.Text = "<b>" + p.Text + "</b>";
+                                text = "<b>" + text + "</b>";
                             if (node.ParentNode.InnerXml.Contains("italic=\"1\""))
-                                p.Text = "<i>" + p.Text + "</i>";
+                                text = "<i>" + text + "</i>";
+                            var p = new Paragraph();
                             p.StartTime = DecodeTime(node.ParentNode.Attributes["offset"]);
                             p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + DecodeTime(node.ParentNode.Attributes["duration"]).TotalMilliseconds;
-                            bool add = true;
+                            p.Text = text;
                             if (subtitle.Paragraphs.Count > 0)
                             {
                                 var prev = subtitle.Paragraphs[subtitle.Paragraphs.Count - 1];
-                                if (prev.Text == p.Text && prev.StartTime.TotalMilliseconds == p.StartTime.TotalMilliseconds)
-                                    add = false;
+                                if (prev.Text.Equals(p.Text, StringComparison.Ordinal) && prev.StartTime.TotalMilliseconds == p.StartTime.TotalMilliseconds)
+                                {
+                                    continue; // ignore duplicated paragraphs
+                                }
                             }
-                            if (add)
-                                subtitle.Paragraphs.Add(p);
+                            subtitle.Paragraphs.Add(p);
                         }
                         catch
                         {
