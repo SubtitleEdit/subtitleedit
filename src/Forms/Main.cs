@@ -14343,7 +14343,7 @@ namespace Nikse.SubtitleEdit.Forms
                     labelVideoInfo.Text = labelVideoInfo.Text + " " + string.Format("{0:0.0##}", _videoInfo.FramesPerSecond);
 
                 string peakWaveFileName = WavePeakGenerator.GetPeakWaveFileName(fileName);
-                string spectrogramFolder = Nikse.SubtitleEdit.Core.WavePeakGenerator.SpectrogramDrawer.GetSpectrogramFolder(fileName);
+                string spectrogramFolder = WavePeakGenerator.SpectrogramDrawer.GetSpectrogramFolder(fileName);
                 if (File.Exists(peakWaveFileName))
                 {
                     audioVisualizer.WavePeaks = WavePeakData.FromDisk(peakWaveFileName);
@@ -16649,7 +16649,7 @@ namespace Nikse.SubtitleEdit.Forms
                 using (var addWaveform = new AddWaveform())
                 {
                     var peakWaveFileName = WavePeakGenerator.GetPeakWaveFileName(_videoFileName);
-                    var spectrogramFolder = Nikse.SubtitleEdit.Core.WavePeakGenerator.SpectrogramDrawer.GetSpectrogramFolder(_videoFileName);
+                    var spectrogramFolder = WavePeakGenerator.SpectrogramDrawer.GetSpectrogramFolder(_videoFileName);
 
                     if (WavePeakGenerator.IsFileValidForVisualizer(_videoFileName))
                     {
@@ -17053,7 +17053,7 @@ namespace Nikse.SubtitleEdit.Forms
             using (var addWaveform = new AddWaveform())
             {
                 string peakWaveFileName = WavePeakGenerator.GetPeakWaveFileName(_videoFileName);
-                string spectrogramFolder = Nikse.SubtitleEdit.Core.WavePeakGenerator.SpectrogramDrawer.GetSpectrogramFolder(_videoFileName);
+                string spectrogramFolder = WavePeakGenerator.SpectrogramDrawer.GetSpectrogramFolder(_videoFileName);
                 addWaveform.InitializeViaWaveFile(fileName, peakWaveFileName, spectrogramFolder);
                 if (addWaveform.ShowDialog() == DialogResult.OK)
                 {
