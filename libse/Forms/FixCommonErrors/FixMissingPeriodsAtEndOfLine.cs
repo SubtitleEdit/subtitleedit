@@ -125,35 +125,83 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     }
                 }
 
-                if (p.Text.Length > 4)
+                // fix missing punctuation before line break (dialog)
+                if (callbacks.AllowFix(p, fixAction) && p.Text.Length > 4)
                 {
-                    int indexOfNewLine = p.Text.IndexOf(Environment.NewLine + " -", 3, StringComparison.Ordinal);
-                    if (indexOfNewLine < 0)
-                        indexOfNewLine = p.Text.IndexOf(Environment.NewLine + "-", 3, StringComparison.Ordinal);
-                    if (indexOfNewLine < 0)
-                        indexOfNewLine = p.Text.IndexOf(Environment.NewLine + "<i>-", 3, StringComparison.Ordinal);
-                    if (indexOfNewLine < 0)
-                        indexOfNewLine = p.Text.IndexOf(Environment.NewLine + "<i> -", 3, StringComparison.Ordinal);
-                    if (indexOfNewLine > 0 && char.IsUpper(char.ToUpper(p.Text[indexOfNewLine - 1])) && callbacks.AllowFix(p, fixAction))
+                    string text = p.Text;
+                    text = FixMissingPunctuationDialog(p.Text);
+                    if (p.Text.Length != text.Length)
                     {
-                        string oldText = p.Text;
-
-                        string text = p.Text.Substring(0, indexOfNewLine);
-                        var st = new StrippableText(text);
-                        if (st.Pre.TrimEnd().EndsWith('¿')) // Spanish ¿
-                            p.Text = p.Text.Insert(indexOfNewLine, "?");
-                        else if (st.Pre.TrimEnd().EndsWith('¡')) // Spanish ¡
-                            p.Text = p.Text.Insert(indexOfNewLine, "!");
-                        else
-                            p.Text = p.Text.Insert(indexOfNewLine, ".");
-
                         missigPeriodsAtEndOfLine++;
-                        callbacks.AddFixToListView(p, fixAction, oldText, p.Text);
+                        callbacks.AddFixToListView(p, fixAction, p.Text, text);
+                        p.Text = text;
                     }
                 }
+
             }
             callbacks.UpdateFixStatus(missigPeriodsAtEndOfLine, language.AddPeriods, language.XPeriodsAdded);
         }
+
+        private static string FixMissingPunctuationDialog(string text)
+        {
+            // - foobar\r\n<i>-Foobar.
+            string[] lines = text.SplitToLines();
+
+            // single line text
+            if (lines.Length == 1)
+            {
+                return text;
+            }
+
+            var flSt = new StrippableText(lines[0]);
+            // skip if first line doesn't start with uppercase (dialog must start with uppercase letter)
+            if (flSt.StrippedText.Length < 0 || !char.IsLetterOrDigit(flSt.StrippedText[0]))
+            {
+                return text;
+            }
+            // skip if already fixed
+            if (flSt.Post.IndexOfAny(new[] { '.', '?', '!' }) >= 0)
+            {
+                return text;
+            }
+
+            // second line excluding beginning html tags
+            string secondLineNoTags = lines[1].TrimStart();
+
+            // skip html tags
+            if (secondLineNoTags.LineStartsWithHtmlTag(true, true))
+            {
+                int closeIdx = secondLineNoTags.IndexOf('>');
+                secondLineNoTags = secondLineNoTags.Substring(closeIdx + 1).TrimStart();
+            }
+
+            if (secondLineNoTags.Length > 1 && secondLineNoTags.StartsWith('-'))
+            {
+                secondLineNoTags = secondLineNoTags.Remove(0, 1).TrimStart();
+
+                if (secondLineNoTags.Length < 1 || char.IsLower(secondLineNoTags[0]))
+                {
+                    return text;
+                }
+
+                string pre = flSt.Pre.TrimEnd();
+                // punctuation character
+                char punCh = '.';
+                if (pre.EndsWith('¿')) // Spanish ¿
+                {
+                    punCh = '?';
+                }
+                if (pre.EndsWith('¡')) // Spanish ¡
+                {
+                    punCh = '!';
+                }
+                lines[0] += punCh;
+
+                return string.Join(Environment.NewLine, lines);
+            }
+            return text;
+        }
+
 
     }
 }
