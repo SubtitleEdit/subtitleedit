@@ -68,16 +68,19 @@ $ColorIndex4    = 3
 
         private static string EncodeText(string text)
         {
-            text = HtmlUtil.FixUpperTags(text);
-            bool allItalic = text.StartsWith("<i>", StringComparison.Ordinal) && text.EndsWith("</i>", StringComparison.Ordinal) && Utilities.CountTagInText(text, "<i>") == 1;
-            text = text.Replace("<b>", Bold);
-            text = text.Replace("</b>", Bold);
-            text = text.Replace("<i>", Italic);
-            text = text.Replace("</i>", Italic);
-            text = text.Replace("<u>", Underline);
-            text = text.Replace("</u>", Underline);
-            if (allItalic)
-                return text.Replace(Environment.NewLine, "|^I");
+            if (text.Contains('<'))
+            {
+                text = HtmlUtil.FixUpperTags(text);
+                bool allItalic = text.StartsWith("<i>", StringComparison.Ordinal) && text.EndsWith("</i>", StringComparison.Ordinal) && Utilities.CountTagInText(text, "<i>") == 1;
+                text = text.Replace("<b>", Bold);
+                text = text.Replace("</b>", Bold);
+                text = text.Replace("<i>", Italic);
+                text = text.Replace("</i>", Italic);
+                text = text.Replace("<u>", Underline);
+                text = text.Replace("</u>", Underline);
+                if (allItalic)
+                    return text.Replace(Environment.NewLine, "|^I"); 
+            }
             return text.Replace(Environment.NewLine, "|");
         }
 
@@ -99,43 +102,36 @@ $ColorIndex4    = 3
             if (fileName != null && fileName.EndsWith(".stl", StringComparison.OrdinalIgnoreCase)) // allow empty text if extension is ".stl"...
                 timeCodeRegex = RegexTimeCodes2;
 
+            int number = 1;
             foreach (string line in lines)
             {
-                if (line.IndexOf(':') == 2 && timeCodeRegex.IsMatch(line))
+                if (line.Length >= 24 && timeCodeRegex.IsMatch(line))
                 {
                     string start = line.Substring(0, 11);
                     string end = line.Substring(12, 11);
-
-                    try
-                    {
-                        Paragraph p = new Paragraph(DecodeTimeCode(start), DecodeTimeCode(end), DecodeText(line.Substring(24)));
-                        subtitle.Paragraphs.Add(p);
-                    }
-                    catch
-                    {
-                        _errorCount++;
-                    }
+                    var p = new Paragraph(DecodeTimeCode(start), DecodeTimeCode(end), DecodeText(line.Substring(24)));
+                    p.Number = number++;
+                    subtitle.Paragraphs.Add(p);
                 }
                 else if (!string.IsNullOrWhiteSpace(line) && !line.StartsWith("//", StringComparison.Ordinal) && !line.StartsWith('$'))
                 {
                     _errorCount++;
                 }
             }
-            subtitle.Renumber();
         }
 
-        private static TimeCode DecodeTimeCode(string time)
+        private static TimeCode DecodeTimeCode(string timeStamp)
         {
             //00:01:54:19
-            string hour = time.Substring(0, 2);
-            string minutes = time.Substring(3, 2);
-            string seconds = time.Substring(6, 2);
-            string frames = time.Substring(9, 2);
+            int hours = int.Parse(timeStamp.Substring(0, 2));
+            int minutes = int.Parse(timeStamp.Substring(3, 2));
+            int seconds = int.Parse(timeStamp.Substring(6, 2));
+            int frames = int.Parse(timeStamp.Substring(9, 2));
 
-            int milliseconds = (int)((TimeCode.BaseUnit / 25.0) * int.Parse(frames));
+            int milliseconds = (int)((TimeCode.BaseUnit / 25.0) * frames);
             if (milliseconds > 999)
                 milliseconds = 999;
-            return new TimeCode(int.Parse(hour), int.Parse(minutes), int.Parse(seconds), milliseconds);
+            return new TimeCode(hours, minutes, seconds, milliseconds);
         }
 
         private static string DecodeText(string text)
