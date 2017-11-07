@@ -6421,7 +6421,7 @@ namespace Nikse.SubtitleEdit.Forms
                 // GAP
                 var contextMenuStripLvHeaderGapToolStripMenuItem = new ToolStripMenuItem(Configuration.Settings.Language.General.Gap);
                 contextMenuStripLvHeaderGapToolStripMenuItem.CheckOnClick = true;
-                contextMenuStripLvHeaderGapToolStripMenuItem.Checked = Configuration.Settings.Tools.ListViewShowColumnWordsPerMin;
+                contextMenuStripLvHeaderGapToolStripMenuItem.Checked = Configuration.Settings.Tools.ListViewShowColumnGap;
                 contextMenuStripLvHeaderGapToolStripMenuItem.Click += (sender2, e2) =>
                 {
                     SubtitleListview1.BeginUpdate();
