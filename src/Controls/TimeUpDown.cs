@@ -73,7 +73,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         private void NumericUpDownValueChanged(object sender, EventArgs e)
         {
-            double? milliseconds = GetTotalMilliseconds();
+            double? milliseconds = TimeCode?.TotalMilliseconds;
             if (milliseconds.HasValue)
             {
                 if (milliseconds.Value >= TimeCode.MaxTime.TotalMilliseconds - 0.1)
@@ -106,13 +106,7 @@ namespace Nikse.SubtitleEdit.Controls
             numericUpDown1.Value = NumericUpDownValue;
         }
 
-        public MaskedTextBox MaskedTextBox
-        {
-            get
-            {
-                return maskedTextBox1;
-            }
-        }
+        public MaskedTextBox MaskedTextBox => maskedTextBox1;
 
         public void SetTotalMilliseconds(double milliseconds)
         {
@@ -131,14 +125,6 @@ namespace Nikse.SubtitleEdit.Controls
                 maskedTextBox1.Mask = GetMaskFrames(milliseconds);
                 maskedTextBox1.Text = tc.ToString().Substring(0, 9) + string.Format("{0:00}", Core.SubtitleFormats.SubtitleFormat.MillisecondsToFrames(tc.Milliseconds));
             }
-        }
-
-        public double? GetTotalMilliseconds()
-        {
-            TimeCode tc = TimeCode;
-            if (tc != null)
-                return tc.TotalMilliseconds;
-            return null;
         }
 
         public TimeCode TimeCode
@@ -264,18 +250,16 @@ namespace Nikse.SubtitleEdit.Controls
             if (e.KeyCode == Keys.Up)
             {
                 numericUpDown1.UpButton();
-                e.SuppressKeyPress = true;
             }
             else if (e.KeyCode == Keys.Down)
             {
                 numericUpDown1.DownButton();
-                e.SuppressKeyPress = true;
             }
             else if (e.KeyCode == Keys.Enter)
             {
                 TimeCodeChanged?.Invoke(this, e);
-                e.SuppressKeyPress = true;
             }
+            e.SuppressKeyPress = true;
         }
 
         private string GetMask(double val) => val >= 0 ? "00:00:00.000" : "-00:00:00.000";
