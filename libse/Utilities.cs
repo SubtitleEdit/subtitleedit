@@ -2343,5 +2343,6 @@ namespace Nikse.SubtitleEdit.Core
             }
         }
 
+        public static string RemoveBadChars(string inp) => inp.Replace('\0', ' ');
     }
 }
