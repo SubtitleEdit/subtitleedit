@@ -17,6 +17,6 @@
         /// <summary>
         /// Checks if character is between A-Z or a-z
         /// </summary>
-        public static bool IsEnglishAlphabet(char ch) => (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z');
+        public static bool IsEnglishAlphabet(char ch) => ch >= 'A' && ch <= 'z' && (ch <= 'Z' || ch >= 'a');
     }
 }
