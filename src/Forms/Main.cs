@@ -6968,24 +6968,25 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        private static void ToggleWebVTTVoice(string voice, TextBox tb)
+        {
+            if (string.IsNullOrWhiteSpace(voice))
+            {
+                return;
+            }
+            string selText = tb.SelectedText;
+            if (selText.Length == 0)
+            {
+                return;
+            }
+            string noTagText = WebVTT.RemoveTag("v", selText);
+            tb.SelectedText = (selText.Length == tb.SelectionLength) ? $"<v {voice}>{noTagText}" : $"<v {voice}>{noTagText}</v>";
+        }
+
         private void WebVTTSetVoiceTextBox(object sender, EventArgs e)
         {
             string voice = (sender as ToolStripItem).Text;
-            if (!string.IsNullOrEmpty(voice))
-            {
-                var tb = GetFocusedTextBox();
-
-                if (tb.SelectionLength > 0)
-                {
-                    string s = tb.SelectedText;
-                    s = WebVTT.RemoveTag("v", s);
-                    if (tb.SelectedText == tb.Text)
-                        s = string.Format("<v {0}>{1}", voice, s);
-                    else
-                        s = string.Format("<v {0}>{1}</v>", voice, s);
-                    tb.SelectedText = s;
-                }
-            }
+            ToggleWebVTTVoice(voice, GetFocusedTextBox());
         }
 
         private void WebVTTSetNewVoiceTextBox(object sender, EventArgs e)
@@ -6994,22 +6995,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (form.ShowDialog(this) == DialogResult.OK)
                 {
-                    string voice = form.InputText;
-                    if (!string.IsNullOrEmpty(voice))
-                    {
-                        var tb = GetFocusedTextBox();
-
-                        if (tb.SelectionLength > 0)
-                        {
-                            string s = tb.SelectedText;
-                            s = WebVTT.RemoveTag("v", s);
-                            if (tb.SelectedText == tb.Text)
-                                s = string.Format("<v {0}>{1}", voice, s);
-                            else
-                                s = string.Format("<v {0}>{1}</v>", voice, s);
-                            tb.SelectedText = s;
-                        }
-                    }
+                    ToggleWebVTTVoice(form.InputText, GetFocusedTextBox());
                 }
             }
         }
@@ -7126,34 +7112,32 @@ namespace Nikse.SubtitleEdit.Forms
                             alternateIndices.Add(_subtitleAlternate.GetIndex(original));
                     }
                 }
-
-                alternateIndices.Reverse();
-                foreach (int i in alternateIndices)
+                int bound = _subtitleAlternate.Paragraphs.Count;
+                for (int i = alternateIndices.Count - 1; i >= 0; i--)
                 {
-                    if (i < _subtitleAlternate.Paragraphs.Count)
+                    if (i < bound)
+                    {
                         _subtitleAlternate.Paragraphs.RemoveAt(i);
+                    }
                 }
                 _subtitleAlternate.Renumber();
             }
 
-            var indices = new List<int>();
+            var removedIndices = new List<int>();
             foreach (ListViewItem item in SubtitleListview1.SelectedItems)
-                indices.Add(item.Index);
+                removedIndices.Add(item.Index);
             int firstIndex = SubtitleListview1.SelectedItems[0].Index;
 
             if (_networkSession != null)
             {
                 _networkSession.TimerStop();
-                NetworkGetSendUpdates(indices, 0, null);
+                NetworkGetSendUpdates(removedIndices, 0, null);
             }
             else
             {
-                indices.Reverse();
-                foreach (int i in indices)
+                for (int i = removedIndices.Count - 1; i >= 0; i--)
                 {
                     _subtitle.Paragraphs.RemoveAt(i);
-                    if (_networkSession != null && _networkSession.LastSubtitle != null && i < _networkSession.LastSubtitle.Paragraphs.Count)
-                        _networkSession.LastSubtitle.Paragraphs.RemoveAt(i);
                 }
                 _subtitle.Renumber();
                 SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
@@ -7361,7 +7345,8 @@ namespace Nikse.SubtitleEdit.Forms
                 newParagraph.StartTime.TotalMilliseconds = 1000;
                 newParagraph.EndTime.TotalMilliseconds = 3000;
             }
-            if (GetCurrentSubtitleFormat().IsFrameBased)
+
+            if (format.IsFrameBased)
             {
                 newParagraph.CalculateFrameNumbersFromTimeCodes(CurrentFrameRate);
                 newParagraph.CalculateTimeCodesFromFrameNumbers(CurrentFrameRate);
@@ -7815,14 +7800,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (textBoxListViewText.SelectionLength == 0)
                 {
-                    if (textBoxListViewText.Text.Contains("<i>", StringComparison.Ordinal))
-                    {
-                        textBoxListViewText.Text = HtmlUtil.RemoveOpenCloseTags(textBoxListViewText.Text, HtmlUtil.TagItalic);
-                    }
-                    else
-                    {
-                        textBoxListViewText.Text = string.Format("<i>{0}</i>", textBoxListViewText.Text);
-                    }
+                    textBoxListViewText.Text = HtmlUtil.ToggleTag(textBoxListViewText.Text, HtmlUtil.TagItalic);
                 }
                 else
                 {
