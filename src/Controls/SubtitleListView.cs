@@ -304,6 +304,9 @@ namespace Nikse.SubtitleEdit.Controls
             if (Configuration.Settings != null && Configuration.Settings.Tools.ListViewShowColumnWordsPerMin)
                 ShowWordsMinColumn(Configuration.Settings.Language.General.WordsPerMin);
 
+            if (Configuration.Settings != null && Configuration.Settings.Tools.ListViewShowColumnGap)
+                ShowGapColumn(Configuration.Settings.Language.General.Gap);
+
             SubtitleListViewLastColumnFill(this, null);
 
             FullRowSelect = true;
