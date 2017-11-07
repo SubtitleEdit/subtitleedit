@@ -331,13 +331,13 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 int indexOfDialogChar = newText.IndexOf('-');
                 bool insertDash = true;
                 var arr = newText.SplitToLines();
-                if (arr.Length == 2 && arr[0].Length > 1 && arr[1].Length > 1)
+                if (arr.Length == 2 && arr[0].Length > 0 && arr[1].Length > 0)
                 {
                     string arr0 = new StrippableText(arr[0]).StrippedText;
                     var arr1Strippable = new StrippableText(arr[1]);
                     string arr1 = arr1Strippable.StrippedText;
 
-                    if (arr0.Length > 0 && arr1.Length > 1)
+                    if (arr0.Length > 0 && arr1.Length > 0)
                     {
                         // line continuation?
                         if (char.IsLower(arr1[0])) // second line starts with lower case letter
