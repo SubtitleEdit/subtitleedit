@@ -1122,8 +1122,7 @@ namespace Nikse.SubtitleEdit.Core
             if (!text.Contains(startTag) || !text.Contains(endTag))
                 return false;
 
-            while (text.Contains("  "))
-                text = text.Replace("  ", " ");
+            text = text.FixExtraSpaces();
 
             var s1 = "- " + startTag;
             var s2 = "-" + startTag;
