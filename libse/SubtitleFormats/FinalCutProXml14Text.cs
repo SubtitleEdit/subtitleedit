@@ -65,8 +65,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 var trimmedTitle = new StringBuilder();
                 foreach (var ch in HtmlUtil.RemoveHtmlTags(p.Text, true))
                 {
-                    if ("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".Contains(ch.ToString(CultureInfo.InvariantCulture)))
-                        trimmedTitle.Append(ch.ToString(CultureInfo.InvariantCulture));
+                    if (CharUtils.IsEnglishAlphabet(ch) || char.IsDigit(ch))
+                    {
+                        trimmedTitle.Append(ch);
+                    }
                 }
                 string temp = xmlClipStructure.Replace("[NUMBER]", number.ToString(CultureInfo.InvariantCulture)).Replace("[TITLEID]", trimmedTitle.ToString());
                 video.InnerXml = temp;
