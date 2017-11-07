@@ -28,6 +28,7 @@ Email: mailto:moob42341@gmail.com</TranslatedBy>
     <CharsPerSec>Caracteres/seg</CharsPerSec>
     <WordsPerMin>Palavras/min</WordsPerMin>
     <Actor>Actor</Actor>
+	<Gap>Intervalo</Gap>
     <Region>Região</Region>
     <NumberSymbol>#</NumberSymbol>
     <Number>Número</Number>
@@ -1454,6 +1455,7 @@ Deseja continuar?</SubtitleAppendPrompt>
     <ImportTimeCodesDifferentNumberOfLinesWarning>Legenda com tempos tem um número diferente de linhas ({0}) do que as legendas actuais ({1}) - mesmo assim deseja continuar?</ImportTimeCodesDifferentNumberOfLinesWarning>
     <ParsingTransportStream>A analisar o fluxo de transporte - por favor aguarde...</ParsingTransportStream>
     <XPercentCompleted>{0}% concluído</XPercentCompleted>
+	<NextX>Próximo: {0}</NextX>
     <ErrorLoadIdx>Não foi possível ler/editar o ficheiro idx. Os ficheiros idx são parte de um par de ficheiros idx/sub (também conhecidos como VobSub) e o Subtitle Edit pode abrir o ficheiro sub.</ErrorLoadIdx>
     <ErrorLoadRar>Este ficheiro parece ser um ficheiro comprimido .rar. O Subtitle Edit não pode abrir ficheiros comprimidos.</ErrorLoadRar>
     <ErrorLoadZip>Este ficheiro parece ser um ficheiro comprimido .zip. O Subtitle Edit não pode abrir ficheiros comprimidos.</ErrorLoadZip>
@@ -1864,6 +1866,10 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <AdjustStartDownEndUpAndGoToNext>Tecla "Page Down"=definir início, tecla "Page Up"=definir final e ir para o seguinte</AdjustStartDownEndUpAndGoToNext>
     <AdjustSelected100MsForward>Adiantar as linhas seleccionadas 100 ms</AdjustSelected100MsForward>
     <AdjustSelected100MsBack>Atrasar as linhas seleccionadas 100 ms</AdjustSelected100MsBack>
+    <AdjustStartXMsBack>Atrasar o início {0} ms</AdjustStartXMsBack>
+    <AdjustStartXMsForward>Adiantar o início {0} ms</AdjustStartXMsForward>
+    <AdjustEndXMsBack>Atrasar o fim {0} ms</AdjustEndXMsBack>
+    <AdjustEndXMsForward>Adiantar o fim {0} ms</AdjustEndXMsForward>
     <AdjustSetStartTimeKeepDuration>Definir a hora de início, manter a duração</AdjustSetStartTimeKeepDuration>
     <AdjustSetEndAndOffsetTheRest>Defenir o fim, compensar o resto</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Definir o fim, compensar o resto e ir para a próxima</AdjustSetEndAndOffsetTheRestAndGoToNext>
