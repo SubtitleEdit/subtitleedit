@@ -5,6 +5,8 @@ namespace Nikse.SubtitleEdit.Core.Forms
 {
     public static class SplitLongLinesHelper
     {
+        private static readonly string[] SplitCharsDialog = { ". -", "! -", "? -" };
+
         public static bool QualifiesForSplit(string text, int singleLineMaxCharacters, int totalLineMaxCharacters)
         {
             string s = HtmlUtil.RemoveHtmlTags(text.Trim(), true);
@@ -19,9 +21,9 @@ namespace Nikse.SubtitleEdit.Core.Forms
             }
 
             var tempText = Utilities.UnbreakLine(text);
-            if (Utilities.CountTagInText(tempText, '-') == 2 && (text.StartsWith('-') || text.StartsWith("<i>-")))
+            if (Utilities.CountTagInText(tempText, '-') == 2 && (text.StartsWith('-') || text.StartsWith("<i>-", StringComparison.Ordinal)))
             {
-                var idx = tempText.IndexOfAny(new[] { ". -", "! -", "? -" }, StringComparison.Ordinal);
+                var idx = tempText.IndexOfAny(SplitCharsDialog, StringComparison.Ordinal);
                 if (idx > 1)
                 {
                     idx++;
@@ -38,8 +40,6 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
         public static Subtitle SplitLongLinesInSubtitle(Subtitle subtitle, int totalLineMaxCharacters, int singleLineMaxCharacters)
         {
-            var splittedIndexes = new List<int>();
-            var autoBreakedIndexes = new List<int>();
             var splittedSubtitle = new Subtitle(subtitle);
             splittedSubtitle.Paragraphs.Clear();
             string language = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle);
@@ -55,7 +55,6 @@ namespace Nikse.SubtitleEdit.Core.Forms
                         if (!QualifiesForSplit(text, singleLineMaxCharacters, totalLineMaxCharacters))
                         {
                             var newParagraph = new Paragraph(p) { Text = text };
-                            autoBreakedIndexes.Add(splittedSubtitle.Paragraphs.Count);
                             splittedSubtitle.Paragraphs.Add(newParagraph);
                             added = true;
                         }
@@ -80,9 +79,6 @@ namespace Nikse.SubtitleEdit.Core.Forms
                                     newParagraph2.Text = Utilities.AutoBreakLine(arr[1], language);
                                     newParagraph2.StartTime.TotalMilliseconds = newParagraph1.EndTime.TotalMilliseconds + spacing2;
 
-                                    splittedIndexes.Add(splittedSubtitle.Paragraphs.Count);
-                                    splittedIndexes.Add(splittedSubtitle.Paragraphs.Count + 1);
-
                                     string p1 = HtmlUtil.RemoveHtmlTags(newParagraph1.Text);
                                     var len = p1.Length - 1;
                                     if (p1.Length > 0 && (p1[len] == '.' || p1[len] == '!' || p1[len] == '?' || p1[len] == ':' || p1[len] == ')' || p1[len] == ']' || p1[len] == '♪'))
@@ -104,17 +100,12 @@ namespace Nikse.SubtitleEdit.Core.Forms
                                     {
                                         if (newParagraph1.Text.EndsWith("</i>", StringComparison.Ordinal))
                                         {
-                                            const string post = "</i>";
-                                            newParagraph1.Text = newParagraph1.Text.Remove(newParagraph1.Text.Length - post.Length);
+                                            newParagraph1.Text = newParagraph1.Text.Remove(newParagraph1.Text.Length - 4);
                                         }
-                                        //newParagraph1.Text += comboBoxLineContinuationEnd.Text.TrimEnd() + post;
-
                                         if (newParagraph2.Text.StartsWith("<i>", StringComparison.Ordinal))
                                         {
-                                            const string pre = "<i>";
-                                            newParagraph2.Text = newParagraph2.Text.Remove(0, pre.Length);
+                                            newParagraph2.Text = newParagraph2.Text.Substring(3);
                                         }
-                                        //newParagraph2.Text = pre + comboBoxLineContinuationBegin.Text + newParagraph2.Text;
                                     }
 
                                     var indexOfItalicOpen1 = newParagraph1.Text.IndexOf("<i>", StringComparison.Ordinal);
