@@ -41,15 +41,14 @@ namespace Nikse.SubtitleEdit.Forms
             _descriptions = new List<string>();
             _xmlName = xmlRessourceName;
             System.Reflection.Assembly asm = System.Reflection.Assembly.GetExecutingAssembly();
-            Stream strm = asm.GetManifestResourceStream(_xmlName);
-            if (strm != null)
+            Stream stream = asm.GetManifestResourceStream(_xmlName);
+            if (stream?.CanRead == true)
             {
                 comboBoxDictionaries.Items.Clear();
-                XmlDocument doc = new XmlDocument();
-                using (var rdr = new StreamReader(strm))
-                using (var zip = new GZipStream(rdr.BaseStream, CompressionMode.Decompress))
+                var doc = new XmlDocument();
+                using (var zip = new GZipStream(stream, CompressionMode.Decompress))
                 {
-                    byte[] data = new byte[195000];
+                    byte[] data = new byte[stream.Length];
                     int bytesRead = zip.Read(data, 0, data.Length);
                     var s = System.Text.Encoding.UTF8.GetString(data, 0, bytesRead).Trim();
                     try
@@ -59,6 +58,7 @@ namespace Nikse.SubtitleEdit.Forms
                     catch (Exception exception)
                     {
                         MessageBox.Show(exception.Message);
+                        return;
                     }
                 }
 
@@ -102,7 +102,7 @@ namespace Nikse.SubtitleEdit.Forms
                 buttonDownload.Enabled = false;
                 comboBoxDictionaries.Enabled = false;
                 Refresh();
-                Cursor = Cursors.WaitCursor;
+                Cursor.Current = Cursors.WaitCursor;
 
                 int index = comboBoxDictionaries.SelectedIndex;
                 string url = _dictionaryDownloadLinks[index];
@@ -164,17 +164,15 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            using (var tr = new TarReader(tempFileName))
+            var tr = new TarReader(tempFileName);
+            foreach (var th in tr.Files)
             {
-                foreach (var th in tr.Files)
-                {
-                    string fn = Path.Combine(dictionaryFolder, Path.GetFileName(th.FileName.Trim()));
-                    th.WriteData(fn);
-                }
+                string fn = Path.Combine(dictionaryFolder, Path.GetFileName(th.FileName.Trim()));
+                th.WriteData(fn);
             }
             File.Delete(tempFileName);
 
-            Cursor = Cursors.Default;
+            Cursor.Current = Cursors.Default;
             labelPleaseWait.Text = string.Empty;
             buttonOK.Enabled = true;
             buttonDownload.Enabled = true;
@@ -208,7 +206,7 @@ namespace Nikse.SubtitleEdit.Forms
                     fs.Write(buffer, 0, nRead);
                 }
             }
-            Cursor = Cursors.Default;
+            Cursor.Current = Cursors.Default;
             labelPleaseWait.Text = string.Empty;
             buttonOK.Enabled = true;
             buttonDownload.Enabled = true;
