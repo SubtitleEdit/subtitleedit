@@ -341,6 +341,7 @@ namespace Nikse.SubtitleEdit.Forms
                 UiUtil.FixFonts(this);
                 Icon = Properties.Resources.SubtitleEditFormIcon;
 
+                textBoxListViewTextAlternate.VisibleChanged += TextBoxListViewTextAlternate_VisibleChanged;
                 textBoxListViewTextAlternate.Visible = false;
                 labelAlternateText.Visible = false;
                 labelAlternateCharactersPerSecond.Visible = false;
@@ -581,6 +582,11 @@ namespace Nikse.SubtitleEdit.Forms
                 Cursor = Cursors.Default;
                 MessageBox.Show(exception.Message + Environment.NewLine + exception.StackTrace);
             }
+        }
+
+        private void TextBoxListViewTextAlternate_VisibleChanged(object sender, EventArgs e)
+        {
+            timerAlternateTextUndo.Enabled = ((TextBox)sender).Visible;
         }
 
         private void audioVisualizer_InsertAtVideoPosition(object sender, EventArgs e)
@@ -5920,12 +5926,11 @@ namespace Nikse.SubtitleEdit.Forms
 
                 // Add latest changes if any (also stop changes from being added while redoing/undoing)
                 timerTextUndo.Stop();
-                timerAlternateTextUndo.Stop();
                 _listViewTextTicks = 0;
-                _listViewAlternateTextTicks = 0;
                 TimerTextUndoTick(null, null);
+                timerAlternateTextUndo.Stop();
+                _listViewAlternateTextTicks = 0;
                 TimerAlternateTextUndoTick(null, null);
-
                 try
                 {
                     int selectedIndex = FirstSelectedIndex;
@@ -6068,7 +6073,10 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 timerTextUndo.Start();
-                timerAlternateTextUndo.Start();
+                if (textBoxListViewTextAlternate.Enabled && textBoxListViewTextAlternate.Visible)
+                {
+                    timerAlternateTextUndo.Start();
+                }
                 SetTitle();
             }
         }
@@ -15856,7 +15864,10 @@ namespace Nikse.SubtitleEdit.Forms
             lock (_syncUndo)
             {
                 timerTextUndo.Start();
-                timerAlternateTextUndo.Start();
+                if (textBoxListViewTextAlternate.Visible && textBoxListViewTextAlternate.Enabled)
+                {
+                    timerAlternateTextUndo.Start();
+                }
             }
             if (Configuration.IsRunningOnLinux())
             {
