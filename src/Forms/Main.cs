@@ -4613,31 +4613,42 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (_findHelper != null)
             {
-                TextBox tb;
-                if (_findHelper.MatchInOriginal)
-                    tb = textBoxListViewTextAlternate;
-                else
-                    tb = textBoxListViewText;
-
                 if (tabControlSubtitle.SelectedIndex == TabControlListView)
                 {
-                    int selectedIndex = -1;
-                    if (SubtitleListview1.SelectedItems.Count > 0)
-                        selectedIndex = SubtitleListview1.SelectedItems[0].Index;
-
-                    int textBoxStart = tb.SelectionStart;
-                    if (_findHelper.SelectedPosition - 1 == tb.SelectionStart && tb.SelectionLength > 0)
+                    int textBoxStart = textBoxListViewText.SelectionStart;
+                    if (_findHelper.SelectedPosition - 1 == textBoxListViewText.SelectionStart && textBoxListViewText.SelectionLength > 0)
                     {
-                        textBoxStart = tb.SelectionStart + 1;
+                        textBoxStart = textBoxListViewText.SelectionLength;
                     }
 
-                    if (_findHelper.FindNext(_subtitle, _subtitleAlternate, selectedIndex, textBoxStart, Configuration.Settings.General.AllowEditOfOriginalSubtitle))
+                    // If already matched in original/alternate.
+                    if (_findHelper.MatchInOriginal && _findHelper.FindText.Length > 0)
+                    {
+                        textBoxStart = _findHelper.FindText.Length; // TODO: Remove this!
+                    }
+
+                    // Clear previous selection heighlight.
+                    textBoxListViewText.SelectionLength = 0;
+                    textBoxListViewTextAlternate.SelectionLength = 0;
+
+                    if (_findHelper.FindNext(_subtitle, _subtitleAlternate, _subtitleListViewIndex, _findHelper.SelectedPosition, Configuration.Settings.General.AllowEditOfOriginalSubtitle))
                     {
                         SubtitleListview1.SelectIndexAndEnsureVisible(_findHelper.SelectedIndex, true);
                         ShowStatus(string.Format(_language.XFoundAtLineNumberY, _findHelper.FindText, _findHelper.SelectedIndex + 1));
-                        tb.Focus();
-                        tb.SelectionStart = _findHelper.SelectedPosition;
-                        tb.SelectionLength = _findHelper.FindTextLength;
+                        // Focus and select whichever textbox text was found in.
+                        if (_findHelper.MatchInOriginal)
+                        {
+                            textBoxListViewTextAlternate.Focus();
+                            textBoxListViewTextAlternate.SelectionStart = _findHelper.SelectedPosition;
+                            textBoxListViewTextAlternate.SelectionLength = _findHelper.FindTextLength;
+                        }
+                        else
+                        {
+                            textBoxListViewText.Focus();
+                            textBoxListViewText.SelectionStart = _findHelper.SelectedPosition;
+                            textBoxListViewText.SelectionLength = _findHelper.FindTextLength;
+                        };
+                        // Next search start position.
                         _findHelper.SelectedPosition++;
                     }
                     else
@@ -4647,14 +4658,34 @@ namespace Nikse.SubtitleEdit.Forms
                             if (MessageBox.Show(_language.FindContinue, _language.FindContinueTitle, MessageBoxButtons.YesNo) == DialogResult.Yes)
                             {
                                 _findHelper.StartLineIndex = 0;
+                                _findHelper.SelectedPosition = 0;
+                                _findHelper.MatchInOriginal = true;
                                 if (_findHelper.Find(_subtitle, _subtitleAlternate, 0))
                                 {
+<<<<<<< 4d49ee662a2cd2ce3619a045bc6a97683f6fefdd
                                     SubtitleListview1.SelectIndexAndEnsureVisible(_findHelper.SelectedIndex, true);
                                     tb.Focus();
                                     tb.SelectionStart = _findHelper.SelectedPosition;
                                     tb.SelectionLength = _findHelper.FindTextLength;
+=======
+                                    SubtitleListview1.SelectIndexAndEnsureVisible(_findHelper.SelectedIndex);
+>>>>>>> Work in progress part 2.
                                     ShowStatus(string.Format(_language.XFoundAtLineNumberY, _findHelper.FindText, _findHelper.SelectedIndex + 1));
-                                    _findHelper.SelectedPosition++;
+                                    // Focus and select whichever textbox text was found in.
+                                    if (_findHelper.MatchInOriginal)
+                                    {
+                                        textBoxListViewTextAlternate.Focus();
+                                        textBoxListViewTextAlternate.SelectionStart = _findHelper.SelectedPosition;
+                                        textBoxListViewTextAlternate.SelectionLength = _findHelper.FindTextLength;
+                                    }
+                                    else
+                                    {
+                                        textBoxListViewText.Focus();
+                                        textBoxListViewText.SelectionStart = _findHelper.SelectedPosition;
+                                        textBoxListViewText.SelectionLength = _findHelper.FindTextLength;
+                                    };
+                                    // Next search start position.
+                                     // _findHelper.SelectedPosition++;
                                     return;
                                 }
                             }

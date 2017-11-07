@@ -18,10 +18,11 @@ namespace Nikse.SubtitleEdit.Logic
         public bool Success { get; set; }
         public ReplaceType FindReplaceType { get; set; }        
         public int SelectedIndex { get; set; }
-        public int SelectedPosition { get; set; }
+        public int SelectedPosition { get; set; } // TODO: Rename this to SelectionStart
         public int StartLineIndex { get; set; }
         public bool MatchInOriginal { get; set; }
 
+        // TODO: Remove. (Text length can easily be accesed through FindText).
         public int FindTextLength
         {
             get
@@ -116,48 +117,42 @@ namespace Nikse.SubtitleEdit.Logic
 
         public bool FindNext(Subtitle subtitle, Subtitle originalSubtitle, int startIndex, int position, bool allowEditOfOriginalSubtitle)
         {
-            Success = false;
-            int index = 0;
             if (position < 0)
                 position = 0;
-            foreach (Paragraph p in subtitle.Paragraphs)
+            Success = false;
+            StartLineIndex = startIndex;
+            for (; startIndex < subtitle.Paragraphs.Count; startIndex++)
             {
-                if (index >= startIndex)
+                Paragraph p = subtitle.Paragraphs[startIndex];
+                int pos = -1;
+                bool matchedInOriginal = false;
+
+                if (MatchInOriginal)
                 {
-                    int pos = 0;
-                    if (!MatchInOriginal)
+                    if (p.Text.Length == position)
+                        pos = FindPositionInText(p.Text, 0);
+                }
+                else
+                {
+                    pos = FindPositionInText(p.Text, position);
+                    position = 0;
+                }
+                if (pos < 0 && allowEditOfOriginalSubtitle)
+                {
+                    p = originalSubtitle?.GetParagraphOrDefault(startIndex);
+                    if (p != null)
                     {
                         pos = FindPositionInText(p.Text, position);
-                        if (pos >= 0)
-                        {
-                            MatchInOriginal = false;
-                            SelectedIndex = index;
-                            SelectedPosition = pos;
-                            Success = true;
-                            return true;
-                        }
-                        position = 0;
-                    }
-                    MatchInOriginal = false;
-
-                    if (originalSubtitle != null && allowEditOfOriginalSubtitle)
-                    {
-                        Paragraph o = Utilities.GetOriginalParagraph(index, p, originalSubtitle.Paragraphs);
-                        if (o != null)
-                        {
-                            pos = FindPositionInText(o.Text, position);
-                            if (pos >= 0)
-                            {
-                                MatchInOriginal = true;
-                                SelectedIndex = index;
-                                SelectedPosition = pos;
-                                Success = true;
-                                return true;
-                            }
-                        }
+                        matchedInOriginal = pos >= 0;
                     }
                 }
-                index++;
+                if (pos >= 0)
+                {
+                    SelectedIndex = startIndex;
+                    MatchInOriginal = matchedInOriginal;
+                    SelectedPosition = pos;
+                    return Success = true;
+                }
             }
             return false;
         }
