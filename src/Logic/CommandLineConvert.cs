@@ -1436,17 +1436,11 @@ namespace Nikse.SubtitleEdit.Logic
         private static void DetachedConsole(string cwd)
         {
             _stdOutWriter?.Close();
-
             if (!IsWindows)
             {
                 return;
             }
-
-            if (_stdOutWriter == null)
-            {
-                Console.Write(cwd + ">");
-            }
-
+            _stdOutWriter.Write(cwd + ">");
             NativeMethods.FreeConsole();
         }
 
