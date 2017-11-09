@@ -139,7 +139,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (radioButtonLowercase.Checked)
             {
-                text = text.ToLower();
+                text = text.ToLower(subtitleCulture);
             }
             if (original != text)
                 _noOfLinesChanged++;
