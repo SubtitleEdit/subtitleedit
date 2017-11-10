@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.5.4</Version>
-    <TranslatedBy>Vertaald door Quetsbeek en minouhse & René Maassen ver. 3.5.4</TranslatedBy>
+    <TranslatedBy>Vertaald door Quetsbeek en minouhse &amp; René Maassen</TranslatedBy>
     <CultureName>nl-NL</CultureName>
     <HelpFile />
     <Ok>&amp;OK</Ok>
@@ -28,7 +28,7 @@
     <WordsPerMin>Woorden/min</WordsPerMin>
     <Actor>Acteur</Actor>
     <Gap>Gap</Gap>
-    <Region>Regio</Regio>
+    <Region>Regio</Region>
     <NumberSymbol>№</NumberSymbol>
     <Number>Aantal</Number>
     <Text>Tekst</Text>
@@ -379,7 +379,7 @@ Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
     <TextAndTimingInformation>Tekst en timing informatie</TextAndTimingInformation>
     <JustificationCode>Tekstuitlĳning (JC)</JustificationCode>
     <VerticalPosition>Verticale positie</VerticalPosition>
-    <MarginTop>Top marge (voor ondertitels die bovenaan zijn uitgelijnd)/MarginTop>
+    <MarginTop>Top marge (voor ondertitels die bovenaan zijn uitgelijnd)</MarginTop>
     <MarginBottom>Onderkant marge (voor ondertitels die aan de onderkant zijn uitgelijnd)</MarginBottom>
     <NewLineRows>Aantal rijen toegevoegd door een nieuwe regel</NewLineRows>
     <Teletext>Teletekst</Teletext>
@@ -1081,11 +1081,11 @@ Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
       </ToolBar>
       <ContextMenu>
         <SizeAllColumnsToFit>Pas alle kolommen aan die passen</SizeAllColumnsToFit>
-        <SubStationAlphaSetStyle>SubStation Alpha - stĳl instellen</SubStationAlphaSetStyle>
-        <SubStationAlphaStyles>SubStation Alpha stĳlen...</SubStationAlphaStyles>
-        <SetActor>Stel acteur in</SetActor>
-        <SubStationAlphaStyles>Advanced SubStation Alpha stĳlen...</AdvancedSubStationAlphaStyles>
         <AdvancedSubStationAlphaSetStyle>Advanced SubStation Alpha - stĳl instellen</AdvancedSubStationAlphaSetStyle>
+        <SubStationAlphaSetStyle>SubStation Alpha - stĳl instellen</SubStationAlphaSetStyle>
+        <SetActor>Stel acteur in</SetActor>
+        <SubStationAlphaStyles>SubStation Alpha stĳlen...</SubStationAlphaStyles>
+        <AdvancedSubStationAlphaStyles>Advanced SubStation Alpha stĳlen...</AdvancedSubStationAlphaStyles>
         <TimedTextSetRegion>TGetimede tekst - regio instellen</TimedTextSetRegion>
         <TimedTextSetStyle>Getimede tekst - stĳl instellen</TimedTextSetStyle>
         <TimedTextStyles>Getimede tekst stĳlen...</TimedTextStyles>
