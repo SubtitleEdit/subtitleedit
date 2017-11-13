@@ -13,24 +13,24 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
                 Paragraph p = subtitle.Paragraphs[i];
-                string oldText = p.Text;
                 string s = p.Text;
                 if (s.Contains('i'))
                 {
-                    s = FixAloneLowercaseIToUppercaseLine(SubtitleEditRegex.LittleIRegex, oldText, s, 'i');
-                    if (s != oldText && callbacks.AllowFix(p, fixAction))
+                    s = FixAloneLowercaseIToUppercaseLine(SubtitleEditRegex.LittleIRegex, s, 'i');
+                    if (s != p.Text && callbacks.AllowFix(p, fixAction))
                     {
+                        callbacks.AddFixToListView(p, fixAction, p.Text, s);
                         p.Text = s;
                         iFixes++;
-                        callbacks.AddFixToListView(p, fixAction, oldText, p.Text);
                     }
                 }
             }
             callbacks.UpdateFixStatus(iFixes, language.FixLowercaseIToUppercaseI, language.XIsChangedToUppercase);
         }
 
-        public static string FixAloneLowercaseIToUppercaseLine(Regex re, string oldText, string s, char target)
+        public static string FixAloneLowercaseIToUppercaseLine(Regex re, string s, char target)
         {
+            string oldText = s;
             //html tags
             s = s.Replace(">" + target + "</", ">I</");
             s = s.Replace(">" + target + " ", ">I ");

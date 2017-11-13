@@ -449,9 +449,8 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 text = FixLowercaseIToUppercaseI(text, lastLine);
                 if (SpellCheckDictionaryName.StartsWith("en_", StringComparison.Ordinal) || _threeLetterIsoLanguageName == "eng")
                 {
-                    string oldText = text;
-                    text = FixAloneLowercaseIToUppercaseI.FixAloneLowercaseIToUppercaseLine(SubtitleEditRegex.LittleIRegex, oldText, text, 'i');
-                    text = FixAloneLowercaseIToUppercaseI.FixAloneLowercaseIToUppercaseLine(RegexAloneIasL, oldText, text, 'l');
+                    text = FixAloneLowercaseIToUppercaseI.FixAloneLowercaseIToUppercaseLine(SubtitleEditRegex.LittleIRegex, text, 'i');
+                    text = FixAloneLowercaseIToUppercaseI.FixAloneLowercaseIToUppercaseLine(RegexAloneIasL, text, 'l');
                 }
                 else if (_threeLetterIsoLanguageName == "fra")
                 {
@@ -652,31 +651,50 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
         private string FixLowercaseIToUppercaseI(string input, string lastLine)
         {
-            var sb = new StringBuilder();
             var lines = input.SplitToLines();
+            const string endChars = ".?!¿¡)]";
             for (int i = 0; i < lines.Length; i++)
             {
-                string l = lines[i];
-
+                string line = lines[i];
+                // update lastline
                 if (i > 0)
-                    lastLine = lines[i - 1];
-                lastLine = HtmlUtil.RemoveHtmlTags(lastLine);
-
-                if (string.IsNullOrEmpty(lastLine) ||
-                    lastLine.EndsWith('.') ||
-                    lastLine.EndsWith('!') ||
-                    lastLine.EndsWith('?'))
                 {
-                    var st = new StrippableText(l);
-                    if (st.StrippedText.StartsWith('i') && !st.Pre.EndsWith('[') && !st.Pre.EndsWith('(') && !st.Pre.EndsWith("...", StringComparison.Ordinal))
+                    lastLine = lines[i - 1];
+                }
+                // make sure previous line is fully closed
+                if (!string.IsNullOrEmpty(lastLine))
+                {
+                    lastLine = HtmlUtil.RemoveHtmlTags(lastLine);
+                    if (lastLine.Length > 0)
                     {
-                        if (string.IsNullOrEmpty(lastLine) || (!lastLine.EndsWith("...", StringComparison.Ordinal) && !EndsWithAbbreviation(lastLine, _abbreviationList)))
-                            l = st.Pre + "I" + st.StrippedText.Remove(0, 1) + st.Post;
+                        if (!endChars.Contains(lastLine[lastLine.Length - 1]))
+                        {
+                            continue;
+                        }
+                        if (lastLine.EndsWith("...", StringComparison.Ordinal) || EndsWithAbbreviation(lastLine, _abbreviationList))
+                        {
+                            continue;
+                        }
                     }
                 }
-                sb.AppendLine(l);
+                var st = new StrippableText(line);
+                // Do not change word inside parentheses or if it's a continuation
+                if (st.Pre.EndsWith('(') || st.Pre.EndsWith('[') || st.Pre.EndsWith("...", StringComparison.Ordinal))
+                {
+                    continue;
+                }
+                if (st.StrippedText.StartsWith('i'))
+                {
+                    // Do not change words like: iPhone, iPad...
+                    if (st.StrippedText.Length > 1 && char.IsUpper(st.StrippedText[1]))
+                    {
+                        continue;
+                    }
+                    line = st.CombineWithPrePost(st.StrippedText.CapitalizeFirstLetter());
+                    lines[i] = line;
+                }
             }
-            return sb.ToString().TrimEnd('\r', '\n');
+            return string.Join(Environment.NewLine, lines).TrimEnd(Utilities.NewLineChars);
         }
 
         private static bool EndsWithAbbreviation(string line, HashSet<string> abbreviationList)
