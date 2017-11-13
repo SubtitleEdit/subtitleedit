@@ -24,6 +24,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
@@ -338,7 +339,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 UiUtil.PreInitialize(this);
                 InitializeComponent();
-                UiUtil.FixFonts(this);
+
                 Icon = Properties.Resources.SubtitleEditFormIcon;
 
                 textBoxListViewTextAlternate.Visible = false;
@@ -9264,7 +9265,9 @@ namespace Nikse.SubtitleEdit.Forms
                     Configuration.Settings.General.SplitContainerListViewAndTextSplitterDistance = splitContainerListViewAndText.SplitterDistance;
                 }
                 Configuration.Settings.General.AutoRepeatOn = checkBoxAutoRepeatOn.Checked;
-                Configuration.Settings.General.AutoRepeatCount = Convert.ToInt32(comboBoxAutoRepeat.Text);
+                int autoRepeat;
+                if (int.TryParse(comboBoxAutoRepeat.Text, out autoRepeat))
+                    Configuration.Settings.General.AutoRepeatCount = autoRepeat;
                 Configuration.Settings.General.AutoContinueOn = checkBoxAutoContinue.Checked;
                 Configuration.Settings.General.AutoContinueDelay = comboBoxAutoContinue.SelectedIndex;
                 Configuration.Settings.General.SyncListViewWithVideoWhilePlaying = checkBoxSyncListViewWithVideoWhilePlaying.Checked;
@@ -15927,6 +15930,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             comboBoxSubtitleFormats.AutoCompleteSource = AutoCompleteSource.ListItems;
             comboBoxSubtitleFormats.AutoCompleteMode = AutoCompleteMode.Append;
+            UiUtil.FixFonts(this);
         }
 
         private void TimerCheckForUpdatesTick(object sender, EventArgs e)
@@ -16212,6 +16216,8 @@ namespace Nikse.SubtitleEdit.Forms
             int filePluginCount = 0;
             int toolsPluginCount = 0;
             int syncPluginCount = 0;
+            int translatePluginCount = 0;
+            int spellCheckPluginCount = 0;
 
             for (int k = fileToolStripMenuItem.DropDownItems.Count - 1; k > 0; k--)
             {
@@ -16250,7 +16256,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     string name, description, text, shortcut, actionType;
                     decimal version;
-                    System.Reflection.MethodInfo mi;
+                    MethodInfo mi;
                     GetPropertiesAndDoAction(pluginFileName, out name, out text, out version, out description, out actionType, out shortcut, out mi);
                     if (!string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(actionType) && mi != null)
                     {
@@ -16258,69 +16264,45 @@ namespace Nikse.SubtitleEdit.Forms
                         item.Name = "Plugin" + toolsPluginCount;
                         item.Text = text;
                         item.Tag = pluginFileName;
+                        UiUtil.FixFonts(item);
 
                         if (!string.IsNullOrEmpty(shortcut))
                             item.ShortcutKeys = UiUtil.GetKeys(shortcut);
 
                         if (actionType.Equals("File", StringComparison.OrdinalIgnoreCase))
                         {
-                            if (filePluginCount == 0)
-                            {
-                                var tss = new ToolStripSeparator();
-                                tss.Name = "PluginSepFile";
-                                fileToolStripMenuItem.DropDownItems.Insert(fileToolStripMenuItem.DropDownItems.Count - 2, tss);
-                            }
+                            AddSeparator(filePluginCount, fileToolStripMenuItem, 2);
                             item.Click += PluginToolClick;
                             fileToolStripMenuItem.DropDownItems.Insert(fileToolStripMenuItem.DropDownItems.Count - 2, item);
                             filePluginCount++;
                         }
                         else if (actionType.Equals("Tool", StringComparison.OrdinalIgnoreCase))
                         {
-                            if (toolsPluginCount == 0)
-                            {
-                                var tss = new ToolStripSeparator();
-                                tss.Name = "PluginSepTool";
-                                toolsToolStripMenuItem.DropDownItems.Add(tss);
-                            }
+                            AddSeparator(toolsPluginCount, toolsToolStripMenuItem);
                             item.Click += PluginToolClick;
                             toolsToolStripMenuItem.DropDownItems.Add(item);
                             toolsPluginCount++;
                         }
                         else if (actionType.Equals("Sync", StringComparison.OrdinalIgnoreCase))
                         {
-                            if (syncPluginCount == 0)
-                            {
-                                var tss = new ToolStripSeparator();
-                                tss.Name = "PluginSepSync";
-                                toolStripMenuItemSynchronization.DropDownItems.Add(tss);
-                            }
+                            AddSeparator(syncPluginCount, toolStripMenuItemSynchronization);
                             item.Click += PluginToolClick;
                             toolStripMenuItemSynchronization.DropDownItems.Add(item);
                             syncPluginCount++;
                         }
                         else if (actionType.Equals("Translate", StringComparison.OrdinalIgnoreCase))
                         {
-                            if (syncPluginCount == 0)
-                            {
-                                var tss = new ToolStripSeparator();
-                                tss.Name = "PluginSepTranslate";
-                                toolStripMenuItemAutoTranslate.DropDownItems.Add(tss);
-                            }
+                            AddSeparator(translatePluginCount, toolStripMenuItemAutoTranslate);
                             item.Click += PluginClickTranslate;
                             toolStripMenuItemAutoTranslate.DropDownItems.Add(item);
-                            syncPluginCount++;
+                            translatePluginCount++;
                         }
                         else if (actionType.Equals("SpellCheck", StringComparison.OrdinalIgnoreCase))
                         {
-                            if (syncPluginCount == 0)
-                            {
-                                var tss = new ToolStripSeparator();
-                                tss.Name = "PluginSepSpellCheck";
-                                toolStripMenuItemSpellCheckMain.DropDownItems.Add(tss);
-                            }
+                            AddSeparator(spellCheckPluginCount, toolStripMenuItemSpellCheckMain);
                             item.Click += PluginClickNoFormatChange;
                             toolStripMenuItemSpellCheckMain.DropDownItems.Add(item);
-                            syncPluginCount++;
+                            spellCheckPluginCount++;
                         }
                     }
                 }
@@ -16328,6 +16310,19 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     MessageBox.Show(string.Format(_language.ErrorLoadingPluginXErrorY, pluginFileName, exception.Message));
                 }
+            }
+        }
+
+        private void AddSeparator(int pluginCount, ToolStripMenuItem parent, int? relativeOffset = null)
+        {
+            if (pluginCount == 0)
+            {
+                var tss = new ToolStripSeparator();
+                if (relativeOffset == null)
+                    parent.DropDownItems.Add(tss);
+                else
+                    parent.DropDownItems.Insert(parent.DropDownItems.Count - relativeOffset.Value, tss);
+                UiUtil.FixFonts(tss);
             }
         }
 
