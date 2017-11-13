@@ -670,8 +670,9 @@ namespace Nikse.SubtitleEdit.Core
         public bool CheckForUpdates { get; set; }
         public DateTime LastCheckForUpdates { get; set; }
         public bool ShowProgress { get; set; }
-        public bool ShowBetaStuff { get; set; }
         public long CurrentVideoOffsetInMs { get; set; }
+        public bool UseDarkTheme { get; set; }
+        public bool ShowBetaStuff { get; set; }
 
         public GeneralSettings()
         {
@@ -765,6 +766,7 @@ namespace Nikse.SubtitleEdit.Core
             CheckForUpdates = true;
             LastCheckForUpdates = DateTime.Now;
             ShowProgress = false;
+            UseDarkTheme = false;
             ShowBetaStuff = false;
             NewEmptyDefaultMs = 2000;
         }
@@ -1780,6 +1782,9 @@ namespace Nikse.SubtitleEdit.Core
             subNode = node.SelectSingleNode("ShowProgress");
             if (subNode != null)
                 settings.General.ShowProgress = Convert.ToBoolean(subNode.InnerText.Trim());
+            subNode = node.SelectSingleNode("UseDarkTheme");
+            if (subNode != null)
+                settings.General.UseDarkTheme = Convert.ToBoolean(subNode.InnerText.Trim());
             subNode = node.SelectSingleNode("ShowBetaStuff");
             if (subNode != null)
                 settings.General.ShowBetaStuff = Convert.ToBoolean(subNode.InnerText.Trim());
@@ -3427,6 +3432,7 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("CheckForUpdates", settings.General.CheckForUpdates.ToString());
                 textWriter.WriteElementString("LastCheckForUpdates", settings.General.LastCheckForUpdates.ToString("yyyy-MM-dd"));
                 textWriter.WriteElementString("ShowProgress", settings.General.ShowProgress.ToString());
+                textWriter.WriteElementString("UseDarkTheme", settings.General.UseDarkTheme.ToString());
                 textWriter.WriteElementString("ShowBetaStuff", settings.General.ShowBetaStuff.ToString());
                 textWriter.WriteElementString("NewEmptyDefaultMs", settings.General.NewEmptyDefaultMs.ToString(CultureInfo.InvariantCulture));
 

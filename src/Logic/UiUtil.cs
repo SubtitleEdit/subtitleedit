@@ -366,6 +366,27 @@ namespace Nikse.SubtitleEdit.Logic
 
         public static void FixFonts(Control form, int iterations = 5)
         {
+            FixFontsInner(form, iterations);
+            if (Configuration.Settings.General.UseDarkTheme)
+                DarkTheme.SetDarkTheme(form, 1500);
+        }
+
+        public static void FixFonts(ToolStripMenuItem item)
+        {
+            item.Font = GetDefaultFont();
+            if (Configuration.Settings.General.UseDarkTheme)
+                DarkTheme.SetDarkTheme(item);
+        }
+
+        public static void FixFonts(ToolStripSeparator item)
+        {
+            item.Font = GetDefaultFont();
+            if (Configuration.Settings.General.UseDarkTheme)
+                DarkTheme.SetDarkTheme(item);
+        }
+
+        private static void FixFontsInner(Control form, int iterations = 5)
+        {
             if (iterations < 1)
                 return;
 
@@ -377,7 +398,7 @@ namespace Nikse.SubtitleEdit.Logic
                 }
                 foreach (Control inner in c.Controls)
                 {
-                    FixFonts(inner, iterations - 1);
+                    FixFontsInner(inner, iterations - 1);
                 }
             }
         }
