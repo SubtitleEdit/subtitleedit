@@ -1708,12 +1708,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         private static TimeCode ParseTimeCode(string start)
         {
             string[] arr = start.Split(new[] { ':', ';', ',' }, StringSplitOptions.RemoveEmptyEntries);
-
-            int milliseconds = (int)Math.Round(1000.0 / Configuration.Settings.General.CurrentFrameRate * int.Parse(arr[3]));
-            if (milliseconds > 999)
-                milliseconds = 999;
-
-            return new TimeCode(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]), milliseconds);
+            return new TimeCode(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]), FramesToMillisecondsMax999(int.Parse(arr[3])));
         }
 
     }
