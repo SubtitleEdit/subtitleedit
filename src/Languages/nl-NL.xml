@@ -167,6 +167,7 @@ Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
     <ChooseOutputFolder>Doelmap kiezen</ChooseOutputFolder>
     <OverwriteExistingFiles>Bestaande bestanden vervangen</OverwriteExistingFiles>
     <Style>Stĳl...</Style>
+    <UseStyleFromSource>Gebruik bronstijl</UseStyleFromSource>
     <ConvertOptions>Conversieopties</ConvertOptions>
     <RemoveFormatting>Formateringstekens verwĳderen</RemoveFormatting>
     <RemoveTextForHI>D&amp;&amp;SH tekst verwĳderen</RemoveTextForHI>
@@ -183,7 +184,6 @@ Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
     <ScanFolder>Doorzoek de map...</ScanFolder>
     <ScanningFolder>Doorzoek {0} en submappen naar ondertitelbestanden...</ScanningFolder>
     <Recursive>Inclusief submappen</Recursive>
-    <SetMinMsBetweenSubtitles>Bepaal min. millisec. tussen ondertitels</SetMinMsBetweenSubtitles>
     <SetMinMsBetweenSubtitles>Zet min. milliseconden tussen ondertitels in</SetMinMsBetweenSubtitles>
     <BridgeGaps>Brugkloven</BridgeGaps>
     <PlainText>Platte tekst</PlainText>
@@ -235,7 +235,7 @@ Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
     <FromDropFrame>Van drop-frame</FromDropFrame>
   </ChangeSpeedInPercent>
   <CheckForUpdates>
-    <Title>Naar updates zoeken</Title>
+    <Title>Naar opwaardering zoeken</Title>
     <CheckingForUpdates>Naar updates zoeken...</CheckingForUpdates>
     <CheckingForUpdatesFailedX>Zoeken naar updates mislukt: {0}</CheckingForUpdatesFailedX>
     <CheckingForUpdatesNoneAvailable>U gebruikt nu de nieuwste versie van Subtitle Edit :)</CheckingForUpdatesNoneAvailable>
@@ -330,7 +330,7 @@ Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
     <IfoFiles>Ifo-bestanden</IfoFiles>
     <VobFiles>Vob-bestanden</VobFiles>
     <Add>Toevoegen...</Add>
-    <Remove>Verwĳderen</Remove>
+    <Remove>Verwijderen</Remove>
     <Clear>Leegmaken</Clear>
     <MoveUp>Omhoog</MoveUp>
     <MoveDown>Omlaag</MoveDown>
@@ -1728,8 +1728,9 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <StartInSourceView>In bronweergave starten</StartInSourceView>
     <RemoveBlankLinesWhenOpening>Lege regels bĳ het openen van een ondertitel verwĳderen</RemoveBlankLinesWhenOpening>
     <ShowLineBreaksAs>Regeleinden in lĳstweergave tonen als</ShowLineBreaksAs>
-    <MainListViewDoubleClickAction>Dubbelklik op de tekst in de lĳstweergave zal</MainListViewDoubleClickAction>
-    <MainListViewColumnsInfo>Choose visible list view columns</MainListViewColumnsInfo>
+    <MainListViewDoubleClickAction>Dubbelklik op lijn in het hoofdvenster lijstweergave zal:</MainListViewDoubleClickAction>
+    <MainListViewColumns>Kolommen lijstweergave</MainListViewColumns>
+    <MainListViewColumnsInfo>Kies zichtbare kolommen met lijstweergaven</MainListViewColumnsInfo>
     <MainListViewNothing>Niets</MainListViewNothing>
     <MainListViewVideoGoToPositionAndPause>Ga naar videopositie en pauzeer</MainListViewVideoGoToPositionAndPause>
     <MainListViewVideoGoToPositionAndPlay>Ga naar videopositie en speel af</MainListViewVideoGoToPositionAndPlay>
@@ -1738,11 +1739,11 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <MainListViewVideoGoToPositionMinusHalfSecAndPause>Ga naar videopositie min ½ seconde en pauzeer</MainListViewVideoGoToPositionMinusHalfSecAndPause>
     <MainListViewVideoGoToPositionMinus1SecAndPlay>Ga naar videopositie min 1 seconde en speel af</MainListViewVideoGoToPositionMinus1SecAndPlay>
     <MainListViewEditTextAndPause>Ga naar tekstbewerkingsvak en pauzeer op videopositie</MainListViewEditTextAndPause>
-    <AutoBackup>Automatische back-up</AutoBackup>
+    <AutoBackup>Auto back-up:</AutoBackup>
     <AutoBackupEveryMinute>Elke minuut</AutoBackupEveryMinute>
     <AutoBackupEveryFiveMinutes>Elke 5e minuut</AutoBackupEveryFiveMinutes>
     <AutoBackupEveryFifteenMinutes>Elke 15e minuut</AutoBackupEveryFifteenMinutes>
-    <AutoBackupDeleteAfter>Verwĳderen na</AutoBackupDeleteAfter>
+    <AutoBackupDeleteAfter>Wissen na</AutoBackupDeleteAfter>
     <AutoBackupDeleteAfterOneMonth>1 maand</AutoBackupDeleteAfterOneMonth>
     <AutoBackupDeleteAfterThreeMonths>3 maanden</AutoBackupDeleteAfterThreeMonths>
     <AutoBackupDeleteAfterSixMonths>6 maanden</AutoBackupDeleteAfterSixMonths>
@@ -1807,7 +1808,7 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <NamesIgnoreLists>Naam/ruis-lĳst (hoofdlettergevoelig)</NamesIgnoreLists>
     <AddName>Toevoegen</AddName>
     <AddWord>Toevoegen</AddWord>
-    <Remove>Verwĳderen</Remove>
+    <Remove>Wissen</Remove>
     <AddPair>Toevoegen</AddPair>
     <UserWordList>Gebruikerswoordenlĳst</UserWordList>
     <OcrFixList>OCR-correctielĳst</OcrFixList>
@@ -2149,9 +2150,9 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <BottomRight>Rechtsonder</BottomRight>
     <Colors>Kleuren</Colors>
     <Margins>Marges</Margins>
-    <MarginLeft>Linkermarge</MarginLeft>
-    <MarginRight>Rechtermarge</MarginRight>
-    <MarginVertical>Verticale marge</MarginVertical>
+    <MarginLeft>Marge links</MarginLeft>
+    <MarginRight>Marge rechts</MarginRight>
+    <MarginVertical>Marge verticaal</MarginVertical>
     <Border>Rand</Border>
     <PlusShadow>+ Schaduw</PlusShadow>
     <OpaqueBox>Opaque doos (gebruikt omlĳstingskleur)</OpaqueBox>
@@ -2276,7 +2277,7 @@ Wĳzigingen behouden?</KeepChangesMessage>
     <EditLastAdditions>Bewerk laatste beeldvergelĳkingstoevoegingen...</EditLastAdditions>
     <SetUnitalicFactor>Decursiveringsfactor bepalen</SetUnitalicFactor>
     <DiscardTitle>OCR wĳzigingen afwijzen?</DiscardTitle>
-    <DiscardText>Wilt u de wĳzigingen in deze OCR sessie verwerpen?</DiscardText>
+    <DiscardText>Wilt u de wĳzigingen in deze OCR sessie afwijzen</DiscardText>
     <MinLineSplitHeight>Min. lijnhoogte (spleet)</MinLineSplitHeight>
   </VobSubOcr>
   <VobSubOcrCharacter>
