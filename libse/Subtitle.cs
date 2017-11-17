@@ -49,6 +49,13 @@ namespace Nikse.SubtitleEdit.Core
             _history = historyItems;
         }
 
+        public Subtitle(List<Paragraph> paragraphs, List<HistoryItem> historyItems)
+                   : this()
+        {
+            _history = historyItems;
+            _paragraphs = paragraphs;
+        }
+
         /// <summary>
         /// Copy constructor (only paragraphs)
         /// </summary>
@@ -534,7 +541,7 @@ namespace Nikse.SubtitleEdit.Core
                     _paragraphs = _paragraphs.OrderBy(p => p.Number).ThenBy(p => p.StartTime.TotalMilliseconds).ToList();
                     break;
                 case SubtitleSortCriteria.StartTime:
-                    _paragraphs = _paragraphs.OrderBy(p=>p.StartTime.TotalMilliseconds).ThenBy(p=>p.Number).ToList();
+                    _paragraphs = _paragraphs.OrderBy(p => p.StartTime.TotalMilliseconds).ThenBy(p => p.Number).ToList();
                     break;
                 case SubtitleSortCriteria.EndTime:
                     _paragraphs = _paragraphs.OrderBy(p => p.EndTime.TotalMilliseconds).ThenBy(p => p.Number).ToList();
