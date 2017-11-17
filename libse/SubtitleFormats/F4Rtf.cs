@@ -9,19 +9,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override string Extension => ".rtf";
 
         public override string Name => "F4 Rich Text Format";
-
-        public override bool IsMine(List<string> lines, string fileName)
-        {
-            if (fileName != null && !fileName.EndsWith(Extension, StringComparison.OrdinalIgnoreCase))
-                return false;
-
-            return base.IsMine(lines, fileName);
-        }
-
-        public override string ToText(Subtitle subtitle, string title)
-        {
-            return ToF4Text(subtitle).ToRtf();
-        }
+        
+        public override string ToText(Subtitle subtitle, string title) => base.ToText(subtitle, title).ToRtf();
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
