@@ -13773,7 +13773,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
 
                         _subtitleListViewIndex = -1;
-                        _subtitle = importText.FixedSubtitle;
+                        _subtitle = new Subtitle(importText.FixedSubtitle.Paragraphs, _subtitle.HistoryItems);
                         _subtitle.CalculateFrameNumbersFromTimeCodesNoCheck(CurrentFrameRate);
                         ShowStatus(_language.TextImported);
                         ShowSource();
