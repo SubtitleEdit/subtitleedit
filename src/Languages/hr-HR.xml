@@ -270,8 +270,8 @@ Napomena: Provjeri slobodan prostor prostor na disku.</WaveFileMalformed>
     <NextDifference>&amp;Sljedeća razlika</NextDifference>
     <SubtitlesNotAlike>Podnaslovi nemaju sličnosti.</SubtitlesNotAlike>
     <XNumberOfDifference>Broj razlika: {0}</XNumberOfDifference>
-    <XNumberOfDifferenceAndPercentChanged>Broj promijenjenih: {0} ({1}% riječi)</XNumberOfDifferenceAndPercentChanged>
-    <XNumberOfDifferenceAndPercentLettersChanged>Broj promijenjenih: {0} ({1}%slova)</XNumberOfDifferenceAndPercentLettersChanged>
+    <XNumberOfDifferenceAndPercentChanged>Broj promijenjenih: {0} ({1:0.##}% riječi)</XNumberOfDifferenceAndPercentChanged>
+    <XNumberOfDifferenceAndPercentLettersChanged>Broj promijenjenih: {0} ({1:0.##}%slova)</XNumberOfDifferenceAndPercentLettersChanged>
     <ShowOnlyDifferences>P&amp;rikaži samo razlike</ShowOnlyDifferences>
     <IgnoreLineBreaks>Zanemari prijelome redaka</IgnoreLineBreaks>
     <OnlyLookForDifferencesInText>&amp;Traži samo razlike u tekstu</OnlyLookForDifferencesInText>

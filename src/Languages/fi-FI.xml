@@ -268,8 +268,8 @@ HUOM! Tarkista vapaa levytila.</WaveFileMalformed>
     <NextDifference>Seuraava eroavuus</NextDifference>
     <SubtitlesNotAlike>Tekstityksissä ei ole samankaltaisuuksia</SubtitlesNotAlike>
     <XNumberOfDifference>Eroavuuksien määrä: {0}</XNumberOfDifference>
-    <XNumberOfDifferenceAndPercentChanged>Eroavuuksien määrä: {0} ({1}% sanoista muutettu)</XNumberOfDifferenceAndPercentChanged>
-    <XNumberOfDifferenceAndPercentLettersChanged>Eroavuuksien määrä: {0} ({1}% kirjaimista muutettu)</XNumberOfDifferenceAndPercentLettersChanged>
+    <XNumberOfDifferenceAndPercentChanged>Eroavuuksien määrä: {0} ({1:0.##}% sanoista muutettu)</XNumberOfDifferenceAndPercentChanged>
+    <XNumberOfDifferenceAndPercentLettersChanged>Eroavuuksien määrä: {0} ({1:0.##}% kirjaimista muutettu)</XNumberOfDifferenceAndPercentLettersChanged>
     <ShowOnlyDifferences>Näytä vain erot</ShowOnlyDifferences>
     <IgnoreLineBreaks>Älä huomioi rivinvaihtoja</IgnoreLineBreaks>
     <OnlyLookForDifferencesInText>Etsi erot vain tekstissä</OnlyLookForDifferencesInText>

@@ -272,7 +272,7 @@ Command line: {1} {2}
     <NextDifference>下一个差异(&amp;N)</NextDifference>
     <SubtitlesNotAlike>字幕没有相似之处</SubtitlesNotAlike>
     <XNumberOfDifference>差异数量: {0}</XNumberOfDifference>
-    <XNumberOfDifferenceAndPercentChanged>差异数量：{0} (更改了 {1}% 的词)</XNumberOfDifferenceAndPercentChanged>
+    <XNumberOfDifferenceAndPercentChanged>差异数量：{0} (更改了 {1:0.##}% 的词)</XNumberOfDifferenceAndPercentChanged>
     <XNumberOfDifferenceAndPercentLettersChanged>忽略断行</XNumberOfDifferenceAndPercentLettersChanged>
     <ShowOnlyDifferences>仅显示差异</ShowOnlyDifferences>
     <IgnoreLineBreaks>忽略断行</IgnoreLineBreaks>

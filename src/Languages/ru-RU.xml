@@ -283,8 +283,8 @@ https://github.com/SubtitleEdit/subtitleedit
     <NextDifference>Следующее отличие</NextDifference>
     <SubtitlesNotAlike>Субтитры не имеют сходства</SubtitlesNotAlike>
     <XNumberOfDifference>Количество отличий: {0}</XNumberOfDifference>
-    <XNumberOfDifferenceAndPercentChanged>Количество различий: {0} ({1}% измененных слов)</XNumberOfDifferenceAndPercentChanged>
-    <XNumberOfDifferenceAndPercentLettersChanged>Количество различий: {0} ({1}% измененных символов)</XNumberOfDifferenceAndPercentLettersChanged>
+    <XNumberOfDifferenceAndPercentChanged>Количество различий: {0} ({1:0.##}% измененных слов)</XNumberOfDifferenceAndPercentChanged>
+    <XNumberOfDifferenceAndPercentLettersChanged>Количество различий: {0} ({1:0.##}% измененных символов)</XNumberOfDifferenceAndPercentLettersChanged>
     <ShowOnlyDifferences>Показывать только временные отличия</ShowOnlyDifferences>
     <IgnoreLineBreaks>Не учитывать переносы строк</IgnoreLineBreaks>
     <OnlyLookForDifferencesInText>Показывать только текстовые отличия</OnlyLookForDifferencesInText>
