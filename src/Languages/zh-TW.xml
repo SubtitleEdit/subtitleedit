@@ -255,8 +255,8 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
     <NextDifference>下一個差異處(&amp;N)</NextDifference>
     <SubtitlesNotAlike>字幕沒有相似之處</SubtitlesNotAlike>
     <XNumberOfDifference>差異數量: {0}</XNumberOfDifference>
-    <XNumberOfDifferenceAndPercentChanged>差異數量: {0} (已變更單字的 {1}%)</XNumberOfDifferenceAndPercentChanged>
-    <XNumberOfDifferenceAndPercentLettersChanged>差異數量: {0} (已變更字母的 {1}%)</XNumberOfDifferenceAndPercentLettersChanged>
+    <XNumberOfDifferenceAndPercentChanged>差異數量: {0} (已變更單字的 {1:0.##}%)</XNumberOfDifferenceAndPercentChanged>
+    <XNumberOfDifferenceAndPercentLettersChanged>差異數量: {0} (已變更字母的 {1:0.##}%)</XNumberOfDifferenceAndPercentLettersChanged>
     <ShowOnlyDifferences>僅顯示差異處</ShowOnlyDifferences>
     <IgnoreLineBreaks>忽略換行字元</IgnoreLineBreaks>
     <OnlyLookForDifferencesInText>僅尋找文字差異</OnlyLookForDifferencesInText>
@@ -1707,8 +1707,7 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
     <WaveformShowWpm>顯示每分鐘單字</WaveformShowWpm>
     <ReverseMouseWheelScrollDirection>反轉滑鼠捲動方向</ReverseMouseWheelScrollDirection>
     <WaveformAllowOverlap>允許重疊 (當 移動/調整大小 時)</WaveformAllowOverlap>
-    <WaveformSetVideoPosMoveStartEnd>
-    </WaveformSetVideoPosMoveStartEnd>
+    <WaveformSetVideoPosMoveStartEnd></WaveformSetVideoPosMoveStartEnd>
     <WaveformFocusMouseEnter>滑鼠移過後設定焦點</WaveformFocusMouseEnter>
     <WaveformListViewFocusMouseEnter>當滑鼠移過時將焦點設定到清單檢視</WaveformListViewFocusMouseEnter>
     <WaveformBorderHitMs1>邊框標記的最短相接間隔須為</WaveformBorderHitMs1>
@@ -1840,8 +1839,7 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
     <GoToFirstSelectedLine>移至第一個選擇的行</GoToFirstSelectedLine>
     <GoToNextEmptyLine>移至下一個空行</GoToNextEmptyLine>
     <MergeSelectedLines>合併選擇的行</MergeSelectedLines>
-    <MergeSelectedLinesOnlyFirstText>
-    </MergeSelectedLinesOnlyFirstText>
+    <MergeSelectedLinesOnlyFirstText></MergeSelectedLinesOnlyFirstText>
     <ToggleTranslationMode>切換翻譯模式</ToggleTranslationMode>
     <SwitchOriginalAndTranslation>切換原文和翻譯</SwitchOriginalAndTranslation>
     <MergeOriginalAndTranslation>合併原文和翻譯</MergeOriginalAndTranslation>
@@ -1866,8 +1864,7 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
     <HowToSignUp>如何註冊</HowToSignUp>
     <GoogleTranslateUrl>Google 翻譯網址</GoogleTranslateUrl>
   </Settings>
-  <SettingsMpv>
-  </SettingsMpv>
+  <SettingsMpv></SettingsMpv>
   <SetVideoOffset>
     <Reset>重置</Reset>
   </SetVideoOffset>
@@ -2198,8 +2195,7 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
     <Title>新增資料夾</Title>
     <Message>新字元資料庫資料夾的名稱</Message>
   </VobSubOcrNewFolder>
-  <VobSubOcrSetItalicFactor>
-  </VobSubOcrSetItalicFactor>
+  <VobSubOcrSetItalicFactor></VobSubOcrSetItalicFactor>
   <Watermark>
     <Title>水印</Title>
     <WatermarkX>水印: {0}</WatermarkX>

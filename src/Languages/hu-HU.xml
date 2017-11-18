@@ -277,8 +277,8 @@ Megjegyzés: Ellenőrizze a szabad merevlemez területet.</WaveFileMalformed>
     <NextDifference>Következő eltérés</NextDifference>
     <SubtitlesNotAlike>A feliratok nem egyeznek</SubtitlesNotAlike>
     <XNumberOfDifference>Eltérések száma: {0}</XNumberOfDifference>
-    <XNumberOfDifferenceAndPercentChanged>Eltérések száma: {0} ({1}% szó módosult)</XNumberOfDifferenceAndPercentChanged>
-    <XNumberOfDifferenceAndPercentLettersChanged>Eltérések száma: {0} ({1}% betű módosult)</XNumberOfDifferenceAndPercentLettersChanged>
+    <XNumberOfDifferenceAndPercentChanged>Eltérések száma: {0} ({1:0.##}% szó módosult)</XNumberOfDifferenceAndPercentChanged>
+    <XNumberOfDifferenceAndPercentLettersChanged>Eltérések száma: {0} ({1:0.##}% betű módosult)</XNumberOfDifferenceAndPercentLettersChanged>
     <ShowOnlyDifferences>Csak az eltérések megjelenítése</ShowOnlyDifferences>
     <IgnoreLineBreaks>Sortörések figyelmen kívül hagyása</IgnoreLineBreaks>
     <OnlyLookForDifferencesInText>Csak az eltérések keresése a szövegben</OnlyLookForDifferencesInText>

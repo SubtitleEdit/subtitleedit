@@ -292,7 +292,7 @@ namespace Nikse.SubtitleEdit.Forms
                 while (index < min)
                 {
                     bool addIndexToDifferences = false;
-                    Utilities.GetTotalAndChangedWords(p1.Text, p2.Text, ref totalWords, ref wordsChanged, checkBoxIgnoreLineBreaks.Checked, GetBreakToLetter());
+                    Utilities.GetTotalAndChangedWords(p1.Text, p2.Text, ref totalWords, ref wordsChanged, checkBoxIgnoreLineBreaks.Checked, ShouldBreakToLetter());
                     if (p1.ToString() == emptyParagraphAsString)
                     {
                         addIndexToDifferences = true;
@@ -323,7 +323,7 @@ namespace Nikse.SubtitleEdit.Forms
                 const double tolerance = 0.1;
                 while (index < min)
                 {
-                    Utilities.GetTotalAndChangedWords(p1.Text, p2.Text, ref totalWords, ref wordsChanged, checkBoxIgnoreLineBreaks.Checked, GetBreakToLetter());
+                    Utilities.GetTotalAndChangedWords(p1.Text, p2.Text, ref totalWords, ref wordsChanged, checkBoxIgnoreLineBreaks.Checked, ShouldBreakToLetter());
                     bool addIndexToDifferences = false;
                     if (p1.ToString() == emptyParagraphAsString)
                     {
@@ -420,10 +420,10 @@ namespace Nikse.SubtitleEdit.Forms
                 if (wordsChanged != totalWords && wordsChanged > 0)
                 {
                     string formatString = Configuration.Settings.Language.CompareSubtitles.XNumberOfDifferenceAndPercentChanged;
-                    if (GetBreakToLetter())
+                    if (ShouldBreakToLetter())
                         formatString = Configuration.Settings.Language.CompareSubtitles.XNumberOfDifferenceAndPercentLettersChanged;
 
-                    labelStatus.Text = string.Format(formatString, _differences.Count, wordsChanged * 100 / totalWords);
+                    labelStatus.Text = string.Format(formatString, _differences.Count, wordsChanged * 100.00 / totalWords);
                 }
                 else
                 {
@@ -461,12 +461,7 @@ namespace Nikse.SubtitleEdit.Forms
             subtitleListView1.SelectIndexAndEnsureVisible(0);
         }
 
-        private bool GetBreakToLetter()
-        {
-            if (_language1 != null && (_language1 == "ja" || _language1 == "zh"))
-                return true;
-            return false;
-        }
+        private bool ShouldBreakToLetter() => _language1 == null ? false : (_language1 == "ja" || _language1 == "zh");
 
         private string FixWhitespace(string p)
         {

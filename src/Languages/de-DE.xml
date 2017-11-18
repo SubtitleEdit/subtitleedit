@@ -271,8 +271,8 @@ Ist genügend Plattenspeicherplatz verfügbar?</WaveFileMalformed>
     <NextDifference>&amp;Nächster Unterschied</NextDifference>
     <SubtitlesNotAlike>Untertitel haben keine Übereinstimmungen</SubtitlesNotAlike>
     <XNumberOfDifference>Unterschiede: {0}</XNumberOfDifference>
-    <XNumberOfDifferenceAndPercentChanged>Unterschiede: {0} ({1}% Worte geändert)</XNumberOfDifferenceAndPercentChanged>
-    <XNumberOfDifferenceAndPercentLettersChanged>Unterschiede: {0} ({1}% Buchstaben geändert)</XNumberOfDifferenceAndPercentLettersChanged>
+    <XNumberOfDifferenceAndPercentChanged>Unterschiede: {0} ({1:0.##}% Worte geändert)</XNumberOfDifferenceAndPercentChanged>
+    <XNumberOfDifferenceAndPercentLettersChanged>Unterschiede: {0} ({1:0.##}% Buchstaben geändert)</XNumberOfDifferenceAndPercentLettersChanged>
     <ShowOnlyDifferences>Nur Unterschiede anzeigen</ShowOnlyDifferences>
     <IgnoreLineBreaks>Umbrüche ignorieren</IgnoreLineBreaks>
     <OnlyLookForDifferencesInText>Nur nach Unterschieden im Text suchen</OnlyLookForDifferencesInText>

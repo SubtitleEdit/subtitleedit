@@ -240,8 +240,8 @@ E-posta: mailto:nikse.dk@gmail.com</AboutText1>
     <NextDifference>&amp;Sonraki farklılık</NextDifference>
     <SubtitlesNotAlike>Altyazılar benzemiyor</SubtitlesNotAlike>
     <XNumberOfDifference>Fark sayısı: {0}</XNumberOfDifference>
-    <XNumberOfDifferenceAndPercentChanged>Yapılan değişikliklik {0} ({1}% kelime değiştirildi.</XNumberOfDifferenceAndPercentChanged>
-    <XNumberOfDifferenceAndPercentLettersChanged>Yapılan değişikliklik {0} ({1}% harf değiştirildi.</XNumberOfDifferenceAndPercentLettersChanged>
+    <XNumberOfDifferenceAndPercentChanged>Yapılan değişikliklik {0} ({1:0.##}% kelime değiştirildi.</XNumberOfDifferenceAndPercentChanged>
+    <XNumberOfDifferenceAndPercentLettersChanged>Yapılan değişikliklik {0} ({1:0.##}% harf değiştirildi.</XNumberOfDifferenceAndPercentLettersChanged>
     <ShowOnlyDifferences>Sadece farkları göster</ShowOnlyDifferences>
     <IgnoreLineBreaks>Bozuk satırları görmezden gel</IgnoreLineBreaks>
     <OnlyLookForDifferencesInText>Sadece metindeki farklılıklara bak</OnlyLookForDifferencesInText>

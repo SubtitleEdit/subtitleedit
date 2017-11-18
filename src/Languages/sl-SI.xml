@@ -226,8 +226,8 @@ E-pošta: hdhawkhd@gmail.com</AboutText1>
     <NextDifference>&amp; naslednja razlika</NextDifference>
     <SubtitlesNotAlike>Podnapisa nimata podobnosti</SubtitlesNotAlike>
     <XNumberOfDifference>Število razlik: {0}</XNumberOfDifference>
-    <XNumberOfDifferenceAndPercentChanged>Število razlik: {0} ({1}% od, zamenjane besede)</XNumberOfDifferenceAndPercentChanged>
-    <XNumberOfDifferenceAndPercentLettersChanged>Število razlik: {0} ({1}% od, zamenjane črke)</XNumberOfDifferenceAndPercentLettersChanged>
+    <XNumberOfDifferenceAndPercentChanged>Število razlik: {0} ({1:0.##}% od, zamenjane besede)</XNumberOfDifferenceAndPercentChanged>
+    <XNumberOfDifferenceAndPercentLettersChanged>Število razlik: {0} ({1:0.##}% od, zamenjane črke)</XNumberOfDifferenceAndPercentLettersChanged>
     <ShowOnlyDifferences>Pokaži edino razlike</ShowOnlyDifferences>
     <IgnoreLineBreaks>Spreglej lome vrstic</IgnoreLineBreaks>
     <OnlyLookForDifferencesInText>Razlike samo v besedilu</OnlyLookForDifferencesInText>

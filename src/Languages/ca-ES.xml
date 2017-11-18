@@ -264,8 +264,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <NextDifference>Diferència següe&amp;nt</NextDifference>
     <SubtitlesNotAlike>Els subtítols no tenen similituds</SubtitlesNotAlike>
     <XNumberOfDifference>Nombre de diferències: {0}</XNumberOfDifference>
-    <XNumberOfDifferenceAndPercentChanged>Nombre de diferències: {0} ({1}% de paraules canviades)</XNumberOfDifferenceAndPercentChanged>
-    <XNumberOfDifferenceAndPercentLettersChanged>Nombre de diferències: {0} ({1}% de lletres canviades)</XNumberOfDifferenceAndPercentLettersChanged>
+    <XNumberOfDifferenceAndPercentChanged>Nombre de diferències: {0} ({1:0.##}% de paraules canviades)</XNumberOfDifferenceAndPercentChanged>
+    <XNumberOfDifferenceAndPercentLettersChanged>Nombre de diferències: {0} ({1:0.##}% de lletres canviades)</XNumberOfDifferenceAndPercentLettersChanged>
     <ShowOnlyDifferences>Mostra només diferències</ShowOnlyDifferences>
     <IgnoreLineBreaks>Ignora salts de línia</IgnoreLineBreaks>
     <OnlyLookForDifferencesInText>Només comprova diferències al text</OnlyLookForDifferencesInText>

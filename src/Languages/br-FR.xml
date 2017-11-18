@@ -275,8 +275,8 @@ Notenn: Gwiriekit spas an disk vak.</WaveFileMalformed>
     <NextDifference>Diforc'h &amp;da-heul</NextDifference>
     <SubtitlesNotAlike>N'eo ket heñvel an istitloù</SubtitlesNotAlike>
     <XNumberOfDifference>Niver a ziforc'hioù: {0}</XNumberOfDifference>
-    <XNumberOfDifferenceAndPercentChanged>Niver a ziforc'hioù: {0} ({1}% eus ar gerioù kemmet)</XNumberOfDifferenceAndPercentChanged>
-    <XNumberOfDifferenceAndPercentLettersChanged>Niver a ziforc'hioù: {0} ({1}% eus al lizheroù kemmet)</XNumberOfDifferenceAndPercentLettersChanged>
+    <XNumberOfDifferenceAndPercentChanged>Niver a ziforc'hioù: {0} ({1:0.##}% eus ar gerioù kemmet)</XNumberOfDifferenceAndPercentChanged>
+    <XNumberOfDifferenceAndPercentLettersChanged>Niver a ziforc'hioù: {0} ({1:0.##}% eus al lizheroù kemmet)</XNumberOfDifferenceAndPercentLettersChanged>
     <ShowOnlyDifferences>Diskouez an diforc'hioù hepken</ShowOnlyDifferences>
     <IgnoreLineBreaks>Na ober van ouzh al lamm linennoù</IgnoreLineBreaks>
     <OnlyLookForDifferencesInText>Gwelet an diforc'hioù en destenn hepken</OnlyLookForDifferencesInText>
