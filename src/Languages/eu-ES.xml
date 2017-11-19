@@ -274,8 +274,8 @@ Oharra: Egiaztatu diskako toki askea.</WaveFileMalformed>
     <NextDifference>&amp;Hurrengo ezberdintasuna</NextDifference>
     <SubtitlesNotAlike>Azpidatziek ez dute antzekotasunik</SubtitlesNotAlike>
     <XNumberOfDifference>Ezberdintasun zenbatekoa: {0}</XNumberOfDifference>
-    <XNumberOfDifferenceAndPercentChanged>Ezberdintasun zenbatekoa: {0} ({1}% hitz aldatuta)</XNumberOfDifferenceAndPercentChanged>
-    <XNumberOfDifferenceAndPercentLettersChanged>Ezberdintasun zenbatekoa: {0} ({1}% hizkirri aldatuta)</XNumberOfDifferenceAndPercentLettersChanged>
+    <XNumberOfDifferenceAndPercentChanged>Ezberdintasun zenbatekoa: {0} ({1:0.##}% hitz aldatuta)</XNumberOfDifferenceAndPercentChanged>
+    <XNumberOfDifferenceAndPercentLettersChanged>Ezberdintasun zenbatekoa: {0} ({1:0.##}% hizkirri aldatuta)</XNumberOfDifferenceAndPercentLettersChanged>
     <ShowOnlyDifferences>Erakutsi ezberdintasunak bakarrik</ShowOnlyDifferences>
     <IgnoreLineBreaks>Ezikusi lerro hausteak</IgnoreLineBreaks>
     <OnlyLookForDifferencesInText>Idatzizko ezberdintasunak bakarrik behatu</OnlyLookForDifferencesInText>

@@ -274,8 +274,8 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <NextDifference>다음(&amp;N)...</NextDifference>
     <SubtitlesNotAlike>완전히 다른 자막입니다!</SubtitlesNotAlike>
     <XNumberOfDifference>차이: {0}개</XNumberOfDifference>
-    <XNumberOfDifferenceAndPercentChanged>차이나는 줄: {0}개 (변경된 단어 비율: {1}%)</XNumberOfDifferenceAndPercentChanged>
-    <XNumberOfDifferenceAndPercentLettersChanged>차이나는 줄: {0}개 (변경된 문자 비율: {1}%)</XNumberOfDifferenceAndPercentLettersChanged>
+    <XNumberOfDifferenceAndPercentChanged>차이나는 줄: {0}개 (변경된 단어 비율: {1:0.##}%)</XNumberOfDifferenceAndPercentChanged>
+    <XNumberOfDifferenceAndPercentLettersChanged>차이나는 줄: {0}개 (변경된 문자 비율: {1:0.##}%)</XNumberOfDifferenceAndPercentLettersChanged>
     <ShowOnlyDifferences>차이나는 줄만 표시</ShowOnlyDifferences>
     <IgnoreLineBreaks>줄바꿈 무시</IgnoreLineBreaks>
     <OnlyLookForDifferencesInText>변경된 텍스트에 색칠</OnlyLookForDifferencesInText>

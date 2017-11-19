@@ -271,8 +271,8 @@ Tips: Se om du har noe plass igjen på harddisken.</WaveFileMalformed>
     <NextDifference>&amp;Neste forskjell</NextDifference>
     <SubtitlesNotAlike>Undertekstene har ingen likheter</SubtitlesNotAlike>
     <XNumberOfDifference>Antall forskjeller: {0}</XNumberOfDifference>
-    <XNumberOfDifferenceAndPercentChanged>Antall forskjeller: {0} ({1}% av ordene er endret)</XNumberOfDifferenceAndPercentChanged>
-    <XNumberOfDifferenceAndPercentLettersChanged>Antall forskjeller: {0} ({1}% av bokstavene er endret)</XNumberOfDifferenceAndPercentLettersChanged>
+    <XNumberOfDifferenceAndPercentChanged>Antall forskjeller: {0} ({1:0.##}% av ordene er endret)</XNumberOfDifferenceAndPercentChanged>
+    <XNumberOfDifferenceAndPercentLettersChanged>Antall forskjeller: {0} ({1:0.##}% av bokstavene er endret)</XNumberOfDifferenceAndPercentLettersChanged>
     <ShowOnlyDifferences>Vis kun forskjeller</ShowOnlyDifferences>
     <IgnoreLineBreaks>Ignorer linjebrytninger</IgnoreLineBreaks>
     <OnlyLookForDifferencesInText>Let kun etter forskjeller i tekst</OnlyLookForDifferencesInText>

@@ -277,8 +277,8 @@ Note: Vérifiez l'espace disque disponible.</WaveFileMalformed>
     <NextDifference>Différence &amp;suivante</NextDifference>
     <SubtitlesNotAlike>Les sous-titres ne sont pas similaires</SubtitlesNotAlike>
     <XNumberOfDifference>Nombre de différences: {0}</XNumberOfDifference>
-    <XNumberOfDifferenceAndPercentChanged>Nombre de différences: {0} ({1}% des mots modifiés)</XNumberOfDifferenceAndPercentChanged>
-    <XNumberOfDifferenceAndPercentLettersChanged>Nombre de différences: {0} ({1}% de lettres modifié)</XNumberOfDifferenceAndPercentLettersChanged>
+    <XNumberOfDifferenceAndPercentChanged>Nombre de différences: {0} ({1:0.##}% des mots modifiés)</XNumberOfDifferenceAndPercentChanged>
+    <XNumberOfDifferenceAndPercentLettersChanged>Nombre de différences: {0} ({1:0.##}% de lettres modifié)</XNumberOfDifferenceAndPercentLettersChanged>
     <ShowOnlyDifferences>Cacher les lignes identiques</ShowOnlyDifferences>
     <IgnoreLineBreaks>Ignorer les divisions de ligne</IgnoreLineBreaks>
     <OnlyLookForDifferencesInText>Ne considérer que les différences dans le texte</OnlyLookForDifferencesInText>

@@ -273,8 +273,8 @@ Obs! Kontrollera ledigt utrymme.</WaveFileMalformed>
     <NextDifference>Nästa skillnad</NextDifference>
     <SubtitlesNotAlike>Texter har inga likheter</SubtitlesNotAlike>
     <XNumberOfDifference>Antal skillnader: {0}</XNumberOfDifference>
-    <XNumberOfDifferenceAndPercentChanged>Antal skillnader: {0} ({1}% av ord förändrats)</XNumberOfDifferenceAndPercentChanged>
-    <XNumberOfDifferenceAndPercentLettersChanged>Antal skillnader: {0} ({1}% av bokstäver ändrats)</XNumberOfDifferenceAndPercentLettersChanged>
+    <XNumberOfDifferenceAndPercentChanged>Antal skillnader: {0} ({1:0.##}% av ord förändrats)</XNumberOfDifferenceAndPercentChanged>
+    <XNumberOfDifferenceAndPercentLettersChanged>Antal skillnader: {0} ({1:0.##}% av bokstäver ändrats)</XNumberOfDifferenceAndPercentLettersChanged>
     <ShowOnlyDifferences>Visa bara skillnader</ShowOnlyDifferences>
     <IgnoreLineBreaks>Ignorera radbrytningar</IgnoreLineBreaks>
     <OnlyLookForDifferencesInText>Leta bara efter skillnader i text</OnlyLookForDifferencesInText>
