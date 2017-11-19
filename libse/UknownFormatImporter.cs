@@ -48,6 +48,11 @@ namespace Nikse.SubtitleEdit.Core
                     subtitle = jsonSubtitle;
             }
 
+            if (subtitle.Paragraphs.Count == 0 && lines.Length == 1 && lines[0].Contains(" --> "))
+            {
+                subtitle = ImportSubtitleWithNoLineBreaks(lines[0]);
+            }
+
             return subtitle;
         }
 
@@ -730,5 +735,43 @@ namespace Nikse.SubtitleEdit.Core
             }
         }
 
+        private static Subtitle ImportSubtitleWithNoLineBreaks(string text)
+        {
+            var regex = new Regex(@"^\d+ \d+:\d+:\d+[.,:;]\d+ --> \d+:\d+:\d+[.,:;]\d+\b", RegexOptions.Compiled); // e.g.: 1 00:00:01.502 --> 00:00:03.604
+            var subtitle = new Subtitle();
+            int i = 0;
+            var sb = new StringBuilder();
+            Paragraph p = null;
+            while (i < text.Length)
+            {
+                var ch = text[i];
+                if (char.IsNumber(ch))
+                {
+                    var macth = regex.Match(text.Substring(i));
+                    if (macth.Success)
+                    {
+                        if (p != null)
+                            p.Text = Utilities.AutoBreakLine(sb.ToString().Trim());
+                        sb.Clear();
+                        var arr = macth.Value.Split(' ');
+                        if (arr.Length == 4)
+                        {
+                            i += macth.Value.Length;
+                            p = new Paragraph();
+                            p.StartTime = DecodeTime(arr[1].Split(ExpectedSplitChars));
+                            p.EndTime = DecodeTime(arr[3].Split(ExpectedSplitChars));
+                            subtitle.Paragraphs.Add(p);
+                            continue;
+                        }
+                    }
+                }
+                sb.Append(ch);
+                i++;
+            }
+            if (p != null && string.IsNullOrEmpty(p.Text))
+                p.Text = Utilities.AutoBreakLine(sb.ToString().Trim());
+            subtitle.Renumber();
+            return subtitle;
+        }
     }
 }
