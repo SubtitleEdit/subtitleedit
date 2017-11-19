@@ -271,8 +271,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <NextDifference>&amp;Наступна відмінність</NextDifference>
     <SubtitlesNotAlike>Субтитри не мають подібностей</SubtitlesNotAlike>
     <XNumberOfDifference>Кількість відмінностей: {0}</XNumberOfDifference>
-    <XNumberOfDifferenceAndPercentChanged>Кількість відмінностей: {0} ({1}% слів змінено)</XNumberOfDifferenceAndPercentChanged>
-    <XNumberOfDifferenceAndPercentLettersChanged>Кількість відмінностей: {0} ({1}% літер змінено)</XNumberOfDifferenceAndPercentLettersChanged>
+    <XNumberOfDifferenceAndPercentChanged>Кількість відмінностей: {0} ({1:0.##}% слів змінено)</XNumberOfDifferenceAndPercentChanged>
+    <XNumberOfDifferenceAndPercentLettersChanged>Кількість відмінностей: {0} ({1:0.##}% літер змінено)</XNumberOfDifferenceAndPercentLettersChanged>
     <ShowOnlyDifferences>Показувати тільки відмінності</ShowOnlyDifferences>
     <IgnoreLineBreaks>Ігнорувати розриви рядків</IgnoreLineBreaks>
     <OnlyLookForDifferencesInText>Шукати виключно різницю в тексті</OnlyLookForDifferencesInText>

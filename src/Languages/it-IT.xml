@@ -270,8 +270,8 @@ Nota: Controlla lo spazio libero sul disco.</WaveFileMalformed>
     <NextDifference>&amp;Differenza successiva</NextDifference>
     <SubtitlesNotAlike>I sottotitoli sono differenti</SubtitlesNotAlike>
     <XNumberOfDifference>Numero delle differenze: {0}</XNumberOfDifference>
-    <XNumberOfDifferenceAndPercentChanged>Numero delle differenze: {0} ({1}% di parole cambiate)</XNumberOfDifferenceAndPercentChanged>
-    <XNumberOfDifferenceAndPercentLettersChanged>Numero delle differenze: {0} ({1}% di lettere cambiate)</XNumberOfDifferenceAndPercentLettersChanged>
+    <XNumberOfDifferenceAndPercentChanged>Numero delle differenze: {0} ({1:0.##}% di parole cambiate)</XNumberOfDifferenceAndPercentChanged>
+    <XNumberOfDifferenceAndPercentLettersChanged>Numero delle differenze: {0} ({1:0.##}% di lettere cambiate)</XNumberOfDifferenceAndPercentLettersChanged>
     <ShowOnlyDifferences>Mostra solo le differenze</ShowOnlyDifferences>
     <IgnoreLineBreaks>Ignora divisioni di linea</IgnoreLineBreaks>
     <OnlyLookForDifferencesInText>Cerca solo le differenze nel testo</OnlyLookForDifferencesInText>

@@ -279,8 +279,8 @@ Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
     <NextDifference>Volge&amp;nd verschil</NextDifference>
     <SubtitlesNotAlike>Volledig verschillende ondertitels</SubtitlesNotAlike>
     <XNumberOfDifference>Aantal verschillen: {0}</XNumberOfDifference>
-    <XNumberOfDifferenceAndPercentChanged>Aantal verschillen: {0} ({1}% woorden gewĳzigd)</XNumberOfDifferenceAndPercentChanged>
-    <XNumberOfDifferenceAndPercentLettersChanged>Aantal verschillen: {0} ({1}% letters gewĳzigd)</XNumberOfDifferenceAndPercentLettersChanged>
+    <XNumberOfDifferenceAndPercentChanged>Aantal verschillen: {0} ({1:0.##}% woorden gewĳzigd)</XNumberOfDifferenceAndPercentChanged>
+    <XNumberOfDifferenceAndPercentLettersChanged>Aantal verschillen: {0} ({1:0.##}% letters gewĳzigd)</XNumberOfDifferenceAndPercentLettersChanged>
     <ShowOnlyDifferences>Alleen verschillen tonen</ShowOnlyDifferences>
     <IgnoreLineBreaks>Regelafbrekingen negeren</IgnoreLineBreaks>
     <OnlyLookForDifferencesInText>Alleen tekstverschillen</OnlyLookForDifferencesInText>

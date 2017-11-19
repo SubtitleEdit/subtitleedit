@@ -275,8 +275,8 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <NextDifference>&amp;Næste ændring</NextDifference>
     <SubtitlesNotAlike>Undertekster har ingen ligheder</SubtitlesNotAlike>
     <XNumberOfDifference>Antal forskelle: {0}</XNumberOfDifference>
-    <XNumberOfDifferenceAndPercentChanged>Antal forskelle: {0} ({1}% af ord ændret)</XNumberOfDifferenceAndPercentChanged>
-    <XNumberOfDifferenceAndPercentLettersChanged>Antal forskelle: {0} ({1}% af bogstaver ændret)</XNumberOfDifferenceAndPercentLettersChanged>
+    <XNumberOfDifferenceAndPercentChanged>Antal forskelle: {0} ({1:0.##}% af ord ændret)</XNumberOfDifferenceAndPercentChanged>
+    <XNumberOfDifferenceAndPercentLettersChanged>Antal forskelle: {0} ({1:0.##}% af bogstaver ændret)</XNumberOfDifferenceAndPercentLettersChanged>
     <ShowOnlyDifferences>Vis kun forskelle</ShowOnlyDifferences>
     <IgnoreLineBreaks>Ignorer linjeskift</IgnoreLineBreaks>
     <OnlyLookForDifferencesInText>Vis kun forskelle i teksten</OnlyLookForDifferencesInText>

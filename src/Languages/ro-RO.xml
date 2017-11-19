@@ -277,8 +277,8 @@
     <NextDifference>&amp;Diferența următoare</NextDifference>
     <SubtitlesNotAlike>Subtitrările n-au asemănări</SubtitlesNotAlike>
     <XNumberOfDifference>Numărul diferențelor: {0}</XNumberOfDifference>
-    <XNumberOfDifferenceAndPercentChanged>Numărul diferențelor: {0} ({1}% din cuvintele schimbate)</XNumberOfDifferenceAndPercentChanged>
-    <XNumberOfDifferenceAndPercentLettersChanged>Numărul diferențelor: {0} ({1}% din literele schimbate)</XNumberOfDifferenceAndPercentLettersChanged>
+    <XNumberOfDifferenceAndPercentChanged>Numărul diferențelor: {0} ({1:0.##}% din cuvintele schimbate)</XNumberOfDifferenceAndPercentChanged>
+    <XNumberOfDifferenceAndPercentLettersChanged>Numărul diferențelor: {0} ({1:0.##}% din literele schimbate)</XNumberOfDifferenceAndPercentLettersChanged>
     <ShowOnlyDifferences>Arată doar diferențele</ShowOnlyDifferences>
     <IgnoreLineBreaks>Ignoră pauzele de linie</IgnoreLineBreaks>
     <OnlyLookForDifferencesInText>Caută numai diferențele din text</OnlyLookForDifferencesInText>

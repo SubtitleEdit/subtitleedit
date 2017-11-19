@@ -270,8 +270,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <NextDifference>Следваща разлика</NextDifference>
     <SubtitlesNotAlike>Субтитрите не са еднакви</SubtitlesNotAlike>
     <XNumberOfDifference>Брой разлики: {0}</XNumberOfDifference>
-    <XNumberOfDifferenceAndPercentChanged>Брой разлики: {0} ({1}% думи са променени)</XNumberOfDifferenceAndPercentChanged>
-    <XNumberOfDifferenceAndPercentLettersChanged>Брой разлики: {0} ({1}% букви са променени)</XNumberOfDifferenceAndPercentLettersChanged>
+    <XNumberOfDifferenceAndPercentChanged>Брой разлики: {0} ({1:0.##}% думи са променени)</XNumberOfDifferenceAndPercentChanged>
+    <XNumberOfDifferenceAndPercentLettersChanged>Брой разлики: {0} ({1:0.##}% букви са променени)</XNumberOfDifferenceAndPercentLettersChanged>
     <ShowOnlyDifferences>Показване само разликите</ShowOnlyDifferences>
     <IgnoreLineBreaks>Игнориране на редовия разделител</IgnoreLineBreaks>
     <OnlyLookForDifferencesInText>Търсене само разликите в текста</OnlyLookForDifferencesInText>

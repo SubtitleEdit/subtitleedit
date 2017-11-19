@@ -273,8 +273,8 @@ Nota: Verifique o espaço livre em disco.</WaveFileMalformed>
     <NextDifference>Diferença segui&amp;nte</NextDifference>
     <SubtitlesNotAlike>As legendas não são parecidas</SubtitlesNotAlike>
     <XNumberOfDifference>Número de diferenças: {0}</XNumberOfDifference>
-    <XNumberOfDifferenceAndPercentChanged>Número de diferenças: {0} ({1}% de palavras alteradas)</XNumberOfDifferenceAndPercentChanged>
-    <XNumberOfDifferenceAndPercentLettersChanged>Número de diferenças: {0} ({1}% de letras alteradas)</XNumberOfDifferenceAndPercentLettersChanged>
+    <XNumberOfDifferenceAndPercentChanged>Número de diferenças: {0} ({1:0.##}% de palavras alteradas)</XNumberOfDifferenceAndPercentChanged>
+    <XNumberOfDifferenceAndPercentLettersChanged>Número de diferenças: {0} ({1:0.##}% de letras alteradas)</XNumberOfDifferenceAndPercentLettersChanged>
     <ShowOnlyDifferences>Mostrar somente diferenças</ShowOnlyDifferences>
     <IgnoreLineBreaks>Ignorar quebras de linha</IgnoreLineBreaks>
     <OnlyLookForDifferencesInText>Buscar somente diferenças no texto</OnlyLookForDifferencesInText>

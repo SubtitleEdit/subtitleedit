@@ -239,8 +239,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <NextDifference>&amp;Επόμενη διαφορά</NextDifference>
     <SubtitlesNotAlike>Οι Υπότιτλοι δεν έχουν ομοιότητες</SubtitlesNotAlike>
     <XNumberOfDifference>Σύνολο διαφορών: {0}</XNumberOfDifference>
-    <XNumberOfDifferenceAndPercentChanged>Αριθμός διαφορών: {0} ({1}% αλλαγή των λέξεων)</XNumberOfDifferenceAndPercentChanged>
-    <XNumberOfDifferenceAndPercentLettersChanged>Αριθμός διαφορών: {0} ({1}% αλλαγή των γραμμάτων)</XNumberOfDifferenceAndPercentLettersChanged>
+    <XNumberOfDifferenceAndPercentChanged>Αριθμός διαφορών: {0} ({1:0.##}% αλλαγή των λέξεων)</XNumberOfDifferenceAndPercentChanged>
+    <XNumberOfDifferenceAndPercentLettersChanged>Αριθμός διαφορών: {0} ({1:0.##}% αλλαγή των γραμμάτων)</XNumberOfDifferenceAndPercentLettersChanged>
     <ShowOnlyDifferences>Εμφάνιση μόνο διαφορών</ShowOnlyDifferences>
     <IgnoreLineBreaks>Αγνοήστε τις αλλαγές γραμμών</IgnoreLineBreaks>
     <OnlyLookForDifferencesInText>Αναζήτηση μόνο για διαφορές στο κείμενο</OnlyLookForDifferencesInText>
