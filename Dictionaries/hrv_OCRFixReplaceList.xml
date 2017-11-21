@@ -283,6 +283,7 @@
     <Word from="korpu" to="košaru" />
     <Word from="kritikuju" to="kritiziraju" />
     <Word from="krsta" to="križa" />
+    <Word from="krstaši" to="križari" />
     <Word from="krstu" to="križu" />
     <Word from="krstića" to="križića" />
     <Word from="krstiću" to="križiću" />
@@ -397,6 +398,7 @@
     <Word from="nezi" to="njezi" />
     <Word from="nigde" to="nigdje" />
     <Word from="Nigde" to="Nigdje" />
+    <Word from="nikakave" to="nikakve" />
     <Word from="niko" to="nitko" />
     <Word from="Niko" to="Nitko" />
     <Word from="nisma" to="nisam" />
@@ -989,6 +991,7 @@
     <Word from="Krejg" to="Craig" />
     <Word from="Kristi" to="Christie" />
     <Word from="Lajf" to="Life" />
+    <Word from="Lorejn" to="Loraine" />
     <Word from="Lusi" to="Lucy" />
     <Word from="Majk" to="Mike" />
     <Word from="Medelin" to="Madeline" />
@@ -1069,7 +1072,9 @@
     <LinePart from="Bi ste" to="Biste" />
     <LinePart from="bilo ko" to="bilo tko" />
     <LinePart from="će da dođe" to="će doći" />
+    <LinePart from="Da li će" to="Hoće li" />
     <LinePart from="Da li ćemo" to="Hoćemo li" />
+    <LinePart from="Da li ću" to="Hoću li" />
     <LinePart from="da li ću" to="hoću li" />
     <LinePart from="dali ću" to="hoću li" />
     <LinePart from="Da li je" to="Je li" />
@@ -1536,6 +1541,7 @@
     <RegEx find="([nN]a|[Ii])smej" replaceWith="$1smij" />
     <RegEx find="asle([dđ])" replaceWith="aslje$1" />
     <RegEx find="([nN])atera" replaceWith="$1atjera" />
+    <RegEx find="([nN])atj?erać" replaceWith="$1atjerat ć" />
     <RegEx find="([nN])a(gradi|pravi|tera|uči|zva)ć" replaceWith="$1a$2t ć" />
     <RegEx find="naučn" replaceWith="znanstven" />
     <RegEx find="Naučn" replaceWith="Znanstven" />
@@ -2027,6 +2033,7 @@
     <RegEx find="[^e]seda(?!m|tiv)" replaceWith="sjeda" />
     <RegEx find="ii" replaceWith="i" />
     <RegEx find="đž" replaceWith="dž" />
+    <RegEx find="zž" replaceWith="ž" />
     <RegEx find="adji" replaceWith="ađi" />
     <RegEx find="(?&lt;![ml])a([blcrnz])ić" replaceWith="a$1it ć" />
     <RegEx find="a(jm|mn)(t?)ić" replaceWith="a$1$2it ć" />
