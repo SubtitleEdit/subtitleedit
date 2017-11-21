@@ -89,10 +89,10 @@
             // 
             this.groupBoxImportText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBoxImportText.Controls.Add(this.listViewInputFiles);
             this.groupBoxImportText.Controls.Add(this.checkBoxMultipleFiles);
-            this.groupBoxImportText.Controls.Add(this.textBoxText);
             this.groupBoxImportText.Controls.Add(this.buttonOpenText);
+            this.groupBoxImportText.Controls.Add(this.listViewInputFiles);
+            this.groupBoxImportText.Controls.Add(this.textBoxText);
             this.groupBoxImportText.Location = new System.Drawing.Point(12, 12);
             this.groupBoxImportText.Name = "groupBoxImportText";
             this.groupBoxImportText.Size = new System.Drawing.Size(531, 365);
