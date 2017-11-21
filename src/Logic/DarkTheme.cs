@@ -60,6 +60,8 @@ namespace Nikse.SubtitleEdit.Logic
         {
             Configuration.Settings.General.SubtitleBackgroundColor = BackColor;
             Configuration.Settings.General.SubtitleFontColor = ForeColor;
+            Configuration.Settings.VideoControls.WaveformBackgroundColor = BackColor;
+            Configuration.Settings.VideoControls.WaveformGridColor = Color.FromArgb(62, 62, 60);
 
             if (iterations < 1)
                 return;
@@ -123,9 +125,17 @@ namespace Nikse.SubtitleEdit.Logic
                 var toolStripSeparators = GetSubControls<ToolStripSeparator>(form);
                 foreach (ToolStripSeparator c in toolStripSeparators)
                 {
+                    var p = (c.GetCurrentParent() as ToolStripDropDownMenu);
+                    if (p != null)
+                    {
+                        p.BackColor = BackColor;
+                        p.ShowCheckMargin = false;
+                        p.ShowImageMargin = false;
+                    }
+                    
                     c.BackColor = BackColor;
                     c.ForeColor = ForeColor;
-                    c.Paint += C_Paint;
+                    //c.Paint += C_Paint;
                 }
             }
             FixControl(form);
@@ -243,5 +253,10 @@ namespace Nikse.SubtitleEdit.Logic
             item.ForeColor = ForeColor;
         }
 
+        internal static void SetDarkTheme(ToolStripItem item)
+        {
+            item.BackColor = BackColor;
+            item.ForeColor = ForeColor;
+        }
     }
 }

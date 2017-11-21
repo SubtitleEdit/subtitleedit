@@ -385,6 +385,13 @@ namespace Nikse.SubtitleEdit.Logic
                 DarkTheme.SetDarkTheme(item);
         }
 
+        internal static void FixFonts(ToolStripItem item)
+        {
+            item.Font = GetDefaultFont();
+            if (Configuration.Settings.General.UseDarkTheme)
+                DarkTheme.SetDarkTheme(item);
+        }
+
         private static void FixFontsInner(Control form, int iterations = 5)
         {
             if (iterations < 1)
@@ -696,6 +703,7 @@ namespace Nikse.SubtitleEdit.Logic
             AddExtension(sb, ".mxf");
             AddExtension(sb, ".sup");
             AddExtension(sb, ".dost");
+            AddExtension(sb, new FinalDraftTemplate2().Extension);
             AddExtension(sb, new Ayato().Extension);
             AddExtension(sb, new PacUnicode().Extension);
             AddExtension(sb, new WinCaps32().Extension);
@@ -719,6 +727,6 @@ namespace Nikse.SubtitleEdit.Logic
 
         public static string GetListViewTextFromString(string s) => s.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString);
 
-        public static string GetStringFromListViewText(string lviText) => lviText.Replace(Configuration.Settings.General.ListViewLineSeparatorString, Environment.NewLine);
+        public static string GetStringFromListViewText(string lviText) => lviText.Replace(Configuration.Settings.General.ListViewLineSeparatorString, Environment.NewLine);      
     }
 }

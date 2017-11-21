@@ -314,6 +314,15 @@ namespace Nikse.SubtitleEdit.Forms
 
         protected override void OnLoad(EventArgs e)
         {
+            UiUtil.FixFonts(this, 10000);
+            UiUtil.FixLargeFonts(tabControlButtons, buttonAutoBreak);
+            UiUtil.FixLargeFonts(tabControlButtons, buttonAutoBreak);
+            UiUtil.FixLargeFonts(groupBoxEdit, buttonAutoBreak);
+            UiUtil.InitializeSubtitleFont(textBoxSource);
+            UiUtil.InitializeSubtitleFont(textBoxListViewText);
+            UiUtil.InitializeSubtitleFont(textBoxListViewTextAlternate);
+            UiUtil.InitializeSubtitleFont(SubtitleListview1);
+
             using (var graphics = CreateGraphics())
             {
                 // avoid weird looking layout for high DPI
@@ -389,10 +398,6 @@ namespace Nikse.SubtitleEdit.Forms
                 UpdateRecentFilesUI();
                 InitializeToolbar();
                 UpdateNetflixGlyphCheckToolsVisibility();
-                UiUtil.InitializeSubtitleFont(textBoxSource);
-                UiUtil.InitializeSubtitleFont(textBoxListViewText);
-                UiUtil.InitializeSubtitleFont(textBoxListViewTextAlternate);
-                UiUtil.InitializeSubtitleFont(SubtitleListview1);
 
                 if (Configuration.Settings.General.CenterSubtitleInTextBox)
                 {
@@ -1114,19 +1119,19 @@ namespace Nikse.SubtitleEdit.Forms
                 CenterFormOnCurrentScreen();
             }
 
-            if (Environment.OSVersion.Version.Major < 6 && Configuration.Settings.General.SubtitleFontName == Utilities.WinXP2KUnicodeFontName) // 6 == Vista/Win2008Server/Win7
-            {
-                //const string unicodeFontName = Utilities.WinXp2kUnicodeFontName;
-                //Configuration.Settings.General.SubtitleFontName = unicodeFontName;
-                //float fontSize = toolStripMenuItemInsertUnicodeSymbol.Font.Size;
-                //textBoxSource.Font = new Font(unicodeFontName, fontSize);
-                //textBoxListViewText.Font = new Font(unicodeFontName, fontSize);
-                //SubtitleListview1.Font = new Font(unicodeFontName, fontSize);
-                //toolStripWaveControls.RenderMode = ToolStripRenderMode.System;
-                //toolStripMenuItemSurroundWithMusicSymbols.Font = new Font(unicodeFontName, fontSize);
-                UiUtil.InitializeSubtitleFont(SubtitleListview1);
-                Refresh();
-            }
+            //if (Environment.OSVersion.Version.Major < 6 && Configuration.Settings.General.SubtitleFontName == Utilities.WinXP2KUnicodeFontName) // 6 == Vista/Win2008Server/Win7
+            //{
+            //    //const string unicodeFontName = Utilities.WinXp2kUnicodeFontName;
+            //    //Configuration.Settings.General.SubtitleFontName = unicodeFontName;
+            //    //float fontSize = toolStripMenuItemInsertUnicodeSymbol.Font.Size;
+            //    //textBoxSource.Font = new Font(unicodeFontName, fontSize);
+            //    //textBoxListViewText.Font = new Font(unicodeFontName, fontSize);
+            //    //SubtitleListview1.Font = new Font(unicodeFontName, fontSize);
+            //    //toolStripWaveControls.RenderMode = ToolStripRenderMode.System;
+            //    //toolStripMenuItemSurroundWithMusicSymbols.Font = new Font(unicodeFontName, fontSize);
+            //    UiUtil.InitializeSubtitleFont(SubtitleListview1);
+            //    Refresh();
+            //}
         }
 
         private void InitializeLanguage()
@@ -2890,6 +2895,17 @@ namespace Nikse.SubtitleEdit.Forms
                     return;
                 }
 
+                if (format == null)
+                {
+                    var fd = new FinalDraftTemplate2();
+                    var list = new List<string>(File.ReadAllLines(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName)));
+                    if (fd.IsMine(list, fileName))
+                    {
+                        ImportPlainText(fileName);
+                        return;
+                    }
+                }
+
                 _fileDateTime = File.GetLastWriteTime(fileName);
 
                 if (format != null && format.IsFrameBased)
@@ -3318,7 +3334,10 @@ namespace Nikse.SubtitleEdit.Forms
                 foreach (var file in Configuration.Settings.RecentFiles.Files)
                 {
                     if (File.Exists(file.FileName))
+                    {                        
                         reopenToolStripMenuItem.DropDownItems.Add(file.FileName, null, ReopenSubtitleToolStripMenuItemClick);
+                        UiUtil.FixFonts(reopenToolStripMenuItem.DropDownItems[reopenToolStripMenuItem.DropDownItems.Count - 1]);
+                    }
                 }
             }
             else
@@ -6337,7 +6356,9 @@ namespace Nikse.SubtitleEdit.Forms
                 };
                 cm.Items.Add(contextMenuStripLvHeaderResizeToolStripMenuItem);
 
-                cm.Items.Add(new ToolStripSeparator());
+                var tss = new ToolStripSeparator();
+                UiUtil.FixFonts(tss);
+                cm.Items.Add(tss);
 
                 // End time
                 var contextMenuStripLvHeaderEndTimeToolStripMenuItem = new ToolStripMenuItem(Configuration.Settings.Language.General.EndTime);
@@ -6530,7 +6551,11 @@ namespace Nikse.SubtitleEdit.Forms
                     setActorForSelectedLinesToolStripMenuItem.DropDownItems.Add(actor, null, actor_Click);
                 }
                 if (actors.Count > 0)
-                    setActorForSelectedLinesToolStripMenuItem.DropDownItems.Add(new ToolStripSeparator());
+                {
+                    var tss = new ToolStripSeparator();
+                    UiUtil.FixFonts(tss);
+                    setActorForSelectedLinesToolStripMenuItem.DropDownItems.Add(tss);
+                }
                 setActorForSelectedLinesToolStripMenuItem.DropDownItems.Add(_language.Menu.ContextMenu.NewActor, null, SetNewActor);
                 if (actors.Count > 0)
                     setActorForSelectedLinesToolStripMenuItem.DropDownItems.Add(_language.Menu.ContextMenu.RemoveActors, null, RemoveActors);
@@ -13773,6 +13798,12 @@ namespace Nikse.SubtitleEdit.Forms
                         }
 
                         _subtitleListViewIndex = -1;
+                        if (importText.Format != null)
+                        {
+                            if (_subtitle.Paragraphs.Any(p => !string.IsNullOrEmpty(p.Actor)))
+                                SubtitleListview1.ShowActorColumn(Configuration.Settings.Language.General.Actor);
+                            SetCurrentFormat(importText.Format);
+                        }
                         _subtitle = new Subtitle(importText.FixedSubtitle.Paragraphs, _subtitle.HistoryItems);
                         _subtitle.CalculateFrameNumbersFromTimeCodesNoCheck(CurrentFrameRate);
                         ShowStatus(_language.TextImported);
@@ -15897,7 +15928,6 @@ namespace Nikse.SubtitleEdit.Forms
                 splitContainerListViewAndText.SplitterDistance = Configuration.Settings.General.SplitContainerListViewAndTextSplitterDistance;
             }
             mediaPlayer.InitializeVolume(Configuration.Settings.General.VideoPlayerDefaultVolume);
-            LoadPlugins();
             tabControlSubtitle.Invalidate();
 
             if (string.IsNullOrEmpty(Configuration.Settings.Language.CheckForUpdates.CheckingForUpdates))
@@ -15929,10 +15959,9 @@ namespace Nikse.SubtitleEdit.Forms
                 labelDuration.Left = numericUpDownDuration.Left;
             }
             _changeSubtitleToString = _subtitle.GetFastHashCode(GetCurrentEncoding().BodyName);
-
             comboBoxSubtitleFormats.AutoCompleteSource = AutoCompleteSource.ListItems;
             comboBoxSubtitleFormats.AutoCompleteMode = AutoCompleteMode.Append;
-            UiUtil.FixFonts(this);
+            LoadPlugins();
         }
 
         private void TimerCheckForUpdatesTick(object sender, EventArgs e)
