@@ -18,6 +18,7 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.PreInitialize(this);
             InitializeComponent();
             UiUtil.FixFonts(this);
+            UiUtil.FixLargeFonts(this, buttonOK);
 
             _mainForm = mainForm;
             InitLanguage();
