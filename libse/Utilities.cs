@@ -126,7 +126,7 @@ namespace Nikse.SubtitleEdit.Core
             {
                 sb.Append('|');
                 sb.Append(Configuration.Settings.Language.General.AudioFiles);
-                sb.Append("|*.mp3;*.wav;*.wma;*.ogg;*.mpa;*.m4a;*.ape;*.aiff;*.flac;*.aac;*.mka");
+                sb.Append("|*.mp3;*.wav;*.wma;*.ogg;*.mpa;*.m4a;*.ape;*.aiff;*.flac;*.aac;*.ac3;*.mka");
             }
             sb.Append('|');
             sb.Append(Configuration.Settings.Language.General.AllFiles);

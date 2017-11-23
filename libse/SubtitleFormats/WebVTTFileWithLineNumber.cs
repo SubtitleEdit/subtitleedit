@@ -82,8 +82,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     {
                         string[] parts = s.Replace("-->", "@").Split(new[] { '@' }, StringSplitOptions.RemoveEmptyEntries);
                         p = new Paragraph();
-                        p.StartTime = GetTimeCodeFromString(parts[0]);
-                        p.EndTime = GetTimeCodeFromString(parts[1]);
+                        p.StartTime = WebVTT.GetTimeCodeFromString(parts[0]);
+                        p.EndTime = WebVTT.GetTimeCodeFromString(parts[1]);
                         positionInfo = WebVTT.GetPositionInfo(s);
                     }
                     catch (Exception exception)
@@ -122,16 +122,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override void RemoveNativeFormatting(Subtitle subtitle, SubtitleFormat newFormat)
         {
             new WebVTT().RemoveNativeFormatting(subtitle, newFormat);
-        }
-
-        private static TimeCode GetTimeCodeFromString(string time)
-        {
-            // hh:mm:ss.mmm
-            string[] timeCode = time.Trim().Split(':', '.', ' ');
-            return new TimeCode(int.Parse(timeCode[0]),
-                                int.Parse(timeCode[1]),
-                                int.Parse(timeCode[2]),
-                                int.Parse(timeCode[3]));
         }
 
     }
