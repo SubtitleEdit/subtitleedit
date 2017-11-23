@@ -48,15 +48,9 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             return list;
         }
 
-        public HashSet<string> GetNames()
-        {
-            return _namesList;
-        }
+        public HashSet<string> GetNames() => _namesList;
 
-        public HashSet<string> GetMultiNames()
-        {
-            return _namesMultiList;
-        }
+        public HashSet<string> GetMultiNames() => _namesMultiList;
 
         /// <summary>
         /// Returns two letters ISO language name (Neutral culture).
@@ -64,11 +58,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
         private string GetLocalNamesFileName()
         {
             // Converts e.g en_US => en (Neutral culture).
-            string twoLetterISOLanguageName = _languageName;
-            if (_languageName.Length > 2)
-            {
-                twoLetterISOLanguageName = _languageName.Substring(0, 2);
-            }
+            string twoLetterISOLanguageName = _languageName.Length > 2 ? _languageName.Substring(0, 2) : _languageName;
             return Path.Combine(_dictionaryFolder, twoLetterISOLanguageName + "_names.xml");
         }
 
@@ -206,15 +196,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                 // <neutral>_names.xml e.g: en_names.xml
                 var fileName = GetLocalNamesFileName();
                 var nameListXml = new XmlDocument();
-                if (File.Exists(fileName))
-                {
-                    nameListXml.Load(fileName);
-                }
-                else
-                {
-                    nameListXml.LoadXml("<names><blacklist></blacklist></names>");
-                }
-
+                nameListXml.LoadXml(File.Exists(fileName) ? fileName : "<names><blacklist></blacklist></names>");
                 XmlNode de = nameListXml.DocumentElement;
                 if (de != null)
                 {
