@@ -88,6 +88,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             string text = Utilities.RemoveSsaTags(p.Text);
             while (text.Contains(Environment.NewLine + Environment.NewLine))
                 text = text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
+
+            text = ColorHtmlToWebVtt(text);
             return text;
         }
 
@@ -151,6 +153,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
             if (p != null)
                 subtitle.Paragraphs.Add(p);
+
+            foreach (var paragraph in subtitle.Paragraphs)
+            {
+                paragraph.Text = ColorWebVttToHtml(paragraph.Text);
+            }
+
             subtitle.Renumber();
         }
 
@@ -284,10 +292,52 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     text = RemoveTag("v", text);
                     text = RemoveTag("rt", text);
                     text = RemoveTag("ruby", text);
+                    text = RemoveTag("span", text);
                     text = RemoveTag("c", text);
-                    p.Text = RemoveTag("span", text);
+                    p.Text = text;
                 }
             }
+        }
+
+        private static readonly Regex RegexWebVttColor = new Regex(@"<c.[a-z]*>", RegexOptions.Compiled);
+
+        private static string ColorWebVttToHtml(string text)
+        {
+            text = text.Replace("</c>", "</font>");
+            var match = RegexWebVttColor.Match(text);
+            while (match.Success)
+            {
+                var fontString = "<font color=\"" + match.Value.Substring(3, match.Value.Length - 4) + "\">";
+                fontString = fontString.Trim('"').Trim('\'');
+                text = text.Remove(match.Index, match.Length).Insert(match.Index, fontString);
+                match = RegexWebVttColor.Match(text);
+            }
+            return text;
+        }
+
+        private static readonly Regex RegexHtmlColor = new Regex("<font color=\"[a-z]*\">", RegexOptions.Compiled);
+        private static readonly Regex RegexHtmlColor2 = new Regex("<font color=[a-z]*>", RegexOptions.Compiled);
+
+        private static string ColorHtmlToWebVtt(string text)
+        {
+            text = text.Replace("</font>", "</c>");
+            var match = RegexHtmlColor.Match(text);
+            while (match.Success)
+            {
+                var fontString = "<c." + match.Value.Substring(13, match.Value.Length - 15) + ">";
+                fontString = fontString.Trim('"').Trim('\'');
+                text = text.Remove(match.Index, match.Length).Insert(match.Index, fontString);
+                match = RegexHtmlColor.Match(text);
+            }
+            match = RegexHtmlColor2.Match(text);
+            while (match.Success)
+            {
+                var fontString = "<c." + match.Value.Substring(12, match.Value.Length - 13) + ">";
+                fontString = fontString.Trim('"').Trim('\'');
+                text = text.Remove(match.Index, match.Length).Insert(match.Index, fontString);
+                match = RegexHtmlColor2.Match(text);
+            }
+            return text;
         }
 
         public static List<string> GetVoices(Subtitle subtitle)
