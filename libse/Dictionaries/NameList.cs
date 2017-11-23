@@ -38,13 +38,6 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             {
                 LoadNamesList(Path.Combine(_dictionaryFolder, "names.xml"));
             }
-            foreach (var name in _blackList)
-            {
-                if (_namesList.Contains(name))
-                    _namesList.Remove(name);
-                if (_namesMultiList.Contains(name))
-                    _namesMultiList.Remove(name);
-            }
         }
 
         public List<string> GetAllNames()
