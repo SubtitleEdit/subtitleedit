@@ -39,6 +39,16 @@ namespace Nikse.SubtitleEdit.Core
             }
         }
 
+        public static string[] ReadAllLinesShared(string path, Encoding encoding)
+        {
+            return encoding.GetString(ReadAllBytesShared(path)).SplitToLines();
+        }
+
+        public static string ReadAllTextShared(string path, Encoding encoding)
+        {
+            return encoding.GetString(ReadAllBytesShared(path));
+        }
+
         public static bool IsZip(string fileName)
         {
             using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))

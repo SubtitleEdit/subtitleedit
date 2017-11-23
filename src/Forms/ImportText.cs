@@ -150,7 +150,7 @@ namespace Nikse.SubtitleEdit.Forms
                 ext = extension.ToLowerInvariant();
 
             var fd = new FinalDraftTemplate2();
-            var list = new List<string>(File.ReadAllLines(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName)));
+            var list = new List<string>(FileUtil.ReadAllLinesShared(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName)));
             bool isFinalDraft = fd.IsMine(list, fileName);
 
             if (ext == ".astx")
@@ -694,7 +694,7 @@ namespace Nikse.SubtitleEdit.Forms
             try
             {
                 Encoding encoding = LanguageAutoDetect.GetEncodingFromFile(fileName);
-                var text = File.ReadAllText(fileName, encoding);
+                var text = FileUtil.ReadAllTextShared(fileName, encoding);
                 if (fileName.EndsWith(".htm", StringComparison.OrdinalIgnoreCase) || fileName.EndsWith(".htm", StringComparison.OrdinalIgnoreCase))
                     text = HtmlToPlainText(text);
                 return text;
