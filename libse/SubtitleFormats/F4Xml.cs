@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text;
 using System.Xml;
 
@@ -10,14 +9,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override string Extension => ".xml";
 
         public override string Name => "F4 Xml";
-
-        public override bool IsMine(List<string> lines, string fileName)
-        {
-            if (fileName != null && !fileName.EndsWith(Extension, StringComparison.OrdinalIgnoreCase))
-                return false;
-
-            return base.IsMine(lines, fileName);
-        }
 
         public override string ToText(Subtitle subtitle, string title)
         {
@@ -30,7 +21,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     </style>
 </transcript>".Replace("'", "\"");
             xml.LoadXml(template);
-            xml.DocumentElement.SelectSingleNode("content").Attributes["content"].Value = ToF4Text(subtitle);
+            xml.DocumentElement.SelectSingleNode("content").Attributes["content"].Value = base.ToText(subtitle, title);
 
             return ToUtf8XmlString(xml);
         }
