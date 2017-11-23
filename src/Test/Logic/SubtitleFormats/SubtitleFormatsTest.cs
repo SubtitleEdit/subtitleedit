@@ -1083,5 +1083,30 @@ and astronauts.“...""
         }
         #endregion
 
+        #region WebVTT
+
+        [TestMethod]
+        public void WebVttFontColor()
+        {
+            var target = new WebVTT();
+            var subtitle = new Subtitle();
+            string raw = @"
+WEBVTT
+
+00:00:54.440 --> 00:00:58.920 align:middle line:-4
+Hi, I'm Keith Lemon.
+
+00:00:58.960 --> 00:01:03.280 align:middle line:-3
+<c.yellow>AUDIENCE: Aww!</c>";
+            target.LoadSubtitle(subtitle, raw.SplitToLines().ToList(), null);
+            string actual = subtitle.Paragraphs[1].Text;
+            const string expected = "<font color=\"yellow\">AUDIENCE: Aww!</font>";
+            Assert.AreEqual(expected, actual);
+
+            var webVtt = subtitle.ToText(target);
+            Assert.IsTrue(webVtt.Contains("<c.yellow>AUDIENCE: Aww!</c>"));
+        }
+
+        #endregion
     }
 }
