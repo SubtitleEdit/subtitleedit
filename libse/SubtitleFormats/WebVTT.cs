@@ -334,7 +334,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return text;
         }
 
-        private static TimeCode GetTimeCodeFromString(string time)
+        internal static TimeCode GetTimeCodeFromString(string time)
         {
             // hh:mm:ss.mmm
             string[] timeCode = time.Trim().Split(':', '.', ' ');
