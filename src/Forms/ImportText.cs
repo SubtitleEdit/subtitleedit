@@ -121,7 +121,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (checkBoxMultipleFiles.Visible && checkBoxMultipleFiles.Checked)
                 openFileDialog1.Filter = Configuration.Settings.Language.ImportText.TextFiles + "|*.txt|" + Configuration.Settings.Language.General.AllFiles + "|*.*";
             else
-                openFileDialog1.Filter = Configuration.Settings.Language.ImportText.TextFiles + "|*.txt;*.tx3g|Adobe Story|*.astx|Final Draft Template|*.fdx|" + Configuration.Settings.Language.General.AllFiles + "|*.*";
+                openFileDialog1.Filter = Configuration.Settings.Language.ImportText.TextFiles + "|*.txt;*.tx3g;*.astx;*" + new FinalDraftTemplate2().Extension + "|Adobe Story|*.astx|Final Draft Template|*" + new FinalDraftTemplate2().Extension + "|" + Configuration.Settings.Language.General.AllFiles + "|*.*";
             openFileDialog1.FileName = string.Empty;
             openFileDialog1.Multiselect = checkBoxMultipleFiles.Visible && checkBoxMultipleFiles.Checked;
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
@@ -751,7 +751,7 @@ namespace Nikse.SubtitleEdit.Forms
                         sb.AppendLine(textRun.InnerText);
                 }
                 textBoxText.Text = sb.ToString();
-                SetVideoFileName(fileName);
+                _videoFileName = null;
                 Text = Configuration.Settings.Language.ImportText.Title + " - " + fileName;
             }
             catch (Exception ex)
@@ -771,7 +771,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var sub = new Subtitle();
                 fd.LoadSubtitle(sub, Encoding.UTF8.GetString(FileUtil.ReadAllBytesShared(fileName)).SplitToLines().ToList(), fileName);
                 textBoxText.Text = sub.ToText(fd);
-                SetVideoFileName(fileName);
+                _videoFileName = null;
                 Text = Configuration.Settings.Language.ImportText.Title + " - " + fileName;
                 _subtitleInput = sub;
                 Format = new AdvancedSubStationAlpha();
@@ -792,30 +792,32 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SetVideoFileName(string fileName)
         {
+            var videoExtensions = new[] { ".mkv", ".mp4", ".avi", ".mov", ".wmv", ".flv", ".mpg" };
             _videoFileName = fileName.Substring(0, fileName.Length - Path.GetExtension(fileName).Length);
             if (_videoFileName.EndsWith(".en", StringComparison.Ordinal))
                 _videoFileName = _videoFileName.Remove(_videoFileName.Length - 3);
-            if (File.Exists(_videoFileName + ".avi"))
+            foreach (var ext in videoExtensions)
             {
-                _videoFileName += ".avi";
-            }
-            else if (File.Exists(_videoFileName + ".mkv"))
-            {
-                _videoFileName += ".mkv";
-            }
-            else
-            {
-                var dir = Path.GetDirectoryName(fileName);
-                if (dir != null)
+                if (File.Exists(_videoFileName + ext))
                 {
-                    var files = Directory.GetFiles(dir, Path.GetFileNameWithoutExtension(_videoFileName) + "*.avi");
-                    if (files.Length == 0)
-                        files = Directory.GetFiles(dir, "*.avi");
-                    if (files.Length == 0)
-                        files = Directory.GetFiles(dir, "*.mkv");
-                    if (files.Length > 0)
-                        _videoFileName = files[0];
+                    _videoFileName += ext;
+                    return;
                 }
+            }
+
+            var dir = Path.GetDirectoryName(fileName);
+            if (dir != null)
+            {
+                foreach (var ext in videoExtensions)
+                {
+                    var files = Directory.GetFiles(dir, Path.GetFileNameWithoutExtension(_videoFileName) + "*" + ext);
+                    if (files.Length > 0)
+                    {
+                        _videoFileName = files[0];
+                        return;
+                    }
+                }
+                _videoFileName = null;
             }
         }
 

@@ -43,7 +43,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         }
                         else if (paragraphType != null && paragraphType.InnerText.Equals("Dialogue", StringComparison.OrdinalIgnoreCase))
                         {
-                            var p = new Paragraph(sb.ToString().Trim(), 0, 0);
+                            var p = new Paragraph(Utilities.AutoBreakLine(sb.ToString().Trim()), 0, 0);
                             if (!string.IsNullOrWhiteSpace(actor))
                                 p.Actor = actor;
                             subtitle.Paragraphs.Add(p);
