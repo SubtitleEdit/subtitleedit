@@ -19,7 +19,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 string oldText = p.Text;
                 var st = new StrippableText(p.Text);
 
-                Match match = ReAfterLowercaseLetter.Match(p.Text);
+                Match match = ReAfterLowercaseLetter.Match(st.StrippedText);
                 while (match.Success)
                 {
                     if (!(match.Index > 1 && p.Text.Substring(match.Index - 1, 2) == "Mc") // irish names, McDonalds etc.
@@ -29,7 +29,8 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         string word = GetWholeWord(st.StrippedText, match.Index);
                         if (!callbacks.IsName(word))
                         {
-                            p.Text = p.Text.Substring(0, match.Index + 1) + "l";
+                            st.StrippedText = st.StrippedText.Substring(0, match.Index + 1) + "l";
+                            p.Text = st.MergedString;
                             if (match.Index + 2 < oldText.Length)
                                 p.Text += oldText.Substring(match.Index + 2);
 

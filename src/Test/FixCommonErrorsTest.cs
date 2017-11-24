@@ -1626,6 +1626,17 @@ namespace Test
             }
         }
 
+        [TestMethod]
+        public void FixUppercaseIInsideWords3()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "<i>FIight DU 720 from StockhoIm...</i>");
+                new FixUppercaseIInsideWords().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual(_subtitle.Paragraphs[0].Text, "<i>Flight DU 720 from Stockholm...</i>");
+            }
+        }
+
         #endregion Fix uppercase I inside words
 
         #region Fix dialogs on one line
