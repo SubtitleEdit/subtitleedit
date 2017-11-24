@@ -95,7 +95,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
             else if (Math.Abs(Configuration.Settings.General.CurrentFrameRate - 60) < 0.01)
             {
-                return "10/60s";
+                return "1/60s";
             }
             return "1/25s";
         }
@@ -139,7 +139,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         internal static string GetNdfDf()
         {
-            if (Math.Abs(Configuration.Settings.General.CurrentFrameRate % 0.0) < 0.01)
+            if (Math.Abs(Configuration.Settings.General.CurrentFrameRate % 1.0) < 0.01)
             {
                 return "NDF";
             }
