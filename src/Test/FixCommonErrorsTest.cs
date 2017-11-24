@@ -1637,6 +1637,28 @@ namespace Test
             }
         }
 
+        [TestMethod]
+        public void FixUppercaseIInsideWords4()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "<i>FIight DU 720 from BraziI...</i>");
+                new FixUppercaseIInsideWords().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual(_subtitle.Paragraphs[0].Text, "<i>Flight DU 720 from Brazil...</i>");
+            }
+        }
+
+        [TestMethod]
+        public void FixUppercaseIInsideWords5()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "<i>FIight DU 720 from McIvan BraziI...</i>");
+                new FixUppercaseIInsideWords().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual(_subtitle.Paragraphs[0].Text, "<i>Flight DU 720 from McIvan Brazil...</i>");
+            }
+        }
+
         #endregion Fix uppercase I inside words
 
         #region Fix dialogs on one line
