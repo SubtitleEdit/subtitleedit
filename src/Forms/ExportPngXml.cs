@@ -4253,7 +4253,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             {
                 Configuration.Settings.Tools.ExportBdnXmlImageType = comboBoxImageFormat.SelectedItem.ToString();
             }
-            else if (_exportType == ExportFormats.Fcp)
+            if (_exportType == ExportFormats.Fcp)
             {
                 Configuration.Settings.Tools.ExportFcpFontName = _subtitleFontName;
                 Configuration.Settings.Tools.ExportFcpFontSize = (int)_subtitleFontSize;
