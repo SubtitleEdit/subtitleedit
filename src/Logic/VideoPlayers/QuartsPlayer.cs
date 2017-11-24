@@ -257,23 +257,30 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             if (_quartzVideo == null)
                 return;
 
-            // calc new scaled size with correct aspect ratio
-            float factorX = _owner.Width / (float)_sourceWidth;
-            float factorY = _owner.Height / (float)_sourceHeight;
-
-            if (factorX > factorY)
+            try
             {
-                _quartzVideo.Width = (int)(_sourceWidth * factorY);
-                _quartzVideo.Height = (int)(_sourceHeight * factorY);
-            }
-            else
-            {
-                _quartzVideo.Width = (int)(_sourceWidth * factorX);
-                _quartzVideo.Height = (int)(_sourceHeight * factorX);
-            }
+                // calc new scaled size with correct aspect ratio
+                float factorX = _owner.Width / (float)_sourceWidth;
+                float factorY = _owner.Height / (float)_sourceHeight;
 
-            _quartzVideo.Left = (_owner.Width - _quartzVideo.Width) / 2;
-            _quartzVideo.Top = (_owner.Height - _quartzVideo.Height) / 2;
+                if (factorX > factorY)
+                {
+                    _quartzVideo.Width = (int)(_sourceWidth * factorY);
+                    _quartzVideo.Height = (int)(_sourceHeight * factorY);
+                }
+                else
+                {
+                    _quartzVideo.Width = (int)(_sourceWidth * factorX);
+                    _quartzVideo.Height = (int)(_sourceHeight * factorX);
+                }
+
+                _quartzVideo.Left = (_owner.Width - _quartzVideo.Width) / 2;
+                _quartzVideo.Top = (_owner.Height - _quartzVideo.Height) / 2;
+            }
+            catch
+            {
+                // ignored
+            }
         }
 
         public override void DisposeVideoPlayer()
