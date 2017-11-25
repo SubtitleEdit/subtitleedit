@@ -266,6 +266,9 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
 
         public override void Resize(int width, int height)
         {
+            if (_process == null || _videoHandle == IntPtr.Zero)
+                return;
+
             NativeMethods.ShowWindow(_process.MainWindowHandle, NativeMethods.ShowWindowCommands.ShowNoActivate);
             NativeMethods.SetWindowPos(_videoHandle, (IntPtr)NativeMethods.SpecialWindowHandles.HWND_TOP, 0, 0, width, height, NativeMethods.SetWindowPosFlags.SWP_NOREPOSITION);
             HideMpcPlayerWindow();
@@ -288,6 +291,9 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
                         return path;
                     if (Directory.Exists(Configuration.Settings.General.MpcHcLocation))
                     {
+                        path = Path.Combine(Configuration.Settings.General.MpcHcLocation, "mpc-hc64.exe");
+                        if (File.Exists(path))
+                            return path;
                         path = Path.Combine(Configuration.Settings.General.MpcHcLocation, @"MPC-HC\mpc-hc64.exe");
                         if (File.Exists(path))
                             return path;
@@ -339,6 +345,9 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
                         return path;
                     if (Directory.Exists(Configuration.Settings.General.MpcHcLocation))
                     {
+                        path = Path.Combine(Configuration.Settings.General.MpcHcLocation, @"mpc-hc.exe");
+                        if (File.Exists(path))
+                            return path;
                         path = Path.Combine(Configuration.Settings.General.MpcHcLocation, @"MPC-HC\mpc-hc.exe");
                         if (File.Exists(path))
                             return path;
