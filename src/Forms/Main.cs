@@ -5063,7 +5063,7 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             if (_findHelper.FindReplaceType.FindType == FindType.RegEx)
                             {
-                                ReplaceViaRegularExpression();
+                                ReplaceViaRegularExpression(tb);
                             }
                             else
                             {
@@ -5146,23 +5146,23 @@ namespace Nikse.SubtitleEdit.Forms
             replaceDialog.Dispose();
         }
 
-        private void ReplaceViaRegularExpression()
+        private void ReplaceViaRegularExpression(TextBox tb)
         {
             var r = new Regex(_findHelper.FindText, RegexOptions.Multiline);
             if (_findHelper.ReplaceText.Contains('$'))
             {
-                string result = r.Replace(textBoxListViewText.Text, _findHelper.ReplaceText);
-                if (result != textBoxListViewText.Text)
+                string result = r.Replace(tb.Text, _findHelper.ReplaceText);
+                if (result != tb.Text)
                 {
-                    textBoxListViewText.Text = result;
+                    tb.Text = result;
                 }
             }
             else
             {
-                string result = r.Replace(textBoxListViewText.SelectedText, _findHelper.ReplaceText);
-                if (result != textBoxListViewText.SelectedText)
+                string result = r.Replace(tb.SelectedText, _findHelper.ReplaceText);
+                if (result != tb.SelectedText)
                 {
-                    textBoxListViewText.SelectedText = result;
+                    tb.SelectedText = result;
                 }
             }
         }
@@ -5180,6 +5180,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (replace)
             {
+                var tb = GetFindRepaceTextBox();
                 if (_findHelper.MatchInOriginal)
                 {
                     textBoxListViewTextAlternate.SelectionStart = _findHelper.SelectedPosition;
@@ -5188,15 +5189,15 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
-                    textBoxListViewText.SelectionStart = _findHelper.SelectedPosition;
-                    textBoxListViewText.SelectionLength = _findHelper.FindTextLength;
+                    tb.SelectionStart = _findHelper.SelectedPosition;
+                    tb.SelectionLength = _findHelper.FindTextLength;
                     if (_findHelper.FindReplaceType.FindType == FindType.RegEx)
                     {
-                        ReplaceViaRegularExpression();
+                        ReplaceViaRegularExpression(tb);
                     }
                     else
                     {
-                        textBoxListViewText.SelectedText = _findHelper.ReplaceText;
+                        tb.SelectedText = _findHelper.ReplaceText;
                     }
                 }
             }
