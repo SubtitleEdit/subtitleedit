@@ -120,10 +120,13 @@ namespace Nikse.SubtitleEdit.Logic
             int index = 0;
             if (position < 0)
                 position = 0;
+            bool first = true;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 if (index >= startIndex)
                 {
+                    if (!first)
+                        position = 0;
                     int pos = 0;
                     if (!MatchInOriginal)
                     {
@@ -156,8 +159,8 @@ namespace Nikse.SubtitleEdit.Logic
                             }
                         }
                     }
-                }
-                position = 0;
+                    first = false;
+                }                
                 index++;
             }
             return false;
