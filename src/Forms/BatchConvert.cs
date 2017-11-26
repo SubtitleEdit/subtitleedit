@@ -1529,7 +1529,7 @@ namespace Nikse.SubtitleEdit.Forms
                 try
                 {
                     string ext = Path.GetExtension(fileName).ToLowerInvariant();
-                    if (ext != "" && 
+                    if (ext != "" &&
                         ext != ".png" &&
                         ext != ".jpg" &&
                         ext != ".docx" &&

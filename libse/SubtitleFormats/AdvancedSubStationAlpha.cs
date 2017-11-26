@@ -287,9 +287,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
 
             try
             {
-                var lines = new List<string>();
-                foreach (string s in subtitle.Header.SplitToLines())
-                    lines.Add(s);
+                var lines = subtitle.Header.SplitToLines();
                 var tt = new TimedText10();
                 var sub = new Subtitle();
                 tt.LoadSubtitle(sub, lines, string.Empty);
@@ -410,9 +408,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
 
             try
             {
-                var lines = new List<string>();
-                foreach (string s in subtitle.Header.SplitToLines())
-                    lines.Add(s);
+                var lines = subtitle.Header.SplitToLines();
                 var sb2 = new StringBuilder();
                 lines.ForEach(line => sb2.AppendLine(line));
                 var xml = new XmlDocument { XmlResolver = null };

@@ -201,9 +201,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 format = new AdvancedSubStationAlpha();
             var sub = new Subtitle();
             string text = format.ToText(sub, string.Empty);
-            var lines = new List<string>();
-            foreach (string line in text.SplitToLines())
-                lines.Add(line);
+            var lines = text.SplitToLines();
             format.LoadSubtitle(sub, lines, string.Empty);
             _header = sub.Header;
         }

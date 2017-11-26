@@ -47,9 +47,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 var ssa = new SubStationAlpha();
                 var sub = new Subtitle();
-                var lines = new List<string>();
-                foreach (string line in subtitle.ToText(ssa).SplitToLines())
-                    lines.Add(line);
+                var lines = subtitle.ToText(ssa).SplitToLines();
                 string title = "Untitled";
                 if (!string.IsNullOrEmpty(subtitleFileName))
                     title = Path.GetFileNameWithoutExtension(subtitleFileName);
@@ -167,9 +165,7 @@ namespace Nikse.SubtitleEdit.Forms
                 format = new AdvancedSubStationAlpha();
             var sub = new Subtitle();
             string text = format.ToText(sub, string.Empty);
-            var lines = new List<string>();
-            foreach (string line in text.SplitToLines())
-                lines.Add(line);
+            var lines = text.SplitToLines();
             format.LoadSubtitle(sub, lines, string.Empty);
             return sub.Header.Trim();
         }
