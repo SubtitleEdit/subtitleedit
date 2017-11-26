@@ -444,7 +444,7 @@ namespace Nikse.SubtitleEdit.Logic
             const int max = 3;
 
             var sb = new StringBuilder();
-            for (int i = 0; i < lines.Length; i++)
+            for (int i = 0; i < lines.Count; i++)
             {
                 string line = lines[i];
                 if (i > 0)

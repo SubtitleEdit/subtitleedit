@@ -41,7 +41,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     var sub = new Subtitle();
                     var format = new TimedText();
-                    sub.ReloadLoadSubtitle(xmlAsString.SplitToLines().ToList(), null, format);
+                    sub.ReloadLoadSubtitle(xmlAsString.SplitToLines(), null, format);
 
                     if (sub.Paragraphs.Count == 0)
                         continue;

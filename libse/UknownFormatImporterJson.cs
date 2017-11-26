@@ -1,5 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 
@@ -8,7 +9,7 @@ namespace Nikse.SubtitleEdit.Core
     public class UknownFormatImporterJson
     {
 
-        public Subtitle AutoGuessImport(string[] lines)
+        public Subtitle AutoGuessImport(List<string> lines)
         {
 
             var sb = new StringBuilder();

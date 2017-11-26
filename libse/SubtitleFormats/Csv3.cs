@@ -56,16 +56,16 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 var arr = p.Text.Trim().SplitToLines();
-                if (arr.Length > 3)
+                if (arr.Count > 3)
                 {
                     string s = Utilities.AutoBreakLine(p.Text);
                     arr = s.Trim().SplitToLines();
                 }
                 string line1 = string.Empty;
                 string line2 = string.Empty;
-                if (arr.Length > 0)
+                if (arr.Count > 0)
                     line1 = arr[0];
-                if (arr.Length > 1)
+                if (arr.Count > 1)
                     line2 = arr[1];
                 line1 = line1.Replace("\"", "\"\"");
                 line2 = line2.Replace("\"", "\"\"");

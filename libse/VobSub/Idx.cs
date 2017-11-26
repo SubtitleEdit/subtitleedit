@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core.VobSub
@@ -15,11 +16,11 @@ namespace Nikse.SubtitleEdit.Core.VobSub
         private static readonly Regex _timeCodeLinePattern = new Regex(@"^timestamp: \d+:\d+:\d+:\d+, filepos: [\dabcdefABCDEF]+$", RegexOptions.Compiled);
 
         public Idx(string fileName)
-            : this(File.ReadAllLines(fileName))
+            : this(File.ReadAllLines(fileName).ToList())
         {
         }
 
-        public Idx(string[] lines)
+        public Idx(List<string> lines)
         {
             int languageIndex = 0;
             foreach (string line in lines)

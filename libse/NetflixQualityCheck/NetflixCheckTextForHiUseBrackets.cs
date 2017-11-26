@@ -22,7 +22,7 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
                 {
                     newText = "[" + newText.Substring(1, newText.Length - 2) + "]";
                 }
-                else if (arr.Length == 2 && arr[0].StartsWith("-", StringComparison.Ordinal) && arr[1].StartsWith("-", StringComparison.Ordinal))
+                else if (arr.Count == 2 && arr[0].StartsWith("-", StringComparison.Ordinal) && arr[1].StartsWith("-", StringComparison.Ordinal))
                 {
                     if ((arr[0].StartsWith("-(", StringComparison.Ordinal) && arr[0].EndsWith(")", StringComparison.Ordinal)) || (arr[0].StartsWith("-{", StringComparison.Ordinal) && arr[0].EndsWith("}", StringComparison.Ordinal)))
                     {

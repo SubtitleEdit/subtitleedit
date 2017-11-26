@@ -544,7 +544,7 @@ namespace Nikse.SubtitleEdit.Logic
                             var lines = new List<string>();
                             if (format == null)
                             {
-                                lines = File.ReadAllText(fileName).SplitToLines().ToList();
+                                lines = File.ReadAllText(fileName).SplitToLines();
                                 var timedTextImage = new TimedTextImage();
                                 if (timedTextImage.IsMine(lines, fileName))
                                 {
@@ -605,7 +605,7 @@ namespace Nikse.SubtitleEdit.Logic
                                 {
                                     WriteLine("Found image based subtitle format: " + format.FriendlyName);
                                     var subtitle = new Subtitle();
-                                    format.LoadSubtitle(subtitle, File.ReadAllText(fileName).SplitToLines().ToList(), fileName);
+                                    format.LoadSubtitle(subtitle, File.ReadAllText(fileName).SplitToLines(), fileName);
                                     if (subtitle != null)
                                     {
                                         subtitle.FileName = fileName;

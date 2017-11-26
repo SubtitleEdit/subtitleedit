@@ -52,10 +52,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var lines = text.SplitToLines();
             int textLengthFirstLine = 0;
             int textLengthSecondLine = 0;
-            if (lines.Length > 0)
+            if (lines.Count > 0)
             {
                 textLengthFirstLine = lines[0].Length;
-                if (lines.Length > 1)
+                if (lines.Count > 1)
                     textLengthSecondLine = lines[1].Length;
             }
         }

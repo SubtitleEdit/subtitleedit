@@ -63,7 +63,7 @@ ST 0 EB 3.10
             if (!rtf.StartsWith("{\\rtf", StringComparison.Ordinal))
                 return;
 
-            string[] arr = rtf.FromRtf().SplitToLines();
+            var arr = rtf.FromRtf().SplitToLines();
             Paragraph p = null;
             subtitle.Paragraphs.Clear();
             char[] splitChar = { '.' };

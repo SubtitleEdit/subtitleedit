@@ -41,13 +41,13 @@ SRPSKI
                 string firstLine = string.Empty;
                 string secondLine = string.Empty;
                 var lines = p.Text.SplitToLines();
-                if (lines.Length > 2)
+                if (lines.Count > 2)
                 {
                     lines = Utilities.AutoBreakLine(p.Text).SplitToLines();
                 }
-                if (lines.Length > 0)
+                if (lines.Count > 0)
                     firstLine = lines[0];
-                if (lines.Length > 1)
+                if (lines.Count > 1)
                     secondLine = lines[1];
 
                 sb.AppendLine(string.Format(" {0}          {1} " + Environment.NewLine +

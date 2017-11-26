@@ -40,10 +40,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 SubtitleFormat format = new AdvancedSubStationAlpha();
                 var sub = new Subtitle();
                 string text = format.ToText(sub, string.Empty);
-                string[] lineArray = text.SplitToLines();
-                var lines = new List<string>();
-                foreach (string line in lineArray)
-                    lines.Add(line);
+                var lines = text.SplitToLines();
                 format.LoadSubtitle(sub, lines, string.Empty);
                 return sub.Header;
             }

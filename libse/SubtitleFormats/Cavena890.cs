@@ -436,14 +436,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             string line1 = string.Empty;
             string line2 = string.Empty;
             var lines = text.SplitToLines();
-            if (lines.Length > 2)
+            if (lines.Count > 2)
                 lines = Utilities.AutoBreakLine(text).SplitToLines();
-            if (lines.Length > 1)
+            if (lines.Count > 1)
             {
                 line1 = lines[0];
                 line2 = lines[1];
             }
-            else if (lines.Length == 1)
+            else if (lines.Count == 1)
             {
                 line2 = lines[0];
             }

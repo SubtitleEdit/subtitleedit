@@ -36,7 +36,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                 sb.AppendLine($"{index + 1:0000} : {EncodeTimeCode(p.StartTime)},{EncodeTimeCode(p.EndTime)},{numberOfLinesCode}");
                 sb.AppendLine("80 80 80");
-                for (int i = 0; i < p.Text.SplitToLines().Length; i++)
+                for (int i = 0; i < p.Text.SplitToLines().Count; i++)
                 {
                     string line = p.Text.SplitToLines()[i];
                     sb.AppendLine(GetPositionCode(i, p.Extra) + " " + line.Trim());

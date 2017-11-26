@@ -312,7 +312,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             var lines = text.SplitToLines();
-            if (Configuration.Settings.Tools.TranslateAutoSplit && lines.Length == 2 && !string.IsNullOrEmpty(lines[0]) && (Utilities.AllLettersAndNumbers + ",").Contains(lines[0].Substring(lines[0].Length-1)))
+            if (Configuration.Settings.Tools.TranslateAutoSplit && lines.Count == 2 && !string.IsNullOrEmpty(lines[0]) && (Utilities.AllLettersAndNumbers + ",").Contains(lines[0].Substring(lines[0].Length-1)))
             {
                 _autoSplit[i] = true;
                 text = Utilities.RemoveLineBreaks(text);

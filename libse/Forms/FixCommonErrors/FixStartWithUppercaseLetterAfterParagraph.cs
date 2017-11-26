@@ -112,7 +112,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             if (p.Text != null && p.Text.Contains(Environment.NewLine))
             {
                 var arr = p.Text.SplitToLines();
-                if (arr.Length == 2 && arr[1].Length > 1)
+                if (arr.Count == 2 && arr[1].Length > 1)
                 {
                     string text = arr[1];
                     string pre = string.Empty;

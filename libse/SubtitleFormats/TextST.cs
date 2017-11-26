@@ -599,7 +599,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 var sb = new StringBuilder();
                 bool italic = false;
                 bool bold = false;
-                for (int lineNumber = 0; lineNumber < lines.Length; lineNumber++)
+                for (int lineNumber = 0; lineNumber < lines.Count; lineNumber++)
                 {
                     string line = lines[lineNumber];
                     if (lineNumber > 0)

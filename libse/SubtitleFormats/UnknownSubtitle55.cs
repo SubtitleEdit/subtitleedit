@@ -47,7 +47,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             if (!rtf.StartsWith("{\\rtf", StringComparison.Ordinal))
                 return;
 
-            string[] arr = rtf.FromRtf().SplitToLines();
+            var arr = rtf.FromRtf().SplitToLines();
             bool expectStartTime = true;
             var p = new Paragraph();
             subtitle.Paragraphs.Clear();

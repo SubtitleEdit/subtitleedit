@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 
@@ -85,9 +86,49 @@ namespace Nikse.SubtitleEdit.Core
             return source.IndexOf(value, comparisonType) >= 0;
         }
 
-        public static string[] SplitToLines(this string source)
+        public static List<string> SplitToLines(this string s)
         {
-            return source.Replace("\r\r\n", "\n").Replace("\r\n", "\n").Replace('\r', '\n').Replace('\u2028', '\n').Split('\n');
+            //original non-optimized version: return source.Replace("\r\r\n", "\n").Replace("\r\n", "\n").Replace('\r', '\n').Replace('\u2028', '\n').Split('\n');
+
+            var lines = new List<string>();
+            int start = 0;
+            int max = s.Length;
+            int i = 0;
+            while (i < max)
+            {
+                var ch = s[i];
+                if (ch == '\r')
+                {
+                    if (i < s.Length - 2 && s[i + 1] == '\r' && s[i + 2] == '\n') // \r\r\n
+                    {
+                        lines.Add(start < i ? s.Substring(start, i - start) : string.Empty);
+                        i += 3;
+                        start = i;
+                        continue;
+                    }
+                    if (i < s.Length - 1 && s[i + 1] == '\n') // \r\n
+                    {
+                        lines.Add(start < i ? s.Substring(start, i - start) : string.Empty);
+                        i += 2;
+                        start = i;
+                        continue;
+                    }
+                    lines.Add(start < i ? s.Substring(start, i - start) : string.Empty);
+                    i++;
+                    start = i;
+                    continue;
+                }
+                if (ch == '\n' || ch == '\u2028')
+                {
+                    lines.Add(start < i ? s.Substring(start, i - start) : string.Empty);
+                    i++;
+                    start = i;
+                    continue;
+                }
+                i++;
+            }
+            lines.Add(start < i ? s.Substring(start, i - start) : string.Empty);
+            return lines;
         }
 
         public static int CountWords(this string source)

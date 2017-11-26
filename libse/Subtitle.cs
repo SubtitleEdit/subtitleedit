@@ -177,7 +177,7 @@ namespace Nikse.SubtitleEdit.Core
             }
 
             encoding = sr.CurrentEncoding;
-            var lines = sr.ReadToEnd().SplitToLines().ToList();
+            var lines = sr.ReadToEnd().SplitToLines();
             sr.Close();
 
             foreach (SubtitleFormat subtitleFormat in SubtitleFormat.AllSubtitleFormats)

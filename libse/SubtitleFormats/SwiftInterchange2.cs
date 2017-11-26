@@ -109,9 +109,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     text = ItalicPrefix + text;
                 }
                 var arr = text.SplitToLines();
-                for (int rowNo = 0; rowNo < arr.Length; rowNo++)
+                for (int rowNo = 0; rowNo < arr.Count; rowNo++)
                 {
-                    if (rowNo == arr.Length - 1)
+                    if (rowNo == arr.Count - 1)
                     {
                         sb.AppendLine("# ROW " + rowNo);
                     }

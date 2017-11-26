@@ -507,7 +507,7 @@ namespace Nikse.SubtitleEdit.Core
                 if (italicBeginTagCount == 2 && italicEndTagCount == 1)
                 {
                     var lines = text.SplitToLines();
-                    if (lines.Length == 2 && lines[0].StartsWith(beginTag, StringComparison.Ordinal) && lines[0].EndsWith(endTag, StringComparison.Ordinal) &&
+                    if (lines.Count == 2 && lines[0].StartsWith(beginTag, StringComparison.Ordinal) && lines[0].EndsWith(endTag, StringComparison.Ordinal) &&
                         lines[1].StartsWith(beginTag, StringComparison.Ordinal))
                     {
                         text = text.TrimEnd() + endTag;

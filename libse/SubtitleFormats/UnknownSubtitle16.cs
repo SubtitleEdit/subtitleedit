@@ -28,7 +28,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             foreach (string s in lines)
                 text.AppendLine(s);
 
-            var lines2 = text.ToString().FromRtf().SplitToLines().ToList();
+            var lines2 = text.ToString().FromRtf().SplitToLines();
             var u52 = new UnknownSubtitle52();
             u52.LoadSubtitle(subtitle, lines2, fileName);
             _errorCount = u52.ErrorCount;
