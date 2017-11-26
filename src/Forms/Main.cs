@@ -4655,8 +4655,6 @@ namespace Nikse.SubtitleEdit.Forms
 
         private TextBox GetFindRepaceTextBox()
         {
-            if (Configuration.Settings.General.RightToLeftMode)
-                return _findHelper.MatchInOriginal ? textBoxListViewText : textBoxListViewTextAlternate;
             return _findHelper.MatchInOriginal ? textBoxListViewTextAlternate : textBoxListViewText;
         }
 
