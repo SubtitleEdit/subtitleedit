@@ -2201,9 +2201,7 @@ namespace Nikse.SubtitleEdit.Core
         {
             var codecPrivate = matroskaSubtitleInfo.GetCodecPrivate();
             var subtitle = new Subtitle { Header = codecPrivate };
-            var lines = new List<string>();
-            foreach (string l in subtitle.Header.Trim().SplitToLines())
-                lines.Add(l);
+            var lines = subtitle.Header.Trim().SplitToLines();
             var footer = new StringBuilder();
             var comments = new Subtitle();
             if (!string.IsNullOrEmpty(codecPrivate))
