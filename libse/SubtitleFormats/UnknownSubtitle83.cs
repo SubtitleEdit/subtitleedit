@@ -47,7 +47,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             if (!rtf.StartsWith("{\\rtf", StringComparison.Ordinal))
                 return;
 
-            lines = rtf.FromRtf().SplitToLines().ToList();
+            lines = rtf.FromRtf().SplitToLines();
             Paragraph p = null;
             foreach (var line in lines)
             {

@@ -177,7 +177,7 @@ namespace Nikse.SubtitleEdit.Forms
                             }
 
                             var arr = dialogText.SplitToLines();
-                            if (arr.Length == 2 && (arr[0].StartsWith('-') || arr[0].StartsWith("<i>-", StringComparison.Ordinal)) && (arr[1].StartsWith('-') || arr[1].StartsWith("<i>-", StringComparison.Ordinal)))
+                            if (arr.Count == 2 && (arr[0].StartsWith('-') || arr[0].StartsWith("<i>-", StringComparison.Ordinal)) && (arr[1].StartsWith('-') || arr[1].StartsWith("<i>-", StringComparison.Ordinal)))
                                 isDialog = true;
                         }
 
@@ -199,7 +199,7 @@ namespace Nikse.SubtitleEdit.Forms
                             if (isDialog || text.Contains(Environment.NewLine))
                             {
                                 var arr = text.SplitToLines();
-                                if (arr.Length == 2)
+                                if (arr.Count == 2)
                                 {
                                     int spacing1 = Configuration.Settings.General.MinimumMillisecondsBetweenLines / 2;
                                     int spacing2 = Configuration.Settings.General.MinimumMillisecondsBetweenLines / 2;

@@ -302,7 +302,7 @@ namespace Nikse.SubtitleEdit.Core
             string s = AutoBreakLine(text, 0, 0, language);
 
             var arr = s.SplitToLines();
-            if ((arr.Length < 2 && arr[0].Length <= maximumLineLength) || (arr[0].Length <= maximumLineLength && arr[1].Length <= maximumLineLength))
+            if ((arr.Count < 2 && arr[0].Length <= maximumLineLength) || (arr[0].Length <= maximumLineLength && arr[1].Length <= maximumLineLength))
                 return s;
 
             s = RemoveLineBreaks(s);
@@ -409,7 +409,7 @@ namespace Nikse.SubtitleEdit.Core
             if (text.Contains(Environment.NewLine) && (text.Contains('-') || text.Contains('♪')))
             {
                 var noTagLines = HtmlUtil.RemoveHtmlTags(text, true).SplitToLines();
-                if (noTagLines.Length == 2)
+                if (noTagLines.Count == 2)
                 {
                     var arr0 = noTagLines[0].Trim().TrimEnd('"', '\'').TrimEnd();
                     if (language == "ar")
@@ -679,7 +679,7 @@ namespace Nikse.SubtitleEdit.Core
         public static string UnbreakLine(string text)
         {
             var lines = text.SplitToLines();
-            if (lines.Length == 1)
+            if (lines.Count == 1)
                 return text;
 
             var singleLine = string.Join(" ", lines);

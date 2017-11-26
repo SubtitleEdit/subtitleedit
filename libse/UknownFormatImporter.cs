@@ -1,5 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -13,7 +14,7 @@ namespace Nikse.SubtitleEdit.Core
         private static readonly char[] ExpectedSplitChars = { '.', ',', ';', ':' };
         public bool UseFrames { get; set; }
 
-        public Subtitle AutoGuessImport(string[] lines)
+        public Subtitle AutoGuessImport(List<string> lines)
         {
             var subtitle = ImportTimeCodesOnSameSeperateLine(lines);
             if (subtitle.Paragraphs.Count < 2)
@@ -48,7 +49,7 @@ namespace Nikse.SubtitleEdit.Core
                     subtitle = jsonSubtitle;
             }
 
-            if (subtitle.Paragraphs.Count == 0 && lines.Length == 1 && lines[0].Contains(" --> "))
+            if (subtitle.Paragraphs.Count == 0 && lines.Count == 1 && lines[0].Contains(" --> "))
             {
                 subtitle = ImportSubtitleWithNoLineBreaks(lines[0]);
             }
@@ -89,13 +90,13 @@ namespace Nikse.SubtitleEdit.Core
             subtitle.RemoveEmptyLines();
         }
 
-        private Subtitle ImportTimeCodesInFramesAndTextOnSameLine(string[] lines)
+        private Subtitle ImportTimeCodesInFramesAndTextOnSameLine(List<string> lines)
         {
             var regexTimeCodes1 = new Regex(@"\d+", RegexOptions.Compiled);
             Paragraph p = null;
             var subtitle = new Subtitle();
             var sb = new StringBuilder();
-            for (int idx = 0; idx < lines.Length; idx++)
+            for (int idx = 0; idx < lines.Count; idx++)
             {
                 string line = lines[idx];
 
@@ -156,12 +157,12 @@ namespace Nikse.SubtitleEdit.Core
             return subtitle;
         }
 
-        private Subtitle ImportTimeCodesInFramesOnSameSeperateLine(string[] lines)
+        private Subtitle ImportTimeCodesInFramesOnSameSeperateLine(List<string> lines)
         {
             Paragraph p = null;
             var subtitle = new Subtitle();
             var sb = new StringBuilder();
-            for (int idx = 0; idx < lines.Length; idx++)
+            for (int idx = 0; idx < lines.Count; idx++)
             {
                 string line = lines[idx];
                 string lineWithPerhapsOnlyNumbers = GetLineWithPerhapsOnlyNumbers(line);
@@ -267,13 +268,13 @@ namespace Nikse.SubtitleEdit.Core
             return subtitle;
         }
 
-        private static Subtitle ImportTimeCodesOnAloneLines(string[] lines)
+        private static Subtitle ImportTimeCodesOnAloneLines(List<string> lines)
         {
             Paragraph p = null;
             var subtitle = new Subtitle();
             var sb = new StringBuilder();
             char[] splitChars = { ' ', '\t', '-', '>', '<', '{', '}', '[', ']' };
-            for (int idx = 0; idx < lines.Length; idx++)
+            for (int idx = 0; idx < lines.Count; idx++)
             {
                 string line = lines[idx];
                 string lineWithPerhapsOnlyNumbers = GetLineWithPerhapsOnlyNumbers(line);
@@ -325,7 +326,7 @@ namespace Nikse.SubtitleEdit.Core
             return subtitle;
         }
 
-        private static Subtitle ImportTimeCodesAndTextOnSameLine(string[] lines)
+        private static Subtitle ImportTimeCodesAndTextOnSameLine(List<string> lines)
         {
             var regexTimeCodes1 = new Regex(@"\d+[:.,;]{1}\d\d[:.,;]{1}\d\d[:.,;]{1}\d+", RegexOptions.Compiled);
             var regexTimeCodes2 = new Regex(@"\d+[:.,;]{1}\d\d[:.,;]{1}\d+", RegexOptions.Compiled);
@@ -336,7 +337,7 @@ namespace Nikse.SubtitleEdit.Core
             bool isFirstLineNumber = false;
 
             int count = -1;
-            for (int idx = 0; idx < lines.Length; idx++)
+            for (int idx = 0; idx < lines.Count; idx++)
             {
                 string line = lines[idx];
                 var matches = regexTimeCodes1.Matches(line);
@@ -362,7 +363,7 @@ namespace Nikse.SubtitleEdit.Core
                     isFirstLineNumber = true;
             }
 
-            for (int idx = 0; idx < lines.Length; idx++)
+            for (int idx = 0; idx < lines.Count; idx++)
             {
                 string line = lines[idx];
 
@@ -446,7 +447,7 @@ namespace Nikse.SubtitleEdit.Core
             return subtitle;
         }
 
-        private static Subtitle ImportTimeCodesAndTextOnSameLineOnlySpaceAsSeparator(string[] lines)
+        private static Subtitle ImportTimeCodesAndTextOnSameLineOnlySpaceAsSeparator(List<string> lines)
         {
             var regexTimeCodes1 = new Regex(@"\d+ {1}\d\d {1}\d\d {1}\d+", RegexOptions.Compiled);
             var regexTimeCodes2 = new Regex(@"\d+  {1}\d\d {1}\d+", RegexOptions.Compiled);
@@ -454,7 +455,7 @@ namespace Nikse.SubtitleEdit.Core
             var subtitle = new Subtitle();
             var sb = new StringBuilder();
             char[] splitChar = { ' ' };
-            for (int idx = 0; idx < lines.Length; idx++)
+            for (int idx = 0; idx < lines.Count; idx++)
             {
                 string line = lines[idx];
 
@@ -498,13 +499,13 @@ namespace Nikse.SubtitleEdit.Core
             return subtitle;
         }
 
-        private static Subtitle ImportTimeCodesOnSameSeperateLine(string[] lines)
+        private static Subtitle ImportTimeCodesOnSameSeperateLine(List<string> lines)
         {
             Paragraph p = null;
             var subtitle = new Subtitle();
             var sb = new StringBuilder();
             char[] splitChars = { ' ', '\t' };
-            for (int idx = 0; idx < lines.Length; idx++)
+            for (int idx = 0; idx < lines.Count; idx++)
             {
                 string line = lines[idx];
                 string lineWithPerhapsOnlyNumbers = GetLineWithPerhapsOnlyNumbers(line);
@@ -608,13 +609,13 @@ namespace Nikse.SubtitleEdit.Core
             return subtitle;
         }
 
-        private static Subtitle ImportTimeCodesOnSameSeperateLineNoMilliseconds(string[] lines)
+        private static Subtitle ImportTimeCodesOnSameSeperateLineNoMilliseconds(List<string> lines)
         {
             Paragraph p = null;
             var subtitle = new Subtitle();
             var sb = new StringBuilder();
             char[] splitChar = { ' ' };
-            for (int idx = 0; idx < lines.Length; idx++)
+            for (int idx = 0; idx < lines.Count; idx++)
             {
                 string line = lines[idx];
                 string lineWithPerhapsOnlyNumbers = GetLineWithPerhapsOnlyNumbers(line);

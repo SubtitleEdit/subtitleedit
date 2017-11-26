@@ -417,7 +417,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (input.Length < Configuration.Settings.General.SubtitleLineMaximumLength * 3 && input.Length > Configuration.Settings.General.SubtitleLineMaximumLength * 1.5)
             {
                 var breaked = Utilities.AutoBreakLine(input).SplitToLines();
-                if (breaked.Length == 2 && (breaked[0].Length > Configuration.Settings.General.SubtitleLineMaximumLength || breaked[1].Length > Configuration.Settings.General.SubtitleLineMaximumLength))
+                if (breaked.Count == 2 && (breaked[0].Length > Configuration.Settings.General.SubtitleLineMaximumLength || breaked[1].Length > Configuration.Settings.General.SubtitleLineMaximumLength))
                 {
                     var first = new StringBuilder();
                     var second = new StringBuilder();
@@ -472,8 +472,8 @@ namespace Nikse.SubtitleEdit.Forms
         private void SplitSingle(StringBuilder sb)
         {
             string t = sb.ToString().Trim();
-            string[] tarr = t.SplitToLines();
-            if (checkBoxMergeShortLines.Checked == false && tarr.Length == 3 &&
+            var tarr = t.SplitToLines();
+            if (checkBoxMergeShortLines.Checked == false && tarr.Count == 3 &&
                 tarr[0].Length < Configuration.Settings.General.SubtitleLineMaximumLength &&
                 tarr[1].Length < Configuration.Settings.General.SubtitleLineMaximumLength &&
                 tarr[2].Length < Configuration.Settings.General.SubtitleLineMaximumLength)
@@ -481,14 +481,14 @@ namespace Nikse.SubtitleEdit.Forms
                 _subtitle.Paragraphs.Add(new Paragraph { Text = tarr[0] + Environment.NewLine + tarr[1] });
                 return;
             }
-            if (checkBoxMergeShortLines.Checked == false && tarr.Length == 2 &&
+            if (checkBoxMergeShortLines.Checked == false && tarr.Count == 2 &&
                 tarr[0].Length < Configuration.Settings.General.SubtitleLineMaximumLength &&
                 tarr[1].Length < Configuration.Settings.General.SubtitleLineMaximumLength)
             {
                 _subtitle.Paragraphs.Add(new Paragraph { Text = tarr[0] + Environment.NewLine + tarr[1] });
                 return;
             }
-            if (checkBoxMergeShortLines.Checked == false && tarr.Length == 1 && tarr[0].Length < Configuration.Settings.General.SubtitleLineMaximumLength)
+            if (checkBoxMergeShortLines.Checked == false && tarr.Count == 1 && tarr[0].Length < Configuration.Settings.General.SubtitleLineMaximumLength)
             {
                 _subtitle.Paragraphs.Add(new Paragraph { Text = tarr[0].Trim() });
                 return;
@@ -769,7 +769,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 var fd = new FinalDraftTemplate2();
                 var sub = new Subtitle();
-                fd.LoadSubtitle(sub, Encoding.UTF8.GetString(FileUtil.ReadAllBytesShared(fileName)).SplitToLines().ToList(), fileName);
+                fd.LoadSubtitle(sub, Encoding.UTF8.GetString(FileUtil.ReadAllBytesShared(fileName)).SplitToLines(), fileName);
                 textBoxText.Text = sub.ToText(fd);
                 _videoFileName = null;
                 Text = Configuration.Settings.Language.ImportText.Title + " - " + fileName;

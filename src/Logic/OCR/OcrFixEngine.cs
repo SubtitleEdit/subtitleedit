@@ -654,7 +654,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
         {
             var sb = new StringBuilder();
             var lines = input.SplitToLines();
-            for (int i = 0; i < lines.Length; i++)
+            for (int i = 0; i < lines.Count; i++)
             {
                 string l = lines[i];
 

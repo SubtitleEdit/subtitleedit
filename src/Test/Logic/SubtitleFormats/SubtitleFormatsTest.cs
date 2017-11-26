@@ -146,7 +146,7 @@ Line 3";
             var text = target.ToText(subtitle, "title");
 
             var outSubtitle = new Subtitle();
-            target.LoadSubtitle(outSubtitle, text.SplitToLines().ToList(), null);
+            target.LoadSubtitle(outSubtitle, text.SplitToLines(), null);
             Assert.IsTrue(outSubtitle.Paragraphs[0].Text == subText);
         }
 
@@ -398,7 +398,7 @@ Dialogue: 0,0:00:01.80,0:00:04.93,Segoe Script Red shadow alpha 160,,0,0,0,,Die 
 Dialogue: 0,0:00:05.02,0:00:07.94,Segoe Script Red shadow alpha 160,,0,0,0,,Dit wordt de trip van ons leven.";
             var target = new AdvancedSubStationAlpha();
             var subtitle = new Subtitle();
-            target.LoadSubtitle(subtitle, text.SplitToLines().ToList(), null);
+            target.LoadSubtitle(subtitle, text.SplitToLines(), null);
             var output = new AdvancedSubStationAlpha().ToText(subtitle, string.Empty);
             Assert.IsTrue(output.Contains("[Events]"));
             Assert.AreEqual(2, subtitle.Paragraphs.Count);
@@ -635,7 +635,7 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
             var text = target.ToText(subtitle, "title");
 
             var outSubtitle = new Subtitle();
-            target.LoadSubtitle(outSubtitle, text.SplitToLines().ToList(), null);
+            target.LoadSubtitle(outSubtitle, text.SplitToLines(), null);
             Assert.IsTrue(outSubtitle.Paragraphs[0].Text == subText);
         }
 
@@ -650,7 +650,7 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
             var text = target.ToText(subtitle, "title");
 
             var outSubtitle = new Subtitle();
-            target.LoadSubtitle(outSubtitle, text.SplitToLines().ToList(), null);
+            target.LoadSubtitle(outSubtitle, text.SplitToLines(), null);
             Assert.IsTrue(outSubtitle.Paragraphs[0].Text == subText);
             Assert.IsTrue(outSubtitle.Paragraphs[1].Text == subText);
         }
@@ -666,7 +666,7 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
             var text = target.ToText(subtitle, "title");
 
             var outSubtitle = new Subtitle();
-            target.LoadSubtitle(outSubtitle, text.SplitToLines().ToList(), null);
+            target.LoadSubtitle(outSubtitle, text.SplitToLines(), null);
             Assert.IsTrue(outSubtitle.Paragraphs[0].Text == subText);
             Assert.IsTrue(outSubtitle.Paragraphs[1].Text == subText);
         }
@@ -882,7 +882,7 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
             string s = "#Every satellite...#\r\n#0:02:06.14,0:02:08.08";
             var target = new Utx();
             var subtitle = new Subtitle();
-            target.LoadSubtitle(subtitle, s.SplitToLines().ToList(), string.Empty);
+            target.LoadSubtitle(subtitle, s.SplitToLines(), string.Empty);
             string actual = subtitle.Paragraphs[0].Text;
             Assert.AreEqual("#Every satellite...#", actual);
         }
@@ -899,7 +899,7 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
                 sb.AppendLine(Utilities.LowercaseLetters);
                 sb.AppendLine();
             }
-            var lines = sb.ToString().SplitToLines().ToList();
+            var lines = sb.ToString().SplitToLines();
             Configuration.Settings.General.CurrentFrameRate = 27;
             foreach (var format in SubtitleFormat.AllSubtitleFormats)
             {
@@ -999,7 +999,7 @@ and astronauts.“...""
     </tt:div>
   </tt:body>
 </tt:tt>".Replace("'", "\"");
-            target.LoadSubtitle(subtitle, raw.SplitToLines().ToList(), null);
+            target.LoadSubtitle(subtitle, raw.SplitToLines(), null);
             string actual = subtitle.Paragraphs[0].Text;
             const string expected = "Hallo world.";
             Assert.AreEqual(expected, actual);
@@ -1098,7 +1098,7 @@ Hi, I'm Keith Lemon.
 
 00:00:58.960 --> 00:01:03.280 align:middle line:-3
 <c.yellow>AUDIENCE: Aww!</c>";
-            target.LoadSubtitle(subtitle, raw.SplitToLines().ToList(), null);
+            target.LoadSubtitle(subtitle, raw.SplitToLines(), null);
             string actual = subtitle.Paragraphs[1].Text;
             const string expected = "<font color=\"yellow\">AUDIENCE: Aww!</font>";
             Assert.AreEqual(expected, actual);

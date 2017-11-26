@@ -26,7 +26,7 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 var arr = p.Text.SplitToLines();
-                if (arr.Length == 2 && p.Text.Contains("-"))
+                if (arr.Count == 2 && p.Text.Contains("-"))
                 {
                     string newText = p.Text;
                     if (arr[0].StartsWith("- ", StringComparison.Ordinal) && arr[1].StartsWith("- ", StringComparison.Ordinal))
@@ -71,7 +71,7 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
             {
                 Paragraph p = new Paragraph(sub.Paragraphs[i]);
                 var arr = p.Text.SplitToLines();
-                if (arr.Length == 2 && p.Text.Contains("-") && arr[0].Length > 3 && arr[1].Length > 3)
+                if (arr.Count == 2 && p.Text.Contains("-") && arr[0].Length > 3 && arr[1].Length > 3)
                 {
                     string newText = p.Text;
                     if (arr[0][0] == '-' && char.IsLetter(arr[0][1]) && (arr[1].StartsWith("-", StringComparison.Ordinal) || arr[1].StartsWith("<i>-", StringComparison.Ordinal)))

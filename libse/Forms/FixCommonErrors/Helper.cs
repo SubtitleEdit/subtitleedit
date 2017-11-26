@@ -153,7 +153,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             if (text.Contains(" - ") && !text.Contains(Environment.NewLine))
             {
                 var noTagLines = HtmlUtil.RemoveHtmlTags(text.Replace(" - ", Environment.NewLine), true).SplitToLines();
-                if (noTagLines.Length == 2)
+                if (noTagLines.Count == 2)
                 {
                     string part0 = noTagLines[0];
                     string part1 = noTagLines[1];
@@ -181,7 +181,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     string temp = Utilities.AutoBreakLine(text, 99, 33, language);
                     var arr = text.SplitToLines();
                     var arrTemp = temp.SplitToLines();
-                    if (arrTemp.Length == 2 && arr.Length == 2)
+                    if (arrTemp.Count == 2 && arr.Count == 2)
                     {
                         var secLine = HtmlUtil.RemoveHtmlTags(arr[1]).TrimStart();
                         var secLineTemp = HtmlUtil.RemoveHtmlTags(arrTemp[1]).TrimStart();
@@ -193,7 +193,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 {
                     string temp = Utilities.AutoBreakLine(text, language);
                     var arrTemp = temp.SplitToLines();
-                    if (arrTemp.Length == 2)
+                    if (arrTemp.Count == 2)
                     {
                         var secLineTemp = HtmlUtil.RemoveHtmlTags(arrTemp[1]).TrimStart();
                         if (secLineTemp.StartsWith('-'))
@@ -259,7 +259,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     {
                         bool remove = true;
                         var noTagparts = HtmlUtil.RemoveHtmlTags(text).SplitToLines();
-                        if (noTagparts.Length == 2)
+                        if (noTagparts.Count == 2)
                         {
                             if (noTagparts[0].TrimStart().StartsWith('-') && noTagparts[1].Contains(": "))
                                 remove = false;
@@ -393,7 +393,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     if (startHyphenCount == 1 && totalSpaceHyphen == 0)
                     {
                         var parts = textCache.SplitToLines();
-                        if (parts.Length == 2 && !string.IsNullOrWhiteSpace(parts[0]))
+                        if (parts.Count == 2 && !string.IsNullOrWhiteSpace(parts[0]))
                         {
                             var part0 = parts[0].TrimEnd();
                             bool doAdd = "!?.".Contains(part0[part0.Length - 1]) || language == "ko";

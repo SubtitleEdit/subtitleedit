@@ -1,6 +1,7 @@
 ﻿using Nikse.SubtitleEdit.Core.TransportStream;
 using Nikse.SubtitleEdit.Core.VobSub;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
@@ -39,7 +40,7 @@ namespace Nikse.SubtitleEdit.Core
             }
         }
 
-        public static string[] ReadAllLinesShared(string path, Encoding encoding)
+        public static List<string> ReadAllLinesShared(string path, Encoding encoding)
         {
             return encoding.GetString(ReadAllBytesShared(path)).SplitToLines();
         }

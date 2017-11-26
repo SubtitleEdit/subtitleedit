@@ -86,5 +86,53 @@ namespace Test.Core
             Assert.IsFalse(test.LineBreakStartsWithHtmlTag(true, true));
         }
 
+        [TestMethod]
+        public void SplitToLines1()
+        {
+            string input = "Line1" + Environment.NewLine + "Line2";
+            Assert.AreEqual(2, input.SplitToLines().Count);
+        }
+
+        [TestMethod]
+        public void SplitToLines2()
+        {
+            string input = "Line1\r\r\nLine2\r\nLine3\rLine4\u2028Line5\nLine6";
+            var res = input.SplitToLines();
+            Assert.AreEqual(6, res.Count);
+            Assert.AreEqual("Line1", res[0]);
+            Assert.AreEqual("Line2", res[1]);
+            Assert.AreEqual("Line3", res[2]);
+            Assert.AreEqual("Line4", res[3]);
+            Assert.AreEqual("Line5", res[4]);
+            Assert.AreEqual("Line6", res[5]);
+        }
+
+        [TestMethod]
+        public void SplitToLinesEmptyLines1()
+        {
+            string input = "\n\nLine3\r\n\r\nLine5\r";
+            var res = input.SplitToLines();
+            Assert.AreEqual(6, res.Count);
+            Assert.AreEqual(string.Empty, res[0]);
+            Assert.AreEqual(string.Empty, res[1]);
+            Assert.AreEqual("Line3", res[2]);
+            Assert.AreEqual(string.Empty, res[3]);
+            Assert.AreEqual("Line5", res[4]);
+            Assert.AreEqual(string.Empty, res[5]);
+        }
+
+        [TestMethod]
+        public void SplitToLinesEmptyLines2()
+        {
+            string input = "\r\n\r\nLine3\u2028\rLine5\r\r\n";
+            var res = input.SplitToLines();
+            Assert.AreEqual(6, res.Count);
+            Assert.AreEqual(string.Empty, res[0]);
+            Assert.AreEqual(string.Empty, res[1]);
+            Assert.AreEqual("Line3", res[2]);
+            Assert.AreEqual(string.Empty, res[3]);
+            Assert.AreEqual("Line5", res[4]);
+            Assert.AreEqual(string.Empty, res[5]);
+        }
     }
 }

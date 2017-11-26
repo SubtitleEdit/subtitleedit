@@ -16,8 +16,8 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 if (text.Contains("..") && callbacks.AllowFix(p, fixAction))
                 {
                     var oldText = text;
-                    string[] lines = text.SplitToLines();
-                    for (int k = 0; k < lines.Length; k++)
+                    var lines = text.SplitToLines();
+                    for (int k = 0; k < lines.Count; k++)
                     {
                         lines[k] = Helper.FixEllipsesStartHelper(lines[k]);
                     }

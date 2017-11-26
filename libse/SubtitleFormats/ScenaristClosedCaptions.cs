@@ -469,11 +469,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return sb.ToString().Trim();
         }
 
-        private static bool IsAllOkay(string[] lines)
+        private static bool IsAllOkay(List<string> lines)
         {
-            if (lines.Length > 4)
+            if (lines.Count > 4)
                 return false;
-            for (int i = 0; i < lines.Length; i++)
+            for (int i = 0; i < lines.Count; i++)
             {
                 if (lines[i].Length > 32)
                     return false;
@@ -579,7 +579,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 text = line.Trim();
                 if (count > 0)
                     sb.Append(' ');
-                sb.Append(GetCenterCodes(text, count, lines.Length));
+                sb.Append(GetCenterCodes(text, count, lines.Count));
                 count++;
                 int i = 0;
                 string code = string.Empty;

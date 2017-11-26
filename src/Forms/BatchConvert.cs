@@ -363,7 +363,7 @@ namespace Nikse.SubtitleEdit.Forms
                         var lines = new List<string>();
                         if (format == null)
                         {
-                            lines = File.ReadAllText(fileName).SplitToLines().ToList();
+                            lines = File.ReadAllText(fileName).SplitToLines();
                             var f = new DlDd();
                             if (f.IsMine(lines, fileName)) // not binary, so text lines are needed
                             {
@@ -812,7 +812,7 @@ namespace Nikse.SubtitleEdit.Forms
                         List<string> lines = new List<string>();
                         if (format == null)
                         {
-                            lines = File.ReadAllText(fileName).SplitToLines().ToList();
+                            lines = File.ReadAllText(fileName).SplitToLines();
                             var timedTextImage = new TimedTextImage();
                             if (timedTextImage.IsMine(lines, fileName))
                             {
@@ -1634,7 +1634,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 var lines = new List<string>();
                                 if (format == null)
                                 {
-                                    lines = File.ReadAllText(fileName).SplitToLines().ToList();
+                                    lines = File.ReadAllText(fileName).SplitToLines();
                                     var timedTextImage = new TimedTextImage();
                                     if (timedTextImage.IsMine(lines, fileName))
                                         format = timedTextImage;

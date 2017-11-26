@@ -32,10 +32,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 var lines = HtmlUtil.RemoveHtmlTags(p.Text).SplitToLines();
-                if (lines.Length > 0)
+                if (lines.Count > 0)
                 {
                     sb.AppendLine(string.Format(paragraphWriteFormat, EncodeTimeCode(p.StartTime), count.ToString(CultureInfo.InvariantCulture).PadLeft(2, ' '), lines[0]));
-                    for (int i = 1; i < lines.Length; i++)
+                    for (int i = 1; i < lines.Count; i++)
                     {
                         count++;
                         if (count > 26)

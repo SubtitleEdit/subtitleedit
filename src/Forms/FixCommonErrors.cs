@@ -1537,7 +1537,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 string oldText = currentParagraph.Text;
                 var lines = currentParagraph.Text.SplitToLines();
-                if (lines.Length == 2 && (lines[0].EndsWith('.') || lines[0].EndsWith('!') || lines[0].EndsWith('?')))
+                if (lines.Count == 2 && (lines[0].EndsWith('.') || lines[0].EndsWith('!') || lines[0].EndsWith('?')))
                 {
                     currentParagraph.Text = Utilities.AutoBreakLine(lines[0], Language);
                     newParagraph.Text = Utilities.AutoBreakLine(lines[1], Language);
@@ -1546,7 +1546,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     string s = Utilities.AutoBreakLine(currentParagraph.Text, 5, Configuration.Settings.Tools.MergeLinesShorterThan, Language);
                     lines = s.SplitToLines();
-                    if (lines.Length == 2)
+                    if (lines.Count == 2)
                     {
                         currentParagraph.Text = Utilities.AutoBreakLine(lines[0], Language);
                         newParagraph.Text = Utilities.AutoBreakLine(lines[1], Language);

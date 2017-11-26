@@ -2534,9 +2534,9 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
                 // align lines with "gjpqy,ýęçÇ/()[]" a bit lower
                 var lines = text.SplitToLines();
-                if (lines.Length > 0)
+                if (lines.Count > 0)
                 {
-                    var lastLine = lines[lines.Length - 1];
+                    var lastLine = lines[lines.Count - 1];
                     if (lastLine.Contains(new[] { 'g', 'j', 'p', 'q', 'y', ',', 'ý', 'ę', 'ç', 'Ç', '/', '(', ')', '[', ']' }))
                     {
                         var textNoBelow = lastLine.Replace('g', 'a').Replace('j', 'a').Replace('p', 'a').Replace('q', 'a').Replace('y', 'a').Replace(',', 'a').Replace('ý', 'a').Replace('ę', 'a').Replace('ç', 'a').Replace('Ç', 'a').Replace('/', 'a').Replace('(', 'a').Replace(')', 'a').Replace('[', 'a').Replace(']', 'a');

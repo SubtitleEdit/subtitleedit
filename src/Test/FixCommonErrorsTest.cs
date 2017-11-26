@@ -1581,7 +1581,7 @@ namespace Test
             var lines3 = input3.SplitToLines();
             var lines4 = input4.SplitToLines();
 
-            for (int i = 0; i < lines1.Length; i++)
+            for (int i = 0; i < lines1.Count; i++)
             {
                 lines1[i] = Helper.FixDoubleGreaterThanHelper(lines1[i]);
                 lines2[i] = Helper.FixDoubleGreaterThanHelper(lines2[i]);

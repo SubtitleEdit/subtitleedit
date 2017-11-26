@@ -10,11 +10,11 @@
         {
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                if (p.Text.SplitToLines().Length > 2)
+                if (p.Text.SplitToLines().Count > 2)
                 {
                     var fixedParagraph = new Paragraph(p, false);
                     fixedParagraph.Text = Utilities.AutoBreakLine(fixedParagraph.Text, controller.SingleLineMaxLength, controller.SingleLineMaxLength - 3, controller.Language);
-                    if (fixedParagraph.Text.SplitToLines().Length > 2)
+                    if (fixedParagraph.Text.SplitToLines().Count > 2)
                     {
                         fixedParagraph = null; // cannot fix text
                     }

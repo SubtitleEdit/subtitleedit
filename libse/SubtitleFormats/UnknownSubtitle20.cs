@@ -24,10 +24,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 string line1 = string.Empty;
                 string line2 = string.Empty;
-                string[] lines = p.Text.SplitToLines();
-                if (lines.Length > 2)
+                var lines = p.Text.SplitToLines();
+                if (lines.Count > 2)
                     lines = Utilities.AutoBreakLine(p.Text).SplitToLines();
-                if (lines.Length == 1)
+                if (lines.Count == 1)
                 {
                     line2 = lines[0];
                 }
