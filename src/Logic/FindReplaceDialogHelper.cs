@@ -157,6 +157,7 @@ namespace Nikse.SubtitleEdit.Logic
                         }
                     }
                 }
+                position = 0;
                 index++;
             }
             return false;
