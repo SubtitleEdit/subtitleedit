@@ -73,6 +73,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new FinalCutProXml14(),
                     new FinalCutProXml14Text(),
                     new FinalCutProXml15(),
+                    new FinalCutProXml16(),
                     new FinalCutProTestXml(),
                     new FinalCutProTest2Xml(),
                     new FlashXml(),

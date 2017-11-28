@@ -39,6 +39,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
     public class FinalCutProXml15 : SubtitleFormat
     {
+        internal string FcpXmlVersion { get; set; } = "1.5";
 
         public FinalCutProXml15()
         {
@@ -61,7 +62,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string Extension => ".fcpxml";
 
-        public override string Name => "Final Cut Pro Xml 1.5";
+        public override string Name => "Final Cut Pro Xml " + FcpXmlVersion;
 
         internal static string GetFrameDuration()
         {
@@ -150,7 +151,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             string xmlStructure =
                 "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>" + Environment.NewLine +
-                "<fcpxml version=\"1.5\">" + Environment.NewLine +
+                "<fcpxml version=\"" + FcpXmlVersion + "\">" + Environment.NewLine +
                 "   <resources>" + Environment.NewLine +
                 "       <format height=\"[HEIGHT]\" width=\"[WIDTH]\" frameDuration=\"" + GetFrameDuration() + "\" id=\"r1\"/>" + Environment.NewLine +
                 "       <effect id=\"r2\" uid=\".../Titles.localized/Bumper:Opener.localized/Basic Title.localized/Basic Title.moti\" name=\"Basic Title\"/>" + Environment.NewLine +
@@ -423,7 +424,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var sb = new StringBuilder();
             lines.ForEach(line => sb.AppendLine(line));
             string x = sb.ToString();
-            if (!x.Contains("<fcpxml version=\"1.5\">"))
+            if (!x.Contains("<fcpxml version=\"" + FcpXmlVersion + "\">"))
                 return;
 
             var xml = new XmlDocument();
@@ -437,6 +438,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     if (textNodes.Count == 0)
                     {
                         textNodes = xml.SelectNodes("//project/sequence/spine/gap/title/text");
+                    }
+                    if (textNodes.Count == 0)
+                    {
+                        textNodes = xml.SelectNodes("//title/text");
                     }
                     foreach (XmlNode node in textNodes)
                     {
