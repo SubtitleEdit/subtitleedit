@@ -2260,6 +2260,14 @@
     <LinePart from="wouldn 'tyou" to="wouldn't you" />
     <LinePart from=" lgot it" to=" I got it" />
     <LinePart from=" you,ve " to=" you've " />
+    <LinePart from=" I ve " to=" I've " />
+    <LinePart from=" I ii " to=" I'll " />
+    <LinePart from=" I m " to=" I'm " />
+    <LinePart from=" why d " to=" why'd " />
+    <LinePart from=" couldn t " to=" couldn't " />
+    <LinePart from=" that s " to=" that's " />
+    <LinePart from=" I Won't " to=" I won't " />
+    <LinePart from=" i... " to=" I... " />
   </PartialLines>
   <PartialLinesAlways>
     <LinePart from="forbest act" to="for best act" />
@@ -2358,6 +2366,16 @@
     <Beginning from="lt'syour" to="It's your" />
     <Beginning from="It'syour" to="It's your" />
     <Beginning from="Ls " to="Is " />
+    <Beginning from="I ve " to="I've " />
+    <Beginning from="I ii " to="I'll " />
+    <Beginning from="I m " to="I'm " />
+    <Beginning from="Why d " to="Why'd " />
+    <Beginning from="why d " to="Why'd " />
+    <Beginning from="Couldn t " to="Couldn't " />
+    <Beginning from="couldn t " to="Couldn't " />
+    <Beginning from="That s " to="That's " />
+    <Beginning from="that s " to="That's " />
+    <Beginning from="I Won't " to="I won't " /> 
   </BeginLines>
   <EndLines>
     <Ending from=", sin" to=", sir." />
@@ -2366,6 +2384,7 @@
     <Ending from=" openiL" to=" open it." />
     <Ending from=" ofﬂ" to=" off!" />
     <Ending from="pshycol" to="psycho!" />
+    <Ending from=" i..." to=" I..." />
   </EndLines>
   <WholeLines>
     <!-- Whole lines - including -" etc -->
