@@ -8,15 +8,14 @@ namespace Nikse.SubtitleEdit.Logic
 {
     public class FindReplaceDialogHelper
     {
-        private const string StartChars = " >-\"„”“[]'‘`´¶(){}♪¿¡.…—،؟\r\n\u2028";
-        private const string EndChars = " <-\"”“]'`´¶(){}♪,.!?:;…—،؟\r\n\u2028";
+        private const string SeparatorChars = " #><-\"„”“[]'‘`´¶(){}♪,.!?:;¿¡.…—،؟\r\n\u2028";
         private readonly string _findText = string.Empty;
         private readonly string _replaceText = string.Empty;
         private Regex _regEx;
         private int _findTextLenght;
 
         public bool Success { get; set; }
-        public ReplaceType FindReplaceType { get; set; }        
+        public ReplaceType FindReplaceType { get; set; }
         public int SelectedIndex { get; set; }
         public int SelectedPosition { get; set; }
         public int StartLineIndex { get; set; }
@@ -85,8 +84,8 @@ namespace Nikse.SubtitleEdit.Logic
                 {
                     if (FindReplaceType.WholeWord)
                     {
-                        var startOk = idx == 0 || StartChars.Contains(text[idx - 1]);
-                        var endOk = idx + _findText.Length == text.Length || EndChars.Contains(text[idx + _findText.Length]);
+                        var startOk = idx == 0 || SeparatorChars.Contains(text[idx - 1]);
+                        var endOk = idx + _findText.Length == text.Length || SeparatorChars.Contains(text[idx + _findText.Length]);
                         if (startOk && endOk)
                             return idx;
                     }
@@ -160,7 +159,7 @@ namespace Nikse.SubtitleEdit.Logic
                         }
                     }
                     first = false;
-                }                
+                }
                 index++;
             }
             return false;
@@ -292,8 +291,8 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 if (matchWholeWord)
                 {
-                    var startOk = (idx == 0) || (StartChars.Contains(text[idx - 1]));
-                    var endOk = (idx + pattern.Length == text.Length) || (EndChars.Contains(text[idx + pattern.Length]));
+                    var startOk = (idx == 0) || (SeparatorChars.Contains(text[idx - 1]));
+                    var endOk = (idx + pattern.Length == text.Length) || (SeparatorChars.Contains(text[idx + pattern.Length]));
                     if (startOk && endOk)
                         count++;
                 }
