@@ -253,31 +253,27 @@ namespace Nikse.SubtitleEdit.Logic
             //  validate pattern if find type is regex
             if (FindReplaceType.FindType == FindType.RegEx)
             {
-                if (!Utilities.IsValidRegex(FindText))
+                if (!Utilities.IsValidRegex(_findText))
                 {
                     MessageBox.Show(Configuration.Settings.Language.General.RegularExpressionIsNotValid);
                     return count;
                 }
                 _regEx = new Regex(_findText);
             }
-
-            // count matches
+            StringComparison comparison = FindReplaceType.FindType == FindType.Normal ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
             foreach (var p in subtitle.Paragraphs)
             {
-                if (p.Text.Length < FindText.Length)
-                    continue;
-
-                switch (FindReplaceType.FindType)
+                if (FindReplaceType.FindType != FindType.RegEx)
                 {
-                    case FindType.Normal:
-                        count += GetWordCount(p.Text, _findText, wholeWord, StringComparison.OrdinalIgnoreCase);
-                        break;
-                    case FindType.CaseSensitive:
-                        count += GetWordCount(p.Text, _findText, wholeWord, StringComparison.Ordinal);
-                        break;
-                    case FindType.RegEx:
-                        count += _regEx.Matches(p.Text).Count;
-                        break;
+                    if (p.Text.Length < _findText.Length)
+                    {
+                        continue;
+                    }
+                    count += GetWordCount(p.Text, _findText, wholeWord, comparison);
+                }
+                else
+                {
+                    count += _regEx.Matches(p.Text).Count;
                 }
             }
             return count;
