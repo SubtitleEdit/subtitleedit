@@ -326,7 +326,7 @@ namespace Nikse.SubtitleEdit.Controls
                     {
                         foreach (var paragraph in subtitle.Paragraphs)
                         {
-                            paragraph.Text = "\u200F" + paragraph.Text;
+                            paragraph.Text = "\u200F" + paragraph.Text.Replace(Environment.NewLine, "\u200F" + Environment.NewLine + "\u200F") + "\u200F"; // RTL control character
                         }
                     }
                     var oldFontSize = Configuration.Settings.SubtitleSettings.SsaFontSize;
