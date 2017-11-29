@@ -2266,7 +2266,6 @@
     <LinePart from=" why d " to=" why'd " />
     <LinePart from=" couldn t " to=" couldn't " />
     <LinePart from=" that s " to=" that's " />
-    <LinePart from=" I Won't " to=" I won't " />
     <LinePart from=" i... " to=" I... " />
   </PartialLines>
   <PartialLinesAlways>
@@ -2375,7 +2374,6 @@
     <Beginning from="couldn t " to="Couldn't " />
     <Beginning from="That s " to="That's " />
     <Beginning from="that s " to="That's " />
-    <Beginning from="I Won't " to="I won't " /> 
   </BeginLines>
   <EndLines>
     <Ending from=", sin" to=", sir." />
@@ -2404,6 +2402,7 @@
     <Line from="ISIGHS]" to="[SIGHS]" />
   </WholeLines>
   <RegularExpressions>
-    <!-- <RegEx find="\bi\b" replaceWith="I" /> just an example - do not use this regex -->
+    <RegEx find="([a-z]) Won't " replaceWith="$1 won't " />
+    <RegEx find=" L(\b)" replaceWith=" I$1" />
   </RegularExpressions>
 </OCRFixReplaceList>
