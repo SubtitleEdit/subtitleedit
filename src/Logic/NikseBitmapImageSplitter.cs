@@ -20,7 +20,7 @@ namespace Nikse.SubtitleEdit.Logic
                 b.A > 250 && b.R > 90 && b.G > 90 && b.B > 90)
                 return true; // dark, non transparent
 
-            int diff = (a.R + a.G + a.B) - (b.R + b.G + b.B);                        
+            int diff = (a.R + a.G + a.B) - (b.R + b.G + b.B);
             return diff < tolerance && diff > -tolerance;
         }
 
@@ -774,11 +774,6 @@ namespace Nikse.SubtitleEdit.Logic
                     subtractSpacePixels = add;
                 }
 
-                if (clean && startX + 1 < x)
-                {
-                    width++;
-                }
-
                 var newStartX = points != null ? FindMinX(points, x) : 0;
                 if (points == null)
                 {
@@ -818,7 +813,7 @@ namespace Nikse.SubtitleEdit.Logic
                     spacePixels = -subtractSpacePixels;
                     subtractSpacePixels = 0;
                 }
-                else
+                else if (clean)
                 {
                     width = 1;
                     startX = newStartX;
