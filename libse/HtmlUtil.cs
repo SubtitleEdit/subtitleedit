@@ -27,6 +27,9 @@ namespace Nikse.SubtitleEdit.Core
         /// <returns>A new string without the specified opening and closing tags.</returns>
         public static string RemoveOpenCloseTags(string source, params string[] tags)
         {
+            if (string.IsNullOrEmpty(source) || source.IndexOf('<') < 0)
+                return source;
+
             // This pattern matches these tag formats:
             // <tag*>
             // < tag*>
