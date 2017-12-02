@@ -156,6 +156,28 @@ namespace Test
         }
 
         [TestMethod]
+        public void FixShortLinesWithDash()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "Any progress" + Environment.NewLine + "on the e-mail?");
+                new FixShortLines().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual(_subtitle.Paragraphs[0].Text, "Any progress on the e-mail?");
+            }
+        }
+
+        [TestMethod]
+        public void FixShortLinesWithDash2()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "- Any progress" + Environment.NewLine + "- None.");
+                new FixShortLines().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual(_subtitle.Paragraphs[0].Text, "- Any progress" + Environment.NewLine + "- None.");
+            }
+        }
+
+        [TestMethod]
         public void FixShortLinesDialog()
         {
             using (var target = GetFixCommonErrorsLib())
