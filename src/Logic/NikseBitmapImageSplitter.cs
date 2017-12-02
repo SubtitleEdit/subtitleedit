@@ -779,7 +779,7 @@ namespace Nikse.SubtitleEdit.Logic
                 {
                     width++;
                 }
-                else if (width > 1 || (width == 1 && newStartX > startX + 1 && spacePixels == 0))
+                else if (width > 0 && newStartX > startX + 1)
                 {
                     var bmp0 = new NikseBitmap(bmp);
                     // remove pixels after current;
