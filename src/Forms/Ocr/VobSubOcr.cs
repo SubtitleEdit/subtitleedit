@@ -4356,9 +4356,12 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             var matches = new List<CompareMatch>();
             var parentBitmap = new NikseBitmap(bitmap);
             int minLineHeight = _binOcrLastLowercaseHeight - 3;
+            if (comboBoxLineSplitMinLineHeight.Visible && comboBoxLineSplitMinLineHeight.SelectedIndex > 0)
+                minLineHeight = int.Parse(comboBoxLineSplitMinLineHeight.Text);
+            minLineHeight = Math.Max(minLineHeight, 6);
             if (_binOcrLastLowercaseHeight == -1 && _nocrLastLowercaseHeight == -1)
             { // try to guess lowercase height
-                var letters = NikseBitmapImageSplitter.SplitBitmapToLettersNew(parentBitmap, _numericUpDownPixelsIsSpace, checkBoxRightToLeft.Checked, Configuration.Settings.VobSubOcr.TopToBottom, 6, _ocrCount > 20 ? _ocrHeight : -1);
+                var letters = NikseBitmapImageSplitter.SplitBitmapToLettersNew(parentBitmap, _numericUpDownPixelsIsSpace, checkBoxRightToLeft.Checked, Configuration.Settings.VobSubOcr.TopToBottom, minLineHeight, _ocrCount > 20 ? _ocrHeight : -1);
                 var actualLetters = letters.Where(p => p.NikseBitmap != null);
                 if (actualLetters.Any())
                     minLineHeight = (int)Math.Round(actualLetters.Average(p => p.NikseBitmap.Height) * 0.5);
@@ -8071,8 +8074,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             else
             {
                 int minLineHeight = _binOcrLastLowercaseHeight - 3;
-                if (minLineHeight < 5)
-                    minLineHeight = 5;
+                if (comboBoxLineSplitMinLineHeight.Visible && comboBoxLineSplitMinLineHeight.SelectedIndex > 0)
+                    minLineHeight = int.Parse(comboBoxLineSplitMinLineHeight.Text);
+                minLineHeight = Math.Max(minLineHeight, 6);
                 sourceList = NikseBitmapImageSplitter.SplitBitmapToLettersNew(parentBitmap, (int)numericUpDownPixelsIsSpace.Value, checkBoxRightToLeft.Checked, Configuration.Settings.VobSubOcr.TopToBottom, minLineHeight);
             }
 
