@@ -450,7 +450,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 if (SpellCheckDictionaryName.StartsWith("en_", StringComparison.Ordinal) || _threeLetterIsoLanguageName == "eng")
                 {
                     string oldText = text;
-                    text = FixAloneLowercaseIToUppercaseI.FixAloneLowercaseIToUppercaseLine(SubtitleEditRegex.LittleIRegex, oldText, text, 'i');
+                    text = FixAloneLowercaseIToUppercaseI.FixAloneLowercaseIToUppercaseLine(RegexUtils.LittleIRegex, oldText, text, 'i');
                     text = FixAloneLowercaseIToUppercaseI.FixAloneLowercaseIToUppercaseLine(RegexAloneIasL, oldText, text, 'l');
                 }
                 else if (_threeLetterIsoLanguageName == "fra")
