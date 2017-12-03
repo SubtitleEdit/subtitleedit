@@ -3913,6 +3913,11 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
         internal int GetBottomMarginInPixels(Paragraph p)
         {
+            if (!comboBoxBottomMargin.Visible)
+            {
+                return 20;
+            }
+
             if (p != null && !string.IsNullOrEmpty(p.Extra) && _formatName == AdvancedSubStationAlpha.NameOfFormat || _formatName == SubStationAlpha.NameOfFormat)
             {
                 var style = AdvancedSubStationAlpha.GetSsaStyle(p.Extra, _subtitle.Header);
