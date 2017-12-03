@@ -152,7 +152,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else
             {
-                if (!Utilities.IsValidRegex(textBoxNoBreakAfter.Text))
+                if (!RegexUtils.IsValidRegex(textBoxNoBreakAfter.Text))
                 {
                     MessageBox.Show(Configuration.Settings.Language.General.RegularExpressionIsNotValid);
                     return;

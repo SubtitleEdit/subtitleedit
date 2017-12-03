@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core
 {
-    public static class SubtitleEditRegex
+    public static class RegexUtils
     {
         // Others classes may want to use this regex.
         public static readonly Regex LittleIRegex = new Regex(@"\bi\b", RegexOptions.Compiled);
@@ -166,5 +167,41 @@ namespace Nikse.SubtitleEdit.Core
             /// </summary>
             private static string ExpandWhiteSpace(string pattern) => pattern.Replace(" ", "[ \r\n]+");
         }
+
+        public static bool IsValidRegex(string testPattern)
+        {
+            if (string.IsNullOrEmpty(testPattern))
+            {
+                return false;
+            }
+            try
+            {
+                Regex.Match(string.Empty, testPattern);
+                return true;
+            }
+            catch (ArgumentException) // invalid pattern e.g: [
+            {
+                return false;
+            }
+        }
+
+        public static Regex MakeWordSearchRegex(string word)
+        {
+            string s = word.Replace("\\", "\\\\");
+            s = s.Replace("*", "\\*");
+            s = s.Replace(".", "\\.");
+            s = s.Replace("?", "\\?");
+            return new Regex(@"\b" + s + @"\b", RegexOptions.Compiled);
+        }
+
+        public static Regex MakeWordSearchRegexWithNumbers(string word)
+        {
+            string s = word.Replace("\\", "\\\\");
+            s = s.Replace("*", "\\*");
+            s = s.Replace(".", "\\.");
+            s = s.Replace("?", "\\?");
+            return new Regex(@"[\b ,\.\?\!]" + s + @"[\b !\.,\r\n\?]", RegexOptions.Compiled);
+        }
+
     }
 }

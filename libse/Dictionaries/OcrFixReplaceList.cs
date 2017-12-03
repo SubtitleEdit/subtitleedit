@@ -132,7 +132,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             {
                 if (node.Attributes["find"] != null && node.Attributes["replaceWith"] != null)
                 {
-                    return Utilities.IsValidRegex(node.Attributes["find"].Value);
+                    return RegexUtils.IsValidRegex(node.Attributes["find"].Value);
                 }
             }
             else
