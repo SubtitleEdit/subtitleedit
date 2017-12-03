@@ -145,11 +145,6 @@ namespace Nikse.SubtitleEdit.Logic
             return SplitVertical(new NikseBitmap(bmp));
         }
 
-        public static List<ImageSplitterItem> SplitVertical(Bitmap bmp, int lineMinHeight)
-        {
-            return SplitVertical(new NikseBitmap(bmp), lineMinHeight);
-        }
-
         public static List<ImageSplitterItem> SplitVertical(NikseBitmap bmp)
         { // split into lines
             int startY = 0;
@@ -429,23 +424,6 @@ namespace Nikse.SubtitleEdit.Logic
                 return parts;
             }
             return parts;
-        }
-
-        public static int IsBitmapsAlike(Bitmap bmp1, Bitmap bmp2)
-        {
-            int different = 0;
-            int maxDiff = bmp1.Width * bmp1.Height / 5;
-            for (int y = 0; y < bmp1.Height; y++)
-            {
-                for (int x = 0; x < bmp1.Width; x++)
-                {
-                    if (!IsColorClose(bmp1.GetPixel(x, y), bmp2.GetPixel(x, y), 20))
-                        different++;
-                }
-            }
-            if (different > maxDiff)
-                return different + 10;
-            return different;
         }
 
         public static int IsBitmapsAlike(NikseBitmap bmp1, Bitmap bmp2)
