@@ -190,37 +190,41 @@ namespace Nikse.SubtitleEdit.Core
         {
             if (string.IsNullOrEmpty(s))
                 return s;
-
             int len = s.Length;
-            var sb = new StringBuilder(s.Length);
-            bool lastWasWhitespace = false;
-            for (int i = 0; i < len; i++)
+            int k = -1;
+            for (int i = len - 1; i >= 0; i--)
             {
                 char ch = s[i];
-                if (ch == ' ')
+                if (k < 2)
                 {
-                    if (lastWasWhitespace)
+                    if (ch == 0x20)
                     {
-                        continue;
+                        k = i + 1;
                     }
-                    if (i < len - 1)
-                    {
-                        var next = s[i + 1];
-                        if (next == '\n' || next == '\r')
-                        {
-                            continue;
-                        }
-                    }
-                    sb.Append(ch);
-                    lastWasWhitespace = true;
                 }
-                else
+                else if (ch != 0x20)
                 {
-                    sb.Append(ch);
-                    lastWasWhitespace = ch == '\n' || ch == '\r';
+                    // Two or more white-spaces found!
+                    if (k - (i + 1) > 1)
+                    {
+                        // Keep only one white-space.
+                        s = s.Remove(i + 1, k - (i + 2));
+                    }
+
+                    // No white-space after/before line break.
+                    if ((ch == '\n' || ch == '\r') && i + 1 < s.Length && s[i + 1] == 0x20)
+                    {
+                        s = s.Remove(i + 1, 1);
+                    }
+                    // Reset remove length.
+                    k = -1;
+                }
+                if (ch == 0x20 && i + 1 < s.Length && (s[i + 1] == '\n' || s[i + 1] == '\r'))
+                {
+                    s = s.Remove(i, 1);
                 }
             }
-            return sb.ToString();
+            return s;
         }
 
         public static bool ContainsLetter(this string s)
