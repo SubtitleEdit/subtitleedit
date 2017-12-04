@@ -253,7 +253,7 @@ namespace Nikse.SubtitleEdit.Logic
             //  validate pattern if find type is regex
             if (FindReplaceType.FindType == FindType.RegEx)
             {
-                if (!Utilities.IsValidRegex(_findText))
+                if (!RegexUtils.IsValidRegex(_findText))
                 {
                     MessageBox.Show(Configuration.Settings.Language.General.RegularExpressionIsNotValid);
                     return count;

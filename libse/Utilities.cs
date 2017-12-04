@@ -872,43 +872,6 @@ namespace Nikse.SubtitleEdit.Core
             }
         }
 
-        public static bool IsValidRegex(string testPattern)
-        {
-            if (string.IsNullOrEmpty(testPattern))
-            {
-                return false;
-            }
-
-            try
-            {
-                Regex.Match(string.Empty, testPattern);
-            }
-            catch (ArgumentException)
-            {
-                // BAD PATTERN: Syntax error
-                return false;
-            }
-            return true;
-        }
-
-        public static Regex MakeWordSearchRegex(string word)
-        {
-            string s = word.Replace("\\", "\\\\");
-            s = s.Replace("*", "\\*");
-            s = s.Replace(".", "\\.");
-            s = s.Replace("?", "\\?");
-            return new Regex(@"\b" + s + @"\b", RegexOptions.Compiled);
-        }
-
-        public static Regex MakeWordSearchRegexWithNumbers(string word)
-        {
-            string s = word.Replace("\\", "\\\\");
-            s = s.Replace("*", "\\*");
-            s = s.Replace(".", "\\.");
-            s = s.Replace("?", "\\?");
-            return new Regex(@"[\b ,\.\?\!]" + s + @"[\b !\.,\r\n\?]", RegexOptions.Compiled);
-        }
-
         public static void RemoveFromUserDictionary(string word, string languageName)
         {
             word = word.Trim();

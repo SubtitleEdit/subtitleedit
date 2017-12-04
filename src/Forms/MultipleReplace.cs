@@ -197,7 +197,7 @@ namespace Nikse.SubtitleEdit.Forms
                 else if (radioButtonRegEx.Checked)
                 {
                     searchType = SearchTypeRegularExpression;
-                    if (!Utilities.IsValidRegex(findText))
+                    if (!RegexUtils.IsValidRegex(findText))
                     {
                         MessageBox.Show(Configuration.Settings.Language.General.RegularExpressionIsNotValid);
                         textBoxFind.Select();
@@ -424,7 +424,7 @@ namespace Nikse.SubtitleEdit.Forms
                 else if (radioButtonRegEx.Checked)
                 {
                     searchType = SearchTypeRegularExpression;
-                    if (!Utilities.IsValidRegex(findText))
+                    if (!RegexUtils.IsValidRegex(findText))
                     {
                         MessageBox.Show(Configuration.Settings.Language.General.RegularExpressionIsNotValid);
                         textBoxFind.Select();

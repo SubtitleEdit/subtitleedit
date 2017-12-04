@@ -497,19 +497,19 @@ namespace Test.Logic
         [TestMethod]
         public void IsValidRegexOk1()
         {
-            Assert.IsTrue(Utilities.IsValidRegex(@"^(?![\s\S])"));
+            Assert.IsTrue(RegexUtils.IsValidRegex(@"^(?![\s\S])"));
         }
 
         [TestMethod]
         public void IsValidRegexOk2()
         {
-            Assert.IsTrue(Utilities.IsValidRegex(@"\d+"));
+            Assert.IsTrue(RegexUtils.IsValidRegex(@"\d+"));
         }
 
         [TestMethod]
         public void IsValidRegexBad1()
         {
-            Assert.IsFalse(Utilities.IsValidRegex(@"[\s\S(\()()(()\)"));
+            Assert.IsFalse(RegexUtils.IsValidRegex(@"[\s\S(\()()(()\)"));
         }
 
         [TestMethod]

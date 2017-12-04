@@ -17,15 +17,15 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 string oldText = text;
 
                 // Make sure text contains lower: 'i'.
-                if (SubtitleEditRegex.LittleIRegex.IsMatch(text))
+                if (RegexUtils.LittleIRegex.IsMatch(text))
                 {
-                    foreach (var regex in SubtitleEditRegex.DanishLetterI.DanishCompiledRegexList)
+                    foreach (var regex in RegexUtils.DanishLetterI.DanishCompiledRegexList)
                     {
                         Match match = regex.Match(text);
                         while (match.Success)
                         {
                             // Get lower 'i' index from matched value.
-                            int iIdx = SubtitleEditRegex.LittleIRegex.Match(match.Value).Index;
+                            int iIdx = RegexUtils.LittleIRegex.Match(match.Value).Index;
                             // Remove 'i' from given index and insert new uppwercase 'I'.
                             string temp = match.Value.Remove(iIdx, 1).Insert(iIdx, "I");
 
@@ -39,26 +39,26 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     }
                 }
 
-                if (SubtitleEditRegex.DanishLetterI.RegExIDag.IsMatch(text))
-                    text = SubtitleEditRegex.DanishLetterI.RegExIDag.Replace(text, "i dag");
+                if (RegexUtils.DanishLetterI.RegExIDag.IsMatch(text))
+                    text = RegexUtils.DanishLetterI.RegExIDag.Replace(text, "i dag");
 
-                if (SubtitleEditRegex.DanishLetterI.RegExIGaar.IsMatch(text))
-                    text = SubtitleEditRegex.DanishLetterI.RegExIGaar.Replace(text, "i går");
+                if (RegexUtils.DanishLetterI.RegExIGaar.IsMatch(text))
+                    text = RegexUtils.DanishLetterI.RegExIGaar.Replace(text, "i går");
 
-                if (SubtitleEditRegex.DanishLetterI.RegExIMorgen.IsMatch(text))
-                    text = SubtitleEditRegex.DanishLetterI.RegExIMorgen.Replace(text, "i morgen");
+                if (RegexUtils.DanishLetterI.RegExIMorgen.IsMatch(text))
+                    text = RegexUtils.DanishLetterI.RegExIMorgen.Replace(text, "i morgen");
 
-                if (SubtitleEditRegex.DanishLetterI.RegExIAlt.IsMatch(text))
-                    text = SubtitleEditRegex.DanishLetterI.RegExIAlt.Replace(text, "i alt");
+                if (RegexUtils.DanishLetterI.RegExIAlt.IsMatch(text))
+                    text = RegexUtils.DanishLetterI.RegExIAlt.Replace(text, "i alt");
 
-                if (SubtitleEditRegex.DanishLetterI.RegExIGang.IsMatch(text))
-                    text = SubtitleEditRegex.DanishLetterI.RegExIGang.Replace(text, "i gang");
+                if (RegexUtils.DanishLetterI.RegExIGang.IsMatch(text))
+                    text = RegexUtils.DanishLetterI.RegExIGang.Replace(text, "i gang");
 
-                if (SubtitleEditRegex.DanishLetterI.RegExIStand.IsMatch(text))
-                    text = SubtitleEditRegex.DanishLetterI.RegExIStand.Replace(text, "i stand");
+                if (RegexUtils.DanishLetterI.RegExIStand.IsMatch(text))
+                    text = RegexUtils.DanishLetterI.RegExIStand.Replace(text, "i stand");
 
-                if (SubtitleEditRegex.DanishLetterI.RegExIOevrigt.IsMatch(text))
-                    text = SubtitleEditRegex.DanishLetterI.RegExIOevrigt.Replace(text, "i øvrigt");
+                if (RegexUtils.DanishLetterI.RegExIOevrigt.IsMatch(text))
+                    text = RegexUtils.DanishLetterI.RegExIOevrigt.Replace(text, "i øvrigt");
 
                 if (text != oldText && callbacks.AllowFix(p, fixAction))
                 {
