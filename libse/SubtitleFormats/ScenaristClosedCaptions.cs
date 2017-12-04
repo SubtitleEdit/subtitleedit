@@ -240,7 +240,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             new KeyValuePair<string,string>("1332",                "Ö" ),
 			new KeyValuePair<string,string>("4f80 1332",           "Ö" ),
             new KeyValuePair<string,string>("13b3",                "ö" ),
-			new KeyValuePair<string,string>("ef80 1332",           "ö" ),
+			new KeyValuePair<string,string>("ef80 13b3",           "ö" ),
             new KeyValuePair<string,string>("1334",                ""  ),
             new KeyValuePair<string,string>("13b5",                ""  ),
             new KeyValuePair<string,string>("13b6",                ""  ),
