@@ -38,46 +38,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         protected virtual Regex RegexTimeCodes => Regex;
         protected bool DropFrame = false;
 
-
-        public static List<KeyValuePair<string, string>> ExtendedCharacterSet = new List<KeyValuePair<string, string>>
-        {
-            new KeyValuePair<string, string>("AÃ", "Ã"),
-            new KeyValuePair<string, string>("aã", "ã"),
-            new KeyValuePair<string, string>("IÍ", "Í"),
-            new KeyValuePair<string, string>("IÌ", "Ì"),
-            new KeyValuePair<string, string>("iì", "ì"),
-            new KeyValuePair<string, string>("OÒ", "Ò"),
-            new KeyValuePair<string, string>("oò", "ò"),
-            new KeyValuePair<string, string>("OÕ", "Õ"),
-            new KeyValuePair<string, string>("oõ", "õ"),
-            //new KeyValuePair<string,string>("1329", "{" ),
-            //new KeyValuePair<string,string>("132a", "}" ),
-            //new KeyValuePair<string,string>("13ab", "\\"),
-            //new KeyValuePair<string,string>("132c", "^" ),
-            //new KeyValuePair<string,string>("13ad", "_" ),
-            //new KeyValuePair<string,string>("13ae", "|" ),
-            //new KeyValuePair<string,string>("132f", "~" ),
-            new KeyValuePair<string,string>("AÄ", "Ä" ),
-            new KeyValuePair<string,string>("aä", "ä" ),
-            new KeyValuePair<string,string>("OÖ", "Ö" ),
-            new KeyValuePair<string,string>("oö", "ö" ),
-            //new KeyValuePair<string,string>("1334", ""  ),
-            //new KeyValuePair<string,string>("13b5", ""  ),
-            //new KeyValuePair<string,string>("13b6", ""  ),
-            //new KeyValuePair<string,string>("1337", "|" ),
-            new KeyValuePair<string,string>("AÅ", "Å" ),
-            new KeyValuePair<string,string>("aå", "å" ),
-            //new KeyValuePair<string,string>("13b3", "Ø" ),
-            //new KeyValuePair<string,string>("133b", "ø" ),
-            //new KeyValuePair<string,string>("13b3", ""  ),
-            //new KeyValuePair<string,string>("133d", ""  ),
-            //new KeyValuePair<string,string>("133e", ""  ),
-            //new KeyValuePair<string,string>("13bf", ""  )
-        };
-
         public static List<KeyValuePair<string, string>> LetterDictionary = new List<KeyValuePair<string, string>>
         {
-            new KeyValuePair<string,string>( "20",                  " "),
+            new KeyValuePair<string,string>("20",                  " " ),
             new KeyValuePair<string,string>("a1",                  "!" ),
             new KeyValuePair<string,string>("a2",                  "\""),
             new KeyValuePair<string,string>("23",                  "#" ),
@@ -237,14 +200,32 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             new KeyValuePair<string,string>("923e",                ""  ),
             new KeyValuePair<string,string>("92bf",                ""  ),
             new KeyValuePair<string,string>("1320",                "Ã" ),
+			new KeyValuePair<string,string>("c1 1320",             "Ã" ),
+			new KeyValuePair<string,string>("c180 1320",           "Ã" ),
             new KeyValuePair<string,string>("13a1",                "ã" ),
+			new KeyValuePair<string,string>("80 13a1",             "ã" ),
+			new KeyValuePair<string,string>("6180 13a1",           "ã" ),
             new KeyValuePair<string,string>("13a2",                "Í" ),
+			new KeyValuePair<string,string>("49 13a2",             "Í" ),
+			new KeyValuePair<string,string>("4980 13a2",           "Í" ),
             new KeyValuePair<string,string>("1323",                "Ì" ),
+			new KeyValuePair<string,string>("49 1323",             "Ì" ),
+			new KeyValuePair<string,string>("4980 1323",           "Ì" ),
             new KeyValuePair<string,string>("13a4",                "ì" ),
+			new KeyValuePair<string,string>("e9 13a4",             "ì" ),
+			new KeyValuePair<string,string>("e980 13a4",           "ì" ),
             new KeyValuePair<string,string>("1325",                "Ò" ),
+			new KeyValuePair<string,string>("4f 1325",             "Ò" ),
+			new KeyValuePair<string,string>("4f80 1325",           "Ò" ),
             new KeyValuePair<string,string>("1326",                "ò" ),
+			new KeyValuePair<string,string>("ef 1326",             "ò" ),
+			new KeyValuePair<string,string>("ef80 1326",           "ò" ),
             new KeyValuePair<string,string>("13a7",                "Õ" ),
+			new KeyValuePair<string,string>("4f 13a7",             "Õ" ),
+			new KeyValuePair<string,string>("4f80 13a7",           "Õ" ),
             new KeyValuePair<string,string>("13a8",                "õ" ),
+			new KeyValuePair<string,string>("ef 13a8",             "õ" ),
+			new KeyValuePair<string,string>("ef80 13a8",           "õ" ),
             new KeyValuePair<string,string>("1329",                "{" ),
             new KeyValuePair<string,string>("132a",                "}" ),
             new KeyValuePair<string,string>("13ab",                "\\"),
@@ -253,9 +234,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             new KeyValuePair<string,string>("13ae",                "|" ),
             new KeyValuePair<string,string>("132f",                "~" ),
             new KeyValuePair<string,string>("13b0",                "Ä" ),
+			new KeyValuePair<string,string>("c180 13b0",           "Ä" ),
             new KeyValuePair<string,string>("1331",                "ä" ),
+			new KeyValuePair<string,string>("6180 1331",           "ä" ),
             new KeyValuePair<string,string>("1332",                "Ö" ),
+			new KeyValuePair<string,string>("4f80 1332",           "Ö" ),
             new KeyValuePair<string,string>("13b3",                "ö" ),
+			new KeyValuePair<string,string>("ef80 1332",           "ö" ),
             new KeyValuePair<string,string>("1334",                ""  ),
             new KeyValuePair<string,string>("13b5",                ""  ),
             new KeyValuePair<string,string>("13b6",                ""  ),
@@ -1739,10 +1724,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 res += "</i>";
             //res = res.Replace("aã", "ã");
             //res = res.Replace("oõ", "õ");
-            foreach(KeyValuePair<String,String> extendedCharacter in ExtendedCharacterSet)
-            {
-                res = res.Replace(extendedCharacter.Key, extendedCharacter.Value);
-            }
             return HtmlUtil.FixInvalidItalicTags(res);
         }
 
