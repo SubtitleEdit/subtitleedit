@@ -226,7 +226,7 @@
     <Compile Include="SsaStyle.cs" />
     <Compile Include="StringExtensions.cs" />
     <Compile Include="StrippableText.cs" />
-    <Compile Include="SubtitleEditRegex.cs" />
+    <Compile Include="RegexUtils.cs" />
     <Compile Include="Subtitle.cs" />
     <Compile Include="SubtitleFormats\AribB36.cs" />
     <Compile Include="SubtitleFormats\AribB24Decoder.cs" />

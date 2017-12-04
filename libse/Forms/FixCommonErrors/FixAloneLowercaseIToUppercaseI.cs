@@ -17,7 +17,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 string s = p.Text;
                 if (s.Contains('i'))
                 {
-                    s = FixAloneLowercaseIToUppercaseLine(SubtitleEditRegex.LittleIRegex, oldText, s, 'i');
+                    s = FixAloneLowercaseIToUppercaseLine(RegexUtils.LittleIRegex, oldText, s, 'i');
                     if (s != oldText && callbacks.AllowFix(p, fixAction))
                     {
                         p.Text = s;
