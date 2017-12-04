@@ -39,11 +39,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var sb = new StringBuilder();
             foreach (string s in lines)
                 sb.Append(s);
-            int startIndex = sb.ToString().IndexOf("[{\"", StringComparison.Ordinal);
-            if (startIndex < 0)
+            var text = sb.ToString();
+            int startIndex = text.IndexOf("[{\"", StringComparison.Ordinal);
+            if (startIndex < 0 || text.Contains("\"captions\"", StringComparison.Ordinal))
                 return;
 
-            string text = sb.ToString().Substring(startIndex);
+            text = text.Substring(startIndex);
             foreach (string line in text.Replace("},{", Environment.NewLine).SplitToLines())
             {
                 string s = line.Trim() + "}";

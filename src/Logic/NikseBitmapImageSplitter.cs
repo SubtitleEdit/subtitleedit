@@ -20,7 +20,7 @@ namespace Nikse.SubtitleEdit.Logic
                 b.A > 250 && b.R > 90 && b.G > 90 && b.B > 90)
                 return true; // dark, non transparent
 
-            int diff = (a.R + a.G + a.B) - (b.R + b.G + b.B);                        
+            int diff = (a.R + a.G + a.B) - (b.R + b.G + b.B);
             return diff < tolerance && diff > -tolerance;
         }
 
@@ -143,11 +143,6 @@ namespace Nikse.SubtitleEdit.Logic
         public static List<ImageSplitterItem> SplitVertical(Bitmap bmp)
         {
             return SplitVertical(new NikseBitmap(bmp));
-        }
-
-        public static List<ImageSplitterItem> SplitVertical(Bitmap bmp, int lineMinHeight)
-        {
-            return SplitVertical(new NikseBitmap(bmp), lineMinHeight);
         }
 
         public static List<ImageSplitterItem> SplitVertical(NikseBitmap bmp)
@@ -429,23 +424,6 @@ namespace Nikse.SubtitleEdit.Logic
                 return parts;
             }
             return parts;
-        }
-
-        public static int IsBitmapsAlike(Bitmap bmp1, Bitmap bmp2)
-        {
-            int different = 0;
-            int maxDiff = bmp1.Width * bmp1.Height / 5;
-            for (int y = 0; y < bmp1.Height; y++)
-            {
-                for (int x = 0; x < bmp1.Width; x++)
-                {
-                    if (!IsColorClose(bmp1.GetPixel(x, y), bmp2.GetPixel(x, y), 20))
-                        different++;
-                }
-            }
-            if (different > maxDiff)
-                return different + 10;
-            return different;
         }
 
         public static int IsBitmapsAlike(NikseBitmap bmp1, Bitmap bmp2)
@@ -774,17 +752,12 @@ namespace Nikse.SubtitleEdit.Logic
                     subtractSpacePixels = add;
                 }
 
-                if (clean && startX + 1 < x)
-                {
-                    width++;
-                }
-
                 var newStartX = points != null ? FindMinX(points, x) : 0;
                 if (points == null)
                 {
                     width++;
                 }
-                else if (width > 1 || (width == 1 && newStartX > startX + 1 && spacePixels == 0))
+                else if (width > 0 && newStartX > startX + 1)
                 {
                     var bmp0 = new NikseBitmap(bmp);
                     // remove pixels after current;
@@ -818,7 +791,7 @@ namespace Nikse.SubtitleEdit.Logic
                     spacePixels = -subtractSpacePixels;
                     subtractSpacePixels = 0;
                 }
-                else
+                else if (clean)
                 {
                     width = 1;
                     startX = newStartX;

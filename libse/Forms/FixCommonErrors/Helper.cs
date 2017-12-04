@@ -473,7 +473,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             return post + text;
         }
 
-        private static readonly char[] NoShortLineList = { '.', '?', '!', ':', ';', '-', '♪', '♫' };
+        private static readonly char[] NoShortLineList = { '.', '?', '!', ':', ';', '…', '♪', '♫' };
 
         public static string FixShortLines(string text)
         {
@@ -486,6 +486,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 s = s.TrimEnd().TrimEnd('.', '?', '!', ':', ';');
                 s = s.TrimStart('-');
                 if (!s.Contains(NoShortLineList) &&
+                    !s.Contains(Environment.NewLine + "-") &&
                     !(s.StartsWith('[') && s.Contains("]" + Environment.NewLine, StringComparison.Ordinal)) &&
                     !(s.StartsWith('(') && s.Contains(")" + Environment.NewLine, StringComparison.Ordinal)) &&
                     s != s.ToUpper())
