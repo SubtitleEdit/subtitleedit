@@ -38,13 +38,6 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             {
                 LoadNamesList(Path.Combine(_dictionaryFolder, "names.xml"));
             }
-            foreach (var name in _blackList)
-            {
-                if (_namesList.Contains(name))
-                    _namesList.Remove(name);
-                if (_namesMultiList.Contains(name))
-                    _namesMultiList.Remove(name);
-            }
         }
 
         public List<string> GetAllNames()
@@ -55,15 +48,9 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             return list;
         }
 
-        public HashSet<string> GetNames()
-        {
-            return _namesList;
-        }
+        public HashSet<string> GetNames() => _namesList;
 
-        public HashSet<string> GetMultiNames()
-        {
-            return _namesMultiList;
-        }
+        public HashSet<string> GetMultiNames() => _namesMultiList;
 
         /// <summary>
         /// Returns two letters ISO language name (Neutral culture).
@@ -71,11 +58,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
         private string GetLocalNamesFileName()
         {
             // Converts e.g en_US => en (Neutral culture).
-            string twoLetterISOLanguageName = _languageName;
-            if (_languageName.Length > 2)
-            {
-                twoLetterISOLanguageName = _languageName.Substring(0, 2);
-            }
+            string twoLetterISOLanguageName = _languageName.Length > 2 ? _languageName.Substring(0, 2) : _languageName;
             return Path.Combine(_dictionaryFolder, twoLetterISOLanguageName + "_names.xml");
         }
 
@@ -193,47 +176,33 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             {
                 return false;
             }
-            if (name.ContainsLetter())
+            if (!name.ContainsLetter())
             {
-                if (name.Contains(' '))
-                {
-                    if (!_namesMultiList.Contains(name))
-                        _namesMultiList.Add(name);
-                    else
-                        return false;
-                }
-                else
-                {
-                    if (!_namesList.Contains(name))
-                        _namesList.Add(name);
-                    else
-                        return false;
-                }
-
-                // <neutral>_names.xml e.g: en_names.xml
-                var fileName = GetLocalNamesFileName();
-                var nameListXml = new XmlDocument();
-                if (File.Exists(fileName))
-                {
-                    nameListXml.Load(fileName);
-                }
-                else
-                {
-                    nameListXml.LoadXml("<names><blacklist></blacklist></names>");
-                }
-
-                XmlNode de = nameListXml.DocumentElement;
-                if (de != null)
-                {
-                    XmlNode node = nameListXml.CreateElement("name");
-                    node.InnerText = name;
-                    de.AppendChild(node);
-                    nameListXml.Save(fileName);
-                }
-                return true;
+                return false;
             }
-            return false;
+            if (TryAdd(name))
+            {
+                return false;
+            }
+            // <neutral>_names.xml e.g: en_names.xml
+            var fileName = GetLocalNamesFileName();
+            var nameListXml = new XmlDocument();
+            nameListXml.LoadXml(File.Exists(fileName) ? fileName : "<names><blacklist></blacklist></names>");
+            XmlNode de = nameListXml.DocumentElement;
+            if (de != null)
+            {
+                XmlNode node = nameListXml.CreateElement("name");
+                node.InnerText = name;
+                de.AppendChild(node);
+                nameListXml.Save(fileName);
+            }
+            return true;
         }
+
+        /// <summary>
+        /// Try adding name to underling list (O: n+2*1).
+        /// </summary>
+        public bool TryAdd(string name) => name.Contains(" ") ? _namesMultiList.Add(name) : _namesList.Add(name);
 
         public bool IsInNamesMultiWordList(string text, string word)
         {
