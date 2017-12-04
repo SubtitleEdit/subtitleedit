@@ -681,18 +681,22 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
         private static bool EndsWithAbbreviation(string line, HashSet<string> abbreviationList)
         {
-            if (string.IsNullOrEmpty(line) || abbreviationList == null)
-                return false;
-
-            foreach (string abbreviation in abbreviationList)
+            if (string.IsNullOrEmpty(line))
             {
-                if (line.EndsWith(" " + abbreviation, StringComparison.OrdinalIgnoreCase))
-                    return true;
+                return false;
             }
-
             if (line.Length > 5 && line[line.Length - 3] == '.' && char.IsLetter(line[line.Length - 2]))
+            {
                 return true;
-
+            }
+            if (abbreviationList != null)
+            {
+                foreach (string abbreviation in abbreviationList)
+                {
+                    if (line.EndsWith(" " + abbreviation, StringComparison.OrdinalIgnoreCase))
+                        return true;
+                }
+            }
             return false;
         }
 
@@ -1237,8 +1241,8 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                             }
                         }
                         if (_nameListObj != null)
-                        { 
-                            _nameListObj.Add(s);                            
+                        {
+                            _nameListObj.Add(s);
                         }
                     }
                     catch

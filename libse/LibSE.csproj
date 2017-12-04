@@ -233,9 +233,11 @@
     <Compile Include="SubtitleFormats\Cmaft.cs" />
     <Compile Include="SubtitleFormats\Csv5.cs" />
     <Compile Include="SubtitleFormats\DvdStudioProSpaceOneSemicolon.cs" />
+    <Compile Include="SubtitleFormats\FinalCutProXml16.cs" />
     <Compile Include="SubtitleFormats\FinalCutProXml15.cs" />
     <Compile Include="SubtitleFormats\FinalDraftTemplate2.cs" />
     <Compile Include="SubtitleFormats\IsmtDfxp.cs" />
+    <Compile Include="SubtitleFormats\JsonTed.cs" />
     <Compile Include="SubtitleFormats\JsonTypeOnlyLoad1.cs" />
     <Compile Include="SubtitleFormats\JsonType12.cs" />
     <Compile Include="SubtitleFormats\TimeCodesOnly2.cs" />

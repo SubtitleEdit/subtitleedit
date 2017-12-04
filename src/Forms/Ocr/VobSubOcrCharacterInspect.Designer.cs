@@ -216,7 +216,7 @@
             this.contextMenuStripAddBetterMultiMatch.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.addBetterMultiMatchToolStripMenuItem});
             this.contextMenuStripAddBetterMultiMatch.Name = "contextMenuStripAddBetterMultiMatch";
-            this.contextMenuStripAddBetterMultiMatch.Size = new System.Drawing.Size(199, 48);
+            this.contextMenuStripAddBetterMultiMatch.Size = new System.Drawing.Size(199, 26);
             this.contextMenuStripAddBetterMultiMatch.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripAddBetterMultiMatch_Opening);
             // 
             // addBetterMultiMatchToolStripMenuItem
@@ -252,6 +252,7 @@
             // pictureBoxInspectItem
             // 
             this.pictureBoxInspectItem.BackColor = System.Drawing.Color.Red;
+            this.pictureBoxInspectItem.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pictureBoxInspectItem.Location = new System.Drawing.Point(252, 114);
             this.pictureBoxInspectItem.Name = "pictureBoxInspectItem";
             this.pictureBoxInspectItem.Size = new System.Drawing.Size(52, 52);

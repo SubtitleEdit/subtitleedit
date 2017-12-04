@@ -322,11 +322,11 @@ namespace Nikse.SubtitleEdit.Controls
                 if (subtitle.Header == null || !subtitle.Header.Contains("[V4+ Styles]"))
                 {
                     subtitle = new Subtitle(subtitle);
-                    if (_subtitleTextBox.RightToLeft == RightToLeft.Yes)
+                    if (_subtitleTextBox.RightToLeft == RightToLeft.Yes && LanguageAutoDetect.CouldBeRightToLeftLanguge(subtitle))
                     {
                         foreach (var paragraph in subtitle.Paragraphs)
                         {
-                            paragraph.Text = Utilities.ReverseStartAndEndingForRightToLeft(paragraph.Text);
+                            paragraph.Text = "\u200F" + paragraph.Text.Replace(Environment.NewLine, "\u200F" + Environment.NewLine + "\u200F") + "\u200F"; // RTL control character
                         }
                     }
                     var oldFontSize = Configuration.Settings.SubtitleSettings.SsaFontSize;
