@@ -236,7 +236,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     var lines = HtmlUtil.RemoveHtmlTags(TextField, true).SplitToLines();
                     var byteList = new List<byte>();
                     encoding = Encoding.GetEncoding(1200); // 16-bit Unicode
-                    for (int i = 0; i < lines.Count(); i++)
+                    for (int i = 0; i < lines.Count; i++)
                     {
                         var l = lines[i];
                         if (i > 0)
