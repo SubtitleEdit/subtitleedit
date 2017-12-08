@@ -3350,7 +3350,7 @@ namespace Nikse.SubtitleEdit.Forms
                 foreach (var file in Configuration.Settings.RecentFiles.Files)
                 {
                     if (File.Exists(file.FileName))
-                    {                        
+                    {
                         reopenToolStripMenuItem.DropDownItems.Add(file.FileName, null, ReopenSubtitleToolStripMenuItemClick);
                         UiUtil.FixFonts(reopenToolStripMenuItem.DropDownItems[reopenToolStripMenuItem.DropDownItems.Count - 1]);
                     }
@@ -3589,7 +3589,7 @@ namespace Nikse.SubtitleEdit.Forms
                 string allText = sub.ToText(format);
 
                 // Seungki begin
-                if (_splitDualSami && _subtitleAlternate != null)
+                if (_splitDualSami && _subtitleAlternate?.Paragraphs.Count > 0)
                 {
                     var s = new Subtitle(_subtitle);
                     foreach (var p in _subtitleAlternate.Paragraphs)
@@ -4618,7 +4618,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     if (found)
                     {
-                        SubtitleListview1.SelectIndexAndEnsureVisible(_findHelper.SelectedIndex, true);                        
+                        SubtitleListview1.SelectIndexAndEnsureVisible(_findHelper.SelectedIndex, true);
                         tb.Focus();
                         tb.SelectionStart = _findHelper.SelectedPosition;
                         tb.SelectionLength = _findHelper.FindTextLength;
@@ -4878,7 +4878,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             SaveSubtitleListviewIndices();
             int firstIndex = FirstSelectedIndex;
-            bool isFirst = true;            
+            bool isFirst = true;
             string selectedText;
             if (textBoxListViewTextAlternate.Focused)
                 selectedText = textBoxListViewTextAlternate.SelectedText;
