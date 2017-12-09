@@ -37,6 +37,7 @@ namespace Nikse.SubtitleEdit.Forms
         private const string FindWhat = "FindWhat";
         private const string ReplaceWith = "ReplaceWith";
         private const string SearchType = "SearchType";
+        private const string Comment = "Comment";
 
         public const string SearchTypeNormal = "Normal";
         public const string SearchTypeCaseSensitive = "CaseSensitive";
@@ -64,6 +65,7 @@ namespace Nikse.SubtitleEdit.Forms
             Text = Configuration.Settings.Language.MultipleReplace.Title;
             labelFindWhat.Text = Configuration.Settings.Language.MultipleReplace.FindWhat;
             labelReplaceWith.Text = Configuration.Settings.Language.MultipleReplace.ReplaceWith;
+            labelDescription.Text = Configuration.Settings.Language.MultipleReplace.Description;
             radioButtonNormal.Text = Configuration.Settings.Language.MultipleReplace.Normal;
             radioButtonRegEx.Text = Configuration.Settings.Language.MultipleReplace.RegularExpression;
             radioButtonCaseSensitive.Text = Configuration.Settings.Language.MultipleReplace.CaseSensitive;
@@ -73,6 +75,7 @@ namespace Nikse.SubtitleEdit.Forms
             listViewRules.Columns[1].Text = Configuration.Settings.Language.MultipleReplace.FindWhat;
             listViewRules.Columns[2].Text = Configuration.Settings.Language.MultipleReplace.ReplaceWith;
             listViewRules.Columns[3].Text = Configuration.Settings.Language.MultipleReplace.SearchType;
+            listViewRules.Columns[4].Text = Configuration.Settings.Language.MultipleReplace.Description;
             groupBoxGroups.Text = Configuration.Settings.Language.MultipleReplace.Groups;
             groupBoxLinesFound.Text = string.Empty;
             listViewFixes.Columns[0].Text = Configuration.Settings.Language.General.Apply;
@@ -205,11 +208,12 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-                var rule = new MultipleSearchAndReplaceSetting() { Enabled = true, FindWhat = findText, ReplaceWith = textBoxReplace.Text, SearchType = searchType };
+                var rule = new MultipleSearchAndReplaceSetting() { Enabled = true, FindWhat = findText, ReplaceWith = textBoxReplace.Text, SearchType = searchType, Comment = textBoxDescription.Text };
                 _currentGroup.Rules.Add(rule);
                 AddToRulesListView(rule);
                 textBoxFind.Text = string.Empty;
                 textBoxReplace.Text = string.Empty;
+                textBoxDescription.Text = string.Empty;
                 GeneratePreview();
                 textBoxFind.Select();
             }
@@ -313,6 +317,7 @@ namespace Nikse.SubtitleEdit.Forms
             item.SubItems.Add(rule.FindWhat);
             item.SubItems.Add(rule.ReplaceWith);
             item.SubItems.Add(EnglishSearchTypeToLocal(rule.SearchType));
+            item.SubItems.Add(rule.Comment);
             listViewRules.Items.Add(item);
         }
 
@@ -436,10 +441,12 @@ namespace Nikse.SubtitleEdit.Forms
                 item.SubItems[1].Text = findText;
                 item.SubItems[2].Text = replaceText;
                 item.SubItems[3].Text = EnglishSearchTypeToLocal(searchType);
+                item.SubItems[4].Text = textBoxDescription.Text;
 
                 _currentGroup.Rules[item.Index].FindWhat = findText;
                 _currentGroup.Rules[item.Index].ReplaceWith = replaceText;
                 _currentGroup.Rules[item.Index].SearchType = searchType;
+                _currentGroup.Rules[item.Index].Comment = textBoxDescription.Text;
 
                 GeneratePreview();
                 textBoxFind.Select();
@@ -460,6 +467,7 @@ namespace Nikse.SubtitleEdit.Forms
                     radioButtonCaseSensitive.Checked = true;
                 else
                     radioButtonNormal.Checked = true;
+                textBoxDescription.Text = listViewRules.SelectedItems[0].SubItems[4].Text;
             }
             else
             {
@@ -559,17 +567,20 @@ namespace Nikse.SubtitleEdit.Forms
             string findWhat = listViewRules.Items[index].SubItems[1].Text;
             string replaceWith = listViewRules.Items[index].SubItems[2].Text;
             string searchType = listViewRules.Items[index].SubItems[3].Text;
+            string comment = listViewRules.Items[index].SubItems[4].Text;
 
             listViewRules.Items[index].Checked = listViewRules.Items[index2].Checked;
             listViewRules.Items[index].SubItems[1].Text = listViewRules.Items[index2].SubItems[1].Text;
             listViewRules.Items[index].SubItems[2].Text = listViewRules.Items[index2].SubItems[2].Text;
             listViewRules.Items[index].SubItems[3].Text = listViewRules.Items[index2].SubItems[3].Text;
+            listViewRules.Items[index].SubItems[4].Text = listViewRules.Items[index2].SubItems[4].Text;
             listViewRules.Items[index].Tag = _currentGroup.Rules[index];
 
             listViewRules.Items[index2].Checked = enabled;
             listViewRules.Items[index2].SubItems[1].Text = findWhat;
             listViewRules.Items[index2].SubItems[2].Text = replaceWith;
             listViewRules.Items[index2].SubItems[3].Text = searchType;
+            listViewRules.Items[index2].SubItems[4].Text = comment;
             listViewRules.Items[index2].Tag = _currentGroup.Rules[index2];
 
             listViewRules.Items[index].Selected = false;
@@ -643,6 +654,12 @@ namespace Nikse.SubtitleEdit.Forms
                 subNode = listNode.SelectSingleNode(SearchType);
                 if (subNode != null)
                     item.SearchType = subNode.InnerText;
+                subNode = listNode.SelectSingleNode(SearchType);
+                if (subNode != null)
+                    item.SearchType = subNode.InnerText;
+                subNode = listNode.SelectSingleNode(Comment);
+                if (subNode != null)
+                    item.Comment = subNode.InnerText;
 
                 AddToRulesListView(item);
                 _currentGroup.Rules.Add(item);
@@ -726,6 +743,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 textBoxFind.Text = string.Empty;
                 textBoxReplace.Text = string.Empty;
+                textBoxDescription.Text = string.Empty;
             }
             listViewRules.EndUpdate();
             listViewRules.ItemChecked += ListViewRulesItemChecked;
@@ -782,6 +800,7 @@ namespace Nikse.SubtitleEdit.Forms
                     textWriter.WriteElementString(FindWhat, item.FindWhat);
                     textWriter.WriteElementString(ReplaceWith, item.ReplaceWith);
                     textWriter.WriteElementString(SearchType, item.SearchType);
+                    textWriter.WriteElementString(Comment, item.Comment);
                     textWriter.WriteEndElement();
                 }
                 textWriter.WriteEndElement();
@@ -903,7 +922,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void MultipleReplace_ResizeEnd(object sender, EventArgs e)
         {
-            columnHeader6.Width = -2;
+            listViewRules.Columns[listViewRules.Columns.Count - 1].Width = -2;
         }
 
         private void moveToTopToolStripMenuItem_Click(object sender, EventArgs e)

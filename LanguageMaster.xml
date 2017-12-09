@@ -1541,6 +1541,7 @@ If you have edited this file with Subtitle Edit you might be able to find a back
     <Normal>Normal</Normal>
     <CaseSensitive>Case sensitive</CaseSensitive>
     <RegularExpression>Regular expression</RegularExpression>
+    <Description>Description</Description>
     <LinesFoundX>Lines found: {0}</LinesFoundX>
     <Remove>Remove</Remove>
     <Add>&amp;Add</Add>

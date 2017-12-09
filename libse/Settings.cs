@@ -895,6 +895,7 @@ namespace Nikse.SubtitleEdit.Core
         public string FindWhat { get; set; }
         public string ReplaceWith { get; set; }
         public string SearchType { get; set; }
+        public string Comment { get; set; }
     }
 
     public class MultipleSearchAndReplaceGroup
@@ -2707,6 +2708,9 @@ namespace Nikse.SubtitleEdit.Core
                     subNode = listNode.SelectSingleNode("SearchType");
                     if (subNode != null)
                         item.SearchType = subNode.InnerText;
+                    subNode = listNode.SelectSingleNode("Comment");
+                    if (subNode != null)
+                        item.Comment = subNode.InnerText;
                     group.Rules.Add(item);
                 }
             }
@@ -2740,6 +2744,9 @@ namespace Nikse.SubtitleEdit.Core
                     subNode = listNode.SelectSingleNode("SearchType");
                     if (subNode != null)
                         item.SearchType = subNode.InnerText;
+                    subNode = listNode.SelectSingleNode("Comment");
+                    if (subNode != null)
+                        item.Comment = subNode.InnerText;
                     group.Rules.Add(item);
                 }
             }
@@ -3771,6 +3778,7 @@ namespace Nikse.SubtitleEdit.Core
                         textWriter.WriteElementString("FindWhat", item.FindWhat);
                         textWriter.WriteElementString("ReplaceWith", item.ReplaceWith);
                         textWriter.WriteElementString("SearchType", item.SearchType);
+                        textWriter.WriteElementString("Comment", item.Comment);
                         textWriter.WriteEndElement();
                     }
                     textWriter.WriteEndElement();

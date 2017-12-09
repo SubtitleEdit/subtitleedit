@@ -4162,6 +4162,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "MultipleReplace/RegularExpression":
                     language.MultipleReplace.RegularExpression = reader.Value;
                     break;
+                case "MultipleReplace/Description":
+                    language.MultipleReplace.Description = reader.Value;
+                    break;
                 case "MultipleReplace/LinesFoundX":
                     language.MultipleReplace.LinesFoundX = reader.Value;
                     break;
