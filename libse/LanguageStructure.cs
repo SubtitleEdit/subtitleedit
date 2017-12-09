@@ -1680,6 +1680,7 @@
             public string Normal { get; set; }
             public string CaseSensitive { get; set; }
             public string RegularExpression { get; set; }
+            public string Description { get; set; }
             public string LinesFoundX { get; set; }
             public string Remove { get; set; }
             public string Add { get; set; }

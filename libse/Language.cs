@@ -1799,6 +1799,7 @@ namespace Nikse.SubtitleEdit.Core
                 Normal = "Normal",
                 CaseSensitive = "Case sensitive",
                 RegularExpression = "Regular expression",
+                Description = "Description",
                 LinesFoundX = "Lines found: {0}",
                 Remove = "Remove",
                 Add = "&Add",
