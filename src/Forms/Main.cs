@@ -3096,6 +3096,13 @@ namespace Nikse.SubtitleEdit.Forms
                         if (!string.IsNullOrEmpty(errors))
                             MessageBox.Show(errors, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
+                    else if (formatType == typeof(CsvNuendo))
+                    {
+                        if (_subtitle.Paragraphs.Any(p => !string.IsNullOrEmpty(p.Actor)))
+                        {
+                            SubtitleListview1.ShowActorColumn(Configuration.Settings.Language.General.Character);
+                        }
+                    }
                 }
                 else
                 {
@@ -3350,7 +3357,7 @@ namespace Nikse.SubtitleEdit.Forms
                 foreach (var file in Configuration.Settings.RecentFiles.Files)
                 {
                     if (File.Exists(file.FileName))
-                    {                        
+                    {
                         reopenToolStripMenuItem.DropDownItems.Add(file.FileName, null, ReopenSubtitleToolStripMenuItemClick);
                         UiUtil.FixFonts(reopenToolStripMenuItem.DropDownItems[reopenToolStripMenuItem.DropDownItems.Count - 1]);
                     }
@@ -3985,10 +3992,19 @@ namespace Nikse.SubtitleEdit.Forms
                 _oldSubtitleFormat = format;
                 Configuration.Settings.General.LastSaveAsFormat = format.Name;
 
-                if ((formatType == typeof(AdvancedSubStationAlpha) || formatType == typeof(SubStationAlpha)) &&
-                    Configuration.Settings.Tools.ListViewShowColumnActor)
+                if ((formatType == typeof(AdvancedSubStationAlpha) ||
+                    formatType == typeof(SubStationAlpha) ||
+                    formatType == typeof(CsvNuendo)) && (_subtitle.Paragraphs.Any(p => !string.IsNullOrEmpty(p.Actor)) ||
+                    Configuration.Settings.Tools.ListViewShowColumnActor))
                 {
-                    SubtitleListview1.ShowActorColumn(Configuration.Settings.Language.General.Actor);
+                    if (formatType == typeof(CsvNuendo))
+                    {
+                        SubtitleListview1.ShowActorColumn(Configuration.Settings.Language.General.Character);
+                    }
+                    else
+                    {
+                        SubtitleListview1.ShowActorColumn(Configuration.Settings.Language.General.Actor);
+                    }
                 }
                 else
                 {
@@ -4618,7 +4634,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     if (found)
                     {
-                        SubtitleListview1.SelectIndexAndEnsureVisible(_findHelper.SelectedIndex, true);                        
+                        SubtitleListview1.SelectIndexAndEnsureVisible(_findHelper.SelectedIndex, true);
                         tb.Focus();
                         tb.SelectionStart = _findHelper.SelectedPosition;
                         tb.SelectionLength = _findHelper.FindTextLength;
@@ -4878,7 +4894,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             SaveSubtitleListviewIndices();
             int firstIndex = FirstSelectedIndex;
-            bool isFirst = true;            
+            bool isFirst = true;
             string selectedText;
             if (textBoxListViewTextAlternate.Focused)
                 selectedText = textBoxListViewTextAlternate.SelectedText;
@@ -6489,10 +6505,11 @@ namespace Nikse.SubtitleEdit.Forms
                 };
                 cm.Items.Add(contextMenuStripLvHeaderGapToolStripMenuItem);
 
-                if (formatType == typeof(AdvancedSubStationAlpha) || formatType == typeof(SubStationAlpha))
+                if (formatType == typeof(AdvancedSubStationAlpha) || formatType == typeof(SubStationAlpha) || formatType == typeof(CsvNuendo))
                 {
                     // ACTOR
-                    var contextMenuStripLvHeaderActorToolStripMenuItem = new ToolStripMenuItem(Configuration.Settings.Language.General.Actor);
+                    var actorTitle = formatType == typeof(CsvNuendo) ? Configuration.Settings.Language.General.Character : Configuration.Settings.Language.General.Actor;
+                    var contextMenuStripLvHeaderActorToolStripMenuItem = new ToolStripMenuItem(actorTitle);
                     contextMenuStripLvHeaderActorToolStripMenuItem.CheckOnClick = true;
                     contextMenuStripLvHeaderActorToolStripMenuItem.Checked = Configuration.Settings.Tools.ListViewShowColumnActor;
                     contextMenuStripLvHeaderActorToolStripMenuItem.Click += (sender2, e2) =>
@@ -6500,7 +6517,7 @@ namespace Nikse.SubtitleEdit.Forms
                         SubtitleListview1.BeginUpdate();
                         Configuration.Settings.Tools.ListViewShowColumnActor = contextMenuStripLvHeaderActorToolStripMenuItem.Checked;
                         if (Configuration.Settings.Tools.ListViewShowColumnActor)
-                            SubtitleListview1.ShowActorColumn(Configuration.Settings.Language.General.Actor);
+                            SubtitleListview1.ShowActorColumn(actorTitle);
                         else
                             SubtitleListview1.HideColumn(SubtitleListView.SubtitleColumn.Actor);
                         SaveSubtitleListviewIndices();
@@ -13807,7 +13824,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ImportPlainText(string fileName)
         {
-            using (var importText = new ImportText(fileName))
+            using (var importText = new ImportText(fileName, this))
             {
                 if (importText.ShowDialog(this) == DialogResult.OK)
                 {
@@ -13829,8 +13846,6 @@ namespace Nikse.SubtitleEdit.Forms
                         _subtitleListViewIndex = -1;
                         if (importText.Format != null)
                         {
-                            if (_subtitle.Paragraphs.Any(p => !string.IsNullOrEmpty(p.Actor)))
-                                SubtitleListview1.ShowActorColumn(Configuration.Settings.Language.General.Actor);
                             SetCurrentFormat(importText.Format);
                         }
                         _subtitle = new Subtitle(importText.FixedSubtitle.Paragraphs, _subtitle.HistoryItems);

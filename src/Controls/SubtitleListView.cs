@@ -945,6 +945,10 @@ namespace Nikse.SubtitleEdit.Controls
                 Columns[ColumnIndexActor].Width = 80;
                 AutoSizeAllColumns(null);
             }
+            else
+            {
+                Columns[GetColumnIndex(SubtitleColumn.Actor)].Text = title;
+            }
         }
 
         public void ShowRegionColumn(string title)
@@ -1495,7 +1499,7 @@ namespace Nikse.SubtitleEdit.Controls
                 if (ColumnIndexDuration >= 0)
                     item.SubItems[ColumnIndexDuration].Text = paragraph.Duration.ToShortDisplayString();
                 if (ColumnIndexGap >= 0)
-                  item.SubItems[ColumnIndexGap].Text = GetGap(paragraph, next);
+                    item.SubItems[ColumnIndexGap].Text = GetGap(paragraph, next);
                 UpdateCpsAndWpm(item, paragraph);
             }
         }

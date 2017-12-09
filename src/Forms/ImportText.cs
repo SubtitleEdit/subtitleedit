@@ -18,12 +18,13 @@ namespace Nikse.SubtitleEdit.Forms
         private Subtitle _subtitleInput;
         private string _videoFileName;
         private readonly Timer _refreshTimer = new Timer();
+        private bool _exit;
 
         public Subtitle FixedSubtitle => _subtitle;
         public SubtitleFormat Format { get; set; }
         public string VideoFileName => _videoFileName;
 
-        public ImportText(string fileName = null)
+        public ImportText(string fileName = null, Form parentForm = null)
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
@@ -104,7 +105,8 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (fileName != null && File.Exists(fileName))
             {
-                LoadSingleFile(fileName);
+                if (!LoadSingleFile(fileName, parentForm))
+                    _exit = true;
             }
         }
 
@@ -133,13 +135,13 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
-                    LoadSingleFile(openFileDialog1.FileName);
+                    LoadSingleFile(openFileDialog1.FileName, this);
                 }
                 GeneratePreview();
             }
         }
 
-        private void LoadSingleFile(string fileName)
+        private bool LoadSingleFile(string fileName, Form parentForm)
         {
             groupBoxSplitting.Enabled = true;
             textBoxText.Enabled = true;
@@ -154,13 +156,22 @@ namespace Nikse.SubtitleEdit.Forms
             bool isFinalDraft = fd.IsMine(list, fileName);
 
             if (ext == ".astx")
+            {
                 LoadAdobeStory(fileName);
+            }
             else if (isFinalDraft)
-                LoadFinalDraftTemplate(fileName);
+            {
+                return LoadFinalDraftTemplate(fileName, parentForm ?? this);
+            }
             else if (ext == ".tx3g" && new Tx3GTextOnly().IsMine(null, fileName))
+            {
                 LoadTx3G(fileName);
+            }
             else
+            {
                 LoadTextFile(fileName);
+            }
+            return true;
         }
 
         private void GeneratePreview()
@@ -181,7 +192,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void GeneratePreviewReal()
         {
-            if (Format == null || Format.GetType() != typeof(AdvancedSubStationAlpha))
+            if (Format == null || Format.GetType() != typeof(CsvNuendo))
             {
                 _subtitle = new Subtitle();
                 if (checkBoxMultipleFiles.Visible && checkBoxMultipleFiles.Checked)
@@ -763,23 +774,36 @@ namespace Nikse.SubtitleEdit.Forms
             GeneratePreview();
         }
 
-        private void LoadFinalDraftTemplate(string fileName)
+        private bool LoadFinalDraftTemplate(string fileName, Form parentForm)
         {
             try
             {
                 var fd = new FinalDraftTemplate2();
                 var sub = new Subtitle();
-                fd.LoadSubtitle(sub, Encoding.UTF8.GetString(FileUtil.ReadAllBytesShared(fileName)).SplitToLines(), fileName);
+                var lines = Encoding.UTF8.GetString(FileUtil.ReadAllBytesShared(fileName)).SplitToLines();
+                var availableParagraphTypes = fd.GetParagraphTypes(lines);
+                using (var form = new ImportFinalDraft(availableParagraphTypes))
+                {
+                    if (form.ShowDialog(parentForm) == DialogResult.OK)
+                    {
+                        fd.ActiveParagraphTypes = form.ChosenParagraphTypes;
+                        fd.LoadSubtitle(sub, lines, fileName);
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+
                 textBoxText.Text = sub.ToText(fd);
                 _videoFileName = null;
                 Text = Configuration.Settings.Language.ImportText.Title + " - " + fileName;
                 _subtitleInput = sub;
-                Format = new AdvancedSubStationAlpha();
-                _subtitleInput.Header = AdvancedSubStationAlpha.DefaultHeader;
+                Format = new CsvNuendo();
                 groupBoxSplitting.Enabled = false;
                 textBoxText.Enabled = false;
                 if (_subtitleInput.Paragraphs.Any(p => !string.IsNullOrEmpty(p.Actor)))
-                    SubtitleListview1.ShowActorColumn(Configuration.Settings.Language.General.Actor);
+                    SubtitleListview1.ShowActorColumn(Configuration.Settings.Language.General.Character);
             }
             catch (Exception ex)
             {
@@ -788,6 +812,7 @@ namespace Nikse.SubtitleEdit.Forms
             radioButtonLineMode.Checked = true;
             checkBoxMergeShortLines.Checked = false;
             GeneratePreview();
+            return true;
         }
 
         private void SetVideoFileName(string fileName)
@@ -968,6 +993,8 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (textBoxText.Visible && textBoxText.Text.Length > 20)
                 buttonOK.Focus();
+            if (_exit)
+                DialogResult = DialogResult.Cancel;
         }
     }
 }

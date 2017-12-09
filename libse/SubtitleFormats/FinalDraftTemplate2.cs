@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Xml;
 
@@ -11,8 +12,19 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string Name => "Final Draft Template 2";
 
+        private List<string> _paragraphTypes;
+
+        public List<string> GetParagraphTypes(List<string> lines)
+        {
+            LoadSubtitle(new Subtitle(), lines, null);
+            return _paragraphTypes;
+        }
+        public List<string> ActiveParagraphTypes { get; set; } = new List<string> { "Dialogue", "Parenthetical" };
+
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
+            var lowercaseChosencategories = ActiveParagraphTypes.Select(p => p.ToLowerInvariant()).ToList();
+            _paragraphTypes = new List<string>();
             _errorCount = 0;
             var sb = new StringBuilder();
             var actor = string.Empty;
@@ -26,27 +38,33 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     try
                     {
                         var paragraphType = node.Attributes["Type"];
-                        sb.Clear();
-                        foreach (XmlNode text in node.SelectNodes("Text"))
+                        if (paragraphType != null)
                         {
-                            sb.AppendLine(text.InnerText);
-                        }
+                            if (paragraphType != null && !_paragraphTypes.Contains(paragraphType.InnerText))
+                                _paragraphTypes.Add(paragraphType.InnerText);
 
-                        if (paragraphType != null && paragraphType.InnerText.Equals("Character", StringComparison.OrdinalIgnoreCase))
-                        {
-                            actor = sb.ToString().Replace(Environment.NewLine, " ").Trim();
-                            actor = actor.Replace("( CONT'D )", string.Empty).Trim();
-                            actor = actor.Replace("( CONT’D )", string.Empty).Trim();
-                            actor = actor.Replace("(CONT'D)", string.Empty).Trim();
-                            actor = actor.Replace("(CONT’D)", string.Empty).Trim();
-                            actor = actor.ToUpper();
-                        }
-                        else if (paragraphType != null && paragraphType.InnerText.Equals("Dialogue", StringComparison.OrdinalIgnoreCase))
-                        {
-                            var p = new Paragraph(Utilities.AutoBreakLine(sb.ToString().Trim()), 0, 0);
-                            if (!string.IsNullOrWhiteSpace(actor))
-                                p.Actor = actor;
-                            subtitle.Paragraphs.Add(p);
+                            sb.Clear();
+                            foreach (XmlNode text in node.SelectNodes("Text"))
+                            {
+                                sb.AppendLine(text.InnerText);
+                            }
+
+                            if (paragraphType != null && paragraphType.InnerText.Equals("Character", StringComparison.OrdinalIgnoreCase))
+                            {
+                                actor = sb.ToString().Replace(Environment.NewLine, " ").Trim();
+                                actor = actor.Replace("( CONT'D )", string.Empty).Trim();
+                                actor = actor.Replace("( CONT’D )", string.Empty).Trim();
+                                actor = actor.Replace("(CONT'D)", string.Empty).Trim();
+                                actor = actor.Replace("(CONT’D)", string.Empty).Trim();
+                                actor = actor.ToUpper();
+                            }
+                            else if (paragraphType != null && lowercaseChosencategories.Contains(paragraphType.InnerText.ToLowerInvariant()))
+                            {
+                                var p = new Paragraph(Utilities.AutoBreakLine(sb.ToString().Trim()), 0, 0);
+                                if (!string.IsNullOrWhiteSpace(actor))
+                                    p.Actor = actor;
+                                subtitle.Paragraphs.Add(p);
+                            }
                         }
                     }
                     catch
