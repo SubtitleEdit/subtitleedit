@@ -452,6 +452,22 @@ namespace Nikse.SubtitleEdit.Core
                                || tagString.StartsWith("<i", StringComparison.OrdinalIgnoreCase)
                                || tagString.StartsWith("</i", StringComparison.OrdinalIgnoreCase);
                 }
+                else if (letter == '{' && s.Substring(six).StartsWith("{\\"))
+                {
+                    string tagString = s.Substring(six);
+                    var endIndexAssTag = tagString.IndexOf('}') + 1;
+                    if (endIndexAssTag > 0)
+                    {
+                        tagString = tagString.Substring(0, endIndexAssTag);
+                        if (htmlTags.ContainsKey(six))
+                            htmlTags[six] = htmlTags[six] + tagString;
+                        else
+                            htmlTags.Add(six, tagString);
+
+                        s = s.Remove(six, endIndexAssTag);
+                        continue;
+                    }
+                }
 
                 int endIndex = -1;
                 if (tagFound)
