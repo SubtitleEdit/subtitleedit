@@ -3596,7 +3596,7 @@ namespace Nikse.SubtitleEdit.Forms
                 string allText = sub.ToText(format);
 
                 // Seungki begin
-                if (_splitDualSami && _subtitleAlternate != null)
+                if (_splitDualSami && _subtitleAlternate?.Paragraphs.Count > 0)
                 {
                     var s = new Subtitle(_subtitle);
                     foreach (var p in _subtitleAlternate.Paragraphs)
