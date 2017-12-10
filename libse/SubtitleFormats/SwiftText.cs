@@ -123,7 +123,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             if (RegexTimeCodes.IsMatch(line))
             {
                 //TIMEIN: 01:00:04:12   DURATION: 04:25 TIMEOUT: 01:00:09:07
-                string s = line.Replace("TIMEIN:", string.Empty).Replace("DURATION", string.Empty).Replace("TIMEOUT", string.Empty).Replace(" ", string.Empty).Replace("\t", string.Empty);
+                string s = line.Replace("TIMEIN:", string.Empty).Replace("DURATION", string.Empty).Replace("TIMEOUT", string.Empty).RemoveChar(' ').Replace("\t", string.Empty);
                 string[] parts = s.Split(':');
                 try
                 {

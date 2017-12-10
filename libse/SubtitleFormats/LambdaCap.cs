@@ -16,16 +16,17 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string Name => "Lambda Cap";
 
-        public string Header {
+        public string Header
+        {
             get
             {
                 if (Configuration.Settings.General.CurrentFrameRate % 1.0 < 0.001)
                 {
                     return "Lambda字幕V4 DF0+1 SCENE\"和文標準\""; // non drop frame
-                }                
+                }
                 return "Lambda字幕V4 DF1+1 SCENE\"和文標準\""; // drop frame
             }
-        }  
+        }
 
         public override bool IsMine(List<string> lines, string fileName)
         {
@@ -65,7 +66,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static string EncodeTimeCode(TimeCode time)
         {
-            return time.ToHHMMSSFF().Replace(":", string.Empty); //HHMMSSFF without seperators, like 00031522
+            return time.ToHHMMSSFF().RemoveChar(':'); //HHMMSSFF without seperators, like 00031522
         }
 
         private static string EncodeStyle(string text)
@@ -74,7 +75,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             text = text.Replace("ー", LongDash2);
 
             var verticalAlignTop = text.StartsWith("{\\an7}", StringComparison.Ordinal) || text.StartsWith("{\\an8}", StringComparison.Ordinal) || text.StartsWith("{\\an9}", StringComparison.Ordinal);
-//            var verticalAlignCenter = text.StartsWith("{\\an4}", StringComparison.Ordinal) || text.StartsWith("{\\an5}", StringComparison.Ordinal) || text.StartsWith("{\\an6}", StringComparison.Ordinal);
+            //            var verticalAlignCenter = text.StartsWith("{\\an4}", StringComparison.Ordinal) || text.StartsWith("{\\an5}", StringComparison.Ordinal) || text.StartsWith("{\\an6}", StringComparison.Ordinal);
             var horizontalAlignLeft = text.StartsWith("{\\an1}", StringComparison.Ordinal) || text.StartsWith("{\\an4}", StringComparison.Ordinal) || text.StartsWith("{\\an7}", StringComparison.Ordinal);
             var horizontalAlignRight = text.StartsWith("{\\an3}", StringComparison.Ordinal) || text.StartsWith("{\\an6}", StringComparison.Ordinal) || text.StartsWith("{\\an9}", StringComparison.Ordinal);
             var s = Utilities.RemoveSsaTags(text);

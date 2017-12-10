@@ -399,7 +399,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
             {
                 var st = new StrippableText(newText);
                 if (st.Pre.Contains('-') && !st.Pre.Contains("--"))
-                    newText = st.Pre.Replace("-", string.Empty) + st.StrippedText + st.Post;
+                    newText = st.Pre.RemoveChar('-') + st.StrippedText + st.Post;
             }
             else if (removedInSecondLine && !removedInFirstLine && Utilities.GetNumberOfLines(newText) == 2)
             {
@@ -583,7 +583,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
             if (noOfNamesRemoved >= 1 && Utilities.GetNumberOfLines(text) == 3)
             {
                 var splitChars = new[] { '.', '?', '!' };
-                var splitParts = HtmlUtil.RemoveHtmlTags(text).Replace(" ", string.Empty).Split(splitChars, StringSplitOptions.RemoveEmptyEntries);
+                var splitParts = HtmlUtil.RemoveHtmlTags(text).RemoveChar(' ').Split(splitChars, StringSplitOptions.RemoveEmptyEntries);
                 if (splitParts.Length == 2)
                 {
                     var temp = new StrippableText(text);
@@ -1095,12 +1095,12 @@ namespace Nikse.SubtitleEdit.Core.Forms
             }
             if (lines.Count == 2)
             {
-                if (string.IsNullOrWhiteSpace(lines[1].Replace(".", string.Empty).Replace("?", string.Empty).Replace("!", string.Empty).Replace("-", string.Empty).Replace("—", string.Empty)))
+                if (string.IsNullOrWhiteSpace(lines[1].RemoveChar('.').RemoveChar('?').RemoveChar('!').RemoveChar('-').RemoveChar('—')))
                 {
                     text = lines[0];
                     lines = text.SplitToLines();
                 }
-                else if (string.IsNullOrWhiteSpace(lines[0].Replace(".", string.Empty).Replace("?", string.Empty).Replace("!", string.Empty).Replace("-", string.Empty).Replace("—", string.Empty)))
+                else if (string.IsNullOrWhiteSpace(lines[0].RemoveChar('.').RemoveChar('?').RemoveChar('!').RemoveChar('-').RemoveChar('—')))
                 {
                     text = lines[1];
                     lines = text.SplitToLines();

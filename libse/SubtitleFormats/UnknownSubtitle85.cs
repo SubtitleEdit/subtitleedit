@@ -51,7 +51,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             if (ts.TotalMilliseconds >= 0)
                 return s;
 
-            return "-" + s.Replace("-", string.Empty);
+            return "-" + s.RemoveChar('-');
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)

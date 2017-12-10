@@ -167,5 +167,21 @@ namespace Test.Core
             Assert.AreEqual("Hallo" + Environment.NewLine + "world!", res);
         }
 
+        [TestMethod]
+        public void RemoveChar1()
+        {
+            string input = "Hallo world!";
+            var res = input.RemoveChar(' ');
+            Assert.AreEqual("Halloworld!", res);
+        }
+
+        [TestMethod]
+        public void RemoveChar2()
+        {
+            string input = " Hallo  world! ";
+            var res = input.RemoveChar(' ');
+            Assert.AreEqual("Halloworld!", res);
+        }
+
     }
 }

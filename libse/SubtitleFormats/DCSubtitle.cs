@@ -93,7 +93,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 languageEnglishName = "English";
             }
 
-            string hex = Guid.NewGuid().ToString().Replace("-", string.Empty);
+            string hex = Guid.NewGuid().ToString().RemoveChar('-');
             hex = hex.Insert(8, "-").Insert(13, "-").Insert(18, "-").Insert(23, "-");
 
             string xmlStructure = "<DCSubtitle Version=\"1.0\">" + Environment.NewLine +

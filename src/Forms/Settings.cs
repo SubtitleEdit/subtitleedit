@@ -748,7 +748,7 @@ namespace Nikse.SubtitleEdit.Forms
             AddNode(videoNode, language.ToggleDockUndockOfVideoControls, nameof(Configuration.Settings.Shortcuts.MainVideoToggleVideoControls));
             AddNode(videoNode, language.GoBack1Frame, nameof(Configuration.Settings.Shortcuts.MainVideo1FrameLeft));
             AddNode(videoNode, language.GoForward1Frame, nameof(Configuration.Settings.Shortcuts.MainVideo1FrameRight));
-            AddNode(videoNode, language.GoBack1FrameWithPlay, nameof(Configuration.Settings.Shortcuts.MainVideo1FrameLeftWithPlay)); 
+            AddNode(videoNode, language.GoBack1FrameWithPlay, nameof(Configuration.Settings.Shortcuts.MainVideo1FrameLeftWithPlay));
             AddNode(videoNode, language.GoForward1FrameWithPlay, nameof(Configuration.Settings.Shortcuts.MainVideo1FrameRightWithPlay));
             AddNode(videoNode, language.GoBack100Milliseconds, nameof(Configuration.Settings.Shortcuts.MainVideo100MsLeft));
             AddNode(videoNode, language.GoForward100Milliseconds, nameof(Configuration.Settings.Shortcuts.MainVideo100MsRight));
@@ -867,13 +867,13 @@ namespace Nikse.SubtitleEdit.Forms
 
             foreach (TreeNode node in treeViewShortcuts.Nodes)
             {
-                node.Text = node.Text.Replace("&", string.Empty);
+                node.Text = node.Text.RemoveChar('&');
                 foreach (TreeNode subNode in node.Nodes)
                 {
-                    subNode.Text = subNode.Text.Replace("&", string.Empty);
+                    subNode.Text = subNode.Text.RemoveChar('&');
                     foreach (TreeNode subSubNode in subNode.Nodes)
                     {
-                        subSubNode.Text = subSubNode.Text.Replace("&", string.Empty);
+                        subSubNode.Text = subSubNode.Text.RemoveChar('&');
                     }
                 }
             }

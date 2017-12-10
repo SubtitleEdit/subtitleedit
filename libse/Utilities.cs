@@ -846,7 +846,7 @@ namespace Nikse.SubtitleEdit.Core
 
             string s = HtmlUtil.RemoveHtmlTags(paragraph.Text, true).Replace(Environment.NewLine, string.Empty).Replace(zeroWidthSpace, string.Empty).Replace(zeroWidthNoBreakSpace, string.Empty);
             if (Configuration.Settings.General.CharactersPerSecondsIgnoreWhiteSpace)
-                s = s.Replace(" ", string.Empty);
+                s = s.RemoveChar(' ');
             return s.Length / paragraph.Duration.TotalSeconds;
         }
 

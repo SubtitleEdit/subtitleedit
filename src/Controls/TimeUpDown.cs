@@ -148,7 +148,7 @@ namespace Nikse.SubtitleEdit.Controls
                 if (_designMode)
                     return new TimeCode();
 
-                if (string.IsNullOrWhiteSpace(maskedTextBox1.Text.Replace(".", string.Empty).Replace(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, string.Empty).Replace(",", string.Empty).Replace(":", string.Empty)))
+                if (string.IsNullOrWhiteSpace(maskedTextBox1.Text.RemoveChar('.').Replace(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, string.Empty).RemoveChar(',').RemoveChar(':')))
                     return TimeCode.MaxTime;
 
 

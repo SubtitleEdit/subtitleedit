@@ -8802,7 +8802,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     string s = newFolder.FolderName;
                     if (string.IsNullOrEmpty(s))
                         return;
-                    s = s.Replace("?", string.Empty).Replace("/", string.Empty).Replace("*", string.Empty).Replace("\\", string.Empty);
+                    s = s.RemoveChar('?').RemoveChar('/').RemoveChar('*').RemoveChar('\\');
                     if (string.IsNullOrEmpty(s))
                         return;
                     if (File.Exists(Configuration.DictionariesDirectory + "nOCR_" + newFolder.FolderName + ".xml"))

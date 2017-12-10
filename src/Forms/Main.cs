@@ -7771,14 +7771,14 @@ namespace Nikse.SubtitleEdit.Forms
                         makeHistory = textBoxListViewTextAlternate.Text != alternateFixedText;
                     if (makeHistory)
                     {
-                        MakeHistoryForUndo(_language.Controls.AutoBreak.Replace("&", string.Empty));
+                        MakeHistoryForUndo(_language.Controls.AutoBreak.RemoveChar('&'));
                         textBoxListViewText.Text = fixedText;
                     }
                     textBoxListViewTextAlternate.Text = alternateFixedText;
                 }
                 else if (makeHistory)
                 {
-                    MakeHistoryForUndo(_language.Controls.AutoBreak.Replace("&", string.Empty));
+                    MakeHistoryForUndo(_language.Controls.AutoBreak.RemoveChar('&'));
                     textBoxListViewText.Text = fixedText;
                 }
             }

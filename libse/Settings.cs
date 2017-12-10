@@ -439,7 +439,7 @@ namespace Nikse.SubtitleEdit.Core
             }
             else
             {
-                string hex = Guid.NewGuid().ToString().Replace("-", string.Empty).ToLower();
+                string hex = Guid.NewGuid().ToString().RemoveChar('-').ToLower();
                 hex = hex.Insert(8, "-").Insert(13, "-").Insert(18, "-").Insert(23, "-");
                 CurrentDCinemaSubtitleId = hex;
                 CurrentDCinemaLanguage = "English";

@@ -703,7 +703,7 @@ namespace Nikse.SubtitleEdit.Core
 
         private static string GetLineWithPerhapsOnlyNumbers(string line)
         {
-            return line.Replace(" ", string.Empty).Replace(".", string.Empty).Replace(",", string.Empty).Replace("\t", string.Empty).Replace(":", string.Empty).Replace(";", string.Empty).Replace("{", string.Empty).Replace("}", string.Empty).Replace("[", string.Empty).Replace("]", string.Empty).Replace("-", string.Empty).Replace(">", string.Empty).Replace("<", string.Empty);
+            return line.RemoveChar(' ').RemoveChar('.').RemoveChar(',').RemoveChar('\t').RemoveChar(':').RemoveChar(';').RemoveChar('{').RemoveChar('}').RemoveChar('[').RemoveChar(']').RemoveChar('-').RemoveChar('>').RemoveChar('<');
         }
 
         private static TimeCode DecodeTime(string[] parts)

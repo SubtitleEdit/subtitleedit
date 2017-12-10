@@ -98,7 +98,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             string text = s.Remove(0, arr[0].Length + arr[1].Length + arr[2].Length + 2).Trim();
 
                             if (string.IsNullOrWhiteSpace(text.Replace("0", string.Empty).Replace("1", string.Empty).Replace("2", string.Empty).Replace("3", string.Empty).Replace("4", string.Empty).Replace("5", string.Empty).
-                                Replace("6", string.Empty).Replace("7", string.Empty).Replace("8", string.Empty).Replace("9", string.Empty).Replace(".", string.Empty).Replace(":", string.Empty).Replace(",", string.Empty)))
+                                Replace("6", string.Empty).Replace("7", string.Empty).Replace("8", string.Empty).Replace("9", string.Empty).RemoveChar('.').RemoveChar(':').RemoveChar(',')))
                                 _errorCount++;
                             if (italic)
                                 text = "<i>" + text + "</i>";
@@ -115,11 +115,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
                 else if (s.StartsWith('$'))
                 {
-                    if (s.Replace(" ", string.Empty).Equals("$italic=true", StringComparison.OrdinalIgnoreCase))
+                    if (s.RemoveChar(' ').Equals("$italic=true", StringComparison.OrdinalIgnoreCase))
                     {
                         italic = true;
                     }
-                    else if (s.Replace(" ", string.Empty).Equals("$italic=false", StringComparison.OrdinalIgnoreCase))
+                    else if (s.RemoveChar(' ').Equals("$italic=false", StringComparison.OrdinalIgnoreCase))
                     {
                         italic = false;
                     }
