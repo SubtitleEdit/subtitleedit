@@ -27,6 +27,7 @@
     <CharsPerSec>문자/초</CharsPerSec>
     <WordsPerMin>단어/분</WordsPerMin>
     <Actor>배우</Actor>
+    <Gap>간격</Gap>
     <Region>지역</Region>
     <NumberSymbol>번호</NumberSymbol>
     <Number>번호</Number>
@@ -447,8 +448,8 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <SimpleRendering>간단한 렌더링</SimpleRendering>
     <AntiAliasingWithTransparency>투명하게 앤티 앨리어싱</AntiAliasingWithTransparency>
     <Text3D>3D</Text3D>
-    <SideBySide3D>Half-side-by-side</SideBySide3D>
-    <HalfTopBottom3D>Half-Top/Bottom</HalfTopBottom3D>
+    <SideBySide3D>하프-좌/우</SideBySide3D>
+    <HalfTopBottom3D>하프-상/하</HalfTopBottom3D>
     <Depth>깊이</Depth>
     <ExportAllLines>모든 줄 내보내기...</ExportAllLines>
     <XImagesSavedInY>{0}개의 이미지가 {1}에 저장되었습니다.</XImagesSavedInY>
@@ -1451,6 +1452,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
 - 타임코드 수: ({0})개 | 현재 자막 줄 수: ({1})개</ImportTimeCodesDifferentNumberOfLinesWarning>
     <ParsingTransportStream>전송 스트림을 분석하는 중... 잠시 기다려 주십시오!</ParsingTransportStream>
     <XPercentCompleted>{0}% 완료</XPercentCompleted>
+    <NextX>다음: {0}</NextX>
     <ErrorLoadIdx>Idx 파일은 읽거나 편집할 수 없습니다. Idx 파일은 한 쌍으로 이루어진 VobSub(sub/idx) 파일의 서브 파일일 뿐입니다. .sub 파일로 여시기 바랍니다.</ErrorLoadIdx>
     <ErrorLoadRar>이 파일은 압축된 .rar 파일 같습니다. Subtitle Edit는 압축된 파일을 열 수 없습니다.</ErrorLoadRar>
     <ErrorLoadZip>이 파일은 압축된 .zip 파일 같습니다. Subtitle Edit는 압축된 파일을 열 수 없습니다.</ErrorLoadZip>
@@ -1536,6 +1538,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <Normal>일반</Normal>
     <CaseSensitive>대/소문자 구분</CaseSensitive>
     <RegularExpression>정규 표현식</RegularExpression>
+    <Description>설명 </Description>
     <LinesFoundX>발견된 줄: {0}</LinesFoundX>
     <Remove>제거</Remove>
     <Add>추가(&amp;A)</Add>
@@ -1733,7 +1736,6 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <RemoveBlankLinesWhenOpening>자막 열 때, 빈 줄 제거</RemoveBlankLinesWhenOpening>
     <ShowLineBreaksAs>다음 기호로 줄바꿈 표시</ShowLineBreaksAs>
     <MainListViewDoubleClickAction>「자막 보기」에서 줄을 더블 클릭하면 다음 실행:</MainListViewDoubleClickAction>
-    <MainListViewColumns>「자막 보기」열의 레이블</MainListViewColumns>
     <MainListViewColumnsInfo>「자막 보기」열에 표시할 레이블 선택</MainListViewColumnsInfo>
     <MainListViewNothing>아무것도 안 함</MainListViewNothing>
     <MainListViewVideoGoToPositionAndPause>비디오를 선택 지점으로 이동하고 일시 중지</MainListViewVideoGoToPositionAndPause>
@@ -1861,6 +1863,10 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <AdjustStartDownEndUpAndGoToNext>'↓'키=시작 지점 설정, '↑'키=끝 지점 정하고 다음으로 이동</AdjustStartDownEndUpAndGoToNext>
     <AdjustSelected100MsForward>선택한 줄을 0.1초 앞으로 이동</AdjustSelected100MsForward>
     <AdjustSelected100MsBack>선택한 줄을 0.1초 뒤로 이동</AdjustSelected100MsBack>
+    <AdjustStartXMsBack>시작 지점 {0} 밀리초 뒤로 이동</AdjustStartXMsBack>
+    <AdjustStartXMsForward>시작 지점 {0} 밀리초 앞으로 이동</AdjustStartXMsForward>
+    <AdjustEndXMsBack>끝 지점 {0} 밀리초 뒤로 이동</AdjustEndXMsBack>
+    <AdjustEndXMsForward>끝지점 {0} 밀리초 앞으로 이동</AdjustEndXMsForward>
     <AdjustSetStartTimeKeepDuration>시작 설정, 간격 유지</AdjustSetStartTimeKeepDuration>
     <AdjustSetEndAndOffsetTheRest>끝 설정, 나머지 보충</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>끝 설정, 나머지 보충하고 다음으로 이동</AdjustSetEndAndOffsetTheRestAndGoToNext>
@@ -1892,6 +1898,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <WaveformPlayFirstSelectedSubtitle>처음 선택한 자막 재생</WaveformPlayFirstSelectedSubtitle>
     <WaveformFocusListView>「자막 보기」로 이동</WaveformFocusListView>
     <WaveformGoToNextSubtitle>다음 자막으로 이동 (비디오 위치에서)</WaveformGoToNextSubtitle>
+    <WaveformGoToPreviousSceneChange>이전 장면 전환으로 이동</WaveformGoToPreviousSceneChange>
     <WaveformGoToNextSceneChange>다음 장면 전환으로 이동</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>장면 전환</WaveformToggleSceneChange>
     <GoBack1Frame>1프레임 뒤로</GoBack1Frame>
@@ -2080,6 +2087,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <NumberOfLinesX>자막 라인 수: {0:#,###}</NumberOfLinesX>
     <LengthInFormatXinCharactersY>{0} 문자수: {1:#,###,##0}</LengthInFormatXinCharactersY>
     <NumberOfCharactersInTextOnly>텍스트 파트 안의 문자수: {0:#,###,##0}</NumberOfCharactersInTextOnly>
+    <TotalDuration>자막의 총 표시시간: {0}</TotalDuration>
     <TotalCharsPerSecond>초당 총 문자수: {0:0.0}/초</TotalCharsPerSecond>
     <TotalWords>자막 안의 총 단어수: {0}</TotalWords>
     <NumberOfItalicTags>기울임꼴 태그 수: {0}</NumberOfItalicTags>
