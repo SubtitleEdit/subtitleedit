@@ -5653,6 +5653,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Statistics/NumberOfCharactersInTextOnly":
                     language.Statistics.NumberOfCharactersInTextOnly = reader.Value;
                     break;
+                case "Statistics/TotalDuration":
+                    language.Statistics.TotalDuration = reader.Value;
+                    break;
                 case "Statistics/TotalCharsPerSecond":
                     language.Statistics.TotalCharsPerSecond = reader.Value;
                     break;

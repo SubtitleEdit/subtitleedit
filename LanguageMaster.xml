@@ -2090,6 +2090,7 @@ can edit in same subtitle file (collaboration)</Information>
     <NumberOfLinesX>Number of subtitle lines: {0:#,###}</NumberOfLinesX>
     <LengthInFormatXinCharactersY>Number of characters as {0}: {1:#,###,##0}</LengthInFormatXinCharactersY>
     <NumberOfCharactersInTextOnly>Number of characters in text only: {0:#,###,##0}</NumberOfCharactersInTextOnly>
+    <TotalDuration>Total duration of all subtitles: {0}</TotalDuration>
     <TotalCharsPerSecond>Total characters/second: {0:0.0} seconds</TotalCharsPerSecond>
     <TotalWords>Total words in subtitle: {0}</TotalWords>
     <NumberOfItalicTags>Number of italic tags: {0}</NumberOfItalicTags>
