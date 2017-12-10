@@ -3618,19 +3618,13 @@ namespace Nikse.SubtitleEdit.Forms
                     allText = NormalizeUnicode(allText);
                 }
 
-                bool containsNegativeTime = false;
-                foreach (var p in sub.Paragraphs)
-                {
-                    if (p.StartTime.TotalMilliseconds < 0 || p.EndTime.TotalMilliseconds < 0)
-                    {
-                        containsNegativeTime = true;
-                        break;
-                    }
-                }
-                if (containsNegativeTime)
+                // check for negative time
+                if (sub.Paragraphs.Any(p => p.StartTime.TotalMilliseconds < 0 || p.EndTime.TotalMilliseconds < 0))
                 {
                     if (MessageBox.Show(_language.NegativeTimeWarning, Title, MessageBoxButtons.YesNo) == DialogResult.No)
+                    {
                         return DialogResult.No;
+                    }
                 }
 
                 if (File.Exists(_fileName))
@@ -3730,19 +3724,13 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 var subAlt = GetSaveSubtitle(_subtitleAlternate);
 
-                bool containsNegativeTime = false;
-                foreach (var p in subAlt.Paragraphs)
-                {
-                    if (p.StartTime.TotalMilliseconds < 0 || p.EndTime.TotalMilliseconds < 0)
-                    {
-                        containsNegativeTime = true;
-                        break;
-                    }
-                }
-                if (containsNegativeTime)
+                // check for negative time
+                if(subAlt.Paragraphs.Any(p => p.StartTime.TotalMilliseconds < 0 || p.EndTime.TotalMilliseconds < 0))
                 {
                     if (MessageBox.Show(_language.NegativeTimeWarning, Title, MessageBoxButtons.YesNo) == DialogResult.No)
+                    {
                         return DialogResult.No;
+                    }
                 }
 
                 if (format != null && !format.IsTextBased)
