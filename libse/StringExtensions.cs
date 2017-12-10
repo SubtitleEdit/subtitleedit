@@ -316,5 +316,18 @@ namespace Nikse.SubtitleEdit.Core
             return RichTextToPlainText.ConvertToText(value);
         }
 
+        public static string RemoveChar(this string value, char removeChar)
+        {
+            char[] array = new char[value.Length];
+            int arrayIndex = 0;
+            for (int i = 0; i < value.Length; i++)
+            {
+                char ch = value[i];
+                if (ch != removeChar)
+                    array[arrayIndex++] = ch;
+            }
+            return new string(array, 0, arrayIndex);
+        }
+
     }
 }

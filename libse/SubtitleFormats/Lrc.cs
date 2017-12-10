@@ -149,7 +149,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
                 else if (line.StartsWith("[offset:", StringComparison.Ordinal)) // [length:How long the song is]
                 {
-                    var temp = line.Replace("[offset:", string.Empty).Replace("]", string.Empty).Replace("'", string.Empty).Replace(" ", string.Empty).TrimEnd();
+                    var temp = line.Replace("[offset:", string.Empty).Replace("]", string.Empty).Replace("'", string.Empty).RemoveChar(' ').TrimEnd();
                     double d;
                     if (double.TryParse(temp, out d))
                     {

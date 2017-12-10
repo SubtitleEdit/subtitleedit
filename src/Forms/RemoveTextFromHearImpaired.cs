@@ -113,7 +113,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Paragraph p = Subtitle.Paragraphs[index];
                 _removeTextForHiLib.WarningIndex = index - 1;
                 string newText = _removeTextForHiLib.RemoveTextFromHearImpaired(p.Text);
-                if (p.Text.Replace(" ", string.Empty) != newText.Replace(" ", string.Empty))
+                if (p.Text.RemoveChar(' ') != newText.RemoveChar(' '))
                 {
                     count++;
                     AddToListView(p, newText);

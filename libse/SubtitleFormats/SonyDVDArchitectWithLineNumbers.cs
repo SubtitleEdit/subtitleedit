@@ -52,7 +52,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     {
                         s = s.Substring(5, match.Length - 5).TrimStart();
                         s = s.Replace("  ", ":");
-                        s = s.Replace(" ", string.Empty);
+                        s = s.RemoveChar(' ');
                         string[] parts = s.Split(':');
                         if (parts.Length == 8)
                         {
@@ -80,7 +80,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     {
                         s = s.Substring(5, match1DigitMilliseconds.Length - 5).TrimStart();
                         s = s.Replace("  ", ":");
-                        s = s.Replace(" ", string.Empty);
+                        s = s.RemoveChar(' ');
                         string[] parts = s.Split(':');
                         if (parts.Length == 8)
                         {

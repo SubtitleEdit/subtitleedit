@@ -27,7 +27,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             labelCharacters.Text = language.Characters;
             labelCharactersAsText.Text = language.CharactersAsText;
             checkBoxItalic.Text = language.Italic;
-            labelItalicOn.Text = language.Italic.Replace("&", string.Empty);
+            labelItalicOn.Text = language.Italic.RemoveChar('&');
             labelItalicOn.Visible = false;
             buttonAbort.Text = language.Abort;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;

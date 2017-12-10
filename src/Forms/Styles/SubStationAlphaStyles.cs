@@ -341,7 +341,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                     }
                     sb.AppendLine(line);
                 }
-                else if (s.Replace(" ", string.Empty).StartsWith("style:", StringComparison.Ordinal))
+                else if (s.RemoveChar(' ').StartsWith("style:", StringComparison.Ordinal))
                 {
                     if (line.Length > 10)
                     {
@@ -757,7 +757,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             var sb = new StringBuilder();
             foreach (var line in _header.Split(new[] { Environment.NewLine }, StringSplitOptions.None))
             {
-                var lineIsStyle = line.ToLower().Replace(" ", string.Empty).StartsWith("style:" + name.ToLower().Replace(" ", string.Empty) + ",", StringComparison.Ordinal) &&
+                var lineIsStyle = line.ToLower().RemoveChar(' ').StartsWith("style:" + name.ToLower().RemoveChar(' ') + ",", StringComparison.Ordinal) &&
                                   line.ToLower().Contains(name.ToLower());
                 if (!lineIsStyle)
                     sb.AppendLine(line);
@@ -1324,7 +1324,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                                 }
                             }
                             sb.AppendLine(line);
-                            if (stylesOn && line.Replace(" ", string.Empty).TrimStart().StartsWith("style:" + styleName.Replace(" ", string.Empty).Trim() + ",", StringComparison.OrdinalIgnoreCase))
+                            if (stylesOn && line.RemoveChar(' ').TrimStart().StartsWith("style:" + styleName.RemoveChar(' ').Trim() + ",", StringComparison.OrdinalIgnoreCase))
                             {
                                 MessageBox.Show(string.Format(Configuration.Settings.Language.SubStationAlphaStyles.StyleAlreadyExits, styleName));
                                 return;
@@ -1340,7 +1340,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                     {
                         if (line.StartsWith("style:", StringComparison.OrdinalIgnoreCase))
                         {
-                            if (line.ToLower().Replace(" ", string.Empty).StartsWith("style:" + styleName.ToLower().Trim(), StringComparison.Ordinal))
+                            if (line.ToLower().RemoveChar(' ').StartsWith("style:" + styleName.ToLower().Trim(), StringComparison.Ordinal))
                                 sb.AppendLine(line);
                         }
                         else

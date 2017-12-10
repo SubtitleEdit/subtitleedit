@@ -153,7 +153,7 @@ namespace Nikse.SubtitleEdit.Core
                 _totalMilliseconds = value.TotalMilliseconds;
             }
         }
-        
+
         public override string ToString() => ToString(false);
 
         public string ToString(bool localize)
@@ -164,7 +164,7 @@ namespace Nikse.SubtitleEdit.Core
 
             if (TotalMilliseconds >= 0)
                 return s;
-            return "-" + s.Replace("-", string.Empty);
+            return "-" + s.RemoveChar('-');
         }
 
         public string ToShortString(bool localize = false)
@@ -181,7 +181,7 @@ namespace Nikse.SubtitleEdit.Core
 
             if (TotalMilliseconds >= 0)
                 return s;
-            return "-" + s.Replace("-", string.Empty);
+            return "-" + s.RemoveChar('-');
         }
 
         public string ToShortStringHHMMSSFF()
@@ -215,7 +215,7 @@ namespace Nikse.SubtitleEdit.Core
 
             if (TotalMilliseconds >= 0)
                 return s;
-            return "-" + s.Replace("-", string.Empty);
+            return "-" + s.RemoveChar('-');
         }
 
         public string ToSSFF()
@@ -230,7 +230,7 @@ namespace Nikse.SubtitleEdit.Core
 
             if (TotalMilliseconds >= 0)
                 return s;
-            return "-" + s.Replace("-", string.Empty);
+            return "-" + s.RemoveChar('-');
         }
 
         public string ToHHMMSSPeriodFF()
@@ -245,7 +245,7 @@ namespace Nikse.SubtitleEdit.Core
 
             if (TotalMilliseconds >= 0)
                 return s;
-            return "-" + s.Replace("-", string.Empty);
+            return "-" + s.RemoveChar('-');
         }
 
         public string ToDisplayString()

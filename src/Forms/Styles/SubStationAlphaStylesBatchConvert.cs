@@ -146,7 +146,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                     }
                     sb.AppendLine(line);
                 }
-                else if (s.Replace(" ", string.Empty).StartsWith("style:", StringComparison.Ordinal))
+                else if (s.RemoveChar(' ').StartsWith("style:", StringComparison.Ordinal))
                 {
                     if (line.Length > 10)
                     {

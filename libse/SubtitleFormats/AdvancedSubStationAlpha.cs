@@ -765,7 +765,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                             string unknownTags;
                             CheckAndAddSubTags(ref color, ref extraTags, out unknownTags, out italic);
 
-                            color = color.Replace("&", string.Empty).TrimStart('H');
+                            color = color.RemoveChar('&').TrimStart('H');
                             color = color.PadLeft(6, '0');
 
                             // switch to rrggbb from bbggrr
@@ -799,7 +799,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                             string unknownTags;
                             CheckAndAddSubTags(ref color, ref extraTags, out unknownTags, out italic);
 
-                            color = color.Replace("&", string.Empty).TrimStart('H');
+                            color = color.RemoveChar('&').TrimStart('H');
                             color = color.PadLeft(6, '0');
 
                             // switch to rrggbb from bbggrr
@@ -941,7 +941,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                         }
 
                         string color = fontColor.Substring(2);
-                        color = color.Replace("&", string.Empty).TrimStart('H');
+                        color = color.RemoveChar('&').TrimStart('H');
                         color = color.PadLeft(6, '0');
                         // switch to rrggbb from bbggrr
                         color = "#" + color.Remove(color.Length - 6) + color.Substring(color.Length - 2, 2) + color.Substring(color.Length - 4, 2) + color.Substring(color.Length - 6, 2);
@@ -1454,7 +1454,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                         }
                     }
                 }
-                else if (s.Replace(" ", string.Empty).StartsWith("style:", StringComparison.Ordinal))
+                else if (s.RemoveChar(' ').StartsWith("style:", StringComparison.Ordinal))
                 {
                     if (line.Length > 10)
                     {
@@ -1728,7 +1728,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                         }
                     }
                 }
-                else if (s.Replace(" ", string.Empty).StartsWith("style:", StringComparison.Ordinal))
+                else if (s.RemoveChar(' ').StartsWith("style:", StringComparison.Ordinal))
                 {
                     if (line.Length > 10)
                     {

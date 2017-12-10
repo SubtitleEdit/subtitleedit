@@ -140,7 +140,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             if (RegexTimeCodes.IsMatch(line))
             {
                 line = line.Replace(',', ':');
-                string[] parts = line.Replace(" ", string.Empty).Split(':', ',');
+                string[] parts = line.RemoveChar(' ').Split(':', ',');
                 try
                 {
                     int startHours = int.Parse(parts[0]);

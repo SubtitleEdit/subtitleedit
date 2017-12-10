@@ -714,7 +714,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (!string.IsNullOrEmpty(_fileName))
                         title = Path.GetFileNameWithoutExtension(_fileName);
 
-                    string guid = Guid.NewGuid().ToString().Replace("-", string.Empty).Insert(8, "-").Insert(13, "-").Insert(18, "-").Insert(23, "-");
+                    string guid = Guid.NewGuid().ToString().RemoveChar('-').Insert(8, "-").Insert(13, "-").Insert(18, "-").Insert(23, "-");
                     doc.LoadXml("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + Environment.NewLine +
                                 "<DCSubtitle Version=\"1.1\">" + Environment.NewLine +
                                 "<SubtitleID>" + guid + "</SubtitleID>" + Environment.NewLine +
@@ -745,7 +745,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (!string.IsNullOrEmpty(_fileName))
                         title = Path.GetFileNameWithoutExtension(_fileName);
 
-                    string guid = Guid.NewGuid().ToString().Replace("-", string.Empty).Insert(8, "-").Insert(13, "-").Insert(18, "-").Insert(23, "-");
+                    string guid = Guid.NewGuid().ToString().RemoveChar('-').Insert(8, "-").Insert(13, "-").Insert(18, "-").Insert(23, "-");
                     doc.LoadXml("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + Environment.NewLine +
                                 "<DCSubtitle Version=\"1.1\">" + Environment.NewLine +
                                 "<SubtitleID>" + guid + "</SubtitleID>" + Environment.NewLine +
@@ -944,7 +944,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             string dropValue = "30000";
             if (comboBoxFrameRate.SelectedIndex == -1)
             {
-                var numberAsString = comboBoxFrameRate.Text.Trim().Replace(".", string.Empty).Replace(",", string.Empty).Replace(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, string.Empty);
+                var numberAsString = comboBoxFrameRate.Text.Trim().RemoveChar('.').RemoveChar(',').Replace(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, string.Empty);
                 if (numberAsString.Length > 0 && Utilities.IsInteger(numberAsString))
                     dropValue = numberAsString;
             }
@@ -1480,7 +1480,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
         internal int WriteFcpParagraph(StringBuilder sb, int imagesSavedCount, MakeBitmapParameter param, int i, string fileName)
         {
-            string numberString = string.Format(Path.GetFileNameWithoutExtension(Path.GetFileName(fileName)) + "{0:0000}", i).Replace(" ", string.Empty);
+            string numberString = string.Format(Path.GetFileNameWithoutExtension(Path.GetFileName(fileName)) + "{0:0000}", i).RemoveChar(' ');
             var fileNameShort = numberString + "." + comboBoxImageFormat.Text.ToLower();
             var targetImageFileName = Path.Combine(Path.GetDirectoryName(fileName), fileNameShort);
             string fileNameNoPath = Path.GetFileName(fileNameShort);

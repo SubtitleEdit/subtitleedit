@@ -224,7 +224,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 line = line.Substring(0, 29);
 
             // removes all extra spaces
-            line = line.Replace(" ", string.Empty).Replace("-->", defaultSeparator).Trim();
+            line = line.RemoveChar(' ').Replace("-->", defaultSeparator).Trim();
 
             // Fix a few more cases of wrong time codes, seen this: 00.00.02,000 --> 00.00.04,000
             line = line.Replace('.', ':');
@@ -235,7 +235,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             if (RegexTimeCodes.IsMatch(line) || RegexTimeCodes2.IsMatch(line))
             {
-                string[] parts = line.Replace("-->", ":").Replace(" ", string.Empty).Split(':', ',');
+                string[] parts = line.Replace("-->", ":").RemoveChar(' ').Split(':', ',');
                 try
                 {
                     int startHours = int.Parse(parts[0]);

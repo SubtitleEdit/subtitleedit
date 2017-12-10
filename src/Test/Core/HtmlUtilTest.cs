@@ -36,6 +36,13 @@ namespace Test.Core
         }
 
         [TestMethod]
+        public void RemoveHtmlTags3()
+        {
+            const string source = "{\\an9}<i>How are you? Are you <font='arial'>happy</font> and 1 < 2</i>";
+            Assert.AreEqual("{\\an9}How are you? Are you happy and 1 < 2", HtmlUtil.RemoveHtmlTags(source));
+        }
+
+        [TestMethod]
         public void RemoveHtmlTagsKeepAss()
         {
             const string source = "{\\an2}<i>SubtitleEdit</i>";
