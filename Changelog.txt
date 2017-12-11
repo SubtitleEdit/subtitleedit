@@ -10,7 +10,8 @@
    * Add new shortcuts - thx darnn
    * Add shortcut "Go to prev scene change" shortcut - thx Ingo
    * Add more image based formats to batch/cmd-line convert
-   * Add advanced FCP XML 1.5 export
+   * Add advanced fcpxml 1.5 export
+   * New plain text import format "Final Draft Template" - thx Wolfgang
 * IMPROVED:
    * Update Bulgarian translation - thx Maknol
    * Update Hungarian translation - thx ZityiSoft Team
@@ -18,11 +19,14 @@
    * Update Portuguese translation - thx moob
    * Update Polish translation - thx admas
    * Update Dutch translation - thx René
-   * Save/restore "Auto continue delay" from UI - thx Hideaki
+   * Update Korean translation - thx domddol
    * Add sort by "Actor" - thx von Suppé
+   * Add "Description" to "multiple replace" rules
    * Add "Apply" button to "Multiple replace" - thx Finduilas
-   * New plain text import format "Final Draft Template" - thx Wolfgang
+   * Add "Total duration of all subtitles" to File -> Statistics
    * Add words to English OCR fix replace list - thx anewuser
+   * Save/restore "Auto continue delay" from UI - thx Hideaki
+   * Add some extended char to format SCC - thx jorgemjorge
 * FIXED:
    * Fix mpv preview font size (regression from 3.5.4) - thx OmrSi
    * Fix many binary OCR issues - thx Jamakmake
