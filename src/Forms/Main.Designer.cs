@@ -480,6 +480,7 @@
             this.imageListPlayRate = new System.Windows.Forms.ImageList(this.components);
             this.timerTextUndo = new System.Windows.Forms.Timer(this.components);
             this.timerAlternateTextUndo = new System.Windows.Forms.Timer(this.components);
+            this.toolStripMenuItemOpenVideoFromUrl = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -2004,6 +2005,7 @@
             // 
             this.toolStripMenuItemVideo.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.openVideoToolStripMenuItem,
+            this.toolStripMenuItemOpenVideoFromUrl,
             this.toolStripMenuItemOpenDvd,
             this.toolStripMenuItemSetAudioTrack,
             this.closeVideoToolStripMenuItem,
@@ -4664,6 +4666,13 @@
             this.timerAlternateTextUndo.Interval = 700;
             this.timerAlternateTextUndo.Tick += new System.EventHandler(this.TimerAlternateTextUndoTick);
             // 
+            // toolStripMenuItemOpenVideoFromUrl
+            // 
+            this.toolStripMenuItemOpenVideoFromUrl.Name = "toolStripMenuItemOpenVideoFromUrl";
+            this.toolStripMenuItemOpenVideoFromUrl.Size = new System.Drawing.Size(206, 22);
+            this.toolStripMenuItemOpenVideoFromUrl.Text = "Open video from url...";
+            this.toolStripMenuItemOpenVideoFromUrl.Click += new System.EventHandler(this.toolStripMenuItemOpenVideoFromUrl_Click);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -5185,5 +5194,6 @@
         private System.Windows.Forms.ToolStripMenuItem actorToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemFcpXmlAdvanced;
         private System.Windows.Forms.Label labelNextWord;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemOpenVideoFromUrl;
     }
 }
