@@ -37,7 +37,7 @@ namespace Nikse.SubtitleEdit.Forms
         private const string FindWhat = "FindWhat";
         private const string ReplaceWith = "ReplaceWith";
         private const string SearchType = "SearchType";
-        private const string Comment = "Comment";
+        private const string Description = "Description";
 
         public const string SearchTypeNormal = "Normal";
         public const string SearchTypeCaseSensitive = "CaseSensitive";
@@ -208,7 +208,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-                var rule = new MultipleSearchAndReplaceSetting() { Enabled = true, FindWhat = findText, ReplaceWith = textBoxReplace.Text, SearchType = searchType, Comment = textBoxDescription.Text };
+                var rule = new MultipleSearchAndReplaceSetting() { Enabled = true, FindWhat = findText, ReplaceWith = textBoxReplace.Text, SearchType = searchType, Description = textBoxDescription.Text };
                 _currentGroup.Rules.Add(rule);
                 AddToRulesListView(rule);
                 textBoxFind.Text = string.Empty;
@@ -317,7 +317,7 @@ namespace Nikse.SubtitleEdit.Forms
             item.SubItems.Add(rule.FindWhat);
             item.SubItems.Add(rule.ReplaceWith);
             item.SubItems.Add(EnglishSearchTypeToLocal(rule.SearchType));
-            item.SubItems.Add(rule.Comment);
+            item.SubItems.Add(rule.Description);
             listViewRules.Items.Add(item);
         }
 
@@ -446,7 +446,7 @@ namespace Nikse.SubtitleEdit.Forms
                 _currentGroup.Rules[item.Index].FindWhat = findText;
                 _currentGroup.Rules[item.Index].ReplaceWith = replaceText;
                 _currentGroup.Rules[item.Index].SearchType = searchType;
-                _currentGroup.Rules[item.Index].Comment = textBoxDescription.Text;
+                _currentGroup.Rules[item.Index].Description = textBoxDescription.Text;
 
                 GeneratePreview();
                 textBoxFind.Select();
@@ -567,7 +567,7 @@ namespace Nikse.SubtitleEdit.Forms
             string findWhat = listViewRules.Items[index].SubItems[1].Text;
             string replaceWith = listViewRules.Items[index].SubItems[2].Text;
             string searchType = listViewRules.Items[index].SubItems[3].Text;
-            string comment = listViewRules.Items[index].SubItems[4].Text;
+            string description = listViewRules.Items[index].SubItems[4].Text;
 
             listViewRules.Items[index].Checked = listViewRules.Items[index2].Checked;
             listViewRules.Items[index].SubItems[1].Text = listViewRules.Items[index2].SubItems[1].Text;
@@ -580,7 +580,7 @@ namespace Nikse.SubtitleEdit.Forms
             listViewRules.Items[index2].SubItems[1].Text = findWhat;
             listViewRules.Items[index2].SubItems[2].Text = replaceWith;
             listViewRules.Items[index2].SubItems[3].Text = searchType;
-            listViewRules.Items[index2].SubItems[4].Text = comment;
+            listViewRules.Items[index2].SubItems[4].Text = description;
             listViewRules.Items[index2].Tag = _currentGroup.Rules[index2];
 
             listViewRules.Items[index].Selected = false;
@@ -657,9 +657,9 @@ namespace Nikse.SubtitleEdit.Forms
                 subNode = listNode.SelectSingleNode(SearchType);
                 if (subNode != null)
                     item.SearchType = subNode.InnerText;
-                subNode = listNode.SelectSingleNode(Comment);
+                subNode = listNode.SelectSingleNode(Description);
                 if (subNode != null)
-                    item.Comment = subNode.InnerText;
+                    item.Description = subNode.InnerText;
 
                 AddToRulesListView(item);
                 _currentGroup.Rules.Add(item);
@@ -800,7 +800,7 @@ namespace Nikse.SubtitleEdit.Forms
                     textWriter.WriteElementString(FindWhat, item.FindWhat);
                     textWriter.WriteElementString(ReplaceWith, item.ReplaceWith);
                     textWriter.WriteElementString(SearchType, item.SearchType);
-                    textWriter.WriteElementString(Comment, item.Comment);
+                    textWriter.WriteElementString(Description, item.Description);
                     textWriter.WriteEndElement();
                 }
                 textWriter.WriteEndElement();
