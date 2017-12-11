@@ -895,7 +895,7 @@ namespace Nikse.SubtitleEdit.Core
         public string FindWhat { get; set; }
         public string ReplaceWith { get; set; }
         public string SearchType { get; set; }
-        public string Comment { get; set; }
+        public string Description { get; set; }
     }
 
     public class MultipleSearchAndReplaceGroup
@@ -2708,9 +2708,9 @@ namespace Nikse.SubtitleEdit.Core
                     subNode = listNode.SelectSingleNode("SearchType");
                     if (subNode != null)
                         item.SearchType = subNode.InnerText;
-                    subNode = listNode.SelectSingleNode("Comment");
+                    subNode = listNode.SelectSingleNode("Description");
                     if (subNode != null)
-                        item.Comment = subNode.InnerText;
+                        item.Description = subNode.InnerText;
                     group.Rules.Add(item);
                 }
             }
@@ -2744,9 +2744,9 @@ namespace Nikse.SubtitleEdit.Core
                     subNode = listNode.SelectSingleNode("SearchType");
                     if (subNode != null)
                         item.SearchType = subNode.InnerText;
-                    subNode = listNode.SelectSingleNode("Comment");
+                    subNode = listNode.SelectSingleNode("Description");
                     if (subNode != null)
-                        item.Comment = subNode.InnerText;
+                        item.Description = subNode.InnerText;
                     group.Rules.Add(item);
                 }
             }
@@ -3778,7 +3778,7 @@ namespace Nikse.SubtitleEdit.Core
                         textWriter.WriteElementString("FindWhat", item.FindWhat);
                         textWriter.WriteElementString("ReplaceWith", item.ReplaceWith);
                         textWriter.WriteElementString("SearchType", item.SearchType);
-                        textWriter.WriteElementString("Comment", item.Comment);
+                        textWriter.WriteElementString("Description", item.Description);
                         textWriter.WriteEndElement();
                     }
                     textWriter.WriteEndElement();
