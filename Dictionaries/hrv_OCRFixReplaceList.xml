@@ -1017,6 +1017,7 @@
     <Word from="Niče" to="Nietzsche" />
     <Word from="Odri" to="Audrey" />
     <Word from="Ohajo" to="Ohio" />
+    <Word from="Ohaja" to="Ohia" />
     <Word from="Pem" to="Pam" />
     <Word from="Pejdž" to="Paige" />
     <Word from="Rejčel" to="Rachel" />
@@ -1120,6 +1121,7 @@
     <LinePart from="Jeli sve" to="Je li sve" />
     <LinePart from="Jeli ti" to="Je li ti" />
     <LinePart from="ko je" to="tko je" />
+    <LinePart from="ko si" to="tko si" />
     <LinePart from="ko ti je" to="tko ti je" />
     <LinePart from="ko te je" to="tko te je" />
     <LinePart from="ko zna" to="tko zna" />
@@ -1138,6 +1140,7 @@
     <LinePart from="Plašim se" to="Bojim se" />
     <LinePart from="plašim se" to="bojim se" />
     <LinePart from="pravo u oči" to="ravno u oči" />
+    <LinePart from="sa njim" to="s njim" />
     <LinePart from="sa njom" to="s njom" />
     <LinePart from="sa tim" to="s tim" />
     <LinePart from="sa tom" to="s tom" />
@@ -1199,9 +1202,11 @@
     <RegEx find="beđivać" replaceWith="vjeravat ć" />
     <RegEx find="beđujuć" replaceWith="vjeravajuć" />
     <RegEx find="ekstv" replaceWith="ijeg" />
+    <RegEx find="bj?elac" replaceWith="bijelac" />
     <RegEx find="([bB])ele([šgž])" replaceWith="$1ilje$2" />
     <!-- nikada sa velikim slovom jer je Bela ime -->
     <RegEx find="([bc])elin" replaceWith="$1jelin" />
+    <RegEx find="belkinj" replaceWith="bjelkinj" />
     <RegEx find="([bB])erz" replaceWith="$1urz" />
     <RegEx find="\bbezbj?ed" replaceWith="sigur" />
     <RegEx find="\bBezbj?ed" replaceWith="Sigur" />
@@ -2275,6 +2280,7 @@
     <RegEx find="zmern" replaceWith="zmjern" />
     <RegEx find="(?&lt;![Oo]bra|o)zova([lton])" replaceWith="zira$1" />
     <RegEx find="zuslov" replaceWith="zuvjet" />
+    <RegEx find="zvešć" replaceWith="zvest ć" />
     <RegEx find="zvolić" replaceWith="zvolit ć" />
     <RegEx find="žalj?ev" replaceWith="žalijev" />
     <RegEx find="živać" replaceWith="živat ć" />
@@ -2347,6 +2353,7 @@
     <RegEx find="Kris(?!t)" replaceWith="Chris" />
     <RegEx find="Lajonel" replaceWith="Lionel" />
     <RegEx find="Leri" replaceWith="Larry" />
+    <RegEx find="livlend" replaceWith="leveland" />
     <RegEx find="(?&lt;![LT])ejl" replaceWith="ale" />
     <RegEx find="Losanđeles" replaceWith="Los Angeles" />
     <RegEx find="Los Anđeles" replaceWith="Los Angeles" />
@@ -2358,6 +2365,7 @@
     <RegEx find="Menhetn" replaceWith="Manhattan" />
     <RegEx find="Metju" replaceWith="Matthew" />
     <RegEx find="Mexic" replaceWith="Meksik" />
+    <RegEx find="ičigen" replaceWith="ichigan" />
     <RegEx find="Misisipi" replaceWith="Mississippi" />
     <RegEx find="Mocart" replaceWith="Mozart" />
     <RegEx find="Nejt" replaceWith="Nate" />
