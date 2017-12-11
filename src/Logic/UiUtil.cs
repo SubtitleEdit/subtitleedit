@@ -205,9 +205,17 @@ namespace Nikse.SubtitleEdit.Logic
                 videoPlayerContainer.ShowMuteButton = Configuration.Settings.General.VideoPlayerShowMuteButton;
                 videoPlayerContainer.Volume = Configuration.Settings.General.VideoPlayerDefaultVolume;
                 videoPlayerContainer.EnableMouseWheelStep();
-                videoPlayerContainer.VideoWidth = videoInfo.Width;
-                videoPlayerContainer.VideoHeight = videoInfo.Height;
-                videoPlayerContainer.VideoPlayer.Resize(videoPlayerContainer.PanelPlayer.Width, videoPlayerContainer.PanelPlayer.Height);
+                if (fileName != null && (fileName.StartsWith("https://") || fileName.StartsWith("http://")))
+                {
+                    // we don't have videoInfo for streams...
+                }
+                else
+                {
+                    videoPlayerContainer.VideoWidth = videoInfo.Width;
+                    videoPlayerContainer.VideoHeight = videoInfo.Height;
+                    videoPlayerContainer.VideoPlayer.Resize(videoPlayerContainer.PanelPlayer.Width, videoPlayerContainer.PanelPlayer.Height);
+                }
+
             }
             catch (Exception exception)
             {
@@ -727,6 +735,6 @@ namespace Nikse.SubtitleEdit.Logic
 
         public static string GetListViewTextFromString(string s) => s.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString);
 
-        public static string GetStringFromListViewText(string lviText) => lviText.Replace(Configuration.Settings.General.ListViewLineSeparatorString, Environment.NewLine);      
+        public static string GetStringFromListViewText(string lviText) => lviText.Replace(Configuration.Settings.General.ListViewLineSeparatorString, Environment.NewLine);
     }
 }

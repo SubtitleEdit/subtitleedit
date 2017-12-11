@@ -16709,6 +16709,12 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (audioVisualizer.WavePeaks == null)
             {
+                if (_videoFileName != null && (_videoFileName.StartsWith("http://", StringComparison.OrdinalIgnoreCase) ||
+                                              _videoFileName.StartsWith("https://", StringComparison.OrdinalIgnoreCase)))
+                {
+                    return;
+                }
+
                 if (string.IsNullOrEmpty(_videoFileName))
                 {
                     buttonOpenVideo_Click(sender, e);
@@ -18378,6 +18384,10 @@ namespace Nikse.SubtitleEdit.Forms
                     setVideoOffsetToolStripMenuItem.Text = _language.Menu.Video.SetVideoOffset;
                 }
             }
+
+            toolStripMenuItemOpenVideoFromUrl.Visible = Configuration.Settings.General.VideoPlayer.Trim().Equals("MPV", StringComparison.OrdinalIgnoreCase) &&
+                                                        LibMpvDynamic.IsInstalled &&
+                                                        File.Exists(Path.Combine(Configuration.BaseDirectory, "youtube-dl.exe"));
 
             toolStripMenuItemSetAudioTrack.Visible = false;
             var libVlc = mediaPlayer.VideoPlayer as LibVlcDynamic;
@@ -21665,6 +21675,47 @@ namespace Nikse.SubtitleEdit.Forms
             using (var dialog = new ExportFcpXmlAdvanced(_subtitle, _videoFileName))
             {
                 dialog.ShowDialog(this);
+            }
+        }
+
+        private void toolStripMenuItemOpenVideoFromUrl_Click(object sender, EventArgs e)
+        {
+            using (var form = new TextPrompt(Configuration.Settings.Language.Main.OpenVideoFile, "Url"))
+            {
+                if (form.ShowDialog(this) == DialogResult.OK)
+                {
+                    string url = form.InputText;
+                    if (!string.IsNullOrEmpty(url))
+                    {
+                        if (audioVisualizer.WavePeaks != null)
+                        {
+                            audioVisualizer.WavePeaks = null;
+                            audioVisualizer.Spectrogram = null;
+                            audioVisualizer.SceneChanges = new List<double>();
+                        }
+                        if (!panelVideoPlayer.Visible)
+                            toolStripButtonToggleVideo_Click(null, null);
+
+                        ShowSubtitleTimer.Stop();
+                        Cursor = Cursors.WaitCursor;
+                        VideoFileName = url;
+                        if (mediaPlayer.VideoPlayer != null)
+                        {
+                            mediaPlayer.Pause();
+                            mediaPlayer.VideoPlayer.DisposeVideoPlayer();
+                        }
+                        _endSeconds = -1;
+                        UiUtil.InitializeVideoPlayerAndContainer(url, _videoInfo, mediaPlayer, VideoLoaded, VideoEnded);
+                        mediaPlayer.Volume = 0;
+                        mediaPlayer.ShowFullscreenButton = Configuration.Settings.General.VideoPlayerShowFullscreenButton;
+                        mediaPlayer.OnButtonClicked -= MediaPlayer_OnButtonClicked;
+                        mediaPlayer.OnButtonClicked += MediaPlayer_OnButtonClicked;
+                        labelVideoInfo.Text = url;
+                        Cursor = Cursors.Default;
+                        SetUndockedWindowsTitle();
+                        ShowSubtitleTimer.Start();
+                    }
+                }
             }
         }
     }
