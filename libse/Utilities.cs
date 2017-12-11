@@ -1181,11 +1181,11 @@ namespace Nikse.SubtitleEdit.Core
 
                 bool startsWithAssTag = false;
                 string assTag = string.Empty;
-                if (s2.StartsWith("{\\", StringComparison.Ordinal) && s.IndexOf('}') < 22)
+                while (s2.StartsWith("{\\", StringComparison.Ordinal) && s.IndexOf('}') > 0)
                 {
                     startsWithAssTag = true;
                     int end = s2.IndexOf('}') + 1;
-                    assTag = s2.Substring(0, end);
+                    assTag += s2.Substring(0, end);
                     s2 = s2.Remove(0, end);
                 }
 
