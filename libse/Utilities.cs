@@ -1181,7 +1181,7 @@ namespace Nikse.SubtitleEdit.Core
 
                 bool startsWithAssTag = false;
                 string assTag = string.Empty;
-                while (s2.StartsWith("{\\", StringComparison.Ordinal) && s.IndexOf('}') > 0)
+                while (s2.StartsWith("{\\", StringComparison.Ordinal) && s2.IndexOf('}') > 0)
                 {
                     startsWithAssTag = true;
                     int end = s2.IndexOf('}') + 1;
