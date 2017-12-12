@@ -12,7 +12,7 @@ namespace Nikse.SubtitleEdit.Logic
         private readonly string _findText = string.Empty;
         private readonly string _replaceText = string.Empty;
         private Regex _regEx;
-        private int _findTextLenght;
+        private int _findTextLength;
 
         public bool Success { get; set; }
         public ReplaceType FindReplaceType { get; set; }
@@ -25,7 +25,7 @@ namespace Nikse.SubtitleEdit.Logic
         {
             get
             {
-                return _findTextLenght;
+                return _findTextLength;
             }
         }
 
@@ -57,7 +57,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
 
             _regEx = regEx;
-            _findTextLenght = findText.Length;
+            _findTextLength = findText.Length;
             StartLineIndex = startLineIndex;
         }
 
@@ -104,10 +104,10 @@ namespace Nikse.SubtitleEdit.Logic
                 string groupName = RegexUtils.GetRegExGroup(_findText);
                 if (groupName != null && match.Groups[groupName] != null && match.Groups[groupName].Success)
                 {
-                    _findTextLenght = match.Groups[groupName].Length;
+                    _findTextLength = match.Groups[groupName].Length;
                     return match.Groups[groupName].Index;
                 }
-                _findTextLenght = match.Length;
+                _findTextLength = match.Length;
                 return match.Index;
             }
             return -1;
@@ -224,12 +224,12 @@ namespace Nikse.SubtitleEdit.Logic
                         string groupName = RegexUtils.GetRegExGroup(_findText);
                         if (groupName != null && match.Groups[groupName] != null && match.Groups[groupName].Success)
                         {
-                            _findTextLenght = match.Groups[groupName].Length;
+                            _findTextLength = match.Groups[groupName].Length;
                             SelectedIndex = match.Groups[groupName].Index;
                         }
                         else
                         {
-                            _findTextLenght = match.Length;
+                            _findTextLength = match.Length;
                             SelectedIndex = match.Index;
                         }
                         Success = true;
