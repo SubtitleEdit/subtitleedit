@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.groupBoxImportResult = new System.Windows.Forms.GroupBox();
+            this.labelAdjustFactor = new System.Windows.Forms.Label();
             this.buttonFindTextOther = new System.Windows.Forms.Button();
             this.buttonFindText = new System.Windows.Forms.Button();
             this.labelOtherSubtitleFileName = new System.Windows.Forms.Label();
@@ -43,7 +44,6 @@
             this.buttonApplySync = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
-            this.labelAdjustFactor = new System.Windows.Forms.Label();
             this.groupBoxImportResult.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -68,6 +68,17 @@
             this.groupBoxImportResult.Size = new System.Drawing.Size(1096, 434);
             this.groupBoxImportResult.TabIndex = 16;
             this.groupBoxImportResult.TabStop = false;
+            // 
+            // labelAdjustFactor
+            // 
+            this.labelAdjustFactor.AutoSize = true;
+            this.labelAdjustFactor.Font = new System.Drawing.Font("Tahoma", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelAdjustFactor.ForeColor = System.Drawing.Color.Gray;
+            this.labelAdjustFactor.Location = new System.Drawing.Point(482, 299);
+            this.labelAdjustFactor.Name = "labelAdjustFactor";
+            this.labelAdjustFactor.Size = new System.Drawing.Size(58, 11);
+            this.labelAdjustFactor.TabIndex = 35;
+            this.labelAdjustFactor.Text = "AdjustFactor";
             // 
             // buttonFindTextOther
             // 
@@ -111,12 +122,14 @@
             // 
             // subtitleListView2
             // 
+            this.subtitleListView2.AllowColumnReorder = true;
             this.subtitleListView2.AllowDrop = true;
             this.subtitleListView2.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.subtitleListView2.FirstVisibleIndex = -1;
             this.subtitleListView2.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.subtitleListView2.FullRowSelect = true;
             this.subtitleListView2.GridLines = true;
+            this.subtitleListView2.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.subtitleListView2.HideSelection = false;
             this.subtitleListView2.Location = new System.Drawing.Point(629, 33);
             this.subtitleListView2.MultiSelect = false;
@@ -175,6 +188,7 @@
             // 
             // SubtitleListview1
             // 
+            this.SubtitleListview1.AllowColumnReorder = true;
             this.SubtitleListview1.AllowDrop = true;
             this.SubtitleListview1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
@@ -183,6 +197,7 @@
             this.SubtitleListview1.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SubtitleListview1.FullRowSelect = true;
             this.SubtitleListview1.GridLines = true;
+            this.SubtitleListview1.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.SubtitleListview1.HideSelection = false;
             this.SubtitleListview1.Location = new System.Drawing.Point(9, 33);
             this.SubtitleListview1.MultiSelect = false;
@@ -244,17 +259,6 @@
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
             // 
-            // labelAdjustFactor
-            // 
-            this.labelAdjustFactor.AutoSize = true;
-            this.labelAdjustFactor.Font = new System.Drawing.Font("Tahoma", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelAdjustFactor.ForeColor = System.Drawing.Color.Gray;
-            this.labelAdjustFactor.Location = new System.Drawing.Point(482, 299);
-            this.labelAdjustFactor.Name = "labelAdjustFactor";
-            this.labelAdjustFactor.Size = new System.Drawing.Size(58, 11);
-            this.labelAdjustFactor.TabIndex = 35;
-            this.labelAdjustFactor.Text = "AdjustFactor";
-            // 
             // SyncPointsSync
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -267,7 +271,6 @@
             this.Controls.Add(this.labelSyncInfo);
             this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.KeyPreview = true;
-            this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.MinimumSize = new System.Drawing.Size(600, 400);
             this.Name = "SyncPointsSync";
