@@ -1045,18 +1045,6 @@ namespace Nikse.SubtitleEdit.Core
             return (int)(number % 8);
         }
 
-        public static string GetRegExGroup(string regEx)
-        {
-            var start = regEx.IndexOf("(?<", StringComparison.Ordinal);
-            if (start < 0)
-                return null;
-            start += 3;
-            var end = regEx.IndexOf('>', start);
-            if (end <= start)
-                return null;
-            return regEx.Substring(start, end - start);
-        }
-
         public static string LowercaseVowels
         {
             get
