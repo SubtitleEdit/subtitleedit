@@ -240,6 +240,7 @@
     <Word from="kampujemo" to="kampiramo" />
     <Word from="kampuju" to="kampiraju" />
     <Word from="kancelariji" to="uredu" />
+    <Word from="kancelarije" to="ureda" />
     <Word from="kancelarijom" to="uredom" />
     <Word from="kancera" to="raka" />
     <Word from="kandidovati" to="kandidirati" />
@@ -333,7 +334,6 @@
     <Word from="malopre" to="malo prije" />
     <Word from="maloprije" to="malo prije" />
     <Word from="manifestuje" to="manifestira" />
-    <Word from="Mek" to="Mac" />
     <Word from="mehur" to="mjehur" />
     <Word from="menom" to="mnom" />
     <Word from="merač" to="mjerač" />
@@ -419,6 +419,7 @@
     <Word from="njie" to="nije" />
     <Word from="njem" to="nijem" />
     <Word from="njeme" to="njene" />
+    <Word from="nominovan" to="nominiran" />
     <Word from="nsiam" to="nisam" />
     <Word from="nteko" to="netko" />
     <Word from="obe" to="obje" />
@@ -953,6 +954,7 @@
     <Word from="Bejker" to="Baker" />
     <Word from="Bridžit" to="Bridget" />
     <Word from="Brižit" to="Brigitte" />
+    <Word from="Dag" to="Doug" />
     <Word from="Darvin" to="Darwin" />
     <Word from="Darvina" to="Darwina" />
     <Word from="Darvinu" to="Darwinu" />
@@ -982,6 +984,7 @@
     <Word from="Entoni" to="Anthony" />
     <Word from="Ešli" to="Ashley" />
     <Word from="Fibi" to="Phoebe" />
+    <Word from="Fren" to="Fran" />
     <Word from="Grečen" to="Gretchen" />
     <Word from="Grejs" to="Grace" />
     <Word from="Henk" to="Hank" />
@@ -994,6 +997,7 @@
     <Word from="Kejsi" to="Casey" />
     <Word from="Kerol" to="Carol" />
     <Word from="Kerolajn" to="Caroline" />
+    <Word from="Klarens" to="Clarence" />
     <Word from="Kloe" to="Chloe" />
     <Word from="Kortni" to="Courtney" />
     <Word from="Krejg" to="Craig" />
@@ -1010,6 +1014,7 @@
     <Word from="Mejnu" to="Maineu" />
     <Word from="Mejnom" to="Maineom" />
     <Word from="Mejpls" to="Maples" />
+    <Word from="Mek" to="Mac" />
     <Word from="Merilend" to="Maryland" />
     <Word from="Mičel" to="Mitchell" />
     <Word from="Nejt" to="Nate" />
