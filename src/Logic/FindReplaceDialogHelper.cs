@@ -78,7 +78,7 @@ namespace Nikse.SubtitleEdit.Logic
 
             if (FindReplaceType.FindType == FindType.CaseSensitive || FindReplaceType.FindType == FindType.Normal)
             {
-                var comparison = FindReplaceType.FindType == FindType.CaseSensitive ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase;
+                var comparison = GetComparison();
                 var idx = text.IndexOf(_findText, startIndex, comparison);
                 while (idx >= 0)
                 {
@@ -101,7 +101,7 @@ namespace Nikse.SubtitleEdit.Logic
             var match = _regEx.Match(text, startIndex);
             if (match.Success)
             {
-                string groupName = Utilities.GetRegExGroup(_findText);
+                string groupName = RegexUtils.GetRegExGroup(_findText);
                 if (groupName != null && match.Groups[groupName] != null && match.Groups[groupName].Success)
                 {
                     _findTextLenght = match.Groups[groupName].Length;
@@ -221,7 +221,7 @@ namespace Nikse.SubtitleEdit.Logic
                     Match match = _regEx.Match(text, startIndex);
                     if (match.Success)
                     {
-                        string groupName = Utilities.GetRegExGroup(_findText);
+                        string groupName = RegexUtils.GetRegExGroup(_findText);
                         if (groupName != null && match.Groups[groupName] != null && match.Groups[groupName].Success)
                         {
                             _findTextLenght = match.Groups[groupName].Length;
@@ -260,7 +260,7 @@ namespace Nikse.SubtitleEdit.Logic
                 }
                 _regEx = new Regex(_findText);
             }
-            StringComparison comparison = FindReplaceType.FindType == FindType.Normal ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
+            var comparison = GetComparison();
             foreach (var p in subtitle.Paragraphs)
             {
                 if (FindReplaceType.FindType != FindType.RegEx)
@@ -300,6 +300,8 @@ namespace Nikse.SubtitleEdit.Logic
             }
             return count;
         }
+
+        private StringComparison GetComparison() => FindReplaceType.FindType == FindType.Normal ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
 
     }
 }
