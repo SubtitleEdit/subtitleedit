@@ -12,7 +12,7 @@ namespace Nikse.SubtitleEdit.Logic
         private readonly string _findText = string.Empty;
         private readonly string _replaceText = string.Empty;
         private Regex _regEx;
-        private int _findTextLenght;
+        private int _findTextLength;
 
         public bool Success { get; set; }
         public ReplaceType FindReplaceType { get; set; }
@@ -25,7 +25,7 @@ namespace Nikse.SubtitleEdit.Logic
         {
             get
             {
-                return _findTextLenght;
+                return _findTextLength;
             }
         }
 
@@ -57,7 +57,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
 
             _regEx = regEx;
-            _findTextLenght = findText.Length;
+            _findTextLength = findText.Length;
             StartLineIndex = startLineIndex;
         }
 
@@ -78,7 +78,7 @@ namespace Nikse.SubtitleEdit.Logic
 
             if (FindReplaceType.FindType == FindType.CaseSensitive || FindReplaceType.FindType == FindType.Normal)
             {
-                var comparison = FindReplaceType.FindType == FindType.CaseSensitive ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase;
+                var comparison = GetComparison();
                 var idx = text.IndexOf(_findText, startIndex, comparison);
                 while (idx >= 0)
                 {
@@ -101,13 +101,13 @@ namespace Nikse.SubtitleEdit.Logic
             var match = _regEx.Match(text, startIndex);
             if (match.Success)
             {
-                string groupName = Utilities.GetRegExGroup(_findText);
+                string groupName = RegexUtils.GetRegExGroup(_findText);
                 if (groupName != null && match.Groups[groupName] != null && match.Groups[groupName].Success)
                 {
-                    _findTextLenght = match.Groups[groupName].Length;
+                    _findTextLength = match.Groups[groupName].Length;
                     return match.Groups[groupName].Index;
                 }
-                _findTextLenght = match.Length;
+                _findTextLength = match.Length;
                 return match.Index;
             }
             return -1;
@@ -221,15 +221,15 @@ namespace Nikse.SubtitleEdit.Logic
                     Match match = _regEx.Match(text, startIndex);
                     if (match.Success)
                     {
-                        string groupName = Utilities.GetRegExGroup(_findText);
+                        string groupName = RegexUtils.GetRegExGroup(_findText);
                         if (groupName != null && match.Groups[groupName] != null && match.Groups[groupName].Success)
                         {
-                            _findTextLenght = match.Groups[groupName].Length;
+                            _findTextLength = match.Groups[groupName].Length;
                             SelectedIndex = match.Groups[groupName].Index;
                         }
                         else
                         {
-                            _findTextLenght = match.Length;
+                            _findTextLength = match.Length;
                             SelectedIndex = match.Index;
                         }
                         Success = true;
@@ -260,7 +260,7 @@ namespace Nikse.SubtitleEdit.Logic
                 }
                 _regEx = new Regex(_findText);
             }
-            StringComparison comparison = FindReplaceType.FindType == FindType.Normal ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
+            var comparison = GetComparison();
             foreach (var p in subtitle.Paragraphs)
             {
                 if (FindReplaceType.FindType != FindType.RegEx)
@@ -300,6 +300,8 @@ namespace Nikse.SubtitleEdit.Logic
             }
             return count;
         }
+
+        private StringComparison GetComparison() => FindReplaceType.FindType == FindType.Normal ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
 
     }
 }

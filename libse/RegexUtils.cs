@@ -203,5 +203,17 @@ namespace Nikse.SubtitleEdit.Core
             return new Regex(@"[\b ,\.\?\!]" + s + @"[\b !\.,\r\n\?]", RegexOptions.Compiled);
         }
 
+        public static string GetRegExGroup(string pattern)
+        {
+            var start = pattern.IndexOf("(?<", StringComparison.Ordinal);
+            if (start < 0)
+                return null;
+            start += 3;
+            var end = pattern.IndexOf('>', start);
+            if (end <= start)
+                return null;
+            return pattern.Substring(start, end - start);
+        }
+
     }
 }
