@@ -28,7 +28,7 @@ Email: mailto:moob42341@gmail.com</TranslatedBy>
     <CharsPerSec>Caracteres/seg</CharsPerSec>
     <WordsPerMin>Palavras/min</WordsPerMin>
     <Actor>Actor</Actor>
-    <Gap>Intervalo</Gap>
+	<Gap>Intervalo</Gap>
     <Region>Região</Region>
     <NumberSymbol>#</NumberSymbol>
     <Number>Número</Number>
@@ -168,7 +168,7 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <ChooseOutputFolder>Seleccionar pasta de saída</ChooseOutputFolder>
     <OverwriteExistingFiles>Substituir os ficheiros existentes</OverwriteExistingFiles>
     <Style>Estilo...</Style>
-    <UseStyleFromSource>Usar o estilo da origem</UseStyleFromSource>
+	<UseStyleFromSource>Usar o estilo da origem</UseStyleFromSource>
     <ConvertOptions>Opções de conversão</ConvertOptions>
     <RemoveFormatting>Remover etiquetas de formatação</RemoveFormatting>
     <RemoveTextForHI>Eliminar texto para Deficientes Auditivos</RemoveTextForHI>
@@ -186,7 +186,7 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <ScanningFolder>A examinar {0} e as sub-pastas por ficheiros de legendas...</ScanningFolder>
     <Recursive>Incluir sub-pastas</Recursive>
     <SetMinMsBetweenSubtitles>Definir mínimo em (ms) entre as linhas</SetMinMsBetweenSubtitles>
-    <BridgeGaps>Unir intervalos</BridgeGaps>
+	<BridgeGaps>Unir intervalos</BridgeGaps>
     <PlainText>Texto sem formatação</PlainText>
     <Ocr>OCR...</Ocr>
     <Filter>Filtro</Filter>
@@ -197,7 +197,7 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <FixCommonErrorsErrorX>Erros frequentes corrigidos: {0}</FixCommonErrorsErrorX>
     <MultipleReplaceErrorX>Múltiplas substituições: {0}</MultipleReplaceErrorX>
     <AutoBalanceErrorX>Balanço automático: {0}</AutoBalanceErrorX>
-    <OffsetTimeCodes>Tempos de compensação</OffsetTimeCodes>
+	<OffsetTimeCodes>Tempos de compensação</OffsetTimeCodes>
   </BatchConvert>
   <Beamer>
     <Title>Vídeo projector</Title>
@@ -480,7 +480,7 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <Forced>Forçado</Forced>
     <ChooseBackgroundColor>Escolha a cor do fundo</ChooseBackgroundColor>
     <SaveImageAs>Guardar imagem como...</SaveImageAs>
-    <FcpUseFullPathUrl>Utilizar o caminho completo do endereço no FCP xml</FcpUseFullPathUrl>
+	<FcpUseFullPathUrl>Utilizar o caminho completo do endereço no FCP xml</FcpUseFullPathUrl>
   </ExportPngXml>
   <ExportText>
     <Title>Exportar texto</Title>
@@ -1455,11 +1455,11 @@ Deseja continuar?</SubtitleAppendPrompt>
     <ImportTimeCodesDifferentNumberOfLinesWarning>Legenda com tempos tem um número diferente de linhas ({0}) do que as legendas actuais ({1}) - mesmo assim deseja continuar?</ImportTimeCodesDifferentNumberOfLinesWarning>
     <ParsingTransportStream>A analisar o fluxo de transporte - por favor aguarde...</ParsingTransportStream>
     <XPercentCompleted>{0}% concluído</XPercentCompleted>
-    <NextX>Próximo: {0}</NextX>
+	<NextX>Próximo: {0}</NextX>
     <ErrorLoadIdx>Não foi possível ler/editar o ficheiro idx. Os ficheiros idx são parte de um par de ficheiros idx/sub (também conhecidos como VobSub) e o Subtitle Edit pode abrir o ficheiro sub.</ErrorLoadIdx>
     <ErrorLoadRar>Este ficheiro parece ser um ficheiro comprimido .rar. O Subtitle Edit não pode abrir ficheiros comprimidos.</ErrorLoadRar>
     <ErrorLoadZip>Este ficheiro parece ser um ficheiro comprimido .zip. O Subtitle Edit não pode abrir ficheiros comprimidos.</ErrorLoadZip>
-    <ErrorLoad7Zip>Este ficheiro parece ser um ficheiro comprimido 7-Zip. O Subtitle Edit não pode abrir ficheiros comprimidos.</ErrorLoad7Zip>
+	<ErrorLoad7Zip>Este ficheiro parece ser um ficheiro comprimido 7-Zip. O Subtitle Edit não pode abrir ficheiros comprimidos.</ErrorLoad7Zip>
     <ErrorLoadPng>Este ficheiro parece ser um ficheiro de imagem no formato PNG. O Subtitle Edit não pode abrir ficheiros PNG.</ErrorLoadPng>
     <ErrorLoadJpg>Este ficheiro parece ser um ficheiro de imagem no formato JPG. O Subtitle Edit não pode abrir ficheiros JPG.</ErrorLoadJpg>
     <ErrorLoadSrr>Este ficheiro parece ser um ficheiro ReScene (.srr) - não é um ficheiro de legenda.</ErrorLoadSrr>
@@ -1541,6 +1541,7 @@ Se editou este ficheiro no Subtitle Edit é possível que encontre a cópia de s
     <Normal>Normal</Normal>
     <CaseSensitive>Diferenciar maiúsculas/minúsculas</CaseSensitive>
     <RegularExpression>Expressão regular</RegularExpression>
+	<Description>Descrição</Description>
     <LinesFoundX>Linhas encontradas: {0}</LinesFoundX>
     <Remove>Remover</Remove>
     <Add>&amp;Adicionar</Add>
@@ -1901,7 +1902,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <WaveformPlayFirstSelectedSubtitle>Reproduzir a partir da primeira legenda selecionada</WaveformPlayFirstSelectedSubtitle>
     <WaveformFocusListView>Destacar a lista de visualização</WaveformFocusListView>
     <WaveformGoToNextSubtitle>Ir para a próxima linha (a partir da posição do vídeo)</WaveformGoToNextSubtitle>
-    <WaveformGoToPreviousSceneChange>Ir para a mudança de cena anterior</WaveformGoToPreviousSceneChange>
+	<WaveformGoToPreviousSceneChange>Ir para a mudança de cena anterior</WaveformGoToPreviousSceneChange>
     <WaveformGoToNextSceneChange>Ir para a próxima mudança de cena</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>Alternar a mudança de cena</WaveformToggleSceneChange>
     <GoBack1Frame>Um fotograma para atrás</GoBack1Frame>
@@ -1963,7 +1964,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <UseDoNotBreakAfterList>Utilizar "não quebrar linha depois da lista" (para o ajuste-auto)</UseDoNotBreakAfterList>
     <MicrosoftBingTranslator>Tradutor Microsoft Bing</MicrosoftBingTranslator>
     <HowToSignUp>Como efectuar o registo</HowToSignUp>
-    <GoogleTranslateUrl>Endereço do tradutor do Google</GoogleTranslateUrl>
+	<GoogleTranslateUrl>Endereço do tradutor do Google</GoogleTranslateUrl>
     <MicrosoftTranslateApiKey>Chave</MicrosoftTranslateApiKey>
   </Settings>
   <SettingsMpv>
@@ -2024,7 +2025,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <ImageText>Imagem de texto</ImageText>
     <SpellCheckCompleted>Verificação ortográfica terminada</SpellCheckCompleted>
     <SpellCheckAborted>Verificação ortográfica cancelada</SpellCheckAborted>
-    <SpacesNotAllowed>Espaços não permitidos numa única palavra!</SpacesNotAllowed>
+	<SpacesNotAllowed>Espaços não permitidos numa única palavra!</SpacesNotAllowed>
     <UndoX>Anular: {0}</UndoX>
   </SpellCheck>
   <NetflixQualityCheck>
@@ -2090,6 +2091,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <NumberOfLinesX>Número de linhas da legenda: {0:#,###}</NumberOfLinesX>
     <LengthInFormatXinCharactersY>Número de caracteres como {0}: {1:#,###,##0}</LengthInFormatXinCharactersY>
     <NumberOfCharactersInTextOnly>Número de caracteres só no texto: {0:#,###,##0}</NumberOfCharactersInTextOnly>
+	<TotalDuration>Duração total de todas as linhas: {0}</TotalDuration>
     <TotalCharsPerSecond>Total de caracteres/segundo: {0:0.0} segundos</TotalCharsPerSecond>
     <TotalWords>Total de palavras na legenda: {0}</TotalWords>
     <NumberOfItalicTags>Número de etiquetas itálicas: {0}</NumberOfItalicTags>
@@ -2287,7 +2289,7 @@ Manter as alterações?</KeepChangesMessage>
     <SetUnitalicFactor>Definir um factor itálico...</SetUnitalicFactor>
     <DiscardTitle>Rejeitar as alterações feitas no OCR?</DiscardTitle>
     <DiscardText>Deseja rejeitar as alterações feitas na sessão corrente de OCR?</DiscardText>
-    <MinLineSplitHeight>Altura mínima da linha (dividida)</MinLineSplitHeight>
+	<MinLineSplitHeight>Altura mínima da linha (dividida)</MinLineSplitHeight>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub - Imagem para texto manualmente</Title>
