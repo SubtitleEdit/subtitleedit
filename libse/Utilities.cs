@@ -1155,7 +1155,7 @@ namespace Nikse.SubtitleEdit.Core
         }
 
         private static readonly Regex TwoOrMoreDigitsNumber = new Regex(@"\d\d+", RegexOptions.Compiled);
-        private const string PrePostStringsToReverse = @"-— !?.""،,():;[]+~";
+        private const string PrePostStringsToReverse = @"-— !?.""،,():;[]+~*/<>&^%$#\\|";
 
         public static string ReverseStartAndEndingForRightToLeft(string s)
         {
