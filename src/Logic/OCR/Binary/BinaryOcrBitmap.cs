@@ -191,6 +191,11 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Binary
             return _colors[Width * y + x];
         }
 
+        public int GetPixel(int index)
+        {
+            return _colors[index];
+        }
+
         public void SetPixel(int x, int y, int c)
         {
             _colors[Width * y + x] = (byte)c;

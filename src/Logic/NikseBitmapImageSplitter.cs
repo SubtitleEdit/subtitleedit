@@ -12,7 +12,7 @@ namespace Nikse.SubtitleEdit.Logic
             if (a.A < 120 && b.A < 120)
                 return true; // transparent
 
-            var alphaDiff = (int)Math.Abs(a.A - b.A);
+            var alphaDiff = Math.Abs(a.A - b.A);
             if (alphaDiff > 50)
                 return false; // different alpha levels
 
@@ -983,14 +983,17 @@ namespace Nikse.SubtitleEdit.Logic
         {
             int different = 0;
             int maxDiff = bmp1.Width * bmp1.Height / 5;
-
-            for (int x = 0; x < bmp1.Width; x++)
+            int w4 = bmp2.Width * 4;
+            for (int y = 0; y < bmp1.Height; y++)
             {
-                for (int y = 0; y < bmp1.Height; y++)
+                var alpha = y * w4 + 3;
+                var pixel = y * bmp1.Width;
+                for (int x = 0; x < bmp1.Width; x++)
                 {
-                    //if (!IsColorClose(bmp1.GetPixel(x, y), bmp2.GetPixel(x, y), 20))
-                    if (bmp1.GetPixel(x, y) > 0 && bmp2.GetAlpha(x, y) < 100)
+                    if (bmp1.GetPixel(pixel) > 0 && bmp2.GetAlpha(alpha) < 100)
                         different++;
+                    pixel++;
+                    alpha += 4;
                 }
                 if (different > maxDiff)
                     return different + 10;
@@ -1002,18 +1005,23 @@ namespace Nikse.SubtitleEdit.Logic
         {
             int different = 0;
             int maxDiff = bmp1.Width * bmp1.Height / 5;
-
-            for (int x = 1; x < bmp1.Width; x++)
+            int w4 = bmp1.Width * 4;
+            for (int y = 1; y < bmp1.Height; y++)
             {
-                for (int y = 1; y < bmp1.Height; y++)
+                var alpha = y * w4 + 7;
+                var pixel = y * bmp2.Width + 1;
+                for (int x = 1; x < bmp1.Width; x++)
                 {
-                    if (bmp1.GetAlpha(x, y) < 100 && bmp2.GetPixel(x, y) > 0)
+                    if (bmp1.GetAlpha(alpha) < 100 && bmp2.GetPixel(pixel) > 0)
                         different++;
+                    pixel++;
+                    alpha += 4;
                 }
                 if (different > maxDiff)
                     return different + 10;
             }
             return different;
         }
+
     }
 }
