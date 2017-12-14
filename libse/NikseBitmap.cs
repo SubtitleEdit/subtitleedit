@@ -855,6 +855,11 @@ namespace Nikse.SubtitleEdit.Core
             return _bitmapData[(x * 4) + (y * _widthX4) + 3];
         }
 
+        public int GetAlpha(int index)
+        {
+            return _bitmapData[index];
+        }
+
         public Color GetPixel(int x, int y)
         {
             _pixelAddress = (x * 4) + (y * _widthX4);
