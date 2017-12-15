@@ -1701,6 +1701,7 @@
     <RegEx find="pozoriš" replaceWith="kazališ" />
     <RegEx find="Pozoriš" replaceWith="Kazališ" />
     <RegEx find="raktikuje" replaceWith="rakticira" />
+    <RegEx find="rebić" replaceWith="rebit ć" />
     <RegEx find="reci?j?edni([čk])" replaceWith="redsjedni$1" />
     <RegEx find="redsedni([čk])" replaceWith="redsjedni$1" />
     <RegEx find="rj?edlo([gz])" replaceWith="rijedlo$1" />
