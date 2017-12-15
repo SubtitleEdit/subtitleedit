@@ -325,8 +325,6 @@
     <Word from="lenja" to="lijena" />
     <Word from="lešnik" to="lješnjak" />
     <Word from="Leta" to="Ljeta" />
-    <Word from="leteo" to="letio" />
-    <Word from="Leteo" to="Letio" />
     <Word from="leto" to="ljeto" />
     <Word from="Leto" to="Ljeto" />
     <Word from="letos" to="ljetos" />
@@ -1515,6 +1513,8 @@
     <RegEx find="\b([lL])ep([šil])" replaceWith="$1jep$2" />
     <RegEx find="\b([lL])ev(?!is)" replaceWith="$1ijev" />
     <RegEx find="(?&lt;!p)([lL])ete([lt])" replaceWith="$1etje$2" />
+    <!-- ne diraj! [uzletio/razletio/sletio/podletio] -->
+    <RegEx find="([lL])eteo" replaceWith="$1etio" />
     <RegEx find="\b([lL])eto([ms])" replaceWith="$1jeto$2" />
     <RegEx find="icemer" replaceWith="icemjer" />
     <RegEx find="\bličn([aeiou]|im|o[mgj])" replaceWith="osobn$1" />
