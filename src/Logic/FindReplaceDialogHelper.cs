@@ -71,21 +71,33 @@ namespace Nikse.SubtitleEdit.Logic
             return FindNext(textBox.Text, startIndex);
         }
 
-        private int FindPositionInText(string text, int startIndex)
+        private int GetTextPosition(string text, int startIndex)
         {
-            if (startIndex >= text.Length && !(FindReplaceType.FindType == FindType.RegEx && startIndex == 0))
+            if (string.IsNullOrEmpty(text))
+            {
                 return -1;
+            }
+
+            // handle boundary case
+            if (FindReplaceType.FindType != FindType.RegEx)
+            {
+                if (startIndex + _findText.Length >= text.Length)
+                {
+                    return -1;
+                }
+            }
 
             if (FindReplaceType.FindType == FindType.CaseSensitive || FindReplaceType.FindType == FindType.Normal)
             {
                 var comparison = GetComparison();
+                int findLen = _findText.Length;
                 var idx = text.IndexOf(_findText, startIndex, comparison);
                 while (idx >= 0)
                 {
                     if (FindReplaceType.WholeWord)
                     {
                         var startOk = idx == 0 || SeparatorChars.Contains(text[idx - 1]);
-                        var endOk = idx + _findText.Length == text.Length || SeparatorChars.Contains(text[idx + _findText.Length]);
+                        var endOk = idx + findLen == text.Length || SeparatorChars.Contains(text[idx + findLen]);
                         if (startOk && endOk)
                             return idx;
                     }
@@ -93,7 +105,7 @@ namespace Nikse.SubtitleEdit.Logic
                     {
                         return idx;
                     }
-                    idx = text.IndexOf(_findText, idx + _findText.Length, comparison);
+                    idx = text.IndexOf(_findText, idx + findLen, comparison);
                 }
                 return -1;
             }
@@ -110,59 +122,66 @@ namespace Nikse.SubtitleEdit.Logic
                 _findTextLength = match.Length;
                 return match.Index;
             }
+
             return -1;
         }
 
         public bool FindNext(Subtitle subtitle, Subtitle originalSubtitle, int startIndex, int position, bool allowEditOfOriginalSubtitle)
         {
+            position = Math.Max(0, position);
             Success = false;
-            int index = 0;
-            if (position < 0)
-                position = 0;
-            bool first = true;
-            foreach (Paragraph p in subtitle.Paragraphs)
+            bool machInOriginalSubtitle = allowEditOfOriginalSubtitle && originalSubtitle?.Paragraphs?.Count > 0;
+            int prghCount = subtitle.Paragraphs.Count;
+            for (int i = startIndex; i < prghCount; i++)
             {
-                if (index >= startIndex)
+                // always reset position after 1st lookup
+                if (i > startIndex)
                 {
-                    if (!first)
-                        position = 0;
-                    int pos = 0;
-                    if (!MatchInOriginal)
-                    {
-                        pos = FindPositionInText(p.Text, position);
-                        if (pos >= 0)
-                        {
-                            MatchInOriginal = false;
-                            SelectedIndex = index;
-                            SelectedPosition = pos;
-                            Success = true;
-                            return true;
-                        }
-                        position = 0;
-                    }
-                    MatchInOriginal = false;
-
-                    if (originalSubtitle != null && allowEditOfOriginalSubtitle)
-                    {
-                        Paragraph o = Utilities.GetOriginalParagraph(index, p, originalSubtitle.Paragraphs);
-                        if (o != null)
-                        {
-                            pos = FindPositionInText(o.Text, position);
-                            if (pos >= 0)
-                            {
-                                MatchInOriginal = true;
-                                SelectedIndex = index;
-                                SelectedPosition = pos;
-                                Success = true;
-                                return true;
-                            }
-                        }
-                    }
-                    first = false;
+                    position = 0;
                 }
-                index++;
+
+                if (!MatchInOriginal)
+                {
+                    position = GetTextPosition(subtitle.Paragraphs[i].Text, position);
+                    if (position >= 0)
+                    {
+                        return UpdateSearchResult(i, position, false);
+                    }
+                    else
+                    {
+                        position = 0;
+                    }
+                }
+                else
+                {
+                    MatchInOriginal = false;
+                }
+
+                if (machInOriginalSubtitle)
+                {
+                    Paragraph p2 = originalSubtitle.GetParagraphOrDefault(i);
+                    if (p2 == null)
+                    {
+                        continue;
+                    }
+                    position = GetTextPosition(p2.Text, position);
+                    if (position >= 0)
+                    {
+                        return UpdateSearchResult(i, position, true);
+                    }
+                }
+
             }
-            return false;
+
+            return Success;
+        }
+
+        private bool UpdateSearchResult(int paragraphIdx, int textPosition, bool foundInOriginal)
+        {
+            SelectedIndex = paragraphIdx;
+            SelectedPosition = textPosition;
+            MatchInOriginal = foundInOriginal;
+            return Success = true;
         }
 
         public static ContextMenu GetRegExContextMenu(TextBox textBox)
@@ -213,11 +232,26 @@ namespace Nikse.SubtitleEdit.Logic
         public bool FindNext(string text, int startIndex)
         {
             Success = false;
-            startIndex++;
-            if (startIndex < text.Length)
+
+            if (++startIndex >= text.Length)
             {
-                if (FindReplaceType.FindType == FindType.RegEx)
-                {
+                return false;
+            }
+
+            switch (FindReplaceType.FindType)
+            {
+                case FindType.Normal:
+                case FindType.CaseSensitive:
+                    string searchText = text.Substring(startIndex);
+                    int pos = GetTextPosition(searchText, 0);
+                    if (pos >= 0)
+                    {
+                        SelectedIndex = pos + startIndex;
+                        Success = true;
+                    }
+                    break;
+
+                case FindType.RegEx:
                     Match match = _regEx.Match(text, startIndex);
                     if (match.Success)
                     {
@@ -234,23 +268,15 @@ namespace Nikse.SubtitleEdit.Logic
                         }
                         Success = true;
                     }
-                    return match.Success;
-                }
-                string searchText = text.Substring(startIndex);
-                int pos = FindPositionInText(searchText, 0);
-                if (pos >= 0)
-                {
-                    SelectedIndex = pos + startIndex;
-                    return true;
-                }
+                    break;
             }
-            return false;
+            return Success;
         }
 
         public int FindCount(Subtitle subtitle, bool wholeWord)
         {
             var count = 0;
-            //  validate pattern if find type is regex
+            // validate pattern if find type is regex
             if (FindReplaceType.FindType == FindType.RegEx)
             {
                 if (!RegexUtils.IsValidRegex(_findText))
@@ -283,12 +309,13 @@ namespace Nikse.SubtitleEdit.Logic
         {
             var idx = text.IndexOf(pattern, comparison);
             var count = 0;
+            int patternLen = pattern.Length;
             while (idx >= 0)
             {
                 if (matchWholeWord)
                 {
                     var startOk = (idx == 0) || (SeparatorChars.Contains(text[idx - 1]));
-                    var endOk = (idx + pattern.Length == text.Length) || (SeparatorChars.Contains(text[idx + pattern.Length]));
+                    var endOk = (idx + patternLen == text.Length) || (SeparatorChars.Contains(text[idx + patternLen]));
                     if (startOk && endOk)
                         count++;
                 }
@@ -296,7 +323,7 @@ namespace Nikse.SubtitleEdit.Logic
                 {
                     count++;
                 }
-                idx = text.IndexOf(pattern, idx + pattern.Length, comparison);
+                idx = text.IndexOf(pattern, idx + patternLen, comparison);
             }
             return count;
         }
