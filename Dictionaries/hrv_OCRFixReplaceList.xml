@@ -885,6 +885,7 @@
     <Word from="Vaistinu" to="Uistinu" />
     <Word from="varnica" to="iskra" />
     <Word from="varnicu" to="iskru" />
+    <Word from="vaspitala" to="odgojila" />
     <Word from="vaspitavan" to="odgajan" />
     <Word from="vaspitavanju" to="odgoju" />
     <Word from="vašljivi" to="ušljivi" />
@@ -989,6 +990,7 @@
     <Word from="Ejb" to="Abe" />
     <Word from="Ejmi" to="Amy" />
     <Word from="Ejpril" to="April" />
+    <Word from="Empajer" to="Empire" />
     <Word from="Endži" to="Angie" />
     <Word from="Entoni" to="Anthony" />
     <Word from="Ešli" to="Ashley" />
@@ -2311,6 +2313,7 @@
     <RegEx find="Ajland" replaceWith="Island" />
     <RegEx find="([aA])l[cz]h[ae]jmer" replaceWith="$1lzheimer" />
     <RegEx find="Atin" replaceWith="Aten" />
+    <RegEx find="rčer" replaceWith="rcher" />
     <RegEx find="Avgani" replaceWith="Afgani" />
     <RegEx find="Belgijan" replaceWith="Belgij" />
     <RegEx find="Betmen" replaceWith="Batman" />
@@ -2397,6 +2400,7 @@
     <RegEx find="Njujork" replaceWith="New York" />
     <RegEx find="Njuton" replaceWith="Newton" />
     <RegEx find="Pokipsi" replaceWith="Poughkeepsie" />
+    <RegEx find="ulicer" replaceWith="ulitzer" />
     <RegEx find="Rajan" replaceWith="Ryan" />
     <RegEx find="Rič" replaceWith="Rich" />
     <RegEx find="odže" replaceWith="oge" />
