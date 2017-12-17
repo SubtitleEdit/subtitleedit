@@ -1009,6 +1009,28 @@ namespace Test
         }
 
         [TestMethod]
+        public void FixUnneededSpaces7()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "<i>\"pescado. \"</i>");
+                new FixUnneededSpaces().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual(_subtitle.Paragraphs[0].Text, "<i>\"pescado.\"</i>");
+            }
+        }
+
+        [TestMethod]
+        public void FixUnneededSpaces8()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "<i>\" pescado.\"</i>");
+                new FixUnneededSpaces().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual(_subtitle.Paragraphs[0].Text, "<i>\"pescado.\"</i>");
+            }
+        }
+
+        [TestMethod]
         public void FixUnneededSpacesItalic1()
         {
             using (var target = GetFixCommonErrorsLib())
