@@ -1988,11 +1988,27 @@ namespace Nikse.SubtitleEdit.Core
                 text = '"' + text.Substring(1).TrimStart();
             }
             text = preText + text;
+
+            // Fix spaces before quotes at line ending
+            string postText = string.Empty;
+            if (text.LineEndsWithHtmlTag(true, true))
+            {
+                int endIdx = text.LastIndexOf('<');
+                postText = text.Substring(endIdx);
+                text = text.Substring(0, endIdx);
+            }
+            if (text.EndsWith(" \""))
+            {
+                text = text.Remove(text.Length - 2, 1);
+            }
+            text = text + postText;
+
             text = text.Replace(". \" ", ". \"");
             text = text.Replace("? \" ", "? \"");
             text = text.Replace("! \" ", "! \"");
             text = text.Replace(") \" ", ") \"");
             text = text.Replace("> \" ", "> \"");
+
             return text;
         }
 
