@@ -54,6 +54,7 @@
             this.richTextBoxParagraph = new System.Windows.Forms.RichTextBox();
             this.buttonEditWholeText = new System.Windows.Forms.Button();
             this.buttonEditWord = new System.Windows.Forms.Button();
+            this.buttonEditImageDb = new System.Windows.Forms.Button();
             this.groupBoxSuggestions.SuspendLayout();
             this.GroupBoxEditWord.SuspendLayout();
             this.groupBoxEditWholeText.SuspendLayout();
@@ -307,6 +308,7 @@
             // 
             this.groupBoxText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxText.Controls.Add(this.buttonEditImageDb);
             this.groupBoxText.Controls.Add(this.richTextBoxParagraph);
             this.groupBoxText.Controls.Add(this.buttonEditWholeText);
             this.groupBoxText.Controls.Add(this.buttonEditWord);
@@ -347,6 +349,16 @@
             this.buttonEditWord.Text = "Edit word";
             this.buttonEditWord.UseVisualStyleBackColor = true;
             this.buttonEditWord.Click += new System.EventHandler(this.ButtonEditWordClick);
+            // 
+            // buttonEditImageDb
+            // 
+            this.buttonEditImageDb.Location = new System.Drawing.Point(514, 17);
+            this.buttonEditImageDb.Name = "buttonEditImageDb";
+            this.buttonEditImageDb.Size = new System.Drawing.Size(172, 47);
+            this.buttonEditImageDb.TabIndex = 403;
+            this.buttonEditImageDb.Text = "Edit image db";
+            this.buttonEditImageDb.UseVisualStyleBackColor = true;
+            this.buttonEditImageDb.Click += new System.EventHandler(this.buttonEditImageDb_Click);
             // 
             // OcrSpellCheck
             // 
@@ -409,5 +421,6 @@
         private System.Windows.Forms.Button buttonSkipText;
         private System.Windows.Forms.Button buttonChangeAllWholeText;
         private System.Windows.Forms.Button buttonGoogleIt;
+        private System.Windows.Forms.Button buttonEditImageDb;
     }
 }

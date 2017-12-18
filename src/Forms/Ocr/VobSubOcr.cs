@@ -4527,6 +4527,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 {
                     ButtonStopClick(null, null);
                     _ocrFixEngine.Abort = false;
+
+                    if (_ocrFixEngine.LastAction == OcrSpellCheck.Action.InspectCompareMatches)
+                        InspectImageCompareMatchesForCurrentImageToolStripMenuItem_Click(null, null);
+
                     return string.Empty;
                 }
 
@@ -7448,7 +7452,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             if (_ocrFixEngine != null)
                 _ocrFixEngine.Dispose();
-            _ocrFixEngine = new OcrFixEngine(threeLetterISOLanguageName, hunspellName, this);
+            _ocrFixEngine = new OcrFixEngine(threeLetterISOLanguageName, hunspellName, this, _ocrMethodIndex == _ocrMethodBinaryImageCompare );
             if (_ocrFixEngine.IsDictionaryLoaded)
             {
                 string loadedDictionaryName = _ocrFixEngine.SpellCheckDictionaryName;
@@ -7535,6 +7539,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 ShowOcrMethodGroupBox(groupBoxModiMethod);
                 Configuration.Settings.VobSubOcr.LastOcrMethod = "MODI";
             }
+            _ocrFixEngine = null;
             SubtitleListView1SelectedIndexChanged(null, null);
         }
 
@@ -7846,7 +7851,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 if (_ocrFixEngine != null)
                     _ocrFixEngine.Dispose();
-                _ocrFixEngine = new OcrFixEngine(string.Empty, string.Empty, this);
+                _ocrFixEngine = new OcrFixEngine(string.Empty, string.Empty, this, _ocrMethodIndex == _ocrMethodBinaryImageCompare);
                 return;
             }
             try

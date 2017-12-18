@@ -1,5 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.Ocr.Binary;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -23,8 +24,20 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             SkipWholeText,
             SkipOnce,
             UseSuggestion,
+            InspectCompareMatches,
         }
 
+        public bool IsBinaryImageCompare
+        {
+            get
+            {
+                return buttonEditImageDb.Visible;
+            }
+            set
+            {
+                buttonEditImageDb.Visible = value;
+            }
+        }
         public Action ActionResult { get; private set; }
         public string Word { get; private set; }
         public string Paragraph { get; private set; }
@@ -36,8 +49,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
-            UiUtil.FixFonts(this);
-
+            UiUtil.FixFonts(this);            
             Text = Configuration.Settings.Language.SpellCheck.Title;
             buttonAddToDictionary.Text = Configuration.Settings.Language.SpellCheck.AddToUserDictionary;
             buttonChange.Text = Configuration.Settings.Language.SpellCheck.Change;
@@ -280,5 +292,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
         }
 
+        private void buttonEditImageDb_Click(object sender, EventArgs e)
+        {
+            ActionResult = Action.InspectCompareMatches;
+            DialogResult = DialogResult.OK;
+        }
     }
 }

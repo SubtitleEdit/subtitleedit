@@ -22,6 +22,7 @@
     <Word from="ahi" to="ahí" />
     <Word from="angel" to="ángel" />
     <Word from="angeles" to="ángeles" />
+    <Word from="ansian" to="ansían" />
     <Word from="apagala" to="apágala" />
     <Word from="aqui" to="aquí" />
     <Word from="asi" to="así" />
@@ -80,6 +81,8 @@
     <Word from="empezo" to="empezó" />
     <Word from="empujon" to="empujón" />
     <Word from="empujalo" to="empújalo" />
+    <Word from="energia" to="energía" />
+    <Word from="enfrian" to="enfrían" />
     <Word from="escondanme" to="escóndanme" />
     <Word from="esperame" to="espérame" />
     <Word from="estara" to="estará" />
@@ -942,5 +945,8 @@
     <RegEx find="\Bo(log[ao]s?\b)" replaceWith="ó$1" />
     <RegEx find="\Ba(log[ao]s?\b)" replaceWith="á$1" />
     <RegEx find="\Bi(log[ao]s?\b)" replaceWith="í$1" />
+
+    <RegEx find="\bIes\b" replaceWith="les" />
+    <RegEx find="\bIos\b" replaceWith="los" />
   </RegularExpressions>
 </OCRFixReplaceList>

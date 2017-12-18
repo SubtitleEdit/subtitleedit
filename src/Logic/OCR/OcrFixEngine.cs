@@ -50,6 +50,8 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
         private static readonly char[] SplitChars = { ' ', '¡', '¿', ',', '.', '!', '?', ':', ';', '(', ')', '[', ']', '{', '}', '+', '-', '£', '"', '„', '”', '“', '«', '»', '#', '&', '%', '…', '—', '♪', '\r', '\n' };
 
         public bool Abort { get; set; }
+        public OcrSpellCheck.Action LastAction { get; set; } = OcrSpellCheck.Action.Abort;
+        public bool IsBinaryImageCompare { get; set; }
         public List<string> AutoGuessesUsed { get; set; }
         public List<string> UnknownWordsFound { get; set; }
         public bool IsDictionaryLoaded { get; private set; }
@@ -62,7 +64,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
         /// <param name="threeLetterIsoLanguageName">E.g. eng for English</param>
         /// <param name="hunspellName">Name of hunspell dictionary</param>
         /// <param name="parentForm">Used for centering/show spell check dialog</param>
-        public OcrFixEngine(string threeLetterIsoLanguageName, string hunspellName, Form parentForm)
+        public OcrFixEngine(string threeLetterIsoLanguageName, string hunspellName, Form parentForm, bool isBinaryImageCompare = false)
         {
             if (threeLetterIsoLanguageName == "per")
                 threeLetterIsoLanguageName = "fas";
@@ -70,7 +72,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             _threeLetterIsoLanguageName = threeLetterIsoLanguageName;
             _parentForm = parentForm;
 
-            _spellCheck = new OcrSpellCheck { StartPosition = FormStartPosition.Manual };
+            _spellCheck = new OcrSpellCheck() { StartPosition = FormStartPosition.Manual, IsBinaryImageCompare = isBinaryImageCompare };
             _spellCheck.Location = new Point(parentForm.Left + (parentForm.Width / 2 - _spellCheck.Width / 2),
                                              parentForm.Top + (parentForm.Height / 2 - _spellCheck.Height / 2));
 
@@ -1141,7 +1143,10 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                                 word = word.Remove(word.Length - 4, 4);
 
                             SpellCheckOcrTextResult res = SpellCheckOcrText(line, bitmap, word, suggestions);
-
+                            if (Abort)
+                            {
+                                return null;
+                            }
                             if (res.FixedWholeLine)
                             {
                                 return res.Line;
@@ -1201,12 +1206,11 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             var result = new SpellCheckOcrTextResult { Fixed = false, FixedWholeLine = false, Line = null, Word = null };
             _spellCheck.Initialize(word, suggestions, line, bitmap);
             _spellCheck.ShowDialog(_parentForm);
+            LastAction = _spellCheck.ActionResult;
             switch (_spellCheck.ActionResult)
             {
                 case OcrSpellCheck.Action.Abort:
                     Abort = true;
-                    result.FixedWholeLine = true;
-                    result.Line = line;
                     break;
                 case OcrSpellCheck.Action.AddToUserDictionary:
                     if (_userWordListXmlFileName != null)
@@ -1307,6 +1311,9 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 case OcrSpellCheck.Action.UseSuggestion:
                     result.Word = _spellCheck.Word;
                     result.Fixed = true;
+                    break;
+                case OcrSpellCheck.Action.InspectCompareMatches:
+                    Abort = true;
                     break;
             }
             if (result.Fixed)
