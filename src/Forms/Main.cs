@@ -7615,10 +7615,10 @@ namespace Nikse.SubtitleEdit.Forms
             string text = paragraph.Text;
             lineLengths.Text = _languageGeneral.SingleLineLengths.Trim();
             singleLine.Left = lineLengths.Left + lineLengths.Width - 3;
+            text = HtmlUtil.RemoveHtmlTags(text, true);
             UiUtil.GetLineLengths(singleLine, text);
 
             buttonSplitLine.Visible = false;
-            text = HtmlUtil.RemoveHtmlTags(text, true);
 
             // remove unicode control characters
             var s = text.RemoveControlCharacters(); // incl. new line

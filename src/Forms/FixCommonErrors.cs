@@ -1181,9 +1181,10 @@ namespace Nikse.SubtitleEdit.Forms
         {
             labelTextLineLengths.Text = _languageGeneral.SingleLineLengths;
             labelSingleLine.Left = labelTextLineLengths.Left + labelTextLineLengths.Width - 6;
+            text = HtmlUtil.RemoveHtmlTags(text, true);
             UiUtil.GetLineLengths(labelSingleLine, text);
 
-            string s = HtmlUtil.RemoveHtmlTags(text, true).Replace(Environment.NewLine, " ");
+            string s = text.Replace(Environment.NewLine, " ");
             buttonSplitLine.Visible = false;
             if (s.Length < Configuration.Settings.General.SubtitleLineMaximumLength * 1.9)
             {
