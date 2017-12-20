@@ -183,5 +183,29 @@ namespace Test.Core
             Assert.AreEqual("Halloworld!", res);
         }
 
+        [TestMethod]
+        public void RemoveWhiteSpaces1()
+        {
+            string input = " Hallo  world! ";
+            var res = input.RemoveWhiteSpaces(false);
+            Assert.AreEqual(input, res);
+        }
+
+        [TestMethod]
+        public void RemoveWhiteSpaces2()
+        {
+            string input = " Hallo " + Environment.NewLine + " world! ";
+            var res = input.RemoveWhiteSpaces(true);
+            Assert.AreEqual("Halloworld!", res);
+        }
+
+        [TestMethod]
+        public void RemoveWhiteSpaces3()
+        {
+            string input = " Hallo" + Environment.NewLine + "world!";
+            var res = input.RemoveWhiteSpaces(false);
+            Assert.AreEqual(" Halloworld!", res);
+        }
+
     }
 }

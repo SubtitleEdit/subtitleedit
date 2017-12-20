@@ -329,5 +329,22 @@ namespace Nikse.SubtitleEdit.Core
             return new string(array, 0, arrayIndex);
         }
 
+        public static string RemoveWhiteSpaces(this string value, bool removeNormalSpace)
+        {
+            const char zeroWidthSpace = '\u200B';
+            const char zeroWidthNoBreakSpace = '\uFEFF';
+            char normalSpace = removeNormalSpace ? ' ' : zeroWidthSpace;
+
+            char[] array = new char[value.Length];
+            int arrayIndex = 0;
+            for (int i = 0; i < value.Length; i++)
+            {
+                char ch = value[i];
+                if (ch != '\n' && ch != '\r' && ch != '\t' && ch != zeroWidthSpace && ch != zeroWidthNoBreakSpace && ch != normalSpace)
+                    array[arrayIndex++] = ch;
+            }
+            return new string(array, 0, arrayIndex);
+        }
+
     }
 }

@@ -841,12 +841,7 @@ namespace Nikse.SubtitleEdit.Core
             if (paragraph.Duration.TotalMilliseconds < 1)
                 return 999;
 
-            const string zeroWidthSpace = "\u200B";
-            const string zeroWidthNoBreakSpace = "\uFEFF";
-
-            string s = HtmlUtil.RemoveHtmlTags(paragraph.Text, true).Replace(Environment.NewLine, string.Empty).Replace(zeroWidthSpace, string.Empty).Replace(zeroWidthNoBreakSpace, string.Empty);
-            if (Configuration.Settings.General.CharactersPerSecondsIgnoreWhiteSpace)
-                s = s.RemoveChar(' ');
+            string s = HtmlUtil.RemoveHtmlTags(paragraph.Text, true).RemoveWhiteSpaces(Configuration.Settings.General.CharactersPerSecondsIgnoreWhiteSpace);
             return s.Length / paragraph.Duration.TotalSeconds;
         }
 
@@ -1260,7 +1255,7 @@ namespace Nikse.SubtitleEdit.Core
             return TwoOrMoreDigitsNumber.Replace(s, m => ReverseString(m.Value));
         }
 
-        private static string ReverseString(string s)
+        internal static string ReverseString(string s)
         {
             int len = s.Length;
             if (len <= 1)
