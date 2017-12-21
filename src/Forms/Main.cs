@@ -3100,7 +3100,14 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         if (_subtitle.Paragraphs.Any(p => !string.IsNullOrEmpty(p.Actor)))
                         {
+                            bool wasVisible = SubtitleListview1.ColumnIndexActor >= 0;
                             SubtitleListview1.ShowActorColumn(Configuration.Settings.Language.General.Character);
+                            if (!wasVisible)
+                            {
+                                SaveSubtitleListviewIndices();
+                                SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+                                RestoreSubtitleListviewIndices();
+                            }
                         }
                     }
                 }
@@ -3997,6 +4004,7 @@ namespace Nikse.SubtitleEdit.Forms
                     formatType == typeof(CsvNuendo)) && (_subtitle.Paragraphs.Any(p => !string.IsNullOrEmpty(p.Actor)) ||
                     Configuration.Settings.Tools.ListViewShowColumnActor))
                 {
+                    bool wasVisible = SubtitleListview1.ColumnIndexActor >= 0;
                     if (formatType == typeof(CsvNuendo))
                     {
                         SubtitleListview1.ShowActorColumn(Configuration.Settings.Language.General.Character);
@@ -4004,6 +4012,12 @@ namespace Nikse.SubtitleEdit.Forms
                     else
                     {
                         SubtitleListview1.ShowActorColumn(Configuration.Settings.Language.General.Actor);
+                    }
+                    if (!wasVisible)
+                    {
+                        SaveSubtitleListviewIndices();
+                        SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+                        RestoreSubtitleListviewIndices();
                     }
                 }
                 else
@@ -6559,7 +6573,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemSetRegion.Visible = false;
             toolStripMenuItemSetLanguage.Visible = false;
             List<string> actors = null;
-            if ((formatType == typeof(AdvancedSubStationAlpha) || formatType == typeof(SubStationAlpha)) && SubtitleListview1.SelectedItems.Count > 0)
+            if ((formatType == typeof(AdvancedSubStationAlpha) || formatType == typeof(SubStationAlpha) || formatType == typeof(CsvNuendo)) && SubtitleListview1.SelectedItems.Count > 0)
             {
                 actors = new List<string>();
                 toolStripMenuItemWebVTT.Visible = false;
