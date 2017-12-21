@@ -18,7 +18,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public const int LanguageIdChineseSimplified = 0x91;
         public const int LanguageIdRomanian = 0x22;
 
-        private static readonly List<int> HebrewCodes = new List<int> {
+        private static readonly List<int> HebrewCodes = new List<int>
+        {
             0x40, // א
             0x41, // ב
             0x42, // ג
@@ -46,9 +47,64 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             0x48, // ט
             0x53, // ף
             0x55, // ץ
+
+            0xB1, // "a"
+            0xB2, // "b"
+            0xB3, // "c"
+            0xB4, // "d"
+            0xB5, // "e"
+            0xB6, // "f"
+            0xB7, // "g"
+            0xB8, // "h"
+            0xB9, // "i"
+            0xBA, // "j"
+            0xBB, // "k"
+            0xBC, // "l"
+            0xBD, // "m"
+            0xBE, // "n"
+            0xBF, // "o"
+            0xC0, // "p"
+            0xC1, // "q"
+            0xC2, // "r"
+            0xC3, // "s"
+            0xC4, // "t"
+            0xC5, // "u"
+            0xC6, // "v"
+            0xC7, // "w"
+            0xC8, // "x"
+            0xC9, // "y"
+            0xCA, // "z"
+
+            0x91, // "A"
+            0xDB, // "B" -- weird
+            0x93, // "C"
+            0xDC, // "D" -- weird
+            0x95, // "E"
+            0x96, // "F"
+            0x97, // "G"
+            0xAB, // "H" -- weird
+            0x99, // "I"
+            0x9A, // "J"
+            0x9B, // "K"
+            0x9C, // "L"
+            0xDD, // "M"
+            0xDE, // "N"
+            0x9F, // "O"
+            0xA0, // "P"
+            0xA1, // "Q"
+            0xA2, // "R"
+            0xA3, // "S"
+            0xA4, // "T"
+            0xA5, // "U"
+            0xA6, // "V"
+            0xA7, // "W"
+            0xA8, // "X" - weird
+            0xA9, // "Y"
+            0xAA, // "Z" - weird
         };
 
-        private static readonly List<string> HebrewLetters = new List<string> {
+        private static readonly List<string> HebrewLetters = new List<string>
+        {
             "א",
             "ב",
             "ג",
@@ -76,9 +132,64 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             "ט",
             "ף",
             "ץ",
+
+            "a", // 0xB1
+            "b", // 0xB2
+            "c", // 0xB3
+            "d", // 0xB4
+            "e", // 0xB5
+            "f", // 0xB6
+            "g", // 0xB7
+            "h", // 0xB8
+            "i", // 0xB9
+            "j", // 0xBA
+            "k", // 0xBB
+            "l", // 0xBC
+            "m", // 0xBD
+            "n", // 0xBE
+            "o", // 0xBF
+            "p", // 0xC0
+            "q", // 0xC1
+            "r", // 0xC2
+            "s", // 0xC3
+            "t", // 0xC4
+            "u", // 0xC5
+            "v", // 0xC6
+            "w", // 0xC7
+            "x", // 0xC8
+            "y", // 0xC9
+            "z", // 0xCA
+
+            "A", // 0x91,
+            "B", // 0xDB,
+            "C", // 0x93,
+            "D", // 0xDC,
+            "E", // 0x95,
+            "F", // 0x96,
+            "G", // 0x97,
+            "H", // 0xAB,
+            "I", // 0x99,
+            "J", // 0x9A,
+            "K", // 0x9B,
+            "L", // 0x9C,
+            "M", // 0xDD,
+            "N", // 0xDE,
+            "O", // 0x9F,
+            "P", // 0xA0,
+            "Q", // 0xA1,
+            "R", // 0xA2,
+            "S", // 0xA3,
+            "T", // 0xA4,
+            "U", // 0xA5,
+            "V", // 0xA6,
+            "W", // 0xA7,
+            "X", // 0xA8,
+            "Y", // 0xA9,
+            "Z", // 0xAA,
         };
 
-        private static readonly List<int> RussianCodes = new List<int> {
+        private static readonly List<int> RussianCodes = new List<int>
+        {
             0x42, // Б
             0x45, // Е
             0x5A, // З
@@ -125,7 +236,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             0x68, // П
         };
 
-        private static readonly List<string> RussianLetters = new List<string> {
+        private static readonly List<string> RussianLetters = new List<string>
+        {
             "Б",
             "Е",
             "З",
@@ -485,6 +597,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             var encoding = Encoding.Default;
             int index = 0;
+
+            if (languageId == LanguageIdHebrew)
+            {
+                text = ReverseAnsi(text);
+            }
+
             for (int i = 0; i < text.Length; i++)
             {
                 var current = text[i];
@@ -837,6 +955,31 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return buffer;
         }
 
+        private static string ReverseAnsi(string text)
+        {
+            var sb = new StringBuilder();
+            var ansi = new StringBuilder();
+            foreach (var ch in text)
+            {
+                if (ch > 255)
+                {
+                    if (ansi.Length > 0)
+                    {
+                        sb.Append(Utilities.ReverseString(ansi.ToString()));
+                        ansi.Clear();
+                    }
+                    sb.Append(ch);
+                }
+                else
+                {
+                    ansi.Append(ch);
+                }
+            }
+            if (ansi.Length > 0)
+                sb.Append(Utilities.ReverseString(ansi.ToString()));
+            return sb.ToString();
+        }
+
         private static void AddTwo(byte[] buffer, ref int index, byte b1, byte b2)
         {
             buffer[index] = b1;
@@ -1020,9 +1163,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 text = text.Replace(encoding.GetString(new byte[] { 0x7F }), string.Empty); // Used to fill empty space upto 51 bytes
                 text = text.Replace(encoding.GetString(new byte[] { 0xBE }), string.Empty); // Unknown?
                 text = FixColors(text);
-                if (!Configuration.Settings.General.RightToLeftMode)
-                    text = Utilities.ReverseStartAndEndingForRightToLeft(text);
-                text = Utilities.ReverseNumbers(text);
+
+                text = ReverseAnsi(text);
+                text = Utilities.ReverseStartAndEndingForRightToLeft(text);
             }
             else if (languageId == LanguageIdChineseTraditional || languageId == LanguageIdChineseSimplified) //  (_language == "CCKM44" || _language == "TVB000")
             {
