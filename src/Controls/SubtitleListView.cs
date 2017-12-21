@@ -1193,6 +1193,9 @@ namespace Nikse.SubtitleEdit.Controls
                     }
                 }
 
+                if (ColumnIndexText >= item.SubItems.Count)
+                    return;
+
                 if (_settings.Tools.ListViewSyntaxColorLongLines)
                 {
                     string s = HtmlUtil.RemoveHtmlTags(paragraph.Text, true);

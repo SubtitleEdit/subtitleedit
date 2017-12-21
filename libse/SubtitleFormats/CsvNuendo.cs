@@ -7,9 +7,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class CsvNuendo : SubtitleFormat
     {
-        private static readonly Regex CsvLine = new Regex("^.*;[+\\d+:,]+;[+\\d+:,]+;\".+", RegexOptions.Compiled);
-        private const string LineFormat = "{1}{0}{2}{0}{3}{0}\"{4}\"";
-        private static string Header = string.Format(LineFormat, ";", "Character", "Timecode In", "Timecode Out", "Dialogue");
+        private static readonly Regex CsvLine = new Regex("^.*,[+\\d+:]+,[+\\d+:]+,\".+", RegexOptions.Compiled);
+        private const string LineFormat = "\"{1}\"{0}{2}{0}{3}{0}\"{4}\"";
+        private static string Header = string.Format(LineFormat, ",", "Character", "\"Timecode In\"", "\"Timecode Out\"", "\"Dialogue\"");
 
         public override string Extension => ".csv";
 
@@ -34,7 +34,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             sb.AppendLine(Header);
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                sb.AppendLine(string.Format(LineFormat, ";", p.Actor != null ? p.Actor.Replace(";", " ") : string.Empty, p.StartTime, p.EndTime, p.Text.Replace(Environment.NewLine, "\n")));
+                sb.AppendLine(string.Format(LineFormat, ",", p.Actor != null ? p.Actor.Replace(",", " ").Replace("\"", string.Empty) : string.Empty, p.StartTime.ToHHMMSSFF(), p.EndTime.ToHHMMSSFF(), p.Text.Replace("\"", "\"\"").Replace(Environment.NewLine, "\n")));
             }
             return sb.ToString().Trim();
         }
@@ -48,11 +48,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 if (CsvLine.IsMatch(line))
                 {
-                    string[] parts = line.Split(';');
+                    string[] parts = line.Split(',');
                     if (parts.Length == 4)
                         try
                         {
-                            var actor = parts[0];
+                            var actor = Utilities.FixQuotes(parts[0]);
                             var start = DecodeTime(parts[1]);
                             var end = DecodeTime(parts[2]);
                             string text = Utilities.FixQuotes(parts[3]);
@@ -86,7 +86,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private TimeCode DecodeTime(string s)
         {
-            return DecodeTimeCodeFramesFourParts(s.Split(new char[] { ',', ':', '.' }));
+            return DecodeTimeCodeFramesFourParts(s.Split(new char[] { ':' }));
         }
     }
 }
