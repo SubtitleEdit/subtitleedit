@@ -51,6 +51,7 @@
    * Fix issues with find/replace in translator mode - thx darnn
    * Fix "Find whole word" issue - thx OmrSi
    * Fix issue in "Find & count" with regex - thx ivandrofly
+   * Fix wrong text for "split long lines" - thx Christian
 
 
 3.5.4 (2nd October 2017)
