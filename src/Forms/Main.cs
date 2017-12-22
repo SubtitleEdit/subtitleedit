@@ -13791,11 +13791,11 @@ namespace Nikse.SubtitleEdit.Forms
                 splitLongLines.Initialize(_subtitle);
                 if (splitLongLines.ShowDialog(this) == DialogResult.OK)
                 {
-                    MakeHistoryForUndo(_language.BeforeMergeShortLines);
+                    MakeHistoryForUndo(_language.BeforeSplitLongLines);
                     _subtitle.Paragraphs.Clear();
                     foreach (var p in splitLongLines.SplittedSubtitle.Paragraphs)
                         _subtitle.Paragraphs.Add(p);
-                    ShowStatus(string.Format(_language.MergedShortLinesX, splitLongLines.NumberOfSplits));
+                    ShowStatus(string.Format(_language.LongLinesSplitX, splitLongLines.NumberOfSplits));
                     SaveSubtitleListviewIndices();
                     ShowSource();
                     SubtitleListview1.Fill(_subtitle, _subtitleAlternate);

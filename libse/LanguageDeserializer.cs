@@ -2935,11 +2935,14 @@ namespace Nikse.SubtitleEdit.Core
                 case "Main/BeforeMergeShortLines":
                     language.Main.BeforeMergeShortLines = reader.Value;
                     break;
+                case "Main/MergedShortLinesX":
+                    language.Main.MergedShortLinesX = reader.Value;
+                    break;
                 case "Main/BeforeSplitLongLines":
                     language.Main.BeforeSplitLongLines = reader.Value;
                     break;
-                case "Main/MergedShortLinesX":
-                    language.Main.MergedShortLinesX = reader.Value;
+                case "Main/LongLinesSplitX":
+                    language.Main.LongLinesSplitX = reader.Value;
                     break;
                 case "Main/BeforeDurationsBridgeGap":
                     language.Main.BeforeDurationsBridgeGap = reader.Value;

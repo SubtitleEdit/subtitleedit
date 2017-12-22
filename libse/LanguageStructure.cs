@@ -1169,8 +1169,9 @@
             public string UnicodeCharactersAnsiWarning { get; set; }
             public string NegativeTimeWarning { get; set; }
             public string BeforeMergeShortLines { get; set; }
-            public string BeforeSplitLongLines { get; set; }
             public string MergedShortLinesX { get; set; }
+            public string BeforeSplitLongLines { get; set; }
+            public string LongLinesSplitX { get; set; }
             public string BeforeDurationsBridgeGap { get; set; }
             public string BeforeSetMinimumDisplayTimeBetweenParagraphs { get; set; }
             public string XMinimumDisplayTimeBetweenParagraphsChanged { get; set; }
