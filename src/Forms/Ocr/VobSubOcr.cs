@@ -4464,7 +4464,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                             string name = SaveCompareItemNew(item, text, _vobSubOcrCharacter.IsItalic, null);
                             var addition = new ImageCompareAddition(name, text, item.NikseBitmap, _vobSubOcrCharacter.IsItalic, listViewIndex);
                             _lastAdditions.Add(addition);
-                            matches.Add(new CompareMatch(text, _vobSubOcrCharacter.IsItalic, 0, null));
+                            matches.Add(new CompareMatch(text, _vobSubOcrCharacter.IsItalic, 0, null, item));
                             SetBinOcrLowercaseUppercase(item.NikseBitmap.Height, text);
                         }
                         else if (result == DialogResult.Abort)
@@ -4473,13 +4473,13 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         }
                         else
                         {
-                            matches.Add(new CompareMatch("*", false, 0, null));
+                            matches.Add(new CompareMatch("*", false, 0, null, item));
                         }
                         _italicCheckedLast = _vobSubOcrCharacter.IsItalic;
                     }
                     else // found image match
                     {
-                        matches.Add(new CompareMatch(match.Text, match.Italic, 0, null));
+                        matches.Add(new CompareMatch(match.Text, match.Italic, 0, null, item));
                         if (match.ExpandCount > 0)
                             index += match.ExpandCount - 1;
                     }
@@ -4495,7 +4495,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 }
             }
 
-            string line = GetStringWithItalicTags(matches);
+            string line = GetStringWithItalicTags(matches);            
 
             if (checkBoxAutoFixCommonErrors.Checked && _ocrFixEngine != null)
                 line = _ocrFixEngine.FixOcrErrorsViaHardcodedRules(line, _lastLine, null); // TODO: Add abbreviations list
@@ -4515,6 +4515,41 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     line = _ocrFixEngine.FixOcrErrors(line, listViewIndex, _lastLine, true, autoGuessLevel);
                 int correctWords;
                 int wordsNotFound = _ocrFixEngine.CountUnknownWordsViaDictionary(line, out correctWords);
+
+                // smaller space pixels for italic
+                if (correctWords > 0 && wordsNotFound > 0 && line.Contains("<i>", StringComparison.Ordinal) && matches.Any(p=>p?.ImageSplitterItem?.CouldBeSpace == true))
+                {
+                    int j = 0;
+                    while (j < matches.Count)
+                    {
+                        if (matches[j]?.ImageSplitterItem?.CouldBeSpace == true)
+                        {
+                            matches[j].ImageSplitterItem.CouldBeSpace = false;
+                            matches.Insert(j, new CompareMatch(" ", false, 0, string.Empty, new ImageSplitterItem(" ")));
+                        }
+                        j++;
+                    }
+                    var tempLine = GetStringWithItalicTags(matches);
+                    var oldAutoGuessesUsed = new List<string>(_ocrFixEngine.AutoGuessesUsed);
+                    var oldUnknownWordsFound = new List<string>(_ocrFixEngine.UnknownWordsFound);
+                    _ocrFixEngine.AutoGuessesUsed.Clear();
+                    _ocrFixEngine.UnknownWordsFound.Clear();
+                    if (checkBoxAutoFixCommonErrors.Checked)
+                        tempLine = _ocrFixEngine.FixOcrErrors(tempLine, listViewIndex, _lastLine, true, autoGuessLevel);
+                    int tempCorrectWords;
+                    int tempWordsNotFound = _ocrFixEngine.CountUnknownWordsViaDictionary(tempLine, out tempCorrectWords);
+                    if (tempWordsNotFound == 0 && tempCorrectWords > 0)
+                    {
+                        wordsNotFound = tempWordsNotFound;
+                        correctWords = tempCorrectWords;
+                        line = tempLine;
+                    }
+                    else
+                    {
+                        _ocrFixEngine.AutoGuessesUsed = oldAutoGuessesUsed;
+                        _ocrFixEngine.UnknownWordsFound = oldUnknownWordsFound;
+                    }
+                }
 
                 if (wordsNotFound > 0 || correctWords == 0 || textWithOutFixes != null && string.IsNullOrWhiteSpace(textWithOutFixes.Replace("~", string.Empty)))
                 {
@@ -5999,12 +6034,12 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             string text = string.Empty;
             //            var sw = Stopwatch.StartNew();
-            if (_ocrMethodIndex == _ocrMethodTesseract)
+            if (_ocrMethodIndex == _ocrMethodBinaryImageCompare)
+                text = SplitAndOcrBinaryImageCompare(bmp, i);
+            else if (_ocrMethodIndex == _ocrMethodTesseract)
                 text = OcrViaTesseract(bmp, i);
             else if (_ocrMethodIndex == _ocrMethodImageCompare)
                 text = SplitAndOcrBitmapNormal(bmp, i);
-            else if (_ocrMethodIndex == _ocrMethodBinaryImageCompare)
-                text = SplitAndOcrBinaryImageCompare(bmp, i);
             else if (_ocrMethodIndex == _ocrMethodNocr)
                 text = OcrViaNOCR(bmp, i);
             else if (_ocrMethodIndex == _ocrMethodModi)
@@ -7470,7 +7505,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
             else
             {
-                comboBoxDictionaries.SelectedIndex = 0;
+                if (comboBoxDictionaries.SelectedIndex < 0)
+                    comboBoxDictionaries.SelectedIndex = 0;
+                else
+                    comboBoxDictionaries_SelectedIndexChanged(null, null);
             }
 
             if (_modiEnabled && checkBoxUseModiInTesseractForUnknownWords.Checked)
