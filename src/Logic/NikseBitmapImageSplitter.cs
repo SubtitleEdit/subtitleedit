@@ -774,11 +774,16 @@ namespace Nikse.SubtitleEdit.Logic
                     int addY;
                     b1 = CropTopAndBottom(b1, out addY);
 
+                    var couldBeSpace = false;
                     if (spacePixels >= xOrMorePixelsMakesSpace && parts.Count > 0)
                         parts.Add(new ImageSplitterItem(" ") { Y = addY + lineSplitterItem.Y });
+                    else if (xOrMorePixelsMakesSpace > 9 && spacePixels >= xOrMorePixelsMakesSpace - 2 && parts.Count > 0)
+                        couldBeSpace = true;
+                    else if (xOrMorePixelsMakesSpace > 3 && spacePixels >= xOrMorePixelsMakesSpace - 1 && parts.Count > 0)
+                        couldBeSpace = true;
 
                     if (b1.Width > 0 && b1.Height > 0)
-                        parts.Add(new ImageSplitterItem(startX + lineSplitterItem.X, addY + lineSplitterItem.Y, b1)); //y is what?
+                        parts.Add(new ImageSplitterItem(startX + lineSplitterItem.X, addY + lineSplitterItem.Y, b1, couldBeSpace)); //y is what?
 
                     // remove pixels before next letter;
                     const int begin = 0;

@@ -931,6 +931,18 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 }
             }
 
+            if (input.EndsWith(". \"</i>", StringComparison.Ordinal))
+                input = input.Remove(input.Length - 6, 1);
+
+            if (input.Contains(". \"</i>" + Environment.NewLine, StringComparison.Ordinal))
+            {
+                idx = input.IndexOf(". \"</i>" + Environment.NewLine);
+                if (idx > 0)
+                {
+                    input = input.Remove(idx + 1, 1);
+                }                
+            }
+
             return input;
         }
 
