@@ -1300,6 +1300,7 @@ namespace Nikse.SubtitleEdit.Core
                 NegativeTimeWarning = "Subtitle contains negative time codes. Continue with saving?",
                 BeforeMergeShortLines = "Before merge short lines",
                 BeforeSplitLongLines = "Before split long lines",
+                LongLinesSplitX = "Number of lines split: {0}",
                 MergedShortLinesX = "Number of lines merged: {0}",
                 BeforeDurationsBridgeGap = "Before bridge small gaps",
                 BeforeSetMinimumDisplayTimeBetweenParagraphs = "Before set minimum display time between subtitles",
