@@ -344,10 +344,11 @@ namespace Nikse.SubtitleEdit.Core
                         nextStartMilliseconds = _paragraphs[i + 1].StartTime.TotalMilliseconds;
 
                     double newEndMilliseconds = _paragraphs[i].EndTime.TotalMilliseconds;
-                    newEndMilliseconds = _paragraphs[i].StartTime.TotalMilliseconds + (((newEndMilliseconds - _paragraphs[i].StartTime.TotalMilliseconds) * percent) / 100);
+                    newEndMilliseconds = _paragraphs[i].StartTime.TotalMilliseconds + (((newEndMilliseconds - _paragraphs[i].StartTime.TotalMilliseconds) * percent) / 100.0);
                     if (newEndMilliseconds > nextStartMilliseconds)
-                        newEndMilliseconds = nextStartMilliseconds - 1;
-                    _paragraphs[i].EndTime.TotalMilliseconds = newEndMilliseconds;
+                        newEndMilliseconds = nextStartMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                    if (percent > 100 && newEndMilliseconds > _paragraphs[i].EndTime.TotalMilliseconds || percent < 100)
+                        _paragraphs[i].EndTime.TotalMilliseconds = newEndMilliseconds;
                 }
             }
         }
@@ -364,7 +365,7 @@ namespace Nikse.SubtitleEdit.Core
 
                     double newEndMilliseconds = _paragraphs[i].EndTime.TotalMilliseconds + (seconds * TimeCode.BaseUnit);
                     if (newEndMilliseconds > nextStartMilliseconds)
-                        newEndMilliseconds = nextStartMilliseconds - 1;
+                        newEndMilliseconds = nextStartMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
 
                     if (seconds < 0)
                     {
@@ -373,7 +374,7 @@ namespace Nikse.SubtitleEdit.Core
                         else
                             _paragraphs[i].EndTime.TotalMilliseconds = newEndMilliseconds;
                     }
-                    else
+                    else if (newEndMilliseconds > _paragraphs[i].EndTime.TotalMilliseconds)
                     {
                         _paragraphs[i].EndTime.TotalMilliseconds = newEndMilliseconds;
                     }

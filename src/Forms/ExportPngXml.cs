@@ -5095,12 +5095,12 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 {
                     if (adjustDisplayTime.AdjustUsingPercent)
                     {
-                        double percent = double.Parse(adjustDisplayTime.AdjustValue);
+                        double percent = double.Parse(adjustDisplayTime.AdjustValue, CultureInfo.InvariantCulture);
                         _subtitle.AdjustDisplayTimeUsingPercent(percent, null);
                     }
                     else if (adjustDisplayTime.AdjustUsingSeconds)
                     {
-                        double seconds = double.Parse(adjustDisplayTime.AdjustValue);
+                        double seconds = double.Parse(adjustDisplayTime.AdjustValue, CultureInfo.InvariantCulture);
                         _subtitle.AdjustDisplayTimeUsingSeconds(seconds, null);
                     }
                     else

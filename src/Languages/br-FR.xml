@@ -143,7 +143,6 @@ Notenn: Gwiriekit spas an disk vak.</WaveFileMalformed>
     <SetAsPercent>Lakaat en % ar badelezh</SetAsPercent>
     <Note>Notenn: Ar spisadurioù na vo ket desleberet ar c'hrafoù loc'hañ ganto</Note>
     <PleaseSelectAValueFromTheDropDownList>Diuzit mar plij un dalvoudegezh e-barzh ar roll disachañ</PleaseSelectAValueFromTheDropDownList>
-    <PleaseChoose> - Dibabit mar plij - </PleaseChoose>
   </AdjustDisplayDuration>
   <ApplyDurationLimits>
     <Title>Arloañ bevennoù padelezh</Title>
@@ -1433,7 +1432,6 @@ M'ho peus kemmet ar restr gant Subtitle Edit gellout a rafec'h kavout une enroll
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Dibabit an istitloù eus ar restr Matroska</Title>
-    <PleaseChoose>Muioc'h evit un istitl kavet - dibabit mar-plij</PleaseChoose>
     <TrackXLanguageYTypeZ>Loabr {0} - yezh : {1} - tip : {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MeasurementConverter>

@@ -272,7 +272,6 @@ namespace Nikse.SubtitleEdit.Core
                 Seconds = "Seconds",
                 Note = "Note: Display time will not overlap start time of next text",
                 PleaseSelectAValueFromTheDropDownList = "Please select a value from the dropdown list",
-                PleaseChoose = " - Please choose - ",
             };
 
             ApplyDurationLimits = new LanguageStructure.ApplyDurationLimits

@@ -139,7 +139,6 @@ Ist genügend Plattenspeicherplatz verfügbar?</WaveFileMalformed>
     <SetAsPercent>Als Prozent festlegen</SetAsPercent>
     <Note>Hinweis: Die Anzeigezeit wird nicht mit nächster Textstartzeit überlappen</Note>
     <PleaseSelectAValueFromTheDropDownList>Bitte einen Wert aus der Auswahlliste wählen</PleaseSelectAValueFromTheDropDownList>
-    <PleaseChoose> - Bitte wählen - </PleaseChoose>
   </AdjustDisplayDuration>
   <ApplyDurationLimits>
     <Title>Längenbegrenzungen anwenden</Title>
@@ -1445,7 +1444,6 @@ Falls Sie diese Datei mit Subtitle Edit bearbeitet haben, dürfte eine Sicherung
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Untertitel aus Matroska Datei auswählen</Title>
-    <PleaseChoose>Mehr als ein Untertitel gefunden - bitte wählen</PleaseChoose>
     <TrackXLanguageYTypeZ>Spur {0} - Sprache: {1} - Typ: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MeasurementConverter>

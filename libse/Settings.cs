@@ -206,7 +206,9 @@ namespace Nikse.SubtitleEdit.Core
         public bool ExportTextNewLineBetweenSubtitles { get; set; }
         public bool VideoOffsetKeepTimeCodes { get; set; }
         public int MoveStartEndMs { get; set; }
-
+        public decimal AdjustDurationSeconds { get; set; }
+        public int AdjustDurationPercent { get; set; }
+        public string AdjustDurationLast { get; set; }
 
         public ToolsSettings()
         {
@@ -287,6 +289,8 @@ namespace Nikse.SubtitleEdit.Core
             ExportTextNewLineBetweenSubtitles = true;
             ImportTextLineBreak = "|";
             MoveStartEndMs = 100;
+            AdjustDurationSeconds = 0.1m;
+            AdjustDurationPercent = 120;
         }
 
     }
@@ -2200,6 +2204,15 @@ namespace Nikse.SubtitleEdit.Core
             subNode = node.SelectSingleNode("MoveStartEndMs");
             if (subNode != null)
                 settings.Tools.MoveStartEndMs = Convert.ToInt32(subNode.InnerText);
+            subNode = node.SelectSingleNode("AdjustDurationSeconds");
+            if (subNode != null)
+                settings.Tools.AdjustDurationSeconds = Convert.ToDecimal(subNode.InnerText);
+            subNode = node.SelectSingleNode("AdjustDurationPercent");
+            if (subNode != null)
+                settings.Tools.AdjustDurationPercent = Convert.ToInt32(subNode.InnerText);
+            subNode = node.SelectSingleNode("AdjustDurationLast");
+            if (subNode != null)
+                settings.Tools.AdjustDurationLast = subNode.InnerText;
             subNode = node.SelectSingleNode("FindHistory");
             if (subNode != null)
             {
@@ -3580,6 +3593,10 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("ExportTextNewLineBetweenSubtitles", settings.Tools.ExportTextNewLineBetweenSubtitles.ToString());
                 textWriter.WriteElementString("VideoOffsetKeepTimeCodes", settings.Tools.VideoOffsetKeepTimeCodes.ToString());
                 textWriter.WriteElementString("MoveStartEndMs", settings.Tools.MoveStartEndMs.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("AdjustDurationSeconds", settings.Tools.AdjustDurationSeconds.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("AdjustDurationPercent", settings.Tools.AdjustDurationPercent.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("AdjustDurationLast", settings.Tools.AdjustDurationLast);
+
 
                 if (settings.Tools.FindHistory != null && settings.Tools.FindHistory.Count > 0)
                 {

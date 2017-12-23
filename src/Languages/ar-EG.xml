@@ -104,7 +104,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SetAsPercent>ادخال في المئة من مدة</SetAsPercent>
     <Note>ملاحظة : سيتم عرض الوقت لن يتداخل وقت بدء النص التالي</Note>
     <PleaseSelectAValueFromTheDropDownList>يرجى تحديد قيمة من القائمة المنسدلة</PleaseSelectAValueFromTheDropDownList>
-    <PleaseChoose>- الرجاء اختيار -</PleaseChoose>
   </AdjustDisplayDuration>
   <AutoBreakUnbreakLines>
     <TitleAutoBreak>خطوط التوازن التلقائي المحدد</TitleAutoBreak>

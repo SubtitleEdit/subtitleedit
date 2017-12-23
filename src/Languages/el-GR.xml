@@ -122,7 +122,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SetAsPercent>Ορισμός ως ποσοστό της διάρκειας</SetAsPercent>
     <Note>Σημείωση: Ο χρόνος εμφάνισης δεν θα επικαλύπτει την ώρα έναρξης του επόμενου κειμένου</Note>
     <PleaseSelectAValueFromTheDropDownList>Παρακαλώ επιλέξτε μια τιμή από τη λίστα</PleaseSelectAValueFromTheDropDownList>
-    <PleaseChoose> - Παρακαλώ επιλέξτε - </PleaseChoose>
   </AdjustDisplayDuration>
   <ApplyDurationLimits>
     <Title>Εφαρμογή ορίων διάρκειας</Title>
@@ -1350,7 +1349,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Επιλογή υπότιτλου από αρχείο Matroska</Title>
-    <PleaseChoose>Περισσότεροι από ένας υπότιτλοι βρέθηκαν - παρακαλώ επιλέξτε</PleaseChoose>
     <TrackXLanguageYTypeZ>Κομμάτι {0} - γλώσσα: {1} - τύπος: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MeasurementConverter>

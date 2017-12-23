@@ -139,7 +139,6 @@ Tips: Se om du har noe plass igjen på harddisken.</WaveFileMalformed>
     <SetAsPercent>Sett som prosentandel av varigheten</SetAsPercent>
     <Note>Bemerk: Visningstiden vil ikke overlappe starttidspunktet til den neste teksten.</Note>
     <PleaseSelectAValueFromTheDropDownList>Vennligst velg en verdi fra nedfallslisten</PleaseSelectAValueFromTheDropDownList>
-    <PleaseChoose> - Vennligst velg - </PleaseChoose>
   </AdjustDisplayDuration>
   <ApplyDurationLimits>
     <Title>Legg til varighetsbegrensninger</Title>
@@ -1436,7 +1435,6 @@ Hvis du har redigert denne filen i Subtitle Edit, kan du kanskje finne en backup
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Choose subtitle from Matroska file</Title>
-    <PleaseChoose>More than one subtitle found - please choose</PleaseChoose>
     <TrackXLanguageYTypeZ>Track {0} - language: {1} - type: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MeasurementConverter>

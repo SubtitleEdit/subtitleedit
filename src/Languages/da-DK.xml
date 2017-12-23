@@ -140,7 +140,6 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <SetAsPercent>Set som procent af varighed</SetAsPercent>
     <Note>Bemærk: Visningstid vil ikke overlappe starttidspunkt for næste tekst</Note>
     <PleaseSelectAValueFromTheDropDownList>Vælg en værdi fra listen</PleaseSelectAValueFromTheDropDownList>
-    <PleaseChoose>- Vælg værdi -</PleaseChoose>
   </AdjustDisplayDuration>
   <ApplyDurationLimits>
     <Title>Overhold visnings-grænser</Title>
@@ -1461,7 +1460,6 @@ Hvis du har redigeret denne fil med Subtitle Edit du måske finde en backup via 
   <MatroskaSubtitleChooser>
     <Title>Vælg undertekst fra Matroska fil</Title>
     <TitleMp4>Vælg undertekster fra MP4-fil</TitleMp4>
-    <PleaseChoose>Mere end en undertekst fundet - så vælg</PleaseChoose>
     <TrackXLanguageYTypeZ>Spor {0} - sprog: {1} - type: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MeasurementConverter>

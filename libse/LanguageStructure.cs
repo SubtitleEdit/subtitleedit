@@ -146,7 +146,6 @@
             public string SetAsPercent { get; set; }
             public string Note { get; set; }
             public string PleaseSelectAValueFromTheDropDownList { get; set; }
-            public string PleaseChoose { get; set; }
         }
 
         public class ApplyDurationLimits

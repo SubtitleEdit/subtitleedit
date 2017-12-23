@@ -142,7 +142,6 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
     <SetAsPercent>Ustaw jako procent czasu trwania</SetAsPercent>
     <Note>Uwaga: Czas wyświetlania nie nałoży się na czas początkowy następnego tekstu</Note>
     <PleaseSelectAValueFromTheDropDownList>Proszę wybrać wartość z listy rozwijanej</PleaseSelectAValueFromTheDropDownList>
-    <PleaseChoose> - Proszę wybrać - </PleaseChoose>
   </AdjustDisplayDuration>
   <ApplyDurationLimits>
     <Title>Zastosuj limity czasu trwania</Title>
@@ -1475,7 +1474,6 @@ Jeśli edytowałeś ten plik w Subtitle Edit, to możesz odszukać kopię zapaso
   <MatroskaSubtitleChooser>
     <Title>Wybierz napisy z pliku Matroska</Title>
     <TitleMp4>Wybierz napisy z pliku MP4</TitleMp4>
-    <PleaseChoose>Znaleziono klika napisów - proszę wybrać</PleaseChoose>
     <TrackXLanguageYTypeZ>Ścieżka {0} - język: {1} - typ: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MeasurementConverter>

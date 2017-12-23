@@ -144,7 +144,6 @@ Note: Do check free disk space.</WaveFileMalformed>
     <SetAsPercent>Set as percent of duration</SetAsPercent>
     <Note>Note: Display time will not overlap start time of next text</Note>
     <PleaseSelectAValueFromTheDropDownList>Please select a value from the dropdown list</PleaseSelectAValueFromTheDropDownList>
-    <PleaseChoose> - Please choose - </PleaseChoose>
   </AdjustDisplayDuration>
   <ApplyDurationLimits>
     <Title>Apply duration limits</Title>
