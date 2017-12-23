@@ -1395,8 +1395,9 @@ Deseja continuar?</SubtitleAppendPrompt>
     <UnicodeCharactersAnsiWarning>A legenda contém caracteres Unicode. Guardar a legenda com a codificação ANSI perde estes caracteres. Deseja continuar?</UnicodeCharactersAnsiWarning>
     <NegativeTimeWarning>A legenda contém tempos negativos. Deseja continuar?</NegativeTimeWarning>
     <BeforeMergeShortLines>Antes de combinar as linhas curtas</BeforeMergeShortLines>
+	<MergedShortLinesX>Número de linhas combinadas: {0}</MergedShortLinesX>
     <BeforeSplitLongLines>Antes de dividir linhas longas</BeforeSplitLongLines>
-    <MergedShortLinesX>Número de linhas combinadas: {0}</MergedShortLinesX>
+    <LongLinesSplitX>Número de linhas divididas: {0}</LongLinesSplitX>
     <BeforeDurationsBridgeGap>Antes de unir pequenos intervalos</BeforeDurationsBridgeGap>
     <BeforeSetMinimumDisplayTimeBetweenParagraphs>Antes de estabelecer o tempo de visualização mínimo entre legendas</BeforeSetMinimumDisplayTimeBetweenParagraphs>
     <XMinimumDisplayTimeBetweenParagraphsChanged>Número de linhas com tempo de visualização mínimo entre legendas alteradas: {0}</XMinimumDisplayTimeBetweenParagraphsChanged>
