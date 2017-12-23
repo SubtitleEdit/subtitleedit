@@ -2206,7 +2206,7 @@ namespace Nikse.SubtitleEdit.Core
                 settings.Tools.MoveStartEndMs = Convert.ToInt32(subNode.InnerText);
             subNode = node.SelectSingleNode("AdjustDurationSeconds");
             if (subNode != null)
-                settings.Tools.AdjustDurationSeconds = Convert.ToDecimal(subNode.InnerText);
+                settings.Tools.AdjustDurationSeconds = Convert.ToDecimal(subNode.InnerText, CultureInfo.InvariantCulture);
             subNode = node.SelectSingleNode("AdjustDurationPercent");
             if (subNode != null)
                 settings.Tools.AdjustDurationPercent = Convert.ToInt32(subNode.InnerText);
