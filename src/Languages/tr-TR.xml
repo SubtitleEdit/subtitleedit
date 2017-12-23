@@ -119,7 +119,6 @@ E-posta: mailto:nikse.dk@gmail.com</AboutText1>
     <SetAsPercent>Süreyi yüzde olarak ayarla</SetAsPercent>
     <Note>Not: Görüntüleme süresi, sonraki metnin başlangıç süresiyle örtüşmemelidir.</Note>
     <PleaseSelectAValueFromTheDropDownList>Please select a value from the dropdown list</PleaseSelectAValueFromTheDropDownList>
-    <PleaseChoose> - Lütfen seçin - </PleaseChoose>
   </AdjustDisplayDuration>
   <ApplyDurationLimits>
     <Title>Süre limitleri uygula</Title>
@@ -1356,7 +1355,6 @@ Continue?</SubtitleAppendPrompt>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Matroska dosyasından altyazı seç</Title>
-    <PleaseChoose>Birden fazla altyazı bulundu - lütfen seçin</PleaseChoose>
     <TrackXLanguageYTypeZ>Parça {0} - dil: {1} - tür: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MeasurementConverter>

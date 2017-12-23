@@ -140,7 +140,6 @@ Command line: {1} {2}
     <SetAsPercent>设置为时长百分比</SetAsPercent>
     <Note>说明: 显示时间不会与下一个文本的起始时间重叠</Note>
     <PleaseSelectAValueFromTheDropDownList>请从下拉列表中选择一个数值</PleaseSelectAValueFromTheDropDownList>
-    <PleaseChoose>- 请选择 -</PleaseChoose>
   </AdjustDisplayDuration>
   <ApplyDurationLimits>
     <Title>应用时长限制</Title>
@@ -1449,7 +1448,6 @@ Command line: {1} {2}
   </Main>
   <MatroskaSubtitleChooser>
     <Title>从 Matroska 文件选择字幕</Title>
-    <PleaseChoose>找到多个字幕 - 请选择</PleaseChoose>
     <TrackXLanguageYTypeZ>曲目 {0} - 语言: {1} - 类型: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MeasurementConverter>

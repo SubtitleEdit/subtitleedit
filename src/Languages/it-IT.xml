@@ -139,7 +139,6 @@ Nota: Controlla lo spazio libero sul disco.</WaveFileMalformed>
     <SetAsPercent>Imposta percentuale di durata</SetAsPercent>
     <Note>Nota: Il tempo di visualizzazione non supererà il tempo di inizio del testo successivo</Note>
     <PleaseSelectAValueFromTheDropDownList>Selezionare un valore dalla lista a discesa</PleaseSelectAValueFromTheDropDownList>
-    <PleaseChoose> - Per favore, scegliere - </PleaseChoose>
   </AdjustDisplayDuration>
   <ApplyDurationLimits>
     <Title>Applica limiti di durata</Title>
@@ -1414,7 +1413,6 @@ la codifica ANSI andranno perse. Salvare comunque?</UnicodeCharactersAnsiWarning
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Scegli sottotitolo da file Matroska</Title>
-    <PleaseChoose>Trovato più di un sottotitolo - scegliere, per favore</PleaseChoose>
     <TrackXLanguageYTypeZ>Traccia {0} - lingua: {1} - tipo: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MeasurementConverter>

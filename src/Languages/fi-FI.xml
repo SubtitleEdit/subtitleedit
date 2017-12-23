@@ -136,7 +136,6 @@ HUOM! Tarkista vapaa levytila.</WaveFileMalformed>
     <SetAsPercent>Prosentteina kestosta</SetAsPercent>
     <Note>Huomautus: Näytön aika ei mene päällekkäin seuraavan tekstin alkamisajan kanssa</Note>
     <PleaseSelectAValueFromTheDropDownList>Valitse arvo pudotusvalikon luettelosta</PleaseSelectAValueFromTheDropDownList>
-    <PleaseChoose>-Valitse -</PleaseChoose>
   </AdjustDisplayDuration>
   <ApplyDurationLimits>
     <Title>Käytä keston rajoja</Title>
@@ -1442,7 +1441,6 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
   <MatroskaSubtitleChooser>
     <Title>Valitse tekstitys Matroska-tiedostosta</Title>
     <TitleMp4>Valitse tekstitys MP4-tiedostosta</TitleMp4>
-    <PleaseChoose>Enemmän kuin yksi tekstitys löytyi - valitse</PleaseChoose>
     <TrackXLanguageYTypeZ>Raita {0} - kieli: {1} - tyyppi: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MeasurementConverter>

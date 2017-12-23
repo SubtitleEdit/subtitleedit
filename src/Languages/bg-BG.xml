@@ -136,7 +136,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SetAsPercent>Настройка като процент от времетраенето</SetAsPercent>
     <Note>Забележка: Времето за показване няма да застъпва началното време на следващите субтитри.</Note>
     <PleaseSelectAValueFromTheDropDownList>Изберете стойност от падащото меню</PleaseSelectAValueFromTheDropDownList>
-    <PleaseChoose>- Изберете -</PleaseChoose>
   </AdjustDisplayDuration>
   <ApplyDurationLimits>
     <Title>Прилагане на лимитите за времетраене</Title>
@@ -1450,7 +1449,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   <MatroskaSubtitleChooser>
     <Title>Изберете субтитри от Matroska файла</Title>
     <TitleMp4>Изберете субтитри от МР4 файл</TitleMp4>
-    <PleaseChoose>Намерени са повече от едни субтитри – моля, изберете</PleaseChoose>
     <TrackXLanguageYTypeZ>Запис {0} - език: {1} - тип: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MeasurementConverter>

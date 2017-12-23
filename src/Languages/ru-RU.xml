@@ -148,7 +148,6 @@ https://github.com/SubtitleEdit/subtitleedit
     <Note>Примечание: Временные границы субтитра будут установлены
 без наложения на следующий текст.</Note>
     <PleaseSelectAValueFromTheDropDownList>Выберите значение из раскрывающегося списка</PleaseSelectAValueFromTheDropDownList>
-    <PleaseChoose> - Сделайте выбор - </PleaseChoose>
   </AdjustDisplayDuration>
   <ApplyDurationLimits>
     <Title>Ограничения продолжительности</Title>
@@ -1482,7 +1481,6 @@ https://github.com/SubtitleEdit/subtitleedit
   <MatroskaSubtitleChooser>
     <Title>Выбор субтитров из файла Matroska</Title>
     <TitleMp4>Выбор субтитров из файла MP4</TitleMp4>
-    <PleaseChoose>Найдено несколько субтитров - пожалуйста, сделайте выбор:</PleaseChoose>
     <TrackXLanguageYTypeZ>Трек {0} - язык: {1} - тип: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MeasurementConverter>

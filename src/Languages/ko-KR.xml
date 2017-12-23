@@ -140,7 +140,6 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <SetAsPercent>비율로 조정합니다.</SetAsPercent>
     <Note>※ 현재 자막이 표시되는 시간은 다음 자막이 시작하는 시간을 초과하지 않습니다!</Note>
     <PleaseSelectAValueFromTheDropDownList>드롭다운 목록에서 하나의 값을 선택하십시오!</PleaseSelectAValueFromTheDropDownList>
-    <PleaseChoose>----------- 선택 ------------</PleaseChoose>
   </AdjustDisplayDuration>
   <ApplyDurationLimits>
     <Title>최대/최소 표시시간 설정</Title>
@@ -1474,7 +1473,6 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
   <MatroskaSubtitleChooser>
     <Title>MATROSKA 파일 안에 있는 자막 선택하기</Title>
     <TitleMp4>MP4 파일에서 자막 선택하기</TitleMp4>
-    <PleaseChoose>한 개 이상의 자막 발견! - 자막을 선택하십시오!</PleaseChoose>
     <TrackXLanguageYTypeZ>트랙 {0} - 언어: {1} - 종류: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MeasurementConverter>

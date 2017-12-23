@@ -141,7 +141,6 @@ Oharra: Egiaztatu diskako toki askea.</WaveFileMalformed>
     <SetAsPercent>Ezarri iraupenaren ehunekoa</SetAsPercent>
     <Note>Oharra: Erakuspen denbora ez zaio hurrengo idatziaren hasiera denborari gainjarriko</Note>
     <PleaseSelectAValueFromTheDropDownList>Mesedez hautatu goitibeherako zerrendaren balioa</PleaseSelectAValueFromTheDropDownList>
-    <PleaseChoose>- Mesedez hautatu -</PleaseChoose>
   </AdjustDisplayDuration>
   <ApplyDurationLimits>
     <Title>Ezarri denbora mugak</Title>
@@ -1466,7 +1465,6 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
   <MatroskaSubtitleChooser>
     <Title>Hautatu azpidatzia Matroska agiritik</Title>
     <TitleMp4>Hautatu azpidatzia MP4 agiritik</TitleMp4>
-    <PleaseChoose>Azpidatzi bat baino gehiago aurkitu da - mesedez hautatu</PleaseChoose>
     <TrackXLanguageYTypeZ>Bidea {0} - Hizkuntza: {1} - Mota: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MeasurementConverter>

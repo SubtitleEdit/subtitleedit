@@ -143,7 +143,6 @@ Megjegyzés: Ellenőrizze a szabad merevlemez területet.</WaveFileMalformed>
     <SetAsPercent>Beállítás az időtartam százalékaként</SetAsPercent>
     <Note>Megjegyzés: A megjelenítési idő nem fogja fedni a következő szöveg kezdési idejét</Note>
     <PleaseSelectAValueFromTheDropDownList>Kérjük, válasszon egy értéket a legördülő listából</PleaseSelectAValueFromTheDropDownList>
-    <PleaseChoose> - Kérem válasszon - </PleaseChoose>
   </AdjustDisplayDuration>
   <ApplyDurationLimits>
     <Title>Időtartam-korlátok alkalmazása</Title>
@@ -1465,7 +1464,6 @@ Ha ezt a fájlt a Subtitle Edit programmal módosította, akkor lehet, hogy megt
   <MatroskaSubtitleChooser>
     <Title>Válassza ki a feliratot a Matroska fájlból</Title>
     <TitleMp4>Válasszon feliratot az MP4 fájlból</TitleMp4>
-    <PleaseChoose>Egynél több feliratot találtunk - kérem, válasszon</PleaseChoose>
     <TrackXLanguageYTypeZ>Sáv {0} - nyelv: {1} - típus: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MeasurementConverter>

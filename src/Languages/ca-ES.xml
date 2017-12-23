@@ -132,7 +132,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SetAsPercent>Estableix com percentatge de durada</SetAsPercent>
     <Note>Nota: La Durada no pot solapar-se al temps d'inici del següent text</Note>
     <PleaseSelectAValueFromTheDropDownList>Si us plau seleccioneu un valor des de la llista desplegable</PleaseSelectAValueFromTheDropDownList>
-    <PleaseChoose>- Escolliu si us plau -</PleaseChoose>
   </AdjustDisplayDuration>
   <ApplyDurationLimits>
     <Title>Aplica limits durada</Title>
@@ -1424,7 +1423,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Escolliu subtítol des de fitxer Matroska</Title>
-    <PleaseChoose>S'ha trobat més d'un subtítol - escolliu si us plau</PleaseChoose>
     <TrackXLanguageYTypeZ>Pista {0} - Idioma: {1} - tipus: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MeasurementConverter>

@@ -119,7 +119,6 @@
     <SetAsPercent>กำหนดเป็นเปอร์เซนต์ของระยะเวลา</SetAsPercent>
     <Note>หมายเหตุ: เวลาแสดงผลจะต้องไม่ซ้อนกับเวลาเริ่มต้นของข้อความถัดไป</Note>
     <PleaseSelectAValueFromTheDropDownList>โปรดเลือกค่าจากรายการข้างล่าง</PleaseSelectAValueFromTheDropDownList>
-    <PleaseChoose> - โปรดเลือก - </PleaseChoose>
   </AdjustDisplayDuration>
   <ApplyDurationLimits>
     <Title>กำหนดระยะเวลา</Title>
@@ -1349,7 +1348,6 @@
   </Main>
   <MatroskaSubtitleChooser>
     <Title>เลือกซับไตเติ้ลจากไฟล์มาทรอสกา</Title>
-    <PleaseChoose>เจอซับไตเติ้ลมากกว่าหนึ่ง - โปรดเลือก</PleaseChoose>
     <TrackXLanguageYTypeZ>แทร็ก {0}  - ภาษา: {1} - ชนิด: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MeasurementConverter>

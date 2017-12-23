@@ -391,9 +391,6 @@ namespace Nikse.SubtitleEdit.Core
                 case "AdjustDisplayDuration/PleaseSelectAValueFromTheDropDownList":
                     language.AdjustDisplayDuration.PleaseSelectAValueFromTheDropDownList = reader.Value;
                     break;
-                case "AdjustDisplayDuration/PleaseChoose":
-                    language.AdjustDisplayDuration.PleaseChoose = reader.Value;
-                    break;
                 case "ApplyDurationLimits/Title":
                     language.ApplyDurationLimits.Title = reader.Value;
                     break;

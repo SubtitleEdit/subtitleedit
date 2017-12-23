@@ -141,7 +141,6 @@ Nota: Verifique o espaço livre em disco.</WaveFileMalformed>
     <SetAsPercent>Ajustar como porcentagem de duração</SetAsPercent>
     <Note>Nota: A duração não pode se sobrepor ao tempo de início do próximo texto</Note>
     <PleaseSelectAValueFromTheDropDownList>Por favor, selecione um valor da lista abaixo</PleaseSelectAValueFromTheDropDownList>
-    <PleaseChoose>- Por favor, selecione -</PleaseChoose>
   </AdjustDisplayDuration>
   <ApplyDurationLimits>
     <Title>Aplicar limites de duração</Title>
@@ -1457,7 +1456,6 @@ Se você editou este arquivo com o Subtitle Edit você poderá encontrar um back
   <MatroskaSubtitleChooser>
     <Title>Selecionar legenda a partir do arquivo Matroska</Title>
     <TitleMp4>Escolha a legenda do arquivo MP4</TitleMp4>
-    <PleaseChoose>Foi encontrada mais do que uma legenda - por favor, escolha uma</PleaseChoose>
     <TrackXLanguageYTypeZ>Faixa {0} - idioma: {1} - tipo: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MeasurementConverter>

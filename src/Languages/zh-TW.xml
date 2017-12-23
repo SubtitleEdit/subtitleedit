@@ -131,7 +131,6 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
     <SetAsPercent>設定為持續時間百分比</SetAsPercent>
     <Note>說明: 顯示時間不會重疊下一個文字的起始時間</Note>
     <PleaseSelectAValueFromTheDropDownList>請從下拉清單中選擇一個數值</PleaseSelectAValueFromTheDropDownList>
-    <PleaseChoose>- 請選擇 -</PleaseChoose>
   </AdjustDisplayDuration>
   <ApplyDurationLimits>
     <Title>套用持續時間限制</Title>
@@ -1405,7 +1404,6 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
   <MatroskaSubtitleChooser>
     <Title>從 Matroska 檔案選擇字幕</Title>
     <TitleMp4>從 MP4 檔案中選擇字幕</TitleMp4>
-    <PleaseChoose>找到多個字幕 - 請選擇</PleaseChoose>
     <TrackXLanguageYTypeZ>軌道 {0} - 語言: {1} - 類型: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MeasurementConverter>

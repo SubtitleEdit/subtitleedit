@@ -143,7 +143,6 @@ Note: Vérifiez l'espace disque disponible.</WaveFileMalformed>
     <SetAsPercent>Déterminer en % de la durée</SetAsPercent>
     <Note>Note: Les ajustements n'altéreront pas les points de départ</Note>
     <PleaseSelectAValueFromTheDropDownList>Veuillez sélectionner une valeur dans la liste déroulante</PleaseSelectAValueFromTheDropDownList>
-    <PleaseChoose> - Veuillez choisir - </PleaseChoose>
   </AdjustDisplayDuration>
   <ApplyDurationLimits>
     <Title>Appliquer des limites de durée</Title>
@@ -1474,7 +1473,6 @@ Si vous avez modifié ce fichier avec Subtitle Edit vous pourriez trouver une sa
   <MatroskaSubtitleChooser>
     <Title>Choisir les sous-titres du fichier Matroska</Title>
     <TitleMp4>Choisir les sous-titres du fichier MP4</TitleMp4>
-    <PleaseChoose>Plus d'un sous-titre trouvé - choisir svp</PleaseChoose>
     <TrackXLanguageYTypeZ>Piste {0} - langue: {1} - type: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MeasurementConverter>

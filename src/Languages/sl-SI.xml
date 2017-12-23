@@ -125,7 +125,6 @@ E-pošta: hdhawkhd@gmail.com</AboutText1>
     <SetAsPercent>Določi po odstotku trajanja</SetAsPercent>
     <Note>Opomba: Čas prikazovanja ne bo prekoračil začetnega časa naslednjega besedila</Note>
     <PleaseSelectAValueFromTheDropDownList>Prosim izberite vrednost iz spustnega menija</PleaseSelectAValueFromTheDropDownList>
-    <PleaseChoose> - Prosim izberite - </PleaseChoose>
   </AdjustDisplayDuration>
   <ApplyDurationLimits>
     <Title>Uporabi omejitve trajanja</Title>
@@ -1317,7 +1316,6 @@ Nadaljujem?</SubtitleAppendPrompt>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Izberi podanapis iz Matroska datoteke</Title>
-    <PleaseChoose>Našel več datotek - prosim izberi</PleaseChoose>
     <TrackXLanguageYTypeZ>Zapis {0} - jezik: {1} -vrsta: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MeasurementConverter>

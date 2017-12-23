@@ -5431,18 +5431,20 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         double percent = double.Parse(adjustDisplayTime.AdjustValue);
                         _subtitle.AdjustDisplayTimeUsingPercent(percent, selectedIndices);
+                        ShowStatus(string.Format(_language.DisplayTimesAdjustedX, double.Parse(adjustDisplayTime.AdjustValue, CultureInfo.InvariantCulture) + "%"));
                     }
                     else if (adjustDisplayTime.AdjustUsingSeconds)
                     {
-                        double seconds = double.Parse(adjustDisplayTime.AdjustValue);
+                        double seconds = double.Parse(adjustDisplayTime.AdjustValue, CultureInfo.InvariantCulture);
                         _subtitle.AdjustDisplayTimeUsingSeconds(seconds, selectedIndices);
+                        ShowStatus(string.Format(_language.DisplayTimesAdjustedX, double.Parse(adjustDisplayTime.AdjustValue, CultureInfo.InvariantCulture)));
                     }
                     else
                     { // recalculate durations!!!
                         double maxCharSeconds = (double)(adjustDisplayTime.MaxCharactersPerSecond);
                         _subtitle.RecalculateDisplayTimes(maxCharSeconds, selectedIndices);
+                        ShowStatus(string.Format(_language.DisplayTimesAdjustedX, adjustDisplayTime.AdjustValue));
                     }
-                    ShowStatus(string.Format(_language.DisplayTimesAdjustedX, adjustDisplayTime.AdjustValue));
                     SaveSubtitleListviewIndices();
                     if (IsFramesRelevant && CurrentFrameRate > 0)
                     {

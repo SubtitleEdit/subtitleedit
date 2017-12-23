@@ -145,7 +145,6 @@ Napomena: Provjeri slobodan prostor prostor na disku.</WaveFileMalformed>
     <SetAsPercent>Postotak trajanja:</SetAsPercent>
     <Note>Vrijeme prikaza neće preklapati početno vrijeme iduće linije.</Note>
     <PleaseSelectAValueFromTheDropDownList>Izaberite vrijednost iz padajućeg izbornika.</PleaseSelectAValueFromTheDropDownList>
-    <PleaseChoose> – Izaberite – </PleaseChoose>
   </AdjustDisplayDuration>
   <ApplyDurationLimits>
     <Title>Primijeni ograničeno trajanje</Title>
@@ -1474,7 +1473,6 @@ koji bi trebao biti usklađen s video datotekom.
   <MatroskaSubtitleChooser>
     <Title>Odabir podnaslova iz matroške</Title>
     <TitleMp4>Izaberi podnatpis iz MP4 datoteke</TitleMp4>
-    <PleaseChoose>Pronađeno je više od jednog podnaslova. Izaberi koji želiš.</PleaseChoose>
     <TrackXLanguageYTypeZ>Zapis {0} – jezik: {1} – vrsta: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MeasurementConverter>

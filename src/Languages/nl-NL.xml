@@ -144,7 +144,6 @@ Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
     <SetAsPercent>Als percentage instellen</SetAsPercent>
     <Note>Opmerking: weergavetĳd zal starttĳd van volgende tekst niet overlappen</Note>
     <PleaseSelectAValueFromTheDropDownList>Kies een waarde in de vervolgkeuzelĳst</PleaseSelectAValueFromTheDropDownList>
-    <PleaseChoose>- Maak uw keuze -</PleaseChoose>
   </AdjustDisplayDuration>
   <ApplyDurationLimits>
     <Title>Duurtĳdlimieten toepassen</Title>
@@ -1468,7 +1467,6 @@ Wilt u het zoeken/vervangen vanaf het begin van het document voortzetten?</Repla
   <MatroskaSubtitleChooser>
     <Title>Ondertitel uit Matroska-bestand kiezen</Title>
     <TitleMp4>Kies ondertitel uit van MP4 bestand</TitleMp4>
-    <PleaseChoose>Meer dan één ondertitel gevonden - kies a.u.b.</PleaseChoose>
     <TrackXLanguageYTypeZ>Spoor {0} - taal: {1} - type: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MeasurementConverter>
