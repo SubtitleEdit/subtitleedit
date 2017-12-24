@@ -3145,8 +3145,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (!videoFileLoaded && mediaPlayer.VideoPlayer != null)
                 {
-                    mediaPlayer.VideoPlayer.DisposeVideoPlayer();
-                    mediaPlayer.VideoPlayer = null;
+                    mediaPlayer.PauseAndDisposePlayer();
                     timer1.Stop();
                 }
                 ResetShowEarlierOrLater();
@@ -3886,8 +3885,7 @@ namespace Nikse.SubtitleEdit.Forms
                 audioVisualizer.SceneChanges = new List<double>();
                 if (mediaPlayer.VideoPlayer != null)
                 {
-                    mediaPlayer.VideoPlayer.DisposeVideoPlayer();
-                    mediaPlayer.VideoPlayer = null;
+                    mediaPlayer.PauseAndDisposePlayer();
                 }
             }
 
@@ -9374,7 +9372,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (mediaPlayer.VideoPlayer != null)
                 {
-                    mediaPlayer.VideoPlayer.DisposeVideoPlayer();
+                    mediaPlayer.PauseAndDisposePlayer();
                 }
             }
         }
@@ -14415,8 +14413,7 @@ namespace Nikse.SubtitleEdit.Forms
                 VideoFileName = fileName;
                 if (mediaPlayer.VideoPlayer != null)
                 {
-                    mediaPlayer.Pause();
-                    mediaPlayer.VideoPlayer.DisposeVideoPlayer();
+                    mediaPlayer.PauseAndDisposePlayer();
                 }
                 _endSeconds = -1;
 
@@ -18358,8 +18355,7 @@ namespace Nikse.SubtitleEdit.Forms
             timer1.Stop();
             if (mediaPlayer.VideoPlayer != null)
             {
-                mediaPlayer.SubtitleText = string.Empty;
-                mediaPlayer.VideoPlayer.DisposeVideoPlayer();
+                mediaPlayer.PauseAndDisposePlayer();
             }
             mediaPlayer.SetPlayerName(string.Empty);
             mediaPlayer.ResetTimeLabel();
@@ -21171,8 +21167,7 @@ namespace Nikse.SubtitleEdit.Forms
                     VideoFileName = form.DvdPath;
                     if (mediaPlayer.VideoPlayer != null)
                     {
-                        mediaPlayer.Pause();
-                        mediaPlayer.VideoPlayer.DisposeVideoPlayer();
+                        mediaPlayer.PauseAndDisposePlayer();
                     }
                     _endSeconds = -1;
 
@@ -21717,8 +21712,7 @@ namespace Nikse.SubtitleEdit.Forms
                         VideoFileName = url;
                         if (mediaPlayer.VideoPlayer != null)
                         {
-                            mediaPlayer.Pause();
-                            mediaPlayer.VideoPlayer.DisposeVideoPlayer();
+                            mediaPlayer.PauseAndDisposePlayer();
                         }
                         _endSeconds = -1;
                         UiUtil.InitializeVideoPlayerAndContainer(url, _videoInfo, mediaPlayer, VideoLoaded, VideoEnded);

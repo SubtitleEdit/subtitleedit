@@ -311,6 +311,7 @@ namespace Nikse.SubtitleEdit.Controls
         private Subtitle _subtitlePrev;
         private static string _mpvTextOld = string.Empty;
         private string _mpvTextFileName;
+        private int _retryCount = 3;
         private void RefreshMpv(LibMpvDynamic mpv, Subtitle subtitle)
         {
             if (subtitle == null)
@@ -339,15 +340,16 @@ namespace Nikse.SubtitleEdit.Controls
                 }
 
                 string text = subtitle.ToText(format);
-                if (text != _mpvTextOld || _mpvTextFileName == null)
+                if (text != _mpvTextOld || _mpvTextFileName == null || _retryCount > 0)
                 {
-                    if (string.IsNullOrEmpty(_mpvTextFileName) || _subtitlePrev.FileName != subtitle.FileName || !_mpvTextFileName.EndsWith(format.Extension, StringComparison.Ordinal))
-                    {
+                    if (_retryCount >= 0 || string.IsNullOrEmpty(_mpvTextFileName) || _subtitlePrev == null || _subtitlePrev.FileName != subtitle.FileName || !_mpvTextFileName.EndsWith(format.Extension, StringComparison.Ordinal))
+                    {                        
                         mpv.RemoveSubtitle();
                         DeleteTempMpvFileName();
                         _mpvTextFileName = Path.GetTempFileName() + format.Extension;
                         File.WriteAllText(_mpvTextFileName, text);
                         mpv.LoadSubtitle(_mpvTextFileName);
+                        _retryCount--;
                     }
                     else
                     {
@@ -1551,6 +1553,17 @@ namespace Nikse.SubtitleEdit.Controls
         {
             DeleteTempMpvFileName();
             base.Dispose(disposing);
+            _retryCount = 3;
+        }
+
+        public void PauseAndDisposePlayer()
+        {
+            Pause();
+            SubtitleText = string.Empty;
+            VideoPlayer.DisposeVideoPlayer();
+            VideoPlayer = null;
+            DeleteTempMpvFileName();            
+            _retryCount = 3;
         }
 
     }
