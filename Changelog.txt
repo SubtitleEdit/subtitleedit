@@ -27,6 +27,8 @@
    * Add words to English OCR fix replace list - thx anewuser
    * Save/restore "Auto continue delay" from UI - thx Hideaki
    * Add some extended chars to format SCC - thx jorgemjorge
+   * Remember settings in "Adjust durations" 
+   * Allow smaller steps in "Adjust durations" - thx Príncipe
 * FIXED:
    * Fix mpv preview font size (regression from 3.5.4) - thx OmrSi
    * Fix many binary OCR issues - thx Jamakmake
