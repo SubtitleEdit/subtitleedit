@@ -1183,5 +1183,16 @@ namespace Nikse.SubtitleEdit.Core
             }
         }
 
+        public bool IsLineTransparent(int y)
+        {
+            int max = (_width * 4) + (y * _widthX4) + 3;
+            for (int pos = y * _widthX4 + 3; pos < max; pos += 4)
+            {
+                if (_bitmapData[pos] != 0)
+                    return false;
+            }
+            return true;
+        }
+
     }
 }
