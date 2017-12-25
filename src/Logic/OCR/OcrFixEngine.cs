@@ -57,7 +57,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
         public bool IsDictionaryLoaded { get; private set; }
 
         public CultureInfo DictionaryCulture { get; private set; }
-        private const string ExpectedChars = " ¡¿,.!?:;()[]{}+-£\"#&%\r\n"; // removed $
+        private const string ExpectedChars = " ¡¿,.!?:;()[]{}+-£\"”„“«»#&%\r\n؟"; // removed $
         /// <summary>
         /// Advanced OCR fixing via replace/spelling dictionaries + some hardcoded rules
         /// </summary>
@@ -940,7 +940,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 if (idx > 0)
                 {
                     input = input.Remove(idx + 1, 1);
-                }                
+                }
             }
 
             return input;

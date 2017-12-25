@@ -1,6 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Logic;
-using Nikse.SubtitleEdit.Logic.Ocr.Binary;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -49,7 +48,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
-            UiUtil.FixFonts(this);            
+            UiUtil.FixFonts(this);
             Text = Configuration.Settings.Language.SpellCheck.Title;
             buttonAddToDictionary.Text = Configuration.Settings.Language.SpellCheck.AddToUserDictionary;
             buttonChange.Text = Configuration.Settings.Language.SpellCheck.Change;

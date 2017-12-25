@@ -260,19 +260,32 @@ namespace Nikse.SubtitleEdit.Logic
             var parts = new List<ImageSplitterItem>();
             for (int y = 0; y < bmp.Height; y++)
             {
-                bool allTransparent = true;
-                for (int x = 0; x < bmp.Width; x++)
+                if (bmp.IsLineTransparent(y))
                 {
-                    int a = bmp.GetAlpha(x, y);
-                    if (a != 0)
+
+                    // check for appendix below text
+                    bool appendix = y >= bmp.Height - minLineHeight;
+                    if (!appendix && y < bmp.Height - 10 && size > minLineHeight && minLineHeight > 15)
                     {
-                        allTransparent = false;
-                        break;
+                        bool yp1 = bmp.IsLineTransparent(y + 1);
+                        bool yp2 = bmp.IsLineTransparent(y + 2);
+                        bool yp3 = bmp.IsLineTransparent(y + 3);
+                        bool yp4 = bmp.IsLineTransparent(y + 4);
+                        bool yp5 = bmp.IsLineTransparent(y + 5);
+                        if (!yp1 || !yp2 || !yp3 || !yp4 || !yp5)
+                        {
+                            bool yp6 = bmp.IsLineTransparent(y + 6);
+                            bool yp7 = bmp.IsLineTransparent(y + 7);
+                            bool yp8 = bmp.IsLineTransparent(y + 8);
+                            bool yp9 = bmp.IsLineTransparent(y + 9);
+                            if (yp6 && yp7 && yp8 && yp9)
+                            {
+                                appendix = true;
+                            }
+                        }
                     }
-                }
-                if (allTransparent)
-                {
-                    if (size > 1 && size <= minLineHeight)
+
+                    if (appendix || size > 1 && size <= minLineHeight)
                     {
                         size++; // at least 'lineMinHeight' pixels, like top of 'i'
                     }
@@ -320,16 +333,7 @@ namespace Nikse.SubtitleEdit.Logic
             for (int y = 0; y < bmp.Height; y++)
             {
                 int a;
-                bool allTransparent = true;
-                for (int x = 0; x < bmp.Width; x++)
-                {
-                    a = bmp.GetAlpha(x, y);
-                    if (a != 0)
-                    {
-                        allTransparent = false;
-                        break;
-                    }
-                }
+                bool allTransparent = bmp.IsLineTransparent(y);
 
                 if (size > 5 && size >= minLineHeight && size > averageLineHeight && !allTransparent && bmp.Width > 50 && y < bmp.Height - 5)
                 {
