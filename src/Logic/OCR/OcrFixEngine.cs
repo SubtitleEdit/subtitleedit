@@ -47,7 +47,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
         private static readonly Regex RegexUppercaseI = new Regex("[a-zæøåöääöéèàùâêîôûëï]I.", RegexOptions.Compiled);
         private static readonly Regex RegexNumber1 = new Regex(@"(?<=\d) 1(?!/\d)", RegexOptions.Compiled);
 
-        private static readonly char[] SplitChars = { ' ', '¡', '¿', ',', '.', '!', '?', ':', ';', '(', ')', '[', ']', '{', '}', '+', '-', '£', '"', '„', '”', '“', '«', '»', '#', '&', '%', '…', '—', '♪', '\r', '\n' };
+        private static readonly char[] SplitChars = { ' ', '¡', '¿', ',', '.', '!', '?', ':', ';', '(', ')', '[', ']', '{', '}', '+', '-', '£', '"', '„', '”', '“', '«', '»', '#', '&', '%', '…', '—', '♪', '\r', '\n', '؟' };
 
         public bool Abort { get; set; }
         public OcrSpellCheck.Action LastAction { get; set; } = OcrSpellCheck.Action.Abort;
