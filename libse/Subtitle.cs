@@ -2,6 +2,7 @@
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -604,6 +605,7 @@ namespace Nikse.SubtitleEdit.Core
             for (int i = 0; i < Paragraphs.Count; i++)
             {
                 var p = Paragraphs[i];
+                sb.Append(p.Number.ToString(CultureInfo.InvariantCulture));
                 sb.Append(p.StartTime.TotalMilliseconds.GetHashCode());
                 sb.Append(p.EndTime.TotalMilliseconds.GetHashCode());
                 sb.Append(p.Text);
