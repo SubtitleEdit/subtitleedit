@@ -593,7 +593,7 @@ namespace Nikse.SubtitleEdit.Core
         }
 
         /// <summary>
-        /// Fast hash code for subtitle (only includes start + end + text)
+        /// Fast hash code for subtitle - includes pre (encoding atm) + number + start + end + text.
         /// </summary>
         /// <returns>Hash value that can be used for quick compare</returns>
         public string GetFastHashCode(string pre)
