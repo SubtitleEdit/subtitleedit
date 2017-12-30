@@ -503,6 +503,7 @@
     <Compile Include="SubtitleFormats\UnknownSubtitle77.cs" />
     <Compile Include="SubtitleFormats\UnknownSubtitle78.cs" />
     <Compile Include="SubtitleFormats\UnknownSubtitle8.cs" />
+    <Compile Include="SubtitleFormats\KanopyHtml.cs" />
     <Compile Include="SubtitleFormats\UnknownSubtitle9.cs" />
     <Compile Include="SubtitleFormats\UTSubtitleXml.cs" />
     <Compile Include="SubtitleFormats\Utx.cs" />
