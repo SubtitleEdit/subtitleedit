@@ -21566,7 +21566,7 @@ namespace Nikse.SubtitleEdit.Forms
             return formatType == typeof(TimedText10) || formatType == typeof(NetflixTimedText);
         }
 
-        private void NetflixGlyphCheck(bool isSaving = true)
+        private void NetflixGlyphCheck(bool isSaving)
         {
             ReloadFromSourceView();
 
@@ -21615,12 +21615,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void netflixGlyphCheckToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            NetflixGlyphCheck();
+            NetflixGlyphCheck(false);
         }
 
         private void toolStripButtonNetflixGlyphCheck_Click(object sender, EventArgs e)
         {
-            NetflixGlyphCheck();
+            NetflixGlyphCheck(false);
         }
 
         private void insertSubtitleHereToolStripMenuItem_Click(object sender, EventArgs e)
