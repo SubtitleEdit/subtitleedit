@@ -1,10 +1,11 @@
 ﻿Subtitle Edit Changelog
 
-3.5.5 (xth December 2017) BETA
+3.5.5 (xth January 2018) BETA
 * NEW:
    * Add new subtitle format - thx Karim
    * Add new subtitle format - thx Wojtek
    * Add new subtitle format - thx yumiko
+   * Add new subtitle format - thx Frank
    * Add support for fcpxml 1.6 - thx Julius
    * Add sync options when re-exporting image formats - thx Music Fan
    * Add new shortcuts - thx darnn
