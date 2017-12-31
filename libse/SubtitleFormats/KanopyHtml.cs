@@ -20,13 +20,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var sb = new StringBuilder();
             sb.AppendLine("<html>");
             sb.AppendLine("<body>");
-            sb.AppendLine("<div id=\"transcript\">");
+            sb.AppendLine("<div>");
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 var start = $"{p.StartTime.Minutes:00}:{p.StartTime.Seconds:00}";
                 if (p.StartTime.Hours > 0)
                     start = $"{p.StartTime.Hours:00}:{start}";
-                sb.AppendLine($"      <a href=\"#\" begin=\"{p.StartTime.TotalSeconds:0.000}\" end=\"{p.EndTime.TotalSeconds:0.000}\"><span class='ts'>{start}</span> {p.Text.Replace(Environment.NewLine, " <br />")}</a>");
+                sb.AppendLine($"      <a href='#' begin=\"{p.StartTime.TotalSeconds:0.000}\" end=\"{p.EndTime.TotalSeconds:0.000}\"><span class='ts'>{start}</span> {p.Text.Replace(Environment.NewLine, " <br />")}</a>");
             }
             sb.AppendLine("</div>");
             sb.AppendLine("</body>");
@@ -36,8 +36,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
-            //<a href='#' begin="5.706" end="8.289"><span class='ts'>00:05</span> (music)</a>
-
             var temp = new StringBuilder();
             foreach (string l in lines)
                 temp.Append(l);
@@ -59,7 +57,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     int index = indexOfBegin + 6;
                     while (index < line.Length && @"0123456789""'.".Contains(line[index]))
                     {
-                        if (@"0123456789.".Contains(line[index]))
+                        if ("0123456789.".Contains(line[index]))
                             startTime += line[index];
                         index++;
                     }
@@ -68,7 +66,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     index = IndexOfEnd + 4;
                     while (index < line.Length && @"0123456789""'.".Contains(line[index]))
                     {
-                        if (@"0123456789,.".Contains(line[index]))
+                        if ("0123456789.".Contains(line[index]))
                             end += line[index];
                         index++;
                     }
@@ -86,7 +84,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                     double startSeconds;
                     double endSeconds;
-                    if (text.Length > 0 && double.TryParse(startTime, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out startSeconds) && 
+                    if (text.Length > 0 && double.TryParse(startTime, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out startSeconds) &&
                                            double.TryParse(end, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out endSeconds))
                         subtitle.Paragraphs.Add(new Paragraph(text, startSeconds * TimeCode.BaseUnit, endSeconds * TimeCode.BaseUnit));
                 }
