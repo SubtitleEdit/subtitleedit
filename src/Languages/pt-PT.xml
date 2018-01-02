@@ -1845,7 +1845,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <RemoveTextForHi>Eliminar texto para Deficientes Auditivos</RemoveTextForHi>
     <MergeLinesShorterThan>Remover quebra em linha menor que...</MergeLinesShorterThan>
     <MusicSymbol>Símbolo musical</MusicSymbol>
-    <MusicSymbolsToReplace>Símbolos musicais para substituir (separados por espaços)</MusicSymbolsToReplace>
+    <MusicSymbolsReplace>Símbolos musicais para substituir (separados por vírgula)</MusicSymbolsReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Corrigir erros frequentes de OCR - também utilizar regras codificadas</FixCommonOcrErrorsUseHardcodedRules>
     <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Corrigir o tempo curto de exibição - permitir o movimento do tempo inicial</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
     <FixCommonErrorsSkipStepOne>Ignorar a fase um (escolher regras de correcção)</FixCommonErrorsSkipStepOne>
