@@ -1,7 +1,7 @@
 ﻿;* Subtitle Edit - Installer script
 ;*
 ;* Copyright (C) 2010-2016 XhmikosR
-;* Copyright (C) 2010-2016 all the respective translators
+;* Copyright (C) 2010-2018 all the respective translators
 ;*
 ;* This file is part of Subtitle Edit.
 ;*
