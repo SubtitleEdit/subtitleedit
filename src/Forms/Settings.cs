@@ -505,7 +505,7 @@ namespace Nikse.SubtitleEdit.Forms
             groupBoxFixCommonErrors.Text = language.FixCommonerrors;
             labelMergeShortLines.Text = language.MergeLinesShorterThan;
             labelToolsMusicSymbol.Text = language.MusicSymbol;
-            labelToolsMusicSymbolsToReplace.Text = language.MusicSymbolsToReplace;
+            labelToolsMusicSymbolsToReplace.Text = language.MusicSymbolsReplace;
             checkBoxFixCommonOcrErrorsUsingHardcodedRules.Text = language.FixCommonOcrErrorsUseHardcodedRules;
             checkBoxFixShortDisplayTimesAllowMoveStartTime.Text = language.FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime;
             checkBoxFceSkipStep1.Text = language.FixCommonErrorsSkipStepOne;
@@ -637,7 +637,7 @@ namespace Nikse.SubtitleEdit.Forms
                 comboBoxToolsMusicSymbol.SelectedIndex = 5;
             }
 
-            textBoxMusicSymbolsToReplace.Text = toolsSettings.MusicSymbolToReplace;
+            textBoxMusicSymbolsToReplace.Text = toolsSettings.MusicSymbolReplace;
             checkBoxFixCommonOcrErrorsUsingHardcodedRules.Checked = toolsSettings.OcrFixUseHardcodedRules;
             checkBoxFixShortDisplayTimesAllowMoveStartTime.Checked = toolsSettings.FixShortDisplayTimesAllowMoveStartTime;
             checkBoxFceSkipStep1.Checked = toolsSettings.FixCommonErrorsSkipStepOne;
@@ -1213,7 +1213,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (toolsSettings.MergeLinesShorterThan > gs.SubtitleLineMaximumLength + 1)
                 toolsSettings.MergeLinesShorterThan = gs.SubtitleLineMaximumLength;
             toolsSettings.MusicSymbol = comboBoxToolsMusicSymbol.SelectedItem.ToString();
-            toolsSettings.MusicSymbolToReplace = textBoxMusicSymbolsToReplace.Text;
+            toolsSettings.MusicSymbolReplace = textBoxMusicSymbolsToReplace.Text;
             toolsSettings.SpellCheckAutoChangeNames = checkBoxSpellCheckAutoChangeNames.Checked;
             toolsSettings.SpellCheckOneLetterWords = checkBoxSpellCheckOneLetterWords.Checked;
             toolsSettings.SpellCheckEnglishAllowInQuoteAsIng = checkBoxTreatINQuoteAsING.Checked;
