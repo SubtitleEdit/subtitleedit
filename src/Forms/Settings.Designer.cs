@@ -2761,7 +2761,7 @@
             this.labelToolsMusicSymbolsToReplace.Name = "labelToolsMusicSymbolsToReplace";
             this.labelToolsMusicSymbolsToReplace.Size = new System.Drawing.Size(225, 13);
             this.labelToolsMusicSymbolsToReplace.TabIndex = 34;
-            this.labelToolsMusicSymbolsToReplace.Text = "Music symbols to replace (separate by space)";
+            this.labelToolsMusicSymbolsToReplace.Text = "Music symbols to replace (separate by comma)";
             // 
             // labelToolsMusicSymbol
             // 

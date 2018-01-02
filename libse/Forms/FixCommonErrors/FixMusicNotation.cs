@@ -9,7 +9,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             var language = Configuration.Settings.Language.FixCommonErrors;
             string fixAction = language.FixMusicNotation;
             int fixCount = 0;
-            string[] musicSymbols = Configuration.Settings.Tools.MusicSymbolToReplace.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] musicSymbols = Configuration.Settings.Tools.MusicSymbolReplace.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
                 Paragraph p = subtitle.Paragraphs[i];
@@ -20,7 +20,8 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     bool containsFontTag = oldText.Contains("<font ", StringComparison.OrdinalIgnoreCase);
                     foreach (string musicSymbol in musicSymbols)
                     {
-                        if (containsFontTag && musicSymbol == "#")
+                        var ms = musicSymbol.Trim();
+                        if (containsFontTag && ms == "#")
                         {
                             var idx = newText.IndexOf('#');
                             while (idx >= 0)
@@ -38,8 +39,8 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         }
                         else
                         {
-                            newText = newText.Replace(musicSymbol, Configuration.Settings.Tools.MusicSymbol);
-                            newText = newText.Replace(musicSymbol.ToUpper(), Configuration.Settings.Tools.MusicSymbol);
+                            newText = newText.Replace(ms, Configuration.Settings.Tools.MusicSymbol);
+                            newText = newText.Replace(ms.ToUpper(), Configuration.Settings.Tools.MusicSymbol);
                         }
                     }
                     var noTagsText = HtmlUtil.RemoveHtmlTags(newText);

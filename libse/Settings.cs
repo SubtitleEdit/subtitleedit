@@ -78,7 +78,7 @@ namespace Nikse.SubtitleEdit.Core
         public int MergeLinesShorterThan { get; set; }
         public bool FixShortDisplayTimesAllowMoveStartTime { get; set; }
         public string MusicSymbol { get; set; }
-        public string MusicSymbolToReplace { get; set; }
+        public string MusicSymbolReplace { get; set; }
         public string UnicodeSymbolsToInsert { get; set; }
         public bool SpellCheckAutoChangeNames { get; set; }
         public bool SpellCheckOneLetterWords { get; set; }
@@ -218,7 +218,9 @@ namespace Nikse.SubtitleEdit.Core
             MergeLinesShorterThan = 33;
             FixShortDisplayTimesAllowMoveStartTime = false;
             MusicSymbol = "♪";
-            MusicSymbolToReplace = "âª â¶ â™ª âTª ã¢â™âª ?t×3 ?t¤3 #";
+            MusicSymbolReplace = "â™ª,â™," + // ♪ + ♫ in UTF-8 opened as ANSI
+                                 "<s M/>,<s m/>," + // music symbols by subtitle creator
+                                 "#,*"; // common music symbols
             UnicodeSymbolsToInsert = "♪;♫;☺;☹;♥;©;☮;☯;Σ;∞;≡;⇒;π";
             SpellCheckAutoChangeNames = true;
             OcrFixUseHardcodedRules = true;
@@ -1820,9 +1822,9 @@ namespace Nikse.SubtitleEdit.Core
             subNode = node.SelectSingleNode("MusicSymbol");
             if (subNode != null)
                 settings.Tools.MusicSymbol = subNode.InnerText;
-            subNode = node.SelectSingleNode("MusicSymbolToReplace");
+            subNode = node.SelectSingleNode("MusicSymbolReplace");
             if (subNode != null)
-                settings.Tools.MusicSymbolToReplace = subNode.InnerText;
+                settings.Tools.MusicSymbolReplace = subNode.InnerText;
             subNode = node.SelectSingleNode("UnicodeSymbolsToInsert");
             if (subNode != null)
                 settings.Tools.UnicodeSymbolsToInsert = subNode.InnerText;
@@ -3465,7 +3467,7 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("MergeLinesShorterThan", settings.Tools.MergeLinesShorterThan.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("FixShortDisplayTimesAllowMoveStartTime", settings.Tools.FixShortDisplayTimesAllowMoveStartTime.ToString());
                 textWriter.WriteElementString("MusicSymbol", settings.Tools.MusicSymbol);
-                textWriter.WriteElementString("MusicSymbolToReplace", settings.Tools.MusicSymbolToReplace);
+                textWriter.WriteElementString("MusicSymbolReplace", settings.Tools.MusicSymbolReplace);
                 textWriter.WriteElementString("UnicodeSymbolsToInsert", settings.Tools.UnicodeSymbolsToInsert);
                 textWriter.WriteElementString("SpellCheckAutoChangeNames", settings.Tools.SpellCheckAutoChangeNames.ToString());
                 textWriter.WriteElementString("SpellCheckOneLetterWords", settings.Tools.SpellCheckOneLetterWords.ToString());

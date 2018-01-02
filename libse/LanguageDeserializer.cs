@@ -4984,8 +4984,8 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/MusicSymbol":
                     language.Settings.MusicSymbol = reader.Value;
                     break;
-                case "Settings/MusicSymbolsToReplace":
-                    language.Settings.MusicSymbolsToReplace = reader.Value;
+                case "Settings/MusicSymbolsReplace":
+                    language.Settings.MusicSymbolsReplace = reader.Value;
                     break;
                 case "Settings/FixCommonOcrErrorsUseHardcodedRules":
                     language.Settings.FixCommonOcrErrorsUseHardcodedRules = reader.Value;
