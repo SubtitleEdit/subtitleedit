@@ -174,7 +174,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
 
             // begin fromLine
             var lines = newText.SplitToLines();
-            var sb = new StringBuilder();
+            var sb = new StringBuilder(input.Length + 2);
             foreach (string l in lines)
             {
                 string s = l;
@@ -400,24 +400,37 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                     word = word.Insert(match.Index + 2, " ");
             }
 
-            foreach (string from in WordReplaceList.Keys)
+            if (!string.IsNullOrEmpty(pre) || !string.IsNullOrEmpty(post))
             {
-                if (word.Length == from.Length)
+                var wordPlusPost = word + post;
+                foreach (string from in WordReplaceList.Keys)
                 {
-                    if (word == from)
+                    if (word.Length == from.Length)
+                    {
+                        if (word == from)
+                            return pre + WordReplaceList[from] + post;
+                    }
+                    else if (wordPlusPost.Length == from.Length)
+                    {
+                        if (string.CompareOrdinal(wordPlusPost, from) == 0)
+                            return pre + WordReplaceList[from];
+                    }
+                    if (preWordPost.Length == from.Length && string.CompareOrdinal(preWordPost, from) == 0)
+                    {
+                        return WordReplaceList[from];
+                    }
+                }
+            }
+            else
+            {
+                foreach (string from in WordReplaceList.Keys)
+                {
+                    if (word.Length == from.Length && word == from)
                         return pre + WordReplaceList[from] + post;
-                }
-                else if (word.Length + post.Length == from.Length)
-                {
-                    if (string.CompareOrdinal(word + post, from) == 0)
-                        return pre + WordReplaceList[from];
-                }
-                if (pre.Length + word.Length + post.Length == from.Length && string.CompareOrdinal(preWordPost, from) == 0)
-                {
-                    return WordReplaceList[from];
                 }
             }
 
+            var oldWord = word;
             if (Configuration.Settings.Tools.OcrFixUseHardcodedRules)
             {
                 // uppercase I or 1 inside lowercase fromWord (will be replaced by lowercase L)
@@ -432,22 +445,38 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                 word = FixLowerCaseLInsideUpperCaseWord(word); // eg. SCARLETTl => SCARLETTI
             }
 
-            // Retry fromWord replace list
-            foreach (string from in WordReplaceList.Keys)
+
+            if (oldWord != word)
             {
-                if (word.Length == from.Length)
+                // Retry fromWord replace list
+                if (!string.IsNullOrEmpty(pre) || !string.IsNullOrEmpty(post))
                 {
-                    if (string.CompareOrdinal(word, from) == 0)
-                        return pre + WordReplaceList[from] + post;
+                    var wordPlusPost = word + post;
+                    foreach (string from in WordReplaceList.Keys)
+                    {
+                        if (word.Length == from.Length)
+                        {
+                            if (string.CompareOrdinal(word, from) == 0)
+                                return pre + WordReplaceList[from] + post;
+                        }
+                        else if (wordPlusPost.Length == from.Length)
+                        {
+                            if (string.CompareOrdinal(wordPlusPost, from) == 0)
+                                return pre + WordReplaceList[from];
+                        }
+                        if (preWordPost.Length == from.Length && string.CompareOrdinal(preWordPost, from) == 0)
+                        {
+                            return WordReplaceList[from];
+                        }
+                    }
                 }
-                else if (word.Length + post.Length == from.Length)
+                else
                 {
-                    if (string.CompareOrdinal(word + post, from) == 0)
-                        return pre + WordReplaceList[from];
-                }
-                if (pre.Length + word.Length + post.Length == from.Length && string.CompareOrdinal(preWordPost, from) == 0)
-                {
-                    return WordReplaceList[from];
+                    foreach (string from in WordReplaceList.Keys)
+                    {
+                        if (word.Length == from.Length && string.CompareOrdinal(word, from) == 0)
+                            return pre + WordReplaceList[from] + post;
+                    }
                 }
             }
 
@@ -642,24 +671,35 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             if (word.Length == 0)
                 return preWordPost;
 
-            foreach (string from in WordReplaceList.Keys)
+            if (!string.IsNullOrEmpty(pre) || !string.IsNullOrEmpty(post))
             {
-                if (word.Length == from.Length)
+                var wordPlusPost = word + post;
+                foreach (string from in WordReplaceList.Keys)
                 {
-                    if (string.CompareOrdinal(word, from) == 0)
-                        return pre + WordReplaceList[from] + post;
-                }
-                else if (word.Length + post.Length == from.Length)
-                {
-                    if (string.CompareOrdinal(word + post, from) == 0)
-                        return pre + WordReplaceList[from];
-                }
-                if (pre.Length + word.Length + post.Length == from.Length && string.CompareOrdinal(preWordPost, from) == 0)
-                {
-                    return WordReplaceList[from];
+                    if (word.Length == from.Length)
+                    {
+                        if (string.CompareOrdinal(word, from) == 0)
+                            return pre + WordReplaceList[from] + post;
+                    }
+                    else if (wordPlusPost.Length == from.Length)
+                    {
+                        if (string.CompareOrdinal(wordPlusPost, from) == 0)
+                            return pre + WordReplaceList[from];
+                    }
+                    if (pre.Length + word.Length + post.Length == from.Length && string.CompareOrdinal(preWordPost, from) == 0)
+                    {
+                        return WordReplaceList[from];
+                    }
                 }
             }
-
+            else
+            {
+                foreach (string from in WordReplaceList.Keys)
+                {
+                    if (word.Length == from.Length && word == from)
+                        return pre + WordReplaceList[from] + post;
+                }
+            }
             return preWordPost;
         }
 
@@ -904,7 +944,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
 
         public static string ReplaceWord(string text, string word, string newWord)
         {
-            var sb = new StringBuilder();
+            var sb = new StringBuilder(text.Length);
             if (word != null && text != null && text.Contains(word))
             {
                 const string startChars = @" ¡¿<>-""”“()[]'‘`´¶♪¿¡.…—!?,:;/";

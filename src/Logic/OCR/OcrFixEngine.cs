@@ -360,7 +360,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             text = text.Trim();
 
             // Try to prevent resizing when fixing Ocr-hardcoded.
-            var sb = new StringBuilder(text.Length * 2);
+            var sb = new StringBuilder(text.Length + 2);
             var word = new StringBuilder();
 
             if (Configuration.Settings.Tools.OcrFixUseHardcodedRules)
@@ -1077,6 +1077,15 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                         if (autoFix && autoGuess != AutoGuessLevel.None)
                         {
                             var guesses = new List<string>();
+
+                            // Name starting with "l" instead of 'I'
+                            if (!correct && word.StartsWith('l') && word.Length > 3 && !_nameList.Contains(word))
+                            {
+                                var w = "I" + word.Substring(1);
+                                if (_nameList.Contains(w))
+                                    guesses.Add(w);
+                            }
+
                             if (word.Length > 5 && autoGuess == AutoGuessLevel.Aggressive)
                             {
                                 guesses = (List<string>)_ocrFixReplaceList.CreateGuessesFromLetters(word);

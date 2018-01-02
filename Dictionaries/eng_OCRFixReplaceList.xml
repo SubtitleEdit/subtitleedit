@@ -2094,6 +2094,11 @@
     <LinePart from="he)/" to="hey" />
     <LinePart from="He)/" to="Hey" />
     <LinePart from="HEA VY" to="HEAVY" />
+    <LinePart from="Henry ll" to="Henry II" />
+    <LinePart from="Henry lll" to="Henry III" />
+    <LinePart from="Henry Vlll" to="Henry VIII" />
+    <LinePart from="Henry Vll" to="Henry VII" />
+    <LinePart from="Henry Vl" to="Henry VI" />
     <LinePart from="Hold 0n" to="Hold on" />
     <LinePart from="I am. ls" to="I am. Is" />
     <LinePart from="I d0" to="I do" />
