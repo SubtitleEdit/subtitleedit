@@ -120,7 +120,7 @@ namespace Nikse.SubtitleEdit.Core
             int idName = 0;
             foreach (string name in nameList)
             {
-                int start = lower.IndexOf(name, StringComparison.OrdinalIgnoreCase);
+                int start = lower.IndexOf(name.ToLowerInvariant(), StringComparison.Ordinal);
                 while (start >= 0 && start < lower.Length)
                 {
                     bool startOk = (start == 0) || (lower[start - 1] == ' ') || (lower[start - 1] == '-') ||
@@ -204,6 +204,19 @@ namespace Nikse.SubtitleEdit.Core
                         !StrippedText.StartsWith("http", StringComparison.OrdinalIgnoreCase))
                     {
                         StrippedText = char.ToUpper(StrippedText[0]) + StrippedText.Substring(1);
+                        if (StrippedText.StartsWith("_@", StringComparison.Ordinal))
+                        {
+                            for (int i = 0; i < replaceIds.Count; i++)
+                            {
+                                string id = $"_@{i}_";
+                                if (StrippedText.StartsWith(id, StringComparison.Ordinal))
+                                {
+                                    if (!string.IsNullOrEmpty(originalNames[i]))
+                                        originalNames[i] = char.ToUpper(originalNames[i][0]) + originalNames[i].Remove(0, 1);
+                                    break;
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -212,7 +225,7 @@ namespace Nikse.SubtitleEdit.Core
             {
                 const string breakAfterChars = @".!?:;)]}([{";
                 const string expectedChars = "\"`´'()<>!?.- \r\n";
-                var sb = new StringBuilder();
+                var sb = new StringBuilder(StrippedText.Length);
                 bool lastWasBreak = false;
                 for (int i = 0; i < StrippedText.Length; i++)
                 {
@@ -246,6 +259,21 @@ namespace Nikse.SubtitleEdit.Core
                             {
                                 lastWasBreak = false;
                                 sb.Append(char.ToUpper(s));
+
+                                if (StrippedText.Substring(i).StartsWith("_@", StringComparison.Ordinal))
+                                {
+                                    var ks = StrippedText.Substring(i);
+                                    for (int k = 0; k < replaceIds.Count; k++)
+                                    {
+                                        string id = $"_@{k}_";
+                                        if (ks.StartsWith(id, StringComparison.Ordinal))
+                                        {
+                                            if (!string.IsNullOrEmpty(originalNames[k]))
+                                                originalNames[k] = char.ToUpper(originalNames[k][0]) + originalNames[k].Remove(0, 1);
+                                            break;
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
@@ -258,13 +286,40 @@ namespace Nikse.SubtitleEdit.Core
                             if (s == ']' && idx > 1)
                             { // I [Motor roaring] love you!
                                 string temp = sb.ToString(0, idx - 1).Trim();
-                                if (temp.Length > 0 && !char.IsLower(temp[temp.Length - 1]))
+                                if (temp.Length > 0 && !char.IsLetterOrDigit(temp[temp.Length - 1]))
                                     lastWasBreak = true;
+                            }
+                            else if (s == ']' && idx == -1 && Pre.Contains('['))
+                            { // [ Motor roaring ] Hallo!
+                                lastWasBreak = true;
+                            }
+                            else if (s == ':') // seems to be the rule (in subtitles) to nearly always capitalize first letter efter semicolon
+                            {
+                                lastWasBreak = true;
                             }
                             else
                             {
                                 idx = sb.ToString().LastIndexOf(' ');
                                 if (idx >= 0 && idx < sb.Length - 2 && !IsInMiddleOfUrl(i - idx, StrippedText.Substring(idx + 1)))
+                                {
+                                    lastWasBreak = true;
+                                }
+                            }
+                        }
+                        else if (s == '-' && Pre.Contains("-"))
+                        {
+                            if (sb.ToString().EndsWith(Environment.NewLine + "-"))
+                            {
+                                var prevLine = HtmlUtil.RemoveHtmlTags(sb.ToString().Substring(0, sb.Length - 2).TrimEnd());
+                                if (prevLine.EndsWith('.') ||
+                                    prevLine.EndsWith('!') ||
+                                    prevLine.EndsWith('?') ||
+                                    prevLine.EndsWith(". ♪", StringComparison.Ordinal) ||
+                                    prevLine.EndsWith("! ♪", StringComparison.Ordinal) ||
+                                    prevLine.EndsWith("? ♪", StringComparison.Ordinal) ||
+                                    prevLine.EndsWith(']') ||
+                                    prevLine.EndsWith(')') ||
+                                    prevLine.EndsWith(':'))
                                 {
                                     lastWasBreak = true;
                                 }
