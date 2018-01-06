@@ -276,8 +276,8 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
     <NextDifference>&amp;Następna różnica</NextDifference>
     <SubtitlesNotAlike>Napisy nie posiadają żadnych podobieństw</SubtitlesNotAlike>
     <XNumberOfDifference>Ilość różnic: {0}</XNumberOfDifference>
-    <XNumberOfDifferenceAndPercentChanged>Ilość różnic: {0} ({1:0.##}% zmienionych słów)</XNumberOfDifferenceAndPercentChanged>
-    <XNumberOfDifferenceAndPercentLettersChanged>Ilość różnic: {0} ({1:0.##}% zmienionych liter)</XNumberOfDifferenceAndPercentLettersChanged>
+    <XNumberOfDifferenceAndPercentChanged>Ilość różnic: {0} ({1}% zmienionych słów)</XNumberOfDifferenceAndPercentChanged>
+    <XNumberOfDifferenceAndPercentLettersChanged>Ilość różnic: {0} ({1}% zmienionych liter)</XNumberOfDifferenceAndPercentLettersChanged>
     <ShowOnlyDifferences>Pokaż tylko różnice</ShowOnlyDifferences>
     <IgnoreLineBreaks>Ignoruj łamanie linii</IgnoreLineBreaks>
     <OnlyLookForDifferencesInText>Szukaj różnic tylko w tekście</OnlyLookForDifferencesInText>
@@ -1392,8 +1392,9 @@ Kontynuować?</SubtitleAppendPrompt>
     <UnicodeCharactersAnsiWarning>Napisy zawierają znaki Unicode. Utracisz je zapisując plik przy użyciu kodowania ANSI. Czy na pewno chcesz zapisać?</UnicodeCharactersAnsiWarning>
     <NegativeTimeWarning>Napisy zawierają ujemne kody czasowe. Na pewno chcesz zapisać?</NegativeTimeWarning>
     <BeforeMergeShortLines>Przed połączeniem krótkich linii</BeforeMergeShortLines>
-    <BeforeSplitLongLines>Przed podziałem długich linii</BeforeSplitLongLines>
     <MergedShortLinesX>Ilość połączonych linii: {0}</MergedShortLinesX>
+    <BeforeSplitLongLines>Przed podziałem długich linii</BeforeSplitLongLines>
+    <LongLinesSplitX>Ilość podzielonych linii: {0}</LongLinesSplitX>
     <BeforeDurationsBridgeGap>Przed zmostkowaniem małych przerw</BeforeDurationsBridgeGap>
     <BeforeSetMinimumDisplayTimeBetweenParagraphs>Przed ustawieniem minimalnego czasu wyświetlania pomiędzy napisami</BeforeSetMinimumDisplayTimeBetweenParagraphs>
     <XMinimumDisplayTimeBetweenParagraphsChanged>Ilość zmienionych linii z minimalnym czasem wyświetlania pomiędzy napisami: {0}</XMinimumDisplayTimeBetweenParagraphsChanged>
@@ -1474,6 +1475,7 @@ Jeśli edytowałeś ten plik w Subtitle Edit, to możesz odszukać kopię zapaso
   <MatroskaSubtitleChooser>
     <Title>Wybierz napisy z pliku Matroska</Title>
     <TitleMp4>Wybierz napisy z pliku MP4</TitleMp4>
+    <PleaseChoose>Znaleziono klika napisów - proszę wybrać</PleaseChoose>
     <TrackXLanguageYTypeZ>Ścieżka {0} - język: {1} - typ: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MeasurementConverter>
@@ -1537,6 +1539,7 @@ Jeśli edytowałeś ten plik w Subtitle Edit, to możesz odszukać kopię zapaso
     <Normal>Zwykłe</Normal>
     <CaseSensitive>Wielkość liter</CaseSensitive>
     <RegularExpression>Wyrażenia regularne</RegularExpression>
+    <Description>Opis</Description>
     <LinesFoundX>Znaleziono linii: {0}</LinesFoundX>
     <Remove>Usuń</Remove>
     <Add>&amp;Dodaj</Add>
@@ -1840,7 +1843,7 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <RemoveTextForHi>Usuń tekst dla HI</RemoveTextForHi>
     <MergeLinesShorterThan>Połącz linie krótsze, niż</MergeLinesShorterThan>
     <MusicSymbol>Symbole muzyczne</MusicSymbol>
-    <MusicSymbolsToReplace>Symbole muzyczne do zastąpienia (oddzielone spacją)</MusicSymbolsToReplace>
+    <MusicSymbolsReplace>Symbole muzyczne do zastąpienia (oddziel je przecinkami)</MusicSymbolsReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Popraw częste błędy OCR - także z użyciem sztywnych reguł</FixCommonOcrErrorsUseHardcodedRules>
     <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Popraw krótki czas wyświetlania (możliwe przes. czasu rozpocz.)</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
     <FixCommonErrorsSkipStepOne>Pomiń pierwszy krok (wybór zasad poprawy)</FixCommonErrorsSkipStepOne>
@@ -2085,6 +2088,7 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <NumberOfLinesX>Ilość linii napisów: {0:#,###}</NumberOfLinesX>
     <LengthInFormatXinCharactersY>Ilość znaków w {0}: {1:#,###,##0}</LengthInFormatXinCharactersY>
     <NumberOfCharactersInTextOnly>Ilość znaków tylko w tekście: {0:#,###,##0}</NumberOfCharactersInTextOnly>
+    <TotalDuration>Całkowity czas trwania wszystkich napisów: {0}</TotalDuration>
     <TotalCharsPerSecond>Ogółem znaków/sekundę: {0:0.0} sek.</TotalCharsPerSecond>
     <TotalWords>Ogółem słów w napisach: {0}</TotalWords>
     <NumberOfItalicTags>Ilość tagów kursywy: {0}</NumberOfItalicTags>
