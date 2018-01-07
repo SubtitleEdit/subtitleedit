@@ -29,6 +29,9 @@ namespace Nikse.SubtitleEdit.Controls
 
         private static char[] _splitChars;
 
+        public bool _dirty = false;
+        double _initialTotalMilliseconds;
+
         internal void ForceHHMMSSFF()
         {
             _forceHHMMSSFF = true;
@@ -73,6 +76,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         private void NumericUpDownValueChanged(object sender, EventArgs e)
         {
+            _dirty = true;
             double? milliseconds = GetTotalMilliseconds();
             if (milliseconds.HasValue)
             {
@@ -116,6 +120,8 @@ namespace Nikse.SubtitleEdit.Controls
 
         public void SetTotalMilliseconds(double milliseconds)
         {
+            _dirty = false;
+            _initialTotalMilliseconds = milliseconds;
             if (UseVideoOffset)
             {
                 milliseconds += Configuration.Settings.General.CurrentVideoOffsetInMs;
@@ -135,6 +141,9 @@ namespace Nikse.SubtitleEdit.Controls
 
         public double? GetTotalMilliseconds()
         {
+            if (!_dirty)
+                return _initialTotalMilliseconds;
+
             TimeCode tc = TimeCode;
             if (tc != null)
                 return tc.TotalMilliseconds;
@@ -151,6 +160,8 @@ namespace Nikse.SubtitleEdit.Controls
                 if (string.IsNullOrWhiteSpace(maskedTextBox1.Text.RemoveChar('.').Replace(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, string.Empty).RemoveChar(',').RemoveChar(':')))
                     return TimeCode.MaxTime;
 
+                if (!_dirty)
+                    return new TimeCode(_initialTotalMilliseconds);
 
                 string startTime = maskedTextBox1.Text;
                 bool isNegative = startTime.StartsWith('-');
@@ -233,6 +244,12 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 if (_designMode)
                     return;
+
+                if (value != null)
+                {
+                    _dirty = false;
+                    _initialTotalMilliseconds = value.TotalMilliseconds;
+                }
 
                 if (value == null || value.TotalMilliseconds >= TimeCode.MaxTime.TotalMilliseconds - 0.1)
                 {
