@@ -9139,8 +9139,13 @@ namespace Nikse.SubtitleEdit.Forms
             labelDurationWarning.Text = durationWarning;
         }
 
+        private double _durationMsInitialValue = 0;
+        private bool _durationIsDirty = false;
+
         private double GetDurationInMilliseconds()
         {
+            if (!_durationIsDirty)
+                return _durationMsInitialValue;
             if (Configuration.Settings.General.UseTimeFormatHHMMSSFF)
             {
                 var seconds = (int)numericUpDownDuration.Value;
@@ -9152,6 +9157,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SetDurationInSeconds(double seconds)
         {
+            _durationIsDirty = false;
+            _durationMsInitialValue = seconds * 1000.0;
             if (Configuration.Settings.General.UseTimeFormatHHMMSSFF)
             {
                 var wholeSeconds = (int)seconds;
@@ -9174,6 +9181,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void NumericUpDownDurationValueChanged(object sender, EventArgs e)
         {
+            _durationIsDirty = true;
             if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedItems.Count > 0)
             {
                 int firstSelectedIndex = SubtitleListview1.SelectedItems[0].Index;
