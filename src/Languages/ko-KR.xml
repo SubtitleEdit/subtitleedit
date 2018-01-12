@@ -1256,7 +1256,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <BeforeChangesMadeInSourceView>「소스 보기」로 바꾸기 전</BeforeChangesMadeInSourceView>
     <UnableToParseSourceView>「소스 보기」의 문자를 분석할 수 없습니다!</UnableToParseSourceView>
     <GoToLineNumberX>'{0}'번 줄로 이동했습니다!</GoToLineNumberX>
-    <CreateAdjustChangesApplied>줄 만들기/조정등의 변경 사항이 적용되었습니다!</CreateAdjustChangesApplied>
+    <CreateAdjustChangesApplied>줄 만들기/조정등의 변경사항이 적용되었습니다!</CreateAdjustChangesApplied>
     <SelectedLines>선택한 줄</SelectedLines>
     <BeforeDisplayTimeAdjustment>표시시간 조정 전</BeforeDisplayTimeAdjustment>
     <DisplayTimeAdjustedX>조정된 표시시간: {0}</DisplayTimeAdjustedX>
@@ -1390,8 +1390,9 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
 이 유니코드식 문자는 손실될 것입니다. 그래도 계속하시겠습니까?</UnicodeCharactersAnsiWarning>
     <NegativeTimeWarning>자막 안에 음수 타임코드가 있습니다. 계속하시겠습니까?</NegativeTimeWarning>
     <BeforeMergeShortLines>짧은 줄 병합 전</BeforeMergeShortLines>
-    <BeforeSplitLongLines>긴 줄 분할 전</BeforeSplitLongLines>
     <MergedShortLinesX>병합된 자막 줄: {0}개</MergedShortLinesX>
+    <BeforeSplitLongLines>긴 줄 분할 전</BeforeSplitLongLines>
+    <LongLinesSplitX>분할된 줄: {0}개</LongLinesSplitX>
     <BeforeDurationsBridgeGap>작은 시간 간격 메우기 전</BeforeDurationsBridgeGap>
     <BeforeSetMinimumDisplayTimeBetweenParagraphs>자막 사이의 최소 간격 수정 전</BeforeSetMinimumDisplayTimeBetweenParagraphs>
     <XMinimumDisplayTimeBetweenParagraphsChanged>자막 사이의 최소 간격 수정: {0}</XMinimumDisplayTimeBetweenParagraphsChanged>
@@ -1473,6 +1474,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
   <MatroskaSubtitleChooser>
     <Title>MATROSKA 파일 안에 있는 자막 선택하기</Title>
     <TitleMp4>MP4 파일에서 자막 선택하기</TitleMp4>
+    <PleaseChoose>한 개 이상의 자막 발견! - 자막을 선택하십시오!</PleaseChoose>
     <TrackXLanguageYTypeZ>트랙 {0} - 언어: {1} - 종류: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MeasurementConverter>
@@ -1840,7 +1842,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <RemoveTextForHi>청각 장애인용 텍스트 삭제</RemoveTextForHi>
     <MergeLinesShorterThan>다음보다 짧은 줄은 줄바꿈 제거</MergeLinesShorterThan>
     <MusicSymbol>음표</MusicSymbol>
-    <MusicSymbolsToReplace>대체 음표 (공백으로 구분)</MusicSymbolsToReplace>
+    <MusicSymbolsReplace>대체 음표 (쉼표로 구분)</MusicSymbolsReplace>
     <FixCommonOcrErrorsUseHardcodedRules>일반적인 OCR 오류 해결 - 하드 코딩 규칙 포함</FixCommonOcrErrorsUseHardcodedRules>
     <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>짧은 표시시간 수정 - 시작 시간 이동을 허용</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
     <FixCommonErrorsSkipStepOne>1 단계 건너뛰기 (수정 규칙 선택)</FixCommonErrorsSkipStepOne>
@@ -2206,7 +2208,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <PlayXSecondsAndBack>{0}초 재생후 원위치로</PlayXSecondsAndBack>
     <FindText>찾기</FindText>
     <GoToSubPosition>자막 위치로 이동</GoToSubPosition>
-    <KeepChangesTitle>변경 사항을 저장하시겠습니까?</KeepChangesTitle>
+    <KeepChangesTitle>변경사항을 저장하시겠습니까?</KeepChangesTitle>
     <KeepChangesMessage>자막이 변경되었습니다. 저장하시겠습니까?</KeepChangesMessage>
     <SynchronizationDone>동기화 성공!</SynchronizationDone>
     <StartSceneMustComeBeforeEndScene>시작 장면은 끝 장면 앞에 있어야 합니다.</StartSceneMustComeBeforeEndScene>
@@ -2280,8 +2282,8 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <InspectCompareMatchesForCurrentImage>현재 이미지에 대한 일치 항목 비교 검사...</InspectCompareMatchesForCurrentImage>
     <EditLastAdditions>마지막 이미지 추가 비교 편집...</EditLastAdditions>
     <SetUnitalicFactor>기울임꼴 인자 설정...</SetUnitalicFactor>
-    <DiscardTitle>OCR의 변경 사항을 폐기하시겠습니까?</DiscardTitle>
-    <DiscardText>현재 OCR 세션의 변경 사항을 폐기하시겠습니까?</DiscardText>
+    <DiscardTitle>OCR 변경사항 폐기</DiscardTitle>
+    <DiscardText>현재 OCR 세션의 변경사항을 폐기합니까?</DiscardText>
     <MinLineSplitHeight>최소 줄 높이 (분할)</MinLineSplitHeight>
   </VobSubOcr>
   <VobSubOcrCharacter>
