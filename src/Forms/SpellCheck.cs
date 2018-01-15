@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Core.Dictionaries;
 using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.Interfaces;
 using Nikse.SubtitleEdit.Core.SpellCheck;
@@ -7,6 +8,7 @@ using Nikse.SubtitleEdit.Logic.SpellCheck;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Windows.Forms;
 
@@ -47,6 +49,7 @@ namespace Nikse.SubtitleEdit.Forms
         private string _languageName;
         private Main _mainWindow;
         private string _currentDictionary;
+        private OcrFixReplaceList _ocrFixReplaceList;
 
         private static readonly char[] ExpectedChars = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '%', '&', '@', '$', '*', '=', '£', '#', '_', '½', '^' };
 
@@ -94,6 +97,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelLanguage.Text = Configuration.Settings.Language.SpellCheck.Language;
             groupBoxWordNotFound.Text = Configuration.Settings.Language.SpellCheck.WordNotFound;
             buttonAddToDictionary.Text = Configuration.Settings.Language.SpellCheck.AddToUserDictionary;
+            buttonAddToOcrReplaceList.Text = Configuration.Settings.Language.SpellCheck.AddToOcrReplaceList;
             buttonChange.Text = Configuration.Settings.Language.SpellCheck.Change;
             buttonChangeAll.Text = Configuration.Settings.Language.SpellCheck.ChangeAll;
             buttonSkipAll.Text = Configuration.Settings.Language.SpellCheck.SkipAll;
@@ -357,7 +361,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (!string.IsNullOrWhiteSpace(richTextBoxParagraph.SelectedText))
             {
                 string word = richTextBoxParagraph.SelectedText.Trim();
-                addXToNamesnoiseListToolStripMenuItem.Text = string.Format(Configuration.Settings.Language.SpellCheck.AddXToNames, word);
+                addXToNamesListToolStripMenuItem.Text = string.Format(Configuration.Settings.Language.SpellCheck.AddXToNames, word);
             }
             else
             {
@@ -365,7 +369,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void AddXToNamesnoiseListToolStripMenuItemClick(object sender, EventArgs e)
+        private void AddXToNameListToolStripMenuItemClick(object sender, EventArgs e)
         {
             if (!string.IsNullOrWhiteSpace(richTextBoxParagraph.SelectedText))
             {
@@ -883,6 +887,31 @@ namespace Nikse.SubtitleEdit.Forms
             _skipAllList = new List<string>();
             _spellCheckWordLists = new SpellCheckWordLists(dictionaryFolder, languageName, this);
             LoadHunspell(dictionary);
+            LoadOcrReplaceList(languageName);
+        }
+
+        private void LoadOcrReplaceList(string languageName)
+        {
+            CultureInfo ci = null;
+            try
+            {
+                ci = CultureInfo.GetCultureInfo(languageName.Replace("_", "-"));
+            }
+            catch
+            {
+                try
+                {
+                    ci = CultureInfo.GetCultureInfo(languageName.Substring(0, 2));
+                }
+                catch
+                {
+                    buttonAddToOcrReplaceList.Enabled = false;
+                    return;
+                }
+            }
+            buttonAddToOcrReplaceList.Enabled = true;
+            string threeLetterIsoLanguageName = ci.ThreeLetterISOLanguageName;
+            _ocrFixReplaceList = OcrFixReplaceList.FromLanguageId(threeLetterIsoLanguageName);
         }
 
         private void textBoxWord_TextChanged(object sender, EventArgs e)
@@ -1086,5 +1115,14 @@ namespace Nikse.SubtitleEdit.Forms
                 System.Diagnostics.Process.Start("https://www.google.com/search?q=" + Utilities.UrlEncode(text));
         }
 
+        private void buttonAddToOcrReplaceList_Click(object sender, EventArgs e)
+        {
+            using (var form = new AddToOcrReplaceList(textBoxWord.Text, comboBoxDictionaries.SelectedItem.ToString(), _ocrFixReplaceList))
+            {
+                if (form.ShowDialog(this) == DialogResult.OK)
+                {
+                }
+            }
+        }
     }
 }

@@ -22,7 +22,7 @@
             this.labelLanguage = new System.Windows.Forms.Label();
             this.richTextBoxParagraph = new System.Windows.Forms.RichTextBox();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.addXToNamesnoiseListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.addXToNamesListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.listBoxSuggestions = new System.Windows.Forms.ListBox();
             this.labelFullText = new System.Windows.Forms.Label();
             this.textBoxWord = new System.Windows.Forms.TextBox();
@@ -34,6 +34,7 @@
             this.buttonUseSuggestionAlways = new System.Windows.Forms.Button();
             this.buttonAddToNames = new System.Windows.Forms.Button();
             this.groupBoxWordNotFound = new System.Windows.Forms.GroupBox();
+            this.buttonGoogleIt = new System.Windows.Forms.Button();
             this.buttonUndo = new System.Windows.Forms.Button();
             this.groupBoxSuggestions = new System.Windows.Forms.GroupBox();
             this.checkBoxAutoChangeNames = new System.Windows.Forms.CheckBox();
@@ -44,7 +45,7 @@
             this.textBoxWholeText = new System.Windows.Forms.TextBox();
             this.labelActionInfo = new System.Windows.Forms.Label();
             this.buttonSpellCheckDownload = new System.Windows.Forms.Button();
-            this.buttonGoogleIt = new System.Windows.Forms.Button();
+            this.buttonAddToOcrReplaceList = new System.Windows.Forms.Button();
             this.contextMenuStrip1.SuspendLayout();
             this.groupBoxWordNotFound.SuspendLayout();
             this.groupBoxSuggestions.SuspendLayout();
@@ -108,17 +109,17 @@
             // contextMenuStrip1
             // 
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.addXToNamesnoiseListToolStripMenuItem});
+            this.addXToNamesListToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
             this.contextMenuStrip1.Size = new System.Drawing.Size(208, 26);
             this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStrip1Opening);
             // 
-            // addXToNamesnoiseListToolStripMenuItem
+            // addXToNamesListToolStripMenuItem
             // 
-            this.addXToNamesnoiseListToolStripMenuItem.Name = "addXToNamesnoiseListToolStripMenuItem";
-            this.addXToNamesnoiseListToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
-            this.addXToNamesnoiseListToolStripMenuItem.Text = "Add x to names/noise list";
-            this.addXToNamesnoiseListToolStripMenuItem.Click += new System.EventHandler(this.AddXToNamesnoiseListToolStripMenuItemClick);
+            this.addXToNamesListToolStripMenuItem.Name = "addXToNamesListToolStripMenuItem";
+            this.addXToNamesListToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
+            this.addXToNamesListToolStripMenuItem.Text = "Add x to names/noise list";
+            this.addXToNamesListToolStripMenuItem.Click += new System.EventHandler(this.AddXToNameListToolStripMenuItemClick);
             // 
             // listBoxSuggestions
             // 
@@ -127,7 +128,7 @@
             this.listBoxSuggestions.FormattingEnabled = true;
             this.listBoxSuggestions.Location = new System.Drawing.Point(8, 44);
             this.listBoxSuggestions.Name = "listBoxSuggestions";
-            this.listBoxSuggestions.Size = new System.Drawing.Size(272, 134);
+            this.listBoxSuggestions.Size = new System.Drawing.Size(272, 160);
             this.listBoxSuggestions.TabIndex = 2;
             this.listBoxSuggestions.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.ListBoxSuggestionsMouseDoubleClick);
             // 
@@ -151,7 +152,7 @@
             // buttonAbort
             // 
             this.buttonAbort.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonAbort.Location = new System.Drawing.Point(515, 341);
+            this.buttonAbort.Location = new System.Drawing.Point(515, 370);
             this.buttonAbort.Name = "buttonAbort";
             this.buttonAbort.Size = new System.Drawing.Size(85, 21);
             this.buttonAbort.TabIndex = 3;
@@ -231,6 +232,7 @@
             // 
             this.groupBoxWordNotFound.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
+            this.groupBoxWordNotFound.Controls.Add(this.buttonAddToOcrReplaceList);
             this.groupBoxWordNotFound.Controls.Add(this.buttonGoogleIt);
             this.groupBoxWordNotFound.Controls.Add(this.buttonUndo);
             this.groupBoxWordNotFound.Controls.Add(this.buttonAddToNames);
@@ -242,17 +244,27 @@
             this.groupBoxWordNotFound.Controls.Add(this.buttonChange);
             this.groupBoxWordNotFound.Location = new System.Drawing.Point(11, 120);
             this.groupBoxWordNotFound.Name = "groupBoxWordNotFound";
-            this.groupBoxWordNotFound.Size = new System.Drawing.Size(292, 215);
+            this.groupBoxWordNotFound.Size = new System.Drawing.Size(292, 244);
             this.groupBoxWordNotFound.TabIndex = 0;
             this.groupBoxWordNotFound.TabStop = false;
             this.groupBoxWordNotFound.Text = "Word not found";
             // 
+            // buttonGoogleIt
+            // 
+            this.buttonGoogleIt.Location = new System.Drawing.Point(6, 185);
+            this.buttonGoogleIt.Name = "buttonGoogleIt";
+            this.buttonGoogleIt.Size = new System.Drawing.Size(280, 21);
+            this.buttonGoogleIt.TabIndex = 10;
+            this.buttonGoogleIt.Text = "&Google it";
+            this.buttonGoogleIt.UseVisualStyleBackColor = true;
+            this.buttonGoogleIt.Click += new System.EventHandler(this.buttonGoogleIt_Click);
+            // 
             // buttonUndo
             // 
-            this.buttonUndo.Location = new System.Drawing.Point(6, 185);
+            this.buttonUndo.Location = new System.Drawing.Point(6, 212);
             this.buttonUndo.Name = "buttonUndo";
             this.buttonUndo.Size = new System.Drawing.Size(280, 21);
-            this.buttonUndo.TabIndex = 8;
+            this.buttonUndo.TabIndex = 12;
             this.buttonUndo.Text = "Undo: skip all \'A\'";
             this.buttonUndo.UseVisualStyleBackColor = true;
             this.buttonUndo.Visible = false;
@@ -268,7 +280,7 @@
             this.groupBoxSuggestions.Controls.Add(this.listBoxSuggestions);
             this.groupBoxSuggestions.Location = new System.Drawing.Point(309, 120);
             this.groupBoxSuggestions.Name = "groupBoxSuggestions";
-            this.groupBoxSuggestions.Size = new System.Drawing.Size(291, 215);
+            this.groupBoxSuggestions.Size = new System.Drawing.Size(291, 244);
             this.groupBoxSuggestions.TabIndex = 1;
             this.groupBoxSuggestions.TabStop = false;
             this.groupBoxSuggestions.Text = "Suggestions";
@@ -277,7 +289,7 @@
             // 
             this.checkBoxAutoChangeNames.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.checkBoxAutoChangeNames.AutoSize = true;
-            this.checkBoxAutoChangeNames.Location = new System.Drawing.Point(8, 191);
+            this.checkBoxAutoChangeNames.Location = new System.Drawing.Point(8, 220);
             this.checkBoxAutoChangeNames.Name = "checkBoxAutoChangeNames";
             this.checkBoxAutoChangeNames.Size = new System.Drawing.Size(216, 17);
             this.checkBoxAutoChangeNames.TabIndex = 3;
@@ -340,7 +352,7 @@
             // 
             this.labelActionInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelActionInfo.AutoSize = true;
-            this.labelActionInfo.Location = new System.Drawing.Point(12, 352);
+            this.labelActionInfo.Location = new System.Drawing.Point(12, 381);
             this.labelActionInfo.Name = "labelActionInfo";
             this.labelActionInfo.Size = new System.Drawing.Size(79, 13);
             this.labelActionInfo.TabIndex = 2;
@@ -357,21 +369,21 @@
             this.buttonSpellCheckDownload.UseVisualStyleBackColor = true;
             this.buttonSpellCheckDownload.Click += new System.EventHandler(this.buttonSpellCheckDownload_Click);
             // 
-            // buttonGoogleIt
+            // buttonAddToOcrReplaceList
             // 
-            this.buttonGoogleIt.Location = new System.Drawing.Point(6, 158);
-            this.buttonGoogleIt.Name = "buttonGoogleIt";
-            this.buttonGoogleIt.Size = new System.Drawing.Size(280, 21);
-            this.buttonGoogleIt.TabIndex = 7;
-            this.buttonGoogleIt.Text = "&Google it";
-            this.buttonGoogleIt.UseVisualStyleBackColor = true;
-            this.buttonGoogleIt.Click += new System.EventHandler(this.buttonGoogleIt_Click);
+            this.buttonAddToOcrReplaceList.Location = new System.Drawing.Point(6, 158);
+            this.buttonAddToOcrReplaceList.Name = "buttonAddToOcrReplaceList";
+            this.buttonAddToOcrReplaceList.Size = new System.Drawing.Size(280, 21);
+            this.buttonAddToOcrReplaceList.TabIndex = 8;
+            this.buttonAddToOcrReplaceList.Text = "Add to OCR replace list...";
+            this.buttonAddToOcrReplaceList.UseVisualStyleBackColor = true;
+            this.buttonAddToOcrReplaceList.Click += new System.EventHandler(this.buttonAddToOcrReplaceList_Click);
             // 
             // SpellCheck
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(612, 374);
+            this.ClientSize = new System.Drawing.Size(612, 403);
             this.Controls.Add(this.buttonSpellCheckDownload);
             this.Controls.Add(this.labelActionInfo);
             this.Controls.Add(this.richTextBoxParagraph);
@@ -431,11 +443,12 @@
         private System.Windows.Forms.Button buttonChangeWholeText;
         private System.Windows.Forms.TextBox textBoxWholeText;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
-        private System.Windows.Forms.ToolStripMenuItem addXToNamesnoiseListToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem addXToNamesListToolStripMenuItem;
         private System.Windows.Forms.CheckBox checkBoxAutoChangeNames;
         private System.Windows.Forms.Label labelActionInfo;
         private System.Windows.Forms.Button buttonSpellCheckDownload;
         private System.Windows.Forms.Button buttonUndo;
         private System.Windows.Forms.Button buttonGoogleIt;
+        private System.Windows.Forms.Button buttonAddToOcrReplaceList;
     }
 }

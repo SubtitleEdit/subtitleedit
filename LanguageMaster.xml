@@ -1820,7 +1820,7 @@ can edit in same subtitle file (collaboration)</Information>
     <Remove>Remove</Remove>
     <AddPair>Add pair</AddPair>
     <UserWordList>User word list</UserWordList>
-    <OcrFixList>OCR fix list</OcrFixList>
+    <OcrFixList>OCR replace list</OcrFixList>
     <Location>Location</Location>
     <UseOnlineNames>Use online names xml file</UseOnlineNames>
     <WordAddedX>Word added: {0}</WordAddedX>
