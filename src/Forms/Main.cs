@@ -18936,7 +18936,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void ContextMenuStripTextBoxListViewOpening(object sender, System.ComponentModel.CancelEventArgs e)
         {
             var tb = GetFocusedTextBox();
-            toolStripMenuItemSplitTextAtCursor.Visible = tb.Text.Length > 5 && tb.SelectionStart > 2 && tb.SelectionStart < tb.Text.Length - 2;
+            toolStripMenuItemSplitTextAtCursor.Visible = tb.Text.Length > 1;
 
             if (IsUnicode)
             {
