@@ -1028,6 +1028,8 @@ namespace Nikse.SubtitleEdit.Core
         public string MainTextBoxSplitAtCursor { get; set; }
         public string MainTextBoxMoveLastWordDown { get; set; }
         public string MainTextBoxMoveFirstWordFromNextUp { get; set; }
+        public string MainTextBoxMoveLastWordDownCurrent { get; set; }
+        public string MainTextBoxMoveFirstWordUpCurrent { get; set; }
         public string MainTextBoxSelectionToLower { get; set; }
         public string MainTextBoxSelectionToUpper { get; set; }
         public string MainTextBoxToggleAutoDuration { get; set; }
@@ -3061,6 +3063,12 @@ namespace Nikse.SubtitleEdit.Core
                 subNode = node.SelectSingleNode("MainTextBoxMoveFirstWordFromNextUp");
                 if (subNode != null)
                     settings.Shortcuts.MainTextBoxMoveFirstWordFromNextUp = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainTextBoxMoveLastWordDownCurrent");
+                if (subNode != null)
+                    settings.Shortcuts.MainTextBoxMoveLastWordDownCurrent = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainTextBoxMoveFirstWordUpCurrent");
+                if (subNode != null)
+                    settings.Shortcuts.MainTextBoxMoveFirstWordUpCurrent = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainTextBoxSelectionToLower");
                 if (subNode != null)
                     settings.Shortcuts.MainTextBoxSelectionToLower = subNode.InnerText;
@@ -3903,6 +3911,8 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("MainTextBoxSplitAtCursor", settings.Shortcuts.MainTextBoxSplitAtCursor);
                 textWriter.WriteElementString("MainTextBoxMoveLastWordDown", settings.Shortcuts.MainTextBoxMoveLastWordDown);
                 textWriter.WriteElementString("MainTextBoxMoveFirstWordFromNextUp", settings.Shortcuts.MainTextBoxMoveFirstWordFromNextUp);
+                textWriter.WriteElementString("MainTextBoxMoveLastWordDownCurrent", settings.Shortcuts.MainTextBoxMoveLastWordDownCurrent);
+                textWriter.WriteElementString("MainTextBoxMoveFirstWordUpCurrent", settings.Shortcuts.MainTextBoxMoveFirstWordUpCurrent);
                 textWriter.WriteElementString("MainTextBoxSelectionToLower", settings.Shortcuts.MainTextBoxSelectionToLower);
                 textWriter.WriteElementString("MainTextBoxSelectionToUpper", settings.Shortcuts.MainTextBoxSelectionToUpper);
                 textWriter.WriteElementString("MainTextBoxToggleAutoDuration", settings.Shortcuts.MainTextBoxToggleAutoDuration);

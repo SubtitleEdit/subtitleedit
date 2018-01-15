@@ -167,6 +167,8 @@ namespace Nikse.SubtitleEdit.Forms
         private Keys _mainTextBoxSplitAtCursor = Keys.None;
         private Keys _mainTextBoxMoveLastWordDown = Keys.None;
         private Keys _mainTextBoxMoveFirstWordFromNextUp = Keys.None;
+        private Keys _mainTextBoxMoveLastWordDownCurrent = Keys.None;
+        private Keys _mainTextBoxMoveFirstWordUpCurrent = Keys.None;
         private Keys _mainTextBoxSelectionToLower = Keys.None;
         private Keys _mainTextBoxSelectionToUpper = Keys.None;
         private Keys _mainTextBoxToggleAutoDuration = Keys.None;
@@ -12264,6 +12266,16 @@ namespace Nikse.SubtitleEdit.Forms
                 MoveFirstWordInNextUp();
                 e.SuppressKeyPress = true;
             }
+            else if ((textBoxListViewText.Focused || (SubtitleListview1.Focused && SubtitleListview1.SelectedItems.Count == 1) || (audioVisualizer.Focused && SubtitleListview1.SelectedItems.Count == 1)) && _mainTextBoxMoveLastWordDownCurrent == e.KeyData)
+            {
+                MoveWordUpDownInCurrent(true);
+                e.SuppressKeyPress = true;
+            }
+            else if ((textBoxListViewText.Focused || (SubtitleListview1.Focused && SubtitleListview1.SelectedItems.Count == 1) || (audioVisualizer.Focused && SubtitleListview1.SelectedItems.Count == 1)) && _mainTextBoxMoveFirstWordUpCurrent == e.KeyData)
+            {
+                MoveWordUpDownInCurrent(false);
+                e.SuppressKeyPress = true;
+            }
             else if (_mainAutoCalcCurrentDuration == e.KeyData && (tabControlButtons.SelectedTab == tabPageAdjust || tabControlButtons.SelectedTab == tabPageCreate))
             {
                 e.SuppressKeyPress = true;
@@ -12532,6 +12544,59 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             // put new entries above tabs
+        }
+
+        private void MoveWordUpDownInCurrent(bool down)
+        {
+            int firstIndex = FirstSelectedIndex;
+            if (firstIndex < 0)
+            {
+                return;
+            }
+
+            var p = _subtitle.GetParagraphOrDefault(firstIndex);
+            if (p == null)
+            {
+                return;
+            }
+
+            var lines = p.Text.SplitToLines();
+            if (lines.Count == 1)
+            {
+                lines.Add(string.Empty);
+            }
+            if (lines.Count != 2)
+            {
+                return;
+            }
+
+            var line1Words = lines[0].Split(' ').ToList();
+            var line2Words = lines[1].Split(' ').ToList();
+            if (down)
+            {
+                if (line1Words.Count > 0)
+                { 
+                    line2Words.Insert(0, line1Words[line1Words.Count - 1]);
+                    line1Words.RemoveAt(line1Words.Count - 1);
+                }
+            }
+            else // up
+            {
+                if (line2Words.Count > 0)
+                {
+                    line1Words.Add(line2Words[0]);
+                    line2Words.RemoveAt(0);
+                }
+            }
+            var newText = (string.Join(" ", line1Words.ToArray()).Trim() + Environment.NewLine +
+                           string.Join(" ", line2Words.ToArray()).Trim()).Trim();
+            if (newText != p.Text)
+            {
+                MakeHistoryForUndo(_language.BeforeLineUpdatedInListView);
+                p.Text = newText;
+                SubtitleListview1.SetText(firstIndex, p.Text);
+                textBoxListViewText.Text = p.Text;
+            }
         }
 
         private void MoveStartCurrent(int ms)
@@ -16172,6 +16237,8 @@ namespace Nikse.SubtitleEdit.Forms
             _mainTextBoxSplitAtCursor = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxSplitAtCursor);
             _mainTextBoxMoveLastWordDown = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxMoveLastWordDown);
             _mainTextBoxMoveFirstWordFromNextUp = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxMoveFirstWordFromNextUp);
+            _mainTextBoxMoveLastWordDownCurrent = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxMoveLastWordDownCurrent);
+            _mainTextBoxMoveFirstWordUpCurrent = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxMoveFirstWordUpCurrent);
             _mainTextBoxSelectionToLower = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxSelectionToLower);
             _mainTextBoxSelectionToUpper = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxSelectionToUpper);
             _mainTextBoxToggleAutoDuration = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxToggleAutoDuration);
