@@ -692,6 +692,12 @@
     <Compile Include="Forms\Styles\SubStationAlphaStylesBatchConvert.Designer.cs">
       <DependentUpon>SubStationAlphaStylesBatchConvert.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Styles\SubStationAlphaStylesExport.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Styles\SubStationAlphaStylesExport.Designer.cs">
+      <DependentUpon>SubStationAlphaStylesExport.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\SubStationAlphaProperties.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1239,6 +1245,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Styles\SubStationAlphaStylesBatchConvert.resx">
       <DependentUpon>SubStationAlphaStylesBatchConvert.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Styles\SubStationAlphaStylesExport.resx">
+      <DependentUpon>SubStationAlphaStylesExport.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\SubStationAlphaProperties.resx">
       <DependentUpon>SubStationAlphaProperties.cs</DependentUpon>
