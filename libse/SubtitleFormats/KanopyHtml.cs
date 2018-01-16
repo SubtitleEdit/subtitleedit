@@ -40,7 +40,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             foreach (string l in lines)
                 temp.Append(l);
             string all = temp.ToString();
-            if (!all.Contains(" begin=") || !all.Contains(" end="))
+            if (!all.Contains(" begin=") || !all.Contains(" end=") || all.Contains("http://www.w3.org/ns/ttml"))
                 return;
 
             _errorCount = 0;
