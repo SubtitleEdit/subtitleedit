@@ -58,6 +58,7 @@
             this.listViewStyles.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.listViewStyles.CheckBoxes = true;
             this.listViewStyles.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeaderName,
             this.columnHeaderFontName,
@@ -88,21 +89,20 @@
             // columnHeaderFontSize
             // 
             this.columnHeaderFontSize.Text = "Font size";
-            this.columnHeaderFontSize.Width = 80;
+            this.columnHeaderFontSize.Width = 85;
             // 
             // columnHeaderUseCount
             // 
             this.columnHeaderUseCount.Text = "Used#";
+            this.columnHeaderUseCount.Width = 65;
             // 
             // columnHeaderPrimaryColor
             // 
             this.columnHeaderPrimaryColor.Text = "Primary";
-            this.columnHeaderPrimaryColor.Width = 50;
             // 
             // columnHeaderOutline
             // 
             this.columnHeaderOutline.Text = "Outline";
-            this.columnHeaderOutline.Width = 55;
             // 
             // buttonCancel
             // 
