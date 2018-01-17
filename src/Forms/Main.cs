@@ -16906,6 +16906,8 @@ namespace Nikse.SubtitleEdit.Forms
             if (format.GetType() == typeof(TimedText10) || format.GetType() == typeof(ItunesTimedText))
             {
                 var c = _subtitle.GetParagraphOrDefault(index);
+                if (c == null)
+                    c = _subtitle.GetParagraphOrDefault(index -1);
                 if (c != null)
                 {
                     newParagraph.Style = c.Style;

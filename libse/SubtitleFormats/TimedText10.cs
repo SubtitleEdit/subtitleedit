@@ -288,7 +288,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     bool firstParagraph = true;
                     foreach (Paragraph p in subtitle.Paragraphs)
                     {
-                        if (p.Language.Equals(language, StringComparison.OrdinalIgnoreCase))
+                        if (p.Language != null && p.Language.Equals(language, StringComparison.OrdinalIgnoreCase))
                         {
                             if (p.NewSection && !firstParagraph)
                             {
