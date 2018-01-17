@@ -5,7 +5,8 @@
     <Version>3.5.4</Version>
     <TranslatedBy>翻译: FeiXJ | Leon Cheung | larsenlouis</TranslatedBy>
     <CultureName>zh-Hans</CultureName>
-    <HelpFile />
+    <HelpFile>
+    </HelpFile>
     <Ok>确定(&amp;O)</Ok>
     <Cancel>取消(&amp;A)</Cancel>
     <Apply>应用</Apply>
@@ -26,6 +27,9 @@
     <Duration>时长</Duration>
     <CharsPerSec>字/秒</CharsPerSec>
     <WordsPerMin>词/分</WordsPerMin>
+    <Actor>演员</Actor>
+    <Gap>间隙</Gap>
+    <Region>区域</Region>
     <NumberSymbol>编号</NumberSymbol>
     <Number>编号</Number>
     <Text>文本</Text>
@@ -162,6 +166,7 @@ Command line: {1} {2}
     <ChooseOutputFolder>选择输出文件夹</ChooseOutputFolder>
     <OverwriteExistingFiles>覆盖已有文件</OverwriteExistingFiles>
     <Style>样式...</Style>
+    <UseStyleFromSource>使用来自源文件的样式</UseStyleFromSource>
     <ConvertOptions>转换选项</ConvertOptions>
     <RemoveFormatting>删除格式化标签</RemoveFormatting>
     <RemoveTextForHI>删除 HI 文本</RemoveTextForHI>
@@ -179,6 +184,7 @@ Command line: {1} {2}
     <ScanningFolder>正在扫描 {0} 及其子文件夹中的字幕文件...</ScanningFolder>
     <Recursive>包含子文件夹</Recursive>
     <SetMinMsBetweenSubtitles>设定字幕间的最小毫秒数</SetMinMsBetweenSubtitles>
+    <BridgeGaps>桥接间隙</BridgeGaps>
     <PlainText>纯文本</PlainText>
     <Ocr>OCR...</Ocr>
     <Filter>过滤器</Filter>
@@ -189,6 +195,7 @@ Command line: {1} {2}
     <FixCommonErrorsErrorX>修复常见错误： {0}</FixCommonErrorsErrorX>
     <MultipleReplaceErrorX>多内容替换： {0}</MultipleReplaceErrorX>
     <AutoBalanceErrorX>自动平衡： {0}</AutoBalanceErrorX>
+    <OffsetTimeCodes>偏移时间码</OffsetTimeCodes>
   </BatchConvert>
   <Beamer>
     <Title>投影仪</Title>
@@ -416,6 +423,14 @@ Command line: {1} {2}
     <Footer>页脚</Footer>
     <DoNotModify>[不改动]</DoNotModify>
   </ExportCustomTextFormat>
+  <ExportFcpXmlAdvanced>
+    <Title>导出Final Cut Pro XML advanced格式</Title>
+    <FontName>字体名称</FontName>
+    <FontSize>字体大小</FontSize>
+    <FontFace>字体</FontFace>
+    <Alignment>对齐样式</Alignment>
+    <Baseline>底线</Baseline>
+  </ExportFcpXmlAdvanced>
   <ExportPngXml>
     <Title>导出 BDN XML/PNG</Title>
     <ImageSettings>图像设置</ImageSettings>
@@ -464,6 +479,7 @@ Command line: {1} {2}
     <Forced>强制</Forced>
     <ChooseBackgroundColor>选择背景色</ChooseBackgroundColor>
     <SaveImageAs>图像另存为...</SaveImageAs>
+    <FcpUseFullPathUrl>在FCP xml文件名中使用完整的图像路径</FcpUseFullPathUrl>
   </ExportPngXml>
   <ExportText>
     <Title>导出文本</Title>
@@ -632,6 +648,7 @@ Command line: {1} {2}
     <FixOcrErrorExample>D0n't -&gt; Don't</FixOcrErrorExample>
     <FixSpaceBetweenNumbersExample>1 100 -&gt; 1100</FixSpaceBetweenNumbersExample>
     <FixDialogsOneLineExample>Hi John! - Hi Ida! -&gt; Hi John!&lt;br /&gt;- Hi Ida!</FixDialogsOneLineExample>
+    <SelectDefault>选中默认</SelectDefault>
   </FixCommonErrors>
   <GetDictionaries>
     <Title>是否使用词典？</Title>
@@ -1056,6 +1073,7 @@ Command line: {1} {2}
         <RemoveTextForHi>移除听障辅助内容</RemoveTextForHi>
         <VisualSync>影音对照同步</VisualSync>
         <SpellCheck>拼写检查</SpellCheck>
+        <NetflixQualityCheck>Netflix品质检查</NetflixQualityCheck>
         <Settings>设置</Settings>
         <Help>帮助</Help>
         <ShowHideWaveform>显示/隐藏 音频</ShowHideWaveform>
@@ -1065,11 +1083,13 @@ Command line: {1} {2}
         <SizeAllColumnsToFit>自适应所有的列宽度</SizeAllColumnsToFit>
         <AdvancedSubStationAlphaSetStyle>高级 Sub Station Alpha - 设置样式</AdvancedSubStationAlphaSetStyle>
         <SubStationAlphaSetStyle>Sub Station Alpha - 设置样式</SubStationAlphaSetStyle>
+        <SetActor>设定演员</SetActor>
         <SubStationAlphaStyles>Sub Station Alpha 样式...</SubStationAlphaStyles>
         <AdvancedSubStationAlphaStyles>高级 Sub Station Alpha 样式...</AdvancedSubStationAlphaStyles>
-        <TimedTextSetStyle>时间文本 - 设置样式</TimedTextSetStyle>
-        <TimedTextStyles>时间文本样式...</TimedTextStyles>
-        <TimedTextSetLanguage>时间文本 - 选择语言</TimedTextSetLanguage>
+        <TimedTextSetRegion>带时间文本 - 设置区域</TimedTextSetRegion>
+        <TimedTextSetStyle>带时间文本 - 设置样式</TimedTextSetStyle>
+        <TimedTextStyles>带时间文本样式...</TimedTextStyles>
+        <TimedTextSetLanguage>带时间文本 - 选择语言</TimedTextSetLanguage>
         <SamiSetStyle>Sami - 设置等级</SamiSetStyle>
         <NuendoSetStyle>Nuendo - 设置字符</NuendoSetStyle>
         <Cut>剪切</Cut>
@@ -1116,6 +1136,8 @@ Command line: {1} {2}
         <SaveSelectedLines>所选行另存为...</SaveSelectedLines>
         <WebVTTSetNewVoice>设定新人声...</WebVTTSetNewVoice>
         <WebVTTRemoveVoices>移除人声</WebVTTRemoveVoices>
+        <NewActor>没有演员...</NewActor>
+        <RemoveActors>移除演员...</RemoveActors>
       </ContextMenu>
     </Menu>
     <Controls>
@@ -1369,8 +1391,9 @@ Command line: {1} {2}
     <UnicodeCharactersAnsiWarning>字幕中含有Unicode字符，将文件保存为ANSI编码将丢失这些字符，要继续保存吗？</UnicodeCharactersAnsiWarning>
     <NegativeTimeWarning>字幕含有负值时间码。继续保存吗？</NegativeTimeWarning>
     <BeforeMergeShortLines>合并短行之前</BeforeMergeShortLines>
-    <BeforeSplitLongLines>分割长行之前</BeforeSplitLongLines>
     <MergedShortLinesX>已合并行数: {0}</MergedShortLinesX>
+    <BeforeSplitLongLines>分割长行之前</BeforeSplitLongLines>
+    <LongLinesSplitX>分割后的行数: {0}</LongLinesSplitX>
     <BeforeDurationsBridgeGap>在桥接短间隙之前</BeforeDurationsBridgeGap>
     <BeforeSetMinimumDisplayTimeBetweenParagraphs>设置段间最小显示时间之前</BeforeSetMinimumDisplayTimeBetweenParagraphs>
     <XMinimumDisplayTimeBetweenParagraphsChanged>已更改段间最小显示时间的行数: {0}</XMinimumDisplayTimeBetweenParagraphsChanged>
@@ -1429,9 +1452,11 @@ Command line: {1} {2}
     <ImportTimeCodesDifferentNumberOfLinesWarning>带时间码的字幕与当前文件 ({1}) 的行数相差 ({0}) - 仍要继续吗?</ImportTimeCodesDifferentNumberOfLinesWarning>
     <ParsingTransportStream>正在解析传送流，请稍候...</ParsingTransportStream>
     <XPercentCompleted>{0}% 已完成</XPercentCompleted>
+    <NextX>下一个: {0}</NextX>
     <ErrorLoadIdx>无法读取或编辑 .idx 文件。Idx 文件是 idx/sub 文件对中的一部分 (也称为VobSub), Subtitle Edit 无法打开 .sub 文件。</ErrorLoadIdx>
     <ErrorLoadRar>此文件是一个 .rar 压缩文件。Subtitle Edit 无法打开压缩文件。</ErrorLoadRar>
     <ErrorLoadZip>此文件是一个 .zip 压缩文件，Subtitle Edit 无法打开压缩文件。</ErrorLoadZip>
+    <ErrorLoad7Zip>从MP4文件中选择字幕</ErrorLoad7Zip>
     <ErrorLoadPng>此文件是 PNG 图像文件，Subtitle Edit 无法打开 PNG 文件。</ErrorLoadPng>
     <ErrorLoadJpg>此文件是一个 JPG 图像文件。Subtitle Edit 无法打开 JPG 文件。</ErrorLoadJpg>
     <ErrorLoadSrr>此文件是一个 ReScene .srr 文件，而不是字幕文件。</ErrorLoadSrr>
@@ -1447,7 +1472,9 @@ Command line: {1} {2}
     <NoSupportHereDivx>此处不支持 Divx 文件。</NoSupportHereDivx>
   </Main>
   <MatroskaSubtitleChooser>
-    <Title>从 Matroska 文件选择字幕</Title>
+    <Title>从 Matroska 文件中选择字幕</Title>
+    <TitleMp4>从 MP4 文件中选择字幕</TitleMp4>
+    <PleaseChoose>找到包含多行的字幕 - 请选择</PleaseChoose>
     <TrackXLanguageYTypeZ>曲目 {0} - 语言: {1} - 类型: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MeasurementConverter>
@@ -1511,6 +1538,7 @@ Command line: {1} {2}
     <Normal>正常</Normal>
     <CaseSensitive>区分大小写</CaseSensitive>
     <RegularExpression>正则表达式</RegularExpression>
+    <Description>描述</Description>
     <LinesFoundX>找到行数: {0}</LinesFoundX>
     <Remove>移除</Remove>
     <Add>添加</Add>
@@ -1675,6 +1703,7 @@ Command line: {1} {2}
     <Replace>替换</Replace>
     <VisualSync>影音对照同步</VisualSync>
     <SpellCheck>拼写检查</SpellCheck>
+    <NetflixQualityCheck>Netfix品质检查</NetflixQualityCheck>
     <SettingsName>设置</SettingsName>
     <Help>帮助</Help>
     <ShowFrameRate>在工具栏显示帧率</ShowFrameRate>
@@ -1692,6 +1721,7 @@ Command line: {1} {2}
     <SubtitleFont>字幕字体</SubtitleFont>
     <SubtitleFontSize>字幕字体大小</SubtitleFontSize>
     <SubtitleBold>粗体</SubtitleBold>
+    <VideoAutoOpen>打开字幕时自动打开视频文件</VideoAutoOpen>
     <SubtitleCenter>居中</SubtitleCenter>
     <SubtitleFontColor>字幕字体颜色</SubtitleFontColor>
     <SubtitleBackgroundColor>字幕背景颜色</SubtitleBackgroundColor>
@@ -1704,7 +1734,6 @@ Command line: {1} {2}
     <RemoveBlankLinesWhenOpening>打开字幕时删除空行</RemoveBlankLinesWhenOpening>
     <ShowLineBreaksAs>列表视图中的换行符显示为</ShowLineBreaksAs>
     <MainListViewDoubleClickAction>双击主窗口中的行时，列表视图将</MainListViewDoubleClickAction>
-    <MainListViewColumns>列表视图列</MainListViewColumns>
     <MainListViewColumnsInfo>选择可见的列表视图列</MainListViewColumnsInfo>
     <MainListViewNothing>无</MainListViewNothing>
     <MainListViewVideoGoToPositionAndPause>转到视频位置并暂停</MainListViewVideoGoToPositionAndPause>
@@ -1811,7 +1840,7 @@ Command line: {1} {2}
     <RemoveTextForHi>移除听障辅助内容</RemoveTextForHi>
     <MergeLinesShorterThan>合并小于此长度的行</MergeLinesShorterThan>
     <MusicSymbol>音符</MusicSymbol>
-    <MusicSymbolsToReplace>替换音符 (用空格分隔)</MusicSymbolsToReplace>
+    <MusicSymbolsReplace>要替换的音乐符号（用分号间隔）</MusicSymbolsReplace>
     <FixCommonOcrErrorsUseHardcodedRules>修复 OCR 常规错误 - 同时使用硬编码规则</FixCommonOcrErrorsUseHardcodedRules>
     <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>修正较短的显示时间 - 允许移动起始时间</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
     <FixCommonErrorsSkipStepOne>设置结束点并转到下一条</FixCommonErrorsSkipStepOne>
@@ -1832,6 +1861,10 @@ Command line: {1} {2}
     <AdjustStartDownEndUpAndGoToNext>向下方向键=设置起点，向上方向键=设置终点，并转到下一个</AdjustStartDownEndUpAndGoToNext>
     <AdjustSelected100MsForward>所选行前移 100ms</AdjustSelected100MsForward>
     <AdjustSelected100MsBack>所选行后移 100ms</AdjustSelected100MsBack>
+    <AdjustStartXMsBack>将起始点向后移动 {0} ms</AdjustStartXMsBack>
+    <AdjustStartXMsForward>将起始点向前移动 {0} ms</AdjustStartXMsForward>
+    <AdjustEndXMsBack>将结束点向后移动 {0} ms</AdjustEndXMsBack>
+    <AdjustEndXMsForward>将结束点向前移动 {0} ms</AdjustEndXMsForward>
     <AdjustSetStartTimeKeepDuration>设置结束时间，偏移其后的所有值</AdjustSetStartTimeKeepDuration>
     <AdjustSetEndAndOffsetTheRest>设置结束时间，偏移其后的所有时间</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>设置结束时间，偏移其后的所有时间并转到下一行</AdjustSetEndAndOffsetTheRestAndGoToNext>
@@ -1862,10 +1895,14 @@ Command line: {1} {2}
     <WaveformPlayNewSelectionEnd>播放选中内容的末尾</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>播放首个选中行</WaveformPlayFirstSelectedSubtitle>
     <WaveformFocusListView>操作焦点位于列表视图</WaveformFocusListView>
+    <WaveformGoToNextSubtitle>转到下一条字幕（从当前位置起）</WaveformGoToNextSubtitle>
+    <WaveformGoToPreviousSceneChange>转到下一个场景变化点</WaveformGoToPreviousSceneChange>
     <WaveformGoToNextSceneChange>转到下一处场景变动</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>切换场景变动</WaveformToggleSceneChange>
     <GoBack1Frame>退回一帧</GoBack1Frame>
     <GoForward1Frame>前进一帧</GoForward1Frame>
+    <GoBack1FrameWithPlay>退回一帧 (并播放)</GoBack1FrameWithPlay>
+    <GoForward1FrameWithPlay>前进一帧 (并播放)</GoForward1FrameWithPlay>
     <GoBack100Milliseconds>退回 100 毫秒</GoBack100Milliseconds>
     <GoForward100Milliseconds>前进 100 毫秒</GoForward100Milliseconds>
     <GoBack500Milliseconds>退回 500 毫秒</GoBack500Milliseconds>
@@ -1918,11 +1955,12 @@ Command line: {1} {2}
     <MainTextBoxUnbreak>取消换行</MainTextBoxUnbreak>
     <MainFileSaveAll>显示全部</MainFileSaveAll>
     <Miscellaneous>杂项</Miscellaneous>
+    <CpsIncludesSpace>字词/秒 （CPS）含空格</CpsIncludesSpace>
     <UseDoNotBreakAfterList>使用不在后面断行的列表</UseDoNotBreakAfterList>
     <MicrosoftBingTranslator>微软 Bing 翻译引擎</MicrosoftBingTranslator>
     <HowToSignUp>如何注册</HowToSignUp>
-    <ClientId>客户 ID</ClientId>
-    <ClientSecret>客户密码</ClientSecret>
+    <GoogleTranslateUrl>Google 翻译网址</GoogleTranslateUrl>
+    <MicrosoftTranslateApiKey>激活码</MicrosoftTranslateApiKey>
   </Settings>
   <SettingsMpv>
     <Title>mpv 设置</Title>
@@ -1982,8 +2020,16 @@ Command line: {1} {2}
     <ImageText>图片文字</ImageText>
     <SpellCheckCompleted>拼写检查完成。</SpellCheckCompleted>
     <SpellCheckAborted>拼写检查中止</SpellCheckAborted>
+    <SpacesNotAllowed>单一单词中不允许出现空格！</SpacesNotAllowed>
     <UndoX>撤销：{0}</UndoX>
   </SpellCheck>
+  <NetflixQualityCheck>
+    <GlyphCheckReport>{1} 栏处找到无效字符 {0}</GlyphCheckReport>
+    <WhiteSpaceCheckReport>{1} 栏处找到无效空白字符 {0}</WhiteSpaceCheckReport>
+    <ReportPrompt>完整报告请看这里: {0}</ReportPrompt>
+    <FoundXIssues>Netflix 品质检查找到 {0} 个问题</FoundXIssues>
+    <CheckOk>Netflix品质检查通过 :)</CheckOk>
+  </NetflixQualityCheck>
   <Split>
     <Title>分割</Title>
     <SplitOptions>分割选项</SplitOptions>
@@ -2040,7 +2086,9 @@ Command line: {1} {2}
     <NumberOfLinesX>字幕行数: {0:#,###}</NumberOfLinesX>
     <LengthInFormatXinCharactersY>作为 {0} 的字符数: {1:#,###,##0}</LengthInFormatXinCharactersY>
     <NumberOfCharactersInTextOnly>仅文本中的字符数: {0:#,###,##0}</NumberOfCharactersInTextOnly>
+    <TotalDuration>所有字幕的总持续时间</TotalDuration>
     <TotalCharsPerSecond>每秒总字符数: {0:0.0} 秒</TotalCharsPerSecond>
+    <TotalWords>单条字幕的总字数: {0}</TotalWords>
     <NumberOfItalicTags>斜体标签数: {0}</NumberOfItalicTags>
     <NumberOfBoldTags>粗体标签数: {0}</NumberOfBoldTags>
     <NumberOfUnderlineTags>下划线标签数: {0}</NumberOfUnderlineTags>
@@ -2234,6 +2282,7 @@ Command line: {1} {2}
     <SetUnitalicFactor>设置非倾斜因数...</SetUnitalicFactor>
     <DiscardTitle>放弃对OCR设置的更改?</DiscardTitle>
     <DiscardText>是否要放弃对当前OCR会话的更改?</DiscardText>
+    <MinLineSplitHeight>最低行高 （分割）</MinLineSplitHeight>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub - 图像转文本（手动）</Title>
@@ -2298,6 +2347,7 @@ Command line: {1} {2}
     <RemoveSceneChange>移除场景变动</RemoveSceneChange>
     <GuessTimeCodes>猜测时间码...</GuessTimeCodes>
     <SeekSilence>搜索静音...</SeekSilence>
+    <InsertSubtitleHere>在这里插入字幕...</InsertSubtitleHere>
     <CharsSecX>CPS: {0:0.00}</CharsSecX>
     <WordsMinX>WPM: {0:0.00}</WordsMinX>
   </Waveform>
