@@ -21,6 +21,7 @@
    * Update Polish translation - thx admas
    * Update Dutch translation - thx René
    * Update Korean translation - thx domddol
+   * Update Simplified Chinese translation - thx Leon
    * Add sort by "Actor" - thx von Suppé
    * Add "Description" to "multiple replace" rules
    * Add "Apply" button to "Multiple replace" - thx Finduilas
@@ -30,6 +31,7 @@
    * Add some extended chars to format SCC - thx jorgemjorge
    * Remember settings in "Adjust durations" 
    * Allow smaller steps in "Adjust durations" - thx Príncipe
+   * SSA/ASSA styles import/export works with multiple styles
 * FIXED:
    * Fix mpv preview font size (regression from 3.5.4) - thx OmrSi
    * Fix many binary OCR issues - thx Jamakmake
@@ -55,6 +57,9 @@
    * Fix "Find whole word" issue - thx OmrSi
    * Fix issue in "Find & count" with regex - thx ivandrofly
    * Fix wrong text for "split long lines" - thx Christian
+   * Fix for format "KanopyHtml" "stealing" TTML - thx nathaniel1977
+   * Fix exporting SSA/ASSA styles with space in name - thx sneaker_ger
+   * Fix crash in TTML 1.0 saving - thx nathaniel1977
 
 
 3.5.4 (2nd October 2017)
