@@ -5484,11 +5484,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             if (_dvbSubtitles != null && checkBoxTransportStreamGetColorAndSplit.Checked)
                 MergeDvbForEachSubImage();
 
-            if (Configuration.Settings.VobSubOcr.XOrMorePixelsMakesSpace != (int)numericUpDownPixelsIsSpace.Value && _bluRaySubtitlesOriginal == null)
-            {
-                Configuration.Settings.VobSubOcr.XOrMorePixelsMakesSpace = (int)numericUpDownPixelsIsSpace.Value;
-                Configuration.Settings.Save();
-            }
             DialogResult = DialogResult.OK;
         }
 
@@ -8424,6 +8419,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             Configuration.Settings.VobSubOcr.AutoBreakSubtitleIfMoreThanTwoLines = checkBoxAutoBreakLines.Checked;
             Configuration.Settings.VobSubOcr.LineOcrDraw = checkBoxNOcrCorrect.Checked;
             Configuration.Settings.VobSubOcr.LineOcrAdvancedItalic = checkBoxNOcrItalic.Checked;
+            Configuration.Settings.VobSubOcr.XOrMorePixelsMakesSpace = (int)numericUpDownPixelsIsSpace.Value;
+
             if (_ocrMethodIndex == _ocrMethodBinaryImageCompare)
             {
                 Configuration.Settings.VobSubOcr.LastBinaryImageCompareDb = comboBoxCharacterDatabase.SelectedItem.ToString();
