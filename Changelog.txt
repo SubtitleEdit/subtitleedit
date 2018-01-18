@@ -22,6 +22,7 @@
    * Update Dutch translation - thx René
    * Update Korean translation - thx domddol
    * Update Simplified Chinese translation - thx Leon
+   * Update Russian translation - thx Elheym
    * Add sort by "Actor" - thx von Suppé
    * Add "Description" to "multiple replace" rules
    * Add "Apply" button to "Multiple replace" - thx Finduilas
