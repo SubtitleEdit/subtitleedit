@@ -97,6 +97,16 @@
   <EndLines />
   <WholeLines />
   <RegularExpressions>
+    <RegEx find="ÄŤ" replaceWith="č" />
+    <RegEx find="Ä‡" replaceWith="ć" />
+    <RegEx find="Ä‘" replaceWith="đ" />
+    <RegEx find="Ĺľ" replaceWith="ž" />
+    <RegEx find="Ĺˇ" replaceWith="š" />
+    <RegEx find="ÄŚ" replaceWith="Č" />
+    <RegEx find="Ä†" replaceWith="Ć" />
+    <RegEx find="Ä" replaceWith="Đ" />
+    <RegEx find="Ĺ " replaceWith="Š" />
+    <RegEx find="Ĺ˝" replaceWith="Ž" />
     <RegEx find="đž" replaceWith="dž" />
     <RegEx find="ajsmiješnij" replaceWith="ajsmješnij" />
     <RegEx find="boži[čć]([aeiu]|em|ima)?\b" replaceWith="Božić$1" />
