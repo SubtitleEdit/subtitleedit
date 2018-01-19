@@ -13,10 +13,6 @@
     <Word from="Hey" to="Hej" />
     <Word from="hey" to="hej" />
     <Word from="htjeo" to="htio" />
-    <Word from="Hočeš" to="Hoćeš" />
-    <Word from="hočeš" to="hoćeš" />
-    <Word from="Hočete" to="Hoćete" />
-    <Word from="hočete" to="hoćete" />
     <Word from="iči" to="ići" />
     <Word from="jel" to="je l'" />
     <Word from="Jel" to="Je l'" />
@@ -116,6 +112,7 @@
     <RegEx find="([gG])-đo +(?=[A-ZČĐŠŽ])" replaceWith="$1gđo " />
     <RegEx find="gdina +(?=[A-ZČĐŠŽ])" replaceWith="g. " />
     <RegEx find=" gosp +" replaceWith=" g. " />
+    <RegEx find="([hH])oč" replaceWith="$1oć" />
     <RegEx find="Jel si sigur" replaceWith="Jesi li sigur" />
     <RegEx find="Jel' si sigur" replaceWith="Jesi li sigur" />
     <RegEx find="\b([jJ])el\?" replaceWith="$1e l'?" />
