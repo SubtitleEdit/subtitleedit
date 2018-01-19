@@ -134,12 +134,11 @@
     <RegEx find="([oO])sječa" replaceWith="$1sjeća" />
     <RegEx find="([pPdD])onje([lt])" replaceWith="$1onije$2" />
     <RegEx find="([pP])objedi([mšto])" replaceWith="$1obijedi$2" />
-    <RegEx find="edp" replaceWith="etp" />
+    <RegEx find="ed([ph])" replaceWith="et$1" />
     <RegEx find="rimjeti" replaceWith="rimijeti" />
     <RegEx find="([pP])romjeni([mštol])" replaceWith="$1romijeni$2" />
     <RegEx find="azumijeć" replaceWith="azumjeć" />
     <RegEx find="rascjepljen" replaceWith="rascijepljen" />
-    <RegEx find="edh" replaceWith="eth" />
     <RegEx find="rimjenjen" replaceWith="rimijenjen" />
     <RegEx find="([^d])rješit" replaceWith="$1riješit" />
     <RegEx find="([sS])lijede[čć]([aeiu]|e[mg])" replaceWith="$1ljedeć$2" />
