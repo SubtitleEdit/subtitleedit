@@ -172,5 +172,21 @@ namespace Test.Logic
             Assert.AreEqual("Andy: Dad!", st.MergedString);
         }
 
+        [TestMethod]
+        public void StrippableTextChangeCasing9()
+        {
+            var st = new StrippableText("- quit! wait outside!" + Environment.NewLine + "- girl: miss, i've got a headache.");
+            st.FixCasing(new System.Collections.Generic.List<string> { "Joe", "Jane" }, true, true, true, "Bye.");
+            Assert.AreEqual("- Quit! Wait outside!" + Environment.NewLine + "- Girl: Miss, i've got a headache.", st.MergedString);
+        }
+
+        [TestMethod]
+        public void StrippableTextChangeCasing10()
+        {
+            var st = new StrippableText("Uh, “thor and doctor jones”");
+            st.FixCasing(new System.Collections.Generic.List<string> { "Thor", "Jones" }, true, true, true, "Bye.");
+            Assert.AreEqual("Uh, “Thor and doctor Jones”", st.MergedString);
+        }
+
     }
 }

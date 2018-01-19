@@ -124,7 +124,7 @@ namespace Nikse.SubtitleEdit.Core
                 while (start >= 0 && start < lower.Length)
                 {
                     bool startOk = (start == 0) || (lower[start - 1] == ' ') || (lower[start - 1] == '-') ||
-                                   (lower[start - 1] == '"') || (lower[start - 1] == '\'') || (lower[start - 1] == '>') ||
+                                   (lower[start - 1] == '"') || (lower[start - 1] == '\'') || (lower[start - 1] == '>') || (lower[start - 1] == '“') || 
                                    Environment.NewLine.EndsWith(lower[start - 1]);
 
                     if (startOk && string.CompareOrdinal(name, "Don") == 0 && lower.Substring(start).StartsWith("don't", StringComparison.Ordinal))
@@ -135,7 +135,7 @@ namespace Nikse.SubtitleEdit.Core
                         int end = start + name.Length;
                         bool endOk = end <= lower.Length;
                         if (endOk)
-                            endOk = end == lower.Length || (@" ,.!?:;')- <""" + Environment.NewLine).Contains(lower[end]);
+                            endOk = end == lower.Length || (@" ,.!?:;')- <”""" + Environment.NewLine).Contains(lower[end]);
 
                         if (endOk && StrippedText.Length >= start + name.Length)
                         {
@@ -178,7 +178,7 @@ namespace Nikse.SubtitleEdit.Core
 
             if (checkLastLine)
             {
-                string s = HtmlUtil.RemoveHtmlTags(lastLine).TrimEnd().TrimEnd('\"').TrimEnd();
+                string s = HtmlUtil.RemoveHtmlTags(lastLine).TrimEnd().TrimEnd('\"').TrimEnd('”').TrimEnd();
 
                 bool startWithUppercase = string.IsNullOrEmpty(s) ||
                                           s.EndsWith('.') ||
@@ -224,7 +224,7 @@ namespace Nikse.SubtitleEdit.Core
             if (makeUppercaseAfterBreak && StrippedText.Contains(ExpectedCharsArray))
             {
                 const string breakAfterChars = @".!?:;)]}([{";
-                const string expectedChars = "\"`´'()<>!?.- \r\n";
+                const string expectedChars = "\"“`´'()<>!?.- \r\n";
                 var sb = new StringBuilder(StrippedText.Length);
                 bool lastWasBreak = false;
                 for (int i = 0; i < StrippedText.Length; i++)
@@ -304,8 +304,12 @@ namespace Nikse.SubtitleEdit.Core
                                 {
                                     lastWasBreak = true;
                                 }
-                            }
+                                else if (StrippedText.Length > i + 1 && " \r\n".Contains(StrippedText[i+1]))
+                                {
+                                    lastWasBreak = true;
+                                }
                         }
+                    }
                         else if (s == '-' && Pre.Contains("-"))
                         {
                             if (sb.ToString().EndsWith(Environment.NewLine + "-"))
