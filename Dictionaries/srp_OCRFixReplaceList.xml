@@ -24,6 +24,9 @@
     <Word from="Rješit" to="Riješit" />
     <Word from="smjeo" to="smio" />
     <Word from="uopče" to="uopće" />
+    <Word from="Uopče" to="Uopće" />
+    <Word from="umijesto" to="umjesto" />
+    <Word from="Umijesto" to="Umjesto" />
     <Word from="uvjek" to="uvijek" />
     <Word from="Uvjek" to="Uvijek" />
     <Word from="valda" to="valjda" />
@@ -123,7 +126,6 @@
     <RegEx find="([sSzZ])amnom" replaceWith="$1a mnom" />
     <RegEx find="([sS])lijede[čć]([aeiu]|e[mg])" replaceWith="$1ljedeć$2" />
     <RegEx find="([sS])mješno" replaceWith="$1miješno" />
-    <RegEx find="mijesto" replaceWith="mjesto" />
     <RegEx find="spijeh" replaceWith="spjeh" />
     <RegEx find="([uU])spiješ(an|n[aeiou]|no[mgj])" replaceWith="$1spješ$2" />
     <RegEx find="\b([vV])eč([aiu]|[ei]m|eg|ih|ima|o[mj])?\b" replaceWith="$1eć$2" />
