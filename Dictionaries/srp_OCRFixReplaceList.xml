@@ -15,6 +15,8 @@
     <Word from="htjeo" to="htio" />
     <Word from="Hočeš" to="Hoćeš" />
     <Word from="hočeš" to="hoćeš" />
+    <Word from="Hočete" to="Hoćete" />
+    <Word from="hočete" to="hoćete" />
     <Word from="iči" to="ići" />
     <Word from="jel" to="je l'" />
     <Word from="Jel" to="Je l'" />
@@ -22,6 +24,8 @@
     <Word from="predamnom" to="preda mnom" />
     <Word from="Predamnom" to="Preda mnom" />
     <Word from="Rješit" to="Riješit" />
+    <Word from="samnom" to="sa mnom" />
+    <Word from="Samnom" to="Sa mnom" />
     <Word from="smjeo" to="smio" />
     <Word from="uopče" to="uopće" />
     <Word from="Uopče" to="Uopće" />
@@ -30,6 +34,8 @@
     <Word from="uvjek" to="uvijek" />
     <Word from="Uvjek" to="Uvijek" />
     <Word from="valda" to="valjda" />
+    <Word from="zamnom" to="za mnom" />
+    <Word from="Zamnom" to="Za mnom" />
     <Word from="želila" to="željela" />
   </WholeWords>
   <PartialWordsAlways />
@@ -123,12 +129,11 @@
     <RegEx find="redhodn" replaceWith="rethodn" />
     <RegEx find="rimjenjen" replaceWith="rimijenjen" />
     <RegEx find="([^d])rješit" replaceWith="$1riješit" />
-    <RegEx find="([sSzZ])amnom" replaceWith="$1a mnom" />
     <RegEx find="([sS])lijede[čć]([aeiu]|e[mg])" replaceWith="$1ljedeć$2" />
     <RegEx find="([sS])mješno" replaceWith="$1miješno" />
     <RegEx find="spijeh" replaceWith="spjeh" />
     <RegEx find="([uU])spiješ(an|n[aeiou]|no[mgj])" replaceWith="$1spješ$2" />
-    <RegEx find="\b([vV])eč([aiu]|[ei]m|eg|ih|ima|o[mj])?\b" replaceWith="$1eć$2" />
+    <RegEx find="\b([vV])eč([aiu]|[ei][mg]|ih|ima|in[iu]|uom|o[mj])?\b" replaceWith="$1eć$2" />
     <RegEx find="([zZ])ahtjeva([ojlmšt])" replaceWith="$1ahtijeva$2" />
     <RegEx find="([ks]ao)\.:" replaceWith="$1:" />
     <RegEx find="(?&lt;=[a-zčđšž])Ij(?=[a-zčđšž])" replaceWith="lj" />
