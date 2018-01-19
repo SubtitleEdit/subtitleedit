@@ -137,6 +137,7 @@ namespace Nikse.SubtitleEdit.Controls
                 maskedTextBox1.Mask = GetMaskFrames(milliseconds);
                 maskedTextBox1.Text = tc.ToString().Substring(0, 9) + string.Format("{0:00}", Core.SubtitleFormats.SubtitleFormat.MillisecondsToFrames(tc.Milliseconds));
             }
+            _dirty = false;
         }
 
         public double? GetTotalMilliseconds()
@@ -293,11 +294,41 @@ namespace Nikse.SubtitleEdit.Controls
                 TimeCodeChanged?.Invoke(this, e);
                 e.SuppressKeyPress = true;
             }
+            else if (e.KeyCode == Keys.D0 ||
+                     e.KeyCode == Keys.D1 ||
+                     e.KeyCode == Keys.D2 ||
+                     e.KeyCode == Keys.D3 ||
+                     e.KeyCode == Keys.D4 ||
+                     e.KeyCode == Keys.D5 ||
+                     e.KeyCode == Keys.D6 ||
+                     e.KeyCode == Keys.D7 ||
+                     e.KeyCode == Keys.D8 ||
+                     e.KeyCode == Keys.D9 ||
+                     e.KeyCode == Keys.NumPad0 ||
+                     e.KeyCode == Keys.NumPad1 ||
+                     e.KeyCode == Keys.NumPad2 ||
+                     e.KeyCode == Keys.NumPad3 ||
+                     e.KeyCode == Keys.NumPad4 ||
+                     e.KeyCode == Keys.NumPad5 ||
+                     e.KeyCode == Keys.NumPad6 ||
+                     e.KeyCode == Keys.NumPad7 ||
+                     e.KeyCode == Keys.NumPad8 ||
+                     e.KeyCode == Keys.NumPad9 ||
+                     e.KeyCode == Keys.Delete ||
+                     e.KeyCode == Keys.Back)
+            {
+                _dirty = true;
+            }
         }
 
         private string GetMask(double val) => val >= 0 ? "00:00:00.000" : "-00:00:00.000";
 
         private string GetMaskFrames(double val) => val >= 0 ? "00:00:00:00" : "-00:00:00:00";
 
+        private void maskedTextBox1_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+                _dirty = true;
+        }
     }
 }
