@@ -21,6 +21,13 @@
     <Word from="jel" to="je l'" />
     <Word from="Jel" to="Je l'" />
     <Word from="nedaj" to="ne daj" />
+    <Word from="Nedaj" to="Ne daj" />
+    <Word from="nemogu" to="ne mogu" />
+    <Word from="Nemogu" to="Ne mogu" />
+    <Word from="nemora" to="ne mora" />
+    <Word from="Nemora" to="Ne mora" />
+    <Word from="nemoraš" to="ne moraš" />
+    <Word from="Nemoraš" to="Ne moraš" />
     <Word from="predamnom" to="preda mnom" />
     <Word from="Predamnom" to="Preda mnom" />
     <Word from="Rješit" to="Riješit" />
@@ -78,11 +85,7 @@
     <LinePart from="jeli ti " to="je li ti" />
     <LinePart from="Jeli to " to="Je li to" />
     <LinePart from="Nebrini" to="Ne brini" />
-    <LinePart from="nedaj" to="ne daj" />
     <LinePart from="ne ću" to="neću" />
-    <LinePart from="Nemogu" to="Ne mogu" />
-    <LinePart from="nemogu" to="ne mogu" />
-    <LinePart from="Nemoraš" to="Ne moraš" />
     <LinePart from="od kako" to="otkako" />
     <LinePart from="Si dobro" to="Jesi li dobro" />
     <LinePart from="Svo vreme" to="Sve vrijeme" />
@@ -126,7 +129,7 @@
     <RegEx find="([pP])romjeni([mštol])" replaceWith="$1romijeni$2" />
     <RegEx find="azumijeć" replaceWith="azumjeć" />
     <RegEx find="rascjepljen" replaceWith="rascijepljen" />
-    <RegEx find="redhodn" replaceWith="rethodn" />
+    <RegEx find="edh" replaceWith="eth" />
     <RegEx find="rimjenjen" replaceWith="rimijenjen" />
     <RegEx find="([^d])rješit" replaceWith="$1riješit" />
     <RegEx find="([sS])lijede[čć]([aeiu]|e[mg])" replaceWith="$1ljedeć$2" />
