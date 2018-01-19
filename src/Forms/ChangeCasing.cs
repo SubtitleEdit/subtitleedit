@@ -100,14 +100,68 @@ namespace Nikse.SubtitleEdit.Forms
         {
             const string pre = " >¡¿♪♫([";
             const string post = " <!?.:;,♪♫)]";
+
+            if (text.StartsWith("I-i ", StringComparison.Ordinal))
+                text = text.Remove(0, 3).Insert(0, "I-I");
+            if (text.StartsWith("I-if ", StringComparison.Ordinal))
+                text = text.Remove(0, 4).Insert(0, "I-If ");
+
             for (var indexOfI = text.IndexOf('i'); indexOfI >= 0; indexOfI = text.IndexOf('i', indexOfI + 1))
             {
                 if (indexOfI == 0 || pre.Contains(text[indexOfI - 1]))
                 {
-                    if (indexOfI + 1 == text.Length || post.Contains(text[indexOfI + 1]))
+                    if (text.Substring(indexOfI).StartsWith("i-i ", StringComparison.Ordinal))
+                    {
+                        text = text.Remove(indexOfI, 3).Insert(indexOfI, "I-I");
+                    }
+                    else if (text.Substring(indexOfI).StartsWith("i-if ", StringComparison.Ordinal))
+                    {
+                        text = text.Remove(indexOfI, 4).Insert(indexOfI, "I-If");
+                    }
+                    else if (indexOfI + 1 == text.Length || post.Contains(text[indexOfI + 1]))
                     {
                         text = text.Remove(indexOfI, 1).Insert(indexOfI, "I");
                     }
+                    else if (indexOfI > 1 && indexOfI < text.Length - 2 && "\r\n".Contains(text[indexOfI + 1]) && text[indexOfI - 1] == ' ')
+                    {
+                        text = text.Remove(indexOfI, 1).Insert(indexOfI, "I");
+                    }
+                }
+                if (indexOfI > 1 && indexOfI < text.Length - 2 && "\r\n".Contains(text[indexOfI - 1]) && " .?!".Contains(text[indexOfI + 1]))
+                {
+                    text = text.Remove(indexOfI, 1).Insert(indexOfI, "I");
+                }
+                else if (indexOfI > 1 && "\r\n ".Contains(text[indexOfI - 1]) && text.Substring(indexOfI).StartsWith("i-i ", StringComparison.Ordinal))
+                {
+                    text = text.Remove(indexOfI, 3).Insert(indexOfI, "I-I");
+                }
+                else if (indexOfI >= 1 && indexOfI < text.Length - 2 && "“\"".Contains(text[indexOfI - 1]) && " .?!".Contains(text[indexOfI + 1]))
+                {
+                    text = text.Remove(indexOfI, 1).Insert(indexOfI, "I");
+                }
+                else if (indexOfI > 2 && text.Substring(indexOfI - 2).StartsWith("I-i ", StringComparison.Ordinal))
+                {
+                    text = text.Remove(indexOfI - 2, 3).Insert(indexOfI - 2, "I-I");
+                }
+                else if (indexOfI > 2 && text.Substring(indexOfI - 2).StartsWith("I-it's ", StringComparison.Ordinal))
+                {
+                    text = text.Remove(indexOfI - 2, 3).Insert(indexOfI - 2, "I-I");
+                }
+                else if (text.Substring(indexOfI).StartsWith("i'll ", StringComparison.Ordinal))
+                {
+                    text = text.Remove(indexOfI, 1).Insert(indexOfI, "I");
+                }
+                else if (text.Substring(indexOfI).StartsWith("i've ", StringComparison.Ordinal))
+                {
+                    text = text.Remove(indexOfI, 1).Insert(indexOfI, "I");
+                }
+                else if (text.Substring(indexOfI).StartsWith("i'm ", StringComparison.Ordinal))
+                {
+                    text = text.Remove(indexOfI, 1).Insert(indexOfI, "I");
+                }
+                else if (text.Substring(indexOfI).StartsWith("i'd ", StringComparison.Ordinal))
+                {
+                    text = text.Remove(indexOfI, 1).Insert(indexOfI, "I");
                 }
             }
             return text;
