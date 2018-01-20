@@ -12621,12 +12621,13 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (down)
             {
-                if (indexOfNewLine == -1 && oldIndexOfNewLine > 0)
+                if (indexOfNewLine == -1 && oldIndexOfNewLine > 0 && textCaretPos > oldIndexOfNewLine)
                 {
                     textCaretPos--;
                 }
                 else if (textCaretPos > indexOfNewLine && textCaretPos > oldIndexOfNewLine && oldIndexOfNewLine >= 0 ||
-                         textCaretPos < indexOfNewLine && (oldIndexOfNewLine == -1 || textCaretPos < oldIndexOfNewLine))
+                         textCaretPos < indexOfNewLine && (oldIndexOfNewLine == -1 || textCaretPos < oldIndexOfNewLine) ||
+                         textCaretPos < oldIndexOfNewLine && indexOfNewLine == -1)
                 {
                 }
                 else
