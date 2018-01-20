@@ -12575,7 +12575,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (down)
             {
                 if (line1Words.Count > 0)
-                { 
+                {
                     line2Words.Insert(0, line1Words[line1Words.Count - 1]);
                     line1Words.RemoveAt(line1Words.Count - 1);
                 }
@@ -12592,10 +12592,65 @@ namespace Nikse.SubtitleEdit.Forms
                            string.Join(" ", line2Words.ToArray()).Trim()).Trim();
             if (newText != p.Text)
             {
+                var oldText = p.Text;
                 MakeHistoryForUndo(_language.BeforeLineUpdatedInListView);
+                var textCaretPos = textBoxListViewText.SelectionStart;
                 p.Text = newText;
                 SubtitleListview1.SetText(firstIndex, p.Text);
                 textBoxListViewText.Text = p.Text;
+
+                // keep cursor position
+                KeepCursorMoveWordUpdown(down, newText, oldText, textCaretPos);
+            }
+        }
+
+        private void KeepCursorMoveWordUpdown(bool down, string newText, string oldText, int textCaretPos)
+        {
+            if (textCaretPos > textBoxListViewText.Text.Length)
+            {
+                // set cursor at end of textbox
+                textBoxListViewText.SelectionStart = textCaretPos;
+                int end = textBoxListViewText.Text.Length;
+                textBoxListViewText.SelectionStart = end;
+                textBoxListViewText.SelectionLength = 0;
+                return;
+            }
+
+            int indexOfNewLine = newText.IndexOf(Environment.NewLine);
+            int oldIndexOfNewLine = oldText.IndexOf(Environment.NewLine);
+
+            if (down)
+            {
+                if (indexOfNewLine == -1 && oldIndexOfNewLine > 0)
+                {
+                    textCaretPos--;
+                }
+                else if (textCaretPos > indexOfNewLine && textCaretPos > oldIndexOfNewLine && oldIndexOfNewLine >= 0 ||
+                         textCaretPos < indexOfNewLine && (oldIndexOfNewLine == -1 || textCaretPos < oldIndexOfNewLine))
+                {
+                }
+                else
+                {
+                    textCaretPos++;
+                }
+            }
+            else // up
+            {
+                if (textCaretPos <= oldIndexOfNewLine || textCaretPos > oldIndexOfNewLine && textCaretPos > indexOfNewLine && indexOfNewLine >= 0)
+                {
+                }
+                else
+                {
+                    textCaretPos--;
+                }
+            }
+            if (textBoxListViewText.Text.Length > textCaretPos && '\n' == textBoxListViewText.Text[textCaretPos])
+                textCaretPos--;
+            if (textCaretPos >= 0)
+            {
+                textBoxListViewText.SelectionStart = textCaretPos;
+                textBoxListViewText.SelectionStart = textCaretPos;
+                textBoxListViewText.SelectionStart = textCaretPos;
             }
         }
 
@@ -16907,7 +16962,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 var c = _subtitle.GetParagraphOrDefault(index);
                 if (c == null)
-                    c = _subtitle.GetParagraphOrDefault(index -1);
+                    c = _subtitle.GetParagraphOrDefault(index - 1);
                 if (c != null)
                 {
                     newParagraph.Style = c.Style;
