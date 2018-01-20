@@ -2024,7 +2024,7 @@
     <RegEx find="vazdušn" replaceWith="zračn" />
     <RegEx find="Vazdušn" replaceWith="Zračn" />
     <!-- bez e, jer mijenja veče(r) u veće, što je gnjavaža -->
-    <RegEx find="\b([vV])eč([aiu]|[ei][mg]|ih|ima|in[iu]|uom|o[mj])?\b" replaceWith="$1eć$2" />
+    <RegEx find="\b([vV])eč([aiu]|[ei][mg]|ih|ima|in[iu]|inom|o[mj])?\b" replaceWith="$1eć$2" />
     <RegEx find="([vV])e[čć]n" replaceWith="$1ječn" />
     <RegEx find="([vV])ečit" replaceWith="$1ječit" />
     <RegEx find="([vV])enča" replaceWith="$1jenča" />
