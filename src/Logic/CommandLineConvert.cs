@@ -368,7 +368,7 @@ namespace Nikse.SubtitleEdit.Logic
                                                 format = Utilities.LoadMatroskaTextSubtitle(track, matroska, ss, sub);
                                                 string newFileName = fileName;
                                                 if (tracks.Count > 1)
-                                                    newFileName = fileName.Insert(fileName.Length - 4, "_" + track.TrackNumber + "_" + track.Language.RemoveChar('?').RemoveChar('!').RemoveChar('*').RemoveChar(',').RemoveChar('/').Trim());
+                                                    newFileName = fileName.Insert(fileName.Length - 4, "." + track.TrackNumber + "." + track.Language.RemoveChar('?').RemoveChar('!').RemoveChar('*').RemoveChar(',').RemoveChar('/').Trim());
 
                                                 if (format.GetType() == typeof(AdvancedSubStationAlpha) || format.GetType() == typeof(SubStationAlpha))
                                                 {
@@ -980,9 +980,9 @@ namespace Nikse.SubtitleEdit.Logic
                                 {
                                     string s = fileName;
                                     if (s.LastIndexOf('.') > 0)
-                                        s = s.Insert(s.LastIndexOf('.'), "_" + className);
+                                        s = s.Insert(s.LastIndexOf('.'), "." + className);
                                     else
-                                        s += "_" + className + format.Extension;
+                                        s += "." + className + format.Extension;
                                     outputFileName = FormatOutputFileNameForBatchConvert(s, sf.Extension, outputFolder, overwrite);
                                     File.WriteAllText(outputFileName, newSub.ToText(sf), targetEncoding);
                                 }
