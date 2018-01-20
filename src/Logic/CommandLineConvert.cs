@@ -1440,7 +1440,7 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 return;
             }
-            _stdOutWriter.Write(cwd + ">");
+            Console.Write(cwd + ">");
             NativeMethods.FreeConsole();
         }
 
