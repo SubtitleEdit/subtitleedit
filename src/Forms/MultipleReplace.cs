@@ -208,7 +208,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-                var rule = new MultipleSearchAndReplaceSetting() { Enabled = true, FindWhat = findText, ReplaceWith = textBoxReplace.Text, SearchType = searchType, Description = textBoxDescription.Text };
+                var rule = new MultipleSearchAndReplaceSetting { Enabled = true, FindWhat = findText, ReplaceWith = textBoxReplace.Text, SearchType = searchType, Description = textBoxDescription.Text };
                 _currentGroup.Rules.Add(rule);
                 AddToRulesListView(rule);
                 textBoxFind.Text = string.Empty;
@@ -239,7 +239,8 @@ namespace Nikse.SubtitleEdit.Forms
                             string findWhat = rule.FindWhat;
                             if (!string.IsNullOrEmpty(findWhat)) // allow space or spaces
                             {
-                                string replaceWith = RegexUtils.FixReplaceNewLine(rule.ReplaceWith);
+                                string replaceWith = RegexUtils.FixNewLine(rule.ReplaceWith);
+                                findWhat = RegexUtils.FixNewLine(findWhat);
                                 string searchType = rule.SearchType;
                                 var mpi = new ReplaceExpression(findWhat, replaceWith, searchType);
                                 replaceExpressions.Add(mpi);
@@ -274,7 +275,7 @@ namespace Nikse.SubtitleEdit.Forms
                         if (r.IsMatch(newText))
                         {
                             hit = true;
-                            newText = RegexUtils.ReplaceNewLineSafe(r, newText, item.ReplaceWith); 
+                            newText = RegexUtils.ReplaceNewLineSafe(r, newText, item.ReplaceWith);
                         }
                     }
                     else

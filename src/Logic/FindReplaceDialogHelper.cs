@@ -53,7 +53,7 @@ namespace Nikse.SubtitleEdit.Logic
             _replaceText = replaceText;
             if (_replaceText != null)
             {
-                _replaceText = RegexUtils.FixReplaceNewLine(_replaceText);
+                _replaceText = RegexUtils.FixNewLine(_replaceText);
             }
 
             _regEx = regEx;
@@ -253,27 +253,28 @@ namespace Nikse.SubtitleEdit.Logic
             //  validate pattern if find type is regex
             if (FindReplaceType.FindType == FindType.RegEx)
             {
-                if (!RegexUtils.IsValidRegex(_findText))
+                var findText = RegexUtils.FixNewLine(_findText);
+                if (!RegexUtils.IsValidRegex(findText))
                 {
                     MessageBox.Show(Configuration.Settings.Language.General.RegularExpressionIsNotValid);
                     return count;
                 }
-                _regEx = new Regex(_findText);
+                _regEx = new Regex(findText);
             }
             var comparison = GetComparison();
             foreach (var p in subtitle.Paragraphs)
             {
-                if (FindReplaceType.FindType != FindType.RegEx)
+                if (FindReplaceType.FindType == FindType.RegEx)
+                {
+                    count += _regEx.Matches(p.Text).Count;
+                }
+                else
                 {
                     if (p.Text.Length < _findText.Length)
                     {
                         continue;
                     }
                     count += GetWordCount(p.Text, _findText, wholeWord, comparison);
-                }
-                else
-                {
-                    count += _regEx.Matches(p.Text).Count;
                 }
             }
             return count;
