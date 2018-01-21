@@ -61,6 +61,9 @@
    * Fix for format "KanopyHtml" "stealing" TTML - thx nathaniel1977
    * Fix exporting SSA/ASSA styles with space in name - thx sneaker_ger
    * Fix crash in TTML 1.0 saving - thx nathaniel1977
+   * Fix issue in "Change casing" - thx Chamallow
+   * Fix batch/cmd extract of multi tracks in mkv - thx Rouzax
+   * Fix issue with newline/regex in "Multiple replace" - thx mkver
 
 
 3.5.4 (2nd October 2017)

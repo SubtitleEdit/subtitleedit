@@ -5179,21 +5179,10 @@ namespace Nikse.SubtitleEdit.Forms
         private void ReplaceViaRegularExpression(TextBox tb)
         {
             var r = new Regex(_findHelper.FindText, RegexOptions.Multiline);
-            if (_findHelper.ReplaceText.Contains('$'))
+            string result = RegexUtils.ReplaceNewLineSafe(r, tb.Text, _findHelper.ReplaceText);
+            if (result != tb.Text)
             {
-                string result = r.Replace(tb.Text, _findHelper.ReplaceText);
-                if (result != tb.Text)
-                {
-                    tb.Text = result;
-                }
-            }
-            else
-            {
-                string result = r.Replace(tb.SelectedText, _findHelper.ReplaceText);
-                if (result != tb.SelectedText)
-                {
-                    tb.SelectedText = result;
-                }
+                tb.Text = result;
             }
         }
 
