@@ -53,7 +53,7 @@ namespace Nikse.SubtitleEdit.Logic
             _replaceText = replaceText;
             if (_replaceText != null)
             {
-                _replaceText = _replaceText.Replace("\\n", Environment.NewLine);
+                _replaceText = RegexUtils.FixReplaceNewLine(_replaceText);
             }
 
             _regEx = regEx;

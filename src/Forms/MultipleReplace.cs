@@ -239,7 +239,7 @@ namespace Nikse.SubtitleEdit.Forms
                             string findWhat = rule.FindWhat;
                             if (!string.IsNullOrEmpty(findWhat)) // allow space or spaces
                             {
-                                string replaceWith = rule.ReplaceWith.Replace("\\r\\n", "\n").Replace("\\n", "\n");
+                                string replaceWith = RegexUtils.FixReplaceNewLine(rule.ReplaceWith);
                                 string searchType = rule.SearchType;
                                 var mpi = new ReplaceExpression(findWhat, replaceWith, searchType);
                                 replaceExpressions.Add(mpi);
@@ -274,8 +274,7 @@ namespace Nikse.SubtitleEdit.Forms
                         if (r.IsMatch(newText))
                         {
                             hit = true;
-                            newText = r.Replace(string.Join("\n", newText.SplitToLines()), item.ReplaceWith);
-                            newText = string.Join(Environment.NewLine, newText.SplitToLines());
+                            newText = RegexUtils.ReplaceNewLineSafe(r, newText, item.ReplaceWith); 
                         }
                     }
                     else
