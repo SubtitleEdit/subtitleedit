@@ -219,12 +219,12 @@ namespace Nikse.SubtitleEdit.Core
         /// Changes "\\r\\n" and "\\n" to "\n", which hopefully makes it simpler for 
         /// the user who can use both "\\n" and "\\r\\n" for new line.
         /// </summary>
-        public static string FixReplaceNewLine(string pattern)
+        public static string FixNewLine(string pattern)
         {
             if (string.IsNullOrEmpty(pattern))
                 return pattern;
 
-            return pattern.Replace("\\r\\n", "\n").Replace("\\n", "\n");
+            return pattern.Replace("\\r\\n", Environment.NewLine).Replace("\\n", Environment.NewLine);
         }
 
         /// <summary>
@@ -237,7 +237,7 @@ namespace Nikse.SubtitleEdit.Core
         /// <returns></returns>
         public static string ReplaceNewLineSafe(Regex regularExpression, string text, string replaceWith)
         {
-            text = regularExpression.Replace(string.Join("\n", text.SplitToLines()), replaceWith);
+            text = regularExpression.Replace(string.Join(Environment.NewLine, text.SplitToLines()), replaceWith);
             return string.Join(Environment.NewLine, text.SplitToLines());
         }
 
