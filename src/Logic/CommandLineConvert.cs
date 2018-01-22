@@ -397,6 +397,16 @@ namespace Nikse.SubtitleEdit.Logic
                                             }
                                         }
                                     }
+                                    else
+                                    {
+                                        WriteLine($"No subtitle tracks in Matroska file '{fileName}'.");
+                                        done = true;
+                                    }
+                                }
+                                else
+                                {
+                                    WriteLine($"Invalid Matroska file '{fileName}'!");
+                                    done = true;
                                 }
                             }
                         }
