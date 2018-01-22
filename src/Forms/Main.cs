@@ -7854,7 +7854,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 return false;
             }
-            else if (Environment.NewLine == "\r\n")
+            else if (Environment.NewLine == "\n")
             {
                 return s.Contains('\r');
             }
