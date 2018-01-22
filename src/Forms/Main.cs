@@ -7814,6 +7814,12 @@ namespace Nikse.SubtitleEdit.Forms
 
                 // update _subtitle + listview
                 string text = textBoxListViewText.Text.TrimEnd();
+                if (ContainsNonStandardNewLines(text))
+                {
+                    var lines = text.SplitToLines();
+                    text = string.Join(Environment.NewLine, lines);
+                    textBoxListViewText.Text = text;
+                }
                 _subtitle.Paragraphs[_subtitleListViewIndex].Text = text;
                 UpdateListViewTextInfo(labelTextLineLengths, labelSingleLine, labelTextLineTotal, labelCharactersPerSecond, _subtitle.Paragraphs[_subtitleListViewIndex], textBoxListViewText);
                 SubtitleListview1.SetText(_subtitleListViewIndex, text);
@@ -7823,6 +7829,39 @@ namespace Nikse.SubtitleEdit.Forms
 
                 StartUpdateListSyntaxColoring();
                 FixVerticalScrollBars(textBoxListViewText);
+            }
+        }
+
+        private bool ContainsNonStandardNewLines(string s)
+        {
+            if (Environment.NewLine == "\r\n")
+            {
+                int i = 0;
+                while (i < s.Length)
+                {
+                    var ch = s[i];
+                    if (ch == '\r')
+                    {
+                        if (i >= s.Length - 1 || s[i + 1] != '\n')
+                            return true;
+                        i++;
+                    }
+                    else if (ch == '\n')
+                    {
+                        return true;
+                    }
+                    i++;
+                }
+                return false;
+            }
+            else if (Environment.NewLine == "\r\n")
+            {
+                return s.Contains('\r');
+            }
+            else
+            {
+                s = s.Replace(Environment.NewLine, string.Empty);
+                return s.Contains('\n') || s.Contains('\r');
             }
         }
 
@@ -7842,6 +7881,12 @@ namespace Nikse.SubtitleEdit.Forms
 
                     // update _subtitle + listview
                     string text = textBoxListViewTextAlternate.Text.TrimEnd();
+                    if (ContainsNonStandardNewLines(text))
+                    {
+                        var lines = text.SplitToLines();
+                        text = string.Join(Environment.NewLine, lines);
+                        textBoxListViewTextAlternate.Text = text;
+                    }
                     original.Text = text;
                     UpdateListViewTextInfo(labelTextAlternateLineLengths, labelAlternateSingleLine, labelTextAlternateLineTotal, labelAlternateCharactersPerSecond, original, textBoxListViewTextAlternate);
                     SubtitleListview1.SetAlternateText(_subtitleListViewIndex, text);
