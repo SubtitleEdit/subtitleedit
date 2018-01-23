@@ -167,6 +167,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         public VideoPlayerContainer()
         {
+            SmpteMode = false;
             FontSizeFactor = 1.0F;
             BorderStyle = BorderStyle.None;
             _resources = new System.ComponentModel.ComponentResourceManager(typeof(VideoPlayerContainer));
@@ -1336,6 +1337,13 @@ namespace Nikse.SubtitleEdit.Controls
             OnButtonClicked?.Invoke(sender, e);
         }
 
+        /// <summary>
+        /// Use SMPTE time (drop frame mode)
+        /// See https://blog.frame.io/2017/07/17/timecode-and-frame-rates/ and
+        ///     https://backlothelp.netflix.com/hc/en-us/articles/215131928-How-do-I-know-whether-to-select-SMPTE-or-MEDIA-for-a-timing-reference-
+        /// </summary>
+        public bool SmpteMode { get; set; }
+
         public void RefreshProgressBar()
         {
             if (VideoPlayer == null)
@@ -1354,10 +1362,18 @@ namespace Nikse.SubtitleEdit.Controls
                 var pos = CurrentPosition;
                 if (pos > 1000000)
                     pos = 0;
-                var span = TimeCode.FromSeconds(pos + Configuration.Settings.General.CurrentVideoOffsetInMs / TimeCode.BaseUnit);
-                var dur = TimeCode.FromSeconds(Duration + Configuration.Settings.General.CurrentVideoOffsetInMs / TimeCode.BaseUnit);
 
-                _labelTimeCode.Text = string.Format("{0} / {1}", span.ToDisplayString(), dur.ToDisplayString());
+                var dur = TimeCode.FromSeconds(Duration + Configuration.Settings.General.CurrentVideoOffsetInMs / TimeCode.BaseUnit);
+                if (SmpteMode)
+                {
+                    var span = TimeCode.FromSeconds(pos + 0.017 + Configuration.Settings.General.CurrentVideoOffsetInMs / TimeCode.BaseUnit);
+                    _labelTimeCode.Text = string.Format("{0} / {1} SMPTE", span.ToDisplayString(), dur.ToDisplayString());
+                }
+                else
+                {
+                    var span = TimeCode.FromSeconds(pos + Configuration.Settings.General.CurrentVideoOffsetInMs / TimeCode.BaseUnit);
+                    _labelTimeCode.Text = string.Format("{0} / {1}", span.ToDisplayString(), dur.ToDisplayString());
+                }
 
                 RefreshPlayPauseButtons();
             }
@@ -1490,14 +1506,30 @@ namespace Nikse.SubtitleEdit.Controls
             get
             {
                 if (VideoPlayer != null)
-                    return VideoPlayer.CurrentPosition;
+                {
+                    if (SmpteMode)
+                    {
+                        return VideoPlayer.CurrentPosition / 1.001;
+                    }
+                    else
+                    {
+                        return VideoPlayer.CurrentPosition;
+                    }
+                }                    
                 return 0;
             }
             set
             {
                 if (VideoPlayer != null)
                 {
-                    VideoPlayer.CurrentPosition = value;
+                    if (SmpteMode)
+                    {
+                        VideoPlayer.CurrentPosition = value * 1.001;
+                    }
+                    else
+                    {
+                        VideoPlayer.CurrentPosition = value;
+                    }
                 }
                 else
                 {
@@ -1554,6 +1586,7 @@ namespace Nikse.SubtitleEdit.Controls
             DeleteTempMpvFileName();
             base.Dispose(disposing);
             _retryCount = 3;
+            SmpteMode = false;
         }
 
         public void PauseAndDisposePlayer()
@@ -1564,6 +1597,7 @@ namespace Nikse.SubtitleEdit.Controls
             VideoPlayer = null;
             DeleteTempMpvFileName();            
             _retryCount = 3;
+            SmpteMode = false;
         }
 
     }
