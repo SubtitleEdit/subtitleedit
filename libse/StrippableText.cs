@@ -124,7 +124,7 @@ namespace Nikse.SubtitleEdit.Core
                 while (start >= 0 && start < lower.Length)
                 {
                     bool startOk = (start == 0) || (lower[start - 1] == ' ') || (lower[start - 1] == '-') ||
-                                   (lower[start - 1] == '"') || (lower[start - 1] == '\'') || (lower[start - 1] == '>') || (lower[start - 1] == '“') || 
+                                   (lower[start - 1] == '"') || (lower[start - 1] == '\'') || (lower[start - 1] == '>') || (lower[start - 1] == '[') || (lower[start - 1] == '“') || 
                                    Environment.NewLine.EndsWith(lower[start - 1]);
 
                     if (startOk && string.CompareOrdinal(name, "Don") == 0 && lower.Substring(start).StartsWith("don't", StringComparison.Ordinal))
@@ -135,7 +135,7 @@ namespace Nikse.SubtitleEdit.Core
                         int end = start + name.Length;
                         bool endOk = end <= lower.Length;
                         if (endOk)
-                            endOk = end == lower.Length || (@" ,.!?:;')- <”""" + Environment.NewLine).Contains(lower[end]);
+                            endOk = end == lower.Length || (@" ,.!?:;')]- <”""" + Environment.NewLine).Contains(lower[end]);
 
                         if (endOk && StrippedText.Length >= start + name.Length)
                         {
