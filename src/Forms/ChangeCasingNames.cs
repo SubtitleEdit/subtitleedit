@@ -144,7 +144,7 @@ namespace Nikse.SubtitleEdit.Forms
                     while (startIndex >= 0 && startIndex < text.Length &&
                            textToLower.Substring(startIndex).Contains(name.ToLower()) && name.Length > 1 && name != name.ToLower())
                     {
-                        bool startOk = startIndex == 0 || "([ --'>\r\n¿¡".Contains(text[startIndex - 1]);
+                        bool startOk = startIndex == 0 || "([ --'>\r\n¿¡\"”“„".Contains(text[startIndex - 1]);
                         if (startOk)
                         {
                             int end = startIndex + name.Length;
