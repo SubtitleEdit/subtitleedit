@@ -184,27 +184,59 @@ namespace Test.Core
         }
 
         [TestMethod]
-        public void RemoveWhiteSpaces1()
+        public void CountLetters1()
         {
             string input = " Hallo  world! ";
-            var res = input.RemoveWhiteSpaces(false);
-            Assert.AreEqual(input, res);
+            var res = input.CountCharacters(false);
+            Assert.AreEqual(" Hallo  world! ".Length, res);
         }
 
         [TestMethod]
-        public void RemoveWhiteSpaces2()
+        public void CountLetters2()
         {
             string input = " Hallo " + Environment.NewLine + " world! ";
-            var res = input.RemoveWhiteSpaces(true);
-            Assert.AreEqual("Halloworld!", res);
+            var res = input.CountCharacters(true);
+            Assert.AreEqual("Halloworld!".Length, res);
         }
 
         [TestMethod]
-        public void RemoveWhiteSpaces3()
+        public void CountLetters3()
         {
             string input = " Hallo" + Environment.NewLine + "world!";
-            var res = input.RemoveWhiteSpaces(false);
-            Assert.AreEqual(" Halloworld!", res);
+            var res = input.CountCharacters(false);
+            Assert.AreEqual(" Halloworld!".Length, res);
+        }
+
+        [TestMethod]
+        public void CountLetters4Ssa()
+        {
+            string input = "{\\an1}Hallo";
+            var res = input.CountCharacters(true);
+            Assert.AreEqual("Hallo".Length, res);
+        }
+
+        [TestMethod]
+        public void CountLetters4Html()
+        {
+            string input = "<i>Hallo</i>";
+            var res = input.CountCharacters(true);
+            Assert.AreEqual("Hallo".Length, res);
+        }
+
+        [TestMethod]
+        public void CountLetters5HtmlFont()
+        {
+            string input = "<font color=\"red\"><i>Hal lo<i></font>";
+            var res = input.CountCharacters(true);
+            Assert.AreEqual("Hallo".Length, res);
+        }
+
+        [TestMethod]
+        public void CountLetters6HtmlFontMultiLine()
+        {
+            string input = "<font color=\"red\"><i>Hal lo<i></font>" + Environment.NewLine + "<i>Bye!</i>";
+            var res = input.CountCharacters(true);
+            Assert.AreEqual("HalloBye!".Length, res);
         }
 
     }

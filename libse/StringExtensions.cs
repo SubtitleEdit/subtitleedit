@@ -329,21 +329,45 @@ namespace Nikse.SubtitleEdit.Core
             return new string(array, 0, arrayIndex);
         }
 
-        public static string RemoveWhiteSpaces(this string value, bool removeNormalSpace)
+        /// <summary>
+        /// Count characters excl. white spaces/ssa-tags/html-tags and normal space depending on parameter.
+        /// </summary>
+        public static int CountCharacters(this string value, bool removeNormalSpace)
         {
+            int length = 0;
             const char zeroWidthSpace = '\u200B';
             const char zeroWidthNoBreakSpace = '\uFEFF';
             char normalSpace = removeNormalSpace ? ' ' : zeroWidthSpace;
+            bool ssaTagOn = false;
+            bool htmlTagOn = false;
 
-            char[] array = new char[value.Length];
-            int arrayIndex = 0;
             for (int i = 0; i < value.Length; i++)
             {
                 char ch = value[i];
-                if (ch != '\n' && ch != '\r' && ch != '\t' && ch != zeroWidthSpace && ch != zeroWidthNoBreakSpace && ch != normalSpace)
-                    array[arrayIndex++] = ch;
+                if (ssaTagOn)
+                {
+                    if (ch == '}')
+                        ssaTagOn = false;
+                }
+                else if (htmlTagOn)
+                {
+                    if (ch == '>')
+                        htmlTagOn = false;
+                }
+                else if (ch == '{' && i < value.Length - 1 && value[i + 1] == '\\')
+                {
+                    ssaTagOn = true;
+                }
+                else if (ch == '<' && i < value.Length - 1 && (value[i + 1] == '/' || char.IsLetter(value[i + 1])) && value.IndexOf('>', i) > 0)
+                {
+                    htmlTagOn = true;
+                }
+                else if (ch != '\n' && ch != '\r' && ch != '\t' && ch != zeroWidthSpace && ch != zeroWidthNoBreakSpace && ch != normalSpace)
+                {
+                    length++;
+                }
             }
-            return new string(array, 0, arrayIndex);
+            return length;
         }
 
     }
