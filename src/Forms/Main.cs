@@ -250,6 +250,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             get { return tabControlButtons.SelectedIndex == 0 && checkBoxAutoContinue.Checked; }
         }
+
         private bool AutoRepeatOn
         {
             get { return tabControlButtons.SelectedIndex == 0 && checkBoxAutoRepeatOn.Checked; }
@@ -1120,20 +1121,6 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 CenterFormOnCurrentScreen();
             }
-
-            //if (Environment.OSVersion.Version.Major < 6 && Configuration.Settings.General.SubtitleFontName == Utilities.WinXP2KUnicodeFontName) // 6 == Vista/Win2008Server/Win7
-            //{
-            //    //const string unicodeFontName = Utilities.WinXp2kUnicodeFontName;
-            //    //Configuration.Settings.General.SubtitleFontName = unicodeFontName;
-            //    //float fontSize = toolStripMenuItemInsertUnicodeSymbol.Font.Size;
-            //    //textBoxSource.Font = new Font(unicodeFontName, fontSize);
-            //    //textBoxListViewText.Font = new Font(unicodeFontName, fontSize);
-            //    //SubtitleListview1.Font = new Font(unicodeFontName, fontSize);
-            //    //toolStripWaveControls.RenderMode = ToolStripRenderMode.System;
-            //    //toolStripMenuItemSurroundWithMusicSymbols.Font = new Font(unicodeFontName, fontSize);
-            //    UiUtil.InitializeSubtitleFont(SubtitleListview1);
-            //    Refresh();
-            //}
         }
 
         private void InitializeLanguage()
@@ -3207,7 +3194,7 @@ namespace Nikse.SubtitleEdit.Forms
                     SubtitleListview1.FirstVisibleIndex = -1;
                     SubtitleListview1.SelectIndexAndEnsureVisible(0);
 
-                    _fileName = Path.ChangeExtension(formSubOcr.FileName, ".srt");
+                    _fileName = Path.ChangeExtension(formSubOcr.FileName, new SubRip().Extension);
                     SetTitle();
                     _converted = true;
                 }
@@ -3241,7 +3228,7 @@ namespace Nikse.SubtitleEdit.Forms
                     SubtitleListview1.FirstVisibleIndex = -1;
                     SubtitleListview1.SelectIndexAndEnsureVisible(0);
 
-                    _fileName = Path.ChangeExtension(formSubOcr.FileName, ".srt");
+                    _fileName = Path.ChangeExtension(formSubOcr.FileName, new SubRip().Extension);
                     SetTitle();
                     _converted = true;
                 }
@@ -3275,7 +3262,7 @@ namespace Nikse.SubtitleEdit.Forms
                     SubtitleListview1.FirstVisibleIndex = -1;
                     SubtitleListview1.SelectIndexAndEnsureVisible(0);
 
-                    _fileName = Path.ChangeExtension(formSubOcr.FileName, ".srt");
+                    _fileName = Path.ChangeExtension(formSubOcr.FileName, new SubRip().Extension);
                     SetTitle();
                     _converted = true;
                 }
@@ -3309,7 +3296,7 @@ namespace Nikse.SubtitleEdit.Forms
                     SubtitleListview1.FirstVisibleIndex = -1;
                     SubtitleListview1.SelectIndexAndEnsureVisible(0);
 
-                    _fileName = Path.ChangeExtension(formSubOcr.FileName, ".srt");
+                    _fileName = Path.ChangeExtension(formSubOcr.FileName, new SubRip().Extension);
                     SetTitle();
                     _converted = true;
                 }
@@ -3340,7 +3327,7 @@ namespace Nikse.SubtitleEdit.Forms
                     SubtitleListview1.FirstVisibleIndex = -1;
                     SubtitleListview1.SelectIndexAndEnsureVisible(0);
 
-                    _fileName = Path.ChangeExtension(formSubOcr.FileName, ".srt");
+                    _fileName = Path.ChangeExtension(formSubOcr.FileName, new SubRip().Extension);
                     SetTitle();
                     _converted = true;
                 }
@@ -11405,7 +11392,7 @@ namespace Nikse.SubtitleEdit.Forms
                     SubtitleListview1.FirstVisibleIndex = -1;
                     SubtitleListview1.SelectIndexAndEnsureVisible(0);
 
-                    _fileName = Path.ChangeExtension(vobSubOcr.FileName, ".srt");
+                    _fileName = Path.ChangeExtension(vobSubOcr.FileName, new SubRip().Extension);
                     SetTitle();
                     _converted = true;
 
@@ -11448,7 +11435,7 @@ namespace Nikse.SubtitleEdit.Forms
                     SubtitleListview1.FirstVisibleIndex = -1;
                     SubtitleListview1.SelectIndexAndEnsureVisible(0);
 
-                    _fileName = Path.ChangeExtension(vobSubOcr.FileName, ".srt");
+                    _fileName = Path.ChangeExtension(vobSubOcr.FileName, new SubRip().Extension);
                     SetTitle();
                     _converted = true;
 
@@ -17373,7 +17360,7 @@ namespace Nikse.SubtitleEdit.Forms
                     SubtitleListview1.FirstVisibleIndex = -1;
                     SubtitleListview1.SelectIndexAndEnsureVisible(0);
 
-                    _fileName = Path.ChangeExtension(vobSubOcr.FileName, ".srt");
+                    _fileName = Path.ChangeExtension(vobSubOcr.FileName, new SubRip().Extension);
                     SetTitle();
                     _converted = true;
 
@@ -18548,7 +18535,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             closeVideoToolStripMenuItem.Visible = !string.IsNullOrEmpty(_videoFileName);
-            setVideoOffsetToolStripMenuItem.Visible = !string.IsNullOrEmpty(_videoFileName); // && Configuration.Settings.General.ShowBetaStuff;
+            setVideoOffsetToolStripMenuItem.Visible = !string.IsNullOrEmpty(_videoFileName);
             smpteTimeModedropFrameToolStripMenuItem.Visible = !string.IsNullOrEmpty(_videoFileName) && Configuration.Settings.General.ShowBetaStuff;
             if (!string.IsNullOrEmpty(_videoFileName))
             {
@@ -18843,8 +18830,6 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ToolStripMenuItemSpellCheckMainDropDownOpening(object sender, EventArgs e)
         {
-            //toolStripSeparator9.Visible = true;
-            //GetDictionariesToolStripMenuItem.Visible = true;
             addWordToNameListToolStripMenuItem.Visible = true;
         }
 
@@ -19801,7 +19786,6 @@ namespace Nikse.SubtitleEdit.Forms
             Rectangle tabBounds = tc.GetTabRect(e.Index);
             var stringFlags = new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center };
             e.Graphics.DrawString(tc.TabPages[e.Index].Text.Trim(), tabFont, textBrush, tabBounds, new StringFormat(stringFlags));
-            //tc.DrawMode = TabDrawMode.Normal;
         }
 
         public void GotoNextSubPosFromVideoPos()
