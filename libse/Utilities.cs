@@ -841,8 +841,7 @@ namespace Nikse.SubtitleEdit.Core
             if (paragraph.Duration.TotalMilliseconds < 1)
                 return 999;
 
-            string s = HtmlUtil.RemoveHtmlTags(paragraph.Text, true).RemoveWhiteSpaces(Configuration.Settings.General.CharactersPerSecondsIgnoreWhiteSpace);
-            return s.Length / paragraph.Duration.TotalSeconds;
+            return paragraph.Text.CountCharacters(Configuration.Settings.General.CharactersPerSecondsIgnoreWhiteSpace) / paragraph.Duration.TotalSeconds;
         }
 
         public static bool IsRunningOnMono()
