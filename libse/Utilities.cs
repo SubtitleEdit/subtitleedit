@@ -838,10 +838,11 @@ namespace Nikse.SubtitleEdit.Core
 
         public static double GetCharactersPerSecond(Paragraph paragraph)
         {
-            if (paragraph.Duration.TotalMilliseconds < 1)
+            var duration = paragraph.Duration;
+            if (duration.TotalMilliseconds < 1)
                 return 999;
 
-            return paragraph.Text.CountCharacters(Configuration.Settings.General.CharactersPerSecondsIgnoreWhiteSpace) / paragraph.Duration.TotalSeconds;
+            return paragraph.Text.CountCharacters(Configuration.Settings.General.CharactersPerSecondsIgnoreWhiteSpace) / duration.TotalSeconds;
         }
 
         public static bool IsRunningOnMono()
