@@ -1751,8 +1751,8 @@
     <RegEx find="Pozoriš" replaceWith="Kazališ" />
     <RegEx find="raktikuje" replaceWith="rakticira" />
     <RegEx find="rebić" replaceWith="rebit ć" />
-    <RegEx find="reci?j?edni([čk])" replaceWith="redsjedni$1" />
-    <RegEx find="redsedni([čk])" replaceWith="redsjedni$1" />
+    <RegEx find="reci?j?edni" replaceWith="redsjedni" />
+    <RegEx find="redsedni" replaceWith="redsjedni" />
     <RegEx find="rj?edlo([gz])" replaceWith="rijedlo$1" />
     <RegEx find="red?postav" replaceWith="retpostav" />
     <RegEx find="ređaš" replaceWith="rijaš" />
