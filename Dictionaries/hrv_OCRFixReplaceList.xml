@@ -130,7 +130,6 @@
     <Word from="dole" to="dolje" />
     <Word from="Dole" to="Dolje" />
     <Word from="Donijeću" to="Donijet ću" />
-    <Word from="do ovde" to="dovde" />
     <Word from="dosledan" to="dosljedan" />
     <!-- nije za regex [ni dospeo - ni dospeju - mora ostati ovako] -->
     <Word from="dospeo" to="dospio" />
@@ -423,8 +422,6 @@
     <Word from="neda" to="ne da" />
     <Word from="nedam" to="ne dam" />
     <Word from="negujem" to="njegujem" />
-    <Word from="new yorški" to="njujorški" />
-    <Word from="nju jorški" to="njujorški" />
     <Word from="njegi" to="njezi" />
     <Word from="neželi" to="ne želi" />
     <Word from="niej" to="nije" />
@@ -596,6 +593,8 @@
     <Word from="preći" to="prijeći" />
     <Word from="prećutkuje" to="prešućuje" />
     <Word from="predame" to="preda me" />
+    <Word from="predamnom" to="preda mnom" />
+    <Word from="Predamnom" to="Preda mnom" />
     <Word from="predelu" to="predjelu" />
     <Word from="preformuliši" to="preformuliraj" />
     <Word from="preklo" to="porijeklo" />
@@ -852,7 +851,6 @@
     <Word from="ulivali" to="ulijevali" />
     <Word from="ulivate" to="ulijevate" />
     <Word from="uljeva" to="ulijeva" />
-    <Word from="u jutro" to="ujutro" />
     <Word from="ujutru" to="ujutro" />
     <Word from="Ukoliko" to="Ako" />
     <Word from="ukoliko" to="ako" />
@@ -954,7 +952,6 @@
     <Word from="zanma" to="zanima" />
     <Word from="zaspem" to="zaspim" />
     <Word from="zastareo" to="zastario" />
-    <Word from="za uvijek" to="zauvijek" />
     <Word from="zavera" to="zavjera" />
     <Word from="zavredili" to="zavrijedili" />
     <Word from="zahtev" to="zahtjev" />
@@ -1049,6 +1046,7 @@
     <Word from="Krejg" to="Craig" />
     <Word from="Kristi" to="Christie" />
     <Word from="Lajf" to="Life" />
+    <Word from="Lejk" to="Lake" />
     <Word from="Lorejn" to="Loraine" />
     <Word from="Lusi" to="Lucy" />
     <Word from="Majk" to="Mike" />
@@ -1194,6 +1192,9 @@
     <LinePart from="neko ko" to="netko tko" />
     <LinePart from="nedjelju dana" to="tjedan dana" />
     <LinePart from="Ne mogu da verujem" to="Ne mogu vjerovati" />
+    <LinePart from="new yorški" to="njujorški" />
+    <LinePart from="nju jorški" to="njujorški" />
+    <LinePart from="nju jorški" to="njujorški" />
     <LinePart from="od kako" to="otkako" />
     <LinePart from="Plašim se" to="Bojim se" />
     <LinePart from="plašim se" to="bojim se" />
@@ -1218,6 +1219,8 @@
     <LinePart from="tamo natrag" to="tamo iza" />
     <LinePart from="tamo je natrag" to="tamo je iza" />
     <LinePart from="Tamo je natrag" to="Tamo je iza" />
+    <LinePart from="u jutro" to="ujutro" />
+    <LinePart from="za uvijek" to="zauvijek" />
     <LinePart from="zato sto" to="zato što" />
     <LinePart from="zna da bude" to="zna biti" />
     <LinePart from="zna ko" to="zna tko" />
@@ -1378,7 +1381,7 @@
     <RegEx find="Džigeric" replaceWith="Jetr" />
     <RegEx find="žinovsk" replaceWith="ivovsk" />
     <RegEx find="\bđep" replaceWith="džep" />
-    <RegEx find="\bĐep" replaceWith="Džep" />
+    <RegEx find="Đep" replaceWith="Džep" />
     <RegEx find="\bđubret" replaceWith="smeć" />
     <RegEx find="\bđubriš" replaceWith="smetliš" />
     <RegEx find="eklariše" replaceWith="eklarira" />
@@ -1607,6 +1610,7 @@
     <RegEx find="Muzičk" replaceWith="Glazben" />
     <RegEx find="nabdjeva(?!č)" replaceWith="nabdijeva" />
     <RegEx find="([nN])aden" replaceWith="$1adjen" />
+    <RegEx find="amern" replaceWith="amjern" />
     <RegEx find="agovj?est" replaceWith="agovijest" />
     <RegEx find="ajcijenjen" replaceWith="ajcjenjen" />
     <RegEx find="\b([nN])amj?en([aeiou])" replaceWith="$1amjen$2" />
@@ -1751,7 +1755,6 @@
     <RegEx find="reci?j?edni([čk])" replaceWith="redsjedni$1" />
     <RegEx find="redsedni([čk])" replaceWith="redsjedni$1" />
     <RegEx find="rj?edlo([gz])" replaceWith="rijedlo$1" />
-    <RegEx find="redamnom" replaceWith="reda mnom" />
     <RegEx find="red?postav" replaceWith="retpostav" />
     <RegEx find="ređaš" replaceWith="rijaš" />
     <RegEx find="premić" replaceWith="premit ć" />
@@ -2110,15 +2113,21 @@
     <RegEx find="[Nn]aj(opt|min|maks)imalnij" replaceWith="$1imaln" />
     <!-- experimental -->
     <RegEx find="ÄŤ" replaceWith="č" />
+    <RegEx find="Ä" replaceWith="č" />
     <RegEx find="Ä‡" replaceWith="ć" />
     <RegEx find="Ä‘" replaceWith="đ" />
     <RegEx find="Ĺľ" replaceWith="ž" />
+    <RegEx find="Å¾" replaceWith="ž" />
     <RegEx find="Ĺˇ" replaceWith="š" />
+    <RegEx find="Å¡" replaceWith="š" />
     <RegEx find="ÄŚ" replaceWith="Č" />
+    <RegEx find="ÄŒ" replaceWith="Č" /> 
     <RegEx find="Ä†" replaceWith="Ć" />
     <RegEx find="Ä" replaceWith="Đ" />
     <RegEx find="Ĺ " replaceWith="Š" />
+    <RegEx find="Å " replaceWith="Š" />
     <RegEx find="Ĺ˝" replaceWith="Ž" />
+    <RegEx find="Å½" replaceWith="Ž" />
     <RegEx find="[^e]seda(?!m|tiv)" replaceWith="sjeda" />
     <RegEx find="ii" replaceWith="i" />
     <RegEx find="đž" replaceWith="dž" />
@@ -2147,6 +2156,7 @@
     <RegEx find="ilišu" replaceWith="iliziraju" />
     <RegEx find="ćič" replaceWith="čić" />
     <RegEx find="dilova" replaceWith="dila" />
+    <RegEx find="diteljk" replaceWith="diteljic" />
     <RegEx find="citov" replaceWith="citir" />
     <RegEx find="dnačin" replaceWith="dnadžb" />
     <RegEx find="\bdral" replaceWith="deral" />
@@ -2379,6 +2389,7 @@
     <RegEx find="Dankan" replaceWith="Duncan" />
     <RegEx find="Dejvi([ds])" replaceWith="Davi$1" />
     <RegEx find="Dijeg" replaceWith="Dieg" />
+    <RegEx find="Doson" replaceWith="Dawson" />
     <RegEx find="Džastin" replaceWith="Justin" />
     <RegEx find="Džejn" replaceWith="Jane" />
     <RegEx find="Džejk" replaceWith="Jake" />
@@ -2392,6 +2403,7 @@
     <RegEx find="Džoni" replaceWith="Johnny" />
     <RegEx find="Džonson" replaceWith="Johnson" />
     <RegEx find="Džordž" replaceWith="George" />
+    <RegEx find="Džouns" replaceWith="Jones" />
     <RegEx find="Džulij" replaceWith="Juli" />
     <RegEx find="[EA]jnštajn" replaceWith="Einstein" />
     <RegEx find="Endi" replaceWith="Andy" />
