@@ -69,10 +69,17 @@ namespace Nikse.SubtitleEdit.Forms
             // Longer names must be first
             names.Sort((s1, s2) => s2.Length.CompareTo(s1.Length));
 
-            string lastLine = string.Empty;
+            Paragraph last = null;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                p.Text = FixCasing(p.Text, lastLine, names, subCulture);
+                if (last != null)
+                {
+                    p.Text = FixCasing(p.Text, last.Text, names, subCulture, p.StartTime.TotalMilliseconds - last.EndTime.TotalMilliseconds);
+                }
+                else
+                {
+                    p.Text = FixCasing(p.Text, string.Empty, names, subCulture, 10000);
+                }
 
                 // fix casing of English alone i to I
                 if (radioButtonNormal.Checked && language.StartsWith("en", StringComparison.Ordinal))
@@ -80,7 +87,7 @@ namespace Nikse.SubtitleEdit.Forms
                     p.Text = FixEnglishAloneILowerToUpper(p.Text);
                 }
 
-                lastLine = p.Text;
+                last = p;
             }
         }
 
@@ -167,7 +174,7 @@ namespace Nikse.SubtitleEdit.Forms
             return text;
         }
 
-        private string FixCasing(string text, string lastLine, List<string> nameList, CultureInfo subtitleCulture)
+        private string FixCasing(string text, string lastLine, List<string> nameList, CultureInfo subtitleCulture, double millisecondsFromLast)
         {
             string original = text;
             if (radioButtonNormal.Checked)
@@ -181,7 +188,7 @@ namespace Nikse.SubtitleEdit.Forms
                     text = text.ToLower(subtitleCulture).Trim();
                     text = text.FixExtraSpaces();
                     var st = new StrippableText(text);
-                    st.FixCasing(nameList, false, true, true, lastLine); // fix all casing but names (that's a seperate option)
+                    st.FixCasing(nameList, false, true, true, lastLine, millisecondsFromLast); // fix all casing but names (that's a seperate option)
                     text = st.MergedString;
                 }
             }

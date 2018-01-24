@@ -169,7 +169,7 @@ namespace Nikse.SubtitleEdit.Core
         }
 
         private static readonly char[] ExpectedCharsArray = { '.', '!', '?', ':', ';', ')', ']', '}', '(', '[', '{' };
-        public void FixCasing(List<string> nameList, bool changeNameCases, bool makeUppercaseAfterBreak, bool checkLastLine, string lastLine)
+        public void FixCasing(List<string> nameList, bool changeNameCases, bool makeUppercaseAfterBreak, bool checkLastLine, string lastLine, double millisecondsFromLast = 0)
         {
             var replaceIds = new List<string>();
             var replaceNames = new List<string>();
@@ -189,7 +189,11 @@ namespace Nikse.SubtitleEdit.Core
                                           s.EndsWith("? ♪", StringComparison.Ordinal) ||
                                           s.EndsWith(']') ||
                                           s.EndsWith(')') ||
-                                          s.EndsWith(':');
+                                          s.EndsWith(':') ||
+                                          s.EndsWith('_');
+
+                if (!startWithUppercase && millisecondsFromLast > 5000)
+                    startWithUppercase = true;
 
                 // start with uppercase after music symbol - but only if next line does not start with music symbol
                 if (!startWithUppercase && (s.EndsWith('♪') || s.EndsWith('♫')))
