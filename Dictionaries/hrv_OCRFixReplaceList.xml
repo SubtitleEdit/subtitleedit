@@ -1754,7 +1754,7 @@
     <RegEx find="reci?j?edni" replaceWith="redsjedni" />
     <RegEx find="redsedni" replaceWith="redsjedni" />
     <RegEx find="rj?edlo([gz])" replaceWith="rijedlo$1" />
-    <RegEx find="red?postav" replaceWith="retpostav" />
+    <RegEx find="repostav" replaceWith="retpostav" />
     <RegEx find="ređaš" replaceWith="rijaš" />
     <RegEx find="premić" replaceWith="premit ć" />
     <RegEx find="renje([lt])" replaceWith="renije$1" />
