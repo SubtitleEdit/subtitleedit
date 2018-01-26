@@ -2,7 +2,7 @@
 <Language Name="hrvatski">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.5.4</Version>
+    <Version>3.5.5</Version>
     <TranslatedBy>Prijevod: Jozo Marić &amp; diomed</TranslatedBy>
     <CultureName>hr-HR</CultureName>
     <HelpFile />
@@ -185,7 +185,8 @@ Napomena: Provjeri slobodan prostor prostor na disku.</WaveFileMalformed>
     <ScanningFolder>Pretraživanje i podmapa za podnaslove...</ScanningFolder>
     <Recursive>Uključi i podmape</Recursive>
     <SetMinMsBetweenSubtitles>Postavi min. milisekundi između podnaslova</SetMinMsBetweenSubtitles>
-    <BridgeGaps></BridgeGaps>
+    <BridgeGaps>
+    </BridgeGaps>
     <PlainText>Običan tekst</PlainText>
     <Ocr>OCR...</Ocr>
     <Filter>Filter</Filter>
@@ -196,7 +197,8 @@ Napomena: Provjeri slobodan prostor prostor na disku.</WaveFileMalformed>
     <FixCommonErrorsErrorX>Popravi uobičajene pogreške: {0}</FixCommonErrorsErrorX>
     <MultipleReplaceErrorX>Višestruke zamjene: {0}</MultipleReplaceErrorX>
     <AutoBalanceErrorX>Auto ravnoteža: {0}</AutoBalanceErrorX>
-    <OffsetTimeCodes></OffsetTimeCodes>
+    <OffsetTimeCodes>
+    </OffsetTimeCodes>
   </BatchConvert>
   <Beamer>
     <Title>Beamer (Video projekcija)</Title>
@@ -368,8 +370,10 @@ Napomena: Provjeri slobodan prostor prostor na disku.</WaveFileMalformed>
     <TranslatorsName>Ime prevoditelja</TranslatorsName>
     <SubtitleListReferenceCode>Popis titla referentni kod</SubtitleListReferenceCode>
     <CountryOfOrigin>Zemlja podrijetla</CountryOfOrigin>
-    <TimeCodeStatus></TimeCodeStatus>
-    <TimeCodeStartOfProgramme></TimeCodeStartOfProgramme>
+    <TimeCodeStatus>
+    </TimeCodeStatus>
+    <TimeCodeStartOfProgramme>
+    </TimeCodeStartOfProgramme>
     <RevisionNumber>Broj izdanja</RevisionNumber>
     <MaxNoOfDisplayableChars>Maksimalni broj znakova po retku</MaxNoOfDisplayableChars>
     <MaxNumberOfDisplayableRows>Max # redaka</MaxNumberOfDisplayableRows>
@@ -379,8 +383,10 @@ Napomena: Provjeri slobodan prostor prostor na disku.</WaveFileMalformed>
     <TextAndTimingInformation>Tekst i vrijeme informacija</TextAndTimingInformation>
     <JustificationCode>Kod opravdanja</JustificationCode>
     <VerticalPosition>Vertikalna pozicija</VerticalPosition>
-    <MarginTop></MarginTop>
-    <MarginBottom></MarginBottom>
+    <MarginTop>
+    </MarginTop>
+    <MarginBottom>
+    </MarginBottom>
     <NewLineRows>Broj redova dodan novom linijom</NewLineRows>
     <Teletext>Teletext</Teletext>
     <UseBox>Koristi kutiju oko teksta</UseBox>
@@ -425,12 +431,15 @@ Napomena: Provjeri slobodan prostor prostor na disku.</WaveFileMalformed>
     <DoNotModify>[Ne mijenjajte]</DoNotModify>
   </ExportCustomTextFormat>
   <ExportFcpXmlAdvanced>
-    <Title></Title>
+    <Title>
+    </Title>
     <FontName>Ime fonta</FontName>
     <FontSize>Veličina fonta</FontSize>
-    <FontFace></FontFace>
+    <FontFace>
+    </FontFace>
     <Alignment>Poravnanje</Alignment>
-    <Baseline></Baseline>
+    <Baseline>
+    </Baseline>
   </ExportFcpXmlAdvanced>
   <ExportPngXml>
     <Title>Izvoz BDN XML/PNG</Title>
@@ -709,7 +718,8 @@ Napomena: Provjeri slobodan prostor prostor na disku.</WaveFileMalformed>
     <Frames>Okviri</Frames>
     <Seconds>Sekundi</Seconds>
     <Milliseconds>Milisekundi</Milliseconds>
-    <GetSceneChangesWithFfmpeg></GetSceneChangesWithFfmpeg>
+    <GetSceneChangesWithFfmpeg>
+    </GetSceneChangesWithFfmpeg>
   </ImportSceneChanges>
   <ImportText>
     <Title>Uvoz običnog teksta</Title>
@@ -1011,7 +1021,8 @@ Napomena: Provjeri slobodan prostor prostor na disku.</WaveFileMalformed>
         <OpenDvd>Otvori DVD</OpenDvd>
         <ChooseAudioTrack>Izaberi zvučni zapis</ChooseAudioTrack>
         <CloseVideo>&amp;Zatvori video datoteku</CloseVideo>
-        <SetVideoOffset></SetVideoOffset>
+        <SetVideoOffset>
+        </SetVideoOffset>
         <ImportSceneChanges>Uvezi promijenjene scene</ImportSceneChanges>
         <RemoveSceneChanges>Ukloni promijenjene scene</RemoveSceneChanges>
         <WaveformBatchGenerate>Batch stvoreni valni oblik...</WaveformBatchGenerate>
@@ -1083,10 +1094,12 @@ Napomena: Provjeri slobodan prostor prostor na disku.</WaveFileMalformed>
         <SizeAllColumnsToFit>Promijeni veličinu svih stupaca</SizeAllColumnsToFit>
         <AdvancedSubStationAlphaSetStyle>Napredna Sub Station Alpha - stil</AdvancedSubStationAlphaSetStyle>
         <SubStationAlphaSetStyle>SSA – Podešavanje stila</SubStationAlphaSetStyle>
-        <SetActor></SetActor>
+        <SetActor>
+        </SetActor>
         <SubStationAlphaStyles>Sub Station Alpha stilovi...</SubStationAlphaStyles>
         <AdvancedSubStationAlphaStyles>Napredne Sub Station Alpha stilovi...</AdvancedSubStationAlphaStyles>
-        <TimedTextSetRegion></TimedTextSetRegion>
+        <TimedTextSetRegion>
+        </TimedTextSetRegion>
         <TimedTextSetStyle>Vremenski Tekst - postavi stil</TimedTextSetStyle>
         <TimedTextStyles>Vremenski Tekstualni stilovi...</TimedTextStyles>
         <TimedTextSetLanguage>Vremenski Tekst - postaviti jezik</TimedTextSetLanguage>
@@ -1734,7 +1747,8 @@ određeni podnaslov s drugim ljudima.</Information>
     <RemoveBlankLinesWhenOpening>U&amp;kloni prazne linije pri otvaranju podnaslova</RemoveBlankLinesWhenOpening>
     <ShowLineBreaksAs>Prikaži redove u popisu kao:</ShowLineBreaksAs>
     <MainListViewDoubleClickAction>Dvoklik na liniju u glavnom prozoru će:</MainListViewDoubleClickAction>
-    <MainListViewColumnsInfo></MainListViewColumnsInfo>
+    <MainListViewColumnsInfo>
+    </MainListViewColumnsInfo>
     <MainListViewNothing>zaboraviti radnju</MainListViewNothing>
     <MainListViewVideoGoToPositionAndPause>prijeći na poziciju snimke i pauzirati</MainListViewVideoGoToPositionAndPause>
     <MainListViewVideoGoToPositionAndPlay>prijeći na poziciju snimke i pustiti</MainListViewVideoGoToPositionAndPlay>
@@ -1763,8 +1777,10 @@ određeni podnaslov s drugim ljudima.</Information>
     <MpcHc>MPC-HC</MpcHc>
     <MpcHcDescription>Media Player Classic - Home Cinema</MpcHcDescription>
     <MpvPlayer>mpv</MpvPlayer>
-    <MpvPlayerDescription></MpvPlayerDescription>
-    <MpvHandlesPreviewText></MpvHandlesPreviewText>
+    <MpvPlayerDescription>
+    </MpvPlayerDescription>
+    <MpvHandlesPreviewText>
+    </MpvHandlesPreviewText>
     <VlcMediaPlayer>VLC media player</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll iz VLC media player-a 1.1.0 ili novijeg izdanja</VlcMediaPlayerDescription>
     <VlcBrowseToLabel>VLC putanja (potrebno samo ako se koristi prijenosna verzija VLC)</VlcBrowseToLabel>
@@ -1781,7 +1797,8 @@ određeni podnaslov s drugim ljudima.</Information>
     <WaveformShowWpm>Prikaži riječi/min</WaveformShowWpm>
     <ReverseMouseWheelScrollDirection>Obrnuti smjer kotačića na mišu</ReverseMouseWheelScrollDirection>
     <WaveformAllowOverlap>Dopusti preklapanje (kad se kreće/i veličine)</WaveformAllowOverlap>
-    <WaveformSetVideoPosMoveStartEnd></WaveformSetVideoPosMoveStartEnd>
+    <WaveformSetVideoPosMoveStartEnd>
+    </WaveformSetVideoPosMoveStartEnd>
     <WaveformFocusMouseEnter>Fokusiraj na pokazivač miša</WaveformFocusMouseEnter>
     <WaveformListViewFocusMouseEnter>Također postavi prikaz popisa fokus na miša prilikom ulaska miša na listu popisa</WaveformListViewFocusMouseEnter>
     <WaveformBorderHitMs1>Granični marker mora biti s...</WaveformBorderHitMs1>
@@ -1861,14 +1878,19 @@ određeni podnaslov s drugim ljudima.</Information>
     <AdjustStartDownEndUpAndGoToNext>Tipka dolje = Start, Tipka gore = postavi kraj i idi na sljedeći</AdjustStartDownEndUpAndGoToNext>
     <AdjustSelected100MsForward>Premještanje odabrane linije 100 ms naprijed</AdjustSelected100MsForward>
     <AdjustSelected100MsBack>Premjesti odabrane linije 100 ms nazad</AdjustSelected100MsBack>
-    <AdjustStartXMsBack></AdjustStartXMsBack>
-    <AdjustStartXMsForward></AdjustStartXMsForward>
-    <AdjustEndXMsBack></AdjustEndXMsBack>
-    <AdjustEndXMsForward></AdjustEndXMsForward>
+    <AdjustStartXMsBack>
+    </AdjustStartXMsBack>
+    <AdjustStartXMsForward>
+    </AdjustStartXMsForward>
+    <AdjustEndXMsBack>
+    </AdjustEndXMsBack>
+    <AdjustEndXMsForward>
+    </AdjustEndXMsForward>
     <AdjustSetStartTimeKeepDuration>Postavi početno vrijeme. Zadrži trajanje</AdjustSetStartTimeKeepDuration>
     <AdjustSetEndAndOffsetTheRest>Postaviti kraj, nadoknaditi ostatak</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Postaviti kraj, nadoknaditi ostatak i prelazak na sljedeći</AdjustSetEndAndOffsetTheRestAndGoToNext>
-    <AdjustExtendCurrentSubtitle></AdjustExtendCurrentSubtitle>
+    <AdjustExtendCurrentSubtitle>
+    </AdjustExtendCurrentSubtitle>
     <RecalculateDurationOfCurrentSubtitle>Rekalkuliraj trajanje trenutnog titla</RecalculateDurationOfCurrentSubtitle>
     <MainCreateStartDownEndUp>Stvori novi na tipka-dolje, postavi vrijeme završetka na tipka-gore</MainCreateStartDownEndUp>
     <MergeDialog>Spoji dijalog (upisati crtice)</MergeDialog>
@@ -1890,19 +1912,26 @@ određeni podnaslov s drugim ljudima.</Information>
     <WaveformSeekSilenceForward>Traži tišinu naprijed</WaveformSeekSilenceForward>
     <WaveformSeekSilenceBack>Traži tišinu natrag</WaveformSeekSilenceBack>
     <WaveformAddTextHere>Dodajte tekst ovdje (za novi odabir)</WaveformAddTextHere>
-    <WaveformAddTextHereFromClipboard></WaveformAddTextHereFromClipboard>
+    <WaveformAddTextHereFromClipboard>
+    </WaveformAddTextHereFromClipboard>
     <WaveformPlayNewSelection>Reproduciraj novo izabrano</WaveformPlayNewSelection>
-    <WaveformPlayNewSelectionEnd></WaveformPlayNewSelectionEnd>
+    <WaveformPlayNewSelectionEnd>
+    </WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Reproduciraj prvi izabrani podnaslov</WaveformPlayFirstSelectedSubtitle>
     <WaveformFocusListView>Fokusiraj listu prikaza</WaveformFocusListView>
     <WaveformGoToNextSubtitle>Idi na sljedeći titl (sa video pozicije)</WaveformGoToNextSubtitle>
-    <WaveformGoToPreviousSceneChange></WaveformGoToPreviousSceneChange>
-    <WaveformGoToNextSceneChange></WaveformGoToNextSceneChange>
-    <WaveformToggleSceneChange></WaveformToggleSceneChange>
+    <WaveformGoToPreviousSceneChange>
+    </WaveformGoToPreviousSceneChange>
+    <WaveformGoToNextSceneChange>
+    </WaveformGoToNextSceneChange>
+    <WaveformToggleSceneChange>
+    </WaveformToggleSceneChange>
     <GoBack1Frame>Jedan okvir natrag</GoBack1Frame>
     <GoForward1Frame>Jedan okvir naprijed</GoForward1Frame>
-    <GoBack1FrameWithPlay></GoBack1FrameWithPlay>
-    <GoForward1FrameWithPlay></GoForward1FrameWithPlay>
+    <GoBack1FrameWithPlay>
+    </GoBack1FrameWithPlay>
+    <GoForward1FrameWithPlay>
+    </GoForward1FrameWithPlay>
     <GoBack100Milliseconds>100 ms natrag</GoBack100Milliseconds>
     <GoForward100Milliseconds>100 ms naprijed</GoForward100Milliseconds>
     <GoBack500Milliseconds>500 ms natrag</GoBack500Milliseconds>
@@ -1955,24 +1984,28 @@ određeni podnaslov s drugim ljudima.</Information>
     <MainTextBoxUnbreak>Neprekinuti tekst</MainTextBoxUnbreak>
     <MainFileSaveAll>Spremi sve</MainFileSaveAll>
     <Miscellaneous>Razno.</Miscellaneous>
-    <CpsIncludesSpace></CpsIncludesSpace>
+    <CpsIncludesSpace>
+    </CpsIncludesSpace>
     <UseDoNotBreakAfterList>Koristi ne-neprekinuti nakon popisa (za auto-Br)</UseDoNotBreakAfterList>
     <MicrosoftBingTranslator>Microsoft Bing Prevoditelj</MicrosoftBingTranslator>
     <HowToSignUp>Kako se prijaviti</HowToSignUp>
     <GoogleTranslateUrl>Google translate link</GoogleTranslateUrl>
-    <MicrosoftTranslateApiKey></MicrosoftTranslateApiKey>
+    <MicrosoftTranslateApiKey>
+    </MicrosoftTranslateApiKey>
   </Settings>
   <SettingsMpv>
     <Title>Postavke za mpv</Title>
     <DownloadMpv>Preuzmi mpv lib</DownloadMpv>
-    <DownloadMpvFailed></DownloadMpvFailed>
+    <DownloadMpvFailed>
+    </DownloadMpvFailed>
     <DownloadMpvOk>Mpv lib je preuzeta i spremna za upotrebu.</DownloadMpvOk>
   </SettingsMpv>
   <SetVideoOffset>
     <Title>Izjednači video</Title>
     <Description>Izjednači video (podnaslovi ne bi trebali slijediti pravo videa vrijeme, ali npr +10 sati)</Description>
     <RelativeToCurrentVideoPosition>Relativno u odnosu na trenutnu poziciju videa</RelativeToCurrentVideoPosition>
-    <KeepTimeCodes></KeepTimeCodes>
+    <KeepTimeCodes>
+    </KeepTimeCodes>
     <Reset>Resetiraj</Reset>
   </SetVideoOffset>
   <ShowEarlierLater>
@@ -2345,13 +2378,17 @@ određeni podnaslov s drugim ljudima.</Information>
     <ShowWaveformAndSpectrogram>Pokaži valni oblik i spektrogram</ShowWaveformAndSpectrogram>
     <ShowWaveformOnly>Pokaži samo valni oblik</ShowWaveformOnly>
     <ShowSpectrogramOnly>Pokaži samo spektrogram</ShowSpectrogramOnly>
-    <AddSceneChange></AddSceneChange>
-    <RemoveSceneChange></RemoveSceneChange>
+    <AddSceneChange>
+    </AddSceneChange>
+    <RemoveSceneChange>
+    </RemoveSceneChange>
     <GuessTimeCodes>Pogodi vremenske kodove...</GuessTimeCodes>
     <SeekSilence>Traži tišinu...</SeekSilence>
     <InsertSubtitleHere>Umetni titl ovdje...</InsertSubtitleHere>
-    <CharsSecX></CharsSecX>
-    <WordsMinX></WordsMinX>
+    <CharsSecX>
+    </CharsSecX>
+    <WordsMinX>
+    </WordsMinX>
   </Waveform>
   <WaveformGenerateTimeCodes>
     <Title>Pogodi vremenske kodove...</Title>
