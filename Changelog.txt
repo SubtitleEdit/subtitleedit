@@ -1,6 +1,6 @@
 ﻿Subtitle Edit Changelog
 
-3.5.5 (xth January 2018) BETA
+3.5.5 (26th January 2018)
 * NEW:
    * Add new subtitle format - thx Karim
    * Add new subtitle format - thx Wojtek
