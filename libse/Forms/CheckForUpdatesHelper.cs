@@ -41,6 +41,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 request.Method = "GET";
                 request.AllowAutoRedirect = true;
                 request.Accept = contentType;
+                request.Proxy = Utilities.GetProxy();
                 request.BeginGetResponse(callback, request);
             }
             catch (Exception exception)
@@ -157,6 +158,10 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
         public bool IsUpdateAvailable()
         {
+            if (!string.IsNullOrEmpty(Error))
+            {
+                return false;
+            }
             try
             {
                 //string[] currentVersionInfo = "3.3.14".Split('.'); // for testing...
