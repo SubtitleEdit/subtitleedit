@@ -1503,6 +1503,7 @@ namespace Nikse.SubtitleEdit.Core
                         ChooseAudioTrack = "Choose audio track",
                         CloseVideo = "Close video file",
                         SetVideoOffset = "Set video offset...",
+                        SmptTimeMode = "SMPTE timing (drop frame)",
                         ImportSceneChanges = "Import scene changes...",
                         RemoveSceneChanges = "Remove scene changes",
                         WaveformBatchGenerate = "Batch generate waveforms...",

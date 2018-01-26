@@ -1241,6 +1241,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemSetAudioTrack.Text = _language.Menu.Video.ChooseAudioTrack;
             closeVideoToolStripMenuItem.Text = _language.Menu.Video.CloseVideo;
 
+            smpteTimeModedropFrameToolStripMenuItem.Text = _language.Menu.Video.SmptTimeMode;
             toolStripMenuItemImportSceneChanges.Text = _language.Menu.Video.ImportSceneChanges;
             toolStripMenuItemRemoveSceneChanges.Text = _language.Menu.Video.RemoveSceneChanges;
 
@@ -18536,7 +18537,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             closeVideoToolStripMenuItem.Visible = !string.IsNullOrEmpty(_videoFileName);
             setVideoOffsetToolStripMenuItem.Visible = !string.IsNullOrEmpty(_videoFileName);
-            smpteTimeModedropFrameToolStripMenuItem.Visible = !string.IsNullOrEmpty(_videoFileName) && Configuration.Settings.General.ShowBetaStuff;
+            smpteTimeModedropFrameToolStripMenuItem.Visible = !string.IsNullOrEmpty(_videoFileName);
             if (!string.IsNullOrEmpty(_videoFileName))
             {
                 if (Configuration.Settings.General.CurrentVideoOffsetInMs > 0)
