@@ -1012,6 +1012,7 @@ Note: Do check free disk space.</WaveFileMalformed>
         <ChooseAudioTrack>Choose audio track</ChooseAudioTrack>
         <CloseVideo>Close video file</CloseVideo>
         <SetVideoOffset>Set video offset...</SetVideoOffset>
+        <SmptTimeMode>SMPTE timing (drop frame)</SmptTimeMode>
         <ImportSceneChanges>Import scene changes...</ImportSceneChanges>
         <RemoveSceneChanges>Remove scene changes</RemoveSceneChanges>
         <WaveformBatchGenerate>Batch generate waveforms...</WaveformBatchGenerate>
@@ -1952,6 +1953,8 @@ can edit in same subtitle file (collaboration)</Information>
     <ShowBeamer>Start subtitle fullscreen beamer</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Move last word down to next subtitle line</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Move first word from next subtitle line up</MainTextBoxMoveFirstWordFromNextUp>
+    <MainTextBoxMoveFirstWordUpCurrent>Move first word from next line up (current subtitle)</MainTextBoxMoveFirstWordUpCurrent>
+    <MainTextBoxMoveLastWordDownCurrent>Move last word from first line down (current subtitle)</MainTextBoxMoveLastWordDownCurrent>
     <MainTextBoxSelectionToLower>Selection to lowercase</MainTextBoxSelectionToLower>
     <MainTextBoxSelectionToUpper>Selection to uppercase</MainTextBoxSelectionToUpper>
     <MainTextBoxToggleAutoDuration>Toggle auto duration</MainTextBoxToggleAutoDuration>

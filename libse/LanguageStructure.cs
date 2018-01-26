@@ -2120,6 +2120,8 @@
             public string ShowBeamer { get; set; }
             public string MainTextBoxMoveLastWordDown { get; set; }
             public string MainTextBoxMoveFirstWordFromNextUp { get; set; }
+            public string MainTextBoxMoveFirstWordUpCurrent { get; set; }
+            public string MainTextBoxMoveLastWordDownCurrent { get; set; }
             public string MainTextBoxSelectionToLower { get; set; }
             public string MainTextBoxSelectionToUpper { get; set; }
             public string MainTextBoxToggleAutoDuration { get; set; }

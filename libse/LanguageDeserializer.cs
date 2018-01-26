@@ -3499,6 +3499,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Main/Menu/Video/SetVideoOffset":
                     language.Main.Menu.Video.SetVideoOffset = reader.Value;
                     break;
+                case "Main/Menu/Video/SmptTimeMode":
+                    language.Main.Menu.Video.SmptTimeMode = reader.Value;
+                    break;
                 case "Main/Menu/Video/ImportSceneChanges":
                     language.Main.Menu.Video.ImportSceneChanges = reader.Value;
                     break;
@@ -5304,6 +5307,12 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "Settings/MainTextBoxMoveFirstWordFromNextUp":
                     language.Settings.MainTextBoxMoveFirstWordFromNextUp = reader.Value;
+                    break;
+                case "Settings/MainTextBoxMoveFirstWordUpCurrent":
+                    language.Settings.MainTextBoxMoveFirstWordUpCurrent = reader.Value;
+                    break;
+                case "Settings/MainTextBoxMoveLastWordDownCurrent":
+                    language.Settings.MainTextBoxMoveLastWordDownCurrent = reader.Value;
                     break;
                 case "Settings/MainTextBoxSelectionToLower":
                     language.Settings.MainTextBoxSelectionToLower = reader.Value;
