@@ -119,6 +119,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             new KeyValuePair<string,string>("ec",                  "l" ),
             new KeyValuePair<string,string>("6d",                  "m" ),
             new KeyValuePair<string,string>("6e",                  "n" ),
+            new KeyValuePair<string,string>("6e",                  "n" ),
             new KeyValuePair<string,string>("ef",                  "o" ),
             new KeyValuePair<string,string>("70",                  "p" ),
             new KeyValuePair<string,string>("f1",                  "q" ),
@@ -450,6 +451,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             new KeyValuePair<string,string>("d580 923d 923d",      "Û"),
             new KeyValuePair<string,string>("923d 923d",           "Û"),
+
+
+            new KeyValuePair<string,string>("4f80 13ba 13ba",      "Ø"),
+            new KeyValuePair<string,string>("c1 1338 1338",        "Å"),
+
+            new KeyValuePair<string,string>("ef80 133b 133b",      "ø"),
+            new KeyValuePair<string,string>("61 13b9 13b9",        "å"), // not correct?
         };
 
         public override string Extension => ".scc";
@@ -608,8 +616,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
                 while (i < text.Length)
                 {
+                    //string nextCode = null;
+                    //if (i < text.Length - 1)
+                    //    nextCode = GetCodeFromLetter(text.Substring(i + 1, 1));
                     string s = text.Substring(i, 1);
                     string codeFromLetter = GetCodeFromLetter(s);
+                    //if (codeFromLetter != null && nextCode != null && codeFromLetter.Length == 2 && nextCode.Length > 2)
+                    //    codeFromLetter += codeFromLetter;
                     string newCode;
                     if (text.Substring(i).StartsWith("<i>", StringComparison.Ordinal))
                     {
@@ -715,7 +728,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static string GetLetterFromCode(string hexCode)
         {
-            var letter = LetterDictionary.FirstOrDefault(x => x.Key == hexCode.ToLowerInvariant());
+            var letter = LetterDictionary.Where(x => x.Key == hexCode.ToLowerInvariant()).OrderByDescending(p=>p.Value.Length).FirstOrDefault();
             if (letter.Equals(new KeyValuePair<string, string>()))
                 return null;
             return letter.Value;
@@ -1587,6 +1600,16 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         // 3 codes
                         if (k < parts.Length - 2)
                         {
+                            //if (sb.Length > 1) // if next code is > 2 in length, then last code might have been a double...
+                            //{
+                            //    var last = sb.ToString().Substring(sb.Length - 1);
+                            //    if ("ñ".Contains(last) && sb.ToString().EndsWith(last + last))
+                            //    {
+                            //        var temp = sb.ToString().Substring(0, sb.Length-1);
+                            //        sb = new StringBuilder(temp);
+                            //    }
+                            //}
+
                             var letter = GetLetterFromCode(part + " " + parts[k + 1] + " " + parts[k + 2]);
                             if (letter != null)
                             {
