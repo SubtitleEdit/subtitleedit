@@ -67,7 +67,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         private IntPtr _libMpvDll;
         private IntPtr _mpvHandle;
         private Timer _videoLoadedTimer;
-        private double? _pausePosition = null; // Hack to hold precise seeking when paused
+        private double? _pausePosition; // Hack to hold precise seeking when paused
         //        private Timer _videoEndedTimer;
 
         public override event EventHandler OnVideoLoaded;

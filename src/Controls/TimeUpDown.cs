@@ -9,7 +9,7 @@ using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Controls
 {
-    public partial class TimeUpDown : UserControl
+    public sealed partial class TimeUpDown : UserControl
     {
         public enum TimeMode
         {
@@ -17,7 +17,7 @@ namespace Nikse.SubtitleEdit.Controls
             HHMMSSFF
         }
 
-        private bool _designMode = LicenseManager.UsageMode == LicenseUsageMode.Designtime;
+        private readonly bool _designMode = LicenseManager.UsageMode == LicenseUsageMode.Designtime;
 
         private const int NumericUpDownValue = 50;
 
@@ -29,7 +29,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         private static char[] _splitChars;
 
-        public bool _dirty = false;
+        private bool _dirty = false;
         double _initialTotalMilliseconds;
 
         internal void ForceHHMMSSFF()
@@ -135,7 +135,7 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 var tc = new TimeCode(milliseconds);
                 maskedTextBox1.Mask = GetMaskFrames(milliseconds);
-                maskedTextBox1.Text = tc.ToString().Substring(0, 9) + string.Format("{0:00}", Core.SubtitleFormats.SubtitleFormat.MillisecondsToFrames(tc.Milliseconds));
+                maskedTextBox1.Text = tc.ToString().Substring(0, 9) + $"{Core.SubtitleFormats.SubtitleFormat.MillisecondsToFrames(tc.Milliseconds):00}";
             }
             _dirty = false;
         }
@@ -145,10 +145,7 @@ namespace Nikse.SubtitleEdit.Controls
             if (!_dirty)
                 return _initialTotalMilliseconds;
 
-            TimeCode tc = TimeCode;
-            if (tc != null)
-                return tc.TotalMilliseconds;
-            return null;
+            return TimeCode?.TotalMilliseconds;
         }
 
         public TimeCode TimeCode

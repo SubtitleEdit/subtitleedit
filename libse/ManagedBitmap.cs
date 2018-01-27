@@ -9,14 +9,14 @@ namespace Nikse.SubtitleEdit.Core
         public int Width { get; private set; }
         public int Height { get; private set; }
 
-        private Color[] _colors;
+        private readonly Color[] _colors;
         public bool LoadedOk { get; private set; }
 
         public ManagedBitmap(string fileName)
         {
             try
             {
-                byte[] buffer = new byte[1024];
+                byte[] buffer;
                 using (var fd = new MemoryStream())
                 using (Stream csStream = new GZipStream(File.OpenRead(fileName), CompressionMode.Decompress))
                 {
@@ -123,13 +123,6 @@ namespace Nikse.SubtitleEdit.Core
             }
         }
 
-        //private static int ReadInt16(Stream stream)
-        //{
-        //    byte b0 = (byte)stream.ReadByte();
-        //    byte b1 = (byte)stream.ReadByte();
-        //    return b0 << 8 | b1;
-        //}
-
         private static void WriteInt16(Stream stream, short val)
         {
             byte[] buffer = new byte[2];
@@ -180,7 +173,7 @@ namespace Nikse.SubtitleEdit.Core
                 int rectx = 0;
                 for (int x = section.Left; x < section.Left + section.Width; x++)
                 {
-                    newRectangle.SetPixel(rectx, recty, this.GetPixel(x, y));
+                    newRectangle.SetPixel(rectx, recty, GetPixel(x, y));
                     rectx++;
                 }
                 recty++;
@@ -195,7 +188,7 @@ namespace Nikse.SubtitleEdit.Core
             {
                 for (int x = 0; x < Width; x++)
                 {
-                    nbmp.SetPixel(x, y, this.GetPixel(x, y));
+                    nbmp.SetPixel(x, y, GetPixel(x, y));
                 }
             }
             return nbmp.GetBitmap();

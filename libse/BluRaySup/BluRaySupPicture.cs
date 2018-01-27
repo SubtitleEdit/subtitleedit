@@ -113,14 +113,13 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
         /// <returns>RLE buffer</returns>
         private static byte[] EncodeImage(NikseBitmap bm, Dictionary<Color, int> palette)
         {
-            var bytes = new List<Byte>();
+            var bytes = new List<byte>();
             for (int y = 0; y < bm.Height; y++)
             {
-                var ofs = y * bm.Width;
                 //eol = false;
                 int x;
                 int len;
-                for (x = 0; x < bm.Width; x += len, ofs += len)
+                for (x = 0; x < bm.Width; x += len)
                 {
                     Color c = bm.GetPixel(x, y);
                     byte color;
@@ -239,7 +238,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                                 pal.Add(c, pal.Count);
                         }
                         else if (pal.Count < 254 && !HasCloseColor(c, pal, 25))
-                        { 
+                        {
                             pal.Add(c, pal.Count);
                         }
                     }
