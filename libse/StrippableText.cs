@@ -124,7 +124,7 @@ namespace Nikse.SubtitleEdit.Core
                 while (start >= 0 && start < lower.Length)
                 {
                     bool startOk = (start == 0) || (lower[start - 1] == ' ') || (lower[start - 1] == '-') ||
-                                   (lower[start - 1] == '"') || (lower[start - 1] == '\'') || (lower[start - 1] == '>') || (lower[start - 1] == '[') || (lower[start - 1] == '“') || 
+                                   (lower[start - 1] == '"') || (lower[start - 1] == '\'') || (lower[start - 1] == '>') || (lower[start - 1] == '[') || (lower[start - 1] == '“') ||
                                    Environment.NewLine.EndsWith(lower[start - 1]);
 
                     if (startOk && string.CompareOrdinal(name, "Don") == 0 && lower.Substring(start).StartsWith("don't", StringComparison.Ordinal))
@@ -308,12 +308,12 @@ namespace Nikse.SubtitleEdit.Core
                                 {
                                     lastWasBreak = true;
                                 }
-                                else if (StrippedText.Length > i + 1 && " \r\n".Contains(StrippedText[i+1]))
+                                else if (StrippedText.Length > i + 1 && " \r\n".Contains(StrippedText[i + 1]))
                                 {
                                     lastWasBreak = true;
                                 }
+                            }
                         }
-                    }
                         else if (s == '-' && Pre.Contains("-"))
                         {
                             if (sb.ToString().EndsWith(Environment.NewLine + "-"))

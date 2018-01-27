@@ -15,8 +15,6 @@ namespace Nikse.SubtitleEdit.Core
 
         private List<Paragraph> _paragraphs;
         private readonly List<HistoryItem> _history;
-        private SubtitleFormat _format;
-        private bool _wasLoadedWithFrameNumbers;
         public string Header { get; set; } = string.Empty;
         public string Footer { get; set; } = string.Empty;
 
@@ -24,18 +22,9 @@ namespace Nikse.SubtitleEdit.Core
 
         public const int MaximumHistoryItems = 100;
 
-        public SubtitleFormat OriginalFormat
-        {
-            get
-            {
-                return _format;
-            }
-        }
+        public SubtitleFormat OriginalFormat { get; private set; }
 
-        public List<HistoryItem> HistoryItems
-        {
-            get { return _history; }
-        }
+        public List<HistoryItem> HistoryItems => _history;
 
         public Subtitle()
         {
@@ -72,7 +61,7 @@ namespace Nikse.SubtitleEdit.Core
             {
                 _paragraphs.Add(new Paragraph(p, generateNewId));
             }
-            _wasLoadedWithFrameNumbers = subtitle.WasLoadedWithFrameNumbers;
+            WasLoadedWithFrameNumbers = subtitle.WasLoadedWithFrameNumbers;
             Header = subtitle.Header;
             Footer = subtitle.Footer;
             FileName = subtitle.FileName;
@@ -83,13 +72,7 @@ namespace Nikse.SubtitleEdit.Core
             _paragraphs = paragraphs;
         }
 
-        public List<Paragraph> Paragraphs
-        {
-            get
-            {
-                return _paragraphs;
-            }
-        }
+        public List<Paragraph> Paragraphs => _paragraphs;
 
         /// <summary>
         /// Get the paragraph of index, null if out of bounds
@@ -115,7 +98,7 @@ namespace Nikse.SubtitleEdit.Core
             if (format != null && format.IsMine(lines, fileName))
             {
                 format.LoadSubtitle(this, lines, fileName);
-                _format = format;
+                OriginalFormat = format;
                 return format;
             }
             foreach (SubtitleFormat subtitleFormat in SubtitleFormat.AllSubtitleFormats)
@@ -123,7 +106,7 @@ namespace Nikse.SubtitleEdit.Core
                 if (subtitleFormat.IsMine(lines, fileName))
                 {
                     subtitleFormat.LoadSubtitle(this, lines, fileName);
-                    _format = subtitleFormat;
+                    OriginalFormat = subtitleFormat;
                     return subtitleFormat;
                 }
             }
@@ -189,9 +172,9 @@ namespace Nikse.SubtitleEdit.Core
                     subtitleFormat.BatchMode = batchMode;
                     subtitleFormat.BatchSourceFrameRate = sourceFrameRate;
                     subtitleFormat.LoadSubtitle(this, lines, fileName);
-                    _format = subtitleFormat;
-                    _wasLoadedWithFrameNumbers = _format.IsFrameBased;
-                    if (_wasLoadedWithFrameNumbers)
+                    OriginalFormat = subtitleFormat;
+                    WasLoadedWithFrameNumbers = OriginalFormat.IsFrameBased;
+                    if (WasLoadedWithFrameNumbers)
                         CalculateTimeCodesFromFrameNumbers(Configuration.Settings.General.CurrentFrameRate);
                     return subtitleFormat;
                 }
@@ -212,13 +195,7 @@ namespace Nikse.SubtitleEdit.Core
             _history.Add(new HistoryItem(_history.Count, this, description, FileName, fileModified, subtitleFormat.FriendlyName, original, originalSubtitleFileName, lineNumber, linePosition, linePositionAlternate));
         }
 
-        public bool CanUndo
-        {
-            get
-            {
-                return _history.Count > 0;
-            }
-        }
+        public bool CanUndo => _history.Count > 0;
 
         public string UndoHistory(int index, out string subtitleFormatFriendlyName, out DateTime fileModified, out Subtitle originalSubtitle, out string originalSubtitleFileName)
         {
@@ -263,7 +240,7 @@ namespace Nikse.SubtitleEdit.Core
         /// <returns>True if times could be calculated</returns>
         public bool CalculateTimeCodesFromFrameNumbers(double frameRate)
         {
-            if (_format == null || _format.IsTimeBased)
+            if (OriginalFormat == null || OriginalFormat.IsTimeBased)
                 return false;
 
             foreach (Paragraph p in Paragraphs)
@@ -280,7 +257,7 @@ namespace Nikse.SubtitleEdit.Core
         /// <returns></returns>
         public bool CalculateFrameNumbersFromTimeCodes(double frameRate)
         {
-            if (_format == null || _format.IsFrameBased)
+            if (OriginalFormat == null || OriginalFormat.IsFrameBased)
                 return false;
 
             foreach (Paragraph p in Paragraphs)
@@ -322,17 +299,7 @@ namespace Nikse.SubtitleEdit.Core
             }
         }
 
-        public bool WasLoadedWithFrameNumbers
-        {
-            get
-            {
-                return _wasLoadedWithFrameNumbers;
-            }
-            set
-            {
-                _wasLoadedWithFrameNumbers = value;
-            }
-        }
+        public bool WasLoadedWithFrameNumbers { get; set; }
 
         public void AdjustDisplayTimeUsingPercent(double percent, List<int> selectedIndexes)
         {

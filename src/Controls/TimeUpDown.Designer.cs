@@ -1,6 +1,6 @@
 ﻿namespace Nikse.SubtitleEdit.Controls
 {
-    partial class TimeUpDown
+    sealed partial class TimeUpDown
     {
         /// <summary>
         /// Required designer variable.

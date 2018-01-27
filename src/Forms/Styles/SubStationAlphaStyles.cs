@@ -7,7 +7,6 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Text;
 using System.Globalization;
-using System.IO;
 using System.Text;
 using System.Windows.Forms;
 
@@ -129,13 +128,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             checkBoxFontUnderline.Left = checkBoxFontItalic.Left + checkBoxFontItalic.Width + 12;
         }
 
-        public override string Header
-        {
-            get
-            {
-                return _header;
-            }
-        }
+        public override string Header => _header;
 
         protected override void GeneratePreviewReal()
         {
@@ -266,9 +259,11 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
         public static void AddStyle(ListView lv, SsaStyle ssaStyle, Subtitle subtitle, bool isSubstationAlpha)
         {
-            var item = new ListViewItem(ssaStyle.Name.Trim());
-            item.Checked = true;
-            item.UseItemStyleForSubItems = false;
+            var item = new ListViewItem(ssaStyle.Name.Trim())
+            {
+                Checked = true,
+                UseItemStyleForSubItems = false
+            };
 
             var subItem = new ListViewItem.ListViewSubItem(item, ssaStyle.FontName);
             item.SubItems.Add(subItem);
@@ -287,17 +282,15 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             subItem = new ListViewItem.ListViewSubItem(item, count.ToString());
             item.SubItems.Add(subItem);
 
-            subItem = new ListViewItem.ListViewSubItem(item, string.Empty);
-            subItem.BackColor = ssaStyle.Primary;
+            subItem = new ListViewItem.ListViewSubItem(item, string.Empty) { BackColor = ssaStyle.Primary };
             item.SubItems.Add(subItem);
 
-            subItem = new ListViewItem.ListViewSubItem(item, string.Empty);
-            if (isSubstationAlpha)
-                subItem.BackColor = ssaStyle.Background;
-            else
-                subItem.BackColor = ssaStyle.Outline;
-            subItem.Text = Configuration.Settings.Language.General.Text;
-            subItem.ForeColor = ssaStyle.Primary;
+            subItem = new ListViewItem.ListViewSubItem(item, string.Empty)
+            {
+                BackColor = isSubstationAlpha ? ssaStyle.Background : ssaStyle.Outline,
+                Text = Configuration.Settings.Language.General.Text,
+                ForeColor = ssaStyle.Primary
+            };
             try
             {
                 if (ssaStyle.Bold || ssaStyle.Italic)
@@ -311,7 +304,9 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             }
             catch
             {
+                // ignored
             }
+
             item.SubItems.Add(subItem);
 
             lv.Items.Add(item);
@@ -695,8 +690,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             {
                 string styleName = listViewStyles.SelectedItems[0].Text;
                 SsaStyle oldStyle = GetSsaStyle(styleName);
-                var style = new SsaStyle(oldStyle); // Copy contructor
-                style.Name = string.Format(Configuration.Settings.Language.SubStationAlphaStyles.CopyOfY, styleName);
+                var style = new SsaStyle(oldStyle) { Name = string.Format(Configuration.Settings.Language.SubStationAlphaStyles.CopyOfY, styleName) }; // Copy contructor
 
                 if (GetSsaStyle(style.Name).LoadedFromHeader)
                 {
@@ -901,10 +895,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             if (listViewStyles.SelectedItems.Count == 1 && _doUpdate)
             {
                 string name = listViewStyles.SelectedItems[0].Text;
-                if (checkBoxFontBold.Checked)
-                    SetSsaStyle(name, "bold", "-1");
-                else
-                    SetSsaStyle(name, "bold", "0");
+                SetSsaStyle(name, "bold", checkBoxFontBold.Checked ? "-1" : "0");
                 GeneratePreview();
             }
         }
@@ -914,10 +905,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             if (listViewStyles.SelectedItems.Count == 1 && _doUpdate)
             {
                 string name = listViewStyles.SelectedItems[0].Text;
-                if (checkBoxFontItalic.Checked)
-                    SetSsaStyle(name, "italic", "-1");
-                else
-                    SetSsaStyle(name, "italic", "0");
+                SetSsaStyle(name, "italic", checkBoxFontItalic.Checked ? "-1" : "0");
                 GeneratePreview();
             }
         }
@@ -927,17 +915,14 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             if (listViewStyles.SelectedItems.Count == 1 && _doUpdate)
             {
                 string name = listViewStyles.SelectedItems[0].Text;
-                if (checkBoxFontUnderline.Checked)
-                    SetSsaStyle(name, "underline", "-1");
-                else
-                    SetSsaStyle(name, "underline", "0");
+                SetSsaStyle(name, "underline", checkBoxFontUnderline.Checked ? "-1" : "0");
                 GeneratePreview();
             }
         }
 
         private void radioButtonBottomLeft_CheckedChanged(object sender, EventArgs e)
         {
-            if (listViewStyles.SelectedItems.Count == 1 && _doUpdate && (sender as RadioButton).Checked)
+            if (listViewStyles.SelectedItems.Count == 1 && _doUpdate && ((RadioButton)sender).Checked)
             {
                 string name = listViewStyles.SelectedItems[0].Text;
                 SetSsaStyle(name, "alignment", "1");
@@ -947,7 +932,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
         private void radioButtonBottomCenter_CheckedChanged(object sender, EventArgs e)
         {
-            if (listViewStyles.SelectedItems.Count == 1 && _doUpdate && (sender as RadioButton).Checked)
+            if (listViewStyles.SelectedItems.Count == 1 && _doUpdate && ((RadioButton)sender).Checked)
             {
                 string name = listViewStyles.SelectedItems[0].Text;
                 SetSsaStyle(name, "alignment", "2");
@@ -957,7 +942,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
         private void radioButtonBottomRight_CheckedChanged(object sender, EventArgs e)
         {
-            if (listViewStyles.SelectedItems.Count == 1 && _doUpdate && (sender as RadioButton).Checked)
+            if (listViewStyles.SelectedItems.Count == 1 && _doUpdate && ((RadioButton)sender).Checked)
             {
                 string name = listViewStyles.SelectedItems[0].Text;
                 SetSsaStyle(name, "alignment", "3");
@@ -967,78 +952,60 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
         private void radioButtonMiddleLeft_CheckedChanged(object sender, EventArgs e)
         {
-            if (listViewStyles.SelectedItems.Count == 1 && _doUpdate && (sender as RadioButton).Checked)
+            if (listViewStyles.SelectedItems.Count == 1 && _doUpdate && ((RadioButton)sender).Checked)
             {
                 string name = listViewStyles.SelectedItems[0].Text;
-                if (_isSubStationAlpha)
-                    SetSsaStyle(name, "alignment", "9");
-                else
-                    SetSsaStyle(name, "alignment", "4");
+                SetSsaStyle(name, "alignment", _isSubStationAlpha ? "9" : "4");
                 GeneratePreview();
             }
         }
 
         private void radioButtonMiddleCenter_CheckedChanged(object sender, EventArgs e)
         {
-            if (listViewStyles.SelectedItems.Count == 1 && _doUpdate && (sender as RadioButton).Checked)
+            if (listViewStyles.SelectedItems.Count == 1 && _doUpdate && ((RadioButton)sender).Checked)
             {
                 string name = listViewStyles.SelectedItems[0].Text;
-                if (_isSubStationAlpha)
-                    SetSsaStyle(name, "alignment", "10");
-                else
-                    SetSsaStyle(name, "alignment", "5");
+                SetSsaStyle(name, "alignment", _isSubStationAlpha ? "10" : "5");
                 GeneratePreview();
             }
         }
 
         private void radioButtonMiddleRight_CheckedChanged(object sender, EventArgs e)
         {
-            if (listViewStyles.SelectedItems.Count == 1 && _doUpdate && (sender as RadioButton).Checked)
+            if (listViewStyles.SelectedItems.Count == 1 && _doUpdate && ((RadioButton)sender).Checked)
             {
                 string name = listViewStyles.SelectedItems[0].Text;
-                if (_isSubStationAlpha)
-                    SetSsaStyle(name, "alignment", "11");
-                else
-                    SetSsaStyle(name, "alignment", "6");
+                SetSsaStyle(name, "alignment", _isSubStationAlpha ? "11" : "6");
                 GeneratePreview();
             }
         }
 
         private void radioButtonTopLeft_CheckedChanged(object sender, EventArgs e)
         {
-            if (listViewStyles.SelectedItems.Count == 1 && _doUpdate && (sender as RadioButton).Checked)
+            if (listViewStyles.SelectedItems.Count == 1 && _doUpdate && ((RadioButton)sender).Checked)
             {
                 string name = listViewStyles.SelectedItems[0].Text;
-                if (_isSubStationAlpha)
-                    SetSsaStyle(name, "alignment", "5");
-                else
-                    SetSsaStyle(name, "alignment", "7");
+                SetSsaStyle(name, "alignment", _isSubStationAlpha ? "5" : "7");
                 GeneratePreview();
             }
         }
 
         private void radioButtonTopCenter_CheckedChanged(object sender, EventArgs e)
         {
-            if (listViewStyles.SelectedItems.Count == 1 && _doUpdate && (sender as RadioButton).Checked)
+            if (listViewStyles.SelectedItems.Count == 1 && _doUpdate && ((RadioButton)sender).Checked)
             {
                 string name = listViewStyles.SelectedItems[0].Text;
-                if (_isSubStationAlpha)
-                    SetSsaStyle(name, "alignment", "6");
-                else
-                    SetSsaStyle(name, "alignment", "8");
+                SetSsaStyle(name, "alignment", _isSubStationAlpha ? "6" : "8");
                 GeneratePreview();
             }
         }
 
         private void radioButtonTopRight_CheckedChanged(object sender, EventArgs e)
         {
-            if (listViewStyles.SelectedItems.Count == 1 && _doUpdate && (sender as RadioButton).Checked)
+            if (listViewStyles.SelectedItems.Count == 1 && _doUpdate && ((RadioButton)sender).Checked)
             {
                 string name = listViewStyles.SelectedItems[0].Text;
-                if (_isSubStationAlpha)
-                    SetSsaStyle(name, "alignment", "7");
-                else
-                    SetSsaStyle(name, "alignment", "9");
+                SetSsaStyle(name, "alignment", _isSubStationAlpha ? "7" : "9");
                 GeneratePreview();
             }
         }
@@ -1101,7 +1068,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
         private void radioButtonOutline_CheckedChanged(object sender, EventArgs e)
         {
-            var rb = (sender as RadioButton);
+            var rb = sender as RadioButton;
             if (rb != null && listViewStyles.SelectedItems.Count == 1 && _doUpdate && rb.Checked)
             {
                 numericUpDownShadowWidth.Value = 2;
@@ -1118,7 +1085,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
         private void radioButtonOpaqueBox_CheckedChanged(object sender, EventArgs e)
         {
-            var rb = (sender as RadioButton);
+            var rb = sender as RadioButton;
             if (rb != null && listViewStyles.SelectedItems.Count == 1 && _doUpdate && rb.Checked)
             {
                 numericUpDownShadowWidth.Value = 0;

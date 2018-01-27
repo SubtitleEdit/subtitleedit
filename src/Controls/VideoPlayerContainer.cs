@@ -1367,12 +1367,12 @@ namespace Nikse.SubtitleEdit.Controls
                 if (SmpteMode)
                 {
                     var span = TimeCode.FromSeconds(pos + 0.017 + Configuration.Settings.General.CurrentVideoOffsetInMs / TimeCode.BaseUnit);
-                    _labelTimeCode.Text = string.Format("{0} / {1} SMPTE", span.ToDisplayString(), dur.ToDisplayString());
+                    _labelTimeCode.Text = $"{span.ToDisplayString()} / {dur.ToDisplayString()} SMPTE";
                 }
                 else
                 {
                     var span = TimeCode.FromSeconds(pos + Configuration.Settings.General.CurrentVideoOffsetInMs / TimeCode.BaseUnit);
-                    _labelTimeCode.Text = string.Format("{0} / {1}", span.ToDisplayString(), dur.ToDisplayString());
+                    _labelTimeCode.Text = $"{span.ToDisplayString()} / {dur.ToDisplayString()}";
                 }
 
                 RefreshPlayPauseButtons();
