@@ -312,7 +312,9 @@ namespace Nikse.SubtitleEdit.Controls
                      e.KeyCode == Keys.NumPad8 ||
                      e.KeyCode == Keys.NumPad9 ||
                      e.KeyCode == Keys.Delete ||
-                     e.KeyCode == Keys.Back)
+                     e.KeyCode == Keys.Back ||
+                     e.Control && e.KeyCode == Keys.V ||
+                     e.Control && e.KeyCode == Keys.X)
             {
                 _dirty = true;
             }
