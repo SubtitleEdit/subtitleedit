@@ -150,7 +150,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     var pText = new StringBuilder();
                     var styleName = string.Empty;
-                    if (node.Attributes["style"] != null)
+                    if (node.Attributes?["style"] != null)
                     {
                         styleName = node.Attributes["style"].Value;
                     }
@@ -170,7 +170,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                     {
                                         italic = true;
                                         pText.Append("<i>");
-                                    }                                    
+                                    }
                                 }
                                 if (innerNode.Attributes["tts:color"] != null)
                                 {
@@ -222,7 +222,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                         pText.Append("</font>");
                                     }
                                 }
-                                
+
                                 break;
                             case "i":
                                 pText.Append("<i>" + innerNode.InnerText + "</i>");
@@ -239,14 +239,17 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     string start = null;
                     string end = null;
                     string dur = null;
-                    foreach (XmlAttribute attr in node.Attributes)
+                    if (node.Attributes != null)
                     {
-                        if (attr.Name.EndsWith("begin", StringComparison.Ordinal))
-                            start = attr.InnerText;
-                        else if (attr.Name.EndsWith("end", StringComparison.Ordinal))
-                            end = attr.InnerText;
-                        else if (attr.Name.EndsWith("duration", StringComparison.Ordinal))
-                            dur = attr.InnerText;
+                        foreach (XmlAttribute attr in node.Attributes)
+                        {
+                            if (attr.Name.EndsWith("begin", StringComparison.Ordinal))
+                                start = attr.InnerText;
+                            else if (attr.Name.EndsWith("end", StringComparison.Ordinal))
+                                end = attr.InnerText;
+                            else if (attr.Name.EndsWith("duration", StringComparison.Ordinal))
+                                dur = attr.InnerText;
+                        }
                     }
                     string text = pText.ToString();
                     text = text.Replace(Environment.NewLine + "</i>", "</i>" + Environment.NewLine);
@@ -289,6 +292,17 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 {
                                     p.Extra = styleName;
                                 }
+                            }
+                            else if (start != null && start.EndsWith("t", StringComparison.Ordinal) &&
+                                     end != null && end.EndsWith("t", StringComparison.Ordinal) &&
+                                     double.TryParse(start.TrimEnd('t'), out dBegin) && double.TryParse(end.TrimEnd('t'), out dEnd))
+                            {
+                                var p = new Paragraph(text, TimeSpan.FromTicks((long)dBegin).TotalMilliseconds, TimeSpan.FromTicks((long)dEnd).TotalMilliseconds);
+                                if (!string.IsNullOrEmpty(styleName))
+                                {
+                                    p.Extra = styleName;
+                                }
+                                subtitle.Paragraphs.Add(p);
                             }
                             else
                             {
@@ -345,8 +359,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     foreach (Paragraph p in subtitle.Paragraphs)
                     {
-                        p.StartTime.Milliseconds = SubtitleFormat.FramesToMillisecondsMax999(p.StartTime.Milliseconds);
-                        p.EndTime.Milliseconds = SubtitleFormat.FramesToMillisecondsMax999(p.EndTime.Milliseconds);
+                        p.StartTime.Milliseconds = FramesToMillisecondsMax999(p.StartTime.Milliseconds);
+                        p.EndTime.Milliseconds = FramesToMillisecondsMax999(p.EndTime.Milliseconds);
                     }
                 }
             }

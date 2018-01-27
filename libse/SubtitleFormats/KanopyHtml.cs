@@ -40,7 +40,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             foreach (string l in lines)
                 temp.Append(l);
             string all = temp.ToString();
-            if (!all.Contains(" begin=") || !all.Contains(" end=") || all.Contains("http://www.w3.org/ns/ttml"))
+            if (!all.Contains(" begin=") || !all.Contains(" end=") || all.Contains("http://www.w3.org/ns/ttml") || all.Contains("http://www.w3.org/20"))
                 return;
 
             _errorCount = 0;
@@ -50,8 +50,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 string line = lines[i].Trim();
 
                 var indexOfBegin = line.IndexOf("begin=", StringComparison.Ordinal);
-                var IndexOfEnd = line.IndexOf("end=", StringComparison.Ordinal);
-                if (indexOfBegin > 0 && IndexOfEnd > 0)
+                var indexOfEnd = line.IndexOf("end=", StringComparison.Ordinal);
+                if (indexOfBegin > 0 && indexOfEnd > 0)
                 {
                     string startTime = "0";
                     int index = indexOfBegin + 6;
@@ -63,7 +63,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
 
                     string end = "0";
-                    index = IndexOfEnd + 4;
+                    index = indexOfEnd + 4;
                     while (index < line.Length && @"0123456789""'.".Contains(line[index]))
                     {
                         if ("0123456789.".Contains(line[index]))
@@ -72,7 +72,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
 
                     string text = string.Empty;
-                    index = line.IndexOf("</span>", IndexOfEnd);
+                    index = line.IndexOf("</span>", indexOfEnd, StringComparison.Ordinal);
                     if (index > 0 && index + 7 < line.Length)
                     {
                         text = line.Substring(index + 7).Trim().Replace("</p>", string.Empty);
