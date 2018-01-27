@@ -549,6 +549,7 @@
     <Compile Include="UknownFormatImporter.cs" />
     <Compile Include="Utilities.cs" />
     <Compile Include="VideoInfo.cs" />
+    <Compile Include="AdjustSubtitleSyncTimeEventArgs.cs" />
     <Compile Include="VobSub\Helper.cs" />
     <Compile Include="VobSub\Idx.cs" />
     <Compile Include="VobSub\IdxParagraph.cs" />

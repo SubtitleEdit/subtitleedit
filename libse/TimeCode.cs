@@ -270,5 +270,9 @@ namespace Nikse.SubtitleEdit.Core
             return ToShortString(true);
         }
 
+        public static TimeCode operator +(TimeCode timeCode1, TimeCode timeCode2)
+        {
+            return new TimeCode(timeCode1.TimeSpan + timeCode2.TimeSpan);
+        }
     }
 }
