@@ -25,6 +25,7 @@ namespace Nikse.SubtitleEdit.Forms
             radioButtonCaseSensitive.Text = Configuration.Settings.Language.ReplaceDialog.CaseSensitive;
             radioButtonRegEx.Text = Configuration.Settings.Language.ReplaceDialog.RegularExpression;
             labelReplaceWith.Text = Configuration.Settings.Language.ReplaceDialog.ReplaceWith;
+            checkBoxWholeWord.Text = Configuration.Settings.Language.FindDialog.WholeWord;
             buttonFind.Text = Configuration.Settings.Language.ReplaceDialog.Find;
             buttonReplace.Text = Configuration.Settings.Language.ReplaceDialog.Replace;
             buttonReplaceAll.Text = Configuration.Settings.Language.ReplaceDialog.ReplaceAll;
