@@ -1071,7 +1071,8 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                             string nf = word;
                             if (nf.StartsWith("<i>", StringComparison.Ordinal))
                                 nf = nf.Remove(0, 3);
-                            UnknownWordsFound.Add(string.Format("#{0}: {1}", index + 1, nf));
+                            if (nf.Trim().Length > 0)
+                                UnknownWordsFound.Add($"#{index + 1}: {nf}");
                         }
 
                         if (autoFix && autoGuess != AutoGuessLevel.None)

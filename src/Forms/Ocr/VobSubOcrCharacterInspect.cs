@@ -86,8 +86,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             pictureBoxInspectItem.Image = img;
             if (img != null)
             {
-                pictureBoxInspectItem.Width = img.Width;
-                pictureBoxInspectItem.Height = img.Height;
+                pictureBoxInspectItem.Width = img.Width + 2;
+                pictureBoxInspectItem.Height = img.Height + 2;
             }
 
             pictureBoxCompareBitmap.Image = null;
