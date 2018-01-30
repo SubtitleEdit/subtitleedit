@@ -7,7 +7,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Binary
 {
     public class BinaryOcrDb
     {
-        public string FileName { get; private set; }
+        public string FileName { get; }
         public List<BinaryOcrBitmap> CompareImages = new List<BinaryOcrBitmap>();
         public List<BinaryOcrBitmap> CompareImagesExpanded = new List<BinaryOcrBitmap>();
 

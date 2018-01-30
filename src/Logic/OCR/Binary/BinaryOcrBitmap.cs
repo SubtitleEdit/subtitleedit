@@ -31,17 +31,11 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Binary
         private byte[] _colors;
         public bool Italic { get; set; }
         public int ExpandCount { get; set; }
-        public bool LoadedOk { get; private set; }
+        public bool LoadedOk { get; }
         public string Text { get; set; }
         public List<BinaryOcrBitmap> ExpandedList { get; set; }
 
-        public string Key
-        {
-            get
-            {
-                return Text + "|#|" + Hash + "_" + Width + "x" + Height + "_" + NumberOfColoredPixels;
-            }
-        }
+        public string Key => Text + "|#|" + Hash + "_" + Width + "x" + Height + "_" + NumberOfColoredPixels;
 
         public override string ToString()
         {
@@ -270,8 +264,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Binary
                 int minY = Y;
                 int maxX = X + Width;
                 int maxY = Y + Height;
-                var list = new List<BinaryOcrBitmap>();
-                list.Add(this);
+                var list = new List<BinaryOcrBitmap> { this };
                 foreach (BinaryOcrBitmap bob in ExpandedList)
                 {
                     if (bob.X < minX)
