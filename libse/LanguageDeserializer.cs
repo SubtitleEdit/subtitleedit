@@ -3118,6 +3118,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Main/NextX":
                     language.Main.NextX = reader.Value;
                     break;
+                case "Main/InsertSubtitleOverlap":
+                    language.Main.InsertSubtitleOverlap = reader.Value;
+                    break;
                 case "Main/ErrorLoadIdx":
                     language.Main.ErrorLoadIdx = reader.Value;
                     break;

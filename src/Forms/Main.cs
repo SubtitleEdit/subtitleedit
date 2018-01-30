@@ -19326,7 +19326,9 @@ namespace Nikse.SubtitleEdit.Forms
                 showOnlySpectrogramToolStripMenuItem.Visible = false;
                 toolStripSeparatorGuessTimeCodes.Visible = false;
             }
-            insertSubtitleHereToolStripMenuItem.Visible = _subtitle.Paragraphs.Count == 0 || _subtitle.Paragraphs[_subtitle.Paragraphs.Count - 1].EndTime.TotalSeconds < mediaPlayer.CurrentPosition;
+            insertSubtitleHereToolStripMenuItem.Visible = !_subtitle.Paragraphs.Any(p => p.StartTime.TotalSeconds < mediaPlayer.CurrentPosition + 5.0 &&
+                                                                                         p.EndTime.TotalSeconds < mediaPlayer.CurrentPosition + 5.0 &&
+                                                                                         p.EndTime.TotalSeconds > mediaPlayer.CurrentPosition);
         }
 
         private void ShowWaveformAndSpectrogramToolStripMenuItemClick(object sender, EventArgs e)
@@ -21299,12 +21301,13 @@ namespace Nikse.SubtitleEdit.Forms
                     if (index < 0)
                         index = 0;
                     MakeHistoryForUndo(_language.BeforeDurationsBridgeGap);
+                    SaveSubtitleListviewIndices();
                     _subtitle.Paragraphs.Clear();
-                    foreach (var p in form.FixedSubtitle.Paragraphs)
-                        _subtitle.Paragraphs.Add(p);
+                    _subtitle.Paragraphs.AddRange(form.FixedSubtitle.Paragraphs);
 
                     SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
                     SubtitleListview1.SelectIndexAndEnsureVisible(index);
+                    RestoreSubtitleListviewIndices();
                 }
             }
         }
@@ -21797,7 +21800,6 @@ namespace Nikse.SubtitleEdit.Forms
                 SubtitleFormat format = subtitle.LoadSubtitle(openFileDialog1.FileName, out encoding, null);
                 if (format != null && subtitle.Paragraphs.Count > 0)
                 {
-                    MakeHistoryForUndo(string.Format(_language.BeforeInsertSubtitleAtVideoPosition, openFileDialog1.FileName));
                     SaveSubtitleListviewIndices();
                     if (format.IsFrameBased)
                         subtitle.CalculateTimeCodesFromFrameNumbers(CurrentFrameRate);
@@ -21807,17 +21809,29 @@ namespace Nikse.SubtitleEdit.Forms
                     if (Configuration.Settings.General.RemoveBlankLinesWhenOpening)
                         subtitle.RemoveEmptyLines();
 
-                    int index = FirstSelectedIndex + 1;
-                    if (index < 0)
-                        index = 0;
                     var adjustment = mediaPlayer.CurrentPosition - subtitle.Paragraphs[0].StartTime.TotalSeconds;
                     if (adjustment < 0)
                         adjustment = 0;
+
+                    foreach (Paragraph newP in subtitle.Paragraphs)
+                    {
+                        newP.Adjust(1.0d, adjustment);
+                        if (_subtitle.Paragraphs.Any(p => newP.StartTime.TotalMilliseconds >= p.StartTime.TotalMilliseconds &&
+                                                          newP.StartTime.TotalMilliseconds <= p.EndTime.TotalMilliseconds ||
+                                                          newP.EndTime.TotalMilliseconds >= p.StartTime.TotalMilliseconds &&
+                                                          newP.EndTime.TotalMilliseconds <= p.EndTime.TotalMilliseconds))
+                        {
+                            // new subs will overlap existing subs
+                            MessageBox.Show("Cannot insert subtitle as this action will cause overlap!");
+                            return;
+                        }
+                    }
+
+                    MakeHistoryForUndo(string.Format(_language.BeforeInsertSubtitleAtVideoPosition, openFileDialog1.FileName));
+
                     foreach (var p in subtitle.Paragraphs)
                     {
-                        p.Adjust(1.0d, adjustment);
-                        _subtitle.Paragraphs.Insert(index, new Paragraph(p));
-                        index++;
+                        _subtitle.InsertParagraphInCorrectTimeOrder(p);
                     }
                     _subtitle.Renumber();
                     ShowSource();
