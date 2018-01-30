@@ -3120,43 +3120,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             var bob = new BinaryOcrBitmap(target) { X = targetItem.X, Y = targetItem.Top };
 
             // precise match
-            for (int k = 0; k < _binaryOcrDb.CompareImagesExpanded.Count; k++)
-            {
-                var b = _binaryOcrDb.CompareImagesExpanded[k];
-                if ((bob.Hash == b.Hash && bob.Width == b.Width && bob.Height == b.Height && bob.NumberOfColoredPixels == b.NumberOfColoredPixels) || GetPixelDifPercentage(b, bob, target, 0) == 0)
-                {
-                    bool ok = false;
-                    for (int i = 0; i < b.ExpandedList.Count; i++)
-                    {
-                        if (listIndex + i + 1 < list.Count && list[listIndex + i + 1].NikseBitmap != null)
-                        {
-                            var bobNext = new BinaryOcrBitmap(list[listIndex + i + 1].NikseBitmap);
-                            if (b.ExpandedList[i].Hash == bobNext.Hash)
-                            {
-                                ok = true;
-                            }
-                            else if (Math.Abs(b.ExpandedList[i].Y - bobNext.Y) < 6 &&
-                                     GetPixelDifPercentage(b.ExpandedList[i], bobNext, list[listIndex + i + 1].NikseBitmap, 0) == 0)
-                            {
-                                ok = true;
-                            }
-                            else
-                            {
-                                ok = false;
-                                break;
-                            }
-                        }
-                        else
-                        {
-                            ok = false;
-                            break;
-                        }
-                    }
-                    if (ok)
-                    {
-                        return new CompareMatch(b.Text, b.Italic, b.ExpandCount, b.Key);
-                    }
-                }
+            var exactMatchIndex = _binaryOcrDb.FindExactMatchExpanded(bob);
+            if (exactMatchIndex >= 0)
+            { 
+                var b = _binaryOcrDb.CompareImagesExpanded[exactMatchIndex];
+                return new CompareMatch(b.Text, b.Italic, b.ExpandCount, b.Key);
             }
 
             // allow for error %
