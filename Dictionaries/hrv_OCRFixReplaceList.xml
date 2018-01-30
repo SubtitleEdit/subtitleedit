@@ -62,6 +62,8 @@
     <Word from="cevi" to="cijevi" />
     <Word from="cevčica" to="cjevčica" />
     <Word from="cevčicu" to="cjevčicu" />
+    <Word from="cvetaju" to="cvjetaju" />
+    <Word from="cvetove" to="cvjetove" />
     <Word from="cvetu" to="cvijetu" />
     <Word from="cvjetu" to="cvijetu" />
     <Word from="cvetalo" to="cvjetalo" />
@@ -159,6 +161,7 @@
     <Word from="emituje" to="emitira" />
     <Word from="emitujem" to="emitiram" />
     <Word from="emituju" to="emitiraju" />
+    <Word from="evra" to="eura" />
     <Word from="familijama" to="obiteljima" />
     <Word from="familiji" to="obitelji" />
     <Word from="flertuje" to="očijuka" />
@@ -204,8 +207,6 @@
     <Word from="Ignorišite" to="Ignorirajte" />
     <Word from="ignorišu" to="ignoriraju" />
     <Word from="ilustruju" to="ilustriraju" />
-    <Word from="informiše" to="informira" />
-    <Word from="informišu" to="informiraju" />
     <Word from="inspirisao" to="inspirirao" />
     <Word from="interesuje" to="zanima" />
     <Word from="Interesuje" to="Zanima" />
@@ -221,13 +222,15 @@
     <Word from="ivice" to="ruba" />
     <Word from="ivici" to="rubu" />
     <Word from="ivicu" to="rub" />
+    <Word from="izoluje" to="izolira" />
+    <Word from="izoluješ" to="izoliraš" />
     <Word from="Izolujete" to="Izolirate" />
     <Word from="Izolujte" to="Izolirajte" />
+    <Word from="izolujte" to="izolirajte" />
     <Word from="izgladneo" to="izgladnio" />
     <Word from="izmeriti" to="izmjeriti" />
     <Word from="izmerio" to="izmjerio" />
     <Word from="izneo" to="iznio" />
-    <Word from="izolujte" to="izolirajte" />
     <Word from="izneti" to="iznijeti" />
     <Word from="izvestan" to="izvjestan" />
     <Word from="izvinim" to="ispričam" />
@@ -336,6 +339,8 @@
     <Word from="leve" to="lijeve" />
     <Word from="loži" to="pali" />
     <Word from="lza" to="Iza" />
+    <Word from="magnezijuma" to="magnezija" />
+    <Word from="magnezijumu" to="magneziju" />
     <Word from="majca" to="majica" />
     <Word from="majce" to="majice" />
     <Word from="majcu" to="majicu" />
@@ -589,6 +594,8 @@
     <Word from="praktikovati" to="prakticirati" />
     <Word from="pre" to="prije" />
     <Word from="Pre" to="Prije" />
+    <Word from="predela" to="predjela" />
+    <Word from="predelu" to="predjelu" />
     <Word from="Preći" to="Prijeći" />
     <Word from="preći" to="prijeći" />
     <Word from="prećutkuje" to="prešućuje" />
@@ -629,6 +636,8 @@
     <Word from="prmda" to="iako" />
     <Word from="procenat" to="postotak" />
     <Word from="procent" to="postotak" />
+    <Word from="procenta" to="postotka" />
+    <Word from="procentu" to="postotku" />
     <Word from="procenata" to="postotaka" />
     <Word from="procenti" to="postoci" />
     <Word from="Procenti" to="Postoci" />
@@ -649,6 +658,7 @@
     <Word from="protestvuju" to="protestiraju" />
     <Word from="protestujući" to="protestirajući" />
     <Word from="psihićki" to="psihički" />
+    <Word from="pto" to="što" />
     <Word from="ptom" to="potom" />
     <Word from="računari" to="računala" />
     <Word from="računare" to="računala" />
@@ -677,6 +687,8 @@
     <Word from="Resetujte" to="Resetirajte" />
     <Word from="rijeđi" to="rjeđi" />
     <Word from="Rizikuj" to="Riskiraj" />
+    <Word from="rizikuju" to="riskiraju" />
+    <Word from="rizikuje" to="riskira" />
     <Word from="rokenrol" to="rock'n'roll" />
     <Word from="ronioc" to="ronilac" />
     <Word from="saviješću" to="savješću" />
@@ -706,6 +718,7 @@
     <Word from="sigruno" to="sigurno" />
     <Word from="siguan" to="siguran" />
     <Word from="sija" to="sja" />
+    <Word from="sijaju" to="sjaju" />
     <Word from="sirće" to="ocat" />
     <Word from="sirćeta" to="octa" />
     <Word from="sirćetu" to="octu" />
@@ -788,6 +801,7 @@
     <Word from="svjesti" to="svijesti" />
     <Word from="Svjesti" to="Svijesti" />
     <Word from="svetova" to="svjetova" />
+    <Word from="svetove" to="svjetove" />
     <Word from="svugde" to="svugdje" />
     <Word from="šolja" to="šalica" />
     <Word from="šolju" to="šalicu" />
@@ -943,6 +957,7 @@
     <Word from="vrteo" to="vrtio" />
     <Word from="whiskey" to="viski" />
     <Word from="zaceljivanje" to="zacjeljivanje" />
+    <Word from="zagreva" to="zagrijava" />
     <Word from="zagrevanje" to="zagrijavanje" />
     <Word from="zalepili" to="zalijepili" />
     <Word from="zalepiti" to="zalijepiti" />
@@ -1005,6 +1020,7 @@
     <Word from="Džejn" to="Jane" />
     <Word from="Džil" to="Jill" />
     <Word from="Džodi" to="Jody" />
+    <Word from="Džud" to="Jude" />
     <Word from="Džuli" to="Julie" />
     <Word from="Ebi" to="Abby" />
     <Word from="Ejb" to="Abe" />
@@ -1043,7 +1059,7 @@
     <Word from="Klod" to="Claude" />
     <Word from="Klode" to="Claude" />
     <Word from="Kortni" to="Courtney" />
-    <Word from="Krejg" to="Craig" />
+    <Word from="Krej?g" to="Craig" />
     <Word from="Kristi" to="Christie" />
     <Word from="Lajf" to="Life" />
     <Word from="Lejk" to="Lake" />
@@ -1071,6 +1087,7 @@
     <Word from="Pejdž" to="Paige" />
     <Word from="Rejčel" to="Rachel" />
     <Word from="Rouz" to="Rose" />
+    <Word from="Sidnej" to="Sidney" />
     <Word from="Sole" to="Saule" />
     <Word from="Stejt" to="State" />
     <Word from="Stejsi" to="Stacy" />
@@ -1143,6 +1160,7 @@
     <LinePart from="dali ću" to="hoću li" />
     <LinePart from="Da li je" to="Je li" />
     <LinePart from="da li je" to="je li" />
+    <LinePart from="dali je" to="je li" />
     <LinePart from="Da li ste" to="Jeste li" />
     <LinePart from="Da li si" to="Jesi li" />
     <LinePart from="dali si" to="jesi li" />
@@ -2134,6 +2152,7 @@
     <RegEx find="adji" replaceWith="ađi" />
     <RegEx find="(?&lt;![ml])a([blcrnz])ić" replaceWith="a$1it ć" />
     <RegEx find="a(jm|mn)(t?)ić" replaceWith="a$1$2it ć" />
+    <RegEx find="ajuc" replaceWith="ajuć" />
     <RegEx find="\bajpod" replaceWith="iPod" />
     <RegEx find="alepn" replaceWith="aljepn" />
     <RegEx find="alj?epi" replaceWith="alijepi" />
@@ -2191,9 +2210,11 @@
     <RegEx find="(mpl|st|f)ikova([nlot])" replaceWith="$1icira$2" />
     <RegEx find="fikuj" replaceWith="ficir" />
     <RegEx find="(fin|form)isa" replaceWith="$1ira" />
+    <RegEx find="(?&lt;o)formiš" replaceWith="formiraj" />
     <RegEx find="fi(sa|še)" replaceWith="fira" />
     <RegEx find="frov" replaceWith="frir" />
     <RegEx find="grišć" replaceWith="grist ć" />
+    <RegEx find="haot" replaceWith="kaot" />
     <RegEx find="hrono" replaceWith="krono" />
     <RegEx find="(?&lt;!M)ick([eoiu])" replaceWith="ičk$1" />
     <RegEx find="idev" replaceWith="idjev" />
@@ -2212,6 +2233,7 @@
     <!-- doktorica / profesorica -->
     <RegEx find="(kt|s)ork" replaceWith="$1oric" />
     <RegEx find="ktovanj" replaceWith="ktiranj" />
+    <RegEx find="ktuj" replaceWith="ktiraj" />
     <RegEx find="(?&lt;![Oo]b)([nl])izuj[eu]" replaceWith="$1izira" />
     <RegEx find="\bl([čćžzvsmrtpdbgkn])" replaceWith="i$1" />
     <RegEx find="\bL([čćžzvsmrtpdbgkn])" replaceWith="I$1" />
@@ -2266,6 +2288,7 @@
     <RegEx find="orks" replaceWith="orsk" />
     <RegEx find="osejan" replaceWith="osijan" />
     <RegEx find="o([dbjpv])ać(?!o)" replaceWith="o$1at ć" />
+    <RegEx find="oslj?ep" replaceWith="oslijep" />
     <RegEx find="sj?etić" replaceWith="sjetit ć" />
     <RegEx find="osb" replaceWith="osob" />
     <RegEx find="ovinova([lt])" replaceWith="okorava$1" />
@@ -2277,6 +2300,7 @@
     <RegEx find="(?&lt;![Pp]r|[Nn])adje(?!(v|n(e|u[olt]))\b)" replaceWith="ađe" />
     <RegEx find="par nedj?elja" replaceWith="par tjedana" />
     <RegEx find="pendov" replaceWith="pendir" />
+    <RegEx find="ralijs" replaceWith="rals" />
     <RegEx find="rasčist" replaceWith="raščist" />
     <RegEx find="kratij" replaceWith="kracij" />
     <RegEx find="(?&lt;![is]|S)redić" replaceWith="rjedit ć" />
@@ -2309,6 +2333,7 @@
     <RegEx find="stvrn" replaceWith="stvarn" />
     <RegEx find="(?&lt;!n)svesti([lt])" replaceWith="svijest$1" />
     <RegEx find="svetić" replaceWith="svetit ć" />
+    <RegEx find="([šđ])ać" replaceWith="$1ač" />
     <RegEx find="šević" replaceWith="ševit ć" />
     <RegEx find="šunjać" replaceWith="šuljat ć" />
     <RegEx find="tarisa" replaceWith="tira" />
@@ -2377,6 +2402,7 @@
     <RegEx find="Avgani" replaceWith="Afgani" />
     <RegEx find="Belgijan" replaceWith="Belgij" />
     <RegEx find="Betmen" replaceWith="Batman" />
+    <RegEx find="Blejk" replaceWith="Blake" />
     <RegEx find="Bruklin" replaceWith="Brooklyn" />
     <RegEx find="Brajan" replaceWith="Brian" />
     <RegEx find="Brajs" replaceWith="Bryce" />
