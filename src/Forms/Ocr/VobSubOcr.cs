@@ -327,7 +327,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 return;
 
             PropertyInfo aProp = typeof(Control).GetProperty("DoubleBuffered", BindingFlags.NonPublic | BindingFlags.Instance);
-            aProp.SetValue(c, true, null);
+            aProp?.SetValue(c, true, null);
         }
 
         public VobSubOcr()
@@ -1814,7 +1814,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         {
             italic = false;
             var nbmp = targetItem.NikseBitmap;
-            int index = 0;
+            int index;
             foreach (NOcrChar oc in nOcrChars)
             {
                 if (Math.Abs(oc.Width - nbmp.Width) < 3 && Math.Abs(oc.Height - nbmp.Height) < 3 && Math.Abs(oc.MarginTop - topMargin) < 3)
@@ -3037,26 +3037,26 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
 
             // Search images with minor location changes
-            FindBestMatch(ref index, ref smallestDifference, ref smallestIndex, target, _compareBitmaps);
+            FindBestMatch(out index, ref smallestDifference, ref smallestIndex, target, _compareBitmaps);
 
             if (smallestDifference * 100.0 / (target.Width * target.Height) > _vobSubOcrSettings.AllowDifferenceInPercent && target.Width < 70)
             {
                 if (smallestDifference > 2 && target.Width > 25)
                 {
                     var cutBitmap = target.CopyRectangle(new Rectangle(4, 0, target.Width - 4, target.Height));
-                    FindBestMatch(ref index, ref smallestDifference, ref smallestIndex, cutBitmap, _compareBitmaps);
+                    FindBestMatch(out index, ref smallestDifference, ref smallestIndex, cutBitmap, _compareBitmaps);
                 }
 
                 if (smallestDifference > 2 && target.Width > 12)
                 {
                     var cutBitmap = target.CopyRectangle(new Rectangle(1, 0, target.Width - 2, target.Height));
-                    FindBestMatch(ref index, ref smallestDifference, ref smallestIndex, cutBitmap, _compareBitmaps);
+                    FindBestMatch(out index, ref smallestDifference, ref smallestIndex, cutBitmap, _compareBitmaps);
                 }
 
                 if (smallestDifference > 2 && target.Width > 12)
                 {
                     var cutBitmap = target.CopyRectangle(new Rectangle(0, 0, target.Width - 2, target.Height));
-                    FindBestMatch(ref index, ref smallestDifference, ref smallestIndex, cutBitmap, _compareBitmaps);
+                    FindBestMatch(out index, ref smallestDifference, ref smallestIndex, cutBitmap, _compareBitmaps);
                 }
 
                 if (smallestDifference > 2 && target.Width > 12)
@@ -3065,7 +3065,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     int topCrop = 0;
                     var cutBitmap2 = NikseBitmapImageSplitter.CropTopAndBottom(cutBitmap, out topCrop, 2);
                     if (cutBitmap2.Height != target.Height)
-                        FindBestMatch(ref index, ref smallestDifference, ref smallestIndex, cutBitmap2, _compareBitmaps);
+                        FindBestMatch(out index, ref smallestDifference, ref smallestIndex, cutBitmap2, _compareBitmaps);
                 }
 
                 if (smallestDifference > 2 && target.Width > 15)
@@ -3074,7 +3074,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     int topCrop = 0;
                     var cutBitmap2 = NikseBitmapImageSplitter.CropTopAndBottom(cutBitmap, out topCrop);
                     if (cutBitmap2.Height != target.Height)
-                        FindBestMatch(ref index, ref smallestDifference, ref smallestIndex, cutBitmap2, _compareBitmaps);
+                        FindBestMatch(out index, ref smallestDifference, ref smallestIndex, cutBitmap2, _compareBitmaps);
                 }
 
                 if (smallestDifference > 2 && target.Width > 15)
@@ -3083,7 +3083,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     int topCrop;
                     var cutBitmap2 = NikseBitmapImageSplitter.CropTopAndBottom(cutBitmap, out topCrop);
                     if (cutBitmap2.Height != target.Height)
-                        FindBestMatch(ref index, ref smallestDifference, ref smallestIndex, cutBitmap2, _compareBitmaps);
+                        FindBestMatch(out index, ref smallestDifference, ref smallestIndex, cutBitmap2, _compareBitmaps);
                 }
             }
 
@@ -3648,7 +3648,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private static readonly object BinOcrDbMoveFirstLock = new object();
 
-        private static void FindBestMatch(ref int index, ref int smallestDifference, ref int smallestIndex, NikseBitmap target, List<CompareItem> compareBitmaps)
+        private static void FindBestMatch(out int index, ref int smallestDifference, ref int smallestIndex, NikseBitmap target, List<CompareItem> compareBitmaps)
         {
             int numberOfForegroundColors = CalculateNumberOfForegroundColors(target);
             const int minForeColorMatch = 90;
@@ -4111,7 +4111,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             if (_icThreadResults != null && !string.IsNullOrEmpty(_icThreadResults[listViewIndex]))
                 threadText = _icThreadResults[listViewIndex];
 
-            string line = string.Empty;
+            string line;
             if (threadText == null)
             {
                 var matches = new List<CompareMatch>();
@@ -4330,7 +4330,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             if (_binOcrLastLowercaseHeight == -1 && _nocrLastLowercaseHeight == -1)
             { // try to guess lowercase height
                 var letters = NikseBitmapImageSplitter.SplitBitmapToLettersNew(parentBitmap, _numericUpDownPixelsIsSpace, checkBoxRightToLeft.Checked, Configuration.Settings.VobSubOcr.TopToBottom, minLineHeight, _ocrCount > 20 ? _ocrHeight : -1);
-                var actualLetters = letters.Where(p => p.NikseBitmap != null);
+                var actualLetters = letters.Where(p => p.NikseBitmap != null).ToList();
                 if (actualLetters.Any())
                     minLineHeight = (int)Math.Round(actualLetters.Average(p => p.NikseBitmap.Height) * 0.5);
             }
@@ -7088,7 +7088,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
             catch
             {
+                // ignored
             }
+
             if (ocrResult != null)
                 paramter.Text = ocrResult.ToString().Trim();
         }
@@ -8676,6 +8678,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     }
                     catch
                     {
+                        // ignored
                     }
                 }
             }
