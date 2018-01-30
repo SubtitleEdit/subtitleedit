@@ -137,6 +137,20 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Binary
             }
         }
 
+        public bool AreColorsEqual(BinaryOcrBitmap other)
+        {
+            if (_colors.Length != other._colors.Length)
+                return false;
+
+            for (int i = 0; i < _colors.Length; i++)
+            {
+                if (_colors[i] != other._colors[i])
+                    return false;
+            }
+
+            return true;
+        }
+
         public void Save(Stream stream)
         {
             WriteInt16(stream, (ushort)Width);

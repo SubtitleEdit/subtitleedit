@@ -936,7 +936,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
             if (input.Contains(". \"</i>" + Environment.NewLine, StringComparison.Ordinal))
             {
-                idx = input.IndexOf(". \"</i>" + Environment.NewLine);
+                idx = input.IndexOf(". \"</i>" + Environment.NewLine, StringComparison.Ordinal);
                 if (idx > 0)
                 {
                     input = input.Remove(idx + 1, 1);

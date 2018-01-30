@@ -324,8 +324,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             if (listBoxInspectItems.SelectedIndex < 0)
                 return;
 
-            if (listBoxInspectItems.Items[listBoxInspectItems.SelectedIndex].ToString() == textBoxText.Text)
-            {
+            if (listBoxInspectItems.Items[listBoxInspectItems.SelectedIndex].ToString().Replace(" (italic)", string.Empty)  == textBoxText.Text)
+            { 
+                // text not changed
                 textBoxText.SelectAll();
                 textBoxText.Focus();
                 return;
