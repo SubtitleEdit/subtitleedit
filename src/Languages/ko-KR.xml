@@ -1008,6 +1008,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
         <ChooseAudioTrack>오디오 트랙 선택하기</ChooseAudioTrack>
         <CloseVideo>비디오 파일 닫기</CloseVideo>
         <SetVideoOffset>비디오 오프셋 설정...</SetVideoOffset>
+        <SmptTimeMode>SMPTE 타이밍 (드롭 프레임)</SmptTimeMode>
         <ImportSceneChanges>장면 전환 가져오기</ImportSceneChanges>
         <RemoveSceneChanges>장면 전환 제거</RemoveSceneChanges>
         <WaveformBatchGenerate>파형 일괄 생성...</WaveformBatchGenerate>
@@ -1949,6 +1950,8 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <ShowBeamer>전체 화면으로 자막 프로젝터 시작</ShowBeamer>
     <MainTextBoxMoveLastWordDown>마지막 단어를 아래로 이동</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>다음 줄의 첫 단어를 위로 이동</MainTextBoxMoveFirstWordFromNextUp>
+    <MainTextBoxMoveFirstWordUpCurrent>다음 줄의 첫 단어를 위로 이동 (현재 자막)</MainTextBoxMoveFirstWordUpCurrent>
+    <MainTextBoxMoveLastWordDownCurrent>첫째 줄의 마지막 단어를 아래로 이동 (현재 자막)</MainTextBoxMoveLastWordDownCurrent>
     <MainTextBoxSelectionToLower>선택한 영역 소문자로...</MainTextBoxSelectionToLower>
     <MainTextBoxSelectionToUpper>선택한 영역 대문자로...</MainTextBoxSelectionToUpper>
     <MainTextBoxToggleAutoDuration>자동 표시시간</MainTextBoxToggleAutoDuration>
