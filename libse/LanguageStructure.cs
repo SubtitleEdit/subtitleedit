@@ -1230,7 +1230,7 @@
             public string ParsingTransportStream { get; set; }
             public string XPercentCompleted { get; set; }
             public string NextX { get; set; }
-            public string InsertSubtitleOverlap { get; set; }
+            public string PromptInsertSubtitleOverlap { get; set; }
             public string ErrorLoadIdx { get; set; }
             public string ErrorLoadRar { get; set; }
             public string ErrorLoadZip { get; set; }
