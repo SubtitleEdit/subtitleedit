@@ -19326,9 +19326,9 @@ namespace Nikse.SubtitleEdit.Forms
                 showOnlySpectrogramToolStripMenuItem.Visible = false;
                 toolStripSeparatorGuessTimeCodes.Visible = false;
             }
-            insertSubtitleHereToolStripMenuItem.Visible = !_subtitle.Paragraphs.Any(p => p.StartTime.TotalSeconds < mediaPlayer.CurrentPosition + 5.0 &&
-                                                                                         p.EndTime.TotalSeconds < mediaPlayer.CurrentPosition + 5.0 &&
-                                                                                         p.EndTime.TotalSeconds > mediaPlayer.CurrentPosition);
+            insertSubtitleHereToolStripMenuItem.Visible = !_subtitle.Paragraphs.Any(p => p.StartTime.TotalSeconds <= mediaPlayer.CurrentPosition + 1.0 &&
+                                                                                         p.EndTime.TotalSeconds <= mediaPlayer.CurrentPosition + 1.0 &&
+                                                                                         p.EndTime.TotalSeconds >= mediaPlayer.CurrentPosition);
         }
 
         private void ShowWaveformAndSpectrogramToolStripMenuItemClick(object sender, EventArgs e)
