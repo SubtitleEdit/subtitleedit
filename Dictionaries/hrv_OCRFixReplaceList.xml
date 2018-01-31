@@ -243,6 +243,10 @@
     <Word from="jedamput" to="jedanput" />
     <Word from="jelda" to="jel' da" />
     <Word from="Ješćemo" to="Jest ćemo" />
+    <Word from="ješće" to="jest će" />
+    <Word from="ješću" to="jest ću" />
+    <Word from="ješćeš" to="jest ćeš" />
+    <Word from="ješćemo" to="jest ćemo" />
     <Word from="juče" to="jučer" />
     <Word from="Juče" to="Jučer" />
     <Word from="kakava" to="kakva" />
@@ -340,6 +344,8 @@
     <Word from="leve" to="lijeve" />
     <Word from="loži" to="pali" />
     <Word from="lza" to="Iza" />
+    <Word from="ljepiti" to="lijepiti" />
+    <Word from="ljepili" to="lijepili" />
     <Word from="magnezijuma" to="magnezija" />
     <Word from="magnezijumu" to="magneziju" />
     <Word from="majca" to="majica" />
@@ -985,12 +991,17 @@
     <Word from="zvaničan" to="služben" />
     <Word from="žemo" to="ćemo" />
     <Word from="Živeo" to="Živio" />
+    <Word from="živeo" to="živio" />
     <Word from="žmureo" to="žmirio" />
 
     <!-- imena -->
     <Word from="Alis" to="Alice" />
     <Word from="Ajron" to="Iron" />
     <Word from="Ajvi" to="Ivy" />
+    <Word from="Anđeles" to="Angeles" />
+    <Word from="Anđelesa" to="Angelesa" />
+    <Word from="Anđelesu" to="Angelesu" />
+    <Word from="Anđelesom" to="Angelesom" />
     <Word from="Arči" to="Archie" />
     <Word from="Beverli" to="Beverly" />
     <Word from="Bejker" to="Baker" />
@@ -2377,6 +2388,7 @@
     <RegEx find="umere" replaceWith="umjere" />
     <RegEx find="upoce" replaceWith="upocje" />
     <RegEx find="urfovan" replaceWith="urfan" />
+    <RegEx find="ušać" replaceWith="ušat ć" />
     <RegEx find="(?&lt;!kr|m)užić" replaceWith="užit ć" />
     <RegEx find="veri([lt])" replaceWith="vjeri$1" />
     <RegEx find="([do])vešć" replaceWith="$1vest ć" />
@@ -2476,7 +2488,6 @@
     <RegEx find="livlend" replaceWith="leveland" />
     <RegEx find="(?&lt;![LT])ejl" replaceWith="ale" />
     <RegEx find="Losanđeles" replaceWith="Los Angeles" />
-    <RegEx find="Los Anđeles" replaceWith="Los Angeles" />
     <RegEx find="Majami" replaceWith="Miami" />
     <RegEx find="Majkl" replaceWith="Michael" />
     <RegEx find="Marfi" replaceWith="Murphy" />
