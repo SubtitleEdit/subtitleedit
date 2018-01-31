@@ -1327,6 +1327,8 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemInsertTextFromSub.Text = _language.Menu.ContextMenu.ColumnInsertTextFromSubtitle;
             toolStripMenuItemColumnImportText.Text = _language.Menu.ContextMenu.ColumnImportTextAndShiftCellsDown;
             toolStripMenuItemPasteSpecial.Text = _language.Menu.ContextMenu.ColumnPasteFromClipboard;
+            moveTextUpToolStripMenuItem.Text = _language.Menu.ContextMenu.ColumnTextUp;
+            moveTextDownToolStripMenuItem.Text = _language.Menu.ContextMenu.ColumnTextDown;
             copyOriginalTextToCurrentToolStripMenuItem.Text = _language.Menu.ContextMenu.ColumnCopyOriginalTextToCurrent;
 
             splitLineToolStripMenuItem.Text = _language.Menu.ContextMenu.Split;
@@ -16310,6 +16312,8 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemColumnDeleteText.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewColumnDeleteText);
             ShiftTextCellsDownToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewColumnInsertText);
             toolStripMenuItemPasteSpecial.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewColumnPaste);
+            moveTextUpToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewColumnTextUp);
+            moveTextDownToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewColumnTextDown);
             toolStripMenuItemReverseRightToLeftStartEnd.ShortcutKeys = _mainEditReverseStartAndEndingForRTL;
             italicToolStripMenuItem1.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxItalic);
             _mainTextBoxSplitAtCursor = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxSplitAtCursor);
@@ -21901,6 +21905,73 @@ namespace Nikse.SubtitleEdit.Forms
         {
             smpteTimeModedropFrameToolStripMenuItem.Checked = !smpteTimeModedropFrameToolStripMenuItem.Checked;
             mediaPlayer.SmpteMode = smpteTimeModedropFrameToolStripMenuItem.Checked;
+        }
+
+        private void moveTextUpToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var indices = SubtitleListview1.SelectedIndices.OfType<int>().OrderBy(p => p).ToList();
+            if (indices.Count == 0 || indices[0] - 1 < 0)
+                return;
+
+            MakeHistoryForUndo(string.Format(_language.BeforeX, _language.Menu.ContextMenu.ColumnTextUp));
+            SubtitleListview1.SelectedIndexChanged -= SubtitleListview1_SelectedIndexChanged;
+            SubtitleListview1.BeginUpdate();
+            foreach (int index in indices)
+            {
+                if (index - 1 >= 0)
+                {
+                    var p = _subtitle.Paragraphs[index];
+                    var prev = _subtitle.Paragraphs[index - 1];
+                    var prevText = prev.Text;
+                    prev.Text = p.Text;
+                    p.Text = prevText;
+                    SubtitleListview1.Items[index - 1].Selected = true;
+                    SubtitleListview1.Items[index].Selected = false;
+                    SubtitleListview1.SetText(index - 1, prev.Text);
+                    SubtitleListview1.SetText(index, p.Text);
+                    SubtitleListview1.SyntaxColorLine(_subtitle.Paragraphs, index - 1, prev);
+                    SubtitleListview1.SyntaxColorLine(_subtitle.Paragraphs, index, p);
+                }
+            }
+            SubtitleListview1.EndUpdate();
+            SubtitleListview1.SelectedIndexChanged += SubtitleListview1_SelectedIndexChanged;
+            SubtitleListview1.EnsureVisible(FirstSelectedIndex);
+            _subtitleListViewIndex = -1;
+            SubtitleListview1_SelectedIndexChanged(null, null);
+        }
+
+        private void moveTextDownToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var indices = SubtitleListview1.SelectedIndices.OfType<int>().OrderByDescending(p => p).ToList();
+            if (indices.Count == 0 || indices[0] + 1 >= _subtitle.Paragraphs.Count)
+                return;
+
+            MakeHistoryForUndo(string.Format(_language.BeforeX, _language.Menu.ContextMenu.ColumnTextDown));
+            SubtitleListview1.SelectedIndexChanged -= SubtitleListview1_SelectedIndexChanged;
+            SubtitleListview1.BeginUpdate();
+            foreach (int index in indices)
+            {
+                if (index + 1 < _subtitle.Paragraphs.Count)
+                {
+                    var p = _subtitle.Paragraphs[index];
+                    var next = _subtitle.Paragraphs[index + 1];
+                    var nextText = next.Text;
+                    next.Text = p.Text;
+                    p.Text = nextText;
+                    SubtitleListview1.Items[index + 1].Selected = true;
+                    SubtitleListview1.Items[index].Selected = false;
+                    SubtitleListview1.SetText(index, p.Text);
+                    SubtitleListview1.SetText(index + 1, next.Text);
+                    SubtitleListview1.SyntaxColorLine(_subtitle.Paragraphs, index, p);
+                    SubtitleListview1.SyntaxColorLine(_subtitle.Paragraphs, index + 1, next);
+                }
+            }
+            SubtitleListview1.EndUpdate();
+            SubtitleListview1.SelectedIndexChanged += SubtitleListview1_SelectedIndexChanged;
+            SubtitleListview1.EnsureVisible(FirstSelectedIndex);
+            SubtitleListview1.EnsureVisible(indices[0]);
+            _subtitleListViewIndex = -1;
+            SubtitleListview1_SelectedIndexChanged(null, null);
         }
     }
 }

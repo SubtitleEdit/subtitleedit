@@ -789,6 +789,8 @@ namespace Nikse.SubtitleEdit.Forms
             AddNode(listViewNode, language.ListViewColumnDelete, nameof(Configuration.Settings.Shortcuts.MainListViewColumnDeleteText), true);
             AddNode(listViewNode, language.ListViewColumnInsert, nameof(Configuration.Settings.Shortcuts.MainListViewColumnInsertText), true);
             AddNode(listViewNode, language.ListViewColumnPaste, nameof(Configuration.Settings.Shortcuts.MainListViewColumnPaste), true);
+            AddNode(listViewNode, language.ListViewColumnTextUp, nameof(Configuration.Settings.Shortcuts.MainListViewColumnTextUp), true);
+            AddNode(listViewNode, language.ListViewColumnTextDown, nameof(Configuration.Settings.Shortcuts.MainListViewColumnTextDown), true);
             AddNode(listViewNode, language.ListViewFocusWaveform, nameof(Configuration.Settings.Shortcuts.MainListViewFocusWaveform));
             AddNode(listViewNode, language.ListViewGoToNextError, nameof(Configuration.Settings.Shortcuts.MainListViewGoToNextError));
             treeViewShortcuts.Nodes.Add(listViewNode);
@@ -924,21 +926,6 @@ namespace Nikse.SubtitleEdit.Forms
             labelPlatform.Text = (IntPtr.Size * 8) + "-bit";
         }
 
-        private string GetListViewColumns()
-        {
-            var sb = new StringBuilder();
-            sb.Append(Configuration.Settings.Language.General.NumberSymbol + ", ");
-            sb.Append(Configuration.Settings.Language.General.StartTime + ", ");
-            sb.Append(Configuration.Settings.Language.General.EndTime + ", ");
-            sb.Append(Configuration.Settings.Language.General.Duration + ", ");
-            if (Configuration.Settings.Tools.ListViewShowColumnCharsPerSec)
-                sb.Append(Configuration.Settings.Language.General.CharsPerSec + ", ");
-            if (Configuration.Settings.Tools.ListViewShowColumnWordsPerMin)
-                sb.Append(Configuration.Settings.Language.General.WordsPerMin + ", ");
-            sb.Append(Configuration.Settings.Language.General.Text + ", ");
-            return sb.ToString().TrimEnd().TrimEnd(',');
-        }
-
         private void AddNode(TreeNode node, string text, string shortcut, bool isMenuItem = false)
         {
             var prop = Configuration.Settings.Shortcuts.GetType().GetProperty(shortcut);
@@ -949,7 +936,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (string.IsNullOrEmpty(shortcut))
                 shortcut = Configuration.Settings.Language.General.None;
-            return string.Format(" [{0}]", shortcut);
+            return $" [{shortcut}]";
         }
 
         private void InitializeWaveformsAndSpectrogramsFolderEmpty(LanguageStructure.Settings language)
@@ -1014,7 +1001,7 @@ namespace Nikse.SubtitleEdit.Forms
         }
 
         public void Initialize(Icon icon, Image newFile, Image openFile, Image saveFile, Image saveFileAs, Image find, Image replace, Image fixCommonErrors, Image removeTextForHi,
-                               Image visualSync, Image spellCheck, Image NetflixGlyphCheck, Image settings, Image help)
+                               Image visualSync, Image spellCheck, Image netflixGlyphCheck, Image settings, Image help)
         {
             Icon = (Icon)icon.Clone();
             pictureBoxNew.Image = (Image)newFile.Clone();
@@ -1027,7 +1014,7 @@ namespace Nikse.SubtitleEdit.Forms
             pictureBoxTBRemoveTextForHi.Image = (Image)removeTextForHi.Clone();
             pictureBoxVisualSync.Image = (Image)visualSync.Clone();
             pictureBoxSpellCheck.Image = (Image)spellCheck.Clone();
-            pictureBoxNetflixQualityCheck.Image = (Image)NetflixGlyphCheck.Clone();
+            pictureBoxNetflixQualityCheck.Image = (Image)netflixGlyphCheck.Clone();
             pictureBoxSettings.Image = (Image)settings.Clone();
             pictureBoxHelp.Image = (Image)help.Clone();
         }

@@ -1022,6 +1022,8 @@ namespace Nikse.SubtitleEdit.Core
         public string MainListViewColumnDeleteText { get; set; }
         public string MainListViewColumnInsertText { get; set; }
         public string MainListViewColumnPaste { get; set; }
+        public string MainListViewColumnTextUp { get; set; }
+        public string MainListViewColumnTextDown { get; set; }        
         public string MainListViewFocusWaveform { get; set; }
         public string MainListViewGoToNextError { get; set; }
         public string MainTextBoxItalic { get; set; }
@@ -3042,6 +3044,12 @@ namespace Nikse.SubtitleEdit.Core
                 subNode = node.SelectSingleNode("MainListViewColumnPaste");
                 if (subNode != null)
                     settings.Shortcuts.MainListViewColumnPaste = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainListViewColumnTextUp");
+                if (subNode != null)
+                    settings.Shortcuts.MainListViewColumnTextUp = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainListViewColumnTextDown");
+                if (subNode != null)
+                    settings.Shortcuts.MainListViewColumnTextDown = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainListViewFocusWaveform");
                 if (subNode != null)
                     settings.Shortcuts.MainListViewFocusWaveform = subNode.InnerText;
@@ -3904,6 +3912,8 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("MainListViewColumnDeleteText", settings.Shortcuts.MainListViewColumnDeleteText);
                 textWriter.WriteElementString("MainListViewColumnInsertText", settings.Shortcuts.MainListViewColumnInsertText);
                 textWriter.WriteElementString("MainListViewColumnPaste", settings.Shortcuts.MainListViewColumnPaste);
+                textWriter.WriteElementString("MainListViewColumnTextUp", settings.Shortcuts.MainListViewColumnTextUp);
+                textWriter.WriteElementString("MainListViewColumnTextDown", settings.Shortcuts.MainListViewColumnTextDown);
                 textWriter.WriteElementString("MainListViewFocusWaveform", settings.Shortcuts.MainListViewFocusWaveform);
                 textWriter.WriteElementString("MainListViewGoToNextError", settings.Shortcuts.MainListViewGoToNextError);
                 textWriter.WriteElementString("MainEditReverseStartAndEndingForRTL", settings.Shortcuts.MainEditReverseStartAndEndingForRTL);
