@@ -1360,7 +1360,9 @@ namespace Nikse.SubtitleEdit.Core
                 ParsingTransportStream = "Parsing transport stream - please wait...",
                 XPercentCompleted = "{0}% completed",
                 NextX = "Next: {0}",
-                InsertSubtitleOverlap = "Cannot insert subtitle at waveform position at this will cause overlap!",
+                PromptInsertSubtitleOverlap = "Insert subtitle at waveform position will cause overlap!" + Environment.NewLine + 
+                                              Environment.NewLine + 
+                                              "Continue anyway?",
                 ErrorLoadIdx = "Cannot read/edit .idx files. Idx files are a part of an idx/sub file pair (also called VobSub), and Subtitle Edit can open the .sub file.",
                 ErrorLoadRar = "This file seems to be a compressed .rar file. Subtitle Edit cannot open compressed files.",
                 ErrorLoadZip = "This file seems to be a compressed .zip file. Subtitle Edit cannot open compressed files.",

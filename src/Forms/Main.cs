@@ -21822,8 +21822,11 @@ namespace Nikse.SubtitleEdit.Forms
                                                           newP.EndTime.TotalMilliseconds <= p.EndTime.TotalMilliseconds))
                         {
                             // new subs will overlap existing subs
-                            MessageBox.Show("Cannot insert subtitle as this action will cause overlap!");
-                            return;
+                            if (MessageBox.Show(_language.PromptInsertSubtitleOverlap, _languageGeneral.Title, MessageBoxButtons.YesNo) == DialogResult.No)
+                            {
+                                return;
+                            }
+                            break;
                         }
                     }
 
