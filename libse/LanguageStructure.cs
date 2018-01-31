@@ -1215,6 +1215,7 @@
             public string BeforeColumnDelete { get; set; }
             public string BeforeColumnImportText { get; set; }
             public string BeforeColumnShiftCellsDown { get; set; }
+            public string BeforeX { get; set; }
             public string ErrorLoadingPluginXErrorY { get; set; }
             public string BeforeRunningPluginXVersionY { get; set; }
             public string UnableToReadPluginResult { get; set; }
@@ -1484,6 +1485,8 @@
                     public string ColumnInsertTextFromSubtitle { get; set; }
                     public string ColumnImportTextAndShiftCellsDown { get; set; }
                     public string ColumnPasteFromClipboard { get; set; }
+                    public string ColumnTextUp { get; set; }
+                    public string ColumnTextDown { get; set; }
                     public string ColumnCopyOriginalTextToCurrent { get; set; }
                     public string Split { get; set; }
                     public string MergeSelectedLines { get; set; }
@@ -2116,6 +2119,8 @@
             public string ListViewColumnDelete { get; set; }
             public string ListViewColumnInsert { get; set; }
             public string ListViewColumnPaste { get; set; }
+            public string ListViewColumnTextUp { get; set; }
+            public string ListViewColumnTextDown { get; set; }
             public string ListViewFocusWaveform { get; set; }
             public string ListViewGoToNextError { get; set; }
             public string ShowBeamer { get; set; }

@@ -1112,6 +1112,8 @@ Note: Do check free disk space.</WaveFileMalformed>
         <ColumnInsertTextFromSubtitle>Insert text from subtitle...</ColumnInsertTextFromSubtitle>
         <ColumnImportTextAndShiftCellsDown>Import text and shift cells down</ColumnImportTextAndShiftCellsDown>
         <ColumnPasteFromClipboard>Paste from clipboard...</ColumnPasteFromClipboard>
+        <ColumnTextUp>Text up</ColumnTextUp>
+        <ColumnTextDown>Text dowm</ColumnTextDown>
         <ColumnCopyOriginalTextToCurrent>Copy text from original to current</ColumnCopyOriginalTextToCurrent>
         <Split>Split</Split>
         <MergeSelectedLines>Merge selected lines</MergeSelectedLines>
@@ -1442,6 +1444,7 @@ Continue?</SubtitleAppendPrompt>
     <BeforeColumnDelete>Before column delete</BeforeColumnDelete>
     <BeforeColumnImportText>Before column import text</BeforeColumnImportText>
     <BeforeColumnShiftCellsDown>Before column shift cells down</BeforeColumnShiftCellsDown>
+    <BeforeX>Before: {0}</BeforeX>
     <ErrorLoadingPluginXErrorY>Error loading plugin: {0}: {1}</ErrorLoadingPluginXErrorY>
     <BeforeRunningPluginXVersionY>Before running plugin: {0}: {1}</BeforeRunningPluginXVersionY>
     <UnableToReadPluginResult>Unable to read subtitle result from plugin!</UnableToReadPluginResult>
@@ -1951,6 +1954,8 @@ can edit in same subtitle file (collaboration)</Information>
     <ListViewColumnDelete>Column, delete text</ListViewColumnDelete>
     <ListViewColumnInsert>Column, insert text</ListViewColumnInsert>
     <ListViewColumnPaste>Column, paste</ListViewColumnPaste>
+    <ListViewColumnTextUp>Column, text up</ListViewColumnTextUp>
+    <ListViewColumnTextDown>Column, text down</ListViewColumnTextDown>
     <ListViewFocusWaveform>Focus waveform/spectrogram</ListViewFocusWaveform>
     <ListViewGoToNextError>Go to next error</ListViewGoToNextError>
     <ShowBeamer>Start subtitle fullscreen beamer</ShowBeamer>

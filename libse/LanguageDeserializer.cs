@@ -3073,6 +3073,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Main/BeforeColumnShiftCellsDown":
                     language.Main.BeforeColumnShiftCellsDown = reader.Value;
                     break;
+                case "Main/BeforeX":
+                    language.Main.BeforeX = reader.Value;
+                    break;
                 case "Main/ErrorLoadingPluginXErrorY":
                     language.Main.ErrorLoadingPluginXErrorY = reader.Value;
                     break;
@@ -3753,6 +3756,12 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "Main/Menu/ContextMenu/ColumnPasteFromClipboard":
                     language.Main.Menu.ContextMenu.ColumnPasteFromClipboard = reader.Value;
+                    break;
+                case "Main/Menu/ContextMenu/ColumnTextUp":
+                    language.Main.Menu.ContextMenu.ColumnTextUp = reader.Value;
+                    break;
+                case "Main/Menu/ContextMenu/ColumnTextDown":
+                    language.Main.Menu.ContextMenu.ColumnTextDown = reader.Value;
                     break;
                 case "Main/Menu/ContextMenu/ColumnCopyOriginalTextToCurrent":
                     language.Main.Menu.ContextMenu.ColumnCopyOriginalTextToCurrent = reader.Value;
@@ -5295,6 +5304,12 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "Settings/ListViewColumnPaste":
                     language.Settings.ListViewColumnPaste = reader.Value;
+                    break;
+                case "Settings/ListViewColumnTextUp":
+                    language.Settings.ListViewColumnTextUp = reader.Value;
+                    break;
+                case "Settings/ListViewColumnTextDown":
+                    language.Settings.ListViewColumnTextDown = reader.Value;
                     break;
                 case "Settings/ListViewFocusWaveform":
                     language.Settings.ListViewFocusWaveform = reader.Value;

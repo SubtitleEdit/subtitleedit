@@ -1345,6 +1345,7 @@ namespace Nikse.SubtitleEdit.Core
                 BeforeColumnDelete = "Before column delete",
                 BeforeColumnImportText = "Before column import text",
                 BeforeColumnShiftCellsDown = "Before column shift cells down",
+                BeforeX = "Before: {0}",
                 ErrorLoadingPluginXErrorY = "Error loading plugin: {0}: {1}",
                 BeforeRunningPluginXVersionY = "Before running plugin: {0}: {1}",
                 UnableToReadPluginResult = "Unable to read subtitle result from plugin!",
@@ -1360,8 +1361,8 @@ namespace Nikse.SubtitleEdit.Core
                 ParsingTransportStream = "Parsing transport stream - please wait...",
                 XPercentCompleted = "{0}% completed",
                 NextX = "Next: {0}",
-                PromptInsertSubtitleOverlap = "Insert subtitle at waveform position will cause overlap!" + Environment.NewLine + 
-                                              Environment.NewLine + 
+                PromptInsertSubtitleOverlap = "Insert subtitle at waveform position will cause overlap!" + Environment.NewLine +
+                                              Environment.NewLine +
                                               "Continue anyway?",
                 ErrorLoadIdx = "Cannot read/edit .idx files. Idx files are a part of an idx/sub file pair (also called VobSub), and Subtitle Edit can open the .sub file.",
                 ErrorLoadRar = "This file seems to be a compressed .rar file. Subtitle Edit cannot open compressed files.",
@@ -1622,6 +1623,8 @@ namespace Nikse.SubtitleEdit.Core
                         ColumnInsertTextFromSubtitle = "Insert text from subtitle...",
                         ColumnImportTextAndShiftCellsDown = "Import text and shift cells down",
                         ColumnPasteFromClipboard = "Paste from clipboard...",
+                        ColumnTextUp = "Text up",
+                        ColumnTextDown = "Text dowm",
                         ColumnCopyOriginalTextToCurrent = "Copy text from original to current",
                         Split = "Split",
                         MergeSelectedLines = "Merge selected lines",
@@ -2237,6 +2240,8 @@ can edit in same subtitle file (collaboration)",
                 ListViewColumnDelete = "Column, delete text",
                 ListViewColumnInsert = "Column, insert text",
                 ListViewColumnPaste = "Column, paste",
+                ListViewColumnTextUp = "Column, text up",
+                ListViewColumnTextDown = "Column, text down",
                 ListViewFocusWaveform = "Focus waveform/spectrogram",
                 ListViewGoToNextError = "Go to next error",
                 ShowBeamer = "Start subtitle fullscreen beamer",
