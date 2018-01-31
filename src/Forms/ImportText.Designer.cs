@@ -31,12 +31,12 @@
             this.components = new System.ComponentModel.Container();
             this.buttonOpenText = new System.Windows.Forms.Button();
             this.groupBoxImportText = new System.Windows.Forms.GroupBox();
+            this.checkBoxMultipleFiles = new System.Windows.Forms.CheckBox();
             this.listViewInputFiles = new System.Windows.Forms.ListView();
             this.columnHeaderFName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderSize = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.contextMenuStripListView = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.clearToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.checkBoxMultipleFiles = new System.Windows.Forms.CheckBox();
             this.textBoxText = new System.Windows.Forms.TextBox();
             this.groupBoxImportOptions = new System.Windows.Forms.GroupBox();
             this.checkBoxAutoBreak = new System.Windows.Forms.CheckBox();
@@ -63,6 +63,8 @@
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
+            this.contextMenuStripPreview = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.startNumberingFromToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBoxImportText.SuspendLayout();
             this.contextMenuStripListView.SuspendLayout();
             this.groupBoxImportOptions.SuspendLayout();
@@ -72,6 +74,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDurationFixed)).BeginInit();
             this.groupBoxSplitting.SuspendLayout();
             this.groupBoxImportResult.SuspendLayout();
+            this.contextMenuStripPreview.SuspendLayout();
             this.SuspendLayout();
             // 
             // buttonOpenText
@@ -99,6 +102,18 @@
             this.groupBoxImportText.TabIndex = 0;
             this.groupBoxImportText.TabStop = false;
             this.groupBoxImportText.Text = "Import text";
+            // 
+            // checkBoxMultipleFiles
+            // 
+            this.checkBoxMultipleFiles.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.checkBoxMultipleFiles.AutoSize = true;
+            this.checkBoxMultipleFiles.Location = new System.Drawing.Point(178, 22);
+            this.checkBoxMultipleFiles.Name = "checkBoxMultipleFiles";
+            this.checkBoxMultipleFiles.Size = new System.Drawing.Size(198, 17);
+            this.checkBoxMultipleFiles.TabIndex = 5;
+            this.checkBoxMultipleFiles.Text = "Multiple files - one file is one subtitle";
+            this.checkBoxMultipleFiles.UseVisualStyleBackColor = true;
+            this.checkBoxMultipleFiles.CheckedChanged += new System.EventHandler(this.checkBoxMultipleFiles_CheckedChanged);
             // 
             // listViewInputFiles
             // 
@@ -144,18 +159,6 @@
             this.clearToolStripMenuItem.Size = new System.Drawing.Size(101, 22);
             this.clearToolStripMenuItem.Text = "Clear";
             this.clearToolStripMenuItem.Click += new System.EventHandler(this.clearToolStripMenuItem_Click);
-            // 
-            // checkBoxMultipleFiles
-            // 
-            this.checkBoxMultipleFiles.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.checkBoxMultipleFiles.AutoSize = true;
-            this.checkBoxMultipleFiles.Location = new System.Drawing.Point(178, 22);
-            this.checkBoxMultipleFiles.Name = "checkBoxMultipleFiles";
-            this.checkBoxMultipleFiles.Size = new System.Drawing.Size(198, 17);
-            this.checkBoxMultipleFiles.TabIndex = 5;
-            this.checkBoxMultipleFiles.Text = "Multiple files - one file is one subtitle";
-            this.checkBoxMultipleFiles.UseVisualStyleBackColor = true;
-            this.checkBoxMultipleFiles.CheckedChanged += new System.EventHandler(this.checkBoxMultipleFiles_CheckedChanged);
             // 
             // textBoxText
             // 
@@ -458,6 +461,7 @@
             this.SubtitleListview1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.SubtitleListview1.ContextMenuStrip = this.contextMenuStripPreview;
             this.SubtitleListview1.FirstVisibleIndex = -1;
             this.SubtitleListview1.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SubtitleListview1.FullRowSelect = true;
@@ -505,6 +509,20 @@
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.ButtonOkClick);
             // 
+            // contextMenuStripPreview
+            // 
+            this.contextMenuStripPreview.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.startNumberingFromToolStripMenuItem});
+            this.contextMenuStripPreview.Name = "contextMenuStripPreview";
+            this.contextMenuStripPreview.Size = new System.Drawing.Size(199, 26);
+            // 
+            // startNumberingFromToolStripMenuItem
+            // 
+            this.startNumberingFromToolStripMenuItem.Name = "startNumberingFromToolStripMenuItem";
+            this.startNumberingFromToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
+            this.startNumberingFromToolStripMenuItem.Text = "Start numbering from...";
+            this.startNumberingFromToolStripMenuItem.Click += new System.EventHandler(this.startNumberingFromToolStripMenuItem_Click);
+            // 
             // ImportText
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -540,6 +558,7 @@
             this.groupBoxSplitting.ResumeLayout(false);
             this.groupBoxSplitting.PerformLayout();
             this.groupBoxImportResult.ResumeLayout(false);
+            this.contextMenuStripPreview.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -580,5 +599,7 @@
         private System.Windows.Forms.ComboBox comboBoxLineBreak;
         private System.Windows.Forms.ContextMenuStrip contextMenuStripListView;
         private System.Windows.Forms.ToolStripMenuItem clearToolStripMenuItem;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStripPreview;
+        private System.Windows.Forms.ToolStripMenuItem startNumberingFromToolStripMenuItem;
     }
 }
