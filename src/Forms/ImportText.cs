@@ -18,7 +18,8 @@ namespace Nikse.SubtitleEdit.Forms
         private Subtitle _subtitleInput;
         private string _videoFileName;
         private readonly Timer _refreshTimer = new Timer();
-        private bool _exit;
+        private readonly bool _exit;
+        private int _startFromNumber = 1;
 
         public Subtitle FixedSubtitle => _subtitle;
         public SubtitleFormat Format { get; set; }
@@ -63,6 +64,7 @@ namespace Nikse.SubtitleEdit.Forms
             groupBoxTimeCodes.Text = Configuration.Settings.Language.ImportText.TimeCodes;
             groupBoxImportResult.Text = Configuration.Settings.Language.General.Preview;
             clearToolStripMenuItem.Text = Configuration.Settings.Language.DvdSubRip.Clear;
+            startNumberingFromToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.Tools.StartNumberingFrom;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             SubtitleListview1.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
@@ -128,6 +130,7 @@ namespace Nikse.SubtitleEdit.Forms
             openFileDialog1.Multiselect = checkBoxMultipleFiles.Visible && checkBoxMultipleFiles.Checked;
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
+                _startFromNumber = 1;
                 if (checkBoxMultipleFiles.Visible && checkBoxMultipleFiles.Checked)
                 {
                     foreach (string fileName in openFileDialog1.FileNames)
@@ -219,7 +222,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (checkBoxMergeShortLines.Checked)
                 MergeLinesWithContinuation();
 
-            _subtitle.Renumber();
+            _subtitle.Renumber(_startFromNumber);
             if (checkBoxGenerateTimeCodes.Checked)
             {
                 FixDurations();
@@ -706,7 +709,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 Encoding encoding = LanguageAutoDetect.GetEncodingFromFile(fileName);
                 var text = FileUtil.ReadAllTextShared(fileName, encoding);
-                if (fileName.EndsWith(".htm", StringComparison.OrdinalIgnoreCase) || fileName.EndsWith(".htm", StringComparison.OrdinalIgnoreCase))
+                if (fileName.EndsWith(".html", StringComparison.OrdinalIgnoreCase) || fileName.EndsWith(".htm", StringComparison.OrdinalIgnoreCase))
                     text = HtmlToPlainText(text);
                 return text;
             }
@@ -755,12 +758,17 @@ namespace Nikse.SubtitleEdit.Forms
                 var sb = new StringBuilder();
                 var doc = new XmlDocument();
                 doc.Load(fileName);
-                foreach (XmlNode node in doc.DocumentElement.SelectNodes("//paragraph[@element='Dialog']")) // <paragraph objID="1:28" element="Dialog">
+                var nodes = doc.DocumentElement?.SelectNodes("//paragraph[@element='Dialog']");
+                if (nodes != null)
                 {
-                    XmlNode textRun = node.SelectSingleNode("textRun"); // <textRun objID="1:259">Yeah...I suppose</textRun>
-                    if (textRun != null)
-                        sb.AppendLine(textRun.InnerText);
+                    foreach (XmlNode node in nodes) // <paragraph objID="1:28" element="Dialog">
+                    {
+                        XmlNode textRun = node.SelectSingleNode("textRun"); // <textRun objID="1:259">Yeah...I suppose</textRun>
+                        if (textRun != null)
+                            sb.AppendLine(textRun.InnerText);
+                    }
                 }
+
                 textBoxText.Text = sb.ToString();
                 _videoFileName = null;
                 Text = Configuration.Settings.Language.ImportText.Title + " - " + fileName;
@@ -995,6 +1003,19 @@ namespace Nikse.SubtitleEdit.Forms
                 buttonOK.Focus();
             if (_exit)
                 DialogResult = DialogResult.Cancel;
+        }
+
+        private void startNumberingFromToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (var startNumberingFrom = new StartNumberingFrom())
+            {
+                if (startNumberingFrom.ShowDialog(this) == DialogResult.OK)
+                {
+                    _startFromNumber = startNumberingFrom.StartFromNumber;
+                    _subtitle.Renumber(startNumberingFrom.StartFromNumber);
+                    SubtitleListview1.Fill(_subtitle);
+                }
+            }
         }
     }
 }
