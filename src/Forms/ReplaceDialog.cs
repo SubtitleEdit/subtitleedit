@@ -68,7 +68,9 @@ namespace Nikse.SubtitleEdit.Forms
             textBoxFind.Text = selectedText;
             //if we are searching for the same thing, then keep the replace text the same.
             if (selectedText == findHelper.FindText)
-                textBoxReplace.Text = findHelper.ReplaceText;
+            { 
+                textBoxReplace.Text = findHelper.ReplaceText.Replace(Environment.NewLine, "\\n");
+            }
             textBoxFind.SelectAll();
             if (findHelper.FindReplaceType.FindType == FindType.RegEx)
                 radioButtonRegEx.Checked = true;
