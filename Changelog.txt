@@ -1,5 +1,24 @@
 ﻿Subtitle Edit Changelog
 
+
+3.5.6 (xth March 2018) BETA
+* NEW:
+   * Some support for SMPTE time code (drop frame) in video player
+   * Swap text up/down - thx Leon
+* IMPROVED:
+   * Update Bulgarian translation - thx KalinM
+   * Update Hungarian translation - thx ZityiSoft Team
+   * Update Korean translation - thx domddol
+   * Waveform insert sub now works not just at end - thx Leon
+   * Allow larger "margin" in SSA/ASSA styles - thx von Suppé
+* FIXED:
+   * Fix Ctrl+v of time code in "Time code control" (regr. from 3.5.5) - thx Mohammed
+   * Fix for format "TTML draft 2006-10" - thx thehulk
+   * Fix issue regarding "Binary image compare OCR ext. matches" - thx SimplyTheBOSS
+   * Fix issue regarding "Bridge gaps"/selected line - thx btsix
+   * Fix new-line char in "Replace -> Replace with" text box - thx Leon
+
+
 3.5.5 (26th January 2018)
 * NEW:
    * Add new subtitle format - thx Karim

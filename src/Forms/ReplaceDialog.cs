@@ -68,7 +68,7 @@ namespace Nikse.SubtitleEdit.Forms
             textBoxFind.Text = selectedText;
             //if we are searching for the same thing, then keep the replace text the same.
             if (selectedText == findHelper.FindText)
-            { 
+            {
                 textBoxReplace.Text = findHelper.ReplaceText.Replace(Environment.NewLine, "\\n");
             }
             textBoxFind.SelectAll();
@@ -159,8 +159,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (bitmap != null)
             {
-                IntPtr Hicon = bitmap.GetHicon();
-                this.Icon = Icon.FromHandle(Hicon);
+                Icon = Icon.FromHandle(bitmap.GetHicon());
             }
         }
 
