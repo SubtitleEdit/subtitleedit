@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.5.5</Version>
-    <TranslatedBy>Suomentanut vm, päivittänyt Teijo S. [31-03-2017]</TranslatedBy>
+    <TranslatedBy>Suomentanut vm, päivittänyt Teijo S. [30-01-2018]</TranslatedBy>
     <CultureName>fi-FI</CultureName>
     <HelpFile />
     <Ok>&amp;OK</Ok>
@@ -26,6 +26,9 @@
     <Duration>Kesto</Duration>
     <CharsPerSec>Merkkiä/sek.</CharsPerSec>
     <WordsPerMin>Sanoja/min.</WordsPerMin>
+    <Actor>Hahmo</Actor>
+    <Gap>Väli</Gap>
+    <Region>Alue</Region>
     <NumberSymbol>Nro.</NumberSymbol>
     <Number>Numero</Number>
     <Text>Teksti</Text>
@@ -158,6 +161,7 @@ HUOM! Tarkista vapaa levytila.</WaveFileMalformed>
     <ChooseOutputFolder>Valitse kohdekansio</ChooseOutputFolder>
     <OverwriteExistingFiles>Korvaa aiemmat tiedostot</OverwriteExistingFiles>
     <Style>Tyyli</Style>
+    <UseStyleFromSource>Käytä lähteen tyyliä</UseStyleFromSource>
     <ConvertOptions>Muunnosasetukset</ConvertOptions>
     <RemoveFormatting>Poista muotoilutunnisteet</RemoveFormatting>
     <RemoveTextForHI>Poista HI-teksti</RemoveTextForHI>
@@ -173,8 +177,9 @@ HUOM! Tarkista vapaa levytila.</WaveFileMalformed>
     <AutoBalance>Tasoita rivit automaattisesti</AutoBalance>
     <ScanFolder>Tutki kansio</ScanFolder>
     <ScanningFolder>Etsitään tekstitystiedostoja kansiosta {0} ja sen alikansioista</ScanningFolder>
-    <Recursive>sisällytä alikansiot</Recursive>
+    <Recursive>Sisällytä alikansiot</Recursive>
     <SetMinMsBetweenSubtitles>Määritä pienin tekstityksien aikaväli</SetMinMsBetweenSubtitles>
+    <BridgeGaps>Yhdistä välit</BridgeGaps>
     <PlainText>Pelkkä teksti</PlainText>
     <Ocr>Tekstintunnistus</Ocr>
     <Filter>Suodatin</Filter>
@@ -185,6 +190,7 @@ HUOM! Tarkista vapaa levytila.</WaveFileMalformed>
     <FixCommonErrorsErrorX>Yleisten virheiden korjaus epäonnistui: {0}</FixCommonErrorsErrorX>
     <MultipleReplaceErrorX>Monen korvaus epäonnistui: {0}</MultipleReplaceErrorX>
     <AutoBalanceErrorX>Automaattinen tasoittaminen epäonnistui: {0}</AutoBalanceErrorX>
+    <OffsetTimeCodes>Aikaleimojen siirtymä</OffsetTimeCodes>
   </BatchConvert>
   <Beamer>
     <Title>Videotykki</Title>
@@ -412,8 +418,16 @@ HUOM! Tarkista vapaa levytila.</WaveFileMalformed>
     <Footer>Alatunniste</Footer>
     <DoNotModify>[Älä muokkaa]</DoNotModify>
   </ExportCustomTextFormat>
+  <ExportFcpXmlAdvanced>
+    <Title>Vienti muotoon 'Final Cut Pro XML'</Title>
+    <FontName>Fontin nimi</FontName>
+    <FontSize>Fontin koko</FontSize>
+    <FontFace>Fonttimuotoilu</FontFace>
+    <Alignment>Tasaus</Alignment>
+    <Baseline>Peruslinja</Baseline>
+  </ExportFcpXmlAdvanced>
   <ExportPngXml>
-    <Title>Vie BDN XML/PNG</Title>
+    <Title>Vie muotoon 'BDN XML/PNG'</Title>
     <ImageSettings>Kuvan asetukset</ImageSettings>
     <FontFamily>Fonttiperhe</FontFamily>
     <FontSize>Fonttikoko</FontSize>
@@ -460,6 +474,7 @@ HUOM! Tarkista vapaa levytila.</WaveFileMalformed>
     <Forced>Pakotettu</Forced>
     <ChooseBackgroundColor>Valitse taustakuva</ChooseBackgroundColor>
     <SaveImageAs>Tallenna kuva nimellä...</SaveImageAs>
+    <FcpUseFullPathUrl>Käytä FCP xml -tiedostossa kuvien koko polkua</FcpUseFullPathUrl>
   </ExportPngXml>
   <ExportText>
     <Title>Vie teksti</Title>
@@ -628,6 +643,7 @@ HUOM! Tarkista vapaa levytila.</WaveFileMalformed>
     <FixOcrErrorExample>K0ira -&gt; Koira</FixOcrErrorExample>
     <FixSpaceBetweenNumbersExample>1 100 -&gt; 1100</FixSpaceBetweenNumbersExample>
     <FixDialogsOneLineExample>Hei, Jussi! - Hei, Iida! -&gt; Hei, Jussi!&lt;br /&gt;- Hei, Iida!</FixDialogsOneLineExample>
+    <SelectDefault>Valitse oletus</SelectDefault>
   </FixCommonErrors>
   <GetDictionaries>
     <Title>Sanastojen lataustarve</Title>
@@ -991,6 +1007,7 @@ HUOM! Tarkista vapaa levytila.</WaveFileMalformed>
         <ChooseAudioTrack>Valitse ääniraita</ChooseAudioTrack>
         <CloseVideo>Sulje videotiedosto</CloseVideo>
         <SetVideoOffset>Aseta videosiirtymä...</SetVideoOffset>
+        <SmptTimeMode>SMTPE-ajoitus (kehysten pudotus)</SmptTimeMode>
         <ImportSceneChanges>Tuo kohtausmuutokset</ImportSceneChanges>
         <RemoveSceneChanges>Poista kohtausmuutokset</RemoveSceneChanges>
         <WaveformBatchGenerate>Luo aaltomuodot eräajona</WaveformBatchGenerate>
@@ -1062,10 +1079,12 @@ HUOM! Tarkista vapaa levytila.</WaveFileMalformed>
         <SizeAllColumnsToFit>Sovita sarakkeet</SizeAllColumnsToFit>
         <AdvancedSubStationAlphaSetStyle>Advanced Sub Station Alpha - aseta tyyli</AdvancedSubStationAlphaSetStyle>
         <SubStationAlphaSetStyle>Sub Station Alpha - aseta tyyli</SubStationAlphaSetStyle>
+        <SetActor>Aseta hahmo</SetActor>
         <SubStationAlphaStyles>Sub Station Alpha tyylit</SubStationAlphaStyles>
         <AdvancedSubStationAlphaStyles>Advanced Sub Station Alpha -tyylit</AdvancedSubStationAlphaStyles>
+        <TimedTextSetRegion>Ajoitettu teksti -  aseta alue</TimedTextSetRegion>
         <TimedTextSetStyle>Ajastettu teksti - aseta tyyli</TimedTextSetStyle>
-        <TimedTextStyles>Ajastettu teksti tyylit</TimedTextStyles>
+        <TimedTextStyles>Ajastettu teksti -tyylit</TimedTextStyles>
         <TimedTextSetLanguage>Ajastettu teksti - aseta kieli</TimedTextSetLanguage>
         <SamiSetStyle>Sami - aseta luokka</SamiSetStyle>
         <NuendoSetStyle>Nuendo - valitse henkilö</NuendoSetStyle>
@@ -1113,6 +1132,8 @@ HUOM! Tarkista vapaa levytila.</WaveFileMalformed>
         <SaveSelectedLines>Tallenna valitut rivit</SaveSelectedLines>
         <WebVTTSetNewVoice>Aseta uusi ääni</WebVTTSetNewVoice>
         <WebVTTRemoveVoices>Poista äänet</WebVTTRemoveVoices>
+        <NewActor>Uusi hahmo...</NewActor>
+        <RemoveActors>Poista hahmot</RemoveActors>
       </ContextMenu>
     </Menu>
     <Controls>
@@ -1361,8 +1382,9 @@ Haluatko aloittaa asiakirjan alusta ja hakea kerran vielä?</FindContinue>
     <UnicodeCharactersAnsiWarning>Tekstitys sisältää unicode-merkkejä. Tallennus käyttäen ANSI-koodausta poistaa ne. Jatketaanko?</UnicodeCharactersAnsiWarning>
     <NegativeTimeWarning>Tekstityksessä on negatiivisia aikaleimoja. Jatketaanko tallentamista?</NegativeTimeWarning>
     <BeforeMergeShortLines>Ennen lyhyiden rivien yhdistämistä</BeforeMergeShortLines>
-    <BeforeSplitLongLines>Ennen pitkien rivien jakamista</BeforeSplitLongLines>
     <MergedShortLinesX>Rivejä yhdistetty: {0}</MergedShortLinesX>
+    <BeforeSplitLongLines>Ennen pitkien rivien jakamista</BeforeSplitLongLines>
+    <LongLinesSplitX>Jaettujen rivien määrä: {0}</LongLinesSplitX>
     <BeforeDurationsBridgeGap>Ennen välien poistoa</BeforeDurationsBridgeGap>
     <BeforeSetMinimumDisplayTimeBetweenParagraphs>Ennen vähimmäisnäyttöajan asettamista kappaleiden välillä</BeforeSetMinimumDisplayTimeBetweenParagraphs>
     <XMinimumDisplayTimeBetweenParagraphsChanged>Rivien määrä mahdollisimman pienellä näyttöajalla kappaleiden välillä muutettu: {0}</XMinimumDisplayTimeBetweenParagraphsChanged>
@@ -1421,9 +1443,11 @@ Haluatko aloittaa asiakirjan alusta ja hakea kerran vielä?</FindContinue>
     <ImportTimeCodesDifferentNumberOfLinesWarning>Aikaleimat sisältävässä tekstityksessä on eri rivimäärä ({0)} kuin nykyisessä tekstityksessä - jatketaanko silti?</ImportTimeCodesDifferentNumberOfLinesWarning>
     <ParsingTransportStream>Luodaan siirtovirtausta - odota</ParsingTransportStream>
     <XPercentCompleted>{0}% valmiina</XPercentCompleted>
+    <NextX>Seuraava: {0}</NextX>
     <ErrorLoadIdx>Idx-tiedostojen luku tai muokkaus epäonnistui, mutta sub-tiedoston avaus onnistuu. idx-tiedostot ovat osa idx/sub -tiedostoparia (nk VobSub).</ErrorLoadIdx>
-    <ErrorLoadRar>Tiedostoa ei ole pakattu rar-pakkauksella, joten sitä ei voida avata.</ErrorLoadRar>
-    <ErrorLoadZip>Tiedostoa ei ole pakattu zip-pakkauksella, joten sitä ei voida avata.</ErrorLoadZip>
+    <ErrorLoadRar>Tiedostoa on pakattu rar-pakkauksella, joten sitä ei voida avata.</ErrorLoadRar>
+    <ErrorLoadZip>Tiedostoa on pakattu zip-pakkauksella, joten sitä ei voida avata.</ErrorLoadZip>
+    <ErrorLoad7Zip>Tiedostoa on pakattu 7-zip-pakkauksella, joten sitä ei voida avata.</ErrorLoad7Zip>
     <ErrorLoadPng>Tiedosto on PGN-kuva, sitä ei voida avata.</ErrorLoadPng>
     <ErrorLoadJpg>Tiedosto on JPG-kuva, sitä ei voida avata.</ErrorLoadJpg>
     <ErrorLoadSrr>Tiedosto on ReScene .srr -tiedosto, eikä sisällä tekstitystä.</ErrorLoadSrr>
@@ -1441,6 +1465,7 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
   <MatroskaSubtitleChooser>
     <Title>Valitse tekstitys Matroska-tiedostosta</Title>
     <TitleMp4>Valitse tekstitys MP4-tiedostosta</TitleMp4>
+    <PleaseChoose>Useampi tekstitys havaittu, valitse käytettävä</PleaseChoose>
     <TrackXLanguageYTypeZ>Raita {0} - kieli: {1} - tyyppi: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MeasurementConverter>
@@ -1504,6 +1529,7 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <Normal>Normaali haku</Normal>
     <CaseSensitive>Huomioi kirjainkoko</CaseSensitive>
     <RegularExpression>Kyseessä on säännöllinen lauseke (RegExp)</RegularExpression>
+    <Description>Kuvaus</Description>
     <LinesFoundX>Rivejä löytyi: {0}</LinesFoundX>
     <Remove>Poista</Remove>
     <Add>Lisää</Add>
@@ -1699,7 +1725,6 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <RemoveBlankLinesWhenOpening>Poista tekstityksestä tyhjät rivit avattaessa</RemoveBlankLinesWhenOpening>
     <ShowLineBreaksAs>Rivinvaihtojen esitystapa luettelonäkymässä:</ShowLineBreaksAs>
     <MainListViewDoubleClickAction>Toiminta kaksoisnapsautettaessa pääikkunan luetteloriviä:</MainListViewDoubleClickAction>
-    <MainListViewColumns>Luettelonäkymän sarakkeet</MainListViewColumns>
     <MainListViewColumnsInfo>Valitse näytettävät luettelonäkymän sarakkeet</MainListViewColumnsInfo>
     <MainListViewNothing>Ei mitään</MainListViewNothing>
     <MainListViewVideoGoToPositionAndPause>Siirry videokohtaan ja pysäytä</MainListViewVideoGoToPositionAndPause>
@@ -1806,7 +1831,7 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <RemoveTextForHi>Poista äänitekstitys</RemoveTextForHi>
     <MergeLinesShorterThan>Yhdistä rivit lyhyempiä kuin</MergeLinesShorterThan>
     <MusicSymbol>Musiikkisymboli</MusicSymbol>
-    <MusicSymbolsToReplace>Korvattavat nuotit (erota välilyönnillä)</MusicSymbolsToReplace>
+    <MusicSymbolsReplace>Korvattavat musiikkisymbolit (pilkuin eroteltuina)</MusicSymbolsReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Korjaa yleiset tekstintunnistusvirheet</FixCommonOcrErrorsUseHardcodedRules>
     <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Korjaa liian lyhyet kestot aloitusaikaa muuttamalla</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
     <FixCommonErrorsSkipStepOne>Ohita ensimmäinen vaihe (korjaussääntöjen ohitus)</FixCommonErrorsSkipStepOne>
@@ -1826,7 +1851,11 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <AdjustSetEndNextStartAndGoToNext>Aseta loppu, seuraava aloitus ja siirry seuraavaan</AdjustSetEndNextStartAndGoToNext>
     <AdjustStartDownEndUpAndGoToNext>Nuoli alas=aseta alku, Nuoli ylös=aseta loppu ja siirry seuraavaan</AdjustStartDownEndUpAndGoToNext>
     <AdjustSelected100MsForward>Siirrä valitut rivit 100 ms eteenpäin</AdjustSelected100MsForward>
-    <AdjustSelected100MsBack>Siirrä valitut rivit 100 ms takaisin</AdjustSelected100MsBack>
+    <AdjustSelected100MsBack>Siirrä valitut rivit 100 ms taaksepäin</AdjustSelected100MsBack>
+    <AdjustStartXMsBack>Siirrä alkua {0} ms taaksepäin</AdjustStartXMsBack>
+    <AdjustStartXMsForward>Siirrä alkua {0} ms eteenpäin</AdjustStartXMsForward>
+    <AdjustEndXMsBack>Siirrä loppua {0} ms taaksepäin</AdjustEndXMsBack>
+    <AdjustEndXMsForward>Siirrä loppua {0} ms eteenpäin</AdjustEndXMsForward>
     <AdjustSetStartTimeKeepDuration>Aseta aloitusaika, säilytä kesto</AdjustSetStartTimeKeepDuration>
     <AdjustSetEndAndOffsetTheRest>Aseta loppu, liu'uta muita</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Aseta loppu, liu'uta muita ja siirry seuraavaan</AdjustSetEndAndOffsetTheRestAndGoToNext>
@@ -1857,10 +1886,14 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <WaveformPlayNewSelectionEnd>Toista valinnan loppu</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Toista ensimmäinen valittu tekstitys</WaveformPlayFirstSelectedSubtitle>
     <WaveformFocusListView>Tarkennusluettelonäkymä</WaveformFocusListView>
+    <WaveformGoToNextSubtitle>Siirry seuraavaan tekstitykseen</WaveformGoToNextSubtitle>
+    <WaveformGoToPreviousSceneChange>Siirry edelliseen kohtauksen vaihtoon</WaveformGoToPreviousSceneChange>
     <WaveformGoToNextSceneChange>Siirry seuraavaan kohtauksen vaihtoon</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>Kohtauksen vaihto päälle / pois</WaveformToggleSceneChange>
     <GoBack1Frame>Yksi kehys takaisin</GoBack1Frame>
     <GoForward1Frame>Yksi kehys eteenpäin</GoForward1Frame>
+    <GoBack1FrameWithPlay>Yksi kehys takaisin ja toisto</GoBack1FrameWithPlay>
+    <GoForward1FrameWithPlay>Yksi kehys eteenpäin ja toisto</GoForward1FrameWithPlay>
     <GoBack100Milliseconds>100 ms takaisin</GoBack100Milliseconds>
     <GoForward100Milliseconds>100 ms eteenpäin</GoForward100Milliseconds>
     <GoBack500Milliseconds>500 ms takaisin</GoBack500Milliseconds>
@@ -1904,7 +1937,9 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <ListViewGoToNextError>Siirry seuraavaan virheeseen</ListViewGoToNextError>
     <ShowBeamer>Aloita tekstityksen kokonäytön videoesitys</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Siirrä viimeinen sana seuraavalle riville</MainTextBoxMoveLastWordDown>
-    <MainTextBoxMoveFirstWordFromNextUp>Siirrä ensimmäinen sana edelliselle riville</MainTextBoxMoveFirstWordFromNextUp>
+    <MainTextBoxMoveFirstWordFromNextUp>Siirrä seuraavan tekstityksen ensimmäinen sana edelliselle</MainTextBoxMoveFirstWordFromNextUp>
+    <MainTextBoxMoveFirstWordUpCurrent>Siirrä ensimmäinen sana seuraavalta riviltä ylös (nykyinen)</MainTextBoxMoveFirstWordUpCurrent>
+    <MainTextBoxMoveLastWordDownCurrent>Siirrä viimeinen sana ensimmäiseltä riviltä toiselle (nykyinen)</MainTextBoxMoveLastWordDownCurrent>
     <MainTextBoxSelectionToLower>Valittu pieniksi</MainTextBoxSelectionToLower>
     <MainTextBoxSelectionToUpper>Valittu isoiksi</MainTextBoxSelectionToUpper>
     <MainTextBoxToggleAutoDuration>Automaattinen kesto päälle/pois</MainTextBoxToggleAutoDuration>
@@ -1912,11 +1947,12 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <MainTextBoxUnbreak>Poista rivitys</MainTextBoxUnbreak>
     <MainFileSaveAll>Tallenna kaikki</MainFileSaveAll>
     <Miscellaneous>Sekalaiset</Miscellaneous>
+    <CpsIncludesSpace>Sisällytä välilyönnit 'merkkiä sekunnissa' -arvoon</CpsIncludesSpace>
     <UseDoNotBreakAfterList>Käytä rivinvaihdon kieltoluetteloa (automaattiselle rivinvaihdolle)</UseDoNotBreakAfterList>
     <MicrosoftBingTranslator>Microsoft Bing -kääntäjä</MicrosoftBingTranslator>
     <HowToSignUp>Tilinluontiohje</HowToSignUp>
-    <ClientId>Käyttäjätunnus</ClientId>
-    <ClientSecret>Salasana</ClientSecret>
+    <GoogleTranslateUrl>Käytettävä Google-kääntäjä</GoogleTranslateUrl>
+    <MicrosoftTranslateApiKey>Avain</MicrosoftTranslateApiKey>
   </Settings>
   <SettingsMpv>
     <Title>mpv:n asetukset</Title>
@@ -1976,17 +2012,15 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <ImageText>Kuvateksti</ImageText>
     <SpellCheckCompleted>Oikoluku on valmis.</SpellCheckCompleted>
     <SpellCheckAborted>Oikoluku on keskeytetty</SpellCheckAborted>
+    <SpacesNotAllowed>Yksittäinen sana ei voi sisältää välilyöntejä!</SpacesNotAllowed>
     <UndoX>Kumoa: {0}</UndoX>
   </SpellCheck>
   <NetflixQualityCheck>
-    <GlyphCheckSuccessfull>Merkkien tarkastus onnistui.</GlyphCheckSuccessfull>
-    <GlyphCheckFailed>Merkkien tarkastus epäonnistui.</GlyphCheckFailed>
     <GlyphCheckReport>Ei-kelpaava merkki [0] sarakkessa {1}.</GlyphCheckReport>
-    <WhiteSpaceCheckSuccessfull>Välilyöntien tarkastus onnistui.</WhiteSpaceCheckSuccessfull>
-    <WhiteSpaceCheckFailed>Välilyöntien tarkastus epäonnistui.</WhiteSpaceCheckFailed>
     <WhiteSpaceCheckReport>Ei-kelpaava välilyönti sarakkessa {0}.</WhiteSpaceCheckReport>
     <ReportPrompt>Lue koko raportti: {0}.</ReportPrompt>
-    <SavingError>Raportin tallennus epäonnistui.</SavingError>
+    <FoundXIssues>Netflix-laaduntarkastuksessa {0} ongelmaa.</FoundXIssues>
+    <CheckOk>Netflix-laaduntarkastus kunnossa.</CheckOk>
   </NetflixQualityCheck>
   <Split>
     <Title>Jakaminen</Title>
@@ -2044,6 +2078,7 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <NumberOfLinesX>Tekstitysrivien määrä: {0:#,###}</NumberOfLinesX>
     <LengthInFormatXinCharactersY>Merkkien lukumäärä {0}: {1:#,###,##0}</LengthInFormatXinCharactersY>
     <NumberOfCharactersInTextOnly>Merkkien lukumäärä vain tekstissä: {0:#,###,##0}</NumberOfCharactersInTextOnly>
+    <TotalDuration>Kaikkien tekstitysten yhteiskesto: {0}</TotalDuration>
     <TotalCharsPerSecond>Yhteensä merkkiä/sekunti: {0:0.0} sekuntia</TotalCharsPerSecond>
     <TotalWords>Sanojen määrä tekstityksessä yhteensä: {0}</TotalWords>
     <NumberOfItalicTags>Kursivointitunnisteiden määrä: {0}</NumberOfItalicTags>
@@ -2239,6 +2274,7 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <SetUnitalicFactor>Poista kursivointi</SetUnitalicFactor>
     <DiscardTitle>Hylätäänkö tekstintunnistuksessa tehdyt muutokset?</DiscardTitle>
     <DiscardText>Hylätäänkö nykyisessä tekstintunnistuksessa tehdyt muutokset?</DiscardText>
+    <MinLineSplitHeight>Pienin sallittu rivikorkeus jaettaessa</MinLineSplitHeight>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub - manuaalinen kuva tekstiksi</Title>
@@ -2303,6 +2339,7 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <RemoveSceneChange>Poista kohtauksen vaihto</RemoveSceneChange>
     <GuessTimeCodes>Arvaa aikaleimat</GuessTimeCodes>
     <SeekSilence>Etsi hiljaisuutta</SeekSilence>
+    <InsertSubtitleHere>Lisää tähän tekstitys</InsertSubtitleHere>
     <CharsSecX>M/S: {0:0.00}</CharsSecX>
     <WordsMinX>S/M: {0:0.00}</WordsMinX>
   </Waveform>
