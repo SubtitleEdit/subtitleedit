@@ -5104,7 +5104,14 @@ namespace Nikse.SubtitleEdit.Forms
                             tb.Focus();
                             tb.SelectionStart = _findHelper.SelectedPosition;
                             tb.SelectionLength = _findHelper.FindTextLength;
-                            _findHelper.SelectedPosition += _findHelper.ReplaceText.Length;
+                            if (_findHelper.FindReplaceType.FindType == FindType.RegEx)
+                            {
+                                _findHelper.SelectedPosition += _findHelper.FindTextLength;
+                            }
+                            else
+                            {
+                                _findHelper.SelectedPosition += _findHelper.ReplaceText.Length;
+                            }
                             ShowStatus(string.Format(msg + _language.XFoundAtLineNumberY, _findHelper.FindText, _findHelper.SelectedIndex + 1));
                         }
                         else
@@ -5203,10 +5210,12 @@ namespace Nikse.SubtitleEdit.Forms
                     if (_findHelper.FindReplaceType.FindType == FindType.RegEx)
                     {
                         ReplaceViaRegularExpression(tb);
+                        _findHelper.SelectedPosition += _findHelper.FindTextLength;
                     }
                     else
                     {
                         tb.SelectedText = _findHelper.ReplaceText;
+                        _findHelper.SelectedPosition += _findHelper.ReplaceText.Length;
                     }
                 }
             }
