@@ -516,6 +516,7 @@
             public string Left { get; set; }
             public string Right { get; set; }
             public string Center { get; set; }
+            public string CenterLeftJustify { get; set; }
             public string BottomMargin { get; set; }
             public string LeftRightMargin { get; set; }
             public string SaveBluRraySupAs { get; set; }

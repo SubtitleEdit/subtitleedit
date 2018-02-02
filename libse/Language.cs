@@ -641,6 +641,7 @@ namespace Nikse.SubtitleEdit.Core
                 Left = "Left",
                 Center = "Center",
                 Right = "Right",
+                CenterLeftJustify = "Center, left justify",
                 BottomMargin = "Bottom margin",
                 LeftRightMargin = "Left/right margin",
                 SaveBluRraySupAs = "Choose Blu-ray sup file name",
