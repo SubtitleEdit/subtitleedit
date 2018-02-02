@@ -11915,7 +11915,7 @@ namespace Nikse.SubtitleEdit.Forms
                     var p = _subtitle.GetParagraphOrDefault(index);
                     if (p != null)
                     {
-                        SubtitleListview1.SelectIndexAndEnsureVisible(index);
+                        SubtitleListview1.SelectIndexAndEnsureVisible(index, true);
                         mediaPlayer.CurrentPosition = p.StartTime.TotalSeconds;
                         e.SuppressKeyPress = true;
                     }
@@ -11929,7 +11929,7 @@ namespace Nikse.SubtitleEdit.Forms
                     var p = _subtitle.GetParagraphOrDefault(index);
                     if (p != null)
                     {
-                        SubtitleListview1.SelectIndexAndEnsureVisible(index);
+                        SubtitleListview1.SelectIndexAndEnsureVisible(index, true);
                         mediaPlayer.CurrentPosition = p.StartTime.TotalSeconds;
                         e.SuppressKeyPress = true;
                     }
