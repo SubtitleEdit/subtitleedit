@@ -609,7 +609,6 @@
     <Word from="predame" to="preda me" />
     <Word from="predamnom" to="preda mnom" />
     <Word from="Predamnom" to="Preda mnom" />
-    <Word from="predelu" to="predjelu" />
     <Word from="preformuliši" to="preformuliraj" />
     <Word from="preklo" to="porijeklo" />
     <Word from="preloma" to="prijeloma" />
@@ -644,7 +643,6 @@
     <Word from="procenat" to="postotak" />
     <Word from="procent" to="postotak" />
     <Word from="procenta" to="postotka" />
-    <Word from="procentu" to="postotku" />
     <Word from="procenata" to="postotaka" />
     <Word from="procenti" to="postoci" />
     <Word from="Procenti" to="Postoci" />
@@ -1061,7 +1059,6 @@
     <Word from="Johni" to="Johnny" />
     <Word from="Judžin" to="Eugene" />
     <Word from="Kejsi" to="Casey" />
-    <Word from="Kejt" to="Kate" />
     <Word from="Kejti" to="Katie" />
     <Word from="Kerol" to="Carol" />
     <Word from="Kerolajn" to="Caroline" />
@@ -1089,7 +1086,6 @@
     <Word from="Mek" to="Mac" />
     <Word from="Merilend" to="Maryland" />
     <Word from="Mičel" to="Mitchell" />
-    <Word from="Nejt" to="Nate" />
     <Word from="Nensi" to="Nancy" />
     <Word from="Niče" to="Nietzsche" />
     <Word from="Odri" to="Audrey" />
@@ -1105,7 +1101,6 @@
     <Word from="Rouz" to="Rose" />
     <Word from="Sidnej" to="Sidney" />
     <Word from="Sole" to="Saule" />
-    <Word from="Stejt" to="State" />
     <Word from="Stejsi" to="Stacy" />
     <Word from="Šeron" to="Sharon" />
     <Word from="Šeril" to="Cheryl" />
@@ -1113,7 +1108,6 @@
     <Word from="Španiji" to="Španjolskoj" />
     <Word from="Tajms" to="Times" />
     <Word from="Tejlor" to="Taylor" />
-    <Word from="Tejt" to="Tate" />
     <Word from="Vajlder" to="Wilder" />
     <Word from="Žak" to="Jacques" />
     <!-- imena mjeseci -->
@@ -2228,7 +2222,7 @@
     <RegEx find="(mpl|st|f)ikova([nlot])" replaceWith="$1icira$2" />
     <RegEx find="fikuj" replaceWith="ficir" />
     <RegEx find="(fin|form)isa" replaceWith="$1ira" />
-    <RegEx find="(?&lt;o)formiš" replaceWith="formiraj" />
+    <RegEx find="(?&lt;!o)formiš" replaceWith="formiraj" />
     <RegEx find="fi(sa|še)" replaceWith="fira" />
     <RegEx find="frov" replaceWith="frir" />
     <RegEx find="grišć" replaceWith="grist ć" />
@@ -2322,7 +2316,7 @@
     <RegEx find="rasčist" replaceWith="raščist" />
     <RegEx find="kratij" replaceWith="kracij" />
     <RegEx find="(?&lt;![is]|S)redić" replaceWith="rjedit ć" />
-    <RegEx find="(?&lt;r)ejt" replaceWith="ate" />
+    <RegEx find="(?&lt;![mr])ejt" replaceWith="ate" />
     <RegEx find="rešć" replaceWith="rest ć" />
     <!-- preduzeti / preduzetnik -->
     <RegEx find="reduz" replaceWith="oduz" />
