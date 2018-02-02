@@ -5,12 +5,14 @@
 * NEW:
    * Some support for SMPTE time code (drop frame) in video player
    * Swap text up/down - thx Leon
+   * Shortcuts for moving text up/down in current sub - thx Leon
 * IMPROVED:
    * Update Bulgarian translation - thx KalinM
    * Update Hungarian translation - thx ZityiSoft Team
    * Update Korean translation - thx domddol
    * Waveform insert sub now works not just at end - thx Leon
    * Allow larger "margin" in SSA/ASSA styles - thx von Suppé
+   * Export to images alignment option "Center, left justify" - thx Shota 
 * FIXED:
    * Fix Ctrl+v of time code in "Time code control" (regr. from 3.5.5) - thx Mohammed
    * Fix for format "TTML draft 2006-10" - thx thehulk

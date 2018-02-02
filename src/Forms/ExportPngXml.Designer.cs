@@ -37,6 +37,7 @@
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.groupBoxImageSettings = new System.Windows.Forms.GroupBox();
+            this.checkBoxFcpFullPathUrl = new System.Windows.Forms.CheckBox();
             this.labelResize = new System.Windows.Forms.Label();
             this.comboBoxResizePercentage = new System.Windows.Forms.ComboBox();
             this.comboBoxBottomMarginUnit = new System.Windows.Forms.ComboBox();
@@ -104,7 +105,6 @@
             this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.checkBoxFcpFullPathUrl = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
             this.groupBoxImageSettings.SuspendLayout();
@@ -231,6 +231,16 @@
             this.groupBoxImageSettings.TabIndex = 3;
             this.groupBoxImageSettings.TabStop = false;
             this.groupBoxImageSettings.Text = "Image settings";
+            // 
+            // checkBoxFcpFullPathUrl
+            // 
+            this.checkBoxFcpFullPathUrl.AutoSize = true;
+            this.checkBoxFcpFullPathUrl.Location = new System.Drawing.Point(13, 162);
+            this.checkBoxFcpFullPathUrl.Name = "checkBoxFcpFullPathUrl";
+            this.checkBoxFcpFullPathUrl.Size = new System.Drawing.Size(182, 17);
+            this.checkBoxFcpFullPathUrl.TabIndex = 62;
+            this.checkBoxFcpFullPathUrl.Text = "Use full image path url in FCP xml";
+            this.checkBoxFcpFullPathUrl.UseVisualStyleBackColor = true;
             // 
             // labelResize
             // 
@@ -655,7 +665,8 @@
             this.comboBoxHAlign.Items.AddRange(new object[] {
             "Left",
             "Center",
-            "Right"});
+            "Right",
+            "Center - Left justify"});
             this.comboBoxHAlign.Location = new System.Drawing.Point(112, 105);
             this.comboBoxHAlign.Name = "comboBoxHAlign";
             this.comboBoxHAlign.Size = new System.Drawing.Size(121, 21);
@@ -1040,16 +1051,6 @@
             this.subtitleListView1.View = System.Windows.Forms.View.Details;
             this.subtitleListView1.SelectedIndexChanged += new System.EventHandler(this.subtitleListView1_SelectedIndexChanged);
             this.subtitleListView1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.subtitleListView1_KeyDown);
-            // 
-            // checkBoxFcpFullPathUrl
-            // 
-            this.checkBoxFcpFullPathUrl.AutoSize = true;
-            this.checkBoxFcpFullPathUrl.Location = new System.Drawing.Point(13, 162);
-            this.checkBoxFcpFullPathUrl.Name = "checkBoxFcpFullPathUrl";
-            this.checkBoxFcpFullPathUrl.Size = new System.Drawing.Size(182, 17);
-            this.checkBoxFcpFullPathUrl.TabIndex = 62;
-            this.checkBoxFcpFullPathUrl.Text = "Use full image path url in FCP xml";
-            this.checkBoxFcpFullPathUrl.UseVisualStyleBackColor = true;
             // 
             // ExportPngXml
             // 

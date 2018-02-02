@@ -56,6 +56,7 @@ namespace Nikse.SubtitleEdit.Forms
             public bool SimpleRendering { get; set; }
             public bool AlignLeft { get; set; }
             public bool AlignRight { get; set; }
+            public bool JustifyLeft { get; set; }
             public byte[] Buffer { get; set; }
             public int ScreenWidth { get; set; }
             public int ScreenHeight { get; set; }
@@ -352,6 +353,7 @@ namespace Nikse.SubtitleEdit.Forms
                 SimpleRendering = checkBoxSimpleRender.Checked,
                 AlignLeft = comboBoxHAlign.SelectedIndex == 0,
                 AlignRight = comboBoxHAlign.SelectedIndex == 2,
+                JustifyLeft = comboBoxHAlign.SelectedIndex == 3, // center, left justify
                 ScreenWidth = screenWidth,
                 ScreenHeight = screenHeight,
                 VideoResolution = comboBoxResolution.Text,
@@ -2020,6 +2022,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
             mbp.AlignLeft = comboBoxHAlign.SelectedIndex == 0;
             mbp.AlignRight = comboBoxHAlign.SelectedIndex == 2;
+            mbp.JustifyLeft = comboBoxHAlign.SelectedIndex == 3;
             mbp.SimpleRendering = checkBoxSimpleRender.Checked;
             mbp.BorderWidth = _borderWidth;
             mbp.BorderColor = _borderColor;
@@ -2475,7 +2478,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
         }
 
         private static readonly Dictionary<string, int> PaddingDictionary = new Dictionary<string, int>();
-        private static Bitmap GenerateImageFromTextWithStyleInner(MakeBitmapParameter parameter)
+        private static Bitmap GenerateImageFromTextWithStyleInner(MakeBitmapParameter parameter) // for UI
         {
             string text = parameter.P.Text;
 
@@ -2600,6 +2603,16 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                             lefts.Add(bmp.Width - (TextDraw.MeasureTextWidth(font, line, parameter.SubtitleFontBold) + 15));
                         else
                             lefts.Add((float)((bmp.Width - TextDraw.MeasureTextWidth(font, line, parameter.SubtitleFontBold) + 15) / 2.0));
+                    }
+                }
+
+                if (parameter.JustifyLeft) 
+                {
+                    // left justify centered lines
+                    var minX = lefts.Min(p => p);
+                    for (var index = 0; index < lefts.Count; index++)
+                    {
+                        lefts[index] = minX;
                     }
                 }
 
@@ -2741,7 +2754,6 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         var colorStack = new Stack<Color>();
                         var fontStack = new Stack<Font>();
                         var lastText = new StringBuilder();
-                        int numberOfCharsOnCurrentLine = 0;
                         for (var i = 0; i < text.Length; i++)
                         {
                             if (text.Substring(i).StartsWith("<font ", StringComparison.OrdinalIgnoreCase))
@@ -2995,15 +3007,10 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                     leftMargin = lefts[lineNumber];
                                     left = leftMargin;
                                 }
-                                numberOfCharsOnCurrentLine = 0;
                             }
                             else
                             {
-                                if (numberOfCharsOnCurrentLine != 0 || text[i] != ' ')
-                                {
-                                    sb.Append(text[i]);
-                                    numberOfCharsOnCurrentLine++;
-                                }
+                                sb.Append(text[i]);
                             }
                         }
                         if (sb.Length > 0)
@@ -3453,6 +3460,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 comboBoxHAlign.Items.Add(Configuration.Settings.Language.ExportPngXml.Left);
                 comboBoxHAlign.Items.Add(Configuration.Settings.Language.ExportPngXml.Center);
                 comboBoxHAlign.Items.Add(Configuration.Settings.Language.ExportPngXml.Right);
+                comboBoxHAlign.Items.Add(Configuration.Settings.Language.ExportPngXml.CenterLeftJustify);
             }
 
             buttonShadowColor.Text = Configuration.Settings.Language.ExportPngXml.ShadowColor;
