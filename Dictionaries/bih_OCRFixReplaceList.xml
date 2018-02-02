@@ -1186,7 +1186,7 @@
    <RegEx find="ogadj?a" replaceWith="ogađa" />
    <RegEx find="onizav" replaceWith="onižav" />
    <RegEx find="rosti[cć]" replaceWith="rostit ć" />
-   <RegEx find="ruzj([aeu])" replaceWith="ružj$2" />
+   <RegEx find="ruzj([aeu])" replaceWith="ružj$1" />
    <RegEx find="([oO])sj?e[cč]a" replaceWith="$1sjeća" />
    <RegEx find="([oO])slobodić([eu])" replaceWith="$1slobodit ć$2" />
    <RegEx find="([oO])sta[čć]([eu])" replaceWith="$1stat ć$2" />
