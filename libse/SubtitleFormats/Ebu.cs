@@ -263,19 +263,85 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     encoding = Encoding.GetEncoding(20269);
                     // 0xC1—0xCF combines characters - http://en.wikipedia.org/wiki/ISO/IEC_6937
-                    TextField = ReplaceSpecialCharactersWithTwoByteEncoding(TextField, encoding.GetString(new byte[] { 0xc1 }), "ÀÈÌÒÙàèìòù", "AEIOUaeiou");
-                    TextField = ReplaceSpecialCharactersWithTwoByteEncoding(TextField, encoding.GetString(new byte[] { 0xc2 }), "ÁĆÉÍĹŃÓŔŚÚÝŹáćéģíĺńóŕśúýź", "ACEILNORSUYZacegilnorsuyz");
-                    TextField = ReplaceSpecialCharactersWithTwoByteEncoding(TextField, encoding.GetString(new byte[] { 0xc3 }), "ÂĈÊĜĤÎĴÔŜÛŴŶâĉêĝĥĵôŝûŵŷîî", "ACEGHIJOSUWYaceghjosuwyıi");
-                    TextField = ReplaceSpecialCharactersWithTwoByteEncoding(TextField, encoding.GetString(new byte[] { 0xc4 }), "ÃĨÑÕŨãĩñõũ", "AINOUainou");
-                    TextField = ReplaceSpecialCharactersWithTwoByteEncoding(TextField, encoding.GetString(new byte[] { 0xc5 }), "ĀĒĪŌŪāēīōū", "AEIOUaeiou");
-                    TextField = ReplaceSpecialCharactersWithTwoByteEncoding(TextField, encoding.GetString(new byte[] { 0xc6 }), "ĂĞŬăğŭ", "AGUagu");
-                    TextField = ReplaceSpecialCharactersWithTwoByteEncoding(TextField, encoding.GetString(new byte[] { 0xc7 }), "ĊĖĠİŻċėġıż", "CEGIZcegiz");
-                    TextField = ReplaceSpecialCharactersWithTwoByteEncoding(TextField, encoding.GetString(new byte[] { 0xc8 }), "ÄËÏÖÜŸäëïöüÿ", "AEIOUYaeiouy");
-                    TextField = ReplaceSpecialCharactersWithTwoByteEncoding(TextField, encoding.GetString(new byte[] { 0xca }), "ÅŮåů", "AUau");
-                    TextField = ReplaceSpecialCharactersWithTwoByteEncoding(TextField, encoding.GetString(new byte[] { 0xcb }), "ÇĢĶĻŅŖŞŢçķļņŗşţ", "CGKLNRSTcklnrst");
-                    TextField = ReplaceSpecialCharactersWithTwoByteEncoding(TextField, encoding.GetString(new byte[] { 0xcd }), "ŐŰőű", "OUou");
-                    TextField = ReplaceSpecialCharactersWithTwoByteEncoding(TextField, encoding.GetString(new byte[] { 0xce }), "ĄĘĮŲąęįų", "AEIUaeiu");
-                    TextField = ReplaceSpecialCharactersWithTwoByteEncoding(TextField, encoding.GetString(new byte[] { 0xcf }), "ČĎĚĽŇŘŠŤŽčďěľňřšťž", "CDELNRSTZcdelnrstz");
+
+                    var sbTwoChar = new StringBuilder();
+                    bool skipNext = false;
+                    for (var index = 0; index < TextField.Length; index++)
+                    {
+                        var ch = TextField[index];
+                        if (skipNext)
+                        {
+                            skipNext = false;
+                        }
+                        else if (ch == 'ı' && TextField.Substring(index).StartsWith("ı̂")) // extended unicode char - rewritten as simple 'î' - looks the same as "î" but it's not...)
+                        {
+                            sbTwoChar.Append(encoding.GetString(new byte[] { 0xc3, 0x69 })); // Ãi - simple î
+                                                                                             //                          sbTwoChar.Append(encoding.GetString(new byte[] { 0xc3, 0xf5 }));
+                            skipNext = true;
+                        }
+                        else if ("ÀÈÌÒÙàèìòù".Contains(ch))
+                        {
+                            sbTwoChar.Append(ReplaceSpecialCharactersWithTwoByteEncoding(ch, encoding.GetString(new byte[] { 0xc1 }), "ÀÈÌÒÙàèìòù", "AEIOUaeiou"));
+                        }
+                        else if ("ÁĆÉÍĹŃÓŔŚÚÝŹáćéģíĺńóŕśúýź".Contains(ch))
+                        {
+                            sbTwoChar.Append(ReplaceSpecialCharactersWithTwoByteEncoding(ch, encoding.GetString(new byte[] { 0xc2 }), "ÁĆÉÍĹŃÓŔŚÚÝŹáćéģíĺńóŕśúýź", "ACEILNORSUYZacegilnorsuyz"));
+                        }
+                        else if ("ÂĈÊĜĤÎĴÔŜÛŴŶâĉêĝĥĵôŝûŵŷîı̂".Contains(ch))
+                        {
+                            sbTwoChar.Append(ReplaceSpecialCharactersWithTwoByteEncoding(ch, encoding.GetString(new byte[] { 0xc3 }), "ÂĈÊĜĤÎĴÔŜÛŴŶâĉêĝĥîĵôŝûŵŷ", "ACEGHIJOSUWYaceghijosuwy"));
+                        }
+                        else if ("ÃĨÑÕŨãĩñõũ".Contains(ch))
+                        {
+                            sbTwoChar.Append(ReplaceSpecialCharactersWithTwoByteEncoding(ch, encoding.GetString(new byte[] { 0xc4 }), "ÃĨÑÕŨãĩñõũ", "AINOUainou"));
+                        }
+                        else if ("ĀĒĪŌŪāēīōū".Contains(ch))
+                        {
+                            sbTwoChar.Append(ReplaceSpecialCharactersWithTwoByteEncoding(ch, encoding.GetString(new byte[] { 0xc5 }), "ĀĒĪŌŪāēīōū", "AEIOUaeiou"));
+                        }
+                        else if ("ĂĞŬăğŭ".Contains(ch))
+                        {
+                            sbTwoChar.Append(ReplaceSpecialCharactersWithTwoByteEncoding(ch, encoding.GetString(new byte[] { 0xc6 }), "ĂĞŬăğŭ", "AGUagu"));
+                        }
+                        else if ("ĂĞŬăğŭ".Contains(ch))
+                        {
+                            sbTwoChar.Append(ReplaceSpecialCharactersWithTwoByteEncoding(ch, encoding.GetString(new byte[] { 0xc6 }), "ĂĞŬăğŭ", "AGUagu"));
+                        }
+                        else if ("ĊĖĠİŻċėġıż".Contains(ch))
+                        {
+                            sbTwoChar.Append(ReplaceSpecialCharactersWithTwoByteEncoding(ch, encoding.GetString(new byte[] { 0xc7 }), "ĊĖĠİŻċėġıż", "CEGIZcegiz"));
+                        }
+                        else if ("ÄËÏÖÜŸäëïöüÿ".Contains(ch))
+                        {
+                            sbTwoChar.Append(ReplaceSpecialCharactersWithTwoByteEncoding(ch, encoding.GetString(new byte[] { 0xc8 }), "ÄËÏÖÜŸäëïöüÿ", "AEIOUYaeiouy"));
+                        }
+                        else if ("ÅŮåů".Contains(ch))
+                        {
+                            sbTwoChar.Append(ReplaceSpecialCharactersWithTwoByteEncoding(ch, encoding.GetString(new byte[] { 0xca }), "ÅŮåů", "AUau"));
+                        }
+                        else if ("ÇĢĶĻŅŖŞŢçķļņŗşţ".Contains(ch))
+                        {
+                            sbTwoChar.Append(ReplaceSpecialCharactersWithTwoByteEncoding(ch, encoding.GetString(new byte[] { 0xcb }), "ÇĢĶĻŅŖŞŢçķļņŗşţ", "CGKLNRSTcklnrst"));
+                        }
+                        else if ("ŐŰőű".Contains(ch))
+                        {
+                            sbTwoChar.Append(ReplaceSpecialCharactersWithTwoByteEncoding(ch, encoding.GetString(new byte[] { 0xcd }), "ŐŰőű", "OUou"));
+                        }
+                        else if ("ĄĘĮŲąęįų".Contains(ch))
+                        {
+                            sbTwoChar.Append(ReplaceSpecialCharactersWithTwoByteEncoding(ch, encoding.GetString(new byte[] { 0xce }), "ĄĘĮŲąęįų", "AEIUaeiu"));
+                        }
+                        else if ("ČĎĚĽŇŘŠŤŽčďěľňřšťž".Contains(ch))
+                        {
+                            sbTwoChar.Append(ReplaceSpecialCharactersWithTwoByteEncoding(ch, encoding.GetString(new byte[] { 0xcf }), "ČĎĚĽŇŘŠŤŽčďěľňřšťž", "CDELNRSTZcdelnrstz"));
+                        }
+                        else
+                        {
+                            sbTwoChar.Append(ch);
+                        }
+                    }
+
+                    TextField = sbTwoChar.ToString();
                 }
                 else if (header.CharacterCodeTableNumber == "01") // Latin/Cyrillic alphabet - from ISO 8859/5-1988
                 {
@@ -506,14 +572,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 return string.Empty;
             }
 
-            private static string ReplaceSpecialCharactersWithTwoByteEncoding(string text, string specialCharacter, string originalCharacters, string newCharacters)
+            private static string ReplaceSpecialCharactersWithTwoByteEncoding(char ch, string specialCharacter, string originalCharacters, string newCharacters)
             {
                 if (originalCharacters.Length != newCharacters.Length)
                     throw new ArgumentException("originalCharacters and newCharacters must have equal length");
 
                 for (int i = 0; i < newCharacters.Length; i++)
-                    text = text.Replace(originalCharacters[i].ToString(), specialCharacter + newCharacters[i]);
-                return text;
+                {
+                    if (originalCharacters[i] == ch)
+                        return specialCharacter + newCharacters[i];
+
+                }
+                return ch.ToString();
             }
 
             public static byte GetFrameFromMilliseconds(int milliseconds, double frameRate)
@@ -1122,8 +1192,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 // - 8Ah = new line
                 // - unused space = 8Fh
                 int i = index + 16; // text block start at 17th byte (index 16)
-                var open = header.DisplayStandardCode == "0";
-                var closed = header.DisplayStandardCode == "1" || header.DiskFormatCode == "2";
+                var open = header.DisplayStandardCode != "1" && header.DisplayStandardCode != "2";
+                var closed = header.DisplayStandardCode != "0";
                 int max = index + 112;
                 var sb = new StringBuilder();
                 while (i < max)
