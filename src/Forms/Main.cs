@@ -164,6 +164,7 @@ namespace Nikse.SubtitleEdit.Forms
         private Keys _mainGoToNextSubtitleAndFocusVideo = Keys.None;
         private Keys _mainAdjustExtendCurrentSubtitle = Keys.None;
         private Keys _mainAutoCalcCurrentDuration = Keys.None;
+        private Keys _mainUnbreakNoSpace = Keys.None;
         private Keys _mainTextBoxSplitAtCursor = Keys.None;
         private Keys _mainTextBoxMoveLastWordDown = Keys.None;
         private Keys _mainTextBoxMoveFirstWordFromNextUp = Keys.None;
@@ -9459,6 +9460,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonUnBreakClick(object sender, EventArgs e)
         {
+            Unbreak();
+        }
+
+        private void Unbreak(bool removeNewLineOnly = false)
+        {
             _doAutoBreakOnTextChanged = false;
 
             var textCaretPos = textBoxListViewText.SelectionStart;
@@ -9474,7 +9480,10 @@ namespace Nikse.SubtitleEdit.Forms
                 foreach (int index in SubtitleListview1.SelectedIndices)
                 {
                     var p = _subtitle.GetParagraphOrDefault(index);
-                    p.Text = Utilities.UnbreakLine(p.Text);
+                    if (removeNewLineOnly)
+                        p.Text = p.Text.Replace(Environment.NewLine, string.Empty);
+                    else
+                        p.Text = Utilities.UnbreakLine(p.Text);
                     SubtitleListview1.SetText(index, p.Text);
 
                     if (_subtitleAlternate != null && SubtitleListview1.IsAlternateTextColumnVisible && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
@@ -9482,7 +9491,10 @@ namespace Nikse.SubtitleEdit.Forms
                         var original = Utilities.GetOriginalParagraph(index, p, _subtitleAlternate.Paragraphs);
                         if (original != null)
                         {
-                            original.Text = Utilities.UnbreakLine(original.Text);
+                            if (removeNewLineOnly)
+                                original.Text = original.Text.Replace(Environment.NewLine, string.Empty);
+                            else
+                                original.Text = Utilities.UnbreakLine(original.Text);
                             SubtitleListview1.SetAlternateText(index, original.Text);
                         }
                     }
@@ -9492,7 +9504,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else
             {
-                var fixedText = Utilities.UnbreakLine(textBoxListViewText.Text);
+                var fixedText = removeNewLineOnly ? textBoxListViewText.Text.Replace(Environment.NewLine, string.Empty) : Utilities.UnbreakLine(textBoxListViewText.Text);
                 var makeHistory = textBoxListViewText.Text != fixedText;
                 if (_subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
                 {
@@ -9504,6 +9516,7 @@ namespace Nikse.SubtitleEdit.Forms
                         MakeHistoryForUndo(_language.BeforeRemoveLineBreaksInSelectedLines);
                         textBoxListViewText.Text = fixedText;
                     }
+
                     textBoxListViewTextAlternate.Text = alternateFixedText;
                 }
                 else if (makeHistory)
@@ -9512,6 +9525,7 @@ namespace Nikse.SubtitleEdit.Forms
                     textBoxListViewText.Text = fixedText;
                 }
             }
+
             _doAutoBreakOnTextChanged = true;
             textBoxListViewText.SelectionStart = textCaretPos;
         }
@@ -11749,6 +11763,10 @@ namespace Nikse.SubtitleEdit.Forms
                     ShowSubtitle();
                     e.SuppressKeyPress = true;
                 }
+            }
+            else if (_mainUnbreakNoSpace == e.KeyData)
+            {
+                Unbreak(true);
             }
             else if (_mainGeneralFileSaveAll == e.KeyData)
             {
@@ -16295,7 +16313,7 @@ namespace Nikse.SubtitleEdit.Forms
             _mainGoToNextSubtitleAndFocusVideo = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitleAndFocusVideo);
             _mainAdjustExtendCurrentSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralExtendCurrentSubtitle);
             _mainAutoCalcCurrentDuration = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralAutoCalcCurrentDuration);
-
+            _mainUnbreakNoSpace = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralUnbrekNoSpace);
             _mainVideoFullscreen = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoFullscreen);
 
             spellCheckToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainSpellCheck);

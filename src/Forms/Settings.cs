@@ -696,6 +696,7 @@ namespace Nikse.SubtitleEdit.Forms
             AddNode(generalNode, language.GoToPreviousSubtitleAndFocusVideo, nameof(Configuration.Settings.Shortcuts.GeneralGoToPreviousSubtitleAndFocusVideo));
             AddNode(generalNode, language.GoToNextSubtitleAndFocusVideo, nameof(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitleAndFocusVideo));
             AddNode(generalNode, language.Help, nameof(Configuration.Settings.Shortcuts.GeneralHelp));
+            AddNode(generalNode, language.UnbreakNoSpace, nameof(Configuration.Settings.Shortcuts.GeneralUnbrekNoSpace));
             treeViewShortcuts.Nodes.Add(generalNode);
 
             var fileNode = new TreeNode(Configuration.Settings.Language.Main.Menu.File.Title);
