@@ -1,6 +1,8 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Nikse.SubtitleEdit.Core.Forms;
 using System;
+using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Core.Dictionaries;
 
 namespace Test.Logic.Forms
 {
@@ -19,7 +21,7 @@ namespace Test.Logic.Forms
 
         private static RemoveTextForHI GetRemoveTextForHiLib()
         {
-            var hiSettings = new RemoveTextForHISettings();
+            var hiSettings = new RemoveTextForHISettings(new Subtitle());
             return new RemoveTextForHI(hiSettings);
         }
 
@@ -667,7 +669,7 @@ namespace Test.Logic.Forms
             target.Settings.OnlyIfInSeparateLine = false;
             target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
             target.Settings.ColonSeparateLine = false;
-            string text =  "I think that..." + Environment.NewLine + "Uh... Hey!";
+            string text = "I think that..." + Environment.NewLine + "Uh... Hey!";
             string expected = "I think that..." + Environment.NewLine + "Hey!";
             string actual = target.RemoveInterjections(text);
             Assert.AreEqual(expected, actual);
@@ -1017,6 +1019,32 @@ namespace Test.Logic.Forms
             const string text = "I'm sorry. I, mm-hmm—";
             const string expected = "I'm sorry. I—";
             string actual = target.RemoveInterjections(text);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void RemoveInterjectionsOnlyOnSeparateLine1()
+        {
+            var target = GetRemoveTextForHiLib();
+            target.Settings.RemoveInterjections = true;
+            target.Settings.RemoveInterjectionsOnlySeparateLine = true;
+            const string text = "I'm sorry. Mm-hmm.";
+            const string expected = text;
+            string actual = target.RemoveInterjections(text);
+            target.Settings.RemoveInterjectionsOnlySeparateLine = false;
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void RemoveInterjectionsOnlyOnSeparateLine2()
+        {
+            var target = GetRemoveTextForHiLib();
+            target.Settings.RemoveInterjections = true;
+            target.Settings.RemoveInterjectionsOnlySeparateLine = true;
+            string text = "I'm sorry." + Environment.NewLine + "Mm-hmm.";
+            const string expected = "I'm sorry.";
+            string actual = target.RemoveInterjections(text);
+            target.Settings.RemoveInterjectionsOnlySeparateLine = false;
             Assert.AreEqual(expected, actual);
         }
 
@@ -1728,6 +1756,17 @@ namespace Test.Logic.Forms
             target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
             string actual = target.RemoveColon("Hallo!" + Environment.NewLine + "Robert: what do you think about this new car?");
             Assert.IsTrue(actual.Contains("What do you think about this new car?"));
+        }
+
+        [TestMethod]
+        public void RemoveColonNameAfterElipseInsideLine()
+        {
+            var target = GetRemoveTextForHiLib();
+            target.Settings.RemoveTextBeforeColon = true;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
+            target.Settings.NameList.Add("JEREMY");
+            string actual = target.RemoveColon("- Step out of here... JEREMY: Not world." + Environment.NewLine + "It's a British record.");
+            Assert.AreEqual("- Step out of here... Not world." + Environment.NewLine + "- It's a British record.", actual);
         }
 
         #region Additional test attributes

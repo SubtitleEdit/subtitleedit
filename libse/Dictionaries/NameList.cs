@@ -71,12 +71,12 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
         private string GetLocalNamesFileName()
         {
             // Converts e.g en_US => en (Neutral culture).
-            string twoLetterISOLanguageName = _languageName;
+            string twoLetterIsoLanguageName = _languageName;
             if (_languageName.Length > 2)
             {
-                twoLetterISOLanguageName = _languageName.Substring(0, 2);
+                twoLetterIsoLanguageName = _languageName.Substring(0, 2);
             }
-            return Path.Combine(_dictionaryFolder, twoLetterISOLanguageName + "_names.xml");
+            return Path.Combine(_dictionaryFolder, twoLetterIsoLanguageName + "_names.xml");
         }
 
         private void LoadNamesList(string fileName)
@@ -254,6 +254,19 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                     if (multiWordName.StartsWith(word + " ", StringComparison.Ordinal) || multiWordName.EndsWith(" " + word, StringComparison.Ordinal) || multiWordName.Contains(" " + word + " "))
                         return true;
                 }
+            }
+            return false;
+        }
+
+        public bool ContainsCaseInsensitive(string name)
+        {
+            if (string.IsNullOrEmpty(name))
+                return false;
+
+            foreach (var n in name.Contains(' ') ? _namesMultiList : _namesList)
+            {
+                if (name.Equals(n, StringComparison.OrdinalIgnoreCase))
+                    return true;
             }
             return false;
         }

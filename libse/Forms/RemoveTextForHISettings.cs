@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Nikse.SubtitleEdit.Core.Dictionaries;
 
 namespace Nikse.SubtitleEdit.Core.Forms
 {
@@ -14,14 +15,16 @@ namespace Nikse.SubtitleEdit.Core.Forms
         public List<string> RemoveIfTextContains { get; set; }
         public bool RemoveTextBetweenCustomTags { get; set; }
         public bool RemoveInterjections { get; set; }
+        public bool RemoveInterjectionsOnlySeparateLine { get; set; }
         public bool RemoveTextBetweenSquares { get; set; }
         public bool RemoveTextBetweenBrackets { get; set; }
         public bool RemoveTextBetweenQuestionMarks { get; set; }
         public bool RemoveTextBetweenParentheses { get; set; }
         public string CustomStart { get; set; }
         public string CustomEnd { get; set; }
+        public NameList NameList { get; set; }
 
-        public RemoveTextForHISettings()
+        public RemoveTextForHISettings(Subtitle subtitle)
         {
             OnlyIfInSeparateLine = Configuration.Settings.RemoveTextForHearingImpaired.RemoveTextBetweenOnlySeperateLines;
             RemoveIfAllUppercase = Configuration.Settings.RemoveTextForHearingImpaired.RemoveIfAllUppercase;
@@ -42,6 +45,8 @@ namespace Nikse.SubtitleEdit.Core.Forms
             RemoveTextBetweenParentheses = Configuration.Settings.RemoveTextForHearingImpaired.RemoveTextBetweenParentheses;
             CustomStart = Configuration.Settings.RemoveTextForHearingImpaired.RemoveTextBetweenCustomBefore;
             CustomEnd = Configuration.Settings.RemoveTextForHearingImpaired.RemoveTextBetweenCustomAfter;
+            var languageName = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle);
+            NameList = new NameList(Configuration.DictionariesDirectory, languageName, Configuration.Settings.WordLists.UseOnlineNames, Configuration.Settings.WordLists.NamesUrl);
         }
 
     }
