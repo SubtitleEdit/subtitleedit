@@ -2271,7 +2271,9 @@ namespace Nikse.SubtitleEdit.Core
                         comments.Paragraphs.RemoveAt(commentIndex);
                 }
 
-                string text = mp.GetText(matroskaSubtitleInfo).Replace(Environment.NewLine, "\\N");
+                string text = mp.GetText(matroskaSubtitleInfo)
+                    .Replace(Environment.NewLine + Environment.NewLine, "\\N")
+                    .Replace(Environment.NewLine, "\\N");
                 int idx = text.IndexOf(',') + 1;
                 if (idx > 0 && idx < text.Length)
                 {

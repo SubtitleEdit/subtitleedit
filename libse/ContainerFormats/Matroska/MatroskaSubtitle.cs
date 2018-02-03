@@ -53,19 +53,17 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
         {
         }
 
-        public long End
-        {
-            get
-            {
-                return Start + Duration;
-            }
-        }
+        public long End => Start + Duration;
 
         public string GetText(MatroskaTrackInfo matroskaTrackInfo)
         {
             var data = GetData(matroskaTrackInfo);
             if (data != null)
-                return System.Text.Encoding.UTF8.GetString(data).Replace("\\N", Environment.NewLine);
+            {
+                return System.Text.Encoding.UTF8.GetString(data)
+                    .Replace("\\N", Environment.NewLine)
+                    .Replace("\0", string.Empty);
+            }
             return string.Empty;
         }
     }
