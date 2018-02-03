@@ -6,6 +6,7 @@
    * Some support for SMPTE time code (drop frame) in video player
    * Swap text up/down - thx Leon
    * Shortcuts for moving text up/down in current sub - thx Leon
+   * Shortcut for "Unbreak without space" (for CJK) - thx Leon
 * IMPROVED:
    * Update Bulgarian translation - thx KalinM
    * Update Hungarian translation - thx ZityiSoft Team
@@ -19,6 +20,8 @@
    * Fix issue regarding "Binary image compare OCR ext. matches" - thx SimplyTheBOSS
    * Fix issue regarding "Bridge gaps"/selected line - thx btsix
    * Fix new-line char in "Replace -> Replace with" text box - thx Leon
+   * Fix missing char "î" for EBU STL - thx Milenko
+   * Fix missing color tag for EBU STL - thx Tom
 
 
 3.5.5 (26th January 2018)
