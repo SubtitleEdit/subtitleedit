@@ -1882,6 +1882,8 @@
             public string NetflixQualityCheck { get; set; }
             public string SettingsName { get; set; }
             public string Help { get; set; }
+            public string UnbreakNoSpace { get; set; }
+            
             public string ShowFrameRate { get; set; }
             public string DefaultFrameRate { get; set; }
             public string DefaultFileEncoding { get; set; }

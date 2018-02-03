@@ -4600,6 +4600,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/Help":
                     language.Settings.Help = reader.Value;
                     break;
+                case "Settings/UnbreakNoSpace":
+                    language.Settings.UnbreakNoSpace = reader.Value;
+                    break;
                 case "Settings/ShowFrameRate":
                     language.Settings.ShowFrameRate = reader.Value;
                     break;

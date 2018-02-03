@@ -1719,6 +1719,7 @@ can edit in same subtitle file (collaboration)</Information>
     <NetflixQualityCheck>Netflix quality check</NetflixQualityCheck>
     <SettingsName>Settings</SettingsName>
     <Help>Help</Help>
+    <UnbreakNoSpace>Unbreak wihout space (CJK)</UnbreakNoSpace>
     <ShowFrameRate>Show frame rate in toolbar</ShowFrameRate>
     <DefaultFrameRate>Default frame rate</DefaultFrameRate>
     <DefaultFileEncoding>Default file encoding</DefaultFileEncoding>

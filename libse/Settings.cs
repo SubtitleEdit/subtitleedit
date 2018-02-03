@@ -949,7 +949,7 @@ namespace Nikse.SubtitleEdit.Core
         public string GeneralAutoCalcCurrentDuration { get; set; }
         public string GeneralPlayFirstSelected { get; set; }
         public string GeneralHelp { get; set; }
-
+        public string GeneralUnbrekNoSpace { get; set; }
         public string MainFileNew { get; set; }
         public string MainFileOpen { get; set; }
         public string MainFileOpenKeepVideo { get; set; }
@@ -2831,6 +2831,9 @@ namespace Nikse.SubtitleEdit.Core
                 subNode = node.SelectSingleNode("GeneralHelp");
                 if (subNode != null)
                     settings.Shortcuts.GeneralHelp = subNode.InnerText;
+                subNode = node.SelectSingleNode("GeneralUnbrekNoSpace");
+                if (subNode != null)
+                    settings.Shortcuts.GeneralUnbrekNoSpace = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainFileNew");
                 if (subNode != null)
                     settings.Shortcuts.MainFileNew = subNode.InnerText;
@@ -3840,6 +3843,7 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("GeneralAutoCalcCurrentDuration", settings.Shortcuts.GeneralAutoCalcCurrentDuration);
                 textWriter.WriteElementString("GeneralPlayFirstSelected", settings.Shortcuts.GeneralPlayFirstSelected);
                 textWriter.WriteElementString("GeneralHelp", settings.Shortcuts.GeneralHelp);
+                textWriter.WriteElementString("GeneralUnbrekNoSpace", settings.Shortcuts.GeneralUnbrekNoSpace);
                 textWriter.WriteElementString("MainFileNew", settings.Shortcuts.MainFileNew);
                 textWriter.WriteElementString("MainFileOpen", settings.Shortcuts.MainFileOpen);
                 textWriter.WriteElementString("MainFileOpenKeepVideo", settings.Shortcuts.MainFileOpenKeepVideo);
