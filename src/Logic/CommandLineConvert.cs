@@ -909,7 +909,7 @@ namespace Nikse.SubtitleEdit.Logic
                 {
                     if (action == BatchAction.RemoveTextForHI)
                     {
-                        var hiSettings = new Core.Forms.RemoveTextForHISettings();
+                        var hiSettings = new Core.Forms.RemoveTextForHISettings(sub);
                         var hiLib = new Core.Forms.RemoveTextForHI(hiSettings);
                         foreach (var p in sub.Paragraphs)
                         {

@@ -5593,7 +5593,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             ReloadFromSourceView();
-            using (var removeTextFromHearImpaired = new FormRemoveTextForHearImpaired(this))
+            using (var removeTextFromHearImpaired = new FormRemoveTextForHearImpaired(this, _subtitle))
             {
                 removeTextFromHearImpaired.Initialize(_subtitle);
                 if (removeTextFromHearImpaired.ShowDialog(this) == DialogResult.OK)

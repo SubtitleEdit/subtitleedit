@@ -206,7 +206,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxSetMinimumDisplayTimeBetweenSubs.Text = l.SetMinMsBetweenSubtitles;
             checkBoxBridgeGaps.Text = l.BridgeGaps;
 
-            _removeTextForHearingImpaired = new RemoveTextForHI(new RemoveTextForHISettings());
+            _removeTextForHearingImpaired = new RemoveTextForHI(new RemoveTextForHISettings(new Subtitle()));
 
             labelFilter.Text = l.Filter;
             comboBoxFilter.Items[0] = Configuration.Settings.Language.General.AllFiles;
@@ -1751,7 +1751,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonRemoveTextForHiSettings_Click(object sender, EventArgs e)
         {
-            using (var form = new FormRemoveTextForHearImpaired(null))
+            using (var form = new FormRemoveTextForHearImpaired(null, new Subtitle()))
             {
                 form.InitializeSettingsOnly();
                 form.ShowDialog(this);

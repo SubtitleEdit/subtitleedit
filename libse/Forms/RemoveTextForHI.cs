@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
+using Nikse.SubtitleEdit.Core.Dictionaries;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 
 namespace Nikse.SubtitleEdit.Core.Forms
 {
@@ -117,29 +119,33 @@ namespace Nikse.SubtitleEdit.Core.Forms
                     var noTagPre = HtmlUtil.RemoveHtmlTags(pre, true);
                     if (Settings.RemoveTextBeforeColonOnlyUppercase && noTagPre != noTagPre.ToUpper())
                     {
-                        string s = line;
-                        string l1Trim = HtmlUtil.RemoveHtmlTags(lines[0]).TrimEnd('"');
-                        if (count == 1 && lines.Count == 2 && !l1Trim.EndsWith('.') &&
-                                                               !l1Trim.EndsWith('!') &&
-                                                               !l1Trim.EndsWith('?'))
+                        bool remove = true;
+                        newText = RemovePartialBeforeColon(line, indexOfColon, newText, count, ref removedInFirstLine, ref removedInSecondLine, ref remove);
+                        if (remove)
                         {
-                            var indexOf = line.IndexOfAny(ExpectedStrings, StringComparison.Ordinal);
-                            if (indexOf > 0 && indexOf < indexOfColon)
+                            string s = line;
+                            string l1Trim = HtmlUtil.RemoveHtmlTags(lines[0]).TrimEnd('"');
+                            if (count == 1 && lines.Count == 2 && !l1Trim.EndsWith('.') &&
+                                                                   !l1Trim.EndsWith('!') &&
+                                                                   !l1Trim.EndsWith('?'))
                             {
-                                var toRemove = s.Substring(indexOf + 1, indexOfColon - indexOf).Trim();
-                                if (toRemove.Length > 1 && toRemove == toRemove.ToUpper())
+                                var indexOf = line.IndexOfAny(ExpectedStrings, StringComparison.Ordinal);
+                                if (indexOf > 0 && indexOf < indexOfColon)
                                 {
-                                    s = s.Remove(indexOf + 1, indexOfColon - indexOf);
-                                    s = s.Insert(indexOf + 1, " -");
-                                    if (newText.StartsWith("<i>", StringComparison.Ordinal) && !newText.StartsWith("<i>-", StringComparison.Ordinal))
-                                        newText = "<i>- " + newText.Remove(0, 3);
-                                    else if (!newText.StartsWith('-'))
-                                        newText = "- " + newText;
+                                    var toRemove = s.Substring(indexOf + 1, indexOfColon - indexOf).Trim();
+                                    if (toRemove.Length > 1 && toRemove == toRemove.ToUpper())
+                                    {
+                                        s = s.Remove(indexOf + 1, indexOfColon - indexOf);
+                                        s = s.Insert(indexOf + 1, " -");
+                                        if (newText.StartsWith("<i>", StringComparison.Ordinal) && !newText.StartsWith("<i>-", StringComparison.Ordinal))
+                                            newText = "<i>- " + newText.Remove(0, 3);
+                                        else if (!newText.StartsWith('-'))
+                                            newText = "- " + newText;
+                                    }
                                 }
                             }
+                            newText = (newText + Environment.NewLine + s).Trim();
                         }
-
-                        newText = (newText + Environment.NewLine + s).Trim();
                     }
                     else
                     {
@@ -210,35 +216,41 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
                                 if (remove)
                                 {
-                                    var content = line.Substring(indexOfColon + 1).Trim();
-                                    if (content.Length > 0)
+                                    newText = RemovePartialBeforeColon(line, indexOfColon, newText, count, ref removedInFirstLine, ref removedInSecondLine, ref remove);
+
+                                    if (remove)
                                     {
-                                        if (count == 0 && content[0].ToString() != content[0].ToString().ToUpperInvariant())
+                                        var content = line.Substring(indexOfColon + 1).Trim();
+                                        if (content.Length > 0)
                                         {
-                                            content = content[0].ToString().ToUpperInvariant() + content.Remove(0, 1);
-                                        }
-                                        else if (count == 1 && content[0].ToString() != content[0].ToString().ToUpperInvariant())
-                                        {
-                                            content = content[0].ToString().ToUpperInvariant() + content.Remove(0, 1);
-                                        }
+                                            if (count == 0 && content[0].ToString() != content[0].ToString().ToUpperInvariant())
+                                            {
+                                                content = content[0].ToString().ToUpperInvariant() + content.Remove(0, 1);
+                                            }
+                                            else if (count == 1 && content[0].ToString() != content[0].ToString().ToUpperInvariant())
+                                            {
+                                                content = content[0].ToString().ToUpperInvariant() + content.Remove(0, 1);
+                                            }
 
-                                        newText += Environment.NewLine;
-                                        if (pre.Contains("<i>") && content.Contains("</i>"))
-                                            newText += "<i>" + content;
-                                        else if (pre.Contains("<b>") && content.Contains("</b>"))
-                                            newText += "<b>" + content;
-                                        else if (pre.Contains('[') && content.Contains(']'))
-                                            newText += "[" + content;
-                                        else if (pre.Contains('(') && content.EndsWith(')'))
-                                            newText += "(" + content;
-                                        else
-                                            newText += content;
+                                            newText += Environment.NewLine;
+                                            if (pre.Contains("<i>") && content.Contains("</i>"))
+                                                newText += "<i>" + content;
+                                            else if (pre.Contains("<b>") && content.Contains("</b>"))
+                                                newText += "<b>" + content;
+                                            else if (pre.Contains('[') && content.Contains(']'))
+                                                newText += "[" + content;
+                                            else if (pre.Contains('(') && content.EndsWith(')'))
+                                                newText += "(" + content;
+                                            else
+                                                newText += content;
 
-                                        if (count == 0)
-                                            removedInFirstLine = true;
-                                        else if (count == 1)
-                                            removedInSecondLine = true;
+                                            if (count == 0)
+                                                removedInFirstLine = true;
+                                            else if (count == 1)
+                                                removedInSecondLine = true;
+                                        }
                                     }
+
                                     newText = newText.Trim();
 
                                     if (text.StartsWith('(') && newText.EndsWith(')') && !newText.Contains('('))
@@ -420,6 +432,49 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 return string.Empty;
 
             return preAssTag + newText;
+        }
+
+        private string RemovePartialBeforeColon(string line, int indexOfColon, string newText, int count, ref bool removedInFirstLine, ref bool removedInSecondLine, ref bool remove)
+        {
+            var lastIndexOfPeriod = line.Substring(0, indexOfColon).LastIndexOf("... ", StringComparison.Ordinal);
+            if (lastIndexOfPeriod > 10)
+            {
+                var s = line.Substring(lastIndexOfPeriod, indexOfColon - lastIndexOfPeriod);
+                s = s.Trim('.', '-', ' ', '!', '?', '"', '\'');
+                if (IsHIDescription(s) || Settings.NameList != null && Settings.NameList.ContainsCaseInsensitive(s))
+                {
+                    var partialRemove = false;
+                    if (Settings.RemoveTextBeforeColonOnlyUppercase)
+                    {
+                        if (s == s.ToUpperInvariant())
+                        {
+                            partialRemove = true;
+                        }
+                    }
+                    else
+                    {
+                        partialRemove = true;
+                    }
+
+                    if (partialRemove)
+                    {
+                        newText = line.Remove(lastIndexOfPeriod + 4, indexOfColon - lastIndexOfPeriod - 3);
+                        if (newText.Substring(lastIndexOfPeriod + 3).StartsWith("  "))
+                        {
+                            newText = newText.Remove(lastIndexOfPeriod + 3, 1);
+                        }
+
+                        if (count == 0)
+                            removedInFirstLine = true;
+                        else if (count == 1)
+                            removedInSecondLine = true;
+                    }
+
+                    remove = false;
+                }
+            }
+
+            return newText;
         }
 
         private bool IsInsideBrackets(string text, int targetIndex)
@@ -1143,6 +1198,22 @@ namespace Nikse.SubtitleEdit.Core.Forms
                     text = text.Remove(text.Length - (Environment.NewLine.Length + 4), Environment.NewLine.Length);
                 }
                 text = text.Replace(Environment.NewLine + "</i>" + Environment.NewLine, "</i>" + Environment.NewLine);
+
+                if (Settings.RemoveInterjectionsOnlySeparateLine)
+                {
+                    if (string.IsNullOrEmpty(text))
+                        return text;
+
+                    var oldLines = oldText.SplitToLines();
+                    var newLines = text.SplitToLines();
+                    if (oldLines.Count == 2 && newLines.Count == 1 &&
+                        (oldLines[0] == newLines[0] || oldLines[1] == newLines[0]))
+                    {
+                        return text;
+                    }
+
+                    return oldText;
+                }
             }
             return text;
         }

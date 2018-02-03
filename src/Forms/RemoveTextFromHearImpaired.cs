@@ -19,14 +19,14 @@ namespace Nikse.SubtitleEdit.Forms
         private readonly Main _mainForm;
         private readonly List<Paragraph> _unchecked = new List<Paragraph>();
 
-        public FormRemoveTextForHearImpaired(Main main)
+        public FormRemoveTextForHearImpaired(Main main, Subtitle subtitle)
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
             UiUtil.FixFonts(this);
 
             _mainForm = main;
-            _removeTextForHiLib = new RemoveTextForHI(GetSettings());
+            _removeTextForHiLib = new RemoveTextForHI(GetSettings(subtitle));
 
             checkBoxRemoveTextBetweenSquares.Checked = Configuration.Settings.RemoveTextForHearingImpaired.RemoveTextBetweenBrackets;
             checkBoxRemoveTextBetweenParentheses.Checked = Configuration.Settings.RemoveTextForHearingImpaired.RemoveTextBetweenParentheses;
@@ -38,6 +38,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxRemoveTextBeforeColonOnlyUppercase.Checked = Configuration.Settings.RemoveTextForHearingImpaired.RemoveTextBeforeColonOnlyIfUppercase;
             checkBoxColonSeparateLine.Checked = Configuration.Settings.RemoveTextForHearingImpaired.RemoveTextBeforeColonOnlyOnSeparateLine;
             checkBoxRemoveInterjections.Checked = Configuration.Settings.RemoveTextForHearingImpaired.RemoveInterjections;
+            checkBoxInterjectionOnlySeparateLine.Checked = Configuration.Settings.RemoveTextForHearingImpaired.RemoveInterjectionsOnlyOnSeparateLine;
             checkBoxRemoveWhereContains.Checked = Configuration.Settings.RemoveTextForHearingImpaired.RemoveIfContains;
             checkBoxRemoveIfAllUppercase.Checked = Configuration.Settings.RemoveTextForHearingImpaired.RemoveIfAllUppercase;
 
@@ -60,6 +61,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxRemoveWhereContains.Text = _language.RemoveTextIfContains;
             checkBoxRemoveIfAllUppercase.Text = _language.RemoveTextIfAllUppercase;
             checkBoxRemoveInterjections.Text = _language.RemoveInterjections;
+            checkBoxInterjectionOnlySeparateLine.Text = _language.OnlyIfInSeparateLine;
             buttonEditInterjections.Text = _language.EditInterjections;
             buttonEditInterjections.Left = checkBoxRemoveInterjections.Left + checkBoxRemoveInterjections.Width;
             listViewFixes.Columns[0].Text = Configuration.Settings.Language.General.Apply;
@@ -83,8 +85,7 @@ namespace Nikse.SubtitleEdit.Forms
                 comboBoxRemoveIfTextContains.Font = new Font(unicodeFontName, fontSize);
             }
             comboBoxRemoveIfTextContains.Left = checkBoxRemoveWhereContains.Left + checkBoxRemoveWhereContains.Width;
-
-            Subtitle = new Subtitle(subtitle);
+            Subtitle = new Subtitle(subtitle);            
             GeneratePreview();
         }
 
@@ -102,7 +103,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (Subtitle == null)
                 return;
             Cursor.Current = Cursors.WaitCursor;
-            _removeTextForHiLib.Settings = GetSettings();
+            _removeTextForHiLib.Settings = GetSettings(Subtitle);
             _removeTextForHiLib.Warnings = new List<int>();
             listViewFixes.BeginUpdate();
             listViewFixes.Items.Clear();
@@ -161,6 +162,7 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.RemoveTextForHearingImpaired.RemoveTextBeforeColonOnlyIfUppercase = checkBoxRemoveTextBeforeColonOnlyUppercase.Checked;
             Configuration.Settings.RemoveTextForHearingImpaired.RemoveTextBeforeColonOnlyOnSeparateLine = checkBoxColonSeparateLine.Checked;
             Configuration.Settings.RemoveTextForHearingImpaired.RemoveInterjections = checkBoxRemoveInterjections.Checked;
+            Configuration.Settings.RemoveTextForHearingImpaired.RemoveInterjectionsOnlyOnSeparateLine = checkBoxInterjectionOnlySeparateLine.Checked;
             Configuration.Settings.RemoveTextForHearingImpaired.RemoveIfContains = checkBoxRemoveWhereContains.Checked;
             Configuration.Settings.RemoveTextForHearingImpaired.RemoveIfAllUppercase = checkBoxRemoveIfAllUppercase.Checked;
             Configuration.Settings.RemoveTextForHearingImpaired.RemoveIfContainsText = comboBoxRemoveIfTextContains.Text;
@@ -265,9 +267,9 @@ namespace Nikse.SubtitleEdit.Forms
             GeneratePreview();
         }
 
-        public RemoveTextForHISettings GetSettings()
+        public RemoveTextForHISettings GetSettings(Subtitle subtitle)
         {
-            var settings = new RemoveTextForHISettings
+            var settings = new RemoveTextForHISettings(subtitle)
             {
                 OnlyIfInSeparateLine = checkBoxOnlyIfInSeparateLine.Checked,
                 RemoveIfAllUppercase = checkBoxRemoveIfAllUppercase.Checked,
@@ -278,6 +280,7 @@ namespace Nikse.SubtitleEdit.Forms
                 RemoveIfTextContains = new List<string>(),
                 RemoveTextBetweenCustomTags = checkBoxRemoveTextBetweenCustomTags.Checked,
                 RemoveInterjections = checkBoxRemoveInterjections.Checked,
+                RemoveInterjectionsOnlySeparateLine = checkBoxInterjectionOnlySeparateLine.Checked,
                 RemoveTextBetweenSquares = checkBoxRemoveTextBetweenSquares.Checked,
                 RemoveTextBetweenBrackets = checkBoxRemoveTextBetweenBrackets.Checked,
                 RemoveTextBetweenQuestionMarks = checkBoxRemoveTextBetweenQuestionMarks.Checked,
@@ -338,5 +341,9 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        private void checkBoxInterjectionOnlySeparateLine_CheckedChanged(object sender, EventArgs e)
+        {
+            GeneratePreview();
+        }
     }
 }
