@@ -58,11 +58,21 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
         public string GetText(MatroskaTrackInfo matroskaTrackInfo)
         {
             var data = GetData(matroskaTrackInfo);
+
             if (data != null)
             {
-                return System.Text.Encoding.UTF8.GetString(data)
-                    .Replace("\\N", Environment.NewLine)
-                    .Replace("\0", string.Empty);
+                // terminate string at first binary zero - https://github.com/Matroska-Org/ebml-specification/blob/master/specification.markdown#terminating-elements
+                // https://github.com/SubtitleEdit/subtitleedit/issues/2732
+                int max = data.Length;
+                for (int i = 0; i < max; i++)
+                {
+                    if (data[i] == 0)
+                    {
+                        max = i;
+                        break;
+                    }
+                }
+                return System.Text.Encoding.UTF8.GetString(data, 0, max).Replace("\\N", Environment.NewLine);
             }
             return string.Empty;
         }
