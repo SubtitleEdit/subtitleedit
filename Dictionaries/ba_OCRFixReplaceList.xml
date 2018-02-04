@@ -1229,7 +1229,7 @@
  <RegEx find="redjas" replaceWith="rijaš" />
  <RegEx find="redlaz" replaceWith="redlaž" />
  <RegEx find="(?&lt;![Šš])([pP])rica" replaceWith="$1riča" />
- <RegEx find="\b([pP])rilicn" replaceWith="$1riličn" />
+ <RegEx find="rilicn" replaceWith="riličn" />
  <RegEx find="romj?enis" replaceWith="romijeniš" />
  <RegEx find="([pP](?:ri|od))sj?eca" replaceWith="$1sjeća" />
  <RegEx find="rosj?ec" replaceWith="rosječ" />
@@ -1253,7 +1253,7 @@
  <RegEx find="\b([rR])i?j?ecni([kc])" replaceWith="$1ječni$2" />
  <RegEx find="(?&lt;!t)rocita" replaceWith="ročita" />
  <RegEx find="([dDrRvVg])odje" replaceWith="$1ođe" />
- <RegEx find="([rR])ucak" replaceWith="$1učak" />
+ <RegEx find="(?&lt;![Cc])ucak" replaceWith="učak" />
  <RegEx find="ruce" replaceWith="ruče" />
  <RegEx find="rucio" replaceWith="ručio" />
  <RegEx find="arud[zž]bin" replaceWith="arudžb" />
@@ -1542,7 +1542,6 @@
  <RegEx find="rucin" replaceWith="rućin" />
  <RegEx find="([lr])adj" replaceWith="$1ađ" />
  <RegEx find="redje([nm])" replaceWith="ređe$1" />
- <RegEx find="rocit" replaceWith="ročit" />
  <RegEx find="ronad" replaceWith="ronađ" />
  <RegEx find="([KkPp])renes\b" replaceWith="$1reneš" />
  <RegEx find="sapni" replaceWith="šapni" />
