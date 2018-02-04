@@ -54,10 +54,28 @@ namespace Nikse.SubtitleEdit.Forms
             radioButtonTimeCodeMs.Text = l.Milliseconds;
             radioButtonTimeCodeHHMMSSFF.Text = l.HHMMSSFF;
             labelTimeCodeSeparator.Text = l.TimeCodeSeparator;
+            comboBoxTimeCodeSeparator.Left = labelTimeCodeSeparator.Left + labelTimeCodeSeparator.Width + 5;
             labelEncoding.Text = Configuration.Settings.Language.Main.Controls.FileEncoding;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             buttonOK.Text = Configuration.Settings.Language.Main.Menu.File.SaveAs;
+
             _loading = true;
+        }
+
+        internal void Initialize(Subtitle subtitle, string fileName)
+        {
+            _subtitle = subtitle;
+            _fileName = fileName;
+            textBoxText.ReadOnly = true;
+            comboBoxTimeCodeSeparator.SelectedIndex = 0;
+            LoadSettings();
+            _loading = false;
+            GeneratePreview();
+            UiUtil.InitializeTextEncodingComboBox(comboBoxEncoding);
+        }
+
+        private void LoadSettings()
+        {
             if (Configuration.Settings.Tools.ExportTextFormatText == "None")
                 radioButtonFormatNone.Checked = true;
             else if (Configuration.Settings.Tools.ExportTextFormatText == "Unbreak")
@@ -71,18 +89,30 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxAddNewlineAfterTimeCodes.Checked = Configuration.Settings.Tools.ExportTextShowTimeCodesNewLine;
             checkBoxAddAfterText.Checked = Configuration.Settings.Tools.ExportTextNewLineAfterText;
             checkBoxAddNewLine2.Checked = Configuration.Settings.Tools.ExportTextNewLineBetweenSubtitles;
-        }
+            checkBoxShowTimeCodes.Checked = Configuration.Settings.Tools.ExportTextShowTimeCodes;
 
-        internal void Initialize(Subtitle subtitle, string fileName)
-        {
-            _subtitle = subtitle;
-            _fileName = fileName;
-            textBoxText.ReadOnly = true;
-            comboBoxTimeCodeSeparator.SelectedIndex = 0;
-            _loading = false;
-            GeneratePreview();
+            if (Configuration.Settings.Tools.ExportTextTimeCodeFormat == "Frames")
+            {
+                radioButtonTimeCodeHHMMSSFF.Checked = true;
+            }
 
-            UiUtil.InitializeTextEncodingComboBox(comboBoxEncoding);
+            if (Configuration.Settings.Tools.ExportTextTimeCodeFormat == "Milliseconds")
+            {
+                radioButtonTimeCodeMs.Checked = true;
+            }
+            else
+            {
+                radioButtonTimeCodeSrt.Checked = true;
+            }
+
+            if (Configuration.Settings.Tools.ExportTextTimeCodeSeparator == comboBoxTimeCodeSeparator.Items[0].ToString())
+            {
+                comboBoxTimeCodeSeparator.SelectedIndex = 0;
+            }
+            else if (Configuration.Settings.Tools.ExportTextTimeCodeSeparator == comboBoxTimeCodeSeparator.Items[1].ToString())
+            {
+                comboBoxTimeCodeSeparator.SelectedIndex = 1;
+            }
         }
 
         private void GeneratePreview()
@@ -224,6 +254,21 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.Tools.ExportTextShowTimeCodesNewLine = checkBoxAddNewlineAfterTimeCodes.Checked;
             Configuration.Settings.Tools.ExportTextNewLineAfterText = checkBoxAddAfterText.Checked;
             Configuration.Settings.Tools.ExportTextNewLineBetweenSubtitles = checkBoxAddNewLine2.Checked;
+
+            if (radioButtonTimeCodeHHMMSSFF.Checked)
+            {
+                Configuration.Settings.Tools.ExportTextTimeCodeFormat = "Frames";
+            }
+            else if (radioButtonTimeCodeMs.Checked)
+            {
+                Configuration.Settings.Tools.ExportTextTimeCodeFormat = "Milliseconds";
+            }
+            else
+            {
+                Configuration.Settings.Tools.ExportTextTimeCodeFormat = "Srt";
+            }
+
+            Configuration.Settings.Tools.ExportTextTimeCodeSeparator = comboBoxTimeCodeSeparator.Items[comboBoxTimeCodeSeparator.SelectedIndex].ToString();
         }
 
         public void PrepareForBatchSettings()

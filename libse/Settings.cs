@@ -204,6 +204,8 @@ namespace Nikse.SubtitleEdit.Core
         public bool ExportTextShowTimeCodesNewLine { get; set; }
         public bool ExportTextNewLineAfterText { get; set; }
         public bool ExportTextNewLineBetweenSubtitles { get; set; }
+        public string ExportTextTimeCodeFormat { get; set; }
+        public string ExportTextTimeCodeSeparator { get; set; }        
         public bool VideoOffsetKeepTimeCodes { get; set; }
         public int MoveStartEndMs { get; set; }
         public decimal AdjustDurationSeconds { get; set; }
@@ -2205,6 +2207,12 @@ namespace Nikse.SubtitleEdit.Core
             subNode = node.SelectSingleNode("ExportTextNewLineBetweenSubtitles");
             if (subNode != null)
                 settings.Tools.ExportTextNewLineBetweenSubtitles = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("ExportTextTimeCodeFormat");
+            if (subNode != null)
+                settings.Tools.ExportTextTimeCodeFormat = subNode.InnerText;
+            subNode = node.SelectSingleNode("ExportTextTimeCodeSeparator");
+            if (subNode != null)
+                settings.Tools.ExportTextTimeCodeSeparator = subNode.InnerText;
             subNode = node.SelectSingleNode("VideoOffsetKeepTimeCodes");
             if (subNode != null)
                 settings.Tools.VideoOffsetKeepTimeCodes = Convert.ToBoolean(subNode.InnerText);
@@ -3616,12 +3624,13 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("ExportTextShowTimeCodesNewLine", settings.Tools.ExportTextShowTimeCodesNewLine.ToString());
                 textWriter.WriteElementString("ExportTextNewLineAfterText", settings.Tools.ExportTextNewLineAfterText.ToString());
                 textWriter.WriteElementString("ExportTextNewLineBetweenSubtitles", settings.Tools.ExportTextNewLineBetweenSubtitles.ToString());
+                textWriter.WriteElementString("ExportTextTimeCodeFormat", settings.Tools.ExportTextTimeCodeFormat);
+                textWriter.WriteElementString("ExportTextTimeCodeSeparator", settings.Tools.ExportTextTimeCodeSeparator);
                 textWriter.WriteElementString("VideoOffsetKeepTimeCodes", settings.Tools.VideoOffsetKeepTimeCodes.ToString());
                 textWriter.WriteElementString("MoveStartEndMs", settings.Tools.MoveStartEndMs.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AdjustDurationSeconds", settings.Tools.AdjustDurationSeconds.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AdjustDurationPercent", settings.Tools.AdjustDurationPercent.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AdjustDurationLast", settings.Tools.AdjustDurationLast);
-
 
                 if (settings.Tools.FindHistory != null && settings.Tools.FindHistory.Count > 0)
                 {
