@@ -1,4 +1,5 @@
 <OCRFixReplaceList>
+<!-- ova skripta stvorena je isključivo za mijenjanje riječi bez kvačica u riječi sa kvačicama -->  
   <WholeWords>
     <Word from="andele" to="anđele" />
     <Word from="andeli" to="anđeli" />
@@ -878,7 +879,6 @@
     <Word from="vrtic" to="vrtić" />
     <Word from="vrtica" to="vrtića" />
     <Word from="vrticu" to="vrtiću" />
-
     <!--z-->
     <Word from="zaduzen" to="zadužen" />
     <Word from="Zaduzen" to="Zadužen" />
@@ -921,6 +921,7 @@
 <PartialWords />
 <PartialLines>
     <LinePart from="da nadjem" to="naći" />
+    <LinePart from="da nadjes" to="naći" />
     <LinePart from="da budes" to="biti" />
     <LinePart from="da ides" to="ići" />
     <LinePart from="gdje ides" to="kamo ideš" />
