@@ -314,7 +314,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private int _ocrMethodIndex;
         private bool _autoBreakLines;
 
-        private int _ocrMethodTesseract = 0;
+        private int _ocrMethodTesseract;
         private int _ocrMethodModi = 2;
         private int _ocrMethodBinaryImageCompare = 1;
         private int _ocrMethodNocr = 3;
@@ -523,7 +523,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         internal void InitializeBatch(string vobSubFileName, VobSubOcrSettings vobSubOcrSettings, bool forcedOnly)
         {
-            Initialize(vobSubFileName, vobSubOcrSettings, null);
+            Initialize(vobSubFileName, vobSubOcrSettings, null, true);
             checkBoxShowOnlyForced.Checked = forcedOnly;
             FormVobSubOcr_Shown(null, null);
             checkBoxPromptForUnknownWords.Checked = false;
@@ -592,7 +592,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             SetButtonsEnabledAfterOcrDone();
         }
 
-        internal bool Initialize(string vobSubFileName, VobSubOcrSettings vobSubOcrSettings, Main main)
+        internal bool Initialize(string vobSubFileName, VobSubOcrSettings vobSubOcrSettings, Main main, bool batchMode = false)
         {
             _main = main;
             buttonOK.Enabled = false;
@@ -618,7 +618,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             FileName = vobSubFileName;
             Text += " - " + Path.GetFileName(FileName);
 
-            return InitializeSubIdx(vobSubFileName);
+            return InitializeSubIdx(vobSubFileName, batchMode);
         }
 
         internal void Initialize(List<VobSubMergedPack> vobSubMergedPackist, List<Color> palette, VobSubOcrSettings vobSubOcrSettings, string languageString)
@@ -1010,7 +1010,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             _compareBitmaps = null;
         }
 
-        private bool InitializeSubIdx(string vobSubFileName)
+        private bool InitializeSubIdx(string vobSubFileName, bool batchMode = false)
         {
             var vobSubParser = new VobSubParser(true);
             string idxFileName = Path.ChangeExtension(vobSubFileName, ".idx");
@@ -1039,17 +1039,23 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     Form form = _main;
                     if (form == null)
                         form = this;
+                    if (batchMode)
+                    {
+                        chooseLanguage.SelectActive();
+                        _vobSubMergedPackist = chooseLanguage.SelectedVobSubMergedPacks;
+                        SetTesseractLanguageFromLanguageString(chooseLanguage.SelectedLanguageString);
+                        _importLanguageString = chooseLanguage.SelectedLanguageString;
+                        return true;
+                    }
                     chooseLanguage.Activate();
                     if (chooseLanguage.ShowDialog(form) == DialogResult.OK)
                     {
                         _vobSubMergedPackist = chooseLanguage.SelectedVobSubMergedPacks;
                         SetTesseractLanguageFromLanguageString(chooseLanguage.SelectedLanguageString);
                         _importLanguageString = chooseLanguage.SelectedLanguageString;
+                        return true;
                     }
-                    else
-                    {
-                        return false;
-                    }
+                    return false;
                 }
             }
             return true;
@@ -3122,7 +3128,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // precise match
             var exactMatchIndex = _binaryOcrDb.FindExactMatchExpanded(bob);
             if (exactMatchIndex >= 0)
-            { 
+            {
                 var b = _binaryOcrDb.CompareImagesExpanded[exactMatchIndex];
                 return new CompareMatch(b.Text, b.Italic, b.ExpandCount, b.Key);
             }
@@ -4463,7 +4469,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 }
             }
 
-            string line = GetStringWithItalicTags(matches);            
+            string line = GetStringWithItalicTags(matches);
 
             if (checkBoxAutoFixCommonErrors.Checked && _ocrFixEngine != null)
                 line = _ocrFixEngine.FixOcrErrorsViaHardcodedRules(line, _lastLine, null); // TODO: Add abbreviations list
@@ -4485,7 +4491,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 int wordsNotFound = _ocrFixEngine.CountUnknownWordsViaDictionary(line, out correctWords);
 
                 // smaller space pixels for italic
-                if (correctWords > 0 && wordsNotFound > 0 && line.Contains("<i>", StringComparison.Ordinal) && matches.Any(p=>p?.ImageSplitterItem?.CouldBeSpace == true))
+                if (correctWords > 0 && wordsNotFound > 0 && line.Contains("<i>", StringComparison.Ordinal) && matches.Any(p => p?.ImageSplitterItem?.CouldBeSpace == true))
                 {
                     int j = 0;
                     while (j < matches.Count)
@@ -4680,10 +4686,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
                 foreach (ImageSplitterItem item in list)
                 {
-                    if (item.NikseBitmap != null)
-                    {
-                        item.NikseBitmap.ReplaceTransparentWith(Color.Black);
-                    }
+                    item.NikseBitmap?.ReplaceTransparentWith(Color.Black);
                 }
                 int index = 0;
                 bool expandSelection = false;
@@ -7452,7 +7455,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             if (_ocrFixEngine != null)
                 _ocrFixEngine.Dispose();
-            _ocrFixEngine = new OcrFixEngine(threeLetterISOLanguageName, hunspellName, this, _ocrMethodIndex == _ocrMethodBinaryImageCompare );
+            _ocrFixEngine = new OcrFixEngine(threeLetterISOLanguageName, hunspellName, this, _ocrMethodIndex == _ocrMethodBinaryImageCompare);
             if (_ocrFixEngine.IsDictionaryLoaded)
             {
                 string loadedDictionaryName = _ocrFixEngine.SpellCheckDictionaryName;
