@@ -4,7 +4,7 @@
     <Title>Subtitle Edit</Title>
     <Version>3.5.5</Version>
     <TranslatedBy>Превод на български: Ivo Ivanov и JJD
-Допълнения и последваща доработка: KalinM (Email: mailto:kalinm@gbg.bg)</TranslatedBy>
+Допълнения и последваща обработка: KalinM (Email: mailto:kalinm@gbg.bg)</TranslatedBy>
     <CultureName>bg-BG</CultureName>
     <HelpFile />
     <Ok>&amp;OK</Ok>
@@ -22,11 +22,11 @@
     <OpenVideoFileTitle>Отваряне на видео файл...</OpenVideoFileTitle>
     <NoVideoLoaded>Не е заредено видео</NoVideoLoaded>
     <VideoInformation>Информация за видеото (Видео файла)</VideoInformation>
-    <StartTime>Нач.време</StartTime>
-    <EndTime>Кр.време</EndTime>
+    <StartTime>Начално време</StartTime>
+    <EndTime>Крайно време</EndTime>
     <Duration>Времетраене</Duration>
-    <CharsPerSec>Симв./сек</CharsPerSec>
-    <WordsPerMin>Думи/мин</WordsPerMin>
+    <CharsPerSec>Симв./сек.</CharsPerSec>
+    <WordsPerMin>Думи/мин.</WordsPerMin>
     <Actor>Актьор</Actor>
     <Gap>Разлика</Gap>
     <Region>Регион</Region>
@@ -51,9 +51,9 @@
     <SplitLine>Раздели реда!</SplitLine>
     <NotAvailable>N/A</NotAvailable>
     <OverlapPreviousLineX>Застъпване с предишен ред ({0:#,##0.###})</OverlapPreviousLineX>
-    <OverlapX>Застъпване ({0:#,##0.###})</OverlapX>
+    <OverlapX>Застъпване с ({0:#,##0.###})</OverlapX>
     <OverlapNextX>Застъпване на следващ ред ({0:#,##0.###})</OverlapNextX>
-    <Negative>Отрицателно</Negative>
+    <Negative>Отриц. застъпване</Negative>
     <RegularExpressionIsNotValid>Обикновения израз е невалиден!</RegularExpressionIsNotValid>
     <SubtitleSaved>Субтитрите са записани</SubtitleSaved>
     <CurrentSubtitle>Текущи субтитри</CurrentSubtitle>
@@ -74,7 +74,7 @@
     <Character>Характер</Character>
     <Class>Клас</Class>
     <GeneralText>Основен</GeneralText>
-    <LineNumber>Ред#</LineNumber>
+    <LineNumber>Ред №</LineNumber>
     <Before>Преди</Before>
     <After>След</After>
     <Size>Размер</Size>
@@ -96,22 +96,22 @@ https://github.com/SubtitleEdit/subtitleedit
 Email: mailto:nikse.dk@gmail.com</AboutText1>
   </About>
   <AddToNames>
-    <Title>Добавяне към списъка с думи</Title>
-    <Description>Добави към списъка с думи (с отчитане регистъра/Главни и малки букви/)</Description>
+    <Title>Добавяне на дума към списъка с думи</Title>
+    <Description>Добави думата (с отчитане на ГЛАВНИ и малки букви)</Description>
   </AddToNames>
   <AddToOcrReplaceList>
     <Title>Добавяне към списък на OCR за замяна</Title>
-    <Description>Добави няколко в OCR списъка за замяна (с отчитане регистъра/Главни и малки букви/)</Description>
+    <Description>Добави няколко в OCR списъка за замяна (с отчитане на ГЛАВНИ и малки букви)</Description>
   </AddToOcrReplaceList>
   <AddToUserDictionary>
     <Title>Добавяне към потребителския речник</Title>
-    <Description>Добави дума към потребителския речник (без отчитане регистъра/Главни и малки букви/)</Description>
+    <Description>Добави дума към потребителския речник (без отчитане на главни и малки букви)</Description>
   </AddToUserDictionary>
   <AddWaveform>
     <Title>Създаване на данни за Wav форма на звуковия сигнал</Title>
     <SourceVideoFile>Изходен видео файл:</SourceVideoFile>
     <GenerateWaveformData>Създ. форма на сигнала</GenerateWaveformData>
-    <PleaseWait>Това ще отнеме 1-2 минути - моля, изчакайте</PleaseWait>
+    <PleaseWait>Това ще отнеме няколко минути - моля, изчакайте!</PleaseWait>
     <VlcMediaPlayerNotFoundTitle>Не е намерен VLC media player</VlcMediaPlayerNotFoundTitle>
     <VlcMediaPlayerNotFound>Subtitle Edit се нуждае от VLC media player 1.1.x или по-нова за извличане на аудио данните.</VlcMediaPlayerNotFound>
     <GoToVlcMediaPlayerHomePage>Искате ли да отидете до официалния сайт на VLC media player?</GoToVlcMediaPlayerHomePage>
@@ -492,7 +492,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <MergeAllLines>Обединяване на всички редове</MergeAllLines>
     <UnbreakLines>Не разделени редове</UnbreakLines>
     <RemoveStyling>Премахване на стила</RemoveStyling>
-    <ShowLineNumbers>Показване номера на реда</ShowLineNumbers>
+    <ShowLineNumbers>Показване № на реда</ShowLineNumbers>
     <AddNewLineAfterLineNumber>Добавяне на нов ред след номера на реда</AddNewLineAfterLineNumber>
     <ShowTimeCode>Показване на времевия код</ShowTimeCode>
     <AddNewLineAfterTimeCode>Добавяне на нов ред след времевия код</AddNewLineAfterTimeCode>
@@ -516,7 +516,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Търсене на дума (израз)</Title>
     <Find>Търсене</Find>
     <Normal>Нормално</Normal>
-    <CaseSensitive>Отчитане на регистъра (Главни и малки букви)</CaseSensitive>
+    <CaseSensitive>С отчитане на ГЛАВНИ и малки букви</CaseSensitive>
     <RegularExpression>Обикновен израз</RegularExpression>
     <WholeWord>Цялата дума</WholeWord>
     <Count>Преброени</Count>
@@ -536,7 +536,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SelectAll>Избери вс.</SelectAll>
     <InverseSelection>Инвертиране</InverseSelection>
     <Back>&lt; Назад</Back>
-    <Next>Напред &gt;</Next>
+    <Next>Напред&gt;</Next>
     <Step2>Стъпка 2/2 – Проверка на поправките</Step2>
     <Fixes>Поправки</Fixes>
     <Log>Отчет</Log>
@@ -571,7 +571,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixTurkishAnsi>Поправяне на турски ANSI (Исландски) букви в Unicod</FixTurkishAnsi>
     <FixDanishLetterI>Поправяне на датската буква »i«</FixDanishLetterI>
     <FixSpanishInvertedQuestionAndExclamationMarks>Поправяне на испански обърнати "?" и "!"</FixSpanishInvertedQuestionAndExclamationMarks>
-    <AddMissingQuote>Добавяне на липсващи едни кавички (")</AddMissingQuote>
+    <AddMissingQuote>Добавяне на липсваща кавичка (")</AddMissingQuote>
     <AddMissingQuotes>Добавяне на липсващи кавички (")</AddMissingQuotes>
     <FixHyphens>Премахване на тире (-) в редове започващи с тирета (-)</FixHyphens>
     <FixHyphensAdd>Добавяне на тире (-) в редове започващи с тирета (-)</FixHyphensAdd>
@@ -606,10 +606,10 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixMissingSpacesExample>Хей.Ти. -&gt; Хей. Ти.</FixMissingSpacesExample>
     <FixUppercaseIInsindeLowercaseWordsExample>The earth is fIat. -&gt; The earth is flat.</FixUppercaseIInsindeLowercaseWordsExample>
     <FixLowercaseIToUppercaseIExample>What do i care. -&gt; What do I care.</FixLowercaseIToUppercaseIExample>
-    <StartTimeLaterThanEndTime>Текст номер {0}: Началното време е по-късно от крайното време: {4}{1} -&gt; {2} {3}</StartTimeLaterThanEndTime>
-    <UnableToFixStartTimeLaterThanEndTime>Не може да се поправи текст номер {0}: Началното време е по-късно от крайното време: {1}</UnableToFixStartTimeLaterThanEndTime>
+    <StartTimeLaterThanEndTime>Текст № {0}: Началното време е по-късно от крайното време: {4}{1} -&gt; {2} {3}</StartTimeLaterThanEndTime>
+    <UnableToFixStartTimeLaterThanEndTime>Не може да се поправи текст с № {0}: Началното време е по-късно от крайното време: {1}</UnableToFixStartTimeLaterThanEndTime>
     <XFixedToYZ>{0} са поправени към: {1}{2}</XFixedToYZ>
-    <UnableToFixTextXY>Не може да се поправи текст номер {0}: {1}</UnableToFixTextXY>
+    <UnableToFixTextXY>Не може да се поправи текст с № {0}: {1}</UnableToFixTextXY>
     <XOverlappingTimestampsFixed>{0} застъпващи се времена са поправени</XOverlappingTimestampsFixed>
     <XDisplayTimesProlonged>{0} времена на показване са удължени</XDisplayTimesProlonged>
     <XInvalidHtmlTagsFixed>{0} невалидни HTML тага са поправени</XInvalidHtmlTagsFixed>
@@ -627,7 +627,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <XDoubleApostrophesFixed>{0} поправени двойни апострофи.</XDoubleApostrophesFixed>
     <XUppercaseIsFoundInsideLowercaseWords>{0} големи букви "i" са намерени в думи с малки букви</XUppercaseIsFoundInsideLowercaseWords>
     <RefreshFixes>Обнови наличните поправки</RefreshFixes>
-    <ApplyFixes>Приложи избраните поправки</ApplyFixes>
+    <ApplyFixes>Приложи за избраните поправки</ApplyFixes>
     <AutoBreak>Прекъсни ред</AutoBreak>
     <Unbreak>Обедини редове</Unbreak>
     <FixDoubleDash>Поправяне символ тире (--) -&gt;на многоточие (...)</FixDoubleDash>
@@ -691,7 +691,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <MicrosoftTranslate>Microsoft превод</MicrosoftTranslate>
   </GoogleOrMicrosoftTranslate>
   <GoToLine>
-    <Title>Отиване до субтитри номер</Title>
+    <Title>Отиване до субтитри с №</Title>
     <XIsNotAValidNumber>Ред № {0} в текущия списък на субтитрите не съществува.
 
 Моля, въведете число в зададен диапазон.</XIsNotAValidNumber>
@@ -744,7 +744,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   <JoinSubtitles>
     <Title>Настройки за Обединяване на файлове със субтитри</Title>
     <Information>Добавяне на файлове със субтитри за обединяване</Information>
-    <NumberOfLines>#Редове</NumberOfLines>
+    <NumberOfLines>Редове №</NumberOfLines>
     <StartTime>Начално време</StartTime>
     <EndTime>Крайно време</EndTime>
     <FileName>Име на файл</FileName>
@@ -914,9 +914,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <OpenOriginal>Отваряне на оригиналните субтитри (режим на превод)...</OpenOriginal>
         <SaveOriginal>Запис на оригиналните субтитри</SaveOriginal>
         <CloseOriginal>Затваряне на оригиналните субтитри</CloseOriginal>
-        <OpenContainingFolder>Отваряне на папката, съдърщаща субтитрите</OpenContainingFolder>
+        <OpenContainingFolder>Отвори папката, съдърщаща субтитрите</OpenContainingFolder>
         <Compare>Сравняване...</Compare>
-        <Statistics>Статистики</Statistics>
+        <Statistics>Статистика...</Statistics>
         <Plugins>Приставки (Plugins)...</Plugins>
         <ImportOcrFromDvd>Импортиране/OCR на субтитри от VOB/IFO (DVD)...</ImportOcrFromDvd>
         <ImportOcrVobSubSubtitle>Импортиране/OCR на субтитри VobSub (sub/idx)...</ImportOcrVobSubSubtitle>
@@ -959,11 +959,11 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <InsertUnicodeControlCharactersRLE>Започване на стандартно вграждане от-Дясно-на-Ляво (RLM)</InsertUnicodeControlCharactersRLE>
         <InsertUnicodeControlCharactersLRO>Започване на стандартно презаписване от-Ляво-на-Дясно (LRО)</InsertUnicodeControlCharactersLRO>
         <InsertUnicodeControlCharactersRLO>Започване на стандартно презаписване от-Дясно-на-Ляво (RLO)</InsertUnicodeControlCharactersRLO>
-        <Find>Търсене</Find>
+        <Find>Търсене...</Find>
         <FindNext>Следващо търсене</FindNext>
-        <Replace>Замяна</Replace>
+        <Replace>Замяна...</Replace>
         <MultipleReplace>Множествена замяна...</MultipleReplace>
-        <GoToSubtitleNumber>Отиване до субтитри номер...</GoToSubtitleNumber>
+        <GoToSubtitleNumber>Отиване до субтитри с №...</GoToSubtitleNumber>
         <RightToLeftMode>Режим от дясно на ляво (RTL)</RightToLeftMode>
         <FixTrlViaUnicodeControlCharacters>Поправяне отДясно/наЛяво чрез Unicod контрол на символите (за избраните редове)</FixTrlViaUnicodeControlCharacters>
         <ReverseRightToLeftStartEnd>Превключване на отДясно/наЛяво, начало/край (за избраните редове)</ReverseRightToLeftStartEnd>
@@ -987,21 +987,21 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <MergeSameTimeCodes>Обединяане на редове с еднакъв времеви код...</MergeSameTimeCodes>
         <SplitLongLines>Разделяне на дълги редове...</SplitLongLines>
         <MinimumDisplayTimeBetweenParagraphs>Мин. интервал от време за показване между субтитрите...</MinimumDisplayTimeBetweenParagraphs>
-        <SortBy>Сортиране по</SortBy>
+        <SortBy>Сортиране на редовете по</SortBy>
         <Number>Номер</Number>
         <StartTime>Начално време</StartTime>
         <EndTime>Крайно време</EndTime>
         <Duration>Продължителност</Duration>
         <TextAlphabetically>Текст – по азбучен ред</TextAlphabetically>
-        <TextSingleLineMaximumLength>Текст – макс. дължина на един ред</TextSingleLineMaximumLength>
-        <TextTotalLength>Текст – обща дължина</TextTotalLength>
-        <TextNumberOfLines>Текст – брой редове</TextNumberOfLines>
-        <TextNumberOfCharactersPerSeconds>Тест - брой символи/секунда</TextNumberOfCharactersPerSeconds>
-        <WordsPerMinute>Текст - думи за секунда (wpm)</WordsPerMinute>
+        <TextSingleLineMaximumLength>Текст – по макс.дължина на ред</TextSingleLineMaximumLength>
+        <TextTotalLength>Текст – по обща дължина</TextTotalLength>
+        <TextNumberOfLines>Текст – по брой редове</TextNumberOfLines>
+        <TextNumberOfCharactersPerSeconds>Текст - по брой символи в секунда</TextNumberOfCharactersPerSeconds>
+        <WordsPerMinute>Текст - по думи в минута (темпо)</WordsPerMinute>
         <Style>Стил</Style>
-        <Ascending>Възходящ</Ascending>
-        <Descending>Низходящ</Descending>
-        <MakeNewEmptyTranslationFromCurrentSubtitle>Създай нов празен превод от настоящите субтитри</MakeNewEmptyTranslationFromCurrentSubtitle>
+        <Ascending>Възходящ ред</Ascending>
+        <Descending>Низходящ ред</Descending>
+        <MakeNewEmptyTranslationFromCurrentSubtitle>Създай нов празен превод с тайминги от настоящите субтитри</MakeNewEmptyTranslationFromCurrentSubtitle>
         <BatchConvert>Пакетно конвертиране...</BatchConvert>
         <GenerateTimeAsText>Генериране на време като текст...</GenerateTimeAsText>
         <MeasurementConverter>Конвертиране на мерни единици...</MeasurementConverter>
@@ -1033,7 +1033,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <FindDoubleWords>Търси дублиращи се думи</FindDoubleWords>
         <FindDoubleLines>Търси дублиращи се редове</FindDoubleLines>
         <GetDictionaries>Изтегляне на речници...</GetDictionaries>
-        <AddToNameList>Добавяне на дума към «Списъка с думи»</AddToNameList>
+        <AddToNameList>Добавяне на дума към «Списък с думи»</AddToNameList>
       </SpellCheck>
       <Synchronization>
         <Title>Синхронизация</Title>
@@ -1103,7 +1103,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <Delete>Изтриване на ред (-ове)</Delete>
         <SplitLineAtCursorPosition>Разделяне на реда в позицията на курсора</SplitLineAtCursorPosition>
         <AutoDurationCurrentLine>Авт. продължителност</AutoDurationCurrentLine>
-        <SelectAll>Избиране всичко</SelectAll>
+        <SelectAll>Избери всичко</SelectAll>
         <InsertFirstLine>Вмъкване на ред</InsertFirstLine>
         <InsertBefore>Вмъкване на ред ПРЕДИ този ред</InsertBefore>
         <InsertAfter>Вмъкване на ред СЛЕД този ред</InsertAfter>
@@ -1152,7 +1152,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
       <SourceView>Изглед оригинал</SourceView>
       <UndoChangesInEditPanel>Отмени промените</UndoChangesInEditPanel>
       <Previous>&lt; Назад</Previous>
-      <Next>Напред &gt;</Next>
+      <Next>Напред&gt;</Next>
       <AutoBreak>Авт. прекъсни</AutoBreak>
       <Unbreak>Обедини в един ред</Unbreak>
     </Controls>
@@ -1240,7 +1240,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ConvertedToX>Конвертирано към {0}</ConvertedToX>
     <BeforeShowEarlier>Преди показването по-рано</BeforeShowEarlier>
     <BeforeShowLater>Преди показването по-късно</BeforeShowLater>
-    <LineNumberX>Ред номер: {0:#,##0.##}</LineNumberX>
+    <LineNumberX>Ред №: {0:#,##0.##}</LineNumberX>
     <OpenVideoFile>Отваряне на видео файл...</OpenVideoFile>
     <NewFrameRateUsedToCalculateTimeCodes>Новата честота на кадри ({0}) беше използвана за определяне на началните/крайните времеви кодове</NewFrameRateUsedToCalculateTimeCodes>
     <NewFrameRateUsedToCalculateFrameNumbers>Новата честота на кадри ({0}) беше използвана за определяне на началните/крайните номера на кадри</NewFrameRateUsedToCalculateFrameNumbers>
@@ -1254,8 +1254,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ReplaceXContinue>Търсеното беше заменено {0} път/и.
 Искате ли да започнете отначало на документа и да продължите с търсене и заместване?</ReplaceXContinue>
     <ReplaceContinueTitle>Продължаване на «Замяна»?</ReplaceContinueTitle>
-    <SearchingForXFromLineY>Търсене на {0} от ред номер {1}...</SearchingForXFromLineY>
-    <XFoundAtLineNumberY>'{0}' намерени на ред номер {1}</XFoundAtLineNumberY>
+    <SearchingForXFromLineY>Търсене на {0} от ред № {1}...</SearchingForXFromLineY>
+    <XFoundAtLineNumberY>'{0}' намерени на ред № {1}</XFoundAtLineNumberY>
     <XNotFound>'{0}' не са намерени</XNotFound>
     <BeforeReplace>Преди замяната: {0}</BeforeReplace>
     <MatchFoundX>Намерени подобни: {0}</MatchFoundX>
@@ -1266,7 +1266,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <OneReplacementMade>Направена е една замяна.</OneReplacementMade>
     <BeforeChangesMadeInSourceView>Преди направените промени в оригиналния вид</BeforeChangesMadeInSourceView>
     <UnableToParseSourceView>Не може да се обработи текста в оригиналния вид!</UnableToParseSourceView>
-    <GoToLineNumberX>Отиване до ред номер {0}</GoToLineNumberX>
+    <GoToLineNumberX>Отиване до ред № {0}</GoToLineNumberX>
     <CreateAdjustChangesApplied>Промените в създаване/настройка на редове са приложени</CreateAdjustChangesApplied>
     <SelectedLines>Избрани редове</SelectedLines>
     <BeforeDisplayTimeAdjustment>Преди настройката на времето за показване</BeforeDisplayTimeAdjustment>
@@ -1418,7 +1418,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <BeforeSetEndTimeAndOffsetTheRest>Преди задаване изместване на крайното време и коригиране на останалото</BeforeSetEndTimeAndOffsetTheRest>
     <BeforeSetEndAndVideoPosition>Преди задаване крайното време на видеото и авт. изчисляване на началното</BeforeSetEndAndVideoPosition>
     <ContinueWithCurrentSpellCheck>Искате ли да продължите с текущата проверка на правопис?</ContinueWithCurrentSpellCheck>
-    <CharactersPerSecond>Символи/сек: {0:0.00}</CharactersPerSecond>
+    <CharactersPerSecond>Симв./сек.: {0:0.00}</CharactersPerSecond>
     <GetFrameRateFromVideoFile>Вземете честотата на кадри от видео файла</GetFrameRateFromVideoFile>
     <NetworkMessage>Ново съобщение: {0} ({1}): {2}</NetworkMessage>
     <NetworkUpdate>Обновен ред: {0} ({1}): Index={2}, Текст={3}</NetworkUpdate>
@@ -1439,24 +1439,26 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ExportPlainTextAs>Експорт на чист текст като</ExportPlainTextAs>
     <TextFiles>Текстови файлове</TextFiles>
     <SubtitleExported>Субтитрите са изнесени</SubtitleExported>
-    <LineNumberXErrorReadingFromSourceLineY>Ред {0} - грешка в прочитане на: {1}</LineNumberXErrorReadingFromSourceLineY>
-    <LineNumberXErrorReadingTimeCodeFromSourceLineY>Ред {0} - грешка в прочитане тайминга на: {1}</LineNumberXErrorReadingTimeCodeFromSourceLineY>
-    <LineNumberXExpectedNumberFromSourceLineY>Ред {0} - предполагаема грешка в субтитърен номер: {1}</LineNumberXExpectedNumberFromSourceLineY>
+    <LineNumberXErrorReadingFromSourceLineY>Грешка в прочитането на: {1} (Ред {0})</LineNumberXErrorReadingFromSourceLineY>
+    <LineNumberXErrorReadingTimeCodeFromSourceLineY>Грешка в прочитането на тайминг: {1}
+във файла със субитрите (Ред {0})
+</LineNumberXErrorReadingTimeCodeFromSourceLineY>
+    <LineNumberXExpectedNumberFromSourceLineY>Предполагаема грешка във файла със субитрите [Ред {0}]: {1}</LineNumberXExpectedNumberFromSourceLineY>
     <BeforeGuessingTimeCodes>Преди налучването на времевия код</BeforeGuessingTimeCodes>
     <BeforeAutoDuration>Преди авт. времетраене за избраните редове</BeforeAutoDuration>
     <BeforeColumnPaste>Преди поставянето на колона</BeforeColumnPaste>
     <BeforeColumnDelete>Преди изтриването на колона</BeforeColumnDelete>
     <BeforeColumnImportText>Преди колоната импорт на текст</BeforeColumnImportText>
     <BeforeColumnShiftCellsDown>Преди местенето на клетка надолу</BeforeColumnShiftCellsDown>
-    <ErrorLoadingPluginXErrorY>Грешка в зареждането на приставка: {0}: {1}</ErrorLoadingPluginXErrorY>
-    <BeforeRunningPluginXVersionY>Преди стартирането на приставка: {0}: {1}</BeforeRunningPluginXVersionY>
+    <ErrorLoadingPluginXErrorY>Грешка в зареждането на приставка (Plugins): {0}: {1}</ErrorLoadingPluginXErrorY>
+    <BeforeRunningPluginXVersionY>Преди стартирането на приставка (Plugins): {0}: {1}</BeforeRunningPluginXVersionY>
     <UnableToReadPluginResult>Не може да се прочетат субтитрите, в резултат от приставката!</UnableToReadPluginResult>
     <UnableToCreateBackupDirectory>Не може да се създаде папка за резервно копие: {0}: {1}</UnableToCreateBackupDirectory>
     <BeforeDisplaySubtitleJoin>Преди обединение на субтитрите</BeforeDisplaySubtitleJoin>
     <SubtitlesJoined>Субтитрите са обединени</SubtitlesJoined>
     <StatusLog>Статус лог</StatusLog>
     <XSceneChangesImported>Внесени са (0) промени на сцени</XSceneChangesImported>
-    <PluginXExecuted>Плъгинът (0) е стартиран.</PluginXExecuted>
+    <PluginXExecuted>Приставката (0) е стартирана.</PluginXExecuted>
     <NotAValidXSubFile>Невалиден XSub файл!</NotAValidXSubFile>
     <BeforeMergeLinesWithSameText>Преди обединяването на редове с еднакъв текст</BeforeMergeLinesWithSameText>
     <ImportTimeCodesDifferentNumberOfLinesWarning>Субтитри с различен тайм код имат ({0}) различни редове с ({1}), продължение?</ImportTimeCodesDifferentNumberOfLinesWarning>
@@ -1512,7 +1514,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <MaximumCharacters>Максимален брой символи в един абзац</MaximumCharacters>
     <MaximumMillisecondsBetween>Макс. интервал от време между редовете (милисек.)</MaximumMillisecondsBetween>
     <NumberOfMergesX>Брой обединявания: {0}</NumberOfMergesX>
-    <MergedText>Слят текст</MergedText>
+    <MergedText>Обединен текст</MergedText>
     <OnlyMergeContinuationLines>Обединяане само на редовете с многоточия</OnlyMergeContinuationLines>
   </MergedShortLines>
   <MergeTextWithSameTimeCodes>
@@ -1520,12 +1522,12 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <MaxDifferenceMilliseconds>Макс. разлика (милисек.)</MaxDifferenceMilliseconds>
     <ReBreakLines>Пре-разделяне на редове</ReBreakLines>
     <NumberOfMergesX>Брой обединявания: {0}</NumberOfMergesX>
-    <MergedText>Слят текст</MergedText>
+    <MergedText>Обединен текст</MergedText>
   </MergeTextWithSameTimeCodes>
   <ModifySelection>
-    <Title>Модифициране на избраното</Title>
+    <Title>Промяна на избраното</Title>
     <Rule>Правило</Rule>
-    <CaseSensitive>Съвсем точно</CaseSensitive>
+    <CaseSensitive>Съвсем точно с отчитане на Главни и малки букви</CaseSensitive>
     <DoWithMatches>Какво да се прави със съвпаденията</DoWithMatches>
     <MakeNewSelection>Нов избор</MakeNewSelection>
     <AddToCurrentSelection>Добавяне към избраното</AddToCurrentSelection>
@@ -1533,19 +1535,19 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <IntersectWithCurrentSelection>Смесване с избраното</IntersectWithCurrentSelection>
     <MatchingLinesX>Съвпадащи редове: (0)</MatchingLinesX>
     <Contains>Съдържащи</Contains>
-    <StartsWith>Започващ с</StartsWith>
-    <EndsWith>Свършващ с</EndsWith>
-    <NoContains>Не съдържа</NoContains>
-    <RegEx>Правилен израз</RegEx>
-    <UnequalLines>Различни редове</UnequalLines>
-    <EqualLines>Еднакви редове</EqualLines>
+    <StartsWith>Започващи с</StartsWith>
+    <EndsWith>Завършващи с</EndsWith>
+    <NoContains>Не съдържащи</NoContains>
+    <RegEx>С правилен израз</RegEx>
+    <UnequalLines>С различни редове</UnequalLines>
+    <EqualLines>С еднакви редове</EqualLines>
   </ModifySelection>
   <MultipleReplace>
     <Title>Множествена замяна</Title>
     <FindWhat>Търсене на</FindWhat>
     <ReplaceWith>Замяна с</ReplaceWith>
     <Normal>Нормално</Normal>
-    <CaseSensitive>Отчитане на регистъра (Главни и малки букви)</CaseSensitive>
+    <CaseSensitive>С отчитане на ГЛАВНИ и малки букви</CaseSensitive>
     <RegularExpression>Обикновен израз</RegularExpression>
     <Description>Описание</Description>
     <LinesFoundX>Намерени редове: {0}</LinesFoundX>
@@ -1599,21 +1601,21 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ChooseFolder>Изберете папка</ChooseFolder>
   </OpenVideoDvd>
   <PluginsGet>
-    <Title>Приставки</Title>
-    <InstalledPlugins>Инсталирани приставки</InstalledPlugins>
-    <GetPlugins>Вземете приставки</GetPlugins>
+    <Title>Приставки (Plugins)</Title>
+    <InstalledPlugins>Инсталирани приставки (Plugins)</InstalledPlugins>
+    <GetPlugins>Вземете приставки (Plugins)</GetPlugins>
     <Description>Описание</Description>
     <Version>Версия</Version>
     <Date>Дата</Date>
     <Type>Вид</Type>
-    <OpenPluginsFolder>Отваряне папка «Приставки»</OpenPluginsFolder>
-    <GetPluginsInfo1>Приставките за Subtitle Edit трябва да са свалени в папка «Приставки»</GetPluginsInfo1>
-    <GetPluginsInfo2>Изберете приставка и натиснете «Сваляне»</GetPluginsInfo2>
+    <OpenPluginsFolder>Отваряне на папка «Приставки (Plugins)»</OpenPluginsFolder>
+    <GetPluginsInfo1>Приставките за Subtitle Edit трябва да са свалени в папка «Plugins»</GetPluginsInfo1>
+    <GetPluginsInfo2>Изберете приставка (Plugins) и натиснете «Сваляне»</GetPluginsInfo2>
     <PluginXDownloaded>Приставката {0} е свалена</PluginXDownloaded>
     <Download>Сваляне</Download>
     <Remove>Премахване</Remove>
     <UpdateAllX>Обновяване на всички ({0})</UpdateAllX>
-    <UnableToDownloadPluginListX>Не може да се свали списъка с приставки: {0}</UnableToDownloadPluginListX>
+    <UnableToDownloadPluginListX>Не може да се свали списъка с приставки (Plugins): {0}</UnableToDownloadPluginListX>
     <NewVersionOfSubtitleEditRequired>Изисква се нова версия на Subtitle Edit</NewVersionOfSubtitleEditRequired>
     <UpdateAvailable>[Налично е обновяване!]</UpdateAvailable>
     <UpdateAll>Обновяване на всички</UpdateAll>
@@ -1656,7 +1658,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Замяна на дума (израз)</Title>
     <FindWhat>Търсене на:</FindWhat>
     <Normal>Нормално</Normal>
-    <CaseSensitive>Отчитане на регистъра (Главни и малки букви)</CaseSensitive>
+    <CaseSensitive>С отчитане на ГЛАВНИ и малки букви</CaseSensitive>
     <RegularExpression>Обикновен израз</RegularExpression>
     <ReplaceWith>Замяна с</ReplaceWith>
     <Find>Търси</Find>
@@ -2018,7 +2020,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SkipOnce>Пропусни една</SkipOnce>
     <SkipAll>Пропусни всички</SkipAll>
     <AddToUserDictionary>Добави към потребителския речник</AddToUserDictionary>
-    <AddToNamesAndIgnoreList>Добави към списъка с думи (с отчитане регистъра/Главни и малки букви/)</AddToNamesAndIgnoreList>
+    <AddToNamesAndIgnoreList>Добави към списъка с думи (с отчитане ГЛАВНИ и малки букви)</AddToNamesAndIgnoreList>
     <AddToOcrReplaceList>Добави няколко в OCR списъка за замяна</AddToOcrReplaceList>
     <Abort>Прекрати</Abort>
     <Use>Използвай</Use>
@@ -2028,7 +2030,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <EditWholeText>Редактирай текста</EditWholeText>
     <EditWordOnly>Редактирай думата</EditWordOnly>
     <AddXToNames>Добави "{0}" към списъка с думи</AddXToNames>
-    <AutoFixNames>Поправяне на думите с различна големина на буквите</AutoFixNames>
+    <AutoFixNames>Поправяне на думи с различна големина на буквите</AutoFixNames>
     <CheckOneLetterWords>Питане за непозната буква</CheckOneLetterWords>
     <TreatINQuoteAsING>Промяна опред.член на думи, завършващи на "in" като "ing"(СамоЗАанглийски)</TreatINQuoteAsING>
     <ImageText>Изображение с текст</ImageText>
@@ -2065,8 +2067,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <LineMaximumLength>Макс. обща дължина</LineMaximumLength>
     <LineContinuationBeginEndStrings>Разделеният ред да започва/завършва със символите:</LineContinuationBeginEndStrings>
     <NumberOfSplits>Брой разделяния: {0}</NumberOfSplits>
-    <LongestSingleLineIsXAtY>Най-дългият единичен ред има {0} символи в ред №{1}</LongestSingleLineIsXAtY>
-    <LongestLineIsXAtY>Най-дългият ред общо има {0} символи в ред №{1}</LongestLineIsXAtY>
+    <LongestSingleLineIsXAtY>Най-дългият единичен ред има {0} символи в ред № {1}</LongestSingleLineIsXAtY>
+    <LongestLineIsXAtY>Най-дългият ред общо има {0} символи в ред № {1}</LongestLineIsXAtY>
   </SplitLongLines>
   <SplitSubtitle>
     <Title>Основни настройки за Разделяне на субтитри</Title>
@@ -2086,13 +2088,13 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   </SplitSubtitle>
   <StartNumberingFrom>
     <Title>Начално преномериране от</Title>
-    <StartFromNumber>Стартиране от номер:</StartFromNumber>
-    <PleaseEnterAValidNumber>Грешка, моля въведете номер</PleaseEnterAValidNumber>
+    <StartFromNumber>Стартиране от №:</StartFromNumber>
+    <PleaseEnterAValidNumber>Грешка, моля въведете №</PleaseEnterAValidNumber>
   </StartNumberingFrom>
   <Statistics>
-    <Title>Статистики</Title>
-    <TitleWithFileName>Статистики - {0}</TitleWithFileName>
-    <GeneralStatistics>Основни статистики</GeneralStatistics>
+    <Title>Статистика</Title>
+    <TitleWithFileName>Статистика за - {0}</TitleWithFileName>
+    <GeneralStatistics>Основна статистика</GeneralStatistics>
     <MostUsed>Най използвани...</MostUsed>
     <MostUsedLines>Най-използвани редове</MostUsedLines>
     <MostUsedWords>Най-използвани думи</MostUsedWords>
