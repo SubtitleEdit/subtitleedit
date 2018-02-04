@@ -4,6 +4,7 @@ using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
@@ -85,6 +86,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (radioButtonNormal.Checked && language.StartsWith("en", StringComparison.Ordinal))
                 {
                     p.Text = FixEnglishAloneILowerToUpper(p.Text);
+                    p.Text = FixCasingAfterTitles(p.Text);
                 }
 
                 last = p;
@@ -169,6 +171,35 @@ namespace Nikse.SubtitleEdit.Forms
                 else if (text.Substring(indexOfI).StartsWith("i'd ", StringComparison.Ordinal))
                 {
                     text = text.Remove(indexOfI, 1).Insert(indexOfI, "I");
+                }
+            }
+            return text;
+        }
+
+        private string FixCasingAfterTitles(string text)
+        {
+            var titles = new[] { "Mrs.", "Miss.", "Mr.", "Ms.", "Dr." };
+            var notChangeWords = new[] { "does", "has", "will", "is", "and", "for", "but", "or", "of" };
+            for (int i = 0; i < text.Length - 4; i++)
+            {
+                var start = text.Substring(i);
+                foreach (var title in titles)
+                {
+                    if (start.StartsWith(title, StringComparison.OrdinalIgnoreCase))
+                    {
+                        var idx = i + title.Length;
+                        if (idx < text.Length - 2 && text[idx] == ' ')
+                        {
+                            idx++;
+                            var words = text.Substring(idx).Split(' ', '\r', '\n', ',', '"', '?', '!', '.', '\'');
+                            if (words.Length > 0 && !notChangeWords.Contains(words[0]))
+                            {
+                                var upper = text[idx].ToString().ToUpper();
+                                text = text.Remove(idx, 1).Insert(idx, upper);
+                            }
+                        }
+                        break;
+                    }
                 }
             }
             return text;
