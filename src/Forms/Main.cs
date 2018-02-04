@@ -18777,6 +18777,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SaveOriginalAstoolStripMenuItemClick(object sender, EventArgs e)
         {
+            if (_subtitleAlternate == null || _subtitleAlternate.Paragraphs.Count == 0)
+                return;
+
             SubtitleFormat currentFormat = GetCurrentSubtitleFormat();
             UiUtil.SetSaveDialogFilter(saveFileDialog1, currentFormat);
 
@@ -18798,7 +18801,10 @@ namespace Nikse.SubtitleEdit.Forms
                 _subtitleAlternateFileName = saveFileDialog1.FileName;
                 SaveOriginalSubtitle(GetCurrentSubtitleFormat());
                 SetTitle();
-                Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, _videoFileName, _subtitleAlternateFileName, Configuration.Settings.General.CurrentVideoOffsetInMs);
+                if (_fileName != null)
+                {
+                    Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, _videoFileName, _subtitleAlternateFileName, Configuration.Settings.General.CurrentVideoOffsetInMs);
+                }
             }
         }
 
