@@ -458,7 +458,7 @@ namespace Nikse.SubtitleEdit.Core
                 for (int i = _paragraphs.Count - 1; i >= 0; i--)
                 {
                     Paragraph p = _paragraphs[i];
-                    if (string.IsNullOrWhiteSpace(p.Text))
+                    if (string.IsNullOrWhiteSpace(p.Text.RemoveControlCharacters()))
                         _paragraphs.RemoveAt(i);
                 }
                 if (count != _paragraphs.Count)
