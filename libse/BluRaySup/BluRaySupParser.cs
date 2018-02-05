@@ -286,6 +286,9 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                 }
                 return mergedBmp;
             }
+
+            public TimeCode StartTimeCode => new TimeCode((StartTime + 45) / 90.0);
+            public TimeCode EndTimeCode => new TimeCode((EndTime + 45) / 90.0);
         }
 
         public class PdsData

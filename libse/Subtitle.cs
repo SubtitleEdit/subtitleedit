@@ -593,5 +593,20 @@ namespace Nikse.SubtitleEdit.Core
             }
             return sb.ToString();
         }
+
+        public SubtitleFormat LoadBinaryFormatsformats(SubtitleFormat[] formats, string fileName)
+        {
+            var list = new List<string>(File.ReadAllLines(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName)));
+            foreach (var subtitleFormat in formats)
+            {
+                if (subtitleFormat.IsMine(list, fileName))
+                {
+                    subtitleFormat.LoadSubtitle(this, list, fileName);
+                    return subtitleFormat;
+                }
+            }
+            return null;
+        }
+
     }
 }
