@@ -2206,6 +2206,7 @@
             public string EditWholeText { get; set; }
             public string EditWordOnly { get; set; }
             public string AddXToNames { get; set; }
+            public string AddXToUserDictionary { get; set; }
             public string AutoFixNames { get; set; }
             public string CheckOneLetterWords { get; set; }
             public string TreatINQuoteAsING { get; set; }
