@@ -8,7 +8,7 @@
     <Word from="ćmo" to="ćemo" />
     <Word from="ćte" to="ćete" />
     <Word from="čemo" to="ćemo" />
-    <Word from="čete" to="čete" />
+    <Word from="čete" to="ćete" />
     <Word from="djete" to="dijete" />
     <Word from="Hey" to="Hej" />
     <Word from="hey" to="hej" />
@@ -157,6 +157,10 @@
     <RegEx find="([ks]ao)\.:" replaceWith="$1:" />
     <RegEx find="(?&lt;=[a-zčđšž])Ij(?=[a-zčđšž])" replaceWith="lj" />
     <RegEx find="(?&lt;=[^A-ZČĐŠŽa-zčđšž])Iju(?=bav|d|t)" replaceWith="lju" />
+    <!-- 10kg » 10 kg   |  20cm » 20 cm   |  44dag » 44 dag -->
+    <RegEx find="\b(\d+)([a-z]{2,4})\b" replaceWith="$1 $2" />
+    <!-- 10m » 10 m -->
+    <RegEx find="([\d]){1}?m" replaceWith="$1 m" />
     <!-- kad ima razmak između tagova </i> <i> -->
     <!-- <RegEx find="(&gt;) +(&lt;)" replaceWith="$1$2" /> -->
     <!-- ',"' to '",' -->
