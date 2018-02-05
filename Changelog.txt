@@ -15,6 +15,7 @@
    * Allow larger "margin" in SSA/ASSA styles - thx von Suppé
    * Export to images alignment option "Center, left justify" - thx Shota 
    * Add "only if on separate line" option for "Remove interjections" - thx darnn
+   * Start with uppercase letter after title in "Change casing" - thx 791
 * FIXED:
    * Fix Ctrl+v of time code in "Time code control" (regr. from 3.5.5) - thx Mohammed
    * Fix for format "TTML draft 2006-10" - thx thehulk
@@ -25,6 +26,7 @@
    * Fix missing color tag for EBU STL - thx Tom
    * Fix for null terminated text from mkv - thx taxen/mkver
    * Fix focus after Alt+3/4 (previous/next) - thx Jamakmake
+   * Fix possible crash in "Save original as..." - thx darnn
 
 
 3.5.5 (26th January 2018)

@@ -358,6 +358,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 string word = richTextBoxParagraph.SelectedText.Trim();
                 addXToNamesnoiseListToolStripMenuItem.Text = string.Format(Configuration.Settings.Language.SpellCheck.AddXToNames, word);
+                addXToUserDictionaryToolStripMenuItem.Text = string.Format(Configuration.Settings.Language.SpellCheck.AddXToUserDictionary, word);
             }
             else
             {
@@ -371,6 +372,15 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 ChangeWord = richTextBoxParagraph.SelectedText.Trim();
                 DoAction(SpellCheckAction.AddToNames);
+            }
+        }
+
+        private void AddXToUserDictionaryToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrWhiteSpace(richTextBoxParagraph.SelectedText))
+            {
+                ChangeWord = richTextBoxParagraph.SelectedText.Trim();
+                DoAction(SpellCheckAction.AddToDictionary);
             }
         }
 
@@ -1085,6 +1095,5 @@ namespace Nikse.SubtitleEdit.Forms
             if (!string.IsNullOrWhiteSpace(text))
                 System.Diagnostics.Process.Start("https://www.google.com/search?q=" + Utilities.UrlEncode(text));
         }
-
     }
 }
