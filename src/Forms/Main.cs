@@ -14243,28 +14243,45 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 Encoding encoding;
                 var timeCodeSubtitle = new Subtitle();
-                SubtitleFormat format = timeCodeSubtitle.LoadSubtitle(openFileDialog1.FileName, out encoding, null);
+                SubtitleFormat format = null;
+
+                if (format == null &&
+                    openFileDialog1.FileName.EndsWith(".sup", StringComparison.OrdinalIgnoreCase) &&
+                    FileUtil.IsBluRaySup(openFileDialog1.FileName))
+                {
+                    var log = new StringBuilder();
+                    var subtitles = BluRaySupParser.ParseBluRaySup(openFileDialog1.FileName, log);
+                    if (subtitles.Count > 0)
+                    {
+                        foreach (var sup in subtitles)
+                        {
+                            timeCodeSubtitle.Paragraphs.Add(new Paragraph(sup.StartTimeCode, sup.EndTimeCode, string.Empty));
+                        }
+                        format = new SubRip(); // just to set format to something
+                    }
+                }
 
                 if (format == null)
                 {
-                    var imageFormat = new FinalCutProImage();
-                    var list = new List<string>(File.ReadAllLines(openFileDialog1.FileName, LanguageAutoDetect.GetEncodingFromFile(openFileDialog1.FileName)));
-                    if (imageFormat.IsMine(list, openFileDialog1.FileName))
-                    {
-                        imageFormat.LoadSubtitle(timeCodeSubtitle, list, openFileDialog1.FileName);
-                        format = imageFormat;
-                    }
+                    format = timeCodeSubtitle.LoadSubtitle(openFileDialog1.FileName, out encoding, null);
                 }
+
                 if (format == null)
                 {
-                    var imageFormat = new SpuImage();
-                    var list = new List<string>(File.ReadAllLines(openFileDialog1.FileName, LanguageAutoDetect.GetEncodingFromFile(openFileDialog1.FileName)));
-                    if (imageFormat.IsMine(list, openFileDialog1.FileName))
+                    var formats = new SubtitleFormat[]
                     {
-                        imageFormat.LoadSubtitle(timeCodeSubtitle, list, openFileDialog1.FileName);
-                        format = imageFormat;
-                    }
+                        new FinalCutProImage(),
+                        new SpuImage(),
+                        new Ebu(),
+                        new BdnXml(),
+                        new Pac(),
+                        new Cavena890(),
+                        new TimeCodesOnly1(),
+                        new TimeCodesOnly2()
+                    };
+                    format = timeCodeSubtitle.LoadBinaryFormatsformats(formats, openFileDialog1.FileName);
                 }
+
                 if (format == null)
                 {
                     ShowUnknownSubtitle();
