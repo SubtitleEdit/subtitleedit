@@ -24,12 +24,12 @@ namespace Nikse.SubtitleEdit.Core.VobSub
 
         public readonly int SubPictureDateSize;
         public TimeSpan Delay;
-        public int BufferSize { get { return _data.Length; } }
+        public int BufferSize => _data.Length;
         private readonly byte[] _data;
         public Rectangle ImageDisplayArea;
         public bool Forced { get; private set; }
-        private int _pixelDataAddressOffset;
-        private int _startDisplayControlSequenceTableAddress;
+        private readonly int _pixelDataAddressOffset;
+        private readonly int _startDisplayControlSequenceTableAddress;
 
         public SubPicture(byte[] data)
         {
@@ -105,14 +105,11 @@ namespace Nikse.SubtitleEdit.Core.VobSub
                             commandIndex++;
                             break;
                         case (int)DisplayControlCommand.StopDisplay: // 2
-                            Delay = TimeSpan.FromMilliseconds(((delayBeforeExecute << 10) + 1023) / 90.0);
+                            Delay = TimeSpan.FromMilliseconds((delayBeforeExecute << 10) / 90.0);
                             if (createBitmap && Delay.TotalMilliseconds > largestDelay) // in case of more than one images, just use the one with the largest display time
                             {
                                 largestDelay = Delay.TotalMilliseconds;
-                                if (bmp != null)
-                                {
-                                    bmp.Dispose();
-                                }
+                                bmp?.Dispose();
                                 bmp = GenerateBitmap(ImageDisplayArea, imageTopFieldDataAddress, imageBottomFieldDataAddress, fourColors);
                                 bitmapGenerated = true;
                             }

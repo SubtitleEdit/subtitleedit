@@ -1191,8 +1191,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 {
                     _bluRaySubtitles.Add(x);
                     Paragraph p = new Paragraph();
-                    p.StartTime = new TimeCode((x.StartTime + 45) / 90.0);
-                    p.EndTime = new TimeCode((x.EndTime + 45) / 90.0);
+                    p.StartTime = new TimeCode(x.StartTime / 90.0);
+                    p.EndTime = new TimeCode(x.EndTime / 90.0);
                     _subtitle.Paragraphs.Add(p);
                 }
             }
@@ -1612,8 +1612,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             else if (_bluRaySubtitlesOriginal != null)
             {
                 var item = _bluRaySubtitles[index];
-                start = new TimeCode((item.StartTime + 45) / 90.0);
-                end = new TimeCode((item.EndTime + 45) / 90.0);
+                start = new TimeCode(item.StartTime / 90.0);
+                end = new TimeCode(item.EndTime / 90.0);
             }
             else if (_xSubList != null)
             {
@@ -1701,8 +1701,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 Bitmap old = pictureBoxSubtitleImage.Image as Bitmap;
                 pictureBoxSubtitleImage.Image = bmp.Clone() as Bitmap;
                 pictureBoxSubtitleImage.Invalidate();
-                if (old != null)
-                    old.Dispose();
+                old?.Dispose();
             }
             catch
             {

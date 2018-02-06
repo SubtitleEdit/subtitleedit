@@ -224,7 +224,7 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                             ulong endMs = 0;
                             if (k < endMsList.Count)
                                 endMs = endMsList[k];
-                            subList.Add(new TransportStreamSubtitle(bdSup, startMs, endMs, (ulong)((FirstVideoPts + 45) / 90.0)));
+                            subList.Add(new TransportStreamSubtitle(bdSup, startMs, endMs, (ulong)(FirstVideoPts / 90.0)));
                         }
                         DvbSubtitlesLookup.Add(pid, subList);
                     }
@@ -262,7 +262,7 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
 
             // Merge packets and set start/end time
             DvbSubtitlesLookup = new Dictionary<int, List<TransportStreamSubtitle>>();
-            var firstVideoMs = (ulong)((FirstVideoPts + 45) / 90.0);
+            var firstVideoMs = (ulong)(FirstVideoPts / 90.0);
             foreach (int pid in SubtitlePacketIds)
             {
                 var subtitles = new List<TransportStreamSubtitle>();
