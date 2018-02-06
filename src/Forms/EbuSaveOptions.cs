@@ -204,9 +204,9 @@ namespace Nikse.SubtitleEdit.Forms
             textBoxSubtitleListReferenceCode.Text = header.SubtitleListReferenceCode.TrimEnd();
             textBoxCountryOfOrigin.Text = header.CountryOfOrigin;
 
-            comboBoxTimeCodeStatus.SelectedIndex = 0;
-            if (header.TimeCodeStatus == "1")
-                comboBoxTimeCodeStatus.SelectedIndex = 1;
+            comboBoxTimeCodeStatus.SelectedIndex = 1;
+            if (header.TimeCodeStatus == "0")
+                comboBoxTimeCodeStatus.SelectedIndex = 1; // 1 == intended for use, 0 == not intended for use
             try
             {
                 // HHMMSSFF
