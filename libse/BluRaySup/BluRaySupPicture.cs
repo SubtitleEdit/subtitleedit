@@ -14,6 +14,7 @@
  * limitations under the License.
  *
  * NOTE: Converted to C# and modified by Nikse.dk@gmail.com
+ * NOTE: For more info see http://blog.thescorpius.com/index.php/2017/07/15/presentation-graphic-stream-sup-files-bluray-subtitle-format/
  */
 
 using System;
@@ -40,20 +41,14 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
         /// </summary>
         public long StartTime { get; set; }
 
-        public int StartTimeForWrite
-        {
-            get { return (int)((StartTime - 45) * 90.0); }
-        }
+        public int StartTimeForWrite => (int)(StartTime * 90.0);
 
         /// <summary>
         /// end time in milliseconds
         /// </summary>
         public long EndTime { get; set; }
 
-        public int EndTimeForWrite
-        {
-            get { return (int)((EndTime - 45) * 90.0); }
-        }
+        public int EndTimeForWrite => (int)(EndTime * 90.0);
 
         /// <summary>
         /// if true, this is a forced subtitle
@@ -506,7 +501,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             if (bufSize > 0xffe4)
                 bufSize = 0xffe4;
             packetHeader[10] = 0x15;                                            // ID
-            timestamp = dts + imageDecodeTime;
+            timestamp = 0; //dts + imageDecodeTime;
             ToolBox.SetDWord(packetHeader, 2, timestamp);                       // PTS
             ToolBox.SetDWord(packetHeader, 6, dts);                             // DTS
             ToolBox.SetWord(packetHeader, 11, headerOdsFirst.Length + bufSize); // size

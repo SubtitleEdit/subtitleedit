@@ -14,6 +14,7 @@
  * limitations under the License.
  *
  * NOTE: Converted to C# and modified by Nikse.dk@gmail.com
+ * NOTE: For more info see http://blog.thescorpius.com/index.php/2017/07/15/presentation-graphic-stream-sup-files-bluray-subtitle-format/
  */
 
 using System;
@@ -43,11 +44,6 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             /// segment PTS time stamp
             /// </summary>
             public long PtsTimestamp;
-
-            /// <summary>
-            /// segment DTS time stamp
-            /// </summary>
-            public long DtsTimestamp;
         }
 
         public class PcsObject
@@ -127,12 +123,11 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                 bm.LockImage();
                 BluRaySupPalette pal = DecodePalette(palettes);
 
-                int index = 0;
                 int ofs = 0;
                 int xpos = 0;
+                var index = 0;
 
                 byte[] buf = data[0].Fragment.ImageBuffer;
-                index = 0;
                 do
                 {
                     int b = buf[index++] & 0xff;
@@ -269,10 +264,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                 for (int ioIndex = 0; ioIndex < PcsObjects.Count; ioIndex++)
                 {
                     var ioRect = new Rectangle(PcsObjects[ioIndex].Origin, BitmapObjects[ioIndex][0].Size);
-                    if (r.IsEmpty)
-                        r = ioRect;
-                    else
-                        r = Rectangle.Union(r, ioRect);
+                    r = r.IsEmpty ? ioRect : Rectangle.Union(r, ioRect);
                 }
                 var mergedBmp = new Bitmap(r.Width, r.Height, PixelFormat.Format32bppArgb);
                 for (var ioIndex = 0; ioIndex < PcsObjects.Count; ioIndex++)
@@ -287,8 +279,8 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                 return mergedBmp;
             }
 
-            public TimeCode StartTimeCode => new TimeCode((StartTime + 45) / 90.0);
-            public TimeCode EndTimeCode => new TimeCode((EndTime + 45) / 90.0);
+            public TimeCode StartTimeCode => new TimeCode(StartTime / 90.0);
+            public TimeCode EndTimeCode => new TimeCode(EndTime / 90.0);
         }
 
         public class PdsData
@@ -362,7 +354,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             if (buffer[0] == 0x50 && buffer[1] == 0x47) // 80 + 71 - P G
             {
                 segment.PtsTimestamp = BigEndianInt32(buffer, 2); // read PTS
-                segment.DtsTimestamp = BigEndianInt32(buffer, 6); // read PTS
+                //segment.DtsTimestamp = BigEndianInt32(buffer, 6); // read DTS - not used
                 segment.Type = buffer[10];
                 segment.Size = BigEndianInt16(buffer, 11);
             }
@@ -375,9 +367,11 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
 
         private static SupSegment ParseSegmentHeaderFromMatroska(byte[] buffer)
         {
-            var segment = new SupSegment();
-            segment.Type = buffer[0];
-            segment.Size = BigEndianInt16(buffer, 1);
+            var segment = new SupSegment
+            {
+                Type = buffer[0],
+                Size = BigEndianInt16(buffer, 1)
+            };
             return segment;
         }
 
@@ -385,6 +379,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
         /// Parse an PCS packet which contains width/height info
         /// </summary>
         /// <param name="buffer">Raw data buffer, starting right after segment</param>
+        /// <param name="offset">Buffer offset</param>
         private static PcsObject ParsePcs(byte[] buffer, int offset)
         {
             var pcs = new PcsObject();
@@ -439,7 +434,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
 
         private static bool CompletePcs(PcsData pcs, Dictionary<int, List<OdsData>> bitmapObjects, Dictionary<int, List<PaletteInfo>> palettes)
         {
-            if (pcs == null || pcs.PcsObjects == null || palettes == null)
+            if (pcs?.PcsObjects == null || palettes == null)
                 return false;
 
             if (pcs.PcsObjects.Count == 0)
@@ -472,8 +467,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             // 8bit palette version number (incremented for each palette change)
             int paletteUpdate = buffer[1];
 
-            var p = new PaletteInfo();
-            p.PaletteSize = (segment.Size - 2) / 5;
+            var p = new PaletteInfo { PaletteSize = (segment.Size - 2) / 5 };
 
             if (p.PaletteSize <= 0)
                 return new PdsData { Message = "Empty palette" };
@@ -495,6 +489,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
         /// </summary>
         /// <param name="buffer">raw byte date, starting right after segment</param>
         /// <param name="segment">object containing info about the current segment</param>
+        /// <param name="forceFirst"></param>
         /// <returns>true if this is a valid new object (neither invalid nor a fragment)</returns>
         private static OdsData ParseOds(byte[] buffer, SupSegment segment, bool forceFirst)
         {
@@ -502,7 +497,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             int objVer = buffer[2];     // 16bit object_id nikse - index 2 or 1???
             int objSeq = buffer[3];     // 8bit  first_in_sequence (0x80),
             // last_in_sequence (0x40), 6bits reserved
-            bool first = ((objSeq & 0x80) == 0x80) || forceFirst;
+            bool first = (objSeq & 0x80) == 0x80 || forceFirst;
             bool last = (objSeq & 0x40) == 0x40;
 
             var info = new ImageObjectFragment();
@@ -550,13 +545,8 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             bool forceFirstOds = true;
             var bitmapObjects = new Dictionary<int, List<OdsData>>();
             PcsData latestPcs = null;
-            int latestCompNum = -1;
             var pcsList = new List<PcsData>();
-            byte[] headerBuffer;
-            if (fromMatroskaFile)
-                headerBuffer = new byte[3];
-            else
-                headerBuffer = new byte[HeaderSize];
+            var headerBuffer = fromMatroskaFile ? new byte[3] : new byte[HeaderSize];
 
             while (position < ms.Length)
             {
@@ -564,11 +554,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
 
                 // Read segment header
                 ms.Read(headerBuffer, 0, headerBuffer.Length);
-                SupSegment segment;
-                if (fromMatroskaFile)
-                    segment = ParseSegmentHeaderFromMatroska(headerBuffer);
-                else
-                    segment = ParseSegmentHeader(headerBuffer, log);
+                var segment = fromMatroskaFile ? ParseSegmentHeaderFromMatroska(headerBuffer) : ParseSegmentHeader(headerBuffer, log);
                 position += headerBuffer.Length;
 
                 // Read segment data
@@ -581,7 +567,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                     case 0x14: // Palette
                         if (latestPcs != null)
                         {
-                            log.AppendLine(string.Format("0x14 - Palette - PDS offset={0} size={1}", position, segment.Size));
+                            log.AppendLine($"0x14 - Palette - PDS offset={position} size={segment.Size}");
                             PdsData pds = ParsePds(buffer, segment);
                             log.AppendLine(pds.Message);
                             if (pds.PaletteInfo != null)
@@ -609,7 +595,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                     case 0x15: // Image bitmap data
                         if (latestPcs != null)
                         {
-                            log.AppendLine(string.Format("0x15 - Bitmap data - ODS offset={0} size={1}", position, segment.Size));
+                            log.AppendLine($"0x15 - Bitmap data - ODS offset={position} size={segment.Size}");
                             OdsData ods = ParseOds(buffer, segment, forceFirstOds);
                             log.AppendLine(ods.Message);
                             if (!latestPcs.PaletteUpdate)
@@ -617,8 +603,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                                 List<OdsData> odsList;
                                 if (ods.IsFirst)
                                 {
-                                    odsList = new List<OdsData>();
-                                    odsList.Add(ods);
+                                    odsList = new List<OdsData> { ods };
                                     bitmapObjects[ods.ObjectId] = odsList;
                                 }
                                 else
@@ -629,13 +614,13 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                                     }
                                     else
                                     {
-                                        log.AppendLine(string.Format("INVALID ObjectId {0} in ODS, offset={1}", ods.ObjectId, position));
+                                        log.AppendLine($"INVALID ObjectId {ods.ObjectId} in ODS, offset={position}");
                                     }
                                 }
                             }
                             else
                             {
-                                log.AppendLine(string.Format("Bitmap Data Ignore due to PaletteUpdate offset={0}", position));
+                                log.AppendLine($"Bitmap Data Ignore due to PaletteUpdate offset={position}");
                             }
                             forceFirstOds = false;
                         }
@@ -648,15 +633,13 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                             {
                                 pcsList.Add(latestPcs);
                             }
-                            latestPcs = null;
                         }
 
-                        log.AppendLine(string.Format("0x16 - Picture codes, offset={0} size={1}", position, segment.Size));
+                        log.AppendLine($"0x16 - Picture codes, offset={position} size={segment.Size}");
                         forceFirstOds = true;
                         PcsData nextPcs = ParsePicture(buffer, segment);
                         log.AppendLine(nextPcs.Message);
                         latestPcs = nextPcs;
-                        latestCompNum = nextPcs.CompNum;
                         if (latestPcs.CompositionState == CompositionState.EpochStart)
                         {
                             bitmapObjects.Clear();
@@ -667,7 +650,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                     case 0x17: // Window display
                         if (latestPcs != null)
                         {
-                            log.AppendLine(string.Format("0x17 - Window display offset={0} size={1}", position, segment.Size));
+                            log.AppendLine($"0x17 - Window display offset={position} size={segment.Size}");
                             int windowCount = buffer[0];
                             int offset = 0;
                             for (int nextWindow = 0; nextWindow < windowCount; nextWindow++)
@@ -686,7 +669,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
 
                     case 0x80:
                         forceFirstOds = true;
-                        log.AppendLine(string.Format("0x80 - END offset={0} size={1}", position, segment.Size));
+                        log.AppendLine($"0x80 - END offset={position} size={segment.Size}");
                         if (latestPcs != null)
                         {
                             if (CompletePcs(latestPcs, bitmapObjects, palettes))
@@ -698,7 +681,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                         break;
 
                     default:
-                        log.AppendLine(string.Format("0x?? - END offset={0} UNKOWN SEGMENT TYPE={1}", position, segment.Type));
+                        log.AppendLine($"0x?? - END offset={position} UNKOWN SEGMENT TYPE={segment.Type}");
                         break;
                 }
                 position += segment.Size;
@@ -709,7 +692,6 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             {
                 if (CompletePcs(latestPcs, bitmapObjects, palettes))
                     pcsList.Add(latestPcs);
-                latestPcs = null;
             }
 
             for (int pcsIndex = 1; pcsIndex < pcsList.Count; pcsIndex++)

@@ -104,10 +104,7 @@ namespace Nikse.SubtitleEdit.Core.VobSub
             WriteEndianWord(startDisplayControlSequenceTableAddress + 24, ms); // start of display control sequence table address
 
             // Control command start
-            if (p.Forced)
-                ms.WriteByte(0); // ForcedStartDisplay==0
-            else
-                ms.WriteByte(1); // StartDisplay==1
+            ms.WriteByte(p.Forced ? (byte)0 : (byte)1);
 
             // Control command 3 = SetColor
             WriteColors(ms); // 3 bytes
@@ -126,7 +123,8 @@ namespace Nikse.SubtitleEdit.Core.VobSub
 
             // Control Sequence Table
             // Write delay - subtitle duration
-            WriteEndianWord(Convert.ToInt32(p.Duration.TotalMilliseconds * 90.0 - 1023) >> 10, ms);
+            WriteEndianWord(Convert.ToInt32(p.Duration.TotalMilliseconds * 90.0) >> 10, ms);
+            //            WriteEndianWord(Convert.ToInt32(p.Duration.TotalMilliseconds * 90.0 - 1023) >> 10, ms);
 
             // next display control sequence table address (use current is last)
             WriteEndianWord(startDisplayControlSequenceTableAddress + 24, ms); // start of display control sequence table address
@@ -143,7 +141,7 @@ namespace Nikse.SubtitleEdit.Core.VobSub
         public void WriteParagraph(Paragraph p, Bitmap bmp, ContentAlignment alignment, Point? overridePosition = null) // inspired by code from SubtitleCreator
         {
             // timestamp: 00:00:33:900, filepos: 000000000
-            _idx.AppendLine(string.Format("timestamp: {0:00}:{1:00}:{2:00}:{3:000}, filepos: {4}", p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, p.StartTime.Milliseconds, _subFile.Position.ToString("X").PadLeft(9, '0').ToLower()));
+            _idx.AppendLine($"timestamp: {p.StartTime.Hours:00}:{p.StartTime.Minutes:00}:{p.StartTime.Seconds:00}:{p.StartTime.Milliseconds:000}, filepos: {_subFile.Position.ToString("X").PadLeft(9, '0').ToLower()}");
 
             var nbmp = new NikseBitmap(bmp);
             _emphasis2 = nbmp.ConverToFourColors(_background, _pattern, _emphasis1, _useInnerAntialiasing);
@@ -203,12 +201,12 @@ namespace Nikse.SubtitleEdit.Core.VobSub
                     subHeader[27] = (byte)((ts[0] & 0x7f) << 1 | 0x01);
 
                     const string pre = "0010"; // 0011 or 0010 ? (KMPlayer will not understand 0011!!!)
-                    long newPts = (long)(p.StartTime.TotalSeconds * 90000.0 + 0.5);
+                    long newPts = (long)(p.StartTime.TotalSeconds * 90000.0);
                     string bString = Convert.ToString(newPts, 2).PadLeft(33, '0');
                     string fiveBytesString = pre + bString.Substring(0, 3) + "1" + bString.Substring(3, 15) + "1" + bString.Substring(18, 15) + "1";
                     for (int i = 0; i < 5; i++)
                     {
-                        subHeader[23 + i] = Convert.ToByte(fiveBytesString.Substring((i * 8), 8), 2);
+                        subHeader[23 + i] = Convert.ToByte(fiveBytesString.Substring(i * 8, 8), 2);
                     }
                     subHeader[28] = vobSubId;
                     headerSize = 29;
