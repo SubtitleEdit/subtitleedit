@@ -1,4 +1,5 @@
 <OCRFixReplaceList>
+<!-- ova skripta stvorena je isključivo za mijenjanje riječi bez kvačica u riječi sa kvačicama -->  
   <WholeWords>
     <Word from="andele" to="anđele" />
     <Word from="andeli" to="anđeli" />
@@ -878,7 +879,6 @@
     <Word from="vrtic" to="vrtić" />
     <Word from="vrtica" to="vrtića" />
     <Word from="vrticu" to="vrtiću" />
-
     <!--z-->
     <Word from="zaduzen" to="zadužen" />
     <Word from="Zaduzen" to="Zadužen" />
@@ -921,6 +921,7 @@
 <PartialWords />
 <PartialLines>
     <LinePart from="da nadjem" to="naći" />
+    <LinePart from="da nadjes" to="naći" />
     <LinePart from="da budes" to="biti" />
     <LinePart from="da ides" to="ići" />
     <LinePart from="gdje ides" to="kamo ideš" />
@@ -1228,7 +1229,7 @@
  <RegEx find="redjas" replaceWith="rijaš" />
  <RegEx find="redlaz" replaceWith="redlaž" />
  <RegEx find="(?&lt;![Šš])([pP])rica" replaceWith="$1riča" />
- <RegEx find="\b([pP])rilicn" replaceWith="$1riličn" />
+ <RegEx find="rilicn" replaceWith="riličn" />
  <RegEx find="romj?enis" replaceWith="romijeniš" />
  <RegEx find="([pP](?:ri|od))sj?eca" replaceWith="$1sjeća" />
  <RegEx find="rosj?ec" replaceWith="rosječ" />
@@ -1252,7 +1253,7 @@
  <RegEx find="\b([rR])i?j?ecni([kc])" replaceWith="$1ječni$2" />
  <RegEx find="(?&lt;!t)rocita" replaceWith="ročita" />
  <RegEx find="([dDrRvVg])odje" replaceWith="$1ođe" />
- <RegEx find="([rR])ucak" replaceWith="$1učak" />
+ <RegEx find="(?&lt;![Cc])ucak" replaceWith="učak" />
  <RegEx find="ruce" replaceWith="ruče" />
  <RegEx find="rucio" replaceWith="ručio" />
  <RegEx find="arud[zž]bin" replaceWith="arudžb" />
@@ -1541,7 +1542,6 @@
  <RegEx find="rucin" replaceWith="rućin" />
  <RegEx find="([lr])adj" replaceWith="$1ađ" />
  <RegEx find="redje([nm])" replaceWith="ređe$1" />
- <RegEx find="rocit" replaceWith="ročit" />
  <RegEx find="ronad" replaceWith="ronađ" />
  <RegEx find="([KkPp])renes\b" replaceWith="$1reneš" />
  <RegEx find="sapni" replaceWith="šapni" />
