@@ -35,13 +35,13 @@
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPageHeader = new System.Windows.Forms.TabPage();
+            this.timeUpDownStartTime = new Nikse.SubtitleEdit.Controls.TimeUpDown();
             this.labelColorRequiresTeletext = new System.Windows.Forms.Label();
             this.labelFrameRate = new System.Windows.Forms.Label();
             this.comboBoxFrameRate = new System.Windows.Forms.ComboBox();
             this.labelTimeCodeStartOfProgramme = new System.Windows.Forms.Label();
             this.labelTimeCodeStatus = new System.Windows.Forms.Label();
             this.comboBoxTimeCodeStatus = new System.Windows.Forms.ComboBox();
-            this.timeUpDownStartTime = new Nikse.SubtitleEdit.Controls.TimeUpDown();
             this.comboBoxDisplayStandardCode = new System.Windows.Forms.ComboBox();
             this.labelDisplayStandardCode = new System.Windows.Forms.Label();
             this.textBoxCountryOfOrigin = new System.Windows.Forms.TextBox();
@@ -211,6 +211,26 @@
             this.tabPageHeader.Text = "General subtitle information";
             this.tabPageHeader.UseVisualStyleBackColor = true;
             // 
+            // timeUpDownStartTime
+            // 
+            this.timeUpDownStartTime.AutoSize = true;
+            this.timeUpDownStartTime.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.timeUpDownStartTime.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.timeUpDownStartTime.Location = new System.Drawing.Point(179, 411);
+            this.timeUpDownStartTime.Margin = new System.Windows.Forms.Padding(4);
+            this.timeUpDownStartTime.Name = "timeUpDownStartTime";
+            this.timeUpDownStartTime.Size = new System.Drawing.Size(96, 27);
+            this.timeUpDownStartTime.TabIndex = 14;
+            timeCode1.Hours = 0;
+            timeCode1.Milliseconds = 0;
+            timeCode1.Minutes = 0;
+            timeCode1.Seconds = 0;
+            timeCode1.TimeSpan = System.TimeSpan.Parse("00:00:00");
+            timeCode1.TotalMilliseconds = 0D;
+            timeCode1.TotalSeconds = 0D;
+            this.timeUpDownStartTime.TimeCode = timeCode1;
+            this.timeUpDownStartTime.UseVideoOffset = false;
+            // 
             // labelColorRequiresTeletext
             // 
             this.labelColorRequiresTeletext.AutoSize = true;
@@ -262,32 +282,12 @@
             this.comboBoxTimeCodeStatus.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxTimeCodeStatus.FormattingEnabled = true;
             this.comboBoxTimeCodeStatus.Items.AddRange(new object[] {
-            "Intended for use",
-            "Not intended for use"});
+            "Not intended for use",
+            "Intended for use"});
             this.comboBoxTimeCodeStatus.Location = new System.Drawing.Point(181, 383);
             this.comboBoxTimeCodeStatus.Name = "comboBoxTimeCodeStatus";
             this.comboBoxTimeCodeStatus.Size = new System.Drawing.Size(219, 21);
             this.comboBoxTimeCodeStatus.TabIndex = 13;
-            // 
-            // timeUpDownStartTime
-            // 
-            this.timeUpDownStartTime.AutoSize = true;
-            this.timeUpDownStartTime.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.timeUpDownStartTime.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.timeUpDownStartTime.Location = new System.Drawing.Point(179, 411);
-            this.timeUpDownStartTime.Margin = new System.Windows.Forms.Padding(4);
-            this.timeUpDownStartTime.Name = "timeUpDownStartTime";
-            this.timeUpDownStartTime.Size = new System.Drawing.Size(96, 27);
-            this.timeUpDownStartTime.TabIndex = 14;
-            timeCode1.Hours = 0;
-            timeCode1.Milliseconds = 0;
-            timeCode1.Minutes = 0;
-            timeCode1.Seconds = 0;
-            timeCode1.TimeSpan = System.TimeSpan.Parse("00:00:00");
-            timeCode1.TotalMilliseconds = 0D;
-            timeCode1.TotalSeconds = 0D;
-            this.timeUpDownStartTime.TimeCode = timeCode1;
-            this.timeUpDownStartTime.UseVideoOffset = false;
             // 
             // comboBoxDisplayStandardCode
             // 

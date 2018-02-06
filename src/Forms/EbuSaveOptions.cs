@@ -206,7 +206,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             comboBoxTimeCodeStatus.SelectedIndex = 1;
             if (header.TimeCodeStatus == "0")
-                comboBoxTimeCodeStatus.SelectedIndex = 1; // 1 == intended for use, 0 == not intended for use
+                comboBoxTimeCodeStatus.SelectedIndex = 0; // 1 == intended for use, 0 == not intended for use
             try
             {
                 // HHMMSSFF
