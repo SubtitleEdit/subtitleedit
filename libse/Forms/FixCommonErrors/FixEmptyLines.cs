@@ -30,11 +30,11 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     // Ssa Tags
                     if (text.StartsWith("{\\", StringComparison.Ordinal))
                     {
-                        var endIDx = text.IndexOf('}', 2);
-                        if (endIDx > 2)
+                        var endIdx = text.IndexOf('}', 2);
+                        if (endIdx > 2)
                         {
-                            pre = text.Substring(0, endIDx + 1);
-                            text = text.Remove(0, endIDx + 1);
+                            pre = text.Substring(0, endIdx + 1);
+                            text = text.Remove(0, endIdx + 1);
                         }
                     }
 
@@ -106,11 +106,11 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             {
                 Paragraph p = subtitle.Paragraphs[i];
                 var text = HtmlUtil.RemoveHtmlTags(p.Text, true).Trim();
-                if (callbacks.AllowFix(p, fixAction0) && string.IsNullOrEmpty(text))
+                if (callbacks.AllowFix(p, fixAction0) && string.IsNullOrEmpty(text.RemoveControlCharacters()))
                 {
                     subtitle.Paragraphs.RemoveAt(i);
                     emptyLinesRemoved++;
-                    callbacks.AddFixToListView(p, fixAction0, p.Text, string.Format("[{0}]", language.RemovedEmptyLine));
+                    callbacks.AddFixToListView(p, fixAction0, p.Text, $"[{language.RemovedEmptyLine}]");
                     callbacks.AddToDeleteIndices(i);
                 }
             }

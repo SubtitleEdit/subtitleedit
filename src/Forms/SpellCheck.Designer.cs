@@ -34,6 +34,7 @@
             this.buttonUseSuggestionAlways = new System.Windows.Forms.Button();
             this.buttonAddToNames = new System.Windows.Forms.Button();
             this.groupBoxWordNotFound = new System.Windows.Forms.GroupBox();
+            this.buttonGoogleIt = new System.Windows.Forms.Button();
             this.buttonUndo = new System.Windows.Forms.Button();
             this.groupBoxSuggestions = new System.Windows.Forms.GroupBox();
             this.checkBoxAutoChangeNames = new System.Windows.Forms.CheckBox();
@@ -44,7 +45,7 @@
             this.textBoxWholeText = new System.Windows.Forms.TextBox();
             this.labelActionInfo = new System.Windows.Forms.Label();
             this.buttonSpellCheckDownload = new System.Windows.Forms.Button();
-            this.buttonGoogleIt = new System.Windows.Forms.Button();
+            this.addXToUserDictionaryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip1.SuspendLayout();
             this.groupBoxWordNotFound.SuspendLayout();
             this.groupBoxSuggestions.SuspendLayout();
@@ -108,9 +109,10 @@
             // contextMenuStrip1
             // 
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.addXToNamesnoiseListToolStripMenuItem});
+            this.addXToNamesnoiseListToolStripMenuItem,
+            this.addXToUserDictionaryToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(208, 26);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(208, 70);
             this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStrip1Opening);
             // 
             // addXToNamesnoiseListToolStripMenuItem
@@ -247,6 +249,16 @@
             this.groupBoxWordNotFound.TabStop = false;
             this.groupBoxWordNotFound.Text = "Word not found";
             // 
+            // buttonGoogleIt
+            // 
+            this.buttonGoogleIt.Location = new System.Drawing.Point(6, 158);
+            this.buttonGoogleIt.Name = "buttonGoogleIt";
+            this.buttonGoogleIt.Size = new System.Drawing.Size(280, 21);
+            this.buttonGoogleIt.TabIndex = 7;
+            this.buttonGoogleIt.Text = "&Google it";
+            this.buttonGoogleIt.UseVisualStyleBackColor = true;
+            this.buttonGoogleIt.Click += new System.EventHandler(this.buttonGoogleIt_Click);
+            // 
             // buttonUndo
             // 
             this.buttonUndo.Location = new System.Drawing.Point(6, 185);
@@ -357,15 +369,12 @@
             this.buttonSpellCheckDownload.UseVisualStyleBackColor = true;
             this.buttonSpellCheckDownload.Click += new System.EventHandler(this.buttonSpellCheckDownload_Click);
             // 
-            // buttonGoogleIt
+            // addXToUserDictionaryToolStripMenuItem
             // 
-            this.buttonGoogleIt.Location = new System.Drawing.Point(6, 158);
-            this.buttonGoogleIt.Name = "buttonGoogleIt";
-            this.buttonGoogleIt.Size = new System.Drawing.Size(280, 21);
-            this.buttonGoogleIt.TabIndex = 7;
-            this.buttonGoogleIt.Text = "&Google it";
-            this.buttonGoogleIt.UseVisualStyleBackColor = true;
-            this.buttonGoogleIt.Click += new System.EventHandler(this.buttonGoogleIt_Click);
+            this.addXToUserDictionaryToolStripMenuItem.Name = "addXToUserDictionaryToolStripMenuItem";
+            this.addXToUserDictionaryToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
+            this.addXToUserDictionaryToolStripMenuItem.Text = "Add x to user dictionary";
+            this.addXToUserDictionaryToolStripMenuItem.Click += new System.EventHandler(this.AddXToUserDictionaryToolStripMenuItem_Click);
             // 
             // SpellCheck
             // 
@@ -437,5 +446,6 @@
         private System.Windows.Forms.Button buttonSpellCheckDownload;
         private System.Windows.Forms.Button buttonUndo;
         private System.Windows.Forms.Button buttonGoogleIt;
+        private System.Windows.Forms.ToolStripMenuItem addXToUserDictionaryToolStripMenuItem;
     }
 }

@@ -5506,6 +5506,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "SpellCheck/AddXToNames":
                     language.SpellCheck.AddXToNames = reader.Value;
                     break;
+                case "SpellCheck/AddXToUserDictionary":
+                    language.SpellCheck.AddXToUserDictionary = reader.Value;
+                    break;
                 case "SpellCheck/AutoFixNames":
                     language.SpellCheck.AutoFixNames = reader.Value;
                     break;
