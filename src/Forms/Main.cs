@@ -2929,10 +2929,16 @@ namespace Nikse.SubtitleEdit.Forms
                         _subtitle.RemoveEmptyLines();
                     }
 
-                    foreach (var p in _subtitle.Paragraphs)
+                    if (Configuration.Settings.General.RemoveBadCharsWhenOpening)
                     {
-                        // Replace U+0456 (CYRILLIC SMALL LETTER BYELORUSSIAN-UKRAINIAN I) by U+0069 (LATIN SMALL LETTER I)
-                        p.Text = p.Text.Replace("<і>", "<i>").Replace("</і>", "</i>");
+                        foreach (var p in _subtitle.Paragraphs)
+                        {
+                            // Replace U+0456 (CYRILLIC SMALL LETTER BYELORUSSIAN-UKRAINIAN I) by U+0069 (LATIN SMALL LETTER I)
+                            p.Text = p.Text.Replace("<і>", "<i>").Replace("</і>", "</i>");
+
+                            // remove control characters (e.g. binary zero)
+                            p.Text = p.Text.RemoveControlCharactersButWhiteSpace();
+                        }
                     }
 
                     _subtitleListViewIndex = -1;

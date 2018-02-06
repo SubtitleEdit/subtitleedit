@@ -205,7 +205,7 @@ namespace Nikse.SubtitleEdit.Core
         public bool ExportTextNewLineAfterText { get; set; }
         public bool ExportTextNewLineBetweenSubtitles { get; set; }
         public string ExportTextTimeCodeFormat { get; set; }
-        public string ExportTextTimeCodeSeparator { get; set; }        
+        public string ExportTextTimeCodeSeparator { get; set; }
         public bool VideoOffsetKeepTimeCodes { get; set; }
         public int MoveStartEndMs { get; set; }
         public decimal AdjustDurationSeconds { get; set; }
@@ -604,6 +604,7 @@ namespace Nikse.SubtitleEdit.Core
         public int SplitContainerListViewAndTextSplitterDistance { get; set; }
         public bool StartInSourceView { get; set; }
         public bool RemoveBlankLinesWhenOpening { get; set; }
+        public bool RemoveBadCharsWhenOpening { get; set; }
         public int SubtitleLineMaximumLength { get; set; }
         public int SubtitleMinimumDisplayMilliseconds { get; set; }
         public int SubtitleMaximumDisplayMilliseconds { get; set; }
@@ -725,6 +726,7 @@ namespace Nikse.SubtitleEdit.Core
             SubtitleLineMaximumLength = 43;
             SubtitleMinimumDisplayMilliseconds = 1000;
             SubtitleMaximumDisplayMilliseconds = 8 * 1000;
+            RemoveBadCharsWhenOpening = true;
             MinimumMillisecondsBetweenLines = 24;
             SetStartEndHumanDelay = 100;
             AutoWrapLineWhileTyping = false;
@@ -1025,7 +1027,7 @@ namespace Nikse.SubtitleEdit.Core
         public string MainListViewColumnInsertText { get; set; }
         public string MainListViewColumnPaste { get; set; }
         public string MainListViewColumnTextUp { get; set; }
-        public string MainListViewColumnTextDown { get; set; }        
+        public string MainListViewColumnTextDown { get; set; }
         public string MainListViewFocusWaveform { get; set; }
         public string MainListViewGoToNextError { get; set; }
         public string MainTextBoxItalic { get; set; }
@@ -1578,6 +1580,9 @@ namespace Nikse.SubtitleEdit.Core
             subNode = node.SelectSingleNode("RemoveBlankLinesWhenOpening");
             if (subNode != null)
                 settings.General.RemoveBlankLinesWhenOpening = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("RemoveBadCharsWhenOpening");
+            if (subNode != null)
+                settings.General.RemoveBadCharsWhenOpening = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("SubtitleLineMaximumLength");
             if (subNode != null)
                 settings.General.SubtitleLineMaximumLength = Convert.ToInt32(subNode.InnerText);
@@ -3413,6 +3418,7 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("SplitContainerListViewAndTextSplitterDistance", settings.General.SplitContainerListViewAndTextSplitterDistance.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("StartInSourceView", settings.General.StartInSourceView.ToString());
                 textWriter.WriteElementString("RemoveBlankLinesWhenOpening", settings.General.RemoveBlankLinesWhenOpening.ToString());
+                textWriter.WriteElementString("RemoveBadCharsWhenOpening", settings.General.RemoveBadCharsWhenOpening.ToString());
                 textWriter.WriteElementString("SubtitleLineMaximumLength", settings.General.SubtitleLineMaximumLength.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("SubtitleMinimumDisplayMilliseconds", settings.General.SubtitleMinimumDisplayMilliseconds.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("SubtitleMaximumDisplayMilliseconds", settings.General.SubtitleMaximumDisplayMilliseconds.ToString(CultureInfo.InvariantCulture));
