@@ -85,7 +85,7 @@ namespace Nikse.SubtitleEdit.Forms
                 comboBoxRemoveIfTextContains.Font = new Font(unicodeFontName, fontSize);
             }
             comboBoxRemoveIfTextContains.Left = checkBoxRemoveWhereContains.Left + checkBoxRemoveWhereContains.Width;
-            Subtitle = new Subtitle(subtitle);            
+            Subtitle = new Subtitle(subtitle);
             GeneratePreview();
         }
 
@@ -238,7 +238,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (editInterjections.ShowDialog(this) == DialogResult.OK)
                 {
                     Configuration.Settings.Tools.Interjections = editInterjections.GetInterjectionsSemiColonSeperatedString();
-                    _removeTextForHiLib.ResetInterjections();
+                    _removeTextForHiLib.ReloadInterjection();
                     if (checkBoxRemoveInterjections.Checked)
                     {
                         GeneratePreview();
@@ -319,7 +319,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             foreach (ListViewItem item in listViewFixes.Items)
             {
-                item.Checked = selectAll ? selectAll : !item.Checked;
+                item.Checked = selectAll ? true : !item.Checked;
             }
         }
 
