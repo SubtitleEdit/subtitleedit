@@ -170,6 +170,7 @@
     <Compile Include="Forms\FixCommonErrors\FixUppercaseIInsideWords.cs" />
     <Compile Include="Forms\FixCommonErrors\Helper.cs" />
     <Compile Include="Forms\MergeLinesWithSameTimeCodes.cs" />
+    <Compile Include="Forms\RemoveInterjection.cs" />
     <Compile Include="Interfaces\IBinaryPersistableSubtitle.cs" />
     <Compile Include="Interfaces\IFixCallbacks.cs" />
     <Compile Include="Interfaces\IFixCommonError.cs" />
