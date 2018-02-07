@@ -41,6 +41,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxInterjectionOnlySeparateLine.Checked = Configuration.Settings.RemoveTextForHearingImpaired.RemoveInterjectionsOnlyOnSeparateLine;
             checkBoxRemoveWhereContains.Checked = Configuration.Settings.RemoveTextForHearingImpaired.RemoveIfContains;
             checkBoxRemoveIfAllUppercase.Checked = Configuration.Settings.RemoveTextForHearingImpaired.RemoveIfAllUppercase;
+            checkBoxInterjectionOnlySeparateLine.Enabled = checkBoxRemoveInterjections.Checked;
 
             contextMenuStrip1.Items[0].Text = Configuration.Settings.Language.Main.Menu.ContextMenu.SelectAll;
             contextMenuStrip1.Items[1].Text = Configuration.Settings.Language.Main.Menu.Edit.InverseSelection;
@@ -227,6 +228,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void checkBoxRemoveInterjections_CheckedChanged(object sender, EventArgs e)
         {
+            checkBoxInterjectionOnlySeparateLine.Enabled = checkBoxRemoveInterjections.Checked;
             GeneratePreview();
         }
 
@@ -319,7 +321,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             foreach (ListViewItem item in listViewFixes.Items)
             {
-                item.Checked = selectAll ? true : !item.Checked;
+                item.Checked = selectAll || !item.Checked;
             }
         }
 
