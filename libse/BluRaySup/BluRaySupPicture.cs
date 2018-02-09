@@ -320,7 +320,10 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                 0x10,                   // 4: hi nibble: frame_rate (0x10=24p), lo nibble: reserved
                 0x00, 0x00,             // 5: composition_number (increased by start and end header)
                 0x80,                   // 7: composition_state (0x80: epoch start)
-                0x00,                   // 8: palette_update_flag (0x80), 7bit reserved
+                                        //      0x00: Normal
+                                        //      0x40: Acquisition Point
+                                        //      0x80: Epoch Start
+                0x00,                   // 8: palette_update_flag (0x80==true, 0x00==false), 7bit reserved
                 0x00,                   // 9: palette_id_ref (0..7)
                 0x01,                   // 10: number_of_composition_objects (0..2)
                 0x00, 0x00,             // 11: 16bit object_id_ref
@@ -444,7 +447,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             /* time (in 90kHz resolution) needed to decode the image
                 based on the decoding pixel rate of 128e6 bit/s - always rounded up  */
             int imageDecodeTime = (bm.Width * bm.Height * 9 + 1599) / 1600;
-            // write PCS start
+            // write PCS start - Presentation Composition Segment (also called the Control Segment)
             packetHeader[10] = 0x16;                                            // ID
             int dts = pic.StartTimeForWrite - (frameInitTime + windowInitTime + imageDecodeTime); //int dts = pic.StartTimeForWrite - windowInitTime; ???
 
@@ -477,11 +480,11 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             for (int i = 0; i < headerWds.Length; i++)
                 buf[index++] = headerWds[i];
 
-            // write PDS
+            // write PDS - Palette Definition Segment 
             packetHeader[10] = 0x14;                                            // ID
             ToolBox.SetDWord(packetHeader, 2, dts);                             // PTS (=DTS of PCS/WDS)
             ToolBox.SetDWord(packetHeader, 6, 0);                               // DTS (0)
-            ToolBox.SetWord(packetHeader, 11, (2 + palSize * 5));               // size
+            ToolBox.SetWord(packetHeader, 11, 2 + palSize * 5);               // size
             for (int i = 0; i < packetHeader.Length; i++)
                 buf[index++] = packetHeader[i];
             buf[index++] = 0;
@@ -544,7 +547,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             // write PCS end
             packetHeader[10] = 0x16;                                            // ID
             ToolBox.SetDWord(packetHeader, 2, pic.EndTimeForWrite);             // PTS
-            dts = pic.EndTimeForWrite - 1; //dts = pic.StartTimeForWrite - 1;
+            dts = pic.EndTimeForWrite - 90; //dts = pic.StartTimeForWrite - 1;
             ToolBox.SetDWord(packetHeader, 6, dts);                             // DTS
             ToolBox.SetWord(packetHeader, 11, headerPcsEnd.Length);             // size
             for (int i = 0; i < packetHeader.Length; i++)
@@ -556,10 +559,11 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             for (int i = 0; i < headerPcsEnd.Length; i++)
                 buf[index++] = headerPcsEnd[i];
 
-            // write WDS
+            // write WDS - Window Definition Segment
             packetHeader[10] = 0x17;                                            // ID
             timestamp = pic.EndTimeForWrite - windowInitTime;
-            ToolBox.SetDWord(packetHeader, 2, timestamp);                       // PTS (keep DTS of PCS)
+            ToolBox.SetDWord(packetHeader, 2, timestamp);                       // PTS 
+            ToolBox.SetDWord(packetHeader, 6, dts - windowInitTime);            // DTS
             ToolBox.SetWord(packetHeader, 11, headerWds.Length);                // size
             for (int i = 0; i < packetHeader.Length; i++)
                 buf[index++] = packetHeader[i];
