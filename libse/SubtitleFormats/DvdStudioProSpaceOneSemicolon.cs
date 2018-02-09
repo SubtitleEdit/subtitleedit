@@ -33,13 +33,26 @@ $FadeOut                =   0
 $HorzAlign          =   Center
 ";
 
+            var verticalAlign = "$VertAlign=Bottom";
+            var lastVerticalAlign = verticalAlign;
             var sb = new StringBuilder();
             sb.AppendLine(header);
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 string startTime = string.Format(timeFormat, p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, MillisecondsToFramesMaxFrameRate(p.StartTime.Milliseconds));
                 string endTime = string.Format(timeFormat, p.EndTime.Hours, p.EndTime.Minutes, p.EndTime.Seconds, MillisecondsToFramesMaxFrameRate(p.EndTime.Milliseconds));
+
+                bool topAlign = p.Text.StartsWith("{\\an7}", StringComparison.Ordinal) ||
+                                p.Text.StartsWith("{\\an8}", StringComparison.Ordinal) ||
+                                p.Text.StartsWith("{\\an9}", StringComparison.Ordinal);
+                verticalAlign = topAlign ? "$VertAlign=Top" : "$VertAlign=Bottom";
+                if (lastVerticalAlign != verticalAlign)
+                {
+                    sb.AppendLine(verticalAlign);
+                }
+
                 sb.AppendFormat(paragraphWriteFormat, startTime, endTime, DvdStudioPro.EncodeStyles(p.Text));
+                lastVerticalAlign = verticalAlign;
             }
             return sb.ToString().Trim();
         }
@@ -49,6 +62,7 @@ $HorzAlign          =   Center
             _errorCount = 0;
             int number = 0;
             bool italicOn = false;
+            bool alignTop = false;
             foreach (string line in lines)
             {
                 if (string.IsNullOrWhiteSpace(line))
@@ -73,6 +87,10 @@ $HorzAlign          =   Center
                             {
                                 p.Text = "<i>" + p.Text + "</i>";
                             }
+                            if (alignTop)
+                            {
+                                p.Text = "{\\an8}" + p.Text;
+                            }
                             subtitle.Paragraphs.Add(p);
                         }
                     }
@@ -96,6 +114,18 @@ $HorzAlign          =   Center
                 else if (line.StartsWith("$Italic = False", StringComparison.OrdinalIgnoreCase))
                 {
                     italicOn = false;
+                }
+                else if (line.TrimStart().StartsWith("$VertAlign", StringComparison.OrdinalIgnoreCase))
+                {
+                    var s = line.RemoveChar(' ').RemoveChar('\t');
+                    if (s.Equals("$VertAlign=Bottom", StringComparison.OrdinalIgnoreCase))
+                    {
+                        alignTop = false;
+                    }
+                    else if (s.Equals("$VertAlign=Top", StringComparison.OrdinalIgnoreCase))
+                    {
+                        alignTop = true;
+                    }
                 }
             }
         }

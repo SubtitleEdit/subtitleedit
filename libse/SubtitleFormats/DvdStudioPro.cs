@@ -35,6 +35,8 @@ $HorzAlign          =   Center
 
             var sb = new StringBuilder();
             sb.AppendLine(header);
+            var verticalAlign = "$VertAlign=Bottom";
+            var lastVerticalAlign = verticalAlign;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 string startTime = string.Format(timeFormat, p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, MillisecondsToFramesMaxFrameRate(p.StartTime.Milliseconds));
@@ -43,18 +45,14 @@ $HorzAlign          =   Center
                 bool topAlign = p.Text.StartsWith("{\\an7}", StringComparison.Ordinal) ||
                                 p.Text.StartsWith("{\\an8}", StringComparison.Ordinal) ||
                                 p.Text.StartsWith("{\\an9}", StringComparison.Ordinal);
-                if (topAlign)
+                verticalAlign = topAlign ? "$VertAlign=Top" : "$VertAlign=Bottom";
+                if (lastVerticalAlign != verticalAlign)
                 {
-                    sb.AppendLine("$VertAlign = Top");
-                    sb.AppendFormat(paragraphWriteFormat, startTime, endTime, EncodeStyles(p.Text));
-                    sb.AppendLine("$VertAlign = Bottom");
-                }
-                else
-                {
-                    sb.AppendFormat(paragraphWriteFormat, startTime, endTime, EncodeStyles(p.Text));
+                    sb.AppendLine(verticalAlign);
                 }
 
-                
+                sb.AppendFormat(paragraphWriteFormat, startTime, endTime, EncodeStyles(p.Text));
+                lastVerticalAlign = verticalAlign;
             }
             return sb.ToString().Trim();
         }
@@ -90,7 +88,7 @@ $HorzAlign          =   Center
                         _errorCount++;
                     }
                 }
-                else if (line != null && line.TrimStart().StartsWith('$'))
+                else if (line != null && line.TrimStart().StartsWith("$VertAlign", StringComparison.OrdinalIgnoreCase))
                 {
                     var s = line.RemoveChar(' ').RemoveChar('\t');
                     if (s.Equals("$VertAlign=Bottom", StringComparison.OrdinalIgnoreCase))
