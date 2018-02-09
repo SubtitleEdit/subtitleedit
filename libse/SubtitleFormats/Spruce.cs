@@ -57,10 +57,14 @@ $ColorIndex3    = 2
 $ColorIndex4    = 3
 
 //Subtitles";
+
+            var lastVerticalAlign = "$VertAlign=Bottom";
+            var lastHorizontalcalAlign = "$HorzAlign=Center";
             var sb = new StringBuilder();
             sb.AppendLine(header);
             foreach (Paragraph p in subtitle.Paragraphs)
             {
+                DvdStudioPro.ToTextAlignment(p, sb, ref lastVerticalAlign, ref lastHorizontalcalAlign);
                 sb.AppendLine($"{EncodeTimeCode(p.StartTime)},{EncodeTimeCode(p.EndTime)},{EncodeText(p.Text)}");
             }
             return sb.ToString();
@@ -76,6 +80,7 @@ $ColorIndex4    = 3
             text = text.Replace("</i>", Italic);
             text = text.Replace("<u>", Underline);
             text = text.Replace("</u>", Underline);
+            text = HtmlUtil.RemoveHtmlTags(text, true);
             if (allItalic)
                 return text.Replace(Environment.NewLine, "|^I");
             return text.Replace(Environment.NewLine, "|");
@@ -99,6 +104,8 @@ $ColorIndex4    = 3
             if (fileName != null && fileName.EndsWith(".stl", StringComparison.OrdinalIgnoreCase)) // allow empty text if extension is ".stl"...
                 timeCodeRegex = RegexTimeCodes2;
 
+            var verticalAlign = "$VertAlign=Bottom";
+            var horizontalAlign = "$HorzAlign=Center";
             foreach (string line in lines)
             {
                 if (line.IndexOf(':') == 2 && timeCodeRegex.IsMatch(line))
@@ -108,13 +115,23 @@ $ColorIndex4    = 3
 
                     try
                     {
-                        Paragraph p = new Paragraph(DecodeTimeCode(start), DecodeTimeCode(end), DecodeText(line.Substring(24)));
+                        var text = DecodeText(line.Substring(24));
+                        text = DvdStudioPro.GetAlignment(verticalAlign, horizontalAlign) + text;
+                        Paragraph p = new Paragraph(DecodeTimeCode(start), DecodeTimeCode(end), text);
                         subtitle.Paragraphs.Add(p);
                     }
                     catch
                     {
                         _errorCount++;
                     }
+                }
+                else if (line.TrimStart().StartsWith("$VertAlign", StringComparison.OrdinalIgnoreCase))
+                {
+                    verticalAlign = line.RemoveChar(' ').RemoveChar('\t');
+                }
+                else if (line.TrimStart().StartsWith("$HorzAlign", StringComparison.OrdinalIgnoreCase))
+                {
+                    horizontalAlign = line.RemoveChar(' ').RemoveChar('\t');
                 }
                 else if (!string.IsNullOrWhiteSpace(line) && !line.StartsWith("//", StringComparison.Ordinal) && !line.StartsWith('$'))
                 {

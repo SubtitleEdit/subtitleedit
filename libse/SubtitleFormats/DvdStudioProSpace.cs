@@ -33,26 +33,16 @@ $FadeOut                =   0
 $HorzAlign          =   Center
 ";
 
-            var verticalAlign = "$VertAlign=Bottom";
-            var lastVerticalAlign = verticalAlign;
+            var lastVerticalAlign = "$VertAlign=Bottom";
+            var lastHorizontalcalAlign = "$HorzAlign=Center";
             var sb = new StringBuilder();
             sb.AppendLine(header);
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 string startTime = string.Format(timeFormat, p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, MillisecondsToFramesMaxFrameRate(p.StartTime.Milliseconds));
                 string endTime = string.Format(timeFormat, p.EndTime.Hours, p.EndTime.Minutes, p.EndTime.Seconds, MillisecondsToFramesMaxFrameRate(p.EndTime.Milliseconds));
-
-                bool topAlign = p.Text.StartsWith("{\\an7}", StringComparison.Ordinal) ||
-                                p.Text.StartsWith("{\\an8}", StringComparison.Ordinal) ||
-                                p.Text.StartsWith("{\\an9}", StringComparison.Ordinal);
-                verticalAlign = topAlign ? "$VertAlign=Top" : "$VertAlign=Bottom";
-                if (lastVerticalAlign != verticalAlign)
-                {
-                    sb.AppendLine(verticalAlign);
-                }
-
+                DvdStudioPro.ToTextAlignment(p, sb, ref lastVerticalAlign, ref lastHorizontalcalAlign);
                 sb.AppendFormat(paragraphWriteFormat, startTime, endTime, DvdStudioPro.EncodeStyles(p.Text));
-                lastVerticalAlign = verticalAlign;
             }
             return sb.ToString().Trim();
         }
@@ -61,7 +51,8 @@ $HorzAlign          =   Center
         {
             _errorCount = 0;
             int number = 0;
-            bool alignTop = false;
+            var verticalAlign = "$VertAlign=Bottom";
+            var horizontalAlign = "$HorzAlign=Center";
             foreach (string line in lines)
             {
                 if (!string.IsNullOrWhiteSpace(line) && line[0] != '$' && !line.StartsWith("//", StringComparison.Ordinal))
@@ -79,8 +70,7 @@ $HorzAlign          =   Center
                             string text = line.Substring(27).Trim();
                             p.Text = text.Replace(" | ", Environment.NewLine).Replace("|", Environment.NewLine);
                             p.Text = DvdStudioPro.DecodeStyles(p.Text);
-                            if (alignTop)
-                                p.Text = "{\\an8}" + p.Text;
+                            p.Text = DvdStudioPro.GetAlignment(verticalAlign, horizontalAlign) + p.Text;
                             subtitle.Paragraphs.Add(p);
                         }
                     }
@@ -91,15 +81,11 @@ $HorzAlign          =   Center
                 }
                 else if (line != null && line.TrimStart().StartsWith("$VertAlign", StringComparison.OrdinalIgnoreCase))
                 {
-                    var s = line.RemoveChar(' ').RemoveChar('\t');
-                    if (s.Equals("$VertAlign=Bottom", StringComparison.OrdinalIgnoreCase))
-                    {
-                        alignTop = false;
-                    }
-                    else if (s.Equals("$VertAlign=Top", StringComparison.OrdinalIgnoreCase))
-                    {
-                        alignTop = true;
-                    }
+                    verticalAlign = line.RemoveChar(' ').RemoveChar('\t');
+                }
+                else if (line != null && line.TrimStart().StartsWith("$HorzAlign", StringComparison.OrdinalIgnoreCase))
+                {
+                    horizontalAlign = line.RemoveChar(' ').RemoveChar('\t');
                 }
             }
         }

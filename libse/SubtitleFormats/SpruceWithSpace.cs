@@ -43,13 +43,54 @@ $TapeOffset         =   FALSE
 \\Colour 6 = Cyan
 \\Colour 7 = White
 ";
+
+            var lastVerticalAlign = "$VertAlign     = Bottom";
+            var lastHorizontalcalAlign = "$HorzAlign     = Center";
             var sb = new StringBuilder();
             sb.AppendLine(header);
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                sb.AppendLine($"$HorzAlign     = Center\r\n{EncodeTimeCode(p.StartTime)}, {EncodeTimeCode(p.EndTime)}, {EncodeText(p.Text)}");
+                DvdStudioPro.ToTextAlignment(p, sb, ref lastVerticalAlign, ref lastHorizontalcalAlign);
+                sb.AppendLine($"{EncodeTimeCode(p.StartTime)}, {EncodeTimeCode(p.EndTime)}, {EncodeText(p.Text)}");
             }
             return sb.ToString();
+        }
+
+        private static StringBuilder ToTextAlignment(Paragraph p, StringBuilder sb, ref string lastVerticalAlign, ref string lastHorizontalAlign)
+        {
+            string verticalAlign;
+            string horizontalAlign;
+            bool verticalTopAlign = p.Text.StartsWith("{\\an7}", StringComparison.Ordinal) ||
+                                    p.Text.StartsWith("{\\an8}", StringComparison.Ordinal) ||
+                                    p.Text.StartsWith("{\\an9}", StringComparison.Ordinal);
+            bool verticalCenterAlign = p.Text.StartsWith("{\\an4}", StringComparison.Ordinal) ||
+                                       p.Text.StartsWith("{\\an5}", StringComparison.Ordinal) ||
+                                       p.Text.StartsWith("{\\an6}", StringComparison.Ordinal);
+            if (verticalTopAlign)
+                verticalAlign = "$VertAlign     = Top";
+            else if (verticalCenterAlign)
+                verticalAlign = "$VertAlign     = Center";
+            else
+                verticalAlign = "$VertAlign     = Bottom";
+            if (lastVerticalAlign != verticalAlign)
+                sb.AppendLine(verticalAlign);
+
+            bool horizontalLeftAlign = p.Text.StartsWith("{\\an1}", StringComparison.Ordinal) ||
+                                       p.Text.StartsWith("{\\an4}", StringComparison.Ordinal) ||
+                                       p.Text.StartsWith("{\\an7}", StringComparison.Ordinal);
+            bool horizontalRightAlign = p.Text.StartsWith("{\\an3}", StringComparison.Ordinal) ||
+                                        p.Text.StartsWith("{\\an6}", StringComparison.Ordinal) ||
+                                        p.Text.StartsWith("{\\an9}", StringComparison.Ordinal);
+            if (horizontalLeftAlign)
+                horizontalAlign = "$HorzAlign     = Left";
+            else if (horizontalRightAlign)
+                horizontalAlign = "$HorzAlign     = Right";
+            else
+                horizontalAlign = "$HorzAlign     = Center";
+            sb.AppendLine(horizontalAlign);
+
+            lastVerticalAlign = verticalAlign;
+            return sb;
         }
 
         private static string EncodeText(string text)
@@ -60,6 +101,7 @@ $TapeOffset         =   FALSE
             text = text.Replace("</i>", string.Empty);
             text = text.Replace("<u>", "^U");
             text = text.Replace("</u>", string.Empty);
+            text = HtmlUtil.RemoveHtmlTags(text, true);
             return text.Replace(Environment.NewLine, "|");
         }
 
@@ -73,6 +115,8 @@ $TapeOffset         =   FALSE
         {
             //00:01:54:19,00:01:56:17,We should be thankful|they accepted our offer.
             _errorCount = 0;
+            var verticalAlign = "$VertAlign=Bottom";
+            var horizontalAlign = "$HorzAlign=Center";
             subtitle.Paragraphs.Clear();
             foreach (string line in lines)
             {
@@ -83,15 +127,25 @@ $TapeOffset         =   FALSE
 
                     try
                     {
+                        var text = DecodeText(line.Substring(25).Trim());
+                        text = DvdStudioPro.GetAlignment(verticalAlign, horizontalAlign) + text;
                         var startTime = DecodeTimeCodeFramesFourParts(start.Split(SplitCharColon, StringSplitOptions.RemoveEmptyEntries));
                         var endTime = DecodeTimeCodeFramesFourParts(end.Split(SplitCharColon, StringSplitOptions.RemoveEmptyEntries));
-                        var p = new Paragraph(startTime, endTime, DecodeText(line.Substring(25).Trim()));
+                        var p = new Paragraph(startTime, endTime, text);
                         subtitle.Paragraphs.Add(p);
                     }
                     catch
                     {
                         _errorCount++;
                     }
+                }
+                else if (line.TrimStart().StartsWith("$VertAlign", StringComparison.OrdinalIgnoreCase))
+                {
+                    verticalAlign = line.RemoveChar(' ').RemoveChar('\t');
+                }
+                else if (line.TrimStart().StartsWith("$HorzAlign", StringComparison.OrdinalIgnoreCase))
+                {
+                    horizontalAlign = line.RemoveChar(' ').RemoveChar('\t');
                 }
                 else if (!string.IsNullOrWhiteSpace(line) && !line.StartsWith("//", StringComparison.Ordinal) && !line.StartsWith('$'))
                 {

@@ -33,35 +33,65 @@ $FadeOut                =   0
 $HorzAlign          =   Center
 ";
 
+            var lastVerticalAlign = "$VertAlign=Bottom";
+            var lastHorizontalcalAlign = "$HorzAlign=Center";
             var sb = new StringBuilder();
             sb.AppendLine(header);
-            var verticalAlign = "$VertAlign=Bottom";
-            var lastVerticalAlign = verticalAlign;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 string startTime = string.Format(timeFormat, p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, MillisecondsToFramesMaxFrameRate(p.StartTime.Milliseconds));
                 string endTime = string.Format(timeFormat, p.EndTime.Hours, p.EndTime.Minutes, p.EndTime.Seconds, MillisecondsToFramesMaxFrameRate(p.EndTime.Milliseconds));
-
-                bool topAlign = p.Text.StartsWith("{\\an7}", StringComparison.Ordinal) ||
-                                p.Text.StartsWith("{\\an8}", StringComparison.Ordinal) ||
-                                p.Text.StartsWith("{\\an9}", StringComparison.Ordinal);
-                verticalAlign = topAlign ? "$VertAlign=Top" : "$VertAlign=Bottom";
-                if (lastVerticalAlign != verticalAlign)
-                {
-                    sb.AppendLine(verticalAlign);
-                }
-
+                sb = ToTextAlignment(p, sb, ref lastVerticalAlign, ref lastHorizontalcalAlign);
                 sb.AppendFormat(paragraphWriteFormat, startTime, endTime, EncodeStyles(p.Text));
-                lastVerticalAlign = verticalAlign;
             }
             return sb.ToString().Trim();
+        }
+
+        internal static StringBuilder ToTextAlignment(Paragraph p, StringBuilder sb, ref string lastVerticalAlign, ref string lastHorizontalAlign)
+        {
+            string verticalAlign;
+            string horizontalAlign;
+            bool verticalTopAlign = p.Text.StartsWith("{\\an7}", StringComparison.Ordinal) ||
+                                    p.Text.StartsWith("{\\an8}", StringComparison.Ordinal) ||
+                                    p.Text.StartsWith("{\\an9}", StringComparison.Ordinal);
+            bool verticalCenterAlign = p.Text.StartsWith("{\\an4}", StringComparison.Ordinal) ||
+                                       p.Text.StartsWith("{\\an5}", StringComparison.Ordinal) ||
+                                       p.Text.StartsWith("{\\an6}", StringComparison.Ordinal);
+            if (verticalTopAlign)
+                verticalAlign = "$VertAlign=Top";
+            else if (verticalCenterAlign)
+                verticalAlign = "$VertAlign=Center";
+            else
+                verticalAlign = "$VertAlign=Bottom";
+            if (lastVerticalAlign != verticalAlign)
+                sb.AppendLine(verticalAlign);
+
+            bool horizontalLeftAlign = p.Text.StartsWith("{\\an1}", StringComparison.Ordinal) ||
+                                       p.Text.StartsWith("{\\an4}", StringComparison.Ordinal) ||
+                                       p.Text.StartsWith("{\\an7}", StringComparison.Ordinal);
+            bool horizontalRightAlign = p.Text.StartsWith("{\\an3}", StringComparison.Ordinal) ||
+                                        p.Text.StartsWith("{\\an6}", StringComparison.Ordinal) ||
+                                        p.Text.StartsWith("{\\an9}", StringComparison.Ordinal);
+            if (horizontalLeftAlign)
+                horizontalAlign = "$HorzAlign=Left";
+            else if (horizontalRightAlign)
+                horizontalAlign = "$HorzAlign=Right";
+            else
+                horizontalAlign = "$HorzAlign=Center";
+            if (lastHorizontalAlign != horizontalAlign)
+                sb.AppendLine(horizontalAlign);
+
+            lastVerticalAlign = verticalAlign;
+            lastHorizontalAlign = horizontalAlign;
+            return sb;
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             _errorCount = 0;
             int number = 0;
-            bool alignTop = false;
+            var verticalAlign = "$VertAlign=Bottom";
+            var horizontalAlign = "$HorzAlign=Center";
             foreach (string line in lines)
             {
                 if (!string.IsNullOrWhiteSpace(line) && line[0] != '$')
@@ -78,8 +108,7 @@ $HorzAlign          =   Center
                             p.Number = number;
                             p.Text = threePart[2].TrimEnd().Replace(" | ", Environment.NewLine).Replace("|", Environment.NewLine);
                             p.Text = DecodeStyles(p.Text);
-                            if (alignTop)
-                                p.Text = "{\\an8}" + p.Text;
+                            p.Text = GetAlignment(verticalAlign, horizontalAlign) + p.Text;
                             subtitle.Paragraphs.Add(p);
                         }
                     }
@@ -90,17 +119,40 @@ $HorzAlign          =   Center
                 }
                 else if (line != null && line.TrimStart().StartsWith("$VertAlign", StringComparison.OrdinalIgnoreCase))
                 {
-                    var s = line.RemoveChar(' ').RemoveChar('\t');
-                    if (s.Equals("$VertAlign=Bottom", StringComparison.OrdinalIgnoreCase))
-                    {
-                        alignTop = false;
-                    }
-                    else if (s.Equals("$VertAlign=Top", StringComparison.OrdinalIgnoreCase))
-                    {
-                        alignTop = true;
-                    }
+                    verticalAlign = line.RemoveChar(' ').RemoveChar('\t');
+                }
+                else if (line != null && line.TrimStart().StartsWith("$HorzAlign", StringComparison.OrdinalIgnoreCase))
+                {
+                    horizontalAlign = line.RemoveChar(' ').RemoveChar('\t');
                 }
             }
+        }
+
+        internal static string GetAlignment(string verticalAlign, string horizontalAlign)
+        {
+            if (verticalAlign.Equals("$VertAlign=Top"))
+            {
+                if (horizontalAlign.Equals("$HorzAlign=Left"))
+                    return "{\\an7}";
+                if (horizontalAlign.Equals("$HorzAlign=Right"))
+                    return "{\\an9}";
+                return "{\\an8}";
+            }
+
+            if (verticalAlign.Equals("$VertAlign=Center"))
+            {
+                if (horizontalAlign.Equals("$HorzAlign=Left"))
+                    return "{\\an4}";
+                if (horizontalAlign.Equals("$HorzAlign=Right"))
+                    return "{\\an6}";
+                return "{\\an5}";
+            }
+
+            if (horizontalAlign.Equals("$HorzAlign=Left"))
+                return "{\\an1}";
+            if (horizontalAlign.Equals("$HorzAlign=Right"))
+                return "{\\an3}";
+            return string.Empty;
         }
 
         internal static string DecodeStyles(string text)
