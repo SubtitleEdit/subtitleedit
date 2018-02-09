@@ -274,6 +274,8 @@
             this.toolStripMenuItemColumnImportText = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemPasteSpecial = new System.Windows.Forms.ToolStripMenuItem();
             this.copyOriginalTextToCurrentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.moveTextUpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.moveTextDownToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
             this.splitLineToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemMergeLines = new System.Windows.Forms.ToolStripMenuItem();
@@ -311,6 +313,7 @@
             this.fontDialog1 = new System.Windows.Forms.FontDialog();
             this.groupBoxVideo = new System.Windows.Forms.GroupBox();
             this.labelNextWord = new System.Windows.Forms.Label();
+            this.audioVisualizer = new Nikse.SubtitleEdit.Controls.AudioVisualizer();
             this.checkBoxSyncListViewWithVideoWhilePlaying = new System.Windows.Forms.CheckBox();
             this.labelVideoInfo = new System.Windows.Forms.Label();
             this.trackBarWaveformPosition = new System.Windows.Forms.TrackBar();
@@ -350,6 +353,7 @@
             this.buttonPlayCurrent = new System.Windows.Forms.Button();
             this.buttonPlayNext = new System.Windows.Forms.Button();
             this.tabPageCreate = new System.Windows.Forms.TabPage();
+            this.timeUpDownVideoPosition = new Nikse.SubtitleEdit.Controls.TimeUpDown();
             this.buttonGotoSub = new System.Windows.Forms.Button();
             this.buttonBeforeText = new System.Windows.Forms.Button();
             this.buttonSetEnd = new System.Windows.Forms.Button();
@@ -386,6 +390,7 @@
             this.labelVideoPosition2 = new System.Windows.Forms.Label();
             this.buttonAdjustGoToPosAndPause = new System.Windows.Forms.Button();
             this.buttonAdjustPlayBefore = new System.Windows.Forms.Button();
+            this.timeUpDownVideoPositionAdjust = new Nikse.SubtitleEdit.Controls.TimeUpDown();
             this.ShowSubtitleTimer = new System.Windows.Forms.Timer(this.components);
             this.timerAutoDuration = new System.Windows.Forms.Timer(this.components);
             this.timerAutoContinue = new System.Windows.Forms.Timer(this.components);
@@ -416,6 +421,7 @@
             this.tabControlSubtitle = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.splitContainerListViewAndText = new System.Windows.Forms.SplitContainer();
+            this.SubtitleListview1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.groupBoxEdit = new System.Windows.Forms.GroupBox();
             this.labelSingleLine = new System.Windows.Forms.Label();
             this.labelAlternateSingleLine = new System.Windows.Forms.Label();
@@ -427,6 +433,7 @@
             this.labelTextAlternateLineLengths = new System.Windows.Forms.Label();
             this.labelAlternateText = new System.Windows.Forms.Label();
             this.labelText = new System.Windows.Forms.Label();
+            this.textBoxListViewTextAlternate = new Nikse.SubtitleEdit.Controls.SETextBox();
             this.contextMenuStripTextBoxListView = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItemWebVttVoice = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparatorWebVTT = new System.Windows.Forms.ToolStripSeparator();
@@ -460,30 +467,24 @@
             this.labelTextLineTotal = new System.Windows.Forms.Label();
             this.labelCharactersPerSecond = new System.Windows.Forms.Label();
             this.buttonUnBreak = new System.Windows.Forms.Button();
+            this.timeUpDownStartTime = new Nikse.SubtitleEdit.Controls.TimeUpDown();
             this.numericUpDownDuration = new System.Windows.Forms.NumericUpDown();
             this.buttonPrevious = new System.Windows.Forms.Button();
             this.buttonNext = new System.Windows.Forms.Button();
             this.labelStartTime = new System.Windows.Forms.Label();
+            this.textBoxListViewText = new Nikse.SubtitleEdit.Controls.SETextBox();
             this.labelDuration = new System.Windows.Forms.Label();
             this.labelAutoDuration = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.textBoxSource = new System.Windows.Forms.TextBox();
             this.panelVideoPlayer = new System.Windows.Forms.Panel();
+            this.mediaPlayer = new Nikse.SubtitleEdit.Controls.VideoPlayerContainer();
             this.contextMenuStripEmpty = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.insertLineToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.imageListPlayRate = new System.Windows.Forms.ImageList(this.components);
             this.timerTextUndo = new System.Windows.Forms.Timer(this.components);
             this.timerAlternateTextUndo = new System.Windows.Forms.Timer(this.components);
-            this.moveTextUpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.moveTextDownToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.SubtitleListview1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
-            this.textBoxListViewTextAlternate = new Nikse.SubtitleEdit.Controls.SETextBox();
-            this.timeUpDownStartTime = new Nikse.SubtitleEdit.Controls.TimeUpDown();
-            this.textBoxListViewText = new Nikse.SubtitleEdit.Controls.SETextBox();
-            this.mediaPlayer = new Nikse.SubtitleEdit.Controls.VideoPlayerContainer();
-            this.audioVisualizer = new Nikse.SubtitleEdit.Controls.AudioVisualizer();
-            this.timeUpDownVideoPosition = new Nikse.SubtitleEdit.Controls.TimeUpDown();
-            this.timeUpDownVideoPositionAdjust = new Nikse.SubtitleEdit.Controls.TimeUpDown();
+            this.generateTextFromCurrentVideoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -2017,6 +2018,7 @@
             this.toolStripMenuItemImportSceneChanges,
             this.toolStripMenuItemRemoveSceneChanges,
             this.toolStripMenuItemAddWaveformBatch,
+            this.generateTextFromCurrentVideoToolStripMenuItem,
             this.toolStripSeparator5,
             this.showhideWaveformToolStripMenuItem,
             this.showhideVideoToolStripMenuItem,
@@ -2032,107 +2034,107 @@
             // openVideoToolStripMenuItem
             // 
             this.openVideoToolStripMenuItem.Name = "openVideoToolStripMenuItem";
-            this.openVideoToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
+            this.openVideoToolStripMenuItem.Size = new System.Drawing.Size(257, 22);
             this.openVideoToolStripMenuItem.Text = "Open video...";
             this.openVideoToolStripMenuItem.Click += new System.EventHandler(this.buttonOpenVideo_Click);
             // 
             // toolStripMenuItemOpenVideoFromUrl
             // 
             this.toolStripMenuItemOpenVideoFromUrl.Name = "toolStripMenuItemOpenVideoFromUrl";
-            this.toolStripMenuItemOpenVideoFromUrl.Size = new System.Drawing.Size(224, 22);
+            this.toolStripMenuItemOpenVideoFromUrl.Size = new System.Drawing.Size(257, 22);
             this.toolStripMenuItemOpenVideoFromUrl.Text = "Open video from url...";
             this.toolStripMenuItemOpenVideoFromUrl.Click += new System.EventHandler(this.toolStripMenuItemOpenVideoFromUrl_Click);
             // 
             // toolStripMenuItemOpenDvd
             // 
             this.toolStripMenuItemOpenDvd.Name = "toolStripMenuItemOpenDvd";
-            this.toolStripMenuItemOpenDvd.Size = new System.Drawing.Size(224, 22);
+            this.toolStripMenuItemOpenDvd.Size = new System.Drawing.Size(257, 22);
             this.toolStripMenuItemOpenDvd.Text = "Open DVD...";
             this.toolStripMenuItemOpenDvd.Click += new System.EventHandler(this.toolStripMenuItemOpenDvd_Click);
             // 
             // toolStripMenuItemSetAudioTrack
             // 
             this.toolStripMenuItemSetAudioTrack.Name = "toolStripMenuItemSetAudioTrack";
-            this.toolStripMenuItemSetAudioTrack.Size = new System.Drawing.Size(224, 22);
+            this.toolStripMenuItemSetAudioTrack.Size = new System.Drawing.Size(257, 22);
             this.toolStripMenuItemSetAudioTrack.Text = "Choose audio track";
             // 
             // closeVideoToolStripMenuItem
             // 
             this.closeVideoToolStripMenuItem.Name = "closeVideoToolStripMenuItem";
-            this.closeVideoToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
+            this.closeVideoToolStripMenuItem.Size = new System.Drawing.Size(257, 22);
             this.closeVideoToolStripMenuItem.Text = "Close video";
             this.closeVideoToolStripMenuItem.Click += new System.EventHandler(this.CloseVideoToolStripMenuItemClick);
             // 
             // setVideoOffsetToolStripMenuItem
             // 
             this.setVideoOffsetToolStripMenuItem.Name = "setVideoOffsetToolStripMenuItem";
-            this.setVideoOffsetToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
+            this.setVideoOffsetToolStripMenuItem.Size = new System.Drawing.Size(257, 22);
             this.setVideoOffsetToolStripMenuItem.Text = "Set video offset...";
             this.setVideoOffsetToolStripMenuItem.Click += new System.EventHandler(this.setVideoOffsetToolStripMenuItem_Click);
             // 
             // smpteTimeModedropFrameToolStripMenuItem
             // 
             this.smpteTimeModedropFrameToolStripMenuItem.Name = "smpteTimeModedropFrameToolStripMenuItem";
-            this.smpteTimeModedropFrameToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
+            this.smpteTimeModedropFrameToolStripMenuItem.Size = new System.Drawing.Size(257, 22);
             this.smpteTimeModedropFrameToolStripMenuItem.Text = "SMPTE timing (drop frame)";
             this.smpteTimeModedropFrameToolStripMenuItem.Click += new System.EventHandler(this.SmpteTimeModedropFrameToolStripMenuItem_Click);
             // 
             // toolStripMenuItemImportSceneChanges
             // 
             this.toolStripMenuItemImportSceneChanges.Name = "toolStripMenuItemImportSceneChanges";
-            this.toolStripMenuItemImportSceneChanges.Size = new System.Drawing.Size(224, 22);
+            this.toolStripMenuItemImportSceneChanges.Size = new System.Drawing.Size(257, 22);
             this.toolStripMenuItemImportSceneChanges.Text = "Import scene changes...";
             this.toolStripMenuItemImportSceneChanges.Click += new System.EventHandler(this.toolStripMenuItemImportSceneChanges_Click);
             // 
             // toolStripMenuItemRemoveSceneChanges
             // 
             this.toolStripMenuItemRemoveSceneChanges.Name = "toolStripMenuItemRemoveSceneChanges";
-            this.toolStripMenuItemRemoveSceneChanges.Size = new System.Drawing.Size(224, 22);
+            this.toolStripMenuItemRemoveSceneChanges.Size = new System.Drawing.Size(257, 22);
             this.toolStripMenuItemRemoveSceneChanges.Text = "Remove scene changes";
             this.toolStripMenuItemRemoveSceneChanges.Click += new System.EventHandler(this.toolStripMenuItemRemoveSceneChanges_Click);
             // 
             // toolStripMenuItemAddWaveformBatch
             // 
             this.toolStripMenuItemAddWaveformBatch.Name = "toolStripMenuItemAddWaveformBatch";
-            this.toolStripMenuItemAddWaveformBatch.Size = new System.Drawing.Size(224, 22);
+            this.toolStripMenuItemAddWaveformBatch.Size = new System.Drawing.Size(257, 22);
             this.toolStripMenuItemAddWaveformBatch.Text = "Add waveform batch...";
             this.toolStripMenuItemAddWaveformBatch.Click += new System.EventHandler(this.ToolStripMenuItemAddWaveformBatchClick);
             // 
             // toolStripSeparator5
             // 
             this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(221, 6);
+            this.toolStripSeparator5.Size = new System.Drawing.Size(254, 6);
             // 
             // showhideWaveformToolStripMenuItem
             // 
             this.showhideWaveformToolStripMenuItem.Name = "showhideWaveformToolStripMenuItem";
-            this.showhideWaveformToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
+            this.showhideWaveformToolStripMenuItem.Size = new System.Drawing.Size(257, 22);
             this.showhideWaveformToolStripMenuItem.Text = "Show/hide waveform";
             this.showhideWaveformToolStripMenuItem.Click += new System.EventHandler(this.ShowhideWaveformToolStripMenuItemClick);
             // 
             // showhideVideoToolStripMenuItem
             // 
             this.showhideVideoToolStripMenuItem.Name = "showhideVideoToolStripMenuItem";
-            this.showhideVideoToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
+            this.showhideVideoToolStripMenuItem.Size = new System.Drawing.Size(257, 22);
             this.showhideVideoToolStripMenuItem.Text = "Show/hide video";
             this.showhideVideoToolStripMenuItem.Click += new System.EventHandler(this.toolStripButtonToggleVideo_Click);
             // 
             // toolStripSeparator19
             // 
             this.toolStripSeparator19.Name = "toolStripSeparator19";
-            this.toolStripSeparator19.Size = new System.Drawing.Size(221, 6);
+            this.toolStripSeparator19.Size = new System.Drawing.Size(254, 6);
             // 
             // undockVideoControlsToolStripMenuItem
             // 
             this.undockVideoControlsToolStripMenuItem.Name = "undockVideoControlsToolStripMenuItem";
-            this.undockVideoControlsToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
+            this.undockVideoControlsToolStripMenuItem.Size = new System.Drawing.Size(257, 22);
             this.undockVideoControlsToolStripMenuItem.Text = "Un-dock video controls";
             this.undockVideoControlsToolStripMenuItem.Click += new System.EventHandler(this.UndockVideoControlsToolStripMenuItemClick);
             // 
             // redockVideoControlsToolStripMenuItem
             // 
             this.redockVideoControlsToolStripMenuItem.Name = "redockVideoControlsToolStripMenuItem";
-            this.redockVideoControlsToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
+            this.redockVideoControlsToolStripMenuItem.Size = new System.Drawing.Size(257, 22);
             this.redockVideoControlsToolStripMenuItem.Text = "Re-dock video controls";
             this.redockVideoControlsToolStripMenuItem.Visible = false;
             this.redockVideoControlsToolStripMenuItem.Click += new System.EventHandler(this.RedockVideoControlsToolStripMenuItemClick);
@@ -2531,6 +2533,20 @@
             this.copyOriginalTextToCurrentToolStripMenuItem.Text = "Copy original text to current";
             this.copyOriginalTextToCurrentToolStripMenuItem.Click += new System.EventHandler(this.copyOriginalTextToCurrentToolStripMenuItem_Click);
             // 
+            // moveTextUpToolStripMenuItem
+            // 
+            this.moveTextUpToolStripMenuItem.Name = "moveTextUpToolStripMenuItem";
+            this.moveTextUpToolStripMenuItem.Size = new System.Drawing.Size(313, 22);
+            this.moveTextUpToolStripMenuItem.Text = "Move text up";
+            this.moveTextUpToolStripMenuItem.Click += new System.EventHandler(this.moveTextUpToolStripMenuItem_Click);
+            // 
+            // moveTextDownToolStripMenuItem
+            // 
+            this.moveTextDownToolStripMenuItem.Name = "moveTextDownToolStripMenuItem";
+            this.moveTextDownToolStripMenuItem.Size = new System.Drawing.Size(313, 22);
+            this.moveTextDownToolStripMenuItem.Text = "Move text down";
+            this.moveTextDownToolStripMenuItem.Click += new System.EventHandler(this.moveTextDownToolStripMenuItem_Click);
+            // 
             // toolStripSeparator7
             // 
             this.toolStripSeparator7.Name = "toolStripSeparator7";
@@ -2776,6 +2792,44 @@
             this.labelNextWord.TabIndex = 13;
             this.labelNextWord.Text = "Next: xxx";
             this.labelNextWord.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // audioVisualizer
+            // 
+            this.audioVisualizer.AllowDrop = true;
+            this.audioVisualizer.AllowNewSelection = true;
+            this.audioVisualizer.AllowOverlap = false;
+            this.audioVisualizer.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.audioVisualizer.BackColor = System.Drawing.Color.Black;
+            this.audioVisualizer.BackgroundColor = System.Drawing.Color.Black;
+            this.audioVisualizer.Color = System.Drawing.Color.GreenYellow;
+            this.audioVisualizer.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.audioVisualizer.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(18)))));
+            this.audioVisualizer.Location = new System.Drawing.Point(472, 32);
+            this.audioVisualizer.Margin = new System.Windows.Forms.Padding(0);
+            this.audioVisualizer.Name = "audioVisualizer";
+            this.audioVisualizer.NewSelectionParagraph = null;
+            this.audioVisualizer.ParagraphColor = System.Drawing.Color.LimeGreen;
+            this.audioVisualizer.SceneChanges = ((System.Collections.Generic.List<double>)(resources.GetObject("audioVisualizer.SceneChanges")));
+            this.audioVisualizer.SelectedColor = System.Drawing.Color.Red;
+            this.audioVisualizer.ShowGridLines = true;
+            this.audioVisualizer.ShowSpectrogram = false;
+            this.audioVisualizer.ShowWaveform = true;
+            this.audioVisualizer.Size = new System.Drawing.Size(499, 229);
+            this.audioVisualizer.StartPositionSeconds = 0D;
+            this.audioVisualizer.TabIndex = 6;
+            this.audioVisualizer.TextBold = true;
+            this.audioVisualizer.TextColor = System.Drawing.Color.Gray;
+            this.audioVisualizer.TextSize = 9F;
+            this.audioVisualizer.VerticalZoomFactor = 1D;
+            this.audioVisualizer.WaveformNotLoadedText = "Click to add waveform";
+            this.audioVisualizer.WavePeaks = null;
+            this.audioVisualizer.ZoomFactor = 1D;
+            this.audioVisualizer.Click += new System.EventHandler(this.AudioWaveform_Click);
+            this.audioVisualizer.DragDrop += new System.Windows.Forms.DragEventHandler(this.AudioWaveformDragDrop);
+            this.audioVisualizer.DragEnter += new System.Windows.Forms.DragEventHandler(this.AudioWaveformDragEnter);
+            this.audioVisualizer.MouseEnter += new System.EventHandler(this.audioVisualizer_MouseEnter);
             // 
             // checkBoxSyncListViewWithVideoWhilePlaying
             // 
@@ -3237,6 +3291,26 @@
             this.tabPageCreate.Text = "Create";
             this.tabPageCreate.UseVisualStyleBackColor = true;
             // 
+            // timeUpDownVideoPosition
+            // 
+            this.timeUpDownVideoPosition.AutoSize = true;
+            this.timeUpDownVideoPosition.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.timeUpDownVideoPosition.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.timeUpDownVideoPosition.Location = new System.Drawing.Point(96, 191);
+            this.timeUpDownVideoPosition.Margin = new System.Windows.Forms.Padding(4);
+            this.timeUpDownVideoPosition.Name = "timeUpDownVideoPosition";
+            this.timeUpDownVideoPosition.Size = new System.Drawing.Size(96, 27);
+            this.timeUpDownVideoPosition.TabIndex = 12;
+            timeCode4.Hours = 0;
+            timeCode4.Milliseconds = 0;
+            timeCode4.Minutes = 0;
+            timeCode4.Seconds = 0;
+            timeCode4.TimeSpan = System.TimeSpan.Parse("00:00:00");
+            timeCode4.TotalMilliseconds = 0D;
+            timeCode4.TotalSeconds = 0D;
+            this.timeUpDownVideoPosition.TimeCode = timeCode4;
+            this.timeUpDownVideoPosition.UseVideoOffset = false;
+            // 
             // buttonGotoSub
             // 
             this.buttonGotoSub.Location = new System.Drawing.Point(6, 58);
@@ -3671,6 +3745,26 @@
             this.buttonAdjustPlayBefore.UseVisualStyleBackColor = true;
             this.buttonAdjustPlayBefore.Click += new System.EventHandler(this.buttonBeforeText_Click);
             // 
+            // timeUpDownVideoPositionAdjust
+            // 
+            this.timeUpDownVideoPositionAdjust.AutoSize = true;
+            this.timeUpDownVideoPositionAdjust.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.timeUpDownVideoPositionAdjust.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.timeUpDownVideoPositionAdjust.Location = new System.Drawing.Point(96, 213);
+            this.timeUpDownVideoPositionAdjust.Margin = new System.Windows.Forms.Padding(4);
+            this.timeUpDownVideoPositionAdjust.Name = "timeUpDownVideoPositionAdjust";
+            this.timeUpDownVideoPositionAdjust.Size = new System.Drawing.Size(96, 27);
+            this.timeUpDownVideoPositionAdjust.TabIndex = 13;
+            timeCode5.Hours = 0;
+            timeCode5.Milliseconds = 0;
+            timeCode5.Minutes = 0;
+            timeCode5.Seconds = 0;
+            timeCode5.TimeSpan = System.TimeSpan.Parse("00:00:00");
+            timeCode5.TotalMilliseconds = 0D;
+            timeCode5.TotalSeconds = 0D;
+            this.timeUpDownVideoPositionAdjust.TimeCode = timeCode5;
+            this.timeUpDownVideoPositionAdjust.UseVideoOffset = false;
+            // 
             // ShowSubtitleTimer
             // 
             this.ShowSubtitleTimer.Enabled = true;
@@ -3935,6 +4029,36 @@
             this.splitContainerListViewAndText.SplitterDistance = 91;
             this.splitContainerListViewAndText.TabIndex = 2;
             // 
+            // SubtitleListview1
+            // 
+            this.SubtitleListview1.AllowColumnReorder = true;
+            this.SubtitleListview1.AllowDrop = true;
+            this.SubtitleListview1.ContextMenuStrip = this.contextMenuStripListview;
+            this.SubtitleListview1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.SubtitleListview1.FirstVisibleIndex = -1;
+            this.SubtitleListview1.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SubtitleListview1.FullRowSelect = true;
+            this.SubtitleListview1.GridLines = true;
+            this.SubtitleListview1.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            this.SubtitleListview1.HideSelection = false;
+            this.SubtitleListview1.Location = new System.Drawing.Point(0, 0);
+            this.SubtitleListview1.Name = "SubtitleListview1";
+            this.SubtitleListview1.OwnerDraw = true;
+            this.SubtitleListview1.Size = new System.Drawing.Size(724, 91);
+            this.SubtitleListview1.SubtitleFontBold = false;
+            this.SubtitleListview1.SubtitleFontName = "Tahoma";
+            this.SubtitleListview1.SubtitleFontSize = 8;
+            this.SubtitleListview1.TabIndex = 0;
+            this.SubtitleListview1.UseCompatibleStateImageBehavior = false;
+            this.SubtitleListview1.UseSyntaxColoring = true;
+            this.SubtitleListview1.View = System.Windows.Forms.View.Details;
+            this.SubtitleListview1.SelectedIndexChanged += new System.EventHandler(this.SubtitleListview1_SelectedIndexChanged);
+            this.SubtitleListview1.DragDrop += new System.Windows.Forms.DragEventHandler(this.SubtitleListview1_DragDrop);
+            this.SubtitleListview1.DragEnter += new System.Windows.Forms.DragEventHandler(this.SubtitleListview1_DragEnter);
+            this.SubtitleListview1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.SubtitleListview1KeyDown);
+            this.SubtitleListview1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.SubtitleListview1_MouseDoubleClick);
+            this.SubtitleListview1.MouseEnter += new System.EventHandler(this.SubtitleListview1_MouseEnter);
+            // 
             // groupBoxEdit
             // 
             this.groupBoxEdit.Controls.Add(this.labelSingleLine);
@@ -4069,6 +4193,28 @@
             this.labelText.Size = new System.Drawing.Size(28, 13);
             this.labelText.TabIndex = 5;
             this.labelText.Text = "Text";
+            // 
+            // textBoxListViewTextAlternate
+            // 
+            this.textBoxListViewTextAlternate.AllowDrop = true;
+            this.textBoxListViewTextAlternate.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxListViewTextAlternate.ContextMenuStrip = this.contextMenuStripTextBoxListView;
+            this.textBoxListViewTextAlternate.Enabled = false;
+            this.textBoxListViewTextAlternate.HideSelection = false;
+            this.textBoxListViewTextAlternate.Location = new System.Drawing.Point(946, 28);
+            this.textBoxListViewTextAlternate.Multiline = true;
+            this.textBoxListViewTextAlternate.Name = "textBoxListViewTextAlternate";
+            this.textBoxListViewTextAlternate.Size = new System.Drawing.Size(0, 63);
+            this.textBoxListViewTextAlternate.TabIndex = 33;
+            this.textBoxListViewTextAlternate.Visible = false;
+            this.textBoxListViewTextAlternate.MouseClick += new System.Windows.Forms.MouseEventHandler(this.TextBoxListViewTextAlternateMouseClick);
+            this.textBoxListViewTextAlternate.TextChanged += new System.EventHandler(this.textBoxListViewTextAlternate_TextChanged);
+            this.textBoxListViewTextAlternate.Enter += new System.EventHandler(this.TextBoxListViewTextAlternateEnter);
+            this.textBoxListViewTextAlternate.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxListViewTextAlternateKeyDown);
+            this.textBoxListViewTextAlternate.KeyUp += new System.Windows.Forms.KeyEventHandler(this.TextBoxListViewTextAlternateKeyUp);
+            this.textBoxListViewTextAlternate.MouseMove += new System.Windows.Forms.MouseEventHandler(this.TextBoxListViewTextAlternateMouseMove);
             // 
             // contextMenuStripTextBoxListView
             // 
@@ -4342,6 +4488,26 @@
             this.buttonUnBreak.UseVisualStyleBackColor = true;
             this.buttonUnBreak.Click += new System.EventHandler(this.ButtonUnBreakClick);
             // 
+            // timeUpDownStartTime
+            // 
+            this.timeUpDownStartTime.AutoSize = true;
+            this.timeUpDownStartTime.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.timeUpDownStartTime.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.timeUpDownStartTime.Location = new System.Drawing.Point(9, 26);
+            this.timeUpDownStartTime.Margin = new System.Windows.Forms.Padding(4);
+            this.timeUpDownStartTime.Name = "timeUpDownStartTime";
+            this.timeUpDownStartTime.Size = new System.Drawing.Size(96, 27);
+            this.timeUpDownStartTime.TabIndex = 0;
+            timeCode6.Hours = 0;
+            timeCode6.Milliseconds = 0;
+            timeCode6.Minutes = 0;
+            timeCode6.Seconds = 0;
+            timeCode6.TimeSpan = System.TimeSpan.Parse("00:00:00");
+            timeCode6.TotalMilliseconds = 0D;
+            timeCode6.TotalSeconds = 0D;
+            this.timeUpDownStartTime.TimeCode = timeCode6;
+            this.timeUpDownStartTime.UseVideoOffset = false;
+            // 
             // numericUpDownDuration
             // 
             this.numericUpDownDuration.DecimalPlaces = 3;
@@ -4394,6 +4560,28 @@
             this.labelStartTime.Size = new System.Drawing.Size(51, 13);
             this.labelStartTime.TabIndex = 3;
             this.labelStartTime.Text = "Start time";
+            // 
+            // textBoxListViewText
+            // 
+            this.textBoxListViewText.AllowDrop = true;
+            this.textBoxListViewText.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxListViewText.ContextMenuStrip = this.contextMenuStripTextBoxListView;
+            this.textBoxListViewText.Enabled = false;
+            this.textBoxListViewText.HideSelection = false;
+            this.textBoxListViewText.Location = new System.Drawing.Point(236, 28);
+            this.textBoxListViewText.Multiline = true;
+            this.textBoxListViewText.Name = "textBoxListViewText";
+            this.textBoxListViewText.Size = new System.Drawing.Size(362, 63);
+            this.textBoxListViewText.TabIndex = 5;
+            this.textBoxListViewText.MouseClick += new System.Windows.Forms.MouseEventHandler(this.TextBoxListViewTextMouseClick);
+            this.textBoxListViewText.TextChanged += new System.EventHandler(this.TextBoxListViewTextTextChanged);
+            this.textBoxListViewText.Enter += new System.EventHandler(this.TextBoxListViewTextEnter);
+            this.textBoxListViewText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxListViewTextKeyDown);
+            this.textBoxListViewText.KeyUp += new System.Windows.Forms.KeyEventHandler(this.textBoxListViewText_KeyUp);
+            this.textBoxListViewText.Leave += new System.EventHandler(this.textBoxListViewText_Leave);
+            this.textBoxListViewText.MouseMove += new System.Windows.Forms.MouseEventHandler(this.textBoxListViewText_MouseMove);
             // 
             // labelDuration
             // 
@@ -4456,6 +4644,34 @@
             this.panelVideoPlayer.Size = new System.Drawing.Size(220, 246);
             this.panelVideoPlayer.TabIndex = 5;
             // 
+            // mediaPlayer
+            // 
+            this.mediaPlayer.AllowDrop = true;
+            this.mediaPlayer.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.mediaPlayer.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(18)))), ((int)(((byte)(18)))), ((int)(((byte)(18)))));
+            this.mediaPlayer.CurrentPosition = 0D;
+            this.mediaPlayer.FontSizeFactor = 1F;
+            this.mediaPlayer.LastParagraph = null;
+            this.mediaPlayer.Location = new System.Drawing.Point(0, 0);
+            this.mediaPlayer.Margin = new System.Windows.Forms.Padding(0);
+            this.mediaPlayer.Name = "mediaPlayer";
+            this.mediaPlayer.ShowFullscreenButton = true;
+            this.mediaPlayer.ShowMuteButton = true;
+            this.mediaPlayer.ShowStopButton = true;
+            this.mediaPlayer.Size = new System.Drawing.Size(219, 246);
+            this.mediaPlayer.SmpteMode = false;
+            this.mediaPlayer.SubtitleText = "";
+            this.mediaPlayer.TabIndex = 5;
+            this.mediaPlayer.TextRightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.mediaPlayer.VideoHeight = 0;
+            this.mediaPlayer.VideoPlayer = null;
+            this.mediaPlayer.VideoWidth = 0;
+            this.mediaPlayer.Volume = 0D;
+            this.mediaPlayer.DragDrop += new System.Windows.Forms.DragEventHandler(this.mediaPlayer_DragDrop);
+            this.mediaPlayer.DragEnter += new System.Windows.Forms.DragEventHandler(this.mediaPlayer_DragEnter);
+            // 
             // contextMenuStripEmpty
             // 
             this.contextMenuStripEmpty.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -4487,219 +4703,12 @@
             this.timerAlternateTextUndo.Interval = 700;
             this.timerAlternateTextUndo.Tick += new System.EventHandler(this.TimerAlternateTextUndoTick);
             // 
-            // moveTextUpToolStripMenuItem
+            // generateTextFromCurrentVideoToolStripMenuItem
             // 
-            this.moveTextUpToolStripMenuItem.Name = "moveTextUpToolStripMenuItem";
-            this.moveTextUpToolStripMenuItem.Size = new System.Drawing.Size(313, 22);
-            this.moveTextUpToolStripMenuItem.Text = "Move text up";
-            this.moveTextUpToolStripMenuItem.Click += new System.EventHandler(this.moveTextUpToolStripMenuItem_Click);
-            // 
-            // moveTextDownToolStripMenuItem
-            // 
-            this.moveTextDownToolStripMenuItem.Name = "moveTextDownToolStripMenuItem";
-            this.moveTextDownToolStripMenuItem.Size = new System.Drawing.Size(313, 22);
-            this.moveTextDownToolStripMenuItem.Text = "Move text down";
-            this.moveTextDownToolStripMenuItem.Click += new System.EventHandler(this.moveTextDownToolStripMenuItem_Click);
-            // 
-            // SubtitleListview1
-            // 
-            this.SubtitleListview1.AllowColumnReorder = true;
-            this.SubtitleListview1.AllowDrop = true;
-            this.SubtitleListview1.ContextMenuStrip = this.contextMenuStripListview;
-            this.SubtitleListview1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.SubtitleListview1.FirstVisibleIndex = -1;
-            this.SubtitleListview1.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SubtitleListview1.FullRowSelect = true;
-            this.SubtitleListview1.GridLines = true;
-            this.SubtitleListview1.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-            this.SubtitleListview1.HideSelection = false;
-            this.SubtitleListview1.Location = new System.Drawing.Point(0, 0);
-            this.SubtitleListview1.Name = "SubtitleListview1";
-            this.SubtitleListview1.OwnerDraw = true;
-            this.SubtitleListview1.Size = new System.Drawing.Size(724, 91);
-            this.SubtitleListview1.SubtitleFontBold = false;
-            this.SubtitleListview1.SubtitleFontName = "Tahoma";
-            this.SubtitleListview1.SubtitleFontSize = 8;
-            this.SubtitleListview1.TabIndex = 0;
-            this.SubtitleListview1.UseCompatibleStateImageBehavior = false;
-            this.SubtitleListview1.UseSyntaxColoring = true;
-            this.SubtitleListview1.View = System.Windows.Forms.View.Details;
-            this.SubtitleListview1.SelectedIndexChanged += new System.EventHandler(this.SubtitleListview1_SelectedIndexChanged);
-            this.SubtitleListview1.DragDrop += new System.Windows.Forms.DragEventHandler(this.SubtitleListview1_DragDrop);
-            this.SubtitleListview1.DragEnter += new System.Windows.Forms.DragEventHandler(this.SubtitleListview1_DragEnter);
-            this.SubtitleListview1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.SubtitleListview1KeyDown);
-            this.SubtitleListview1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.SubtitleListview1_MouseDoubleClick);
-            this.SubtitleListview1.MouseEnter += new System.EventHandler(this.SubtitleListview1_MouseEnter);
-            // 
-            // textBoxListViewTextAlternate
-            // 
-            this.textBoxListViewTextAlternate.AllowDrop = true;
-            this.textBoxListViewTextAlternate.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxListViewTextAlternate.ContextMenuStrip = this.contextMenuStripTextBoxListView;
-            this.textBoxListViewTextAlternate.Enabled = false;
-            this.textBoxListViewTextAlternate.HideSelection = false;
-            this.textBoxListViewTextAlternate.Location = new System.Drawing.Point(946, 28);
-            this.textBoxListViewTextAlternate.Multiline = true;
-            this.textBoxListViewTextAlternate.Name = "textBoxListViewTextAlternate";
-            this.textBoxListViewTextAlternate.Size = new System.Drawing.Size(0, 63);
-            this.textBoxListViewTextAlternate.TabIndex = 33;
-            this.textBoxListViewTextAlternate.Visible = false;
-            this.textBoxListViewTextAlternate.MouseClick += new System.Windows.Forms.MouseEventHandler(this.TextBoxListViewTextAlternateMouseClick);
-            this.textBoxListViewTextAlternate.TextChanged += new System.EventHandler(this.textBoxListViewTextAlternate_TextChanged);
-            this.textBoxListViewTextAlternate.Enter += new System.EventHandler(this.TextBoxListViewTextAlternateEnter);
-            this.textBoxListViewTextAlternate.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxListViewTextAlternateKeyDown);
-            this.textBoxListViewTextAlternate.KeyUp += new System.Windows.Forms.KeyEventHandler(this.TextBoxListViewTextAlternateKeyUp);
-            this.textBoxListViewTextAlternate.MouseMove += new System.Windows.Forms.MouseEventHandler(this.TextBoxListViewTextAlternateMouseMove);
-            // 
-            // timeUpDownStartTime
-            // 
-            this.timeUpDownStartTime.AutoSize = true;
-            this.timeUpDownStartTime.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.timeUpDownStartTime.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.timeUpDownStartTime.Location = new System.Drawing.Point(9, 26);
-            this.timeUpDownStartTime.Margin = new System.Windows.Forms.Padding(4);
-            this.timeUpDownStartTime.Name = "timeUpDownStartTime";
-            this.timeUpDownStartTime.Size = new System.Drawing.Size(96, 27);
-            this.timeUpDownStartTime.TabIndex = 0;
-            timeCode4.Hours = 0;
-            timeCode4.Milliseconds = 0;
-            timeCode4.Minutes = 0;
-            timeCode4.Seconds = 0;
-            timeCode4.TimeSpan = System.TimeSpan.Parse("00:00:00");
-            timeCode4.TotalMilliseconds = 0D;
-            timeCode4.TotalSeconds = 0D;
-            this.timeUpDownStartTime.TimeCode = timeCode4;
-            this.timeUpDownStartTime.UseVideoOffset = false;
-            // 
-            // textBoxListViewText
-            // 
-            this.textBoxListViewText.AllowDrop = true;
-            this.textBoxListViewText.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxListViewText.ContextMenuStrip = this.contextMenuStripTextBoxListView;
-            this.textBoxListViewText.Enabled = false;
-            this.textBoxListViewText.HideSelection = false;
-            this.textBoxListViewText.Location = new System.Drawing.Point(236, 28);
-            this.textBoxListViewText.Multiline = true;
-            this.textBoxListViewText.Name = "textBoxListViewText";
-            this.textBoxListViewText.Size = new System.Drawing.Size(362, 63);
-            this.textBoxListViewText.TabIndex = 5;
-            this.textBoxListViewText.MouseClick += new System.Windows.Forms.MouseEventHandler(this.TextBoxListViewTextMouseClick);
-            this.textBoxListViewText.TextChanged += new System.EventHandler(this.TextBoxListViewTextTextChanged);
-            this.textBoxListViewText.Enter += new System.EventHandler(this.TextBoxListViewTextEnter);
-            this.textBoxListViewText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxListViewTextKeyDown);
-            this.textBoxListViewText.KeyUp += new System.Windows.Forms.KeyEventHandler(this.textBoxListViewText_KeyUp);
-            this.textBoxListViewText.Leave += new System.EventHandler(this.textBoxListViewText_Leave);
-            this.textBoxListViewText.MouseMove += new System.Windows.Forms.MouseEventHandler(this.textBoxListViewText_MouseMove);
-            // 
-            // mediaPlayer
-            // 
-            this.mediaPlayer.AllowDrop = true;
-            this.mediaPlayer.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.mediaPlayer.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(18)))), ((int)(((byte)(18)))), ((int)(((byte)(18)))));
-            this.mediaPlayer.CurrentPosition = 0D;
-            this.mediaPlayer.FontSizeFactor = 1F;
-            this.mediaPlayer.LastParagraph = null;
-            this.mediaPlayer.Location = new System.Drawing.Point(0, 0);
-            this.mediaPlayer.Margin = new System.Windows.Forms.Padding(0);
-            this.mediaPlayer.Name = "mediaPlayer";
-            this.mediaPlayer.ShowFullscreenButton = true;
-            this.mediaPlayer.ShowMuteButton = true;
-            this.mediaPlayer.ShowStopButton = true;
-            this.mediaPlayer.Size = new System.Drawing.Size(219, 246);
-            this.mediaPlayer.SmpteMode = false;
-            this.mediaPlayer.SubtitleText = "";
-            this.mediaPlayer.TabIndex = 5;
-            this.mediaPlayer.TextRightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.mediaPlayer.VideoHeight = 0;
-            this.mediaPlayer.VideoPlayer = null;
-            this.mediaPlayer.VideoWidth = 0;
-            this.mediaPlayer.Volume = 0D;
-            this.mediaPlayer.DragDrop += new System.Windows.Forms.DragEventHandler(this.mediaPlayer_DragDrop);
-            this.mediaPlayer.DragEnter += new System.Windows.Forms.DragEventHandler(this.mediaPlayer_DragEnter);
-            // 
-            // audioVisualizer
-            // 
-            this.audioVisualizer.AllowDrop = true;
-            this.audioVisualizer.AllowNewSelection = true;
-            this.audioVisualizer.AllowOverlap = false;
-            this.audioVisualizer.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.audioVisualizer.BackColor = System.Drawing.Color.Black;
-            this.audioVisualizer.BackgroundColor = System.Drawing.Color.Black;
-            this.audioVisualizer.Color = System.Drawing.Color.GreenYellow;
-            this.audioVisualizer.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.audioVisualizer.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(18)))));
-            this.audioVisualizer.Location = new System.Drawing.Point(472, 32);
-            this.audioVisualizer.Margin = new System.Windows.Forms.Padding(0);
-            this.audioVisualizer.Name = "audioVisualizer";
-            this.audioVisualizer.NewSelectionParagraph = null;
-            this.audioVisualizer.ParagraphColor = System.Drawing.Color.LimeGreen;
-            this.audioVisualizer.SceneChanges = ((System.Collections.Generic.List<double>)(resources.GetObject("audioVisualizer.SceneChanges")));
-            this.audioVisualizer.SelectedColor = System.Drawing.Color.Red;
-            this.audioVisualizer.ShowGridLines = true;
-            this.audioVisualizer.ShowSpectrogram = false;
-            this.audioVisualizer.ShowWaveform = true;
-            this.audioVisualizer.Size = new System.Drawing.Size(499, 229);
-            this.audioVisualizer.StartPositionSeconds = 0D;
-            this.audioVisualizer.TabIndex = 6;
-            this.audioVisualizer.TextBold = true;
-            this.audioVisualizer.TextColor = System.Drawing.Color.Gray;
-            this.audioVisualizer.TextSize = 9F;
-            this.audioVisualizer.VerticalZoomFactor = 1D;
-            this.audioVisualizer.WaveformNotLoadedText = "Click to add waveform";
-            this.audioVisualizer.WavePeaks = null;
-            this.audioVisualizer.ZoomFactor = 1D;
-            this.audioVisualizer.Click += new System.EventHandler(this.AudioWaveform_Click);
-            this.audioVisualizer.DragDrop += new System.Windows.Forms.DragEventHandler(this.AudioWaveformDragDrop);
-            this.audioVisualizer.DragEnter += new System.Windows.Forms.DragEventHandler(this.AudioWaveformDragEnter);
-            this.audioVisualizer.MouseEnter += new System.EventHandler(this.audioVisualizer_MouseEnter);
-            // 
-            // timeUpDownVideoPosition
-            // 
-            this.timeUpDownVideoPosition.AutoSize = true;
-            this.timeUpDownVideoPosition.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.timeUpDownVideoPosition.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.timeUpDownVideoPosition.Location = new System.Drawing.Point(96, 191);
-            this.timeUpDownVideoPosition.Margin = new System.Windows.Forms.Padding(4);
-            this.timeUpDownVideoPosition.Name = "timeUpDownVideoPosition";
-            this.timeUpDownVideoPosition.Size = new System.Drawing.Size(96, 27);
-            this.timeUpDownVideoPosition.TabIndex = 12;
-            timeCode5.Hours = 0;
-            timeCode5.Milliseconds = 0;
-            timeCode5.Minutes = 0;
-            timeCode5.Seconds = 0;
-            timeCode5.TimeSpan = System.TimeSpan.Parse("00:00:00");
-            timeCode5.TotalMilliseconds = 0D;
-            timeCode5.TotalSeconds = 0D;
-            this.timeUpDownVideoPosition.TimeCode = timeCode5;
-            this.timeUpDownVideoPosition.UseVideoOffset = false;
-            // 
-            // timeUpDownVideoPositionAdjust
-            // 
-            this.timeUpDownVideoPositionAdjust.AutoSize = true;
-            this.timeUpDownVideoPositionAdjust.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.timeUpDownVideoPositionAdjust.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.timeUpDownVideoPositionAdjust.Location = new System.Drawing.Point(96, 213);
-            this.timeUpDownVideoPositionAdjust.Margin = new System.Windows.Forms.Padding(4);
-            this.timeUpDownVideoPositionAdjust.Name = "timeUpDownVideoPositionAdjust";
-            this.timeUpDownVideoPositionAdjust.Size = new System.Drawing.Size(96, 27);
-            this.timeUpDownVideoPositionAdjust.TabIndex = 13;
-            timeCode6.Hours = 0;
-            timeCode6.Milliseconds = 0;
-            timeCode6.Minutes = 0;
-            timeCode6.Seconds = 0;
-            timeCode6.TimeSpan = System.TimeSpan.Parse("00:00:00");
-            timeCode6.TotalMilliseconds = 0D;
-            timeCode6.TotalSeconds = 0D;
-            this.timeUpDownVideoPositionAdjust.TimeCode = timeCode6;
-            this.timeUpDownVideoPositionAdjust.UseVideoOffset = false;
+            this.generateTextFromCurrentVideoToolStripMenuItem.Name = "generateTextFromCurrentVideoToolStripMenuItem";
+            this.generateTextFromCurrentVideoToolStripMenuItem.Size = new System.Drawing.Size(257, 22);
+            this.generateTextFromCurrentVideoToolStripMenuItem.Text = "Generate text from current video...";
+            this.generateTextFromCurrentVideoToolStripMenuItem.Click += new System.EventHandler(this.generateTextFromCurrentVideoToolStripMenuItem_Click);
             // 
             // Main
             // 
@@ -5226,5 +5235,6 @@
         private System.Windows.Forms.ToolStripMenuItem smpteTimeModedropFrameToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem moveTextUpToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem moveTextDownToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem generateTextFromCurrentVideoToolStripMenuItem;
     }
 }
