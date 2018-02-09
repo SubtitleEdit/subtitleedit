@@ -40,6 +40,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AudioToText\PhocketSphinx\ResultReader.cs" />
+    <Compile Include="AudioToText\PhocketSphinx\SubtitleGenerator.cs" />
+    <Compile Include="AudioToText\ResultText.cs" />
     <Compile Include="BluRaySup\BluRaySupPalette.cs" />
     <Compile Include="BluRaySup\BluRaySupParser.cs" />
     <Compile Include="BluRaySup\BluRaySupPicture.cs" />
@@ -576,6 +579,7 @@
     <None Include="packages.config" />
     <None Include="Resources\NetflixAllowedGlyphs.bin.gz" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="BeforeCompile">
     <Exec Command="%22$(SolutionDir)..\build_helpers.bat%22 rev %22$(ConfigurationName)%22" />

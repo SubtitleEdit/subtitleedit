@@ -18657,6 +18657,8 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripMenuItemImportSceneChanges.Visible = false;
                 toolStripMenuItemRemoveSceneChanges.Visible = false;
             }
+
+            generateTextFromCurrentVideoToolStripMenuItem.Visible = Configuration.Settings.General.ShowBetaStuff;
         }
 
         private void ChooseAudioTrack(object sender, EventArgs e)
@@ -22028,6 +22030,19 @@ namespace Nikse.SubtitleEdit.Forms
             SubtitleListview1.EnsureVisible(indices[0]);
             _subtitleListViewIndex = -1;
             SubtitleListview1_SelectedIndexChanged(null, null);
+        }
+
+        private void generateTextFromCurrentVideoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (var form = new AudioToText(_videoFileName))
+            {
+                if (form.ShowDialog(this) == DialogResult.OK)
+                {
+                    _subtitle.Paragraphs.Clear();
+                    _subtitle.Paragraphs.AddRange(form.Subtitle.Paragraphs);
+                    SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+                }
+            }
         }
     }
 }
