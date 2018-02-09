@@ -39,7 +39,22 @@ $HorzAlign          =   Center
             {
                 string startTime = string.Format(timeFormat, p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, MillisecondsToFramesMaxFrameRate(p.StartTime.Milliseconds));
                 string endTime = string.Format(timeFormat, p.EndTime.Hours, p.EndTime.Minutes, p.EndTime.Seconds, MillisecondsToFramesMaxFrameRate(p.EndTime.Milliseconds));
-                sb.AppendFormat(paragraphWriteFormat, startTime, endTime, EncodeStyles(p.Text));
+
+                bool topAlign = p.Text.StartsWith("{\\an7}", StringComparison.Ordinal) ||
+                                p.Text.StartsWith("{\\an8}", StringComparison.Ordinal) ||
+                                p.Text.StartsWith("{\\an9}", StringComparison.Ordinal);
+                if (topAlign)
+                {
+                    sb.AppendLine("$VertAlign = Top");
+                    sb.AppendFormat(paragraphWriteFormat, startTime, endTime, EncodeStyles(p.Text));
+                    sb.AppendLine("$VertAlign = Bottom");
+                }
+                else
+                {
+                    sb.AppendFormat(paragraphWriteFormat, startTime, endTime, EncodeStyles(p.Text));
+                }
+
+                
             }
             return sb.ToString().Trim();
         }
@@ -48,6 +63,7 @@ $HorzAlign          =   Center
         {
             _errorCount = 0;
             int number = 0;
+            bool alignTop = false;
             foreach (string line in lines)
             {
                 if (!string.IsNullOrWhiteSpace(line) && line[0] != '$')
@@ -64,12 +80,26 @@ $HorzAlign          =   Center
                             p.Number = number;
                             p.Text = threePart[2].TrimEnd().Replace(" | ", Environment.NewLine).Replace("|", Environment.NewLine);
                             p.Text = DecodeStyles(p.Text);
+                            if (alignTop)
+                                p.Text = "{\\an8}" + p.Text;
                             subtitle.Paragraphs.Add(p);
                         }
                     }
                     else
                     {
                         _errorCount++;
+                    }
+                }
+                else if (line != null && line.TrimStart().StartsWith('$'))
+                {
+                    var s = line.RemoveChar(' ').RemoveChar('\t');
+                    if (s.Equals("$VertAlign=Bottom", StringComparison.OrdinalIgnoreCase))
+                    {
+                        alignTop = false;
+                    }
+                    else if (s.Equals("$VertAlign=Top", StringComparison.OrdinalIgnoreCase))
+                    {
+                        alignTop = true;
                     }
                 }
             }
