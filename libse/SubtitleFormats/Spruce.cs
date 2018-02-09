@@ -61,7 +61,7 @@ $ColorIndex4    = 3
             sb.AppendLine(header);
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                sb.AppendLine(string.Format("{0},{1},{2}", EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), EncodeText(p.Text)));
+                sb.AppendLine($"{EncodeTimeCode(p.StartTime)},{EncodeTimeCode(p.EndTime)},{EncodeText(p.Text)}");
             }
             return sb.ToString();
         }
@@ -84,8 +84,8 @@ $ColorIndex4    = 3
         private static string EncodeTimeCode(TimeCode time)
         {
             //00:01:54:19
-            int frames = (int)Math.Round(time.Milliseconds / (TimeCode.BaseUnit / 25.0));
-            return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", time.Hours, time.Minutes, time.Seconds, frames);
+            int frames = MillisecondsToFrames(time.Milliseconds);
+            return $"{time.Hours:00}:{time.Minutes:00}:{time.Seconds:00}:{frames:00}";
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
@@ -132,9 +132,7 @@ $ColorIndex4    = 3
             string seconds = time.Substring(6, 2);
             string frames = time.Substring(9, 2);
 
-            int milliseconds = (int)((TimeCode.BaseUnit / 25.0) * int.Parse(frames));
-            if (milliseconds > 999)
-                milliseconds = 999;
+            int milliseconds = FramesToMillisecondsMax999(int.Parse(frames));
             return new TimeCode(int.Parse(hour), int.Parse(minutes), int.Parse(seconds), milliseconds);
         }
 

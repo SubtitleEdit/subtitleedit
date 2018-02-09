@@ -47,7 +47,7 @@ $TapeOffset         =   FALSE
             sb.AppendLine(header);
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                sb.AppendLine(string.Format("$HorzAlign     = Center\r\n{0}, {1}, {2}", EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), EncodeText(p.Text)));
+                sb.AppendLine($"$HorzAlign     = Center\r\n{EncodeTimeCode(p.StartTime)}, {EncodeTimeCode(p.EndTime)}, {EncodeText(p.Text)}");
             }
             return sb.ToString();
         }
@@ -66,7 +66,7 @@ $TapeOffset         =   FALSE
         private static string EncodeTimeCode(TimeCode time)
         {
             //00:01:54:19
-            return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", time.Hours, time.Minutes, time.Seconds, MillisecondsToFramesMaxFrameRate(time.Milliseconds));
+            return $"{time.Hours:00}:{time.Minutes:00}:{time.Seconds:00}:{MillisecondsToFramesMaxFrameRate(time.Milliseconds):00}";
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
