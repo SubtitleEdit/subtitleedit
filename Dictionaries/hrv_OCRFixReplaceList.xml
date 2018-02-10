@@ -895,6 +895,9 @@
     <Word from="umem" to="umijem" />
     <Word from="umeš" to="umiješ" />
     <Word from="umesto" to="umjesto" />
+    <Word from="Umesto" to="umjesto" />
+    <Word from="umijesto" to="umjesto" />
+    <Word from="Umijesto" to="Umjesto" />
     <Word from="umetninama" to="umjetninama" />
     <Word from="umreti" to="umrijeti" />
     <Word from="Umret" to="Umrijet" />
@@ -2036,7 +2039,6 @@
     <RegEx find="([uU])mešan" replaceWith="$1mješan" />
     <RegEx find="([uU])metni([kcč])" replaceWith="$1mjetni$2" />
     <RegEx find="([uU])metno" replaceWith="$1mjetno" />
-    <RegEx find="([uU])mi?j?esto" replaceWith="$1mjesto" />
     <RegEx find="([uU])mrj?eć" replaceWith="$1mrijet ć" />
     <RegEx find="\b([uU])nj?e([lt])" replaceWith="$1nije$2" />
     <RegEx find="\b([uU]?)([nN])aprj?ed\b" replaceWith="$1$2aprijed" />
@@ -2061,7 +2063,7 @@
     <RegEx find="\b([uU])ver([aeil])" replaceWith="$1vjer$2" />
     <RegEx find="\b([uUcC])vet([aeiu]|om|ima|n[aeiou]|nima?|no[mgj])?\b" replaceWith="$1vjet$2" />
     <RegEx find="\b([uU])v([oau]|om)\b" replaceWith="$1h$2" />
-    <RegEx find="\b([uU])zeć([eu])" replaceWith="$1zet ć$2" />
+    <RegEx find="\b([uU])zeć" replaceWith="$1zet ć" />
     <RegEx find="([uU])zok" replaceWith="$1zrok" />
     <RegEx find="vajarstv" replaceWith="kiparstv" />
     <RegEx find="Vajarstv" replaceWith="Kiparstv" />
