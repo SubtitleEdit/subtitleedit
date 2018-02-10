@@ -1417,7 +1417,7 @@
     <RegEx find="\b([dD])j?eljenj" replaceWith="$1ijeljenj" />
     <RegEx find="\b([dD])ijec([aeiou]|om)\b" replaceWith="$1jec$2" />
     <RegEx find="ragoce" replaceWith="ragocje" />
-    <RegEx find="([dD])obi[čćc]([eu])" replaceWith="$1obit ć$2" />
+    <RegEx find="([dD])obi[čćc](?!i)" replaceWith="$1obit ć" />
     <RegEx find="\b([dD])obij(a|en)" replaceWith="$1obiv$2" />
     <RegEx find="([dD])o[čć]ić([eu])" replaceWith="$1oći ć$2" />
     <RegEx find="([dD])ol?j?nj" replaceWith="$1onj" />
@@ -1477,6 +1477,7 @@
     <RegEx find="([gG])odić" replaceWith="$1odit ć" />
     <RegEx find="ospodj" replaceWith="ospođ" />
     <RegEx find="([gG])ore([lt])" replaceWith="$1orje$2" />
+    <!-- ne diraj! [dogorio/razgorio/ izgorio] -->
     <RegEx find="([gG])oreo" replaceWith="$1orio" />
     <RegEx find="([gG])rej(?!p)" replaceWith="$1rij" />
     <RegEx find="\b([gG])rj?e([hs])" replaceWith="$1rije$2" />
@@ -1857,7 +1858,7 @@
     <RegEx find="([pP])rotiv([adkoprstz])" replaceWith="$1rotu$2" />
     <RegEx find="rovid([an])" replaceWith="rozir$1" />
     <RegEx find="rovj?erić" replaceWith="rovjerit ć" />
-    <RegEx find="ustić([eu])" replaceWith="ustit ć$1" />
+    <RegEx find="ustić(?!i)" replaceWith="ustit ć" />
     <RegEx find="put[ae]?r" replaceWith="maslac" />
     <RegEx find="Put[ae]?r" replaceWith="Maslac" />
     <RegEx find="(?&lt;!g)([rR])a([dn])ić([eu])" replaceWith="$1a$2it ć$3" />
