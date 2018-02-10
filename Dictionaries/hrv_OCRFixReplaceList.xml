@@ -1013,6 +1013,10 @@
     <Word from="znaći" to="znači" />
     <Word from="zvaničan" to="služben" />
     <Word from="žemo" to="ćemo" />
+    <Word from="želeo" to="želio" />
+    <Word from="Želeo" to="Želio" />
+    <Word from="Željeo" to="Želio" />
+    <Word from="željeo" to="želio" />
     <Word from="Živeo" to="Živio" />
     <Word from="živeo" to="živio" />
     <Word from="žmureo" to="žmirio" />
@@ -2140,7 +2144,6 @@
     <RegEx find="([zZ])vezd([ai])" replaceWith="$1vjezd$2" />
     <RegEx find="([žŽ])el[ei]([lz]|ti)" replaceWith="$1elje$2" />
     <RegEx find="([žŽ])eleć([eu])" replaceWith="$1eljet ć$2" />
-    <RegEx find="([žŽ])elj?eo" replaceWith="$1elio" />
     <RegEx find="([žŽ])ive([lt])" replaceWith="$1ivje$2" />
     <RegEx find="iveć(?!i)" replaceWith="ivjet ć" />
     <RegEx find="lj?ezd" replaceWith="lijezd" />
