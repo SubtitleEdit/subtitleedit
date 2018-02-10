@@ -50,7 +50,7 @@ $TapeOffset         =   FALSE
             sb.AppendLine(header);
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                DvdStudioPro.ToTextAlignment(p, sb, ref lastVerticalAlign, ref lastHorizontalcalAlign);
+                sb = ToTextAlignment(p, sb, ref lastVerticalAlign, ref lastHorizontalcalAlign);
                 sb.AppendLine($"{EncodeTimeCode(p.StartTime)}, {EncodeTimeCode(p.EndTime)}, {EncodeText(p.Text)}");
             }
             return sb.ToString();
@@ -90,6 +90,7 @@ $TapeOffset         =   FALSE
             sb.AppendLine(horizontalAlign);
 
             lastVerticalAlign = verticalAlign;
+            lastHorizontalAlign = horizontalAlign;
             return sb;
         }
 
