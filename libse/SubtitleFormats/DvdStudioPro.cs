@@ -130,27 +130,27 @@ $HorzAlign          =   Center
 
         internal static string GetAlignment(string verticalAlign, string horizontalAlign)
         {
-            if (verticalAlign.Equals("$VertAlign=Top"))
+            if (verticalAlign.Equals("$VertAlign=Top", StringComparison.OrdinalIgnoreCase))
             {
-                if (horizontalAlign.Equals("$HorzAlign=Left"))
+                if (horizontalAlign.Equals("$HorzAlign=Left", StringComparison.OrdinalIgnoreCase))
                     return "{\\an7}";
-                if (horizontalAlign.Equals("$HorzAlign=Right"))
+                if (horizontalAlign.Equals("$HorzAlign=Right", StringComparison.OrdinalIgnoreCase))
                     return "{\\an9}";
                 return "{\\an8}";
             }
 
-            if (verticalAlign.Equals("$VertAlign=Center"))
+            if (verticalAlign.Equals("$VertAlign=Center", StringComparison.OrdinalIgnoreCase))
             {
-                if (horizontalAlign.Equals("$HorzAlign=Left"))
+                if (horizontalAlign.Equals("$HorzAlign=Left", StringComparison.OrdinalIgnoreCase))
                     return "{\\an4}";
-                if (horizontalAlign.Equals("$HorzAlign=Right"))
+                if (horizontalAlign.Equals("$HorzAlign=Right", StringComparison.OrdinalIgnoreCase))
                     return "{\\an6}";
                 return "{\\an5}";
             }
 
-            if (horizontalAlign.Equals("$HorzAlign=Left"))
+            if (horizontalAlign.Equals("$HorzAlign=Left", StringComparison.OrdinalIgnoreCase))
                 return "{\\an1}";
-            if (horizontalAlign.Equals("$HorzAlign=Right"))
+            if (horizontalAlign.Equals("$HorzAlign=Right", StringComparison.OrdinalIgnoreCase))
                 return "{\\an3}";
             return string.Empty;
         }
