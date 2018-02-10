@@ -20,7 +20,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             const string header = @"$VertAlign          =   Bottom
 $Bold               =   FALSE
 $Underlined         =   FALSE
-$Italic             =   0
+$Italic             =   FALSE
 $XOffset                =   0
 $YOffset                =   -5
 $TextContrast           =   15
@@ -33,8 +33,8 @@ $FadeOut                =   0
 $HorzAlign          =   Center
 ";
 
-            var lastVerticalAlign = "$VertAlign=Bottom";
-            var lastHorizontalcalAlign = "$HorzAlign=Center";
+            var lastVerticalAlign = "$VertAlign = Bottom";
+            var lastHorizontalcalAlign = "$HorzAlign = Center";
             var sb = new StringBuilder();
             sb.AppendLine(header);
             foreach (Paragraph p in subtitle.Paragraphs)

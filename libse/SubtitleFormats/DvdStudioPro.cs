@@ -20,7 +20,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             const string header = @"$VertAlign          =   Bottom
 $Bold               =   FALSE
 $Underlined         =   FALSE
-$Italic             =   0
+$Italic             =   FALSE
 $XOffset                =   0
 $YOffset                =   -5
 $TextContrast           =   15
@@ -33,8 +33,8 @@ $FadeOut                =   0
 $HorzAlign          =   Center
 ";
 
-            var lastVerticalAlign = "$VertAlign=Bottom";
-            var lastHorizontalcalAlign = "$HorzAlign=Center";
+            var lastVerticalAlign = "$VertAlign = Bottom";
+            var lastHorizontalcalAlign = "$HorzAlign = Center";
             var sb = new StringBuilder();
             sb.AppendLine(header);
             foreach (Paragraph p in subtitle.Paragraphs)
@@ -58,11 +58,11 @@ $HorzAlign          =   Center
                                        p.Text.StartsWith("{\\an5}", StringComparison.Ordinal) ||
                                        p.Text.StartsWith("{\\an6}", StringComparison.Ordinal);
             if (verticalTopAlign)
-                verticalAlign = "$VertAlign=Top";
+                verticalAlign = "$VertAlign = Top";
             else if (verticalCenterAlign)
-                verticalAlign = "$VertAlign=Center";
+                verticalAlign = "$VertAlign = Center";
             else
-                verticalAlign = "$VertAlign=Bottom";
+                verticalAlign = "$VertAlign = Bottom";
             if (lastVerticalAlign != verticalAlign)
                 sb.AppendLine(verticalAlign);
 
@@ -73,11 +73,11 @@ $HorzAlign          =   Center
                                         p.Text.StartsWith("{\\an6}", StringComparison.Ordinal) ||
                                         p.Text.StartsWith("{\\an9}", StringComparison.Ordinal);
             if (horizontalLeftAlign)
-                horizontalAlign = "$HorzAlign=Left";
+                horizontalAlign = "$HorzAlign = Left";
             else if (horizontalRightAlign)
-                horizontalAlign = "$HorzAlign=Right";
+                horizontalAlign = "$HorzAlign = Right";
             else
-                horizontalAlign = "$HorzAlign=Center";
+                horizontalAlign = "$HorzAlign = Center";
             if (lastHorizontalAlign != horizontalAlign)
                 sb.AppendLine(horizontalAlign);
 

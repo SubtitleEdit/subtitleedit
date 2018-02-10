@@ -58,8 +58,8 @@ $ColorIndex4    = 3
 
 //Subtitles";
 
-            var lastVerticalAlign = "$VertAlign=Bottom";
-            var lastHorizontalcalAlign = "$HorzAlign=Center";
+            var lastVerticalAlign = "$VertAlign = Bottom";
+            var lastHorizontalcalAlign = "$HorzAlign = Center";
             var sb = new StringBuilder();
             sb.AppendLine(header);
             foreach (Paragraph p in subtitle.Paragraphs)
