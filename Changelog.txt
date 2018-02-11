@@ -4,20 +4,21 @@
 3.5.6 (xth March 2018) BETA
 * NEW:
    * Some support for SMPTE time code (drop frame) in video player
-   * Swap text up/down - thx Leon
    * Shortcuts for moving text up/down in current sub - thx Leon
    * Shortcut for "Unbreak without space" (for CJK) - thx Leon
 * IMPROVED:
    * Update Bulgarian translation - thx KalinM
    * Update Hungarian translation - thx ZityiSoft Team
    * Update Korean translation - thx domddol
+   * Update Turkish translation - thx Falcon006
    * Waveform insert sub now works not just at end - thx Leon
    * Allow larger "margin" in SSA/ASSA styles - thx von Suppé
    * Export to images alignment option "Center, left justify" - thx Shota 
    * Add "only if on separate line" option for "Remove interjections" - thx darnn
    * Start with uppercase letter after title in "Change casing" - thx 791
+   * Support more formats in "Import time codes from subtitles" - thx Ninelpienel 
 * FIXED:
-   * Fix Ctrl+v of time code in "Time code control" (regr. from 3.5.5) - thx Mohammed
+   * Fix Ctrl+p of time code in "Time code control" (regr. from 3.5.5) - thx Mohammed
    * Fix for format "TTML draft 2006-10" - thx thehulk
    * Fix issue regarding "Binary image compare OCR ext. matches" - thx SimplyTheBOSS
    * Fix issue regarding "Bridge gaps"/selected line - thx btsix
@@ -27,6 +28,11 @@
    * Fix for null terminated text from mkv - thx taxen/mkver
    * Fix focus after Alt+3/4 (previous/next) - thx Jamakmake
    * Fix possible crash in "Save original as..." - thx darnn
+   * Fix BDSup issue where DTS was after PTS - thx Anders
+   * Fix for time codes in DvdStudioPro + SpruceText - thx Shas2509
+   * Fix for alignment/italic in DvdStudioPro + SpruceText - thx Shas2509
+   * Fix wrong "Time code status" in EBU properties - thx doc
+   * Strip control characters from text field when loading subtitle - thx mkver
 
 
 3.5.5 (26th January 2018)
