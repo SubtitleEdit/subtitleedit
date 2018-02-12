@@ -607,6 +607,10 @@
     <Word from="Povinuju" to="Pokoravaju" />
     <Word from="povinuju" to="pokoravaju" />
     <Word from="pozadi" to="iza" />
+    <Word from="poželeo" to="poželio" />
+    <Word from="Poželeo" to="Poželio" />
+    <Word from="Poželjeo" to="Poželio" />
+    <Word from="poželjeo" to="poželio" />
     <Word from="praktikuj" to="prakticiraj" />
     <Word from="praktikuju" to="prakticiraju" />
     <Word from="praktikovala" to="prakticirala" />
@@ -709,6 +713,7 @@
     <Word from="Rizikuj" to="Riskiraj" />
     <Word from="rizikuju" to="riskiraju" />
     <Word from="rizikuje" to="riskira" />
+    <Word from="rješio" to="riješio" />
     <Word from="rokenrol" to="rock'n'roll" />
     <Word from="ronioc" to="ronilac" />
     <Word from="saviješću" to="savješću" />
@@ -1004,6 +1009,10 @@
     <Word from="zasedu" to="zasjedu" />
     <Word from="zatp" to="zato" />
     <Word from="Zatp" to="Zato" />
+    <Word from="zaželeo" to="zaželio" />
+    <Word from="Zaželeo" to="Zaželio" />
+    <Word from="Zaželjeo" to="Zaželio" />
+    <Word from="zaželjeo" to="zaželio" />
     <Word from="zbg" to="zbog" />
     <Word from="zdrvo" to="zdravo" />
     <Word from="Zdrvo" to="Zdravo" />
@@ -1102,8 +1111,10 @@
     <Word from="Lajf" to="Life" />
     <Word from="Lejk" to="Lake" />
     <Word from="Lorejn" to="Loraine" />
+    <Word from="Lorens" to="Lawrence" />
     <Word from="Lusi" to="Lucy" />
     <Word from="Majk" to="Mike" />
+    <Word from="Majkeve" to="Mikeove" />
     <Word from="Medlin" to="Madelaine" />
     <Word from="Medelin" to="Madeline" />
     <Word from="Mejbel" to="Mabel" />
