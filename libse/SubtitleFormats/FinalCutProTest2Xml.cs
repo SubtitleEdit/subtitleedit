@@ -161,7 +161,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                 }
 
-                foreach (XmlNode node in xml.SelectNodes("xmeml/sequence/media/video/track"))
+                foreach (XmlNode node in xml.SelectNodes("//video/track"))
                 {
                     try
                     {
