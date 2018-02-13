@@ -2,16 +2,19 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
+using Nikse.SubtitleEdit.Core.AudioToText.PhocketSphinx;
 
-namespace Nikse.SubtitleEdit.Core.AudioToText.PhocketSphinx
+namespace Nikse.SubtitleEdit.Core.AudioToText.PocketSphinx
 {
     public class ResultReader
     {
-        private List<string> _lines;
+        private readonly List<string> _lines;
+        private static readonly Regex EndsWithNumberInParentheses = new Regex(@"\(\d+\)$", RegexOptions.Compiled);
 
         public ResultReader(Stream stream)
         {
-            _lines = new List<string>(); ;
+            _lines = new List<string>();
             using (var reader = new StreamReader(stream))
             {
                 while (!reader.EndOfStream)
@@ -51,14 +54,20 @@ namespace Nikse.SubtitleEdit.Core.AudioToText.PhocketSphinx
                             {
                                 try
                                 {
-                                    var t = parts[0];
+                                    var text = parts[0];
+                                    if (text.EndsWith(')') && EndsWithNumberInParentheses.IsMatch(text))
+                                    {
+                                        text = text.Substring(0, text.LastIndexOf("(", StringComparison.Ordinal));
+                                    }
+
                                     var start = double.Parse(parts[1]);
                                     var end = double.Parse(parts[2]);
                                     var confidence = double.Parse(parts[3]);
-                                    list.Add(new ResultText { Text = t, Start = start, End = end, Confidence = confidence });
+                                    list.Add(new ResultText { Text = text, Start = start, End = end, Confidence = confidence });
                                 }
-                                catch (Exception e)
+                                catch 
                                 {
+                                    // ignored
                                 }
                             }
 

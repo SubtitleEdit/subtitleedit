@@ -718,6 +718,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "CompareSubtitles/IgnoreLineBreaks":
                     language.CompareSubtitles.IgnoreLineBreaks = reader.Value;
                     break;
+                case "CompareSubtitles/IgnoreFormatting":
+                    language.CompareSubtitles.IgnoreFormatting = reader.Value;
+                    break;
                 case "CompareSubtitles/OnlyLookForDifferencesInText":
                     language.CompareSubtitles.OnlyLookForDifferencesInText = reader.Value;
                     break;

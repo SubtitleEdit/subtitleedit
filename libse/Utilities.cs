@@ -1591,10 +1591,13 @@ namespace Nikse.SubtitleEdit.Core
             return defaultColor;
         }
 
-        public static string[] SplitForChangedCalc(string s, bool ignoreLineBreaks, bool breakToLetters)
+        public static string[] SplitForChangedCalc(string s, bool ignoreLineBreaks, bool ignoreFormatting, bool breakToLetters)
         {
             const string endChars = "!?.:;,#%$£";
             var list = new List<string>();
+
+            if (ignoreFormatting)
+                s = HtmlUtil.RemoveHtmlTags(s, true);
 
             if (breakToLetters)
             {
@@ -1648,10 +1651,10 @@ namespace Nikse.SubtitleEdit.Core
             return list.ToArray();
         }
 
-        public static void GetTotalAndChangedWords(string s1, string s2, ref int total, ref int change, bool ignoreLineBreaks, bool breakToLetters)
+        public static void GetTotalAndChangedWords(string s1, string s2, ref int total, ref int change, bool ignoreLineBreaks, bool ignoreFormatting, bool breakToLetters)
         {
-            var parts1 = SplitForChangedCalc(s1, ignoreLineBreaks, breakToLetters);
-            var parts2 = SplitForChangedCalc(s2, ignoreLineBreaks, breakToLetters);
+            var parts1 = SplitForChangedCalc(s1, ignoreLineBreaks, ignoreFormatting, breakToLetters);
+            var parts2 = SplitForChangedCalc(s2, ignoreLineBreaks, ignoreFormatting, breakToLetters);
             total += Math.Max(parts1.Length, parts2.Length);
             change += GetChangesAdvanced(parts1, parts2);
         }
@@ -2317,6 +2320,31 @@ namespace Nikse.SubtitleEdit.Core
                 var hash = hasher.ComputeHash(bytes);
                 return Convert.ToBase64String(hash, 0, hash.Length);
             }
+        }
+
+        public static bool QualifiesForMerge(Paragraph p, Paragraph next, double maximumMillisecondsBetweenLines, int maximumTotalLength, bool onlyContinuationLines)
+        {
+            if (p?.Text != null && next?.Text != null)
+            {
+                var s = HtmlUtil.RemoveHtmlTags(p.Text.Trim(), true);
+                var nextText = HtmlUtil.RemoveHtmlTags(next.Text.Trim(), true);
+                if (s.Length + nextText.Length < maximumTotalLength && next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds < maximumMillisecondsBetweenLines)
+                {
+                    if (string.IsNullOrEmpty(s))
+                        return true;
+                    bool isLineContinuation = s.EndsWith(',') ||
+                                              s.EndsWith('-') ||
+                                              s.EndsWith("...", StringComparison.Ordinal) ||
+                                              s.EndsWith("…", StringComparison.Ordinal) || // Unicode Character 'HORIZONTAL ELLIPSIS' (U+2026)
+                                              AllLettersAndNumbers.Contains(s.Substring(s.Length - 1));
+
+                    if (!onlyContinuationLines)
+                        return true;
+
+                    return isLineContinuation;
+                }
+            }
+            return false;
         }
 
     }

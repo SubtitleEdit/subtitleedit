@@ -27,10 +27,7 @@ namespace Nikse.SubtitleEdit.Forms
             SubtitleListview1.HideColumn(SubtitleListView.SubtitleColumn.WordsPerMinute);
         }
 
-        public Subtitle MergedSubtitle
-        {
-            get { return _mergedSubtitle; }
-        }
+        public Subtitle MergedSubtitle => _mergedSubtitle;
 
         private void MergeShortLines_KeyDown(object sender, KeyEventArgs e)
         {
@@ -121,6 +118,7 @@ namespace Nikse.SubtitleEdit.Forms
             bool lastMerged = false;
             Paragraph p = null;
             var lineNumbers = new StringBuilder();
+            bool onlyContinuousLines = checkBoxOnlyContinuationLines.Checked;
             for (int i = 1; i < subtitle.Paragraphs.Count; i++)
             {
                 if (!lastMerged)
@@ -131,7 +129,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Paragraph next = subtitle.GetParagraphOrDefault(i);
                 if (next != null)
                 {
-                    if (QualifiesForMerge(p, next, maxMillisecondsBetweenLines, maxCharacters) && IsFixAllowed(p))
+                    if (Utilities.QualifiesForMerge(p, next, maxMillisecondsBetweenLines, maxCharacters, onlyContinuousLines) && IsFixAllowed(p))
                     {
                         if (GetStartTag(p.Text) == GetStartTag(next.Text) &&
                             GetEndTag(p.Text) == GetEndTag(next.Text))
@@ -222,28 +220,7 @@ namespace Nikse.SubtitleEdit.Forms
                 startTag = text.Substring(0, end + 1);
             }
             return startTag;
-        }
-
-        private bool QualifiesForMerge(Paragraph p, Paragraph next, double maximumMillisecondsBetweenLines, int maximumTotalLength)
-        {
-            if (p != null && p.Text != null && next != null && next.Text != null)
-            {
-                var s = HtmlUtil.RemoveHtmlTags(p.Text.Trim(), true);
-                var nextText = HtmlUtil.RemoveHtmlTags(next.Text.Trim(), true);
-                if (s.Length + nextText.Length < maximumTotalLength && next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds < maximumMillisecondsBetweenLines)
-                {
-                    if (string.IsNullOrEmpty(s))
-                        return true;
-                    bool isLineContinuation = s.EndsWith(',') || s.EndsWith('-') || s.EndsWith("...", StringComparison.Ordinal) || Utilities.AllLettersAndNumbers.Contains(s.Substring(s.Length - 1));
-
-                    if (!checkBoxOnlyContinuationLines.Checked)
-                        return true;
-
-                    return isLineContinuation;
-                }
-            }
-            return false;
-        }
+        }     
 
         private void NumericUpDownMaxCharactersValueChanged(object sender, EventArgs e)
         {

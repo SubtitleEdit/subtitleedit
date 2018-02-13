@@ -14,8 +14,12 @@ namespace Nikse.SubtitleEdit.Forms
     {
         private List<string> _dictionaryDownloadLinks = new List<string>();
         private List<string> _descriptions = new List<string>();
+        private List<string> _englishNames = new List<string>();
         private string _xmlName;
         private int _testAllIndex = -1;
+
+        public string SelectedEnglishName { get; private set; } = null;
+
 
         public GetDictionaries()
         {
@@ -43,6 +47,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             _dictionaryDownloadLinks = new List<string>();
             _descriptions = new List<string>();
+            _englishNames = new List<string>();
             _xmlName = xmlRessourceName;
             System.Reflection.Assembly asm = System.Reflection.Assembly.GetExecutingAssembly();
             var strm = asm.GetManifestResourceStream(_xmlName);
@@ -76,6 +81,7 @@ namespace Nikse.SubtitleEdit.Forms
                         comboBoxDictionaries.Items.Add(name);
                         _dictionaryDownloadLinks.Add(downloadLink);
                         _descriptions.Add(description);
+                        _englishNames.Add(englishName);
                     }
                 }
                 comboBoxDictionaries.SelectedIndex = 0;
@@ -122,11 +128,12 @@ namespace Nikse.SubtitleEdit.Forms
                 buttonDownload.Enabled = false;
                 buttonDownloadAll.Enabled = false;
                 comboBoxDictionaries.Enabled = false;
-                this.Refresh();
+                Refresh();
                 Cursor = Cursors.WaitCursor;
 
                 int index = comboBoxDictionaries.SelectedIndex;
                 string url = _dictionaryDownloadLinks[index];
+                SelectedEnglishName = _englishNames[index];
 
                 var wc = new WebClient { Proxy = Utilities.GetProxy() };
                 wc.DownloadDataCompleted += wc_DownloadDataCompleted;

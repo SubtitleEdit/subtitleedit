@@ -7,29 +7,35 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Core;
-using Nikse.SubtitleEdit.Core.AudioToText.PhocketSphinx;
+using Nikse.SubtitleEdit.Core.AudioToText.PocketSphinx;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
+using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Forms
 {
     public partial class AudioToText : Form
     {
         public Subtitle Subtitle { get; set; }
+        private readonly VideoInfo _videoInfo;
         private readonly string _videoFileName;
         private int _delayInMilliseconds;
         private bool _abort;
         private string _waveFileName;
         private readonly BackgroundWorker _backgroundWorker;
-
         private static readonly StringBuilder Output = new StringBuilder();
         private static readonly StringBuilder Error = new StringBuilder();
+        private bool _showMore = true;
 
-
-        public AudioToText(string videoFileName)
+        public AudioToText(string videoFileName, VideoInfo videoInfo)
         {
+            UiUtil.PreInitialize(this);
             InitializeComponent();
+            UiUtil.FixFonts(this);
             _videoFileName = videoFileName;
+            _videoInfo = videoInfo;
             _backgroundWorker = new BackgroundWorker();
+            UiUtil.FixLargeFonts(this, buttonOK);
+            labelProgress.Text = "Progress: 0%";
         }
 
         public static Process GetCommandLineProcess(string inputVideoFile, int audioTrackNumber, string outWaveFile, string encodeParamters, out string encoderName)
@@ -43,12 +49,10 @@ namespace Nikse.SubtitleEdit.Forms
             //-i indicates the input
             //-ac 1 means 1 channel (mono)
 
-
             string exeFilePath = Configuration.Settings.General.FFmpegLocation;
             string parameters = string.Format(fFmpegWaveTranscodeSettings, inputVideoFile, outWaveFile, audioParameter);
             return new Process { StartInfo = new ProcessStartInfo(exeFilePath, parameters) { WindowStyle = ProcessWindowStyle.Hidden } };
         }
-
 
         private void ExtractAudio()
         {
@@ -138,11 +142,15 @@ namespace Nikse.SubtitleEdit.Forms
             process.StartInfo.RedirectStandardOutput = true;
             process.StartInfo.RedirectStandardError = true;
             process.StartInfo.UseShellExecute = false;
+
             using (AutoResetEvent outputWaitHandle = new AutoResetEvent(false))
             using (AutoResetEvent errorWaitHandle = new AutoResetEvent(false))
             {
                 process.OutputDataReceived += (sender, e) =>
                 {
+                    if (_abort)
+                        return;
+
                     if (e.Data == null)
                     {
                         outputWaitHandle.Set();
@@ -150,11 +158,18 @@ namespace Nikse.SubtitleEdit.Forms
                     else
                     {
                         Output.AppendLine(e.Data);
+                        var seconds = GetLastTimeStampInSeconds(e.Data);
+                        if (seconds > 0)
+                        {
+                            _backgroundWorker.ReportProgress(seconds);
+                        }
                     }
                 };
                 process.ErrorDataReceived += (sender, e) =>
                 {
-                    if (e.Data == null)
+                    if (_abort)
+                        return;
+                    if (e.Data != null)
                     {
                         errorWaitHandle.Set();
                     }
@@ -168,43 +183,57 @@ namespace Nikse.SubtitleEdit.Forms
 
                 process.BeginOutputReadLine();
                 process.BeginErrorReadLine();
-                var timeout = 1000 * 60 * 60; //60 min timeout
 
-                if (process.WaitForExit(timeout) &&
-                    outputWaitHandle.WaitOne(timeout) &&
-                    errorWaitHandle.WaitOne(timeout))
+                var killed = false;
+                while (!process.HasExited)
                 {
-                    //Console.WriteLine("Done");
-                    // Process completed. Check process.ExitCode here.
+                    Application.DoEvents();
+                    Thread.Sleep(50);
+                    if (_abort && !killed)
+                    {
+                        process.Kill();
+                        killed = true;
+                    }
                 }
-                else
-                {
-                    // Console.WriteLine("Timeout");
-                    // Timed out.
-                }
+
             }
             return Output.ToString();
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private static int GetLastTimeStampInSeconds(string text)
         {
-            var fileName = @"E:\PocketSphinx\pocketsphinx\a.txt";
-            using (var s = new FileStream(fileName, FileMode.Open))
+            var lines = text.SplitToLines();
+            lines.Reverse();
+            foreach (var line in lines)
             {
-                var reader = new ResultReader(s);
-                var results = reader.Parse();
-                var subtitleGenerator = new SubtitleGenerator(results);
-                Subtitle = subtitleGenerator.Generate();
+                if (!line.StartsWith('<') && !line.StartsWith('['))
+                {
+                    var parts = line.Split();
+                    if (parts.Length == 4)
+                    {
+                        double start;
+                        double end;
+                        if (double.TryParse(parts[1], out start) && double.TryParse(parts[2], out end))
+                        {
+                            return (int)Math.Round(end);
+                        }
+                    }
+                }
             }
+
+            return -1;
         }
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
+            _abort = true;
             DialogResult = DialogResult.OK;
         }
 
         private void buttonCancel_Click(object sender, EventArgs e)
         {
+            _abort = true;
+            _backgroundWorker.CancelAsync();
             DialogResult = DialogResult.Cancel;
         }
 
@@ -218,19 +247,18 @@ namespace Nikse.SubtitleEdit.Forms
             return stream;
         }
 
-        private Subtitle Start(string videoFileName)
+        private Subtitle Start()
         {
-            //labelStatus.Text = "Extracting audio from video...";
             ExtractAudio();
-            Subtitle subtitle = new Subtitle();
 
+            Subtitle subtitle;
             var result = ExtractTextFromAudio(_waveFileName, _delayInMilliseconds);
             using (var stream = GenerateStreamFromString(result))
             {
                 var reader = new ResultReader(stream);
                 var results = reader.Parse();
                 var subtitleGenerator = new SubtitleGenerator(results);
-                subtitle = subtitleGenerator.Generate();
+                subtitle = subtitleGenerator.Generate("en");
             }
 
             // cleanup
@@ -248,9 +276,13 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void AudioToText_Load(object sender, EventArgs e)
         {
+            buttonOK.Enabled = false;
             _backgroundWorker.DoWork += _backgroundWorker_DoWork;
             _backgroundWorker.RunWorkerCompleted += _backgroundWorker_RunWorkerCompleted;
-            _backgroundWorker.RunWorkerAsync(_videoFileName);
+            _backgroundWorker.WorkerReportsProgress = true;
+            _backgroundWorker.ProgressChanged += _backgroundWorker_ProgressChanged;
+            _backgroundWorker.WorkerSupportsCancellation = true;
+            _backgroundWorker.RunWorkerAsync();
             progressBar1.Style = ProgressBarStyle.Marquee;
             progressBar1.Visible = true;
             labelStatus.Text = "Extracting text from video - this will take a while...";
@@ -262,12 +294,51 @@ namespace Nikse.SubtitleEdit.Forms
             labelStatus.Text = "Done extracing text from video.";
             textBoxOutput.Text = Output.ToString();
             textBoxLog.Text = Error.ToString();
+            labelProgress.Text = "Progress: " + 100 + "%";
             progressBar1.Visible = false;
+            buttonOK.Enabled = true;
         }
 
         private void _backgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-            e.Result = Start((string)e.Argument);
+            e.Result = Start();
+        }
+
+        private void _backgroundWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            var positionInSeconds = e.ProgressPercentage;
+            var percentage = (int)Math.Round(positionInSeconds * 100.0 / (_videoInfo.TotalMilliseconds / 1000.0));
+            labelProgress.Text = "Progress: " + percentage + "%";
+        }
+
+        private void linkLabelShowMoreLess_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            _showMore = !_showMore;
+            if (_showMore)
+            {
+                linkLabelShowMoreLess.Text = "Show less";
+                Height = 500;
+            }
+            else
+            {
+                linkLabelShowMoreLess.Text = "Show more";
+                Height = linkLabelShowMoreLess.Top + linkLabelShowMoreLess.Height + buttonOK.Height + 60;
+            }
+            labelLog.Visible = _showMore;
+            textBoxLog.Visible = _showMore;
+            labelOutput.Visible = _showMore;
+            textBoxOutput.Visible = _showMore;
+        }
+
+        private void AudioToText_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (!_abort)
+                e.Cancel = true;
+        }
+
+        private void AudioToText_Shown(object sender, EventArgs e)
+        {
+            linkLabelShowMoreLess_LinkClicked(null, null);
         }
     }
 }

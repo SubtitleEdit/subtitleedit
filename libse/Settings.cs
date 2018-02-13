@@ -1256,12 +1256,11 @@ namespace Nikse.SubtitleEdit.Core
         public bool ShowOnlyDifferences { get; set; }
         public bool OnlyLookForDifferenceInText { get; set; }
         public bool IgnoreLineBreaks { get; set; }
+        public bool IgnoreFormatting { get; set; }
 
         public CompareSettings()
         {
-            ShowOnlyDifferences = false;
             OnlyLookForDifferenceInText = true;
-            IgnoreLineBreaks = false;
         }
     }
 
@@ -1415,6 +1414,9 @@ namespace Nikse.SubtitleEdit.Core
                 xnode = nodeCompare.SelectSingleNode("IgnoreLineBreaks");
                 if (xnode != null)
                     settings.Compare.IgnoreLineBreaks = Convert.ToBoolean(xnode.InnerText);
+                xnode = nodeCompare.SelectSingleNode("IgnoreFormatting");
+                if (xnode != null)
+                    settings.Compare.IgnoreFormatting = Convert.ToBoolean(xnode.InnerText);
             }
 
             // Recent files
@@ -3353,6 +3355,7 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("ShowOnlyDifferences", settings.Compare.ShowOnlyDifferences.ToString());
                 textWriter.WriteElementString("OnlyLookForDifferenceInText", settings.Compare.OnlyLookForDifferenceInText.ToString());
                 textWriter.WriteElementString("IgnoreLineBreaks", settings.Compare.IgnoreLineBreaks.ToString());
+                textWriter.WriteElementString("IgnoreFormatting", settings.Compare.IgnoreFormatting.ToString());
                 textWriter.WriteEndElement();
 
                 textWriter.WriteStartElement("RecentFiles", string.Empty);
