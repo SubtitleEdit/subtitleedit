@@ -1100,6 +1100,7 @@ Note: Do check free disk space.</WaveFileMalformed>
         <Paste>Paste</Paste>
         <Delete>Delete</Delete>
         <SplitLineAtCursorPosition>Split line at cursor position</SplitLineAtCursorPosition>
+        <SplitLineAtCursorAndWaveformPosition>Split line at cursor/video position</SplitLineAtCursorAndWaveformPosition>
         <AutoDurationCurrentLine>Auto duration (current line)</AutoDurationCurrentLine>
         <SelectAll>Select all</SelectAll>
         <InsertFirstLine>Insert line</InsertFirstLine>

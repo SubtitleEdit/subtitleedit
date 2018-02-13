@@ -1611,6 +1611,7 @@ namespace Nikse.SubtitleEdit.Core
                         Paste = "Paste",
                         Delete = "Delete",
                         SplitLineAtCursorPosition = "Split line at cursor position",
+                        SplitLineAtCursorAndWaveformPosition = "Split line at cursor/video position",
                         AutoDurationCurrentLine = "Auto duration (current line)",
                         SelectAll = "Select all",
                         InsertFirstLine = "Insert line",
