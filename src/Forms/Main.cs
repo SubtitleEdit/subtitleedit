@@ -166,6 +166,7 @@ namespace Nikse.SubtitleEdit.Forms
         private Keys _mainAutoCalcCurrentDuration = Keys.None;
         private Keys _mainUnbreakNoSpace = Keys.None;
         private Keys _mainTextBoxSplitAtCursor = Keys.None;
+        private Keys _mainTextBoxSplitAtCursorAndVideoPos = Keys.None;
         private Keys _mainTextBoxMoveLastWordDown = Keys.None;
         private Keys _mainTextBoxMoveFirstWordFromNextUp = Keys.None;
         private Keys _mainTextBoxMoveLastWordDownCurrent = Keys.None;
@@ -1363,6 +1364,7 @@ namespace Nikse.SubtitleEdit.Forms
             pasteToolStripMenuItem.Text = _language.Menu.ContextMenu.Paste;
             deleteToolStripMenuItem.Text = _language.Menu.ContextMenu.Delete;
             toolStripMenuItemSplitTextAtCursor.Text = _language.Menu.ContextMenu.SplitLineAtCursorPosition;
+            toolStripMenuItemSplitViaWaveform.Text = _language.Menu.ContextMenu.SplitLineAtCursorAndWaveformPosition;
             selectAllToolStripMenuItem.Text = _language.Menu.ContextMenu.SelectAll;
             normalToolStripMenuItem1.Text = _language.Menu.ContextMenu.Normal;
             boldToolStripMenuItem1.Text = _languageGeneral.Bold;
@@ -7967,6 +7969,11 @@ namespace Nikse.SubtitleEdit.Forms
             else if (_mainTextBoxSplitAtCursor == e.KeyData)
             {
                 ToolStripMenuItemSplitTextAtCursorClick(null, null);
+                e.SuppressKeyPress = true;
+            }
+            else if (_mainTextBoxSplitAtCursorAndVideoPos == e.KeyData)
+            {
+                toolStripMenuItemSplitViaWaveform_Click(null, null);
                 e.SuppressKeyPress = true;
             }
             else if (e.KeyData == _mainTextBoxInsertAfter)
@@ -16367,6 +16374,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemReverseRightToLeftStartEnd.ShortcutKeys = _mainEditReverseStartAndEndingForRTL;
             italicToolStripMenuItem1.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxItalic);
             _mainTextBoxSplitAtCursor = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxSplitAtCursor);
+            _mainTextBoxSplitAtCursorAndVideoPos = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxSplitAtCursorAndVideoPos);
             _mainTextBoxMoveLastWordDown = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxMoveLastWordDown);
             _mainTextBoxMoveFirstWordFromNextUp = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxMoveFirstWordFromNextUp);
             _mainTextBoxMoveLastWordDownCurrent = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxMoveLastWordDownCurrent);
@@ -17467,6 +17475,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private TextBox GetFocusedTextBox()
         {
+            if (!textBoxListViewTextAlternate.Visible)
+                return textBoxListViewText;
             return textBoxListViewTextAlternate.Focused ? textBoxListViewTextAlternate : textBoxListViewText;
         }
 
@@ -19142,6 +19152,18 @@ namespace Nikse.SubtitleEdit.Forms
             tb.SelectionStart = tb.Text.Length;
         }
 
+        private void toolStripMenuItemSplitViaWaveform_Click(object sender, EventArgs e)
+        {
+            var tb = GetFocusedTextBox();
+            if (tb.SelectionStart > 2 && tb.SelectionStart < tb.Text.Length - 2)
+            {
+                int? pos = tb.SelectionStart;
+                SplitSelectedParagraph(mediaPlayer.CurrentPosition, pos);
+                tb.Focus();
+                tb.SelectionStart = tb.Text.Length;
+            }
+        }
+
         private void ContextMenuStripTextBoxListViewOpening(object sender, System.ComponentModel.CancelEventArgs e)
         {
             var tb = GetFocusedTextBox();
@@ -19191,6 +19213,22 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 toolStripSeparatorWebVTT.Visible = false;
                 toolStripMenuItemWebVttVoice.Visible = false;
+            }
+
+            if (tb.SelectionStart > 2 && tb.SelectionStart < tb.Text.Length - 2 && !string.IsNullOrEmpty(_videoFileName) && mediaPlayer != null &&
+                _subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedItems.Count > 0)
+            {
+                int firstSelectedIndex = SubtitleListview1.SelectedItems[0].Index;
+                var currentParagraph = _subtitle.GetParagraphOrDefault(firstSelectedIndex);
+                var splitSeconds = mediaPlayer.CurrentPosition;
+                if (splitSeconds > (currentParagraph.StartTime.TotalSeconds + 0.2) && splitSeconds < (currentParagraph.EndTime.TotalSeconds - 0.2))
+                    toolStripMenuItemSplitViaWaveform.Visible = true;
+                else
+                    toolStripMenuItemSplitViaWaveform.Visible = false;
+            }
+            else
+            {
+                toolStripMenuItemSplitViaWaveform.Visible = false;
             }
         }
 
@@ -22043,6 +22081,11 @@ namespace Nikse.SubtitleEdit.Forms
                     SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
                 }
             }
+        }
+
+        private void toolStripMenuItemSplitAtWaveTextBoxPos_Click(object sender, EventArgs e)
+        {
+            toolStripMenuItemSplitViaWaveform_Click(sender, e);
         }
     }
 }
