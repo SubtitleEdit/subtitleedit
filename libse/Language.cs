@@ -440,6 +440,7 @@ namespace Nikse.SubtitleEdit.Core
                 XNumberOfDifferenceAndPercentLettersChanged = "Number of differences: {0} ({1:0.##}% of letters changed)",
                 ShowOnlyDifferences = "Show only differences",
                 IgnoreLineBreaks = "Ignore line breaks",
+                IgnoreFormatting = "Ignore formatting",
                 OnlyLookForDifferencesInText = "Only look for differences in text",
                 CannotCompareWithImageBasedSubtitles = "Cannot compare with image based subtitles",
             };

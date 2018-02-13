@@ -40,8 +40,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AudioToText\PhocketSphinx\ResultReader.cs" />
-    <Compile Include="AudioToText\PhocketSphinx\SubtitleGenerator.cs" />
+    <Compile Include="AudioToText\PocketSphinx\PocketSphinxSettings.cs" />
+    <Compile Include="AudioToText\PocketSphinx\ResultReader.cs" />
+    <Compile Include="AudioToText\PocketSphinx\SubtitleGenerator.cs" />
     <Compile Include="AudioToText\ResultText.cs" />
     <Compile Include="BluRaySup\BluRaySupPalette.cs" />
     <Compile Include="BluRaySup\BluRaySupParser.cs" />
@@ -137,6 +138,7 @@
     <Compile Include="FastBitmap.cs" />
     <Compile Include="FastFileStream.cs" />
     <Compile Include="FileUtil.cs" />
+    <Compile Include="FixCasing.cs" />
     <Compile Include="Forms\CheckForUpdatesHelper.cs" />
     <Compile Include="Forms\DurationsBridgeGaps.cs" />
     <Compile Include="Forms\FixCommonErrors\AddMissingQuotes.cs" />

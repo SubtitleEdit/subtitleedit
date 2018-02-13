@@ -196,7 +196,7 @@ namespace Nikse.SubtitleEdit.Forms
                     int start = lower.IndexOf(name.ToLower(), StringComparison.Ordinal);
                     if (start >= 0)
                     {
-                        bool startOk = (start == 0) || (lower[start - 1] == ' ') || (lower[start - 1] == '-') || (lower[start - 1] == '"') ||
+                        bool startOk = start == 0 || lower[start - 1] == ' ' || lower[start - 1] == '-' || lower[start - 1] == '"' ||
                                        lower[start - 1] == '\'' || lower[start - 1] == '>' || Environment.NewLine.EndsWith(lower[start - 1]);
 
                         if (startOk)

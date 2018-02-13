@@ -22034,7 +22034,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void generateTextFromCurrentVideoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            using (var form = new AudioToText(_videoFileName))
+            using (var form = new AudioToText(_videoFileName, _videoInfo))
             {
                 if (form.ShowDialog(this) == DialogResult.OK)
                 {

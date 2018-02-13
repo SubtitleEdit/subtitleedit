@@ -8841,8 +8841,21 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             using (var form = new GetDictionaries())
             {
                 form.ShowDialog(this);
+                FillSpellCheckDictionaries();
+                if (!string.IsNullOrEmpty(form.SelectedEnglishName))
+                {
+                    for (var index = 0; index < comboBoxDictionaries.Items.Count; index++)
+                    {
+                        var item = comboBoxDictionaries.Items[index].ToString();
+                        if (item.Contains(form.SelectedEnglishName))
+                        {
+                            comboBoxDictionaries.SelectedIndex = index;
+                            return;
+                        }
+                    }
+                }
             }
-            FillSpellCheckDictionaries();
+
             if (comboBoxDictionaries.Items.Count > 0)
                 comboBoxDictionaries.SelectedIndex = 0;
         }

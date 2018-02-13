@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            Nikse.SubtitleEdit.Core.TimeCode timeCode2 = new Nikse.SubtitleEdit.Core.TimeCode();
+            Nikse.SubtitleEdit.Core.TimeCode timeCode1 = new Nikse.SubtitleEdit.Core.TimeCode();
             this.buttonConvert = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.groupBoxConvertOptions = new System.Windows.Forms.GroupBox();
@@ -272,7 +272,7 @@
             // buttonRemoveTextForHiSettings
             // 
             this.buttonRemoveTextForHiSettings.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonRemoveTextForHiSettings.Location = new System.Drawing.Point(183, 69);
+            this.buttonRemoveTextForHiSettings.Location = new System.Drawing.Point(183, 68);
             this.buttonRemoveTextForHiSettings.Name = "buttonRemoveTextForHiSettings";
             this.buttonRemoveTextForHiSettings.Size = new System.Drawing.Size(104, 21);
             this.buttonRemoveTextForHiSettings.TabIndex = 3;
@@ -303,7 +303,7 @@
             // buttonMultipleReplaceSettings
             // 
             this.buttonMultipleReplaceSettings.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonMultipleReplaceSettings.Location = new System.Drawing.Point(183, 141);
+            this.buttonMultipleReplaceSettings.Location = new System.Drawing.Point(183, 140);
             this.buttonMultipleReplaceSettings.Name = "buttonMultipleReplaceSettings";
             this.buttonMultipleReplaceSettings.Size = new System.Drawing.Size(104, 21);
             this.buttonMultipleReplaceSettings.TabIndex = 30;
@@ -434,14 +434,14 @@
             this.timeUpDownAdjust.Name = "timeUpDownAdjust";
             this.timeUpDownAdjust.Size = new System.Drawing.Size(96, 27);
             this.timeUpDownAdjust.TabIndex = 1;
-            timeCode2.Hours = 0;
-            timeCode2.Milliseconds = 0;
-            timeCode2.Minutes = 0;
-            timeCode2.Seconds = 0;
-            timeCode2.TimeSpan = System.TimeSpan.Parse("00:00:00");
-            timeCode2.TotalMilliseconds = 0D;
-            timeCode2.TotalSeconds = 0D;
-            this.timeUpDownAdjust.TimeCode = timeCode2;
+            timeCode1.Hours = 0;
+            timeCode1.Milliseconds = 0;
+            timeCode1.Minutes = 0;
+            timeCode1.Seconds = 0;
+            timeCode1.TimeSpan = System.TimeSpan.Parse("00:00:00");
+            timeCode1.TotalMilliseconds = 0D;
+            timeCode1.TotalSeconds = 0D;
+            this.timeUpDownAdjust.TimeCode = timeCode1;
             this.timeUpDownAdjust.UseVideoOffset = false;
             // 
             // labelHourMinSecMilliSecond
