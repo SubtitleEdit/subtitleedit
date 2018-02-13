@@ -17,6 +17,7 @@
    * Add "only if on separate line" option for "Remove interjections" - thx darnn
    * Start with uppercase letter after title in "Change casing" - thx 791
    * Support more formats in "Import time codes from subtitles" - thx Ninelpienel 
+   * Add option to ignore formatting in compare - thx mkver
 * FIXED:
    * Fix Ctrl+p of time code in "Time code control" (regr. from 3.5.5) - thx Mohammed
    * Fix for format "TTML draft 2006-10" - thx thehulk
@@ -33,6 +34,8 @@
    * Fix for alignment/italic in DvdStudioPro + SpruceText - thx Shas2509
    * Fix wrong "Time code status" in EBU properties - thx doc
    * Strip control characters from text field when loading subtitle - thx mkver
+   * Fix for reading FCP xml - thx Antti
+   * Fix reading "YouTube transcript" with trailing space - thx Sherman 
 
 
 3.5.5 (26th January 2018)

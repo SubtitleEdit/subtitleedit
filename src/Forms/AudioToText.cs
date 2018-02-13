@@ -22,9 +22,9 @@ namespace Nikse.SubtitleEdit.Forms
         private bool _abort;
         private string _waveFileName;
         private readonly BackgroundWorker _backgroundWorker;
-        private static readonly StringBuilder Output = new StringBuilder();
-        private static readonly StringBuilder Error = new StringBuilder();
         private bool _showMore = true;
+        private const int LogOutput = -256;
+        private const int LogInfo = -512;
 
         public AudioToText(string videoFileName, VideoInfo videoInfo)
         {
@@ -35,23 +35,53 @@ namespace Nikse.SubtitleEdit.Forms
             _videoInfo = videoInfo;
             _backgroundWorker = new BackgroundWorker();
             UiUtil.FixLargeFonts(this, buttonOK);
-            labelProgress.Text = "Progress: 0%";
+            labelProgress.Text = string.Empty;
         }
 
         public static Process GetCommandLineProcess(string inputVideoFile, int audioTrackNumber, string outWaveFile, string encodeParamters, out string encoderName)
         {
-            encoderName = "FFmpeg";
-            string audioParameter = string.Empty;
-            if (audioTrackNumber > 0)
-                audioParameter = $"-map 0:a:{audioTrackNumber}";
+            if (Configuration.Settings.General.UseFFmpegForWaveExtraction && File.Exists(Configuration.Settings.General.FFmpegLocation))
+            {
+                encoderName = "FFmpeg";
+                string audioParameter = string.Empty;
+                if (audioTrackNumber > 0)
+                    audioParameter = $"-map 0:a:{audioTrackNumber}";
 
-            const string fFmpegWaveTranscodeSettings = "-i \"{0}\" -acodec pcm_s16le -ac 1 -ar 16000 {2} \"{1}\"";
-            //-i indicates the input
-            //-ac 1 means 1 channel (mono)
+                const string fFmpegWaveTranscodeSettings = "-i \"{0}\" -acodec pcm_s16le -ac 1 -ar 16000 {2} \"{1}\"";
+                //-i indicates the input
+                //-ac 1 means 1 channel (mono)
 
-            string exeFilePath = Configuration.Settings.General.FFmpegLocation;
-            string parameters = string.Format(fFmpegWaveTranscodeSettings, inputVideoFile, outWaveFile, audioParameter);
-            return new Process { StartInfo = new ProcessStartInfo(exeFilePath, parameters) { WindowStyle = ProcessWindowStyle.Hidden } };
+                string exeFilePath = Configuration.Settings.General.FFmpegLocation;
+                string parameters = string.Format(fFmpegWaveTranscodeSettings, inputVideoFile, outWaveFile, audioParameter);
+                return new Process { StartInfo = new ProcessStartInfo(exeFilePath, parameters) { WindowStyle = ProcessWindowStyle.Hidden } };
+            }
+            else
+            {
+                encoderName = "VLC";
+                string parameters = "\"" + inputVideoFile + "\" -I dummy -vvv --no-random --no-repeat --no-loop --no-sout-video --audio-track=" + audioTrackNumber + " --sout=\"#transcode{acodec=s16l,channels=1,ab=128,samplerate=16000}:std{access=file,mux=wav,dst=" + outWaveFile + "}\" vlc://quit";
+                string exeFilePath;
+                if (Configuration.IsRunningOnLinux())
+                {
+                    exeFilePath = "cvlc";
+                    parameters = "-vvv --no-random --no-repeat --no-loop --no-sout-video --audio-track=" + audioTrackNumber + " --sout '#transcode{" + encodeParamters + "}:std{mux=wav,access=file,dst=" + outWaveFile + "}' \"" + inputVideoFile + "\" vlc://quit";
+                }
+                else if (Configuration.IsRunningOnMac())
+                {
+                    exeFilePath = "VLC.app/Contents/MacOS/VLC";
+                }
+                else // windows
+                {
+                    exeFilePath = Logic.VideoPlayers.LibVlcDynamic.GetVlcPath("vlc.exe");
+                    if (!File.Exists(exeFilePath))
+                    {
+                        if (!Configuration.Settings.General.UseFFmpegForWaveExtraction || !File.Exists(Configuration.Settings.General.FFmpegLocation))
+                        {
+                            throw new DllNotFoundException("NO_VLC");
+                        }
+                    }
+                }
+                return new Process { StartInfo = new ProcessStartInfo(exeFilePath, parameters) { WindowStyle = ProcessWindowStyle.Hidden } };
+            }
         }
 
         private void ExtractAudio()
@@ -62,7 +92,9 @@ namespace Nikse.SubtitleEdit.Forms
                 Process process;
                 try
                 {
-                    process = GetCommandLineProcess(_videoFileName, -1, _waveFileName, Configuration.Settings.General.VlcWaveTranscodeSettings, out _);
+                    string waveExtractor;
+                    process = GetCommandLineProcess(_videoFileName, -1, _waveFileName, Configuration.Settings.General.VlcWaveTranscodeSettings, out waveExtractor);
+                    _backgroundWorker.ReportProgress(0, string.Format("Extracting audio using {0}...", waveExtractor));
                 }
                 catch (DllNotFoundException)
                 {
@@ -130,6 +162,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private string ExtractTextFromAudio(string targetFile, int delayInMilliseconds)
         {
+            var output = new StringBuilder();
             var path = Path.Combine(Configuration.DataDirectory, "pocketsphinx");
             var fileName = Path.Combine(path, "bin", "Release", "Win32", "pocketsphinx_continuous.exe");
             //            var fileName = Path.Combine(path, "bin", "Release", "x64", "pocketsphinx_continuous.exe");
@@ -157,25 +190,26 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else
                     {
-                        Output.AppendLine(e.Data);
+                        output.AppendLine(e.Data);
                         var seconds = GetLastTimeStampInSeconds(e.Data);
                         if (seconds > 0)
                         {
                             _backgroundWorker.ReportProgress(seconds);
                         }
+                        _backgroundWorker.ReportProgress(LogOutput, e.Data);
                     }
                 };
                 process.ErrorDataReceived += (sender, e) =>
                 {
                     if (_abort)
                         return;
-                    if (e.Data != null)
+                    if (e.Data == null)
                     {
                         errorWaitHandle.Set();
                     }
                     else
                     {
-                        Error.AppendLine(e.Data);
+                        _backgroundWorker.ReportProgress(LogInfo, e.Data);
                     }
                 };
 
@@ -197,7 +231,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
             }
-            return Output.ToString();
+            return output.ToString();
         }
 
         private static int GetLastTimeStampInSeconds(string text)
@@ -252,6 +286,7 @@ namespace Nikse.SubtitleEdit.Forms
             ExtractAudio();
 
             Subtitle subtitle;
+            _backgroundWorker.ReportProgress(0, string.Format("Extracting text via {0}...", "PocketSphinx"));
             var result = ExtractTextFromAudio(_waveFileName, _delayInMilliseconds);
             using (var stream = GenerateStreamFromString(result))
             {
@@ -285,16 +320,12 @@ namespace Nikse.SubtitleEdit.Forms
             _backgroundWorker.RunWorkerAsync();
             progressBar1.Style = ProgressBarStyle.Marquee;
             progressBar1.Visible = true;
-            labelStatus.Text = "Extracting text from video - this will take a while...";
         }
 
         private void _backgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             Subtitle = (Subtitle)e.Result;
-            labelStatus.Text = "Done extracing text from video.";
-            textBoxOutput.Text = Output.ToString();
-            textBoxLog.Text = Error.ToString();
-            labelProgress.Text = "Progress: " + 100 + "%";
+            labelProgress.Text = string.Format("Extracting text via {0} progress: {1}%", "PocketSphinx", 100);
             progressBar1.Visible = false;
             buttonOK.Enabled = true;
         }
@@ -306,9 +337,35 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void _backgroundWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
+            if (e.ProgressPercentage == LogInfo)
+            {
+                textBoxLog.AppendText(Environment.NewLine + e.UserState);
+                return;
+            }
+
+            if (e.ProgressPercentage == LogOutput)
+            {
+                textBoxOutput.AppendText(Environment.NewLine + e.UserState);
+                return;
+            }
+
+            if (e.UserState is string)
+            {
+                labelProgress.Text = e.UserState.ToString();
+                return;
+            }
+
             var positionInSeconds = e.ProgressPercentage;
             var percentage = (int)Math.Round(positionInSeconds * 100.0 / (_videoInfo.TotalMilliseconds / 1000.0));
-            labelProgress.Text = "Progress: " + percentage + "%";
+            if (percentage > 100)
+                percentage = 100;
+            if (progressBar1.Style == ProgressBarStyle.Marquee)
+            {
+                progressBar1.Style = ProgressBarStyle.Blocks;
+                progressBar1.Maximum = 100;
+            }
+            progressBar1.Value = percentage;
+            labelProgress.Text = string.Format("Extracting text via {0} progress: {1}%", "PocketSphinx", percentage);
         }
 
         private void linkLabelShowMoreLess_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -316,12 +373,12 @@ namespace Nikse.SubtitleEdit.Forms
             _showMore = !_showMore;
             if (_showMore)
             {
-                linkLabelShowMoreLess.Text = "Show less";
+                linkLabelShowMoreLess.Text = "Show less  ▲";
                 Height = 500;
             }
             else
             {
-                linkLabelShowMoreLess.Text = "Show more";
+                linkLabelShowMoreLess.Text = "Show more  ▼";
                 Height = linkLabelShowMoreLess.Top + linkLabelShowMoreLess.Height + buttonOK.Height + 60;
             }
             labelLog.Visible = _showMore;
