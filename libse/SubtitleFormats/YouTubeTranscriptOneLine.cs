@@ -26,7 +26,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static string EncodeTimeCode(TimeCode time)
         {
-            return string.Format("{0}:{1:00}", time.Hours * 60 + time.Minutes, time.Seconds);
+            return $"{time.Hours * 60 + time.Minutes}:{time.Seconds:00}";
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)

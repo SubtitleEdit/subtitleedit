@@ -35,21 +35,22 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             subtitle.Paragraphs.Clear();
             foreach (string line in lines)
             {
-                if (RegexTimeCodes.IsMatch(line))
+                var s = line.TrimEnd();
+                if (RegexTimeCodes.IsMatch(s))
                 {
-                    p = new Paragraph(DecodeTimeCode(line), new TimeCode(), string.Empty);
+                    p = new Paragraph(DecodeTimeCode(s), new TimeCode(), string.Empty);
                     subtitle.Paragraphs.Add(p);
                 }
-                else if (string.IsNullOrWhiteSpace(line))
+                else if (string.IsNullOrWhiteSpace(s))
                 {
                     // skip these lines
                 }
                 else if (p != null)
                 {
                     if (string.IsNullOrEmpty(p.Text))
-                        p.Text = line;
+                        p.Text = s;
                     else
-                        p.Text = p.Text + Environment.NewLine + line;
+                        p.Text = p.Text + Environment.NewLine + s;
 
                     if (p.Text.Length > 800)
                     {
