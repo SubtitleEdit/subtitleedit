@@ -30,7 +30,6 @@
         {
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
-            this.labelStatus = new System.Windows.Forms.Label();
             this.textBoxLog = new System.Windows.Forms.TextBox();
             this.labelLog = new System.Windows.Forms.Label();
             this.labelOutput = new System.Windows.Forms.Label();
@@ -65,21 +64,10 @@
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
             // 
-            // labelStatus
-            // 
-            this.labelStatus.AutoSize = true;
-            this.labelStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelStatus.Location = new System.Drawing.Point(12, 25);
-            this.labelStatus.Name = "labelStatus";
-            this.labelStatus.Size = new System.Drawing.Size(41, 13);
-            this.labelStatus.TabIndex = 8;
-            this.labelStatus.Text = "label1";
-            // 
             // textBoxLog
             // 
             this.textBoxLog.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxLog.Enabled = false;
             this.textBoxLog.Location = new System.Drawing.Point(15, 130);
             this.textBoxLog.Multiline = true;
             this.textBoxLog.Name = "textBoxLog";
@@ -111,7 +99,6 @@
             this.textBoxOutput.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxOutput.Enabled = false;
             this.textBoxOutput.Location = new System.Drawing.Point(15, 263);
             this.textBoxOutput.Multiline = true;
             this.textBoxOutput.Name = "textBoxOutput";
@@ -131,9 +118,8 @@
             // 
             // labelProgress
             // 
-            this.labelProgress.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelProgress.AutoSize = true;
-            this.labelProgress.Location = new System.Drawing.Point(12, 453);
+            this.labelProgress.Location = new System.Drawing.Point(13, 25);
             this.labelProgress.Name = "labelProgress";
             this.labelProgress.Size = new System.Drawing.Size(70, 13);
             this.labelProgress.TabIndex = 14;
@@ -162,7 +148,6 @@
             this.Controls.Add(this.textBoxOutput);
             this.Controls.Add(this.labelLog);
             this.Controls.Add(this.textBoxLog);
-            this.Controls.Add(this.labelStatus);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.buttonCancel);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -185,7 +170,6 @@
 
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Button buttonCancel;
-        private System.Windows.Forms.Label labelStatus;
         private System.Windows.Forms.TextBox textBoxLog;
         private System.Windows.Forms.Label labelLog;
         private System.Windows.Forms.Label labelOutput;
