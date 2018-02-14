@@ -79,17 +79,15 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             return Path.Combine(_dictionaryFolder, twoLetterIsoLanguageName + "_names.xml");
         }
 
-        private void LoadNamesList(string fileName)
+        private void LoadNamesList(string uri)
         {
-            if (string.IsNullOrEmpty(fileName) ||
-                (!File.Exists(fileName) &&
-                 !fileName.StartsWith("http", StringComparison.InvariantCultureIgnoreCase) &&
-                 !fileName.StartsWith("\\", StringComparison.InvariantCultureIgnoreCase)))
+            if (!File.Exists(uri) && !uri.StartsWith("http", StringComparison.InvariantCultureIgnoreCase) &&
+                 !uri.StartsWith("\\", StringComparison.InvariantCultureIgnoreCase))
             {
                 return;
             }
 
-            using (XmlReader reader = XmlReader.Create(fileName))
+            using (XmlReader reader = XmlReader.Create(uri))
             {
                 reader.MoveToContent();
                 while (reader.Read())
