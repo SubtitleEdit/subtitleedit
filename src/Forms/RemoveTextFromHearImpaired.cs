@@ -282,7 +282,7 @@ namespace Nikse.SubtitleEdit.Forms
                 RemoveIfTextContains = new List<string>(),
                 RemoveTextBetweenCustomTags = checkBoxRemoveTextBetweenCustomTags.Checked,
                 RemoveInterjections = checkBoxRemoveInterjections.Checked,
-                RemoveInterjectionsOnlySeparateLine = checkBoxInterjectionOnlySeparateLine.Checked,
+                RemoveInterjectionsOnlySeparateLine = checkBoxRemoveInterjections.Checked && checkBoxInterjectionOnlySeparateLine.Checked,
                 RemoveTextBetweenSquares = checkBoxRemoveTextBetweenSquares.Checked,
                 RemoveTextBetweenBrackets = checkBoxRemoveTextBetweenBrackets.Checked,
                 RemoveTextBetweenQuestionMarks = checkBoxRemoveTextBetweenQuestionMarks.Checked,
