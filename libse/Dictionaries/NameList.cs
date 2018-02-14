@@ -191,46 +191,8 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             {
                 return false;
             }
-            if (name.ContainsLetter())
-            {
-                if (name.Contains(' '))
-                {
-                    if (!_namesMultiList.Contains(name))
-                        _namesMultiList.Add(name);
-                    else
-                        return false;
-                }
-                else
-                {
-                    if (!_namesList.Contains(name))
-                        _namesList.Add(name);
-                    else
-                        return false;
-                }
 
-                // <neutral>_names.xml e.g: en_names.xml
-                var fileName = GetLocalNamesFileName();
-                var nameListXml = new XmlDocument();
-                if (File.Exists(fileName))
-                {
-                    nameListXml.Load(fileName);
-                }
-                else
-                {
-                    nameListXml.LoadXml("<names><blacklist></blacklist></names>");
-                }
-
-                XmlNode de = nameListXml.DocumentElement;
-                if (de != null)
-                {
-                    XmlNode node = nameListXml.CreateElement("name");
-                    node.InnerText = name;
-                    de.AppendChild(node);
-                    nameListXml.Save(fileName);
-                }
-                return true;
-            }
-            return false;
+            return name.ContainsLetter() && (name.Contains(' ') ? _namesMultiList.Add(name) : _namesList.Add(name));
         }
 
         public bool IsInNamesMultiWordList(string text, string word)
