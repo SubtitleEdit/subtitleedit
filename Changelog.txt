@@ -6,6 +6,8 @@
    * Some support for SMPTE time code (drop frame) in video player
    * Shortcuts for moving text up/down in current sub - thx Leon
    * Shortcut for "Unbreak without space" (for CJK) - thx Leon
+   * Split by cursor/video pos - thx Leon
+   * Add support for FCP xml 1.7
 * IMPROVED:
    * Update Bulgarian translation - thx KalinM
    * Update Hungarian translation - thx ZityiSoft Team
