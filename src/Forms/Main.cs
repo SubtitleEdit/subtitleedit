@@ -19145,7 +19145,7 @@ namespace Nikse.SubtitleEdit.Forms
             var tb = GetFocusedTextBox();
 
             int? pos = null;
-            if (tb.SelectionStart > 2 && tb.SelectionStart < tb.Text.Length - 2)
+            if (tb.SelectionStart > 1 && tb.SelectionStart < tb.Text.Length - 1)
                 pos = tb.SelectionStart;
             SplitSelectedParagraph(null, pos);
             tb.Focus();
@@ -19155,7 +19155,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void toolStripMenuItemSplitViaWaveform_Click(object sender, EventArgs e)
         {
             var tb = GetFocusedTextBox();
-            if (tb.SelectionStart > 2 && tb.SelectionStart < tb.Text.Length - 2)
+            if (tb.SelectionStart > 1 && tb.SelectionStart < tb.Text.Length - 1)
             {
                 int? pos = tb.SelectionStart;
                 SplitSelectedParagraph(mediaPlayer.CurrentPosition, pos);
@@ -19215,7 +19215,7 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripMenuItemWebVttVoice.Visible = false;
             }
 
-            if (tb.SelectionStart > 2 && tb.SelectionStart < tb.Text.Length - 2 && !string.IsNullOrEmpty(_videoFileName) && mediaPlayer != null &&
+            if (tb.SelectionStart > 1 && tb.SelectionStart < tb.Text.Length - 1 && !string.IsNullOrEmpty(_videoFileName) && mediaPlayer != null &&
                 _subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedItems.Count > 0)
             {
                 int firstSelectedIndex = SubtitleListview1.SelectedItems[0].Index;
