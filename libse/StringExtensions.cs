@@ -211,7 +211,7 @@ namespace Nikse.SubtitleEdit.Core
                         s = s.Remove(i + 1, k - (i + 2));
                     }
 
-                    // No white-space after/before line break.
+                    // No white-space after line break.
                     if ((ch == '\n' || ch == '\r') && i + 1 < s.Length && s[i + 1] == 0x20)
                     {
                         s = s.Remove(i + 1, 1);
@@ -221,7 +221,8 @@ namespace Nikse.SubtitleEdit.Core
                 }
                 if (ch == 0x20 && i + 1 < s.Length && (s[i + 1] == '\n' || s[i + 1] == '\r'))
                 {
-                    s = s.Remove(i, 1);
+                    s = s.Remove(i, 1);// No white-space before line break
+                    k = -1; // Reset remove length -- see issue 2773.
                 }
             }
             return s;
