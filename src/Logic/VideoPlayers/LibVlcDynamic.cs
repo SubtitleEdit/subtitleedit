@@ -14,12 +14,13 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         private Timer _videoEndTimer;
         private Timer _mouseTimer;
 
-        private IntPtr _libVlcDLL;
+        private IntPtr _libVlcDll;
         private IntPtr _libVlc;
         private IntPtr _mediaPlayer;
         private Control _ownerControl;
         private Form _parentForm;
-        private double? _pausePosition = null; // Hack to hold precise seeking when paused
+        private double? _pausePosition; // Hack to hold precise seeking when paused
+        private int _volume = -1;
 
         // LibVLC Core - http://www.videolan.org/developers/vlc/doc/doxygen/html/group__libvlc__core.html
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
@@ -195,7 +196,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
         private object GetDllType(Type type, string name)
         {
-            IntPtr address = NativeMethods.GetProcAddress(_libVlcDLL, name);
+            IntPtr address = NativeMethods.GetProcAddress(_libVlcDll, name);
             if (address != IntPtr.Zero)
             {
                 return Marshal.GetDelegateForFunctionPointer(address, type);
@@ -290,30 +291,27 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             }
         }
 
-        public override string PlayerName
-        {
-            get { return "VLC Lib Dynamic"; }
-        }
+        public override string PlayerName => "VLC Lib Dynamic";
 
         public override int Volume
         {
             get
             {
-                return _libvlc_audio_get_volume(_mediaPlayer);
+                if (_volume == -1)
+                {
+                    var result = (int)Math.Round(_libvlc_audio_get_volume(_mediaPlayer) / 5.0);
+                    return result > 100 ? 100 : result;
+                }
+                return _volume;
             }
             set
             {
-                _libvlc_audio_set_volume(_mediaPlayer, value);
+                _volume = value;
+                _libvlc_audio_set_volume(_mediaPlayer, value * 5);
             }
         }
 
-        public override double Duration
-        {
-            get
-            {
-                return _libvlc_media_player_get_length(_mediaPlayer) / TimeCode.BaseUnit;
-            }
-        }
+        public override double Duration => _libvlc_media_player_get_length(_mediaPlayer) / TimeCode.BaseUnit;
 
         public override double CurrentPosition
         {
@@ -480,7 +478,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
         public LibVlcDynamic MakeSecondMediaPlayer(Control ownerControl, string videoFileName, EventHandler onVideoLoaded, EventHandler onVideoEnded)
         {
-            var newVlc = new LibVlcDynamic { _libVlc = _libVlc, _libVlcDLL = _libVlcDLL, _ownerControl = ownerControl };
+            var newVlc = new LibVlcDynamic { _libVlc = _libVlc, _libVlcDll = _libVlcDll, _ownerControl = ownerControl };
             if (ownerControl != null)
                 newVlc._parentForm = ownerControl.FindForm();
 
@@ -640,7 +638,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 return false;
 
             Directory.SetCurrentDirectory(Path.GetDirectoryName(dllFile));
-            _libVlcDLL = NativeMethods.LoadLibrary(dllFile);
+            _libVlcDll = NativeMethods.LoadLibrary(dllFile);
             LoadLibVlcDynamic();
             string[] initParameters = { "--no-skip-frames" };
             _libVlc = _libvlc_new(initParameters.Length, initParameters);
@@ -668,7 +666,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             if (File.Exists(dllFile))
             {
                 Directory.SetCurrentDirectory(Path.GetDirectoryName(dllFile));
-                _libVlcDLL = NativeMethods.LoadLibrary(dllFile);
+                _libVlcDll = NativeMethods.LoadLibrary(dllFile);
                 LoadLibVlcDynamic();
             }
             else if (!Directory.Exists(videoFileName))
