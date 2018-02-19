@@ -167,6 +167,23 @@ namespace Test.Core
             Assert.AreEqual("Hallo" + Environment.NewLine + "world!", res);
         }
 
+
+        [TestMethod]
+        public void FixExtraSpaces5()
+        {
+            string input = "a  " + Environment.NewLine + "b";
+            var res = input.FixExtraSpaces();
+            Assert.AreEqual("a" + Environment.NewLine + "b", res);
+        }
+
+        [TestMethod]
+        public void FixExtraSpaces6()
+        {
+            string input = "a" + Environment.NewLine + "   b";
+            var res = input.FixExtraSpaces();
+            Assert.AreEqual("a" + Environment.NewLine + "b", res);
+        }
+
         [TestMethod]
         public void RemoveChar1()
         {
