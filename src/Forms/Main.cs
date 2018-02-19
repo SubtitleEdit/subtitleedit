@@ -8351,7 +8351,7 @@ namespace Nikse.SubtitleEdit.Forms
                 currentParagraph.Text = currentParagraph.Text.Replace("< i>", "<i>");
                 string oldText = currentParagraph.Text;
                 var lines = currentParagraph.Text.SplitToLines();
-                if (textIndex != null && textIndex.Value > 2 && textIndex.Value < oldText.Length - 2)
+                if (textIndex != null && textIndex.Value > 1 && textIndex.Value < oldText.Length - 1)
                 {
                     string a = oldText.Substring(0, textIndex.Value).Trim();
                     string b = oldText.Substring(textIndex.Value).Trim();
@@ -8597,7 +8597,7 @@ namespace Nikse.SubtitleEdit.Forms
                         lines = originalCurrent.Text.SplitToLines();
 
                         oldText = originalCurrent.Text;
-                        if (alternateTextIndex != null && alternateTextIndex.Value > 2 && alternateTextIndex.Value < oldText.Length - 2)
+                        if (alternateTextIndex != null && alternateTextIndex.Value > 1 && alternateTextIndex.Value < oldText.Length - 1)
                         {
                             originalCurrent.Text = Utilities.AutoBreakLine(oldText.Substring(0, alternateTextIndex.Value).Trim(), language);
                             originalNew.Text = Utilities.AutoBreakLine(oldText.Substring(alternateTextIndex.Value).Trim(), language);
