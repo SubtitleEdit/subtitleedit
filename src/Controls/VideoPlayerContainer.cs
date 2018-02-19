@@ -540,6 +540,10 @@ namespace Nikse.SubtitleEdit.Controls
                         isFontColor = false;
                         i += 6;
                     }
+                    else if (text.Substring(i).StartsWith("</font>", StringComparison.OrdinalIgnoreCase))
+                    {
+                        i += 6;
+                    }
                     else if (text[i] == '\n') // RichTextBox only count NewLine as one character!
                     {
                         sb.Append(text[i]);
