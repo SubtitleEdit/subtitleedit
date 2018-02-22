@@ -2372,7 +2372,6 @@
     <RegEx find="oješć" replaceWith="ojest ć" />
     <RegEx find="ojtn" replaceWith="ojatn" />
     <RegEx find="(?&lt;![Pp])oletn" replaceWith="oljetn" />
-    <RegEx find="odbr" replaceWith="obr" />
     <RegEx find="(?&lt;![nt])opić" replaceWith="opit ć" />
     <RegEx find="([eoa])pisać" replaceWith="$1pisat ć" />
     <RegEx find="oriće(mo|te)" replaceWith="orit će$1" />
