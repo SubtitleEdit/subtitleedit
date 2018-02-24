@@ -14666,7 +14666,7 @@ namespace Nikse.SubtitleEdit.Forms
                     labelVideoInfo.Text = labelVideoInfo.Text + " " + string.Format("{0:0.0##}", _videoInfo.FramesPerSecond);
 
                 string peakWaveFileName = WavePeakGenerator.GetPeakWaveFileName(fileName);
-                string spectrogramFolder = Nikse.SubtitleEdit.Core.WavePeakGenerator.SpectrogramDrawer.GetSpectrogramFolder(fileName);
+                string spectrogramFolder = WavePeakGenerator.SpectrogramDrawer.GetSpectrogramFolder(fileName);
                 if (File.Exists(peakWaveFileName))
                 {
                     audioVisualizer.WavePeaks = WavePeakData.FromDisk(peakWaveFileName);
@@ -14734,6 +14734,17 @@ namespace Nikse.SubtitleEdit.Forms
             }
             mediaPlayer.Pause();
             mediaPlayer.UpdatePlayerName();
+
+            // Keep current play rate
+            for (var index = 0; index < toolStripSplitButtonPlayRate.DropDownItems.Count; index++)
+            {
+                var item = (ToolStripMenuItem)toolStripSplitButtonPlayRate.DropDownItems[index];
+                if (item.Checked)
+                {
+                    SetPlayRate(item, null, true);
+                    return;
+                }
+            }
         }
 
         private void VideoEnded(object sender, EventArgs e)
@@ -16259,6 +16270,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SetPlayRate(object sender, EventArgs e)
         {
+            SetPlayRate(sender, e, false);
+        }
+
+        private void SetPlayRate(object sender, EventArgs e, bool skipStatusMessage)
+        {
             var playRateDropDownItem = sender as ToolStripMenuItem;
             if (playRateDropDownItem == null)
                 return;
@@ -16269,7 +16285,10 @@ namespace Nikse.SubtitleEdit.Forms
             }
             playRateDropDownItem.Checked = true;
             var percentText = playRateDropDownItem.Text.TrimEnd('%');
-            ShowStatus(string.Format(_language.SetPlayRateX, percentText));
+            if (!skipStatusMessage)
+            {
+                ShowStatus(string.Format(_language.SetPlayRateX, percentText));
+            }
             var factor = double.Parse(percentText) / 100.0;
             toolStripSplitButtonPlayRate.Image = Math.Abs(factor - 1) < 0.01 ? imageListPlayRate.Images[0] : imageListPlayRate.Images[1];
             mediaPlayer.VideoPlayer.PlayRate = factor;
