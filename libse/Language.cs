@@ -1366,6 +1366,7 @@ namespace Nikse.SubtitleEdit.Core
                 PromptInsertSubtitleOverlap = "Insert subtitle at waveform position will cause overlap!" + Environment.NewLine +
                                               Environment.NewLine +
                                               "Continue anyway?",
+                SetPlayRateX = "Set play rate (speed) to {0}%",
                 ErrorLoadIdx = "Cannot read/edit .idx files. Idx files are a part of an idx/sub file pair (also called VobSub), and Subtitle Edit can open the .sub file.",
                 ErrorLoadRar = "This file seems to be a compressed .rar file. Subtitle Edit cannot open compressed files.",
                 ErrorLoadZip = "This file seems to be a compressed .zip file. Subtitle Edit cannot open compressed files.",
@@ -1721,11 +1722,7 @@ namespace Nikse.SubtitleEdit.Core
                     NewTextInsertAtX = "New text inserted at {0}",
 
                     Center = "Center",
-                    PlayRate = "Play rate (speed)",
-                    Slow = "Slow",
-                    Normal = "Normal",
-                    Fast = "Fast",
-                    VeryFast = "Very fast",
+                    PlayRate = "Play rate (speed)"
                 },
             };
 
@@ -2216,6 +2213,8 @@ can edit in same subtitle file (collaboration)",
                 Pause = "Pause",
                 TogglePlayPause = "Toggle play/pause",
                 Fullscreen = "Fullscreen",
+                PlayRateSlower = "Play rate slower",
+                PlayRateFaster = "Play rate faster",
                 CustomSearch1 = "Translate, custom search 1",
                 CustomSearch2 = "Translate, custom search 2",
                 CustomSearch3 = "Translate, custom search 3",

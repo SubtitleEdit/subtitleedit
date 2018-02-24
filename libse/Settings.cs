@@ -1009,6 +1009,8 @@ namespace Nikse.SubtitleEdit.Core
         public string MainVideo5000MsLeft { get; set; }
         public string MainVideo5000MsRight { get; set; }
         public string MainVideoFullscreen { get; set; }
+        public string MainVideoSlower { get; set; }
+        public string MainVideoFaster { get; set; }
         public string MainSpellCheck { get; set; }
         public string MainSpellCheckFindDoubleWords { get; set; }
         public string MainSpellCheckAddWordToNames { get; set; }
@@ -3013,6 +3015,12 @@ namespace Nikse.SubtitleEdit.Core
                 subNode = node.SelectSingleNode("MainVideoFullscreen");
                 if (subNode != null)
                     settings.Shortcuts.MainVideoFullscreen = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainVideoSlower");
+                if (subNode != null)
+                    settings.Shortcuts.MainVideoSlower = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainVideoFaster");
+                if (subNode != null)
+                    settings.Shortcuts.MainVideoFaster = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainSpellCheck");
                 if (subNode != null)
                     settings.Shortcuts.MainSpellCheck = subNode.InnerText;
@@ -3925,6 +3933,8 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("MainVideo5000MsLeft", settings.Shortcuts.MainVideo5000MsLeft);
                 textWriter.WriteElementString("MainVideo5000MsRight", settings.Shortcuts.MainVideo5000MsRight);
                 textWriter.WriteElementString("MainVideoFullscreen", settings.Shortcuts.MainVideoFullscreen);
+                textWriter.WriteElementString("MainVideoSlower", settings.Shortcuts.MainVideoSlower);
+                textWriter.WriteElementString("MainVideoFaster", settings.Shortcuts.MainVideoFaster);
                 textWriter.WriteElementString("MainSpellCheck", settings.Shortcuts.MainSpellCheck);
                 textWriter.WriteElementString("MainSpellCheckFindDoubleWords", settings.Shortcuts.MainSpellCheckFindDoubleWords);
                 textWriter.WriteElementString("MainSpellCheckAddWordToNames", settings.Shortcuts.MainSpellCheckAddWordToNames);

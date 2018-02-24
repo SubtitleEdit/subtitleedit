@@ -1234,6 +1234,7 @@
             public string XPercentCompleted { get; set; }
             public string NextX { get; set; }
             public string PromptInsertSubtitleOverlap { get; set; }
+            public string SetPlayRateX { get; set; }
             public string ErrorLoadIdx { get; set; }
             public string ErrorLoadRar { get; set; }
             public string ErrorLoadZip { get; set; }
@@ -1601,10 +1602,6 @@
 
                 public string Center { get; set; }
                 public string PlayRate { get; set; }
-                public string Slow { get; set; }
-                public string Normal { get; set; }
-                public string Fast { get; set; }
-                public string VeryFast { get; set; }
             }
         }
 
@@ -2096,6 +2093,8 @@
             public string TogglePlayPause { get; set; }
             public string Pause { get; set; }
             public string Fullscreen { get; set; }
+            public string PlayRateSlower { get; set; }
+            public string PlayRateFaster { get; set; }
             public string CustomSearch1 { get; set; }
             public string CustomSearch2 { get; set; }
             public string CustomSearch3 { get; set; }

@@ -38,9 +38,9 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
-            Nikse.SubtitleEdit.Core.TimeCode timeCode1 = new Nikse.SubtitleEdit.Core.TimeCode();
-            Nikse.SubtitleEdit.Core.TimeCode timeCode2 = new Nikse.SubtitleEdit.Core.TimeCode();
-            Nikse.SubtitleEdit.Core.TimeCode timeCode3 = new Nikse.SubtitleEdit.Core.TimeCode();
+            Nikse.SubtitleEdit.Core.TimeCode timeCode4 = new Nikse.SubtitleEdit.Core.TimeCode();
+            Nikse.SubtitleEdit.Core.TimeCode timeCode5 = new Nikse.SubtitleEdit.Core.TimeCode();
+            Nikse.SubtitleEdit.Core.TimeCode timeCode6 = new Nikse.SubtitleEdit.Core.TimeCode();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.labelStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripSelected = new System.Windows.Forms.ToolStripStatusLabel();
@@ -328,10 +328,6 @@
             this.toolStripButtonWaveformPlay = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonLockCenter = new System.Windows.Forms.ToolStripButton();
             this.toolStripSplitButtonPlayRate = new System.Windows.Forms.ToolStripSplitButton();
-            this.toolStripMenuItemPlayRateSlow = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItemPlayRateNormal = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItemPlayRateFast = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItemPlayRateVeryFast = new System.Windows.Forms.ToolStripMenuItem();
             this.tabControlButtons = new System.Windows.Forms.TabControl();
             this.tabPageTranslate = new System.Windows.Forms.TabPage();
             this.labelTranslateTip = new System.Windows.Forms.Label();
@@ -2897,7 +2893,7 @@
             this.toolStripSplitButtonPlayRate});
             this.toolStripWaveControls.Location = new System.Drawing.Point(0, 3);
             this.toolStripWaveControls.Name = "toolStripWaveControls";
-            this.toolStripWaveControls.Size = new System.Drawing.Size(197, 25);
+            this.toolStripWaveControls.Size = new System.Drawing.Size(251, 25);
             this.toolStripWaveControls.TabIndex = 0;
             this.toolStripWaveControls.Text = "toolStrip2";
             // 
@@ -2969,46 +2965,11 @@
             // toolStripSplitButtonPlayRate
             // 
             this.toolStripSplitButtonPlayRate.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripSplitButtonPlayRate.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItemPlayRateSlow,
-            this.toolStripMenuItemPlayRateNormal,
-            this.toolStripMenuItemPlayRateFast,
-            this.toolStripMenuItemPlayRateVeryFast});
             this.toolStripSplitButtonPlayRate.Image = ((System.Drawing.Image)(resources.GetObject("toolStripSplitButtonPlayRate.Image")));
             this.toolStripSplitButtonPlayRate.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripSplitButtonPlayRate.Name = "toolStripSplitButtonPlayRate";
             this.toolStripSplitButtonPlayRate.Size = new System.Drawing.Size(32, 22);
             this.toolStripSplitButtonPlayRate.Text = "Play rate (speed)";
-            // 
-            // toolStripMenuItemPlayRateSlow
-            // 
-            this.toolStripMenuItemPlayRateSlow.Name = "toolStripMenuItemPlayRateSlow";
-            this.toolStripMenuItemPlayRateSlow.Size = new System.Drawing.Size(148, 22);
-            this.toolStripMenuItemPlayRateSlow.Text = "Slow";
-            this.toolStripMenuItemPlayRateSlow.Click += new System.EventHandler(this.ToolStripMenuItemPlayRateSlowClick);
-            // 
-            // toolStripMenuItemPlayRateNormal
-            // 
-            this.toolStripMenuItemPlayRateNormal.Checked = true;
-            this.toolStripMenuItemPlayRateNormal.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.toolStripMenuItemPlayRateNormal.Name = "toolStripMenuItemPlayRateNormal";
-            this.toolStripMenuItemPlayRateNormal.Size = new System.Drawing.Size(148, 22);
-            this.toolStripMenuItemPlayRateNormal.Text = "Normal speed";
-            this.toolStripMenuItemPlayRateNormal.Click += new System.EventHandler(this.ToolStripMenuItemPlayRateNormalClick);
-            // 
-            // toolStripMenuItemPlayRateFast
-            // 
-            this.toolStripMenuItemPlayRateFast.Name = "toolStripMenuItemPlayRateFast";
-            this.toolStripMenuItemPlayRateFast.Size = new System.Drawing.Size(148, 22);
-            this.toolStripMenuItemPlayRateFast.Text = "Fast ";
-            this.toolStripMenuItemPlayRateFast.Click += new System.EventHandler(this.ToolStripMenuItemPlayRateFastClick);
-            // 
-            // toolStripMenuItemPlayRateVeryFast
-            // 
-            this.toolStripMenuItemPlayRateVeryFast.Name = "toolStripMenuItemPlayRateVeryFast";
-            this.toolStripMenuItemPlayRateVeryFast.Size = new System.Drawing.Size(148, 22);
-            this.toolStripMenuItemPlayRateVeryFast.Text = "Very fast";
-            this.toolStripMenuItemPlayRateVeryFast.Click += new System.EventHandler(this.VeryFastToolStripMenuItemClick);
             // 
             // tabControlButtons
             // 
@@ -3309,14 +3270,14 @@
             this.timeUpDownVideoPosition.Name = "timeUpDownVideoPosition";
             this.timeUpDownVideoPosition.Size = new System.Drawing.Size(96, 27);
             this.timeUpDownVideoPosition.TabIndex = 12;
-            timeCode1.Hours = 0;
-            timeCode1.Milliseconds = 0;
-            timeCode1.Minutes = 0;
-            timeCode1.Seconds = 0;
-            timeCode1.TimeSpan = System.TimeSpan.Parse("00:00:00");
-            timeCode1.TotalMilliseconds = 0D;
-            timeCode1.TotalSeconds = 0D;
-            this.timeUpDownVideoPosition.TimeCode = timeCode1;
+            timeCode4.Hours = 0;
+            timeCode4.Milliseconds = 0;
+            timeCode4.Minutes = 0;
+            timeCode4.Seconds = 0;
+            timeCode4.TimeSpan = System.TimeSpan.Parse("00:00:00");
+            timeCode4.TotalMilliseconds = 0D;
+            timeCode4.TotalSeconds = 0D;
+            this.timeUpDownVideoPosition.TimeCode = timeCode4;
             this.timeUpDownVideoPosition.UseVideoOffset = false;
             // 
             // buttonGotoSub
@@ -3763,14 +3724,14 @@
             this.timeUpDownVideoPositionAdjust.Name = "timeUpDownVideoPositionAdjust";
             this.timeUpDownVideoPositionAdjust.Size = new System.Drawing.Size(96, 27);
             this.timeUpDownVideoPositionAdjust.TabIndex = 13;
-            timeCode2.Hours = 0;
-            timeCode2.Milliseconds = 0;
-            timeCode2.Minutes = 0;
-            timeCode2.Seconds = 0;
-            timeCode2.TimeSpan = System.TimeSpan.Parse("00:00:00");
-            timeCode2.TotalMilliseconds = 0D;
-            timeCode2.TotalSeconds = 0D;
-            this.timeUpDownVideoPositionAdjust.TimeCode = timeCode2;
+            timeCode5.Hours = 0;
+            timeCode5.Milliseconds = 0;
+            timeCode5.Minutes = 0;
+            timeCode5.Seconds = 0;
+            timeCode5.TimeSpan = System.TimeSpan.Parse("00:00:00");
+            timeCode5.TotalMilliseconds = 0D;
+            timeCode5.TotalSeconds = 0D;
+            this.timeUpDownVideoPositionAdjust.TimeCode = timeCode5;
             this.timeUpDownVideoPositionAdjust.UseVideoOffset = false;
             // 
             // ShowSubtitleTimer
@@ -3821,7 +3782,7 @@
             this.seekSilenceToolStripMenuItem,
             this.insertSubtitleHereToolStripMenuItem});
             this.contextMenuStripWaveform.Name = "contextMenuStripWaveform";
-            this.contextMenuStripWaveform.Size = new System.Drawing.Size(275, 396);
+            this.contextMenuStripWaveform.Size = new System.Drawing.Size(275, 374);
             this.contextMenuStripWaveform.Closing += new System.Windows.Forms.ToolStripDropDownClosingEventHandler(this.contextMenuStripWaveform_Closing);
             this.contextMenuStripWaveform.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripWaveformOpening);
             // 
@@ -4514,14 +4475,14 @@
             this.timeUpDownStartTime.Name = "timeUpDownStartTime";
             this.timeUpDownStartTime.Size = new System.Drawing.Size(96, 27);
             this.timeUpDownStartTime.TabIndex = 0;
-            timeCode3.Hours = 0;
-            timeCode3.Milliseconds = 0;
-            timeCode3.Minutes = 0;
-            timeCode3.Seconds = 0;
-            timeCode3.TimeSpan = System.TimeSpan.Parse("00:00:00");
-            timeCode3.TotalMilliseconds = 0D;
-            timeCode3.TotalSeconds = 0D;
-            this.timeUpDownStartTime.TimeCode = timeCode3;
+            timeCode6.Hours = 0;
+            timeCode6.Milliseconds = 0;
+            timeCode6.Minutes = 0;
+            timeCode6.Seconds = 0;
+            timeCode6.TimeSpan = System.TimeSpan.Parse("00:00:00");
+            timeCode6.TotalMilliseconds = 0D;
+            timeCode6.TotalSeconds = 0D;
+            this.timeUpDownStartTime.TimeCode = timeCode6;
             this.timeUpDownStartTime.UseVideoOffset = false;
             // 
             // numericUpDownDuration
@@ -5079,11 +5040,7 @@
         private System.Windows.Forms.ToolStripMenuItem openOriginalToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem removeOriginalToolStripMenuItem;
         private System.Windows.Forms.ToolStripSplitButton toolStripSplitButtonPlayRate;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemPlayRateNormal;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemPlayRateSlow;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemPlayRateFast;
         private System.Windows.Forms.ImageList imageListPlayRate;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemPlayRateVeryFast;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSetAudioTrack;
         private System.Windows.Forms.Button buttonSplitLine;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemChangeFrameRate2;
