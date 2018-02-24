@@ -190,8 +190,10 @@ namespace Nikse.SubtitleEdit.Forms
             textBoxCustomSearchUrl5.Text = Configuration.Settings.VideoControls.CustomSearchUrl5;
             textBoxCustomSearchUrl6.Text = Configuration.Settings.VideoControls.CustomSearchUrl6;
 
+            comboBoxFontName.Items.Clear();
             foreach (var x in FontFamily.Families)
             {
+                comboBoxFontName.Items.Add(x.Name);
                 if (x.IsStyleAvailable(FontStyle.Regular) && x.IsStyleAvailable(FontStyle.Bold))
                 {
                     comboBoxSubtitleFont.Items.Add(x.Name);
@@ -204,9 +206,6 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxNamesOnline.Checked = wordListSettings.UseOnlineNames;
             textBoxNamesOnline.Text = wordListSettings.NamesUrl;
 
-            comboBoxFontName.Items.Clear();
-            foreach (var x in FontFamily.Families)
-                comboBoxFontName.Items.Add(x.Name);
             var ssa = Configuration.Settings.SubtitleSettings;
             _ssaFontName = ssa.SsaFontName;
             _ssaFontSize = ssa.SsaFontSize;
@@ -931,7 +930,8 @@ namespace Nikse.SubtitleEdit.Forms
         private void AddNode(TreeNode node, string text, string shortcut, bool isMenuItem = false)
         {
             var prop = Configuration.Settings.Shortcuts.GetType().GetProperty(shortcut);
-            node.Nodes.Add(new TreeNode(text + GetShortcutText((string)prop.GetValue(Configuration.Settings.Shortcuts, null))) { Tag = new ShortcutHelper(prop, isMenuItem) });
+            if (prop != null)
+                node.Nodes.Add(new TreeNode(text + GetShortcutText((string)prop.GetValue(Configuration.Settings.Shortcuts, null))) { Tag = new ShortcutHelper(prop, isMenuItem) });
         }
 
         private static string GetShortcutText(string shortcut)
