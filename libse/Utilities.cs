@@ -9,6 +9,8 @@ using System.Globalization;
 using System.IO;
 using System.Net;
 using System.Reflection;
+using System.Security.Authentication;
+using System.Security.Policy;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -176,6 +178,13 @@ namespace Nikse.SubtitleEdit.Core
                     wc.Encoding = encoding;
                 return wc.DownloadString(address).Trim();
             }
+        }
+
+        public static void SetSecurityProtocol()
+        {
+            // Github requires TLS 1.2
+            var tls12Protocol = (SslProtocols)0x00000C00;
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls | (SecurityProtocolType)tls12Protocol;
         }
 
         public static WebProxy GetProxy()

@@ -47,7 +47,7 @@
             this.buttonDownload.TabIndex = 0;
             this.buttonDownload.Text = "Download mpv dll";
             this.buttonDownload.UseVisualStyleBackColor = true;
-            this.buttonDownload.Click += new System.EventHandler(this.buttonDownload_Click_1);
+            this.buttonDownload.Click += new System.EventHandler(this.ButtonDownloadClick);
             
             
             // 

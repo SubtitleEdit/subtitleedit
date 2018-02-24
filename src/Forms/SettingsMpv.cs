@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
+using System.Security.Authentication;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
@@ -40,7 +41,9 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (e.Error != null)
             {
-                MessageBox.Show(Configuration.Settings.Language.SettingsMpv.DownloadMpvFailed);
+                MessageBox.Show(Configuration.Settings.Language.SettingsMpv.DownloadMpvFailed + Environment.NewLine +
+                                Environment.NewLine +
+                                e.Error.Message);
                 labelPleaseWait.Text = string.Empty;
                 buttonOK.Enabled = true;
                 buttonDownload.Enabled = !Configuration.IsRunningOnLinux();
@@ -76,7 +79,11 @@ namespace Nikse.SubtitleEdit.Forms
             MessageBox.Show(Configuration.Settings.Language.SettingsMpv.DownloadMpvOk);
         }
 
-        private void buttonDownload_Click_1(object sender, EventArgs e)
+        public const SslProtocols Tls12Protocol = (SslProtocols)0x00000C00;
+        public const SecurityProtocolType Tls12 = (SecurityProtocolType)Tls12Protocol;
+        
+
+        private void ButtonDownloadClick(object sender, EventArgs e)
         {
             try
             {
@@ -86,7 +93,9 @@ namespace Nikse.SubtitleEdit.Forms
                 Refresh();
                 Cursor = Cursors.WaitCursor;
                 string url = "https://github.com/SubtitleEdit/support-files/blob/master/mpv/libmpv" + IntPtr.Size * 8 + ".zip?raw=true";
-                var wc = new WebClient { Proxy = Utilities.GetProxy() };
+                Utilities.SetSecurityProtocol();
+                var wc = new WebClient { Proxy = Utilities.GetProxy() };                
+
                 wc.DownloadDataCompleted += wc_DownloadDataCompleted;
                 wc.DownloadProgressChanged += (o, args) =>
                 {
