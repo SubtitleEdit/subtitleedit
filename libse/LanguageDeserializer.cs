@@ -3130,6 +3130,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Main/PromptInsertSubtitleOverlap":
                     language.Main.PromptInsertSubtitleOverlap = reader.Value;
                     break;
+                case "Main/SetPlayRateX":
+                    language.Main.SetPlayRateX = reader.Value;
+                    break;
                 case "Main/ErrorLoadIdx":
                     language.Main.ErrorLoadIdx = reader.Value;
                     break;
@@ -4011,18 +4014,6 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "Main/VideoControls/PlayRate":
                     language.Main.VideoControls.PlayRate = reader.Value;
-                    break;
-                case "Main/VideoControls/Slow":
-                    language.Main.VideoControls.Slow = reader.Value;
-                    break;
-                case "Main/VideoControls/Normal":
-                    language.Main.VideoControls.Normal = reader.Value;
-                    break;
-                case "Main/VideoControls/Fast":
-                    language.Main.VideoControls.Fast = reader.Value;
-                    break;
-                case "Main/VideoControls/VeryFast":
-                    language.Main.VideoControls.VeryFast = reader.Value;
                     break;
                 case "MatroskaSubtitleChooser/Title":
                     language.MatroskaSubtitleChooser.Title = reader.Value;
@@ -5232,6 +5223,12 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "Settings/Fullscreen":
                     language.Settings.Fullscreen = reader.Value;
+                    break;
+                case "Settings/PlayRateSlower":
+                    language.Settings.PlayRateSlower = reader.Value;
+                    break;
+                case "Settings/PlayRateFaster":
+                    language.Settings.PlayRateFaster = reader.Value;
                     break;
                 case "Settings/CustomSearch1":
                     language.Settings.CustomSearch1 = reader.Value;

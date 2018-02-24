@@ -1202,10 +1202,6 @@ Note: Do check free disk space.</WaveFileMalformed>
       <NewTextInsertAtX>New text inserted at {0}</NewTextInsertAtX>
       <Center>Center</Center>
       <PlayRate>Play rate (speed)</PlayRate>
-      <Slow>Slow</Slow>
-      <Normal>Normal</Normal>
-      <Fast>Fast</Fast>
-      <VeryFast>Very fast</VeryFast>
     </VideoControls>
     <SaveChangesToUntitled>Save changes to untitled?</SaveChangesToUntitled>
     <SaveChangesToX>Save changes to {0}?</SaveChangesToX>
@@ -1466,6 +1462,7 @@ Continue?</SubtitleAppendPrompt>
     <PromptInsertSubtitleOverlap>Insert subtitle at waveform position will cause overlap!
 
 Continue anyway?</PromptInsertSubtitleOverlap>
+    <SetPlayRateX>Set play rate (speed) to {0}%</SetPlayRateX>
     <ErrorLoadIdx>Cannot read/edit .idx files. Idx files are a part of an idx/sub file pair (also called VobSub), and Subtitle Edit can open the .sub file.</ErrorLoadIdx>
     <ErrorLoadRar>This file seems to be a compressed .rar file. Subtitle Edit cannot open compressed files.</ErrorLoadRar>
     <ErrorLoadZip>This file seems to be a compressed .zip file. Subtitle Edit cannot open compressed files.</ErrorLoadZip>
@@ -1930,6 +1927,8 @@ can edit in same subtitle file (collaboration)</Information>
     <TogglePlayPause>Toggle play/pause</TogglePlayPause>
     <Pause>Pause</Pause>
     <Fullscreen>Fullscreen</Fullscreen>
+    <PlayRateSlower>Play rate slower</PlayRateSlower>
+    <PlayRateFaster>Play rate faster</PlayRateFaster>
     <CustomSearch1>Translate, custom search 1</CustomSearch1>
     <CustomSearch2>Translate, custom search 2</CustomSearch2>
     <CustomSearch3>Translate, custom search 3</CustomSearch3>
