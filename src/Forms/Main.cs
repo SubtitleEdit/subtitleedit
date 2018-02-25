@@ -13024,7 +13024,10 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (goToNext)
                 {
+                    _subtitleListViewIndex = -1;
                     SubtitleListview1.SelectIndexAndEnsureVisible(index + 1);
+                    if (mediaPlayer.IsPaused && index + 1 < _subtitle.Paragraphs.Count)
+                        mediaPlayer.CurrentPosition = _subtitle.Paragraphs[index + 1].StartTime.TotalSeconds;
                 }
             }
         }
