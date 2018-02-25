@@ -93,7 +93,6 @@ namespace Nikse.SubtitleEdit.Forms
                 Refresh();
                 Cursor = Cursors.WaitCursor;
                 string url = "https://github.com/SubtitleEdit/support-files/blob/master/mpv/libmpv" + IntPtr.Size * 8 + ".zip?raw=true";
-                Utilities.SetSecurityProtocol();
                 var wc = new WebClient { Proxy = Utilities.GetProxy() };                
 
                 wc.DownloadDataCompleted += wc_DownloadDataCompleted;
