@@ -1697,6 +1697,8 @@
             public string Export { get; set; }
             public string ImportRulesTitle { get; set; }
             public string ExportRulesTitle { get; set; }
+            public string ChoseGroupsToImport { get; set; }
+            public string ChoseGroupsToExport { get; set; }
             public string Rules { get; set; }
             public string MoveToTop { get; set; }
             public string MoveToBottom { get; set; }
@@ -1706,6 +1708,7 @@
             public string GroupName { get; set; }
             public string RenameGroup { get; set; }
             public string NewGroup { get; set; }
+            public string NothingToImport { get; set; }
         }
 
         public class NetworkChat

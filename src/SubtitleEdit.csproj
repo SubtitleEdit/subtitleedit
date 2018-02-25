@@ -158,6 +158,12 @@
     <Compile Include="Forms\ImportFinalDraft.Designer.cs">
       <DependentUpon>ImportFinalDraft.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\MultipleReplaceExportImport.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\MultipleReplaceExportImport.Designer.cs">
+      <DependentUpon>MultipleReplaceExportImport.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Ocr\AddBeterMultiMatch.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -991,6 +997,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ImportFinalDraft.resx">
       <DependentUpon>ImportFinalDraft.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\MultipleReplaceExportImport.resx">
+      <DependentUpon>MultipleReplaceExportImport.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Ocr\AddBeterMultiMatch.resx">
       <DependentUpon>AddBeterMultiMatch.cs</DependentUpon>
