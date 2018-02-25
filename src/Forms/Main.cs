@@ -246,6 +246,7 @@ namespace Nikse.SubtitleEdit.Forms
         private static object _syncUndo = new object();
         private string[] _dragAndDropFiles;
         private readonly Timer _dragAndDropTimer = new Timer(); // to prevent locking windows explorer
+        private readonly Timer _dragAndDropVideoTimer = new Timer(); // to prevent locking windows explorer
         private long _labelNextTicks = -1;
 
         public bool IsMenuOpen { get; private set; }
@@ -16248,6 +16249,9 @@ namespace Nikse.SubtitleEdit.Forms
             _dragAndDropTimer.Interval = 50;
             _dragAndDropTimer.Tick += DoSubtitleListview1Drop;
 
+            _dragAndDropVideoTimer.Interval = 50;
+            _dragAndDropVideoTimer.Tick += DropVideoTick;
+
             if (_exitWhenLoaded)
                 Application.Exit();
 
@@ -16923,6 +16927,12 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        private void DropVideoTick(object sender, EventArgs e)
+        {
+            _dragAndDropVideoTimer.Stop();
+            OpenVideo(_videoFileName);
+        }
+
         private void mediaPlayer_DragDrop(object sender, DragEventArgs e)
         {
             var files = (string[])e.Data.GetData(DataFormats.FileDrop);
@@ -16938,7 +16948,8 @@ namespace Nikse.SubtitleEdit.Forms
                         saveFileDialog1.InitialDirectory = dirName;
                         openFileDialog1.InitialDirectory = dirName;
                     }
-                    OpenVideo(fileName);
+                    _videoFileName = fileName;
+                    _dragAndDropVideoTimer.Start();
                 }
                 else
                 {
