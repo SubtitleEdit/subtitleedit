@@ -1136,6 +1136,10 @@ namespace Nikse.SubtitleEdit.Controls
                 {
                     item.SubItems[ColumnIndexWpm].BackColor = paragraph.WordsPerMinute > Configuration.Settings.General.SubtitleMaximumWordsPerMinute ? Configuration.Settings.Tools.ListViewSyntaxErrorColor : BackColor;
                 }
+                if (ColumnIndexDuration >= 0)
+                {
+                    item.SubItems[ColumnIndexDuration].BackColor = BackColor;
+                }
 
                 if (_settings.Tools.ListViewSyntaxColorDurationSmall)
                 {

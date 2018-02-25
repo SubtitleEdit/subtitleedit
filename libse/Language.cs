@@ -1818,6 +1818,8 @@ namespace Nikse.SubtitleEdit.Core
                 Export = "Export...",
                 ImportRulesTitle = "Import replace rule(s) from...",
                 ExportRulesTitle = "Export replace rule(s) to...",
+                ChoseGroupsToImport = "Chose groups to import",
+                ChoseGroupsToExport = "Chose groups to Export",
                 Rules = "Find and replace rules",
                 MoveToBottom = "Move to bottom",
                 MoveToTop = "Move to top",
@@ -1827,6 +1829,7 @@ namespace Nikse.SubtitleEdit.Core
                 RenameGroup = "Rename group...",
                 RulesForGroupX = "Rules for group \"{0}\"",
                 NewGroup = "New group...",
+                NothingToImport = "Nothing to import"
             };
 
             NetworkChat = new LanguageStructure.NetworkChat
