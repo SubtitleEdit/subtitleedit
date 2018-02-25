@@ -2355,5 +2355,17 @@ namespace Nikse.SubtitleEdit.Core
             return false;
         }
 
+        public static string GetFileNameWithoutExtension(string fileName)
+        {
+            if (string.IsNullOrEmpty(fileName))
+                return fileName;
+
+            var idx = fileName.LastIndexOf('.');
+            if (idx > 0)
+                return fileName.Substring(0, idx);
+
+            return fileName;
+        }
+
     }
 }

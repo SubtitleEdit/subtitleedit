@@ -10615,7 +10615,8 @@ namespace Nikse.SubtitleEdit.Forms
                     _fileName = string.Empty;
                     if (!string.IsNullOrEmpty(formSubOcr.FileName))
                     {
-                        _fileName = Path.GetFileNameWithoutExtension(formSubOcr.FileName);
+                        var currentFormat = GetCurrentSubtitleFormat();
+                        _fileName = Utilities.GetFileNameWithoutExtension(formSubOcr.FileName) + currentFormat.Extension;
                         _converted = true;
                     }
                     Text = Title;
