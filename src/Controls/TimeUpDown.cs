@@ -29,7 +29,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         private static char[] _splitChars;
 
-        private bool _dirty = false;
+        private bool _dirty;
         double _initialTotalMilliseconds;
 
         internal void ForceHHMMSSFF()
@@ -110,13 +110,7 @@ namespace Nikse.SubtitleEdit.Controls
             numericUpDown1.Value = NumericUpDownValue;
         }
 
-        public MaskedTextBox MaskedTextBox
-        {
-            get
-            {
-                return maskedTextBox1;
-            }
-        }
+        public MaskedTextBox MaskedTextBox => maskedTextBox1;
 
         public void SetTotalMilliseconds(double milliseconds)
         {
@@ -276,45 +270,25 @@ namespace Nikse.SubtitleEdit.Controls
 
         private void MaskedTextBox1KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Up)
+            if (e.KeyData == Keys.Up)
             {
                 numericUpDown1.UpButton();
                 e.SuppressKeyPress = true;
             }
-            else if (e.KeyCode == Keys.Down)
+            else if (e.KeyData == Keys.Down)
             {
                 numericUpDown1.DownButton();
                 e.SuppressKeyPress = true;
             }
-            else if (e.KeyCode == Keys.Enter)
+            else if (e.KeyData == Keys.Enter)
             {
                 TimeCodeChanged?.Invoke(this, e);
                 e.SuppressKeyPress = true;
             }
-            else if (e.KeyCode == Keys.D0 ||
-                     e.KeyCode == Keys.D1 ||
-                     e.KeyCode == Keys.D2 ||
-                     e.KeyCode == Keys.D3 ||
-                     e.KeyCode == Keys.D4 ||
-                     e.KeyCode == Keys.D5 ||
-                     e.KeyCode == Keys.D6 ||
-                     e.KeyCode == Keys.D7 ||
-                     e.KeyCode == Keys.D8 ||
-                     e.KeyCode == Keys.D9 ||
-                     e.KeyCode == Keys.NumPad0 ||
-                     e.KeyCode == Keys.NumPad1 ||
-                     e.KeyCode == Keys.NumPad2 ||
-                     e.KeyCode == Keys.NumPad3 ||
-                     e.KeyCode == Keys.NumPad4 ||
-                     e.KeyCode == Keys.NumPad5 ||
-                     e.KeyCode == Keys.NumPad6 ||
-                     e.KeyCode == Keys.NumPad7 ||
-                     e.KeyCode == Keys.NumPad8 ||
-                     e.KeyCode == Keys.NumPad9 ||
-                     e.KeyCode == Keys.Delete ||
-                     e.KeyCode == Keys.Back ||
-                     e.Control && e.KeyCode == Keys.V ||
-                     e.Control && e.KeyCode == Keys.X)
+            else if (e.KeyData != (Keys.Tab | Keys.Shift) &&
+                     e.KeyData != Keys.Tab &&
+                     e.KeyData != Keys.Left &&
+                     e.KeyData != Keys.Right)
             {
                 _dirty = true;
             }
