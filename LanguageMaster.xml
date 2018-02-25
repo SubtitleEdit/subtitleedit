@@ -1560,8 +1560,8 @@ If you have edited this file with Subtitle Edit you might be able to find a back
     <Export>Export...</Export>
     <ImportRulesTitle>Import replace rule(s) from...</ImportRulesTitle>
     <ExportRulesTitle>Export replace rule(s) to...</ExportRulesTitle>
-    <ChoseGroupsToImport>Chose groups to import</ChoseGroupsToImport>
-    <ChoseGroupsToExport>Chose groups to Export</ChoseGroupsToExport>
+    <ChooseGroupsToImport>Choose groups to import</ChooseGroupsToImport>
+    <ChooseGroupsToExport>Choose groups to Export</ChooseGroupsToExport>
     <Rules>Find and replace rules</Rules>
     <MoveToTop>Move to top</MoveToTop>
     <MoveToBottom>Move to bottom</MoveToBottom>

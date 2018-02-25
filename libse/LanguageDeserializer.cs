@@ -4213,11 +4213,11 @@ namespace Nikse.SubtitleEdit.Core
                 case "MultipleReplace/ExportRulesTitle":
                     language.MultipleReplace.ExportRulesTitle = reader.Value;
                     break;
-                case "MultipleReplace/ChoseGroupsToImport":
-                    language.MultipleReplace.ChoseGroupsToImport = reader.Value;
+                case "MultipleReplace/ChooseGroupsToImport":
+                    language.MultipleReplace.ChooseGroupsToImport = reader.Value;
                     break;
-                case "MultipleReplace/ChoseGroupsToExport":
-                    language.MultipleReplace.ChoseGroupsToExport = reader.Value;
+                case "MultipleReplace/ChooseGroupsToExport":
+                    language.MultipleReplace.ChooseGroupsToExport = reader.Value;
                     break;
                 case "MultipleReplace/Rules":
                     language.MultipleReplace.Rules = reader.Value;

@@ -1697,8 +1697,8 @@
             public string Export { get; set; }
             public string ImportRulesTitle { get; set; }
             public string ExportRulesTitle { get; set; }
-            public string ChoseGroupsToImport { get; set; }
-            public string ChoseGroupsToExport { get; set; }
+            public string ChooseGroupsToImport { get; set; }
+            public string ChooseGroupsToExport { get; set; }
             public string Rules { get; set; }
             public string MoveToTop { get; set; }
             public string MoveToBottom { get; set; }
