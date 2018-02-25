@@ -13,6 +13,7 @@
    * Update Hungarian translation - thx ZityiSoft Team
    * Update Korean translation - thx domddol
    * Update Turkish translation - thx Falcon006
+   * Update Portuguese translation - thx moob
    * Waveform insert sub now works not just at end - thx Leon
    * Allow larger "margin" in SSA/ASSA styles - thx von Suppé
    * Export to images alignment option "Center, left justify" - thx Shota 
@@ -20,7 +21,11 @@
    * Start with uppercase letter after title in "Change casing" - thx 791
    * Support more formats in "Import time codes from subtitles" - thx Ninelpienel 
    * Add option to ignore formatting in compare - thx mkver
+   * Boost volume for vlc/mpv - thx Mohammad
+   * Import/Export Multiple replace groups
+   * Add more steps to "Play rate" + shortcuts - thx  darnn/Leon
 * FIXED:
+   * Fix downloading mpv/plugins/tesseract-dictionaries
    * Fix Ctrl+p of time code in "Time code control" (regr. from 3.5.5) - thx Mohammed
    * Fix for format "TTML draft 2006-10" - thx thehulk
    * Fix issue regarding "Binary image compare OCR ext. matches" - thx SimplyTheBOSS
@@ -38,6 +43,8 @@
    * Strip control characters from text field when loading subtitle - thx mkver
    * Fix for reading FCP xml - thx Antti
    * Fix reading "YouTube transcript" with trailing space - thx Sherman 
+   * Fix issue where "< min duration" was not error highlighted - thx Ingo
+   * Fix for shortcut "Set end, offset the rest and go to next" - thx Leon
 
 
 3.5.5 (26th January 2018)
