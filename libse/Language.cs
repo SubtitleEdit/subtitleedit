@@ -1819,7 +1819,7 @@ namespace Nikse.SubtitleEdit.Core
                 ImportRulesTitle = "Import replace rule(s) from...",
                 ExportRulesTitle = "Export replace rule(s) to...",
                 ChooseGroupsToImport = "Choose groups to import",
-                ChooseGroupsToExport = "Choose groups to Export",
+                ChooseGroupsToExport = "Choose groups to export",
                 Rules = "Find and replace rules",
                 MoveToBottom = "Move to bottom",
                 MoveToTop = "Move to top",
