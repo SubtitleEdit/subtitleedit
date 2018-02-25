@@ -108,7 +108,6 @@ namespace Nikse.SubtitleEdit.Forms
                 string url = _dictionaryDownloadLinks[index];
                 ChosenLanguage = comboBoxDictionaries.Items[index].ToString();
 
-                Utilities.SetSecurityProtocol();
                 var wc = new WebClient { Proxy = Utilities.GetProxy() };
                 if (url.EndsWith(".traineddata", StringComparison.OrdinalIgnoreCase) || url.EndsWith(".traineddata?raw=true", StringComparison.OrdinalIgnoreCase))
                 {

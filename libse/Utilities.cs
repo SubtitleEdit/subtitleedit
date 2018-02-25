@@ -183,7 +183,7 @@ namespace Nikse.SubtitleEdit.Core
         public static void SetSecurityProtocol()
         {
             // Github requires TLS 1.2
-            var tls12Protocol = (SslProtocols)0x00000C00;
+            var tls12Protocol = (SslProtocols)0x00000C00; //TODO: Remove this when it's standard in .net framework - 4.5?
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls | (SecurityProtocolType)tls12Protocol;
         }
 

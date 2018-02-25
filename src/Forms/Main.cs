@@ -14742,7 +14742,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (item.Checked)
                 {
                     SetPlayRate(item, null, true);
-                    return;
+                    break;
                 }
             }
         }
@@ -16266,6 +16266,8 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             LoadPlugins();
+
+            Utilities.SetSecurityProtocol(); // Github requires TLS 1.2
         }
 
         private void SetPlayRate(object sender, EventArgs e)
