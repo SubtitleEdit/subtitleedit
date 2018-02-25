@@ -339,6 +339,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Compare subtitles";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Compare_FormClosing);
+            this.Shown += new System.EventHandler(this.Compare_Shown);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Compare_KeyDown);
             this.Resize += new System.EventHandler(this.Compare_Resize);
             this.contextMenuStrip1.ResumeLayout(false);
