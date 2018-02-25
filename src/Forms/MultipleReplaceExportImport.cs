@@ -30,8 +30,8 @@ namespace Nikse.SubtitleEdit.Forms
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             labelGroups.Text = export
-                ? Configuration.Settings.Language.MultipleReplace.ChoseGroupsToExport
-                : Configuration.Settings.Language.MultipleReplace.ChoseGroupsToImport;
+                ? Configuration.Settings.Language.MultipleReplace.ChooseGroupsToExport
+                : Configuration.Settings.Language.MultipleReplace.ChooseGroupsToImport;
             Text = export ? Configuration.Settings.Language.MultipleReplace.Export : Configuration.Settings.Language.MultipleReplace.Import;
         }
 
