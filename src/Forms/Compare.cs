@@ -1025,5 +1025,10 @@ namespace Nikse.SubtitleEdit.Forms
         {
             CompareSubtitles();
         }
+
+        private void Compare_Shown(object sender, EventArgs e)
+        {
+            Activate();
+        }
     }
 }
