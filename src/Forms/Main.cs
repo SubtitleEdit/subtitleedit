@@ -16709,9 +16709,22 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 var tss = new ToolStripSeparator();
                 if (relativeOffset == null)
+                {
+                    if (parent.DropDownItems.Count > 0 && parent.DropDownItems[parent.DropDownItems.Count - 1].GetType() == typeof(ToolStripSeparator))
+                        return; // don't app separator after separator
+
                     parent.DropDownItems.Add(tss);
+                }
                 else
+                {
+                    if (parent.DropDownItems.Count - relativeOffset.Value >= 0 &&
+                        relativeOffset.Value < parent.DropDownItems.Count &&
+                        parent.DropDownItems.Count > 0 && 
+                        parent.DropDownItems[parent.DropDownItems.Count - relativeOffset.Value].GetType() == typeof(ToolStripSeparator))
+                        return; // don't app separator after separator
+
                     parent.DropDownItems.Insert(parent.DropDownItems.Count - relativeOffset.Value, tss);
+                }
                 UiUtil.FixFonts(tss);
             }
         }
