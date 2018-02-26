@@ -123,25 +123,34 @@ namespace Nikse.SubtitleEdit.Forms
             string threeLetterIsoLanguageName = ci.ThreeLetterISOLanguageName;
 
             comboBoxLanguage.Items.Clear();
+            comboBoxLanguage.Items.Add("-Auto-");
             foreach (CultureInfo x in CultureInfo.GetCultures(CultureTypes.NeutralCultures))
-                comboBoxLanguage.Items.Add(x);
+            {
+                if (!string.IsNullOrWhiteSpace(x.ToString()))
+                    comboBoxLanguage.Items.Add(x);
+            }
             comboBoxLanguage.Sorted = true;
             int languageIndex = 0;
             int j = 0;
             foreach (var x in comboBoxLanguage.Items)
             {
-                var xci = (CultureInfo)x;
-                if (xci.TwoLetterISOLanguageName == ci.TwoLetterISOLanguageName)
+                var xci = x as CultureInfo;
+                if (xci != null)
                 {
-                    languageIndex = j;
-                    break;
-                }
-                if (xci.TwoLetterISOLanguageName == "en")
-                {
-                    languageIndex = j;
+                    if (xci.TwoLetterISOLanguageName == ci.TwoLetterISOLanguageName)
+                    {
+                        languageIndex = j;
+                        break;
+                    }
+                    if (xci.TwoLetterISOLanguageName == "en")
+                    {
+                        languageIndex = j;
+                    }
                 }
                 j++;
             }
+            if (string.IsNullOrEmpty(language))
+                languageIndex = 0;
             comboBoxLanguage.SelectedIndex = languageIndex;
             AddFixActions(threeLetterIsoLanguageName);
             _originalSubtitle = new Subtitle(subtitle, false); // copy constructor
@@ -160,9 +169,9 @@ namespace Nikse.SubtitleEdit.Forms
         {
             get
             {
-                var ci = (CultureInfo)comboBoxLanguage.SelectedItem;
+                var ci = comboBoxLanguage.SelectedItem as CultureInfo;
                 if (ci == null)
-                    return "en";
+                    return string.Empty;
                 return ci.TwoLetterISOLanguageName;
             }
             set
@@ -1606,9 +1615,12 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (Subtitle != null)
             {
-                var ci = (CultureInfo)comboBoxLanguage.SelectedItem;
-                _autoDetectGoogleLanguage = ci.TwoLetterISOLanguageName;
-                AddFixActions(ci.ThreeLetterISOLanguageName);
+                var ci = comboBoxLanguage.SelectedItem as CultureInfo;
+                if (ci != null)
+                {
+                    _autoDetectGoogleLanguage = ci.TwoLetterISOLanguageName;
+                    AddFixActions(ci.ThreeLetterISOLanguageName);
+                }
             }
         }
 
