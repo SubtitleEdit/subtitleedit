@@ -55,11 +55,6 @@ namespace Nikse.SubtitleEdit.Forms
 
         private Encoding _screenScrapingEncoding;
 
-        public Encoding ScreenScrapingEncoding
-        {
-            get { return _screenScrapingEncoding; }
-        }
-
         private string _targetTwoLetterIsoLanguageName;
 
         public class ComboBoxItem
@@ -82,13 +77,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        public Subtitle TranslatedSubtitle
-        {
-            get
-            {
-                return _translatedSubtitle;
-            }
-        }
+        public Subtitle TranslatedSubtitle => _translatedSubtitle;
 
         public GoogleTranslate()
         {
@@ -1216,5 +1205,9 @@ namespace Nikse.SubtitleEdit.Forms
             return null;
         }
 
+        private void comboBoxTo_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            _screenScrapingEncoding = null;
+        }
     }
 }

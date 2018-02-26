@@ -79,6 +79,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.comboBoxTo.Name = "comboBoxTo";
             this.comboBoxTo.Size = new System.Drawing.Size(121, 21);
             this.comboBoxTo.TabIndex = 3;
+            this.comboBoxTo.SelectedIndexChanged += new System.EventHandler(this.comboBoxTo_SelectedIndexChanged);
             // 
             // buttonTranslate
             // 
@@ -142,10 +143,12 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // subtitleListViewTo
             // 
+            this.subtitleListViewTo.AllowColumnReorder = true;
             this.subtitleListViewTo.FirstVisibleIndex = -1;
             this.subtitleListViewTo.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.subtitleListViewTo.FullRowSelect = true;
             this.subtitleListViewTo.GridLines = true;
+            this.subtitleListViewTo.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.subtitleListViewTo.HideSelection = false;
             this.subtitleListViewTo.Location = new System.Drawing.Point(471, 64);
             this.subtitleListViewTo.Name = "subtitleListViewTo";
@@ -163,10 +166,12 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // subtitleListViewFrom
             // 
+            this.subtitleListViewFrom.AllowColumnReorder = true;
             this.subtitleListViewFrom.FirstVisibleIndex = -1;
             this.subtitleListViewFrom.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.subtitleListViewFrom.FullRowSelect = true;
             this.subtitleListViewFrom.GridLines = true;
+            this.subtitleListViewFrom.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.subtitleListViewFrom.HideSelection = false;
             this.subtitleListViewFrom.Location = new System.Drawing.Point(18, 64);
             this.subtitleListViewFrom.Name = "subtitleListViewFrom";
