@@ -1116,7 +1116,7 @@ Note: Do check free disk space.</WaveFileMalformed>
         <ColumnImportTextAndShiftCellsDown>Import text and shift cells down</ColumnImportTextAndShiftCellsDown>
         <ColumnPasteFromClipboard>Paste from clipboard...</ColumnPasteFromClipboard>
         <ColumnTextUp>Text up</ColumnTextUp>
-        <ColumnTextDown>Text dowm</ColumnTextDown>
+        <ColumnTextDown>Text down</ColumnTextDown>
         <ColumnCopyOriginalTextToCurrent>Copy text from original to current</ColumnCopyOriginalTextToCurrent>
         <Split>Split</Split>
         <MergeSelectedLines>Merge selected lines</MergeSelectedLines>
