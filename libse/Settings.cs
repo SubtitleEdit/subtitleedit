@@ -3840,20 +3840,23 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteStartElement("MultipleSearchAndReplaceGroups", string.Empty);
                 foreach (var group in settings.MultipleSearchAndReplaceGroups)
                 {
-                    textWriter.WriteStartElement("Group", string.Empty);
-                    textWriter.WriteElementString("Name", group.Name);
-                    textWriter.WriteElementString("Enabled", group.Enabled.ToString());
-                    foreach (var item in group.Rules)
+                    if (!string.IsNullOrEmpty(group?.Name))
                     {
-                        textWriter.WriteStartElement("Rule", string.Empty);
-                        textWriter.WriteElementString("Enabled", item.Enabled.ToString());
-                        textWriter.WriteElementString("FindWhat", item.FindWhat);
-                        textWriter.WriteElementString("ReplaceWith", item.ReplaceWith);
-                        textWriter.WriteElementString("SearchType", item.SearchType);
-                        textWriter.WriteElementString("Description", item.Description);
+                        textWriter.WriteStartElement("Group", string.Empty);
+                        textWriter.WriteElementString("Name", group.Name);
+                        textWriter.WriteElementString("Enabled", group.Enabled.ToString());
+                        foreach (var item in group.Rules)
+                        {
+                            textWriter.WriteStartElement("Rule", string.Empty);
+                            textWriter.WriteElementString("Enabled", item.Enabled.ToString());
+                            textWriter.WriteElementString("FindWhat", item.FindWhat);
+                            textWriter.WriteElementString("ReplaceWith", item.ReplaceWith);
+                            textWriter.WriteElementString("SearchType", item.SearchType);
+                            textWriter.WriteElementString("Description", item.Description);
+                            textWriter.WriteEndElement();
+                        }
                         textWriter.WriteEndElement();
                     }
-                    textWriter.WriteEndElement();
                 }
                 textWriter.WriteEndElement();
 
