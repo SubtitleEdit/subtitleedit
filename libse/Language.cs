@@ -1628,7 +1628,7 @@ namespace Nikse.SubtitleEdit.Core
                         ColumnImportTextAndShiftCellsDown = "Import text and shift cells down",
                         ColumnPasteFromClipboard = "Paste from clipboard...",
                         ColumnTextUp = "Text up",
-                        ColumnTextDown = "Text dowm",
+                        ColumnTextDown = "Text down",
                         ColumnCopyOriginalTextToCurrent = "Copy text from original to current",
                         Split = "Split",
                         MergeSelectedLines = "Merge selected lines",
