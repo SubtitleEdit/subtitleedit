@@ -26,9 +26,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string ToText(Subtitle subtitle, string title)
         {
-            string language = LanguageAutoDetect.AutoDetectLanguageName("en_US", subtitle);
-            var ci = CultureInfo.GetCultureInfo(language.Replace("_", "-"));
-            string languageTag = $"{language.Replace("_", string.Empty).ToUpper()}CC";
+            var language = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle);
+            var ci = CultureInfo.GetCultureInfo(language);
+            language = CultureInfo.CreateSpecificCulture(ci.Name).Name;
+            string languageTag = $"{language.Replace("-", string.Empty).ToUpper()}CC";
             string languageName = ci.Parent.EnglishName;
             string languageStyle = $".{languageTag} [ name: {languageName}; lang: {language.Replace("_", "-")} ; SAMIType: CC ; ]";
             languageStyle = languageStyle.Replace("[", "{").Replace("]", "}");
@@ -201,6 +202,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 list.Add("ENUSCC");
             }
             return list;
+        }
+
+        public static List<string> GetStylesFromSubtitle(Subtitle subtitle)
+        {
+            string language = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle);
+            var ci = CultureInfo.GetCultureInfo(language);
+            language = CultureInfo.CreateSpecificCulture(ci.Name).Name;
+            string languageTag = $"{language.Replace("-", string.Empty).ToUpper()}CC";
+            return new List<string> { languageTag };
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)

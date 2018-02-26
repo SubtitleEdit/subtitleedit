@@ -4030,13 +4030,29 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     var styles = new List<string>();
                     if (formatType == typeof(AdvancedSubStationAlpha) || formatType == typeof(SubStationAlpha))
+                    {
                         styles = AdvancedSubStationAlpha.GetStylesFromHeader(_subtitle.Header);
+                    }
                     else if (formatType == typeof(TimedText10) || formatType == typeof(ItunesTimedText))
+                    {
                         styles = TimedText10.GetStylesFromHeader(_subtitle.Header);
+                    }
                     else if (formatType == typeof(Sami) || formatType == typeof(SamiModern))
+                    {
                         styles = Sami.GetStylesFromHeader(_subtitle.Header);
+                        if (_subtitle.Header == null)
+                        {
+                            styles = Sami.GetStylesFromSubtitle(_subtitle);
+                        }
+                        else
+                        {
+                            styles = Sami.GetStylesFromHeader(_subtitle.Header);
+                        }
+                    }
                     else if (format.Name == "Nuendo")
+                    {
                         styles = GetNuendoStyles();
+                    }
 
                     if (styles.Count > 0)
                     {
