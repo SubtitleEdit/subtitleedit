@@ -376,7 +376,7 @@ namespace Nikse.SubtitleEdit.Logic
                                                     }
                                                 }
 
-                                                BatchConvertSave(targetFormat, offset, targetEncoding, outputFolder, count, ref converted, ref errors, formats, newFileName, sub, format, overwrite, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions, resolution);
+                                                BatchConvertSave(targetFormat, offset, targetEncoding, outputFolder, count, ref converted, ref errors, formats, newFileName, sub, format, overwrite, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions, resolution, true);
                                                 done = true;
                                             }
                                         }
@@ -860,7 +860,7 @@ namespace Nikse.SubtitleEdit.Logic
         }
 
 
-        internal static bool BatchConvertSave(string targetFormat, string offset, Encoding targetEncoding, string outputFolder, int count, ref int converted, ref int errors, List<SubtitleFormat> formats, string fileName, Subtitle sub, SubtitleFormat format, bool overwrite, int pacCodePage, double? targetFrameRate, IEnumerable<string> multipleReplaceImportFiles, List<BatchAction> actions, Point? res = null)
+        internal static bool BatchConvertSave(string targetFormat, string offset, Encoding targetEncoding, string outputFolder, int count, ref int converted, ref int errors, List<SubtitleFormat> formats, string fileName, Subtitle sub, SubtitleFormat format, bool overwrite, int pacCodePage, double? targetFrameRate, IEnumerable<string> multipleReplaceImportFiles, List<BatchAction> actions, Point? res = null, bool autoDetectLanguage = false)
         {
             actions = actions ?? new List<BatchAction>();
             double oldFrameRate = Configuration.Settings.General.CurrentFrameRate;
@@ -922,7 +922,10 @@ namespace Nikse.SubtitleEdit.Logic
                         {
                             for (int i = 0; i < 3; i++)
                             {
-                                fce.RunBatch(sub, format, targetEncoding, Configuration.Settings.Tools.BatchConvertLanguage);
+                                var language = Configuration.Settings.Tools.BatchConvertLanguage;
+                                if (string.IsNullOrEmpty(language) || autoDetectLanguage)
+                                    language = LanguageAutoDetect.AutoDetectGoogleLanguage(sub);
+                                fce.RunBatch(sub, format, targetEncoding, language);
                                 sub = fce.FixedSubtitle;
                             }
                         }

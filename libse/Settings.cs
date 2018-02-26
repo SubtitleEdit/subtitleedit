@@ -250,7 +250,7 @@ namespace Nikse.SubtitleEdit.Core
             SplitNumberOfParts = 3;
             SplitVia = "Lines";
             NewEmptyTranslationText = string.Empty;
-            BatchConvertLanguage = "en";
+            BatchConvertLanguage = string.Empty;
             ModifySelectionRule = "Contains";
             ModifySelectionText = string.Empty;
             GenerateTimeCodePatterns = "HH:mm:ss;yyyy-MM-dd;dddd dd MMMM yyyy <br>HH:mm:ss;dddd dd MMMM yyyy <br>hh:mm:ss tt;s";
