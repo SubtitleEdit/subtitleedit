@@ -27,7 +27,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             labelCharacters.Text = language.Characters;
             labelCharactersAsText.Text = language.CharactersAsText;
             checkBoxItalic.Text = language.Italic;
-            labelItalicOn.Text = language.Italic.Replace("&", string.Empty);
+            labelItalicOn.Text = language.Italic.RemoveChar('&');
             labelItalicOn.Visible = false;
             buttonAbort.Text = language.Abort;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
@@ -128,7 +128,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 using (var g = Graphics.FromImage(bm))
                 {
                     g.DrawImage(org, 0, 0, org.Width, org.Height);
-                    g.DrawRectangle(Pens.Red, character.X, character.Y, character.NikseBitmap.Width, character.NikseBitmap.Height - 1);
+                    g.DrawRectangle(Pens.Red, character.X - 1, character.Y - 1, character.NikseBitmap.Width + 1, character.NikseBitmap.Height + 1);
                 }
                 pictureBoxSubtitleImage.Image = bm;
             }

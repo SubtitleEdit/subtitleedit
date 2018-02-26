@@ -8,15 +8,14 @@ namespace Nikse.SubtitleEdit.Logic
 {
     public class FindReplaceDialogHelper
     {
-        private const string StartChars = " >-\"„”“[]'‘`´¶(){}♪¿¡.…—،؟\r\n\u2028";
-        private const string EndChars = " <-\"”“]'`´¶(){}♪,.!?:;…—،؟\r\n\u2028";
+        private const string SeparatorChars = " #><-\"„”“[]'‘`´¶(){}♪,.!?:;¿¡.…—،؟\r\n\u2028";
         private readonly string _findText = string.Empty;
         private readonly string _replaceText = string.Empty;
         private Regex _regEx;
-        private int _findTextLenght;
+        private int _findTextLength;
 
         public bool Success { get; set; }
-        public ReplaceType FindReplaceType { get; set; }        
+        public ReplaceType FindReplaceType { get; set; }
         public int SelectedIndex { get; set; }
         public int SelectedPosition { get; set; }
         public int StartLineIndex { get; set; }
@@ -26,7 +25,7 @@ namespace Nikse.SubtitleEdit.Logic
         {
             get
             {
-                return _findTextLenght;
+                return _findTextLength;
             }
         }
 
@@ -54,11 +53,11 @@ namespace Nikse.SubtitleEdit.Logic
             _replaceText = replaceText;
             if (_replaceText != null)
             {
-                _replaceText = _replaceText.Replace("\\n", Environment.NewLine);
+                _replaceText = RegexUtils.FixNewLine(_replaceText);
             }
 
             _regEx = regEx;
-            _findTextLenght = findText.Length;
+            _findTextLength = findText.Length;
             StartLineIndex = startLineIndex;
         }
 
@@ -79,14 +78,14 @@ namespace Nikse.SubtitleEdit.Logic
 
             if (FindReplaceType.FindType == FindType.CaseSensitive || FindReplaceType.FindType == FindType.Normal)
             {
-                var comparison = FindReplaceType.FindType == FindType.CaseSensitive ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase;
+                var comparison = GetComparison();
                 var idx = text.IndexOf(_findText, startIndex, comparison);
                 while (idx >= 0)
                 {
                     if (FindReplaceType.WholeWord)
                     {
-                        var startOk = idx == 0 || StartChars.Contains(text[idx - 1]);
-                        var endOk = idx + _findText.Length == text.Length || EndChars.Contains(text[idx + _findText.Length]);
+                        var startOk = idx == 0 || SeparatorChars.Contains(text[idx - 1]);
+                        var endOk = idx + _findText.Length == text.Length || SeparatorChars.Contains(text[idx + _findText.Length]);
                         if (startOk && endOk)
                             return idx;
                     }
@@ -102,13 +101,13 @@ namespace Nikse.SubtitleEdit.Logic
             var match = _regEx.Match(text, startIndex);
             if (match.Success)
             {
-                string groupName = Utilities.GetRegExGroup(_findText);
+                string groupName = RegexUtils.GetRegExGroup(_findText);
                 if (groupName != null && match.Groups[groupName] != null && match.Groups[groupName].Success)
                 {
-                    _findTextLenght = match.Groups[groupName].Length;
+                    _findTextLength = match.Groups[groupName].Length;
                     return match.Groups[groupName].Index;
                 }
-                _findTextLenght = match.Length;
+                _findTextLength = match.Length;
                 return match.Index;
             }
             return -1;
@@ -120,10 +119,13 @@ namespace Nikse.SubtitleEdit.Logic
             int index = 0;
             if (position < 0)
                 position = 0;
+            bool first = true;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 if (index >= startIndex)
                 {
+                    if (!first)
+                        position = 0;
                     int pos = 0;
                     if (!MatchInOriginal)
                     {
@@ -156,6 +158,7 @@ namespace Nikse.SubtitleEdit.Logic
                             }
                         }
                     }
+                    first = false;
                 }
                 index++;
             }
@@ -218,15 +221,15 @@ namespace Nikse.SubtitleEdit.Logic
                     Match match = _regEx.Match(text, startIndex);
                     if (match.Success)
                     {
-                        string groupName = Utilities.GetRegExGroup(_findText);
+                        string groupName = RegexUtils.GetRegExGroup(_findText);
                         if (groupName != null && match.Groups[groupName] != null && match.Groups[groupName].Success)
                         {
-                            _findTextLenght = match.Groups[groupName].Length;
+                            _findTextLength = match.Groups[groupName].Length;
                             SelectedIndex = match.Groups[groupName].Index;
                         }
                         else
                         {
-                            _findTextLenght = match.Length;
+                            _findTextLength = match.Length;
                             SelectedIndex = match.Index;
                         }
                         Success = true;
@@ -250,31 +253,28 @@ namespace Nikse.SubtitleEdit.Logic
             //  validate pattern if find type is regex
             if (FindReplaceType.FindType == FindType.RegEx)
             {
-                if (!Utilities.IsValidRegex(FindText))
+                var findText = RegexUtils.FixNewLine(_findText);
+                if (!RegexUtils.IsValidRegex(findText))
                 {
                     MessageBox.Show(Configuration.Settings.Language.General.RegularExpressionIsNotValid);
                     return count;
                 }
-                _regEx = new Regex(_findText);
+                _regEx = new Regex(findText);
             }
-
-            // count matches
+            var comparison = GetComparison();
             foreach (var p in subtitle.Paragraphs)
             {
-                if (p.Text.Length < FindText.Length)
-                    continue;
-
-                switch (FindReplaceType.FindType)
+                if (FindReplaceType.FindType == FindType.RegEx)
                 {
-                    case FindType.Normal:
-                        count += GetWordCount(p.Text, _findText, wholeWord, StringComparison.OrdinalIgnoreCase);
-                        break;
-                    case FindType.CaseSensitive:
-                        count += GetWordCount(p.Text, _findText, wholeWord, StringComparison.Ordinal);
-                        break;
-                    case FindType.RegEx:
-                        count += _regEx.Matches(p.Text).Count;
-                        break;
+                    count += _regEx.Matches(p.Text).Count;
+                }
+                else
+                {
+                    if (p.Text.Length < _findText.Length)
+                    {
+                        continue;
+                    }
+                    count += GetWordCount(p.Text, _findText, wholeWord, comparison);
                 }
             }
             return count;
@@ -288,8 +288,8 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 if (matchWholeWord)
                 {
-                    var startOk = (idx == 0) || (StartChars.Contains(text[idx - 1]));
-                    var endOk = (idx + pattern.Length == text.Length) || (EndChars.Contains(text[idx + pattern.Length]));
+                    var startOk = (idx == 0) || (SeparatorChars.Contains(text[idx - 1]));
+                    var endOk = (idx + pattern.Length == text.Length) || (SeparatorChars.Contains(text[idx + pattern.Length]));
                     if (startOk && endOk)
                         count++;
                 }
@@ -301,6 +301,8 @@ namespace Nikse.SubtitleEdit.Logic
             }
             return count;
         }
+
+        private StringComparison GetComparison() => FindReplaceType.FindType == FindType.Normal ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
 
     }
 }

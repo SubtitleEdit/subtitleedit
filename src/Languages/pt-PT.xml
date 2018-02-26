@@ -2,7 +2,7 @@
 <Language Name="português (Portugal)">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.5.4</Version>
+    <Version>3.5.5</Version>
     <TranslatedBy>Traduzido para Português de Portugal, por moob
 Email: mailto:moob42341@gmail.com</TranslatedBy>
     <CultureName>pt-PT</CultureName>
@@ -28,6 +28,7 @@ Email: mailto:moob42341@gmail.com</TranslatedBy>
     <CharsPerSec>Caracteres/seg</CharsPerSec>
     <WordsPerMin>Palavras/min</WordsPerMin>
     <Actor>Actor</Actor>
+	<Gap>Intervalo</Gap>
     <Region>Região</Region>
     <NumberSymbol>#</NumberSymbol>
     <Number>Número</Number>
@@ -144,7 +145,6 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <SetAsPercent>Definir a percentagem de duração</SetAsPercent>
     <Note>Nota: A duração não pode sobrepor o tempo de início do próximo texto</Note>
     <PleaseSelectAValueFromTheDropDownList>Por favor, seleccione um valor da lista abaixo</PleaseSelectAValueFromTheDropDownList>
-    <PleaseChoose> - Por favor, escolha - </PleaseChoose>
   </AdjustDisplayDuration>
   <ApplyDurationLimits>
     <Title>Aplicar limites de duração</Title>
@@ -279,10 +279,11 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <NextDifference>&amp;Diferença seguinte</NextDifference>
     <SubtitlesNotAlike>As legendas não são semelhantes</SubtitlesNotAlike>
     <XNumberOfDifference>Número de diferenças: {0}</XNumberOfDifference>
-    <XNumberOfDifferenceAndPercentChanged>Número de diferenças: {0} ({1}% de palavras alteradas)</XNumberOfDifferenceAndPercentChanged>
-    <XNumberOfDifferenceAndPercentLettersChanged>Número de diferenças: {0} ({1}% de letras alteradas)</XNumberOfDifferenceAndPercentLettersChanged>
+    <XNumberOfDifferenceAndPercentChanged>Número de diferenças: {0} ({1:0.##}% de palavras alteradas)</XNumberOfDifferenceAndPercentChanged>
+    <XNumberOfDifferenceAndPercentLettersChanged>Número de diferenças: {0} ({1:0.##}% de letras alteradas)</XNumberOfDifferenceAndPercentLettersChanged>
     <ShowOnlyDifferences>Mostrar só as diferenças</ShowOnlyDifferences>
     <IgnoreLineBreaks>Ignorar quebra de linha</IgnoreLineBreaks>
+	<IgnoreFormatting>Ignorar formatação</IgnoreFormatting>
     <OnlyLookForDifferencesInText>Procurar só as diferenças no texto</OnlyLookForDifferencesInText>
     <CannotCompareWithImageBasedSubtitles>Não é possível comparar legendas baseadas em imagens</CannotCompareWithImageBasedSubtitles>
   </CompareSubtitles>
@@ -462,6 +463,7 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <Left>Esquerda</Left>
     <Right>Direita</Right>
     <Center>Centro</Center>
+	<CenterLeftJustify>Centro, justificado à esquerda</CenterLeftJustify>
     <BottomMargin>Margem inferior</BottomMargin>
     <LeftRightMargin>Margem esq./dto.</LeftRightMargin>
     <SaveBluRraySupAs>Escolha o nome do ficheiro Blu-ray sup</SaveBluRraySupAs>
@@ -1012,6 +1014,7 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
         <ChooseAudioTrack>Seleccione a faixa de áudio</ChooseAudioTrack>
         <CloseVideo>Fechar ficheiro de vídeo</CloseVideo>
         <SetVideoOffset>Definir o deslocamento do vídeo...</SetVideoOffset>
+		<SmptTimeMode>SMPTE temporização (drop frame)</SmptTimeMode>
         <ImportSceneChanges>Importar mudanças de cena...</ImportSceneChanges>
         <RemoveSceneChanges>Remover mudanças de cena</RemoveSceneChanges>
         <WaveformBatchGenerate>Gerar formas de onda em série...</WaveformBatchGenerate>
@@ -1097,6 +1100,7 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
         <Paste>Colar</Paste>
         <Delete>Eliminar</Delete>
         <SplitLineAtCursorPosition>Dividir linha a partir do cursor</SplitLineAtCursorPosition>
+		<SplitLineAtCursorAndWaveformPosition>Dividir linha a partir do cursor/posição de vídeo</SplitLineAtCursorAndWaveformPosition>
         <AutoDurationCurrentLine>Duração automática (linha corrente)</AutoDurationCurrentLine>
         <SelectAll>Seleccionar tudo</SelectAll>
         <InsertFirstLine>Inserir linha</InsertFirstLine>
@@ -1111,6 +1115,8 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
         <ColumnInsertTextFromSubtitle>Inserir texto através da legenda...</ColumnInsertTextFromSubtitle>
         <ColumnImportTextAndShiftCellsDown>Importar texto e deslocar células para baixo</ColumnImportTextAndShiftCellsDown>
         <ColumnPasteFromClipboard>Colar da área de transferência</ColumnPasteFromClipboard>
+        <ColumnTextUp>Texto para cima</ColumnTextUp>
+        <ColumnTextDown>Texto para baixo</ColumnTextDown>
         <ColumnCopyOriginalTextToCurrent>Copiar texto do original para o actual</ColumnCopyOriginalTextToCurrent>
         <Split>Dividir</Split>
         <MergeSelectedLines>Combinar as linhas seleccionadas</MergeSelectedLines>
@@ -1394,8 +1400,9 @@ Deseja continuar?</SubtitleAppendPrompt>
     <UnicodeCharactersAnsiWarning>A legenda contém caracteres Unicode. Guardar a legenda com a codificação ANSI perde estes caracteres. Deseja continuar?</UnicodeCharactersAnsiWarning>
     <NegativeTimeWarning>A legenda contém tempos negativos. Deseja continuar?</NegativeTimeWarning>
     <BeforeMergeShortLines>Antes de combinar as linhas curtas</BeforeMergeShortLines>
+	<MergedShortLinesX>Número de linhas combinadas: {0}</MergedShortLinesX>
     <BeforeSplitLongLines>Antes de dividir linhas longas</BeforeSplitLongLines>
-    <MergedShortLinesX>Número de linhas combinadas: {0}</MergedShortLinesX>
+    <LongLinesSplitX>Número de linhas divididas: {0}</LongLinesSplitX>
     <BeforeDurationsBridgeGap>Antes de unir pequenos intervalos</BeforeDurationsBridgeGap>
     <BeforeSetMinimumDisplayTimeBetweenParagraphs>Antes de estabelecer o tempo de visualização mínimo entre legendas</BeforeSetMinimumDisplayTimeBetweenParagraphs>
     <XMinimumDisplayTimeBetweenParagraphsChanged>Número de linhas com tempo de visualização mínimo entre legendas alteradas: {0}</XMinimumDisplayTimeBetweenParagraphsChanged>
@@ -1440,6 +1447,7 @@ Deseja continuar?</SubtitleAppendPrompt>
     <BeforeColumnDelete>Antes de eliminar coluna</BeforeColumnDelete>
     <BeforeColumnImportText>Antes da importação de texto da coluna</BeforeColumnImportText>
     <BeforeColumnShiftCellsDown>Antes baixar as células da coluna</BeforeColumnShiftCellsDown>
+	<BeforeX>Antes: {0}</BeforeX>
     <ErrorLoadingPluginXErrorY>Erro ao carregar plugin: {0}: {1}</ErrorLoadingPluginXErrorY>
     <BeforeRunningPluginXVersionY>Antes de executar plugin: {0}: {1}</BeforeRunningPluginXVersionY>
     <UnableToReadPluginResult>Impossível de ler o resultado da legenda do plugin!</UnableToReadPluginResult>
@@ -1454,6 +1462,10 @@ Deseja continuar?</SubtitleAppendPrompt>
     <ImportTimeCodesDifferentNumberOfLinesWarning>Legenda com tempos tem um número diferente de linhas ({0}) do que as legendas actuais ({1}) - mesmo assim deseja continuar?</ImportTimeCodesDifferentNumberOfLinesWarning>
     <ParsingTransportStream>A analisar o fluxo de transporte - por favor aguarde...</ParsingTransportStream>
     <XPercentCompleted>{0}% concluído</XPercentCompleted>
+	<NextX>Próximo: {0}</NextX>
+    <PromptInsertSubtitleOverlap>Inserir linha na posição da forma de onda causará sobreposição!
+
+Deseja continuar?</PromptInsertSubtitleOverlap>
     <ErrorLoadIdx>Não foi possível ler/editar o ficheiro idx. Os ficheiros idx são parte de um par de ficheiros idx/sub (também conhecidos como VobSub) e o Subtitle Edit pode abrir o ficheiro sub.</ErrorLoadIdx>
     <ErrorLoadRar>Este ficheiro parece ser um ficheiro comprimido .rar. O Subtitle Edit não pode abrir ficheiros comprimidos.</ErrorLoadRar>
     <ErrorLoadZip>Este ficheiro parece ser um ficheiro comprimido .zip. O Subtitle Edit não pode abrir ficheiros comprimidos.</ErrorLoadZip>
@@ -1475,7 +1487,6 @@ Se editou este ficheiro no Subtitle Edit é possível que encontre a cópia de s
   <MatroskaSubtitleChooser>
     <Title>Seleccionar legenda através de um ficheiro Matroska (.mkv)</Title>
     <TitleMp4>Seleccionar legenda através de um ficheiro MP4</TitleMp4>
-    <PleaseChoose>Encontrada mais do que uma legenda - por favor, escolha uma</PleaseChoose>
     <TrackXLanguageYTypeZ>Faixa {0} - idioma: {1} - tipo: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MeasurementConverter>
@@ -1539,6 +1550,7 @@ Se editou este ficheiro no Subtitle Edit é possível que encontre a cópia de s
     <Normal>Normal</Normal>
     <CaseSensitive>Diferenciar maiúsculas/minúsculas</CaseSensitive>
     <RegularExpression>Expressão regular</RegularExpression>
+	<Description>Descrição</Description>
     <LinesFoundX>Linhas encontradas: {0}</LinesFoundX>
     <Remove>Remover</Remove>
     <Add>&amp;Adicionar</Add>
@@ -1708,6 +1720,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <NetflixQualityCheck>Verificação de qualidade Netflix</NetflixQualityCheck>
     <SettingsName>Configurações</SettingsName>
     <Help>Ajuda</Help>
+	<UnbreakNoSpace>Remover quebra sem espaço em branco (CJK)</UnbreakNoSpace>
     <ShowFrameRate>Mostrar taxa de fotogramas na barra de ferramentas</ShowFrameRate>
     <DefaultFrameRate>Taxa de fotogramas padrão</DefaultFrameRate>
     <DefaultFileEncoding>Codificação padrão do ficheiro</DefaultFileEncoding>
@@ -1736,7 +1749,6 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <RemoveBlankLinesWhenOpening>Eliminar linhas em branco ao abrir a legenda</RemoveBlankLinesWhenOpening>
     <ShowLineBreaksAs>Ver quebras de linha na "Lista" da janela principal como:</ShowLineBreaksAs>
     <MainListViewDoubleClickAction>Ao clicar duas vezes na linha de texto na janela principal irá...</MainListViewDoubleClickAction>
-    <MainListViewColumns>Colunas da lista</MainListViewColumns>
     <MainListViewColumnsInfo>Escolher as colunas visíveis da lista</MainListViewColumnsInfo>
     <MainListViewNothing>Não faz nada</MainListViewNothing>
     <MainListViewVideoGoToPositionAndPause>... para posição do vídeo e pausar</MainListViewVideoGoToPositionAndPause>
@@ -1843,7 +1855,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <RemoveTextForHi>Eliminar texto para Deficientes Auditivos</RemoveTextForHi>
     <MergeLinesShorterThan>Remover quebra em linha menor que...</MergeLinesShorterThan>
     <MusicSymbol>Símbolo musical</MusicSymbol>
-    <MusicSymbolsToReplace>Símbolos musicais para substituir (separados por espaços)</MusicSymbolsToReplace>
+    <MusicSymbolsReplace>Símbolos musicais para substituir (separados por vírgula)</MusicSymbolsReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Corrigir erros frequentes de OCR - também utilizar regras codificadas</FixCommonOcrErrorsUseHardcodedRules>
     <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Corrigir o tempo curto de exibição - permitir o movimento do tempo inicial</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
     <FixCommonErrorsSkipStepOne>Ignorar a fase um (escolher regras de correcção)</FixCommonErrorsSkipStepOne>
@@ -1864,6 +1876,10 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <AdjustStartDownEndUpAndGoToNext>Tecla "Page Down"=definir início, tecla "Page Up"=definir final e ir para o seguinte</AdjustStartDownEndUpAndGoToNext>
     <AdjustSelected100MsForward>Adiantar as linhas seleccionadas 100 ms</AdjustSelected100MsForward>
     <AdjustSelected100MsBack>Atrasar as linhas seleccionadas 100 ms</AdjustSelected100MsBack>
+    <AdjustStartXMsBack>Atrasar o início {0} ms</AdjustStartXMsBack>
+    <AdjustStartXMsForward>Adiantar o início {0} ms</AdjustStartXMsForward>
+    <AdjustEndXMsBack>Atrasar o fim {0} ms</AdjustEndXMsBack>
+    <AdjustEndXMsForward>Adiantar o fim {0} ms</AdjustEndXMsForward>
     <AdjustSetStartTimeKeepDuration>Definir a hora de início, manter a duração</AdjustSetStartTimeKeepDuration>
     <AdjustSetEndAndOffsetTheRest>Defenir o fim, compensar o resto</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Definir o fim, compensar o resto e ir para a próxima</AdjustSetEndAndOffsetTheRestAndGoToNext>
@@ -1941,11 +1957,15 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <ListViewColumnDelete>Coluna, eliminar texto</ListViewColumnDelete>
     <ListViewColumnInsert>Coluna, inserir texto</ListViewColumnInsert>
     <ListViewColumnPaste>Coluna, colar</ListViewColumnPaste>
+    <ListViewColumnTextUp>Coluna, texto para cima</ListViewColumnTextUp>
+    <ListViewColumnTextDown>Coluna, texto para baixo</ListViewColumnTextDown>
     <ListViewFocusWaveform>Destacar a forma de onda/espectrograma</ListViewFocusWaveform>
     <ListViewGoToNextError>Ir para o próximo erro</ListViewGoToNextError>
     <ShowBeamer>Iniciar a legenda em ecrã inteiro</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Mover a última palavra para baixo para a próxima linha de legendas</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Mover a primeira palavra a partir da próxima linha acima das legendas</MainTextBoxMoveFirstWordFromNextUp>
+    <MainTextBoxMoveFirstWordUpCurrent>Mover a primeira palavra da linha de cima (linha actual)</MainTextBoxMoveFirstWordUpCurrent>
+    <MainTextBoxMoveLastWordDownCurrent>Mover a primeira palavra da linha de baixo (linha actual)</MainTextBoxMoveLastWordDownCurrent>
     <MainTextBoxSelectionToLower>Selecção para minúsculas</MainTextBoxSelectionToLower>
     <MainTextBoxSelectionToUpper>Selecção para maiúsculas</MainTextBoxSelectionToUpper>
     <MainTextBoxToggleAutoDuration>Alternar duração automática</MainTextBoxToggleAutoDuration>
@@ -2012,6 +2032,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <EditWholeText>Editar todo o texto</EditWholeText>
     <EditWordOnly>Só editar palavra</EditWordOnly>
     <AddXToNames>Adicionar '{0}' à lista de nomes</AddXToNames>
+	<AddXToUserDictionary>Adicionar '{0}' ao dicionário do utilizador</AddXToUserDictionary>
     <AutoFixNames>Corrigir automaticamente formato de nomes</AutoFixNames>
     <CheckOneLetterWords>Solicitar uma letra para uma palavra desconhecida</CheckOneLetterWords>
     <TreatINQuoteAsING>Considerar a palavra final " in' " como " ing " (apenas em Inglês)</TreatINQuoteAsING>
@@ -2084,6 +2105,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <NumberOfLinesX>Número de linhas da legenda: {0:#,###}</NumberOfLinesX>
     <LengthInFormatXinCharactersY>Número de caracteres como {0}: {1:#,###,##0}</LengthInFormatXinCharactersY>
     <NumberOfCharactersInTextOnly>Número de caracteres só no texto: {0:#,###,##0}</NumberOfCharactersInTextOnly>
+	<TotalDuration>Duração total de todas as linhas: {0}</TotalDuration>
     <TotalCharsPerSecond>Total de caracteres/segundo: {0:0.0} segundos</TotalCharsPerSecond>
     <TotalWords>Total de palavras na legenda: {0}</TotalWords>
     <NumberOfItalicTags>Número de etiquetas itálicas: {0}</NumberOfItalicTags>

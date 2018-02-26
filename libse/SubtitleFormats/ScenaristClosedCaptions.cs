@@ -40,7 +40,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public static List<KeyValuePair<string, string>> LetterDictionary = new List<KeyValuePair<string, string>>
         {
-            new KeyValuePair<string,string>( "20",                  " "),
+            new KeyValuePair<string,string>("20",                  " " ),
             new KeyValuePair<string,string>("a1",                  "!" ),
             new KeyValuePair<string,string>("a2",                  "\""),
             new KeyValuePair<string,string>("23",                  "#" ),
@@ -200,14 +200,32 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             new KeyValuePair<string,string>("923e",                ""  ),
             new KeyValuePair<string,string>("92bf",                ""  ),
             new KeyValuePair<string,string>("1320",                "Ã" ),
+            new KeyValuePair<string,string>("c1 1320",             "Ã" ),
+            new KeyValuePair<string,string>("c180 1320",           "Ã" ),
             new KeyValuePair<string,string>("13a1",                "ã" ),
+            new KeyValuePair<string,string>("80 13a1",             "ã" ),
+            new KeyValuePair<string,string>("6180 13a1",           "ã" ),
             new KeyValuePair<string,string>("13a2",                "Í" ),
+            new KeyValuePair<string,string>("49 13a2",             "Í" ),
+            new KeyValuePair<string,string>("4980 13a2",           "Í" ),
             new KeyValuePair<string,string>("1323",                "Ì" ),
+            new KeyValuePair<string,string>("49 1323",             "Ì" ),
+            new KeyValuePair<string,string>("4980 1323",           "Ì" ),
             new KeyValuePair<string,string>("13a4",                "ì" ),
+            new KeyValuePair<string,string>("e9 13a4",             "ì" ),
+            new KeyValuePair<string,string>("e980 13a4",           "ì" ),
             new KeyValuePair<string,string>("1325",                "Ò" ),
+            new KeyValuePair<string,string>("4f 1325",             "Ò" ),
+            new KeyValuePair<string,string>("4f80 1325",           "Ò" ),
             new KeyValuePair<string,string>("1326",                "ò" ),
+            new KeyValuePair<string,string>("ef 1326",             "ò" ),
+            new KeyValuePair<string,string>("ef80 1326",           "ò" ),
             new KeyValuePair<string,string>("13a7",                "Õ" ),
+            new KeyValuePair<string,string>("4f 13a7",             "Õ" ),
+            new KeyValuePair<string,string>("4f80 13a7",           "Õ" ),
             new KeyValuePair<string,string>("13a8",                "õ" ),
+            new KeyValuePair<string,string>("ef 13a8",             "õ" ),
+            new KeyValuePair<string,string>("ef80 13a8",           "õ" ),
             new KeyValuePair<string,string>("1329",                "{" ),
             new KeyValuePair<string,string>("132a",                "}" ),
             new KeyValuePair<string,string>("13ab",                "\\"),
@@ -216,9 +234,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             new KeyValuePair<string,string>("13ae",                "|" ),
             new KeyValuePair<string,string>("132f",                "~" ),
             new KeyValuePair<string,string>("13b0",                "Ä" ),
+            new KeyValuePair<string,string>("c180 13b0",           "Ä" ),
             new KeyValuePair<string,string>("1331",                "ä" ),
+            new KeyValuePair<string,string>("6180 1331",           "ä" ),
             new KeyValuePair<string,string>("1332",                "Ö" ),
+            new KeyValuePair<string,string>("4f80 1332",           "Ö" ),
             new KeyValuePair<string,string>("13b3",                "ö" ),
+            new KeyValuePair<string,string>("ef80 13b3",           "ö" ),
             new KeyValuePair<string,string>("1334",                ""  ),
             new KeyValuePair<string,string>("13b5",                ""  ),
             new KeyValuePair<string,string>("13b6",                ""  ),
@@ -469,11 +491,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return sb.ToString().Trim();
         }
 
-        private static bool IsAllOkay(string[] lines)
+        private static bool IsAllOkay(List<string> lines)
         {
-            if (lines.Length > 4)
+            if (lines.Count > 4)
                 return false;
-            for (int i = 0; i < lines.Length; i++)
+            for (int i = 0; i < lines.Count; i++)
             {
                 if (lines[i].Length > 32)
                     return false;
@@ -567,9 +589,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         private static string ToSccText(string text, string language)
         {
             text = FixMax4LinesAndMax32CharsPerLine(text, language);
-            //text = text.Replace("ã", "aã");
-            //text = text.Replace("õ", "oõ");
-
             var lines = text.Trim().SplitToLines();
             int italic = 0;
             var sb = new StringBuilder();
@@ -579,7 +598,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 text = line.Trim();
                 if (count > 0)
                     sb.Append(' ');
-                sb.Append(GetCenterCodes(text, count, lines.Length));
+                sb.Append(GetCenterCodes(text, count, lines.Count));
                 count++;
                 int i = 0;
                 string code = string.Empty;
@@ -1696,24 +1715,16 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 k++;
             }
             string res = sb.ToString().Replace("<i></i>", string.Empty).Replace("</i><i>", string.Empty);
-            //res = res.Replace("♪♪", "♪");
             res = res.Replace("  ", " ").Replace("  ", " ").Replace(Environment.NewLine + " ", Environment.NewLine).Trim();
             if (res.Contains("<i>") && !res.Contains("</i>"))
                 res += "</i>";
-            //res = res.Replace("aã", "ã");
-            //res = res.Replace("oõ", "õ");
             return HtmlUtil.FixInvalidItalicTags(res);
         }
 
         private static TimeCode ParseTimeCode(string start)
         {
             string[] arr = start.Split(new[] { ':', ';', ',' }, StringSplitOptions.RemoveEmptyEntries);
-
-            int milliseconds = (int)Math.Round(1000.0 / Configuration.Settings.General.CurrentFrameRate * int.Parse(arr[3]));
-            if (milliseconds > 999)
-                milliseconds = 999;
-
-            return new TimeCode(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]), milliseconds);
+            return new TimeCode(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]), FramesToMillisecondsMax999(int.Parse(arr[3])));
         }
 
     }

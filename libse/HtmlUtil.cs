@@ -27,6 +27,9 @@ namespace Nikse.SubtitleEdit.Core
         /// <returns>A new string without the specified opening and closing tags.</returns>
         public static string RemoveOpenCloseTags(string source, params string[] tags)
         {
+            if (string.IsNullOrEmpty(source) || source.IndexOf('<') < 0)
+                return source;
+
             // This pattern matches these tag formats:
             // <tag*>
             // < tag*>
@@ -367,7 +370,78 @@ namespace Nikse.SubtitleEdit.Core
             if (s.Contains("< "))
                 s = FixInvalidItalicTags(s);
 
-            return RemoveOpenCloseTags(s, TagItalic, TagBold, TagUnderline, TagParagraph, TagFont, TagCyrillicI);
+            return RemoveCommonHtmlTags(s);
+        }
+
+        /// <summary>
+        /// Optimized method to remove common html tags, like <i>, <b>, <u>, and <font>
+        /// </summary>
+        /// <param name="s">Text to remove html tags from</param>
+        /// <returns>Text stripped from common html tags</returns>
+        private static string RemoveCommonHtmlTags(string s)
+        {
+            char[] array = new char[s.Length];
+            int arrayIndex = 0;
+            bool inside = false;
+
+            for (int i = 0; i < s.Length; i++)
+            {
+                char ch = s[i];
+                if (ch == '<' && i < s.Length - 2)
+                {
+                    var next = s[i + 1];
+                    var nextNext = s[i + 2];
+                    if (nextNext == '>' &&
+                        (next == 'i' || // <i>
+                         next == 'b' || // <b>
+                         next == 'u')) // <u>
+                    {
+                        inside = true;
+                        continue;
+                    }
+                    if (next == '/' && i < s.Length - 3)
+                    {
+                        var nextNextNext = s[i + 3];
+                        if (nextNextNext == '>' &&
+                            (nextNext == 'i' || // </i>
+                             nextNext == 'b' || // </b>
+                             nextNext == 'u')) // </u>
+                        {
+                            inside = true;
+                            continue;
+                        }
+                    }
+                    if (nextNext == '/' && i < s.Length - 3)
+                    { // some bad end tags sometimes seen
+                        var nextNextNext = s[i + 3];
+                        if (nextNextNext == '>' &&
+                            (next == 'i' || // <i/>
+                             next == 'b' || // <b/>
+                             next == 'u')) // <u/>
+                        {
+                            inside = true;
+                            continue;
+                        }
+                    }
+                    if (next == 'f' && s.Substring(i).StartsWith("<font", StringComparison.OrdinalIgnoreCase) || // <font
+                        next == '/' && nextNext == 'f' && s.Substring(i).StartsWith("</font>", StringComparison.OrdinalIgnoreCase))  // </font>
+                    {
+                        inside = true;
+                        continue;
+                    }
+                }
+                if (inside && ch == '>')
+                {
+                    inside = false;
+                    continue;
+                }
+                if (!inside)
+                {
+                    array[arrayIndex] = ch;
+                    arrayIndex++;
+                }
+            }
+            return new string(array, 0, arrayIndex);
         }
 
         public static bool IsUrl(string text)
@@ -507,7 +581,7 @@ namespace Nikse.SubtitleEdit.Core
                 if (italicBeginTagCount == 2 && italicEndTagCount == 1)
                 {
                     var lines = text.SplitToLines();
-                    if (lines.Length == 2 && lines[0].StartsWith(beginTag, StringComparison.Ordinal) && lines[0].EndsWith(endTag, StringComparison.Ordinal) &&
+                    if (lines.Count == 2 && lines[0].StartsWith(beginTag, StringComparison.Ordinal) && lines[0].EndsWith(endTag, StringComparison.Ordinal) &&
                         lines[1].StartsWith(beginTag, StringComparison.Ordinal))
                     {
                         text = text.TrimEnd() + endTag;

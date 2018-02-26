@@ -156,6 +156,28 @@ namespace Test
         }
 
         [TestMethod]
+        public void FixShortLinesWithDash()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "Any progress" + Environment.NewLine + "on the e-mail?");
+                new FixShortLines().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual(_subtitle.Paragraphs[0].Text, "Any progress on the e-mail?");
+            }
+        }
+
+        [TestMethod]
+        public void FixShortLinesWithDash2()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "- Any progress" + Environment.NewLine + "- None.");
+                new FixShortLines().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual(_subtitle.Paragraphs[0].Text, "- Any progress" + Environment.NewLine + "- None.");
+            }
+        }
+
+        [TestMethod]
         public void FixShortLinesDialog()
         {
             using (var target = GetFixCommonErrorsLib())
@@ -987,6 +1009,28 @@ namespace Test
         }
 
         [TestMethod]
+        public void FixUnneededSpaces7()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "<i>\"pescado. \"</i>");
+                new FixUnneededSpaces().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual(_subtitle.Paragraphs[0].Text, "<i>\"pescado.\"</i>");
+            }
+        }
+
+        [TestMethod]
+        public void FixUnneededSpaces8()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "<i>\" pescado.\"</i>");
+                new FixUnneededSpaces().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual(_subtitle.Paragraphs[0].Text, "<i>\"pescado.\"</i>");
+            }
+        }
+
+        [TestMethod]
         public void FixUnneededSpacesItalic1()
         {
             using (var target = GetFixCommonErrorsLib())
@@ -1581,7 +1625,7 @@ namespace Test
             var lines3 = input3.SplitToLines();
             var lines4 = input4.SplitToLines();
 
-            for (int i = 0; i < lines1.Length; i++)
+            for (int i = 0; i < lines1.Count; i++)
             {
                 lines1[i] = Helper.FixDoubleGreaterThanHelper(lines1[i]);
                 lines2[i] = Helper.FixDoubleGreaterThanHelper(lines2[i]);
@@ -1623,6 +1667,39 @@ namespace Test
                 InitializeFixCommonErrorsLine(target, "- I'll ring her." + Environment.NewLine + "- ...In a lot of trouble.");
                 new FixUppercaseIInsideWords().Fix(_subtitle, new EmptyFixCallback());
                 Assert.AreEqual(_subtitle.Paragraphs[0].Text, "- I'll ring her." + Environment.NewLine + "- ...In a lot of trouble.");
+            }
+        }
+
+        [TestMethod]
+        public void FixUppercaseIInsideWords3()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "<i>FIight DU 720 from StockhoIm...</i>");
+                new FixUppercaseIInsideWords().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual(_subtitle.Paragraphs[0].Text, "<i>Flight DU 720 from Stockholm...</i>");
+            }
+        }
+
+        [TestMethod]
+        public void FixUppercaseIInsideWords4()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "<i>FIight DU 720 from BraziI...</i>");
+                new FixUppercaseIInsideWords().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual(_subtitle.Paragraphs[0].Text, "<i>Flight DU 720 from Brazil...</i>");
+            }
+        }
+
+        [TestMethod]
+        public void FixUppercaseIInsideWords5()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "<i>FIight DU 720 from McIvan BraziI...</i>");
+                new FixUppercaseIInsideWords().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual(_subtitle.Paragraphs[0].Text, "<i>Flight DU 720 from McIvan Brazil...</i>");
             }
         }
 

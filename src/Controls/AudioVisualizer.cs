@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Controls
 {
-    public partial class AudioVisualizer : UserControl
+    public sealed partial class AudioVisualizer : UserControl
     {
         public enum MouseDownParagraphType
         {
@@ -1935,7 +1935,9 @@ namespace Nikse.SubtitleEdit.Controls
             }
             catch
             {
+                // ignored
             }
+
             return -1;
         }
 

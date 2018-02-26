@@ -15,14 +15,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             var text = GetSamiFromAvDicPlayerText(lines);
             var subtitle = new Subtitle();
-            base.LoadSubtitle(subtitle, text.SplitToLines().ToList(), fileName);
+            base.LoadSubtitle(subtitle, text.SplitToLines(), fileName);
             return subtitle.Paragraphs.Count > _errorCount;
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             var text = GetSamiFromAvDicPlayerText(lines);
-            base.LoadSubtitle(subtitle, text.SplitToLines().ToList(), fileName);
+            base.LoadSubtitle(subtitle, text.SplitToLines(), fileName);
         }
 
         public override string ToText(Subtitle subtitle, string title)

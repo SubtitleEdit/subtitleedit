@@ -1,6 +1,6 @@
 ﻿namespace Nikse.SubtitleEdit.Controls
 {
-    partial class TimeUpDown
+    sealed partial class TimeUpDown
     {
         /// <summary>
         /// Required designer variable.
@@ -43,6 +43,7 @@
             this.maskedTextBox1.Size = new System.Drawing.Size(71, 13);
             this.maskedTextBox1.TabIndex = 21;
             this.maskedTextBox1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MaskedTextBox1KeyDown);
+            this.maskedTextBox1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.maskedTextBox1_MouseDown);
             // 
             // numericUpDown1
             // 
@@ -61,7 +62,7 @@
             this.Controls.Add(this.maskedTextBox1);
             this.Controls.Add(this.numericUpDown1);
             this.Name = "TimeUpDown";
-            this.Size = new System.Drawing.Size(94, 24);
+            this.Size = new System.Drawing.Size(96, 24);
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

@@ -64,7 +64,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                             if (text.Contains(Environment.NewLine))
                             {
                                 var arr = text.SplitToLines();
-                                if (arr.Length == 2)
+                                if (arr.Count == 2)
                                 {
                                     var minMsBtwnLnBy2 = Configuration.Settings.General.MinimumMillisecondsBetweenLines / 2;
                                     int spacing1 = minMsBtwnLnBy2;

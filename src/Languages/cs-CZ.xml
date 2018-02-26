@@ -2,7 +2,7 @@
 <Language Name="Čeština">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.5.4</Version>
+    <Version>3.5.5</Version>
     <TranslatedBy>Překlad do češtiny: Trottel</TranslatedBy>
     <CultureName>cs-CZ</CultureName>
     <HelpFile />
@@ -139,7 +139,6 @@ Poznámka: Zkontrolujte volné místo na disku.</WaveFileMalformed>
     <SetAsPercent>Nastavit jako procento trvání</SetAsPercent>
     <Note>Poznámka: Čas zobrazení se nepřekryje se začátkem dalšího textu</Note>
     <PleaseSelectAValueFromTheDropDownList>Vyberte hodnotu z rozbalovacího seznamu</PleaseSelectAValueFromTheDropDownList>
-    <PleaseChoose> - Vyberte - </PleaseChoose>
   </AdjustDisplayDuration>
   <ApplyDurationLimits>
     <Title>Použít limity trvání</Title>
@@ -1434,7 +1433,6 @@ Pokud jste upravili tento soubor v Subtitle Edit, možná budete moci najít zá
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Vybrat titulky ze souboru Matroska</Title>
-    <PleaseChoose>Nalezeny více než jedny titulky - vyberte</PleaseChoose>
     <TrackXLanguageYTypeZ>Stopa {0} - jazyk: {1} - typ: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MeasurementConverter>

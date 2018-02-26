@@ -15,13 +15,17 @@ namespace Nikse.SubtitleEdit.Forms
     public sealed partial class ImportText : Form
     {
         private Subtitle _subtitle;
+        private Subtitle _subtitleInput;
         private string _videoFileName;
         private readonly Timer _refreshTimer = new Timer();
+        private readonly bool _exit;
+        private int _startFromNumber = 1;
 
         public Subtitle FixedSubtitle => _subtitle;
+        public SubtitleFormat Format { get; set; }
         public string VideoFileName => _videoFileName;
 
-        public ImportText(string fileName = null)
+        public ImportText(string fileName = null, Form parentForm = null)
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
@@ -60,6 +64,7 @@ namespace Nikse.SubtitleEdit.Forms
             groupBoxTimeCodes.Text = Configuration.Settings.Language.ImportText.TimeCodes;
             groupBoxImportResult.Text = Configuration.Settings.Language.General.Preview;
             clearToolStripMenuItem.Text = Configuration.Settings.Language.DvdSubRip.Clear;
+            startNumberingFromToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.Tools.StartNumberingFrom;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             SubtitleListview1.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
@@ -102,7 +107,8 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (fileName != null && File.Exists(fileName))
             {
-                LoadSingleFile(fileName);
+                if (!LoadSingleFile(fileName, parentForm))
+                    _exit = true;
             }
         }
 
@@ -119,11 +125,12 @@ namespace Nikse.SubtitleEdit.Forms
             if (checkBoxMultipleFiles.Visible && checkBoxMultipleFiles.Checked)
                 openFileDialog1.Filter = Configuration.Settings.Language.ImportText.TextFiles + "|*.txt|" + Configuration.Settings.Language.General.AllFiles + "|*.*";
             else
-                openFileDialog1.Filter = Configuration.Settings.Language.ImportText.TextFiles + "|*.txt;*.tx3g|Adobe Story|*.astx|" + Configuration.Settings.Language.General.AllFiles + "|*.*";
+                openFileDialog1.Filter = Configuration.Settings.Language.ImportText.TextFiles + "|*.txt;*.tx3g;*.astx;*" + new FinalDraftTemplate2().Extension + "|Adobe Story|*.astx|Final Draft Template|*" + new FinalDraftTemplate2().Extension + "|" + Configuration.Settings.Language.General.AllFiles + "|*.*";
             openFileDialog1.FileName = string.Empty;
             openFileDialog1.Multiselect = checkBoxMultipleFiles.Visible && checkBoxMultipleFiles.Checked;
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
+                _startFromNumber = 1;
                 if (checkBoxMultipleFiles.Visible && checkBoxMultipleFiles.Checked)
                 {
                     foreach (string fileName in openFileDialog1.FileNames)
@@ -131,25 +138,43 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
-                    LoadSingleFile(openFileDialog1.FileName);
+                    LoadSingleFile(openFileDialog1.FileName, this);
                 }
                 GeneratePreview();
             }
         }
 
-        private void LoadSingleFile(string fileName)
+        private bool LoadSingleFile(string fileName, Form parentForm)
         {
+            groupBoxSplitting.Enabled = true;
+            textBoxText.Enabled = true;
+            Format = null;
             string ext = string.Empty;
             var extension = Path.GetExtension(fileName);
             if (extension != null)
                 ext = extension.ToLowerInvariant();
 
+            var fd = new FinalDraftTemplate2();
+            var list = new List<string>(FileUtil.ReadAllLinesShared(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName)));
+            bool isFinalDraft = fd.IsMine(list, fileName);
+
             if (ext == ".astx")
+            {
                 LoadAdobeStory(fileName);
+            }
+            else if (isFinalDraft)
+            {
+                return LoadFinalDraftTemplate(fileName, parentForm ?? this);
+            }
             else if (ext == ".tx3g" && new Tx3GTextOnly().IsMine(null, fileName))
+            {
                 LoadTx3G(fileName);
+            }
             else
+            {
                 LoadTextFile(fileName);
+            }
+            return true;
         }
 
         private void GeneratePreview()
@@ -170,20 +195,34 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void GeneratePreviewReal()
         {
-            _subtitle = new Subtitle();
-            if (checkBoxMultipleFiles.Visible && checkBoxMultipleFiles.Checked)
-                ImportMultipleFiles(listViewInputFiles.Items);
-            else if (radioButtonLineMode.Checked)
-                ImportLineMode(textBoxText.Lines);
-            else if (radioButtonAutoSplit.Checked)
-                ImportAutoSplit(textBoxText.Lines);
+            if (Format == null || Format.GetType() != typeof(CsvNuendo))
+            {
+                _subtitle = new Subtitle();
+                if (checkBoxMultipleFiles.Visible && checkBoxMultipleFiles.Checked)
+                    ImportMultipleFiles(listViewInputFiles.Items);
+                else if (radioButtonLineMode.Checked)
+                    ImportLineMode(textBoxText.Lines);
+                else if (radioButtonAutoSplit.Checked)
+                    ImportAutoSplit(textBoxText.Lines);
+                else
+                    ImportSplitAtBlankLine(textBoxText.Lines);
+            }
             else
-                ImportSplitAtBlankLine(textBoxText.Lines);
+            {
+                _subtitle = new Subtitle(_subtitleInput);
+                if (checkBoxAutoBreak.Enabled && checkBoxAutoBreak.Checked)
+                {
+                    foreach (Paragraph p in _subtitle.Paragraphs)
+                    {
+                        p.Text = Utilities.AutoBreakLine(p.Text);
+                    }
+                }
+            }
 
             if (checkBoxMergeShortLines.Checked)
                 MergeLinesWithContinuation();
 
-            _subtitle.Renumber();
+            _subtitle.Renumber(_startFromNumber);
             if (checkBoxGenerateTimeCodes.Checked)
             {
                 FixDurations();
@@ -392,7 +431,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (input.Length < Configuration.Settings.General.SubtitleLineMaximumLength * 3 && input.Length > Configuration.Settings.General.SubtitleLineMaximumLength * 1.5)
             {
                 var breaked = Utilities.AutoBreakLine(input).SplitToLines();
-                if (breaked.Length == 2 && (breaked[0].Length > Configuration.Settings.General.SubtitleLineMaximumLength || breaked[1].Length > Configuration.Settings.General.SubtitleLineMaximumLength))
+                if (breaked.Count == 2 && (breaked[0].Length > Configuration.Settings.General.SubtitleLineMaximumLength || breaked[1].Length > Configuration.Settings.General.SubtitleLineMaximumLength))
                 {
                     var first = new StringBuilder();
                     var second = new StringBuilder();
@@ -447,8 +486,8 @@ namespace Nikse.SubtitleEdit.Forms
         private void SplitSingle(StringBuilder sb)
         {
             string t = sb.ToString().Trim();
-            string[] tarr = t.SplitToLines();
-            if (checkBoxMergeShortLines.Checked == false && tarr.Length == 3 &&
+            var tarr = t.SplitToLines();
+            if (checkBoxMergeShortLines.Checked == false && tarr.Count == 3 &&
                 tarr[0].Length < Configuration.Settings.General.SubtitleLineMaximumLength &&
                 tarr[1].Length < Configuration.Settings.General.SubtitleLineMaximumLength &&
                 tarr[2].Length < Configuration.Settings.General.SubtitleLineMaximumLength)
@@ -456,14 +495,14 @@ namespace Nikse.SubtitleEdit.Forms
                 _subtitle.Paragraphs.Add(new Paragraph { Text = tarr[0] + Environment.NewLine + tarr[1] });
                 return;
             }
-            if (checkBoxMergeShortLines.Checked == false && tarr.Length == 2 &&
+            if (checkBoxMergeShortLines.Checked == false && tarr.Count == 2 &&
                 tarr[0].Length < Configuration.Settings.General.SubtitleLineMaximumLength &&
                 tarr[1].Length < Configuration.Settings.General.SubtitleLineMaximumLength)
             {
                 _subtitle.Paragraphs.Add(new Paragraph { Text = tarr[0] + Environment.NewLine + tarr[1] });
                 return;
             }
-            if (checkBoxMergeShortLines.Checked == false && tarr.Length == 1 && tarr[0].Length < Configuration.Settings.General.SubtitleLineMaximumLength)
+            if (checkBoxMergeShortLines.Checked == false && tarr.Count == 1 && tarr[0].Length < Configuration.Settings.General.SubtitleLineMaximumLength)
             {
                 _subtitle.Paragraphs.Add(new Paragraph { Text = tarr[0].Trim() });
                 return;
@@ -573,8 +612,8 @@ namespace Nikse.SubtitleEdit.Forms
         private static bool ContainsLetters(string line)
         {
             if (string.IsNullOrWhiteSpace(line.Replace("0", string.Empty).Replace("1", string.Empty).Replace("2", string.Empty).Replace("3", string.Empty).Replace("4", string.Empty).Replace("5", string.Empty).Replace("6", string.Empty)
-                .Replace("7", string.Empty).Replace("8", string.Empty).Replace("9", string.Empty).Replace(":", string.Empty).Replace(".", string.Empty).Replace(",", string.Empty).
-                Replace("-", string.Empty).Replace(">", string.Empty).Replace("/", string.Empty)))
+                .Replace("7", string.Empty).Replace("8", string.Empty).Replace("9", string.Empty).RemoveChar(':').RemoveChar('.').RemoveChar(',').
+                RemoveChar('-').RemoveChar('>').RemoveChar('/')))
                 return false;
 
             const string expectedChars = "\r\n\t .?\0";
@@ -669,8 +708,8 @@ namespace Nikse.SubtitleEdit.Forms
             try
             {
                 Encoding encoding = LanguageAutoDetect.GetEncodingFromFile(fileName);
-                var text = File.ReadAllText(fileName, encoding);
-                if (fileName.EndsWith(".htm", StringComparison.OrdinalIgnoreCase) || fileName.EndsWith(".htm", StringComparison.OrdinalIgnoreCase))
+                var text = FileUtil.ReadAllTextShared(fileName, encoding);
+                if (fileName.EndsWith(".html", StringComparison.OrdinalIgnoreCase) || fileName.EndsWith(".htm", StringComparison.OrdinalIgnoreCase))
                     text = HtmlToPlainText(text);
                 return text;
             }
@@ -719,14 +758,19 @@ namespace Nikse.SubtitleEdit.Forms
                 var sb = new StringBuilder();
                 var doc = new XmlDocument();
                 doc.Load(fileName);
-                foreach (XmlNode node in doc.DocumentElement.SelectNodes("//paragraph[@element='Dialog']")) // <paragraph objID="1:28" element="Dialog">
+                var nodes = doc.DocumentElement?.SelectNodes("//paragraph[@element='Dialog']");
+                if (nodes != null)
                 {
-                    XmlNode textRun = node.SelectSingleNode("textRun"); // <textRun objID="1:259">Yeah...I suppose</textRun>
-                    if (textRun != null)
-                        sb.AppendLine(textRun.InnerText);
+                    foreach (XmlNode node in nodes) // <paragraph objID="1:28" element="Dialog">
+                    {
+                        XmlNode textRun = node.SelectSingleNode("textRun"); // <textRun objID="1:259">Yeah...I suppose</textRun>
+                        if (textRun != null)
+                            sb.AppendLine(textRun.InnerText);
+                    }
                 }
+
                 textBoxText.Text = sb.ToString();
-                SetVideoFileName(fileName);
+                _videoFileName = null;
                 Text = Configuration.Settings.Language.ImportText.Title + " - " + fileName;
             }
             catch (Exception ex)
@@ -738,32 +782,75 @@ namespace Nikse.SubtitleEdit.Forms
             GeneratePreview();
         }
 
+        private bool LoadFinalDraftTemplate(string fileName, Form parentForm)
+        {
+            try
+            {
+                var fd = new FinalDraftTemplate2();
+                var sub = new Subtitle();
+                var lines = Encoding.UTF8.GetString(FileUtil.ReadAllBytesShared(fileName)).SplitToLines();
+                var availableParagraphTypes = fd.GetParagraphTypes(lines);
+                using (var form = new ImportFinalDraft(availableParagraphTypes))
+                {
+                    if (form.ShowDialog(parentForm) == DialogResult.OK)
+                    {
+                        fd.ActiveParagraphTypes = form.ChosenParagraphTypes;
+                        fd.LoadSubtitle(sub, lines, fileName);
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+
+                textBoxText.Text = sub.ToText(fd);
+                _videoFileName = null;
+                Text = Configuration.Settings.Language.ImportText.Title + " - " + fileName;
+                _subtitleInput = sub;
+                Format = new CsvNuendo();
+                groupBoxSplitting.Enabled = false;
+                textBoxText.Enabled = false;
+                if (_subtitleInput.Paragraphs.Any(p => !string.IsNullOrEmpty(p.Actor)))
+                    SubtitleListview1.ShowActorColumn(Configuration.Settings.Language.General.Character);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            radioButtonLineMode.Checked = true;
+            checkBoxMergeShortLines.Checked = false;
+            GeneratePreview();
+            return true;
+        }
+
         private void SetVideoFileName(string fileName)
         {
+            var videoExtensions = new[] { ".mkv", ".mp4", ".avi", ".mov", ".wmv", ".flv", ".mpg" };
             _videoFileName = fileName.Substring(0, fileName.Length - Path.GetExtension(fileName).Length);
             if (_videoFileName.EndsWith(".en", StringComparison.Ordinal))
                 _videoFileName = _videoFileName.Remove(_videoFileName.Length - 3);
-            if (File.Exists(_videoFileName + ".avi"))
+            foreach (var ext in videoExtensions)
             {
-                _videoFileName += ".avi";
-            }
-            else if (File.Exists(_videoFileName + ".mkv"))
-            {
-                _videoFileName += ".mkv";
-            }
-            else
-            {
-                var dir = Path.GetDirectoryName(fileName);
-                if (dir != null)
+                if (File.Exists(_videoFileName + ext))
                 {
-                    var files = Directory.GetFiles(dir, Path.GetFileNameWithoutExtension(_videoFileName) + "*.avi");
-                    if (files.Length == 0)
-                        files = Directory.GetFiles(dir, "*.avi");
-                    if (files.Length == 0)
-                        files = Directory.GetFiles(dir, "*.mkv");
-                    if (files.Length > 0)
-                        _videoFileName = files[0];
+                    _videoFileName += ext;
+                    return;
                 }
+            }
+
+            var dir = Path.GetDirectoryName(fileName);
+            if (dir != null)
+            {
+                foreach (var ext in videoExtensions)
+                {
+                    var files = Directory.GetFiles(dir, Path.GetFileNameWithoutExtension(_videoFileName) + "*" + ext);
+                    if (files.Length > 0)
+                    {
+                        _videoFileName = files[0];
+                        return;
+                    }
+                }
+                _videoFileName = null;
             }
         }
 
@@ -841,6 +928,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void checkBoxMultipleFiles_CheckedChanged(object sender, EventArgs e)
         {
+            Format = null;
+            textBoxText.Enabled = true;
+            groupBoxSplitting.Enabled = true;
             if (checkBoxMultipleFiles.Checked)
             {
                 listViewInputFiles.Visible = true;
@@ -911,6 +1001,21 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (textBoxText.Visible && textBoxText.Text.Length > 20)
                 buttonOK.Focus();
+            if (_exit)
+                DialogResult = DialogResult.Cancel;
+        }
+
+        private void startNumberingFromToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (var startNumberingFrom = new StartNumberingFrom())
+            {
+                if (startNumberingFrom.ShowDialog(this) == DialogResult.OK)
+                {
+                    _startFromNumber = startNumberingFrom.StartFromNumber;
+                    _subtitle.Renumber(startNumberingFrom.StartFromNumber);
+                    SubtitleListview1.Fill(_subtitle);
+                }
+            }
         }
     }
 }

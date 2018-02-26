@@ -53,6 +53,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.subtitleListView2 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.subtitleListView1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
+            this.checkBoxIgnoreFormatting = new System.Windows.Forms.CheckBox();
             this.contextMenuStrip1.SuspendLayout();
             this.contextMenuStrip2.SuspendLayout();
             this.SuspendLayout();
@@ -234,7 +235,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.checkBoxIgnoreLineBreaks.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.checkBoxIgnoreLineBreaks.AutoSize = true;
-            this.checkBoxIgnoreLineBreaks.Location = new System.Drawing.Point(330, 570);
+            this.checkBoxIgnoreLineBreaks.Location = new System.Drawing.Point(582, 534);
             this.checkBoxIgnoreLineBreaks.Name = "checkBoxIgnoreLineBreaks";
             this.checkBoxIgnoreLineBreaks.Size = new System.Drawing.Size(112, 17);
             this.checkBoxIgnoreLineBreaks.TabIndex = 12;
@@ -249,11 +250,13 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // subtitleListView2
             // 
+            this.subtitleListView2.AllowColumnReorder = true;
             this.subtitleListView2.AllowDrop = true;
             this.subtitleListView2.FirstVisibleIndex = -1;
             this.subtitleListView2.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.subtitleListView2.FullRowSelect = true;
             this.subtitleListView2.GridLines = true;
+            this.subtitleListView2.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.subtitleListView2.HideSelection = false;
             this.subtitleListView2.Location = new System.Drawing.Point(490, 56);
             this.subtitleListView2.Name = "subtitleListView2";
@@ -272,11 +275,13 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // subtitleListView1
             // 
+            this.subtitleListView1.AllowColumnReorder = true;
             this.subtitleListView1.AllowDrop = true;
             this.subtitleListView1.FirstVisibleIndex = -1;
             this.subtitleListView1.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.subtitleListView1.FullRowSelect = true;
             this.subtitleListView1.GridLines = true;
+            this.subtitleListView1.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.subtitleListView1.HideSelection = false;
             this.subtitleListView1.Location = new System.Drawing.Point(8, 56);
             this.subtitleListView1.Name = "subtitleListView1";
@@ -293,11 +298,24 @@ namespace Nikse.SubtitleEdit.Forms
             this.subtitleListView1.DragDrop += new System.Windows.Forms.DragEventHandler(this.subtitleListView1_DragDrop);
             this.subtitleListView1.DragEnter += new System.Windows.Forms.DragEventHandler(this.subtitleListView1_DragEnter);
             // 
+            // checkBoxIgnoreFormatting
+            // 
+            this.checkBoxIgnoreFormatting.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.checkBoxIgnoreFormatting.AutoSize = true;
+            this.checkBoxIgnoreFormatting.Location = new System.Drawing.Point(582, 552);
+            this.checkBoxIgnoreFormatting.Name = "checkBoxIgnoreFormatting";
+            this.checkBoxIgnoreFormatting.Size = new System.Drawing.Size(111, 17);
+            this.checkBoxIgnoreFormatting.TabIndex = 18;
+            this.checkBoxIgnoreFormatting.Text = "Ignore formatting";
+            this.checkBoxIgnoreFormatting.UseVisualStyleBackColor = true;
+            this.checkBoxIgnoreFormatting.CheckedChanged += new System.EventHandler(this.checkBoxIgnoreFormatting_CheckedChanged);
+            // 
             // Compare
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(974, 591);
+            this.Controls.Add(this.checkBoxIgnoreFormatting);
             this.Controls.Add(this.checkBoxIgnoreLineBreaks);
             this.Controls.Add(this.checkBoxOnlyListDifferencesInText);
             this.Controls.Add(this.checkBoxShowOnlyDifferences);
@@ -321,6 +339,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Compare subtitles";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Compare_FormClosing);
+            this.Shown += new System.EventHandler(this.Compare_Shown);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Compare_KeyDown);
             this.Resize += new System.EventHandler(this.Compare_Resize);
             this.contextMenuStrip1.ResumeLayout(false);
@@ -354,5 +373,6 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ToolStripMenuItem copyTextToolStripMenuItem;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip2;
         private System.Windows.Forms.ToolStripMenuItem copyTextToolStripMenuItem1;
+        private System.Windows.Forms.CheckBox checkBoxIgnoreFormatting;
     }
 }

@@ -86,8 +86,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             pictureBoxInspectItem.Image = img;
             if (img != null)
             {
-                pictureBoxInspectItem.Width = img.Width;
-                pictureBoxInspectItem.Height = img.Height;
+                pictureBoxInspectItem.Width = img.Width + 2;
+                pictureBoxInspectItem.Height = img.Height + 2;
             }
 
             pictureBoxCompareBitmap.Image = null;
@@ -324,8 +324,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             if (listBoxInspectItems.SelectedIndex < 0)
                 return;
 
-            if (listBoxInspectItems.Items[listBoxInspectItems.SelectedIndex].ToString() == textBoxText.Text)
-            {
+            if (listBoxInspectItems.Items[listBoxInspectItems.SelectedIndex].ToString().Replace(" (italic)", string.Empty)  == textBoxText.Text)
+            { 
+                // text not changed
                 textBoxText.SelectAll();
                 textBoxText.Focus();
                 return;

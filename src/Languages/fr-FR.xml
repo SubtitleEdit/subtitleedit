@@ -2,7 +2,7 @@
 <Language Name="français">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.5.4</Version>
+    <Version>3.5.5</Version>
     <TranslatedBy>Traduction française par JM GBT</TranslatedBy>
     <CultureName>fr-FR</CultureName>
     <HelpFile />
@@ -143,7 +143,6 @@ Note: Vérifiez l'espace disque disponible.</WaveFileMalformed>
     <SetAsPercent>Déterminer en % de la durée</SetAsPercent>
     <Note>Note: Les ajustements n'altéreront pas les points de départ</Note>
     <PleaseSelectAValueFromTheDropDownList>Veuillez sélectionner une valeur dans la liste déroulante</PleaseSelectAValueFromTheDropDownList>
-    <PleaseChoose> - Veuillez choisir - </PleaseChoose>
   </AdjustDisplayDuration>
   <ApplyDurationLimits>
     <Title>Appliquer des limites de durée</Title>
@@ -277,8 +276,8 @@ Note: Vérifiez l'espace disque disponible.</WaveFileMalformed>
     <NextDifference>Différence &amp;suivante</NextDifference>
     <SubtitlesNotAlike>Les sous-titres ne sont pas similaires</SubtitlesNotAlike>
     <XNumberOfDifference>Nombre de différences: {0}</XNumberOfDifference>
-    <XNumberOfDifferenceAndPercentChanged>Nombre de différences: {0} ({1}% des mots modifiés)</XNumberOfDifferenceAndPercentChanged>
-    <XNumberOfDifferenceAndPercentLettersChanged>Nombre de différences: {0} ({1}% de lettres modifié)</XNumberOfDifferenceAndPercentLettersChanged>
+    <XNumberOfDifferenceAndPercentChanged>Nombre de différences: {0} ({1:0.##}% des mots modifiés)</XNumberOfDifferenceAndPercentChanged>
+    <XNumberOfDifferenceAndPercentLettersChanged>Nombre de différences: {0} ({1:0.##}% de lettres modifié)</XNumberOfDifferenceAndPercentLettersChanged>
     <ShowOnlyDifferences>Cacher les lignes identiques</ShowOnlyDifferences>
     <IgnoreLineBreaks>Ignorer les divisions de ligne</IgnoreLineBreaks>
     <OnlyLookForDifferencesInText>Ne considérer que les différences dans le texte</OnlyLookForDifferencesInText>
@@ -1474,7 +1473,6 @@ Si vous avez modifié ce fichier avec Subtitle Edit vous pourriez trouver une sa
   <MatroskaSubtitleChooser>
     <Title>Choisir les sous-titres du fichier Matroska</Title>
     <TitleMp4>Choisir les sous-titres du fichier MP4</TitleMp4>
-    <PleaseChoose>Plus d'un sous-titre trouvé - choisir svp</PleaseChoose>
     <TrackXLanguageYTypeZ>Piste {0} - langue: {1} - type: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MeasurementConverter>

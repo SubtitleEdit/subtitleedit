@@ -52,7 +52,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     string s = line.Substring(0, match.Length);
                     s = s.Replace(" - ", ":");
-                    s = s.Replace(" ", string.Empty);
+                    s = s.RemoveChar(' ');
                     string[] parts = s.Split(':');
                     if (parts.Length == 8)
                     {

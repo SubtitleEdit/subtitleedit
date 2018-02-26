@@ -2,7 +2,7 @@
 <Language Name="中文(繁體)">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.5.4</Version>
+    <Version>3.5.5</Version>
     <TranslatedBy>翻譯: BAWAN | 風逸蘭 | Jackie Lam</TranslatedBy>
     <CultureName>zh-TW</CultureName>
     <HelpFile />
@@ -131,7 +131,6 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
     <SetAsPercent>設定為持續時間百分比</SetAsPercent>
     <Note>說明: 顯示時間不會重疊下一個文字的起始時間</Note>
     <PleaseSelectAValueFromTheDropDownList>請從下拉清單中選擇一個數值</PleaseSelectAValueFromTheDropDownList>
-    <PleaseChoose>- 請選擇 -</PleaseChoose>
   </AdjustDisplayDuration>
   <ApplyDurationLimits>
     <Title>套用持續時間限制</Title>
@@ -255,8 +254,8 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
     <NextDifference>下一個差異處(&amp;N)</NextDifference>
     <SubtitlesNotAlike>字幕沒有相似之處</SubtitlesNotAlike>
     <XNumberOfDifference>差異數量: {0}</XNumberOfDifference>
-    <XNumberOfDifferenceAndPercentChanged>差異數量: {0} (已變更單字的 {1}%)</XNumberOfDifferenceAndPercentChanged>
-    <XNumberOfDifferenceAndPercentLettersChanged>差異數量: {0} (已變更字母的 {1}%)</XNumberOfDifferenceAndPercentLettersChanged>
+    <XNumberOfDifferenceAndPercentChanged>差異數量: {0} (已變更單字的 {1:0.##}%)</XNumberOfDifferenceAndPercentChanged>
+    <XNumberOfDifferenceAndPercentLettersChanged>差異數量: {0} (已變更字母的 {1:0.##}%)</XNumberOfDifferenceAndPercentLettersChanged>
     <ShowOnlyDifferences>僅顯示差異處</ShowOnlyDifferences>
     <IgnoreLineBreaks>忽略換行字元</IgnoreLineBreaks>
     <OnlyLookForDifferencesInText>僅尋找文字差異</OnlyLookForDifferencesInText>
@@ -1405,7 +1404,6 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
   <MatroskaSubtitleChooser>
     <Title>從 Matroska 檔案選擇字幕</Title>
     <TitleMp4>從 MP4 檔案中選擇字幕</TitleMp4>
-    <PleaseChoose>找到多個字幕 - 請選擇</PleaseChoose>
     <TrackXLanguageYTypeZ>軌道 {0} - 語言: {1} - 類型: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MeasurementConverter>

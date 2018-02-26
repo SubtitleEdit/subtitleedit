@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Text;
-using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core.Forms
 {
@@ -12,16 +10,17 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
         public List<int> Warnings;
         public int WarningIndex;
-        private List<string> _interjectionList;
+
+        // interjection
+        private readonly InterjectionRemoveContext _interjectionRemoveContext;
+        private readonly RemoveInterjection _removeInterjection;
+        private IList<string> _interjections;
 
         public RemoveTextForHI(RemoveTextForHISettings removeTextForHISettings)
         {
             Settings = removeTextForHISettings;
-        }
-
-        public void ResetInterjections()
-        {
-            _interjectionList = null;
+            _removeInterjection = new RemoveInterjection();
+            _interjectionRemoveContext = new InterjectionRemoveContext();
         }
 
         public string RemoveHearImpairedtagsInsideLine(string newText)
@@ -101,7 +100,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
             foreach (string line in lines)
             {
                 int indexOfColon = line.IndexOf(':');
-                bool isLastColon = count == lines.Length - 1 && !HtmlUtil.RemoveHtmlTags(line).TrimEnd(':').Contains(':');
+                bool isLastColon = count == lines.Count - 1 && !HtmlUtil.RemoveHtmlTags(line).TrimEnd(':').Contains(':');
                 if (indexOfColon <= 0 || IsInsideBrackets(line, indexOfColon) || (isLastColon && Utilities.CountTagInText(HtmlUtil.RemoveHtmlTags(line), ' ') > 1))
                 {
                     newText = (newText + Environment.NewLine + line).Trim();
@@ -117,29 +116,33 @@ namespace Nikse.SubtitleEdit.Core.Forms
                     var noTagPre = HtmlUtil.RemoveHtmlTags(pre, true);
                     if (Settings.RemoveTextBeforeColonOnlyUppercase && noTagPre != noTagPre.ToUpper())
                     {
-                        string s = line;
-                        string l1Trim = HtmlUtil.RemoveHtmlTags(lines[0]).TrimEnd('"');
-                        if (count == 1 && lines.Length == 2 && !l1Trim.EndsWith('.') &&
-                                                               !l1Trim.EndsWith('!') &&
-                                                               !l1Trim.EndsWith('?'))
+                        bool remove = true;
+                        newText = RemovePartialBeforeColon(line, indexOfColon, newText, count, ref removedInFirstLine, ref removedInSecondLine, ref remove);
+                        if (remove)
                         {
-                            var indexOf = line.IndexOfAny(ExpectedStrings, StringComparison.Ordinal);
-                            if (indexOf > 0 && indexOf < indexOfColon)
+                            string s = line;
+                            string l1Trim = HtmlUtil.RemoveHtmlTags(lines[0]).TrimEnd('"');
+                            if (count == 1 && lines.Count == 2 && !l1Trim.EndsWith('.') &&
+                                                                   !l1Trim.EndsWith('!') &&
+                                                                   !l1Trim.EndsWith('?'))
                             {
-                                var toRemove = s.Substring(indexOf + 1, indexOfColon - indexOf).Trim();
-                                if (toRemove.Length > 1 && toRemove == toRemove.ToUpper())
+                                var indexOf = line.IndexOfAny(ExpectedStrings, StringComparison.Ordinal);
+                                if (indexOf > 0 && indexOf < indexOfColon)
                                 {
-                                    s = s.Remove(indexOf + 1, indexOfColon - indexOf);
-                                    s = s.Insert(indexOf + 1, " -");
-                                    if (newText.StartsWith("<i>", StringComparison.Ordinal) && !newText.StartsWith("<i>-", StringComparison.Ordinal))
-                                        newText = "<i>- " + newText.Remove(0, 3);
-                                    else if (!newText.StartsWith('-'))
-                                        newText = "- " + newText;
+                                    var toRemove = s.Substring(indexOf + 1, indexOfColon - indexOf).Trim();
+                                    if (toRemove.Length > 1 && toRemove == toRemove.ToUpper())
+                                    {
+                                        s = s.Remove(indexOf + 1, indexOfColon - indexOf);
+                                        s = s.Insert(indexOf + 1, " -");
+                                        if (newText.StartsWith("<i>", StringComparison.Ordinal) && !newText.StartsWith("<i>-", StringComparison.Ordinal))
+                                            newText = "<i>- " + newText.Remove(0, 3);
+                                        else if (!newText.StartsWith('-'))
+                                            newText = "- " + newText;
+                                    }
                                 }
                             }
+                            newText = (newText + Environment.NewLine + s).Trim();
                         }
-
-                        newText = (newText + Environment.NewLine + s).Trim();
                     }
                     else
                     {
@@ -199,7 +202,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                                     remove = false;
 
                                 string l1Trimmed = HtmlUtil.RemoveHtmlTags(lines[0]).TrimEnd('"');
-                                if (count == 1 && lines.Length == 2 && !l1Trimmed.EndsWith('.') &&
+                                if (count == 1 && lines.Count == 2 && !l1Trimmed.EndsWith('.') &&
                                                                        !l1Trimmed.EndsWith('!') &&
                                                                        !l1Trimmed.EndsWith('?') &&
                                                                        !l1Trimmed.EndsWith("--", StringComparison.Ordinal) &&
@@ -210,35 +213,41 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
                                 if (remove)
                                 {
-                                    var content = line.Substring(indexOfColon + 1).Trim();
-                                    if (content.Length > 0)
+                                    newText = RemovePartialBeforeColon(line, indexOfColon, newText, count, ref removedInFirstLine, ref removedInSecondLine, ref remove);
+
+                                    if (remove)
                                     {
-                                        if (count == 0 && content[0].ToString() != content[0].ToString().ToUpperInvariant())
+                                        var content = line.Substring(indexOfColon + 1).Trim();
+                                        if (content.Length > 0)
                                         {
-                                            content = content[0].ToString().ToUpperInvariant() + content.Remove(0, 1);
-                                        }
-                                        else if (count == 1 && content[0].ToString() != content[0].ToString().ToUpperInvariant())
-                                        {
-                                            content = content[0].ToString().ToUpperInvariant() + content.Remove(0, 1);
-                                        }
+                                            if (count == 0 && content[0].ToString() != content[0].ToString().ToUpperInvariant())
+                                            {
+                                                content = content[0].ToString().ToUpperInvariant() + content.Remove(0, 1);
+                                            }
+                                            else if (count == 1 && content[0].ToString() != content[0].ToString().ToUpperInvariant())
+                                            {
+                                                content = content[0].ToString().ToUpperInvariant() + content.Remove(0, 1);
+                                            }
 
-                                        newText += Environment.NewLine;
-                                        if (pre.Contains("<i>") && content.Contains("</i>"))
-                                            newText += "<i>" + content;
-                                        else if (pre.Contains("<b>") && content.Contains("</b>"))
-                                            newText += "<b>" + content;
-                                        else if (pre.Contains('[') && content.Contains(']'))
-                                            newText += "[" + content;
-                                        else if (pre.Contains('(') && content.EndsWith(')'))
-                                            newText += "(" + content;
-                                        else
-                                            newText += content;
+                                            newText += Environment.NewLine;
+                                            if (pre.Contains("<i>") && content.Contains("</i>"))
+                                                newText += "<i>" + content;
+                                            else if (pre.Contains("<b>") && content.Contains("</b>"))
+                                                newText += "<b>" + content;
+                                            else if (pre.Contains('[') && content.Contains(']'))
+                                                newText += "[" + content;
+                                            else if (pre.Contains('(') && content.EndsWith(')'))
+                                                newText += "(" + content;
+                                            else
+                                                newText += content;
 
-                                        if (count == 0)
-                                            removedInFirstLine = true;
-                                        else if (count == 1)
-                                            removedInSecondLine = true;
+                                            if (count == 0)
+                                                removedInFirstLine = true;
+                                            else if (count == 1)
+                                                removedInSecondLine = true;
+                                        }
                                     }
+
                                     newText = newText.Trim();
 
                                     if (text.StartsWith('(') && newText.EndsWith(')') && !newText.Contains('('))
@@ -259,7 +268,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                                 {
                                     string s = line;
                                     string l1Trim = HtmlUtil.RemoveHtmlTags(lines[0]).TrimEnd('"');
-                                    if (count == 1 && lines.Length == 2 && !l1Trim.EndsWith('.') &&
+                                    if (count == 1 && lines.Count == 2 && !l1Trim.EndsWith('.') &&
                                                                            !l1Trim.EndsWith('!') &&
                                                                            !l1Trim.EndsWith('?'))
                                     {
@@ -331,7 +340,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 int indexOfDialogChar = newText.IndexOf('-');
                 bool insertDash = true;
                 var arr = newText.SplitToLines();
-                if (arr.Length == 2 && arr[0].Length > 1 && arr[1].Length > 1)
+                if (arr.Count == 2 && arr[0].Length > 1 && arr[1].Length > 1)
                 {
                     string arr0 = new StrippableText(arr[0]).StrippedText;
                     var arr1Strippable = new StrippableText(arr[1]);
@@ -399,7 +408,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
             {
                 var st = new StrippableText(newText);
                 if (st.Pre.Contains('-') && !st.Pre.Contains("--"))
-                    newText = st.Pre.Replace("-", string.Empty) + st.StrippedText + st.Post;
+                    newText = st.Pre.RemoveChar('-') + st.StrippedText + st.Post;
             }
             else if (removedInSecondLine && !removedInFirstLine && Utilities.GetNumberOfLines(newText) == 2)
             {
@@ -420,6 +429,49 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 return string.Empty;
 
             return preAssTag + newText;
+        }
+
+        private string RemovePartialBeforeColon(string line, int indexOfColon, string newText, int count, ref bool removedInFirstLine, ref bool removedInSecondLine, ref bool remove)
+        {
+            var lastIndexOfPeriod = line.Substring(0, indexOfColon).LastIndexOf("... ", StringComparison.Ordinal);
+            if (lastIndexOfPeriod > 10)
+            {
+                var s = line.Substring(lastIndexOfPeriod, indexOfColon - lastIndexOfPeriod);
+                s = s.Trim('.', '-', ' ', '!', '?', '"', '\'');
+                if (IsHIDescription(s) || Settings.NameList != null && Settings.NameList.ContainsCaseInsensitive(s))
+                {
+                    var partialRemove = false;
+                    if (Settings.RemoveTextBeforeColonOnlyUppercase)
+                    {
+                        if (s == s.ToUpperInvariant())
+                        {
+                            partialRemove = true;
+                        }
+                    }
+                    else
+                    {
+                        partialRemove = true;
+                    }
+
+                    if (partialRemove)
+                    {
+                        newText = line.Remove(lastIndexOfPeriod + 4, indexOfColon - lastIndexOfPeriod - 3);
+                        if (newText.Substring(lastIndexOfPeriod + 3).StartsWith("  "))
+                        {
+                            newText = newText.Remove(lastIndexOfPeriod + 3, 1);
+                        }
+
+                        if (count == 0)
+                            removedInFirstLine = true;
+                        else if (count == 1)
+                            removedInSecondLine = true;
+                    }
+
+                    remove = false;
+                }
+            }
+
+            return newText;
         }
 
         private bool IsInsideBrackets(string text, int targetIndex)
@@ -487,7 +539,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
             {
                 var stSub = new StrippableText(s, pre, post);
                 string strippedText = stSub.StrippedText;
-                if ((lineNumber == parts.Length - 1 && st.Post.Contains('?')) || stSub.Post.Contains('?'))
+                if ((lineNumber == parts.Count - 1 && st.Post.Contains('?')) || stSub.Post.Contains('?'))
                     strippedText += "?";
                 if (!StartsAndEndsWithHearImpairedTags(strippedText))
                 {
@@ -543,7 +595,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                     if (s.Contains("<i>") && !s.Contains("</i>") && st.Post.Contains("</i>"))
                         st.Post = st.Post.Replace("</i>", string.Empty);
 
-                    if (lineNumber == parts.Length - 1)
+                    if (lineNumber == parts.Count - 1)
                     {
                         if (st.Post.Replace("♪", string.Empty).Replace("♫", string.Empty).Trim().Length == 0)
                         {
@@ -568,7 +620,18 @@ namespace Nikse.SubtitleEdit.Core.Forms
             text = RemoveLineIfAllUppercase(text);
             text = RemoveHearImpairedtagsInsideLine(text);
             if (Settings.RemoveInterjections)
-                text = RemoveInterjections(text);
+            {
+                if (_interjections == null)
+                {
+                    ReloadInterjection();
+                }
+
+                // reusable context
+                _interjectionRemoveContext.Text = text;
+                _interjectionRemoveContext.OnlySeparetedLines = Settings.RemoveInterjectionsOnlySeparateLine;
+                _interjectionRemoveContext.Interjections = _interjections;
+                text = _removeInterjection.Invoke(_interjectionRemoveContext);
+            }
 
             st = new StrippableText(text, " >-\"'‘`´♪¿¡.…—", " -\"'`´♪.!?:…—");
             text = st.StrippedText;
@@ -583,7 +646,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
             if (noOfNamesRemoved >= 1 && Utilities.GetNumberOfLines(text) == 3)
             {
                 var splitChars = new[] { '.', '?', '!' };
-                var splitParts = HtmlUtil.RemoveHtmlTags(text).Replace(" ", string.Empty).Split(splitChars, StringSplitOptions.RemoveEmptyEntries);
+                var splitParts = HtmlUtil.RemoveHtmlTags(text).RemoveChar(' ').Split(splitChars, StringSplitOptions.RemoveEmptyEntries);
                 if (splitParts.Length == 2)
                 {
                     var temp = new StrippableText(text);
@@ -809,344 +872,6 @@ namespace Nikse.SubtitleEdit.Core.Forms
             return result.Trim(' ', '(', ')', '[', ']', '?', '{', '}');
         }
 
-        private static int CompareLength(string a, string b)
-        {
-            return b.Length.CompareTo(a.Length);
-        }
-
-        public string RemoveInterjections(string text)
-        {
-            if (_interjectionList == null)
-            {
-                var interjectionList = new HashSet<string>();
-                foreach (var s in Configuration.Settings.Tools.Interjections.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries))
-                {
-                    if (s.Length > 0)
-                    {
-                        interjectionList.Add(s);
-                        var upper = s.ToUpper();
-                        interjectionList.Add(upper);
-                        var lower = s.ToLower();
-                        interjectionList.Add(lower);
-                        interjectionList.Add(lower.CapitalizeFirstLetter());
-                    }
-                }
-                _interjectionList = new List<string>(interjectionList);
-                interjectionList.Clear();
-                interjectionList.TrimExcess();
-                _interjectionList.Sort(CompareLength);
-            }
-
-            string oldText = text;
-            bool doRepeat = true;
-            while (doRepeat)
-            {
-                doRepeat = false;
-                foreach (string s in _interjectionList)
-                {
-                    if (text.Contains(s))
-                    {
-                        var regex = new Regex("\\b" + Regex.Escape(s) + "\\b");
-                        var match = regex.Match(text);
-                        if (match.Success)
-                        {
-                            int index = match.Index;
-                            string temp = text.Remove(index, s.Length);
-                            if (index == 0 && temp.StartsWith("... ", StringComparison.Ordinal))
-                            {
-                                temp = temp.Remove(0, 4);
-                            }
-                            if (index == 3 && temp.StartsWith("<i>... ", StringComparison.Ordinal))
-                            {
-                                temp = temp.Remove(3, 4);
-                            }
-                            if (index > 2 && (" \r\n".Contains(text.Substring(index - 1, 1))) && temp.Substring(index).StartsWith("... ", StringComparison.Ordinal))
-                            {
-                                temp = temp.Remove(index, 4);
-                            }
-                            if (index > 4 && temp.Substring(index - 4).StartsWith("\n<i>... ", StringComparison.Ordinal))
-                            {
-                                temp = temp.Remove(index, 4);
-                            }
-
-                            if (temp.Remove(0, index) == " —" && temp.EndsWith("—  —", StringComparison.Ordinal))
-                            {
-                                temp = temp.Remove(temp.Length - 3);
-                                if (temp.EndsWith(Environment.NewLine + "—", StringComparison.Ordinal))
-                                    temp = temp.Remove(temp.Length - 1).TrimEnd();
-                            }
-                            else if (temp.Remove(0, index) == " —" && temp.EndsWith("-  —", StringComparison.Ordinal))
-                            {
-                                temp = temp.Remove(temp.Length - 3);
-                                if (temp.EndsWith(Environment.NewLine + "-", StringComparison.Ordinal))
-                                    temp = temp.Remove(temp.Length - 1).TrimEnd();
-                            }
-                            else if (index == 2 && temp.StartsWith("-  —", StringComparison.Ordinal))
-                            {
-                                temp = temp.Remove(2, 2);
-                            }
-                            else if (index == 2 && temp.StartsWith("- —", StringComparison.Ordinal))
-                            {
-                                temp = temp.Remove(2, 1);
-                            }
-                            else if (index == 0 && temp.StartsWith(" —", StringComparison.Ordinal))
-                            {
-                                temp = temp.Remove(0, 2);
-                            }
-                            else if (index == 0 && temp.StartsWith('—'))
-                            {
-                                temp = temp.Remove(0, 1);
-                            }
-                            else if (index > 3 && (temp.Substring(index - 2) == ".  —" || temp.Substring(index - 2) == "!  —" || temp.Substring(index - 2) == "?  —"))
-                            {
-                                temp = temp.Remove(index - 2, 1).Replace("  ", " ");
-                            }
-                            string pre = string.Empty;
-                            if (index > 0)
-                                doRepeat = true;
-
-                            bool removeAfter = true;
-
-                            if (index > s.Length)
-                            {
-                                if (temp.Length > index - s.Length + 3)
-                                {
-                                    int subIndex = index - s.Length + 1;
-                                    string subTemp = temp.Substring(subIndex, 3);
-                                    if (subTemp == ", !" || subTemp == ", ?" || subTemp == ", .")
-                                    {
-                                        temp = temp.Remove(subIndex, 2);
-                                        removeAfter = false;
-                                    }
-                                    else if (subIndex > 3 && ".!?".Contains(temp.Substring(subIndex - 1, 1)))
-                                    {
-                                        subTemp = temp.Substring(subIndex);
-                                        if (subTemp == " ..." || subTemp.StartsWith(" ..." + Environment.NewLine, StringComparison.InvariantCulture))
-                                        {
-                                            temp = temp.Remove(subIndex, 4).Trim();
-                                            removeAfter = false;
-                                        }
-                                    }
-                                }
-                                if (removeAfter && temp.Length > index - s.Length + 2)
-                                {
-                                    int subIndex = index - s.Length;
-                                    string subTemp = temp.Substring(subIndex, 3);
-                                    if (subTemp == ", !" || subTemp == ", ?" || subTemp == ", .")
-                                    {
-                                        temp = temp.Remove(subIndex, 2);
-                                        removeAfter = false;
-                                    }
-                                    else
-                                    {
-                                        subTemp = temp.Substring(subIndex);
-                                        if (subTemp.StartsWith(", -—", StringComparison.Ordinal))
-                                        {
-                                            temp = temp.Remove(subIndex, 3);
-                                            removeAfter = false;
-                                        }
-                                        else if (subTemp.StartsWith(", --", StringComparison.Ordinal))
-                                        {
-                                            temp = temp.Remove(subIndex, 2);
-                                            removeAfter = false;
-                                        }
-                                        else if (index > 2 && subTemp.StartsWith("-  —", StringComparison.Ordinal))
-                                        {
-                                            temp = temp.Remove(subIndex + 2, 2).Replace("  ", " ");
-                                            removeAfter = false;
-                                        }
-                                    }
-                                }
-                                if (removeAfter && temp.Length > index - s.Length + 2)
-                                {
-                                    int subIndex = index - s.Length + 1;
-                                    string subTemp = temp.Substring(subIndex, 2);
-                                    if (subTemp == "-!" || subTemp == "-?" || subTemp == "-.")
-                                    {
-                                        temp = temp.Remove(subIndex, 1);
-                                        removeAfter = false;
-                                    }
-                                    subTemp = temp.Substring(subIndex);
-                                    if (subTemp == " !" || subTemp == " ?" || subTemp == " .")
-                                    {
-                                        temp = temp.Remove(subIndex, 1);
-                                        removeAfter = false;
-                                    }
-                                }
-                            }
-
-                            if (index > 3 && index - 2 < temp.Length)
-                            {
-                                string subTemp = temp.Substring(index - 2);
-                                if (subTemp.StartsWith(",  —", StringComparison.Ordinal) || subTemp.StartsWith(", —", StringComparison.Ordinal))
-                                {
-                                    temp = temp.Remove(index - 2, 1);
-                                    index--;
-                                }
-                                if (subTemp.StartsWith("- ...", StringComparison.Ordinal))
-                                {
-                                    removeAfter = false;
-                                }
-                            }
-
-                            if (removeAfter)
-                            {
-                                if (index == 0)
-                                {
-                                    if (temp.StartsWith('-'))
-                                        temp = temp.Remove(0, 1).Trim();
-                                }
-                                else if (index == 3 && temp.StartsWith("<i>-", StringComparison.Ordinal))
-                                {
-                                    temp = temp.Remove(3, 1);
-                                }
-                                else if (index > 0 && temp.Length > index)
-                                {
-                                    pre = text.Substring(0, index);
-                                    temp = temp.Remove(0, index);
-                                    if (temp.StartsWith('-') && pre.EndsWith('-'))
-                                        temp = temp.Remove(0, 1);
-                                    if (temp.StartsWith('-') && pre.EndsWith("- ", StringComparison.Ordinal))
-                                        temp = temp.Remove(0, 1);
-                                }
-
-                                if (temp.StartsWith("...", StringComparison.Ordinal))
-                                {
-                                    pre = pre.Trim();
-                                }
-                                else
-                                {
-                                    while (temp.Length > 0 && " ,.?!".Contains(temp[0]))
-                                    {
-                                        temp = temp.Remove(0, 1);
-                                        doRepeat = true;
-                                    }
-                                }
-                                if (temp.Length > 0 && s[0].ToString(CultureInfo.InvariantCulture) != s[0].ToString(CultureInfo.InvariantCulture).ToLower())
-                                {
-                                    temp = char.ToUpper(temp[0]) + temp.Substring(1);
-                                    doRepeat = true;
-                                }
-
-                                if (temp.StartsWith('-') && pre.EndsWith(' '))
-                                    temp = temp.Remove(0, 1);
-
-                                if (temp.StartsWith('—') && pre.EndsWith(','))
-                                    pre = pre.TrimEnd(',') + " ";
-                                temp = pre + temp;
-                            }
-
-                            if (temp.EndsWith(Environment.NewLine + "- ", StringComparison.Ordinal))
-                                temp = temp.Remove(temp.Length - 2).TrimEnd();
-
-                            var st = new StrippableText(temp);
-                            if (st.StrippedText.Length == 0)
-                                return string.Empty;
-
-                            if (temp.StartsWith('-') && !temp.Contains(Environment.NewLine) && text.Contains(Environment.NewLine))
-                                temp = temp.Remove(0, 1).Trim();
-
-                            text = temp;
-                        }
-                    }
-                }
-            }
-            var lines = text.SplitToLines();
-            if (lines.Length == 2 && text != oldText)
-            {
-                if (lines[0] == "-" && lines[1] == "-")
-                    return string.Empty;
-                if (lines[0].Length > 1 && lines[0][0] == '-' && lines[1].Trim() == "-")
-                    return lines[0].Remove(0, 1).Trim();
-                if (lines[1].Length > 1 && lines[1][0] == '-' && lines[0].Trim() == "-")
-                    return lines[1].Remove(0, 1).Trim();
-                if (lines[1].Length > 4 && lines[1].StartsWith("<i>-", StringComparison.Ordinal) && lines[0].Trim() == "-")
-                    return "<i>" + lines[1].Remove(0, 4).Trim();
-                if (lines[0].Length > 1 && lines[1] == "-" || lines[1] == "." || lines[1] == "!" || lines[1] == "?")
-                {
-                    if (lines[0].StartsWith('-') && oldText.Contains(Environment.NewLine + "-"))
-                        lines[0] = lines[0].Remove(0, 1);
-                    return lines[0].Trim();
-                }
-                var noTags0 = HtmlUtil.RemoveHtmlTags(lines[0]).Trim();
-                var noTags1 = HtmlUtil.RemoveHtmlTags(lines[1]).Trim();
-                if (noTags0 == "-")
-                {
-                    if (noTags1 == noTags0)
-                        return string.Empty;
-                    if (lines[1].Length > 1 && lines[1][0] == '-')
-                        return lines[1].Remove(0, 1).Trim();
-                    if (lines[1].Length > 4 && lines[1].StartsWith("<i>-", StringComparison.Ordinal))
-                        return "<i>" + lines[1].Remove(0, 4).Trim();
-                    return lines[1];
-                }
-                if (noTags1 == "-")
-                {
-                    if (lines[0].Length > 1 && lines[0][0] == '-')
-                        return lines[0].Remove(0, 1).Trim();
-                    if (lines[0].Length > 4 && lines[0].StartsWith("<i>-", StringComparison.Ordinal))
-                    {
-                        if (!lines[0].Contains("</i>") && lines[1].Contains("</i>"))
-                            return "<i>" + lines[0].Remove(0, 4).Trim() + "</i>";
-                        return "<i>" + lines[0].Remove(0, 4).Trim();
-                    }
-                    return lines[0];
-                }
-            }
-            if (lines.Length == 2)
-            {
-                if (string.IsNullOrWhiteSpace(lines[1].Replace(".", string.Empty).Replace("?", string.Empty).Replace("!", string.Empty).Replace("-", string.Empty).Replace("—", string.Empty)))
-                {
-                    text = lines[0];
-                    lines = text.SplitToLines();
-                }
-                else if (string.IsNullOrWhiteSpace(lines[0].Replace(".", string.Empty).Replace("?", string.Empty).Replace("!", string.Empty).Replace("-", string.Empty).Replace("—", string.Empty)))
-                {
-                    text = lines[1];
-                    lines = text.SplitToLines();
-                }
-            }
-            if (lines.Length == 1 && text != oldText && Utilities.GetNumberOfLines(oldText) == 2)
-            {
-                if ((oldText.StartsWith('-') || oldText.StartsWith("<i>-", StringComparison.Ordinal)) &&
-                    (oldText.Contains("." + Environment.NewLine) || oldText.Contains(".</i>" + Environment.NewLine) ||
-                     oldText.Contains("!" + Environment.NewLine) || oldText.Contains("!</i>" + Environment.NewLine) ||
-                     oldText.Contains("?" + Environment.NewLine) || oldText.Contains("?</i>" + Environment.NewLine)))
-                {
-                    if (text.StartsWith("<i>-", StringComparison.Ordinal))
-                        text = "<i>" + text.Remove(0, 4).TrimStart();
-                    else
-                        text = text.TrimStart('-').TrimStart();
-                }
-                else if ((oldText.Contains(Environment.NewLine + "-") || oldText.Contains(Environment.NewLine + "<i>-")) &&
-                    (oldText.Contains("." + Environment.NewLine) || oldText.Contains(".</i>" + Environment.NewLine) ||
-                     oldText.Contains("!" + Environment.NewLine) || oldText.Contains("!</i>" + Environment.NewLine) ||
-                     oldText.Contains("?" + Environment.NewLine) || oldText.Contains("?</i>" + Environment.NewLine)))
-                {
-                    if (text.StartsWith("<i>-", StringComparison.Ordinal))
-                        text = "<i>" + text.Remove(0, 4).TrimStart();
-                    else
-                        text = text.TrimStart('-').TrimStart();
-                }
-            }
-
-            if (oldText != text)
-            {
-                text = text.Replace(Environment.NewLine + "<i>" + Environment.NewLine, Environment.NewLine + "<i>");
-                text = text.Replace(Environment.NewLine + "</i>" + Environment.NewLine, "</i>" + Environment.NewLine);
-                if (text.StartsWith("<i>" + Environment.NewLine, StringComparison.Ordinal))
-                {
-                    text = text.Remove(3, Environment.NewLine.Length);
-                }
-                if (text.EndsWith(Environment.NewLine + "</i>", StringComparison.Ordinal))
-                {
-                    text = text.Remove(text.Length - (Environment.NewLine.Length + 4), Environment.NewLine.Length);
-                }
-                text = text.Replace(Environment.NewLine + "</i>" + Environment.NewLine, "</i>" + Environment.NewLine);
-            }
-            return text;
-        }
-
         private string RemoveStartEndTags(string text)
         {
             string newText = text;
@@ -1315,5 +1040,30 @@ namespace Nikse.SubtitleEdit.Core.Forms
             return sb.ToString().Trim();
         }
 
+        public static IList<string> GetInterjectionList()
+        {
+            var interjectionList = new HashSet<string>();
+            foreach (var s in Configuration.Settings.Tools.Interjections.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries))
+            {
+                if (s.Length <= 0)
+                {
+                    continue;
+                }
+
+                interjectionList.Add(s);
+                interjectionList.Add(s.ToUpper());
+                interjectionList.Add(s.ToLower());
+                interjectionList.Add(s.CapitalizeFirstLetter());
+            }
+
+            var sortedList = new List<string>(interjectionList);
+            sortedList.Sort((a, b) => b.Length.CompareTo(a.Length));
+            return sortedList;
+        }
+
+        public void ReloadInterjection()
+        {
+            _interjections = GetInterjectionList();
+        }
     }
 }

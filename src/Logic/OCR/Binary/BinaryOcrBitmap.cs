@@ -31,17 +31,11 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Binary
         private byte[] _colors;
         public bool Italic { get; set; }
         public int ExpandCount { get; set; }
-        public bool LoadedOk { get; private set; }
+        public bool LoadedOk { get; }
         public string Text { get; set; }
         public List<BinaryOcrBitmap> ExpandedList { get; set; }
 
-        public string Key
-        {
-            get
-            {
-                return Text + "|#|" + Hash + "_" + Width + "x" + Height + "_" + NumberOfColoredPixels;
-            }
-        }
+        public string Key => Text + "|#|" + Hash + "_" + Width + "x" + Height + "_" + NumberOfColoredPixels;
 
         public override string ToString()
         {
@@ -137,6 +131,20 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Binary
             }
         }
 
+        public bool AreColorsEqual(BinaryOcrBitmap other)
+        {
+            if (_colors.Length != other._colors.Length)
+                return false;
+
+            for (int i = 0; i < _colors.Length; i++)
+            {
+                if (_colors[i] != other._colors[i])
+                    return false;
+            }
+
+            return true;
+        }
+
         public void Save(Stream stream)
         {
             WriteInt16(stream, (ushort)Width);
@@ -189,6 +197,11 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Binary
         public int GetPixel(int x, int y)
         {
             return _colors[Width * y + x];
+        }
+
+        public int GetPixel(int index)
+        {
+            return _colors[index];
         }
 
         public void SetPixel(int x, int y, int c)
@@ -251,8 +264,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Binary
                 int minY = Y;
                 int maxX = X + Width;
                 int maxY = Y + Height;
-                var list = new List<BinaryOcrBitmap>();
-                list.Add(this);
+                var list = new List<BinaryOcrBitmap> { this };
                 foreach (BinaryOcrBitmap bob in ExpandedList)
                 {
                     if (bob.X < minX)

@@ -1,4 +1,5 @@
-﻿<OCRFixReplaceList>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<OCRFixReplaceList>
   <WholeWords>
     <Word from="lârt" to="lärt" />
     <Word from="hedervårda" to="hedervärda" />
@@ -354,10 +355,50 @@
     <Word from="kundejag" to="kunde jag" />
     <Word from="ärläget" to="är läget" />
     <Word from="blirinte" to="blir inte" />
-    <Word from="l'm" to="I'm" />
-    <Word from="lt's" to="It's" />
     <Word from="ijakt" to="i jakt" />
     <Word from="avjordens" to="av jordens" />
+    <Word from="90000O" to="900000" />
+    <Word from="9O0" to="900" />
+    <Word from="ärpå" to="är på" />
+    <Word from="ärproteserna" to="är proteserna" />
+    <Word from="ärytterst" to="är ytterst" />
+    <Word from="beborjorden" to="bebor jorden" />
+    <Word from="filmjag" to="film jag" />
+    <Word from="fokuserarpå" to="fokuserar på" />
+    <Word from="folkjag" to="folk jag" />
+    <Word from="föreställdejag" to="föreställde jag" />
+    <Word from="förpubliken" to="för publiken" />
+    <Word from="gilladejag" to="gillade jag" />
+    <Word from="hållerpå" to="håller på" />
+    <Word from="harpå" to="har på" />
+    <Word from="harplaner" to="har planer" />
+    <Word from="harprylar" to="har prylar" />
+    <Word from="kommerpubliken" to="kommer publiken" />
+    <Word from="kostymerpå" to="kostymer på" />
+    <Word from="litarpå" to="litar på" />
+    <Word from="lngen" to="Ingen" />
+    <Word from="lnom" to="Inom" />
+    <Word from="lnte" to="Inte" />
+    <Word from="ochjag" to="och jag" />
+    <Word from="Ochjag" to="Och jag" />
+    <Word from="ochjorden" to="och jorden" />
+    <Word from="omjag" to="om jag" />
+    <Word from="Omjag" to="Om jag" />
+    <Word from="passarperfekt" to="passar perfekt" />
+    <Word from="sättetjag" to="sättet jag" />
+    <Word from="silverpå" to="silver på" />
+    <Word from="skruvarjag" to="skruvar jag" />
+    <Word from="somjag" to="som jag" />
+    <Word from="Somjag" to="Som jag" />
+    <Word from="talarpå" to="talar på" />
+    <Word from="tänktejag" to="tänkte jag" />
+    <Word from="tapparjag" to="tappar jag" />
+    <Word from="tittarpå" to="tittar på" />
+    <Word from="visstejag" to="visste jag" />
+    <Word from="medjetpacks" to="med jetpacks" />
+    <Word from="sätterpå" to="sätter på" />
+    <Word from="stårpå" to="står på" />
+    <Word from="tillhörpå" to="tillhör på" />
   </WholeWords>
   <PartialWordsAlways />
   <PartialWords>
@@ -392,6 +433,12 @@
     <WordPart from="å" to="ä" />
     <WordPart from="à" to="å" />
     <WordPart from="n/" to="rv" />
+    <WordPart from="djag" to="d jag" />
+    <WordPart from="sjag" to="s jag" />
+    <WordPart from="rjag" to="r jag" />
+    <WordPart from="tjag" to="t jag" />
+    <WordPart from="ejag" to="e jag" />
+    <WordPart from="ärp" to="är p" />
   </PartialWords>
   <PartialLines />
   <PartialLinesAlways />

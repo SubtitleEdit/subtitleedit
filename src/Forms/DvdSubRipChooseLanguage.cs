@@ -139,6 +139,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonOkClick(object sender, EventArgs e)
         {
+            SelectActive();
+        }
+
+        internal void SelectActive()
+        {
             if (_languages != null && comboBoxLanguages.SelectedIndex >= 0 && comboBoxLanguages.SelectedIndex < _languages.Count)
                 SelectedLanguageString = _languages[comboBoxLanguages.SelectedIndex];
             else

@@ -39,7 +39,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 paragraph.AppendChild(time);
 
                 var arr = p.Text.SplitToLines();
-                for (int i = 0; i < arr.Length; i++)
+                for (int i = 0; i < arr.Count; i++)
                 {
                     XmlNode text = xml.CreateElement("text" + (i + 1));
                     text.InnerText = arr[i];

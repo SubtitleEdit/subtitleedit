@@ -2,7 +2,7 @@
 <Language Name="hrvatski">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.5.4</Version>
+    <Version>3.5.5</Version>
     <TranslatedBy>Prijevod: Jozo Marić &amp; diomed</TranslatedBy>
     <CultureName>hr-HR</CultureName>
     <HelpFile />
@@ -24,6 +24,12 @@
     <StartTime>Početak</StartTime>
     <EndTime>Kraj</EndTime>
     <Duration>Trajanje</Duration>
+    <CharsPerSec>Karakt/sek</CharsPerSec>
+    <WordsPerMin>Riječi/min</WordsPerMin>
+    <Actor>Glumac</Actor>
+    <Gap>Praznina</Gap>
+    <Region>Regija
+</Region>
     <NumberSymbol>#</NumberSymbol>
     <Number>Broj</Number>
     <Text>Tekst</Text>
@@ -88,7 +94,7 @@ E-pošta:nikse.dk@gmail.com</AboutText1>
   </About>
   <AddToNames>
     <Title>Dodavanje riječi u popis naziva/izuzetaka</Title>
-    <Description>Dodajte riječ u popis naziva/izuzetaka:</Description>
+    <Description>Dodaj riječ u popis naziva/izuzetaka:</Description>
   </AddToNames>
   <AddToOcrReplaceList>
     <Title>Dodaj u OCR zamjenski popis</Title>
@@ -139,7 +145,6 @@ Napomena: Provjeri slobodan prostor prostor na disku.</WaveFileMalformed>
     <SetAsPercent>Postotak trajanja:</SetAsPercent>
     <Note>Vrijeme prikaza neće preklapati početno vrijeme iduće linije.</Note>
     <PleaseSelectAValueFromTheDropDownList>Izaberite vrijednost iz padajućeg izbornika.</PleaseSelectAValueFromTheDropDownList>
-    <PleaseChoose> – Izaberite – </PleaseChoose>
   </AdjustDisplayDuration>
   <ApplyDurationLimits>
     <Title>Primijeni ograničeno trajanje</Title>
@@ -162,6 +167,7 @@ Napomena: Provjeri slobodan prostor prostor na disku.</WaveFileMalformed>
     <ChooseOutputFolder>Odaberi izlaznu mapu</ChooseOutputFolder>
     <OverwriteExistingFiles>Prepiši preko postojeće datoteke</OverwriteExistingFiles>
     <Style>Stil...</Style>
+    <UseStyleFromSource>Koristi stil iz izvora</UseStyleFromSource>
     <ConvertOptions>Opcije pretvaranja</ConvertOptions>
     <RemoveFormatting>Ukloni oblikovanja oznaka</RemoveFormatting>
     <RemoveTextForHI>Ukloni tekst za HI</RemoveTextForHI>
@@ -179,6 +185,8 @@ Napomena: Provjeri slobodan prostor prostor na disku.</WaveFileMalformed>
     <ScanningFolder>Pretraživanje i podmapa za podnaslove...</ScanningFolder>
     <Recursive>Uključi i podmape</Recursive>
     <SetMinMsBetweenSubtitles>Postavi min. milisekundi između podnaslova</SetMinMsBetweenSubtitles>
+    <BridgeGaps>
+    </BridgeGaps>
     <PlainText>Običan tekst</PlainText>
     <Ocr>OCR...</Ocr>
     <Filter>Filter</Filter>
@@ -189,6 +197,8 @@ Napomena: Provjeri slobodan prostor prostor na disku.</WaveFileMalformed>
     <FixCommonErrorsErrorX>Popravi uobičajene pogreške: {0}</FixCommonErrorsErrorX>
     <MultipleReplaceErrorX>Višestruke zamjene: {0}</MultipleReplaceErrorX>
     <AutoBalanceErrorX>Auto ravnoteža: {0}</AutoBalanceErrorX>
+    <OffsetTimeCodes>
+    </OffsetTimeCodes>
   </BatchConvert>
   <Beamer>
     <Title>Beamer (Video projekcija)</Title>
@@ -220,6 +230,7 @@ Napomena: Provjeri slobodan prostor prostor na disku.</WaveFileMalformed>
   </ChangeFrameRate>
   <ChangeSpeedInPercent>
     <Title>Prilagodi brzinu u postocima</Title>
+    <TitleShort>Prilagodi brzinu</TitleShort>
     <Info>Promjena brzine titla u postocima</Info>
     <Custom>Prilagođena</Custom>
     <ToDropFrame>Ispuštanje sličica</ToDropFrame>
@@ -270,8 +281,8 @@ Napomena: Provjeri slobodan prostor prostor na disku.</WaveFileMalformed>
     <NextDifference>&amp;Sljedeća razlika</NextDifference>
     <SubtitlesNotAlike>Podnaslovi nemaju sličnosti.</SubtitlesNotAlike>
     <XNumberOfDifference>Broj razlika: {0}</XNumberOfDifference>
-    <XNumberOfDifferenceAndPercentChanged>Broj promijenjenih: {0} ({1}% riječi)</XNumberOfDifferenceAndPercentChanged>
-    <XNumberOfDifferenceAndPercentLettersChanged>Broj promijenjenih: {0} ({1}%slova)</XNumberOfDifferenceAndPercentLettersChanged>
+    <XNumberOfDifferenceAndPercentChanged>Broj promijenjenih: {0} ({1:0.##}% riječi)</XNumberOfDifferenceAndPercentChanged>
+    <XNumberOfDifferenceAndPercentLettersChanged>Broj promijenjenih: {0} ({1:0.##}%slova)</XNumberOfDifferenceAndPercentLettersChanged>
     <ShowOnlyDifferences>P&amp;rikaži samo razlike</ShowOnlyDifferences>
     <IgnoreLineBreaks>Zanemari prijelome redaka</IgnoreLineBreaks>
     <OnlyLookForDifferencesInText>&amp;Traži samo razlike u tekstu</OnlyLookForDifferencesInText>
@@ -349,6 +360,7 @@ Napomena: Provjeri slobodan prostor prostor na disku.</WaveFileMalformed>
     <CodePageNumber>Kodni broj stranice</CodePageNumber>
     <DiskFormatCode>Kodni format diska</DiskFormatCode>
     <DisplayStandardCode>Prikaži standardni kod</DisplayStandardCode>
+    <ColorRequiresTeletext>Boje zahtjevaju teletext!</ColorRequiresTeletext>
     <CharacterCodeTable>Tablica znakova</CharacterCodeTable>
     <LanguageCode>Jezični kod</LanguageCode>
     <OriginalProgramTitle>Izvorni naziv emisije</OriginalProgramTitle>
@@ -358,6 +370,10 @@ Napomena: Provjeri slobodan prostor prostor na disku.</WaveFileMalformed>
     <TranslatorsName>Ime prevoditelja</TranslatorsName>
     <SubtitleListReferenceCode>Popis titla referentni kod</SubtitleListReferenceCode>
     <CountryOfOrigin>Zemlja podrijetla</CountryOfOrigin>
+    <TimeCodeStatus>
+    </TimeCodeStatus>
+    <TimeCodeStartOfProgramme>
+    </TimeCodeStartOfProgramme>
     <RevisionNumber>Broj izdanja</RevisionNumber>
     <MaxNoOfDisplayableChars>Maksimalni broj znakova po retku</MaxNoOfDisplayableChars>
     <MaxNumberOfDisplayableRows>Max # redaka</MaxNumberOfDisplayableRows>
@@ -366,6 +382,15 @@ Napomena: Provjeri slobodan prostor prostor na disku.</WaveFileMalformed>
     <Import>Uvoz...</Import>
     <TextAndTimingInformation>Tekst i vrijeme informacija</TextAndTimingInformation>
     <JustificationCode>Kod opravdanja</JustificationCode>
+    <VerticalPosition>Vertikalna pozicija</VerticalPosition>
+    <MarginTop>
+    </MarginTop>
+    <MarginBottom>
+    </MarginBottom>
+    <NewLineRows>Broj redova dodan novom linijom</NewLineRows>
+    <Teletext>Teletext</Teletext>
+    <UseBox>Koristi kutiju oko teksta</UseBox>
+    <DoubleHeight>Koristi duplu visinu za tekst</DoubleHeight>
     <Errors>Pogreške</Errors>
     <ErrorsX>Pogreške: {0}</ErrorsX>
     <MaxLengthError>Linija {0} premašuje najveću duljinu ({1}) od {2}: {3}</MaxLengthError>
@@ -405,6 +430,17 @@ Napomena: Provjeri slobodan prostor prostor na disku.</WaveFileMalformed>
     <Footer>podnožje</Footer>
     <DoNotModify>[Ne mijenjajte]</DoNotModify>
   </ExportCustomTextFormat>
+  <ExportFcpXmlAdvanced>
+    <Title>
+    </Title>
+    <FontName>Ime fonta</FontName>
+    <FontSize>Veličina fonta</FontSize>
+    <FontFace>
+    </FontFace>
+    <Alignment>Poravnanje</Alignment>
+    <Baseline>
+    </Baseline>
+  </ExportFcpXmlAdvanced>
   <ExportPngXml>
     <Title>Izvoz BDN XML/PNG</Title>
     <ImageSettings>Postavke slika</ImageSettings>
@@ -452,6 +488,7 @@ Napomena: Provjeri slobodan prostor prostor na disku.</WaveFileMalformed>
     <Forced>Prisilni</Forced>
     <ChooseBackgroundColor>Izaberite boju pozadine</ChooseBackgroundColor>
     <SaveImageAs>Spremi sliku kao...</SaveImageAs>
+    <FcpUseFullPathUrl>Koristi punu putanju linka u FCP xml</FcpUseFullPathUrl>
   </ExportPngXml>
   <ExportText>
     <Title>Izvezi tekst</Title>
@@ -469,7 +506,7 @@ Napomena: Provjeri slobodan prostor prostor na disku.</WaveFileMalformed>
     <AddNewLineAfterTexts>Dodaj novu liniju nakon teksta</AddNewLineAfterTexts>
     <AddNewLineBetweenSubtitles>Dodaj novu liniju između podnaslova</AddNewLineBetweenSubtitles>
     <TimeCodeFormat>Vremenski kod formata</TimeCodeFormat>
-    <Srt>. Srt</Srt>
+    <Srt>.srt</Srt>
     <Milliseconds>Milisekundi</Milliseconds>
     <HHMMSSFF>HH: MM: SS: FF</HHMMSSFF>
     <TimeCodeSeparator>Razdvajač vremenskog koda</TimeCodeSeparator>
@@ -488,6 +525,10 @@ Napomena: Provjeri slobodan prostor prostor na disku.</WaveFileMalformed>
     <Normal>&amp;Obična</Normal>
     <CaseSensitive>P&amp;odudaranje</CaseSensitive>
     <RegularExpression>&amp;Regularni izraz</RegularExpression>
+    <WholeWord>Cijela riječ</WholeWord>
+    <Count>Broj</Count>
+    <XNumberOfMatches>{0:#,##0} slaganja</XNumberOfMatches>
+    <OneMatch>Jedno slaganje</OneMatch>
   </FindDialog>
   <FindSubtitleLine>
     <Title>Traženje linije podnaslova</Title>
@@ -616,6 +657,7 @@ Napomena: Provjeri slobodan prostor prostor na disku.</WaveFileMalformed>
     <FixOcrErrorExample>D0n l't → Don l'-t</FixOcrErrorExample>
     <FixSpaceBetweenNumbersExample>1 100 → 1100</FixSpaceBetweenNumbersExample>
     <FixDialogsOneLineExample>Pozdrav John! - Bok Ida! → Pozdrav John!&lt;br /&gt;- Bok Ida!</FixDialogsOneLineExample>
+    <SelectDefault>Odaberi zadano</SelectDefault>
   </FixCommonErrors>
   <GetDictionaries>
     <Title>Preuzimanje rječnika</Title>
@@ -664,6 +706,8 @@ Napomena: Provjeri slobodan prostor prostor na disku.</WaveFileMalformed>
     <ImageFiles>Slikovne datoteke</ImageFiles>
     <Input>Ulaz</Input>
     <InputDescription>Odaberi ulaznu datoteku (pregledavanje ili povuci i spusti)</InputDescription>
+    <Remove>Makni</Remove>
+    <RemoveAll>Makni sve</RemoveAll>
   </ImportImages>
   <ImportSceneChanges>
     <Title>Uvozi promijenjene scene</Title>
@@ -674,6 +718,8 @@ Napomena: Provjeri slobodan prostor prostor na disku.</WaveFileMalformed>
     <Frames>Okviri</Frames>
     <Seconds>Sekundi</Seconds>
     <Milliseconds>Milisekundi</Milliseconds>
+    <GetSceneChangesWithFfmpeg>
+    </GetSceneChangesWithFfmpeg>
   </ImportSceneChanges>
   <ImportText>
     <Title>Uvoz običnog teksta</Title>
@@ -713,6 +759,8 @@ Napomena: Provjeri slobodan prostor prostor na disku.</WaveFileMalformed>
     <Note>Napomena: Datoteke već imaju točne vremenske kodove</Note>
   </JoinSubtitles>
   <LanguageNames>
+    <NotSpecified>Nije specificirano</NotSpecified>
+    <UnknownCodeX>Nepoznat ({0})</UnknownCodeX>
     <aaName>afarski</aaName>
     <abName>abhaski</abName>
     <afName>afrikaans</afName>
@@ -724,6 +772,7 @@ Napomena: Provjeri slobodan prostor prostor na disku.</WaveFileMalformed>
     <baName>baškirski</baName>
     <beName>bjeloruski</beName>
     <bgName>bugarski</bgName>
+    <bhName>bhojpuri</bhName>
     <biName>bislama</biName>
     <bnName>bengalski</bnName>
     <boName>tibetanski</boName>
@@ -787,6 +836,7 @@ Napomena: Provjeri slobodan prostor prostor na disku.</WaveFileMalformed>
     <mkName>makedonski</mkName>
     <mlName>malajalamski</mlName>
     <mnName>mongolski</mnName>
+    <moName>moldavski</moName>
     <mrName>marathski</mrName>
     <msName>malajski</msName>
     <mtName>malteški</mtName>
@@ -971,6 +1021,8 @@ Napomena: Provjeri slobodan prostor prostor na disku.</WaveFileMalformed>
         <OpenDvd>Otvori DVD</OpenDvd>
         <ChooseAudioTrack>Izaberi zvučni zapis</ChooseAudioTrack>
         <CloseVideo>&amp;Zatvori video datoteku</CloseVideo>
+        <SetVideoOffset>
+        </SetVideoOffset>
         <ImportSceneChanges>Uvezi promijenjene scene</ImportSceneChanges>
         <RemoveSceneChanges>Ukloni promijenjene scene</RemoveSceneChanges>
         <WaveformBatchGenerate>Batch stvoreni valni oblik...</WaveformBatchGenerate>
@@ -1029,18 +1081,25 @@ Napomena: Provjeri slobodan prostor prostor na disku.</WaveFileMalformed>
         <Find>Pretraga</Find>
         <Replace>Zamjena</Replace>
         <FixCommonErrors>Popravi uobičajene pogreške</FixCommonErrors>
+        <RemoveTextForHi>Makni tekst za osobe oštećena sluha</RemoveTextForHi>
         <VisualSync>Vizualno usklađivanje</VisualSync>
         <SpellCheck>Provjera pravopisa</SpellCheck>
+        <NetflixQualityCheck>Netflix provjera kvalitete</NetflixQualityCheck>
         <Settings>Postavke</Settings>
         <Help>Pomoć</Help>
         <ShowHideWaveform>Pokaži/Sakrij valni oblik</ShowHideWaveform>
         <ShowHideVideo>Prikaži/sakrij video snimak</ShowHideVideo>
       </ToolBar>
       <ContextMenu>
+        <SizeAllColumnsToFit>Promijeni veličinu svih stupaca</SizeAllColumnsToFit>
         <AdvancedSubStationAlphaSetStyle>Napredna Sub Station Alpha - stil</AdvancedSubStationAlphaSetStyle>
         <SubStationAlphaSetStyle>SSA – Podešavanje stila</SubStationAlphaSetStyle>
+        <SetActor>
+        </SetActor>
         <SubStationAlphaStyles>Sub Station Alpha stilovi...</SubStationAlphaStyles>
         <AdvancedSubStationAlphaStyles>Napredne Sub Station Alpha stilovi...</AdvancedSubStationAlphaStyles>
+        <TimedTextSetRegion>
+        </TimedTextSetRegion>
         <TimedTextSetStyle>Vremenski Tekst - postavi stil</TimedTextSetStyle>
         <TimedTextStyles>Vremenski Tekstualni stilovi...</TimedTextStyles>
         <TimedTextSetLanguage>Vremenski Tekst - postaviti jezik</TimedTextSetLanguage>
@@ -1090,6 +1149,8 @@ Napomena: Provjeri slobodan prostor prostor na disku.</WaveFileMalformed>
         <SaveSelectedLines>Spremi odabrane linije kao...</SaveSelectedLines>
         <WebVTTSetNewVoice>Postavi novi glas</WebVTTSetNewVoice>
         <WebVTTRemoveVoices>Ukloni glasove</WebVTTRemoveVoices>
+        <NewActor>Novi glumac...</NewActor>
+        <RemoveActors>Makni glumce</RemoveActors>
       </ContextMenu>
     </Menu>
     <Controls>
@@ -1404,12 +1465,18 @@ koji bi trebao biti usklađen s video datotekom.
     <BeforeMergeLinesWithSameText>Prije spajanja linije s istim tekstom</BeforeMergeLinesWithSameText>
     <ImportTimeCodesDifferentNumberOfLinesWarning>Podnaslovi sa vremenskim kodovima imaju različit broj linija ({0}) od trenutnog podnaslova ({1}) - svejedno nastaviti?</ImportTimeCodesDifferentNumberOfLinesWarning>
     <ParsingTransportStream>Raščlanjivanje prijenosnog toka - pričekajte...</ParsingTransportStream>
+    <XPercentCompleted>{0}% dovršeno</XPercentCompleted>
+    <NextX>Sljedeći: {0}</NextX>
     <ErrorLoadIdx>Nemoguće čitati/uređivati .idx datoteku. Idx datoteke su dio idx/sub file para (koji se nazivaju VobSub), a Subtitle Edit može otvoriti .sub datoteku.</ErrorLoadIdx>
-    <ErrorLoadRar>Ova datoteka čini se komprimirana .rar datoteka. Subtitle Edit Ne može otvoriti komprimiranu datoteku.</ErrorLoadRar>
-    <ErrorLoadZip>Ova datoteka čini se komprimirana .zip datoteka. Subtitle Edit Ne može otvoriti komprimiranu datoteku.</ErrorLoadZip>
+    <ErrorLoadRar>Ova datoteka čini se komprimirana .rar datoteka. Subtitle Edit ne može otvoriti komprimiranu datoteku.</ErrorLoadRar>
+    <ErrorLoadZip>Ova datoteka čini se komprimirana .zip datoteka. Subtitle Edit ne može otvoriti komprimiranu datoteku.</ErrorLoadZip>
+    <ErrorLoad7Zip>Izgleda da je ovo arhivirana 7-Zip  datoteka. Subtitle Edit ne može otvoriti komprimiranu datoteku.</ErrorLoad7Zip>
     <ErrorLoadPng>Ova datoteka čini se da je datoteka PNG slike. Subtitle Edit Ne može otvoriti PNG datoteke.</ErrorLoadPng>
+    <ErrorLoadJpg>Izgleda da je ovo JPG slika. Subtitle Edit ne otvara JPG datoteke.</ErrorLoadJpg>
     <ErrorLoadSrr>Ova datoteka čini se da je ReScene .srr datoteka - Ne datoteka podnaslova.</ErrorLoadSrr>
     <ErrorLoadTorrent>Ova datoteka čini se da je BitTorrent datoteka - Ne datoteka podnaslova.</ErrorLoadTorrent>
+    <ErrorLoadBinaryZeroes>Ova datoteka sadrži samo binarne nule! Ako je datoteka editirana sa Subtitle Editom mogli biste pronaći backup kroz Datoteka → Vraćanje sigurnosne kopije...</ErrorLoadBinaryZeroes>
+    <ErrorDirectoryDropNotAllowed>Ispuštanje direktorija ovdje nije podržano.</ErrorDirectoryDropNotAllowed>
     <NoSupportEncryptedVobSub>Šifrirani VobSub sadržaj nije podržan.</NoSupportEncryptedVobSub>
     <NoSupportHereBluRaySup>Blu-ray SUP datoteke ovdje nisu podržane.</NoSupportHereBluRaySup>
     <NoSupportHereDvdSup>DVD SUP datoteke ovdje nisu podržane.</NoSupportHereDvdSup>
@@ -1418,7 +1485,7 @@ koji bi trebao biti usklađen s video datotekom.
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Odabir podnaslova iz matroške</Title>
-    <PleaseChoose>Pronađeno je više od jednog podnaslova. Izaberi koji želiš.</PleaseChoose>
+    <TitleMp4>Izaberi podnatpis iz MP4 datoteke</TitleMp4>
     <TrackXLanguageYTypeZ>Zapis {0} – jezik: {1} – vrsta: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MeasurementConverter>
@@ -1482,6 +1549,7 @@ koji bi trebao biti usklađen s video datotekom.
     <Normal>Normalan</Normal>
     <CaseSensitive>&amp;Podudaranje</CaseSensitive>
     <RegularExpression>&amp;Normalan izraz</RegularExpression>
+    <Description>Opis</Description>
     <LinesFoundX>Pronađeno linija: {0}</LinesFoundX>
     <Remove>Obriši</Remove>
     <Add>&amp;Dodaj</Add>
@@ -1496,6 +1564,12 @@ koji bi trebao biti usklađen s video datotekom.
     <Rules>Izvoz pravila</Rules>
     <MoveToTop>Na vrh</MoveToTop>
     <MoveToBottom>Pomicanje na dno</MoveToBottom>
+    <MoveSelectedRulesToGroup>Premjesti odabrana pravila u grupu</MoveSelectedRulesToGroup>
+    <Groups>Grupe</Groups>
+    <RulesForGroupX>Pravila za grupu "{0}"</RulesForGroupX>
+    <GroupName>Ime grupe</GroupName>
+    <RenameGroup>Preimenuj grupu</RenameGroup>
+    <NewGroup>Nova grupa</NewGroup>
   </MultipleReplace>
   <NetworkChat>
     <Title>Ćaskanje</Title>
@@ -1553,8 +1627,10 @@ određeni podnaslov s drugim ljudima.</Information>
     <NewLine>Nova linija (\ r \ n)</NewLine>
     <NewLineShort>Nova linija (\ n)</NewLineShort>
     <AnyDigit>Svaka znamenka (\ d)</AnyDigit>
+    <NonDigit>Nije znamenka (\D)</NonDigit>
     <AnyCharacter>Svaki znak (.)</AnyCharacter>
     <AnyWhitespace>Svaki razmak(\ i)</AnyWhitespace>
+    <NonSpaceCharacter>Znak koji nije razmak (\S)</NonSpaceCharacter>
     <ZeroOrMore>Nula ili više (*)</ZeroOrMore>
     <OneOrMore>Jedan ili više (+)</OneOrMore>
     <InCharacterGroup>U skupinu znakova ([Test])</InCharacterGroup>
@@ -1630,6 +1706,7 @@ određeni podnaslov s drugim ljudima.</Information>
     <Tools>Alati</Tools>
     <WordLists>Popis riječi</WordLists>
     <SsaStyle>SSA stil</SsaStyle>
+    <Network>Mreža</Network>
     <ShowToolBarButtons>Prikaz ikona</ShowToolBarButtons>
     <New>Novi</New>
     <Open>Otvori…</Open>
@@ -1639,6 +1716,7 @@ određeni podnaslov s drugim ljudima.</Information>
     <Replace>Zamjena</Replace>
     <VisualSync>Usklađivanje</VisualSync>
     <SpellCheck>Pravopis</SpellCheck>
+    <NetflixQualityCheck>Netflix provjera kvalitete</NetflixQualityCheck>
     <SettingsName>Postavke</SettingsName>
     <Help>Pomoć</Help>
     <ShowFrameRate>Broj sličica</ShowFrameRate>
@@ -1647,13 +1725,16 @@ određeni podnaslov s drugim ljudima.</Information>
     <AutoDetectAnsiEncoding>Samoprepoznavanje kodiranja:</AutoDetectAnsiEncoding>
     <SubtitleLineMaximumLength>Najveća dužina podnaslova:</SubtitleLineMaximumLength>
     <MaximumCharactersPerSecond>Maks. znakova/sek</MaximumCharactersPerSecond>
+    <MaximumWordssPerMinute>Maksimalno riječi/min</MaximumWordssPerMinute>
     <AutoWrapWhileTyping>p&amp;relamaj pri tipkanju</AutoWrapWhileTyping>
     <DurationMinimumMilliseconds>Min. trajanje, milisekunde</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>Maks. trajanje, milisekunde</DurationMaximumMilliseconds>
     <MinimumGapMilliseconds>Min. jaz između podnaslova u ms</MinimumGapMilliseconds>
+    <MaximumLines>Maksimalan broj linija</MaximumLines>
     <SubtitleFont>Tip fonta:</SubtitleFont>
     <SubtitleFontSize>Veličina:</SubtitleFontSize>
     <SubtitleBold>pod&amp;ebljano</SubtitleBold>
+    <VideoAutoOpen>Automatski otvori video pri otvaranju titla</VideoAutoOpen>
     <SubtitleCenter>centrirano</SubtitleCenter>
     <SubtitleFontColor>Boja fonta:</SubtitleFontColor>
     <SubtitleBackgroundColor>Boja pozadine:</SubtitleBackgroundColor>
@@ -1666,6 +1747,8 @@ određeni podnaslov s drugim ljudima.</Information>
     <RemoveBlankLinesWhenOpening>U&amp;kloni prazne linije pri otvaranju podnaslova</RemoveBlankLinesWhenOpening>
     <ShowLineBreaksAs>Prikaži redove u popisu kao:</ShowLineBreaksAs>
     <MainListViewDoubleClickAction>Dvoklik na liniju u glavnom prozoru će:</MainListViewDoubleClickAction>
+    <MainListViewColumnsInfo>
+    </MainListViewColumnsInfo>
     <MainListViewNothing>zaboraviti radnju</MainListViewNothing>
     <MainListViewVideoGoToPositionAndPause>prijeći na poziciju snimke i pauzirati</MainListViewVideoGoToPositionAndPause>
     <MainListViewVideoGoToPositionAndPlay>prijeći na poziciju snimke i pustiti</MainListViewVideoGoToPositionAndPlay>
@@ -1678,6 +1761,10 @@ određeni podnaslov s drugim ljudima.</Information>
     <AutoBackupEveryMinute>svaku minutu</AutoBackupEveryMinute>
     <AutoBackupEveryFiveMinutes>svakih 5 minuta</AutoBackupEveryFiveMinutes>
     <AutoBackupEveryFifteenMinutes>svakih 15 minuta</AutoBackupEveryFifteenMinutes>
+    <AutoBackupDeleteAfter>Obriši nakon</AutoBackupDeleteAfter>
+    <AutoBackupDeleteAfterOneMonth>1 mjesec</AutoBackupDeleteAfterOneMonth>
+    <AutoBackupDeleteAfterThreeMonths>3 mjeseca</AutoBackupDeleteAfterThreeMonths>
+    <AutoBackupDeleteAfterSixMonths>6 mjeseci</AutoBackupDeleteAfterSixMonths>
     <CheckForUpdates>Provjera ažuriranja</CheckForUpdates>
     <AllowEditOfOriginalSubtitle>&amp;Dozvoli uređivanje izvornog podnaslova</AllowEditOfOriginalSubtitle>
     <PromptDeleteLines>Pitaj za brisanje linija</PromptDeleteLines>
@@ -1689,6 +1776,11 @@ određeni podnaslov s drugim ljudima.</Information>
     <DirectShowDescription>quartz.dll u mapi „System32“</DirectShowDescription>
     <MpcHc>MPC-HC</MpcHc>
     <MpcHcDescription>Media Player Classic - Home Cinema</MpcHcDescription>
+    <MpvPlayer>mpv</MpvPlayer>
+    <MpvPlayerDescription>
+    </MpvPlayerDescription>
+    <MpvHandlesPreviewText>
+    </MpvHandlesPreviewText>
     <VlcMediaPlayer>VLC media player</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll iz VLC media player-a 1.1.0 ili novijeg izdanja</VlcMediaPlayerDescription>
     <VlcBrowseToLabel>VLC putanja (potrebno samo ako se koristi prijenosna verzija VLC)</VlcBrowseToLabel>
@@ -1701,8 +1793,12 @@ određeni podnaslov s drugim ljudima.</Information>
     <WaveformAppearance>Valni izgled</WaveformAppearance>
     <WaveformGridColor>Boja mreže</WaveformGridColor>
     <WaveformShowGridLines>Pokaži mrežu linija</WaveformShowGridLines>
+    <WaveformShowCps>Pokaži br. znakova po sekundi</WaveformShowCps>
+    <WaveformShowWpm>Prikaži riječi/min</WaveformShowWpm>
     <ReverseMouseWheelScrollDirection>Obrnuti smjer kotačića na mišu</ReverseMouseWheelScrollDirection>
     <WaveformAllowOverlap>Dopusti preklapanje (kad se kreće/i veličine)</WaveformAllowOverlap>
+    <WaveformSetVideoPosMoveStartEnd>
+    </WaveformSetVideoPosMoveStartEnd>
     <WaveformFocusMouseEnter>Fokusiraj na pokazivač miša</WaveformFocusMouseEnter>
     <WaveformListViewFocusMouseEnter>Također postavi prikaz popisa fokus na miša prilikom ulaska miša na listu popisa</WaveformListViewFocusMouseEnter>
     <WaveformBorderHitMs1>Granični marker mora biti s...</WaveformBorderHitMs1>
@@ -1758,11 +1854,13 @@ određeni podnaslov s drugim ljudima.</Information>
     <FirstPlusX>prva + {0}</FirstPlusX>
     <LastMinusX>zadnja – {0}</LastMinusX>
     <FixCommonerrors>Ispravljanje čestih pogrešaka</FixCommonerrors>
+    <RemoveTextForHi>Makni tekst za osobe oštećena sluha</RemoveTextForHi>
     <MergeLinesShorterThan>Spoji linije kraće od:</MergeLinesShorterThan>
     <MusicSymbol>Glazbeni simboli:</MusicSymbol>
     <MusicSymbolsToReplace>Glazbeni simboli za zamjenu (odmakni razmakom):</MusicSymbolsToReplace>
     <FixCommonOcrErrorsUseHardcodedRules>I&amp;spravi česte pogreške u prepoznavanju znakova</FixCommonOcrErrorsUseHardcodedRules>
     <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Popraviti kratko vrijeme prikaza - omogućuju pomicanje startnog vremena</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
+    <FixCommonErrorsSkipStepOne>Preskoči prvi korak</FixCommonErrorsSkipStepOne>
     <Shortcuts>Prečaci</Shortcuts>
     <Shortcut>Prečaci:</Shortcut>
     <Control>Ctrl</Control>
@@ -1780,15 +1878,28 @@ određeni podnaslov s drugim ljudima.</Information>
     <AdjustStartDownEndUpAndGoToNext>Tipka dolje = Start, Tipka gore = postavi kraj i idi na sljedeći</AdjustStartDownEndUpAndGoToNext>
     <AdjustSelected100MsForward>Premještanje odabrane linije 100 ms naprijed</AdjustSelected100MsForward>
     <AdjustSelected100MsBack>Premjesti odabrane linije 100 ms nazad</AdjustSelected100MsBack>
+    <AdjustStartXMsBack>
+    </AdjustStartXMsBack>
+    <AdjustStartXMsForward>
+    </AdjustStartXMsForward>
+    <AdjustEndXMsBack>
+    </AdjustEndXMsBack>
+    <AdjustEndXMsForward>
+    </AdjustEndXMsForward>
     <AdjustSetStartTimeKeepDuration>Postavi početno vrijeme. Zadrži trajanje</AdjustSetStartTimeKeepDuration>
     <AdjustSetEndAndOffsetTheRest>Postaviti kraj, nadoknaditi ostatak</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Postaviti kraj, nadoknaditi ostatak i prelazak na sljedeći</AdjustSetEndAndOffsetTheRestAndGoToNext>
+    <AdjustExtendCurrentSubtitle>
+    </AdjustExtendCurrentSubtitle>
+    <RecalculateDurationOfCurrentSubtitle>Rekalkuliraj trajanje trenutnog titla</RecalculateDurationOfCurrentSubtitle>
     <MainCreateStartDownEndUp>Stvori novi na tipka-dolje, postavi vrijeme završetka na tipka-gore</MainCreateStartDownEndUp>
     <MergeDialog>Spoji dijalog (upisati crtice)</MergeDialog>
     <GoToNext>Idi na sljedeću liniju</GoToNext>
     <GoToPrevious>Idi na prethodnu liniju</GoToPrevious>
     <GoToCurrentSubtitleStart>Idi na trenutni početak linije</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>Idi na trenutni završetak linije</GoToCurrentSubtitleEnd>
+    <GoToPreviousSubtitleAndFocusVideo>Idi na prošlu liniju i postavi video poziciju</GoToPreviousSubtitleAndFocusVideo>
+    <GoToNextSubtitleAndFocusVideo>Idi na sljedeću liniju i postavi video poziciju</GoToNextSubtitleAndFocusVideo>
     <ToggleFocus>Prebacivanje fokusa između prikaza popisa i podnaslova tekstnog okvira</ToggleFocus>
     <ToggleDialogDashes>Prebaci dijaloške crtice</ToggleDialogDashes>
     <Alignment>Poravnanje (odabrane linije)</Alignment>
@@ -1801,17 +1912,34 @@ određeni podnaslov s drugim ljudima.</Information>
     <WaveformSeekSilenceForward>Traži tišinu naprijed</WaveformSeekSilenceForward>
     <WaveformSeekSilenceBack>Traži tišinu natrag</WaveformSeekSilenceBack>
     <WaveformAddTextHere>Dodajte tekst ovdje (za novi odabir)</WaveformAddTextHere>
+    <WaveformAddTextHereFromClipboard>
+    </WaveformAddTextHereFromClipboard>
     <WaveformPlayNewSelection>Reproduciraj novo izabrano</WaveformPlayNewSelection>
+    <WaveformPlayNewSelectionEnd>
+    </WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Reproduciraj prvi izabrani podnaslov</WaveformPlayFirstSelectedSubtitle>
     <WaveformFocusListView>Fokusiraj listu prikaza</WaveformFocusListView>
+    <WaveformGoToNextSubtitle>Idi na sljedeći titl (sa video pozicije)</WaveformGoToNextSubtitle>
+    <WaveformGoToPreviousSceneChange>
+    </WaveformGoToPreviousSceneChange>
+    <WaveformGoToNextSceneChange>
+    </WaveformGoToNextSceneChange>
+    <WaveformToggleSceneChange>
+    </WaveformToggleSceneChange>
     <GoBack1Frame>Jedan okvir natrag</GoBack1Frame>
     <GoForward1Frame>Jedan okvir naprijed</GoForward1Frame>
+    <GoBack1FrameWithPlay>
+    </GoBack1FrameWithPlay>
+    <GoForward1FrameWithPlay>
+    </GoForward1FrameWithPlay>
     <GoBack100Milliseconds>100 ms natrag</GoBack100Milliseconds>
     <GoForward100Milliseconds>100 ms naprijed</GoForward100Milliseconds>
     <GoBack500Milliseconds>500 ms natrag</GoBack500Milliseconds>
     <GoForward500Milliseconds>500 ms naprijed</GoForward500Milliseconds>
     <GoBack1Second>Jednu sekundu natrag</GoBack1Second>
     <GoForward1Second>Jednu sekundu naprijed</GoForward1Second>
+    <GoBack5Seconds>5 sekundi natrag</GoBack5Seconds>
+    <GoForward5Seconds>5 sekundi naprijed</GoForward5Seconds>
     <TogglePlayPause>Prebacivanje reprodukcija/pauza</TogglePlayPause>
     <Pause>Pauza</Pause>
     <Fullscreen>Puni prikaz</Fullscreen>
@@ -1826,7 +1954,7 @@ određeni podnaslov s drugim ljudima.</Information>
     <SyntaxColorDurationIfTooSmall>Trajanje boje ako je prekratko</SyntaxColorDurationIfTooSmall>
     <SyntaxColorDurationIfTooLarge>Trajanje boje ako je predugo</SyntaxColorDurationIfTooLarge>
     <SyntaxColorTextIfTooLong>Boja teksta ako je predug</SyntaxColorTextIfTooLong>
-    <SyntaxColorTextMoreThanXLines>Boja teksta ako je više linija:</SyntaxColorTextMoreThanXLines>
+    <SyntaxColorTextMoreThanMaxLines>Oboji tekst ako je više od {0} linija</SyntaxColorTextMoreThanMaxLines>
     <SyntaxColorOverlap>Preklapanje boje vremenskog koda</SyntaxColorOverlap>
     <SyntaxErrorColor>Pogreška je ove boje</SyntaxErrorColor>
     <GoToFirstSelectedLine>Idi na prvu odabranu liniju</GoToFirstSelectedLine>
@@ -1836,6 +1964,8 @@ određeni podnaslov s drugim ljudima.</Information>
     <ToggleTranslationMode>Promijeni način prevođenja</ToggleTranslationMode>
     <SwitchOriginalAndTranslation>Prebacivanje izvornik i prijevod</SwitchOriginalAndTranslation>
     <MergeOriginalAndTranslation>Spoji izvornik i prijevod</MergeOriginalAndTranslation>
+    <MergeWithNext>Spoji sa sljedećim</MergeWithNext>
+    <MergeWithPrevious>Spoji s prošlim</MergeWithPrevious>
     <ShortcutIsAlreadyDefinedX>Prečac je već definiran:
 {0}</ShortcutIsAlreadyDefinedX>
     <ToggleTranslationAndOriginalInPreviews>Prebacivanje prijevoda i izvornika u video/audio pregledu</ToggleTranslationAndOriginalInPreviews>
@@ -1854,12 +1984,29 @@ određeni podnaslov s drugim ljudima.</Information>
     <MainTextBoxUnbreak>Neprekinuti tekst</MainTextBoxUnbreak>
     <MainFileSaveAll>Spremi sve</MainFileSaveAll>
     <Miscellaneous>Razno.</Miscellaneous>
+    <CpsIncludesSpace>
+    </CpsIncludesSpace>
     <UseDoNotBreakAfterList>Koristi ne-neprekinuti nakon popisa (za auto-Br)</UseDoNotBreakAfterList>
+    <MicrosoftBingTranslator>Microsoft Bing Prevoditelj</MicrosoftBingTranslator>
+    <HowToSignUp>Kako se prijaviti</HowToSignUp>
+    <GoogleTranslateUrl>Google translate link</GoogleTranslateUrl>
+    <MicrosoftTranslateApiKey>
+    </MicrosoftTranslateApiKey>
   </Settings>
+  <SettingsMpv>
+    <Title>Postavke za mpv</Title>
+    <DownloadMpv>Preuzmi mpv lib</DownloadMpv>
+    <DownloadMpvFailed>
+    </DownloadMpvFailed>
+    <DownloadMpvOk>Mpv lib je preuzeta i spremna za upotrebu.</DownloadMpvOk>
+  </SettingsMpv>
   <SetVideoOffset>
     <Title>Izjednači video</Title>
     <Description>Izjednači video (podnaslovi ne bi trebali slijediti pravo videa vrijeme, ali npr +10 sati)</Description>
     <RelativeToCurrentVideoPosition>Relativno u odnosu na trenutnu poziciju videa</RelativeToCurrentVideoPosition>
+    <KeepTimeCodes>
+    </KeepTimeCodes>
+    <Reset>Resetiraj</Reset>
   </SetVideoOffset>
   <ShowEarlierLater>
     <Title>Postavljanje linija ranije ili kasnije</Title>
@@ -1906,8 +2053,16 @@ određeni podnaslov s drugim ljudima.</Information>
     <ImageText>Tekst slike</ImageText>
     <SpellCheckCompleted>Provjera pravopisa je završena.</SpellCheckCompleted>
     <SpellCheckAborted>Provjera pravopisa je prekinuta.</SpellCheckAborted>
+    <SpacesNotAllowed>Razmaci nisu dozvoljeni u jednoj riječi!</SpacesNotAllowed>
     <UndoX>Poništi: {0}</UndoX>
   </SpellCheck>
+  <NetflixQualityCheck>
+    <GlyphCheckReport>Nevažeći znak {0} je nađen u stupcu {1}</GlyphCheckReport>
+    <WhiteSpaceCheckReport>Nevaljani razmak nađen je u stupcu {0}.</WhiteSpaceCheckReport>
+    <ReportPrompt>Pogledajte potpuno izvješće ovdje: {0}.</ReportPrompt>
+    <FoundXIssues>Netflix provjerom kvalitete pronađeno je {0} problema.</FoundXIssues>
+    <CheckOk>Netflix provjera kvalitete OK :)</CheckOk>
+  </NetflixQualityCheck>
   <Split>
     <Title>Razdijeli</Title>
     <SplitOptions>Opcije razdjeljivanja</SplitOptions>
@@ -1964,7 +2119,9 @@ određeni podnaslov s drugim ljudima.</Information>
     <NumberOfLinesX>Broj linija podnaslova: {0: # # # #}</NumberOfLinesX>
     <LengthInFormatXinCharactersY>Broj znakova kao {0}: {1: #, ###, ##0}</LengthInFormatXinCharactersY>
     <NumberOfCharactersInTextOnly>Broj znakova u tekstu samo: {0: #, # # #, # # 0}</NumberOfCharactersInTextOnly>
+    <TotalDuration>Ukupno trajanje svih titlova: {0}</TotalDuration>
     <TotalCharsPerSecond>Ukupno znakova / sekundi: {0:0.0} sekundi</TotalCharsPerSecond>
+    <TotalWords>Ukupan broj riječi u titlu: {0}</TotalWords>
     <NumberOfItalicTags>Broj kurzivnih oznaka: {0}</NumberOfItalicTags>
     <NumberOfBoldTags>Broj podebljanih oznaka: {0}</NumberOfBoldTags>
     <NumberOfUnderlineTags>Broj podvučenih oznaka: {0}</NumberOfUnderlineTags>
@@ -2158,6 +2315,9 @@ određeni podnaslov s drugim ljudima.</Information>
     <InspectCompareMatchesForCurrentImage>Usporedi trenutnu sliku…</InspectCompareMatchesForCurrentImage>
     <EditLastAdditions>Uredi dopune usporedbi za zadnju sliku…</EditLastAdditions>
     <SetUnitalicFactor>Postavi de-kurziv faktor...</SetUnitalicFactor>
+    <DiscardTitle>Poništi promjene učinjene u OCR-u?</DiscardTitle>
+    <DiscardText>Želiš li poništiti promjene učinjene u trenutnoj OCR sesiji?</DiscardText>
+    <MinLineSplitHeight>Minimalna visina linije (razdijeli)</MinLineSplitHeight>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>Uredi sliku usporedbi baze podataka</Title>
@@ -2179,6 +2339,7 @@ određeni podnaslov s drugim ljudima.</Information>
     <Title>Usporedba za trenutnu sliku</Title>
     <InspectItems>Provjeri stavke</InspectItems>
     <AddBetterMatch>Dodaj bolje podudaranje</AddBetterMatch>
+    <Add>Dodaj</Add>
   </VobSubOcrCharacterInspect>
   <VobSubOcrNewFolder>
     <Title>Nova mapa</Title>
@@ -2188,6 +2349,17 @@ određeni podnaslov s drugim ljudima.</Information>
     <Title>Postavi de-kurziv faktor...</Title>
     <Description>Podesi vrijednost dok je stil teksta normalno i ne kurziv. Imaj na umu da bi izvorna slika trebala biti kurziv.</Description>
   </VobSubOcrSetItalicFactor>
+  <Watermark>
+    <Title>Vodeni žig</Title>
+    <WatermarkX>Vodeni žig: {0}</WatermarkX>
+    <GenerateWatermarkTitle>Generiraj vodeni žig</GenerateWatermarkTitle>
+    <SpreadOverEntireSubtitle>Preko cijelog titla</SpreadOverEntireSubtitle>
+    <CurrentLineOnlyX>Samo na trenutnoj liniji: {0}</CurrentLineOnlyX>
+    <Generate>Generiraj</Generate>
+    <Remove>Makni</Remove>
+    <BeforeWatermark>Prije vodenog žiga</BeforeWatermark>
+    <ErrorUnicodeEncodingOnly>Vodeni žig radi samo sa unicode enkodingom.</ErrorUnicodeEncodingOnly>
+  </Watermark>
   <Waveform>
     <ClickToAddWaveform>Klikni za dodavanje valnih oblika</ClickToAddWaveform>
     <ClickToAddWaveformAndSpectrogram>Klikni za dodavanje valnog oblika/spektrograma</ClickToAddWaveformAndSpectrogram>
@@ -2206,8 +2378,17 @@ određeni podnaslov s drugim ljudima.</Information>
     <ShowWaveformAndSpectrogram>Pokaži valni oblik i spektrogram</ShowWaveformAndSpectrogram>
     <ShowWaveformOnly>Pokaži samo valni oblik</ShowWaveformOnly>
     <ShowSpectrogramOnly>Pokaži samo spektrogram</ShowSpectrogramOnly>
+    <AddSceneChange>
+    </AddSceneChange>
+    <RemoveSceneChange>
+    </RemoveSceneChange>
     <GuessTimeCodes>Pogodi vremenske kodove...</GuessTimeCodes>
     <SeekSilence>Traži tišinu...</SeekSilence>
+    <InsertSubtitleHere>Umetni titl ovdje...</InsertSubtitleHere>
+    <CharsSecX>
+    </CharsSecX>
+    <WordsMinX>
+    </WordsMinX>
   </Waveform>
   <WaveformGenerateTimeCodes>
     <Title>Pogodi vremenske kodove...</Title>

@@ -56,6 +56,7 @@ namespace Nikse.SubtitleEdit.Forms
             public bool SimpleRendering { get; set; }
             public bool AlignLeft { get; set; }
             public bool AlignRight { get; set; }
+            public bool JustifyLeft { get; set; }
             public byte[] Buffer { get; set; }
             public int ScreenWidth { get; set; }
             public int ScreenHeight { get; set; }
@@ -352,6 +353,7 @@ namespace Nikse.SubtitleEdit.Forms
                 SimpleRendering = checkBoxSimpleRender.Checked,
                 AlignLeft = comboBoxHAlign.SelectedIndex == 0,
                 AlignRight = comboBoxHAlign.SelectedIndex == 2,
+                JustifyLeft = comboBoxHAlign.SelectedIndex == 3, // center, left justify
                 ScreenWidth = screenWidth,
                 ScreenHeight = screenHeight,
                 VideoResolution = comboBoxResolution.Text,
@@ -714,7 +716,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (!string.IsNullOrEmpty(_fileName))
                         title = Path.GetFileNameWithoutExtension(_fileName);
 
-                    string guid = Guid.NewGuid().ToString().Replace("-", string.Empty).Insert(8, "-").Insert(13, "-").Insert(18, "-").Insert(23, "-");
+                    string guid = Guid.NewGuid().ToString().RemoveChar('-').Insert(8, "-").Insert(13, "-").Insert(18, "-").Insert(23, "-");
                     doc.LoadXml("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + Environment.NewLine +
                                 "<DCSubtitle Version=\"1.1\">" + Environment.NewLine +
                                 "<SubtitleID>" + guid + "</SubtitleID>" + Environment.NewLine +
@@ -745,7 +747,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (!string.IsNullOrEmpty(_fileName))
                         title = Path.GetFileNameWithoutExtension(_fileName);
 
-                    string guid = Guid.NewGuid().ToString().Replace("-", string.Empty).Insert(8, "-").Insert(13, "-").Insert(18, "-").Insert(23, "-");
+                    string guid = Guid.NewGuid().ToString().RemoveChar('-').Insert(8, "-").Insert(13, "-").Insert(18, "-").Insert(23, "-");
                     doc.LoadXml("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + Environment.NewLine +
                                 "<DCSubtitle Version=\"1.1\">" + Environment.NewLine +
                                 "<SubtitleID>" + guid + "</SubtitleID>" + Environment.NewLine +
@@ -944,7 +946,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             string dropValue = "30000";
             if (comboBoxFrameRate.SelectedIndex == -1)
             {
-                var numberAsString = comboBoxFrameRate.Text.Trim().Replace(".", string.Empty).Replace(",", string.Empty).Replace(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, string.Empty);
+                var numberAsString = comboBoxFrameRate.Text.Trim().RemoveChar('.').RemoveChar(',').Replace(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, string.Empty);
                 if (numberAsString.Length > 0 && Utilities.IsInteger(numberAsString))
                     dropValue = numberAsString;
             }
@@ -1480,7 +1482,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
         internal int WriteFcpParagraph(StringBuilder sb, int imagesSavedCount, MakeBitmapParameter param, int i, string fileName)
         {
-            string numberString = string.Format(Path.GetFileNameWithoutExtension(Path.GetFileName(fileName)) + "{0:0000}", i).Replace(" ", string.Empty);
+            string numberString = string.Format(Path.GetFileNameWithoutExtension(Path.GetFileName(fileName)) + "{0:0000}", i).RemoveChar(' ');
             var fileNameShort = numberString + "." + comboBoxImageFormat.Text.ToLower();
             var targetImageFileName = Path.Combine(Path.GetDirectoryName(fileName), fileNameShort);
             string fileNameNoPath = Path.GetFileName(fileNameShort);
@@ -2020,6 +2022,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
             mbp.AlignLeft = comboBoxHAlign.SelectedIndex == 0;
             mbp.AlignRight = comboBoxHAlign.SelectedIndex == 2;
+            mbp.JustifyLeft = comboBoxHAlign.SelectedIndex == 3;
             mbp.SimpleRendering = checkBoxSimpleRender.Checked;
             mbp.BorderWidth = _borderWidth;
             mbp.BorderColor = _borderColor;
@@ -2475,7 +2478,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
         }
 
         private static readonly Dictionary<string, int> PaddingDictionary = new Dictionary<string, int>();
-        private static Bitmap GenerateImageFromTextWithStyleInner(MakeBitmapParameter parameter)
+        private static Bitmap GenerateImageFromTextWithStyleInner(MakeBitmapParameter parameter) // for UI
         {
             string text = parameter.P.Text;
 
@@ -2534,9 +2537,9 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
                 // align lines with "gjpqy,ýęçÇ/()[]" a bit lower
                 var lines = text.SplitToLines();
-                if (lines.Length > 0)
+                if (lines.Count > 0)
                 {
-                    var lastLine = lines[lines.Length - 1];
+                    var lastLine = lines[lines.Count - 1];
                     if (lastLine.Contains(new[] { 'g', 'j', 'p', 'q', 'y', ',', 'ý', 'ę', 'ç', 'Ç', '/', '(', ')', '[', ']' }))
                     {
                         var textNoBelow = lastLine.Replace('g', 'a').Replace('j', 'a').Replace('p', 'a').Replace('q', 'a').Replace('y', 'a').Replace(',', 'a').Replace('ý', 'a').Replace('ę', 'a').Replace('ç', 'a').Replace('Ç', 'a').Replace('/', 'a').Replace('(', 'a').Replace(')', 'a').Replace('[', 'a').Replace(']', 'a');
@@ -2600,6 +2603,16 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                             lefts.Add(bmp.Width - (TextDraw.MeasureTextWidth(font, line, parameter.SubtitleFontBold) + 15));
                         else
                             lefts.Add((float)((bmp.Width - TextDraw.MeasureTextWidth(font, line, parameter.SubtitleFontBold) + 15) / 2.0));
+                    }
+                }
+
+                if (parameter.JustifyLeft) 
+                {
+                    // left justify centered lines
+                    var minX = lefts.Min(p => p);
+                    for (var index = 0; index < lefts.Count; index++)
+                    {
+                        lefts[index] = minX;
                     }
                 }
 
@@ -2741,7 +2754,6 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         var colorStack = new Stack<Color>();
                         var fontStack = new Stack<Font>();
                         var lastText = new StringBuilder();
-                        int numberOfCharsOnCurrentLine = 0;
                         for (var i = 0; i < text.Length; i++)
                         {
                             if (text.Substring(i).StartsWith("<font ", StringComparison.OrdinalIgnoreCase))
@@ -2995,15 +3007,10 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                     leftMargin = lefts[lineNumber];
                                     left = leftMargin;
                                 }
-                                numberOfCharsOnCurrentLine = 0;
                             }
                             else
                             {
-                                if (numberOfCharsOnCurrentLine != 0 || text[i] != ' ')
-                                {
-                                    sb.Append(text[i]);
-                                    numberOfCharsOnCurrentLine++;
-                                }
+                                sb.Append(text[i]);
                             }
                         }
                         if (sb.Length > 0)
@@ -3453,6 +3460,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 comboBoxHAlign.Items.Add(Configuration.Settings.Language.ExportPngXml.Left);
                 comboBoxHAlign.Items.Add(Configuration.Settings.Language.ExportPngXml.Center);
                 comboBoxHAlign.Items.Add(Configuration.Settings.Language.ExportPngXml.Right);
+                comboBoxHAlign.Items.Add(Configuration.Settings.Language.ExportPngXml.CenterLeftJustify);
             }
 
             buttonShadowColor.Text = Configuration.Settings.Language.ExportPngXml.ShadowColor;
@@ -3913,6 +3921,11 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
         internal int GetBottomMarginInPixels(Paragraph p)
         {
+            if (!comboBoxBottomMargin.Visible)
+            {
+                return 20;
+            }
+
             if (p != null && !string.IsNullOrEmpty(p.Extra) && _formatName == AdvancedSubStationAlpha.NameOfFormat || _formatName == SubStationAlpha.NameOfFormat)
             {
                 var style = AdvancedSubStationAlpha.GetSsaStyle(p.Extra, _subtitle.Header);
@@ -4253,7 +4266,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             {
                 Configuration.Settings.Tools.ExportBdnXmlImageType = comboBoxImageFormat.SelectedItem.ToString();
             }
-            else if (_exportType == ExportFormats.Fcp)
+            if (_exportType == ExportFormats.Fcp)
             {
                 Configuration.Settings.Tools.ExportFcpFontName = _subtitleFontName;
                 Configuration.Settings.Tools.ExportFcpFontSize = (int)_subtitleFontSize;
@@ -5090,12 +5103,12 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 {
                     if (adjustDisplayTime.AdjustUsingPercent)
                     {
-                        double percent = double.Parse(adjustDisplayTime.AdjustValue);
+                        double percent = double.Parse(adjustDisplayTime.AdjustValue, CultureInfo.InvariantCulture);
                         _subtitle.AdjustDisplayTimeUsingPercent(percent, null);
                     }
                     else if (adjustDisplayTime.AdjustUsingSeconds)
                     {
-                        double seconds = double.Parse(adjustDisplayTime.AdjustValue);
+                        double seconds = double.Parse(adjustDisplayTime.AdjustValue, CultureInfo.InvariantCulture);
                         _subtitle.AdjustDisplayTimeUsingSeconds(seconds, null);
                     }
                     else

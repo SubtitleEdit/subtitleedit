@@ -2,7 +2,7 @@
 <Language Name="română">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.5.4</Version>
+    <Version>3.5.5</Version>
     <TranslatedBy>Tradus de Mircea Voiculescu</TranslatedBy>
     <CultureName>ro-RO</CultureName>
     <HelpFile />
@@ -145,7 +145,6 @@
     <SetAsPercent>Setează ca procente din durată</SetAsPercent>
     <Note>Notă: Timpul afișat nu va fi peste timpul de start al textului următor</Note>
     <PleaseSelectAValueFromTheDropDownList>Selectează, te rog, o valoare din lista derulantă</PleaseSelectAValueFromTheDropDownList>
-    <PleaseChoose>- Alege, te rog -</PleaseChoose>
   </AdjustDisplayDuration>
   <ApplyDurationLimits>
     <Title>Aplicarea limitelor de durată</Title>
@@ -277,8 +276,8 @@
     <NextDifference>&amp;Diferența următoare</NextDifference>
     <SubtitlesNotAlike>Subtitrările n-au asemănări</SubtitlesNotAlike>
     <XNumberOfDifference>Numărul diferențelor: {0}</XNumberOfDifference>
-    <XNumberOfDifferenceAndPercentChanged>Numărul diferențelor: {0} ({1}% din cuvintele schimbate)</XNumberOfDifferenceAndPercentChanged>
-    <XNumberOfDifferenceAndPercentLettersChanged>Numărul diferențelor: {0} ({1}% din literele schimbate)</XNumberOfDifferenceAndPercentLettersChanged>
+    <XNumberOfDifferenceAndPercentChanged>Numărul diferențelor: {0} ({1:0.##}% din cuvintele schimbate)</XNumberOfDifferenceAndPercentChanged>
+    <XNumberOfDifferenceAndPercentLettersChanged>Numărul diferențelor: {0} ({1:0.##}% din literele schimbate)</XNumberOfDifferenceAndPercentLettersChanged>
     <ShowOnlyDifferences>Arată doar diferențele</ShowOnlyDifferences>
     <IgnoreLineBreaks>Ignoră pauzele de linie</IgnoreLineBreaks>
     <OnlyLookForDifferencesInText>Caută numai diferențele din text</OnlyLookForDifferencesInText>
@@ -1467,7 +1466,6 @@
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Alegere subtitrare din fișier Matroska</Title>
-    <PleaseChoose>Sunt mai multe subtitrări: te rog, alege una</PleaseChoose>
     <TrackXLanguageYTypeZ>Pistă audio {0} - limbă: {1} - tip: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MeasurementConverter>

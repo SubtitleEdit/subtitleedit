@@ -231,7 +231,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             {
                                 if (child.Name == "w:t")
                                 {
-                                    bool isTimeCode = child.InnerText.Length == 11 && child.InnerText.Replace(":", string.Empty).Length == 8;
+                                    bool isTimeCode = child.InnerText.Length == 11 && child.InnerText.RemoveChar(':').Length == 8;
                                     if (!isTimeCode)
                                         sb.Append(child.InnerText);
                                 }

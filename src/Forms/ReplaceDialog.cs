@@ -25,6 +25,7 @@ namespace Nikse.SubtitleEdit.Forms
             radioButtonCaseSensitive.Text = Configuration.Settings.Language.ReplaceDialog.CaseSensitive;
             radioButtonRegEx.Text = Configuration.Settings.Language.ReplaceDialog.RegularExpression;
             labelReplaceWith.Text = Configuration.Settings.Language.ReplaceDialog.ReplaceWith;
+            checkBoxWholeWord.Text = Configuration.Settings.Language.FindDialog.WholeWord;
             buttonFind.Text = Configuration.Settings.Language.ReplaceDialog.Find;
             buttonReplace.Text = Configuration.Settings.Language.ReplaceDialog.Replace;
             buttonReplaceAll.Text = Configuration.Settings.Language.ReplaceDialog.ReplaceAll;
@@ -67,7 +68,9 @@ namespace Nikse.SubtitleEdit.Forms
             textBoxFind.Text = selectedText;
             //if we are searching for the same thing, then keep the replace text the same.
             if (selectedText == findHelper.FindText)
-                textBoxReplace.Text = findHelper.ReplaceText;
+            {
+                textBoxReplace.Text = findHelper.ReplaceText.Replace(Environment.NewLine, "\\n");
+            }
             textBoxFind.SelectAll();
             if (findHelper.FindReplaceType.FindType == FindType.RegEx)
                 radioButtonRegEx.Checked = true;
@@ -156,8 +159,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (bitmap != null)
             {
-                IntPtr Hicon = bitmap.GetHicon();
-                this.Icon = Icon.FromHandle(Hicon);
+                Icon = Icon.FromHandle(bitmap.GetHicon());
             }
         }
 

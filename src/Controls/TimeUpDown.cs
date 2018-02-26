@@ -9,7 +9,7 @@ using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Controls
 {
-    public partial class TimeUpDown : UserControl
+    public sealed partial class TimeUpDown : UserControl
     {
         public enum TimeMode
         {
@@ -17,7 +17,7 @@ namespace Nikse.SubtitleEdit.Controls
             HHMMSSFF
         }
 
-        private bool _designMode = LicenseManager.UsageMode == LicenseUsageMode.Designtime;
+        private readonly bool _designMode = LicenseManager.UsageMode == LicenseUsageMode.Designtime;
 
         private const int NumericUpDownValue = 50;
 
@@ -28,6 +28,9 @@ namespace Nikse.SubtitleEdit.Controls
         public bool UseVideoOffset { get; set; }
 
         private static char[] _splitChars;
+
+        private bool _dirty;
+        double _initialTotalMilliseconds;
 
         internal void ForceHHMMSSFF()
         {
@@ -73,6 +76,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         private void NumericUpDownValueChanged(object sender, EventArgs e)
         {
+            _dirty = true;
             double? milliseconds = GetTotalMilliseconds();
             if (milliseconds.HasValue)
             {
@@ -106,16 +110,12 @@ namespace Nikse.SubtitleEdit.Controls
             numericUpDown1.Value = NumericUpDownValue;
         }
 
-        public MaskedTextBox MaskedTextBox
-        {
-            get
-            {
-                return maskedTextBox1;
-            }
-        }
+        public MaskedTextBox MaskedTextBox => maskedTextBox1;
 
         public void SetTotalMilliseconds(double milliseconds)
         {
+            _dirty = false;
+            _initialTotalMilliseconds = milliseconds;
             if (UseVideoOffset)
             {
                 milliseconds += Configuration.Settings.General.CurrentVideoOffsetInMs;
@@ -129,16 +129,17 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 var tc = new TimeCode(milliseconds);
                 maskedTextBox1.Mask = GetMaskFrames(milliseconds);
-                maskedTextBox1.Text = tc.ToString().Substring(0, 9) + string.Format("{0:00}", Core.SubtitleFormats.SubtitleFormat.MillisecondsToFrames(tc.Milliseconds));
+                maskedTextBox1.Text = tc.ToString().Substring(0, 9) + $"{Core.SubtitleFormats.SubtitleFormat.MillisecondsToFrames(tc.Milliseconds):00}";
             }
+            _dirty = false;
         }
 
         public double? GetTotalMilliseconds()
         {
-            TimeCode tc = TimeCode;
-            if (tc != null)
-                return tc.TotalMilliseconds;
-            return null;
+            if (!_dirty)
+                return _initialTotalMilliseconds;
+
+            return TimeCode?.TotalMilliseconds;
         }
 
         public TimeCode TimeCode
@@ -148,9 +149,11 @@ namespace Nikse.SubtitleEdit.Controls
                 if (_designMode)
                     return new TimeCode();
 
-                if (string.IsNullOrWhiteSpace(maskedTextBox1.Text.Replace(".", string.Empty).Replace(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, string.Empty).Replace(",", string.Empty).Replace(":", string.Empty)))
+                if (string.IsNullOrWhiteSpace(maskedTextBox1.Text.RemoveChar('.').Replace(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, string.Empty).RemoveChar(',').RemoveChar(':')))
                     return TimeCode.MaxTime;
 
+                if (!_dirty)
+                    return new TimeCode(_initialTotalMilliseconds);
 
                 string startTime = maskedTextBox1.Text;
                 bool isNegative = startTime.StartsWith('-');
@@ -234,6 +237,12 @@ namespace Nikse.SubtitleEdit.Controls
                 if (_designMode)
                     return;
 
+                if (value != null)
+                {
+                    _dirty = false;
+                    _initialTotalMilliseconds = value.TotalMilliseconds;
+                }
+
                 if (value == null || value.TotalMilliseconds >= TimeCode.MaxTime.TotalMilliseconds - 0.1)
                 {
                     maskedTextBox1.Text = string.Empty;
@@ -261,20 +270,27 @@ namespace Nikse.SubtitleEdit.Controls
 
         private void MaskedTextBox1KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Up)
+            if (e.KeyData == Keys.Up)
             {
                 numericUpDown1.UpButton();
                 e.SuppressKeyPress = true;
             }
-            else if (e.KeyCode == Keys.Down)
+            else if (e.KeyData == Keys.Down)
             {
                 numericUpDown1.DownButton();
                 e.SuppressKeyPress = true;
             }
-            else if (e.KeyCode == Keys.Enter)
+            else if (e.KeyData == Keys.Enter)
             {
                 TimeCodeChanged?.Invoke(this, e);
                 e.SuppressKeyPress = true;
+            }
+            else if (e.KeyData != (Keys.Tab | Keys.Shift) &&
+                     e.KeyData != Keys.Tab &&
+                     e.KeyData != Keys.Left &&
+                     e.KeyData != Keys.Right)
+            {
+                _dirty = true;
             }
         }
 
@@ -282,5 +298,10 @@ namespace Nikse.SubtitleEdit.Controls
 
         private string GetMaskFrames(double val) => val >= 0 ? "00:00:00:00" : "-00:00:00:00";
 
+        private void maskedTextBox1_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+                _dirty = true;
+        }
     }
 }

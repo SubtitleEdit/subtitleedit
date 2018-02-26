@@ -2,7 +2,7 @@
 <Language Name="Deutsch">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.5.4</Version>
+    <Version>3.5.5</Version>
     <TranslatedBy>Übersetzt von Christoph Kitsche. Überarbeitet von Nobody.</TranslatedBy>
     <CultureName>de-DE</CultureName>
     <HelpFile />
@@ -139,7 +139,6 @@ Ist genügend Plattenspeicherplatz verfügbar?</WaveFileMalformed>
     <SetAsPercent>Als Prozent festlegen</SetAsPercent>
     <Note>Hinweis: Die Anzeigezeit wird nicht mit nächster Textstartzeit überlappen</Note>
     <PleaseSelectAValueFromTheDropDownList>Bitte einen Wert aus der Auswahlliste wählen</PleaseSelectAValueFromTheDropDownList>
-    <PleaseChoose> - Bitte wählen - </PleaseChoose>
   </AdjustDisplayDuration>
   <ApplyDurationLimits>
     <Title>Längenbegrenzungen anwenden</Title>
@@ -271,8 +270,8 @@ Ist genügend Plattenspeicherplatz verfügbar?</WaveFileMalformed>
     <NextDifference>&amp;Nächster Unterschied</NextDifference>
     <SubtitlesNotAlike>Untertitel haben keine Übereinstimmungen</SubtitlesNotAlike>
     <XNumberOfDifference>Unterschiede: {0}</XNumberOfDifference>
-    <XNumberOfDifferenceAndPercentChanged>Unterschiede: {0} ({1}% Worte geändert)</XNumberOfDifferenceAndPercentChanged>
-    <XNumberOfDifferenceAndPercentLettersChanged>Unterschiede: {0} ({1}% Buchstaben geändert)</XNumberOfDifferenceAndPercentLettersChanged>
+    <XNumberOfDifferenceAndPercentChanged>Unterschiede: {0} ({1:0.##}% Worte geändert)</XNumberOfDifferenceAndPercentChanged>
+    <XNumberOfDifferenceAndPercentLettersChanged>Unterschiede: {0} ({1:0.##}% Buchstaben geändert)</XNumberOfDifferenceAndPercentLettersChanged>
     <ShowOnlyDifferences>Nur Unterschiede anzeigen</ShowOnlyDifferences>
     <IgnoreLineBreaks>Umbrüche ignorieren</IgnoreLineBreaks>
     <OnlyLookForDifferencesInText>Nur nach Unterschieden im Text suchen</OnlyLookForDifferencesInText>
@@ -1445,7 +1444,6 @@ Falls Sie diese Datei mit Subtitle Edit bearbeitet haben, dürfte eine Sicherung
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Untertitel aus Matroska Datei auswählen</Title>
-    <PleaseChoose>Mehr als ein Untertitel gefunden - bitte wählen</PleaseChoose>
     <TrackXLanguageYTypeZ>Spur {0} - Sprache: {1} - Typ: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MeasurementConverter>

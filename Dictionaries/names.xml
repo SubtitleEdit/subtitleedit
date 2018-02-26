@@ -322,6 +322,7 @@ This file is generated/updated by Multi Translator
   <name>Aria</name>
   <name>Arial</name>
   <name>Arianna</name>
+  <name>Arianne</name>
   <name>Aricept</name>
   <name>Ariel</name>
   <name>Aristotle</name>
@@ -422,6 +423,7 @@ This file is generated/updated by Multi Translator
   <name>Aziz</name>
   <name>Azkaban</name>
   <name>Azkadellia</name>
+  <name>Azoulay</name>
   <name>Babcock</name>
   <name>Babtista</name>
   <name>Babylon</name>
@@ -438,7 +440,7 @@ This file is generated/updated by Multi Translator
   <name>Bailey</name>
   <name>Baizen</name>
   <name>Baja</name>
-  <name>Baker</name>
+  <name>Baker Street</name>
   <name>Bakersfield</name>
   <name>Baku</name>
   <name>Bakuretsu</name>
@@ -1075,6 +1077,7 @@ This file is generated/updated by Multi Translator
   <name>Charlies</name>
   <name>Charlotte</name>
   <name>Charmaine</name>
+  <name>Chatsworth</name>
   <name>Chavez</name>
   <name>Chávez</name>
   <name>Chaz</name>
@@ -1209,6 +1212,7 @@ This file is generated/updated by Multi Translator
   <name>Coleman</name>
   <name>Colette</name>
   <name>Colin</name>
+  <name>Colin Firth</name>
   <name>Colleen</name>
   <name>Collier</name>
   <name>Colliers</name>
@@ -2067,6 +2071,7 @@ This file is generated/updated by Multi Translator
   <name>Galactica</name>
   <name>Galacticas</name>
   <name>Galadriel</name>
+  <name>Galahad</name>
   <name>Gale</name>
   <name>Galilei</name>
   <name>Galileo</name>
@@ -2498,6 +2503,7 @@ This file is generated/updated by Multi Translator
   <name>Hollister</name>
   <name>Hollys</name>
   <name>Hollywood</name>
+  <name>Hollywood Hills</name>
   <name>Hollywoods</name>
   <name>Holmes</name>
   <name>Holy See</name>
@@ -3112,6 +3118,7 @@ This file is generated/updated by Multi Translator
   <name>Kurama</name>
   <name>Kurdistan</name>
   <name>Kurt</name>
+  <name>Kurtz</name>
   <name>Kurtzberg</name>
   <name>Kuwabara</name>
   <name>Kuwabara-kun</name>
@@ -3185,6 +3192,7 @@ This file is generated/updated by Multi Translator
   <name>Larsen</name>
   <name>Larson</name>
   <name>Larsson</name>
+  <name>Las Vegas</name>
   <name>Lasik</name>
   <name>Lasse</name>
   <name>Lasses</name>
@@ -3312,6 +3320,7 @@ This file is generated/updated by Multi Translator
   <name>Linfield</name>
   <name>Linguini</name>
   <name>Linguinis</name>
+  <name>LinkedIn</name>
   <name>Linköping</name>
   <name>Linus</name>
   <name>Lionel</name>
@@ -3480,6 +3489,7 @@ This file is generated/updated by Multi Translator
   <name>Maguire</name>
   <name>Mahatma Gandhi</name>
   <name>Maholevec</name>
+  <name>Mai Tai</name>
   <name>Maia</name>
   <name>Maias</name>
   <name>Maia's</name>
@@ -3589,6 +3599,7 @@ This file is generated/updated by Multi Translator
   <name>Marissa</name>
   <name>Marissas</name>
   <name>Marjorie</name>
+  <name>Mark Hamill</name>
   <name>Mark Zuckerberg</name>
   <name>Marko</name>
   <name>Markus</name>
@@ -3741,6 +3752,7 @@ This file is generated/updated by Multi Translator
   <name>McGraw-Hills</name>
   <name>McGregor</name>
   <name>McGuinness</name>
+  <name>McGurn</name>
   <name>McGyver</name>
   <name>McHenry</name>
   <name>McIntosh</name>
@@ -3810,6 +3822,7 @@ This file is generated/updated by Multi Translator
   <name>Mercer</name>
   <name>Mercury</name>
   <name>Meredith</name>
+  <name>Meredith Grey</name>
   <name>Merediths</name>
   <name>Merida</name>
   <name>Meridius</name>
@@ -3832,6 +3845,7 @@ This file is generated/updated by Multi Translator
   <name>Mias</name>
   <name>Micah</name>
   <name>Michael</name>
+  <name>Michael Caine</name>
   <name>Michaela</name>
   <name>Michaels</name>
   <name>Michas</name>
@@ -3917,6 +3931,7 @@ This file is generated/updated by Multi Translator
   <name>Molinez</name>
   <name>Molly</name>
   <name>Mollys</name>
+  <name>Mon-El</name>
   <name>Mona</name>
   <name>Monaco</name>
   <name>Monday</name>
@@ -3979,8 +3994,18 @@ This file is generated/updated by Multi Translator
   <name>Mozambique</name>
   <name>Mozart</name>
   <name>Mr.</name>
+  <name>Mr. Blue</name>
+  <name>Mr. Black</name>
+  <name>Mr. Green</name>
+  <name>Mr. White</name>
   <name>Mrs.</name>
+  <name>Mrs. Pink</name>
+  <name>Mrs. Orange</name>
+  <name>Mrs. White</name>
   <name>Ms.</name>
+  <name>Ms. Pink</name>
+  <name>Ms. Orange</name>
+  <name>Ms. White</name>
   <name>MTAC</name>
   <name>Mueller</name>
   <name>Muggles</name>
@@ -4228,6 +4253,7 @@ This file is generated/updated by Multi Translator
   <name>Oakenshield</name>
   <name>Oakland</name>
   <name>Obama</name>
+  <name>O'Banion</name>
   <name>O'Barry</name>
   <name>Obi-Wan</name>
   <name>O'Boyle</name>
@@ -4711,6 +4737,7 @@ This file is generated/updated by Multi Translator
   <name>Ricardo</name>
   <name>Ricardus</name>
   <name>Richard</name>
+  <name>Richard Gere</name>
   <name>Richards</name>
   <name>Richard's</name>
   <name>Richardson</name>
@@ -5160,6 +5187,7 @@ This file is generated/updated by Multi Translator
   <name>Sonja</name>
   <name>Sonny</name>
   <name>Sony</name>
+  <name>Sonya</name>
   <name>Sookie</name>
   <name>Sophia</name>
   <name>Sophie</name>
@@ -5292,6 +5320,8 @@ This file is generated/updated by Multi Translator
   <name>Sunday</name>
   <name>Sundays</name>
   <name>Superbowl</name>
+  <name>Supergirl</name>
+  <name>Superman</name>
   <name>Sura</name>
   <name>Suresh</name>
   <name>Suriname</name>

@@ -2,7 +2,7 @@
 <Language Name="svenska">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.5.4</Version>
+    <Version>3.5.5</Version>
     <TranslatedBy>Översätt av Ted</TranslatedBy>
     <CultureName>sv-SE</CultureName>
     <HelpFile />
@@ -141,7 +141,6 @@ Obs! Kontrollera ledigt utrymme.</WaveFileMalformed>
     <SetAsPercent>Ange tid som procent</SetAsPercent>
     <Note>Obs: Visad tid överlappar inte starttiden för nästa text</Note>
     <PleaseSelectAValueFromTheDropDownList>Välj ett värde i listrutan</PleaseSelectAValueFromTheDropDownList>
-    <PleaseChoose>- Välj -</PleaseChoose>
   </AdjustDisplayDuration>
   <ApplyDurationLimits>
     <Title>Ange tids gränser</Title>
@@ -273,8 +272,8 @@ Obs! Kontrollera ledigt utrymme.</WaveFileMalformed>
     <NextDifference>Nästa skillnad</NextDifference>
     <SubtitlesNotAlike>Texter har inga likheter</SubtitlesNotAlike>
     <XNumberOfDifference>Antal skillnader: {0}</XNumberOfDifference>
-    <XNumberOfDifferenceAndPercentChanged>Antal skillnader: {0} ({1}% av ord förändrats)</XNumberOfDifferenceAndPercentChanged>
-    <XNumberOfDifferenceAndPercentLettersChanged>Antal skillnader: {0} ({1}% av bokstäver ändrats)</XNumberOfDifferenceAndPercentLettersChanged>
+    <XNumberOfDifferenceAndPercentChanged>Antal skillnader: {0} ({1:0.##}% av ord förändrats)</XNumberOfDifferenceAndPercentChanged>
+    <XNumberOfDifferenceAndPercentLettersChanged>Antal skillnader: {0} ({1:0.##}% av bokstäver ändrats)</XNumberOfDifferenceAndPercentLettersChanged>
     <ShowOnlyDifferences>Visa bara skillnader</ShowOnlyDifferences>
     <IgnoreLineBreaks>Ignorera radbrytningar</IgnoreLineBreaks>
     <OnlyLookForDifferencesInText>Leta bara efter skillnader i text</OnlyLookForDifferencesInText>
@@ -1450,7 +1449,6 @@ Om du har redigerat den här filen med Subtitle Edit kan du hitta en backup via 
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Välj text från Matroska fil</Title>
-    <PleaseChoose>Mer än en text hittades - välj</PleaseChoose>
     <TrackXLanguageYTypeZ>Spår {0} - Språk: {1} - typ: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MeasurementConverter>

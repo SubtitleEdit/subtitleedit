@@ -2,7 +2,7 @@
 <Language Name="ไทย">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.5.4</Version>
+    <Version>3.5.5</Version>
     <TranslatedBy>ภาษาไทยโดย Bonfelder</TranslatedBy>
     <CultureName>th-TH</CultureName>
     <HelpFile />
@@ -119,7 +119,6 @@
     <SetAsPercent>กำหนดเป็นเปอร์เซนต์ของระยะเวลา</SetAsPercent>
     <Note>หมายเหตุ: เวลาแสดงผลจะต้องไม่ซ้อนกับเวลาเริ่มต้นของข้อความถัดไป</Note>
     <PleaseSelectAValueFromTheDropDownList>โปรดเลือกค่าจากรายการข้างล่าง</PleaseSelectAValueFromTheDropDownList>
-    <PleaseChoose> - โปรดเลือก - </PleaseChoose>
   </AdjustDisplayDuration>
   <ApplyDurationLimits>
     <Title>กำหนดระยะเวลา</Title>
@@ -240,8 +239,8 @@
     <NextDifference>จุดต่าง&amp;ถัดไป</NextDifference>
     <SubtitlesNotAlike>ซับไตเติ้ลไม่มีส่วนที่คล้ายกัน</SubtitlesNotAlike>
     <XNumberOfDifference>จำนวนจุดต่าง: {0}</XNumberOfDifference>
-    <XNumberOfDifferenceAndPercentChanged>จำนวนจุดต่าง: {0} ({1}% ของคำที่เปลี่ยนไป)</XNumberOfDifferenceAndPercentChanged>
-    <XNumberOfDifferenceAndPercentLettersChanged>จำนวนจุดต่าง: {0} ({1}% ของตัวอักษรที่เปลี่ยนไป)</XNumberOfDifferenceAndPercentLettersChanged>
+    <XNumberOfDifferenceAndPercentChanged>จำนวนจุดต่าง: {0} ({1:0.##}% ของคำที่เปลี่ยนไป)</XNumberOfDifferenceAndPercentChanged>
+    <XNumberOfDifferenceAndPercentLettersChanged>จำนวนจุดต่าง: {0} ({1:0.##}% ของตัวอักษรที่เปลี่ยนไป)</XNumberOfDifferenceAndPercentLettersChanged>
     <ShowOnlyDifferences>แสดงเฉพาะส่วนที่ต่างกัน</ShowOnlyDifferences>
     <IgnoreLineBreaks>ไม่สนใจตัวแบ่งบรรทัด</IgnoreLineBreaks>
     <OnlyLookForDifferencesInText>ดูเฉพาะจุดต่างในข้อความ</OnlyLookForDifferencesInText>
@@ -1349,7 +1348,6 @@
   </Main>
   <MatroskaSubtitleChooser>
     <Title>เลือกซับไตเติ้ลจากไฟล์มาทรอสกา</Title>
-    <PleaseChoose>เจอซับไตเติ้ลมากกว่าหนึ่ง - โปรดเลือก</PleaseChoose>
     <TrackXLanguageYTypeZ>แทร็ก {0}  - ภาษา: {1} - ชนิด: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MeasurementConverter>

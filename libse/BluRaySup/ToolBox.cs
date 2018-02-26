@@ -30,7 +30,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             var sb = new StringBuilder();
             for (int i = index; i < index + digits; i++)
             {
-                string s = string.Format("{0:X}", buffer[i]);
+                string s = $"{buffer[i]:X}";
                 if (s.Length < 2)
                     sb.Append('0');
                 sb.Append(s);
@@ -43,7 +43,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
         /// </summary>
         public static string ToHex(int number, int digits)
         {
-            string s = string.Format("{0:X}", number);
+            string s = $"{number:X}";
             if (s.Length < digits)
                 s = s.PadLeft(digits, '0');
             return "0x" + s;
@@ -54,7 +54,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
          * @param ms Time in milliseconds
          * @return Array containing hours, minutes, seconds and milliseconds (in this order)
          */
-        public static int[] MillisecondsToTime(long ms)
+        public static int[] MillisecondsToTime(double ms)
         {
             int[] time = new int[4];
             // time[0] = hours
@@ -77,8 +77,8 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
         /// <returns>String in format hh:mm:ss:ms</returns>
         public static string PtsToTimeString(long pts)
         {
-            int[] time = MillisecondsToTime((pts + 45) / 90);
-            return string.Format(@"{0:D2}:{1:D2}:{2:D2}.{3:D3}", time[0], time[1], time[2], time[3]);
+            int[] time = MillisecondsToTime(pts / 90.0);
+            return $@"{time[0]:D2}:{time[1]:D2}:{time[2]:D2}.{time[3]:D3}";
         }
 
         /// <summary>
@@ -92,7 +92,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             buffer[index] = (byte)(val >> 24);
             buffer[index + 1] = (byte)(val >> 16);
             buffer[index + 2] = (byte)(val >> 8);
-            buffer[index + 3] = (byte)(val);
+            buffer[index + 3] = (byte)val;
         }
 
         /// <summary>
@@ -104,7 +104,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
         public static void SetWord(byte[] buffer, int index, int val)
         {
             buffer[index] = (byte)(val >> 8);
-            buffer[index + 1] = (byte)(val);
+            buffer[index + 1] = (byte)val;
         }
 
         /// <summary>
@@ -115,7 +115,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
         /// <param name="val">Integer value of byte to write</param>
         public static void SetByte(byte[] buffer, int index, int val)
         {
-            buffer[index] = (byte)(val);
+            buffer[index] = (byte)val;
         }
 
     }

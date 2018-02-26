@@ -141,7 +141,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 if (!p.Text.StartsWith("--", StringComparison.Ordinal))
                 {
                     var arr = p.Text.SplitToLines();
-                    if (arr.Length == 2 && arr[0].Length > 1 && arr[1].Length > 1)
+                    if (arr.Count == 2 && arr[0].Length > 1 && arr[1].Length > 1)
                     {
                         if (arr[0][0] == '-' && arr[0][1] != ' ')
                             arr[0] = arr[0].Insert(1, " ");
@@ -203,7 +203,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 if (p.Text.Length > 5 && p.Text.Contains(musicSymbols))
                 {
                     var lines = p.Text.SplitToLines();
-                    for (var lineIndex = 0; lineIndex < lines.Length; lineIndex++)
+                    for (var lineIndex = 0; lineIndex < lines.Count; lineIndex++)
                     {
                         foreach (var musicSymbol in musicSymbols)
                         {

@@ -13,10 +13,10 @@ namespace Nikse.SubtitleEdit.Forms
             get
             {
                 if (radioButtonPercent.Checked)
-                    return comboBoxPercent.Text;
+                    return numericUpDownPercent.Value.ToString(CultureInfo.InvariantCulture);
                 if (radioButtonAutoRecalculate.Checked)
                     return radioButtonAutoRecalculate.Text + ", " + labelMaxCharsPerSecond.Text + ": " + numericUpDownMaxCharsSec.Value; // TODO: Make language string with string.Format
-                return comboBoxSeconds.Text;
+                return numericUpDownSeconds.Value.ToString(CultureInfo.InvariantCulture);
             }
         }
 
@@ -51,15 +51,14 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.FixFonts(this);
             Icon = Properties.Resources.SubtitleEditFormIcon;
 
-            comboBoxPercent.SelectedIndex = 0;
-            comboBoxSeconds.SelectedIndex = 0;
+            if (Configuration.Settings.Tools.AdjustDurationSeconds >= numericUpDownSeconds.Minimum &&
+                Configuration.Settings.Tools.AdjustDurationSeconds <= numericUpDownSeconds.Maximum)
+                numericUpDownSeconds.Value = Configuration.Settings.Tools.AdjustDurationSeconds;
 
-            for (int i = 0; i < comboBoxSeconds.Items.Count; i++)
-            {
-                string s = comboBoxSeconds.Items[i].ToString();
-                s = s.Replace(".", CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator);
-                comboBoxSeconds.Items[i] = s;
-            }
+            if (Configuration.Settings.Tools.AdjustDurationPercent >= numericUpDownPercent.Minimum &&
+                Configuration.Settings.Tools.AdjustDurationPercent <= numericUpDownPercent.Maximum)
+                numericUpDownPercent.Value = Configuration.Settings.Tools.AdjustDurationPercent;
+
             numericUpDownMaxCharsSec.Value = (decimal)Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds;
 
             LanguageStructure.AdjustDisplayDuration language = Configuration.Settings.Language.AdjustDisplayDuration;
@@ -72,11 +71,22 @@ namespace Nikse.SubtitleEdit.Forms
             labelAddSeconds.Text = language.AddSeconds;
             labelAddInPercent.Text = language.SetAsPercent;
             labelNote.Text = language.Note;
-            comboBoxSeconds.Items[0] = language.PleaseChoose;
-            comboBoxPercent.Items[0] = language.PleaseChoose;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             FixLargeFonts();
+
+            if (Configuration.Settings.Tools.AdjustDurationLast == "seconds")
+            {
+                radioButtonSeconds.Checked = true;
+            }
+            else if (Configuration.Settings.Tools.AdjustDurationLast == "percent")
+            {
+                radioButtonPercent.Checked = true;
+            }
+            else if (Configuration.Settings.Tools.AdjustDurationLast == "recalc")
+            {
+                radioButtonAutoRecalculate.Checked = true;
+            }
         }
 
         private void FixLargeFonts()
@@ -101,20 +111,20 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (radioButtonPercent.Checked)
             {
-                comboBoxPercent.Enabled = true;
-                comboBoxSeconds.Enabled = false;
+                numericUpDownPercent.Enabled = true;
+                numericUpDownSeconds.Enabled = false;
                 numericUpDownMaxCharsSec.Enabled = false;
             }
             else if (radioButtonSeconds.Checked)
             {
-                comboBoxPercent.Enabled = false;
-                comboBoxSeconds.Enabled = true;
+                numericUpDownPercent.Enabled = false;
+                numericUpDownSeconds.Enabled = true;
                 numericUpDownMaxCharsSec.Enabled = false;
             }
             else
             {
-                comboBoxPercent.Enabled = false;
-                comboBoxSeconds.Enabled = false;
+                numericUpDownPercent.Enabled = false;
+                numericUpDownSeconds.Enabled = false;
                 numericUpDownMaxCharsSec.Enabled = true;
             }
         }
@@ -126,20 +136,23 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonOkClick(object sender, EventArgs e)
         {
-            if (radioButtonSeconds.Checked && comboBoxSeconds.SelectedIndex < 1)
+            Configuration.Settings.Tools.AdjustDurationSeconds = numericUpDownSeconds.Value;
+            Configuration.Settings.Tools.AdjustDurationPercent = (int)numericUpDownPercent.Value;
+
+            if (radioButtonSeconds.Checked)
             {
-                MessageBox.Show(Configuration.Settings.Language.AdjustDisplayDuration.PleaseSelectAValueFromTheDropDownList);
-                comboBoxSeconds.Focus();
+                Configuration.Settings.Tools.AdjustDurationLast = "seconds";
             }
-            else if (radioButtonPercent.Checked && comboBoxPercent.SelectedIndex < 1)
+            else if (radioButtonPercent.Checked)
             {
-                MessageBox.Show(Configuration.Settings.Language.AdjustDisplayDuration.PleaseSelectAValueFromTheDropDownList);
-                comboBoxPercent.Focus();
+                Configuration.Settings.Tools.AdjustDurationLast = "percent";
             }
-            else
+            else if (radioButtonAutoRecalculate.Checked)
             {
-                DialogResult = DialogResult.OK;
+                Configuration.Settings.Tools.AdjustDurationLast = "recalc";
             }
+
+            DialogResult = DialogResult.OK;
         }
 
         private void radioButtonAutoRecalculate_CheckedChanged(object sender, EventArgs e)

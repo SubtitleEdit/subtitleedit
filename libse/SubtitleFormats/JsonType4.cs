@@ -16,11 +16,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             int count = 0;
 
             string guid = Guid.NewGuid().ToString();
-            string segmentTypeId = Guid.NewGuid().ToString().Replace("-", string.Empty).Substring(0, 24);
+            string segmentTypeId = Guid.NewGuid().ToString().RemoveChar('-').Substring(0, 24);
 
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                string id = Guid.NewGuid().ToString().Replace("-", string.Empty).Substring(0, 24);
+                string id = Guid.NewGuid().ToString().RemoveChar('-').Substring(0, 24);
                 if (count > 0)
                     sb.Append(',');
                 sb.Append("{\"hitType\":\"tag\",\"subTrack\":null,\"tags\":[],\"track\":\"Closed Captioning\",\"startTime\":");

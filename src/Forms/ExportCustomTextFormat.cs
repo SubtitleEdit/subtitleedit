@@ -291,9 +291,9 @@ namespace Nikse.SubtitleEdit.Forms
             var lines = text.SplitToLines();
             var line1 = string.Empty;
             var line2 = string.Empty;
-            if (lines.Length > 0)
+            if (lines.Count > 0)
                 line1 = lines[0];
-            if (lines.Length > 1)
+            if (lines.Count > 1)
                 line2 = lines[1];
 
             string s = template;

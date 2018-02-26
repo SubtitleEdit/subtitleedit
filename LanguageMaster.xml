@@ -2,7 +2,7 @@
 <Language Name="English">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.5.4</Version>
+    <Version>3.5.5</Version>
     <TranslatedBy>Translated by Nikse</TranslatedBy>
     <CultureName>en-US</CultureName>
     <HelpFile />
@@ -144,7 +144,6 @@ Note: Do check free disk space.</WaveFileMalformed>
     <SetAsPercent>Set as percent of duration</SetAsPercent>
     <Note>Note: Display time will not overlap start time of next text</Note>
     <PleaseSelectAValueFromTheDropDownList>Please select a value from the dropdown list</PleaseSelectAValueFromTheDropDownList>
-    <PleaseChoose> - Please choose - </PleaseChoose>
   </AdjustDisplayDuration>
   <ApplyDurationLimits>
     <Title>Apply duration limits</Title>
@@ -279,10 +278,11 @@ Note: Do check free disk space.</WaveFileMalformed>
     <NextDifference>&amp;Next difference</NextDifference>
     <SubtitlesNotAlike>Subtitles have no similarities</SubtitlesNotAlike>
     <XNumberOfDifference>Number of differences: {0}</XNumberOfDifference>
-    <XNumberOfDifferenceAndPercentChanged>Number of differences: {0} ({1}% of words changed)</XNumberOfDifferenceAndPercentChanged>
-    <XNumberOfDifferenceAndPercentLettersChanged>Number of differences: {0} ({1}% of letters changed)</XNumberOfDifferenceAndPercentLettersChanged>
+    <XNumberOfDifferenceAndPercentChanged>Number of differences: {0} ({1:0.##}% of words changed)</XNumberOfDifferenceAndPercentChanged>
+    <XNumberOfDifferenceAndPercentLettersChanged>Number of differences: {0} ({1:0.##}% of letters changed)</XNumberOfDifferenceAndPercentLettersChanged>
     <ShowOnlyDifferences>Show only differences</ShowOnlyDifferences>
     <IgnoreLineBreaks>Ignore line breaks</IgnoreLineBreaks>
+    <IgnoreFormatting>Ignore formatting</IgnoreFormatting>
     <OnlyLookForDifferencesInText>Only look for differences in text</OnlyLookForDifferencesInText>
     <CannotCompareWithImageBasedSubtitles>Cannot compare with image based subtitles</CannotCompareWithImageBasedSubtitles>
   </CompareSubtitles>
@@ -462,6 +462,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <Left>Left</Left>
     <Right>Right</Right>
     <Center>Center</Center>
+    <CenterLeftJustify>Center, left justify</CenterLeftJustify>
     <BottomMargin>Bottom margin</BottomMargin>
     <LeftRightMargin>Left/right margin</LeftRightMargin>
     <SaveBluRraySupAs>Choose Blu-ray sup file name</SaveBluRraySupAs>
@@ -1013,6 +1014,7 @@ Note: Do check free disk space.</WaveFileMalformed>
         <ChooseAudioTrack>Choose audio track</ChooseAudioTrack>
         <CloseVideo>Close video file</CloseVideo>
         <SetVideoOffset>Set video offset...</SetVideoOffset>
+        <SmptTimeMode>SMPTE timing (drop frame)</SmptTimeMode>
         <ImportSceneChanges>Import scene changes...</ImportSceneChanges>
         <RemoveSceneChanges>Remove scene changes</RemoveSceneChanges>
         <WaveformBatchGenerate>Batch generate waveforms...</WaveformBatchGenerate>
@@ -1098,6 +1100,7 @@ Note: Do check free disk space.</WaveFileMalformed>
         <Paste>Paste</Paste>
         <Delete>Delete</Delete>
         <SplitLineAtCursorPosition>Split line at cursor position</SplitLineAtCursorPosition>
+        <SplitLineAtCursorAndWaveformPosition>Split line at cursor/video position</SplitLineAtCursorAndWaveformPosition>
         <AutoDurationCurrentLine>Auto duration (current line)</AutoDurationCurrentLine>
         <SelectAll>Select all</SelectAll>
         <InsertFirstLine>Insert line</InsertFirstLine>
@@ -1112,6 +1115,8 @@ Note: Do check free disk space.</WaveFileMalformed>
         <ColumnInsertTextFromSubtitle>Insert text from subtitle...</ColumnInsertTextFromSubtitle>
         <ColumnImportTextAndShiftCellsDown>Import text and shift cells down</ColumnImportTextAndShiftCellsDown>
         <ColumnPasteFromClipboard>Paste from clipboard...</ColumnPasteFromClipboard>
+        <ColumnTextUp>Text up</ColumnTextUp>
+        <ColumnTextDown>Text down</ColumnTextDown>
         <ColumnCopyOriginalTextToCurrent>Copy text from original to current</ColumnCopyOriginalTextToCurrent>
         <Split>Split</Split>
         <MergeSelectedLines>Merge selected lines</MergeSelectedLines>
@@ -1197,10 +1202,6 @@ Note: Do check free disk space.</WaveFileMalformed>
       <NewTextInsertAtX>New text inserted at {0}</NewTextInsertAtX>
       <Center>Center</Center>
       <PlayRate>Play rate (speed)</PlayRate>
-      <Slow>Slow</Slow>
-      <Normal>Normal</Normal>
-      <Fast>Fast</Fast>
-      <VeryFast>Very fast</VeryFast>
     </VideoControls>
     <SaveChangesToUntitled>Save changes to untitled?</SaveChangesToUntitled>
     <SaveChangesToX>Save changes to {0}?</SaveChangesToX>
@@ -1395,8 +1396,9 @@ Continue?</SubtitleAppendPrompt>
     <UnicodeCharactersAnsiWarning>Subtitle contains unicode characters. Saving using ANSI file encoding will lose these. Continue with saving?</UnicodeCharactersAnsiWarning>
     <NegativeTimeWarning>Subtitle contains negative time codes. Continue with saving?</NegativeTimeWarning>
     <BeforeMergeShortLines>Before merge short lines</BeforeMergeShortLines>
-    <BeforeSplitLongLines>Before split long lines</BeforeSplitLongLines>
     <MergedShortLinesX>Number of lines merged: {0}</MergedShortLinesX>
+    <BeforeSplitLongLines>Before split long lines</BeforeSplitLongLines>
+    <LongLinesSplitX>Number of lines split: {0}</LongLinesSplitX>
     <BeforeDurationsBridgeGap>Before bridge small gaps</BeforeDurationsBridgeGap>
     <BeforeSetMinimumDisplayTimeBetweenParagraphs>Before set minimum display time between subtitles</BeforeSetMinimumDisplayTimeBetweenParagraphs>
     <XMinimumDisplayTimeBetweenParagraphsChanged>Number of lines with minimum display time between subtitles changed: {0}</XMinimumDisplayTimeBetweenParagraphsChanged>
@@ -1441,6 +1443,7 @@ Continue?</SubtitleAppendPrompt>
     <BeforeColumnDelete>Before column delete</BeforeColumnDelete>
     <BeforeColumnImportText>Before column import text</BeforeColumnImportText>
     <BeforeColumnShiftCellsDown>Before column shift cells down</BeforeColumnShiftCellsDown>
+    <BeforeX>Before: {0}</BeforeX>
     <ErrorLoadingPluginXErrorY>Error loading plugin: {0}: {1}</ErrorLoadingPluginXErrorY>
     <BeforeRunningPluginXVersionY>Before running plugin: {0}: {1}</BeforeRunningPluginXVersionY>
     <UnableToReadPluginResult>Unable to read subtitle result from plugin!</UnableToReadPluginResult>
@@ -1456,6 +1459,10 @@ Continue?</SubtitleAppendPrompt>
     <ParsingTransportStream>Parsing transport stream - please wait...</ParsingTransportStream>
     <XPercentCompleted>{0}% completed</XPercentCompleted>
     <NextX>Next: {0}</NextX>
+    <PromptInsertSubtitleOverlap>Insert subtitle at waveform position will cause overlap!
+
+Continue anyway?</PromptInsertSubtitleOverlap>
+    <SetPlayRateX>Set play rate (speed) to {0}%</SetPlayRateX>
     <ErrorLoadIdx>Cannot read/edit .idx files. Idx files are a part of an idx/sub file pair (also called VobSub), and Subtitle Edit can open the .sub file.</ErrorLoadIdx>
     <ErrorLoadRar>This file seems to be a compressed .rar file. Subtitle Edit cannot open compressed files.</ErrorLoadRar>
     <ErrorLoadZip>This file seems to be a compressed .zip file. Subtitle Edit cannot open compressed files.</ErrorLoadZip>
@@ -1541,6 +1548,7 @@ If you have edited this file with Subtitle Edit you might be able to find a back
     <Normal>Normal</Normal>
     <CaseSensitive>Case sensitive</CaseSensitive>
     <RegularExpression>Regular expression</RegularExpression>
+    <Description>Description</Description>
     <LinesFoundX>Lines found: {0}</LinesFoundX>
     <Remove>Remove</Remove>
     <Add>&amp;Add</Add>
@@ -1552,6 +1560,8 @@ If you have edited this file with Subtitle Edit you might be able to find a back
     <Export>Export...</Export>
     <ImportRulesTitle>Import replace rule(s) from...</ImportRulesTitle>
     <ExportRulesTitle>Export replace rule(s) to...</ExportRulesTitle>
+    <ChooseGroupsToImport>Choose groups to import</ChooseGroupsToImport>
+    <ChooseGroupsToExport>Choose groups to export</ChooseGroupsToExport>
     <Rules>Find and replace rules</Rules>
     <MoveToTop>Move to top</MoveToTop>
     <MoveToBottom>Move to bottom</MoveToBottom>
@@ -1561,6 +1571,7 @@ If you have edited this file with Subtitle Edit you might be able to find a back
     <GroupName>Group name</GroupName>
     <RenameGroup>Rename group...</RenameGroup>
     <NewGroup>New group...</NewGroup>
+    <NothingToImport>Nothing to import</NothingToImport>
   </MultipleReplace>
   <NetworkChat>
     <Title>Chat</Title>
@@ -1710,6 +1721,7 @@ can edit in same subtitle file (collaboration)</Information>
     <NetflixQualityCheck>Netflix quality check</NetflixQualityCheck>
     <SettingsName>Settings</SettingsName>
     <Help>Help</Help>
+    <UnbreakNoSpace>Unbreak wihout space (CJK)</UnbreakNoSpace>
     <ShowFrameRate>Show frame rate in toolbar</ShowFrameRate>
     <DefaultFrameRate>Default frame rate</DefaultFrameRate>
     <DefaultFileEncoding>Default file encoding</DefaultFileEncoding>
@@ -1844,8 +1856,8 @@ can edit in same subtitle file (collaboration)</Information>
     <RemoveTextForHi>Remove text for HI</RemoveTextForHi>
     <MergeLinesShorterThan>Unbreak subtitles shorter than</MergeLinesShorterThan>
     <MusicSymbol>Music symbol</MusicSymbol>
-    <MusicSymbolsToReplace>Music symbols to replace (separate by space)</MusicSymbolsToReplace>
-    <FixCommonOcrErrorsUseHardcodedRules>Fix common OCR errors - also use hardcoded rules</FixCommonOcrErrorsUseHardcodedRules>
+    <MusicSymbolsReplace>Music symbols to replace (separate by comma)</MusicSymbolsReplace>
+    <FixCommonOcrErrorsUseHardcodedRules>Fix common OCR errors - also use hard-coded rules</FixCommonOcrErrorsUseHardcodedRules>
     <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Fix short display time - allow move of start time</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
     <FixCommonErrorsSkipStepOne>Skip step one (choose fix rules)</FixCommonErrorsSkipStepOne>
     <Shortcuts>Shortcuts</Shortcuts>
@@ -1900,7 +1912,7 @@ can edit in same subtitle file (collaboration)</Information>
     <WaveformPlayFirstSelectedSubtitle>Play first selected subtitle</WaveformPlayFirstSelectedSubtitle>
     <WaveformFocusListView>Focus list view</WaveformFocusListView>
     <WaveformGoToNextSubtitle>Go to next subtitle (from video position)</WaveformGoToNextSubtitle>
-    <WaveformGoToPreviousSceneChange>Go to prevoius scene change</WaveformGoToPreviousSceneChange>
+    <WaveformGoToPreviousSceneChange>Go to previous scene change</WaveformGoToPreviousSceneChange>
     <WaveformGoToNextSceneChange>Go to next scene change</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>Toggle scene change</WaveformToggleSceneChange>
     <GoBack1Frame>One frame back</GoBack1Frame>
@@ -1918,6 +1930,8 @@ can edit in same subtitle file (collaboration)</Information>
     <TogglePlayPause>Toggle play/pause</TogglePlayPause>
     <Pause>Pause</Pause>
     <Fullscreen>Fullscreen</Fullscreen>
+    <PlayRateSlower>Play rate slower</PlayRateSlower>
+    <PlayRateFaster>Play rate faster</PlayRateFaster>
     <CustomSearch1>Translate, custom search 1</CustomSearch1>
     <CustomSearch2>Translate, custom search 2</CustomSearch2>
     <CustomSearch3>Translate, custom search 3</CustomSearch3>
@@ -1946,11 +1960,15 @@ can edit in same subtitle file (collaboration)</Information>
     <ListViewColumnDelete>Column, delete text</ListViewColumnDelete>
     <ListViewColumnInsert>Column, insert text</ListViewColumnInsert>
     <ListViewColumnPaste>Column, paste</ListViewColumnPaste>
+    <ListViewColumnTextUp>Column, text up</ListViewColumnTextUp>
+    <ListViewColumnTextDown>Column, text down</ListViewColumnTextDown>
     <ListViewFocusWaveform>Focus waveform/spectrogram</ListViewFocusWaveform>
     <ListViewGoToNextError>Go to next error</ListViewGoToNextError>
     <ShowBeamer>Start subtitle fullscreen beamer</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Move last word down to next subtitle line</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Move first word from next subtitle line up</MainTextBoxMoveFirstWordFromNextUp>
+    <MainTextBoxMoveFirstWordUpCurrent>Move first word from next line up (current subtitle)</MainTextBoxMoveFirstWordUpCurrent>
+    <MainTextBoxMoveLastWordDownCurrent>Move last word from first line down (current subtitle)</MainTextBoxMoveLastWordDownCurrent>
     <MainTextBoxSelectionToLower>Selection to lowercase</MainTextBoxSelectionToLower>
     <MainTextBoxSelectionToUpper>Selection to uppercase</MainTextBoxSelectionToUpper>
     <MainTextBoxToggleAutoDuration>Toggle auto duration</MainTextBoxToggleAutoDuration>
@@ -2017,6 +2035,7 @@ can edit in same subtitle file (collaboration)</Information>
     <EditWholeText>Edit whole text</EditWholeText>
     <EditWordOnly>Edit word only</EditWordOnly>
     <AddXToNames>Add '{0}' to name list</AddXToNames>
+    <AddXToUserDictionary>Add '{0}' to user dictionary</AddXToUserDictionary>
     <AutoFixNames>Auto fix names where only casing differ</AutoFixNames>
     <CheckOneLetterWords>Prompt for unknown one letter words</CheckOneLetterWords>
     <TreatINQuoteAsING>Treat word ending " in' " as " ing " (English only)</TreatINQuoteAsING>
@@ -2089,6 +2108,7 @@ can edit in same subtitle file (collaboration)</Information>
     <NumberOfLinesX>Number of subtitle lines: {0:#,###}</NumberOfLinesX>
     <LengthInFormatXinCharactersY>Number of characters as {0}: {1:#,###,##0}</LengthInFormatXinCharactersY>
     <NumberOfCharactersInTextOnly>Number of characters in text only: {0:#,###,##0}</NumberOfCharactersInTextOnly>
+    <TotalDuration>Total duration of all subtitles: {0}</TotalDuration>
     <TotalCharsPerSecond>Total characters/second: {0:0.0} seconds</TotalCharsPerSecond>
     <TotalWords>Total words in subtitle: {0}</TotalWords>
     <NumberOfItalicTags>Number of italic tags: {0}</NumberOfItalicTags>

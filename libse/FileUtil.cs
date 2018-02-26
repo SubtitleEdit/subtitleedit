@@ -1,6 +1,7 @@
 ﻿using Nikse.SubtitleEdit.Core.TransportStream;
 using Nikse.SubtitleEdit.Core.VobSub;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
@@ -37,6 +38,16 @@ namespace Nikse.SubtitleEdit.Core
                 }
                 return bytes;
             }
+        }
+
+        public static List<string> ReadAllLinesShared(string path, Encoding encoding)
+        {
+            return encoding.GetString(ReadAllBytesShared(path)).SplitToLines();
+        }
+
+        public static string ReadAllTextShared(string path, Encoding encoding)
+        {
+            return encoding.GetString(ReadAllBytesShared(path));
         }
 
         public static bool IsZip(string fileName)

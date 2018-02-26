@@ -2,7 +2,7 @@
 <Language Name="srpski">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.5.4</Version>
+    <Version>3.5.5</Version>
     <TranslatedBy>Prevod: Misa Forger</TranslatedBy>
     <CultureName>sr-Latn-RS</CultureName>
     <HelpFile />
@@ -118,7 +118,6 @@ E-pošta:mailto:nikse.dk@gmail.com</AboutText1>
     <SetAsPercent>Postotak trajanja:</SetAsPercent>
     <Note>Vreme prikaza neće preklapati početno vreme iduće linije.</Note>
     <PleaseSelectAValueFromTheDropDownList>Izaberite vrednost iz padajućeg menija.</PleaseSelectAValueFromTheDropDownList>
-    <PleaseChoose> – Izaberite – </PleaseChoose>
   </AdjustDisplayDuration>
   <ApplyDurationLimits>
     <Title>Primeni ograničeno trajanje</Title>
@@ -1173,7 +1172,6 @@ koji bi trebao da bude usklađen sa Video datotekom.
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Biranje prevoda iz MKV datoteke</Title>
-    <PleaseChoose>Pronađeno je više prevoda. Izaberite koji želite.</PleaseChoose>
     <TrackXLanguageYTypeZ>Zapis {0} – jezik: {1} – vrsta: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MergedShortLines>

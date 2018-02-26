@@ -39,6 +39,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
     public class FinalCutProXml15 : SubtitleFormat
     {
+        internal string FcpXmlVersion { get; set; } = "1.5";
 
         public FinalCutProXml15()
         {
@@ -61,7 +62,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string Extension => ".fcpxml";
 
-        public override string Name => "Final Cut Pro Xml 1.5";
+        public override string Name => "Final Cut Pro Xml " + FcpXmlVersion;
 
         internal static string GetFrameDuration()
         {
@@ -95,7 +96,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
             else if (Math.Abs(Configuration.Settings.General.CurrentFrameRate - 60) < 0.01)
             {
-                return "10/60s";
+                return "1/60s";
             }
             return "1/25s";
         }
@@ -139,7 +140,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         internal static string GetNdfDf()
         {
-            if (Math.Abs(Configuration.Settings.General.CurrentFrameRate % 0.0) < 0.01)
+            if (Math.Abs(Configuration.Settings.General.CurrentFrameRate % 1.0) < 0.01)
             {
                 return "NDF";
             }
@@ -150,7 +151,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             string xmlStructure =
                 "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>" + Environment.NewLine +
-                "<fcpxml version=\"1.5\">" + Environment.NewLine +
+                "<fcpxml version=\"" + FcpXmlVersion + "\">" + Environment.NewLine +
                 "   <resources>" + Environment.NewLine +
                 "       <format height=\"[HEIGHT]\" width=\"[WIDTH]\" frameDuration=\"" + GetFrameDuration() + "\" id=\"r1\"/>" + Environment.NewLine +
                 "       <effect id=\"r2\" uid=\".../Titles.localized/Bumper:Opener.localized/Basic Title.localized/Basic Title.moti\" name=\"Basic Title\"/>" + Environment.NewLine +
@@ -180,28 +181,40 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 ;
             XmlNode videoNode = xml.DocumentElement.SelectSingleNode("//project/sequence/spine");
             int number = 1;
+
+            var sbTrimmedTitle = new StringBuilder();
+            var sb = new StringBuilder();
             foreach (Paragraph p in subtitle.Paragraphs)
             {
+                sbTrimmedTitle.Clear();
+                sb.Clear();
                 XmlNode video = xml.CreateElement("video");
-                var trimmedTitle = new StringBuilder();
                 foreach (var ch in HtmlUtil.RemoveHtmlTags(p.Text, true))
                 {
-                    if ("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".Contains(ch.ToString(CultureInfo.InvariantCulture)))
-                        trimmedTitle.Append(ch.ToString(CultureInfo.InvariantCulture));
+                    if (CharUtils.IsEnglishAlphabet(ch) || char.IsDigit(ch))
+                    {
+                        sbTrimmedTitle.Append(ch);
+                    }
                 }
 
                 var styles = new List<FcpXmlStyle>() { DefaultStyle };
                 var text = Utilities.RemoveSsaTags(p.Text).Trim();
-                var sb = new StringBuilder();
-                int i = 0;
                 var italicIndexesBefore = new Stack<int>();
                 var boldIndexesBefore = new Stack<int>();
                 var fontIndexesBefore = new Stack<int>();
                 var styleTextPairs = new Dictionary<int, string>();
-                while (i < text.Length)
+                for (int i = 0; i < text.Length; i++)
                 {
-                    var ch = text[i];
-                    if (ch == '<' && text.Substring(i).StartsWith("<i>", StringComparison.OrdinalIgnoreCase))
+                    char ch = text[i];
+                    if (ch != '<')
+                    {
+                        sb.Append(ch);
+                        continue;
+                    }
+
+                    string subIText = text.Substring(i);
+
+                    if (subIText.StartsWith("<i>", StringComparison.OrdinalIgnoreCase))
                     {
                         AddTextAndStyle(styles, sb, styleTextPairs);
                         italicIndexesBefore.Push(styles.Count - 1);
@@ -209,7 +222,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         styles.Add(newStyle);
                         i += 2;
                     }
-                    else if (ch == '<' && text.Substring(i).StartsWith("<b>", StringComparison.OrdinalIgnoreCase))
+                    else if (subIText.StartsWith("<b>", StringComparison.OrdinalIgnoreCase))
                     {
                         AddTextAndStyle(styles, sb, styleTextPairs);
                         boldIndexesBefore.Push(styles.Count - 1);
@@ -217,7 +230,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         styles.Add(newStyle);
                         i += 2;
                     }
-                    else if (ch == '<' && text.Substring(i).StartsWith("<font ", StringComparison.OrdinalIgnoreCase))
+                    else if (subIText.StartsWith("<font ", StringComparison.OrdinalIgnoreCase))
                     {
                         AddTextAndStyle(styles, sb, styleTextPairs);
                         fontIndexesBefore.Push(styles.Count - 1);
@@ -264,7 +277,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             i += text.Length;
                         }
                     }
-                    else if (ch == '<' && text.Substring(i).StartsWith("</i>", StringComparison.OrdinalIgnoreCase))
+                    else if (subIText.StartsWith("</i>", StringComparison.OrdinalIgnoreCase))
                     {
                         AddTextAndStyle(styles, sb, styleTextPairs);
                         var newStyle = new FcpXmlStyle(styles[styles.Count - 1]);
@@ -276,7 +289,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         styles.Add(newStyle);
                         i += 3;
                     }
-                    else if (ch == '<' && text.Substring(i).StartsWith("</b>", StringComparison.OrdinalIgnoreCase))
+                    else if (subIText.StartsWith("</b>", StringComparison.OrdinalIgnoreCase))
                     {
                         AddTextAndStyle(styles, sb, styleTextPairs);
                         var newStyle = new FcpXmlStyle(styles[styles.Count - 1]);
@@ -288,7 +301,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         styles.Add(newStyle);
                         i += 3;
                     }
-                    else if (ch == '<' && text.Substring(i).StartsWith("</font>", StringComparison.OrdinalIgnoreCase))
+                    else if (subIText.StartsWith("</font>", StringComparison.OrdinalIgnoreCase))
                     {
                         AddTextAndStyle(styles, sb, styleTextPairs);
                         var newStyle = new FcpXmlStyle(styles[styles.Count - 1]);
@@ -301,20 +314,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         styles.Add(newStyle);
                         i += 6;
                     }
-                    else
-                    {
-                        sb.Append(ch);
-                    }
-                    i++;
                 }
                 AddTextAndStyle(styles, sb, styleTextPairs);
-                WriteCurrentTextSegment(styles, styleTextPairs, video, number, trimmedTitle.ToString(), xml);
+                WriteCurrentTextSegment(styles, styleTextPairs, video, number++, sbTrimmedTitle.ToString(), xml);
                 XmlNode generatorNode = video.SelectSingleNode("title");
                 generatorNode.Attributes["offset"].Value = GetFrameTime(p.StartTime);
                 generatorNode.Attributes["duration"].Value = GetFrameTime(p.Duration);
                 generatorNode.Attributes["start"].Value = GetFrameTime(p.StartTime);
                 videoNode.AppendChild(generatorNode);
-                number++;
             }
             return ToUtf8XmlString(xml);
         }
@@ -417,7 +424,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var sb = new StringBuilder();
             lines.ForEach(line => sb.AppendLine(line));
             string x = sb.ToString();
-            if (!x.Contains("<fcpxml version=\"1.5\">"))
+            if (!x.Contains("<fcpxml version=\"" + FcpXmlVersion + "\">"))
                 return;
 
             var xml = new XmlDocument();
@@ -431,6 +438,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     if (textNodes.Count == 0)
                     {
                         textNodes = xml.SelectNodes("//project/sequence/spine/gap/title/text");
+                    }
+                    if (textNodes.Count == 0)
+                    {
+                        textNodes = xml.SelectNodes("//title/text");
                     }
                     foreach (XmlNode node in textNodes)
                     {

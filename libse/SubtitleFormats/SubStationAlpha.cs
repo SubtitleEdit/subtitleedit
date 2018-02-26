@@ -222,9 +222,7 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
         {
             try
             {
-                var lines = new List<string>();
-                foreach (string s in subtitle.Header.Replace(Environment.NewLine, "\n").Split('\n'))
-                    lines.Add(s);
+                var lines = subtitle.Header.SplitToLines();
                 var tt = new TimedText10();
                 var sub = new Subtitle();
                 tt.LoadSubtitle(sub, lines, string.Empty);

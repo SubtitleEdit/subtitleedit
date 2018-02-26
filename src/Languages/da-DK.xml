@@ -2,7 +2,7 @@
 <Language Name="dansk">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.5.4</Version>
+    <Version>3.5.5</Version>
     <TranslatedBy>Oversat til dansk af Nikse (mailto:nikse.dk@gmail.com)</TranslatedBy>
     <CultureName>da-DK</CultureName>
     <HelpFile></HelpFile>
@@ -27,6 +27,7 @@
     <CharsPerSec>Tegn/sek</CharsPerSec>
     <WordsPerMin>Ord/min</WordsPerMin>
     <Actor>Taler</Actor>
+    <Gap>Gap</Gap>
     <Region>Region</Region>
     <NumberSymbol>#</NumberSymbol>
     <Number>Antal</Number>
@@ -140,7 +141,6 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <SetAsPercent>Set som procent af varighed</SetAsPercent>
     <Note>Bemærk: Visningstid vil ikke overlappe starttidspunkt for næste tekst</Note>
     <PleaseSelectAValueFromTheDropDownList>Vælg en værdi fra listen</PleaseSelectAValueFromTheDropDownList>
-    <PleaseChoose>- Vælg værdi -</PleaseChoose>
   </AdjustDisplayDuration>
   <ApplyDurationLimits>
     <Title>Overhold visnings-grænser</Title>
@@ -275,10 +275,11 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <NextDifference>&amp;Næste ændring</NextDifference>
     <SubtitlesNotAlike>Undertekster har ingen ligheder</SubtitlesNotAlike>
     <XNumberOfDifference>Antal forskelle: {0}</XNumberOfDifference>
-    <XNumberOfDifferenceAndPercentChanged>Antal forskelle: {0} ({1}% af ord ændret)</XNumberOfDifferenceAndPercentChanged>
-    <XNumberOfDifferenceAndPercentLettersChanged>Antal forskelle: {0} ({1}% af bogstaver ændret)</XNumberOfDifferenceAndPercentLettersChanged>
+    <XNumberOfDifferenceAndPercentChanged>Antal forskelle: {0} ({1:0.##}% af ord ændret)</XNumberOfDifferenceAndPercentChanged>
+    <XNumberOfDifferenceAndPercentLettersChanged>Antal forskelle: {0} ({1:0.##}% af bogstaver ændret)</XNumberOfDifferenceAndPercentLettersChanged>
     <ShowOnlyDifferences>Vis kun forskelle</ShowOnlyDifferences>
     <IgnoreLineBreaks>Ignorer linjeskift</IgnoreLineBreaks>
+    <IgnoreFormatting>Ignorer formatering</IgnoreFormatting>
     <OnlyLookForDifferencesInText>Vis kun forskelle i teksten</OnlyLookForDifferencesInText>
     <CannotCompareWithImageBasedSubtitles>Kan ikke sammenligne med billede baseret undertekster</CannotCompareWithImageBasedSubtitles>
   </CompareSubtitles>
@@ -420,6 +421,14 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <Footer>Footer</Footer>
     <DoNotModify>[Ret ikke]</DoNotModify>
   </ExportCustomTextFormat>
+  <ExportFcpXmlAdvanced>
+    <Title>Eksporter Final Cut Pro XML avanceret</Title>
+    <FontName>Fontnavn</FontName>
+    <FontSize>Fontstørrelse</FontSize>
+    <FontFace>Font face</FontFace>
+    <Alignment>Position</Alignment>
+    <Baseline>Baseline</Baseline>
+  </ExportFcpXmlAdvanced>
   <ExportPngXml>
     <Title>Eksporter BDN XML/PNG</Title>
     <ImageSettings>Billedindstillinger</ImageSettings>
@@ -450,6 +459,7 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <Left>Venstre</Left>
     <Right>Højre</Right>
     <Center>Centrer</Center>
+    <CenterLeftJustify>Center, venstrestillet</CenterLeftJustify>
     <BottomMargin>Bundmargen</BottomMargin>
     <LeftRightMargin>Venstre/højre margen</LeftRightMargin>
     <SaveBluRraySupAs>Vælg Blu-ray sup filnavn</SaveBluRraySupAs>
@@ -468,6 +478,7 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <Forced>Forced</Forced>
     <ChooseBackgroundColor>Vælg baggrundsfarve</ChooseBackgroundColor>
     <SaveImageAs>Gem billede som...</SaveImageAs>
+    <FcpUseFullPathUrl>Benyt fuld billede sti i FCP xml</FcpUseFullPathUrl>
   </ExportPngXml>
   <ExportText>
     <Title>Eksport tekst</Title>
@@ -1000,6 +1011,7 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
         <ChooseAudioTrack>Vælg lydspor</ChooseAudioTrack>
         <CloseVideo>Luk videofil</CloseVideo>
         <SetVideoOffset>Indstil video offset...</SetVideoOffset>
+        <SmptTimeMode>SMPTE timing (drop frame)</SmptTimeMode>
         <ImportSceneChanges>Importer sceneskift...</ImportSceneChanges>
         <RemoveSceneChanges>Fjern sceneskift</RemoveSceneChanges>
         <WaveformBatchGenerate>Batch generer bølgeformer...</WaveformBatchGenerate>
@@ -1085,6 +1097,7 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
         <Paste>Indsæt</Paste>
         <Delete>Slet</Delete>
         <SplitLineAtCursorPosition>Split ved markør</SplitLineAtCursorPosition>
+        <SplitLineAtCursorAndWaveformPosition>Split linje ved cursor/video position</SplitLineAtCursorAndWaveformPosition>
         <AutoDurationCurrentLine>Auto varighed (aktuelle linje)</AutoDurationCurrentLine>
         <SelectAll>Vælg alle</SelectAll>
         <InsertFirstLine>Indsæt linje</InsertFirstLine>
@@ -1099,6 +1112,8 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
         <ColumnInsertTextFromSubtitle>Indsæt tekst fra undertekst fil...</ColumnInsertTextFromSubtitle>
         <ColumnImportTextAndShiftCellsDown>Import tekst og flyt celler ned</ColumnImportTextAndShiftCellsDown>
         <ColumnPasteFromClipboard>Indsæt fra udklipsholder...</ColumnPasteFromClipboard>
+        <ColumnTextUp>Tekst op</ColumnTextUp>
+        <ColumnTextDown>Tekst ned</ColumnTextDown>
         <ColumnCopyOriginalTextToCurrent>Kopier text fra original to aktuel</ColumnCopyOriginalTextToCurrent>
         <Split>Split</Split>
         <MergeSelectedLines>Flet markerede linjer</MergeSelectedLines>
@@ -1184,10 +1199,6 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
       <NewTextInsertAtX>Ny tekst indsat ved {0}</NewTextInsertAtX>
       <Center>Center</Center>
       <PlayRate>Afspilnings hastighed</PlayRate>
-      <Slow>Langsom</Slow>
-      <Normal>Normal</Normal>
-      <Fast>Hurtig</Fast>
-      <VeryFast>Meget hurtig</VeryFast>
     </VideoControls>
     <SaveChangesToUntitled>Gem ændringer til unavngivet?</SaveChangesToUntitled>
     <SaveChangesToX>Gem ændringer til {0}?</SaveChangesToX>
@@ -1381,8 +1392,9 @@ Fortsæt?</SubtitleAppendPrompt>
     <UnicodeCharactersAnsiWarning>Undertekst indeholder Unicode-tegn. Ved gem i ANSI filkodning vil disse gå tabt. Fortsæt gem?</UnicodeCharactersAnsiWarning>
     <NegativeTimeWarning>Undertekst indeholder negative tidskoder. Gem?</NegativeTimeWarning>
     <BeforeMergeShortLines>Før fusionere korte linjer</BeforeMergeShortLines>
-    <BeforeSplitLongLines>Før split lange linjer</BeforeSplitLongLines>
     <MergedShortLinesX>Antal linjer fusionerede: {0}</MergedShortLinesX>
+    <BeforeSplitLongLines>Før split lange linjer</BeforeSplitLongLines>
+    <LongLinesSplitX>Antal linjer delt: {0}</LongLinesSplitX>
     <BeforeDurationsBridgeGap>Før 'Fjern små gaps'</BeforeDurationsBridgeGap>
     <BeforeSetMinimumDisplayTimeBetweenParagraphs>Før ret minimum visningstid mellem tekster</BeforeSetMinimumDisplayTimeBetweenParagraphs>
     <XMinimumDisplayTimeBetweenParagraphsChanged>Antallet af linjer med minimum visningstid mellem tekster ændret: {0}</XMinimumDisplayTimeBetweenParagraphsChanged>
@@ -1427,6 +1439,7 @@ Fortsæt?</SubtitleAppendPrompt>
     <BeforeColumnDelete>Før kolonne slet</BeforeColumnDelete>
     <BeforeColumnImportText>Før kolonne import af tekst</BeforeColumnImportText>
     <BeforeColumnShiftCellsDown>Før indsæt og flyt kolonner ned</BeforeColumnShiftCellsDown>
+    <BeforeX>Før: {0}</BeforeX>
     <ErrorLoadingPluginXErrorY>Fejl ved indlæsning af plugin: {0}: {1}</ErrorLoadingPluginXErrorY>
     <BeforeRunningPluginXVersionY>Før kørsel af plugin: {0}: {1}</BeforeRunningPluginXVersionY>
     <UnableToReadPluginResult>Kan ikke læse underteksterne fra plugin!</UnableToReadPluginResult>
@@ -1441,6 +1454,11 @@ Fortsæt?</SubtitleAppendPrompt>
     <ImportTimeCodesDifferentNumberOfLinesWarning>Undertekst med tidskoder har et forskelligt antal linier ({0}) end nuværende undertekst ({1}) - fortsæt alligevel?</ImportTimeCodesDifferentNumberOfLinesWarning>
     <ParsingTransportStream>Læser transport stream - vent venligst...</ParsingTransportStream>
     <XPercentCompleted>{0}% gennemført</XPercentCompleted>
+    <NextX>Næste: {0}</NextX>
+    <PromptInsertSubtitleOverlap>Indsæt undertekst ved bølgeform position vil forårsage overlapning!
+
+Fortsæt alligevel?</PromptInsertSubtitleOverlap>
+    <SetPlayRateX>Afspilningshastighed er {0}%</SetPlayRateX>
     <ErrorLoadIdx>Subtitle Edit kan ikke læse/redigere .idx filer. Idx filer er en del af et idx/sub fil par (også kaldet VobSub), og Subtitle Edit kan kun åbne .sub filen.</ErrorLoadIdx>
     <ErrorLoadRar>Denne fil er sandsynligvis en komprimeret .rar fil. Subtitle Edit kan ikke åbne komprimerede filer.</ErrorLoadRar>
     <ErrorLoadZip>Denne fil er sandsynligvis en komprimeret .zip fil. Subtitle Edit kan ikke åbne komprimerede filer.</ErrorLoadZip>
@@ -1461,7 +1479,7 @@ Hvis du har redigeret denne fil med Subtitle Edit du måske finde en backup via 
   <MatroskaSubtitleChooser>
     <Title>Vælg undertekst fra Matroska fil</Title>
     <TitleMp4>Vælg undertekster fra MP4-fil</TitleMp4>
-    <PleaseChoose>Mere end en undertekst fundet - så vælg</PleaseChoose>
+    <PleaseChoose>Mere end en undertekst fundet - vælg venligst</PleaseChoose>
     <TrackXLanguageYTypeZ>Spor {0} - sprog: {1} - type: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MeasurementConverter>
@@ -1525,6 +1543,7 @@ Hvis du har redigeret denne fil med Subtitle Edit du måske finde en backup via 
     <Normal>Normal</Normal>
     <CaseSensitive>Versal følsom</CaseSensitive>
     <RegularExpression>Regulært udtryk</RegularExpression>
+    <Description>Beskrivelse</Description>
     <LinesFoundX>Linjer fundet: {0}</LinesFoundX>
     <Remove>Fjern</Remove>
     <Add>Tilføj</Add>
@@ -1536,6 +1555,8 @@ Hvis du har redigeret denne fil med Subtitle Edit du måske finde en backup via 
     <Export>Eksport...</Export>
     <ImportRulesTitle>Import erstat-regle(r) fra...</ImportRulesTitle>
     <ExportRulesTitle>Export erstat-regle(r)...</ExportRulesTitle>
+    <ChooseGroupsToImport>Vælg grupper til import</ChooseGroupsToImport>
+    <ChooseGroupsToExport>Vælg grupper til eksport</ChooseGroupsToExport>
     <Rules>Eksport regler</Rules>
     <MoveToTop>Flyt til top</MoveToTop>
     <MoveToBottom>Flyt til bund</MoveToBottom>
@@ -1545,6 +1566,7 @@ Hvis du har redigeret denne fil med Subtitle Edit du måske finde en backup via 
     <GroupName>Gruppenavn</GroupName>
     <RenameGroup>Omdøb gruppe...</RenameGroup>
     <NewGroup>Ny gruppe...</NewGroup>
+    <NothingToImport>Intet at importere</NothingToImport>
   </MultipleReplace>
   <NetworkChat>
     <Title>Chat</Title>
@@ -1694,6 +1716,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <NetflixQualityCheck>Netflix kvalitetstjek</NetflixQualityCheck>
     <SettingsName>Indstillinger</SettingsName>
     <Help>Hjælp</Help>
+    <UnbreakNoSpace>Fjern lineskift uden mellemrum (CJK)</UnbreakNoSpace>
     <ShowFrameRate>Vis frame rate i værktøjslinjen</ShowFrameRate>
     <DefaultFrameRate>Standard frame rate</DefaultFrameRate>
     <DefaultFileEncoding>Standard filkodningen</DefaultFileEncoding>
@@ -1722,7 +1745,6 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <RemoveBlankLinesWhenOpening>Fjern tomme linjer, når undertekst åbnes</RemoveBlankLinesWhenOpening>
     <ShowLineBreaksAs>Vis linjeskift i listevisning som</ShowLineBreaksAs>
     <MainListViewDoubleClickAction>Dobbeltklik på linje i hovedvinduet listevisning starter</MainListViewDoubleClickAction>
-    <MainListViewColumns>Listevisning kolonner</MainListViewColumns>
     <MainListViewColumnsInfo>Vælg synlige listevisning kolonner</MainListViewColumnsInfo>
     <MainListViewNothing>Ingenting</MainListViewNothing>
     <MainListViewVideoGoToPositionAndPause>Gå til video pos og pause</MainListViewVideoGoToPositionAndPause>
@@ -1829,7 +1851,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <RemoveTextForHi>Fjern tekst for svagthørende</RemoveTextForHi>
     <MergeLinesShorterThan>Flet linjer kortere end</MergeLinesShorterThan>
     <MusicSymbol>Musik symbol</MusicSymbol>
-    <MusicSymbolsToReplace>Musik symboler der skal erstattes (adskilt af mellemrum)</MusicSymbolsToReplace>
+    <MusicSymbolsReplace>Musik symboler, der skal erstattes (adskilt med komma)</MusicSymbolsReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Ret normale OCR fejl - Inkluder hardcodede regler</FixCommonOcrErrorsUseHardcodedRules>
     <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Fix kort visningstid - tillad flytning af starttidspunkt</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
     <FixCommonErrorsSkipStepOne>Spring trin 1 over (vælg fix regler)</FixCommonErrorsSkipStepOne>
@@ -1850,6 +1872,10 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <AdjustStartDownEndUpAndGoToNext>Tast ned = set start, tast op = sæt slut og gå til næste</AdjustStartDownEndUpAndGoToNext>
     <AdjustSelected100MsForward>Flyt valgte linjer 100 ms frem</AdjustSelected100MsForward>
     <AdjustSelected100MsBack>Flyt valgte linjer 100 ms tilbage</AdjustSelected100MsBack>
+    <AdjustStartXMsBack>Flyt start {0} ms tilbage</AdjustStartXMsBack>
+    <AdjustStartXMsForward>Flyt start {0} ms fremad</AdjustStartXMsForward>
+    <AdjustEndXMsBack>Flyt slut {0} ms tilbage</AdjustEndXMsBack>
+    <AdjustEndXMsForward>Flyt slut {0} ms frem</AdjustEndXMsForward>
     <AdjustSetStartTimeKeepDuration>Sæt starttid, behold varighed</AdjustSetStartTimeKeepDuration>
     <AdjustSetEndAndOffsetTheRest>Set sluttid, juster resten</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Set sluttid, juster resten og gå til næste</AdjustSetEndAndOffsetTheRestAndGoToNext>
@@ -1881,6 +1907,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <WaveformPlayFirstSelectedSubtitle>Spil første valgte undertekst</WaveformPlayFirstSelectedSubtitle>
     <WaveformFocusListView>Fokuser listevisning</WaveformFocusListView>
     <WaveformGoToNextSubtitle>Gå til næste undertekst (fra video position)</WaveformGoToNextSubtitle>
+    <WaveformGoToPreviousSceneChange>Gå til forrige sceneændring</WaveformGoToPreviousSceneChange>
     <WaveformGoToNextSceneChange>Gå til næste sceneskift</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>Toggle sceneskift</WaveformToggleSceneChange>
     <GoBack1Frame>En frame tilbage</GoBack1Frame>
@@ -1898,6 +1925,8 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <TogglePlayPause>Skift mellem afspil og pause</TogglePlayPause>
     <Pause>Pause</Pause>
     <Fullscreen>Fuldskærm</Fullscreen>
+    <PlayRateSlower>Afspilningshastigheden langsommere</PlayRateSlower>
+    <PlayRateFaster>Afspilningshastighed hurtigere</PlayRateFaster>
     <CustomSearch1>Oversæt, brugerdefineret søgning 1</CustomSearch1>
     <CustomSearch2>Oversæt, brugerdefineret søgning 2</CustomSearch2>
     <CustomSearch3>Oversæt, brugerdefineret søgning 3</CustomSearch3>
@@ -1927,11 +1956,15 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <ListViewColumnDelete>Kolonne, slet tekst</ListViewColumnDelete>
     <ListViewColumnInsert>Column, indsæt tekst</ListViewColumnInsert>
     <ListViewColumnPaste>Column, indsæt fra udklipsholder</ListViewColumnPaste>
+    <ListViewColumnTextUp>Kolonne, tekst op</ListViewColumnTextUp>
+    <ListViewColumnTextDown>Kolonne, tekst ned</ListViewColumnTextDown>
     <ListViewFocusWaveform>Fokuser bølgeform/spectrogram</ListViewFocusWaveform>
     <ListViewGoToNextError>Gå til næste fejl</ListViewGoToNextError>
     <ShowBeamer>Start undertekst fremviser (fuldskærm)</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Flyt sidste ord ned til næste linje</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Flyt første ord fra næste linje op</MainTextBoxMoveFirstWordFromNextUp>
+    <MainTextBoxMoveFirstWordUpCurrent>Flyt første ord fra næste linje op (nuværende undertekst)</MainTextBoxMoveFirstWordUpCurrent>
+    <MainTextBoxMoveLastWordDownCurrent>Flyt sidste ord fra første linje ned (nuværende undertekst)</MainTextBoxMoveLastWordDownCurrent>
     <MainTextBoxSelectionToLower>Markering til små bogstaver</MainTextBoxSelectionToLower>
     <MainTextBoxSelectionToUpper>Markering til store bogstaver</MainTextBoxSelectionToUpper>
     <MainTextBoxToggleAutoDuration>Toggle auto varighed</MainTextBoxToggleAutoDuration>
@@ -1998,12 +2031,14 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <EditWholeText>Rediger hele teksten</EditWholeText>
     <EditWordOnly>Rediger kun ord</EditWordOnly>
     <AddXToNames>Tilføj '{0}' til navne mv. liste</AddXToNames>
+    <AddXToUserDictionary>Tilføj '0' ' til brugerordbog</AddXToUserDictionary>
     <AutoFixNames>Auto fix navne, hvor kun små/store bogstaver udgør forskellen</AutoFixNames>
     <CheckOneLetterWords>Spørg ved enkeltbogstaver</CheckOneLetterWords>
     <TreatINQuoteAsING>Accepter ord der slutter med i' som ing (kun på engelsk)</TreatINQuoteAsING>
     <ImageText>Billede tekst</ImageText>
     <SpellCheckCompleted>Stavekontrol færdig</SpellCheckCompleted>
     <SpellCheckAborted>Stavekontrol afbrudt</SpellCheckAborted>
+    <SpacesNotAllowed>Mellemrum ikke tilladt i enkeltord!</SpacesNotAllowed>
     <UndoX>Fortryd: {0}</UndoX>
   </SpellCheck>
   <NetflixQualityCheck>
@@ -2069,6 +2104,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <NumberOfLinesX>Antal undertekst linjer: {0:#,###}</NumberOfLinesX>
     <LengthInFormatXinCharactersY>Antal tegn som {0}: {1: ####, ##0}</LengthInFormatXinCharactersY>
     <NumberOfCharactersInTextOnly>Antal tegn (kun in tekst): {0:#,###,##0}</NumberOfCharactersInTextOnly>
+    <TotalDuration>Samlet varighed af alle undertekster: {0}</TotalDuration>
     <TotalCharsPerSecond>Total antal karakterer per sekund: {0:0.0} sekunder</TotalCharsPerSecond>
     <TotalWords>Total antal ord: {0}</TotalWords>
     <NumberOfItalicTags>Antal kursiv tags: {0}</NumberOfItalicTags>
@@ -2264,6 +2300,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <SetUnitalicFactor>Juster de-kursiv faktor...</SetUnitalicFactor>
     <DiscardTitle>Kassér ændringer i OCR?</DiscardTitle>
     <DiscardText>Ønsker du at kassere ændringer i nuværende OCR-session?</DiscardText>
+    <MinLineSplitHeight>Min. linje højde (split)</MinLineSplitHeight>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub - Manual billede til tekst</Title>

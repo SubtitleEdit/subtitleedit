@@ -64,7 +64,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelMarginTop.Text = language.MarginTop;
             labelMarginBottom.Text = language.MarginBottom;
             labelNewLineRows.Text = language.NewLineRows;
-            int tempW = labelMarginTop.Left + 9 +  Math.Max(Math.Max(labelMarginTop.Width, labelMarginBottom.Width), labelNewLineRows.Width);
+            int tempW = labelMarginTop.Left + 9 + Math.Max(Math.Max(labelMarginTop.Width, labelMarginBottom.Width), labelNewLineRows.Width);
             numericUpDownMarginTop.Left = tempW;
             numericUpDownMarginBottom.Left = tempW;
             numericUpDownNewLineRows.Left = tempW;
@@ -204,9 +204,9 @@ namespace Nikse.SubtitleEdit.Forms
             textBoxSubtitleListReferenceCode.Text = header.SubtitleListReferenceCode.TrimEnd();
             textBoxCountryOfOrigin.Text = header.CountryOfOrigin;
 
-            comboBoxTimeCodeStatus.SelectedIndex = 0;
-            if (header.TimeCodeStatus == "1")
-                comboBoxTimeCodeStatus.SelectedIndex = 1;
+            comboBoxTimeCodeStatus.SelectedIndex = 1;
+            if (header.TimeCodeStatus == "0")
+                comboBoxTimeCodeStatus.SelectedIndex = 0; // 1 == intended for use, 0 == not intended for use
             try
             {
                 // HHMMSSFF
@@ -292,7 +292,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (_header.CountryOfOrigin.Length != 3)
                 _header.CountryOfOrigin = "USA";
             _header.TimeCodeStatus = comboBoxTimeCodeStatus.SelectedIndex.ToString(CultureInfo.InvariantCulture);
-            _header.TimeCodeStartOfProgramme = timeUpDownStartTime.TimeCode.ToHHMMSSFF().Replace(":", string.Empty);
+            _header.TimeCodeStartOfProgramme = timeUpDownStartTime.TimeCode.ToHHMMSSFF().RemoveChar(':');
 
             _header.RevisionNumber = numericUpDownRevisionNumber.Value.ToString("00");
             _header.MaximumNumberOfDisplayableCharactersInAnyTextRow = numericUpDownMaxCharacters.Value.ToString("00");

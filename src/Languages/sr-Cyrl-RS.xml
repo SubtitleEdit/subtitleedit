@@ -99,7 +99,6 @@
     <SetAsPercent>Постотак трајања:</SetAsPercent>
     <Note>Време приказа неће преклапати почетно време идуће линије.</Note>
     <PleaseSelectAValueFromTheDropDownList>Изаберите вредност из падајућег менија.</PleaseSelectAValueFromTheDropDownList>
-    <PleaseChoose> – изаберите – </PleaseChoose>
   </AdjustDisplayDuration>
   <AutoBreakUnbreakLines>
     <TitleAutoBreak>Преламање линија</TitleAutoBreak>
@@ -968,7 +967,6 @@
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Одабир титла из матрошке</Title>
-    <PleaseChoose>Пронађено је више од једног титла. Изаберите који желите.</PleaseChoose>
     <TrackXLanguageYTypeZ>Запис {0} – језик: {1} – врста: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MergedShortLines>

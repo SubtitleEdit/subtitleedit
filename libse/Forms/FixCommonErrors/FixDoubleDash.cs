@@ -36,7 +36,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         if (text.IndexOf(Environment.NewLine, StringComparison.Ordinal) > 1)
                         {
                             var lines = text.SplitToLines();
-                            for (int k = 0; k < lines.Length; k++)
+                            for (int k = 0; k < lines.Count; k++)
                                 lines[k] = Helper.RemoveSpacesBeginLineAfterEllipses(lines[k]);
                             text = string.Join(Environment.NewLine, lines);
                         }

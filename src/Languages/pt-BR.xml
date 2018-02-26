@@ -2,7 +2,7 @@
 <Language Name="Português (Brasil)">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.5.4</Version>
+    <Version>3.5.5</Version>
     <TranslatedBy>Tradução (Português do Brasil): Igor Rückert</TranslatedBy>
     <CultureName>pt-BR</CultureName>
     <HelpFile />
@@ -141,7 +141,6 @@ Nota: Verifique o espaço livre em disco.</WaveFileMalformed>
     <SetAsPercent>Ajustar como porcentagem de duração</SetAsPercent>
     <Note>Nota: A duração não pode se sobrepor ao tempo de início do próximo texto</Note>
     <PleaseSelectAValueFromTheDropDownList>Por favor, selecione um valor da lista abaixo</PleaseSelectAValueFromTheDropDownList>
-    <PleaseChoose>- Por favor, selecione -</PleaseChoose>
   </AdjustDisplayDuration>
   <ApplyDurationLimits>
     <Title>Aplicar limites de duração</Title>
@@ -273,8 +272,8 @@ Nota: Verifique o espaço livre em disco.</WaveFileMalformed>
     <NextDifference>Diferença segui&amp;nte</NextDifference>
     <SubtitlesNotAlike>As legendas não são parecidas</SubtitlesNotAlike>
     <XNumberOfDifference>Número de diferenças: {0}</XNumberOfDifference>
-    <XNumberOfDifferenceAndPercentChanged>Número de diferenças: {0} ({1}% de palavras alteradas)</XNumberOfDifferenceAndPercentChanged>
-    <XNumberOfDifferenceAndPercentLettersChanged>Número de diferenças: {0} ({1}% de letras alteradas)</XNumberOfDifferenceAndPercentLettersChanged>
+    <XNumberOfDifferenceAndPercentChanged>Número de diferenças: {0} ({1:0.##}% de palavras alteradas)</XNumberOfDifferenceAndPercentChanged>
+    <XNumberOfDifferenceAndPercentLettersChanged>Número de diferenças: {0} ({1:0.##}% de letras alteradas)</XNumberOfDifferenceAndPercentLettersChanged>
     <ShowOnlyDifferences>Mostrar somente diferenças</ShowOnlyDifferences>
     <IgnoreLineBreaks>Ignorar quebras de linha</IgnoreLineBreaks>
     <OnlyLookForDifferencesInText>Buscar somente diferenças no texto</OnlyLookForDifferencesInText>
@@ -1457,7 +1456,6 @@ Se você editou este arquivo com o Subtitle Edit você poderá encontrar um back
   <MatroskaSubtitleChooser>
     <Title>Selecionar legenda a partir do arquivo Matroska</Title>
     <TitleMp4>Escolha a legenda do arquivo MP4</TitleMp4>
-    <PleaseChoose>Foi encontrada mais do que uma legenda - por favor, escolha uma</PleaseChoose>
     <TrackXLanguageYTypeZ>Faixa {0} - idioma: {1} - tipo: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MeasurementConverter>

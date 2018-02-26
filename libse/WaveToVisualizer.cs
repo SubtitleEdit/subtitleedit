@@ -342,7 +342,7 @@ namespace Nikse.SubtitleEdit.Core
 
             var file = new FileInfo(videoFileName);
             var wavePeakName = Utilities.Sha256Hash(file.Name + file.Length + file.CreationTimeUtc.ToShortDateString()) + ".wav";
-            wavePeakName = wavePeakName.Replace("=", string.Empty).Replace("/", string.Empty).Replace(",", string.Empty).Replace("?", string.Empty).Replace("*", string.Empty).Replace("+", string.Empty).Replace("\\", string.Empty);
+            wavePeakName = wavePeakName.RemoveChar('=').RemoveChar('/').RemoveChar(',').RemoveChar('?').RemoveChar('*').RemoveChar('+').RemoveChar('\\');
             wavePeakName = Path.Combine(dir, wavePeakName);
             return wavePeakName;
         }
@@ -810,7 +810,7 @@ namespace Nikse.SubtitleEdit.Core
 
                 var file = new FileInfo(videoFileName);
                 var name = Utilities.Sha256Hash(file.Name + file.Length + file.CreationTimeUtc.ToShortDateString());
-                name = name.Replace("=", string.Empty).Replace("/", string.Empty).Replace(",", string.Empty).Replace("?", string.Empty).Replace("*", string.Empty).Replace("+", string.Empty).Replace("\\", string.Empty);
+                name = name.RemoveChar('=').RemoveChar('/').RemoveChar(',').RemoveChar('?').RemoveChar('*').RemoveChar('+').RemoveChar('\\');
                 name = Path.Combine(dir, name);
                 return name;
             }

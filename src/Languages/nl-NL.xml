@@ -2,8 +2,8 @@
 <Language Name="Nederlands">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.5.4</Version>
-    <TranslatedBy>Vertaald door Quetsbeek en minouhse 11082014</TranslatedBy>
+    <Version>3.5.5</Version>
+    <TranslatedBy>Vertaald door Quetsbeek en minouhse &amp; René Maassen</TranslatedBy>
     <CultureName>nl-NL</CultureName>
     <HelpFile />
     <Ok>&amp;OK</Ok>
@@ -24,6 +24,11 @@
     <StartTime>Starttĳd</StartTime>
     <EndTime>Eindtĳd</EndTime>
     <Duration>Tĳdsduur</Duration>
+    <CharsPerSec>Karakter/sec.</CharsPerSec>
+    <WordsPerMin>Woorden/min</WordsPerMin>
+    <Actor>Acteur</Actor>
+    <Gap>Gap</Gap>
+    <Region>Regio</Region>
     <NumberSymbol>№</NumberSymbol>
     <Number>Aantal</Number>
     <Text>Tekst</Text>
@@ -139,7 +144,6 @@ Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
     <SetAsPercent>Als percentage instellen</SetAsPercent>
     <Note>Opmerking: weergavetĳd zal starttĳd van volgende tekst niet overlappen</Note>
     <PleaseSelectAValueFromTheDropDownList>Kies een waarde in de vervolgkeuzelĳst</PleaseSelectAValueFromTheDropDownList>
-    <PleaseChoose>- Maak uw keuze -</PleaseChoose>
   </AdjustDisplayDuration>
   <ApplyDurationLimits>
     <Title>Duurtĳdlimieten toepassen</Title>
@@ -162,6 +166,7 @@ Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
     <ChooseOutputFolder>Doelmap kiezen</ChooseOutputFolder>
     <OverwriteExistingFiles>Bestaande bestanden vervangen</OverwriteExistingFiles>
     <Style>Stĳl...</Style>
+    <UseStyleFromSource>Gebruik bronstijl</UseStyleFromSource>
     <ConvertOptions>Conversieopties</ConvertOptions>
     <RemoveFormatting>Formateringstekens verwĳderen</RemoveFormatting>
     <RemoveTextForHI>D&amp;&amp;SH tekst verwĳderen</RemoveTextForHI>
@@ -178,7 +183,8 @@ Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
     <ScanFolder>Doorzoek de map...</ScanFolder>
     <ScanningFolder>Doorzoek {0} en submappen naar ondertitelbestanden...</ScanningFolder>
     <Recursive>Inclusief submappen</Recursive>
-    <SetMinMsBetweenSubtitles>Bepaal min. millisec. tussen ondertitels</SetMinMsBetweenSubtitles>
+    <SetMinMsBetweenSubtitles>Zet min. milliseconden tussen ondertitels in</SetMinMsBetweenSubtitles>
+    <BridgeGaps>Brugkloven</BridgeGaps>
     <PlainText>Platte tekst</PlainText>
     <Ocr>OCR...</Ocr>
     <Filter>Filteren</Filter>
@@ -189,6 +195,7 @@ Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
     <FixCommonErrorsErrorX>Fouten verbeteren: {0}</FixCommonErrorsErrorX>
     <MultipleReplaceErrorX>Meerdere vervangen: {0}</MultipleReplaceErrorX>
     <AutoBalanceErrorX>Automatisch uitlĳnen: {0}</AutoBalanceErrorX>
+    <OffsetTimeCodes>Tijdcompensatiecode</OffsetTimeCodes>
   </BatchConvert>
   <Beamer>
     <Title>Beamer</Title>
@@ -227,7 +234,7 @@ Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
     <FromDropFrame>Van drop-frame</FromDropFrame>
   </ChangeSpeedInPercent>
   <CheckForUpdates>
-    <Title>Naar updates zoeken</Title>
+    <Title>Naar opwaardering zoeken</Title>
     <CheckingForUpdates>Naar updates zoeken...</CheckingForUpdates>
     <CheckingForUpdatesFailedX>Zoeken naar updates mislukt: {0}</CheckingForUpdatesFailedX>
     <CheckingForUpdatesNoneAvailable>U gebruikt nu de nieuwste versie van Subtitle Edit :)</CheckingForUpdatesNoneAvailable>
@@ -271,8 +278,8 @@ Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
     <NextDifference>Volge&amp;nd verschil</NextDifference>
     <SubtitlesNotAlike>Volledig verschillende ondertitels</SubtitlesNotAlike>
     <XNumberOfDifference>Aantal verschillen: {0}</XNumberOfDifference>
-    <XNumberOfDifferenceAndPercentChanged>Aantal verschillen: {0} ({1}% woorden gewĳzigd)</XNumberOfDifferenceAndPercentChanged>
-    <XNumberOfDifferenceAndPercentLettersChanged>Aantal verschillen: {0} ({1}% letters gewĳzigd)</XNumberOfDifferenceAndPercentLettersChanged>
+    <XNumberOfDifferenceAndPercentChanged>Aantal verschillen: {0} ({1:0.##}% woorden gewĳzigd)</XNumberOfDifferenceAndPercentChanged>
+    <XNumberOfDifferenceAndPercentLettersChanged>Aantal verschillen: {0} ({1:0.##}% letters gewĳzigd)</XNumberOfDifferenceAndPercentLettersChanged>
     <ShowOnlyDifferences>Alleen verschillen tonen</ShowOnlyDifferences>
     <IgnoreLineBreaks>Regelafbrekingen negeren</IgnoreLineBreaks>
     <OnlyLookForDifferencesInText>Alleen tekstverschillen</OnlyLookForDifferencesInText>
@@ -322,7 +329,7 @@ Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
     <IfoFiles>Ifo-bestanden</IfoFiles>
     <VobFiles>Vob-bestanden</VobFiles>
     <Add>Toevoegen...</Add>
-    <Remove>Verwĳderen</Remove>
+    <Remove>Verwijderen</Remove>
     <Clear>Leegmaken</Clear>
     <MoveUp>Omhoog</MoveUp>
     <MoveDown>Omlaag</MoveDown>
@@ -350,6 +357,7 @@ Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
     <CodePageNumber>Codepage nummer (CPN)</CodePageNumber>
     <DiskFormatCode>Disk formatcode (DFC)</DiskFormatCode>
     <DisplayStandardCode>Weergavestandaard (DSC)</DisplayStandardCode>
+    <ColorRequiresTeletext>Kleur vereist teletekst!</ColorRequiresTeletext>
     <CharacterCodeTable>Tekencodetabel (CCT)</CharacterCodeTable>
     <LanguageCode>Taalcode (LC)</LanguageCode>
     <OriginalProgramTitle>Originele programmatitel (OPT)</OriginalProgramTitle>
@@ -369,6 +377,10 @@ Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
     <Import>Importeren...</Import>
     <TextAndTimingInformation>Tekst en timing informatie</TextAndTimingInformation>
     <JustificationCode>Tekstuitlĳning (JC)</JustificationCode>
+    <VerticalPosition>Verticale positie</VerticalPosition>
+    <MarginTop>Top marge (voor ondertitels die bovenaan zijn uitgelijnd)</MarginTop>
+    <MarginBottom>Onderkant marge (voor ondertitels die aan de onderkant zijn uitgelijnd)</MarginBottom>
+    <NewLineRows>Aantal rijen toegevoegd door een nieuwe regel</NewLineRows>
     <Teletext>Teletekst</Teletext>
     <UseBox>Tekst in kader weergeven</UseBox>
     <DoubleHeight>Tekst in dubbele hoogte weergeven</DoubleHeight>
@@ -411,6 +423,14 @@ Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
     <Footer>Voettekst</Footer>
     <DoNotModify>[niet wĳzigen]</DoNotModify>
   </ExportCustomTextFormat>
+  <ExportFcpXmlAdvanced>
+    <Title>Export Final Cut Pro XML advanced</Title>
+    <FontName>Lettertype naam</FontName>
+    <FontSize>Lettertype grootte</FontSize>
+    <FontFace>Lettertype face</FontFace>
+    <Alignment>Uitlijnen</Alignment>
+    <Baseline>Gondlijn</Baseline>
+  </ExportFcpXmlAdvanced>
   <ExportPngXml>
     <Title>BDN xml/png exporteren</Title>
     <ImageSettings>Beeldinstellingen</ImageSettings>
@@ -458,6 +478,7 @@ Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
     <Forced>Ingebakken</Forced>
     <ChooseBackgroundColor>Achtergrondkleur kiezen</ChooseBackgroundColor>
     <SaveImageAs>Afbeelding opslaan als...</SaveImageAs>
+    <FcpUseFullPathUrl>Gebruik de volledige URL van het URL-pad in FCP xml</FcpUseFullPathUrl>
   </ExportPngXml>
   <ExportText>
     <Title>Tekst exporteren</Title>
@@ -626,6 +647,7 @@ Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
     <FixOcrErrorExample>D0n't -&gt; Don't</FixOcrErrorExample>
     <FixSpaceBetweenNumbersExample>1 100 -&gt; 1100</FixSpaceBetweenNumbersExample>
     <FixDialogsOneLineExample>Hi John! - Hi Ida! -&gt; Hi John!&lt;br /&gt;- Hi Ida!</FixDialogsOneLineExample>
+    <SelectDefault>Selecteer standaard</SelectDefault>
   </FixCommonErrors>
   <GetDictionaries>
     <Title>Woordenboeken nodig?</Title>
@@ -653,8 +675,8 @@ Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
     <To>Naar:</To>
     <Translate>Vertalen</Translate>
     <PleaseWait>Dit kan enige tĳd duren. Even geduld a.u.b.</PleaseWait>
-    <PoweredByGoogleTranslate>Powered by Google Translate</PoweredByGoogleTranslate>
-    <PoweredByMicrosoftTranslate>Powered by Microsoft Translate</PoweredByMicrosoftTranslate>
+    <PoweredByGoogleTranslate>Aangestuurd door Google vertalen</PoweredByGoogleTranslate>
+    <PoweredByMicrosoftTranslate>Aangestuurd door  Microsoft vertalen</PoweredByMicrosoftTranslate>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
     <Title>Google vs Microsoft vertalen</Title>
@@ -975,7 +997,7 @@ Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
         <Ascending>Oplopend</Ascending>
         <Descending>Aflopend</Descending>
         <MakeNewEmptyTranslationFromCurrentSubtitle>Nieuwe lege vertaling van de huidige ondertitel maken</MakeNewEmptyTranslationFromCurrentSubtitle>
-        <BatchConvert>Batch-conversie...</BatchConvert>
+        <BatchConvert>Reeks (batch)-conversie...</BatchConvert>
         <GenerateTimeAsText>Tĳd als tekst genereren...</GenerateTimeAsText>
         <MeasurementConverter>Maateenheden omrekenen...</MeasurementConverter>
         <SplitSubtitle>Ondertitel opdelen...</SplitSubtitle>
@@ -1016,9 +1038,9 @@ Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
       </Synchronization>
       <AutoTranslate>
         <Title>Ver&amp;talen</Title>
-        <TranslatePoweredByGoogle>Vertalen (powered by Google)...</TranslatePoweredByGoogle>
-        <TranslatePoweredByMicrosoft>Vertalen (powered by Microsoft)...</TranslatePoweredByMicrosoft>
-        <TranslateFromSwedishToDanish>Vertalen van Zweeds naar Deens (powered by nikse.dk)...</TranslateFromSwedishToDanish>
+        <TranslatePoweredByGoogle>Vertalen (aangestuurd door Google)...</TranslatePoweredByGoogle>
+        <TranslatePoweredByMicrosoft>Vertalen (aangestuurd door Microsoft)...</TranslatePoweredByMicrosoft>
+        <TranslateFromSwedishToDanish>Vertalen van Zweeds naar Deens (aangestuurd door nikse.dk)...</TranslateFromSwedishToDanish>
       </AutoTranslate>
       <Options>
         <Title>&amp;Instellingen</Title>
@@ -1050,16 +1072,20 @@ Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
         <RemoveTextForHi>Tekst voor slechthorenden verwĳderen</RemoveTextForHi>
         <VisualSync>Visuele synchronisatie</VisualSync>
         <SpellCheck>Spellingcontrole</SpellCheck>
+        <NetflixQualityCheck>Netflix kwalitietscontrole</NetflixQualityCheck>
         <Settings>Voorkeuren</Settings>
         <Help>Help</Help>
         <ShowHideWaveform>Golfvorm tonen/verbergen</ShowHideWaveform>
         <ShowHideVideo>Video tonen/verbergen</ShowHideVideo>
       </ToolBar>
       <ContextMenu>
+        <SizeAllColumnsToFit>Pas alle kolommen aan die passen</SizeAllColumnsToFit>
         <AdvancedSubStationAlphaSetStyle>Advanced SubStation Alpha - stĳl instellen</AdvancedSubStationAlphaSetStyle>
         <SubStationAlphaSetStyle>SubStation Alpha - stĳl instellen</SubStationAlphaSetStyle>
+        <SetActor>Stel acteur in</SetActor>
         <SubStationAlphaStyles>SubStation Alpha stĳlen...</SubStationAlphaStyles>
         <AdvancedSubStationAlphaStyles>Advanced SubStation Alpha stĳlen...</AdvancedSubStationAlphaStyles>
+        <TimedTextSetRegion>TGetimede tekst - regio instellen</TimedTextSetRegion>
         <TimedTextSetStyle>Getimede tekst - stĳl instellen</TimedTextSetStyle>
         <TimedTextStyles>Getimede tekst stĳlen...</TimedTextStyles>
         <TimedTextSetLanguage>Getimede tekst - taal instellen</TimedTextSetLanguage>
@@ -1109,6 +1135,8 @@ Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
         <SaveSelectedLines>Tekstselectie opslaan als...</SaveSelectedLines>
         <WebVTTSetNewVoice>Nieuwe stem instellen...</WebVTTSetNewVoice>
         <WebVTTRemoveVoices>Stemmen verwĳderen</WebVTTRemoveVoices>
+        <NewActor>Nieuw acteur..</NewActor>
+        <RemoveActors>Verwijder acteurs</RemoveActors>
       </ContextMenu>
     </Menu>
     <Controls>
@@ -1195,11 +1223,8 @@ Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
     <SavedOriginalSubtitleX>Originele ondertitel {0} opgeslagen</SavedOriginalSubtitleX>
     <FileOnDiskModified>Bestand op de schĳf gewĳzigd</FileOnDiskModified>
     <OverwriteModifiedFile>Bestand {0} gewĳzigd op {1} {2} {3} vervangen door het huidige bestand geladen op {4} {5}?</OverwriteModifiedFile>
-    <FileXIsReadOnly>Kan bestand {0} niet opslaan
-
-Dit bestand is schrĳfbeveiligd!</FileXIsReadOnly>
-    <UnableToSaveSubtitleX>Kan ondertitelbestand {0} niet opslaan!
-Ondertitel lĳkt leeg! Probeer het nog eens als deze ondertitel toch in orde is.</UnableToSaveSubtitleX>
+    <FileXIsReadOnly>Kan bestand {0} niet opslaan Dit bestand is schrĳfbeveiligd!</FileXIsReadOnly>
+    <UnableToSaveSubtitleX>Kan ondertitelbestand {0} niet opslaan! Ondertitel lĳkt leeg! Probeer het nog eens als deze ondertitel toch in orde is.</UnableToSaveSubtitleX>
     <BeforeNew>Vóór nieuw</BeforeNew>
     <New>Nieuw</New>
     <BeforeConvertingToX>Vóór het omzetten naar {0}</BeforeConvertingToX>
@@ -1246,9 +1271,7 @@ Wilt u het zoeken/vervangen vanaf het begin van het document voortzetten?</Repla
     <TextingForHearingImpairedRemovedOneLine>Tekst voor slechthorenden verwĳderd: één tekst</TextingForHearingImpairedRemovedOneLine>
     <TextingForHearingImpairedRemovedXLines>Tekst voor slechthorenden verwĳderd: {0} teksten</TextingForHearingImpairedRemovedXLines>
     <SubtitleSplitted>Ondertitel opgedeeld</SubtitleSplitted>
-    <SubtitleAppendPrompt>Dit voegt een bestaande ondertitel toe aan de momenteel geladen ondertitel die reeds in sync zou moeten zĳn met het videobestand.
-
-Verder gaan?</SubtitleAppendPrompt>
+    <SubtitleAppendPrompt>Dit voegt een bestaande ondertitel toe aan de momenteel geladen ondertitel die reeds in sync zou moeten zĳn met het videobestand. Verder gaan?</SubtitleAppendPrompt>
     <SubtitleAppendPromptTitle>Ondertitel toevoegen</SubtitleAppendPromptTitle>
     <OpenSubtitleToAppend>Toe te voegen ondertitel openen...</OpenSubtitleToAppend>
     <AppendViaVisualSyncTitle>Visuele sync - tweede deel van de ondertiteling toevoegen</AppendViaVisualSyncTitle>
@@ -1424,16 +1447,16 @@ Verder gaan?</SubtitleAppendPrompt>
     <ImportTimeCodesDifferentNumberOfLinesWarning>Ondertitel met tĳdcodes heeft een ander aantal regels ({0}) dan huidige ondertitel ({1}). Toch doorgaan?</ImportTimeCodesDifferentNumberOfLinesWarning>
     <ParsingTransportStream>Transportstroom analyseren. Even geduld a.u.b.</ParsingTransportStream>
     <XPercentCompleted>{0}% voltooid</XPercentCompleted>
+    <NextX>Volgende: {0}</NextX>
     <ErrorLoadIdx>Subtitle Edit kan idx-bestanden niet lezen. Die maken deel uit van een sub/idx bestandspaar (ook wel VobSub genoemd). Subtitle Edit kan het sub-bestand openen.</ErrorLoadIdx>
     <ErrorLoadRar>Dit is een rar-bestand. Subtitle Edit kan gecomprimeerde bestanden niet openen.</ErrorLoadRar>
     <ErrorLoadZip>Dit is een zip-bestand. Subtitle Edit kan gecomprimeerde bestanden niet openen.</ErrorLoadZip>
+    <ErrorLoad7Zip>Dit bestand lijkt een gecomprimeerd 7-Zip-bestand te zijn. Subtitle Edit kan gecomprimeerde bestanden niet openen.</ErrorLoad7Zip>
     <ErrorLoadPng>Dit is een png-beeldbestand. Subtitle Edit kan png-bestanden niet openen.</ErrorLoadPng>
     <ErrorLoadJpg>Dit is een jpeg-beeldbestand. Subtitle Edit kan jpeg-bestanden niet openen.</ErrorLoadJpg>
     <ErrorLoadSrr>Dit is een ReScene srr-bestand, géén ondertitelbestand.</ErrorLoadSrr>
     <ErrorLoadTorrent>Dit is een BitTorrent bestand, géén ondertitelbestand.</ErrorLoadTorrent>
-    <ErrorLoadBinaryZeroes>Dit bestand bevat uitsluitend nul-bytes.
-
-Indien u dit bestand met Subtitle Edit bewerkt hebt, kunt u een vorige versie vinden onder menu "Bestand -&gt; Back-up herstellen..."</ErrorLoadBinaryZeroes>
+    <ErrorLoadBinaryZeroes>Dit bestand bevat uitsluitend nul-bytes. Indien u dit bestand met Subtitle Edit bewerkt hebt, kunt u een vorige versie vinden onder menu "Bestand -&gt; Back-up herstellen..."</ErrorLoadBinaryZeroes>
     <ErrorDirectoryDropNotAllowed>U kunt hier geen map slepen en plaatsen.</ErrorDirectoryDropNotAllowed>
     <NoSupportEncryptedVobSub>Versleutelde VobSub-bestanden worden niet ondersteund.</NoSupportEncryptedVobSub>
     <NoSupportHereBluRaySup>U kunt hier geen blu-ray sup-bestand opgeven.</NoSupportHereBluRaySup>
@@ -1443,7 +1466,7 @@ Indien u dit bestand met Subtitle Edit bewerkt hebt, kunt u een vorige versie vi
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Ondertitel uit Matroska-bestand kiezen</Title>
-    <PleaseChoose>Meer dan één ondertitel gevonden - kies a.u.b.</PleaseChoose>
+    <TitleMp4>Kies ondertitel uit van MP4 bestand</TitleMp4>
     <TrackXLanguageYTypeZ>Spoor {0} - taal: {1} - type: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MeasurementConverter>
@@ -1673,6 +1696,7 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <Replace>Vervangen</Replace>
     <VisualSync>Visuele synchronisatie</VisualSync>
     <SpellCheck>Spellingcontrole</SpellCheck>
+    <NetflixQualityCheck>Netflix kwaliteitscontrole</NetflixQualityCheck>
     <SettingsName>Voorkeuren</SettingsName>
     <Help>Help</Help>
     <ShowFrameRate>Toon beeldsnelheid in de werkbalk</ShowFrameRate>
@@ -1681,6 +1705,7 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <AutoDetectAnsiEncoding>Auto-detectie ANSI-codering</AutoDetectAnsiEncoding>
     <SubtitleLineMaximumLength>Max. lengte enkele regel</SubtitleLineMaximumLength>
     <MaximumCharactersPerSecond>Max. tekens/sec.</MaximumCharactersPerSecond>
+    <MaximumWordssPerMinute>Max. tekens/min.</MaximumWordssPerMinute>
     <AutoWrapWhileTyping>Tekstomloop tĳdens het typen</AutoWrapWhileTyping>
     <DurationMinimumMilliseconds>Min. tĳdsduur in milliseconden</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>Max. tĳdsduur in milliseconden</DurationMaximumMilliseconds>
@@ -1689,6 +1714,7 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <SubtitleFont>Ondertitel lettertype</SubtitleFont>
     <SubtitleFontSize>Ondertitel lettergrootte</SubtitleFontSize>
     <SubtitleBold>Vet</SubtitleBold>
+    <VideoAutoOpen>Automatisch videobestand openen bij het openen van ondertiteling</VideoAutoOpen>
     <SubtitleCenter>Midden</SubtitleCenter>
     <SubtitleFontColor>Ondertitel tekstkleur</SubtitleFontColor>
     <SubtitleBackgroundColor>Ondertitel achtergrondkleur</SubtitleBackgroundColor>
@@ -1700,7 +1726,9 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <StartInSourceView>In bronweergave starten</StartInSourceView>
     <RemoveBlankLinesWhenOpening>Lege regels bĳ het openen van een ondertitel verwĳderen</RemoveBlankLinesWhenOpening>
     <ShowLineBreaksAs>Regeleinden in lĳstweergave tonen als</ShowLineBreaksAs>
-    <MainListViewDoubleClickAction>Dubbelklik op de tekst in de lĳstweergave zal</MainListViewDoubleClickAction>
+    <MainListViewDoubleClickAction>Dubbelklik op lijn in het hoofdvenster lijstweergave zal:</MainListViewDoubleClickAction>
+    <MainListViewColumns>Kolommen lijstweergave</MainListViewColumns>
+    <MainListViewColumnsInfo>Kies zichtbare kolommen met lijstweergaven</MainListViewColumnsInfo>
     <MainListViewNothing>Niets</MainListViewNothing>
     <MainListViewVideoGoToPositionAndPause>Ga naar videopositie en pauzeer</MainListViewVideoGoToPositionAndPause>
     <MainListViewVideoGoToPositionAndPlay>Ga naar videopositie en speel af</MainListViewVideoGoToPositionAndPlay>
@@ -1709,11 +1737,11 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <MainListViewVideoGoToPositionMinusHalfSecAndPause>Ga naar videopositie min ½ seconde en pauzeer</MainListViewVideoGoToPositionMinusHalfSecAndPause>
     <MainListViewVideoGoToPositionMinus1SecAndPlay>Ga naar videopositie min 1 seconde en speel af</MainListViewVideoGoToPositionMinus1SecAndPlay>
     <MainListViewEditTextAndPause>Ga naar tekstbewerkingsvak en pauzeer op videopositie</MainListViewEditTextAndPause>
-    <AutoBackup>Automatische back-up</AutoBackup>
+    <AutoBackup>Auto back-up:</AutoBackup>
     <AutoBackupEveryMinute>Elke minuut</AutoBackupEveryMinute>
     <AutoBackupEveryFiveMinutes>Elke 5e minuut</AutoBackupEveryFiveMinutes>
     <AutoBackupEveryFifteenMinutes>Elke 15e minuut</AutoBackupEveryFifteenMinutes>
-    <AutoBackupDeleteAfter>Verwĳderen na</AutoBackupDeleteAfter>
+    <AutoBackupDeleteAfter>Wissen na</AutoBackupDeleteAfter>
     <AutoBackupDeleteAfterOneMonth>1 maand</AutoBackupDeleteAfterOneMonth>
     <AutoBackupDeleteAfterThreeMonths>3 maanden</AutoBackupDeleteAfterThreeMonths>
     <AutoBackupDeleteAfterSixMonths>6 maanden</AutoBackupDeleteAfterSixMonths>
@@ -1730,6 +1758,7 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <MpcHcDescription>Media Player Classic - Home Cinema</MpcHcDescription>
     <MpvPlayer>mpv</MpvPlayer>
     <MpvPlayerDescription>https://mpv.io/ - vrĳ te gebruiken multiplatform mediaspeler met open broncode</MpvPlayerDescription>
+    <MpvHandlesPreviewText>mpv behandelt voorbeeldtekst</MpvHandlesPreviewText>
     <VlcMediaPlayer>VLC media player</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll van VLC media player 1.1.0 of nieuwer</VlcMediaPlayerDescription>
     <VlcBrowseToLabel>VLC pad (alleen nodig als u met de draagbare versie van VLC werkt)</VlcBrowseToLabel>
@@ -1742,8 +1771,11 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <WaveformAppearance>Golfvormweergave</WaveformAppearance>
     <WaveformGridColor>Rasterkleur</WaveformGridColor>
     <WaveformShowGridLines>Toon rasterlĳnen</WaveformShowGridLines>
+    <WaveformShowCps>Toon tekens/sec.</WaveformShowCps>
+    <WaveformShowWpm>Toon woorden/min.</WaveformShowWpm>
     <ReverseMouseWheelScrollDirection>Muiswiel scrollrichting omkeren</ReverseMouseWheelScrollDirection>
     <WaveformAllowOverlap>Sta overlap toe (bĳ verplaatsen/herschalen)</WaveformAllowOverlap>
+    <WaveformSetVideoPosMoveStartEnd>Stel de videopositie in bij het verplaatsen van start / einde</WaveformSetVideoPosMoveStartEnd>
     <WaveformFocusMouseEnter>Op muisinvoer focussen</WaveformFocusMouseEnter>
     <WaveformListViewFocusMouseEnter>Ook op muisinvoer focusen in de lĳstweergave</WaveformListViewFocusMouseEnter>
     <WaveformBorderHitMs1>Laat herpositionering toe binnen</WaveformBorderHitMs1>
@@ -1774,7 +1806,7 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <NamesIgnoreLists>Naam/ruis-lĳst (hoofdlettergevoelig)</NamesIgnoreLists>
     <AddName>Toevoegen</AddName>
     <AddWord>Toevoegen</AddWord>
-    <Remove>Verwĳderen</Remove>
+    <Remove>Wissen</Remove>
     <AddPair>Toevoegen</AddPair>
     <UserWordList>Gebruikerswoordenlĳst</UserWordList>
     <OcrFixList>OCR-correctielĳst</OcrFixList>
@@ -1823,16 +1855,22 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <AdjustStartDownEndUpAndGoToNext>Pĳl omlaag=bepaal start, Pĳl omhoog=bepaal einde en naar volgende</AdjustStartDownEndUpAndGoToNext>
     <AdjustSelected100MsForward>Verplaats geselecteerde regels 100 msec. vooruit</AdjustSelected100MsForward>
     <AdjustSelected100MsBack>Verplaats geselecteerde regels 100 msec. terug</AdjustSelected100MsBack>
+    <AdjustStartXMsBack>Film start {0} ms terug</AdjustStartXMsBack>
+    <AdjustStartXMsForward>Film start {0} ms vooruit</AdjustStartXMsForward>
+    <AdjustEndXMsBack>Film eindigd {0} ms eerder</AdjustEndXMsBack>
+    <AdjustEndXMsForward>Film eindigd {0} ms later</AdjustEndXMsForward>
     <AdjustSetStartTimeKeepDuration>Bepaal starttĳd, behoud duur</AdjustSetStartTimeKeepDuration>
     <AdjustSetEndAndOffsetTheRest>Stel einde in, compenseer de rest</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Stel einde in, compenseer de rest en naar volgende</AdjustSetEndAndOffsetTheRestAndGoToNext>
     <AdjustExtendCurrentSubtitle>Tĳdsduur verlengen tot volgende tekst of maximale tĳdsduur</AdjustExtendCurrentSubtitle>
+    <RecalculateDurationOfCurrentSubtitle>Bereken de duur van de huidige ondertitel opnieuw</RecalculateDurationOfCurrentSubtitle>
     <MainCreateStartDownEndUp>Maak nieuwe met pĳl omlaag , bepaal eindtĳd met pĳl omhoog</MainCreateStartDownEndUp>
     <MergeDialog>Samenvoegen dialoog (voeg koppelteken in)</MergeDialog>
     <GoToNext>Ga naar volgende regel</GoToNext>
     <GoToPrevious>Ga naar vorige regel</GoToPrevious>
     <GoToCurrentSubtitleStart>Naar start van huidige tekst</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>Naar einde van huidige tekst</GoToCurrentSubtitleEnd>
+    <GoToPreviousSubtitleAndFocusVideo>Ga naar de vorige regel en stel de videopositie in</GoToPreviousSubtitleAndFocusVideo>
     <GoToNextSubtitleAndFocusVideo>Naar volgende tekst en positie instellen</GoToNextSubtitleAndFocusVideo>
     <ToggleFocus>Tussen lĳstweergave en tekstvak wisselen</ToggleFocus>
     <ToggleDialogDashes>Dialoogstreepjes wisselen</ToggleDialogDashes>
@@ -1851,10 +1889,14 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <WaveformPlayNewSelectionEnd>Speel selectie-einde</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Speel eerste geselecteerde ondertitel</WaveformPlayFirstSelectedSubtitle>
     <WaveformFocusListView>Focus lĳstweergave</WaveformFocusListView>
+    <WaveformGoToNextSubtitle>Ga naar de volgende ondertitel (vanuit videopositie)</WaveformGoToNextSubtitle>
+    <WaveformGoToPreviousSceneChange>Ga naar de vorige scènewisseling</WaveformGoToPreviousSceneChange>
     <WaveformGoToNextSceneChange>Naar volgende scène</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>Scènewisseling omkeren</WaveformToggleSceneChange>
     <GoBack1Frame>Eén frame terug</GoBack1Frame>
     <GoForward1Frame>Eén frame vooruit</GoForward1Frame>
+    <GoBack1FrameWithPlay>Eén frame terug (met spelen)</GoBack1FrameWithPlay>
+    <GoForward1FrameWithPlay>Eén frame vooruit (met spelen)</GoForward1FrameWithPlay>
     <GoBack100Milliseconds>100 msec. terug</GoBack100Milliseconds>
     <GoForward100Milliseconds>100 msec. vooruit</GoForward100Milliseconds>
     <GoBack500Milliseconds>500 msec. terug</GoBack500Milliseconds>
@@ -1887,6 +1929,8 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <ToggleTranslationMode>Verander vertaling modus</ToggleTranslationMode>
     <SwitchOriginalAndTranslation>Wĳzig tussen origineel en vertaling</SwitchOriginalAndTranslation>
     <MergeOriginalAndTranslation>Samenvoegen origineel en vertaling</MergeOriginalAndTranslation>
+    <MergeWithNext>Samenvoegen met volgende</MergeWithNext>
+    <MergeWithPrevious>Samenvoegen met vorige</MergeWithPrevious>
     <ShortcutIsAlreadyDefinedX>Snelkoppeling al gedefinieerd: {0}</ShortcutIsAlreadyDefinedX>
     <ToggleTranslationAndOriginalInPreviews>Verander vertaling en origineel in video/audio preview</ToggleTranslationAndOriginalInPreviews>
     <ListViewColumnDelete>Kolom, verwĳderen tekst</ListViewColumnDelete>
@@ -1904,18 +1948,17 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <MainTextBoxUnbreak>Breek tekst niet automatisch af</MainTextBoxUnbreak>
     <MainFileSaveAll>Alles opslaan</MainFileSaveAll>
     <Miscellaneous>Diversen</Miscellaneous>
+    <CpsIncludesSpace>Karakters/sec. (CPS) inclusief spaties</CpsIncludesSpace>
     <UseDoNotBreakAfterList>Gebruik breek-niet-af-lĳst (voor auto-afbr)</UseDoNotBreakAfterList>
     <MicrosoftBingTranslator>Microsoft Bing Vertaalmachine</MicrosoftBingTranslator>
     <HowToSignUp>Hoe meld ik mĳ aan?</HowToSignUp>
-    <ClientId>Aanmeldings-ID</ClientId>
-    <ClientSecret>Wachtwoord</ClientSecret>
+    <GoogleTranslateUrl>Google vertaal url</GoogleTranslateUrl>
+    <MicrosoftTranslateApiKey>Sleutel</MicrosoftTranslateApiKey>
   </Settings>
   <SettingsMpv>
     <Title>mpv instellingen</Title>
     <DownloadMpv>Download mpv lib</DownloadMpv>
-    <DownloadMpvFailed>Downloaden van de mpv lib is mislukt!
-
-Probeer het later opnieuw a.u.b.</DownloadMpvFailed>
+    <DownloadMpvFailed>Downloaden van de mpv lib is mislukt! Probeer het later opnieuw a.u.b.</DownloadMpvFailed>
     <DownloadMpvOk>De mpv lib is gedownload en klaar voor gebruik.</DownloadMpvOk>
   </SettingsMpv>
   <SetVideoOffset>
@@ -1970,8 +2013,16 @@ Probeer het later opnieuw a.u.b.</DownloadMpvFailed>
     <ImageText>Afbeeldingstekst</ImageText>
     <SpellCheckCompleted>Spellingcontrole voltooid</SpellCheckCompleted>
     <SpellCheckAborted>Spellingcontrole afgebroken</SpellCheckAborted>
+    <SpacesNotAllowed>Spaties niet toegstaan in een enkel woord!</SpacesNotAllowed>
     <UndoX>Annuleer {0}</UndoX>
   </SpellCheck>
+  <NetflixQualityCheck>
+    <GlyphCheckReport>Ongeldig karakter {0} gevonden bij kolom {1}</GlyphCheckReport>
+    <WhiteSpaceCheckReport>Ongeldig witte ruimte gevonden bij kolom {0}.</WhiteSpaceCheckReport>
+    <ReportPrompt>Zie a.u.b. volledige rapportage hier: {0}.</ReportPrompt>
+    <FoundXIssues>Netflix kwaliteitscontrole vond {0} kwesties.</FoundXIssues>
+    <CheckOk>Netflix kwaliteitscontrol OK :)</CheckOk>
+  </NetflixQualityCheck>
   <Split>
     <Title>Opdelen</Title>
     <SplitOptions>Opdeelopties</SplitOptions>
@@ -2029,6 +2080,7 @@ Probeer het later opnieuw a.u.b.</DownloadMpvFailed>
     <LengthInFormatXinCharactersY>Aantal tekens als {0}: {1: #, ###, ##0}</LengthInFormatXinCharactersY>
     <NumberOfCharactersInTextOnly>Aantal teksttekens: {0:#,###,##0}</NumberOfCharactersInTextOnly>
     <TotalCharsPerSecond>Totaal tekens/seconde: {0:0.0} seconden</TotalCharsPerSecond>
+    <TotalWords>Totaal aantal woorden in ondertitel: {0}</TotalWords>
     <NumberOfItalicTags>Aantal cursief tags: {0}</NumberOfItalicTags>
     <NumberOfBoldTags>Aantal vet tags: {0}</NumberOfBoldTags>
     <NumberOfUnderlineTags>Aantal onderstrepen tags: {0}</NumberOfUnderlineTags>
@@ -2096,9 +2148,9 @@ Probeer het later opnieuw a.u.b.</DownloadMpvFailed>
     <BottomRight>Rechtsonder</BottomRight>
     <Colors>Kleuren</Colors>
     <Margins>Marges</Margins>
-    <MarginLeft>Linkermarge</MarginLeft>
-    <MarginRight>Rechtermarge</MarginRight>
-    <MarginVertical>Verticale marge</MarginVertical>
+    <MarginLeft>Marge links</MarginLeft>
+    <MarginRight>Marge rechts</MarginRight>
+    <MarginVertical>Marge verticaal</MarginVertical>
     <Border>Rand</Border>
     <PlusShadow>+ Schaduw</PlusShadow>
     <OpaqueBox>Opaque doos (gebruikt omlĳstingskleur)</OpaqueBox>
@@ -2222,8 +2274,9 @@ Wĳzigingen behouden?</KeepChangesMessage>
     <InspectCompareMatchesForCurrentImage>Inspecteer vergelĳkingsovereenkomsten voor huidig beeld...</InspectCompareMatchesForCurrentImage>
     <EditLastAdditions>Bewerk laatste beeldvergelĳkingstoevoegingen...</EditLastAdditions>
     <SetUnitalicFactor>Decursiveringsfactor bepalen</SetUnitalicFactor>
-    <DiscardTitle>OCR wĳzigingen verwerpen?</DiscardTitle>
-    <DiscardText>Wilt u de wĳzigingen in deze OCR sessie verwerpen?</DiscardText>
+    <DiscardTitle>OCR wĳzigingen afwijzen?</DiscardTitle>
+    <DiscardText>Wilt u de wĳzigingen in deze OCR sessie afwijzen</DiscardText>
+    <MinLineSplitHeight>Min. lijnhoogte (spleet)</MinLineSplitHeight>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub - Handmatig beeld naar tekst</Title>
@@ -2288,6 +2341,9 @@ Wĳzigingen behouden?</KeepChangesMessage>
     <RemoveSceneChange>Scènewisseling verwĳderen</RemoveSceneChange>
     <GuessTimeCodes>Tĳdcodes schatten...</GuessTimeCodes>
     <SeekSilence>Stilte zoeken...</SeekSilence>
+    <InsertSubtitleHere>Ondertitel hier invoegen...</InsertSubtitleHere>
+    <CharsSecX>CPS: {0:0.00}</CharsSecX>
+    <WordsMinX>WPM: {0:0.00}</WordsMinX>
   </Waveform>
   <WaveformGenerateTimeCodes>
     <Title>Schat de tĳdcodes</Title>

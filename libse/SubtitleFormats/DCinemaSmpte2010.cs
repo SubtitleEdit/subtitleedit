@@ -194,7 +194,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     string text = Utilities.RemoveSsaTags(p.Text);
 
                     var lines = text.SplitToLines();
-                    int vPos = 1 + lines.Length * 7;
+                    int vPos = 1 + lines.Count * 7;
                     int vPosFactor = (int)Math.Round(fontSize / 7.4);
                     if (alignVTop)
                     {
@@ -202,11 +202,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                     else if (alignVCenter)
                     {
-                        vPos = (int)Math.Round((lines.Length * vPosFactor * -1) / 2.0);
+                        vPos = (int)Math.Round((lines.Count * vPosFactor * -1) / 2.0);
                     }
                     else
                     {
-                        vPos = (lines.Length * vPosFactor) - vPosFactor + Configuration.Settings.SubtitleSettings.DCinemaBottomMargin; // Bottom margin is normally 8
+                        vPos = (lines.Count * vPosFactor) - vPosFactor + Configuration.Settings.SubtitleSettings.DCinemaBottomMargin; // Bottom margin is normally 8
                     }
 
                     bool isItalic = false;

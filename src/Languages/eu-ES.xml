@@ -2,7 +2,7 @@
 <Language Name="euskara">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.5.4</Version>
+    <Version>3.5.5</Version>
     <TranslatedBy>Itzultzailea: Xabier Aramendi</TranslatedBy>
     <CultureName>eu-ES</CultureName>
     <HelpFile>http://www.nikse.dk/SubtitleEdit/HelpEU</HelpFile>
@@ -27,6 +27,7 @@
     <CharsPerSec>Hizk/seg</CharsPerSec>
     <WordsPerMin>Hitz/min</WordsPerMin>
     <Actor>Antzezlea</Actor>
+    <Gap>Hutsartea</Gap>
     <Region>Eskualdea</Region>
     <NumberSymbol>Zenbakia</NumberSymbol>
     <Number>Zenbakia</Number>
@@ -140,7 +141,6 @@ Oharra: Egiaztatu diskako toki askea.</WaveFileMalformed>
     <SetAsPercent>Ezarri iraupenaren ehunekoa</SetAsPercent>
     <Note>Oharra: Erakuspen denbora ez zaio hurrengo idatziaren hasiera denborari gainjarriko</Note>
     <PleaseSelectAValueFromTheDropDownList>Mesedez hautatu goitibeherako zerrendaren balioa</PleaseSelectAValueFromTheDropDownList>
-    <PleaseChoose>- Mesedez hautatu -</PleaseChoose>
   </AdjustDisplayDuration>
   <ApplyDurationLimits>
     <Title>Ezarri denbora mugak</Title>
@@ -192,6 +192,7 @@ Oharra: Egiaztatu diskako toki askea.</WaveFileMalformed>
     <FixCommonErrorsErrorX>Zuzendu akats arruntak: {0}</FixCommonErrorsErrorX>
     <MultipleReplaceErrorX>Ordezte anitza: {0}</MultipleReplaceErrorX>
     <AutoBalanceErrorX>Berez orekatzea: {0}</AutoBalanceErrorX>
+    <OffsetTimeCodes>Orekatu denbora kodeak</OffsetTimeCodes>
   </BatchConvert>
   <Beamer>
     <Title>Beamer</Title>
@@ -274,8 +275,8 @@ Oharra: Egiaztatu diskako toki askea.</WaveFileMalformed>
     <NextDifference>&amp;Hurrengo ezberdintasuna</NextDifference>
     <SubtitlesNotAlike>Azpidatziek ez dute antzekotasunik</SubtitlesNotAlike>
     <XNumberOfDifference>Ezberdintasun zenbatekoa: {0}</XNumberOfDifference>
-    <XNumberOfDifferenceAndPercentChanged>Ezberdintasun zenbatekoa: {0} ({1}% hitz aldatuta)</XNumberOfDifferenceAndPercentChanged>
-    <XNumberOfDifferenceAndPercentLettersChanged>Ezberdintasun zenbatekoa: {0} ({1}% hizkirri aldatuta)</XNumberOfDifferenceAndPercentLettersChanged>
+    <XNumberOfDifferenceAndPercentChanged>Ezberdintasun zenbatekoa: {0} ({1:0.##}% hitz aldatuta)</XNumberOfDifferenceAndPercentChanged>
+    <XNumberOfDifferenceAndPercentLettersChanged>Ezberdintasun zenbatekoa: {0} ({1:0.##}% hizkirri aldatuta)</XNumberOfDifferenceAndPercentLettersChanged>
     <ShowOnlyDifferences>Erakutsi ezberdintasunak bakarrik</ShowOnlyDifferences>
     <IgnoreLineBreaks>Ezikusi lerro hausteak</IgnoreLineBreaks>
     <OnlyLookForDifferencesInText>Idatzizko ezberdintasunak bakarrik behatu</OnlyLookForDifferencesInText>
@@ -419,6 +420,14 @@ Oharra: Egiaztatu diskako toki askea.</WaveFileMalformed>
     <Footer>Idazohina</Footer>
     <DoNotModify>[Ez aldatu]</DoNotModify>
   </ExportCustomTextFormat>
+  <ExportFcpXmlAdvanced>
+    <Title>Esportatu Final Cut Pro XML aurreratua</Title>
+    <FontName>Hizki izena</FontName>
+    <FontSize>Hizki neurria</FontSize>
+    <FontFace>Hizki aldea</FontFace>
+    <Alignment>Lerrokapena</Alignment>
+    <Baseline>Ohinlerroa</Baseline>
+  </ExportFcpXmlAdvanced>
   <ExportPngXml>
     <Title>Esportatu BDN XML/PNG</Title>
     <ImageSettings>Irudi ezarpenak</ImageSettings>
@@ -466,6 +475,7 @@ Oharra: Egiaztatu diskako toki askea.</WaveFileMalformed>
     <Forced>Behartuta</Forced>
     <ChooseBackgroundColor>Hautatu barren margoa</ChooseBackgroundColor>
     <SaveImageAs>Gorde irudia honela...</SaveImageAs>
+    <FcpUseFullPathUrl>Erabili irudi osoaren helburu url-a FCP xml-an</FcpUseFullPathUrl>
   </ExportPngXml>
   <ExportText>
     <Title>Esportatu idatzia</Title>
@@ -1435,9 +1445,11 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <ImportTimeCodesDifferentNumberOfLinesWarning>Denbora-kodea duen azpidatziak lerro zenbateko ezberdina du ({0}) oraingo azpidatziarekin alderatuta ({1}) - jarraitu horrela ere?</ImportTimeCodesDifferentNumberOfLinesWarning>
     <ParsingTransportStream>Garraio jarioa aztertzen - mesedez itxaron...</ParsingTransportStream>
     <XPercentCompleted>{0}% osatuta</XPercentCompleted>
+    <NextX>Hurrengot: {0}</NextX>
     <ErrorLoadIdx>Ezinezkoa da .idx agiriak irakurtzea/editatzea. Idx agiriak idx/sub agiri bikote baten atal dira (VobSub deitua ere), eta Subtitle Edit-ek ireki dezake .sub agiria.</ErrorLoadIdx>
     <ErrorLoadRar>Agiri honek .rar agiri konprimitu bat dela dirudi. Subtitle Edit-ek ezin du agiri konprimiturik ireki.</ErrorLoadRar>
     <ErrorLoadZip>Agiri honek .zip agiri konprimitu bat dela dirudi. Subtitle Edit-ek ezin du agiri konprimiturik ireki.</ErrorLoadZip>
+    <ErrorLoad7Zip>Agiriak 7-Zip agiri konprimitu bat dela dirudi. Subtitle Edit-ek ezin du agiri konprimiturik  ireki.</ErrorLoad7Zip>
     <ErrorLoadPng>Agiriak PNG irudi agiri bat dela dirudi. Subtitle Edit-ek ezin du PNG agiririk ireki.</ErrorLoadPng>
     <ErrorLoadJpg>Agiriak JPG irudi agiri bat dela dirudi. Subtitle Edit-ek ezin du JPG agiririk ireki.</ErrorLoadJpg>
     <ErrorLoadSrr>Agiriak ReScene .srr agiri bat dela dirudi - ez azpidatzi agiri bat.</ErrorLoadSrr>
@@ -1453,7 +1465,6 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
   <MatroskaSubtitleChooser>
     <Title>Hautatu azpidatzia Matroska agiritik</Title>
     <TitleMp4>Hautatu azpidatzia MP4 agiritik</TitleMp4>
-    <PleaseChoose>Azpidatzi bat baino gehiago aurkitu da - mesedez hautatu</PleaseChoose>
     <TrackXLanguageYTypeZ>Bidea {0} - Hizkuntza: {1} - Mota: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MeasurementConverter>
@@ -1712,7 +1723,6 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <RemoveBlankLinesWhenOpening>Kendu lerro hutsak azpidatzia irekitzerakoan</RemoveBlankLinesWhenOpening>
     <ShowLineBreaksAs>Erakutsi lerro hautsiak zerrenda ikuspegian honela:</ShowLineBreaksAs>
     <MainListViewDoubleClickAction>Klik bikoitza lerroan leiho nagusian zerrenda ikuspegian izango da:</MainListViewDoubleClickAction>
-    <MainListViewColumns>Zerrenda ikuspegi zutabeak</MainListViewColumns>
     <MainListViewColumnsInfo>Hautatu zerrenda ikuspegi zutabe ikusgarriak</MainListViewColumnsInfo>
     <MainListViewNothing>Ezer ez</MainListViewNothing>
     <MainListViewVideoGoToPositionAndPause>Joan bideo kokapenera eta pausatu</MainListViewVideoGoToPositionAndPause>
@@ -1840,6 +1850,10 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <AdjustStartDownEndUpAndGoToNext>Behera tekla: ezarri hasiera - Gora tekla: ezarri amaiera eta joan hurrengora</AdjustStartDownEndUpAndGoToNext>
     <AdjustSelected100MsForward>Mugitu hautaturiko lerroa 100 sm aurrera</AdjustSelected100MsForward>
     <AdjustSelected100MsBack>Mugitu hautaturiko lerroa 100 sm atzera</AdjustSelected100MsBack>
+    <AdjustStartXMsBack>Mugitu hasiera {0} sm atzera</AdjustStartXMsBack>
+    <AdjustStartXMsForward>Mugitu hasiera {0} sm aurrera</AdjustStartXMsForward>
+    <AdjustEndXMsBack>Mugitu amaiera {0} sm atzera</AdjustEndXMsBack>
+    <AdjustEndXMsForward>Mugitu amaiera {0} sm aurrera</AdjustEndXMsForward>
     <AdjustSetStartTimeKeepDuration>Ezarri hasiera denbora, heutsi iraupenari</AdjustSetStartTimeKeepDuration>
     <AdjustSetEndAndOffsetTheRest>Ezarri amaiera, orekatu gainontzekoa</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Ezarri amaiera, orekatu gainontzekoa eta joan hurrengora</AdjustSetEndAndOffsetTheRestAndGoToNext>
@@ -1871,6 +1885,7 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <WaveformPlayFirstSelectedSubtitle>Irakurri lehenik hautaturiko azpidatzia</WaveformPlayFirstSelectedSubtitle>
     <WaveformFocusListView>Fokutu zerrenda ikuspegia</WaveformFocusListView>
     <WaveformGoToNextSubtitle>Joan hurrengo azpidatzira (bideo kokapenetik)</WaveformGoToNextSubtitle>
+    <WaveformGoToPreviousSceneChange>Joan aurreko agerraldi aldaketara</WaveformGoToPreviousSceneChange>
     <WaveformGoToNextSceneChange>Joan hurrengo agerraldi aldaketara</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>Aldatu agerraldi aldaketa</WaveformToggleSceneChange>
     <GoBack1Frame>Frame bat atzera</GoBack1Frame>
@@ -1933,8 +1948,7 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <MicrosoftBingTranslator>Microsoft Bing Itzultzailea</MicrosoftBingTranslator>
     <HowToSignUp>Nola hasi saioa</HowToSignUp>
     <GoogleTranslateUrl>Google itzultzailea url-a</GoogleTranslateUrl>
-    <ClientId>Bezero ID-a</ClientId>
-    <ClientSecret>Bezero sekretua</ClientSecret>
+    <MicrosoftTranslateApiKey>Giltza</MicrosoftTranslateApiKey>
   </Settings>
   <SettingsMpv>
     <Title>mpv ezarpenak</Title>
@@ -1994,6 +2008,7 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <ImageText>Irudi idatzia</ImageText>
     <SpellCheckCompleted>Idaz-egiaztapena osatuta.</SpellCheckCompleted>
     <SpellCheckAborted>Idaz-egiaztapena utzita</SpellCheckAborted>
+    <SpacesNotAllowed>Tarteak ez daude ahalbidetuta hitz bakarrean!</SpacesNotAllowed>
     <UndoX>Deseginda: {0}</UndoX>
   </SpellCheck>
   <NetflixQualityCheck>
@@ -2255,6 +2270,7 @@ Gorde aldaketak?</KeepChangesMessage>
     <SetUnitalicFactor>Ezarri ez-etzana ezaugarria...</SetUnitalicFactor>
     <DiscardTitle>Baztertu OCR-an egindako aldaketak?</DiscardTitle>
     <DiscardText>Baztetzea nahi dituzu oraingo OCR saioan egindako aldaketak?</DiscardText>
+    <MinLineSplitHeight>Gutx. lerro garaiera (banandu)</MinLineSplitHeight>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub - Eskuzko irudia idatzira</Title>

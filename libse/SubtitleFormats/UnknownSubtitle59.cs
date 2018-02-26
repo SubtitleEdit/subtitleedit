@@ -28,10 +28,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 var lines = HtmlUtil.RemoveHtmlTags(p.Text).SplitToLines();
-                if (lines.Length > 0)
+                if (lines.Count > 0)
                 {
                     sb.AppendLine(EncodeTimeCode(p.StartTime) + "\t" + lines[0]);
-                    for (int i = 1; i < lines.Length; i++)
+                    for (int i = 1; i < lines.Count; i++)
                         sb.AppendLine("\t" + lines[i]);
                 }
             }

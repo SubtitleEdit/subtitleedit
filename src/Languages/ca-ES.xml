@@ -2,7 +2,7 @@
 <Language Name="català">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.5.4</Version>
+    <Version>3.5.5</Version>
     <TranslatedBy>Traduït per Juansa</TranslatedBy>
     <CultureName>ca-ES</CultureName>
     <HelpFile />
@@ -132,7 +132,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SetAsPercent>Estableix com percentatge de durada</SetAsPercent>
     <Note>Nota: La Durada no pot solapar-se al temps d'inici del següent text</Note>
     <PleaseSelectAValueFromTheDropDownList>Si us plau seleccioneu un valor des de la llista desplegable</PleaseSelectAValueFromTheDropDownList>
-    <PleaseChoose>- Escolliu si us plau -</PleaseChoose>
   </AdjustDisplayDuration>
   <ApplyDurationLimits>
     <Title>Aplica limits durada</Title>
@@ -264,8 +263,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <NextDifference>Diferència següe&amp;nt</NextDifference>
     <SubtitlesNotAlike>Els subtítols no tenen similituds</SubtitlesNotAlike>
     <XNumberOfDifference>Nombre de diferències: {0}</XNumberOfDifference>
-    <XNumberOfDifferenceAndPercentChanged>Nombre de diferències: {0} ({1}% de paraules canviades)</XNumberOfDifferenceAndPercentChanged>
-    <XNumberOfDifferenceAndPercentLettersChanged>Nombre de diferències: {0} ({1}% de lletres canviades)</XNumberOfDifferenceAndPercentLettersChanged>
+    <XNumberOfDifferenceAndPercentChanged>Nombre de diferències: {0} ({1:0.##}% de paraules canviades)</XNumberOfDifferenceAndPercentChanged>
+    <XNumberOfDifferenceAndPercentLettersChanged>Nombre de diferències: {0} ({1:0.##}% de lletres canviades)</XNumberOfDifferenceAndPercentLettersChanged>
     <ShowOnlyDifferences>Mostra només diferències</ShowOnlyDifferences>
     <IgnoreLineBreaks>Ignora salts de línia</IgnoreLineBreaks>
     <OnlyLookForDifferencesInText>Només comprova diferències al text</OnlyLookForDifferencesInText>
@@ -1424,7 +1423,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Escolliu subtítol des de fitxer Matroska</Title>
-    <PleaseChoose>S'ha trobat més d'un subtítol - escolliu si us plau</PleaseChoose>
     <TrackXLanguageYTypeZ>Pista {0} - Idioma: {1} - tipus: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MeasurementConverter>

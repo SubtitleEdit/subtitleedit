@@ -67,7 +67,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         private IntPtr _libMpvDll;
         private IntPtr _mpvHandle;
         private Timer _videoLoadedTimer;
-        private double? _pausePosition = null; // Hack to hold precise seeking when paused
+        private double? _pausePosition; // Hack to hold precise seeking when paused
         //        private Timer _videoEndedTimer;
 
         public override event EventHandler OnVideoLoaded;
@@ -162,7 +162,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             }
             set
             {
-                DoMpvCommand("set", "volume", value.ToString());
+                DoMpvCommand("set", "volume",  ((int)Math.Round(value * 1.5)).ToString(CultureInfo.InvariantCulture));
                 _volume = value;
             }
         }
@@ -435,7 +435,9 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 _mpvSetOptionString(_mpvHandle, GetUtf8Bytes("vo"), GetUtf8Bytes(videoOutput)); // use "direct3d" or "opengl"
                 _mpvSetOptionString(_mpvHandle, GetUtf8Bytes("keep-open"), GetUtf8Bytes("always")); // don't auto close video
                 _mpvSetOptionString(_mpvHandle, GetUtf8Bytes("no-sub"), GetUtf8Bytes("")); // don't load subtitles
-
+                if (videoFileName.StartsWith("http://", StringComparison.OrdinalIgnoreCase) ||
+                    videoFileName.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
+                    _mpvSetOptionString(_mpvHandle, GetUtf8Bytes("ytdl"), GetUtf8Bytes("yes"));
                 DoMpvCommand("loadfile", videoFileName);
 
                 _videoLoadedTimer = new Timer { Interval = 50 };

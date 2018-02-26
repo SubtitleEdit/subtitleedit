@@ -2,7 +2,7 @@
 <Language Name="Tiếng Việt">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.5.4</Version>
+    <Version>3.5.5</Version>
     <TranslatedBy>Dịch qua Tiếng Việt bởi by everytime
 Mọi góp ý về bản dịch vui lòng gửi thư tới hộp thư: handes1990@gmail.com
 Cảm ơn rất nhiều</TranslatedBy>
@@ -121,7 +121,6 @@ Hộp thư: Gửi thư tới: nikse.dk@gmail.com</AboutText1>
     <SetAsPercent>Xác nhận giới hạn %</SetAsPercent>
     <Note>Lưu ý: Thời gian hiển thị không trùng lên thời gian của văn bản tiếp theo</Note>
     <PleaseSelectAValueFromTheDropDownList>Vui lòng chọn giá trị từ danh sách xổ xuống</PleaseSelectAValueFromTheDropDownList>
-    <PleaseChoose> -Vui lòng chọn- </PleaseChoose>
   </AdjustDisplayDuration>
   <ApplyDurationLimits>
     <Title>Áp dụng giới hạn thời gian</Title>
@@ -1185,7 +1184,6 @@ Bạn có muốn bắt đầu từ phía trên cùng của tài liệu và tiế
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Chon tập tin phụ dề từ Matroskae</Title>
-    <PleaseChoose>Có nhiều hơn một phụ đề được tìm thấy-Vui lòng lựa chọn</PleaseChoose>
     <TrackXLanguageYTypeZ>Đường{0} - Ngôn ngữ: {1} - Loại: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MergeDoubleLines>

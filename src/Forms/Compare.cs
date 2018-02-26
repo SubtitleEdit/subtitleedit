@@ -35,6 +35,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonNextDifference.Text = Configuration.Settings.Language.CompareSubtitles.NextDifference;
             checkBoxShowOnlyDifferences.Text = Configuration.Settings.Language.CompareSubtitles.ShowOnlyDifferences;
             checkBoxIgnoreLineBreaks.Text = Configuration.Settings.Language.CompareSubtitles.IgnoreLineBreaks;
+            checkBoxIgnoreFormatting.Text = Configuration.Settings.Language.CompareSubtitles.IgnoreFormatting;
             checkBoxOnlyListDifferencesInText.Text = Configuration.Settings.Language.CompareSubtitles.OnlyLookForDifferencesInText;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             copyTextToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.Copy;
@@ -292,7 +293,7 @@ namespace Nikse.SubtitleEdit.Forms
                 while (index < min)
                 {
                     bool addIndexToDifferences = false;
-                    Utilities.GetTotalAndChangedWords(p1.Text, p2.Text, ref totalWords, ref wordsChanged, checkBoxIgnoreLineBreaks.Checked, GetBreakToLetter());
+                    Utilities.GetTotalAndChangedWords(p1.Text, p2.Text, ref totalWords, ref wordsChanged, checkBoxIgnoreLineBreaks.Checked, checkBoxIgnoreFormatting.Checked, ShouldBreakToLetter());
                     if (p1.ToString() == emptyParagraphAsString)
                     {
                         addIndexToDifferences = true;
@@ -323,7 +324,7 @@ namespace Nikse.SubtitleEdit.Forms
                 const double tolerance = 0.1;
                 while (index < min)
                 {
-                    Utilities.GetTotalAndChangedWords(p1.Text, p2.Text, ref totalWords, ref wordsChanged, checkBoxIgnoreLineBreaks.Checked, GetBreakToLetter());
+                    Utilities.GetTotalAndChangedWords(p1.Text, p2.Text, ref totalWords, ref wordsChanged, checkBoxIgnoreLineBreaks.Checked, checkBoxIgnoreFormatting.Checked, ShouldBreakToLetter());
                     bool addIndexToDifferences = false;
                     if (p1.ToString() == emptyParagraphAsString)
                     {
@@ -420,10 +421,10 @@ namespace Nikse.SubtitleEdit.Forms
                 if (wordsChanged != totalWords && wordsChanged > 0)
                 {
                     string formatString = Configuration.Settings.Language.CompareSubtitles.XNumberOfDifferenceAndPercentChanged;
-                    if (GetBreakToLetter())
+                    if (ShouldBreakToLetter())
                         formatString = Configuration.Settings.Language.CompareSubtitles.XNumberOfDifferenceAndPercentLettersChanged;
 
-                    labelStatus.Text = string.Format(formatString, _differences.Count, wordsChanged * 100 / totalWords);
+                    labelStatus.Text = string.Format(formatString, _differences.Count, wordsChanged * 100.00 / totalWords);
                 }
                 else
                 {
@@ -461,12 +462,7 @@ namespace Nikse.SubtitleEdit.Forms
             subtitleListView1.SelectIndexAndEnsureVisible(0);
         }
 
-        private bool GetBreakToLetter()
-        {
-            if (_language1 != null && (_language1 == "ja" || _language1 == "zh"))
-                return true;
-            return false;
-        }
+        private bool ShouldBreakToLetter() => _language1 != null && (_language1 == "ja" || _language1 == "zh");
 
         private string FixWhitespace(string p)
         {
@@ -476,10 +472,16 @@ namespace Nikse.SubtitleEdit.Forms
                 while (p.Contains("  "))
                     p = p.Replace("  ", " ");
             }
+
+            if (checkBoxIgnoreFormatting.Checked)
+            {
+                p = HtmlUtil.RemoveHtmlTags(p, true);
+            }
+
             return p;
         }
 
-        private static int GetColumnsEqualExceptNumber(Paragraph p1, Paragraph p2)
+        private int GetColumnsEqualExceptNumber(Paragraph p1, Paragraph p2)
         {
             if (p1 == null || p2 == null)
                 return 0;
@@ -496,13 +498,16 @@ namespace Nikse.SubtitleEdit.Forms
             if (Math.Abs(p1.Duration.TotalMilliseconds - p2.Duration.TotalMilliseconds) < tolerance)
                 columnsEqual++;
 
-            if (p1.Text.Trim() == p2.Text.Trim())
+            if (p1.Text.Trim() == p2.Text.Trim() ||
+                checkBoxIgnoreFormatting.Checked && HtmlUtil.RemoveHtmlTags(p1.Text.Trim()) == HtmlUtil.RemoveHtmlTags(p2.Text.Trim()))
+            {
                 columnsEqual++;
-
+            }
+            
             return columnsEqual;
         }
 
-        private static int GetColumnsEqualExceptNumberAndDuration(Paragraph p1, Paragraph p2)
+        private int GetColumnsEqualExceptNumberAndDuration(Paragraph p1, Paragraph p2)
         {
             if (p1 == null || p2 == null)
                 return 0;
@@ -516,8 +521,11 @@ namespace Nikse.SubtitleEdit.Forms
             if (Math.Abs(p1.EndTime.TotalMilliseconds - p2.EndTime.TotalMilliseconds) < tolerance)
                 columnsEqual++;
 
-            if (p1.Text.Trim() == p2.Text.Trim())
+            if (p1.Text.Trim() == p2.Text.Trim() ||
+                checkBoxIgnoreFormatting.Checked && HtmlUtil.RemoveHtmlTags(p1.Text.Trim()) == HtmlUtil.RemoveHtmlTags(p2.Text.Trim()))
+            {
                 columnsEqual++;
+            }
 
             return columnsEqual;
         }
@@ -1000,6 +1008,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxShowOnlyDifferences.Checked = config.ShowOnlyDifferences;
             checkBoxOnlyListDifferencesInText.Checked = config.OnlyLookForDifferenceInText;
             checkBoxIgnoreLineBreaks.Checked = config.IgnoreLineBreaks;
+            checkBoxIgnoreFormatting.Checked = config.IgnoreFormatting;
             _loadingConfig = false;
         }
 
@@ -1009,7 +1018,17 @@ namespace Nikse.SubtitleEdit.Forms
             config.ShowOnlyDifferences = checkBoxShowOnlyDifferences.Checked;
             config.OnlyLookForDifferenceInText = checkBoxOnlyListDifferencesInText.Checked;
             config.IgnoreLineBreaks = checkBoxIgnoreLineBreaks.Checked;
+            config.IgnoreFormatting = checkBoxIgnoreFormatting.Checked;
         }
 
+        private void checkBoxIgnoreFormatting_CheckedChanged(object sender, EventArgs e)
+        {
+            CompareSubtitles();
+        }
+
+        private void Compare_Shown(object sender, EventArgs e)
+        {
+            Activate();
+        }
     }
 }

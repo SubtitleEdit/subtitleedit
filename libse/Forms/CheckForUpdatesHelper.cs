@@ -8,24 +8,16 @@ namespace Nikse.SubtitleEdit.Core.Forms
 {
     public class CheckForUpdatesHelper
     {
-        private readonly static Regex regex = new Regex(@"\d\.\d", RegexOptions.Compiled); // 3.4.0 (xth June 2014)
+        private static readonly Regex VersionNumberRegex = new Regex(@"\d\.\d", RegexOptions.Compiled); // 3.4.0 (xth June 2014)
 
-        //private const string ReleasesUrl = "https://api.github.com/repos/SubtitleEdit/subtitleedit/releases";
         private const string ChangeLogUrl = "https://raw.githubusercontent.com/SubtitleEdit/subtitleedit/master/Changelog.txt";
 
-        //private string _jsonReleases;
         private string _changeLog;
         private int _successCount;
 
         public string Error { get; set; }
 
-        public bool Done
-        {
-            get
-            {
-                return _successCount == 1;
-            }
-        }
+        public bool Done => _successCount == 1;
 
         public string LatestVersionNumber { get; set; }
         public string LatestChangeLog { get; set; }
@@ -41,6 +33,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 request.Method = "GET";
                 request.AllowAutoRedirect = true;
                 request.Accept = contentType;
+                request.Proxy = Utilities.GetProxy();
                 request.BeginGetResponse(callback, request);
             }
             catch (Exception exception)
@@ -51,21 +44,6 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 }
             }
         }
-
-        //void FinishWebRequestReleases(IAsyncResult result)
-        //{
-        //    try
-        //    {
-        //        _jsonReleases = GetStringFromResponse(result);
-        //    }
-        //    catch (Exception exception)
-        //    {
-        //        if (Error == null)
-        //        {
-        //            Error = exception.Message;
-        //        }
-        //    }
-        //}
 
         private void FinishWebRequestChangeLog(IAsyncResult result)
         {
@@ -89,7 +67,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
             foreach (string line in latestChangeLog.Replace(Environment.NewLine, "\n").Split('\n'))
             {
                 string s = line.Trim();
-                if (!s.Contains("BETA", StringComparison.OrdinalIgnoreCase) && !s.Contains('x') && !s.Contains('*') && s.Contains('(') && s.Contains(')') && regex.IsMatch(s))
+                if (!s.Contains("BETA", StringComparison.OrdinalIgnoreCase) && !s.Contains('x') && !s.Contains('*') && s.Contains('(') && s.Contains(')') && VersionNumberRegex.IsMatch(s))
                 {
                     int indexOfSpace = s.IndexOf(' ');
                     if (indexOfSpace > 0)
@@ -111,7 +89,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
                 if (!releaseOn)
                 {
-                    if (!s.Contains('x') && !s.Contains('*') && s.Contains('(') && s.Contains(')') && regex.IsMatch(s))
+                    if (!s.Contains('x') && !s.Contains('*') && s.Contains('(') && s.Contains(')') && VersionNumberRegex.IsMatch(s))
                         releaseOn = true;
                 }
 
@@ -148,15 +126,16 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
         public void CheckForUpdates()
         {
-            // load github release json
-            //StartDownloadString(ReleasesUrl, "application/json", FinishWebRequestReleases);
-
             // load change log
             StartDownloadString(ChangeLogUrl, null, FinishWebRequestChangeLog);
         }
 
         public bool IsUpdateAvailable()
         {
+            if (!string.IsNullOrEmpty(Error))
+            {
+                return false;
+            }
             try
             {
                 //string[] currentVersionInfo = "3.3.14".Split('.'); // for testing...
@@ -164,7 +143,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 string minorMinorVersion = string.Empty;
                 if (currentVersionInfo.Length >= 3 && currentVersionInfo[2] != "0")
                     minorMinorVersion = "." + currentVersionInfo[2];
-                string currentVersion = String.Format("{0}.{1}{2}", currentVersionInfo[0], currentVersionInfo[1], minorMinorVersion);
+                string currentVersion = $"{currentVersionInfo[0]}.{currentVersionInfo[1]}{minorMinorVersion}";
                 if (currentVersion == LatestVersionNumber)
                     return false;
 

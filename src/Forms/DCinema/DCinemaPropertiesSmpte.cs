@@ -154,7 +154,7 @@ namespace Nikse.SubtitleEdit.Forms.DCinema
 
         private string GenerateID()
         {
-            var hex = Guid.NewGuid().ToString().Replace("-", string.Empty);
+            var hex = Guid.NewGuid().ToString().RemoveChar('-');
             return "urn:uuid:" + hex.Insert(8, "-").Insert(13, "-").Insert(18, "-").Insert(23, "-");
         }
     }

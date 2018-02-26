@@ -57,11 +57,15 @@ $ColorIndex3    = 2
 $ColorIndex4    = 3
 
 //Subtitles";
+
+            var lastVerticalAlign = "$VertAlign = Bottom";
+            var lastHorizontalcalAlign = "$HorzAlign = Center";
             var sb = new StringBuilder();
             sb.AppendLine(header);
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                sb.AppendLine(string.Format("{0},{1},{2}", EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), EncodeText(p.Text)));
+                DvdStudioPro.ToTextAlignment(p, sb, ref lastVerticalAlign, ref lastHorizontalcalAlign);
+                sb.AppendLine($"{EncodeTimeCode(p.StartTime)},{EncodeTimeCode(p.EndTime)},{EncodeText(p.Text)}");
             }
             return sb.ToString();
         }
@@ -76,6 +80,7 @@ $ColorIndex4    = 3
             text = text.Replace("</i>", Italic);
             text = text.Replace("<u>", Underline);
             text = text.Replace("</u>", Underline);
+            text = HtmlUtil.RemoveHtmlTags(text, true);
             if (allItalic)
                 return text.Replace(Environment.NewLine, "|^I");
             return text.Replace(Environment.NewLine, "|");
@@ -84,8 +89,8 @@ $ColorIndex4    = 3
         private static string EncodeTimeCode(TimeCode time)
         {
             //00:01:54:19
-            int frames = (int)Math.Round(time.Milliseconds / (TimeCode.BaseUnit / 25.0));
-            return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", time.Hours, time.Minutes, time.Seconds, frames);
+            int frames = MillisecondsToFrames(time.Milliseconds);
+            return $"{time.Hours:00}:{time.Minutes:00}:{time.Seconds:00}:{frames:00}";
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
@@ -99,6 +104,8 @@ $ColorIndex4    = 3
             if (fileName != null && fileName.EndsWith(".stl", StringComparison.OrdinalIgnoreCase)) // allow empty text if extension is ".stl"...
                 timeCodeRegex = RegexTimeCodes2;
 
+            var verticalAlign = "$VertAlign=Bottom";
+            var horizontalAlign = "$HorzAlign=Center";
             foreach (string line in lines)
             {
                 if (line.IndexOf(':') == 2 && timeCodeRegex.IsMatch(line))
@@ -108,13 +115,23 @@ $ColorIndex4    = 3
 
                     try
                     {
-                        Paragraph p = new Paragraph(DecodeTimeCode(start), DecodeTimeCode(end), DecodeText(line.Substring(24)));
+                        var text = DecodeText(line.Substring(24));
+                        text = DvdStudioPro.GetAlignment(verticalAlign, horizontalAlign) + text;
+                        Paragraph p = new Paragraph(DecodeTimeCode(start), DecodeTimeCode(end), text);
                         subtitle.Paragraphs.Add(p);
                     }
                     catch
                     {
                         _errorCount++;
                     }
+                }
+                else if (line.TrimStart().StartsWith("$VertAlign", StringComparison.OrdinalIgnoreCase))
+                {
+                    verticalAlign = line.RemoveChar(' ').RemoveChar('\t');
+                }
+                else if (line.TrimStart().StartsWith("$HorzAlign", StringComparison.OrdinalIgnoreCase))
+                {
+                    horizontalAlign = line.RemoveChar(' ').RemoveChar('\t');
                 }
                 else if (!string.IsNullOrWhiteSpace(line) && !line.StartsWith("//", StringComparison.Ordinal) && !line.StartsWith('$'))
                 {
@@ -132,9 +149,7 @@ $ColorIndex4    = 3
             string seconds = time.Substring(6, 2);
             string frames = time.Substring(9, 2);
 
-            int milliseconds = (int)((TimeCode.BaseUnit / 25.0) * int.Parse(frames));
-            if (milliseconds > 999)
-                milliseconds = 999;
+            int milliseconds = FramesToMillisecondsMax999(int.Parse(frames));
             return new TimeCode(int.Parse(hour), int.Parse(minutes), int.Parse(seconds), milliseconds);
         }
 

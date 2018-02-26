@@ -170,10 +170,7 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
             }
         }
 
-        public bool IsDvbSubpicture
-        {
-            get { return SubPictureStreamId.HasValue && SubPictureStreamId.Value == 32; }
-        }
+        public bool IsDvbSubpicture => SubPictureStreamId.HasValue && SubPictureStreamId.Value == 32;
 
         public int DataIdentifier
         {
@@ -385,7 +382,7 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
         public ulong PresentationTimestampToMilliseconds()
         {
             if (PresentationTimestamp.HasValue)
-                return (ulong)Math.Round((PresentationTimestamp.Value + 45.0) / 90.0);
+                return (ulong)Math.Round(PresentationTimestamp.Value / 90.0);
             return 0;
         }
 

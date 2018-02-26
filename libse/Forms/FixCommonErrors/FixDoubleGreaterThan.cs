@@ -25,7 +25,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     else
                     {
                         var lines = text.SplitToLines();
-                        for (int k = 0; k < lines.Length; k++)
+                        for (int k = 0; k < lines.Count; k++)
                         {
                             lines[k] = Helper.FixDoubleGreaterThanHelper(lines[k]);
                         }

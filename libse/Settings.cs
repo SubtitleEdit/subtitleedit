@@ -78,7 +78,7 @@ namespace Nikse.SubtitleEdit.Core
         public int MergeLinesShorterThan { get; set; }
         public bool FixShortDisplayTimesAllowMoveStartTime { get; set; }
         public string MusicSymbol { get; set; }
-        public string MusicSymbolToReplace { get; set; }
+        public string MusicSymbolReplace { get; set; }
         public string UnicodeSymbolsToInsert { get; set; }
         public bool SpellCheckAutoChangeNames { get; set; }
         public bool SpellCheckOneLetterWords { get; set; }
@@ -204,9 +204,13 @@ namespace Nikse.SubtitleEdit.Core
         public bool ExportTextShowTimeCodesNewLine { get; set; }
         public bool ExportTextNewLineAfterText { get; set; }
         public bool ExportTextNewLineBetweenSubtitles { get; set; }
+        public string ExportTextTimeCodeFormat { get; set; }
+        public string ExportTextTimeCodeSeparator { get; set; }
         public bool VideoOffsetKeepTimeCodes { get; set; }
         public int MoveStartEndMs { get; set; }
-
+        public decimal AdjustDurationSeconds { get; set; }
+        public int AdjustDurationPercent { get; set; }
+        public string AdjustDurationLast { get; set; }
 
         public ToolsSettings()
         {
@@ -216,7 +220,9 @@ namespace Nikse.SubtitleEdit.Core
             MergeLinesShorterThan = 33;
             FixShortDisplayTimesAllowMoveStartTime = false;
             MusicSymbol = "♪";
-            MusicSymbolToReplace = "âª â¶ â™ª âTª ã¢â™âª ?t×3 ?t¤3 #";
+            MusicSymbolReplace = "â™ª,â™," + // ♪ + ♫ in UTF-8 opened as ANSI
+                                 "<s M/>,<s m/>," + // music symbols by subtitle creator
+                                 "#,*,¶"; // common music symbols
             UnicodeSymbolsToInsert = "♪;♫;☺;☹;♥;©;☮;☯;Σ;∞;≡;⇒;π";
             SpellCheckAutoChangeNames = true;
             OcrFixUseHardcodedRules = true;
@@ -244,7 +250,7 @@ namespace Nikse.SubtitleEdit.Core
             SplitNumberOfParts = 3;
             SplitVia = "Lines";
             NewEmptyTranslationText = string.Empty;
-            BatchConvertLanguage = "en";
+            BatchConvertLanguage = string.Empty;
             ModifySelectionRule = "Contains";
             ModifySelectionText = string.Empty;
             GenerateTimeCodePatterns = "HH:mm:ss;yyyy-MM-dd;dddd dd MMMM yyyy <br>HH:mm:ss;dddd dd MMMM yyyy <br>hh:mm:ss tt;s";
@@ -287,6 +293,8 @@ namespace Nikse.SubtitleEdit.Core
             ExportTextNewLineBetweenSubtitles = true;
             ImportTextLineBreak = "|";
             MoveStartEndMs = 100;
+            AdjustDurationSeconds = 0.1m;
+            AdjustDurationPercent = 120;
         }
 
     }
@@ -439,7 +447,7 @@ namespace Nikse.SubtitleEdit.Core
             }
             else
             {
-                string hex = Guid.NewGuid().ToString().Replace("-", string.Empty).ToLower();
+                string hex = Guid.NewGuid().ToString().RemoveChar('-').ToLower();
                 hex = hex.Insert(8, "-").Insert(13, "-").Insert(18, "-").Insert(23, "-");
                 CurrentDCinemaSubtitleId = hex;
                 CurrentDCinemaLanguage = "English";
@@ -596,6 +604,7 @@ namespace Nikse.SubtitleEdit.Core
         public int SplitContainerListViewAndTextSplitterDistance { get; set; }
         public bool StartInSourceView { get; set; }
         public bool RemoveBlankLinesWhenOpening { get; set; }
+        public bool RemoveBadCharsWhenOpening { get; set; }
         public int SubtitleLineMaximumLength { get; set; }
         public int SubtitleMinimumDisplayMilliseconds { get; set; }
         public int SubtitleMaximumDisplayMilliseconds { get; set; }
@@ -670,8 +679,9 @@ namespace Nikse.SubtitleEdit.Core
         public bool CheckForUpdates { get; set; }
         public DateTime LastCheckForUpdates { get; set; }
         public bool ShowProgress { get; set; }
-        public bool ShowBetaStuff { get; set; }
         public long CurrentVideoOffsetInMs { get; set; }
+        public bool UseDarkTheme { get; set; }
+        public bool ShowBetaStuff { get; set; }
 
         public GeneralSettings()
         {
@@ -716,6 +726,7 @@ namespace Nikse.SubtitleEdit.Core
             SubtitleLineMaximumLength = 43;
             SubtitleMinimumDisplayMilliseconds = 1000;
             SubtitleMaximumDisplayMilliseconds = 8 * 1000;
+            RemoveBadCharsWhenOpening = true;
             MinimumMillisecondsBetweenLines = 24;
             SetStartEndHumanDelay = 100;
             AutoWrapLineWhileTyping = false;
@@ -765,6 +776,7 @@ namespace Nikse.SubtitleEdit.Core
             CheckForUpdates = true;
             LastCheckForUpdates = DateTime.Now;
             ShowProgress = false;
+            UseDarkTheme = false;
             ShowBetaStuff = false;
             NewEmptyDefaultMs = 2000;
         }
@@ -893,6 +905,7 @@ namespace Nikse.SubtitleEdit.Core
         public string FindWhat { get; set; }
         public string ReplaceWith { get; set; }
         public string SearchType { get; set; }
+        public string Description { get; set; }
     }
 
     public class MultipleSearchAndReplaceGroup
@@ -940,7 +953,7 @@ namespace Nikse.SubtitleEdit.Core
         public string GeneralAutoCalcCurrentDuration { get; set; }
         public string GeneralPlayFirstSelected { get; set; }
         public string GeneralHelp { get; set; }
-
+        public string GeneralUnbrekNoSpace { get; set; }
         public string MainFileNew { get; set; }
         public string MainFileOpen { get; set; }
         public string MainFileOpenKeepVideo { get; set; }
@@ -996,6 +1009,8 @@ namespace Nikse.SubtitleEdit.Core
         public string MainVideo5000MsLeft { get; set; }
         public string MainVideo5000MsRight { get; set; }
         public string MainVideoFullscreen { get; set; }
+        public string MainVideoSlower { get; set; }
+        public string MainVideoFaster { get; set; }
         public string MainSpellCheck { get; set; }
         public string MainSpellCheckFindDoubleWords { get; set; }
         public string MainSpellCheckAddWordToNames { get; set; }
@@ -1013,12 +1028,17 @@ namespace Nikse.SubtitleEdit.Core
         public string MainListViewColumnDeleteText { get; set; }
         public string MainListViewColumnInsertText { get; set; }
         public string MainListViewColumnPaste { get; set; }
+        public string MainListViewColumnTextUp { get; set; }
+        public string MainListViewColumnTextDown { get; set; }
         public string MainListViewFocusWaveform { get; set; }
         public string MainListViewGoToNextError { get; set; }
         public string MainTextBoxItalic { get; set; }
         public string MainTextBoxSplitAtCursor { get; set; }
+        public string MainTextBoxSplitAtCursorAndVideoPos { get; set; }
         public string MainTextBoxMoveLastWordDown { get; set; }
         public string MainTextBoxMoveFirstWordFromNextUp { get; set; }
+        public string MainTextBoxMoveLastWordDownCurrent { get; set; }
+        public string MainTextBoxMoveFirstWordUpCurrent { get; set; }
         public string MainTextBoxSelectionToLower { get; set; }
         public string MainTextBoxSelectionToUpper { get; set; }
         public string MainTextBoxToggleAutoDuration { get; set; }
@@ -1196,6 +1216,7 @@ namespace Nikse.SubtitleEdit.Core
         public bool RemoveTextBeforeColonOnlyIfUppercase { get; set; }
         public bool RemoveTextBeforeColonOnlyOnSeparateLine { get; set; }
         public bool RemoveInterjections { get; set; }
+        public bool RemoveInterjectionsOnlyOnSeparateLine { get; set; }
         public bool RemoveIfContains { get; set; }
         public bool RemoveIfAllUppercase { get; set; }
         public string RemoveIfContainsText { get; set; }
@@ -1238,12 +1259,11 @@ namespace Nikse.SubtitleEdit.Core
         public bool ShowOnlyDifferences { get; set; }
         public bool OnlyLookForDifferenceInText { get; set; }
         public bool IgnoreLineBreaks { get; set; }
+        public bool IgnoreFormatting { get; set; }
 
         public CompareSettings()
         {
-            ShowOnlyDifferences = false;
             OnlyLookForDifferenceInText = true;
-            IgnoreLineBreaks = false;
         }
     }
 
@@ -1397,6 +1417,9 @@ namespace Nikse.SubtitleEdit.Core
                 xnode = nodeCompare.SelectSingleNode("IgnoreLineBreaks");
                 if (xnode != null)
                     settings.Compare.IgnoreLineBreaks = Convert.ToBoolean(xnode.InnerText);
+                xnode = nodeCompare.SelectSingleNode("IgnoreFormatting");
+                if (xnode != null)
+                    settings.Compare.IgnoreFormatting = Convert.ToBoolean(xnode.InnerText);
             }
 
             // Recent files
@@ -1562,6 +1585,9 @@ namespace Nikse.SubtitleEdit.Core
             subNode = node.SelectSingleNode("RemoveBlankLinesWhenOpening");
             if (subNode != null)
                 settings.General.RemoveBlankLinesWhenOpening = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("RemoveBadCharsWhenOpening");
+            if (subNode != null)
+                settings.General.RemoveBadCharsWhenOpening = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("SubtitleLineMaximumLength");
             if (subNode != null)
                 settings.General.SubtitleLineMaximumLength = Convert.ToInt32(subNode.InnerText);
@@ -1780,6 +1806,9 @@ namespace Nikse.SubtitleEdit.Core
             subNode = node.SelectSingleNode("ShowProgress");
             if (subNode != null)
                 settings.General.ShowProgress = Convert.ToBoolean(subNode.InnerText.Trim());
+            subNode = node.SelectSingleNode("UseDarkTheme");
+            if (subNode != null)
+                settings.General.UseDarkTheme = Convert.ToBoolean(subNode.InnerText.Trim());
             subNode = node.SelectSingleNode("ShowBetaStuff");
             if (subNode != null)
                 settings.General.ShowBetaStuff = Convert.ToBoolean(subNode.InnerText.Trim());
@@ -1810,9 +1839,9 @@ namespace Nikse.SubtitleEdit.Core
             subNode = node.SelectSingleNode("MusicSymbol");
             if (subNode != null)
                 settings.Tools.MusicSymbol = subNode.InnerText;
-            subNode = node.SelectSingleNode("MusicSymbolToReplace");
+            subNode = node.SelectSingleNode("MusicSymbolReplace");
             if (subNode != null)
-                settings.Tools.MusicSymbolToReplace = subNode.InnerText;
+                settings.Tools.MusicSymbolReplace = subNode.InnerText;
             subNode = node.SelectSingleNode("UnicodeSymbolsToInsert");
             if (subNode != null)
                 settings.Tools.UnicodeSymbolsToInsert = subNode.InnerText;
@@ -2188,12 +2217,27 @@ namespace Nikse.SubtitleEdit.Core
             subNode = node.SelectSingleNode("ExportTextNewLineBetweenSubtitles");
             if (subNode != null)
                 settings.Tools.ExportTextNewLineBetweenSubtitles = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("ExportTextTimeCodeFormat");
+            if (subNode != null)
+                settings.Tools.ExportTextTimeCodeFormat = subNode.InnerText;
+            subNode = node.SelectSingleNode("ExportTextTimeCodeSeparator");
+            if (subNode != null)
+                settings.Tools.ExportTextTimeCodeSeparator = subNode.InnerText;
             subNode = node.SelectSingleNode("VideoOffsetKeepTimeCodes");
             if (subNode != null)
                 settings.Tools.VideoOffsetKeepTimeCodes = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("MoveStartEndMs");
             if (subNode != null)
                 settings.Tools.MoveStartEndMs = Convert.ToInt32(subNode.InnerText);
+            subNode = node.SelectSingleNode("AdjustDurationSeconds");
+            if (subNode != null)
+                settings.Tools.AdjustDurationSeconds = Convert.ToDecimal(subNode.InnerText, CultureInfo.InvariantCulture);
+            subNode = node.SelectSingleNode("AdjustDurationPercent");
+            if (subNode != null)
+                settings.Tools.AdjustDurationPercent = Convert.ToInt32(subNode.InnerText);
+            subNode = node.SelectSingleNode("AdjustDurationLast");
+            if (subNode != null)
+                settings.Tools.AdjustDurationLast = subNode.InnerText;
             subNode = node.SelectSingleNode("FindHistory");
             if (subNode != null)
             {
@@ -2702,6 +2746,9 @@ namespace Nikse.SubtitleEdit.Core
                     subNode = listNode.SelectSingleNode("SearchType");
                     if (subNode != null)
                         item.SearchType = subNode.InnerText;
+                    subNode = listNode.SelectSingleNode("Description");
+                    if (subNode != null)
+                        item.Description = subNode.InnerText;
                     group.Rules.Add(item);
                 }
             }
@@ -2735,6 +2782,9 @@ namespace Nikse.SubtitleEdit.Core
                     subNode = listNode.SelectSingleNode("SearchType");
                     if (subNode != null)
                         item.SearchType = subNode.InnerText;
+                    subNode = listNode.SelectSingleNode("Description");
+                    if (subNode != null)
+                        item.Description = subNode.InnerText;
                     group.Rules.Add(item);
                 }
             }
@@ -2800,6 +2850,9 @@ namespace Nikse.SubtitleEdit.Core
                 subNode = node.SelectSingleNode("GeneralHelp");
                 if (subNode != null)
                     settings.Shortcuts.GeneralHelp = subNode.InnerText;
+                subNode = node.SelectSingleNode("GeneralUnbrekNoSpace");
+                if (subNode != null)
+                    settings.Shortcuts.GeneralUnbrekNoSpace = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainFileNew");
                 if (subNode != null)
                     settings.Shortcuts.MainFileNew = subNode.InnerText;
@@ -2962,6 +3015,12 @@ namespace Nikse.SubtitleEdit.Core
                 subNode = node.SelectSingleNode("MainVideoFullscreen");
                 if (subNode != null)
                     settings.Shortcuts.MainVideoFullscreen = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainVideoSlower");
+                if (subNode != null)
+                    settings.Shortcuts.MainVideoSlower = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainVideoFaster");
+                if (subNode != null)
+                    settings.Shortcuts.MainVideoFaster = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainSpellCheck");
                 if (subNode != null)
                     settings.Shortcuts.MainSpellCheck = subNode.InnerText;
@@ -3013,6 +3072,12 @@ namespace Nikse.SubtitleEdit.Core
                 subNode = node.SelectSingleNode("MainListViewColumnPaste");
                 if (subNode != null)
                     settings.Shortcuts.MainListViewColumnPaste = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainListViewColumnTextUp");
+                if (subNode != null)
+                    settings.Shortcuts.MainListViewColumnTextUp = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainListViewColumnTextDown");
+                if (subNode != null)
+                    settings.Shortcuts.MainListViewColumnTextDown = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainListViewFocusWaveform");
                 if (subNode != null)
                     settings.Shortcuts.MainListViewFocusWaveform = subNode.InnerText;
@@ -3028,12 +3093,21 @@ namespace Nikse.SubtitleEdit.Core
                 subNode = node.SelectSingleNode("MainTextBoxSplitAtCursor");
                 if (subNode != null)
                     settings.Shortcuts.MainTextBoxSplitAtCursor = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainTextBoxSplitAtCursorAndVideoPos");
+                if (subNode != null)
+                    settings.Shortcuts.MainTextBoxSplitAtCursorAndVideoPos = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainTextBoxMoveLastWordDown");
                 if (subNode != null)
                     settings.Shortcuts.MainTextBoxMoveLastWordDown = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainTextBoxMoveFirstWordFromNextUp");
                 if (subNode != null)
                     settings.Shortcuts.MainTextBoxMoveFirstWordFromNextUp = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainTextBoxMoveLastWordDownCurrent");
+                if (subNode != null)
+                    settings.Shortcuts.MainTextBoxMoveLastWordDownCurrent = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainTextBoxMoveFirstWordUpCurrent");
+                if (subNode != null)
+                    settings.Shortcuts.MainTextBoxMoveFirstWordUpCurrent = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainTextBoxSelectionToLower");
                 if (subNode != null)
                     settings.Shortcuts.MainTextBoxSelectionToLower = subNode.InnerText;
@@ -3244,6 +3318,9 @@ namespace Nikse.SubtitleEdit.Core
                 subNode = node.SelectSingleNode("RemoveInterjections");
                 if (subNode != null)
                     settings.RemoveTextForHearingImpaired.RemoveInterjections = Convert.ToBoolean(subNode.InnerText);
+                subNode = node.SelectSingleNode("RemoveInterjectionsOnlyOnSeparateLine");
+                if (subNode != null)
+                    settings.RemoveTextForHearingImpaired.RemoveInterjectionsOnlyOnSeparateLine = Convert.ToBoolean(subNode.InnerText);
                 subNode = node.SelectSingleNode("RemoveIfContains");
                 if (subNode != null)
                     settings.RemoveTextForHearingImpaired.RemoveIfContains = Convert.ToBoolean(subNode.InnerText);
@@ -3290,6 +3367,7 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("ShowOnlyDifferences", settings.Compare.ShowOnlyDifferences.ToString());
                 textWriter.WriteElementString("OnlyLookForDifferenceInText", settings.Compare.OnlyLookForDifferenceInText.ToString());
                 textWriter.WriteElementString("IgnoreLineBreaks", settings.Compare.IgnoreLineBreaks.ToString());
+                textWriter.WriteElementString("IgnoreFormatting", settings.Compare.IgnoreFormatting.ToString());
                 textWriter.WriteEndElement();
 
                 textWriter.WriteStartElement("RecentFiles", string.Empty);
@@ -3355,6 +3433,7 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("SplitContainerListViewAndTextSplitterDistance", settings.General.SplitContainerListViewAndTextSplitterDistance.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("StartInSourceView", settings.General.StartInSourceView.ToString());
                 textWriter.WriteElementString("RemoveBlankLinesWhenOpening", settings.General.RemoveBlankLinesWhenOpening.ToString());
+                textWriter.WriteElementString("RemoveBadCharsWhenOpening", settings.General.RemoveBadCharsWhenOpening.ToString());
                 textWriter.WriteElementString("SubtitleLineMaximumLength", settings.General.SubtitleLineMaximumLength.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("SubtitleMinimumDisplayMilliseconds", settings.General.SubtitleMinimumDisplayMilliseconds.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("SubtitleMaximumDisplayMilliseconds", settings.General.SubtitleMaximumDisplayMilliseconds.ToString(CultureInfo.InvariantCulture));
@@ -3427,6 +3506,7 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("CheckForUpdates", settings.General.CheckForUpdates.ToString());
                 textWriter.WriteElementString("LastCheckForUpdates", settings.General.LastCheckForUpdates.ToString("yyyy-MM-dd"));
                 textWriter.WriteElementString("ShowProgress", settings.General.ShowProgress.ToString());
+                textWriter.WriteElementString("UseDarkTheme", settings.General.UseDarkTheme.ToString());
                 textWriter.WriteElementString("ShowBetaStuff", settings.General.ShowBetaStuff.ToString());
                 textWriter.WriteElementString("NewEmptyDefaultMs", settings.General.NewEmptyDefaultMs.ToString(CultureInfo.InvariantCulture));
 
@@ -3439,7 +3519,7 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("MergeLinesShorterThan", settings.Tools.MergeLinesShorterThan.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("FixShortDisplayTimesAllowMoveStartTime", settings.Tools.FixShortDisplayTimesAllowMoveStartTime.ToString());
                 textWriter.WriteElementString("MusicSymbol", settings.Tools.MusicSymbol);
-                textWriter.WriteElementString("MusicSymbolToReplace", settings.Tools.MusicSymbolToReplace);
+                textWriter.WriteElementString("MusicSymbolReplace", settings.Tools.MusicSymbolReplace);
                 textWriter.WriteElementString("UnicodeSymbolsToInsert", settings.Tools.UnicodeSymbolsToInsert);
                 textWriter.WriteElementString("SpellCheckAutoChangeNames", settings.Tools.SpellCheckAutoChangeNames.ToString());
                 textWriter.WriteElementString("SpellCheckOneLetterWords", settings.Tools.SpellCheckOneLetterWords.ToString());
@@ -3565,8 +3645,13 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("ExportTextShowTimeCodesNewLine", settings.Tools.ExportTextShowTimeCodesNewLine.ToString());
                 textWriter.WriteElementString("ExportTextNewLineAfterText", settings.Tools.ExportTextNewLineAfterText.ToString());
                 textWriter.WriteElementString("ExportTextNewLineBetweenSubtitles", settings.Tools.ExportTextNewLineBetweenSubtitles.ToString());
+                textWriter.WriteElementString("ExportTextTimeCodeFormat", settings.Tools.ExportTextTimeCodeFormat);
+                textWriter.WriteElementString("ExportTextTimeCodeSeparator", settings.Tools.ExportTextTimeCodeSeparator);
                 textWriter.WriteElementString("VideoOffsetKeepTimeCodes", settings.Tools.VideoOffsetKeepTimeCodes.ToString());
                 textWriter.WriteElementString("MoveStartEndMs", settings.Tools.MoveStartEndMs.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("AdjustDurationSeconds", settings.Tools.AdjustDurationSeconds.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("AdjustDurationPercent", settings.Tools.AdjustDurationPercent.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("AdjustDurationLast", settings.Tools.AdjustDurationLast);
 
                 if (settings.Tools.FindHistory != null && settings.Tools.FindHistory.Count > 0)
                 {
@@ -3755,19 +3840,23 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteStartElement("MultipleSearchAndReplaceGroups", string.Empty);
                 foreach (var group in settings.MultipleSearchAndReplaceGroups)
                 {
-                    textWriter.WriteStartElement("Group", string.Empty);
-                    textWriter.WriteElementString("Name", group.Name);
-                    textWriter.WriteElementString("Enabled", group.Enabled.ToString());
-                    foreach (var item in group.Rules)
+                    if (!string.IsNullOrEmpty(group?.Name))
                     {
-                        textWriter.WriteStartElement("Rule", string.Empty);
-                        textWriter.WriteElementString("Enabled", item.Enabled.ToString());
-                        textWriter.WriteElementString("FindWhat", item.FindWhat);
-                        textWriter.WriteElementString("ReplaceWith", item.ReplaceWith);
-                        textWriter.WriteElementString("SearchType", item.SearchType);
+                        textWriter.WriteStartElement("Group", string.Empty);
+                        textWriter.WriteElementString("Name", group.Name);
+                        textWriter.WriteElementString("Enabled", group.Enabled.ToString());
+                        foreach (var item in group.Rules)
+                        {
+                            textWriter.WriteStartElement("Rule", string.Empty);
+                            textWriter.WriteElementString("Enabled", item.Enabled.ToString());
+                            textWriter.WriteElementString("FindWhat", item.FindWhat);
+                            textWriter.WriteElementString("ReplaceWith", item.ReplaceWith);
+                            textWriter.WriteElementString("SearchType", item.SearchType);
+                            textWriter.WriteElementString("Description", item.Description);
+                            textWriter.WriteEndElement();
+                        }
                         textWriter.WriteEndElement();
                     }
-                    textWriter.WriteEndElement();
                 }
                 textWriter.WriteEndElement();
 
@@ -3791,6 +3880,7 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("GeneralAutoCalcCurrentDuration", settings.Shortcuts.GeneralAutoCalcCurrentDuration);
                 textWriter.WriteElementString("GeneralPlayFirstSelected", settings.Shortcuts.GeneralPlayFirstSelected);
                 textWriter.WriteElementString("GeneralHelp", settings.Shortcuts.GeneralHelp);
+                textWriter.WriteElementString("GeneralUnbrekNoSpace", settings.Shortcuts.GeneralUnbrekNoSpace);
                 textWriter.WriteElementString("MainFileNew", settings.Shortcuts.MainFileNew);
                 textWriter.WriteElementString("MainFileOpen", settings.Shortcuts.MainFileOpen);
                 textWriter.WriteElementString("MainFileOpenKeepVideo", settings.Shortcuts.MainFileOpenKeepVideo);
@@ -3846,6 +3936,8 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("MainVideo5000MsLeft", settings.Shortcuts.MainVideo5000MsLeft);
                 textWriter.WriteElementString("MainVideo5000MsRight", settings.Shortcuts.MainVideo5000MsRight);
                 textWriter.WriteElementString("MainVideoFullscreen", settings.Shortcuts.MainVideoFullscreen);
+                textWriter.WriteElementString("MainVideoSlower", settings.Shortcuts.MainVideoSlower);
+                textWriter.WriteElementString("MainVideoFaster", settings.Shortcuts.MainVideoFaster);
                 textWriter.WriteElementString("MainSpellCheck", settings.Shortcuts.MainSpellCheck);
                 textWriter.WriteElementString("MainSpellCheckFindDoubleWords", settings.Shortcuts.MainSpellCheckFindDoubleWords);
                 textWriter.WriteElementString("MainSpellCheckAddWordToNames", settings.Shortcuts.MainSpellCheckAddWordToNames);
@@ -3863,13 +3955,18 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("MainListViewColumnDeleteText", settings.Shortcuts.MainListViewColumnDeleteText);
                 textWriter.WriteElementString("MainListViewColumnInsertText", settings.Shortcuts.MainListViewColumnInsertText);
                 textWriter.WriteElementString("MainListViewColumnPaste", settings.Shortcuts.MainListViewColumnPaste);
+                textWriter.WriteElementString("MainListViewColumnTextUp", settings.Shortcuts.MainListViewColumnTextUp);
+                textWriter.WriteElementString("MainListViewColumnTextDown", settings.Shortcuts.MainListViewColumnTextDown);
                 textWriter.WriteElementString("MainListViewFocusWaveform", settings.Shortcuts.MainListViewFocusWaveform);
                 textWriter.WriteElementString("MainListViewGoToNextError", settings.Shortcuts.MainListViewGoToNextError);
                 textWriter.WriteElementString("MainEditReverseStartAndEndingForRTL", settings.Shortcuts.MainEditReverseStartAndEndingForRTL);
                 textWriter.WriteElementString("MainTextBoxItalic", settings.Shortcuts.MainTextBoxItalic);
                 textWriter.WriteElementString("MainTextBoxSplitAtCursor", settings.Shortcuts.MainTextBoxSplitAtCursor);
+                textWriter.WriteElementString("MainTextBoxSplitAtCursorAndVideoPos", settings.Shortcuts.MainTextBoxSplitAtCursorAndVideoPos);
                 textWriter.WriteElementString("MainTextBoxMoveLastWordDown", settings.Shortcuts.MainTextBoxMoveLastWordDown);
                 textWriter.WriteElementString("MainTextBoxMoveFirstWordFromNextUp", settings.Shortcuts.MainTextBoxMoveFirstWordFromNextUp);
+                textWriter.WriteElementString("MainTextBoxMoveLastWordDownCurrent", settings.Shortcuts.MainTextBoxMoveLastWordDownCurrent);
+                textWriter.WriteElementString("MainTextBoxMoveFirstWordUpCurrent", settings.Shortcuts.MainTextBoxMoveFirstWordUpCurrent);
                 textWriter.WriteElementString("MainTextBoxSelectionToLower", settings.Shortcuts.MainTextBoxSelectionToLower);
                 textWriter.WriteElementString("MainTextBoxSelectionToUpper", settings.Shortcuts.MainTextBoxSelectionToUpper);
                 textWriter.WriteElementString("MainTextBoxToggleAutoDuration", settings.Shortcuts.MainTextBoxToggleAutoDuration);
@@ -3940,6 +4037,7 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("RemoveTextBeforeColonOnlyIfUppercase", settings.RemoveTextForHearingImpaired.RemoveTextBeforeColonOnlyIfUppercase.ToString());
                 textWriter.WriteElementString("RemoveTextBeforeColonOnlyOnSeparateLine", settings.RemoveTextForHearingImpaired.RemoveTextBeforeColonOnlyOnSeparateLine.ToString());
                 textWriter.WriteElementString("RemoveInterjections", settings.RemoveTextForHearingImpaired.RemoveInterjections.ToString());
+                textWriter.WriteElementString("RemoveInterjectionsOnlyOnSeparateLine", settings.RemoveTextForHearingImpaired.RemoveInterjectionsOnlyOnSeparateLine.ToString());
                 textWriter.WriteElementString("RemoveIfAllUppercase", settings.RemoveTextForHearingImpaired.RemoveIfAllUppercase.ToString());
                 textWriter.WriteElementString("RemoveIfContains", settings.RemoveTextForHearingImpaired.RemoveIfContains.ToString());
                 textWriter.WriteElementString("RemoveIfContainsText", settings.RemoveTextForHearingImpaired.RemoveIfContainsText);

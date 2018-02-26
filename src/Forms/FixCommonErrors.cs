@@ -123,25 +123,34 @@ namespace Nikse.SubtitleEdit.Forms
             string threeLetterIsoLanguageName = ci.ThreeLetterISOLanguageName;
 
             comboBoxLanguage.Items.Clear();
+            comboBoxLanguage.Items.Add("-Auto-");
             foreach (CultureInfo x in CultureInfo.GetCultures(CultureTypes.NeutralCultures))
-                comboBoxLanguage.Items.Add(x);
+            {
+                if (!string.IsNullOrWhiteSpace(x.ToString()))
+                    comboBoxLanguage.Items.Add(x);
+            }
             comboBoxLanguage.Sorted = true;
             int languageIndex = 0;
             int j = 0;
             foreach (var x in comboBoxLanguage.Items)
             {
-                var xci = (CultureInfo)x;
-                if (xci.TwoLetterISOLanguageName == ci.TwoLetterISOLanguageName)
+                var xci = x as CultureInfo;
+                if (xci != null)
                 {
-                    languageIndex = j;
-                    break;
-                }
-                if (xci.TwoLetterISOLanguageName == "en")
-                {
-                    languageIndex = j;
+                    if (xci.TwoLetterISOLanguageName == ci.TwoLetterISOLanguageName)
+                    {
+                        languageIndex = j;
+                        break;
+                    }
+                    if (xci.TwoLetterISOLanguageName == "en")
+                    {
+                        languageIndex = j;
+                    }
                 }
                 j++;
             }
+            if (string.IsNullOrEmpty(language))
+                languageIndex = 0;
             comboBoxLanguage.SelectedIndex = languageIndex;
             AddFixActions(threeLetterIsoLanguageName);
             _originalSubtitle = new Subtitle(subtitle, false); // copy constructor
@@ -160,9 +169,9 @@ namespace Nikse.SubtitleEdit.Forms
         {
             get
             {
-                var ci = (CultureInfo)comboBoxLanguage.SelectedItem;
+                var ci = comboBoxLanguage.SelectedItem as CultureInfo;
                 if (ci == null)
-                    return "en";
+                    return string.Empty;
                 return ci.TwoLetterISOLanguageName;
             }
             set
@@ -1181,9 +1190,10 @@ namespace Nikse.SubtitleEdit.Forms
         {
             labelTextLineLengths.Text = _languageGeneral.SingleLineLengths;
             labelSingleLine.Left = labelTextLineLengths.Left + labelTextLineLengths.Width - 6;
+            text = HtmlUtil.RemoveHtmlTags(text, true);
             UiUtil.GetLineLengths(labelSingleLine, text);
 
-            string s = HtmlUtil.RemoveHtmlTags(text, true).Replace(Environment.NewLine, " ");
+            string s = text.Replace(Environment.NewLine, " ");
             buttonSplitLine.Visible = false;
             if (s.Length < Configuration.Settings.General.SubtitleLineMaximumLength * 1.9)
             {
@@ -1537,7 +1547,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 string oldText = currentParagraph.Text;
                 var lines = currentParagraph.Text.SplitToLines();
-                if (lines.Length == 2 && (lines[0].EndsWith('.') || lines[0].EndsWith('!') || lines[0].EndsWith('?')))
+                if (lines.Count == 2 && (lines[0].EndsWith('.') || lines[0].EndsWith('!') || lines[0].EndsWith('?')))
                 {
                     currentParagraph.Text = Utilities.AutoBreakLine(lines[0], Language);
                     newParagraph.Text = Utilities.AutoBreakLine(lines[1], Language);
@@ -1546,7 +1556,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     string s = Utilities.AutoBreakLine(currentParagraph.Text, 5, Configuration.Settings.Tools.MergeLinesShorterThan, Language);
                     lines = s.SplitToLines();
-                    if (lines.Length == 2)
+                    if (lines.Count == 2)
                     {
                         currentParagraph.Text = Utilities.AutoBreakLine(lines[0], Language);
                         newParagraph.Text = Utilities.AutoBreakLine(lines[1], Language);
@@ -1605,9 +1615,12 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (Subtitle != null)
             {
-                var ci = (CultureInfo)comboBoxLanguage.SelectedItem;
-                _autoDetectGoogleLanguage = ci.TwoLetterISOLanguageName;
-                AddFixActions(ci.ThreeLetterISOLanguageName);
+                var ci = comboBoxLanguage.SelectedItem as CultureInfo;
+                if (ci != null)
+                {
+                    _autoDetectGoogleLanguage = ci.TwoLetterISOLanguageName;
+                    AddFixActions(ci.ThreeLetterISOLanguageName);
+                }
             }
         }
 

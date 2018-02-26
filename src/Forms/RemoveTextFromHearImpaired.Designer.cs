@@ -42,6 +42,7 @@
             this.toolStripMenuItemInvertSel = new System.Windows.Forms.ToolStripMenuItem();
             this.checkBoxRemoveTextBeforeColon = new System.Windows.Forms.CheckBox();
             this.groupBoxRemoveTextConditions = new System.Windows.Forms.GroupBox();
+            this.checkBoxInterjectionOnlySeparateLine = new System.Windows.Forms.CheckBox();
             this.checkBoxRemoveIfAllUppercase = new System.Windows.Forms.CheckBox();
             this.checkBoxColonSeparateLine = new System.Windows.Forms.CheckBox();
             this.buttonEditInterjections = new System.Windows.Forms.Button();
@@ -180,6 +181,7 @@
             // 
             this.groupBoxRemoveTextConditions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxRemoveTextConditions.Controls.Add(this.checkBoxInterjectionOnlySeparateLine);
             this.groupBoxRemoveTextConditions.Controls.Add(this.checkBoxRemoveIfAllUppercase);
             this.groupBoxRemoveTextConditions.Controls.Add(this.checkBoxColonSeparateLine);
             this.groupBoxRemoveTextConditions.Controls.Add(this.buttonEditInterjections);
@@ -204,6 +206,17 @@
             this.groupBoxRemoveTextConditions.TabIndex = 0;
             this.groupBoxRemoveTextConditions.TabStop = false;
             this.groupBoxRemoveTextConditions.Text = "Remove text conditions";
+            // 
+            // checkBoxInterjectionOnlySeparateLine
+            // 
+            this.checkBoxInterjectionOnlySeparateLine.AutoSize = true;
+            this.checkBoxInterjectionOnlySeparateLine.Location = new System.Drawing.Point(600, 53);
+            this.checkBoxInterjectionOnlySeparateLine.Name = "checkBoxInterjectionOnlySeparateLine";
+            this.checkBoxInterjectionOnlySeparateLine.Size = new System.Drawing.Size(137, 17);
+            this.checkBoxInterjectionOnlySeparateLine.TabIndex = 18;
+            this.checkBoxInterjectionOnlySeparateLine.Text = "Only if on separate line";
+            this.checkBoxInterjectionOnlySeparateLine.UseVisualStyleBackColor = true;
+            this.checkBoxInterjectionOnlySeparateLine.CheckedChanged += new System.EventHandler(this.checkBoxInterjectionOnlySeparateLine_CheckedChanged);
             // 
             // checkBoxRemoveIfAllUppercase
             // 
@@ -231,7 +244,7 @@
             // 
             // buttonEditInterjections
             // 
-            this.buttonEditInterjections.Location = new System.Drawing.Point(377, 168);
+            this.buttonEditInterjections.Location = new System.Drawing.Point(718, 26);
             this.buttonEditInterjections.Name = "buttonEditInterjections";
             this.buttonEditInterjections.Size = new System.Drawing.Size(103, 23);
             this.buttonEditInterjections.TabIndex = 17;
@@ -242,7 +255,7 @@
             // checkBoxRemoveInterjections
             // 
             this.checkBoxRemoveInterjections.AutoSize = true;
-            this.checkBoxRemoveInterjections.Location = new System.Drawing.Point(241, 172);
+            this.checkBoxRemoveInterjections.Location = new System.Drawing.Point(582, 30);
             this.checkBoxRemoveInterjections.Name = "checkBoxRemoveInterjections";
             this.checkBoxRemoveInterjections.Size = new System.Drawing.Size(130, 17);
             this.checkBoxRemoveInterjections.TabIndex = 16;
@@ -441,7 +454,6 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Remove text for hearing impaired";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormRemoveTextForHearImpaired_FormClosing);
             this.Load += new System.EventHandler(this.FormRemoveTextForHearImpaired_Load);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FormRemoveTextForHearImpaired_KeyDown);
             this.Resize += new System.EventHandler(this.FormRemoveTextForHearImpaired_Resize);
@@ -486,5 +498,6 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSelAll;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemInvertSel;
         private System.Windows.Forms.Button buttonApply;
+        private System.Windows.Forms.CheckBox checkBoxInterjectionOnlySeparateLine;
     }
 }

@@ -81,7 +81,7 @@ namespace Test
                          exception.Message;
 
             var lines = File.ReadAllLines(fileName);
-            if (exception.LineNumber >= 0 && exception.LineNumber < lines.Count())
+            if (exception.LineNumber >= 0 && exception.LineNumber < lines.Length)
             {
                 msg += Environment.NewLine + Environment.NewLine;
                 if (exception.LineNumber > 1)

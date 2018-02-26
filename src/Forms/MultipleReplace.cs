@@ -2,7 +2,9 @@
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Globalization;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Xml;
@@ -32,11 +34,14 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private const string MultipleSearchAndReplaceItem = "MultipleSearchAndReplaceItem";
-        private const string RuleEnabled = "Enabled";
-        private const string FindWhat = "FindWhat";
-        private const string ReplaceWith = "ReplaceWith";
-        private const string SearchType = "SearchType";
+        internal const string Group = "Group";
+        internal const string GroupName = "Name";
+        internal const string MultipleSearchAndReplaceItem = "MultipleSearchAndReplaceItem";
+        internal const string RuleEnabled = "Enabled";
+        internal const string FindWhat = "FindWhat";
+        internal const string ReplaceWith = "ReplaceWith";
+        internal const string SearchType = "SearchType";
+        internal const string Description = "Description";
 
         public const string SearchTypeNormal = "Normal";
         public const string SearchTypeCaseSensitive = "CaseSensitive";
@@ -64,6 +69,7 @@ namespace Nikse.SubtitleEdit.Forms
             Text = Configuration.Settings.Language.MultipleReplace.Title;
             labelFindWhat.Text = Configuration.Settings.Language.MultipleReplace.FindWhat;
             labelReplaceWith.Text = Configuration.Settings.Language.MultipleReplace.ReplaceWith;
+            labelDescription.Text = Configuration.Settings.Language.MultipleReplace.Description;
             radioButtonNormal.Text = Configuration.Settings.Language.MultipleReplace.Normal;
             radioButtonRegEx.Text = Configuration.Settings.Language.MultipleReplace.RegularExpression;
             radioButtonCaseSensitive.Text = Configuration.Settings.Language.MultipleReplace.CaseSensitive;
@@ -73,6 +79,7 @@ namespace Nikse.SubtitleEdit.Forms
             listViewRules.Columns[1].Text = Configuration.Settings.Language.MultipleReplace.FindWhat;
             listViewRules.Columns[2].Text = Configuration.Settings.Language.MultipleReplace.ReplaceWith;
             listViewRules.Columns[3].Text = Configuration.Settings.Language.MultipleReplace.SearchType;
+            listViewRules.Columns[4].Text = Configuration.Settings.Language.MultipleReplace.Description;
             groupBoxGroups.Text = Configuration.Settings.Language.MultipleReplace.Groups;
             groupBoxLinesFound.Text = string.Empty;
             listViewFixes.Columns[0].Text = Configuration.Settings.Language.General.Apply;
@@ -83,6 +90,10 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemRemoveAll.Text = Configuration.Settings.Language.MultipleReplace.RemoveAll;
             toolStripMenuItemImport.Text = Configuration.Settings.Language.MultipleReplace.Import;
             toolStripMenuItemExport.Text = Configuration.Settings.Language.MultipleReplace.Export;
+            importToolStripMenuItem.Text = Configuration.Settings.Language.MultipleReplace.Import;
+            exportToolStripMenuItem.Text = Configuration.Settings.Language.MultipleReplace.Export;
+            buttonImportGroups.Text = Configuration.Settings.Language.MultipleReplace.Import;
+            buttonExportGroups.Text = Configuration.Settings.Language.MultipleReplace.Export;
             buttonNewGroup.Text = Configuration.Settings.Language.MultipleReplace.NewGroup;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
@@ -114,7 +125,9 @@ namespace Nikse.SubtitleEdit.Forms
         public void Initialize(Subtitle subtitle)
         {
             if (subtitle == null)
-                throw new ArgumentNullException("subtitle");
+            {
+                throw new ArgumentNullException(nameof(subtitle));
+            }
 
             _subtitle = subtitle;
             _oldMultipleSearchAndReplaceGroups.Clear();
@@ -135,7 +148,9 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             if (subtitle.Paragraphs == null || subtitle.Paragraphs.Count == 0)
+            {
                 groupBoxLinesFound.Enabled = false;
+            }
 
             UpdateViewFromModel(Configuration.Settings.MultipleSearchAndReplaceGroups, Configuration.Settings.MultipleSearchAndReplaceGroups.Count > 0 ? Configuration.Settings.MultipleSearchAndReplaceGroups[0] : null);
         }
@@ -197,7 +212,7 @@ namespace Nikse.SubtitleEdit.Forms
                 else if (radioButtonRegEx.Checked)
                 {
                     searchType = SearchTypeRegularExpression;
-                    if (!Utilities.IsValidRegex(findText))
+                    if (!RegexUtils.IsValidRegex(findText))
                     {
                         MessageBox.Show(Configuration.Settings.Language.General.RegularExpressionIsNotValid);
                         textBoxFind.Select();
@@ -205,11 +220,12 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-                var rule = new MultipleSearchAndReplaceSetting() { Enabled = true, FindWhat = findText, ReplaceWith = textBoxReplace.Text, SearchType = searchType };
+                var rule = new MultipleSearchAndReplaceSetting { Enabled = true, FindWhat = findText, ReplaceWith = textBoxReplace.Text, SearchType = searchType, Description = textBoxDescription.Text };
                 _currentGroup.Rules.Add(rule);
                 AddToRulesListView(rule);
                 textBoxFind.Text = string.Empty;
                 textBoxReplace.Text = string.Empty;
+                textBoxDescription.Text = string.Empty;
                 GeneratePreview();
                 textBoxFind.Select();
             }
@@ -235,7 +251,8 @@ namespace Nikse.SubtitleEdit.Forms
                             string findWhat = rule.FindWhat;
                             if (!string.IsNullOrEmpty(findWhat)) // allow space or spaces
                             {
-                                string replaceWith = rule.ReplaceWith.Replace(@"\n", Environment.NewLine);
+                                string replaceWith = RegexUtils.FixNewLine(rule.ReplaceWith);
+                                findWhat = RegexUtils.FixNewLine(findWhat);
                                 string searchType = rule.SearchType;
                                 var mpi = new ReplaceExpression(findWhat, replaceWith, searchType);
                                 replaceExpressions.Add(mpi);
@@ -270,7 +287,7 @@ namespace Nikse.SubtitleEdit.Forms
                         if (r.IsMatch(newText))
                         {
                             hit = true;
-                            newText = r.Replace(newText, item.ReplaceWith);
+                            newText = RegexUtils.ReplaceNewLineSafe(r, newText, item.ReplaceWith);
                         }
                     }
                     else
@@ -313,6 +330,7 @@ namespace Nikse.SubtitleEdit.Forms
             item.SubItems.Add(rule.FindWhat);
             item.SubItems.Add(rule.ReplaceWith);
             item.SubItems.Add(EnglishSearchTypeToLocal(rule.SearchType));
+            item.SubItems.Add(rule.Description);
             listViewRules.Items.Add(item);
         }
 
@@ -424,7 +442,7 @@ namespace Nikse.SubtitleEdit.Forms
                 else if (radioButtonRegEx.Checked)
                 {
                     searchType = SearchTypeRegularExpression;
-                    if (!Utilities.IsValidRegex(findText))
+                    if (!RegexUtils.IsValidRegex(findText))
                     {
                         MessageBox.Show(Configuration.Settings.Language.General.RegularExpressionIsNotValid);
                         textBoxFind.Select();
@@ -436,10 +454,12 @@ namespace Nikse.SubtitleEdit.Forms
                 item.SubItems[1].Text = findText;
                 item.SubItems[2].Text = replaceText;
                 item.SubItems[3].Text = EnglishSearchTypeToLocal(searchType);
+                item.SubItems[4].Text = textBoxDescription.Text;
 
                 _currentGroup.Rules[item.Index].FindWhat = findText;
                 _currentGroup.Rules[item.Index].ReplaceWith = replaceText;
                 _currentGroup.Rules[item.Index].SearchType = searchType;
+                _currentGroup.Rules[item.Index].Description = textBoxDescription.Text;
 
                 GeneratePreview();
                 textBoxFind.Select();
@@ -460,6 +480,7 @@ namespace Nikse.SubtitleEdit.Forms
                     radioButtonCaseSensitive.Checked = true;
                 else
                     radioButtonNormal.Checked = true;
+                textBoxDescription.Text = listViewRules.SelectedItems[0].SubItems[4].Text;
             }
             else
             {
@@ -559,17 +580,20 @@ namespace Nikse.SubtitleEdit.Forms
             string findWhat = listViewRules.Items[index].SubItems[1].Text;
             string replaceWith = listViewRules.Items[index].SubItems[2].Text;
             string searchType = listViewRules.Items[index].SubItems[3].Text;
+            string description = listViewRules.Items[index].SubItems[4].Text;
 
             listViewRules.Items[index].Checked = listViewRules.Items[index2].Checked;
             listViewRules.Items[index].SubItems[1].Text = listViewRules.Items[index2].SubItems[1].Text;
             listViewRules.Items[index].SubItems[2].Text = listViewRules.Items[index2].SubItems[2].Text;
             listViewRules.Items[index].SubItems[3].Text = listViewRules.Items[index2].SubItems[3].Text;
+            listViewRules.Items[index].SubItems[4].Text = listViewRules.Items[index2].SubItems[4].Text;
             listViewRules.Items[index].Tag = _currentGroup.Rules[index];
 
             listViewRules.Items[index2].Checked = enabled;
             listViewRules.Items[index2].SubItems[1].Text = findWhat;
             listViewRules.Items[index2].SubItems[2].Text = replaceWith;
             listViewRules.Items[index2].SubItems[3].Text = searchType;
+            listViewRules.Items[index2].SubItems[4].Text = description;
             listViewRules.Items[index2].Tag = _currentGroup.Rules[index2];
 
             listViewRules.Items[index].Selected = false;
@@ -628,25 +652,77 @@ namespace Nikse.SubtitleEdit.Forms
             var doc = new XmlDocument { XmlResolver = null };
             doc.Load(fileName);
 
-            foreach (XmlNode listNode in doc.DocumentElement.SelectNodes("MultipleSearchAndReplaceList/MultipleSearchAndReplaceItem"))
+            foreach (XmlNode listNode in doc.DocumentElement.SelectNodes("//MultipleSearchAndReplaceItem"))
             {
-                var item = new MultipleSearchAndReplaceSetting();
-                var subNode = listNode.SelectSingleNode(RuleEnabled);
-                if (subNode != null)
-                    item.Enabled = Convert.ToBoolean(subNode.InnerText);
-                subNode = listNode.SelectSingleNode(FindWhat);
-                if (subNode != null)
-                    item.FindWhat = subNode.InnerText;
-                subNode = listNode.SelectSingleNode(ReplaceWith);
-                if (subNode != null)
-                    item.ReplaceWith = subNode.InnerText;
-                subNode = listNode.SelectSingleNode(SearchType);
-                if (subNode != null)
-                    item.SearchType = subNode.InnerText;
-
+                var item = MakeMultipleSearchAndReplaceSetting(listNode);
                 AddToRulesListView(item);
                 _currentGroup.Rules.Add(item);
             }
+        }
+
+        private List<MultipleSearchAndReplaceGroup> ImportGroupsFile(string fileName)
+        {
+            var list = new List<MultipleSearchAndReplaceGroup>();
+            var doc = new XmlDocument { XmlResolver = null };
+            doc.Load(fileName);
+            foreach (XmlNode groupNode in doc.DocumentElement.SelectNodes("//Group"))
+            {
+                var group = new MultipleSearchAndReplaceGroup();
+                var nameNode = groupNode.SelectSingleNode(GroupName);
+                if (nameNode != null)
+                    group.Name = nameNode.InnerText;
+                group.Rules = new List<MultipleSearchAndReplaceSetting>();
+                list.Add(group);
+
+                foreach (XmlNode listNode in groupNode.SelectNodes("MultipleSearchAndReplaceItem"))
+                {
+                    var item = MakeMultipleSearchAndReplaceSetting(listNode);
+                    group.Rules.Add(item);
+                }
+            }
+
+            if (list.Count == 0)
+            {
+                // import into "untitled" group if only rules
+                var group = new MultipleSearchAndReplaceGroup();
+                group.Name = "untitled";
+                group.Rules = new List<MultipleSearchAndReplaceSetting>();
+                foreach (XmlNode listNode in doc.DocumentElement.SelectNodes("//MultipleSearchAndReplaceItem"))
+                {
+                    var item = MakeMultipleSearchAndReplaceSetting(listNode);
+                    group.Rules.Add(item);
+                }
+                if (group.Rules.Count > 0)
+                {
+                    list.Add(group);
+                }
+            }
+
+            return list;
+        }
+
+        private static MultipleSearchAndReplaceSetting MakeMultipleSearchAndReplaceSetting(XmlNode listNode)
+        {
+            var item = new MultipleSearchAndReplaceSetting();
+            var subNode = listNode.SelectSingleNode(RuleEnabled);
+            if (subNode != null)
+                item.Enabled = Convert.ToBoolean(subNode.InnerText);
+            subNode = listNode.SelectSingleNode(FindWhat);
+            if (subNode != null)
+                item.FindWhat = subNode.InnerText;
+            subNode = listNode.SelectSingleNode(ReplaceWith);
+            if (subNode != null)
+                item.ReplaceWith = subNode.InnerText;
+            subNode = listNode.SelectSingleNode(SearchType);
+            if (subNode != null)
+                item.SearchType = subNode.InnerText;
+            subNode = listNode.SelectSingleNode(SearchType);
+            if (subNode != null)
+                item.SearchType = subNode.InnerText;
+            subNode = listNode.SelectSingleNode(Description);
+            if (subNode != null)
+                item.Description = subNode.InnerText;
+            return item;
         }
 
         private void MultipleReplace_Shown(object sender, EventArgs e)
@@ -726,6 +802,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 textBoxFind.Text = string.Empty;
                 textBoxReplace.Text = string.Empty;
+                textBoxDescription.Text = string.Empty;
             }
             listViewRules.EndUpdate();
             listViewRules.ItemChecked += ListViewRulesItemChecked;
@@ -775,6 +852,8 @@ namespace Nikse.SubtitleEdit.Forms
                 textWriter.WriteStartDocument();
                 textWriter.WriteStartElement("Settings", string.Empty);
                 textWriter.WriteStartElement("MultipleSearchAndReplaceList", string.Empty);
+                textWriter.WriteStartElement(Group, string.Empty);
+                textWriter.WriteElementString(GroupName, _currentGroup.Name);
                 foreach (var item in _currentGroup.Rules)
                 {
                     textWriter.WriteStartElement(MultipleSearchAndReplaceItem, string.Empty);
@@ -782,8 +861,10 @@ namespace Nikse.SubtitleEdit.Forms
                     textWriter.WriteElementString(FindWhat, item.FindWhat);
                     textWriter.WriteElementString(ReplaceWith, item.ReplaceWith);
                     textWriter.WriteElementString(SearchType, item.SearchType);
+                    textWriter.WriteElementString(Description, item.Description);
                     textWriter.WriteEndElement();
                 }
+                textWriter.WriteEndElement();
                 textWriter.WriteEndElement();
                 textWriter.WriteEndElement();
                 textWriter.WriteEndDocument();
@@ -844,6 +925,8 @@ namespace Nikse.SubtitleEdit.Forms
             else
             {
                 _currentGroup = null;
+                listViewRules.Items.Clear();
+                listViewFixes.Items.Clear();
             }
             UpdateViewFromModel(Configuration.Settings.MultipleSearchAndReplaceGroups, _currentGroup);
         }
@@ -903,7 +986,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void MultipleReplace_ResizeEnd(object sender, EventArgs e)
         {
-            columnHeader6.Width = -2;
+            listViewRules.Columns[listViewRules.Columns.Count - 1].Width = -2;
         }
 
         private void moveToTopToolStripMenuItem_Click(object sender, EventArgs e)
@@ -944,8 +1027,16 @@ namespace Nikse.SubtitleEdit.Forms
             bool doShow = listViewGroups.SelectedItems.Count > 0;
             foreach (ToolStripItem item in contextMenuStripGroups.Items)
             {
-                if (item != newToolStripMenuItem)
+                if (item != newToolStripMenuItem &&
+                    item != toolStripSeparatorGroupImportExport &&
+                    item != importToolStripMenuItem)
+                {
                     item.Visible = doShow;
+                }
+                if (item == exportToolStripMenuItem)
+                {
+                    item.Visible = listViewGroups.Items.Count > 0;
+                }
             }
         }
 
@@ -954,6 +1045,85 @@ namespace Nikse.SubtitleEdit.Forms
             ResetUncheckLines();
             _subtitle = new Subtitle(FixedSubtitle);
             GeneratePreview();
+        }
+
+        private void exportToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (listViewGroups.Items.Count == 0)
+            {
+                return;
+            }
+
+            using (var form = new MultipleReplaceExportImport(Configuration.Settings.MultipleSearchAndReplaceGroups, true))
+            {
+                form.ShowDialog(this);
+            }
+        }
+
+        private void importToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            openFileDialog1.Title = Configuration.Settings.Language.MultipleReplace.ImportRulesTitle;
+            openFileDialog1.Filter = Configuration.Settings.Language.MultipleReplace.Rules + "|*.template";
+            if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
+            {
+                try
+                {
+                    var importGroups = ImportGroupsFile(openFileDialog1.FileName);
+                    if (importGroups.Count == 0)
+                    {
+                        MessageBox.Show(Configuration.Settings.Language.MultipleReplace.NothingToImport);
+                        return;
+                    }
+
+                    using (var form = new MultipleReplaceExportImport(importGroups, false))
+                    {
+                        if (form.ShowDialog(this) == DialogResult.OK)
+                        {
+                            foreach (MultipleSearchAndReplaceGroup importGroup in importGroups.Where(g => form.ChosenGroups.Contains(g.Name)))
+                            {
+                                importGroup.Name = FixDuplicateName(importGroup.Name, Configuration.Settings.MultipleSearchAndReplaceGroups);
+                                Configuration.Settings.MultipleSearchAndReplaceGroups.Add(importGroup);
+                            }
+                            UpdateViewFromModel(Configuration.Settings.MultipleSearchAndReplaceGroups, _currentGroup);
+                        }
+                    }
+                }
+                catch (Exception exception)
+                {
+                    MessageBox.Show(exception.Message);
+                    return;
+                }
+                GeneratePreview();
+            }
+        }
+
+        private string FixDuplicateName(string newGroupName, List<MultipleSearchAndReplaceGroup> existinGroups)
+        {
+            if (existinGroups.All(p => p.Name != newGroupName))
+            {
+                return newGroupName;
+            }
+
+            for (int i = 1; i < int.MaxValue; i++)
+            {
+                var name = $"{newGroupName}_{i}";
+                if (existinGroups.All(p => p.Name != name))
+                {
+                    return name;
+                }
+            }
+
+            return Guid.NewGuid().ToString();
+        }
+
+        private void buttonImportGroups_Click(object sender, EventArgs e)
+        {
+            importToolStripMenuItem_Click(sender, e);
+        }
+
+        private void buttonExportGroups_Click(object sender, EventArgs e)
+        {
+            exportToolStripMenuItem_Click(sender, e);
         }
 
     }

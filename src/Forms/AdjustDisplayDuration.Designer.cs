@@ -32,8 +32,6 @@
             this.radioButtonSeconds = new System.Windows.Forms.RadioButton();
             this.groupBoxAdjustVia = new System.Windows.Forms.GroupBox();
             this.radioButtonAutoRecalculate = new System.Windows.Forms.RadioButton();
-            this.comboBoxPercent = new System.Windows.Forms.ComboBox();
-            this.comboBoxSeconds = new System.Windows.Forms.ComboBox();
             this.labelNote = new System.Windows.Forms.Label();
             this.labelAddInPercent = new System.Windows.Forms.Label();
             this.labelAddSeconds = new System.Windows.Forms.Label();
@@ -41,8 +39,12 @@
             this.buttonOK = new System.Windows.Forms.Button();
             this.numericUpDownMaxCharsSec = new System.Windows.Forms.NumericUpDown();
             this.labelMaxCharsPerSecond = new System.Windows.Forms.Label();
+            this.numericUpDownSeconds = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownPercent = new System.Windows.Forms.NumericUpDown();
             this.groupBoxAdjustVia.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxCharsSec)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSeconds)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPercent)).BeginInit();
             this.SuspendLayout();
             // 
             // radioButtonPercent
@@ -92,99 +94,6 @@
             this.radioButtonAutoRecalculate.TabIndex = 2;
             this.radioButtonAutoRecalculate.Text = "Recalculate";
             this.radioButtonAutoRecalculate.UseVisualStyleBackColor = true;
-            // 
-            // comboBoxPercent
-            // 
-            this.comboBoxPercent.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxPercent.Enabled = false;
-            this.comboBoxPercent.FormattingEnabled = true;
-            this.comboBoxPercent.Items.AddRange(new object[] {
-            "- Please choose -",
-            "75",
-            "76",
-            "77",
-            "78",
-            "79",
-            "80",
-            "81",
-            "82",
-            "83",
-            "84",
-            "85",
-            "86",
-            "87",
-            "88",
-            "89",
-            "90",
-            "91",
-            "92",
-            "93",
-            "94",
-            "95",
-            "96",
-            "97",
-            "98",
-            "99",
-            "101",
-            "102",
-            "103",
-            "104",
-            "105",
-            "106",
-            "107",
-            "108",
-            "109",
-            "110",
-            "111",
-            "112",
-            "113",
-            "114",
-            "115",
-            "116",
-            "117",
-            "118",
-            "119",
-            "120",
-            "121",
-            "122",
-            "123",
-            "124",
-            "125"});
-            this.comboBoxPercent.Location = new System.Drawing.Point(182, 89);
-            this.comboBoxPercent.Name = "comboBoxPercent";
-            this.comboBoxPercent.Size = new System.Drawing.Size(141, 21);
-            this.comboBoxPercent.TabIndex = 4;
-            // 
-            // comboBoxSeconds
-            // 
-            this.comboBoxSeconds.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxSeconds.FormattingEnabled = true;
-            this.comboBoxSeconds.Items.AddRange(new object[] {
-            "- Please choose -",
-            "-0.5",
-            "-0.4",
-            "-0.3",
-            "-0.2",
-            "-0.1",
-            "+0.1",
-            "+0.2",
-            "+0.3",
-            "+0.4",
-            "+0.5",
-            "+0.6",
-            "+0.7",
-            "+0.8",
-            "+0.9",
-            "+1",
-            "+2",
-            "+3",
-            "+4",
-            "+5",
-            "+10"});
-            this.comboBoxSeconds.Location = new System.Drawing.Point(13, 89);
-            this.comboBoxSeconds.Name = "comboBoxSeconds";
-            this.comboBoxSeconds.Size = new System.Drawing.Size(141, 21);
-            this.comboBoxSeconds.TabIndex = 2;
             // 
             // labelNote
             // 
@@ -253,7 +162,7 @@
             0,
             0});
             this.numericUpDownMaxCharsSec.Name = "numericUpDownMaxCharsSec";
-            this.numericUpDownMaxCharsSec.Size = new System.Drawing.Size(56, 21);
+            this.numericUpDownMaxCharsSec.Size = new System.Drawing.Size(80, 21);
             this.numericUpDownMaxCharsSec.TabIndex = 6;
             this.numericUpDownMaxCharsSec.Value = new decimal(new int[] {
             24,
@@ -270,15 +179,65 @@
             this.labelMaxCharsPerSecond.TabIndex = 5;
             this.labelMaxCharsPerSecond.Text = "Max. chars/sec";
             // 
+            // numericUpDownSeconds
+            // 
+            this.numericUpDownSeconds.DecimalPlaces = 3;
+            this.numericUpDownSeconds.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            131072});
+            this.numericUpDownSeconds.Location = new System.Drawing.Point(13, 89);
+            this.numericUpDownSeconds.Maximum = new decimal(new int[] {
+            20,
+            0,
+            0,
+            0});
+            this.numericUpDownSeconds.Minimum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            -2147483648});
+            this.numericUpDownSeconds.Name = "numericUpDownSeconds";
+            this.numericUpDownSeconds.Size = new System.Drawing.Size(80, 21);
+            this.numericUpDownSeconds.TabIndex = 3;
+            this.numericUpDownSeconds.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            // 
+            // numericUpDownPercent
+            // 
+            this.numericUpDownPercent.Location = new System.Drawing.Point(182, 89);
+            this.numericUpDownPercent.Maximum = new decimal(new int[] {
+            150,
+            0,
+            0,
+            0});
+            this.numericUpDownPercent.Minimum = new decimal(new int[] {
+            75,
+            0,
+            0,
+            0});
+            this.numericUpDownPercent.Name = "numericUpDownPercent";
+            this.numericUpDownPercent.Size = new System.Drawing.Size(80, 21);
+            this.numericUpDownPercent.TabIndex = 4;
+            this.numericUpDownPercent.Value = new decimal(new int[] {
+            110,
+            0,
+            0,
+            0});
+            // 
             // AdjustDisplayDuration
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(493, 206);
+            this.Controls.Add(this.numericUpDownPercent);
+            this.Controls.Add(this.numericUpDownSeconds);
             this.Controls.Add(this.numericUpDownMaxCharsSec);
             this.Controls.Add(this.labelMaxCharsPerSecond);
-            this.Controls.Add(this.comboBoxSeconds);
-            this.Controls.Add(this.comboBoxPercent);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.labelAddSeconds);
@@ -298,6 +257,8 @@
             this.groupBoxAdjustVia.ResumeLayout(false);
             this.groupBoxAdjustVia.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxCharsSec)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSeconds)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPercent)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -308,8 +269,6 @@
         private System.Windows.Forms.RadioButton radioButtonPercent;
         private System.Windows.Forms.RadioButton radioButtonSeconds;
         private System.Windows.Forms.GroupBox groupBoxAdjustVia;
-        private System.Windows.Forms.ComboBox comboBoxPercent;
-        private System.Windows.Forms.ComboBox comboBoxSeconds;
         private System.Windows.Forms.Label labelNote;
         private System.Windows.Forms.Label labelAddInPercent;
         private System.Windows.Forms.Label labelAddSeconds;
@@ -318,5 +277,7 @@
         private System.Windows.Forms.RadioButton radioButtonAutoRecalculate;
         private System.Windows.Forms.NumericUpDown numericUpDownMaxCharsSec;
         private System.Windows.Forms.Label labelMaxCharsPerSecond;
+        private System.Windows.Forms.NumericUpDown numericUpDownSeconds;
+        private System.Windows.Forms.NumericUpDown numericUpDownPercent;
     }
 }

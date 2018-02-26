@@ -2,7 +2,7 @@
 <Language Name="日本語">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.5.4</Version>
+    <Version>3.5.5</Version>
     <TranslatedBy>Nardog</TranslatedBy>
     <CultureName>ja-JP</CultureName>
     <HelpFile />
@@ -118,7 +118,6 @@ C# ソース コードは https://github.com/SubtitleEdit/subtitleedit にあり
     <SetAsPercent>表示時間のパーセンテージ</SetAsPercent>
     <Note>注意: 表示時間が次のテキストの開始時間に重複することはありません</Note>
     <PleaseSelectAValueFromTheDropDownList>ドロップダウン リストから値を選択してください</PleaseSelectAValueFromTheDropDownList>
-    <PleaseChoose> - 選択してください - </PleaseChoose>
   </AdjustDisplayDuration>
   <ApplyDurationLimits>
     <Title>表示時間制限の適用</Title>
@@ -1173,7 +1172,6 @@ C# ソース コードは https://github.com/SubtitleEdit/subtitleedit にあり
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Matroska ファイルから字幕を選択</Title>
-    <PleaseChoose>2 個以上の字幕が見つかりました - 選択してください</PleaseChoose>
     <TrackXLanguageYTypeZ>トラック {0} - 言語: {1} - 種類: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MergedShortLines>

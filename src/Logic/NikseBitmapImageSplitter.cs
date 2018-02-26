@@ -12,7 +12,7 @@ namespace Nikse.SubtitleEdit.Logic
             if (a.A < 120 && b.A < 120)
                 return true; // transparent
 
-            var alphaDiff = (int)Math.Abs(a.A - b.A);
+            var alphaDiff = Math.Abs(a.A - b.A);
             if (alphaDiff > 50)
                 return false; // different alpha levels
 
@@ -20,7 +20,7 @@ namespace Nikse.SubtitleEdit.Logic
                 b.A > 250 && b.R > 90 && b.G > 90 && b.B > 90)
                 return true; // dark, non transparent
 
-            int diff = (a.R + a.G + a.B) - (b.R + b.G + b.B);                        
+            int diff = (a.R + a.G + a.B) - (b.R + b.G + b.B);
             return diff < tolerance && diff > -tolerance;
         }
 
@@ -145,11 +145,6 @@ namespace Nikse.SubtitleEdit.Logic
             return SplitVertical(new NikseBitmap(bmp));
         }
 
-        public static List<ImageSplitterItem> SplitVertical(Bitmap bmp, int lineMinHeight)
-        {
-            return SplitVertical(new NikseBitmap(bmp), lineMinHeight);
-        }
-
         public static List<ImageSplitterItem> SplitVertical(NikseBitmap bmp)
         { // split into lines
             int startY = 0;
@@ -265,19 +260,32 @@ namespace Nikse.SubtitleEdit.Logic
             var parts = new List<ImageSplitterItem>();
             for (int y = 0; y < bmp.Height; y++)
             {
-                bool allTransparent = true;
-                for (int x = 0; x < bmp.Width; x++)
+                if (bmp.IsLineTransparent(y))
                 {
-                    int a = bmp.GetAlpha(x, y);
-                    if (a != 0)
+
+                    // check for appendix below text
+                    bool appendix = y >= bmp.Height - minLineHeight;
+                    if (!appendix && y < bmp.Height - 10 && size > minLineHeight && minLineHeight > 15)
                     {
-                        allTransparent = false;
-                        break;
+                        bool yp1 = bmp.IsLineTransparent(y + 1);
+                        bool yp2 = bmp.IsLineTransparent(y + 2);
+                        bool yp3 = bmp.IsLineTransparent(y + 3);
+                        bool yp4 = bmp.IsLineTransparent(y + 4);
+                        bool yp5 = bmp.IsLineTransparent(y + 5);
+                        if (!yp1 || !yp2 || !yp3 || !yp4 || !yp5)
+                        {
+                            bool yp6 = bmp.IsLineTransparent(y + 6);
+                            bool yp7 = bmp.IsLineTransparent(y + 7);
+                            bool yp8 = bmp.IsLineTransparent(y + 8);
+                            bool yp9 = bmp.IsLineTransparent(y + 9);
+                            if (yp6 && yp7 && yp8 && yp9)
+                            {
+                                appendix = true;
+                            }
+                        }
                     }
-                }
-                if (allTransparent)
-                {
-                    if (size > 1 && size <= minLineHeight)
+
+                    if (appendix || size > 1 && size <= minLineHeight)
                     {
                         size++; // at least 'lineMinHeight' pixels, like top of 'i'
                     }
@@ -325,16 +333,7 @@ namespace Nikse.SubtitleEdit.Logic
             for (int y = 0; y < bmp.Height; y++)
             {
                 int a;
-                bool allTransparent = true;
-                for (int x = 0; x < bmp.Width; x++)
-                {
-                    a = bmp.GetAlpha(x, y);
-                    if (a != 0)
-                    {
-                        allTransparent = false;
-                        break;
-                    }
-                }
+                bool allTransparent = bmp.IsLineTransparent(y);
 
                 if (size > 5 && size >= minLineHeight && size > averageLineHeight && !allTransparent && bmp.Width > 50 && y < bmp.Height - 5)
                 {
@@ -429,23 +428,6 @@ namespace Nikse.SubtitleEdit.Logic
                 return parts;
             }
             return parts;
-        }
-
-        public static int IsBitmapsAlike(Bitmap bmp1, Bitmap bmp2)
-        {
-            int different = 0;
-            int maxDiff = bmp1.Width * bmp1.Height / 5;
-            for (int y = 0; y < bmp1.Height; y++)
-            {
-                for (int x = 0; x < bmp1.Width; x++)
-                {
-                    if (!IsColorClose(bmp1.GetPixel(x, y), bmp2.GetPixel(x, y), 20))
-                        different++;
-                }
-            }
-            if (different > maxDiff)
-                return different + 10;
-            return different;
         }
 
         public static int IsBitmapsAlike(NikseBitmap bmp1, Bitmap bmp2)
@@ -774,17 +756,12 @@ namespace Nikse.SubtitleEdit.Logic
                     subtractSpacePixels = add;
                 }
 
-                if (clean && startX + 1 < x)
-                {
-                    width++;
-                }
-
                 var newStartX = points != null ? FindMinX(points, x) : 0;
                 if (points == null)
                 {
                     width++;
                 }
-                else if (width > 1 || (width == 1 && newStartX > startX + 1 && spacePixels == 0))
+                else if (width > 0 && newStartX > startX + 1)
                 {
                     var bmp0 = new NikseBitmap(bmp);
                     // remove pixels after current;
@@ -801,11 +778,16 @@ namespace Nikse.SubtitleEdit.Logic
                     int addY;
                     b1 = CropTopAndBottom(b1, out addY);
 
+                    var couldBeSpace = false;
                     if (spacePixels >= xOrMorePixelsMakesSpace && parts.Count > 0)
                         parts.Add(new ImageSplitterItem(" ") { Y = addY + lineSplitterItem.Y });
+                    else if (xOrMorePixelsMakesSpace > 9 && spacePixels >= xOrMorePixelsMakesSpace - 2 && parts.Count > 0)
+                        couldBeSpace = true;
+                    else if (xOrMorePixelsMakesSpace > 3 && spacePixels >= xOrMorePixelsMakesSpace - 1 && parts.Count > 0)
+                        couldBeSpace = true;
 
                     if (b1.Width > 0 && b1.Height > 0)
-                        parts.Add(new ImageSplitterItem(startX + lineSplitterItem.X, addY + lineSplitterItem.Y, b1)); //y is what?
+                        parts.Add(new ImageSplitterItem(startX + lineSplitterItem.X, addY + lineSplitterItem.Y, b1, couldBeSpace)); //y is what?
 
                     // remove pixels before next letter;
                     const int begin = 0;
@@ -818,7 +800,7 @@ namespace Nikse.SubtitleEdit.Logic
                     spacePixels = -subtractSpacePixels;
                     subtractSpacePixels = 0;
                 }
-                else
+                else if (clean)
                 {
                     width = 1;
                     startX = newStartX;
@@ -1010,14 +992,17 @@ namespace Nikse.SubtitleEdit.Logic
         {
             int different = 0;
             int maxDiff = bmp1.Width * bmp1.Height / 5;
-
-            for (int x = 0; x < bmp1.Width; x++)
+            int w4 = bmp2.Width * 4;
+            for (int y = 0; y < bmp1.Height; y++)
             {
-                for (int y = 0; y < bmp1.Height; y++)
+                var alpha = y * w4 + 3;
+                var pixel = y * bmp1.Width;
+                for (int x = 0; x < bmp1.Width; x++)
                 {
-                    //if (!IsColorClose(bmp1.GetPixel(x, y), bmp2.GetPixel(x, y), 20))
-                    if (bmp1.GetPixel(x, y) > 0 && bmp2.GetAlpha(x, y) < 100)
+                    if (bmp1.GetPixel(pixel) > 0 && bmp2.GetAlpha(alpha) < 100)
                         different++;
+                    pixel++;
+                    alpha += 4;
                 }
                 if (different > maxDiff)
                     return different + 10;
@@ -1029,18 +1014,23 @@ namespace Nikse.SubtitleEdit.Logic
         {
             int different = 0;
             int maxDiff = bmp1.Width * bmp1.Height / 5;
-
-            for (int x = 1; x < bmp1.Width; x++)
+            int w4 = bmp1.Width * 4;
+            for (int y = 1; y < bmp1.Height; y++)
             {
-                for (int y = 1; y < bmp1.Height; y++)
+                var alpha = y * w4 + 7;
+                var pixel = y * bmp2.Width + 1;
+                for (int x = 1; x < bmp1.Width; x++)
                 {
-                    if (bmp1.GetAlpha(x, y) < 100 && bmp2.GetPixel(x, y) > 0)
+                    if (bmp1.GetAlpha(alpha) < 100 && bmp2.GetPixel(pixel) > 0)
                         different++;
+                    pixel++;
+                    alpha += 4;
                 }
                 if (different > maxDiff)
                     return different + 10;
             }
             return different;
         }
+
     }
 }

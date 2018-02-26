@@ -205,9 +205,17 @@ namespace Nikse.SubtitleEdit.Logic
                 videoPlayerContainer.ShowMuteButton = Configuration.Settings.General.VideoPlayerShowMuteButton;
                 videoPlayerContainer.Volume = Configuration.Settings.General.VideoPlayerDefaultVolume;
                 videoPlayerContainer.EnableMouseWheelStep();
-                videoPlayerContainer.VideoWidth = videoInfo.Width;
-                videoPlayerContainer.VideoHeight = videoInfo.Height;
-                videoPlayerContainer.VideoPlayer.Resize(videoPlayerContainer.PanelPlayer.Width, videoPlayerContainer.PanelPlayer.Height);
+                if (fileName != null && (fileName.StartsWith("https://") || fileName.StartsWith("http://")))
+                {
+                    // we don't have videoInfo for streams...
+                }
+                else
+                {
+                    videoPlayerContainer.VideoWidth = videoInfo.Width;
+                    videoPlayerContainer.VideoHeight = videoInfo.Height;
+                    videoPlayerContainer.VideoPlayer.Resize(videoPlayerContainer.PanelPlayer.Width, videoPlayerContainer.PanelPlayer.Height);
+                }
+
             }
             catch (Exception exception)
             {
@@ -366,6 +374,34 @@ namespace Nikse.SubtitleEdit.Logic
 
         public static void FixFonts(Control form, int iterations = 5)
         {
+            FixFontsInner(form, iterations);
+            if (Configuration.Settings.General.UseDarkTheme)
+                DarkTheme.SetDarkTheme(form, 1500);
+        }
+
+        public static void FixFonts(ToolStripMenuItem item)
+        {
+            item.Font = GetDefaultFont();
+            if (Configuration.Settings.General.UseDarkTheme)
+                DarkTheme.SetDarkTheme(item);
+        }
+
+        public static void FixFonts(ToolStripSeparator item)
+        {
+            item.Font = GetDefaultFont();
+            if (Configuration.Settings.General.UseDarkTheme)
+                DarkTheme.SetDarkTheme(item);
+        }
+
+        internal static void FixFonts(ToolStripItem item)
+        {
+            item.Font = GetDefaultFont();
+            if (Configuration.Settings.General.UseDarkTheme)
+                DarkTheme.SetDarkTheme(item);
+        }
+
+        private static void FixFontsInner(Control form, int iterations = 5)
+        {
             if (iterations < 1)
                 return;
 
@@ -377,7 +413,7 @@ namespace Nikse.SubtitleEdit.Logic
                 }
                 foreach (Control inner in c.Controls)
                 {
-                    FixFonts(inner, iterations - 1);
+                    FixFontsInner(inner, iterations - 1);
                 }
             }
         }
@@ -411,12 +447,12 @@ namespace Nikse.SubtitleEdit.Logic
         public static void GetLineLengths(Label label, string text)
         {
             label.ForeColor = Color.Black;
-            var lines = HtmlUtil.RemoveHtmlTags(text, true).SplitToLines();
+            var lines = text.SplitToLines();
 
             const int max = 3;
 
             var sb = new StringBuilder();
-            for (int i = 0; i < lines.Length; i++)
+            for (int i = 0; i < lines.Count; i++)
             {
                 string line = lines[i];
                 if (i > 0)
@@ -675,6 +711,7 @@ namespace Nikse.SubtitleEdit.Logic
             AddExtension(sb, ".mxf");
             AddExtension(sb, ".sup");
             AddExtension(sb, ".dost");
+            AddExtension(sb, new FinalDraftTemplate2().Extension);
             AddExtension(sb, new Ayato().Extension);
             AddExtension(sb, new PacUnicode().Extension);
             AddExtension(sb, new WinCaps32().Extension);

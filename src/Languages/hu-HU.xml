@@ -2,7 +2,7 @@
 <Language Name="Hungarian">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.5.4</Version>
+    <Version>3.5.5</Version>
     <TranslatedBy>Fordító: Zityi's Translator Team (http://szoftverforditasok.hu)</TranslatedBy>
     <CultureName>hu-HU</CultureName>
     <HelpFile />
@@ -27,6 +27,7 @@
     <CharsPerSec>Karakter/mp</CharsPerSec>
     <WordsPerMin>Szó/perc</WordsPerMin>
     <Actor>Színész</Actor>
+    <Gap>Köz</Gap>
     <Region>Régió</Region>
     <NumberSymbol>#</NumberSymbol>
     <Number>Szám</Number>
@@ -143,7 +144,6 @@ Megjegyzés: Ellenőrizze a szabad merevlemez területet.</WaveFileMalformed>
     <SetAsPercent>Beállítás az időtartam százalékaként</SetAsPercent>
     <Note>Megjegyzés: A megjelenítési idő nem fogja fedni a következő szöveg kezdési idejét</Note>
     <PleaseSelectAValueFromTheDropDownList>Kérjük, válasszon egy értéket a legördülő listából</PleaseSelectAValueFromTheDropDownList>
-    <PleaseChoose> - Kérem válasszon - </PleaseChoose>
   </AdjustDisplayDuration>
   <ApplyDurationLimits>
     <Title>Időtartam-korlátok alkalmazása</Title>
@@ -195,6 +195,7 @@ Megjegyzés: Ellenőrizze a szabad merevlemez területet.</WaveFileMalformed>
     <FixCommonErrorsErrorX>Gyakori hibák javítása: {0}</FixCommonErrorsErrorX>
     <MultipleReplaceErrorX>Csoportos csere: {0}</MultipleReplaceErrorX>
     <AutoBalanceErrorX>Automatikus kiegyenlítés: {0}</AutoBalanceErrorX>
+    <OffsetTimeCodes>Eltolási időkódok</OffsetTimeCodes>
   </BatchConvert>
   <Beamer>
     <Title>Projektor</Title>
@@ -277,8 +278,8 @@ Megjegyzés: Ellenőrizze a szabad merevlemez területet.</WaveFileMalformed>
     <NextDifference>Következő eltérés</NextDifference>
     <SubtitlesNotAlike>A feliratok nem egyeznek</SubtitlesNotAlike>
     <XNumberOfDifference>Eltérések száma: {0}</XNumberOfDifference>
-    <XNumberOfDifferenceAndPercentChanged>Eltérések száma: {0} ({1}% szó módosult)</XNumberOfDifferenceAndPercentChanged>
-    <XNumberOfDifferenceAndPercentLettersChanged>Eltérések száma: {0} ({1}% betű módosult)</XNumberOfDifferenceAndPercentLettersChanged>
+    <XNumberOfDifferenceAndPercentChanged>Eltérések száma: {0} ({1:0.##}% szó módosult)</XNumberOfDifferenceAndPercentChanged>
+    <XNumberOfDifferenceAndPercentLettersChanged>Eltérések száma: {0} ({1:0.##}% betű módosult)</XNumberOfDifferenceAndPercentLettersChanged>
     <ShowOnlyDifferences>Csak az eltérések megjelenítése</ShowOnlyDifferences>
     <IgnoreLineBreaks>Sortörések figyelmen kívül hagyása</IgnoreLineBreaks>
     <OnlyLookForDifferencesInText>Csak az eltérések keresése a szövegben</OnlyLookForDifferencesInText>
@@ -422,6 +423,14 @@ Megjegyzés: Ellenőrizze a szabad merevlemez területet.</WaveFileMalformed>
     <Footer>Lábléc</Footer>
     <DoNotModify>[Ne módosítsa]</DoNotModify>
   </ExportCustomTextFormat>
+  <ExportFcpXmlAdvanced>
+    <Title>Final Cut Pro XML speciális exportálása</Title>
+    <FontName>Betűtípus neve</FontName>
+    <FontSize>Betűméret</FontSize>
+    <FontFace>Betűtípus</FontFace>
+    <Alignment>Igazítás</Alignment>
+    <Baseline>Alapvonal</Baseline>
+  </ExportFcpXmlAdvanced>
   <ExportPngXml>
     <Title>BDN XML/PNG exportálás</Title>
     <ImageSettings>Képbeállítások</ImageSettings>
@@ -470,6 +479,7 @@ Megjegyzés: Ellenőrizze a szabad merevlemez területet.</WaveFileMalformed>
     <Forced>Kényszerített</Forced>
     <ChooseBackgroundColor>Válassza ki a háttér színét</ChooseBackgroundColor>
     <SaveImageAs>Kép mentése másként...</SaveImageAs>
+    <FcpUseFullPathUrl>A teljes kép útvonal URL használata az FCP xml-ben</FcpUseFullPathUrl>
   </ExportPngXml>
   <ExportText>
     <Title>Szöveg exportálása</Title>
@@ -1002,6 +1012,7 @@ Megjegyzés: Ellenőrizze a szabad merevlemez területet.</WaveFileMalformed>
         <ChooseAudioTrack>Válasszon hangsávot</ChooseAudioTrack>
         <CloseVideo>Videófájl bezárása</CloseVideo>
         <SetVideoOffset>Videóeltolás beállítása...</SetVideoOffset>
+        <SmptTimeMode>SMPTE időzítés (keretkihagyás)</SmptTimeMode>
         <ImportSceneChanges>Jelenet változások importálása...</ImportSceneChanges>
         <RemoveSceneChanges>Jelenet váltások eltávolítása</RemoveSceneChanges>
         <WaveformBatchGenerate>Hullámformák csoportos létrehozása...</WaveformBatchGenerate>
@@ -1384,8 +1395,9 @@ Folytatja?</SubtitleAppendPrompt>
     <UnicodeCharactersAnsiWarning>A felirat unicode karaktereket tartalmaz. Az ANSI fájlkódolással való mentés esetén, ezek el fognak veszni. Folytatja a mentést?</UnicodeCharactersAnsiWarning>
     <NegativeTimeWarning>A felirat negatív időkódokat tartalmaz. Folytatja a mentést?</NegativeTimeWarning>
     <BeforeMergeShortLines>A rövid sorok egyesítése előtti állapotra</BeforeMergeShortLines>
-    <BeforeSplitLongLines>A hosszú sorok felosztása előtti állapotra</BeforeSplitLongLines>
     <MergedShortLinesX>Összevont sorok száma: {0}</MergedShortLinesX>
+    <BeforeSplitLongLines>A hosszú sorok felosztása előtti állapotra</BeforeSplitLongLines>
+    <LongLinesSplitX>Osztott sorok száma: {0}</LongLinesSplitX>
     <BeforeDurationsBridgeGap>A kis szünetek áthidalása előtti állapotra</BeforeDurationsBridgeGap>
     <BeforeSetMinimumDisplayTimeBetweenParagraphs>A feliratok közti legkisebb megjelenítési idő beállítása előtti állapotra</BeforeSetMinimumDisplayTimeBetweenParagraphs>
     <XMinimumDisplayTimeBetweenParagraphsChanged>A sorok száma a feliratok közti legkisebb megjelenítési időnél módosult: {0}</XMinimumDisplayTimeBetweenParagraphsChanged>
@@ -1444,6 +1456,7 @@ Folytatja?</SubtitleAppendPrompt>
     <ImportTimeCodesDifferentNumberOfLinesWarning>Az időkódokat tartalmazó felirat eltérő sorszámokkal rendelkezik ({0}), mint a jelenlegi ({1}) felirat - folytatja?</ImportTimeCodesDifferentNumberOfLinesWarning>
     <ParsingTransportStream>Átviteli adatfolyam elemzése - kis türelmet...</ParsingTransportStream>
     <XPercentCompleted>{0}% befejezve</XPercentCompleted>
+    <NextX>Következő: {0}</NextX>
     <ErrorLoadIdx>Nem lehet olvasni/szerkeszteni az .idx fájlokat. Az idx fájlok egy idx/sub állomány pár részei (más néven VobSub), és az Subtitle Edit nem tudja megnyitni a .sub fájlt.</ErrorLoadIdx>
     <ErrorLoadRar>Ez a fájl úgy tűnik, hogy egy tömörített .rar fájl. Az Subtitle Edit nem tudja megnyitni a tömörített fájlokat.</ErrorLoadRar>
     <ErrorLoadZip>Ez a fájl úgy tűnik, hogy egy tömörített .zip fájl. Az Subtitle Edit nem tudja megnyitni a tömörített fájlokat.</ErrorLoadZip>
@@ -1529,6 +1542,7 @@ Ha ezt a fájlt a Subtitle Edit programmal módosította, akkor lehet, hogy megt
     <Normal>Normál</Normal>
     <CaseSensitive>Betűérzékeny</CaseSensitive>
     <RegularExpression>Reguláris kifejezés</RegularExpression>
+    <Description>Leírás</Description>
     <LinesFoundX>Talált sorok: {0}</LinesFoundX>
     <Remove>Eltávolítás</Remove>
     <Add>Hozzáadás</Add>
@@ -1726,7 +1740,6 @@ szerkesztheti ugyanazt a feliratfájlt</Information>
     <RemoveBlankLinesWhenOpening>Üres sorok eltávolítása egy felirat megnyitásakor</RemoveBlankLinesWhenOpening>
     <ShowLineBreaksAs>Sortörések megjelenítése listanézetben:</ShowLineBreaksAs>
     <MainListViewDoubleClickAction>A főablak listanézetében egy sorra való dupla kattintáskor:</MainListViewDoubleClickAction>
-    <MainListViewColumns>Listanézet oszlopok</MainListViewColumns>
     <MainListViewColumnsInfo>Válassza ki a látható listanézet oszlopait</MainListViewColumnsInfo>
     <MainListViewNothing>Nincs művelet</MainListViewNothing>
     <MainListViewVideoGoToPositionAndPause>Ugrás a videópozícióra és szüneteltetés</MainListViewVideoGoToPositionAndPause>
@@ -1833,8 +1846,8 @@ szerkesztheti ugyanazt a feliratfájlt</Information>
     <RemoveTextForHi>Szöveg eltávolítása halláskárosultak esetén</RemoveTextForHi>
     <MergeLinesShorterThan>Tördeletlen feliratok rövidebbek, mint</MergeLinesShorterThan>
     <MusicSymbol>Zene szimbólum</MusicSymbol>
-    <MusicSymbolsToReplace>Zenei szimbólumok a cseréhez (elválasztva szóközökkel)</MusicSymbolsToReplace>
-    <FixCommonOcrErrorsUseHardcodedRules>OCR hibák javítása - rögzített hivatkozású szabály is használható</FixCommonOcrErrorsUseHardcodedRules>
+    <MusicSymbolsReplace>Cserélendő zenei szimbólumok (vesszővel elválasztva)</MusicSymbolsReplace>
+    <FixCommonOcrErrorsUseHardcodedRules>Közös OCR hibák javítása - rögzített hivatkozású szabály is használható</FixCommonOcrErrorsUseHardcodedRules>
     <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Rövid megjelenítési idő javítása - kezdési idő léptetési lehetőség</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
     <FixCommonErrorsSkipStepOne>Első lépés kihagyása (javítási szabályok kiválasztása)</FixCommonErrorsSkipStepOne>
     <Shortcuts>Gyorsbillentyűk</Shortcuts>
@@ -1854,6 +1867,10 @@ szerkesztheti ugyanazt a feliratfájlt</Information>
     <AdjustStartDownEndUpAndGoToNext>Le gomb=indítás beállítása, Fel gomb=befejezés beállítása és ugrás a következőre</AdjustStartDownEndUpAndGoToNext>
     <AdjustSelected100MsForward>A kiválasztott sorok áthelyezése 100 ezredmásodperccel előre</AdjustSelected100MsForward>
     <AdjustSelected100MsBack>A kiválasztott sorok áthelyezése 100 ezredmásodperccel vissza</AdjustSelected100MsBack>
+    <AdjustStartXMsBack>Kezdés áthelyezése {0} ezredmásodperccel vissza</AdjustStartXMsBack>
+    <AdjustStartXMsForward>Kezdés áthelyezése {0} ezredmásodperccel előre</AdjustStartXMsForward>
+    <AdjustEndXMsBack>Befejezés áthelyezése {0} ezredmásodperccel vissza</AdjustEndXMsBack>
+    <AdjustEndXMsForward>Befejezés áthelyezése {0} ezredmásodperccel előre</AdjustEndXMsForward>
     <AdjustSetStartTimeKeepDuration>Kezdési idő beállítása, időtartam megtartása</AdjustSetStartTimeKeepDuration>
     <AdjustSetEndAndOffsetTheRest>A befejezés és a többi eltolás beállítása</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>A befejezés és a többi eltolás beállítása és ugrás a következőre</AdjustSetEndAndOffsetTheRestAndGoToNext>
@@ -1885,6 +1902,7 @@ szerkesztheti ugyanazt a feliratfájlt</Information>
     <WaveformPlayFirstSelectedSubtitle>Az első kiválasztott felirat lejátszása</WaveformPlayFirstSelectedSubtitle>
     <WaveformFocusListView>Listanézet fókusz</WaveformFocusListView>
     <WaveformGoToNextSubtitle>Ugrás a következő feliratra (a videó pozícióból)</WaveformGoToNextSubtitle>
+    <WaveformGoToPreviousSceneChange>Ugrás az előző jelenetváltásra</WaveformGoToPreviousSceneChange>
     <WaveformGoToNextSceneChange>Ugrás a következő jelenet váltásra</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>Jelenet váltás kapcsoló</WaveformToggleSceneChange>
     <GoBack1Frame>Egy képkocka vissza</GoBack1Frame>
@@ -1935,6 +1953,8 @@ szerkesztheti ugyanazt a feliratfájlt</Information>
     <ShowBeamer>Teljes képernyős projektor felirat indítás</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Utolsó szó áthelyezése a következő felirat sorba</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Az első szó áthelyezése felfelé a következő felirat sorból</MainTextBoxMoveFirstWordFromNextUp>
+    <MainTextBoxMoveFirstWordUpCurrent>Első szó mozgatása a következő sorból felfelé (aktuális felirat)</MainTextBoxMoveFirstWordUpCurrent>
+    <MainTextBoxMoveLastWordDownCurrent>Utolsó szó mozgatása az első sorból lefelé (aktuális felirat)</MainTextBoxMoveLastWordDownCurrent>
     <MainTextBoxSelectionToLower>Kijelölés kisbetűsre</MainTextBoxSelectionToLower>
     <MainTextBoxSelectionToUpper>Kijelölés nagybetűsre</MainTextBoxSelectionToUpper>
     <MainTextBoxToggleAutoDuration>Automatikus időtartam kapcsoló</MainTextBoxToggleAutoDuration>
@@ -2007,6 +2027,7 @@ szerkesztheti ugyanazt a feliratfájlt</Information>
     <ImageText>Képszöveg</ImageText>
     <SpellCheckCompleted>A helyesírás-ellenőrzés befejeződött.</SpellCheckCompleted>
     <SpellCheckAborted>A helyesírás-ellenőrzés félbeszakadt</SpellCheckAborted>
+    <SpacesNotAllowed>A szóközök nem engedélyezettek egyetlen szóban!</SpacesNotAllowed>
     <UndoX>Visszavonás: {0}</UndoX>
   </SpellCheck>
   <NetflixQualityCheck>
@@ -2072,6 +2093,7 @@ szerkesztheti ugyanazt a feliratfájlt</Information>
     <NumberOfLinesX>A felirat sorainak száma: {0:#,###}</NumberOfLinesX>
     <LengthInFormatXinCharactersY>{0} karakterek száma: {1:#,###,##0}</LengthInFormatXinCharactersY>
     <NumberOfCharactersInTextOnly>Csak a szöveg karaktereinek száma: {0:#,###,##0}</NumberOfCharactersInTextOnly>
+    <TotalDuration>A feliratok teljes időtartama: {0}</TotalDuration>
     <TotalCharsPerSecond>Összes karakter/másodperc: {0:0.0} másodperc</TotalCharsPerSecond>
     <TotalWords>Összes szó a feliratban: {0}</TotalWords>
     <NumberOfItalicTags>Dőlt betűs címkék száma: {0}</NumberOfItalicTags>
@@ -2269,6 +2291,7 @@ Megtartja a módosításokat?</KeepChangesMessage>
     <SetUnitalicFactor>Nem-dőlt tényező beállítása...</SetUnitalicFactor>
     <DiscardTitle>Elveti a változtatásokat az OCR-ben?</DiscardTitle>
     <DiscardText>Elveti a változtatásokat a jelenlegi OCR műveletnél?</DiscardText>
+    <MinLineSplitHeight>Min. sormagasság (osztott)</MinLineSplitHeight>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub - Manuális kép a szöveghez</Title>

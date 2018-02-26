@@ -35,7 +35,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             if (!rtf.StartsWith("{\\rtf", StringComparison.Ordinal))
                 return;
 
-            var list = rtf.FromRtf().SplitToLines().ToList();
+            var list = rtf.FromRtf().SplitToLines();
             base.LoadSubtitle(subtitle, list, fileName);
         }
 

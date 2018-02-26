@@ -855,6 +855,11 @@ namespace Nikse.SubtitleEdit.Core
             return _bitmapData[(x * 4) + (y * _widthX4) + 3];
         }
 
+        public int GetAlpha(int index)
+        {
+            return _bitmapData[index];
+        }
+
         public Color GetPixel(int x, int y)
         {
             _pixelAddress = (x * 4) + (y * _widthX4);
@@ -1176,6 +1181,17 @@ namespace Nikse.SubtitleEdit.Core
                 fileStream.Write(header, 0, header.Length);
                 fileStream.Write(pixels, 0, pixels.Length);
             }
+        }
+
+        public bool IsLineTransparent(int y)
+        {
+            int max = (_width * 4) + (y * _widthX4) + 3;
+            for (int pos = y * _widthX4 + 3; pos < max; pos += 4)
+            {
+                if (_bitmapData[pos] != 0)
+                    return false;
+            }
+            return true;
         }
 
     }

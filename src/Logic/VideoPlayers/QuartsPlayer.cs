@@ -143,7 +143,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             const int wsChild = 0x40000000;
 
             string ext = System.IO.Path.GetExtension(videoFileName).ToLower();
-            bool isAudio = ext == ".mp3" || ext == ".wav" || ext == ".wma" || ext == ".ogg" || ext == ".mpa" || ext == ".m4a" || ext == ".ape" || ext == ".aiff" || ext == ".flac" || ext == ".aac" || ext == ".mka";
+            bool isAudio = ext == ".mp3" || ext == ".wav" || ext == ".wma" || ext == ".ogg" || ext == ".mpa" || ext == ".m4a" || ext == ".ape" || ext == ".aiff" || ext == ".flac" || ext == ".aac" || ext == ".ac3" || ext == ".mka";
 
             OnVideoLoaded = onVideoLoaded;
             OnVideoEnded = onVideoEnded;
@@ -257,23 +257,30 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             if (_quartzVideo == null)
                 return;
 
-            // calc new scaled size with correct aspect ratio
-            float factorX = _owner.Width / (float)_sourceWidth;
-            float factorY = _owner.Height / (float)_sourceHeight;
-
-            if (factorX > factorY)
+            try
             {
-                _quartzVideo.Width = (int)(_sourceWidth * factorY);
-                _quartzVideo.Height = (int)(_sourceHeight * factorY);
-            }
-            else
-            {
-                _quartzVideo.Width = (int)(_sourceWidth * factorX);
-                _quartzVideo.Height = (int)(_sourceHeight * factorX);
-            }
+                // calc new scaled size with correct aspect ratio
+                float factorX = _owner.Width / (float)_sourceWidth;
+                float factorY = _owner.Height / (float)_sourceHeight;
 
-            _quartzVideo.Left = (_owner.Width - _quartzVideo.Width) / 2;
-            _quartzVideo.Top = (_owner.Height - _quartzVideo.Height) / 2;
+                if (factorX > factorY)
+                {
+                    _quartzVideo.Width = (int)(_sourceWidth * factorY);
+                    _quartzVideo.Height = (int)(_sourceHeight * factorY);
+                }
+                else
+                {
+                    _quartzVideo.Width = (int)(_sourceWidth * factorX);
+                    _quartzVideo.Height = (int)(_sourceHeight * factorX);
+                }
+
+                _quartzVideo.Left = (_owner.Width - _quartzVideo.Width) / 2;
+                _quartzVideo.Top = (_owner.Height - _quartzVideo.Height) / 2;
+            }
+            catch
+            {
+                // ignored
+            }
         }
 
         public override void DisposeVideoPlayer()

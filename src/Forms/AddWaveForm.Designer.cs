@@ -111,7 +111,7 @@
             this.labelInfo.ForeColor = System.Drawing.Color.Gray;
             this.labelInfo.Location = new System.Drawing.Point(427, 6);
             this.labelInfo.Name = "labelInfo";
-            this.labelInfo.Size = new System.Drawing.Size(120, 13);
+            this.labelInfo.Size = new System.Drawing.Size(120, 17);
             this.labelInfo.TabIndex = 18;
             this.labelInfo.Text = "label1";
             this.labelInfo.TextAlign = System.Drawing.ContentAlignment.TopRight;

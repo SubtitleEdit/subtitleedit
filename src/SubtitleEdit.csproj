@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="packages\ILRepack.2.0.13\build\ILRepack.props" Condition="Exists('packages\ILRepack.2.0.13\build\ILRepack.props')" />
+  <Import Project="packages\ILRepack.2.0.15\build\ILRepack.props" Condition="Exists('packages\ILRepack.2.0.15\build\ILRepack.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -92,6 +92,12 @@
     <Compile Include="Forms\AddWaveformBatch.Designer.cs">
       <DependentUpon>AddWaveformBatch.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\AudioToText.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\AudioToText.Designer.cs">
+      <DependentUpon>AudioToText.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Cavena890SaveOptions.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -145,6 +151,18 @@
     </Compile>
     <Compile Include="Forms\ExportFcpXmlAdvanced.Designer.cs">
       <DependentUpon>ExportFcpXmlAdvanced.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ImportFinalDraft.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ImportFinalDraft.Designer.cs">
+      <DependentUpon>ImportFinalDraft.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\MultipleReplaceExportImport.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\MultipleReplaceExportImport.Designer.cs">
+      <DependentUpon>MultipleReplaceExportImport.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Ocr\AddBeterMultiMatch.cs">
       <SubType>Form</SubType>
@@ -686,6 +704,12 @@
     <Compile Include="Forms\Styles\SubStationAlphaStylesBatchConvert.Designer.cs">
       <DependentUpon>SubStationAlphaStylesBatchConvert.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Styles\SubStationAlphaStylesExport.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Styles\SubStationAlphaStylesExport.Designer.cs">
+      <DependentUpon>SubStationAlphaStylesExport.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\SubStationAlphaProperties.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -860,6 +884,7 @@
     <Compile Include="Logic\CommandLineConvert.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Logic\DarkTheme.cs" />
     <Compile Include="Logic\FindReplaceDialogHelper.cs" />
     <Compile Include="Logic\ListViewSorter.cs" />
     <Compile Include="Logic\NativeMethods.cs" />
@@ -939,6 +964,9 @@
     <EmbeddedResource Include="Forms\AddWaveformBatch.resx">
       <DependentUpon>AddWaveformBatch.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\AudioToText.resx">
+      <DependentUpon>AudioToText.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Cavena890SaveOptions.resx">
       <DependentUpon>Cavena890SaveOptions.cs</DependentUpon>
     </EmbeddedResource>
@@ -966,6 +994,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ExportFcpXmlAdvanced.resx">
       <DependentUpon>ExportFcpXmlAdvanced.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ImportFinalDraft.resx">
+      <DependentUpon>ImportFinalDraft.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\MultipleReplaceExportImport.resx">
+      <DependentUpon>MultipleReplaceExportImport.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Ocr\AddBeterMultiMatch.resx">
       <DependentUpon>AddBeterMultiMatch.cs</DependentUpon>
@@ -1229,6 +1263,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Styles\SubStationAlphaStylesBatchConvert.resx">
       <DependentUpon>SubStationAlphaStylesBatchConvert.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Styles\SubStationAlphaStylesExport.resx">
+      <DependentUpon>SubStationAlphaStylesExport.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\SubStationAlphaProperties.resx">
       <DependentUpon>SubStationAlphaProperties.cs</DependentUpon>
@@ -1672,7 +1709,7 @@
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them. For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
-    <Error Condition="!Exists('packages\ILRepack.2.0.13\build\ILRepack.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\ILRepack.2.0.13\build\ILRepack.props'))" />
+    <Error Condition="!Exists('packages\ILRepack.2.0.15\build\ILRepack.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\ILRepack.2.0.15\build\ILRepack.props'))" />
   </Target>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <ItemGroup>

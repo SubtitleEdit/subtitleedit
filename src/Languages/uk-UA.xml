@@ -2,7 +2,7 @@
 <Language Name="українська">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.5.4</Version>
+    <Version>3.5.5</Version>
     <TranslatedBy>Переклад: Максим Кобєлєв http://mazepa-studio.com</TranslatedBy>
     <CultureName>uk-UA</CultureName>
     <HelpFile />
@@ -140,7 +140,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SetAsPercent>Відсоток від поточної тривалості</SetAsPercent>
     <Note>Зверніть увагу: Тривалість субтитру не буде накладатися на початок наступного</Note>
     <PleaseSelectAValueFromTheDropDownList>Будь ласка, оберіть значення зі спадного списку</PleaseSelectAValueFromTheDropDownList>
-    <PleaseChoose> - Оберіть - </PleaseChoose>
   </AdjustDisplayDuration>
   <ApplyDurationLimits>
     <Title>Застосування обмеження тривалостей</Title>
@@ -271,8 +270,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <NextDifference>&amp;Наступна відмінність</NextDifference>
     <SubtitlesNotAlike>Субтитри не мають подібностей</SubtitlesNotAlike>
     <XNumberOfDifference>Кількість відмінностей: {0}</XNumberOfDifference>
-    <XNumberOfDifferenceAndPercentChanged>Кількість відмінностей: {0} ({1}% слів змінено)</XNumberOfDifferenceAndPercentChanged>
-    <XNumberOfDifferenceAndPercentLettersChanged>Кількість відмінностей: {0} ({1}% літер змінено)</XNumberOfDifferenceAndPercentLettersChanged>
+    <XNumberOfDifferenceAndPercentChanged>Кількість відмінностей: {0} ({1:0.##}% слів змінено)</XNumberOfDifferenceAndPercentChanged>
+    <XNumberOfDifferenceAndPercentLettersChanged>Кількість відмінностей: {0} ({1:0.##}% літер змінено)</XNumberOfDifferenceAndPercentLettersChanged>
     <ShowOnlyDifferences>Показувати тільки відмінності</ShowOnlyDifferences>
     <IgnoreLineBreaks>Ігнорувати розриви рядків</IgnoreLineBreaks>
     <OnlyLookForDifferencesInText>Шукати виключно різницю в тексті</OnlyLookForDifferencesInText>
@@ -1428,7 +1427,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Вибір субтитру із файлу Matroska</Title>
-    <PleaseChoose>Знайдено більше одного субтитру - будь ласка, оберіть</PleaseChoose>
     <TrackXLanguageYTypeZ>Доріжка {0} - мова: {1} - тип: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MeasurementConverter>

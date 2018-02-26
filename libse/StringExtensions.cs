@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 
@@ -85,9 +86,49 @@ namespace Nikse.SubtitleEdit.Core
             return source.IndexOf(value, comparisonType) >= 0;
         }
 
-        public static string[] SplitToLines(this string source)
+        public static List<string> SplitToLines(this string s)
         {
-            return source.Replace("\r\r\n", "\n").Replace("\r\n", "\n").Replace('\r', '\n').Replace('\u2028', '\n').Split('\n');
+            //original non-optimized version: return source.Replace("\r\r\n", "\n").Replace("\r\n", "\n").Replace('\r', '\n').Replace('\u2028', '\n').Split('\n');
+
+            var lines = new List<string>();
+            int start = 0;
+            int max = s.Length;
+            int i = 0;
+            while (i < max)
+            {
+                var ch = s[i];
+                if (ch == '\r')
+                {
+                    if (i < s.Length - 2 && s[i + 1] == '\r' && s[i + 2] == '\n') // \r\r\n
+                    {
+                        lines.Add(start < i ? s.Substring(start, i - start) : string.Empty);
+                        i += 3;
+                        start = i;
+                        continue;
+                    }
+                    if (i < s.Length - 1 && s[i + 1] == '\n') // \r\n
+                    {
+                        lines.Add(start < i ? s.Substring(start, i - start) : string.Empty);
+                        i += 2;
+                        start = i;
+                        continue;
+                    }
+                    lines.Add(start < i ? s.Substring(start, i - start) : string.Empty);
+                    i++;
+                    start = i;
+                    continue;
+                }
+                if (ch == '\n' || ch == '\u2028')
+                {
+                    lines.Add(start < i ? s.Substring(start, i - start) : string.Empty);
+                    i++;
+                    start = i;
+                    continue;
+                }
+                i++;
+            }
+            lines.Add(start < i ? s.Substring(start, i - start) : string.Empty);
+            return lines;
         }
 
         public static int CountWords(this string source)
@@ -147,40 +188,32 @@ namespace Nikse.SubtitleEdit.Core
 
         public static string FixExtraSpaces(this string s)
         {
-            if (string.IsNullOrEmpty(s))
-                return s;
-            int len = s.Length;
+            if (string.IsNullOrEmpty(s)) return s;
+            const char whiteSpace = ' ';
             int k = -1;
-            for (int i = len - 1; i >= 0; i--)
+            for (int i = s.Length - 1; i >= 0; i--)
             {
                 char ch = s[i];
                 if (k < 2)
                 {
-                    if (ch == 0x20)
+                    if (ch == whiteSpace)
                     {
                         k = i + 1;
                     }
                 }
-                else if (ch != 0x20)
+                else if (ch != whiteSpace)
                 {
-                    // Two or more white-spaces found!
-                    if (k - (i + 1) > 1)
+                    // only keep white space if it doesn't succeed/precede CRLF
+                    int skipCount = (ch == '\n' || ch == '\r') || (k < s.Length && (s[k] == '\n' || s[k] == '\r')) ? 1 : 2;
+
+                    // extra space found
+                    if (k - (i + skipCount) >= 1)
                     {
-                        // Keep only one white-space.
-                        s = s.Remove(i + 1, k - (i + 2));
+                        s = s.Remove(i + 1, k - (i + skipCount));
                     }
 
-                    // No white-space after/before line break.
-                    if ((ch == '\n' || ch == '\r') && i + 1 < s.Length && s[i + 1] == 0x20)
-                    {
-                        s = s.Remove(i + 1, 1);
-                    }
                     // Reset remove length.
                     k = -1;
-                }
-                if (ch == 0x20 && i + 1 < s.Length && (s[i + 1] == '\n' || s[i + 1] == '\r'))
-                {
-                    s = s.Remove(i, 1);
                 }
             }
             return s;
@@ -273,6 +306,60 @@ namespace Nikse.SubtitleEdit.Core
         public static string FromRtf(this string value)
         {
             return RichTextToPlainText.ConvertToText(value);
+        }
+
+        public static string RemoveChar(this string value, char removeChar)
+        {
+            char[] array = new char[value.Length];
+            int arrayIndex = 0;
+            for (int i = 0; i < value.Length; i++)
+            {
+                char ch = value[i];
+                if (ch != removeChar)
+                    array[arrayIndex++] = ch;
+            }
+            return new string(array, 0, arrayIndex);
+        }
+
+        /// <summary>
+        /// Count characters excl. white spaces/ssa-tags/html-tags and normal space depending on parameter.
+        /// </summary>
+        public static int CountCharacters(this string value, bool removeNormalSpace)
+        {
+            int length = 0;
+            const char zeroWidthSpace = '\u200B';
+            const char zeroWidthNoBreakSpace = '\uFEFF';
+            char normalSpace = removeNormalSpace ? ' ' : zeroWidthSpace;
+            bool ssaTagOn = false;
+            bool htmlTagOn = false;
+
+            for (int i = 0; i < value.Length; i++)
+            {
+                char ch = value[i];
+                if (ssaTagOn)
+                {
+                    if (ch == '}')
+                        ssaTagOn = false;
+                }
+                else if (htmlTagOn)
+                {
+                    if (ch == '>')
+                        htmlTagOn = false;
+                }
+                else if (ch == '{' && i < value.Length - 1 && value[i + 1] == '\\')
+                {
+                    ssaTagOn = true;
+                }
+                else if (ch == '<' && i < value.Length - 1 && (value[i + 1] == '/' || char.IsLetter(value[i + 1])) && value.IndexOf('>', i) > 0)
+                {
+                    htmlTagOn = true;
+                }
+                else if (ch != '\n' && ch != '\r' && ch != '\t' && ch != zeroWidthSpace && ch != zeroWidthNoBreakSpace && ch != normalSpace)
+                {
+                    length++;
+                }
+            }
+            return length;
         }
 
     }

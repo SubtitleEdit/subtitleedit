@@ -2,7 +2,7 @@
 <Language Name="italiano">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.5.4</Version>
+    <Version>3.5.5</Version>
     <TranslatedBy>Traduzione Italiana SilverDrake (giurdi@katamail.com)</TranslatedBy>
     <CultureName>it-IT</CultureName>
     <HelpFile />
@@ -139,7 +139,6 @@ Nota: Controlla lo spazio libero sul disco.</WaveFileMalformed>
     <SetAsPercent>Imposta percentuale di durata</SetAsPercent>
     <Note>Nota: Il tempo di visualizzazione non supererà il tempo di inizio del testo successivo</Note>
     <PleaseSelectAValueFromTheDropDownList>Selezionare un valore dalla lista a discesa</PleaseSelectAValueFromTheDropDownList>
-    <PleaseChoose> - Per favore, scegliere - </PleaseChoose>
   </AdjustDisplayDuration>
   <ApplyDurationLimits>
     <Title>Applica limiti di durata</Title>
@@ -270,8 +269,8 @@ Nota: Controlla lo spazio libero sul disco.</WaveFileMalformed>
     <NextDifference>&amp;Differenza successiva</NextDifference>
     <SubtitlesNotAlike>I sottotitoli sono differenti</SubtitlesNotAlike>
     <XNumberOfDifference>Numero delle differenze: {0}</XNumberOfDifference>
-    <XNumberOfDifferenceAndPercentChanged>Numero delle differenze: {0} ({1}% di parole cambiate)</XNumberOfDifferenceAndPercentChanged>
-    <XNumberOfDifferenceAndPercentLettersChanged>Numero delle differenze: {0} ({1}% di lettere cambiate)</XNumberOfDifferenceAndPercentLettersChanged>
+    <XNumberOfDifferenceAndPercentChanged>Numero delle differenze: {0} ({1:0.##}% di parole cambiate)</XNumberOfDifferenceAndPercentChanged>
+    <XNumberOfDifferenceAndPercentLettersChanged>Numero delle differenze: {0} ({1:0.##}% di lettere cambiate)</XNumberOfDifferenceAndPercentLettersChanged>
     <ShowOnlyDifferences>Mostra solo le differenze</ShowOnlyDifferences>
     <IgnoreLineBreaks>Ignora divisioni di linea</IgnoreLineBreaks>
     <OnlyLookForDifferencesInText>Cerca solo le differenze nel testo</OnlyLookForDifferencesInText>
@@ -1414,7 +1413,6 @@ la codifica ANSI andranno perse. Salvare comunque?</UnicodeCharactersAnsiWarning
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Scegli sottotitolo da file Matroska</Title>
-    <PleaseChoose>Trovato più di un sottotitolo - scegliere, per favore</PleaseChoose>
     <TrackXLanguageYTypeZ>Traccia {0} - lingua: {1} - tipo: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MeasurementConverter>

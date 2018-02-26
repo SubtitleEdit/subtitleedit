@@ -26,13 +26,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     {
         internal class SubtitleLine
         {
-            internal string VerticalPosition { get; set; }
             internal string Text { get; set; }
+            internal string VerticalPosition { get; set; }
+            internal string VerticalAlignment { get; set; }
 
-            internal SubtitleLine(string text, string verticalPosition)
+            internal SubtitleLine(string text, string verticalPosition, string verticalAlignment)
             {
                 Text = text;
                 VerticalPosition = verticalPosition;
+                VerticalAlignment = verticalAlignment;
             }
 
             internal int GetVerticalPositionAsNumber()
@@ -91,7 +93,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 languageEnglishName = "English";
             }
 
-            string hex = Guid.NewGuid().ToString().Replace("-", string.Empty);
+            string hex = Guid.NewGuid().ToString().RemoveChar('-');
             hex = hex.Insert(8, "-").Insert(13, "-").Insert(18, "-").Insert(23, "-");
 
             string xmlStructure = "<DCSubtitle Version=\"1.0\">" + Environment.NewLine +
@@ -183,11 +185,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                     else if (alignVCenter)
                     {
-                        vPos = (int)Math.Round((lines.Length * vPosFactor * -1) / 2.0);
+                        vPos = (int)Math.Round((lines.Count * vPosFactor * -1) / 2.0);
                     }
                     else
                     {
-                        vPos = (lines.Length * vPosFactor) - vPosFactor + Configuration.Settings.SubtitleSettings.DCinemaBottomMargin; // Bottom margin is normally 8
+                        vPos = (lines.Count * vPosFactor) - vPosFactor + Configuration.Settings.SubtitleSettings.DCinemaBottomMargin; // Bottom margin is normally 8
                     }
 
                     bool isItalic = false;
@@ -515,9 +517,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             foreach (XmlNode node in xml.DocumentElement.SelectNodes("//Subtitle"))
             {
                 try
-                {                    
+                {
                     var textLines = new List<SubtitleLine>();
                     var pText = new StringBuilder();
+                    var vAlignment = string.Empty;
                     string lastVPosition = string.Empty;
                     foreach (XmlNode innerNode in node.ChildNodes)
                     {
@@ -527,11 +530,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 if (innerNode.Attributes["VPosition"] != null)
                                 {
                                     string vPosition = innerNode.Attributes["VPosition"].InnerText;
+                                    var vAlignmentNode = innerNode.Attributes["VAlign"];
+                                    if (vAlignmentNode != null)
+                                        vAlignment = vAlignmentNode.InnerText;
                                     if (vPosition != lastVPosition)
                                     {
                                         if (pText.Length > 0 && lastVPosition.Length > 0)
                                         {
-                                            textLines.Add(new SubtitleLine(pText.ToString(), lastVPosition));
+                                            textLines.Add(new SubtitleLine(pText.ToString(), lastVPosition, vAlignment));
                                             pText.Clear();
                                         }
                                         lastVPosition = vPosition;
@@ -630,9 +636,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                     if (pText.Length > 0)
                     {
-                        textLines.Add(new SubtitleLine(pText.ToString(), lastVPosition));
+                        textLines.Add(new SubtitleLine(pText.ToString(), lastVPosition, vAlignment));
                     }
-                    var text = string.Join(Environment.NewLine, textLines.OrderByDescending(p=>p.GetVerticalPositionAsNumber()).Select(p=>p.Text));
+
+                    string text;
+                    if (textLines.All(p => p.VerticalAlignment.ToLowerInvariant() == "top"))
+                    {
+                        text = string.Join(Environment.NewLine, textLines.OrderBy(p => p.GetVerticalPositionAsNumber()).Select(p => p.Text));
+                    }
+                    else
+                    {
+                        text = string.Join(Environment.NewLine, textLines.OrderByDescending(p => p.GetVerticalPositionAsNumber()).Select(p => p.Text));
+                    }
                     text = text.Replace(Environment.NewLine + "{\\an1}", Environment.NewLine);
                     text = text.Replace(Environment.NewLine + "{\\an2}", Environment.NewLine);
                     text = text.Replace(Environment.NewLine + "{\\an3}", Environment.NewLine);

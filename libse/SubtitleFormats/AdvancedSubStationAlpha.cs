@@ -40,10 +40,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 SubtitleFormat format = new AdvancedSubStationAlpha();
                 var sub = new Subtitle();
                 string text = format.ToText(sub, string.Empty);
-                string[] lineArray = text.SplitToLines();
-                var lines = new List<string>();
-                foreach (string line in lineArray)
-                    lines.Add(line);
+                var lines = text.SplitToLines();
                 format.LoadSubtitle(sub, lines, string.Empty);
                 return sub.Header;
             }
@@ -290,9 +287,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
 
             try
             {
-                var lines = new List<string>();
-                foreach (string s in subtitle.Header.SplitToLines())
-                    lines.Add(s);
+                var lines = subtitle.Header.SplitToLines();
                 var tt = new TimedText10();
                 var sub = new Subtitle();
                 tt.LoadSubtitle(sub, lines, string.Empty);
@@ -413,9 +408,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
 
             try
             {
-                var lines = new List<string>();
-                foreach (string s in subtitle.Header.SplitToLines())
-                    lines.Add(s);
+                var lines = subtitle.Header.SplitToLines();
                 var sb2 = new StringBuilder();
                 lines.ForEach(line => sb2.AppendLine(line));
                 var xml = new XmlDocument { XmlResolver = null };
@@ -772,7 +765,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                             string unknownTags;
                             CheckAndAddSubTags(ref color, ref extraTags, out unknownTags, out italic);
 
-                            color = color.Replace("&", string.Empty).TrimStart('H');
+                            color = color.RemoveChar('&').TrimStart('H');
                             color = color.PadLeft(6, '0');
 
                             // switch to rrggbb from bbggrr
@@ -806,7 +799,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                             string unknownTags;
                             CheckAndAddSubTags(ref color, ref extraTags, out unknownTags, out italic);
 
-                            color = color.Replace("&", string.Empty).TrimStart('H');
+                            color = color.RemoveChar('&').TrimStart('H');
                             color = color.PadLeft(6, '0');
 
                             // switch to rrggbb from bbggrr
@@ -948,7 +941,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                         }
 
                         string color = fontColor.Substring(2);
-                        color = color.Replace("&", string.Empty).TrimStart('H');
+                        color = color.RemoveChar('&').TrimStart('H');
                         color = color.PadLeft(6, '0');
                         // switch to rrggbb from bbggrr
                         color = "#" + color.Remove(color.Length - 6) + color.Substring(color.Length - 2, 2) + color.Substring(color.Length - 4, 2) + color.Substring(color.Length - 6, 2);
@@ -1461,7 +1454,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                         }
                     }
                 }
-                else if (s.Replace(" ", string.Empty).StartsWith("style:", StringComparison.Ordinal))
+                else if (s.RemoveChar(' ').StartsWith("style:", StringComparison.Ordinal))
                 {
                     if (line.Length > 10)
                     {
@@ -1735,7 +1728,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                         }
                     }
                 }
-                else if (s.Replace(" ", string.Empty).StartsWith("style:", StringComparison.Ordinal))
+                else if (s.RemoveChar(' ').StartsWith("style:", StringComparison.Ordinal))
                 {
                     if (line.Length > 10)
                     {
@@ -1831,7 +1824,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                         }
                     }
                     if (styleName != null && style.Name != null && (styleName.Equals(style.Name, StringComparison.OrdinalIgnoreCase) ||
-                                                                    (styleName.Equals("*Default", StringComparison.OrdinalIgnoreCase) && style.Name.Equals("Default", StringComparison.OrdinalIgnoreCase))))
+                                                                    styleName.Equals("*Default", StringComparison.OrdinalIgnoreCase) && style.Name.Equals("Default", StringComparison.OrdinalIgnoreCase)))
                     {
                         style.LoadedFromHeader = true;
                         return style;

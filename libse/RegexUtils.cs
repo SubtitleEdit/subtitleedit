@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core
 {
-    public static class SubtitleEditRegex
+    public static class RegexUtils
     {
         // Others classes may want to use this regex.
         public static readonly Regex LittleIRegex = new Regex(@"\bi\b", RegexOptions.Compiled);
@@ -166,5 +167,79 @@ namespace Nikse.SubtitleEdit.Core
             /// </summary>
             private static string ExpandWhiteSpace(string pattern) => pattern.Replace(" ", "[ \r\n]+");
         }
+
+        public static bool IsValidRegex(string testPattern)
+        {
+            if (string.IsNullOrEmpty(testPattern))
+            {
+                return false;
+            }
+            try
+            {
+                Regex.Match(string.Empty, testPattern);
+                return true;
+            }
+            catch (ArgumentException) // invalid pattern e.g: [
+            {
+                return false;
+            }
+        }
+
+        public static Regex MakeWordSearchRegex(string word)
+        {
+            string s = word.Replace("\\", "\\\\");
+            s = s.Replace("*", "\\*");
+            s = s.Replace(".", "\\.");
+            s = s.Replace("?", "\\?");
+            return new Regex(@"\b" + s + @"\b", RegexOptions.Compiled);
+        }
+
+        public static Regex MakeWordSearchRegexWithNumbers(string word)
+        {
+            string s = word.Replace("\\", "\\\\");
+            s = s.Replace("*", "\\*");
+            s = s.Replace(".", "\\.");
+            s = s.Replace("?", "\\?");
+            return new Regex(@"[\b ,\.\?\!]" + s + @"[\b !\.,\r\n\?]", RegexOptions.Compiled);
+        }
+
+        public static string GetRegExGroup(string pattern)
+        {
+            var start = pattern.IndexOf("(?<", StringComparison.Ordinal);
+            if (start < 0)
+                return null;
+            start += 3;
+            var end = pattern.IndexOf('>', start);
+            if (end <= start)
+                return null;
+            return pattern.Substring(start, end - start);
+        }
+
+        /// <summary>
+        /// Changes "\\r\\n" and "\\n" to "\n", which hopefully makes it simpler for 
+        /// the user who can use both "\\n" and "\\r\\n" for new line.
+        /// </summary>
+        public static string FixNewLine(string pattern)
+        {
+            if (string.IsNullOrEmpty(pattern))
+                return pattern;
+
+            return pattern.Replace("\\r\\n", Environment.NewLine).Replace("\\n", Environment.NewLine);
+        }
+
+        /// <summary>
+        /// Performs replace on regular expression. Line breaks are converted to just "\n" during the replace 
+        /// and line breaks are returned as Environment.NewLine.
+        /// </summary>
+        /// <param name="regularExpression">Regular expression to perform replace on</param>
+        /// <param name="text">Text perform replace on</param>
+        /// <param name="replaceWith">Pattern to replace with (new lines should be "\n")</param>
+        /// <returns></returns>
+        public static string ReplaceNewLineSafe(Regex regularExpression, string text, string replaceWith)
+        {
+            text = regularExpression.Replace(string.Join(Environment.NewLine, text.SplitToLines()), replaceWith);
+            return string.Join(Environment.NewLine, text.SplitToLines());
+        }
+
     }
 }

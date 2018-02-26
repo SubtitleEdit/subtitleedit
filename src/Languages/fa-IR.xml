@@ -2,7 +2,7 @@
 <Language Name="فارسي">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.5.4</Version>
+    <Version>3.5.5</Version>
     <TranslatedBy>ترجمه توسط:برنامه نویس جوان، نیما</TranslatedBy>
     <CultureName>fa-IR</CultureName>
     <HelpFile>
@@ -145,7 +145,6 @@ http://soft98.ir
     <SetAsPercent>تنظیم به عنوان درصد مدت زمان</SetAsPercent>
     <Note>توجه : زمان نمایش با زمان شروع متن بعدی نمی تواند تداخل داشته باشد.</Note>
     <PleaseSelectAValueFromTheDropDownList>لطفا یک مقدار از لیست را انتخاب کنید</PleaseSelectAValueFromTheDropDownList>
-    <PleaseChoose>-- لطفا انتخاب کنید --</PleaseChoose>
   </AdjustDisplayDuration>
   <ApplyDurationLimits>
     <Title>اعمال محدودیت های زمان</Title>
@@ -1462,7 +1461,6 @@ http://soft98.ir
   <MatroskaSubtitleChooser>
     <Title>زیرنویس را از فایل MKV انتخاب کنید</Title>
     <TitleMp4>زیرنویس را از فایل MP4 انتخاب کنید</TitleMp4>
-    <PleaseChoose>بیش از یک نام یافت -- لطفا انتخاب کنید</PleaseChoose>
     <TrackXLanguageYTypeZ>مسیر {0} - زبان: {1} - ترک: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MeasurementConverter>

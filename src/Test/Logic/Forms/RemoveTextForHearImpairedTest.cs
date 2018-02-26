@@ -1,6 +1,8 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Nikse.SubtitleEdit.Core.Forms;
 using System;
+using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Core.Dictionaries;
 
 namespace Test.Logic.Forms
 {
@@ -19,8 +21,18 @@ namespace Test.Logic.Forms
 
         private static RemoveTextForHI GetRemoveTextForHiLib()
         {
-            var hiSettings = new RemoveTextForHISettings();
+            var hiSettings = new RemoveTextForHISettings(new Subtitle());
             return new RemoveTextForHI(hiSettings);
+        }
+
+        private static InterjectionRemoveContext GetRemoveInterjectionContext(string text, bool onlyInSeparatedLine)
+        {
+            return new InterjectionRemoveContext()
+            {
+                OnlySeparetedLines = onlyInSeparatedLine,
+                Interjections = RemoveTextForHI.GetInterjectionList(),
+                Text = text,
+            };
         }
 
         /// <summary>
@@ -333,14 +345,9 @@ namespace Test.Logic.Forms
         [TestMethod]
         public void RemoveHIQuotes()
         {
-            var target = GetRemoveTextForHiLib();
-            target.Settings.RemoveIfAllUppercase = false;
-            target.Settings.OnlyIfInSeparateLine = false;
-            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
-            target.Settings.ColonSeparateLine = false;
-            string text = "- Where?!" + Environment.NewLine + "- Ow!";
             const string expected = "Where?!";
-            string actual = target.RemoveInterjections(text);
+            string text = "- Where?!" + Environment.NewLine + "- Ow!";
+            string actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext(text, onlyInSeparatedLine: false));
             Assert.AreEqual(expected, actual);
         }
 
@@ -394,296 +401,185 @@ namespace Test.Logic.Forms
         [TestMethod]
         public void RemoveInterjections()
         {
-            var target = GetRemoveTextForHiLib();
-            target.Settings.RemoveIfAllUppercase = false;
-            target.Settings.RemoveInterjections = true;
-            target.Settings.OnlyIfInSeparateLine = false;
-            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
-            target.Settings.ColonSeparateLine = false;
-            string text = "-Ballpark." + Environment.NewLine + "-Hmm.";
+            var text = "-Ballpark." + Environment.NewLine + "-Hmm.";
             const string expected = "Ballpark.";
-            string actual = target.RemoveInterjections(text);
+            string actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext(text, false));
             Assert.AreEqual(expected, actual);
         }
 
         [TestMethod]
         public void RemoveInterjections2()
         {
-            var target = GetRemoveTextForHiLib();
-            target.Settings.RemoveIfAllUppercase = false;
-            target.Settings.RemoveInterjections = true;
-            target.Settings.OnlyIfInSeparateLine = false;
-            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
-            target.Settings.ColonSeparateLine = false;
-            string text = "-Ballpark." + Environment.NewLine + "-Mm-hm.";
+            var text = $"-Ballpark.{Environment.NewLine}-Mm-hm.";
             const string expected = "Ballpark.";
-            string actual = target.RemoveInterjections(text);
+            var actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext(text, false));
             Assert.AreEqual(expected, actual);
         }
 
         [TestMethod]
         public void RemoveInterjections3()
         {
-            var target = GetRemoveTextForHiLib();
-            target.Settings.RemoveIfAllUppercase = false;
-            target.Settings.RemoveInterjections = true;
-            target.Settings.OnlyIfInSeparateLine = false;
-            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
-            target.Settings.ColonSeparateLine = false;
-            string text = "-Mm-hm." + Environment.NewLine + "-Ballpark.";
+            var text = $"-Mm-hm.{Environment.NewLine}-Ballpark.";
             const string expected = "Ballpark.";
-            string actual = target.RemoveInterjections(text);
+            var actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext(text, false));
             Assert.AreEqual(expected, actual);
         }
 
         [TestMethod]
         public void RemoveInterjections4()
         {
-            var target = GetRemoveTextForHiLib();
-            target.Settings.RemoveIfAllUppercase = false;
-            target.Settings.RemoveInterjections = true;
-            target.Settings.OnlyIfInSeparateLine = false;
-            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
-            target.Settings.ColonSeparateLine = false;
-            string text = "- Mm-hm." + Environment.NewLine + "- Ballpark.";
+            var text = "- Mm-hm." + Environment.NewLine + "- Ballpark.";
             const string expected = "Ballpark.";
-            string actual = target.RemoveInterjections(text);
+            var actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext(text, false));
             Assert.AreEqual(expected, actual);
         }
 
         [TestMethod]
         public void RemoveInterjections5()
         {
-            var target = GetRemoveTextForHiLib();
-            target.Settings.RemoveIfAllUppercase = false;
-            target.Settings.RemoveInterjections = true;
-            target.Settings.OnlyIfInSeparateLine = false;
-            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
-            target.Settings.ColonSeparateLine = false;
-            string text = "- Ballpark." + Environment.NewLine + "- Hmm.";
+            var text = $"- Ballpark.{Environment.NewLine}- Hmm.";
             const string expected = "Ballpark.";
-            string actual = target.RemoveInterjections(text);
+            var actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext(text, false));
             Assert.AreEqual(expected, actual);
         }
 
         [TestMethod]
         public void RemoveInterjections6A()
         {
-            var target = GetRemoveTextForHiLib();
-            target.Settings.RemoveIfAllUppercase = false;
-            target.Settings.RemoveInterjections = true;
-            target.Settings.OnlyIfInSeparateLine = false;
-            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
-            target.Settings.ColonSeparateLine = false;
             const string text = "Ballpark, mm-hm.";
             const string expected = "Ballpark.";
-            string actual = target.RemoveInterjections(text);
+            var actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext(text, false));
             Assert.AreEqual(expected, actual);
         }
 
         [TestMethod]
         public void RemoveInterjections6B()
         {
-            var target = GetRemoveTextForHiLib();
-            target.Settings.RemoveIfAllUppercase = false;
-            target.Settings.RemoveInterjections = true;
-            target.Settings.OnlyIfInSeparateLine = false;
-            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
-            target.Settings.ColonSeparateLine = false;
             const string text = "Mm-hm, Ballpark.";
             const string expected = "Ballpark.";
-            string actual = target.RemoveInterjections(text);
+
+            var actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext(text, false));
             Assert.AreEqual(expected, actual);
         }
 
         [TestMethod]
         public void RemoveInterjections6BItalic()
         {
-            var target = GetRemoveTextForHiLib();
-            target.Settings.RemoveIfAllUppercase = false;
-            target.Settings.RemoveInterjections = true;
-            target.Settings.OnlyIfInSeparateLine = false;
-            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
-            target.Settings.ColonSeparateLine = false;
             const string text = "<i>Mm-hm, Ballpark.</i>";
             const string expected = "<i>Ballpark.</i>";
-            string actual = target.RemoveInterjections(text);
+            var actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext(text, false));
             Assert.AreEqual(expected, actual);
         }
 
         [TestMethod]
         public void RemoveInterjections7()
         {
-            var target = GetRemoveTextForHiLib();
-            target.Settings.RemoveIfAllUppercase = false;
-            target.Settings.RemoveInterjections = true;
-            target.Settings.OnlyIfInSeparateLine = false;
-            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
-            target.Settings.ColonSeparateLine = false;
             const string text = "You like her, huh?";
             const string expected = "You like her?";
-            string actual = target.RemoveInterjections(text);
+            var actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext(text, false));
             Assert.AreEqual(expected, actual);
         }
 
         [TestMethod]
         public void RemoveInterjections8()
         {
-            var target = GetRemoveTextForHiLib();
-            target.Settings.RemoveIfAllUppercase = false;
-            target.Settings.RemoveInterjections = true;
-            target.Settings.OnlyIfInSeparateLine = false;
-            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
-            target.Settings.ColonSeparateLine = false;
             const string text = "You like her, huh!";
             const string expected = "You like her!";
-            string actual = target.RemoveInterjections(text);
+            var actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext(text, false));
             Assert.AreEqual(expected, actual);
         }
 
         [TestMethod]
         public void RemoveInterjections9()
         {
-            var target = GetRemoveTextForHiLib();
-            target.Settings.RemoveIfAllUppercase = false;
-            target.Settings.RemoveInterjections = true;
-            target.Settings.OnlyIfInSeparateLine = false;
-            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
-            target.Settings.ColonSeparateLine = false;
             const string text = "You like her, huh.";
             const string expected = "You like her.";
-            string actual = target.RemoveInterjections(text);
+            var actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext(text, false));
             Assert.AreEqual(expected, actual);
         }
 
         [TestMethod]
         public void RemoveInterjections10()
         {
-            var target = GetRemoveTextForHiLib();
-            target.Settings.RemoveIfAllUppercase = false;
-            target.Settings.RemoveInterjections = true;
-            target.Settings.OnlyIfInSeparateLine = false;
-            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
-            target.Settings.ColonSeparateLine = false;
-            string text = "- You like her, huh." + Environment.NewLine + "- I do";
-            string expected = "- You like her." + Environment.NewLine + "- I do";
-            string actual = target.RemoveInterjections(text);
+            var text = $"- You like her, huh.{Environment.NewLine}- I do";
+            var expected = $"- You like her.{Environment.NewLine}- I do";
+            var actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext(text, false));
             Assert.AreEqual(expected, actual);
         }
 
         [TestMethod]
         public void RemoveInterjections10Italic()
         {
-            var target = GetRemoveTextForHiLib();
-            target.Settings.RemoveIfAllUppercase = false;
-            target.Settings.RemoveInterjections = true;
-            target.Settings.OnlyIfInSeparateLine = false;
-            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
-            target.Settings.ColonSeparateLine = false;
             string text = "<i>- You like her, huh." + Environment.NewLine + "- I do</i>";
             string expected = "<i>- You like her." + Environment.NewLine + "- I do</i>";
-            string actual = target.RemoveInterjections(text);
+
+            var actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext(text, false));
             Assert.AreEqual(expected, actual);
         }
 
         [TestMethod]
         public void RemoveInterjections11()
         {
-            var target = GetRemoveTextForHiLib();
-            target.Settings.RemoveIfAllUppercase = false;
-            target.Settings.RemoveInterjections = true;
-            target.Settings.OnlyIfInSeparateLine = false;
-            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
-            target.Settings.ColonSeparateLine = false;
-            string text = "- Ballpark, mm-hm." + Environment.NewLine + "- Oh yes!";
-            string expected = "- Ballpark." + Environment.NewLine + "- Yes!";
-            string actual = target.RemoveInterjections(text);
+            var text = $"- Ballpark, mm-hm.{Environment.NewLine}- Oh yes!";
+            var expected = $"- Ballpark.{Environment.NewLine}- Yes!";
+            var actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext(text, false));
             Assert.AreEqual(expected, actual);
         }
 
         [TestMethod]
         public void RemoveInterjections12()
         {
-            var target = GetRemoveTextForHiLib();
-            target.Settings.RemoveIfAllUppercase = false;
-            target.Settings.RemoveInterjections = true;
-            target.Settings.OnlyIfInSeparateLine = false;
-            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
-            target.Settings.ColonSeparateLine = false;
             const string text = "Well, boy, I'm — Uh —";
             const string expected = "Well, boy, I'm —";
-            string actual = target.RemoveInterjections(text);
+
+            var actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext(text, false));
             Assert.AreEqual(expected, actual);
         }
 
         [TestMethod]
         public void RemoveInterjections13()
         {
-            var target = GetRemoveTextForHiLib();
-            target.Settings.RemoveIfAllUppercase = false;
-            target.Settings.RemoveInterjections = true;
-            target.Settings.OnlyIfInSeparateLine = false;
-            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
-            target.Settings.ColonSeparateLine = false;
             string text = "- What?" + Environment.NewLine + "- Uh —";
             const string expected = "What?";
-            string actual = target.RemoveInterjections(text);
+            var actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext(text, false));
             Assert.AreEqual(expected, actual);
         }
 
         [TestMethod]
         public void RemoveInterjections14A()
         {
-            var target = GetRemoveTextForHiLib();
-            target.Settings.RemoveIfAllUppercase = false;
-            target.Settings.OnlyIfInSeparateLine = false;
-            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
-            target.Settings.ColonSeparateLine = false;
             string text = "Hey! Uh...";
             const string expected = "Hey!";
-            string actual = target.RemoveInterjections(text);
+
+            var actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext(text, false));
             Assert.AreEqual(expected, actual);
         }
 
         [TestMethod]
         public void RemoveInterjections14B()
         {
-            var target = GetRemoveTextForHiLib();
-            target.Settings.RemoveIfAllUppercase = false;
-            target.Settings.OnlyIfInSeparateLine = false;
-            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
-            target.Settings.ColonSeparateLine = false;
-            string text = "Hey! Uh..." + Environment.NewLine + "Bye.";
-            string expected = "Hey!" + Environment.NewLine + "Bye.";
-            string actual = target.RemoveInterjections(text);
+            var text = $"Hey! Uh...{Environment.NewLine}Bye.";
+            var expected = $"Hey!{Environment.NewLine}Bye.";
+            var actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext(text, false));
             Assert.AreEqual(expected, actual);
         }
 
         [TestMethod]
         public void RemoveInterjections15A()
         {
-            var target = GetRemoveTextForHiLib();
-            target.Settings.RemoveIfAllUppercase = false;
-            target.Settings.OnlyIfInSeparateLine = false;
-            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
-            target.Settings.ColonSeparateLine = false;
-            string text =  "I think that..." + Environment.NewLine + "Uh... Hey!";
+            string text = "I think that..." + Environment.NewLine + "Uh... Hey!";
             string expected = "I think that..." + Environment.NewLine + "Hey!";
-            string actual = target.RemoveInterjections(text);
+
+            var actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext(text, false));
             Assert.AreEqual(expected, actual);
         }
 
         [TestMethod]
         public void RemoveInterjections15B()
         {
-            var target = GetRemoveTextForHiLib();
-            target.Settings.RemoveIfAllUppercase = false;
-            target.Settings.OnlyIfInSeparateLine = false;
-            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
-            target.Settings.ColonSeparateLine = false;
-            string text = "I think that..." + Environment.NewLine + "<i>Uh... Hey!</i>";
-            string expected = "I think that..." + Environment.NewLine + "<i>Hey!</i>";
-            string actual = target.RemoveInterjections(text);
+            var text = $"I think that...{Environment.NewLine}<i>Uh... Hey!</i>";
+            var expected = $"I think that...{Environment.NewLine}<i>Hey!</i>";
+            var actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext(text, false));
             Assert.AreEqual(expected, actual);
         }
 
@@ -924,18 +820,9 @@ namespace Test.Logic.Forms
         [TestMethod]
         public void RemoveTextRemoveDashInRemoveInterjections()
         {
-            var target = GetRemoveTextForHiLib();
-            target.Settings.RemoveIfAllUppercase = false;
-            target.Settings.RemoveInterjections = false;
-            target.Settings.RemoveTextBeforeColon = false;
-            target.Settings.OnlyIfInSeparateLine = false;
-            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
-            target.Settings.ColonSeparateLine = false;
-            target.Settings.RemoveTextBetweenBrackets = true;
-            target.Settings.RemoveTextBeforeColon = true;
             string text = "- Oh." + Environment.NewLine + "<i>- Yes, sure.</i>";
             const string expected = "<i>Yes, sure.</i>";
-            string actual = target.RemoveInterjections(text);
+            var actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext(text, false));
             Assert.AreEqual(expected, actual);
         }
 
@@ -979,44 +866,55 @@ namespace Test.Logic.Forms
         [TestMethod]
         public void RemoveInterjectionsItalicFirstLine()
         {
-            var target = GetRemoveTextForHiLib();
-            target.Settings.RemoveInterjections = true;
             string text = "<i>- Mm-hmm.</i>" + Environment.NewLine + "- In my spare time.";
             const string expected = "In my spare time.";
-            string actual = target.RemoveInterjections(text);
+            var actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext(text, false));
             Assert.AreEqual(expected, actual);
         }
 
         [TestMethod]
         public void RemoveInterjectionsItalicSecondLine()
         {
-            var target = GetRemoveTextForHiLib();
-            target.Settings.RemoveInterjections = true;
-            string text = "- In my spare time." + Environment.NewLine + "<i>- Mm-hmm.</i>";
+            var text = $"- In my spare time.{Environment.NewLine}<i>- Mm-hmm.</i>";
             const string expected = "In my spare time.";
-            string actual = target.RemoveInterjections(text);
+            var actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext(text, false));
             Assert.AreEqual(expected, actual);
         }
 
         [TestMethod]
         public void RemoveInterjectionsItalicBothLines()
         {
-            var target = GetRemoveTextForHiLib();
-            target.Settings.RemoveInterjections = true;
-            string text = "<i>- In my spare time.</i>" + Environment.NewLine + "<i>- Mm-hmm.</i>";
+            var text = $"<i>- In my spare time.</i>{Environment.NewLine}<i>- Mm-hmm.</i>";
             const string expected = "<i>In my spare time.</i>";
-            string actual = target.RemoveInterjections(text);
+
+            var actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext(text, false));
             Assert.AreEqual(expected, actual);
         }
 
         [TestMethod]
         public void RemoveInterjectionsMDash()
         {
-            var target = GetRemoveTextForHiLib();
-            target.Settings.RemoveInterjections = true;
             const string text = "I'm sorry. I, mm-hmm—";
             const string expected = "I'm sorry. I—";
-            string actual = target.RemoveInterjections(text);
+            var actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext(text, false));
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void RemoveInterjectionsOnlyOnSeparateLine1()
+        {
+            const string text = "I'm sorry. Mm-hmm.";
+            const string expected = text;
+            var actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext(text, true));
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void RemoveInterjectionsOnlyOnSeparateLine2()
+        {
+            string text = $"I\'m sorry.{Environment.NewLine}Mm-hmm.";
+            const string expected = "I'm sorry.";
+            var actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext(text, true));
             Assert.AreEqual(expected, actual);
         }
 
@@ -1241,15 +1139,10 @@ namespace Test.Logic.Forms
         [TestMethod]
         public void RemoveTextQuotesInFirstLine2()
         {
-            var target = GetRemoveTextForHiLib();
-            target.Settings.RemoveIfAllUppercase = false;
-            target.Settings.RemoveInterjections = true;
-            target.Settings.OnlyIfInSeparateLine = false;
-            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
-            target.Settings.ColonSeparateLine = false;
+
             string text = "- \"Ballpark.\"" + Environment.NewLine + "-Hmm.";
             const string expected = "\"Ballpark.\"";
-            string actual = target.RemoveInterjections(text);
+            var actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext(text, true));
             Assert.AreEqual(expected, actual);
         }
 
@@ -1311,11 +1204,9 @@ namespace Test.Logic.Forms
         [TestMethod]
         public void RemoveTextForHiRemoveInterjections()
         {
-            var target = GetRemoveTextForHiLib();
-            target.Settings.RemoveTextBetweenBrackets = true;
             string text = "<i>- Here it is." + Environment.NewLine + "- Ahh!</i>";
             const string expected = "<i>Here it is.</i>";
-            string actual = target.RemoveInterjections(text);
+            var actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext(text, true));
             Assert.AreEqual(expected, actual);
         }
 
@@ -1397,20 +1288,18 @@ namespace Test.Logic.Forms
         [TestMethod]
         public void RemoveTextForHiInterjectionsEndDash()
         {
-            var target = GetRemoveTextForHiLib();
             const string text = "Oh. Oh, yeah. Ahh —";
             const string expected = "Yeah —";
-            string actual = target.RemoveInterjections(text);
+            var actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext(text, false));
             Assert.AreEqual(expected, actual);
         }
 
         [TestMethod]
         public void RemoveTextForHiRemoveFirstBlankLineAlsoItalics()
         {
-            var target = GetRemoveTextForHiLib();
             string text = "<i>Ow. Ow." + Environment.NewLine + "Ow, my head.</i>";
             const string expected = "<i>My head.</i>";
-            string actual = target.RemoveInterjections(text);
+            var actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext(text, false));
             Assert.AreEqual(expected, actual);
         }
 
@@ -1427,10 +1316,9 @@ namespace Test.Logic.Forms
         [TestMethod]
         public void RemoveInterjectionKeepDotDotDot()
         {
-            var target = GetRemoveTextForHiLib();
             string text = "She uh..." + Environment.NewLine + "she disappeared.";
             string expected = "She..." + Environment.NewLine + "she disappeared.";
-            string actual = target.RemoveInterjections(text);
+            var actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext(text, false));
             Assert.AreEqual(expected, actual);
         }
 
@@ -1440,17 +1328,16 @@ namespace Test.Logic.Forms
             var target = GetRemoveTextForHiLib();
             const string text = "So you mean that oh?";
             const string expected = "So you mean that?";
-            string actual = target.RemoveInterjections(text);
+            var actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext(text, false));
             Assert.AreEqual(expected, actual);
         }
 
         [TestMethod]
         public void RemoveInterjectionKeepEndingEx()
         {
-            var target = GetRemoveTextForHiLib();
             const string text = "So you mean that oh!";
             const string expected = "So you mean that!";
-            string actual = target.RemoveInterjections(text);
+            var actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext(text, false));
             Assert.AreEqual(expected, actual);
         }
 
@@ -1562,18 +1449,16 @@ namespace Test.Logic.Forms
         [TestMethod]
         public void RemoveInterjectionDotDotDot()
         {
-            var target = GetRemoveTextForHiLib();
             string expected = "Alright.";
-            string actual = target.RemoveInterjections("Oh... alright.");
+            var actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext("Oh... alright.", false));
             Assert.AreEqual(expected, actual);
         }
 
         [TestMethod]
         public void RemoveInterjectionDotDotDotItalic()
         {
-            var target = GetRemoveTextForHiLib();
             string expected = "<i>Alright.</i>";
-            string actual = target.RemoveInterjections("<i>Oh... alright.</i>");
+            var actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext("<i>Oh... alright.</i>", false));
             Assert.AreEqual(expected, actual);
         }
 
@@ -1581,8 +1466,8 @@ namespace Test.Logic.Forms
         public void RemoveInterjectionDotDotDotSecondLineDialog()
         {
             var target = GetRemoveTextForHiLib();
-            string expected = "- OK." + Environment.NewLine + "- Alright.";
-            string actual = target.RemoveInterjections("- OK." + Environment.NewLine + "- Oh... alright.");
+            var expected = $"- OK.{Environment.NewLine}- Alright.";
+            var actual = new RemoveInterjection().Invoke(GetRemoveInterjectionContext($"- OK.{Environment.NewLine}- Oh... alright.", false));
             Assert.AreEqual(expected, actual);
         }
 
@@ -1728,6 +1613,17 @@ namespace Test.Logic.Forms
             target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
             string actual = target.RemoveColon("Hallo!" + Environment.NewLine + "Robert: what do you think about this new car?");
             Assert.IsTrue(actual.Contains("What do you think about this new car?"));
+        }
+
+        [TestMethod]
+        public void RemoveColonNameAfterElipseInsideLine()
+        {
+            var target = GetRemoveTextForHiLib();
+            target.Settings.RemoveTextBeforeColon = true;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
+            target.Settings.NameList.Add("JEREMY");
+            string actual = target.RemoveColon("- Step out of here... JEREMY: Not world." + Environment.NewLine + "It's a British record.");
+            Assert.AreEqual("- Step out of here... Not world." + Environment.NewLine + "- It's a British record.", actual);
         }
 
         #region Additional test attributes
