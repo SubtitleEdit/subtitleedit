@@ -5,8 +5,7 @@
     <Version>3.5.5</Version>
     <TranslatedBy>Tłumaczenie Adam Malich (mailto: adam_malich@gizycko.mm.pl)</TranslatedBy>
     <CultureName>pl-PL</CultureName>
-    <HelpFile>
-    </HelpFile>
+    <HelpFile></HelpFile>
     <Ok>&amp;OK</Ok>
     <Cancel>&amp;Anuluj</Cancel>
     <Apply>Zastosuj</Apply>
@@ -281,6 +280,7 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
     <XNumberOfDifferenceAndPercentLettersChanged>Ilość różnic: {0} ({1}% zmienionych liter)</XNumberOfDifferenceAndPercentLettersChanged>
     <ShowOnlyDifferences>Pokaż tylko różnice</ShowOnlyDifferences>
     <IgnoreLineBreaks>Ignoruj łamanie linii</IgnoreLineBreaks>
+    <IgnoreFormatting>Ignoruj formatowanie</IgnoreFormatting>
     <OnlyLookForDifferencesInText>Szukaj różnic tylko w tekście</OnlyLookForDifferencesInText>
     <CannotCompareWithImageBasedSubtitles>Nie można porównać z napisami opartymi na obrazach</CannotCompareWithImageBasedSubtitles>
   </CompareSubtitles>
@@ -460,6 +460,7 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
     <Left>Do lewej</Left>
     <Right>Do prawej</Right>
     <Center>Do środka</Center>
+    <CenterLeftJustify>Środek, wyrównanie do lewej</CenterLeftJustify>
     <BottomMargin>Dolny margines</BottomMargin>
     <LeftRightMargin>Lewy/prawy margines</LeftRightMargin>
     <SaveBluRraySupAs>Wybierz nazwę pliku Blu-ray sup</SaveBluRraySupAs>
@@ -1011,6 +1012,7 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
         <ChooseAudioTrack>Wybierz ścieżkę audio</ChooseAudioTrack>
         <CloseVideo>Zamknij plik wideo</CloseVideo>
         <SetVideoOffset>Ustaw przesunięcie wideo...</SetVideoOffset>
+        <SmptTimeMode>Timing SMPTE (opuść klatkę)</SmptTimeMode>
         <ImportSceneChanges>Importuj zmiany w scenach...</ImportSceneChanges>
         <RemoveSceneChanges>Usuń zmiany w scenach</RemoveSceneChanges>
         <WaveformBatchGenerate>Zbiorcze generowanie wykresów falowych...</WaveformBatchGenerate>
@@ -1096,6 +1098,7 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
         <Paste>Wklej</Paste>
         <Delete>Usuń</Delete>
         <SplitLineAtCursorPosition>Podziel linię w pozycji kursora</SplitLineAtCursorPosition>
+        <SplitLineAtCursorAndWaveformPosition>Podziel linię w pozycji kursora/wideo</SplitLineAtCursorAndWaveformPosition>
         <AutoDurationCurrentLine>Automatyczny czas trwania (aktualna linia)</AutoDurationCurrentLine>
         <SelectAll>Zaznacz wszystko</SelectAll>
         <InsertFirstLine>Wstaw linię</InsertFirstLine>
@@ -1110,6 +1113,8 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
         <ColumnInsertTextFromSubtitle>Wstaw tekst z napisów...</ColumnInsertTextFromSubtitle>
         <ColumnImportTextAndShiftCellsDown>Importuj tekst i przesuń komórki w dół</ColumnImportTextAndShiftCellsDown>
         <ColumnPasteFromClipboard>Wklej ze schowka...</ColumnPasteFromClipboard>
+        <ColumnTextUp>Tekst do góry</ColumnTextUp>
+        <ColumnTextDown>Tekst w dół</ColumnTextDown>
         <ColumnCopyOriginalTextToCurrent>Kopiuj tekst z oryginału do aktualnego</ColumnCopyOriginalTextToCurrent>
         <Split>Podziel</Split>
         <MergeSelectedLines>Połącz zaznaczone linie</MergeSelectedLines>
@@ -1195,10 +1200,6 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
       <NewTextInsertAtX>W pozycji {0} wstawiono nowy tekst napisu</NewTextInsertAtX>
       <Center>Środek</Center>
       <PlayRate>Tempo odtwarzania (szybkość)</PlayRate>
-      <Slow>Wolne</Slow>
-      <Normal>Zwykłe</Normal>
-      <Fast>Szybkie</Fast>
-      <VeryFast>Bardzo szybkie</VeryFast>
     </VideoControls>
     <SaveChangesToUntitled>Zapisać zmiany w pliku bez nazwy?</SaveChangesToUntitled>
     <SaveChangesToX>Zapisać zmiany w {0}?</SaveChangesToX>
@@ -1440,6 +1441,7 @@ Kontynuować?</SubtitleAppendPrompt>
     <BeforeColumnDelete>Przed usuwaniem kolumn</BeforeColumnDelete>
     <BeforeColumnImportText>Przed importem tekstu do kolumn</BeforeColumnImportText>
     <BeforeColumnShiftCellsDown>Przed przesunięciem komórki na dół kolumny</BeforeColumnShiftCellsDown>
+    <BeforeX>Przed: {0}</BeforeX>
     <ErrorLoadingPluginXErrorY>Błąd wczytywania wtyczki: {0}: {1}</ErrorLoadingPluginXErrorY>
     <BeforeRunningPluginXVersionY>Przed uruchomieniem wtyczki: {0}: {1}</BeforeRunningPluginXVersionY>
     <UnableToReadPluginResult>Nie można odczytać wynikowych napisów z wtyczką!</UnableToReadPluginResult>
@@ -1455,6 +1457,10 @@ Kontynuować?</SubtitleAppendPrompt>
     <ParsingTransportStream>Parsowanie strumienia transportowego - proszę czekać...</ParsingTransportStream>
     <XPercentCompleted>Ukończono {0}%</XPercentCompleted>
     <NextX>Następny: {0}</NextX>
+    <PromptInsertSubtitleOverlap>Wstawianie napisów w pozycji waveform spowoduje nakładanie!
+
+Kontynuować mimo to?</PromptInsertSubtitleOverlap>
+    <SetPlayRateX>Ustaw szybkość odtwarzania na {0}%</SetPlayRateX>
     <ErrorLoadIdx>Nie można odczytać/edytować plików .idx. Pliki Idx są częścią składową dwóch plików idx/sub (zwane również VobSub), a Subtitle Edit może otworzyć tylko plik .sub.</ErrorLoadIdx>
     <ErrorLoadRar>Ten plik wydaje się być skompresowanym plikiem .rar. Subtitle Edit nie otwiera plików skompresowanych.</ErrorLoadRar>
     <ErrorLoadZip>Ten plik wydaje się być skompresowanym plikiem .zip. Subtitle Edit nie otwiera plików skompresowanych.</ErrorLoadZip>
@@ -1552,6 +1558,8 @@ Jeśli edytowałeś ten plik w Subtitle Edit, to możesz odszukać kopię zapaso
     <Export>Eksportuj...</Export>
     <ImportRulesTitle>Importuj zasady zastępowania z...</ImportRulesTitle>
     <ExportRulesTitle>Eksportuj zasady zastępowania do...</ExportRulesTitle>
+    <ChooseGroupsToImport>Wybierz grupy do importu</ChooseGroupsToImport>
+    <ChooseGroupsToExport>Wybierz grupy do eksportu</ChooseGroupsToExport>
     <Rules>Zasady znajdowania i zastępowania</Rules>
     <MoveToTop>Przenieś na początek</MoveToTop>
     <MoveToBottom>Przenieś na koniec</MoveToBottom>
@@ -1561,6 +1569,7 @@ Jeśli edytowałeś ten plik w Subtitle Edit, to możesz odszukać kopię zapaso
     <GroupName>Nazwa grupy</GroupName>
     <RenameGroup>Zmień nazwę grupy...</RenameGroup>
     <NewGroup>Nowa grupa</NewGroup>
+    <NothingToImport>Nie ma nic do zaimportowania</NothingToImport>
   </MultipleReplace>
   <NetworkChat>
     <Title>Czat</Title>
@@ -1710,6 +1719,7 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <NetflixQualityCheck>Kontrola jakości Netflix</NetflixQualityCheck>
     <SettingsName>Ustawienia</SettingsName>
     <Help>Pomoc</Help>
+    <UnbreakNoSpace>Cofnij łamanie bez spacji (CJK)</UnbreakNoSpace>
     <ShowFrameRate>Pokaż ilość klatek/sekundę na Pasku narzędziowym</ShowFrameRate>
     <DefaultFrameRate>Domyślna ilość klatek/sekundę</DefaultFrameRate>
     <DefaultFileEncoding>Domyślne kodowanie pliku</DefaultFileEncoding>
@@ -1918,6 +1928,8 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <TogglePlayPause>Przełączanie odtwarzaj/pauza</TogglePlayPause>
     <Pause>Pauza</Pause>
     <Fullscreen>Pełny ekran</Fullscreen>
+    <PlayRateSlower>Odtwarzaj wolniej</PlayRateSlower>
+    <PlayRateFaster>Odtwarzaj szybciej</PlayRateFaster>
     <CustomSearch1>Tłumaczenie, wyszukiwanie niestandardowe 1</CustomSearch1>
     <CustomSearch2>Tłumaczenie, wyszukiwanie niestandardowe 2</CustomSearch2>
     <CustomSearch3>Tłumaczenie, wyszukiwanie niestandardowe 3</CustomSearch3>
@@ -1946,11 +1958,15 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <ListViewColumnDelete>Kolumna, usuń tekst</ListViewColumnDelete>
     <ListViewColumnInsert>Kolumna, wstaw tekst</ListViewColumnInsert>
     <ListViewColumnPaste>Kolumna, wklej</ListViewColumnPaste>
+    <ListViewColumnTextUp>Kolumna, tekst do góry</ListViewColumnTextUp>
+    <ListViewColumnTextDown>Kolumna, tekst w dół</ListViewColumnTextDown>
     <ListViewFocusWaveform>Koncentruj uwagę na wykresie falowym/spektrogramie</ListViewFocusWaveform>
     <ListViewGoToNextError>Przejdź do następnego błędu</ListViewGoToNextError>
     <ShowBeamer>Uruchom projekcję napisów na pełnym ekranie</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Przenieś ostatnie słowo w dół do następnej linii napisów</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Przenieś pierwsze słowo z następnej linii napisów do góry</MainTextBoxMoveFirstWordFromNextUp>
+    <MainTextBoxMoveFirstWordUpCurrent>Przenieś pierwsze słowo z następnej linii w górę (bieżące napisy)</MainTextBoxMoveFirstWordUpCurrent>
+    <MainTextBoxMoveLastWordDownCurrent>Przenieś ostatnie słowo z pierwszej linii w dół (bieżące napisy)</MainTextBoxMoveLastWordDownCurrent>
     <MainTextBoxSelectionToLower>Zaznacz do małych liter</MainTextBoxSelectionToLower>
     <MainTextBoxSelectionToUpper>Zaznacz do wielkich liter</MainTextBoxSelectionToUpper>
     <MainTextBoxToggleAutoDuration>Przełącz na automatyczny czas trwania</MainTextBoxToggleAutoDuration>
@@ -2017,6 +2033,7 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <EditWholeText>Edytuj cały tekst</EditWholeText>
     <EditWordOnly>Edytuj tylko słowo</EditWordOnly>
     <AddXToNames>Dodaj '{0}' do listy nazw własnych</AddXToNames>
+    <AddXToUserDictionary>Dodaj "{0}" do słownika użytkownika</AddXToUserDictionary>
     <AutoFixNames>Popraw pisownię nazw własnych, tylko gdy różnią się budową</AutoFixNames>
     <CheckOneLetterWords>Pytaj o nieznaną pojedynczą literę słowa</CheckOneLetterWords>
     <TreatINQuoteAsING>Traktuj słowo kończące się " in' " jako " ing " (tylko angielski)</TreatINQuoteAsING>
