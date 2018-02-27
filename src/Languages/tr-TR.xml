@@ -2,7 +2,7 @@
 <Language Name="Türkçe">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.5.5</Version>
+    <Version>3.5.6</Version>
     <TranslatedBy>Türkçe Çeviri: Falcon006</TranslatedBy>
     <CultureName>tr-TR</CultureName>
     <HelpFile />
@@ -24,10 +24,10 @@
     <StartTime>Başlangıç</StartTime>
     <EndTime>Bitiş</EndTime>
     <Duration>Süre</Duration>
-	<CharsPerSec>Karakter/sn</CharsPerSec>
+    <CharsPerSec>Karakter/sn</CharsPerSec>
     <WordsPerMin>Kelimeler/dk</WordsPerMin>
     <Actor>Aktör</Actor>
-	<Gap>Aralık</Gap>
+    <Gap>Aralık</Gap>
     <Region>Bölge</Region>
     <NumberSymbol>#</NumberSymbol>
     <Number>Numara</Number>
@@ -166,7 +166,7 @@ Not: Boş disk alanını kontrol edin.</WaveFileMalformed>
     <ChooseOutputFolder>Çıktı klasörü seç</ChooseOutputFolder>
     <OverwriteExistingFiles>Var olan dosyaların üzerine yaz</OverwriteExistingFiles>
     <Style>Tarz...</Style>
-	<UseStyleFromSource>Kaynaktan tarz kullan</UseStyleFromSource>
+    <UseStyleFromSource>Kaynaktan tarz kullan</UseStyleFromSource>
     <ConvertOptions>Dönüştürme seçenekleri</ConvertOptions>
     <RemoveFormatting>Biçimlendirme etiketlerini kaldır</RemoveFormatting>
     <RemoveTextForHI>İşitme engelliler için metni kaldır</RemoveTextForHI>
@@ -184,7 +184,7 @@ Not: Boş disk alanını kontrol edin.</WaveFileMalformed>
     <ScanningFolder>Altyazı dosyası için {0} klasörü ve alt klasörler taranıyor...</ScanningFolder>
     <Recursive>Alt klasörler dahil</Recursive>
     <SetMinMsBetweenSubtitles>Altyazılar arası minimum milisaniye ayarla</SetMinMsBetweenSubtitles>
-	<BridgeGaps>Köprü aralıkları</BridgeGaps>
+    <BridgeGaps>Köprü aralıkları</BridgeGaps>
     <PlainText>Düz metin</PlainText>
     <Ocr>OCR...</Ocr>
     <Filter>Filitre</Filter>
@@ -195,7 +195,7 @@ Not: Boş disk alanını kontrol edin.</WaveFileMalformed>
     <FixCommonErrorsErrorX>Yaygın hataları düzeltme: {0}</FixCommonErrorsErrorX>
     <MultipleReplaceErrorX>Çoklu yer değiştirme: {0}</MultipleReplaceErrorX>
     <AutoBalanceErrorX>Otomatik dengeleme: {0}</AutoBalanceErrorX>
-	<OffsetTimeCodes>Dengeleme zaman kodları</OffsetTimeCodes>
+    <OffsetTimeCodes>Dengeleme zaman kodları</OffsetTimeCodes>
   </BatchConvert>
   <Beamer>
     <Title>Dengeleyici</Title>
@@ -357,7 +357,7 @@ Not: Boş disk alanını kontrol edin.</WaveFileMalformed>
     <CodePageNumber>Kod sayfası numarası</CodePageNumber>
     <DiskFormatCode>Disk biçimi kodu</DiskFormatCode>
     <DisplayStandardCode>Standart kodu göster</DisplayStandardCode>
-	<ColorRequiresTeletext>Renkler teletext gerektiriyor!</ColorRequiresTeletext>
+    <ColorRequiresTeletext>Renkler teletext gerektiriyor!</ColorRequiresTeletext>
     <CharacterCodeTable>Karakter tablosu</CharacterCodeTable>
     <LanguageCode>Dil kodu</LanguageCode>
     <OriginalProgramTitle>Orijinal program başlığı</OriginalProgramTitle>
@@ -377,10 +377,10 @@ Not: Boş disk alanını kontrol edin.</WaveFileMalformed>
     <Import>İçe aktar...</Import>
     <TextAndTimingInformation>Metin ve zamanlama bilgisi</TextAndTimingInformation>
     <JustificationCode>Dayanak kodu</JustificationCode>
-	<VerticalPosition>Dikey pozisyon</VerticalPosition>
-	<MarginTop>Üst kenar boşluğu (üst sıra altyazıları için)</MarginTop>
-	<MarginBottom>Alt Kenar boşluğu (alt sıra altyazılar için)</MarginBottom>
-	<NewLineRows>Yeni bir satır ile eklenen satır sayısı</NewLineRows>
+    <VerticalPosition>Dikey pozisyon</VerticalPosition>
+    <MarginTop>Üst kenar boşluğu (üst sıra altyazıları için)</MarginTop>
+    <MarginBottom>Alt Kenar boşluğu (alt sıra altyazılar için)</MarginBottom>
+    <NewLineRows>Yeni bir satır ile eklenen satır sayısı</NewLineRows>
     <Teletext>Teleteks</Teletext>
     <UseBox>Yazı etrafında kutu kullan</UseBox>
     <DoubleHeight>Metin için çift yüksekliği kullan</DoubleHeight>
@@ -479,7 +479,7 @@ Not: Boş disk alanını kontrol edin.</WaveFileMalformed>
     <Forced>Zorunlu</Forced>
     <ChooseBackgroundColor>Arkaplan rengini seç</ChooseBackgroundColor>
     <SaveImageAs>Görüntüyü farklı kaydet...</SaveImageAs>
-	<FcpUseFullPathUrl>FCP xml'de tam resim yolu url'sini kullanın</FcpUseFullPathUrl>
+    <FcpUseFullPathUrl>FCP xml'de tam resim yolu url'sini kullanın</FcpUseFullPathUrl>
   </ExportPngXml>
   <ExportText>
     <Title>Metni dışa aktar</Title>
@@ -648,7 +648,7 @@ Not: Boş disk alanını kontrol edin.</WaveFileMalformed>
     <FixOcrErrorExample>S0ner'de -&gt; Soner'de</FixOcrErrorExample>
     <FixSpaceBetweenNumbersExample>1 100 -&gt; 1100</FixSpaceBetweenNumbersExample>
     <FixDialogsOneLineExample>Selam Ali! - Selam Veli! -&gt; Selam Ali!&lt;br /&gt;- Selam Veli!</FixDialogsOneLineExample>
-	<SelectDefault>Varsayılanı seç</SelectDefault>
+    <SelectDefault>Varsayılanı seç</SelectDefault>
   </FixCommonErrors>
   <GetDictionaries>
     <Title>Sözlüklere ihtiyacınız mı var?</Title>
@@ -1012,7 +1012,7 @@ Not: Boş disk alanını kontrol edin.</WaveFileMalformed>
         <ChooseAudioTrack>Ses parçası seç</ChooseAudioTrack>
         <CloseVideo>Video dosyasını kapat...</CloseVideo>
         <SetVideoOffset>Video dengesini ayarla...</SetVideoOffset>
-		<SmptTimeMode>SMPTE zamanlaması (çerçeve bırak)</SmptTimeMode>
+        <SmptTimeMode>SMPTE zamanlaması (çerçeve bırak)</SmptTimeMode>
         <ImportSceneChanges>Bölüm değişikliklerini geri al...</ImportSceneChanges>
         <RemoveSceneChanges>Bölüm değişikliklerini kaldır</RemoveSceneChanges>
         <WaveformBatchGenerate>Toplu dalga formları oluştur...</WaveformBatchGenerate>
@@ -1074,20 +1074,20 @@ Not: Boş disk alanını kontrol edin.</WaveFileMalformed>
         <RemoveTextForHi>İşitme engelliler için metni kaldır</RemoveTextForHi>
         <VisualSync>Görsel senkron</VisualSync>
         <SpellCheck>Yazımı denetle</SpellCheck>
-		<NetflixQualityCheck>Netflix kalite kontrolü</NetflixQualityCheck>
+        <NetflixQualityCheck>Netflix kalite kontrolü</NetflixQualityCheck>
         <Settings>Ayarlar</Settings>
         <Help>Yardım</Help>
         <ShowHideWaveform>Dalga formu göster/gizle</ShowHideWaveform>
         <ShowHideVideo>Videoyu göster/gizle</ShowHideVideo>
       </ToolBar>
       <ContextMenu>
-	    <SizeAllColumnsToFit>Tüm sütunları sığacak şekilde boyutlandır</SizeAllColumnsToFit>
+        <SizeAllColumnsToFit>Tüm sütunları sığacak şekilde boyutlandır</SizeAllColumnsToFit>
         <AdvancedSubStationAlphaSetStyle>Gelişmiş Sub Station Alpha - tarz ayarla</AdvancedSubStationAlphaSetStyle>
         <SubStationAlphaSetStyle>Sub Station Alpha - tarz ayarla</SubStationAlphaSetStyle>
-		<SetActor>Aktör ayarla</SetActor>
+        <SetActor>Aktör ayarla</SetActor>
         <SubStationAlphaStyles>Sub Station Alpha tarzları...</SubStationAlphaStyles>
         <AdvancedSubStationAlphaStyles>Gelişmiş Sub Station Alpha tarzları...</AdvancedSubStationAlphaStyles>
-		<TimedTextSetRegion>Zamanlanmış Metin - bölge ayarla</TimedTextSetRegion>
+        <TimedTextSetRegion>Zamanlanmış Metin - bölge ayarla</TimedTextSetRegion>
         <TimedTextSetStyle>Zamanlanmış Metin - tarz ayarla</TimedTextSetStyle>
         <TimedTextStyles>Zamanlanmış Metin tarzları...</TimedTextStyles>
         <TimedTextSetLanguage>Zamanlanmış Metin - dil ayarla</TimedTextSetLanguage>
@@ -1137,7 +1137,7 @@ Not: Boş disk alanını kontrol edin.</WaveFileMalformed>
         <SaveSelectedLines>Seçilen satırları farklı kaydet...</SaveSelectedLines>
         <WebVTTSetNewVoice>Yeni ses ayarla...</WebVTTSetNewVoice>
         <WebVTTRemoveVoices>Sesleri kaldır</WebVTTRemoveVoices>
-		<NewActor>Yeni aktör...</NewActor>
+        <NewActor>Yeni aktör...</NewActor>
         <RemoveActors>Aktörleri kaldır</RemoveActors>
       </ContextMenu>
     </Menu>
@@ -1395,9 +1395,9 @@ Devam edilsin mi?</SubtitleAppendPrompt>
     <UnicodeCharactersAnsiWarning>Altyazıda unicode karakterler var. ANSI olarak kaydetmek, bunların kaybolmasına yol açar. Kaydetmeye devam edilsin mi</UnicodeCharactersAnsiWarning>
     <NegativeTimeWarning>Altyazıda negatif zaman kodu var. Kaydetmeye devam edilsin mi?</NegativeTimeWarning>
     <BeforeMergeShortLines>Kısa satırların birleştirilmesinden önce</BeforeMergeShortLines>
-	<MergedShortLinesX>Birleştirilen satır sayısı: {0}</MergedShortLinesX>
+    <MergedShortLinesX>Birleştirilen satır sayısı: {0}</MergedShortLinesX>
     <BeforeSplitLongLines>Uzun satırların bölünmesinden önce</BeforeSplitLongLines>
-	<LongLinesSplitX>Bölünmüş satır sayısı: {0}</LongLinesSplitX>
+    <LongLinesSplitX>Bölünmüş satır sayısı: {0}</LongLinesSplitX>
     <BeforeDurationsBridgeGap>Küçük boşlukları köprülemeden önce</BeforeDurationsBridgeGap>
     <BeforeSetMinimumDisplayTimeBetweenParagraphs>Önce paragraflar arasında minimum görüntüleme zamanını ayarla</BeforeSetMinimumDisplayTimeBetweenParagraphs>
     <XMinimumDisplayTimeBetweenParagraphsChanged>Paragraflar değişirken gösterilecek minimum satır sayısı: {0}</XMinimumDisplayTimeBetweenParagraphsChanged>
@@ -1456,11 +1456,11 @@ Devam edilsin mi?</SubtitleAppendPrompt>
     <ImportTimeCodesDifferentNumberOfLinesWarning>Zamanı kodlanmış altyazı satırlarının farklı bir numarası var ({0}) göre geçerli altyazı ({1}) - devam edilsin mi?</ImportTimeCodesDifferentNumberOfLinesWarning>
     <ParsingTransportStream>Ayrıştırma işlemi devam ediyor. - Lütfen bekleyin...</ParsingTransportStream>
     <XPercentCompleted>{0}% tamamlandı</XPercentCompleted>
-	<NextX>Sonraki: {0}</NextX>
+    <NextX>Sonraki: {0}</NextX>
     <ErrorLoadIdx>Bu .idx dosyası okunamadı/düzeltilemedi. Idx dosyaları idx/sub dosya parçalarıdır (VobSub olarak da geçer), ve Subtitle Edit .sub dosyasını açabilir.</ErrorLoadIdx>
     <ErrorLoadRar>Bu dosya sıkıştırılmış bir .rar dosyası olarak görünüyor. Subtitle Edit sıkıştırılmış dosyaları açamaz.</ErrorLoadRar>
     <ErrorLoadZip>Bu dosya sıkıştırılmış bir .zip dosyası olarak görünüyor. Subtitle Edit sıkıştırılmış dosyaları açamaz.</ErrorLoadZip>
-	<ErrorLoad7Zip>Bu dosya sıkıştırılmış bir 7-Zip dosyası olarak görünüyor. Subtitle Edit sıkıştırılmış dosyaları açamaz.</ErrorLoad7Zip>
+    <ErrorLoad7Zip>Bu dosya sıkıştırılmış bir 7-Zip dosyası olarak görünüyor. Subtitle Edit sıkıştırılmış dosyaları açamaz.</ErrorLoad7Zip>
     <ErrorLoadPng>Bu dosya bir PNG görüntü dosyası olarak görünüyor. Subtitle Edit PNG dosyalarını açamaz.</ErrorLoadPng>
     <ErrorLoadJpg>Bu dosya bir JPG görüntü dosyası olarak görünüyor. Subtitle Edit JPG dosyalarını açamaz.</ErrorLoadJpg>
     <ErrorLoadSrr>Bu dosya bir ReScene .srr dosyası olarak görünüyor - bir altyazı dosyası değil.</ErrorLoadSrr>
@@ -1477,7 +1477,7 @@ Eğer Subtitle Edit ile bu dosyayı düzenlediyseniz, menü öğesi dosyası üz
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Matroska dosyasından altyazı seç</Title>
-	<TitleMp4>MP4 dosyasından altyazı seç</TitleMp4>
+    <TitleMp4>MP4 dosyasından altyazı seç</TitleMp4>
     <PleaseChoose>Birden fazla altyazı bulundu - lütfen seçin</PleaseChoose>
     <TrackXLanguageYTypeZ>Parça {0} - dil: {1} - tür: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
@@ -1542,7 +1542,7 @@ Eğer Subtitle Edit ile bu dosyayı düzenlediyseniz, menü öğesi dosyası üz
     <Normal>Normal</Normal>
     <CaseSensitive>Harfe duyarlı</CaseSensitive>
     <RegularExpression>Düzenli ifade</RegularExpression>
-	<Description>Açıklama</Description>
+    <Description>Açıklama</Description>
     <LinesFoundX>Satır bulundu: {0}</LinesFoundX>
     <Remove>Kaldır</Remove>
     <Add>&amp;Ekle</Add>
@@ -1709,7 +1709,7 @@ Yeni oturum başlatın (işbirliği)</Information>
     <Replace>Yer değiştir</Replace>
     <VisualSync>Görsel senkron</VisualSync>
     <SpellCheck>Yazım denetimi</SpellCheck>
-	<NetflixQualityCheck>Netflix kalite kontrolü</NetflixQualityCheck>
+    <NetflixQualityCheck>Netflix kalite kontrolü</NetflixQualityCheck>
     <SettingsName>Ayarlar</SettingsName>
     <Help>Yardım</Help>
     <ShowFrameRate>Kare hızını araç çubuğunda göster</ShowFrameRate>
@@ -1718,7 +1718,7 @@ Yeni oturum başlatın (işbirliği)</Information>
     <AutoDetectAnsiEncoding>ANSI Kodlama'yı otomatik algıla</AutoDetectAnsiEncoding>
     <SubtitleLineMaximumLength>Tek satırda en çok harf sayısı</SubtitleLineMaximumLength>
     <MaximumCharactersPerSecond>En çok harf sayısı (sn)</MaximumCharactersPerSecond>
-	<MaximumWordssPerMinute>En çok kelime sayısı (dk)</MaximumWordssPerMinute>
+    <MaximumWordssPerMinute>En çok kelime sayısı (dk)</MaximumWordssPerMinute>
     <AutoWrapWhileTyping>Yazarken otomatik kaydır</AutoWrapWhileTyping>
     <DurationMinimumMilliseconds>En az altyazı süresi (ms)</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>En çok altyazı süresi (ms)</DurationMaximumMilliseconds>
@@ -1727,7 +1727,7 @@ Yeni oturum başlatın (işbirliği)</Information>
     <SubtitleFont>Altyazı harf biçimi</SubtitleFont>
     <SubtitleFontSize>Altyazı harf boyutu</SubtitleFontSize>
     <SubtitleBold>Kalın</SubtitleBold>
-	<VideoAutoOpen>Altyazı açılırken otomatik olarak video dosyası aç</VideoAutoOpen>
+    <VideoAutoOpen>Altyazı açılırken otomatik olarak video dosyası aç</VideoAutoOpen>
     <SubtitleCenter>Ortala</SubtitleCenter>
     <SubtitleFontColor>Altyazı harf rengi</SubtitleFontColor>
     <SubtitleBackgroundColor>Altyazı arka plân rengi</SubtitleBackgroundColor>
@@ -1740,8 +1740,8 @@ Yeni oturum başlatın (işbirliği)</Information>
     <RemoveBlankLinesWhenOpening>Bir altyazı açarken boş satırları kaldır</RemoveBlankLinesWhenOpening>
     <ShowLineBreaksAs>Satır sonlarını liste görünümü olarak göster</ShowLineBreaksAs>
     <MainListViewDoubleClickAction>Satıra çift-tıklandığına görüntülenecek ana pencere listesi</MainListViewDoubleClickAction>
-	<MainListViewColumnsInfo>Gösterilecek sütunları seç</MainListViewColumnsInfo>
-	<MainListViewNothing>Hiçbir şey yapma...</MainListViewNothing>
+    <MainListViewColumnsInfo>Gösterilecek sütunları seç</MainListViewColumnsInfo>
+    <MainListViewNothing>Hiçbir şey yapma...</MainListViewNothing>
     <MainListViewVideoGoToPositionAndPause>Video konumuna git ve duraklat...</MainListViewVideoGoToPositionAndPause>
     <MainListViewVideoGoToPositionAndPlay>Video konumuna git ve oynat...</MainListViewVideoGoToPositionAndPlay>
     <MainListViewEditText>Metin düzenleme kutusuna git...</MainListViewEditText>
@@ -1770,7 +1770,7 @@ Yeni oturum başlatın (işbirliği)</Information>
     <MpcHcDescription>Media Oynatıcı Klasik - Ev Sineması</MpcHcDescription>
     <MpvPlayer>mpv</MpvPlayer>
     <MpvPlayerDescription>https://mpv.io/ - ücretsiz, açık kaynak, ve çapraz-platform medya oynatıcı</MpvPlayerDescription>
-	<MpvHandlesPreviewText>mpv önizleme metnini işler</MpvHandlesPreviewText>
+    <MpvHandlesPreviewText>mpv önizleme metnini işler</MpvHandlesPreviewText>
     <VlcMediaPlayer>VLC Medya Oynatıcı</VlcMediaPlayer>
     <VlcMediaPlayerDescription>VLC v1.1.0 veya daha yenisi, "libvlc.dll" dosyası</VlcMediaPlayerDescription>
     <VlcBrowseToLabel>VLC yolu (eğer taşınabilir sürüm kullanıyorsanız sadece VLC gerekli )</VlcBrowseToLabel>
@@ -1783,11 +1783,11 @@ Yeni oturum başlatın (işbirliği)</Information>
     <WaveformAppearance>Dalga formu görünümü</WaveformAppearance>
     <WaveformGridColor>Izgara rengi</WaveformGridColor>
     <WaveformShowGridLines>Izgara çizgilerini göster</WaveformShowGridLines>
-	<WaveformShowCps>Göster harf/sn</WaveformShowCps>
-	<WaveformShowWpm>Göster kelime/dk</WaveformShowWpm>
+    <WaveformShowCps>Göster harf/sn</WaveformShowCps>
+    <WaveformShowWpm>Göster kelime/dk</WaveformShowWpm>
     <ReverseMouseWheelScrollDirection>Fare tekerleği yönünü ters kaydır</ReverseMouseWheelScrollDirection>
     <WaveformAllowOverlap>Örtüşmeye izin ver (taşırken/boyutlandırırken)</WaveformAllowOverlap>
-	<WaveformSetVideoPosMoveStartEnd>Video oynarken başlangıç/bitiş konumunu ayarla</WaveformSetVideoPosMoveStartEnd>
+    <WaveformSetVideoPosMoveStartEnd>Video oynarken başlangıç/bitiş konumunu ayarla</WaveformSetVideoPosMoveStartEnd>
     <WaveformFocusMouseEnter>Fare üzerinde odak girmeyi ayarla</WaveformFocusMouseEnter>
     <WaveformListViewFocusMouseEnter>Ayrıca liste görünümünde fare ile odaklanmaya izin ver</WaveformListViewFocusMouseEnter>
     <WaveformBorderHitMs1>Sınır işaretleyici</WaveformBorderHitMs1>
@@ -1867,7 +1867,7 @@ Yeni oturum başlatın (işbirliği)</Information>
     <AdjustStartDownEndUpAndGoToNext>Aşağı tuşu=başlat, yukarı tuşu=sonunu ayarla ve sonrakine git</AdjustStartDownEndUpAndGoToNext>
     <AdjustSelected100MsForward>Seçilen satırları 100 ms ileri taşı</AdjustSelected100MsForward>
     <AdjustSelected100MsBack>Seçilen satırları 100 ms geri taşı</AdjustSelected100MsBack>
-	<AdjustStartXMsBack>Başlatı {0} ms geri taşı</AdjustStartXMsBack>
+    <AdjustStartXMsBack>Başlatı {0} ms geri taşı</AdjustStartXMsBack>
     <AdjustStartXMsForward>Başlatı {0} ms ileri taşı</AdjustStartXMsForward>
     <AdjustEndXMsBack>Bitişi {0} ms geri taşı</AdjustEndXMsBack>
     <AdjustEndXMsForward>Bitişi {0} ms ileri taşı</AdjustEndXMsForward>
@@ -1882,7 +1882,7 @@ Yeni oturum başlatın (işbirliği)</Information>
     <GoToPrevious>Önceki satıra git</GoToPrevious>
     <GoToCurrentSubtitleStart>Geçerli satırın başına git</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>Geçerli satırın sonuna git</GoToCurrentSubtitleEnd>
-	<GoToPreviousSubtitleAndFocusVideo>Önceki satıra git ve video konumunu ayarla</GoToPreviousSubtitleAndFocusVideo>
+    <GoToPreviousSubtitleAndFocusVideo>Önceki satıra git ve video konumunu ayarla</GoToPreviousSubtitleAndFocusVideo>
     <GoToNextSubtitleAndFocusVideo>Sonraki satıra git video konumunu ayarla</GoToNextSubtitleAndFocusVideo>
     <ToggleFocus>Liste görünümü ve altyazı metin kutusu arasında geçişi odakla</ToggleFocus>
     <ToggleDialogDashes>Diyalog geçiş tiresi</ToggleDialogDashes>
@@ -1901,14 +1901,14 @@ Yeni oturum başlatın (işbirliği)</Information>
     <WaveformPlayNewSelectionEnd>Seçimin sonunu oynat</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Seçilmiş ilk altyazıyı oynat</WaveformPlayFirstSelectedSubtitle>
     <WaveformFocusListView>Liste görünümünü odakla</WaveformFocusListView>
-	<WaveformGoToNextSubtitle>Sonraki altyazıya git (video konumundan)</WaveformGoToNextSubtitle>
-	<WaveformGoToPreviousSceneChange>Bir önceki bölüm değişikliğine git</WaveformGoToPreviousSceneChange>
+    <WaveformGoToNextSubtitle>Sonraki altyazıya git (video konumundan)</WaveformGoToNextSubtitle>
+    <WaveformGoToPreviousSceneChange>Bir önceki bölüm değişikliğine git</WaveformGoToPreviousSceneChange>
     <WaveformGoToNextSceneChange>Bir sonraki bölüm değişikliğine git</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>Bölüm geçiş değişimi</WaveformToggleSceneChange>
     <GoBack1Frame>Bir kare geri</GoBack1Frame>
     <GoForward1Frame>Bir kare ileri</GoForward1Frame>
-	<GoBack1FrameWithPlay>Bir kare geri (oynatarak)</GoBack1FrameWithPlay>
-	<GoForward1FrameWithPlay>Bir kare ileri (oynatarak)</GoForward1FrameWithPlay>
+    <GoBack1FrameWithPlay>Bir kare geri (oynatarak)</GoBack1FrameWithPlay>
+    <GoForward1FrameWithPlay>Bir kare ileri (oynatarak)</GoForward1FrameWithPlay>
     <GoBack100Milliseconds>100 ms geri</GoBack100Milliseconds>
     <GoForward100Milliseconds>100 ms ileri</GoForward100Milliseconds>
     <GoBack500Milliseconds>500 ms geri</GoBack500Milliseconds>
@@ -1953,7 +1953,7 @@ Yeni oturum başlatın (işbirliği)</Information>
     <ShowBeamer>Altyazı tam ekran akışını başlat</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Bir sonraki altyazı satırının son kelimesini aşağı taşı</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Bir sonraki altyazı satırından ilk kelimeyi yukarı taşı</MainTextBoxMoveFirstWordFromNextUp>
-	<MainTextBoxMoveFirstWordUpCurrent>Bir sonraki satıra ilk kelimeyi taşı (geçerli altyazı)</MainTextBoxMoveFirstWordUpCurrent>
+    <MainTextBoxMoveFirstWordUpCurrent>Bir sonraki satıra ilk kelimeyi taşı (geçerli altyazı)</MainTextBoxMoveFirstWordUpCurrent>
     <MainTextBoxMoveLastWordDownCurrent>Son kelimeyi ilk satırdan aşağı taşı (geçerli altyazı)</MainTextBoxMoveLastWordDownCurrent>
     <MainTextBoxSelectionToLower>Küçük harf seçimi</MainTextBoxSelectionToLower>
     <MainTextBoxSelectionToUpper>Büyük harf seçimi</MainTextBoxSelectionToUpper>
@@ -1962,12 +1962,12 @@ Yeni oturum başlatın (işbirliği)</Information>
     <MainTextBoxUnbreak>Metni böl</MainTextBoxUnbreak>
     <MainFileSaveAll>Tümünü kaydet</MainFileSaveAll>
     <Miscellaneous>Çeşitli</Miscellaneous>
-	<CpsIncludesSpace>Karakter/sn (CPS) boşluklar içeriyor</CpsIncludesSpace>
+    <CpsIncludesSpace>Karakter/sn (CPS) boşluklar içeriyor</CpsIncludesSpace>
     <UseDoNotBreakAfterList>Listeden sonra 'satır-bölmeyin' kullanın (otomatik bölmek için)</UseDoNotBreakAfterList>
     <MicrosoftBingTranslator>Microsoft Bing Çevirici</MicrosoftBingTranslator>
     <HowToSignUp>Katılma seçenekleri</HowToSignUp>
-	<GoogleTranslateUrl>Google çeviri url</GoogleTranslateUrl>
-	<MicrosoftTranslateApiKey>Anahtar</MicrosoftTranslateApiKey>
+    <GoogleTranslateUrl>Google çeviri url</GoogleTranslateUrl>
+    <MicrosoftTranslateApiKey>Anahtar</MicrosoftTranslateApiKey>
   </Settings>
   <SettingsMpv>
     <Title>mpv İçin ayarlar</Title>
@@ -2027,7 +2027,7 @@ Yeni oturum başlatın (işbirliği)</Information>
     <ImageText>Görüntü metni</ImageText>
     <SpellCheckCompleted>Yazım denetimi tamamlandı.</SpellCheckCompleted>
     <SpellCheckAborted>Yazım denetimı iptal edildi</SpellCheckAborted>
-	<SpacesNotAllowed>Tek kelimeyle boşluklara izin verilmiyor!</SpacesNotAllowed>
+    <SpacesNotAllowed>Tek kelimeyle boşluklara izin verilmiyor!</SpacesNotAllowed>
     <UndoX>Geri al: {0}</UndoX>
   </SpellCheck>
   <NetflixQualityCheck>
@@ -2093,9 +2093,9 @@ Yeni oturum başlatın (işbirliği)</Information>
     <NumberOfLinesX>Altyazı satır sayısı: {0:#,###}</NumberOfLinesX>
     <LengthInFormatXinCharactersY>Karakter sayısı olarak {0}: {1:#,###,##0}</LengthInFormatXinCharactersY>
     <NumberOfCharactersInTextOnly>Sadece metindeki karakter sayısı: {0:#,###,##0}</NumberOfCharactersInTextOnly>
-	<TotalDuration>Tüm altyazıların toplam süresi: {0}</TotalDuration>
+    <TotalDuration>Tüm altyazıların toplam süresi: {0}</TotalDuration>
     <TotalCharsPerSecond>Toplam karakter/saniye: {0:0.0} saniye</TotalCharsPerSecond>
-	<TotalWords>Alltyazıdaki toplam kelime: {0}</TotalWords>
+    <TotalWords>Alltyazıdaki toplam kelime: {0}</TotalWords>
     <NumberOfItalicTags>İtalik etiket sayısı: {0}</NumberOfItalicTags>
     <NumberOfBoldTags>Kalın etiket sayısı: {0}</NumberOfBoldTags>
     <NumberOfUnderlineTags>Etiket hizalanma sayısı: {0}</NumberOfUnderlineTags>
@@ -2291,7 +2291,7 @@ Değişiklikler saklansın mı?</KeepChangesMessage>
     <SetUnitalicFactor>Un-italik (italik olmayan) faktorü ayarla...</SetUnitalicFactor>
     <DiscardTitle>OCR içinde yapılan değişiklikler atılsın mı?</DiscardTitle>
     <DiscardText>Geçerli OCR oturumda yapılan değişiklikleri atmak istiyor musunuz?</DiscardText>
-	<MinLineSplitHeight>Min. satır yüksekliği (bölünmüş)</MinLineSplitHeight>
+    <MinLineSplitHeight>Min. satır yüksekliği (bölünmüş)</MinLineSplitHeight>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub - Manuel görüntüden metne</Title>
@@ -2356,8 +2356,8 @@ Değişiklikler saklansın mı?</KeepChangesMessage>
     <RemoveSceneChange>Bölüm değişikliğini kaldır...</RemoveSceneChange>
     <GuessTimeCodes>Zaman kodlarını tahmin et...</GuessTimeCodes>
     <SeekSilence>Sessizlik arama...</SeekSilence>
-	<InsertSubtitleHere>Altyazıyı buraya ekleyin...</InsertSubtitleHere>
-	<CharsSecX>CPS: {0:0.00}</CharsSecX>
+    <InsertSubtitleHere>Altyazıyı buraya ekleyin...</InsertSubtitleHere>
+    <CharsSecX>CPS: {0:0.00}</CharsSecX>
     <WordsMinX>WPM: {0:0.00}</WordsMinX>
   </Waveform>
   <WaveformGenerateTimeCodes>
