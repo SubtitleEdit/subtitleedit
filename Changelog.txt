@@ -1,7 +1,7 @@
 ﻿Subtitle Edit Changelog
 
 
-3.5.6 (xth March 2018) BETA
+3.5.6 (27th February 2018)
 * NEW:
    * Some support for SMPTE time code (drop frame) in video player
    * Shortcuts for moving text up/down in current sub - thx Leon
@@ -45,6 +45,7 @@
    * Fix reading "YouTube transcript" with trailing space - thx Sherman 
    * Fix issue where "< min duration" was not error highlighted - thx Ingo
    * Fix for shortcut "Set end, offset the rest and go to next" - thx Leon
+   * Set better default style in Sami - thx Jamakmake
 
 
 3.5.5 (26th January 2018)
