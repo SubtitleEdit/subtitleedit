@@ -282,6 +282,7 @@ Megjegyzés: Ellenőrizze a szabad merevlemez területet.</WaveFileMalformed>
     <XNumberOfDifferenceAndPercentLettersChanged>Eltérések száma: {0} ({1:0.##}% betű módosult)</XNumberOfDifferenceAndPercentLettersChanged>
     <ShowOnlyDifferences>Csak az eltérések megjelenítése</ShowOnlyDifferences>
     <IgnoreLineBreaks>Sortörések figyelmen kívül hagyása</IgnoreLineBreaks>
+    <IgnoreFormatting>Formázás figyelmen kívül hagyása</IgnoreFormatting>
     <OnlyLookForDifferencesInText>Csak az eltérések keresése a szövegben</OnlyLookForDifferencesInText>
     <CannotCompareWithImageBasedSubtitles>Nem lehet összehasonlítani kép alapú feliratokkal</CannotCompareWithImageBasedSubtitles>
   </CompareSubtitles>
@@ -461,6 +462,7 @@ Megjegyzés: Ellenőrizze a szabad merevlemez területet.</WaveFileMalformed>
     <Left>Balra</Left>
     <Right>Jobbra</Right>
     <Center>Középre</Center>
+    <CenterLeftJustify>Középre, balra zárt</CenterLeftJustify>
     <BottomMargin>Alsó margó</BottomMargin>
     <LeftRightMargin>Bal/jobb margó</LeftRightMargin>
     <SaveBluRraySupAs>Válassza ki a Blu-ray sup fájl nevét</SaveBluRraySupAs>
@@ -1098,6 +1100,7 @@ Megjegyzés: Ellenőrizze a szabad merevlemez területet.</WaveFileMalformed>
         <Paste>Beillesztés</Paste>
         <Delete>Törlés</Delete>
         <SplitLineAtCursorPosition>Sor felosztása a kurzorpozíciónál</SplitLineAtCursorPosition>
+        <SplitLineAtCursorAndWaveformPosition>Sor tagolása a kurzor/videó pozícióban</SplitLineAtCursorAndWaveformPosition>
         <AutoDurationCurrentLine>Automatikus időtartam (jelenlegi sor)</AutoDurationCurrentLine>
         <SelectAll>Összes kijelölése</SelectAll>
         <InsertFirstLine>Sor beszúrása</InsertFirstLine>
@@ -1112,6 +1115,8 @@ Megjegyzés: Ellenőrizze a szabad merevlemez területet.</WaveFileMalformed>
         <ColumnInsertTextFromSubtitle>Szövegt beszúrása a feliratból...</ColumnInsertTextFromSubtitle>
         <ColumnImportTextAndShiftCellsDown>Szöveg importálása és a cellák lefelé tolása</ColumnImportTextAndShiftCellsDown>
         <ColumnPasteFromClipboard>Beillesztés a vágólapról...</ColumnPasteFromClipboard>
+        <ColumnTextUp>Szöveg felfelé</ColumnTextUp>
+        <ColumnTextDown>Szöveg lefelé</ColumnTextDown>
         <ColumnCopyOriginalTextToCurrent>Szöveg másolása az eredetiből a jelenlegibe</ColumnCopyOriginalTextToCurrent>
         <Split>Felosztás</Split>
         <MergeSelectedLines>Kijelölt sorok összevonása</MergeSelectedLines>
@@ -1197,10 +1202,6 @@ Megjegyzés: Ellenőrizze a szabad merevlemez területet.</WaveFileMalformed>
       <NewTextInsertAtX>Új szöveg beszúrva: {0}</NewTextInsertAtX>
       <Center>Középre</Center>
       <PlayRate>Lejátszás (sebesség)</PlayRate>
-      <Slow>Lassú</Slow>
-      <Normal>Normál</Normal>
-      <Fast>Gyors</Fast>
-      <VeryFast>Nagyon gyors</VeryFast>
     </VideoControls>
     <SaveChangesToUntitled>Menti a módosításokat a névtelenbe?</SaveChangesToUntitled>
     <SaveChangesToX>Menti a(z) {0} módosításait?</SaveChangesToX>
@@ -1442,6 +1443,7 @@ Folytatja?</SubtitleAppendPrompt>
     <BeforeColumnDelete>Az oszlop törlése előtti állapotra</BeforeColumnDelete>
     <BeforeColumnImportText>Az oszlop szöveg importálása előtti állapotra</BeforeColumnImportText>
     <BeforeColumnShiftCellsDown>A cellák lefelé tolási művelete előtti állapotra</BeforeColumnShiftCellsDown>
+    <BeforeX>Előtt: {0}</BeforeX>
     <ErrorLoadingPluginXErrorY>Hiba a beépülő betöltése közben: {0}: {1}</ErrorLoadingPluginXErrorY>
     <BeforeRunningPluginXVersionY>A beépülő futtatása előtt: {0}: {1}</BeforeRunningPluginXVersionY>
     <UnableToReadPluginResult>Nem olvasható a felirat eredménye a beépülőből!</UnableToReadPluginResult>
@@ -1457,6 +1459,10 @@ Folytatja?</SubtitleAppendPrompt>
     <ParsingTransportStream>Átviteli adatfolyam elemzése - kis türelmet...</ParsingTransportStream>
     <XPercentCompleted>{0}% befejezve</XPercentCompleted>
     <NextX>Következő: {0}</NextX>
+    <PromptInsertSubtitleOverlap>A felirat beszúrása a hullámforma pozícióba átfedést okoz!
+
+Ennek ellenére folytatja?</PromptInsertSubtitleOverlap>
+    <SetPlayRateX>Lejátszási sebesség beállítása {0}%-ra</SetPlayRateX>
     <ErrorLoadIdx>Nem lehet olvasni/szerkeszteni az .idx fájlokat. Az idx fájlok egy idx/sub állomány pár részei (más néven VobSub), és az Subtitle Edit nem tudja megnyitni a .sub fájlt.</ErrorLoadIdx>
     <ErrorLoadRar>Ez a fájl úgy tűnik, hogy egy tömörített .rar fájl. Az Subtitle Edit nem tudja megnyitni a tömörített fájlokat.</ErrorLoadRar>
     <ErrorLoadZip>Ez a fájl úgy tűnik, hogy egy tömörített .zip fájl. Az Subtitle Edit nem tudja megnyitni a tömörített fájlokat.</ErrorLoadZip>
@@ -1554,6 +1560,8 @@ Ha ezt a fájlt a Subtitle Edit programmal módosította, akkor lehet, hogy megt
     <Export>Exportálás...</Export>
     <ImportRulesTitle>Csere szabály(ok) importálása...</ImportRulesTitle>
     <ExportRulesTitle>Csere szabály(ok) exportálása...</ExportRulesTitle>
+    <ChooseGroupsToImport>Válassza ki az importálni kívánt csoportokat</ChooseGroupsToImport>
+    <ChooseGroupsToExport>Válassza ki az exportálni kívánt csoportokat</ChooseGroupsToExport>
     <Rules>Keresése és szabályok cseréje</Rules>
     <MoveToTop>Áthelyezés felülre</MoveToTop>
     <MoveToBottom>Áthelyezés alulra</MoveToBottom>
@@ -1563,6 +1571,7 @@ Ha ezt a fájlt a Subtitle Edit programmal módosította, akkor lehet, hogy megt
     <GroupName>Csoport neve</GroupName>
     <RenameGroup>Csoport átnevezése...</RenameGroup>
     <NewGroup>Új csoport...</NewGroup>
+    <NothingToImport>Nincs importálható</NothingToImport>
   </MultipleReplace>
   <NetworkChat>
     <Title>Csevegés</Title>
@@ -1712,6 +1721,7 @@ szerkesztheti ugyanazt a feliratfájlt</Information>
     <NetflixQualityCheck>Netflix minőségellenőrzés</NetflixQualityCheck>
     <SettingsName>Beállítások</SettingsName>
     <Help>Súgó</Help>
+    <UnbreakNoSpace>Szóközök nélküli sortörések eltávolítása (CJK)</UnbreakNoSpace>
     <ShowFrameRate>Képarány megjelenítése az eszköztáron</ShowFrameRate>
     <DefaultFrameRate>Alapértelmezett képarány</DefaultFrameRate>
     <DefaultFileEncoding>Alapértelmezett fájlkódolás</DefaultFileEncoding>
@@ -1920,6 +1930,8 @@ szerkesztheti ugyanazt a feliratfájlt</Information>
     <TogglePlayPause>Lejátszás/szünet kapcsoló</TogglePlayPause>
     <Pause>Szünet</Pause>
     <Fullscreen>Teljes képernyős</Fullscreen>
+    <PlayRateSlower>Lassabb lejátszási sebesség</PlayRateSlower>
+    <PlayRateFaster>Gyorsabb lejátszási sebesség</PlayRateFaster>
     <CustomSearch1>Fordítás, egyéni keresés 1</CustomSearch1>
     <CustomSearch2>Fordítás, egyéni keresés 2</CustomSearch2>
     <CustomSearch3>Fordítás, egyéni keresés 3</CustomSearch3>
@@ -1948,6 +1960,8 @@ szerkesztheti ugyanazt a feliratfájlt</Information>
     <ListViewColumnDelete>Oszlop, szöveg törlése</ListViewColumnDelete>
     <ListViewColumnInsert>Oszlop, szöveg beszúrása</ListViewColumnInsert>
     <ListViewColumnPaste>Oszlop, beillesztés</ListViewColumnPaste>
+    <ListViewColumnTextUp>Oszlop, szöveg felfelé</ListViewColumnTextUp>
+    <ListViewColumnTextDown>Oszlop, szöveg lefelé</ListViewColumnTextDown>
     <ListViewFocusWaveform>Hullámforma/spectrogram fókusz</ListViewFocusWaveform>
     <ListViewGoToNextError>Ugrás a következő hibára</ListViewGoToNextError>
     <ShowBeamer>Teljes képernyős projektor felirat indítás</ShowBeamer>
@@ -2021,6 +2035,7 @@ szerkesztheti ugyanazt a feliratfájlt</Information>
     <EditWholeText>Teljes szöveg szerkesztése</EditWholeText>
     <EditWordOnly>Csak szavak szerkesztése</EditWordOnly>
     <AddXToNames>'{0}' hozzáadása a névlistához</AddXToNames>
+    <AddXToUserDictionary>'{0}' hozzáadása a felhasználói szótárhoz</AddXToUserDictionary>
     <AutoFixNames>Nevek auto-javítása, ahol csak a betűállás különbözik</AutoFixNames>
     <CheckOneLetterWords>Rákérdezés az ismeretlen egy betűs szavakra</CheckOneLetterWords>
     <TreatINQuoteAsING>Az " in' " szóvéget kezelje " ing "-ként (Csak angol nyelven)</TreatINQuoteAsING>
