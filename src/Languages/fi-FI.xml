@@ -277,6 +277,7 @@ HUOM! Tarkista vapaa levytila.</WaveFileMalformed>
     <XNumberOfDifferenceAndPercentLettersChanged>Eroavuuksien määrä: {0} ({1:0.##}% kirjaimista muutettu)</XNumberOfDifferenceAndPercentLettersChanged>
     <ShowOnlyDifferences>Näytä vain erot</ShowOnlyDifferences>
     <IgnoreLineBreaks>Älä huomioi rivinvaihtoja</IgnoreLineBreaks>
+    <IgnoreFormatting>Älä huomioi muotoiluja.</IgnoreFormatting>
     <OnlyLookForDifferencesInText>Etsi erot vain tekstissä</OnlyLookForDifferencesInText>
     <CannotCompareWithImageBasedSubtitles>Kuvaan perustuvia tekstityksiä ei voi verrata</CannotCompareWithImageBasedSubtitles>
   </CompareSubtitles>
@@ -456,6 +457,7 @@ HUOM! Tarkista vapaa levytila.</WaveFileMalformed>
     <Left>Vasen</Left>
     <Right>Oikea</Right>
     <Center>Keski</Center>
+    <CenterLeftJustify>Keski, kohdistus vasempaan</CenterLeftJustify>
     <BottomMargin>Alareunus</BottomMargin>
     <LeftRightMargin>Sivureunukset</LeftRightMargin>
     <SaveBluRraySupAs>Valitse Blu-ray sup -tiedostonimi</SaveBluRraySupAs>
@@ -1093,6 +1095,7 @@ HUOM! Tarkista vapaa levytila.</WaveFileMalformed>
         <Paste>Liitä</Paste>
         <Delete>Poista</Delete>
         <SplitLineAtCursorPosition>Katkaise rivi kursorin kohdalta</SplitLineAtCursorPosition>
+        <SplitLineAtCursorAndWaveformPosition>Katkaise rivi kursorin/videon kohdasta</SplitLineAtCursorAndWaveformPosition>
         <AutoDurationCurrentLine>Automaattinen kesto (nykyinen rivi)</AutoDurationCurrentLine>
         <SelectAll>Valitse kaikki</SelectAll>
         <InsertFirstLine>Lisää rivi</InsertFirstLine>
@@ -1107,6 +1110,8 @@ HUOM! Tarkista vapaa levytila.</WaveFileMalformed>
         <ColumnInsertTextFromSubtitle>Lisätä teksti tekstityksestä</ColumnInsertTextFromSubtitle>
         <ColumnImportTextAndShiftCellsDown>Tuo teksti ja siirrä soluja alaspäin</ColumnImportTextAndShiftCellsDown>
         <ColumnPasteFromClipboard>Liitä leikepöydältä</ColumnPasteFromClipboard>
+        <ColumnTextUp>Teksti ylös</ColumnTextUp>
+        <ColumnTextDown>Teksti alas</ColumnTextDown>
         <ColumnCopyOriginalTextToCurrent>Kopioi teksti alkuperäiseltä nykyiseen</ColumnCopyOriginalTextToCurrent>
         <Split>Katkaisu</Split>
         <MergeSelectedLines>Yhdistä valitut rivit</MergeSelectedLines>
@@ -1192,10 +1197,6 @@ HUOM! Tarkista vapaa levytila.</WaveFileMalformed>
       <NewTextInsertAtX>Uusi teksti lisätty kohtaan {0}</NewTextInsertAtX>
       <Center>Keskitys</Center>
       <PlayRate>Toistosuhde (nopeus)</PlayRate>
-      <Slow>Hidas</Slow>
-      <Normal>Normaali</Normal>
-      <Fast>Nopea</Fast>
-      <VeryFast>Erittäin nopea</VeryFast>
     </VideoControls>
     <SaveChangesToUntitled>Tallennetaanko muutokset nimettömään?</SaveChangesToUntitled>
     <SaveChangesToX>Tallennetaanko muutokset kohteeseen {0}?</SaveChangesToX>
@@ -1429,6 +1430,7 @@ Haluatko aloittaa asiakirjan alusta ja hakea kerran vielä?</FindContinue>
     <BeforeColumnDelete>Ennen sarakkeen poistoa</BeforeColumnDelete>
     <BeforeColumnImportText>Ennen tekstin tuomista sarakkeeseen</BeforeColumnImportText>
     <BeforeColumnShiftCellsDown>Ennen sarakkeen solujen alassiirtoa</BeforeColumnShiftCellsDown>
+    <BeforeX>Ennen: {0}</BeforeX>
     <ErrorLoadingPluginXErrorY>Virhe laajennuksen latauksessa: {0}: {1}</ErrorLoadingPluginXErrorY>
     <BeforeRunningPluginXVersionY>Ennen laajennuksen ajamista: {0}: {1}</BeforeRunningPluginXVersionY>
     <UnableToReadPluginResult>Tekstitystuloksia ei voi lukea laajennuksesta!</UnableToReadPluginResult>
@@ -1444,6 +1446,8 @@ Haluatko aloittaa asiakirjan alusta ja hakea kerran vielä?</FindContinue>
     <ParsingTransportStream>Luodaan siirtovirtausta - odota</ParsingTransportStream>
     <XPercentCompleted>{0}% valmiina</XPercentCompleted>
     <NextX>Seuraava: {0}</NextX>
+    <PromptInsertSubtitleOverlap>Tekstityksen lisääminen aaltomuodon kohdalle aiheuttaa päällekkäisyyttä! Jatketaanko silti?</PromptInsertSubtitleOverlap>
+    <SetPlayRateX>Toistonopeus {0}%</SetPlayRateX>
     <ErrorLoadIdx>Idx-tiedostojen luku tai muokkaus epäonnistui, mutta sub-tiedoston avaus onnistuu. idx-tiedostot ovat osa idx/sub -tiedostoparia (nk VobSub).</ErrorLoadIdx>
     <ErrorLoadRar>Tiedostoa on pakattu rar-pakkauksella, joten sitä ei voida avata.</ErrorLoadRar>
     <ErrorLoadZip>Tiedostoa on pakattu zip-pakkauksella, joten sitä ei voida avata.</ErrorLoadZip>
@@ -1541,6 +1545,8 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <Export>Vie</Export>
     <ImportRulesTitle>Tuo korvaussäännöt kohteesta</ImportRulesTitle>
     <ExportRulesTitle>Vie korvaussäännöt kohteeseen</ExportRulesTitle>
+    <ChooseGroupsToImport>Valitse tuotavat ryhmät</ChooseGroupsToImport>
+    <ChooseGroupsToExport>Valitse vietävät ryhmät</ChooseGroupsToExport>
     <Rules>Korvaussäännöt</Rules>
     <MoveToTop>Siirrä yläreunaan</MoveToTop>
     <MoveToBottom>Siirrä alareunaan</MoveToBottom>
@@ -1550,6 +1556,7 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <GroupName>Ryhmän nimi</GroupName>
     <RenameGroup>Uudelleennimeä ryhmä...</RenameGroup>
     <NewGroup>Uusi ryhmä...</NewGroup>
+    <NothingToImport>Ei vietävää</NothingToImport>
   </MultipleReplace>
   <NetworkChat>
     <Title>Keskustelupalsta</Title>
@@ -1697,6 +1704,7 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <NetflixQualityCheck>Netflix-laaduntarkastus</NetflixQualityCheck>
     <SettingsName>Asetukset</SettingsName>
     <Help>Ohje</Help>
+    <UnbreakNoSpace>Yhdistä ilman välilyöntiä (CJK)</UnbreakNoSpace>
     <ShowFrameRate>Näytä kuvataajuus</ShowFrameRate>
     <DefaultFrameRate>Kuvataajuus (oletus)</DefaultFrameRate>
     <DefaultFileEncoding>Tiedoston koodaus (oletus)</DefaultFileEncoding>
@@ -1905,6 +1913,8 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <TogglePlayPause>Vaihda toisto/tauko</TogglePlayPause>
     <Pause>Tauko</Pause>
     <Fullscreen>Kokonäyttö</Fullscreen>
+    <PlayRateSlower>Hitaampi toisto</PlayRateSlower>
+    <PlayRateFaster>Nopeampi toisto</PlayRateFaster>
     <CustomSearch1>Käännös, mukautettu haku 1</CustomSearch1>
     <CustomSearch2>Käännös, mukautettu haku 2</CustomSearch2>
     <CustomSearch3>Käännös, mukautettu haku 3</CustomSearch3>
@@ -1933,6 +1943,8 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <ListViewColumnDelete>Sarake, poista teksti</ListViewColumnDelete>
     <ListViewColumnInsert>Sarake, lisää teksti</ListViewColumnInsert>
     <ListViewColumnPaste>Sarake, liitä</ListViewColumnPaste>
+    <ListViewColumnTextUp>Sarake, teksti ylös</ListViewColumnTextUp>
+    <ListViewColumnTextDown>Sarake, teksti alas</ListViewColumnTextDown>
     <ListViewFocusWaveform>Aaltomuoto / taajuusanalyysi</ListViewFocusWaveform>
     <ListViewGoToNextError>Siirry seuraavaan virheeseen</ListViewGoToNextError>
     <ShowBeamer>Aloita tekstityksen kokonäytön videoesitys</ShowBeamer>
@@ -2005,7 +2017,8 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <SpellCheckProgress>Oikolue [{0}] - {1}</SpellCheckProgress>
     <EditWholeText>Muokkaa koko tekstiä</EditWholeText>
     <EditWordOnly>Muokkaa vain sanaa</EditWordOnly>
-    <AddXToNames>Lisää {0} nimi/etc -luetteloon</AddXToNames>
+    <AddXToNames>Lisää '{0}' nimi/etc -luetteloon</AddXToNames>
+    <AddXToUserDictionary>Lisää '{0}' omaan sanastoon</AddXToUserDictionary>
     <AutoFixNames>Korjaa automaattisesti nimet, joissa vain kirjainkoot eroavat</AutoFixNames>
     <CheckOneLetterWords>Kysy varmistus tuntemattomille, yksikirjaisimille sanoille</CheckOneLetterWords>
     <TreatINQuoteAsING>Kohtele 'in'-päätteisiä sanoja kuten 'ing'-päätteisiä (vain englanti)</TreatINQuoteAsING>
