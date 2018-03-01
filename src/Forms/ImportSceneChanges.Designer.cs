@@ -215,7 +215,9 @@
             this.Name = "ImportSceneChanges";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "ImportSceneChanges";
+            this.Shown += new System.EventHandler(this.ImportSceneChanges_Shown);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ImportSceneChanges_KeyDown);
             this.groupBoxImportOptions.ResumeLayout(false);
             this.groupBoxTimeCodes.ResumeLayout(false);

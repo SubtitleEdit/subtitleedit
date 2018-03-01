@@ -264,5 +264,9 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        private void ImportSceneChanges_Shown(object sender, EventArgs e)
+        {
+            Activate();
+        }
     }
 }
