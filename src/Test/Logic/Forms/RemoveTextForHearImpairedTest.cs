@@ -1636,7 +1636,7 @@ namespace Test.Logic.Forms
             target.Settings.CustomStart = "♪";
             target.Settings.CustomEnd = "♪";
             string actual = target.RemoveTextFromHearImpaired("♪ Give me hope and" + Environment.NewLine + "give me patience ♪");
-            Assert.Equals(string.Empty, actual);
+            Assert.AreEqual(string.Empty, actual);
         }
 
         #region Additional test attributes
