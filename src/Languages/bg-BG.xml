@@ -284,6 +284,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <XNumberOfDifferenceAndPercentLettersChanged>Брой разлики: {0} ({1:0.##}% букви са променени)</XNumberOfDifferenceAndPercentLettersChanged>
     <ShowOnlyDifferences>Показване само разликите</ShowOnlyDifferences>
     <IgnoreLineBreaks>Игнориране пренасянето на редове</IgnoreLineBreaks>
+    <IgnoreFormatting>Игнориране на форматирането</IgnoreFormatting>
     <OnlyLookForDifferencesInText>Показване само разликите в текста</OnlyLookForDifferencesInText>
     <CannotCompareWithImageBasedSubtitles>Не може да сравни със субтитрите в изображението</CannotCompareWithImageBasedSubtitles>
   </CompareSubtitles>
@@ -463,6 +464,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Left>Ляво</Left>
     <Right>Дясно</Right>
     <Center>Центрирано</Center>
+    <CenterLeftJustify>Центрирано, отляво подравнено</CenterLeftJustify>
     <BottomMargin>Долно поле</BottomMargin>
     <LeftRightMargin>Ляво/Дясно поле</LeftRightMargin>
     <SaveBluRraySupAs>Запиши като Blu-ray sup файлово име</SaveBluRraySupAs>
@@ -1102,6 +1104,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <Paste>Вмъкване</Paste>
         <Delete>Изтриване на ред (-ове)</Delete>
         <SplitLineAtCursorPosition>Разделяне на реда в позицията на курсора</SplitLineAtCursorPosition>
+        <SplitLineAtCursorAndWaveformPosition>Разделяне на реда по курсора/видео позиция</SplitLineAtCursorAndWaveformPosition>
         <AutoDurationCurrentLine>Авт. продължителност</AutoDurationCurrentLine>
         <SelectAll>Избери всичко</SelectAll>
         <InsertFirstLine>Вмъкване на ред</InsertFirstLine>
@@ -1116,6 +1119,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <ColumnInsertTextFromSubtitle>Вмъкване на текст след този ред от файл със субтитри...</ColumnInsertTextFromSubtitle>
         <ColumnImportTextAndShiftCellsDown>Вмъкване на текст и местене на клетките надолу</ColumnImportTextAndShiftCellsDown>
         <ColumnPasteFromClipboard>Поставяне от клип борда...</ColumnPasteFromClipboard>
+        <ColumnTextUp>Текста нагоре</ColumnTextUp>
+        <ColumnTextDown>Текста надолу</ColumnTextDown>
         <ColumnCopyOriginalTextToCurrent>Копиране на текста от оригинал към работните</ColumnCopyOriginalTextToCurrent>
         <Split>Разделяне на реда</Split>
         <MergeSelectedLines>Обединяане на избраните редове</MergeSelectedLines>
@@ -1201,10 +1206,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
       <NewTextInsertAtX>Новия текст е вмъкнат в {0}</NewTextInsertAtX>
       <Center>Център</Center>
       <PlayRate>Скорост на възпроизвеждане</PlayRate>
-      <Slow>Бавно</Slow>
-      <Normal>Нормално</Normal>
-      <Fast>Бързо</Fast>
-      <VeryFast>Много бързо</VeryFast>
     </VideoControls>
     <SaveChangesToUntitled>Да се запишат ли промените в неозаглавен?</SaveChangesToUntitled>
     <SaveChangesToX>Да се запишат ли промените в {0}?</SaveChangesToX>
@@ -1450,6 +1451,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <BeforeColumnDelete>Преди изтриването на колона</BeforeColumnDelete>
     <BeforeColumnImportText>Преди колоната импорт на текст</BeforeColumnImportText>
     <BeforeColumnShiftCellsDown>Преди местенето на клетка надолу</BeforeColumnShiftCellsDown>
+    <BeforeX>Преди: {0}</BeforeX>
     <ErrorLoadingPluginXErrorY>Грешка в зареждането на приставка (Plugins): {0}: {1}</ErrorLoadingPluginXErrorY>
     <BeforeRunningPluginXVersionY>Преди стартирането на приставка (Plugins): {0}: {1}</BeforeRunningPluginXVersionY>
     <UnableToReadPluginResult>Не може да се прочетат субтитрите, в резултат от приставката!</UnableToReadPluginResult>
@@ -1465,6 +1467,10 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ParsingTransportStream>Анализ на транспортния поток - изчакайте...</ParsingTransportStream>
     <XPercentCompleted>{0}% завършени</XPercentCompleted>
     <NextX>Следните: {0}</NextX>
+    <PromptInsertSubtitleOverlap>Поставянето на субтитри в позицията на формата на звуковия сигнал ще доведе до припокриване!
+
+Продължавате ли все пак?</PromptInsertSubtitleOverlap>
+    <SetPlayRateX>Задайте скорост на възпроизвеждане до {0}%</SetPlayRateX>
     <ErrorLoadIdx>Невъзможно да се прочете/редактира .idx файла. IDX файловете са част от idx/sub свързани файлове (наречени VodSub), а Subtitle Edit може да отвори .sub файла.</ErrorLoadIdx>
     <ErrorLoadRar>Изглежда това са архивни .rar файлове. Subtitle Edit не може да отваря архивни файлове.</ErrorLoadRar>
     <ErrorLoadZip>Изглежда това са архивни .zip файлове. Subtitle Edit не може да отваря архивни файлове.</ErrorLoadZip>
@@ -1561,6 +1567,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Export>Експорт...</Export>
     <ImportRulesTitle>Импорт (отв.) на правила за замяна от...</ImportRulesTitle>
     <ExportRulesTitle>Експорт (съхр.) на правила за замяна към...</ExportRulesTitle>
+    <ChooseGroupsToImport>Изберете групи за импортиране</ChooseGroupsToImport>
+    <ChooseGroupsToExport>Изберете групи за експортиране</ChooseGroupsToExport>
     <Rules>Правила за експорт</Rules>
     <MoveToTop>Преместване на горе</MoveToTop>
     <MoveToBottom>Преместване на долу</MoveToBottom>
@@ -1570,6 +1578,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <GroupName>Име на групата</GroupName>
     <RenameGroup>Преименуване на група...</RenameGroup>
     <NewGroup>Създаване група...</NewGroup>
+    <NothingToImport>Няма нищо за импортиране</NothingToImport>
   </MultipleReplace>
   <NetworkChat>
     <Title>Чат</Title>
@@ -1719,6 +1728,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <NetflixQualityCheck>Качествен контрол на Netflix</NetflixQualityCheck>
     <SettingsName>Настройки</SettingsName>
     <Help>Помощ</Help>
+    <UnbreakNoSpace>Прекъсване без интервал (CJK)</UnbreakNoSpace>
     <ShowFrameRate>Показване честотата на кадрите в лентата с инструменти</ShowFrameRate>
     <DefaultFrameRate>Честота на кадрите (fps) по подр.</DefaultFrameRate>
     <DefaultFileEncoding>Кодиране на файла по подразбиране</DefaultFileEncoding>
@@ -1928,6 +1938,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <TogglePlayPause>Превключване Пусни/Пауза</TogglePlayPause>
     <Pause>Пауза</Pause>
     <Fullscreen>Цял екран</Fullscreen>
+    <PlayRateSlower>По-бавно възпроизвеждане</PlayRateSlower>
+    <PlayRateFaster>По-бързо възпроизвеждане</PlayRateFaster>
     <CustomSearch1>Превод, лично търсене 1</CustomSearch1>
     <CustomSearch2>Превод, лично търсене 2</CustomSearch2>
     <CustomSearch3>Превод, лично търсене 3</CustomSearch3>
@@ -1957,6 +1969,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ListViewColumnDelete>Колона, изтриване на текст</ListViewColumnDelete>
     <ListViewColumnInsert>Колона, вмъкване на текст</ListViewColumnInsert>
     <ListViewColumnPaste>Колона, поставяне</ListViewColumnPaste>
+    <ListViewColumnTextUp>Колона, текста нагоре</ListViewColumnTextUp>
+    <ListViewColumnTextDown>Колона, текста надолу</ListViewColumnTextDown>
     <ListViewFocusWaveform>Фокус на wave формата/спектограмата</ListViewFocusWaveform>
     <ListViewGoToNextError>Отиване при следващата грешка</ListViewGoToNextError>
     <ShowBeamer>Пускане на субтитрите при пълноекранен режим на проектора</ShowBeamer>
@@ -2030,6 +2044,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <EditWholeText>Редактирай текста</EditWholeText>
     <EditWordOnly>Редактирай думата</EditWordOnly>
     <AddXToNames>Добави "{0}" към списъка с думи</AddXToNames>
+    <AddXToUserDictionary>Добави '{0}' към потреб. речник</AddXToUserDictionary>
     <AutoFixNames>Поправяне на думи с различна големина на буквите</AutoFixNames>
     <CheckOneLetterWords>Питане за непозната буква</CheckOneLetterWords>
     <TreatINQuoteAsING>Промяна опред.член на думи, завършващи на "in" като "ing"(СамоЗАанглийски)</TreatINQuoteAsING>
