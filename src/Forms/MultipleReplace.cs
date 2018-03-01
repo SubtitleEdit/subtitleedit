@@ -403,11 +403,29 @@ namespace Nikse.SubtitleEdit.Forms
             GeneratePreview();
         }
 
-        private void ListViewReplaceListKeyDown(object sender, KeyEventArgs e)
+        private void ListViewRulesKeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Delete)
+            {
                 DeleteToolStripMenuItemClick(null, null);
-            if (listViewRules.SelectedItems.Count == 1)
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyCode == Keys.A && e.Modifiers == Keys.Control)
+            {
+                listViewRules.SelectAll();
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyCode == Keys.D && e.Modifiers == Keys.Control)
+            {
+                listViewRules.SelectFirstSelectedItemOnly();
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyCode == Keys.I && e.Modifiers == (Keys.Control | Keys.Shift)) //InverseSelection
+            {
+                listViewRules.InverseSelection();
+                e.SuppressKeyPress = true;
+            }
+            else if (listViewRules.SelectedItems.Count == 1)
             {
                 if (e.KeyCode == Keys.Up && e.Control && !e.Alt && !e.Shift)
                     moveUpToolStripMenuItem_Click(sender, e);
@@ -1126,5 +1144,24 @@ namespace Nikse.SubtitleEdit.Forms
             exportToolStripMenuItem_Click(sender, e);
         }
 
+        private void listViewFixes_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.A && e.Modifiers == Keys.Control)
+            {
+                listViewFixes.SelectAll();
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyCode == Keys.D && e.Modifiers == Keys.Control)
+            {
+                listViewFixes.SelectFirstSelectedItemOnly();
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyCode == Keys.I && e.Modifiers == (Keys.Control | Keys.Shift)) //InverseSelection
+            {
+                listViewFixes.InverseSelection();
+                e.SuppressKeyPress = true;
+            }
+
+        }
     }
 }

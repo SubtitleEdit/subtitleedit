@@ -13396,24 +13396,15 @@ namespace Nikse.SubtitleEdit.Forms
                 _cutText = tmp.ToText(new SubRip());
                 ToolStripMenuItemDeleteClick(null, null);
             }
-            else if (e.KeyCode == Keys.A && e.Modifiers == Keys.Control) //SelectAll
+            else if (e.KeyCode == Keys.A && e.Modifiers == Keys.Control)
             {
-                foreach (ListViewItem item in SubtitleListview1.Items)
-                    item.Selected = true;
+                SubtitleListview1.SelectAll();
                 e.SuppressKeyPress = true;
             }
-            else if (e.KeyCode == Keys.D && e.Modifiers == Keys.Control) //SelectFirstSelectedItemOnly
+            else if (e.KeyCode == Keys.D && e.Modifiers == Keys.Control)
             {
-                int itemsCount = SubtitleListview1.SelectedItems.Count - 1;
-                if (itemsCount > 0)
-                {
-                    do
-                    {
-                        SubtitleListview1.SelectedItems[itemsCount--].Selected = false;
-                    }
-                    while (itemsCount > 0);
-                    e.SuppressKeyPress = true;
-                }
+                SubtitleListview1.SelectFirstSelectedItemOnly();
+                e.SuppressKeyPress = true;
             }
             else if (e.KeyCode == Keys.Delete && SubtitleListview1.SelectedItems.Count > 0) //Delete
             {
@@ -16719,7 +16710,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (parent.DropDownItems.Count - relativeOffset.Value >= 0 &&
                         relativeOffset.Value < parent.DropDownItems.Count &&
-                        parent.DropDownItems.Count > 0 && 
+                        parent.DropDownItems.Count > 0 &&
                         parent.DropDownItems[parent.DropDownItems.Count - relativeOffset.Value].GetType() == typeof(ToolStripSeparator))
                         return; // don't app separator after separator
 

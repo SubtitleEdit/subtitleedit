@@ -1634,5 +1634,24 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.CommonErrors.SetDefaultFixes();
             AddFixActions(CultureInfo.GetCultureInfo(_autoDetectGoogleLanguage).ThreeLetterISOLanguageName);
         }
+
+        private void subtitleListView1_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.A && e.Modifiers == Keys.Control)
+            {
+                subtitleListView1.SelectAll();
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyCode == Keys.D && e.Modifiers == Keys.Control)
+            {
+                subtitleListView1.SelectFirstSelectedItemOnly();
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyCode == Keys.I && e.Modifiers == (Keys.Control | Keys.Shift)) //InverseSelection
+            {
+                subtitleListView1.InverseSelection();
+                e.SuppressKeyPress = true;
+            }
+        }
     }
 }

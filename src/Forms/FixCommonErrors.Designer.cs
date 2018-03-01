@@ -31,6 +31,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            Nikse.SubtitleEdit.Core.TimeCode timeCode1 = new Nikse.SubtitleEdit.Core.TimeCode();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonNextFinish = new System.Windows.Forms.Button();
             this.labelStatus = new System.Windows.Forms.Label();
@@ -85,6 +86,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBox2.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPageFixes.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainerStep2)).BeginInit();
             this.splitContainerStep2.Panel1.SuspendLayout();
             this.splitContainerStep2.Panel2.SuspendLayout();
             this.splitContainerStep2.SuspendLayout();
@@ -227,8 +229,8 @@ namespace Nikse.SubtitleEdit.Forms
             this.columnHeader1,
             this.columnHeader2,
             this.columnHeader3});
-            this.listView1.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.listView1.FullRowSelect = true;
+            this.listView1.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.listView1.Location = new System.Drawing.Point(6, 48);
             this.listView1.Name = "listView1";
             this.listView1.Size = new System.Drawing.Size(810, 461);
@@ -410,6 +412,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // subtitleListView1
             // 
+            this.subtitleListView1.AllowColumnReorder = true;
             this.subtitleListView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -418,6 +421,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.subtitleListView1.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.subtitleListView1.FullRowSelect = true;
             this.subtitleListView1.GridLines = true;
+            this.subtitleListView1.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.subtitleListView1.HideSelection = false;
             this.subtitleListView1.Location = new System.Drawing.Point(3, 5);
             this.subtitleListView1.Name = "subtitleListView1";
@@ -431,6 +435,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.subtitleListView1.UseSyntaxColoring = true;
             this.subtitleListView1.View = System.Windows.Forms.View.Details;
             this.subtitleListView1.SelectedIndexChanged += new System.EventHandler(this.SubtitleListView1SelectedIndexChanged);
+            this.subtitleListView1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.subtitleListView1_KeyDown);
             // 
             // contextMenuStripListview
             // 
@@ -551,11 +556,21 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.timeUpDownStartTime.AutoSize = true;
             this.timeUpDownStartTime.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.timeUpDownStartTime.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.timeUpDownStartTime.Location = new System.Drawing.Point(8, 27);
             this.timeUpDownStartTime.Margin = new System.Windows.Forms.Padding(4);
             this.timeUpDownStartTime.Name = "timeUpDownStartTime";
-            this.timeUpDownStartTime.Size = new System.Drawing.Size(96, 25);
+            this.timeUpDownStartTime.Size = new System.Drawing.Size(96, 27);
             this.timeUpDownStartTime.TabIndex = 112;
+            timeCode1.Hours = 0;
+            timeCode1.Milliseconds = 0;
+            timeCode1.Minutes = 0;
+            timeCode1.Seconds = 0;
+            timeCode1.TimeSpan = System.TimeSpan.Parse("00:00:00");
+            timeCode1.TotalMilliseconds = 0D;
+            timeCode1.TotalSeconds = 0D;
+            this.timeUpDownStartTime.TimeCode = timeCode1;
+            this.timeUpDownStartTime.UseVideoOffset = false;
             // 
             // numericUpDownDuration
             // 
@@ -700,6 +715,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.tabPageFixes.ResumeLayout(false);
             this.splitContainerStep2.Panel1.ResumeLayout(false);
             this.splitContainerStep2.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainerStep2)).EndInit();
             this.splitContainerStep2.ResumeLayout(false);
             this.contextMenuStripListview.ResumeLayout(false);
             this.groupBoxEditPanel.ResumeLayout(false);

@@ -8417,10 +8417,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             if (e.Modifiers == Keys.Control && e.KeyCode == Keys.A)
             {
                 subtitleListView1.SelectedIndexChanged -= SubtitleListView1SelectedIndexChanged;
-                subtitleListView1.BeginUpdate();
-                for (int i = 0; i < subtitleListView1.Items.Count; i++)
-                    subtitleListView1.Items[i].Selected = true;
-                subtitleListView1.EndUpdate();
+                subtitleListView1.SelectAll();
                 subtitleListView1.SelectedIndexChanged += SubtitleListView1SelectedIndexChanged;
                 e.Handled = true;
                 e.SuppressKeyPress = true;
@@ -8428,10 +8425,15 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             if (e.Modifiers == Keys.Control && e.KeyCode == Keys.D)
             {
                 subtitleListView1.SelectedIndexChanged -= SubtitleListView1SelectedIndexChanged;
-                subtitleListView1.BeginUpdate();
-                for (int i = 0; i < subtitleListView1.Items.Count; i++)
-                    subtitleListView1.Items[i].Selected = false;
-                subtitleListView1.EndUpdate();
+                subtitleListView1.SelectFirstSelectedItemOnly();
+                subtitleListView1.SelectedIndexChanged += SubtitleListView1SelectedIndexChanged;
+                e.Handled = true;
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyCode == Keys.I && e.Modifiers == (Keys.Control | Keys.Shift)) //InverseSelection
+            {
+                subtitleListView1.SelectedIndexChanged -= SubtitleListView1SelectedIndexChanged;
+                subtitleListView1.InverseSelection();
                 subtitleListView1.SelectedIndexChanged += SubtitleListView1SelectedIndexChanged;
                 e.Handled = true;
                 e.SuppressKeyPress = true;

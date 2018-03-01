@@ -161,6 +161,7 @@
             this.listViewFixes.TabIndex = 10;
             this.listViewFixes.UseCompatibleStateImageBehavior = false;
             this.listViewFixes.View = System.Windows.Forms.View.Details;
+            this.listViewFixes.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listViewFixes_KeyDown);
             // 
             // columnHeader4
             // 
@@ -330,7 +331,7 @@
             this.listViewRules.UseCompatibleStateImageBehavior = false;
             this.listViewRules.View = System.Windows.Forms.View.Details;
             this.listViewRules.SelectedIndexChanged += new System.EventHandler(this.ListViewReplaceListSelectedIndexChanged);
-            this.listViewRules.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ListViewReplaceListKeyDown);
+            this.listViewRules.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ListViewRulesKeyDown);
             // 
             // columnHeader1
             // 
