@@ -409,7 +409,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     index = syncStartPos + syncTag.Length;
 
                     syncStartPosEnc = allInputLower.IndexOf(syncTagEnc, syncEndPos, StringComparison.Ordinal);
-                    if ((syncStartPosEnc >= 0 && syncStartPosEnc < syncStartPos) || syncStartPos == -1)
+                    if (syncStartPosEnc >= 0 && syncStartPosEnc < syncStartPos || syncStartPos == -1)
                     {
                         syncStartPos = syncStartPosEnc;
                         index = syncStartPosEnc + syncTagEnc.Length;
