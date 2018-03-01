@@ -1626,6 +1626,19 @@ namespace Test.Logic.Forms
             Assert.AreEqual("- Step out of here... Not world." + Environment.NewLine + "- It's a British record.", actual);
         }
 
+        [TestMethod]
+        public void RemoveNameAndCustom()
+        {
+            var target = GetRemoveTextForHiLib();
+            target.Settings.RemoveTextBeforeColon = true;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
+            target.Settings.RemoveTextBetweenCustomTags = true;
+            target.Settings.CustomStart = "♪";
+            target.Settings.CustomEnd = "♪";
+            string actual = target.RemoveTextFromHearImpaired("♪ Give me hope and" + Environment.NewLine + "give me patience ♪");
+            Assert.Equals(string.Empty, actual);
+        }
+
         #region Additional test attributes
 
         //
