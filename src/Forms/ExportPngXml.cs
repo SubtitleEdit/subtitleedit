@@ -2606,7 +2606,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     }
                 }
 
-                if (parameter.JustifyLeft) 
+                if (parameter.JustifyLeft)
                 {
                     // left justify centered lines
                     var minX = lefts.Min(p => p);
@@ -4588,35 +4588,19 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 ListViewToggleTag("i");
                 subtitleListView1_SelectedIndexChanged(null, null);
             }
-            else if (e.KeyCode == Keys.A && e.Modifiers == Keys.Control) //SelectAll
+            else if (e.KeyCode == Keys.A && e.Modifiers == Keys.Control)
             {
-                subtitleListView1.BeginUpdate();
-                foreach (ListViewItem item in subtitleListView1.Items)
-                    item.Selected = true;
-                subtitleListView1.EndUpdate();
+                subtitleListView1.SelectAll();
                 e.SuppressKeyPress = true;
             }
-            else if (e.KeyCode == Keys.D && e.Modifiers == Keys.Control) //SelectFirstSelectedItemOnly
+            else if (e.KeyCode == Keys.D && e.Modifiers == Keys.Control)
             {
-                if (subtitleListView1.SelectedItems.Count > 0)
-                {
-                    bool skipFirst = true;
-                    foreach (ListViewItem item in subtitleListView1.SelectedItems)
-                    {
-                        if (skipFirst)
-                            skipFirst = false;
-                        else
-                            item.Selected = false;
-                    }
-                    e.SuppressKeyPress = true;
-                }
+                subtitleListView1.SelectFirstSelectedItemOnly();
+                e.SuppressKeyPress = true;
             }
-            else if (e.KeyCode == Keys.I && e.Modifiers == (Keys.Control | Keys.Shift)) //InverseSelection
+            else if (e.KeyCode == Keys.I && e.Modifiers == (Keys.Control | Keys.Shift))
             {
-                subtitleListView1.BeginUpdate();
-                foreach (ListViewItem item in subtitleListView1.Items)
-                    item.Selected = !item.Selected;
-                subtitleListView1.EndUpdate();
+                subtitleListView1.InverseSelection();
                 e.SuppressKeyPress = true;
             }
         }

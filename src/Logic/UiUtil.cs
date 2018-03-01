@@ -736,5 +736,47 @@ namespace Nikse.SubtitleEdit.Logic
         public static string GetListViewTextFromString(string s) => s.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString);
 
         public static string GetStringFromListViewText(string lviText) => lviText.Replace(Configuration.Settings.General.ListViewLineSeparatorString, Environment.NewLine);
+
+        public static void SelectAll(this ListView lv)
+        {
+            lv.BeginUpdate();
+            foreach (ListViewItem item in lv.Items)
+                item.Selected = true;
+            lv.EndUpdate();
+        }
+
+        public static void SelectFirstSelectedItemOnly(this ListView lv)
+        {
+            int itemsCount = lv.SelectedItems.Count - 1;
+            if (itemsCount > 0)
+            {
+                lv.BeginUpdate();
+                do
+                {
+                    lv.SelectedItems[itemsCount--].Selected = false;
+                }
+                while (itemsCount > 0);
+                if (lv.SelectedItems.Count > 0)
+                {
+                    lv.EnsureVisible(lv.SelectedItems[0].Index);
+                    lv.FocusedItem = lv.SelectedItems[0];
+                }
+                else if (lv.Items.Count > 0)
+                {
+                    lv.EnsureVisible(0);
+                    lv.FocusedItem = lv.Items[0];
+                }
+                lv.EndUpdate();
+            }
+        }
+
+        public static void InverseSelection(this ListView lv)
+        {
+            lv.BeginUpdate();
+            foreach (ListViewItem item in lv.Items)
+                item.Selected = !item.Selected;
+            lv.EndUpdate();
+        }
+
     }
 }

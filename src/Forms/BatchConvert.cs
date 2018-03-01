@@ -1433,7 +1433,24 @@ namespace Nikse.SubtitleEdit.Forms
         private void ListViewInputFilesKeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Delete)
+            {
                 RemoveSelectedFiles();
+            }
+            else if (e.KeyCode == Keys.A && e.Modifiers == Keys.Control)
+            {
+                listViewInputFiles.SelectAll();
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyCode == Keys.D && e.Modifiers == Keys.Control)
+            {
+                listViewInputFiles.SelectFirstSelectedItemOnly();
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyCode == Keys.I && e.Modifiers == (Keys.Control | Keys.Shift)) //InverseSelection
+            {
+                listViewInputFiles.InverseSelection();
+                e.SuppressKeyPress = true;
+            }
         }
 
         private void buttonFixCommonErrorSettings_Click(object sender, EventArgs e)
