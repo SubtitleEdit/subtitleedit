@@ -539,7 +539,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
             {
                 var stSub = new StrippableText(s, pre, post);
                 string strippedText = stSub.StrippedText;
-                if ((lineNumber == parts.Count - 1 && st.Post.Contains('?')) || stSub.Post.Contains('?'))
+                if (lineNumber == parts.Count - 1 && st.Post.Contains('?') || stSub.Post.Contains('?'))
                     strippedText += "?";
                 if (!StartsAndEndsWithHearImpairedTags(strippedText))
                 {
@@ -632,8 +632,8 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 _interjectionRemoveContext.Interjections = _interjections;
                 text = _removeInterjection.Invoke(_interjectionRemoveContext);
             }
-
-            st = new StrippableText(text, " >-\"'‘`´♪¿¡.…—", " -\"'`´♪.!?:…—");
+            
+            st = new StrippableText(text, pre, post);
             text = st.StrippedText;
             if (StartsAndEndsWithHearImpairedTags(text))
             {
