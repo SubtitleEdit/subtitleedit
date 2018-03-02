@@ -282,6 +282,7 @@ Command line: {1} {2}
     <XNumberOfDifferenceAndPercentLettersChanged>忽略断行</XNumberOfDifferenceAndPercentLettersChanged>
     <ShowOnlyDifferences>仅显示差异</ShowOnlyDifferences>
     <IgnoreLineBreaks>忽略断行</IgnoreLineBreaks>
+    <IgnoreFormatting>忽略格式</IgnoreFormatting>
     <OnlyLookForDifferencesInText>仅查找差异文本</OnlyLookForDifferencesInText>
     <CannotCompareWithImageBasedSubtitles>无法比较基于图像的字幕</CannotCompareWithImageBasedSubtitles>
   </CompareSubtitles>
@@ -461,6 +462,7 @@ Command line: {1} {2}
     <Left>左</Left>
     <Right>右</Right>
     <Center>中</Center>
+    <CenterLeftJustify>居中, 左对齐</CenterLeftJustify>
     <BottomMargin>底边距</BottomMargin>
     <LeftRightMargin>左/右边距</LeftRightMargin>
     <SaveBluRraySupAs>选择 Blu-ray sup 文件的名称</SaveBluRraySupAs>
@@ -1012,6 +1014,7 @@ Command line: {1} {2}
         <ChooseAudioTrack>选择音轨...</ChooseAudioTrack>
         <CloseVideo>关闭视频文件</CloseVideo>
         <SetVideoOffset>设置视频偏移...</SetVideoOffset>
+        <SmptTimeMode>SMPTE 时间 (弃帧)</SmptTimeMode>
         <ImportSceneChanges>导入场景变更...</ImportSceneChanges>
         <RemoveSceneChanges>移除场景变更</RemoveSceneChanges>
         <WaveformBatchGenerate>批量生成波形...</WaveformBatchGenerate>
@@ -1097,6 +1100,7 @@ Command line: {1} {2}
         <Paste>粘贴</Paste>
         <Delete>删除</Delete>
         <SplitLineAtCursorPosition>在光标处分割行</SplitLineAtCursorPosition>
+        <SplitLineAtCursorAndWaveformPosition>在光标/视频位置处分割行</SplitLineAtCursorAndWaveformPosition>
         <AutoDurationCurrentLine>自动设置时长 (当前行)</AutoDurationCurrentLine>
         <SelectAll>全部选择</SelectAll>
         <InsertFirstLine>插入行</InsertFirstLine>
@@ -1111,6 +1115,8 @@ Command line: {1} {2}
         <ColumnInsertTextFromSubtitle>从字幕插入文本...</ColumnInsertTextFromSubtitle>
         <ColumnImportTextAndShiftCellsDown>导入文本并将单元格下移</ColumnImportTextAndShiftCellsDown>
         <ColumnPasteFromClipboard>粘贴...</ColumnPasteFromClipboard>
+        <ColumnTextUp>文本上移</ColumnTextUp>
+        <ColumnTextDown>文本下移</ColumnTextDown>
         <ColumnCopyOriginalTextToCurrent>从原始文本列复制到当前列</ColumnCopyOriginalTextToCurrent>
         <Split>分割</Split>
         <MergeSelectedLines>合并所选行</MergeSelectedLines>
@@ -1196,10 +1202,6 @@ Command line: {1} {2}
       <NewTextInsertAtX>已在 {0} 处插入新文本</NewTextInsertAtX>
       <Center>居中</Center>
       <PlayRate>播放速度</PlayRate>
-      <Slow>慢</Slow>
-      <Normal>正常</Normal>
-      <Fast>快</Fast>
-      <VeryFast>较快</VeryFast>
     </VideoControls>
     <SaveChangesToUntitled>保存更改到未命名文件吗？</SaveChangesToUntitled>
     <SaveChangesToX>保存更改到 "{0}" 吗？</SaveChangesToX>
@@ -1438,6 +1440,7 @@ Command line: {1} {2}
     <BeforeColumnDelete>列删除之前</BeforeColumnDelete>
     <BeforeColumnImportText>列导入文本之前</BeforeColumnImportText>
     <BeforeColumnShiftCellsDown>列下移单元格之前</BeforeColumnShiftCellsDown>
+    <BeforeX>之前: {0}</BeforeX>
     <ErrorLoadingPluginXErrorY>加载插件时出错: {0}: {1}</ErrorLoadingPluginXErrorY>
     <BeforeRunningPluginXVersionY>运行插件前: {0}: {1}</BeforeRunningPluginXVersionY>
     <UnableToReadPluginResult>无法从插件读取字幕结果！</UnableToReadPluginResult>
@@ -1453,6 +1456,10 @@ Command line: {1} {2}
     <ParsingTransportStream>正在解析传送流，请稍候...</ParsingTransportStream>
     <XPercentCompleted>{0}% 已完成</XPercentCompleted>
     <NextX>下一个: {0}</NextX>
+    <PromptInsertSubtitleOverlap>在波形位置处插入字幕将导致重叠！
+
+是否仍要继续？</PromptInsertSubtitleOverlap>
+    <SetPlayRateX>Set play rate (speed) to {0}%</SetPlayRateX>
     <ErrorLoadIdx>无法读取或编辑 .idx 文件。Idx 文件是 idx/sub 文件对中的一部分 (也称为VobSub), Subtitle Edit 无法打开 .sub 文件。</ErrorLoadIdx>
     <ErrorLoadRar>此文件是一个 .rar 压缩文件。Subtitle Edit 无法打开压缩文件。</ErrorLoadRar>
     <ErrorLoadZip>此文件是一个 .zip 压缩文件，Subtitle Edit 无法打开压缩文件。</ErrorLoadZip>
@@ -1550,6 +1557,8 @@ Command line: {1} {2}
     <Export>导出...</Export>
     <ImportRulesTitle>导入替换规则自...</ImportRulesTitle>
     <ExportRulesTitle>导出替换规则到...</ExportRulesTitle>
+    <ChooseGroupsToImport>选择要导入的组</ChooseGroupsToImport>
+    <ChooseGroupsToExport>选择要到出的组</ChooseGroupsToExport>
     <Rules>导出规则</Rules>
     <MoveToTop>移到顶部</MoveToTop>
     <MoveToBottom>移到底部</MoveToBottom>
@@ -1559,6 +1568,7 @@ Command line: {1} {2}
     <GroupName>组名称</GroupName>
     <RenameGroup>重命名组...</RenameGroup>
     <NewGroup>新建组...</NewGroup>
+    <NothingToImport>无导入内容</NothingToImport>
   </MultipleReplace>
   <NetworkChat>
     <Title>聊天</Title>
@@ -1706,6 +1716,7 @@ Command line: {1} {2}
     <NetflixQualityCheck>Netfix品质检查</NetflixQualityCheck>
     <SettingsName>设置</SettingsName>
     <Help>帮助</Help>
+    <UnbreakNoSpace>取消断行且不带空格（多用于中日韩等语言）</UnbreakNoSpace>
     <ShowFrameRate>在工具栏显示帧率</ShowFrameRate>
     <DefaultFrameRate>默认帧率</DefaultFrameRate>
     <DefaultFileEncoding>默认文件编码</DefaultFileEncoding>
@@ -1914,6 +1925,8 @@ Command line: {1} {2}
     <TogglePlayPause>切换 播放/暂停</TogglePlayPause>
     <Pause>暂停</Pause>
     <Fullscreen>全屏幕</Fullscreen>
+    <PlayRateSlower>减慢播放速度</PlayRateSlower>
+    <PlayRateFaster>加快播放速度</PlayRateFaster>
     <CustomSearch1>翻译、自定义搜索 1</CustomSearch1>
     <CustomSearch2>翻译、自定义搜索 2</CustomSearch2>
     <CustomSearch3>翻译、自定义搜索 3</CustomSearch3>
@@ -1943,11 +1956,15 @@ Command line: {1} {2}
     <ListViewColumnDelete>列，删除文本</ListViewColumnDelete>
     <ListViewColumnInsert>列，插入文本</ListViewColumnInsert>
     <ListViewColumnPaste>列，粘贴</ListViewColumnPaste>
-    <ListViewFocusWaveform>操作焦点位于波兴/频谱区</ListViewFocusWaveform>
-    <ListViewGoToNextError>转到下一个错误</ListViewGoToNextError>
+    <ListViewColumnTextUp>列，文本上移</ListViewColumnTextUp>
+    <ListViewColumnTextDown>列，文本下移</ListViewColumnTextDown>
+    <ListViewFocusWaveform>操作焦点位于波形/频谱区</ListViewFocusWaveform>
+    <ListViewGoToNextError>转到下一处错误</ListViewGoToNextError>
     <ShowBeamer>启动字幕全屏幕投影仪</ShowBeamer>
     <MainTextBoxMoveLastWordDown>将上一行的最后一个单词移到下一行</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>将下一行的第一个单词移到上一行</MainTextBoxMoveFirstWordFromNextUp>
+    <MainTextBoxMoveFirstWordUpCurrent>将次行行首的词上移至首行行末（单条字幕内）</MainTextBoxMoveFirstWordUpCurrent>
+    <MainTextBoxMoveLastWordDownCurrent>将首行行末的词下移至次行行首（单条字幕内）</MainTextBoxMoveLastWordDownCurrent>
     <MainTextBoxSelectionToLower>选中的内容转小写</MainTextBoxSelectionToLower>
     <MainTextBoxSelectionToUpper>选中的内容转大写</MainTextBoxSelectionToUpper>
     <MainTextBoxToggleAutoDuration>切换自动间隔</MainTextBoxToggleAutoDuration>
@@ -2014,6 +2031,7 @@ Command line: {1} {2}
     <EditWholeText>编辑整个文本</EditWholeText>
     <EditWordOnly>仅编辑单词</EditWordOnly>
     <AddXToNames>添加 '{0}' 到 名称/其它 列表</AddXToNames>
+    <AddXToUserDictionary>将 '{0}' 添加到用户词典中</AddXToUserDictionary>
     <AutoFixNames>自动修复仅大小写不同处的名称</AutoFixNames>
     <CheckOneLetterWords>未能识别该字符</CheckOneLetterWords>
     <TreatINQuoteAsING>将词尾为‘in’‘as’‘ing’的词作视作同一个词 (仅对英文有效)</TreatINQuoteAsING>
