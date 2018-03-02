@@ -4,7 +4,6 @@ using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Text;
 using System.Xml;
 
@@ -1106,6 +1105,54 @@ Hi, I'm Keith Lemon.
             var webVtt = subtitle.ToText(target);
             Assert.IsTrue(webVtt.Contains("<c.yellow>AUDIENCE: Aww!</c>"));
         }
+
+        [TestMethod]
+        public void WebVttSpaceBeforeTimeCode()
+        {
+            var target = new WebVTT();
+            var subtitle = new Subtitle();
+            string raw = @"WEBVTT
+
+ 00:39:32.240 --> 00:39:37.640 align:middle
+Jag måste ge mig av.
+Hemskt ledsen.
+
+00:39:48.960 --> 00:39:51.120 align:middle
+
+VÄLKOMMEN TILL TEXAS
+
+00:40:15.520 --> 00:40:19.640 align:middle
+-Hej, Martin.
+-Hej, pappa.";
+            target.LoadSubtitle(subtitle, raw.SplitToLines(), null);
+            Assert.AreEqual(3, subtitle.Paragraphs.Count);
+        }
+
+        [TestMethod]
+        public void WebVttFontBlankLine()
+        {
+            var target = new WebVTT();
+            var subtitle = new Subtitle();
+            string raw = @"WEBVTT
+
+00:39:32.240 --> 00:39:37.640 align:middle
+Jag måste ge mig av.
+Hemskt ledsen.
+
+00:39:48.960 --> 00:39:51.120 align:middle
+
+VÄLKOMMEN TILL TEXAS
+
+00:40:15.520 --> 00:40:19.640 align:middle
+-Hej, Martin.
+-Hej, pappa.";
+            target.LoadSubtitle(subtitle, raw.SplitToLines(), null);
+            string actual = subtitle.Paragraphs[1].Text;
+            string expected = Environment.NewLine + "VÄLKOMMEN TILL TEXAS";
+            Assert.AreEqual(expected, actual);
+        }
+
+       
 
         #endregion
     }
