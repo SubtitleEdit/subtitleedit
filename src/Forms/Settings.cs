@@ -434,6 +434,12 @@ namespace Nikse.SubtitleEdit.Forms
             InitializeWaveformsAndSpectrogramsFolderEmpty(language);
 
             checkBoxUseFFmpeg.Text = language.WaveformUseFFmpeg;
+            buttonDownloadFfmpeg.Text = language.DownloadFFmpeg;
+            if (Configuration.IsRunningOnLinux() || Configuration.IsRunningOnMac())
+            {
+                buttonDownloadFfmpeg.Visible = false;
+            }
+
             labelFFmpegPath.Text = language.WaveformFFmpegPath;
 
             groupBoxSsaStyle.Text = language.SubStationAlphaStyle;
@@ -2468,5 +2474,15 @@ namespace Nikse.SubtitleEdit.Forms
             buttonUpdateShortcut_Click(null, null);
         }
 
+        private void buttonDownloadFfmpeg_Click(object sender, EventArgs e)
+        {
+            using (var form = new DownloadFfmpeg())
+            {
+                if (form.ShowDialog(this) == DialogResult.OK && !string.IsNullOrEmpty(form.FFmpegPath))
+                {
+                    textBoxFFmpegPath.Text = form.FFmpegPath;
+                }
+            }
+        }
     }
 }

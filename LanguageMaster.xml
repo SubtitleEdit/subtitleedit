@@ -1820,6 +1820,7 @@ can edit in same subtitle file (collaboration)</Information>
     <SpectrogramOneColorGradient>One color gradient</SpectrogramOneColorGradient>
     <SpectrogramClassic>Classic</SpectrogramClassic>
     <WaveformUseFFmpeg>Use FFmpeg for wave extraction</WaveformUseFFmpeg>
+    <DownloadFFmpeg>Download FFmpeg...</DownloadFFmpeg>
     <WaveformFFmpegPath>Path to FFmpeg</WaveformFFmpegPath>
     <WaveformBrowseToFFmpeg>Browse to FFmpeg</WaveformBrowseToFFmpeg>
     <WaveformBrowseToVLC>Browse to VLC portable</WaveformBrowseToVLC>
@@ -1997,6 +1998,11 @@ Setting a font for a subtitle is normally done in the video player, but can also
     <DownloadMpvFailed>Unable to download mpv - please re-try later!</DownloadMpvFailed>
     <DownloadMpvOk>The mpv lib was downloaded and is ready for use.</DownloadMpvOk>
   </SettingsMpv>
+  <SettingsFfmpeg>
+    <Title>Download ffmpeg</Title>
+    <XDownloadFailed>Unable to download {0} - please re-try later!</XDownloadFailed>
+    <XDownloadOk>{0} was downloaded and is ready for use.</XDownloadOk>
+  </SettingsFfmpeg>
   <SetVideoOffset>
     <Title>Set video offset</Title>
     <Description>Set video offset (subtitles should not follow real video time, but e.g. +10 hours)</Description>

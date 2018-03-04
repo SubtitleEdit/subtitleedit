@@ -146,6 +146,12 @@
     <Compile Include="Forms\AddToNames.Designer.cs">
       <DependentUpon>AddToNames.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\DownloadFfmpeg.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\DownloadFfmpeg.Designer.cs">
+      <DependentUpon>DownloadFfmpeg.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\ExportFcpXmlAdvanced.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -991,6 +997,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\AddToNames.resx">
       <DependentUpon>AddToNames.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\DownloadFfmpeg.resx">
+      <DependentUpon>DownloadFfmpeg.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ExportFcpXmlAdvanced.resx">
       <DependentUpon>ExportFcpXmlAdvanced.cs</DependentUpon>
