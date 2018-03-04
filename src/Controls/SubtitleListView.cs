@@ -158,9 +158,9 @@ namespace Nikse.SubtitleEdit.Controls
 
             if (!string.IsNullOrEmpty(settings.General.SubtitleFontName))
                 _subtitleFontName = settings.General.SubtitleFontName;
-            SubtitleFontBold = settings.General.SubtitleFontBold;
-            if (settings.General.SubtitleFontSize > 6 && settings.General.SubtitleFontSize < 72)
-                SubtitleFontSize = settings.General.SubtitleFontSize;
+            SubtitleFontBold = settings.General.SubtitleListViewFontBold;
+            if (settings.General.SubtitleListViewFontSize > 6 && settings.General.SubtitleListViewFontSize < 72)
+                SubtitleFontSize = settings.General.SubtitleListViewFontSize;
             ForeColor = settings.General.SubtitleFontColor;
             BackColor = settings.General.SubtitleBackgroundColor;
             _settings = settings;

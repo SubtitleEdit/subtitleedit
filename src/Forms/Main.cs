@@ -232,7 +232,6 @@ namespace Nikse.SubtitleEdit.Forms
         private Keys _mainTranslateCustomSearch3 = Keys.None;
         private Keys _mainTranslateCustomSearch4 = Keys.None;
         private Keys _mainTranslateCustomSearch5 = Keys.None;
-        private Keys _mainTranslateCustomSearch6 = Keys.None;
         private bool _videoLoadedGoToSubPosAndPause;
         private string _cutText = string.Empty;
         private Paragraph _mainCreateStartDownEndUpParagraph;
@@ -3508,7 +3507,17 @@ namespace Nikse.SubtitleEdit.Forms
             if (!string.IsNullOrEmpty(openFileDialog1.InitialDirectory))
                 saveFileDialog1.InitialDirectory = openFileDialog1.InitialDirectory;
 
-            if (!string.IsNullOrWhiteSpace(_fileName))
+            if (!string.IsNullOrWhiteSpace(_fileName) && Configuration.Settings.General.SaveAsUseFileNameFrom.Equals("file", StringComparison.OrdinalIgnoreCase))
+            {
+                saveFileDialog1.FileName = Path.GetFileNameWithoutExtension(_fileName);
+                saveFileDialog1.InitialDirectory = Path.GetDirectoryName(_fileName);
+            }
+            else if (!string.IsNullOrEmpty(_videoFileName) && Configuration.Settings.General.SaveAsUseFileNameFrom.Equals("video", StringComparison.OrdinalIgnoreCase))
+            {
+                saveFileDialog1.FileName = Path.GetFileNameWithoutExtension(_videoFileName);
+                saveFileDialog1.InitialDirectory = Path.GetDirectoryName(_videoFileName);
+            }
+            else if (!string.IsNullOrWhiteSpace(_fileName))
             {
                 saveFileDialog1.FileName = Path.GetFileNameWithoutExtension(_fileName);
                 saveFileDialog1.InitialDirectory = Path.GetDirectoryName(_fileName);
@@ -4240,8 +4249,8 @@ namespace Nikse.SubtitleEdit.Forms
                     UiUtil.InitializeSubtitleFont(textBoxListViewTextAlternate);
                     UiUtil.InitializeSubtitleFont(textBoxSource);
                     SubtitleListview1.SubtitleFontName = Configuration.Settings.General.SubtitleFontName;
-                    SubtitleListview1.SubtitleFontBold = Configuration.Settings.General.SubtitleFontBold;
-                    SubtitleListview1.SubtitleFontSize = Configuration.Settings.General.SubtitleFontSize;
+                    SubtitleListview1.SubtitleFontBold = Configuration.Settings.General.SubtitleListViewFontBold;
+                    SubtitleListview1.SubtitleFontSize = Configuration.Settings.General.SubtitleListViewFontSize;
                 }
                 catch (Exception exception)
                 {
@@ -12637,11 +12646,6 @@ namespace Nikse.SubtitleEdit.Forms
                     e.SuppressKeyPress = true;
                     RunCustomSearch(Configuration.Settings.VideoControls.CustomSearchUrl5);
                 }
-                else if (_mainTranslateCustomSearch6 == e.KeyData)
-                {
-                    e.SuppressKeyPress = true;
-                    RunCustomSearch(Configuration.Settings.VideoControls.CustomSearchUrl6);
-                }
             }
             // put new entries above tabs
         }
@@ -16514,7 +16518,6 @@ namespace Nikse.SubtitleEdit.Forms
             _mainTranslateCustomSearch3 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTranslateCustomSearch3);
             _mainTranslateCustomSearch4 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTranslateCustomSearch4);
             _mainTranslateCustomSearch5 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTranslateCustomSearch5);
-            _mainTranslateCustomSearch6 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTranslateCustomSearch6);
 
             if (audioVisualizer != null)
             {

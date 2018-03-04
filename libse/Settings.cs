@@ -589,7 +589,9 @@ namespace Nikse.SubtitleEdit.Core
 
         public string SubtitleFontName { get; set; }
         public int SubtitleFontSize { get; set; }
+        public int SubtitleListViewFontSize { get; set; }
         public bool SubtitleFontBold { get; set; }
+        public bool SubtitleListViewFontBold { get; set; }
         public Color SubtitleFontColor { get; set; }
         public Color SubtitleBackgroundColor { get; set; }
         public bool CenterSubtitleInTextBox { get; set; }
@@ -626,6 +628,7 @@ namespace Nikse.SubtitleEdit.Core
         public string Language { get; set; }
         public string ListViewLineSeparatorString { get; set; }
         public int ListViewDoubleClickAction { get; set; }
+        public string SaveAsUseFileNameFrom { get; set; }
         public string UppercaseLetters { get; set; }
         public int DefaultAdjustMilliseconds { get; set; }
         public bool AutoRepeatOn { get; set; }
@@ -673,6 +676,7 @@ namespace Nikse.SubtitleEdit.Core
         public string Company { get; set; }
         public bool MoveVideo100Or500MsPlaySmallSample { get; set; }
         public bool DisableVideoAutoLoading { get; set; }
+        public bool AllowVolumeBoost { get; set; }
         public int NewEmptyDefaultMs { get; set; }
         public bool RightToLeftMode { get; set; }
         public string LastSaveAsFormat { get; set; }
@@ -710,6 +714,7 @@ namespace Nikse.SubtitleEdit.Core
                 SubtitleFontName = "Times New Roman";
 
             SubtitleFontSize = 8;
+            SubtitleListViewFontSize = 8;
             SubtitleFontBold = false;
             SubtitleFontColor = Color.Black;
             SubtitleBackgroundColor = Color.White;
@@ -743,6 +748,7 @@ namespace Nikse.SubtitleEdit.Core
             VideoPlayerShowFullscreenButton = true;
             ListViewLineSeparatorString = "<br />";
             ListViewDoubleClickAction = 1;
+            SaveAsUseFileNameFrom = "video";
             UppercaseLetters = "ABCDEFGHIJKLMNOPQRSTUVWZYXÆØÃÅÄÖÉÈÁÂÀÇÊÍÓÔÕÚŁАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯĞİŞÜÙÁÌÑÎ";
             DefaultAdjustMilliseconds = 1000;
             AutoRepeatOn = true;
@@ -790,13 +796,11 @@ namespace Nikse.SubtitleEdit.Core
         public string CustomSearchText3 { get; set; }
         public string CustomSearchText4 { get; set; }
         public string CustomSearchText5 { get; set; }
-        public string CustomSearchText6 { get; set; }
         public string CustomSearchUrl1 { get; set; }
         public string CustomSearchUrl2 { get; set; }
         public string CustomSearchUrl3 { get; set; }
         public string CustomSearchUrl4 { get; set; }
         public string CustomSearchUrl5 { get; set; }
-        public string CustomSearchUrl6 { get; set; }
         public string LastActiveTab { get; set; }
         public bool WaveformDrawGrid { get; set; }
         public bool WaveformDrawCps { get; set; }
@@ -1093,7 +1097,6 @@ namespace Nikse.SubtitleEdit.Core
         public string MainTranslateCustomSearch3 { get; set; }
         public string MainTranslateCustomSearch4 { get; set; }
         public string MainTranslateCustomSearch5 { get; set; }
-        public string MainTranslateCustomSearch6 { get; set; }
 
         public Shortcuts()
         {
@@ -1532,7 +1535,7 @@ namespace Nikse.SubtitleEdit.Core
             if (subNode != null)
                 settings.General.SystemSubtitleFontNameOverride = subNode.InnerText;
             subNode = node.SelectSingleNode("SystemSubtitleFontSizeOverride");
-            if (subNode != null && !string.IsNullOrEmpty(subNode.InnerText))
+            if (!string.IsNullOrEmpty(subNode?.InnerText))
                 settings.General.SystemSubtitleFontSizeOverride = Convert.ToInt32(subNode.InnerText);
             subNode = node.SelectSingleNode("_subtitleFontName");
             if (subNode != null)
@@ -1540,9 +1543,15 @@ namespace Nikse.SubtitleEdit.Core
             subNode = node.SelectSingleNode("SubtitleFontSize");
             if (subNode != null)
                 settings.General.SubtitleFontSize = Convert.ToInt32(subNode.InnerText);
+            subNode = node.SelectSingleNode("SubtitleListViewFontSize");
+            if (subNode != null)
+                settings.General.SubtitleListViewFontSize = Convert.ToInt32(subNode.InnerText);
             subNode = node.SelectSingleNode("SubtitleFontBold");
             if (subNode != null)
                 settings.General.SubtitleFontBold = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("SubtitleListViewFontBold");
+            if (subNode != null)
+                settings.General.SubtitleListViewFontBold = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("SubtitleFontColor");
             if (subNode != null)
                 settings.General.SubtitleFontColor = Color.FromArgb(Convert.ToInt32(subNode.InnerText));
@@ -1653,6 +1662,9 @@ namespace Nikse.SubtitleEdit.Core
             subNode = node.SelectSingleNode("ListViewDoubleClickAction");
             if (subNode != null)
                 settings.General.ListViewDoubleClickAction = Convert.ToInt32(subNode.InnerText);
+            subNode = node.SelectSingleNode("SaveAsUseFileNameFrom");
+            if (subNode != null)
+                settings.General.SaveAsUseFileNameFrom = subNode.InnerText;
             subNode = node.SelectSingleNode("UppercaseLetters");
             if (subNode != null)
                 settings.General.UppercaseLetters = subNode.InnerText;
@@ -1791,6 +1803,9 @@ namespace Nikse.SubtitleEdit.Core
             subNode = node.SelectSingleNode("DisableVideoAutoLoading");
             if (subNode != null)
                 settings.General.DisableVideoAutoLoading = Convert.ToBoolean(subNode.InnerText.Trim());
+            subNode = node.SelectSingleNode("AllowVolumeBoost");
+            if (subNode != null)
+                settings.General.AllowVolumeBoost = Convert.ToBoolean(subNode.InnerText.Trim());
             subNode = node.SelectSingleNode("RightToLeftMode");
             if (subNode != null)
                 settings.General.RightToLeftMode = Convert.ToBoolean(subNode.InnerText.Trim());
@@ -2519,9 +2534,6 @@ namespace Nikse.SubtitleEdit.Core
             subNode = node.SelectSingleNode("CustomSearchText5");
             if (subNode != null)
                 settings.VideoControls.CustomSearchText5 = subNode.InnerText;
-            subNode = node.SelectSingleNode("CustomSearchText6");
-            if (subNode != null)
-                settings.VideoControls.CustomSearchText6 = subNode.InnerText;
             subNode = node.SelectSingleNode("CustomSearchUrl1");
             if (subNode != null)
                 settings.VideoControls.CustomSearchUrl1 = subNode.InnerText;
@@ -2540,9 +2552,6 @@ namespace Nikse.SubtitleEdit.Core
             subNode = node.SelectSingleNode("CustomSearchUrl5");
             if (subNode != null)
                 settings.VideoControls.CustomSearchUrl5 = subNode.InnerText;
-            subNode = node.SelectSingleNode("CustomSearchUrl6");
-            if (subNode != null)
-                settings.VideoControls.CustomSearchUrl6 = subNode.InnerText;
             subNode = node.SelectSingleNode("LastActiveTab");
             if (subNode != null)
                 settings.VideoControls.LastActiveTab = subNode.InnerText;
@@ -3270,9 +3279,6 @@ namespace Nikse.SubtitleEdit.Core
                 subNode = node.SelectSingleNode("MainTranslateCustomSearch5");
                 if (subNode != null)
                     settings.Shortcuts.MainTranslateCustomSearch5 = subNode.InnerText;
-                subNode = node.SelectSingleNode("MainTranslateCustomSearch6");
-                if (subNode != null)
-                    settings.Shortcuts.MainTranslateCustomSearch6 = subNode.InnerText;
             }
 
             // Remove text for Hearing Impaired
@@ -3418,7 +3424,9 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("SystemSubtitleFontSizeOverride", settings.General.SystemSubtitleFontSizeOverride.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("_subtitleFontName", settings.General.SubtitleFontName);
                 textWriter.WriteElementString("SubtitleFontSize", settings.General.SubtitleFontSize.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("SubtitleListViewFontSize", settings.General.SubtitleListViewFontSize.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("SubtitleFontBold", settings.General.SubtitleFontBold.ToString());
+                textWriter.WriteElementString("SubtitleListViewFontBold", settings.General.SubtitleListViewFontBold.ToString());
                 textWriter.WriteElementString("SubtitleFontColor", settings.General.SubtitleFontColor.ToArgb().ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("SubtitleBackgroundColor", settings.General.SubtitleBackgroundColor.ToArgb().ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("CenterSubtitleInTextBox", settings.General.CenterSubtitleInTextBox.ToString());
@@ -3455,6 +3463,7 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("Language", settings.General.Language);
                 textWriter.WriteElementString("ListViewLineSeparatorString", settings.General.ListViewLineSeparatorString);
                 textWriter.WriteElementString("ListViewDoubleClickAction", settings.General.ListViewDoubleClickAction.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("SaveAsUseFileNameFrom", settings.General.SaveAsUseFileNameFrom);
                 textWriter.WriteElementString("UppercaseLetters", settings.General.UppercaseLetters);
                 textWriter.WriteElementString("DefaultAdjustMilliseconds", settings.General.DefaultAdjustMilliseconds.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AutoRepeatOn", settings.General.AutoRepeatOn.ToString());
@@ -3501,6 +3510,7 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("Company", settings.General.Company);
                 textWriter.WriteElementString("MoveVideo100Or500MsPlaySmallSample", settings.General.MoveVideo100Or500MsPlaySmallSample.ToString());
                 textWriter.WriteElementString("DisableVideoAutoLoading", settings.General.DisableVideoAutoLoading.ToString());
+                textWriter.WriteElementString("AllowVolumeBoost", settings.General.AllowVolumeBoost.ToString());
                 textWriter.WriteElementString("RightToLeftMode", settings.General.RightToLeftMode.ToString());
                 textWriter.WriteElementString("LastSaveAsFormat", settings.General.LastSaveAsFormat);
                 textWriter.WriteElementString("CheckForUpdates", settings.General.CheckForUpdates.ToString());
@@ -3767,13 +3777,11 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("CustomSearchText3", settings.VideoControls.CustomSearchText3);
                 textWriter.WriteElementString("CustomSearchText4", settings.VideoControls.CustomSearchText4);
                 textWriter.WriteElementString("CustomSearchText5", settings.VideoControls.CustomSearchText5);
-                textWriter.WriteElementString("CustomSearchText6", settings.VideoControls.CustomSearchText6);
                 textWriter.WriteElementString("CustomSearchUrl1", settings.VideoControls.CustomSearchUrl1);
                 textWriter.WriteElementString("CustomSearchUrl2", settings.VideoControls.CustomSearchUrl2);
                 textWriter.WriteElementString("CustomSearchUrl3", settings.VideoControls.CustomSearchUrl3);
                 textWriter.WriteElementString("CustomSearchUrl4", settings.VideoControls.CustomSearchUrl4);
                 textWriter.WriteElementString("CustomSearchUrl5", settings.VideoControls.CustomSearchUrl5);
-                textWriter.WriteElementString("CustomSearchUrl6", settings.VideoControls.CustomSearchUrl6);
                 textWriter.WriteElementString("LastActiveTab", settings.VideoControls.LastActiveTab);
                 textWriter.WriteElementString("WaveformDrawGrid", settings.VideoControls.WaveformDrawGrid.ToString());
                 textWriter.WriteElementString("WaveformDrawCps", settings.VideoControls.WaveformDrawCps.ToString());
@@ -4021,7 +4029,6 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("MainTranslateCustomSearch3", settings.Shortcuts.MainTranslateCustomSearch3);
                 textWriter.WriteElementString("MainTranslateCustomSearch4", settings.Shortcuts.MainTranslateCustomSearch4);
                 textWriter.WriteElementString("MainTranslateCustomSearch5", settings.Shortcuts.MainTranslateCustomSearch5);
-                textWriter.WriteElementString("MainTranslateCustomSearch6", settings.Shortcuts.MainTranslateCustomSearch6);
                 textWriter.WriteEndElement();
 
                 textWriter.WriteStartElement("RemoveTextForHearingImpaired", string.Empty);

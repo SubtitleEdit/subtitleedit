@@ -162,7 +162,8 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             }
             set
             {
-                DoMpvCommand("set", "volume",  ((int)Math.Round(value * 1.5)).ToString(CultureInfo.InvariantCulture));
+                var v = Configuration.Settings.General.AllowVolumeBoost ? (int)Math.Round(value * 1.5) : value;
+                DoMpvCommand("set", "volume",  v.ToString(CultureInfo.InvariantCulture));
                 _volume = value;
             }
         }

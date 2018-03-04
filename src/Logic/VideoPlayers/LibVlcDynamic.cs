@@ -297,17 +297,28 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         {
             get
             {
-                if (_volume == -1)
+                if (_volume != -1)
+                    return _volume;
+
+                if (Configuration.Settings.General.AllowVolumeBoost)
                 {
                     var result = (int)Math.Round(_libvlc_audio_get_volume(_mediaPlayer) / 5.0);
                     return result > 100 ? 100 : result;
                 }
-                return _volume;
+                var v = _libvlc_audio_get_volume(_mediaPlayer);
+                return v > 100 ? 100 : v;
             }
             set
             {
                 _volume = value;
-                _libvlc_audio_set_volume(_mediaPlayer, value * 5);
+                if (Configuration.Settings.General.AllowVolumeBoost)
+                {
+                    _libvlc_audio_set_volume(_mediaPlayer, value * 5);
+                }
+                else
+                {
+                    _libvlc_audio_set_volume(_mediaPlayer, value);
+                }
             }
         }
 

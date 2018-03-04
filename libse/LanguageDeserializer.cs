@@ -4570,6 +4570,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/Network":
                     language.Settings.Network = reader.Value;
                     break;
+                case "Settings/Rules":
+                    language.Settings.Rules = reader.Value;
+                    break;
                 case "Settings/ShowToolBarButtons":
                     language.Settings.ShowToolBarButtons = reader.Value;
                     break;
@@ -4657,6 +4660,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/VideoAutoOpen":
                     language.Settings.VideoAutoOpen = reader.Value;
                     break;
+                case "Settings/AllowVolumeBoost":
+                    language.Settings.AllowVolumeBoost = reader.Value;
+                    break;
                 case "Settings/SubtitleCenter":
                     language.Settings.SubtitleCenter = reader.Value;
                     break;
@@ -4690,6 +4696,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/ShowLineBreaksAs":
                     language.Settings.ShowLineBreaksAs = reader.Value;
                     break;
+                case "Settings/SaveAsFileNameFrom":
+                    language.Settings.SaveAsFileNameFrom = reader.Value;
+                    break;
                 case "Settings/MainListViewDoubleClickAction":
                     language.Settings.MainListViewDoubleClickAction = reader.Value;
                     break;
@@ -4719,6 +4728,12 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "Settings/MainListViewEditTextAndPause":
                     language.Settings.MainListViewEditTextAndPause = reader.Value;
+                    break;
+                case "Settings/VideoFileName":
+                    language.Settings.VideoFileName = reader.Value;
+                    break;
+                case "Settings/ExistingFileName":
+                    language.Settings.ExistingFileName = reader.Value;
                     break;
                 case "Settings/AutoBackup":
                     language.Settings.AutoBackup = reader.Value;
@@ -5041,6 +5056,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/Key":
                     language.Settings.Key = reader.Value;
                     break;
+                case "Settings/ListView":
+                    language.Settings.ListView = reader.Value;
+                    break;
                 case "Settings/TextBox":
                     language.Settings.TextBox = reader.Value;
                     break;
@@ -5254,9 +5272,6 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/CustomSearch5":
                     language.Settings.CustomSearch5 = reader.Value;
                     break;
-                case "Settings/CustomSearch6":
-                    language.Settings.CustomSearch6 = reader.Value;
-                    break;
                 case "Settings/SyntaxColoring":
                     language.Settings.SyntaxColoring = reader.Value;
                     break;
@@ -5388,6 +5403,9 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "Settings/MicrosoftTranslateApiKey":
                     language.Settings.MicrosoftTranslateApiKey = reader.Value;
+                    break;
+                case "Settings/FontNote":
+                    language.Settings.FontNote = reader.Value;
                     break;
                 case "SettingsMpv/Title":
                     language.SettingsMpv.Title = reader.Value;

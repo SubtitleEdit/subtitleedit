@@ -111,7 +111,9 @@ namespace Nikse.SubtitleEdit.Forms
 
             checkBoxAutoDetectAnsiEncoding.Checked = gs.AutoGuessAnsiEncoding;
             comboBoxSubtitleFontSize.Text = gs.SubtitleFontSize.ToString(CultureInfo.InvariantCulture);
+            comboBoxSubtitleListViewFontSize.Text = gs.SubtitleListViewFontSize.ToString(CultureInfo.InvariantCulture);
             checkBoxSubtitleFontBold.Checked = gs.SubtitleFontBold;
+            checkBoxSubtitleListViewFontBold.Checked = gs.SubtitleListViewFontBold;
             checkBoxSubtitleCenter.Checked = gs.CenterSubtitleInTextBox;
             panelSubtitleFontColor.BackColor = gs.SubtitleFontColor;
             panelSubtitleBackgroundColor.BackColor = gs.SubtitleBackgroundColor;
@@ -176,19 +178,18 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxVideoPlayerPreviewFontBold.Checked = gs.VideoPlayerPreviewFontBold;
 
             checkBoxVideoAutoOpen.Checked = !gs.DisableVideoAutoLoading;
+            checkBoxAllowVolumeBoost.Checked = gs.AllowVolumeBoost;
 
             comboBoxCustomSearch1.Text = Configuration.Settings.VideoControls.CustomSearchText1;
             comboBoxCustomSearch2.Text = Configuration.Settings.VideoControls.CustomSearchText2;
             comboBoxCustomSearch3.Text = Configuration.Settings.VideoControls.CustomSearchText3;
             comboBoxCustomSearch4.Text = Configuration.Settings.VideoControls.CustomSearchText4;
             comboBoxCustomSearch5.Text = Configuration.Settings.VideoControls.CustomSearchText5;
-            comboBoxCustomSearch6.Text = Configuration.Settings.VideoControls.CustomSearchText6;
             textBoxCustomSearchUrl1.Text = Configuration.Settings.VideoControls.CustomSearchUrl1;
             textBoxCustomSearchUrl2.Text = Configuration.Settings.VideoControls.CustomSearchUrl2;
             textBoxCustomSearchUrl3.Text = Configuration.Settings.VideoControls.CustomSearchUrl3;
             textBoxCustomSearchUrl4.Text = Configuration.Settings.VideoControls.CustomSearchUrl4;
             textBoxCustomSearchUrl5.Text = Configuration.Settings.VideoControls.CustomSearchUrl5;
-            textBoxCustomSearchUrl6.Text = Configuration.Settings.VideoControls.CustomSearchUrl6;
 
             comboBoxFontName.Items.Clear();
             foreach (var x in FontFamily.Families)
@@ -255,6 +256,7 @@ namespace Nikse.SubtitleEdit.Forms
             tabPageSsaStyle.Text = language.SsaStyle;
             tabPageNetwork.Text = language.Network;
             tabPageToolBar.Text = language.Toolbar;
+            tabPageFont.Text = Configuration.Settings.Language.DCinemaProperties.Font;
             tabPageShortcuts.Text = language.Shortcuts;
             tabPageSyntaxColoring.Text = language.SyntaxColoring;
             groupBoxShowToolBarButtons.Text = language.ShowToolBarButtons;
@@ -286,6 +288,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxHelp.Text = Configuration.Settings.Language.General.Visible;
 
             groupBoxMiscellaneous.Text = language.General;
+            groupBoxGeneralRules.Text = language.Rules;
             checkBoxShowFrameRate.Text = language.ShowFrameRate;
             labelDefaultFrameRate.Text = language.DefaultFrameRate;
             labelDefaultFileEncoding.Text = language.DefaultFileEncoding;
@@ -294,7 +297,10 @@ namespace Nikse.SubtitleEdit.Forms
             labelMaxCharsPerSecond.Text = language.MaximumCharactersPerSecond;
             labelMaxWordsPerMin.Text = language.MaximumWordssPerMinute;
             checkBoxAutoWrapWhileTyping.Text = language.AutoWrapWhileTyping;
-
+            groupBoxFontGeneral.Text = language.General;
+            groupBoxFontListViews.Text = language.ListView;
+            groupBoxFontTextBox.Text = language.TextBox;
+            labelFontNote.Text = language.FontNote;
             labelMinDuration.Text = language.DurationMinimumMilliseconds;
             labelMaxDuration.Text = language.DurationMaximumMilliseconds;
             labelMinGapMs.Text = language.MinimumGapMilliseconds;
@@ -316,9 +322,11 @@ namespace Nikse.SubtitleEdit.Forms
 
             labelSubtitleFont.Text = language.SubtitleFont;
             labelSubtitleFontSize.Text = language.SubtitleFontSize;
+            labelSubtitleListViewFontSize.Text = language.SubtitleFontSize;
             checkBoxSubtitleFontBold.Text = language.SubtitleBold;
+            checkBoxSubtitleListViewFontBold.Text = language.SubtitleBold;
             checkBoxSubtitleCenter.Text = language.SubtitleCenter;
-            checkBoxSubtitleCenter.Left = checkBoxSubtitleFontBold.Left + checkBoxSubtitleFontBold.Width + 4;
+            checkBoxSubtitleCenter.Left = checkBoxSubtitleFontBold.Left;
             labelSubtitleFontColor.Text = language.SubtitleFontColor;
             labelSubtitleFontBackgroundColor.Text = language.SubtitleBackgroundColor;
             labelSpellChecker.Text = language.SpellChecker;
@@ -333,6 +341,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelShowLineBreaksAs.Text = language.ShowLineBreaksAs;
             textBoxShowLineBreaksAs.Left = labelShowLineBreaksAs.Left + labelShowLineBreaksAs.Width;
             labelListViewDoubleClickEvent.Text = language.MainListViewDoubleClickAction;
+            labelSaveAsFileNameFrom.Text = language.MainListViewDoubleClickAction;
             labelAutoBackup.Text = language.AutoBackup;
             labelAutoBackupDeleteAfter.Text = language.AutoBackupDeleteAfter;
             comboBoxAutoBackup.Left = labelAutoBackup.Left + labelAutoBackup.Width + 3;
@@ -386,6 +395,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxVideoPlayerPreviewFontBold.Left = comboBoxlVideoPlayerPreviewFontSize.Left;
 
             checkBoxVideoAutoOpen.Text = language.VideoAutoOpen;
+            checkBoxAllowVolumeBoost.Text = language.VideoAutoOpen;
 
             groupBoxMainWindowVideoControls.Text = language.MainWindowVideoControls;
             labelCustomSearch.Text = language.CustomSearchTextAndUrl;
@@ -529,12 +539,21 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxListViewDoubleClickEvent.Items.Add(language.MainListViewEditTextAndPause);
             comboBoxListViewDoubleClickEvent.Items.Add(language.MainListViewEditText);
 
+            comboBoxSaveAsFileNameFrom.Items.Clear();
+            comboBoxSaveAsFileNameFrom.Items.Add(language.VideoFileName);
+            comboBoxSaveAsFileNameFrom.Items.Add(language.ExistingFileName);
+
             groupBoxBing.Text = language.MicrosoftBingTranslator;
             linkLabelBingSubscribe.Text = language.HowToSignUp;
             labelClientSecret.Text = language.MicrosoftTranslateApiKey;
 
             if (gs.ListViewDoubleClickAction >= 0 && gs.ListViewDoubleClickAction < comboBoxListViewDoubleClickEvent.Items.Count)
                 comboBoxListViewDoubleClickEvent.SelectedIndex = gs.ListViewDoubleClickAction;
+
+            if (gs.SaveAsUseFileNameFrom.Equals("video", StringComparison.OrdinalIgnoreCase))
+                comboBoxSaveAsFileNameFrom.SelectedIndex = 0;
+            else
+                comboBoxSaveAsFileNameFrom.SelectedIndex = 1;
 
             if (gs.AutoBackupSeconds == 60)
                 comboBoxAutoBackup.SelectedIndex = 1;
@@ -832,7 +851,6 @@ namespace Nikse.SubtitleEdit.Forms
             AddNode(translateNote, language.CustomSearch3, nameof(Configuration.Settings.Shortcuts.MainTranslateCustomSearch3));
             AddNode(translateNote, language.CustomSearch4, nameof(Configuration.Settings.Shortcuts.MainTranslateCustomSearch4));
             AddNode(translateNote, language.CustomSearch5, nameof(Configuration.Settings.Shortcuts.MainTranslateCustomSearch5));
-            AddNode(translateNote, language.CustomSearch6, nameof(Configuration.Settings.Shortcuts.MainTranslateCustomSearch6));
             treeViewShortcuts.Nodes.Add(translateNote);
 
             var adjustNode = new TreeNode(Configuration.Settings.Language.Main.VideoControls.Adjust);
@@ -1108,7 +1126,9 @@ namespace Nikse.SubtitleEdit.Forms
 
             gs.AutoGuessAnsiEncoding = checkBoxAutoDetectAnsiEncoding.Checked;
             gs.SubtitleFontSize = int.Parse(comboBoxSubtitleFontSize.Text);
+            gs.SubtitleListViewFontSize = int.Parse(comboBoxSubtitleListViewFontSize.Text);
             gs.SubtitleFontBold = checkBoxSubtitleFontBold.Checked;
+            gs.SubtitleListViewFontBold = checkBoxSubtitleListViewFontBold.Checked;
             gs.CenterSubtitleInTextBox = checkBoxSubtitleCenter.Checked;
             gs.SubtitleFontColor = panelSubtitleFontColor.BackColor;
             gs.SubtitleBackgroundColor = panelSubtitleBackgroundColor.BackColor;
@@ -1122,6 +1142,11 @@ namespace Nikse.SubtitleEdit.Forms
             if (string.IsNullOrWhiteSpace(gs.ListViewLineSeparatorString))
                 gs.ListViewLineSeparatorString = "<br />";
             gs.ListViewDoubleClickAction = comboBoxListViewDoubleClickEvent.SelectedIndex;
+
+            if (comboBoxSaveAsFileNameFrom.SelectedIndex == 0)
+                gs.SaveAsUseFileNameFrom = "video";
+            else
+                gs.SaveAsUseFileNameFrom = "file";
 
             gs.SubtitleMinimumDisplayMilliseconds = (int)numericUpDownDurationMin.Value;
             gs.SubtitleMaximumDisplayMilliseconds = (int)numericUpDownDurationMax.Value;
@@ -1178,13 +1203,11 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.VideoControls.CustomSearchText3 = comboBoxCustomSearch3.Text;
             Configuration.Settings.VideoControls.CustomSearchText4 = comboBoxCustomSearch4.Text;
             Configuration.Settings.VideoControls.CustomSearchText5 = comboBoxCustomSearch5.Text;
-            Configuration.Settings.VideoControls.CustomSearchText6 = comboBoxCustomSearch6.Text;
             Configuration.Settings.VideoControls.CustomSearchUrl1 = textBoxCustomSearchUrl1.Text;
             Configuration.Settings.VideoControls.CustomSearchUrl2 = textBoxCustomSearchUrl2.Text;
             Configuration.Settings.VideoControls.CustomSearchUrl3 = textBoxCustomSearchUrl3.Text;
             Configuration.Settings.VideoControls.CustomSearchUrl4 = textBoxCustomSearchUrl4.Text;
             Configuration.Settings.VideoControls.CustomSearchUrl5 = textBoxCustomSearchUrl5.Text;
-            Configuration.Settings.VideoControls.CustomSearchUrl6 = textBoxCustomSearchUrl6.Text;
 
             int maxLength = (int)numericUpDownSubtitleLineMaximumLength.Value;
             if (maxLength > 9 && maxLength < 1000)
@@ -1901,8 +1924,6 @@ namespace Nikse.SubtitleEdit.Forms
                 tb = textBoxCustomSearchUrl4;
             else if (cb == comboBoxCustomSearch5)
                 tb = textBoxCustomSearchUrl5;
-            else if (cb == comboBoxCustomSearch6)
-                tb = textBoxCustomSearchUrl6;
 
             if (cb.SelectedIndex >= 0)
             {
