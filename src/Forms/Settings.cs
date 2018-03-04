@@ -341,7 +341,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelShowLineBreaksAs.Text = language.ShowLineBreaksAs;
             textBoxShowLineBreaksAs.Left = labelShowLineBreaksAs.Left + labelShowLineBreaksAs.Width;
             labelListViewDoubleClickEvent.Text = language.MainListViewDoubleClickAction;
-            labelSaveAsFileNameFrom.Text = language.MainListViewDoubleClickAction;
+            labelSaveAsFileNameFrom.Text = language.SaveAsFileNameFrom;
             labelAutoBackup.Text = language.AutoBackup;
             labelAutoBackupDeleteAfter.Text = language.AutoBackupDeleteAfter;
             comboBoxAutoBackup.Left = labelAutoBackup.Left + labelAutoBackup.Width + 3;
