@@ -1987,6 +1987,7 @@
             public string SpectrogramOneColorGradient { get; set; }
             public string SpectrogramClassic { get; set; }
             public string WaveformUseFFmpeg { get; set; }
+            public string DownloadFFmpeg { get; set; }
             public string WaveformFFmpegPath { get; set; }
             public string WaveformBrowseToFFmpeg { get; set; }
             public string WaveformBrowseToVLC { get; set; }
@@ -2164,6 +2165,14 @@
             public string DownloadMpvFailed { get; set; }
             public string DownloadMpvOk { get; set; }
         }
+
+        public class SettingsFfmpeg
+        {
+            public string Title { get; set; }
+            public string XDownloadFailed { get; set; }
+            public string XDownloadOk { get; set; }
+        }
+
         public class SetVideoOffset
         {
             public string Title { get; set; }

@@ -4903,6 +4903,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/WaveformUseFFmpeg":
                     language.Settings.WaveformUseFFmpeg = reader.Value;
                     break;
+                case "Settings/DownloadFFmpeg":
+                    language.Settings.DownloadFFmpeg = reader.Value;
+                    break;
                 case "Settings/WaveformFFmpegPath":
                     language.Settings.WaveformFFmpegPath = reader.Value;
                     break;
@@ -5418,6 +5421,15 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "SettingsMpv/DownloadMpvOk":
                     language.SettingsMpv.DownloadMpvOk = reader.Value;
+                    break;
+                case "SettingsFfmpeg/Title":
+                    language.SettingsFfmpeg.Title = reader.Value;
+                    break;
+                case "SettingsFfmpeg/XDownloadFailed":
+                    language.SettingsFfmpeg.XDownloadFailed = reader.Value;
+                    break;
+                case "SettingsFfmpeg/XDownloadOk":
+                    language.SettingsFfmpeg.XDownloadOk = reader.Value;
                     break;
                 case "SetVideoOffset/Title":
                     language.SetVideoOffset.Title = reader.Value;

@@ -82,6 +82,7 @@ namespace Nikse.SubtitleEdit.Core
         public LanguageStructure.SetSyncPoint SetSyncPoint;
         public LanguageStructure.Settings Settings;
         public LanguageStructure.SettingsMpv SettingsMpv;
+        public LanguageStructure.SettingsFfmpeg SettingsFfmpeg;
         public LanguageStructure.SetVideoOffset SetVideoOffset;
         public LanguageStructure.ShowEarlierLater ShowEarlierLater;
         public LanguageStructure.ShowHistory ShowHistory;
@@ -2108,6 +2109,7 @@ can edit in same subtitle file (collaboration)",
                 SpectrogramOneColorGradient = "One color gradient",
                 SpectrogramClassic = "Classic",
                 WaveformUseFFmpeg = "Use FFmpeg for wave extraction",
+                DownloadFFmpeg = "Download FFmpeg",
                 WaveformFFmpegPath = "Path to FFmpeg",
                 WaveformBrowseToFFmpeg = "Browse to FFmpeg",
                 WaveformBrowseToVLC = "Browse to VLC portable",
@@ -2284,6 +2286,14 @@ can edit in same subtitle file (collaboration)",
                 DownloadMpv = "Download mpv lib",
                 DownloadMpvFailed = "Unable to download mpv - please re-try later!",
                 DownloadMpvOk = "The mpv lib was downloaded and is ready for use.",
+            };
+
+
+            SettingsFfmpeg = new LanguageStructure.SettingsFfmpeg
+            {
+                Title = "Download ffmpeg",
+                XDownloadFailed = "Unable to download {0} - please re-try later!",
+                XDownloadOk = "{0} was downloaded and is ready for use.",
             };
 
             SetVideoOffset = new LanguageStructure.SetVideoOffset

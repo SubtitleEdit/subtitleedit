@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
-using System.Security.Authentication;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
@@ -79,9 +78,6 @@ namespace Nikse.SubtitleEdit.Forms
             MessageBox.Show(Configuration.Settings.Language.SettingsMpv.DownloadMpvOk);
         }
 
-        public const SslProtocols Tls12Protocol = (SslProtocols)0x00000C00;
-        public const SecurityProtocolType Tls12 = (SecurityProtocolType)Tls12Protocol;
-        
 
         private void ButtonDownloadClick(object sender, EventArgs e)
         {
