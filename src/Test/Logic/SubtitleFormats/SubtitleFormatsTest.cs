@@ -470,7 +470,7 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
         [TestMethod]
         public void DcinemaInteropItalic()
         {
-            var target = new DCSubtitle();
+            var target = new DCinemaInterop();
             var subtitle = new Subtitle();
             subtitle.Paragraphs.Add(new Paragraph("<i>Italic</i>", 1000, 5000));
             string text = target.ToText(subtitle, "title");
@@ -480,7 +480,7 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
         [TestMethod]
         public void DcinemaInteropColorAndItalic()
         {
-            var target = new DCSubtitle();
+            var target = new DCinemaInterop();
             var subtitle = new Subtitle();
             subtitle.Paragraphs.Add(new Paragraph("<font color=\"#ff0000\"><i>Red</i></font>", 1000, 5000));
             string text = target.ToText(subtitle, "title");

@@ -300,7 +300,7 @@
     <Compile Include="SubtitleFormats\Csv3.cs" />
     <Compile Include="SubtitleFormats\DCinemaSmpte2007.cs" />
     <Compile Include="SubtitleFormats\DCinemaSmpte2010.cs" />
-    <Compile Include="SubtitleFormats\DCSubtitle.cs" />
+    <Compile Include="SubtitleFormats\DCinemaInterop.cs" />
     <Compile Include="SubtitleFormats\DigiBeta.cs" />
     <Compile Include="SubtitleFormats\Dost.cs" />
     <Compile Include="SubtitleFormats\DvdStudioPro.cs" />
