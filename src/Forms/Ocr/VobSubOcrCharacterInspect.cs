@@ -93,7 +93,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             pictureBoxCompareBitmap.Image = null;
             pictureBoxCompareBitmapDouble.Image = null;
 
-            int index = (listBoxInspectItems.SelectedIndex);
+            int index = listBoxInspectItems.SelectedIndex;
             var match = _matches[index];
             _selectedMatch = match;
             if (!string.IsNullOrEmpty(match.Name))
@@ -208,6 +208,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 pictureBoxCompareBitmap.Visible = false;
                 pictureBoxCompareBitmapDouble.Visible = false;
                 labelDoubleSize.Visible = false;
+                if (img == null)
+                    buttonAddBetterMatch.Enabled = false;
             }
             else
             {
