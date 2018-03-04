@@ -239,20 +239,25 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private void VobSubOcrCharacter_KeyDown(object sender, KeyEventArgs e)
         {
-            if (buttonShrinkSelection.Visible &&
-                (e.Modifiers == Keys.Alt && e.KeyCode == Keys.Left) ||
-                (e.Modifiers == Keys.Shift && e.KeyCode == Keys.Subtract) ||
-                (e.Modifiers == Keys.Alt && e.KeyCode == Keys.D))
+            if (buttonShrinkSelection.Visible && 
+                e.Modifiers == Keys.Alt && e.KeyCode == Keys.Left ||
+                e.Modifiers == Keys.Shift && e.KeyCode == Keys.Subtract ||
+                e.Modifiers == Keys.Alt && e.KeyCode == Keys.D)
             {
                 ButtonShrinkSelectionClick(null, null);
                 e.SuppressKeyPress = true;
             }
             else if (buttonExpandSelection.Visible &&
-               (e.Modifiers == Keys.Alt && e.KeyCode == Keys.Right) ||
-               (e.Modifiers == Keys.Shift && e.KeyCode == Keys.Add) ||
-               (e.Modifiers == Keys.Alt && e.KeyCode == Keys.E))
+                     e.Modifiers == Keys.Alt && e.KeyCode == Keys.Right ||
+                     e.Modifiers == Keys.Shift && e.KeyCode == Keys.Add ||
+                     e.Modifiers == Keys.Alt && e.KeyCode == Keys.E)
             {
                 ButtonExpandSelectionClick(null, null);
+                e.SuppressKeyPress = true;
+            }
+            else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.I)
+            {
+                checkBoxItalic.Checked = !checkBoxItalic.Checked;
                 e.SuppressKeyPress = true;
             }
         }
