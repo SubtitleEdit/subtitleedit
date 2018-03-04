@@ -1820,7 +1820,7 @@ can edit in same subtitle file (collaboration)</Information>
     <SpectrogramOneColorGradient>One color gradient</SpectrogramOneColorGradient>
     <SpectrogramClassic>Classic</SpectrogramClassic>
     <WaveformUseFFmpeg>Use FFmpeg for wave extraction</WaveformUseFFmpeg>
-    <DownloadFFmpeg>Download FFmpeg...</DownloadFFmpeg>
+    <DownloadFFmpeg>Download FFmpeg</DownloadFFmpeg>
     <WaveformFFmpegPath>Path to FFmpeg</WaveformFFmpegPath>
     <WaveformBrowseToFFmpeg>Browse to FFmpeg</WaveformBrowseToFFmpeg>
     <WaveformBrowseToVLC>Browse to VLC portable</WaveformBrowseToVLC>
