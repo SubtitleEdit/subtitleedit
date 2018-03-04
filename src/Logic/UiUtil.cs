@@ -335,16 +335,27 @@ namespace Nikse.SubtitleEdit.Logic
 
             try
             {
-                if (gs.SubtitleFontBold)
-                    control.Font = new Font(gs.SubtitleFontName, gs.SubtitleFontSize, FontStyle.Bold);
+                if (control is ListView)
+                {
+                    if (gs.SubtitleListViewFontBold)
+                        control.Font = new Font(gs.SubtitleFontName, gs.SubtitleListViewFontSize, FontStyle.Bold);
+                    else
+                        control.Font = new Font(gs.SubtitleFontName, gs.SubtitleListViewFontSize);
+                }
                 else
-                    control.Font = new Font(gs.SubtitleFontName, gs.SubtitleFontSize);
+                {
+                    if (gs.SubtitleFontBold)
+                        control.Font = new Font(gs.SubtitleFontName, gs.SubtitleFontSize, FontStyle.Bold);
+                    else
+                        control.Font = new Font(gs.SubtitleFontName, gs.SubtitleFontSize);
+                }
 
                 control.BackColor = gs.SubtitleBackgroundColor;
                 control.ForeColor = gs.SubtitleFontColor;
             }
             catch
             {
+                // ignored
             }
         }
 

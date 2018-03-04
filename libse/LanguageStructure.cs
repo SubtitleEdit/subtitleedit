@@ -1872,6 +1872,7 @@
             public string WordLists { get; set; }
             public string SsaStyle { get; set; }
             public string Network { get; set; }
+            public string Rules { get; set; }
             public string ShowToolBarButtons { get; set; }
             public string New { get; set; }
             public string Open { get; set; }
@@ -1903,6 +1904,8 @@
             public string SubtitleFontSize { get; set; }
             public string SubtitleBold { get; set; }
             public string VideoAutoOpen { get; set; }
+            public string AllowVolumeBoost { get; set; }
+            
             public string SubtitleCenter { get; set; }
             public string SubtitleFontColor { get; set; }
             public string SubtitleBackgroundColor { get; set; }
@@ -1914,6 +1917,7 @@
             public string StartInSourceView { get; set; }
             public string RemoveBlankLinesWhenOpening { get; set; }
             public string ShowLineBreaksAs { get; set; }
+            public string SaveAsFileNameFrom { get; set; }
             public string MainListViewDoubleClickAction { get; set; }
             public string MainListViewColumnsInfo { get; set; }
             public string MainListViewNothing { get; set; }
@@ -1924,6 +1928,8 @@
             public string MainListViewVideoGoToPositionMinusHalfSecAndPause { get; set; }
             public string MainListViewVideoGoToPositionMinus1SecAndPlay { get; set; }
             public string MainListViewEditTextAndPause { get; set; }
+            public string VideoFileName { get; set; }
+            public string ExistingFileName { get; set; }
             public string AutoBackup { get; set; }
 
             public string AutoBackupEveryMinute { get; set; }
@@ -2032,6 +2038,7 @@
             public string Alt { get; set; }
             public string Shift { get; set; }
             public string Key { get; set; }
+            public string ListView { get; set; }
             public string TextBox { get; set; }
             public string UpdateShortcut { get; set; }
             public string ToggleDockUndockOfVideoControls { get; set; }
@@ -2103,7 +2110,6 @@
             public string CustomSearch3 { get; set; }
             public string CustomSearch4 { get; set; }
             public string CustomSearch5 { get; set; }
-            public string CustomSearch6 { get; set; }
             public string SyntaxColoring { get; set; }
             public string ListViewSyntaxColoring { get; set; }
             public string SyntaxColorDurationIfTooSmall { get; set; }
@@ -2148,6 +2154,7 @@
             public string HowToSignUp { get; set; }
             public string GoogleTranslateUrl { get; set; }
             public string MicrosoftTranslateApiKey { get; set; }
+            public string FontNote { get; set; }
         }
 
         public class SettingsMpv

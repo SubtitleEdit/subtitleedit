@@ -1709,6 +1709,7 @@ can edit in same subtitle file (collaboration)</Information>
     <WordLists>Word lists</WordLists>
     <SsaStyle>ASS/SSA Style</SsaStyle>
     <Network>Network</Network>
+    <Rules>Rules</Rules>
     <ShowToolBarButtons>Show tool bar buttons</ShowToolBarButtons>
     <New>New</New>
     <Open>Open</Open>
@@ -1738,6 +1739,7 @@ can edit in same subtitle file (collaboration)</Information>
     <SubtitleFontSize>Subtitle font size</SubtitleFontSize>
     <SubtitleBold>Bold</SubtitleBold>
     <VideoAutoOpen>Auto-open video file when opening subtitle</VideoAutoOpen>
+    <AllowVolumeBoost>Allow volume boost</AllowVolumeBoost>
     <SubtitleCenter>Center</SubtitleCenter>
     <SubtitleFontColor>Subtitle font color</SubtitleFontColor>
     <SubtitleBackgroundColor>Subtitle background color</SubtitleBackgroundColor>
@@ -1749,6 +1751,7 @@ can edit in same subtitle file (collaboration)</Information>
     <StartInSourceView>Start in source view</StartInSourceView>
     <RemoveBlankLinesWhenOpening>Remove blank lines when opening a subtitle</RemoveBlankLinesWhenOpening>
     <ShowLineBreaksAs>Show line breaks in list view as</ShowLineBreaksAs>
+    <SaveAsFileNameFrom>"Save as..." uses file name from</SaveAsFileNameFrom>
     <MainListViewDoubleClickAction>Double-clicking line in main window list view will</MainListViewDoubleClickAction>
     <MainListViewColumnsInfo>Choose visible list view columns</MainListViewColumnsInfo>
     <MainListViewNothing>Nothing</MainListViewNothing>
@@ -1759,6 +1762,8 @@ can edit in same subtitle file (collaboration)</Information>
     <MainListViewVideoGoToPositionMinusHalfSecAndPause>Go to video position - 0.5 s and pause</MainListViewVideoGoToPositionMinusHalfSecAndPause>
     <MainListViewVideoGoToPositionMinus1SecAndPlay>Go to video position - 1 s and play</MainListViewVideoGoToPositionMinus1SecAndPlay>
     <MainListViewEditTextAndPause>Go to edit text box, and pause at video position</MainListViewEditTextAndPause>
+    <VideoFileName>Video file name</VideoFileName>
+    <ExistingFileName>Existing file name</ExistingFileName>
     <AutoBackup>Auto-backup</AutoBackup>
     <AutoBackupEveryMinute>Every minute</AutoBackupEveryMinute>
     <AutoBackupEveryFiveMinutes>Every 5th minute</AutoBackupEveryFiveMinutes>
@@ -1866,7 +1871,8 @@ can edit in same subtitle file (collaboration)</Information>
     <Alt>Alt</Alt>
     <Shift>Shift</Shift>
     <Key>Key</Key>
-    <TextBox>Textbox</TextBox>
+    <ListView>List View</ListView>
+    <TextBox>Text box</TextBox>
     <UpdateShortcut>Update</UpdateShortcut>
     <ToggleDockUndockOfVideoControls>Toggle dock/undock of video controls</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Set end, add new and go to new</CreateSetEndAddNewAndGoToNew>
@@ -1937,7 +1943,6 @@ can edit in same subtitle file (collaboration)</Information>
     <CustomSearch3>Translate, custom search 3</CustomSearch3>
     <CustomSearch4>Translate, custom search 4</CustomSearch4>
     <CustomSearch5>Translate, custom search 5</CustomSearch5>
-    <CustomSearch6>Translate, custom search 6</CustomSearch6>
     <SyntaxColoring>Syntax coloring</SyntaxColoring>
     <ListViewSyntaxColoring>List view syntax coloring</ListViewSyntaxColoring>
     <SyntaxColorDurationIfTooSmall>Color duration if too short</SyntaxColorDurationIfTooSmall>
@@ -1982,6 +1987,9 @@ can edit in same subtitle file (collaboration)</Information>
     <HowToSignUp>How to sign up</HowToSignUp>
     <GoogleTranslateUrl>Google translate url</GoogleTranslateUrl>
     <MicrosoftTranslateApiKey>Key</MicrosoftTranslateApiKey>
+    <FontNote>Note: These font settings are for the Subtitle Edit UI only.
+Setting a font for a subtitle is normally done in the video player, but can also be done when using a subtitle format with built-in font information like 
+"Advanced Sub Station Alpha" or via export to image based formats.</FontNote>
   </Settings>
   <SettingsMpv>
     <Title>Settings for mpv</Title>
