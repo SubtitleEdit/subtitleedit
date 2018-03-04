@@ -48,10 +48,10 @@ namespace Nikse.SubtitleEdit.Forms
             foreach (var track in mp4SubtitleTracks)
             {
                 i++;
-                string handler = track.Mdia.HandlerName;
-                if (handler != null && handler.Length > 1)
+                string handler = (track.Mdia.HandlerType + " " + track.Mdia.HandlerName).Trim();
+                if (handler.Length > 1)
                     handler = " - " + handler;
-                string s = string.Format("{0}: {1} - {2}{3}", i, track.Mdia.Mdhd.Iso639ThreeLetterCode, track.Mdia.Mdhd.LanguageString, handler);
+                string s = $"{i}: {track.Mdia.Mdhd.Iso639ThreeLetterCode} - {track.Mdia.Mdhd.LanguageString}{handler}";
                 listBox1.Items.Add(s);
             }
             listBox1.SelectedIndex = 0;

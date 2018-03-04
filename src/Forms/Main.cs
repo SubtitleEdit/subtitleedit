@@ -15912,7 +15912,7 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripMenuItemEbuProperties.Visible = false;
             }
 
-            if (format.GetType() == typeof(DCSubtitle) || format.GetType() == typeof(DCinemaSmpte2010) || format.GetType() == typeof(DCinemaSmpte2007))
+            if (format.GetType() == typeof(DCinemaInterop) || format.GetType() == typeof(DCinemaSmpte2010) || format.GetType() == typeof(DCinemaSmpte2007))
             {
                 toolStripMenuItemDCinemaProperties.Visible = true;
             }
@@ -20654,7 +20654,7 @@ namespace Nikse.SubtitleEdit.Forms
             PositionAndSizeForm properties = null;
             try
             {
-                if (GetCurrentSubtitleFormat().GetType() == typeof(DCSubtitle))
+                if (GetCurrentSubtitleFormat().GetType() == typeof(DCinemaInterop))
                 {
                     properties = new DCinema.DCinemaPropertiesInterop();
                 }

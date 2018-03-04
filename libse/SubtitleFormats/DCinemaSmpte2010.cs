@@ -654,16 +654,16 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                             innerInnerNode.Attributes["Italic"].InnerText.Equals("yes", StringComparison.OrdinalIgnoreCase))
                                         {
                                             if (innerInnerNode.Attributes["Color"] != null)
-                                                pText.Append("<i><font color=\"" + DCSubtitle.GetColorStringFromDCinema(innerInnerNode.Attributes["Color"].Value) + "\">" + innerInnerNode.InnerText + "</font><i>");
+                                                pText.Append("<i><font color=\"" + DCinemaInterop.GetColorStringFromDCinema(innerInnerNode.Attributes["Color"].Value) + "\">" + innerInnerNode.InnerText + "</font><i>");
                                             else
                                                 pText.Append("<i>" + innerInnerNode.InnerText + "</i>");
                                         }
                                         else if (innerInnerNode.Name == "Font" && innerInnerNode.Attributes["Color"] != null)
                                         {
                                             if (innerInnerNode.Attributes["Italic"] != null && innerInnerNode.Attributes["Italic"].InnerText.Equals("yes", StringComparison.OrdinalIgnoreCase))
-                                                pText.Append("<i><font color=\"" + DCSubtitle.GetColorStringFromDCinema(innerInnerNode.Attributes["Color"].Value) + "\">" + innerInnerNode.InnerText + "</font><i>");
+                                                pText.Append("<i><font color=\"" + DCinemaInterop.GetColorStringFromDCinema(innerInnerNode.Attributes["Color"].Value) + "\">" + innerInnerNode.InnerText + "</font><i>");
                                             else
-                                                pText.Append("<font color=\"" + DCSubtitle.GetColorStringFromDCinema(innerInnerNode.Attributes["Color"].Value) + "\">" + innerInnerNode.InnerText + "</font>");
+                                                pText.Append("<font color=\"" + DCinemaInterop.GetColorStringFromDCinema(innerInnerNode.Attributes["Color"].Value) + "\">" + innerInnerNode.InnerText + "</font>");
                                         }
                                         else
                                         {
