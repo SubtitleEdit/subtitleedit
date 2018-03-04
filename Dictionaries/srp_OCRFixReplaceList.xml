@@ -16,6 +16,10 @@
     <Word from="iči" to="ići" />
     <Word from="jel" to="je l'" />
     <Word from="Jel" to="Je l'" />
+    <Word from="Nebi" to="Ne bi" />
+    <Word from="Nebih" to="Ne bih" />
+    <Word from="nebi" to="ne bi" />
+    <Word from="nebih" to="ne bih" />
     <Word from="nedaj" to="ne daj" />
     <Word from="Nedaj" to="Ne daj" />
     <Word from="nedam" to="ne dam" />
@@ -130,7 +134,6 @@
     <RegEx find="([kK]alib(?:ar|r[aeui]))\. *([0-9])" replaceWith="$1 .$2" />
     <RegEx find="([mM])jenja(?!č)" replaceWith="$1ijenja" />
     <RegEx find="oguč" replaceWith="oguć" />
-    <RegEx find="\b([nN])ebih?" replaceWith="$1e bi" />
     <RegEx find="\b([nN])eč([ue]š?|emo|ete)\b" replaceWith="$1eć$2" />
     <RegEx find="emo[zž]e" replaceWith="e može" />
     <RegEx find="\b([nN])ezna([šm]o?|t[ei]|ju|jući|vši)?\b" replaceWith="$1e zna$2" />
@@ -143,9 +146,9 @@
     <RegEx find="([pP])objedi([mšto])" replaceWith="$1obijedi$2" />
     <RegEx find="ed([ph])" replaceWith="et$1" />
     <RegEx find="rimjeti" replaceWith="rimijeti" />
-    <RegEx find="([pP])romjeni([mštol])" replaceWith="$1romijeni$2" />
+    <RegEx find="romjeni([mštol])" replaceWith="romijeni$1" />
     <RegEx find="azumijeć" replaceWith="azumjeć" />
-    <RegEx find="rascjepljen" replaceWith="rascijepljen" />
+    <RegEx find="([Cc])jepljen" replaceWith="$1ijepljen" />
     <RegEx find="rimjenjen" replaceWith="rimijenjen" />
     <RegEx find="([^d])rješit" replaceWith="$1riješit" />
     <RegEx find="lijede[čć]([aeiu]|e[mg])" replaceWith="ljedeć$1" />
