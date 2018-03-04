@@ -602,6 +602,17 @@ namespace Test
             }
         }
 
+        [TestMethod]
+        public void FixCommonOcrErrorsStartEllipsis()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "…but never could.");
+                target.FixOcrErrorsViaReplaceList("eng");
+                Assert.AreEqual("…but never could.", target.Subtitle.Paragraphs[0].Text);
+            }
+        }
+
         #endregion Fix OCR errors
 
         #region Fix missing spaces
