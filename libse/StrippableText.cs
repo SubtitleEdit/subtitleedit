@@ -191,7 +191,7 @@ namespace Nikse.SubtitleEdit.Core
                                           s.EndsWith(')') ||
                                           s.EndsWith(':') ||
                                           s.EndsWith('_');
-
+                    
                 if (!startWithUppercase && millisecondsFromLast > 5000)
                     startWithUppercase = true;
 
@@ -202,7 +202,7 @@ namespace Nikse.SubtitleEdit.Core
                         startWithUppercase = true;
                 }
 
-                if (startWithUppercase && StrippedText.Length > 0 && !Pre.Contains("..."))
+                if (startWithUppercase && StrippedText.Length > 0 && !Pre.Contains("...") && !Pre.Contains('…'))
                 {
                     if (!StrippedText.StartsWith("www.", StringComparison.OrdinalIgnoreCase) &&
                         !StrippedText.StartsWith("http", StringComparison.OrdinalIgnoreCase))

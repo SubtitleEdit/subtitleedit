@@ -188,5 +188,13 @@ namespace Test.Logic
             Assert.AreEqual("Uh, “Thor and doctor Jones”", st.MergedString);
         }
 
+        [TestMethod]
+        public void StrippableTextChangeEllipsis()
+        {
+            var st = new StrippableText("…but never could.");
+            st.FixCasing(new System.Collections.Generic.List<string>(), true, true, true, "Bye.");
+            Assert.AreEqual("…but never could.", st.MergedString);
+        }
+
     }
 }
