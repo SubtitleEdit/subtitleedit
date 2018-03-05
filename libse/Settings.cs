@@ -1025,6 +1025,7 @@ namespace Nikse.SubtitleEdit.Core
         public string MainSynchronizationChangeFrameRate { get; set; }
         public string MainListViewItalic { get; set; }
         public string MainListViewToggleDashes { get; set; }
+        public string MainListViewToggleMusicSymbols { get; set; }
         public string MainListViewAlignment { get; set; }
         public string MainListViewCopyText { get; set; }
         public string MainListViewCopyTextFromOriginalToCurrent { get; set; }
@@ -3060,6 +3061,9 @@ namespace Nikse.SubtitleEdit.Core
                 subNode = node.SelectSingleNode("MainListViewToggleDashes");
                 if (subNode != null)
                     settings.Shortcuts.MainListViewToggleDashes = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainListViewToggleMusicSymbols");
+                if (subNode != null)
+                    settings.Shortcuts.MainListViewToggleMusicSymbols = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainListViewAlignment");
                 if (subNode != null)
                     settings.Shortcuts.MainListViewAlignment = subNode.InnerText;
@@ -3956,6 +3960,7 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("MainSynchronizationChangeFrameRate", settings.Shortcuts.MainSynchronizationChangeFrameRate);
                 textWriter.WriteElementString("MainListViewItalic", settings.Shortcuts.MainListViewItalic);
                 textWriter.WriteElementString("MainListViewToggleDashes", settings.Shortcuts.MainListViewToggleDashes);
+                textWriter.WriteElementString("MainListViewToggleMusicSymbols", settings.Shortcuts.MainListViewToggleMusicSymbols);
                 textWriter.WriteElementString("MainListViewAlignment", settings.Shortcuts.MainListViewAlignment);
                 textWriter.WriteElementString("MainListViewCopyText", settings.Shortcuts.MainListViewCopyText);
                 textWriter.WriteElementString("MainListViewCopyTextFromOriginalToCurrent", settings.Shortcuts.MainListViewCopyTextFromOriginalToCurrent);
