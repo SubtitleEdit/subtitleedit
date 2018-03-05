@@ -1894,6 +1894,32 @@ namespace Test
             }
         }
 
+        [TestMethod]
+        public void FixMusicNotationNoHashtags()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                const string s = "Lär mig #människor";
+                InitializeFixCommonErrorsLine(target, s);
+                Configuration.Settings.Tools.MusicSymbol = "♫";
+                new FixMusicNotation().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual(s, _subtitle.Paragraphs[0].Text);
+            }
+        }
+
+        [TestMethod]
+        public void FixMusicNotationNoHashtagsMultiple()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                const string s = "Lär mig #människor, #metoo, #timesup";
+                InitializeFixCommonErrorsLine(target, s);
+                Configuration.Settings.Tools.MusicSymbol = "♫";
+                new FixMusicNotation().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual(s, _subtitle.Paragraphs[0].Text);
+            }
+        }
+
         #endregion Fix Music Notation
 
         #region FixFrenchLApostrophe

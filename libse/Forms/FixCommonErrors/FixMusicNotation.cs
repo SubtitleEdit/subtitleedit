@@ -27,7 +27,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                             while (idx >= 0)
                             {
                                 // <font color="#808080">NATIVE HAWAIIAN CHANTING</font>
-                                var isInsideFontTag = (idx < 13) ? false : (newText[idx - 1] == '"' && (newText.Length > idx + 2 && Uri.IsHexDigit(newText[idx + 1]) && Uri.IsHexDigit(newText[idx + 2])));
+                                var isInsideFontTag = idx >= 13 && (newText[idx - 1] == '"' && newText.Length > idx + 2 && Uri.IsHexDigit(newText[idx + 1]) && Uri.IsHexDigit(newText[idx + 2]));
                                 if (!isInsideFontTag)
                                 {
                                     newText = newText.Remove(idx, 1);
@@ -36,11 +36,45 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
                                 idx = newText.IndexOf('#', idx + 1);
                             }
-                        }
+                        }                        
                         else
                         {
-                            newText = newText.Replace(ms, Configuration.Settings.Tools.MusicSymbol);
-                            newText = newText.Replace(ms.ToUpper(), Configuration.Settings.Tools.MusicSymbol);
+                            var fix = true;
+                            if (ms == "#" && newText.Contains("#") && !newText.Contains("# "))
+                            {
+                                int count = Utilities.CountTagInText(newText, '#');
+                                if (count == 1 )
+                                {
+                                    var idx = newText.IndexOf('#');
+                                    if (idx < newText.Length - 2)
+                                    {
+                                        if (char.IsLetterOrDigit(newText[idx + 1]))
+                                        {
+                                            fix = false;
+                                        }
+                                    }
+                                }
+                                else if (!newText.EndsWith('#'))
+                                {
+                                    var idx = newText.IndexOf('#');
+                                    int hashTagCount = 0;
+                                    while (idx >= 0)
+                                    {
+                                        if (char.IsLetterOrDigit(newText[idx + 1]))
+                                        {
+                                            hashTagCount++;
+                                        }
+                                        idx = newText.IndexOf('#', idx + 1);
+                                    }
+                                    fix = hashTagCount == 0;
+                                }
+                            }
+
+                            if (fix)
+                            {
+                                newText = newText.Replace(ms, Configuration.Settings.Tools.MusicSymbol);
+                                newText = newText.Replace(ms.ToUpper(), Configuration.Settings.Tools.MusicSymbol);
+                            }
                         }
                     }
                     var noTagsText = HtmlUtil.RemoveHtmlTags(newText);
