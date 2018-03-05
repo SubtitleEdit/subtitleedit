@@ -1904,6 +1904,7 @@ can edit in same subtitle file (collaboration)</Information>
     <GoToNextSubtitleAndFocusVideo>Go to next line and set video position</GoToNextSubtitleAndFocusVideo>
     <ToggleFocus>Toggle focus between list view and subtitle text box</ToggleFocus>
     <ToggleDialogDashes>Toggle dialog dashes</ToggleDialogDashes>
+    <ToggleMusicSymbols>Toggle music symbols</ToggleMusicSymbols>
     <Alignment>Alignment (selected lines)</Alignment>
     <CopyTextOnly>Copy text only to clip board (selected lines)</CopyTextOnly>
     <CopyTextOnlyFromOriginalToCurrent>Copy text from original to current</CopyTextOnlyFromOriginalToCurrent>

@@ -945,6 +945,32 @@ namespace Test
             }
         }
 
+        [TestMethod]
+        public void FixMissingSpacesMusicHashtags()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                const string input = "#Dream, little one#";
+                const string expected = "# Dream, little one #";
+                InitializeFixCommonErrorsLine(target, input);
+                new FixMissingSpaces().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual(_subtitle.Paragraphs[0].Text, expected);
+            }
+        }
+
+        [TestMethod]
+        public void FixMissingSpacesDontRemoveHashTag()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                const string input = "#Dream";
+                const string expected = "#Dream";
+                InitializeFixCommonErrorsLine(target, input);
+                new FixMissingSpaces().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual(_subtitle.Paragraphs[0].Text, expected);
+            }
+        }
+
         #endregion Fix missing spaces
 
         #region Fix unneeded spaces
