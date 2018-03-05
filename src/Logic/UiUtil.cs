@@ -726,6 +726,7 @@ namespace Nikse.SubtitleEdit.Logic
             AddExtension(sb, new Ayato().Extension);
             AddExtension(sb, new PacUnicode().Extension);
             AddExtension(sb, new WinCaps32().Extension);
+            AddExtension(sb, new IsmtDfxp().Extension);
 
             if (!string.IsNullOrEmpty(Configuration.Settings.General.OpenSubtitleExtraExtensions))
             {
