@@ -38,6 +38,7 @@ namespace Nikse.SubtitleEdit.Forms
             radioButtonSeconds.Text = Configuration.Settings.Language.ImportSceneChanges.Seconds;
             radioButtonMilliseconds.Text = Configuration.Settings.Language.ImportSceneChanges.Milliseconds;
             groupBoxTimeCodes.Text = Configuration.Settings.Language.ImportSceneChanges.TimeCodes;
+            buttonDownloadFfmpeg.Text = Configuration.Settings.Language.Settings.DownloadFFmpeg;
             buttonImportWithFfmpeg.Text = Configuration.Settings.Language.ImportSceneChanges.GetSceneChangesWithFfmpeg;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
@@ -200,6 +201,8 @@ namespace Nikse.SubtitleEdit.Forms
             progressBar1.Style = ProgressBarStyle.Marquee;
             buttonImportWithFfmpeg.Enabled = false;
             Cursor = Cursors.WaitCursor;
+            textBoxText.ReadOnly = true;
+            textBoxText.Text = string.Empty;
             _timeCodes = new StringBuilder();
             using (var process = new Process())
             {
@@ -267,6 +270,20 @@ namespace Nikse.SubtitleEdit.Forms
         private void ImportSceneChanges_Shown(object sender, EventArgs e)
         {
             Activate();
+        }
+
+        private void buttonDownloadFfmpeg_Click(object sender, EventArgs e)
+        {
+            using (var form = new DownloadFfmpeg())
+            {
+                if (form.ShowDialog(this) == DialogResult.OK && !string.IsNullOrEmpty(form.FFmpegPath))
+                {
+                    Configuration.Settings.General.FFmpegLocation = form.FFmpegPath;
+                    buttonDownloadFfmpeg.Visible = false;
+                    buttonImportWithFfmpeg.Enabled = true;
+                }
+            }
+
         }
     }
 }
