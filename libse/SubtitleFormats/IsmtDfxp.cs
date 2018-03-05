@@ -1,7 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
@@ -24,15 +23,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 if (l != buffer.Length)
                     return false;
                 var str = Encoding.ASCII.GetString(buffer, 4, 8);
-                if (str != "ftypisml")
-                    return false;
+                return str == "ftypisml" || str == "ftypdash";
             }
-            return true;            
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             _errorCount = 0;
+            subtitle.Paragraphs.Clear();
             var mp4Parser = new MP4Parser(fileName);
             var dfxpStrings = mp4Parser.GetMdatsAsStrings();
             foreach (var xmlAsString in dfxpStrings)
@@ -40,8 +38,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 try
                 {
                     var sub = new Subtitle();
-                    var format = new TimedText();
-                    sub.ReloadLoadSubtitle(xmlAsString.SplitToLines(), null, format);
+                    var mdatLines = xmlAsString.SplitToLines();
+                    sub.ReloadLoadSubtitle(mdatLines, null, new TimedText());
 
                     if (sub.Paragraphs.Count == 0)
                         continue;
