@@ -207,7 +207,9 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     {
                         foreach (var musicSymbol in musicSymbols)
                         {
-                            lines[lineIndex] = FixMissingSpaceBeforeAfterMusicQuotes(lines[lineIndex], musicSymbol);
+                            var fix = !(musicSymbol == '#' && Utilities.CountTagInText(lines[lineIndex], musicSymbol) == 1 && !lines[lineIndex].EndsWith(musicSymbol));
+                            if (fix)
+                                lines[lineIndex] = FixMissingSpaceBeforeAfterMusicQuotes(lines[lineIndex], musicSymbol);
                         }
                     }
                     string newText = string.Join(Environment.NewLine, lines);
