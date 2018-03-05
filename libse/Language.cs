@@ -2292,7 +2292,7 @@ can edit in same subtitle file (collaboration)",
 
             SettingsFfmpeg = new LanguageStructure.SettingsFfmpeg
             {
-                Title = "Download ffmpeg",
+                Title = "Download FFmpeg",
                 XDownloadFailed = "Unable to download {0} - please re-try later!",
                 XDownloadOk = "{0} was downloaded and is ready for use.",
             };

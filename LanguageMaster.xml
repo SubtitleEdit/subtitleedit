@@ -2000,7 +2000,7 @@ Setting a font for a subtitle is normally done in the video player, but can also
     <DownloadMpvOk>The mpv lib was downloaded and is ready for use.</DownloadMpvOk>
   </SettingsMpv>
   <SettingsFfmpeg>
-    <Title>Download ffmpeg</Title>
+    <Title>Download FFmpeg</Title>
     <XDownloadFailed>Unable to download {0} - please re-try later!</XDownloadFailed>
     <XDownloadOk>{0} was downloaded and is ready for use.</XDownloadOk>
   </SettingsFfmpeg>

@@ -42,6 +42,7 @@
             this.textBoxText = new System.Windows.Forms.TextBox();
             this.buttonOpenText = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.buttonDownloadFfmpeg = new System.Windows.Forms.Button();
             this.groupBoxImportOptions.SuspendLayout();
             this.groupBoxTimeCodes.SuspendLayout();
             this.groupBoxImportText.SuspendLayout();
@@ -141,6 +142,7 @@
             // 
             this.groupBoxImportText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxImportText.Controls.Add(this.buttonDownloadFfmpeg);
             this.groupBoxImportText.Controls.Add(this.progressBar1);
             this.groupBoxImportText.Controls.Add(this.buttonImportWithFfmpeg);
             this.groupBoxImportText.Controls.Add(this.textBoxText);
@@ -163,9 +165,9 @@
             // buttonImportWithFfmpeg
             // 
             this.buttonImportWithFfmpeg.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonImportWithFfmpeg.Location = new System.Drawing.Point(6, 290);
+            this.buttonImportWithFfmpeg.Location = new System.Drawing.Point(6, 284);
             this.buttonImportWithFfmpeg.Name = "buttonImportWithFfmpeg";
-            this.buttonImportWithFfmpeg.Size = new System.Drawing.Size(319, 21);
+            this.buttonImportWithFfmpeg.Size = new System.Drawing.Size(319, 23);
             this.buttonImportWithFfmpeg.TabIndex = 2;
             this.buttonImportWithFfmpeg.Text = "Get scene changes with FFmpeg";
             this.buttonImportWithFfmpeg.UseVisualStyleBackColor = true;
@@ -198,6 +200,16 @@
             // openFileDialog1
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
+            // 
+            // buttonDownloadFfmpeg
+            // 
+            this.buttonDownloadFfmpeg.Location = new System.Drawing.Point(6, 255);
+            this.buttonDownloadFfmpeg.Name = "buttonDownloadFfmpeg";
+            this.buttonDownloadFfmpeg.Size = new System.Drawing.Size(319, 23);
+            this.buttonDownloadFfmpeg.TabIndex = 2;
+            this.buttonDownloadFfmpeg.Text = "Download ffmpeg";
+            this.buttonDownloadFfmpeg.UseVisualStyleBackColor = true;
+            this.buttonDownloadFfmpeg.Click += new System.EventHandler(this.buttonDownloadFfmpeg_Click);
             // 
             // ImportSceneChanges
             // 
@@ -244,5 +256,6 @@
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.Button buttonImportWithFfmpeg;
         private System.Windows.Forms.ProgressBar progressBar1;
+        private System.Windows.Forms.Button buttonDownloadFfmpeg;
     }
 }
