@@ -5155,6 +5155,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/ToggleDialogDashes":
                     language.Settings.ToggleDialogDashes = reader.Value;
                     break;
+                case "Settings/ToggleMusicSymbols":
+                    language.Settings.ToggleMusicSymbols = reader.Value;
+                    break;
                 case "Settings/Alignment":
                     language.Settings.Alignment = reader.Value;
                     break;

@@ -2070,6 +2070,7 @@
             public string GoToNextSubtitleAndFocusVideo { get; set; }
             public string ToggleFocus { get; set; }
             public string ToggleDialogDashes { get; set; }
+            public string ToggleMusicSymbols { get; set; }
             public string Alignment { get; set; }
             public string CopyTextOnly { get; set; }
             public string CopyTextOnlyFromOriginalToCurrent { get; set; }
