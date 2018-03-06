@@ -403,7 +403,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     {
                         TextField = encoding.GetString(new byte[] { 0x0b, 0x0b }) + TextField; // b=start box
                     }
-                    else if (Configuration.Settings.SubtitleSettings.EbuStlTeletextUseBox && Configuration.Settings.SubtitleSettings.EbuStlTeletextUseDoubleHeight)
+                    else if (Configuration.Settings.SubtitleSettings.EbuStlTeletextUseDoubleHeight)
                     {
                         TextField = encoding.GetString(new byte[] { 0x0d }) + TextField; // d=double height
                     }

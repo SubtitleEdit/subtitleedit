@@ -944,8 +944,11 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
 
         public static string ReplaceWord(string text, string word, string newWord)
         {
+            if (string.IsNullOrEmpty(text) || string.IsNullOrEmpty(word))
+                return text;
+
             var sb = new StringBuilder(text.Length);
-            if (word != null && text != null && text.Contains(word))
+            if (text.Contains(word))
             {
                 const string startChars = @" ¡¿<>-""”“()[]'‘`´¶♪¿¡.…—!?,:;/";
                 int appendFrom = 0;

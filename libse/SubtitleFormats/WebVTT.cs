@@ -73,10 +73,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
                 if (!string.IsNullOrEmpty(line))
                 {
-                    if (positionInfo == null)
-                        positionInfo = " line:" + line;
-                    else
-                        positionInfo = positionInfo += " line:" + line;
+                    positionInfo += " line:" + line;
                 }
             }
 

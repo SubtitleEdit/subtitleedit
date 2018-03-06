@@ -152,7 +152,7 @@ namespace Nikse.SubtitleEdit.Forms
                 groupBoxLinesFound.Enabled = false;
             }
 
-            UpdateViewFromModel(Configuration.Settings.MultipleSearchAndReplaceGroups, Configuration.Settings.MultipleSearchAndReplaceGroups.Count > 0 ? Configuration.Settings.MultipleSearchAndReplaceGroups[0] : null);
+            UpdateViewFromModel(Configuration.Settings.MultipleSearchAndReplaceGroups, Configuration.Settings.MultipleSearchAndReplaceGroups[0]);
         }
 
         internal void RunFromBatch(Subtitle subtitle)

@@ -1120,7 +1120,6 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                                         if (log)
                                             AutoGuessesUsed.Add($"#{index + 1}: {word} -> {guess} in line via '{"OCRFixReplaceList.xml"}': {line.Replace(Environment.NewLine, " ")}");
 
-                                        //line = line.Remove(match.Index, match.Value.Length).Insert(match.Index, guess);
                                         line = replacedLine;
                                         wordsNotFound--;
                                         if (log && UnknownWordsFound.Count > 0)
