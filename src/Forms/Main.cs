@@ -206,7 +206,7 @@ namespace Nikse.SubtitleEdit.Forms
         private Keys _mainTextBoxUnbreak = Keys.None;
         private Keys _mainMergeDialog = Keys.None;
         private Keys _mainToggleFocus = Keys.None;
-        private Keys _mainListViewToggleDashes = Keys.None;       
+        private Keys _mainListViewToggleDashes = Keys.None;
         private Keys _mainListViewAutoDuration = Keys.None;
         private Keys _mainListViewFocusWaveform = Keys.None;
         private Keys _mainListViewGoToNextError = Keys.None;
@@ -18939,6 +18939,8 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
 
             SubtitleFormat currentFormat = GetCurrentSubtitleFormat();
+            if (currentFormat == null)
+                currentFormat = new SubRip();
             UiUtil.SetSaveDialogFilter(saveFileDialog1, currentFormat);
 
             saveFileDialog1.Title = _language.SaveOriginalSubtitleAs;
@@ -18947,8 +18949,10 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (!string.IsNullOrEmpty(_videoFileName))
                 saveFileDialog1.FileName = Path.GetFileNameWithoutExtension(_videoFileName);
-            else
+            else if (!string.IsNullOrEmpty(_subtitleAlternateFileName))
                 saveFileDialog1.FileName = Path.GetFileNameWithoutExtension(_subtitleAlternateFileName);
+            else
+                saveFileDialog1.FileName = string.Empty;
 
             if (!string.IsNullOrEmpty(openFileDialog1.InitialDirectory))
                 saveFileDialog1.InitialDirectory = openFileDialog1.InitialDirectory;
@@ -18957,7 +18961,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (result == DialogResult.OK)
             {
                 _subtitleAlternateFileName = saveFileDialog1.FileName;
-                SaveOriginalSubtitle(GetCurrentSubtitleFormat());
+                SaveOriginalSubtitle(currentFormat);
                 SetTitle();
                 if (_fileName != null)
                 {
