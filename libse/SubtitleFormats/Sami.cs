@@ -440,7 +440,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             if (indexOfDiv < 0)
                 indexOfDiv = text.IndexOf("<div>", StringComparison.Ordinal);
             int maxLoop = 10;
-            while (indexOfDiv > 0 && maxLoop > 0)
+            while (indexOfDiv > 0 && maxLoop >= 0)
             {
                 int indexOfStartEnd = text.IndexOf(">", indexOfDiv + 1, StringComparison.Ordinal);
                 if (indexOfStartEnd > 0)
@@ -452,7 +452,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     if (indexOfDiv < 0)
                         indexOfDiv = text.IndexOf("<div>", StringComparison.Ordinal);
                 }
-                maxLoop++;
+                maxLoop--;
             }
             return text;
         }

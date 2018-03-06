@@ -740,28 +740,6 @@ namespace Nikse.SubtitleEdit.Forms
                     File.WriteAllText(saveFileDialog1.FileName, header + sb);
                     MessageBox.Show(string.Format(Configuration.Settings.Language.ExportPngXml.XImagesSavedInY, imagesSavedCount, Path.GetDirectoryName(saveFileDialog1.FileName)));
                 }
-                else if (_exportType == ExportFormats.DCinemaInterop)
-                {
-                    var doc = new XmlDocument();
-                    string title = "unknown";
-                    if (!string.IsNullOrEmpty(_fileName))
-                        title = Path.GetFileNameWithoutExtension(_fileName);
-
-                    string guid = Guid.NewGuid().ToString().RemoveChar('-').Insert(8, "-").Insert(13, "-").Insert(18, "-").Insert(23, "-");
-                    doc.LoadXml("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + Environment.NewLine +
-                                "<DCSubtitle Version=\"1.1\">" + Environment.NewLine +
-                                "<SubtitleID>" + guid + "</SubtitleID>" + Environment.NewLine +
-                                "<MovieTitle>" + title + "</MovieTitle>" + Environment.NewLine +
-                                "<ReelNumber>1</ReelNumber>" + Environment.NewLine +
-                                "<Language>English</Language>" + Environment.NewLine +
-                                sb +
-                                "</DCSubtitle>");
-                    string fName = saveFileDialog1.FileName;
-                    if (!fName.EndsWith(".xml", StringComparison.OrdinalIgnoreCase))
-                        fName += ".xml";
-                    File.WriteAllText(fName, SubtitleFormat.ToUtf8XmlString(doc));
-                    MessageBox.Show(string.Format(Configuration.Settings.Language.ExportPngXml.XImagesSavedInY, imagesSavedCount, Path.GetDirectoryName(fName)));
-                }
                 else
                 {
                     WriteBdnXmlFile(imagesSavedCount, sb, Path.Combine(folderBrowserDialog1.SelectedPath, "BDN_Index.xml"));
@@ -1805,7 +1783,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
         private static string FormatFabTime(TimeCode time, MakeBitmapParameter param)
         {
-            if (param.Bitmap.Width == 720 && param.Bitmap.Width == 480) // NTSC
+            if (param.Bitmap.Width == 720 && param.Bitmap.Height == 480) // NTSC
                 return $"{time.Hours:00};{time.Minutes:00};{time.Seconds:00};{SubtitleFormat.MillisecondsToFramesMaxFrameRate(time.Milliseconds):00}";
 
             // drop frame

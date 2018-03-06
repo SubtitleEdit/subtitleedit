@@ -21,8 +21,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 return "24";
             if (Configuration.Settings.General.CurrentFrameRate < 29)
                 return "25";
-            if (Configuration.Settings.General.CurrentFrameRate < 29)
-                return "25";
             if (Configuration.Settings.General.CurrentFrameRate < 30)
                 return "30"; // ntsc 29.97
             if (Configuration.Settings.General.CurrentFrameRate < 40)
@@ -41,19 +39,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             if (Configuration.Settings.General.CurrentFrameRate < 25)
                 return "FALSE";
             return "TRUE";
-            //if (Configuration.Settings.General.CurrentFrameRate < 29)
-            //    return "FALSE";
-            //if (Configuration.Settings.General.CurrentFrameRate < 29)
-            //    return "FALSE";
-            //if (Configuration.Settings.General.CurrentFrameRate < 30)
-            //    return "TRUE"; // ntsc 29.97
-            //if (Configuration.Settings.General.CurrentFrameRate < 40)
-            //    return "TRUE";
-            //if (Configuration.Settings.General.CurrentFrameRate < 40)
-            //    return "TRUE";
-            //if (Configuration.Settings.General.CurrentFrameRate < 60)
-            //    return "TRUE"; // ntsc 59.94
-            //return "FALSE";
         }
 
         public override string ToText(Subtitle subtitle, string title)
@@ -168,12 +153,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         foreach (XmlNode generatorItemNode in node.SelectNodes("generatoritem"))
                         {
                             XmlNode rate = generatorItemNode.SelectSingleNode("rate");
-                            if (rate != null)
-                            {
-                                XmlNode timebase = rate.SelectSingleNode("timebase");
-                                if (timebase != null)
-                                    frameRate = double.Parse(timebase.InnerText);
-                            }
+                            XmlNode timebase = rate?.SelectSingleNode("timebase");
+                            if (timebase != null)
+                                frameRate = double.Parse(timebase.InnerText);
 
                             double startFrame = 0;
                             double endFrame = 0;

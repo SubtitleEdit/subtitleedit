@@ -112,8 +112,6 @@ namespace Nikse.SubtitleEdit.Core
                     sb.Append(Outline);
                 else if (f == "shadow")
                     sb.Append(OutlineWidth);
-                else if (f == "shadow")
-                    sb.Append(ShadowWidth);
                 else if (f == "marginl")
                     sb.Append(MarginLeft);
                 else if (f == "marginr")

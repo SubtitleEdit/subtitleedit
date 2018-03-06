@@ -267,16 +267,12 @@ namespace Nikse.SubtitleEdit.Forms
                 d = $"{duration.Seconds:00},{SubtitleFormat.MillisecondsToFramesMaxFrameRate(duration.Milliseconds):00}";
             else if (timeCodeTemplate.EndsWith("ss;ff", StringComparison.Ordinal))
                 d = $"{duration.Seconds:00};{SubtitleFormat.MillisecondsToFramesMaxFrameRate(duration.Milliseconds):00}";
-            else if (timeCodeTemplate.EndsWith("ss;ff", StringComparison.Ordinal))
-                d = $"{duration.Seconds:00};{SubtitleFormat.MillisecondsToFramesMaxFrameRate(duration.Milliseconds):00}";
             else if (timeCodeTemplate.EndsWith("ss.zzz", StringComparison.Ordinal))
                 d = $"{duration.Seconds:00}.{duration.Milliseconds:000}";
             else if (timeCodeTemplate.EndsWith("ss:zzz", StringComparison.Ordinal))
                 d = $"{duration.Seconds:00}:{duration.Milliseconds:000}";
             else if (timeCodeTemplate.EndsWith("ss,zzz", StringComparison.Ordinal))
                 d = $"{duration.Seconds:00},{duration.Milliseconds:000}";
-            else if (timeCodeTemplate.EndsWith("ss;zzz", StringComparison.Ordinal))
-                d = $"{duration.Seconds:00};{duration.Milliseconds:000}";
             else if (timeCodeTemplate.EndsWith("ss;zzz", StringComparison.Ordinal))
                 d = $"{duration.Seconds:00};{duration.Milliseconds:000}";
             else if (timeCodeTemplate.EndsWith("ss.zz", StringComparison.Ordinal))

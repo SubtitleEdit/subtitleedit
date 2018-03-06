@@ -293,14 +293,14 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             };
             try
             {
-                if (ssaStyle.Bold || ssaStyle.Italic)
-                    subItem.Font = new Font(ssaStyle.FontName, subItem.Font.Size, FontStyle.Bold | FontStyle.Italic);
-                else if (ssaStyle.Bold)
-                    subItem.Font = new Font(ssaStyle.FontName, subItem.Font.Size, FontStyle.Bold);
-                else if (ssaStyle.Italic)
-                    subItem.Font = new Font(ssaStyle.FontName, subItem.Font.Size, FontStyle.Italic);
-                else if (ssaStyle.Italic)
-                    subItem.Font = new Font(ssaStyle.FontName, subItem.Font.Size, FontStyle.Regular);
+                var fontStyle = FontStyle.Regular;
+                if (ssaStyle.Bold)
+                    fontStyle |= FontStyle.Bold;
+                if (ssaStyle.Italic)
+                    fontStyle |= FontStyle.Italic;
+                if (ssaStyle.Underline)
+                    fontStyle |= FontStyle.Underline;
+                subItem.Font = new Font(ssaStyle.FontName, subItem.Font.Size, fontStyle);
             }
             catch
             {

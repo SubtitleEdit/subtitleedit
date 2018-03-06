@@ -23,13 +23,7 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.FixLargeFonts(this, buttonOK);
         }
 
-        public int LineNumber
-        {
-            get
-            {
-                return _lineNumber;
-            }
-        }
+        public int LineNumber => _lineNumber;
 
         public void Initialize(int min, int max)
         {
@@ -76,11 +70,6 @@ namespace Nikse.SubtitleEdit.Forms
                     e.KeyCode == Keys.End ||
                     (e.KeyValue >= 96 && e.KeyValue <= 105))
                 {
-                    return;
-                }
-                else if (e.KeyCode == Keys.Enter)
-                {
-                    ButtonOkClick(null, null);
                 }
                 else if (e.KeyData == (Keys.Control | Keys.V) && Clipboard.GetText(TextDataFormat.UnicodeText).Length > 0)
                 {
