@@ -501,21 +501,6 @@ namespace Test
             }
         }
 
-        [TestMethod]
-        public void FixHyphensWithBrackets()
-        {
-            using (var target = GetFixCommonErrorsLib())
-            {
-                InitializeFixCommonErrorsLine(target, "[WINCES]" + Environment.NewLine + "- Uh, a little bumpy here.");
-                new FixHyphensAdd().Fix(_subtitle, new EmptyFixCallback());
-                Assert.AreEqual(_subtitle.Paragraphs[0].Text, "- \"Into The Woods.\"" + Environment.NewLine + "- \"Sweeney Todd.\"");
-            }
-        }
-
-        
-        
-
-
         #endregion Fix Hyphens (add dash)
 
         #region Fix OCR errors
