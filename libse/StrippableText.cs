@@ -176,52 +176,27 @@ namespace Nikse.SubtitleEdit.Core
             var originalNames = new List<string>();
             ReplaceNames1Remove(nameList, replaceIds, replaceNames, originalNames);
 
-            if (checkLastLine)
+            if (checkLastLine && ShouldStartWithUpperCase(lastLine, millisecondsFromLast))
             {
-                string s = HtmlUtil.RemoveHtmlTags(lastLine).TrimEnd().TrimEnd('\"').TrimEnd('”').TrimEnd();
-
-                bool startWithUppercase = string.IsNullOrEmpty(s) ||
-                                          s.EndsWith('.') ||
-                                          s.EndsWith('!') ||
-                                          s.EndsWith('?') ||
-                                          s.EndsWith(". ♪", StringComparison.Ordinal) ||
-                                          s.EndsWith("! ♪", StringComparison.Ordinal) ||
-                                          s.EndsWith("? ♪", StringComparison.Ordinal) ||
-                                          s.EndsWith(']') ||
-                                          s.EndsWith(')') ||
-                                          s.EndsWith(':') ||
-                                          s.EndsWith('_');
-                    
-                if (!startWithUppercase && millisecondsFromLast > 5000)
-                    startWithUppercase = true;
-
-                // start with uppercase after music symbol - but only if next line does not start with music symbol
-                if (!startWithUppercase && (s.EndsWith('♪') || s.EndsWith('♫')))
+                if (StrippedText.StartsWith("_@", StringComparison.Ordinal))
                 {
-                    if (!Pre.Contains(new[] { '♪', '♫' }))
-                        startWithUppercase = true;
-                }
-
-                if (startWithUppercase && StrippedText.Length > 0 && !Pre.Contains("...") && !Pre.Contains('…'))
-                {
-                    if (!StrippedText.StartsWith("www.", StringComparison.OrdinalIgnoreCase) &&
-                        !StrippedText.StartsWith("http", StringComparison.OrdinalIgnoreCase))
+                    for (int i = 0; i < replaceIds.Count; i++)
                     {
-                        StrippedText = char.ToUpper(StrippedText[0]) + StrippedText.Substring(1);
-                        if (StrippedText.StartsWith("_@", StringComparison.Ordinal))
+                        string id = $"_@{i}_";
+                        if (StrippedText.StartsWith(id, StringComparison.Ordinal))
                         {
-                            for (int i = 0; i < replaceIds.Count; i++)
+                            if (!string.IsNullOrEmpty(originalNames[i]))
                             {
-                                string id = $"_@{i}_";
-                                if (StrippedText.StartsWith(id, StringComparison.Ordinal))
-                                {
-                                    if (!string.IsNullOrEmpty(originalNames[i]))
-                                        originalNames[i] = char.ToUpper(originalNames[i][0]) + originalNames[i].Remove(0, 1);
-                                    break;
-                                }
+                                originalNames[i] = originalNames[i].CapitalizeFirstLetter();
                             }
+
+                            break;
                         }
                     }
+                }
+                else
+                {
+                    StrippedText = StrippedText.CapitalizeFirstLetter();
                 }
             }
 
@@ -351,6 +326,60 @@ namespace Nikse.SubtitleEdit.Core
         public string CombineWithPrePost(string text)
         {
             return Pre + text + Post;
+        }
+
+        private bool ShouldStartWithUpperCase(string lastLine, double millisecondsgaps)
+        {
+            // do not capitalize url
+            if (StrippedText.StartsWith("www.", StringComparison.OrdinalIgnoreCase) || StrippedText.StartsWith("http", StringComparison.OrdinalIgnoreCase))
+            {
+                return false;
+            }
+
+            // do not capitalize word like iPhone
+            if (StrippedText.Length > 1 && StrippedText[0] == 'i' && char.IsUpper(StrippedText[1]))
+            {
+                return false;
+            }
+
+            // shouldn't capitalize current line not closed
+            if (Pre.Contains("...") || Pre.Contains("…"))
+            {
+                return false;
+            }
+
+            // too much gaps between lines, so should be considered as closed
+            if (millisecondsgaps > 5000)
+            {
+                return true;
+            }
+
+            var preLine = HtmlUtil.RemoveHtmlTags(lastLine).TrimEnd().TrimEnd('\"', '”').TrimEnd();
+
+            // check if previous line was fully closed
+            if (string.IsNullOrEmpty(preLine) ||
+                preLine.EndsWith('.') ||
+                preLine.EndsWith('!') ||
+                preLine.EndsWith('?') ||
+                preLine.EndsWith(". ♪", StringComparison.Ordinal) ||
+                preLine.EndsWith("! ♪", StringComparison.Ordinal) ||
+                preLine.EndsWith("? ♪", StringComparison.Ordinal) ||
+                preLine.EndsWith(']') ||
+                preLine.EndsWith(')') ||
+                preLine.EndsWith(':') ||
+                preLine.EndsWith('_'))
+            {
+                return true;
+            }
+
+            // previous line ends with music symbol but current line doesn't contains any music symbol
+            if ((preLine.EndsWith('♪') || preLine.EndsWith('♫')) && !Pre.Contains(new[] { '♪', '♫' }))
+            {
+                return true;
+            }
+
+            // do not capitalize
+            return false;
         }
     }
 }
