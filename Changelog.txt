@@ -2,16 +2,30 @@
 
 3.5.7 (xth May 2018)
 * NEW:
-   * 
+   * Add support for mp4 dash ttml - thx Octirius
+   * Add shortcut for toggle music symbols - thx robtor
+   * Add new setting: volume boost
+   * Add new setting: "save as..." take file name from
+   * Font can be different for subtitle list view / text box
+   * Add download of ffmpeg
 * IMPROVED:
    * Update Brazilian translation - thx Igor
    * Update Czech translation - thx Trottel
    * Update Hungarian translation - thx ZityiSoft Team
    * Update Turkish translation - thx Falcon006
    * Update Finnish translation - thx Teijo S
+   * Update Bulgarian translation - thx KalinM
+   * Update Chinese translation - thx Leon
+   * Update Romanian translation - thx Mircea
+   * Update Basque translation - thx Xabier
+   * Update Portuguese translation - thx moob
    * Ctrl+a/ctrl+d/ctrl+shift+i works in more lists - thx tormento
 * FIXED:
    * Fix "Remove text for HI" issue - thx btsix
+   * Fix casing issue regarding "President" - thx Kolle
+   * Fix hashtag issue in "Fix common errors"
+   * Improve Swedish/Finnish language auto-detect - thx Kolle
+   * Fix crash in change play rate - thx darnn
 
 
 3.5.6 (27th February 2018)
