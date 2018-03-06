@@ -216,6 +216,7 @@ namespace Nikse.SubtitleEdit.Forms
         private Keys _waveformVerticalZoomOut = Keys.None;
         private Keys _waveformZoomIn = Keys.None;
         private Keys _waveformZoomOut = Keys.None;
+        private Keys _waveformSplit = Keys.None;
         private Keys _waveformPlaySelection = Keys.None;
         private Keys _waveformPlaySelectionEnd = Keys.None;
         private Keys _waveformSearchSilenceForward = Keys.None;
@@ -11657,6 +11658,22 @@ namespace Nikse.SubtitleEdit.Forms
                 audioVisualizer.ZoomOut();
                 e.SuppressKeyPress = true;
             }
+            if (audioVisualizer != null && audioVisualizer.Visible && e.KeyData == _waveformSplit)
+            {
+                if (mediaPlayer.IsPaused)
+                {
+                    var pos = mediaPlayer.VideoPlayer.CurrentPosition;
+                    var paragraph = _subtitle.GetFirstParagrapOrDefaultByTime(pos * TimeCode.BaseUnit);
+                    if (paragraph != null &&
+                        pos * TimeCode.BaseUnit + 100 > paragraph.StartTime.TotalMilliseconds &&
+                        pos * TimeCode.BaseUnit - 100 < paragraph.EndTime.TotalMilliseconds)
+                    {
+                        SubtitleListview1.SelectIndexAndEnsureVisible(paragraph);
+                        SplitSelectedParagraph(pos, null);
+                    }
+                }
+                e.SuppressKeyPress = true;
+            }
             else if (e.KeyData == _videoPlayFirstSelected && !string.IsNullOrEmpty(_videoFileName))
             {
                 PlayFirstSelectedSubtitle();
@@ -16502,6 +16519,7 @@ namespace Nikse.SubtitleEdit.Forms
             _waveformVerticalZoomOut = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformVerticalZoomOut);
             _waveformZoomIn = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformZoomIn);
             _waveformZoomOut = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformZoomOut);
+            _waveformSplit = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformSplit);
             _waveformPlaySelection = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformPlaySelection);
             _waveformPlaySelectionEnd = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformPlaySelectionEnd);
             _waveformSearchSilenceForward = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformSearchSilenceForward);
