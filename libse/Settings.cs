@@ -1082,6 +1082,7 @@ namespace Nikse.SubtitleEdit.Core
         public string WaveformVerticalZoomOut { get; set; }
         public string WaveformZoomIn { get; set; }
         public string WaveformZoomOut { get; set; }
+        public string WaveformSplit { get; set; }
         public string WaveformPlaySelection { get; set; }
         public string WaveformPlaySelectionEnd { get; set; }
         public string WaveformSearchSilenceForward { get; set; }
@@ -3235,6 +3236,9 @@ namespace Nikse.SubtitleEdit.Core
                 subNode = node.SelectSingleNode("WaveformZoomOut");
                 if (subNode != null)
                     settings.Shortcuts.WaveformZoomOut = subNode.InnerText;
+                subNode = node.SelectSingleNode("WaveformSplit");
+                if (subNode != null)
+                    settings.Shortcuts.WaveformSplit = subNode.InnerText;
                 subNode = node.SelectSingleNode("WaveformPlaySelection");
                 if (subNode != null)
                     settings.Shortcuts.WaveformPlaySelection = subNode.InnerText;
@@ -4018,6 +4022,7 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("WaveformVerticalZoomOut", settings.Shortcuts.WaveformVerticalZoomOut);
                 textWriter.WriteElementString("WaveformZoomIn", settings.Shortcuts.WaveformZoomIn);
                 textWriter.WriteElementString("WaveformZoomOut", settings.Shortcuts.WaveformZoomOut);
+                textWriter.WriteElementString("WaveformSplit", settings.Shortcuts.WaveformSplit);
                 textWriter.WriteElementString("WaveformPlaySelection", settings.Shortcuts.WaveformPlaySelection);
                 textWriter.WriteElementString("WaveformPlaySelectionEnd", settings.Shortcuts.WaveformPlaySelectionEnd);
                 textWriter.WriteElementString("WaveformSearchSilenceForward", settings.Shortcuts.WaveformSearchSilenceForward);
