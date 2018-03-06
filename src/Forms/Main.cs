@@ -16293,7 +16293,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void SetPlayRate(object sender, EventArgs e, bool skipStatusMessage)
         {
             var playRateDropDownItem = sender as ToolStripMenuItem;
-            if (playRateDropDownItem == null)
+            if (playRateDropDownItem == null || mediaPlayer == null || mediaPlayer.VideoPlayer == null)
                 return;
 
             foreach (ToolStripMenuItem item in toolStripSplitButtonPlayRate.DropDownItems)
