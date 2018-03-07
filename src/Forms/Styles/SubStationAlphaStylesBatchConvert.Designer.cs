@@ -165,7 +165,7 @@
             this.numericUpDownVideoHeight.Name = "numericUpDownVideoHeight";
             this.numericUpDownVideoHeight.Size = new System.Drawing.Size(47, 20);
             this.numericUpDownVideoHeight.TabIndex = 1;
-            this.numericUpDownVideoHeight.ValueChanged += new System.EventHandler(this.numericUpDownVideoHeight_ValueChanged);
+            this.numericUpDownVideoHeight.ValueChanged += new System.EventHandler(this.NumericUpDownVideoWidthOrHeightValueChanged);
             // 
             // buttonGetResolutionFromVideo
             // 
@@ -197,7 +197,7 @@
             this.numericUpDownVideoWidth.Name = "numericUpDownVideoWidth";
             this.numericUpDownVideoWidth.Size = new System.Drawing.Size(47, 20);
             this.numericUpDownVideoWidth.TabIndex = 0;
-            this.numericUpDownVideoWidth.ValueChanged += new System.EventHandler(this.numericUpDownVideoWidth_ValueChanged);
+            this.numericUpDownVideoWidth.ValueChanged += new System.EventHandler(this.NumericUpDownVideoWidthOrHeightValueChanged);
             // 
             // groupBoxOptions
             // 

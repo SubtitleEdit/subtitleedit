@@ -19,7 +19,7 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
                 var m = NumberOneToNine.Match(newText);
                 while (m.Success)
                 {
-                    bool ok = newText.Length > m.Index + 1 && !":.".Contains(newText[m.Index + 1].ToString()) || newText.Length <= m.Index + 1;
+                    bool ok = newText.Length <= m.Index + 1 || newText.Length > m.Index + 1 && !":.".Contains(newText[m.Index + 1].ToString());
                     if (!ok && newText.Length > m.Index + 1)
                     {
                         var rest = newText.Substring(m.Index + 1);
@@ -41,7 +41,7 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
                 m = NumberTen.Match(newText);
                 while (m.Success)
                 {
-                    bool ok = newText.Length > m.Index + 2 && newText[m.Index + 2] != ':' || newText.Length <= m.Index + 2;
+                    bool ok = newText.Length <= m.Index + 2 || newText.Length > m.Index + 2 && newText[m.Index + 2] != ':';
                     if (ok && m.Index > 0 && ":.".Contains(newText[m.Index - 1].ToString()))
                         ok = false;
                     if (ok)
