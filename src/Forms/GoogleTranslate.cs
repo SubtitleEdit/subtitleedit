@@ -680,20 +680,19 @@ namespace Nikse.SubtitleEdit.Forms
             comboBox.Items.Add(new ComboBoxItem("BASQUE", "eu"));
             comboBox.Items.Add(new ComboBoxItem("BELARUSIAN", "be"));
             comboBox.Items.Add(new ComboBoxItem("BENGALI", "bn"));
-            // comboBox.Items.Add(new ComboBoxItem("BIHARI" , "bh"));
             comboBox.Items.Add(new ComboBoxItem("BOSNIAN", "bs"));
             comboBox.Items.Add(new ComboBoxItem("BULGARIAN", "bg"));
             comboBox.Items.Add(new ComboBoxItem("BURMESE", "my"));
             comboBox.Items.Add(new ComboBoxItem("CATALAN", "ca"));
             comboBox.Items.Add(new ComboBoxItem("CEBUANO", "ceb"));
-            // comboBox.Items.Add(new ComboBoxItem("CHEROKEE" , "chr"));
+            comboBox.Items.Add(new ComboBoxItem("CHICHEWA", "ny"));
             comboBox.Items.Add(new ComboBoxItem("CHINESE", "zh"));
             comboBox.Items.Add(new ComboBoxItem("CHINESE_SIMPLIFIED", "zh-CN"));
             comboBox.Items.Add(new ComboBoxItem("CHINESE_TRADITIONAL", "zh-TW"));
+            comboBox.Items.Add(new ComboBoxItem("CORSICAN", "co"));
             comboBox.Items.Add(new ComboBoxItem("CROATIAN", "hr"));
             comboBox.Items.Add(new ComboBoxItem("CZECH", "cs"));
             comboBox.Items.Add(new ComboBoxItem("DANISH", "da"));
-            // comboBox.Items.Add(new ComboBoxItem("DHIVEHI" , "dv"));
             comboBox.Items.Add(new ComboBoxItem("DUTCH", "nl"));
             comboBox.Items.Add(new ComboBoxItem("ENGLISH", "en"));
             comboBox.Items.Add(new ComboBoxItem("ESPERANTO", "eo"));
@@ -701,14 +700,15 @@ namespace Nikse.SubtitleEdit.Forms
             comboBox.Items.Add(new ComboBoxItem("FILIPINO", "tl"));
             comboBox.Items.Add(new ComboBoxItem("FINNISH", "fi"));
             comboBox.Items.Add(new ComboBoxItem("FRENCH", "fr"));
+            comboBox.Items.Add(new ComboBoxItem("FRISIAN", "fy"));
             comboBox.Items.Add(new ComboBoxItem("GALICIAN", "gl"));
             comboBox.Items.Add(new ComboBoxItem("GEORGIAN", "ka"));
             comboBox.Items.Add(new ComboBoxItem("GERMAN", "de"));
             comboBox.Items.Add(new ComboBoxItem("GREEK", "el"));
-            // comboBox.Items.Add(new ComboBoxItem("GUARANI" , "gn"));
             comboBox.Items.Add(new ComboBoxItem("GUJARATI", "gu"));
             comboBox.Items.Add(new ComboBoxItem("HAITIAN CREOLE", "ht"));
             comboBox.Items.Add(new ComboBoxItem("HAUSA", "ha"));
+            comboBox.Items.Add(new ComboBoxItem("HAWAIIAN", "haw"));
             comboBox.Items.Add(new ComboBoxItem("HEBREW", "iw"));
             comboBox.Items.Add(new ComboBoxItem("HINDI", "hi"));
             comboBox.Items.Add(new ComboBoxItem("HMOUNG", "hmn"));
@@ -717,7 +717,6 @@ namespace Nikse.SubtitleEdit.Forms
             comboBox.Items.Add(new ComboBoxItem("IGBO", "ig"));
             comboBox.Items.Add(new ComboBoxItem("INDONESIAN", "id"));
             comboBox.Items.Add(new ComboBoxItem("IRISH", "ga"));
-            // comboBox.Items.Add(new ComboBoxItem("INUKTITUT" , "iu"));
             comboBox.Items.Add(new ComboBoxItem("ITALIAN", "it"));
             comboBox.Items.Add(new ComboBoxItem("JAPANESE", "ja"));
             comboBox.Items.Add(new ComboBoxItem("JAVANESE", "jw"));
@@ -731,16 +730,18 @@ namespace Nikse.SubtitleEdit.Forms
             comboBox.Items.Add(new ComboBoxItem("LATIN", "la"));
             comboBox.Items.Add(new ComboBoxItem("LATVIAN", "lv"));
             comboBox.Items.Add(new ComboBoxItem("LITHUANIAN", "lt"));
+            comboBox.Items.Add(new ComboBoxItem("LUXEMBOURGISH", "lb"));
             comboBox.Items.Add(new ComboBoxItem("MACEDONIAN", "mk"));
             comboBox.Items.Add(new ComboBoxItem("MALAY", "ms"));
+            comboBox.Items.Add(new ComboBoxItem("MALAGASY", "mg"));
             comboBox.Items.Add(new ComboBoxItem("MALAYALAM", "ml"));
             comboBox.Items.Add(new ComboBoxItem("MALTESE", "mt"));
             comboBox.Items.Add(new ComboBoxItem("MAORI", "mi"));
             comboBox.Items.Add(new ComboBoxItem("MARATHI", "mr"));
             comboBox.Items.Add(new ComboBoxItem("MONGOLIAN", "mn"));
+            comboBox.Items.Add(new ComboBoxItem("MYANMAR", "my"));
             comboBox.Items.Add(new ComboBoxItem("NEPALI", "ne"));
             comboBox.Items.Add(new ComboBoxItem("NORWEGIAN", "no"));
-            // comboBox.Items.Add(new ComboBoxItem("ORIYA" , "or"));
             comboBox.Items.Add(new ComboBoxItem("PASHTO", "ps"));
             comboBox.Items.Add(new ComboBoxItem("PERSIAN", "fa"));
             comboBox.Items.Add(new ComboBoxItem("POLISH", "pl"));
@@ -752,29 +753,28 @@ namespace Nikse.SubtitleEdit.Forms
                 comboBox.Items.Add(new ComboBoxItem("ROMANJI", "romanji"));
 
             comboBox.Items.Add(new ComboBoxItem("RUSSIAN", "ru"));
-            // comboBox.Items.Add(new ComboBoxItem("SANSKRIT" , "sa"));
+            comboBox.Items.Add(new ComboBoxItem("SAMOAN", "sm"));
+            comboBox.Items.Add(new ComboBoxItem("SCOTS GAELIC", "gd"));
             comboBox.Items.Add(new ComboBoxItem("SERBIAN", "sr"));
-            comboBox.Items.Add(new ComboBoxItem("SINDHI", "sd"));
             comboBox.Items.Add(new ComboBoxItem("SESOTHO", "st"));
+            comboBox.Items.Add(new ComboBoxItem("SHONA", "sn"));
+            comboBox.Items.Add(new ComboBoxItem("SINDHI", "sd"));
             comboBox.Items.Add(new ComboBoxItem("SINHALA", "si"));
             comboBox.Items.Add(new ComboBoxItem("SLOVAK", "sk"));
             comboBox.Items.Add(new ComboBoxItem("SLOVENIAN", "sl"));
             comboBox.Items.Add(new ComboBoxItem("SOMALI", "so"));
             comboBox.Items.Add(new ComboBoxItem("SPANISH", "es"));
+            comboBox.Items.Add(new ComboBoxItem("SUNDANESE", "su"));
             comboBox.Items.Add(new ComboBoxItem("SWAHILI", "sw"));
             comboBox.Items.Add(new ComboBoxItem("SWEDISH", "sv"));
-            comboBox.Items.Add(new ComboBoxItem("SWAHILII", "sw"));
             comboBox.Items.Add(new ComboBoxItem("TAJIK", "tg"));
             comboBox.Items.Add(new ComboBoxItem("TAMIL", "ta"));
-            // comboBox.Items.Add(new ComboBoxItem("TAGALOG" , "tl"));
             comboBox.Items.Add(new ComboBoxItem("TELUGU", "te"));
             comboBox.Items.Add(new ComboBoxItem("THAI", "th"));
-            // comboBox.Items.Add(new ComboBoxItem("TIBETAN" , "bo"));
             comboBox.Items.Add(new ComboBoxItem("TURKISH", "tr"));
             comboBox.Items.Add(new ComboBoxItem("UKRAINIAN", "uk"));
             comboBox.Items.Add(new ComboBoxItem("URDU", "ur"));
             comboBox.Items.Add(new ComboBoxItem("UZBEK", "uz"));
-            // comboBox.Items.Add(new ComboBoxItem("UIGHUR" , "ug"));
             comboBox.Items.Add(new ComboBoxItem("VIETNAMESE", "vi"));
             comboBox.Items.Add(new ComboBoxItem("WELSH", "cy"));
             comboBox.Items.Add(new ComboBoxItem("XHOSA", "xh"));
@@ -893,7 +893,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (node.ChildNodes.Count == 0)
             {
                 string oldText = node.InnerText;
-                string newText = Nikse.SubtitleEdit.Forms.GoogleTranslate.TranslateTextViaApi(node.InnerText, languagePair);
+                string newText = TranslateTextViaApi(node.InnerText, languagePair);
                 if (!string.IsNullOrEmpty(oldText) && !string.IsNullOrEmpty(newText))
                 {
                     if (oldText.Contains("{0:"))
@@ -1109,7 +1109,7 @@ namespace Nikse.SubtitleEdit.Forms
                 int index = 0;
                 foreach (Paragraph p in _subtitle.Paragraphs)
                 {
-                    string text = string.Format("{0} +-+ ", SetFormattingTypeAndSplitting(index, p.Text, from.StartsWith("zh")));
+                    string text = $"{SetFormattingTypeAndSplitting(index, p.Text, @from.StartsWith("zh"))} +-+ ";
                     if (!overQuota)
                     {
                         if (Utilities.UrlEncode(sb + text).Length >= textMaxSize)
@@ -1209,5 +1209,6 @@ namespace Nikse.SubtitleEdit.Forms
         {
             _screenScrapingEncoding = null;
         }
+
     }
 }
