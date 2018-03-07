@@ -145,6 +145,7 @@
             this.radioButtonVideoPlayerMpcHc = new System.Windows.Forms.RadioButton();
             this.tabPageWaveform = new System.Windows.Forms.TabPage();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.buttonDownloadFfmpeg = new System.Windows.Forms.Button();
             this.buttonBrowseToFFmpeg = new System.Windows.Forms.Button();
             this.textBoxFFmpegPath = new System.Windows.Forms.TextBox();
             this.labelFFmpegPath = new System.Windows.Forms.Label();
@@ -342,7 +343,6 @@
             this.colorDialogSSAStyle = new System.Windows.Forms.ColorDialog();
             this.labelStatus = new System.Windows.Forms.Label();
             this.openFileDialogFFmpeg = new System.Windows.Forms.OpenFileDialog();
-            this.buttonDownloadFfmpeg = new System.Windows.Forms.Button();
             this.tabControlSettings.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
@@ -843,8 +843,8 @@
             this.comboBoxTimeCodeMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxTimeCodeMode.FormattingEnabled = true;
             this.comboBoxTimeCodeMode.Items.AddRange(new object[] {
-            "HH:MM:SS:MSEC (00:00:01.500)",
-            "HH:MM:SS:FF (01:00:02.12)"});
+            "HH:MM:SS:MSEC (00:00:00.000)",
+            "HH:MM:SS:FF (00:00:00.00)"});
             this.comboBoxTimeCodeMode.Location = new System.Drawing.Point(528, 265);
             this.comboBoxTimeCodeMode.Name = "comboBoxTimeCodeMode";
             this.comboBoxTimeCodeMode.Size = new System.Drawing.Size(207, 21);
@@ -2009,6 +2009,16 @@
             this.groupBox3.Size = new System.Drawing.Size(419, 102);
             this.groupBox3.TabIndex = 3;
             this.groupBox3.TabStop = false;
+            // 
+            // buttonDownloadFfmpeg
+            // 
+            this.buttonDownloadFfmpeg.Location = new System.Drawing.Point(274, 17);
+            this.buttonDownloadFfmpeg.Name = "buttonDownloadFfmpeg";
+            this.buttonDownloadFfmpeg.Size = new System.Drawing.Size(136, 21);
+            this.buttonDownloadFfmpeg.TabIndex = 2;
+            this.buttonDownloadFfmpeg.Text = "Download ffmpeg";
+            this.buttonDownloadFfmpeg.UseVisualStyleBackColor = true;
+            this.buttonDownloadFfmpeg.Click += new System.EventHandler(this.buttonDownloadFfmpeg_Click);
             // 
             // buttonBrowseToFFmpeg
             // 
@@ -4129,16 +4139,6 @@
             // openFileDialogFFmpeg
             // 
             this.openFileDialogFFmpeg.FileName = "openFileDialog1";
-            // 
-            // buttonDownloadFfmpeg
-            // 
-            this.buttonDownloadFfmpeg.Location = new System.Drawing.Point(274, 17);
-            this.buttonDownloadFfmpeg.Name = "buttonDownloadFfmpeg";
-            this.buttonDownloadFfmpeg.Size = new System.Drawing.Size(136, 21);
-            this.buttonDownloadFfmpeg.TabIndex = 2;
-            this.buttonDownloadFfmpeg.Text = "Download ffmpeg";
-            this.buttonDownloadFfmpeg.UseVisualStyleBackColor = true;
-            this.buttonDownloadFfmpeg.Click += new System.EventHandler(this.buttonDownloadFfmpeg_Click);
             // 
             // Settings
             // 
