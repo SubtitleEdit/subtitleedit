@@ -1437,7 +1437,6 @@ namespace Test.Logic.Forms
             target.Settings.RemoveIfAllUppercase = false;
             target.Settings.RemoveTextBeforeColon = true;
             target.Settings.OnlyIfInSeparateLine = false;
-            target.Settings.OnlyIfInSeparateLine = false;
             target.Settings.ColonSeparateLine = false;
             target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
             string text = "- I have a theory, captain--" + Environment.NewLine + "UHURA: Captain Kirk.";

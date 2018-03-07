@@ -9,7 +9,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
     {
         public Mdhd Mdhd;
         public Minf Minf;
-        public readonly string HandlerType = null;
+        public readonly string HandlerType;
         public readonly string HandlerName = string.Empty;
 
         public bool IsTextSubtitle => HandlerType == "sbtl" || HandlerType == "text";
@@ -24,6 +24,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
 
         public Mdia(Stream fs, ulong maximumLength)
         {
+            HandlerType = string.Empty;
             Position = (ulong)fs.Position;
             while (fs.Position < (long)maximumLength)
             {

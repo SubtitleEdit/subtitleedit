@@ -677,20 +677,12 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             _header = sb.ToString().Trim();
         }
 
-        private void numericUpDownVideoWidth_ValueChanged(object sender, EventArgs e)
+        private void NumericUpDownVideoWidthOrHeightValueChanged(object sender, EventArgs e)
         {
             UpdatePropertiesTag("PlayResX", numericUpDownVideoWidth.Value.ToString(CultureInfo.InvariantCulture), numericUpDownVideoWidth.Value == 0);
             UpdatePropertiesTag("PlayResY", numericUpDownVideoHeight.Value.ToString(CultureInfo.InvariantCulture), numericUpDownVideoHeight.Value == 0);
             UpdateRawHeader();
         }
-
-        private void numericUpDownVideoHeight_ValueChanged(object sender, EventArgs e)
-        {
-            UpdatePropertiesTag("PlayResX", numericUpDownVideoWidth.Value.ToString(CultureInfo.InvariantCulture), numericUpDownVideoWidth.Value == 0);
-            UpdatePropertiesTag("PlayResY", numericUpDownVideoHeight.Value.ToString(CultureInfo.InvariantCulture), numericUpDownVideoHeight.Value == 0);
-            UpdateRawHeader();
-        }
-
         private void comboBoxCollision_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (comboBoxCollision.SelectedIndex == 0)
