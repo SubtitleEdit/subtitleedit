@@ -718,7 +718,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private string ConvertToTimeString(TimeCode time)
         {
-            return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", time.Hours, time.Minutes, time.Seconds, DCinemaSmpte2010.MsToFramesMaxFrameRate(time.Milliseconds, _frameRate));
+            return $"{time.Hours:00}:{time.Minutes:00}:{time.Seconds:00}:{DCinemaSmpte2010.MsToFramesMaxFrameRate(time.Milliseconds, _frameRate):00}";
         }
 
     }

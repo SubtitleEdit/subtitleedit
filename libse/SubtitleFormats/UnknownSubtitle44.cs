@@ -42,7 +42,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     text.Clear();
                     while (text.Length < 34)
                         text.Append(' ');
-                    sb.AppendLine(string.Format("{0}{1}", text, EncodeTimeCode(p.EndTime)));
+                    sb.AppendLine($"{text}{EncodeTimeCode(p.EndTime)}");
                 }
             }
             return sb.ToString();
@@ -50,7 +50,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static string EncodeTimeCode(TimeCode time)
         {
-            return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", time.Hours, time.Minutes, time.Seconds, MillisecondsToFramesMaxFrameRate(time.Milliseconds));
+            return $"{time.Hours:00}:{time.Minutes:00}:{time.Seconds:00}:{MillisecondsToFramesMaxFrameRate(time.Milliseconds):00}";
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)

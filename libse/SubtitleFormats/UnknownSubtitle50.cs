@@ -46,12 +46,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 if (p.Text.Contains("<i>"))
                 {
                     if (Utilities.CountTagInText(p.Text, "<i>") == 1 && Utilities.CountTagInText(p.Text, "</i>") == 1 &&
-                        p.Text.StartsWith("<i>") && p.Text.StartsWith("<i>"))
+                        p.Text.StartsWith("<i>", StringComparison.OrdinalIgnoreCase) && 
+                        p.Text.EndsWith("</i>", StringComparison.OrdinalIgnoreCase))
                     {
                         text = "||" + text.Replace(Environment.NewLine, "||" + Environment.NewLine + "||") + "||";
                     }
                     else if (Utilities.CountTagInText(p.Text, "<i>") == 2 && Utilities.CountTagInText(p.Text, "</i>") == 2 &&
-                        p.Text.StartsWith("<i>") && p.Text.StartsWith("<i>") && p.Text.Contains("</i>" + Environment.NewLine + "<i>"))
+                             p.Text.StartsWith("<i>", StringComparison.OrdinalIgnoreCase) && 
+                             p.Text.EndsWith("</i>", StringComparison.OrdinalIgnoreCase) && 
+                             p.Text.Contains("</i>" + Environment.NewLine + "<i>"))
                     {
                         text = "||" + text.Replace(Environment.NewLine, "||" + Environment.NewLine + "||") + "||";
                     }

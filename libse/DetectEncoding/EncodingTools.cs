@@ -12,10 +12,10 @@ namespace Nikse.SubtitleEdit.Core.DetectEncoding
     public static class EncodingTools
     {
         // this only contains ascii, default windows code page and unicode
-        private static int[] PreferredEncodingsForStream;
+        private static readonly int[] PreferredEncodingsForStream;
 
         // this contains all codepages, sorted by preference and byte usage
-        private static int[] PreferredEncodings;
+        private static readonly int[] PreferredEncodings;
 
         /// <summary>
         /// Static constructor that fills the default preferred codepages
@@ -143,12 +143,9 @@ namespace Nikse.SubtitleEdit.Core.DetectEncoding
                 if (byteCount < bestByteCount)
                 {
                     enc = Encoding.Unicode;
-                    bestByteCount = byteCount;
                 }
             }
-            else
-            {
-            }
+
             return enc;
         }
 
@@ -175,7 +172,7 @@ namespace Nikse.SubtitleEdit.Core.DetectEncoding
         private static Encoding DetectOutgoingEncoding(string input, int[] preferredEncodings, bool preserveOrder)
         {
             if (input == null)
-                throw new ArgumentNullException("input");
+                throw new ArgumentNullException(nameof(input));
 
             // empty strings can always be encoded as ASCII
             if (input.Length == 0)
@@ -185,13 +182,11 @@ namespace Nikse.SubtitleEdit.Core.DetectEncoding
 
             // get the IMultiLanguage3 interface
             IMultiLanguage3 multilang3 = new CMultiLanguageClass();
-            if (multilang3 == null)
-                throw new COMException("Failed to get IMultilang3");
             try
             {
-                int[] resultCodePages = new int[preferredEncodings != null ? preferredEncodings.Length : Encoding.GetEncodings().Length];
+                int[] resultCodePages = new int[preferredEncodings?.Length ?? Encoding.GetEncodings().Length];
                 uint detectedCodepages = (uint)resultCodePages.Length;
-                ushort specialChar = (ushort)'?';
+                ushort specialChar = '?';
 
                 // get unmanaged arrays
                 IntPtr pPrefEncs = preferredEncodings == null ? IntPtr.Zero : Marshal.AllocCoTaskMem(sizeof(uint) * preferredEncodings.Length);
@@ -213,7 +208,7 @@ namespace Nikse.SubtitleEdit.Core.DetectEncoding
 
                     multilang3.DetectOutboundCodePage(options,
                         input, (uint)input.Length,
-                        pPrefEncs, (uint)(preferredEncodings == null ? 0 : preferredEncodings.Length),
+                        pPrefEncs, (uint)(preferredEncodings?.Length ?? 0),
 
                         pDetectedEncs, ref detectedCodepages,
                         ref specialChar);
@@ -243,23 +238,21 @@ namespace Nikse.SubtitleEdit.Core.DetectEncoding
         public static Encoding[] DetectOutgoingEncodings(string input, int[] preferredEncodings, bool preserveOrder)
         {
             if (input == null)
-                throw new ArgumentNullException("input");
+                throw new ArgumentNullException(nameof(input));
 
             // empty strings can always be encoded as ASCII
             if (input.Length == 0)
-                return new Encoding[] { Encoding.ASCII };
+                return new[] { Encoding.ASCII };
 
             List<Encoding> result = new List<Encoding>();
 
             // get the IMultiLanguage3 interface
             IMultiLanguage3 multilang3 = new CMultiLanguageClass();
-            if (multilang3 == null)
-                throw new COMException("Failed to get IMultilang3");
             try
             {
                 int[] resultCodePages = new int[preferredEncodings.Length];
                 uint detectedCodepages = (uint)resultCodePages.Length;
-                ushort specialChar = (ushort)'?';
+                ushort specialChar = '?';
 
                 // get unmanaged arrays
                 IntPtr pPrefEncs = Marshal.AllocCoTaskMem(sizeof(uint) * preferredEncodings.Length);
@@ -344,11 +337,11 @@ namespace Nikse.SubtitleEdit.Core.DetectEncoding
                 throw new ArgumentOutOfRangeException("maxEncodings", "at least one encoding must be returned");
 
             if (input == null)
-                throw new ArgumentNullException("input");
+                throw new ArgumentNullException(nameof(input));
 
             // empty strings can always be encoded as ASCII
             if (input.Length == 0)
-                return new Encoding[] { Encoding.ASCII };
+                return new[] { Encoding.ASCII };
 
             // expand the string to be at least 256 bytes
             if (input.Length < 256)
@@ -368,8 +361,6 @@ namespace Nikse.SubtitleEdit.Core.DetectEncoding
 
             // get the IMultiLanguage" interface
             IMultiLanguage2 multilang2 = new CMultiLanguageClass();
-            if (multilang2 == null)
-                throw new COMException("Failed to get IMultilang2");
             try
             {
                 DetectEncodingInfo[] detectedEncdings = new DetectEncodingInfo[maxEncodings];
@@ -411,7 +402,7 @@ namespace Nikse.SubtitleEdit.Core.DetectEncoding
         public static string ReadTextFile(string path)
         {
             if (path == null)
-                throw new ArgumentNullException("path");
+                throw new ArgumentNullException(nameof(path));
 
             using (Stream fs = File.Open(path, FileMode.Open))
             {
@@ -430,7 +421,7 @@ namespace Nikse.SubtitleEdit.Core.DetectEncoding
         public static StreamReader OpenTextFile(string path)
         {
             if (path == null)
-                throw new ArgumentNullException("path");
+                throw new ArgumentNullException(nameof(path));
             return OpenTextStream(File.Open(path, FileMode.Open));
         }
 
@@ -444,21 +435,20 @@ namespace Nikse.SubtitleEdit.Core.DetectEncoding
         {
             // check stream parameter
             if (stream == null)
-                throw new ArgumentNullException("stream");
+                throw new ArgumentNullException(nameof(stream));
             if (!stream.CanSeek)
-                throw new ArgumentException("the stream must support seek operations", "stream");
+                throw new ArgumentException("the stream must support seek operations", nameof(stream));
 
             // assume default encoding at first place
-            Encoding detectedEncoding = Encoding.Default;
 
             // seek to stream start
             stream.Seek(0, SeekOrigin.Begin);
 
             // buffer for preamble and up to 512b sample text for dection
-            byte[] buf = new byte[System.Math.Min(stream.Length, 512)];
+            byte[] buf = new byte[Math.Min(stream.Length, 512)];
 
             stream.Read(buf, 0, buf.Length);
-            detectedEncoding = DetectInputCodepage(buf);
+            var detectedEncoding = DetectInputCodepage(buf);
             // seek back to stream start
             stream.Seek(0, SeekOrigin.Begin);
 

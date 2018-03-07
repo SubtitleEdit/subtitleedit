@@ -131,7 +131,7 @@ Sony,Sony DVD/UMD,1:85,16x9
         private static string EncodeTimeCode(TimeCode time)
         {
             //00:03:15.22 (last is frame)
-            return string.Format("{0:00}:{1:00}:{2:00}.{3:00}", time.Hours, time.Minutes, time.Seconds, MillisecondsToFramesMaxFrameRate(time.Milliseconds));
+            return $"{time.Hours:00}:{time.Minutes:00}:{time.Seconds:00}.{MillisecondsToFramesMaxFrameRate(time.Milliseconds):00}";
         }
 
     }

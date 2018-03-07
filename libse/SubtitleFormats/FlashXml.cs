@@ -45,7 +45,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static string ConvertToTimeString(TimeCode time)
         {
-            return string.Format("{0:00}:{1:00}:{2:00}.{3:00}", time.Hours, time.Minutes, time.Seconds, time.Milliseconds);
+            return $"{time.Hours:00}:{time.Minutes:00}:{time.Seconds:00}.{time.Milliseconds:00}";
         }
 
         public override string ToText(Subtitle subtitle, string title)

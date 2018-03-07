@@ -86,7 +86,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private static string ShowInSrtFormat(TimeSpan ts)
         {
-            return string.Format("{0:00}:{1:00}:{2:00},{3:000}", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds);
+            return $"{ts.Hours:00}:{ts.Minutes:00}:{ts.Seconds:00},{ts.Milliseconds:000}";
         }
 
         private void ListBox1SelectedIndexChanged(object sender, EventArgs e)

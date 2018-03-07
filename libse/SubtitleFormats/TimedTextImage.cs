@@ -96,6 +96,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         else if (attr.Name.EndsWith("duration", StringComparison.Ordinal))
                             dur = attr.InnerText;
                     }
+
+                    if (start == null)
+                        continue;
+
                     string text = pText.ToString();
                     text = text.Replace(Environment.NewLine + "</i>", "</i>" + Environment.NewLine);
                     text = text.Replace("<i></i>", string.Empty).Trim();
@@ -107,7 +111,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             couldBeFrames = false;
                         }
 
-                        if (couldBeMillisecondsWithMissingLastDigit && (end.Length != 11 || start == null || start.Length != 11 || end.Substring(8, 1) != "." | start.Substring(8, 1) != "."))
+                        if (couldBeMillisecondsWithMissingLastDigit && (end.Length != 11 || start == null || start.Length != 11 || end.Substring(8, 1) != "." || start.Substring(8, 1) != "."))
                         {
                             couldBeMillisecondsWithMissingLastDigit = false;
                         }
