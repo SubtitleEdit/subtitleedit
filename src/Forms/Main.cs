@@ -4999,7 +4999,6 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             textBoxListViewText.Visible = false;
                             SetTextForFindAndReplace(true);
-                            _findHelper.SelectedPosition += _findHelper.ReplaceText.Length;
                             searchStringFound = true;
                             replaceCount++;
                         }
