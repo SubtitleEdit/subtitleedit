@@ -300,7 +300,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                     c = c.TrimStart('#').ToUpper().PadLeft(8, 'F');
                                 fontColors.Push(c);
                                 fontNo++;
-                                i += endOfFont - i;
+                                i = endOfFont;
                             }
                             else if (fontNo > 0 && line.Substring(i).StartsWith("</font>"))
                             {

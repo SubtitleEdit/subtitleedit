@@ -139,8 +139,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
                 text = text.Remove(0, index + 1).TrimStart();
                 text = FixEllipsesStartHelper(text);
-                if (pre.Length > 0)
-                    pre += " ";
+                pre += " ";
             }
             return pre + text;
         }

@@ -80,7 +80,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 double currentWantedDisplayTime = Utilities.GetOptimalDisplayMilliseconds(p.Text, Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds);
                 double prevOptimalDisplayTime = Utilities.GetOptimalDisplayMilliseconds(prev.Text);
                 double currentOptimalDisplayTime = Utilities.GetOptimalDisplayMilliseconds(p.Text);
-                bool canBeEqual = callbacks.Format != null && callbacks.Format.GetType() == typeof(AdvancedSubStationAlpha) || callbacks.Format.GetType() == typeof(SubStationAlpha);
+                bool canBeEqual = callbacks != null && (callbacks.Format != null && callbacks.Format.GetType() == typeof(AdvancedSubStationAlpha) || callbacks.Format.GetType() == typeof(SubStationAlpha));
                 if (!canBeEqual)
                     canBeEqual = Configuration.Settings.Tools.FixCommonErrorsFixOverlapAllowEqualEndStart;
 

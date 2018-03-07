@@ -541,7 +541,7 @@ namespace Nikse.SubtitleEdit.Controls
                             int pos = SecondsToXPosition(time - _startPositionSeconds);
                             if (pos > 0 && pos < Width)
                             {
-                                if (Math.Abs(currentPositionPos - pos) < 0.01)
+                                if (currentPositionPos == pos)
                                 { // scene change and current pos are the same - draw 2 pixels + current pos dotted
                                     currentPosDone = true;
                                     using (var p = new Pen(Color.AntiqueWhite, 2))
@@ -616,7 +616,7 @@ namespace Nikse.SubtitleEdit.Controls
                 {
                     if (Width > 90)
                     {
-                        graphics.DrawString(WaveformNotLoadedText, textFont, textBrush, new PointF(Width / 2 - 65, Height / 2 - 10));
+                        graphics.DrawString(WaveformNotLoadedText, textFont, textBrush, new PointF(Width / 2.0f - 65, Height / 2.0f - 10));
                     }
                     else
                     {

@@ -99,9 +99,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     {
                         if (Helper.IsTurkishLittleI(firstLetter, encoding, language))
                             p.Text = pre + Helper.GetTurkishUppercaseLetter(firstLetter, encoding) + text.Substring(1);
-                        else if (language == "en" && (text.StartsWith("l ", StringComparison.Ordinal) || text.StartsWith("l-I", StringComparison.Ordinal) || text.StartsWith("ls ", StringComparison.Ordinal) || text.StartsWith("lnterested") ||
-                                                      text.StartsWith("lsn't ", StringComparison.Ordinal) || text.StartsWith("ldiot", StringComparison.Ordinal) || text.StartsWith("ln", StringComparison.Ordinal) || text.StartsWith("lm", StringComparison.Ordinal) ||
-                                                      text.StartsWith("ls", StringComparison.Ordinal) || text.StartsWith("lt", StringComparison.Ordinal) || text.StartsWith("lf ", StringComparison.Ordinal) || text.StartsWith("lc", StringComparison.Ordinal) || text.StartsWith("l'm ", StringComparison.Ordinal)) || text.StartsWith("l am ", StringComparison.Ordinal)) // l > I
+                        else if (IsEnglishCandidateForLowercaseLtoUppercaseI(language, text)) // l > I
                             p.Text = pre + "I" + text.Substring(1);
                         else
                             p.Text = pre + char.ToUpper(firstLetter) + text.Substring(1);
@@ -174,9 +172,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         {
                             if (Helper.IsTurkishLittleI(firstLetter, encoding, language))
                                 text = pre + Helper.GetTurkishUppercaseLetter(firstLetter, encoding) + text.Substring(1);
-                            else if (language == "en" && (text.StartsWith("l ", StringComparison.Ordinal) || text.StartsWith("l-I", StringComparison.Ordinal) || text.StartsWith("ls ") || text.StartsWith("lnterested") ||
-                                                     text.StartsWith("lsn't ", StringComparison.Ordinal) || text.StartsWith("ldiot", StringComparison.Ordinal) || text.StartsWith("ln", StringComparison.Ordinal) || text.StartsWith("lm", StringComparison.Ordinal) ||
-                                                     text.StartsWith("ls", StringComparison.Ordinal) || text.StartsWith("lt", StringComparison.Ordinal) || text.StartsWith("lf ", StringComparison.Ordinal) || text.StartsWith("lc", StringComparison.Ordinal) || text.StartsWith("l'm ", StringComparison.Ordinal)) || text.StartsWith("l am ", StringComparison.Ordinal)) // l > I
+                            else if (IsEnglishCandidateForLowercaseLtoUppercaseI(language, text)) // l > I
                                 text = pre + "I" + text.Substring(1);
                             else
                                 text = pre + char.ToUpper(firstLetter) + text.Substring(1);
@@ -276,5 +272,13 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             return p.Text;
         }
 
+        private static bool IsEnglishCandidateForLowercaseLtoUppercaseI(string language, string text)
+        {
+            return language == "en" && (text.StartsWith("l ", StringComparison.Ordinal) || text.StartsWith("l-I", StringComparison.Ordinal) ||
+                                        text.StartsWith("ls") || text.StartsWith("ldiot", StringComparison.Ordinal) || text.StartsWith("ln", StringComparison.Ordinal) ||
+                                        text.StartsWith("lm", StringComparison.Ordinal) || text.StartsWith("lt", StringComparison.Ordinal) ||
+                                        text.StartsWith("lf ", StringComparison.Ordinal) || text.StartsWith("lc", StringComparison.Ordinal) ||
+                                        text.StartsWith("l'm ", StringComparison.Ordinal)) || text.StartsWith("l've ", StringComparison.Ordinal);
+        }
     }
 }
