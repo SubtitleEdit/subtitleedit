@@ -85,7 +85,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         subtitle.Paragraphs.Add(p);
                     p = new Paragraph();
                 }
-                else if (!string.IsNullOrWhiteSpace(line))
+                else
                 {
                     expectStartTime = true;
                     p.Text = (p.Text + Environment.NewLine + line).Trim();

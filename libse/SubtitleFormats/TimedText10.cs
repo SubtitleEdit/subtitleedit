@@ -205,7 +205,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 xml.LoadXml(subtitle.Header);
                 XmlNode bodyNode = xml.DocumentElement.SelectSingleNode("//ttml:body", nsmgr);
-                XmlNode divNode = bodyNode.SelectSingleNode("ttml:div", nsmgr);
+                XmlNode divNode = null;
+                if (bodyNode != null)
+                    divNode = bodyNode.SelectSingleNode("ttml:div", nsmgr);
                 if (divNode == null)
                     divNode = xml.DocumentElement.SelectSingleNode("//ttml:body", nsmgr).FirstChild;
                 if (divNode != null)

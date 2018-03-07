@@ -129,7 +129,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static string EncodeTimeCode(TimeCode time)
         {
-            return string.Format("{0:00}.{1:00}", (int)time.TotalSeconds, MillisecondsToFramesMaxFrameRate(time.Milliseconds));
+            return $"{(int)time.TotalSeconds:00}.{MillisecondsToFramesMaxFrameRate(time.Milliseconds):00}";
         }
 
     }

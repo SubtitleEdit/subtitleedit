@@ -1306,7 +1306,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 return _bluRaySubtitles[index].IsForced;
             }
-            if (checkBoxCustomFourColors.Checked)
+            if (_vobSubMergedPackist != null && checkBoxCustomFourColors.Checked)
             {
                 return _vobSubMergedPackist[index].SubPicture.Forced;
             }

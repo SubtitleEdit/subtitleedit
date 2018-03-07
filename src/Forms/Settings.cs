@@ -2079,7 +2079,10 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void treeViewShortcuts_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            if (e.Node == null || e.Node.Nodes.Count > 0)
+            if (e?.Node == null)
+                return;
+
+            if (e.Node.Nodes.Count > 0)
             {
                 checkBoxShortcutsControl.Checked = false;
                 checkBoxShortcutsControl.Enabled = false;
@@ -2092,7 +2095,7 @@ namespace Nikse.SubtitleEdit.Forms
                 buttonUpdateShortcut.Enabled = false;
                 buttonClearShortcut.Enabled = false;
             }
-            else if (e.Node != null || e.Node.Nodes.Count == 0)
+            else if (e.Node.Nodes.Count == 0)
             {
                 checkBoxShortcutsControl.Enabled = true;
                 checkBoxShortcutsAlt.Enabled = true;

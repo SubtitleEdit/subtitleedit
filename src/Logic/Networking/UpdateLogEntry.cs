@@ -21,7 +21,7 @@ namespace Nikse.SubtitleEdit.Logic.Networking
 
         public override string ToString()
         {
-            return string.Format("{0:00}:{1:00}:{2:00} {3}: {4}", OccuredAt.Hour, OccuredAt.Minute, OccuredAt.Second, UserName, Action);
+            return $"{OccuredAt.Hour:00}:{OccuredAt.Minute:00}:{OccuredAt.Second:00} {UserName}: {Action}";
         }
 
     }

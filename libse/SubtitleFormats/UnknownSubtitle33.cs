@@ -32,23 +32,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 var lines = HtmlUtil.RemoveHtmlTags(p.Text).SplitToLines();
-                if (lines.Count > 0)
+                sb.AppendLine(string.Format(paragraphWriteFormat, EncodeTimeCode(p.StartTime), count.ToString(CultureInfo.InvariantCulture).PadLeft(2, ' '), lines[0]));
+                for (int i = 1; i < lines.Count; i++)
                 {
-                    sb.AppendLine(string.Format(paragraphWriteFormat, EncodeTimeCode(p.StartTime), count.ToString(CultureInfo.InvariantCulture).PadLeft(2, ' '), lines[0]));
-                    for (int i = 1; i < lines.Count; i++)
-                    {
-                        count++;
-                        if (count > 26)
-                        {
-                            sb.Append(string.Empty.PadLeft(38, ' ') + count2);
-                            sb.AppendLine();
-                            sb.AppendLine();
-                            count = 1;
-                            count2++;
-                        }
-                        sb.AppendLine(string.Format(paragraphWriteFormat, string.Empty, count.ToString(CultureInfo.InvariantCulture).PadLeft(10, ' '), lines[i]));
-                    }
-
                     count++;
                     if (count > 26)
                     {
@@ -58,15 +44,28 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         count = 1;
                         count2++;
                     }
+
+                    sb.AppendLine(string.Format(paragraphWriteFormat, string.Empty, count.ToString(CultureInfo.InvariantCulture).PadLeft(10, ' '), lines[i]));
+                }
+
+                count++;
+                if (count > 26)
+                {
+                    sb.Append(string.Empty.PadLeft(38, ' ') + count2);
+                    sb.AppendLine();
+                    sb.AppendLine();
+                    count = 1;
+                    count2++;
                 }
             }
+
             return sb.ToString().Trim();
         }
 
         private static string EncodeTimeCode(TimeCode timeCode)
         {
             int seconds = (int)Math.Round(timeCode.Seconds + timeCode.Milliseconds / 1000.0);
-            return string.Format("{0:00}:{1:00}:{2:00}", timeCode.Hours, timeCode.Minutes, seconds);
+            return $"{timeCode.Hours:00}:{timeCode.Minutes:00}:{seconds:00}";
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)

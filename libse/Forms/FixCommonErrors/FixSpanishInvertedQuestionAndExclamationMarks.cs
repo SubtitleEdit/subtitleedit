@@ -47,9 +47,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
         {
             if (p.Text.Contains(mark))
             {
-                bool skip = false;
-                if (last != null && p.Text.Contains(mark) && !p.Text.Contains(inverseMark) && last.Text.Contains(inverseMark) && !last.Text.Contains(mark))
-                    skip = true;
+                bool skip = last != null && !p.Text.Contains(inverseMark) && last.Text.Contains(inverseMark) && !last.Text.Contains(mark);
 
                 if (!skip && Utilities.CountTagInText(p.Text, mark) == Utilities.CountTagInText(p.Text, inverseMark) &&
                     HtmlUtil.RemoveHtmlTags(p.Text).TrimStart(inverseMark[0]).Contains(inverseMark) == false &&
