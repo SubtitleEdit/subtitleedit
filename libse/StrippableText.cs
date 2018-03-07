@@ -116,40 +116,53 @@ namespace Nikse.SubtitleEdit.Core
                 Post = Post.Remove(0, 1);
             }
 
-            string lower = StrippedText.ToLower();
+            const string expectedChars = " ,.!?:;\')]- <”\"\r\n";
             int idName = 0;
             foreach (string name in nameList)
             {
-                int start = lower.IndexOf(name.ToLowerInvariant(), StringComparison.Ordinal);
-                while (start >= 0 && start < lower.Length)
+                int idx = StrippedText.IndexOf(name, StringComparison.OrdinalIgnoreCase);
+                int nameLen = name.Length;
+
+                while (idx >= 0)
                 {
-                    bool startOk = (start == 0) || (lower[start - 1] == ' ') || (lower[start - 1] == '-') ||
-                                   (lower[start - 1] == '"') || (lower[start - 1] == '\'') || (lower[start - 1] == '>') || (lower[start - 1] == '[') || (lower[start - 1] == '“') ||
-                                   Environment.NewLine.EndsWith(lower[start - 1]);
-
-                    if (startOk && string.CompareOrdinal(name, "Don") == 0 && lower.Substring(start).StartsWith("don't", StringComparison.Ordinal))
-                        startOk = false;
-
-                    if (startOk)
+                    bool isWord = true;
+                    if (idx > 0)
                     {
-                        int end = start + name.Length;
-                        bool endOk = end <= lower.Length;
-                        if (endOk)
-                            endOk = end == lower.Length || (@" ,.!?:;')]- <”""" + Environment.NewLine).Contains(lower[end]);
+                        char preChar = StrippedText[idx - 1];
+                        isWord = preChar == ' ' || preChar == '"' || preChar == '\'' || preChar == '-' ||
+                                  preChar == '\n' || preChar == '\r' || preChar == '>' || preChar == '“' ||
+                                  preChar == '"' || preChar == '[' || preChar == '(';
+                    }
 
-                        if (endOk && StrippedText.Length >= start + name.Length)
+                    if (isWord)
+                    {
+                        if (name.Equals("Don", StringComparison.Ordinal) && idx + 5 <= StrippedText.Length)
                         {
-                            string originalName = StrippedText.Substring(start, name.Length);
-                            originalNames.Add(originalName);
-                            StrippedText = StrippedText.Remove(start, name.Length);
-                            StrippedText = StrippedText.Insert(start, GetAndInsertNextId(replaceIds, replaceNames, name, idName++));
-                            lower = StrippedText.ToLower();
+                            isWord = StrippedText.Substring(idx, 5).Equals("don't", StringComparison.OrdinalIgnoreCase);
                         }
                     }
-                    if (start + 3 > lower.Length)
-                        start = lower.Length + 1;
-                    else
-                        start = lower.IndexOf(name, start + 3, StringComparison.OrdinalIgnoreCase);
+
+                    int nextIdx = idx + nameLen;
+                    if (isWord)
+                    {
+                        // check for word boundary
+                        if (idx + nameLen == StrippedText.Length || expectedChars.Contains(StrippedText[idx + nameLen]))
+                        {
+                            originalNames.Add(StrippedText.Substring(idx, nameLen));
+                            int prevLen = StrippedText.Length;
+                            StrippedText = StrippedText.Remove(idx, nameLen);
+                            StrippedText = StrippedText.Insert(idx, GetAndInsertNextId(replaceIds, replaceNames, name, idName++));
+                            // compute next lookup index
+                            nextIdx -= (prevLen - StrippedText.Length);
+                        }
+                    }
+
+                    if (nextIdx >= StrippedText.Length)
+                    {
+                        break;
+                    }
+
+                    idx = StrippedText.IndexOf(name, nextIdx, StringComparison.OrdinalIgnoreCase);
                 }
             }
 
