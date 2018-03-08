@@ -4,6 +4,7 @@
 * NEW:
    * Add support for mp4 dash ttml - thx Octirius
    * Add shortcut for toggle music symbols - thx robtor
+   * Add shortcuts "Batchconvert" + "waveform split"
    * Add new setting: volume boost
    * Add new setting: "save as..." take file name from
    * Font can be different for subtitle list view / text box
@@ -26,6 +27,8 @@
    * Fix hashtag issue in "Fix common errors"
    * Improve Swedish/Finnish language auto-detect - thx Kolle
    * Fix crash in change play rate - thx darnn
+   * Fix some issues found by PVS-Studio - thx SvyatoslavRazmyslov 
+   * Fix "Replace all" with single letter - thx amerzone
 
 
 3.5.6 (27th February 2018)
