@@ -31,7 +31,11 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 {
                     bool doFix = !expectedChars.Contains(p.Text[match.Index + 2]);
 
-                    if (doFix && languageCode == "el" && (p.Text.Substring(match.Index).StartsWith("ό,τι", StringComparison.Ordinal) || p.Text.Substring(match.Index).StartsWith("ο,τι", StringComparison.Ordinal)))
+                    if (doFix && languageCode == "el" && 
+                        (p.Text.Substring(match.Index).StartsWith("ό,τι", StringComparison.Ordinal) ||
+                         p.Text.Substring(match.Index).StartsWith("O,τι", StringComparison.Ordinal) ||
+                         p.Text.Substring(match.Index).StartsWith("Ό,τι", StringComparison.Ordinal) ||
+                         p.Text.Substring(match.Index).StartsWith("ο,τι", StringComparison.Ordinal)))
                         doFix = false;
 
                     if (doFix && callbacks.AllowFix(p, fixAction))
