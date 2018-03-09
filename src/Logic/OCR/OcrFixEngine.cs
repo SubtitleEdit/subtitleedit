@@ -1067,7 +1067,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                             var guesses = new List<string>();
 
                             // Name starting with "l" instead of 'I'
-                            if (!correct && word.StartsWith('l') && word.Length > 3 && !_nameList.Contains(word))
+                            if (word.StartsWith('l') && word.Length > 3 && !_nameList.Contains(word))
                             {
                                 var w = "I" + word.Substring(1);
                                 if (_nameList.Contains(w))

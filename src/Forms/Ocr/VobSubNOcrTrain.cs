@@ -16,11 +16,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
     public partial class VobSubNOcrTrain : Form
     {
 
-        private Color _subtitleColor = Color.White;
+        private readonly Color _subtitleColor = Color.White;
         private string _subtitleFontName = "Verdana";
         private float _subtitleFontSize = 25.0f;
-        private Color _borderColor = Color.Black;
-        private const float _borderWidth = 2.0f;
+        private readonly Color _borderColor = Color.Black;
+        private const float BorderWidth = 2.0f;
 
         public VobSubNOcrTrain()
         {
@@ -33,19 +33,15 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 if (x.IsStyleAvailable(FontStyle.Regular) && x.IsStyleAvailable(FontStyle.Bold))
                 {
-                    ListViewItem item = new ListViewItem(x.Name);
-                    item.Font = new Font(x.Name, 14);
+                    ListViewItem item = new ListViewItem(x.Name) { Font = new Font(x.Name, 14) };
                     listViewFonts.Items.Add(item);
                 }
             }
             comboBoxSubtitleFontSize.SelectedIndex = 10;
         }
 
-        internal void Initialize(NOcrDb _nOcrDb)
+        internal void Initialize()
         {
-            if (_nOcrDb != null)
-            {
-            }
         }
 
         private void buttonInputChoose_Click(object sender, EventArgs e)
@@ -86,14 +82,13 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             var sub = new Subtitle();
             format.LoadSubtitle(sub, lines, textBoxInputFile.Text);
 
-            var charactersLearned = new List<string>();
             foreach (ListViewItem item in listViewFonts.Items)
             {
                 if (item.Checked)
                 {
                     _subtitleFontName = item.Text;
                     _subtitleFontSize = Convert.ToInt32(comboBoxSubtitleFontSize.Items[comboBoxSubtitleFontSize.SelectedIndex].ToString());
-                    charactersLearned = new List<string>();
+                    var charactersLearned = new List<string>();
 
                     foreach (Paragraph p in sub.Paragraphs)
                     {
@@ -128,13 +123,15 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 if (match == null)
                 {
                     pictureBox1.Image = list[0].NikseBitmap.GetBitmap();
-                    this.Refresh();
+                    Refresh();
                     Application.DoEvents();
                     System.Threading.Thread.Sleep(100);
 
-                    NOcrChar nOcrChar = new NOcrChar(s);
-                    nOcrChar.Width = list[0].NikseBitmap.Width;
-                    nOcrChar.Height = list[0].NikseBitmap.Height;
+                    NOcrChar nOcrChar = new NOcrChar(s)
+                    {
+                        Width = list[0].NikseBitmap.Width,
+                        Height = list[0].NikseBitmap.Height
+                    };
                     VobSubOcrNOcrCharacter.GenerateLineSegments((int)numericUpDownSegmentsPerCharacter.Value, checkBoxVeryAccurate.Checked, nOcrChar, list[0].NikseBitmap);
                     nOcrD.Add(nOcrChar);
 
@@ -191,9 +188,12 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             g.SmoothingMode = SmoothingMode.AntiAlias;
             g.CompositingQuality = CompositingQuality.HighQuality;
 
-            var sf = new StringFormat();
-            sf.Alignment = StringAlignment.Near;
-            sf.LineAlignment = StringAlignment.Near;// draw the text to a path
+            var sf = new StringFormat
+            {
+                Alignment = StringAlignment.Near,
+                LineAlignment = StringAlignment.Near
+            };
+            // draw the text to a path
             var path = new GraphicsPath();
 
             // display italic
@@ -234,8 +234,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 TextDraw.DrawText(font, sf, path, sb, false, subtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
             sf.Dispose();
 
-            if (_borderWidth > 0)
-                g.DrawPath(new Pen(_borderColor, _borderWidth), path);
+            g.DrawPath(new Pen(_borderColor, BorderWidth), path);
             g.FillPath(new SolidBrush(c), path);
             g.Dispose();
             var nbmp = new NikseBitmap(bmp);

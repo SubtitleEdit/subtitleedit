@@ -528,7 +528,7 @@ namespace Nikse.SubtitleEdit.Core
                             string rest = s.Substring(mid - j + 1).TrimStart();
                             if (rest.Length > 0 && char.IsUpper(rest[0]))
                             {
-                                if (mid - j > 5 && s[mid - j - 1] == ' ')
+                                if (mid - j > 5)
                                 {
                                     if ("!?.".Contains(s[mid - j - 2]))
                                     {
@@ -783,7 +783,7 @@ namespace Nikse.SubtitleEdit.Core
                 foreach (string dic in Directory.GetFiles(DictionaryFolder, "*.dic"))
                 {
                     string name = Path.GetFileNameWithoutExtension(dic);
-                    if (name != null && !name.StartsWith("hyph", StringComparison.Ordinal))
+                    if (!name.StartsWith("hyph", StringComparison.Ordinal))
                     {
                         try
                         {
