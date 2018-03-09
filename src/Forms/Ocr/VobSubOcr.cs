@@ -9059,7 +9059,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         {
             using (var form = new VobSubNOcrTrain())
             {
-                form.Initialize(_nOcrDb);
+                form.Initialize();
                 form.Show(this);
             }
         }
