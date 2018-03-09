@@ -222,6 +222,7 @@
     </Compile>
     <Compile Include="RealFFT.cs" />
     <Compile Include="RegistryUtil.cs" />
+    <Compile Include="ReplaceExpression.cs" />
     <Compile Include="RichTextToPlainText.cs" />
     <Compile Include="SceneChangeHelper.cs" />
     <Compile Include="Settings.cs" />
