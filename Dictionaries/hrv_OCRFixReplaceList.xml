@@ -1044,6 +1044,20 @@
     <Word from="večnost" to="vječnost" />
     <Word from="veoma" to="vrlo" />
     <Word from="Veoma" to="Vrlo" />
+    <Word from="vera" to="vjera" />
+    <Word from="vere" to="vjere" />
+    <Word from="veri" to="vjeri" />
+    <Word from="verom" to="vjerom" />
+    <Word from="veru" to="vjeru" />
+    <Word from="veran" to="vjeran" />
+    <Word from="verama" to="vjerama" />
+    <Word from="Vera" to="Vjera" />
+    <Word from="Vere" to="Vjere" />
+    <Word from="Veri" to="Vjeri" />
+    <Word from="Verom" to="Vjerom" />
+    <Word from="Veru" to="Vjeru" />
+    <Word from="Veran" to="Vjeran" />
+    <Word from="Verama" to="Vjerama" />
     <Word from="veren" to="zaručen" />
     <Word from="Veren" to="Zaručen" />
     <Word from="verena" to="zaručena" />
@@ -1244,6 +1258,7 @@
     <Word from="Orlinsu" to="Orleansu" />
     <Word from="Pem" to="Pam" />
     <Word from="Pejdž" to="Paige" />
+    <Word from="Redži" to="Reggie" />
     <Word from="Rej" to="Ray" />
     <Word from="Rejčel" to="Rachel" />
     <Word from="Rouz" to="Rose" />
@@ -1368,6 +1383,7 @@
     <LinePart from="moram da idem" to="moram ići" />
     <LinePart from="Moraš da ideš" to="Moraš ići" />
     <LinePart from="Moramo da idemo" to="Moramo ići" />
+    <LinePart from="moram da vidim" to="moram vidjeti" />
     <LinePart from="mora da zna" to="mora znati" />
     <LinePart from="moram da znam" to="moram znati" />
     <LinePart from="Moram da znam" to="Moram znati" />
@@ -2225,8 +2241,7 @@
     <RegEx find="([vV])e[čć]n" replaceWith="$1ječn" />
     <RegEx find="([vV])ečit" replaceWith="$1ječit" />
     <RegEx find="([vV])enča" replaceWith="$1jenča" />
-    <RegEx find="\b([vV])er([aeiou]|an|n[aeiou]|no[mgj]|nosti?|nošću|om|ama|nik|nik[aeu]|ni[ck]om)\b" replaceWith="$1jer$2" />
-    <RegEx find="\b([vV])er([ova|nic|s])" replaceWith="$1jer$2" />
+    <RegEx find="\b([vV])er([ova|ns])" replaceWith="$1jer$2" />
     <RegEx find="([nN])ever(?!b)" replaceWith="$1evjer" />
     <RegEx find="([vV])erova" replaceWith="$1jerova" />
     <RegEx find="([vV])j?ero[vj]at(a?)n" replaceWith="$1jerojat$2n" />
