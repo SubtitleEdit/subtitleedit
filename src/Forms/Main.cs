@@ -3574,7 +3574,7 @@ namespace Nikse.SubtitleEdit.Forms
             return result;
         }
 
-        private DialogResult SaveSubtitle(SubtitleFormat format)
+        private DialogResult SaveSubtitle(SubtitleFormat format, bool useNewLineWithOnly0A = false)
         {
             if (string.IsNullOrEmpty(_fileName) || _converted)
                 return FileSaveAs(false);
@@ -3672,7 +3672,7 @@ namespace Nikse.SubtitleEdit.Forms
                     currentEncoding = Encoding.ASCII;
                 }
 
-                if (ModifierKeys == (Keys.Control | Keys.Shift))
+                if (useNewLineWithOnly0A)
                     allText = allText.Replace("\r\n", "\n");
 
                 if (format.GetType() == typeof(ItunesTimedText) || format.GetType() == typeof(ScenaristClosedCaptions) || format.GetType() == typeof(ScenaristClosedCaptionsDropFrame))
@@ -3773,7 +3773,7 @@ namespace Nikse.SubtitleEdit.Forms
                     MessageBox.Show("Ups - save original does not support this format - please go to Github and create an issue!");
                 }
 
-                string allText = subAlt.ToText(format).Trim();
+                string allText = subAlt.ToText(format);
                 var currentEncoding = GetCurrentEncoding();
                 bool isUnicode = currentEncoding != null && (currentEncoding == Encoding.Unicode || currentEncoding == Encoding.UTF32 || currentEncoding == Encoding.UTF7 || currentEncoding == Encoding.UTF8);
                 if (!isUnicode && (allText.Contains(new[] { '♪', '♫', '♥', '—', '―', '…' }))) // ANSI & music/unicode symbols
@@ -4487,6 +4487,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ToolStripButtonSaveClick(object sender, EventArgs e)
         {
+            var useOnly0AForNewLine = ModifierKeys == (Keys.Control | Keys.Shift);
+            SaveAll(useOnly0AForNewLine);
+        }
+
+        private void SaveAll(bool useOnly0AForNewLine = false)
+        {
             if (!IsSubtitleLoaded)
             {
                 return;
@@ -4496,7 +4502,7 @@ namespace Nikse.SubtitleEdit.Forms
             var enc = GetCurrentEncoding().BodyName;
             bool oldChange = _changeSubtitleToString != _subtitle.GetFastHashCode(enc);
             _saveAsCalled = false;
-            SaveSubtitle(GetCurrentSubtitleFormat());
+            SaveSubtitle(GetCurrentSubtitleFormat(), useOnly0AForNewLine);
 
             if (_subtitleAlternate != null && _changeAlternateSubtitleToString != _subtitleAlternate.ToText(new SubRip()).Trim() && Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate.Paragraphs.Count > 0)
             {
@@ -11814,7 +11820,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (_mainGeneralFileSaveAll == e.KeyData)
             {
-                ToolStripButtonSaveClick(sender, e);
+                SaveAll();
                 e.SuppressKeyPress = true;
             }
             else if (_mainToggleFocus == e.KeyData && inListView)
@@ -21760,9 +21766,11 @@ namespace Nikse.SubtitleEdit.Forms
                 var oldVideoOffset = Configuration.Settings.General.CurrentVideoOffsetInMs;
                 if (form.ShowDialog(this) == DialogResult.OK)
                 {
+                    var change = _changeSubtitleToString != _subtitle.GetFastHashCode(GetCurrentEncoding().BodyName);
                     if (form.FromCurrentVideoPosition && mediaPlayer.VideoPlayer != null)
                     {
                         Configuration.Settings.General.CurrentVideoOffsetInMs = (long)(Math.Round((form.VideoOffset.TotalSeconds - mediaPlayer.VideoPlayer.CurrentPosition) * 1000.0));
+                        change = true;
                     }
                     else
                     {
@@ -21781,6 +21789,16 @@ namespace Nikse.SubtitleEdit.Forms
                             _subtitleAlternate?.AddTimeToAllParagraphs(TimeSpan.FromMilliseconds(-Configuration.Settings.General.CurrentVideoOffsetInMs));
                         }
                     }
+                    else
+                    {
+                        change = true;
+                    }
+
+                    if (!change)
+                        _changeSubtitleToString = _subtitle.GetFastHashCode(GetCurrentEncoding().BodyName);
+                    else if (change && _changeSubtitleToString == _subtitle.GetFastHashCode(GetCurrentEncoding().BodyName))
+                        _changeSubtitleToString = string.Empty;
+
                     SaveSubtitleListviewIndices();
                     SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
                     RefreshSelectedParagraph();

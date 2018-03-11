@@ -563,7 +563,7 @@ namespace Nikse.SubtitleEdit.Core
         {
             foreach (var p in Paragraphs)
             {
-                if (p.StartTime.TotalMilliseconds < milliseconds &&  milliseconds < p.EndTime.TotalMilliseconds)
+                if (p.StartTime.TotalMilliseconds < milliseconds && milliseconds < p.EndTime.TotalMilliseconds)
                 {
                     return p;
                 }
@@ -585,8 +585,8 @@ namespace Nikse.SubtitleEdit.Core
             {
                 var p = Paragraphs[i];
                 sb.Append(p.Number.ToString(CultureInfo.InvariantCulture));
-                sb.Append(p.StartTime.TotalMilliseconds.GetHashCode());
-                sb.Append(p.EndTime.TotalMilliseconds.GetHashCode());
+                sb.Append((p.StartTime.TotalMilliseconds + Configuration.Settings.General.CurrentVideoOffsetInMs).GetHashCode());
+                sb.Append((p.EndTime.TotalMilliseconds + Configuration.Settings.General.CurrentVideoOffsetInMs).GetHashCode());
                 sb.Append(p.Text);
             }
             return sb.ToString().TrimEnd();
