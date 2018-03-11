@@ -372,7 +372,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                         case 'ν': // NOTE: Special unicode character! (Greek character!)
                             if (_threeLetterIsoLanguageName == "ell" || _threeLetterIsoLanguageName == "gre")
                             {
-                                sb.Append('ν'); // Keep Greek 'ν'
+                                sb.Append(ch); // Keep Greek 'ν'
                             }
                             else
                             {
