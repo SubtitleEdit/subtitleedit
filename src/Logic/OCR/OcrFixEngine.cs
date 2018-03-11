@@ -369,8 +369,9 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                         case 'ﬂ': // fb02
                             sb.Append("fl");
                             break;
-                        case 'ν': // NOTE: Special unicode character!
-                            sb.Append('v');
+                        case 'ν': // NOTE: Special unicode character! (Greek character!)
+                            if (_threeLetterIsoLanguageName != "ell" && _threeLetterIsoLanguageName != "gre")
+                                sb.Append('v');
                             break;
                         case '‚': // #x201A (SINGLE LOW-9 QUOTATION MARK) to plain old comma
                             sb.Append(',');
