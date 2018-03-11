@@ -7451,14 +7451,26 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private void LoadOcrFixEngine(string threeLetterISOLanguageName, string hunspellName)
         {
-            if (string.IsNullOrEmpty(threeLetterISOLanguageName) && comboBoxTesseractLanguages.SelectedItem != null)
+            if (_ocrMethodIndex != _ocrMethodTesseract)
+            {
+                try
+                {
+                    var ci = CultureInfo.GetCultureInfo(LanguageString.Replace("_", "-"));
+                    _languageId = ci.ThreeLetterISOLanguageName;
+                    threeLetterISOLanguageName = ci.ThreeLetterISOLanguageName;
+                }
+                catch
+                {
+                    // ignored
+                }
+            }
+            else if (string.IsNullOrEmpty(threeLetterISOLanguageName) && comboBoxTesseractLanguages.SelectedItem != null)
             {
                 _languageId = (comboBoxTesseractLanguages.SelectedItem as TesseractLanguage).Id;
                 threeLetterISOLanguageName = _languageId;
             }
 
-            if (_ocrFixEngine != null)
-                _ocrFixEngine.Dispose();
+            _ocrFixEngine?.Dispose();
             _ocrFixEngine = new OcrFixEngine(threeLetterISOLanguageName, hunspellName, this, _ocrMethodIndex == _ocrMethodBinaryImageCompare);
             if (_ocrFixEngine.IsDictionaryLoaded)
             {
@@ -7856,21 +7868,19 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private void comboBoxDictionaries_SelectedIndexChanged(object sender, EventArgs e)
         {
             Configuration.Settings.General.SpellCheckLanguage = LanguageString;
-            string threeLetterISOLanguageName = string.Empty;
+            string threeLetterIsoLanguageName = string.Empty;
             if (LanguageString == null)
             {
-                if (_ocrFixEngine != null)
-                    _ocrFixEngine.Dispose();
+                _ocrFixEngine?.Dispose();
                 _ocrFixEngine = new OcrFixEngine(string.Empty, string.Empty, this, _ocrMethodIndex == _ocrMethodBinaryImageCompare);
                 return;
             }
             try
             {
-                if (_ocrFixEngine != null)
-                    _ocrFixEngine.Dispose();
+                _ocrFixEngine?.Dispose();
                 _ocrFixEngine = null;
                 var ci = CultureInfo.GetCultureInfo(LanguageString.Replace("_", "-"));
-                threeLetterISOLanguageName = ci.ThreeLetterISOLanguageName;
+                threeLetterIsoLanguageName = ci.ThreeLetterISOLanguageName;
             }
             catch
             {
@@ -7881,13 +7891,13 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     {
                         if (string.Equals(x.TwoLetterISOLanguageName, arr[0], StringComparison.OrdinalIgnoreCase))
                         {
-                            threeLetterISOLanguageName = x.ThreeLetterISOLanguageName;
+                            threeLetterIsoLanguageName = x.ThreeLetterISOLanguageName;
                             break;
                         }
                     }
                 }
             }
-            LoadOcrFixEngine(threeLetterISOLanguageName, LanguageString);
+            LoadOcrFixEngine(threeLetterIsoLanguageName, LanguageString);
         }
 
         internal void Initialize(Subtitle bdnSubtitle, VobSubOcrSettings vobSubOcrSettings, bool isSon)
