@@ -21,6 +21,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         private Form _parentForm;
         private double? _pausePosition; // Hack to hold precise seeking when paused
         private int _volume = -1;
+        private static readonly object DisposeLock = new object();
 
         // LibVLC Core - http://www.videolan.org/developers/vlc/doc/doxygen/html/group__libvlc__core.html
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
@@ -259,12 +260,10 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                    _libvlc_audio_set_volume != null &&
                    _libvlc_media_player_play != null &&
                    _libvlc_media_player_stop != null &&
-                   //_libvlc_media_player_pause != null &&
                    _libvlc_media_player_set_hwnd != null &&
                    _libvlc_media_player_is_playing != null &&
                    _libvlc_media_player_get_time != null &&
                    _libvlc_media_player_set_time != null &&
-                   //_libvlc_media_player_get_fps != null &&
                    _libvlc_media_player_get_state != null &&
                    _libvlc_media_player_get_length != null &&
                    _libvlc_media_player_release != null &&
@@ -330,9 +329,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             {
                 if (_pausePosition != null)
                 {
-                    if (_pausePosition < 0)
-                        return 0;
-                    return _pausePosition.Value;
+                    return _pausePosition < 0 ? 0 : _pausePosition.Value;
                 }
                 return _libvlc_media_player_get_time(_mediaPlayer) / TimeCode.BaseUnit;
             }
@@ -362,13 +359,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             _libvlc_media_player_next_frame(_mediaPlayer);
         }
 
-        public int VlcState
-        {
-            get
-            {
-                return _libvlc_media_player_get_state(_mediaPlayer);
-            }
-        }
+        public int VlcState => _libvlc_media_player_get_state(_mediaPlayer);
 
         public override void Play()
         {
@@ -378,16 +369,22 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
         public override void Pause()
         {
-            int i = 0;
             _libvlc_media_player_set_pause(_mediaPlayer, 1);
+            WaitUntilReady();
+            _libvlc_media_player_set_pause(_mediaPlayer, 1);
+        }
+
+        private void WaitUntilReady()
+        {
             int state = VlcState;
+            int i = 0;
             while (state != 4 && i < 50)
             {
                 System.Threading.Thread.Sleep(10);
-                i++;
+                Application.DoEvents();
                 state = VlcState;
+                i++;
             }
-            _libvlc_media_player_set_pause(_mediaPlayer, 1);
         }
 
         public override void Stop()
@@ -400,9 +397,9 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         {
             get
             {
-                const int Paused = 4;
+                const int paused = 4;
                 int state = _libvlc_media_player_get_state(_mediaPlayer);
-                return state == Paused;
+                return state == paused;
             }
         }
 
@@ -410,9 +407,9 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         {
             get
             {
-                const int Playing = 3;
+                const int playing = 3;
                 int state = _libvlc_media_player_get_state(_mediaPlayer);
-                return state == Playing;
+                return state == playing;
             }
         }
 
@@ -471,20 +468,11 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         /// <summary>
         /// Audio delay in milliseconds
         /// </summary>
-        public Int64 AudioDelay
-        {
-            get
-            {
-                return _libvlc_audio_get_delay(_mediaPlayer) / 1000; // converts microseconds to milliseconds
-            }
-        }
+        public Int64 AudioDelay => _libvlc_audio_get_delay(_mediaPlayer) / 1000;
 
         public bool TakeSnapshot(string fileName, UInt32 width, UInt32 height)
         {
-            if (_libvlc_video_take_snapshot == null)
-                return false;
-
-            return _libvlc_video_take_snapshot(_mediaPlayer, 0, Encoding.UTF8.GetBytes(fileName + "\0"), width, height) == 1;
+            return _libvlc_video_take_snapshot?.Invoke(_mediaPlayer, 0, Encoding.UTF8.GetBytes(fileName + "\0"), width, height) == 1;
         }
 
         public LibVlcDynamic MakeSecondMediaPlayer(Control ownerControl, string videoFileName, EventHandler onVideoLoaded, EventHandler onVideoEnded)
@@ -506,7 +494,8 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
                 //  Linux: libvlc_media_player_set_xdrawable (_mediaPlayer, xdrawable);
                 //  Mac: libvlc_media_player_set_nsobject (_mediaPlayer, view);
-                _libvlc_media_player_set_hwnd(newVlc._mediaPlayer, ownerControl.Handle); // windows
+                if (ownerControl != null)
+                    _libvlc_media_player_set_hwnd(newVlc._mediaPlayer, ownerControl.Handle); // windows
 
                 if (onVideoEnded != null)
                 {
@@ -537,11 +526,8 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 i++;
             }
             Pause();
-            if (_libvlc_video_set_spu != null)
-                _libvlc_video_set_spu(_mediaPlayer, -1); // turn of embedded subtitles
-
-            if (OnVideoLoaded != null)
-                OnVideoLoaded.Invoke(_mediaPlayer, new EventArgs());
+            _libvlc_video_set_spu?.Invoke(_mediaPlayer, -1); // turn of embedded subtitles
+            OnVideoLoaded?.Invoke(_mediaPlayer, new EventArgs());
         }
 
         public static string GetVlcPath(string fileName)
@@ -560,12 +546,16 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                     if (Configuration.Settings.General.VlcLocation.EndsWith(".exe", StringComparison.OrdinalIgnoreCase))
                         Configuration.Settings.General.VlcLocation = Path.GetDirectoryName(Configuration.Settings.General.VlcLocation);
 
-                    path = Path.Combine(Configuration.Settings.General.VlcLocation, fileName);
-                    if (File.Exists(path))
-                        return path;
+                    if (!string.IsNullOrEmpty(Configuration.Settings.General.VlcLocation))
+                    {
+                        path = Path.Combine(Configuration.Settings.General.VlcLocation, fileName);
+                        if (File.Exists(path))
+                            return path;
+                    }
                 }
                 catch
                 {
+                    // ignored
                 }
             }
 
@@ -577,22 +567,25 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                     if (path.EndsWith(".exe", StringComparison.OrdinalIgnoreCase))
                         path = Path.GetDirectoryName(path);
 
-                    path = Path.Combine(path, fileName);
-
-                    string path2 = Path.GetFullPath(path);
-                    if (File.Exists(path2))
-                        return path2;
-
-                    while (path.StartsWith(".."))
+                    if (path != null)
                     {
-                        path = path.Remove(0, 3);
-                        path2 = Path.GetFullPath(path);
+                        path = Path.Combine(path, fileName);
+                        string path2 = Path.GetFullPath(path);
                         if (File.Exists(path2))
                             return path2;
+
+                        while (path.StartsWith(".."))
+                        {
+                            path = path.Remove(0, 3);
+                            path2 = Path.GetFullPath(path);
+                            if (File.Exists(path2))
+                                return path2;
+                        }
                     }
                 }
                 catch
                 {
+                    // ignored
                 }
             }
 
@@ -648,7 +641,9 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             if (!File.Exists(dllFile) || string.IsNullOrEmpty(videoFileName))
                 return false;
 
-            Directory.SetCurrentDirectory(Path.GetDirectoryName(dllFile));
+            var dir = Path.GetDirectoryName(dllFile);
+            if (dir != null)
+                Directory.SetCurrentDirectory(dir);
             _libVlcDll = NativeMethods.LoadLibrary(dllFile);
             LoadLibVlcDynamic();
             string[] initParameters = { "--no-skip-frames" };
@@ -656,15 +651,10 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             IntPtr media = _libvlc_media_new_path(_libVlc, Encoding.UTF8.GetBytes(videoFileName + "\0"));
             _mediaPlayer = _libvlc_media_player_new_from_media(media);
             _libvlc_media_release(media);
-
             _libvlc_video_set_format(_mediaPlayer, "RV24", width, height, 3 * width);
-            //            _libvlc_video_set_format(_mediaPlayer,"RV32", width, height, 4 * width);
-
-            //_libvlc_video_set_callbacks(_mediaPlayer, @lock, unlock, display, opaque);
             _libvlc_video_set_callbacks(_mediaPlayer, @lock, unlock, display, opaque);
             _libvlc_audio_set_volume(_mediaPlayer, 0);
             _libvlc_media_player_set_rate(_mediaPlayer, 9f);
-            //_libvlc_media_player_play(_mediaPlayer);
             return true;
         }
 
@@ -676,7 +666,9 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             string dllFile = GetVlcPath("libvlc.dll");
             if (File.Exists(dllFile))
             {
-                Directory.SetCurrentDirectory(Path.GetDirectoryName(dllFile));
+                var dir = Path.GetDirectoryName(dllFile);
+                if (dir != null)
+                    Directory.SetCurrentDirectory(dir);
                 _libVlcDll = NativeMethods.LoadLibrary(dllFile);
                 LoadLibVlcDynamic();
             }
@@ -766,23 +758,22 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                     }
                 }
             }
-            if (_mouseTimer == null)
-                return;
-            _mouseTimer.Start();
+
+            _mouseTimer?.Start();
         }
 
         private void VideoEndTimerTick(object sender, EventArgs e)
         {
-            const int Ended = 6;
+            const int ended = 6;
             int state = _libvlc_media_player_get_state(_mediaPlayer);
-            if (state == Ended)
-            {
-                // hack to make sure VLC is in ready state
-                Stop();
-                Play();
-                Pause();
-                OnVideoEnded.Invoke(_mediaPlayer, new EventArgs());
-            }
+            if (state != ended)
+                return;
+
+            // hack to make sure VLC is in ready state
+            Stop();
+            Play();
+            Pause();
+            OnVideoEnded?.Invoke(_mediaPlayer, new EventArgs());
         }
 
         public override void DisposeVideoPlayer()
@@ -798,31 +789,35 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         {
             try
             {
-                lock (this)
+                lock (DisposeLock)
                 {
                     if (_mediaPlayer != IntPtr.Zero)
                     {
                         _libvlc_media_player_stop(_mediaPlayer);
-                        //_libvlc_media_player_release(_mediaPlayer); // CRASHES in visual sync / point sync!
+                        WaitUntilReady();
+                        _libvlc_media_player_release(_mediaPlayer); // CRASHES in visual sync / point sync?
                         _mediaPlayer = IntPtr.Zero;
-                        //_libvlc_media_list_player_release(_mediaPlayer);
                     }
 
-                    if (_libvlc_release != null && _libVlc != IntPtr.Zero)
+                    if (_parentForm is Forms.Main)
                     {
-                        _libvlc_release(_libVlc);
-                        _libVlc = IntPtr.Zero;
-                    }
+                        if (_libvlc_release != null && _libVlc != IntPtr.Zero)
+                        {
+                            _libvlc_release(_libVlc); // CRASHES in visual sync / point sync?
+                            _libVlc = IntPtr.Zero;
+                        }
 
-                    //if (_libVlcDLL != IntPtr.Zero)
-                    //{
-                    //    FreeLibrary(_libVlcDLL);  // CRASHES in visual sync / point sync!
-                    //    _libVlcDLL = IntPtr.Zero;
-                    //}
+                        if (_libVlcDll != IntPtr.Zero)
+                        {
+                            NativeMethods.FreeLibrary(_libVlcDll);  // CRASHES in visual sync / point sync?
+                            _libVlcDll = IntPtr.Zero;
+                        }
+                    }
                 }
             }
             catch
             {
+                // ignored
             }
         }
 
