@@ -3248,7 +3248,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     secondBestGuess = new CompareMatch(hit.Text, hit.Italic, hit.ExpandCount, hit.Key);
             }
 
-            if (maxDiff > 0.1)
+            if (maxDiff > 1 && _isLatinDb)
             {
                 if (bob.IsPeriod())
                 {
@@ -3256,7 +3256,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     if (listIndex + 1 < list.Count)
                         next = list[listIndex + 1];
 
-                    if (next == null || next.NikseBitmap == null)
+                    if (next?.NikseBitmap == null)
                         return new CompareMatch(".", false, 0, null);
 
                     var nextBob = new BinaryOcrBitmap(next.NikseBitmap) { X = next.X, Y = next.Top };
@@ -3269,7 +3269,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     if (listIndex + 1 < list.Count)
                         next = list[listIndex + 1];
 
-                    if (next == null || next.NikseBitmap == null)
+                    if (next?.NikseBitmap == null)
                         return new CompareMatch(",", false, 0, null);
 
                     var nextBob = new BinaryOcrBitmap(next.NikseBitmap) { X = next.X, Y = next.Top };
@@ -5834,8 +5834,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
         }
 
+        private bool _isLatinDb;
+
         private void ButtonStartOcrClick(object sender, EventArgs e)
         {
+            _isLatinDb = comboBoxCharacterDatabase.SelectedItem.ToString().Equals("Latin", StringComparison.Ordinal);
             Configuration.Settings.VobSubOcr.RightToLeft = checkBoxRightToLeft.Checked;
             _lastLine = null;
             buttonOK.Enabled = false;
@@ -6207,7 +6210,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
             catch
             {
+                // ignored
             }
+
             return result;
         }
 
