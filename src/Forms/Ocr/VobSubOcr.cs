@@ -5838,7 +5838,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private void ButtonStartOcrClick(object sender, EventArgs e)
         {
-            _isLatinDb = comboBoxCharacterDatabase.SelectedItem.ToString().Equals("Latin", StringComparison.Ordinal);
+            _isLatinDb = comboBoxCharacterDatabase.SelectedItem != null && comboBoxCharacterDatabase.SelectedItem.ToString().Equals("Latin", StringComparison.Ordinal);
             Configuration.Settings.VobSubOcr.RightToLeft = checkBoxRightToLeft.Checked;
             _lastLine = null;
             buttonOK.Enabled = false;
