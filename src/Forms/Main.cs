@@ -16762,7 +16762,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var item = (ToolStripItem)sender;
                 string name, description, text, shortcut, actionType;
                 decimal version;
-                System.Reflection.MethodInfo mi;
+                MethodInfo mi;
                 var pluginObject = GetPropertiesAndDoAction(item.Tag.ToString(), out name, out text, out version, out description, out actionType, out shortcut, out mi);
                 if (mi == null)
                 {
