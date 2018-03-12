@@ -209,52 +209,51 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                     try
                     {
                         var ssaStyle = GetSsaStyle(styleName, subtitle.Header);
-                        if (ssaStyle != null)
+                        
+                        string bold = "0";
+                        if (ssaStyle.Bold)
+                            bold = "-1";
+                        string italic = "0";
+                        if (ssaStyle.Italic)
+                            italic = "-1";
+                        string underline = "0";
+                        if (ssaStyle.Underline)
+                            underline = "-1";
+
+                        string newAlignment = "2";
+                        switch (ssaStyle.Alignment)
                         {
-                            string bold = "0";
-                            if (ssaStyle.Bold)
-                                bold = "-1";
-                            string italic = "0";
-                            if (ssaStyle.Italic)
-                                italic = "-1";
-                            string underline = "0";
-                            if (ssaStyle.Underline)
-                                underline = "-1";
-
-                            string newAlignment = "2";
-                            switch (ssaStyle.Alignment)
-                            {
-                                case "1":
-                                    newAlignment = "1";
-                                    break;
-                                case "3":
-                                    newAlignment = "3";
-                                    break;
-                                case "9":
-                                    newAlignment = "4";
-                                    break;
-                                case "10":
-                                    newAlignment = "5";
-                                    break;
-                                case "11":
-                                    newAlignment = "6";
-                                    break;
-                                case "5":
-                                    newAlignment = "7";
-                                    break;
-                                case "6":
-                                    newAlignment = "8";
-                                    break;
-                                case "7":
-                                    newAlignment = "9";
-                                    break;
-                            }
-
-                            ttStyles.AppendLine(string.Format(styleFormat, ssaStyle.Name, ssaStyle.FontName, ssaStyle.FontSize, GetSsaColorString(ssaStyle.Primary), GetSsaColorString(ssaStyle.Secondary),
-                                GetSsaColorString(ssaStyle.Outline), GetSsaColorString(ssaStyle.Background), bold, italic, underline, ssaStyle.BorderStyle, ssaStyle.OutlineWidth, ssaStyle.ShadowWidth,
-                                newAlignment, ssaStyle.MarginLeft, ssaStyle.MarginRight, ssaStyle.MarginVertical));
-                            styleFound = true;
+                            case "1":
+                                newAlignment = "1";
+                                break;
+                            case "3":
+                                newAlignment = "3";
+                                break;
+                            case "9":
+                                newAlignment = "4";
+                                break;
+                            case "10":
+                                newAlignment = "5";
+                                break;
+                            case "11":
+                                newAlignment = "6";
+                                break;
+                            case "5":
+                                newAlignment = "7";
+                                break;
+                            case "6":
+                                newAlignment = "8";
+                                break;
+                            case "7":
+                                newAlignment = "9";
+                                break;
                         }
+
+                        ttStyles.AppendLine(string.Format(styleFormat, ssaStyle.Name, ssaStyle.FontName, ssaStyle.FontSize, GetSsaColorString(ssaStyle.Primary), GetSsaColorString(ssaStyle.Secondary),
+                            GetSsaColorString(ssaStyle.Outline), GetSsaColorString(ssaStyle.Background), bold, italic, underline, ssaStyle.BorderStyle, ssaStyle.OutlineWidth, ssaStyle.ShadowWidth,
+                            newAlignment, ssaStyle.MarginLeft, ssaStyle.MarginRight, ssaStyle.MarginVertical));
+                        styleFound = true;
+                        
                     }
                     catch
                     {

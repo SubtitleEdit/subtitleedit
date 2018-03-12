@@ -364,8 +364,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                                             match.Value.EndsWith(":ia", StringComparison.Ordinal) ||
                                             match.Value.EndsWith(":ien", StringComparison.Ordinal) ||
                                             match.Value.EndsWith(":iksi", StringComparison.Ordinal) ||
-                                            match.Value.EndsWith(":ille", StringComparison.Ordinal) ||
-                                            match.Value.EndsWith(":een", StringComparison.Ordinal) ||
+                                            match.Value.EndsWith(":ille", StringComparison.Ordinal) ||                                            
                                             match.Value.EndsWith(":in", StringComparison.Ordinal) ||
                                             match.Value.EndsWith(":ina", StringComparison.Ordinal) ||
                                             match.Value.EndsWith(":inä", StringComparison.Ordinal) ||
