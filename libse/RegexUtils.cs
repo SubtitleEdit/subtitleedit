@@ -176,8 +176,8 @@ namespace Nikse.SubtitleEdit.Core
             }
             try
             {
-                Regex.Match(string.Empty, testPattern);
-                return true;
+                return Regex.IsMatch(string.Empty, testPattern);
+                //return true;
             }
             catch (ArgumentException) // invalid pattern e.g: [
             {

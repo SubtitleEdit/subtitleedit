@@ -555,10 +555,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 line1 = lines[0];
                 line2 = lines[1];
             }
-            else if (lines.Count == 1)
-            {
-                line2 = lines[0];
-            }
+            else             
+                line2 = lines[0];            
 
             var buffer = GetTextAsBytes(line1, languageIdLine);
             fs.Write(buffer, 0, buffer.Length);
