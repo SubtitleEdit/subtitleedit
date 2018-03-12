@@ -19,6 +19,7 @@ namespace Nikse.SubtitleEdit.Logic
                                       .Concat(controls)
                                       .Where(c => c.GetType() == type);
         }
+
         static Color BackColor = Color.FromArgb(52, 52, 45);
         static Color ForeColor = Color.FromArgb(150, 150, 150);
 
@@ -56,19 +57,30 @@ namespace Nikse.SubtitleEdit.Logic
             return menus.Cast<T>().ToList();
         }
 
-        public static void SetDarkTheme(Control form, int iterations = 5)
+        private static bool _isConfigUpdated;
+
+        public static void SetDarkTheme(Control ctrl, int iterations = 5)
         {
-            Configuration.Settings.General.SubtitleBackgroundColor = BackColor;
-            Configuration.Settings.General.SubtitleFontColor = ForeColor;
-            Configuration.Settings.VideoControls.WaveformBackgroundColor = BackColor;
-            Configuration.Settings.VideoControls.WaveformGridColor = Color.FromArgb(62, 62, 60);
+            if (!_isConfigUpdated)
+            {
+                Configuration.Settings.General.SubtitleBackgroundColor = BackColor;
+                Configuration.Settings.General.SubtitleFontColor = ForeColor;
+                Configuration.Settings.VideoControls.WaveformBackgroundColor = BackColor;
+                Configuration.Settings.VideoControls.WaveformGridColor = Color.FromArgb(62, 62, 60);
+                // prevent re assignings
+                _isConfigUpdated = true;
+            }
 
             if (iterations < 1)
-                return;
-
-            if (form is Form)
             {
-                var contextMenus = GetSubControls<ContextMenuStrip>(form);
+                // note: no need to restore the colors set are constants
+                //_isConfigUpdated = false;
+                return;
+            }
+
+            if (ctrl is Form)
+            {
+                var contextMenus = GetSubControls<ContextMenuStrip>(ctrl);
                 foreach (ContextMenuStrip cms in contextMenus)
                 {
                     cms.BackColor = BackColor;
@@ -82,28 +94,28 @@ namespace Nikse.SubtitleEdit.Logic
                     }
                 }
 
-                var toolStrips = GetSubControls<ToolStrip>(form);
+                var toolStrips = GetSubControls<ToolStrip>(ctrl);
                 foreach (ToolStrip c in toolStrips)
                 {
                     c.BackColor = BackColor;
                     c.ForeColor = ForeColor;
                 }
 
-                var toolStripContentPanels = GetSubControls<ToolStripContentPanel>(form);
+                var toolStripContentPanels = GetSubControls<ToolStripContentPanel>(ctrl);
                 foreach (ToolStripContentPanel c in toolStripContentPanels)
                 {
                     c.BackColor = BackColor;
                     c.ForeColor = ForeColor;
                 }
 
-                var toolStripContainers = GetSubControls<ToolStripContainer>(form);
+                var toolStripContainers = GetSubControls<ToolStripContainer>(ctrl);
                 foreach (ToolStripContainer c in toolStripContainers)
                 {
                     c.BackColor = BackColor;
                     c.ForeColor = ForeColor;
                 }
 
-                var toolStripDropDownMenus = GetSubControls<ToolStripDropDownMenu>(form);
+                var toolStripDropDownMenus = GetSubControls<ToolStripDropDownMenu>(ctrl);
                 foreach (ToolStripDropDownMenu c in toolStripDropDownMenus)
                 {
                     c.BackColor = BackColor;
@@ -115,37 +127,35 @@ namespace Nikse.SubtitleEdit.Logic
                     }
                 }
 
-                var toolStripMenuItems = GetSubControls<ToolStripMenuItem>(form);
+                var toolStripMenuItems = GetSubControls<ToolStripMenuItem>(ctrl);
                 foreach (ToolStripMenuItem c in toolStripMenuItems)
                 {
                     c.BackColor = BackColor;
                     c.ForeColor = ForeColor;
                 }
 
-                var toolStripSeparators = GetSubControls<ToolStripSeparator>(form);
+                var toolStripSeparators = GetSubControls<ToolStripSeparator>(ctrl);
                 foreach (ToolStripSeparator c in toolStripSeparators)
                 {
-                    var p = (c.GetCurrentParent() as ToolStripDropDownMenu);
-                    if (p != null)
+                    if (c.GetCurrentParent() is ToolStripDropDownMenu p)
                     {
                         p.BackColor = BackColor;
                         p.ShowCheckMargin = false;
                         p.ShowImageMargin = false;
                     }
-                    
+
                     c.BackColor = BackColor;
                     c.ForeColor = ForeColor;
                     //c.Paint += C_Paint;
                 }
             }
-            FixControl(form);
-            foreach (Control c in GetSubControls<Control>(form)) // form.Controls)
+            FixControl(ctrl);
+            foreach (Control c in GetSubControls<Control>(ctrl)) // form.Controls)
             {
-                if (c is TabControl)
+                if (c is TabControl tc)
                 {
-                    var tc = (TabControl)c;
                     tc.DrawMode = TabDrawMode.OwnerDrawFixed;
-                    tc.DrawItem += new DrawItemEventHandler(TabControl1_DrawItem);
+                    tc.DrawItem += TabControl1_DrawItem;
                     foreach (TabPage tabPage in tc.TabPages)
                     {
                         tabPage.Paint += Tabpage_Paint;
@@ -155,36 +165,24 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
-        private static void C_Paint(object sender, PaintEventArgs e)
-        {
-            using (SolidBrush fillBrush = new SolidBrush(BackColor))
-            {
-                e.Graphics.FillRectangle(fillBrush, e.ClipRectangle);
-            }
-        }
-
         private static void FixControl(Control c)
         {
             c.BackColor = BackColor;
             c.ForeColor = ForeColor;
-            if (c is Button)
+            if (c is Button b)
             {
-                var b = (Button)c;
                 b.FlatStyle = FlatStyle.Flat;
             }
-            if (c is Panel)
+            if (c is Panel p)
             {
-                var p = (Panel)c;
                 p.BorderStyle = BorderStyle.FixedSingle;
             }
-            if (c is ContextMenuStrip)
+            if (c is ContextMenuStrip cms)
             {
-                var cms = (ContextMenuStrip)c;
                 cms.Renderer = new MyRenderer();
             }
-            if (c is ToolStripDropDownMenu)
+            if (c is ToolStripDropDownMenu t)
             {
-                var t = (ToolStripDropDownMenu)c;
                 foreach (var x in t.Items)
                 {
                     if (x is ToolStripMenuItem)
@@ -194,9 +192,8 @@ namespace Nikse.SubtitleEdit.Logic
                     }
                 }
             }
-            if (c is SubtitleListView)
+            if (c is SubtitleListView lv)
             {
-                var lv = (SubtitleListView)c;
                 lv.OwnerDraw = true;
                 lv.DrawColumnHeader += lv_DrawColumnHeader;
                 lv.GridLines = false;
@@ -215,10 +212,15 @@ namespace Nikse.SubtitleEdit.Logic
                 e.Graphics.FillRectangle(b, e.Bounds);
 
             var strFormat = new StringFormat();
-            if (e.Header.TextAlign == HorizontalAlignment.Center)
-                strFormat.Alignment = StringAlignment.Center;
-            else if (e.Header.TextAlign == HorizontalAlignment.Right)
-                strFormat.Alignment = StringAlignment.Far;
+            switch (e.Header.TextAlign)
+            {
+                case HorizontalAlignment.Center:
+                    strFormat.Alignment = StringAlignment.Center;
+                    break;
+                case HorizontalAlignment.Right:
+                    strFormat.Alignment = StringAlignment.Far;
+                    break;
+            }
 
             using (var fc = new SolidBrush(ForeColor))
                 e.Graphics.DrawString(e.Header.Text, e.Font, fc, e.Bounds, strFormat);
