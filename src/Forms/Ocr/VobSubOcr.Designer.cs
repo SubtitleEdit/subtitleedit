@@ -141,6 +141,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.textBoxCurrentText = new Nikse.SubtitleEdit.Controls.SETextBox();
             this.subtitleListView1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.timerHideStatus = new System.Windows.Forms.Timer(this.components);
+            this.setForecolorThresholdToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStripListview.SuspendLayout();
             this.groupBoxOcrMethod.SuspendLayout();
             this.groupBoxImageCompareMethod.SuspendLayout();
@@ -195,10 +196,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.nOcrTrainingToolStripMenuItem,
             this.toolStripSeparator4,
             this.toolStripMenuItemSetUnItalicFactor,
+            this.setForecolorThresholdToolStripMenuItem,
             this.toolStripSeparator3,
             this.deleteToolStripMenuItem});
             this.contextMenuStripListview.Name = "contextMenuStripListview";
-            this.contextMenuStripListview.Size = new System.Drawing.Size(306, 320);
+            this.contextMenuStripListview.Size = new System.Drawing.Size(306, 364);
             this.contextMenuStripListview.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripListviewOpening);
             // 
             // normalToolStripMenuItem
@@ -1593,6 +1595,13 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.timerHideStatus.Interval = 2000;
             this.timerHideStatus.Tick += new System.EventHandler(this.timerHideStatus_Tick);
             // 
+            // setForecolorThresholdToolStripMenuItem
+            // 
+            this.setForecolorThresholdToolStripMenuItem.Name = "setForecolorThresholdToolStripMenuItem";
+            this.setForecolorThresholdToolStripMenuItem.Size = new System.Drawing.Size(305, 22);
+            this.setForecolorThresholdToolStripMenuItem.Text = "Set forecolor threshold...";
+            this.setForecolorThresholdToolStripMenuItem.Click += new System.EventHandler(this.setForecolorThresholdToolStripMenuItem_Click);
+            // 
             // VobSubOcr
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1791,5 +1800,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private System.Windows.Forms.ToolStripMenuItem importNewTimeCodesToolStripMenuItem;
         private System.Windows.Forms.Label labelMinLineSplitHeight;
         private System.Windows.Forms.ComboBox comboBoxLineSplitMinLineHeight;
+        private System.Windows.Forms.ToolStripMenuItem setForecolorThresholdToolStripMenuItem;
     }
 }

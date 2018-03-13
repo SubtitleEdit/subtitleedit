@@ -1098,7 +1098,7 @@ namespace Nikse.SubtitleEdit.Core
             bufferWhite[3] = 255; // A
             for (int i = 0; i < _bitmapData.Length; i += 4)
             {
-                if (_bitmapData[i + 3] < 1 || (_bitmapData[i + 0] + _bitmapData[i + 1] + _bitmapData[i + 2] < minRgb))
+                if (_bitmapData[i + 3] < 1 || _bitmapData[i + 0] + _bitmapData[i + 1] + _bitmapData[i + 2] < minRgb)
                     Buffer.BlockCopy(buffer, 0, _bitmapData, i, 4);
                 else
                     Buffer.BlockCopy(bufferWhite, 0, _bitmapData, i, 4);
