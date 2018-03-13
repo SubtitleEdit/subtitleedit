@@ -139,23 +139,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
             try
             {
                 //string[] currentVersionInfo = "3.3.14".Split('.'); // for testing...
-                string[] currentVersionInfo = Utilities.AssemblyVersion.Split('.');
-                string minorMinorVersion = string.Empty;
-                if (currentVersionInfo.Length >= 3 && currentVersionInfo[2] != "0")
-                    minorMinorVersion = "." + currentVersionInfo[2];
-                string currentVersion = $"{currentVersionInfo[0]}.{currentVersionInfo[1]}{minorMinorVersion}";
-                if (currentVersion == LatestVersionNumber)
-                    return false;
-
-                string[] latestVersionInfo = LatestVersionNumber.Split('.');
-                if (int.Parse(latestVersionInfo[0]) > int.Parse(currentVersionInfo[0]))
-                    return true;
-                if (int.Parse(latestVersionInfo[0]) == int.Parse(currentVersionInfo[0]) && int.Parse(latestVersionInfo[1]) > int.Parse(currentVersionInfo[1]))
-                    return true;
-                if (int.Parse(latestVersionInfo[0]) == int.Parse(currentVersionInfo[0]) && int.Parse(latestVersionInfo[1]) == int.Parse(currentVersionInfo[1]) && int.Parse(latestVersionInfo[2]) > int.Parse(currentVersionInfo[2]))
-                    return true;
-
-                return false;
+                return Version.Parse(LatestVersionNumber) > Version.Parse(Utilities.AssemblyVersion);
             }
             catch
             {
