@@ -148,53 +148,52 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                     try
                     {
                         var ssaStyle = AdvancedSubStationAlpha.GetSsaStyle(styleName, subtitle.Header);
-                        if (ssaStyle != null)
+                        
+                        string bold = "0";
+                        if (ssaStyle.Bold)
+                            bold = "-1";
+                        string italic = "0";
+                        if (ssaStyle.Italic)
+                            italic = "-1";
+
+                        string newAlignment = "2";
+                        switch (ssaStyle.Alignment)
                         {
-                            string bold = "0";
-                            if (ssaStyle.Bold)
-                                bold = "-1";
-                            string italic = "0";
-                            if (ssaStyle.Italic)
-                                italic = "-1";
-
-                            string newAlignment = "2";
-                            switch (ssaStyle.Alignment)
-                            {
-                                case "1":
-                                    newAlignment = "1";
-                                    break;
-                                case "3":
-                                    newAlignment = "3";
-                                    break;
-                                case "4":
-                                    newAlignment = "9";
-                                    break;
-                                case "5":
-                                    newAlignment = "10";
-                                    break;
-                                case "6":
-                                    newAlignment = "11";
-                                    break;
-                                case "7":
-                                    newAlignment = "5";
-                                    break;
-                                case "8":
-                                    newAlignment = "6";
-                                    break;
-                                case "9":
-                                    newAlignment = "7";
-                                    break;
-                            }
-
-                            //Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, TertiaryColour, BackColour, Bold, Italic, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, AlphaLevel, Encoding
-                            const string styleFormat = "Style: {0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},0,1";
-                            //                                 N   FN  FS  PC  SC  TC  BC  Bo  It  BS  O    Sh   Ali  ML   MR   MV   A Encoding
-
-                            ttStyles.AppendLine(string.Format(styleFormat, ssaStyle.Name, ssaStyle.FontName, ssaStyle.FontSize, ssaStyle.Primary.ToArgb(), ssaStyle.Secondary.ToArgb(),
-                                                ssaStyle.Outline.ToArgb(), ssaStyle.Background.ToArgb(), bold, italic, ssaStyle.BorderStyle, ssaStyle.OutlineWidth, ssaStyle.ShadowWidth,
-                                                newAlignment, ssaStyle.MarginLeft, ssaStyle.MarginRight, ssaStyle.MarginVertical));
-                            styleFound = true;
+                            case "1":
+                                newAlignment = "1";
+                                break;
+                            case "3":
+                                newAlignment = "3";
+                                break;
+                            case "4":
+                                newAlignment = "9";
+                                break;
+                            case "5":
+                                newAlignment = "10";
+                                break;
+                            case "6":
+                                newAlignment = "11";
+                                break;
+                            case "7":
+                                newAlignment = "5";
+                                break;
+                            case "8":
+                                newAlignment = "6";
+                                break;
+                            case "9":
+                                newAlignment = "7";
+                                break;
                         }
+
+                        //Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, TertiaryColour, BackColour, Bold, Italic, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, AlphaLevel, Encoding
+                        const string styleFormat = "Style: {0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},0,1";
+                        //                                 N   FN  FS  PC  SC  TC  BC  Bo  It  BS  O    Sh   Ali  ML   MR   MV   A Encoding
+
+                        ttStyles.AppendLine(string.Format(styleFormat, ssaStyle.Name, ssaStyle.FontName, ssaStyle.FontSize, ssaStyle.Primary.ToArgb(), ssaStyle.Secondary.ToArgb(),
+                                            ssaStyle.Outline.ToArgb(), ssaStyle.Background.ToArgb(), bold, italic, ssaStyle.BorderStyle, ssaStyle.OutlineWidth, ssaStyle.ShadowWidth,
+                                            newAlignment, ssaStyle.MarginLeft, ssaStyle.MarginRight, ssaStyle.MarginVertical));
+                        styleFound = true;
+                       
                     }
                     catch
                     {
@@ -333,13 +332,13 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                 if (!eventsStarted)
                     header.AppendLine(line);
 
-                if (line.Trim().Equals("[events]", StringComparison.OrdinalIgnoreCase))
-                {
-                    eventsStarted = true;
-                }
-                else if (!string.IsNullOrEmpty(line) && line.TrimStart().StartsWith(';'))
+                 if (!string.IsNullOrEmpty(line) && line.TrimStart().StartsWith(';'))
                 {
                     // skip comment lines
+                }
+                else if (line.Trim().Equals("[events]", StringComparison.OrdinalIgnoreCase))
+                {
+                    eventsStarted = true;
                 }
                 else if (eventsStarted && !string.IsNullOrWhiteSpace(line))
                 {
