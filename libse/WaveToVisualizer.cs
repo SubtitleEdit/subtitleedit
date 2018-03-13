@@ -533,7 +533,7 @@ namespace Nikse.SubtitleEdit.Core
                     peaks[peakIndex++] = new WavePeak(max, min);
                 }
             }
-            else if (_header.NumberOfChannels == 1)
+            else
             {
                 // single sample value (for backwards compatibility)
                 int byteIndex = 0;

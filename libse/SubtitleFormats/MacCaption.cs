@@ -91,9 +91,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 string s = line.Trim();
 
-                if (s.StartsWith("//", StringComparison.Ordinal) || s.StartsWith("File Format=MacCaption_MCC", StringComparison.Ordinal) || s.StartsWith("UUID=", StringComparison.Ordinal) ||
+                if (string.IsNullOrEmpty(s) || s.StartsWith("//", StringComparison.Ordinal) || s.StartsWith("File Format=MacCaption_MCC", StringComparison.Ordinal) || s.StartsWith("UUID=", StringComparison.Ordinal) ||
                     s.StartsWith("Creation Program=") || s.StartsWith("Creation Date=") || s.StartsWith("Creation Time=") ||
-                    s.StartsWith("Code Rate=", StringComparison.Ordinal) || s.StartsWith("Time Code Rate=", StringComparison.Ordinal) || string.IsNullOrEmpty(s))
+                    s.StartsWith("Code Rate=", StringComparison.Ordinal) || s.StartsWith("Time Code Rate=", StringComparison.Ordinal))
                 {
                     header.AppendLine(line);
                 }
