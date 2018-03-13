@@ -374,7 +374,7 @@ namespace Nikse.SubtitleEdit.Core
             {
                 return numberCount < 5 && letterCount > 20;
             }
-            var numberThreshold = len * 0.002 + 1;
+            var numberThreshold = len * 0.002 + 2;
             var letterThreshold = len * 0.8;
             return numberCount < numberThreshold && letterCount > letterThreshold;
         }
@@ -386,12 +386,7 @@ namespace Nikse.SubtitleEdit.Core
             {
                 if (matroska.IsValid)
                 {
-                    double frameRate;
-                    int width;
-                    int height;
-                    double milliseconds;
-                    string videoCodec;
-                    matroska.GetInfo(out frameRate, out width, out height, out milliseconds, out videoCodec);
+                    matroska.GetInfo(out var frameRate, out var width, out var height, out var milliseconds, out var videoCodec);
 
                     info.Width = width;
                     info.Height = height;
@@ -432,7 +427,9 @@ namespace Nikse.SubtitleEdit.Core
             }
             catch
             {
+                // ignored
             }
+
             return info;
         }
 
@@ -455,7 +452,9 @@ namespace Nikse.SubtitleEdit.Core
             }
             catch
             {
+                // ignored
             }
+
             return info;
         }
     }
