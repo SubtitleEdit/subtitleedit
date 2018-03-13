@@ -1,4 +1,7 @@
-﻿using Nikse.SubtitleEdit.Core.TransportStream;
+﻿using Nikse.SubtitleEdit.Core.ContainerFormats;
+using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
+using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4;
+using Nikse.SubtitleEdit.Core.TransportStream;
 using Nikse.SubtitleEdit.Core.VobSub;
 using System;
 using System.Collections.Generic;
@@ -376,5 +379,84 @@ namespace Nikse.SubtitleEdit.Core
             return numberCount < numberThreshold && letterCount > letterThreshold;
         }
 
+        public static VideoInfo TryReadVideoInfoViaMatroskaHeader(string fileName)
+        {
+            var info = new VideoInfo { Success = false };
+            using (var matroska = new MatroskaFile(fileName))
+            {
+                if (matroska.IsValid)
+                {
+                    double frameRate;
+                    int width;
+                    int height;
+                    double milliseconds;
+                    string videoCodec;
+                    matroska.GetInfo(out frameRate, out width, out height, out milliseconds, out videoCodec);
+
+                    info.Width = width;
+                    info.Height = height;
+                    info.FramesPerSecond = frameRate;
+                    info.Success = true;
+                    info.TotalMilliseconds = milliseconds;
+                    info.TotalSeconds = milliseconds / TimeCode.BaseUnit;
+                    info.TotalFrames = info.TotalSeconds * frameRate;
+                    info.VideoCodec = videoCodec;
+                }
+            }
+            return info;
+        }
+
+        public static VideoInfo TryReadVideoInfoViaAviHeader(string fileName)
+        {
+            var info = new VideoInfo { Success = false };
+
+            try
+            {
+                using (var rp = new RiffParser())
+                {
+                    if (rp.TryOpenFile(fileName) && rp.FileType == RiffParser.CkidAvi)
+                    {
+                        var dh = new RiffDecodeHeader(rp);
+                        dh.ProcessMainAvi();
+                        info.FileType = RiffParser.FromFourCc(rp.FileType);
+                        info.Width = dh.Width;
+                        info.Height = dh.Height;
+                        info.FramesPerSecond = dh.FrameRate;
+                        info.TotalFrames = dh.TotalFrames;
+                        info.TotalMilliseconds = dh.TotalMilliseconds;
+                        info.TotalSeconds = info.TotalMilliseconds / TimeCode.BaseUnit;
+                        info.VideoCodec = dh.VideoHandler;
+                        info.Success = true;
+                    }
+                }
+            }
+            catch
+            {
+            }
+            return info;
+        }
+
+        public static VideoInfo TryReadVideoInfoViaMp4(string fileName)
+        {
+            var info = new VideoInfo { Success = false };
+
+            try
+            {
+                var mp4Parser = new MP4Parser(fileName);
+                if (mp4Parser.Moov != null && mp4Parser.VideoResolution.X > 0)
+                {
+                    info.Width = mp4Parser.VideoResolution.X;
+                    info.Height = mp4Parser.VideoResolution.Y;
+                    info.TotalMilliseconds = mp4Parser.Duration.TotalSeconds;
+                    info.VideoCodec = "MP4";
+                    info.FramesPerSecond = mp4Parser.FrameRate;
+                    info.Success = true;
+                }
+            }
+            catch
+            {
+            }
+            return info;
+        }
     }
 }
