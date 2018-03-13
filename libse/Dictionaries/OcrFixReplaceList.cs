@@ -27,6 +27,8 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
         private readonly Dictionary<string, string> _regExList;
         private readonly string _replaceListXmlFileName;
 
+        private const string ReplaceListFileNamePostFix = "_OCRFixReplaceList.xml";
+
         public OcrFixReplaceList(string replaceListXmlFileName)
         {
             _replaceListXmlFileName = replaceListXmlFileName;
@@ -78,7 +80,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
 
         public static OcrFixReplaceList FromLanguageId(string languageId)
         {
-            return new OcrFixReplaceList(Configuration.DictionariesDirectory + languageId + "_OCRFixReplaceList.xml");
+            return new OcrFixReplaceList(Configuration.DictionariesDirectory + languageId + ReplaceListFileNamePostFix);
         }
 
         private static Dictionary<string, string> LoadReplaceList(XmlDocument doc, string name)
@@ -86,16 +88,21 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             var list = new Dictionary<string, string>();
             if (!IsValidXmlDocument(doc, name))
                 return list;
-            foreach (XmlNode item in doc.DocumentElement.SelectSingleNode(name).ChildNodes)
+            var node = doc.DocumentElement?.SelectSingleNode(name);
+            if (node != null)
             {
-                if (HasValidAttributes(item, false))
+                foreach (XmlNode item in node.ChildNodes)
                 {
-                    string to = item.Attributes["to"].Value;
-                    string from = item.Attributes["from"].Value;
-                    if (!list.ContainsKey(from))
-                        list.Add(from, to);
+                    if (item.Attributes != null && HasValidAttributes(item, false))
+                    {
+                        string to = item.Attributes["to"].Value;
+                        string from = item.Attributes["from"].Value;
+                        if (!list.ContainsKey(from))
+                            list.Add(from, to);
+                    }
                 }
             }
+
             return list;
         }
 
@@ -104,29 +111,34 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             var list = new Dictionary<string, string>();
             if (!IsValidXmlDocument(doc, name))
                 return list;
-            foreach (XmlNode item in doc.DocumentElement.SelectSingleNode(name).ChildNodes)
+            var node = doc.DocumentElement?.SelectSingleNode(name);
+            if (node != null)
             {
-                if (HasValidAttributes(item, true))
+                foreach (XmlNode item in node.ChildNodes)
                 {
-                    string to = item.Attributes["replaceWith"].Value;
-                    string from = item.Attributes["find"].Value;
-                    if (!list.ContainsKey(from))
-                        list.Add(from, to);
+                    if (item.Attributes != null && HasValidAttributes(item, true))
+                    {
+                        string to = item.Attributes["replaceWith"].Value;
+                        string from = item.Attributes["find"].Value;
+                        if (!list.ContainsKey(from))
+                            list.Add(from, to);
+                    }
                 }
             }
+
             return list;
         }
 
         private static bool IsValidXmlDocument(XmlDocument doc, string elementName)
         {
-            if (doc.DocumentElement == null || doc.DocumentElement.SelectSingleNode(elementName) == null)
+            if (doc.DocumentElement?.SelectSingleNode(elementName) == null)
                 return false;
             return true;
         }
 
         private static bool HasValidAttributes(XmlNode node, bool isRegex)
         {
-            if (node == null || node.Attributes == null)
+            if (node?.Attributes == null)
                 return false;
             if (isRegex)
             {
@@ -288,8 +300,8 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                 word = word.Replace("ﬂ", "fl");
                 word = word.Replace("ﬃ", "ffi");
                 word = word.Replace("ﬄ", "ffl");
-
-                word = word.Replace('ν', 'v'); // first 'v' is U+03BD GREEK SMALL LETTER NU
+                if (!_replaceListXmlFileName.Contains("\\ell" + ReplaceListFileNamePostFix))
+                    word = word.Replace('ν', 'v'); // first 'v' is U+03BD GREEK SMALL LETTER NU
                 word = word.Replace('’', '\'');
                 word = word.Replace('`', '\'');
                 word = word.Replace('´', '\'');
@@ -753,15 +765,15 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
         private bool DeleteFromList(string word, XmlDocument userDoc, string replaceListName, string elementName, Dictionary<string, string> dictionary, Dictionary<string, string> userDictionary)
         {
             if (dictionary == null)
-                throw new ArgumentNullException("dictionary");
+                throw new ArgumentNullException(nameof(dictionary));
             if (userDictionary == null)
-                throw new ArgumentNullException("userDictionary");
+                throw new ArgumentNullException(nameof(userDictionary));
 
             bool removed = false;
             if (userDictionary.ContainsKey((word)))
             {
                 userDictionary.Remove(word);
-                XmlNode wholeWordsNode = userDoc.DocumentElement.SelectSingleNode(replaceListName);
+                XmlNode wholeWordsNode = userDoc.DocumentElement?.SelectSingleNode(replaceListName);
                 if (wholeWordsNode != null)
                 {
                     wholeWordsNode.RemoveAll();
@@ -772,9 +784,12 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                         XmlAttribute aTo = userDoc.CreateAttribute("to");
                         aFrom.InnerText = kvp.Key;
                         aTo.InnerText = kvp.Value;
-                        newNode.Attributes.Append(aTo);
-                        newNode.Attributes.Append(aFrom);
-                        wholeWordsNode.AppendChild(newNode);
+                        if (newNode.Attributes != null)
+                        {
+                            newNode.Attributes.Append(aTo);
+                            newNode.Attributes.Append(aFrom);
+                            wholeWordsNode.AppendChild(newNode);
+                        }
                     }
                     userDoc.Save(ReplaceListXmlFileNameUser);
                     removed = true;
@@ -782,7 +797,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             }
             if (dictionary.ContainsKey((word)))
             {
-                XmlNode wholeWordsNode = userDoc.DocumentElement.SelectSingleNode("Removed" + replaceListName);
+                XmlNode wholeWordsNode = userDoc.DocumentElement?.SelectSingleNode("Removed" + replaceListName);
                 if (wholeWordsNode != null)
                 {
                     XmlNode newNode = userDoc.CreateNode(XmlNodeType.Element, elementName, null);
@@ -790,11 +805,14 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                     XmlAttribute aTo = userDoc.CreateAttribute("to");
                     aFrom.InnerText = word;
                     aTo.InnerText = string.Empty;
-                    newNode.Attributes.Append(aTo);
-                    newNode.Attributes.Append(aFrom);
-                    wholeWordsNode.AppendChild(newNode);
-                    userDoc.Save(ReplaceListXmlFileNameUser);
-                    removed = true;
+                    if (newNode.Attributes != null)
+                    {
+                        newNode.Attributes.Append(aTo);
+                        newNode.Attributes.Append(aFrom);
+                        wholeWordsNode.AppendChild(newNode);
+                        userDoc.Save(ReplaceListXmlFileNameUser);
+                        removed = true;
+                    }
                 }
             }
             return removed;
@@ -822,10 +840,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             return doc;
         }
 
-        private string ReplaceListXmlFileNameUser
-        {
-            get { return Path.Combine(Path.GetDirectoryName(_replaceListXmlFileName), Path.GetFileNameWithoutExtension(_replaceListXmlFileName) + "_User" + Path.GetExtension(_replaceListXmlFileName)); }
-        }
+        private string ReplaceListXmlFileNameUser => Path.Combine(Path.GetDirectoryName(_replaceListXmlFileName) ?? throw new InvalidOperationException(), Path.GetFileNameWithoutExtension(_replaceListXmlFileName) + "_User" + Path.GetExtension(_replaceListXmlFileName));
 
         private XmlDocument LoadXmlReplaceListUserDocument()
         {
@@ -899,14 +914,14 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
         private bool SaveToList(string fromWord, string toWord, XmlDocument userDoc, string replaceListName, string elementName, Dictionary<string, string> dictionary, Dictionary<string, string> userDictionary)
         {
             if (dictionary == null)
-                throw new ArgumentNullException("dictionary");
+                throw new ArgumentNullException(nameof(dictionary));
             if (userDictionary == null)
-                throw new ArgumentNullException("userDictionary");
+                throw new ArgumentNullException(nameof(userDictionary));
             if (userDictionary.ContainsKey(fromWord))
                 return false;
 
             userDictionary.Add(fromWord, toWord);
-            XmlNode wholeWordsNode = userDoc.DocumentElement.SelectSingleNode(replaceListName);
+            XmlNode wholeWordsNode = userDoc.DocumentElement?.SelectSingleNode(replaceListName);
             if (wholeWordsNode != null)
             {
                 XmlNode newNode = userDoc.CreateNode(XmlNodeType.Element, elementName, null);
@@ -914,11 +929,15 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                 XmlAttribute aTo = userDoc.CreateAttribute("to");
                 aTo.InnerText = toWord;
                 aFrom.InnerText = fromWord;
-                newNode.Attributes.Append(aFrom);
-                newNode.Attributes.Append(aTo);
-                wholeWordsNode.AppendChild(newNode);
-                userDoc.Save(ReplaceListXmlFileNameUser);
+                if (newNode.Attributes != null)
+                {
+                    newNode.Attributes.Append(aFrom);
+                    newNode.Attributes.Append(aTo);
+                    wholeWordsNode.AppendChild(newNode);
+                    userDoc.Save(ReplaceListXmlFileNameUser);
+                }
             }
+
             return true;
         }
 
@@ -927,7 +946,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             var userDocument = LoadXmlReplaceListUserDocument();
             if (!_wholeLineReplaceList.ContainsKey(fromLine))
                 _wholeLineReplaceList.Add(fromLine, toLine);
-            XmlNode wholeWordsNode = userDocument.DocumentElement.SelectSingleNode("WholeLines");
+            XmlNode wholeWordsNode = userDocument.DocumentElement?.SelectSingleNode("WholeLines");
             if (wholeWordsNode != null)
             {
                 XmlNode newNode = userDocument.CreateNode(XmlNodeType.Element, "Line", null);
@@ -935,10 +954,13 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                 XmlAttribute aTo = userDocument.CreateAttribute("to");
                 aTo.InnerText = toLine;
                 aFrom.InnerText = fromLine;
-                newNode.Attributes.Append(aFrom);
-                newNode.Attributes.Append(aTo);
-                wholeWordsNode.AppendChild(newNode);
-                userDocument.Save(_replaceListXmlFileName);
+                if (newNode.Attributes != null)
+                {
+                    newNode.Attributes.Append(aFrom);
+                    newNode.Attributes.Append(aTo);
+                    wholeWordsNode.AppendChild(newNode);
+                    userDocument.Save(_replaceListXmlFileName);
+                }
             }
         }
 
