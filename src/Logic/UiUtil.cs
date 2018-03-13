@@ -20,15 +20,15 @@ namespace Nikse.SubtitleEdit.Logic
 
         public static VideoInfo GetVideoInfo(string fileName)
         {
-            VideoInfo info = Utilities.TryReadVideoInfoViaAviHeader(fileName);
+            VideoInfo info = FileUtil.TryReadVideoInfoViaAviHeader(fileName);
             if (info.Success)
                 return info;
 
-            info = Utilities.TryReadVideoInfoViaMatroskaHeader(fileName);
+            info = FileUtil.TryReadVideoInfoViaMatroskaHeader(fileName);
             if (info.Success)
                 return info;
 
-            info = Utilities.TryReadVideoInfoViaMp4(fileName);
+            info = FileUtil.TryReadVideoInfoViaMp4(fileName);
             if (info.Success)
                 return info;
 
