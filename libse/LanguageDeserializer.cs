@@ -400,6 +400,24 @@ namespace Nikse.SubtitleEdit.Core
                 case "ApplyDurationLimits/UnableToFix":
                     language.ApplyDurationLimits.UnableToFix = reader.Value;
                     break;
+                case "AudioToText/Title":
+                    language.AudioToText.Title = reader.Value;
+                    break;
+                case "AudioToText/ExtractingAudioUsingX":
+                    language.AudioToText.ExtractingAudioUsingX = reader.Value;
+                    break;
+                case "AudioToText/ExtractingTextUsingX":
+                    language.AudioToText.ExtractingTextUsingX = reader.Value;
+                    break;
+                case "AudioToText/ProgessViaXy":
+                    language.AudioToText.ProgessViaXy = reader.Value;
+                    break;
+                case "AudioToText/ShowLess":
+                    language.AudioToText.ShowLess = reader.Value;
+                    break;
+                case "AudioToText/ShowMore":
+                    language.AudioToText.ShowMore = reader.Value;
+                    break;
                 case "AutoBreakUnbreakLines/TitleAutoBreak":
                     language.AutoBreakUnbreakLines.TitleAutoBreak = reader.Value;
                     break;

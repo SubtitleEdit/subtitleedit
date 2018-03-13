@@ -18,6 +18,7 @@ namespace Nikse.SubtitleEdit.Core
         public LanguageStructure.AddWaveformBatch AddWaveformBatch;
         public LanguageStructure.AdjustDisplayDuration AdjustDisplayDuration;
         public LanguageStructure.ApplyDurationLimits ApplyDurationLimits;
+        public LanguageStructure.AudioToText AudioToText;
         public LanguageStructure.AutoBreakUnbreakLines AutoBreakUnbreakLines;
         public LanguageStructure.BatchConvert BatchConvert;
         public LanguageStructure.Beamer Beamer;
@@ -280,6 +281,16 @@ namespace Nikse.SubtitleEdit.Core
                 Title = "Apply duration limits",
                 FixesAvailable = "Fixes available: {0}",
                 UnableToFix = "Unable to fix: {0}",
+            };
+
+            AudioToText = new LanguageStructure.AudioToText
+            {
+                Title = "Audio to text",
+                ExtractingAudioUsingX = "Extracting audio using {0}...",
+                ExtractingTextUsingX = "Extracting text from audio using {0}...",
+                ProgessViaXy = "Extracting text via {0} progress: {1}%",
+                ShowLess = "Show less  ▲",
+                ShowMore = "Show more  ▼"
             };
 
             AutoBreakUnbreakLines = new LanguageStructure.AutoBreakUnbreakLines

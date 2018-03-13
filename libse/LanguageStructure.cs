@@ -155,6 +155,16 @@
             public string UnableToFix { get; set; }
         }
 
+        public class AudioToText
+        {
+            public string Title { get; set; }
+            public string ExtractingAudioUsingX { get; set; }
+            public string ExtractingTextUsingX { get; set; }
+            public string ProgessViaXy { get; set; }
+            public string ShowLess { get; set; }
+            public string ShowMore { get; set; }
+        }
+
         public class AutoBreakUnbreakLines
         {
             public string TitleAutoBreak { get; set; }
