@@ -512,6 +512,12 @@
     <Compile Include="Forms\Networking\NetworkStart.Designer.cs">
       <DependentUpon>NetworkStart.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Ocr\SetForeColorThreshold.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Ocr\SetForeColorThreshold.Designer.cs">
+      <DependentUpon>SetForeColorThreshold.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\OpenVideoDvd.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1178,6 +1184,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Networking\NetworkStart.resx">
       <DependentUpon>NetworkStart.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Ocr\SetForeColorThreshold.resx">
+      <DependentUpon>SetForeColorThreshold.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\OpenVideoDvd.resx">
       <DependentUpon>OpenVideoDvd.cs</DependentUpon>

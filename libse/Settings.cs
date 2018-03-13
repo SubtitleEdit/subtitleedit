@@ -85,6 +85,7 @@ namespace Nikse.SubtitleEdit.Core
         public bool SpellCheckEnglishAllowInQuoteAsIng { get; set; }
         public bool SpellCheckShowCompletedMessage { get; set; }
         public bool OcrFixUseHardcodedRules { get; set; }
+        public int OcrBinaryImageCompareRgbThreshold { get; set; }
         public string Interjections { get; set; }
         public string MicrosoftBingApiId { get; set; }
         public string MicrosoftTranslatorApiKey { get; set; }
@@ -226,6 +227,7 @@ namespace Nikse.SubtitleEdit.Core
             UnicodeSymbolsToInsert = "♪;♫;☺;☹;♥;©;☮;☯;Σ;∞;≡;⇒;π";
             SpellCheckAutoChangeNames = true;
             OcrFixUseHardcodedRules = true;
+            OcrBinaryImageCompareRgbThreshold = 270;
             Interjections = "Ah;Ahh;Ahhh;Ahhhh;Eh;Ehh;Ehhh;Hm;Hmm;Hmmm;Huh;Mm;Mmm;Mmmm;Phew;Gah;Oh;Ohh;Ohhh;Ow;Oww;Owww;Ugh;Ughh;Uh;Uhh;Uhhh;Whew";
             MicrosoftBingApiId = "C2C2E9A508E6748F0494D68DFD92FAA1FF9B0BA4";
             GoogleTranslateUrl = "translate.google.com";
@@ -1877,6 +1879,9 @@ namespace Nikse.SubtitleEdit.Core
             subNode = node.SelectSingleNode("OcrFixUseHardcodedRules");
             if (subNode != null)
                 settings.Tools.OcrFixUseHardcodedRules = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("OcrBinaryImageCompareRgbThreshold");
+            if (subNode != null)
+                settings.Tools.OcrBinaryImageCompareRgbThreshold = Convert.ToInt32(subNode.InnerText);
             subNode = node.SelectSingleNode("Interjections");
             if (subNode != null)
                 settings.Tools.Interjections = subNode.InnerText;
@@ -3544,6 +3549,7 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("SpellCheckEnglishAllowInQuoteAsIng", settings.Tools.SpellCheckEnglishAllowInQuoteAsIng.ToString());
                 textWriter.WriteElementString("SpellCheckShowCompletedMessage", settings.Tools.SpellCheckShowCompletedMessage.ToString());
                 textWriter.WriteElementString("OcrFixUseHardcodedRules", settings.Tools.OcrFixUseHardcodedRules.ToString());
+                textWriter.WriteElementString("OcrBinaryImageCompareRgbThreshold", settings.Tools.OcrBinaryImageCompareRgbThreshold.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("Interjections", settings.Tools.Interjections);
                 textWriter.WriteElementString("MicrosoftBingApiId", settings.Tools.MicrosoftBingApiId);
                 textWriter.WriteElementString("MicrosoftTranslatorApiKey", settings.Tools.MicrosoftTranslatorApiKey);

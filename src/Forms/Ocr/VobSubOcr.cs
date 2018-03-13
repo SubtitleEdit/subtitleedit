@@ -1563,11 +1563,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             if (returnBmp == null)
                 return null;
 
-            if ((_binaryOcrDb == null && _nOcrDb == null) || _fromMenuItem)
+            if (_binaryOcrDb == null && _nOcrDb == null || _fromMenuItem)
                 return returnBmp;
 
             var n = new NikseBitmap(returnBmp);
-            n.MakeTwoColor(280);
+            n.MakeTwoColor(Configuration.Settings.Tools.OcrBinaryImageCompareRgbThreshold);
             returnBmp.Dispose();
             return n.GetBitmap();
         }
@@ -8709,6 +8709,20 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 form.ShowDialog(this);
                 _unItalicFactor = form.GetUnItalicFactor();
+            }
+        }
+
+        private void setForecolorThresholdToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            _fromMenuItem = true;
+            Bitmap bmp = GetSubtitleBitmap(_selectedIndex);
+            _fromMenuItem = false;
+            using (var form = new SetForeColorThreshold(bmp))
+            {
+                if (form.ShowDialog(this) == DialogResult.OK)
+                {
+                    Configuration.Settings.Tools.OcrBinaryImageCompareRgbThreshold = form.Threshold;
+                }
             }
         }
 
