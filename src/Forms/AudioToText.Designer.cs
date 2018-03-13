@@ -1,6 +1,6 @@
 ﻿namespace Nikse.SubtitleEdit.Forms
 {
-    partial class AudioToText
+    sealed partial class AudioToText
     {
         /// <summary>
         /// Required designer variable.

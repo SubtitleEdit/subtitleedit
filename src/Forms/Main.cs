@@ -18789,7 +18789,7 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripMenuItemRemoveSceneChanges.Visible = false;
             }
 
-            generateTextFromCurrentVideoToolStripMenuItem.Visible = Configuration.Settings.General.ShowBetaStuff;
+            generateTextFromCurrentVideoToolStripMenuItem.Visible = Directory.Exists(Path.Combine(Configuration.DataDirectory, "pocketsphinx"));
         }
 
         private void ChooseAudioTrack(object sender, EventArgs e)
@@ -22164,6 +22164,10 @@ namespace Nikse.SubtitleEdit.Forms
                     _subtitle.Paragraphs.Clear();
                     _subtitle.Paragraphs.AddRange(form.Subtitle.Paragraphs);
                     SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+                    if (_subtitle.Paragraphs.Count > 1)
+                    {
+                        ToolStripMenuItemAutoMergeShortLinesClick(sender, e);
+                    }
                 }
             }
         }

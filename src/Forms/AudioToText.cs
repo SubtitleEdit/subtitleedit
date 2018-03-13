@@ -13,7 +13,7 @@ using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public partial class AudioToText : Form
+    public sealed partial class AudioToText : Form
     {
         public Subtitle Subtitle { get; set; }
         private readonly VideoInfo _videoInfo;
@@ -36,6 +36,7 @@ namespace Nikse.SubtitleEdit.Forms
             _backgroundWorker = new BackgroundWorker();
             UiUtil.FixLargeFonts(this, buttonOK);
             labelProgress.Text = string.Empty;
+            Text = Configuration.Settings.Language.AudioToText.Title;
         }
 
         public static Process GetCommandLineProcess(string inputVideoFile, int audioTrackNumber, string outWaveFile, string encodeParamters, out string encoderName)
@@ -92,9 +93,8 @@ namespace Nikse.SubtitleEdit.Forms
                 Process process;
                 try
                 {
-                    string waveExtractor;
-                    process = GetCommandLineProcess(_videoFileName, -1, _waveFileName, Configuration.Settings.General.VlcWaveTranscodeSettings, out waveExtractor);
-                    _backgroundWorker.ReportProgress(0, string.Format("Extracting audio using {0}...", waveExtractor));
+                    process = GetCommandLineProcess(_videoFileName, -1, _waveFileName, Configuration.Settings.General.VlcWaveTranscodeSettings, out var waveExtractor);
+                    _backgroundWorker.ReportProgress(0, string.Format(Configuration.Settings.Language.AudioToText.ExtractingAudioUsingX, waveExtractor));
                 }
                 catch (DllNotFoundException)
                 {
@@ -245,9 +245,7 @@ namespace Nikse.SubtitleEdit.Forms
                     var parts = line.Split();
                     if (parts.Length == 4)
                     {
-                        double start;
-                        double end;
-                        if (double.TryParse(parts[1], out start) && double.TryParse(parts[2], out end))
+                        if (double.TryParse(parts[1], out _) && double.TryParse(parts[2], out var end))
                         {
                             return (int)Math.Round(end);
                         }
@@ -286,7 +284,7 @@ namespace Nikse.SubtitleEdit.Forms
             ExtractAudio();
 
             Subtitle subtitle;
-            _backgroundWorker.ReportProgress(0, string.Format("Extracting text via {0}...", "PocketSphinx"));
+            _backgroundWorker.ReportProgress(0, string.Format(Configuration.Settings.Language.AudioToText.ExtractingTextUsingX, "PocketSphinx"));
             var result = ExtractTextFromAudio(_waveFileName, _delayInMilliseconds);
             using (var stream = GenerateStreamFromString(result))
             {
@@ -325,7 +323,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void _backgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             Subtitle = (Subtitle)e.Result;
-            labelProgress.Text = string.Format("Extracting text via {0} progress: {1}%", "PocketSphinx", 100);
+            labelProgress.Text = string.Format(Configuration.Settings.Language.AudioToText.ProgessViaXy, "PocketSphinx", 100);
             progressBar1.Visible = false;
             buttonOK.Enabled = true;
         }
@@ -365,7 +363,7 @@ namespace Nikse.SubtitleEdit.Forms
                 progressBar1.Maximum = 100;
             }
             progressBar1.Value = percentage;
-            labelProgress.Text = string.Format("Extracting text via {0} progress: {1}%", "PocketSphinx", percentage);
+            labelProgress.Text = string.Format(Configuration.Settings.Language.AudioToText.ProgessViaXy, "PocketSphinx", percentage);
         }
 
         private void linkLabelShowMoreLess_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -373,12 +371,12 @@ namespace Nikse.SubtitleEdit.Forms
             _showMore = !_showMore;
             if (_showMore)
             {
-                linkLabelShowMoreLess.Text = "Show less  ▲";
+                linkLabelShowMoreLess.Text = Configuration.Settings.Language.AudioToText.ShowLess;
                 Height = 500;
             }
             else
             {
-                linkLabelShowMoreLess.Text = "Show more  ▼";
+                linkLabelShowMoreLess.Text = Configuration.Settings.Language.AudioToText.ShowMore;
                 Height = linkLabelShowMoreLess.Top + linkLabelShowMoreLess.Height + buttonOK.Height + 60;
             }
             labelLog.Visible = _showMore;
@@ -390,7 +388,9 @@ namespace Nikse.SubtitleEdit.Forms
         private void AudioToText_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (!_abort)
+            {
                 e.Cancel = true;
+            }
         }
 
         private void AudioToText_Shown(object sender, EventArgs e)
