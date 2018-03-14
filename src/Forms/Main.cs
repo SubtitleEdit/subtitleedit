@@ -102,6 +102,7 @@ namespace Nikse.SubtitleEdit.Forms
         private string _textAutoSave;
         private string _textAutoSaveOriginal;
         private List<string> _statusLog = new List<string>();
+        private bool _hideStatusLog = false;
         private StatusLog _statusLogForm;
         private bool _makeHistoryPaused;
         private bool _saveAsCalled;
@@ -4499,17 +4500,34 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             ReloadFromSourceView();
-            var enc = GetCurrentEncoding().BodyName;
-            bool oldChange = _changeSubtitleToString != _subtitle.GetFastHashCode(enc);
+            _hideStatusLog = true;
+            var oldStatusLog = _statusLog;
+            _statusLog = new List<string>();
             _saveAsCalled = false;
-            SaveSubtitle(GetCurrentSubtitleFormat(), useOnly0AForNewLine);
+            var result = SaveSubtitle(GetCurrentSubtitleFormat(), useOnly0AForNewLine);
+            if (result != DialogResult.OK)
+            {
+                _statusLog = oldStatusLog;
+                _hideStatusLog = false;
+                return;
+            }
 
-            if (_subtitleAlternate != null && _changeAlternateSubtitleToString != _subtitleAlternate.ToText(new SubRip()).Trim() && Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate.Paragraphs.Count > 0)
+            if (_subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate.Paragraphs.Count > 0)
             {
                 SaveOriginalToolStripMenuItemClick(null, null);
-                if (oldChange && _changeSubtitleToString == _subtitle.GetFastHashCode(enc) && _changeAlternateSubtitleToString == _subtitleAlternate.ToText(new SubRip()).Trim())
-                    ShowStatus(string.Format(_language.SavedSubtitleX, Path.GetFileName(_fileName)) + " + " +
-                               string.Format(_language.SavedOriginalSubtitleX, Path.GetFileName(_subtitleAlternateFileName)));
+                _statusLog = oldStatusLog;
+                _hideStatusLog = false;
+                ShowStatus(string.Format(_language.SavedSubtitleX, Path.GetFileName(_fileName)) + " + " +
+                           string.Format(_language.SavedOriginalSubtitleX, Path.GetFileName(_subtitleAlternateFileName)));
+                return;
+            }
+            _hideStatusLog = false;
+            var newStatusLog = _statusLog;
+            _statusLog = oldStatusLog;
+            newStatusLog.Reverse();
+            foreach (var s in newStatusLog)
+            {
+                ShowStatus(s);
             }
         }
 
@@ -5269,6 +5287,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         public void ShowStatus(string message)
         {
+            if (_hideStatusLog)
+            {
+                _statusLog.Add(message);
+                return;
+            }
+
             labelStatus.Text = message.Replace("&", "&&");
             statusStrip1.Refresh();
             if (!string.IsNullOrEmpty(message))

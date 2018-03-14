@@ -25,7 +25,14 @@ namespace Nikse.SubtitleEdit.Forms
         private void StatusLog_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)
+            {
                 DialogResult = DialogResult.Cancel;
+            }
+            else if (e.KeyCode == Keys.Delete && e.Modifiers == Keys.Control)
+            {
+                _log.Clear();
+                timer1_Tick(null, null);
+            }
         }
 
         private void timer1_Tick(object sender, System.EventArgs e)
