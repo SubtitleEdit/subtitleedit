@@ -965,17 +965,41 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
         private bool StartsAndEndsWithHearImpairedTags(string text)
         {
-            return (Settings.RemoveTextBetweenSquares && text.StartsWith('[') && text.EndsWith(']') && !text.Trim('[').Contains('[')) ||
-                   (Settings.RemoveTextBetweenBrackets && text.StartsWith('{') && text.EndsWith('}') && !text.Trim('{').Contains('{')) ||
-                   (Settings.RemoveTextBetweenParentheses && text.StartsWith('(') && text.EndsWith(')') && !text.Trim('(').Contains('(')) ||
-                   (Settings.RemoveTextBetweenQuestionMarks && text.StartsWith('?') && text.EndsWith('?') && !text.Trim('?').Contains('?')) ||
-                   (Settings.RemoveTextBetweenSquares && text.StartsWith('[') && text.EndsWith("]:", StringComparison.Ordinal) && !text.Trim('[').Contains('[')) ||
-                   (Settings.RemoveTextBetweenBrackets && text.StartsWith('{') && text.EndsWith("}:", StringComparison.Ordinal) && !text.Trim('{').Contains('{')) ||
-                   (Settings.RemoveTextBetweenParentheses && text.StartsWith('(') && text.EndsWith("):", StringComparison.Ordinal) && !text.Trim('(').Contains('(')) ||
-                   (Settings.RemoveTextBetweenQuestionMarks && text.StartsWith('?') && text.EndsWith("?:", StringComparison.Ordinal) && !text.Trim('?').Contains('?')) ||
-                   (Settings.RemoveTextBetweenCustomTags &&
-                    Settings.CustomStart.Length > 0 && Settings.CustomEnd.Length > 0 &&
-                    text.StartsWith(Settings.CustomStart, StringComparison.Ordinal) && text.EndsWith(Settings.CustomEnd, StringComparison.Ordinal));
+            if (Settings.RemoveTextBetweenSquares && StartsAndEndsWithHearImpairedTags(text, '[', ']'))
+                return true;
+
+            if (Settings.RemoveTextBetweenBrackets && StartsAndEndsWithHearImpairedTags(text, '{', '}'))
+                return true;
+
+            if (Settings.RemoveTextBetweenParentheses && StartsAndEndsWithHearImpairedTags(text, '(', ')'))
+                return true;
+
+            if (Settings.RemoveTextBetweenQuestionMarks && StartsAndEndsWithHearImpairedTags(text, '?', '?'))
+                return true;
+
+            return Settings.RemoveTextBetweenCustomTags &&
+                   Settings.CustomStart.Length > 0 && Settings.CustomEnd.Length > 0 &&
+                   text.StartsWith(Settings.CustomStart, StringComparison.Ordinal) && text.EndsWith(Settings.CustomEnd, StringComparison.Ordinal);
+        }
+
+        private bool StartsAndEndsWithHearImpairedTags(string text, char startTag, char endTag)
+        {
+            if (text.StartsWith(startTag) && (text.EndsWith(endTag) || text.EndsWith(endTag + ":")))
+            {
+                var lastIndex = text.LastIndexOf(endTag);
+                var s = text.Substring(1, lastIndex - 1);
+                var restNumberOfStartTags = Utilities.CountTagInText(s, startTag);
+                var restNumberOfEndTags = Utilities.CountTagInText(s, endTag);
+                if (restNumberOfStartTags == 1 && restNumberOfEndTags == 1)
+                {
+                    return s.IndexOf(startTag) < s.IndexOf(endTag);
+                }
+                if (restNumberOfStartTags == 0 && restNumberOfEndTags == 0)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         private static string RemoveTextBetweenTags(string startTag, string endTag, string text)

@@ -1638,6 +1638,26 @@ namespace Test.Logic.Forms
             Assert.AreEqual(string.Empty, actual);
         }
 
+        [TestMethod]
+        public void RemoveTextBetweenParenthesesNested1()
+        {
+            var target = GetRemoveTextForHiLib();
+            target.Settings.RemoveTextBeforeColon = false;
+            target.Settings.RemoveTextBetweenParentheses = true;
+            string actual = target.RemoveTextFromHearImpaired("(Not, it's not (a secret).)");
+            Assert.AreEqual(string.Empty, actual);
+        }
+
+        [TestMethod]
+        public void RemoveTextBetweenParenthesesNested2()
+        {
+            var target = GetRemoveTextForHiLib();
+            target.Settings.RemoveTextBeforeColon = false;
+            target.Settings.RemoveTextBetweenParentheses = true;
+            string actual = target.RemoveTextFromHearImpaired("(MAN) Not, it's... (WOMAN) not.");
+            Assert.AreEqual("Not, it's... not.", actual);
+        }
+
         #region Additional test attributes
 
         //
