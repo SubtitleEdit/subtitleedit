@@ -13095,6 +13095,8 @@ namespace Nikse.SubtitleEdit.Forms
         {
             var oldPosition = mediaPlayer.CurrentPosition;
             var newPosition = oldPosition + seconds;
+            if (newPosition < 0)
+                newPosition = 0;
             if (mediaPlayer.IsPaused && Configuration.Settings.General.MoveVideo100Or500MsPlaySmallSample)
             {
                 mediaPlayer.CurrentPosition = newPosition;
