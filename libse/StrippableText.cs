@@ -357,19 +357,28 @@ namespace Nikse.SubtitleEdit.Core
             var preLine = HtmlUtil.RemoveHtmlTags(lastLine).TrimEnd().TrimEnd('\"', '”').TrimEnd();
 
             // check if previous line was fully closed
-            if (string.IsNullOrEmpty(preLine) ||
-                preLine.EndsWith('.') ||
-                preLine.EndsWith('!') ||
-                preLine.EndsWith('?') ||
-                preLine.EndsWith(". ♪", StringComparison.Ordinal) ||
-                preLine.EndsWith("! ♪", StringComparison.Ordinal) ||
-                preLine.EndsWith("? ♪", StringComparison.Ordinal) ||
-                preLine.EndsWith(']') ||
-                preLine.EndsWith(')') ||
-                preLine.EndsWith(':') ||
-                preLine.EndsWith('_'))
+            if (string.IsNullOrEmpty(preLine))
             {
                 return true;
+            }
+            else
+            {
+                char lastChar = preLine[preLine.Length - 1];
+
+                if (lastChar == '♪')
+                {
+                    string tempPreLine = preLine.Substring(0, preLine.Length - 1).TrimEnd();
+                    // update last char
+                    if (tempPreLine.Length > 0)
+                    {
+                        lastChar = tempPreLine[tempPreLine.Length - 1];
+                    }
+                }
+
+                if (lastChar != '♪' && (lastChar == '.' || lastChar == '!' || lastChar == '?' || lastChar == ']' || lastChar == ')' || lastChar == ':' || lastChar == '_'))
+                {
+                    return true;
+                }
             }
 
             // previous line ends with music symbol but current line doesn't contains any music symbol
