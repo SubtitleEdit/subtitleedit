@@ -21,9 +21,9 @@ namespace Nikse.SubtitleEdit.Core
         private static int GetCountContains(string text, params string[] words)
         {
             int count = 0;
-            for (int i = 0; i < words.Length; i++)
+            foreach (var w in words)
             {
-                var regEx = new Regex(words[i]);
+                var regEx = new Regex(w);
                 count += regEx.Matches(text).Count;
             }
             return count;
@@ -75,10 +75,11 @@ namespace Nikse.SubtitleEdit.Core
             }
         }
 
-        private static readonly string[] AutoDetectWordsEnglish = { "we", "are", "and", "your?", "what", "[TW]hat's", "You're", "(any|some|every)thing", "money", "because" };
-        private static readonly string[] AutoDetectWordsDanish = { "vi", "han", "og", "jeg", "var", "men", "gider", "bliver", "virkelig", "kommer", "tilbage", "Hej", "længere", "gjorde", "dig", "havde", "[Uu]ndskyld", "arbejder", "vidste", "troede", "stadigvæk", "[Mm]åske" };
-        private static readonly string[] AutoDetectWordsNorwegian = { "vi", "er", "og", "jeg", "var", "men", "igjen", "Nei", "Hei", "noen", "gjøre", "kanskje", "[Tt]renger", "tenker", "skjer", "møte", "veldig", "takk", "penger", "konsept", "hjelp" };
-        private static readonly string[] AutoDetectWordsSwedish = { "vi", "är", "och", "Jag", "inte", "för", "måste", "Öppna", "Förlåt", "nånting", "ingenting", "jävla", "Varför", "[Ss]nälla", "fattar", "själv", "säger", "öppna", "jävligt", "dörren", "göra", "behöver", "tillbaka", "Varför", "träffa", "kanske", "säga", "hände", "honom", "hennes", "veckor", "tänker", "själv", "pratar", "mycket", "mamma", "dödade", "Ursäkta", "säger", "senaste", "håller", "förstår", "veckan", "varför", "tycker" };
+        private static readonly string[] AutoDetectWordsEnglish = { "we", "are", "and", "your", "what", "[TW]hat's", "You're", "(any|some|every)thing", "money", "because", "human", "because", "welcome", "really", "something", "confusing", "about", "know", "people", "other", "which", "would", "these", "could" };
+
+        private static readonly string[] AutoDetectWordsDanish = { "vi", "han", "og", "jeg", "var", "men", "gider", "bliver", "virkelig", "kommer", "tilbage", "Hej", "længere", "gjorde", "dig", "havde", "[Uu]ndskyld", "arbejder", "vidste", "troede", "stadigvæk", "[Mm]åske", "første", "gik", "fortælle", "begyndt", "spørgsmål", "pludselig" };
+        private static readonly string[] AutoDetectWordsNorwegian = { "vi", "og", "jeg", "var", "men", "igjen", "Nei", "Hei", "noen", "gjøre", "kanskje", "[Tt]renger", "tenker", "skjer", "møte", "veldig", "takk", "penger", "konsept", "hjelp", "forsvunnet", "skutt", "sterkt", "minste", "fortsette", "inneholder", "første", "gikk", "fortelle", "begynt", "spørsmål", "plutselig" };
+        private static readonly string[] AutoDetectWordsSwedish = { "vi", "är", "och", "Jag", "inte", "för", "måste", "Öppna", "Förlåt", "nånting", "ingenting", "jävla", "Varför", "[Ss]nälla", "fattar", "själv", "säger", "öppna", "jävligt", "dörren", "göra", "behöver", "tillbaka", "Varför", "träffa", "kanske", "säga", "hände", "honom", "hennes", "veckor", "tänker", "själv", "pratar", "mycket", "mamma", "dödade", "Ursäkta", "säger", "senaste", "håller", "förstår", "veckan", "varför", "tycker", "första", "gick", "berätta", "börjat", "människor", "frågor", "fråga", "plötsligt" };
 
         private static readonly string[] AutoDetectWordsSpanish =
         {
@@ -96,8 +97,8 @@ namespace Nikse.SubtitleEdit.Core
 
         private static readonly string[] AutoDetectWordsFrench =
         {
-            "pas", "[vn]ous", "ça", "une", "pour", "[mt]oi", "dans", "elle", "tout", "plus", "[bmt]on", "suis", "avec", "oui", "fait", "ils", "être", "faire", "comme", "était", "quoi", "ici", "veux",
-            "rien", "dit", "où", "votre", "pourquoi", "sont", "cette", "peux", "alors", "comment", "avez", "très", "même", "merci", "ont", "aussi", "chose", "voir", "allez", "tous", "ces", "deux"
+            "pas", "[vn]ous", "ça", "une", "pour", "[mt]oi", "dans", "elle", "tout", "plus", "[bmt]on", "suis", "avec", "oui", "fait", "ils", "être", "faire", "comme", "était", "quoi", "ici", "veux", "vouloir", "quelque", "pouvoir",
+            "rien", "dit", "où", "votre", "pourquoi", "sont", "cette", "peux", "alors", "comment", "avez", "très", "même", "merci", "ont", "aussi", "chose", "voir", "allez", "tous", "ces", "deux", "avoir", " pouvoir", "même"
         };
 
         private static readonly string[] AutoDetectWordsPortuguese =
@@ -111,7 +112,10 @@ namespace Nikse.SubtitleEdit.Core
         private static readonly string[] AutoDetectWordsDutch = { "van", "een", "[Hh]et", "m(ij|ĳ)", "z(ij|ĳ)n", "hebben", "alleen", "Waarom" };
         private static readonly string[] AutoDetectWordsPolish = { "Czy", "ale", "ty", "siê", "jest", "mnie", "Proszę", "życie", "statku", "życia", "Czyli", "Wszystko", "Wiem", "Przepraszam", "dobrze", "chciałam" };
         private static readonly string[] AutoDetectWordsGreek = { "μου", "[Εε]ίναι", "αυτό", "Τόμπυ", "καλά", "Ενταξει", "πρεπει", "Λοιπον", "τιποτα", "ξερεις" };
+
         private static readonly string[] AutoDetectWordsRussian = { "[Ээч]?то", "[Нн]е", "[ТтМмбв]ы", "Да", "[Нн]ет", "Он", "его", "тебя", "как", "меня", "Но", "всё", "мне", "вас", "знаю", "ещё", "за", "нас", "чтобы", "был" };
+
+        private static readonly string[] AutoDetectWordsBulgarian = { "[Кк]акво", "тук", "може", "Как", "Да", "Ваше", "нещо", "беше", "Добре", "трябва", "става", "Джоузи", "Защо", "дяволите", "Сиянието", "Трябва", "години", "Стивън", "Благодаря" };
 
         private static readonly string[] AutoDetectWordsUkrainian =
         {
@@ -119,7 +123,6 @@ namespace Nikse.SubtitleEdit.Core
             "нічого", "немає", "може", "знову", "бо", "щось", "щоб", "цим", "тобі", "хотів", "твоїх", "мої", "мій", "має", "їм", "йому", "дуже"
         };
 
-        private static readonly string[] AutoDetectWordsBulgarian = { "[Кк]акво", "тук", "може", "Как", "Ваше" };
         private static readonly string[] AutoDetectWordsAlbanian = { "është", "këtë", "Unë", "mirë", "shumë", "Çfarë", "çfarë", "duhet", "Është", "mbrapa", "Faleminderit", "vërtet", "diçka", "gjithashtu", "gjithe", "eshte", "shume", "vetem", "tënde", "çmendur", "vullnetin", "vdekur" };
         private static readonly string[] AutoDetectWordsArabic = { "من", "هل", "لا", "في", "لقد", "ما", "ماذا", "يا", "هذا", "إلى", "على", "أنا", "أنت", "حسناً", "أيها", "كان", "كيف", "يكون", "هذه", "هذان", "الذي", "التي", "الذين", "هناك", "هنالك" };
         private static readonly string[] AutoDetectWordsFarsi = { "این", "برای", "اون", "سیب", "کال", "رو", "خيلي", "آره", "بود", "اون", "نيست", "اينجا", "باشه", "سلام", "ميکني", "داري", "چيزي", "چرا", "خوبه" };
@@ -189,6 +192,7 @@ namespace Nikse.SubtitleEdit.Core
         private static readonly string[] AutoDetectWordsLithuanian = { "tavęs", "veidai", "apie", "jums", "Veidai", "Kaip", "kaip", "reikia", "Šūdas", "frensis", "Ačiū", "vilsonai", "Palauk", "Veidas", "viskas", "Tikrai", "manęs", "Tačiau", "žmogau", "Flagai", "Prašau", "Džiune", "Nakties", "šviesybe", "Supratau", "komanda", "reikia", "apie", "Kodėl", "mūsų", "Ačiū", "vyksta" };
         private static readonly string[] AutoDetectWordsHindi = { "एक", "और", "को", "का", "यह", "सकते", "लिए", "करने", "भारतीय", "सकता", "भारत", "तकनीक", "कंप्यूटिंग", "उपकरण", "भाषाओं", "भाषा", "कंप्यूटर", "आप", "आपको", "अपने", "लेकिन", "करना", "सकता", "बहुत", "चाहते", "अच्छा", "वास्तव", "लगता", "इसलिए", "शेल्डन", "धन्यवाद।", "तरह", "करता", "चाहता", "कोशिश", "करते", "किया", "अजीब", "सिर्फ", "शुरू" };
         private static readonly string[] AutoDetectWordsUrdu = { "نہیں", "ایک", "ہیں", "کیا", "اور", "لئے", "ٹھیک", "ہوں", "مجھے", "تھا", "کرنے", "صرف", "ارے", "یہاں", "بہت", "لیکن", "ساتھ", "اپنے", "اچھا", "میرے", "چاہتا", "انہوں", "تمہیں" };
+
         private static string AutoDetectGoogleLanguage(string text, int bestCount)
         {
             int count = GetCount(text, AutoDetectWordsEnglish);
@@ -271,7 +275,17 @@ namespace Nikse.SubtitleEdit.Core
 
             count = GetCount(text, AutoDetectWordsRussian);
             if (count > bestCount)
+            {
+                var bulgarianCount = GetCount(text, AutoDetectWordsBulgarian);
+                if (bulgarianCount > count)
+                    return "bg"; // Bulgarian
+
+                var ukranianCount = GetCount(text, AutoDetectWordsUkrainian);
+                if (ukranianCount > count)
+                    return "uk"; // Ukrainian
+
                 return "ru"; // Russian
+            }
 
             count = GetCount(text, AutoDetectWordsUkrainian);
             if (count > bestCount)
@@ -896,8 +910,7 @@ namespace Nikse.SubtitleEdit.Core
                         var buffer = new byte[length];
                         file.Read(buffer, 0, buffer.Length);
 
-                        bool couldBeUtf8;
-                        if (IsUtf8(buffer, out couldBeUtf8))
+                        if (IsUtf8(buffer, out var couldBeUtf8))
                         {
                             encoding = Encoding.UTF8;
                         }
