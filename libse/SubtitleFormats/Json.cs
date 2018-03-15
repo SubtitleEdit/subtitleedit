@@ -140,6 +140,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 res = ConvertJsonSpecialCharacters(res);
                 res = res.Replace("\\\"", "@__1");
                 int endIndex = res.IndexOf("\"}", StringComparison.Ordinal);
+                if (endIndex == -1)
+                {
+                    endIndex = res.LastIndexOf('"');
+                }
                 int endAlternate = res.IndexOf("\",", StringComparison.Ordinal);
                 if (endIndex < 0)
                     endIndex = endAlternate;
