@@ -572,6 +572,12 @@ namespace Nikse.SubtitleEdit.Forms
             res = res.Replace("<br/>", Environment.NewLine);
             res = res.Replace("<br />", Environment.NewLine);
             res = res.Replace("<br>", Environment.NewLine);
+            res = res.Replace("</ font>", "</font>");
+            res = res.Replace("</ font >", "</font>");
+            res = res.Replace("<font color = \"# ", "<font color=\"#");
+            res = res.Replace("<font color = ", "<font color=");
+            res = res.Replace("</ b >", "</b>");
+            res = res.Replace("</ b>", "</b>");
             res = res.Replace("  ", " ").Trim();
             res = res.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
             res = res.Replace(Environment.NewLine + " ", Environment.NewLine);
