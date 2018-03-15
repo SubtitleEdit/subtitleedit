@@ -362,5 +362,55 @@ namespace Nikse.SubtitleEdit.Core
             return length;
         }
 
+        public static bool IsClosed(this string value, bool trimQuotes = true)
+        {
+            // check if previous line was fully closed
+            if (string.IsNullOrEmpty(value))
+            {
+                return true;
+            }
+
+            if (trimQuotes)
+            {
+                value = HtmlUtil.RemoveHtmlTags(value).TrimEnd().TrimEnd('\"', '”').TrimEnd();
+            }
+
+            char lastChar = value[value.Length - 1];
+            if (lastChar == '♪')
+            {
+                string tempPreLine = value.TrimEnd(' ', '♪');
+                // update last char
+                if (tempPreLine.Length > 0)
+                {
+                    lastChar = tempPreLine[tempPreLine.Length - 1];
+                }
+            }
+
+            // Ellipses
+            if (lastChar == '.')
+            {
+                if (value.Length > 3)
+                {
+                    if (value.Substring(0, value.Length - 3).Equals("...", StringComparison.Ordinal))
+                    {
+                        return false;
+                    }
+                }
+
+                return true;
+            }
+
+            if (lastChar == '…')
+            {
+                return false;
+            }
+
+            if (lastChar == '!' || lastChar == '?' || lastChar == ']' || lastChar == ')' || lastChar == ':' || lastChar == '_')
+            {
+                return true;
+            }
+
+            return false;
+        }
     }
 }

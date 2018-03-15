@@ -294,18 +294,7 @@ namespace Nikse.SubtitleEdit.Core
                             if (sb.ToString().EndsWith(Environment.NewLine + "-"))
                             {
                                 var prevLine = HtmlUtil.RemoveHtmlTags(sb.ToString().Substring(0, sb.Length - 2).TrimEnd());
-                                if (prevLine.EndsWith('.') ||
-                                    prevLine.EndsWith('!') ||
-                                    prevLine.EndsWith('?') ||
-                                    prevLine.EndsWith(". ♪", StringComparison.Ordinal) ||
-                                    prevLine.EndsWith("! ♪", StringComparison.Ordinal) ||
-                                    prevLine.EndsWith("? ♪", StringComparison.Ordinal) ||
-                                    prevLine.EndsWith(']') ||
-                                    prevLine.EndsWith(')') ||
-                                    prevLine.EndsWith(':'))
-                                {
-                                    lastWasBreak = true;
-                                }
+                                lastWasBreak = prevLine.IsClosed();
                             }
                         }
                     }
@@ -330,6 +319,12 @@ namespace Nikse.SubtitleEdit.Core
 
         private bool ShouldStartWithUpperCase(string lastLine, double millisecondsgaps)
         {
+            // too much gaps between lines, so should be considered as closed
+            if (millisecondsgaps > 5000)
+            {
+                return true;
+            }
+
             // do not capitalize url
             if (StrippedText.StartsWith("www.", StringComparison.OrdinalIgnoreCase) || StrippedText.StartsWith("http", StringComparison.OrdinalIgnoreCase))
             {
@@ -348,12 +343,6 @@ namespace Nikse.SubtitleEdit.Core
                 return false;
             }
 
-            // too much gaps between lines, so should be considered as closed
-            if (millisecondsgaps > 5000)
-            {
-                return true;
-            }
-
             var preLine = HtmlUtil.RemoveHtmlTags(lastLine).TrimEnd().TrimEnd('\"', '”').TrimEnd();
 
             // check if previous line was fully closed
@@ -362,17 +351,7 @@ namespace Nikse.SubtitleEdit.Core
                 return true;
             }
 
-            char lastChar = preLine[preLine.Length - 1];
-            if (lastChar == '♪')
-            {
-                string tempPreLine = preLine.Substring(0, preLine.Length - 1).TrimEnd();
-                // update last char
-                if (tempPreLine.Length > 0)
-                {
-                    lastChar = tempPreLine[tempPreLine.Length - 1];
-                }
-            }
-            if (lastChar == '.' || lastChar == '!' || lastChar == '?' || lastChar == ']' || lastChar == ')' || lastChar == ':' || lastChar == '_')
+            if (preLine.IsClosed(trimQuotes: false))
             {
                 return true;
             }
