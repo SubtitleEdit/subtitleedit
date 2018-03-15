@@ -904,7 +904,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     for (int i = 0; i < comboBoxCharacterDatabase.Items.Count; i++)
                     {
                         if (comboBoxCharacterDatabase.Items[i].ToString().Equals(_vobSubOcrSettings.LastImageCompareFolder, StringComparison.OrdinalIgnoreCase))
+                        {
                             comboBoxCharacterDatabase.SelectedIndex = i;
+                            break;
+                        }
                     }
                     if (comboBoxCharacterDatabase.SelectedIndex < 0)
                         comboBoxCharacterDatabase.SelectedIndex = 0;
@@ -7475,14 +7478,39 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             if (_ocrFixEngine.IsDictionaryLoaded)
             {
                 string loadedDictionaryName = _ocrFixEngine.SpellCheckDictionaryName;
-                int i = 0;
+                var found = false;
                 comboBoxDictionaries.SelectedIndexChanged -= comboBoxDictionaries_SelectedIndexChanged;
-                foreach (string item in comboBoxDictionaries.Items)
+                if (_ocrMethodIndex == _ocrMethodTesseract &&
+                    !string.IsNullOrEmpty(Configuration.Settings.VobSubOcr.LastTesseractSpellCheck) &&
+                    Configuration.Settings.VobSubOcr.LastTesseractSpellCheck.Length > 1 &&
+                    loadedDictionaryName.Length > 1 &&
+                    Configuration.Settings.VobSubOcr.LastTesseractSpellCheck.StartsWith(loadedDictionaryName.Substring(0, 2), StringComparison.OrdinalIgnoreCase))
                 {
-                    if (item.Contains("[" + loadedDictionaryName + "]"))
-                        comboBoxDictionaries.SelectedIndex = i;
-                    i++;
+                    for (var index = 0; index < comboBoxDictionaries.Items.Count; index++)
+                    {
+                        var item = (string)comboBoxDictionaries.Items[index];
+                        if (item.Contains("[" + Configuration.Settings.VobSubOcr.LastTesseractSpellCheck + "]"))
+                        {
+                            comboBoxDictionaries.SelectedIndex = index;
+                            found = true;
+                            break;
+                        }
+                    }
                 }
+
+                if (!found)
+                {
+                    for (var index = 0; index < comboBoxDictionaries.Items.Count; index++)
+                    {
+                        var item = (string)comboBoxDictionaries.Items[index];
+                        if (item.Contains("[" + loadedDictionaryName + "]"))
+                        {
+                            comboBoxDictionaries.SelectedIndex = index;
+                            break;
+                        }
+                    }
+                }
+
                 comboBoxDictionaries.SelectedIndexChanged += comboBoxDictionaries_SelectedIndexChanged;
                 comboBoxDictionaries.Left = labelDictionaryLoaded.Left + labelDictionaryLoaded.Width;
                 comboBoxDictionaries.Width = groupBoxOcrAutoFix.Width - (comboBoxDictionaries.Left + 10 + buttonSpellCheckDownload.Width);
@@ -7868,6 +7896,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private void comboBoxDictionaries_SelectedIndexChanged(object sender, EventArgs e)
         {
             Configuration.Settings.General.SpellCheckLanguage = LanguageString;
+            if (_ocrMethodIndex == _ocrMethodTesseract)
+                Configuration.Settings.VobSubOcr.LastTesseractSpellCheck = LanguageString;
+
             string threeLetterIsoLanguageName = string.Empty;
             if (LanguageString == null)
             {
@@ -8412,6 +8443,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 Configuration.Settings.VobSubOcr.LastBinaryImageCompareDb = comboBoxCharacterDatabase.SelectedItem.ToString();
                 Configuration.Settings.VobSubOcr.LastBinaryImageSpellCheck = comboBoxDictionaries.SelectedItem.ToString();
+            }
+
+            if (_ocrMethodIndex == _ocrMethodTesseract)
+            {
+                Configuration.Settings.VobSubOcr.LastTesseractSpellCheck = LanguageString;
             }
 
             if (_bluRaySubtitlesOriginal != null)

@@ -875,6 +875,7 @@ namespace Nikse.SubtitleEdit.Core
         public bool GuessUnknownWords { get; set; }
         public bool AutoBreakSubtitleIfMoreThanTwoLines { get; set; }
         public double ItalicFactor { get; set; }
+
         public bool LineOcrDraw { get; set; }
         public bool LineOcrAdvancedItalic { get; set; }
         public string LineOcrLastLanguages { get; set; }
@@ -884,6 +885,7 @@ namespace Nikse.SubtitleEdit.Core
         public int LineOcrMaxLineHeight { get; set; }
         public string LastBinaryImageCompareDb { get; set; }
         public string LastBinaryImageSpellCheck { get; set; }
+        public string LastTesseractSpellCheck { get; set; }
 
         public VobSubOcrSettings()
         {
@@ -2735,41 +2737,9 @@ namespace Nikse.SubtitleEdit.Core
             subNode = node.SelectSingleNode("LastBinaryImageSpellCheck");
             if (subNode != null)
                 settings.VobSubOcr.LastBinaryImageSpellCheck = subNode.InnerText;
-
-
-            // TODO: Remove future version (like SE 3.4.15)
-            //BEGIN OLD
-            var oldReplaceItems = doc.DocumentElement.SelectNodes("MultipleSearchAndReplaceList/MultipleSearchAndReplaceItem");
-            if (oldReplaceItems.Count > 0)
-            {
-                var group = new MultipleSearchAndReplaceGroup();
-                group.Rules = new List<MultipleSearchAndReplaceSetting>();
-                group.Name = "Default";
-                group.Enabled = true;
-                settings.MultipleSearchAndReplaceGroups.Add(group);
-                foreach (XmlNode listNode in oldReplaceItems)
-                {
-                    var item = new MultipleSearchAndReplaceSetting();
-                    subNode = listNode.SelectSingleNode("Enabled");
-                    if (subNode != null)
-                        item.Enabled = Convert.ToBoolean(subNode.InnerText);
-                    subNode = listNode.SelectSingleNode("FindWhat");
-                    if (subNode != null)
-                        item.FindWhat = subNode.InnerText;
-                    subNode = listNode.SelectSingleNode("ReplaceWith");
-                    if (subNode != null)
-                        item.ReplaceWith = subNode.InnerText;
-                    subNode = listNode.SelectSingleNode("SearchType");
-                    if (subNode != null)
-                        item.SearchType = subNode.InnerText;
-                    subNode = listNode.SelectSingleNode("Description");
-                    if (subNode != null)
-                        item.Description = subNode.InnerText;
-                    group.Rules.Add(item);
-                }
-            }
-            //END OLD
-
+            subNode = node.SelectSingleNode("LastTesseractSpellCheck");
+            if (subNode != null)
+                settings.VobSubOcr.LastTesseractSpellCheck = subNode.InnerText;
 
             foreach (XmlNode groupNode in doc.DocumentElement.SelectNodes("MultipleSearchAndReplaceGroups/Group"))
             {
@@ -3857,6 +3827,8 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("LineOcrMaxLineHeight", settings.VobSubOcr.LineOcrMaxLineHeight.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("LastBinaryImageCompareDb", settings.VobSubOcr.LastBinaryImageCompareDb);
                 textWriter.WriteElementString("LastBinaryImageSpellCheck", settings.VobSubOcr.LastBinaryImageSpellCheck);
+                textWriter.WriteElementString("LastTesseractSpellCheck", settings.VobSubOcr.LastTesseractSpellCheck);
+
                 textWriter.WriteEndElement();
 
                 textWriter.WriteStartElement("MultipleSearchAndReplaceGroups", string.Empty);
