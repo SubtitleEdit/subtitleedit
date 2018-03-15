@@ -17,19 +17,22 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var language = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle);
             var userId = "0";
             var duration = "0";
+            var last = subtitle.Paragraphs.LastOrDefault();
+            if (last != null)
+                duration = (last.StartTime.TotalSeconds + last.Duration.TotalSeconds).ToString(CultureInfo.InvariantCulture);
             var createdAt = "";
             var id = "0";
             var sb = new StringBuilder();
             sb.AppendLine("{" + Environment.NewLine +
                           "  \"job\": {" + Environment.NewLine +
-                          "    \"lang\": \"" + language + "\"" + Environment.NewLine +
-                          "    \"user_id\": \"" + userId + "\"" + Environment.NewLine +
-                          "    \"name\": \"" + title + "\"" + Environment.NewLine +
-                          "    \"duration\": \"" + duration + "\"" + Environment.NewLine +
-                          "    \"created_at\": \"" + createdAt + "\"" + Environment.NewLine +
-                          "    \"id\": \"" + id + "\"" + Environment.NewLine +
-                          "}," + Environment.NewLine +
-                          "\"speakers\": [");
+                          "    \"lang\": \"" + language + "\"," + Environment.NewLine +
+                          "    \"user_id\": \"" + userId + "\"," + Environment.NewLine +
+                          "    \"name\": \"" + Json.EncodeJsonText(title) + "\"," + Environment.NewLine +
+                          "    \"duration\": \"" + duration + "\"," + Environment.NewLine +
+                          "    \"created_at\": \"" + createdAt + "\"," + Environment.NewLine +
+                          "    \"id\": \"" + id + "\"," + Environment.NewLine +
+                          "  }," + Environment.NewLine +
+                          "  \"speakers\": [");
 
             int count = 0;
             foreach (Paragraph p in subtitle.Paragraphs)
@@ -37,13 +40,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 if (count > 0)
                     sb.AppendLine(", ");
                 sb.AppendLine("  {");
-                sb.AppendLine("    \"duration\": \"" + p.Duration.TotalSeconds.ToString(CultureInfo.InvariantCulture) + "\"");
-                sb.AppendLine("    \"confidence\": null");
-                sb.AppendLine("    \"name\": \"" + Json.EncodeJsonText(p.Text) + "\"");
+                sb.AppendLine("    \"duration\": \"" + p.Duration.TotalSeconds.ToString(CultureInfo.InvariantCulture) + "\",");
+                sb.AppendLine("    \"confidence\": null,");
+                sb.AppendLine("    \"name\": \"" + Json.EncodeJsonText(p.Text) + "\",");
                 sb.AppendLine("    \"time\": \"" + p.StartTime.TotalSeconds.ToString(CultureInfo.InvariantCulture) + "\"");
-                sb.AppendLine("\"}");
+                sb.Append("  }");
                 count++;
             }
+            sb.AppendLine();
             sb.AppendLine("  ],");
             sb.AppendLine("  \"format\": \"1.0\"");
             sb.AppendLine("}");
