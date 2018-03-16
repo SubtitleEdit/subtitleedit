@@ -1,6 +1,4 @@
-﻿using Nikse.SubtitleEdit.Core.ContainerFormats;
-using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
-using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4;
+﻿using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using System;
 using System.Collections.Generic;
@@ -660,13 +658,7 @@ namespace Nikse.SubtitleEdit.Core
             return s;
         }
 
-        public static string DictionaryFolder
-        {
-            get
-            {
-                return Configuration.DictionariesDirectory;
-            }
-        }
+        public static string DictionaryFolder => Configuration.DictionariesDirectory;
 
         public static List<string> GetDictionaryLanguages()
         {
@@ -676,7 +668,7 @@ namespace Nikse.SubtitleEdit.Core
                 foreach (string dic in Directory.GetFiles(DictionaryFolder, "*.dic"))
                 {
                     string name = Path.GetFileNameWithoutExtension(dic);
-                    if (name != null && !name.StartsWith("hyph", StringComparison.Ordinal))
+                    if (!name.StartsWith("hyph", StringComparison.Ordinal))
                     {
                         try
                         {
@@ -827,21 +819,30 @@ namespace Nikse.SubtitleEdit.Core
                     userWords.LoadXml("<words />");
 
                 var words = new List<string>();
-                foreach (XmlNode node in userWords.DocumentElement.SelectNodes("word"))
+                var nodes = userWords.DocumentElement?.SelectNodes("word");
+                if (nodes != null)
                 {
-                    string w = node.InnerText.Trim();
-                    if (w.Length > 0 && w != word)
-                        words.Add(w);
+                    foreach (XmlNode node in nodes)
+                    {
+                        string w = node.InnerText.Trim();
+                        if (w.Length > 0 && w != word)
+                            words.Add(w);
+                    }
                 }
+
                 words.Sort();
 
-                userWords.DocumentElement.RemoveAll();
-                foreach (string w in words)
+                if (userWords.DocumentElement != null)
                 {
-                    XmlNode node = userWords.CreateElement("word");
-                    node.InnerText = w;
-                    userWords.DocumentElement.AppendChild(node);
+                    userWords.DocumentElement.RemoveAll();
+                    foreach (string w in words)
+                    {
+                        XmlNode node = userWords.CreateElement("word");
+                        node.InnerText = w;
+                        userWords.DocumentElement.AppendChild(node);
+                    }
                 }
+
                 userWords.Save(userWordsXmlFileName);
             }
         }
@@ -859,22 +860,32 @@ namespace Nikse.SubtitleEdit.Core
                     userWords.LoadXml("<words />");
 
                 var words = new List<string>();
-                foreach (XmlNode node in userWords.DocumentElement.SelectNodes("word"))
+                if (userWords.DocumentElement != null)
                 {
-                    string w = node.InnerText.Trim();
-                    if (w.Length > 0)
-                        words.Add(w);
-                }
-                words.Add(word);
-                words.Sort();
+                    var nodes = userWords.DocumentElement.SelectNodes("word");
+                    if (nodes != null)
+                    {
+                        foreach (XmlNode node in nodes)
+                        {
+                            string w = node.InnerText.Trim();
+                            if (w.Length > 0)
+                                words.Add(w);
+                        }
+                    }
 
-                userWords.DocumentElement.RemoveAll();
-                foreach (string w in words)
-                {
-                    XmlNode node = userWords.CreateElement("word");
-                    node.InnerText = w;
-                    userWords.DocumentElement.AppendChild(node);
+                    if (!words.Contains(word))
+                        words.Add(word);
+                    words.Sort();
+
+                    userWords.DocumentElement.RemoveAll();
+                    foreach (string w in words)
+                    {
+                        XmlNode node = userWords.CreateElement("word");
+                        node.InnerText = w;
+                        userWords.DocumentElement.AppendChild(node);
+                    }
                 }
+
                 userWords.Save(userWordsXmlFileName);
             }
         }
@@ -905,11 +916,15 @@ namespace Nikse.SubtitleEdit.Core
             if (File.Exists(userWordListXmlFileName))
             {
                 userWordDictionary.Load(userWordListXmlFileName);
-                foreach (XmlNode node in userWordDictionary.DocumentElement.SelectNodes("word"))
+                var nodes = userWordDictionary.DocumentElement?.SelectNodes("word");
+                if (nodes != null)
                 {
-                    string s = node.InnerText.ToLower();
-                    if (!userWordList.Contains(s))
-                        userWordList.Add(s);
+                    foreach (XmlNode node in nodes)
+                    {
+                        string s = node.InnerText.ToLower();
+                        if (!userWordList.Contains(s))
+                            userWordList.Add(s);
+                    }
                 }
             }
             return userWordListXmlFileName;

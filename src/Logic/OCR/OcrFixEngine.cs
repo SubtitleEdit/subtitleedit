@@ -1230,8 +1230,8 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 case OcrSpellCheck.Action.AddToUserDictionary:
                     if (_userWordListXmlFileName != null)
                     {
-                        _userWordList.Add(_spellCheck.Word.Trim().ToLower());
                         Utilities.AddToUserDictionary(_spellCheck.Word.Trim().ToLower(), _fiveLetterWordListLanguageName);
+                        _userWordList.Add(_spellCheck.Word.Trim().ToLower());
                     }
                     result.Word = _spellCheck.Word;
                     result.Fixed = true;
@@ -1245,6 +1245,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                     try
                     {
                         string s = _spellCheck.Word.Trim();
+                        _nameListObj?.Add(s);
                         if (s.Contains(' '))
                             _nameMultiWordList.Add(s);
                         else
@@ -1259,7 +1260,6 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                                     _nameListWithApostrophe.Add(s + "'");
                             }
                         }
-                        _nameListObj?.Add(s);
                     }
                     catch
                     {
