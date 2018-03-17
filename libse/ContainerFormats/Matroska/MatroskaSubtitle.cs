@@ -72,7 +72,13 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
                         break;
                     }
                 }
-                return System.Text.Encoding.UTF8.GetString(data, 0, max).Replace("\\N", Environment.NewLine);
+                var text = System.Text.Encoding.UTF8.GetString(data, 0, max);
+
+                // normalize space to current OS default - also see https://github.com/SubtitleEdit/subtitleedit/issues/2838
+                text = text.Replace("\\N", Environment.NewLine);
+                text = string.Join(Environment.NewLine, text.SplitToLines());
+
+                return text;
             }
             return string.Empty;
         }
