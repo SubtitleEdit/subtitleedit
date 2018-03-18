@@ -20,7 +20,7 @@ Email: mailto:moob42341@gmail.com</TranslatedBy>
     <OpenSubtitle>Abrir legenda...</OpenSubtitle>
     <OpenVideoFile>Abrir ficheiro de vídeo...</OpenVideoFile>
     <OpenVideoFileTitle>Abrir ficheiro de vídeo...</OpenVideoFileTitle>
-    <NoVideoLoaded>Nenhum vídeo carregado</NoVideoLoaded>
+    <NoVideoLoaded>Nenhum vídeo activo</NoVideoLoaded>
     <VideoInformation>Informações do vídeo</VideoInformation>
     <StartTime>Tempo inicial</StartTime>
     <EndTime>Tempo final</EndTime>
@@ -151,6 +151,14 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <FixesAvailable>Correcções disponíveis: {0}</FixesAvailable>
     <UnableToFix>Incapaz de corrigir: {0}</UnableToFix>
   </ApplyDurationLimits>
+  <AudioToText>
+    <Title>Áudio para texto</Title>
+    <ExtractingAudioUsingX>Extrair áudio utilizando {0}...</ExtractingAudioUsingX>
+    <ExtractingTextUsingX>Extrair texto do áudio utilizando {0}...</ExtractingTextUsingX>
+    <ProgessViaXy>Extrair texto através da {0} progressão: {1}%</ProgessViaXy>
+    <ShowLess>Mostrar menos  ▲</ShowLess>
+    <ShowMore>Mostrar mais  ▼</ShowMore>
+  </AudioToText>
   <AutoBreakUnbreakLines>
     <TitleAutoBreak>Auto-ajustar linhas seleccionadas</TitleAutoBreak>
     <TitleUnbreak>Remover quebras de linha das linhas seleccionadas</TitleUnbreak>
@@ -1161,12 +1169,12 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
       <Translate>Traduzir</Translate>
       <Create>Criar</Create>
       <Adjust>Ajustar</Adjust>
-      <SelectCurrentElementWhilePlaying>Selecção automática da linha durante a reprodução</SelectCurrentElementWhilePlaying>
+      <SelectCurrentElementWhilePlaying>Selecção da linha durante a reprodução</SelectCurrentElementWhilePlaying>
       <AutoRepeat>Repetição automática</AutoRepeat>
-      <AutoRepeatOn>Repetição automática activada</AutoRepeatOn>
+      <AutoRepeatOn>Repetição activada</AutoRepeatOn>
       <AutoRepeatCount>Contador de repetições (vezes)</AutoRepeatCount>
       <AutoContinue>Auto continuar</AutoContinue>
-      <AutoContinueOn>Continuar activo automaticamente</AutoContinueOn>
+      <AutoContinueOn>Continuação automática</AutoContinueOn>
       <DelayInSeconds>Atraso (segundos)</DelayInSeconds>
       <OriginalText>Texto original</OriginalText>
       <Previous>&lt; &amp;Anterior</Previous>
@@ -1179,19 +1187,19 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
       <AutoContinueInOneSecond>Auto continuar num segundo</AutoContinueInOneSecond>
       <AutoContinueInXSeconds>Auto continuar em {0} segundos</AutoContinueInXSeconds>
       <StillTypingAutoContinueStopped>Escrever automático parado</StillTypingAutoContinueStopped>
-      <InsertNewSubtitleAtVideoPosition>&amp;Inserir legenda na posição do vídeo</InsertNewSubtitleAtVideoPosition>
+      <InsertNewSubtitleAtVideoPosition>&amp;Inserir linha nesta posição</InsertNewSubtitleAtVideoPosition>
       <Auto>Auto</Auto>
       <PlayFromJustBeforeText>Reproduzir antes do &amp;texto</PlayFromJustBeforeText>
       <Pause>Pausar</Pause>
-      <GoToSubtitlePositionAndPause>Ir à posição da legenda e pausar</GoToSubtitlePositionAndPause>
+      <GoToSubtitlePositionAndPause>Ir à posição da linha e pausar</GoToSubtitlePositionAndPause>
       <SetStartTime>Definir t&amp;empo inicial</SetStartTime>
       <SetEndTimeAndGoToNext>Definir t&amp;empo final/seguinte</SetEndTimeAndGoToNext>
       <AdjustedViaEndTime>Adjustado através do tempo final {0}</AdjustedViaEndTime>
       <SetEndTime>Definir tempo fin&amp;al</SetEndTime>
-      <SetstartTimeAndOffsetOfRest>Defini&amp;r início e compensar o resto</SetstartTimeAndOffsetOfRest>
+      <SetstartTimeAndOffsetOfRest>Iníci&amp;o e compensar o resto</SetstartTimeAndOffsetOfRest>
       <SearchTextOnline>Procurar texto online</SearchTextOnline>
       <GoogleTranslate>Google Tradutor</GoogleTranslate>
-      <GoogleIt>Pesquizar no Google</GoogleIt>
+      <GoogleIt>Pesquisar Google</GoogleIt>
       <SecondsBackShort>&lt;&lt;</SecondsBackShort>
       <SecondsForwardShort>&gt;&gt;</SecondsForwardShort>
       <VideoPosition>Posição vídeo:</VideoPosition>
@@ -1222,10 +1230,10 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <LoadedEmptyOrShort>Legenda carregada em branco ou muito pequena {0}</LoadedEmptyOrShort>
     <FileIsEmptyOrShort>Ficheiro vazio ou muito pequeno!</FileIsEmptyOrShort>
     <FileNotFound>Ficheiro não encontrado: {0}</FileNotFound>
-    <SavedSubtitleX>Legenda exportada com êxito {0}</SavedSubtitleX>
+    <SavedSubtitleX>Legenda guardada com êxito {0}</SavedSubtitleX>
     <SavedOriginalSubtitleX>Legenda original guardada {0}</SavedOriginalSubtitleX>
     <FileOnDiskModified>Ficheiro foi modificado no disco</FileOnDiskModified>
-    <OverwriteModifiedFile>Substituir o ficheiro {0} modificado em {1} {2}{3} pelo ficheiro actual carregado do disco em {4} {5}?</OverwriteModifiedFile>
+    <OverwriteModifiedFile>Substituir o ficheiro {0} modificado em {1} {2}{3} pelo ficheiro actual do disco em {4} {5}?</OverwriteModifiedFile>
     <FileXIsReadOnly>Não é possível guardar {0}
 
 Ficheiro é só de leitura!</FileXIsReadOnly>
@@ -1722,6 +1730,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <SettingsName>Configurações</SettingsName>
     <Help>Ajuda</Help>
 	<UnbreakNoSpace>Remover quebra sem espaço em branco (CJK)</UnbreakNoSpace>
+	<FontInUi>Tipo de letra da Interface</FontInUi>
     <ShowFrameRate>Mostrar taxa de fotogramas na barra de ferramentas</ShowFrameRate>
     <DefaultFrameRate>Taxa de fotogramas padrão</DefaultFrameRate>
     <DefaultFileEncoding>Codificação padrão do ficheiro</DefaultFileEncoding>
@@ -1744,7 +1753,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <SubtitleBackgroundColor>Cor de fundo</SubtitleBackgroundColor>
     <SpellChecker>Corrector ortográfico</SpellChecker>
     <RememberRecentFiles>Mostrar os ficheiros recentes (para reabrir)</RememberRecentFiles>
-    <StartWithLastFileLoaded>Iniciar com o último ficheiro carregado</StartWithLastFileLoaded>
+    <StartWithLastFileLoaded>Iniciar com o último ficheiro activo</StartWithLastFileLoaded>
     <RememberSelectedLine>Lembrar linha seleccionada</RememberSelectedLine>
     <RememberPositionAndSize>Lembrar tamanho e posição da janela principal</RememberPositionAndSize>
     <StartInSourceView>Iniciar no separador (Original) da janela principal</StartInSourceView>
@@ -1878,7 +1887,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <CreateSetEndAddNewAndGoToNew>Definir o fim, adicionar novo e ir para o novo</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStartAndGoToNext>Ajustar pela posição final e ir para o seguinte</AdjustViaEndAutoStartAndGoToNext>
     <AdjustSetEndTimeAndGoToNext>Definir o fim e ir para a seguinte</AdjustSetEndTimeAndGoToNext>
-    <AdjustSetStartAutoDurationAndGoToNext>Definir início da Auto duração e ir para o seguinte</AdjustSetStartAutoDurationAndGoToNext>
+    <AdjustSetStartAutoDurationAndGoToNext>Início da Auto duração e ir para o seguinte</AdjustSetStartAutoDurationAndGoToNext>
     <AdjustSetEndNextStartAndGoToNext>Definir o fim, a seguir início e ir para o seguinte</AdjustSetEndNextStartAndGoToNext>
     <AdjustStartDownEndUpAndGoToNext>Tecla "Page Down"=definir início, tecla "Page Up"=definir final e ir para o seguinte</AdjustStartDownEndUpAndGoToNext>
     <AdjustSelected100MsForward>Adiantar as linhas seleccionadas 100 ms</AdjustSelected100MsForward>
@@ -1902,6 +1911,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <GoToNextSubtitleAndFocusVideo>Ir para a próxima linha e definir a posição de vídeo</GoToNextSubtitleAndFocusVideo>
     <ToggleFocus>Alternar o realce entre a caixa de texto da legenda e o separador (Lista) na janela principal</ToggleFocus>
     <ToggleDialogDashes>Alternar hífens de diálogo</ToggleDialogDashes>
+	<ToggleMusicSymbols>Alternar símbolos de música</ToggleMusicSymbols>
     <Alignment>Alinhamento (linhas seleccionadas)</Alignment>
     <CopyTextOnly>Copiar só o texto para a área de transferência (linhas seleccionadas)</CopyTextOnly>
     <CopyTextOnlyFromOriginalToCurrent>Copiar o texto do original para a actual</CopyTextOnlyFromOriginalToCurrent>
@@ -1999,7 +2009,7 @@ como "Advanced Sub Station Alpha" ou por via de exportação para formatos basea
     <DownloadMpvOk>O mpv lib foi transferido e está disponível para ser usado.</DownloadMpvOk>
   </SettingsMpv>
   <SettingsFfmpeg>
-    <Title>Transferir ffmpeg</Title>
+    <Title>Transferir FFmpeg</Title>
     <XDownloadFailed>Não é possível transferir {0} - volte a tentar mais tarde!</XDownloadFailed>
     <XDownloadOk>{0} foi transferido e está pronto para utilização.</XDownloadOk>
   </SettingsFfmpeg>
