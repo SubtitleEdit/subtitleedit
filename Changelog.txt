@@ -2,6 +2,7 @@
 
 3.5.7 (xth May 2018)
 * NEW:
+   * Add new subtitle format
    * Add support for mp4 dash ttml - thx Octirius
    * Add shortcut for toggle music symbols - thx robtor
    * Add shortcuts "Batchconvert" + "waveform split"
@@ -21,7 +22,9 @@
    * Update Basque translation - thx Xabier
    * Update Portuguese translation - thx moob
    * Ctrl+a/ctrl+d/ctrl+shift+i works in more lists - thx tormento
+   * Remember OCR spell check dictionary for tesseract - thx raymondjpg
 * FIXED:
+   * Fix "Add to names list" in OCR spell check - thx daed-alus/Sergiy
    * Fix "Remove text for HI" issue - thx btsix
    * Fix casing issue regarding "President" - thx Kolle
    * Fix hashtag issue in "Fix common errors"
@@ -30,7 +33,10 @@
    * Fix some issues found by PVS-Studio - thx SvyatoslavRazmyslov 
    * Fix "Replace all" with single letter - thx amerzone
    * Fix issue with Greek / "Fix missing spaces" - thx amerzone
-
+   * Normalize "new-line" from mkv files - thx mkver
+   * Do not allow navigating before zero in video - thx darnn
+   * Fix issue with nested tags in "Remove text for HI" - thx darnn
+   * Fix image render issue regarding italic/font - thx Cemal
 
 3.5.6 (27th February 2018)
 * NEW:
