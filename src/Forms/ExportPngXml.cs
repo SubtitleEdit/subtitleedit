@@ -2737,7 +2737,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                             if (text.Substring(i).StartsWith("<font ", StringComparison.OrdinalIgnoreCase))
                             {
                                 float addLeft = 0;
-                                int oldPathPointIndex = path.PointCount;
+                                int oldPathPointIndex = path.PointCount -1;
                                 if (oldPathPointIndex < 0)
                                     oldPathPointIndex = 0;
 
@@ -2884,8 +2884,18 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                             {
                                 if (sb.Length > 0)
                                 {
+                                    float addLeft = 0;
+                                    int oldPathPointIndex = path.PointCount - 1;
+                                    if (oldPathPointIndex < 0)
+                                        oldPathPointIndex = 0;
+
                                     lastText.Append(sb);
                                     TextDraw.DrawText(font, sf, path, sb, isItalic, isBold || parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
+
+                                    addLeft = GetLastPositionFromPath(path, oldPathPointIndex, addLeft);
+                                    if (addLeft < 0.01)
+                                        addLeft = left + 2;
+                                    left = addLeft;
                                 }
                                 isItalic = true;
                                 i += 2;
