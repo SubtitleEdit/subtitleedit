@@ -3,10 +3,9 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.5.6</Version>
-    <TranslatedBy>Tłumaczenie Adam Malich (mailto: adam_malich@gizycko.mm.pl)</TranslatedBy>
+    <TranslatedBy>Tłumaczenie Adam Malich (https://potplayerclub.pl)</TranslatedBy>
     <CultureName>pl-PL</CultureName>
-    <HelpFile>
-    </HelpFile>
+    <HelpFile />
     <Ok>&amp;OK</Ok>
     <Cancel>&amp;Anuluj</Cancel>
     <Apply>Zastosuj</Apply>
@@ -50,9 +49,9 @@
     <TotalLengthXSplitLine>Długość całkowita: {0} (linia podzielona!)</TotalLengthXSplitLine>
     <SplitLine>Podziel linię!</SplitLine>
     <NotAvailable>N/D</NotAvailable>
-    <OverlapPreviousLineX>Nakładanie na poprzednią linię ({0:#,##0.###})</OverlapPreviousLineX>
-    <OverlapX>Nakładanie ({0:#,##0.###})</OverlapX>
-    <OverlapNextX>Nakładanie na następną ({0:#,##0.###})</OverlapNextX>
+    <OverlapPreviousLineX>Zachodzenie na poprzednią linię ({0:#,##0.###})</OverlapPreviousLineX>
+    <OverlapX>Zachodzenie ({0:#,##0.###})</OverlapX>
+    <OverlapNextX>Zachodzenie na następną ({0:#,##0.###})</OverlapNextX>
     <Negative>Negatywny</Negative>
     <RegularExpressionIsNotValid>Wyrażenie regularne nie jest poprawne!</RegularExpressionIsNotValid>
     <SubtitleSaved>Napisy zostały zapisane</SubtitleSaved>
@@ -149,6 +148,14 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
     <FixesAvailable>Dostępne poprawki: {0}</FixesAvailable>
     <UnableToFix>Nie można poprawić: {0}</UnableToFix>
   </ApplyDurationLimits>
+  <AudioToText>
+    <Title>Audio na tekst</Title>
+    <ExtractingAudioUsingX>Wyodrębnianie audio za pomocą {0}...</ExtractingAudioUsingX>
+    <ExtractingTextUsingX>Wyodrębnianie tekstu z audio za pomocą {0}...</ExtractingTextUsingX>
+    <ProgessViaXy>Wyodrębnianie tekstu za pomocą {0} postęp: {1}%</ProgessViaXy>
+    <ShowLess>Pokaż mniej ▲</ShowLess>
+    <ShowMore>Pokaż więcej ▼</ShowMore>
+  </AudioToText>
   <AutoBreakUnbreakLines>
     <TitleAutoBreak>Automatycznie zrównoważ zaznaczone linie</TitleAutoBreak>
     <TitleUnbreak>Usuń łamanie linii z wybranych linii</TitleUnbreak>
@@ -182,7 +189,7 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
     <ScanFolder>Skanuj folder...</ScanFolder>
     <ScanningFolder>Przeskanowano {0} i podfolderów z plikami napisów...</ScanningFolder>
     <Recursive>Uwzględnij podfoldery</Recursive>
-    <SetMinMsBetweenSubtitles>Ustaw minimum ms między napisami</SetMinMsBetweenSubtitles>
+    <SetMinMsBetweenSubtitles>Ustaw minimum milisekund między napisami</SetMinMsBetweenSubtitles>
     <BridgeGaps>Zmostkuj przerwy</BridgeGaps>
     <PlainText>Zwykły tekst</PlainText>
     <Ocr>OCR...</Ocr>
@@ -217,12 +224,12 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
     <LinesFoundX>Znaleziono linii: {0}</LinesFoundX>
   </ChangeCasingNames>
   <ChangeFrameRate>
-    <Title>Zmiana ilości klatek/sek.</Title>
-    <ConvertFrameRateOfSubtitle>Konwertuj ilość klatek/sek. napisów</ConvertFrameRateOfSubtitle>
+    <Title>Zmiana ilości klatek/sekundę</Title>
+    <ConvertFrameRateOfSubtitle>Konwertuj ilość klatek/sekundę napisów</ConvertFrameRateOfSubtitle>
     <FromFrameRate>Z ilości:</FromFrameRate>
     <ToFrameRate>Na ilość:</ToFrameRate>
-    <FrameRateNotCorrect>Ilość klatek/sek. nie jest poprawna</FrameRateNotCorrect>
-    <FrameRateNotChanged>Ilość klatek/sek. jest taka sama - nie ma nic do konwersji</FrameRateNotChanged>
+    <FrameRateNotCorrect>Ilość klatek/sekundę nie jest poprawna</FrameRateNotCorrect>
+    <FrameRateNotChanged>Ilość klatek/sekundę jest taka sama - nie ma nic do konwersji</FrameRateNotChanged>
   </ChangeFrameRate>
   <ChangeSpeedInPercent>
     <Title>Dostosuj szybkość w procentach</Title>
@@ -316,9 +323,9 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
     <Title>Zmostkuj małe przerwy w czasach trwania</Title>
     <GapsBridgedX>Ilość zmostkowanych małych przerw: {0}</GapsBridgedX>
     <GapToNext>Przerwa do następnego w sekundach</GapToNext>
-    <BridgeGapsSmallerThanXPart1>Mostkuj przerwy mniejsze niż</BridgeGapsSmallerThanXPart1>
+    <BridgeGapsSmallerThanXPart1>Zmostkuj przerwy mniejsze niż</BridgeGapsSmallerThanXPart1>
     <BridgeGapsSmallerThanXPart2>milisekund</BridgeGapsSmallerThanXPart2>
-    <MinMillisecondsBetweenLines>Min. milisekund między liniami</MinMillisecondsBetweenLines>
+    <MinMillisecondsBetweenLines>Minimum milisekund między liniami</MinMillisecondsBetweenLines>
     <ProlongEndTime>Poprzedni tekst zajmuje cały czas przerwy</ProlongEndTime>
     <DivideEven>Teksty rozdzielane są czasem trwania przerwy</DivideEven>
   </DurationsBridgeGaps>
@@ -345,7 +352,7 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
     <WrongIfoType>Typ IFO '{0}', nie jest on 'DVDVIDEO-VTS'.{1} Proszę wybrać inny plik zamiast {2}</WrongIfoType>
   </DvdSubRip>
   <DvdSubRipChooseLanguage>
-    <Title>Wybierz języka</Title>
+    <Title>Wybierz język</Title>
     <ChooseLanguageStreamId>Wybierz język (stream-id)</ChooseLanguageStreamId>
     <UnknownLanguage>Nieznany język</UnknownLanguage>
     <SubtitleImageXofYAndWidthXHeight>Obraz napisów {0}/{1}  -  {2}x{3} </SubtitleImageXofYAndWidthXHeight>
@@ -1178,7 +1185,7 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
       <AutoContinueInOneSecond>Przejdź do następnego napisu po 1 sek.</AutoContinueInOneSecond>
       <AutoContinueInXSeconds>Przejdź do następnego napisu po {0} sek.</AutoContinueInXSeconds>
       <StillTypingAutoContinueStopped>Trwa pisanie... przejście do następnego napisu zostało zatrzymane</StillTypingAutoContinueStopped>
-      <InsertNewSubtitleAtVideoPosition>&amp;Wstaw nowy napis w poz. wideo</InsertNewSubtitleAtVideoPosition>
+      <InsertNewSubtitleAtVideoPosition>&amp;Wstaw napis w poz. wideo</InsertNewSubtitleAtVideoPosition>
       <Auto>Auto</Auto>
       <PlayFromJustBeforeText>Odtwarzaj tuż przed &amp;tekstem</PlayFromJustBeforeText>
       <Pause>Pauza</Pause>
@@ -1187,7 +1194,7 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
       <SetEndTimeAndGoToNext>Ustaw koni&amp;ec &amp;&amp; Idź do następ.</SetEndTimeAndGoToNext>
       <AdjustedViaEndTime>Dostosowano za pomocą czasu zakończenia {0}</AdjustedViaEndTime>
       <SetEndTime>Ustaw c&amp;zas końca</SetEndTime>
-      <SetstartTimeAndOffsetOfRest>Ustaw start &amp;&amp; Prze&amp;suń pozostałe</SetstartTimeAndOffsetOfRest>
+      <SetstartTimeAndOffsetOfRest>Ustaw start &amp;&amp; Prze&amp;suń pozost.</SetstartTimeAndOffsetOfRest>
       <SearchTextOnline>Szukaj tekstu w Internecie</SearchTextOnline>
       <GoogleTranslate>Tłumacz Google</GoogleTranslate>
       <GoogleIt>Sprawdź w Google</GoogleIt>
@@ -1708,6 +1715,7 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <WordLists>Listy słów</WordLists>
     <SsaStyle>Styl ASS/SSA</SsaStyle>
     <Network>Sieć</Network>
+    <Rules>Reguły</Rules>
     <ShowToolBarButtons>Pokaż przyciski Paska narzędziowego</ShowToolBarButtons>
     <New>Nowy</New>
     <Open>Otwórz</Open>
@@ -1721,13 +1729,14 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <SettingsName>Ustawienia</SettingsName>
     <Help>Pomoc</Help>
     <UnbreakNoSpace>Cofnij łamanie bez spacji (CJK)</UnbreakNoSpace>
-    <ShowFrameRate>Pokaż ilość klatek/sekundę na Pasku narzędziowym</ShowFrameRate>
+    <FontInUi>Czcionka interfejsu użytkownika</FontInUi>
+    <ShowFrameRate>Pokaż ilość klatek/sekundę na Pasku narzędzi</ShowFrameRate>
     <DefaultFrameRate>Domyślna ilość klatek/sekundę</DefaultFrameRate>
     <DefaultFileEncoding>Domyślne kodowanie pliku</DefaultFileEncoding>
     <AutoDetectAnsiEncoding>Automatycznie wykryj kodowanie ANSI</AutoDetectAnsiEncoding>
     <SubtitleLineMaximumLength>Maksymalna długość pojedynczej linii</SubtitleLineMaximumLength>
-    <MaximumCharactersPerSecond>Maksymalnie znaków/sek.</MaximumCharactersPerSecond>
-    <MaximumWordssPerMinute>Maksymalnie słów/min.</MaximumWordssPerMinute>
+    <MaximumCharactersPerSecond>Maksymalnie znaków/sekundę</MaximumCharactersPerSecond>
+    <MaximumWordssPerMinute>Maksymalnie słów/minutę</MaximumWordssPerMinute>
     <AutoWrapWhileTyping>Automatycznie zawijaj wiersze podczas pisania</AutoWrapWhileTyping>
     <DurationMinimumMilliseconds>Minimalny czas trwania, w ms</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>Maksymalny czas trwania, w ms</DurationMaximumMilliseconds>
@@ -1737,6 +1746,7 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <SubtitleFontSize>Rozmiar czcionki napisów</SubtitleFontSize>
     <SubtitleBold>Pogrubienie</SubtitleBold>
     <VideoAutoOpen>Automatycznie otwieraj plik wideo podczas otwierania napisów</VideoAutoOpen>
+    <AllowVolumeBoost>Zezwalaj na zwiększenie głośności</AllowVolumeBoost>
     <SubtitleCenter>Wyśrodkowanie</SubtitleCenter>
     <SubtitleFontColor>Kolor czcionki napisów</SubtitleFontColor>
     <SubtitleBackgroundColor>Kolor tła napisów</SubtitleBackgroundColor>
@@ -1748,6 +1758,7 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <StartInSourceView>Uruchamiaj w "Widoku źródła"</StartInSourceView>
     <RemoveBlankLinesWhenOpening>Podczas otwierania napisów usuwaj puste linie</RemoveBlankLinesWhenOpening>
     <ShowLineBreaksAs>Pokaż łamanie linii w Widoku listy jako</ShowLineBreaksAs>
+    <SaveAsFileNameFrom>"Zapisz jako ..." używa nazwy pliku z</SaveAsFileNameFrom>
     <MainListViewDoubleClickAction>Działanie po dwukrotnym kliknięciu na linii w głównym oknie</MainListViewDoubleClickAction>
     <MainListViewColumnsInfo>Wybierz widoczne kolumny w "Widoku listy" </MainListViewColumnsInfo>
     <MainListViewNothing>Nic nie rób</MainListViewNothing>
@@ -1758,7 +1769,9 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <MainListViewVideoGoToPositionMinusHalfSecAndPause>Przejdź do pozycji wideo - 0.5 sek. i wstrzymaj</MainListViewVideoGoToPositionMinusHalfSecAndPause>
     <MainListViewVideoGoToPositionMinus1SecAndPlay>Przejdź do pozycji wideo - 1 sek. i odtwarzaj</MainListViewVideoGoToPositionMinus1SecAndPlay>
     <MainListViewEditTextAndPause>Przejdź do pola edycji tekstu i wstrzymaj w pozycji wideo</MainListViewEditTextAndPause>
-    <AutoBackup>Automatyczna kopia zapasowa</AutoBackup>
+    <VideoFileName>Nazwa pliku wideo</VideoFileName>
+    <ExistingFileName>Istniejąca nazwa pliku</ExistingFileName>
+    <AutoBackup>Auto kopia zapasowa</AutoBackup>
     <AutoBackupEveryMinute>Co minutę</AutoBackupEveryMinute>
     <AutoBackupEveryFiveMinutes>Co 5 minut</AutoBackupEveryFiveMinutes>
     <AutoBackupEveryFifteenMinutes>Co 15 minut</AutoBackupEveryFifteenMinutes>
@@ -1814,6 +1827,7 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <SpectrogramOneColorGradient>Wypełnienie gradientem w jednym kolorze</SpectrogramOneColorGradient>
     <SpectrogramClassic>Klasyczny</SpectrogramClassic>
     <WaveformUseFFmpeg>Użyj FFmpeg do wydobycia wykresu falowego</WaveformUseFFmpeg>
+    <DownloadFFmpeg>Pobierz FFmpeg</DownloadFFmpeg>
     <WaveformFFmpegPath>Ścieżka do FFmpeg</WaveformFFmpegPath>
     <WaveformBrowseToFFmpeg>Przejdź do FFmpeg</WaveformBrowseToFFmpeg>
     <WaveformBrowseToVLC>Przejdź do VLC Portable</WaveformBrowseToVLC>
@@ -1822,7 +1836,7 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <SsaOutline>Obrys</SsaOutline>
     <SsaShadow>Cień</SsaShadow>
     <SsaOpaqueBox>Pole nieprzezroczyste</SsaOpaqueBox>
-    <Testing123>Daum PotPlayer po polsku - potplayer.pl</Testing123>
+    <Testing123>Daum PotPlayer po polsku - potplayerclub.pl</Testing123>
     <Language>Język</Language>
     <NamesIgnoreLists>Lista nazw własnych (wielkimi literami)</NamesIgnoreLists>
     <AddName>Dodaj nazwę własną</AddName>
@@ -1865,6 +1879,7 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <Alt>Alt</Alt>
     <Shift>Shift</Shift>
     <Key>Klawisz</Key>
+    <ListView>Widok listy</ListView>
     <TextBox>Pole tekstowe</TextBox>
     <UpdateShortcut>Aktualizuj</UpdateShortcut>
     <ToggleDockUndockOfVideoControls>Przełączanie "Zadokuj"/"Oddokuj" panelu wideo</ToggleDockUndockOfVideoControls>
@@ -1895,6 +1910,7 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <GoToNextSubtitleAndFocusVideo>Przejdź do następnej linii i ustaw pozycję wideo</GoToNextSubtitleAndFocusVideo>
     <ToggleFocus>Przełącz fokus między "Widokiem listy" i polem tekstowym napisów</ToggleFocus>
     <ToggleDialogDashes>Przełącz myślniki dialogów</ToggleDialogDashes>
+    <ToggleMusicSymbols>Przełącz symbole muzyczne</ToggleMusicSymbols>
     <Alignment>Wyrównanie (zaznaczone linie)</Alignment>
     <CopyTextOnly>Kopiuj tylko tekst do schowka (zaznaczone linie)</CopyTextOnly>
     <CopyTextOnlyFromOriginalToCurrent>Kopiuj tekst z oryginału do aktualnego</CopyTextOnlyFromOriginalToCurrent>
@@ -1936,7 +1952,6 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <CustomSearch3>Tłumaczenie, wyszukiwanie niestandardowe 3</CustomSearch3>
     <CustomSearch4>Tłumaczenie, wyszukiwanie niestandardowe 4</CustomSearch4>
     <CustomSearch5>Tłumaczenie, wyszukiwanie niestandardowe 5</CustomSearch5>
-    <CustomSearch6>Tłumaczenie, wyszukiwanie niestandardowe 6</CustomSearch6>
     <SyntaxColoring>Kolorowanie składni</SyntaxColoring>
     <ListViewSyntaxColoring>Kolorowanie składni "Widoku listy"</ListViewSyntaxColoring>
     <SyntaxColorDurationIfTooSmall>Koloruj czas trwania, jeśli jest zbyt krótki</SyntaxColorDurationIfTooSmall>
@@ -1981,6 +1996,9 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <HowToSignUp>Jak się zarejestrować</HowToSignUp>
     <GoogleTranslateUrl>Tłumacz Google URL</GoogleTranslateUrl>
     <MicrosoftTranslateApiKey>Klucz</MicrosoftTranslateApiKey>
+    <FontNote>Uwaga: Te ustawienia czcionek dotyczą tylko interfejsu użytkownika Subtitle Edit.
+Ustawienie czcionki napisów zwykle wykonywane jest w odtwarzaczu wideo, ale można to również zrobić w przypadku używania formatu napisów 
+z wbudowanymi informacjami o czcionkach, takimi jak "Advanced Sub Station Alpha" lub poprzez eksport do formatów opartych na obrazie.</FontNote>
   </Settings>
   <SettingsMpv>
     <Title>Ustawienia mpv</Title>
@@ -1988,6 +2006,11 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <DownloadMpvFailed>Nie można pobrać mpv - proszę spróbować później!</DownloadMpvFailed>
     <DownloadMpvOk>mpv lib został pobrany i jest gotowy do użycia.</DownloadMpvOk>
   </SettingsMpv>
+  <SettingsFfmpeg>
+    <Title>Pobierz ffmpeg</Title>
+    <XDownloadFailed>Nie można pobrać {0} - spróbuj ponownie później!</XDownloadFailed>
+    <XDownloadOk>{0} został pobrany i jest gotowy do użycia.</XDownloadOk>
+  </SettingsFfmpeg>
   <SetVideoOffset>
     <Title>Ustaw przesunięcie wideo</Title>
     <Description>Ustaw przesunięcie wideo (napisy nie powinny śledzić rzeczywistego czasu wideo, ale np. +10 godzin)</Description>
