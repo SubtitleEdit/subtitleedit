@@ -1196,9 +1196,11 @@
     <Word from="Fibi" to="Phoebe" />
     <Word from="Filovo" to="Philovo" />
     <Word from="Flober" to="Flaubert" />
+    <Word from="Fokner" to="Faulkner" />
     <Word from="Fren" to="Fran" />
     <Word from="Grečen" to="Gretchen" />
     <Word from="Grejs" to="Grace" />
+    <Word from="Hant" to="Hunt" />
     <Word from="Hemingvej" to="Hemingway" />
     <Word from="Henk" to="Hank" />
     <Word from="Hejstings" to="Hastings" />
@@ -1229,6 +1231,7 @@
     <Word from="Kloi" to="Chloe" />
     <Word from="Klod" to="Claude" />
     <Word from="Klode" to="Claude" />
+    <Word from="Kolins" to="Collins" />
     <Word from="Kortni" to="Courtney" />
     <Word from="Krej?g" to="Craig" />
     <Word from="Kristi" to="Christie" />
@@ -1283,6 +1286,7 @@
     <Word from="Valš" to="Walsh" />
     <Word from="Vinse" to="Vince" />
     <Word from="Voren" to="Warren" />
+    <Word from="Vud" to="Wood" />
     <Word from="Žak" to="Jacques" />
     <!-- imena mjeseci -->
     <Word from="januar" to="siječanj" />
@@ -1409,6 +1413,7 @@
     <LinePart from="nećeš da budeš" to="nećeš biti" />
     <LinePart from="nećeš da požališ" to="nećeš požaliti" />
     <LinePart from="neko ko" to="netko tko" />
+    <LinePart from="neko nešto" to="netko nešto" />
     <LinePart from="nedjelju dana" to="tjedan dana" />
     <LinePart from="Ne mogu da verujem" to="Ne mogu vjerovati" />
     <LinePart from="new yorški" to="njujorški" />
@@ -2743,7 +2748,7 @@
     <RegEx find="V[ao]šington" replaceWith="Washington" />
     <RegEx find="Vejn" replaceWith="Wayne" />
     <RegEx find="Vejder" replaceWith="Vader" />
-    <RegEx find="Vilijams" replaceWith="Williams" />
+    <RegEx find="Vilijam" replaceWith="William" />
     <RegEx find="Vinči" replaceWith="Vinci" />
     <RegEx find="Vinsent" replaceWith="Vincent" />
     <RegEx find="Viskonsin" replaceWith="Wisconsin" />
