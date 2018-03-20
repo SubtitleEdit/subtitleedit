@@ -79,17 +79,15 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             return Path.Combine(_dictionaryFolder, twoLetterIsoLanguageName + "_names.xml");
         }
 
-        private void LoadNamesList(string fileName)
+        private void LoadNamesList(string uri)
         {
-            if (string.IsNullOrEmpty(fileName) ||
-                (!File.Exists(fileName) &&
-                 !fileName.StartsWith("http", StringComparison.InvariantCultureIgnoreCase) &&
-                 !fileName.StartsWith("\\", StringComparison.InvariantCultureIgnoreCase)))
+            if (!File.Exists(uri) && !uri.StartsWith("http", StringComparison.InvariantCultureIgnoreCase) &&
+                 !uri.StartsWith("\\", StringComparison.InvariantCultureIgnoreCase))
             {
                 return;
             }
 
-            using (XmlReader reader = XmlReader.Create(fileName))
+            using (XmlReader reader = XmlReader.Create(uri))
             {
                 reader.MoveToContent();
                 while (reader.Read())
@@ -193,46 +191,8 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             {
                 return false;
             }
-            if (name.ContainsLetter())
-            {
-                if (name.Contains(' '))
-                {
-                    if (!_namesMultiList.Contains(name))
-                        _namesMultiList.Add(name);
-                    else
-                        return false;
-                }
-                else
-                {
-                    if (!_namesList.Contains(name))
-                        _namesList.Add(name);
-                    else
-                        return false;
-                }
 
-                // <neutral>_names.xml e.g: en_names.xml
-                var fileName = GetLocalNamesFileName();
-                var nameListXml = new XmlDocument();
-                if (File.Exists(fileName))
-                {
-                    nameListXml.Load(fileName);
-                }
-                else
-                {
-                    nameListXml.LoadXml("<names><blacklist></blacklist></names>");
-                }
-
-                XmlNode de = nameListXml.DocumentElement;
-                if (de != null)
-                {
-                    XmlNode node = nameListXml.CreateElement("name");
-                    node.InnerText = name;
-                    de.AppendChild(node);
-                    nameListXml.Save(fileName);
-                }
-                return true;
-            }
-            return false;
+            return name.ContainsLetter() && (name.Contains(' ') ? _namesMultiList.Add(name) : _namesList.Add(name));
         }
 
         public bool IsInNamesMultiWordList(string text, string word)
