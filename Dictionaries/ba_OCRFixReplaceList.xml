@@ -1646,6 +1646,7 @@
 		<RegEx find="([zZ])vuca([lto])" replaceWith="$1vuča$2" />
 		<RegEx find="\b([zZ])vuci" replaceWith="$1vuči" />
 		<!-- yxy experimental -->
+		<RegEx find="acic" replaceWith="ačic" />
 		<RegEx find="([aeiou])s([čć])" replaceWith="$1š$2" />
 		<RegEx find="bracun" replaceWith="bračun" />
 		<RegEx find="cupa" replaceWith="čupa" />
