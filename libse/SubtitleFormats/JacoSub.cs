@@ -246,7 +246,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                     else
                     {
-                        i += endComment - i;
+                        i = endComment;
                     }
                 }
                 else if (ch == '~') // hard space

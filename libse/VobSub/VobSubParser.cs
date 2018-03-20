@@ -80,7 +80,10 @@ namespace Nikse.SubtitleEdit.Core.VobSub
                                     else
                                         position += 0x800;
 
-                                    int currentSubPictureStreamId = vsp.PacketizedElementaryStream.SubPictureStreamId.Value;
+                                    int currentSubPictureStreamId = 0;    
+                                    if(vsp.PacketizedElementaryStream.SubPictureStreamId != null)
+                                        currentSubPictureStreamId = vsp.PacketizedElementaryStream.SubPictureStreamId.Value;
+
                                     while (vsp.PacketizedElementaryStream != null &&
                                            vsp.PacketizedElementaryStream.SubPictureStreamId.HasValue &&
                                            (vsp.PacketizedElementaryStream.Length == PacketizedElementaryStreamMaximumLength ||

@@ -159,11 +159,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 else if (ch == '＠')
                 {
                     var part = line.Substring(i);
-                    if (part.StartsWith("＠ルビ上［", StringComparison.Ordinal)) // Bouten on first line - horizontal positioning
+                    if (part.StartsWith("＠ルビ上［", StringComparison.Ordinal)) // Bouten and Ruby on first line - horizontal positioning
                     {
                         readUntilEndCode = true;
                     }
-                    else if (part.StartsWith("＠ルビ下［", StringComparison.Ordinal)) // Bouten on second line - horizontal positioning
+                    else if (part.StartsWith("＠ルビ下［", StringComparison.Ordinal)) // Bouten and Ruby on second line - horizontal positioning
                     {
                         readUntilEndCode = true;
                     }
@@ -171,26 +171,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     {
                         readUntilEndCode = true;
                     }
-                    else if (part.StartsWith("＠ルビ左［", StringComparison.Ordinal)) // Bouten on second line - vertical positioning
+                    else if (part.StartsWith("＠ルビ左［", StringComparison.Ordinal)) // Bouten and Ruby on second line - vertical positioning
                     {
                         readUntilEndCode = true;
-                    }
-                    else if (part.StartsWith("＠ルビ上［", StringComparison.Ordinal)) // Ruby on first line - horizontal positioning
-                    {
-                        readUntilEndCode = true;
-                    }
-                    else if (part.StartsWith("＠ルビ下［", StringComparison.Ordinal)) // Ruby on second line - horizontal positioning
-                    {
-                        readUntilEndCode = true;
-                    }
-                    else if (part.StartsWith("＠ルビ右［", StringComparison.Ordinal)) // Ruby on first line - vertical positioning
-                    {
-                        readUntilEndCode = true;
-                    }
-                    else if (part.StartsWith("＠ルビ左［", StringComparison.Ordinal)) // Ruby on second line - vertical positioning
-                    {
-                        readUntilEndCode = true;
-                    }
+                    }                 
                     else if (part.StartsWith("＠組［", StringComparison.Ordinal)) // Kumi-moji / Tatechuyoko (up to 3 half width digits including numerical punctuation)
                     {
                         readUntilEndCode = true;
@@ -286,11 +270,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             subtitle.Paragraphs.Add(p);
                         }
                     }
-                }
-                else if (string.IsNullOrWhiteSpace(line))
-                {
-                    // skip these lines
-                }
+                }                
                 else if (p != null)
                 {
                     if (string.IsNullOrEmpty(p.Text))
