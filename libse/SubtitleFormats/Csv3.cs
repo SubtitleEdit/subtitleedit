@@ -62,11 +62,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     arr = s.Trim().SplitToLines();
                 }
                 string line1 = string.Empty;
-                string line2 = string.Empty;
-                if (arr.Count > 0)
-                    line1 = arr[0];
+                string line2 = string.Empty;                
+                    
                 if (arr.Count > 1)
                     line2 = arr[1];
+                else
+                    line1 = arr[0];
+                    
                 line1 = line1.Replace("\"", "\"\"");
                 line2 = line2.Replace("\"", "\"\"");
                 sb.AppendLine(string.Format(format, Separator, EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), line1, line2));

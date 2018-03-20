@@ -19,15 +19,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             if (Configuration.Settings.General.CurrentFrameRate < 25)
                 return "24";
             if (Configuration.Settings.General.CurrentFrameRate < 29)
-                return "25";
-            if (Configuration.Settings.General.CurrentFrameRate < 29)
-                return "25";
+                return "25";            
             if (Configuration.Settings.General.CurrentFrameRate < 30)
                 return "30"; // ntsc 29.97
             if (Configuration.Settings.General.CurrentFrameRate < 40)
-                return "30";
-            if (Configuration.Settings.General.CurrentFrameRate < 40)
-                return "30";
+                return "30";            
             if (Configuration.Settings.General.CurrentFrameRate < 60)
                 return "60"; // ntsc 59.94
             return "60";

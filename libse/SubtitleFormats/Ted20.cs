@@ -82,10 +82,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     buffer[i + TextBufferSize] == 0xff)
                 {
                     var text = ReadText(buffer, i);
-                    if (text != null)
-                    {
-                        texts.Add(text);
-                    }
+                    texts.Add(text);
+                    
                     i += TextBufferSize;
                 }
                 else

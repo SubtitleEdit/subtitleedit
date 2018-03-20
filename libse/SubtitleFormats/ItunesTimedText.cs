@@ -57,17 +57,16 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         try
                         {
                             var ssaStyle = AdvancedSubStationAlpha.GetSsaStyle(styleName, subtitle.Header);
-                            if (ssaStyle != null)
-                            {
-                                string fontStyle = "normal";
-                                if (ssaStyle.Italic)
-                                    fontStyle = "italic";
-                                string fontWeight = "normal";
-                                if (ssaStyle.Bold)
-                                    fontWeight = "bold";
-                                AddStyleToXml(x, styleHead, xnsmgr, ssaStyle.Name, ssaStyle.FontName, fontWeight, fontStyle, Utilities.ColorToHex(ssaStyle.Primary), ssaStyle.FontSize.ToString());
-                                convertedFromSubStationAlpha = true;
-                            }
+                            
+                            string fontStyle = "normal";
+                            if (ssaStyle.Italic)
+                                fontStyle = "italic";
+                            string fontWeight = "normal";
+                            if (ssaStyle.Bold)
+                                fontWeight = "bold";
+                            AddStyleToXml(x, styleHead, xnsmgr, ssaStyle.Name, ssaStyle.FontName, fontWeight, fontStyle, Utilities.ColorToHex(ssaStyle.Primary), ssaStyle.FontSize.ToString());
+                            convertedFromSubStationAlpha = true;
+                            
                         }
                         catch
                         {

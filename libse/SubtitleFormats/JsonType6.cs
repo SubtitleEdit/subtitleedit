@@ -140,11 +140,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     if (sb.Length == 0)
                         startMilliseconds = p.StartTime.TotalMilliseconds;
-                    if (!string.IsNullOrWhiteSpace(p.Text))
-                    {
-                        sb.Append(' ');
-                        sb.Append(p.Text);
-                    }
+                    
+                    sb.Append(' ');
+                    sb.Append(p.Text);
+                    
                 }
             }
             if (sb.Length > 0)
