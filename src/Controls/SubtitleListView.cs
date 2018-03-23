@@ -222,15 +222,15 @@ namespace Nikse.SubtitleEdit.Controls
 
                     var idx = GetColumnIndex(SubtitleColumn.Start);
                     if (idx >= 0)
-                        Columns[ColumnIndexStart].Width = timestampWidth;
+                        Columns[idx].Width = timestampWidth;
 
                     idx = GetColumnIndex(SubtitleColumn.End);
                     if (idx >= 0)
-                        Columns[ColumnIndexEnd].Width = timestampWidth;
+                        Columns[idx].Width = timestampWidth;
 
                     idx = GetColumnIndex(SubtitleColumn.Duration);
                     if (idx >= 0)
-                        Columns[ColumnIndexEnd].Width = (int)(timestampWidth * 0.8);
+                        Columns[idx].Width = (int)(timestampWidth * 0.8);
                 }
             }
 
