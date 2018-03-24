@@ -1228,7 +1228,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                 top = param.OverridePosition.Value.Y;
                             }
 
-                            sb.AppendLine(string.Format("{0} {1} {2} {3} {4} {5} {6}", Path.GetFileName(fileName), FormatFabTime(param.P.StartTime, param), FormatFabTime(param.P.EndTime, param), left, top, left + param.Bitmap.Width, top + param.Bitmap.Height));
+                            sb.AppendLine($"{Path.GetFileName(fileName)} {FormatFabTime(param.P.StartTime, param)} {FormatFabTime(param.P.EndTime, param)} {left} {top} {left + param.Bitmap.Width} {top + param.Bitmap.Height}");
                         }
                         param.Saved = true;
                     }
@@ -1434,7 +1434,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         fullSize.Save(fileName2, ImageFormat.Png);
                         fullSize.Dispose();
 
-                        string line = string.Format("{0:000}  {1}  V     C        {2} {3} {4} {5}", i, fileName1, new TimeCode().ToHHMMSSFF(), param.P.Duration.ToHHMMSSFF(), param.P.StartTime.ToHHMMSSFF(), param.P.EndTime.ToHHMMSSFF());
+                        string line = $"{i:000}  {fileName1}  V     C        {new TimeCode().ToHHMMSSFF()} {param.P.Duration.ToHHMMSSFF()} {param.P.StartTime.ToHHMMSSFF()} {param.P.EndTime.ToHHMMSSFF()}";
                         sb.AppendLine(line);
                         if (_exportType == ExportFormats.EdlClipName)
                         {
@@ -2737,7 +2737,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                             if (text.Substring(i).StartsWith("<font ", StringComparison.OrdinalIgnoreCase))
                             {
                                 float addLeft = 0;
-                                int oldPathPointIndex = path.PointCount -1;
+                                int oldPathPointIndex = path.PointCount - 1;
                                 if (oldPathPointIndex < 0)
                                     oldPathPointIndex = 0;
 
@@ -3193,62 +3193,26 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             }
         }
 
-
-        private static void DrawShadowAndPath2(MakeBitmapParameter parameter, Graphics g, GraphicsPath path)
-        {
-            var extraPixels = (float)(0.0389 * parameter.SubtitleFontSize + 1.038); // a little above 1 for small fonts, like 4-5 for font size 70
-            if (parameter.ShadowWidth > 0)
-            {
-                var shadowPath = (GraphicsPath)path.Clone();
-
-                var splittedAlpha = (double)parameter.ShadowAlpha;
-                for (int k = 0; k < parameter.ShadowWidth + 1; k++)
-                    splittedAlpha = splittedAlpha * 0.9;
-                if (splittedAlpha > byte.MaxValue)
-                    splittedAlpha = byte.MaxValue;
-
-                for (int k = 0; k < parameter.ShadowWidth + 1; k++)
-                {
-                    var translateMatrix = new Matrix();
-                    translateMatrix.Translate(1, 1);
-                    shadowPath.Transform(translateMatrix);
-                    using (var p1 = new Pen(Color.FromArgb((int)splittedAlpha, parameter.ShadowColor), extraPixels))
-                    {
-                        SetLineJoin(parameter.LineJoin, p1);
-                        g.DrawPath(p1, shadowPath);
-                    }
-                }
-            }
-
-            if (parameter.BorderWidth > 0)
-            {
-                var p1 = new Pen(parameter.BorderColor, parameter.BorderWidth + extraPixels); // needs a few extra pixels too look "normal"
-                SetLineJoin(parameter.LineJoin, p1);
-                g.DrawPath(p1, path);
-                p1.Dispose();
-            }
-        }
-
         private static void SetLineJoin(string lineJoin, Pen pen)
         {
-            if (!string.IsNullOrWhiteSpace(lineJoin))
+            if (string.IsNullOrWhiteSpace(lineJoin))
+                return;
+
+            if (string.Compare(lineJoin, "Round", StringComparison.OrdinalIgnoreCase) == 0)
             {
-                if (string.Compare(lineJoin, "Round", StringComparison.OrdinalIgnoreCase) == 0)
-                {
-                    pen.LineJoin = LineJoin.Round;
-                }
-                else if (string.Compare(lineJoin, "Bevel", StringComparison.OrdinalIgnoreCase) == 0)
-                {
-                    pen.LineJoin = LineJoin.Bevel;
-                }
-                else if (string.Compare(lineJoin, "Miter", StringComparison.OrdinalIgnoreCase) == 0)
-                {
-                    pen.LineJoin = LineJoin.Miter;
-                }
-                else if (string.Compare(lineJoin, "MiterClipped", StringComparison.OrdinalIgnoreCase) == 0)
-                {
-                    pen.LineJoin = LineJoin.MiterClipped;
-                }
+                pen.LineJoin = LineJoin.Round;
+            }
+            else if (string.Compare(lineJoin, "Bevel", StringComparison.OrdinalIgnoreCase) == 0)
+            {
+                pen.LineJoin = LineJoin.Bevel;
+            }
+            else if (string.Compare(lineJoin, "Miter", StringComparison.OrdinalIgnoreCase) == 0)
+            {
+                pen.LineJoin = LineJoin.Miter;
+            }
+            else if (string.Compare(lineJoin, "MiterClipped", StringComparison.OrdinalIgnoreCase) == 0)
+            {
+                pen.LineJoin = LineJoin.MiterClipped;
             }
         }
 
@@ -3279,6 +3243,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             }
             return newImage;
         }
+
+        private bool _allowCustomBottomMargin;
 
         internal void Initialize(Subtitle subtitle, SubtitleFormat format, string exportType, string fileName, VideoInfo videoInfo, string videoFileName)
         {
@@ -3428,7 +3394,6 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             comboBox3D.Left = label3D.Left + label3D.Width + 3;
 
             buttonBorderColor.Text = Configuration.Settings.Language.ExportPngXml.BorderColor;
-            //labelBorderWidth.Text = Configuration.Settings.Language.ExportPngXml.BorderWidth;
             labelBorderWidth.Text = Configuration.Settings.Language.ExportPngXml.BorderStyle;
             labelImageFormat.Text = Configuration.Settings.Language.ExportPngXml.ImageFormat;
             checkBoxFullFrameImage.Text = Configuration.Settings.Language.ExportPngXml.FullFrameImage;
@@ -3620,7 +3585,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
             comboBoxLeftRightMarginUnit.SelectedIndex = Configuration.Settings.Tools.ExportLeftRightMarginUnit == "%" ? 0 : 1;
 
-            if (_exportType == ExportFormats.BluraySup || _exportType == ExportFormats.VobSub || _exportType == ExportFormats.ImageFrame || _exportType == ExportFormats.BdnXml || _exportType == ExportFormats.Dost || _exportType == ExportFormats.Fab || _exportType == ExportFormats.Edl || _exportType == ExportFormats.EdlClipName)
+            _allowCustomBottomMargin = _exportType == ExportFormats.BluraySup || _exportType == ExportFormats.VobSub || _exportType == ExportFormats.ImageFrame || _exportType == ExportFormats.BdnXml || _exportType == ExportFormats.Dost || _exportType == ExportFormats.Fab || _exportType == ExportFormats.Edl || _exportType == ExportFormats.EdlClipName;
+            if (_allowCustomBottomMargin)
             {
                 comboBoxBottomMarginUnit.Visible = true;
                 comboBoxBottomMargin.Visible = true;
@@ -3909,12 +3875,12 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
         internal int GetBottomMarginInPixels(Paragraph p)
         {
-            if (!comboBoxBottomMargin.Visible)
+            if (!_allowCustomBottomMargin)
             {
                 return 20;
             }
 
-            if (p != null && !string.IsNullOrEmpty(p.Extra) && _formatName == AdvancedSubStationAlpha.NameOfFormat || _formatName == SubStationAlpha.NameOfFormat)
+            if (!string.IsNullOrEmpty(p?.Extra) && (_formatName == AdvancedSubStationAlpha.NameOfFormat || _formatName == SubStationAlpha.NameOfFormat))
             {
                 var style = AdvancedSubStationAlpha.GetSsaStyle(p.Extra, _subtitle.Header);
                 return style.MarginVertical;
@@ -3928,15 +3894,14 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 GetResolution(out width, out height);
                 return (int)Math.Round(int.Parse(s.TrimEnd('%')) / 100.0 * height);
             }
-            else // pixels
-            {
-                return int.Parse(s);
-            }
+
+            // pixels
+            return int.Parse(s);
         }
 
         private int GetLeftMarginInPixels(Paragraph p)
         {
-            if (p != null && !string.IsNullOrEmpty(p.Extra) && _formatName == AdvancedSubStationAlpha.NameOfFormat || _formatName == SubStationAlpha.NameOfFormat)
+            if (!string.IsNullOrEmpty(p?.Extra) && (_formatName == AdvancedSubStationAlpha.NameOfFormat || _formatName == SubStationAlpha.NameOfFormat))
             {
                 var style = AdvancedSubStationAlpha.GetSsaStyle(p.Extra, _subtitle.Header);
                 return style.MarginLeft;
@@ -3950,15 +3915,14 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 GetResolution(out width, out height);
                 return (int)Math.Round(int.Parse(s) / 100.0 * width);
             }
-            else // pixels
-            {
-                return int.Parse(s);
-            }
+
+            // pixels
+            return int.Parse(s);
         }
 
         private int GetRightMarginInPixels(Paragraph p)
         {
-            if (p != null && !string.IsNullOrEmpty(p.Extra) && _formatName == AdvancedSubStationAlpha.NameOfFormat || _formatName == SubStationAlpha.NameOfFormat)
+            if (!string.IsNullOrEmpty(p?.Extra) && (_formatName == AdvancedSubStationAlpha.NameOfFormat || _formatName == SubStationAlpha.NameOfFormat))
             {
                 var style = AdvancedSubStationAlpha.GetSsaStyle(p.Extra, _subtitle.Header);
                 return style.MarginRight;
@@ -4025,7 +3989,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
                     if (alignment == ContentAlignment.MiddleLeft || alignment == ContentAlignment.MiddleCenter || alignment == ContentAlignment.MiddleRight)
                         pictureBox1.Top = (groupBoxExportImage.Height - 4 - bmp.Height) / 2;
-                    else if (comboBoxBottomMargin.Visible && alignment == ContentAlignment.TopLeft || alignment == ContentAlignment.TopCenter || alignment == ContentAlignment.TopRight)
+                    else if (_allowCustomBottomMargin && alignment == ContentAlignment.TopLeft || alignment == ContentAlignment.TopCenter || alignment == ContentAlignment.TopRight)
                         pictureBox1.Top = GetBottomMarginInPixels(p);
                 }
                 if (bmp.Width > groupBoxExportImage.Width + 20 || bmp.Height > groupBoxExportImage.Height + 20)
@@ -4281,7 +4245,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 else // pixels
                     Configuration.Settings.Tools.ExportBluRayBottomMarginPixels = comboBoxBottomMargin.SelectedIndex;
             }
-            else if (comboBoxBottomMargin.Visible)
+            else if (_allowCustomBottomMargin)
             {
                 if (comboBoxBottomMarginUnit.SelectedIndex == 0) // %
                     Configuration.Settings.Tools.ExportBottomMarginPercent = comboBoxBottomMargin.SelectedIndex;
@@ -4916,6 +4880,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             {
                 return;
             }
+            _allowCustomBottomMargin = checkBoxFullFrameImage.Checked;
             comboBoxBottomMargin.Visible = checkBoxFullFrameImage.Checked;
             labelBottomMargin.Visible = checkBoxFullFrameImage.Checked;
             comboBoxBottomMarginUnit.Visible = checkBoxFullFrameImage.Checked;
