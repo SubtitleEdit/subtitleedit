@@ -2,7 +2,6 @@
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Text;
@@ -796,8 +795,16 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             else
                 panelOutlineColor.BackColor = style.Outline;
             panelBackColor.BackColor = style.Background;
-            numericUpDownOutline.Value = style.OutlineWidth;
-            numericUpDownShadowWidth.Value = style.ShadowWidth;
+
+            if (style.OutlineWidth >= 0 && style.OutlineWidth <= numericUpDownOutline.Maximum)
+                numericUpDownOutline.Value = style.OutlineWidth;
+            else
+                numericUpDownOutline.Value = 2;
+
+            if (style.ShadowWidth >= 0 && style.ShadowWidth <= numericUpDownShadowWidth.Maximum)
+                numericUpDownShadowWidth.Value = style.ShadowWidth;
+            else
+                numericUpDownShadowWidth.Value = 1;
 
             if (_isSubStationAlpha)
             {
