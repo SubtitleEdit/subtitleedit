@@ -20506,9 +20506,15 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void toolStripMenuItemSubStationAlpha_Click(object sender, EventArgs e)
         {
+            if (tabControlSubtitle.SelectedIndex == TabControlSourceView)
+                ReloadFromSourceView();
+
             using (var properties = new SubStationAlphaProperties(_subtitle, GetCurrentSubtitleFormat(), _videoFileName, _fileName))
             {
-                properties.ShowDialog(this);
+                if (properties.ShowDialog(this) == DialogResult.OK && tabControlSubtitle.SelectedIndex == TabControlSourceView)
+                {
+                    ShowSource();
+                }
             }
         }
 
