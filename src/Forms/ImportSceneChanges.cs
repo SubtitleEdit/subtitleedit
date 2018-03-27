@@ -44,6 +44,8 @@ namespace Nikse.SubtitleEdit.Forms
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             UiUtil.FixLargeFonts(this, buttonOK);
             buttonImportWithFfmpeg.Enabled = !string.IsNullOrWhiteSpace(Configuration.Settings.General.FFmpegLocation) && File.Exists(Configuration.Settings.General.FFmpegLocation);
+            var isFfmpegAvailable = !string.IsNullOrEmpty(Configuration.Settings.General.FFmpegLocation) && File.Exists(Configuration.Settings.General.FFmpegLocation);
+            buttonDownloadFfmpeg.Visible = !isFfmpegAvailable;
         }
 
         public sealed override string Text
@@ -55,8 +57,8 @@ namespace Nikse.SubtitleEdit.Forms
         private void buttonOpenText_Click(object sender, EventArgs e)
         {
             openFileDialog1.Title = buttonOpenText.Text;
-            openFileDialog1.Filter = Configuration.Settings.Language.ImportText.TextFiles + "|*.txt;*.scenechange"  +
-                                     "|Matroska xml chapter file|*.xml" + 
+            openFileDialog1.Filter = Configuration.Settings.Language.ImportText.TextFiles + "|*.txt;*.scenechange" +
+                                     "|Matroska xml chapter file|*.xml" +
                                      "|" + Configuration.Settings.Language.General.AllFiles + "|*.*";
             openFileDialog1.FileName = string.Empty;
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
@@ -129,7 +131,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 return sb.ToString();
             }
-            catch 
+            catch
             {
                 return null;
             }
@@ -207,7 +209,7 @@ namespace Nikse.SubtitleEdit.Forms
             using (var process = new Process())
             {
                 process.StartInfo.FileName = Configuration.Settings.General.FFmpegLocation;
-                process.StartInfo.Arguments = $"-i \"{_videoFileName}\" -vf \"select=gt(scene\\,0.2),showinfo\" -vsync vfr -f null -";
+                process.StartInfo.Arguments = $"-i \"{_videoFileName}\" -vf \"select=gt(scene\\," + Configuration.Settings.General.FFmpegSceneThreshold + "),showinfo\" -vsync vfr -f null -";
                 process.StartInfo.UseShellExecute = false;
                 process.StartInfo.RedirectStandardOutput = true;
                 process.StartInfo.RedirectStandardError = true;
