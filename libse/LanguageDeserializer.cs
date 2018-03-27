@@ -6259,9 +6259,6 @@ namespace Nikse.SubtitleEdit.Core
                 case "VobSubOcr/XImagesSavedInY":
                     language.VobSubOcr.XImagesSavedInY = reader.Value;
                     break;
-                case "VobSubOcr/TryModiForUnknownWords":
-                    language.VobSubOcr.TryModiForUnknownWords = reader.Value;
-                    break;
                 case "VobSubOcr/DictionaryX":
                     language.VobSubOcr.DictionaryX = reader.Value;
                     break;

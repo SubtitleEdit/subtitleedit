@@ -302,6 +302,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private string[] _tesseractAsyncStrings;
         private int _tesseractAsyncIndex;
         private BackgroundWorker _tesseractThread;
+        private int _tesseractEngineMode;
 
         private readonly DateTime _windowStartTime = DateTime.Now;
         private int _linesOcred;
@@ -426,9 +427,15 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 _ocrMethodImageCompare = 4;
             }
 
-            checkBoxUseModiInTesseractForUnknownWords.Text = language.TryModiForUnknownWords;
             checkBoxTesseractItalicsOn.Checked = Configuration.Settings.VobSubOcr.UseItalicsInTesseract;
             checkBoxTesseractItalicsOn.Text = Configuration.Settings.Language.General.Italic;
+            if (Configuration.Settings.VobSubOcr.TesseractEngineMode >= 0 &&
+                Configuration.Settings.VobSubOcr.TesseractEngineMode < comboBoxTesseractEngineMode.Items.Count)
+            {
+                comboBoxTesseractEngineMode.SelectedIndex = Configuration.Settings.VobSubOcr.TesseractEngineMode;
+            }
+            comboBoxTesseractEngineMode.Left = labelTesseractEngineMode.Left + labelTesseractEngineMode.Width + 5;
+            comboBoxTesseractEngineMode.Width = GroupBoxTesseractMethod.Width - comboBoxTesseractEngineMode.Left - 10;
 
             checkBoxTesseractMusicOn.Checked = Configuration.Settings.VobSubOcr.UseMusicSymbolsInTesseract;
             checkBoxTesseractMusicOn.Text = Configuration.Settings.Language.Settings.MusicSymbol;
@@ -5314,7 +5321,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private void FormVobSubOcr_Shown(object sender, EventArgs e)
         {
-            checkBoxUseModiInTesseractForUnknownWords.Checked = Configuration.Settings.VobSubOcr.UseModiInTesseractForUnknownWords;
             if (_mp4List != null)
             {
                 checkBoxShowOnlyForced.Visible = false;
@@ -5841,6 +5847,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private void ButtonStartOcrClick(object sender, EventArgs e)
         {
+            _tesseractEngineMode = comboBoxTesseractEngineMode.SelectedIndex;
             _isLatinDb = comboBoxCharacterDatabase.SelectedItem != null && comboBoxCharacterDatabase.SelectedItem.ToString().Equals("Latin", StringComparison.Ordinal);
             Configuration.Settings.VobSubOcr.RightToLeft = checkBoxRightToLeft.Checked;
             _lastLine = null;
@@ -6144,11 +6151,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             var nbmp = new NikseBitmap(bmp);
             nbmp.ReplaceYellowWithWhite(); // optimized replace
 
-            string tempTiffFileName = Path.GetTempPath() + Guid.NewGuid() + ".png";
+            string pngFileName = Path.GetTempPath() + Guid.NewGuid() + ".png";
             string tempTextFileName;
             using (var b = nbmp.GetBitmap())
             {
-                b.Save(tempTiffFileName, System.Drawing.Imaging.ImageFormat.Png);
+                b.Save(pngFileName, System.Drawing.Imaging.ImageFormat.Png);
                 tempTextFileName = Path.GetTempPath() + Guid.NewGuid();
             }
 
@@ -6156,10 +6163,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 process.StartInfo = new ProcessStartInfo(Configuration.TesseractDirectory + "tesseract.exe");
                 process.StartInfo.UseShellExecute = true;
-                process.StartInfo.Arguments = "\"" + tempTiffFileName + "\" \"" + tempTextFileName + "\" -l " + language;
-
-                if (checkBoxTesseractMusicOn.Checked)
-                    process.StartInfo.Arguments += "+music";
+                process.StartInfo.Arguments = "\"" + pngFileName + "\" \"" + tempTextFileName + "\" --oem " + _tesseractEngineMode + " -l " + language;
 
                 if (!string.IsNullOrEmpty(psmMode))
                     process.StartInfo.Arguments += " " + psmMode.Trim();
@@ -6186,11 +6190,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 {
                     if (Configuration.IsRunningOnLinux() || Configuration.IsRunningOnMac())
                     {
-                        MessageBox.Show("Unable to start 'Tesseract' - make sure tesseract-ocr 3.x is installed!");
+                        MessageBox.Show("Unable to start 'Tesseract' - make sure tesseract-ocr 4.x is installed!");
                     }
                     else
                     {
-                        MessageBox.Show("Unable to start 'Tesseract' (" + Configuration.TesseractDirectory + "tesseract.exe) - make sure tesseract-ocr 3.x is installed!");
+                        MessageBox.Show("Unable to start 'Tesseract' (" + Configuration.TesseractDirectory + "tesseract.exe) - make sure tesseract-ocr 4.x is installed!");
                     }
                     throw;
                 }
@@ -6209,7 +6213,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     result = ParseHocr(result);
                     File.Delete(outputFileName);
                 }
-                File.Delete(tempTiffFileName);
+                File.Delete(pngFileName);
             }
             catch
             {
@@ -6292,7 +6296,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             const int badWords = 0;
             string textWithOutFixes;
-            if (_tesseractAsyncStrings != null && !string.IsNullOrEmpty(_tesseractAsyncStrings[index]))
+            if (!string.IsNullOrEmpty(_tesseractAsyncStrings?[index]))
             {
                 textWithOutFixes = _tesseractAsyncStrings[index];
             }
@@ -6819,53 +6823,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 {
                     _ocrFixEngine.AutoGuessesUsed.Clear();
                     _ocrFixEngine.UnknownWordsFound.Clear();
-
-                    if (_modiEnabled && checkBoxUseModiInTesseractForUnknownWords.Checked)
-                    {
-                        // which is best - modi or Tesseract - we find out here
-                        string modiText = CallModi(index);
-
-                        if (modiText.Length == 0)
-                            modiText = CallModi(index); // retry... strange MODI
-                        if (modiText.Length == 0)
-                            modiText = CallModi(index); // retry... strange MODI
-
-                        if (modiText.Length > 1 &&
-                            !modiText.Contains("CD") &&
-                            (!modiText.Contains('0') || line.Contains('0')) &&
-                            (!modiText.Contains('2') || line.Contains('2')) &&
-                            (!modiText.Contains('3') || line.Contains('4')) &&
-                            (!modiText.Contains('5') || line.Contains('5')) &&
-                            (!modiText.Contains('9') || line.Contains('9')) &&
-                            (!modiText.Contains('•') || line.Contains('•')) &&
-                            (!modiText.Contains(')') || line.Contains(')')) &&
-                            Utilities.CountTagInText(modiText, '(') < 2 && Utilities.CountTagInText(modiText, ')') < 2 &&
-                            Utilities.GetNumberOfLines(modiText) < 4)
-                        {
-                            int modiWordsNotFound = _ocrFixEngine.CountUnknownWordsViaDictionary(modiText, out correctWords);
-                            //if (modiWordsNotFound > 0)
-                            {
-                                string modiTextOcrFixed = modiText;
-                                if (checkBoxAutoFixCommonErrors.Checked)
-                                    modiTextOcrFixed = _ocrFixEngine.FixOcrErrors(modiText, index, _lastLine, false, GetAutoGuessLevel());
-                                int modiOcrCorrectedWordsNotFound = _ocrFixEngine.CountUnknownWordsViaDictionary(modiTextOcrFixed, out correctWords);
-                                if (modiOcrCorrectedWordsNotFound <= modiWordsNotFound)
-                                    modiText = modiTextOcrFixed;
-                            }
-
-                            if (modiWordsNotFound < wordsNotFound || (textWithOutFixes.Length == 1 && modiWordsNotFound == 0))
-                                line = modiText; // use the modi OCR'ed text
-                            else if (wordsNotFound == modiWordsNotFound && modiText.EndsWith('!') && (line.EndsWith('l') || line.EndsWith('ﬂ')))
-                                line = modiText;
-                        }
-
-                        // take the best option - before OCR fixing, which we do again to save suggestions and prompt for user input
-                        line = _ocrFixEngine.FixUnknownWordsViaGuessOrPrompt(out wordsNotFound, line, index, bitmap, checkBoxAutoFixCommonErrors.Checked, checkBoxPromptForUnknownWords.Checked, true, GetAutoGuessLevel());
-                    }
-                    else
-                    { // fix some error manually (modi not available)
-                        line = _ocrFixEngine.FixUnknownWordsViaGuessOrPrompt(out wordsNotFound, line, index, bitmap, checkBoxAutoFixCommonErrors.Checked, checkBoxPromptForUnknownWords.Checked, true, GetAutoGuessLevel());
-                    }
+                    line = _ocrFixEngine.FixUnknownWordsViaGuessOrPrompt(out wordsNotFound, line, index, bitmap, checkBoxAutoFixCommonErrors.Checked, checkBoxPromptForUnknownWords.Checked, true, GetAutoGuessLevel());
                 }
 
                 if (_ocrFixEngine.Abort)
@@ -6874,39 +6832,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     _ocrFixEngine.Abort = false;
                     return string.Empty;
                 }
-
-                //check Tesseract... find an other way to do this...
-                //string tmp = HtmlUtil.RemoveHtmlTags(line).Trim();
-                //if (!tmp.TrimEnd().EndsWith("..."))
-                //{
-                //    tmp = tmp.TrimEnd('.').TrimEnd();
-                //    if (tmp.Length > 2 && Utilities.LowercaseLetters.Contains(tmp[tmp.Length - 1]))
-                //    {
-                //        if (_nocrChars == null)
-                //            _nocrChars = LoadNOcrForTesseract("Nikse.SubtitleEdit.Resources.nOCR_TesseractHelper.xml.zip");
-                //        string text = HtmlUtil.RemoveHtmlTags(NocrFastCheck(bitmap).TrimEnd());
-                //        string post = string.Empty;
-                //        if (line.EndsWith("</i>"))
-                //        {
-                //            post = "</i>";
-                //            line = line.Remove(line.Length - 4, 4).Trim();
-                //        }
-                //        if (text.EndsWith('.'))
-                //        {
-                //            line = line.TrimEnd('.').Trim();
-                //            while (text.EndsWith('.') || text.EndsWith(' '))
-                //            {
-                //                line += text.Substring(text.Length - 1).Trim();
-                //                text = text.Remove(text.Length - 1, 1);
-                //            }
-                //        }
-                //        else if (text.EndsWith('l') && text.EndsWith('!') && !text.EndsWith("l!"))
-                //        {
-                //            line = line.Remove(line.Length - 1, 1) + "!";
-                //        }
-                //        line += post;
-                //    }
-                //}
 
                 // Log used word guesses (via word replace list)
                 foreach (string guess in _ocrFixEngine.AutoGuessesUsed)
@@ -6938,7 +6863,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             if (textWithOutFixes.Trim() != line.Trim())
             {
                 _tesseractOcrAutoFixes++;
-                labelFixesMade.Text = string.Format(" - {0}", _tesseractOcrAutoFixes);
+                labelFixesMade.Text = $" - {_tesseractOcrAutoFixes}";
                 LogOcrFix(index, textWithOutFixes, line);
             }
 
@@ -6990,9 +6915,20 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private string TesseractResizeAndRetry(Bitmap bitmap)
         {
-            string result = Tesseract3DoOcrViaExe(ResizeBitmap(bitmap, bitmap.Width * 3, bitmap.Height * 2), _languageId, null);
+            string result;
+            using (var b = ResizeBitmap(bitmap, bitmap.Width * 3, bitmap.Height * 2))
+            {
+                result = Tesseract3DoOcrViaExe(b, _languageId, null);
+            }
+
             if (string.IsNullOrWhiteSpace(result))
-                result = Tesseract3DoOcrViaExe(ResizeBitmap(bitmap, bitmap.Width * 4, bitmap.Height * 2), _languageId, "-psm 7");
+            {
+                using (var b = ResizeBitmap(bitmap, bitmap.Width * 4, bitmap.Height * 2))
+                {
+                    result = Tesseract3DoOcrViaExe(b, _languageId, "-psm 7");
+                }
+            }
+
             return result.TrimEnd();
         }
 
@@ -7108,7 +7044,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private void InitializeModi()
         {
             _modiEnabled = false;
-            checkBoxUseModiInTesseractForUnknownWords.Enabled = false;
             comboBoxModiLanguage.Enabled = false;
             try
             {
@@ -7119,7 +7054,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
                 _modiEnabled = _modiDoc != null;
                 comboBoxModiLanguage.Enabled = _modiEnabled;
-                checkBoxUseModiInTesseractForUnknownWords.Enabled = _modiEnabled;
             }
             catch
             {
@@ -7523,17 +7457,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     comboBoxDictionaries_SelectedIndexChanged(null, null);
             }
 
-            if (_modiEnabled && checkBoxUseModiInTesseractForUnknownWords.Checked)
-            {
-                string tesseractLanguageText = (comboBoxTesseractLanguages.SelectedItem as TesseractLanguage).Text;
-                int i = 0;
-                foreach (var modiLanguage in comboBoxModiLanguage.Items)
-                {
-                    if ((modiLanguage as ModiLanguage).Text == tesseractLanguageText)
-                        comboBoxModiLanguage.SelectedIndex = i;
-                    i++;
-                }
-            }
             comboBoxModiLanguage.SelectedIndex = -1;
         }
 
@@ -8430,8 +8353,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             DisposeImageCompareBitmaps();
 
             Configuration.Settings.VobSubOcr.UseItalicsInTesseract = checkBoxTesseractItalicsOn.Checked;
+            if (comboBoxTesseractEngineMode.SelectedIndex != -1)
+                Configuration.Settings.VobSubOcr.TesseractEngineMode = comboBoxTesseractEngineMode.SelectedIndex;
             Configuration.Settings.VobSubOcr.ItalicFactor = _unItalicFactor;
-            Configuration.Settings.VobSubOcr.UseModiInTesseractForUnknownWords = checkBoxUseModiInTesseractForUnknownWords.Checked;
             Configuration.Settings.VobSubOcr.PromptForUnknownWords = checkBoxPromptForUnknownWords.Checked;
             Configuration.Settings.VobSubOcr.GuessUnknownWords = checkBoxGuessUnknownWords.Checked;
             Configuration.Settings.VobSubOcr.AutoBreakSubtitleIfMoreThanTwoLines = checkBoxAutoBreakLines.Checked;

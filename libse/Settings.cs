@@ -865,8 +865,8 @@ namespace Nikse.SubtitleEdit.Core
         public int LastModiLanguageId { get; set; }
         public string LastOcrMethod { get; set; }
         public string TesseractLastLanguage { get; set; }
-        public bool UseModiInTesseractForUnknownWords { get; set; }
         public bool UseItalicsInTesseract { get; set; }
+        public int TesseractEngineMode { get; set; }
         public bool UseMusicSymbolsInTesseract { get; set; }
         public bool RightToLeft { get; set; }
         public bool TopToBottom { get; set; }
@@ -2680,12 +2680,12 @@ namespace Nikse.SubtitleEdit.Core
             subNode = node.SelectSingleNode("TesseractLastLanguage");
             if (subNode != null)
                 settings.VobSubOcr.TesseractLastLanguage = subNode.InnerText;
-            subNode = node.SelectSingleNode("UseModiInTesseractForUnknownWords");
-            if (subNode != null)
-                settings.VobSubOcr.UseModiInTesseractForUnknownWords = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("UseItalicsInTesseract");
             if (subNode != null)
                 settings.VobSubOcr.UseItalicsInTesseract = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("TesseractEngineMode");
+            if (subNode != null)
+                settings.VobSubOcr.TesseractEngineMode = Convert.ToInt32(subNode.InnerText);
             subNode = node.SelectSingleNode("UseMusicSymbolsInTesseract");
             if (subNode != null)
                 settings.VobSubOcr.UseMusicSymbolsInTesseract = Convert.ToBoolean(subNode.InnerText);
@@ -3808,8 +3808,8 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("LastModiLanguageId", settings.VobSubOcr.LastModiLanguageId.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("LastOcrMethod", settings.VobSubOcr.LastOcrMethod);
                 textWriter.WriteElementString("TesseractLastLanguage", settings.VobSubOcr.TesseractLastLanguage);
-                textWriter.WriteElementString("UseModiInTesseractForUnknownWords", settings.VobSubOcr.UseModiInTesseractForUnknownWords.ToString());
                 textWriter.WriteElementString("UseItalicsInTesseract", settings.VobSubOcr.UseItalicsInTesseract.ToString());
+                textWriter.WriteElementString("TesseractEngineMode", settings.VobSubOcr.TesseractEngineMode.ToString());
                 textWriter.WriteElementString("UseMusicSymbolsInTesseract", settings.VobSubOcr.UseMusicSymbolsInTesseract.ToString());
                 textWriter.WriteElementString("RightToLeft", settings.VobSubOcr.RightToLeft.ToString());
                 textWriter.WriteElementString("TopToBottom", settings.VobSubOcr.TopToBottom.ToString());

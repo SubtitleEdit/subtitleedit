@@ -531,6 +531,7 @@
     <Compile Include="TarHeader.cs" />
     <Compile Include="TarReader.cs" />
     <Compile Include="TaskbarList.cs" />
+    <Compile Include="TesseractDictionary.cs" />
     <Compile Include="TextDraw.cs" />
     <Compile Include="TextEncodingExtensions.cs" />
     <Compile Include="TimeCode.cs" />

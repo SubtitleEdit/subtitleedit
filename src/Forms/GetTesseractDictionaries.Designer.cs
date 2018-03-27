@@ -1,6 +1,6 @@
 ﻿namespace Nikse.SubtitleEdit.Forms
 {
-    partial class GetTesseractDictionaries
+    sealed partial class GetTesseractDictionaries
     {
         /// <summary>
         /// Required designer variable.

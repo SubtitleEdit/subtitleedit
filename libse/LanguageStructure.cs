@@ -2524,7 +2524,6 @@
             public string SaveAllSubtitleImagesAsBdnXml { get; set; }
             public string SaveAllSubtitleImagesWithHtml { get; set; }
             public string XImagesSavedInY { get; set; }
-            public string TryModiForUnknownWords { get; set; }
             public string DictionaryX { get; set; }
             public string RightToLeft { get; set; }
             public string ShowOnlyForcedSubtitles { get; set; }
