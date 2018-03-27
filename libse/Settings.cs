@@ -673,6 +673,7 @@ namespace Nikse.SubtitleEdit.Core
         public string MpcHcLocation { get; set; }
         public bool UseFFmpegForWaveExtraction { get; set; }
         public string FFmpegLocation { get; set; }
+        public string FFmpegSceneThreshold { get; set; }
         public bool UseTimeFormatHHMMSSFF { get; set; }
         public int ClearStatusBarAfterSeconds { get; set; }
         public string Company { get; set; }
@@ -775,6 +776,7 @@ namespace Nikse.SubtitleEdit.Core
             VlcWaveTranscodeSettings = "acodec=s16l"; // "acodec=s16l,channels=1,ab=64,samplerate=8000";
             MpvVideoOutput = Configuration.IsRunningOnLinux() ? "vaapi" : "direct3d";
             MpvHandlesPreviewText = true;
+            FFmpegSceneThreshold = "0.2";
             UseTimeFormatHHMMSSFF = false;
             ClearStatusBarAfterSeconds = 10;
             MoveVideo100Or500MsPlaySmallSample = false;
@@ -1797,6 +1799,9 @@ namespace Nikse.SubtitleEdit.Core
             subNode = node.SelectSingleNode("FFmpegLocation");
             if (subNode != null)
                 settings.General.FFmpegLocation = subNode.InnerText.Trim();
+            subNode = node.SelectSingleNode("FFmpegSceneThreshold");
+            if (subNode != null)
+                settings.General.FFmpegSceneThreshold = subNode.InnerText.Trim();
             subNode = node.SelectSingleNode("UseTimeFormatHHMMSSFF");
             if (subNode != null)
                 settings.General.UseTimeFormatHHMMSSFF = Convert.ToBoolean(subNode.InnerText.Trim());
@@ -3488,6 +3493,7 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("MpcHcLocation", settings.General.MpcHcLocation);
                 textWriter.WriteElementString("UseFFmpegForWaveExtraction", settings.General.UseFFmpegForWaveExtraction.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("FFmpegLocation", settings.General.FFmpegLocation);
+                textWriter.WriteElementString("FFmpegSceneThreshold", settings.General.FFmpegSceneThreshold);
                 textWriter.WriteElementString("UseTimeFormatHHMMSSFF", settings.General.UseTimeFormatHHMMSSFF.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ClearStatusBarAfterSeconds", settings.General.ClearStatusBarAfterSeconds.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("Company", settings.General.Company);
