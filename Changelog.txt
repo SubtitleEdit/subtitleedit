@@ -21,6 +21,7 @@
    * Update Romanian translation - thx Mircea
    * Update Basque translation - thx Xabier
    * Update Portuguese translation - thx moob
+   * Update Tesseract OCR from 3.02 to 4.0 (alpha)
    * Ctrl+a/ctrl+d/ctrl+shift+i works in more lists - thx tormento
    * Remember OCR spell check dictionary for tesseract - thx raymondjpg
 * FIXED:
@@ -37,6 +38,8 @@
    * Do not allow navigating before zero in video - thx darnn
    * Fix issue with nested tags in "Remove text for HI" - thx darnn
    * Fix image render issue regarding italic/font - thx Cemal
+   * Fix bottom margin in batch image export - thx Cemal
+   * Fix possible crash in list view - thx lambdacore12
 
 3.5.6 (27th February 2018)
 * NEW:

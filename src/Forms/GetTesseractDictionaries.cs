@@ -6,17 +6,14 @@ using System.IO;
 using System.IO.Compression;
 using System.Net;
 using System.Windows.Forms;
-using System.Xml;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public partial class GetTesseractDictionaries : Form
+    public sealed partial class GetTesseractDictionaries : Form
     {
-        private List<string> _dictionaryDownloadLinks = new List<string>();
-        private List<string> _descriptions = new List<string>();
-        private string _xmlName = null;
-        private string _dictionaryFileName = null;
+        private string _dictionaryFileName;
         internal string ChosenLanguage { get; private set; }
+        private readonly List<TesseractDictionary> _dictionaries;
 
         public GetTesseractDictionaries()
         {
@@ -31,57 +28,24 @@ namespace Nikse.SubtitleEdit.Forms
             buttonDownload.Text = Configuration.Settings.Language.GetTesseractDictionaries.Download;
             labelPleaseWait.Text = string.Empty;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
-            LoadDictionaryList("Nikse.SubtitleEdit.Resources.TesseractDictionaries.xml.gz");
             FixLargeFonts();
+            _dictionaries = TesseractDictionary.List();
+            LoadDictionaryList();
         }
 
-        private void LoadDictionaryList(string xmlRessourceName)
+        private void LoadDictionaryList()
         {
-            _dictionaryDownloadLinks = new List<string>();
-            _descriptions = new List<string>();
-            _xmlName = xmlRessourceName;
-            System.Reflection.Assembly asm = System.Reflection.Assembly.GetExecutingAssembly();
-            Stream strm = asm.GetManifestResourceStream(_xmlName);
-            if (strm != null)
+            comboBoxDictionaries.BeginUpdate();
+            comboBoxDictionaries.Items.Clear();
+            foreach (var d in _dictionaries)
             {
-                comboBoxDictionaries.Items.Clear();
-                XmlDocument doc = new XmlDocument();
-                using (var rdr = new StreamReader(strm))
-                using (var zip = new GZipStream(rdr.BaseStream, CompressionMode.Decompress))
+                if (!string.IsNullOrEmpty(d.Url))
                 {
-                    byte[] data = new byte[195000];
-                    int bytesRead = zip.Read(data, 0, data.Length);
-                    var s = System.Text.Encoding.UTF8.GetString(data, 0, bytesRead).Trim();
-                    try
-                    {
-                        doc.LoadXml(s);
-                    }
-                    catch (Exception exception)
-                    {
-                        MessageBox.Show(exception.Message);
-                    }
-                }
-
-                foreach (XmlNode node in doc.DocumentElement.SelectNodes("Dictionary"))
-                {
-                    string englishName = node.SelectSingleNode("EnglishName").InnerText;
-                    string downloadLink = node.SelectSingleNode("DownloadLink").InnerText;
-
-                    string description = string.Empty;
-                    if (node.SelectSingleNode("Description") != null)
-                        description = node.SelectSingleNode("Description").InnerText;
-
-                    if (!string.IsNullOrEmpty(downloadLink))
-                    {
-                        string name = englishName;
-
-                        comboBoxDictionaries.Items.Add(name);
-                        _dictionaryDownloadLinks.Add(downloadLink);
-                        _descriptions.Add(description);
-                    }
-                    comboBoxDictionaries.SelectedIndex = 0;
+                    comboBoxDictionaries.Items.Add(d);
                 }
             }
+            comboBoxDictionaries.SelectedIndex = 0;
+            comboBoxDictionaries.EndUpdate();
             comboBoxDictionaries.AutoCompleteSource = AutoCompleteSource.ListItems;
             comboBoxDictionaries.AutoCompleteMode = AutoCompleteMode.Append;
         }
@@ -105,7 +69,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Cursor = Cursors.WaitCursor;
 
                 int index = comboBoxDictionaries.SelectedIndex;
-                string url = _dictionaryDownloadLinks[index];
+                string url = _dictionaries[index].Url;
                 ChosenLanguage = comboBoxDictionaries.Items[index].ToString();
 
                 var wc = new WebClient { Proxy = Utilities.GetProxy() };

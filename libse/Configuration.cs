@@ -23,7 +23,7 @@ namespace Nikse.SubtitleEdit.Core
         public static readonly string SceneChangesDirectory = DataDirectory + "SceneChanges" + Path.DirectorySeparatorChar;
         public static readonly string AutoBackupDirectory = DataDirectory + "AutoBackup" + Path.DirectorySeparatorChar;
         public static readonly string VobSubCompareDirectory = DataDirectory + "VobSub" + Path.DirectorySeparatorChar;
-        public static readonly string TesseractDirectory = DataDirectory + "Tesseract" + Path.DirectorySeparatorChar;
+        public static readonly string TesseractDirectory = DataDirectory + "Tesseract4" + Path.DirectorySeparatorChar;
         public static readonly string WaveformsDirectory = DataDirectory + "Waveforms" + Path.DirectorySeparatorChar;
         public static readonly string PluginsDirectory = DataDirectory + "Plugins" + Path.DirectorySeparatorChar;
         public static readonly string IconsDirectory = BaseDirectory + "Icons" + Path.DirectorySeparatorChar;
@@ -54,21 +54,9 @@ namespace Nikse.SubtitleEdit.Core
         }
 
 
-        public static Settings Settings
-        {
-            get
-            {
-                return Instance.Value._settings.Value;
-            }
-        }
+        public static Settings Settings => Instance.Value._settings.Value;
 
-        public static IEnumerable<Encoding> AvailableEncodings
-        {
-            get
-            {
-                return Instance.Value._encodings;
-            }
-        }
+        public static IEnumerable<Encoding> AvailableEncodings => Instance.Value._encodings;
 
         private static string GetInstallerPath()
         {
@@ -117,6 +105,7 @@ namespace Nikse.SubtitleEdit.Core
                     }
                     catch
                     {
+                        // ignored
                     }
                 }
                 Directory.CreateDirectory(Path.Combine(appDataRoamingPath, "Dictionaries"));

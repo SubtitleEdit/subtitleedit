@@ -2318,7 +2318,6 @@ Keep changes?</KeepChangesMessage>
     <SaveAllSubtitleImagesAsBdnXml>Save all images (png/bdn xml)...</SaveAllSubtitleImagesAsBdnXml>
     <SaveAllSubtitleImagesWithHtml>Save all images with HTML index...</SaveAllSubtitleImagesWithHtml>
     <XImagesSavedInY>{0} images saved in {1}</XImagesSavedInY>
-    <TryModiForUnknownWords>Try Microsoft MODI OCR for unknown words</TryModiForUnknownWords>
     <DictionaryX>Dictionary: {0}</DictionaryX>
     <RightToLeft>Right to left</RightToLeft>
     <ShowOnlyForcedSubtitles>Show only forced subtitles</ShowOnlyForcedSubtitles>
