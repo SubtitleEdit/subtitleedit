@@ -102,6 +102,7 @@ COPY /Y /V "Hunspellx64.dll"                             "temp_zip\"
 COPY /Y /V "SubtitleEdit.exe"                            "temp_zip\"
 COPY /Y /V "Languages\*.xml"                             "temp_zip\Languages\"
 COPY /Y /V "..\..\..\Tesseract4\tesseract.exe"            "temp_zip\Tesseract4\"
+COPY /Y /V "..\..\..\Tesseract4\*.dll"            "temp_zip\Tesseract4\"
 COPY /Y /V "..\..\..\Tesseract4\tessdata\configs\hocr"    "temp_zip\Tesseract4\tessdata\configs\"
 COPY /Y /V "..\..\..\Tesseract4\tessdata\*.traineddata"   "temp_zip\Tesseract4\tessdata\"
 
