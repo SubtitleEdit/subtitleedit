@@ -6179,7 +6179,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 }
                 else
                 {
-                    process.StartInfo.WorkingDirectory = (Configuration.TesseractDirectory);
+                    var tessdataPath = Path.Combine(Configuration.TesseractDirectory, "tessdata");
+                    process.StartInfo.Arguments = " --tessdata-dir \"" + tessdataPath + "\" " + process.StartInfo.Arguments.Trim();
+                    process.StartInfo.WorkingDirectory = Configuration.TesseractDirectory;
                 }
 
                 try
