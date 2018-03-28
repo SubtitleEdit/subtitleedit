@@ -5847,6 +5847,12 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private void ButtonStartOcrClick(object sender, EventArgs e)
         {
+            if (_ocrMethodIndex == _ocrMethodTesseract && comboBoxTesseractLanguages.Items.Count == 0)
+            {
+                buttonGetTesseractDictionaries_Click(sender, e);
+                return;
+            }
+
             _tesseractEngineMode = comboBoxTesseractEngineMode.SelectedIndex;
             _isLatinDb = comboBoxCharacterDatabase.SelectedItem != null && comboBoxCharacterDatabase.SelectedItem.ToString().Equals("Latin", StringComparison.Ordinal);
             Configuration.Settings.VobSubOcr.RightToLeft = checkBoxRightToLeft.Checked;
@@ -5862,7 +5868,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             _autoBreakLines = checkBoxAutoBreakLines.Checked;
             listBoxUnknownWords.Items.Clear();
             int max = GetSubtitleCount();
-
+            
             if (_ocrMethodIndex == _ocrMethodTesseract && _tesseractAsyncStrings == null)
             {
                 _nOcrDb = null;
