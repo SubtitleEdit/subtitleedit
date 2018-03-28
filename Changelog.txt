@@ -21,7 +21,7 @@
    * Update Romanian translation - thx Mircea
    * Update Basque translation - thx Xabier
    * Update Portuguese translation - thx moob
-   * Update Tesseract OCR from 3.02 to 4.0 (alpha)
+   * Update Tesseract OCR from 3.02 to 4.0 (beta 1)
    * Ctrl+a/ctrl+d/ctrl+shift+i works in more lists - thx tormento
    * Remember OCR spell check dictionary for tesseract - thx raymondjpg
 * FIXED:
