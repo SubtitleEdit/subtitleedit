@@ -21372,7 +21372,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            using (var form = new ModifySelection(_subtitle, SubtitleListview1))
+            using (var form = new ModifySelection(_subtitle, GetCurrentSubtitleFormat(), SubtitleListview1))
             {
                 form.ShowDialog(this);
             }
