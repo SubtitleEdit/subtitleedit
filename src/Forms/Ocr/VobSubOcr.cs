@@ -303,6 +303,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private int _tesseractAsyncIndex;
         private BackgroundWorker _tesseractThread;
         private int _tesseractEngineMode;
+        private int _tesseractErrors;
 
         private readonly DateTime _windowStartTime = DateTime.Now;
         private int _linesOcred;
@@ -5854,6 +5855,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
 
             _tesseractEngineMode = comboBoxTesseractEngineMode.SelectedIndex;
+            _tesseractErrors = 0;
             _isLatinDb = comboBoxCharacterDatabase.SelectedItem != null && comboBoxCharacterDatabase.SelectedItem.ToString().Equals("Latin", StringComparison.Ordinal);
             Configuration.Settings.VobSubOcr.RightToLeft = checkBoxRightToLeft.Checked;
             _lastLine = null;
@@ -5868,7 +5870,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             _autoBreakLines = checkBoxAutoBreakLines.Checked;
             listBoxUnknownWords.Items.Clear();
             int max = GetSubtitleCount();
-            
+
             if (_ocrMethodIndex == _ocrMethodTesseract && _tesseractAsyncStrings == null)
             {
                 _nOcrDb = null;
@@ -6188,23 +6190,33 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     var tessdataPath = Path.Combine(Configuration.TesseractDirectory, "tessdata");
                     process.StartInfo.Arguments = " --tessdata-dir \"" + tessdataPath + "\" " + process.StartInfo.Arguments.Trim();
                     process.StartInfo.WorkingDirectory = Configuration.TesseractDirectory;
+                    process.StartInfo.UseShellExecute = false;
+                    process.StartInfo.CreateNoWindow = true;
+                    process.StartInfo.RedirectStandardError = true;
+                    process.ErrorDataReceived += TesseractErrorReceived;
+                    process.EnableRaisingEvents = true;
                 }
 
                 try
                 {
                     process.Start();
+                    process.BeginErrorReadLine();
                 }
                 catch
                 {
-                    if (Configuration.IsRunningOnLinux() || Configuration.IsRunningOnMac())
+                    _tesseractErrors++;
+                    if (_tesseractErrors <= 2)
                     {
-                        MessageBox.Show("Unable to start 'Tesseract' - make sure tesseract-ocr 4.x is installed!");
+                        if (Configuration.IsRunningOnLinux() || Configuration.IsRunningOnMac())
+                        {
+                            MessageBox.Show("Unable to start 'Tesseract' - make sure tesseract-ocr 4.x is installed!");
+                        }
+                        else
+                        {
+                            MessageBox.Show("Unable to start 'Tesseract' (" + Configuration.TesseractDirectory + "tesseract.exe) - make sure Subtitle Edit is install correctly + Visual Studio 2017 C++ runtime");
+                        }
+                        throw;
                     }
-                    else
-                    {
-                        MessageBox.Show("Unable to start 'Tesseract' (" + Configuration.TesseractDirectory + "tesseract.exe) - make sure tesseract-ocr 4.x is installed!");
-                    }
-                    throw;
                 }
                 process.WaitForExit(5000);
             }
@@ -6229,6 +6241,17 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
 
             return result;
+        }
+
+        private void TesseractErrorReceived(object sender, DataReceivedEventArgs e)
+        {
+            string msg = e.Data;
+            if (!string.IsNullOrEmpty(msg))
+            {
+                _tesseractErrors++;
+                if (_tesseractErrors <= 2)
+                    MessageBox.Show("An error occurred while running tesseract: " + msg);
+            }
         }
 
         private static string ParseHocr(string html)
