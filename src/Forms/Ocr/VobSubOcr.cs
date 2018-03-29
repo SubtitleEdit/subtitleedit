@@ -4289,10 +4289,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 ColorLineByNumberOfUnknownWords(listViewIndex, wordsNotFound, line);
             }
 
-            if (textWithOutFixes.Trim() != line.Trim())
+            if (textWithOutFixes != null && textWithOutFixes.Trim() != line.Trim())
             {
                 _tesseractOcrAutoFixes++;
-                labelFixesMade.Text = string.Format(" - {0}", _tesseractOcrAutoFixes);
+                labelFixesMade.Text = $" - {_tesseractOcrAutoFixes}";
                 LogOcrFix(listViewIndex, textWithOutFixes, line);
             }
 
@@ -4567,7 +4567,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             if (textWithOutFixes.Trim() != line.Trim())
             {
                 _tesseractOcrAutoFixes++;
-                labelFixesMade.Text = string.Format(" - {0}", _tesseractOcrAutoFixes);
+                labelFixesMade.Text = $" - {_tesseractOcrAutoFixes}";
                 LogOcrFix(listViewIndex, textWithOutFixes, line);
             }
 
@@ -4854,10 +4854,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 ColorLineByNumberOfUnknownWords(listViewIndex, wordsNotFound, line);
             }
 
-            if (textWithOutFixes.Trim() != line.Trim())
+            if (textWithOutFixes != null && textWithOutFixes.Trim() != line.Trim())
             {
                 _tesseractOcrAutoFixes++;
-                labelFixesMade.Text = string.Format(" - {0}", _tesseractOcrAutoFixes);
+                labelFixesMade.Text = $" - {_tesseractOcrAutoFixes}";
                 LogOcrFix(listViewIndex, textWithOutFixes, line);
             }
 
@@ -5828,7 +5828,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 if (_tesseractAsyncIndex >= 0 && _tesseractAsyncStrings != null && _tesseractAsyncIndex < _tesseractAsyncStrings.Length)
                 {
                     if (string.IsNullOrEmpty(_tesseractAsyncStrings[_tesseractAsyncIndex]))
-                        _tesseractAsyncStrings[_tesseractAsyncIndex] = Tesseract3DoOcrViaExe(bitmap, _languageId, "-psm 6"); // 6 = Assume a single uniform block of text.);
+                        _tesseractAsyncStrings[_tesseractAsyncIndex] = Tesseract3DoOcrViaExe(bitmap, _languageId, "--psm 6"); // 6 = Assume a single uniform block of text.);
                 }
                 bitmap.Dispose();
             }
@@ -5996,7 +5996,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             TimeCode startTime;
             TimeCode endTime;
             GetSubtitleTime(i, out startTime, out endTime);
-            labelStatus.Text = string.Format("{0} / {1}: {2} - {3}", i + 1, max, startTime, endTime);
+            labelStatus.Text = $"{i + 1} / {max}: {startTime} - {endTime}";
             progressBar1.Value = i + 1;
             labelStatus.Refresh();
             progressBar1.Refresh();
@@ -6246,11 +6246,20 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private void TesseractErrorReceived(object sender, DataReceivedEventArgs e)
         {
             string msg = e.Data;
-            if (!string.IsNullOrEmpty(msg))
+
+            if (string.IsNullOrEmpty(msg) ||
+                msg.StartsWith("Tesseract Open Source OCR Engine", StringComparison.OrdinalIgnoreCase) ||
+                msg.Contains("Too few characters", StringComparison.OrdinalIgnoreCase) ||
+                msg.Contains("Empty page", StringComparison.OrdinalIgnoreCase) ||
+                msg.Contains("Weak margin", StringComparison.OrdinalIgnoreCase))
             {
-                _tesseractErrors++;
-                if (_tesseractErrors <= 2)
-                    MessageBox.Show("An error occurred while running tesseract: " + msg);
+                return;
+            }
+
+            _tesseractErrors++;
+            if (_tesseractErrors <= 2)
+            {
+                MessageBox.Show("An error occurred while running tesseract: " + msg);
             }
         }
 
@@ -6335,13 +6344,13 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 if (_tesseractAsyncIndex <= index)
                     _tesseractAsyncIndex = index + 10;
-                textWithOutFixes = Tesseract3DoOcrViaExe(bitmap, _languageId, "-psm 6"); // 6 = Assume a single uniform block of text.
+                textWithOutFixes = Tesseract3DoOcrViaExe(bitmap, _languageId, "--psm 6"); // 6 = Assume a single uniform block of text.
             }
 
             if ((!textWithOutFixes.Contains(Environment.NewLine) || Utilities.CountTagInText(textWithOutFixes, '\n') > 2)
                 && (textWithOutFixes.Length < 17 || bitmap.Height < 50))
             {
-                string psm = Tesseract3DoOcrViaExe(bitmap, _languageId, "-psm 7"); // 7 = Treat the image as a single text line.
+                string psm = Tesseract3DoOcrViaExe(bitmap, _languageId, "--psm 7"); // 7 = Treat the image as a single text line.
                 if (textWithOutFixes != psm)
                 {
                     if (string.IsNullOrWhiteSpace(textWithOutFixes))
@@ -6487,7 +6496,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         var nbmp = new NikseBitmap(bitmap);
                         nbmp.MakeOneColor(Color.White);
                         Bitmap oneColorBitmap = nbmp.GetBitmap();
-                        string oneColorText = Tesseract3DoOcrViaExe(oneColorBitmap, _languageId, "-psm 6"); // 6 = Assume a single uniform block of text.
+                        string oneColorText = Tesseract3DoOcrViaExe(oneColorBitmap, _languageId, "--psm 6"); // 6 = Assume a single uniform block of text.
                         oneColorBitmap.Dispose();
                         nbmp = null;
 
@@ -6546,7 +6555,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
                         // which is best - normal image or de-italic'ed? We find out here
                         var unItalicedBmp = UnItalic(bitmap, _unItalicFactor);
-                        string unItalicText = Tesseract3DoOcrViaExe(unItalicedBmp, _languageId, "-psm 6"); // 6 = Assume a single uniform block of text.
+                        string unItalicText = Tesseract3DoOcrViaExe(unItalicedBmp, _languageId, "--psm 6"); // 6 = Assume a single uniform block of text.
                         unItalicedBmp.Dispose();
 
                         if (unItalicText.Length > 1)
@@ -6956,7 +6965,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 using (var b = ResizeBitmap(bitmap, bitmap.Width * 4, bitmap.Height * 2))
                 {
-                    result = Tesseract3DoOcrViaExe(b, _languageId, "-psm 7");
+                    result = Tesseract3DoOcrViaExe(b, _languageId, "--psm 7");
                 }
             }
 
@@ -6965,7 +6974,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private void LogOcrFix(int index, string oldLine, string newLine)
         {
-            listBoxLog.Items.Add(string.Format("#{0}: {1} -> {2}", index + 1, oldLine.Replace(Environment.NewLine, " "), newLine.Replace(Environment.NewLine, " ")));
+            listBoxLog.Items.Add($"#{index + 1}: {oldLine.Replace(Environment.NewLine, " ")} -> {newLine.Replace(Environment.NewLine, " ")}");
         }
 
         private string CallModi(int i)
@@ -7682,7 +7691,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                             p.Text = p.Text.Replace("<" + tag + ">", string.Empty);
                             p.Text = p.Text.Replace("</" + tag + ">", string.Empty);
                         }
-                        p.Text = string.Format("<{0}>{1}</{0}>", tag, p.Text);
+                        p.Text = $"<{tag}>{p.Text}</{tag}>";
                         subtitleListView1.SetText(item.Index, p.Text);
                         if (item.Index == _selectedIndex)
                             textBoxCurrentText.Text = p.Text;
@@ -8058,7 +8067,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 var htmlFileName = Path.Combine(folderBrowserDialog1.SelectedPath, "index.html");
                 File.WriteAllText(htmlFileName, sb.ToString(), Encoding.UTF8);
                 progressBar1.Visible = false;
-                MessageBox.Show(string.Format("{0} images saved in {1}", imagesSavedCount, folderBrowserDialog1.SelectedPath));
+                MessageBox.Show($"{imagesSavedCount} images saved in {folderBrowserDialog1.SelectedPath}");
                 Process.Start(htmlFileName);
             }
         }
@@ -8248,7 +8257,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 }
                 else
                 {
-                    text = string.Format("<i>{0}</i>", text);
+                    text = $"<i>{text}</i>";
                 }
                 tb.SelectedText = text;
                 tb.SelectionStart = selectionStart;
@@ -9170,5 +9179,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
         }
 
+        private void comboBoxTesseractEngineMode_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (_tesseractAsyncStrings != null)
+                _tesseractAsyncStrings = new string[GetSubtitleCount()];
+        }
     }
 }

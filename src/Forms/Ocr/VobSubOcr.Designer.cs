@@ -50,6 +50,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.groupBoxOcrMethod = new System.Windows.Forms.GroupBox();
             this.comboBoxOcrMethod = new System.Windows.Forms.ComboBox();
             this.GroupBoxTesseractMethod = new System.Windows.Forms.GroupBox();
+            this.labelTesseractEngineMode = new System.Windows.Forms.Label();
+            this.comboBoxTesseractEngineMode = new System.Windows.Forms.ComboBox();
             this.buttonGetTesseractDictionaries = new System.Windows.Forms.Button();
             this.checkBoxTesseractMusicOn = new System.Windows.Forms.CheckBox();
             this.checkBoxTesseractItalicsOn = new System.Windows.Forms.CheckBox();
@@ -141,8 +143,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.textBoxCurrentText = new Nikse.SubtitleEdit.Controls.SETextBox();
             this.subtitleListView1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.timerHideStatus = new System.Windows.Forms.Timer(this.components);
-            this.comboBoxTesseractEngineMode = new System.Windows.Forms.ComboBox();
-            this.labelTesseractEngineMode = new System.Windows.Forms.Label();
             this.contextMenuStripListview.SuspendLayout();
             this.groupBoxOcrMethod.SuspendLayout();
             this.GroupBoxTesseractMethod.SuspendLayout();
@@ -455,6 +455,30 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.GroupBoxTesseractMethod.TabIndex = 1;
             this.GroupBoxTesseractMethod.TabStop = false;
             this.GroupBoxTesseractMethod.Text = "Tesseract";
+            // 
+            // labelTesseractEngineMode
+            // 
+            this.labelTesseractEngineMode.AutoSize = true;
+            this.labelTesseractEngineMode.Location = new System.Drawing.Point(18, 103);
+            this.labelTesseractEngineMode.Name = "labelTesseractEngineMode";
+            this.labelTesseractEngineMode.Size = new System.Drawing.Size(68, 13);
+            this.labelTesseractEngineMode.TabIndex = 6;
+            this.labelTesseractEngineMode.Text = "Engine mode";
+            // 
+            // comboBoxTesseractEngineMode
+            // 
+            this.comboBoxTesseractEngineMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxTesseractEngineMode.FormattingEnabled = true;
+            this.comboBoxTesseractEngineMode.Items.AddRange(new object[] {
+            "Original Tesseract only (can detect italic)",
+            "Neural nets LSTM only ",
+            "Tesseract + LSTM",
+            "Default, based on what is available"});
+            this.comboBoxTesseractEngineMode.Location = new System.Drawing.Point(98, 100);
+            this.comboBoxTesseractEngineMode.Name = "comboBoxTesseractEngineMode";
+            this.comboBoxTesseractEngineMode.Size = new System.Drawing.Size(195, 21);
+            this.comboBoxTesseractEngineMode.TabIndex = 5;
+            this.comboBoxTesseractEngineMode.SelectedIndexChanged += new System.EventHandler(this.comboBoxTesseractEngineMode_SelectedIndexChanged);
             // 
             // buttonGetTesseractDictionaries
             // 
@@ -1590,29 +1614,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // 
             this.timerHideStatus.Interval = 2000;
             this.timerHideStatus.Tick += new System.EventHandler(this.timerHideStatus_Tick);
-            // 
-            // comboBoxTesseractEngineMode
-            // 
-            this.comboBoxTesseractEngineMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxTesseractEngineMode.FormattingEnabled = true;
-            this.comboBoxTesseractEngineMode.Items.AddRange(new object[] {
-            "Original Tesseract only (can detect italic)",
-            "Neural nets LSTM only ",
-            "Tesseract + LSTM",
-            "Default, based on what is available"});
-            this.comboBoxTesseractEngineMode.Location = new System.Drawing.Point(98, 100);
-            this.comboBoxTesseractEngineMode.Name = "comboBoxTesseractEngineMode";
-            this.comboBoxTesseractEngineMode.Size = new System.Drawing.Size(195, 21);
-            this.comboBoxTesseractEngineMode.TabIndex = 5;
-            // 
-            // labelTesseractEngineMode
-            // 
-            this.labelTesseractEngineMode.AutoSize = true;
-            this.labelTesseractEngineMode.Location = new System.Drawing.Point(18, 103);
-            this.labelTesseractEngineMode.Name = "labelTesseractEngineMode";
-            this.labelTesseractEngineMode.Size = new System.Drawing.Size(68, 13);
-            this.labelTesseractEngineMode.TabIndex = 6;
-            this.labelTesseractEngineMode.Text = "Engine mode";
             // 
             // VobSubOcr
             // 
