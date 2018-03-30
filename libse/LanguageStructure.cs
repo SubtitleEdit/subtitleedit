@@ -793,7 +793,8 @@
         {
             public string Title { get; set; }
             public string OpenTextFile { get; set; }
-            public string ImportOptions { get; set; }
+            public string Generate { get; set; }
+            public string Import { get; set; }            
             public string TextFiles { get; set; }
             public string TimeCodes { get; set; }
             public string Frames { get; set; }
@@ -1387,7 +1388,7 @@
                     public string CloseVideo { get; set; }
                     public string SetVideoOffset { get; set; }
                     public string SmptTimeMode { get; set; }
-                    public string ImportSceneChanges { get; set; }
+                    public string GenerateImportSceneChanges { get; set; }
                     public string RemoveSceneChanges { get; set; }
                     public string WaveformBatchGenerate { get; set; }
                     public string ShowHideVideo { get; set; }

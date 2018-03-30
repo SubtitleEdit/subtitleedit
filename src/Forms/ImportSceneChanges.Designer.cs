@@ -30,32 +30,33 @@
         {
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
-            this.groupBoxImportOptions = new System.Windows.Forms.GroupBox();
+            this.groupBoxImportText = new System.Windows.Forms.GroupBox();
+            this.textBoxIImport = new System.Windows.Forms.TextBox();
             this.groupBoxTimeCodes = new System.Windows.Forms.GroupBox();
             this.radioButtonMilliseconds = new System.Windows.Forms.RadioButton();
             this.radioButtonSeconds = new System.Windows.Forms.RadioButton();
             this.radioButtonFrames = new System.Windows.Forms.RadioButton();
             this.radioButtonHHMMSSMS = new System.Windows.Forms.RadioButton();
-            this.groupBoxImportText = new System.Windows.Forms.GroupBox();
-            this.progressBar1 = new System.Windows.Forms.ProgressBar();
-            this.buttonImportWithFfmpeg = new System.Windows.Forms.Button();
-            this.textBoxText = new System.Windows.Forms.TextBox();
             this.buttonOpenText = new System.Windows.Forms.Button();
-            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.groupBoxGenerateSceneChanges = new System.Windows.Forms.GroupBox();
             this.buttonDownloadFfmpeg = new System.Windows.Forms.Button();
-            this.groupBoxImportOptions.SuspendLayout();
-            this.groupBoxTimeCodes.SuspendLayout();
+            this.buttonImportWithFfmpeg = new System.Windows.Forms.Button();
+            this.textBoxGenerate = new System.Windows.Forms.TextBox();
+            this.progressBar1 = new System.Windows.Forms.ProgressBar();
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.groupBoxImportText.SuspendLayout();
+            this.groupBoxTimeCodes.SuspendLayout();
+            this.groupBoxGenerateSceneChanges.SuspendLayout();
             this.SuspendLayout();
             // 
             // buttonCancel
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(615, 374);
+            this.buttonCancel.Location = new System.Drawing.Point(639, 433);
             this.buttonCancel.Name = "buttonCancel";
-            this.buttonCancel.Size = new System.Drawing.Size(75, 21);
-            this.buttonCancel.TabIndex = 8;
+            this.buttonCancel.Size = new System.Drawing.Size(87, 23);
+            this.buttonCancel.TabIndex = 4;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
@@ -64,35 +65,54 @@
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(534, 374);
+            this.buttonOK.Location = new System.Drawing.Point(546, 433);
             this.buttonOK.Name = "buttonOK";
-            this.buttonOK.Size = new System.Drawing.Size(75, 21);
-            this.buttonOK.TabIndex = 7;
+            this.buttonOK.Size = new System.Drawing.Size(87, 23);
+            this.buttonOK.TabIndex = 3;
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
             // 
-            // groupBoxImportOptions
+            // groupBoxImportText
             // 
-            this.groupBoxImportOptions.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBoxImportOptions.Controls.Add(this.groupBoxTimeCodes);
-            this.groupBoxImportOptions.Location = new System.Drawing.Point(349, 12);
-            this.groupBoxImportOptions.Name = "groupBoxImportOptions";
-            this.groupBoxImportOptions.Size = new System.Drawing.Size(341, 351);
-            this.groupBoxImportOptions.TabIndex = 6;
-            this.groupBoxImportOptions.TabStop = false;
-            this.groupBoxImportOptions.Text = "Import options";
+            this.groupBoxImportText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxImportText.Controls.Add(this.textBoxIImport);
+            this.groupBoxImportText.Controls.Add(this.groupBoxTimeCodes);
+            this.groupBoxImportText.Controls.Add(this.buttonOpenText);
+            this.groupBoxImportText.Location = new System.Drawing.Point(367, 12);
+            this.groupBoxImportText.Name = "groupBoxImportText";
+            this.groupBoxImportText.Size = new System.Drawing.Size(359, 412);
+            this.groupBoxImportText.TabIndex = 1;
+            this.groupBoxImportText.TabStop = false;
+            this.groupBoxImportText.Text = "Import scene changes";
+            // 
+            // textBoxIImport
+            // 
+            this.textBoxIImport.AllowDrop = true;
+            this.textBoxIImport.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxIImport.Location = new System.Drawing.Point(6, 48);
+            this.textBoxIImport.MaxLength = 0;
+            this.textBoxIImport.Multiline = true;
+            this.textBoxIImport.Name = "textBoxIImport";
+            this.textBoxIImport.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.textBoxIImport.Size = new System.Drawing.Size(338, 232);
+            this.textBoxIImport.TabIndex = 1;
             // 
             // groupBoxTimeCodes
             // 
+            this.groupBoxTimeCodes.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxTimeCodes.Controls.Add(this.radioButtonMilliseconds);
             this.groupBoxTimeCodes.Controls.Add(this.radioButtonSeconds);
             this.groupBoxTimeCodes.Controls.Add(this.radioButtonFrames);
             this.groupBoxTimeCodes.Controls.Add(this.radioButtonHHMMSSMS);
-            this.groupBoxTimeCodes.Location = new System.Drawing.Point(6, 19);
+            this.groupBoxTimeCodes.Location = new System.Drawing.Point(6, 286);
             this.groupBoxTimeCodes.Name = "groupBoxTimeCodes";
-            this.groupBoxTimeCodes.Size = new System.Drawing.Size(329, 120);
-            this.groupBoxTimeCodes.TabIndex = 5;
+            this.groupBoxTimeCodes.Size = new System.Drawing.Size(338, 120);
+            this.groupBoxTimeCodes.TabIndex = 2;
             this.groupBoxTimeCodes.TabStop = false;
             this.groupBoxTimeCodes.Text = "Time codes";
             // 
@@ -138,88 +158,94 @@
             this.radioButtonHHMMSSMS.Text = "HH:MM:SS.ms (00:00:01.500)";
             this.radioButtonHHMMSSMS.UseVisualStyleBackColor = true;
             // 
-            // groupBoxImportText
-            // 
-            this.groupBoxImportText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBoxImportText.Controls.Add(this.buttonDownloadFfmpeg);
-            this.groupBoxImportText.Controls.Add(this.progressBar1);
-            this.groupBoxImportText.Controls.Add(this.buttonImportWithFfmpeg);
-            this.groupBoxImportText.Controls.Add(this.textBoxText);
-            this.groupBoxImportText.Controls.Add(this.buttonOpenText);
-            this.groupBoxImportText.Location = new System.Drawing.Point(12, 12);
-            this.groupBoxImportText.Name = "groupBoxImportText";
-            this.groupBoxImportText.Size = new System.Drawing.Size(331, 351);
-            this.groupBoxImportText.TabIndex = 5;
-            this.groupBoxImportText.TabStop = false;
-            this.groupBoxImportText.Text = "Import scene changes";
-            // 
-            // progressBar1
-            // 
-            this.progressBar1.Location = new System.Drawing.Point(6, 317);
-            this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(319, 23);
-            this.progressBar1.TabIndex = 3;
-            this.progressBar1.Visible = false;
-            // 
-            // buttonImportWithFfmpeg
-            // 
-            this.buttonImportWithFfmpeg.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonImportWithFfmpeg.Location = new System.Drawing.Point(6, 284);
-            this.buttonImportWithFfmpeg.Name = "buttonImportWithFfmpeg";
-            this.buttonImportWithFfmpeg.Size = new System.Drawing.Size(319, 23);
-            this.buttonImportWithFfmpeg.TabIndex = 2;
-            this.buttonImportWithFfmpeg.Text = "Get scene changes with FFmpeg";
-            this.buttonImportWithFfmpeg.UseVisualStyleBackColor = true;
-            this.buttonImportWithFfmpeg.Click += new System.EventHandler(this.buttonImportWithFfmpeg_Click);
-            // 
-            // textBoxText
-            // 
-            this.textBoxText.AllowDrop = true;
-            this.textBoxText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxText.Location = new System.Drawing.Point(6, 48);
-            this.textBoxText.MaxLength = 0;
-            this.textBoxText.Multiline = true;
-            this.textBoxText.Name = "textBoxText";
-            this.textBoxText.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBoxText.Size = new System.Drawing.Size(319, 188);
-            this.textBoxText.TabIndex = 1;
-            // 
             // buttonOpenText
             // 
             this.buttonOpenText.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonOpenText.Location = new System.Drawing.Point(182, 19);
+            this.buttonOpenText.Location = new System.Drawing.Point(191, 19);
             this.buttonOpenText.Name = "buttonOpenText";
-            this.buttonOpenText.Size = new System.Drawing.Size(143, 21);
+            this.buttonOpenText.Size = new System.Drawing.Size(153, 23);
             this.buttonOpenText.TabIndex = 0;
             this.buttonOpenText.Text = "Open file...";
             this.buttonOpenText.UseVisualStyleBackColor = true;
             this.buttonOpenText.Click += new System.EventHandler(this.buttonOpenText_Click);
             // 
-            // openFileDialog1
+            // groupBoxGenerateSceneChanges
             // 
-            this.openFileDialog1.FileName = "openFileDialog1";
+            this.groupBoxGenerateSceneChanges.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxGenerateSceneChanges.Controls.Add(this.buttonDownloadFfmpeg);
+            this.groupBoxGenerateSceneChanges.Controls.Add(this.buttonImportWithFfmpeg);
+            this.groupBoxGenerateSceneChanges.Controls.Add(this.textBoxGenerate);
+            this.groupBoxGenerateSceneChanges.Location = new System.Drawing.Point(12, 12);
+            this.groupBoxGenerateSceneChanges.Name = "groupBoxGenerateSceneChanges";
+            this.groupBoxGenerateSceneChanges.Size = new System.Drawing.Size(349, 413);
+            this.groupBoxGenerateSceneChanges.TabIndex = 0;
+            this.groupBoxGenerateSceneChanges.TabStop = false;
+            this.groupBoxGenerateSceneChanges.Text = "Generate scene changes";
             // 
             // buttonDownloadFfmpeg
             // 
-            this.buttonDownloadFfmpeg.Location = new System.Drawing.Point(6, 255);
+            this.buttonDownloadFfmpeg.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonDownloadFfmpeg.Location = new System.Drawing.Point(159, 19);
             this.buttonDownloadFfmpeg.Name = "buttonDownloadFfmpeg";
-            this.buttonDownloadFfmpeg.Size = new System.Drawing.Size(319, 23);
-            this.buttonDownloadFfmpeg.TabIndex = 2;
+            this.buttonDownloadFfmpeg.Size = new System.Drawing.Size(184, 23);
+            this.buttonDownloadFfmpeg.TabIndex = 0;
             this.buttonDownloadFfmpeg.Text = "Download ffmpeg";
             this.buttonDownloadFfmpeg.UseVisualStyleBackColor = true;
             this.buttonDownloadFfmpeg.Click += new System.EventHandler(this.buttonDownloadFfmpeg_Click);
+            // 
+            // buttonImportWithFfmpeg
+            // 
+            this.buttonImportWithFfmpeg.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonImportWithFfmpeg.Location = new System.Drawing.Point(6, 384);
+            this.buttonImportWithFfmpeg.Name = "buttonImportWithFfmpeg";
+            this.buttonImportWithFfmpeg.Size = new System.Drawing.Size(337, 23);
+            this.buttonImportWithFfmpeg.TabIndex = 2;
+            this.buttonImportWithFfmpeg.Text = "Generate scene changes with FFmpeg";
+            this.buttonImportWithFfmpeg.UseVisualStyleBackColor = true;
+            this.buttonImportWithFfmpeg.Click += new System.EventHandler(this.buttonImportWithFfmpeg_Click);
+            // 
+            // textBoxText
+            // 
+            this.textBoxGenerate.AllowDrop = true;
+            this.textBoxGenerate.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxGenerate.Location = new System.Drawing.Point(6, 48);
+            this.textBoxGenerate.MaxLength = 0;
+            this.textBoxGenerate.Multiline = true;
+            this.textBoxGenerate.Name = "textBoxGenerate";
+            this.textBoxGenerate.ReadOnly = true;
+            this.textBoxGenerate.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.textBoxGenerate.Size = new System.Drawing.Size(337, 323);
+            this.textBoxGenerate.TabIndex = 1;
+            // 
+            // progressBar1
+            // 
+            this.progressBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.progressBar1.Location = new System.Drawing.Point(12, 433);
+            this.progressBar1.Name = "progressBar1";
+            this.progressBar1.Size = new System.Drawing.Size(528, 23);
+            this.progressBar1.TabIndex = 2;
+            this.progressBar1.Visible = false;
+            // 
+            // openFileDialog1
+            // 
+            this.openFileDialog1.FileName = "openFileDialog1";
             // 
             // ImportSceneChanges
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(702, 407);
+            this.ClientSize = new System.Drawing.Size(738, 468);
             this.Controls.Add(this.buttonCancel);
+            this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.buttonOK);
-            this.Controls.Add(this.groupBoxImportOptions);
             this.Controls.Add(this.groupBoxImportText);
+            this.Controls.Add(this.groupBoxGenerateSceneChanges);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.KeyPreview = true;
             this.MaximizeBox = false;
@@ -231,11 +257,12 @@
             this.Text = "ImportSceneChanges";
             this.Shown += new System.EventHandler(this.ImportSceneChanges_Shown);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ImportSceneChanges_KeyDown);
-            this.groupBoxImportOptions.ResumeLayout(false);
-            this.groupBoxTimeCodes.ResumeLayout(false);
-            this.groupBoxTimeCodes.PerformLayout();
             this.groupBoxImportText.ResumeLayout(false);
             this.groupBoxImportText.PerformLayout();
+            this.groupBoxTimeCodes.ResumeLayout(false);
+            this.groupBoxTimeCodes.PerformLayout();
+            this.groupBoxGenerateSceneChanges.ResumeLayout(false);
+            this.groupBoxGenerateSceneChanges.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -244,18 +271,19 @@
 
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Button buttonOK;
-        private System.Windows.Forms.GroupBox groupBoxImportOptions;
+        private System.Windows.Forms.GroupBox groupBoxImportText;
         private System.Windows.Forms.GroupBox groupBoxTimeCodes;
         private System.Windows.Forms.RadioButton radioButtonMilliseconds;
         private System.Windows.Forms.RadioButton radioButtonSeconds;
         private System.Windows.Forms.RadioButton radioButtonFrames;
 		private System.Windows.Forms.RadioButton radioButtonHHMMSSMS;
-        private System.Windows.Forms.GroupBox groupBoxImportText;
-        private System.Windows.Forms.TextBox textBoxText;
+        private System.Windows.Forms.GroupBox groupBoxGenerateSceneChanges;
+        private System.Windows.Forms.TextBox textBoxGenerate;
         private System.Windows.Forms.Button buttonOpenText;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.Button buttonImportWithFfmpeg;
         private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.Button buttonDownloadFfmpeg;
+        private System.Windows.Forms.TextBox textBoxIImport;
     }
 }

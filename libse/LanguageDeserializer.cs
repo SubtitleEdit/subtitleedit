@@ -1864,8 +1864,11 @@ namespace Nikse.SubtitleEdit.Core
                 case "ImportSceneChanges/OpenTextFile":
                     language.ImportSceneChanges.OpenTextFile = reader.Value;
                     break;
-                case "ImportSceneChanges/ImportOptions":
-                    language.ImportSceneChanges.ImportOptions = reader.Value;
+                case "ImportSceneChanges/Generate":
+                    language.ImportSceneChanges.Generate = reader.Value;
+                    break;
+                case "ImportSceneChanges/Import":
+                    language.ImportSceneChanges.Import = reader.Value;
                     break;
                 case "ImportSceneChanges/TextFiles":
                     language.ImportSceneChanges.TextFiles = reader.Value;
