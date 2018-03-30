@@ -711,7 +711,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <RemoveAll>Remove all</RemoveAll>
   </ImportImages>
   <ImportSceneChanges>
-    <Title>Import scene changes</Title>
+    <Title>Generate/import scene changes</Title>
     <OpenTextFile>Open text file...</OpenTextFile>
     <Generate>Generate scene changes</Generate>
     <Import>Import scene changes</Import>
@@ -1024,7 +1024,7 @@ Note: Do check free disk space.</WaveFileMalformed>
         <CloseVideo>Close video file</CloseVideo>
         <SetVideoOffset>Set video offset...</SetVideoOffset>
         <SmptTimeMode>SMPTE timing (drop frame)</SmptTimeMode>
-        <ImportSceneChanges>Import scene changes...</ImportSceneChanges>
+        <GenerateImportSceneChanges>Generate/import scene changes...</GenerateImportSceneChanges>
         <RemoveSceneChanges>Remove scene changes</RemoveSceneChanges>
         <WaveformBatchGenerate>Batch generate waveforms...</WaveformBatchGenerate>
         <ShowHideVideo>Show/hide video</ShowHideVideo>
