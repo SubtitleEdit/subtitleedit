@@ -19,7 +19,7 @@ namespace Nikse.SubtitleEdit.Forms
         private readonly double _frameRate = 25;
         private readonly string _videoFileName;
         private double _lastSeconds;
-        private static readonly Regex TimeRegex = new Regex("pts_time:", RegexOptions.Compiled);
+        private static readonly Regex TimeRegex = new Regex(@"pts_time:\d+[.,]*\d*", RegexOptions.Compiled);
         private bool _abort;
 
         public ImportSceneChanges(VideoInfo videoInfo, string videoFileName)
@@ -286,7 +286,6 @@ namespace Nikse.SubtitleEdit.Forms
                     buttonImportWithFfmpeg.Enabled = true;
                 }
             }
-
         }
     }
 }
