@@ -6251,6 +6251,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 msg.StartsWith("Tesseract Open Source OCR Engine", StringComparison.OrdinalIgnoreCase) ||
                 msg.Contains("Too few characters", StringComparison.OrdinalIgnoreCase) ||
                 msg.Contains("Empty page", StringComparison.OrdinalIgnoreCase) ||
+                msg.Contains(" diacritics", StringComparison.OrdinalIgnoreCase) ||                
                 msg.Contains("Weak margin", StringComparison.OrdinalIgnoreCase))
             {
                 return;

@@ -24,8 +24,10 @@
    * Update Tesseract OCR from 3.02 to 4.0 (beta 1)
    * Ctrl+a/ctrl+d/ctrl+shift+i works in more lists - thx tormento
    * Remember OCR spell check dictionary for tesseract - thx raymondjpg
+   * Add some style support to "Modify selection"
 * FIXED:
    * Fix "Add to names list" in OCR spell check - thx daed-alus/Sergiy
+   * Fix "Generate scene changes" decimal point issue - thx Max
    * Fix "Remove text for HI" issue - thx btsix
    * Fix casing issue regarding "President" - thx Kolle
    * Fix hashtag issue in "Fix common errors"

@@ -3,6 +3,7 @@ using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -18,7 +19,7 @@ namespace Nikse.SubtitleEdit.Forms
         private readonly double _frameRate = 25;
         private readonly string _videoFileName;
         private double _lastSeconds;
-        private static readonly Regex TimeRegex = new Regex(@"pts_time:\d+.\d+", RegexOptions.Compiled);
+        private static readonly Regex TimeRegex = new Regex("pts_time:", RegexOptions.Compiled);
         private bool _abort;
 
         public ImportSceneChanges(VideoInfo videoInfo, string videoFileName)
@@ -258,9 +259,9 @@ namespace Nikse.SubtitleEdit.Forms
                 var match = TimeRegex.Match(outLine.Data);
                 if (match.Success)
                 {
-                    var timeCode = match.Value.Replace("pts_time:", string.Empty).Replace(",", ".");
+                    var timeCode = match.Value.Replace("pts_time:", string.Empty).Replace(",", ".").Replace("٫", ".").Replace("⠨", ".");
                     double seconds;
-                    if (double.TryParse(timeCode, out seconds) && seconds > 0.2)
+                    if (double.TryParse(timeCode, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out seconds) && seconds > 0.2)
                     {
                         _timeCodes.AppendLine(TimeCode.FromSeconds(seconds).ToShortDisplayString());
                         _lastSeconds = seconds;
