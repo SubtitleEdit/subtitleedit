@@ -918,15 +918,16 @@ namespace Nikse.SubtitleEdit.Core
 
             ImportSceneChanges = new LanguageStructure.ImportSceneChanges
             {
-                Title = "Import scene changes",
+                Title = "Generate/import scene changes",
                 OpenTextFile = "Open text file...",
-                ImportOptions = "Import options",
+                Import = "Import scene changes",
+                Generate = "Generate scene changes",
                 TextFiles = "Text files",
                 TimeCodes = "Time codes",
                 Frames = "Frames",
                 Seconds = "Seconds",
                 Milliseconds = "Milliseconds",
-                GetSceneChangesWithFfmpeg = "Get scene changes with FFmpeg"
+                GetSceneChangesWithFfmpeg = "Generate scene changes with FFmpeg"
             };
 
             ImportText = new LanguageStructure.ImportText
@@ -1523,7 +1524,7 @@ namespace Nikse.SubtitleEdit.Core
                         CloseVideo = "Close video file",
                         SetVideoOffset = "Set video offset...",
                         SmptTimeMode = "SMPTE timing (drop frame)",
-                        ImportSceneChanges = "Import scene changes...",
+                        GenerateImportSceneChanges = "Generate/import scene changes...",
                         RemoveSceneChanges = "Remove scene changes",
                         WaveformBatchGenerate = "Batch generate waveforms...",
                         ShowHideVideo = "Show/hide video",

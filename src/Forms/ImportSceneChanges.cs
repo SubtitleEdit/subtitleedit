@@ -32,9 +32,9 @@ namespace Nikse.SubtitleEdit.Forms
             _videoFileName = videoFileName;
 
             Text = Configuration.Settings.Language.ImportSceneChanges.Title;
-            groupBoxImportText.Text = Configuration.Settings.Language.ImportSceneChanges.Title;
+            groupBoxGenerateSceneChanges.Text = Configuration.Settings.Language.ImportSceneChanges.Generate;
             buttonOpenText.Text = Configuration.Settings.Language.ImportSceneChanges.OpenTextFile;
-            groupBoxImportOptions.Text = Configuration.Settings.Language.ImportSceneChanges.ImportOptions;
+            groupBoxImportText.Text = Configuration.Settings.Language.ImportSceneChanges.Import;
             radioButtonFrames.Text = Configuration.Settings.Language.ImportSceneChanges.Frames;
             radioButtonSeconds.Text = Configuration.Settings.Language.ImportSceneChanges.Seconds;
             radioButtonMilliseconds.Text = Configuration.Settings.Language.ImportSceneChanges.Milliseconds;
@@ -75,7 +75,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var res = LoadFromMatroskaChapterFile(fileName);
                 if (!string.IsNullOrEmpty(res))
                 {
-                    textBoxText.Text = res;
+                    textBoxIImport.Text = res;
                     radioButtonHHMMSSMS.Checked = true;
                     return;
                 }
@@ -94,11 +94,11 @@ namespace Nikse.SubtitleEdit.Forms
                         if (!string.IsNullOrWhiteSpace(line))
                             sb.AppendLine(line.Trim());
                     }
-                    textBoxText.Text = sb.ToString();
+                    textBoxIImport.Text = sb.ToString();
                 }
                 else
                 {
-                    textBoxText.Text = s;
+                    textBoxIImport.Text = s;
                 }
             }
             catch (Exception ex)
@@ -143,7 +143,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void buttonOK_Click(object sender, EventArgs e)
         {
             SceneChangesInSeconds = new List<double>();
-            foreach (string line in textBoxText.Lines)
+            foreach (string line in string.IsNullOrEmpty(textBoxGenerate.Text) ? textBoxIImport.Lines : textBoxGenerate.Lines)
             {
                 if (radioButtonHHMMSSMS.Checked)
                 {
@@ -204,8 +204,7 @@ namespace Nikse.SubtitleEdit.Forms
             progressBar1.Style = ProgressBarStyle.Marquee;
             buttonImportWithFfmpeg.Enabled = false;
             Cursor = Cursors.WaitCursor;
-            textBoxText.ReadOnly = true;
-            textBoxText.Text = string.Empty;
+            textBoxGenerate.Text = string.Empty;
             _timeCodes = new StringBuilder();
             using (var process = new Process())
             {
@@ -229,7 +228,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (_lastSeconds > 0.1 && Math.Abs(lastUpdateSeconds - _lastSeconds) > 0 - 001)
                     {
                         lastUpdateSeconds = _lastSeconds;
-                        UpdateTextBox();
+                        UpdateImportTextBox();
                     }
                     if (_abort)
                     {
@@ -240,16 +239,16 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             Cursor = Cursors.Default;
-            UpdateTextBox();
+            UpdateImportTextBox();
             buttonOK.Enabled = true;
             buttonOK_Click(sender, e);
         }
 
-        private void UpdateTextBox()
+        private void UpdateImportTextBox()
         {
-            textBoxText.Text = _timeCodes.ToString();
-            textBoxText.SelectionStart = textBoxText.Text.Length;
-            textBoxText.ScrollToCaret();
+            textBoxGenerate.Text = _timeCodes.ToString();
+            textBoxGenerate.SelectionStart = textBoxGenerate.Text.Length;
+            textBoxGenerate.ScrollToCaret();
         }
 
         void OutputHandler(object sendingProcess, DataReceivedEventArgs outLine)

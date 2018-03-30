@@ -713,13 +713,14 @@ Note: Do check free disk space.</WaveFileMalformed>
   <ImportSceneChanges>
     <Title>Import scene changes</Title>
     <OpenTextFile>Open text file...</OpenTextFile>
-    <ImportOptions>Import options</ImportOptions>
+    <Generate>Generate scene changes</Generate>
+    <Import>Import scene changes</Import>
     <TextFiles>Text files</TextFiles>
     <TimeCodes>Time codes</TimeCodes>
     <Frames>Frames</Frames>
     <Seconds>Seconds</Seconds>
     <Milliseconds>Milliseconds</Milliseconds>
-    <GetSceneChangesWithFfmpeg>Get scene changes with FFmpeg</GetSceneChangesWithFfmpeg>
+    <GetSceneChangesWithFfmpeg>Generate scene changes with FFmpeg</GetSceneChangesWithFfmpeg>
   </ImportSceneChanges>
   <ImportText>
     <Title>Import plain text</Title>
