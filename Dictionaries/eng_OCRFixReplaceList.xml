@@ -2388,6 +2388,7 @@
     <Ending from=" ofﬂ" to=" off!" />
     <Ending from="pshycol" to="psycho!" />
     <Ending from=" i..." to=" I..." />
+    <Ending from=" L." to=" I." />
   </EndLines>
   <WholeLines>
     <!-- Whole lines - including -" etc -->
@@ -2408,6 +2409,7 @@
   </WholeLines>
   <RegularExpressions>
     <RegEx find="([a-z]) Won't " replaceWith="$1 won't " />
-    <RegEx find=" L(\b)" replaceWith=" I$1" />
+    <RegEx find=" L([,\r\n :;!?]+)" replaceWith=" I$1" />
+    <RegEx find=" L.([,\r\n :;!?]+)" replaceWith=" I.$1" />
   </RegularExpressions>
 </OCRFixReplaceList>
