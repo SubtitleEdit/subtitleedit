@@ -776,7 +776,7 @@ namespace Nikse.SubtitleEdit.Core
             VlcWaveTranscodeSettings = "acodec=s16l"; // "acodec=s16l,channels=1,ab=64,samplerate=8000";
             MpvVideoOutput = Configuration.IsRunningOnLinux() ? "vaapi" : "direct3d";
             MpvHandlesPreviewText = true;
-            FFmpegSceneThreshold = "0.2";
+            FFmpegSceneThreshold = "0.4"; // thresshold for generating scene changes - 0.2 is sensitive (more scene change), 0.6 is less sensitive (fewer scene changes)
             UseTimeFormatHHMMSSFF = false;
             ClearStatusBarAfterSeconds = 10;
             MoveVideo100Or500MsPlaySmallSample = false;
