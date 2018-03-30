@@ -3538,8 +3538,8 @@ namespace Nikse.SubtitleEdit.Core
                 case "Main/Menu/Video/SmptTimeMode":
                     language.Main.Menu.Video.SmptTimeMode = reader.Value;
                     break;
-                case "Main/Menu/Video/ImportSceneChanges":
-                    language.Main.Menu.Video.ImportSceneChanges = reader.Value;
+                case "Main/Menu/Video/GenerateImportSceneChanges":
+                    language.Main.Menu.Video.GenerateImportSceneChanges = reader.Value;
                     break;
                 case "Main/Menu/Video/RemoveSceneChanges":
                     language.Main.Menu.Video.RemoveSceneChanges = reader.Value;
