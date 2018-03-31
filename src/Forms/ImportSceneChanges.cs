@@ -305,7 +305,7 @@ namespace Nikse.SubtitleEdit.Forms
                     double seconds;
                     if (double.TryParse(timeCode, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out seconds) && seconds > 0.2)
                     {
-                        _timeCodes.AppendLine(TimeCode.FromSeconds(seconds).ToShortDisplayString());
+                        _timeCodes.AppendLine(TimeCode.FromSeconds(seconds).ToShortString());
                         _lastSeconds = seconds;
                     }
                 }
