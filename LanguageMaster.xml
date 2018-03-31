@@ -721,6 +721,8 @@ Note: Do check free disk space.</WaveFileMalformed>
     <Seconds>Seconds</Seconds>
     <Milliseconds>Milliseconds</Milliseconds>
     <GetSceneChangesWithFfmpeg>Generate scene changes with FFmpeg</GetSceneChangesWithFfmpeg>
+    <Sensitivity>Sensitivity</Sensitivity>
+    <SensitivityDescription>Lower value gives more scene changes</SensitivityDescription>
   </ImportSceneChanges>
   <ImportText>
     <Title>Import plain text</Title>

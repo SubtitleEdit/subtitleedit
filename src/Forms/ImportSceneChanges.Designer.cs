@@ -39,6 +39,9 @@
             this.radioButtonHHMMSSMS = new System.Windows.Forms.RadioButton();
             this.buttonOpenText = new System.Windows.Forms.Button();
             this.groupBoxGenerateSceneChanges = new System.Windows.Forms.GroupBox();
+            this.labelThressholdDescription = new System.Windows.Forms.Label();
+            this.numericUpDownThreshold = new System.Windows.Forms.NumericUpDown();
+            this.labelFfmpegThreshold = new System.Windows.Forms.Label();
             this.buttonDownloadFfmpeg = new System.Windows.Forms.Button();
             this.buttonImportWithFfmpeg = new System.Windows.Forms.Button();
             this.textBoxGenerate = new System.Windows.Forms.TextBox();
@@ -47,6 +50,7 @@
             this.groupBoxImportText.SuspendLayout();
             this.groupBoxTimeCodes.SuspendLayout();
             this.groupBoxGenerateSceneChanges.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownThreshold)).BeginInit();
             this.SuspendLayout();
             // 
             // buttonCancel
@@ -174,6 +178,9 @@
             this.groupBoxGenerateSceneChanges.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxGenerateSceneChanges.Controls.Add(this.labelThressholdDescription);
+            this.groupBoxGenerateSceneChanges.Controls.Add(this.numericUpDownThreshold);
+            this.groupBoxGenerateSceneChanges.Controls.Add(this.labelFfmpegThreshold);
             this.groupBoxGenerateSceneChanges.Controls.Add(this.buttonDownloadFfmpeg);
             this.groupBoxGenerateSceneChanges.Controls.Add(this.buttonImportWithFfmpeg);
             this.groupBoxGenerateSceneChanges.Controls.Add(this.textBoxGenerate);
@@ -183,6 +190,53 @@
             this.groupBoxGenerateSceneChanges.TabIndex = 0;
             this.groupBoxGenerateSceneChanges.TabStop = false;
             this.groupBoxGenerateSceneChanges.Text = "Generate scene changes";
+            // 
+            // labelThressholdDescription
+            // 
+            this.labelThressholdDescription.AutoSize = true;
+            this.labelThressholdDescription.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.labelThressholdDescription.Location = new System.Drawing.Point(115, 384);
+            this.labelThressholdDescription.Name = "labelThressholdDescription";
+            this.labelThressholdDescription.Size = new System.Drawing.Size(195, 13);
+            this.labelThressholdDescription.TabIndex = 5;
+            this.labelThressholdDescription.Text = "Lower value gives more scene changes";
+            // 
+            // numericUpDownThreshold
+            // 
+            this.numericUpDownThreshold.DecimalPlaces = 1;
+            this.numericUpDownThreshold.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.numericUpDownThreshold.Location = new System.Drawing.Point(66, 382);
+            this.numericUpDownThreshold.Maximum = new decimal(new int[] {
+            9,
+            0,
+            0,
+            65536});
+            this.numericUpDownThreshold.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.numericUpDownThreshold.Name = "numericUpDownThreshold";
+            this.numericUpDownThreshold.Size = new System.Drawing.Size(43, 20);
+            this.numericUpDownThreshold.TabIndex = 4;
+            this.numericUpDownThreshold.Value = new decimal(new int[] {
+            4,
+            0,
+            0,
+            65536});
+            // 
+            // labelFfmpegThreshold
+            // 
+            this.labelFfmpegThreshold.AutoSize = true;
+            this.labelFfmpegThreshold.Location = new System.Drawing.Point(6, 384);
+            this.labelFfmpegThreshold.Name = "labelFfmpegThreshold";
+            this.labelFfmpegThreshold.Size = new System.Drawing.Size(54, 13);
+            this.labelFfmpegThreshold.TabIndex = 3;
+            this.labelFfmpegThreshold.Text = "Sensitivity";
             // 
             // buttonDownloadFfmpeg
             // 
@@ -199,7 +253,7 @@
             // 
             this.buttonImportWithFfmpeg.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonImportWithFfmpeg.Location = new System.Drawing.Point(6, 384);
+            this.buttonImportWithFfmpeg.Location = new System.Drawing.Point(6, 353);
             this.buttonImportWithFfmpeg.Name = "buttonImportWithFfmpeg";
             this.buttonImportWithFfmpeg.Size = new System.Drawing.Size(337, 23);
             this.buttonImportWithFfmpeg.TabIndex = 2;
@@ -207,7 +261,7 @@
             this.buttonImportWithFfmpeg.UseVisualStyleBackColor = true;
             this.buttonImportWithFfmpeg.Click += new System.EventHandler(this.buttonImportWithFfmpeg_Click);
             // 
-            // textBoxText
+            // textBoxGenerate
             // 
             this.textBoxGenerate.AllowDrop = true;
             this.textBoxGenerate.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -219,7 +273,7 @@
             this.textBoxGenerate.Name = "textBoxGenerate";
             this.textBoxGenerate.ReadOnly = true;
             this.textBoxGenerate.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBoxGenerate.Size = new System.Drawing.Size(337, 323);
+            this.textBoxGenerate.Size = new System.Drawing.Size(337, 299);
             this.textBoxGenerate.TabIndex = 1;
             // 
             // progressBar1
@@ -263,6 +317,7 @@
             this.groupBoxTimeCodes.PerformLayout();
             this.groupBoxGenerateSceneChanges.ResumeLayout(false);
             this.groupBoxGenerateSceneChanges.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownThreshold)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -285,5 +340,8 @@
         private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.Button buttonDownloadFfmpeg;
         private System.Windows.Forms.TextBox textBoxIImport;
+        private System.Windows.Forms.Label labelThressholdDescription;
+        private System.Windows.Forms.NumericUpDown numericUpDownThreshold;
+        private System.Windows.Forms.Label labelFfmpegThreshold;
     }
 }
