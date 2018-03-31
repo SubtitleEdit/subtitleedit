@@ -45,6 +45,7 @@
             this.buttonDownloadFfmpeg = new System.Windows.Forms.Button();
             this.buttonImportWithFfmpeg = new System.Windows.Forms.Button();
             this.textBoxGenerate = new System.Windows.Forms.TextBox();
+            this.textBoxLog = new System.Windows.Forms.TextBox();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.groupBoxImportText.SuspendLayout();
@@ -84,6 +85,7 @@
             this.groupBoxImportText.Controls.Add(this.textBoxIImport);
             this.groupBoxImportText.Controls.Add(this.groupBoxTimeCodes);
             this.groupBoxImportText.Controls.Add(this.buttonOpenText);
+            this.groupBoxImportText.Controls.Add(this.textBoxLog);
             this.groupBoxImportText.Location = new System.Drawing.Point(367, 12);
             this.groupBoxImportText.Name = "groupBoxImportText";
             this.groupBoxImportText.Size = new System.Drawing.Size(359, 412);
@@ -276,6 +278,21 @@
             this.textBoxGenerate.Size = new System.Drawing.Size(337, 299);
             this.textBoxGenerate.TabIndex = 1;
             // 
+            // textBoxLog
+            // 
+            this.textBoxLog.AllowDrop = true;
+            this.textBoxLog.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxLog.Location = new System.Drawing.Point(7, 19);
+            this.textBoxLog.MaxLength = 0;
+            this.textBoxLog.Multiline = true;
+            this.textBoxLog.Name = "textBoxLog";
+            this.textBoxLog.ReadOnly = true;
+            this.textBoxLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.textBoxLog.Size = new System.Drawing.Size(337, 387);
+            this.textBoxLog.TabIndex = 6;
+            // 
             // progressBar1
             // 
             this.progressBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
@@ -343,5 +360,6 @@
         private System.Windows.Forms.Label labelThressholdDescription;
         private System.Windows.Forms.NumericUpDown numericUpDownThreshold;
         private System.Windows.Forms.Label labelFfmpegThreshold;
+        private System.Windows.Forms.TextBox textBoxLog;
     }
 }

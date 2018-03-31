@@ -21,6 +21,8 @@ namespace Nikse.SubtitleEdit.Forms
         private double _lastSeconds;
         private static readonly Regex TimeRegex = new Regex(@"pts_time:\d+[.,]*\d*", RegexOptions.Compiled);
         private bool _abort;
+        private bool _pause;
+        private readonly StringBuilder _log;
 
         public ImportSceneChanges(VideoInfo videoInfo, string videoFileName)
         {
@@ -57,6 +59,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 numericUpDownThreshold.Value = thresshold;
             }
+            _log = new StringBuilder();
+            textBoxLog.Visible = false;
         }
 
         public sealed override string Text
@@ -205,7 +209,26 @@ namespace Nikse.SubtitleEdit.Forms
         private void ImportSceneChanges_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)
+            {
                 DialogResult = DialogResult.Cancel;
+            }
+            else if (e.KeyCode == Keys.F8)
+            {
+                if (_pause)
+                {
+                    _pause = false;
+                    textBoxLog.Visible = false;
+                    Cursor = Cursors.WaitCursor;
+                }
+                else
+                {
+                    Cursor = Cursors.Default;
+                    textBoxLog.Text = _log.ToString();
+                    _pause = true;
+                    textBoxLog.Visible = true;
+                    textBoxLog.BringToFront();
+                }
+            }
         }
 
         private void buttonImportWithFfmpeg_Click(object sender, EventArgs e)
@@ -237,6 +260,12 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     Application.DoEvents();
                     System.Threading.Thread.Sleep(100);
+
+                    if (_pause && !_abort)
+                    {
+                        continue;
+                    }
+
                     if (_lastSeconds > 0.1 && Math.Abs(lastUpdateSeconds - _lastSeconds) > 0 - 001)
                     {
                         lastUpdateSeconds = _lastSeconds;
@@ -253,7 +282,8 @@ namespace Nikse.SubtitleEdit.Forms
             Cursor = Cursors.Default;
             UpdateImportTextBox();
             buttonOK.Enabled = true;
-            buttonOK_Click(sender, e);
+            if (!_pause)
+                buttonOK_Click(sender, e);
         }
 
         private void UpdateImportTextBox()
@@ -267,6 +297,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (!string.IsNullOrWhiteSpace(outLine.Data))
             {
+                _log.AppendLine(outLine.Data);
                 var match = TimeRegex.Match(outLine.Data);
                 if (match.Success)
                 {
