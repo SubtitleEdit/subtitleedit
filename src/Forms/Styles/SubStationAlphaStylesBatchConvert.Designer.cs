@@ -719,7 +719,7 @@
             this.comboBoxFontName.Name = "comboBoxFontName";
             this.comboBoxFontName.Size = new System.Drawing.Size(188, 21);
             this.comboBoxFontName.TabIndex = 1;
-            this.comboBoxFontName.SelectedValueChanged += new System.EventHandler(this.comboBoxFontName_SelectedValueChanged);
+            this.comboBoxFontName.TextChanged += new System.EventHandler(this.comboBoxFontName_TextChanged);
             this.comboBoxFontName.KeyUp += new System.Windows.Forms.KeyEventHandler(this.comboBoxFontName_KeyUp);
             // 
             // labelFontSize

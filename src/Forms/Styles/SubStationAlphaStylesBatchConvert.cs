@@ -365,15 +365,17 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             }
         }
 
-        private void comboBoxFontName_SelectedValueChanged(object sender, EventArgs e)
+        private void comboBoxFontName_TextChanged(object sender, EventArgs e)
         {
-            if (_doUpdate)
+            var text = comboBoxFontName.Text;
+            if (_doUpdate && !string.IsNullOrEmpty(text))
             {
                 string name = CurrentStyleName;
-                SetSsaStyle(name, "fontname", comboBoxFontName.SelectedItem.ToString());
-                GeneratePreviewAndUpdateRawHeader();
+                SetSsaStyle(name, "fontname", text);
+                GeneratePreview();
             }
         }
+
 
         private void comboBoxFontName_KeyUp(object sender, KeyEventArgs e)
         {
