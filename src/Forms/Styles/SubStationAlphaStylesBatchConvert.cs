@@ -376,7 +376,6 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             }
         }
 
-
         private void comboBoxFontName_KeyUp(object sender, KeyEventArgs e)
         {
             if (_doUpdate)
