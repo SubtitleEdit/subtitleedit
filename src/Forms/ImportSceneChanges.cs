@@ -41,12 +41,22 @@ namespace Nikse.SubtitleEdit.Forms
             groupBoxTimeCodes.Text = Configuration.Settings.Language.ImportSceneChanges.TimeCodes;
             buttonDownloadFfmpeg.Text = Configuration.Settings.Language.Settings.DownloadFFmpeg;
             buttonImportWithFfmpeg.Text = Configuration.Settings.Language.ImportSceneChanges.GetSceneChangesWithFfmpeg;
+            labelFfmpegThreshold.Text = Configuration.Settings.Language.ImportSceneChanges.Sensitivity;
+            labelThressholdDescription.Text = Configuration.Settings.Language.ImportSceneChanges.SensitivityDescription;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             UiUtil.FixLargeFonts(this, buttonOK);
             buttonImportWithFfmpeg.Enabled = !string.IsNullOrWhiteSpace(Configuration.Settings.General.FFmpegLocation) && File.Exists(Configuration.Settings.General.FFmpegLocation);
+            numericUpDownThreshold.Enabled = !string.IsNullOrWhiteSpace(Configuration.Settings.General.FFmpegLocation) && File.Exists(Configuration.Settings.General.FFmpegLocation);
             var isFfmpegAvailable = !string.IsNullOrEmpty(Configuration.Settings.General.FFmpegLocation) && File.Exists(Configuration.Settings.General.FFmpegLocation);
             buttonDownloadFfmpeg.Visible = !isFfmpegAvailable;
+            decimal thresshold;
+            if (decimal.TryParse(Configuration.Settings.General.FFmpegSceneThreshold, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out thresshold) &&
+                thresshold >= numericUpDownThreshold.Minimum &&
+                thresshold <= numericUpDownThreshold.Maximum)
+            {
+                numericUpDownThreshold.Value = thresshold;
+            }
         }
 
         public sealed override string Text
@@ -182,6 +192,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
+            Configuration.Settings.General.FFmpegSceneThreshold = numericUpDownThreshold.Value.ToString(CultureInfo.InvariantCulture);
             DialogResult = DialogResult.OK;
         }
 
@@ -203,13 +214,14 @@ namespace Nikse.SubtitleEdit.Forms
             progressBar1.Visible = true;
             progressBar1.Style = ProgressBarStyle.Marquee;
             buttonImportWithFfmpeg.Enabled = false;
+            numericUpDownThreshold.Enabled = false;
             Cursor = Cursors.WaitCursor;
             textBoxGenerate.Text = string.Empty;
             _timeCodes = new StringBuilder();
             using (var process = new Process())
             {
                 process.StartInfo.FileName = Configuration.Settings.General.FFmpegLocation;
-                process.StartInfo.Arguments = $"-i \"{_videoFileName}\" -vf \"select=gt(scene\\," + Configuration.Settings.General.FFmpegSceneThreshold + "),showinfo\" -vsync vfr -f null -";
+                process.StartInfo.Arguments = $"-i \"{_videoFileName}\" -vf \"select=gt(scene\\," + numericUpDownThreshold.Value.ToString(CultureInfo.InvariantCulture) + "),showinfo\" -vsync vfr -f null -";
                 process.StartInfo.UseShellExecute = false;
                 process.StartInfo.RedirectStandardOutput = true;
                 process.StartInfo.RedirectStandardError = true;
@@ -283,6 +295,7 @@ namespace Nikse.SubtitleEdit.Forms
                     Configuration.Settings.General.FFmpegLocation = form.FFmpegPath;
                     buttonDownloadFfmpeg.Visible = false;
                     buttonImportWithFfmpeg.Enabled = true;
+                    numericUpDownThreshold.Enabled = true;
                 }
             }
         }

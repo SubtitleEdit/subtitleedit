@@ -801,6 +801,8 @@
             public string Seconds { get; set; }
             public string Milliseconds { get; set; }
             public string GetSceneChangesWithFfmpeg { get; set; }
+            public string Sensitivity { get; set; }
+            public string SensitivityDescription { get; set; }
         }
 
         public class ImportText
