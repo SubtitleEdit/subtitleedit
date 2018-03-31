@@ -864,13 +864,14 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             InitializeListView();
         }
 
-        private void comboBoxFontName_SelectedValueChanged(object sender, EventArgs e)
+        private void comboBoxFontName_TextChanged(object sender, EventArgs e)
         {
-            if (listViewStyles.SelectedItems.Count == 1 && _doUpdate)
+            var text = comboBoxFontName.Text;
+            if (_doUpdate && !string.IsNullOrEmpty(text) && listViewStyles.SelectedItems.Count > 0)
             {
-                listViewStyles.SelectedItems[0].SubItems[1].Text = comboBoxFontName.SelectedItem.ToString();
+                listViewStyles.SelectedItems[0].SubItems[1].Text = text;
                 string name = listViewStyles.SelectedItems[0].Text;
-                SetSsaStyle(name, "fontname", comboBoxFontName.SelectedItem.ToString());
+                SetSsaStyle(name, "fontname", text);
                 GeneratePreview();
             }
         }
@@ -1256,5 +1257,6 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             labelStatus.Text = string.Empty;
         }
 
+      
     }
 }
