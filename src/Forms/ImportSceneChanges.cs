@@ -233,6 +233,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonImportWithFfmpeg_Click(object sender, EventArgs e)
         {
+            groupBoxImportText.Enabled = false;
             buttonOK.Enabled = false;
             progressBar1.Visible = true;
             progressBar1.Style = ProgressBarStyle.Marquee;
@@ -327,6 +328,7 @@ namespace Nikse.SubtitleEdit.Forms
                     buttonDownloadFfmpeg.Visible = false;
                     buttonImportWithFfmpeg.Enabled = true;
                     numericUpDownThreshold.Enabled = true;
+                    Configuration.Settings.Save();
                 }
             }
         }
