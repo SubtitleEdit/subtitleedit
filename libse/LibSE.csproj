@@ -67,6 +67,7 @@
     <Compile Include="ContainerFormats\Matroska\MatroskaTrackInfo.cs" />
     <Compile Include="ContainerFormats\Mp4\Boxes\Box.cs" />
     <Compile Include="ContainerFormats\Mp4\Boxes\Moof.cs" />
+    <Compile Include="ContainerFormats\Mp4\SampleTimeInfo.cs" />
     <Compile Include="ContainerFormats\Mp4\Boxes\Tfdt.cs" />
     <Compile Include="ContainerFormats\Mp4\Boxes\Trun.cs" />
     <Compile Include="ContainerFormats\Mp4\Boxes\Traf.cs" />

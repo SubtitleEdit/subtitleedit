@@ -10968,27 +10968,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else
             {
-                for (int i = 0; i < mp4SubtitleTrack.Mdia.Minf.Stbl.EndTimeCodes.Count; i++)
-                {
-                    if (mp4SubtitleTrack.Mdia.Minf.Stbl.Texts.Count > i)
-                    {
-                        var start = TimeSpan.FromSeconds(mp4SubtitleTrack.Mdia.Minf.Stbl.StartTimeCodes[i]);
-                        var end = TimeSpan.FromSeconds(mp4SubtitleTrack.Mdia.Minf.Stbl.EndTimeCodes[i]);
-                        string text = mp4SubtitleTrack.Mdia.Minf.Stbl.Texts[i];
-                        var p = new Paragraph(text, start.TotalMilliseconds, end.TotalMilliseconds);
-                        if (p.EndTime.TotalMilliseconds - p.StartTime.TotalMilliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
-                            p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds;
-
-                        if (mp4SubtitleTrack.Mdia.IsClosedCaption && string.IsNullOrEmpty(text))
-                        {
-                            // do not add empty lines
-                        }
-                        else
-                        {
-                            subtitle.Paragraphs.Add(p);
-                        }
-                    }
-                }
+                subtitle.Paragraphs.AddRange(mp4SubtitleTrack.Mdia.Minf.Stbl.GetParagraphs());
             }
             return subtitle;
         }
@@ -10998,12 +10978,13 @@ namespace Nikse.SubtitleEdit.Forms
             if (mp4SubtitleTrack.Mdia.IsVobSubSubtitle)
             {
                 var subPicturesWithTimeCodes = new List<VobSubOcr.SubPicturesWithSeparateTimeCodes>();
-                for (int i = 0; i < mp4SubtitleTrack.Mdia.Minf.Stbl.EndTimeCodes.Count; i++)
+                var paragraphs = mp4SubtitleTrack.Mdia.Minf.Stbl.GetParagraphs();
+                for (int i = 0; i < paragraphs.Count; i++)
                 {
                     if (mp4SubtitleTrack.Mdia.Minf.Stbl.SubPictures.Count > i)
                     {
-                        var start = TimeSpan.FromSeconds(mp4SubtitleTrack.Mdia.Minf.Stbl.StartTimeCodes[i]);
-                        var end = TimeSpan.FromSeconds(mp4SubtitleTrack.Mdia.Minf.Stbl.EndTimeCodes[i]);
+                        var start = paragraphs[i].StartTime.TimeSpan;
+                        var end = paragraphs[i].EndTime.TimeSpan;
                         subPicturesWithTimeCodes.Add(new VobSubOcr.SubPicturesWithSeparateTimeCodes(mp4SubtitleTrack.Mdia.Minf.Stbl.SubPictures[i], start, end));
                     }
                 }
@@ -11040,27 +11021,7 @@ namespace Nikse.SubtitleEdit.Forms
                 _subtitleListViewIndex = -1;
                 FileNew();
 
-                for (int i = 0; i < mp4SubtitleTrack.Mdia.Minf.Stbl.EndTimeCodes.Count; i++)
-                {
-                    if (mp4SubtitleTrack.Mdia.Minf.Stbl.Texts.Count > i)
-                    {
-                        var start = TimeSpan.FromSeconds(mp4SubtitleTrack.Mdia.Minf.Stbl.StartTimeCodes[i]);
-                        var end = TimeSpan.FromSeconds(mp4SubtitleTrack.Mdia.Minf.Stbl.EndTimeCodes[i]);
-                        string text = mp4SubtitleTrack.Mdia.Minf.Stbl.Texts[i];
-                        var p = new Paragraph(text, start.TotalMilliseconds, end.TotalMilliseconds);
-                        if (p.EndTime.TotalMilliseconds - p.StartTime.TotalMilliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
-                            p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds;
-
-                        if (mp4SubtitleTrack.Mdia.IsClosedCaption && string.IsNullOrEmpty(text))
-                        {
-                            // do not add empty lines
-                        }
-                        else
-                        {
-                            _subtitle.Paragraphs.Add(p);
-                        }
-                    }
-                }
+                _subtitle.Paragraphs.AddRange(mp4SubtitleTrack.Mdia.Minf.Stbl.GetParagraphs());
 
                 SetEncoding(Encoding.UTF8);
                 ShowStatus(_language.SubtitleImportedFromMatroskaFile);

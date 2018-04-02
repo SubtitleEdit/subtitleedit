@@ -9,17 +9,23 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
 {
     public class Stbl : Box
     {
-        public List<string> Texts = new List<string>();
-        public List<SubPicture> SubPictures = new List<SubPicture>();
-        public List<double> StartTimeCodes = new List<double>();
-        public List<double> EndTimeCodes = new List<double>();
-        public ulong StszSampleCount = 0;
-        private Mdia _mdia;
+        public List<string> Texts;
+        public List<SubPicture> SubPictures;
+        public ulong StszSampleCount;
+        public ulong TimeScale { get; set; }
+        private readonly Mdia _mdia;
+        public List<uint> SampleSizes;
+        public List<SampleTimeInfo> Ssts { get; set; }
 
         public Stbl(Stream fs, ulong maximumLength, ulong timeScale, string handlerType, Mdia mdia)
         {
+            TimeScale = timeScale;
             _mdia = mdia;
             Position = (ulong)fs.Position;
+            Ssts = new List<SampleTimeInfo>();
+            SampleSizes = new List<uint>();
+            Texts = new List<string>();
+            SubPictures = new List<SubPicture>();
             while (fs.Position < (long)maximumLength)
             {
                 if (!InitializeSizeAndName(fs))
@@ -37,7 +43,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                     {
                         uint offset = GetUInt(8 + i * 4);
                         if (lastOffset + 5 < offset)
-                            ReadText(fs, offset, handlerType);
+                            ReadText(fs, offset, handlerType, i);
                         lastOffset = offset;
                     }
                 }
@@ -53,7 +59,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                     {
                         ulong offset = GetUInt64(8 + i * 8);
                         if (lastOffset + 8 < offset)
-                            ReadText(fs, offset, handlerType);
+                            ReadText(fs, offset, handlerType, i);
                         lastOffset = offset;
                     }
                 }
@@ -70,6 +76,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                         if (12 + i * 4 + 4 < Buffer.Length)
                         {
                             uint sampleSize = GetUInt(12 + i * 4);
+                            SampleSizes.Add(sampleSize);
                         }
                     }
                 }
@@ -81,21 +88,13 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                     fs.Read(Buffer, 0, Buffer.Length);
                     int version = Buffer[0];
                     uint numberOfSampleTimes = GetUInt(4);
-                    double totalTime = 0;
                     if (_mdia.IsClosedCaption)
                     {
                         for (int i = 0; i < numberOfSampleTimes; i++)
                         {
                             uint sampleCount = GetUInt(8 + i * 8);
                             uint sampleDelta = GetUInt(12 + i * 8);
-                            for (int j = 0; j < sampleCount; j++)
-                            {
-                                totalTime += sampleDelta / (double)timeScale;
-                                if (StartTimeCodes.Count > 0)
-                                    EndTimeCodes[EndTimeCodes.Count - 1] = totalTime - 0.001;
-                                StartTimeCodes.Add(totalTime);
-                                EndTimeCodes.Add(totalTime + 2.5);
-                            }
+                            Ssts.Add(new SampleTimeInfo { SampleCount = sampleCount, SampleDelta = sampleDelta });
                         }
                     }
                     else
@@ -104,11 +103,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                         {
                             uint sampleCount = GetUInt(8 + i * 8);
                             uint sampleDelta = GetUInt(12 + i * 8);
-                            totalTime += sampleDelta / (double)timeScale;
-                            if (StartTimeCodes.Count <= EndTimeCodes.Count)
-                                StartTimeCodes.Add(totalTime);
-                            else
-                                EndTimeCodes.Add(totalTime);
+                            Ssts.Add(new SampleTimeInfo { SampleCount = sampleCount, SampleDelta = sampleDelta });
                         }
                     }
                 }
@@ -133,8 +128,11 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
             }
         }
 
-        private void ReadText(Stream fs, ulong offset, string handlerType)
+        private void ReadText(Stream fs, ulong offset, string handlerType, int index)
         {
+            if (handlerType == "vide")
+                return;
+
             fs.Seek((long)offset, SeekOrigin.Begin);
             var data = new byte[4];
             fs.Read(data, 0, 2);
@@ -152,6 +150,11 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
             }
             else
             {
+                if (handlerType == "text" && index + 1 < SampleSizes.Count && SampleSizes[index + 1] <= 2)
+                {
+                    return;
+                }
+
                 if (textSize == 0)
                 {
                     fs.Read(data, 2, 2);
@@ -189,11 +192,41 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                     }
                     Texts.Add(text.Replace(Environment.NewLine, "\n").Replace("\n", Environment.NewLine));
                 }
-                else
+            }
+        }
+
+        public List<Paragraph> GetParagraphs()
+        {
+            var paragraphs = new List<Paragraph>();
+            double totalTime = 0;
+            var allTimes = new List<double>();
+
+            // expand time codes
+            foreach (var timeInfo in Ssts)
+            {
+                for (var i = 0; i < timeInfo.SampleCount; i++)
                 {
-                    Texts.Add(string.Empty);
+                    totalTime += timeInfo.SampleDelta / (double)TimeScale;
+                    allTimes.Add(totalTime);
                 }
             }
+
+            var index = 0;
+            var textIndex = 0;
+            while (index < allTimes.Count - 1)
+            {
+                if (index > 0 && SampleSizes[index + 1] == 2)
+                    index++;
+                var timeStart = allTimes[index];
+                var timeEnd = timeStart + 2;
+                if (index + 1 < allTimes.Count)
+                    timeEnd = allTimes[index + 1];
+                if (Texts.Count > textIndex)
+                    paragraphs.Add(new Paragraph(Texts[textIndex], timeStart * 1000.0, timeEnd * 1000.0));
+                index++;
+                textIndex++;
+            }
+            return paragraphs;
         }
 
     }
