@@ -8,19 +8,13 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public partial class VideoPlayerUndocked : PositionAndSizeForm
     {
-        private Main _mainForm = null;
-        private Controls.VideoPlayerContainer _videoPlayerContainer;
-        private Keys _redockKeys;
+        private readonly Main _mainForm;
+        private readonly Controls.VideoPlayerContainer _videoPlayerContainer;
+        private readonly Keys _redockKeys;
 
         public bool RedockOnFullscreenEnd { get; set; }
 
-        public Panel PanelContainer
-        {
-            get
-            {
-                return panelContainer;
-            }
-        }
+        public Panel PanelContainer => panelContainer;
 
         public VideoPlayerUndocked(Main main, Controls.VideoPlayerContainer videoPlayerContainer)
         {
@@ -28,7 +22,7 @@ namespace Nikse.SubtitleEdit.Forms
             InitializeComponent();
             UiUtil.FixFonts(this);
             _mainForm = main;
-            this.Icon = (Icon)_mainForm.Icon.Clone();
+            Icon = (Icon)_mainForm.Icon.Clone();
             _videoPlayerContainer = videoPlayerContainer;
             _redockKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoToggleVideoControls);
             RedockOnFullscreenEnd = false;
@@ -144,13 +138,7 @@ namespace Nikse.SubtitleEdit.Forms
             timer1.Start();
         }
 
-        internal bool IsFullscreen
-        {
-            get
-            {
-                return WindowState == FormWindowState.Maximized;
-            }
-        }
+        internal bool IsFullscreen => WindowState == FormWindowState.Maximized;
 
         internal void NoFullscreen()
         {
@@ -162,12 +150,13 @@ namespace Nikse.SubtitleEdit.Forms
             _videoPlayerContainer.ShowFullscreenButton = Configuration.Settings.General.VideoPlayerShowFullscreenButton;
             _videoPlayerContainer.ShowNonFullScreenControls();
             if (RedockOnFullscreenEnd)
-                this.Close();
+                Close();
         }
 
         private void VideoPlayerUndocked_Shown(object sender, EventArgs e)
         {
-            this.Refresh();
+            Refresh();
         }
+
     }
 }
