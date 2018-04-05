@@ -5270,26 +5270,17 @@ namespace Nikse.SubtitleEdit.Forms
             if (replace)
             {
                 var tb = GetFindRepaceTextBox();
-                if (_findHelper.MatchInOriginal)
+                tb.SelectionStart = _findHelper.SelectedPosition;
+                tb.SelectionLength = _findHelper.FindTextLength;
+                if (_findHelper.FindReplaceType.FindType == FindType.RegEx)
                 {
-                    textBoxListViewTextAlternate.SelectionStart = _findHelper.SelectedPosition;
-                    textBoxListViewTextAlternate.SelectionLength = _findHelper.FindTextLength;
-                    textBoxListViewTextAlternate.SelectedText = _findHelper.ReplaceText;
+                    ReplaceViaRegularExpression(tb, replaceAll);
+                    _findHelper.SelectedPosition += _findHelper.FindTextLength;
                 }
                 else
                 {
-                    tb.SelectionStart = _findHelper.SelectedPosition;
-                    tb.SelectionLength = _findHelper.FindTextLength;
-                    if (_findHelper.FindReplaceType.FindType == FindType.RegEx)
-                    {
-                        ReplaceViaRegularExpression(tb, replaceAll);
-                        _findHelper.SelectedPosition += _findHelper.FindTextLength;
-                    }
-                    else
-                    {
-                        tb.SelectedText = _findHelper.ReplaceText;
-                        _findHelper.SelectedPosition += _findHelper.ReplaceText.Length;
-                    }
+                    tb.SelectedText = _findHelper.ReplaceText;
+                    _findHelper.SelectedPosition += _findHelper.ReplaceText.Length;
                 }
             }
         }
@@ -7657,6 +7648,8 @@ namespace Nikse.SubtitleEdit.Forms
 
             _listViewTextUndoIndex = -1;
             SubtitleListView1SelectedIndexChange();
+            if (_findHelper != null)
+                _findHelper.MatchInOriginal = false;
         }
 
         private void ShowLineInformationListView()

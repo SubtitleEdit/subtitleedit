@@ -140,7 +140,8 @@ namespace Nikse.SubtitleEdit.Logic
                         }
                         position = 0;
                     }
-                    MatchInOriginal = false;
+                    if (index < subtitle.Paragraphs.Count -1)
+                        MatchInOriginal = false;
 
                     if (originalSubtitle != null && allowEditOfOriginalSubtitle)
                     {
