@@ -19,6 +19,7 @@ using Nikse.SubtitleEdit.Logic.Networking;
 using Nikse.SubtitleEdit.Logic.VideoPlayers;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -18588,6 +18589,12 @@ namespace Nikse.SubtitleEdit.Forms
 
             undockVideoControlsToolStripMenuItem.Visible = true;
             redockVideoControlsToolStripMenuItem.Visible = false;
+            SubtitleListview1.SelectIndexAndEnsureVisible(_subtitleListViewIndex, true);
+        }
+
+        private void Bw_DoWork(object sender, DoWorkEventArgs e)
+        {
+            System.Threading.Thread.Sleep(1200);
         }
 
         internal void SetWaveformToggleOff()
@@ -19979,7 +19986,7 @@ namespace Nikse.SubtitleEdit.Forms
                     else if (p.Duration.TotalSeconds < 10 && p.StartTime.TotalMilliseconds > ms)
                     {
                         mediaPlayer.VideoPlayer.CurrentPosition = p.StartTime.TotalSeconds;
-                        SubtitleListview1.SelectIndexAndEnsureVisible(_subtitle.GetIndex(p));
+                        SubtitleListview1.SelectIndexAndEnsureVisible(_subtitle.GetIndex(p), true);
                         return;
                     }
                 }
@@ -19992,7 +19999,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 double ms = mediaPlayer.VideoPlayer.CurrentPosition * TimeCode.BaseUnit;
                 int i = _subtitle.Paragraphs.Count - 1;
-                while (i > 0)
+                while (i >= 0)
                 {
                     var p = _subtitle.Paragraphs[i];
                     if (p.EndTime.TotalMilliseconds > ms && p.StartTime.TotalMilliseconds < ms)
@@ -20002,7 +20009,7 @@ namespace Nikse.SubtitleEdit.Forms
                     else if (p.Duration.TotalSeconds < 10 && p.StartTime.TotalMilliseconds < ms)
                     {
                         mediaPlayer.VideoPlayer.CurrentPosition = p.StartTime.TotalSeconds;
-                        SubtitleListview1.SelectIndexAndEnsureVisible(_subtitle.GetIndex(p));
+                        SubtitleListview1.SelectIndexAndEnsureVisible(_subtitle.GetIndex(p), true);
                         return;
                     }
                     i--;
