@@ -241,5 +241,11 @@ namespace Nikse.SubtitleEdit.Core
             return string.Join(Environment.NewLine, text.SplitToLines());
         }
 
+        public static string ReplaceNewLineSafeSingle(Regex regularExpression, string text, string replaceWith, int startIndex)
+        {
+            text = regularExpression.Replace(string.Join(Environment.NewLine, text.SplitToLines()), replaceWith, 1, startIndex);
+            return string.Join(Environment.NewLine, text.SplitToLines());
+        }
+
     }
 }

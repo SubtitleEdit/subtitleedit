@@ -5018,7 +5018,7 @@ namespace Nikse.SubtitleEdit.Forms
                         if (_findHelper.FindNext(_subtitle, _subtitleAlternate, _findHelper.SelectedIndex, _findHelper.SelectedPosition, Configuration.Settings.General.AllowEditOfOriginalSubtitle))
                         {
                             textBoxListViewText.Visible = false;
-                            SetTextForFindAndReplace(true);
+                            SetTextForFindAndReplace(true, replaceDialog.ReplaceAll);
                             searchStringFound = true;
                             replaceCount++;
                         }
@@ -5056,11 +5056,11 @@ namespace Nikse.SubtitleEdit.Forms
                                     _findHelper.StartLineIndex = 0;
                                     _findHelper.SelectedIndex = 0;
                                     _findHelper.SelectedPosition = 0;
-                                    SetTextForFindAndReplace(false);
+                                    SetTextForFindAndReplace(false, replaceDialog.ReplaceAll);
 
                                     if (_findHelper.FindNext(_subtitle, _subtitleAlternate, _findHelper.SelectedIndex, _findHelper.SelectedPosition, Configuration.Settings.General.AllowEditOfOriginalSubtitle))
                                     {
-                                        SetTextForFindAndReplace(true);
+                                        SetTextForFindAndReplace(true, replaceDialog.ReplaceAll);
                                         _findHelper.SelectedPosition += _findHelper.ReplaceText.Length;
                                         searchStringFound = true;
                                         replaceCount++;
@@ -5131,17 +5131,20 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         var tb = GetFindRepaceTextBox();
                         string msg = string.Empty;
-                        if (_findHelper.FindReplaceType.FindType == FindType.RegEx && _findHelper.Success)
+                        if (_findHelper.FindReplaceType.FindType == FindType.RegEx)
                         {
-                            if (_findHelper.FindReplaceType.FindType == FindType.RegEx)
+                            if (_findHelper.Success)
                             {
-                                ReplaceViaRegularExpression(tb);
+                                if (_findHelper.FindReplaceType.FindType == FindType.RegEx)
+                                {
+                                    ReplaceViaRegularExpression(tb, replaceDialog.ReplaceAll);
+                                }
+                                else
+                                {
+                                    tb.SelectedText = _findHelper.ReplaceText;
+                                }
+                                msg = _language.OneReplacementMade + " ";
                             }
-                            else
-                            {
-                                tb.SelectedText = _findHelper.ReplaceText;
-                            }
-                            msg = _language.OneReplacementMade + " ";
                         }
                         else if (tb.SelectionLength == _findHelper.FindTextLength)
                         {
@@ -5156,11 +5159,7 @@ namespace Nikse.SubtitleEdit.Forms
                             tb.Focus();
                             tb.SelectionStart = _findHelper.SelectedPosition;
                             tb.SelectionLength = _findHelper.FindTextLength;
-                            if (_findHelper.FindReplaceType.FindType == FindType.RegEx)
-                            {
-                                _findHelper.SelectedPosition += _findHelper.FindTextLength;
-                            }
-                            else
+                            if (_findHelper.FindReplaceType.FindType != FindType.RegEx)
                             {
                                 _findHelper.SelectedPosition += _findHelper.ReplaceText.Length;
                             }
@@ -5225,17 +5224,39 @@ namespace Nikse.SubtitleEdit.Forms
             replaceDialog.Dispose();
         }
 
-        private void ReplaceViaRegularExpression(TextBox tb)
+        private void ReplaceViaRegularExpression(TextBox tb, bool replaceAll)
         {
             var r = new Regex(_findHelper.FindText, RegexOptions.Multiline);
-            string result = RegexUtils.ReplaceNewLineSafe(r, tb.Text, _findHelper.ReplaceText);
-            if (result != tb.Text)
+            if (replaceAll)
             {
-                tb.Text = result;
+                string result = RegexUtils.ReplaceNewLineSafe(r, tb.Text, _findHelper.ReplaceText);
+                if (result != tb.Text)
+                {
+                    tb.Text = result;
+                }
+                _findHelper.SelectedPosition = tb.Text.Length;
+            }
+            else
+            {
+                string result = RegexUtils.ReplaceNewLineSafeSingle(r, tb.Text, _findHelper.ReplaceText, _findHelper.SelectedPosition);
+                if (result != tb.Text)
+                {
+                    var match = r.Match(string.Join(Environment.NewLine, tb.Text.SplitToLines()));
+                    if (match != null && match.Success && !_findHelper.FindText.StartsWith("^"))
+                    {
+                        var add = Math.Abs(match.Length - _findHelper.ReplaceText.Length);
+                        _findHelper.SelectedPosition += add;
+                    }
+                    tb.Text = result;
+                }
+                if (_findHelper.FindText.StartsWith("^"))
+                {
+                    _findHelper.SelectedPosition++;
+                }
             }
         }
 
-        private void SetTextForFindAndReplace(bool replace)
+        private void SetTextForFindAndReplace(bool replace, bool replaceAll)
         {
             _subtitleListViewIndex = _findHelper.SelectedIndex;
             textBoxListViewText.Text = _subtitle.Paragraphs[_findHelper.SelectedIndex].Text;
@@ -5261,7 +5282,7 @@ namespace Nikse.SubtitleEdit.Forms
                     tb.SelectionLength = _findHelper.FindTextLength;
                     if (_findHelper.FindReplaceType.FindType == FindType.RegEx)
                     {
-                        ReplaceViaRegularExpression(tb);
+                        ReplaceViaRegularExpression(tb, replaceAll);
                         _findHelper.SelectedPosition += _findHelper.FindTextLength;
                     }
                     else

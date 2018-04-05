@@ -259,7 +259,7 @@ namespace Nikse.SubtitleEdit.Logic
                     MessageBox.Show(Configuration.Settings.Language.General.RegularExpressionIsNotValid);
                     return count;
                 }
-                _regEx = new Regex(findText);
+                _regEx = new Regex(findText, RegexOptions.Multiline);
             }
             var comparison = GetComparison();
             foreach (var p in subtitle.Paragraphs)
