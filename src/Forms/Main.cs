@@ -5242,7 +5242,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (result != tb.Text)
                 {
                     var match = r.Match(string.Join(Environment.NewLine, tb.Text.SplitToLines()));
-                    if (match != null && match.Success && !_findHelper.FindText.StartsWith("^"))
+                    if (match != null && match.Success && !_findHelper.FindText.StartsWith("^") && _findHelper.ReplaceText.Length > 0)
                     {
                         var add = Math.Abs(match.Length - _findHelper.ReplaceText.Length);
                         _findHelper.SelectedPosition += add;
