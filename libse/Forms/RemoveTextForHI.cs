@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.Forms
@@ -220,6 +221,25 @@ namespace Nikse.SubtitleEdit.Core.Forms
                                         var content = line.Substring(indexOfColon + 1).Trim();
                                         if (content.Length > 0)
                                         {
+                                            if (content.StartsWith("</font>") &&
+                                                Utilities.CountTagInText(preStrippable.Pre, "<font ") >
+                                                Utilities.CountTagInText(preStrippable.Pre, "</font>"))
+                                            {
+                                                content = content.Remove(0, "</font>".Length);
+                                            }
+                                            else if (content.StartsWith("</i>") &&
+                                                     Utilities.CountTagInText(preStrippable.Pre, "<i>") >
+                                                     Utilities.CountTagInText(preStrippable.Pre, "</i>"))
+                                            {
+                                                content = content.Remove(0, "</i>".Length);
+                                            }
+                                            else if (content.StartsWith("</b>") &&
+                                                     Utilities.CountTagInText(preStrippable.Pre, "<b>") >
+                                                     Utilities.CountTagInText(preStrippable.Pre, "</b>"))
+                                            {
+                                                content = content.Remove(0, "</b>".Length);
+                                            }
+
                                             if (count == 0 && content[0].ToString() != content[0].ToString().ToUpperInvariant())
                                             {
                                                 content = content[0].ToString().ToUpperInvariant() + content.Remove(0, 1);
@@ -632,7 +652,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 _interjectionRemoveContext.Interjections = _interjections;
                 text = _removeInterjection.Invoke(_interjectionRemoveContext);
             }
-            
+
             st = new StrippableText(text, pre, post);
             text = st.StrippedText;
             if (StartsAndEndsWithHearImpairedTags(text))
