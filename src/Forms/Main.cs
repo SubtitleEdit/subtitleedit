@@ -5004,6 +5004,7 @@ namespace Nikse.SubtitleEdit.Forms
                 ShowStatus(string.Format(_language.SearchingForXFromLineY, _findHelper.FindText, _subtitleListViewIndex + 1));
                 int replaceCount = 0;
                 bool searchStringFound = true;
+                int stopAtIndex = int.MaxValue;
                 while (searchStringFound)
                 {
                     searchStringFound = false;
@@ -5054,6 +5055,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     msgText = string.Format(_language.ReplaceXContinue, replaceCount);
                                 if (MessageBox.Show(msgText, _language.ReplaceContinueTitle, MessageBoxButtons.YesNo) == DialogResult.Yes)
                                 {
+                                    stopAtIndex = _findHelper.SelectedIndex;
                                     _findHelper.StartLineIndex = 0;
                                     _findHelper.SelectedIndex = 0;
                                     _findHelper.SelectedPosition = 0;
@@ -5211,6 +5213,8 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         return;
                     }
+                    if (_findHelper.SelectedIndex >= stopAtIndex)
+                        break;
                 }
 
                 ShowSource();
