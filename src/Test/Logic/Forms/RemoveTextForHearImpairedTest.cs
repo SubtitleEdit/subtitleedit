@@ -1658,6 +1658,26 @@ namespace Test.Logic.Forms
             Assert.AreEqual("Not, it's... not.", actual);
         }
 
+        [TestMethod]
+        public void RemoveTextBetweenBeforeColonFontTag()
+        {
+            var target = GetRemoveTextForHiLib();
+            target.Settings.RemoveTextBeforeColon = true;
+            target.Settings.RemoveTextBetweenParentheses = true;
+            string actual = target.RemoveColon("<font color=\"#404040\">MAN:</font> Gotta be ready before nightfall.");
+            Assert.AreEqual("Gotta be ready before nightfall.", actual);
+        }
+
+        [TestMethod]
+        public void RemoveTextBetweenBeforeColonItalicTag()
+        {
+            var target = GetRemoveTextForHiLib();
+            target.Settings.RemoveTextBeforeColon = true;
+            target.Settings.RemoveTextBetweenParentheses = true;
+            string actual = target.RemoveColon("<i>MAN:</i> Gotta be ready before nightfall.");
+            Assert.AreEqual("Gotta be ready before nightfall.", actual);
+        }
+
         #region Additional test attributes
 
         //
