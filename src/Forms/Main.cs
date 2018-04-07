@@ -4636,7 +4636,7 @@ namespace Nikse.SubtitleEdit.Forms
         }
 
         private void Find()
-        {
+        {            
             string selectedText;
             if (tabControlSubtitle.SelectedIndex == TabControlSourceView)
             {
@@ -4670,10 +4670,13 @@ namespace Nikse.SubtitleEdit.Forms
                 findDialog.Initialize(selectedText, _findHelper);
                 if (findDialog.ShowDialog(this) != DialogResult.OK)
                 {
+                    if (_findHelper != null)
+                        _findHelper.InProgress = false;
                     return;
                 }
 
                 _findHelper = findDialog.GetFindDialogHelper(_subtitleListViewIndex);
+                _findHelper.InProgress = true;
                 if (!string.IsNullOrWhiteSpace(_findHelper.FindText))
                 {
                     if (Configuration.Settings.Tools.FindHistory.Count == 0 || Configuration.Settings.Tools.FindHistory[0] != _findHelper.FindText)
@@ -4723,6 +4726,8 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
+            if (_findHelper != null)
+                _findHelper.InProgress = false;
         }
 
         private void FindNextToolStripMenuItemClick(object sender, EventArgs e)
@@ -4740,6 +4745,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (_findHelper != null)
             {
+                _findHelper.InProgress = true;
                 TextBox tb = GetFindRepaceTextBox();
                 if (tabControlSubtitle.SelectedIndex == TabControlListView)
                 {
@@ -4804,6 +4810,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 Find();
             }
+            if (_findHelper != null)
+                _findHelper.InProgress = false;
         }
 
         private void ToolStripButtonReplaceClick(object sender, EventArgs e)
