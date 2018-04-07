@@ -4636,7 +4636,7 @@ namespace Nikse.SubtitleEdit.Forms
         }
 
         private void Find()
-        {            
+        {
             string selectedText;
             if (tabControlSubtitle.SelectedIndex == TabControlSourceView)
             {
@@ -4915,6 +4915,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SourceListReplaceAll(ReplaceDialog replaceDialog, FindReplaceDialogHelper findHelper)
         {
+            if (_findHelper.FindReplaceType.FindType == FindType.RegEx)
+            {
+                SourceListReplaceAllRegEx(replaceDialog, findHelper);
+                return;
+            }
+
             int replaceCount = 0;
             bool searchStringFound = true;
             int start = textBoxSource.SelectionStart;
@@ -4956,8 +4962,57 @@ namespace Nikse.SubtitleEdit.Forms
             replaceDialog.Dispose();
         }
 
+        private void SourceListReplaceAllRegEx(ReplaceDialog replaceDialog, FindReplaceDialogHelper findHelper)
+        {
+            var start = textBoxSource.SelectionStart;
+            var s = textBoxSource.Text;
+            var r = new Regex(_findHelper.FindText, RegexOptions.Multiline);
+            var matches = r.Matches(s, start);
+
+            if (matches.Count > 0)
+            {
+                MakeHistoryForUndo(string.Format(_language.BeforeReplace, _findHelper.FindText));
+            }
+
+            var result = r.Replace(string.Join(Environment.NewLine, s.SplitToLines()), _findHelper.ReplaceText, int.MaxValue, start);
+            result = string.Join(Environment.NewLine, result.SplitToLines());
+
+            // update UI
+            textBoxSource.Text = result;
+            ShowStatus(matches.Count == 0 ? _language.FoundNothingToReplace : string.Format(_language.ReplaceCountX, matches.Count));
+
+            // replace again from beginning
+            if (start > 1)
+            {
+                string msgText = _language.ReplaceContinueNotFound;
+                if (matches.Count > 0)
+                    msgText = string.Format(_language.ReplaceXContinue, matches.Count);
+                if (MessageBox.Show(msgText, _language.ReplaceContinueTitle, MessageBoxButtons.YesNo) == DialogResult.Yes)
+                {
+                    s = result.Substring(0, start - 1);
+                    var rest = result.Remove(0, start - 1);
+                    if (s.EndsWith('\r') && rest.StartsWith('\n'))
+                    { // don't split "\r\n"
+                        s = s.Substring(0, s.Length - 1);
+                        rest = '\r' + rest;
+                    }
+
+                    matches = r.Matches(s);
+                    result = r.Replace(string.Join(Environment.NewLine, s.SplitToLines()), _findHelper.ReplaceText);
+                    result = string.Join(Environment.NewLine, result.SplitToLines());
+
+                    // update UI
+                    textBoxSource.Text = result + rest;
+                    ShowStatus(matches.Count == 0 ? _language.FoundNothingToReplace : string.Format(_language.ReplaceCountX, matches.Count));
+                }
+            }
+
+            replaceDialog.Dispose();
+            ReloadFromSourceView();
+        }
+
         private void ReplaceListView(ReplaceDialog replaceDialog)
-        {            
+        {
             SaveSubtitleListviewIndices();
             int firstIndex = FirstSelectedIndex;
             bool isFirst = true;
@@ -5040,7 +5095,6 @@ namespace Nikse.SubtitleEdit.Forms
                             if (_findHelper.SelectedIndex >= stopAtIndex)
                                 break;
 
-                   //         textBoxListViewText.Visible = false;
                             SetTextForFindAndReplace(true, replaceDialog.ReplaceAll);
                             searchStringFound = true;
                             replaceCount++;
@@ -9314,7 +9368,11 @@ namespace Nikse.SubtitleEdit.Forms
                 var frames = SubtitleFormat.MillisecondsToFrames(seconds % 1.0 * TimeCode.BaseUnit);
                 var extraSeconds = (int)(frames / Configuration.Settings.General.CurrentFrameRate);
                 var restFrames = (int)(frames % Configuration.Settings.General.CurrentFrameRate);
-                numericUpDownDuration.Value = (decimal)(wholeSeconds + extraSeconds + restFrames / 100.0);
+                var v = (decimal)(wholeSeconds + extraSeconds + restFrames / 100.0);
+                if (v >= numericUpDownDuration.Minimum && v <= numericUpDownDuration.Maximum)
+                {
+                    numericUpDownDuration.Value = (decimal)(wholeSeconds + extraSeconds + restFrames / 100.0);
+                }
             }
             else
             {
