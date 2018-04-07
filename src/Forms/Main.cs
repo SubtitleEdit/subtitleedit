@@ -4974,8 +4974,7 @@ namespace Nikse.SubtitleEdit.Forms
                 MakeHistoryForUndo(string.Format(_language.BeforeReplace, _findHelper.FindText));
             }
 
-            var result = r.Replace(string.Join(Environment.NewLine, s.SplitToLines()), _findHelper.ReplaceText, int.MaxValue, start);
-            result = string.Join(Environment.NewLine, result.SplitToLines());
+            var result = RegexUtils.ReplaceNewLineSafe(r, s, _findHelper.ReplaceText, int.MaxValue, start);
 
             // update UI
             textBoxSource.Text = result;
@@ -4998,8 +4997,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
 
                     matches = r.Matches(s);
-                    result = r.Replace(string.Join(Environment.NewLine, s.SplitToLines()), _findHelper.ReplaceText);
-                    result = string.Join(Environment.NewLine, result.SplitToLines());
+                    result = RegexUtils.ReplaceNewLineSafe(r, s, _findHelper.ReplaceText);
 
                     // update UI
                     textBoxSource.Text = result + rest;
@@ -5325,7 +5323,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else
             {
-                string result = RegexUtils.ReplaceNewLineSafeSingle(r, tb.Text, _findHelper.ReplaceText, _findHelper.SelectedPosition);
+                string result = RegexUtils.ReplaceNewLineSafe(r, tb.Text, _findHelper.ReplaceText, 1, _findHelper.SelectedPosition);
                 if (result != tb.Text)
                 {
                     var match = r.Match(string.Join(Environment.NewLine, tb.Text.SplitToLines()));
