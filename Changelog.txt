@@ -5,7 +5,7 @@
    * Add new subtitle format
    * Add support for mp4 dash ttml - thx Octirius
    * Add shortcut for toggle music symbols - thx robtor
-   * Add shortcuts "Batchconvert" + "waveform split"
+   * Add shortcuts "Batch convert" + "waveform split"
    * Add new setting: volume boost
    * Add new setting: "save as..." take file name from
    * Font can be different for subtitle list view / text box
@@ -25,6 +25,7 @@
    * Ctrl+a/ctrl+d/ctrl+shift+i works in more lists - thx tormento
    * Remember OCR spell check dictionary for tesseract - thx raymondjpg
    * Add some style support to "Modify selection"
+   * Minor improvements for Video -> Generate/Import scene changes
 * FIXED:
    * Fix "Add to names list" in OCR spell check - thx daed-alus/Sergiy
    * Fix "Generate scene changes" decimal point issue - thx Max
@@ -42,6 +43,11 @@
    * Fix image render issue regarding italic/font - thx Cemal
    * Fix bottom margin in batch image export - thx Cemal
    * Fix possible crash in list view - thx lambdacore12
+   * Fix for "Remove text for HI" - thx Lynton
+   * Fix list view focus after video fullscreen - thx OmrSi
+   * Fix File -> Open (Keep Video)... - thx Kolle
+   * Fix error when using Regex replace - thx OmrSi/mkver
+
 
 3.5.6 (27th February 2018)
 * NEW:
