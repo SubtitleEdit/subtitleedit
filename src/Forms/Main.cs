@@ -14696,6 +14696,9 @@ namespace Nikse.SubtitleEdit.Forms
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         private void OpenVideo(string fileName)
         {
+            if (!_resetVideo)
+                return;
+
             if (!string.IsNullOrEmpty(fileName) && File.Exists(fileName))
             {
                 if (_loading)
