@@ -22,21 +22,14 @@ namespace Nikse.SubtitleEdit.Core
             public static readonly Regex RegExIStand = new Regex(@"\bistand\b", RegexOptions.Compiled);
             public static readonly Regex RegExIOevrigt = new Regex(@"\biøvrigt\b", RegexOptions.Compiled);
 
-            // TODO: Change to IReadOnlyCollection when changed to (.NET 4.5).
-            private static readonly IList<Regex> _regexList;
+            private static readonly IList<Regex> RegexList;
 
-            public static IEnumerable<Regex> DanishCompiledRegexList
-            {
-                get
-                {
-                    return _regexList;
-                }
-            }
+            public static IEnumerable<Regex> DanishCompiledRegexList => RegexList;
 
             static DanishLetterI()
             {
                 // Not a complete list, more phrases will come.
-                _regexList = new[]
+                RegexList = new[]
                 {
                     RegexFactory(@"\b, er i alle\b"),
                     RegexFactory(@", i (?:ved nok|ved, |ved.|ikke blev)\b"),
@@ -234,16 +227,25 @@ namespace Nikse.SubtitleEdit.Core
         /// <param name="regularExpression">Regular expression to perform replace on</param>
         /// <param name="text">Text perform replace on</param>
         /// <param name="replaceWith">Pattern to replace with (new lines should be "\n")</param>
-        /// <returns></returns>
+        /// <returns>Input string with regular expression replace applied</returns>
         public static string ReplaceNewLineSafe(Regex regularExpression, string text, string replaceWith)
         {
-            text = regularExpression.Replace(string.Join(Environment.NewLine, text.SplitToLines()), replaceWith);
-            return string.Join(Environment.NewLine, text.SplitToLines());
+            return ReplaceNewLineSafe(regularExpression, text, replaceWith, int.MaxValue, 0);
         }
 
-        public static string ReplaceNewLineSafeSingle(Regex regularExpression, string text, string replaceWith, int startIndex)
+        /// <summary>
+        /// Performs replace on regular expression. Line breaks are converted to just "\n" during the replace 
+        /// and line breaks are returned as Environment.NewLine.
+        /// </summary>
+        /// <param name="regularExpression">Regular expression to perform replace on</param>
+        /// <param name="text">Text perform replace on</param>
+        /// <param name="replaceWith">Pattern to replace with (new lines should be "\n")</param>
+        /// <param name="count">Maximum number of times replacement can occur</param>
+        /// <param name="startIndex">Starting index of replace operation</param>
+        /// <returns>Input string with regular expression replace applied</returns>
+        public static string ReplaceNewLineSafe(Regex regularExpression, string text, string replaceWith, int count, int startIndex)
         {
-            text = regularExpression.Replace(string.Join(Environment.NewLine, text.SplitToLines()), replaceWith, 1, startIndex);
+            text = regularExpression.Replace(string.Join(Environment.NewLine, text.SplitToLines()), replaceWith, count, startIndex);
             return string.Join(Environment.NewLine, text.SplitToLines());
         }
 
