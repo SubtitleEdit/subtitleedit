@@ -972,6 +972,7 @@ namespace Nikse.SubtitleEdit.Core
         public string MainFileSaveOriginalAs { get; set; }
         public string MainFileSaveAs { get; set; }
         public string MainFileSaveAll { get; set; }
+        public string MainFileOpenOriginal { get; set; }
         public string MainFileCloseOriginal { get; set; }
         public string MainFileImportPlainText { get; set; }
         public string MainFileImportTimeCodes { get; set; }
@@ -2871,6 +2872,9 @@ namespace Nikse.SubtitleEdit.Core
                 subNode = node.SelectSingleNode("MainFileCloseOriginal");
                 if (subNode != null)
                     settings.Shortcuts.MainFileCloseOriginal = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainFileOpenOriginal");
+                if (subNode != null)
+                    settings.Shortcuts.MainFileOpenOriginal = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainFileImportPlainText");
                 if (subNode != null)
                     settings.Shortcuts.MainFileImportPlainText = subNode.InnerText;
@@ -3889,6 +3893,7 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("MainFileSaveOriginalAs", settings.Shortcuts.MainFileSaveOriginalAs);
                 textWriter.WriteElementString("MainFileSaveAs", settings.Shortcuts.MainFileSaveAs);
                 textWriter.WriteElementString("MainFileCloseOriginal", settings.Shortcuts.MainFileCloseOriginal);
+                textWriter.WriteElementString("MainFileOpenOriginal", settings.Shortcuts.MainFileOpenOriginal);
                 textWriter.WriteElementString("MainFileSaveAll", settings.Shortcuts.MainFileSaveAll);
                 textWriter.WriteElementString("MainFileImportPlainText", settings.Shortcuts.MainFileImportPlainText);
                 textWriter.WriteElementString("MainFileImportTimeCodes", settings.Shortcuts.MainFileImportTimeCodes);
