@@ -16302,21 +16302,6 @@ namespace Nikse.SubtitleEdit.Forms
             numericUpDownSecAdjust2.Value = (decimal)(Configuration.Settings.General.LargeDelayMilliseconds / TimeCode.BaseUnit);
 
             SetShortcuts();
-
-            if (Configuration.Settings.General.StartInSourceView)
-            {
-                textBoxSource.Focus();
-            }
-            else
-            {
-                SubtitleListview1.Focus();
-                int index = FirstSelectedIndex;
-                if (index > 0 && SubtitleListview1.Items.Count > index)
-                {
-                    SubtitleListview1.Focus();
-                    SubtitleListview1.Items[index].Focused = true;
-                }
-            }
             MainResize();
             _loading = false;
             OpenVideo(_videoFileName);
@@ -16406,7 +16391,11 @@ namespace Nikse.SubtitleEdit.Forms
 
             Utilities.SetSecurityProtocol(); // Github requires TLS 1.2
             mediaPlayer.OnEmptyPlayerClicked += MediaPlayer_OnEmptyPlayerClicked;
-
+            SubtitleListview1.SelectIndexAndEnsureVisible(_subtitleListViewIndex, true);
+            if (Configuration.Settings.General.StartInSourceView)
+            {
+                textBoxSource.Focus();
+            }
         }
 
         private void MediaPlayer_OnEmptyPlayerClicked(object sender, EventArgs e)
