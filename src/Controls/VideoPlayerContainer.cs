@@ -34,6 +34,7 @@ namespace Nikse.SubtitleEdit.Controls
         }
 
         public event EventHandler OnButtonClicked;
+        public event EventHandler OnEmptyPlayerClicked;
         public Panel PanelPlayer { get; private set; }
         private Panel _panelSubtitle;
         private RichTextBoxViewOnly _subtitleTextBox;
@@ -600,6 +601,9 @@ namespace Nikse.SubtitleEdit.Controls
 
         private void PanelPlayerMouseDown(object sender, MouseEventArgs e)
         {
+            if (VideoPlayer == null)
+                OnEmptyPlayerClicked?.Invoke(sender, e);
+
             TogglePlayPause();
         }
 
