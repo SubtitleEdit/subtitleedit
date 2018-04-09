@@ -16405,6 +16405,16 @@ namespace Nikse.SubtitleEdit.Forms
             LoadPlugins();
 
             Utilities.SetSecurityProtocol(); // Github requires TLS 1.2
+            mediaPlayer.OnEmptyPlayerClicked += MediaPlayer_OnEmptyPlayerClicked;
+
+        }
+
+        private void MediaPlayer_OnEmptyPlayerClicked(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(_videoFileName))
+            {
+                buttonOpenVideo_Click(sender, e);
+            }
         }
 
         private void SetPlayRate(object sender, EventArgs e)
