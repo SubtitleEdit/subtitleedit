@@ -15196,6 +15196,7 @@ namespace Nikse.SubtitleEdit.Forms
             SaveSubtitleListviewIndices();
             SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
             RestoreSubtitleListviewIndices();
+            SubtitleListview1.SelectIndexAndEnsureVisible(_subtitleListViewIndex, true);
 
             panelVideoPlayer.Refresh();
         }
@@ -16290,6 +16291,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Configuration.Settings.General.Undocked = false;
                 UndockVideoControlsToolStripMenuItemClick(null, null);
             }
+
             Main_Resize(null, null);
 
             toolStripButtonLockCenter.Checked = Configuration.Settings.General.WaveformCenter;
@@ -16310,6 +16312,7 @@ namespace Nikse.SubtitleEdit.Forms
                 timerTextUndo.Start();
                 timerAlternateTextUndo.Start();
             }
+
             if (Configuration.IsRunningOnLinux())
             {
                 numericUpDownDuration.Left = timeUpDownStartTime.Left + timeUpDownStartTime.Width + 10;
@@ -16343,6 +16346,7 @@ namespace Nikse.SubtitleEdit.Forms
                 splitContainer1.SplitterDistance = Configuration.Settings.General.SplitContainer1SplitterDistance;
                 splitContainerListViewAndText.SplitterDistance = Configuration.Settings.General.SplitContainerListViewAndTextSplitterDistance;
             }
+
             mediaPlayer.InitializeVolume(Configuration.Settings.General.VideoPlayerDefaultVolume);
             tabControlSubtitle.Invalidate();
 
@@ -16361,6 +16365,7 @@ namespace Nikse.SubtitleEdit.Forms
                 _timerCheckForUpdates.Start();
                 Configuration.Settings.General.LastCheckForUpdates = DateTime.Now;
             }
+
             _dragAndDropTimer.Interval = 50;
             _dragAndDropTimer.Tick += DoSubtitleListview1Drop;
 
@@ -16377,6 +16382,7 @@ namespace Nikse.SubtitleEdit.Forms
                 numericUpDownDuration.Width = textBoxListViewText.Left - numericUpDownDuration.Left - 5;
                 labelDuration.Left = numericUpDownDuration.Left;
             }
+
             _changeSubtitleToString = _subtitle.GetFastHashCode(GetCurrentEncoding().BodyName);
             comboBoxSubtitleFormats.AutoCompleteSource = AutoCompleteSource.ListItems;
             comboBoxSubtitleFormats.AutoCompleteMode = AutoCompleteMode.Append;
@@ -16395,6 +16401,10 @@ namespace Nikse.SubtitleEdit.Forms
             if (Configuration.Settings.General.StartInSourceView)
             {
                 textBoxSource.Focus();
+            }
+            else
+            {
+                SubtitleListview1.Focus();
             }
         }
 
