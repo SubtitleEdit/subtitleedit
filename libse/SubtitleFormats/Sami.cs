@@ -18,7 +18,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var sb = new StringBuilder();
             foreach (string l in lines)
                 sb.AppendLine(l);
-            if (sb.ToString().Contains("</SYNC>"))
+            if (Name == "SAMI" && sb.ToString().Contains("</SYNC>"))
                 return false;
 
             return base.IsMine(lines, fileName);
@@ -265,7 +265,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                 int syncEndPos = allInputLower.IndexOf(syncTag, index, StringComparison.Ordinal);
                 int syncEndPosEnc = allInputLower.IndexOf(syncTagEnc, index, StringComparison.Ordinal);
-                if ((syncStartPosEnc >= 0 && syncStartPosEnc < syncStartPos) || syncEndPos == -1)
+                if (syncStartPosEnc >= 0 && syncStartPosEnc < syncStartPos || syncEndPos == -1)
                     syncEndPos = syncEndPosEnc;
 
                 string text;
@@ -318,8 +318,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 while (text.Contains("  "))
                     text = text.Replace("  ", " ");
                 text = text.Replace("</BODY>", string.Empty).Replace("</SAMI>", string.Empty).TrimEnd();
+                text = text.Replace("</body>", string.Empty).Replace("</sami>", string.Empty).TrimEnd();
 
-                int endSyncPos = text.ToUpper().IndexOf("</SYNC>", StringComparison.Ordinal);
+                int endSyncPos = text.ToUpper().IndexOf("</SYNC>", StringComparison.OrdinalIgnoreCase);
                 if (text.IndexOf('>') > 0 && (text.IndexOf('>') < endSyncPos || endSyncPos == -1))
                     text = text.Remove(0, text.IndexOf('>') + 1);
                 text = text.TrimEnd();
@@ -327,7 +328,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 if (text.EndsWith("</sync>", StringComparison.OrdinalIgnoreCase))
                     text = text.Substring(0, text.Length - 7).TrimEnd();
 
-                if (text.EndsWith("</p>", StringComparison.Ordinal) || text.EndsWith("</P>", StringComparison.Ordinal))
+                if (text.EndsWith("</p>", StringComparison.Ordinal) || text.EndsWith("</P>", StringComparison.OrdinalIgnoreCase))
                     text = text.Substring(0, text.Length - 4).TrimEnd();
 
                 text = RemoveDiv(text).Trim();
