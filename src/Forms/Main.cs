@@ -14510,30 +14510,13 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (SubtitleListview1.IsAlternateTextColumnVisible)
             {
-                SubtitleListview1.HideColumn(SubtitleListView.SubtitleColumn.TextAlternate);
-                SubtitleListview1.AutoSizeAllColumns(this);
-                _subtitleAlternate = new Subtitle();
-                _subtitleAlternateFileName = null;
-
-                buttonUnBreak.Visible = true;
-                buttonAutoBreak.Visible = true;
-                textBoxListViewTextAlternate.Visible = false;
-                labelAlternateText.Visible = false;
-                labelAlternateCharactersPerSecond.Visible = false;
-                labelTextAlternateLineLengths.Visible = false;
-                labelAlternateSingleLine.Visible = false;
-                labelTextAlternateLineTotal.Visible = false;
-                textBoxListViewText.Width = (groupBoxEdit.Width - (textBoxListViewText.Left + 8 + buttonUnBreak.Width));
-                textBoxListViewText.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right;
-
-                labelCharactersPerSecond.Left = textBoxListViewText.Left + (textBoxListViewText.Width - labelCharactersPerSecond.Width);
-                labelTextLineTotal.Left = textBoxListViewText.Left + (textBoxListViewText.Width - labelTextLineTotal.Width);
+                RemoveAlternate(true);
             }
             else
             {
                 OpenAlternateSubtitle();
+                SetTitle();
             }
-            SetTitle();
         }
 
         private void OpenAlternateSubtitle()
