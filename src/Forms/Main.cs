@@ -14540,6 +14540,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Configuration.Settings.Save();
                 UpdateRecentFilesUI();
                 MainResize();
+                SubtitleListview1.SelectIndexAndEnsureVisible(_subtitleListViewIndex, true);
             }
         }
 
