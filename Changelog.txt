@@ -21,11 +21,13 @@
    * Update Romanian translation - thx Mircea
    * Update Basque translation - thx Xabier
    * Update Portuguese translation - thx moob
+   * Update Russian translation - thx Elheym
    * Update Tesseract OCR from 3.02 to 4.0 (beta 1)
    * Ctrl+a/ctrl+d/ctrl+shift+i works in more lists - thx tormento
    * Remember OCR spell check dictionary for tesseract - thx raymondjpg
    * Add some style support to "Modify selection"
    * Minor improvements for Video -> Generate/import scene changes
+   * Add shortcut for open translator mode - thx OmrSi
 * FIXED:
    * Fix "Add to names list" in OCR spell check - thx daed-alus/Sergiy
    * Fix "Generate scene changes" decimal point issue - thx Max
@@ -47,6 +49,10 @@
    * Fix list view focus after video fullscreen - thx OmrSi
    * Fix File -> Open (Keep Video)... - thx Kolle
    * Fix error when using Regex replace - thx OmrSi/mkver
+   * Fix list view line focus issue - thx OmrSi
+   * Fix text box size in RTL mode after closing original - thx OmrSi
+   * Fix issue with last line in some .smi files - thx Rex
+   * Fix "Move start/end 100 ms back/forward - thx OmrSi
 
 
 3.5.6 (27th February 2018)
