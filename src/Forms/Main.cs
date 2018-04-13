@@ -12908,7 +12908,12 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
-            SubtitleListview1.SetDuration(i, p, _subtitle.GetParagraphOrDefault(i + 1));
+
+            SubtitleListview1.SetStartTimeAndDuration(i, p, _subtitle.GetParagraphOrDefault(i + 1), _subtitle.GetParagraphOrDefault(i - 1));
+            timeUpDownStartTime.MaskedTextBox.TextChanged -= MaskedTextBoxTextChanged;
+            timeUpDownStartTime.TimeCode = p.StartTime;
+            timeUpDownStartTime.MaskedTextBox.TextChanged += MaskedTextBoxTextChanged;
+            SetDurationInSeconds(p.Duration.TotalSeconds);
         }
 
         private void MoveEndCurrent(int ms)
@@ -12946,7 +12951,12 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 p.EndTime.TotalMilliseconds = p.EndTime.TotalMilliseconds + ms;
             }
-            SubtitleListview1.SetDuration(i, p, _subtitle.GetParagraphOrDefault(i + 1));
+
+            SubtitleListview1.SetStartTimeAndDuration(i, p, _subtitle.GetParagraphOrDefault(i + 1), _subtitle.GetParagraphOrDefault(i - 1));
+            timeUpDownStartTime.MaskedTextBox.TextChanged -= MaskedTextBoxTextChanged;
+            timeUpDownStartTime.TimeCode = p.StartTime;
+            timeUpDownStartTime.MaskedTextBox.TextChanged += MaskedTextBoxTextChanged;
+            SetDurationInSeconds(p.Duration.TotalSeconds);
         }
 
         private void ShowNextSubtitleLabel()
