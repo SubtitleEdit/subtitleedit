@@ -647,7 +647,7 @@ namespace Nikse.SubtitleEdit.Core
 
         public static string RemoveSsaTags(string s)
         {
-            int k = s.IndexOf('{');
+            int k = s.IndexOf("{\\", StringComparison.Ordinal);
             while (k >= 0)
             {
                 int l = s.IndexOf('}', k + 1);
