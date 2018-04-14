@@ -2539,7 +2539,7 @@
     <RegEx find="grutova" replaceWith="grutira" />
     <RegEx find="haot" replaceWith="kaot" />
     <RegEx find="hrono" replaceWith="krono" />
-    <RegEx find="(?&lt;!M)ick([eoiu])" replaceWith="ičk$1" />
+    <RegEx find="(?&lt;![MH])ick([eoiu])" replaceWith="ičk$1" />
     <RegEx find="idev" replaceWith="idjev" />
     <RegEx find="ijo([absdegknptz])" replaceWith="io$1" />
     <RegEx find="([ai])nić" replaceWith="$1nit ć" />
