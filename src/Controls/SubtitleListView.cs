@@ -1180,6 +1180,11 @@ namespace Nikse.SubtitleEdit.Controls
                     }
                 }
 
+                if (ColumnIndexTextAlternate >= 0)
+                {
+                    item.SubItems[ColumnIndexTextAlternate].BackColor = BackColor;
+                }               
+
                 if (ColumnIndexText >= item.SubItems.Count)
                     return;
 
@@ -1432,7 +1437,7 @@ namespace Nikse.SubtitleEdit.Controls
                 {
                     Items[index].SubItems[ColumnIndexExtra].Text = text;
                     Items[index].UseItemStyleForSubItems = false;
-                    Items[index].SubItems[ColumnIndexExtra].BackColor = Color.AntiqueWhite;
+                    Items[index].SubItems[ColumnIndexExtra].BackColor = BackColor;
                     Items[index].SubItems[ColumnIndexExtra].ForeColor = color;
                 }
             }
@@ -1474,7 +1479,7 @@ namespace Nikse.SubtitleEdit.Controls
                 {
                     Items[index].SubItems[ColumnIndexTextAlternate].Text = text.Replace(Environment.NewLine, _lineSeparatorString);
                     Items[index].UseItemStyleForSubItems = false;
-                    Items[index].SubItems[ColumnIndexTextAlternate].BackColor = Color.AntiqueWhite;
+                    Items[index].SubItems[ColumnIndexTextAlternate].BackColor = BackColor;
                 }
             }
         }
@@ -1595,6 +1600,8 @@ namespace Nikse.SubtitleEdit.Controls
                     Items[index].SubItems[ColumnIndexWpm].BackColor = color;
                 if (ColumnIndexText >= 0)
                     Items[index].SubItems[ColumnIndexText].BackColor = color;
+                if (ColumnIndexTextAlternate>= 0)
+                    Items[index].SubItems[ColumnIndexTextAlternate].BackColor = color;
             }
         }
 
