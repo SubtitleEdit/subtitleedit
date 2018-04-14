@@ -995,6 +995,9 @@ namespace Nikse.SubtitleEdit.Core
         public string MainToolsMergeShortLines { get; set; }
         public string MainToolsMakeEmptyFromCurrent { get; set; }
         public string MainToolsSplitLongLines { get; set; }
+        public string MainToolsDurationsBridgeGap { get; set; }
+        public string MainToolsMinimumDisplayTimeBetweenParagraphs { get; set; }
+
         public string MainToolsRenumber { get; set; }
         public string MainToolsRemoveTextForHI { get; set; }
         public string MainToolsChangeCasing { get; set; }
@@ -2926,6 +2929,12 @@ namespace Nikse.SubtitleEdit.Core
                 subNode = node.SelectSingleNode("MainToolsSplitLongLines");
                 if (subNode != null)
                     settings.Shortcuts.MainToolsSplitLongLines = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainToolsDurationsBridgeGap");
+                if (subNode != null)
+                    settings.Shortcuts.MainToolsDurationsBridgeGap = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainToolsMinimumDisplayTimeBetweenParagraphs");
+                if (subNode != null)
+                    settings.Shortcuts.MainToolsMinimumDisplayTimeBetweenParagraphs = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainToolsRenumber");
                 if (subNode != null)
                     settings.Shortcuts.MainToolsRenumber = subNode.InnerText;
@@ -3913,6 +3922,8 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("MainToolsMergeShortLines", settings.Shortcuts.MainToolsMergeShortLines);
                 textWriter.WriteElementString("MainToolsMakeEmptyFromCurrent", settings.Shortcuts.MainToolsMakeEmptyFromCurrent);
                 textWriter.WriteElementString("MainToolsSplitLongLines", settings.Shortcuts.MainToolsSplitLongLines);
+                textWriter.WriteElementString("MainToolsMinimumDisplayTimeBetweenParagraphs", settings.Shortcuts.MainToolsMinimumDisplayTimeBetweenParagraphs);
+                textWriter.WriteElementString("MainToolsDurationsBridgeGap", settings.Shortcuts.MainToolsDurationsBridgeGap);
                 textWriter.WriteElementString("MainToolsRenumber", settings.Shortcuts.MainToolsRenumber);
                 textWriter.WriteElementString("MainToolsRemoveTextForHI", settings.Shortcuts.MainToolsRemoveTextForHI);
                 textWriter.WriteElementString("MainToolsChangeCasing", settings.Shortcuts.MainToolsChangeCasing);
@@ -4068,6 +4079,7 @@ namespace Nikse.SubtitleEdit.Core
                 }
                 catch
                 {
+                    // ignored
                 }
             }
         }
