@@ -1528,6 +1528,51 @@ namespace Test
             }
         }
 
+        [TestMethod]
+        public void FixDashItalic()
+        {
+            var subtitle = new Subtitle();
+            const string t1 = "Hey!";
+            const string t2 = "<i>- PREVIOUSLY ON HAVEN...</i>";
+            subtitle.Paragraphs.Add(new Paragraph(t1, 0, 1000));
+            subtitle.Paragraphs.Add(new Paragraph(t2, 1000, 4000));
+            {
+                var result = Helper.FixHyphensRemove(subtitle, 1);
+                const string target = "<i>PREVIOUSLY ON HAVEN...</i>";
+                Assert.AreEqual(target, result);
+            }
+        }
+
+        [TestMethod]
+        public void FixDashItalicLine2()
+        {
+            var subtitle = new Subtitle();
+            const string t1 = "Hey!";
+            string t2 = "Yo!" + Environment.NewLine + "<i>- PREVIOUSLY ON HAVEN...</i>";
+            subtitle.Paragraphs.Add(new Paragraph(t1, 0, 1000));
+            subtitle.Paragraphs.Add(new Paragraph(t2, 1000, 4000));
+            {
+                var result = Helper.FixHyphensRemove(subtitle, 1);
+                string target = "Yo!" + Environment.NewLine + "<i>PREVIOUSLY ON HAVEN...</i>";
+                Assert.AreEqual(target, result);
+            }
+        }
+
+        [TestMethod]
+        public void FixDashAssTag()
+        {
+            var subtitle = new Subtitle();
+            const string t1 = "Hey!";
+            const string t2 = "{\\an3}- PREVIOUSLY ON HAVEN...";
+            subtitle.Paragraphs.Add(new Paragraph(t1, 0, 1000));
+            subtitle.Paragraphs.Add(new Paragraph(t2, 1000, 4000));
+            {
+                var result = Helper.FixHyphensRemove(subtitle, 1);
+                const string target = "{\\an3}PREVIOUSLY ON HAVEN...";
+                Assert.AreEqual(target, result);
+            }
+        }
+
         #endregion FixHyphens (remove dash)
 
         #region Ellipses start
