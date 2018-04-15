@@ -10,6 +10,7 @@ namespace Nikse.SubtitleEdit.Forms
     {
         private readonly List<string> _log;
         private int _logCount = -1;
+        private readonly StringBuilder Sb = new StringBuilder();
 
         public StatusLog(List<string> log)
         {
@@ -37,18 +38,21 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void timer1_Tick(object sender, System.EventArgs e)
         {
-            timer1.Stop();
-            if (_logCount != _log.Count)
+            if (_logCount == _log.Count)
             {
-                _logCount = _log.Count;
-                var sb = new StringBuilder();
-                for (int i = _logCount - 1; i >= 0; i--)
-                {
-                    sb.AppendLine(_log[i]);
-                }
-                textBoxStatusLog.Text = sb.ToString();
+                return;
             }
-            timer1.Start();
+            _logCount = _log.Count;
+            for (int i = _logCount - 1; i >= 0; i--)
+            {
+                Sb.AppendLine(_log[i]);
+            }
+            textBoxStatusLog.Text = Sb.ToString();
+            Sb.Clear();
+            if (!timer1.Enabled)
+            {
+                timer1.Start();
+            }
         }
 
         private void buttonOK_Click(object sender, System.EventArgs e)

@@ -20762,19 +20762,13 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void labelStatus_Click(object sender, EventArgs e)
         {
-            if (_statusLog.Count == 0)
-            {
-                return;
-            }
-
             if (_statusLogForm == null || _statusLogForm.IsDisposed)
             {
                 _statusLogForm = new StatusLog(_statusLog);
-                _statusLogForm.Show(this);
             }
-            else
+            if (!_statusLogForm.Visible)
             {
-                _statusLogForm.Show();
+                _statusLogForm.Show(this);
             }
         }
 
