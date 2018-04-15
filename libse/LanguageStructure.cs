@@ -2099,7 +2099,6 @@
             public string WaveformPlayNewSelectionEnd { get; set; }
             public string WaveformPlayFirstSelectedSubtitle { get; set; }
             public string WaveformFocusListView { get; set; }
-            public string WaveformGoToNextSubtitle { get; set; }
             public string WaveformGoToPreviousSceneChange { get; set; }
             public string WaveformGoToNextSceneChange { get; set; }
             public string WaveformToggleSceneChange { get; set; }
@@ -2115,6 +2114,9 @@
             public string GoForward1Second { get; set; }
             public string GoBack5Seconds { get; set; }
             public string GoForward5Seconds { get; set; }
+            public string WaveformGoToPrevSubtitle { get; set; }
+            public string WaveformGoToNextSubtitle { get; set; }
+
             public string TogglePlayPause { get; set; }
             public string Pause { get; set; }
             public string Fullscreen { get; set; }

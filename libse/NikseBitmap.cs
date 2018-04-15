@@ -1141,6 +1141,25 @@ namespace Nikse.SubtitleEdit.Core
             }
         }
 
+        public void AddMargin(int margin)
+        {
+            int newWidth = Width + margin * 2;
+            int newHeight = Height + margin * 2;
+            var newBitmapData = new byte[newWidth * newHeight * 4];
+            var newWidthX4 = newWidth * 4;
+            var marginX4 = margin * 4;
+
+            for (int y = 0; y < Height; y++)
+            {
+                int pixelAddress = y * _widthX4;
+                int index = marginX4 + (y + margin) * newWidthX4;
+                Buffer.BlockCopy(_bitmapData, pixelAddress, newBitmapData, index, _widthX4);
+            }
+            Width = newWidth;
+            Height = newHeight;
+            _bitmapData = newBitmapData;
+        }
+
         public void SaveAsTarga(string fileName)
         {
             // TGA header (18-byte fixed header)

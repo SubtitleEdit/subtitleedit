@@ -5230,9 +5230,6 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/WaveformFocusListView":
                     language.Settings.WaveformFocusListView = reader.Value;
                     break;
-                case "Settings/WaveformGoToNextSubtitle":
-                    language.Settings.WaveformGoToNextSubtitle = reader.Value;
-                    break;
                 case "Settings/WaveformGoToPreviousSceneChange":
                     language.Settings.WaveformGoToPreviousSceneChange = reader.Value;
                     break;
@@ -5277,6 +5274,12 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "Settings/GoForward5Seconds":
                     language.Settings.GoForward5Seconds = reader.Value;
+                    break;
+                case "Settings/WaveformGoToPrevSubtitle":
+                    language.Settings.WaveformGoToPrevSubtitle = reader.Value;
+                    break;
+                case "Settings/WaveformGoToNextSubtitle":
+                    language.Settings.WaveformGoToNextSubtitle = reader.Value;
                     break;
                 case "Settings/TogglePlayPause":
                     language.Settings.TogglePlayPause = reader.Value;

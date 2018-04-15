@@ -160,6 +160,8 @@ namespace Nikse.SubtitleEdit.Forms
         private Keys _video1000MsRight = Keys.None;
         private Keys _video5000MsLeft = Keys.None;
         private Keys _video5000MsRight = Keys.None;
+        private Keys _videoGoToPrevSubtitle = Keys.None;
+        private Keys _videoGoToNextSubtitle = Keys.None;
         private Keys _videoPlayFirstSelected = Keys.None;
         private Keys _mainVideoFullscreen = Keys.None;
         private Keys _mainVideoSlower = Keys.None;
@@ -226,7 +228,6 @@ namespace Nikse.SubtitleEdit.Forms
         private Keys _waveformAddTextAtHere = Keys.None;
         private Keys _waveformAddTextAtHereFromClipboard = Keys.None;
         private Keys _waveformFocusListView = Keys.None;
-        private Keys _waveformGoToNextSubtitle = Keys.None;
         private Keys _waveformGoToPreviousSceneChange = Keys.None;
         private Keys _waveformGoToNextSceneChange = Keys.None;
         private Keys _waveformToggleSceneChange = Keys.None;
@@ -12385,7 +12386,30 @@ namespace Nikse.SubtitleEdit.Forms
                 SubtitleListview1.Focus();
                 e.SuppressKeyPress = true;
             }
-            else if (e.KeyData == _waveformGoToNextSubtitle)
+            else if (e.KeyData == _videoGoToPrevSubtitle)
+            {
+                var cp = mediaPlayer.CurrentPosition * TimeCode.BaseUnit;
+                foreach (var p in _subtitle.Paragraphs)
+                {
+                    if (p.StartTime.TotalMilliseconds > cp - 1)
+                    {
+                        var prev = _subtitle.GetParagraphOrDefault(_subtitle.Paragraphs.IndexOf(p) - 1);
+                        if (prev == null)
+                        {
+                            break;
+                        }
+                        mediaPlayer.CurrentPosition = prev.StartTime.TotalSeconds;
+                        SubtitleListview1.SelectIndexAndEnsureVisible(_subtitle.Paragraphs.IndexOf(prev), true);
+                        if (p.StartTime.TotalSeconds > audioVisualizer.EndPositionSeconds + 0.2)
+                        {
+                            audioVisualizer.StartPositionSeconds = mediaPlayer.CurrentPosition - 0.2;
+                        }
+                        break;
+                    }
+                }
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyData == _videoGoToNextSubtitle)
             {
                 var cp = mediaPlayer.CurrentPosition * TimeCode.BaseUnit;
                 foreach (var p in _subtitle.Paragraphs)
@@ -16549,6 +16573,8 @@ namespace Nikse.SubtitleEdit.Forms
             _video1000MsRight = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideo1000MsRight);
             _video5000MsLeft = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideo5000MsLeft);
             _video5000MsRight = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideo5000MsRight);
+            _videoGoToPrevSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoGoToPrevSubtitle);
+            _videoGoToNextSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoGoToNextSubtitle);
             _videoPlayFirstSelected = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralPlayFirstSelected);
             _mainGoToPreviousSubtitleAndFocusVideo = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToPreviousSubtitleAndFocusVideo);
             _mainGoToNextSubtitleAndFocusVideo = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitleAndFocusVideo);
@@ -16638,7 +16664,6 @@ namespace Nikse.SubtitleEdit.Forms
             _waveformAddTextAtHere = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformAddTextHere);
             _waveformAddTextAtHereFromClipboard = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformAddTextHereFromClipboard);
             _waveformFocusListView = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformFocusListView);
-            _waveformGoToNextSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformGoToNextSubtitle);
             _waveformGoToPreviousSceneChange = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformGoToPreviousSceneChange);
             _waveformGoToNextSceneChange = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformGoToNextSceneChange);
             _waveformToggleSceneChange = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformToggleSceneChange);
