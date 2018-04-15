@@ -1022,6 +1022,8 @@ namespace Nikse.SubtitleEdit.Core
         public string MainVideo1000MsRight { get; set; }
         public string MainVideo5000MsLeft { get; set; }
         public string MainVideo5000MsRight { get; set; }
+        public string MainVideoGoToPrevSubtitle { get; set; }
+        public string MainVideoGoToNextSubtitle { get; set; }
         public string MainVideoFullscreen { get; set; }
         public string MainVideoSlower { get; set; }
         public string MainVideoFaster { get; set; }
@@ -1100,7 +1102,6 @@ namespace Nikse.SubtitleEdit.Core
         public string WaveformAddTextHere { get; set; }
         public string WaveformAddTextHereFromClipboard { get; set; }
         public string WaveformFocusListView { get; set; }
-        public string WaveformGoToNextSubtitle { get; set; }
         public string WaveformGoToPreviousSceneChange { get; set; }
         public string WaveformGoToNextSceneChange { get; set; }
         public string WaveformToggleSceneChange { get; set; }
@@ -3016,6 +3017,12 @@ namespace Nikse.SubtitleEdit.Core
                 subNode = node.SelectSingleNode("MainVideo5000MsRight");
                 if (subNode != null)
                     settings.Shortcuts.MainVideo5000MsRight = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainVideoGoToPrevSubtitle");
+                if (subNode != null)
+                    settings.Shortcuts.MainVideoGoToPrevSubtitle = subNode.InnerText;
+                    subNode = node.SelectSingleNode("MainVideoGoToNextSubtitle");
+                if (subNode != null)
+                    settings.Shortcuts.MainVideoGoToNextSubtitle = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainVideoFullscreen");
                 if (subNode != null)
                     settings.Shortcuts.MainVideoFullscreen = subNode.InnerText;
@@ -3253,9 +3260,6 @@ namespace Nikse.SubtitleEdit.Core
                 subNode = node.SelectSingleNode("WaveformFocusListView");
                 if (subNode != null)
                     settings.Shortcuts.WaveformFocusListView = subNode.InnerText;
-                subNode = node.SelectSingleNode("WaveformGoToNextSubtitle");
-                if (subNode != null)
-                    settings.Shortcuts.WaveformGoToNextSubtitle = subNode.InnerText;
                 subNode = node.SelectSingleNode("WaveformGoToPreviousSceneChange");
                 if (subNode != null)
                     settings.Shortcuts.WaveformGoToPreviousSceneChange = subNode.InnerText;
@@ -3951,6 +3955,8 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("MainVideo1000MsRight", settings.Shortcuts.MainVideo1000MsRight);
                 textWriter.WriteElementString("MainVideo5000MsLeft", settings.Shortcuts.MainVideo5000MsLeft);
                 textWriter.WriteElementString("MainVideo5000MsRight", settings.Shortcuts.MainVideo5000MsRight);
+                textWriter.WriteElementString("MainVideoGoToPrevSubtitle", settings.Shortcuts.MainVideoGoToPrevSubtitle);
+                textWriter.WriteElementString("MainVideoGoToNextSubtitle", settings.Shortcuts.MainVideoGoToNextSubtitle);
                 textWriter.WriteElementString("MainVideoFullscreen", settings.Shortcuts.MainVideoFullscreen);
                 textWriter.WriteElementString("MainVideoSlower", settings.Shortcuts.MainVideoSlower);
                 textWriter.WriteElementString("MainVideoFaster", settings.Shortcuts.MainVideoFaster);
@@ -4030,7 +4036,6 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("WaveformAddTextHere", settings.Shortcuts.WaveformAddTextHere);
                 textWriter.WriteElementString("WaveformAddTextHereFromClipboard", settings.Shortcuts.WaveformAddTextHereFromClipboard);
                 textWriter.WriteElementString("WaveformFocusListView", settings.Shortcuts.WaveformFocusListView);
-                textWriter.WriteElementString("WaveformGoToNextSubtitle", settings.Shortcuts.WaveformGoToNextSubtitle);
                 textWriter.WriteElementString("WaveformGoToPreviousSceneChange", settings.Shortcuts.WaveformGoToPreviousSceneChange);
                 textWriter.WriteElementString("WaveformGoToNextSceneChange", settings.Shortcuts.WaveformGoToNextSceneChange);
                 textWriter.WriteElementString("WaveformToggleSceneChange", settings.Shortcuts.WaveformToggleSceneChange);

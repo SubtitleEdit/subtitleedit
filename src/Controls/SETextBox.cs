@@ -12,10 +12,10 @@ namespace Nikse.SubtitleEdit.Controls
     public class SETextBox : TextBox
     {
         private string _dragText = string.Empty;
-        private int _dragStartFrom = 0;
-        private long _dragStartTicks = 0;
-        private bool _dragRemoveOld = false;
-        private bool _dragFromThis = false;
+        private int _dragStartFrom;
+        private long _dragStartTicks;
+        private bool _dragRemoveOld;
+        private bool _dragFromThis;
 
         public SETextBox()
         {
@@ -84,7 +84,7 @@ namespace Nikse.SubtitleEdit.Controls
             var pt = PointToClient(new Point(e.X, e.Y));
             int index = GetCharIndexFromPosition(pt);
 
-            string newText = string.Empty;
+            string newText;
             if (e.Data.GetDataPresent(DataFormats.UnicodeText))
                 newText = (string)e.Data.GetData(DataFormats.UnicodeText);
             else
@@ -192,10 +192,7 @@ namespace Nikse.SubtitleEdit.Controls
         {
             if (e.Data.GetDataPresent(DataFormats.Text) || e.Data.GetDataPresent(DataFormats.UnicodeText))
             {
-                if (ModifierKeys == Keys.Control)
-                    e.Effect = DragDropEffects.Copy;
-                else
-                    e.Effect = DragDropEffects.Move;
+                e.Effect = ModifierKeys == Keys.Control ? DragDropEffects.Copy : DragDropEffects.Move;
             }
             else
             {

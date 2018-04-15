@@ -1931,7 +1931,6 @@ can edit in same subtitle file (collaboration)</Information>
     <WaveformPlayNewSelectionEnd>Play end of selection</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Play first selected subtitle</WaveformPlayFirstSelectedSubtitle>
     <WaveformFocusListView>Focus list view</WaveformFocusListView>
-    <WaveformGoToNextSubtitle>Go to next subtitle (from video position)</WaveformGoToNextSubtitle>
     <WaveformGoToPreviousSceneChange>Go to previous scene change</WaveformGoToPreviousSceneChange>
     <WaveformGoToNextSceneChange>Go to next scene change</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>Toggle scene change</WaveformToggleSceneChange>
@@ -1947,6 +1946,8 @@ can edit in same subtitle file (collaboration)</Information>
     <GoForward1Second>One second forward</GoForward1Second>
     <GoBack5Seconds>Five seconds back</GoBack5Seconds>
     <GoForward5Seconds>Five seconds forward</GoForward5Seconds>
+    <WaveformGoToPrevSubtitle>Go to previous subtitle (from video position)</WaveformGoToPrevSubtitle>
+    <WaveformGoToNextSubtitle>Go to next subtitle (from video position)</WaveformGoToNextSubtitle>
     <TogglePlayPause>Toggle play/pause</TogglePlayPause>
     <Pause>Pause</Pause>
     <Fullscreen>Fullscreen</Fullscreen>
