@@ -238,21 +238,17 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             Paragraph p = subtitle.Paragraphs[i];
             string text = p.Text;
 
-            if (text.TrimStart().StartsWith('-') ||
-                text.TrimStart().StartsWith("<i>-", StringComparison.OrdinalIgnoreCase) ||
-                text.TrimStart().StartsWith("<i> -", StringComparison.OrdinalIgnoreCase) ||
+            if (HtmlUtil.RemoveHtmlTags(text, true).TrimStart().StartsWith('-') ||
                 text.Contains(Environment.NewLine + '-') ||
                 text.Contains(Environment.NewLine + " -") ||
-                text.Contains(Environment.NewLine + "<i>-") ||
-                text.Contains(Environment.NewLine + "<i> -") ||
-                text.Contains(Environment.NewLine + "<I>-") ||
-                text.Contains(Environment.NewLine + "<I> -"))
+                text.Contains(Environment.NewLine + "<i>-", StringComparison.OrdinalIgnoreCase) ||
+                text.Contains(Environment.NewLine + "<i> -", StringComparison.OrdinalIgnoreCase))
             {
                 var prev = subtitle.GetParagraphOrDefault(i - 1);
 
                 if (prev == null || !HtmlUtil.RemoveHtmlTags(prev.Text).TrimEnd().EndsWith('-') || HtmlUtil.RemoveHtmlTags(prev.Text).TrimEnd().EndsWith("--", StringComparison.Ordinal))
                 {
-                    var noTaglines = HtmlUtil.RemoveHtmlTags(p.Text).SplitToLines();
+                    var noTaglines = HtmlUtil.RemoveHtmlTags(p.Text, true).SplitToLines();
                     int startHyphenCount = noTaglines.Count(line => line.TrimStart().StartsWith('-'));
                     if (startHyphenCount == 1)
                     {
@@ -270,18 +266,18 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         {
                             int idx = text.IndexOf('-');
                             var st = new StrippableText(text);
-                            if (idx < 5 && st.Pre.Length >= idx)
+                            if (st.Pre.Length >= idx)
                             {
                                 text = text.Remove(idx, 1).TrimStart();
                                 idx = text.IndexOf('-');
                                 st = new StrippableText(text);
-                                if (idx < 5 && idx >= 0 && st.Pre.Length >= idx)
+                                if (idx >= 0 && st.Pre.Length >= idx)
                                 {
                                     text = text.Remove(idx, 1).TrimStart();
                                     st = new StrippableText(text);
                                 }
                                 idx = text.IndexOf('-');
-                                if (idx < 5 && idx >= 0 && st.Pre.Length >= idx)
+                                if (idx >= 0 && st.Pre.Length >= idx)
                                     text = text.Remove(idx, 1).TrimStart();
 
                                 text = RemoveSpacesBeginLine(text);
@@ -295,12 +291,11 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                                     if (idx >= 0 && indexOfNewLine + 5 > indexOfNewLine)
                                     {
                                         text = text.Remove(idx, 1).TrimStart().Replace(Environment.NewLine + " ", Environment.NewLine);
-
+                                        text = RemoveSpacesBeginLine(text);
                                         idx = text.IndexOf('-', indexOfNewLine);
                                         if (idx >= 0 && indexOfNewLine + 5 > indexOfNewLine)
                                         {
                                             text = text.Remove(idx, 1).TrimStart();
-
                                             text = RemoveSpacesBeginLine(text);
                                         }
                                     }
@@ -333,6 +328,14 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             text = text.Replace(Environment.NewLine + "<i> ", Environment.NewLine + "<i>");
             text = text.Replace(Environment.NewLine + "<b> ", Environment.NewLine + "<b>");
             text = text.Replace(Environment.NewLine + "<u> ", Environment.NewLine + "<u>");
+            if (text.StartsWith("{\\"))
+            {
+                int end = text.IndexOf('}');
+                if (end > 0 && end + 1 < text.Length && text[end + 1] == ' ')
+                {
+                    text = text.Remove(end + 1, 1);
+                }
+            }
 
             if (text.LineStartsWithHtmlTag(true) && text[3] == 0x20)
             {
