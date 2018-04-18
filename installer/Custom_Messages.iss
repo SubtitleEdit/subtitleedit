@@ -595,4 +595,20 @@ zhTW.tsk_SetFileTypes=Associate SubRip Text (.srt) files with Subtitle Edit
 zhTW.types_custom=Custom installation
 zhTW.types_default=Default installation
 
+; Indonesian
+id.comp_translations=Terjemahan
+id.msg_AskToDownNET=Subtitle Edit membutuhkan .NET Framework 4.0. Silakan unduh dan instal .NET Framework dan jalankan setup lagi.%n%nApakah Anda ingin mengunduh .NET Framework 4.0 sekarang?
+id.msg_DeleteSettings=Apakah Anda juga ingin menghapus pengaturan Subtitle Edit dan perubahan khusus yang Anda buat dalam kamus?%n%nBila Anda berencana menginstal ulang Subtitle Edit, Anda tidak perlu menghapusnya.
+id.msg_OptimizingPerformance=Mengoptimalkan kinerja...
+id.run_VisitWebsite=Kunjungi Situs Subtitle Edit
+id.sm_com_Changelog=Riwayat Versi Subtitle Edit
+id.tsk_AllUsers=Untuk semua pengguna
+id.tsk_CurrentUser=Untuk pengguna saat ini
+id.tsk_Other=Lainnya:
+id.tsk_ResetDictionaries=Atur ulang Kamus dan hapus nama khusus apa pun
+id.tsk_ResetSettings=Atur ulang pengaturan Subtitle Edit
+id.tsk_SetFileTypes=Asosiasikan file Teks SubRip (.srt) dengan Subtitle Edit
+id.types_custom=Instalasi khusus
+id.types_default=Instalasi standar
+
 #endif
