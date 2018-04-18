@@ -797,6 +797,7 @@
     <Word from="projekat" to="projekt" />
     <Word from="Projekat" to="Projekt" />
     <Word from="promijena" to="promjena" />
+    <Word from="prosledili" to="proslijedili" />
     <Word from="protestvovat" to="protestirat" />
     <Word from="Protestvovat" to="Protestirat" />
     <Word from="Protestvujem" to="Protestiram" />
@@ -832,6 +833,8 @@
     <Word from="rječju" to="riječju" />
     <Word from="Rječju" to="Riječju" />
     <Word from="reagujte" to="reagirajte" />
+    <Word from="redov" to="vojnik" />
+    <Word from="redovu" to="vojniku" />
     <Word from="ređe" to="rjeđe" />
     <Word from="ređi" to="rjeđi" />
     <Word from="rejv" to="rave" />
@@ -1484,6 +1487,7 @@
     <LinePart from="hoću da kažem" to="želim reći" />
     <LinePart from="hoćeš da kažeš" to="želiš reći" />
     <LinePart from="hoće da kaže" to="želi reći" />
+    <LinePart from="hoću da živim" to="želim živjeti" />
     <LinePart from="Izvini se" to="Ispričaj se" />    
     <LinePart from="izvini se" to="ispričaj se" />
     <LinePart from="Izvinite me" to="Ispričajte me" />
