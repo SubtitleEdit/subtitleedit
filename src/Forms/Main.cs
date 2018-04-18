@@ -3038,6 +3038,9 @@ namespace Nikse.SubtitleEdit.Forms
                     SetTitle();
                     ShowStatus(string.Format(_language.LoadedSubtitleX, _fileName));
                     _sourceViewChange = false;
+                    if (Configuration.Settings.General.AutoConvertToUtf8)
+                        encoding = Encoding.UTF8;
+                    SetEncoding(encoding);
                     _changeSubtitleToString = _subtitle.GetFastHashCode(GetCurrentEncoding().BodyName);
                     _converted = false;
                     ResetHistory();
@@ -3049,9 +3052,6 @@ namespace Nikse.SubtitleEdit.Forms
                         _converted = true;
                         ShowStatus(string.Format(_language.LoadedSubtitleX, _fileName) + " - " + string.Format(_language.ConvertedToX, format.FriendlyName));
                     }
-                    if (Configuration.Settings.General.AutoConvertToUtf8)
-                        encoding = Encoding.UTF8;
-                    SetEncoding(encoding);
 
                     var formatType = format.GetType();
                     if (formatType == typeof(SubStationAlpha))
@@ -14984,19 +14984,22 @@ namespace Nikse.SubtitleEdit.Forms
         private void ShowSubtitleTimerTick(object sender, EventArgs e)
         {
             ShowSubtitleTimer.Stop();
-            int oldIndex = FirstSelectedIndex;
-            int index = ShowSubtitle();
-            if (index != -1 && checkBoxSyncListViewWithVideoWhilePlaying.Checked && oldIndex != index)
+            if (mediaPlayer.VideoPlayer != null)
             {
-                if ((DateTime.UtcNow.Ticks - _lastTextKeyDownTicks) > 10000 * 700) // only if last typed char was entered > 700 milliseconds
+                int oldIndex = FirstSelectedIndex;
+                int index = ShowSubtitle();
+                if (index != -1 && checkBoxSyncListViewWithVideoWhilePlaying.Checked && oldIndex != index)
                 {
-                    if (_endSeconds <= 0 || !checkBoxAutoRepeatOn.Checked)
+                    if ((DateTime.UtcNow.Ticks - _lastTextKeyDownTicks) > 10000 * 700) // only if last typed char was entered > 700 milliseconds
                     {
-                        if (!timerAutoDuration.Enabled && !mediaPlayer.IsPaused && (mediaPlayer.CurrentPosition > 0.2 || index > 0))
+                        if (_endSeconds <= 0 || !checkBoxAutoRepeatOn.Checked)
                         {
-                            SubtitleListview1.BeginUpdate();
-                            SubtitleListview1.SelectIndexAndEnsureVisible(index, true);
-                            SubtitleListview1.EndUpdate();
+                            if (!timerAutoDuration.Enabled && !mediaPlayer.IsPaused && (mediaPlayer.CurrentPosition > 0.2 || index > 0))
+                            {
+                                SubtitleListview1.BeginUpdate();
+                                SubtitleListview1.SelectIndexAndEnsureVisible(index, true);
+                                SubtitleListview1.EndUpdate();
+                            }
                         }
                     }
                 }
@@ -16424,6 +16427,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 SubtitleListview1.Focus();
             }
+            ShowSubtitleTimer.Start();
         }
 
         private void MediaPlayer_OnEmptyPlayerClicked(object sender, EventArgs e)
