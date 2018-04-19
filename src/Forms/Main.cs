@@ -18883,7 +18883,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             toolStripMenuItemOpenVideoFromUrl.Visible = Configuration.Settings.General.VideoPlayer.Trim().Equals("MPV", StringComparison.OrdinalIgnoreCase) &&
                                                         LibMpvDynamic.IsInstalled &&
-                                                        File.Exists(Path.Combine(Configuration.BaseDirectory, "youtube-dl.exe"));
+                                                        File.Exists(Path.Combine(Configuration.DataDirectory, "youtube-dl.exe"));
 
             toolStripMenuItemSetAudioTrack.Visible = false;
             var libVlc = mediaPlayer.VideoPlayer as LibVlcDynamic;
