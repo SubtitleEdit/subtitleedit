@@ -648,8 +648,6 @@
 		<Word from="pomaci" to="pomaknuti" />
 		<Word from="pomazes" to="pomažeš" />
 		<Word from="pomislis" to="pomisliš" />
-		<Word from="pomoc" to="pomoć" />
-		<Word from="pomoci" to="pomoći" />
 		<Word from="pomognes" to="pomogneš" />
 		<Word from="poneses" to="poneseš" />
 		<Word from="ponovis" to="ponoviš" />
@@ -1758,6 +1756,7 @@
 		<RegEx find="oceo" replaceWith="očeo" />
 		<RegEx find="ocni" replaceWith="očni" />
 		<RegEx find="o([mk])aze" replaceWith="o$1aže" />
+		<RegEx find="/\bni[cć]k" replaceWith="ničk" />
 		<RegEx find="nosc" replaceWith="nošć" />
 		<RegEx find="sta([jn])es" replaceWith="sta$1eš" />
 		<RegEx find="(?&lt;!m)oroca" replaceWith="oroča" />
