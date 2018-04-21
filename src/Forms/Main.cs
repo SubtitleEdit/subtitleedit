@@ -8136,7 +8136,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (e.KeyData == _mainListViewGoToNextError)
             {
-                GoToNextSynaxError();
+                GoToNextSyntaxError();
                 e.SuppressKeyPress = true;
             }
             else if (_mainTextBoxSelectionToLower == e.KeyData && textBoxListViewText.SelectionLength > 0) // selection to lowercase
@@ -11639,7 +11639,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         SubtitleListview1.Items[index].Selected = true;
                         if (i == 0)
-                            SubtitleListview1.Items[index].EnsureVisible();
+                            SubtitleListview1.SelectIndexAndEnsureVisible(index, true);
                     }
                     i++;
                 }
@@ -13435,7 +13435,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (e.KeyData == _mainListViewGoToNextError)
             {
-                GoToNextSynaxError();
+                GoToNextSyntaxError();
                 e.SuppressKeyPress = true;
             }
             else if (e.KeyCode == Keys.V && e.Modifiers == Keys.Control) //Ctrl+V = Paste from clipboard
@@ -13589,7 +13589,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void GoToNextSynaxError()
+        private void GoToNextSyntaxError()
         {
             int idx = FirstSelectedIndex + 1;
             try
@@ -13604,6 +13604,10 @@ namespace Nikse.SubtitleEdit.Forms
                         (SubtitleListview1.ColumnIndexWpm >= 0 && item.SubItems[SubtitleListview1.ColumnIndexWpm].BackColor == Configuration.Settings.Tools.ListViewSyntaxErrorColor))
                     {
                         SubtitleListview1.SelectIndexAndEnsureVisible(i, true);
+                        if (mediaPlayer.VideoPlayer != null)
+                        {
+                            mediaPlayer.VideoPlayer.CurrentPosition = _subtitle.Paragraphs[i].StartTime.TotalSeconds;
+                        }
                         return;
                     }
                 }
@@ -13709,8 +13713,12 @@ namespace Nikse.SubtitleEdit.Forms
         private void SortSubtitle(SubtitleSortCriteria subtitleSortCriteria, string description)
         {
             Paragraph firstSelectedParagraph = null;
+            var firstSelectedIndex = 0;
             if (SubtitleListview1.SelectedItems.Count > 0)
-                firstSelectedParagraph = _subtitle.Paragraphs[SubtitleListview1.SelectedItems[0].Index];
+            {
+                firstSelectedIndex = SubtitleListview1.SelectedItems[0].Index;
+                firstSelectedParagraph = _subtitle.Paragraphs[firstSelectedIndex];
+            }
 
             _subtitleListViewIndex = -1;
             MakeHistoryForUndo(string.Format(_language.BeforeSortX, description));
@@ -13719,7 +13727,7 @@ namespace Nikse.SubtitleEdit.Forms
                 _subtitle.Paragraphs.Reverse();
             ShowSource();
             SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
-            SubtitleListview1.SelectIndexAndEnsureVisible(firstSelectedParagraph);
+            SubtitleListview1.SelectIndexAndEnsureVisible(firstSelectedIndex, true);
             ShowStatus(string.Format(_language.SortedByX, description));
         }
 
