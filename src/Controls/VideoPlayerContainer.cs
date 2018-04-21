@@ -345,7 +345,7 @@ namespace Nikse.SubtitleEdit.Controls
                 if (text != _mpvTextOld || _mpvTextFileName == null || _retryCount > 0)
                 {
                     if (_retryCount >= 0 || string.IsNullOrEmpty(_mpvTextFileName) || _subtitlePrev == null || _subtitlePrev.FileName != subtitle.FileName || !_mpvTextFileName.EndsWith(format.Extension, StringComparison.Ordinal))
-                    {                        
+                    {
                         mpv.RemoveSubtitle();
                         DeleteTempMpvFileName();
                         _mpvTextFileName = Path.GetTempFileName() + format.Extension;
@@ -1327,7 +1327,7 @@ namespace Nikse.SubtitleEdit.Controls
             if (mouseX > max)
                 mouseX = max;
 
-            double percent = (mouseX * 100.0) / max;
+            double percent = mouseX * 100.0 / max;
             _pictureBoxProgressBar.Width = (int)(max * percent / 100.0);
 
             CurrentPosition = percent * Duration / 100.0;
@@ -1357,6 +1357,7 @@ namespace Nikse.SubtitleEdit.Controls
             if (VideoPlayer == null)
             {
                 _pictureBoxProgressBar.Width = 0;
+                _labelTimeCode.Text = string.Empty;
             }
             else
             {
@@ -1523,7 +1524,7 @@ namespace Nikse.SubtitleEdit.Controls
                     {
                         return VideoPlayer.CurrentPosition;
                     }
-                }                    
+                }
                 return 0;
             }
             set
@@ -1603,9 +1604,10 @@ namespace Nikse.SubtitleEdit.Controls
             SubtitleText = string.Empty;
             VideoPlayer.DisposeVideoPlayer();
             VideoPlayer = null;
-            DeleteTempMpvFileName();            
+            DeleteTempMpvFileName();
             _retryCount = 3;
             SmpteMode = false;
+            RefreshProgressBar();
         }
 
     }
