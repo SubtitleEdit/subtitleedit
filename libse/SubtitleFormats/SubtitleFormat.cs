@@ -433,5 +433,22 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return DecodeTimeCodeFramesFourParts(timestamp.Split(splitChars, StringSplitOptions.RemoveEmptyEntries));
         }
 
+        public static SubtitleFormat LoadBinaryFormatsFormats(SubtitleFormat[] formats, string fileName, Subtitle subtitle)
+        {
+            if (formats == null || formats.Length == 0)
+            {
+                return null;
+            }
+            var list = new List<string>(File.ReadAllLines(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName)));
+            foreach (var subtitleFormat in formats)
+            {
+                if (subtitleFormat.IsMine(list, fileName))
+                {
+                    subtitleFormat.LoadSubtitle(subtitle, list, fileName);
+                    return subtitleFormat;
+                }
+            }
+            return null;
+        }
     }
 }
