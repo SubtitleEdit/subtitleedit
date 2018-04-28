@@ -14483,7 +14483,7 @@ namespace Nikse.SubtitleEdit.Forms
                         new TimeCodesOnly1(),
                         new TimeCodesOnly2()
                     };
-                    format = timeCodeSubtitle.LoadBinaryFormatsformats(formats, openFileDialog1.FileName);
+                    format = SubtitleFormat.LoadBinaryFormatsFormats(formats, openFileDialog1.FileName, timeCodeSubtitle);
                 }
 
                 if (format == null)
