@@ -185,7 +185,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             new KeyValuePair<string,string>("922f",                ""  ),
             new KeyValuePair<string,string>("92b0",                "À" ),
             new KeyValuePair<string,string>("9231",                "Â" ),
-            new KeyValuePair<string,string>("9232",                ""  ),
+            new KeyValuePair<string,string>("9232",                "Ç" ),
             new KeyValuePair<string,string>("92b3",                "È" ),
             new KeyValuePair<string,string>("9234",                "Ê" ),
             new KeyValuePair<string,string>("92b5",                "Ë" ),
