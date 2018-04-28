@@ -14472,18 +14472,12 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (format == null)
                 {
-                    var formats = new SubtitleFormat[]
+                    var formats = SubtitleFormat.BinaryFormats().Union(new SubtitleFormat[]
                     {
-                        new FinalCutProImage(),
-                        new SpuImage(),
-                        new Ebu(),
-                        new BdnXml(),
-                        new Pac(),
-                        new Cavena890(),
                         new TimeCodesOnly1(),
                         new TimeCodesOnly2()
-                    };
-                    format = SubtitleFormat.LoadBinaryFormatsFormats(formats, openFileDialog1.FileName, timeCodeSubtitle);
+                    }).ToArray();
+                    format = SubtitleFormat.LoadSubtitleFromFile(formats, openFileDialog1.FileName, timeCodeSubtitle);
                 }
 
                 if (format == null)

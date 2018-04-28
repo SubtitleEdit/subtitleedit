@@ -13,7 +13,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         protected static readonly char[] SplitCharColon = { ':' };
 
         /// <summary>
-        /// Formats supported by Subtitle Edit
+        /// Text formats supported by Subtitle Edit
         /// </summary>
         public static IEnumerable<SubtitleFormat> AllSubtitleFormats
         {
@@ -433,12 +433,20 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return DecodeTimeCodeFramesFourParts(timestamp.Split(splitChars, StringSplitOptions.RemoveEmptyEntries));
         }
 
-        public static SubtitleFormat LoadBinaryFormatsFormats(SubtitleFormat[] formats, string fileName, Subtitle subtitle)
+        /// <summary>
+        /// Load subtitle type of 'formats' from file.
+        /// </summary>
+        /// <param name="formats">List of possible formats</param>
+        /// <param name="fileName">Name of subtitle file</param>
+        /// <param name="subtitle">Subtitle to load file into</param>
+        /// <returns>The format of the file, null of not format match found</returns>
+        public static SubtitleFormat LoadSubtitleFromFile(SubtitleFormat[] formats, string fileName, Subtitle subtitle)
         {
-            if (formats == null || formats.Length == 0)
+            if (formats == null || formats.Length == 0 || string.IsNullOrEmpty(fileName))
             {
                 return null;
             }
+
             var list = new List<string>(File.ReadAllLines(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName)));
             foreach (var subtitleFormat in formats)
             {
@@ -449,6 +457,20 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
             }
             return null;
+        }
+
+        public static SubtitleFormat[] BinaryFormats()
+        {
+            var formats = new SubtitleFormat[]
+            {
+                new FinalCutProImage(),
+                new SpuImage(),
+                new Ebu(),
+                new BdnXml(),
+                new Pac(),
+                new Cavena890(),
+            };
+            return formats;
         }
     }
 }
