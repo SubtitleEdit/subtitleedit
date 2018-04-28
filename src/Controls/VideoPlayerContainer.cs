@@ -626,6 +626,7 @@ namespace Nikse.SubtitleEdit.Controls
                 _panelSubtitle.Height = _panelSubtitle.Height + _controlsHeight;
                 _panelcontrols.Visible = false;
             }
+            HideCursor();
         }
 
         public void ShowControls()
@@ -635,6 +636,37 @@ namespace Nikse.SubtitleEdit.Controls
                 _panelcontrols.Visible = true;
                 _panelSubtitle.Height = _panelSubtitle.Height - _controlsHeight;
             }
+            ShowCursor();
+        }
+
+        public void HideCursor()
+        {
+            if (_cursorStatus < 0)
+                return;
+
+            _cursorStatus--;
+            if (VideoPlayer != null)
+            {
+                var mpv = VideoPlayer as LibMpvDynamic;
+                mpv?.HideCursor();
+            }
+            Cursor.Hide();
+        }
+
+        private int _cursorStatus = 0;
+
+        public void ShowCursor()
+        {
+            if (_cursorStatus >= 0)
+                return;
+
+            _cursorStatus++;
+            if (VideoPlayer != null)
+            {
+                var mpv = VideoPlayer as LibMpvDynamic;
+                mpv?.ShowCursor();
+            }
+            Cursor.Show();
         }
 
         private Control MakeControlsPanel()
