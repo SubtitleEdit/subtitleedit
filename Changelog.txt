@@ -1,6 +1,6 @@
 ﻿Subtitle Edit Changelog
 
-3.5.7 (xth May 2018)
+3.5.7 (xth May 2018) BETA
 * NEW:
    * Add Indonesian translation (+ installer) - thx Nicedward
    * Add new subtitle format
@@ -29,7 +29,8 @@
    * Add some style support to "Modify selection"
    * Ctrl+a/ctrl+d/ctrl+shift+i works in more lists - thx tormento
    * Add shortcut for open translator mode - thx OmrSi
-   * Add shortcut go to previous subtitle (from video pos) - thx OmrSi 
+   * Add shortcut go to previous subtitle (from video pos) - thx OmrSi
+   * Hide cursor in video fullscreen mode/mpv - thx OmrSi
 * FIXED:
    * Fix "Add to names list" in OCR spell check - thx daed-alus/Sergiy
    * Fix "Generate scene changes" decimal point issue - thx Max

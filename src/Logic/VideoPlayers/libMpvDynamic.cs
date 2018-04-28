@@ -163,7 +163,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             set
             {
                 var v = Configuration.Settings.General.AllowVolumeBoost ? (int)Math.Round(value * 1.5) : value;
-                DoMpvCommand("set", "volume",  v.ToString(CultureInfo.InvariantCulture));
+                DoMpvCommand("set", "volume", v.ToString(CultureInfo.InvariantCulture));
                 _volume = value;
             }
         }
@@ -371,6 +371,16 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         public void ReloadSubtitle()
         {
             DoMpvCommand("sub-reload");
+        }
+
+        public void HideCursor()
+        {
+            _mpvSetOptionString(_mpvHandle, GetUtf8Bytes("cursor-autohide"), GetUtf8Bytes("always"));
+        }
+
+        public void ShowCursor()
+        {
+            _mpvSetOptionString(_mpvHandle, GetUtf8Bytes("cursor-autohide"), GetUtf8Bytes("no"));
         }
 
         public static bool IsInstalled

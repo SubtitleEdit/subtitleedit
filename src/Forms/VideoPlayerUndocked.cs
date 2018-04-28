@@ -35,6 +35,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void VideoPlayerUndocked_FormClosing(object sender, FormClosingEventArgs e)
         {
+            _videoPlayerContainer.ShowCursor();
             if (RedockOnFullscreenEnd)
             {
                 _mainForm.RedockVideoControlsToolStripMenuItemClick(null, null);
