@@ -1060,7 +1060,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             if (listViewStyles.SelectedItems.Count == 1 && _doUpdate)
             {
                 string name = listViewStyles.SelectedItems[0].Text;
-                SetSsaStyle(name, "outline", numericUpDownOutline.Value.ToString(CultureInfo.CurrentCulture));
+                SetSsaStyle(name, "outline", numericUpDownOutline.Value.ToString(CultureInfo.InvariantCulture));
                 GeneratePreview();
             }
         }
@@ -1070,7 +1070,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             if (listViewStyles.SelectedItems.Count == 1 && _doUpdate)
             {
                 string name = listViewStyles.SelectedItems[0].Text;
-                SetSsaStyle(name, "shadow", numericUpDownShadowWidth.Value.ToString(CultureInfo.CurrentCulture));
+                SetSsaStyle(name, "shadow", numericUpDownShadowWidth.Value.ToString(CultureInfo.InvariantCulture));
                 GeneratePreview();
             }
         }
@@ -1082,7 +1082,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             {
                 numericUpDownShadowWidth.Value = 2;
                 string name = listViewStyles.SelectedItems[0].Text;
-                SetSsaStyle(name, "outline", numericUpDownOutline.Value.ToString(CultureInfo.CurrentCulture));
+                SetSsaStyle(name, "outline", numericUpDownOutline.Value.ToString(CultureInfo.InvariantCulture));
                 SetSsaStyle(name, "borderstyle", "1");
                 GeneratePreview();
 
@@ -1099,7 +1099,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             {
                 numericUpDownShadowWidth.Value = 0;
                 string name = listViewStyles.SelectedItems[0].Text;
-                SetSsaStyle(name, "outline", numericUpDownOutline.Value.ToString(CultureInfo.CurrentCulture));
+                SetSsaStyle(name, "outline", numericUpDownOutline.Value.ToString(CultureInfo.InvariantCulture));
                 SetSsaStyle(name, "borderstyle", "3");
                 GeneratePreview();
 
