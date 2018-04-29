@@ -286,7 +286,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
 
                 if (!string.IsNullOrEmpty(Configuration.Settings.General.MpcHcLocation))
                 {
-                    path = Path.GetDirectoryName(Configuration.Settings.General.MpcHcLocation);
+                    path = Configuration.Settings.General.MpcHcLocation;
                     if (path != null && (File.Exists(path) && path.EndsWith("mpc-hc64.exe", StringComparison.OrdinalIgnoreCase)))
                         return path;
                     if (Directory.Exists(Configuration.Settings.General.MpcHcLocation))
@@ -340,7 +340,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
 
                 if (!string.IsNullOrEmpty(Configuration.Settings.General.MpcHcLocation))
                 {
-                    path = Path.GetDirectoryName(Configuration.Settings.General.MpcHcLocation);
+                    path = Configuration.Settings.General.MpcHcLocation;
                     if (path != null && File.Exists(path) && path.EndsWith("mpc-hc.exe", StringComparison.OrdinalIgnoreCase))
                         return path;
                     if (Directory.Exists(Configuration.Settings.General.MpcHcLocation))
