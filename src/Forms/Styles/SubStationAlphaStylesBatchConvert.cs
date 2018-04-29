@@ -84,9 +84,9 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 checkBoxScaleBorderAndShadow.Visible = false;
 
                 numericUpDownOutline.Increment = 1;
-                numericUpDownOutline.DecimalPlaces = 1;
+                numericUpDownOutline.DecimalPlaces = 0;
                 numericUpDownShadowWidth.Increment = 1;
-                numericUpDownShadowWidth.DecimalPlaces = 1;
+                numericUpDownShadowWidth.DecimalPlaces = 0;
             }
 
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
@@ -576,7 +576,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             {
                 numericUpDownShadowWidth.Value = 2;
                 string name = CurrentStyleName;
-                SetSsaStyle(name, "outline", numericUpDownOutline.Value.ToString(CultureInfo.InvariantCulture));
+                SetSsaStyle(name, "outline", numericUpDownOutline.Value.ToString(CultureInfo.CurrentCulture));
                 SetSsaStyle(name, "borderstyle", "1");
                 GeneratePreviewAndUpdateRawHeader();
 
@@ -590,7 +590,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
         {
             if (_doUpdate)
             {
-                SetSsaStyle(CurrentStyleName, "outline", numericUpDownOutline.Value.ToString(CultureInfo.InvariantCulture));
+                SetSsaStyle(CurrentStyleName, "outline", numericUpDownOutline.Value.ToString(CultureInfo.CurrentCulture));
                 GeneratePreviewAndUpdateRawHeader();
             }
         }
@@ -599,7 +599,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
         {
             if (_doUpdate)
             {
-                SetSsaStyle(CurrentStyleName, "shadow", numericUpDownShadowWidth.Value.ToString(CultureInfo.InvariantCulture));
+                SetSsaStyle(CurrentStyleName, "shadow", numericUpDownShadowWidth.Value.ToString(CultureInfo.CurrentCulture));
                 GeneratePreviewAndUpdateRawHeader();
             }
         }
@@ -1018,7 +1018,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             {
                 numericUpDownShadowWidth.Value = 0;
                 string name = CurrentStyleName;
-                SetSsaStyle(name, "outline", numericUpDownOutline.Value.ToString(CultureInfo.InvariantCulture));
+                SetSsaStyle(name, "outline", numericUpDownOutline.Value.ToString(CultureInfo.CurrentCulture));
                 SetSsaStyle(name, "borderstyle", "3");
                 GeneratePreview();
 
