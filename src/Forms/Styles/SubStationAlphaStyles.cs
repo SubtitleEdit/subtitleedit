@@ -102,9 +102,9 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 listViewStyles.Columns[5].Text = l.Back;
                 checkBoxFontUnderline.Visible = false;
                 numericUpDownOutline.Increment = 1;
-                numericUpDownOutline.DecimalPlaces = 1;
+                numericUpDownOutline.DecimalPlaces = 0;
                 numericUpDownShadowWidth.Increment = 1;
-                numericUpDownShadowWidth.DecimalPlaces = 1;
+                numericUpDownShadowWidth.DecimalPlaces = 0;
             }
 
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
@@ -1060,7 +1060,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             if (listViewStyles.SelectedItems.Count == 1 && _doUpdate)
             {
                 string name = listViewStyles.SelectedItems[0].Text;
-                SetSsaStyle(name, "outline", numericUpDownOutline.Value.ToString(CultureInfo.InvariantCulture));
+                SetSsaStyle(name, "outline", numericUpDownOutline.Value.ToString(CultureInfo.CurrentCulture));
                 GeneratePreview();
             }
         }
@@ -1070,7 +1070,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             if (listViewStyles.SelectedItems.Count == 1 && _doUpdate)
             {
                 string name = listViewStyles.SelectedItems[0].Text;
-                SetSsaStyle(name, "shadow", numericUpDownShadowWidth.Value.ToString(CultureInfo.InvariantCulture));
+                SetSsaStyle(name, "shadow", numericUpDownShadowWidth.Value.ToString(CultureInfo.CurrentCulture));
                 GeneratePreview();
             }
         }
@@ -1082,7 +1082,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             {
                 numericUpDownShadowWidth.Value = 2;
                 string name = listViewStyles.SelectedItems[0].Text;
-                SetSsaStyle(name, "outline", numericUpDownOutline.Value.ToString(CultureInfo.InvariantCulture));
+                SetSsaStyle(name, "outline", numericUpDownOutline.Value.ToString(CultureInfo.CurrentCulture));
                 SetSsaStyle(name, "borderstyle", "1");
                 GeneratePreview();
 
@@ -1099,7 +1099,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             {
                 numericUpDownShadowWidth.Value = 0;
                 string name = listViewStyles.SelectedItems[0].Text;
-                SetSsaStyle(name, "outline", numericUpDownOutline.Value.ToString(CultureInfo.InvariantCulture));
+                SetSsaStyle(name, "outline", numericUpDownOutline.Value.ToString(CultureInfo.CurrentCulture));
                 SetSsaStyle(name, "borderstyle", "3");
                 GeneratePreview();
 
