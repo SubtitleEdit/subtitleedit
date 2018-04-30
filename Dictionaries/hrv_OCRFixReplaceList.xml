@@ -2787,6 +2787,7 @@
     <RegEx find="Džordž" replaceWith="George" />
     <RegEx find="Džouns" replaceWith="Jones" />
     <RegEx find="Džulij" replaceWith="Juli" />
+    <RegEx find="Efrejm" replaceWith="Ephraim" />
     <RegEx find="Ejmos" replaceWith="Amos" />
     <RegEx find="[EA]jnštajn" replaceWith="Einstein" />
     <RegEx find="Endi" replaceWith="Andy" />
