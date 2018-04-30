@@ -557,8 +557,6 @@
 		<Word from="otisao" to="otišao" />
 		<Word from="oziljak" to="ožiljak" />
 		<!--p-->		
-		<Word from="Padas" to="Padaš" />
-		<Word from="padas" to="padaš" />
 		<Word from="palaca" to="palača" />
 		<Word from="palaci" to="palači" />
 		<Word from="palacu" to="palaču" />
@@ -751,7 +749,6 @@
 		<Word from="ruzan" to="ružan" />
 		<Word from="ruzu" to="ružu" />
 		<!-- s -->
-		<Word from="sadasnjost" to="sadašnjost" />
 		<Word from="sadrze" to="sadrže" />
 		<Word from="sadrzi" to="sadrži" />
 		<Word from="salje" to="šalje" />
@@ -1178,6 +1175,7 @@
 	<EndLines />
 	<WholeLines />
 	<RegularExpressions>
+		<RegEx find="adas(?!v)" replaceWith="adaš" />
 		<RegEx find="(?&lt;![Pp]r|[Nn])adje(?!(v|n(e|u[olt]))\b)" replaceWith="ađe" />
 		<RegEx find="ajuc" replaceWith="ajuć" />
 		<RegEx find="ndj?el" replaceWith="nđel" />
@@ -1419,7 +1417,6 @@
 		<RegEx find="([oOSs])tici" replaceWith="$1tići" />
 		<RegEx find="([oO])tis([al])" replaceWith="$1tiš$2" />
 		<RegEx find="zledjen" replaceWith="zlijeđen" />
-		<RegEx find="padas" replaceWith="padaš" />
 		<RegEx find="pam[cč]" replaceWith="pamć" />
 		<RegEx find="([pP])az([nl])j" replaceWith="$1až$2j" />
 		<RegEx find="\b([pP])j?es[cć]an" replaceWith="$1ješčan" />
