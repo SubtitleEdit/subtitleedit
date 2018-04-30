@@ -1018,6 +1018,8 @@
     <Word from="talase" to="valove" />
     <Word from="talasi" to="valovi" />
     <Word from="Talasi" to="Valovi" />
+    <Word from="talasima" to="valovima" />
+    <Word from="Talasima" to="Valovima" />
     <Word from="tečnost" to="tekućina" />
     <Word from="tečnosti" to="tekućine" />
     <Word from="tečnošću" to="tekućinom" />
@@ -1259,6 +1261,7 @@
     <Word from="Bitlsi" to="Beatlesi" />
     <Word from="Bridžit" to="Bridget" />
     <Word from="Brižit" to="Brigitte" />
+    <Word from="Bruks" to="Brooks" />
     <Word from="Dablin" to="Dublin" />
     <Word from="Dablina" to="Dublina" />
     <Word from="Dablinu" to="Dublinu" />
@@ -1405,6 +1408,7 @@
     <Word from="Voren" to="Warren" />
     <Word from="Vud" to="Wood" />
     <Word from="Žak" to="Jacques" />
+    <Word from="Žil" to="Jules" />
     <!-- imena mjeseci -->
     <Word from="januar" to="siječanj" />
     <Word from="Januar" to="Siječanj" />
@@ -1569,6 +1573,7 @@
     <LinePart from="treba da bude" to="treba biti" />
     <LinePart from="u jutro" to="ujutro" />
     <LinePart from="ući unutra" to="ući" />
+    <LinePart from="vas je lagao" to="vam je lagao" />
     <LinePart from="za uvijek" to="zauvijek" />
     <LinePart from="zato sto" to="zato što" />
     <LinePart from="zna da bude" to="zna biti" />
@@ -1745,6 +1750,7 @@
     <RegEx find="vrop" replaceWith="urop" />
     <RegEx find="fabri[kc]" replaceWith="tvornic" />
     <RegEx find="Fabri[kc]" replaceWith="Tvornic" />
+    <RegEx find="fabrič" replaceWith="tvornič" />
     <RegEx find="\bfarb" replaceWith="boj" />
     <RegEx find="Farb(?!er)" replaceWith="Boj" />
     <RegEx find="fij?o[ck]" replaceWith="ladic" />
@@ -2523,6 +2529,7 @@
     <!-- bjegunac-->
     <RegEx find="(?&lt;!j)egun" replaceWith="jegun" />
     <RegEx find="(?&lt;!j)elokup" replaceWith="jelokup" />
+    <RegEx find="enlj" replaceWith="enj" />
     <RegEx find="eoni([cč])" replaceWith="ioni$1" />
     <RegEx find="erišu" replaceWith="eriraju" />
     <RegEx find="ermer" replaceWith="ramor" />
@@ -2595,6 +2602,7 @@
     <RegEx find="ntiše" replaceWith="ntira" />
     <RegEx find="ntišu" replaceWith="ntiraju" />
     <RegEx find="ntitj?el" replaceWith="ntitijel" />
+    <RegEx find="nzuje" replaceWith="nzira" />
     <RegEx find="atursk" replaceWith="aturaln" />
     <RegEx find="azuij" replaceWith="azumij" />
     <RegEx find="([pg])asić" replaceWith="$1asit ć" />
@@ -2644,6 +2652,7 @@
     <RegEx find="(?&lt;!k)rimić" replaceWith="rimit ć" />
     <RegEx find="prostav" replaceWith="protstav" />
     <RegEx find="pulis" replaceWith="pulir" />
+    <RegEx find="rčaće" replaceWith="rčat će" />
     <RegEx find="renaduvan" replaceWith="renapuhan" />
     <RegEx find="rijedel" replaceWith="rijedil" />
     <RegEx find="r([mv])isa" replaceWith="r$1ira" />
@@ -2778,6 +2787,7 @@
     <RegEx find="Džordž" replaceWith="George" />
     <RegEx find="Džouns" replaceWith="Jones" />
     <RegEx find="Džulij" replaceWith="Juli" />
+    <RegEx find="Ejmos" replaceWith="Amos" />
     <RegEx find="[EA]jnštajn" replaceWith="Einstein" />
     <RegEx find="Endi" replaceWith="Andy" />
     <RegEx find="Endrj?u" replaceWith="Andrew" />
