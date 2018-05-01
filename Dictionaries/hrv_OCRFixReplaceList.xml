@@ -951,6 +951,8 @@
     <Word from="stoleća" to="stoljeća" />
     <Word from="stobom" to="s tobom" />
     <Word from="stvrano" to="stvarno" />
+    <Word from="Stupiću" to="Stupit ću" />
+    <Word from="stupiću" to="stupit ću" />
     <Word from="subjekat" to="subjekt" />
     <Word from="sudija" to="sudac" />
     <Word from="Sudija" to="Sudac" />
@@ -1079,6 +1081,8 @@
     <Word from="umetninama" to="umjetninama" />
     <Word from="umreti" to="umrijeti" />
     <Word from="Umret" to="Umrijet" />
+    <Word from="umrijećeš" to="umrijet ćeš" />
+    <Word from="umrijećete" to="umrijet ćete" />
     <Word from="Uneću" to="Unijet ću" />
     <Word from="unaprediti" to="unaprijediti" />
     <Word from="univerzitet" to="sveučilište" />
@@ -1254,6 +1258,8 @@
     <Word from="Anđelesa" to="Angelesa" />
     <Word from="Anđelesu" to="Angelesu" />
     <Word from="Anđelesom" to="Angelesom" />
+    <Word from="Antoni" to="Anthony" />
+    <Word from="Antoniju" to="Anthonyju" />
     <Word from="Arči" to="Archie" />
     <Word from="Beverli" to="Beverly" />
     <Word from="Bejker" to="Baker" />
@@ -2874,6 +2880,8 @@
     <RegEx find="Tajler" replaceWith="Tyler" />
     <RegEx find="Valt" replaceWith="Walt" />
     <RegEx find="V[ao]šington" replaceWith="Washington" />
+    <RegEx find="Vavilon" replaceWith="Babilon" />
+    <RegEx find="vavilons" replaceWith="babilons" />
     <RegEx find="Vejn" replaceWith="Wayne" />
     <RegEx find="Vejder" replaceWith="Vader" />
     <RegEx find="Vilijam" replaceWith="William" />
