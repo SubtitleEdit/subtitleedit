@@ -493,7 +493,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <LineHeight>Высота строки</LineHeight>
     <BoxSingleLine>Контур - одна линия</BoxSingleLine>
     <BoxMultiLine>Контур - несколько линий</BoxMultiLine>
-    <Forced>Включ.</Forced>
+    <Forced>Форсированный</Forced>
     <ChooseBackgroundColor>Выберите цвет фона</ChooseBackgroundColor>
     <SaveImageAs>Сохранить изображение как...</SaveImageAs>
     <FcpUseFullPathUrl>Запоминать полный путь сохранения FCP xml</FcpUseFullPathUrl>
@@ -1951,7 +1951,6 @@ https://github.com/SubtitleEdit/subtitleedit
     <WaveformPlayNewSelectionEnd>Воспроизвести конец выделения</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Проиграть первый выделенный субтитр</WaveformPlayFirstSelectedSubtitle>
     <WaveformFocusListView>Фокус на списке</WaveformFocusListView>
-    <WaveformGoToNextSubtitle>Перейти к следующему субтитру (от позиции видео)</WaveformGoToNextSubtitle>
     <WaveformGoToPreviousSceneChange>Перейти к предыдущему изменению сцены</WaveformGoToPreviousSceneChange>
     <WaveformGoToNextSceneChange>Перейти к следующему изменению сцены</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>Переключить изменение сцен</WaveformToggleSceneChange>
@@ -1967,6 +1966,8 @@ https://github.com/SubtitleEdit/subtitleedit
     <GoForward1Second>1 сек. вперед</GoForward1Second>
     <GoBack5Seconds>5 секунд назад</GoBack5Seconds>
     <GoForward5Seconds>5 секунд вперед</GoForward5Seconds>
+    <WaveformGoToPrevSubtitle>Перейти к предыдущему субтитру (от позиции видео)</WaveformGoToPrevSubtitle>
+    <WaveformGoToNextSubtitle>Перейти к следующему субтитру (от позиции видео)</WaveformGoToNextSubtitle>
     <TogglePlayPause>Вкл./Откл. Воспроизведение/Пауза</TogglePlayPause>
     <Pause>Пауза</Pause>
     <Fullscreen>Во весь экран</Fullscreen>
