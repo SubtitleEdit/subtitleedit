@@ -6374,32 +6374,24 @@ namespace Nikse.SubtitleEdit.Forms
                     ShowGetDictionaries();
                     return;
                 }
-
-                if (_subtitle != null && _subtitle.Paragraphs.Count > 0)
+                if (_spellCheckForm != null)
                 {
-                    if (_spellCheckForm != null)
+                    // resume spellcheck?
+                    var result = MessageBox.Show(_language.ContinueWithCurrentSpellCheck, Title, MessageBoxButtons.YesNoCancel);
+                    switch (result)
                     {
-                        var result = MessageBox.Show(_language.ContinueWithCurrentSpellCheck, Title, MessageBoxButtons.YesNoCancel);
-                        if (result == DialogResult.Cancel)
+                        case DialogResult.Cancel:
                             return;
-
-                        if (result == DialogResult.No)
-                        {
-                            _spellCheckForm.Dispose();
-                            _spellCheckForm = new SpellCheck();
-                            _spellCheckForm.DoSpellCheck(autoDetect, _subtitle, dictionaryFolder, this, startFromLine);
-                        }
-                        else
-                        {
+                        case DialogResult.Yes:
                             _spellCheckForm.ContinueSpellCheck(_subtitle);
-                        }
-                    }
-                    else
-                    {
-                        _spellCheckForm = new SpellCheck();
-                        _spellCheckForm.DoSpellCheck(autoDetect, _subtitle, dictionaryFolder, this, startFromLine);
+                            return;
+                        case DialogResult.No:
+                            _spellCheckForm.Dispose();
+                            break;
                     }
                 }
+                _spellCheckForm = new SpellCheck();
+                _spellCheckForm.DoSpellCheck(autoDetect, _subtitle, dictionaryFolder, this, startFromLine);
             }
             catch (Exception ex)
             {
