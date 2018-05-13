@@ -6019,7 +6019,10 @@ namespace Nikse.SubtitleEdit.Forms
                         SetupAlternateEdit();
                     }
                     SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
-                    ResetHistory();
+                    if (!onlySelectedLines)
+                    {
+                        ResetHistory();
+                    }
                     RestoreSubtitleListviewIndices();
                     _fileName = googleTranslate.GetFileNameWithTargetLanguage(oldFileName, _videoFileName, _subtitleAlternate, GetCurrentSubtitleFormat());
                     _converted = true;
