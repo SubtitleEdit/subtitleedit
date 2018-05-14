@@ -922,9 +922,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 if (index + 20 >= buffer.Length)
                     return null;
 
-                if (buffer[index] == 0xFE && (buffer[index - 15] == 0x60 || buffer[index - 15] == 0x61))
+                if (buffer[index] == 0xFE && buffer[index + 2] == 0x03 && (buffer[index - 15] >= 0x60 && buffer[index - 15] <= 0x6F))
                     break;
-                if (buffer[index] == 0xFE && (buffer[index - 12] == 0x60 || buffer[index - 12] == 0x61))
+                if (buffer[index] == 0xFE && buffer[index + 2] == 0x03 && (buffer[index - 12] >= 0x60 && buffer[index - 12] <= 0x6F))
                     break;
             }
 
@@ -934,12 +934,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var p = new Paragraph();
 
             int timeStartIndex = feIndex - 15;
-            if (buffer[timeStartIndex] == 0x60)
+            if (buffer[timeStartIndex] >= 0x60 && buffer[timeStartIndex] <= 0x6F)
             {
                 p.StartTime = GetTimeCode(timeStartIndex + 1, buffer);
                 p.EndTime = GetTimeCode(timeStartIndex + 5, buffer);
             }
-            else if (buffer[timeStartIndex + 3] == 0x60)
+            else if (buffer[timeStartIndex + 3] >= 0x60 && buffer[timeStartIndex + 3] <= 0x6F)
             {
                 timeStartIndex += 3;
                 p.StartTime = GetTimeCode(timeStartIndex + 1, buffer);
