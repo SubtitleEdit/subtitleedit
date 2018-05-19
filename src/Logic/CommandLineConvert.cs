@@ -105,6 +105,7 @@ namespace Nikse.SubtitleEdit.Logic
                     _stdOutWriter.WriteLine("        /fixcommonerrors");
                     _stdOutWriter.WriteLine("        /redocasing");
                     _stdOutWriter.WriteLine("        /forcedonly");
+                    _stdOutWriter.WriteLine("        /usestylefromsource");
                     _stdOutWriter.WriteLine();
                     _stdOutWriter.WriteLine("    example: SubtitleEdit /convert *.srt sami");
                     _stdOutWriter.WriteLine("    list available formats: SubtitleEdit /convert /list");
@@ -155,6 +156,10 @@ namespace Nikse.SubtitleEdit.Logic
                 else if (targetFormat == "sup" || targetFormat == "bluray" || targetFormat == "blu-ray")
                 {
                     targetFormat = BatchConvert.BluRaySubtitle;
+                }
+                else if (targetFormat == "ebu")
+                {
+                    targetFormat = Ebu.NameOfFormat.RemoveChar(' ').ToLowerInvariant();
                 }
 
                 var args = new List<string>(arguments.Skip(4).Select(s => s.Trim()));
@@ -276,6 +281,7 @@ namespace Nikse.SubtitleEdit.Logic
 
                 bool overwrite = GetArgument(args, "overwrite").Equals("overwrite");
                 bool forcedOnly = GetArgument(args, "forcedonly").Equals("forcedonly");
+                bool useStyleFromSource = GetArgument(args, "usestylefromsource").Equals("usestylefromsource");
 
                 var patterns = Enumerable.Empty<string>();
 
@@ -376,7 +382,7 @@ namespace Nikse.SubtitleEdit.Logic
                                                     }
                                                 }
 
-                                                BatchConvertSave(targetFormat, offset, targetEncoding, outputFolder, count, ref converted, ref errors, formats, newFileName, sub, format, overwrite, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions, resolution, true);
+                                                BatchConvertSave(targetFormat, offset, targetEncoding, outputFolder, count, ref converted, ref errors, formats, newFileName, sub, format, overwrite, useStyleFromSource, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions, resolution, true);
                                                 done = true;
                                             }
                                         }
@@ -625,7 +631,7 @@ namespace Nikse.SubtitleEdit.Logic
                         }
                         else if (!done)
                         {
-                            BatchConvertSave(targetFormat, offset, targetEncoding, outputFolder, count, ref converted, ref errors, formats, fileName, sub, format, overwrite, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions, resolution);
+                            BatchConvertSave(targetFormat, offset, targetEncoding, outputFolder, count, ref converted, ref errors, formats, fileName, sub, format, overwrite, useStyleFromSource, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions, resolution);
                         }
                     }
                     else
@@ -698,7 +704,7 @@ namespace Nikse.SubtitleEdit.Logic
             if (sub != null)
             {
                 _stdOutWriter?.WriteLine("Converted subtitle");
-                BatchConvertSave(targetFormat, offset, targetEncoding, outputFolder, count, ref converted, ref errors, formats.ToList(), fileName, sub, format, overwrite, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions, res);
+                BatchConvertSave(targetFormat, offset, targetEncoding, outputFolder, count, ref converted, ref errors, formats.ToList(), fileName, sub, format, overwrite, false, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions, res);
             }
         }
 
@@ -720,7 +726,7 @@ namespace Nikse.SubtitleEdit.Logic
             if (sub != null)
             {
                 _stdOutWriter?.WriteLine("Converted subtitle");
-                BatchConvertSave(targetFormat, offset, targetEncoding, outputFolder, count, ref converted, ref errors, formats.ToList(), fileName, sub, format, overwrite, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions);
+                BatchConvertSave(targetFormat, offset, targetEncoding, outputFolder, count, ref converted, ref errors, formats.ToList(), fileName, sub, format, overwrite, false, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions);
             }
         }
 
@@ -742,7 +748,7 @@ namespace Nikse.SubtitleEdit.Logic
             if (sub != null)
             {
                 _stdOutWriter?.WriteLine("Converted subtitle");
-                BatchConvertSave(targetFormat, offset, targetEncoding, outputFolder, count, ref converted, ref errors, formats.ToList(), fileName, sub, format, overwrite, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions);
+                BatchConvertSave(targetFormat, offset, targetEncoding, outputFolder, count, ref converted, ref errors, formats.ToList(), fileName, sub, format, overwrite, false, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions);
             }
         }
 
@@ -860,7 +866,10 @@ namespace Nikse.SubtitleEdit.Logic
         }
 
 
-        internal static bool BatchConvertSave(string targetFormat, string offset, Encoding targetEncoding, string outputFolder, int count, ref int converted, ref int errors, List<SubtitleFormat> formats, string fileName, Subtitle sub, SubtitleFormat format, bool overwrite, int pacCodePage, double? targetFrameRate, IEnumerable<string> multipleReplaceImportFiles, List<BatchAction> actions, Point? res = null, bool autoDetectLanguage = false)
+        internal static bool BatchConvertSave(string targetFormat, string offset, Encoding targetEncoding, string outputFolder, int count, ref int converted, ref int errors,
+                                              List<SubtitleFormat> formats, string fileName, Subtitle sub, SubtitleFormat format, bool overwrite, bool useStyleFromSource,
+                                              int pacCodePage, double? targetFrameRate, IEnumerable<string> multipleReplaceImportFiles, List<BatchAction> actions, Point? res = null,
+                                              bool autoDetectLanguage = false)
         {
             actions = actions ?? new List<BatchAction>();
             double oldFrameRate = Configuration.Settings.General.CurrentFrameRate;
@@ -1042,7 +1051,17 @@ namespace Nikse.SubtitleEdit.Logic
                         targetFormatFound = true;
                         outputFileName = FormatOutputFileNameForBatchConvert(fileName, ebu.Extension, outputFolder, overwrite);
                         _stdOutWriter?.Write($"{count}: {Path.GetFileName(fileName)} -> {outputFileName}...");
-                        ebu.Save(outputFileName, sub, true);
+                        if (useStyleFromSource && format != null && format.GetType() == typeof(Ebu))
+                        {
+                            var ebuOriginal = new Ebu();
+                            var temp = new Subtitle();
+                            ebuOriginal.LoadSubtitle(temp, null, fileName);
+                            ebu.Save(outputFileName, sub, true, ebuOriginal.Header);
+                        }
+                        else
+                        {
+                            ebu.Save(outputFileName, sub, true);
+                        }
                         _stdOutWriter?.WriteLine(" done.");
                     }
                 }
