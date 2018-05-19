@@ -1709,8 +1709,8 @@
 		<RegEx find="gusi" replaceWith="guši" />
 		<RegEx find="(?&lt;!\b[oO]zlo|\b[iI]sp(rip)?ov|i)jedjen" replaceWith="ijeđen" />
 		<RegEx find="hic(k|en)" replaceWith="hić$1" />
-		<RegEx find="hvaca" replaceWith="hvaća" />
-		<RegEx find="hvacas" replaceWith="hvaćaš" />
+		<RegEx find="hva[cč]a" replaceWith="hvaća" />
+		<RegEx find="hva[cč]as" replaceWith="hvaćaš" />
 		<RegEx find="hva([lt])is" replaceWith="hva$1iš" />
 		<RegEx find="(?&lt;![Gg]r|[Ll])icka" replaceWith="ička" />
 		<RegEx find="(?&lt;!M)ick([eoiu])" replaceWith="ičk$1" />
