@@ -592,6 +592,10 @@
     <Word from="viljeg" to="vil jeg" />
     <Word from="Sætjer" to="Sæt jer" />
     <Word from="udsatham" to="udsat ham" />
+    <Word from="afen" to="af en" />
+    <Word from="påjorden" to="på jorden" />
+    <Word from="afdem" to="af dem" />
+    <Word from="kmt" to="km/t" />
   </WholeWords>
   <PartialWordsAlways>
     <WordPart from="¤" to="o" />

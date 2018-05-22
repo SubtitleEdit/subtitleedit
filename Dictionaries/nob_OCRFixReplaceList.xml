@@ -1,0 +1,58 @@
+<ReplaceList>
+  <WholeWords>
+    <Word from="varjeg" to="var jeg" />
+    <Word from="omjeg" to="om jeg" />
+    <Word from="menjeg" to="men jeg" />
+    <Word from="noejeg" to="noe jeg" />
+    <Word from="førjeg" to="før jeg" />
+    <Word from="harjobbet" to="har jobbet" />
+    <Word from="Kunnejeg" to="Kunne jeg" />
+    <Word from="haddejeg" to="hadde jeg" />
+    <Word from="påjorden" to="på jorden" />
+    <Word from="nårjeg" to="når jeg" />
+    <Word from="tenkerjeg" to="tenker jeg" />
+    <Word from="helejorden" to="hele jorden" />
+    <Word from="menjorden" to="men jorden" />
+    <Word from="rundtjorden" to="rundt jorden" />
+    <Word from="forjorden" to="for jorden" />
+    <Word from="avjordens" to="av jordens" />
+  </WholeWords>
+  <PartialWords>
+    <!-- Will be used to check words not in dictionary -->
+    <!-- If new word(s) exists in spelling dictionary, it(they) is accepted -->
+    <WordPart from="ﬁ" to="fi" />
+    <WordPart from="ﬂ" to="fl" />
+    <WordPart from="/" to="l" />
+    <WordPart from="vv" to="w" />
+    <WordPart from="m" to="rn" />
+    <WordPart from="l" to="i" />
+    <WordPart from="€" to="e" />
+    <WordPart from="I" to="l" />
+    <WordPart from="c" to="o" />
+    <WordPart from="i" to="t" />
+    <WordPart from="cc" to="oo" />
+    <WordPart from="ii" to="tt" />
+    <WordPart from="n/" to="ry" />
+    <WordPart from="ae" to="æ" />
+
+    <!-- "f " will be two words -->
+    <WordPart from="f" to="f " />
+    <WordPart from="c" to="e" />
+    <WordPart from="o" to="e" />
+    <WordPart from="I" to="t" />
+    <WordPart from="n" to="o" />
+    <WordPart from="s" to="e" />
+    <WordPart from="\A" to="Vi" />
+    <WordPart from="n/" to="rv" />
+    <WordPart from="Ã" to="Å" />
+    <WordPart from="í" to="i" />
+  </PartialWords>
+  <BeginLines />
+  <EndLines />
+  <WholeLines />
+  <RemovedWholeWords />
+  <RemovedPartialLines />
+  <RemovedBeginLines />
+  <RemovedEndLines />
+  <RemovedWholeLines />
+</ReplaceList>
