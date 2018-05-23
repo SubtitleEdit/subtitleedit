@@ -16414,7 +16414,7 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxSubtitleFormats.AutoCompleteMode = AutoCompleteMode.Append;
 
             toolStripSplitButtonPlayRate.DropDownItems.Clear();
-            for (int i = 50; i <= 300; i += 10)
+            for (int i = 30; i <= 300; i += 10)
             {
                 toolStripSplitButtonPlayRate.DropDownItems.Add(new ToolStripMenuItem(i + "%", null, SetPlayRate) { Checked = i == 100 });
             }
