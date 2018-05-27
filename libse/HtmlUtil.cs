@@ -393,8 +393,11 @@ namespace Nikse.SubtitleEdit.Core
                     var nextNext = s[i + 2];
                     if (nextNext == '>' &&
                         (next == 'i' || // <i>
+                         next == 'I' || // <I>
                          next == 'b' || // <b>
-                         next == 'u')) // <u>
+                         next == 'B' || // <B>
+                         next == 'u' || // <u>
+                         next == 'U'))  // <U>
                     {
                         inside = true;
                         continue;
@@ -404,8 +407,11 @@ namespace Nikse.SubtitleEdit.Core
                         var nextNextNext = s[i + 3];
                         if (nextNextNext == '>' &&
                             (nextNext == 'i' || // </i>
+                             nextNext == 'I' || // </I>
                              nextNext == 'b' || // </b>
-                             nextNext == 'u')) // </u>
+                             nextNext == 'B' || // </B>
+                             nextNext == 'u' || // </u>
+                             nextNext == 'U'))  // </U>
                         {
                             inside = true;
                             continue;
@@ -416,15 +422,18 @@ namespace Nikse.SubtitleEdit.Core
                         var nextNextNext = s[i + 3];
                         if (nextNextNext == '>' &&
                             (next == 'i' || // <i/>
+                             next == 'I' || // <I/>
                              next == 'b' || // <b/>
-                             next == 'u')) // <u/>
+                             next == 'B' || // <B/>
+                             next == 'u' || // <u/>
+                             next == 'U'))  // <U/>
                         {
                             inside = true;
                             continue;
                         }
                     }
-                    if (next == 'f' && s.Substring(i).StartsWith("<font", StringComparison.OrdinalIgnoreCase) || // <font
-                        next == '/' && nextNext == 'f' && s.Substring(i).StartsWith("</font>", StringComparison.OrdinalIgnoreCase))  // </font>
+                    if ((next == 'f' || next == 'F') && s.Substring(i).StartsWith("<font", StringComparison.OrdinalIgnoreCase) || // <font
+                        next == '/' && (nextNext == 'f' || nextNext == 'F') && s.Substring(i).StartsWith("</font>", StringComparison.OrdinalIgnoreCase))  // </font>
                     {
                         inside = true;
                         continue;
