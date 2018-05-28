@@ -339,6 +339,11 @@
     <Word from="kampuje" to="kampira" />
     <Word from="kampujemo" to="kampiramo" />
     <Word from="kampuju" to="kampiraju" />
+    <Word from="kancelarija" to="ured" />
+    <Word from="kancelarijama" to="uredima" />
+    <Word from="kancelariju" to="ured" />
+    <Word from="Kancelarija" to="Ured" />
+    <Word from="Kancelariju" to="Ured" />
     <Word from="kancelariji" to="uredu" />
     <Word from="kancelarije" to="ureda" />
     <Word from="kancelarijom" to="uredom" />
@@ -1853,7 +1858,7 @@
     <RegEx find="ntezivn" replaceWith="ntenzivn" />
     <RegEx find="([iI])seče" replaceWith="$1zreže" />
     <RegEx find="spoljava" replaceWith="zražava" />
-    <RegEx find="([iI])spovj?e(d|st)" replaceWith="$1spovije$2" />
+    <RegEx find="spovj?e(d|st)" replaceWith="spovije$1" />
     <RegEx find="zbe([gć])" replaceWith="zbje$1" />
     <RegEx find="spresj?ecan" replaceWith="spresijecan" />
     <RegEx find="spri[čć]ać" replaceWith="spričat ć" />
@@ -1872,11 +1877,8 @@
     <RegEx find="jereti" replaceWith="hereti" />
     <RegEx find="Jereti" replaceWith="Hereti" />
     <RegEx find="jevanđelj" replaceWith="evanđelj" />
-    <RegEx find="\bJovan([aeou])?" replaceWith="Ivan$1" />
     <RegEx find="\b([kK])af([aeiou]|om|ama|anama|ic[aeiu]|an[aeiuo]|anom|ansk[aeiuo])\b" replaceWith="$1av$2" />
     <RegEx find="([kK]alib(?:ar|r[aeui]))\. *([0-9])" replaceWith="$1 .$2" />
-    <RegEx find="kancelarij[au]" replaceWith="ured" />
-    <RegEx find="Kancelarij[au]" replaceWith="Ured" />
     <RegEx find="arantin" replaceWith="aranten" />
     <RegEx find="kašik" replaceWith="žlic" />
     <RegEx find="Kašik" replaceWith="Žlic" />
@@ -2847,6 +2849,7 @@
     <RegEx find="Jejl" replaceWith="Yale" />
     <RegEx find="Jevrej" replaceWith="Židov" />
     <RegEx find="jevrej" replaceWith="židov" />
+    <RegEx find="Jovan" replaceWith="Ivan" />
     <RegEx find="kadilak" replaceWith="Cadillac" />
     <RegEx find="Kajl" replaceWith="Kyle" />
     <RegEx find="Kavendiš" replaceWith="Cavendish" />
