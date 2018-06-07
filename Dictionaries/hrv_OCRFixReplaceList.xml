@@ -949,6 +949,7 @@
     <Word from="sitnisajzer" to="synthesizer" />
     <Word from="skelet" to="kostur" />
     <Word from="sočiva" to="leće" />
+    <Word from="sočivima" to="lećama" />
     <Word from="sočivo" to="leća" />
     <Word from="sočivom" to="lećom" />
     <Word from="sočivu" to="leći" />
@@ -1200,6 +1201,8 @@
     <Word from="verena" to="zaručena" />
     <Word from="vereni" to="zaručeni" />
     <Word from="verimo" to="zaručimo" />
+    <Word from="vest" to="vijest" />
+    <Word from="Vest" to="Vijest" />
     <Word from="vesti" to="vijesti" />
     <Word from="Vesti" to="Vijesti" />
     <Word from="Vjesti" to="Vijesti" />
@@ -1280,6 +1283,7 @@
     <Word from="žmureo" to="žmirio" />
 
     <!-- imena -->
+    <Word from="Abi" to="Abby" />
     <Word from="Alis" to="Alice" />
     <Word from="Ajk" to="Ike" />
     <Word from="Ajku" to="Ikeu" />
@@ -1325,7 +1329,10 @@
     <Word from="Džeri" to="Jerry" />
     <Word from="Džerija" to="Jerryja" />
     <Word from="Džo" to="Joe" />
+    <Word from="Džoel" to="Joel" />
+    <Word from="Džoelu" to="Joelu" />
     <Word from="Džoš" to="Josh" />
+    <Word from="Džošu" to="Joshu" />
     <Word from="Džosi" to="Josie" />
     <Word from="Džozi" to="Josie" />
     <Word from="Džes" to="Jess" />
@@ -1395,6 +1402,7 @@
     <Word from="Krej?g" to="Craig" />
     <Word from="Kristi" to="Christie" />
     <Word from="Lajf" to="Life" />
+    <Word from="Lajl" to="Lile" />
     <Word from="Lejk" to="Lake" />
     <Word from="Lorejn" to="Loraine" />
     <Word from="Lorens" to="Lawrence" />
@@ -1424,6 +1432,7 @@
     <Word from="Ohajo" to="Ohio" />
     <Word from="Ohaja" to="Ohia" />
     <Word from="Ohaju" to="Ohiu" />
+    <Word from="Olbrajt" to="Albright" />
     <Word from="O'Nil" to="O'Neal" />
     <Word from="Orlins" to="Orleans" />
     <Word from="Orlinsa" to="Orleansa" />
