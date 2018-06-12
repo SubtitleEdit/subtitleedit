@@ -170,6 +170,7 @@
     <Word from="awoman" to="a woman" />
     <Word from="Awoman" to="A woman" />
     <Word from="barelytalked" to="barely talked" />
+    <Word from="basicly" to="basically" />
     <Word from="bcat" to="boat" />
     <Word from="Bcllvla" to="Bolivia" />
     <Word from="bcmb" to="bomb" />
@@ -467,6 +468,7 @@
     <Word from="H0we·ver" to="However" />
     <Word from="halftheir" to="half their" />
     <Word from="hapPY" to="happy" />
+    <Word from="harrassment" to="harassment" />
     <Word from="hasrt" to="hasn't" />
     <Word from="Hasrt" to="Hasn't" />
     <Word from="haven'tspokerl" to="haven't spoken" />
@@ -1137,6 +1139,7 @@
     <Word from="reallytalked" to="really talked" />
     <Word from="reallythink" to="really think" />
     <Word from="reallythinkthis" to="really think this" />
+    <Word from="recieve" to="receive" />
     <Word from="rememberthem" to="remember them" />
     <Word from="reoalibrated" to="recalibrated" />
     <Word from="retum" to="return" />
