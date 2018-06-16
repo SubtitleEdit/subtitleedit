@@ -1953,6 +1953,9 @@ namespace Nikse.SubtitleEdit.Core
             text = text.Replace(") \" ", ") \"");
             text = text.Replace("> \" ", "> \"");
 
+            while (text.Contains(" . "))
+                text = text.Replace(" . ", ". ");
+
             return text;
         }
 
