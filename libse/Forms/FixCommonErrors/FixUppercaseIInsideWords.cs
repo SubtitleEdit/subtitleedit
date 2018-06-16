@@ -100,8 +100,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                                         callbacks.AddFixToListView(p, fixAction, oldText, p.Text);
                                     }
                                 }
-                                else if (match.Index > 1 && ((st.StrippedText[match.Index - 1] == '\"') || (st.StrippedText[match.Index - 1] == '\'') ||
-                                                             (st.StrippedText[match.Index - 1] == '>') || (st.StrippedText[match.Index - 1] == '-')))
+                                else if (match.Index > 1 && "\"'<>()[]{}-—,.‘’¡¿„“()[]♪@".Contains(st.StrippedText[match.Index - 1]))
                                 {
                                 }
                                 else

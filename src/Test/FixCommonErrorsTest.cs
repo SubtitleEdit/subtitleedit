@@ -1796,6 +1796,17 @@ namespace Test
             }
         }
 
+        [TestMethod]
+        public void FixUppercaseIInsideWords6_AfterCurlyBracket()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "{MAN}Isabella");
+                new FixUppercaseIInsideWords().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual(_subtitle.Paragraphs[0].Text, "{MAN}Isabella");
+            }
+        }
+
         #endregion Fix uppercase I inside words
 
         #region Fix dialogs on one line
