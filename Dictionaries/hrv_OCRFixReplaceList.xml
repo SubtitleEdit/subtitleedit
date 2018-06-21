@@ -15,6 +15,7 @@
     <Word from="apsorbovanje" to="apsorbiranje" />
     <Word from="apsorbuje" to="apsorbira" />
     <Word from="azot" to="dušik" />
+    <Word from="azota" to="dušika" />
     <Word from="bašta" to="vrt" />
     <Word from="Bašta" to="Vrt" />
     <Word from="bašte" to="vrtovi" />
@@ -649,6 +650,7 @@
     <Word from="Pantalone" to="Hlače" />
     <Word from="pantalona" to="hlača" />
     <Word from="pantalonama" to="hlačama" />
+    <Word from="parčadi" to="komadića" />
     <Word from="parče" to="komadić" />
     <Word from="parčeta" to="komadića" />
     <Word from="parčetu" to="komadiću" />
@@ -755,6 +757,7 @@
     <Word from="praktikuju" to="prakticiraju" />
     <Word from="praktikovala" to="prakticirala" />
     <Word from="praktikovati" to="prakticirati" />
+    <Word from="pravougli" to="pravokutni" />
     <Word from="pre" to="prije" />
     <Word from="Pre" to="Prije" />
     <Word from="predela" to="predjela" />
@@ -824,6 +827,7 @@
     <Word from="projekat" to="projekt" />
     <Word from="Projekat" to="Projekt" />
     <Word from="promijena" to="promjena" />
+    <Word from="promovisao" to="promovirao" />
     <Word from="prosledili" to="proslijedili" />
     <Word from="protestvovat" to="protestirat" />
     <Word from="Protestvovat" to="Protestirat" />
@@ -1074,6 +1078,7 @@
     <Word from="trougao" to="trokut" />
     <Word from="trougla" to="trokuta" />
     <Word from="trouglu" to="trokutu" />
+    <Word from="trouglovi" to="trokuti" />
     <Word from="trouglove" to="trokute" />
     <Word from="trpeo" to="trpio" />
     <Word from="Trpeo" to="Trpio" />
@@ -1439,9 +1444,13 @@
     <Word from="Orlinsu" to="Orleansu" />
     <Word from="Pem" to="Pam" />
     <Word from="Pejdž" to="Paige" />
+    <Word from="Prinston" to="Princeton" />
+    <Word from="Prinstonu" to="Princetonu" />
     <Word from="Redži" to="Reggie" />
     <Word from="Redžinald" to="Reginald" />
     <Word from="Rej" to="Ray" />
+    <Word from="Rejmond" to="Raymond" />
+    <Word from="Rejmonda" to="Raymonda" />
     <Word from="Rejčel" to="Rachel" />
     <Word from="Rič" to="Rich" />
     <Word from="Rouz" to="Rose" />
@@ -1633,6 +1642,7 @@
     <LinePart from="ući unutra" to="ući" />
     <LinePart from="vas je lagao" to="vam je lagao" />
     <LinePart from="za uvijek" to="zauvijek" />
+    <LinePart from="zato jer" to="zato što" />
     <LinePart from="zato sto" to="zato što" />
     <LinePart from="zna da bude" to="zna biti" />
     <LinePart from="zna ko" to="zna tko" />
@@ -2075,6 +2085,7 @@
     <RegEx find="gladne([lvt])" replaceWith="gladnje$1" />
     <RegEx find="kean" replaceWith="cean" />
     <RegEx find="\bokvasi" replaceWith="smoči" />
+    <RegEx find="(?&lt;!m)onj?el" replaceWith="onijel" />
     <RegEx find="pklad" replaceWith="klad" />
     <RegEx find="(?&lt;![mdp])ostić" replaceWith="ostit ć" />
     <RegEx find="psedn" replaceWith="psjedn" />
@@ -2605,6 +2616,7 @@
     <RegEx find="grišć" replaceWith="grist ć" />
     <RegEx find="grutova" replaceWith="grutira" />
     <RegEx find="haot" replaceWith="kaot" />
+    <RegEx find="hariz" replaceWith="kariz" />
     <RegEx find="hrono" replaceWith="krono" />
     <RegEx find="(?&lt;![MH])ick([eoiu])" replaceWith="ičk$1" />
     <RegEx find="idev" replaceWith="idjev" />
@@ -2771,7 +2783,7 @@
     <RegEx find="umere" replaceWith="umjere" />
     <RegEx find="upoce" replaceWith="upocje" />
     <RegEx find="urfovan" replaceWith="urfan" />
-    <RegEx find="ušać" replaceWith="ušat ć" />
+    <RegEx find="u([šv])ać" replaceWith="u$1at ć" />
     <RegEx find="uzp" replaceWith="usp" />
     <RegEx find="(?&lt;!kr|m)užić" replaceWith="užit ć" />
     <RegEx find="veri([lt])" replaceWith="vjeri$1" />
@@ -2883,6 +2895,7 @@
     <RegEx find="Korejan" replaceWith="Korej" />
     <RegEx find="Kris(?!t)" replaceWith="Chris" />
     <RegEx find="Kvins" replaceWith="Queens" />
+    <RegEx find="Lajbnic" replaceWith="Leibnitz" />
     <RegEx find="Lajonel" replaceWith="Lionel" />
     <RegEx find="Leri" replaceWith="Larry" />
     <RegEx find="Klivlend" replaceWith="Cleveland" />
