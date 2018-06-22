@@ -395,7 +395,9 @@
     <Word from="komšinica" to="susjeda" />
     <Word from="komšinicu" to="susjedu" />
     <Word from="konektovan" to="spojen" />
+    <Word from="konektovana" to="spojena" />
     <Word from="konektovati" to="spojiti" />
+    <Word from="konektuje" to="spoji" />
     <Word from="kontrolišu" to="kontroliraju" />
     <Word from="Kontrolišu" to="Kontroliraju" />
     <Word from="Kontroliši" to="Kontroliraj" />
@@ -2895,7 +2897,7 @@
     <RegEx find="Korejan" replaceWith="Korej" />
     <RegEx find="Kris(?!t)" replaceWith="Chris" />
     <RegEx find="Kvins" replaceWith="Queens" />
-    <RegEx find="Lajbnic" replaceWith="Leibnitz" />
+    <RegEx find="Lajbnic" replaceWith="Leibniz" />
     <RegEx find="Lajonel" replaceWith="Lionel" />
     <RegEx find="Leri" replaceWith="Larry" />
     <RegEx find="Klivlend" replaceWith="Cleveland" />
