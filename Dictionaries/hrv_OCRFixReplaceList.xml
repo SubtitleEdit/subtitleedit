@@ -446,6 +446,7 @@
     <Word from="leto" to="ljeto" />
     <Word from="Leto" to="Ljeto" />
     <Word from="letos" to="ljetos" />
+    <Word from="Letos" to="Ljetos" />
     <Word from="letiti" to="letjeti" />
     <Word from="leve" to="lijeve" />
     <Word from="loži" to="pali" />
@@ -1981,7 +1982,6 @@
     <RegEx find="(?&lt;!p)([lL])ete([lt])" replaceWith="$1etje$2" />
     <!-- ne diraj! [uzletio/razletio/sletio/podletio] -->
     <RegEx find="([lL])eteo" replaceWith="$1etio" />
-    <RegEx find="\b([lL])eto([ms])" replaceWith="$1jeto$2" />
     <RegEx find="icemer" replaceWith="icemjer" />
     <RegEx find="\bličn([aeiou]|im|o[mgj])" replaceWith="osobn$1" />
     <RegEx find="\bLičn([aeiou]|im|o[mgj])" replaceWith="Osobn$1" />
@@ -1996,7 +1996,7 @@
     <RegEx find="maknil" replaceWith="maknul" />
     <RegEx find="\bmap(?!ir)" replaceWith="kart" />
     <RegEx find="\bMap(?!ir)" replaceWith="Kart" />
-    <RegEx find="mator" replaceWith="star" />
+    <RegEx find="mator(i?!j)" replaceWith="star" />
     <RegEx find="Mator" replaceWith="Star" />
     <RegEx find="\b([mM])er([aou]|i[lt]|e(?!d))" replaceWith="$1jer$2" />
     <RegEx find="([mM])ese([cč])" replaceWith="$1jese$2" />
@@ -2381,7 +2381,7 @@
     <RegEx find="([tT])ržn(?!ic)" replaceWith="$1rgovačk" />
     <RegEx find="([uU])bi?j?edi" replaceWith="$1vjeri" />
     <RegEx find="bj?edljiv" replaceWith="vjerljiv" />
-    <RegEx find="bi?j?eđen" replaceWith="vjeren" />
+    <RegEx find="(?&lt;!o)bi?j?eđen" replaceWith="vjeren" />
     <RegEx find="bj?eđivanj" replaceWith="vjeravanj" />
     <RegEx find="\b([uU])bic" replaceWith="$1bojic" />
     <RegEx find="(?&lt;!l)([Uu])([bd])ić" replaceWith="$1$2it ć" />
