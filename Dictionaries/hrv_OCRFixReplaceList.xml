@@ -370,6 +370,7 @@
     <Word from="kerova" to="pasa" />
     <Word from="kidnapovan" to="otet" />
     <Word from="Kidnapovan" to="Otet" />
+    <Word from="kijanje" to="kihanje" />
     <Word from="kiji" to="koji" />
     <Word from="kijim" to="kojim" />
     <Word from="klasifikuju" to="klasificiraju" />
@@ -472,6 +473,7 @@
     <Word from="martom" to="ožujkom" />
     <Word from="mehur" to="mjehur" />
     <Word from="menom" to="mnom" />
+    <Word from="menjajući" to="mijenjajući" />
     <Word from="merač" to="mjerač" />
     <Word from="meri" to="mjeri" />
     <Word from="mere" to="mjere" />
@@ -985,6 +987,9 @@
     <Word from="stepeni" to="stupnjeva" />
     <Word from="stepenu" to="stupnju" />
     <Word from="sticati" to="stjecati" />
+    <Word from="stideo" to="stidio" />
+    <Word from="Stideo" to="Stidio" />
+    <Word from="stidela" to="stidjela" />
     <Word from="stiditi" to="stidjeti" />
     <Word from="streljamo" to="strijeljamo" />
     <Word from="streljati" to="strijeljati" />
@@ -1268,6 +1273,7 @@
     <Word from="zasede" to="zasjede" />
     <Word from="zasedi" to="zasjedi" />
     <Word from="zasedu" to="zasjedu" />
+    <Word from="zastideo" to="zastidio" />
     <Word from="zatp" to="zato" />
     <Word from="Zatp" to="Zato" />
     <Word from="zaželeo" to="zaželio" />
@@ -2752,7 +2758,6 @@
     <RegEx find="tarisa" replaceWith="tira" />
     <RegEx find="taun" replaceWith="town" />
     <RegEx find="tćeš" replaceWith="t ćeš" />
-    <RegEx find="tideo" replaceWith="tidio" />
     <RegEx find="tede(?![oć])" replaceWith="tedje" />
     <RegEx find="tedeo" replaceWith="tedio" />
     <RegEx find="tešn" replaceWith="tješn" />
