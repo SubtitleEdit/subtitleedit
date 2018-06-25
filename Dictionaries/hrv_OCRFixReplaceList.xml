@@ -1411,9 +1411,12 @@
     <Word from="Klod" to="Claude" />
     <Word from="Klode" to="Claude" />
     <Word from="Kol" to="Cole" />
+    <Word from="Kolu" to="Coleu" />
     <Word from="Kolins" to="Collins" />
     <Word from="Kortni" to="Courtney" />
-    <Word from="Krej?g" to="Craig" />
+    <Word from="Krejg" to="Craig" />
+    <Word from="Krejga" to="Craiga" />
+    <Word from="Krejgu" to="Craigu" />
     <Word from="Kristi" to="Christie" />
     <Word from="Lajf" to="Life" />
     <Word from="Lajl" to="Lile" />
@@ -2688,7 +2691,7 @@
     <RegEx find="o[cčć]aren" replaceWith="očaran" />
     <RegEx find="([oO])d([kp])" replaceWith="$1t$2" />
     <RegEx find="oćeju" replaceWith="oće" />
-    <RegEx find="očeće" replaceWith="očet će" />
+    <RegEx find="očeć([eu])" replaceWith="očet ć$1" />
     <RegEx find="očmi" replaceWith="očni" />
     <RegEx find="odseč" replaceWith="odsječ" />
     <RegEx find="odsetni" replaceWith="odsjetni" />
