@@ -69,6 +69,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 return;
 
             var idx = allText.IndexOf('[', indxOfSpeakers);
+            if (idx == -1)
+                return;
+
             allText = allText.Substring(idx);
             allText = allText.Substring(0, allText.LastIndexOf(']') + 1);
 
