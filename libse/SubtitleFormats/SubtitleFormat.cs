@@ -61,6 +61,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new Ebu(),
                     new Edl(),
                     new Eeg708(),
+                    new ElrPrint(),
                     new F4Text(),
                     new F4Rtf(),
                     new F4Xml(),

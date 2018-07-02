@@ -251,6 +251,7 @@
     <Compile Include="SubtitleFormats\JsonType13.cs" />
     <Compile Include="SubtitleFormats\JsonTypeOnlyLoad1.cs" />
     <Compile Include="SubtitleFormats\JsonType12.cs" />
+    <Compile Include="SubtitleFormats\ElrPrint.cs" />
     <Compile Include="SubtitleFormats\TimeCodesOnly2.cs" />
     <Compile Include="SubtitleFormats\Rtf1.cs" />
     <Compile Include="SubtitleFormats\Rtf2.cs" />
