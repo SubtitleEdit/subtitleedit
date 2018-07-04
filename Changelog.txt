@@ -1,9 +1,9 @@
 ﻿Subtitle Edit Changelog
 
-3.5.7 (xth May 2018) BETA
+3.5.7 (xth August 2018) BETA
 * NEW:
    * Add Indonesian translation (+ installer) - thx Nicedward
-   * Add new subtitle format
+   * Add new subtitle formats
    * Add support for mp4 dash ttml - thx Octirius
    * Add shortcut for toggle music symbols - thx robtor
    * Add shortcuts "Batch convert" + "waveform split"
@@ -34,6 +34,7 @@
 * FIXED:
    * Fix "Add to names list" in OCR spell check - thx daed-alus/Sergiy
    * Fix "Generate scene changes" decimal point issue - thx Max
+   * Fix issue with "max time" after "split line" - thx Jüri
    * Fix "Remove text for HI" issue - thx btsix
    * Fix casing issue regarding "President" - thx Kolle
    * Fix hashtag issue in "Fix common errors"
@@ -58,6 +59,7 @@
    * Fix "Move start/end 100 ms back/forward" - thx OmrSi
    * Fix for "Fix (remove dash) lines beginning w dash" - thx OmrSi
    * Fix changed status for non utf-8 files - thx OmrSi/mkver
+   * Fix crash with file containing the word "speakers" - txh darnn
 
 
 3.5.6 (27th February 2018)
