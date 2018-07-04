@@ -80,7 +80,7 @@ namespace Nikse.SubtitleEdit.Controls
             double? milliseconds = GetTotalMilliseconds();
             if (milliseconds.HasValue)
             {
-                if (milliseconds.Value >= TimeCode.MaxTime.TotalMilliseconds - 0.1)
+                if (milliseconds.Value >= TimeCode.MaxTimeTotalMilliseconds - 0.1)
                     milliseconds = 0;
 
                 if (Mode == TimeMode.HHMMSSMS)
@@ -150,7 +150,7 @@ namespace Nikse.SubtitleEdit.Controls
                     return new TimeCode();
 
                 if (string.IsNullOrWhiteSpace(maskedTextBox1.Text.RemoveChar('.').Replace(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, string.Empty).RemoveChar(',').RemoveChar(':')))
-                    return TimeCode.MaxTime;
+                    return new TimeCode(TimeCode.MaxTimeTotalMilliseconds);
 
                 if (!_dirty)
                     return new TimeCode(_initialTotalMilliseconds);
@@ -243,7 +243,7 @@ namespace Nikse.SubtitleEdit.Controls
                     _initialTotalMilliseconds = value.TotalMilliseconds;
                 }
 
-                if (value == null || value.TotalMilliseconds >= TimeCode.MaxTime.TotalMilliseconds - 0.1)
+                if (value == null || value.TotalMilliseconds >= TimeCode.MaxTimeTotalMilliseconds - 0.1)
                 {
                     maskedTextBox1.Text = string.Empty;
                     return;
