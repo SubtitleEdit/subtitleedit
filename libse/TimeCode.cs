@@ -6,18 +6,11 @@ namespace Nikse.SubtitleEdit.Core
 {
     public class TimeCode
     {
-        public static readonly TimeCode MaxTime = new TimeCode(99, 59, 59, 999);
-
         public const double BaseUnit = 1000.0; // Base unit of time
         private double _totalMilliseconds;
 
-        public bool IsMaxTime
-        {
-            get
-            {
-                return Math.Abs(_totalMilliseconds - MaxTime.TotalMilliseconds) < 0.01;
-            }
-        }
+        public bool IsMaxTime => Math.Abs(_totalMilliseconds - MaxTimeTotalMilliseconds) < 0.01;
+        public const double MaxTimeTotalMilliseconds = 359999999; // new TimeCode(99, 59, 59, 999).TotalMilliseconds
 
         public static TimeCode FromSeconds(double seconds)
         {
