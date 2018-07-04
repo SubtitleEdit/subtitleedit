@@ -1209,8 +1209,8 @@
 		<RegEx find="cas([au]|om|ovima)\b" replaceWith="sat$1" />
 		<RegEx find="Cas([au]|om|ovima)\b" replaceWith="Sat$1" />
 		<RegEx find="[cC]ascen" replaceWith="čašćen" />
-		<RegEx find="[cC]ek" replaceWith="ček" />
-		<RegEx find="[cC]ekov" replaceWith="čekov" />
+		<RegEx find="cek" replaceWith="ček" />
+		<RegEx find="Ček" replaceWith="Ček" />
 		<RegEx find="[cC]etvrt" replaceWith="četvrt" />
 		<RegEx find="cetv" replaceWith="četv" />
 		<RegEx find="Cetv" replaceWith="Četv" />
@@ -1228,7 +1228,7 @@
 		<RegEx find="[cC]udn" replaceWith="čudn" />
 		<RegEx find="[cCČč]udovi[sš]" replaceWith="čudoviš" />
 		<RegEx find="\b[cC]uje" replaceWith="čuje" />
-		<RegEx find="(?&lt;!a)cuje" replaceWith="čuje" />
+		<RegEx find="(?&lt;![ba])cuje" replaceWith="čuje" />
 		<RegEx find="[cC]u([vl])a" replaceWith="ču$1a" />
 		<RegEx find="cut([ei])" replaceWith="šut$1" />
 		<RegEx find="Cut([ei])" replaceWith="Šut$1" />
@@ -1750,8 +1750,8 @@
 		<RegEx find="nisten" replaceWith="ništen" />
 		<RegEx find="(?&lt;![Ee]t|[Gg]e|[Rr]i|[Tt]am)noc" replaceWith="noć" />
 		<RegEx find="oceju" replaceWith="oće" />
-		<RegEx find="oceo" replaceWith="očeo" />
-		<RegEx find="ocni" replaceWith="očni" />
+		<RegEx find="([Oo])ce([ko])" replaceWith="$1če$2" />
+		<RegEx find="oc[mn]i" replaceWith="očni" />
 		<RegEx find="o([mk])aze" replaceWith="o$1aže" />
 		<RegEx find="/\bni[cć]k" replaceWith="ničk" />
 		<RegEx find="nosc" replaceWith="nošć" />
@@ -1776,6 +1776,7 @@
 		<RegEx find="ronad" replaceWith="ronađ" />
 		<RegEx find="([KkPp])renes\b" replaceWith="$1reneš" />
 		<RegEx find="sapni" replaceWith="šapni" />
+		<RegEx find="sce([zk])" replaceWith="šče$1" />
 		<RegEx find="setnj" replaceWith="šetnj" />
 		<RegEx find="slusa" replaceWith="sluša" />
 		<RegEx find="slusk" replaceWith="slušk" />
