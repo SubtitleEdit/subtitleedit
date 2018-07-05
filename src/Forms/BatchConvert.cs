@@ -207,6 +207,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxBridgeGaps.Text = l.BridgeGaps;
 
             _removeTextForHearingImpaired = new RemoveTextForHI(new RemoveTextForHISettings(new Subtitle()));
+            _removeTextForHiSettings = _removeTextForHearingImpaired.Settings;
 
             labelFilter.Text = l.Filter;
             comboBoxFilter.Items[0] = Configuration.Settings.Language.General.AllFiles;
@@ -960,6 +961,7 @@ namespace Nikse.SubtitleEdit.Forms
                             {
                                 if (checkBoxRemoveTextForHI.Checked)
                                 {
+                                    _removeTextForHearingImpaired.Settings = _removeTextForHiSettings;
                                     p.Text = _removeTextForHearingImpaired.RemoveTextFromHearImpaired(p.Text);
                                 }
                                 if (checkBoxRemoveFormatting.Checked)
@@ -1766,12 +1768,14 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        RemoveTextForHISettings _removeTextForHiSettings;
         private void buttonRemoveTextForHiSettings_Click(object sender, EventArgs e)
         {
             using (var form = new FormRemoveTextForHearImpaired(null, new Subtitle()))
             {
                 form.InitializeSettingsOnly();
                 form.ShowDialog(this);
+                _removeTextForHiSettings = form.GetSettings(new Subtitle());
             }
         }
 
