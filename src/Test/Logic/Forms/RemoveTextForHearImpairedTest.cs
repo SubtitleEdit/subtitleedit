@@ -1678,6 +1678,18 @@ namespace Test.Logic.Forms
             Assert.AreEqual("Gotta be ready before nightfall.", actual);
         }
 
+        [TestMethod]
+        public void RemoveTextBetweenBeforeColonDoNotTouch()
+        {
+            var target = GetRemoveTextForHiLib();
+            target.Settings.RemoveTextBeforeColon = true;
+            target.Settings.RemoveTextBetweenParentheses = true;
+            var source = "{\\an8}But I know of something" + Environment.NewLine +
+                         "<i>that could:</i>"; 
+            string actual = target.RemoveColon(source);
+            Assert.AreEqual(source, actual);
+        }
+
         #region Additional test attributes
 
         //
