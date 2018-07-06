@@ -90,7 +90,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
             // Okay or remove???
             string noTagText = HtmlUtil.RemoveHtmlTags(text);
             if (noTagText.Length > 10 && noTagText.IndexOf(':') == noTagText.Length - 1 && noTagText != noTagText.ToUpper())
-                return text;
+                return preAssTag + text;
 
             string newText = string.Empty;
             var lines = text.Trim().SplitToLines();
