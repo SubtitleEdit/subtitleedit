@@ -160,7 +160,7 @@
             this.KeyPreview = true;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(700, 500);
+            this.MinimumSize = new System.Drawing.Size(700, 600);
             this.Name = "Statistics";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
