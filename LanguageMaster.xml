@@ -2133,17 +2133,17 @@ Setting a font for a subtitle is normally done in the video player, but can also
     <MostUsedLines>Most used lines</MostUsedLines>
     <MostUsedWords>Most used words</MostUsedWords>
     <NothingFound>Nothing found</NothingFound>
-    <NumberOfLinesX>Number of subtitle lines: {0:#,###}</NumberOfLinesX>
+    <NumberOfLinesX>Number of subtitle lines: {0:#,##0}</NumberOfLinesX>
     <LengthInFormatXinCharactersY>Number of characters as {0}: {1:#,###,##0}</LengthInFormatXinCharactersY>
     <NumberOfCharactersInTextOnly>Number of characters in text only: {0:#,###,##0}</NumberOfCharactersInTextOnly>
-    <TotalDuration>Total duration of all subtitles: {0}</TotalDuration>
+    <TotalDuration>Total duration of all subtitles: {0:#,##0}</TotalDuration>
     <TotalCharsPerSecond>Total characters/second: {0:0.0} seconds</TotalCharsPerSecond>
-    <TotalWords>Total words in subtitle: {0}</TotalWords>
-    <NumberOfItalicTags>Number of italic tags: {0}</NumberOfItalicTags>
-    <NumberOfBoldTags>Number of bold tags: {0}</NumberOfBoldTags>
-    <NumberOfUnderlineTags>Number of underline tags: {0}</NumberOfUnderlineTags>
-    <NumberOfFontTags>Number of font tags: {0}</NumberOfFontTags>
-    <NumberOfAlignmentTags>Number of alignment tags: {0}</NumberOfAlignmentTags>
+    <TotalWords>Total words in subtitle: {0:#,##0}</TotalWords>
+    <NumberOfItalicTags>Number of italic tags: {0:#,##0}</NumberOfItalicTags>
+    <NumberOfBoldTags>Number of bold tags: {0:#,##0}</NumberOfBoldTags>
+    <NumberOfUnderlineTags>Number of underline tags: {0:#,##0}</NumberOfUnderlineTags>
+    <NumberOfFontTags>Number of font tags: {0:#,##0}</NumberOfFontTags>
+    <NumberOfAlignmentTags>Number of alignment tags: {0:#,##0}</NumberOfAlignmentTags>
     <LineLengthMinimum>Subtitle length - minimum: {0}</LineLengthMinimum>
     <LineLengthMaximum>Subtitle length - maximum: {0}</LineLengthMaximum>
     <LineLengthAverage>Subtitle length - average: {0}</LineLengthAverage>
