@@ -61,14 +61,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 try
                 {
-                    if (buffer[i] == 0xc4 && buffer[i + 1] == 9 && buffer[i + 2] == 0 && buffer[i + 3] == 0x10) // start time (hopefully)
+                    if ((buffer[i] == 0xc4 || buffer[i] == 0x5d) && buffer[i + 1] == 9 && buffer[i + 2] == 0 && buffer[i + 3] == 0x10) // start time (hopefully)
                     {
-                        var p = new Paragraph();
-                        p.StartTime = GetTimeCode(buffer, i + 4);
+                        var p = new Paragraph { StartTime = GetTimeCode(buffer, i + 4) };
                         i += 7;
 
                         // seek to endtime
-                        while (i < buffer.Length - 10 && !(buffer[i] == 0xc4 && buffer[i + 1] == 9 && buffer[i + 2] == 0 && buffer[i + 3] == 0x10))
+                        while (i < buffer.Length - 10 && !((buffer[i] == 0xc4 || buffer[i] == 0x5d) && buffer[i + 1] == 9 && buffer[i + 2] == 0 && buffer[i + 3] == 0x10))
                         {
                             i++;
                         }
@@ -84,13 +83,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                         // seek to text
                         var sb = new StringBuilder();
-                        while (i < buffer.Length - 10 && !(buffer[i] == 0xc4 && buffer[i + 1] == 9 && buffer[i + 2] == 0 && buffer[i + 3] == 0x10))
+                        int min = 4;
+                        while (min > 0 || i < buffer.Length - 10 && !((buffer[i] == 0xc4 || buffer[i] == 0x5d) && buffer[i + 1] == 9 && buffer[i + 2] == 0 && buffer[i + 3] == 0x10))
                         {
+                            min--;
                             if (buffer[i] == 9 && buffer[i + 1] == 0 && buffer[i + 2] == 0x44)
                             {
                                 var length = buffer[i - 1];
                                 i += 12;
-                                for (int j = i; j < i + (length * 4); j += 4)
+                                for (int j = i; j < i + length * 4; j += 4)
                                 {
                                     sb.Append(Encoding.GetEncoding(1252).GetString(buffer, j, 1));
                                 }
@@ -101,7 +102,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 i++;
                             }
                         }
-                        p.Text = p.Text + " " + sb.ToString().TrimEnd();
+                        p.Text = (p.Text + " " + sb).Trim();
                         subtitle.Paragraphs.Add(p);
                     }
                     else
