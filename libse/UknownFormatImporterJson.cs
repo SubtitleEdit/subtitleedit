@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Text;
 
 namespace Nikse.SubtitleEdit.Core
@@ -70,12 +71,12 @@ namespace Nikse.SubtitleEdit.Core
                 // ignored
             }
 
-            if (subtitle1.Paragraphs.Count > subtitle2.Paragraphs.Count && subtitle1.Paragraphs.Count > subtitle3.Paragraphs.Count)
+            if (subtitle1.Paragraphs.Count >= subtitle2.Paragraphs.Count && subtitle1.Paragraphs.Count >= subtitle3.Paragraphs.Count)
             {
                 subtitle1.Renumber();
                 return FixTimeCodeMsOrSeconds(subtitle1);
             }
-            if (subtitle2.Paragraphs.Count > subtitle1.Paragraphs.Count && subtitle2.Paragraphs.Count > subtitle3.Paragraphs.Count)
+            if (subtitle2.Paragraphs.Count >= subtitle1.Paragraphs.Count && subtitle2.Paragraphs.Count >= subtitle3.Paragraphs.Count)
             {
                 subtitle2.Renumber();
                 return FixTimeCodeMsOrSeconds(subtitle2);
@@ -126,6 +127,9 @@ namespace Nikse.SubtitleEdit.Core
             {
                 return;
             }
+
+            if (!s.EndsWith('}'))
+                s += '}';
 
             var start = ReadStartTag(s);
             var end = ReadEndTag(s);
@@ -212,7 +216,16 @@ namespace Nikse.SubtitleEdit.Core
 
         private static string ReadTextTag(string s)
         {
+            var text = Json.ReadTag(s, "text");
             var textLines = Json.ReadArray(s, "text");
+            bool isArray = s.Contains("[");
+            if (isArray && textLines.Any(p => p == "end_time" || p == "endTime" || p == "end" || p == "endMs" || p == "endMilliseconds" || p == "end_ms"))
+                isArray = false;
+            if (!isArray && !string.IsNullOrEmpty(text))
+            {
+                return text.Replace("&#039;", "'");
+            }
+
             if (textLines != null && textLines.Count > 0)
             {
                 return string.Join(Environment.NewLine, textLines);
