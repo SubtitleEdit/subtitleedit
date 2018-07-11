@@ -216,6 +216,15 @@ namespace Nikse.SubtitleEdit.Core
 
         private static string ReadTextTag(string s)
         {
+            var idx = s.IndexOf("\"text", StringComparison.OrdinalIgnoreCase);
+            if (idx < 0)
+                return null;
+
+            s = s.Substring(idx);
+            idx = s.IndexOf(']');
+            if (idx > 0)
+                s = s.Substring(0, idx + 1);
+
             var text = Json.ReadTag(s, "text");
             var textLines = Json.ReadArray(s, "text");
             bool isArray = s.Contains("[");

@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Nikse.SubtitleEdit.Core;
 
 namespace Test.Logic
@@ -13,9 +14,9 @@ namespace Test.Logic
         'subtitles': [
         {
             'sub_order' : 1,
-                        'text' : 'this presentation is delivered by the stanford center for professional',
-                        'start_time' : 13.128,
-                        'end_time' : 16.399
+            'text' : 'this presentation is delivered by the stanford center for professional',
+            'start_time' : 13.128,
+            'end_time' : 16.399
         },        {
             'sub_order' : 2,
             'text' : 'development',
@@ -73,6 +74,75 @@ namespace Test.Logic
             var subtitle = importer.AutoGuessImport(raw.Replace('\'', '"').SplitToLines());
             Assert.AreEqual(11, subtitle.Paragraphs.Count);
             Assert.AreEqual("development", subtitle.Paragraphs[1].Text);
+        }
+
+        [TestMethod]
+        public void TestUnknownJsonArray()
+        {
+            var raw = @"{
+        'subtitles': [
+        {
+            'sub_order' : 1,
+            'text' : [ 'Ford', 'BMW', 'Fiat' ],
+            'start_time' : 13.128,
+            'end_time' : 16.399
+        },        {
+            'sub_order' : 2,
+            'text' : [ 'Ford', 'BMW', 'Fiat' ],
+            'start_time' : 16.399,
+            'end_time' : 23.399
+        },        {
+            'sub_order' : 3,
+            'text' : [ 'Ford', 'BMW', 'Fiat' ],
+            'start_time' : 27.07,
+            'end_time' : 30.099
+        },        {
+            'sub_order' : 4,
+            'text' : [ 'Ford', 'BMW', 'Fiat' ],
+            'start_time' : 30.099,
+            'end_time' : 31.949
+        },        {
+            'sub_order' : 5,
+            'text' : [ 'Ford', 'BMW', 'Fiat' ],
+            'start_time' : 31.949,
+            'end_time' : 33.57
+        },        {
+            'sub_order' : 6,
+            'text' : [ 'Ford', 'BMW', 'Fiat' ],
+            'start_time' : 33.57,
+            'end_time' : 34.63
+        },        {
+            'sub_order' : 7,
+            'text' : [ 'Ford', 'BMW', 'Fiat' ],
+            'start_time' : 34.63,
+            'end_time' : 37.66
+        },        {
+            'sub_order' : 8,
+            'text' : [ 'Ford', 'BMW', 'Fiat' ],
+            'start_time' : 37.659,
+            'end_time' : 40.179
+        },        {
+            'sub_order' : 9,
+            'text' : [ 'Ford', 'BMW', 'Fiat' ],
+            'start_time' : 40.179,
+            'end_time' : 42.959
+        },        {
+            'sub_order' : 10,
+            'text' : [ 'Ford', 'BMW', 'Fiat' ],
+            'start_time' : 42.959,
+            'end_time' : 45.339
+        },        {
+            'sub_order' : 11,
+            'text' : [ 'Ford', 'BMW', 'Fiat' ],
+            'start_time' : 45.338,
+            'end_time' : 48.368
+        }]
+}";
+
+            var importer = new UknownFormatImporterJson();
+            var subtitle = importer.AutoGuessImport(raw.Replace('\'', '"').SplitToLines());
+            Assert.AreEqual(11, subtitle.Paragraphs.Count);
+            Assert.AreEqual("Ford" + Environment.NewLine + "BMW" + Environment.NewLine + "Fiat", subtitle.Paragraphs[1].Text);
         }
     }
 }
