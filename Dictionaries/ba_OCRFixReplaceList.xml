@@ -60,8 +60,6 @@
 		<Word from="cerku" to="kćer" />
 		<Word from="Cerku" to="Kćer" />
 		<Word from="ces" to="ćeš" />
-		<Word from="cesce" to="češće" />
-		<Word from="Cesce" to="Češće" />
 		<Word from="Ceskoj" to="Češkoj" />
 		<Word from="cestitki" to="čestitki" />
 		<Word from="cesto" to="često" />
@@ -919,13 +917,6 @@
 		<Word from="takodje" to="također" />
 		<Word from="Takodje" to="Također" />
 		<Word from="tece" to="teče" />
-		<Word from="teska" to="teška" />
-		<Word from="Teska" to="Teška" />
-		<Word from="teske" to="teške" />
-		<Word from="teski" to="teški" />
-		<Word from="tesko" to="teško" />
-		<Word from="Tesko" to="Teško" />
-		<Word from="teskom" to="teškom" />
 		<Word from="tezak" to="težak" />
 		<Word from="Tezak" to="Težak" />
 		<Word from="teze" to="teže" />
@@ -1209,6 +1200,8 @@
 		<RegEx find="cas([au]|om|ovima)\b" replaceWith="sat$1" />
 		<RegEx find="Cas([au]|om|ovima)\b" replaceWith="Sat$1" />
 		<RegEx find="[cC]ascen" replaceWith="čašćen" />
+		<RegEx find="C([ae])sc" replaceWith="Č$1šć" />
+		<RegEx find="c([ae])sc" replaceWith="č$1šć" />
 		<RegEx find="cek" replaceWith="ček" />
 		<RegEx find="Ček" replaceWith="Ček" />
 		<RegEx find="[cC]etvrt" replaceWith="četvrt" />
@@ -1559,6 +1552,7 @@
 		<RegEx find="Takmicenj" replaceWith="Natjecanj" />
 		<RegEx find="\b([tT])ac([an])" replaceWith="$1oč$2" />    
 		<RegEx find="ehnic(?!i)" replaceWith="ehnič" />
+		<RegEx find="\b([Tt])esk" replaceWith="$1esk" />
 		<RegEx find="\b([tT])ice" replaceWith="$1iče" />
 		<RegEx find="\b([tTSs])rcan" replaceWith="$1rčan" />
 		<RegEx find="\b([tT])re[čc]in" replaceWith="$1rećin" />
