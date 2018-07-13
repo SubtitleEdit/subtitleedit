@@ -529,7 +529,6 @@
 		<Word from="odredujemo" to="određujemo" />
 		<Word from="odvec" to="odveć" />
 		<Word from="ogrtac" to="ogrtač" />
-		<Word from="ohrabrujuce" to="ohrabrujuće" />
 		<Word from="ojacam" to="ojačam" />
 		<Word from="okrece" to="okreće" />
 		<Word from="opasac" to="opasač" />
@@ -983,7 +982,6 @@
 		<Word from="udjes" to="uđeš" />
 		<Word from="ugriscu" to="ugrist ću" />
 		<Word from="ukljestena" to="ukliještena" />
-		<Word from="ukljucujuci" to="uključujući" />
 		<Word from="umes" to="umiješ" />
 		<Word from="umiruci" to="umirući" />
 		<Word from="umrecu" to="umrijet ću" />
@@ -1168,7 +1166,7 @@
 	<RegularExpressions>
 		<RegEx find="adas(?!v)" replaceWith="adaš" />
 		<RegEx find="(?&lt;![Pp]r|[Nn])adje(?!(v|n(e|u[olt]))\b)" replaceWith="ađe" />
-		<RegEx find="ajuc" replaceWith="ajuć" />
+		<RegEx find="([au])juc" replaceWith="$1juć" />
 		<RegEx find="ndj?el" replaceWith="nđel" />
 		<RegEx find="(?&lt;![ou])ndje" replaceWith="nđe" />
 		<RegEx find="([0-9])-ogodisnj([aeiu])\b" replaceWith="$1-godišnj$2" />
@@ -1565,7 +1563,6 @@
 		<RegEx find="\b([uU])ci([mntl])" replaceWith="$1či$2" />
 		<RegEx find="([uU])ci([lt])" replaceWith="$1či$2" />
 		<RegEx find="paljac" replaceWith="paljač" />
-		<RegEx find="\b([uU])redj" replaceWith="$1ređ" />
 		<RegEx find="([uU])spjes(an|n[aeiou]|no[mgj])" replaceWith="$1spješ$2" />
 		<RegEx find="\b([uU])dje([mst])" replaceWith="$1đe$2" />
 		<RegEx find="\b([uU])sl([aeio])" replaceWith="$1šl$2" />
@@ -1575,7 +1572,6 @@
 		<RegEx find="\b([uU])ziva" replaceWith="$1živa" />
 		<RegEx find="([vV])as([aeu]|o[jm])\b" replaceWith="$1aš$2" />
 		<RegEx find="([vV]l?)azn([aeiu]|o[mgj])\b" replaceWith="$1ažn$2" />
-		<RegEx find="([vV])ecn" replaceWith="$1ječn" />
 		<RegEx find="([vV])e[cč]in" replaceWith="$1ećin" />
 		<RegEx find="([vV])estin" replaceWith="$1ještin" />
 		<RegEx find="elicin" replaceWith="eličin" />
@@ -1608,7 +1604,6 @@
 		<RegEx find="apo[cč]mi" replaceWith="apočni" />
 		<RegEx find="asluzuj" replaceWith="aslužuj" />
 		<RegEx find="([zZ])astit" replaceWith="$1aštit" />
-		<RegEx find="astrasujuc" replaceWith="astrašujuć" />
 		<RegEx find="[zZ]edn" replaceWith="žedn" />
 		<RegEx find="\b[zZ]en([aeui]|om|io|il[aei]|sk)" replaceWith="žen$1" />
 		<RegEx find="[zZ]eli([mt])" replaceWith="želi$1" />
@@ -1766,7 +1761,7 @@
 		<RegEx find="redoce" replaceWith="redoče" />
 		<RegEx find="rucin" replaceWith="rućin" />
 		<RegEx find="([lr])adj" replaceWith="$1ađ" />
-		<RegEx find="redje([nm])" replaceWith="ređe$1" />
+		<RegEx find="(?&lt;!p)redj" replaceWith="ređ" />
 		<RegEx find="ronad" replaceWith="ronađ" />
 		<RegEx find="([KkPp])renes\b" replaceWith="$1reneš" />
 		<RegEx find="sapni" replaceWith="šapni" />
@@ -1801,8 +1796,12 @@
 		<RegEx find="(?&lt;![Kk]lj)učiće" replaceWith="učit će" />
 		<RegEx find="udiva" replaceWith="uđiva" />
 		<RegEx find="udj([aiu])" replaceWith="uđ$1" />
-		<RegEx find="([Uu])nisti" replaceWith="$1ništi" />
+		<!--ne može više zbog oportunisti i komunisti -->
+		<RegEx find="\b([Uu])nisti" replaceWith="$1ništi" />
 		<RegEx find="nistav" replaceWith="ništav" />
+		<RegEx find="ujuc" replaceWith="ujuć" />
+		<RegEx find="cujuc" replaceWith="čujuć" />
+		<RegEx find="sujuc" replaceWith="šujuć" />
 		<!--busenje je iznimka, ali bušenje nije, dakle češća riječ prevladava-->
 		<RegEx find="(?&lt;![jk])us[cč]" replaceWith="ušć" />
 		<RegEx find="usenj" replaceWith="ušenj" />
@@ -1810,8 +1809,8 @@
 		<RegEx find="varas" replaceWith="varaš" />
 		<RegEx find="vazn" replaceWith="važn" />
 		<RegEx find="vadj" replaceWith="vađ" />
+		<RegEx find="(?&lt;![lpr])ecn" replaceWith="ečn" />
 		<RegEx find="visis" replaceWith="visiš" />
-		<RegEx find="([Vv])jecn" replaceWith="$1ječn" />
 		<RegEx find="vjezb" replaceWith="vježb" />
 		<RegEx find="(?&lt;!p)rsten" replaceWith="ršten" />
 		<RegEx find="vruc" replaceWith="vruć" />
