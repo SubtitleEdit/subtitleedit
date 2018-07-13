@@ -5,6 +5,9 @@
     <Word from="advokatima" to="odvjetnicima" />
     <Word from="Advokatima" to="Odvjetnicima" />
     <Word from="afirmiše" to="afirmira" />
+    <Word from="ajpod" to="iPod" />
+		<Word from="ajpoda" to="iPoda" />
+		<Word from="ajpodu" to="iPodu" />
     <Word from="akcenat" to="naglasak" />
     <Word from="akcionara" to="dioničara" />
     <Word from="akvarijum" to="akvarij" />
@@ -2594,8 +2597,7 @@
     <RegEx find="([aeiou])dk" replaceWith="$1tk" />
     <RegEx find="(?&lt;![ml])a([blcrnz])ić" replaceWith="a$1it ć" />
     <RegEx find="a(jm|mn)(t?)ić" replaceWith="a$1$2it ć" />
-    <RegEx find="ajuc" replaceWith="ajuć" />
-    <RegEx find="\bajpod" replaceWith="iPod" />
+    <RegEx find="([au])juc" replaceWith="$1juć" />
     <RegEx find="alepn" replaceWith="aljepn" />
     <RegEx find="alj?epi" replaceWith="alijepi" />
     <RegEx find="alolet" replaceWith="aloljet" />
