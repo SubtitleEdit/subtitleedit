@@ -185,7 +185,10 @@
 		<Word from="drhteci" to="drhteći" />
 		<Word from="drhteći" to="drhteći" />
 		<Word from="Drhteći" to="Drhteći" />
+		<Word from="drsces" to="dršćeš" />
+		<Word from="Drsces" to="Dršćeš" />
 		<Word from="drugacija" to="drugačija" />
+		<Word from="Drugacija" to="Drugačija" />
 		<Word from="Drugacije" to="Drugačije" />
 		<Word from="drugacije" to="drugačije" />
 		<Word from="drugaciji" to="drugačiji" />
@@ -852,6 +855,8 @@
 		<Word from="steceni" to="stečeni" />
 		<Word from="stezuci" to="stežući" />
 		<Word from="stici" to="stići" />
+		<Word from="stisces" to="stišćeš" />
+		<Word from="Stisces" to="Stišćeš" />
 		<Word from="stojis" to="stojiš" />
 		<Word from="Stojis" to="Stojiš" />
 		<Word from="stp" to="što" />
@@ -1373,6 +1378,7 @@
 		    <!-- ne diraj -->
 		<RegEx find="\b([nN])ista" replaceWith="$1išta" />
 		<RegEx find="\b([nN])oc" replaceWith="$1oć" />
+		<RegEx find="nosc" replaceWith="nošć" />
 		<RegEx find="ovcan" replaceWith="ovčan" />
 		<RegEx find="notez" replaceWith="notež" />
 		<RegEx find="beca" replaceWith="beća" />
