@@ -2214,7 +2214,7 @@
     <RegEx find="Pomera([mšt])" replaceWith="Miče$1" />
     <RegEx find="pomeren" replaceWith="pomaknut" />
     <RegEx find="([pP])omj?eri" replaceWith="$1omakni" />
-    <RegEx find="([pP])omoč" replaceWith="$1omoć" />
+    <RegEx find="(?&lt;!r)omoč" replaceWith="omoć" />
     <RegEx find="([pP])oresk" replaceWith="$1orezn" />
     <RegEx find="porodičn" replaceWith="obiteljsk" />
     <RegEx find="Porodičn" replaceWith="Obiteljsk" />
@@ -2807,6 +2807,7 @@
     <RegEx find="(?&lt;!n)([sz])vesti([lt])" replaceWith="$1vijest$2" />
     <RegEx find="svetić" replaceWith="svetit ć" />
     <RegEx find="svetlj(?!iv)" replaceWith="svjetlj" />
+    <RegEx find="svh" replaceWith="shv" />
     <RegEx find="([šđ])ać" replaceWith="$1ač" />
     <RegEx find="šević" replaceWith="ševit ć" />
     <RegEx find="šunjać" replaceWith="šuljat ć" />
