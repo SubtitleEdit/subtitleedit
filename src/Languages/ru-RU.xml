@@ -1035,7 +1035,7 @@ https://github.com/SubtitleEdit/subtitleedit
         <ChooseAudioTrack>Выбор аудио трека</ChooseAudioTrack>
         <CloseVideo>Закрыть файл видео</CloseVideo>
         <SetVideoOffset>Задать видео задержку...</SetVideoOffset>
-        <SmptTimeMode>SMPTE разметка (включая кадры)</SmptTimeMode>
+        <SmptTimeMode>SMPTE разметка (с пропуском кадров)</SmptTimeMode>
         <GenerateImportSceneChanges>Создание/Открытие изменений сцен...</GenerateImportSceneChanges>
         <RemoveSceneChanges>Удалить изменения сцен</RemoveSceneChanges>
         <WaveformBatchGenerate>Пакетная обработка форм сигнала...</WaveformBatchGenerate>
@@ -1752,7 +1752,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <NetflixQualityCheck>Netflix проверка качества</NetflixQualityCheck>
     <SettingsName>Настройки</SettingsName>
     <Help>Справка</Help>
-    <UnbreakNoSpace>Безпробельный, сплошной, перенос между двумя строками (CJK)</UnbreakNoSpace>
+    <UnbreakNoSpace>Безпробельный, сплошной, перенос между двумя строками (CJK - для Китайского-Японского-Корейского)</UnbreakNoSpace>
     <FontInUi>Шрифты для Интерфейса Пользователя (UI)</FontInUi>
     <ShowFrameRate>Показывать частоту кадров в панели инструментов</ShowFrameRate>
     <DefaultFrameRate>Частота кадров по умолчанию</DefaultFrameRate>
@@ -1769,8 +1769,8 @@ https://github.com/SubtitleEdit/subtitleedit
     <SubtitleFont>Шрифт субтитров</SubtitleFont>
     <SubtitleFontSize>Размер шрифта субтитров</SubtitleFontSize>
     <SubtitleBold>Полужирный</SubtitleBold>
-    <VideoAutoOpen>Автоматически открывать видеофайл при открытии субтитров</VideoAutoOpen>
-    <AllowVolumeBoost>Разрешить увеличение громкости</AllowVolumeBoost>
+    <VideoAutoOpen>При открытии субтитров подгружать видеофайл автоматически </VideoAutoOpen>
+    <AllowVolumeBoost>Разрешить изменение уровня громкости</AllowVolumeBoost>
     <SubtitleCenter>По центру</SubtitleCenter>
     <SubtitleFontColor>Цвет шрифта субтитров</SubtitleFontColor>
     <SubtitleBackgroundColor>Цвет фона субтитров</SubtitleBackgroundColor>
@@ -1816,7 +1816,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <MpcHcDescription>Media Player Classic - Home Cinema</MpcHcDescription>
     <MpvPlayer>mpv проигрыватель</MpvPlayer>
     <MpvPlayerDescription>https://mpv.io/ - бесплатный проигрыватель с откр. исх. кодом</MpvPlayerDescription>
-    <MpvHandlesPreviewText>mpv будет предварительно обрабатывать просмотр текста</MpvHandlesPreviewText>
+    <MpvHandlesPreviewText>mpv будет предварительно обрабатывать просматриваемый текст (настройка масштабирования расположена ниже)</MpvHandlesPreviewText>
     <VlcMediaPlayer>VLC медиа проигрыватель</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll из VLC media player 1.1.0 или новее</VlcMediaPlayerDescription>
     <VlcBrowseToLabel>Путь к VLC (только для переносной версии VLC)</VlcBrowseToLabel>
@@ -1923,7 +1923,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <AdjustSetStartTimeKeepDuration>Установить начальное время, сохранить длительность</AdjustSetStartTimeKeepDuration>
     <AdjustSetEndAndOffsetTheRest>Установить конец, сместить остаток</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Установить конец, сместить остаток и перейти к следующему субтитру</AdjustSetEndAndOffsetTheRestAndGoToNext>
-    <AdjustExtendCurrentSubtitle>Продлить строку до след. субтитра/задать макс. длительность</AdjustExtendCurrentSubtitle>
+    <AdjustExtendCurrentSubtitle>Продлить строку до следующего субтитра/задать максимальную длительность</AdjustExtendCurrentSubtitle>
     <RecalculateDurationOfCurrentSubtitle>Пересчитать продолжительность текущих субтитров</RecalculateDurationOfCurrentSubtitle>
     <MainCreateStartDownEndUp>Создать новый - ВНИЗ, установить конечное время - ВВЕРХ</MainCreateStartDownEndUp>
     <MergeDialog>Объединить диалог (вставить тире)</MergeDialog>
@@ -1971,8 +1971,8 @@ https://github.com/SubtitleEdit/subtitleedit
     <TogglePlayPause>Вкл./Откл. Воспроизведение/Пауза</TogglePlayPause>
     <Pause>Пауза</Pause>
     <Fullscreen>Во весь экран</Fullscreen>
-    <PlayRateSlower>Замедлить скорость воспр-ния</PlayRateSlower>
-    <PlayRateFaster>Ускорить скорость воспр-ния</PlayRateFaster>
+    <PlayRateSlower>Замедлить скорость воспроизведения</PlayRateSlower>
+    <PlayRateFaster>Ускорить скорость воспроизведения</PlayRateFaster>
     <CustomSearch1>Перевод, пользовательский поиск 1</CustomSearch1>
     <CustomSearch2>Перевод, пользовательский поиск 2</CustomSearch2>
     <CustomSearch3>Перевод, пользовательский поиск 3</CustomSearch3>
