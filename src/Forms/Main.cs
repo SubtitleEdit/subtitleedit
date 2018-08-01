@@ -7692,6 +7692,7 @@ namespace Nikse.SubtitleEdit.Forms
                     _subtitleListViewIndex = firstSelectedIndex;
                     _oldSelectedParagraph = new Paragraph(p);
                     UpdateListViewTextInfo(labelTextLineLengths, labelSingleLine, labelTextLineTotal, labelCharactersPerSecond, p, textBoxListViewText);
+                    FixVerticalScrollBars(textBoxListViewText);
 
                     if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0)
                     {
@@ -7832,7 +7833,6 @@ namespace Nikse.SubtitleEdit.Forms
             UpdateListViewTextCharactersPerSeconds(charactersPerSecond, paragraph);
             charactersPerSecond.Left = textBox.Left + (textBox.Width - labelCharactersPerSecond.Width);
             lineTotal.Left = textBox.Left + (textBox.Width - lineTotal.Width);
-            FixVerticalScrollBars(textBox);
         }
 
         private void ButtonNextClick(object sender, EventArgs e)
@@ -7973,6 +7973,22 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (_subtitleListViewIndex >= 0)
             {
+
+                // Writing when text is selected gives a double event + some trouble (typed letter disappears or a crash happens).
+                // This tries to fix this - changing scrollbars is bad during this double event!?
+                // Also check https://stackoverflow.com/questions/28331672/c-sharp-textchanged-event-fires-twice-in-a-multiline-textbox
+                if (textBoxListViewText.Text == string.Empty) 
+                {
+                    _subtitle.Paragraphs[_subtitleListViewIndex].Text = string.Empty;
+                    UpdateListViewTextInfo(labelTextLineLengths, labelSingleLine, labelTextLineTotal, labelCharactersPerSecond, _subtitle.Paragraphs[_subtitleListViewIndex], textBoxListViewText);
+                    SubtitleListview1.SetText(_subtitleListViewIndex, string.Empty);
+                    _listViewTextUndoIndex = _subtitleListViewIndex;
+                    labelStatus.Text = string.Empty;
+                    StartUpdateListSyntaxColoring();
+                    return;
+                }
+
+                textBoxListViewText.TextChanged -= TextBoxListViewTextTextChanged;
                 if (_doAutoBreakOnTextChanged)
                     UiUtil.CheckAutoWrap(textBoxListViewText, new KeyEventArgs(Keys.None), Utilities.GetNumberOfLines(textBoxListViewText.Text));
 
@@ -7993,6 +8009,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 StartUpdateListSyntaxColoring();
                 FixVerticalScrollBars(textBoxListViewText);
+                textBoxListViewText.TextChanged += TextBoxListViewTextTextChanged;
             }
         }
 
@@ -8040,6 +8057,16 @@ namespace Nikse.SubtitleEdit.Forms
                 var original = Utilities.GetOriginalParagraph(_subtitleListViewIndex, p, _subtitleAlternate.Paragraphs);
                 if (original != null)
                 {
+                    if (textBoxListViewTextAlternate.Text == string.Empty)
+                    {
+                        UpdateListViewTextInfo(labelTextAlternateLineLengths, labelAlternateSingleLine, labelTextAlternateLineTotal, labelAlternateCharactersPerSecond, original, textBoxListViewTextAlternate);
+                        SubtitleListview1.SetAlternateText(_subtitleListViewIndex, string.Empty);
+                        _listViewTextUndoIndex = _subtitleListViewIndex;
+                        labelStatus.Text = string.Empty;
+                        StartUpdateListSyntaxColoring();
+                        return;
+                    }
+
                     int numberOfNewLines = Utilities.GetNumberOfLines(textBoxListViewTextAlternate.Text);
                     UiUtil.CheckAutoWrap(textBoxListViewTextAlternate, new KeyEventArgs(Keys.None), numberOfNewLines);
 
@@ -18979,6 +19006,7 @@ namespace Nikse.SubtitleEdit.Forms
                     original.Text = text;
                     UpdateListViewTextInfo(labelTextAlternateLineLengths, labelAlternateSingleLine, labelTextAlternateLineTotal, labelAlternateCharactersPerSecond, original, textBoxListViewTextAlternate);
                     SubtitleListview1.SetAlternateText(_subtitleListViewIndex, text);
+                    FixVerticalScrollBars(textBoxListViewTextAlternate);
                 }
             }
         }
