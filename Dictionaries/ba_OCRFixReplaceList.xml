@@ -20,7 +20,6 @@
 		<Word from="Biceš" to="Bit ćeš" />
 		<Word from="Bicu" to="Bit ću" />
 		<Word from="bicu" to="biću" />
-		<Word from="blagonaklonoscu" to="blagonaklonošću" />
 		<Word from="blizi" to="bliži" />
 		<Word from="bljesti" to="bliješti" />
 		<Word from="Bljesti" to="Bliješti" />
@@ -437,7 +436,6 @@
 		<Word from="nagovestaj" to="nagovještaj" />
 		<Word from="najvise" to="najvise" />
 		<Word from="Najvise" to="Najviše" />
-		<Word from="naklonoscu" to="nakolonošću" />
 		<Word from="naocale" to="naočale" />
 		<Word from="Napisite" to="Napišite" />
 		<Word from="nasa" to="naša" />
@@ -690,8 +688,8 @@
 		<Word from="pricu" to="priču" />
 		<Word from="Pridji" to="Priđi" />
 		<Word from="pridji" to="priđi" />
-		<Word from="pridje to="priđe" />
-		<Word from="pridjes to="priđeš" />
+		<Word from="pridje" to="priđe" />
+		<Word from="pridjes" to="priđeš" />
 		<Word from="prijeci" to="prijeći" />
 		<Word from="prijedi" to="prijeđi" />
 		<Word from="prilazis" to="prilaziš" />
@@ -791,7 +789,6 @@
 		<Word from="skaci" to="skači" />
 		<Word from="skacu" to="skaču" />
 		<Word from="sklanjas" to="sklanjaš" />
-		<Word from="sklonoscu" to="sklonošću" />
 		<Word from="sklupcam" to="sklupčam" />
 		<Word from="skola" to="škola" />
 		<Word from="Skola" to="Škola" />
@@ -824,7 +821,6 @@
 		<Word from="smesak" to="smješak" />
 		<Word from="Smijes" to="Smiješ" />
 		<Word from="smijes" to="smiješ" />
-		<Word from="smionoscu" to="smionošću" />
 		<Word from="smraci" to="smrači" />
 		<Word from="smracilo" to="smračilo" />
 		<Word from="smrcu" to="smrću" />
@@ -1753,7 +1749,6 @@
 		<RegEx find="oc[mn]i" replaceWith="očni" />
 		<RegEx find="o([mk])aze" replaceWith="o$1aže" />
 		<RegEx find="/\bni[cć]k" replaceWith="ničk" />
-		<RegEx find="nosc" replaceWith="nošć" />
 		<RegEx find="sta([jn])es" replaceWith="sta$1eš" />
 		<RegEx find="(?&lt;!m)oroca" replaceWith="oroča" />
 		<RegEx find="osvece" replaceWith="osveće" />
