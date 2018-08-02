@@ -8,6 +8,10 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class AdjustDisplayDuration : PositionAndSizeForm
     {
+        private const string Sec = "seconds";
+        private const string Per = "percent";
+        private const string Recal = "recalc";
+
         public string AdjustValue
         {
             get
@@ -15,34 +19,16 @@ namespace Nikse.SubtitleEdit.Forms
                 if (radioButtonPercent.Checked)
                     return numericUpDownPercent.Value.ToString(CultureInfo.InvariantCulture);
                 if (radioButtonAutoRecalculate.Checked)
-                    return radioButtonAutoRecalculate.Text + ", " + labelMaxCharsPerSecond.Text + ": " + numericUpDownMaxCharsSec.Value; // TODO: Make language string with string.Format
+                    return $"{radioButtonAutoRecalculate.Text}, {labelMaxCharsPerSecond.Text}: {numericUpDownMaxCharsSec.Value}";
                 return numericUpDownSeconds.Value.ToString(CultureInfo.InvariantCulture);
             }
         }
 
-        public bool AdjustUsingPercent
-        {
-            get
-            {
-                return radioButtonPercent.Checked;
-            }
-        }
+        public bool AdjustUsingPercent => radioButtonPercent.Checked;
 
-        public bool AdjustUsingSeconds
-        {
-            get
-            {
-                return radioButtonSeconds.Checked;
-            }
-        }
+        public bool AdjustUsingSeconds => radioButtonSeconds.Checked;
 
-        public decimal MaxCharactersPerSecond
-        {
-            get
-            {
-                return numericUpDownMaxCharsSec.Value;
-            }
-        }
+        public decimal MaxCharactersPerSecond => numericUpDownMaxCharsSec.Value;
 
         public AdjustDisplayDuration()
         {
@@ -51,13 +37,13 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.FixFonts(this);
             Icon = Properties.Resources.SubtitleEditFormIcon;
 
-            if (Configuration.Settings.Tools.AdjustDurationSeconds >= numericUpDownSeconds.Minimum &&
-                Configuration.Settings.Tools.AdjustDurationSeconds <= numericUpDownSeconds.Maximum)
-                numericUpDownSeconds.Value = Configuration.Settings.Tools.AdjustDurationSeconds;
+            decimal adjustSeconds = Configuration.Settings.Tools.AdjustDurationSeconds;
+            if (adjustSeconds >= numericUpDownSeconds.Minimum && adjustSeconds <= numericUpDownSeconds.Maximum)
+                numericUpDownSeconds.Value = adjustSeconds;
 
-            if (Configuration.Settings.Tools.AdjustDurationPercent >= numericUpDownPercent.Minimum &&
-                Configuration.Settings.Tools.AdjustDurationPercent <= numericUpDownPercent.Maximum)
-                numericUpDownPercent.Value = Configuration.Settings.Tools.AdjustDurationPercent;
+            int adjustPerscent = Configuration.Settings.Tools.AdjustDurationPercent;
+            if (adjustPerscent >= numericUpDownPercent.Minimum && adjustPerscent <= numericUpDownPercent.Maximum)
+                numericUpDownPercent.Value = adjustPerscent;
 
             numericUpDownMaxCharsSec.Value = (decimal)Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds;
 
@@ -75,17 +61,17 @@ namespace Nikse.SubtitleEdit.Forms
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             FixLargeFonts();
 
-            if (Configuration.Settings.Tools.AdjustDurationLast == "seconds")
+            switch (Configuration.Settings.Tools.AdjustDurationLast)
             {
-                radioButtonSeconds.Checked = true;
-            }
-            else if (Configuration.Settings.Tools.AdjustDurationLast == "percent")
-            {
-                radioButtonPercent.Checked = true;
-            }
-            else if (Configuration.Settings.Tools.AdjustDurationLast == "recalc")
-            {
-                radioButtonAutoRecalculate.Checked = true;
+                case Sec:
+                    radioButtonSeconds.Checked = true;
+                    break;
+                case Per:
+                    radioButtonPercent.Checked = true;
+                    break;
+                case Recal:
+                    radioButtonAutoRecalculate.Checked = true;
+                    break;
             }
         }
 
@@ -109,24 +95,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void FixEnabled()
         {
-            if (radioButtonPercent.Checked)
-            {
-                numericUpDownPercent.Enabled = true;
-                numericUpDownSeconds.Enabled = false;
-                numericUpDownMaxCharsSec.Enabled = false;
-            }
-            else if (radioButtonSeconds.Checked)
-            {
-                numericUpDownPercent.Enabled = false;
-                numericUpDownSeconds.Enabled = true;
-                numericUpDownMaxCharsSec.Enabled = false;
-            }
-            else
-            {
-                numericUpDownPercent.Enabled = false;
-                numericUpDownSeconds.Enabled = false;
-                numericUpDownMaxCharsSec.Enabled = true;
-            }
+            numericUpDownPercent.Enabled = radioButtonPercent.Checked;
+            numericUpDownSeconds.Enabled = radioButtonSeconds.Checked;
+            numericUpDownMaxCharsSec.Enabled = radioButtonAutoRecalculate.Checked;
         }
 
         private void RadioButtonSecondsCheckedChanged(object sender, EventArgs e)
@@ -141,23 +112,18 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (radioButtonSeconds.Checked)
             {
-                Configuration.Settings.Tools.AdjustDurationLast = "seconds";
+                Configuration.Settings.Tools.AdjustDurationLast = Sec;
             }
             else if (radioButtonPercent.Checked)
             {
-                Configuration.Settings.Tools.AdjustDurationLast = "percent";
+                Configuration.Settings.Tools.AdjustDurationLast = Per;
             }
             else if (radioButtonAutoRecalculate.Checked)
             {
-                Configuration.Settings.Tools.AdjustDurationLast = "recalc";
+                Configuration.Settings.Tools.AdjustDurationLast = Recal;
             }
 
             DialogResult = DialogResult.OK;
-        }
-
-        private void radioButtonAutoRecalculate_CheckedChanged(object sender, EventArgs e)
-        {
-            FixEnabled();
         }
 
         public void HideRecalculate()
