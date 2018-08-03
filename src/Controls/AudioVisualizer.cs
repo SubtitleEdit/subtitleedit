@@ -746,23 +746,8 @@ namespace Nikse.SubtitleEdit.Controls
                 // paragraph text
                 if (n > 80)
                 {
-                    string text = HtmlUtil.RemoveHtmlTags(paragraph.Text, true).Replace(Environment.NewLine, "  ");
-                    if (Configuration.Settings.General.RightToLeftMode && LanguageAutoDetect.CouldBeRightToLeftLanguge(new Subtitle(_displayableParagraphs)))
-                        text = Utilities.ReverseStartAndEndingForRightToLeft(text);
-                    int removeLength = 1;
-                    if (text.Length > 500)
-                        text = text.Substring(0, 500); // don't now allow very long texts as they can make SE unresponsive - see https://github.com/SubtitleEdit/subtitleedit/issues/2536
-                    while (text.Length > removeLength && graphics.MeasureString(text, font).Width > currentRegionWidth - padding - 1)
-                    {
-                        text = text.Remove(text.Length - removeLength).TrimEnd() + "…";
-                        if (text.Length > 200)
-                            removeLength = 21;
-                        else if (text.Length > 100)
-                            removeLength = 11;
-                        else
-                            removeLength = 2;
-                    }
-                    drawStringOutlined(text, currentRegionLeft + padding, padding);
+                    string text = HtmlUtil.RemoveHtmlTags(paragraph.Text, true); //.Replace(Environment.NewLine, "  ");
+                    DrawParagraphText(graphics, text, font, currentRegionWidth, padding, drawStringOutlined, currentRegionLeft);
                 }
 
                 // paragraph number
@@ -783,6 +768,36 @@ namespace Nikse.SubtitleEdit.Controls
                     drawStringOutlined(text, currentRegionLeft + padding, Height - 14 - (int)graphics.MeasureString(text, font).Height);
                 }
             }
+        }
+
+        private void DrawParagraphText(Graphics graphics, string text, Font font, int currentRegionWidth, int padding, Action<string, int, int> drawStringOutlined, int currentRegionLeft)
+        {
+            if (Configuration.Settings.General.RightToLeftMode && LanguageAutoDetect.CouldBeRightToLeftLanguge(new Subtitle(_displayableParagraphs)))
+                text = Utilities.ReverseStartAndEndingForRightToLeft(text);
+            if (text.Length > 500)
+                text = text.Substring(0, 500); // don't now allow very long texts as they can make SE unresponsive - see https://github.com/SubtitleEdit/subtitleedit/issues/2536
+            int y = padding;
+            var max = currentRegionWidth - padding - 1;
+            foreach (var line in text.SplitToLines())
+            {
+                text = line;
+                int removeLength = 1;
+                var measureResult = graphics.MeasureString(text, font);
+                while (text.Length > removeLength && graphics.MeasureString(text, font).Width > max)
+                {
+                    text = text.Remove(text.Length - removeLength).TrimEnd() + "…";
+                    if (text.Length > 200)
+                        removeLength = 21;
+                    else if (text.Length > 100)
+                        removeLength = 11;
+                    else
+                        removeLength = 2;
+                    measureResult = graphics.MeasureString(text, font);
+                }
+                drawStringOutlined(text, currentRegionLeft + padding, y);
+                y += (int)Math.Round(measureResult.Height, MidpointRounding.AwayFromZero);
+            }
+
         }
 
         private double RelativeXPositionToSeconds(int x)
