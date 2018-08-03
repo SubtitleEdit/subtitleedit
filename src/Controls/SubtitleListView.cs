@@ -1560,14 +1560,12 @@ namespace Nikse.SubtitleEdit.Controls
 
         private string GetGap(Paragraph paragraph, Paragraph next)
         {
-            if (next == null || next.StartTime.IsMaxTime || paragraph.EndTime.IsMaxTime)
+            if (next == null || paragraph == null || next.StartTime.IsMaxTime || paragraph.EndTime.IsMaxTime)
             {
                 return string.Empty;
             }
-            else
-            {
-                return new TimeCode(next.StartTime.TotalMilliseconds - paragraph.EndTime.TotalMilliseconds).ToShortDisplayString();
-            }
+
+            return new TimeCode(next.StartTime.TotalMilliseconds - paragraph.EndTime.TotalMilliseconds).ToShortDisplayString();
         }
 
         public void SetBackgroundColor(int index, Color color, int columnNumber)
