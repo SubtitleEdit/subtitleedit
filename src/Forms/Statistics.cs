@@ -15,6 +15,11 @@ namespace Nikse.SubtitleEdit.Forms
         {
             public bool Equals(string x, string y)
             {
+                if (x == null)
+                {
+                    return y == null;
+                }
+
                 return x.Equals(y, StringComparison.Ordinal);
             }
 
@@ -264,7 +269,7 @@ https://github.com/SubtitleEdit/subtitleedit
             var hashtable = new Dictionary<string, int>(new StingOrdinalComparer());
 
             foreach (Paragraph p in _subtitle.Paragraphs)
-            { 
+            {
                 MostUsedWordsAdd(hashtable, p.Text);
                 _totalWords += p.Text.CountWords();
             }
@@ -302,7 +307,7 @@ https://github.com/SubtitleEdit/subtitleedit
             foreach (Paragraph p in _subtitle.Paragraphs)
                 MostUsedLinesAdd(hashtable, p.Text.Replace(Environment.NewLine, " ").Replace("  ", " "));
 
-            var sortedTable = new SortedDictionary<string, string>();
+            var sortedTable = new SortedDictionary<string, string>(new StingOrdinalComparer());
             foreach (KeyValuePair<string, int> item in hashtable)
             {
                 if (item.Value > 1)
