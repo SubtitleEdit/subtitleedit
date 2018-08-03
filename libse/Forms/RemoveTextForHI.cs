@@ -240,11 +240,11 @@ namespace Nikse.SubtitleEdit.Core.Forms
                                                 content = content.Remove(0, "</b>".Length);
                                             }
 
-                                            if (count == 0 && content[0].ToString() != content[0].ToString().ToUpperInvariant())
+                                            if (count == 0 && !string.IsNullOrEmpty(content) && content[0].ToString() != content[0].ToString().ToUpperInvariant())
                                             {
                                                 content = content[0].ToString().ToUpperInvariant() + content.Remove(0, 1);
                                             }
-                                            else if (count == 1 && content[0].ToString() != content[0].ToString().ToUpperInvariant())
+                                            else if (count == 1 && !string.IsNullOrEmpty(content) && content[0].ToString() != content[0].ToString().ToUpperInvariant())
                                             {
                                                 content = content[0].ToString().ToUpperInvariant() + content.Remove(0, 1);
                                             }
