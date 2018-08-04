@@ -1690,6 +1690,17 @@ namespace Test.Logic.Forms
             Assert.AreEqual(source, actual);
         }
 
+        [TestMethod]
+        public void RemoveTextBetweenBeforeColonMakeEmpty()
+        {
+            var target = GetRemoveTextForHiLib();
+            target.Settings.RemoveTextBeforeColon = true;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = true;
+            target.Settings.OnlyIfInSeparateLine = false;
+            string actual = target.RemoveColon("<i>SAURON:</i>");
+            Assert.AreEqual(string.Empty, actual);
+        }        
+
         #region Additional test attributes
 
         //
