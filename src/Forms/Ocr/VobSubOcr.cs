@@ -1159,7 +1159,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             for (int i = 0; i < max; i++)
             {
                 var x = _bdnXmlOriginal.Paragraphs[i];
-                if ((checkBoxShowOnlyForced.Checked && x.Forced) ||
+                if (checkBoxShowOnlyForced.Checked && x.Forced ||
                     checkBoxShowOnlyForced.Checked == false)
                 {
                     _bdnXmlSubtitle.Paragraphs.Add(new Paragraph(x));
@@ -1197,7 +1197,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             for (int i = 0; i < max; i++)
             {
                 var x = _bluRaySubtitlesOriginal[i];
-                if ((checkBoxShowOnlyForced.Checked && x.IsForced) ||
+                if (checkBoxShowOnlyForced.Checked && x.IsForced ||
                     checkBoxShowOnlyForced.Checked == false)
                 {
                     _bluRaySubtitles.Add(x);
@@ -1235,7 +1235,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             for (int i = 0; i < max; i++)
             {
                 var x = _vobSubMergedPackistOriginal[i];
-                if ((checkBoxShowOnlyForced.Checked && x.SubPicture.Forced) ||
+                if (checkBoxShowOnlyForced.Checked && x.SubPicture.Forced ||
                     checkBoxShowOnlyForced.Checked == false)
                 {
                     _vobSubMergedPackist.Add(x);
@@ -7767,6 +7767,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             ResetTesseractThread();
         }
 
+
+        Subtitle _beforeOnlyForced;
+
         private void checkBoxShowOnlyForced_CheckedChanged(object sender, EventArgs e)
         {
             if (_tesseractThread != null)
@@ -7781,7 +7784,12 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 _tesseractAsyncStrings = null;
             }
 
-            Subtitle oldSubtitle = new Subtitle(_subtitle);
+            var oldSubtitle = new Subtitle(_subtitle);
+            if (checkBoxShowOnlyForced.Checked)
+            {
+                _beforeOnlyForced = oldSubtitle;
+            }
+
             subtitleListView1.BeginUpdate();
             if (_bdnXmlOriginal != null)
                 LoadBdnXml();
@@ -7802,6 +7810,20 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     }
                 }
             }
+
+            if (!checkBoxShowOnlyForced.Checked && _beforeOnlyForced != null)
+            {
+                for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
+                {
+                    Paragraph current = _subtitle.Paragraphs[i];
+                    var old = _beforeOnlyForced.Paragraphs[i];
+                    if (string.IsNullOrEmpty(current.Text))
+                    {
+                        current.Text = old.Text;
+                    }
+                }
+            }
+
             subtitleListView1.Fill(_subtitle);
             subtitleListView1.EndUpdate();
         }
@@ -7974,6 +7996,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             splitContainerBottom.Top = groupBoxSubtitleImage.Top + groupBoxSubtitleImage.Height + 5;
             splitContainerBottom.Height = progressBar1.Top - (splitContainerBottom.Top + 20);
             checkBoxUseTimeCodesFromIdx.Left = groupBoxOCRControls.Left + 1;
+            checkBoxShowOnlyForced.Left = checkBoxUseTimeCodesFromIdx.Left;
 
             listBoxUnknownWords.Top = listBoxLog.Top;
             listBoxUnknownWords.Left = listBoxLog.Left;
