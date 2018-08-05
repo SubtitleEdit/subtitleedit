@@ -41,9 +41,9 @@ namespace Nikse.SubtitleEdit.Forms
             if (adjustSeconds >= numericUpDownSeconds.Minimum && adjustSeconds <= numericUpDownSeconds.Maximum)
                 numericUpDownSeconds.Value = adjustSeconds;
 
-            int adjustPerscent = Configuration.Settings.Tools.AdjustDurationPercent;
-            if (adjustPerscent >= numericUpDownPercent.Minimum && adjustPerscent <= numericUpDownPercent.Maximum)
-                numericUpDownPercent.Value = adjustPerscent;
+            int adjustPercent = Configuration.Settings.Tools.AdjustDurationPercent;
+            if (adjustPercent >= numericUpDownPercent.Minimum && adjustPercent <= numericUpDownPercent.Maximum)
+                numericUpDownPercent.Value = adjustPercent;
 
             numericUpDownMaxCharsSec.Value = (decimal)Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds;
 
