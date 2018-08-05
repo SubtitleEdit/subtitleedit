@@ -1699,7 +1699,29 @@ namespace Test.Logic.Forms
             target.Settings.OnlyIfInSeparateLine = false;
             string actual = target.RemoveColon("<i>SAURON:</i>");
             Assert.AreEqual(string.Empty, actual);
-        }        
+        }
+
+        [TestMethod]
+        public void RemoveTextBetweenBeforeColonMakeEmpty2()
+        {
+            var target = GetRemoveTextForHiLib();
+            target.Settings.RemoveTextBeforeColon = true;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
+            target.Settings.OnlyIfInSeparateLine = false;
+            string actual = target.RemoveColon("<i>SAURON:</i>");
+            Assert.AreEqual(string.Empty, actual);
+        }
+
+        [TestMethod]
+        public void RemoveTextBetweenBeforeColonMakeEmpty3()
+        {
+            var target = GetRemoveTextForHiLib();
+            target.Settings.RemoveTextBeforeColon = true;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = true;
+            target.Settings.OnlyIfInSeparateLine = true;
+            string actual = target.RemoveColon("<i>SAURON:</i>");
+            Assert.AreEqual(string.Empty, actual);
+        }
 
         #region Additional test attributes
 
