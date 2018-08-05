@@ -29,8 +29,9 @@
    * Add some style support to "Modify selection"
    * Ctrl+a/ctrl+d/ctrl+shift+i works in more lists - thx tormento
    * Add shortcut for open translator mode - thx OmrSi
-   * Add shortcut go to previous subtitle (from video pos) - thx OmrSi
+   * Add shortcut "Go to previous sub (from video pos)" - thx OmrSi
    * Hide cursor in video fullscreen mode/mpv - thx OmrSi
+   * Respect line break for waveform preview text - thx Leon
 * FIXED:
    * Fix "Add to names list" in OCR spell check - thx daed-alus/Sergiy
    * Fix "Generate scene changes" decimal point issue - thx Max
@@ -62,6 +63,11 @@
    * Fix crash with file containing the word "speakers" - txh darnn
    * Batch convert: Remember "remove interjections" - thx MosDos96
    * Fix ass/ssa bug in "Remove text for HI" - thx MosDos96
+   * Fix bug in "Move 100 ms forw/back" + translation - thx OmrSi
+   * Fix crash in statistics - thx khashayarxy
+   * Fix crash with Gap Column - thx Leon
+   * Fix issue with "Fix missing spaces" and "?" - thx Boulder08
+   * Fix crash in "Remove text for HI" - thx tormento
 
 
 3.5.6 (27th February 2018)
