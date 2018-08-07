@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Core.NetflixQualityCheck;
@@ -331,6 +332,98 @@ namespace Test.Logic
             Assert.AreEqual(1, controller.Records.Count);
             Assert.AreEqual(controller.Records[0].OriginalParagraph, p1);
             Assert.AreEqual(controller.Records[0].FixedParagraph.Text, "<i>Enginie starting</i>");
+        }
+
+        [TestMethod]
+        public void TestNetflixValidFrameRatesDrop()
+        {
+            var sub = new Subtitle();
+            var template = @"<?xml version='1.0' encoding='utf-8'?>
+<tt xml:lang='en' xmlns='http://www.w3.org/ns/ttml' xmlns:tts='http://www.w3.org/ns/ttml#styling' xmlns:ttp='http://www.w3.org/ns/ttml#parameter' xmlns:ttm='http://www.w3.org/ns/ttml#metadata' ttp:profile='http://www.netflix.com/ns/ttml/profile/nflx-tt' ttp:frameRate='[frameRate]' ttp:frameRateMultiplier='[frameRateMultiplier]' ttp:dropMode='nonDrop' ttp:timeBase='smpte'>
+  <head>
+    <metadata />
+    <styling>
+      <style xml:id='style.default' tts:fontFamily='Arial' tts:fontSize='100%' tts:fontStyle='normal' tts:fontWeight='normal' tts:backgroundColor='transparent' tts:color='white' />
+    </styling>
+    <layout>
+      <region xml:id='region.after.center' tts:displayAlign='after' tts:textAlign='center' tts:origin='10% 10%' tts:extent='80% 80%' />
+      <region xml:id='region.before.center' tts:displayAlign='before' tts:textAlign='center' tts:origin='10% 10%' tts:extent='80% 80%' />
+    </layout>
+  </head>
+  <body>
+    <div xml:lang='en'>
+      <p begin='00:00:55:01' xml:id='p0' end='00:00:58:07' style='style.default'>
+        <span tts:fontStyle='italic'>Enginie starting</span>
+      </p>
+    </div>
+  </body>
+</tt>".Replace('\'', '"');
+
+            var p1 = new Paragraph("<i>Enginie starting</i>", 0, 1000);
+            sub.Paragraphs.Add(p1);
+            for (int frameRate = 0; frameRate < 100; frameRate++)
+            {
+                var controller = new NetflixQualityController();
+                sub.Header = template.Replace("[frameRate]", frameRate.ToString(CultureInfo.InvariantCulture)).Replace("[frameRateMultiplier]", "1000 1001"); //ttp:frameRate='25' ttp:frameRateMultiplier='1000 1001' 
+                var checker = new NetflixCheckTimedTextFrameRate();
+                if (frameRate == 24 || frameRate == 30 || frameRate == 60)
+                {
+                    checker.Check(sub, controller);
+                    Assert.AreEqual(0, controller.Records.Count);
+                }
+                else
+                {
+                    checker.Check(sub, controller);
+                    Assert.AreEqual(1, controller.Records.Count);
+                    Assert.AreEqual("Frame rate is invalid", controller.Records[0].Comment);
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestNetflixValidFrameRates()
+        {
+            var sub = new Subtitle();
+            var template = @"<?xml version='1.0' encoding='utf-8'?>
+<tt xml:lang='en' xmlns='http://www.w3.org/ns/ttml' xmlns:tts='http://www.w3.org/ns/ttml#styling' xmlns:ttp='http://www.w3.org/ns/ttml#parameter' xmlns:ttm='http://www.w3.org/ns/ttml#metadata' ttp:profile='http://www.netflix.com/ns/ttml/profile/nflx-tt' ttp:frameRate='[frameRate]' ttp:frameRateMultiplier='[frameRateMultiplier]' ttp:dropMode='nonDrop' ttp:timeBase='smpte'>
+  <head>
+    <metadata />
+    <styling>
+      <style xml:id='style.default' tts:fontFamily='Arial' tts:fontSize='100%' tts:fontStyle='normal' tts:fontWeight='normal' tts:backgroundColor='transparent' tts:color='white' />
+    </styling>
+    <layout>
+      <region xml:id='region.after.center' tts:displayAlign='after' tts:textAlign='center' tts:origin='10% 10%' tts:extent='80% 80%' />
+      <region xml:id='region.before.center' tts:displayAlign='before' tts:textAlign='center' tts:origin='10% 10%' tts:extent='80% 80%' />
+    </layout>
+  </head>
+  <body>
+    <div xml:lang='en'>
+      <p begin='00:00:55:01' xml:id='p0' end='00:00:58:07' style='style.default'>
+        <span tts:fontStyle='italic'>Enginie starting</span>
+      </p>
+    </div>
+  </body>
+</tt>".Replace('\'', '"');
+
+            var p1 = new Paragraph("<i>Enginie starting</i>", 0, 1000);
+            sub.Paragraphs.Add(p1);
+            for (int frameRate = 0; frameRate < 200; frameRate++)
+            {
+                var controller = new NetflixQualityController();
+                sub.Header = template.Replace("[frameRate]", frameRate.ToString(CultureInfo.InvariantCulture)).Replace("[frameRateMultiplier]", "1 1"); //ttp:frameRate='25' ttp:frameRateMultiplier='1000 1001' 
+                var checker = new NetflixCheckTimedTextFrameRate();
+                if (frameRate == 24 || frameRate == 25 || frameRate == 30 || frameRate == 50 || frameRate == 60 || frameRate == 120)
+                {
+                    checker.Check(sub, controller);
+                    Assert.AreEqual(0, controller.Records.Count);
+                }
+                else
+                {
+                    checker.Check(sub, controller);
+                    Assert.AreEqual(1, controller.Records.Count);
+                    Assert.AreEqual("Frame rate is invalid", controller.Records[0].Comment);
+                }
+            }
         }
 
     }
