@@ -169,7 +169,7 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
                 Context = context,
                 OriginalParagraph = originalParagraph,
                 FixedParagraph = fixedParagraph,
-                Timecode = originalParagraph.StartTime.ToDisplayString()
+                Timecode = originalParagraph?.StartTime.ToDisplayString()
             });
         }
 
@@ -205,6 +205,7 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
         {
             return new List<INetflixQualityChecker>
             {
+                new NetflixCheckTimedTextFrameRate(),
                 new NetflixCheckDialogeHyphenSpace(),
                 new NetflixCheckGlyph(),
                 new NetflixCheckMaxCps(),
@@ -228,7 +229,7 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
             {
                 checker.Check(subtitle, this);
             }
-            Records = Records.OrderBy(p => p.OriginalParagraph.Number).ToList();
+            Records = Records.OrderBy(p => p.OriginalParagraph?.Number ?? 0).ToList();
         }
 
     }
