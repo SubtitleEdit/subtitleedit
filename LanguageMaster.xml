@@ -1551,6 +1551,8 @@ If you have edited this file with Subtitle Edit you might be able to find a back
     <RegEx>Regular expression</RegEx>
     <UnequalLines>Odd-numbered lines</UnequalLines>
     <EqualLines>Even-numbered lines</EqualLines>
+    <DurationLessThan>Duration less than</DurationLessThan>
+    <DurationGreaterThan>Duration greater than</DurationGreaterThan>
   </ModifySelection>
   <MultipleReplace>
     <Title>Multiple replace</Title>
