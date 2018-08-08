@@ -7979,7 +7979,7 @@ namespace Nikse.SubtitleEdit.Forms
                 // Writing when text is selected gives a double event + some trouble (typed letter disappears or a crash happens).
                 // This tries to fix this - changing scrollbars is bad during this double event!?
                 // Also check https://stackoverflow.com/questions/28331672/c-sharp-textchanged-event-fires-twice-in-a-multiline-textbox
-                if (textBoxListViewText.Text == string.Empty) 
+                if (textBoxListViewText.Text == string.Empty)
                 {
                     _subtitle.Paragraphs[_subtitleListViewIndex].Text = string.Empty;
                     UpdateListViewTextInfo(labelTextLineLengths, labelSingleLine, labelTextLineTotal, labelCharactersPerSecond, _subtitle.Paragraphs[_subtitleListViewIndex], textBoxListViewText);
@@ -18672,6 +18672,9 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
 
             Configuration.Settings.General.Undocked = true;
+            Configuration.Settings.General.SplitContainerMainSplitterDistance = splitContainerMain.SplitterDistance;
+            Configuration.Settings.General.SplitContainer1SplitterDistance = splitContainer1.SplitterDistance;
+            Configuration.Settings.General.SplitContainerListViewAndTextSplitterDistance = splitContainerListViewAndText.SplitterDistance;
 
             var top = Math.Max(Top, 0);
             var left = Math.Max(Left, 0);
@@ -18785,6 +18788,10 @@ namespace Nikse.SubtitleEdit.Forms
             undockVideoControlsToolStripMenuItem.Visible = true;
             redockVideoControlsToolStripMenuItem.Visible = false;
             SubtitleListview1.SelectIndexAndEnsureVisible(_subtitleListViewIndex, true);
+
+            splitContainerMain.SplitterDistance = Configuration.Settings.General.SplitContainerMainSplitterDistance;
+            splitContainer1.SplitterDistance = Configuration.Settings.General.SplitContainer1SplitterDistance;
+            splitContainerListViewAndText.SplitterDistance = Configuration.Settings.General.SplitContainerListViewAndTextSplitterDistance;
         }
 
         private void Bw_DoWork(object sender, DoWorkEventArgs e)
