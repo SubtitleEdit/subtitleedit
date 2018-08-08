@@ -5377,6 +5377,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/ListViewColumnDelete":
                     language.Settings.ListViewColumnDelete = reader.Value;
                     break;
+                case "Settings/ListViewColumnDeleteAndShiftUp":
+                    language.Settings.ListViewColumnDeleteAndShiftUp = reader.Value;
+                    break;
                 case "Settings/ListViewColumnInsert":
                     language.Settings.ListViewColumnInsert = reader.Value;
                     break;
