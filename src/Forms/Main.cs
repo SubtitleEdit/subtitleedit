@@ -3894,6 +3894,8 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     mediaPlayer.PauseAndDisposePlayer();
                 }
+                timeUpDownVideoPositionAdjust.TimeCode = new TimeCode();
+                timeUpDownVideoPositionAdjust.Enabled = false;
             }
 
             _sourceViewChange = false;
