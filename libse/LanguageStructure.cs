@@ -1688,6 +1688,8 @@
             public string RegEx { get; set; }
             public string UnequalLines { get; set; }
             public string EqualLines { get; set; }
+            public string DurationLessThan { get; set; }
+            public string DurationGreaterThan { get; set; }
         }
 
         public class MultipleReplace

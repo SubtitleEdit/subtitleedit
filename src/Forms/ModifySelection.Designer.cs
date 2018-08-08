@@ -35,7 +35,7 @@
             this.radioButtonNewSelection = new System.Windows.Forms.RadioButton();
             this.groupBoxRule = new System.Windows.Forms.GroupBox();
             this.checkBoxCaseSensitive = new System.Windows.Forms.CheckBox();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.textBoxText = new System.Windows.Forms.TextBox();
             this.comboBoxRule = new System.Windows.Forms.ComboBox();
             this.listViewStyles = new System.Windows.Forms.ListView();
             this.columnHeaderStyleName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -49,9 +49,11 @@
             this.columnHeaderText = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderStyle = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.labelInfo = new System.Windows.Forms.Label();
+            this.numericUpDownDuration = new System.Windows.Forms.NumericUpDown();
             this.groupBoxWhatToDo.SuspendLayout();
             this.groupBoxRule.SuspendLayout();
             this.groupBoxPreview.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDuration)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBoxWhatToDo
@@ -117,8 +119,9 @@
             // 
             // groupBoxRule
             // 
+            this.groupBoxRule.Controls.Add(this.numericUpDownDuration);
             this.groupBoxRule.Controls.Add(this.checkBoxCaseSensitive);
-            this.groupBoxRule.Controls.Add(this.textBox1);
+            this.groupBoxRule.Controls.Add(this.textBoxText);
             this.groupBoxRule.Controls.Add(this.comboBoxRule);
             this.groupBoxRule.Controls.Add(this.listViewStyles);
             this.groupBoxRule.Location = new System.Drawing.Point(12, 12);
@@ -139,13 +142,13 @@
             this.checkBoxCaseSensitive.UseVisualStyleBackColor = true;
             this.checkBoxCaseSensitive.CheckedChanged += new System.EventHandler(this.checkBoxCaseSensitive_CheckedChanged);
             // 
-            // textBox1
+            // textBoxText
             // 
-            this.textBox1.Location = new System.Drawing.Point(198, 21);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(158, 20);
-            this.textBox1.TabIndex = 1;
-            this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
+            this.textBoxText.Location = new System.Drawing.Point(198, 21);
+            this.textBoxText.Name = "textBoxText";
+            this.textBoxText.Size = new System.Drawing.Size(158, 20);
+            this.textBoxText.TabIndex = 1;
+            this.textBoxText.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
             // comboBoxRule
             // 
@@ -273,6 +276,19 @@
             this.labelInfo.TabIndex = 3;
             this.labelInfo.Text = "labelInfo";
             // 
+            // numericUpDownDuration
+            // 
+            this.numericUpDownDuration.Location = new System.Drawing.Point(198, 22);
+            this.numericUpDownDuration.Maximum = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            0});
+            this.numericUpDownDuration.Name = "numericUpDownDuration";
+            this.numericUpDownDuration.Size = new System.Drawing.Size(82, 20);
+            this.numericUpDownDuration.TabIndex = 4;
+            this.numericUpDownDuration.ValueChanged += new System.EventHandler(this.numericUpDownDuration_ValueChanged);
+            // 
             // ModifySelection
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -301,6 +317,7 @@
             this.groupBoxRule.ResumeLayout(false);
             this.groupBoxRule.PerformLayout();
             this.groupBoxPreview.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDuration)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -313,7 +330,7 @@
         private System.Windows.Forms.RadioButton radioButtonAddToSelection;
         private System.Windows.Forms.RadioButton radioButtonNewSelection;
         private System.Windows.Forms.GroupBox groupBoxRule;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox textBoxText;
         private System.Windows.Forms.ComboBox comboBoxRule;
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Button buttonOK;
@@ -329,5 +346,6 @@
         private System.Windows.Forms.ColumnHeader columnHeaderStyle;
         private System.Windows.Forms.ListView listViewStyles;
         private System.Windows.Forms.ColumnHeader columnHeaderStyleName;
+        private System.Windows.Forms.NumericUpDown numericUpDownDuration;
     }
 }
