@@ -360,6 +360,28 @@ namespace Test
             }
         }
 
+        [TestMethod]
+        public void FixItalicsLine1BadEndingCasing1()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "<i>Test</I>");
+                new FixInvalidItalicTags().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual("<i>Test</i>", _subtitle.Paragraphs[0].Text);
+            }
+        }
+
+        [TestMethod]
+        public void FixItalicsLine1BadEndingCasing2()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "<I>Test</i>");
+                new FixInvalidItalicTags().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual("<i>Test</i>", _subtitle.Paragraphs[0].Text);
+            }
+        }
+
         #endregion Fix Italics
 
         #region Fix Missing Periods At End Of Line

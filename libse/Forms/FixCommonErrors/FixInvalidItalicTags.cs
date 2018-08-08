@@ -18,7 +18,11 @@
                     var text = subtitle.Paragraphs[i].Text;
                     if (text.Contains('<'))
                     {
-                        text = text.Replace(beginTagUpper, beginTag).Replace(endTagUpper, endTag);
+                        if (!text.Contains("i>") && !text.Contains("<i"))
+                        {
+                            text = text.Replace(beginTagUpper, beginTag).Replace(endTagUpper, endTag);
+                        }
+
                         string oldText = text;
 
                         text = HtmlUtil.FixInvalidItalicTags(text);
