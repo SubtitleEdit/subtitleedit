@@ -15,7 +15,7 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
                 {
                     xml.LoadXml(subtitle.Header);
                 }
-                catch (Exception exception)
+                catch
                 {
                     return;
                 }
@@ -68,7 +68,6 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
             30,
             59.94,
             60,
-            120,
             25,
             50,
             24,
