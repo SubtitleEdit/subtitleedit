@@ -2149,6 +2149,7 @@
             public string ShortcutIsAlreadyDefinedX { get; set; }
             public string ToggleTranslationAndOriginalInPreviews { get; set; }
             public string ListViewColumnDelete { get; set; }
+            public string ListViewColumnDeleteAndShiftUp { get; set; }
             public string ListViewColumnInsert { get; set; }
             public string ListViewColumnPaste { get; set; }
             public string ListViewColumnTextUp { get; set; }

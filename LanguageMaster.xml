@@ -1980,6 +1980,7 @@ can edit in same subtitle file (collaboration)</Information>
     <ShortcutIsAlreadyDefinedX>Shortcut already defined: {0}</ShortcutIsAlreadyDefinedX>
     <ToggleTranslationAndOriginalInPreviews>Toggle translation and original in video/audio preview</ToggleTranslationAndOriginalInPreviews>
     <ListViewColumnDelete>Column, delete text</ListViewColumnDelete>
+    <ListViewColumnDeleteAndShiftUp>Column, delete text and shift up</ListViewColumnDeleteAndShiftUp>
     <ListViewColumnInsert>Column, insert text</ListViewColumnInsert>
     <ListViewColumnPaste>Column, paste</ListViewColumnPaste>
     <ListViewColumnTextUp>Column, text up</ListViewColumnTextUp>

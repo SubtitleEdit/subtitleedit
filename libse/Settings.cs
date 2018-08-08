@@ -1043,6 +1043,7 @@ namespace Nikse.SubtitleEdit.Core
         public string MainListViewCopyTextFromOriginalToCurrent { get; set; }
         public string MainListViewAutoDuration { get; set; }
         public string MainListViewColumnDeleteText { get; set; }
+        public string MainListViewColumnDeleteTextAndShiftUp { get; set; }        
         public string MainListViewColumnInsertText { get; set; }
         public string MainListViewColumnPaste { get; set; }
         public string MainListViewColumnTextUp { get; set; }
@@ -3080,6 +3081,9 @@ namespace Nikse.SubtitleEdit.Core
                 subNode = node.SelectSingleNode("MainListViewColumnDeleteText");
                 if (subNode != null)
                     settings.Shortcuts.MainListViewColumnDeleteText = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainListViewColumnDeleteTextAndShiftUp");
+                if (subNode != null)
+                    settings.Shortcuts.MainListViewColumnDeleteTextAndShiftUp = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainListViewColumnInsertText");
                 if (subNode != null)
                     settings.Shortcuts.MainListViewColumnInsertText = subNode.InnerText;
@@ -3976,6 +3980,7 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("MainListViewCopyTextFromOriginalToCurrent", settings.Shortcuts.MainListViewCopyTextFromOriginalToCurrent);
                 textWriter.WriteElementString("MainListViewAutoDuration", settings.Shortcuts.MainListViewAutoDuration);
                 textWriter.WriteElementString("MainListViewColumnDeleteText", settings.Shortcuts.MainListViewColumnDeleteText);
+                textWriter.WriteElementString("MainListViewColumnDeleteTextAndShiftUp", settings.Shortcuts.MainListViewColumnDeleteTextAndShiftUp);
                 textWriter.WriteElementString("MainListViewColumnInsertText", settings.Shortcuts.MainListViewColumnInsertText);
                 textWriter.WriteElementString("MainListViewColumnPaste", settings.Shortcuts.MainListViewColumnPaste);
                 textWriter.WriteElementString("MainListViewColumnTextUp", settings.Shortcuts.MainListViewColumnTextUp);
