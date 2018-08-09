@@ -81,6 +81,7 @@
             this.Controls.Add(this.buttonOK);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.KeyPreview = true;
+            this.MaximizeBox = false;
             this.Name = "EbuLanguageCode";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
