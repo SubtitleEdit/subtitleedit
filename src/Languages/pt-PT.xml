@@ -711,15 +711,18 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <RemoveAll>Remover todas</RemoveAll>
   </ImportImages>
   <ImportSceneChanges>
-    <Title>Importar mudanças de cena</Title>
+    <Title>Gerar/Importar mudanças de cena</Title>
     <OpenTextFile>Abrir ficheiro de texto...</OpenTextFile>
-    <ImportOptions>Importar opções</ImportOptions>
+	<Generate>Gerar mudanças de cena</Generate>
+    <Import>Importar mudanças de cena</Import>
     <TextFiles>Ficheiros de texto</TextFiles>
     <TimeCodes>Tempos</TimeCodes>
     <Frames>Fotogramas</Frames>
     <Seconds>Segundos</Seconds>
     <Milliseconds>Milissegundos</Milliseconds>
-    <GetSceneChangesWithFfmpeg>Obter as alterações de cena com o FFmpeg</GetSceneChangesWithFfmpeg>
+    <GetSceneChangesWithFfmpeg>Gerar as alterações de cena com o FFmpeg</GetSceneChangesWithFfmpeg>
+    <Sensitivity>Sensibilidade</Sensitivity>
+    <SensitivityDescription>Um valor mais baixo oferece mais alterações de cena</SensitivityDescription>
   </ImportSceneChanges>
   <ImportText>
     <Title>Importar texto sem formatação</Title>
@@ -1023,7 +1026,7 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
         <CloseVideo>Fechar ficheiro de vídeo</CloseVideo>
         <SetVideoOffset>Definir o deslocamento do vídeo...</SetVideoOffset>
 		<SmptTimeMode>SMPTE temporização (drop frame)</SmptTimeMode>
-        <ImportSceneChanges>Importar mudanças de cena...</ImportSceneChanges>
+        <GenerateImportSceneChanges>Gerar/Importar mudanças de cena...</GenerateImportSceneChanges>
         <RemoveSceneChanges>Remover mudanças de cena</RemoveSceneChanges>
         <WaveformBatchGenerate>Gerar formas de onda em série...</WaveformBatchGenerate>
         <ShowHideVideo>Mostrar/ocultar vídeo</ShowHideVideo>
@@ -1160,8 +1163,8 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
       <ListView>Lista</ListView>
       <SourceView>Original</SourceView>
       <UndoChangesInEditPanel>Anular alterações no painel de edição</UndoChangesInEditPanel>
-      <Previous>&lt;Anterior</Previous>
-      <Next>Próxima &gt;</Next>
+      <Previous>Anterior</Previous>
+      <Next>Próxima</Next>
       <AutoBreak>Ajuste auto &amp;</AutoBreak>
       <Unbreak>Combinar</Unbreak>
     </Controls>
@@ -1199,7 +1202,7 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
       <SetstartTimeAndOffsetOfRest>Iníci&amp;o e compensar o resto</SetstartTimeAndOffsetOfRest>
       <SearchTextOnline>Procurar texto online</SearchTextOnline>
       <GoogleTranslate>Google Tradutor</GoogleTranslate>
-      <GoogleIt>Pesquisar Google</GoogleIt>
+      <GoogleIt>Pesquisa Google</GoogleIt>
       <SecondsBackShort>&lt;&lt;</SecondsBackShort>
       <SecondsForwardShort>&gt;&gt;</SecondsForwardShort>
       <VideoPosition>Posição vídeo:</VideoPosition>
@@ -1547,6 +1550,8 @@ Se editou este ficheiro no Subtitle Edit é possível que encontre a cópia de s
     <RegEx>Expressão regular</RegEx>
     <UnequalLines>Linhas com números ímpares</UnequalLines>
     <EqualLines>Linhas com números pares</EqualLines>
+    <DurationLessThan>Duração menor que</DurationLessThan>
+    <DurationGreaterThan>Duração maior que</DurationGreaterThan>
   </ModifySelection>
   <MultipleReplace>
     <Title>Múltipla substituição</Title>
@@ -1927,7 +1932,6 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <WaveformPlayNewSelectionEnd>Reproduzir a partir do fim da selecção</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Reproduzir a partir da primeira legenda selecionada</WaveformPlayFirstSelectedSubtitle>
     <WaveformFocusListView>Destacar a lista de visualização</WaveformFocusListView>
-    <WaveformGoToNextSubtitle>Ir para a próxima linha (a partir da posição do vídeo)</WaveformGoToNextSubtitle>
 	<WaveformGoToPreviousSceneChange>Ir para a mudança de cena anterior</WaveformGoToPreviousSceneChange>
     <WaveformGoToNextSceneChange>Ir para a próxima mudança de cena</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>Alternar a mudança de cena</WaveformToggleSceneChange>
@@ -1943,6 +1947,8 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <GoForward1Second>Um segundo para a frente</GoForward1Second>
     <GoBack5Seconds>Cinco segundos para trás</GoBack5Seconds>
     <GoForward5Seconds>Cinco segundos para a frente</GoForward5Seconds>
+	<WaveformGoToPrevSubtitle>Ir para linha anterior (da posição do vídeo)</WaveformGoToPrevSubtitle>
+	<WaveformGoToNextSubtitle>Ir para a próxima linha (da posição do vídeo)</WaveformGoToNextSubtitle>
     <TogglePlayPause>Alternar reproduzir/pausar</TogglePlayPause>
     <Pause>Pausar</Pause>
     <Fullscreen>Ecrã inteiro</Fullscreen>
@@ -1973,6 +1979,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <ShortcutIsAlreadyDefinedX>Atalho já definido: {0}</ShortcutIsAlreadyDefinedX>
     <ToggleTranslationAndOriginalInPreviews>Alternar tradução e original na pré-visualização vídeo/áudio</ToggleTranslationAndOriginalInPreviews>
     <ListViewColumnDelete>Coluna, eliminar texto</ListViewColumnDelete>
+	<ListViewColumnDeleteAndShiftUp>Coluna, eliminar texto e mover para cima</ListViewColumnDeleteAndShiftUp>
     <ListViewColumnInsert>Coluna, inserir texto</ListViewColumnInsert>
     <ListViewColumnPaste>Coluna, colar</ListViewColumnPaste>
     <ListViewColumnTextUp>Coluna, texto para cima</ListViewColumnTextUp>
@@ -1980,8 +1987,8 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <ListViewFocusWaveform>Destacar a forma de onda/espectrograma</ListViewFocusWaveform>
     <ListViewGoToNextError>Ir para o próximo erro</ListViewGoToNextError>
     <ShowBeamer>Iniciar a legenda em ecrã inteiro</ShowBeamer>
-    <MainTextBoxMoveLastWordDown>Mover a última palavra para baixo para a próxima linha de legendas</MainTextBoxMoveLastWordDown>
-    <MainTextBoxMoveFirstWordFromNextUp>Mover a primeira palavra a partir da próxima linha acima das legendas</MainTextBoxMoveFirstWordFromNextUp>
+    <MainTextBoxMoveLastWordDown>Mover a última palavra até à próxima linha da legenda</MainTextBoxMoveLastWordDown>
+    <MainTextBoxMoveFirstWordFromNextUp>Buscar a primeira palavra da próxima linha da legenda</MainTextBoxMoveFirstWordFromNextUp>
     <MainTextBoxMoveFirstWordUpCurrent>Mover a primeira palavra da linha de cima (linha actual)</MainTextBoxMoveFirstWordUpCurrent>
     <MainTextBoxMoveLastWordDownCurrent>Mover a primeira palavra da linha de baixo (linha actual)</MainTextBoxMoveLastWordDownCurrent>
     <MainTextBoxSelectionToLower>Selecção para minúsculas</MainTextBoxSelectionToLower>
@@ -2318,7 +2325,6 @@ Manter as alterações?</KeepChangesMessage>
     <SaveAllSubtitleImagesAsBdnXml>Guardar todas as imagens (png/bdn xml)...</SaveAllSubtitleImagesAsBdnXml>
     <SaveAllSubtitleImagesWithHtml>Guardar todas as imagens com índice HTML...</SaveAllSubtitleImagesWithHtml>
     <XImagesSavedInY>{0} imagens guardadas em {1}</XImagesSavedInY>
-    <TryModiForUnknownWords>Tentar o Microsoft MODI OCR para palavras desconhecidas</TryModiForUnknownWords>
     <DictionaryX>Dicionário: {0}</DictionaryX>
     <RightToLeft>Direita para esquerda</RightToLeft>
     <ShowOnlyForcedSubtitles>Mostrar somente legendas forçadas</ShowOnlyForcedSubtitles>
