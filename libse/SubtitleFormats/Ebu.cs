@@ -623,7 +623,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public bool Save(string fileName, Stream stream, Subtitle subtitle, bool batchMode, EbuGeneralSubtitleInformation header)
         {
             if (header == null)
+            {
                 header = new EbuGeneralSubtitleInformation();
+                header.LanguageCode = AutoDetectLanguageCode(subtitle);
+            }
 
             if (EbuUiHelper == null)
                 return false;
@@ -735,6 +738,64 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 subtitleNumber++;
             }
             return true;
+        }
+
+        private string AutoDetectLanguageCode(Subtitle subtitle)
+        {
+            if (subtitle == null || subtitle.Paragraphs.Count == 0)
+            {
+                return "00"; // Unknown/not applicable
+            }
+
+            var languageCode = LanguageAutoDetect.AutoDetectGoogleLanguageOrNull(subtitle);
+            switch (languageCode)
+            {
+                case "sq": return "01"; // Albanian
+                case "br": return "02"; // Breton
+                case "ca": return "03"; // Catalan
+                case "hr": return "04"; // Croatian
+                case "cy": return "05"; // Welsh
+                case "cs": return "06"; // Czech
+                case "da": return "07"; // Danish
+                case "de": return "08"; // German
+                case "en": return "09"; // English
+                case "es": return "0A"; // Spanish
+                case "eo": return "0B"; // Esperanto
+                case "et": return "0C"; // Estonian
+                case "eu": return "0D"; // Basque
+                case "fo": return "0E"; // Faroese
+                case "fr": return "0F"; // French
+                case "fy": return "10"; // Frisian
+                case "ga": return "11"; // Irish
+                case "gd": return "12"; // Gaelic
+                case "gl": return "13"; // Galician
+                case "is": return "14"; // Icelandic
+                case "it": return "15"; // Italian
+                case "Lappish": return "16"; // Lappish
+                case "la": return "17"; // Latin
+                case "lv": return "18"; // Latvian":
+                case "lb": return "19"; // Luxembourgi
+                case "lt": return "1A"; // Lithuanian
+                case "hu": return "1B"; // Hungarian
+                case "mt": return "1C"; // Maltese
+                case "nl": return "1D"; // Dutch
+                case "nb": return "1E"; // Norwegian
+                case "oc": return "1F"; // Occitan":
+                case "pl": return "20"; // Polish": 
+                case "pt": return "21"; // Portugese
+                case "ro": return "22"; // Romanian"
+                case "rm": return "23"; // Romansh":
+                case "sr": return "24"; // Serbian":
+                case "sk": return "25"; // Slovak": 
+                case "sl": return "26"; // Slovenian
+                case "fi": return "27"; // Finnish
+                case "sv": return "28"; // Swedish
+                case "tr": return "29"; // Turkish
+                case "Flemish": return "2A"; // Flemish
+                case "Wallon": return "2B"; // Wallon
+            }
+
+            return "09"; // English - default
         }
 
         public override bool IsMine(List<string> lines, string fileName)
