@@ -3899,6 +3899,8 @@ namespace Nikse.SubtitleEdit.Forms
                 timeUpDownVideoPosition.TimeCode = new TimeCode();
                 timeUpDownVideoPosition.Enabled = false;
                 trackBarWaveformPosition.Value = 0;
+                timeUpDownStartTime.TimeCode = new TimeCode();
+                numericUpDownDuration.Value = 0;
             }
 
             _sourceViewChange = false;
