@@ -152,6 +152,12 @@
     <Compile Include="Forms\DownloadFfmpeg.Designer.cs">
       <DependentUpon>DownloadFfmpeg.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\EbuLanguageCode.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\EbuLanguageCode.Designer.cs">
+      <DependentUpon>EbuLanguageCode.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\ExportFcpXmlAdvanced.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1006,6 +1012,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\DownloadFfmpeg.resx">
       <DependentUpon>DownloadFfmpeg.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\EbuLanguageCode.resx">
+      <DependentUpon>EbuLanguageCode.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ExportFcpXmlAdvanced.resx">
       <DependentUpon>ExportFcpXmlAdvanced.cs</DependentUpon>

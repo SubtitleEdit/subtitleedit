@@ -76,7 +76,10 @@ namespace Nikse.SubtitleEdit.Forms
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
 
+            labelLanguageCodeFriendlyName.Text = string.Empty;
             timeUpDownStartTime.ForceHHMMSSFF();
+
+            UiUtil.FixLargeFonts(this, buttonOK);
         }
 
         internal void Initialize(Ebu.EbuGeneralSubtitleInformation header, byte justificationCode, string fileName, Subtitle subtitle)
@@ -404,5 +407,20 @@ namespace Nikse.SubtitleEdit.Forms
             labelColorRequiresTeletext.Visible = false;
         }
 
+        private void buttonChooseLanguageCode_Click(object sender, EventArgs e)
+        {
+            using (var form = new EbuLanguageCode(textBoxLanguageCode.Text))
+            {
+                if (form.ShowDialog(this) == DialogResult.OK)
+                {
+                    textBoxLanguageCode.Text = form.LanguageCode;
+                }
+            }
+        }
+
+        private void textBoxLanguageCode_TextChanged(object sender, EventArgs e)
+        {
+            labelLanguageCodeFriendlyName.Text = EbuLanguageCode.GetLanguageFromCode(textBoxLanguageCode.Text);
+        }
     }
 }

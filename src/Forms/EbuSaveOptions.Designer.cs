@@ -35,6 +35,8 @@
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPageHeader = new System.Windows.Forms.TabPage();
+            this.labelLanguageCodeFriendlyName = new System.Windows.Forms.Label();
+            this.buttonChooseLanguageCode = new System.Windows.Forms.Button();
             this.timeUpDownStartTime = new Nikse.SubtitleEdit.Controls.TimeUpDown();
             this.labelColorRequiresTeletext = new System.Windows.Forms.Label();
             this.labelFrameRate = new System.Windows.Forms.Label();
@@ -161,6 +163,8 @@
             // 
             // tabPageHeader
             // 
+            this.tabPageHeader.Controls.Add(this.labelLanguageCodeFriendlyName);
+            this.tabPageHeader.Controls.Add(this.buttonChooseLanguageCode);
             this.tabPageHeader.Controls.Add(this.timeUpDownStartTime);
             this.tabPageHeader.Controls.Add(this.labelColorRequiresTeletext);
             this.tabPageHeader.Controls.Add(this.labelFrameRate);
@@ -210,6 +214,28 @@
             this.tabPageHeader.TabIndex = 0;
             this.tabPageHeader.Text = "General subtitle information";
             this.tabPageHeader.UseVisualStyleBackColor = true;
+            // 
+            // labelLanguageCodeFriendlyName
+            // 
+            this.labelLanguageCodeFriendlyName.AutoSize = true;
+            this.labelLanguageCodeFriendlyName.ForeColor = System.Drawing.SystemColors.GrayText;
+            this.labelLanguageCodeFriendlyName.Location = new System.Drawing.Point(440, 157);
+            this.labelLanguageCodeFriendlyName.Name = "labelLanguageCodeFriendlyName";
+            this.labelLanguageCodeFriendlyName.Size = new System.Drawing.Size(166, 13);
+            this.labelLanguageCodeFriendlyName.TabIndex = 73;
+            this.labelLanguageCodeFriendlyName.Text = "labelLanguageCodeFriendlyName";
+            // 
+            // buttonChooseLanguageCode
+            // 
+            this.buttonChooseLanguageCode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonChooseLanguageCode.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.buttonChooseLanguageCode.Location = new System.Drawing.Point(405, 153);
+            this.buttonChooseLanguageCode.Name = "buttonChooseLanguageCode";
+            this.buttonChooseLanguageCode.Size = new System.Drawing.Size(31, 21);
+            this.buttonChooseLanguageCode.TabIndex = 6;
+            this.buttonChooseLanguageCode.Text = "...";
+            this.buttonChooseLanguageCode.UseVisualStyleBackColor = true;
+            this.buttonChooseLanguageCode.Click += new System.EventHandler(this.buttonChooseLanguageCode_Click);
             // 
             // timeUpDownStartTime
             // 
@@ -447,6 +473,7 @@
             this.textBoxLanguageCode.Name = "textBoxLanguageCode";
             this.textBoxLanguageCode.Size = new System.Drawing.Size(219, 20);
             this.textBoxLanguageCode.TabIndex = 5;
+            this.textBoxLanguageCode.TextChanged += new System.EventHandler(this.textBoxLanguageCode_TextChanged);
             // 
             // labelLanguageCode
             // 
@@ -979,5 +1006,7 @@
         private System.Windows.Forms.Label labelNewLineRows;
         private System.Windows.Forms.NumericUpDown numericUpDownMarginBottom;
         private System.Windows.Forms.Label labelColorRequiresTeletext;
+        private System.Windows.Forms.Button buttonChooseLanguageCode;
+        private System.Windows.Forms.Label labelLanguageCodeFriendlyName;
     }
 }
