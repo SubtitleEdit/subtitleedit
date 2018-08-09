@@ -144,11 +144,13 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxFrameRateFrom.Items.Add(24.0);
             comboBoxFrameRateFrom.Items.Add(25.0);
             comboBoxFrameRateFrom.Items.Add(29.97);
+            comboBoxFrameRateFrom.Items.Add(30.0);
 
             comboBoxFrameRateTo.Items.Add(23.976);
             comboBoxFrameRateTo.Items.Add(24.0);
             comboBoxFrameRateTo.Items.Add(25.0);
             comboBoxFrameRateTo.Items.Add(29.97);
+            comboBoxFrameRateTo.Items.Add(30.0);
 
             UiUtil.FixLargeFonts(this, buttonCancel);
 
