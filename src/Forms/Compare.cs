@@ -22,6 +22,7 @@ namespace Nikse.SubtitleEdit.Forms
         private readonly Color _backDifferenceColor = Color.FromArgb(255, 90, 90);
         private readonly Color _foregroundDifferenceColor = Color.FromArgb(225, 0, 0);
         private bool _loadingConfig = true;
+        private static readonly string EmptyParagraphString = new Paragraph().ToString();
 
         public Compare()
         {
@@ -37,6 +38,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxIgnoreLineBreaks.Text = Configuration.Settings.Language.CompareSubtitles.IgnoreLineBreaks;
             checkBoxIgnoreFormatting.Text = Configuration.Settings.Language.CompareSubtitles.IgnoreFormatting;
             checkBoxOnlyListDifferencesInText.Text = Configuration.Settings.Language.CompareSubtitles.OnlyLookForDifferencesInText;
+            buttonExport.Text = Configuration.Settings.Language.Statistics.Export;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             copyTextToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.Copy;
             copyTextToolStripMenuItem1.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.Copy;
@@ -283,7 +285,6 @@ namespace Nikse.SubtitleEdit.Forms
             p2 = sub2.GetParagraphOrDefault(index);
             int totalWords = 0;
             int wordsChanged = 0;
-            string emptyParagraphAsString = new Paragraph().ToString();
             max = Math.Max(sub1.Paragraphs.Count, sub2.Paragraphs.Count);
             int min = Math.Min(sub1.Paragraphs.Count, sub2.Paragraphs.Count);
             var onlyTextDiff = checkBoxOnlyListDifferencesInText.Checked;
@@ -294,12 +295,12 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     bool addIndexToDifferences = false;
                     Utilities.GetTotalAndChangedWords(p1.Text, p2.Text, ref totalWords, ref wordsChanged, checkBoxIgnoreLineBreaks.Checked, checkBoxIgnoreFormatting.Checked, ShouldBreakToLetter());
-                    if (p1.ToString() == emptyParagraphAsString)
+                    if (p1.ToString() == EmptyParagraphString)
                     {
                         addIndexToDifferences = true;
                         subtitleListView1.ColorOut(index, Color.Salmon);
                     }
-                    else if (p2.ToString() == emptyParagraphAsString)
+                    else if (p2.ToString() == EmptyParagraphString)
                     {
                         addIndexToDifferences = true;
                         subtitleListView2.ColorOut(index, Color.Salmon);
@@ -326,12 +327,12 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     Utilities.GetTotalAndChangedWords(p1.Text, p2.Text, ref totalWords, ref wordsChanged, checkBoxIgnoreLineBreaks.Checked, checkBoxIgnoreFormatting.Checked, ShouldBreakToLetter());
                     bool addIndexToDifferences = false;
-                    if (p1.ToString() == emptyParagraphAsString)
+                    if (p1.ToString() == EmptyParagraphString)
                     {
                         addIndexToDifferences = true;
                         subtitleListView1.ColorOut(index, Color.Salmon);
                     }
-                    else if (p2.ToString() == emptyParagraphAsString)
+                    else if (p2.ToString() == EmptyParagraphString)
                     {
                         addIndexToDifferences = true;
                         subtitleListView2.ColorOut(index, Color.Salmon);
@@ -503,7 +504,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 columnsEqual++;
             }
-            
+
             return columnsEqual;
         }
 
@@ -1029,6 +1030,75 @@ namespace Nikse.SubtitleEdit.Forms
         private void Compare_Shown(object sender, EventArgs e)
         {
             Activate();
+        }
+
+        private void buttonExport_Click(object sender, EventArgs e)
+        {
+            using (var saveFile = new SaveFileDialog { Filter = "Html files|*.html" })
+            {
+                if (saveFile.ShowDialog() == DialogResult.OK)
+                {
+                    string fileName = saveFile.FileName;
+                    var sb = new StringBuilder();
+                    sb.AppendLine("<html>");
+                    sb.AppendLine("  <head><title>Subtitle compare</title></head>");
+                    sb.AppendLine("    <title>Subtitle compare</title>");
+                    sb.AppendLine("  </head>");
+                    sb.AppendLine("  <body>");
+                    sb.AppendLine("    <h1>Subtitle Edit compare</h1>");
+                    sb.AppendLine("    <table>");
+                    sb.AppendLine("    <tr>");
+                    sb.AppendLine("      <th colspan='4' style='text-align:left'>" + labelSubtitle1.Text + "</th>");
+                    sb.AppendLine("      <th>&nbsp;</th>");
+                    sb.AppendLine("      <th colspan='4' style='text-align:left'>" + labelSubtitle2.Text + "</th>");
+                    sb.AppendLine("    </tr>");
+                    for (int i = 0; i < subtitleListView1.Items.Count; i++)
+                    {
+                        var itemLeft = subtitleListView1.Items[i].Tag as Paragraph;
+                        var itemRight = subtitleListView2.Items[i].Tag as Paragraph;
+                        if (itemLeft != null && itemRight != null)
+                        {
+                            sb.AppendLine("    <tr>");
+                            sb.AppendLine("      <td" + GetHtmlBackgroundColor(subtitleListView1.Items[i].SubItems[0]) + ">" + GetHtmlText(itemLeft, itemLeft.Number.ToString()) + "</td>");
+                            sb.AppendLine("      <td" + GetHtmlBackgroundColor(subtitleListView1.Items[i].SubItems[1]) + ">" + GetHtmlText(itemLeft, itemLeft.StartTime.ToShortDisplayString()) + "</td>");
+                            sb.AppendLine("      <td" + GetHtmlBackgroundColor(subtitleListView1.Items[i].SubItems[2]) + ">" + GetHtmlText(itemLeft, itemLeft.EndTime.ToShortDisplayString()) + "</td>");
+                            sb.AppendLine("      <td" + GetHtmlBackgroundColor(subtitleListView1.Items[i].SubItems[4]) + ">" + GetHtmlText(itemLeft, itemLeft.Text) + "</td>");
+                            sb.AppendLine("      <td>&nbsp;</td>");
+                            sb.AppendLine("      <td" + GetHtmlBackgroundColor(subtitleListView2.Items[i].SubItems[0]) + ">" + GetHtmlText(itemRight, itemRight.Number.ToString()) + "</td>");
+                            sb.AppendLine("      <td" + GetHtmlBackgroundColor(subtitleListView2.Items[i].SubItems[1]) + ">" + GetHtmlText(itemRight, itemRight.StartTime.ToShortDisplayString()) + "</td>");
+                            sb.AppendLine("      <td" + GetHtmlBackgroundColor(subtitleListView2.Items[i].SubItems[2]) + ">" + GetHtmlText(itemRight, itemRight.EndTime.ToShortDisplayString()) + "</td>");
+                            sb.AppendLine("      <td" + GetHtmlBackgroundColor(subtitleListView2.Items[i].SubItems[4]) + ">" + GetHtmlText(itemRight, itemRight.Text) + "</td>");
+                            sb.AppendLine("    </tr>");
+                        }
+                    }
+                    sb.AppendLine("    <tr>");
+                    sb.AppendLine("      <td colspan='9' style='text-align:left'><br />" + labelStatus.Text + "</td>");
+                    sb.AppendLine("    </tr>");
+                    sb.AppendLine("    </table>");
+                    sb.AppendLine("  </body>");
+                    sb.AppendLine("</html>");
+                    var statistic = string.Format(sb.ToString());
+                    File.WriteAllText(fileName, statistic);
+                }
+            }
+        }
+
+        private string GetHtmlText(Paragraph p, string text)
+        {
+            if (p.ToString() == EmptyParagraphString)
+            {
+                return string.Empty;
+            }
+            return HtmlUtil.EncodeNamed(text);
+        }
+
+        private string GetHtmlBackgroundColor(ListViewItem.ListViewSubItem item)
+        {
+            if (item.BackColor == DefaultBackColor)
+            {
+                return string.Empty;
+            }
+            return " style='background-color:" + ColorTranslator.ToHtml(item.BackColor) + "'";
         }
     }
 }

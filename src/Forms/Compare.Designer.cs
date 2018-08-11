@@ -54,6 +54,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.subtitleListView2 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.subtitleListView1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.checkBoxIgnoreFormatting = new System.Windows.Forms.CheckBox();
+            this.buttonExport = new System.Windows.Forms.Button();
             this.contextMenuStrip1.SuspendLayout();
             this.contextMenuStrip2.SuspendLayout();
             this.SuspendLayout();
@@ -64,7 +65,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonOK.Location = new System.Drawing.Point(884, 561);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(84, 21);
-            this.buttonOK.TabIndex = 13;
+            this.buttonOK.TabIndex = 22;
             this.buttonOK.Text = "&Close";
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.ButtonOkClick);
@@ -305,16 +306,28 @@ namespace Nikse.SubtitleEdit.Forms
             this.checkBoxIgnoreFormatting.Location = new System.Drawing.Point(582, 552);
             this.checkBoxIgnoreFormatting.Name = "checkBoxIgnoreFormatting";
             this.checkBoxIgnoreFormatting.Size = new System.Drawing.Size(111, 17);
-            this.checkBoxIgnoreFormatting.TabIndex = 18;
+            this.checkBoxIgnoreFormatting.TabIndex = 14;
             this.checkBoxIgnoreFormatting.Text = "Ignore formatting";
             this.checkBoxIgnoreFormatting.UseVisualStyleBackColor = true;
             this.checkBoxIgnoreFormatting.CheckedChanged += new System.EventHandler(this.checkBoxIgnoreFormatting_CheckedChanged);
+            // 
+            // buttonExport
+            // 
+            this.buttonExport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonExport.Location = new System.Drawing.Point(774, 561);
+            this.buttonExport.Name = "buttonExport";
+            this.buttonExport.Size = new System.Drawing.Size(104, 21);
+            this.buttonExport.TabIndex = 20;
+            this.buttonExport.Text = "Export";
+            this.buttonExport.UseVisualStyleBackColor = true;
+            this.buttonExport.Click += new System.EventHandler(this.buttonExport_Click);
             // 
             // Compare
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(974, 591);
+            this.Controls.Add(this.buttonExport);
             this.Controls.Add(this.checkBoxIgnoreFormatting);
             this.Controls.Add(this.checkBoxIgnoreLineBreaks);
             this.Controls.Add(this.checkBoxOnlyListDifferencesInText);
@@ -374,5 +387,6 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip2;
         private System.Windows.Forms.ToolStripMenuItem copyTextToolStripMenuItem1;
         private System.Windows.Forms.CheckBox checkBoxIgnoreFormatting;
+        private System.Windows.Forms.Button buttonExport;
     }
 }
