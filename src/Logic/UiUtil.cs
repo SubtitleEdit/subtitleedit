@@ -156,7 +156,14 @@ namespace Nikse.SubtitleEdit.Logic
 
             if (Configuration.IsRunningOnLinux())
             {
+                //TODO: Improve finding libmpv.so.*
                 var handle = NativeMethods.dlopen("libmpv.so", RTLD_NOW | RTLD_GLOBAL);
+                if (handle == IntPtr.Zero)
+                    handle = NativeMethods.dlopen("libmpv.so.1", RTLD_NOW | RTLD_GLOBAL);
+                if (handle == IntPtr.Zero)
+                    handle = NativeMethods.dlopen("libmpv.so.1.27.0", RTLD_NOW | RTLD_GLOBAL);
+                if (handle == IntPtr.Zero)
+                    handle = NativeMethods.dlopen("libmpv.so.1.26.0", RTLD_NOW | RTLD_GLOBAL);
                 if (handle != IntPtr.Zero)
                 {
                     NativeMethods.dlclose(handle);
