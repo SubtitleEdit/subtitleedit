@@ -15794,8 +15794,6 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             double frameRate = CurrentFrameRate;
-            SubtitleListview1.BeginUpdate();
-
             int startFrom = 0;
             if (selection == SelectionChoice.SelectionAndForward)
             {
@@ -15805,6 +15803,50 @@ namespace Nikse.SubtitleEdit.Forms
                     startFrom = _subtitle.Paragraphs.Count;
             }
 
+            // don't overlap previous/next
+            if (selection == SelectionChoice.SelectionOnly && SubtitleListview1.SelectedItems.Count == 1 &&
+                !Configuration.Settings.VideoControls.WaveformAllowOverlap &&
+                GetCurrentSubtitleFormat().GetType() != typeof(AdvancedSubStationAlpha))
+            {
+                var current = _subtitle.GetParagraphOrDefault(FirstSelectedIndex);
+                if (current != null)
+                {
+                    if (adjustMilliseconds >= 0)
+                    {
+                        var next = _subtitle.GetParagraphOrDefault(FirstSelectedIndex + 1);
+                        if (next != null && current.EndTime.TotalMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines > next.StartTime.TotalMilliseconds - adjustMilliseconds)
+                        {
+                            var newAdjustMs = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines - current.EndTime.TotalMilliseconds;
+                            if (newAdjustMs > 0)
+                            {
+                                adjustMilliseconds = newAdjustMs;
+                            }
+                            else
+                            {
+                                return;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        var prev = _subtitle.GetParagraphOrDefault(FirstSelectedIndex - 1);
+                        if (prev != null && current.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines + adjustMilliseconds < prev.EndTime.TotalMilliseconds)
+                        {
+                            var newAdjustMs = prev.EndTime.TotalMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines - current.StartTime.TotalMilliseconds;
+                            if (newAdjustMs < 0)
+                            {
+                                adjustMilliseconds = newAdjustMs;
+                            }
+                            else
+                            {
+                                return;
+                            }
+                        }
+                    }
+                }
+            }
+
+            SubtitleListview1.BeginUpdate();
             for (int i = startFrom; i < _subtitle.Paragraphs.Count; i++)
             {
                 switch (selection)
