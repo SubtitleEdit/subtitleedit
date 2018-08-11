@@ -6447,8 +6447,14 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void RefreshSelectedParagraph()
         {
+            var idx = FirstSelectedIndex;
+            var p = _subtitle.GetParagraphOrDefault(idx);
             _subtitleListViewIndex = -1;
             SubtitleListview1_SelectedIndexChanged(null, null);
+            if (p != null)
+            {
+                SubtitleListview1.SetStartTimeAndDuration(idx, p, _subtitle.GetParagraphOrDefault(idx + 1), _subtitle.GetParagraphOrDefault(idx - 1));
+            }
         }
 
         private int GetPositionFromWordIndex(string text, int wordIndex)
