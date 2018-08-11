@@ -2316,7 +2316,7 @@
     <RegEx find="(?&lt;!mhv)ališ[eu]" replaceWith="alizira" />
     <RegEx find="([nN])ezna(?![bčlnt])" replaceWith="$1e zna" />
     <RegEx find="([nN])ežn" replaceWith="$1ježn" />
-    <RegEx find="\b([nN])oč" replaceWith="$1oć" />
+    <RegEx find="(?&lt;!d)([nN])oč" replaceWith="$1oć" />
     <RegEx find="\b([oO])dbra" replaceWith="$1bra" />
     <RegEx find="bavj?est" replaceWith="bavijest" />
     <RegEx find="belod" replaceWith="bjelod" />
