@@ -81,7 +81,7 @@
   <About>
     <Title>O Subtitle Edit</Title>
     <AboutText1>Subtitle Edit jest wolnym oprogramowaniem na licencji GNU Public.
-Możesz go dowolnie dystrybuować, modyfikować i używać.
+Możesz go dowolnie rozpowszechniać, modyfikować i używać.
 
 Kod źródłowy C# dostępny jest na https://github.com/SubtitleEdit/subtitleedit
 
@@ -119,7 +119,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
 Ta funkcja wymaga VLC media player 1.1.x lub nowszego ({0}-bit). Wiersz poleceń: {1} {2}</WaveFileNotFound>
     <WaveFileMalformed>{0} nie był w stanie wyodrębnić danych audio do pliku wave!
 
-Wiersz poleceń: {1} {2}
+Wiersz polecenia: {1} {2}
 
 Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
     <LowDiskSpace>MAŁO MIEJSCA NA DYSKU!</LowDiskSpace>
@@ -129,15 +129,15 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
     <Title>Zbiorcze generowanie danych wykresu falowego</Title>
     <ExtractingAudio>Wydobywanie dźwięku...</ExtractingAudio>
     <Calculating>Obliczanie...</Calculating>
-    <Done>Wykonano</Done>
+    <Done>Gotowe</Done>
     <Error>Błąd</Error>
   </AddWaveformBatch>
   <AdjustDisplayDuration>
     <Title>Dostosuj czasy trwania</Title>
     <AdjustVia>Dostosuj za pomocą</AdjustVia>
     <Seconds>Sekund</Seconds>
-    <Percent>Procentów</Percent>
-    <Recalculate>Przelicz</Recalculate>
+    <Percent>Wartości procentowej</Percent>
+    <Recalculate>Przelicz ponownie</Recalculate>
     <AddSeconds>Dodaj sekundy</AddSeconds>
     <SetAsPercent>Ustaw jako procent czasu trwania</SetAsPercent>
     <Note>Uwaga: Czas wyświetlania nie nałoży się na czas początkowy następnego tekstu</Note>
@@ -146,19 +146,19 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
   <ApplyDurationLimits>
     <Title>Zastosuj limity czasu trwania</Title>
     <FixesAvailable>Dostępne poprawki: {0}</FixesAvailable>
-    <UnableToFix>Nie można poprawić: {0}</UnableToFix>
+    <UnableToFix>Nie można naprawić: {0}</UnableToFix>
   </ApplyDurationLimits>
   <AudioToText>
     <Title>Audio na tekst</Title>
-    <ExtractingAudioUsingX>Wyodrębnianie audio za pomocą {0}...</ExtractingAudioUsingX>
-    <ExtractingTextUsingX>Wyodrębnianie tekstu z audio za pomocą {0}...</ExtractingTextUsingX>
-    <ProgessViaXy>Wyodrębnianie tekstu za pomocą {0} postęp: {1}%</ProgessViaXy>
+    <ExtractingAudioUsingX>Wyodrębnianie audio przy użyciu {0}...</ExtractingAudioUsingX>
+    <ExtractingTextUsingX>Wyodrębnianie tekstu z audio przy użyciu {0}...</ExtractingTextUsingX>
+    <ProgessViaXy>Wyodrębnianie tekstu przy użyciu {0} postęp: {1}%</ProgessViaXy>
     <ShowLess>Pokaż mniej ▲</ShowLess>
     <ShowMore>Pokaż więcej ▼</ShowMore>
   </AudioToText>
   <AutoBreakUnbreakLines>
     <TitleAutoBreak>Automatycznie zrównoważ zaznaczone linie</TitleAutoBreak>
-    <TitleUnbreak>Usuń łamanie linii z wybranych linii</TitleUnbreak>
+    <TitleUnbreak>Usuwanie łamania linii z wybranych linii</TitleUnbreak>
     <LinesFoundX>Znaleziono linii: {0}</LinesFoundX>
     <OnlyBreakLinesLongerThan>Przełam tylko linie dłuższe, niż</OnlyBreakLinesLongerThan>
     <OnlyUnbreakLinesLongerThan>Cofnij łamanie tylko dla linii dłuższych, niż</OnlyUnbreakLinesLongerThan>
@@ -171,12 +171,12 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
     <Output>Wyjście</Output>
     <ChooseOutputFolder>Wybierz folder wyjściowy</ChooseOutputFolder>
     <OverwriteExistingFiles>Nadpisz istniejące pliki</OverwriteExistingFiles>
-    <Style>Style...</Style>
+    <Style>Styl...</Style>
     <UseStyleFromSource>Użyj stylu ze źródła</UseStyleFromSource>
     <ConvertOptions>Opcje konwersji</ConvertOptions>
     <RemoveFormatting>Usuń tagi formatujące</RemoveFormatting>
     <RemoveTextForHI>Usuń tekst dla niedosłyszących (HI)</RemoveTextForHI>
-    <OverwriteOriginalFiles>Nadpisz oryginalne pliki (nowe rozszerzenie, jeśli format jest zmieniany)</OverwriteOriginalFiles>
+    <OverwriteOriginalFiles>Nadpisz pliki oryginalne (nowe rozszerzenie w przypadku zmiany formatu)</OverwriteOriginalFiles>
     <RedoCasing>Ponów wielkie litery</RedoCasing>
     <Convert>Konwertuj</Convert>
     <NothingToConvert>Nie ma nic do konwersji!</NothingToConvert>
@@ -187,14 +187,14 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
     <SplitLongLines>Podziel długie linie</SplitLongLines>
     <AutoBalance>Automatycznie zrównoważ linie</AutoBalance>
     <ScanFolder>Skanuj folder...</ScanFolder>
-    <ScanningFolder>Przeskanowano {0} i podfolderów z plikami napisów...</ScanningFolder>
+    <ScanningFolder>Przeskanowano {0} i podfolderów w poszukiwaniu plików napisów...</ScanningFolder>
     <Recursive>Uwzględnij podfoldery</Recursive>
     <SetMinMsBetweenSubtitles>Ustaw minimum milisekund między napisami</SetMinMsBetweenSubtitles>
     <BridgeGaps>Zmostkuj przerwy</BridgeGaps>
     <PlainText>Zwykły tekst</PlainText>
     <Ocr>OCR...</Ocr>
     <Filter>Filtr</Filter>
-    <FilterSkipped>Pomijanie przez filtr</FilterSkipped>
+    <FilterSkipped>Pomijane przez filtr</FilterSkipped>
     <FilterSrtNoUtf8BOM>Pliki SubRip (.srt) bez nagłówka UTF-8 BOM</FilterSrtNoUtf8BOM>
     <FilterMoreThanTwoLines>Więcej, niż dwie linie w jednym napisie</FilterMoreThanTwoLines>
     <FilterContains>Tekst zawiera...</FilterContains>
@@ -709,15 +709,18 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
     <RemoveAll>Usuń wszystko</RemoveAll>
   </ImportImages>
   <ImportSceneChanges>
-    <Title>Import zmian w scenach</Title>
+    <Title>Import zmiany scen</Title>
     <OpenTextFile>Otwórz plik tekstowy...</OpenTextFile>
-    <ImportOptions>Opcje importu</ImportOptions>
+    <Generate>Generuj zmiany scen</Generate>
+    <Import>Importuj zmiany scen</Import>
     <TextFiles>Plik tekstowy</TextFiles>
     <TimeCodes>Kody czasowe</TimeCodes>
     <Frames>Klatki</Frames>
     <Seconds>Sekundy</Seconds>
     <Milliseconds>Milisekundy</Milliseconds>
-    <GetSceneChangesWithFfmpeg>Uzyskaj zmiany sceny z FFmpeg</GetSceneChangesWithFfmpeg>
+    <GetSceneChangesWithFfmpeg>Uzyskaj zmiany scen za pomocą FFmpeg</GetSceneChangesWithFfmpeg>
+    <Sensitivity>Czułość</Sensitivity>
+    <SensitivityDescription>Niższa wartość daje więcej zmian w scenach</SensitivityDescription>
   </ImportSceneChanges>
   <ImportText>
     <Title>Import czystego tekstu</Title>
@@ -1021,8 +1024,8 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
         <CloseVideo>Zamknij plik wideo</CloseVideo>
         <SetVideoOffset>Ustaw przesunięcie wideo...</SetVideoOffset>
         <SmptTimeMode>Timing SMPTE (opuść klatkę)</SmptTimeMode>
-        <ImportSceneChanges>Importuj zmiany w scenach...</ImportSceneChanges>
-        <RemoveSceneChanges>Usuń zmiany w scenach</RemoveSceneChanges>
+        <GenerateImportSceneChanges>Generuj/Importuj zmiany scen</GenerateImportSceneChanges>
+        <RemoveSceneChanges>Usuń zmiany scen</RemoveSceneChanges>
         <WaveformBatchGenerate>Zbiorcze generowanie wykresów falowych...</WaveformBatchGenerate>
         <ShowHideVideo>Pokaż/ukryj wideo</ShowHideVideo>
         <ShowHideWaveform>Pokaż/ukryj wykres falowy audio</ShowHideWaveform>
@@ -1457,7 +1460,7 @@ Kontynuować?</SubtitleAppendPrompt>
     <BeforeDisplaySubtitleJoin>Przed dołączeniem napisów</BeforeDisplaySubtitleJoin>
     <SubtitlesJoined>Dołączanie napisów</SubtitlesJoined>
     <StatusLog>Status Dziennika zdarzeń</StatusLog>
-    <XSceneChangesImported>Zaimportowano {0} zmian w scenach</XSceneChangesImported>
+    <XSceneChangesImported>Zaimportowano {0} zmian scen</XSceneChangesImported>
     <PluginXExecuted>Wtyczka '{0}' wykonana.</PluginXExecuted>
     <NotAValidXSubFile>Niepoprawny plik XSub!</NotAValidXSubFile>
     <BeforeMergeLinesWithSameText>Przed połączeniem linii z takim samym tekstem</BeforeMergeLinesWithSameText>
@@ -1546,6 +1549,8 @@ Jeśli edytowałeś ten plik w Subtitle Edit, to możesz odszukać kopię zapaso
     <RegEx>Wyrażenie regularne</RegEx>
     <UnequalLines>Linie o numerach nieparzystych</UnequalLines>
     <EqualLines>Linie o numerach parzystych</EqualLines>
+    <DurationLessThan>Czas trwania krótszy niż</DurationLessThan>
+    <DurationGreaterThan>Czas trwania dłuższy niż</DurationGreaterThan>
   </ModifySelection>
   <MultipleReplace>
     <Title>Wielokrotne zastąpienia</Title>
@@ -1926,7 +1931,6 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <WaveformPlayNewSelectionEnd>Odtwarzaj koniec zaznaczenia</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Odtwarzaj pierwsze zaznaczone napisy</WaveformPlayFirstSelectedSubtitle>
     <WaveformFocusListView>Koncentruj uwagę na "Widoku listy"</WaveformFocusListView>
-    <WaveformGoToNextSubtitle>Przejdź do następnych napisów (z pozycji wideo)</WaveformGoToNextSubtitle>
     <WaveformGoToPreviousSceneChange>Przejdź do poprzedniej zmiany sceny</WaveformGoToPreviousSceneChange>
     <WaveformGoToNextSceneChange>Przejdź do następnej zmiany sceny</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>Przełącznik zmiany sceny</WaveformToggleSceneChange>
@@ -1942,6 +1946,8 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <GoForward1Second>1 sekunda do przodu</GoForward1Second>
     <GoBack5Seconds>5 sekund do tyłu</GoBack5Seconds>
     <GoForward5Seconds>5 sekund do przodu</GoForward5Seconds>
+    <WaveformGoToPrevSubtitle>Przejdź do poprzedniej linii napisów (z pozycji wideo)</WaveformGoToPrevSubtitle>
+    <WaveformGoToNextSubtitle>Przejdź do następnej linii napisów (z pozycji wideo)</WaveformGoToNextSubtitle>
     <TogglePlayPause>Przełączanie odtwarzaj/pauza</TogglePlayPause>
     <Pause>Pauza</Pause>
     <Fullscreen>Pełny ekran</Fullscreen>
@@ -1972,6 +1978,7 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <ShortcutIsAlreadyDefinedX>Skrót już jest zdefiniowany:{0}</ShortcutIsAlreadyDefinedX>
     <ToggleTranslationAndOriginalInPreviews>Przełącz tłumaczenie i oryginał w podglądzie wideo/audio</ToggleTranslationAndOriginalInPreviews>
     <ListViewColumnDelete>Kolumna, usuń tekst</ListViewColumnDelete>
+    <ListViewColumnDeleteAndShiftUp>Kolumna, usuń tekst i przesuń w górę</ListViewColumnDeleteAndShiftUp>
     <ListViewColumnInsert>Kolumna, wstaw tekst</ListViewColumnInsert>
     <ListViewColumnPaste>Kolumna, wklej</ListViewColumnPaste>
     <ListViewColumnTextUp>Kolumna, tekst do góry</ListViewColumnTextUp>
@@ -2316,7 +2323,6 @@ Utrzymać te zmiany?</KeepChangesMessage>
     <SaveAllSubtitleImagesAsBdnXml>Zapisz wszystkie obrazy (png/bdn xml)...</SaveAllSubtitleImagesAsBdnXml>
     <SaveAllSubtitleImagesWithHtml>Zapisz wszystkie obrazy z indeksem HTML...</SaveAllSubtitleImagesWithHtml>
     <XImagesSavedInY>Zapisano {0} obrazów w {1}</XImagesSavedInY>
-    <TryModiForUnknownWords>Wypróbuj Microsoft MODI OCR dla nieznanych słów</TryModiForUnknownWords>
     <DictionaryX>Słownik: {0}</DictionaryX>
     <RightToLeft>Od prawej do lewej</RightToLeft>
     <ShowOnlyForcedSubtitles>Pokaż tylko wymuszone napisy</ShowOnlyForcedSubtitles>
