@@ -1083,8 +1083,6 @@
     <Word from="Smena" to="Smjena" />
     <Word from="smene" to="smjene" />
     <Word from="Smene" to="Smjene" />
-    <Word from="smenu" to="smjenu" />
-    <Word from="Smenu" to="Smjenu" />
     <Word from="smeni" to="smjeni" />
     <Word from="Smeni" to="Smjeni" />
     <Word from="smenu" to="smjenu" />
@@ -1196,8 +1194,6 @@
     <Word from="surfuju" to="surfaju" />
     <Word from="suština" to="bit" />
     <Word from="suštinski" to="bitni" />
-    <Word from="suv" to="suh" />
-    <Word from="Suv" to="Suh" />
     <Word from="suv" to="suh" />
     <Word from="Suv" to="Suh" />
     <Word from="suva" to="suha" />
@@ -1448,7 +1444,6 @@
     <Word from="zagrevanja" to="zagrijavanja" />
     <Word from="zagrevanje" to="zagrijavanje" />
     <Word from="Zagrevate" to="Zagrijavate" />
-    <Word from="zagrevanje" to="zagrijavanje" />
     <Word from="zakunio" to="zakleo" />
     <Word from="zalepili" to="zalijepili" />
     <Word from="zalepiti" to="zalijepiti" />
@@ -1849,8 +1844,9 @@
     <LinePart from="moram da budem" to="moram biti" />
     <LinePart from="Moram da idem" to="Moram ići" />
     <LinePart from="moram da idem" to="moram ići" />
-    <LinePart from="Moraš da ideš" to="Moraš ići" />
     <LinePart from="Moramo da idemo" to="Moramo ići" />
+    <LinePart from="Moraš da ideš" to="Moraš ići" />
+    <LinePart from="moraš da ideš" to="moraš ići" />
     <LinePart from="moram da vidim" to="moram vidjeti" />
     <LinePart from="moram da zaboravim" to="moram zaboraviti" />
     <LinePart from="moraš da zaboraviš" to="moraš zaboraviti" />
@@ -1859,8 +1855,6 @@
     <LinePart from="Moram da znam" to="Moram znati" />
     <LinePart from="Moraš da znaš" to="Moraš znati" />
     <LinePart from="moraš da znaš" to="moraš znati" />
-    <LinePart from="Moraš da ideš" to="Moraš ići" />
-    <LinePart from="moraš da ideš" to="moraš ići" />
     <LinePart from="može da bude" to="može biti" />
     <LinePart from="možeš da budeš" to="možeš biti" />
     <LinePart from="može da diše" to="može disati" />
