@@ -55,6 +55,7 @@ namespace Nikse.SubtitleEdit.Forms
             subtitleListView2.UseSyntaxColoring = false;
             openFileDialog1.Filter = UiUtil.SubtitleExtensionFilter.Value;
             LoadConfigurations();
+            buttonExport.Enabled = false;
         }
 
         public void Initialize(Subtitle subtitle1, string subtitleFileName1, string title)
@@ -231,6 +232,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 return;
             }
+            buttonExport.Enabled = true;
             timer1.Stop();
             var sub1 = new Subtitle(_subtitle1);
             var sub2 = new Subtitle(_subtitle2);
