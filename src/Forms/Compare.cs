@@ -1039,10 +1039,11 @@ namespace Nikse.SubtitleEdit.Forms
                 if (saveFile.ShowDialog() == DialogResult.OK)
                 {
                     string fileName = saveFile.FileName;
-                    var sb = new StringBuilder();
+                    var sb = new StringBuilder();                        
+                    sb.AppendLine("<!DOCTYPE html>");
                     sb.AppendLine("<html>");
-                    sb.AppendLine("  <head><title>Subtitle compare</title></head>");
-                    sb.AppendLine("    <title>Subtitle compare</title>");
+                    sb.AppendLine("  <head>");
+                    sb.AppendLine("    <title>Subtitle Edit compare</title>");
                     sb.AppendLine("  </head>");
                     sb.AppendLine("  <body>");
                     sb.AppendLine("    <h1>Subtitle Edit compare</h1>");
