@@ -32,6 +32,10 @@
    * Add shortcut "Go to previous sub (from video pos)" - thx OmrSi
    * Hide cursor in video fullscreen mode/mpv - thx OmrSi
    * Respect line break for waveform preview text - thx Leon
+   * Add check for frame rate in Netflix quality checker - thx Justin
+   * Add ">" and "<" duration in "Modify selection"
+   * Improve EBU STL properties regarding "language code"
+   * Add "Export" for compare tool - thx Kait
 * FIXED:
    * Fix "Add to names list" in OCR spell check - thx daed-alus/Sergiy
    * Fix "Generate scene changes" decimal point issue - thx Max
@@ -68,6 +72,9 @@
    * Fix crash with Gap Column - thx Leon
    * Fix issue with "Fix missing spaces" and "?" - thx Boulder08
    * Fix crash in "Remove text for HI" - thx tormento
+   * Fix reset video position after new file - thx OmrSi
+   * Fix shortcut "Column, Delete text" - thx OmrSi
+   * Fix character count in EBU STL propertie - thx FVonFaschion
 
 
 3.5.6 (27th February 2018)
