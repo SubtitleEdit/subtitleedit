@@ -1882,6 +1882,7 @@ can edit in same subtitle file (collaboration)</Information>
     <UpdateShortcut>Update</UpdateShortcut>
     <ToggleDockUndockOfVideoControls>Toggle dock/undock of video controls</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Set end, add new and go to new</CreateSetEndAddNewAndGoToNew>
+    <AdjustViaEndAutoStart>Adjust via end position</AdjustViaEndAutoStart>
     <AdjustViaEndAutoStartAndGoToNext>Adjust via end position and go to next</AdjustViaEndAutoStartAndGoToNext>
     <AdjustSetEndTimeAndGoToNext>Set end and go to next</AdjustSetEndTimeAndGoToNext>
     <AdjustSetStartAutoDurationAndGoToNext>Set start, auto duration and go to next</AdjustSetStartAutoDurationAndGoToNext>

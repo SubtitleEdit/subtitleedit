@@ -1070,6 +1070,7 @@ namespace Nikse.SubtitleEdit.Core
         public string MainAdjustSetEndAndOffsetTheRest { get; set; }
         public string MainAdjustSetEndAndOffsetTheRestAndGoToNext { get; set; }
         public string MainAdjustSetEndAndGotoNext { get; set; }
+        public string MainAdjustViaEndAutoStart { get; set; }
         public string MainAdjustViaEndAutoStartAndGoToNext { get; set; }
         public string MainAdjustSetStartAutoDurationAndGoToNext { get; set; }
         public string MainAdjustSetEndNextStartAndGoToNext { get; set; }
@@ -3165,6 +3166,9 @@ namespace Nikse.SubtitleEdit.Core
                 subNode = node.SelectSingleNode("MainAdjustSetEndAndGotoNext");
                 if (subNode != null)
                     settings.Shortcuts.MainAdjustSetEndAndGotoNext = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainAdjustViaEndAutoStart");
+                if (subNode != null)
+                    settings.Shortcuts.MainAdjustViaEndAutoStart = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainAdjustViaEndAutoStartAndGoToNext");
                 if (subNode != null)
                     settings.Shortcuts.MainAdjustViaEndAutoStartAndGoToNext = subNode.InnerText;
@@ -4008,6 +4012,7 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("MainAdjustSetEndAndOffsetTheRest", settings.Shortcuts.MainAdjustSetEndAndOffsetTheRest);
                 textWriter.WriteElementString("MainAdjustSetEndAndOffsetTheRestAndGoToNext", settings.Shortcuts.MainAdjustSetEndAndOffsetTheRestAndGoToNext);
                 textWriter.WriteElementString("MainAdjustSetEndAndGotoNext", settings.Shortcuts.MainAdjustSetEndAndGotoNext);
+                textWriter.WriteElementString("MainAdjustViaEndAutoStart", settings.Shortcuts.MainAdjustViaEndAutoStart);
                 textWriter.WriteElementString("MainAdjustViaEndAutoStartAndGoToNext", settings.Shortcuts.MainAdjustViaEndAutoStartAndGoToNext);
                 textWriter.WriteElementString("MainAdjustSetStartAutoDurationAndGoToNext", settings.Shortcuts.MainAdjustSetStartAutoDurationAndGoToNext);
                 textWriter.WriteElementString("MainAdjustSetEndNextStartAndGoToNext", settings.Shortcuts.MainAdjustSetEndNextStartAndGoToNext);
