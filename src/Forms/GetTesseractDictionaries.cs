@@ -177,7 +177,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonOK.Enabled = true;
             buttonDownload.Enabled = true;
             comboBoxDictionaries.Enabled = true;
-            MessageBox.Show(string.Format(Configuration.Settings.Language.GetDictionaries.XDownloaded, comboBoxDictionaries.Items[index]));
+            MessageBox.Show(string.Format(Configuration.Settings.Language.GetTesseractDictionaries.XDownloaded, comboBoxDictionaries.Items[index]));
         }
 
         private void linkLabelOpenDictionaryFolder_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

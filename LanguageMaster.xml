@@ -661,7 +661,6 @@ Note: Do check free disk space.</WaveFileMalformed>
     <Title>Need dictionaries?</Title>
     <DescriptionLine1>Subtitle Edit's spell check is based on the NHunspell engine which</DescriptionLine1>
     <DescriptionLine2>uses the spell checking dictionaries from Open Office.</DescriptionLine2>
-    <GetDictionariesHere>Get dictionaries here:</GetDictionariesHere>
     <ChooseLanguageAndClickDownload>Choose your language and click download</ChooseLanguageAndClickDownload>
     <OpenDictionariesFolder>Open 'Dictionaries' folder</OpenDictionariesFolder>
     <Download>Download</Download>
@@ -1312,7 +1311,6 @@ Continue?</SubtitleAppendPrompt>
     <RedoPerformed>Redo performed</RedoPerformed>
     <NothingToUndo>Nothing to undo</NothingToUndo>
     <InvalidLanguageNameX>Invalid language name: {0}</InvalidLanguageNameX>
-    <UnableToChangeLanguage>Unable to change language!</UnableToChangeLanguage>
     <DoNotDisplayMessageAgain>Don't display this message again</DoNotDisplayMessageAgain>
     <NumberOfCorrectedWords>Number of corrected words: {0}</NumberOfCorrectedWords>
     <NumberOfSkippedWords>Number of skipped words: {0}</NumberOfSkippedWords>
@@ -1356,7 +1354,6 @@ Continue?</SubtitleAppendPrompt>
     <SubtitleImportedFromMatroskaFile>Subtitle imported from Matroska file</SubtitleImportedFromMatroskaFile>
     <DropFileXNotAccepted>Drop file '{0}' not accepted - file is too large</DropFileXNotAccepted>
     <DropOnlyOneFile>You can only drop one file</DropOnlyOneFile>
-    <BeforeCreateAdjustLines>Before create/adjust lines</BeforeCreateAdjustLines>
     <OpenAnsiSubtitle>Open subtitle...</OpenAnsiSubtitle>
     <BeforeChangeCasing>Before change casing</BeforeChangeCasing>
     <CasingCompleteMessageNoNames>Number of lines with casing changed: {0}/{1}</CasingCompleteMessageNoNames>
@@ -1383,7 +1380,6 @@ Continue?</SubtitleAppendPrompt>
     <ShowSelectedLinesXSecondsLinesLater>Show selected lines {0:0.0##} seconds later</ShowSelectedLinesXSecondsLinesLater>
     <ShowSelectionAndForwardXSecondsLinesEarlier>Show selection and forward {0:0.0##} seconds earlier</ShowSelectionAndForwardXSecondsLinesEarlier>
     <ShowSelectionAndForwardXSecondsLinesLater>Show selection and forward {0:0.0##} seconds later</ShowSelectionAndForwardXSecondsLinesLater>
-    <ShowSelectedLinesEarlierLaterPerformed>Show earlier/later performed on selected lines</ShowSelectedLinesEarlierLaterPerformed>
     <DoubleWordsViaRegEx>Double words via regex {0}</DoubleWordsViaRegEx>
     <BeforeSortX>Before sort: {0}</BeforeSortX>
     <SortedByX>Sorted by: {0}</SortedByX>

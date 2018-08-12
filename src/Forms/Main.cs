@@ -6295,7 +6295,7 @@ namespace Nikse.SubtitleEdit.Forms
                             _fileDateTime = _subtitle.HistoryItems[_undoIndex].RedoFileModified;
                         _fileName = _subtitle.HistoryItems[_undoIndex].RedoFileName;
                         _subtitleAlternateFileName = _subtitle.HistoryItems[_undoIndex].RedoOriginalFileName;
-                        ShowStatus(_language.UndoPerformed);
+                        ShowStatus(_language.RedoPerformed);
                     }
                 }
                 catch (Exception exception)
