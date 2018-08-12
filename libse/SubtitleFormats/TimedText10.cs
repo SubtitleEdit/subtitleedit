@@ -694,7 +694,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             if (body.Attributes["style"] != null)
                 defaultStyle = body.Attributes["style"].InnerText;
 
-            var topRegions = GetRegionsTopFromHeader(xml.OuterXml);
             var headerStyleNodes = new List<XmlNode>();
             try
             {
@@ -708,6 +707,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
             }
 
+            var topRegions = GetRegionsTopFromHeader(xml.OuterXml);
+            XmlNode lastDiv = null;
             foreach (XmlNode node in body.SelectNodes("//ttml:p", nsmgr))
             {
                 try
@@ -801,6 +802,20 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 p.Text = "{\\an8}" + p.Text;
                             SetEffect(p, "region", region);
                         }
+                    }
+
+                    if (node.ParentNode.Name == "div")
+                    {
+                        // check language
+                        if (node.ParentNode.Attributes["xml:lang"] != null)
+                            p.Language = node.ParentNode.Attributes["xml:lang"].InnerText;
+                        else if (node.ParentNode.Attributes["lang"] != null)
+                            p.Language = node.ParentNode.Attributes["lang"].InnerText;
+
+                        // check for new div
+                        if (lastDiv != null && node.ParentNode != lastDiv)
+                            p.NewSection = true;
+                        lastDiv = node.ParentNode;
                     }
 
                     p.Extra = SetExtra(p);
