@@ -1004,6 +1004,34 @@ and astronauts.“...""
             Assert.AreEqual(expected, actual);
         }
 
+        [TestMethod]
+        public void TimedTextKeepDivs()
+        {
+            var target = new TimedText10();
+            var subtitle = new Subtitle();
+            string raw = @"
+<?xml version='1.0' encoding='utf-8'?>
+<tt xmlns='http://www.w3.org/ns/ttml' xmlns:tts='http://www.w3.org/ns/ttml#styling' xml:lang='en'>
+  <head>
+  </head>
+  <body>
+    <div>
+      <p begin='00:00:01.000' id='p1' end='00:00:03.079'>Test.</p>
+    </div>
+    <div>
+      <p begin='00:00:51.699' id='p2' end='00:00:54.040'>Now.</p>
+      <p begin='00:00:54.064' id='p3' end='00:00:55.429'>We all alive.</p>
+    </div>
+    <div>
+      <p begin='00:01:29.731' id='p4' end='00:01:32.447'>Here is what's left.</p>
+    </div>
+  </body>
+</tt>".Replace("'", "\"");
+            target.LoadSubtitle(subtitle, raw.SplitToLines(), null);
+            var actual = target.ToText(subtitle, string.Empty);
+            Assert.AreEqual(3, Utilities.CountTagInText(actual, "</div>"));
+        }
+
         #endregion
 
         #region JacoSub

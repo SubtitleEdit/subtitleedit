@@ -170,7 +170,6 @@ namespace Nikse.SubtitleEdit.Core
                 OverlapNextX = "Overlap next ({0:#,##0.###})",
                 Negative = "Negative",
                 RegularExpressionIsNotValid = "Regular expression is not valid!",
-                SubtitleSaved = "Subtitle saved",
                 CurrentSubtitle = "Current subtitle",
                 OriginalText = "Original text",
                 OpenOriginalSubtitleFile = "Open original subtitle file...",
@@ -193,6 +192,7 @@ namespace Nikse.SubtitleEdit.Core
                 Before = "Before",
                 After = "After",
                 Size = "Size",
+                Search = "Search"
             };
 
             About = new LanguageStructure.About
@@ -273,7 +273,6 @@ namespace Nikse.SubtitleEdit.Core
                 Recalculate = "Recalculate",
                 Seconds = "Seconds",
                 Note = "Note: Display time will not overlap start time of next text",
-                PleaseSelectAValueFromTheDropDownList = "Please select a value from the dropdown list",
             };
 
             ApplyDurationLimits = new LanguageStructure.ApplyDurationLimits
@@ -787,8 +786,6 @@ namespace Nikse.SubtitleEdit.Core
                 FixesFoundX = "Fixes found: {0}",
                 XFixesApplied = "Fixes applied: {0}",
                 NothingToFixBut = "Nothing to fix but a few things could be improved - see log for details",
-                Continue = "Continue",
-                ContinueAnyway = "Continue anyway?",
                 UncheckedFixLowercaseIToUppercaseI = "Unchecked \"Fix alone lowercase 'i' to 'I' (English)\"",
                 XIsChangedToUppercase = "{0} i's changed to uppercase",
                 FixFirstLetterToUppercaseAfterParagraph = "Fix first letter to uppercase after paragraph",

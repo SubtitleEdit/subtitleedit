@@ -211,9 +211,6 @@ namespace Nikse.SubtitleEdit.Core
                 case "General/RegularExpressionIsNotValid":
                     language.General.RegularExpressionIsNotValid = reader.Value;
                     break;
-                case "General/SubtitleSaved":
-                    language.General.SubtitleSaved = reader.Value;
-                    break;
                 case "General/CurrentSubtitle":
                     language.General.CurrentSubtitle = reader.Value;
                     break;
@@ -279,6 +276,9 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "General/Size":
                     language.General.Size = reader.Value;
+                    break;
+                case "General/Search":
+                    language.General.Search = reader.Value;
                     break;
                 case "About/Title":
                     language.About.Title = reader.Value;
@@ -387,9 +387,6 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "AdjustDisplayDuration/Note":
                     language.AdjustDisplayDuration.Note = reader.Value;
-                    break;
-                case "AdjustDisplayDuration/PleaseSelectAValueFromTheDropDownList":
-                    language.AdjustDisplayDuration.PleaseSelectAValueFromTheDropDownList = reader.Value;
                     break;
                 case "ApplyDurationLimits/Title":
                     language.ApplyDurationLimits.Title = reader.Value;
@@ -1551,12 +1548,6 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "FixCommonErrors/NothingToFixBut":
                     language.FixCommonErrors.NothingToFixBut = reader.Value;
-                    break;
-                case "FixCommonErrors/Continue":
-                    language.FixCommonErrors.Continue = reader.Value;
-                    break;
-                case "FixCommonErrors/ContinueAnyway":
-                    language.FixCommonErrors.ContinueAnyway = reader.Value;
                     break;
                 case "FixCommonErrors/UncheckedFixLowercaseIToUppercaseI":
                     language.FixCommonErrors.UncheckedFixLowercaseIToUppercaseI = reader.Value;
