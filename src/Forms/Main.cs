@@ -12693,7 +12693,6 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else if (_mainAdjustInsertViaEndAutoStart == e.KeyData)
                     {
-                        ShowNextSubtitleLabel();
                         SetCurrentViaEndPositionAndGotoNext(FirstSelectedIndex, false);
                         e.SuppressKeyPress = true;
                     }
