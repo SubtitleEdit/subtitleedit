@@ -189,7 +189,7 @@ namespace Nikse.SubtitleEdit.Forms
         private Keys _mainAdjustSetStartAndOffsetTheRest = Keys.None;
         private Keys _mainAdjustSetEndAndOffsetTheRest = Keys.None;
         private Keys _mainAdjustSetEndAndOffsetTheRestAndGoToNext = Keys.None;
-        private Keys _mainAdjustSetEndAndGotoNext = Keys.None;
+        private Keys _mainAdjustSetEndAndGotoNext = Keys.None;        
         private Keys _mainAdjustInsertViaEndAutoStart = Keys.None;
         private Keys _mainAdjustInsertViaEndAutoStartAndGoToNext = Keys.None;
         private Keys _mainAdjustSetStartAutoDurationAndGoToNext = Keys.None;
@@ -12705,7 +12705,6 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else if (_mainAdjustSetStartAutoDurationAndGoToNext == e.KeyData)
                     {
-                        //             ShowNextSubtitleLabel();
                         SetCurrentStartAutoDurationAndGotoNext(FirstSelectedIndex);
                         e.SuppressKeyPress = true;
                     }
@@ -16761,6 +16760,7 @@ namespace Nikse.SubtitleEdit.Forms
             _mainAdjustSetEndAndOffsetTheRest = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetEndAndOffsetTheRest);
             _mainAdjustSetEndAndOffsetTheRestAndGoToNext = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetEndAndOffsetTheRestAndGoToNext);
             _mainAdjustSetEndAndGotoNext = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetEndAndGotoNext);
+            _mainAdjustInsertViaEndAutoStart = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustViaEndAutoStart);
             _mainAdjustInsertViaEndAutoStartAndGoToNext = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustViaEndAutoStartAndGoToNext);
             _mainAdjustSetStartAutoDurationAndGoToNext = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetStartAutoDurationAndGoToNext);
             _mainAdjustSetEndNextStartAndGoToNext = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetEndNextStartAndGoToNext);
