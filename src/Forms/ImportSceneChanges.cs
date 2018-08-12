@@ -163,17 +163,24 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     // Parse string (HH:MM:SS.ms)
                     string[] timeParts = line.Split(SplitChars, StringSplitOptions.RemoveEmptyEntries);
-                    if (timeParts.Length == 2)
+                    try
                     {
-                        SceneChangesInSeconds.Add(new TimeSpan(0, 0, 0, Convert.ToInt32(timeParts[0]), Convert.ToInt32(timeParts[1])).TotalSeconds);
+                        if (timeParts.Length == 2)
+                        {
+                            SceneChangesInSeconds.Add(new TimeSpan(0, 0, 0, Convert.ToInt32(timeParts[0]), Convert.ToInt32(timeParts[1])).TotalSeconds);
+                        }
+                        else if (timeParts.Length == 3)
+                        {
+                            SceneChangesInSeconds.Add(new TimeSpan(0, 0, Convert.ToInt32(timeParts[0]), Convert.ToInt32(timeParts[1]), Convert.ToInt32(timeParts[2])).TotalSeconds);
+                        }
+                        else if (timeParts.Length == 4)
+                        {
+                            SceneChangesInSeconds.Add(new TimeSpan(0, Convert.ToInt32(timeParts[0]), Convert.ToInt32(timeParts[1]), Convert.ToInt32(timeParts[2]), Convert.ToInt32(timeParts[3])).TotalSeconds);
+                        }
                     }
-                    else if (timeParts.Length == 3)
+                    catch
                     {
-                        SceneChangesInSeconds.Add(new TimeSpan(0, 0, Convert.ToInt32(timeParts[0]), Convert.ToInt32(timeParts[1]), Convert.ToInt32(timeParts[2])).TotalSeconds);
-                    }
-                    else if (timeParts.Length == 4)
-                    {
-                        SceneChangesInSeconds.Add(new TimeSpan(0, Convert.ToInt32(timeParts[0]), Convert.ToInt32(timeParts[1]), Convert.ToInt32(timeParts[2]), Convert.ToInt32(timeParts[3])).TotalSeconds);
+                        // ignored
                     }
                 }
                 else
@@ -197,7 +204,14 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             Configuration.Settings.General.FFmpegSceneThreshold = numericUpDownThreshold.Value.ToString(CultureInfo.InvariantCulture);
-            DialogResult = DialogResult.OK;
+            if (SceneChangesInSeconds.Count > 0)
+            {
+                DialogResult = DialogResult.OK;
+            }
+            else
+            {
+                MessageBox.Show(Configuration.Settings.Language.ImportSceneChanges.NoSceneChangesFound);
+            }
         }
 
         private void buttonCancel_Click(object sender, EventArgs e)

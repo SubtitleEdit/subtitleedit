@@ -927,7 +927,8 @@ namespace Nikse.SubtitleEdit.Core
                 Milliseconds = "Milliseconds",
                 GetSceneChangesWithFfmpeg = "Generate scene changes with FFmpeg",
                 Sensitivity = "Sensitivity",
-                SensitivityDescription = "Lower value gives more scene changes"
+                SensitivityDescription = "Lower value gives more scene changes",
+                NoSceneChangesFound = "No scene changes found."
             };
 
             ImportText = new LanguageStructure.ImportText
