@@ -2050,6 +2050,7 @@
             public string UpdateShortcut { get; set; }
             public string ToggleDockUndockOfVideoControls { get; set; }
             public string CreateSetEndAddNewAndGoToNew { get; set; }
+            public string AdjustViaEndAutoStart { get; set; }
             public string AdjustViaEndAutoStartAndGoToNext { get; set; }
             public string AdjustSetEndTimeAndGoToNext { get; set; }
             public string AdjustSetStartAutoDurationAndGoToNext { get; set; }

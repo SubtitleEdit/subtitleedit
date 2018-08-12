@@ -5083,6 +5083,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/CreateSetEndAddNewAndGoToNew":
                     language.Settings.CreateSetEndAddNewAndGoToNew = reader.Value;
                     break;
+                case "Settings/AdjustViaEndAutoStart":
+                    language.Settings.AdjustViaEndAutoStart = reader.Value;
+                    break;
                 case "Settings/AdjustViaEndAutoStartAndGoToNext":
                     language.Settings.AdjustViaEndAutoStartAndGoToNext = reader.Value;
                     break;

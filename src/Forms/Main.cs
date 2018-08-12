@@ -190,6 +190,7 @@ namespace Nikse.SubtitleEdit.Forms
         private Keys _mainAdjustSetEndAndOffsetTheRest = Keys.None;
         private Keys _mainAdjustSetEndAndOffsetTheRestAndGoToNext = Keys.None;
         private Keys _mainAdjustSetEndAndGotoNext = Keys.None;
+        private Keys _mainAdjustInsertViaEndAutoStart = Keys.None;
         private Keys _mainAdjustInsertViaEndAutoStartAndGoToNext = Keys.None;
         private Keys _mainAdjustSetStartAutoDurationAndGoToNext = Keys.None;
         private Keys _mainAdjustSetEndNextStartAndGoToNext = Keys.None;
@@ -12690,10 +12691,16 @@ namespace Nikse.SubtitleEdit.Forms
                         ButtonSetEndClick(null, null);
                         e.SuppressKeyPress = true;
                     }
+                    else if (_mainAdjustInsertViaEndAutoStart == e.KeyData)
+                    {
+                        ShowNextSubtitleLabel();
+                        SetCurrentViaEndPositionAndGotoNext(FirstSelectedIndex, false);
+                        e.SuppressKeyPress = true;
+                    }
                     else if (_mainAdjustInsertViaEndAutoStartAndGoToNext == e.KeyData)
                     {
                         ShowNextSubtitleLabel();
-                        SetCurrentViaEndPositionAndGotoNext(FirstSelectedIndex);
+                        SetCurrentViaEndPositionAndGotoNext(FirstSelectedIndex, true);
                         e.SuppressKeyPress = true;
                     }
                     else if (_mainAdjustSetStartAutoDurationAndGoToNext == e.KeyData)
@@ -19329,7 +19336,7 @@ namespace Nikse.SubtitleEdit.Forms
             mediaPlayer.TogglePlayPause();
         }
 
-        public void SetCurrentViaEndPositionAndGotoNext(int index)
+        public void SetCurrentViaEndPositionAndGotoNext(int index, bool goToNext)
         {
             var p = _subtitle.GetParagraphOrDefault(index);
             if (p == null)
@@ -19371,7 +19378,9 @@ namespace Nikse.SubtitleEdit.Forms
             if (durationInSeconds >= numericUpDownDuration.Minimum && durationInSeconds <= numericUpDownDuration.Maximum)
                 SetDurationInSeconds((double)durationInSeconds);
 
-            SubtitleListview1.SelectIndexAndEnsureVisible(index + 1, true);
+            if (goToNext)
+                SubtitleListview1.SelectIndexAndEnsureVisible(index + 1, true);
+
             ShowStatus(string.Format(_language.VideoControls.AdjustedViaEndTime, p.StartTime.ToShortString()));
             audioVisualizer.Invalidate();
             _makeHistoryPaused = false;
