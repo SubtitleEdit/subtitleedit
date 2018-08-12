@@ -1888,6 +1888,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "ImportSceneChanges/SensitivityDescription":
                     language.ImportSceneChanges.SensitivityDescription = reader.Value;
                     break;
+                case "ImportSceneChanges/NoSceneChangesFound":
+                    language.ImportSceneChanges.NoSceneChangesFound = reader.Value;
+                    break;
                 case "ImportText/Title":
                     language.ImportText.Title = reader.Value;
                     break;

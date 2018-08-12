@@ -801,6 +801,7 @@
             public string GetSceneChangesWithFfmpeg { get; set; }
             public string Sensitivity { get; set; }
             public string SensitivityDescription { get; set; }
+            public string NoSceneChangesFound { get; set; }
         }
 
         public class ImportText
