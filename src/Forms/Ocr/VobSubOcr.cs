@@ -5848,6 +5848,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private void ButtonStartOcrClick(object sender, EventArgs e)
         {
+            if (_subtitle.Paragraphs.Count == 0)
+            {
+                return;
+            }
+
             if (_ocrMethodIndex == _ocrMethodTesseract && comboBoxTesseractLanguages.Items.Count == 0)
             {
                 buttonGetTesseractDictionaries_Click(sender, e);
