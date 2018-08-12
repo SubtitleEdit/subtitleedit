@@ -63,7 +63,7 @@ namespace Nikse.SubtitleEdit.Forms
                 textBoxFileName.Text = fileName;
             _fileName = fileName;
             foreach (Paragraph p in _subtitle.Paragraphs)
-                _totalNumberOfCharacters += p.Text.Length;
+                _totalNumberOfCharacters += HtmlUtil.RemoveHtmlTags(p.Text, true).Length;
             labelLines.Text = string.Format(Configuration.Settings.Language.Split.NumberOfLinesX, _subtitle.Paragraphs.Count);
             labelCharacters.Text = string.Format(Configuration.Settings.Language.Split.NumberOfCharactersX, _totalNumberOfCharacters);
 
@@ -73,6 +73,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             catch
             {
+                // ignored
             }
 
             if (Configuration.Settings.Tools.SplitVia.Trim().Equals("lines", StringComparison.OrdinalIgnoreCase))
@@ -126,13 +127,13 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         Paragraph p = _subtitle.Paragraphs[startNumber + number];
                         temp.Paragraphs.Add(new Paragraph(p));
-                        size += p.Text.Length;
+                        size += HtmlUtil.RemoveHtmlTags(p.Text, true).Length;
                     }
                     startNumber += noOfLines;
                     _parts.Add(temp);
 
-                    var lvi = new ListViewItem(string.Format("{0:#,###,###}", noOfLines));
-                    lvi.SubItems.Add(string.Format("{0:#,###,###}", size));
+                    var lvi = new ListViewItem($"{noOfLines:#,###,###}");
+                    lvi.SubItems.Add($"{size:#,###,###}");
                     lvi.SubItems.Add(fileNameNoExt + ".Part" + (i + 1) + format.Extension);
                     listViewParts.Items.Add(lvi);
                 }
@@ -147,12 +148,12 @@ namespace Nikse.SubtitleEdit.Forms
                 for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
                 {
                     Paragraph p = _subtitle.Paragraphs[i];
-                    int size = p.Text.Length;
+                    int size = HtmlUtil.RemoveHtmlTags(p.Text, true).Length;
                     if (currentSize + size > nextLimit + 4 && _parts.Count < numericUpDownParts.Value - 1)
                     {
                         _parts.Add(temp);
-                        var lvi = new ListViewItem(string.Format("{0:#,###,###}", temp.Paragraphs.Count));
-                        lvi.SubItems.Add(string.Format("{0:#,###,###}", currentSize));
+                        var lvi = new ListViewItem($"{temp.Paragraphs.Count:#,###,###}");
+                        lvi.SubItems.Add($"{currentSize:#,###,###}");
                         lvi.SubItems.Add(fileNameNoExt + ".Part" + _parts.Count + format.Extension);
                         listViewParts.Items.Add(lvi);
                         currentSize = size;
@@ -167,8 +168,8 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
                 _parts.Add(temp);
-                var lvi2 = new ListViewItem(string.Format("{0:#,###,###}", temp.Paragraphs.Count));
-                lvi2.SubItems.Add(string.Format("{0:#,###,###}", currentSize));
+                var lvi2 = new ListViewItem($"{temp.Paragraphs.Count:#,###,###}");
+                lvi2.SubItems.Add($"{currentSize:#,###,###}");
                 lvi2.SubItems.Add(fileNameNoExt + ".Part" + numericUpDownParts.Value + ".srt");
                 listViewParts.Items.Add(lvi2);
             }
