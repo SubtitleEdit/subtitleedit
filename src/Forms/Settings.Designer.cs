@@ -82,6 +82,9 @@
             this.labelDefaultFrameRate = new System.Windows.Forms.Label();
             this.tabPageShortcuts = new System.Windows.Forms.TabPage();
             this.groupBoxShortcuts = new System.Windows.Forms.GroupBox();
+            this.buttonShortcutsClear = new System.Windows.Forms.Button();
+            this.labelShortcutsSearch = new System.Windows.Forms.Label();
+            this.textBoxShortcutSearch = new System.Windows.Forms.TextBox();
             this.buttonClearShortcut = new System.Windows.Forms.Button();
             this.comboBoxShortcutKey = new System.Windows.Forms.ComboBox();
             this.labelShortcutKey = new System.Windows.Forms.Label();
@@ -1100,6 +1103,9 @@
             this.groupBoxShortcuts.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxShortcuts.Controls.Add(this.buttonShortcutsClear);
+            this.groupBoxShortcuts.Controls.Add(this.labelShortcutsSearch);
+            this.groupBoxShortcuts.Controls.Add(this.textBoxShortcutSearch);
             this.groupBoxShortcuts.Controls.Add(this.buttonClearShortcut);
             this.groupBoxShortcuts.Controls.Add(this.comboBoxShortcutKey);
             this.groupBoxShortcuts.Controls.Add(this.labelShortcutKey);
@@ -1115,6 +1121,34 @@
             this.groupBoxShortcuts.TabIndex = 2;
             this.groupBoxShortcuts.TabStop = false;
             this.groupBoxShortcuts.Text = "Shortcuts";
+            // 
+            // buttonShortcutsClear
+            // 
+            this.buttonShortcutsClear.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonShortcutsClear.Location = new System.Drawing.Point(221, 18);
+            this.buttonShortcutsClear.Name = "buttonShortcutsClear";
+            this.buttonShortcutsClear.Size = new System.Drawing.Size(111, 23);
+            this.buttonShortcutsClear.TabIndex = 38;
+            this.buttonShortcutsClear.Text = "Clear";
+            this.buttonShortcutsClear.UseVisualStyleBackColor = true;
+            this.buttonShortcutsClear.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // labelShortcutsSearch
+            // 
+            this.labelShortcutsSearch.AutoSize = true;
+            this.labelShortcutsSearch.Location = new System.Drawing.Point(18, 23);
+            this.labelShortcutsSearch.Name = "labelShortcutsSearch";
+            this.labelShortcutsSearch.Size = new System.Drawing.Size(40, 13);
+            this.labelShortcutsSearch.TabIndex = 37;
+            this.labelShortcutsSearch.Text = "Search";
+            // 
+            // textBoxShortcutSearch
+            // 
+            this.textBoxShortcutSearch.Location = new System.Drawing.Point(64, 20);
+            this.textBoxShortcutSearch.Name = "textBoxShortcutSearch";
+            this.textBoxShortcutSearch.Size = new System.Drawing.Size(151, 21);
+            this.textBoxShortcutSearch.TabIndex = 36;
+            this.textBoxShortcutSearch.TextChanged += new System.EventHandler(this.textBoxShortcutSearch_TextChanged);
             // 
             // buttonClearShortcut
             // 
@@ -1343,9 +1377,9 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.treeViewShortcuts.HideSelection = false;
-            this.treeViewShortcuts.Location = new System.Drawing.Point(16, 21);
+            this.treeViewShortcuts.Location = new System.Drawing.Point(16, 47);
             this.treeViewShortcuts.Name = "treeViewShortcuts";
-            this.treeViewShortcuts.Size = new System.Drawing.Size(797, 419);
+            this.treeViewShortcuts.Size = new System.Drawing.Size(797, 393);
             this.treeViewShortcuts.TabIndex = 0;
             this.treeViewShortcuts.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeViewShortcuts_AfterSelect);
             // 
@@ -4589,5 +4623,8 @@
         private System.Windows.Forms.GroupBox groupBoxFontGeneral;
         private System.Windows.Forms.Label labelFontNote;
         private System.Windows.Forms.Button buttonDownloadFfmpeg;
+        private System.Windows.Forms.Button buttonShortcutsClear;
+        private System.Windows.Forms.Label labelShortcutsSearch;
+        private System.Windows.Forms.TextBox textBoxShortcutSearch;
     }
 }
