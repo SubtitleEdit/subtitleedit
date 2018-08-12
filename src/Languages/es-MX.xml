@@ -1201,9 +1201,9 @@ Nota: comprobar el espacio libre en disco.</WaveFileMalformed>
       <SecondsBackShort>&lt;&lt;</SecondsBackShort>
       <SecondsForwardShort>&gt;&gt;</SecondsForwardShort>
       <VideoPosition>Posición video:</VideoPosition>
-      <TranslateTip>Tip: Use «alt+flecha arriba/abajo» para ir al subtítulo anterior/siguiente</TranslateTip>
-      <CreateTip>Tip: Use «ctrl+flecha izquierda/derecha»</CreateTip>
-      <AdjustTip>Tip: Use «alt+flecha arriba/abajo» para ir al subtítulo anterior/siguiente</AdjustTip>
+      <TranslateTip>Tip: Usa «alt+flecha arriba/abajo» para ir al subtítulo anterior/siguiente.</TranslateTip>
+      <CreateTip>Tip: «ctrl+flecha izquierda/derecha»</CreateTip>
+      <AdjustTip>Tip: «alt+flecha arriba/abajo»</AdjustTip>
       <BeforeChangingTimeInWaveformX>Antes de cambiar el tiempo en forma de onda: {0}</BeforeChangingTimeInWaveformX>
       <NewTextInsertAtX>Nuevo texto insertado en {0}</NewTextInsertAtX>
       <Center>Centrar</Center>
