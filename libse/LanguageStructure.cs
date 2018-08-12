@@ -58,7 +58,6 @@
             public string OverlapNextX { get; set; }
             public string Negative { get; set; }
             public string RegularExpressionIsNotValid { get; set; }
-            public string SubtitleSaved { get; set; }
             public string CurrentSubtitle { get; set; }
             public string OriginalText { get; set; }
             public string OpenOriginalSubtitleFile { get; set; }
@@ -81,6 +80,7 @@
             public string Before { get; set; }
             public string After { get; set; }
             public string Size { get; set; }
+            public string Search { get; set; }
         }
 
         public class About
@@ -145,7 +145,6 @@
             public string AddSeconds { get; set; }
             public string SetAsPercent { get; set; }
             public string Note { get; set; }
-            public string PleaseSelectAValueFromTheDropDownList { get; set; }
         }
 
         public class ApplyDurationLimits
@@ -661,8 +660,6 @@
             public string FixesFoundX { get; set; }
             public string XFixesApplied { get; set; }
             public string NothingToFixBut { get; set; }
-            public string Continue { get; set; }
-            public string ContinueAnyway { get; set; }
             public string UncheckedFixLowercaseIToUppercaseI { get; set; }
             public string XIsChangedToUppercase { get; set; }
             public string FixFirstLetterToUppercaseAfterParagraph { get; set; }

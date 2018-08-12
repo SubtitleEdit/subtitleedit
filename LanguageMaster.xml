@@ -54,7 +54,6 @@
     <OverlapNextX>Overlap next ({0:#,##0.###})</OverlapNextX>
     <Negative>Negative</Negative>
     <RegularExpressionIsNotValid>Regular expression is not valid!</RegularExpressionIsNotValid>
-    <SubtitleSaved>Subtitle saved</SubtitleSaved>
     <CurrentSubtitle>Current subtitle</CurrentSubtitle>
     <OriginalText>Original text</OriginalText>
     <OpenOriginalSubtitleFile>Open original subtitle file...</OpenOriginalSubtitleFile>
@@ -77,6 +76,7 @@
     <Before>Before</Before>
     <After>After</After>
     <Size>Size</Size>
+    <Search>Search</Search>
   </General>
   <About>
     <Title>About Subtitle Edit</Title>
@@ -143,7 +143,6 @@ Note: Do check free disk space.</WaveFileMalformed>
     <AddSeconds>Add seconds</AddSeconds>
     <SetAsPercent>Set as percent of duration</SetAsPercent>
     <Note>Note: Display time will not overlap start time of next text</Note>
-    <PleaseSelectAValueFromTheDropDownList>Please select a value from the dropdown list</PleaseSelectAValueFromTheDropDownList>
   </AdjustDisplayDuration>
   <ApplyDurationLimits>
     <Title>Apply duration limits</Title>
@@ -595,8 +594,6 @@ Note: Do check free disk space.</WaveFileMalformed>
     <FixesFoundX>Fixes found: {0}</FixesFoundX>
     <XFixesApplied>Fixes applied: {0}</XFixesApplied>
     <NothingToFixBut>Nothing to fix but a few things could be improved - see log for details</NothingToFixBut>
-    <Continue>Continue</Continue>
-    <ContinueAnyway>Continue anyway?</ContinueAnyway>
     <UncheckedFixLowercaseIToUppercaseI>Unchecked "Fix alone lowercase 'i' to 'I' (English)"</UncheckedFixLowercaseIToUppercaseI>
     <XIsChangedToUppercase>{0} i's changed to uppercase</XIsChangedToUppercase>
     <FixFirstLetterToUppercaseAfterParagraph>Fix first letter to uppercase after paragraph</FixFirstLetterToUppercaseAfterParagraph>
