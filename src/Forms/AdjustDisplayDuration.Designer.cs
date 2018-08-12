@@ -31,6 +31,7 @@
             this.radioButtonPercent = new System.Windows.Forms.RadioButton();
             this.radioButtonSeconds = new System.Windows.Forms.RadioButton();
             this.groupBoxAdjustVia = new System.Windows.Forms.GroupBox();
+            this.radioButtonFixed = new System.Windows.Forms.RadioButton();
             this.radioButtonAutoRecalculate = new System.Windows.Forms.RadioButton();
             this.labelNote = new System.Windows.Forms.Label();
             this.labelAddInPercent = new System.Windows.Forms.Label();
@@ -41,10 +42,16 @@
             this.labelMaxCharsPerSecond = new System.Windows.Forms.Label();
             this.numericUpDownSeconds = new System.Windows.Forms.NumericUpDown();
             this.numericUpDownPercent = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownOptimalCharsSec = new System.Windows.Forms.NumericUpDown();
+            this.labelOptimalCharsSec = new System.Windows.Forms.Label();
+            this.numericUpDownFixedMilliseconds = new System.Windows.Forms.NumericUpDown();
+            this.labelMillisecondsFixed = new System.Windows.Forms.Label();
             this.groupBoxAdjustVia.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxCharsSec)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSeconds)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPercent)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownOptimalCharsSec)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFixedMilliseconds)).BeginInit();
             this.SuspendLayout();
             // 
             // radioButtonPercent
@@ -75,15 +82,27 @@
             // 
             this.groupBoxAdjustVia.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxAdjustVia.Controls.Add(this.radioButtonFixed);
             this.groupBoxAdjustVia.Controls.Add(this.radioButtonAutoRecalculate);
             this.groupBoxAdjustVia.Controls.Add(this.radioButtonPercent);
             this.groupBoxAdjustVia.Controls.Add(this.radioButtonSeconds);
             this.groupBoxAdjustVia.Location = new System.Drawing.Point(13, 13);
             this.groupBoxAdjustVia.Name = "groupBoxAdjustVia";
-            this.groupBoxAdjustVia.Size = new System.Drawing.Size(468, 47);
+            this.groupBoxAdjustVia.Size = new System.Drawing.Size(599, 47);
             this.groupBoxAdjustVia.TabIndex = 0;
             this.groupBoxAdjustVia.TabStop = false;
             this.groupBoxAdjustVia.Text = "Adjust via";
+            // 
+            // radioButtonFixed
+            // 
+            this.radioButtonFixed.AutoSize = true;
+            this.radioButtonFixed.Location = new System.Drawing.Point(491, 21);
+            this.radioButtonFixed.Name = "radioButtonFixed";
+            this.radioButtonFixed.Size = new System.Drawing.Size(51, 17);
+            this.radioButtonFixed.TabIndex = 3;
+            this.radioButtonFixed.Text = "Fixed";
+            this.radioButtonFixed.UseVisualStyleBackColor = true;
+            this.radioButtonFixed.CheckedChanged += new System.EventHandler(this.radioButton1_CheckedChanged);
             // 
             // radioButtonAutoRecalculate
             // 
@@ -94,11 +113,12 @@
             this.radioButtonAutoRecalculate.TabIndex = 2;
             this.radioButtonAutoRecalculate.Text = "Recalculate";
             this.radioButtonAutoRecalculate.UseVisualStyleBackColor = true;
+            this.radioButtonAutoRecalculate.CheckedChanged += new System.EventHandler(this.radioButtonAutoRecalculate_CheckedChanged);
             // 
             // labelNote
             // 
             this.labelNote.AutoSize = true;
-            this.labelNote.Location = new System.Drawing.Point(10, 135);
+            this.labelNote.Location = new System.Drawing.Point(12, 191);
             this.labelNote.Name = "labelNote";
             this.labelNote.Size = new System.Drawing.Size(279, 13);
             this.labelNote.TabIndex = 7;
@@ -127,10 +147,10 @@
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(406, 169);
+            this.buttonCancel.Location = new System.Drawing.Point(537, 210);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 21);
-            this.buttonCancel.TabIndex = 9;
+            this.buttonCancel.TabIndex = 21;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             // 
@@ -138,10 +158,10 @@
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(325, 169);
+            this.buttonOK.Location = new System.Drawing.Point(456, 210);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 21);
-            this.buttonOK.TabIndex = 8;
+            this.buttonOK.TabIndex = 20;
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.ButtonOkClick);
@@ -229,11 +249,75 @@
             0,
             0});
             // 
+            // numericUpDownOptimalCharsSec
+            // 
+            this.numericUpDownOptimalCharsSec.DecimalPlaces = 1;
+            this.numericUpDownOptimalCharsSec.Enabled = false;
+            this.numericUpDownOptimalCharsSec.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.numericUpDownOptimalCharsSec.Location = new System.Drawing.Point(357, 147);
+            this.numericUpDownOptimalCharsSec.Minimum = new decimal(new int[] {
+            4,
+            0,
+            0,
+            0});
+            this.numericUpDownOptimalCharsSec.Name = "numericUpDownOptimalCharsSec";
+            this.numericUpDownOptimalCharsSec.Size = new System.Drawing.Size(80, 21);
+            this.numericUpDownOptimalCharsSec.TabIndex = 7;
+            this.numericUpDownOptimalCharsSec.Value = new decimal(new int[] {
+            17,
+            0,
+            0,
+            0});
+            // 
+            // labelOptimalCharsSec
+            // 
+            this.labelOptimalCharsSec.AutoSize = true;
+            this.labelOptimalCharsSec.Location = new System.Drawing.Point(357, 128);
+            this.labelOptimalCharsSec.Name = "labelOptimalCharsSec";
+            this.labelOptimalCharsSec.Size = new System.Drawing.Size(92, 13);
+            this.labelOptimalCharsSec.TabIndex = 10;
+            this.labelOptimalCharsSec.Text = "Optimal chars/sec";
+            // 
+            // numericUpDownFixedMilliseconds
+            // 
+            this.numericUpDownFixedMilliseconds.Enabled = false;
+            this.numericUpDownFixedMilliseconds.Location = new System.Drawing.Point(501, 89);
+            this.numericUpDownFixedMilliseconds.Maximum = new decimal(new int[] {
+            20000,
+            0,
+            0,
+            0});
+            this.numericUpDownFixedMilliseconds.Name = "numericUpDownFixedMilliseconds";
+            this.numericUpDownFixedMilliseconds.Size = new System.Drawing.Size(80, 21);
+            this.numericUpDownFixedMilliseconds.TabIndex = 8;
+            this.numericUpDownFixedMilliseconds.Value = new decimal(new int[] {
+            3000,
+            0,
+            0,
+            0});
+            // 
+            // labelMillisecondsFixed
+            // 
+            this.labelMillisecondsFixed.AutoSize = true;
+            this.labelMillisecondsFixed.Location = new System.Drawing.Point(501, 70);
+            this.labelMillisecondsFixed.Name = "labelMillisecondsFixed";
+            this.labelMillisecondsFixed.Size = new System.Drawing.Size(62, 13);
+            this.labelMillisecondsFixed.TabIndex = 12;
+            this.labelMillisecondsFixed.Text = "Milliseconds";
+            // 
             // AdjustDisplayDuration
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(493, 206);
+            this.ClientSize = new System.Drawing.Size(624, 247);
+            this.Controls.Add(this.numericUpDownFixedMilliseconds);
+            this.Controls.Add(this.labelMillisecondsFixed);
+            this.Controls.Add(this.numericUpDownOptimalCharsSec);
+            this.Controls.Add(this.labelOptimalCharsSec);
             this.Controls.Add(this.numericUpDownPercent);
             this.Controls.Add(this.numericUpDownSeconds);
             this.Controls.Add(this.numericUpDownMaxCharsSec);
@@ -259,6 +343,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxCharsSec)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSeconds)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPercent)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownOptimalCharsSec)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFixedMilliseconds)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -279,5 +365,10 @@
         private System.Windows.Forms.Label labelMaxCharsPerSecond;
         private System.Windows.Forms.NumericUpDown numericUpDownSeconds;
         private System.Windows.Forms.NumericUpDown numericUpDownPercent;
+        private System.Windows.Forms.NumericUpDown numericUpDownOptimalCharsSec;
+        private System.Windows.Forms.Label labelOptimalCharsSec;
+        private System.Windows.Forms.RadioButton radioButtonFixed;
+        private System.Windows.Forms.NumericUpDown numericUpDownFixedMilliseconds;
+        private System.Windows.Forms.Label labelMillisecondsFixed;
     }
 }

@@ -61,7 +61,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 if (p != null)
                     subtitle.Paragraphs.Add(p);
             }
-            subtitle.RecalculateDisplayTimes(25, null);
+            subtitle.RecalculateDisplayTimes(25, null, Configuration.Settings.General.SubtitleOptimalCharactersPerSeconds);
             subtitle.Renumber();
         }
 

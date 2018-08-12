@@ -5048,10 +5048,14 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         double seconds = double.Parse(adjustDisplayTime.AdjustValue, CultureInfo.InvariantCulture);
                         _subtitle.AdjustDisplayTimeUsingSeconds(seconds, null);
                     }
-                    else
-                    { // recalculate durations!!!
+                    else if (adjustDisplayTime.AdjustUsingRecalc)
+                    {
                         double maxCharSeconds = (double)(adjustDisplayTime.MaxCharactersPerSecond);
-                        _subtitle.RecalculateDisplayTimes(maxCharSeconds, null);
+                        _subtitle.RecalculateDisplayTimes(maxCharSeconds, null, (double)adjustDisplayTime.OptimalCharactersPerSecond);
+                    }
+                    else // fixed duration
+                    {
+                        _subtitle.SetFixedDuration(null, adjustDisplayTime.FixedMilliseconds);
                     }
                 }
             }

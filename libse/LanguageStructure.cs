@@ -145,6 +145,8 @@
             public string AddSeconds { get; set; }
             public string SetAsPercent { get; set; }
             public string Note { get; set; }
+            public string Fixed { get; set; }
+            public string Milliseconds { get; set; }
         }
 
         public class ApplyDurationLimits
