@@ -55,7 +55,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 p2.Text = Utilities.AutoBreakLine(p2.Text);
             }
-            subtitle.RecalculateDisplayTimes(Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds, null);
+            subtitle.RecalculateDisplayTimes(Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds, null, Configuration.Settings.General.SubtitleOptimalCharactersPerSeconds);
             subtitle.Renumber();
         }
 

@@ -5590,11 +5590,16 @@ namespace Nikse.SubtitleEdit.Forms
                         _subtitle.AdjustDisplayTimeUsingSeconds(seconds, selectedIndices);
                         ShowStatus(string.Format(_language.DisplayTimesAdjustedX, double.Parse(adjustDisplayTime.AdjustValue, CultureInfo.InvariantCulture)));
                     }
-                    else
-                    { // recalculate durations!!!
+                    else if (adjustDisplayTime.AdjustUsingRecalc)
+                    { 
                         double maxCharSeconds = (double)(adjustDisplayTime.MaxCharactersPerSecond);
-                        _subtitle.RecalculateDisplayTimes(maxCharSeconds, selectedIndices);
+                        _subtitle.RecalculateDisplayTimes(maxCharSeconds, selectedIndices, (double)adjustDisplayTime.OptimalCharactersPerSecond);
                         ShowStatus(string.Format(_language.DisplayTimesAdjustedX, adjustDisplayTime.AdjustValue));
+                    }
+                    else
+                    { // fixed duration
+                        _subtitle.SetFixedDuration(selectedIndices, adjustDisplayTime.FixedMilliseconds);
+                        ShowStatus(string.Format(_language.DisplayTimesAdjustedX, adjustDisplayTime.FixedMilliseconds));
                     }
                     SaveSubtitleListviewIndices();
                     if (IsFramesRelevant && CurrentFrameRate > 0)
@@ -12570,7 +12575,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (SubtitleListview1.SelectedItems.Count >= 1)
                 {
                     var idx = SubtitleListview1.SelectedItems[0].Index;
-                    _subtitle.RecalculateDisplayTime(Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds, idx);
+                    _subtitle.RecalculateDisplayTime(Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds, idx, Configuration.Settings.General.SubtitleOptimalCharactersPerSeconds);
                     SetDurationInSeconds(_subtitle.Paragraphs[idx].Duration.TotalSeconds);
                 }
             }

@@ -11,6 +11,7 @@ namespace Nikse.SubtitleEdit.Forms
         private const string Sec = "seconds";
         private const string Per = "percent";
         private const string Recal = "recalc";
+        private const string Fixed = "fixed";
 
         public string AdjustValue
         {
@@ -28,7 +29,13 @@ namespace Nikse.SubtitleEdit.Forms
 
         public bool AdjustUsingSeconds => radioButtonSeconds.Checked;
 
+        public bool AdjustUsingRecalc => radioButtonAutoRecalculate.Checked;
+
         public decimal MaxCharactersPerSecond => numericUpDownMaxCharsSec.Value;
+
+        public decimal OptimalCharactersPerSecond => numericUpDownOptimalCharsSec.Value;
+
+        public int FixedMilliseconds => (int)numericUpDownFixedMilliseconds.Value;
 
         public AdjustDisplayDuration()
         {
@@ -36,6 +43,9 @@ namespace Nikse.SubtitleEdit.Forms
             InitializeComponent();
             UiUtil.FixFonts(this);
             Icon = Properties.Resources.SubtitleEditFormIcon;
+
+            numericUpDownSeconds.Enabled = false;
+            numericUpDownPercent.Enabled = false;
 
             decimal adjustSeconds = Configuration.Settings.Tools.AdjustDurationSeconds;
             if (adjustSeconds >= numericUpDownSeconds.Minimum && adjustSeconds <= numericUpDownSeconds.Maximum)
@@ -45,6 +55,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (adjustPercent >= numericUpDownPercent.Minimum && adjustPercent <= numericUpDownPercent.Maximum)
                 numericUpDownPercent.Value = adjustPercent;
 
+            numericUpDownOptimalCharsSec.Value = (decimal)Configuration.Settings.General.SubtitleOptimalCharactersPerSeconds;
             numericUpDownMaxCharsSec.Value = (decimal)Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds;
 
             LanguageStructure.AdjustDisplayDuration language = Configuration.Settings.Language.AdjustDisplayDuration;
@@ -57,6 +68,8 @@ namespace Nikse.SubtitleEdit.Forms
             labelAddSeconds.Text = language.AddSeconds;
             labelAddInPercent.Text = language.SetAsPercent;
             labelNote.Text = language.Note;
+            radioButtonFixed.Text = language.Fixed;
+            labelMillisecondsFixed.Text = language.Milliseconds;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             FixLargeFonts();
@@ -71,6 +84,9 @@ namespace Nikse.SubtitleEdit.Forms
                     break;
                 case Recal:
                     radioButtonAutoRecalculate.Checked = true;
+                    break;
+                case Fixed:
+                    radioButtonFixed.Checked = true;
                     break;
             }
         }
@@ -98,6 +114,8 @@ namespace Nikse.SubtitleEdit.Forms
             numericUpDownPercent.Enabled = radioButtonPercent.Checked;
             numericUpDownSeconds.Enabled = radioButtonSeconds.Checked;
             numericUpDownMaxCharsSec.Enabled = radioButtonAutoRecalculate.Checked;
+            numericUpDownOptimalCharsSec.Enabled = radioButtonAutoRecalculate.Checked;
+            numericUpDownFixedMilliseconds.Enabled = radioButtonFixed.Checked;
         }
 
         private void RadioButtonSecondsCheckedChanged(object sender, EventArgs e)
@@ -122,6 +140,10 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 Configuration.Settings.Tools.AdjustDurationLast = Recal;
             }
+            else if (radioButtonFixed.Checked)
+            {
+                Configuration.Settings.Tools.AdjustDurationLast = Fixed;
+            }
 
             DialogResult = DialogResult.OK;
         }
@@ -135,5 +157,14 @@ namespace Nikse.SubtitleEdit.Forms
             numericUpDownMaxCharsSec.Visible = false;
         }
 
+        private void radioButton1_CheckedChanged(object sender, EventArgs e)
+        {
+            FixEnabled();
+        }
+
+        private void radioButtonAutoRecalculate_CheckedChanged(object sender, EventArgs e)
+        {
+            FixEnabled();
+        }
     }
 }

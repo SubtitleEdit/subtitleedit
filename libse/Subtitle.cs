@@ -350,24 +350,24 @@ namespace Nikse.SubtitleEdit.Core
             }
         }
 
-        public void RecalculateDisplayTimes(double maxCharactersPerSecond, List<int> selectedIndexes)
+        public void RecalculateDisplayTimes(double maxCharactersPerSecond, List<int> selectedIndexes, double optimalCharactersPerSeconds)
         {
             for (int i = 0; i < _paragraphs.Count; i++)
             {
                 if (selectedIndexes == null || selectedIndexes.Contains(i))
                 {
-                    RecalculateDisplayTime(maxCharactersPerSecond, i);
+                    RecalculateDisplayTime(maxCharactersPerSecond, i, optimalCharactersPerSeconds);
                 }
             }
         }
 
-        public void RecalculateDisplayTime(double maxCharactersPerSecond, int index)
+        public void RecalculateDisplayTime(double maxCharactersPerSecond, int index, double optimalCharactersPerSeconds)
         {
             Paragraph p = GetParagraphOrDefault(index);
             if (p == null)
                 return;
 
-            double duration = Utilities.GetOptimalDisplayMilliseconds(p.Text);
+            double duration = Utilities.GetOptimalDisplayMilliseconds(p.Text, optimalCharactersPerSeconds);
             p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + duration;
             while (Utilities.GetCharactersPerSecond(p) > maxCharactersPerSecond)
             {
@@ -381,6 +381,30 @@ namespace Nikse.SubtitleEdit.Core
                 p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
                 if (p.Duration.TotalMilliseconds <= 0)
                     p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + 1;
+            }
+        }
+
+        
+        public void SetFixedDuration(List<int> selectedIndexes, double fixedDurationMilliseconds)
+        {
+            for (int i = 0; i < _paragraphs.Count; i++)
+            {
+                if (selectedIndexes == null || selectedIndexes.Contains(i))
+                {
+                    Paragraph p = GetParagraphOrDefault(i);
+                    if (p == null)
+                        continue;
+
+                    p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + fixedDurationMilliseconds;
+
+                    Paragraph next = GetParagraphOrDefault(i + 1);
+                    if (next != null && p.StartTime.TotalMilliseconds + fixedDurationMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines > next.StartTime.TotalMilliseconds)
+                    {
+                        p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                        if (p.Duration.TotalMilliseconds <= 0)
+                            p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + 1;
+                    }
+                }
             }
         }
 
