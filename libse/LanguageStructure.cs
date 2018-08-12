@@ -729,7 +729,6 @@
             public string Title { get; set; }
             public string DescriptionLine1 { get; set; }
             public string DescriptionLine2 { get; set; }
-            public string GetDictionariesHere { get; set; }
             public string ChooseLanguageAndClickDownload { get; set; }
             public string OpenDictionariesFolder { get; set; }
             public string Download { get; set; }
@@ -1088,7 +1087,6 @@
             public string RedoPerformed { get; set; }
             public string NothingToUndo { get; set; }
             public string InvalidLanguageNameX { get; set; }
-            public string UnableToChangeLanguage { get; set; }
             public string DoNotDisplayMessageAgain { get; set; }
             public string NumberOfCorrectedWords { get; set; }
             public string NumberOfSkippedWords { get; set; }
@@ -1132,7 +1130,6 @@
             public string SubtitleImportedFromMatroskaFile { get; set; }
             public string DropFileXNotAccepted { get; set; }
             public string DropOnlyOneFile { get; set; }
-            public string BeforeCreateAdjustLines { get; set; }
             public string OpenAnsiSubtitle { get; set; }
             public string BeforeChangeCasing { get; set; }
             public string CasingCompleteMessageNoNames { get; set; }
@@ -1159,7 +1156,6 @@
             public string ShowSelectedLinesXSecondsLinesLater { get; set; }
             public string ShowSelectionAndForwardXSecondsLinesEarlier { get; set; }
             public string ShowSelectionAndForwardXSecondsLinesLater { get; set; }
-            public string ShowSelectedLinesEarlierLaterPerformed { get; set; }
             public string DoubleWordsViaRegEx { get; set; }
             public string BeforeSortX { get; set; }
             public string SortedByX { get; set; }

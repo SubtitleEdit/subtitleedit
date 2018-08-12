@@ -1744,9 +1744,6 @@ namespace Nikse.SubtitleEdit.Core
                 case "GetDictionaries/DescriptionLine2":
                     language.GetDictionaries.DescriptionLine2 = reader.Value;
                     break;
-                case "GetDictionaries/GetDictionariesHere":
-                    language.GetDictionaries.GetDictionariesHere = reader.Value;
-                    break;
                 case "GetDictionaries/ChooseLanguageAndClickDownload":
                     language.GetDictionaries.ChooseLanguageAndClickDownload = reader.Value;
                     break;
@@ -2680,9 +2677,6 @@ namespace Nikse.SubtitleEdit.Core
                 case "Main/InvalidLanguageNameX":
                     language.Main.InvalidLanguageNameX = reader.Value;
                     break;
-                case "Main/UnableToChangeLanguage":
-                    language.Main.UnableToChangeLanguage = reader.Value;
-                    break;
                 case "Main/DoNotDisplayMessageAgain":
                     language.Main.DoNotDisplayMessageAgain = reader.Value;
                     break;
@@ -2812,9 +2806,6 @@ namespace Nikse.SubtitleEdit.Core
                 case "Main/DropOnlyOneFile":
                     language.Main.DropOnlyOneFile = reader.Value;
                     break;
-                case "Main/BeforeCreateAdjustLines":
-                    language.Main.BeforeCreateAdjustLines = reader.Value;
-                    break;
                 case "Main/OpenAnsiSubtitle":
                     language.Main.OpenAnsiSubtitle = reader.Value;
                     break;
@@ -2892,9 +2883,6 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "Main/ShowSelectionAndForwardXSecondsLinesLater":
                     language.Main.ShowSelectionAndForwardXSecondsLinesLater = reader.Value;
-                    break;
-                case "Main/ShowSelectedLinesEarlierLaterPerformed":
-                    language.Main.ShowSelectedLinesEarlierLaterPerformed = reader.Value;
                     break;
                 case "Main/DoubleWordsViaRegEx":
                     language.Main.DoubleWordsViaRegEx = reader.Value;
