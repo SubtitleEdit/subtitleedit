@@ -1173,7 +1173,6 @@
             public string OcrReplacePairXNotAdded { get; set; }
             public string XLinesSelected { get; set; }
             public string UnicodeMusicSymbolsAnsiWarning { get; set; }
-            public string UnicodeCharactersAnsiWarning { get; set; }
             public string NegativeTimeWarning { get; set; }
             public string BeforeMergeShortLines { get; set; }
             public string MergedShortLinesX { get; set; }
@@ -1205,10 +1204,6 @@
             public string UserAndAction { get; set; }
             public string NetworkMode { get; set; }
             public string XStartedSessionYAtZ { get; set; }
-            public string SpellChekingViaWordXLineYOfX { get; set; }
-            public string UnableToStartWord { get; set; }
-            public string SpellCheckAbortedXCorrections { get; set; }
-            public string SpellCheckCompletedXCorrections { get; set; }
             public string OpenOtherSubtitle { get; set; }
             public string BeforeToggleDialogDashes { get; set; }
             public string ExportPlainTextAs { get; set; }

@@ -2935,9 +2935,6 @@ namespace Nikse.SubtitleEdit.Core
                 case "Main/UnicodeMusicSymbolsAnsiWarning":
                     language.Main.UnicodeMusicSymbolsAnsiWarning = reader.Value;
                     break;
-                case "Main/UnicodeCharactersAnsiWarning":
-                    language.Main.UnicodeCharactersAnsiWarning = reader.Value;
-                    break;
                 case "Main/NegativeTimeWarning":
                     language.Main.NegativeTimeWarning = reader.Value;
                     break;
@@ -3030,18 +3027,6 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "Main/XStartedSessionYAtZ":
                     language.Main.XStartedSessionYAtZ = reader.Value;
-                    break;
-                case "Main/SpellChekingViaWordXLineYOfX":
-                    language.Main.SpellChekingViaWordXLineYOfX = reader.Value;
-                    break;
-                case "Main/UnableToStartWord":
-                    language.Main.UnableToStartWord = reader.Value;
-                    break;
-                case "Main/SpellCheckAbortedXCorrections":
-                    language.Main.SpellCheckAbortedXCorrections = reader.Value;
-                    break;
-                case "Main/SpellCheckCompletedXCorrections":
-                    language.Main.SpellCheckCompletedXCorrections = reader.Value;
                     break;
                 case "Main/OpenOtherSubtitle":
                     language.Main.OpenOtherSubtitle = reader.Value;

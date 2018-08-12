@@ -1397,7 +1397,6 @@ Continue?</SubtitleAppendPrompt>
     <OcrReplacePairXNotAdded>The OCR replace list pair '{0} -&gt; {1}' was NOT added to the OCR replace list</OcrReplacePairXNotAdded>
     <XLinesSelected>{0} lines selected</XLinesSelected>
     <UnicodeMusicSymbolsAnsiWarning>Subtitle contains unicode characters. Saving using ANSI file encoding will lose these. Continue with saving?</UnicodeMusicSymbolsAnsiWarning>
-    <UnicodeCharactersAnsiWarning>Subtitle contains unicode characters. Saving using ANSI file encoding will lose these. Continue with saving?</UnicodeCharactersAnsiWarning>
     <NegativeTimeWarning>Subtitle contains negative time codes. Continue with saving?</NegativeTimeWarning>
     <BeforeMergeShortLines>Before merge short lines</BeforeMergeShortLines>
     <MergedShortLinesX>Number of lines merged: {0}</MergedShortLinesX>
@@ -1429,10 +1428,6 @@ Continue?</SubtitleAppendPrompt>
     <UserAndAction>User/action</UserAndAction>
     <NetworkMode>Networking mode</NetworkMode>
     <XStartedSessionYAtZ>{0}: Started session {1} at {2}</XStartedSessionYAtZ>
-    <SpellChekingViaWordXLineYOfX>Spell checking using Word {0} - line {1} / {2}</SpellChekingViaWordXLineYOfX>
-    <UnableToStartWord>Unable to start Microsoft Word</UnableToStartWord>
-    <SpellCheckAbortedXCorrections>Spell check aborted. {0} lines were modified.</SpellCheckAbortedXCorrections>
-    <SpellCheckCompletedXCorrections>Spell check completed. {0} lines were modified.</SpellCheckCompletedXCorrections>
     <OpenOtherSubtitle>Open other subtitle</OpenOtherSubtitle>
     <BeforeToggleDialogDashes>Before toggle of dialog dashes</BeforeToggleDialogDashes>
     <ExportPlainTextAs>Export plain text as</ExportPlainTextAs>
