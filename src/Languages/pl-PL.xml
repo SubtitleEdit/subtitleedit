@@ -5,7 +5,7 @@
     <Version>3.5.6</Version>
     <TranslatedBy>Tłumaczenie Adam Malich (https://potplayerclub.pl)</TranslatedBy>
     <CultureName>pl-PL</CultureName>
-    <HelpFile />
+    <HelpFile></HelpFile>
     <Ok>&amp;OK</Ok>
     <Cancel>&amp;Anuluj</Cancel>
     <Apply>Zastosuj</Apply>
@@ -54,7 +54,6 @@
     <OverlapNextX>Zachodzenie na następną ({0:#,##0.###})</OverlapNextX>
     <Negative>Negatywny</Negative>
     <RegularExpressionIsNotValid>Wyrażenie regularne nie jest poprawne!</RegularExpressionIsNotValid>
-    <SubtitleSaved>Napisy zostały zapisane</SubtitleSaved>
     <CurrentSubtitle>Aktualne napisy</CurrentSubtitle>
     <OriginalText>Tekst oryginalny</OriginalText>
     <OpenOriginalSubtitleFile>Otwórz plik oryginalnych napisów...</OpenOriginalSubtitleFile>
@@ -77,6 +76,7 @@
     <Before>Przed</Before>
     <After>Po</After>
     <Size>Rozmiar</Size>
+    <Search>Szukaj</Search>
   </General>
   <About>
     <Title>O Subtitle Edit</Title>
@@ -141,7 +141,8 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
     <AddSeconds>Dodaj sekundy</AddSeconds>
     <SetAsPercent>Ustaw jako procent czasu trwania</SetAsPercent>
     <Note>Uwaga: Czas wyświetlania nie nałoży się na czas początkowy następnego tekstu</Note>
-    <PleaseSelectAValueFromTheDropDownList>Proszę wybrać wartość z listy rozwijanej</PleaseSelectAValueFromTheDropDownList>
+    <Fixed>Naprawiono</Fixed>
+    <Milliseconds>Milisekund</Milliseconds>
   </AdjustDisplayDuration>
   <ApplyDurationLimits>
     <Title>Zastosuj limity czasu trwania</Title>
@@ -593,8 +594,6 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
     <FixesFoundX>Znalezionych błędów: {0}</FixesFoundX>
     <XFixesApplied>Zastosowanych poprawek: {0}</XFixesApplied>
     <NothingToFixBut>Nic nie poprawiono, ale jest kilka elementów, które można poprawić - zobacz szczegóły w Dzienniku</NothingToFixBut>
-    <Continue>Kontynuacja</Continue>
-    <ContinueAnyway>Chcesz kontynuować?</ContinueAnyway>
     <UncheckedFixLowercaseIToUppercaseI>Odznaczono "Popraw osamotnione małe litery 'i' na 'I' (angielski)"</UncheckedFixLowercaseIToUppercaseI>
     <XIsChangedToUppercase>Zmieniono {0} "i" na wielkie litery</XIsChangedToUppercase>
     <FixFirstLetterToUppercaseAfterParagraph>Popraw pierwszą literę na wielką po akapicie</FixFirstLetterToUppercaseAfterParagraph>
@@ -662,7 +661,6 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
     <Title>Potrzebujesz słowników?</Title>
     <DescriptionLine1>Subtitle Edit sprawdza pisownię w oparciu o silnik NHunspell,</DescriptionLine1>
     <DescriptionLine2>który korzysta ze słowników sprawdzania pisowni Open Office.</DescriptionLine2>
-    <GetDictionariesHere>Tutaj pobierzesz słowniki:</GetDictionariesHere>
     <ChooseLanguageAndClickDownload>Wybierz swój język i kliknij "Pobierz"</ChooseLanguageAndClickDownload>
     <OpenDictionariesFolder>Otwórz folder "Dictionaries"</OpenDictionariesFolder>
     <Download>Pobierz</Download>
@@ -721,6 +719,7 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
     <GetSceneChangesWithFfmpeg>Uzyskaj zmiany scen za pomocą FFmpeg</GetSceneChangesWithFfmpeg>
     <Sensitivity>Czułość</Sensitivity>
     <SensitivityDescription>Niższa wartość daje więcej zmian w scenach</SensitivityDescription>
+    <NoSceneChangesFound>Nie znaleziono zmian sceny.</NoSceneChangesFound>
   </ImportSceneChanges>
   <ImportText>
     <Title>Import czystego tekstu</Title>
@@ -1313,7 +1312,6 @@ Kontynuować?</SubtitleAppendPrompt>
     <RedoPerformed>Ponów wykonane zmiany</RedoPerformed>
     <NothingToUndo>Nie ma nic do cofnięcia</NothingToUndo>
     <InvalidLanguageNameX>Błędna nazwa języka: {0}</InvalidLanguageNameX>
-    <UnableToChangeLanguage>Nie można zmienić języka!</UnableToChangeLanguage>
     <DoNotDisplayMessageAgain>Nie wyświetlaj ponownie tego komunikatu</DoNotDisplayMessageAgain>
     <NumberOfCorrectedWords>Ilość poprawionych słów: {0}</NumberOfCorrectedWords>
     <NumberOfSkippedWords>Ilość pominiętych słów: {0}</NumberOfSkippedWords>
@@ -1357,7 +1355,6 @@ Kontynuować?</SubtitleAppendPrompt>
     <SubtitleImportedFromMatroskaFile>Zaimportowano napisy z pliku Matroska</SubtitleImportedFromMatroskaFile>
     <DropFileXNotAccepted>Przeciągnięty plik '{0}' nie został zaakceptowany - plik jest zbyt duży</DropFileXNotAccepted>
     <DropOnlyOneFile>Możesz tutaj przeciągnąć tylko jeden plik</DropOnlyOneFile>
-    <BeforeCreateAdjustLines>Przed utworzeniem/dostosowaniem linii</BeforeCreateAdjustLines>
     <OpenAnsiSubtitle>Otwórz napisy...</OpenAnsiSubtitle>
     <BeforeChangeCasing>Przed zmianą pisowni</BeforeChangeCasing>
     <CasingCompleteMessageNoNames>Ilość linii ze zmienioną pisownią: {0}/{1}</CasingCompleteMessageNoNames>
@@ -1384,7 +1381,6 @@ Kontynuować?</SubtitleAppendPrompt>
     <ShowSelectedLinesXSecondsLinesLater>Pokaż zaznaczone linie {0:0.0##} sekund później</ShowSelectedLinesXSecondsLinesLater>
     <ShowSelectionAndForwardXSecondsLinesEarlier>Pokaż zaznaczone i przesunięte do przodu {0:0.0##} sekund wcześniej</ShowSelectionAndForwardXSecondsLinesEarlier>
     <ShowSelectionAndForwardXSecondsLinesLater>Pokaż zaznaczone i przesunięte do przodu {0:0.0##} sekund później</ShowSelectionAndForwardXSecondsLinesLater>
-    <ShowSelectedLinesEarlierLaterPerformed>Wykonano wcześniejsze/późniejsze ukazywanie się na zaznaczonych liniach</ShowSelectedLinesEarlierLaterPerformed>
     <DoubleWordsViaRegEx>Zdublowane słowa za pomocą wyrażeń regularnych {0}</DoubleWordsViaRegEx>
     <BeforeSortX>Przed sortowaniem: {0}</BeforeSortX>
     <SortedByX>Wykonano sortowanie wg: {0}</SortedByX>
@@ -1402,7 +1398,6 @@ Kontynuować?</SubtitleAppendPrompt>
     <OcrReplacePairXNotAdded>Lista par zamienników OCR '{0} -&gt; {1}' NIE została dodana do listy zamienników OCR</OcrReplacePairXNotAdded>
     <XLinesSelected>Zaznaczono linii: {0}</XLinesSelected>
     <UnicodeMusicSymbolsAnsiWarning>Napisy zawierają symbole Unicode. Utracisz ją zapisując plik przy użyciu kodowania ANSI. Czy na pewno chcesz zapisać?</UnicodeMusicSymbolsAnsiWarning>
-    <UnicodeCharactersAnsiWarning>Napisy zawierają znaki Unicode. Utracisz je zapisując plik przy użyciu kodowania ANSI. Czy na pewno chcesz zapisać?</UnicodeCharactersAnsiWarning>
     <NegativeTimeWarning>Napisy zawierają ujemne kody czasowe. Na pewno chcesz zapisać?</NegativeTimeWarning>
     <BeforeMergeShortLines>Przed połączeniem krótkich linii</BeforeMergeShortLines>
     <MergedShortLinesX>Ilość połączonych linii: {0}</MergedShortLinesX>
@@ -1434,10 +1429,6 @@ Kontynuować?</SubtitleAppendPrompt>
     <UserAndAction>Użytkownik / Czynność</UserAndAction>
     <NetworkMode>Tryb sieciowy</NetworkMode>
     <XStartedSessionYAtZ>{0}: Rozpoczęcie sesji {1} w {2}</XStartedSessionYAtZ>
-    <SpellChekingViaWordXLineYOfX>Sprawdzanie pisowni za pomocą programu Word {0} - linia {1} / {2}</SpellChekingViaWordXLineYOfX>
-    <UnableToStartWord>Nie można uruchomić programu Microsoft Word</UnableToStartWord>
-    <SpellCheckAbortedXCorrections>Sprawdzanie pisowni zostało przerwane. {0} linii zostało zmodyfikowanych.</SpellCheckAbortedXCorrections>
-    <SpellCheckCompletedXCorrections>Sprawdzanie pisowni zostało zakończone. {0} linii zostało zmodyfikowanych.</SpellCheckCompletedXCorrections>
     <OpenOtherSubtitle>Otwórz inne napisy</OpenOtherSubtitle>
     <BeforeToggleDialogDashes>Przed przełączeniem myślników dialogu</BeforeToggleDialogDashes>
     <ExportPlainTextAs>Eksportuj jako zwykły tekst</ExportPlainTextAs>
@@ -1889,7 +1880,8 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <UpdateShortcut>Aktualizuj</UpdateShortcut>
     <ToggleDockUndockOfVideoControls>Przełączanie "Zadokuj"/"Oddokuj" panelu wideo</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Ustaw koniec, dodaj nowy i przejdź do nowego</CreateSetEndAddNewAndGoToNew>
-    <AdjustViaEndAutoStartAndGoToNext>Dostosuj przy pomocy pozycji końca i przejdź do następnej</AdjustViaEndAutoStartAndGoToNext>
+    <AdjustViaEndAutoStart>Dostosuj za pomocą pozycji końca</AdjustViaEndAutoStart>
+    <AdjustViaEndAutoStartAndGoToNext>Dostosuj za pomocą pozycji końca i przejdź do następnej</AdjustViaEndAutoStartAndGoToNext>
     <AdjustSetEndTimeAndGoToNext>Ustaw koniec i przejdź do następnej</AdjustSetEndTimeAndGoToNext>
     <AdjustSetStartAutoDurationAndGoToNext>Ustaw początek, automatyczny czas trwania i przejdź do następnej</AdjustSetStartAutoDurationAndGoToNext>
     <AdjustSetEndNextStartAndGoToNext>Ustaw koniec, początek następnej i przejdź do następnej</AdjustSetEndNextStartAndGoToNext>
