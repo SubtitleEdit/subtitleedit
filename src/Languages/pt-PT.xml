@@ -55,7 +55,6 @@ Email: mailto:moob42341@gmail.com</TranslatedBy>
     <OverlapNextX>Sobrepor a seguinte ({0:#,##0.###})</OverlapNextX>
     <Negative>Negativo</Negative>
     <RegularExpressionIsNotValid>Expressão regular não válida!</RegularExpressionIsNotValid>
-    <SubtitleSaved>Legenda guardada</SubtitleSaved>
     <CurrentSubtitle>Legenda corrente</CurrentSubtitle>
     <OriginalText>Texto original</OriginalText>
     <OpenOriginalSubtitleFile>Abrir legenda original...</OpenOriginalSubtitleFile>
@@ -78,6 +77,7 @@ Email: mailto:moob42341@gmail.com</TranslatedBy>
     <Before>Antes</Before>
     <After>Depois</After>
     <Size>Tamanho</Size>
+	<Search>Procurar</Search>
   </General>
   <About>
     <Title>Acerca do Subtitle Edit</Title>
@@ -144,7 +144,8 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <AddSeconds>Adicionar segundos</AddSeconds>
     <SetAsPercent>Definir a percentagem de duração</SetAsPercent>
     <Note>Nota: A duração não pode sobrepor o tempo de início do próximo texto</Note>
-    <PleaseSelectAValueFromTheDropDownList>Por favor, seleccione um valor da lista abaixo</PleaseSelectAValueFromTheDropDownList>
+    <Fixed>Corrigido</Fixed>
+	<Milliseconds>Milissegundos</Milliseconds>
   </AdjustDisplayDuration>
   <ApplyDurationLimits>
     <Title>Aplicar limites de duração</Title>
@@ -595,8 +596,6 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <FixesFoundX>Correcções encontradas: {0}</FixesFoundX>
     <XFixesApplied>Correcções aplicadas: {0}</XFixesApplied>
     <NothingToFixBut>Nada a corrigir, mas algumas coisas podem ser melhoradas - veja o registo para mais detalhes</NothingToFixBut>
-    <Continue>Continuar</Continue>
-    <ContinueAnyway>Continuar mesmo assim?</ContinueAnyway>
     <UncheckedFixLowercaseIToUppercaseI>Desmarcar "Corrigir "i" minúscula sozinha por "I" maiúscula (Inglês)"</UncheckedFixLowercaseIToUppercaseI>
     <XIsChangedToUppercase>{0} i's alterados para maiúsculo</XIsChangedToUppercase>
     <FixFirstLetterToUppercaseAfterParagraph>Corrigir primeira letra do parágrafo para maiúscula</FixFirstLetterToUppercaseAfterParagraph>
@@ -664,7 +663,6 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <Title>Precisa de dicionários?</Title>
     <DescriptionLine1>A revisão ortográfica do Subtitle Edit é baseada no mecanismo NHunspell</DescriptionLine1>
     <DescriptionLine2>que usa os dicionários do Open Office.</DescriptionLine2>
-    <GetDictionariesHere>Obtenha dicionários aqui:</GetDictionariesHere>
     <ChooseLanguageAndClickDownload>Seleccione o idioma e clique em transferir</ChooseLanguageAndClickDownload>
     <OpenDictionariesFolder>Abrir a pasta dos 'Dicionários'</OpenDictionariesFolder>
     <Download>Transferir</Download>
@@ -723,6 +721,7 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <GetSceneChangesWithFfmpeg>Gerar as alterações de cena com o FFmpeg</GetSceneChangesWithFfmpeg>
     <Sensitivity>Sensibilidade</Sensitivity>
     <SensitivityDescription>Um valor mais baixo oferece mais alterações de cena</SensitivityDescription>
+	<NoSceneChangesFound>Nenhuma mudança de cena foi encontrada.</NoSceneChangesFound>
   </ImportSceneChanges>
   <ImportText>
     <Title>Importar texto sem formatação</Title>
@@ -1315,7 +1314,6 @@ Deseja continuar?</SubtitleAppendPrompt>
     <RedoPerformed>Refazer aplicado</RedoPerformed>
     <NothingToUndo>Nada para anular</NothingToUndo>
     <InvalidLanguageNameX>Nome de idioma inválido: {0}</InvalidLanguageNameX>
-    <UnableToChangeLanguage>Não é possível alterar o idioma!</UnableToChangeLanguage>
     <DoNotDisplayMessageAgain>Não exibir esta mensagem novamente</DoNotDisplayMessageAgain>
     <NumberOfCorrectedWords>Número de palavras corrigidas: {0}</NumberOfCorrectedWords>
     <NumberOfSkippedWords>Número de palavras omitidas: {0}</NumberOfSkippedWords>
@@ -1359,7 +1357,6 @@ Deseja continuar?</SubtitleAppendPrompt>
     <SubtitleImportedFromMatroskaFile>Legenda importada do ficheiro Matroska (.mkv)</SubtitleImportedFromMatroskaFile>
     <DropFileXNotAccepted>Ficheiro '{0}' não aceite - ficheiro demasiado grande</DropFileXNotAccepted>
     <DropOnlyOneFile>Só pode baixar um ficheiro</DropOnlyOneFile>
-    <BeforeCreateAdjustLines>Antes de criar/ajustar linhas</BeforeCreateAdjustLines>
     <OpenAnsiSubtitle>Abrir legenda...</OpenAnsiSubtitle>
     <BeforeChangeCasing>Antes de alterar o formato</BeforeChangeCasing>
     <CasingCompleteMessageNoNames>Número de linhas com formato alterado: {0}/{1}</CasingCompleteMessageNoNames>
@@ -1386,7 +1383,6 @@ Deseja continuar?</SubtitleAppendPrompt>
     <ShowSelectedLinesXSecondsLinesLater>Mostrar linhas seleccionadas {0:0.0##} segundos depois</ShowSelectedLinesXSecondsLinesLater>
     <ShowSelectionAndForwardXSecondsLinesEarlier>Mostrar selecção e continuar {0:0.0##} segundos antes</ShowSelectionAndForwardXSecondsLinesEarlier>
     <ShowSelectionAndForwardXSecondsLinesLater>Mostrar selecção e continuar {0:0.0##} segundos depois</ShowSelectionAndForwardXSecondsLinesLater>
-    <ShowSelectedLinesEarlierLaterPerformed>Mostrar antes/depois aplicado nas linhas seleccionadas</ShowSelectedLinesEarlierLaterPerformed>
     <DoubleWordsViaRegEx>Palavras duplicadas via RegEx {0}</DoubleWordsViaRegEx>
     <BeforeSortX>Antes de ordenar: {0}</BeforeSortX>
     <SortedByX>Ordenado por: {0}</SortedByX>
@@ -1404,7 +1400,6 @@ Deseja continuar?</SubtitleAppendPrompt>
     <OcrReplacePairXNotAdded>O par OCR lista de substituição '{0} -&gt; {1}' NÃO foi adicionado à lista de substituição OCR</OcrReplacePairXNotAdded>
     <XLinesSelected>{0} linhas seleccionadas</XLinesSelected>
     <UnicodeMusicSymbolsAnsiWarning>A legenda contém caracteres em Unicode. Guardar como ANSI irá removê-las. Deseja continuar?</UnicodeMusicSymbolsAnsiWarning>
-    <UnicodeCharactersAnsiWarning>A legenda contém caracteres Unicode. Guardar a legenda com a codificação ANSI perde estes caracteres. Deseja continuar?</UnicodeCharactersAnsiWarning>
     <NegativeTimeWarning>A legenda contém tempos negativos. Deseja continuar?</NegativeTimeWarning>
     <BeforeMergeShortLines>Antes de combinar as linhas curtas</BeforeMergeShortLines>
 	<MergedShortLinesX>Número de linhas combinadas: {0}</MergedShortLinesX>
@@ -1436,10 +1431,6 @@ Deseja continuar?</SubtitleAppendPrompt>
     <UserAndAction>Utilizador/acção</UserAndAction>
     <NetworkMode>Modo de rede</NetworkMode>
     <XStartedSessionYAtZ>{0}: Sessão iniciada {1} de {2}</XStartedSessionYAtZ>
-    <SpellChekingViaWordXLineYOfX>Verificação ortográfica usando o Microsoft Word {0} - linha {1} / {2}</SpellChekingViaWordXLineYOfX>
-    <UnableToStartWord>Impossível iniciar o Microsoft Word</UnableToStartWord>
-    <SpellCheckAbortedXCorrections>Verificação ortográfica cancelada. {0} linhas modificadas.</SpellCheckAbortedXCorrections>
-    <SpellCheckCompletedXCorrections>Verificação ortográfica completa. {0} linhas modificadas.</SpellCheckCompletedXCorrections>
     <OpenOtherSubtitle>Abrir outra legenda</OpenOtherSubtitle>
     <BeforeToggleDialogDashes>Antes de alternar traços de diálogo</BeforeToggleDialogDashes>
     <ExportPlainTextAs>Exportar texto sem formatação como</ExportPlainTextAs>
@@ -1890,6 +1881,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <UpdateShortcut>Actualizar</UpdateShortcut>
     <ToggleDockUndockOfVideoControls>Alternar acoplar/desacoplar controlos de vídeo</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Definir o fim, adicionar novo e ir para o novo</CreateSetEndAddNewAndGoToNew>
+	<AdjustViaEndAutoStart>Ajustar através da posição final</AdjustViaEndAutoStart>
     <AdjustViaEndAutoStartAndGoToNext>Ajustar pela posição final e ir para o seguinte</AdjustViaEndAutoStartAndGoToNext>
     <AdjustSetEndTimeAndGoToNext>Definir o fim e ir para a seguinte</AdjustSetEndTimeAndGoToNext>
     <AdjustSetStartAutoDurationAndGoToNext>Início da Auto duração e ir para o seguinte</AdjustSetStartAutoDurationAndGoToNext>
