@@ -13069,7 +13069,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (next != null && !string.IsNullOrEmpty(next.Text))
                 {
                     labelNextWord.Top = audioVisualizer.Top;
-                    labelNextWord.Text = string.Format(_language.NextX, next.Text.Replace(Environment.NewLine, " "));
+                    labelNextWord.Text = string.Format(_language.NextX, HtmlUtil.RemoveHtmlTags(next.Text, true).Replace(Environment.NewLine, " "));
                     labelNextWord.Left = audioVisualizer.Width / 2 - labelNextWord.Width / 2 + audioVisualizer.Left;
                     labelNextWord.Visible = true;
                     _labelNextTicks = DateTime.UtcNow.Ticks;
