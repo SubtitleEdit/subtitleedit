@@ -36,6 +36,9 @@
             this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.textBoxPreview = new System.Windows.Forms.TextBox();
             this.LabelPreview = new System.Windows.Forms.Label();
+            this.buttonSearchClear = new System.Windows.Forms.Button();
+            this.labelShortcutsSearch = new System.Windows.Forms.Label();
+            this.textBoxSearch = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // buttonCancel
@@ -71,10 +74,10 @@
             this.listView1.FullRowSelect = true;
             this.listView1.GridLines = true;
             this.listView1.HideSelection = false;
-            this.listView1.Location = new System.Drawing.Point(12, 12);
+            this.listView1.Location = new System.Drawing.Point(12, 41);
             this.listView1.MultiSelect = false;
             this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(605, 254);
+            this.listView1.Size = new System.Drawing.Size(605, 225);
             this.listView1.TabIndex = 8;
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.View = System.Windows.Forms.View.Details;
@@ -117,11 +120,42 @@
             this.LabelPreview.TabIndex = 10;
             this.LabelPreview.Text = "Preview";
             // 
+            // buttonSearchClear
+            // 
+            this.buttonSearchClear.Enabled = false;
+            this.buttonSearchClear.Location = new System.Drawing.Point(217, 12);
+            this.buttonSearchClear.Name = "buttonSearchClear";
+            this.buttonSearchClear.Size = new System.Drawing.Size(111, 23);
+            this.buttonSearchClear.TabIndex = 3;
+            this.buttonSearchClear.Text = "Clear";
+            this.buttonSearchClear.UseVisualStyleBackColor = true;
+            this.buttonSearchClear.Click += new System.EventHandler(this.buttonSearchClear_Click);
+            // 
+            // labelShortcutsSearch
+            // 
+            this.labelShortcutsSearch.AutoSize = true;
+            this.labelShortcutsSearch.Location = new System.Drawing.Point(14, 17);
+            this.labelShortcutsSearch.Name = "labelShortcutsSearch";
+            this.labelShortcutsSearch.Size = new System.Drawing.Size(40, 13);
+            this.labelShortcutsSearch.TabIndex = 40;
+            this.labelShortcutsSearch.Text = "Search";
+            // 
+            // textBoxSearch
+            // 
+            this.textBoxSearch.Location = new System.Drawing.Point(60, 14);
+            this.textBoxSearch.Name = "textBoxSearch";
+            this.textBoxSearch.Size = new System.Drawing.Size(151, 21);
+            this.textBoxSearch.TabIndex = 2;
+            this.textBoxSearch.TextChanged += new System.EventHandler(this.textBoxSearch_TextChanged);
+            // 
             // ChooseEncoding
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(629, 503);
+            this.Controls.Add(this.buttonSearchClear);
+            this.Controls.Add(this.labelShortcutsSearch);
+            this.Controls.Add(this.textBoxSearch);
             this.Controls.Add(this.LabelPreview);
             this.Controls.Add(this.textBoxPreview);
             this.Controls.Add(this.listView1);
@@ -130,6 +164,7 @@
             this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.KeyPreview = true;
             this.MinimizeBox = false;
+            this.MinimumSize = new System.Drawing.Size(645, 542);
             this.Name = "ChooseEncoding";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
@@ -152,5 +187,8 @@
         private System.Windows.Forms.ColumnHeader columnHeader3;
         private System.Windows.Forms.TextBox textBoxPreview;
         private System.Windows.Forms.Label LabelPreview;
+        private System.Windows.Forms.Button buttonSearchClear;
+        private System.Windows.Forms.Label labelShortcutsSearch;
+        private System.Windows.Forms.TextBox textBoxSearch;
     }
 }
