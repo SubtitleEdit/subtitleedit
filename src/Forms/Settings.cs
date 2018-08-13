@@ -575,10 +575,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (gs.ListViewDoubleClickAction >= 0 && gs.ListViewDoubleClickAction < comboBoxListViewDoubleClickEvent.Items.Count)
                 comboBoxListViewDoubleClickEvent.SelectedIndex = gs.ListViewDoubleClickAction;
 
-            if (gs.SaveAsUseFileNameFrom.Equals("video", StringComparison.OrdinalIgnoreCase))
-                comboBoxSaveAsFileNameFrom.SelectedIndex = 0;
-            else
-                comboBoxSaveAsFileNameFrom.SelectedIndex = 1;
+            comboBoxSaveAsFileNameFrom.SelectedIndex = gs.SaveAsUseFileNameFrom.Equals("video", StringComparison.OrdinalIgnoreCase) ? 0 : 1;
 
             if (gs.AutoBackupSeconds == 60)
                 comboBoxAutoBackup.SelectedIndex = 1;
@@ -2164,28 +2161,15 @@ namespace Nikse.SubtitleEdit.Forms
             if (e?.Node == null)
                 return;
 
-            if (e.Node.Nodes.Count > 0)
+            if (e.Node.Nodes.Count == 0)
             {
                 checkBoxShortcutsControl.Checked = false;
-                checkBoxShortcutsControl.Enabled = false;
                 checkBoxShortcutsAlt.Checked = false;
-                checkBoxShortcutsAlt.Enabled = false;
                 checkBoxShortcutsShift.Checked = false;
-                checkBoxShortcutsShift.Enabled = false;
-                comboBoxShortcutKey.SelectedIndex = 0;
-                comboBoxShortcutKey.Enabled = false;
-                buttonUpdateShortcut.Enabled = false;
-                buttonClearShortcut.Enabled = false;
-            }
-            else if (e.Node.Nodes.Count == 0)
-            {
+
                 checkBoxShortcutsControl.Enabled = true;
                 checkBoxShortcutsAlt.Enabled = true;
                 checkBoxShortcutsShift.Enabled = true;
-
-                checkBoxShortcutsControl.Checked = false;
-                checkBoxShortcutsAlt.Checked = false;
-                checkBoxShortcutsShift.Checked = false;
 
                 comboBoxShortcutKey.SelectedIndex = 0;
 
@@ -2269,7 +2253,7 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             subNode.Text = text + " " + shortcutText; ;
                         }
-                        else  if (subNode.Text.Contains(shortcutText) && treeViewShortcuts.SelectedNode.Text != subNode.Text)
+                        else if (subNode.Text.Contains(shortcutText) && treeViewShortcuts.SelectedNode.Text != subNode.Text)
                         {
                             existsIn.AppendLine(string.Format(Configuration.Settings.Language.Settings.ShortcutIsAlreadyDefinedX, parent.Text + " -> " + subNode.Text));
                         }
@@ -2581,7 +2565,34 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void textBoxShortcutSearch_TextChanged(object sender, EventArgs e)
         {
+            var selected = treeViewShortcuts.SelectedNode?.Tag as ShortcutHelper;
+            var oldControl = checkBoxShortcutsControl.Checked;
+            var oldAlt = checkBoxShortcutsAlt.Checked;
+            var oldShift = checkBoxShortcutsShift.Checked;
+            var oldKeyIndex = comboBoxShortcutKey.SelectedIndex;
             ShowShortcutsTreeview();
+            if (selected != null)
+            {
+                foreach (TreeNode parentNode in treeViewShortcuts.Nodes)
+                {
+                    foreach (TreeNode node in parentNode.Nodes)
+                    {
+                        var sh = node.Tag as ShortcutHelper;
+                        if (sh != null && sh.Shortcut.Name == selected.Shortcut.Name)
+                        {
+                            treeViewShortcuts.SelectedNode = node;
+                            checkBoxShortcutsControl.Checked = oldControl;
+                            checkBoxShortcutsAlt.Checked = oldAlt;
+                            checkBoxShortcutsShift.Checked = oldShift;
+                            comboBoxShortcutKey.SelectedIndex = oldKeyIndex;
+                            return;
+                        }
+                    }
+                }
+            }
+            comboBoxShortcutKey.Enabled = false;
+            buttonUpdateShortcut.Enabled = false;
+            buttonClearShortcut.Enabled = false;
         }
 
         private void button1_Click(object sender, EventArgs e)
