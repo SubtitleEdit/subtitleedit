@@ -538,8 +538,8 @@ Nota: comprobar el espacio libre en disco.</WaveFileMalformed>
     <Example>Ejemplo</Example>
     <SelectAll>Seleccionar todo</SelectAll>
     <InverseSelection>Invertir selección</InverseSelection>
-    <Back>&lt; Atrás</Back>
-    <Next>Siguie&amp;nte &gt;</Next>
+    <Back>&lt;Atrás</Back>
+    <Next>Siguiente&gt;</Next>
     <Step2>Paso 2/2 - Verificar correcciones</Step2>
     <Fixes>Correcciones</Fixes>
     <Log>Registro</Log>
@@ -1158,8 +1158,8 @@ Nota: comprobar el espacio libre en disco.</WaveFileMalformed>
       <ListView>Vista de lista</ListView>
       <SourceView>Vista original</SourceView>
       <UndoChangesInEditPanel>Deshacer cambios en panel de edición</UndoChangesInEditPanel>
-      <Previous>&lt; Anterior</Previous>
-      <Next>Siguiente &gt;</Next>
+      <Previous>&lt;Anterior</Previous>
+      <Next>Siguiente&gt;</Next>
       <AutoBreak>Salto automático</AutoBreak>
       <Unbreak>Combinar</Unbreak>
     </Controls>
@@ -1175,10 +1175,10 @@ Nota: comprobar el espacio libre en disco.</WaveFileMalformed>
       <AutoContinueOn>Auto continuar (activar)</AutoContinueOn>
       <DelayInSeconds>Retraso (segundos)</DelayInSeconds>
       <OriginalText>Texto Original</OriginalText>
-      <Previous>&lt; Anterior</Previous>
+      <Previous>&lt;Anterior</Previous>
       <Stop>Parar</Stop>
       <PlayCurrent>Reproducir actual</PlayCurrent>
-      <Next>Siguiente &gt;</Next>
+      <Next>Siguiente&gt;</Next>
       <Playing>Reproduciendo...</Playing>
       <RepeatingLastTime>Repitiendo... última vez</RepeatingLastTime>
       <RepeatingXTimesLeft>Repitiendo... faltan {0} veces</RepeatingXTimesLeft>
@@ -1200,10 +1200,10 @@ Nota: comprobar el espacio libre en disco.</WaveFileMalformed>
       <GoogleIt>Google</GoogleIt>
       <SecondsBackShort>&lt;&lt;</SecondsBackShort>
       <SecondsForwardShort>&gt;&gt;</SecondsForwardShort>
-      <VideoPosition>Posición del video:</VideoPosition>
-      <TranslateTip>Tip: Use «alt+flecha arriba/abajo» para ir al subtítulo anterior/siguiente</TranslateTip>
-      <CreateTip>Tip: Use «ctrl+flecha izquierda/derecha»</CreateTip>
-      <AdjustTip>Tip: Use «alt+flecha arriba/abajo» para ir al subtítulo anterior/siguiente</AdjustTip>
+      <VideoPosition>Posición video:</VideoPosition>
+      <TranslateTip>Tip: Usa «alt+flecha arriba/abajo» para ir al subtítulo anterior/siguiente.</TranslateTip>
+      <CreateTip>Tip: «ctrl+flecha izquierda/derecha»</CreateTip>
+      <AdjustTip>Tip: «alt+flecha arriba/abajo»</AdjustTip>
       <BeforeChangingTimeInWaveformX>Antes de cambiar el tiempo en forma de onda: {0}</BeforeChangingTimeInWaveformX>
       <NewTextInsertAtX>Nuevo texto insertado en {0}</NewTextInsertAtX>
       <Center>Centrar</Center>
