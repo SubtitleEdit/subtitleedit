@@ -1124,7 +1124,6 @@
             // 
             // buttonShortcutsClear
             // 
-            this.buttonShortcutsClear.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonShortcutsClear.Enabled = false;
             this.buttonShortcutsClear.Location = new System.Drawing.Point(221, 18);
             this.buttonShortcutsClear.Name = "buttonShortcutsClear";

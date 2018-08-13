@@ -20,6 +20,10 @@ namespace Nikse.SubtitleEdit.Forms
 
             LanguageStructure.ChooseEncoding language = Configuration.Settings.Language.ChooseEncoding;
             Text = language.Title;
+            labelShortcutsSearch.Text = Configuration.Settings.Language.General.Search;
+            buttonSearchClear.Text = Configuration.Settings.Language.DvdSubRip.Clear;
+            textBoxSearch.Left = labelShortcutsSearch.Left + labelShortcutsSearch.Width + 5;
+            buttonSearchClear.Left = textBoxSearch.Left + textBoxSearch.Width + 5;
             LabelPreview.Text = Configuration.Settings.Language.General.Preview;
             listView1.Columns[0].Text = language.CodePage;
             listView1.Columns[1].Text = Configuration.Settings.Language.General.Name;
@@ -91,6 +95,11 @@ namespace Nikse.SubtitleEdit.Forms
                 textBoxPreview.Text = encoding.GetString(_fileBuffer).Replace("\0", " ");
                 LabelPreview.Text = Configuration.Settings.Language.General.Preview + " - " + encoding.EncodingName;
             }
+            else
+            {
+                textBoxPreview.Text = string.Empty;
+                LabelPreview.Text = string.Empty;
+            }
         }
 
         private void ChooseEncoding_Load(object sender, EventArgs e)
@@ -114,6 +123,31 @@ namespace Nikse.SubtitleEdit.Forms
                 sorter.IsNumber = e.Column == 0; // only index 1 is numeric
             }
             listView1.Sort();
+        }
+
+        private void textBoxSearch_TextChanged(object sender, EventArgs e)
+        {
+            listView1.BeginUpdate();
+            listView1.Items.Clear();
+            foreach (var enc in Configuration.AvailableEncodings)
+            {
+                if (textBoxSearch.Text.Length < 2 ||
+                    enc.CodePage.ToString().Contains(textBoxSearch.Text, StringComparison.OrdinalIgnoreCase) ||
+                    enc.WebName.Contains(textBoxSearch.Text, StringComparison.OrdinalIgnoreCase) ||
+                    enc.EncodingName.Contains(textBoxSearch.Text, StringComparison.OrdinalIgnoreCase))
+                {
+                    var item = new ListViewItem(new[] { enc.CodePage.ToString(), enc.WebName, enc.EncodingName });
+                    listView1.Items.Add(item);
+                }
+            }
+            listView1.EndUpdate();
+            buttonSearchClear.Enabled = textBoxSearch.Text.Length > 0;
+            listView1_SelectedIndexChanged(null, null);
+        }
+
+        private void buttonSearchClear_Click(object sender, EventArgs e)
+        {
+            textBoxSearch.Text = string.Empty;
         }
     }
 }
