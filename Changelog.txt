@@ -36,6 +36,7 @@
    * Add ">" and "<" duration in "Modify selection"
    * Improve EBU STL properties regarding "language code"
    * Add "Export" for compare tool - thx Kait
+   * Add "Search" in Options -> Settings -> Shortcuts - thx Leon/OmrSi
 * FIXED:
    * Fix "Add to names list" in OCR spell check - thx daed-alus/Sergiy
    * Fix "Generate scene changes" decimal point issue - thx Max
