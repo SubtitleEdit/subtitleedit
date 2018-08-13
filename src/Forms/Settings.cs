@@ -45,6 +45,24 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        public class ShortcutNode
+        {
+            public string Text { get; set; }
+            public string ShortcutText { get; set; }
+            public ShortcutHelper Shortcut { get; set; }
+            public List<ShortcutNode> Nodes { get; set; }
+
+            public ShortcutNode()
+            {
+                Nodes = new List<ShortcutNode>();
+            }
+            public ShortcutNode(string text)
+            {
+                Text = text;
+                Nodes = new List<ShortcutNode>();
+            }
+        }
+
         public class ShortcutHelper
         {
             public ShortcutHelper(PropertyInfo shortcut, bool isMenuItem)
@@ -69,8 +87,6 @@ namespace Nikse.SubtitleEdit.Forms
             var folderUri = new Uri(folder);
             return Uri.UnescapeDataString(folderUri.MakeRelativeUri(pathUri).ToString().Replace('/', Path.DirectorySeparatorChar));
         }
-
-        private readonly List<TreeNode> _allNodes;
 
         public Settings()
         {
@@ -707,16 +723,10 @@ namespace Nikse.SubtitleEdit.Forms
             textBoxFFmpegPath.Text = gs.FFmpegLocation;
 
             MakeShortcutsTreeview(language);
-            _allNodes = new List<TreeNode>();
-            foreach (TreeNode node in treeViewShortcuts.Nodes)
-            {
-                foreach (TreeNode subNode in node.Nodes)
-                {
-                    _allNodes.Add(subNode);
-                }
-            }
+            ShowShortcutsTreeview();
 
             labelShortcutsSearch.Text = Configuration.Settings.Language.General.Search;
+            buttonShortcutsClear.Text = Configuration.Settings.Language.DvdSubRip.Clear;
             textBoxShortcutSearch.Left = labelShortcutsSearch.Left + labelShortcutsSearch.Width + 5;
             buttonShortcutsClear.Left = textBoxShortcutSearch.Left + textBoxShortcutSearch.Width + 5;
 
@@ -759,12 +769,13 @@ namespace Nikse.SubtitleEdit.Forms
             labelPlatform.Text = (IntPtr.Size * 8) + "-bit";
         }
 
+        ShortcutNode _shortcuts = new ShortcutNode("root");
+
         private void MakeShortcutsTreeview(LanguageStructure.Settings language)
         {
-            treeViewShortcuts.BeginUpdate();
-            treeViewShortcuts.Nodes.Clear();
+            _shortcuts = new ShortcutNode("root");
 
-            var generalNode = new TreeNode(Configuration.Settings.Language.General.GeneralText);
+            var generalNode = new ShortcutNode(Configuration.Settings.Language.General.GeneralText);
             AddNode(generalNode, language.MergeSelectedLines, nameof(Configuration.Settings.Shortcuts.GeneralMergeSelectedLines));
             AddNode(generalNode, language.MergeSelectedLinesOnlyFirstText, nameof(Configuration.Settings.Shortcuts.GeneralMergeSelectedLinesOnlyFirstText));
             AddNode(generalNode, language.MergeOriginalAndTranslation, nameof(Configuration.Settings.Shortcuts.GeneralMergeOriginalAndTranslation));
@@ -784,9 +795,9 @@ namespace Nikse.SubtitleEdit.Forms
             AddNode(generalNode, language.Help, nameof(Configuration.Settings.Shortcuts.GeneralHelp));
             AddNode(generalNode, language.UnbreakNoSpace, nameof(Configuration.Settings.Shortcuts.GeneralUnbrekNoSpace));
             if (generalNode.Nodes.Count > 0)
-                treeViewShortcuts.Nodes.Add(generalNode);
+                _shortcuts.Nodes.Add(generalNode);
 
-            var fileNode = new TreeNode(Configuration.Settings.Language.Main.Menu.File.Title);
+            var fileNode = new ShortcutNode(Configuration.Settings.Language.Main.Menu.File.Title);
             AddNode(fileNode, Configuration.Settings.Language.Main.Menu.File.New, nameof(Configuration.Settings.Shortcuts.MainFileNew), true);
             AddNode(fileNode, Configuration.Settings.Language.Main.Menu.File.Open, nameof(Configuration.Settings.Shortcuts.MainFileOpen), true);
             AddNode(fileNode, Configuration.Settings.Language.Main.Menu.File.OpenKeepVideo, nameof(Configuration.Settings.Shortcuts.MainFileOpenKeepVideo), true);
@@ -802,9 +813,9 @@ namespace Nikse.SubtitleEdit.Forms
             AddNode(fileNode, Configuration.Settings.Language.Main.Menu.File.Export + " -> " + Configuration.Settings.Language.Main.Menu.File.ExportEbu, nameof(Configuration.Settings.Shortcuts.MainFileExportEbu), true);
             AddNode(fileNode, Configuration.Settings.Language.Main.Menu.File.Export + " -> " + Configuration.Settings.Language.Main.Menu.File.ExportPlainText, nameof(Configuration.Settings.Shortcuts.MainFileExportPlainText), true);
             if (fileNode.Nodes.Count > 0)
-                treeViewShortcuts.Nodes.Add(fileNode);
+                _shortcuts.Nodes.Add(fileNode);
 
-            var editNode = new TreeNode(Configuration.Settings.Language.Main.Menu.Edit.Title);
+            var editNode = new ShortcutNode(Configuration.Settings.Language.Main.Menu.Edit.Title);
             AddNode(editNode, Configuration.Settings.Language.Main.Menu.Edit.Undo, nameof(Configuration.Settings.Shortcuts.MainEditUndo), true);
             AddNode(editNode, Configuration.Settings.Language.Main.Menu.Edit.Redo, nameof(Configuration.Settings.Shortcuts.MainEditRedo), true);
             AddNode(editNode, Configuration.Settings.Language.Main.Menu.Edit.Find, nameof(Configuration.Settings.Shortcuts.MainEditFind), true);
@@ -816,9 +827,9 @@ namespace Nikse.SubtitleEdit.Forms
             AddNode(editNode, language.ReverseStartAndEndingForRTL, nameof(Configuration.Settings.Shortcuts.MainEditReverseStartAndEndingForRTL), true);
             AddNode(editNode, language.ToggleTranslationAndOriginalInPreviews, nameof(Configuration.Settings.Shortcuts.MainEditToggleTranslationOriginalInPreviews), true);
             if (editNode.Nodes.Count > 0)
-                treeViewShortcuts.Nodes.Add(editNode);
+                _shortcuts.Nodes.Add(editNode);
 
-            var toolsNode = new TreeNode(Configuration.Settings.Language.Main.Menu.Tools.Title);
+            var toolsNode = new ShortcutNode(Configuration.Settings.Language.Main.Menu.Tools.Title);
             AddNode(toolsNode, Configuration.Settings.Language.Main.Menu.Tools.DurationsBridgeGap, nameof(Configuration.Settings.Shortcuts.MainToolsDurationsBridgeGap), true);
             AddNode(toolsNode, Configuration.Settings.Language.Main.Menu.Tools.FixCommonErrors, nameof(Configuration.Settings.Shortcuts.MainToolsFixCommonErrors), true);
             AddNode(toolsNode, Configuration.Settings.Language.Main.Menu.Tools.StartNumberingFrom, nameof(Configuration.Settings.Shortcuts.MainToolsRenumber), true);
@@ -832,9 +843,9 @@ namespace Nikse.SubtitleEdit.Forms
             AddNode(toolsNode, Configuration.Settings.Language.Main.Menu.ContextMenu.AutoDurationCurrentLine, nameof(Configuration.Settings.Shortcuts.MainToolsAutoDuration));
             AddNode(toolsNode, language.ShowBeamer, nameof(Configuration.Settings.Shortcuts.MainToolsBeamer));
             if (toolsNode.Nodes.Count > 0)
-                treeViewShortcuts.Nodes.Add(toolsNode);
+                _shortcuts.Nodes.Add(toolsNode);
 
-            var videoNode = new TreeNode(Configuration.Settings.Language.Main.Menu.Video.Title);
+            var videoNode = new ShortcutNode(Configuration.Settings.Language.Main.Menu.Video.Title);
             AddNode(videoNode, Configuration.Settings.Language.Main.Menu.Video.OpenVideo, nameof(Configuration.Settings.Shortcuts.MainVideoOpen), true);
             AddNode(videoNode, Configuration.Settings.Language.Main.Menu.Video.CloseVideo, nameof(Configuration.Settings.Shortcuts.MainVideoClose), true);
             AddNode(videoNode, language.TogglePlayPause, nameof(Configuration.Settings.Shortcuts.MainVideoPlayPauseToggle));
@@ -859,25 +870,25 @@ namespace Nikse.SubtitleEdit.Forms
             AddNode(videoNode, language.PlayRateSlower, nameof(Configuration.Settings.Shortcuts.MainVideoSlower));
             AddNode(videoNode, language.PlayRateFaster, nameof(Configuration.Settings.Shortcuts.MainVideoFaster));
             if (videoNode.Nodes.Count > 0)
-                treeViewShortcuts.Nodes.Add(videoNode);
+                _shortcuts.Nodes.Add(videoNode);
 
-            var spellCheckNode = new TreeNode(Configuration.Settings.Language.Main.Menu.SpellCheck.Title);
+            var spellCheckNode = new ShortcutNode(Configuration.Settings.Language.Main.Menu.SpellCheck.Title);
             AddNode(spellCheckNode, Configuration.Settings.Language.Main.Menu.SpellCheck.Title, nameof(Configuration.Settings.Shortcuts.MainSpellCheck));
             AddNode(spellCheckNode, Configuration.Settings.Language.Main.Menu.SpellCheck.FindDoubleWords, nameof(Configuration.Settings.Shortcuts.MainSpellCheckFindDoubleWords));
             AddNode(spellCheckNode, Configuration.Settings.Language.Main.Menu.SpellCheck.AddToNameList, nameof(Configuration.Settings.Shortcuts.MainSpellCheckAddWordToNames));
             if (spellCheckNode.Nodes.Count > 0)
-                treeViewShortcuts.Nodes.Add(spellCheckNode);
+                _shortcuts.Nodes.Add(spellCheckNode);
 
-            var syncNode = new TreeNode(Configuration.Settings.Language.Main.Menu.Synchronization.Title);
+            var syncNode = new ShortcutNode(Configuration.Settings.Language.Main.Menu.Synchronization.Title);
             AddNode(syncNode, Configuration.Settings.Language.Main.Menu.Synchronization.AdjustAllTimes, nameof(Configuration.Settings.Shortcuts.MainSynchronizationAdjustTimes), true);
             AddNode(syncNode, Configuration.Settings.Language.Main.Menu.Synchronization.VisualSync, nameof(Configuration.Settings.Shortcuts.MainSynchronizationVisualSync), true);
             AddNode(syncNode, Configuration.Settings.Language.Main.Menu.Synchronization.PointSync, nameof(Configuration.Settings.Shortcuts.MainSynchronizationPointSync), true);
             AddNode(syncNode, Configuration.Settings.Language.Main.Menu.Synchronization.PointSyncViaOtherSubtitle, nameof(Configuration.Settings.Shortcuts.MainSynchronizationPointSyncViaFile), true);
             AddNode(syncNode, Configuration.Settings.Language.Main.Menu.Tools.ChangeFrameRate, nameof(Configuration.Settings.Shortcuts.MainSynchronizationChangeFrameRate), true);
             if (syncNode.Nodes.Count > 0)
-                treeViewShortcuts.Nodes.Add(syncNode);
+                _shortcuts.Nodes.Add(syncNode);
 
-            var listViewNode = new TreeNode(Configuration.Settings.Language.Main.Controls.ListView);
+            var listViewNode = new ShortcutNode(Configuration.Settings.Language.Main.Controls.ListView);
             AddNode(listViewNode, Configuration.Settings.Language.General.Italic, nameof(Configuration.Settings.Shortcuts.MainListViewItalic), true);
             AddNode(listViewNode, Configuration.Settings.Language.Main.Menu.ContextMenu.InsertAfter, nameof(Configuration.Settings.Shortcuts.MainInsertAfter));
             AddNode(listViewNode, Configuration.Settings.Language.Main.Menu.ContextMenu.InsertBefore, nameof(Configuration.Settings.Shortcuts.MainInsertBefore));
@@ -898,9 +909,9 @@ namespace Nikse.SubtitleEdit.Forms
             AddNode(listViewNode, language.ListViewFocusWaveform, nameof(Configuration.Settings.Shortcuts.MainListViewFocusWaveform));
             AddNode(listViewNode, language.ListViewGoToNextError, nameof(Configuration.Settings.Shortcuts.MainListViewGoToNextError));
             if (listViewNode.Nodes.Count > 0)
-                treeViewShortcuts.Nodes.Add(listViewNode);
+                _shortcuts.Nodes.Add(listViewNode);
 
-            var textBoxNode = new TreeNode(language.TextBox);
+            var textBoxNode = new ShortcutNode(language.TextBox);
             AddNode(textBoxNode, Configuration.Settings.Language.General.Italic, nameof(Configuration.Settings.Shortcuts.MainTextBoxItalic));
             AddNode(textBoxNode, Configuration.Settings.Language.Main.Menu.ContextMenu.SplitLineAtCursorPosition, nameof(Configuration.Settings.Shortcuts.MainTextBoxSplitAtCursor));
             AddNode(textBoxNode, Configuration.Settings.Language.Main.Menu.ContextMenu.SplitLineAtCursorAndWaveformPosition, nameof(Configuration.Settings.Shortcuts.MainTextBoxSplitAtCursorAndVideoPos));
@@ -915,9 +926,9 @@ namespace Nikse.SubtitleEdit.Forms
             AddNode(textBoxNode, language.MainTextBoxAutoBreak, nameof(Configuration.Settings.Shortcuts.MainTextBoxAutoBreak));
             AddNode(textBoxNode, language.MainTextBoxUnbreak, nameof(Configuration.Settings.Shortcuts.MainTextBoxUnbreak));
             if (textBoxNode.Nodes.Count > 0)
-                treeViewShortcuts.Nodes.Add(textBoxNode);
+                _shortcuts.Nodes.Add(textBoxNode);
 
-            var createNode = new TreeNode(Configuration.Settings.Language.Main.VideoControls.Create);
+            var createNode = new ShortcutNode(Configuration.Settings.Language.Main.VideoControls.Create);
             AddNode(createNode, Configuration.Settings.Language.Main.VideoControls.InsertNewSubtitleAtVideoPosition, nameof(Configuration.Settings.Shortcuts.MainCreateInsertSubAtVideoPos));
             AddNode(createNode, Configuration.Settings.Language.Main.VideoControls.PlayFromJustBeforeText, nameof(Configuration.Settings.Shortcuts.MainCreatePlayFromJustBefore));
             AddNode(createNode, Configuration.Settings.Language.Main.VideoControls.SetStartTime, nameof(Configuration.Settings.Shortcuts.MainCreateSetStart));
@@ -925,18 +936,18 @@ namespace Nikse.SubtitleEdit.Forms
             AddNode(createNode, language.MainCreateStartDownEndUp, nameof(Configuration.Settings.Shortcuts.MainCreateStartDownEndUp));
             AddNode(createNode, language.CreateSetEndAddNewAndGoToNew, nameof(Configuration.Settings.Shortcuts.MainCreateSetEndAddNewAndGoToNew));
             if (createNode.Nodes.Count > 0)
-                treeViewShortcuts.Nodes.Add(createNode);
+                _shortcuts.Nodes.Add(createNode);
 
-            var translateNote = new TreeNode(Configuration.Settings.Language.Main.VideoControls.Translate);
+            var translateNote = new ShortcutNode(Configuration.Settings.Language.Main.VideoControls.Translate);
             AddNode(translateNote, language.CustomSearch1, nameof(Configuration.Settings.Shortcuts.MainTranslateCustomSearch1));
             AddNode(translateNote, language.CustomSearch2, nameof(Configuration.Settings.Shortcuts.MainTranslateCustomSearch2));
             AddNode(translateNote, language.CustomSearch3, nameof(Configuration.Settings.Shortcuts.MainTranslateCustomSearch3));
             AddNode(translateNote, language.CustomSearch4, nameof(Configuration.Settings.Shortcuts.MainTranslateCustomSearch4));
             AddNode(translateNote, language.CustomSearch5, nameof(Configuration.Settings.Shortcuts.MainTranslateCustomSearch5));
             if (translateNote.Nodes.Count > 0)
-                treeViewShortcuts.Nodes.Add(translateNote);
+                _shortcuts.Nodes.Add(translateNote);
 
-            var adjustNode = new TreeNode(Configuration.Settings.Language.Main.VideoControls.Adjust);
+            var adjustNode = new ShortcutNode(Configuration.Settings.Language.Main.VideoControls.Adjust);
             AddNode(adjustNode, Configuration.Settings.Language.Main.VideoControls.SetstartTimeAndOffsetOfRest, nameof(Configuration.Settings.Shortcuts.MainAdjustSetStartAndOffsetTheRest));
             AddNode(adjustNode, language.AdjustSetEndTimeAndGoToNext, nameof(Configuration.Settings.Shortcuts.MainAdjustSetEndAndGotoNext));
             AddNode(adjustNode, language.AdjustViaEndAutoStart, nameof(Configuration.Settings.Shortcuts.MainAdjustViaEndAutoStart));
@@ -958,9 +969,9 @@ namespace Nikse.SubtitleEdit.Forms
             AddNode(adjustNode, language.AdjustExtendCurrentSubtitle, nameof(Configuration.Settings.Shortcuts.GeneralExtendCurrentSubtitle));
             AddNode(adjustNode, language.RecalculateDurationOfCurrentSubtitle, nameof(Configuration.Settings.Shortcuts.GeneralAutoCalcCurrentDuration));
             if (adjustNode.Nodes.Count > 0)
-                treeViewShortcuts.Nodes.Add(adjustNode);
+                _shortcuts.Nodes.Add(adjustNode);
 
-            var audioVisualizerNode = new TreeNode(language.WaveformAndSpectrogram);
+            var audioVisualizerNode = new ShortcutNode(language.WaveformAndSpectrogram);
             AddNode(audioVisualizerNode, Configuration.Settings.Language.Waveform.ZoomIn, nameof(Configuration.Settings.Shortcuts.WaveformZoomIn));
             AddNode(audioVisualizerNode, Configuration.Settings.Language.Waveform.ZoomOut, nameof(Configuration.Settings.Shortcuts.WaveformZoomOut));
             AddNode(audioVisualizerNode, language.VerticalZoom, nameof(Configuration.Settings.Shortcuts.WaveformVerticalZoom));
@@ -978,8 +989,26 @@ namespace Nikse.SubtitleEdit.Forms
             AddNode(audioVisualizerNode, language.WaveformGoToNextSceneChange, nameof(Configuration.Settings.Shortcuts.WaveformGoToNextSceneChange));
             AddNode(audioVisualizerNode, language.WaveformToggleSceneChange, nameof(Configuration.Settings.Shortcuts.WaveformToggleSceneChange));
             if (audioVisualizerNode.Nodes.Count > 0)
-                treeViewShortcuts.Nodes.Add(audioVisualizerNode);
+                _shortcuts.Nodes.Add(audioVisualizerNode);
+        }
 
+        private void ShowShortcutsTreeview()
+        {
+            treeViewShortcuts.BeginUpdate();
+            treeViewShortcuts.Nodes.Clear();
+
+            foreach (var parent in _shortcuts.Nodes)
+            {
+                var parentNode = new TreeNode(parent.Text);
+                foreach (ShortcutNode node in parent.Nodes)
+                {
+                    AddNode(parentNode, node.Text, node.Shortcut);
+                }
+                if (parentNode.Nodes.Count > 0)
+                {
+                    treeViewShortcuts.Nodes.Add(parentNode);
+                }
+            }
             foreach (TreeNode node in treeViewShortcuts.Nodes)
             {
                 node.Text = node.Text.RemoveChar('&');
@@ -997,16 +1026,21 @@ namespace Nikse.SubtitleEdit.Forms
             treeViewShortcuts.EndUpdate();
         }
 
-        private void AddNode(TreeNode node, string text, string shortcut, bool isMenuItem = false)
+        private void AddNode(TreeNode parentNode, string text, ShortcutHelper shortcut)
+        {
+            if (textBoxShortcutSearch.Left < 2 || text.Contains(textBoxShortcutSearch.Text, StringComparison.OrdinalIgnoreCase))
+            {
+                parentNode.Nodes.Add(new TreeNode(text) { Tag = shortcut });
+            }
+        }
+
+        private void AddNode(ShortcutNode node, string text, string shortcut, bool isMenuItem = false)
         {
             var prop = Configuration.Settings.Shortcuts.GetType().GetProperty(shortcut);
             if (prop != null)
             {
                 var s = text + GetShortcutText((string)prop.GetValue(Configuration.Settings.Shortcuts, null));
-                if (textBoxShortcutSearch.Left < 2 || s.Contains(textBoxShortcutSearch.Text, StringComparison.OrdinalIgnoreCase))
-                {
-                    node.Nodes.Add(new TreeNode(s) { Tag = new ShortcutHelper(prop, isMenuItem) });
-                }
+                node.Nodes.Add(new ShortcutNode(s) { Shortcut = new ShortcutHelper(prop, isMenuItem), ShortcutText = shortcut });
             }
         }
 
@@ -2226,10 +2260,20 @@ namespace Nikse.SubtitleEdit.Forms
             var existsIn = new StringBuilder();
             if (comboBoxShortcutKey.SelectedIndex > 0)
             {
-                foreach (TreeNode subNode in _allNodes)
+                var sh = (ShortcutHelper)treeViewShortcuts.SelectedNode.Tag;
+                foreach (ShortcutNode parent in _shortcuts.Nodes)
                 {
-                    if (subNode.Text.Contains(shortcutText) && treeViewShortcuts.SelectedNode.Text != subNode.Text)
-                        existsIn.AppendLine(string.Format(Configuration.Settings.Language.Settings.ShortcutIsAlreadyDefinedX, subNode.Parent.Text + " -> " + subNode.Text));
+                    foreach (ShortcutNode subNode in parent.Nodes)
+                    {
+                        if (sh != null && subNode.Shortcut.Shortcut.Name == sh.Shortcut.Name)
+                        {
+                            subNode.Text = text + " " + shortcutText; ;
+                        }
+                        else  if (subNode.Text.Contains(shortcutText) && treeViewShortcuts.SelectedNode.Text != subNode.Text)
+                        {
+                            existsIn.AppendLine(string.Format(Configuration.Settings.Language.Settings.ShortcutIsAlreadyDefinedX, parent.Text + " -> " + subNode.Text));
+                        }
+                    }
                 }
                 if (existsIn.Length > 0)
                 {
@@ -2537,7 +2581,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void textBoxShortcutSearch_TextChanged(object sender, EventArgs e)
         {
-            MakeShortcutsTreeview(Configuration.Settings.Language.Settings);
+            ShowShortcutsTreeview();
         }
 
         private void button1_Click(object sender, EventArgs e)
