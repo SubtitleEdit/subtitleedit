@@ -1125,13 +1125,14 @@
             // buttonShortcutsClear
             // 
             this.buttonShortcutsClear.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonShortcutsClear.Enabled = false;
             this.buttonShortcutsClear.Location = new System.Drawing.Point(221, 18);
             this.buttonShortcutsClear.Name = "buttonShortcutsClear";
             this.buttonShortcutsClear.Size = new System.Drawing.Size(111, 23);
             this.buttonShortcutsClear.TabIndex = 38;
             this.buttonShortcutsClear.Text = "Clear";
             this.buttonShortcutsClear.UseVisualStyleBackColor = true;
-            this.buttonShortcutsClear.Click += new System.EventHandler(this.button1_Click);
+            this.buttonShortcutsClear.Click += new System.EventHandler(this.buttonShortcutsClear_Click);
             // 
             // labelShortcutsSearch
             // 

@@ -2242,28 +2242,25 @@ namespace Nikse.SubtitleEdit.Forms
             string text = treeViewShortcuts.SelectedNode.Text.Substring(0, treeViewShortcuts.SelectedNode.Text.IndexOf('[')).Trim();
             var shortcutText = GetCurrentShortcutText();
             var existsIn = new StringBuilder();
-            if (comboBoxShortcutKey.SelectedIndex > 0)
+            var sh = (ShortcutHelper)treeViewShortcuts.SelectedNode.Tag;
+            foreach (ShortcutNode parent in _shortcuts.Nodes)
             {
-                var sh = (ShortcutHelper)treeViewShortcuts.SelectedNode.Tag;
-                foreach (ShortcutNode parent in _shortcuts.Nodes)
+                foreach (ShortcutNode subNode in parent.Nodes)
                 {
-                    foreach (ShortcutNode subNode in parent.Nodes)
+                    if (sh != null && subNode.Shortcut.Shortcut.Name == sh.Shortcut.Name)
                     {
-                        if (sh != null && subNode.Shortcut.Shortcut.Name == sh.Shortcut.Name)
-                        {
-                            subNode.Text = text + " " + shortcutText; ;
-                        }
-                        else if (subNode.Text.Contains(shortcutText) && treeViewShortcuts.SelectedNode.Text != subNode.Text)
-                        {
-                            existsIn.AppendLine(string.Format(Configuration.Settings.Language.Settings.ShortcutIsAlreadyDefinedX, parent.Text + " -> " + subNode.Text));
-                        }
+                        subNode.Text = text + " " + shortcutText; ;
+                    }
+                    else if (subNode.Text.Contains(shortcutText) && treeViewShortcuts.SelectedNode.Text != subNode.Text)
+                    {
+                        existsIn.AppendLine(string.Format(Configuration.Settings.Language.Settings.ShortcutIsAlreadyDefinedX, parent.Text + " -> " + subNode.Text));
                     }
                 }
-                if (existsIn.Length > 0)
-                {
-                    MessageBox.Show(existsIn.ToString(), string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
-                }
+            }
+            if (existsIn.Length > 0 && comboBoxShortcutKey.SelectedIndex > 0)
+            {
+                MessageBox.Show(existsIn.ToString(), string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
             }
             treeViewShortcuts.SelectedNode.Text = text + " " + shortcutText;
             AddToSaveList((ShortcutHelper)treeViewShortcuts.SelectedNode.Tag, shortcutText);
@@ -2571,6 +2568,7 @@ namespace Nikse.SubtitleEdit.Forms
             var oldShift = checkBoxShortcutsShift.Checked;
             var oldKeyIndex = comboBoxShortcutKey.SelectedIndex;
             ShowShortcutsTreeview();
+            buttonShortcutsClear.Enabled = textBoxShortcutSearch.Text.Length > 0;
             if (selected != null)
             {
                 foreach (TreeNode parentNode in treeViewShortcuts.Nodes)
@@ -2595,7 +2593,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonClearShortcut.Enabled = false;
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void buttonShortcutsClear_Click(object sender, EventArgs e)
         {
             textBoxShortcutSearch.Text = string.Empty;
         }
