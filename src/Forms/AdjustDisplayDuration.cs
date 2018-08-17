@@ -89,6 +89,7 @@ namespace Nikse.SubtitleEdit.Forms
                     radioButtonFixed.Checked = true;
                     break;
             }
+            FixEnabled();
         }
 
         private void FixLargeFonts()
