@@ -947,7 +947,10 @@ namespace Nikse.SubtitleEdit.Core
         public string GeneralGoToFirstSelectedLine { get; set; }
         public string GeneralGoToNextEmptyLine { get; set; }
         public string GeneralMergeSelectedLines { get; set; }
+        public string GeneralMergeSelectedLinesAndUnbreak { get; set; }
+        public string GeneralMergeSelectedLinesAndUnbreakCjk { get; set; }
         public string GeneralMergeSelectedLinesOnlyFirstText { get; set; }
+        public string GeneralMergeSelectedLinesBilingual { get; set; }
         public string GeneralMergeWithNext { get; set; }
         public string GeneralMergeWithPrevious { get; set; }
         public string GeneralToggleTranslationMode { get; set; }
@@ -1043,7 +1046,7 @@ namespace Nikse.SubtitleEdit.Core
         public string MainListViewCopyTextFromOriginalToCurrent { get; set; }
         public string MainListViewAutoDuration { get; set; }
         public string MainListViewColumnDeleteText { get; set; }
-        public string MainListViewColumnDeleteTextAndShiftUp { get; set; }        
+        public string MainListViewColumnDeleteTextAndShiftUp { get; set; }
         public string MainListViewColumnInsertText { get; set; }
         public string MainListViewColumnPaste { get; set; }
         public string MainListViewColumnTextUp { get; set; }
@@ -2800,9 +2803,18 @@ namespace Nikse.SubtitleEdit.Core
                 subNode = node.SelectSingleNode("GeneralMergeSelectedLines");
                 if (subNode != null)
                     settings.Shortcuts.GeneralMergeSelectedLines = subNode.InnerText;
+                subNode = node.SelectSingleNode("GeneralMergeSelectedLinesAndUnbreak");
+                if (subNode != null)
+                    settings.Shortcuts.GeneralMergeSelectedLinesAndUnbreak = subNode.InnerText;
+                subNode = node.SelectSingleNode("GeneralMergeSelectedLinesAndUnbreakCjk");
+                if (subNode != null)
+                    settings.Shortcuts.GeneralMergeSelectedLinesAndUnbreakCjk = subNode.InnerText;
                 subNode = node.SelectSingleNode("GeneralMergeSelectedLinesOnlyFirstText");
                 if (subNode != null)
                     settings.Shortcuts.GeneralMergeSelectedLinesOnlyFirstText = subNode.InnerText;
+                subNode = node.SelectSingleNode("GeneralMergeSelectedLinesBilingual");
+                if (subNode != null)
+                    settings.Shortcuts.GeneralMergeSelectedLinesBilingual = subNode.InnerText;
                 subNode = node.SelectSingleNode("GeneralMergeWithNext");
                 if (subNode != null)
                     settings.Shortcuts.GeneralMergeWithNext = subNode.InnerText;
@@ -3022,7 +3034,7 @@ namespace Nikse.SubtitleEdit.Core
                 subNode = node.SelectSingleNode("MainVideoGoToPrevSubtitle");
                 if (subNode != null)
                     settings.Shortcuts.MainVideoGoToPrevSubtitle = subNode.InnerText;
-                    subNode = node.SelectSingleNode("MainVideoGoToNextSubtitle");
+                subNode = node.SelectSingleNode("MainVideoGoToNextSubtitle");
                 if (subNode != null)
                     settings.Shortcuts.MainVideoGoToNextSubtitle = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainVideoFullscreen");
@@ -3889,7 +3901,10 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("GeneralGoToFirstSelectedLine", settings.Shortcuts.GeneralGoToFirstSelectedLine);
                 textWriter.WriteElementString("GeneralGoToNextEmptyLine", settings.Shortcuts.GeneralGoToNextEmptyLine);
                 textWriter.WriteElementString("GeneralMergeSelectedLines", settings.Shortcuts.GeneralMergeSelectedLines);
+                textWriter.WriteElementString("GeneralMergeSelectedLinesAndUnbreak", settings.Shortcuts.GeneralMergeSelectedLinesAndUnbreak);
+                textWriter.WriteElementString("GeneralMergeSelectedLinesAndUnbreakCjk", settings.Shortcuts.GeneralMergeSelectedLinesAndUnbreakCjk);
                 textWriter.WriteElementString("GeneralMergeSelectedLinesOnlyFirstText", settings.Shortcuts.GeneralMergeSelectedLinesOnlyFirstText);
+                textWriter.WriteElementString("GeneralMergeSelectedLinesBilingual", settings.Shortcuts.GeneralMergeSelectedLinesBilingual);
                 textWriter.WriteElementString("GeneralMergeWithNext", settings.Shortcuts.GeneralMergeWithNext);
                 textWriter.WriteElementString("GeneralMergeWithPrevious", settings.Shortcuts.GeneralMergeWithPrevious);
                 textWriter.WriteElementString("GeneralToggleTranslationMode", settings.Shortcuts.GeneralToggleTranslationMode);

@@ -2132,7 +2132,10 @@
             public string GoToFirstSelectedLine { get; set; }
             public string GoToNextEmptyLine { get; set; }
             public string MergeSelectedLines { get; set; }
+            public string MergeSelectedLinesAndUnbreak { get; set; }
+            public string MergeSelectedLinesAndUnbreakCjk { get; set; }
             public string MergeSelectedLinesOnlyFirstText { get; set; }
+            public string MergeSelectedLinesBilingual { get; set; }            
             public string ToggleTranslationMode { get; set; }
             public string SwitchOriginalAndTranslation { get; set; }
             public string MergeOriginalAndTranslation { get; set; }
@@ -2443,6 +2446,7 @@
         {
             public string Title { get; set; }
             public string Message { get; set; }
+            public string ImportAsPlainText { get; set; }
         }
 
         public class VisualSync

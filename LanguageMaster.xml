@@ -1963,7 +1963,10 @@ can edit in same subtitle file (collaboration)</Information>
     <GoToFirstSelectedLine>Go to first selected line</GoToFirstSelectedLine>
     <GoToNextEmptyLine>Go to next empty line</GoToNextEmptyLine>
     <MergeSelectedLines>Merge selected lines</MergeSelectedLines>
+    <MergeSelectedLinesAndUnbreak>Merge selected lines and unbreak</MergeSelectedLinesAndUnbreak>
+    <MergeSelectedLinesAndUnbreakCjk>Merge selected lines and unbreak without space (CJK)</MergeSelectedLinesAndUnbreakCjk>
     <MergeSelectedLinesOnlyFirstText>Merge selected lines, keep only first non-empty text</MergeSelectedLinesOnlyFirstText>
+    <MergeSelectedLinesBilingual>Merge selected lines bilingual</MergeSelectedLinesBilingual>
     <ToggleTranslationMode>Toggle translator mode</ToggleTranslationMode>
     <SwitchOriginalAndTranslation>Switch original and translation</SwitchOriginalAndTranslation>
     <MergeOriginalAndTranslation>Merge original and translation</MergeOriginalAndTranslation>
@@ -2240,6 +2243,7 @@ Setting a font for a subtitle is normally done in the video player, but can also
   <UnknownSubtitle>
     <Title>Unknown subtitle type</Title>
     <Message>If you want this fixed please send an email to mailto:niksedk@gmail.com and include a copy of the subtitle.</Message>
+    <ImportAsPlainText>Import as plain text...</ImportAsPlainText>
   </UnknownSubtitle>
   <VisualSync>
     <Title>Visual sync</Title>

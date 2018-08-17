@@ -2253,7 +2253,10 @@ can edit in same subtitle file (collaboration)",
                 GoToFirstSelectedLine = "Go to first selected line",
                 GoToNextEmptyLine = "Go to next empty line",
                 MergeSelectedLines = "Merge selected lines",
+                MergeSelectedLinesAndUnbreak = "Merge selected lines and unbreak",
+                MergeSelectedLinesAndUnbreakCjk = "Merge selected lines and unbreak without space (CJK)",
                 MergeSelectedLinesOnlyFirstText = "Merge selected lines, keep only first non-empty text",
+                MergeSelectedLinesBilingual = "Merge selected lines bilingual",
                 ToggleTranslationMode = "Toggle translator mode",
                 SwitchOriginalAndTranslation = "Switch original and translation",
                 MergeOriginalAndTranslation = "Merge original and translation",
@@ -2565,6 +2568,7 @@ can edit in same subtitle file (collaboration)",
             {
                 Title = "Unknown subtitle type",
                 Message = "If you want this fixed please send an email to mailto:niksedk@gmail.com and include a copy of the subtitle.",
+                ImportAsPlainText = "Import as plain text...",
             };
 
             VisualSync = new LanguageStructure.VisualSync
