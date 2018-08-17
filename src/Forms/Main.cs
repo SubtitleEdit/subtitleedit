@@ -17444,21 +17444,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void addParagraphHereToolStripMenuItem_Click(object sender, EventArgs e)
         {
             audioVisualizer.ClearSelection();
-            var newParagraph = new Paragraph(audioVisualizer.NewSelectionParagraph);
-            var format = GetCurrentSubtitleFormat();
-            bool useExtraForStyle = format.HasStyleSupport;
-            var styles = new List<string>();
-            if (format.GetType() == typeof(AdvancedSubStationAlpha) || format.GetType() == typeof(SubStationAlpha))
-                styles = AdvancedSubStationAlpha.GetStylesFromHeader(_subtitle.Header);
-            else if (format.GetType() == typeof(TimedText10) || format.GetType() == typeof(ItunesTimedText))
-                styles = TimedText10.GetStylesFromHeader(_subtitle.Header);
-            else if (format.GetType() == typeof(Sami) || format.GetType() == typeof(SamiModern))
-                styles = Sami.GetStylesFromHeader(_subtitle.Header);
-            string style = "Default";
-            if (styles.Count > 0)
-                style = styles[0];
-            if (useExtraForStyle)
-                newParagraph.Extra = style;
+            var newParagraph = new Paragraph(audioVisualizer.NewSelectionParagraph);            
 
             mediaPlayer.Pause();
 
@@ -17475,23 +17461,12 @@ namespace Nikse.SubtitleEdit.Forms
                 index++;
             }
 
-            if (format.GetType() == typeof(TimedText10) || format.GetType() == typeof(ItunesTimedText))
-            {
-                var c = _subtitle.GetParagraphOrDefault(index);
-                if (c == null)
-                    c = _subtitle.GetParagraphOrDefault(index - 1);
-                if (c != null)
-                {
-                    newParagraph.Style = c.Style;
-                    newParagraph.Region = c.Region;
-                    newParagraph.Language = c.Language;
-                    newParagraph.Extra = TimedText10.SetExtra(newParagraph);
-                }
-            }
+            SetStyleForNewParagraph(newParagraph, index);
 
             MakeHistoryForUndo(_language.BeforeInsertLine);
 
             // create and insert
+            var format = GetCurrentSubtitleFormat();
             if (format.IsFrameBased)
             {
                 newParagraph.CalculateFrameNumbersFromTimeCodes(CurrentFrameRate);
