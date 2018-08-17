@@ -7441,19 +7441,6 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void InsertBefore()
         {
-            var format = GetCurrentSubtitleFormat();
-            bool useExtraForStyle = format.HasStyleSupport;
-            var styles = new List<string>();
-            if (format.GetType() == typeof(AdvancedSubStationAlpha) || format.GetType() == typeof(SubStationAlpha))
-                styles = AdvancedSubStationAlpha.GetStylesFromHeader(_subtitle.Header);
-            else if (format.GetType() == typeof(TimedText10) || format.GetType() == typeof(ItunesTimedText))
-                styles = TimedText10.GetStylesFromHeader(_subtitle.Header);
-            else if (format.GetType() == typeof(Sami) || format.GetType() == typeof(SamiModern))
-                styles = Sami.GetStylesFromHeader(_subtitle.Header);
-            string style = "Default";
-            if (styles.Count > 0)
-                style = styles[0];
-
             MakeHistoryForUndo(_language.BeforeInsertLine);
 
             int firstSelectedIndex = 0;
@@ -7465,23 +7452,8 @@ namespace Nikse.SubtitleEdit.Forms
                 addMilliseconds = 1;
 
             var newParagraph = new Paragraph();
-            if (useExtraForStyle)
-            {
-                newParagraph.Extra = style;
-                if (format.GetType() == typeof(TimedText10) || format.GetType() == typeof(ItunesTimedText))
-                {
-                    if (styles.Count > 0)
-                        newParagraph.Style = style;
-                    var c = _subtitle.GetParagraphOrDefault(firstSelectedIndex);
-                    if (c != null)
-                    {
-                        newParagraph.Style = c.Style;
-                        newParagraph.Region = c.Region;
-                        newParagraph.Language = c.Language;
-                    }
-                    newParagraph.Extra = TimedText10.SetExtra(newParagraph);
-                }
-            }
+
+            SetStyleForNewParagraph(newParagraph, firstSelectedIndex);
 
             var prev = _subtitle.GetParagraphOrDefault(firstSelectedIndex - 1);
             var next = _subtitle.GetParagraphOrDefault(firstSelectedIndex);
@@ -7559,20 +7531,6 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void InsertAfter()
         {
-            var format = GetCurrentSubtitleFormat();
-            bool useExtraForStyle = format.HasStyleSupport;
-            var formatType = format.GetType();
-            var styles = new List<string>();
-            if (formatType == typeof(AdvancedSubStationAlpha) || formatType == typeof(SubStationAlpha))
-                styles = AdvancedSubStationAlpha.GetStylesFromHeader(_subtitle.Header);
-            else if (formatType == typeof(TimedText10) || formatType == typeof(ItunesTimedText))
-                styles = TimedText10.GetStylesFromHeader(_subtitle.Header);
-            else if (formatType == typeof(Sami) || formatType == typeof(SamiModern))
-                styles = Sami.GetStylesFromHeader(_subtitle.Header);
-            string style = "Default";
-            if (styles.Count > 0)
-                style = styles[0];
-
             MakeHistoryForUndo(_language.BeforeInsertLine);
 
             int firstSelectedIndex = 0;
@@ -7580,23 +7538,8 @@ namespace Nikse.SubtitleEdit.Forms
                 firstSelectedIndex = SubtitleListview1.SelectedItems[0].Index + 1;
 
             var newParagraph = new Paragraph();
-            if (useExtraForStyle)
-            {
-                newParagraph.Extra = style;
-                if (format.GetType() == typeof(TimedText10) || format.GetType() == typeof(ItunesTimedText))
-                {
-                    if (styles.Count > 0)
-                        newParagraph.Style = style;
-                    var c = _subtitle.GetParagraphOrDefault(FirstSelectedIndex);
-                    if (c != null)
-                    {
-                        newParagraph.Style = c.Style;
-                        newParagraph.Region = c.Region;
-                        newParagraph.Language = c.Language;
-                    }
-                    newParagraph.Extra = TimedText10.SetExtra(newParagraph);
-                }
-            }
+
+            SetStyleForNewParagraph(newParagraph, firstSelectedIndex);
 
             var prev = _subtitle.GetParagraphOrDefault(firstSelectedIndex - 1);
             var next = _subtitle.GetParagraphOrDefault(firstSelectedIndex);
@@ -7657,6 +7600,42 @@ namespace Nikse.SubtitleEdit.Forms
             SubtitleListview1.SelectIndexAndEnsureVisible(firstSelectedIndex, true);
             ShowSource();
             ShowStatus(_language.LineInserted);
+        }
+
+        private void SetStyleForNewParagraph(Paragraph newParagraph, int nearestIndex)
+        {
+            var format = GetCurrentSubtitleFormat();
+            bool useExtraForStyle = format.HasStyleSupport;
+            var formatType = format.GetType();
+            var styles = new List<string>();
+            if (formatType == typeof(AdvancedSubStationAlpha) || formatType == typeof(SubStationAlpha))
+                styles = AdvancedSubStationAlpha.GetStylesFromHeader(_subtitle.Header);
+            else if (formatType == typeof(TimedText10) || formatType == typeof(ItunesTimedText))
+                styles = TimedText10.GetStylesFromHeader(_subtitle.Header);
+            else if (formatType == typeof(Sami) || formatType == typeof(SamiModern))
+                styles = Sami.GetStylesFromHeader(_subtitle.Header);
+            string style = "Default";
+            if (styles.Count > 0)
+                style = styles[0];
+
+            if (useExtraForStyle)
+            {
+                newParagraph.Extra = style;
+                if (format.GetType() == typeof(TimedText10) || format.GetType() == typeof(ItunesTimedText))
+                {
+                    if (styles.Count > 0)
+                        newParagraph.Style = style;
+                    var c = _subtitle.GetParagraphOrDefault(nearestIndex);
+                    if (c != null)
+                    {
+                        newParagraph.Style = c.Style;
+                        newParagraph.Region = c.Region;
+                        newParagraph.Language = c.Language;
+                    }
+
+                    newParagraph.Extra = TimedText10.SetExtra(newParagraph);
+                }
+            }
         }
 
         private void SubtitleListView1SelectedIndexChange()
@@ -15664,6 +15643,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             // create and insert
             var newParagraph = new Paragraph(string.Empty, videoPositionInMilliseconds, videoPositionInMilliseconds + Configuration.Settings.General.NewEmptyDefaultMs);
+            SetStyleForNewParagraph(newParagraph, index);
             if (GetCurrentSubtitleFormat().IsFrameBased)
             {
                 newParagraph.CalculateFrameNumbersFromTimeCodes(CurrentFrameRate);
