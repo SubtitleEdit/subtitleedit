@@ -5326,8 +5326,17 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/MergeSelectedLines":
                     language.Settings.MergeSelectedLines = reader.Value;
                     break;
+                case "Settings/MergeSelectedLinesAndUnbreak":
+                    language.Settings.MergeSelectedLinesAndUnbreak = reader.Value;
+                    break;
+                case "Settings/MergeSelectedLinesAndUnbreakCjk":
+                    language.Settings.MergeSelectedLinesAndUnbreakCjk = reader.Value;
+                    break;
                 case "Settings/MergeSelectedLinesOnlyFirstText":
                     language.Settings.MergeSelectedLinesOnlyFirstText = reader.Value;
+                    break;
+                case "Settings/MergeSelectedLinesBilingual":
+                    language.Settings.MergeSelectedLinesBilingual = reader.Value;
                     break;
                 case "Settings/ToggleTranslationMode":
                     language.Settings.ToggleTranslationMode = reader.Value;
@@ -6048,6 +6057,9 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "UnknownSubtitle/Message":
                     language.UnknownSubtitle.Message = reader.Value;
+                    break;
+                case "UnknownSubtitle/ImportAsPlainText":
+                    language.UnknownSubtitle.ImportAsPlainText = reader.Value;
                     break;
                 case "VisualSync/Title":
                     language.VisualSync.Title = reader.Value;

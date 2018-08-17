@@ -132,6 +132,9 @@ namespace Nikse.SubtitleEdit.Forms
         private Keys _mainGeneralGoToFirstSelectedLine = Keys.None;
         private Keys _mainGeneralGoToFirstEmptyLine = Keys.None;
         private Keys _mainGeneralMergeSelectedLines = Keys.None;
+        private Keys _mainGeneralMergeSelectedLinesAndUnbreak = Keys.None;
+        private Keys _mainGeneralMergeSelectedLinesAndUnbreakNoSpace = Keys.None;
+        private Keys _mainGeneralMergeSelectedLinesBilingual = Keys.None;
         private Keys _mainGeneralMergeSelectedLinesOnlyFirstText = Keys.None;
         private Keys _mainGeneralToggleTranslationMode = Keys.None;
         private Keys _mainGeneralSwitchTranslationAndOriginal = Keys.None;
@@ -189,7 +192,7 @@ namespace Nikse.SubtitleEdit.Forms
         private Keys _mainAdjustSetStartAndOffsetTheRest = Keys.None;
         private Keys _mainAdjustSetEndAndOffsetTheRest = Keys.None;
         private Keys _mainAdjustSetEndAndOffsetTheRestAndGoToNext = Keys.None;
-        private Keys _mainAdjustSetEndAndGotoNext = Keys.None;        
+        private Keys _mainAdjustSetEndAndGotoNext = Keys.None;
         private Keys _mainAdjustInsertViaEndAutoStart = Keys.None;
         private Keys _mainAdjustInsertViaEndAutoStartAndGoToNext = Keys.None;
         private Keys _mainAdjustSetStartAutoDurationAndGoToNext = Keys.None;
@@ -3141,7 +3144,10 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else
                     {
-                        ShowUnknownSubtitle();
+                        if (ShowUnknownSubtitle(fileName, true))
+                        {
+                            ImportPlainText(fileName);
+                        }
                         return;
                     }
                 }
@@ -3348,12 +3354,13 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void ShowUnknownSubtitle()
+        private bool ShowUnknownSubtitle(string fileName, bool allowImportPlainText = false)
         {
             using (var unknownSubtitle = new UnknownSubtitle())
             {
-                unknownSubtitle.Initialize(Title);
+                unknownSubtitle.Initialize(Title, fileName, allowImportPlainText);
                 unknownSubtitle.ShowDialog(this);
+                return unknownSubtitle.ImportPlainText;
             }
         }
 
@@ -9043,7 +9050,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void MergeSelectedLines()
+        private void MergeSelectedLines(bool unbreak = false)
         {
             if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedItems.Count > 1)
             {
@@ -9082,7 +9089,11 @@ namespace Nikse.SubtitleEdit.Forms
                 string text = sb.ToString();
                 text = HtmlUtil.FixInvalidItalicTags(text);
                 text = ChangeAllLinesItalictoSingleItalic(text);
-                text = Utilities.AutoBreakLine(text, LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle));
+                if (unbreak)
+                    text = Utilities.UnbreakLine(text);
+                else
+                    text = Utilities.AutoBreakLine(text, LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle));
+
                 currentParagraph.Text = text;
 
                 //display time
@@ -9117,7 +9128,12 @@ namespace Nikse.SubtitleEdit.Forms
                         original.Text = originalTexts.ToString().Replace("  ", " ");
                         original.Text = original.Text.Replace(Environment.NewLine, " ");
                         original.Text = ChangeAllLinesItalictoSingleItalic(original.Text);
-                        original.Text = Utilities.AutoBreakLine(original.Text);
+
+                        if (unbreak)
+                            original.Text = Utilities.UnbreakLine(original.Text);
+                        else
+                            original.Text = Utilities.AutoBreakLine(original.Text, LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitleAlternate));
+
                         original.EndTime.TotalMilliseconds = currentParagraph.EndTime.TotalMilliseconds;
                         _subtitleAlternate.Renumber();
                     }
@@ -9170,7 +9186,15 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void MergeWithLineAfter(bool insertDash)
+        public enum BreakMode
+        {
+            Normal,
+            Unbreak,
+            UnbreakNoSpace,
+            Bilangual
+        }
+
+        private void MergeWithLineAfter(bool insertDash, BreakMode breakMode = BreakMode.Normal)
         {
             int firstSelectedIndex = SubtitleListview1.SelectedItems[0].Index;
 
@@ -12008,6 +12032,47 @@ namespace Nikse.SubtitleEdit.Forms
                         MergeSelectedLines();
                 }
             }
+
+
+
+
+            //TODO: Work on new shortcuts - start
+            else if (_mainGeneralMergeSelectedLinesAndUnbreak == e.KeyData)
+            {
+                e.SuppressKeyPress = true;
+                if (SubtitleListview1.SelectedItems.Count == 2)
+                    MergeWithLineAfter(false, BreakMode.Unbreak);
+                else
+                    MergeSelectedLines(true);
+            }
+            else if (_mainGeneralMergeSelectedLinesAndUnbreakNoSpace == e.KeyData)
+            {
+                if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedItems.Count >= 1)
+                {
+                    e.SuppressKeyPress = true;
+                    if (SubtitleListview1.SelectedItems.Count == 2)
+                        MergeWithLineAfter(false, BreakMode.UnbreakNoSpace);
+                    else
+                        MergeSelectedLines(true);
+                }
+            }
+            else if (_mainGeneralMergeSelectedLinesBilingual == e.KeyData)
+            {
+                if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedItems.Count >= 1)
+                {
+                    e.SuppressKeyPress = true;
+                    if (SubtitleListview1.SelectedItems.Count == 2)
+                        MergeWithLineAfter(false);
+                    else
+                        MergeSelectedLines();
+                }
+            }
+            //TODO: Work on new shortcuts - end
+
+
+
+
+
             else if (_mainGeneralMergeSelectedLinesOnlyFirstText == e.KeyData)
             {
                 if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedItems.Count >= 1)
@@ -14486,7 +14551,7 @@ namespace Nikse.SubtitleEdit.Forms
                         SubtitleFormat f = sub.LoadSubtitle(fileName, out enc, null);
                         if (f == null)
                         {
-                            ShowUnknownSubtitle();
+                            ShowUnknownSubtitle(fileName);
                             return;
                         }
                     }
@@ -14560,7 +14625,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (format == null)
                 {
-                    ShowUnknownSubtitle();
+                    ShowUnknownSubtitle(openFileDialog1.FileName);
                     return;
                 }
 
@@ -16631,6 +16696,9 @@ namespace Nikse.SubtitleEdit.Forms
             _mainGeneralGoToFirstSelectedLine = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToFirstSelectedLine);
             _mainGeneralGoToFirstEmptyLine = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextEmptyLine);
             _mainGeneralMergeSelectedLines = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralMergeSelectedLines);
+            _mainGeneralMergeSelectedLinesAndUnbreak = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralMergeSelectedLinesAndUnbreak);
+            _mainGeneralMergeSelectedLinesAndUnbreakNoSpace = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralMergeSelectedLinesAndUnbreakCjk);
+            _mainGeneralMergeSelectedLinesBilingual = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralMergeSelectedLinesBilingual);
             _mainGeneralMergeSelectedLinesOnlyFirstText = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralMergeSelectedLinesOnlyFirstText);
             _mainGeneralToggleTranslationMode = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralToggleTranslationMode);
             _mainGeneralSwitchTranslationAndOriginal = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralSwitchOriginalAndTranslation);
