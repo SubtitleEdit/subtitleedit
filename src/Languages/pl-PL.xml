@@ -1961,7 +1961,10 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <GoToFirstSelectedLine>Przejdź do pierwszej zaznaczonej linii</GoToFirstSelectedLine>
     <GoToNextEmptyLine>Przejdź do następnej pustej linii</GoToNextEmptyLine>
     <MergeSelectedLines>Połącz zaznaczone linie</MergeSelectedLines>
+    <MergeSelectedLinesAndUnbreak>Połącz zaznaczone linie i usuń łamanie linii</MergeSelectedLinesAndUnbreak>
+    <MergeSelectedLinesAndUnbreakCjk>Połącz zaznaczone linie i usuń łamanie linii bez spacji (CJK)</MergeSelectedLinesAndUnbreakCjk>
     <MergeSelectedLinesOnlyFirstText>Połącz zaznaczone linie, zachowaj tylko pierwszy nie pusty tekst</MergeSelectedLinesOnlyFirstText>
+    <MergeSelectedLinesBilingual>Połącz zaznaczone linie dwujęzycznie</MergeSelectedLinesBilingual>
     <ToggleTranslationMode>Przełączanie trybu tłumaczenia</ToggleTranslationMode>
     <SwitchOriginalAndTranslation>Przełącz oryginał i tłumaczenie</SwitchOriginalAndTranslation>
     <MergeOriginalAndTranslation>Połącz oryginał i tłumaczenie</MergeOriginalAndTranslation>
@@ -2238,6 +2241,7 @@ z wbudowanymi informacjami o czcionkach, takimi jak "Advanced Sub Station Alpha"
   <UnknownSubtitle>
     <Title>Nieznany typ napisów</Title>
     <Message>Jeżeli chcesz to naprawić, wyślij email na mailto:niksedk@gmail.com i dołącz kopię pliku napisów.</Message>
+    <ImportAsPlainText>Importuj jako zwykły tekst...</ImportAsPlainText>
   </UnknownSubtitle>
   <VisualSync>
     <Title>Synchronizacja wizualna</Title>
