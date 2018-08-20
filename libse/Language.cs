@@ -1721,8 +1721,6 @@ namespace Nikse.SubtitleEdit.Core
                     SecondsForwardShort = ">>",
                     VideoPosition = "Video position:",
                     TranslateTip = "Tip: Use <alt+arrow up/down> to go to previous/next subtitle",
-                    CreateTip = "Tip: Use <ctrl+arrow left/right> keys",
-                    AdjustTip = "Tip: Use <alt+arrow up/down> to go to previous/next subtitle",
 
                     BeforeChangingTimeInWaveformX = "Before changing time in waveform: {0}",
                     NewTextInsertAtX = "New text inserted at {0}",

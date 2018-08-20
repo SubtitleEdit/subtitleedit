@@ -1598,8 +1598,6 @@
                 public string SecondsForwardShort { get; set; }
                 public string VideoPosition { get; set; }
                 public string TranslateTip { get; set; }
-                public string CreateTip { get; set; }
-                public string AdjustTip { get; set; }
 
                 public string BeforeChangingTimeInWaveformX { get; set; }
                 public string NewTextInsertAtX { get; set; }
