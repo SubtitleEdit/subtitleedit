@@ -290,7 +290,7 @@ namespace Nikse.SubtitleEdit.Forms
                     endMilliseconds += _paragraph.StartTime.TotalMilliseconds;
                     start = new TimeCode(startMilliseconds);
                     end = new TimeCode(endMilliseconds);
-                    TypewriterParagraphs.Add(new Paragraph(start, end, alignment + text + beforeEndTag));
+                    TypewriterParagraphs.Add(new Paragraph(start, end, alignment + text + beforeEndTag) { Extra = _paragraph.Extra });
                     index++;
                 }
                 i++;
@@ -303,7 +303,7 @@ namespace Nikse.SubtitleEdit.Forms
                 endMilliseconds = _paragraph.EndTime.TotalMilliseconds;
                 start = new TimeCode(startMilliseconds);
                 end = new TimeCode(endMilliseconds);
-                TypewriterParagraphs.Add(new Paragraph(start, end, _paragraph.Text));
+                TypewriterParagraphs.Add(new Paragraph(start, end, _paragraph.Text) { Extra = _paragraph.Extra });
             }
             else if (TypewriterParagraphs.Count > 0)
             {
