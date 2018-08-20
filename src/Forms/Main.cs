@@ -1446,7 +1446,6 @@ namespace Nikse.SubtitleEdit.Forms
             buttonForward2.Text = _language.VideoControls.SecondsForwardShort;
             labelVideoPosition.Text = _language.VideoControls.VideoPosition;
             labelVideoPosition2.Text = _language.VideoControls.VideoPosition;
-            labelCreateTip.Text = _language.VideoControls.CreateTip;
 
             buttonSetStartAndOffsetRest.Text = _language.VideoControls.SetstartTimeAndOffsetOfRest;
             buttonSetEndAndGoToNext.Text = _language.VideoControls.SetEndTimeAndGoToNext;
@@ -1458,7 +1457,6 @@ namespace Nikse.SubtitleEdit.Forms
             buttonAdjustSecBack2.Text = _language.VideoControls.SecondsBackShort;
             buttonAdjustSecForward1.Text = _language.VideoControls.SecondsForwardShort;
             buttonAdjustSecForward2.Text = _language.VideoControls.SecondsForwardShort;
-            labelAdjustTip.Text = _language.VideoControls.CreateTip;
 
             // waveform
             var languageWaveform = Configuration.Settings.Language.Waveform;

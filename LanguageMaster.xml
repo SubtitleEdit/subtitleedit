@@ -1206,8 +1206,6 @@ Note: Do check free disk space.</WaveFileMalformed>
       <SecondsForwardShort>&gt;&gt;</SecondsForwardShort>
       <VideoPosition>Video position:</VideoPosition>
       <TranslateTip>Tip: Use &lt;alt+arrow up/down&gt; to go to previous/next subtitle</TranslateTip>
-      <CreateTip>Tip: Use &lt;ctrl+arrow left/right&gt; keys</CreateTip>
-      <AdjustTip>Tip: Use &lt;alt+arrow up/down&gt; to go to previous/next subtitle</AdjustTip>
       <BeforeChangingTimeInWaveformX>Before changing time in waveform: {0}</BeforeChangingTimeInWaveformX>
       <NewTextInsertAtX>New text inserted at {0}</NewTextInsertAtX>
       <Center>Center</Center>

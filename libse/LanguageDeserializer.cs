@@ -3997,12 +3997,6 @@ namespace Nikse.SubtitleEdit.Core
                 case "Main/VideoControls/TranslateTip":
                     language.Main.VideoControls.TranslateTip = reader.Value;
                     break;
-                case "Main/VideoControls/CreateTip":
-                    language.Main.VideoControls.CreateTip = reader.Value;
-                    break;
-                case "Main/VideoControls/AdjustTip":
-                    language.Main.VideoControls.AdjustTip = reader.Value;
-                    break;
                 case "Main/VideoControls/BeforeChangingTimeInWaveformX":
                     language.Main.VideoControls.BeforeChangingTimeInWaveformX = reader.Value;
                     break;
