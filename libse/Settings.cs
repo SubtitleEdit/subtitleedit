@@ -1010,6 +1010,7 @@ namespace Nikse.SubtitleEdit.Core
         public string MainVideoOpen { get; set; }
         public string MainVideoClose { get; set; }
         public string MainVideoPause { get; set; }
+        public string MainVideoPlayFromJustBefore { get; set; }        
         public string MainVideoPlayPauseToggle { get; set; }
         public string MainVideoShowHideVideo { get; set; }
         public string MainVideoToggleVideoControls { get; set; }
@@ -1064,7 +1065,6 @@ namespace Nikse.SubtitleEdit.Core
         public string MainTextBoxSelectionToUpper { get; set; }
         public string MainTextBoxToggleAutoDuration { get; set; }
         public string MainCreateInsertSubAtVideoPos { get; set; }
-        public string MainCreatePlayFromJustBefore { get; set; }
         public string MainCreateSetStart { get; set; }
         public string MainCreateSetEnd { get; set; }
         public string MainCreateSetEndAddNewAndGoToNew { get; set; }
@@ -1182,7 +1182,6 @@ namespace Nikse.SubtitleEdit.Core
             MainTextBoxToggleAutoDuration = string.Empty;
             MainToolsBeamer = "Control+Shift+Alt+B";
             MainCreateInsertSubAtVideoPos = string.Empty;
-            MainCreatePlayFromJustBefore = string.Empty;
             MainCreateSetStart = string.Empty;
             MainCreateSetEnd = string.Empty;
             MainCreateSetEndAddNewAndGoToNew = string.Empty;
@@ -2986,6 +2985,9 @@ namespace Nikse.SubtitleEdit.Core
                 subNode = node.SelectSingleNode("MainVideoPause");
                 if (subNode != null)
                     settings.Shortcuts.MainVideoPause = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainVideoPlayFromJustBefore");
+                if (subNode != null)
+                    settings.Shortcuts.MainVideoPlayFromJustBefore = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainVideoPlayPauseToggle");
                 if (subNode != null)
                     settings.Shortcuts.MainVideoPlayPauseToggle = subNode.InnerText;
@@ -3151,9 +3153,6 @@ namespace Nikse.SubtitleEdit.Core
                 subNode = node.SelectSingleNode("MainCreateInsertSubAtVideoPos");
                 if (subNode != null)
                     settings.Shortcuts.MainCreateInsertSubAtVideoPos = subNode.InnerText;
-                subNode = node.SelectSingleNode("MainCreatePlayFromJustBefore");
-                if (subNode != null)
-                    settings.Shortcuts.MainCreatePlayFromJustBefore = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainCreateSetStart");
                 if (subNode != null)
                     settings.Shortcuts.MainCreateSetStart = subNode.InnerText;
@@ -3963,6 +3962,7 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("MainVideoOpen", settings.Shortcuts.MainVideoOpen);
                 textWriter.WriteElementString("MainVideoClose", settings.Shortcuts.MainVideoClose);
                 textWriter.WriteElementString("MainVideoPause", settings.Shortcuts.MainVideoPause);
+                textWriter.WriteElementString("MainVideoPlayFromJustBefore", settings.Shortcuts.MainVideoPlayFromJustBefore);
                 textWriter.WriteElementString("MainVideoPlayPauseToggle", settings.Shortcuts.MainVideoPlayPauseToggle);
                 textWriter.WriteElementString("MainVideoShowHideVideo", settings.Shortcuts.MainVideoShowHideVideo);
                 textWriter.WriteElementString("MainVideoToggleVideoControls", settings.Shortcuts.MainVideoToggleVideoControls);
@@ -4018,7 +4018,6 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("MainTextBoxSelectionToUpper", settings.Shortcuts.MainTextBoxSelectionToUpper);
                 textWriter.WriteElementString("MainTextBoxToggleAutoDuration", settings.Shortcuts.MainTextBoxToggleAutoDuration);
                 textWriter.WriteElementString("MainCreateInsertSubAtVideoPos", settings.Shortcuts.MainCreateInsertSubAtVideoPos);
-                textWriter.WriteElementString("MainCreatePlayFromJustBefore", settings.Shortcuts.MainCreatePlayFromJustBefore);
                 textWriter.WriteElementString("MainCreateSetStart", settings.Shortcuts.MainCreateSetStart);
                 textWriter.WriteElementString("MainCreateSetEnd", settings.Shortcuts.MainCreateSetEnd);
                 textWriter.WriteElementString("MainCreateSetEndAddNewAndGoToNew", settings.Shortcuts.MainCreateSetEndAddNewAndGoToNew);
