@@ -151,6 +151,7 @@ namespace Nikse.SubtitleEdit.Forms
         private Keys _toggleVideoDockUndock = Keys.None;
         private Keys _videoPause = Keys.None;
         private Keys _videoPlayPauseToggle = Keys.None;
+        private Keys _mainVideoPlayFromJustBefore = Keys.None;
         private Keys _video1FrameLeft = Keys.None;
         private Keys _video1FrameRight = Keys.None;
         private Keys _video1FrameLeftWithPlay = Keys.None;
@@ -184,7 +185,6 @@ namespace Nikse.SubtitleEdit.Forms
         private Keys _mainTextBoxSelectionToUpper = Keys.None;
         private Keys _mainTextBoxToggleAutoDuration = Keys.None;
         private Keys _mainCreateInsertSubAtVideoPos = Keys.None;
-        private Keys _mainCreatePlayFromJustBefore = Keys.None;
         private Keys _mainCreateSetStart = Keys.None;
         private Keys _mainCreateSetEnd = Keys.None;
         private Keys _mainCreateStartDownEndUp = Keys.None;
@@ -9080,7 +9080,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var currentParagraph = _subtitle.Paragraphs[firstIndex];
                 string text1 = sb1.ToString().TrimEnd();
                 string text2 = sb2.ToString().TrimEnd();
-                
+
                 currentParagraph.Text = text1 + Environment.NewLine + text2;
 
                 //display time
@@ -12254,6 +12254,11 @@ namespace Nikse.SubtitleEdit.Forms
                     e.Handled = true;
                 }
             }
+            else if (_mainVideoPlayFromJustBefore == e.KeyData)
+            {
+                buttonBeforeText_Click(null, null);
+                e.SuppressKeyPress = true;
+            }
             else if (e.Modifiers == (Keys.Control | Keys.Shift) && e.KeyCode == Keys.Right)
             {
                 if (!textBoxListViewText.Focused && !textBoxListViewTextAlternate.Focused)
@@ -12935,7 +12940,7 @@ namespace Nikse.SubtitleEdit.Forms
                     ButtonInsertNewTextClick(null, null);
                     e.SuppressKeyPress = true;
                 }
-                else if ((e.Modifiers == Keys.None && e.KeyCode == Keys.F10) || _mainCreatePlayFromJustBefore == e.KeyData)
+                else if (e.Modifiers == Keys.None && e.KeyCode == Keys.F10)
                 {
                     buttonBeforeText_Click(null, null);
                     e.SuppressKeyPress = true;
@@ -16878,6 +16883,7 @@ namespace Nikse.SubtitleEdit.Forms
             _toggleVideoDockUndock = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoToggleVideoControls);
             _videoPause = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoPause);
             _videoPlayPauseToggle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoPlayPauseToggle);
+            _mainVideoPlayFromJustBefore = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoPlayFromJustBefore);
             _video1FrameLeft = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideo1FrameLeft);
             _video1FrameRight = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideo1FrameRight);
             _video1FrameLeftWithPlay = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideo1FrameLeftWithPlay);
@@ -16941,7 +16947,6 @@ namespace Nikse.SubtitleEdit.Forms
             _mainTextBoxSelectionToUpper = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxSelectionToUpper);
             _mainTextBoxToggleAutoDuration = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxToggleAutoDuration);
             _mainCreateInsertSubAtVideoPos = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainCreateInsertSubAtVideoPos);
-            _mainCreatePlayFromJustBefore = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainCreatePlayFromJustBefore);
             _mainCreateSetStart = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainCreateSetStart);
             _mainCreateSetEnd = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainCreateSetEnd);
             _mainCreateStartDownEndUp = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainCreateStartDownEndUp);
