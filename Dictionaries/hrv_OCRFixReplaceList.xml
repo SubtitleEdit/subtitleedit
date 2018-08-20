@@ -304,6 +304,18 @@
     <Word from="Hakujemo" to="Hakiramo" />
     <Word from="Hakuju" to="Hakiraju" />
     <Word from="hakuju" to="hakiraju" />
+    <Word from="hiljada" to="tisuća" />
+    <Word from="hiljade" to="tisuće" />
+    <Word from="hiljadi" to="tisuća" />
+    <Word from="hiljadom" to="tisućom" />
+    <Word from="hiljadama" to="tisućama" />
+    <Word from="hiljadu" to="tisuću" />
+    <Word from="Hiljada" to="Tisuća" />
+    <Word from="Hiljade" to="Tisuće" />
+    <Word from="Hiljadi" to="Tisuća" />
+    <Word from="Hiljadom" to="Tisućom" />
+    <Word from="Hiljadama" to="Tisućama" />
+    <Word from="Hiljadu" to="Tisuću" />
     <Word from="hoču" to="hoću" />
     <Word from="Hoču" to="Hoću" />
     <Word from="hor" to="zbor" />
@@ -1704,6 +1716,7 @@
     <Word from="Rič" to="Rich" />
     <Word from="Rouz" to="Rose" />
     <Word from="Sejmur" to="Seymour" />
+    <Word from="Sejnt" to="Saint" />
     <Word from="Sendi" to="Sandy" />
     <Word from="Sidnej" to="Sidney" />
     <Word from="Sindi" to="Cindy" />
@@ -1724,6 +1737,8 @@
     <Word from="Tejlor" to="Taylor" />
     <Word from="Vajlder" to="Wilder" />
     <Word from="Valš" to="Walsh" />
+    <Word from="Vankuver" to="Vancouver" />
+    <Word from="Vankuveru" to="Vancouveru" />
     <Word from="Vins" to="Vince" />
     <Word from="Voren" to="Warren" />
     <Word from="Vud" to="Wood" />
@@ -2118,8 +2133,6 @@
     <RegEx find="\bh?istorijsk" replaceWith="povijesn" />
     <RegEx find="\bHistorijsk" replaceWith="Povijesn" />
     <RegEx find="\bIstorijsk" replaceWith="Povijesn" />
-    <RegEx find="\bhiljad([aeiou]|om|ama)\b" replaceWith="tisuć$1" />
-    <RegEx find="\bHiljad([aeiou]|om|ama)\b" replaceWith="Tisuć$1" />
     <RegEx find="hirur" replaceWith="kirur" />
     <RegEx find="Hirur" replaceWith="Kirur" />
     <RegEx find="hleb" replaceWith="kruh" />
@@ -2799,6 +2812,7 @@
     <RegEx find="ampovan" replaceWith="ampiran" />
     <RegEx find="(an|ru|men|mi)tovan" replaceWith="$1tiran" />
     <RegEx find="(?&lt;!gl|[Nn])avić" replaceWith="avit ć" />
+    <RegEx find="apb" replaceWith="aob" />
     <RegEx find="asmj?eš" replaceWith="asmiješ" />
     <RegEx find="asnić" replaceWith="asnit ć" />
     <RegEx find="ašić" replaceWith="ašit ć" />
