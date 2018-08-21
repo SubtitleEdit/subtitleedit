@@ -172,8 +172,6 @@ namespace Nikse.SubtitleEdit.Logic
         {
             Success = false;
             int index = startIndex;
-            if (position < 0)
-                position = 0;
             bool first = true;
             for (var i = startIndex; i >= 0; i--)
             {
