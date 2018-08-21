@@ -124,7 +124,10 @@ namespace Nikse.SubtitleEdit.Forms
             timer1.Stop();
             if (WindowState == FormWindowState.Maximized)
             {
-                _videoPlayerContainer.HideControls();
+                var videoScreen = Screen.FromControl(_videoPlayerContainer);
+                var mainScreen = Screen.FromControl(_mainForm);
+                if (videoScreen.DeviceName == mainScreen.DeviceName)
+                    _videoPlayerContainer.HideControls();
             }
         }
 
