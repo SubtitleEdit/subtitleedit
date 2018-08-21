@@ -4845,7 +4845,8 @@ namespace Nikse.SubtitleEdit.Forms
                     selectedIndex = SubtitleListview1.SelectedItems[0].Index;
 
                 int textBoxStart = tb.SelectionStart;
-                if (_findHelper.SelectedPosition - 1 == tb.SelectionStart && tb.SelectionLength > 0)
+                if (_findHelper.SelectedPosition - 1 == tb.SelectionStart && tb.SelectionLength > 0 ||
+                    _findHelper.FindText.Equals(tb.SelectedText))
                 {
                     textBoxStart = tb.SelectionStart - 1;
                 }
