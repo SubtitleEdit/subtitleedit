@@ -191,16 +191,19 @@ namespace Nikse.SubtitleEdit.Logic
 
                             for (var j = 0; j <= position; j++)
                             {
-                                var t = o.Text.Substring(position - j, j);
-                                int pos = FindPositionInText(t, 0);
-                                if (pos >= 0)
+                                if (position - j >= 0 && position - j + j < o.Text.Length)
                                 {
-                                    pos += position - j;
-                                    MatchInOriginal = true;
-                                    SelectedIndex = index;
-                                    SelectedPosition = pos;
-                                    Success = true;
-                                    return true;
+                                    var t = o.Text.Substring(position - j, j);
+                                    int pos = FindPositionInText(t, 0);
+                                    if (pos >= 0)
+                                    {
+                                        pos += position - j;
+                                        MatchInOriginal = true;
+                                        SelectedIndex = index;
+                                        SelectedPosition = pos;
+                                        Success = true;
+                                        return true;
+                                    }
                                 }
                             }
                         }
@@ -214,23 +217,23 @@ namespace Nikse.SubtitleEdit.Logic
 
                 for (var j = 0; j <= position; j++)
                 {
-                    var t = p.Text.Substring(position - j, j + 1);
-                    int pos = FindPositionInText(t, 0);
-                    if (pos >= 0)
+                    if (position - j >= 0 && position < p.Text.Length)
                     {
-                        pos += position - j;
-                        MatchInOriginal = false;
-                        SelectedIndex = index;
-                        SelectedPosition = pos;
-                        Success = true;
-                        return true;
+                        var t = p.Text.Substring(position - j, j + 1);
+                        int pos = FindPositionInText(t, 0);
+                        if (pos >= 0)
+                        {
+                            pos += position - j;
+                            MatchInOriginal = false;
+                            SelectedIndex = index;
+                            SelectedPosition = pos;
+                            Success = true;
+                            return true;
+                        }
                     }
                 }
                 position = 0;
-
-
                 first = false;
-
                 index--;
             }
             return false;
