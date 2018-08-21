@@ -4768,7 +4768,8 @@ namespace Nikse.SubtitleEdit.Forms
                         selectedIndex = SubtitleListview1.SelectedItems[0].Index;
 
                     int textBoxStart = tb.SelectionStart;
-                    if (_findHelper.SelectedPosition - 1 == tb.SelectionStart && tb.SelectionLength > 0)
+                    if (_findHelper.SelectedPosition - 1 == tb.SelectionStart && tb.SelectionLength > 0 ||
+                        _findHelper.FindText == tb.SelectedText)
                     {
                         textBoxStart = tb.SelectionStart + 1;
                     }
@@ -4826,6 +4827,59 @@ namespace Nikse.SubtitleEdit.Forms
             }
             if (_findHelper != null)
                 _findHelper.InProgress = false;
+        }
+
+        private void FindPrevious()
+        {
+            if (_findHelper == null)
+            {
+                return;
+            }
+
+            _findHelper.InProgress = true;
+            TextBox tb = GetFindRepaceTextBox();
+            if (tabControlSubtitle.SelectedIndex == TabControlListView)
+            {
+                int selectedIndex = -1;
+                if (SubtitleListview1.SelectedItems.Count > 0)
+                    selectedIndex = SubtitleListview1.SelectedItems[0].Index;
+
+                int textBoxStart = tb.SelectionStart;
+                if (_findHelper.SelectedPosition - 1 == tb.SelectionStart && tb.SelectionLength > 0)
+                {
+                    textBoxStart = tb.SelectionStart - 1;
+                }
+
+                if (_findHelper.FindPrevious(_subtitle, _subtitleAlternate, selectedIndex, textBoxStart, Configuration.Settings.General.AllowEditOfOriginalSubtitle))
+                {
+                    tb = GetFindRepaceTextBox();
+                    SubtitleListview1.SelectIndexAndEnsureVisible(_findHelper.SelectedIndex, true);
+                    ShowStatus(string.Format(_language.XFoundAtLineNumberY, _findHelper.FindText, _findHelper.SelectedIndex + 1));
+                    tb.Focus();
+                    tb.SelectionStart = _findHelper.SelectedPosition;
+                    tb.SelectionLength = _findHelper.FindTextLength;
+                    _findHelper.SelectedPosition--;
+                }
+                else
+                {
+                    ShowStatus(string.Format(_language.XNotFound, _findHelper.FindText));
+                }
+            }
+            else if (tabControlSubtitle.SelectedIndex == TabControlSourceView)
+            {
+                if (_findHelper.FindPrevious(textBoxSource.Text, textBoxSource.SelectionStart))
+                {
+                    textBoxSource.SelectionStart = _findHelper.SelectedIndex;
+                    textBoxSource.SelectionLength = _findHelper.FindTextLength;
+                    textBoxSource.ScrollToCaret();
+                    ShowStatus(string.Format(_language.XFoundAtLineNumberY, _findHelper.FindText, textBoxSource.GetLineFromCharIndex(textBoxSource.SelectionStart)));
+                }
+                else
+                {
+                    ShowStatus(string.Format(_language.XNotFound, _findHelper.FindText));
+                }
+            }
+            _findHelper.InProgress = false;
         }
 
         private void ToolStripButtonReplaceClick(object sender, EventArgs e)
@@ -12790,6 +12844,11 @@ namespace Nikse.SubtitleEdit.Forms
                     RefreshSelectedParagraph();
                     e.SuppressKeyPress = true;
                 }
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyCode == Keys.F3 && e.Modifiers == Keys.Shift)
+            {
+                FindPrevious();
                 e.SuppressKeyPress = true;
             }
 

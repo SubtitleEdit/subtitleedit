@@ -142,7 +142,7 @@ namespace Nikse.SubtitleEdit.Logic
                         }
                         position = 0;
                     }
-                    if (index < subtitle.Paragraphs.Count -1)
+                    if (index < subtitle.Paragraphs.Count - 1)
                         MatchInOriginal = false;
 
                     if (originalSubtitle != null && allowEditOfOriginalSubtitle)
@@ -164,6 +164,74 @@ namespace Nikse.SubtitleEdit.Logic
                     first = false;
                 }
                 index++;
+            }
+            return false;
+        }
+
+        public bool FindPrevious(Subtitle subtitle, Subtitle originalSubtitle, int startIndex, int position, bool allowEditOfOriginalSubtitle)
+        {
+            Success = false;
+            int index = startIndex;
+            if (position < 0)
+                position = 0;
+            bool first = true;
+            for (var i = startIndex; i >= 0; i--)
+            {
+                Paragraph p = subtitle.Paragraphs[i];
+
+                if (originalSubtitle != null && allowEditOfOriginalSubtitle)
+                {
+                    if (!first || MatchInOriginal)
+                    {
+                        Paragraph o = Utilities.GetOriginalParagraph(index, p, originalSubtitle.Paragraphs);
+                        if (o != null)
+                        {
+                            if (!first)
+                                position = o.Text.Length - 1;
+
+                            for (var j = 0; j <= position; j++)
+                            {
+                                var t = o.Text.Substring(position - j, j);
+                                int pos = FindPositionInText(t, 0);
+                                if (pos >= 0)
+                                {
+                                    pos += position - j;
+                                    MatchInOriginal = true;
+                                    SelectedIndex = index;
+                                    SelectedPosition = pos;
+                                    Success = true;
+                                    return true;
+                                }
+                            }
+                        }
+                        position = p.Text.Length - 1;
+                    }
+                }
+
+                MatchInOriginal = false;
+                if (!first)
+                    position = p.Text.Length - 1;
+
+                for (var j = 0; j <= position; j++)
+                {
+                    var t = p.Text.Substring(position - j, j + 1);
+                    int pos = FindPositionInText(t, 0);
+                    if (pos >= 0)
+                    {
+                        pos += position - j;
+                        MatchInOriginal = false;
+                        SelectedIndex = index;
+                        SelectedPosition = pos;
+                        Success = true;
+                        return true;
+                    }
+                }
+                position = 0;
+
+
+                first = false;
+
+                index--;
             }
             return false;
         }
@@ -249,6 +317,67 @@ namespace Nikse.SubtitleEdit.Logic
             }
             return false;
         }
+
+        public bool FindPrevious(string text, int startIndex)
+        {
+            Success = false;
+            startIndex--;
+            if (startIndex < text.Length)
+            {
+                if (FindReplaceType.FindType == FindType.RegEx)
+                {
+                    var matches = _regEx.Matches(text.Substring(0, startIndex));
+                    if (matches.Count > 0)
+                    {
+                        string groupName = RegexUtils.GetRegExGroup(_findText);
+                        var last = matches[matches.Count - 1];
+                        if (groupName != null && last.Groups[groupName] != null && last.Groups[groupName].Success)
+                        {
+                            _findTextLength = last.Groups[groupName].Length;
+                            SelectedIndex = last.Groups[groupName].Index;
+                        }
+                        else
+                        {
+                            _findTextLength = last.Length;
+                            SelectedIndex = last.Index;
+                        }
+                        Success = true;
+                    }
+                    return Success;
+                }
+                string searchText = text.Substring(0, startIndex);
+                int pos = -1;
+                var comparison = GetComparison();
+                var idx = searchText.LastIndexOf(_findText, startIndex, comparison);
+                while (idx >= 0)
+                {
+                    if (FindReplaceType.WholeWord)
+                    {
+                        var startOk = idx == 0 || SeparatorChars.Contains(searchText[idx - 1]);
+                        var endOk = idx + _findText.Length == searchText.Length || SeparatorChars.Contains(searchText[idx + _findText.Length]);
+                        if (startOk && endOk)
+                        {
+                            pos = idx;
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        pos = idx;
+                        break;
+                    }
+                    searchText = text.Substring(0, idx);
+                    idx = searchText.LastIndexOf(_findText, comparison);
+                }
+                if (pos >= 0)
+                {
+                    SelectedIndex = pos;
+                    return true;
+                }
+            }
+            return false;
+        }
+
 
         public int FindCount(Subtitle subtitle, bool wholeWord)
         {
