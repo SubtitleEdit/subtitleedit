@@ -4769,7 +4769,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     int textBoxStart = tb.SelectionStart;
                     if (_findHelper.SelectedPosition - 1 == tb.SelectionStart && tb.SelectionLength > 0 ||
-                        _findHelper.FindText == tb.SelectedText)
+                        _findHelper.FindText.Equals(tb.SelectedText, StringComparison.OrdinalIgnoreCase))
                     {
                         textBoxStart = tb.SelectionStart + 1;
                     }
