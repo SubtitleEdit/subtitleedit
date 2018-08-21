@@ -11,6 +11,7 @@
    * Add new setting: "save as..." take file name from
    * Font can be different for subtitle list view / text box
    * Add download of ffmpeg
+   * Add "Shift+F3" for backward search - thx OmrSi/Leon
 * IMPROVED:
    * Update Brazilian translation - thx Igor
    * Update Czech translation - thx Trottel
@@ -37,6 +38,7 @@
    * Improve EBU STL properties regarding "language code"
    * Add "Export" for compare tool - thx Kait
    * Add "Search" in Options -> Settings -> Shortcuts - thx Leon/OmrSi
+   * Add "Search" in "Open subtitle w manual chosen encoding"
 * FIXED:
    * Fix "Add to names list" in OCR spell check - thx daed-alus/Sergiy
    * Fix "Generate scene changes" decimal point issue - thx Max
@@ -76,6 +78,8 @@
    * Fix reset video position after new file - thx OmrSi
    * Fix shortcut "Column, Delete text" - thx OmrSi
    * Fix character count in EBU STL propertie - thx FVonFaschion
+   * Fix style when add subtitle with F9 in create mode - thx OmrSi
+   * Fix typewriter effect with tags - thx OmrSi
 
 
 3.5.6 (27th February 2018)
