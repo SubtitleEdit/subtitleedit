@@ -40,6 +40,7 @@
             this.columnHeaderDate = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.tabControlPlugins = new System.Windows.Forms.TabControl();
             this.tabPageInstalledPlugins = new System.Windows.Forms.TabPage();
+            this.buttonUpdateAll = new System.Windows.Forms.Button();
             this.buttonRemove = new System.Windows.Forms.Button();
             this.listViewInstalledPlugins = new System.Windows.Forms.ListView();
             this.columnHeaderInsName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -47,8 +48,10 @@
             this.columnHeaderInsVersion = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderInsType = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.tabPageGetPlugins = new System.Windows.Forms.TabPage();
+            this.buttonSearchClear = new System.Windows.Forms.Button();
+            this.labelShortcutsSearch = new System.Windows.Forms.Label();
+            this.textBoxSearch = new System.Windows.Forms.TextBox();
             this.labelPleaseWait = new System.Windows.Forms.Label();
-            this.buttonUpdateAll = new System.Windows.Forms.Button();
             this.tabControlPlugins.SuspendLayout();
             this.tabPageInstalledPlugins.SuspendLayout();
             this.tabPageGetPlugins.SuspendLayout();
@@ -57,7 +60,7 @@
             // labelClickDownload
             // 
             this.labelClickDownload.AutoSize = true;
-            this.labelClickDownload.Location = new System.Drawing.Point(13, 45);
+            this.labelClickDownload.Location = new System.Drawing.Point(13, 48);
             this.labelClickDownload.Name = "labelClickDownload";
             this.labelClickDownload.Size = new System.Drawing.Size(181, 13);
             this.labelClickDownload.TabIndex = 23;
@@ -66,7 +69,7 @@
             // buttonDownload
             // 
             this.buttonDownload.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonDownload.Location = new System.Drawing.Point(651, 375);
+            this.buttonDownload.Location = new System.Drawing.Point(680, 435);
             this.buttonDownload.Name = "buttonDownload";
             this.buttonDownload.Size = new System.Drawing.Size(104, 25);
             this.buttonDownload.TabIndex = 22;
@@ -87,10 +90,10 @@
             // 
             this.linkLabelOpenPluginFolder.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.linkLabelOpenPluginFolder.AutoSize = true;
-            this.linkLabelOpenPluginFolder.Location = new System.Drawing.Point(12, 455);
+            this.linkLabelOpenPluginFolder.Location = new System.Drawing.Point(12, 515);
             this.linkLabelOpenPluginFolder.Name = "linkLabelOpenPluginFolder";
             this.linkLabelOpenPluginFolder.Size = new System.Drawing.Size(106, 13);
-            this.linkLabelOpenPluginFolder.TabIndex = 25;
+            this.linkLabelOpenPluginFolder.TabIndex = 98;
             this.linkLabelOpenPluginFolder.TabStop = true;
             this.linkLabelOpenPluginFolder.Text = "Open \'Plug-ins\' folder";
             this.linkLabelOpenPluginFolder.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelOpenDictionaryFolder_LinkClicked);
@@ -99,10 +102,10 @@
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.buttonOK.Location = new System.Drawing.Point(666, 450);
+            this.buttonOK.Location = new System.Drawing.Point(695, 510);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(104, 23);
-            this.buttonOK.TabIndex = 26;
+            this.buttonOK.TabIndex = 99;
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
             // 
@@ -118,11 +121,11 @@
             this.columnHeaderDate});
             this.listViewGetPlugins.FullRowSelect = true;
             this.listViewGetPlugins.HideSelection = false;
-            this.listViewGetPlugins.Location = new System.Drawing.Point(16, 61);
+            this.listViewGetPlugins.Location = new System.Drawing.Point(16, 67);
             this.listViewGetPlugins.MultiSelect = false;
             this.listViewGetPlugins.Name = "listViewGetPlugins";
-            this.listViewGetPlugins.Size = new System.Drawing.Size(738, 308);
-            this.listViewGetPlugins.TabIndex = 27;
+            this.listViewGetPlugins.Size = new System.Drawing.Size(767, 362);
+            this.listViewGetPlugins.TabIndex = 15;
             this.listViewGetPlugins.UseCompatibleStateImageBehavior = false;
             this.listViewGetPlugins.View = System.Windows.Forms.View.Details;
             // 
@@ -156,7 +159,7 @@
             this.tabControlPlugins.Location = new System.Drawing.Point(12, 12);
             this.tabControlPlugins.Name = "tabControlPlugins";
             this.tabControlPlugins.SelectedIndex = 0;
-            this.tabControlPlugins.Size = new System.Drawing.Size(769, 432);
+            this.tabControlPlugins.Size = new System.Drawing.Size(798, 492);
             this.tabControlPlugins.TabIndex = 28;
             // 
             // tabPageInstalledPlugins
@@ -167,15 +170,26 @@
             this.tabPageInstalledPlugins.Location = new System.Drawing.Point(4, 22);
             this.tabPageInstalledPlugins.Name = "tabPageInstalledPlugins";
             this.tabPageInstalledPlugins.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageInstalledPlugins.Size = new System.Drawing.Size(761, 406);
+            this.tabPageInstalledPlugins.Size = new System.Drawing.Size(790, 466);
             this.tabPageInstalledPlugins.TabIndex = 0;
             this.tabPageInstalledPlugins.Text = "Installed plugins";
             this.tabPageInstalledPlugins.UseVisualStyleBackColor = true;
             // 
+            // buttonUpdateAll
+            // 
+            this.buttonUpdateAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonUpdateAll.Location = new System.Drawing.Point(539, 435);
+            this.buttonUpdateAll.Name = "buttonUpdateAll";
+            this.buttonUpdateAll.Size = new System.Drawing.Size(134, 25);
+            this.buttonUpdateAll.TabIndex = 30;
+            this.buttonUpdateAll.Text = "Updata all";
+            this.buttonUpdateAll.UseVisualStyleBackColor = true;
+            this.buttonUpdateAll.Click += new System.EventHandler(this.buttonUpdateAll_Click);
+            // 
             // buttonRemove
             // 
             this.buttonRemove.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonRemove.Location = new System.Drawing.Point(650, 375);
+            this.buttonRemove.Location = new System.Drawing.Point(679, 435);
             this.buttonRemove.Name = "buttonRemove";
             this.buttonRemove.Size = new System.Drawing.Size(104, 25);
             this.buttonRemove.TabIndex = 29;
@@ -198,7 +212,7 @@
             this.listViewInstalledPlugins.Location = new System.Drawing.Point(6, 6);
             this.listViewInstalledPlugins.MultiSelect = false;
             this.listViewInstalledPlugins.Name = "listViewInstalledPlugins";
-            this.listViewInstalledPlugins.Size = new System.Drawing.Size(748, 363);
+            this.listViewInstalledPlugins.Size = new System.Drawing.Size(777, 423);
             this.listViewInstalledPlugins.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.listViewInstalledPlugins.TabIndex = 28;
             this.listViewInstalledPlugins.UseCompatibleStateImageBehavior = false;
@@ -226,6 +240,9 @@
             // 
             // tabPageGetPlugins
             // 
+            this.tabPageGetPlugins.Controls.Add(this.buttonSearchClear);
+            this.tabPageGetPlugins.Controls.Add(this.labelShortcutsSearch);
+            this.tabPageGetPlugins.Controls.Add(this.textBoxSearch);
             this.tabPageGetPlugins.Controls.Add(this.labelPleaseWait);
             this.tabPageGetPlugins.Controls.Add(this.listViewGetPlugins);
             this.tabPageGetPlugins.Controls.Add(this.labelDescription1);
@@ -234,36 +251,56 @@
             this.tabPageGetPlugins.Location = new System.Drawing.Point(4, 22);
             this.tabPageGetPlugins.Name = "tabPageGetPlugins";
             this.tabPageGetPlugins.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageGetPlugins.Size = new System.Drawing.Size(761, 406);
+            this.tabPageGetPlugins.Size = new System.Drawing.Size(790, 466);
             this.tabPageGetPlugins.TabIndex = 1;
             this.tabPageGetPlugins.Text = "Get plugins";
             this.tabPageGetPlugins.UseVisualStyleBackColor = true;
             // 
+            // buttonSearchClear
+            // 
+            this.buttonSearchClear.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonSearchClear.Enabled = false;
+            this.buttonSearchClear.Location = new System.Drawing.Point(672, 38);
+            this.buttonSearchClear.Name = "buttonSearchClear";
+            this.buttonSearchClear.Size = new System.Drawing.Size(111, 23);
+            this.buttonSearchClear.TabIndex = 8;
+            this.buttonSearchClear.Text = "Clear";
+            this.buttonSearchClear.UseVisualStyleBackColor = true;
+            this.buttonSearchClear.Click += new System.EventHandler(this.buttonSearchClear_Click);
+            // 
+            // labelShortcutsSearch
+            // 
+            this.labelShortcutsSearch.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelShortcutsSearch.AutoSize = true;
+            this.labelShortcutsSearch.Location = new System.Drawing.Point(469, 43);
+            this.labelShortcutsSearch.Name = "labelShortcutsSearch";
+            this.labelShortcutsSearch.Size = new System.Drawing.Size(41, 13);
+            this.labelShortcutsSearch.TabIndex = 43;
+            this.labelShortcutsSearch.Text = "Search";
+            // 
+            // textBoxSearch
+            // 
+            this.textBoxSearch.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxSearch.Location = new System.Drawing.Point(515, 40);
+            this.textBoxSearch.Name = "textBoxSearch";
+            this.textBoxSearch.Size = new System.Drawing.Size(151, 20);
+            this.textBoxSearch.TabIndex = 5;
+            this.textBoxSearch.TextChanged += new System.EventHandler(this.textBoxSearch_TextChanged);
+            // 
             // labelPleaseWait
             // 
             this.labelPleaseWait.AutoSize = true;
-            this.labelPleaseWait.Location = new System.Drawing.Point(13, 458);
+            this.labelPleaseWait.Location = new System.Drawing.Point(13, 447);
             this.labelPleaseWait.Name = "labelPleaseWait";
             this.labelPleaseWait.Size = new System.Drawing.Size(70, 13);
             this.labelPleaseWait.TabIndex = 28;
             this.labelPleaseWait.Text = "Please wait...";
             // 
-            // buttonUpdateAll
-            // 
-            this.buttonUpdateAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonUpdateAll.Location = new System.Drawing.Point(510, 375);
-            this.buttonUpdateAll.Name = "buttonUpdateAll";
-            this.buttonUpdateAll.Size = new System.Drawing.Size(134, 25);
-            this.buttonUpdateAll.TabIndex = 30;
-            this.buttonUpdateAll.Text = "Updata all";
-            this.buttonUpdateAll.UseVisualStyleBackColor = true;
-            this.buttonUpdateAll.Click += new System.EventHandler(this.buttonUpdateAll_Click);
-            // 
             // PluginsGet
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(782, 482);
+            this.ClientSize = new System.Drawing.Size(811, 542);
             this.Controls.Add(this.tabControlPlugins);
             this.Controls.Add(this.linkLabelOpenPluginFolder);
             this.Controls.Add(this.buttonOK);
@@ -309,5 +346,8 @@
         private System.Windows.Forms.TabPage tabPageGetPlugins;
         private System.Windows.Forms.Label labelPleaseWait;
         private System.Windows.Forms.Button buttonUpdateAll;
+        private System.Windows.Forms.Button buttonSearchClear;
+        private System.Windows.Forms.Label labelShortcutsSearch;
+        private System.Windows.Forms.TextBox textBoxSearch;
     }
 }

@@ -14,7 +14,18 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class PluginsGet : Form
     {
-        private readonly XmlDocument _pluginDoc = new XmlDocument();
+
+        public class PluginInfoItem
+        {
+            public string Version { get; set; }
+            public string Name { get; set; }
+            public string Description { get; set; }
+            public string Date { get; set; }
+            public string Url { get; set; }
+        }
+
+        private List<PluginInfoItem> _downloadList;
+
         private string _downloadedPluginName;
         private readonly LanguageStructure.PluginsGet _language;
         private List<string> _updateAllListUrls;
@@ -55,6 +66,10 @@ namespace Nikse.SubtitleEdit.Forms
             columnHeaderInsVersion.Text = _language.Version;
             columnHeaderInsType.Text = _language.Type;
 
+            labelShortcutsSearch.Text = Configuration.Settings.Language.General.Search;
+            labelShortcutsSearch.Left = textBoxSearch.Left - labelShortcutsSearch.Width - 9;
+            buttonSearchClear.Text = Configuration.Settings.Language.DvdSubRip.Clear;
+
             buttonUpdateAll.Visible = false;
             try
             {
@@ -91,12 +106,14 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 return;
             }
-            _updateAllListUrls = new List<string>();
+
+            var pluginDoc = new XmlDocument();
+            _downloadList = new List<PluginInfoItem>();
             listViewGetPlugins.BeginUpdate();
             try
             {
-                _pluginDoc.LoadXml(e.Result);
-                string[] arr = _pluginDoc.DocumentElement.SelectSingleNode("SubtitleEditVersion").InnerText.Split(new[] { '.', ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                pluginDoc.LoadXml(e.Result);
+                string[] arr = pluginDoc.DocumentElement.SelectSingleNode("SubtitleEditVersion").InnerText.Split(new[] { '.', ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
                 double requiredVersion = Convert.ToDouble(arr[0] + "." + arr[1], CultureInfo.InvariantCulture);
 
                 string[] versionInfo = Utilities.AssemblyVersion.Split('.');
@@ -109,29 +126,9 @@ namespace Nikse.SubtitleEdit.Forms
                     return;
                 }
 
-                foreach (XmlNode node in _pluginDoc.DocumentElement.SelectNodes("Plugin"))
-                {
-                    var item = new ListViewItem(node.SelectSingleNode("Name").InnerText.Trim('.'));
-                    item.SubItems.Add(node.SelectSingleNode("Description").InnerText);
-                    item.SubItems.Add(node.SelectSingleNode("Version").InnerText);
-                    item.SubItems.Add(node.SelectSingleNode("Date").InnerText);
-                    listViewGetPlugins.Items.Add(item);
-
-                    foreach (ListViewItem installed in listViewInstalledPlugins.Items)
-                    {
-                        var installedVer = Convert.ToDouble(installed.SubItems[2].Text.Replace(',', '.').Replace(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, "."), CultureInfo.InvariantCulture);
-                        var currentVer = Convert.ToDouble(node.SelectSingleNode("Version").InnerText.Replace(',', '.').Replace(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, "."), CultureInfo.InvariantCulture);
-
-                        if (string.Compare(installed.Text, node.SelectSingleNode("Name").InnerText.Trim('.'), StringComparison.OrdinalIgnoreCase) == 0 && installedVer < currentVer)
-                        {
-                            //item.BackColor = Color.LightGreen;
-                            installed.BackColor = Color.LightPink;
-                            installed.SubItems[1].Text = _language.UpdateAvailable + " " + installed.SubItems[1].Text;
-                            buttonUpdateAll.Visible = true;
-                            _updateAllListUrls.Add(node.SelectSingleNode("Url").InnerText);
-                        }
-                    }
-                }
+                _updateAllListUrls = new List<string>();
+                LoadAvailablePlugins(pluginDoc);
+                ShowAvailablePlugins();
             }
             catch (Exception exception)
             {
@@ -147,6 +144,68 @@ namespace Nikse.SubtitleEdit.Forms
                 else
                     buttonUpdateAll.Text = Configuration.Settings.Language.PluginsGet.UpdateAll;
                 buttonUpdateAll.Visible = true;
+            }
+        }
+
+        private void LoadAvailablePlugins(XmlDocument doc)
+        {
+            foreach (XmlNode node in doc.DocumentElement.SelectNodes("Plugin"))
+            {
+                var item = new PluginInfoItem
+                {
+                    Name = node.SelectSingleNode("Name").InnerText.Trim('.'),
+                    Description = node.SelectSingleNode("Description").InnerText.Trim('.'),
+                    Version = node.SelectSingleNode("Version").InnerText,
+                    Date = node.SelectSingleNode("Date").InnerText,
+                    Url = node.SelectSingleNode("Url").InnerText,
+                };
+                _downloadList.Add(item);
+
+                foreach (ListViewItem installed in listViewInstalledPlugins.Items)
+                {
+                    var installedVer = Convert.ToDouble(installed.SubItems[2].Text.Replace(',', '.').Replace(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, "."), CultureInfo.InvariantCulture);
+                    var currentVer = Convert.ToDouble(node.SelectSingleNode("Version").InnerText.Replace(',', '.').Replace(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, "."), CultureInfo.InvariantCulture);
+
+                    if (string.Compare(installed.Text, node.SelectSingleNode("Name").InnerText.Trim('.'), StringComparison.OrdinalIgnoreCase) == 0 && installedVer < currentVer)
+                    {
+                        installed.BackColor = Color.LightPink;
+                        installed.SubItems[1].Text = _language.UpdateAvailable + " " + installed.SubItems[1].Text;
+                        buttonUpdateAll.Visible = true;
+                        _updateAllListUrls.Add(item.Url);
+                    }
+                }
+            }
+        }
+
+        private void ShowAvailablePlugins()
+        {
+            bool search = textBoxSearch.Text.Length > 1;
+            string searchText = textBoxSearch.Text;
+            foreach (var plugin in _downloadList)
+            {
+                var item = new ListViewItem(plugin.Name) { Tag = plugin };
+                item.SubItems.Add(plugin.Description);
+                item.SubItems.Add(plugin.Version);
+                item.SubItems.Add(plugin.Date);
+
+                if (!search ||
+                    plugin.Name.Contains(searchText, StringComparison.OrdinalIgnoreCase) ||
+                    plugin.Description.Contains(searchText, StringComparison.OrdinalIgnoreCase) ||
+                    plugin.Version.Contains(searchText, StringComparison.OrdinalIgnoreCase))
+                    listViewGetPlugins.Items.Add(item);
+
+                foreach (ListViewItem installed in listViewInstalledPlugins.Items)
+                {
+                    var installedVer = Convert.ToDouble(installed.SubItems[2].Text.Replace(',', '.').Replace(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, "."), CultureInfo.InvariantCulture);
+                    var currentVer = Convert.ToDouble(plugin.Version.Replace(',', '.').Replace(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, "."), CultureInfo.InvariantCulture);
+
+                    if (string.Compare(installed.Text, plugin.Name.Trim('.'), StringComparison.OrdinalIgnoreCase) == 0 && installedVer < currentVer)
+                    {
+                        installed.BackColor = Color.LightPink;
+                        installed.SubItems[1].Text = _language.UpdateAvailable + " " + installed.SubItems[1].Text;
+                        buttonUpdateAll.Visible = true;
+                    }
+                }
             }
         }
 
@@ -177,7 +236,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     catch (Exception exception)
                     {
-                        MessageBox.Show("Error loading plugin:" + pluginFileName + ": " + exception.Message);
+                        MessageBox.Show($"Error loading plugin:{pluginFileName}: {exception.Message}");
                     }
                 }
             }
@@ -196,9 +255,11 @@ namespace Nikse.SubtitleEdit.Forms
                 Refresh();
                 Cursor = Cursors.WaitCursor;
 
+                var plugin = (PluginInfoItem)listViewGetPlugins.SelectedItems[0].Tag;
+
                 int index = listViewGetPlugins.SelectedItems[0].Index;
-                string url = _pluginDoc.DocumentElement.SelectNodes("Plugin")[index].SelectSingleNode("Url").InnerText;
-                _downloadedPluginName = _pluginDoc.DocumentElement.SelectNodes("Plugin")[index].SelectSingleNode("Name").InnerText;
+                string url = plugin.Url;
+                _downloadedPluginName = plugin.Name;
 
                 var wc = new WebClient { Proxy = Utilities.GetProxy(), CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore) };
                 wc.DownloadDataCompleted += wc_DownloadDataCompleted;
@@ -233,7 +294,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 catch (Exception exception)
                 {
-                    MessageBox.Show("Unable to create plugin folder " + pluginsFolder + ": " + exception.Message);
+                    MessageBox.Show($"Unable to create plugin folder {pluginsFolder}: {exception.Message}");
                     ChangeControlsState(true);
                     Cursor = Cursors.Default;
                     return;
@@ -258,7 +319,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         catch
                         {
-                            MessageBox.Show(string.Format("{0} already exists - unable to overwrite it", fullPath));
+                            MessageBox.Show($"{fullPath} already exists - unable to overwrite it");
                             Cursor = Cursors.Default;
                             ChangeControlsState(true);
                             return;
@@ -306,7 +367,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 catch (Exception exception)
                 {
-                    MessageBox.Show("Unable to create plugin folder " + pluginsFolder + ": " + exception.Message);
+                    MessageBox.Show($"Unable to create plugin folder {pluginsFolder}: {exception.Message}");
                     return;
                 }
             }
@@ -316,7 +377,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             catch (Exception exception)
             {
-                MessageBox.Show("Cannot open folder: " + pluginsFolder + Environment.NewLine + Environment.NewLine + exception.Source + ":" + exception.Message);
+                MessageBox.Show($"Cannot open folder: {pluginsFolder}{Environment.NewLine}{Environment.NewLine}{exception.Source}:{exception.Message}");
             }
         }
 
@@ -389,5 +450,18 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        private void buttonSearchClear_Click(object sender, EventArgs e)
+        {
+            textBoxSearch.Text = string.Empty;
+        }
+
+        private void textBoxSearch_TextChanged(object sender, EventArgs e)
+        {
+            listViewGetPlugins.BeginUpdate();
+            listViewGetPlugins.Items.Clear();
+            ShowAvailablePlugins();
+            listViewGetPlugins.EndUpdate();
+            buttonSearchClear.Enabled = textBoxSearch.Text.Length > 0;
+        }
     }
 }
