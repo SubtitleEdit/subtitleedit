@@ -9014,69 +9014,13 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void MergeBeforeToolStripMenuItemClick(object sender, EventArgs e)
         {
-            string language = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle);
-            if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedItems.Count > 0)
+            if (SubtitleListview1.SelectedItems.Count >= 1)
             {
-                int firstSelectedIndex = SubtitleListview1.SelectedItems[0].Index;
-
-                var prevParagraph = _subtitle.GetParagraphOrDefault(firstSelectedIndex - 1);
-                var currentParagraph = _subtitle.GetParagraphOrDefault(firstSelectedIndex);
-
-                if (prevParagraph != null && currentParagraph != null)
+                var idx = SubtitleListview1.SelectedItems[0].Index;
+                if (idx > 0)
                 {
-                    SubtitleListview1.SelectedIndexChanged -= SubtitleListview1_SelectedIndexChanged;
-                    MakeHistoryForUndo(_language.BeforeMergeLines);
-
-                    if (_subtitleAlternate != null)
-                    {
-                        var prevOriginal = Utilities.GetOriginalParagraph(firstSelectedIndex, prevParagraph, _subtitleAlternate.Paragraphs);
-                        var currentOriginal = Utilities.GetOriginalParagraph(firstSelectedIndex + 1, currentParagraph, _subtitleAlternate.Paragraphs);
-
-                        if (currentOriginal != null)
-                        {
-                            if (prevOriginal == null)
-                            {
-                                currentOriginal.StartTime = prevParagraph.StartTime;
-                                currentOriginal.EndTime = currentParagraph.EndTime;
-                            }
-                            else
-                            {
-                                prevOriginal.Text = prevOriginal.Text.Replace(Environment.NewLine, " ");
-                                prevOriginal.Text += Environment.NewLine + currentOriginal.Text.Replace(Environment.NewLine, " ");
-                                prevOriginal.Text = ChangeAllLinesItalictoSingleItalic(prevOriginal.Text);
-                                prevOriginal.Text = Utilities.AutoBreakLine(prevOriginal.Text);
-                                prevOriginal.EndTime = currentOriginal.EndTime;
-                                _subtitleAlternate.Paragraphs.Remove(currentOriginal);
-                            }
-                            _subtitleAlternate.Renumber();
-                        }
-                    }
-
-                    prevParagraph.Text = prevParagraph.Text.Replace(Environment.NewLine, " ");
-                    prevParagraph.Text += Environment.NewLine + currentParagraph.Text.Replace(Environment.NewLine, " ");
-                    prevParagraph.Text = Utilities.AutoBreakLine(prevParagraph.Text, language);
-
-                    prevParagraph.EndTime.TotalMilliseconds = currentParagraph.EndTime.TotalMilliseconds;
-
-                    if (_networkSession != null)
-                    {
-                        _networkSession.TimerStop();
-                        var deleteIndices = new List<int>();
-                        deleteIndices.Add(_subtitle.GetIndex(currentParagraph));
-                        NetworkGetSendUpdates(deleteIndices, 0, null);
-                    }
-                    else
-                    {
-                        _subtitle.Paragraphs.Remove(currentParagraph);
-                        _subtitle.Renumber();
-                        SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
-                        SubtitleListview1.Items[firstSelectedIndex - 1].Selected = true;
-                    }
-                    SubtitleListview1.SelectIndexAndEnsureVisible(firstSelectedIndex - 1, true);
-                    ShowSource();
-                    ShowStatus(_language.LinesMerged);
-                    SubtitleListview1.SelectedIndexChanged += SubtitleListview1_SelectedIndexChanged;
-                    RefreshSelectedParagraph();
+                    SubtitleListview1.SelectIndexAndEnsureVisible(idx - 1, true);
+                    MergeAfterToolStripMenuItemClick(null, null);
                 }
             }
         }
@@ -9478,6 +9422,8 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         currentParagraph.Text = currentParagraph.Text.Replace(Environment.NewLine, " ");
                         currentParagraph.Text += Environment.NewLine + nextParagraph.Text.Replace(Environment.NewLine, " ");
+                        var language = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle);
+                        currentParagraph.Text = Utilities.AutoBreakLine(currentParagraph.Text, language);
                     }
 
                     currentParagraph.Text = ChangeAllLinesItalictoSingleItalic(currentParagraph.Text);
