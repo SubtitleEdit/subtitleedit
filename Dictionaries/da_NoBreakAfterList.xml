@@ -1,10 +1,12 @@
 ﻿<NoBreakAfterList>
-  <Item> at</Item>
-  <Item> der</Item>
-  <Item> en</Item>
-  <Item> er</Item>
-  <Item RegEx="True"> et</Item>
-  <Item> fik</Item>
-  <Item> som</Item>
-  <Item> var</Item>
+  <Item>Dr.</Item>
+  <Item>Dr</Item>
+  <Item>Hr.</Item>
+  <Item>Mr.</Item>
+  <Item>Mr</Item>
+  <Item>Mrs.</Item>
+  <Item>Ms.</Item>
+  <Item>Frk.</Item>
+  <Item>Frk.</Item>
+  <Item>Fru</Item>
 </NoBreakAfterList>
