@@ -1206,8 +1206,6 @@ Command line: {1} {2}
       <SecondsForwardShort>&gt;&gt;</SecondsForwardShort>
       <VideoPosition>视频位置:</VideoPosition>
       <TranslateTip>提示: 使用 &lt;Alt + up/down&gt; 以转到 上一行/下一行</TranslateTip>
-      <CreateTip>提示: 使用 &lt;Ctrl + left/right&gt; 键</CreateTip>
-      <AdjustTip>提示: 使用 &lt;Alt + up/down&gt; 以转到 上一行/下一行</AdjustTip>
       <BeforeChangingTimeInWaveformX>更改波形内的时间之前: {0}</BeforeChangingTimeInWaveformX>
       <NewTextInsertAtX>已在 {0} 处插入新文本</NewTextInsertAtX>
       <Center>居中</Center>
@@ -1721,7 +1719,7 @@ Command line: {1} {2}
     <NetflixQualityCheck>Netfix品质检查</NetflixQualityCheck>
     <SettingsName>设置</SettingsName>
     <Help>帮助</Help>
-    <UnbreakNoSpace>取消断行且不带空格（多用于中日韩等语言）</UnbreakNoSpace>
+    <UnbreakNoSpace>取消断行且不带空格（用于中日韩等语言）</UnbreakNoSpace>
     <FontInUi>用户界面字体</FontInUi>
     <ShowFrameRate>在工具栏显示帧率</ShowFrameRate>
     <DefaultFrameRate>默认帧率</DefaultFrameRate>
@@ -1958,7 +1956,11 @@ Command line: {1} {2}
     <GoToFirstSelectedLine>转到首个所选行</GoToFirstSelectedLine>
     <GoToNextEmptyLine>转到下一个空白行</GoToNextEmptyLine>
     <MergeSelectedLines>合并所选行</MergeSelectedLines>
+    <MergeSelectedLinesAndUnbreak>合并所选行，取消断行</MergeSelectedLinesAndUnbreak>
+    <MergeSelectedLinesAndUnbreakCjk>合并所选行，取消断行且不带空格（用于中日韩等语言）</MergeSelectedLinesAndUnbreakCjk>
     <MergeSelectedLinesOnlyFirstText>合并所选行, 仅保留首个非空文本</MergeSelectedLinesOnlyFirstText>
+    <MergeSelectedLinesBilingual>合并双语字幕</MergeSelectedLinesBilingual>
+    <SplitSelectedLineBilingual>拆分双语字幕</SplitSelectedLineBilingual>
     <ToggleTranslationMode>切换翻译模式</ToggleTranslationMode>
     <SwitchOriginalAndTranslation>切换原文和翻译</SwitchOriginalAndTranslation>
     <MergeOriginalAndTranslation>合并原文和翻译</MergeOriginalAndTranslation>
@@ -2234,6 +2236,7 @@ Command line: {1} {2}
   <UnknownSubtitle>
     <Title>未知的字幕类型</Title>
     <Message>如果您要修复这个问题请发送电子邮件到 mailto:niksedk@gmail.com，并附上该字幕的副本。</Message>
+    <ImportAsPlainText>以纯文本导入...</ImportAsPlainText>
   </UnknownSubtitle>
   <VisualSync>
     <Title>影音对照同步</Title>
