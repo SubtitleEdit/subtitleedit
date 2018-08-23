@@ -334,7 +334,74 @@ namespace Nikse.SubtitleEdit.Core
 
     public class WavePeakGenerator : IDisposable
     {
-        public static string GetPeakWaveFileName(string videoFileName)
+        #region Movie Hasher - hash from OpenSubtitles: http://trac.opensubtitles.org/projects/opensubtitles/wiki/HashSourceCodes
+
+        public static string GetPeakWaveFileName(string videofileName)
+        {
+            var old = GetPeakWaveFileNameOld(videofileName);
+            if (File.Exists(old))
+                return old;
+
+            try
+            {
+                return ToHexadecimal(ComputeMovieHash(videofileName)) + ".wav";
+            }
+            catch
+            {
+                return old;
+            }
+        }
+
+        private static byte[] ComputeMovieHash(string videofileName)
+        {
+            byte[] result;
+            using (Stream input = new FileStream(videofileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            {
+                result = ComputeMovieHash(input);
+            }
+            return result;
+        }
+
+        private static byte[] ComputeMovieHash(Stream input)
+        {
+            long streamsize = input.Length;
+            long lhash = streamsize;
+
+            long i = 0;
+            var buffer = new byte[sizeof(long)];
+            const int c = 65536;
+            while (i < c / sizeof(long) && input.Read(buffer, 0, sizeof(long)) > 0)
+            {
+                i++;
+                lhash += BitConverter.ToInt64(buffer, 0);
+            }
+
+            input.Position = Math.Max(0, streamsize - c);
+            i = 0;
+            while (i < 65536 / sizeof(long) && input.Read(buffer, 0, sizeof(long)) > 0)
+            {
+                i++;
+                lhash += BitConverter.ToInt64(buffer, 0);
+            }
+            input.Close();
+            var result = BitConverter.GetBytes(lhash);
+            Array.Reverse(result);
+            return result;
+        }
+
+        private static string ToHexadecimal(byte[] bytes)
+        {
+            var hexBuilder = new StringBuilder();
+            for (int i = 0; i < bytes.Length; i++)
+            {
+                hexBuilder.Append(bytes[i].ToString("x2"));
+            }
+            return hexBuilder.ToString();
+        }
+
+        #endregion Movie Hasher
+
+        private static string GetPeakWaveFileNameOld(string videoFileName)
         {
             var dir = Configuration.WaveformsDirectory.TrimEnd(Path.DirectorySeparatorChar);
             if (!Directory.Exists(dir))
@@ -358,8 +425,8 @@ namespace Nikse.SubtitleEdit.Core
             }
         }
 
-        private Stream _stream;
-        private WaveHeader _header;
+        private readonly Stream _stream;
+        private readonly WaveHeader _header;
 
         private delegate int ReadSampleDataValue(byte[] data, ref int index);
 
