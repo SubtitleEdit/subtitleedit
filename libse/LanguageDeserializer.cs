@@ -5332,6 +5332,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/MergeSelectedLinesBilingual":
                     language.Settings.MergeSelectedLinesBilingual = reader.Value;
                     break;
+                case "Settings/SplitSelectedLineBilingual":
+                    language.Settings.SplitSelectedLineBilingual = reader.Value;
+                    break;
                 case "Settings/ToggleTranslationMode":
                     language.Settings.ToggleTranslationMode = reader.Value;
                     break;

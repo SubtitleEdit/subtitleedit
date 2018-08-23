@@ -177,6 +177,7 @@ namespace Nikse.SubtitleEdit.Forms
         private Keys _mainUnbreakNoSpace = Keys.None;
         private Keys _mainTextBoxSplitAtCursor = Keys.None;
         private Keys _mainTextBoxSplitAtCursorAndVideoPos = Keys.None;
+        private Keys _mainTextBoxSplitSelectedLineBilingual = Keys.None;
         private Keys _mainTextBoxMoveLastWordDown = Keys.None;
         private Keys _mainTextBoxMoveFirstWordFromNextUp = Keys.None;
         private Keys _mainTextBoxMoveLastWordDownCurrent = Keys.None;
@@ -8217,6 +8218,14 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripMenuItemSplitViaWaveform_Click(null, null);
                 e.SuppressKeyPress = true;
             }
+            else if (_mainTextBoxSplitSelectedLineBilingual == e.KeyData)
+            {
+                if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedItems.Count >= 1 && SubtitleListview1.SelectedItems.Count < 10)
+                {
+                    e.SuppressKeyPress = true;
+                    SplitSelectedLineBilingual();
+                }
+            }
             else if (e.KeyData == _mainTextBoxInsertAfter)
             {
                 InsertAfter();
@@ -8786,43 +8795,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (newParagraph.Text.StartsWith("<i> ", StringComparison.Ordinal))
                     newParagraph.Text = newParagraph.Text.Remove(3, 1);
 
-                double middle = currentParagraph.StartTime.TotalMilliseconds + (currentParagraph.Duration.TotalMilliseconds / 2);
-                if (!string.IsNullOrWhiteSpace(HtmlUtil.RemoveHtmlTags(oldText)))
-                {
-                    var startFactor = (double)HtmlUtil.RemoveHtmlTags(currentParagraph.Text).Length / HtmlUtil.RemoveHtmlTags(oldText).Length;
-                    if (startFactor < 0.25)
-                        startFactor = 0.25;
-                    if (startFactor > 0.75)
-                        startFactor = 0.75;
-                    middle = currentParagraph.StartTime.TotalMilliseconds + (currentParagraph.Duration.TotalMilliseconds * startFactor);
-                }
-
-                if (currentParagraph.StartTime.IsMaxTime && currentParagraph.EndTime.IsMaxTime)
-                {
-                    newParagraph.StartTime.TotalMilliseconds = TimeCode.MaxTimeTotalMilliseconds;
-                    newParagraph.EndTime.TotalMilliseconds = TimeCode.MaxTimeTotalMilliseconds;
-                }
-                else
-                {
-                    if (splitSeconds.HasValue && splitSeconds.Value > (currentParagraph.StartTime.TotalSeconds + 0.2) && splitSeconds.Value < (currentParagraph.EndTime.TotalSeconds - 0.2))
-                        middle = splitSeconds.Value * TimeCode.BaseUnit;
-                    newParagraph.EndTime.TotalMilliseconds = currentParagraph.EndTime.TotalMilliseconds;
-                    currentParagraph.EndTime.TotalMilliseconds = middle;
-                    newParagraph.StartTime.TotalMilliseconds = currentParagraph.EndTime.TotalMilliseconds + 1;
-                    if (Configuration.Settings.General.MinimumMillisecondsBetweenLines > 0)
-                    {
-                        var next = _subtitle.GetParagraphOrDefault(firstSelectedIndex + 1);
-                        if (next == null || next.StartTime.TotalMilliseconds > newParagraph.EndTime.TotalMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines + Configuration.Settings.General.MinimumMillisecondsBetweenLines)
-                        {
-                            newParagraph.StartTime.TotalMilliseconds += Configuration.Settings.General.MinimumMillisecondsBetweenLines;
-                            newParagraph.EndTime.TotalMilliseconds += Configuration.Settings.General.MinimumMillisecondsBetweenLines;
-                        }
-                        else
-                        {
-                            newParagraph.StartTime.TotalMilliseconds += Configuration.Settings.General.MinimumMillisecondsBetweenLines;
-                        }
-                    }
-                }
+                SetSplitTime(splitSeconds, currentParagraph, newParagraph, firstSelectedIndex, oldText);
 
                 if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0)
                 {
@@ -9012,6 +8985,47 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        private void SetSplitTime(double? splitSeconds, Paragraph currentParagraph, Paragraph newParagraph, int firstSelectedIndex, string oldText)
+        {
+            double middle = currentParagraph.StartTime.TotalMilliseconds + (currentParagraph.Duration.TotalMilliseconds / 2);
+            if (!string.IsNullOrWhiteSpace(HtmlUtil.RemoveHtmlTags(oldText)))
+            {
+                var startFactor = (double)HtmlUtil.RemoveHtmlTags(currentParagraph.Text).Length / HtmlUtil.RemoveHtmlTags(oldText).Length;
+                if (startFactor < 0.25)
+                    startFactor = 0.25;
+                if (startFactor > 0.75)
+                    startFactor = 0.75;
+                middle = currentParagraph.StartTime.TotalMilliseconds + (currentParagraph.Duration.TotalMilliseconds * startFactor);
+            }
+
+            if (currentParagraph.StartTime.IsMaxTime && currentParagraph.EndTime.IsMaxTime)
+            {
+                newParagraph.StartTime.TotalMilliseconds = TimeCode.MaxTimeTotalMilliseconds;
+                newParagraph.EndTime.TotalMilliseconds = TimeCode.MaxTimeTotalMilliseconds;
+            }
+            else
+            {
+                if (splitSeconds.HasValue && splitSeconds.Value > (currentParagraph.StartTime.TotalSeconds + 0.2) && splitSeconds.Value < (currentParagraph.EndTime.TotalSeconds - 0.2))
+                    middle = splitSeconds.Value * TimeCode.BaseUnit;
+                newParagraph.EndTime.TotalMilliseconds = currentParagraph.EndTime.TotalMilliseconds;
+                currentParagraph.EndTime.TotalMilliseconds = middle;
+                newParagraph.StartTime.TotalMilliseconds = currentParagraph.EndTime.TotalMilliseconds + 1;
+                if (Configuration.Settings.General.MinimumMillisecondsBetweenLines > 0)
+                {
+                    var next = _subtitle.GetParagraphOrDefault(firstSelectedIndex + 1);
+                    if (next == null || next.StartTime.TotalMilliseconds > newParagraph.EndTime.TotalMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines + Configuration.Settings.General.MinimumMillisecondsBetweenLines)
+                    {
+                        newParagraph.StartTime.TotalMilliseconds += Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                        newParagraph.EndTime.TotalMilliseconds += Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                    }
+                    else
+                    {
+                        newParagraph.StartTime.TotalMilliseconds += Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                    }
+                }
+            }
+        }
+
         private void MergeBeforeToolStripMenuItemClick(object sender, EventArgs e)
         {
             if (SubtitleListview1.SelectedItems.Count >= 1)
@@ -9025,7 +9039,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void MergeSelectedLinesBilangual()
+        private void MergeSelectedLinesBilingual()
         {
             if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedItems.Count > 1)
             {
@@ -9108,6 +9122,45 @@ namespace Nikse.SubtitleEdit.Forms
                 SubtitleListview1.SelectedIndexChanged += SubtitleListview1_SelectedIndexChanged;
                 RefreshSelectedParagraph();
             }
+        }
+
+        private void SplitSelectedLineBilingual()
+        {
+            var idx = FirstSelectedIndex;
+            if (_subtitle.Paragraphs.Count < 1 || idx < 0)
+                return;
+
+            var p = _subtitle.GetParagraphOrDefault(idx);
+            if (p == null)
+                return;
+
+            var tb = textBoxListViewText;
+            var lines = tb.Text.SplitToLines();
+            if (lines.Count != 2 || tb.SelectionLength < 3 || lines[0].Length < 2 || lines[1].Length < 2)
+                return;
+
+            var start = tb.SelectionStart;
+            var end = start + tb.SelectionLength;
+            var indexOfNewLine = tb.Text.IndexOf(Environment.NewLine);
+            if (end < indexOfNewLine || start > indexOfNewLine)
+                return;
+
+            MakeHistoryForUndo(_language.BeforeSplitLine);
+            var oldText = p.Text;
+            string text1 = lines[0].Substring(0, start).Trim() + Environment.NewLine + lines[1].Substring(0, end - indexOfNewLine - 2).Trim();
+            string text2 = lines[0].Remove(0, start).Trim() + Environment.NewLine + lines[1].Remove(0, end - indexOfNewLine - 2).Trim();
+            var newParagraph = new Paragraph(p);
+            newParagraph.NewSection = false;
+            double? splitPos = null;
+            if (!string.IsNullOrEmpty(_videoFileName))
+                splitPos = mediaPlayer.CurrentPosition;
+            SetSplitTime(splitPos, p, newParagraph, idx, oldText);
+            _subtitle.InsertParagraphInCorrectTimeOrder(newParagraph);
+            _subtitleListViewIndex = -1;
+            p.Text = text1;
+            newParagraph.Text = text2;
+            SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+            SubtitleListview1.SelectIndexAndEnsureVisible(idx, true);
         }
 
         private void MergeSelectedLines(BreakMode breakMode = BreakMode.Normal)
@@ -12191,7 +12244,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedItems.Count >= 1 && SubtitleListview1.SelectedItems.Count < 10)
                 {
                     e.SuppressKeyPress = true;
-                    MergeSelectedLinesBilangual();
+                    MergeSelectedLinesBilingual();
                 }
             }
             else if (_mainGeneralMergeSelectedLinesOnlyFirstText == e.KeyData)
@@ -16943,6 +16996,7 @@ namespace Nikse.SubtitleEdit.Forms
             italicToolStripMenuItem1.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxItalic);
             _mainTextBoxSplitAtCursor = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxSplitAtCursor);
             _mainTextBoxSplitAtCursorAndVideoPos = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxSplitAtCursorAndVideoPos);
+            _mainTextBoxSplitSelectedLineBilingual = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxSplitSelectedLineBilingual);
             _mainTextBoxMoveLastWordDown = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxMoveLastWordDown);
             _mainTextBoxMoveFirstWordFromNextUp = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxMoveFirstWordFromNextUp);
             _mainTextBoxMoveLastWordDownCurrent = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxMoveLastWordDownCurrent);

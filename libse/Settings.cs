@@ -1010,7 +1010,7 @@ namespace Nikse.SubtitleEdit.Core
         public string MainVideoOpen { get; set; }
         public string MainVideoClose { get; set; }
         public string MainVideoPause { get; set; }
-        public string MainVideoPlayFromJustBefore { get; set; }        
+        public string MainVideoPlayFromJustBefore { get; set; }
         public string MainVideoPlayPauseToggle { get; set; }
         public string MainVideoShowHideVideo { get; set; }
         public string MainVideoToggleVideoControls { get; set; }
@@ -1057,6 +1057,7 @@ namespace Nikse.SubtitleEdit.Core
         public string MainTextBoxItalic { get; set; }
         public string MainTextBoxSplitAtCursor { get; set; }
         public string MainTextBoxSplitAtCursorAndVideoPos { get; set; }
+        public string MainTextBoxSplitSelectedLineBilingual { get; set; }
         public string MainTextBoxMoveLastWordDown { get; set; }
         public string MainTextBoxMoveFirstWordFromNextUp { get; set; }
         public string MainTextBoxMoveLastWordDownCurrent { get; set; }
@@ -3129,6 +3130,9 @@ namespace Nikse.SubtitleEdit.Core
                 subNode = node.SelectSingleNode("MainTextBoxSplitAtCursorAndVideoPos");
                 if (subNode != null)
                     settings.Shortcuts.MainTextBoxSplitAtCursorAndVideoPos = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainTextBoxSplitSelectedLineBilingual");
+                if (subNode != null)
+                    settings.Shortcuts.MainTextBoxSplitSelectedLineBilingual = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainTextBoxMoveLastWordDown");
                 if (subNode != null)
                     settings.Shortcuts.MainTextBoxMoveLastWordDown = subNode.InnerText;
@@ -4010,6 +4014,7 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("MainTextBoxItalic", settings.Shortcuts.MainTextBoxItalic);
                 textWriter.WriteElementString("MainTextBoxSplitAtCursor", settings.Shortcuts.MainTextBoxSplitAtCursor);
                 textWriter.WriteElementString("MainTextBoxSplitAtCursorAndVideoPos", settings.Shortcuts.MainTextBoxSplitAtCursorAndVideoPos);
+                textWriter.WriteElementString("MainTextBoxSplitSelectedLineBilingual", settings.Shortcuts.MainTextBoxSplitSelectedLineBilingual);
                 textWriter.WriteElementString("MainTextBoxMoveLastWordDown", settings.Shortcuts.MainTextBoxMoveLastWordDown);
                 textWriter.WriteElementString("MainTextBoxMoveFirstWordFromNextUp", settings.Shortcuts.MainTextBoxMoveFirstWordFromNextUp);
                 textWriter.WriteElementString("MainTextBoxMoveLastWordDownCurrent", settings.Shortcuts.MainTextBoxMoveLastWordDownCurrent);

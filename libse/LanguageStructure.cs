@@ -2133,7 +2133,8 @@
             public string MergeSelectedLinesAndUnbreak { get; set; }
             public string MergeSelectedLinesAndUnbreakCjk { get; set; }
             public string MergeSelectedLinesOnlyFirstText { get; set; }
-            public string MergeSelectedLinesBilingual { get; set; }            
+            public string MergeSelectedLinesBilingual { get; set; }
+            public string SplitSelectedLineBilingual { get; set; }
             public string ToggleTranslationMode { get; set; }
             public string SwitchOriginalAndTranslation { get; set; }
             public string MergeOriginalAndTranslation { get; set; }
