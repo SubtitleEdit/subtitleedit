@@ -619,14 +619,15 @@ namespace Nikse.SubtitleEdit.Controls
             return PanelPlayer;
         }
 
-        public void HideControls()
+        public void HideControls(bool hideCursor)
         {
             if (_panelcontrols.Visible)
             {
                 _panelSubtitle.Height = _panelSubtitle.Height + _controlsHeight;
                 _panelcontrols.Visible = false;
             }
-            HideCursor();
+            if (hideCursor)
+                HideCursor();
         }
 
         public void ShowControls()
