@@ -18967,9 +18967,12 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
 
             Configuration.Settings.General.Undocked = true;
-            Configuration.Settings.General.SplitContainerMainSplitterDistance = splitContainerMain.SplitterDistance;
-            Configuration.Settings.General.SplitContainer1SplitterDistance = splitContainer1.SplitterDistance;
-            Configuration.Settings.General.SplitContainerListViewAndTextSplitterDistance = splitContainerListViewAndText.SplitterDistance;
+            if (!_loading)
+            {
+                Configuration.Settings.General.SplitContainerMainSplitterDistance = splitContainerMain.SplitterDistance;
+                Configuration.Settings.General.SplitContainer1SplitterDistance = splitContainer1.SplitterDistance;
+                Configuration.Settings.General.SplitContainerListViewAndTextSplitterDistance = splitContainerListViewAndText.SplitterDistance;
+            }
 
             var top = Math.Max(Top, 0);
             var left = Math.Max(Left, 0);
