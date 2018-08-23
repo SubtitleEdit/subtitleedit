@@ -13729,7 +13729,11 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 if (tmp.Paragraphs.Count > 0)
                 {
-                    Clipboard.SetText(tmp.ToText(new SubRip()));
+                    if (Configuration.Settings.General.CurrentVideoOffsetInMs != 0)
+                    {
+                        tmp.AddTimeToAllParagraphs(TimeSpan.FromMilliseconds(Configuration.Settings.General.CurrentVideoOffsetInMs));
+                    }
+                    Clipboard.SetText(tmp.ToText(new SubRip()).TrimEnd());
                 }
                 e.SuppressKeyPress = true;
             }
@@ -19558,7 +19562,11 @@ namespace Nikse.SubtitleEdit.Forms
             var selectedLines = new Subtitle(_subtitle);
             selectedLines.Paragraphs.Clear();
             foreach (int index in SubtitleListview1.SelectedIndices)
-                selectedLines.Paragraphs.Add(_subtitle.Paragraphs[index]);
+                selectedLines.Paragraphs.Add(new Paragraph(_subtitle.Paragraphs[index]));
+            if (Configuration.Settings.General.CurrentVideoOffsetInMs != 0)
+            {
+                selectedLines.AddTimeToAllParagraphs(TimeSpan.FromMilliseconds(Configuration.Settings.General.CurrentVideoOffsetInMs));
+            }
             Clipboard.SetText(selectedLines.ToText(GetCurrentSubtitleFormat()).TrimEnd());
         }
 
