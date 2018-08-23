@@ -6096,9 +6096,9 @@ namespace Nikse.SubtitleEdit.Forms
                     if (!onlySelectedLines)
                     {
                         ResetHistory();
+                        _fileName = googleTranslate.GetFileNameWithTargetLanguage(oldFileName, _videoFileName, _subtitleAlternate, GetCurrentSubtitleFormat());
                     }
                     RestoreSubtitleListviewIndices();
-                    _fileName = googleTranslate.GetFileNameWithTargetLanguage(oldFileName, _videoFileName, _subtitleAlternate, GetCurrentSubtitleFormat());
                     _converted = true;
                     SetTitle();
                     SetEncoding(Encoding.UTF8);

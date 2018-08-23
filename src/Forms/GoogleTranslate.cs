@@ -1196,7 +1196,8 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     return Path.GetFileNameWithoutExtension(videoFileName) + "." + _targetTwoLetterIsoLanguageName.ToLower() + subtitleFormat.Extension;
                 }
-                else if (!string.IsNullOrEmpty(oldFileName))
+
+                if (!string.IsNullOrEmpty(oldFileName))
                 {
                     var s = Path.GetFileNameWithoutExtension(oldFileName);
                     if (oldSubtitle != null)
