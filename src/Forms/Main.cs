@@ -17587,6 +17587,8 @@ namespace Nikse.SubtitleEdit.Forms
                     buttonOpenVideo_Click(sender, e);
                     if (string.IsNullOrEmpty(_videoFileName))
                         return;
+                    if (audioVisualizer.WavePeaks != null && File.Exists(WavePeakGenerator.GetPeakWaveFileName(_videoFileName)))
+                        return; // waveform already exists and is loaded
                 }
                 mediaPlayer.Pause();
                 using (var addWaveform = new AddWaveform())
