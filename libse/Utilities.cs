@@ -177,6 +177,14 @@ namespace Nikse.SubtitleEdit.Core
                         return false;
                 }
             }
+            else
+            {
+                if (s2.EndsWith(" mr.", StringComparison.OrdinalIgnoreCase) ||
+                    s2.EndsWith(" dr.", StringComparison.OrdinalIgnoreCase))
+                {
+                    return false;
+                }
+            }
 
             if (s2.EndsWith("? -", StringComparison.Ordinal) || s2.EndsWith("! -", StringComparison.Ordinal) || s2.EndsWith(". -", StringComparison.Ordinal))
                 return false;
@@ -206,14 +214,14 @@ namespace Nikse.SubtitleEdit.Core
                 {
                     if (!string.IsNullOrEmpty(node.InnerText))
                     {
-                        if (node.Attributes["RegEx"] != null && node.Attributes["RegEx"].InnerText.Equals("true", StringComparison.OrdinalIgnoreCase))
+                        if (node.Attributes?["RegEx"] != null && node.Attributes["RegEx"].InnerText.Equals("true", StringComparison.OrdinalIgnoreCase))
                         {
                             var r = new Regex(node.InnerText, RegexOptions.Compiled);
                             _lastNoBreakAfterList.Add(new NoBreakAfterItem(r, node.InnerText));
                         }
                         else
                         {
-                            _lastNoBreakAfterList.Add(new NoBreakAfterItem(node.InnerText));
+                            _lastNoBreakAfterList.Add(new NoBreakAfterItem(" " + node.InnerText.TrimStart()));
                         }
                     }
                 }
