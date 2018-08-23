@@ -126,8 +126,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 var videoScreen = Screen.FromControl(_videoPlayerContainer);
                 var mainScreen = Screen.FromControl(_mainForm);
-                if (videoScreen.DeviceName == mainScreen.DeviceName)
-                    _videoPlayerContainer.HideControls();
+                _videoPlayerContainer.HideControls(videoScreen.DeviceName == mainScreen.DeviceName);
             }
         }
 
