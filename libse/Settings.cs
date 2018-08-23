@@ -716,8 +716,8 @@ namespace Nikse.SubtitleEdit.Core
             if (Environment.OSVersion.Version.Major < 6) // 6 == Vista/Win2008Server/Win7
                 SubtitleFontName = "Times New Roman";
 
-            SubtitleFontSize = 8;
-            SubtitleListViewFontSize = 8;
+            SubtitleFontSize = 10;
+            SubtitleListViewFontSize = 10;
             SubtitleFontBold = false;
             SubtitleFontColor = Color.Black;
             SubtitleBackgroundColor = Color.White;
