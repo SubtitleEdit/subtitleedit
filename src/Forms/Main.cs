@@ -1807,35 +1807,42 @@ namespace Nikse.SubtitleEdit.Forms
                 RemoveAlternate(true);
 
                 // try to open via recent files
-                var rfe = Configuration.Settings.RecentFiles.Files.FirstOrDefault(p => p.FileName.Equals(openFileDialog1.FileName, StringComparison.OrdinalIgnoreCase));
-                if (rfe != null)
-                {
-                    OpenSubtitle(rfe.FileName, null, rfe.VideoFileName, rfe.OriginalFileName);
-                    Configuration.Settings.General.CurrentVideoOffsetInMs = rfe.VideoOffsetInMs;
-                    if (rfe.VideoOffsetInMs > 0)
-                    {
-                        _subtitle.AddTimeToAllParagraphs(TimeSpan.FromMilliseconds(-Configuration.Settings.General.CurrentVideoOffsetInMs));
-                        _changeSubtitleToString = _subtitle.GetFastHashCode(GetCurrentEncoding().BodyName);
-                        SubtitleListview1.Fill(_subtitle);
-                    }
-                    GotoSubPosAndPause();
-                    SetRecentIndices(openFileDialog1.FileName);
-                    SubtitleListview1.EndUpdate();
-                    if (!string.IsNullOrEmpty(rfe.VideoFileName))
-                    {
-                        var p = _subtitle.GetParagraphOrDefault(rfe.FirstSelectedIndex);
-                        if (p != null)
-                        {
-                            mediaPlayer.CurrentPosition = p.StartTime.TotalSeconds;
-                        }
-                    }
-                    _openFileDialogOn = false;
+                if (OpenFromRecentFiles(openFileDialog1.FileName))
                     return;
-                }
 
                 OpenSubtitle(openFileDialog1.FileName, null);
             }
             _openFileDialogOn = false;
+        }
+
+        private bool OpenFromRecentFiles(string fileName)
+        {
+            var rfe = Configuration.Settings.RecentFiles.Files.FirstOrDefault(p => p.FileName.Equals(fileName, StringComparison.OrdinalIgnoreCase));
+            if (rfe != null)
+            {
+                OpenSubtitle(rfe.FileName, null, rfe.VideoFileName, rfe.OriginalFileName);
+                Configuration.Settings.General.CurrentVideoOffsetInMs = rfe.VideoOffsetInMs;
+                if (rfe.VideoOffsetInMs > 0)
+                {
+                    _subtitle.AddTimeToAllParagraphs(TimeSpan.FromMilliseconds(-Configuration.Settings.General.CurrentVideoOffsetInMs));
+                    _changeSubtitleToString = _subtitle.GetFastHashCode(GetCurrentEncoding().BodyName);
+                    SubtitleListview1.Fill(_subtitle);
+                }
+                GotoSubPosAndPause();
+                SetRecentIndices(openFileDialog1.FileName);
+                SubtitleListview1.EndUpdate();
+                if (!string.IsNullOrEmpty(rfe.VideoFileName))
+                {
+                    var p = _subtitle.GetParagraphOrDefault(rfe.FirstSelectedIndex);
+                    if (p != null)
+                    {
+                        mediaPlayer.CurrentPosition = p.StartTime.TotalSeconds;
+                    }
+                }
+                _openFileDialogOn = false;
+                return true;
+            }
+            return false;
         }
 
         public double CurrentFrameRate
@@ -11526,7 +11533,8 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (file.Length < Subtitle.MaxFileSize)
                 {
-                    OpenSubtitle(fileName, null);
+                    if (!OpenFromRecentFiles(fileName))
+                        OpenSubtitle(fileName, null);
                 }
                 else if (file.Length < 150000000 && ext == ".sub" && IsVobSubFile(fileName, true)) // max 150 mb
                 {
