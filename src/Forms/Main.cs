@@ -550,7 +550,7 @@ namespace Nikse.SubtitleEdit.Forms
                         Configuration.Settings.RecentFiles.Files.Count > 0)
                 {
                     fileName = Configuration.Settings.RecentFiles.Files[0].FileName;
-                    if (!OpenFromRecentFiles(fileName))
+                    if (!string.IsNullOrEmpty(fileName) && File.Exists(fileName) && !OpenFromRecentFiles(fileName))
                         OpenSubtitle(fileName, null);
                 }
 
