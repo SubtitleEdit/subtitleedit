@@ -500,7 +500,17 @@ namespace Nikse.SubtitleEdit.Forms
                 if (fileName.Length > 0 && File.Exists(fileName))
                 {
                     fileName = Path.GetFullPath(fileName);
-                    OpenSubtitle(fileName, null);
+
+                    if (srcLineNumber < 0)
+                    {
+                        if (!OpenFromRecentFiles(fileName))
+                            OpenSubtitle(fileName, null);
+                    }
+                    else
+                    {
+                        OpenSubtitle(fileName, null);
+                    }
+
                     if (srcLineNumber >= 0 && GetCurrentSubtitleFormat().GetType() == typeof(SubRip) && srcLineNumber < textBoxSource.Lines.Length)
                     {
                         int pos = 0;
@@ -536,25 +546,12 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                     }
                 }
-                else if (Configuration.Settings.General.StartLoadLastFile)
+                else if (Configuration.Settings.General.StartLoadLastFile &&
+                        Configuration.Settings.RecentFiles.Files.Count > 0)
                 {
-                    if (Configuration.Settings.RecentFiles.Files.Count > 0)
-                    {
-                        fileName = Configuration.Settings.RecentFiles.Files[0].FileName;
-                        if (File.Exists(fileName))
-                        {
-                            OpenSubtitle(fileName, null, Configuration.Settings.RecentFiles.Files[0].VideoFileName, Configuration.Settings.RecentFiles.Files[0].OriginalFileName);
-                            SetRecentIndices(fileName);
-                            if (Configuration.Settings.RecentFiles.Files[0].VideoOffsetInMs > 0 && _subtitle != null)
-                            {
-                                Configuration.Settings.General.CurrentVideoOffsetInMs = Configuration.Settings.RecentFiles.Files[0].VideoOffsetInMs;
-                                _subtitle.AddTimeToAllParagraphs(TimeSpan.FromMilliseconds(-Configuration.Settings.General.CurrentVideoOffsetInMs));
-                                _changeSubtitleToString = _subtitle.GetFastHashCode(GetCurrentEncoding().BodyName);
-                                SubtitleListview1.Fill(_subtitle);
-                            }
-                            GotoSubPosAndPause();
-                        }
-                    }
+                    fileName = Configuration.Settings.RecentFiles.Files[0].FileName;
+                    if (!OpenFromRecentFiles(fileName))
+                        OpenSubtitle(fileName, null);
                 }
 
                 // Initialize events etc. for audio waveform
