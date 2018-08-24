@@ -10,15 +10,15 @@ namespace Nikse.SubtitleEdit.Core
     public static class MovieHasher
     {
 
-        public static string GenerateHash(string videofileName)
+        public static string GenerateHash(string videoFileName)
         {
-            return ToHexadecimal(ComputeMovieHash(videofileName));
+            return ToHexadecimal(ComputeMovieHash(videoFileName));
         }
 
-        private static byte[] ComputeMovieHash(string videofileName)
+        private static byte[] ComputeMovieHash(string videoFileName)
         {
             byte[] result;
-            using (Stream input = new FileStream(videofileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            using (Stream input = new FileStream(videoFileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
                 result = ComputeMovieHash(input);
             }
