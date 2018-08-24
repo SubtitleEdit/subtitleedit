@@ -334,7 +334,7 @@ namespace Nikse.SubtitleEdit.Core
 
     public class WavePeakGenerator : IDisposable
     {
-        #region Movie Hasher - hash from OpenSubtitles: http://trac.opensubtitles.org/projects/opensubtitles/wiki/HashSourceCodes
+        #region Movie Hasher - 
 
         public static string GetPeakWaveFileName(string videofileName)
         {
@@ -344,59 +344,17 @@ namespace Nikse.SubtitleEdit.Core
 
             try
             {
-                return ToHexadecimal(ComputeMovieHash(videofileName)) + ".wav";
+                var dir = Configuration.WaveformsDirectory.TrimEnd(Path.DirectorySeparatorChar);
+                if (!Directory.Exists(dir))
+                    Directory.CreateDirectory(dir);
+
+                var wavePeakName = MovieHasher.GenerateHash(videofileName) + ".wav";
+                return Path.Combine(dir, wavePeakName);
             }
             catch
             {
                 return old;
             }
-        }
-
-        private static byte[] ComputeMovieHash(string videofileName)
-        {
-            byte[] result;
-            using (Stream input = new FileStream(videofileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-            {
-                result = ComputeMovieHash(input);
-            }
-            return result;
-        }
-
-        private static byte[] ComputeMovieHash(Stream input)
-        {
-            long streamsize = input.Length;
-            long lhash = streamsize;
-
-            long i = 0;
-            var buffer = new byte[sizeof(long)];
-            const int c = 65536;
-            while (i < c / sizeof(long) && input.Read(buffer, 0, sizeof(long)) > 0)
-            {
-                i++;
-                lhash += BitConverter.ToInt64(buffer, 0);
-            }
-
-            input.Position = Math.Max(0, streamsize - c);
-            i = 0;
-            while (i < 65536 / sizeof(long) && input.Read(buffer, 0, sizeof(long)) > 0)
-            {
-                i++;
-                lhash += BitConverter.ToInt64(buffer, 0);
-            }
-            input.Close();
-            var result = BitConverter.GetBytes(lhash);
-            Array.Reverse(result);
-            return result;
-        }
-
-        private static string ToHexadecimal(byte[] bytes)
-        {
-            var hexBuilder = new StringBuilder();
-            for (int i = 0; i < bytes.Length; i++)
-            {
-                hexBuilder.Append(bytes[i].ToString("x2"));
-            }
-            return hexBuilder.ToString();
         }
 
         #endregion Movie Hasher
@@ -870,6 +828,26 @@ namespace Nikse.SubtitleEdit.Core
             private readonly double[] _magnitude2;
 
             public static string GetSpectrogramFolder(string videoFileName)
+            {
+                var old = GetSpectrogramFolderOld(videoFileName);
+                if (Directory.Exists(old))
+                    return old;
+
+                try
+                {
+                    var dir = Configuration.SpectrogramsDirectory.TrimEnd(Path.DirectorySeparatorChar);
+                    if (!Directory.Exists(dir))
+                        Directory.CreateDirectory(dir);
+
+                    return Path.Combine(dir, MovieHasher.GenerateHash(videoFileName));
+                }
+                catch
+                {
+                    return old;
+                }
+            }
+
+            public static string GetSpectrogramFolderOld(string videoFileName)
             {
                 var dir = Configuration.SpectrogramsDirectory.TrimEnd(Path.DirectorySeparatorChar);
                 if (!Directory.Exists(dir))

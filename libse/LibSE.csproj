@@ -194,6 +194,7 @@
     <Compile Include="LanguageDeserializer.cs" />
     <Compile Include="LanguageStructure.cs" />
     <Compile Include="ManagedBitmap.cs" />
+    <Compile Include="MovieHasher.cs" />
     <Compile Include="MurMurHash3.cs" />
     <Compile Include="NativeMethods.cs" />
     <Compile Include="NetflixQualityCheck\NetflixCheckMaxLineLength.cs" />
