@@ -5,8 +5,7 @@
     <Version>3.5.6</Version>
     <TranslatedBy>Oversat til dansk af Nikse (mailto:nikse.dk@gmail.com)</TranslatedBy>
     <CultureName>da-DK</CultureName>
-    <HelpFile>
-    </HelpFile>
+    <HelpFile></HelpFile>
     <Ok>&amp;OK</Ok>
     <Cancel>&amp;Fortryd</Cancel>
     <Apply>Anvend</Apply>
@@ -55,7 +54,6 @@
     <OverlapNextX>Overlap næste ({0:#,##0.###})</OverlapNextX>
     <Negative>Negativ</Negative>
     <RegularExpressionIsNotValid>Regulært udtryk er ikke gyldigt</RegularExpressionIsNotValid>
-    <SubtitleSaved>Undertekst gemt</SubtitleSaved>
     <CurrentSubtitle>Nuværende undertekst</CurrentSubtitle>
     <OriginalText>Oprindelig tekst</OriginalText>
     <OpenOriginalSubtitleFile>Åbn oprindelige undertekst fil...</OpenOriginalSubtitleFile>
@@ -78,6 +76,7 @@
     <Before>Før</Before>
     <After>Efter</After>
     <Size>Størrelse</Size>
+    <Search>Søg</Search>
   </General>
   <About>
     <Title>Om Subtitle Edit</Title>
@@ -141,13 +140,22 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <AddSeconds>Tilføj sekunder</AddSeconds>
     <SetAsPercent>Set som procent af varighed</SetAsPercent>
     <Note>Bemærk: Visningstid vil ikke overlappe starttidspunkt for næste tekst</Note>
-    <PleaseSelectAValueFromTheDropDownList>Vælg en værdi fra listen</PleaseSelectAValueFromTheDropDownList>
+    <Fixed>Fast</Fixed>
+    <Milliseconds>Millisekunder</Milliseconds>
   </AdjustDisplayDuration>
   <ApplyDurationLimits>
     <Title>Overhold visnings-grænser</Title>
     <FixesAvailable>Mulige rettelser: {0}</FixesAvailable>
     <UnableToFix>Kan ikke rettes: {0}</UnableToFix>
   </ApplyDurationLimits>
+  <AudioToText>
+    <Title>Lyd til tekst</Title>
+    <ExtractingAudioUsingX>Udtræk lyd ved hjælp af {0}...</ExtractingAudioUsingX>
+    <ExtractingTextUsingX>Udtræk tekst fra lyd ved hjælp af {0}...</ExtractingTextUsingX>
+    <ProgessViaXy>Udtræk tekst via {0} fremskridt: {1}%</ProgessViaXy>
+    <ShowLess>Vis mindre ▲</ShowLess>
+    <ShowMore>Vis mere ▼</ShowMore>
+  </AudioToText>
   <AutoBreakUnbreakLines>
     <TitleAutoBreak>Auto ombryd valgte linjer</TitleAutoBreak>
     <TitleUnbreak>Fjern linjeskift i valgte linjer</TitleUnbreak>
@@ -585,8 +593,6 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <FixesFoundX>Rettelser fundet: {0}</FixesFoundX>
     <XFixesApplied>Rettelser udført: {0}</XFixesApplied>
     <NothingToFixBut>Intet at rette, men nogle ting kan forbedres - se log for detailjer</NothingToFixBut>
-    <Continue>Fortsæt</Continue>
-    <ContinueAnyway>Fortsæt alligevel?</ContinueAnyway>
     <UncheckedFixLowercaseIToUppercaseI>"Ret alene små bogstaver 'i' til 'I' (engelsk)" er ikke længere valgt</UncheckedFixLowercaseIToUppercaseI>
     <XIsChangedToUppercase>{0} i'er skiftet til store bogstaver</XIsChangedToUppercase>
     <FixFirstLetterToUppercaseAfterParagraph>Ret første bogstav til stort bogstav efter afsnit</FixFirstLetterToUppercaseAfterParagraph>
@@ -654,7 +660,6 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <Title>Mangler ordbøger?</Title>
     <DescriptionLine1>Subtitle Edit's stavekontrol er baseret på NHunspell, der</DescriptionLine1>
     <DescriptionLine2>bruger ordbøger fra Open Office.</DescriptionLine2>
-    <GetDictionariesHere>Hent ordbøger her:</GetDictionariesHere>
     <ChooseLanguageAndClickDownload>Vælg sprog og klik på download</ChooseLanguageAndClickDownload>
     <OpenDictionariesFolder>Åbn 'Dictionaries' mappen</OpenDictionariesFolder>
     <Download>Download</Download>
@@ -703,13 +708,17 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
   <ImportSceneChanges>
     <Title>Importer sceneskift</Title>
     <OpenTextFile>Åbn tekst fil...</OpenTextFile>
-    <ImportOptions>Importindstillinger</ImportOptions>
+    <Generate>Generer sceneændringer</Generate>
+    <Import>Importer sceneændringer</Import>
     <TextFiles>Tekstfiler</TextFiles>
     <TimeCodes>Tidskoder</TimeCodes>
     <Frames>Rammer</Frames>
     <Seconds>Sekunder</Seconds>
     <Milliseconds>Millisekunder</Milliseconds>
     <GetSceneChangesWithFfmpeg>Generer sceneskift med FFmpeg</GetSceneChangesWithFfmpeg>
+    <Sensitivity>Følsomhed</Sensitivity>
+    <SensitivityDescription>Nedre værdi giver flere sceneændringer</SensitivityDescription>
+    <NoSceneChangesFound>Ingen sceneændringer fundet.</NoSceneChangesFound>
   </ImportSceneChanges>
   <ImportText>
     <Title>Importer tekst</Title>
@@ -1013,7 +1022,7 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
         <CloseVideo>Luk videofil</CloseVideo>
         <SetVideoOffset>Indstil video offset...</SetVideoOffset>
         <SmptTimeMode>SMPTE timing (drop frame)</SmptTimeMode>
-        <ImportSceneChanges>Importer sceneskift...</ImportSceneChanges>
+        <GenerateImportSceneChanges>Generer/importer sceneændringer...</GenerateImportSceneChanges>
         <RemoveSceneChanges>Fjern sceneskift</RemoveSceneChanges>
         <WaveformBatchGenerate>Batch generer bølgeformer...</WaveformBatchGenerate>
         <ShowHideVideo>Vis/skjul video</ShowHideVideo>
@@ -1194,8 +1203,6 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
       <SecondsForwardShort>&gt;&gt;</SecondsForwardShort>
       <VideoPosition>Video position:</VideoPosition>
       <TranslateTip>Tip: Brug &lt;alt+pil op/ned&gt; for at gå til forrige/næste tekst</TranslateTip>
-      <CreateTip>Tip: Brug &lt;ctrl+pil venstre/højre&gt; genveje</CreateTip>
-      <AdjustTip>Tip: Brug &lt;alt+pil op/ned&gt; for at gå til forrige/næste tekst</AdjustTip>
       <BeforeChangingTimeInWaveformX>Før ændring af tid i lyd kurve: {0}</BeforeChangingTimeInWaveformX>
       <NewTextInsertAtX>Ny tekst indsat ved {0}</NewTextInsertAtX>
       <Center>Center</Center>
@@ -1301,7 +1308,6 @@ Fortsæt?</SubtitleAppendPrompt>
     <RedoPerformed>Redo udført</RedoPerformed>
     <NothingToUndo>Intet at fortryde</NothingToUndo>
     <InvalidLanguageNameX>Ugyldigt sprog navn: {0}</InvalidLanguageNameX>
-    <UnableToChangeLanguage>Kunne ikke skifte sprog!</UnableToChangeLanguage>
     <DoNotDisplayMessageAgain>Vis ikke denne meddelelse igen</DoNotDisplayMessageAgain>
     <NumberOfCorrectedWords>Antal rettede ord: {0}</NumberOfCorrectedWords>
     <NumberOfSkippedWords>Antal oversprungne ord: {0}</NumberOfSkippedWords>
@@ -1345,7 +1351,6 @@ Fortsæt?</SubtitleAppendPrompt>
     <SubtitleImportedFromMatroskaFile>Undertekst importeret fra Matroska fil</SubtitleImportedFromMatroskaFile>
     <DropFileXNotAccepted>Drop fil '{0}' ikke accepteret - filen er for stor</DropFileXNotAccepted>
     <DropOnlyOneFile>Du kan kun drag-n-drop en fil</DropOnlyOneFile>
-    <BeforeCreateAdjustLines>Før opret/juster linjer</BeforeCreateAdjustLines>
     <OpenAnsiSubtitle>Åbn ANSI undertekst...</OpenAnsiSubtitle>
     <BeforeChangeCasing>Før ændring af store/små bogstaver</BeforeChangeCasing>
     <CasingCompleteMessageNoNames>Antal af linjer med store/små bogstaver ændret: {0}/{1}</CasingCompleteMessageNoNames>
@@ -1372,7 +1377,6 @@ Fortsæt?</SubtitleAppendPrompt>
     <ShowSelectedLinesXSecondsLinesLater>Vis valgte linjer {0:0.0##} sekunder senere</ShowSelectedLinesXSecondsLinesLater>
     <ShowSelectionAndForwardXSecondsLinesEarlier>Vis valgte linje(r) og fremad {0:0.0##} sekunder tidligere</ShowSelectionAndForwardXSecondsLinesEarlier>
     <ShowSelectionAndForwardXSecondsLinesLater>Vis valgte linje(r) og fremad {0:0.0##} sekunder senere</ShowSelectionAndForwardXSecondsLinesLater>
-    <ShowSelectedLinesEarlierLaterPerformed>Vis tidligere/senere udført på udvalgte linjer</ShowSelectedLinesEarlierLaterPerformed>
     <DoubleWordsViaRegEx>Dobbelt ord via regex {0}</DoubleWordsViaRegEx>
     <BeforeSortX>Før sortering: {0}</BeforeSortX>
     <SortedByX>Sorteret efter: {0}</SortedByX>
@@ -1390,7 +1394,6 @@ Fortsæt?</SubtitleAppendPrompt>
     <OcrReplacePairXNotAdded>'{0} -&gt; {1}' blev IKKE tilføjet til OCR erstat listen</OcrReplacePairXNotAdded>
     <XLinesSelected>{0} linjer valgt</XLinesSelected>
     <UnicodeMusicSymbolsAnsiWarning>Undertekst indeholder unicode tegn. Gemmes i ANSI filformat vil disse gå tabt. Fortsæt?</UnicodeMusicSymbolsAnsiWarning>
-    <UnicodeCharactersAnsiWarning>Undertekst indeholder Unicode-tegn. Ved gem i ANSI filkodning vil disse gå tabt. Fortsæt gem?</UnicodeCharactersAnsiWarning>
     <NegativeTimeWarning>Undertekst indeholder negative tidskoder. Gem?</NegativeTimeWarning>
     <BeforeMergeShortLines>Før fusionere korte linjer</BeforeMergeShortLines>
     <MergedShortLinesX>Antal linjer fusionerede: {0}</MergedShortLinesX>
@@ -1422,10 +1425,6 @@ Fortsæt?</SubtitleAppendPrompt>
     <UserAndAction>Bruger/handling</UserAndAction>
     <NetworkMode>Netværk mode on</NetworkMode>
     <XStartedSessionYAtZ>{0}: Startede session {1} kl. {2}</XStartedSessionYAtZ>
-    <SpellChekingViaWordXLineYOfX>Stavekontrol hjælp af Word {0} - linje {1} / {2}</SpellChekingViaWordXLineYOfX>
-    <UnableToStartWord>Kan ikke starte Microsoft Word</UnableToStartWord>
-    <SpellCheckAbortedXCorrections>Stavekontrol afbrudt. {0} korrektioner blev foretaget.</SpellCheckAbortedXCorrections>
-    <SpellCheckCompletedXCorrections>Stavekontrol færdig. {0} korrektioner blev foretaget.</SpellCheckCompletedXCorrections>
     <OpenOtherSubtitle>Åbne anden undertekst</OpenOtherSubtitle>
     <BeforeToggleDialogDashes>Før skift af dialog tankestreger</BeforeToggleDialogDashes>
     <ExportPlainTextAs>Eksporter almindelig tekst som</ExportPlainTextAs>
@@ -1536,6 +1535,8 @@ Hvis du har redigeret denne fil med Subtitle Edit du måske finde en backup via 
     <RegEx>Regulært udtryk</RegEx>
     <UnequalLines>Ulige linjer</UnequalLines>
     <EqualLines>Lige linjer</EqualLines>
+    <DurationLessThan>Varighed mindre end</DurationLessThan>
+    <DurationGreaterThan>Varighed større end</DurationGreaterThan>
   </ModifySelection>
   <MultipleReplace>
     <Title>Multi søg og erstat</Title>
@@ -1705,6 +1706,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <WordLists>Ordlister</WordLists>
     <SsaStyle>ASS/SSA Style</SsaStyle>
     <Network>Netværk</Network>
+    <Rules>Regler</Rules>
     <ShowToolBarButtons>Vis Værktøjslinjeknapperne</ShowToolBarButtons>
     <New>Ny</New>
     <Open>Åben</Open>
@@ -1718,6 +1720,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <SettingsName>Indstillinger</SettingsName>
     <Help>Hjælp</Help>
     <UnbreakNoSpace>Fjern lineskift uden mellemrum (CJK)</UnbreakNoSpace>
+    <FontInUi>UI-skrifttype</FontInUi>
     <ShowFrameRate>Vis frame rate i værktøjslinjen</ShowFrameRate>
     <DefaultFrameRate>Standard frame rate</DefaultFrameRate>
     <DefaultFileEncoding>Standard filkodningen</DefaultFileEncoding>
@@ -1734,6 +1737,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <SubtitleFontSize>undertekst skriftstørrelse</SubtitleFontSize>
     <SubtitleBold>Fed</SubtitleBold>
     <VideoAutoOpen>Auto-åbn videofil ved åbning af undertekst</VideoAutoOpen>
+    <AllowVolumeBoost>Tillad volumenforøgelse</AllowVolumeBoost>
     <SubtitleCenter>Centrer</SubtitleCenter>
     <SubtitleFontColor>Undertekst skriftfarve</SubtitleFontColor>
     <SubtitleBackgroundColor>Undertekst baggrundsfarve</SubtitleBackgroundColor>
@@ -1745,6 +1749,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <StartInSourceView>Start i kilde visning</StartInSourceView>
     <RemoveBlankLinesWhenOpening>Fjern tomme linjer, når undertekst åbnes</RemoveBlankLinesWhenOpening>
     <ShowLineBreaksAs>Vis linjeskift i listevisning som</ShowLineBreaksAs>
+    <SaveAsFileNameFrom>"Gem som..." bruger filnavn fra</SaveAsFileNameFrom>
     <MainListViewDoubleClickAction>Dobbeltklik på linje i hovedvinduet listevisning starter</MainListViewDoubleClickAction>
     <MainListViewColumnsInfo>Vælg synlige listevisning kolonner</MainListViewColumnsInfo>
     <MainListViewNothing>Ingenting</MainListViewNothing>
@@ -1755,6 +1760,8 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <MainListViewVideoGoToPositionMinusHalfSecAndPause>Gå til video pos - 0,5 sek og pause</MainListViewVideoGoToPositionMinusHalfSecAndPause>
     <MainListViewVideoGoToPositionMinus1SecAndPlay>Gå til video pos - 1 sek og afspil</MainListViewVideoGoToPositionMinus1SecAndPlay>
     <MainListViewEditTextAndPause>Gå at redigere tekstfeltet, og pause på video position</MainListViewEditTextAndPause>
+    <VideoFileName>Videofilnavn</VideoFileName>
+    <ExistingFileName>Eksisterende filnavn</ExistingFileName>
     <AutoBackup>Auto-backup</AutoBackup>
     <AutoBackupEveryMinute>Hvert minut</AutoBackupEveryMinute>
     <AutoBackupEveryFiveMinutes>Hver 5. minut</AutoBackupEveryFiveMinutes>
@@ -1811,6 +1818,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <SpectrogramOneColorGradient>Enkelt farve gradient</SpectrogramOneColorGradient>
     <SpectrogramClassic>Klassisk</SpectrogramClassic>
     <WaveformUseFFmpeg>Benyt FFmpeg til at udtrække lydfiler</WaveformUseFFmpeg>
+    <DownloadFFmpeg>Download FFmpeg</DownloadFFmpeg>
     <WaveformFFmpegPath>Sti til FFmpeg</WaveformFFmpegPath>
     <WaveformBrowseToFFmpeg>Vælg sti stil FFmpeg</WaveformBrowseToFFmpeg>
     <WaveformBrowseToVLC>Gå til VLC portable</WaveformBrowseToVLC>
@@ -1862,10 +1870,12 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <Alt>Alt</Alt>
     <Shift>Shift</Shift>
     <Key>Key</Key>
+    <ListView>Listevisning</ListView>
     <TextBox>Tekstboks</TextBox>
     <UpdateShortcut>Opdater</UpdateShortcut>
     <ToggleDockUndockOfVideoControls>Skift dok/frigør af video kontrol</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Sæt slut, tilføj ny og gå til ny</CreateSetEndAddNewAndGoToNew>
+    <AdjustViaEndAutoStart>Juster via slut-position</AdjustViaEndAutoStart>
     <AdjustViaEndAutoStartAndGoToNext>Juster via slutposition og gå til næste</AdjustViaEndAutoStartAndGoToNext>
     <AdjustSetEndTimeAndGoToNext>Set slut og gå til næste</AdjustSetEndTimeAndGoToNext>
     <AdjustSetStartAutoDurationAndGoToNext>Sæt start, auto varighed og gå til næste</AdjustSetStartAutoDurationAndGoToNext>
@@ -1892,6 +1902,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <GoToNextSubtitleAndFocusVideo>Gå til næste linje og sæt video position</GoToNextSubtitleAndFocusVideo>
     <ToggleFocus>Skift fokus imellem liste visning og undertekst tekstboks</ToggleFocus>
     <ToggleDialogDashes>Toggle dialog tankestreger</ToggleDialogDashes>
+    <ToggleMusicSymbols>Skift musik symboler</ToggleMusicSymbols>
     <Alignment>Justering (valgte linier)</Alignment>
     <CopyTextOnly>Kopier kun tekst til klippe-bord (valgte linier)</CopyTextOnly>
     <CopyTextOnlyFromOriginalToCurrent>Kopier tekst fra original</CopyTextOnlyFromOriginalToCurrent>
@@ -1907,7 +1918,6 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <WaveformPlayNewSelectionEnd>Afspil slutningen af markering</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Spil første valgte undertekst</WaveformPlayFirstSelectedSubtitle>
     <WaveformFocusListView>Fokuser listevisning</WaveformFocusListView>
-    <WaveformGoToNextSubtitle>Gå til næste undertekst (fra video position)</WaveformGoToNextSubtitle>
     <WaveformGoToPreviousSceneChange>Gå til forrige sceneændring</WaveformGoToPreviousSceneChange>
     <WaveformGoToNextSceneChange>Gå til næste sceneskift</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>Toggle sceneskift</WaveformToggleSceneChange>
@@ -1923,6 +1933,8 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <GoForward1Second>Et sekund fremad</GoForward1Second>
     <GoBack5Seconds>Fem sekunder tilbage</GoBack5Seconds>
     <GoForward5Seconds>Fem sekunder frem</GoForward5Seconds>
+    <WaveformGoToPrevSubtitle>Gå til forrige undertekst (fra video position)</WaveformGoToPrevSubtitle>
+    <WaveformGoToNextSubtitle>Gå til næste undertekst (fra video position)</WaveformGoToNextSubtitle>
     <TogglePlayPause>Skift mellem afspil og pause</TogglePlayPause>
     <Pause>Pause</Pause>
     <Fullscreen>Fuldskærm</Fullscreen>
@@ -1933,7 +1945,6 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <CustomSearch3>Oversæt, brugerdefineret søgning 3</CustomSearch3>
     <CustomSearch4>Oversæt, brugerdefineret søgning 4</CustomSearch4>
     <CustomSearch5>Oversæt, brugerdefineret søgning 5</CustomSearch5>
-    <CustomSearch6>Oversæt, brugerdefineret søgning 6</CustomSearch6>
     <SyntaxColoring>Syntaks farvelægning</SyntaxColoring>
     <ListViewSyntaxColoring>Listevisning syntaks farvelægning</ListViewSyntaxColoring>
     <SyntaxColorDurationIfTooSmall>Farve - varighed, hvis for kort</SyntaxColorDurationIfTooSmall>
@@ -1945,7 +1956,11 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <GoToFirstSelectedLine>Gå til første valgte linje</GoToFirstSelectedLine>
     <GoToNextEmptyLine>Gå til næste tomme linje</GoToNextEmptyLine>
     <MergeSelectedLines>Flet markerede linjer</MergeSelectedLines>
+    <MergeSelectedLinesAndUnbreak>Flet udvalgte linjer og fjern linjeskift</MergeSelectedLinesAndUnbreak>
+    <MergeSelectedLinesAndUnbreakCjk>Flet udvalgte linjer og fjern linjeskift uden mellemrum (CJK)</MergeSelectedLinesAndUnbreakCjk>
     <MergeSelectedLinesOnlyFirstText>Flet markerede linjer, beholde første ikke-tomme tekst</MergeSelectedLinesOnlyFirstText>
+    <MergeSelectedLinesBilingual>Flet valgte linjer tosproget</MergeSelectedLinesBilingual>
+    <SplitSelectedLineBilingual>Split valgte linie tosproget</SplitSelectedLineBilingual>
     <ToggleTranslationMode>Toggle oversættelses-tilstand</ToggleTranslationMode>
     <SwitchOriginalAndTranslation>Byt original og oversættelse</SwitchOriginalAndTranslation>
     <MergeOriginalAndTranslation>Flet original og oversættelse</MergeOriginalAndTranslation>
@@ -1955,6 +1970,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
 {0}</ShortcutIsAlreadyDefinedX>
     <ToggleTranslationAndOriginalInPreviews>Skift mellem oversættelse og original i video/audio preview</ToggleTranslationAndOriginalInPreviews>
     <ListViewColumnDelete>Kolonne, slet tekst</ListViewColumnDelete>
+    <ListViewColumnDeleteAndShiftUp>Kolonne, slet tekst og skift op</ListViewColumnDeleteAndShiftUp>
     <ListViewColumnInsert>Column, indsæt tekst</ListViewColumnInsert>
     <ListViewColumnPaste>Column, indsæt fra udklipsholder</ListViewColumnPaste>
     <ListViewColumnTextUp>Kolonne, tekst op</ListViewColumnTextUp>
@@ -1979,6 +1995,9 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <HowToSignUp>Sådan tilmelder du dig</HowToSignUp>
     <GoogleTranslateUrl>Google oversæt url</GoogleTranslateUrl>
     <MicrosoftTranslateApiKey>Nøgle</MicrosoftTranslateApiKey>
+    <FontNote>Bemærk: Disse skrifttypeindstillinger er kun til undertekst Rediger brugergrænsefladen.
+Indstilling af en skrifttype til en undertekst udføres normalt i videospiller, men det kan også gøres ved brug af et undertekstformat med indbygget skriftinformation som f.eks.
+"Advanced Sub Station Alpha" eller via eksport til billedbaserede formater.</FontNote>
   </Settings>
   <SettingsMpv>
     <Title>Indstillinger for MPV</Title>
@@ -1986,6 +2005,11 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <DownloadMpvFailed>Kan ikke downloade MPV - prøv igen senere!</DownloadMpvFailed>
     <DownloadMpvOk>MPV lib blev hentet og er klar til brug.</DownloadMpvOk>
   </SettingsMpv>
+  <SettingsFfmpeg>
+    <Title>Download FFmpeg</Title>
+    <XDownloadFailed>Kan ikke downloade {0} - prøv igen senere!</XDownloadFailed>
+    <XDownloadOk>{0} blev downloadet og er klar til brug.</XDownloadOk>
+  </SettingsFfmpeg>
   <SetVideoOffset>
     <Title>Indstil video offset</Title>
     <Description>Indstil video offset (undertekster bør ikke følge real video tid, men fx +10 timer)</Description>
@@ -2214,6 +2238,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
   <UnknownSubtitle>
     <Title>Ukendt undertekst type</Title>
     <Message>Hvis du ønsker, at denne undertekst type skal kunne indlæses, bedes du sende en mail til mailto: niksedk@gmail.com og vedhæfte en kopi af underteksten.</Message>
+    <ImportAsPlainText>Import som almindelig tekst...</ImportAsPlainText>
   </UnknownSubtitle>
   <VisualSync>
     <Title>Visual synkroniser</Title>
@@ -2289,7 +2314,6 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <SaveAllSubtitleImagesAsBdnXml>Gem alle billeder (png/BDN xml)...</SaveAllSubtitleImagesAsBdnXml>
     <SaveAllSubtitleImagesWithHtml>Gem alle billeder med HTML-indeks...</SaveAllSubtitleImagesWithHtml>
     <XImagesSavedInY>{0} billeder gemt i {1}</XImagesSavedInY>
-    <TryModiForUnknownWords>Prøv Microsoft MODI OCR for ukendte ord</TryModiForUnknownWords>
     <DictionaryX>Ordbog: {0}</DictionaryX>
     <RightToLeft>Højre til venstre</RightToLeft>
     <ShowOnlyForcedSubtitles>Vis kun tvungede (forced) undertekster</ShowOnlyForcedSubtitles>
