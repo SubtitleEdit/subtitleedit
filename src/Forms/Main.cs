@@ -5160,7 +5160,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         if (_findHelper.FindNext(_subtitle, _subtitleAlternate, _findHelper.SelectedIndex, _findHelper.SelectedPosition, Configuration.Settings.General.AllowEditOfOriginalSubtitle))
                         {
-                            if (_findHelper.SelectedIndex >= stopAtIndex)
+                            if (_findHelper.SelectedIndex > stopAtIndex)
                                 break;
 
                             SetTextForFindAndReplace(true, replaceDialog.ReplaceAll);
@@ -5362,7 +5362,7 @@ namespace Nikse.SubtitleEdit.Forms
                         _findHelper.InProgress = false;
                         return;
                     }
-                    if (_findHelper.SelectedIndex >= stopAtIndex)
+                    if (_findHelper.SelectedIndex > stopAtIndex)
                         break;
                 }
 
