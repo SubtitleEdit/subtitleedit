@@ -18,7 +18,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         private Paragraph _paragraph;
         private Paragraph _lastParagraph;
         private ExpectingLine _expecting = ExpectingLine.Number;
-        private static readonly Regex RegexTimeCodes = new Regex(@"^-?\d+:-?\d+:-?\d+:-?\d\d\d\d\s[–-]\s-?\d+:-?\d+:-?\d+:-?\d\d\d\d$", RegexOptions.Compiled);
+        private static readonly Regex RegexTimeCodes = new Regex(@"^-?\d+:-?\d+:-?\d+:-?\d\d\d\d\s[–-]\s-?\d+:-?\d+:-?\d+:-?\d\d\d\d", RegexOptions.Compiled);
 
         public override string Extension => ".txt";
 
@@ -113,6 +113,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     if (TryReadTimeCodesLine(line, _paragraph))
                     {
                         _paragraph.Text = string.Empty;
+                        var match = RegexTimeCodes.Match(line);
+                        if (match.Success)
+                        {
+                            var rest = line.Remove(0, match.Length).Trim();
+                            if (rest.StartsWith("0 "))
+                                rest = rest.Remove(0, 2);
+                            if (rest.Length > 0 && rest != "0" && rest != ":")
+                                _paragraph.Text = rest;
+                        }
                         _expecting = ExpectingLine.Text;
                     }
                     else if (!string.IsNullOrWhiteSpace(line))
@@ -162,8 +171,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private bool TryReadTimeCodesLine(string line, Paragraph paragraph)
         {
-            if (RegexTimeCodes.IsMatch(line))
+            var match = RegexTimeCodes.Match(line);
+            if (match.Success)
             {
+                line = line.Substring(0, match.Length);
                 string[] parts = line.Replace("–", ":").Replace("-", ":").RemoveChar(' ').Split(':', ',');
                 try
                 {
