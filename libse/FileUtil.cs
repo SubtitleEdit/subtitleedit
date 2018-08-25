@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core
 {
@@ -348,7 +349,7 @@ namespace Nikse.SubtitleEdit.Core
                 return false; // too large to be plain text
 
             var enc = LanguageAutoDetect.GetEncodingFromFile(fileName);
-            var s = File.ReadAllText(fileName, enc);
+            var s = ReadAllTextShared(fileName, enc);
 
             int numberCount = 0;
             int letterCount = 0;
@@ -356,7 +357,7 @@ namespace Nikse.SubtitleEdit.Core
 
             for (int i = 0; i < len; i++)
             {
-                char ch = s[i];
+                var ch = s[i];
                 if (char.IsLetter(ch) || " -,.!?[]()\r\n".Contains(ch))
                 {
                     letterCount++;
@@ -374,7 +375,24 @@ namespace Nikse.SubtitleEdit.Core
             {
                 return numberCount < 5 && letterCount > 20;
             }
-            var numberThreshold = len * 0.002 + 2;
+
+            var numberPatternMatches = new Regex(@"\d+[.:,; -]\d+").Matches(s);
+            if (numberPatternMatches.Count > 30)
+                return false; // looks like time codes
+
+            var largeBlocksOfLargeNumbers = new Regex(@"\d{3,8}").Matches(s);
+            if (largeBlocksOfLargeNumbers.Count > 30)
+                return false; // looks like time codes
+            if (len < 1000 && largeBlocksOfLargeNumbers.Count > 10)
+                return false; // looks like time codes
+
+            var partsWithMoreThan100CharsOfNonNumbers = new Regex(@"[^\d]{150,100000}").Matches(s);
+            if (partsWithMoreThan100CharsOfNonNumbers.Count > 10)
+            {
+                return true; // looks like text
+            }
+
+            var numberThreshold = len * 0.015 + 25;
             var letterThreshold = len * 0.8;
             return numberCount < numberThreshold && letterCount > letterThreshold;
         }
