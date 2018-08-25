@@ -1826,7 +1826,7 @@ namespace Nikse.SubtitleEdit.Forms
                     SubtitleListview1.Fill(_subtitle);
                 }
                 GotoSubPosAndPause();
-                SetRecentIndices(openFileDialog1.FileName);
+                SetRecentIndices(fileName);
                 SubtitleListview1.EndUpdate();
                 if (!string.IsNullOrEmpty(rfe.VideoFileName))
                 {
