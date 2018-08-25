@@ -12,6 +12,7 @@
    * Font can be different for subtitle list view / text box
    * Add download of ffmpeg
    * Add "Shift+F3" for backward search - thx OmrSi/Leon
+   * Add shortcuts for bilingual line merge/split
 * IMPROVED:
    * Update Brazilian translation - thx Igor
    * Update Czech translation - thx Trottel
