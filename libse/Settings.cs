@@ -281,7 +281,7 @@ namespace Nikse.SubtitleEdit.Core
             ExportPenLineJoin = "Round";
             ExportFcpImageType = "Bmp";
             ExportFcpPalNtsc = "PAL";
-            ExportLastBorderWidth = 2;
+            ExportLastBorderWidth = 4;
             BridgeGapMilliseconds = 100;
             ExportCustomTemplates = "SubRipÆÆ{number}\r\n{start} --> {end}\r\n{text}\r\n\r\nÆhh:mm:ss,zzzÆ[Do not modify]ÆæMicroDVDÆÆ{{start}}{{end}}{text}\r\nÆffÆ||Æ";
             UseNoLineBreakAfter = false;
