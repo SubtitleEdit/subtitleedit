@@ -1826,8 +1826,8 @@ namespace Nikse.SubtitleEdit.Forms
                     SubtitleListview1.Fill(_subtitle);
                 }
                 GotoSubPosAndPause();
-                SetRecentIndices(fileName);
                 SubtitleListview1.EndUpdate();
+                SetRecentIndices(fileName);
                 if (!string.IsNullOrEmpty(rfe.VideoFileName))
                 {
                     var p = _subtitle.GetParagraphOrDefault(rfe.FirstSelectedIndex);
@@ -3464,15 +3464,6 @@ namespace Nikse.SubtitleEdit.Forms
                         SubtitleListview1.SelectIndexAndEnsureVisible(sIndex, true);
                         _subtitleListViewIndex = -1;
                         SubtitleListview1.SelectedIndexChanged += SubtitleListview1_SelectedIndexChanged;
-                    }
-
-                    int topIndex = x.FirstVisibleIndex;
-                    if (topIndex >= 0 && topIndex < SubtitleListview1.Items.Count)
-                    {
-                        // to fix bug in .net framework we have to set topitem 3 times... wtf!?
-                        SubtitleListview1.TopItem = SubtitleListview1.Items[topIndex];
-                        SubtitleListview1.TopItem = SubtitleListview1.Items[topIndex];
-                        SubtitleListview1.TopItem = SubtitleListview1.Items[topIndex];
                     }
                     RefreshSelectedParagraph();
                     break;
