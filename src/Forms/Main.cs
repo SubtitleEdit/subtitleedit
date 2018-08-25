@@ -13436,6 +13436,10 @@ namespace Nikse.SubtitleEdit.Forms
                 if (string.IsNullOrWhiteSpace(_subtitle.Paragraphs[index].Text))
                 {
                     SubtitleListview1.SelectIndexAndEnsureVisible(index, true);
+                    if (mediaPlayer.VideoPlayer != null)
+                    {
+                        mediaPlayer.VideoPlayer.CurrentPosition = _subtitle.Paragraphs[index].StartTime.TotalSeconds;
+                    }
                     return;
                 }
             }
