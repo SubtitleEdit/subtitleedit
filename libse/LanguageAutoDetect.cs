@@ -152,7 +152,12 @@ namespace Nikse.SubtitleEdit.Core
             "uopšte", "decu", "napred", "porodicu", "zaista", "mestu", "lepa", "takođe", "reč", "telo"
         };
 
-        private static readonly string[] AutoDetectWordsSerbianCyrillic = { "сам", "али", "није", "само", "ово", "како", "добро", "све", "тако", "ће", "могу", "ћу", "зашто", "нешто", "за", "шта", "овде" };
+        private static readonly string[] AutoDetectWordsSerbianCyrillic = 
+        {
+            "сам", "али", "није", "само", "ово", "како", "добро", "све", "тако", "ће", "могу", "ћу",
+            "зашто", "нешто", "за", "шта", "овде", "бити", "чини", "учениче", "побегне", "остати"
+        };
+
         private static readonly string[] AutoDetectWordsIndonesian = { "yang", "tahu", "bisa", "akan", "tahun", "tapi", "dengan", "untuk", "rumah", "dalam", "sudah", "bertemu" };
 
         private static readonly string[] AutoDetectWordsThai =
@@ -831,26 +836,36 @@ namespace Nikse.SubtitleEdit.Core
 
             try
             {
-                Encoding greekEncoding = Encoding.GetEncoding(1253); // Greek
+                var greekEncoding = Encoding.GetEncoding(1253); // Greek
                 if (GetCount(greekEncoding.GetString(buffer), AutoDetectWordsGreek) > 5)
                     return greekEncoding;
 
-                Encoding russianEncoding = Encoding.GetEncoding(1251); // Cyrillic
+                var russianEncoding = Encoding.GetEncoding(1251); // Cyrillic
                 if (GetCount(russianEncoding.GetString(buffer), "что", "быть", "весь", "этот", "один", "такой") > 5) // Russian
                     return russianEncoding;
                 if (GetCount(russianEncoding.GetString(buffer), "Какво", "тук", "може", "Как", "Ваше", "какво") > 5) // Bulgarian
                     return russianEncoding;
+                if (GetCount(russianEncoding.GetString(buffer), AutoDetectWordsSerbianCyrillic) > buffer.Length / 300) // Serbian
+                    return russianEncoding;
+
+                var encoding1250 = Encoding.GetEncoding(1250); //  Central European/Eastern European: Polish, Czech, Slovak, Hungarian, Slovene, Bosnian, Croatian, Serbian (Latin script), Romanian (before 1993 spelling reform) and Albanian
+                if (GetCount(encoding1250.GetString(buffer), AutoDetectWordsCroatianAndSerbian) > buffer.Length / 300)
+                    return encoding1250;
+                if (GetCount(encoding1250.GetString(buffer), AutoDetectWordsCzechAndSlovak) > buffer.Length / 300) 
+                    return encoding1250;
+                if (GetCount(encoding1250.GetString(buffer), AutoDetectWordsPolish) > buffer.Length / 300)
+                    return encoding1250;
 
                 russianEncoding = Encoding.GetEncoding(28595); // Russian
                 if (GetCount(russianEncoding.GetString(buffer), "что", "быть", "весь", "этот", "один", "такой") > 5) // Russian
                     return russianEncoding;
 
-                Encoding thaiEncoding = Encoding.GetEncoding(874); // Thai
+                var thaiEncoding = Encoding.GetEncoding(874); // Thai
                 if (GetCount(thaiEncoding.GetString(buffer), "โอ", "โรเบิร์ต", "วิตตอเรีย", "ดร", "คุณตำรวจ", "ราเชล", "ไม่", "เลดดิส", "พระเจ้า", "เท็ดดี้", "หัวหน้า", "แอนดรูว์") > 5)
                     return thaiEncoding;
 
-                Encoding arabicEncoding = Encoding.GetEncoding(1256); // Arabic
-                Encoding hewbrewEncoding = Encoding.GetEncoding(28598); // Hebrew
+                var arabicEncoding = Encoding.GetEncoding(1256); // Arabic
+                var hewbrewEncoding = Encoding.GetEncoding(28598); // Hebrew
                 if (GetCount(arabicEncoding.GetString(buffer), AutoDetectWordsArabic) > 5)
                 {
                     if (GetCount(hewbrewEncoding.GetString(buffer), AutoDetectWordsHebrew) > 10)

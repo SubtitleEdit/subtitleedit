@@ -5,18 +5,15 @@ using System.Text;
 
 namespace Test.Core
 {
-
     [DeploymentItem("Files")]
     [TestClass]
     public class LanguageAutoDetectTest
     {
-
         private static string GetLanguageCode(string fileName)
         {
             fileName = Path.Combine(Directory.GetCurrentDirectory(), fileName);
             var sub = new Subtitle();
-            Encoding encoding;
-            sub.LoadSubtitle(fileName, out encoding, null);
+            sub.LoadSubtitle(fileName, out _, null);
             return LanguageAutoDetect.AutoDetectGoogleLanguage(sub);
         }
 
@@ -24,15 +21,34 @@ namespace Test.Core
         public void AutoDetectRussian()
         {
             var languageCode = GetLanguageCode("auto_detect_Russian.srt");
-            Assert.AreEqual(languageCode, "ru");
+            Assert.AreEqual("ru", languageCode);
         }
 
         [TestMethod]
         public void AutoDetectDanish()
         {
             var languageCode = GetLanguageCode("auto_detect_Danish.srt");
-            Assert.AreEqual(languageCode, "da");
+            Assert.AreEqual("da", languageCode);
         }
 
+        private static Encoding DetectAnsiEncoding(string fileName)
+        {
+            fileName = Path.Combine(Directory.GetCurrentDirectory(), fileName);
+            return LanguageAutoDetect.DetectAnsiEncoding(FileUtil.ReadAllBytesShared(fileName));
+        }
+
+        [TestMethod]
+        public void AutoDetectCodePage1250()
+        {
+            var encoding = DetectAnsiEncoding("auto_detect_windows-1250.srt");
+            Assert.AreEqual(1250, encoding.CodePage);
+        }
+
+        [TestMethod]
+        public void AutoDetectCodePage1251()
+        {
+            var encoding = DetectAnsiEncoding("auto_detect_windows-1251.srt");
+            Assert.AreEqual(1251, encoding.CodePage);
+        }
     }
 }

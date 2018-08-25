@@ -54,6 +54,9 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             var encoding = LanguageAutoDetect.DetectAnsiEncoding(_fileBuffer);
+            if (_fileBuffer.Length > 10 && _fileBuffer[0] == 0xef && _fileBuffer[1] == 0xbb && _fileBuffer[2] == 0xbf)
+                encoding = Encoding.UTF8;
+
             foreach (var enc in Configuration.AvailableEncodings)
             {
                 var item = new ListViewItem(new[] { enc.CodePage.ToString(), enc.WebName, enc.EncodingName });
