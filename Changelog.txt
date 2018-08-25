@@ -12,6 +12,7 @@
    * Font can be different for subtitle list view / text box
    * Add download of ffmpeg
    * Add "Shift+F3" for backward search - thx OmrSi/Leon
+   * Add shortcuts for bilingual line merge/split
 * IMPROVED:
    * Update Brazilian translation - thx Igor
    * Update Czech translation - thx Trottel
@@ -41,6 +42,7 @@
    * Add "Search" in "Open subtitle w manual chosen encoding"
    * Some improvements of waveform file name - thx OmrSi/Jamakmake
    * Allow up to 2 mb ebu stl sub files - thx Yusuf
+   * Add "Import as plain text" button for unknown subtitle types.
 * FIXED:
    * Fix "Add to names list" in OCR spell check - thx daed-alus/Sergiy
    * Fix "Generate scene changes" decimal point issue - thx Max
