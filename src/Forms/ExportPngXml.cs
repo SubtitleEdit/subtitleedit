@@ -1800,7 +1800,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             if (subtitleListView1.SelectedItems.Count > 0 && _format.HasStyleSupport)
             {
                 Paragraph p = _subtitle.GetParagraphOrDefault(subtitleListView1.SelectedItems[0].Index);
-                if (p != null && _format.GetType() == typeof(AdvancedSubStationAlpha) || _format.GetType() == typeof(SubStationAlpha))
+                if (p != null && (_format.GetType() == typeof(AdvancedSubStationAlpha) || _format.GetType() == typeof(SubStationAlpha)))
                 {
                     if (!string.IsNullOrEmpty(p.Extra))
                     {
