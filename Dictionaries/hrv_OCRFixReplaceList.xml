@@ -868,6 +868,8 @@
     <Word from="platu" to="plaću" />
     <Word from="plačanje" to="plaćanje" />
     <Word from="plačanjem" to="plaćanjem" />
+    <Word from="plačam" to="plaćam" />
+    <Word from="plačaš" to="plaćaš" />
     <Word from="plaćeš" to="plačeš" />
     <Word from="plen" to="plijen" />
     <Word from="Plen" to="Plijen" />
@@ -1684,6 +1686,7 @@
     <Word from="Bridžit" to="Bridget" />
     <Word from="Brižit" to="Brigitte" />
     <Word from="Bruks" to="Brooks" />
+    <Word from="Čarli" to="Charlie" />
     <Word from="Čipova" to="Chipova" />
     <Word from="Dablin" to="Dublin" />
     <Word from="Dablina" to="Dublina" />
@@ -1716,6 +1719,7 @@
     <Word from="Džini" to="Jeanie" />
     <Word from="Džo" to="Joe" />
     <Word from="Džoa" to="Joea" />
+    <Word from="Džoan" to="Joan" />
     <Word from="Džobs" to="Jobs" />
     <Word from="Džobsu" to="Jobsu" />
     <Word from="Džoel" to="Joel" />
@@ -1741,6 +1745,7 @@
     <Word from="Empajer" to="Empire" />
     <Word from="Enđel" to="Angel" />
     <Word from="Endži" to="Angie" />
+    <Word from="Eni" to="Annie" />
     <Word from="Entoni" to="Anthony" />
     <Word from="Ešford" to="Ashford" />
     <Word from="Ešforda" to="Ashforda" />
@@ -1841,6 +1846,7 @@
     <Word from="Orlinsu" to="Orleansu" />
     <Word from="Pem" to="Pam" />
     <Word from="Pejdž" to="Paige" />
+    <Word from="Piter" to="Peter" />
     <Word from="Pole" to="Paule" />
     <Word from="Prinston" to="Princeton" />
     <Word from="Prinstonu" to="Princetonu" />
@@ -2035,6 +2041,7 @@
     <LinePart from="sa njim" to="s njim" />
     <LinePart from="sa njima" to="s njima" />
     <LinePart from="sa njom" to="s njom" />
+    <LinePart from="sa ovim" to="s ovim" />
     <LinePart from="sa tim" to="s tim" />
     <LinePart from="sa tom" to="s tom" />
     <LinePart from="sa tobom" to="s tobom" />
