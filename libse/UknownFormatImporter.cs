@@ -1,6 +1,7 @@
 ﻿using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -33,7 +34,23 @@ namespace Nikse.SubtitleEdit.Core
                 subtitle = ImportTimeCodesInFramesOnSameSeperateLine(lines);
                 if (subtitle.Paragraphs.Count < 2)
                 {
-                    subtitle = ImportTimeCodesInFramesAndTextOnSameLine(lines);
+                    var sameLineSub = ImportTimeCodesInFramesAndTextOnSameLine(lines);
+                    if (sameLineSub.Paragraphs.Count < 10 &&
+                        (sameLineSub.Paragraphs.Count(p => p.Duration.TotalMilliseconds < 0) > 2 ||
+                         sameLineSub.Paragraphs.Count(p => p.Text.Length > 100) > 1))
+                    {
+                        // probably not a subtitle
+                    }
+                    else if (sameLineSub.Paragraphs.Count < 20 &&
+                        (sameLineSub.Paragraphs.Count(p => p.Duration.TotalMilliseconds < 0) > 8 ||
+                         sameLineSub.Paragraphs.Count(p => p.Text.Length > 100) > 5))
+                    {
+                        // probably not a subtitle
+                    }
+                    else
+                    {
+                        subtitle = sameLineSub;
+                    }
                 }
             }
 
@@ -758,9 +775,11 @@ namespace Nikse.SubtitleEdit.Core
                         if (arr.Length == 4)
                         {
                             i += macth.Value.Length;
-                            p = new Paragraph();
-                            p.StartTime = DecodeTime(arr[1].Split(ExpectedSplitChars));
-                            p.EndTime = DecodeTime(arr[3].Split(ExpectedSplitChars));
+                            p = new Paragraph
+                            {
+                                StartTime = DecodeTime(arr[1].Split(ExpectedSplitChars)),
+                                EndTime = DecodeTime(arr[3].Split(ExpectedSplitChars))
+                            };
                             subtitle.Paragraphs.Add(p);
                             continue;
                         }
