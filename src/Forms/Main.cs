@@ -3966,6 +3966,8 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (ContinueNewOrExit())
             {
+                if (Configuration.Settings.General.ShowRecentFiles && !string.IsNullOrEmpty(_fileName))
+                    Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, _videoFileName, _subtitleAlternateFileName, Configuration.Settings.General.CurrentVideoOffsetInMs);
                 MakeHistoryForUndo(_language.BeforeNew);
                 ResetSubtitle(true);
             }
