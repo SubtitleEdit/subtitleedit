@@ -1961,6 +1961,7 @@ can edit in same subtitle file (collaboration)</Information>
     <GoToFirstSelectedLine>Go to first selected line</GoToFirstSelectedLine>
     <GoToNextEmptyLine>Go to next empty line</GoToNextEmptyLine>
     <MergeSelectedLines>Merge selected lines</MergeSelectedLines>
+    <MergeSelectedLinesAndAutoBreak>Merge selected lines and auto-break</MergeSelectedLinesAndAutoBreak>
     <MergeSelectedLinesAndUnbreak>Merge selected lines and unbreak</MergeSelectedLinesAndUnbreak>
     <MergeSelectedLinesAndUnbreakCjk>Merge selected lines and unbreak without space (CJK)</MergeSelectedLinesAndUnbreakCjk>
     <MergeSelectedLinesOnlyFirstText>Merge selected lines, keep only first non-empty text</MergeSelectedLinesOnlyFirstText>

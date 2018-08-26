@@ -5320,6 +5320,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/MergeSelectedLines":
                     language.Settings.MergeSelectedLines = reader.Value;
                     break;
+                case "Settings/MergeSelectedLinesAndAutoBreak":
+                    language.Settings.MergeSelectedLinesAndAutoBreak = reader.Value;
+                    break;
                 case "Settings/MergeSelectedLinesAndUnbreak":
                     language.Settings.MergeSelectedLinesAndUnbreak = reader.Value;
                     break;

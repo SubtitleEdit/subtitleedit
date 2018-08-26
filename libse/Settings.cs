@@ -947,6 +947,7 @@ namespace Nikse.SubtitleEdit.Core
         public string GeneralGoToFirstSelectedLine { get; set; }
         public string GeneralGoToNextEmptyLine { get; set; }
         public string GeneralMergeSelectedLines { get; set; }
+        public string GeneralMergeSelectedLinesAndAutoBreak { get; set; }
         public string GeneralMergeSelectedLinesAndUnbreak { get; set; }
         public string GeneralMergeSelectedLinesAndUnbreakCjk { get; set; }
         public string GeneralMergeSelectedLinesOnlyFirstText { get; set; }
@@ -2806,6 +2807,9 @@ namespace Nikse.SubtitleEdit.Core
                 subNode = node.SelectSingleNode("GeneralMergeSelectedLinesAndUnbreak");
                 if (subNode != null)
                     settings.Shortcuts.GeneralMergeSelectedLinesAndUnbreak = subNode.InnerText;
+                subNode = node.SelectSingleNode("GeneralMergeSelectedLinesAndAutoBreak");
+                if (subNode != null)
+                    settings.Shortcuts.GeneralMergeSelectedLinesAndAutoBreak = subNode.InnerText;
                 subNode = node.SelectSingleNode("GeneralMergeSelectedLinesAndUnbreakCjk");
                 if (subNode != null)
                     settings.Shortcuts.GeneralMergeSelectedLinesAndUnbreakCjk = subNode.InnerText;
@@ -3904,6 +3908,7 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("GeneralGoToFirstSelectedLine", settings.Shortcuts.GeneralGoToFirstSelectedLine);
                 textWriter.WriteElementString("GeneralGoToNextEmptyLine", settings.Shortcuts.GeneralGoToNextEmptyLine);
                 textWriter.WriteElementString("GeneralMergeSelectedLines", settings.Shortcuts.GeneralMergeSelectedLines);
+                textWriter.WriteElementString("GeneralMergeSelectedLinesAndAutoBreak", settings.Shortcuts.GeneralMergeSelectedLinesAndAutoBreak);
                 textWriter.WriteElementString("GeneralMergeSelectedLinesAndUnbreak", settings.Shortcuts.GeneralMergeSelectedLinesAndUnbreak);
                 textWriter.WriteElementString("GeneralMergeSelectedLinesAndUnbreakCjk", settings.Shortcuts.GeneralMergeSelectedLinesAndUnbreakCjk);
                 textWriter.WriteElementString("GeneralMergeSelectedLinesOnlyFirstText", settings.Shortcuts.GeneralMergeSelectedLinesOnlyFirstText);
