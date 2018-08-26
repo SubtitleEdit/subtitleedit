@@ -132,6 +132,7 @@ namespace Nikse.SubtitleEdit.Forms
         private Keys _mainGeneralGoToFirstSelectedLine = Keys.None;
         private Keys _mainGeneralGoToFirstEmptyLine = Keys.None;
         private Keys _mainGeneralMergeSelectedLines = Keys.None;
+        private Keys _mainGeneralMergeSelectedLinesAndAutoBreak = Keys.None;
         private Keys _mainGeneralMergeSelectedLinesAndUnbreak = Keys.None;
         private Keys _mainGeneralMergeSelectedLinesAndUnbreakNoSpace = Keys.None;
         private Keys _mainGeneralMergeSelectedLinesBilingual = Keys.None;
@@ -9341,6 +9342,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         public enum BreakMode
         {
+            AutoBreak,
             Normal,
             Unbreak,
             UnbreakNoSpace
@@ -9466,12 +9468,17 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         currentParagraph.Text = currentParagraph.Text.TrimEnd() + nextParagraph.Text.TrimStart();
                     }
-                    else
+                    else if (breakMode == BreakMode.AutoBreak)
                     {
                         currentParagraph.Text = currentParagraph.Text.Replace(Environment.NewLine, " ");
                         currentParagraph.Text += Environment.NewLine + nextParagraph.Text.Replace(Environment.NewLine, " ");
                         var language = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle);
                         currentParagraph.Text = Utilities.AutoBreakLine(currentParagraph.Text, language);
+                    }
+                    else
+                    {
+                        currentParagraph.Text = (currentParagraph.Text.Trim() + Environment.NewLine +
+                                                 nextParagraph.Text.Trim()).Trim();
                     }
 
                     currentParagraph.Text = ChangeAllLinesItalictoSingleItalic(currentParagraph.Text);
@@ -12215,6 +12222,14 @@ namespace Nikse.SubtitleEdit.Forms
                     else
                         MergeSelectedLines();
                 }
+            }
+            else if (_mainGeneralMergeSelectedLinesAndAutoBreak == e.KeyData)
+            {
+                e.SuppressKeyPress = true;
+                if (SubtitleListview1.SelectedItems.Count == 2)
+                    MergeWithLineAfter(false, BreakMode.AutoBreak);
+                else
+                    MergeSelectedLines(BreakMode.AutoBreak);
             }
             else if (_mainGeneralMergeSelectedLinesAndUnbreak == e.KeyData)
             {
@@ -16885,6 +16900,7 @@ namespace Nikse.SubtitleEdit.Forms
             _mainGeneralGoToFirstSelectedLine = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToFirstSelectedLine);
             _mainGeneralGoToFirstEmptyLine = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextEmptyLine);
             _mainGeneralMergeSelectedLines = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralMergeSelectedLines);
+            _mainGeneralMergeSelectedLinesAndAutoBreak = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralMergeSelectedLinesAndAutoBreak);
             _mainGeneralMergeSelectedLinesAndUnbreak = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralMergeSelectedLinesAndUnbreak);
             _mainGeneralMergeSelectedLinesAndUnbreakNoSpace = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralMergeSelectedLinesAndUnbreakCjk);
             _mainGeneralMergeSelectedLinesBilingual = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralMergeSelectedLinesBilingual);

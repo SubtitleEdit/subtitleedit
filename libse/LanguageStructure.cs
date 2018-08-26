@@ -2130,6 +2130,7 @@
             public string GoToFirstSelectedLine { get; set; }
             public string GoToNextEmptyLine { get; set; }
             public string MergeSelectedLines { get; set; }
+            public string MergeSelectedLinesAndAutoBreak { get; set; }
             public string MergeSelectedLinesAndUnbreak { get; set; }
             public string MergeSelectedLinesAndUnbreakCjk { get; set; }
             public string MergeSelectedLinesOnlyFirstText { get; set; }
