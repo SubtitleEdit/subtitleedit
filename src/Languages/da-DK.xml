@@ -1956,9 +1956,10 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <GoToFirstSelectedLine>Gå til første valgte linje</GoToFirstSelectedLine>
     <GoToNextEmptyLine>Gå til næste tomme linje</GoToNextEmptyLine>
     <MergeSelectedLines>Flet markerede linjer</MergeSelectedLines>
-    <MergeSelectedLinesAndUnbreak>Flet udvalgte linjer og fjern linjeskift</MergeSelectedLinesAndUnbreak>
-    <MergeSelectedLinesAndUnbreakCjk>Flet udvalgte linjer og fjern linjeskift uden mellemrum (CJK)</MergeSelectedLinesAndUnbreakCjk>
-    <MergeSelectedLinesOnlyFirstText>Flet markerede linjer, beholde første ikke-tomme tekst</MergeSelectedLinesOnlyFirstText>
+    <MergeSelectedLinesAndAutoBreak>Flet valgte linjer og automatisk ombryd</MergeSelectedLinesAndAutoBreak>
+    <MergeSelectedLinesAndUnbreak>Flet valgte linjer og fjern linjeskift</MergeSelectedLinesAndUnbreak>
+    <MergeSelectedLinesAndUnbreakCjk>Flet valgte linjer og fjern linjeskift uden mellemrum (CJK)</MergeSelectedLinesAndUnbreakCjk>
+    <MergeSelectedLinesOnlyFirstText>Flet valgte linjer, beholde første ikke-tomme tekst</MergeSelectedLinesOnlyFirstText>
     <MergeSelectedLinesBilingual>Flet valgte linjer tosproget</MergeSelectedLinesBilingual>
     <SplitSelectedLineBilingual>Split valgte linie tosproget</SplitSelectedLineBilingual>
     <ToggleTranslationMode>Toggle oversættelses-tilstand</ToggleTranslationMode>
