@@ -357,6 +357,22 @@ namespace Nikse.SubtitleEdit.Forms
             base.OnLoad(e);
         }
 
+        private static string GetArgumentAfterColon(IList<string> commandLineArguments, string requestedArgumentName)
+        {
+            for (int i = 0; i < commandLineArguments.Count; i++)
+            {
+                var argument = commandLineArguments[i];
+                if (argument.StartsWith(requestedArgumentName, StringComparison.OrdinalIgnoreCase))
+                {
+                    var idx = argument.IndexOf(':');
+                    if (idx >= 0)
+                        return argument.Remove(0, idx + 1);
+                    return argument;
+                }
+            }
+            return null;
+        }
+
         public Main()
         {
             if (Configuration.IsRunningOnLinux())
@@ -461,12 +477,15 @@ namespace Nikse.SubtitleEdit.Forms
                 if (args.Length >= 2)
                 {
                     fileName = args[1];
-                    if (args.Length > 2 && args[2].StartsWith("/srcline:", StringComparison.OrdinalIgnoreCase))
+
+                    var sourceLineString = GetArgumentAfterColon(args, "/srcline:");
+                    if (!string.IsNullOrEmpty(sourceLineString))
                     {
-                        string srcLine = args[2].Remove(0, 9);
-                        if (!int.TryParse(srcLine, out srcLineNumber))
+                        if (!int.TryParse(sourceLineString, out srcLineNumber))
                             srcLineNumber = -1;
                     }
+
+                    _videoFileName = GetArgumentAfterColon(args, "/video:");
                 }
 
                 labelAutoDuration.Visible = false;
@@ -505,11 +524,11 @@ namespace Nikse.SubtitleEdit.Forms
                     if (srcLineNumber < 0)
                     {
                         if (!OpenFromRecentFiles(fileName))
-                            OpenSubtitle(fileName, null);
+                            OpenSubtitle(fileName, null, _videoFileName, null);
                     }
                     else
                     {
-                        OpenSubtitle(fileName, null);
+                        OpenSubtitle(fileName, null, _videoFileName, null);
                     }
 
                     if (srcLineNumber >= 0 && GetCurrentSubtitleFormat().GetType() == typeof(SubRip) && srcLineNumber < textBoxSource.Lines.Length)
