@@ -281,6 +281,9 @@ namespace Nikse.SubtitleEdit.Forms
                 var ext = fi.Extension;
                 var item = new ListViewItem(fileName);
                 item.SubItems.Add(Utilities.FormatBytesToDisplayFileSize(fi.Length));
+                var isMkv = false;
+                var mkvPgs = new List<string>();
+                int mkvCount = 0;
 
                 SubtitleFormat format = null;
                 var sub = new Subtitle();
@@ -505,7 +508,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else if (ext.Equals(".mkv", StringComparison.OrdinalIgnoreCase) || ext.Equals(".mks", StringComparison.OrdinalIgnoreCase))
                     {
-                        int mkvCount = 0;
+                        isMkv = true;
                         using (var matroska = new MatroskaFile(fileName))
                         {
                             if (matroska.IsValid)
@@ -518,7 +521,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     }
                                     else if (track.CodecId.Equals("S_HDMV/PGS", StringComparison.OrdinalIgnoreCase))
                                     {
-                                        mkvCount++;
+                                        mkvPgs.Add((track.Language ?? "undefined") + " #" + track.TrackNumber);
                                     }
                                     else if (track.CodecId.Equals("S_TEXT/UTF8", StringComparison.OrdinalIgnoreCase) || track.CodecId.Equals("S_TEXT/SSA", StringComparison.OrdinalIgnoreCase) || track.CodecId.Equals("S_TEXT/ASS", StringComparison.OrdinalIgnoreCase))
                                     {
@@ -547,7 +550,27 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 item.SubItems.Add("-");
 
-                listViewInputFiles.Items.Add(item);
+                if (isMkv)
+                {
+                    if (mkvCount > 0)
+                        listViewInputFiles.Items.Add(item);
+
+                    if (mkvPgs.Count > 0)
+                    {
+                        foreach (var mkvPg in mkvPgs)
+                        {
+                            item = new ListViewItem(fileName);
+                            item.SubItems.Add(Utilities.FormatBytesToDisplayFileSize(fi.Length));
+                            listViewInputFiles.Items.Add(item);
+                            item.SubItems.Add("Matroska/PGS - " + mkvPg);
+                            item.SubItems.Add("-");
+                        }
+                    }
+                }
+                else
+                {
+                    listViewInputFiles.Items.Add(item);
+                }
             }
             catch
             {
@@ -895,6 +918,9 @@ namespace Nikse.SubtitleEdit.Forms
                             {
                                 if (matroska.IsValid)
                                 {
+                                    var trackId = item.SubItems[2].Text;
+                                    if (trackId.Contains("#"))
+                                        trackId = trackId.Remove(0, trackId.IndexOf("#", StringComparison.Ordinal) + 1);
                                     foreach (var track in matroska.GetTracks(true))
                                     {
                                         if (track.CodecId.Equals("S_VOBSUB", StringComparison.OrdinalIgnoreCase))
@@ -903,18 +929,22 @@ namespace Nikse.SubtitleEdit.Forms
                                         }
                                         else if (track.CodecId.Equals("S_HDMV/PGS", StringComparison.OrdinalIgnoreCase))
                                         {
-                                            bluRaySubtitles = LoadBluRaySupFromMatroska(track, matroska);
-                                            if (bluRaySubtitles.Count > 0)
+                                            if (trackId == track.TrackNumber.ToString(CultureInfo.InvariantCulture))
                                             {
-                                                item.SubItems[3].Text = Configuration.Settings.Language.BatchConvert.Ocr;
-                                                using (var vobSubOcr = new VobSubOcr())
+                                                bluRaySubtitles = LoadBluRaySupFromMatroska(track, matroska);
+                                                if (bluRaySubtitles.Count > 0)
                                                 {
-                                                    vobSubOcr.FileName = Path.GetFileName(fileName);
-                                                    vobSubOcr.InitializeBatch(bluRaySubtitles, Configuration.Settings.VobSubOcr, fileName, false);
-                                                    sub = vobSubOcr.SubtitleFromOcr;
+                                                    item.SubItems[3].Text = Configuration.Settings.Language.BatchConvert.Ocr;
+                                                    using (var vobSubOcr = new VobSubOcr())
+                                                    {
+                                                        vobSubOcr.FileName = Path.GetFileName(fileName);
+                                                        vobSubOcr.InitializeBatch(bluRaySubtitles, Configuration.Settings.VobSubOcr, fileName, false, track.Language);
+                                                        sub = vobSubOcr.SubtitleFromOcr;
+                                                    }
                                                 }
+                                                fileName = fileName.Substring(0, fileName.LastIndexOf('.')) + ".#" + trackId + "." + track.Language + ".mkv";
+                                                break;
                                             }
-                                            break;
                                         }
                                         else if (track.CodecId.Equals("S_TEXT/UTF8", StringComparison.OrdinalIgnoreCase) || track.CodecId.Equals("S_TEXT/SSA", StringComparison.OrdinalIgnoreCase) || track.CodecId.Equals("S_TEXT/ASS", StringComparison.OrdinalIgnoreCase))
                                         {
