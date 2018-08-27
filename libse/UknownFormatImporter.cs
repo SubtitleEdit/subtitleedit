@@ -71,6 +71,11 @@ namespace Nikse.SubtitleEdit.Core
                 subtitle = ImportSubtitleWithNoLineBreaks(lines[0]);
             }
 
+            if (subtitle.Paragraphs.Count > 0 && lines.Count > 0 && lines.Count / subtitle.Paragraphs.Count > 25)
+            { // no more than 25 raw lines per subtitle lines
+                return new Subtitle();
+            }
+
             return subtitle;
         }
 
