@@ -717,9 +717,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 _importLanguageString = _importLanguageString.Substring(0, languageString.IndexOf('(') - 1).Trim();
         }
 
-        internal void InitializeBatch(List<BluRaySupParser.PcsData> subtitles, VobSubOcrSettings vobSubOcrSettings, string fileName, bool forcedOnly)
+        internal void InitializeBatch(List<BluRaySupParser.PcsData> subtitles, VobSubOcrSettings vobSubOcrSettings, string fileName, bool forcedOnly, string language = null)
         {
             Initialize(subtitles, vobSubOcrSettings, fileName);
+            SetTesseractLanguageFromLanguageString(language);
             checkBoxShowOnlyForced.Checked = forcedOnly;
             DoBatch();
         }
@@ -1086,62 +1087,78 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         comboBoxTesseractLanguages.SelectedIndex = i;
                         break;
                     }
-                    if (tl.Text.StartsWith("Korean", StringComparison.OrdinalIgnoreCase) && (languageString.StartsWith("korean", StringComparison.OrdinalIgnoreCase) || languageString.StartsWith("한국어", StringComparison.OrdinalIgnoreCase)))
+                    if (tl.Text.StartsWith("Korean", StringComparison.OrdinalIgnoreCase) && (languageString.StartsWith("korean", StringComparison.OrdinalIgnoreCase) || languageString.StartsWith("한국어", StringComparison.OrdinalIgnoreCase)) ||
+                        tl.Text.StartsWith("Korean", StringComparison.OrdinalIgnoreCase) && languageString.Equals("kor", StringComparison.OrdinalIgnoreCase))
                     {
                         comboBoxTesseractLanguages.SelectedIndex = i;
                         break;
                     }
-                    else if (tl.Text.StartsWith("Swedish", StringComparison.OrdinalIgnoreCase) && languageString.StartsWith("svenska", StringComparison.OrdinalIgnoreCase))
+                    if (tl.Text.StartsWith("Swedish", StringComparison.OrdinalIgnoreCase) && languageString.StartsWith("svenska", StringComparison.OrdinalIgnoreCase) ||
+                        tl.Text.StartsWith("Swedish", StringComparison.OrdinalIgnoreCase) && languageString.Equals("swe", StringComparison.OrdinalIgnoreCase))
                     {
                         comboBoxTesseractLanguages.SelectedIndex = i;
                         break;
                     }
-                    else if (tl.Text.StartsWith("Norwegian", StringComparison.OrdinalIgnoreCase) && languageString.StartsWith("norsk", StringComparison.OrdinalIgnoreCase))
+                    if (tl.Text.StartsWith("Norwegian", StringComparison.OrdinalIgnoreCase) && languageString.StartsWith("norsk", StringComparison.OrdinalIgnoreCase) ||
+                        tl.Text.StartsWith("Norwegian", StringComparison.OrdinalIgnoreCase) && languageString.StartsWith("nor", StringComparison.OrdinalIgnoreCase))
                     {
                         comboBoxTesseractLanguages.SelectedIndex = i;
                         break;
                     }
-                    else if (tl.Text.StartsWith("Dutch", StringComparison.OrdinalIgnoreCase) && languageString.StartsWith("Nederlands", StringComparison.OrdinalIgnoreCase))
+                    if (tl.Text.StartsWith("Dutch", StringComparison.OrdinalIgnoreCase) && languageString.StartsWith("Nederlands", StringComparison.OrdinalIgnoreCase) ||
+                        tl.Text.StartsWith("Dutch", StringComparison.OrdinalIgnoreCase) && languageString.Equals("nld", StringComparison.OrdinalIgnoreCase))
                     {
                         comboBoxTesseractLanguages.SelectedIndex = i;
                         break;
                     }
-                    else if (tl.Text.StartsWith("Danish", StringComparison.OrdinalIgnoreCase) && languageString.StartsWith("dansk", StringComparison.OrdinalIgnoreCase))
+                    if (tl.Text.StartsWith("Danish", StringComparison.OrdinalIgnoreCase) && languageString.StartsWith("dansk", StringComparison.OrdinalIgnoreCase) ||
+                        tl.Text.StartsWith("Danish", StringComparison.OrdinalIgnoreCase) && languageString.Equals("dnk", StringComparison.OrdinalIgnoreCase))
                     {
                         comboBoxTesseractLanguages.SelectedIndex = i;
                         break;
                     }
-                    else if (tl.Text.StartsWith("English", StringComparison.OrdinalIgnoreCase) && languageString.StartsWith("English", StringComparison.OrdinalIgnoreCase))
+                    if (tl.Text.StartsWith("English", StringComparison.OrdinalIgnoreCase) && languageString.StartsWith("English", StringComparison.OrdinalIgnoreCase))
                     {
                         comboBoxTesseractLanguages.SelectedIndex = i;
                         break;
                     }
-                    else if (tl.Text.StartsWith("French", StringComparison.OrdinalIgnoreCase) && (languageString.StartsWith("french", StringComparison.OrdinalIgnoreCase) || languageString.StartsWith("français", StringComparison.OrdinalIgnoreCase)))
+                    if (tl.Text.StartsWith("French", StringComparison.OrdinalIgnoreCase) && (languageString.StartsWith("french", StringComparison.OrdinalIgnoreCase) || languageString.StartsWith("français", StringComparison.OrdinalIgnoreCase)) ||
+                        tl.Text.StartsWith("French", StringComparison.OrdinalIgnoreCase) && languageString.Equals("fra", StringComparison.OrdinalIgnoreCase))
                     {
                         comboBoxTesseractLanguages.SelectedIndex = i;
                         break;
                     }
-                    else if (tl.Text.StartsWith("Spannish", StringComparison.OrdinalIgnoreCase) && (languageString.StartsWith("spannish", StringComparison.OrdinalIgnoreCase) || languageString.StartsWith("españo", StringComparison.OrdinalIgnoreCase)))
+                    if (tl.Text.StartsWith("Spannish", StringComparison.OrdinalIgnoreCase) && (languageString.StartsWith("spannish", StringComparison.OrdinalIgnoreCase) || languageString.StartsWith("españo", StringComparison.OrdinalIgnoreCase)) ||
+                        tl.Text.StartsWith("Spannish", StringComparison.OrdinalIgnoreCase) && languageString.Equals("esp", StringComparison.OrdinalIgnoreCase))
                     {
                         comboBoxTesseractLanguages.SelectedIndex = i;
                         break;
                     }
-                    else if (tl.Text.StartsWith("Finnish", StringComparison.OrdinalIgnoreCase) && languageString.StartsWith("suomi", StringComparison.OrdinalIgnoreCase))
+                    if (tl.Text.StartsWith("Finnish", StringComparison.OrdinalIgnoreCase) && languageString.StartsWith("suomi", StringComparison.OrdinalIgnoreCase) ||
+                        tl.Text.StartsWith("Finnish", StringComparison.OrdinalIgnoreCase) && languageString.Equals("fin", StringComparison.OrdinalIgnoreCase))
                     {
                         comboBoxTesseractLanguages.SelectedIndex = i;
                         break;
                     }
-                    else if (tl.Text.StartsWith("Italian", StringComparison.OrdinalIgnoreCase) && languageString.StartsWith("itali", StringComparison.OrdinalIgnoreCase))
+                    if (tl.Text.StartsWith("Italian", StringComparison.OrdinalIgnoreCase) && languageString.StartsWith("itali", StringComparison.OrdinalIgnoreCase) ||
+                        tl.Text.StartsWith("Italian", StringComparison.OrdinalIgnoreCase) && languageString.Equals("ita", StringComparison.OrdinalIgnoreCase))
                     {
                         comboBoxTesseractLanguages.SelectedIndex = i;
                         break;
                     }
-                    else if (tl.Text.StartsWith("German", StringComparison.OrdinalIgnoreCase) && languageString.StartsWith("deutsch", StringComparison.OrdinalIgnoreCase))
+                    if (tl.Text.StartsWith("German", StringComparison.OrdinalIgnoreCase) && languageString.StartsWith("deutsch", StringComparison.OrdinalIgnoreCase) ||
+                             tl.Text.StartsWith("German", StringComparison.OrdinalIgnoreCase) && languageString.Equals("ger", StringComparison.OrdinalIgnoreCase))
                     {
                         comboBoxTesseractLanguages.SelectedIndex = i;
                         break;
                     }
-                    else if (tl.Text.StartsWith("Portuguese", StringComparison.OrdinalIgnoreCase) && languageString.StartsWith("português", StringComparison.OrdinalIgnoreCase))
+                    if (tl.Text.StartsWith("Portuguese", StringComparison.OrdinalIgnoreCase) && languageString.StartsWith("português", StringComparison.OrdinalIgnoreCase) ||
+                             tl.Text.StartsWith("Portuguese", StringComparison.OrdinalIgnoreCase) && languageString.Equals("prt", StringComparison.OrdinalIgnoreCase))
+                    {
+                        comboBoxTesseractLanguages.SelectedIndex = i;
+                        break;
+                    }
+                    if (tl.Id.Equals(languageString, StringComparison.OrdinalIgnoreCase))
                     {
                         comboBoxTesseractLanguages.SelectedIndex = i;
                         break;
@@ -6256,7 +6273,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 msg.StartsWith("Tesseract Open Source OCR Engine", StringComparison.OrdinalIgnoreCase) ||
                 msg.Contains("Too few characters", StringComparison.OrdinalIgnoreCase) ||
                 msg.Contains("Empty page", StringComparison.OrdinalIgnoreCase) ||
-                msg.Contains(" diacritics", StringComparison.OrdinalIgnoreCase) ||                
+                msg.Contains(" diacritics", StringComparison.OrdinalIgnoreCase) ||
                 msg.Contains("Weak margin", StringComparison.OrdinalIgnoreCase))
             {
                 return;
