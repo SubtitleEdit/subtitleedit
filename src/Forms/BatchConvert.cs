@@ -518,7 +518,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     }
                                     else if (track.CodecId.Equals("S_HDMV/PGS", StringComparison.OrdinalIgnoreCase))
                                     {
-                                        // TODO: Convert from Blu-ray image based format!
+                                        mkvCount++;
                                     }
                                     else if (track.CodecId.Equals("S_TEXT/UTF8", StringComparison.OrdinalIgnoreCase) || track.CodecId.Equals("S_TEXT/SSA", StringComparison.OrdinalIgnoreCase) || track.CodecId.Equals("S_TEXT/ASS", StringComparison.OrdinalIgnoreCase))
                                     {
@@ -903,7 +903,18 @@ namespace Nikse.SubtitleEdit.Forms
                                         }
                                         else if (track.CodecId.Equals("S_HDMV/PGS", StringComparison.OrdinalIgnoreCase))
                                         {
-                                            // TODO: Convert from Blu-ray image based format!
+                                            bluRaySubtitles = LoadBluRaySupFromMatroska(track, matroska);
+                                            if (bluRaySubtitles.Count > 0)
+                                            {
+                                                item.SubItems[3].Text = Configuration.Settings.Language.BatchConvert.Ocr;
+                                                using (var vobSubOcr = new VobSubOcr())
+                                                {
+                                                    vobSubOcr.FileName = Path.GetFileName(fileName);
+                                                    vobSubOcr.InitializeBatch(bluRaySubtitles, Configuration.Settings.VobSubOcr, fileName, false);
+                                                    sub = vobSubOcr.SubtitleFromOcr;
+                                                }
+                                            }
+                                            break;
                                         }
                                         else if (track.CodecId.Equals("S_TEXT/UTF8", StringComparison.OrdinalIgnoreCase) || track.CodecId.Equals("S_TEXT/SSA", StringComparison.OrdinalIgnoreCase) || track.CodecId.Equals("S_TEXT/ASS", StringComparison.OrdinalIgnoreCase))
                                         {
@@ -1055,6 +1066,74 @@ namespace Nikse.SubtitleEdit.Forms
             buttonSearchFolder.Enabled = true;
             comboBoxFilter.Enabled = true;
             textBoxFilter.Enabled = true;
+        }
+
+        private List<BluRaySupParser.PcsData> LoadBluRaySupFromMatroska(MatroskaTrackInfo track, MatroskaFile matroska)
+        {
+            if (track.ContentEncodingType == 1)
+            {
+                return new List<BluRaySupParser.PcsData>();
+            }
+
+            var sub = matroska.GetSubtitle(track.TrackNumber, null);
+            TaskbarList.SetProgressState(Handle, TaskbarButtonProgressFlags.NoProgress);
+            var subtitles = new List<BluRaySupParser.PcsData>();
+            var log = new StringBuilder();
+            var clusterStream = new MemoryStream();
+            foreach (var p in sub)
+            {
+                byte[] buffer = p.GetData(track);
+                if (buffer != null && buffer.Length > 2)
+                {
+                    clusterStream.Write(buffer, 0, buffer.Length);
+                    if (ContainsBluRayStartSegment(buffer))
+                    {
+                        if (subtitles.Count > 0 && subtitles[subtitles.Count - 1].StartTime == subtitles[subtitles.Count - 1].EndTime)
+                        {
+                            subtitles[subtitles.Count - 1].EndTime = (long)((p.Start - 1) * 90.0);
+                        }
+                        clusterStream.Position = 0;
+                        var list = BluRaySupParser.ParseBluRaySup(clusterStream, log, true);
+                        foreach (var sup in list)
+                        {
+                            sup.StartTime = (long)((p.Start - 1) * 90.0);
+                            sup.EndTime = (long)((p.End - 1) * 90.0);
+                            subtitles.Add(sup);
+
+                            // fix overlapping
+                            if (subtitles.Count > 1 && sub[subtitles.Count - 2].End > sub[subtitles.Count - 1].Start)
+                                subtitles[subtitles.Count - 2].EndTime = subtitles[subtitles.Count - 1].StartTime - 1;
+                        }
+                        clusterStream = new MemoryStream();
+                    }
+                }
+                else if (subtitles.Count > 0)
+                {
+                    var lastSub = subtitles[subtitles.Count - 1];
+                    if (lastSub.StartTime == lastSub.EndTime)
+                    {
+                        lastSub.EndTime = (long)((p.Start - 1) * 90.0);
+                        if (lastSub.EndTime - lastSub.StartTime > 1000000)
+                            lastSub.EndTime = lastSub.StartTime;
+                    }
+                }
+            }
+            return subtitles;
+        }
+
+        private bool ContainsBluRayStartSegment(byte[] buffer)
+        {
+            const int epochStart = 0x80;
+            var position = 0;
+            while (position + 3 <= buffer.Length)
+            {
+                var segmentType = buffer[position];
+                if (segmentType == epochStart)
+                    return true;
+                int length = BluRaySupParser.BigEndianInt16(buffer, position + 1) + 3;
+                position += length;
+            }
+            return false;
         }
 
         private bool CheckSkipFilter(string fileName, SubtitleFormat format, Subtitle sub)
