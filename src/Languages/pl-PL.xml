@@ -1204,8 +1204,6 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
       <SecondsForwardShort>&gt;&gt;</SecondsForwardShort>
       <VideoPosition>Pozycja wideo:</VideoPosition>
       <TranslateTip>Tip: Użyj &lt;alt+strzałki ↑/↓&gt;, aby przejść do poprzedniej/następnej linii</TranslateTip>
-      <CreateTip>Tip: Użyj klawiszy &lt;ctrl+strzałki ←/→&gt;</CreateTip>
-      <AdjustTip>Tip: Użyj &lt;alt+strzałki ↑/↓&gt;, aby przejść do poprzedniej/następnej linii</AdjustTip>
       <BeforeChangingTimeInWaveformX>Przed zmianami czasu na wykresie falowym audio: {0}</BeforeChangingTimeInWaveformX>
       <NewTextInsertAtX>W pozycji {0} wstawiono nowy tekst napisu</NewTextInsertAtX>
       <Center>Środek</Center>
@@ -1961,10 +1959,12 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <GoToFirstSelectedLine>Przejdź do pierwszej zaznaczonej linii</GoToFirstSelectedLine>
     <GoToNextEmptyLine>Przejdź do następnej pustej linii</GoToNextEmptyLine>
     <MergeSelectedLines>Połącz zaznaczone linie</MergeSelectedLines>
+    <MergeSelectedLinesAndAutoBreak>Połącz zaznaczone linie i automatycznie przełam</MergeSelectedLinesAndAutoBreak>
     <MergeSelectedLinesAndUnbreak>Połącz zaznaczone linie i usuń łamanie linii</MergeSelectedLinesAndUnbreak>
     <MergeSelectedLinesAndUnbreakCjk>Połącz zaznaczone linie i usuń łamanie linii bez spacji (CJK)</MergeSelectedLinesAndUnbreakCjk>
     <MergeSelectedLinesOnlyFirstText>Połącz zaznaczone linie, zachowaj tylko pierwszy nie pusty tekst</MergeSelectedLinesOnlyFirstText>
-    <MergeSelectedLinesBilingual>Połącz zaznaczone linie dwujęzycznie</MergeSelectedLinesBilingual>
+    <MergeSelectedLinesBilingual>Połącz zaznaczone linie dwujęzyczne</MergeSelectedLinesBilingual>
+    <SplitSelectedLineBilingual>Podziel zaznaczone linie dwujęzyczne</SplitSelectedLineBilingual>
     <ToggleTranslationMode>Przełączanie trybu tłumaczenia</ToggleTranslationMode>
     <SwitchOriginalAndTranslation>Przełącz oryginał i tłumaczenie</SwitchOriginalAndTranslation>
     <MergeOriginalAndTranslation>Połącz oryginał i tłumaczenie</MergeOriginalAndTranslation>
