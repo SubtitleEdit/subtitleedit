@@ -1510,6 +1510,34 @@
     <Word from="uspećemo" to="uspjet ćemo" />
     <Word from="uspeš" to="uspiješ" />
     <Word from="uspeju" to="uspiju" />
+    <Word from="uspem" to="uspijem" />
+    <Word from="uspemo" to="uspijemo" />
+    <Word from="uspeva" to="uspijeva" />
+    <Word from="uspevam" to="uspijevam" />
+    <Word from="uspevaš" to="uspijevaš" />
+    <Word from="uspevate" to="uspijevate" />
+    <Word from="uspevati" to="uspijevati" />
+    <Word from="Uspem" to="Uspijem" />
+    <Word from="Uspemo" to="Uspijemo" />
+    <Word from="Uspeva" to="Uspijeva" />
+    <Word from="Uspevam" to="Uspijevam" />
+    <Word from="Uspevaš" to="Uspijevaš" />
+    <Word from="Uspevate" to="Uspijevate" />
+    <Word from="Uspevati" to="Uspijevati" />
+    <Word from="uspjem" to="uspijem" />
+    <Word from="uspjemo" to="uspijemo" />
+    <Word from="uspjeva" to="uspijeva" />
+    <Word from="uspjevam" to="uspijevam" />
+    <Word from="uspjevaš" to="uspijevaš" />
+    <Word from="uspjevate" to="uspijevate" />
+    <Word from="uspjevati" to="uspijevati" />
+    <Word from="Uspjem" to="Uspijem" />
+    <Word from="Uspjemo" to="Uspijemo" />
+    <Word from="Uspjeva" to="Uspijeva" />
+    <Word from="Uspjevam" to="Uspijevam" />
+    <Word from="Uspjevaš" to="Uspijevaš" />
+    <Word from="Uspjevate" to="Uspijevate" />
+    <Word from="Uspjevati" to="Uspijevati" />
     <Word from="uspjevala" to="uspijevala" />
     <Word from="uspijo" to="uspio" />
     <Word from="u sred" to="usred" />
@@ -2853,7 +2881,6 @@
     <RegEx find="spi?j?e(h|si)" replaceWith="spje$1" />
     <RegEx find="spi?j?eš([an]|n[aeiou])" replaceWith="spješ$1" />
     <RegEx find="\b([uU])spe([lt])" replaceWith="$1spje$2" />
-    <RegEx find="\b([uU])spj?e(mo?|va[mšt]?)\b" replaceWith="$1spije$2" />
     <RegEx find="sred?sre[dđ]" replaceWith="sredotoč" />
     <RegEx find="([uU])strj?el" replaceWith="$1strijel" />
     <RegEx find="\b([uU])te([hš])" replaceWith="$1tje$2" />
