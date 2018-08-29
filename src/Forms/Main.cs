@@ -13512,6 +13512,7 @@ namespace Nikse.SubtitleEdit.Forms
                 checkBoxSyncListViewWithVideoWhilePlaying.Checked = oldSync;
                 numericUpDownDuration.Value = (decimal)_subtitle.Paragraphs[index].Duration.TotalSeconds;
                 numericUpDownDuration.ValueChanged += NumericUpDownDurationValueChanged;
+                RefreshSelectedParagraph();
 
                 for (int i = index + 1; i < SubtitleListview1.Items.Count; i++)
                 {
