@@ -2,17 +2,17 @@
 
 3.5.7 (xth August 2018) BETA
 * NEW:
-   * Add Indonesian translation - thx Nicedward
    * Add new subtitle formats
+   * Font can be different for subtitle list view / text box
+   * Add Indonesian translation - thx Nicedward
    * Add support for mp4 dash ttml - thx Octirius
    * Add shortcut for toggle music symbols - thx robtor
    * Add shortcuts "Batch convert" + "waveform split"
+   * Add shortcuts for bilingual line merge/split
+   * Add "Shift+F3" shortcut for backward search - thx OmrSi/Leon
    * Add new setting: volume boost
    * Add new setting: "save as..." take file name from
-   * Font can be different for subtitle list view / text box
    * Add download of ffmpeg
-   * Add "Shift+F3" for backward search - thx OmrSi/Leon
-   * Add shortcuts for bilingual line merge/split
 * IMPROVED:
    * Update Brazilian translation - thx Igor
    * Update Czech translation - thx Trottel
@@ -42,7 +42,8 @@
    * Add "Search" in "Open subtitle w manual chosen encoding"
    * Some improvements of waveform file name - thx OmrSi/Jamakmake
    * Allow up to 2 mb ebu stl sub files - thx Yusuf
-   * Add "Import as plain text" button for unknown subtitle types.
+   * Add "Import as plain text" button for unknown subtitle types
+   * Improve ansi code page detection a bit - thx Xy
 * FIXED:
    * Fix "Add to names list" in OCR spell check - thx daed-alus/Sergiy
    * Fix "Generate scene changes" decimal point issue - thx Max
@@ -87,6 +88,9 @@
    * Copy source to clipboard now adds video offset - thx Ingo
    * Fix duplicate postfix in "translate selected" - thx Jamakmake
    * Fix for last line in "Replace all"  - thx ryvec
+   * Fix for setting index for recent file - thx OmrSi
+   * Fix current line issue for "Set end, offset rest" - thx OmrSi
+   * Fixed decimal point issue with ASS - thx Thierry
 
 
 3.5.6 (27th February 2018)
