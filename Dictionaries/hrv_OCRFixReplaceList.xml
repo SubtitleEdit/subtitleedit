@@ -1004,6 +1004,26 @@
     <Word from="pretrpeo" to="pretrpio" />
     <Word from="prevod" to="prijevod" />
     <Word from="Prevod" to="Prijevod" />
+    <Word from="prevoz" to="prijevoz" />
+    <Word from="prevoza" to="prijevoza" />
+    <Word from="prevozi" to="prijevozi" />
+    <Word from="prevozu" to="prijevozu" />
+    <Word from="prevozom" to="prijevozom" />
+    <Word from="Prevoz" to="Prijevoz" />
+    <Word from="Prevoza" to="Prijevoza" />
+    <Word from="Prevozi" to="Prijevozi" />
+    <Word from="Prevozu" to="Prijevozu" />
+    <Word from="Prevozom" to="Prijevozom" />
+    <Word from="prjevoz" to="prijevoz" />
+    <Word from="prjevoza" to="prijevoza" />
+    <Word from="prjevozi" to="prijevozi" />
+    <Word from="prjevozu" to="prijevozu" />
+    <Word from="prjevozom" to="prijevozom" />
+    <Word from="Prjevoz" to="Prijevoz" />
+    <Word from="Prjevoza" to="Prijevoza" />
+    <Word from="Prjevozi" to="Prijevozi" />
+    <Word from="Prjevozu" to="Prijevozu" />
+    <Word from="Prjevozom" to="Prijevozom" />
     <Word from="prezentovati" to="prezentirati" />
     <Word from="prezentovane" to="prezentirane" />
     <Word from="prezentovan" to="prezentiran" />
@@ -1270,8 +1290,32 @@
     <Word from="Sredićemo" to="Sredit ćemo" />
     <Word from="sredićemo" to="sredit ćemo" />
     <Word from="Srediću" to="Sredit ću" />
+    <Word from="sreda" to="srijeda" />
+    <Word from="sredu" to="srijedu" />
+    <Word from="sredom" to="srijedom" />
+    <Word from="sredama" to="srijedama" />
+    <Word from="Sreda" to="Srijeda" />
+    <Word from="Sredu" to="Srijedu" />
+    <Word from="Sredom" to="Srijedom" />
+    <Word from="Sredama" to="Srijedama" />
+    <Word from="srjeda" to="srijeda" />
+    <Word from="srjedu" to="srijedu" />
+    <Word from="srjedom" to="srijedom" />
+    <Word from="srjedama" to="srijedama" />
+    <Word from="Srjeda" to="Srijeda" />
+    <Word from="Srjedu" to="Srijedu" />
+    <Word from="Srjedom" to="Srijedom" />
+    <Word from="Srjedama" to="Srijedama" />
     <!-- nisu za regex - ne odgovaraju zbog dodatnog ju na kraju -->
     <Word from="stabilizuju" to="stabiliziraju" />
+    <Word from="staće" to="stat će" />
+    <Word from="staću" to="stat ću" />
+    <Word from="Staće" to="Stat će" />
+    <Word from="Staću" to="Stat ću" />
+    <Word from="stače" to="stat će" />
+    <Word from="staču" to="stat ću" />
+    <Word from="Stače" to="Stat će" />
+    <Word from="Staču" to="Stat ću" />    
     <Word from="starao" to="brinuo" />
     <Word from="starati" to="brinuti" />
     <Word from="Starati" to="Brinuti" />
@@ -1466,6 +1510,34 @@
     <Word from="uspećemo" to="uspjet ćemo" />
     <Word from="uspeš" to="uspiješ" />
     <Word from="uspeju" to="uspiju" />
+    <Word from="uspem" to="uspijem" />
+    <Word from="uspemo" to="uspijemo" />
+    <Word from="uspeva" to="uspijeva" />
+    <Word from="uspevam" to="uspijevam" />
+    <Word from="uspevaš" to="uspijevaš" />
+    <Word from="uspevate" to="uspijevate" />
+    <Word from="uspevati" to="uspijevati" />
+    <Word from="Uspem" to="Uspijem" />
+    <Word from="Uspemo" to="Uspijemo" />
+    <Word from="Uspeva" to="Uspijeva" />
+    <Word from="Uspevam" to="Uspijevam" />
+    <Word from="Uspevaš" to="Uspijevaš" />
+    <Word from="Uspevate" to="Uspijevate" />
+    <Word from="Uspevati" to="Uspijevati" />
+    <Word from="uspjem" to="uspijem" />
+    <Word from="uspjemo" to="uspijemo" />
+    <Word from="uspjeva" to="uspijeva" />
+    <Word from="uspjevam" to="uspijevam" />
+    <Word from="uspjevaš" to="uspijevaš" />
+    <Word from="uspjevate" to="uspijevate" />
+    <Word from="uspjevati" to="uspijevati" />
+    <Word from="Uspjem" to="Uspijem" />
+    <Word from="Uspjemo" to="Uspijemo" />
+    <Word from="Uspjeva" to="Uspijeva" />
+    <Word from="Uspjevam" to="Uspijevam" />
+    <Word from="Uspjevaš" to="Uspijevaš" />
+    <Word from="Uspjevate" to="Uspijevate" />
+    <Word from="Uspjevati" to="Uspijevati" />
     <Word from="uspjevala" to="uspijevala" />
     <Word from="uspijo" to="uspio" />
     <Word from="u sred" to="usred" />
@@ -1892,6 +1964,8 @@
     <!-- imena mjeseci -->
     <Word from="januar" to="siječanj" />
     <Word from="Januar" to="Siječanj" />
+    <Word from="januara" to="siječnja" />
+    <Word from="januaru" to="siječnju" />
     <Word from="februar" to="veljača" />
     <Word from="februara" to="veljače" />
     <Word from="februaru" to="veljači" />
@@ -2601,7 +2675,6 @@
     <RegEx find="rijtelj" replaceWith="rijatelj" />
     <RegEx find="(ri|[Ss])tiskaj" replaceWith="$1tišći" />
     <RegEx find="rj?estupni([kc])([aeu]|om)\b" replaceWith="rijestupni$1$2" />
-    <RegEx find="\b([pP])rj?evoz([aiu]|om)?\b" replaceWith="$1rijevoz$2" />
     <RegEx find="\b([pP])rj?etnj" replaceWith="$1rijetnj" />
     <RegEx find="rimi?j?ećuj" replaceWith="rimjećuj" />
     <RegEx find="\b([pP])rimj?e(ćen|ćen[aeiou]|tio?|til[aeio]|njen|šati|šan|[st]iti)\b" replaceWith="$1rimije$2" />
@@ -2718,8 +2791,6 @@
     <RegEx find="prj?eče" replaceWith="priječe" />
     <RegEx find="([sS])reč" replaceWith="$1reć" />
     <RegEx find="([sS])re[cčć](a?)n" replaceWith="$1ret$2n" />
-    <RegEx find="\b([sS])rj?ed([au]|om|ama)\b" replaceWith="$1rijed$2" />
-    <RegEx find="\b([sS])ta[čć]([eu])" replaceWith="$1tat ć$2" />
     <RegEx find="tavr" replaceWith="tvar" />
     <RegEx find="\b([sS])tj?en([aeu])" replaceWith="$1tijen$2" />
     <RegEx find="\b([sSuU])tica" replaceWith="$1tjeca" />
@@ -2810,7 +2881,6 @@
     <RegEx find="spi?j?e(h|si)" replaceWith="spje$1" />
     <RegEx find="spi?j?eš([an]|n[aeiou])" replaceWith="spješ$1" />
     <RegEx find="\b([uU])spe([lt])" replaceWith="$1spje$2" />
-    <RegEx find="\b([uU])spj?e(mo?|va[mšt]?)\b" replaceWith="$1spije$2" />
     <RegEx find="sred?sre[dđ]" replaceWith="sredotoč" />
     <RegEx find="([uU])strj?el" replaceWith="$1strijel" />
     <RegEx find="\b([uU])te([hš])" replaceWith="$1tje$2" />
@@ -2901,7 +2971,6 @@
     <RegEx find="([sSzZ])amnom" replaceWith="$1a mnom" />
     <RegEx find="([sSnNpPzZ]r?[aoi]z[vn])ać" replaceWith="$1at ć" />
     <!-- mjeseci [\b mora biti nakon jun]-->
-    <RegEx find="januar([au]|ima)" replaceWith="siječnj$1" />
     <RegEx find="([Ss])j?ečnj([au]|ima)" replaceWith="$1iječnj$2" />
     <RegEx find="\ba[uv]gust" replaceWith="kolovoz" />
     <RegEx find="septembr" replaceWith="rujn" />
@@ -3014,6 +3083,7 @@
     <RegEx find="fiskov" replaceWith="fiscir" />
     <RegEx find="frov" replaceWith="frir" />
     <RegEx find="grišć" replaceWith="grist ć" />
+    <RegEx find="(?&lt;!e)grš" replaceWith="greš" />
     <RegEx find="grutova" replaceWith="grutira" />
     <RegEx find="haot" replaceWith="kaot" />
     <RegEx find="hariz" replaceWith="kariz" />
@@ -3172,6 +3242,7 @@
     <RegEx find="trišu" replaceWith="triraju" />
     <RegEx find="ueln" replaceWith="ualn" />
     <RegEx find="uisa" replaceWith="uira" />
+    <RegEx find="uzt" replaceWith="ust" />
     <RegEx find="tvd" replaceWith="tvrd" />
     <RegEx find="tvrn" replaceWith="tvarn" />
     <RegEx find="u([bd])ić" replaceWith="u$1it ć" />
