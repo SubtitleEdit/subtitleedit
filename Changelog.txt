@@ -2,7 +2,7 @@
 
 3.5.7 (xth August 2018) BETA
 * NEW:
-   * Add Indonesian translation (+ installer) - thx Nicedward
+   * Add Indonesian translation - thx Nicedward
    * Add new subtitle formats
    * Add support for mp4 dash ttml - thx Octirius
    * Add shortcut for toggle music symbols - thx robtor
