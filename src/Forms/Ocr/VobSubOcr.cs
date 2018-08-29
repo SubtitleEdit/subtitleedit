@@ -7141,16 +7141,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         {
             if (!Directory.Exists(Configuration.TesseractDirectory) && !Configuration.IsRunningOnLinux() && !Configuration.IsRunningOnMac())
             {
-                Directory.CreateDirectory(Configuration.TesseractDirectory);
-                Process process = new Process();
-                ProcessStartInfo startInfo = new ProcessStartInfo();
-                startInfo.WindowStyle = ProcessWindowStyle.Hidden;
-                startInfo.FileName = "xcopy";
-                startInfo.Arguments = "\"" + Path.Combine(Configuration.TesseractOriginalDirectory, "*.*") + "\" \"" + Configuration.TesseractDirectory + "\" /s";
-                MessageBox.Show(startInfo.Arguments);
-                process.StartInfo = startInfo;
-                process.Start();
-                process.WaitForExit();
+                foreach (string dirPath in Directory.GetDirectories(Configuration.TesseractOriginalDirectory, "*", SearchOption.AllDirectories))
+                    Directory.CreateDirectory(dirPath.Replace(Configuration.TesseractOriginalDirectory, Configuration.TesseractDirectory));
+
+                foreach (string newPath in Directory.GetFiles(Configuration.TesseractOriginalDirectory, "*.*", SearchOption.AllDirectories))
+                    File.Copy(newPath, newPath.Replace(Configuration.TesseractOriginalDirectory, Configuration.TesseractDirectory), true);
             }
 
             string dir = Configuration.TesseractDataDirectory;

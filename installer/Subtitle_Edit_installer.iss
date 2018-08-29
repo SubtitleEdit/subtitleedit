@@ -267,8 +267,10 @@ Source: {#bindir}\SubtitleEdit.exe;                DestDir: {app};              
 Source: {#bindir}\SubtitleEdit.resources.dll;      DestDir: {app};                                    Flags: ignoreversion; Components: main
 Source: ..\Changelog.txt;                          DestDir: {app};                                    Flags: ignoreversion; Components: main
 Source: ..\LICENSE.txt;                            DestDir: {app};                                    Flags: ignoreversion; Components: main
+Source: Icons\uninstall.ico;                       DestDir: {app}\Icons;                              Flags: ignoreversion; Components: main
+
 Source: ..\Tesseract4\tessdata\configs\hocr;       DestDir: {app}\Tesseract4\tessdata\configs;        Flags: ignoreversion; Components: main
-Source: ..\Tesseract4\tessdata\eng.traineddata;    DestDir: {app}\Tesseract4\tessdata;                Flags: ignoreversion; Components: main
+Source: ..\Tesseract4\tessdata\osd.traineddata;    DestDir: {app}\Tesseract4\tessdata;                Flags: ignoreversion; Components: main
 Source: ..\Tesseract4\tesseract.exe;               DestDir: {app}\Tesseract4;                         Flags: ignoreversion; Components: main
 Source: ..\Tesseract4\gif.dll;                     DestDir: {app}\Tesseract4;                         Flags: ignoreversion; Components: main
 Source: ..\Tesseract4\jpeg62.dll;                  DestDir: {app}\Tesseract4;                         Flags: ignoreversion; Components: main
@@ -277,7 +279,6 @@ Source: ..\Tesseract4\libpng16.dll;                DestDir: {app}\Tesseract4;   
 Source: ..\Tesseract4\lzma.dll;                    DestDir: {app}\Tesseract4;                         Flags: ignoreversion; Components: main
 Source: ..\Tesseract4\tiff.dll;                    DestDir: {app}\Tesseract4;                         Flags: ignoreversion; Components: main
 Source: ..\Tesseract4\zlib1.dll;                   DestDir: {app}\Tesseract4;                         Flags: ignoreversion; Components: main
-Source: Icons\uninstall.ico;                       DestDir: {app}\Icons;                              Flags: ignoreversion; Components: main
 
 
 [Icons]
@@ -521,6 +522,7 @@ begin
   DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Dictionaries\spa_OCRFixReplaceList.xml'));
   DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Dictionaries\srp_OCRFixReplaceList.xml'));
   DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Dictionaries\swe_OCRFixReplaceList.xml'));
+  DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Dictionaries\nob_OCRFixReplaceList.xml'));
   DelTree(ExpandConstant('{userappdata}\Subtitle Edit\Dictionaries\???_OCRFixReplaceList_User.xml'), False, True, False);
   DelTree(ExpandConstant('{userappdata}\Subtitle Edit\Dictionaries\*.dic'), False, True, False);
   DelTree(ExpandConstant('{userappdata}\Subtitle Edit\Dictionaries\*.aff'), False, True, False);
