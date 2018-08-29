@@ -209,7 +209,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                     try
                     {
                         var ssaStyle = GetSsaStyle(styleName, subtitle.Header);
-                        
+
                         string bold = "0";
                         if (ssaStyle.Bold)
                             bold = "-1";
@@ -253,7 +253,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                             GetSsaColorString(ssaStyle.Outline), GetSsaColorString(ssaStyle.Background), bold, italic, underline, ssaStyle.BorderStyle, ssaStyle.OutlineWidth.ToString(CultureInfo.InvariantCulture), ssaStyle.ShadowWidth.ToString(CultureInfo.InvariantCulture),
                             newAlignment, ssaStyle.MarginLeft, ssaStyle.MarginRight, ssaStyle.MarginVertical));
                         styleFound = true;
-                        
+
                     }
                     catch
                     {
@@ -1489,8 +1489,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                                 }
                                 else if (i == fontsizeIndex)
                                 {
-                                    int number;
-                                    if (!int.TryParse(f, out number) || f.StartsWith('-'))
+                                    if (!int.TryParse(f, out _) || f.StartsWith('-'))
                                     {
                                         sb.AppendLine("'Fontsize' incorrect: " + rawLine);
                                         sb.AppendLine();
@@ -1554,8 +1553,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                                 }
                                 else if (i == outlineIndex)
                                 {
-                                    float number;
-                                    if (!float.TryParse(f, out number) || f.StartsWith('-'))
+                                    if (!float.TryParse(f, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out _) || f.StartsWith('-'))
                                     {
                                         sb.AppendLine("'Outline' (width) incorrect: " + rawLine);
                                         sb.AppendLine();
@@ -1563,8 +1561,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                                 }
                                 else if (i == shadowIndex)
                                 {
-                                    float number;
-                                    if (!float.TryParse(f, out number) || f.StartsWith('-'))
+                                    if (!float.TryParse(f, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out _) || f.StartsWith('-'))
                                     {
                                         sb.AppendLine("'Shadow' (width) incorrect: " + rawLine);
                                         sb.AppendLine();
@@ -1580,8 +1577,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                                 }
                                 else if (i == marginLIndex)
                                 {
-                                    int number;
-                                    if (!int.TryParse(f, out number) || f.StartsWith('-'))
+                                    if (!int.TryParse(f, out _) || f.StartsWith('-'))
                                     {
                                         sb.AppendLine("'MarginL' incorrect: " + rawLine);
                                         sb.AppendLine();
@@ -1589,8 +1585,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                                 }
                                 else if (i == marginRIndex)
                                 {
-                                    int number;
-                                    if (!int.TryParse(f, out number) || f.StartsWith('-'))
+                                    if (!int.TryParse(f, out _) || f.StartsWith('-'))
                                     {
                                         sb.AppendLine("'MarginR' incorrect: " + rawLine);
                                         sb.AppendLine();
@@ -1598,8 +1593,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                                 }
                                 else if (i == marginVIndex)
                                 {
-                                    int number;
-                                    if (!int.TryParse(f, out number) || f.StartsWith('-'))
+                                    if (!int.TryParse(f, out _) || f.StartsWith('-'))
                                     {
                                         sb.AppendLine("'MarginV' incorrect: " + rawLine);
                                         sb.AppendLine();
@@ -1823,7 +1817,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                         }
                     }
                     if (styleName != null && style.Name != null && (styleName.Equals(style.Name, StringComparison.OrdinalIgnoreCase) ||
-                                                                    styleName.Equals("*Default", StringComparison.OrdinalIgnoreCase) && 
+                                                                    styleName.Equals("*Default", StringComparison.OrdinalIgnoreCase) &&
                                                                     style.Name.Equals("Default", StringComparison.OrdinalIgnoreCase)))
                     {
                         style.LoadedFromHeader = true;
