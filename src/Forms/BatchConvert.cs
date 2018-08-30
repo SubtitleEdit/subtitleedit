@@ -14,6 +14,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Core.VobSub;
 using Nikse.SubtitleEdit.Forms.Ocr;
 
 namespace Nikse.SubtitleEdit.Forms
@@ -283,6 +284,7 @@ namespace Nikse.SubtitleEdit.Forms
                 item.SubItems.Add(Utilities.FormatBytesToDisplayFileSize(fi.Length));
                 var isMkv = false;
                 var mkvPgs = new List<string>();
+                var mkvVobSub = new List<string>();
                 int mkvCount = 0;
 
                 SubtitleFormat format = null;
@@ -517,7 +519,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 {
                                     if (track.CodecId.Equals("S_VOBSUB", StringComparison.OrdinalIgnoreCase))
                                     {
-                                        // TODO: Convert from VobSub image based format!
+                                        mkvVobSub.Add((track.Language ?? "undefined") + " #" + track.TrackNumber);
                                     }
                                     else if (track.CodecId.Equals("S_HDMV/PGS", StringComparison.OrdinalIgnoreCase))
                                     {
@@ -555,16 +557,21 @@ namespace Nikse.SubtitleEdit.Forms
                     if (mkvCount > 0)
                         listViewInputFiles.Items.Add(item);
 
-                    if (mkvPgs.Count > 0)
+                    foreach (var lang in mkvPgs)
                     {
-                        foreach (var mkvPg in mkvPgs)
-                        {
-                            item = new ListViewItem(fileName);
-                            item.SubItems.Add(Utilities.FormatBytesToDisplayFileSize(fi.Length));
-                            listViewInputFiles.Items.Add(item);
-                            item.SubItems.Add("Matroska/PGS - " + mkvPg);
-                            item.SubItems.Add("-");
-                        }
+                        item = new ListViewItem(fileName);
+                        item.SubItems.Add(Utilities.FormatBytesToDisplayFileSize(fi.Length));
+                        listViewInputFiles.Items.Add(item);
+                        item.SubItems.Add("Matroska/PGS - " + lang);
+                        item.SubItems.Add("-");
+                    }
+                    foreach (var lang in mkvVobSub)
+                    {
+                        item = new ListViewItem(fileName);
+                        item.SubItems.Add(Utilities.FormatBytesToDisplayFileSize(fi.Length));
+                        listViewInputFiles.Items.Add(item);
+                        item.SubItems.Add("Matroska/VobSub - " + lang);
+                        item.SubItems.Add("-");
                     }
                 }
                 else
@@ -925,7 +932,23 @@ namespace Nikse.SubtitleEdit.Forms
                                     {
                                         if (track.CodecId.Equals("S_VOBSUB", StringComparison.OrdinalIgnoreCase))
                                         {
-                                            // TODO: Convert from VobSub image based format!
+                                            if (trackId == track.TrackNumber.ToString(CultureInfo.InvariantCulture))
+                                            {
+                                                Core.VobSub.Idx idx;
+                                                var vobSubs = LoadVobSubFromMatroska(track, matroska, out idx);
+                                                if (vobSubs.Count > 0)
+                                                {
+                                                    item.SubItems[3].Text = Configuration.Settings.Language.BatchConvert.Ocr;
+                                                    using (var vobSubOcr = new VobSubOcr())
+                                                    {
+                                                        vobSubOcr.FileName = Path.GetFileName(fileName);
+                                                        vobSubOcr.InitializeBatch(vobSubs, idx.Palette, Configuration.Settings.VobSubOcr, fileName, false, track.Language);
+                                                        sub = vobSubOcr.SubtitleFromOcr;
+                                                    }
+                                                }
+                                                fileName = fileName.Substring(0, fileName.LastIndexOf('.')) + ".#" + trackId + "." + track.Language + ".mkv";
+                                                break;
+                                            }
                                         }
                                         else if (track.CodecId.Equals("S_HDMV/PGS", StringComparison.OrdinalIgnoreCase))
                                         {
@@ -1096,6 +1119,30 @@ namespace Nikse.SubtitleEdit.Forms
             buttonSearchFolder.Enabled = true;
             comboBoxFilter.Enabled = true;
             textBoxFilter.Enabled = true;
+        }
+
+        private List<VobSubMergedPack> LoadVobSubFromMatroska(MatroskaTrackInfo matroskaSubtitleInfo, MatroskaFile matroska, out Core.VobSub.Idx idx)
+        {
+            List<VobSubMergedPack> mergedVobSubPacks = new List<VobSubMergedPack>();
+            if (matroskaSubtitleInfo.ContentEncodingType == 1)
+            {
+                idx = null;
+                return mergedVobSubPacks;
+            }
+
+            var sub = matroska.GetSubtitle(matroskaSubtitleInfo.TrackNumber, null);
+            idx = new Core.VobSub.Idx(matroskaSubtitleInfo.GetCodecPrivate().SplitToLines());
+            foreach (var p in sub)
+            {
+                mergedVobSubPacks.Add(new VobSubMergedPack(p.GetData(matroskaSubtitleInfo), TimeSpan.FromMilliseconds(p.Start), 32, null));
+                if (mergedVobSubPacks.Count > 0)
+                    mergedVobSubPacks[mergedVobSubPacks.Count - 1].EndTime = TimeSpan.FromMilliseconds(p.End);
+
+                // fix overlapping (some versions of Handbrake makes overlapping time codes - thx Hawke)
+                if (mergedVobSubPacks.Count > 1 && mergedVobSubPacks[mergedVobSubPacks.Count - 2].EndTime > mergedVobSubPacks[mergedVobSubPacks.Count - 1].StartTime)
+                    mergedVobSubPacks[mergedVobSubPacks.Count - 2].EndTime = TimeSpan.FromMilliseconds(mergedVobSubPacks[mergedVobSubPacks.Count - 1].StartTime.TotalMilliseconds - 1);
+            }
+            return mergedVobSubPacks;
         }
 
         private List<BluRaySupParser.PcsData> LoadBluRaySupFromMatroska(MatroskaTrackInfo track, MatroskaFile matroska)

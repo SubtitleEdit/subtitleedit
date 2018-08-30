@@ -725,6 +725,13 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             DoBatch();
         }
 
+        internal void InitializeBatch(List<VobSubMergedPack> vobSubMergedPackist, List<Color> palette, VobSubOcrSettings vobSubOcrSettings, string fileName, bool forcedOnly, string language)
+        {
+            Initialize(vobSubMergedPackist, palette, vobSubOcrSettings, language);
+            checkBoxShowOnlyForced.Checked = forcedOnly;
+            DoBatch();
+        }
+
         private void DoBatch()
         {
             FormVobSubOcr_Shown(null, null);
