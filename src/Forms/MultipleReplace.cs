@@ -12,7 +12,6 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class MultipleReplace : PositionAndSizeForm
     {
-
         internal const string Group = "Group";
         internal const string GroupName = "Name";
         internal const string MultipleSearchAndReplaceItem = "MultipleSearchAndReplaceItem";
@@ -29,7 +28,9 @@ namespace Nikse.SubtitleEdit.Forms
         private Subtitle _subtitle;
         public List<int> DeleteIndices { get; private set; }
         public Subtitle FixedSubtitle { get; private set; }
-        public int FixCount { get; private set; }
+        public int FixCount => _fixedTotalLines.Count;
+        private readonly List<int> _fixedTotalLines;
+        private List<int> _fixedLines;
         private MultipleSearchAndReplaceGroup _currentGroup;
 
         public MultipleReplace()
@@ -98,16 +99,13 @@ namespace Nikse.SubtitleEdit.Forms
 
             radioButtonCaseSensitive.Left = radioButtonNormal.Left + radioButtonNormal.Width + 40;
             radioButtonRegEx.Left = radioButtonCaseSensitive.Left + radioButtonCaseSensitive.Width + 40;
+            _fixedLines = new List<int>();
+            _fixedTotalLines = new List<int>();
         }
 
         public void Initialize(Subtitle subtitle)
         {
-            if (subtitle == null)
-            {
-                throw new ArgumentNullException(nameof(subtitle));
-            }
-
-            _subtitle = subtitle;
+            _subtitle = subtitle ?? throw new ArgumentNullException(nameof(subtitle));
             _oldMultipleSearchAndReplaceGroups.Clear();
 
             if (Configuration.Settings.MultipleSearchAndReplaceGroups.Count == 0)
@@ -170,10 +168,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void RadioButtonCheckedChanged(object sender, EventArgs e)
         {
-            if (sender == radioButtonRegEx)
-                textBoxFind.ContextMenu = FindReplaceDialogHelper.GetRegExContextMenu(textBoxFind);
-            else
-                textBoxFind.ContextMenu = null;
+            textBoxFind.ContextMenu = sender == radioButtonRegEx ? FindReplaceDialogHelper.GetRegExContextMenu(textBoxFind) : null;
         }
 
         private void ButtonAddClick(object sender, EventArgs e)
@@ -214,7 +209,7 @@ namespace Nikse.SubtitleEdit.Forms
             Cursor = Cursors.WaitCursor;
             FixedSubtitle = new Subtitle(_subtitle);
             DeleteIndices = new List<int>();
-            FixCount = 0;
+            _fixedLines = new List<int>();
             listViewFixes.BeginUpdate();
             listViewFixes.Items.Clear();
             var replaceExpressions = new HashSet<ReplaceExpression>();
@@ -245,8 +240,9 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             var fixes = new List<ListViewItem>();
-            foreach (Paragraph p in _subtitle.Paragraphs)
+            for (var i = 0; i < _subtitle.Paragraphs.Count; i++)
             {
+                Paragraph p = _subtitle.Paragraphs[i];
                 bool hit = false;
                 string newText = p.Text;
                 foreach (ReplaceExpression item in replaceExpressions)
@@ -278,14 +274,14 @@ namespace Nikse.SubtitleEdit.Forms
                             {
                                 newText = newText.Remove(index, item.FindWhat.Length).Insert(index, item.ReplaceWith);
                                 index = newText.IndexOf(item.FindWhat, index + item.ReplaceWith.Length, StringComparison.OrdinalIgnoreCase);
-                            }
-                            while (index >= 0);
+                            } while (index >= 0);
                         }
                     }
                 }
+
                 if (hit && newText != p.Text)
                 {
-                    FixCount++;
+                    _fixedLines.Add(i);
                     fixes.Add(MakePreviewListItem(p, newText));
                     int index = _subtitle.GetIndex(p);
                     FixedSubtitle.Paragraphs[index].Text = newText;
@@ -295,9 +291,10 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
+
             listViewFixes.Items.AddRange(fixes.ToArray());
             listViewFixes.EndUpdate();
-            groupBoxLinesFound.Text = string.Format(Configuration.Settings.Language.MultipleReplace.LinesFoundX, FixCount);
+            groupBoxLinesFound.Text = string.Format(Configuration.Settings.Language.MultipleReplace.LinesFoundX, _fixedLines.Count);
             Cursor = Cursors.Default;
             DeleteIndices.Reverse();
         }
@@ -341,6 +338,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
+            foreach (var fixedLine in _fixedLines)
+            {
+                if (!_fixedTotalLines.Contains(fixedLine))
+                    _fixedTotalLines.Add(fixedLine);
+            }
             ResetUncheckLines();
             SaveReplaceList(true);
             DialogResult = DialogResult.OK;
@@ -1055,6 +1057,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonApply_Click(object sender, EventArgs e)
         {
+            foreach (var fixedLine in _fixedLines)
+            {
+                if (!_fixedTotalLines.Contains(fixedLine))
+                    _fixedTotalLines.Add(fixedLine);
+            }
             ResetUncheckLines();
             _subtitle = new Subtitle(FixedSubtitle);
             GeneratePreview();
