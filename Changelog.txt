@@ -91,6 +91,7 @@
    * Fix for setting index for recent file - thx OmrSi
    * Fix current line issue for "Set end, offset rest" - thx OmrSi
    * Fixed decimal point issue with ASS - thx Thierry
+   * Fixed info msg after "Multiple replace" - thx OmrSi
 
 
 3.5.6 (27th February 2018)
