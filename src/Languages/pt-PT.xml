@@ -1860,8 +1860,8 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <EndSceneIndex>O parágrafo final da cena é</EndSceneIndex>
     <FirstPlusX>Primeiro + {0}</FirstPlusX>
     <LastMinusX>Último - {0}</LastMinusX>
-    <FixCommonerrors>Corrigir erros frequentes</FixCommonerrors>
-    <RemoveTextForHi>Eliminar texto para Deficientes Auditivos</RemoveTextForHi>
+    <FixCommonerrors>Erros frequentes</FixCommonerrors>
+    <RemoveTextForHi>Deficientes Auditivos</RemoveTextForHi>
     <MergeLinesShorterThan>Remover quebra em linha menor que...</MergeLinesShorterThan>
     <MusicSymbol>Símbolo musical</MusicSymbol>
     <MusicSymbolsReplace>Símbolos musicais para substituir (separados por vírgula)</MusicSymbolsReplace>
@@ -1960,6 +1960,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <GoToFirstSelectedLine>Ir para a primeira linha seleccionada</GoToFirstSelectedLine>
     <GoToNextEmptyLine>Ir para a próxima linha em branco</GoToNextEmptyLine>
     <MergeSelectedLines>Combinar as linhas seleccionadas</MergeSelectedLines>
+	<MergeSelectedLinesAndAutoBreak>Combinar as linhas seleccionadas e quebrar linha</MergeSelectedLinesAndAutoBreak>
     <MergeSelectedLinesAndUnbreak>Combinar as linhas seleccionadas e remover quebra</MergeSelectedLinesAndUnbreak>
     <MergeSelectedLinesAndUnbreakCjk>Combinar as linhas seleccionadas e remover quebra sem espaço (CJK)</MergeSelectedLinesAndUnbreakCjk>
     <MergeSelectedLinesOnlyFirstText>Combinar as linhas seleccionadas, manter só o primeiro texto que não esteja em branco</MergeSelectedLinesOnlyFirstText>
