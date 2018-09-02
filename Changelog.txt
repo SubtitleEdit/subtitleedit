@@ -44,6 +44,7 @@
    * Allow up to 2 mb ebu stl sub files - thx Yusuf
    * Add "Import as plain text" button for unknown subtitle types
    * Improve ansi code page detection a bit - thx Xy
+   * Batch convert can now handle mkv pgs/vobsub
 * FIXED:
    * Fix "Add to names list" in OCR spell check - thx daed-alus/Sergiy
    * Fix "Generate scene changes" decimal point issue - thx Max
