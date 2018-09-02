@@ -12851,9 +12851,12 @@ namespace Nikse.SubtitleEdit.Forms
                 e.SuppressKeyPress = true;
                 if (SubtitleListview1.SelectedItems.Count >= 1)
                 {
+                    MakeHistoryForUndo(_language.BeforeDisplayTimeAdjustment);
+                    _makeHistoryPaused = true;
                     var idx = SubtitleListview1.SelectedItems[0].Index;
                     _subtitle.RecalculateDisplayTime(Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds, idx, Configuration.Settings.General.SubtitleOptimalCharactersPerSeconds);
                     SetDurationInSeconds(_subtitle.Paragraphs[idx].Duration.TotalSeconds);
+                    _makeHistoryPaused = false;
                 }
             }
             else if (_mainAdjustExtendCurrentSubtitle == e.KeyData && (tabControlButtons.SelectedTab == tabPageAdjust || tabControlButtons.SelectedTab == tabPageCreate))
