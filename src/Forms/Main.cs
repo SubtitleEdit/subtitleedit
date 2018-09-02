@@ -7447,7 +7447,8 @@ namespace Nikse.SubtitleEdit.Forms
         private void DeleteSelectedLines()
         {
             _subtitleListViewIndex = -1;
-
+            textBoxListViewText.Text = string.Empty;
+            textBoxListViewTextAlternate.Text = string.Empty;
             if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0)
             {
                 var alternateIndices = new List<int>();
@@ -12368,6 +12369,7 @@ namespace Nikse.SubtitleEdit.Forms
                         _endSeconds = -1;
                         mediaPlayer.TogglePlayPause();
                         e.SuppressKeyPress = true;
+                        e.Handled = true;
                     }
                 }
             }
@@ -12475,6 +12477,7 @@ namespace Nikse.SubtitleEdit.Forms
                     _endSeconds = -1;
                     mediaPlayer.TogglePlayPause();
                     e.SuppressKeyPress = true;
+                    e.Handled = true;
                 }
             }
             else if (e.Modifiers == (Keys.Control | Keys.Alt | Keys.Shift) && e.KeyCode == Keys.W) // watermark
