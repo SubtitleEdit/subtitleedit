@@ -26,11 +26,11 @@ namespace Nikse.SubtitleEdit.Forms
         private readonly List<MultipleSearchAndReplaceGroup> _oldMultipleSearchAndReplaceGroups = new List<MultipleSearchAndReplaceGroup>();
         private readonly Dictionary<string, Regex> _compiledRegExList = new Dictionary<string, Regex>();
         private Subtitle _subtitle;
+        private Subtitle _original;
         public List<int> DeleteIndices { get; private set; }
         public Subtitle FixedSubtitle { get; private set; }
-        public int FixCount => _fixedTotalLines.Count;
-        private readonly List<int> _fixedTotalLines;
-        private List<int> _fixedLines;
+        public int FixCount { get; private set; }
+
         private MultipleSearchAndReplaceGroup _currentGroup;
 
         public MultipleReplace()
@@ -99,13 +99,12 @@ namespace Nikse.SubtitleEdit.Forms
 
             radioButtonCaseSensitive.Left = radioButtonNormal.Left + radioButtonNormal.Width + 40;
             radioButtonRegEx.Left = radioButtonCaseSensitive.Left + radioButtonCaseSensitive.Width + 40;
-            _fixedLines = new List<int>();
-            _fixedTotalLines = new List<int>();
         }
 
         public void Initialize(Subtitle subtitle)
         {
             _subtitle = subtitle ?? throw new ArgumentNullException(nameof(subtitle));
+            _original = new Subtitle(_subtitle);
             _oldMultipleSearchAndReplaceGroups.Clear();
 
             if (Configuration.Settings.MultipleSearchAndReplaceGroups.Count == 0)
@@ -209,7 +208,7 @@ namespace Nikse.SubtitleEdit.Forms
             Cursor = Cursors.WaitCursor;
             FixedSubtitle = new Subtitle(_subtitle);
             DeleteIndices = new List<int>();
-            _fixedLines = new List<int>();
+            int fixedLines = 0;
             listViewFixes.BeginUpdate();
             listViewFixes.Items.Clear();
             var replaceExpressions = new HashSet<ReplaceExpression>();
@@ -281,7 +280,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (hit && newText != p.Text)
                 {
-                    _fixedLines.Add(i);
+                    fixedLines++;
                     fixes.Add(MakePreviewListItem(p, newText));
                     int index = _subtitle.GetIndex(p);
                     FixedSubtitle.Paragraphs[index].Text = newText;
@@ -294,7 +293,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             listViewFixes.Items.AddRange(fixes.ToArray());
             listViewFixes.EndUpdate();
-            groupBoxLinesFound.Text = string.Format(Configuration.Settings.Language.MultipleReplace.LinesFoundX, _fixedLines.Count);
+            groupBoxLinesFound.Text = string.Format(Configuration.Settings.Language.MultipleReplace.LinesFoundX, fixedLines);
             Cursor = Cursors.Default;
             DeleteIndices.Reverse();
         }
@@ -338,14 +337,21 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
-            foreach (var fixedLine in _fixedLines)
-            {
-                if (!_fixedTotalLines.Contains(fixedLine))
-                    _fixedTotalLines.Add(fixedLine);
-            }
             ResetUncheckLines();
+            SetFixCount();
             SaveReplaceList(true);
             DialogResult = DialogResult.OK;
+        }
+
+        public void SetFixCount()
+        {
+            for (var index = 0; index < _original.Paragraphs.Count; index++)
+            {
+                var p = _original.Paragraphs[index];
+                var f = FixedSubtitle.GetParagraphOrDefault(index);
+                if (f != null && f.Text != p.Text)
+                    FixCount++;
+            }
         }
 
         private void SaveReplaceList(bool saveToDisk)
@@ -1057,11 +1063,6 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonApply_Click(object sender, EventArgs e)
         {
-            foreach (var fixedLine in _fixedLines)
-            {
-                if (!_fixedTotalLines.Contains(fixedLine))
-                    _fixedTotalLines.Add(fixedLine);
-            }
             ResetUncheckLines();
             _subtitle = new Subtitle(FixedSubtitle);
             GeneratePreview();
