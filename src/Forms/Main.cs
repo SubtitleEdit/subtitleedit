@@ -7537,6 +7537,17 @@ namespace Nikse.SubtitleEdit.Forms
                     newParagraph.StartTime.TotalMilliseconds = prev.EndTime.TotalMilliseconds + 1;
                 if (newParagraph.Duration.TotalMilliseconds < 100)
                     newParagraph.EndTime.TotalMilliseconds += 100;
+
+                if (next != null && next.StartTime.IsMaxTime && prev.EndTime.IsMaxTime)
+                {
+                    newParagraph.StartTime.TotalMilliseconds = TimeCode.MaxTimeTotalMilliseconds;
+                    newParagraph.EndTime.TotalMilliseconds = TimeCode.MaxTimeTotalMilliseconds;
+                }
+                else if (next != null && next.StartTime.TotalMilliseconds == 0 && prev.EndTime.TotalMilliseconds == 0)
+                {
+                    newParagraph.StartTime.TotalMilliseconds = 0;
+                    newParagraph.EndTime.TotalMilliseconds = 0;
+                }
             }
             else if (prev != null)
             {
@@ -7549,6 +7560,17 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 newParagraph.StartTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - 2000;
                 newParagraph.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - 1;
+
+                if (next.StartTime.IsMaxTime)
+                {
+                    newParagraph.StartTime.TotalMilliseconds = TimeCode.MaxTimeTotalMilliseconds;
+                    newParagraph.EndTime.TotalMilliseconds = TimeCode.MaxTimeTotalMilliseconds;
+                }
+                else if (next.StartTime.TotalMilliseconds == 0 && next.EndTime.TotalMilliseconds == 0)
+                {
+                    newParagraph.StartTime.TotalMilliseconds = 0;
+                    newParagraph.EndTime.TotalMilliseconds = 0;
+                }
             }
             else
             {
@@ -7627,6 +7649,27 @@ namespace Nikse.SubtitleEdit.Forms
                     newParagraph.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - 1;
                 if (newParagraph.StartTime.TotalMilliseconds > newParagraph.EndTime.TotalMilliseconds)
                     newParagraph.StartTime.TotalMilliseconds = prev.EndTime.TotalMilliseconds + 1;
+
+                if (next != null && next.StartTime.IsMaxTime && prev.EndTime.IsMaxTime)
+                {
+                    newParagraph.StartTime.TotalMilliseconds = TimeCode.MaxTimeTotalMilliseconds;
+                    newParagraph.EndTime.TotalMilliseconds = TimeCode.MaxTimeTotalMilliseconds;
+                }
+                else if (next != null && next.StartTime.TotalMilliseconds == 0 && prev.EndTime.TotalMilliseconds == 0)
+                {
+                    newParagraph.StartTime.TotalMilliseconds = 0;
+                    newParagraph.EndTime.TotalMilliseconds = 0;
+                }
+                else if (next == null && prev.EndTime.IsMaxTime)
+                {
+                    newParagraph.StartTime.TotalMilliseconds = TimeCode.MaxTimeTotalMilliseconds;
+                    newParagraph.EndTime.TotalMilliseconds = TimeCode.MaxTimeTotalMilliseconds;
+                }
+                else if (next == null && prev.EndTime.TotalMilliseconds == 0)
+                {
+                    newParagraph.StartTime.TotalMilliseconds = 0;
+                    newParagraph.EndTime.TotalMilliseconds = 0;
+                }
             }
             else if (next != null)
             {
