@@ -13307,9 +13307,8 @@ namespace Nikse.SubtitleEdit.Forms
                 if (p.Duration.TotalMilliseconds + ms > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
                     return;
 
-
                 var next = _subtitle.GetParagraphOrDefault(i + 1);
-                if (next == null || p.StartTime.TotalMilliseconds - (Math.Abs(ms) + Configuration.Settings.General.MinimumMillisecondsBetweenLines) < next.StartTime.TotalMilliseconds)
+                if (next == null || p.EndTime.TotalMilliseconds + ms + Configuration.Settings.General.MinimumMillisecondsBetweenLines < next.StartTime.TotalMilliseconds)
                 {
                     p.EndTime.TotalMilliseconds = p.EndTime.TotalMilliseconds + ms;
                 }
