@@ -9758,6 +9758,7 @@ namespace Nikse.SubtitleEdit.Forms
                         if (original != null)
                         {
                             original.EndTime.TotalMilliseconds = currentParagraph.EndTime.TotalMilliseconds;
+                            UpdateListViewTextCharactersPerSeconds(labelAlternateCharactersPerSecond, original);
                         }
                     }
 
