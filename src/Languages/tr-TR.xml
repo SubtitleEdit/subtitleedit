@@ -2,7 +2,7 @@
 <Language Name="Türkçe">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.5.6</Version>
+    <Version>3.5.7</Version>
     <TranslatedBy>Türkçe Çeviri: Falcon006</TranslatedBy>
     <CultureName>tr-TR</CultureName>
     <HelpFile />
@@ -282,7 +282,7 @@ Not: Boş disk alanını kontrol edin.</WaveFileMalformed>
     <XNumberOfDifferenceAndPercentLettersChanged>Fark sayısı: {0} ({1}% harf değiştirildi)</XNumberOfDifferenceAndPercentLettersChanged>
     <ShowOnlyDifferences>Sadece farkları göster</ShowOnlyDifferences>
     <IgnoreLineBreaks>Boş satırları yoksay</IgnoreLineBreaks>
-	<IgnoreFormatting>Biçimlendirmeyi yoksay</IgnoreFormatting>
+    <IgnoreFormatting>Biçimlendirmeyi yoksay</IgnoreFormatting>
     <OnlyLookForDifferencesInText>Sadece metindeki farklılıklara bak</OnlyLookForDifferencesInText>
     <CannotCompareWithImageBasedSubtitles>Görüntü tabanlı altyazı karşılaştırılamaz</CannotCompareWithImageBasedSubtitles>
   </CompareSubtitles>
@@ -462,7 +462,7 @@ Not: Boş disk alanını kontrol edin.</WaveFileMalformed>
     <Left>Sol</Left>
     <Right>Sağ</Right>
     <Center>Orta</Center>
-	<CenterLeftJustify>Orta, sola yasla</CenterLeftJustify>
+    <CenterLeftJustify>Orta, sola yasla</CenterLeftJustify>
     <BottomMargin>Alt boşluk</BottomMargin>
     <LeftRightMargin>Sol/sağ boşluk</LeftRightMargin>
     <SaveBluRraySupAs>Blu-ray altyazı dosya adı seçin</SaveBluRraySupAs>
@@ -1100,7 +1100,7 @@ Not: Boş disk alanını kontrol edin.</WaveFileMalformed>
         <Paste>Yapıştır</Paste>
         <Delete>Sil</Delete>
         <SplitLineAtCursorPosition>Satırı imlecin olduğu konumdan böl</SplitLineAtCursorPosition>
-		<SplitLineAtCursorAndWaveformPosition>Satırı imleç/video konumundan böl</SplitLineAtCursorAndWaveformPosition>
+        <SplitLineAtCursorAndWaveformPosition>Satırı imleç/video konumundan böl</SplitLineAtCursorAndWaveformPosition>
         <AutoDurationCurrentLine>Otomatik süre (geçerli satır))</AutoDurationCurrentLine>
         <SelectAll>Tümünü seç...</SelectAll>
         <InsertFirstLine>Satır ekle</InsertFirstLine>
@@ -1115,8 +1115,8 @@ Not: Boş disk alanını kontrol edin.</WaveFileMalformed>
         <ColumnInsertTextFromSubtitle>Altyazıdan metin ekle...</ColumnInsertTextFromSubtitle>
         <ColumnImportTextAndShiftCellsDown>Metini içe aktar ve hücreleri aşağı taşı</ColumnImportTextAndShiftCellsDown>
         <ColumnPasteFromClipboard>Panodan yapıştır...</ColumnPasteFromClipboard>
-		<ColumnTextUp>Metin yukarı</ColumnTextUp>
-		<ColumnTextDown>Metin aşağı</ColumnTextDown>
+        <ColumnTextUp>Metin yukarı</ColumnTextUp>
+        <ColumnTextDown>Metin aşağı</ColumnTextDown>
         <ColumnCopyOriginalTextToCurrent>Orijinal geçerliden metin kopyala</ColumnCopyOriginalTextToCurrent>
         <Split>Böl</Split>
         <MergeSelectedLines>Seçilen satırları birleştir</MergeSelectedLines>
@@ -1443,7 +1443,7 @@ Devam edilsin mi?</SubtitleAppendPrompt>
     <BeforeColumnDelete>Sütun silmeden önce</BeforeColumnDelete>
     <BeforeColumnImportText>Metne sütun içe aktarmadan önce</BeforeColumnImportText>
     <BeforeColumnShiftCellsDown>Sütun hücrelerini aşağı taşımadan önce</BeforeColumnShiftCellsDown>
-	<BeforeX>Önce: {0}</BeforeX>
+    <BeforeX>Önce: {0}</BeforeX>
     <ErrorLoadingPluginXErrorY>Eklenti yükleme hatası: {0}: {1</ErrorLoadingPluginXErrorY>
     <BeforeRunningPluginXVersionY>Eklenti çalıştırmadan önce: {0}: {1}</BeforeRunningPluginXVersionY>
     <UnableToReadPluginResult>Eklentiden altyazı sonucu okunamıyor!</UnableToReadPluginResult>
@@ -1459,7 +1459,7 @@ Devam edilsin mi?</SubtitleAppendPrompt>
     <ParsingTransportStream>Ayrıştırma işlemi devam ediyor. - Lütfen bekleyin...</ParsingTransportStream>
     <XPercentCompleted>{0}% tamamlandı</XPercentCompleted>
     <NextX>Sonraki: {0}</NextX>
-	<PromptInsertSubtitleOverlap>Dalga formu konumuna altyazı eklemek çakışmaya neden olur!
+    <PromptInsertSubtitleOverlap>Dalga formu konumuna altyazı eklemek çakışmaya neden olur!
 
 Yinede devam edilsin mi?</PromptInsertSubtitleOverlap>
     <SetPlayRateX>Oynatma oranını (hızını) ayarla {0}%</SetPlayRateX>
@@ -1560,7 +1560,7 @@ Eğer Subtitle Edit ile bu dosyayı düzenlediyseniz, menü öğesi dosyası üz
     <Export>Dışa aktar...</Export>
     <ImportRulesTitle>Alma kural(larını) yer değiştirin...</ImportRulesTitle>
     <ExportRulesTitle>Çıkartma kural(larını) yer değiştirin...</ExportRulesTitle>
-	<ChooseGroupsToImport>İçe aktarmak için grupları seç</ChooseGroupsToImport>
+    <ChooseGroupsToImport>İçe aktarmak için grupları seç</ChooseGroupsToImport>
     <ChooseGroupsToExport>Dışa aktarmak için grupları seç</ChooseGroupsToExport>
     <Rules>Bul ve yer değiştime kuralları </Rules>
     <MoveToTop>Üste taşı</MoveToTop>
@@ -1571,7 +1571,7 @@ Eğer Subtitle Edit ile bu dosyayı düzenlediyseniz, menü öğesi dosyası üz
     <GroupName>Grup ismi</GroupName>
     <RenameGroup>Grubu yeniden adlandır...</RenameGroup>
     <NewGroup>Yeni grup...</NewGroup>
-	<NothingToImport>İçe aktarılacak hiçbir şey yok</NothingToImport>
+    <NothingToImport>İçe aktarılacak hiçbir şey yok</NothingToImport>
   </MultipleReplace>
   <NetworkChat>
     <Title>Sohbet</Title>
@@ -1721,7 +1721,7 @@ Yeni oturum başlatın (işbirliği)</Information>
     <NetflixQualityCheck>Netflix kalite kontrolü</NetflixQualityCheck>
     <SettingsName>Ayarlar</SettingsName>
     <Help>Yardım</Help>
-	<UnbreakNoSpace>Boşluksuz ayırma (CJK)</UnbreakNoSpace>
+    <UnbreakNoSpace>Boşluksuz ayırma (CJK)</UnbreakNoSpace>
     <ShowFrameRate>Kare hızını araç çubuğunda göster</ShowFrameRate>
     <DefaultFrameRate>Varsayılan kare hızı</DefaultFrameRate>
     <DefaultFileEncoding>Varsayılan dosya kodlama</DefaultFileEncoding>
@@ -1930,8 +1930,8 @@ Yeni oturum başlatın (işbirliği)</Information>
     <TogglePlayPause>Oynat/duraklat Geçişi</TogglePlayPause>
     <Pause>Duraklat</Pause>
     <Fullscreen>Tam Ekran</Fullscreen>
-	<PlayRateSlower>Daha yavaş oynatma hızı</PlayRateSlower>
-	<PlayRateFaster>Daha hızlı oynatma hızı</PlayRateFaster>
+    <PlayRateSlower>Daha yavaş oynatma hızı</PlayRateSlower>
+    <PlayRateFaster>Daha hızlı oynatma hızı</PlayRateFaster>
     <CustomSearch1>Çevir, özel arama 1</CustomSearch1>
     <CustomSearch2>Çevir, özel arama 2</CustomSearch2>
     <CustomSearch3>Çevir, özel arama 3</CustomSearch3>
@@ -1960,7 +1960,7 @@ Yeni oturum başlatın (işbirliği)</Information>
     <ListViewColumnDelete>Sütunda, metin sil</ListViewColumnDelete>
     <ListViewColumnInsert>Sütuna, metin ekle</ListViewColumnInsert>
     <ListViewColumnPaste>Sütun, yapıştır</ListViewColumnPaste>
-	<ListViewColumnTextUp>Sütun, metin yukarı</ListViewColumnTextUp>
+    <ListViewColumnTextUp>Sütun, metin yukarı</ListViewColumnTextUp>
     <ListViewColumnTextDown>Sütun, metin aşağı</ListViewColumnTextDown>
     <ListViewFocusWaveform>Dalga formu/spektrogram odakla</ListViewFocusWaveform>
     <ListViewGoToNextError>Sonraki hataya git</ListViewGoToNextError>
@@ -2035,7 +2035,7 @@ Yeni oturum başlatın (işbirliği)</Information>
     <EditWholeText>Tam metni düzenle</EditWholeText>
     <EditWordOnly>Sadece kelimeyi düzenle</EditWordOnly>
     <AddXToNames>İsimler listesine '{0}' ekle</AddXToNames>
-	<AddXToUserDictionary>Kullanıcı sözlüğüne '{0}' ekle</AddXToUserDictionary>
+    <AddXToUserDictionary>Kullanıcı sözlüğüne '{0}' ekle</AddXToUserDictionary>
     <AutoFixNames>Adları yalnızca gövde farklılıklarına göre otomatik düzelt</AutoFixNames>
     <CheckOneLetterWords>Bilinmeyen "tek harf"leri kontrol et</CheckOneLetterWords>
     <TreatINQuoteAsING>Fiillerin sonundaki "ini'yi "ing"e çevir (sadece İngilizce'de)</TreatINQuoteAsING>

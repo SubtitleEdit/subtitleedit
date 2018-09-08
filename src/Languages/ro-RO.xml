@@ -2,7 +2,7 @@
 <Language Name="română">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.5.6</Version>
+    <Version>3.5.7</Version>
     <TranslatedBy>Tradus de Mircea Voiculescu</TranslatedBy>
     <CultureName>ro-RO</CultureName>
     <HelpFile />
@@ -128,15 +128,6 @@ Linia de comandă: {1} {2}
 Notă: Verifică spațiul liber al discului.</WaveFileMalformed>
     <LowDiskSpace>SPAȚIUL DISCULUI REDUS!</LowDiskSpace>
     <FreeDiskSpace>{0} liber</FreeDiskSpace>
-
-
-
-
-
-
-
-
-
   </AddWaveform>
   <AddWaveformBatch>
     <Title>Pachet date audio generate</Title>
@@ -1210,10 +1201,6 @@ Notă: Verifică spațiul liber al discului.</WaveFileMalformed>
       <NewTextInsertAtX>Text nou inserat la {0}</NewTextInsertAtX>
       <Center>Centru</Center>
       <PlayRate>Rata de redare (viteză)</PlayRate>
-      
-
-
-
     </VideoControls>
     <SaveChangesToUntitled>Salvezi modificările în fișier nedenumit?</SaveChangesToUntitled>
     <SaveChangesToX>Salvezi modificările la {0}?</SaveChangesToX>
@@ -1593,8 +1580,6 @@ Dacă aveți de editat acest fișier cu SE ați putea descoperi un backup realiz
     <Information>Alătură-te sesiunii existente, unde mai multe persoane 
 pot edita în același fișier de subtitrare (colaborare)</Information>
     <Join>Alătură-te</Join>
-
-
   </NetworkJoin>
   <NetworkLogAndInfo>
     <Title>Informații și jurnal despre sesiunea de rețea</Title>
@@ -1605,8 +1590,6 @@ pot edita în același fișier de subtitrare (colaborare)</Information>
     <ConnectionTo>Conectare la {0}...</ConnectionTo>
     <Information>Start sesiune nouă, unde mai multe persoane 
 pot edita în acelasi fișier de subtitrare (colaborare)</Information>
-
-
     <Start>Start</Start>
   </NetworkStart>
   <OpenVideoDvd>
@@ -1743,7 +1726,7 @@ pot edita în acelasi fișier de subtitrare (colaborare)</Information>
     <AutoDetectAnsiEncoding>Auto-detectare codare ANSI</AutoDetectAnsiEncoding>
     <SubtitleLineMaximumLength>Lung. max. a unei singure linii</SubtitleLineMaximumLength>
     <MaximumCharactersPerSecond>Maxim de caractere/sec.</MaximumCharactersPerSecond>
-<MaximumWordssPerMinute>Maxim de cuvinte/min</MaximumWordssPerMinute>
+    <MaximumWordssPerMinute>Maxim de cuvinte/min</MaximumWordssPerMinute>
     <AutoWrapWhileTyping>Auto-încadrare în timpul tastării</AutoWrapWhileTyping>
     <DurationMinimumMilliseconds>Durată minimă, în milisec.</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>Durată maximă, în milisec.</DurationMaximumMilliseconds>
@@ -1926,7 +1909,7 @@ pot edita în acelasi fișier de subtitrare (colaborare)</Information>
     <WaveformPlayNewSelectionEnd>Redă sfârșitul selecției</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Redă prima subtitrare selectată</WaveformPlayFirstSelectedSubtitle>
     <WaveformFocusListView>Focalizează lista de explorare</WaveformFocusListView>
-	<WaveformGoToNextSubtitle>Trece la următoarea subtitrare (de la poz. video)</WaveformGoToNextSubtitle>
+    <WaveformGoToNextSubtitle>Trece la următoarea subtitrare (de la poz. video)</WaveformGoToNextSubtitle>
     <WaveformGoToPreviousSceneChange>Trece la precedenta schimbare de scenă</WaveformGoToPreviousSceneChange>
     <WaveformGoToNextSceneChange>Trece la următoarea schimbare de scenă</WaveformGoToNextSceneChange>
     <WaveformToggleSceneChange>Comută schimbarea scenei</WaveformToggleSceneChange>
@@ -2250,8 +2233,6 @@ Păstrezi schimbările?</KeepChangesMessage>
     <SynchronizationDone>Sincronizare făcută!</SynchronizationDone>
     <StartSceneMustComeBeforeEndScene>Startul scenei trebuie să fie înaintea sfârșitului scenei!</StartSceneMustComeBeforeEndScene>
     <Tip>Sfat: Tastele &lt;Ctrl+←/→&gt; ptr. mutare 100 ms înapoi/înainte</Tip>
-
-
   </VisualSync>
   <VobSubEditCharacters>
     <Title>Editare imagine comparată cu baza de date</Title>

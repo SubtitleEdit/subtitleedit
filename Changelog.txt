@@ -1,6 +1,6 @@
 ﻿Subtitle Edit Changelog
 
-3.5.7 (xth August 2018) BETA
+3.5.7 (9th August 2018)
 * NEW:
    * Add new subtitle formats
    * Font can be different for subtitle list view / text box
@@ -25,7 +25,7 @@
    * Update Basque translation - thx Xabier
    * Update Portuguese translation - thx moob
    * Update Russian translation - thx Elheym
-   * Update Tesseract OCR from 3.02 to 4.0 (beta 1)
+   * Update Tesseract OCR from 3.02 to 4.0 (beta 3)
    * Minor improvements for Video -> Generate/import scene changes
    * Remember OCR spell check dictionary for tesseract - thx raymondjpg
    * Add some style support to "Modify selection"
