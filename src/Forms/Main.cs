@@ -7538,15 +7538,21 @@ namespace Nikse.SubtitleEdit.Forms
                 if (newParagraph.Duration.TotalMilliseconds < 100)
                     newParagraph.EndTime.TotalMilliseconds += 100;
 
-                if (next != null && next.StartTime.IsMaxTime && prev.EndTime.IsMaxTime)
+                if (next.StartTime.IsMaxTime && prev.EndTime.IsMaxTime)
                 {
                     newParagraph.StartTime.TotalMilliseconds = TimeCode.MaxTimeTotalMilliseconds;
                     newParagraph.EndTime.TotalMilliseconds = TimeCode.MaxTimeTotalMilliseconds;
                 }
-                else if (next != null && next.StartTime.TotalMilliseconds == 0 && prev.EndTime.TotalMilliseconds == 0)
+                else if (next.StartTime.TotalMilliseconds == 0 && prev.EndTime.TotalMilliseconds == 0)
                 {
                     newParagraph.StartTime.TotalMilliseconds = 0;
                     newParagraph.EndTime.TotalMilliseconds = 0;
+                }
+                else if (prev.StartTime.TotalMilliseconds == next.StartTime.TotalMilliseconds &&
+                         prev.EndTime.TotalMilliseconds == next.EndTime.TotalMilliseconds)
+                {
+                    newParagraph.StartTime.TotalMilliseconds = prev.StartTime.TotalMilliseconds;
+                    newParagraph.EndTime.TotalMilliseconds = prev.EndTime.TotalMilliseconds;
                 }
             }
             else if (prev != null)
@@ -7669,6 +7675,13 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     newParagraph.StartTime.TotalMilliseconds = 0;
                     newParagraph.EndTime.TotalMilliseconds = 0;
+                }
+                else if (next != null &&
+                         prev.StartTime.TotalMilliseconds == next.StartTime.TotalMilliseconds &&
+                         prev.EndTime.TotalMilliseconds == next.EndTime.TotalMilliseconds)
+                {
+                    newParagraph.StartTime.TotalMilliseconds = prev.StartTime.TotalMilliseconds;
+                    newParagraph.EndTime.TotalMilliseconds = prev.EndTime.TotalMilliseconds;
                 }
             }
             else if (next != null)
