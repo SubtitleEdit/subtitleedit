@@ -5,6 +5,8 @@
 	<Item>dipl.</Item>
 	<Item>Dr.</Item>
 	<Item>Dr</Item>
+	<Item>dr.</Item>
+	<Item>dr</Item>
 	<Item>g.</Item>
 	<Item>g</Item>
 	<Item>god.</Item>
@@ -17,9 +19,10 @@
 	<Item>gđici</Item>
 	<Item>gđicu</Item>
 	<Item>ing.</Item>
+	<Item>mr.</Item>
 	<Item>prof</Item>
 	<Item>prof.</Item>
 	<Item>sv.</Item>
-  <Item>sv</Item>
+  	<Item>sv</Item>
 	<Item>vlč.</Item>
 </NoBreakAfterList>
