@@ -1156,6 +1156,8 @@
     <Word from="Sakriću" to="Sakrit ću" />
     <Word from="sakriću" to="sakrit ću" />
     <Word from="samosvest" to="samosvijest" />
+    <Word from="samnom" to="sa mnom" />
+    <Word from="Samnom" to="Sa mnom" />
     <Word from="saviješću" to="savješću" />
     <Word from="savešću" to="savješću" />
     <Word from="secka" to="sjecka" />
@@ -1681,6 +1683,8 @@
     <Word from="zalepiti" to="zalijepiti" />
     <Word from="zaliv" to="zaljev" />
     <Word from="zalivu" to="zaljevu" />
+    <Word from="zamnom" to="za mnom" />
+    <Word from="Zamnom" to="Za mnom" />
     <Word from="zanm" to="znam" />
     <Word from="zanma" to="zanima" />
     <Word from="zaplena" to="zapljena" />
@@ -2983,7 +2987,6 @@
     <RegEx find="([žŽ])ude([lt])" replaceWith="$1udje$2" />
     <RegEx find="žur[ck]" replaceWith="zabav" />
     <RegEx find="Žur[ck]" replaceWith="Zabav" />
-    <RegEx find="([sSzZ])amnom" replaceWith="$1a mnom" />
     <RegEx find="([sSnNpPzZ]r?[aoi]z[vn])ać" replaceWith="$1at ć" />
     <!-- mjeseci [\b mora biti nakon jun]-->
     <RegEx find="([Ss])j?ečnj([au]|ima)" replaceWith="$1iječnj$2" />
