@@ -1728,7 +1728,7 @@
 		<RegEx find="igralista" replaceWith="igralista" />
 		<RegEx find="iznervira" replaceWith="iživcira" />
 		<RegEx find="asnjav" replaceWith="ašnjav" />
-		<RegEx find="jasnic([eu])" replaceWith="jasnit ć$1" />
+		<RegEx find="([jk])asnic" replaceWith="$1asnit ć" />
 		<RegEx find="juci" replaceWith="jući" />
 		<RegEx find="kaslja" replaceWith="kašlja" />
 		<RegEx find="krsi" replaceWith="krši" />
