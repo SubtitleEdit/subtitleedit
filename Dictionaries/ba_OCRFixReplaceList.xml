@@ -39,6 +39,15 @@
 		<Word from="Cao" to="Ćao" />
 		<Word from="cao" to="ćao" />
 		<Word from="cas" to="sat" />
+		<Word from="casa" to="sata" />
+		<Word from="casu" to="satu" />
+		<Word from="casom" to="satom" />
+		<Word from="casovima" to="satovima" />
+		<Word from="Cas" to="Sat" />
+		<Word from="Casa" to="Sata" />
+		<Word from="Casu" to="Satu" />
+		<Word from="Casom" to="Satom" />
+		<Word from="Casovima" to="Satovima" />		
 		<Word from="casno" to="časno" />
 		<Word from="Casno" to="Časno" />
 		<Word from="castis" to="častiš" />
@@ -1200,8 +1209,6 @@
 		<RegEx find="Caroli(?!n)" replaceWith="Čaroli" />
 		<RegEx find="cast" replaceWith="čast" />
 		<RegEx find="Cast" replaceWith="Čast" />
-		<RegEx find="cas([au]|om|ovima)\b" replaceWith="sat$1" />
-		<RegEx find="Cas([au]|om|ovima)\b" replaceWith="Sat$1" />
 		<RegEx find="[cC]ascen" replaceWith="čašćen" />
 		<RegEx find="C([ae])sc" replaceWith="Č$1šć" />
 		<RegEx find="c([ae])sc" replaceWith="č$1šć" />
