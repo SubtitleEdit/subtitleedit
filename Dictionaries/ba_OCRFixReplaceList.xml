@@ -1660,6 +1660,7 @@
 		<RegEx find="eskuc" replaceWith="eskuć" />
 		<RegEx find="([aez])vrsi" replaceWith="$1vrši" />
 		<RegEx find="acma" replaceWith="ačma" />
+		<RegEx find="acn" replaceWith="ačn" />
 		<RegEx find="aces" replaceWith="aćeš" />
 		<RegEx find="ajvec" replaceWith="ajveć" />
 		<RegEx find="amcen" replaceWith="amčen" />
@@ -1680,11 +1681,10 @@
 		<RegEx find="[Cc]injen" replaceWith="činjen" />
 		<RegEx find="cisc" replaceWith="čišć" />
 		<RegEx find="Cisc" replaceWith="Čišć" />
-		<RegEx find="dacn" replaceWith="dačn" />
 		<RegEx find="daces" replaceWith="dat ćeš" />
 		<RegEx find="dinacn" replaceWith="dinačn" />
-		<RegEx find="dlucn" replaceWith="dlučn" />
-		<RegEx find="dlucuj" replaceWith="dlučuj" />
+		<RegEx find="lucn" replaceWith="lučn" />
+		<RegEx find="lucuj" replaceWith="lučuj" />
 		<RegEx find="djem" replaceWith="đem" />
 		<RegEx find="djit" replaceWith="đit" />
 		<RegEx find="djuj" replaceWith="đuj" />
