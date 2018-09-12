@@ -39,6 +39,15 @@
 		<Word from="Cao" to="Ćao" />
 		<Word from="cao" to="ćao" />
 		<Word from="cas" to="sat" />
+		<Word from="casa" to="sata" />
+		<Word from="casu" to="satu" />
+		<Word from="casom" to="satom" />
+		<Word from="casovima" to="satovima" />
+		<Word from="Cas" to="Sat" />
+		<Word from="Casa" to="Sata" />
+		<Word from="Casu" to="Satu" />
+		<Word from="Casom" to="Satom" />
+		<Word from="Casovima" to="Satovima" />		
 		<Word from="casno" to="časno" />
 		<Word from="Casno" to="Časno" />
 		<Word from="castis" to="častiš" />
@@ -1200,8 +1209,6 @@
 		<RegEx find="Caroli(?!n)" replaceWith="Čaroli" />
 		<RegEx find="cast" replaceWith="čast" />
 		<RegEx find="Cast" replaceWith="Čast" />
-		<RegEx find="cas([au]|om|ovima)\b" replaceWith="sat$1" />
-		<RegEx find="Cas([au]|om|ovima)\b" replaceWith="Sat$1" />
 		<RegEx find="[cC]ascen" replaceWith="čašćen" />
 		<RegEx find="C([ae])sc" replaceWith="Č$1šć" />
 		<RegEx find="c([ae])sc" replaceWith="č$1šć" />
@@ -1653,6 +1660,7 @@
 		<RegEx find="eskuc" replaceWith="eskuć" />
 		<RegEx find="([aez])vrsi" replaceWith="$1vrši" />
 		<RegEx find="acma" replaceWith="ačma" />
+		<RegEx find="acn" replaceWith="ačn" />
 		<RegEx find="aces" replaceWith="aćeš" />
 		<RegEx find="ajvec" replaceWith="ajveć" />
 		<RegEx find="amcen" replaceWith="amčen" />
@@ -1673,11 +1681,10 @@
 		<RegEx find="[Cc]injen" replaceWith="činjen" />
 		<RegEx find="cisc" replaceWith="čišć" />
 		<RegEx find="Cisc" replaceWith="Čišć" />
-		<RegEx find="dacn" replaceWith="dačn" />
 		<RegEx find="daces" replaceWith="dat ćeš" />
 		<RegEx find="dinacn" replaceWith="dinačn" />
-		<RegEx find="dlucn" replaceWith="dlučn" />
-		<RegEx find="dlucuj" replaceWith="dlučuj" />
+		<RegEx find="lucn" replaceWith="lučn" />
+		<RegEx find="lucuj" replaceWith="lučuj" />
 		<RegEx find="djem" replaceWith="đem" />
 		<RegEx find="djit" replaceWith="đit" />
 		<RegEx find="djuj" replaceWith="đuj" />
@@ -1721,7 +1728,7 @@
 		<RegEx find="igralista" replaceWith="igralista" />
 		<RegEx find="iznervira" replaceWith="iživcira" />
 		<RegEx find="asnjav" replaceWith="ašnjav" />
-		<RegEx find="jasnic([eu])" replaceWith="jasnit ć$1" />
+		<RegEx find="([jk])asnic" replaceWith="$1asnit ć" />
 		<RegEx find="juci" replaceWith="jući" />
 		<RegEx find="kaslja" replaceWith="kašlja" />
 		<RegEx find="krsi" replaceWith="krši" />
