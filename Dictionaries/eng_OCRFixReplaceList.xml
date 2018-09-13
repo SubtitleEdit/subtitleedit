@@ -1161,6 +1161,7 @@
     <Word from="SCREAlvllNG" to="SCREAMING" />
     <Word from="scund" to="sound" />
     <Word from="S'EOp" to="Stop" />
+    <Word from="seperate" to="separate" />
     <Word from="severa/parents" to="several parents" />
     <Word from="sfill" to="still" />
     <Word from="Sﬂence" to="Silence" />
@@ -2414,6 +2415,6 @@
   <RegularExpressions>
     <RegEx find="([a-z]) Won't " replaceWith="$1 won't " />
     <RegEx find=" L([,\r\n :;!?]+)" replaceWith=" I$1" />
-    <RegEx find=" L.([,\r\n :;!?]+)" replaceWith=" I.$1" />
+    <RegEx find=" L\.([,\r\n :;!?]+)" replaceWith=" I.$1" />
   </RegularExpressions>
 </OCRFixReplaceList>
