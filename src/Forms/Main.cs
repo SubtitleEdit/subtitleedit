@@ -2459,6 +2459,27 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     try
                     {
+                        var f = new DvdStudioProSpaceGraphic();
+                        var list = new List<string>(File.ReadAllLines(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName)));
+                        if (f.IsMine(list, fileName))
+                        {
+                            if (ContinueNewOrExit())
+                            {
+                                ImportAndOcrDost(fileName, f, list);
+                            }
+                            return;
+                        }
+                    }
+                    catch
+                    {
+                        // ignore
+                    }
+                }
+
+                if (format == null)
+                {
+                    try
+                    {
                         var imageFormat = new SpuImage();
                         var list = new List<string>(File.ReadAllLines(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName)));
                         if (imageFormat.IsMine(list, fileName))
