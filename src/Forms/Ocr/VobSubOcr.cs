@@ -1414,6 +1414,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     {
                         fullFileName = Path.Combine(Path.GetDirectoryName(_bdnFileName), _bdnXmlSubtitle.Paragraphs[index].Extra.Replace("file://", string.Empty));
                     }
+
                     if (File.Exists(fullFileName))
                     {
                         try
@@ -1446,6 +1447,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                                     }
                                 }
                             }
+
                             if (File.Exists(fullFileName))
                             {
                                 try
@@ -1478,6 +1480,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                                 y += part.Height + 7;
                                 part.Dispose();
                             }
+
                             b = merged;
                         }
                         else if (bitmaps.Count == 1)
@@ -1510,8 +1513,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                                             fbmp.SetPixel(x, y, c);
                                     }
                                 }
+
                                 fbmp.UnlockImage();
                             }
+
                             if (checkBoxAutoTransparentBackground.Checked)
                                 b.MakeTransparent();
                             returnBmp = b;
@@ -1599,9 +1604,23 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 return null;
 
             if (_binaryOcrDb == null && _nOcrDb == null || _fromMenuItem)
-                return returnBmp;
+            {
+                if (_replaceColorWithWhite.A == 0 && _replaceColor.A == 0)
+                    return returnBmp;
+                var nb = new NikseBitmap(returnBmp);
+                if (_replaceColorWithWhite.A > 0)
+                    nb.ReplaceColor(_replaceColorWithWhite.A, _replaceColorWithWhite.R, _replaceColorWithWhite.G, _replaceColorWithWhite.B, 255, 255, 255, 255);
+                if (_replaceColor.A > 0)
+                    nb.ReplaceColor(_replaceColor.A, _replaceColor.R, _replaceColor.G, _replaceColor.B, Color.Transparent.A, Color.Transparent.R, Color.Transparent.G, Color.Transparent.B);
+                returnBmp.Dispose();
+                return nb.GetBitmap();
+            }
 
             var n = new NikseBitmap(returnBmp);
+            if (_replaceColorWithWhite.A > 0)
+                n.ReplaceColor(_replaceColorWithWhite.A, _replaceColorWithWhite.R, _replaceColorWithWhite.G, _replaceColorWithWhite.B, 255, 255, 255, 255);
+            if (_replaceColor.A > 0)
+                n.ReplaceColor(_replaceColor.A, _replaceColor.R, _replaceColor.G, _replaceColor.B, Color.Transparent.A, Color.Transparent.R, Color.Transparent.G, Color.Transparent.B);
             n.MakeTwoColor(Configuration.Settings.Tools.OcrBinaryImageCompareRgbThreshold);
             returnBmp.Dispose();
             return n.GetBitmap();
@@ -5852,7 +5871,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 if (_tesseractAsyncIndex >= 0 && _tesseractAsyncStrings != null && _tesseractAsyncIndex < _tesseractAsyncStrings.Length)
                 {
                     if (string.IsNullOrEmpty(_tesseractAsyncStrings[_tesseractAsyncIndex]))
-                        _tesseractAsyncStrings[_tesseractAsyncIndex] = Tesseract3DoOcrViaExe(bitmap, _languageId, "--psm 6"); // 6 = Assume a single uniform block of text.);
+                        _tesseractAsyncStrings[_tesseractAsyncIndex] = Tesseract3DoOcrViaExe(bitmap, _languageId, "--psm 6", _tesseractEngineMode); // 6 = Assume a single uniform block of text.);
                 }
                 bitmap.Dispose();
             }
@@ -6182,7 +6201,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             return unItaliced;
         }
 
-        private string Tesseract3DoOcrViaExe(Bitmap bmp, string language, string psmMode)
+        private string Tesseract3DoOcrViaExe(Bitmap bmp, string language, string psmMode, int tesseractEngineMode)
         {
             // change yellow color to white - easier for Tesseract
             var nbmp = new NikseBitmap(bmp);
@@ -6200,7 +6219,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 process.StartInfo = new ProcessStartInfo(Configuration.TesseractDirectory + "tesseract.exe");
                 process.StartInfo.UseShellExecute = true;
-                process.StartInfo.Arguments = "\"" + pngFileName + "\" \"" + tempTextFileName + "\" --oem " + _tesseractEngineMode + " -l " + language;
+                process.StartInfo.Arguments = "\"" + pngFileName + "\" \"" + tempTextFileName + "\" --oem " + tesseractEngineMode + " -l " + language;
 
                 if (!string.IsNullOrEmpty(psmMode))
                     process.StartInfo.Arguments += " " + psmMode.Trim();
@@ -6374,13 +6393,13 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 if (_tesseractAsyncIndex <= index)
                     _tesseractAsyncIndex = index + 10;
-                textWithOutFixes = Tesseract3DoOcrViaExe(bitmap, _languageId, "--psm 6"); // 6 = Assume a single uniform block of text.
+                textWithOutFixes = Tesseract3DoOcrViaExe(bitmap, _languageId, "--psm 6", _tesseractEngineMode); // 6 = Assume a single uniform block of text.
             }
 
             if ((!textWithOutFixes.Contains(Environment.NewLine) || Utilities.CountTagInText(textWithOutFixes, '\n') > 2)
                 && (textWithOutFixes.Length < 17 || bitmap.Height < 50))
             {
-                string psm = Tesseract3DoOcrViaExe(bitmap, _languageId, "--psm 7"); // 7 = Treat the image as a single text line.
+                string psm = Tesseract3DoOcrViaExe(bitmap, _languageId, "--psm 7", _tesseractEngineMode); // 7 = Treat the image as a single text line.
                 if (textWithOutFixes != psm)
                 {
                     if (string.IsNullOrWhiteSpace(textWithOutFixes))
@@ -6526,7 +6545,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         var nbmp = new NikseBitmap(bitmap);
                         nbmp.MakeOneColor(Color.White);
                         Bitmap oneColorBitmap = nbmp.GetBitmap();
-                        string oneColorText = Tesseract3DoOcrViaExe(oneColorBitmap, _languageId, "--psm 6"); // 6 = Assume a single uniform block of text.
+                        string oneColorText = Tesseract3DoOcrViaExe(oneColorBitmap, _languageId, "--psm 6", _tesseractEngineMode); // 6 = Assume a single uniform block of text.
                         oneColorBitmap.Dispose();
                         nbmp = null;
 
@@ -6585,7 +6604,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
                         // which is best - normal image or de-italic'ed? We find out here
                         var unItalicedBmp = UnItalic(bitmap, _unItalicFactor);
-                        string unItalicText = Tesseract3DoOcrViaExe(unItalicedBmp, _languageId, "--psm 6"); // 6 = Assume a single uniform block of text.
+                        string unItalicText = Tesseract3DoOcrViaExe(unItalicedBmp, _languageId, "--psm 6", _tesseractEngineMode); // 6 = Assume a single uniform block of text.
                         unItalicedBmp.Dispose();
 
                         if (unItalicText.Length > 1)
@@ -6988,14 +7007,14 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             string result;
             using (var b = ResizeBitmap(bitmap, bitmap.Width * 3, bitmap.Height * 2))
             {
-                result = Tesseract3DoOcrViaExe(b, _languageId, null);
+                result = Tesseract3DoOcrViaExe(b, _languageId, null, _tesseractEngineMode);
             }
 
             if (string.IsNullOrWhiteSpace(result))
             {
                 using (var b = ResizeBitmap(bitmap, bitmap.Width * 4, bitmap.Height * 2))
                 {
-                    result = Tesseract3DoOcrViaExe(b, _languageId, "--psm 7");
+                    result = Tesseract3DoOcrViaExe(b, _languageId, "--psm 7", _tesseractEngineMode);
                 }
             }
 
@@ -8760,16 +8779,20 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
         }
 
+        private Color _replaceColorWithWhite = Color.Transparent;
+        private Color _replaceColor = Color.Transparent;
         private void setForecolorThresholdToolStripMenuItem_Click(object sender, EventArgs e)
         {
             _fromMenuItem = true;
-            Bitmap bmp = GetSubtitleBitmap(_selectedIndex);
+            var bmp = GetSubtitleBitmap(_selectedIndex);
             _fromMenuItem = false;
-            using (var form = new SetForeColorThreshold(bmp))
+            using (var form = new SetForeColorThreshold(bmp, _ocrMethodIndex == _ocrMethodBinaryImageCompare))
             {
                 if (form.ShowDialog(this) == DialogResult.OK)
                 {
                     Configuration.Settings.Tools.OcrBinaryImageCompareRgbThreshold = form.Threshold;
+                    _replaceColorWithWhite = form.ReplaceColorWithWhite;
+                    _replaceColor = form.ColorToRemove;
                 }
             }
         }
