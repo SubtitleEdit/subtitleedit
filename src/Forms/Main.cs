@@ -24,6 +24,7 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Net;
 using System.Reflection;
 using System.Text;
@@ -17166,66 +17167,91 @@ namespace Nikse.SubtitleEdit.Forms
             helpToolStripMenuItem1.ShortcutKeys = UiUtil.HelpKeys;
         }
 
-        public static object GetPropertiesAndDoAction(string pluginFileName, out string name, out string text, out decimal version, out string description, out string actionType, out string shortcut, out System.Reflection.MethodInfo mi)
+        public static PluginInfoLocal GetPluginInfoFromFile(string pluginFileName)
         {
-            name = null;
-            text = null;
-            version = 0;
-            description = null;
-            actionType = null;
-            shortcut = null;
-            mi = null;
-            System.Reflection.Assembly assembly;
+            Assembly assembly;
             try
             {
-                assembly = System.Reflection.Assembly.Load(File.ReadAllBytes(pluginFileName));
+                assembly = Assembly.Load(File.ReadAllBytes(pluginFileName));
+                if (assembly == null)
+                {
+                    return null;
+                }
             }
             catch
             {
                 return null;
             }
+
             string objectName = Path.GetFileNameWithoutExtension(pluginFileName);
-            if (assembly != null)
+
+            Type pluginType = assembly.GetType("Nikse.SubtitleEdit.PluginLogic." + objectName);
+            // plugin couln't be found on assembly
+            if (pluginType == null)
             {
-                Type pluginType = assembly.GetType("Nikse.SubtitleEdit.PluginLogic." + objectName);
-                if (pluginType == null)
-                    return null;
-                object pluginObject = Activator.CreateInstance(pluginType);
-
-                // IPlugin
-                var t = pluginType.GetInterface("IPlugin");
-                if (t == null)
-                    return null;
-
-                System.Reflection.PropertyInfo pi = t.GetProperty("Name");
-                if (pi != null)
-                    name = (string)pi.GetValue(pluginObject, null);
-
-                pi = t.GetProperty("Text");
-                if (pi != null)
-                    text = (string)pi.GetValue(pluginObject, null);
-
-                pi = t.GetProperty("Description");
-                if (pi != null)
-                    description = (string)pi.GetValue(pluginObject, null);
-
-                pi = t.GetProperty("Version");
-                if (pi != null)
-                    version = Convert.ToDecimal(pi.GetValue(pluginObject, null));
-
-                pi = t.GetProperty("ActionType");
-                if (pi != null)
-                    actionType = (string)pi.GetValue(pluginObject, null);
-
-                mi = t.GetMethod("DoAction");
-
-                pi = t.GetProperty("Shortcut");
-                if (pi != null)
-                    shortcut = (string)pi.GetValue(pluginObject, null);
-
-                return pluginObject;
+                return null;
             }
-            return null;
+
+            object pluginObject = Activator.CreateInstance(pluginType);
+
+            // plugin doesn't implement the contract (IPlugin)
+            var t = pluginType.GetInterface("IPlugin");
+            if (t == null)
+            {
+                return null;
+            }
+
+            var pluginInfo = new PluginInfoLocal
+            {
+                Name = (string)t.GetProperty(nameof(PluginInfoLocal.Name))?.GetValue(pluginObject, null),
+                Text = (string)t.GetProperty(nameof(PluginInfoLocal.Text))?.GetValue(pluginObject, null),
+                Description = (string)t.GetProperty(nameof(PluginInfoLocal.Description))?.GetValue(pluginObject, null),
+                Version = Convert.ToDecimal(t.GetProperty(nameof(PluginInfoLocal.Version))?.GetValue(pluginObject, null)),
+                Author = (string)t.GetProperty(nameof(PluginInfoLocal.Author))?.GetValue(pluginObject, null),
+                Shortcut = (string)t.GetProperty(nameof(PluginInfoLocal.Shortcut))?.GetValue(pluginObject, null),
+                File = pluginFileName
+            };
+
+            // File, Tool, Sync, Translate, Spellcheck
+            var pi = t.GetProperty("ActionType");
+            if (pi != null)
+            {
+                string at = (string)pi.GetValue(pluginObject, null);
+                at = at.CapitalizeFirstLetter(); 
+                ActionType actionType = (ActionType)Enum.Parse(typeof(ActionType), at);
+                pluginInfo.ActioType = actionType;
+            }
+
+            var mi = t.GetMethod("DoAction");
+            if (mi == null)
+            {
+                return null;
+            }
+
+            // object instance wich will be used to invoke method
+            var instance = Expression.Constant(pluginObject);
+
+            // create plugin DoAction parameters
+            var formParam = Expression.Parameter(typeof(Form), "parentForm");
+            var srtTextParm = Expression.Parameter(typeof(string), "srtText");
+            var frameRateParam = Expression.Parameter(typeof(double), "frameRate");
+            var uiLineBreakParam = Expression.Parameter(typeof(string), "uiLineBreak");
+            var fileParam = Expression.Parameter(typeof(string), "file");
+            var videoFileParam = Expression.Parameter(typeof(string), "videoFile");
+            var rawFileParam = Expression.Parameter(typeof(string), "rawText");
+
+            // create method call expression
+            var methodCallExp = Expression.Call(instance, mi, formParam, srtTextParm,
+                frameRateParam, uiLineBreakParam, fileParam, videoFileParam, rawFileParam);
+
+            // make lambda from method call expression
+            var doAction = Expression.Lambda<Func<Form, string, double, string,
+                string, string, string, string>>(methodCallExp, formParam, srtTextParm,
+                frameRateParam, uiLineBreakParam, fileParam, videoFileParam, rawFileParam).Compile();
+
+            pluginInfo.DoAction = doAction;
+
+            return pluginInfo;
         }
 
         private void LoadPlugins()
@@ -17276,57 +17302,57 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 try
                 {
-                    string name, description, text, shortcut, actionType;
-                    decimal version;
-                    MethodInfo mi;
-                    GetPropertiesAndDoAction(pluginFileName, out name, out text, out version, out description, out actionType, out shortcut, out mi);
-                    if (!string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(actionType) && mi != null)
+                    var pi = GetPluginInfoFromFile(pluginFileName);
+
+                    // skip plugin without metadata
+                    if (pi == null || pi.IsValid() == false)
                     {
-                        var item = new ToolStripMenuItem();
-                        item.Name = "Plugin" + toolsPluginCount;
-                        item.Text = text;
-                        item.Tag = pluginFileName;
-                        UiUtil.FixFonts(item);
+                        continue;
+                    }
 
-                        if (!string.IsNullOrEmpty(shortcut))
-                            item.ShortcutKeys = UiUtil.GetKeys(shortcut);
+                    var item = new ToolStripMenuItem();
+                    item.Name = "Plugin" + toolsPluginCount;
+                    item.Text = pi.Text;
+                    item.Tag = pi;
+                    UiUtil.FixFonts(item);
 
-                        if (actionType.Equals("File", StringComparison.OrdinalIgnoreCase))
-                        {
+                    if (!string.IsNullOrEmpty(pi.Shortcut))
+                        item.ShortcutKeys = UiUtil.GetKeys(pi.Shortcut);
+
+                    switch (pi.ActioType)
+                    {
+                        case ActionType.File:
                             AddSeparator(filePluginCount, fileToolStripMenuItem, 2);
                             item.Click += PluginToolClick;
                             fileToolStripMenuItem.DropDownItems.Insert(fileToolStripMenuItem.DropDownItems.Count - 2, item);
                             filePluginCount++;
-                        }
-                        else if (actionType.Equals("Tool", StringComparison.OrdinalIgnoreCase))
-                        {
+                            break;
+                        case ActionType.Tool:
                             AddSeparator(toolsPluginCount, toolsToolStripMenuItem);
                             item.Click += PluginToolClick;
                             toolsToolStripMenuItem.DropDownItems.Add(item);
                             toolsPluginCount++;
-                        }
-                        else if (actionType.Equals("Sync", StringComparison.OrdinalIgnoreCase))
-                        {
+                            break;
+                        case ActionType.Sync:
                             AddSeparator(syncPluginCount, toolStripMenuItemSynchronization);
                             item.Click += PluginToolClick;
                             toolStripMenuItemSynchronization.DropDownItems.Add(item);
                             syncPluginCount++;
-                        }
-                        else if (actionType.Equals("Translate", StringComparison.OrdinalIgnoreCase))
-                        {
+                            break;
+                        case ActionType.Translate:
                             AddSeparator(translatePluginCount, toolStripMenuItemAutoTranslate);
                             item.Click += PluginClickTranslate;
                             toolStripMenuItemAutoTranslate.DropDownItems.Add(item);
                             translatePluginCount++;
-                        }
-                        else if (actionType.Equals("SpellCheck", StringComparison.OrdinalIgnoreCase))
-                        {
+                            break;
+                        case ActionType.Spellcheck:
                             AddSeparator(spellCheckPluginCount, toolStripMenuItemSpellCheckMain);
                             item.Click += PluginClickNoFormatChange;
                             toolStripMenuItemSpellCheckMain.DropDownItems.Add(item);
                             spellCheckPluginCount++;
-                        }
+                            break;
                     }
+
                 }
                 catch (Exception exception)
                 {
@@ -17380,12 +17406,9 @@ namespace Nikse.SubtitleEdit.Forms
         {
             try
             {
-                var item = (ToolStripItem)sender;
-                string name, description, text, shortcut, actionType;
-                decimal version;
-                MethodInfo mi;
-                var pluginObject = GetPropertiesAndDoAction(item.Tag.ToString(), out name, out text, out version, out description, out actionType, out shortcut, out mi);
-                if (mi == null)
+                var pi = ((ToolStripItem)sender).Tag as PluginInfoLocal;
+
+                if (pi == null || pi.DoAction == null)
                 {
                     return;
                 }
@@ -17401,23 +17424,19 @@ namespace Nikse.SubtitleEdit.Forms
                     rawText = _subtitle.ToText(format);
                 }
 
-                string pluginResult = (string)mi.Invoke(pluginObject,
-                    new object[]
-                    {
-                        this,
+                string result = pi.DoAction(this,
                         _subtitle.ToText(new SubRip()),
                         Configuration.Settings.General.CurrentFrameRate,
                         Configuration.Settings.General.ListViewLineSeparatorString,
                         _fileName,
                         _videoFileName,
-                        rawText
-                    });
+                        rawText);
 
-                if (!string.IsNullOrEmpty(pluginResult) && pluginResult.Length > 10 && text != pluginResult)
+                if (!string.IsNullOrEmpty(result) && result.Length > 10 && pi.Text != result)
                 {
-                    var lines = new List<string>(pluginResult.SplitToLines());
+                    var lines = new List<string>(result.SplitToLines());
 
-                    MakeHistoryForUndo(string.Format(_language.BeforeRunningPluginXVersionY, name, version));
+                    MakeHistoryForUndo(string.Format(_language.BeforeRunningPluginXVersionY, pi.Name, pi.Version));
 
                     var s = new Subtitle();
                     SubtitleFormat newFormat = null;
@@ -17478,7 +17497,7 @@ namespace Nikse.SubtitleEdit.Forms
                         RestoreSubtitleListviewIndices();
                         ShowSource();
 
-                        ShowStatus(string.Format(_language.PluginXExecuted, name));
+                        ShowStatus(string.Format(_language.PluginXExecuted, pi.Name));
                     }
                     else
                     {

@@ -38,6 +38,7 @@
             this.columnHeaderDescription = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderVersion = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderDate = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeaderAuthor = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.tabControlPlugins = new System.Windows.Forms.TabControl();
             this.tabPageInstalledPlugins = new System.Windows.Forms.TabPage();
             this.buttonUpdateAll = new System.Windows.Forms.Button();
@@ -47,6 +48,7 @@
             this.columnHeaderInsDescription = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderInsVersion = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderInsType = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeaderInsAuthor = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.tabPageGetPlugins = new System.Windows.Forms.TabPage();
             this.buttonSearchClear = new System.Windows.Forms.Button();
             this.labelShortcutsSearch = new System.Windows.Forms.Label();
@@ -118,7 +120,8 @@
             this.columnHeaderName,
             this.columnHeaderDescription,
             this.columnHeaderVersion,
-            this.columnHeaderDate});
+            this.columnHeaderDate,
+            this.columnHeaderAuthor});
             this.listViewGetPlugins.FullRowSelect = true;
             this.listViewGetPlugins.HideSelection = false;
             this.listViewGetPlugins.Location = new System.Drawing.Point(16, 67);
@@ -137,7 +140,7 @@
             // columnHeaderDescription
             // 
             this.columnHeaderDescription.Text = "Description";
-            this.columnHeaderDescription.Width = 420;
+            this.columnHeaderDescription.Width = 378;
             // 
             // columnHeaderVersion
             // 
@@ -148,6 +151,11 @@
             // 
             this.columnHeaderDate.Text = "Date";
             this.columnHeaderDate.Width = 70;
+            // 
+            // columnHeaderAuthor
+            // 
+            this.columnHeaderAuthor.Text = "Author";
+            this.columnHeaderAuthor.Width = 90;
             // 
             // tabControlPlugins
             // 
@@ -206,7 +214,8 @@
             this.columnHeaderInsName,
             this.columnHeaderInsDescription,
             this.columnHeaderInsVersion,
-            this.columnHeaderInsType});
+            this.columnHeaderInsType,
+            this.columnHeaderInsAuthor});
             this.listViewInstalledPlugins.FullRowSelect = true;
             this.listViewInstalledPlugins.HideSelection = false;
             this.listViewInstalledPlugins.Location = new System.Drawing.Point(6, 6);
@@ -226,7 +235,7 @@
             // columnHeaderInsDescription
             // 
             this.columnHeaderInsDescription.Text = "Description";
-            this.columnHeaderInsDescription.Width = 420;
+            this.columnHeaderInsDescription.Width = 373;
             // 
             // columnHeaderInsVersion
             // 
@@ -235,8 +244,13 @@
             // 
             // columnHeaderInsType
             // 
-            this.columnHeaderInsType.Text = "Date";
+            this.columnHeaderInsType.Text = "Type";
             this.columnHeaderInsType.Width = 80;
+            // 
+            // columnHeaderInsAuthor
+            // 
+            this.columnHeaderInsAuthor.Text = "Author";
+            this.columnHeaderInsAuthor.Width = 97;
             // 
             // tabPageGetPlugins
             // 
@@ -349,5 +363,7 @@
         private System.Windows.Forms.Button buttonSearchClear;
         private System.Windows.Forms.Label labelShortcutsSearch;
         private System.Windows.Forms.TextBox textBoxSearch;
+        private System.Windows.Forms.ColumnHeader columnHeaderInsAuthor;
+        private System.Windows.Forms.ColumnHeader columnHeaderAuthor;
     }
 }

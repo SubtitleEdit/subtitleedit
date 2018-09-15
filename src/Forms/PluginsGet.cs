@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Cache;
 using System.Windows.Forms;
@@ -15,16 +16,7 @@ namespace Nikse.SubtitleEdit.Forms
     public sealed partial class PluginsGet : Form
     {
 
-        public class PluginInfoItem
-        {
-            public string Version { get; set; }
-            public string Name { get; set; }
-            public string Description { get; set; }
-            public string Date { get; set; }
-            public string Url { get; set; }
-        }
-
-        private List<PluginInfoItem> _downloadList;
+        private List<PluginInfoOnline> _downloadList;
 
         private string _downloadedPluginName;
         private readonly LanguageStructure.PluginsGet _language;
@@ -108,7 +100,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             var pluginDoc = new XmlDocument();
-            _downloadList = new List<PluginInfoItem>();
+            _downloadList = new List<PluginInfoOnline>();
             listViewGetPlugins.BeginUpdate();
             try
             {
@@ -151,12 +143,13 @@ namespace Nikse.SubtitleEdit.Forms
         {
             foreach (XmlNode node in doc.DocumentElement.SelectNodes("Plugin"))
             {
-                var item = new PluginInfoItem
+                var item = new PluginInfoOnline
                 {
                     Name = node.SelectSingleNode("Name").InnerText.Trim('.'),
                     Description = node.SelectSingleNode("Description").InnerText.Trim('.'),
-                    Version = node.SelectSingleNode("Version").InnerText,
+                    Version = Convert.ToDecimal(node.SelectSingleNode("Version").InnerText),
                     Date = node.SelectSingleNode("Date").InnerText,
+                    Author = node.SelectSingleNode(nameof(PluginInfo.Author)).InnerText,
                     Url = node.SelectSingleNode("Url").InnerText,
                 };
                 _downloadList.Add(item);
@@ -181,25 +174,24 @@ namespace Nikse.SubtitleEdit.Forms
         {
             bool search = textBoxSearch.Text.Length > 1;
             string searchText = textBoxSearch.Text;
-            foreach (var plugin in _downloadList)
+            foreach (var plugin in _downloadList.OrderBy(p => p.Name))
             {
                 var item = new ListViewItem(plugin.Name) { Tag = plugin };
                 item.SubItems.Add(plugin.Description);
-                item.SubItems.Add(plugin.Version);
+                item.SubItems.Add(plugin.Version.ToString());
                 item.SubItems.Add(plugin.Date);
+                item.SubItems.Add(plugin.Author);
 
                 if (!search ||
                     plugin.Name.Contains(searchText, StringComparison.OrdinalIgnoreCase) ||
                     plugin.Description.Contains(searchText, StringComparison.OrdinalIgnoreCase) ||
-                    plugin.Version.Contains(searchText, StringComparison.OrdinalIgnoreCase))
+                    plugin.Version.ToString().Contains(searchText, StringComparison.OrdinalIgnoreCase))
                     listViewGetPlugins.Items.Add(item);
 
                 foreach (ListViewItem installed in listViewInstalledPlugins.Items)
                 {
-                    var installedVer = Convert.ToDouble(installed.SubItems[2].Text.Replace(',', '.').Replace(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, "."), CultureInfo.InvariantCulture);
-                    var currentVer = Convert.ToDouble(plugin.Version.Replace(',', '.').Replace(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, "."), CultureInfo.InvariantCulture);
-
-                    if (string.Compare(installed.Text, plugin.Name.Trim('.'), StringComparison.OrdinalIgnoreCase) == 0 && installedVer < currentVer)
+                    var installedVer = Convert.ToDecimal(installed.SubItems[2].Text.Replace(',', '.').Replace(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, "."), CultureInfo.InvariantCulture);
+                    if (string.Compare(installed.Text, plugin.Name.Trim('.'), StringComparison.OrdinalIgnoreCase) == 0 && installedVer < plugin.Version)
                     {
                         installed.BackColor = Color.LightPink;
                         installed.SubItems[1].Text = _language.UpdateAvailable + " " + installed.SubItems[1].Text;
@@ -219,25 +211,25 @@ namespace Nikse.SubtitleEdit.Forms
             listViewInstalledPlugins.Items.Clear();
             foreach (string pluginFileName in Directory.GetFiles(path, "*.DLL"))
             {
-                string name, description, text, shortcut, actionType;
-                decimal version;
-                System.Reflection.MethodInfo mi;
-                Main.GetPropertiesAndDoAction(pluginFileName, out name, out text, out version, out description, out actionType, out shortcut, out mi);
-                if (!string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(actionType) && mi != null)
+                var pi = Main.GetPluginInfoFromFile(pluginFileName);
+
+                if (pi == null || pi.IsValid() == false)
                 {
-                    try
+                    continue;
+                }
+
+                try
+                {
+                    var item = new ListViewItem(pi.Name.Trim('.'))
                     {
-                        var item = new ListViewItem(name.Trim('.'));
-                        item.Tag = pluginFileName;
-                        item.SubItems.Add(description);
-                        item.SubItems.Add(version.ToString());
-                        item.SubItems.Add(actionType);
-                        listViewInstalledPlugins.Items.Add(item);
-                    }
-                    catch (Exception exception)
-                    {
-                        MessageBox.Show($"Error loading plugin:{pluginFileName}: {exception.Message}");
-                    }
+                        Tag = pi,
+                        SubItems = { pi.Description, pi.Version.ToString(), pi.ActioType.ToString(), pi.Author }
+                    };
+                    listViewInstalledPlugins.Items.Add(item);
+                }
+                catch (Exception exception)
+                {
+                    MessageBox.Show($"Error loading plugin:{pluginFileName}: {exception.Message}");
                 }
             }
             listViewInstalledPlugins.EndUpdate();
@@ -255,7 +247,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Refresh();
                 Cursor = Cursors.WaitCursor;
 
-                var plugin = (PluginInfoItem)listViewGetPlugins.SelectedItems[0].Tag;
+                var plugin = (PluginInfoOnline)listViewGetPlugins.SelectedItems[0].Tag;
 
                 int index = listViewGetPlugins.SelectedItems[0].Index;
                 string url = plugin.Url;
