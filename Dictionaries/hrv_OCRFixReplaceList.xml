@@ -491,13 +491,14 @@
     <Word from="kompanija" to="tvrtka" />
     <Word from="komponovao" to="skladao" />
     <Word from="komšija" to="susjed" />
+    <Word from="komšije" to="susjedi" />
     <Word from="komšiji" to="susjedu" />
     <Word from="komšiju" to="susjeda" />
     <Word from="komšiluk" to="susjedstvo" />
     <Word from="komšiluka" to="susjedstva" />
     <Word from="komšiluku" to="susjedstvu" />
-    <Word from="komšije" to="susjedi" />
     <Word from="komšijama" to="susjedima" />
+    <Word from="komšijom" to="susjedom" />
     <Word from="komšinica" to="susjeda" />
     <Word from="komšinicu" to="susjedu" />
     <Word from="konektovan" to="spojen" />
@@ -1208,6 +1209,7 @@
     <Word from="seo" to="sjeo" />
     <Word from="Seo" to="Sjeo" />
     <Word from="sem" to="osim" />
+    <Word from="sm" to="sam" />
     <Word from="sma" to="sam" />
     <Word from="smao" to="samo" />
     <Word from="Smao" to="Samo" />
@@ -2047,6 +2049,7 @@
     <LinePart from="Bilo ko" to="Bilo tko" />
     <LinePart from="bilo ko" to="bilo tko" />
     <LinePart from="će da dođe" to="će doći" />
+    <LinePart from="će da bude" to="će biti" />
     <LinePart from="Da li će" to="Hoće li" />
     <LinePart from="Da li ćemo" to="Hoćemo li" />
     <LinePart from="Da li ću" to="Hoću li" />
