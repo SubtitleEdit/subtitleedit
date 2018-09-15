@@ -201,7 +201,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             this.toolStripSeparator3,
             this.deleteToolStripMenuItem});
             this.contextMenuStripListview.Name = "contextMenuStripListview";
-            this.contextMenuStripListview.Size = new System.Drawing.Size(306, 342);
+            this.contextMenuStripListview.Size = new System.Drawing.Size(306, 364);
             this.contextMenuStripListview.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripListviewOpening);
             // 
             // normalToolStripMenuItem
@@ -344,7 +344,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // 
             this.setForecolorThresholdToolStripMenuItem.Name = "setForecolorThresholdToolStripMenuItem";
             this.setForecolorThresholdToolStripMenuItem.Size = new System.Drawing.Size(305, 22);
-            this.setForecolorThresholdToolStripMenuItem.Text = "Set forecolor threshold...";
+            this.setForecolorThresholdToolStripMenuItem.Text = "Image preprocessing...";
             this.setForecolorThresholdToolStripMenuItem.Click += new System.EventHandler(this.setForecolorThresholdToolStripMenuItem_Click);
             // 
             // toolStripSeparator3

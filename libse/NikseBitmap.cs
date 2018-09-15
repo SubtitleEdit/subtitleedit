@@ -12,7 +12,7 @@ namespace Nikse.SubtitleEdit.Core
     {
         public byte[] Buffer1 { get; set; }
         public byte[] Buffer2 { get; set; }
-        public int Length { get { return Buffer1.Length + Buffer2.Length; } }
+        public int Length => Buffer1.Length + Buffer2.Length;
     }
 
     public class NikseBitmap
@@ -20,10 +20,7 @@ namespace Nikse.SubtitleEdit.Core
         private int _width;
         public int Width
         {
-            get
-            {
-                return _width;
-            }
+            get => _width;
             private set
             {
                 _width = value;
@@ -114,6 +111,24 @@ namespace Nikse.SubtitleEdit.Core
             }
         }
 
+        public void ReplaceColor(int alpha, int red, int green, int blue,
+                                 int alphaTo, int redTo, int greenTo, int blueTo)
+        {
+            var buffer = new byte[4];
+            buffer[0] = (byte)blueTo;
+            buffer[1] = (byte)greenTo;
+            buffer[2] = (byte)redTo;
+            buffer[3] = (byte)alphaTo;
+            for (int i = 0; i < _bitmapData.Length; i += 4)
+            {
+                if (_bitmapData[i + 3] == alpha &&
+                    _bitmapData[i + 2] == red &&
+                    _bitmapData[i + 1] == green &&
+                    _bitmapData[i] == blue)
+                    Buffer.BlockCopy(buffer, 0, _bitmapData, i, 4);
+            }
+        }
+
         public void ReplaceNonWhiteWithTransparent()
         {
             var buffer = new byte[4];
@@ -157,10 +172,7 @@ namespace Nikse.SubtitleEdit.Core
             bufferTransparent[3] = 0;
             for (int i = 0; i < _bitmapData.Length; i += 4)
             {
-                if (_bitmapData[i] > 20)
-                    Buffer.BlockCopy(buffer, 0, _bitmapData, i, 4);
-                else
-                    Buffer.BlockCopy(bufferTransparent, 0, _bitmapData, i, 4);
+                Buffer.BlockCopy(_bitmapData[i] > 20 ? buffer : bufferTransparent, 0, _bitmapData, i, 4);
             }
         }
 
@@ -188,12 +200,12 @@ namespace Nikse.SubtitleEdit.Core
             {
                 if (_bitmapData[i + 3] > 20)
                 {
-                    if ((Math.Abs(buffer1[0] - _bitmapData[i]) < maxDif &&
+                    if (Math.Abs(buffer1[0] - _bitmapData[i]) < maxDif &&
                         Math.Abs(buffer1[1] - _bitmapData[i + 1]) < maxDif &&
-                        Math.Abs(buffer1[2] - _bitmapData[i + 2]) < maxDif) ||
-                        (Math.Abs(buffer2[0] - _bitmapData[i]) < maxDif &&
+                        Math.Abs(buffer1[2] - _bitmapData[i + 2]) < maxDif ||
+                        Math.Abs(buffer2[0] - _bitmapData[i]) < maxDif &&
                         Math.Abs(buffer2[1] - _bitmapData[i + 1]) < maxDif &&
-                        Math.Abs(buffer2[2] - _bitmapData[i + 2]) < maxDif))
+                        Math.Abs(buffer2[2] - _bitmapData[i + 2]) < maxDif)
                     {
                         count++;
                     }
@@ -311,7 +323,7 @@ namespace Nikse.SubtitleEdit.Core
             int r = (int)Math.Round(((pattern.R * 2.0 + emphasis1.R) / 3.0));
             int g = (int)Math.Round(((pattern.G * 2.0 + emphasis1.G) / 3.0));
             int b = (int)Math.Round(((pattern.B * 2.0 + emphasis1.B) / 3.0));
-            Color antializeColor = Color.FromArgb(r, g, b);
+            var antializeColor = Color.FromArgb(r, g, b);
 
             for (int y = 1; y < Height - 1; y++)
             {
@@ -656,7 +668,7 @@ namespace Nikse.SubtitleEdit.Core
                 y = 0;
                 while (!done && y < Height)
                 {
-                    Color c = GetPixel(x, y);
+                    var c = GetPixel(x, y);
                     if (c != transparentColor)
                     {
                         done = true;
@@ -678,7 +690,7 @@ namespace Nikse.SubtitleEdit.Core
                 y = 0;
                 while (!done && y < Height)
                 {
-                    Color c = GetPixel(x, y);
+                    var c = GetPixel(x, y);
                     if (c != transparentColor)
                     {
                         done = true;
@@ -703,7 +715,7 @@ namespace Nikse.SubtitleEdit.Core
                     x = 0;
                     while (!done && x < Width)
                     {
-                        Color c = GetPixel(x, y);
+                        var c = GetPixel(x, y);
                         if (c != transparentColor)
                         {
                             done = true;
@@ -748,7 +760,7 @@ namespace Nikse.SubtitleEdit.Core
                 var x = 0;
                 while (!done && x < Width)
                 {
-                    Color c = GetPixel(x, y);
+                    var c = GetPixel(x, y);
                     if (c != transparentColor && !(c.A == 0 && transparentColor.A == 0))
                     {
                         done = true;
@@ -899,8 +911,8 @@ namespace Nikse.SubtitleEdit.Core
         public Bitmap GetBitmap()
         {
             var bitmap = new Bitmap(Width, Height, PixelFormat.Format32bppArgb);
-            BitmapData bitmapdata = bitmap.LockBits(new Rectangle(0, 0, Width, Height), ImageLockMode.WriteOnly, PixelFormat.Format32bppArgb);
-            IntPtr destination = bitmapdata.Scan0;
+            var bitmapdata = bitmap.LockBits(new Rectangle(0, 0, Width, Height), ImageLockMode.WriteOnly, PixelFormat.Format32bppArgb);
+            var destination = bitmapdata.Scan0;
             Marshal.Copy(_bitmapData, 0, destination, _bitmapData.Length);
             bitmap.UnlockBits(bitmapdata);
             return bitmap;
@@ -934,12 +946,12 @@ namespace Nikse.SubtitleEdit.Core
         {
             var newBitmap = new Bitmap(Width, Height, PixelFormat.Format8bppIndexed);
             var palette = new List<Color> { Color.Transparent };
-            ColorPalette bPalette = newBitmap.Palette;
+            var bPalette = newBitmap.Palette;
             var entries = bPalette.Entries;
             for (int i = 0; i < newBitmap.Palette.Entries.Length; i++)
                 entries[i] = Color.Transparent;
 
-            BitmapData data = newBitmap.LockBits(new Rectangle(0, 0, Width, Height), ImageLockMode.WriteOnly, PixelFormat.Format8bppIndexed);
+            var data = newBitmap.LockBits(new Rectangle(0, 0, Width, Height), ImageLockMode.WriteOnly, PixelFormat.Format8bppIndexed);
             var bytes = new byte[data.Height * data.Stride];
             Marshal.Copy(data.Scan0, bytes, 0, bytes.Length);
 
@@ -947,15 +959,14 @@ namespace Nikse.SubtitleEdit.Core
             {
                 for (int x = 0; x < Width; x++)
                 {
-                    Color c = GetPixel(x, y);
+                    var c = GetPixel(x, y);
                     if (c.A < 5)
                     {
                         bytes[y * data.Stride + x] = 0;
                     }
                     else
                     {
-                        int maxDiff;
-                        int index = FindBestMatch(c, palette, out maxDiff);
+                        int index = FindBestMatch(c, palette, out var maxDiff);
 
                         if (index == -1 && palette.Count < 255)
                         {
@@ -1017,10 +1028,10 @@ namespace Nikse.SubtitleEdit.Core
         public Color GetBrightestColorWhiteIsTransparent()
         {
             int max = Width * Height - 4;
-            Color brightest = Color.Black;
+            var brightest = Color.Black;
             for (int i = 0; i < max; i++)
             {
-                Color c = GetPixelNext();
+                var c = GetPixelNext();
                 if (c.A > 220 && c.R + c.G + c.B > 200 && c.R + c.G + c.B > brightest.R + brightest.G + brightest.B)
                     brightest = c;
             }
@@ -1038,10 +1049,10 @@ namespace Nikse.SubtitleEdit.Core
         public Color GetBrightestColor()
         {
             int max = Width * Height - 4;
-            Color brightest = Color.Black;
+            var brightest = Color.Black;
             for (int i = 0; i < max; i++)
             {
-                Color c = GetPixelNext();
+                var c = GetPixelNext();
                 if (c.A > 220 && c.R + c.G + c.B > 200 && c.R + c.G + c.B > brightest.R + brightest.G + brightest.B)
                     brightest = c;
             }
