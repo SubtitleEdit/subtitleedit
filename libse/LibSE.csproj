@@ -243,6 +243,7 @@
     <Compile Include="SubtitleFormats\Cmaft.cs" />
     <Compile Include="SubtitleFormats\CsvNuendo.cs" />
     <Compile Include="SubtitleFormats\Csv5.cs" />
+    <Compile Include="SubtitleFormats\DvdStudioProSpaceGraphic.cs" />
     <Compile Include="SubtitleFormats\DvdStudioProSpaceOneSemicolon.cs" />
     <Compile Include="SubtitleFormats\FinalCutProXml17.cs" />
     <Compile Include="SubtitleFormats\FinalCutProXml16.cs" />
