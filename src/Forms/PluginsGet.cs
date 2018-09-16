@@ -15,9 +15,7 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class PluginsGet : Form
     {
-
         private List<PluginInfoOnline> _downloadList;
-
         private string _downloadedPluginName;
         private readonly LanguageStructure.PluginsGet _language;
         private List<string> _updateAllListUrls;
@@ -61,14 +59,22 @@ namespace Nikse.SubtitleEdit.Forms
             labelShortcutsSearch.Text = Configuration.Settings.Language.General.Search;
             labelShortcutsSearch.Left = textBoxSearch.Left - labelShortcutsSearch.Width - 9;
             buttonSearchClear.Text = Configuration.Settings.Language.DvdSubRip.Clear;
+            // TODO: globalize
+            //buttonRefresh.Text = 
 
             buttonUpdateAll.Visible = false;
+
+            ShowInstalledPlugins();
+            GetOnlinePluginsInfo();
+        }
+
+        private void GetOnlinePluginsInfo()
+        {
+
+            labelPleaseWait.Text = Configuration.Settings.Language.General.PleaseWait;
+            Refresh();
             try
             {
-                labelPleaseWait.Text = Configuration.Settings.Language.General.PleaseWait;
-                Refresh();
-                ShowInstalledPlugins();
-                string url = GetPluginXmlFileUrl();
                 var wc = new WebClient
                 {
                     Proxy = Utilities.GetProxy(),
@@ -77,9 +83,9 @@ namespace Nikse.SubtitleEdit.Forms
                 };
                 wc.Headers.Add("Accept-Encoding", "");
                 wc.DownloadStringCompleted += wc_DownloadStringCompleted;
-                wc.DownloadStringAsync(new Uri(url));
+                wc.DownloadStringAsync(new Uri(GetPluginXmlFileUrl()));
             }
-            catch (Exception exception)
+            catch (Exception exception) // todo: remove this try-catch (main-thread will start async proc and leave)?
             {
                 ChangeControlsState(true);
                 MessageBox.Show(exception.Message + Environment.NewLine + Environment.NewLine + exception.StackTrace);
@@ -172,6 +178,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ShowAvailablePlugins()
         {
+            listViewGetPlugins.BeginUpdate();
+            listViewGetPlugins.Items.Clear();
+
             bool search = textBoxSearch.Text.Length > 1;
             string searchText = textBoxSearch.Text;
             foreach (var plugin in _downloadList.OrderBy(p => p.Name))
@@ -199,6 +208,8 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
+            listViewGetPlugins.EndUpdate();
+            buttonSearchClear.Enabled = textBoxSearch.Text.Length > 0;
         }
 
         private void ShowInstalledPlugins()
@@ -454,6 +465,16 @@ namespace Nikse.SubtitleEdit.Forms
             ShowAvailablePlugins();
             listViewGetPlugins.EndUpdate();
             buttonSearchClear.Enabled = textBoxSearch.Text.Length > 0;
+        }
+
+        private void ButtonRefresh_Click(object sender, EventArgs e)
+        {
+            GetOnlinePluginsInfo();
+        }
+
+        private void TabControlPlugins_Selecting(object sender, TabControlCancelEventArgs e)
+        {
+            buttonRefresh.Enabled = e.TabPageIndex == 1;
         }
     }
 }

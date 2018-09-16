@@ -54,6 +54,7 @@
             this.labelShortcutsSearch = new System.Windows.Forms.Label();
             this.textBoxSearch = new System.Windows.Forms.TextBox();
             this.labelPleaseWait = new System.Windows.Forms.Label();
+            this.buttonRefresh = new System.Windows.Forms.Button();
             this.tabControlPlugins.SuspendLayout();
             this.tabPageInstalledPlugins.SuspendLayout();
             this.tabPageGetPlugins.SuspendLayout();
@@ -169,6 +170,7 @@
             this.tabControlPlugins.SelectedIndex = 0;
             this.tabControlPlugins.Size = new System.Drawing.Size(798, 492);
             this.tabControlPlugins.TabIndex = 28;
+            this.tabControlPlugins.Selecting += new System.Windows.Forms.TabControlCancelEventHandler(this.TabControlPlugins_Selecting);
             // 
             // tabPageInstalledPlugins
             // 
@@ -254,6 +256,7 @@
             // 
             // tabPageGetPlugins
             // 
+            this.tabPageGetPlugins.Controls.Add(this.buttonRefresh);
             this.tabPageGetPlugins.Controls.Add(this.buttonSearchClear);
             this.tabPageGetPlugins.Controls.Add(this.labelShortcutsSearch);
             this.tabPageGetPlugins.Controls.Add(this.textBoxSearch);
@@ -310,6 +313,17 @@
             this.labelPleaseWait.TabIndex = 28;
             this.labelPleaseWait.Text = "Please wait...";
             // 
+            // buttonRefresh
+            // 
+            this.buttonRefresh.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonRefresh.Location = new System.Drawing.Point(570, 435);
+            this.buttonRefresh.Name = "buttonRefresh";
+            this.buttonRefresh.Size = new System.Drawing.Size(104, 25);
+            this.buttonRefresh.TabIndex = 44;
+            this.buttonRefresh.Text = "Refresh";
+            this.buttonRefresh.UseVisualStyleBackColor = true;
+            this.buttonRefresh.Click += new System.EventHandler(this.ButtonRefresh_Click);
+            // 
             // PluginsGet
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -365,5 +379,6 @@
         private System.Windows.Forms.TextBox textBoxSearch;
         private System.Windows.Forms.ColumnHeader columnHeaderInsAuthor;
         private System.Windows.Forms.ColumnHeader columnHeaderAuthor;
+        private System.Windows.Forms.Button buttonRefresh;
     }
 }
