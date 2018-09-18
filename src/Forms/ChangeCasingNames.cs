@@ -89,20 +89,28 @@ namespace Nikse.SubtitleEdit.Forms
                 string text = p.Text;
                 foreach (ListViewItem item in listViewNames.Items)
                 {
-                    string name = item.SubItems[1].Text;
-
-                    string textNoTags = HtmlUtil.RemoveHtmlTags(text, true);
-                    if (textNoTags != textNoTags.ToUpper())
+                    if (!item.Checked)
                     {
-                        if (item.Checked && text != null && text.Contains(name, StringComparison.OrdinalIgnoreCase) && name.Length > 1 && name != name.ToLower())
-                        {
-                            var st = new StrippableText(text);
-                            st.FixCasing(new List<string> { name }, true, false, false, string.Empty);
-                            text = st.MergedString;
-                        }
+                        continue;
+                    }
+                    string name = item.SubItems[1].Text;
+                    if (name.Length == 0 || name.ToLower() == name)
+                    {
+                        continue;
+                    }
+                    if (text.Length < name.Length || text.Contains(name, StringComparison.OrdinalIgnoreCase) == false)
+                    {
+                        continue;
+                    }
+                    string textNoTags = HtmlUtil.RemoveHtmlTags(text, true);
+                    if (textNoTags.ContainsLetter())
+                    {
+                        var st = new StrippableText(text);
+                        st.FixCasing(new List<string> { name }, true, false, false, string.Empty);
+                        text = st.MergedString;
                     }
                 }
-                if (text != p.Text)
+                if (text.Equals(p.Text, StringComparison.Ordinal) == false)
                     AddToPreviewListView(p, text);
             }
             listViewFixes.EndUpdate();
@@ -124,7 +132,12 @@ namespace Nikse.SubtitleEdit.Forms
             foreach (string s in textBoxExtraNames.Text.Split(','))
             {
                 var name = s.Trim();
-                if (name.Length > 1 && !_nameListInclMulti.Contains(name))
+                if (!name.ContainsLetter())
+                {
+                    // TODO: notify adding invalid name?
+                    continue;
+                }
+                if (!_nameListInclMulti.Contains(name))
                 {
                     _nameListInclMulti.Add(name);
                 }
