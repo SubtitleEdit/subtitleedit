@@ -939,7 +939,7 @@ namespace Nikse.SubtitleEdit.Core
         {
             UserName = string.Empty;
             SessionKey = "DemoSession"; // TODO: Leave blank or use guid
-            WebServiceUrl = "http://www.nikse.dk/se/SeService.asmx";
+            WebServiceUrl = "https://www.nikse.dk/se/SeService.asmx";
             PollIntervalSeconds = 5;
         }
     }
