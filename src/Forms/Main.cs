@@ -6155,7 +6155,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             WebRequest.DefaultWebProxy = Utilities.GetProxy();
             //var request = WebRequest.Create("http://localhost:54942/MultiTranslator/TranslateForSubtitleEdit");
-            var request = WebRequest.Create("http://www.nikse.dk/MultiTranslator/TranslateForSubtitleEdit");
+            var request = WebRequest.Create("https://www.nikse.dk/MultiTranslator/TranslateForSubtitleEdit");
             request.Method = "POST";
             var postData = String.Format("languagePair={1}&text={0}", Utilities.UrlEncode(input), "svda");
             var byteArray = Encoding.UTF8.GetBytes(postData);

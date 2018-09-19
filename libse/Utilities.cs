@@ -785,7 +785,7 @@ namespace Nikse.SubtitleEdit.Core
         {
             string helpFile = Configuration.Settings.Language.General.HelpFile;
             if (string.IsNullOrEmpty(helpFile))
-                helpFile = "http://www.nikse.dk/SubtitleEdit/Help";
+                helpFile = "https://www.nikse.dk/SubtitleEdit/Help";
             System.Diagnostics.Process.Start(helpFile + parameter);
         }
 
