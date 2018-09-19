@@ -518,6 +518,18 @@
     <Compile Include="Forms\Networking\NetworkStart.Designer.cs">
       <DependentUpon>NetworkStart.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Ocr\DownloadTesseract302.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Ocr\DownloadTesseract302.Designer.cs">
+      <DependentUpon>DownloadTesseract302.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Ocr\GetTesseract302Dictionaries.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Ocr\GetTesseract302Dictionaries.Designer.cs">
+      <DependentUpon>GetTesseract302Dictionaries.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Ocr\SetForeColorThreshold.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -923,6 +935,7 @@
     <Compile Include="Logic\Ocr\OcrFixEngine.cs" />
     <Compile Include="Logic\Ocr\OcrImage.cs" />
     <Compile Include="Logic\Ocr\NOcrPoint.cs" />
+    <Compile Include="Logic\Ocr\PreprocessingSettings.cs" />
     <Compile Include="Logic\Ocr\SpellCheckOcrTextResult.cs" />
     <Compile Include="Logic\RtfTextConverterRichTextBox.cs" />
     <Compile Include="Logic\SpellCheck\Hunspell.cs" />
@@ -1193,6 +1206,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Networking\NetworkStart.resx">
       <DependentUpon>NetworkStart.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Ocr\DownloadTesseract302.resx">
+      <DependentUpon>DownloadTesseract302.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Ocr\GetTesseract302Dictionaries.resx">
+      <DependentUpon>GetTesseract302Dictionaries.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Ocr\SetForeColorThreshold.resx">
       <DependentUpon>SetForeColorThreshold.cs</DependentUpon>

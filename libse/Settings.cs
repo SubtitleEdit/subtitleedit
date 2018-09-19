@@ -867,6 +867,7 @@ namespace Nikse.SubtitleEdit.Core
         public int LastModiLanguageId { get; set; }
         public string LastOcrMethod { get; set; }
         public string TesseractLastLanguage { get; set; }
+        public bool UseTesseractFallback { get; set; }
         public bool UseItalicsInTesseract { get; set; }
         public int TesseractEngineMode { get; set; }
         public bool UseMusicSymbolsInTesseract { get; set; }
@@ -899,6 +900,7 @@ namespace Nikse.SubtitleEdit.Core
             LastOcrMethod = "Tesseract";
             UseItalicsInTesseract = true;
             UseMusicSymbolsInTesseract = true;
+            UseTesseractFallback = true;
             RightToLeft = false;
             TopToBottom = true;
             DefaultMillisecondsForUnknownDurations = 5000;
@@ -2696,6 +2698,9 @@ namespace Nikse.SubtitleEdit.Core
             subNode = node.SelectSingleNode("TesseractLastLanguage");
             if (subNode != null)
                 settings.VobSubOcr.TesseractLastLanguage = subNode.InnerText;
+            subNode = node.SelectSingleNode("UseTesseractFallback");
+            if (subNode != null)
+                settings.VobSubOcr.UseTesseractFallback = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("UseItalicsInTesseract");
             if (subNode != null)
                 settings.VobSubOcr.UseItalicsInTesseract = Convert.ToBoolean(subNode.InnerText);
@@ -3858,6 +3863,7 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("LastModiLanguageId", settings.VobSubOcr.LastModiLanguageId.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("LastOcrMethod", settings.VobSubOcr.LastOcrMethod);
                 textWriter.WriteElementString("TesseractLastLanguage", settings.VobSubOcr.TesseractLastLanguage);
+                textWriter.WriteElementString("UseTesseractFallback", settings.VobSubOcr.UseTesseractFallback.ToString());
                 textWriter.WriteElementString("UseItalicsInTesseract", settings.VobSubOcr.UseItalicsInTesseract.ToString());
                 textWriter.WriteElementString("TesseractEngineMode", settings.VobSubOcr.TesseractEngineMode.ToString());
                 textWriter.WriteElementString("UseMusicSymbolsInTesseract", settings.VobSubOcr.UseMusicSymbolsInTesseract.ToString());

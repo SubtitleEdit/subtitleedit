@@ -24,12 +24,14 @@ namespace Nikse.SubtitleEdit.Core
         public static readonly string AutoBackupDirectory = DataDirectory + "AutoBackup" + Path.DirectorySeparatorChar;
         public static readonly string VobSubCompareDirectory = DataDirectory + "VobSub" + Path.DirectorySeparatorChar;
         public static readonly string TesseractDirectory = DataDirectory + "Tesseract4" + Path.DirectorySeparatorChar;
+        public static readonly string Tesseract302Directory = DataDirectory + "Tesseract302" + Path.DirectorySeparatorChar;
         public static readonly string WaveformsDirectory = DataDirectory + "Waveforms" + Path.DirectorySeparatorChar;
         public static readonly string PluginsDirectory = DataDirectory + "Plugins" + Path.DirectorySeparatorChar;
         public static readonly string IconsDirectory = BaseDirectory + "Icons" + Path.DirectorySeparatorChar;
         public static readonly string OcrDirectory = DataDirectory + "Ocr" + Path.DirectorySeparatorChar;
         public static readonly string SettingsFileName = DataDirectory + "Settings.xml";
         public static readonly string TesseractDataDirectory = GetTesseractDataDirectory();
+        public static readonly string Tesseract302DataDirectory = GetTesseract302DataDirectory();
 
 
         private Configuration()
@@ -151,6 +153,20 @@ namespace Nikse.SubtitleEdit.Core
                     return "/usr/share/tessdata";
             }
             return Path.Combine(TesseractDirectory, "tessdata");
+        }
+
+        private static string GetTesseract302DataDirectory()
+        {
+            if (IsRunningOnLinux() || IsRunningOnMac())
+            {
+                if (Directory.Exists("/usr/share/tesseract-ocr/tessdata"))
+                    return "/usr/share/tesseract-ocr/tessdata";
+                if (Directory.Exists("/usr/share/tesseract/tessdata"))
+                    return "/usr/share/tesseract/tessdata";
+                if (Directory.Exists("/usr/share/tessdata"))
+                    return "/usr/share/tessdata";
+            }
+            return Path.Combine(Tesseract302Directory, "tessdata");
         }
 
         private static IEnumerable<Encoding> GetAvailableEncodings()

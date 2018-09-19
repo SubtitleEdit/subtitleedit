@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Logic.Ocr;
 using Bitmap = System.Drawing.Bitmap;
 
 namespace Nikse.SubtitleEdit.Forms.Ocr
@@ -10,24 +11,35 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
     {
         private readonly bool _isBinaryImageCompare;
         private readonly NikseBitmap _source;
+        public PreprocessingSettings PreprocessingSettings { get; private set; }
 
-        public SetForeColorThreshold(Bitmap bitmap, bool isBinaryImageCompare)
+        public SetForeColorThreshold(Bitmap bitmap, bool isBinaryImageCompare, PreprocessingSettings preprocessingSettings)
         {
             _isBinaryImageCompare = isBinaryImageCompare;
             InitializeComponent();
             groupBoxBinaryImageCompareThresshold.Visible = isBinaryImageCompare;
             _source = new NikseBitmap(bitmap);
             pictureBoxSubtitleImage.Image = bitmap;
-            ColorToRemove = Color.Transparent;
-            ReplaceColorWithWhite = Color.Transparent;
-            numericUpDownThreshold.Value = Configuration.Settings.Tools.OcrBinaryImageCompareRgbThreshold;
-            panelColorToWhite.BackColor = Color.Transparent;
-            panelColorToRemove.BackColor = Color.Transparent;
-        }
+            if (preprocessingSettings != null)
+            {
+                PreprocessingSettings = preprocessingSettings;
+            }
+            else
+            {
+                PreprocessingSettings = new PreprocessingSettings
+                {
+                    BinaryImageCompareThresshold = Configuration.Settings.Tools.OcrBinaryImageCompareRgbThreshold
+                };
+            }
 
-        public int Threshold { get; set; }
-        public Color ReplaceColorWithWhite { get; set; }
-        public Color ColorToRemove { get; set; }
+            checkBoxInvertColors.Checked = PreprocessingSettings.InvertColors;
+            panelColorToWhite.BackColor = PreprocessingSettings.ColorToWhite;
+            panelColorToRemove.BackColor = PreprocessingSettings.ColorToRemove;
+            checkBoxCropTransparent.Checked = PreprocessingSettings.CropTransparentColors;
+            numericUpDownThreshold.Value = PreprocessingSettings.BinaryImageCompareThresshold;
+
+            RefreshImage();
+        }
 
         private void numericUpDownThreshold_ValueChanged(object sender, EventArgs e)
         {
@@ -36,9 +48,26 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private void RefreshImage()
         {
+            PreprocessingSettings.InvertColors = checkBoxInvertColors.Checked;
+            PreprocessingSettings.ColorToWhite = panelColorToWhite.BackColor;
+            PreprocessingSettings.ColorToRemove = panelColorToRemove.BackColor;
+            PreprocessingSettings.CropTransparentColors = checkBoxCropTransparent.Checked;
+            PreprocessingSettings.BinaryImageCompareThresshold = (int)numericUpDownThreshold.Value;
+
             pictureBox1.Image?.Dispose();
             var n = new NikseBitmap(_source);
-            n.CropTopTransparent(9999);
+
+            if (PreprocessingSettings.CropTransparentColors)
+            {
+                n.CropSidesAndBottom(2, Color.Transparent, true);
+                n.CropSidesAndBottom(2, Color.FromArgb(0, 0, 0, 0), true);
+                n.CropTop(2, Color.Transparent);
+                n.CropTop(2, Color.FromArgb(0, 0, 0, 0));
+            }
+            if (PreprocessingSettings.InvertColors)
+            {
+                n.InvertColors();
+            }
             if (panelColorToWhite.BackColor != Color.Transparent)
                 n.ReplaceColor(panelColorToWhite.BackColor.A, panelColorToWhite.BackColor.R, panelColorToWhite.BackColor.G, panelColorToWhite.BackColor.B, 255, 255, 255, 255);
             if (panelColorToRemove.BackColor != Color.Transparent)
@@ -50,7 +79,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
-            Threshold = (int)numericUpDownThreshold.Value;
             DialogResult = DialogResult.OK;
         }
 
@@ -73,7 +101,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             if (colorDialog1.ShowDialog() == DialogResult.OK)
             {
                 panelColorToWhite.BackColor = colorDialog1.Color;
-                ReplaceColorWithWhite = colorDialog1.Color;
                 RefreshImage();
             }
         }
@@ -84,7 +111,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             if (colorDialog1.ShowDialog() == DialogResult.OK)
             {
                 panelColorToRemove.BackColor = colorDialog1.Color;
-                ColorToRemove = colorDialog1.Color;
                 RefreshImage();
             }
         }
@@ -100,6 +126,22 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 DialogResult = DialogResult.Cancel;
             }
+        }
+
+        private void checkBoxInvertColors_CheckedChanged(object sender, EventArgs e)
+        {
+            buttonColorToWhite.Enabled = !checkBoxInvertColors.Checked;
+            panelColorToWhite.Enabled = !checkBoxInvertColors.Checked;
+
+            buttonColorToRemove.Enabled = !checkBoxInvertColors.Checked;
+            panelColorToRemove.Enabled = !checkBoxInvertColors.Checked;
+
+            RefreshImage();
+        }
+
+        private void checkBoxCropTransparent_CheckedChanged(object sender, EventArgs e)
+        {
+            RefreshImage();
         }
     }
 }

@@ -129,6 +129,19 @@ namespace Nikse.SubtitleEdit.Core
             }
         }
 
+        public void InvertColors()
+        {
+            for (int i = 0; i < _bitmapData.Length;)
+            {
+                _bitmapData[i] = (byte) ~_bitmapData[i];
+                i++;
+                _bitmapData[i] = (byte)~_bitmapData[i];
+                i++;
+                _bitmapData[i] = (byte)~_bitmapData[i];
+                i +=2;
+            }
+        }
+
         public void ReplaceNonWhiteWithTransparent()
         {
             var buffer = new byte[4];
