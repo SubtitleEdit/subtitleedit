@@ -125,6 +125,14 @@ namespace Test.Logic
         }
 
         [TestMethod]
+        public void AutoBreakLineDialog4()
+        {
+            const string s1 = "- Come on, I…\r\n- Here, let's try this one, right over here.";
+            string s2 = Utilities.AutoBreakLine(s1);
+            Assert.AreEqual(s1, s2);
+        }
+
+        [TestMethod]
         public void UnBreakLine1()
         {
             string s = Utilities.UnbreakLine("Hallo!" + Environment.NewLine + "Hallo!");
