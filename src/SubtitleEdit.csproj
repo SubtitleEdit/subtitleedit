@@ -518,6 +518,12 @@
     <Compile Include="Forms\Networking\NetworkStart.Designer.cs">
       <DependentUpon>NetworkStart.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Ocr\DownloadTesseract4.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Ocr\DownloadTesseract4.Designer.cs">
+      <DependentUpon>DownloadTesseract4.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Ocr\DownloadTesseract302.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -937,6 +943,9 @@
     <Compile Include="Logic\Ocr\NOcrPoint.cs" />
     <Compile Include="Logic\Ocr\PreprocessingSettings.cs" />
     <Compile Include="Logic\Ocr\SpellCheckOcrTextResult.cs" />
+    <Compile Include="Logic\Ocr\Tesseract\TesseractThreadRunner.cs" />
+    <Compile Include="Logic\Ocr\Tesseract\TesseractRunner.cs" />
+    <Compile Include="Logic\Ocr\Tesseract\TesseractMultiRunner.cs" />
     <Compile Include="Logic\RtfTextConverterRichTextBox.cs" />
     <Compile Include="Logic\SpellCheck\Hunspell.cs" />
     <Compile Include="Logic\SpellCheck\LinuxHunspell.cs" />
@@ -1206,6 +1215,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Networking\NetworkStart.resx">
       <DependentUpon>NetworkStart.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Ocr\DownloadTesseract4.resx">
+      <DependentUpon>DownloadTesseract4.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Ocr\DownloadTesseract302.resx">
       <DependentUpon>DownloadTesseract302.cs</DependentUpon>

@@ -17,7 +17,7 @@ namespace Nikse.SubtitleEdit.Core
 
         public static readonly string BaseDirectory = GetBaseDirectory();
         public static readonly string DataDirectory = GetDataDirectory();
-        public static readonly string TesseractOriginalDirectory = BaseDirectory + "Tesseract4" + Path.DirectorySeparatorChar;
+        public static readonly string TesseractOriginalDirectory = BaseDirectory + "Tesseract302" + Path.DirectorySeparatorChar;
         public static readonly string DictionariesDirectory = DataDirectory + "Dictionaries" + Path.DirectorySeparatorChar;
         public static readonly string SpectrogramsDirectory = DataDirectory + "Spectrograms" + Path.DirectorySeparatorChar;
         public static readonly string SceneChangesDirectory = DataDirectory + "SceneChanges" + Path.DirectorySeparatorChar;
