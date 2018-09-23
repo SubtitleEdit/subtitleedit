@@ -1,6 +1,6 @@
 ﻿namespace Nikse.SubtitleEdit.Forms.Ocr
 {
-    partial class DownloadTesseract302
+    partial class DownloadTesseract4
     {
         /// <summary>
         /// Required designer variable.
@@ -50,7 +50,7 @@
             this.labelPleaseWait.TabIndex = 28;
             this.labelPleaseWait.Text = "Please wait...";
             // 
-            // DownloadTesseract302
+            // DownloadTesseract4
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -60,10 +60,10 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "DownloadTesseract302";
+            this.Name = "DownloadTesseract4";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Download Tesseract 3.02";
+            this.Text = "Download Tesseract 4";
             this.ResumeLayout(false);
             this.PerformLayout();
 

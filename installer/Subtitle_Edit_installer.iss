@@ -269,16 +269,12 @@ Source: ..\Changelog.txt;                          DestDir: {app};              
 Source: ..\LICENSE.txt;                            DestDir: {app};                                    Flags: ignoreversion; Components: main
 Source: Icons\uninstall.ico;                       DestDir: {app}\Icons;                              Flags: ignoreversion; Components: main
 
-Source: ..\Tesseract4\tessdata\configs\hocr;       DestDir: {app}\Tesseract4\tessdata\configs;        Flags: ignoreversion; Components: main
-Source: ..\Tesseract4\tessdata\osd.traineddata;    DestDir: {app}\Tesseract4\tessdata;                Flags: ignoreversion; Components: main
-Source: ..\Tesseract4\tesseract.exe;               DestDir: {app}\Tesseract4;                         Flags: ignoreversion; Components: main
-Source: ..\Tesseract4\gif.dll;                     DestDir: {app}\Tesseract4;                         Flags: ignoreversion; Components: main
-Source: ..\Tesseract4\jpeg62.dll;                  DestDir: {app}\Tesseract4;                         Flags: ignoreversion; Components: main
-Source: ..\Tesseract4\leptonica-1.74.4.dll;        DestDir: {app}\Tesseract4;                         Flags: ignoreversion; Components: main
-Source: ..\Tesseract4\libpng16.dll;                DestDir: {app}\Tesseract4;                         Flags: ignoreversion; Components: main
-Source: ..\Tesseract4\lzma.dll;                    DestDir: {app}\Tesseract4;                         Flags: ignoreversion; Components: main
-Source: ..\Tesseract4\tiff.dll;                    DestDir: {app}\Tesseract4;                         Flags: ignoreversion; Components: main
-Source: ..\Tesseract4\zlib1.dll;                   DestDir: {app}\Tesseract4;                         Flags: ignoreversion; Components: main
+Source: ..\Tesseract302\tessdata\configs\hocr;       DestDir: {app}\Tesseract302\tessdata\configs;    Flags: ignoreversion; Components: main
+Source: ..\Tesseract302\tessdata\eng.traineddata;    DestDir: {app}\Tesseract302\tessdata;            Flags: ignoreversion; Components: main
+Source: ..\Tesseract302\tessdata\music.traineddata;  DestDir: {app}\Tesseract302\tessdata;            Flags: ignoreversion; Components: main
+Source: ..\Tesseract302\tesseract.exe;               DestDir: {app}\Tesseract302;                     Flags: ignoreversion; Components: main
+Source: ..\Tesseract302\msvcp90.dll;                 DestDir: {app}\Tesseract302;                     Flags: ignoreversion; Components: main
+Source: ..\Tesseract302\msvcr90.dll;                 DestDir: {app}\Tesseract302;                     Flags: ignoreversion; Components: main
 
 
 [Icons]
@@ -325,6 +321,12 @@ Type: files;      Name: {app}\TessData\eng.word-dawg;                 Check: IsU
 Type: dirifempty; Name: {app}\TessData;                               Check: IsUpgrade()
 Type: files;      Name: {app}\Tesseract\leptonlib.dll;                Check: IsUpgrade()
 Type: files;      Name: {app}\tessnet2_32.dll;                        Check: IsUpgrade()
+Type: files;      Name: {app}\Tesseract302\tessdata\configs\hocr;     Check: IsUpgrade()
+Type: files;      Name: {app}\Tesseract302\tessdata\eng.traineddata;  Check: IsUpgrade()
+Type: files;      Name: {app}\Tesseract302\tessdata\music.traineddata; Check: IsUpgrade()
+Type: files;      Name: {app}\Tesseract302\tesseract.exe;             Check: IsUpgrade()
+Type: files;      Name: {app}\Tesseract302\msvcp90.dll;               Check: IsUpgrade()
+Type: files;      Name: {app}\Tesseract302\msvcr90.dll;               Check: IsUpgrade()
 Type: files;      Name: {app}\Icons\SubtitleEdit.srt.ico;             Check: IsUpgrade()
 Type: files;      Name: {app}\DocumentIcons.dll;                      Check: IsUpgrade()
 Type: files;      Name: {app}\Settings.xml;                           Check: IsUpgrade()
@@ -596,6 +598,12 @@ begin
       DelTree(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract4\tessdata\*.traineddata'), False, True, False);
       DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract4\tessdata\configs\hocr'));
 
+      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract302\tessdata\configs\hocr'));
+      DelTree(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract302\tessdata\*.traineddata'), False, True, False);
+      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract302\tesseract.exe'));
+      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract302\msvcp90.dll'));
+      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract302\msvcr90.dll'));
+
       // Remove possible installed mpv 
       DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\mpv-1.dll'));
 
@@ -614,6 +622,9 @@ begin
       RemoveDir(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract4\tessdata\configs'));
       RemoveDir(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract4\tessdata'));
       RemoveDir(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract4'));
+      RemoveDir(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract302\tessdata\configs'));
+      RemoveDir(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract302\tessdata'));
+      RemoveDir(ExpandConstant('{userappdata}\Subtitle Edit\Tesseract302'));
       RemoveDir(ExpandConstant('{userappdata}\Subtitle Edit'));
 
     end;
