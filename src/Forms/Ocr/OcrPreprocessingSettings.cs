@@ -7,13 +7,13 @@ using Bitmap = System.Drawing.Bitmap;
 
 namespace Nikse.SubtitleEdit.Forms.Ocr
 {
-    public partial class SetForeColorThreshold : Form
+    public partial class OcrPreprocessingSettings : Form
     {
         private readonly bool _isBinaryImageCompare;
         private readonly NikseBitmap _source;
-        public PreprocessingSettings PreprocessingSettings { get; private set; }
+        public PreprocessingSettings PreprocessingSettings { get; }
 
-        public SetForeColorThreshold(Bitmap bitmap, bool isBinaryImageCompare, PreprocessingSettings preprocessingSettings)
+        public OcrPreprocessingSettings(Bitmap bitmap, bool isBinaryImageCompare, PreprocessingSettings preprocessingSettings)
         {
             _isBinaryImageCompare = isBinaryImageCompare;
             InitializeComponent();
@@ -36,6 +36,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             panelColorToWhite.BackColor = PreprocessingSettings.ColorToWhite;
             panelColorToRemove.BackColor = PreprocessingSettings.ColorToRemove;
             checkBoxCropTransparent.Checked = PreprocessingSettings.CropTransparentColors;
+            checkBoxYellowToWhite.Checked = PreprocessingSettings.YellowToWhite;
             numericUpDownThreshold.Value = PreprocessingSettings.BinaryImageCompareThresshold;
 
             RefreshImage();
@@ -49,8 +50,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private void RefreshImage()
         {
             PreprocessingSettings.InvertColors = checkBoxInvertColors.Checked;
-            PreprocessingSettings.ColorToWhite = panelColorToWhite.BackColor;
-            PreprocessingSettings.ColorToRemove = panelColorToRemove.BackColor;
+            PreprocessingSettings.YellowToWhite = checkBoxYellowToWhite.Enabled && checkBoxYellowToWhite.Checked;
+            PreprocessingSettings.ColorToWhite = buttonColorToWhite.Enabled ? panelColorToWhite.BackColor : Color.Transparent;
+            PreprocessingSettings.ColorToRemove = buttonColorToRemove.Enabled ? panelColorToRemove.BackColor : Color.Transparent;
             PreprocessingSettings.CropTransparentColors = checkBoxCropTransparent.Checked;
             PreprocessingSettings.BinaryImageCompareThresshold = (int)numericUpDownThreshold.Value;
 
@@ -67,6 +69,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             if (PreprocessingSettings.InvertColors)
             {
                 n.InvertColors();
+            }
+            if (PreprocessingSettings.YellowToWhite)
+            {
+                n.ReplaceYellowWithWhite();
             }
             if (panelColorToWhite.BackColor != Color.Transparent)
                 n.ReplaceColor(panelColorToWhite.BackColor.A, panelColorToWhite.BackColor.R, panelColorToWhite.BackColor.G, panelColorToWhite.BackColor.B, 255, 255, 255, 255);
@@ -130,6 +136,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private void checkBoxInvertColors_CheckedChanged(object sender, EventArgs e)
         {
+            checkBoxYellowToWhite.Enabled = !checkBoxInvertColors.Checked;
+
             buttonColorToWhite.Enabled = !checkBoxInvertColors.Checked;
             panelColorToWhite.Enabled = !checkBoxInvertColors.Checked;
 

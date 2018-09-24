@@ -34,7 +34,8 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Tesseract
 
                 if (!string.IsNullOrEmpty(psmMode))
                 {
-                    process.StartInfo.Arguments += " --psm " + psmMode;
+                    var prefix = run302 ? " -psm " : " --psm ";
+                    process.StartInfo.Arguments += prefix + psmMode;
                 }
 
                 if (!string.IsNullOrEmpty(engineMode) && !run302)

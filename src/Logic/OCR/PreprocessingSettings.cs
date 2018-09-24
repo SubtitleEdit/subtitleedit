@@ -7,6 +7,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
         public Color ColorToWhite { get; set; }
         public Color ColorToRemove { get; set; }
         public bool InvertColors { get; set; }
+        public bool YellowToWhite { get; set; }
 
         public bool CropTransparentColors { get; set; }
         public int CropLeftRight { get; set; }
@@ -23,6 +24,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
         public bool Active => ColorToWhite != Color.Transparent ||
                               ColorToRemove != Color.Transparent ||
                               InvertColors ||
+                              YellowToWhite ||
                               CropTransparentColors ||
                               CropLeftRight > 0 ||
                               CropTopBottom > 0;

@@ -1,6 +1,6 @@
 ﻿namespace Nikse.SubtitleEdit.Forms.Ocr
 {
-    partial class SetForeColorThreshold
+    partial class OcrPreprocessingSettings
     {
         /// <summary>
         /// Required designer variable.
@@ -43,9 +43,10 @@
             this.panelColorToRemove = new System.Windows.Forms.Panel();
             this.groupBoxBinaryImageCompareThresshold = new System.Windows.Forms.GroupBox();
             this.groupBoxCropping = new System.Windows.Forms.GroupBox();
+            this.checkBoxCropTransparent = new System.Windows.Forms.CheckBox();
             this.groupBoxColors = new System.Windows.Forms.GroupBox();
             this.checkBoxInvertColors = new System.Windows.Forms.CheckBox();
-            this.checkBoxCropTransparent = new System.Windows.Forms.CheckBox();
+            this.checkBoxYellowToWhite = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownThreshold)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSubtitleImage)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -137,7 +138,7 @@
             // panelColorToWhite
             // 
             this.panelColorToWhite.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelColorToWhite.Location = new System.Drawing.Point(180, 55);
+            this.panelColorToWhite.Location = new System.Drawing.Point(180, 70);
             this.panelColorToWhite.Name = "panelColorToWhite";
             this.panelColorToWhite.Size = new System.Drawing.Size(21, 20);
             this.panelColorToWhite.TabIndex = 19;
@@ -163,7 +164,7 @@
             // 
             // buttonColorToWhite
             // 
-            this.buttonColorToWhite.Location = new System.Drawing.Point(9, 53);
+            this.buttonColorToWhite.Location = new System.Drawing.Point(9, 68);
             this.buttonColorToWhite.Name = "buttonColorToWhite";
             this.buttonColorToWhite.Size = new System.Drawing.Size(162, 23);
             this.buttonColorToWhite.TabIndex = 24;
@@ -173,7 +174,7 @@
             // 
             // buttonColorToRemove
             // 
-            this.buttonColorToRemove.Location = new System.Drawing.Point(9, 84);
+            this.buttonColorToRemove.Location = new System.Drawing.Point(9, 99);
             this.buttonColorToRemove.Name = "buttonColorToRemove";
             this.buttonColorToRemove.Size = new System.Drawing.Size(162, 23);
             this.buttonColorToRemove.TabIndex = 26;
@@ -184,7 +185,7 @@
             // panelColorToRemove
             // 
             this.panelColorToRemove.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelColorToRemove.Location = new System.Drawing.Point(180, 85);
+            this.panelColorToRemove.Location = new System.Drawing.Point(180, 100);
             this.panelColorToRemove.Name = "panelColorToRemove";
             this.panelColorToRemove.Size = new System.Drawing.Size(21, 20);
             this.panelColorToRemove.TabIndex = 25;
@@ -213,8 +214,20 @@
             this.groupBoxCropping.TabStop = false;
             this.groupBoxCropping.Text = "Cropping";
             // 
+            // checkBoxCropTransparent
+            // 
+            this.checkBoxCropTransparent.AutoSize = true;
+            this.checkBoxCropTransparent.Location = new System.Drawing.Point(9, 19);
+            this.checkBoxCropTransparent.Name = "checkBoxCropTransparent";
+            this.checkBoxCropTransparent.Size = new System.Drawing.Size(135, 17);
+            this.checkBoxCropTransparent.TabIndex = 29;
+            this.checkBoxCropTransparent.Text = "Crop transparent colors";
+            this.checkBoxCropTransparent.UseVisualStyleBackColor = true;
+            this.checkBoxCropTransparent.CheckedChanged += new System.EventHandler(this.checkBoxCropTransparent_CheckedChanged);
+            // 
             // groupBoxColors
             // 
+            this.groupBoxColors.Controls.Add(this.checkBoxYellowToWhite);
             this.groupBoxColors.Controls.Add(this.checkBoxInvertColors);
             this.groupBoxColors.Controls.Add(this.buttonColorToWhite);
             this.groupBoxColors.Controls.Add(this.panelColorToWhite);
@@ -238,16 +251,15 @@
             this.checkBoxInvertColors.UseVisualStyleBackColor = true;
             this.checkBoxInvertColors.CheckedChanged += new System.EventHandler(this.checkBoxInvertColors_CheckedChanged);
             // 
-            // checkBoxCropTransparent
+            // checkBoxYellowToWhite
             // 
-            this.checkBoxCropTransparent.AutoSize = true;
-            this.checkBoxCropTransparent.Location = new System.Drawing.Point(9, 19);
-            this.checkBoxCropTransparent.Name = "checkBoxCropTransparent";
-            this.checkBoxCropTransparent.Size = new System.Drawing.Size(135, 17);
-            this.checkBoxCropTransparent.TabIndex = 29;
-            this.checkBoxCropTransparent.Text = "Crop transparent colors";
-            this.checkBoxCropTransparent.UseVisualStyleBackColor = true;
-            this.checkBoxCropTransparent.CheckedChanged += new System.EventHandler(this.checkBoxCropTransparent_CheckedChanged);
+            this.checkBoxYellowToWhite.AutoSize = true;
+            this.checkBoxYellowToWhite.Location = new System.Drawing.Point(9, 42);
+            this.checkBoxYellowToWhite.Name = "checkBoxYellowToWhite";
+            this.checkBoxYellowToWhite.Size = new System.Drawing.Size(97, 17);
+            this.checkBoxYellowToWhite.TabIndex = 28;
+            this.checkBoxYellowToWhite.Text = "Yellow to white";
+            this.checkBoxYellowToWhite.UseVisualStyleBackColor = true;
             // 
             // SetForeColorThreshold
             // 
@@ -306,5 +318,6 @@
         private System.Windows.Forms.GroupBox groupBoxColors;
         private System.Windows.Forms.CheckBox checkBoxInvertColors;
         private System.Windows.Forms.CheckBox checkBoxCropTransparent;
+        private System.Windows.Forms.CheckBox checkBoxYellowToWhite;
     }
 }
