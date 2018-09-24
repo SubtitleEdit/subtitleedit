@@ -50,7 +50,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Tesseract
             }
         }
 
-        public void AddImageJob(Bitmap bmp, int index, string language, string psmMode, string engineMode, bool run302)
+        public void AddImageJob(Bitmap bmp, int index, string language, string psmMode, string engineMode, bool run302, bool music302)
         {
             var job = new ImageJob
             {
@@ -58,7 +58,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Tesseract
                 Index = index,
                 Completed = DateTime.MaxValue,
                 Bitmap = bmp,
-                LanguageCode = language,
+                LanguageCode = language + (music302 ? "+music" : string.Empty),
                 PsmMode = psmMode,
                 EngineMode = engineMode,
                 Run302 = run302

@@ -1496,6 +1496,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 nb.CropTop(2, Color.Transparent);
                 if (_preprocessingSettings.InvertColors)
                     nb.InvertColors();
+                if (_preprocessingSettings.YellowToWhite)
+                    nb.ReplaceYellowWithWhite();
                 if (_preprocessingSettings.ColorToWhite != Color.Transparent)
                     nb.ReplaceColor(_preprocessingSettings.ColorToWhite.A, _preprocessingSettings.ColorToWhite.R, _preprocessingSettings.ColorToWhite.G, _preprocessingSettings.ColorToWhite.B, 255, 255, 255, 255);
                 if (_preprocessingSettings.ColorToRemove.A > 0)
@@ -1513,6 +1515,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 if (_preprocessingSettings.InvertColors)
                     n.InvertColors();
+                if (_preprocessingSettings.YellowToWhite)
+                    n.ReplaceYellowWithWhite();
                 if (_preprocessingSettings.ColorToWhite != Color.Transparent)
                     n.ReplaceColor(_preprocessingSettings.ColorToWhite.A, _preprocessingSettings.ColorToWhite.R, _preprocessingSettings.ColorToWhite.G, _preprocessingSettings.ColorToWhite.B, 255, 255, 255, 255);
                 if (_preprocessingSettings.ColorToRemove.A > 0)
@@ -5491,7 +5495,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             var bmp = GetSubtitleBitmap(i);
             _mainOcrBitmap = bmp;
-            _tesseractThreadRunner.AddImageJob(bmp, i, _languageId, string.Empty, _tesseractEngineMode.ToString(CultureInfo.InvariantCulture), _ocrMethodIndex == _ocrMethodTesseract302);
+            bool is302 = _ocrMethodIndex == _ocrMethodTesseract302;
+            _tesseractThreadRunner.AddImageJob(bmp, i, _languageId, string.Empty, _tesseractEngineMode.ToString(CultureInfo.InvariantCulture), is302, is302 && checkBoxTesseractMusicOn.Checked);
             _tesseractThreadRunner.CheckQueue();
             return false;
         }
@@ -5561,15 +5566,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 _tesseractRunner = new TesseractRunner();
             }
 
-            // change yellow color to white - easier for Tesseract
-            var nbmp = new NikseBitmap(bmp);
-            nbmp.ReplaceYellowWithWhite(); // optimized replace
-
             string pngFileName = Path.GetTempPath() + Guid.NewGuid() + ".png";
-            using (var b = nbmp.GetBitmap())
-            {
-                b.Save(pngFileName, System.Drawing.Imaging.ImageFormat.Png);
-            }
+            bmp.Save(pngFileName, System.Drawing.Imaging.ImageFormat.Png);
 
             var result = _tesseractRunner.Run(language, psmMode, tesseractEngineMode.ToString(CultureInfo.InvariantCulture), pngFileName, _ocrMethodIndex == _ocrMethodTesseract302);
             if (_tesseractRunner.TesseractErrors.Count <= 2 && !string.IsNullOrEmpty(_tesseractRunner.LastError))
@@ -5620,13 +5618,13 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 if (_tesseractAsyncIndex <= index)
                     _tesseractAsyncIndex = index + 10;
-                textWithOutFixes = Tesseract3DoOcrViaExe(bitmap, _languageId, "--psm 6", _tesseractEngineMode); // 6 = Assume a single uniform block of text.
+                textWithOutFixes = Tesseract3DoOcrViaExe(bitmap, _languageId, "6", _tesseractEngineMode); // 6 = Assume a single uniform block of text.
             }
 
             if ((!textWithOutFixes.Contains(Environment.NewLine) || Utilities.CountTagInText(textWithOutFixes, '\n') > 2)
                 && (textWithOutFixes.Length < 17 || bitmap.Height < 50))
             {
-                string psm = Tesseract3DoOcrViaExe(bitmap, _languageId, "--psm 7", _tesseractEngineMode); // 7 = Treat the image as a single text line.
+                string psm = Tesseract3DoOcrViaExe(bitmap, _languageId, "7", _tesseractEngineMode); // 7 = Treat the image as a single text line.
                 if (textWithOutFixes != psm)
                 {
                     if (string.IsNullOrWhiteSpace(textWithOutFixes))
@@ -5725,7 +5723,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     {
                         var oldOcrMethodIndex = _ocrMethodIndex;
                         _ocrMethodIndex = _ocrMethodIndex == _ocrMethodTesseract ? _ocrMethodTesseract302 : _ocrMethodTesseract;
-                        newUnfixedText = Tesseract3DoOcrViaExe(bitmap, _languageId, "--psm 6", _tesseractEngineMode); // 6 = Assume a single uniform block of text.
+                        newUnfixedText = Tesseract3DoOcrViaExe(bitmap, _languageId, "6", _tesseractEngineMode); // 6 = Assume a single uniform block of text.
                         newText = _ocrFixEngine.FixOcrErrors(newUnfixedText, index, _lastLine, true, GetAutoGuessLevel());
                         newWordsNotFound = _ocrFixEngine.CountUnknownWordsViaDictionary(newText, out correctWords);
                         _ocrMethodIndex = oldOcrMethodIndex;
@@ -5781,7 +5779,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         var nbmp = new NikseBitmap(bitmap);
                         nbmp.MakeOneColor(Color.White);
                         Bitmap oneColorBitmap = nbmp.GetBitmap();
-                        string oneColorText = Tesseract3DoOcrViaExe(oneColorBitmap, _languageId, "--psm 6", _tesseractEngineMode); // 6 = Assume a single uniform block of text.
+                        string oneColorText = Tesseract3DoOcrViaExe(oneColorBitmap, _languageId, "6", _tesseractEngineMode); // 6 = Assume a single uniform block of text.
                         oneColorBitmap.Dispose();
                         nbmp = null;
 
@@ -5840,10 +5838,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
                         // which is best - normal image or de-italic'ed? We find out here
                         var unItalicedBmp = UnItalic(bitmap, _unItalicFactor);
-                        string unItalicText = Tesseract3DoOcrViaExe(unItalicedBmp, _languageId, "--psm 6", _tesseractEngineMode); // 6 = Assume a single uniform block of text.
+                        string unItalicText = Tesseract3DoOcrViaExe(unItalicedBmp, _languageId, "6", _tesseractEngineMode); // 6 = Assume a single uniform block of text.
                         unItalicedBmp.Dispose();
 
-                        if (unItalicText.Length > 1)
+                        if (unItalicText.Replace("<i>", string.Empty).Replace("</i>", string.Empty).Length > 1)
                         {
                             int modiCorrectWords;
                             int modiWordsNotFound = _ocrFixEngine.CountUnknownWordsViaDictionary(unItalicText, out modiCorrectWords);
@@ -6252,7 +6250,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 using (var b = ResizeBitmap(bitmap, bitmap.Width * 4, bitmap.Height * 2))
                 {
-                    result = Tesseract3DoOcrViaExe(b, _languageId, "--psm 7", _tesseractEngineMode);
+                    result = Tesseract3DoOcrViaExe(b, _languageId, "7", _tesseractEngineMode);
                 }
             }
 
@@ -6390,7 +6388,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private void InitializeTesseract(string chosenLanguage = null)
         {
-            if (!Directory.Exists(Configuration.Tesseract302Directory) && 
+            if (!Directory.Exists(Configuration.Tesseract302Directory) &&
                 !Configuration.IsRunningOnLinux() && !Configuration.IsRunningOnMac() &&
                 Directory.Exists(Configuration.TesseractOriginalDirectory))
             {
@@ -8045,10 +8043,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             var bmp = GetSubtitleBitmap(_selectedIndex);
             _preprocessingSettings = temp;
             _fromMenuItem = false;
-            using (var form = new SetForeColorThreshold(bmp, _ocrMethodIndex == _ocrMethodBinaryImageCompare, _preprocessingSettings))
+            using (var form = new OcrPreprocessingSettings(bmp, _ocrMethodIndex == _ocrMethodBinaryImageCompare, _preprocessingSettings))
             {
                 if (form.ShowDialog(this) == DialogResult.OK)
                 {
+                    ResetTesseractThread();
                     _preprocessingSettings = form.PreprocessingSettings;
                     Configuration.Settings.Tools.OcrBinaryImageCompareRgbThreshold = _preprocessingSettings.BinaryImageCompareThresshold;
                     SubtitleListView1SelectedIndexChanged(null, null);
