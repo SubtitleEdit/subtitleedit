@@ -11,10 +11,12 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Tesseract
     {
         public List<string> TesseractErrors { get; set; }
         public string LastError { get; set; }
+        private readonly bool _runningOnWindows;
 
         public TesseractRunner()
         {
             TesseractErrors = new List<string>();
+            _runningOnWindows = !Configuration.IsRunningOnMac() && !Configuration.IsRunningOnLinux();
         }
 
         public string Run(string languageCode, string psmMode, string engineMode, string imageFileName, bool run302 = false)
@@ -41,14 +43,24 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Tesseract
                 }
 
                 process.StartInfo.Arguments += " hocr";
-                if (run302)
+
+                if (_runningOnWindows)
                 {
-                    process.StartInfo.WorkingDirectory = Configuration.Tesseract302Directory;
+                    if (run302)
+                    {
+                        process.StartInfo.WorkingDirectory = Configuration.Tesseract302Directory;
+                    }
+                    else
+                    {
+                        process.ErrorDataReceived += TesseractErrorReceived;
+                        process.StartInfo.Arguments = " --tessdata-dir \"" + Path.Combine(dir, "tessdata") + "\" " + process.StartInfo.Arguments.Trim();
+                    }
                 }
                 else
                 {
-                    process.ErrorDataReceived += TesseractErrorReceived;
-                    process.StartInfo.Arguments = " --tessdata-dir \"" + Path.Combine(dir, "tessdata") + "\" " + process.StartInfo.Arguments.Trim();
+                    process.StartInfo.UseShellExecute = false;
+                    process.StartInfo.RedirectStandardError = true;
+                    process.StartInfo.FileName = "tesseract";
                 }
 
                 process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
