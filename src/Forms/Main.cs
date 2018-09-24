@@ -10494,13 +10494,20 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         else
                         {
+                            var ext = Path.GetExtension(matroska.Path).ToLowerInvariant();
                             if (LoadMatroskaSubtitle(subtitleList[0], matroska, false) &&
-                                (Path.GetExtension(matroska.Path).Equals(".mkv", StringComparison.OrdinalIgnoreCase) ||
-                                 Path.GetExtension(matroska.Path).Equals(".mks", StringComparison.OrdinalIgnoreCase)))
+                                (ext == ".mkv" || ext == ".mks"))
                             {
                                 if (!Configuration.Settings.General.DisableVideoAutoLoading)
                                 {
-                                    OpenVideo(matroska.Path);
+                                    if (ext == ".mkv")
+                                    {
+                                        OpenVideo(matroska.Path);
+                                    }
+                                    else
+                                    {
+                                        TryToFindAndOpenVideoFile(Path.Combine(Path.GetDirectoryName(matroska.Path), Path.GetFileNameWithoutExtension(matroska.Path)));
+                                    }
                                 }
                             }
                             else
