@@ -11,6 +11,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Xml;
+using Nikse.SubtitleEdit.Core.Translate;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -21,10 +22,10 @@ namespace Nikse.SubtitleEdit.Forms
         private bool _breakTranslation;
         private bool _googleTranslate = true;
         private MicrosoftTranslationService.SoapService _microsoftTranslationService;
-        private string _bingAccessToken;
         private bool _googleApiNotWorking;
         private const string SplitterString = "\n\n\n";
         private const string NewlineString = "\n";
+        private ITranslator _translator;
 
         private enum FormattingType
         {
@@ -115,6 +116,7 @@ namespace Nikse.SubtitleEdit.Forms
             _googleTranslate = googleTranslate;
             if (!_googleTranslate)
             {
+                _translator = new MicrosoftTranslator(Configuration.Settings.Tools.MicrosoftTranslatorApiKey);
                 linkLabelPoweredByGoogleTranslate.Text = Configuration.Settings.Language.GoogleTranslate.PoweredByMicrosoftTranslate;
             }
 
@@ -201,24 +203,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 string from = (comboBoxFrom.SelectedItem as ComboBoxItem).Value;
                 string to = _targetTwoLetterIsoLanguageName;
-                if (!string.IsNullOrEmpty(Configuration.Settings.Tools.MicrosoftTranslatorApiKey))
-                {
-                    try
-                    {
-                        _bingAccessToken = GetBingAccesstoken(Configuration.Settings.Tools.MicrosoftTranslatorApiKey);
-                    }
-                    catch (Exception exception)
-                    {
-                        MessageBox.Show("Make sure 'Client ID' and 'Client secret' are correct!" + Environment.NewLine + Environment.NewLine + exception.Message + Environment.NewLine + exception.StackTrace);
-                        return;
-                    }
-                    if (!string.IsNullOrEmpty(_bingAccessToken))
-                    {
-                        DoMicrosoftTranslateNew(from, to); // uses new api with access token
-                        return;
-                    }
-                }
-                DoMicrosoftTranslate(from, to); // uses old api key
+                DoMicrosoftTranslateV3(from, to);
                 return;
             }
 
@@ -317,60 +302,65 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (index < _translatedSubtitle.Paragraphs.Count)
                 {
-                    string cleanText = s.Replace("</p>", string.Empty).Trim();
-                    int indexOfP = cleanText.IndexOf(SplitterString.Trim(), StringComparison.Ordinal);
-                    if (indexOfP >= 0 && indexOfP < 4)
-                        cleanText = cleanText.Remove(0, indexOfP);
-                    cleanText = cleanText.Replace(SplitterString, string.Empty).Trim();
-                    if (cleanText.Contains('\n') && !cleanText.Contains('\r'))
-                        cleanText = cleanText.Replace("\n", Environment.NewLine);
-                    cleanText = cleanText.Replace(" ...", "...");
-                    cleanText = cleanText.Replace("<br/>", Environment.NewLine);
-                    cleanText = cleanText.Replace("<br />", Environment.NewLine);
-                    cleanText = cleanText.Replace("<br / >", Environment.NewLine);
-                    cleanText = cleanText.Replace("< br />", Environment.NewLine);
-                    cleanText = cleanText.Replace("< br / >", Environment.NewLine);
-                    cleanText = cleanText.Replace("< br/ >", Environment.NewLine);
-                    cleanText = cleanText.Replace(Environment.NewLine + " ", Environment.NewLine);
-                    cleanText = cleanText.Replace(" " + Environment.NewLine, Environment.NewLine);
-                    cleanText = cleanText.Replace("<I>", "<i>");
-                    cleanText = cleanText.Replace("< I>", "<i>");
-                    cleanText = cleanText.Replace("</ i>", "</i>");
-                    cleanText = cleanText.Replace("</ I>", "</i>");
-                    cleanText = cleanText.Replace("</I>", "</i>");
-                    cleanText = cleanText.Replace("< i >", "<i>");
-                    if (cleanText.StartsWith("<i> ", StringComparison.Ordinal))
-                        cleanText = cleanText.Remove(3, 1);
-                    if (cleanText.EndsWith(" </i>", StringComparison.Ordinal))
-                        cleanText = cleanText.Remove(cleanText.Length - 5, 1);
-                    cleanText = cleanText.Replace(Environment.NewLine + "<i> ", Environment.NewLine + "<i>");
-                    cleanText = cleanText.Replace(" </i>" + Environment.NewLine, "</i>" + Environment.NewLine);
-
-                    if (_autoSplit[index])
-                    {
-                        cleanText = Utilities.AutoBreakLine(cleanText);
-                    }
-                    if (Utilities.GetNumberOfLines(cleanText) == 1 && Utilities.GetNumberOfLines(_subtitle.Paragraphs[index].Text) == 2)
-                    {
-                        if (!_autoSplit[index])
-                        {
-                            cleanText = Utilities.AutoBreakLine(cleanText);
-                        }
-                    }
-
-                    if (_formattingTypes[index] == FormattingType.ItalicTwoLines || _formattingTypes[index] == FormattingType.Italic)
-                    {
-                        _translatedSubtitle.Paragraphs[index].Text = "<i>" + cleanText + "</i>";
-                    }
-                    else
-                    {
-                        _translatedSubtitle.Paragraphs[index].Text = cleanText;
-                    }
+                    var cleanText = CleanText(s, index);
+                    _translatedSubtitle.Paragraphs[index].Text = cleanText;
                 }
                 index++;
             }
             subtitleListViewTo.Fill(_translatedSubtitle);
             subtitleListViewTo.SelectIndexAndEnsureVisible(end);
+        }
+
+        private string CleanText(string s, int index)
+        {
+            string cleanText = s.Replace("</p>", string.Empty).Trim();
+            int indexOfP = cleanText.IndexOf(SplitterString.Trim(), StringComparison.Ordinal);
+            if (indexOfP >= 0 && indexOfP < 4)
+                cleanText = cleanText.Remove(0, indexOfP);
+            cleanText = cleanText.Replace(SplitterString, string.Empty).Trim();
+            if (cleanText.Contains('\n') && !cleanText.Contains('\r'))
+                cleanText = cleanText.Replace("\n", Environment.NewLine);
+            cleanText = cleanText.Replace(" ...", "...");
+            cleanText = cleanText.Replace("<br/>", Environment.NewLine);
+            cleanText = cleanText.Replace("<br />", Environment.NewLine);
+            cleanText = cleanText.Replace("<br / >", Environment.NewLine);
+            cleanText = cleanText.Replace("< br />", Environment.NewLine);
+            cleanText = cleanText.Replace("< br / >", Environment.NewLine);
+            cleanText = cleanText.Replace("< br/ >", Environment.NewLine);
+            cleanText = cleanText.Replace(Environment.NewLine + " ", Environment.NewLine);
+            cleanText = cleanText.Replace(" " + Environment.NewLine, Environment.NewLine);
+            cleanText = cleanText.Replace("<I>", "<i>");
+            cleanText = cleanText.Replace("< I>", "<i>");
+            cleanText = cleanText.Replace("</ i>", "</i>");
+            cleanText = cleanText.Replace("</ I>", "</i>");
+            cleanText = cleanText.Replace("</I>", "</i>");
+            cleanText = cleanText.Replace("< i >", "<i>");
+            if (cleanText.StartsWith("<i> ", StringComparison.Ordinal))
+                cleanText = cleanText.Remove(3, 1);
+            if (cleanText.EndsWith(" </i>", StringComparison.Ordinal))
+                cleanText = cleanText.Remove(cleanText.Length - 5, 1);
+            cleanText = cleanText.Replace(Environment.NewLine + "<i> ", Environment.NewLine + "<i>");
+            cleanText = cleanText.Replace(" </i>" + Environment.NewLine, "</i>" + Environment.NewLine);
+
+            if (_autoSplit[index])
+            {
+                cleanText = Utilities.AutoBreakLine(cleanText);
+            }
+
+            if (Utilities.GetNumberOfLines(cleanText) == 1 && Utilities.GetNumberOfLines(_subtitle.Paragraphs[index].Text) == 2)
+            {
+                if (!_autoSplit[index])
+                {
+                    cleanText = Utilities.AutoBreakLine(cleanText);
+                }
+            }
+
+            if (_formattingTypes[index] == FormattingType.ItalicTwoLines || _formattingTypes[index] == FormattingType.Italic)
+            {
+                cleanText = "<i>" + cleanText + "</i>";
+            }
+
+            return cleanText;
         }
 
         private List<string> SplitToLines(string translatedText)
@@ -393,7 +383,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (romanji)
                 languagePair = (comboBoxFrom.SelectedItem as ComboBoxItem).Value + "|ja";
 
-            input = PreTranslate(input.TrimEnd('|').Trim());
+            input = PreTranslate(input.TrimEnd('|').Trim(), (comboBoxFrom.SelectedItem as ComboBoxItem).Value);
 
             string result = null;
             if (!_googleApiNotWorking)
@@ -594,9 +584,9 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (!_googleTranslate)
             {
-                foreach (var bingLanguageCode in GetBingLanguageCodes())
+                foreach (var bingLanguageCode in _translator.GetTranslationPairs())
                 {
-                    comboBox.Items.Add(new ComboBoxItem(bingLanguageCode.Value, bingLanguageCode.Key));
+                    comboBox.Items.Add(new ComboBoxItem(bingLanguageCode.Name, bingLanguageCode.Code));
                 }
                 return;
             }
@@ -604,76 +594,6 @@ namespace Nikse.SubtitleEdit.Forms
             FillComboWithGoogleLanguages(comboBox);
         }
 
-        /// <summary>
-        /// https://msdn.microsoft.com/en-us/library/hh456380.aspx - current list is from October 2015
-        /// </summary>
-        /// <returns></returns>
-        private Dictionary<string, string> GetBingLanguageCodes()
-        {
-            return new Dictionary<string, string>
-            {
-                {"af", "Afrikaans"},
-                {"ar", "Arabic"},
-                {"bn", "Bangla"},
-                { "bs-Latn", "Bosnian (Latin)"},
-                { "bg", "Bulgarian"},
-                { "yue", "Cantonese (Traditional)"},
-                { "ca", "Catalan"},
-                { "zh-CHS", "Chinese Simplified"},
-                { "zh-CHT", "Chinese Traditional"},
-                { "hr", "Croatian"},
-                { "cs", "Czech"},
-                { "da", "Danish"},
-                { "nl", "Dutch"},
-                { "en", "English"},
-                { "et", "Estonian"},
-                { "fj", "Fijian"},
-                { "fil", "Filipino"},
-                { "fi", "Finnish"},
-                { "fr", "French"},
-                { "de", "German"},
-                { "el", "Greek"},
-                { "ht", "Haitian Creole"},
-                { "he", "Hebrew"},
-                { "hi", "Hindi"},
-                { "mww", "Hmong Daw"},
-                { "hu", "Hungarian"},
-                { "id", "Indonesian"},
-                { "it", "Italian"},
-                { "ja", "Japanese"},
-                { "sw", "Kiswahili"},
-                { "tlh", "Klingon"},
-                { "tlh-Qaak", "Klingon (pIqaD)"},
-                { "ko", "Korean"},
-                { "lv", "Latvian"},
-                { "lt", "Lithuanian"},
-                { "ms", "Malay"},
-                { "mt", "Maltese"},
-                { "no", "Norwegian"},
-                { "fa", "Persian"},
-                { "pl", "Polish"},
-                { "pt", "Portuguese"},
-                { "otq", "Querétaro Otomi"},
-                { "ro", "Romanian"},
-                { "ru", "Russian"},
-                { "sm", "Samoan"},
-                { "sr-Cyrl", "Serbian (Cyrillic)"},
-                { "sr-Latn", "Serbian (Latin)"},
-                { "sk", "Slovak"},
-                { "sl", "Slovenian"},
-                { "es", "Spanish"},
-                { "sv", "Swedish"},
-                { "ty", "Tahitian"},
-                { "th", "Thai"},
-                { "to", "Tongan"},
-                { "tr", "Turkish"},
-                { "uk", "Ukrainian"},
-                { "ur", "Urdu"},
-                { "vi", "Vietnamese"},
-                { "cy", "Welsh"},
-                { "yua", "Yucatec Maya"},
-            };
-        }
 
         public void FillComboWithGoogleLanguages(ComboBox comboBox)
         {
@@ -791,24 +711,17 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void LinkLabel1LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            System.Diagnostics.Process.Start(_googleTranslate ? GoogleTranslateUrl : "http://www.bing.com/translator");
+            System.Diagnostics.Process.Start(_googleTranslate ? GoogleTranslateUrl : _translator.GetUrl());
         }
 
         private void ButtonOkClick(object sender, EventArgs e)
         {
-            if (subtitleListViewTo.Items.Count > 0)
-            {
-                DialogResult = DialogResult.OK;
-            }
-            else
-            {
-                DialogResult = DialogResult.Cancel;
-            }
+            DialogResult = subtitleListViewTo.Items.Count > 0 ? DialogResult.OK : DialogResult.Cancel;
         }
 
-        private string PreTranslate(string s)
+        private string PreTranslate(string s, string from)
         {
-            if ((comboBoxFrom.SelectedItem as ComboBoxItem).Value == "en")
+            if (from == "en")
             {
                 s = Regex.Replace(s, @"\bI'm ", "I am ");
                 s = Regex.Replace(s, @"\bI've ", "I have ");
@@ -823,8 +736,9 @@ namespace Nikse.SubtitleEdit.Forms
                 s = Regex.Replace(s, @"\b(S|s)he's ", "$1he is ");
                 s = Regex.Replace(s, @"\b(W|w)e're ", "$1e are ");
                 s = Regex.Replace(s, @"\bwon't ", "will not ");
+                s = Regex.Replace(s, @"\bdon't ", "do not ");
+                s = Regex.Replace(s, @"\bDon't ", "Do not ");
                 s = Regex.Replace(s, @"\b(W|w)e're ", "$1e are ");
-                s = Regex.Replace(s, @"\bwon't ", "will not ");
                 s = Regex.Replace(s, @"\b(T|t)hey're ", "$1hey are ");
                 s = Regex.Replace(s, @"\b(W|w)ho's ", "$1ho is ");
                 s = Regex.Replace(s, @"\b(T|t)hat's ", "$1hat is ");
@@ -979,55 +893,6 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private string BingTranslateViaAccessToken(string accessToken, string text, string fromLanguage, string toLanguage)
-        {
-            //max 10000 chars!
-            string url = string.Format("https://api.microsofttranslator.com/V2/Http.svc/Translate?appid=&text={0}&from={1}&to={2}", Utilities.UrlEncode(text), fromLanguage, toLanguage);
-            var req = WebRequest.Create(url);
-            req.Method = "GET";
-            req.Headers["Authorization"] = "Bearer " + accessToken;
-            var response = req.GetResponse() as HttpWebResponse;
-            if (response == null)
-            {
-                return null;
-            }
-            var responseStream = response.GetResponseStream();
-            if (responseStream == null)
-            {
-                return null;
-            }
-
-            using (var reader = new StreamReader(responseStream, Encoding.UTF8))
-            {
-                string xml = reader.ReadToEnd();
-                var doc = new XmlDocument();
-                doc.LoadXml(xml);
-                return doc.InnerText;
-            }
-        }
-
-        private string GetBingAccesstoken(string clientSecret)
-        {
-            string datamarketAccessUri = "https://api.cognitive.microsoft.com/sts/v1.0/issueToken";
-            var webRequest = WebRequest.Create(datamarketAccessUri);
-            webRequest.ContentType = "application/x-www-form-urlencoded";
-            webRequest.Method = "POST";
-            webRequest.Headers.Add("Ocp-Apim-Subscription-Key", clientSecret);
-            webRequest.ContentLength = 0;
-            using (WebResponse webResponse = webRequest.GetResponse())
-            {
-                var responseStream = webResponse.GetResponseStream();
-                if (responseStream == null)
-                {
-                    return null;
-                }
-                using (var reader = new StreamReader(responseStream, Encoding.UTF8))
-                {
-                    return reader.ReadToEnd(); // raw access token
-                }
-            }
-        }
-
         public void DoMicrosoftTranslate(string from, string to)
         {
             MicrosoftTranslationService.SoapService client = MsTranslationServiceClient;
@@ -1096,61 +961,40 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        public void DoMicrosoftTranslateNew(string from, string to)
+        public void DoMicrosoftTranslateV3(string from, string to)
         {
             _breakTranslation = false;
             buttonTranslate.Text = Configuration.Settings.Language.General.Cancel;
-            const int textMaxSize = 10000;
             Cursor.Current = Cursors.WaitCursor;
             progressBar1.Maximum = _subtitle.Paragraphs.Count;
             progressBar1.Value = 0;
             progressBar1.Visible = true;
             labelPleaseWait.Visible = true;
-            int start = 0;
-            bool overQuota = false;
+            subtitleListViewTo.Fill(_translatedSubtitle);
 
             try
             {
-                var sb = new StringBuilder();
+                var linesToTranslate = new List<string>();
+                var log = new StringBuilder();
                 int index = 0;
-                foreach (Paragraph p in _subtitle.Paragraphs)
+                foreach (var p in _subtitle.Paragraphs)
                 {
-                    string text = $"{SetFormattingTypeAndSplitting(index, p.Text, @from.StartsWith("zh"))} +-+ ";
-                    if (!overQuota)
+                    if (linesToTranslate.Count >= MicrosoftTranslator.MaximumRequestArrayLength)
                     {
-                        if (Utilities.UrlEncode(sb + text).Length >= textMaxSize)
-                        {
-                            try
-                            {
-                                FillTranslatedText(BingTranslateViaAccessToken(_bingAccessToken, sb.ToString(), from, to), start, index - 1);
-                            }
-                            catch (Exception exception)
-                            {
-                                MessageBox.Show(exception.Message);
-                                overQuota = true;
-                            }
-                            sb.Clear();
-                            progressBar1.Refresh();
-                            Application.DoEvents();
-                            start = index;
-                        }
-                        sb.Append(text);
+                        TranslateLines(from, to, linesToTranslate, log, index);
+                        linesToTranslate.Clear();
                     }
+
+                    var text = PreTranslate(p.Text, from);
+                    text = $"{SetFormattingTypeAndSplitting(index, text, from.StartsWith("zh"))}";
+                    linesToTranslate.Add(text);
                     index++;
-                    progressBar1.Value = index;
                     if (_breakTranslation)
                         break;
                 }
-                if (sb.Length > 0 && !overQuota)
+                if (linesToTranslate.Count > 0)
                 {
-                    try
-                    {
-                        FillTranslatedText(BingTranslateViaAccessToken(_bingAccessToken, sb.ToString(), from, to), start, index - 1);
-                    }
-                    catch (Exception exception)
-                    {
-                        MessageBox.Show(exception.Message);
-                    }
+                    TranslateLines(from, to, linesToTranslate, log, index);
                 }
             }
             finally
@@ -1161,6 +1005,24 @@ namespace Nikse.SubtitleEdit.Forms
                 buttonTranslate.Text = Configuration.Settings.Language.GoogleTranslate.Translate;
                 buttonTranslate.Enabled = true;
             }
+        }
+
+        private void TranslateLines(string from, string to, List<string> linesToTranslate, StringBuilder sb, int index)
+        {
+            var resultLines = _translator.Translate(from, to, linesToTranslate, sb);
+            var i = index - linesToTranslate.Count;
+            subtitleListViewTo.BeginUpdate();
+            foreach (var line in resultLines)
+            {
+                var t = CleanText(line, i);
+                subtitleListViewTo.SetText(i, t);
+                _translatedSubtitle.Paragraphs[i].Text = t;
+                i++;
+            }
+            subtitleListViewTo.EndUpdate();
+            subtitleListViewTo.SelectIndexAndEnsureVisible(index);
+            subtitleListViewFrom.SelectIndexAndEnsureVisible(index);
+            progressBar1.Value = index;
         }
 
         private void SyncListViews(ListView listViewSelected, SubtitleListView listViewOther)
