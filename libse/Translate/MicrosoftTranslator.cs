@@ -1,0 +1,143 @@
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Net;
+using System.Text;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
+
+namespace Nikse.SubtitleEdit.Core.Translate
+{
+    /// <summary>
+    /// https://docs.microsoft.com/en-us/azure/cognitive-services/translator/reference/v3-0-translate
+    /// </summary>
+    public class MicrosoftTranslator : ITranslator
+    {
+        public const string SignUpUrl = "https://docs.microsoft.com/en-us/azure/cognitive-services/translator/translator-text-how-to-signup";
+        public const string GoToUrl = "https://www.bing.com/translator";
+        public const int MaximumRequestArrayLength = 25;
+        private const string LanguagesUrl = "https://api.cognitive.microsofttranslator.com/languages?api-version=3.0&scope=translation";
+        private const string TranslateUrl = "https://api.cognitive.microsofttranslator.com/translate?api-version=3.0&from={0}&to={1}";
+        private const string SecurityHeaderName = "Ocp-Apim-Subscription-Key";
+        private readonly string _ocpApimSubscriptionKey;
+        private static List<TranslationPair> _translationPairs;
+
+        public MicrosoftTranslator(string ocpApimSubscriptionKey)
+        {
+            _ocpApimSubscriptionKey = ocpApimSubscriptionKey;
+        }
+
+        public List<TranslationPair> GetTranslationPairs()
+        {
+            if (_translationPairs != null)
+            {
+                return _translationPairs;
+            }
+
+            using (var wc = new WebClient { Proxy = Utilities.GetProxy(), Encoding = Encoding.UTF8 })
+            {
+                var json = wc.DownloadString(LanguagesUrl);
+                _translationPairs = FillTranslationPairsFromJson(json);
+                return _translationPairs;
+            }
+        }
+
+        private static List<TranslationPair> FillTranslationPairsFromJson(string json)
+        {
+            var list = new List<TranslationPair>();
+            var parser = new JsonParser();
+            var x = (Dictionary<string, object>)parser.Parse(json);
+            foreach (var k in x.Keys)
+            {
+                if (x[k] is Dictionary<string, object> v)
+                {
+                    foreach (var innerKey in v.Keys)
+                    {
+                        if (v[innerKey] is Dictionary<string, object> l)
+                        {
+                            list.Add(new TranslationPair
+                            {
+                                Name = l["name"].ToString(),
+                                Code = innerKey
+                            });
+                        }
+                    }
+                }
+            }
+            return list;
+        }
+
+        public string GetName()
+        {
+            return "Microsoft translate";
+        }
+
+        public string GetUrl()
+        {
+            return GoToUrl;
+        }
+
+        public List<string> Translate(string sourceLanguage, string targetLanguage, List<string> texts, StringBuilder log)
+        {
+            var url = string.Format(TranslateUrl, sourceLanguage, targetLanguage);
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
+            httpWebRequest.ContentType = "application/json";
+            httpWebRequest.Method = "POST";
+            httpWebRequest.Headers.Add(SecurityHeaderName, _ocpApimSubscriptionKey);
+
+            var jsonBuilder = new StringBuilder();
+            jsonBuilder.Append("[");
+            bool isFirst = true;
+            foreach (var text in texts)
+            {
+                if (!isFirst)
+                {
+                    jsonBuilder.Append(",");
+                }
+                else
+                {
+                    isFirst = false;
+                }
+
+                var t = text;
+                if (sourceLanguage == "en")
+                {
+                    t = text.Replace(" don't ", " do not ");
+                    t = text.Replace(" don't ", " do not ");
+                    t = text.Replace(" don't ", " do not ");
+                }
+
+                jsonBuilder.Append("{ \"Text\":\"" + Json.EncodeJsonText(t) + "\"}");
+            }
+            jsonBuilder.Append("]");
+            string json = jsonBuilder.ToString();
+            httpWebRequest.ContentLength = json.Length;
+            using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+            {
+                streamWriter.Write(json);
+                streamWriter.Flush();
+                streamWriter.Close();
+            }
+
+            var results = new List<string>();
+            var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+            using (var streamReader = new StreamReader(httpResponse.GetResponseStream() ?? throw new InvalidOperationException()))
+            {
+                var result = streamReader.ReadToEnd();
+
+                var parser = new JsonParser();
+                var x = (List<object>)parser.Parse(result);
+                foreach (var xElement in x)
+                {
+                    var dict = (Dictionary<string, object>)xElement;
+                    var y = (List<object>)dict["translations"];
+                    foreach (var o in y)
+                    {
+                        var textDics = (Dictionary<string, object>)o;
+                        results.Add(textDics["text"].ToString());
+                    }
+                }
+            }
+            return results;
+        }
+    }
+}

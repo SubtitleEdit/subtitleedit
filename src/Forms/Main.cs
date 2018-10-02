@@ -20004,7 +20004,6 @@ namespace Nikse.SubtitleEdit.Forms
                 if (p != null)
                 {
                     string defaultFromLanguage = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle);
-                    string defaultToLanguage = defaultFromLanguage;
                     if (_subtitleAlternate != null)
                     {
                         var o = Utilities.GetOriginalParagraph(firstSelectedIndex, p, _subtitleAlternate.Paragraphs);
@@ -20018,7 +20017,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (_googleOrMicrosoftTranslate == null || _googleOrMicrosoftTranslate.IsDisposed)
                     {
                         _googleOrMicrosoftTranslate = new GoogleOrMicrosoftTranslate();
-                        _googleOrMicrosoftTranslate.InitializeFromLanguage(defaultFromLanguage, defaultToLanguage);
+                        _googleOrMicrosoftTranslate.InitializeFromLanguage(defaultFromLanguage);
                     }
                     _googleOrMicrosoftTranslate.Initialize(p);
                     Cursor = Cursors.Default;

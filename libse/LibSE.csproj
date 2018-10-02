@@ -11,6 +11,7 @@
     <AssemblyName>libse</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -21,6 +22,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -30,10 +32,12 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml" />
     <Reference Include="zlib.net, Version=1.0.3.0, Culture=neutral, PublicKeyToken=47d7877cb3620160">
       <HintPath>..\src\packages\zlib.net.1.0.4.0\lib\zlib.net.dll</HintPath>
@@ -189,6 +193,7 @@
     <Compile Include="IfoParser.cs" />
     <Compile Include="ImageSplitterItem.cs" />
     <Compile Include="Interfaces\IRtfTextConverter.cs" />
+    <Compile Include="TinyJsonParser.cs" />
     <Compile Include="Language.cs" />
     <Compile Include="LanguageAutoDetect.cs" />
     <Compile Include="LanguageDeserializer.cs" />
@@ -541,6 +546,9 @@
     <Compile Include="TextDraw.cs" />
     <Compile Include="TextEncodingExtensions.cs" />
     <Compile Include="TimeCode.cs" />
+    <Compile Include="Translate\ITranslator.cs" />
+    <Compile Include="Translate\MicrosoftTranslator.cs" />
+    <Compile Include="Translate\TranslationPair.cs" />
     <Compile Include="TransportStream\AdaptationField.cs" />
     <Compile Include="TransportStream\ClutDefinitionSegment.cs" />
     <Compile Include="TransportStream\DisplayDefinitionSegment.cs" />
