@@ -94,7 +94,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonDonate_Click(object sender, EventArgs e)
         {
-            Process.Start("http://www.nikse.dk/Donate");
+            Process.Start("https://www.nikse.dk/Donate");
         }
 
         private void linkLabelGitBuildHash_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

@@ -31,8 +31,7 @@ namespace Nikse.SubtitleEdit.Core
             {
                 stream.Seek(pos, SeekOrigin.Begin);
                 var th = new TarHeader(stream);
-                if (th.FileSizeInBytes > 0)
-                    Files.Add(th);
+                Files.Add(th);
                 pos += TarHeader.HeaderSize + th.FileSizeInBytes;
                 if (pos % TarHeader.HeaderSize > 0)
                     pos += 512 - (pos % TarHeader.HeaderSize);

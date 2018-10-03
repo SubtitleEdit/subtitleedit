@@ -1180,7 +1180,43 @@ VÄLKOMMEN TILL TEXAS
             Assert.AreEqual(expected, actual);
         }
 
-       
+
+
+        #endregion
+
+        #region DvdStudioGraphics
+
+        private const string DvdStudioGraphicsAsString = @"$SetFilePathToken = <<Graphic>>
+01:00:42:00 , 01:00:46:22 , <<Graphic>>file.0001.tif
+01:09:02:13 , 01:09:06:12 , <<Graphic>>file.0002.tif
+01:09:06:13 , 01:09:10:02 , <<Graphic>>file.0003.tif
+01:09:34:23 , 01:09:37:22 , <<Graphic>>file.0004.tif
+01:36:15:02 , 01:36:21:01 , <<Graphic>>file.0005.tif
+01:37:35:00 , 01:37:40:11 , <<Graphic>>file.0006.tif
+01:38:34:17 , 01:38:37:14 , <<Graphic>>file.0007.tif";
+
+        [TestMethod]
+        public void DvdStudioProSpaceGraphicTestText()
+        {
+            var format = new DvdStudioProSpaceGraphic();
+            var subtitle = new Subtitle();
+            format.LoadSubtitle(subtitle, new List<string>(DvdStudioGraphicsAsString.SplitToLines()), null);
+            Assert.AreEqual("file.0001.tif", subtitle.Paragraphs[0].Text);
+            Assert.AreEqual("file.0007.tif", subtitle.Paragraphs[subtitle.Paragraphs.Count-1].Text);
+        }
+
+        [TestMethod]
+        public void DvdStudioProSpaceGraphicShouldNotBeLoaded()
+        {
+            var lines = DvdStudioGraphicsAsString.SplitToLines();
+            foreach (var format in SubtitleFormat.AllSubtitleFormats)
+            {
+                if (format.IsMine(lines, null))
+                {
+                    Assert.Fail("'DvdStudioProSpaceGraphic' should not be recognized by " + format.FriendlyName);
+                }
+            }
+        }
 
         #endregion
     }

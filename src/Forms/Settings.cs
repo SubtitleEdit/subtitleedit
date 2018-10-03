@@ -16,6 +16,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
+using Nikse.SubtitleEdit.Core.Translate;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -2494,7 +2495,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void linkLabelBingSubscribe_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Process.Start("https://www.microsoft.com/en-us/translator/getstarted.aspx");
+            Process.Start(MicrosoftTranslator.SignUpUrl);
         }
 
         private void ValidateShortcut(object sender, EventArgs e)

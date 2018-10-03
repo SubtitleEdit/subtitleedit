@@ -56,6 +56,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         p.Text = text;
                         if (text.Length > 1 && Utilities.IsInteger(text.Substring(0, 2)))
                             _errorCount++;
+                        if (text.Contains("<<Graphic>>"))
+                            _errorCount++;
                     }
                     catch
                     {
