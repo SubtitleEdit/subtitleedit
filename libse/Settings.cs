@@ -899,6 +899,7 @@ namespace Nikse.SubtitleEdit.Core
             LastModiLanguageId = 9;
             LastOcrMethod = "Tesseract";
             UseItalicsInTesseract = true;
+            TesseractEngineMode = 3; // Default, based on what is available (T4 docs)
             UseMusicSymbolsInTesseract = true;
             UseTesseractFallback = true;
             RightToLeft = false;

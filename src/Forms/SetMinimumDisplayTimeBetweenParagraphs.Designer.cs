@@ -58,6 +58,7 @@
             // 
             // SubtitleListview1
             // 
+            this.SubtitleListview1.AllowColumnReorder = true;
             this.SubtitleListview1.AllowDrop = true;
             this.SubtitleListview1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
@@ -66,6 +67,7 @@
             this.SubtitleListview1.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SubtitleListview1.FullRowSelect = true;
             this.SubtitleListview1.GridLines = true;
+            this.SubtitleListview1.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.SubtitleListview1.HideSelection = false;
             this.SubtitleListview1.Location = new System.Drawing.Point(6, 19);
             this.SubtitleListview1.Name = "SubtitleListview1";
@@ -84,11 +86,6 @@
             this.numericUpDownMinMillisecondsBetweenLines.Location = new System.Drawing.Point(18, 34);
             this.numericUpDownMinMillisecondsBetweenLines.Maximum = new decimal(new int[] {
             1000,
-            0,
-            0,
-            0});
-            this.numericUpDownMinMillisecondsBetweenLines.Minimum = new decimal(new int[] {
-            1,
             0,
             0,
             0});
