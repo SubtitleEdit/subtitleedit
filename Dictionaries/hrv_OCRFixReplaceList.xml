@@ -273,6 +273,8 @@
     <Word from="Familiju" to="Obitelj" />
     <Word from="familijama" to="obiteljima" />
     <Word from="familiji" to="obitelji" />
+    <Word from="farmerke" to="traperice" />
+    <Word from="farmerkama" to="trapericama" />
     <Word from="flertuje" to="očijuka" />
     <Word from="foka" to="tuljan" />
     <Word from="foku" to="tuljana" />
@@ -829,6 +831,7 @@
     <Word from="osete" to="osjete" />
     <Word from="ostrvo" to="otok" />
     <Word from="Ostrvo" to="Otok" />
+    <Word from="ouno" to="puno" />
     <Word from="osvjetljen" to="osvijetljen" />
     <Word from="ovde" to="ovdje" />
     <Word from="Ovde" to="Ovdje" />
@@ -1094,6 +1097,7 @@
     <Word from="raspust" to="odmor" />
     <Word from="razbiću" to="razbit ću" />
     <Word from="razbijesneo" to="razbjesnio" />
+    <Word from="razbolila" to="razboljela" />
     <Word from="razrešiti" to="razriješiti" />
     <Word from="rašće" to="rast će" />
     <Word from="Razbiću" to="Razbit ću" />
@@ -1960,6 +1964,7 @@
     <Word from="Sejmur" to="Seymour" />
     <Word from="Sejnt" to="Saint" />
     <Word from="Sendi" to="Sandy" />
+    <Word from="Sesil" to="Cecil" />
     <Word from="Sidnej" to="Sidney" />
     <Word from="Sindi" to="Cindy" />
     <Word from="Sojer" to="Sawyer" />
@@ -2098,6 +2103,7 @@
     <LinePart from="Jeli ti" to="Je li ti" />
     <LinePart from="ko je" to="tko je" />
     <LinePart from="ko si" to="tko si" />
+    <LinePart from="ko mu je" to="tko mu je" />
     <LinePart from="ko ti je" to="tko ti je" />
     <LinePart from="ko te je" to="tko te je" />
     <LinePart from="ko zna" to="tko zna" />
