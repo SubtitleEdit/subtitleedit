@@ -21,7 +21,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     <author>
       <name>SubtitleEdit</name>
       <email>nikse.dk@gmail.com</email>
-      <url>http://www.nikse.dk/</url>
+      <url>https://www.nikse.dk/</url>
     </author>" + Environment.NewLine +
 "   <language code=\"eng\">English</language>" + Environment.NewLine +
 @"  <date>[DATE]</date>

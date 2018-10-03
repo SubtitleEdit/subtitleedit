@@ -458,10 +458,10 @@
     <Compile Include="Forms\GetDictionaries.Designer.cs">
       <DependentUpon>GetDictionaries.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\GetTesseractDictionaries.cs">
+    <Compile Include="Forms\Ocr\GetTesseractDictionaries.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\GetTesseractDictionaries.Designer.cs">
+    <Compile Include="Forms\Ocr\GetTesseractDictionaries.Designer.cs">
       <DependentUpon>GetTesseractDictionaries.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\HardSubExtract.cs">
@@ -518,11 +518,29 @@
     <Compile Include="Forms\Networking\NetworkStart.Designer.cs">
       <DependentUpon>NetworkStart.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Ocr\SetForeColorThreshold.cs">
+    <Compile Include="Forms\Ocr\DownloadTesseract4.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Ocr\SetForeColorThreshold.Designer.cs">
-      <DependentUpon>SetForeColorThreshold.cs</DependentUpon>
+    <Compile Include="Forms\Ocr\DownloadTesseract4.Designer.cs">
+      <DependentUpon>DownloadTesseract4.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Ocr\DownloadTesseract302.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Ocr\DownloadTesseract302.Designer.cs">
+      <DependentUpon>DownloadTesseract302.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Ocr\GetTesseract302Dictionaries.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Ocr\GetTesseract302Dictionaries.Designer.cs">
+      <DependentUpon>GetTesseract302Dictionaries.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Ocr\OcrPreprocessingSettings.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Ocr\OcrPreprocessingSettings.Designer.cs">
+      <DependentUpon>OcrPreprocessingSettings.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\OpenVideoDvd.cs">
       <SubType>Form</SubType>
@@ -923,7 +941,11 @@
     <Compile Include="Logic\Ocr\OcrFixEngine.cs" />
     <Compile Include="Logic\Ocr\OcrImage.cs" />
     <Compile Include="Logic\Ocr\NOcrPoint.cs" />
+    <Compile Include="Logic\Ocr\PreprocessingSettings.cs" />
     <Compile Include="Logic\Ocr\SpellCheckOcrTextResult.cs" />
+    <Compile Include="Logic\Ocr\Tesseract\TesseractThreadRunner.cs" />
+    <Compile Include="Logic\Ocr\Tesseract\TesseractRunner.cs" />
+    <Compile Include="Logic\Ocr\Tesseract\TesseractMultiRunner.cs" />
     <Compile Include="Logic\RtfTextConverterRichTextBox.cs" />
     <Compile Include="Logic\SpellCheck\Hunspell.cs" />
     <Compile Include="Logic\SpellCheck\LinuxHunspell.cs" />
@@ -1164,7 +1186,7 @@
       <DependentUpon>GetDictionaries.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\GetTesseractDictionaries.resx">
+    <EmbeddedResource Include="Forms\Ocr\GetTesseractDictionaries.resx">
       <DependentUpon>GetTesseractDictionaries.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\HardSubExtract.resx">
@@ -1194,8 +1216,17 @@
     <EmbeddedResource Include="Forms\Networking\NetworkStart.resx">
       <DependentUpon>NetworkStart.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Ocr\SetForeColorThreshold.resx">
-      <DependentUpon>SetForeColorThreshold.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\Ocr\DownloadTesseract4.resx">
+      <DependentUpon>DownloadTesseract4.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Ocr\DownloadTesseract302.resx">
+      <DependentUpon>DownloadTesseract302.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Ocr\GetTesseract302Dictionaries.resx">
+      <DependentUpon>GetTesseract302Dictionaries.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Ocr\OcrPreprocessingSettings.resx">
+      <DependentUpon>OcrPreprocessingSettings.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\OpenVideoDvd.resx">
       <DependentUpon>OpenVideoDvd.cs</DependentUpon>

@@ -1,7 +1,10 @@
 ﻿using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Logic;
 using System;
+using System.Collections.Generic;
+using System.Text;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Core.Translate;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -47,10 +50,26 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        internal void InitializeFromLanguage(string defaultFromLanguage, string defaultToLanguage)
+        internal void InitializeFromLanguage(string defaultFromLanguage)
         {
-            if (defaultFromLanguage == defaultToLanguage)
-                defaultToLanguage = "en";
+            string defaultToLanguage = Configuration.Settings.Tools.GoogleTranslateLastTargetLanguage;
+            if (defaultToLanguage == defaultFromLanguage)
+            {
+                foreach (string s in Utilities.GetDictionaryLanguages())
+                {
+                    string temp = s.Replace("[", string.Empty).Replace("]", string.Empty);
+                    if (temp.Length > 4)
+                    {
+                        temp = temp.Substring(temp.Length - 5, 2).ToLower();
+
+                        if (temp != defaultToLanguage)
+                        {
+                            defaultToLanguage = temp;
+                            break;
+                        }
+                    }
+                }
+            }
 
             int i = 0;
             comboBoxFrom.SelectedIndex = 0;
@@ -106,15 +125,25 @@ namespace Nikse.SubtitleEdit.Forms
                 var screenScrapingEncoding = GoogleTranslate.GetScreenScrapingEncoding(languagePair);
                 buttonGoogle.Text = GoogleTranslate.TranslateTextViaScreenScraping(textBoxSourceText.Text, languagePair, screenScrapingEncoding, romanji);
 
-                using (var gt = new GoogleTranslate())
+                // ms translator
+                if (!string.IsNullOrEmpty(Configuration.Settings.Tools.MicrosoftTranslatorApiKey))
                 {
-                    Subtitle subtitle = new Subtitle();
-                    subtitle.Paragraphs.Add(new Paragraph(0, 0, textBoxSourceText.Text));
-                    gt.Initialize(subtitle, string.Empty, false, System.Text.Encoding.UTF8);
-                    from = FixMsLocale(from);
-                    to = FixMsLocale(to);
-                    gt.DoMicrosoftTranslate(from, to);
-                    buttonMicrosoft.Text = gt.TranslatedSubtitle.Paragraphs[0].Text;
+                    var translator = new MicrosoftTranslator(Configuration.Settings.Tools.MicrosoftTranslatorApiKey);
+                    var result = translator.Translate(from, to, new List<string> { textBoxSourceText.Text }, new StringBuilder());
+                    buttonMicrosoft.Text = result[0];
+                }
+                else
+                {
+                    using (var gt = new GoogleTranslate())
+                    {
+                        var subtitle = new Subtitle();
+                        subtitle.Paragraphs.Add(new Paragraph(0, 0, textBoxSourceText.Text));
+                        gt.Initialize(subtitle, string.Empty, false, Encoding.UTF8);
+                        from = FixMsLocale(from);
+                        to = FixMsLocale(to);
+                        gt.DoMicrosoftTranslate(from, to);
+                        buttonMicrosoft.Text = gt.TranslatedSubtitle.Paragraphs[0].Text;
+                    }
                 }
             }
             finally

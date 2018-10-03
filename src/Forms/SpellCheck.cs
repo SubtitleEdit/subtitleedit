@@ -354,16 +354,17 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ContextMenuStrip1Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            bool showAddItems = false;
             if (!string.IsNullOrWhiteSpace(richTextBoxParagraph.SelectedText))
             {
                 string word = richTextBoxParagraph.SelectedText.Trim();
                 addXToNamesnoiseListToolStripMenuItem.Text = string.Format(Configuration.Settings.Language.SpellCheck.AddXToNames, word);
                 addXToUserDictionaryToolStripMenuItem.Text = string.Format(Configuration.Settings.Language.SpellCheck.AddXToUserDictionary, word);
+                showAddItems = true;
             }
-            else
-            {
-                e.Cancel = true;
-            }
+            addXToNamesnoiseListToolStripMenuItem.Visible = showAddItems;
+            addXToUserDictionaryToolStripMenuItem.Visible = showAddItems;
+            toolStripSeparator1.Visible = showAddItems;
         }
 
         private void AddXToNamesnoiseListToolStripMenuItemClick(object sender, EventArgs e)
@@ -449,6 +450,11 @@ namespace Nikse.SubtitleEdit.Forms
                     _mainWindow.ShowStatus(string.Format(Configuration.Settings.Language.Main.SpellCheckChangedXToY, _currentParagraph.Text.Replace(Environment.NewLine, " "), ChangeWholeText.Replace(Environment.NewLine, " ")));
                     _currentParagraph.Text = ChangeWholeText;
                     _mainWindow.ChangeWholeTextMainPart(ref _noOfChangedWords, ref _firstChange, _currentIndex, _currentParagraph);
+                    _currentIndex--; // re-spellcheck current line
+                    _wordsIndex = int.MaxValue - 1;
+                    break;
+                case SpellCheckAction.DeleteLine:
+                    _mainWindow.DeleteLine(_currentIndex, _currentParagraph);
                     _currentIndex--; // re-spellcheck current line
                     _wordsIndex = int.MaxValue - 1;
                     break;
@@ -908,7 +914,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ShowActionInfo(string label, string text)
         {
-            labelActionInfo.Text = string.Format("{0}: {1}", label, text.Trim());
+            labelActionInfo.Text = $"{label}: {text.Trim()}";
             _currentAction = label;
         }
 
@@ -1094,6 +1100,14 @@ namespace Nikse.SubtitleEdit.Forms
             string text = textBoxWord.Text.Trim();
             if (!string.IsNullOrWhiteSpace(text))
                 System.Diagnostics.Process.Start("https://www.google.com/search?q=" + Utilities.UrlEncode(text));
+        }
+
+        private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (Configuration.Settings.General.PromptDeleteLines && MessageBox.Show(Configuration.Settings.Language.Main.DeleteOneLinePrompt, Configuration.Settings.Language.SpellCheck.Title, MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
+            {
+                DoAction(SpellCheckAction.DeleteLine);
+            }
         }
     }
 }

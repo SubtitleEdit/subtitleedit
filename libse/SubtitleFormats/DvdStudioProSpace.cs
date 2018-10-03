@@ -12,6 +12,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override string Extension => ".STL";
 
         public override string Name => "DVD Studio Pro with space";
+               
 
         public override string ToText(Subtitle subtitle, string title)
         {
@@ -71,6 +72,8 @@ $HorzAlign          =   Center
                             p.Text = text.Replace(" | ", Environment.NewLine).Replace("|", Environment.NewLine);
                             p.Text = DvdStudioPro.DecodeStyles(p.Text);
                             p.Text = DvdStudioPro.GetAlignment(verticalAlign, horizontalAlign) + p.Text;
+                            if (p.Text.Trim().StartsWith("<<Graphic>>"))
+                                _errorCount++;
                             subtitle.Paragraphs.Add(p);
                         }
                     }

@@ -2459,6 +2459,27 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     try
                     {
+                        var f = new DvdStudioProSpaceGraphic();
+                        var list = new List<string>(File.ReadAllLines(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName)));
+                        if (f.IsMine(list, fileName))
+                        {
+                            if (ContinueNewOrExit())
+                            {
+                                ImportAndOcrDost(fileName, f, list);
+                            }
+                            return;
+                        }
+                    }
+                    catch
+                    {
+                        // ignore
+                    }
+                }
+
+                if (format == null)
+                {
+                    try
+                    {
                         var imageFormat = new SpuImage();
                         var list = new List<string>(File.ReadAllLines(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName)));
                         if (imageFormat.IsMine(list, fileName))
@@ -3644,7 +3665,7 @@ namespace Nikse.SubtitleEdit.Forms
                 bool isUnicode = currentEncoding == Encoding.Unicode || currentEncoding == Encoding.UTF32 || currentEncoding == Encoding.GetEncoding(12001) || currentEncoding == Encoding.UTF7 || currentEncoding == Encoding.UTF8;
                 if (!isUnicode && (allText.Contains(new[] { '♪', '♫', '♥', '—', '―', '…' }))) // ANSI & music/unicode symbols
                 {
-                    if (MessageBox.Show(string.Format(_language.UnicodeMusicSymbolsAnsiWarning), Title, MessageBoxButtons.YesNo) == DialogResult.No)
+                    if (MessageBox.Show(string.Format(_language.UnicodeMusicSymbolsAnsiWarning), Title, MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
                         return DialogResult.No;
                 }
 
@@ -3664,7 +3685,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 if (containsNegativeTime)
                 {
-                    if (MessageBox.Show(_language.NegativeTimeWarning, Title, MessageBoxButtons.YesNo) == DialogResult.No)
+                    if (MessageBox.Show(_language.NegativeTimeWarning, Title, MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
                         return DialogResult.No;
                 }
 
@@ -3677,7 +3698,7 @@ namespace Nikse.SubtitleEdit.Forms
                         if (MessageBox.Show(string.Format(_language.OverwriteModifiedFile,
                             _fileName, fileOnDisk.ToShortDateString(), fileOnDisk.ToString("HH:mm:ss"),
                             Environment.NewLine, _fileDateTime.ToShortDateString(), _fileDateTime.ToString("HH:mm:ss")),
-                            Title + " - " + _language.FileOnDiskModified, MessageBoxButtons.YesNo) == DialogResult.No)
+                            Title + " - " + _language.FileOnDiskModified, MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
                             return DialogResult.No;
                     }
                     if (fileInfo.IsReadOnly)
@@ -3776,7 +3797,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 if (containsNegativeTime)
                 {
-                    if (MessageBox.Show(_language.NegativeTimeWarning, Title, MessageBoxButtons.YesNo) == DialogResult.No)
+                    if (MessageBox.Show(_language.NegativeTimeWarning, Title, MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
                         return DialogResult.No;
                 }
 
@@ -3803,7 +3824,7 @@ namespace Nikse.SubtitleEdit.Forms
                 bool isUnicode = currentEncoding != null && (currentEncoding == Encoding.Unicode || currentEncoding == Encoding.UTF32 || currentEncoding == Encoding.UTF7 || currentEncoding == Encoding.UTF8);
                 if (!isUnicode && (allText.Contains(new[] { '♪', '♫', '♥', '—', '―', '…' }))) // ANSI & music/unicode symbols
                 {
-                    if (MessageBox.Show(string.Format(_language.UnicodeMusicSymbolsAnsiWarning), Title, MessageBoxButtons.YesNo) == DialogResult.No)
+                    if (MessageBox.Show(string.Format(_language.UnicodeMusicSymbolsAnsiWarning), Title, MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
                         return DialogResult.No;
                 }
 
@@ -4724,7 +4745,7 @@ namespace Nikse.SubtitleEdit.Forms
                     //if we fail to find the text, we might want to start searching from the top of the file.
                     if (!found && _findHelper.StartLineIndex >= 1)
                     {
-                        if (MessageBox.Show(_language.FindContinue, _language.FindContinueTitle, MessageBoxButtons.YesNo) == DialogResult.Yes)
+                        if (MessageBox.Show(_language.FindContinue, _language.FindContinueTitle, MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
                         {
                             found = _findHelper.Find(_subtitle, _subtitleAlternate, -1);
                         }
@@ -4806,7 +4827,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         if (_findHelper.StartLineIndex >= 1)
                         {
-                            if (MessageBox.Show(_language.FindContinue, _language.FindContinueTitle, MessageBoxButtons.YesNo) == DialogResult.Yes)
+                            if (MessageBox.Show(_language.FindContinue, _language.FindContinueTitle, MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
                             {
                                 _findHelper.StartLineIndex = 0;
                                 if (_findHelper.Find(_subtitle, _subtitleAlternate, 0))
@@ -5073,7 +5094,7 @@ namespace Nikse.SubtitleEdit.Forms
                 string msgText = _language.ReplaceContinueNotFound;
                 if (matches.Count > 0)
                     msgText = string.Format(_language.ReplaceXContinue, matches.Count);
-                if (MessageBox.Show(msgText, _language.ReplaceContinueTitle, MessageBoxButtons.YesNo) == DialogResult.Yes)
+                if (MessageBox.Show(msgText, _language.ReplaceContinueTitle, MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
                 {
                     s = result.Substring(0, start - 1);
                     var rest = result.Remove(0, start - 1);
@@ -5213,7 +5234,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 string msgText = _language.ReplaceContinueNotFound;
                                 if (replaceCount > 0)
                                     msgText = string.Format(_language.ReplaceXContinue, replaceCount);
-                                if (MessageBox.Show(msgText, _language.ReplaceContinueTitle, MessageBoxButtons.YesNo) == DialogResult.Yes)
+                                if (MessageBox.Show(msgText, _language.ReplaceContinueTitle, MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
                                 {
                                     stopAtIndex = firstIndex;
                                     _findHelper.MatchInOriginal = false;
@@ -5256,7 +5277,7 @@ namespace Nikse.SubtitleEdit.Forms
                         if (_replaceStartLineIndex >= 1) // Prompt for start over
                         {
                             _replaceStartLineIndex = 0;
-                            if (MessageBox.Show(_language.FindContinue, _language.FindContinueTitle, MessageBoxButtons.YesNo) == DialogResult.Yes)
+                            if (MessageBox.Show(_language.FindContinue, _language.FindContinueTitle, MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
                             {
                                 SubtitleListview1.SelectIndexAndEnsureVisible(0, true);
                                 _findHelper.StartLineIndex = 0;
@@ -5340,7 +5361,7 @@ namespace Nikse.SubtitleEdit.Forms
                             if (_replaceStartLineIndex >= 1)
                             {
                                 _replaceStartLineIndex = 0;
-                                if (MessageBox.Show(_language.FindContinue, _language.FindContinueTitle, MessageBoxButtons.YesNo) == DialogResult.Yes)
+                                if (MessageBox.Show(_language.FindContinue, _language.FindContinueTitle, MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
                                 {
                                     SubtitleListview1.SelectIndexAndEnsureVisible(0, true);
                                     _findHelper.StartLineIndex = 0;
@@ -5987,7 +6008,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 visualSync.ShowDialog(this);
                                 if (visualSync.OkPressed)
                                 {
-                                    if (MessageBox.Show(_language.AppendSynchronizedSubtitlePrompt, _language.SubtitleAppendPromptTitle, MessageBoxButtons.YesNo) == DialogResult.Yes)
+                                    if (MessageBox.Show(_language.AppendSynchronizedSubtitlePrompt, _language.SubtitleAppendPromptTitle, MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
                                     {
                                         int start = _subtitle.Paragraphs.Count + 1;
                                         var fr = CurrentFrameRate;
@@ -6134,7 +6155,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             WebRequest.DefaultWebProxy = Utilities.GetProxy();
             //var request = WebRequest.Create("http://localhost:54942/MultiTranslator/TranslateForSubtitleEdit");
-            var request = WebRequest.Create("http://www.nikse.dk/MultiTranslator/TranslateForSubtitleEdit");
+            var request = WebRequest.Create("https://www.nikse.dk/MultiTranslator/TranslateForSubtitleEdit");
             request.Method = "POST";
             var postData = String.Format("languagePair={1}&text={0}", Utilities.UrlEncode(input), "svda");
             var byteArray = Encoding.UTF8.GetBytes(postData);
@@ -6164,7 +6185,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (!isSwedish)
                 promptText = _language.TranslateSwedishToDanishWarning;
 
-            if (MessageBox.Show(promptText, Title, MessageBoxButtons.YesNo) == DialogResult.Yes)
+            if (MessageBox.Show(promptText, Title, MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
             {
                 try
                 {
@@ -6514,6 +6535,12 @@ namespace Nikse.SubtitleEdit.Forms
                 ShowSource();
             else
                 RefreshSelectedParagraph();
+        }
+
+        public void DeleteLine(int i, Paragraph p)
+        {
+            MakeHistoryForUndo(Configuration.Settings.Language.Main.OneLineDeleted);
+            DeleteSelectedLines();
         }
 
         public void FocusParagraph(int index)
@@ -7424,7 +7451,7 @@ namespace Nikse.SubtitleEdit.Forms
                     askText = _language.DeleteOneLinePrompt;
                 }
 
-                if (Configuration.Settings.General.PromptDeleteLines && MessageBox.Show(askText, Title, MessageBoxButtons.YesNo) == DialogResult.No)
+                if (Configuration.Settings.General.PromptDeleteLines && MessageBox.Show(askText, Title, MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
                 {
                     _cutText = string.Empty;
                     return;
@@ -10467,13 +10494,20 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         else
                         {
+                            var ext = Path.GetExtension(matroska.Path).ToLowerInvariant();
                             if (LoadMatroskaSubtitle(subtitleList[0], matroska, false) &&
-                                (Path.GetExtension(matroska.Path).Equals(".mkv", StringComparison.OrdinalIgnoreCase) ||
-                                 Path.GetExtension(matroska.Path).Equals(".mks", StringComparison.OrdinalIgnoreCase)))
+                                (ext == ".mkv" || ext == ".mks"))
                             {
                                 if (!Configuration.Settings.General.DisableVideoAutoLoading)
                                 {
-                                    OpenVideo(matroska.Path);
+                                    if (ext == ".mkv")
+                                    {
+                                        OpenVideo(matroska.Path);
+                                    }
+                                    else
+                                    {
+                                        TryToFindAndOpenVideoFile(Path.Combine(Path.GetDirectoryName(matroska.Path), Path.GetFileNameWithoutExtension(matroska.Path)));
+                                    }
                                 }
                             }
                             else
@@ -11822,7 +11856,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (File.Exists(idxFileName))
                         return true;
 
-                    var dr = MessageBox.Show(string.Format(_language.IdxFileNotFoundWarning, idxFileName), _title, MessageBoxButtons.YesNo);
+                    var dr = MessageBox.Show(string.Format(_language.IdxFileNotFoundWarning, idxFileName), _title, MessageBoxButtons.YesNoCancel);
                     return dr == DialogResult.Yes;
                 }
                 if (verbose)
@@ -14919,7 +14953,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (timeCodeSubtitle.Paragraphs.Count != _subtitle.Paragraphs.Count)
                 {
                     var text = string.Format(_language.ImportTimeCodesDifferentNumberOfLinesWarning, timeCodeSubtitle.Paragraphs.Count, _subtitle.Paragraphs.Count);
-                    if (MessageBox.Show(this, text, _title, MessageBoxButtons.YesNo) == DialogResult.No)
+                    if (MessageBox.Show(this, text, _title, MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
                         return;
                 }
 
@@ -19970,7 +20004,6 @@ namespace Nikse.SubtitleEdit.Forms
                 if (p != null)
                 {
                     string defaultFromLanguage = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle);
-                    string defaultToLanguage = defaultFromLanguage;
                     if (_subtitleAlternate != null)
                     {
                         var o = Utilities.GetOriginalParagraph(firstSelectedIndex, p, _subtitleAlternate.Paragraphs);
@@ -19984,7 +20017,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (_googleOrMicrosoftTranslate == null || _googleOrMicrosoftTranslate.IsDisposed)
                     {
                         _googleOrMicrosoftTranslate = new GoogleOrMicrosoftTranslate();
-                        _googleOrMicrosoftTranslate.InitializeFromLanguage(defaultFromLanguage, defaultToLanguage);
+                        _googleOrMicrosoftTranslate.InitializeFromLanguage(defaultFromLanguage);
                     }
                     _googleOrMicrosoftTranslate.Initialize(p);
                     Cursor = Cursors.Default;
@@ -22637,7 +22670,7 @@ namespace Nikse.SubtitleEdit.Forms
                                                           newP.EndTime.TotalMilliseconds <= p.EndTime.TotalMilliseconds))
                         {
                             // new subs will overlap existing subs
-                            if (MessageBox.Show(_language.PromptInsertSubtitleOverlap, _languageGeneral.Title, MessageBoxButtons.YesNo) == DialogResult.No)
+                            if (MessageBox.Show(_language.PromptInsertSubtitleOverlap, _languageGeneral.Title, MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
                             {
                                 return;
                             }

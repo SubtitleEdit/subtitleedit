@@ -456,7 +456,7 @@ namespace Nikse.SubtitleEdit.Core
                             {
                                 if (mid - j > 5)
                                 {
-                                    if ("!?.".Contains(s[mid - j - 2]))
+                                    if ("!?.…".Contains(s[mid - j - 2]))
                                     {
                                         splitPos = mid - j;
                                         break;
@@ -785,7 +785,7 @@ namespace Nikse.SubtitleEdit.Core
         {
             string helpFile = Configuration.Settings.Language.General.HelpFile;
             if (string.IsNullOrEmpty(helpFile))
-                helpFile = "http://www.nikse.dk/SubtitleEdit/Help";
+                helpFile = "https://www.nikse.dk/SubtitleEdit/Help";
             System.Diagnostics.Process.Start(helpFile + parameter);
         }
 
@@ -1104,7 +1104,7 @@ namespace Nikse.SubtitleEdit.Core
         }
 
         private static readonly Regex TwoOrMoreDigitsNumber = new Regex(@"\d\d+", RegexOptions.Compiled);
-        private const string PrePostStringsToReverse = @"-— !?.""،,():;[]+~*/<>&^%$#\\|";
+        private const string PrePostStringsToReverse = @"-— !?.…""،,():;[]+~*/<>&^%$#\\|";
 
         public static string ReverseStartAndEndingForRightToLeft(string s)
         {
@@ -1547,7 +1547,7 @@ namespace Nikse.SubtitleEdit.Core
 
         public static string[] SplitForChangedCalc(string s, bool ignoreLineBreaks, bool ignoreFormatting, bool breakToLetters)
         {
-            const string endChars = "!?.:;,#%$£";
+            const string endChars = "!?.…:;,#%$£";
             var list = new List<string>();
 
             if (ignoreFormatting)
