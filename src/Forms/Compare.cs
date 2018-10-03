@@ -114,8 +114,7 @@ namespace Nikse.SubtitleEdit.Forms
                     return;
                 }
                 _subtitle1 = new Subtitle();
-                Encoding encoding;
-                var format = _subtitle1.LoadSubtitle(openFileDialog1.FileName, out encoding, null);
+                var format = _subtitle1.LoadSubtitle(openFileDialog1.FileName, out _, null);
                 if (format == null)
                 {
                     var pac = new Pac();
@@ -196,8 +195,7 @@ namespace Nikse.SubtitleEdit.Forms
                     return;
                 }
                 _subtitle2 = new Subtitle();
-                Encoding encoding;
-                var format = _subtitle2.LoadSubtitle(openFileDialog1.FileName, out encoding, null);
+                var format = _subtitle2.LoadSubtitle(openFileDialog1.FileName, out _, null);
                 if (format == null)
                 {
                     var pac = new Pac();
@@ -957,11 +955,11 @@ namespace Nikse.SubtitleEdit.Forms
                 MessageBox.Show(Configuration.Settings.Language.CompareSubtitles.CannotCompareWithImageBasedSubtitles);
                 return;
             }
-            Encoding encoding;
+
             if (listView.Name == "subtitleListView1")
             {
                 _subtitle1 = new Subtitle();
-                _subtitle1.LoadSubtitle(filePath, out encoding, null);
+                _subtitle1.LoadSubtitle(filePath, out _, null);
                 subtitleListView1.Fill(_subtitle1);
                 subtitleListView1.SelectIndexAndEnsureVisible(0);
                 subtitleListView2.SelectIndexAndEnsureVisible(0);
@@ -973,7 +971,7 @@ namespace Nikse.SubtitleEdit.Forms
             else
             {
                 _subtitle2 = new Subtitle();
-                _subtitle2.LoadSubtitle(filePath, out encoding, null);
+                _subtitle2.LoadSubtitle(filePath, out _, null);
                 subtitleListView2.Fill(_subtitle2);
                 subtitleListView1.SelectIndexAndEnsureVisible(0);
                 subtitleListView2.SelectIndexAndEnsureVisible(0);
@@ -1080,8 +1078,7 @@ namespace Nikse.SubtitleEdit.Forms
                     sb.AppendLine("    </table>");
                     sb.AppendLine("  </body>");
                     sb.AppendLine("</html>");
-                    var statistic = string.Format(sb.ToString());
-                    File.WriteAllText(fileName, statistic);
+                    File.WriteAllText(fileName, sb.ToString());
                 }
             }
         }
