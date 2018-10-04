@@ -80,6 +80,7 @@ namespace Nikse.SubtitleEdit.Core.Translate
         {
             var url = string.Format(TranslateUrl, sourceLanguage, targetLanguage);
             var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
+            httpWebRequest.Proxy = Utilities.GetProxy();
             httpWebRequest.ContentType = "application/json";
             httpWebRequest.Method = "POST";
             httpWebRequest.Headers.Add(SecurityHeaderName, _ocpApimSubscriptionKey);
@@ -97,16 +98,7 @@ namespace Nikse.SubtitleEdit.Core.Translate
                 {
                     isFirst = false;
                 }
-
-                var t = text;
-                if (sourceLanguage == "en")
-                {
-                    t = text.Replace(" don't ", " do not ");
-                    t = text.Replace(" don't ", " do not ");
-                    t = text.Replace(" don't ", " do not ");
-                }
-
-                jsonBuilder.Append("{ \"Text\":\"" + Json.EncodeJsonText(t) + "\"}");
+                jsonBuilder.Append("{ \"Text\":\"" + Json.EncodeJsonText(text) + "\"}");
             }
             jsonBuilder.Append("]");
             string json = jsonBuilder.ToString();
