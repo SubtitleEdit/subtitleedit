@@ -110,6 +110,12 @@
     <Compile Include="Forms\CheckForUpdates.Designer.cs">
       <DependentUpon>CheckForUpdates.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\ChooseFontName.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ChooseFontName.Designer.cs">
+      <DependentUpon>ChooseFontName.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\ColorChooser.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1012,6 +1018,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\CheckForUpdates.resx">
       <DependentUpon>CheckForUpdates.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ChooseFontName.resx">
+      <DependentUpon>ChooseFontName.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ColorChooser.resx">
       <DependentUpon>ColorChooser.cs</DependentUpon>
