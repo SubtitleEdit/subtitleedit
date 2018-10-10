@@ -3211,6 +3211,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Main/Menu/File/EbuProperties":
                     language.Main.Menu.File.EbuProperties = reader.Value;
                     break;
+                case "Main/Menu/File/DvdStuioProProperties":
+                    language.Main.Menu.File.DvdStuioProProperties = reader.Value;
+                    break;
                 case "Main/Menu/File/PacProperties":
                     language.Main.Menu.File.PacProperties = reader.Value;
                     break;

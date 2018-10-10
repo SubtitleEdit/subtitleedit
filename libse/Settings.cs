@@ -384,6 +384,7 @@ namespace Nikse.SubtitleEdit.Core
         public int EbuStlMarginBottom { get; set; }
         public int EbuStlNewLineRows { get; set; }
 
+        public string DvdStudioProHeader { get; set; }
 
 
         public bool CheetahCaptionAlwayWriteEndTime { get; set; }
@@ -425,6 +426,22 @@ namespace Nikse.SubtitleEdit.Core
             EbuStlMarginTop = 0;
             EbuStlMarginBottom = 2;
             EbuStlNewLineRows = 2;
+
+            DvdStudioProHeader = @"$VertAlign          =   Bottom
+$Bold               =   FALSE
+$Underlined         =   FALSE
+$Italic             =   FALSE
+$XOffset                =   0
+$YOffset                =   -5
+$TextContrast           =   15
+$Outline1Contrast           =   15
+$Outline2Contrast           =   13
+$BackgroundContrast     =   0
+$ForceDisplay           =   FALSE
+$FadeIn             =   0
+$FadeOut                =   0
+$HorzAlign          =   Center
+";
 
             SamiDisplayTwoClassesAsTwoSubtitles = true;
             SamiHtmlEncodeMode = 0;
@@ -2378,6 +2395,11 @@ namespace Nikse.SubtitleEdit.Core
                 subNode = node.SelectSingleNode("EbuStlNewLineRows");
                 if (subNode != null)
                     settings.SubtitleSettings.EbuStlNewLineRows = Convert.ToInt32(subNode.InnerText);
+
+                subNode = node.SelectSingleNode("DvdStudioProHeader");
+                if (subNode != null)
+                    settings.SubtitleSettings.DvdStudioProHeader = subNode.InnerText.TrimEnd() + Environment.NewLine;
+
                 subNode = node.SelectSingleNode("CheetahCaptionAlwayWriteEndTime");
                 if (subNode != null)
                     settings.SubtitleSettings.CheetahCaptionAlwayWriteEndTime = Convert.ToBoolean(subNode.InnerText);
@@ -3748,6 +3770,7 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("EbuStlMarginTop", settings.SubtitleSettings.EbuStlMarginTop.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("EbuStlMarginBottom", settings.SubtitleSettings.EbuStlMarginBottom.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("EbuStlNewLineRows", settings.SubtitleSettings.EbuStlNewLineRows.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("DvdStudioProHeader", settings.SubtitleSettings.DvdStudioProHeader.TrimEnd() + Environment.NewLine);
                 textWriter.WriteElementString("CheetahCaptionAlwayWriteEndTime", settings.SubtitleSettings.CheetahCaptionAlwayWriteEndTime.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("NuendoCharacterListFile", settings.SubtitleSettings.NuendoCharacterListFile);
                 textWriter.WriteEndElement();

@@ -16549,12 +16549,13 @@ namespace Nikse.SubtitleEdit.Forms
                     removeOriginalToolStripMenuItem.Visible = false;
             }
             var format = GetCurrentSubtitleFormat();
-            if (format.GetType() == typeof(AdvancedSubStationAlpha))
+            var ft = format.GetType();
+            if (ft == typeof(AdvancedSubStationAlpha))
             {
                 toolStripMenuItemSubStationAlpha.Visible = true;
                 toolStripMenuItemSubStationAlpha.Text = _language.Menu.File.AdvancedSubStationAlphaProperties;
             }
-            else if (format.GetType() == typeof(SubStationAlpha))
+            else if (ft == typeof(SubStationAlpha))
             {
                 toolStripMenuItemSubStationAlpha.Visible = true;
                 toolStripMenuItemSubStationAlpha.Text = _language.Menu.File.SubStationAlphaProperties;
@@ -16564,7 +16565,7 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripMenuItemSubStationAlpha.Visible = false;
             }
 
-            if (format.GetType() == typeof(Ebu))
+            if (ft == typeof(Ebu))
             {
                 toolStripMenuItemEbuProperties.Text = _language.Menu.File.EbuProperties;
                 toolStripMenuItemEbuProperties.Visible = !string.IsNullOrEmpty(_language.Menu.File.EbuProperties);
@@ -16574,7 +16575,20 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripMenuItemEbuProperties.Visible = false;
             }
 
-            if (format.GetType() == typeof(DCinemaInterop) || format.GetType() == typeof(DCinemaSmpte2010) || format.GetType() == typeof(DCinemaSmpte2007))
+            if (ft == typeof(DvdStudioPro) ||
+                ft == typeof(DvdStudioProSpace) ||
+                ft == typeof(DvdStudioProSpaceOne) ||
+                ft == typeof(DvdStudioProSpaceOneSemicolon))
+            {
+                toolStripMenuItemDvdStudioProProperties.Text = _language.Menu.File.DvdStuioProProperties;
+                toolStripMenuItemDvdStudioProProperties.Visible = true;
+            }
+            else
+            {
+                toolStripMenuItemDvdStudioProProperties.Visible = false;
+            }
+
+            if (ft == typeof(DCinemaInterop) || ft == typeof(DCinemaSmpte2010) || ft == typeof(DCinemaSmpte2007))
             {
                 toolStripMenuItemDCinemaProperties.Visible = true;
             }
@@ -16583,7 +16597,7 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripMenuItemDCinemaProperties.Visible = false;
             }
 
-            if (format.GetType() == typeof(TimedText10) || format.GetType() == typeof(ItunesTimedText))
+            if (ft == typeof(TimedText10) || ft == typeof(ItunesTimedText))
             {
                 toolStripMenuItemTTProperties.Visible = true;
             }
@@ -16593,7 +16607,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             toolStripMenuItemNuendoProperties.Visible = format.Name == "Nuendo";
-            toolStripMenuItemFcpProperties.Visible = format.GetType() == typeof(FinalCutProXml);
+            toolStripMenuItemFcpProperties.Visible = ft == typeof(FinalCutProXml);
 
             toolStripSeparator20.Visible = subtitleLoaded;
         }
@@ -22846,6 +22860,14 @@ namespace Nikse.SubtitleEdit.Forms
         private void toolStripMenuItemSplitAtWaveTextBoxPos_Click(object sender, EventArgs e)
         {
             toolStripMenuItemSplitViaWaveform_Click(sender, e);
+        }
+
+        private void toolStripMenuDvdStudioProperties_Click(object sender, EventArgs e)
+        {
+            using (var form = new DvdStudioProProperties())
+            {
+                form.ShowDialog(this);
+            }
         }
     }
 }

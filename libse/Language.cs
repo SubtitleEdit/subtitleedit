@@ -1404,6 +1404,7 @@ namespace Nikse.SubtitleEdit.Core
                         AdvancedSubStationAlphaProperties = "Advanced Sub Station Alpha properties...",
                         SubStationAlphaProperties = "Sub Station Alpha properties...",
                         EbuProperties = "EBU STL properties...",
+                        DvdStuioProProperties = "DVD Studio Pro properties...",
                         PacProperties = "PAC properties...",
                         OpenOriginal = "Open original subtitle (translator mode)...",
                         SaveOriginal = "Save original subtitle",
