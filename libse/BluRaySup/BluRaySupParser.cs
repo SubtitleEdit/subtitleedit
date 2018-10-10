@@ -529,21 +529,19 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                     Message = "ObjId: " + objId + ", ver: " + objVer + ", seq: first" + (last ? "/" : "") + (last ? "" + "last" : "") + ", width: " + width + ", height: " + height,
                 };
             }
-            else
-            {
-                info.ImagePacketSize = segment.Size - 4;
-                info.ImageBuffer = new byte[info.ImagePacketSize];
-                Buffer.BlockCopy(buffer, 4, info.ImageBuffer, 0, info.ImagePacketSize);
 
-                return new OdsData
-                {
-                    IsFirst = false,
-                    ObjectId = objId,
-                    ObjectVersion = objVer,
-                    Fragment = info,
-                    Message = "Continued ObjId: " + objId + ", ver: " + objVer + ", seq: " + (last ? "" + "last" : ""),
-                };
-            }
+            info.ImagePacketSize = segment.Size - 4;
+            info.ImageBuffer = new byte[info.ImagePacketSize];
+            Buffer.BlockCopy(buffer, 4, info.ImageBuffer, 0, info.ImagePacketSize);
+
+            return new OdsData
+            {
+                IsFirst = false,
+                ObjectId = objId,
+                ObjectVersion = objVer,
+                Fragment = info,
+                Message = "Continued ObjId: " + objId + ", ver: " + objVer + ", seq: " + (last ? "" + "last" : ""),
+            };
         }
 
         public static List<PcsData> ParseBluRaySup(Stream ms, StringBuilder log, bool fromMatroskaFile, Dictionary<int, List<PaletteInfo>> lastPalettes = null)
@@ -833,7 +831,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
         {
             if (buffer.Length < 4)
                 return 0;
-            return (uint)((buffer[index + 3]) + (buffer[index + 2] << 8) + (buffer[index + 1] << 0x10) + (buffer[index + 0] << 0x18));
+            return (uint)(buffer[index + 3] + (buffer[index + 2] << 8) + (buffer[index + 1] << 0x10) + (buffer[index + 0] << 0x18));
         }
 
     }
