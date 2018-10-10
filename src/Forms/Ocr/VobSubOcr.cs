@@ -1115,7 +1115,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             _subtitle.Renumber();
 
             FixShortDisplayTimes(_subtitle);
-
+            
             subtitleListView1.Fill(_subtitle);
             subtitleListView1.SelectIndexAndEnsureVisible(0);
 

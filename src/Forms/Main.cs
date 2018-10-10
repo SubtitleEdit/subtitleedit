@@ -10972,6 +10972,7 @@ namespace Nikse.SubtitleEdit.Forms
             var subtitles = new List<BluRaySupParser.PcsData>();
             var log = new StringBuilder();
             var clusterStream = new MemoryStream();
+            var lastPalettes = new Dictionary<int, List<PaletteInfo>>();
             foreach (var p in sub)
             {
                 byte[] buffer = p.GetData(matroskaSubtitleInfo);
@@ -10985,7 +10986,7 @@ namespace Nikse.SubtitleEdit.Forms
                             subtitles[subtitles.Count - 1].EndTime = (long)((p.Start - 1) * 90.0);
                         }
                         clusterStream.Position = 0;
-                        var list = BluRaySupParser.ParseBluRaySup(clusterStream, log, true);
+                        var list = BluRaySupParser.ParseBluRaySup(clusterStream, log, true, lastPalettes);
                         foreach (var sup in list)
                         {
                             sup.StartTime = (long)((p.Start - 1) * 90.0);
@@ -18410,7 +18411,7 @@ namespace Nikse.SubtitleEdit.Forms
             int selectionStart = tb.SelectionStart;
 
             using (var form = new ChooseFontName())
-            { 
+            {
                 if (form.ShowDialog(this) == DialogResult.OK)
                 {
                     bool done = false;
