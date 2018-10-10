@@ -17,21 +17,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             const string paragraphWriteFormat = "{0}\t,\t{1}\t,\t{2}\r\n";
             const string timeFormat = "{0:00}:{1:00}:{2:00}:{3:00}";
-            const string header = @"$VertAlign          =   Bottom
-$Bold               =   FALSE
-$Underlined         =   FALSE
-$Italic             =   FALSE
-$XOffset                =   0
-$YOffset                =   -5
-$TextContrast           =   15
-$Outline1Contrast           =   15
-$Outline2Contrast           =   13
-$BackgroundContrast     =   0
-$ForceDisplay           =   FALSE
-$FadeIn             =   0
-$FadeOut                =   0
-$HorzAlign          =   Center
-";
+            var header = Configuration.Settings.SubtitleSettings.DvdStudioProHeader.TrimEnd() + Environment.NewLine;
 
             var lastVerticalAlign = "$VertAlign = Bottom";
             var lastHorizontalcalAlign = "$HorzAlign = Center";

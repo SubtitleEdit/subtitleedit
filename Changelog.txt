@@ -1,6 +1,32 @@
 ﻿Subtitle Edit Changelog
 
-3.5.7 (9th September 2018)
+
+
+3.5.8 (xth December 2018) BETA
+* NEW:
+   * Add new subtitle formats
+   * Add some image pre-processing for OCR
+* IMPROVED:
+   * Update Bulgarian translation - thx KalinM
+   * Update Finnish translation - thx Teijo S
+   * Update Korean translation - thx domddol
+   * Update Catalan translation - thx Juansa
+   * Update Hungarian translation - thx Zityi
+   * Make custom "Choose font" dialog - thx OmrSi
+   * Update Bing translator from V2 to V3 API
+   * Faster Tesseract OCR if CPU has many cores
+* FIXED:
+   * Go back to Tesseract 3.02 (T4 available as in-program download)
+   * Fix Bing translator sign-up url - thx sopor
+   * Fix common OCR errors change " L* to " I." - thx Araynilmar
+   * Fix for loading video file after openening .mks file
+   * Fix crash in "Point sync" - thx Kari
+   * Fix crash in export of compare result - thx billysamk
+   * Fix missing titles from PGS inside MKV - thx ManChicken1911
+
+
+3.5.7 (9th August 2018)
+
 * NEW:
    * Add new subtitle formats
    * Font can be different for subtitle list view / text box

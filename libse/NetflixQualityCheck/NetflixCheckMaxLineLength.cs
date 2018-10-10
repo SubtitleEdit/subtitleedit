@@ -6,15 +6,15 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
     {
 
         /// <summary>
-        /// Maximum duration: 7 seconds per subtitle event
+        /// Maximum 42 chars per line for the majority of languages.
         /// </summary>
         public void Check(Subtitle subtitle, NetflixQualityController controller)
         {
-            foreach (Paragraph p in subtitle.Paragraphs)
+            foreach (var p in subtitle.Paragraphs)
             {
                 foreach (var line in p.Text.SplitToLines())
                 {
-                    if (line.Length > controller.SingleLineMaxLength)
+                    if (HtmlUtil.RemoveHtmlTags(line, true).Length > controller.SingleLineMaxLength)
                     {
                         var fixedParagraph = new Paragraph(p, false);
                         fixedParagraph.Text = Utilities.AutoBreakLine(fixedParagraph.Text, controller.SingleLineMaxLength, controller.SingleLineMaxLength - 3, controller.Language);
