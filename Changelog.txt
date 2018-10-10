@@ -1,7 +1,7 @@
 ﻿Subtitle Edit Changelog
 
 
-3.5.8 (xth December 2018)
+3.5.8 (xth December 2018) BETA
 * NEW:
    * Add new subtitle formats
    * Add some image pre-processing for OCR
