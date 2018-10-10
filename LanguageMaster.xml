@@ -918,6 +918,7 @@ Note: Do check free disk space.</WaveFileMalformed>
         <AdvancedSubStationAlphaProperties>Advanced Sub Station Alpha properties...</AdvancedSubStationAlphaProperties>
         <SubStationAlphaProperties>Sub Station Alpha properties...</SubStationAlphaProperties>
         <EbuProperties>EBU STL properties...</EbuProperties>
+        <DvdStuioProProperties>DVD Studio Pro properties...</DvdStuioProProperties>
         <PacProperties>PAC properties...</PacProperties>
         <OpenOriginal>Open original subtitle (translator mode)...</OpenOriginal>
         <SaveOriginal>Save original subtitle</SaveOriginal>
