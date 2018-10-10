@@ -22,10 +22,6 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
             {
                 if (!string.IsNullOrEmpty(Language))
                 {
-                    if (Language == "ar") // Arabic
-                    {
-                        return 20;
-                    }
                     if (Language == "ko") // Korean
                     {
                         return 12;
@@ -35,7 +31,7 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
                         return 9;
                     }
                 }
-                return 17;
+                return 20;
             }
         }
 
@@ -47,7 +43,7 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
                 {
                     if (Language == "ja") // Japanese
                     {
-                        return 13;
+                        return 23;
                     }
                     if (Language == "ko") // Korean
                     {
@@ -73,6 +69,10 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
                         return false;
                     }
                     if (Language == "zh") // Chinese
+                    {
+                        return false;
+                    }
+                    if (Language == "ar") // Arabic
                     {
                         return false;
                     }

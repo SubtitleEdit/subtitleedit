@@ -60,11 +60,11 @@
             this.checkBoxRemoveEmptyLines = new System.Windows.Forms.CheckBox();
             this.groupBoxImportResult = new System.Windows.Forms.GroupBox();
             this.SubtitleListview1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
+            this.contextMenuStripPreview = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.startNumberingFromToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
-            this.contextMenuStripPreview = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.startNumberingFromToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBoxImportText.SuspendLayout();
             this.contextMenuStripListView.SuspendLayout();
             this.groupBoxImportOptions.SuspendLayout();
@@ -246,11 +246,6 @@
             0,
             0,
             0});
-            this.numericUpDownGapBetweenLines.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
             this.numericUpDownGapBetweenLines.Name = "numericUpDownGapBetweenLines";
             this.numericUpDownGapBetweenLines.Size = new System.Drawing.Size(64, 21);
             this.numericUpDownGapBetweenLines.TabIndex = 1;
@@ -278,11 +273,6 @@
             this.numericUpDownDurationFixed.Location = new System.Drawing.Point(111, 42);
             this.numericUpDownDurationFixed.Maximum = new decimal(new int[] {
             100000,
-            0,
-            0,
-            0});
-            this.numericUpDownDurationFixed.Minimum = new decimal(new int[] {
-            100,
             0,
             0,
             0});
@@ -481,6 +471,20 @@
             this.SubtitleListview1.UseSyntaxColoring = true;
             this.SubtitleListview1.View = System.Windows.Forms.View.Details;
             // 
+            // contextMenuStripPreview
+            // 
+            this.contextMenuStripPreview.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.startNumberingFromToolStripMenuItem});
+            this.contextMenuStripPreview.Name = "contextMenuStripPreview";
+            this.contextMenuStripPreview.Size = new System.Drawing.Size(199, 26);
+            // 
+            // startNumberingFromToolStripMenuItem
+            // 
+            this.startNumberingFromToolStripMenuItem.Name = "startNumberingFromToolStripMenuItem";
+            this.startNumberingFromToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
+            this.startNumberingFromToolStripMenuItem.Text = "Start numbering from...";
+            this.startNumberingFromToolStripMenuItem.Click += new System.EventHandler(this.startNumberingFromToolStripMenuItem_Click);
+            // 
             // openFileDialog1
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
@@ -508,20 +512,6 @@
             this.buttonOK.Text = "&Next >";
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.ButtonOkClick);
-            // 
-            // contextMenuStripPreview
-            // 
-            this.contextMenuStripPreview.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.startNumberingFromToolStripMenuItem});
-            this.contextMenuStripPreview.Name = "contextMenuStripPreview";
-            this.contextMenuStripPreview.Size = new System.Drawing.Size(199, 26);
-            // 
-            // startNumberingFromToolStripMenuItem
-            // 
-            this.startNumberingFromToolStripMenuItem.Name = "startNumberingFromToolStripMenuItem";
-            this.startNumberingFromToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
-            this.startNumberingFromToolStripMenuItem.Text = "Start numbering from...";
-            this.startNumberingFromToolStripMenuItem.Click += new System.EventHandler(this.startNumberingFromToolStripMenuItem_Click);
             // 
             // ImportText
             // 

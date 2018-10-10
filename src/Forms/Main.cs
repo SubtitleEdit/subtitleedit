@@ -10295,34 +10295,38 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedItems.Count > 0)
             {
-                if (fontDialog1.ShowDialog(this) == DialogResult.OK)
+                using (var form = new ChooseFontName())
                 {
-                    MakeHistoryForUndo(_language.BeforeSettingFontName);
 
-                    foreach (ListViewItem item in SubtitleListview1.SelectedItems)
+                    if (form.ShowDialog(this) == DialogResult.OK)
                     {
-                        var p = _subtitle.GetParagraphOrDefault(item.Index);
-                        if (p != null)
+                        MakeHistoryForUndo(_language.BeforeSettingFontName);
+
+                        foreach (ListViewItem item in SubtitleListview1.SelectedItems)
                         {
-                            SetFontName(p);
-                            SubtitleListview1.SetText(item.Index, p.Text);
-                            if (_subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle && SubtitleListview1.IsAlternateTextColumnVisible)
+                            var p = _subtitle.GetParagraphOrDefault(item.Index);
+                            if (p != null)
                             {
-                                var original = Utilities.GetOriginalParagraph(item.Index, p, _subtitleAlternate.Paragraphs);
-                                if (original != null)
+                                SetFontName(p, form.FontName);
+                                SubtitleListview1.SetText(item.Index, p.Text);
+                                if (_subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle && SubtitleListview1.IsAlternateTextColumnVisible)
                                 {
-                                    SetFontName(original);
-                                    SubtitleListview1.SetAlternateText(item.Index, original.Text);
+                                    var original = Utilities.GetOriginalParagraph(item.Index, p, _subtitleAlternate.Paragraphs);
+                                    if (original != null)
+                                    {
+                                        SetFontName(original, form.FontName);
+                                        SubtitleListview1.SetAlternateText(item.Index, original.Text);
+                                    }
                                 }
                             }
                         }
+                        RefreshSelectedParagraph();
                     }
-                    RefreshSelectedParagraph();
                 }
             }
         }
 
-        private void SetFontName(Paragraph p)
+        private void SetFontName(Paragraph p, string fontName)
         {
             if (p == null)
                 return;
@@ -10338,7 +10342,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (f.Contains(" color=") && !f.Contains(" face="))
                     {
                         var start = s.IndexOf(" color=", StringComparison.Ordinal);
-                        p.Text = s.Insert(start, string.Format(" face=\"{0}\"", fontDialog1.Font.Name));
+                        p.Text = s.Insert(start, string.Format(" face=\"{0}\"", fontName));
                         return;
                     }
 
@@ -10347,13 +10351,13 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         if (s.IndexOf('"', faceStart + 7) > 0)
                             end = s.IndexOf('"', faceStart + 7);
-                        p.Text = s.Substring(0, faceStart) + string.Format(" face=\"{0}", fontDialog1.Font.Name) + s.Substring(end);
+                        p.Text = s.Substring(0, faceStart) + string.Format(" face=\"{0}", fontName) + s.Substring(end);
                         return;
                     }
                 }
             }
 
-            p.Text = string.Format("<font face=\"{0}\">{1}</font>", fontDialog1.Font.Name, s);
+            p.Text = string.Format("<font face=\"{0}\">{1}</font>", fontName, s);
         }
 
         private void TypeEffectToolStripMenuItemClick(object sender, EventArgs e)
@@ -10968,6 +10972,7 @@ namespace Nikse.SubtitleEdit.Forms
             var subtitles = new List<BluRaySupParser.PcsData>();
             var log = new StringBuilder();
             var clusterStream = new MemoryStream();
+            var lastPalettes = new Dictionary<int, List<PaletteInfo>>();
             foreach (var p in sub)
             {
                 byte[] buffer = p.GetData(matroskaSubtitleInfo);
@@ -10981,7 +10986,7 @@ namespace Nikse.SubtitleEdit.Forms
                             subtitles[subtitles.Count - 1].EndTime = (long)((p.Start - 1) * 90.0);
                         }
                         clusterStream.Position = 0;
-                        var list = BluRaySupParser.ParseBluRaySup(clusterStream, log, true);
+                        var list = BluRaySupParser.ParseBluRaySup(clusterStream, log, true, lastPalettes);
                         foreach (var sup in list)
                         {
                             sup.StartTime = (long)((p.Start - 1) * 90.0);
@@ -16544,12 +16549,13 @@ namespace Nikse.SubtitleEdit.Forms
                     removeOriginalToolStripMenuItem.Visible = false;
             }
             var format = GetCurrentSubtitleFormat();
-            if (format.GetType() == typeof(AdvancedSubStationAlpha))
+            var ft = format.GetType();
+            if (ft == typeof(AdvancedSubStationAlpha))
             {
                 toolStripMenuItemSubStationAlpha.Visible = true;
                 toolStripMenuItemSubStationAlpha.Text = _language.Menu.File.AdvancedSubStationAlphaProperties;
             }
-            else if (format.GetType() == typeof(SubStationAlpha))
+            else if (ft == typeof(SubStationAlpha))
             {
                 toolStripMenuItemSubStationAlpha.Visible = true;
                 toolStripMenuItemSubStationAlpha.Text = _language.Menu.File.SubStationAlphaProperties;
@@ -16559,7 +16565,7 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripMenuItemSubStationAlpha.Visible = false;
             }
 
-            if (format.GetType() == typeof(Ebu))
+            if (ft == typeof(Ebu))
             {
                 toolStripMenuItemEbuProperties.Text = _language.Menu.File.EbuProperties;
                 toolStripMenuItemEbuProperties.Visible = !string.IsNullOrEmpty(_language.Menu.File.EbuProperties);
@@ -16569,7 +16575,20 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripMenuItemEbuProperties.Visible = false;
             }
 
-            if (format.GetType() == typeof(DCinemaInterop) || format.GetType() == typeof(DCinemaSmpte2010) || format.GetType() == typeof(DCinemaSmpte2007))
+            if (ft == typeof(DvdStudioPro) ||
+                ft == typeof(DvdStudioProSpace) ||
+                ft == typeof(DvdStudioProSpaceOne) ||
+                ft == typeof(DvdStudioProSpaceOneSemicolon))
+            {
+                toolStripMenuItemDvdStudioProProperties.Text = _language.Menu.File.DvdStuioProProperties;
+                toolStripMenuItemDvdStudioProProperties.Visible = true;
+            }
+            else
+            {
+                toolStripMenuItemDvdStudioProProperties.Visible = false;
+            }
+
+            if (ft == typeof(DCinemaInterop) || ft == typeof(DCinemaSmpte2010) || ft == typeof(DCinemaSmpte2007))
             {
                 toolStripMenuItemDCinemaProperties.Visible = true;
             }
@@ -16578,7 +16597,7 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripMenuItemDCinemaProperties.Visible = false;
             }
 
-            if (format.GetType() == typeof(TimedText10) || format.GetType() == typeof(ItunesTimedText))
+            if (ft == typeof(TimedText10) || ft == typeof(ItunesTimedText))
             {
                 toolStripMenuItemTTProperties.Visible = true;
             }
@@ -16588,7 +16607,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             toolStripMenuItemNuendoProperties.Visible = format.Name == "Nuendo";
-            toolStripMenuItemFcpProperties.Visible = format.GetType() == typeof(FinalCutProXml);
+            toolStripMenuItemFcpProperties.Visible = ft == typeof(FinalCutProXml);
 
             toolStripSeparator20.Visible = subtitleLoaded;
         }
@@ -18405,38 +18424,41 @@ namespace Nikse.SubtitleEdit.Forms
             string text = tb.SelectedText;
             int selectionStart = tb.SelectionStart;
 
-            if (fontDialog1.ShowDialog(this) == DialogResult.OK)
+            using (var form = new ChooseFontName())
             {
-                bool done = false;
-
-                if (text.StartsWith("<font ", StringComparison.Ordinal))
+                if (form.ShowDialog(this) == DialogResult.OK)
                 {
-                    int end = text.IndexOf('>');
-                    if (end > 0)
+                    bool done = false;
+
+                    if (text.StartsWith("<font ", StringComparison.Ordinal))
                     {
-                        string f = text.Substring(0, end);
-                        if (f.Contains(" color=") && !f.Contains(" face="))
+                        int end = text.IndexOf('>');
+                        if (end > 0)
                         {
-                            var start = text.IndexOf(" color=", StringComparison.Ordinal);
-                            text = text.Insert(start, string.Format(" face=\"{0}\"", fontDialog1.Font.Name));
-                            done = true;
-                        }
-                        else if (f.Contains(" face="))
-                        {
-                            int faceStart = f.IndexOf(" face=", StringComparison.Ordinal);
-                            if (text.IndexOf('"', faceStart + " face=".Length + 1) > 0)
-                                end = text.IndexOf('"', faceStart + " face=".Length + 1);
-                            text = text.Substring(0, faceStart) + string.Format(" face=\"{0}", fontDialog1.Font.Name) + text.Substring(end);
-                            done = true;
+                            string f = text.Substring(0, end);
+                            if (f.Contains(" color=") && !f.Contains(" face="))
+                            {
+                                var start = text.IndexOf(" color=", StringComparison.Ordinal);
+                                text = text.Insert(start, string.Format(" face=\"{0}\"", form.FontName));
+                                done = true;
+                            }
+                            else if (f.Contains(" face="))
+                            {
+                                int faceStart = f.IndexOf(" face=", StringComparison.Ordinal);
+                                if (text.IndexOf('"', faceStart + " face=".Length + 1) > 0)
+                                    end = text.IndexOf('"', faceStart + " face=".Length + 1);
+                                text = text.Substring(0, faceStart) + string.Format(" face=\"{0}", form.FontName) + text.Substring(end);
+                                done = true;
+                            }
                         }
                     }
-                }
-                if (!done)
-                    text = string.Format("<font face=\"{0}\">{1}</font>", fontDialog1.Font.Name, text);
+                    if (!done)
+                        text = string.Format("<font face=\"{0}\">{1}</font>", form.FontName, text);
 
-                tb.SelectedText = text;
-                tb.SelectionStart = selectionStart;
-                tb.SelectionLength = text.Length;
+                    tb.SelectedText = text;
+                    tb.SelectionStart = selectionStart;
+                    tb.SelectionLength = text.Length;
+                }
             }
         }
 
@@ -22838,6 +22860,14 @@ namespace Nikse.SubtitleEdit.Forms
         private void toolStripMenuItemSplitAtWaveTextBoxPos_Click(object sender, EventArgs e)
         {
             toolStripMenuItemSplitViaWaveform_Click(sender, e);
+        }
+
+        private void toolStripMenuDvdStudioProperties_Click(object sender, EventArgs e)
+        {
+            using (var form = new DvdStudioProProperties())
+            {
+                form.ShowDialog(this);
+            }
         }
     }
 }
