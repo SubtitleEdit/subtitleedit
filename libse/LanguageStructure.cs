@@ -1820,7 +1820,6 @@
         public class RemoveTextFromHearImpaired
         {
             public string Title { get; set; }
-            public string RemoveTextConditions { get; set; }
             public string RemoveTextBetween { get; set; }
             public string SquareBrackets { get; set; }
             public string Brackets { get; set; }

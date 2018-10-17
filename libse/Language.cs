@@ -1951,7 +1951,6 @@ can edit in same subtitle file (collaboration)",
             RemoveTextFromHearImpaired = new LanguageStructure.RemoveTextFromHearImpaired
             {
                 Title = "Remove text for hearing impaired",
-                RemoveTextConditions = "Remove text conditions",
                 RemoveTextBetween = "Remove text between",
                 SquareBrackets = "'[' and ']'",
                 Brackets = "'{' and '}'",

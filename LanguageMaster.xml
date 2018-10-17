@@ -1670,7 +1670,6 @@ can edit in same subtitle file (collaboration)</Information>
   </RegularExpressionContextMenu>
   <RemoveTextFromHearImpaired>
     <Title>Remove text for hearing impaired</Title>
-    <RemoveTextConditions>Remove text conditions</RemoveTextConditions>
     <RemoveTextBetween>Remove text between</RemoveTextBetween>
     <SquareBrackets>'[' and ']'</SquareBrackets>
     <Brackets>'{' and '}'</Brackets>

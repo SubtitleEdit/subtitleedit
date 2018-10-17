@@ -4462,9 +4462,6 @@ namespace Nikse.SubtitleEdit.Core
                 case "RemoveTextFromHearImpaired/Title":
                     language.RemoveTextFromHearImpaired.Title = reader.Value;
                     break;
-                case "RemoveTextFromHearImpaired/RemoveTextConditions":
-                    language.RemoveTextFromHearImpaired.RemoveTextConditions = reader.Value;
-                    break;
                 case "RemoveTextFromHearImpaired/RemoveTextBetween":
                     language.RemoveTextFromHearImpaired.RemoveTextBetween = reader.Value;
                     break;

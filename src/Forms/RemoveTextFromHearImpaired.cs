@@ -48,9 +48,10 @@ namespace Nikse.SubtitleEdit.Forms
 
             _language = Configuration.Settings.Language.RemoveTextFromHearImpaired;
             Text = _language.Title;
-            groupBoxRemoveTextConditions.Text = _language.RemoveTextConditions;
             labelAnd.Text = _language.And;
-            labelRemoveTextBetween.Text = _language.RemoveTextBetween;
+            groupBoxTextBetween.Text = _language.RemoveTextBetween;
+            groupBoxInterjections.Text = _language.RemoveInterjections;
+            groupBoxTextBeforeColon.Text = _language.RemoveTextBeforeColon;
             checkBoxRemoveTextBeforeColon.Text = _language.RemoveTextBeforeColon;
             checkBoxRemoveTextBeforeColonOnlyUppercase.Text = _language.OnlyIfTextIsUppercase;
             checkBoxOnlyIfInSeparateLine.Text = _language.OnlyIfInSeparateLine;
@@ -73,6 +74,19 @@ namespace Nikse.SubtitleEdit.Forms
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             buttonApply.Text = Configuration.Settings.Language.General.Apply;
             UiUtil.FixLargeFonts(this, buttonOK);
+
+            int buttonRightInForm = groupBoxInterjections.Location.X + buttonEditInterjections.Right;
+            int groupBoxRightInForm = groupBoxInterjections.Location.X + groupBoxInterjections.Width;
+            if (groupBoxInterjections.Location.X + buttonEditInterjections.Right > groupBoxInterjections.Location.X + groupBoxInterjections.Width)
+            {
+                int adjustWidth = buttonRightInForm - groupBoxRightInForm + 10;
+                groupBoxTextBetween.Width += adjustWidth;
+                groupBoxTextBeforeColon.Width += adjustWidth;
+                groupBoxInterjections.Width += adjustWidth;
+                groupBoxTextBeforeColon.Left += adjustWidth;
+                groupBoxInterjections.Left += adjustWidth * 2;
+            }
+            MinimumSize = new Size(groupBoxInterjections.Right + groupBoxTextBetween.Location.X * 2, Height);
         }
 
         public void Initialize(Subtitle subtitle)
@@ -94,9 +108,10 @@ namespace Nikse.SubtitleEdit.Forms
         {
             comboBoxRemoveIfTextContains.Left = checkBoxRemoveWhereContains.Left + checkBoxRemoveWhereContains.Width;
             groupBoxLinesFound.Visible = false;
-            int h = groupBoxRemoveTextConditions.Top + groupBoxRemoveTextConditions.Height + buttonOK.Height + 50;
-            MinimumSize = new Size(MinimumSize.Width, h);
-            Height = h;
+            MaximumSize = new Size(groupBoxInterjections.Right + groupBoxTextBetween.Location.X * 2, Height - groupBoxLinesFound.Height - (groupBoxLinesFound.Top - groupBoxTextBetween.Bottom));
+            FormBorderStyle = FormBorderStyle.FixedToolWindow;
+            StartPosition = FormStartPosition.CenterParent;
+            MaximizeBox = false;
         }
 
         private void GeneratePreview()
