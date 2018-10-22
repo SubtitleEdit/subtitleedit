@@ -1201,7 +1201,7 @@ Command line: {1} {2}
       <SetstartTimeAndOffsetOfRest>设为起始时间并偏移其余(&amp;R)</SetstartTimeAndOffsetOfRest>
       <SearchTextOnline>在网上搜索文本</SearchTextOnline>
       <GoogleTranslate>谷歌翻译</GoogleTranslate>
-      <GoogleIt>谷歌翻译该行</GoogleIt>
+      <GoogleIt>谷歌搜索该行</GoogleIt>
       <SecondsBackShort>&lt;&lt;</SecondsBackShort>
       <SecondsForwardShort>&gt;&gt;</SecondsForwardShort>
       <VideoPosition>视频位置:</VideoPosition>
@@ -1716,7 +1716,7 @@ Command line: {1} {2}
     <Replace>替换</Replace>
     <VisualSync>影音对照同步</VisualSync>
     <SpellCheck>拼写检查</SpellCheck>
-    <NetflixQualityCheck>Netfix品质检查</NetflixQualityCheck>
+    <NetflixQualityCheck>Netflix品质检查</NetflixQualityCheck>
     <SettingsName>设置</SettingsName>
     <Help>帮助</Help>
     <UnbreakNoSpace>取消断行且不带空格（用于中日韩等语言）</UnbreakNoSpace>
@@ -1860,7 +1860,7 @@ Command line: {1} {2}
     <RemoveTextForHi>移除听障辅助内容</RemoveTextForHi>
     <MergeLinesShorterThan>合并小于此长度的行</MergeLinesShorterThan>
     <MusicSymbol>音符</MusicSymbol>
-    <MusicSymbolsReplace>要替换的音乐符号（用分号间隔）</MusicSymbolsReplace>
+    <MusicSymbolsReplace>要替换的音乐符号（用逗号间隔）</MusicSymbolsReplace>
     <FixCommonOcrErrorsUseHardcodedRules>修复 OCR 常规错误 - 同时使用硬编码规则</FixCommonOcrErrorsUseHardcodedRules>
     <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>修正较短的显示时间 - 允许移动起始时间</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
     <FixCommonErrorsSkipStepOne>设置结束点并转到下一条</FixCommonErrorsSkipStepOne>
@@ -1994,7 +1994,7 @@ Command line: {1} {2}
     <MicrosoftBingTranslator>微软 Bing 翻译引擎</MicrosoftBingTranslator>
     <HowToSignUp>如何注册</HowToSignUp>
     <GoogleTranslateUrl>Google 翻译网址</GoogleTranslateUrl>
-    <MicrosoftTranslateApiKey>激活码</MicrosoftTranslateApiKey>
+    <MicrosoftTranslateApiKey>API密钥</MicrosoftTranslateApiKey>
     <FontNote>注意：这些字体设置仅用于Subtitle Edit的用户界面。字幕字体通常在视频播放器中设置。但也可以通过包含内建字体信息的字幕来设置，例如“Advance Sub Station Alpha”格式，或通过expor</FontNote>
   </Settings>
   <SettingsMpv>
@@ -2364,7 +2364,7 @@ Command line: {1} {2}
     <Generate>生成</Generate>
     <Remove>移除</Remove>
     <BeforeWatermark>在水印前</BeforeWatermark>
-    <ErrorUnicodeEncodingOnly>水印仅可使用 unicode 文件编码</ErrorUnicodeEncodingOnly>
+    <ErrorUnicodeEncodingOnly>水印仅可使用 Unicode 文件编码</ErrorUnicodeEncodingOnly>
   </Watermark>
   <Waveform>
     <ClickToAddWaveform>点击以添加波形</ClickToAddWaveform>
