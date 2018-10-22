@@ -999,7 +999,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             if (!string.IsNullOrEmpty(fileName) && File.Exists(fileName))
             {
                 var fi = new FileInfo(fileName);
-                if (fi.Length >= 640 && fi.Length < 1024000) // not too small or too big
+                if (fi.Length >= 512 && fi.Length < 1024000) // not too small or too big
                 {
                     if (!fileName.EndsWith(".890", StringComparison.Ordinal))
                         return false;
