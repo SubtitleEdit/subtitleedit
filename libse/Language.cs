@@ -203,7 +203,7 @@ namespace Nikse.SubtitleEdit.Core
                              Environment.NewLine +
                              "C# source code is available on https://github.com/SubtitleEdit/subtitleedit" + Environment.NewLine +
                              Environment.NewLine +
-                             "Visit www.nikse.dk for the latest version." + Environment.NewLine +
+                             "Visit https://www.nikse.dk for the latest version." + Environment.NewLine +
                              Environment.NewLine +
                              "Suggestions are very welcome." + Environment.NewLine +
                              Environment.NewLine +
