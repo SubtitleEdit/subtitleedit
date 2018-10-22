@@ -2021,21 +2021,21 @@ namespace Nikse.SubtitleEdit.Forms
             if (cb.SelectedIndex >= 0)
             {
                 if (cb.SelectedIndex == 0)
-                    tb.Text = "http://dictionary.reference.com/browse/{0}";
+                    tb.Text = "https://www.dictionary.com/browse/{0}";
                 else if (cb.SelectedIndex == 1)
                     tb.Text = "http://www.learnersdictionary.com/search/{0}";
                 else if (cb.SelectedIndex == 2)
-                    tb.Text = "http://www.merriam-webster.com/dictionary/{0}";
+                    tb.Text = "https://www.merriam-webster.com/dictionary/{0}";
                 else if (cb.SelectedIndex == 3)
-                    tb.Text = "http://www.thefreedictionary.com/{0}";
+                    tb.Text = "https://www.thefreedictionary.com/{0}";
                 else if (cb.SelectedIndex == 4)
-                    tb.Text = "http://thesaurus.com/browse/{0}";
+                    tb.Text = "https://www.thesaurus.com/browse/{0}";
                 else if (cb.SelectedIndex == 5)
-                    tb.Text = "http://www.urbandictionary.com/define.php?term={0}";
+                    tb.Text = "https://www.urbandictionary.com/define.php?term={0}";
                 else if (cb.SelectedIndex == 6)
-                    tb.Text = "http://www.visuwords.com/?word={0}";
+                    tb.Text = "https://visuwords.com/?word={0}";
                 else if (cb.SelectedIndex == 7)
-                    tb.Text = "http://en.m.wikipedia.org/wiki?search={0}";
+                    tb.Text = "https://en.wikipedia.org/wiki?search={0}";
             }
         }
 
