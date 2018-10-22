@@ -1,7 +1,6 @@
 ﻿Subtitle Edit Changelog
 
 
-
 3.5.8 (xth December 2018) BETA
 * NEW:
    * Add new subtitle formats
@@ -26,7 +25,6 @@
 
 
 3.5.7 (9th August 2018)
-
 * NEW:
    * Add new subtitle formats
    * Font can be different for subtitle list view / text box
