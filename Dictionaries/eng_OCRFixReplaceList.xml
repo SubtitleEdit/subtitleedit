@@ -2277,6 +2277,25 @@
     <LinePart from=" couldn t " to=" couldn't " />
     <LinePart from=" that s " to=" that's " />
     <LinePart from=" i... " to=" I... " />
+    <LinePart from=" I ' ll " to=" I'll " />
+    <LinePart from=" I' ll " to=" I'll " />
+    <LinePart from=" That' s " to=" That's " />
+    <LinePart from=" It' s " to=" It's " />
+    <LinePart from=" that' s " to=" that's " />
+    <LinePart from=" There' s " to=" There's " />
+    <LinePart from=" I ' m " to=" I'm " />
+    <LinePart from=" I 'm " to=" I'm " />
+    <LinePart from=" let' s " to=" let's " />
+    <LinePart from=" it' s " to=" it's " />
+    <LinePart from=" I ' I I  " to=" I'll " />
+    <LinePart from=" aren 't " to=" aren't " />
+    <LinePart from=" he' s " to=" he's " />
+    <LinePart from=" isn' t " to=" isn't " />
+    <LinePart from=" Isn' t " to=" Isn't " />
+    <LinePart from=" hasn 't " to=" hasn't " />
+    <LinePart from=" you ' re " to=" you're " />
+    <LinePart from=" You ' re " to=" You're " />
+    <LinePart from=" that' s " to=" that's " />
   </PartialLines>
   <PartialLinesAlways>
     <LinePart from="forbest act" to="for best act" />
@@ -2384,6 +2403,18 @@
     <Beginning from="couldn t " to="Couldn't " />
     <Beginning from="That s " to="That's " />
     <Beginning from="that s " to="That's " />
+    <Beginning from="I ' ll " to="I'll " />
+    <Beginning from="I 'll " to="I'll " />
+    <Beginning from="That' s " to="That's " />
+    <Beginning from="There' s " to="There's " />
+    <Beginning from="I ' m " to="I'm " />
+    <Beginning from="I 'm " to="I'm " />
+    <Beginning from="Didn 't " to="Didn't " />
+    <Beginning from="It' s " to="It's " />
+    <Beginning from="You ' re " to="You're " />
+    <Beginning from="Isn 't " to="Isn't " />
+    <Beginning from="He' s " to="He's " />
+    <Beginning from="She' s " to="She's " />
   </BeginLines>
   <EndLines>
     <Ending from=", sin" to=", sir." />
