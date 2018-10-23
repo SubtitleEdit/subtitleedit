@@ -411,9 +411,24 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                         {
                             bool doFixWord = !(word.Length == 1 && sb.Length > 1 && sb.EndsWith('-'));
                             if (doFixWord)
+                            {
                                 fixedWord = _ocrFixReplaceList.FixCommonWordErrors(word.ToString());
+
+                                // Try using wordlists for uppercase i inside words, e.g. "NIkolaj" to "Nikolaj"
+                                if (fixedWord.Contains('I'))
+                                {
+                                    var temp = fixedWord.Replace('I', 'i');
+                                    if (temp != fixedWord.ToUpperInvariant())
+                                    {
+                                        if (_nameList.Contains(temp))
+                                            fixedWord = temp;
+                                    }
+                                }
+                            }
                             else
+                            {
                                 fixedWord = word.ToString();
+                            }
                         }
                         sb.Append(fixedWord);
                         lastWord = fixedWord;
