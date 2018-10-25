@@ -9873,7 +9873,7 @@ namespace Nikse.SubtitleEdit.Forms
                 int firstSelectedIndex = FirstSelectedIndex;
                 var oldParagraph = _subtitle.GetParagraphOrDefault(firstSelectedIndex);
                 if (oldParagraph != null)
-                    oldParagraph = new Paragraph(oldParagraph);
+                    oldParagraph = new Paragraph(oldParagraph, false);
 
                 UpdateStartTimeInfo(timeUpDownStartTime.TimeCode);
 
@@ -9882,20 +9882,41 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void UpdateOriginalTimeCodes(Paragraph currentPargraphBeforeChange)
+        private void UpdateOriginalTimeCodes(Paragraph currentPargraphBeforeChange, Paragraph p2Before = null)
         {
             if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0)
             {
-                int firstSelectedIndex = FirstSelectedIndex;
-                var p = _subtitle.GetParagraphOrDefault(firstSelectedIndex);
-                if (currentPargraphBeforeChange != null && p != null)
+                Paragraph p1 = null;
+                Paragraph o1 = null;
+                if (currentPargraphBeforeChange != null)
                 {
-                    var original = Utilities.GetOriginalParagraph(FirstSelectedIndex, currentPargraphBeforeChange, _subtitleAlternate.Paragraphs);
-                    if (original != null)
+                    p1 = _subtitle.GetParagraphOrDefaultById(currentPargraphBeforeChange.ID);
+                    if (p1 != null)
                     {
-                        original.StartTime.TotalMilliseconds = p.StartTime.TotalMilliseconds;
-                        original.EndTime.TotalMilliseconds = p.EndTime.TotalMilliseconds;
+                        o1 = Utilities.GetOriginalParagraph(_subtitle.Paragraphs.IndexOf(p1), currentPargraphBeforeChange, _subtitleAlternate.Paragraphs);
                     }
+                }
+
+                Paragraph p2 = null;
+                Paragraph o2 = null;
+                if (p2Before != null)
+                {
+                    p2 = _subtitle.GetParagraphOrDefaultById(p2Before.ID);
+                    if (p2 != null)
+                    {
+                        o2 = Utilities.GetOriginalParagraph(_subtitle.Paragraphs.IndexOf(p2), p2Before, _subtitleAlternate.Paragraphs);
+                    }
+                }
+
+                if (o1 != null)
+                {
+                    o1.StartTime.TotalMilliseconds = p1.StartTime.TotalMilliseconds;
+                    o1.EndTime.TotalMilliseconds = p1.EndTime.TotalMilliseconds;
+                }
+                if (o2 != null)
+                {
+                    o2.StartTime.TotalMilliseconds = p2.StartTime.TotalMilliseconds;
+                    o2.EndTime.TotalMilliseconds = p2.EndTime.TotalMilliseconds;
                 }
             }
         }
@@ -13768,7 +13789,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var lines = p.Text.SplitToLines();
                 foreach (var line in lines)
                 {
-                    var trimmed = line.TrimStart();
+                    var trimmed = Utilities.RemoveSsaTags(line).TrimStart();
                     if (trimmed.StartsWith('-') || trimmed.StartsWith("<i>-", StringComparison.Ordinal) || trimmed.StartsWith("<i> -", StringComparison.Ordinal))
                     {
                         hasStartDash = true;
@@ -13792,12 +13813,20 @@ namespace Nikse.SubtitleEdit.Forms
                 var sb = new StringBuilder();
                 foreach (var line in lines)
                 {
-                    if (line.TrimStart().StartsWith('-') || line.TrimStart().StartsWith("<i>-", StringComparison.Ordinal) || line.TrimStart().StartsWith("<i> -", StringComparison.Ordinal))
-                        sb.AppendLine(line);
-                    else if (line.TrimStart().StartsWith("<i>", StringComparison.Ordinal) && line.Trim().Length > 3)
-                        sb.AppendLine("<i>- " + line.Substring(3).TrimStart());
+                    var pre = string.Empty;
+                    var s = line;
+                    if (s.StartsWith("{\\") && s.IndexOf('}') > 0)
+                    {
+                        pre = s.Substring(0, s.IndexOf('}') + 1);
+                        s = s.Remove(0, pre.Length);
+                    }
+
+                    if (s.TrimStart().StartsWith('-') || s.TrimStart().StartsWith("<i>-", StringComparison.Ordinal) || s.TrimStart().StartsWith("<i> -", StringComparison.Ordinal))
+                        sb.AppendLine(pre + line);
+                    else if (s.TrimStart().StartsWith("<i>", StringComparison.Ordinal) && s.Trim().Length > 3)
+                        sb.AppendLine(pre + "<i>- " + s.Substring(3).TrimStart());
                     else
-                        sb.AppendLine("- " + line);
+                        sb.AppendLine(pre + "- " + s);
                 }
                 var text = sb.ToString().Trim();
                 _subtitle.Paragraphs[index].Text = text;
@@ -13816,12 +13845,20 @@ namespace Nikse.SubtitleEdit.Forms
                 var sb = new StringBuilder();
                 foreach (var line in lines)
                 {
-                    if (line.TrimStart().StartsWith('-'))
-                        sb.AppendLine(line.TrimStart().TrimStart('-').TrimStart());
-                    else if (line.TrimStart().StartsWith("<i>-", StringComparison.Ordinal) || line.TrimStart().StartsWith("<i> -", StringComparison.Ordinal))
-                        sb.AppendLine("<i>" + line.TrimStart().Substring(3).TrimStart().TrimStart('-').TrimStart());
+                    var pre = string.Empty;
+                    var s = line;
+                    if (s.StartsWith("{\\") && s.IndexOf('}') > 0)
+                    {
+                        pre = s.Substring(0, s.IndexOf('}') + 1);
+                        s = s.Remove(0, pre.Length);
+                    }
+
+                    if (s.TrimStart().StartsWith('-'))
+                        sb.AppendLine(pre + s.TrimStart().TrimStart('-').TrimStart());
+                    else if (s.TrimStart().StartsWith("<i>-", StringComparison.Ordinal) || s.TrimStart().StartsWith("<i> -", StringComparison.Ordinal))
+                        sb.AppendLine(pre + "<i>" + s.TrimStart().Substring(3).TrimStart().TrimStart('-').TrimStart());
                     else
-                        sb.AppendLine(line);
+                        sb.AppendLine(pre + s);
                 }
                 string text = sb.ToString().Trim();
                 _subtitle.Paragraphs[index].Text = text;
@@ -15888,7 +15925,7 @@ namespace Nikse.SubtitleEdit.Forms
                 timeUpDownStartTime.MaskedTextBox.TextChanged -= MaskedTextBoxTextChanged;
                 int index = SubtitleListview1.SelectedItems[0].Index;
                 var p = _subtitle.Paragraphs[index];
-                var oldParagraph = new Paragraph(p);
+                var oldParagraph = new Paragraph(p, false);
                 if (oldParagraph.StartTime.IsMaxTime || oldParagraph.EndTime.IsMaxTime)
                     adjustEndTime = true;
                 double videoPosition = mediaPlayer.CurrentPosition;
@@ -19808,7 +19845,7 @@ namespace Nikse.SubtitleEdit.Forms
             MakeHistoryForUndoOnlyIfNotResent(string.Format(_language.VideoControls.BeforeChangingTimeInWaveformX, "#" + p.Number + " " + p.Text));
 
             timeUpDownStartTime.MaskedTextBox.TextChanged -= MaskedTextBoxTextChanged;
-            var oldParagraph = new Paragraph(_subtitle.Paragraphs[index]);
+            var oldParagraph = new Paragraph(_subtitle.Paragraphs[index], false);
             if (!mediaPlayer.IsPaused)
                 videoPosition -= Configuration.Settings.General.SetStartEndHumanDelay / TimeCode.BaseUnit;
 
@@ -19848,6 +19885,10 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             MakeHistoryForUndoOnlyIfNotResent(string.Format(_language.VideoControls.BeforeChangingTimeInWaveformX, "#" + p.Number + " " + p.Text));
+            var p1 = new Paragraph(p, false);
+            Paragraph p2 = null;
+            if (next != null)
+                p2 = new Paragraph(next, false);
 
             double videoPosition = mediaPlayer.CurrentPosition;
             if (!mediaPlayer.IsPaused)
@@ -19884,6 +19925,7 @@ namespace Nikse.SubtitleEdit.Forms
                 SubtitleListview1.SetStartTimeAndDuration(index + 1, next, _subtitle.GetParagraphOrDefault(index + 2), _subtitle.GetParagraphOrDefault(index));
                 SubtitleListview1.SelectIndexAndEnsureVisible(index + 1, true);
             }
+            UpdateOriginalTimeCodes(p1, p2);
             audioVisualizer.Invalidate();
         }
 
