@@ -75,7 +75,13 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Tesseract
                     TesseractErrors.Add(LastError);
                     return "Error!";
                 }
-                process.WaitForExit(5000);
+                process.WaitForExit(8000);
+
+                if (process.HasExited && process.ExitCode != 0)
+                {
+                    LastError = "Tesseract returned with code " + process.ExitCode;
+                    TesseractErrors.Add(LastError);
+                }
             }
 
             string result = string.Empty;
@@ -92,7 +98,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Tesseract
                 }
                 File.Delete(imageFileName);
             }
-            catch
+            catch 
             {
                 // ignored
             }
