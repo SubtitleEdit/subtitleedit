@@ -9,13 +9,14 @@ namespace Nikse.SubtitleEdit.Controls
     /// <summary>
     /// TextBox where double click selects current word
     /// </summary>
-    public class SETextBox : TextBox
+    public sealed class SETextBox : TextBox
     {
         private string _dragText = string.Empty;
         private int _dragStartFrom;
         private long _dragStartTicks;
         private bool _dragRemoveOld;
         private bool _dragFromThis;
+        private long _gotFocusTicks;
 
         public SETextBox()
         {
@@ -26,6 +27,9 @@ namespace Nikse.SubtitleEdit.Controls
             MouseDown += SETextBox_MouseDown;
             MouseUp += SETextBox_MouseUp;
             KeyDown += SETextBox_KeyDown;
+
+            // To fix issue where WM_LBUTTONDOWN got wrong "SelectedText" (only in undocked mode)
+            GotFocus += (sender, args) => { _gotFocusTicks = DateTime.UtcNow.Ticks; };
         }
 
         private void SETextBox_KeyDown(object sender, KeyEventArgs e)
@@ -52,7 +56,7 @@ namespace Nikse.SubtitleEdit.Controls
         {
             if (MouseButtons == MouseButtons.Left && !string.IsNullOrEmpty(_dragText))
             {
-                Point pt = new Point(e.X, e.Y);
+                var pt = new Point(e.X, e.Y);
                 int index = GetCharIndexFromPosition(pt);
                 if (index >= _dragStartFrom && index <= _dragStartFrom + _dragText.Length)
                 {
@@ -60,20 +64,27 @@ namespace Nikse.SubtitleEdit.Controls
                     SelectionStart = _dragStartFrom;
                     SelectionLength = _dragText.Length;
 
-                    var dataObject = new DataObject();
-                    dataObject.SetText(_dragText, TextDataFormat.UnicodeText);
-                    dataObject.SetText(_dragText, TextDataFormat.Text);
+                    try
+                    {
+                        var dataObject = new DataObject();
+                        dataObject.SetText(_dragText, TextDataFormat.UnicodeText);
+                        dataObject.SetText(_dragText, TextDataFormat.Text);
 
-                    _dragFromThis = true;
-                    if (ModifierKeys == Keys.Control)
-                    {
-                        _dragRemoveOld = false;
-                        DoDragDrop(dataObject, DragDropEffects.Copy);
+                        _dragFromThis = true;
+                        if (ModifierKeys == Keys.Control)
+                        {
+                            _dragRemoveOld = false;
+                            DoDragDrop(dataObject, DragDropEffects.Copy);
+                        }
+                        else if (ModifierKeys == Keys.None)
+                        {
+                            _dragRemoveOld = true;
+                            DoDragDrop(dataObject, DragDropEffects.Move);
+                        }
                     }
-                    else if (ModifierKeys == Keys.None)
+                    catch
                     {
-                        _dragRemoveOld = true;
-                        DoDragDrop(dataObject, DragDropEffects.Move);
+                        // ignored
                     }
                 }
             }
@@ -212,9 +223,13 @@ namespace Nikse.SubtitleEdit.Controls
             }
             if (m.Msg == WM_LBUTTONDOWN)
             {
-                _dragText = SelectedText;
-                _dragStartFrom = SelectionStart;
-                _dragStartTicks = DateTime.UtcNow.Ticks;
+                long milliseconds = (DateTime.UtcNow.Ticks - _gotFocusTicks) / 10000;
+                if (milliseconds > 10)
+                {
+                    _dragText = SelectedText;
+                    _dragStartFrom = SelectionStart;
+                    _dragStartTicks = DateTime.UtcNow.Ticks;
+                }
             }
             base.WndProc(ref m);
         }
