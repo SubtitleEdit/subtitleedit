@@ -193,6 +193,7 @@
     <Compile Include="IfoParser.cs" />
     <Compile Include="ImageSplitterItem.cs" />
     <Compile Include="Interfaces\IRtfTextConverter.cs" />
+    <Compile Include="SubtitleFormats\TranscriptiveJson.cs" />
     <Compile Include="TinyJsonParser.cs" />
     <Compile Include="Language.cs" />
     <Compile Include="LanguageAutoDetect.cs" />
