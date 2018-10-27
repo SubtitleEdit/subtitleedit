@@ -168,7 +168,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                                 else
                                     newText += line;
                             }
-                            else if (count == 1 && newText.Length > 1 && indexOfColon > 15 && line.Substring(0, indexOfColon).Contains(' ') &&
+                            else if (count == 1 && newTextNoHtml.Length > 1 && indexOfColon > 15 && line.Substring(0, indexOfColon).Contains(' ') &&
                                      !".?!".Contains(newTextNoHtml[newTextNoHtml.Length - 1]) && newText.LineEndsWithHtmlTag(true) &&
                                      line != line.ToUpper())
                             {
