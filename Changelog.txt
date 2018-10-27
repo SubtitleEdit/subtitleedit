@@ -30,7 +30,7 @@
    * Fix auto-select text in undocked mode - thx Ingo
    * Fix Toggle dialog dashes with ASS tags - thx OmrSi
    * Fix "Set end, next start + go to next" w org sub - thx OmrSi
-
+   * Fix crash in Remove text for HI" - thx indeed-a-genius
 
 3.5.7 (9th August 2018)
 * NEW:
