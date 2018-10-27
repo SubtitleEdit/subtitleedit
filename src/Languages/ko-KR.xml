@@ -914,6 +914,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
         <AdvancedSubStationAlphaProperties>Advanced Sub Station Alpha(.ass)의 속성...</AdvancedSubStationAlphaProperties>
         <SubStationAlphaProperties>Sub Station Alpha(.ssa)의 속성...</SubStationAlphaProperties>
         <EbuProperties>EBU STL 속성...</EbuProperties>
+        <DvdStuioProProperties>DVD Studio Pro 속성...</DvdStuioProProperties>
         <PacProperties>PAC 속성...</PacProperties>
         <OpenOriginal>원본 자막 열기 (번역 모드)</OpenOriginal>
         <SaveOriginal>원본 자막 저장...</SaveOriginal>
