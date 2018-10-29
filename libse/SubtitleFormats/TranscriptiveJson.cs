@@ -28,7 +28,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 return;
 
             var parser = new JsonParser();
-            var dictionary = (Dictionary<string, object>)parser.Parse(allText);
+            Dictionary<string, object> dictionary;
+            try
+            {
+                dictionary = (Dictionary<string, object>)parser.Parse(allText);
+            }
+            catch (ParserException)
+            {
+                return;
+            }
             foreach (var k in dictionary.Keys)
             {
                 if (k != "results" || !(dictionary[k] is List<object> v)) continue;
