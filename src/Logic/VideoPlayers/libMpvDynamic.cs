@@ -141,8 +141,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             if (_mpvHandle == IntPtr.Zero)
                 return;
 
-            IntPtr[] byteArrayPointers;
-            var mainPtr = AllocateUtf8IntPtrArrayWithSentinel(args, out byteArrayPointers);
+            var mainPtr = AllocateUtf8IntPtrArrayWithSentinel(args, out var byteArrayPointers);
             _mpvCommand(_mpvHandle, mainPtr);
             foreach (var ptr in byteArrayPointers)
             {
@@ -523,27 +522,28 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
         private void ReleaseUnmangedResources()
         {
-            try
-            {
-                lock (this)
-                {
-                    if (_mpvHandle != IntPtr.Zero)
-                    {
-                        _mpvTerminateDestroy(_mpvHandle);
-                        _mpvHandle = IntPtr.Zero;
-                    }
-
-                    //if (_libMpvDll != IntPtr.Zero) - hm, will make video hang on second video...
-                    //{
-                    //    NativeMethods.FreeLibrary(_libMpvDll);
-                    //    _libMpvDll = IntPtr.Zero;
-                    //}
-                }
-            }
-            catch
-            {
-                // ignored
-            }
+            // -hm, will make video hang after 4th loaded video... ?
+            //try
+            //{
+            //    lock (this)
+            //    {
+            //        if (_mpvHandle != IntPtr.Zero)
+            //        {
+            //            _mpvTerminateDestroy(_mpvHandle);
+            //            _mpvHandle = IntPtr.Zero;
+            //        }
+            //
+            //        if (_libMpvDll != IntPtr.Zero) 
+            //        {
+            //            NativeMethods.FreeLibrary(_libMpvDll);
+            //            _libMpvDll = IntPtr.Zero;
+            //        }
+            //    }
+            //}
+            //catch
+            //{
+            //    // ignored
+            //}
         }
 
         ~LibMpvDynamic()
