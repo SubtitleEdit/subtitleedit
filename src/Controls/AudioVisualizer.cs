@@ -746,7 +746,9 @@ namespace Nikse.SubtitleEdit.Controls
                 // paragraph text
                 if (n > 80)
                 {
-                    string text = HtmlUtil.RemoveHtmlTags(paragraph.Text, true); //.Replace(Environment.NewLine, "  ");
+                    string text = HtmlUtil.RemoveHtmlTags(paragraph.Text, true); 
+                    if (Configuration.Settings.VideoControls.WaveformUnwrapText)
+                        text = text.Replace(Environment.NewLine, "  ");
                     DrawParagraphText(graphics, text, font, currentRegionWidth, padding, drawStringOutlined, currentRegionLeft);
                 }
 
@@ -760,10 +762,20 @@ namespace Nikse.SubtitleEdit.Controls
                     }
                     else if (n > 99)
                     {
-                        if (Configuration.Settings.VideoControls.WaveformDrawWpm)
-                            text = string.Format(Configuration.Settings.Language.Waveform.WordsMinX, paragraph.WordsPerMinute) + Environment.NewLine + text;
-                        if (Configuration.Settings.VideoControls.WaveformDrawCps)
-                            text = string.Format(Configuration.Settings.Language.Waveform.CharsSecX, Utilities.GetCharactersPerSecond(paragraph)) + Environment.NewLine + text;
+                        if (Configuration.Settings.VideoControls.WaveformHideWpmCpsLabels)
+                        {
+                            if (Configuration.Settings.VideoControls.WaveformDrawWpm)
+                                text = $"{paragraph.WordsPerMinute:0.00}" + Environment.NewLine + text;
+                            if (Configuration.Settings.VideoControls.WaveformDrawCps)
+                                text = $"{Utilities.GetCharactersPerSecond(paragraph):0.00}" + Environment.NewLine + text;
+                        }
+                        else
+                        {
+                            if (Configuration.Settings.VideoControls.WaveformDrawWpm)
+                                text = string.Format(Configuration.Settings.Language.Waveform.WordsMinX, paragraph.WordsPerMinute) + Environment.NewLine + text;
+                            if (Configuration.Settings.VideoControls.WaveformDrawCps)
+                                text = string.Format(Configuration.Settings.Language.Waveform.CharsSecX, Utilities.GetCharactersPerSecond(paragraph)) + Environment.NewLine + text;
+                        }
                     }
                     drawStringOutlined(text, currentRegionLeft + padding, Height - 14 - (int)graphics.MeasureString(text, font).Height);
                 }
