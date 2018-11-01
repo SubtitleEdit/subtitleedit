@@ -75,13 +75,13 @@ namespace Nikse.SubtitleEdit.Forms.DCinema
                    numericUpDownFadeUp.Maximum >= ss.DCinemaFadeUpTime)
                     numericUpDownFadeUp.Value = ss.DCinemaFadeUpTime;
                 else
-                    numericUpDownFadeUp.Value = 5;
+                    numericUpDownFadeUp.Value = 0;
 
                 if (numericUpDownFadeDown.Minimum <= ss.DCinemaFadeDownTime &&
                    numericUpDownFadeDown.Maximum >= ss.DCinemaFadeDownTime)
                     numericUpDownFadeDown.Value = ss.DCinemaFadeDownTime;
                 else
-                    numericUpDownFadeDown.Value = 5;
+                    numericUpDownFadeDown.Value = 0;
 
                 decimal zPosition = (decimal)ss.DCinemaZPosition;
                 if (numericUpDownZPosition.Minimum <= zPosition &&

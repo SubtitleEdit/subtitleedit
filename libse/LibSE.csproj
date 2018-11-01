@@ -195,6 +195,7 @@
     <Compile Include="Interfaces\IRtfTextConverter.cs" />
     <Compile Include="SubtitleFormats\JsonType14.cs" />
     <Compile Include="SubtitleFormats\TranscriptiveJson.cs" />
+    <Compile Include="SubtitleFormats\UnknownSubtitle88.cs" />
     <Compile Include="TinyJsonParser.cs" />
     <Compile Include="Language.cs" />
     <Compile Include="LanguageAutoDetect.cs" />

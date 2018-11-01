@@ -80,6 +80,18 @@ namespace Nikse.SubtitleEdit.Forms.DCinema
                     numericUpDownTopBottomMargin.Value = ss.DCinemaBottomMargin;
                 else
                     numericUpDownTopBottomMargin.Value = 8;
+
+                if (numericUpDownFadeUp.Minimum <= ss.DCinemaFadeUpTime &&
+                    numericUpDownFadeUp.Maximum >= ss.DCinemaFadeUpTime)
+                    numericUpDownFadeUp.Value = ss.DCinemaFadeUpTime;
+                else
+                    numericUpDownFadeUp.Value = 0;
+
+                if (numericUpDownFadeDown.Minimum <= ss.DCinemaFadeDownTime &&
+                    numericUpDownFadeDown.Maximum >= ss.DCinemaFadeDownTime)
+                    numericUpDownFadeDown.Value = ss.DCinemaFadeDownTime;
+                else
+                    numericUpDownFadeDown.Value = 0;
             }
             UiUtil.FixLargeFonts(this, buttonCancel);
         }
@@ -138,6 +150,9 @@ namespace Nikse.SubtitleEdit.Forms.DCinema
             ss.CurrentDCinemaFontEffectColor = panelFontEffectColor.BackColor;
             ss.CurrentDCinemaFontSize = (int)numericUpDownFontSize.Value;
             ss.DCinemaBottomMargin = (int)numericUpDownTopBottomMargin.Value;
+
+            ss.DCinemaFadeUpTime = (int)numericUpDownFadeUp.Value;
+            ss.DCinemaFadeDownTime = (int)numericUpDownFadeDown.Value;
 
             DialogResult = DialogResult.OK;
         }
