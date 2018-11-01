@@ -418,8 +418,8 @@ namespace Nikse.SubtitleEdit.Core
             DCinemaFontSize = 42;
             DCinemaBottomMargin = 8;
             DCinemaZPosition = 0;
-            DCinemaFadeUpTime = 5;
-            DCinemaFadeDownTime = 5;
+            DCinemaFadeUpTime = 0;
+            DCinemaFadeDownTime = 0;
 
             EbuStlTeletextUseBox = true;
             EbuStlTeletextUseDoubleHeight = true;
@@ -846,6 +846,9 @@ $HorzAlign          =   Center
         public int WaveformMinimumSampleRate { get; set; }
         public double WaveformSeeksSilenceDurationSeconds { get; set; }
         public double WaveformSeeksSilenceMaxVolume { get; set; }
+        public bool WaveformUnwrapText { get; set; }
+        public bool WaveformHideWpmCpsLabels { get; set; }
+
 
         public VideoControlsSettings()
         {
@@ -2676,6 +2679,12 @@ $HorzAlign          =   Center
             subNode = node.SelectSingleNode("WaveformSeeksSilenceMaxVolume");
             if (subNode != null)
                 settings.VideoControls.WaveformSeeksSilenceMaxVolume = Convert.ToDouble(subNode.InnerText, CultureInfo.InvariantCulture);
+            subNode = node.SelectSingleNode("WaveformUnwrapText");
+            if (subNode != null)
+                settings.VideoControls.WaveformUnwrapText = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            subNode = node.SelectSingleNode("WaveformHideWpmCpsLabels");
+            if (subNode != null)
+                settings.VideoControls.WaveformHideWpmCpsLabels = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
 
             // Network
             node = doc.DocumentElement.SelectSingleNode("NetworkSettings");
@@ -3869,6 +3878,8 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("WaveformMinimumSampleRate", settings.VideoControls.WaveformMinimumSampleRate.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("WaveformSeeksSilenceDurationSeconds", settings.VideoControls.WaveformSeeksSilenceDurationSeconds.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("WaveformSeeksSilenceMaxVolume", settings.VideoControls.WaveformSeeksSilenceMaxVolume.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("WaveformUnwrapText", settings.VideoControls.WaveformUnwrapText.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("WaveformHideWpmCpsLabels", settings.VideoControls.WaveformHideWpmCpsLabels.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteEndElement();
 
                 textWriter.WriteStartElement("NetworkSettings", string.Empty);

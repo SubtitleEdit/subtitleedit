@@ -23,6 +23,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return sb.ToString();
         }
 
+        public override bool IsMine(List<string> lines, string fileName)
+        {
+            if (new UnknownSubtitle88().IsMine(lines, fileName))
+                return false;
+
+            return base.IsMine(lines, fileName);
+        }
+
         private static string EncodeTimeCode(TimeCode time)
         {
             return $"{time.Hours * 60 + time.Minutes}:{time.Seconds:00}";
