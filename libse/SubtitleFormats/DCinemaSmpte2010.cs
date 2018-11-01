@@ -164,11 +164,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     subNode.Attributes.Append(id);
 
                     XmlAttribute fadeUpTime = xml.CreateAttribute("FadeUpTime");
-                    fadeUpTime.InnerText = "00:00:00:00"; //Configuration.Settings.SubtitleSettings.DCinemaFadeUpDownTime.ToString();
+                    fadeUpTime.InnerText = new TimeCode(FramesToMilliseconds(Configuration.Settings.SubtitleSettings.DCinemaFadeUpTime)).ToHHMMSSFF(); 
                     subNode.Attributes.Append(fadeUpTime);
 
                     XmlAttribute fadeDownTime = xml.CreateAttribute("FadeDownTime");
-                    fadeDownTime.InnerText = "00:00:00:00"; //Configuration.Settings.SubtitleSettings.DCinemaFadeUpDownTime.ToString();
+                    fadeDownTime.InnerText = new TimeCode(FramesToMilliseconds(Configuration.Settings.SubtitleSettings.DCinemaFadeDownTime)).ToHHMMSSFF();
                     subNode.Attributes.Append(fadeDownTime);
 
                     XmlAttribute start = xml.CreateAttribute("TimeIn");

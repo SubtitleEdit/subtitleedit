@@ -35,6 +35,8 @@ namespace Nikse.SubtitleEdit.Forms.DCinema
             this.numericUpDownReelNumber = new System.Windows.Forms.NumericUpDown();
             this.buttonGenerateID = new System.Windows.Forms.Button();
             this.groupBoxFont = new System.Windows.Forms.GroupBox();
+            this.numericUpDownFadeDown = new System.Windows.Forms.NumericUpDown();
+            this.labelFadeDownTime = new System.Windows.Forms.Label();
             this.numericUpDownFadeUp = new System.Windows.Forms.NumericUpDown();
             this.labelFadeUpTime = new System.Windows.Forms.Label();
             this.labelZPositionHelp = new System.Windows.Forms.Label();
@@ -63,16 +65,14 @@ namespace Nikse.SubtitleEdit.Forms.DCinema
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
-            this.numericUpDownFadeDown = new System.Windows.Forms.NumericUpDown();
-            this.labelFadeDownTime = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownReelNumber)).BeginInit();
             this.groupBoxFont.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFadeDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFadeUp)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownZPosition)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTopBottomMargin)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFontSize)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFadeDown)).BeginInit();
             this.SuspendLayout();
             // 
             // panelFontEffectColor
@@ -190,6 +190,27 @@ namespace Nikse.SubtitleEdit.Forms.DCinema
             this.groupBoxFont.TabStop = false;
             this.groupBoxFont.Text = "Font";
             // 
+            // numericUpDownFadeDown
+            // 
+            this.numericUpDownFadeDown.Location = new System.Drawing.Point(133, 233);
+            this.numericUpDownFadeDown.Maximum = new decimal(new int[] {
+            50,
+            0,
+            0,
+            0});
+            this.numericUpDownFadeDown.Name = "numericUpDownFadeDown";
+            this.numericUpDownFadeDown.Size = new System.Drawing.Size(112, 20);
+            this.numericUpDownFadeDown.TabIndex = 33;
+            // 
+            // labelFadeDownTime
+            // 
+            this.labelFadeDownTime.AutoSize = true;
+            this.labelFadeDownTime.Location = new System.Drawing.Point(9, 236);
+            this.labelFadeDownTime.Name = "labelFadeDownTime";
+            this.labelFadeDownTime.Size = new System.Drawing.Size(82, 13);
+            this.labelFadeDownTime.TabIndex = 37;
+            this.labelFadeDownTime.Text = "Fade down time";
+            // 
             // numericUpDownFadeUp
             // 
             this.numericUpDownFadeUp.Location = new System.Drawing.Point(133, 207);
@@ -201,11 +222,6 @@ namespace Nikse.SubtitleEdit.Forms.DCinema
             this.numericUpDownFadeUp.Name = "numericUpDownFadeUp";
             this.numericUpDownFadeUp.Size = new System.Drawing.Size(112, 20);
             this.numericUpDownFadeUp.TabIndex = 32;
-            this.numericUpDownFadeUp.Value = new decimal(new int[] {
-            5,
-            0,
-            0,
-            0});
             // 
             // labelFadeUpTime
             // 
@@ -222,9 +238,10 @@ namespace Nikse.SubtitleEdit.Forms.DCinema
             this.labelZPositionHelp.ForeColor = System.Drawing.Color.Gray;
             this.labelZPositionHelp.Location = new System.Drawing.Point(252, 265);
             this.labelZPositionHelp.Name = "labelZPositionHelp";
-            this.labelZPositionHelp.Size = new System.Drawing.Size(327, 47);
+            this.labelZPositionHelp.Size = new System.Drawing.Size(343, 47);
             this.labelZPositionHelp.TabIndex = 34;
-            this.labelZPositionHelp.Text = "Positive numbers move text away, negative numbers move text closer, if z-position is zero then it\'s normal \r\n2D";
+            this.labelZPositionHelp.Text = "Positive numbers move text away, negative numbers move text closer, if z-position" +
+    " is zero then it\'s normal 2D";
             // 
             // numericUpDownZPosition
             // 
@@ -480,32 +497,6 @@ namespace Nikse.SubtitleEdit.Forms.DCinema
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
             // 
-            // numericUpDownFadeDown
-            // 
-            this.numericUpDownFadeDown.Location = new System.Drawing.Point(133, 233);
-            this.numericUpDownFadeDown.Maximum = new decimal(new int[] {
-            50,
-            0,
-            0,
-            0});
-            this.numericUpDownFadeDown.Name = "numericUpDownFadeDown";
-            this.numericUpDownFadeDown.Size = new System.Drawing.Size(112, 20);
-            this.numericUpDownFadeDown.TabIndex = 33;
-            this.numericUpDownFadeDown.Value = new decimal(new int[] {
-            5,
-            0,
-            0,
-            0});
-            // 
-            // labelFadeDownTime
-            // 
-            this.labelFadeDownTime.AutoSize = true;
-            this.labelFadeDownTime.Location = new System.Drawing.Point(9, 236);
-            this.labelFadeDownTime.Name = "labelFadeDownTime";
-            this.labelFadeDownTime.Size = new System.Drawing.Size(82, 13);
-            this.labelFadeDownTime.TabIndex = 37;
-            this.labelFadeDownTime.Text = "Fade down time";
-            // 
             // DCinemaPropertiesInterop
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -528,11 +519,11 @@ namespace Nikse.SubtitleEdit.Forms.DCinema
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownReelNumber)).EndInit();
             this.groupBoxFont.ResumeLayout(false);
             this.groupBoxFont.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFadeDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFadeUp)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownZPosition)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTopBottomMargin)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFontSize)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFadeDown)).EndInit();
             this.ResumeLayout(false);
 
         }
