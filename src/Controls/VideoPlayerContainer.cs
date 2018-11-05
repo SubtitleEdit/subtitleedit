@@ -1633,10 +1633,21 @@ namespace Nikse.SubtitleEdit.Controls
 
         public void PauseAndDisposePlayer()
         {
+            PanelPlayer.Hide();
             Pause();
             SubtitleText = string.Empty;
-            VideoPlayer.DisposeVideoPlayer();
+            var temp = VideoPlayer;
             VideoPlayer = null;
+            Application.DoEvents();
+            temp.DisposeVideoPlayer();
+
+            // to avoid not showing video with libmpv, a new PanelPlayer is made...
+            PanelPlayer.MouseDown -= PanelPlayerMouseDown;
+            Controls.Add(MakePlayerPanel());
+            PanelPlayer.BringToFront();
+            PanelPlayer.MouseDown += PanelPlayerMouseDown;
+            VideoPlayerContainerResize(this, null);
+
             DeleteTempMpvFileName();
             _retryCount = 3;
             SmpteMode = false;
