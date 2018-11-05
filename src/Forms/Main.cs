@@ -4452,11 +4452,12 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     catch (Exception)
                     {
-                        // ignore
+                        MessageBox.Show("Failed to activate new libmpv dll");
+                        return;
                     }
                 }
             }
-            UiUtil.InitializeVideoPlayerAndContainer(_videoFileName, _videoInfo, mediaPlayer, VideoLoaded, VideoEnded);
+            MessageBox.Show("Please restart to use new libmpv dll");
         }
 
         private void AddAlternate()
