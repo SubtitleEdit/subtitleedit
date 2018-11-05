@@ -108,43 +108,49 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Tesseract
 
         private static string ParseHocr(string html)
         {
-            string s = html.Replace("<em>", "@001_____").Replace("</em>", "@002_____");
-
-            int first = s.IndexOf('<');
-            while (first >= 0)
+            var sb = new StringBuilder();
+            var lineStart = html.IndexOf("<span class='ocr_line'", StringComparison.InvariantCulture);
+            while (lineStart > 0)
             {
-                int last = s.IndexOf('>');
-                if (last > 0)
+                var wordStart = html.IndexOf("<span class='ocrx_word'", lineStart, StringComparison.InvariantCulture);
+                int wordMax = html.IndexOf("<span class='ocr_line'", lineStart + 1, StringComparison.InvariantCulture);
+                if (wordMax <= 0)
+                    wordMax = html.Length;
+                while (wordStart > 0 && wordStart <= wordMax)
                 {
-                    s = s.Remove(first, last - first + 1);
-                    first = s.IndexOf('<');
+                    var startText = html.IndexOf('>', wordStart + 1);
+                    if (startText > 0)
+                    {
+                        startText++;
+                        var endText = html.IndexOf("</span>", startText + 1, StringComparison.InvariantCulture);
+                        if (endText > 0)
+                        {
+                            var text = html.Substring(startText, endText - startText);
+                            sb.Append(text.Trim() + " ");
+                        }
+                    }
+                    wordStart = html.IndexOf("<span class='ocrx_word'", wordStart + 1, StringComparison.InvariantCulture);
                 }
-                else
-                {
-                    first = -1;
-                }
+                sb.AppendLine();
+                lineStart = html.IndexOf("<span class='ocr_line'", lineStart + 1, StringComparison.InvariantCulture);
             }
-
-            s = s.Trim();
-            s = s.Replace("@001_____", "<i>").Replace("@002_____", "</i>");
-            while (s.Contains("  "))
-                s = s.Replace("  ", " ");
-            s = s.Replace("</i> <i>", " ");
+            var result = sb.ToString().Replace("<em>", "<i>").Replace("</em>", "</i>");
+            result = result.Replace("<strong>", "<i>").Replace("</strong>", "</i>");
+            result = result.Replace("</i> <i>", " ");
+            result = result.Replace("</i><i>", string.Empty);
 
             // html escape decoding
-            s = s.Replace("&amp;", "&")
+            result = result.Replace("&amp;", "&")
                 .Replace("&lt;", "<")
                 .Replace("&gt;", ">")
                 .Replace("&quot;", "\"")
                 .Replace("&#39;", "'")
                 .Replace("&apos;", "'");
 
-            while (s.Contains("\n\n"))
-                s = s.Replace("\n\n", "\n");
-            s = s.Replace("</i>\n<i>", "\n");
-            s = s.Replace("\n", Environment.NewLine);
+            result = result.Replace("</i>" + Environment.NewLine + "<i>", Environment.NewLine);
+            result = result.Replace(" " + Environment.NewLine, Environment.NewLine);
 
-            return s;
+            return result.Trim();
         }
 
         private void TesseractErrorReceived(object sender, DataReceivedEventArgs e)
