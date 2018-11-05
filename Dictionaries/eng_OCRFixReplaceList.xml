@@ -1971,6 +1971,11 @@
     <Word from="reaI" to="real" />
     <Word from="Foryour" to="For your" />
     <Word from="yourpublic" to="your public" />
+    <Word from="brotherand" to="brother and" />
+    <Word from="lguess" to="I guess" />
+    <Word from="bomberjust" to="bomber just" />
+    <Word from="Ilovedit" to="I loved it" />
+    <Word from="PIaza" to="Plaza" />
   </WholeWords>
   <PartialWordsAlways>
     <!-- Will be replaced always -->
@@ -2296,6 +2301,7 @@
     <LinePart from=" you ' re " to=" you're " />
     <LinePart from=" You ' re " to=" You're " />
     <LinePart from=" that' s " to=" that's " />
+    <LinePart from="1 2th " to="12th " />
   </PartialLines>
   <PartialLinesAlways>
     <LinePart from="forbest act" to="for best act" />
@@ -2415,6 +2421,7 @@
     <Beginning from="Isn 't " to="Isn't " />
     <Beginning from="He' s " to="He's " />
     <Beginning from="She' s " to="She's " />
+    <Beginning from="O kay, " to="Okay, " />
   </BeginLines>
   <EndLines>
     <Ending from=", sin" to=", sir." />
