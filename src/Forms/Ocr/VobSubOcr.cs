@@ -1115,7 +1115,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             _subtitle.Renumber();
 
             FixShortDisplayTimes(_subtitle);
-            
+
             subtitleListView1.Fill(_subtitle);
             subtitleListView1.SelectIndexAndEnsureVisible(0);
 
@@ -5299,82 +5299,86 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         public void OcrDone(int index, TesseractThreadRunner.ImageJob job)
         {
             _tesseractAsyncStrings[index] = job.Result;
-            string text = OcrViaTesseract(job.Bitmap, index);
-
-            _lastLine = text;
-
-            text = text.Replace("<i>-</i>", "-");
-            text = text.Replace("<i>a</i>", "a");
-            text = text.Replace("<i>.</i>", ".");
-            text = text.Replace("  ", " ");
-            text = text.Trim();
-
-            text = text.Replace(" " + Environment.NewLine, Environment.NewLine);
-            text = text.Replace(Environment.NewLine + " ", Environment.NewLine);
-
-            // max allow 2 lines
-            if (_autoBreakLines && text.Replace(Environment.NewLine, "*").Length + 2 <= text.Length)
+            Application.DoEvents();
+            lock (this)
             {
+                var text = OcrViaTesseract(job.Bitmap, index);
+                _lastLine = text;
+
+                text = text.Replace("<i>-</i>", "-");
+                text = text.Replace("<i>a</i>", "a");
+                text = text.Replace("<i>.</i>", ".");
+                text = text.Replace("  ", " ");
+                text = text.Trim();
+
                 text = text.Replace(" " + Environment.NewLine, Environment.NewLine);
                 text = text.Replace(Environment.NewLine + " ", Environment.NewLine);
-                while (text.Contains(Environment.NewLine + Environment.NewLine))
-                    text = text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
 
-                if (text.Replace(Environment.NewLine, "*").Length + 2 <= text.Length)
-                    text = Utilities.AutoBreakLine(text);
+                // max allow 2 lines
+                if (_autoBreakLines && text.Replace(Environment.NewLine, "*").Length + 2 <= text.Length)
+                {
+                    text = text.Replace(" " + Environment.NewLine, Environment.NewLine);
+                    text = text.Replace(Environment.NewLine + " ", Environment.NewLine);
+                    while (text.Contains(Environment.NewLine + Environment.NewLine))
+                        text = text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
+
+                    if (text.Replace(Environment.NewLine, "*").Length + 2 <= text.Length)
+                        text = Utilities.AutoBreakLine(text);
+                }
+
+                if (_dvbSubtitles != null && checkBoxTransportStreamGetColorAndSplit.Checked)
+                {
+                    text = Utilities.UnbreakLine(text);
+                    if (_dvbSubColor != Color.Transparent)
+                        text = "<font color=\"" + ColorTranslator.ToHtml(_dvbSubColor) + "\">" + text + "</font>";
+                }
+
+                _linesOcred++;
+
+                if (_abort)
+                {
+                    textBoxCurrentText.Text = text;
+                    _mainOcrRunning = false;
+                    SetButtonsEnabledAfterOcrDone();
+                    _nocrThreadsStop = true;
+                }
+
+                text = text.Trim();
+                text = text.Replace("  ", " ");
+                text = text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
+                text = text.Replace("  ", " ");
+                text = text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
+
+                if (index >= subtitleListView1.Items.Count)
+                    return;
+                var item = subtitleListView1.Items[index];
+                item.Selected = true;
+                item.EnsureVisible();
+
+                Paragraph p = _subtitle.GetParagraphOrDefault(index);
+                if (p != null)
+                    p.Text = text;
+                if (subtitleListView1.SelectedItems.Count == 1 && subtitleListView1.SelectedItems[0].Index == index)
+                    textBoxCurrentText.Text = text;
+                else
+                    subtitleListView1.SetText(index, text);
+
+                var max = GetSubtitleCount();
+                GetSubtitleTime(index, out var startTime, out var endTime);
+                labelStatus.Text = $"{index + 1} / {max}: {startTime} - {endTime}";
+                progressBar1.Value = index + 1;
+                labelStatus.Refresh();
+                progressBar1.Refresh();
+
+                _linesOcred++;
+                job.Bitmap.Dispose();
+                if (index >= max - 1)
+                {
+                    SetButtonsEnabledAfterOcrDone();
+                    _mainOcrRunning = false;
+                }
             }
-
-            if (_dvbSubtitles != null && checkBoxTransportStreamGetColorAndSplit.Checked)
-            {
-                text = Utilities.UnbreakLine(text);
-                if (_dvbSubColor != Color.Transparent)
-                    text = "<font color=\"" + ColorTranslator.ToHtml(_dvbSubColor) + "\">" + text + "</font>";
-            }
-
-            _linesOcred++;
-
-            if (_abort)
-            {
-                textBoxCurrentText.Text = text;
-                _mainOcrRunning = false;
-                SetButtonsEnabledAfterOcrDone();
-                _nocrThreadsStop = true;
-            }
-
-            text = text.Trim();
-            text = text.Replace("  ", " ");
-            text = text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
-            text = text.Replace("  ", " ");
-            text = text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
-
-            if (index >= subtitleListView1.Items.Count)
-                return;
-            var item = subtitleListView1.Items[index];
-            item.Selected = true;
-            item.EnsureVisible();
-
-            Paragraph p = _subtitle.GetParagraphOrDefault(index);
-            if (p != null)
-                p.Text = text;
-            if (subtitleListView1.SelectedItems.Count == 1 && subtitleListView1.SelectedItems[0].Index == index)
-                textBoxCurrentText.Text = text;
-            else
-                subtitleListView1.SetText(index, text);
-
-            var max = GetSubtitleCount();
-            GetSubtitleTime(index, out var startTime, out var endTime);
-            labelStatus.Text = $"{index + 1} / {max}: {startTime} - {endTime}";
-            progressBar1.Value = index + 1;
-            labelStatus.Refresh();
-            progressBar1.Refresh();
-
-            _linesOcred++;
-            job.Bitmap.Dispose();
-            if (index >= max - 1)
-            {
-                SetButtonsEnabledAfterOcrDone();
-                _mainOcrRunning = false;
-            }
+            Application.DoEvents();
         }
 
         private bool MainLoop(int max, int i)
@@ -5562,7 +5566,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         {
             if (_tesseractRunner == null)
             {
-                _tesseractThreadRunner = new TesseractThreadRunner(OcrDone);
+                //_tesseractThreadRunner = new TesseractThreadRunner(OcrDone);
                 _tesseractRunner = new TesseractRunner();
             }
 
