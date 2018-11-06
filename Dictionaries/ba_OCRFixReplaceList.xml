@@ -411,10 +411,16 @@
 		<Word from="mladic" to="mladić" />
 		<Word from="moc" to="moć" />
 		<Word from="moci" to="moći" />
+		<Word from="moras" to="moraš" />
+		<Word from="Moras" to="Moraš" />
 		<Word from="motivisu" to="motiviraju" />
 		<Word from="mozda" to="možda" />
 		<Word from="Mozda" to="Možda" />
 		<Word from="moze" to="može" />
+		<Word from="mozes" to="možeš" />
+		<Word from="možes" to="možeš" />
+		<Word from="Mozes" to="Možeš" />
+		<Word from="Možes" to="Možeš" />
 		<Word from="mozete" to="možete" />
 		<Word from="mreza" to="mreža" />
 		<Word from="mrezu" to="mrežu" />
@@ -1268,7 +1274,7 @@
 		<RegEx find="dzigeric" replaceWith="jetr" />
 		<RegEx find="Dzigeric" replaceWith="Jetr" />
 		<RegEx find="([dD])zinov" replaceWith="$1ivov" />
-		<RegEx find="gipcan" replaceWith="gipćan" />
+		<RegEx find="pcan" replaceWith="pćan" />
 		<RegEx find="entise" replaceWith="entira" />
 		<RegEx find="onise" replaceWith="onira" />
 		<RegEx find="([gG])dj(?!e)" replaceWith="$1đ" />
@@ -1344,13 +1350,11 @@
 		<RegEx find="([mM])lj?ecn" replaceWith="$1liječn" />
 		<RegEx find="\b([mMNn])oc([iuna])" replaceWith="$1oć$2" />
 		<RegEx find="oguc" replaceWith="oguć" />
-		<RegEx find="([mM])oras" replaceWith="$1oraš" />
 		<RegEx find="([mM])orac([eu])" replaceWith="$1orat ć$2" />
 		<RegEx find="otivise([mst])" replaceWith="otivira$1" />
 		<RegEx find="medju" replaceWith="među" />
 		<RegEx find="mjestaj" replaceWith="mještaj" />
 		<RegEx find="([mMbB])oze" replaceWith="$1ože" />
-		<RegEx find="([mM])o[zž]es" replaceWith="$1ožeš" />
 		<RegEx find="([mM])racn" replaceWith="$1račn" />
 		<RegEx find="([mM])rznj" replaceWith="$1ržnj" />
 		<RegEx find="rzec" replaceWith="rzit ć" />
