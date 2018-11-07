@@ -79,10 +79,18 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             DialogResult = DialogResult.Abort;
         }
 
-        internal void Initialize(string word, List<string> suggestions, string line, Bitmap bitmap)
+        internal void Initialize(string word, List<string> suggestions, string line, Bitmap bitmap, bool isBinaryImageCompare)
         {
+            IsBinaryImageCompare = isBinaryImageCompare;
             _originalWord = word;
             OriginalWholeText = line;
+            pictureBoxText.SizeMode = PictureBoxSizeMode.Zoom;
+            if (isBinaryImageCompare)
+            {
+                groupBoxTextAsImage.BackColor = Color.DimGray;
+                groupBoxTextAsImage.ForeColor = Color.White;
+                pictureBoxText.BackColor = Color.Transparent;
+            }
             pictureBoxText.Image = bitmap;
             textBoxWord.Text = word;
             richTextBoxParagraph.Text = line;

@@ -51,10 +51,10 @@
             this.groupBoxTextAsImage = new System.Windows.Forms.GroupBox();
             this.pictureBoxText = new System.Windows.Forms.PictureBox();
             this.groupBoxText = new System.Windows.Forms.GroupBox();
+            this.buttonEditImageDb = new System.Windows.Forms.Button();
             this.richTextBoxParagraph = new System.Windows.Forms.RichTextBox();
             this.buttonEditWholeText = new System.Windows.Forms.Button();
             this.buttonEditWord = new System.Windows.Forms.Button();
-            this.buttonEditImageDb = new System.Windows.Forms.Button();
             this.groupBoxSuggestions.SuspendLayout();
             this.GroupBoxEditWord.SuspendLayout();
             this.groupBoxEditWholeText.SuspendLayout();
@@ -319,6 +319,16 @@
             this.groupBoxText.TabStop = false;
             this.groupBoxText.Text = "Text";
             // 
+            // buttonEditImageDb
+            // 
+            this.buttonEditImageDb.Location = new System.Drawing.Point(514, 17);
+            this.buttonEditImageDb.Name = "buttonEditImageDb";
+            this.buttonEditImageDb.Size = new System.Drawing.Size(172, 47);
+            this.buttonEditImageDb.TabIndex = 403;
+            this.buttonEditImageDb.Text = "Edit image db";
+            this.buttonEditImageDb.UseVisualStyleBackColor = true;
+            this.buttonEditImageDb.Click += new System.EventHandler(this.buttonEditImageDb_Click);
+            // 
             // richTextBoxParagraph
             // 
             this.richTextBoxParagraph.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
@@ -349,16 +359,6 @@
             this.buttonEditWord.Text = "Edit word";
             this.buttonEditWord.UseVisualStyleBackColor = true;
             this.buttonEditWord.Click += new System.EventHandler(this.ButtonEditWordClick);
-            // 
-            // buttonEditImageDb
-            // 
-            this.buttonEditImageDb.Location = new System.Drawing.Point(514, 17);
-            this.buttonEditImageDb.Name = "buttonEditImageDb";
-            this.buttonEditImageDb.Size = new System.Drawing.Size(172, 47);
-            this.buttonEditImageDb.TabIndex = 403;
-            this.buttonEditImageDb.Text = "Edit image db";
-            this.buttonEditImageDb.UseVisualStyleBackColor = true;
-            this.buttonEditImageDb.Click += new System.EventHandler(this.buttonEditImageDb_Click);
             // 
             // OcrSpellCheck
             // 
