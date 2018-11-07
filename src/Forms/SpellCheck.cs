@@ -15,13 +15,16 @@ namespace Nikse.SubtitleEdit.Forms
     public sealed partial class SpellCheck : Form, IDoSpell
     {
         private List<UndoObject> _undoList = new List<UndoObject>();
-        private SpellCheckAction _action = SpellCheckAction.Skip;
         private List<string> _suggestions;
         private string _currentAction;
-        public SpellCheckAction Action { get { return _action; } set { _action = value; } }
-        public string ChangeWord { get { return textBoxWord.Text; } set { textBoxWord.Text = value; } }
-        public string ChangeWholeText { get { return textBoxWholeText.Text; } }
-        public bool AutoFixNames { get { return checkBoxAutoChangeNames.Checked; } }
+        public SpellCheckAction Action { get; set; } = SpellCheckAction.Skip;
+        public string ChangeWord
+        {
+            get => textBoxWord.Text;
+            set => textBoxWord.Text = value;
+        }
+        public string ChangeWholeText => textBoxWholeText.Text;
+        public bool AutoFixNames => checkBoxAutoChangeNames.Checked;
 
         private SpellCheckWordLists _spellCheckWordLists;
         private List<string> _skipAllList = new List<string>();
@@ -135,7 +138,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             FillSpellCheckDictionaries(languageName);
             ShowActiveWordWithColor(word);
-            _action = SpellCheckAction.Skip;
+            Action = SpellCheckAction.Skip;
             DialogResult = DialogResult.None;
         }
 
@@ -185,7 +188,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (e.KeyCode == Keys.Escape)
             {
-                _action = SpellCheckAction.Abort;
+                Action = SpellCheckAction.Abort;
                 DialogResult = DialogResult.Cancel;
             }
             else if (e.KeyCode == UiUtil.HelpKeys)
@@ -216,7 +219,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonChangeClick(object sender, EventArgs e)
         {
-            PushUndo(string.Format("{0}: {1}", Configuration.Settings.Language.SpellCheck.Change, _currentWord + " > " + textBoxWord.Text), SpellCheckAction.Change);
+            PushUndo($"{Configuration.Settings.Language.SpellCheck.Change}: {_currentWord + " > " + textBoxWord.Text}", SpellCheckAction.Change);
             DoAction(SpellCheckAction.Change);
         }
 
@@ -225,26 +228,26 @@ namespace Nikse.SubtitleEdit.Forms
             if (listBoxSuggestions.SelectedIndex >= 0)
             {
                 textBoxWord.Text = listBoxSuggestions.SelectedItem.ToString();
-                PushUndo(string.Format("{0}: {1}", Configuration.Settings.Language.SpellCheck.Change, _currentWord + " > " + textBoxWord.Text), SpellCheckAction.Change);
+                PushUndo($"{Configuration.Settings.Language.SpellCheck.Change}: {_currentWord + " > " + textBoxWord.Text}", SpellCheckAction.Change);
                 DoAction(SpellCheckAction.Change);
             }
         }
 
         private void ButtonSkipAllClick(object sender, EventArgs e)
         {
-            PushUndo(string.Format("{0}: {1}", Configuration.Settings.Language.SpellCheck.SkipAll, textBoxWord.Text), SpellCheckAction.SkipAll);
+            PushUndo($"{Configuration.Settings.Language.SpellCheck.SkipAll}: {textBoxWord.Text}", SpellCheckAction.SkipAll);
             DoAction(SpellCheckAction.SkipAll);
         }
 
         private void ButtonSkipOnceClick(object sender, EventArgs e)
         {
-            PushUndo(string.Format("{0}: {1}", Configuration.Settings.Language.SpellCheck.SkipOnce, textBoxWord.Text), SpellCheckAction.Skip);
+            PushUndo($"{Configuration.Settings.Language.SpellCheck.SkipOnce}: {textBoxWord.Text}", SpellCheckAction.Skip);
             DoAction(SpellCheckAction.Skip);
         }
 
         private void ButtonAddToDictionaryClick(object sender, EventArgs e)
         {
-            PushUndo(string.Format("{0}: {1}", Configuration.Settings.Language.SpellCheck.AddToUserDictionary, textBoxWord.Text), SpellCheckAction.AddToDictionary);
+            PushUndo($"{Configuration.Settings.Language.SpellCheck.AddToUserDictionary}: {textBoxWord.Text}", SpellCheckAction.AddToDictionary);
             DoAction(SpellCheckAction.AddToDictionary);
         }
 
@@ -262,8 +265,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void LoadHunspell(string dictionary)
         {
             _currentDictionary = dictionary;
-            if (_hunspell != null)
-                _hunspell.Dispose();
+            _hunspell?.Dispose();
             _hunspell = Hunspell.GetHunspell(dictionary);
         }
 
@@ -293,7 +295,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonChangeAllClick(object sender, EventArgs e)
         {
-            PushUndo(string.Format("{0}: {1}", Configuration.Settings.Language.SpellCheck.ChangeAll, _currentWord + " > " + textBoxWord.Text), SpellCheckAction.ChangeAll);
+            PushUndo($"{Configuration.Settings.Language.SpellCheck.ChangeAll}: {_currentWord + " > " + textBoxWord.Text}", SpellCheckAction.ChangeAll);
             DoAction(SpellCheckAction.ChangeAll);
         }
 
@@ -302,7 +304,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (listBoxSuggestions.SelectedIndex >= 0)
             {
                 textBoxWord.Text = listBoxSuggestions.SelectedItem.ToString();
-                PushUndo(string.Format("{0}: {1}", Configuration.Settings.Language.SpellCheck.ChangeAll, _currentWord + " > " + textBoxWord.Text), SpellCheckAction.ChangeAll);
+                PushUndo($"{Configuration.Settings.Language.SpellCheck.ChangeAll}: {_currentWord + " > " + textBoxWord.Text}", SpellCheckAction.ChangeAll);
                 DoAction(SpellCheckAction.ChangeAll);
             }
         }
@@ -318,7 +320,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonAddToNamesClick(object sender, EventArgs e)
         {
-            PushUndo(string.Format("{0}: {1}", Configuration.Settings.Language.SpellCheck.AddToNamesAndIgnoreList, textBoxWord.Text), SpellCheckAction.AddToNames);
+            PushUndo($"{Configuration.Settings.Language.SpellCheck.AddToNamesAndIgnoreList}: {textBoxWord.Text}", SpellCheckAction.AddToNames);
             DoAction(SpellCheckAction.AddToNames);
         }
 
@@ -342,13 +344,13 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonSkipTextClick(object sender, EventArgs e)
         {
-            PushUndo(string.Format("{0}", Configuration.Settings.Language.SpellCheck.SkipOnce), SpellCheckAction.Skip);
+            PushUndo($"{Configuration.Settings.Language.SpellCheck.SkipOnce}", SpellCheckAction.Skip);
             DoAction(SpellCheckAction.SkipWholeLine);
         }
 
         private void ButtonChangeWholeTextClick(object sender, EventArgs e)
         {
-            PushUndo(string.Format("{0}", Configuration.Settings.Language.SpellCheck.EditWholeText), SpellCheckAction.ChangeWholeText);
+            PushUndo($"{Configuration.Settings.Language.SpellCheck.EditWholeText}", SpellCheckAction.ChangeWholeText);
             DoAction(SpellCheckAction.ChangeWholeText);
         }
 

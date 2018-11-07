@@ -68,6 +68,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
         /// <param name="isBinaryImageCompare">Calling from OCR via "Image compare"</param>
         public OcrFixEngine(string threeLetterIsoLanguageName, string hunspellName, Form parentForm, bool isBinaryImageCompare = false)
         {
+            IsBinaryImageCompare = isBinaryImageCompare;
             if (threeLetterIsoLanguageName == "per")
                 threeLetterIsoLanguageName = "fas";
 
@@ -1234,7 +1235,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
         private SpellCheckOcrTextResult SpellCheckOcrText(string line, Bitmap bitmap, string word, List<string> suggestions)
         {
             var result = new SpellCheckOcrTextResult { Fixed = false, FixedWholeLine = false, Line = null, Word = null };
-            _spellCheck.Initialize(word, suggestions, line, bitmap);
+            _spellCheck.Initialize(word, suggestions, line, bitmap, IsBinaryImageCompare);
             _spellCheck.ShowDialog(_parentForm);
             LastAction = _spellCheck.ActionResult;
             switch (_spellCheck.ActionResult)
