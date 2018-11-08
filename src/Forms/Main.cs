@@ -5436,7 +5436,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ReplaceViaRegularExpression(TextBox tb, bool replaceAll)
         {
-            var r = new Regex(_findHelper.FindText, RegexOptions.Multiline);
+            var r = new Regex(RegexUtils.FixNewLine(_findHelper.FindText), RegexOptions.Multiline);
             if (replaceAll)
             {
                 string result = RegexUtils.ReplaceNewLineSafe(r, tb.Text, _findHelper.ReplaceText);
