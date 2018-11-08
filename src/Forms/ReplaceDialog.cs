@@ -119,7 +119,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 try
                 {
-                    _regEx = new Regex(textBoxFind.Text, RegexOptions.Compiled | RegexOptions.Multiline);
+                    _regEx = new Regex(RegexUtils.FixNewLine(textBoxFind.Text), RegexOptions.Compiled);
                     DialogResult = DialogResult.OK;
                     _userAction = true;
                 }

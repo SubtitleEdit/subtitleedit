@@ -110,7 +110,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 try
                 {
-                    _regEx = new Regex(searchText, RegexOptions.Compiled);
+                    _regEx = new Regex(RegexUtils.FixNewLine(searchText), RegexOptions.Compiled);
                     DialogResult = DialogResult.OK;
                 }
                 catch (Exception exception)
