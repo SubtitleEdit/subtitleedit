@@ -97,8 +97,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                 ReadLine(subtitle, line, next, nextNext);
             }
-            if (_paragraph != null && _paragraph.EndTime.TotalMilliseconds > _paragraph.StartTime.TotalMilliseconds)
+            if (_paragraph != null && _paragraph.ToString() != new Paragraph().ToString())
+            {
                 subtitle.Paragraphs.Add(_paragraph);
+            }
 
             if (doRenum)
                 subtitle.Renumber();
