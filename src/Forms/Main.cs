@@ -21650,7 +21650,7 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             if (form.PasteAll)
                             {
-                                for (int k = _subtitle.Paragraphs.Count - 2; k > index; k--)
+                                for (int k = _subtitle.Paragraphs.Count - 2; k >= index; k--)
                                 {
                                     _subtitle.Paragraphs[k + 1] = new Paragraph(_subtitle.Paragraphs[k]);
                                 }
@@ -21659,7 +21659,7 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                             else if (form.PasteTimeCodesOnly)
                             {
-                                for (int k = _subtitle.Paragraphs.Count - 2; k > index; k--)
+                                for (int k = _subtitle.Paragraphs.Count - 2; k >= index; k--)
                                 {
                                     _subtitle.Paragraphs[k + 1].StartTime.TotalMilliseconds = _subtitle.Paragraphs[k].StartTime.TotalMilliseconds;
                                     _subtitle.Paragraphs[k + 1].EndTime.TotalMilliseconds = _subtitle.Paragraphs[k].EndTime.TotalMilliseconds;
@@ -21669,17 +21669,17 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                             else if (form.PasteTextOnly)
                             {
-                                for (int k = _subtitle.Paragraphs.Count - 2; k > index; k--)
+                                for (int k = _subtitle.Paragraphs.Count - 2; k >= index; k--)
                                 {
                                     _subtitle.Paragraphs[k + 1].Text = _subtitle.Paragraphs[k].Text;
                                 }
                             }
                             else if (form.PasteOriginalTextOnly)
                             {
-                                for (int k = _subtitle.Paragraphs.Count - 2; k > index; k--)
+                                for (int k = _subtitle.Paragraphs.Count - 2; k >= index; k--)
                                 {
-                                    var original = Utilities.GetOriginalParagraph(index, _subtitle.Paragraphs[k], _subtitleAlternate.Paragraphs);
-                                    var originalNext = Utilities.GetOriginalParagraph(index, _subtitle.Paragraphs[k + 1], _subtitleAlternate.Paragraphs);
+                                    var original = Utilities.GetOriginalParagraph(k, _subtitle.Paragraphs[k], _subtitleAlternate.Paragraphs);
+                                    var originalNext = Utilities.GetOriginalParagraph(k + 1, _subtitle.Paragraphs[k + 1], _subtitleAlternate.Paragraphs);
                                     if (original != null)
                                     {
                                         originalNext.Text = original.Text;
@@ -21696,15 +21696,75 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     if (form.PasteOverwrite)
                     {
-                        for (int i = 0; i + index < _subtitle.Paragraphs.Count && i < tmp.Paragraphs.Count; i++)
-                            _subtitle.Paragraphs[index + i].Text = tmp.Paragraphs[i].Text;
+                        for (int i = 0; i < tmp.Paragraphs.Count; i++)
+                        {
+                            if (form.PasteAll)
+                            {
+                                for (int k = _subtitle.Paragraphs.Count - 2; k > index; k--)
+                                {
+                                    _subtitle.Paragraphs[index + i].Text = tmp.Paragraphs[i].Text;
+                                    _subtitle.Paragraphs[index + i].StartTime.TotalMilliseconds = tmp.Paragraphs[i].StartTime.TotalMilliseconds;
+                                    _subtitle.Paragraphs[index + i].EndTime.TotalMilliseconds = tmp.Paragraphs[i].EndTime.TotalMilliseconds;
+                                }
+                            }
+                            else if (form.PasteTimeCodesOnly)
+                            {
+                                for (int k = _subtitle.Paragraphs.Count - 2; k > index; k--)
+                                {
+                                    _subtitle.Paragraphs[index + i].StartTime.TotalMilliseconds = tmp.Paragraphs[i].StartTime.TotalMilliseconds;
+                                    _subtitle.Paragraphs[index + i].EndTime.TotalMilliseconds = tmp.Paragraphs[i].EndTime.TotalMilliseconds;
+                                }
+                            }
+                            else if (form.PasteTextOnly)
+                            {
+                                for (int k = _subtitle.Paragraphs.Count - 2; k > index; k--)
+                                {
+                                    _subtitle.Paragraphs[index + i].Text = tmp.Paragraphs[i].Text;
+                                }
+                            }
+                            else if (form.PasteOriginalTextOnly)
+                            {
+                                for (int k = _subtitle.Paragraphs.Count - 2; k > index; k--)
+                                {
+                                    var original = Utilities.GetOriginalParagraph(index +i, _subtitle.Paragraphs[index + i], _subtitleAlternate.Paragraphs);
+                                    if (original != null)
+                                    {
+                                        original.Text = tmp.Paragraphs[i].Text;
+                                    }
+                                }
+                            }
+                        }
                     }
                     else
                     {
                         for (int i = 0; i + index < _subtitle.Paragraphs.Count && i < tmp.Paragraphs.Count; i++)
                         {
                             if (index + i + 1 < _subtitle.Paragraphs.Count)
-                                _subtitle.Paragraphs[index + i + 1].Text = tmp.Paragraphs[i].Text;
+                            {
+                                if (form.PasteAll)
+                                {
+                                    _subtitle.Paragraphs[index + i].Text = tmp.Paragraphs[i].Text;
+                                    _subtitle.Paragraphs[index + i].StartTime.TotalMilliseconds = tmp.Paragraphs[i].StartTime.TotalMilliseconds;
+                                    _subtitle.Paragraphs[index + i].EndTime.TotalMilliseconds = tmp.Paragraphs[i].EndTime.TotalMilliseconds;
+                                }
+                                else if (form.PasteTimeCodesOnly)
+                                {
+                                    _subtitle.Paragraphs[index + i].StartTime.TotalMilliseconds = tmp.Paragraphs[i].StartTime.TotalMilliseconds;
+                                    _subtitle.Paragraphs[index + i].EndTime.TotalMilliseconds = tmp.Paragraphs[i].EndTime.TotalMilliseconds;
+                                }
+                                else if (form.PasteTextOnly)
+                                {
+                                    _subtitle.Paragraphs[index + i].Text = tmp.Paragraphs[i].Text;
+                                }
+                                else if (form.PasteOriginalTextOnly)
+                                {
+                                    var original = Utilities.GetOriginalParagraph(index + i, _subtitle.Paragraphs[index + i], _subtitleAlternate.Paragraphs);
+                                    if (original != null)
+                                    {
+                                        original.Text = tmp.Paragraphs[i].Text;
+                                    }
+                                }
+                            }
                         }
                     }
 
