@@ -79,7 +79,7 @@ namespace Test.Logic
         [TestMethod]
         public void TestUnknownJsonArray()
         {
-            var raw = @"{
+            const string raw = @"{
         'subtitles': [
         {
             'sub_order' : 1,
@@ -144,5 +144,43 @@ namespace Test.Logic
             Assert.AreEqual(11, subtitle.Paragraphs.Count);
             Assert.AreEqual("Ford" + Environment.NewLine + "BMW" + Environment.NewLine + "Fiat", subtitle.Paragraphs[1].Text);
         }
+
+        [TestMethod]
+        public void ImportBilibiliJson()
+        {
+            const string raw = @"{
+            'body': [
+            {
+                'from': 3.7,
+                'to': 7.7,
+                'location': 2,
+                'content': 'Line0'
+            },
+            {
+                'from': 7.7,
+                'to': 13.7,
+                'location': 2,
+                'content': 'Line1'
+            },
+            {
+                'from': 13.7,
+                'to': 18.7,
+                'location': 2,
+                'content': 'Line2'
+            },
+            {
+                'from': 18.7,
+                'to': 24.7,
+                'location': 2,
+                'content': 'Line3'
+            }]
+        }";
+
+            var importer = new UknownFormatImporterJson();
+            var subtitle = importer.AutoGuessImport(raw.Replace('\'', '"').SplitToLines());
+            Assert.AreEqual(4, subtitle.Paragraphs.Count);
+            Assert.AreEqual("Line1", subtitle.Paragraphs[1].Text);
+        }
+
     }
 }

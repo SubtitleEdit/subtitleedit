@@ -100,7 +100,12 @@ namespace Nikse.SubtitleEdit.Core
                     p.Style.Contains("\"startMillis\"") ||
                     p.Style.Contains("\"start_millis\"") ||
                     p.Style.Contains("\"startMilliseconds\"") ||
-                    p.Style.Contains("\"start_millisecondsMs\""))
+                    p.Style.Contains("\"start_millisecondsMs\"") ||
+                    p.Style.Contains("\"fromMs\"") ||
+                    p.Style.Contains("\"from_ms\"") ||
+                    p.Style.Contains("\"fromMillis\"") ||
+                    p.Style.Contains("\"fromMilliseconds\"") ||
+                    p.Style.Contains("\"from_milliseconds\""))
                 {
                     msFound++;
                 }
@@ -190,6 +195,7 @@ namespace Nikse.SubtitleEdit.Core
                 "startMillis", "start_Millis", "startmillis",
                 "startMs", "start_ms", "startms",
                 "startMilliseconds", "start_Millisesonds", "startmilliseconds",
+                "from", "fromTime", "from_ms", "fromMilliseconds", "from_milliseconds"
             });
         }
 
@@ -202,6 +208,7 @@ namespace Nikse.SubtitleEdit.Core
                 "endMillis", "end_Millis", "endmillis",
                 "endMs", "end_ms", "startms",
                 "endMilliseconds", "end_Millisesonds", "endmilliseconds",
+                "to", "toTime", "to_ms", "toMilliseconds", "to_milliseconds"
             });
         }
 
@@ -218,6 +225,8 @@ namespace Nikse.SubtitleEdit.Core
         {
             var idx = s.IndexOf("\"text", StringComparison.OrdinalIgnoreCase);
             if (idx < 0)
+                idx = s.IndexOf("\"content", StringComparison.OrdinalIgnoreCase);
+            if (idx < 0)
                 return null;
 
             s = s.Substring(idx);
@@ -226,9 +235,13 @@ namespace Nikse.SubtitleEdit.Core
                 s = s.Substring(0, idx + 1);
 
             var text = Json.ReadTag(s, "text");
+            if (text == null)
+                text = Json.ReadTag(s, "content");
             var textLines = Json.ReadArray(s, "text");
+            if (textLines == null || textLines.Count == 0)
+                textLines = Json.ReadArray(s, "content");
             bool isArray = s.Contains("[");
-            if (isArray && textLines.Any(p => p == "end_time" || p == "endTime" || p == "end" || p == "endMs" || p == "endMilliseconds" || p == "end_ms"))
+            if (isArray && textLines.Any(p => p == "end_time" || p == "endTime" || p == "end" || p == "endMs" || p == "endMilliseconds" || p == "end_ms" || p == "to" || p == "to_ms" || p == "from" || p == "from_ms"))
                 isArray = false;
             if (!isArray && !string.IsNullOrEmpty(text))
             {
