@@ -2194,5 +2194,51 @@ namespace Test
         }
 
         #endregion
+
+        #region AddMissingQuotes
+
+        [TestMethod]
+        public void AddMissingQuotesMissingStart()
+        {
+            var p = new Paragraph("Bad Ape!\"", 1200, 5000);
+            var s = new Subtitle();
+            s.Paragraphs.Add(p);
+            new AddMissingQuotes().Fix(s, new EmptyFixCallback());
+            Assert.AreEqual("\"Bad Ape!\"", p.Text);
+        }
+
+        [TestMethod]
+        public void AddMissingQuotesMissingEnd()
+        {
+            var p = new Paragraph("\"Bad Ape!", 1200, 5000);
+            var s = new Subtitle();
+            s.Paragraphs.Add(p);
+            new AddMissingQuotes().Fix(s, new EmptyFixCallback());
+            Assert.AreEqual("\"Bad Ape!\"", p.Text);
+        }
+
+        [TestMethod]
+        public void AddMissingQuotesMissingMultiple()
+        {
+            var s = new Subtitle();
+            s.Paragraphs.Add(new Paragraph("\"Bad Ape!", 1200, 5000));
+            s.Paragraphs.Add(new Paragraph("\"Bad Ape!", 11200, 15000));
+            s.Paragraphs.Add(new Paragraph("\"Bad Ape!", 21200, 25000));
+            new AddMissingQuotes().Fix(s, new EmptyFixCallback());
+            Assert.AreEqual("\"Bad Ape!\"", s.Paragraphs[0].Text);
+            Assert.AreEqual("\"Bad Ape!\"", s.Paragraphs[1].Text);
+            Assert.AreEqual("\"Bad Ape!\"", s.Paragraphs[2].Text);
+        }
+
+        [TestMethod]
+        public void AddMissingQuotesOtherQuote()
+        {
+            var p = new Paragraph("\"Bad Ape!”", 1200, 5000);
+            var s = new Subtitle();
+            s.Paragraphs.Add(p);
+            new AddMissingQuotes().Fix(s, new EmptyFixCallback());
+            Assert.AreEqual("\"Bad Ape!\"", p.Text);
+        }
+        #endregion
     }
 }
