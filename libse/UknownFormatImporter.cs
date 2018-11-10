@@ -29,7 +29,9 @@ namespace Nikse.SubtitleEdit.Core
             if (subTcOnAloneLines.Paragraphs.Count > subtitle.Paragraphs.Count)
                 subtitle = subTcOnAloneLines;
 
-            if (subtitle.Paragraphs.Count < 2)
+            bool isJson = IsJson(lines);
+
+            if (subtitle.Paragraphs.Count < 2 && !isJson)
             {
                 subtitle = ImportTimeCodesInFramesOnSameSeperateLine(lines);
                 if (subtitle.Paragraphs.Count < 2)
@@ -59,7 +61,7 @@ namespace Nikse.SubtitleEdit.Core
                 CleanUp(subtitle);
             }
 
-            if (subtitle.Paragraphs.Count < 2)
+            if (subtitle.Paragraphs.Count < 2 || isJson)
             {
                 var jsonSubtitle = new UknownFormatImporterJson().AutoGuessImport(lines);
                 if (jsonSubtitle != null && jsonSubtitle.Paragraphs.Count > 2)
@@ -77,6 +79,25 @@ namespace Nikse.SubtitleEdit.Core
             }
 
             return subtitle;
+        }
+
+        private bool IsJson(List<string> lines)
+        {
+            var jp = new JsonParser();
+            try
+            {
+                var sb = new StringBuilder();
+                foreach (var line in lines)
+                {
+                    sb.AppendLine(line);
+                }
+                jp.Parse(sb.ToString());
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         private static void CleanUp(Subtitle subtitle)
