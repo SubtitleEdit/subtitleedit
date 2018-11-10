@@ -955,6 +955,7 @@
     <Compile Include="Logic\Ocr\NOcrPoint.cs" />
     <Compile Include="Logic\Ocr\PreprocessingSettings.cs" />
     <Compile Include="Logic\Ocr\SpellCheckOcrTextResult.cs" />
+    <Compile Include="Logic\Ocr\Tesseract\TesseractMultiThreadRunner.cs" />
     <Compile Include="Logic\Ocr\Tesseract\TesseractThreadRunner.cs" />
     <Compile Include="Logic\Ocr\Tesseract\TesseractRunner.cs" />
     <Compile Include="Logic\Ocr\Tesseract\TesseractMultiRunner.cs" />

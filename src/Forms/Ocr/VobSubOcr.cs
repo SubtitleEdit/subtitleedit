@@ -5190,6 +5190,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             if (_ocrMethodIndex == _ocrMethodTesseract302 || _ocrMethodIndex == _ocrMethodTesseract)
             {
+                _tesseractThreadRunner?.Cancel();
                 _tesseractThreadRunner = new TesseractThreadRunner(OcrDone);
                 _tesseractRunner = new TesseractRunner();
             }
@@ -6471,6 +6472,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         {
             _mainOcrTimer?.Stop();
             _abort = true;
+            _tesseractThreadRunner?.Cancel();
             _nocrThreadsStop = true;
             buttonStop.Enabled = false;
             progressBar1.Visible = false;
