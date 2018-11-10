@@ -12,16 +12,19 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Tesseract
     /// </summary>
     public class TesseractMultiRunner
     {
-        private readonly List<string> _tesseractErrors;
+        public List<string> TesseractErrors { get; set; }
+        public string LastError { get; set; }
+        private readonly bool _runningOnWindows;
 
         public TesseractMultiRunner()
         {
-            _tesseractErrors = new List<string>();
+            TesseractErrors = new List<string>();
+            _runningOnWindows = !Configuration.IsRunningOnMac() && !Configuration.IsRunningOnLinux();
         }
 
         private void TesseractErrorReceived(object sender, DataReceivedEventArgs e)
         {
-            var msg = e.Data;
+            string msg = e.Data;
 
             if (string.IsNullOrEmpty(msg) ||
                 msg.StartsWith("Tesseract Open Source OCR Engine", StringComparison.OrdinalIgnoreCase) ||
@@ -33,98 +36,99 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Tesseract
                 return;
             }
 
-            _tesseractErrors.Add(msg);
+            if (TesseractErrors.Count <= 100)
+            {
+                if (string.IsNullOrEmpty(LastError))
+                {
+                    LastError = msg;
+                }
+                else if (!LastError.Contains(msg))
+                {
+                    LastError = LastError + Environment.NewLine + msg;
+                }
+                TesseractErrors.Add(msg);
+            }
         }
 
-        public string Run(List<NikseBitmap> bmps, string language, string psmMode)
+        public List<string> Run(string languageCode, string psmMode, string engineMode, List<string> imageFileNames, bool run302 = false)
         {
-            // change yellow color to white - easier for Tesseract
+            var dir = run302 ? Configuration.Tesseract302Directory : Configuration.TesseractDirectory;
             string inputFileName = Path.GetTempPath() + Guid.NewGuid() + ".txt";
             var filesToDelete = new List<string>();
             var sb = new StringBuilder();
-            foreach (var bmp in bmps)
+            foreach (var imageFileName in imageFileNames)
             {
-                bmp.ReplaceYellowWithWhite(); // optimized replace
-                string pngFileName = Path.GetTempPath() + Guid.NewGuid() + ".png";
-                using (var b = bmp.GetBitmap())
-                {
-                    b.Save(pngFileName, System.Drawing.Imaging.ImageFormat.Png);
-                }
-                filesToDelete.Add(pngFileName);
-                sb.AppendLine(pngFileName);
+                filesToDelete.Add(imageFileName);
+                sb.AppendLine(imageFileName);
             }
 
             File.WriteAllText(inputFileName, sb.ToString());
             filesToDelete.Add(inputFileName);
             var outputFileName = Path.GetTempPath() + Guid.NewGuid();
-            var dir = @"C:\Data\SubtitleEdit\subtitleedit\src\bin\Debug\Tesseract4";
             using (var process = new Process())
             {
                 process.StartInfo = new ProcessStartInfo(dir + "tesseract.exe")
                 {
                     UseShellExecute = true,
-                    Arguments = "\"" + inputFileName + "\" \"" + outputFileName + "\" -l " + language
+                    Arguments = "\"" + inputFileName + "\" \"" + outputFileName + "\" -l " + languageCode
                 };
 
                 if (!string.IsNullOrEmpty(psmMode))
-                    process.StartInfo.Arguments += " " + psmMode.Trim();
+                {
+                    var prefix = run302 ? " -psm " : " --psm ";
+                    process.StartInfo.Arguments += prefix + psmMode;
+                }
+
+                if (!string.IsNullOrEmpty(engineMode) && !run302)
+                {
+                    process.StartInfo.Arguments += " --oem " + engineMode;
+                }
 
                 process.StartInfo.Arguments += " hocr";
-                process.StartInfo.Arguments = " --tessdata-dir \"" + Path.Combine(dir, "tessdata") + "\" " + process.StartInfo.Arguments.Trim();
-                process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
 
-                if (Configuration.IsRunningOnLinux() || Configuration.IsRunningOnMac())
+                if (_runningOnWindows)
+                {
+                    if (run302)
+                    {
+                        process.StartInfo.WorkingDirectory = Configuration.Tesseract302Directory;
+                    }
+                    else
+                    {
+                        process.ErrorDataReceived += TesseractErrorReceived;
+                        process.StartInfo.Arguments = " --tessdata-dir \"" + Path.Combine(dir, "tessdata") + "\" " + process.StartInfo.Arguments.Trim();
+                    }
+                }
+                else
                 {
                     process.StartInfo.UseShellExecute = false;
                     process.StartInfo.RedirectStandardError = true;
                     process.StartInfo.FileName = "tesseract";
                 }
-                else
-                {
-                    var tessdataPath = Path.Combine(Configuration.TesseractDirectory, "tessdata");
-                    process.StartInfo.Arguments = " --tessdata-dir \"" + tessdataPath + "\" " + process.StartInfo.Arguments.Trim();
-                    process.StartInfo.WorkingDirectory = Configuration.TesseractDirectory;
-                    process.StartInfo.UseShellExecute = false;
-                    process.StartInfo.CreateNoWindow = true;
-                    process.StartInfo.RedirectStandardError = true;
-                    process.ErrorDataReceived += TesseractErrorReceived;
-                    process.EnableRaisingEvents = true;
-                }
 
+                process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
                 try
                 {
                     process.Start();
-                    process.BeginErrorReadLine();
                 }
-                catch
+                catch (Exception exception)
                 {
-                    if (_tesseractErrors.Count <= 2)
-                    {
-
-                        if (Configuration.IsRunningOnLinux() || Configuration.IsRunningOnMac())
-                        {
-                            _tesseractErrors.Add("Unable to start 'Tesseract' - make sure tesseract-ocr 4.x is installed!");
-                        }
-                        else
-                        {
-                            _tesseractErrors.Add("Unable to start 'Tesseract' (" + Configuration.TesseractDirectory + "tesseract.exe) - make sure Subtitle Edit is install correctly + Visual Studio 2017 C++ runtime");
-                        }
-                    }
+                    LastError = exception.Message + Environment.NewLine + exception.StackTrace;
+                    TesseractErrors.Add(LastError);
+                    return new List<string> { "Error!" };
                 }
 
-                process.WaitForExit(5000 + bmps.Count * 500);
+                process.WaitForExit(8000 + imageFileNames.Count * 500);
 
-                string result = string.Empty;
+                var result = new List<string>();
                 string resultFileName = outputFileName + ".html";
                 if (!File.Exists(outputFileName))
                     resultFileName = outputFileName + ".hocr";
                 filesToDelete.Add(resultFileName);
                 try
                 {
-                    if (File.Exists(outputFileName))
+                    if (File.Exists(resultFileName))
                     {
-                        result = File.ReadAllText(outputFileName, Encoding.UTF8);
-                        result = ParseHocr(result);
+                        result = ParseHocr(File.ReadAllText(resultFileName, Encoding.UTF8));
                     }
                     foreach (var fileName in filesToDelete)
                     {
@@ -143,45 +147,60 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Tesseract
             }
         }
 
-        private static string ParseHocr(string html)
+        internal static List<string> ParseHocr(string html)
         {
-            string s = html.Replace("<em>", "@001_____").Replace("</em>", "@002_____");
-
-            int first = s.IndexOf('<');
-            while (first >= 0)
+            var pages = new List<string>();
+            var pageStart = html.IndexOf("<div class='ocr_page'", StringComparison.InvariantCulture);
+            while (pageStart > 0)
             {
-                int last = s.IndexOf('>');
-                if (last > 0)
+                var pageEnd = html.IndexOf("<div class='ocr_page'", pageStart + 1, StringComparison.InvariantCulture);
+                var sb = new StringBuilder();
+                var lineStart = html.IndexOf("<span class='ocr_line'", pageStart, StringComparison.InvariantCulture);
+                while (lineStart > 0 && lineStart < pageEnd)
                 {
-                    s = s.Remove(first, last - first + 1);
-                    first = s.IndexOf('<');
+                    var wordStart = html.IndexOf("<span class='ocrx_word'", lineStart, StringComparison.InvariantCulture);
+                    int wordMax = html.IndexOf("<span class='ocr_line'", lineStart + 1, StringComparison.InvariantCulture);
+                    if (wordMax <= 0)
+                        wordMax = html.Length;
+                    while (wordStart > 0 && wordStart <= wordMax)
+                    {
+                        var startText = html.IndexOf('>', wordStart + 1);
+                        if (startText > 0)
+                        {
+                            startText++;
+                            var endText = html.IndexOf("</span>", startText + 1, StringComparison.InvariantCulture);
+                            if (endText > 0)
+                            {
+                                var text = html.Substring(startText, endText - startText);
+                                sb.Append(text.Trim() + " ");
+                            }
+                        }
+                        wordStart = html.IndexOf("<span class='ocrx_word'", wordStart + 1, StringComparison.InvariantCulture);
+                    }
+                    sb.AppendLine();
+                    lineStart = html.IndexOf("<span class='ocr_line'", lineStart + 1, StringComparison.InvariantCulture);
                 }
-                else
-                {
-                    first = -1;
-                }
+                var page = sb.ToString().Replace("<em>", "<i>").Replace("</em>", "</i>");
+                page = page.Replace("<strong>", string.Empty).Replace("</strong>", string.Empty);
+                page = page.Replace("</i> <i>", " ");
+                page = page.Replace("</i><i>", string.Empty);
+
+                // html escape decoding
+                page = page.Replace("&amp;", "&")
+                    .Replace("&lt;", "<")
+                    .Replace("&gt;", ">")
+                    .Replace("&quot;", "\"")
+                    .Replace("&#39;", "'")
+                    .Replace("&apos;", "'");
+
+                page = page.Replace("</i>" + Environment.NewLine + "<i>", Environment.NewLine);
+                page = page.Replace(" " + Environment.NewLine, Environment.NewLine);
+
+                pages.Add(page.Trim());
+                pageStart = pageEnd;
             }
 
-            s = s.Trim();
-            s = s.Replace("@001_____", "<i>").Replace("@002_____", "</i>");
-            while (s.Contains("  "))
-                s = s.Replace("  ", " ");
-            s = s.Replace("</i> <i>", " ");
-
-            // html escape decoding
-            s = s.Replace("&amp;", "&");
-            s = s.Replace("&lt;", "<");
-            s = s.Replace("&gt;", ">");
-            s = s.Replace("&quot;", "\"");
-            s = s.Replace("&#39;", "'");
-            s = s.Replace("&apos;", "'");
-
-            while (s.Contains("\n\n"))
-                s = s.Replace("\n\n", "\n");
-            s = s.Replace("</i>\n<i>", "\n");
-            s = s.Replace("\n", Environment.NewLine);
-
-            return s;
+            return pages;
         }
 
     }
