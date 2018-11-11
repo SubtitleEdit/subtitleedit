@@ -1136,13 +1136,13 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void UpdateListSyntaxColoring()
         {
-            if (Subtitle == null || Subtitle.Paragraphs.Count == 0 || _subtitleListViewIndex < 0 || _subtitleListViewIndex >= Subtitle.Paragraphs.Count)
+            if (FixedSubtitle == null || FixedSubtitle.Paragraphs.Count == 0 || _subtitleListViewIndex < 0 || _subtitleListViewIndex >= Subtitle.Paragraphs.Count)
                 return;
 
-            subtitleListView1.SyntaxColorLine(Subtitle.Paragraphs, _subtitleListViewIndex, Subtitle.Paragraphs[_subtitleListViewIndex]);
+            subtitleListView1.SyntaxColorLine(FixedSubtitle.Paragraphs, _subtitleListViewIndex, FixedSubtitle.Paragraphs[_subtitleListViewIndex]);
             Paragraph next = Subtitle.GetParagraphOrDefault(_subtitleListViewIndex + 1);
             if (next != null)
-                subtitleListView1.SyntaxColorLine(Subtitle.Paragraphs, _subtitleListViewIndex + 1, Subtitle.Paragraphs[_subtitleListViewIndex + 1]);
+                subtitleListView1.SyntaxColorLine(FixedSubtitle.Paragraphs, _subtitleListViewIndex + 1, FixedSubtitle.Paragraphs[_subtitleListViewIndex + 1]);
         }
 
         private void MaskedTextBox_TextChanged(object sender, EventArgs e)
