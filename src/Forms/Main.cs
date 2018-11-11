@@ -13973,7 +13973,6 @@ namespace Nikse.SubtitleEdit.Forms
                     if (SubtitleListview1.SelectedItems.Count == 1 && tmp.Paragraphs.Count > 0)
                     {
                         MakeHistoryForUndo(_language.BeforeInsertLine);
-                        var selectedIndices = new List<int>();
                         int firstIndex = FirstSelectedIndex;
                         var lastParagraph = _subtitle.Paragraphs[firstIndex];
                         double addMs = 0;
