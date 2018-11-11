@@ -13973,32 +13973,24 @@ namespace Nikse.SubtitleEdit.Forms
                     if (SubtitleListview1.SelectedItems.Count == 1 && tmp.Paragraphs.Count > 0)
                     {
                         MakeHistoryForUndo(_language.BeforeInsertLine);
-                        _makeHistoryPaused = true;
-                        Paragraph lastParagraph = null;
-                        Paragraph lastTempParagraph = null;
                         var selectedIndices = new List<int>();
                         int firstIndex = FirstSelectedIndex;
-                        foreach (var p in tmp.Paragraphs)
-                        {
-                            firstIndex++;
-                            selectedIndices.Add(firstIndex);
-                            InsertAfter();
-                            textBoxListViewText.Text = p.Text;
-                            if (lastParagraph != null)
-                            {
-                                double millisecondsBetween = p.StartTime.TotalMilliseconds - lastTempParagraph.EndTime.TotalMilliseconds;
-                                timeUpDownStartTime.TimeCode = new TimeCode(lastParagraph.EndTime.TotalMilliseconds + millisecondsBetween);
-                            }
-                            SetDurationInSeconds(p.Duration.TotalSeconds);
-                            lastParagraph = _subtitle.GetParagraphOrDefault(_subtitleListViewIndex);
-                            lastTempParagraph = p;
+                        var lastParagraph = _subtitle.Paragraphs[firstIndex];
+                        double addMs = 0;
+                        if (lastParagraph.EndTime.TotalMilliseconds > tmp.Paragraphs[0].StartTime.TotalMilliseconds)
+                        { // add time to pasted subtitles to prevent overlap, but only if necessary
+                            addMs = lastParagraph.EndTime.TotalMilliseconds - tmp.Paragraphs[0].StartTime.TotalMilliseconds + 1000;
                         }
-                        SubtitleListview1.SelectIndexAndEnsureVisible(selectedIndices[0], true);
-                        foreach (var idx in selectedIndices)
+                        SaveSubtitleListviewIndices();
+                        for (int i = 0; i < tmp.Paragraphs.Count; i++)
                         {
-                            SubtitleListview1.Items[idx].Selected = true;
+                            var p = tmp.Paragraphs[i];
+                            p.StartTime.TotalMilliseconds += addMs;
+                            p.EndTime.TotalMilliseconds += addMs;
+                            _subtitle.Paragraphs.Insert(firstIndex + i + 1, p);
                         }
-                        RestartHistory();
+                        SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+                        RestoreSubtitleListviewIndices();
                     }
                     else if (SubtitleListview1.Items.Count == 0 && tmp.Paragraphs.Count > 0)
                     { // insert into empty subtitle
