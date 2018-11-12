@@ -16,8 +16,9 @@
    * Make custom "Choose font" dialog - thx OmrSi
    * Update Bing translator from V2 to V3 API
    * Faster Tesseract OCR if CPU has many cores
-   * Try using word lists for uppercase i inside words - thx TeDDy
+   * Try using word lists for uppercase "i" inside words - thx TeDDy
    * Improve unknown json importer - thx Thamy
+   * Improve paste in list view - thx OmrSi/darnn
 * FIXED:
    * Go back to Tesseract 3.02 (T4 Beta3 available as in-program download)
    * Fix Bing translator sign-up url - thx sopor
@@ -37,6 +38,7 @@
    * Add custom fade up/down for DCinema smpte - thx felagund
    * Fix reading last line with zero duration - thx darnn
    * Fix for column paste - thx OmrSi
+   * Fix syntax coloring in "Fix common errors" - thx OmrSi
 
 
 3.5.7 (9th August 2018)

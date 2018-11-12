@@ -13978,18 +13978,25 @@ namespace Nikse.SubtitleEdit.Forms
                         double addMs = 0;
                         if (lastParagraph.EndTime.TotalMilliseconds > tmp.Paragraphs[0].StartTime.TotalMilliseconds)
                         { // add time to pasted subtitles to prevent overlap, but only if necessary
-                            addMs = lastParagraph.EndTime.TotalMilliseconds - tmp.Paragraphs[0].StartTime.TotalMilliseconds + 1000;
+                            addMs = lastParagraph.EndTime.TotalMilliseconds - tmp.Paragraphs[0].StartTime.TotalMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines;
                         }
-                        SaveSubtitleListviewIndices();
+                        var selectIndices = new List<int>();
                         for (int i = 0; i < tmp.Paragraphs.Count; i++)
                         {
                             var p = tmp.Paragraphs[i];
                             p.StartTime.TotalMilliseconds += addMs;
                             p.EndTime.TotalMilliseconds += addMs;
                             _subtitle.Paragraphs.Insert(firstIndex + i + 1, p);
+                            selectIndices.Insert(0 ,firstIndex + i +1);
                         }
                         SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
-                        RestoreSubtitleListviewIndices();
+                        SubtitleListview1.BeginUpdate();
+                        SubtitleListview1.SelectIndexAndEnsureVisible(firstIndex + 1, true);
+                        foreach (var selectIndex in selectIndices)
+                        {
+                            SubtitleListview1.Items[selectIndex].Selected = true;
+                        }
+                        SubtitleListview1.EndUpdate();
                     }
                     else if (SubtitleListview1.Items.Count == 0 && tmp.Paragraphs.Count > 0)
                     { // insert into empty subtitle
