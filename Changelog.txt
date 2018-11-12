@@ -39,6 +39,8 @@
    * Fix reading last line with zero duration - thx darnn
    * Fix for column paste - thx OmrSi
    * Fix syntax coloring in "Fix common errors" - thx OmrSi
+   * Fix sometimes not updating total line length - thx OmrSi
+   * Fix adding music symbols with tags - thx OmrSi
 
 
 3.5.7 (9th August 2018)
