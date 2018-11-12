@@ -8007,6 +8007,12 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
+            else
+            {
+                if (!textBoxHasFocus)
+                    lineTotal.Text = string.Format(_languageGeneral.TotalLengthX, s.Length);
+            }
+
             UpdateListViewTextCharactersPerSeconds(charactersPerSecond, paragraph);
             charactersPerSecond.Left = textBox.Left + (textBox.Width - labelCharactersPerSecond.Width);
             lineTotal.Left = textBox.Left + (textBox.Width - lineTotal.Width);
@@ -20797,37 +20803,54 @@ namespace Nikse.SubtitleEdit.Forms
                 SubtitleListview1.BeginUpdate();
                 foreach (int i in indices)
                 {
+                    var pre = string.Empty;
+                    int indexOfEndBracket = -1;
                     if (_subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
                     {
                         var original = Utilities.GetOriginalParagraph(i, _subtitle.Paragraphs[i], _subtitleAlternate.Paragraphs);
                         if (original != null)
                         {
+                            pre = string.Empty;
+                            indexOfEndBracket = original.Text.IndexOf('}');
+                            if (original.Text.StartsWith("{\\", StringComparison.Ordinal) && indexOfEndBracket > 1)
+                            {
+                                pre = original.Text.Substring(0, indexOfEndBracket + 1);
+                                original.Text = original.Text.Remove(0, indexOfEndBracket + 1);
+                            }
                             if (original.Text.Contains(tag))
                             {
-                                original.Text = original.Text.Replace(tag, string.Empty);
-                                original.Text = original.Text.Replace(Environment.NewLine + " ", Environment.NewLine).Replace(" " + Environment.NewLine, Environment.NewLine).Trim();
+                                original.Text = original.Text.Replace(tag, string.Empty).Trim();
+                                original.Text = pre + original.Text.Replace(Environment.NewLine + " ", Environment.NewLine).Replace(" " + Environment.NewLine, Environment.NewLine).Trim();
                             }
                             else
                             {
                                 if (Configuration.Settings.Tools.MusicSymbolStyle.Equals("single", StringComparison.OrdinalIgnoreCase))
-                                    original.Text = string.Format("{0} {1}", tag, original.Text.Replace(Environment.NewLine, Environment.NewLine + tag + " "));
+                                    original.Text = string.Format("{0}{1} {2}", pre, tag, original.Text.Replace(Environment.NewLine, Environment.NewLine + tag + " "));
                                 else
-                                    original.Text = string.Format("{0} {1} {0}", tag, original.Text.Replace(Environment.NewLine, " " + tag + Environment.NewLine + tag + " "));
+                                    original.Text = string.Format("{0}{1} {2} {1}", pre, tag, original.Text.Replace(Environment.NewLine, " " + tag + Environment.NewLine + tag + " "));
                             }
                             SubtitleListview1.SetAlternateText(i, original.Text);
                         }
                     }
 
+                    pre = string.Empty;
+                    var p = _subtitle.Paragraphs[i];
+                    indexOfEndBracket = p.Text.IndexOf('}');
+                    if (p.Text.StartsWith("{\\", StringComparison.Ordinal) && indexOfEndBracket > 1)
+                    {
+                        pre = p.Text.Substring(0, indexOfEndBracket + 1);
+                        p.Text = p.Text.Remove(0, indexOfEndBracket + 1);
+                    }
                     if (_subtitle.Paragraphs[i].Text.Contains(tag))
                     {
-                        _subtitle.Paragraphs[i].Text = _subtitle.Paragraphs[i].Text.Replace("♪", string.Empty).Replace(Environment.NewLine + " ", Environment.NewLine).Replace(" " + Environment.NewLine, Environment.NewLine).Trim();
+                        _subtitle.Paragraphs[i].Text = pre + _subtitle.Paragraphs[i].Text.Replace("♪", string.Empty).Replace(Environment.NewLine + " ", Environment.NewLine).Replace(" " + Environment.NewLine, Environment.NewLine).Trim();
                     }
                     else
                     {
                         if (Configuration.Settings.Tools.MusicSymbolStyle.Equals("single", StringComparison.OrdinalIgnoreCase))
-                            _subtitle.Paragraphs[i].Text = string.Format("{0} {1}", tag, _subtitle.Paragraphs[i].Text.Replace(Environment.NewLine, Environment.NewLine + tag + " "));
+                            p.Text = string.Format("{0}{1} {2}", pre, tag, p.Text.Replace(Environment.NewLine, Environment.NewLine + tag + " "));
                         else
-                            _subtitle.Paragraphs[i].Text = string.Format("{0} {1} {0}", tag, _subtitle.Paragraphs[i].Text.Replace(Environment.NewLine, " " + tag + Environment.NewLine + tag + " "));
+                            p.Text = string.Format("{0}{1} {2} {1}", pre, tag, p.Text.Replace(Environment.NewLine, " " + tag + Environment.NewLine + tag + " "));
                     }
                     SubtitleListview1.SetText(i, _subtitle.Paragraphs[i].Text);
                 }
