@@ -312,7 +312,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private int _ocrMethodIndex;
         private bool _autoBreakLines;
 
-        private readonly int _ocrMethodTesseract;
+        private readonly int _ocrMethodTesseract4;
         private readonly int _ocrMethodModi;
         private readonly int _ocrMethodBinaryImageCompare;
         private readonly int _ocrMethodNocr;
@@ -417,7 +417,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             comboBoxOcrMethod.Items.Clear();
             comboBoxOcrMethod.Items.Add("Binary image compare");
             comboBoxOcrMethod.Items.Add("Tesseract 3.02");
-            comboBoxOcrMethod.Items.Add("Tesseract 4 Beta");
+            comboBoxOcrMethod.Items.Add("Tesseract 4.00");
             if (_modiEnabled)
                 comboBoxOcrMethod.Items.Add(language.OcrViaModi);
             if (Configuration.Settings.General.ShowBetaStuff)
@@ -427,7 +427,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
             _ocrMethodBinaryImageCompare = comboBoxOcrMethod.Items.IndexOf("Binary image compare");
             _ocrMethodTesseract302 = comboBoxOcrMethod.Items.IndexOf("Tesseract 3.02");
-            _ocrMethodTesseract = comboBoxOcrMethod.Items.IndexOf("Tesseract 4 Beta");
+            _ocrMethodTesseract4 = comboBoxOcrMethod.Items.IndexOf("Tesseract 4.00");
             _ocrMethodModi = comboBoxOcrMethod.Items.IndexOf(language.OcrViaModi);
             _ocrMethodNocr = comboBoxOcrMethod.Items.IndexOf(language.OcrViaNOCR);
 
@@ -541,7 +541,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             checkBoxPromptForUnknownWords.Checked = false;
 
             int max = GetSubtitleCount();
-            if (_ocrMethodIndex == _ocrMethodTesseract && _tesseractAsyncStrings == null)
+            if (_ocrMethodIndex == _ocrMethodTesseract4 && _tesseractAsyncStrings == null)
             {
                 _tesseractAsyncStrings = new string[max];
                 _tesseractAsyncIndex = (int)numericUpDownStartNumber.Value + 5;
@@ -734,7 +734,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             checkBoxPromptForUnknownWords.Checked = false;
 
             int max = GetSubtitleCount();
-            if (_ocrMethodIndex == _ocrMethodTesseract && _tesseractAsyncStrings == null)
+            if (_ocrMethodIndex == _ocrMethodTesseract4 && _tesseractAsyncStrings == null)
             {
                 _tesseractAsyncStrings = new string[max];
                 _tesseractAsyncIndex = (int)numericUpDownStartNumber.Value + 5;
@@ -1483,6 +1483,15 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             if (returnBmp == null)
                 return null;
+
+            if (_ocrMethodIndex == _ocrMethodTesseract4 && !_fromMenuItem)
+            {
+                var nb = new NikseBitmap(returnBmp);
+                nb.MakeTwoColor(Configuration.Settings.Tools.OcrBinaryImageCompareRgbThreshold, Color.White, Color.Black);
+                nb.AddMargin(5);
+                returnBmp.Dispose();
+                return nb.GetBitmap();
+            }
 
             if (_binaryOcrDb == null && _nOcrDb == null || _fromMenuItem)
             {
@@ -5188,19 +5197,20 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 return;
             }
 
-            if (_ocrMethodIndex == _ocrMethodTesseract302 || _ocrMethodIndex == _ocrMethodTesseract)
+            if (_ocrMethodIndex == _ocrMethodTesseract302 || _ocrMethodIndex == _ocrMethodTesseract4)
             {
                 _tesseractThreadRunner?.Cancel();
                 _tesseractThreadRunner = new TesseractThreadRunner(OcrDone);
                 _tesseractRunner = new TesseractRunner();
             }
 
-            if (_ocrMethodIndex == _ocrMethodTesseract && comboBoxTesseractLanguages.Items.Count == 0)
+            if (_ocrMethodIndex == _ocrMethodTesseract4 && comboBoxTesseractLanguages.Items.Count == 0)
             {
                 buttonGetTesseractDictionaries_Click(sender, e);
                 return;
             }
 
+            _mainOcrBitmap = null;
             _tesseractEngineMode = comboBoxTesseractEngineMode.SelectedIndex;
             _isLatinDb = comboBoxCharacterDatabase.SelectedItem != null && comboBoxCharacterDatabase.SelectedItem.ToString().Equals("Latin", StringComparison.Ordinal);
             Configuration.Settings.VobSubOcr.RightToLeft = checkBoxRightToLeft.Checked;
@@ -5217,7 +5227,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             listBoxUnknownWords.Items.Clear();
             int max = GetSubtitleCount();
 
-            if ((_ocrMethodIndex == _ocrMethodTesseract || _ocrMethodIndex == _ocrMethodTesseract302) &&
+            if ((_ocrMethodIndex == _ocrMethodTesseract4 || _ocrMethodIndex == _ocrMethodTesseract302) &&
                 _tesseractAsyncStrings == null)
             {
                 _nOcrDb = null;
@@ -5499,7 +5509,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
 
             var bmp = GetSubtitleBitmap(i);
-            _mainOcrBitmap = bmp;
             bool is302 = _ocrMethodIndex == _ocrMethodTesseract302;
             _tesseractThreadRunner.AddImageJob(bmp, i, _languageId, string.Empty, _tesseractEngineMode.ToString(CultureInfo.InvariantCulture), is302, is302 && checkBoxTesseractMusicOn.Checked);
             _tesseractThreadRunner.CheckQueue();
@@ -5508,9 +5517,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private void mainOcrTimer_Tick(object sender, EventArgs e)
         {
-            _mainOcrTimer.Stop();
-
-            bool done = _ocrMethodIndex == _ocrMethodTesseract || _ocrMethodIndex == _ocrMethodTesseract302 ?
+            _mainOcrTimer.Stop();            
+            bool done = _ocrMethodIndex == _ocrMethodTesseract4 || _ocrMethodIndex == _ocrMethodTesseract302 ?
                 MainLoopTesseract(_mainOcrTimerMax, _mainOcrIndex) :
                 MainLoop(_mainOcrTimerMax, _mainOcrIndex);
             if (done || _abort)
@@ -5727,7 +5735,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         checkBoxTesseractFallback.Visible && checkBoxTesseractFallback.Checked)
                     {
                         var oldOcrMethodIndex = _ocrMethodIndex;
-                        _ocrMethodIndex = _ocrMethodIndex == _ocrMethodTesseract ? _ocrMethodTesseract302 : _ocrMethodTesseract;
+                        _ocrMethodIndex = _ocrMethodIndex == _ocrMethodTesseract4 ? _ocrMethodTesseract302 : _ocrMethodTesseract4;
                         newUnfixedText = Tesseract3DoOcrViaExe(bitmap, _languageId, "6", _tesseractEngineMode); // 6 = Assume a single uniform block of text.
                         newText = _ocrFixEngine.FixOcrErrors(newUnfixedText, index, _lastLine, true, GetAutoGuessLevel());
                         newWordsNotFound = _ocrFixEngine.CountUnknownWordsViaDictionary(newText, out correctWords);
@@ -6700,7 +6708,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private void LoadOcrFixEngine(string threeLetterIsoLanguageName, string hunspellName)
         {
-            if (_ocrMethodIndex != _ocrMethodTesseract && _ocrMethodIndex != _ocrMethodTesseract302)
+            if (_ocrMethodIndex != _ocrMethodTesseract4 && _ocrMethodIndex != _ocrMethodTesseract302)
             {
                 try
                 {
@@ -6726,7 +6734,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 string loadedDictionaryName = _ocrFixEngine.SpellCheckDictionaryName;
                 var found = false;
                 comboBoxDictionaries.SelectedIndexChanged -= comboBoxDictionaries_SelectedIndexChanged;
-                if (_ocrMethodIndex == _ocrMethodTesseract &&
+                if (_ocrMethodIndex == _ocrMethodTesseract4 &&
                     !string.IsNullOrEmpty(Configuration.Settings.VobSubOcr.LastTesseractSpellCheck) &&
                     Configuration.Settings.VobSubOcr.LastTesseractSpellCheck.Length > 1 &&
                     loadedDictionaryName.Length > 1 &&
@@ -6777,7 +6785,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             _binaryOcrDb = null;
             _nOcrDb = null;
             _ocrMethodIndex = comboBoxOcrMethod.SelectedIndex;
-            if (_ocrMethodIndex == _ocrMethodTesseract)
+            if (_ocrMethodIndex == _ocrMethodTesseract4)
             {
                 ResetTesseractThread();
                 InitializeTesseract();
@@ -6789,7 +6797,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 checkBoxTesseractFallback.Visible = File.Exists(Path.Combine(Configuration.Tesseract302Directory, "tesseract.exe"));
                 if (!File.Exists(Path.Combine(Configuration.TesseractDirectory, "tesseract.exe")))
                 {
-                    if (MessageBox.Show("Download Tesseract 4 Beta", "Subtitle Edit", MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
+                    if (MessageBox.Show("Download Tesseract 4.0.0", "Subtitle Edit", MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
                     {
                         using (var form = new DownloadTesseract4())
                         {
@@ -6925,6 +6933,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             nOcrTrainingToolStripMenuItem.Visible = useNocrCompare;
 
             toolStripSeparatorImageCompare.Visible = useNocrCompare || enableIfImageCompare;
+
+            setForecolorThresholdToolStripMenuItem.Visible = _ocrMethodIndex != _ocrMethodTesseract4;
         }
 
         private void SaveImageAsToolStripMenuItemClick(object sender, EventArgs e)
@@ -7189,7 +7199,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private void comboBoxDictionaries_SelectedIndexChanged(object sender, EventArgs e)
         {
             Configuration.Settings.General.SpellCheckLanguage = LanguageString;
-            if (_ocrMethodIndex == _ocrMethodTesseract || _ocrMethodIndex == _ocrMethodTesseract302)
+            if (_ocrMethodIndex == _ocrMethodTesseract4 || _ocrMethodIndex == _ocrMethodTesseract302)
                 Configuration.Settings.VobSubOcr.LastTesseractSpellCheck = LanguageString;
 
             string threeLetterIsoLanguageName = string.Empty;
@@ -7277,7 +7287,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             else if (Configuration.Settings.VobSubOcr.LastOcrMethod == "Tesseract302" && comboBoxOcrMethod.Items.Count > _ocrMethodTesseract302)
                 comboBoxOcrMethod.SelectedIndex = _ocrMethodTesseract302;
             else if (Configuration.Settings.VobSubOcr.LastOcrMethod == "Tesseract4" && comboBoxOcrMethod.Items.Count > _ocrMethodTesseract302)
-                comboBoxOcrMethod.SelectedIndex = _ocrMethodTesseract;
+                comboBoxOcrMethod.SelectedIndex = _ocrMethodTesseract4;
             else
                 comboBoxOcrMethod.SelectedIndex = 0;
         }
@@ -7737,7 +7747,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 Configuration.Settings.VobSubOcr.LastBinaryImageSpellCheck = comboBoxDictionaries.SelectedItem.ToString();
             }
 
-            if (_ocrMethodIndex == _ocrMethodTesseract || _ocrMethodTesseract == _ocrMethodTesseract302)
+            if (_ocrMethodIndex == _ocrMethodTesseract4 || _ocrMethodTesseract4 == _ocrMethodTesseract302)
             {
                 Configuration.Settings.VobSubOcr.LastTesseractSpellCheck = LanguageString;
             }
@@ -8303,7 +8313,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private void checkBoxTransportStreamGetColorAndSplit_CheckedChanged(object sender, EventArgs e)
         {
-            if (_ocrMethodIndex == _ocrMethodTesseract)
+            if (_ocrMethodIndex == _ocrMethodTesseract4)
             {
                 _abort = true;
                 _nocrThreadsStop = true;
