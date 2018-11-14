@@ -86,6 +86,7 @@ namespace Nikse.SubtitleEdit.Core
         public bool SpellCheckShowCompletedMessage { get; set; }
         public bool OcrFixUseHardcodedRules { get; set; }
         public int OcrBinaryImageCompareRgbThreshold { get; set; }
+        public int OcrTesseract4RgbThreshold { get; set; }
         public string Interjections { get; set; }
         public string MicrosoftBingApiId { get; set; }
         public string MicrosoftTranslatorApiKey { get; set; }
@@ -228,6 +229,7 @@ namespace Nikse.SubtitleEdit.Core
             SpellCheckAutoChangeNames = true;
             OcrFixUseHardcodedRules = true;
             OcrBinaryImageCompareRgbThreshold = 270;
+            OcrTesseract4RgbThreshold = 200;
             Interjections = "Ah;Ahem;Ahh;Ahhh;Ahhhh;Eh;Ehh;Ehhh;Hm;Hmm;Hmmm;Huh;Mm;Mmm;Mmmm;Phew;Gah;Oh;Ohh;Ohhh;Ow;Oww;Owww;Ugh;Ughh;Uh;Uhh;Uhhh;Whew";
             MicrosoftBingApiId = "C2C2E9A508E6748F0494D68DFD92FAA1FF9B0BA4";
             GoogleTranslateUrl = "translate.google.com";
@@ -1923,6 +1925,9 @@ $HorzAlign          =   Center
             subNode = node.SelectSingleNode("OcrBinaryImageCompareRgbThreshold");
             if (subNode != null)
                 settings.Tools.OcrBinaryImageCompareRgbThreshold = Convert.ToInt32(subNode.InnerText);
+            subNode = node.SelectSingleNode("OcrTesseract4RgbThreshold");
+            if (subNode != null)
+                settings.Tools.OcrTesseract4RgbThreshold = Convert.ToInt32(subNode.InnerText);
             subNode = node.SelectSingleNode("Interjections");
             if (subNode != null)
                 settings.Tools.Interjections = subNode.InnerText;
@@ -3607,6 +3612,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("SpellCheckShowCompletedMessage", settings.Tools.SpellCheckShowCompletedMessage.ToString());
                 textWriter.WriteElementString("OcrFixUseHardcodedRules", settings.Tools.OcrFixUseHardcodedRules.ToString());
                 textWriter.WriteElementString("OcrBinaryImageCompareRgbThreshold", settings.Tools.OcrBinaryImageCompareRgbThreshold.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("OcrTesseract4RgbThreshold", settings.Tools.OcrTesseract4RgbThreshold.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("Interjections", settings.Tools.Interjections);
                 textWriter.WriteElementString("MicrosoftBingApiId", settings.Tools.MicrosoftBingApiId);
                 textWriter.WriteElementString("MicrosoftTranslatorApiKey", settings.Tools.MicrosoftTranslatorApiKey);
