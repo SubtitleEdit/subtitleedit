@@ -6933,8 +6933,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             nOcrTrainingToolStripMenuItem.Visible = useNocrCompare;
 
             toolStripSeparatorImageCompare.Visible = useNocrCompare || enableIfImageCompare;
-
-            setForecolorThresholdToolStripMenuItem.Visible = _ocrMethodIndex != _ocrMethodTesseract4;
         }
 
         private void SaveImageAsToolStripMenuItemClick(object sender, EventArgs e)
@@ -8059,6 +8057,22 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             var bmp = GetSubtitleBitmap(_selectedIndex);
             _preprocessingSettings = temp;
             _fromMenuItem = false;
+
+            if (_ocrMethodIndex == _ocrMethodTesseract4)
+            {
+                using (var form = new OcrPreprocessingT4(bmp, _ocrMethodIndex == _ocrMethodBinaryImageCompare, new PreprocessingSettings {  BinaryImageCompareThresshold = Configuration.Settings.Tools.OcrTesseract4RgbThreshold }))
+                {
+                    if (form.ShowDialog(this) == DialogResult.OK)
+                    {
+                        ResetTesseractThread();
+                        _preprocessingSettings = form.PreprocessingSettings;
+                        Configuration.Settings.Tools.OcrTesseract4RgbThreshold = _preprocessingSettings.BinaryImageCompareThresshold;
+                        SubtitleListView1SelectedIndexChanged(null, null);
+                    }
+                }
+                return;
+            }
+
             using (var form = new OcrPreprocessingSettings(bmp, _ocrMethodIndex == _ocrMethodBinaryImageCompare, _preprocessingSettings))
             {
                 if (form.ShowDialog(this) == DialogResult.OK)
