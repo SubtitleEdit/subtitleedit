@@ -21721,7 +21721,7 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             if (form.PasteAll)
                             {
-                                for (int k = _subtitle.Paragraphs.Count - 2; k > index; k--)
+                                if (index + i < _subtitle.Paragraphs.Count)
                                 {
                                     _subtitle.Paragraphs[index + i].Text = tmp.Paragraphs[i].Text;
                                     _subtitle.Paragraphs[index + i].StartTime.TotalMilliseconds = tmp.Paragraphs[i].StartTime.TotalMilliseconds;
@@ -21730,7 +21730,7 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                             else if (form.PasteTimeCodesOnly)
                             {
-                                for (int k = _subtitle.Paragraphs.Count - 2; k > index; k--)
+                                if (index + i < _subtitle.Paragraphs.Count)
                                 {
                                     _subtitle.Paragraphs[index + i].StartTime.TotalMilliseconds = tmp.Paragraphs[i].StartTime.TotalMilliseconds;
                                     _subtitle.Paragraphs[index + i].EndTime.TotalMilliseconds = tmp.Paragraphs[i].EndTime.TotalMilliseconds;
@@ -21738,14 +21738,14 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                             else if (form.PasteTextOnly)
                             {
-                                for (int k = _subtitle.Paragraphs.Count - 2; k > index; k--)
+                                if (index + i < _subtitle.Paragraphs.Count)
                                 {
                                     _subtitle.Paragraphs[index + i].Text = tmp.Paragraphs[i].Text;
                                 }
                             }
                             else if (form.PasteOriginalTextOnly)
                             {
-                                for (int k = _subtitle.Paragraphs.Count - 2; k > index; k--)
+                                if (index + i < _subtitle.Paragraphs.Count)
                                 {
                                     var original = Utilities.GetOriginalParagraph(index +i, _subtitle.Paragraphs[index + i], _subtitleAlternate.Paragraphs);
                                     if (original != null)
@@ -21760,7 +21760,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         for (int i = 0; i + index < _subtitle.Paragraphs.Count && i < tmp.Paragraphs.Count; i++)
                         {
-                            if (index + i + 1 < _subtitle.Paragraphs.Count)
+                            if (index + i < _subtitle.Paragraphs.Count)
                             {
                                 if (form.PasteAll)
                                 {
