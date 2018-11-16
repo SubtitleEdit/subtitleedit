@@ -20,7 +20,7 @@
    * Improve unknown json importer - thx Thamy
    * Improve paste in list view - thx OmrSi/darnn
 * FIXED:
-   * Go back to Tesseract 3.02 (T4 Beta3 available as in-program download)
+   * Go back to Tesseract 3.02 (T4 available as in-program download)
    * Fix Bing translator sign-up url - thx sopor
    * Fix common OCR errors "L" vs "I" issue - thx Araynilmar/Zoltán
    * Fix for loading video file after openening .mks file
@@ -38,10 +38,13 @@
    * Add custom fade up/down for DCinema smpte - thx felagund
    * Fix reading last line with zero duration - thx darnn
    * Fix for column paste - thx OmrSi
+   * Fix adding music symbols with tags - thx 
    * Fix syntax coloring in "Fix common errors" - thx OmrSi
-   * Fix sometimes not updating total line length - thx OmrSi
-   * Fix adding music symbols with tags - thx OmrSi
-
+   * Fix somtimes not updating total line length - thx OmrSi
+   * Fix text/image overlap in manual image to text OCR - thx amichaeltm
+   * Do not ignore words of combined letters/numbers - thx Boulder08
+   * Trying to fix mpv missing text refresh - thx darnn
+   * Fix crash in "add better multi match" - thx Boulder08
 
 3.5.7 (9th August 2018)
 * NEW:
