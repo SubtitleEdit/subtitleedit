@@ -44,6 +44,9 @@ namespace Nikse.SubtitleEdit.Logic
             return QuartsPlayer.GetVideoInfo(fileName);
         }
 
+        private static long _lastShowSubTicks = DateTime.UtcNow.Ticks;
+        private static string _lastShowSubHash;
+
         public static int ShowSubtitle(Subtitle subtitle, VideoPlayerContainer videoPlayerContainer)
         {
             if (videoPlayerContainer.VideoPlayer != null)
@@ -60,15 +63,35 @@ namespace Nikse.SubtitleEdit.Logic
                         if (!isInfo)
                         {
                             if (videoPlayerContainer.LastParagraph != p)
+                            {
                                 videoPlayerContainer.SetSubtitleText(text, p, subtitle);
+                            }
                             else if (videoPlayerContainer.SubtitleText != text)
+                            {
                                 videoPlayerContainer.SetSubtitleText(text, p, subtitle);
+                            }
                             return i;
                         }
                     }
                 }
+
                 if (!string.IsNullOrEmpty(videoPlayerContainer.SubtitleText))
+                {
                     videoPlayerContainer.SetSubtitleText(string.Empty, null, subtitle);
+                }
+                else
+                {
+                    if (DateTime.UtcNow.Ticks - _lastShowSubTicks > 10000 * 4000) // more than 4+ seconds ago
+                    {
+                        var newHash = subtitle.GetFastHashCode(string.Empty);
+                        if (newHash != _lastShowSubHash)
+                        {
+                            videoPlayerContainer.SetSubtitleText(string.Empty, null, subtitle);
+                            _lastShowSubHash = newHash;
+                        }
+                        _lastShowSubTicks = DateTime.UtcNow.Ticks;
+                    }
+                }
             }
             return -1;
         }
