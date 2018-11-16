@@ -25,7 +25,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         {
             if (e.Error != null)
             {
-                MessageBox.Show(Configuration.Settings.Language.GetTesseractDictionaries.DownloadFailed);
+                MessageBox.Show(Configuration.Settings.Language.GetTesseractDictionaries.DownloadFailed + Environment.NewLine +
+                                Environment.NewLine +
+                                e.Error.Message + ": " + e.Error.StackTrace);
                 DialogResult = DialogResult.Cancel;
                 return;
             }

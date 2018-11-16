@@ -5199,6 +5199,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             if (_ocrMethodIndex == _ocrMethodTesseract302 || _ocrMethodIndex == _ocrMethodTesseract4)
             {
+                labelStatus.Text = Configuration.Settings.Language.General.PleaseWait;
                 _tesseractThreadRunner?.Cancel();
                 _tesseractThreadRunner = new TesseractThreadRunner(OcrDone);
                 _tesseractRunner = new TesseractRunner();
