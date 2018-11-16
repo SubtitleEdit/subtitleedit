@@ -6800,6 +6800,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 {
                     if (MessageBox.Show("Download Tesseract 4.0.0", "Subtitle Edit", MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
                     {
+                        comboBoxTesseractLanguages.Items.Clear();
                         using (var form = new DownloadTesseract4())
                         {
                             form.ShowDialog(this);
