@@ -10960,6 +10960,15 @@ namespace Nikse.SubtitleEdit.Forms
                     mergedVobSubPacks[mergedVobSubPacks.Count - 2].EndTime = TimeSpan.FromMilliseconds(mergedVobSubPacks[mergedVobSubPacks.Count - 1].StartTime.TotalMilliseconds - 1);
             }
 
+            // Remove bad packs
+            for (int i = mergedVobSubPacks.Count - 1; i >= 0; i--)
+            {
+                if (mergedVobSubPacks[i].SubPicture.SubPictureDateSize <= 2)
+                {
+                    mergedVobSubPacks.RemoveAt(i);
+                }
+            }
+
             using (var formSubOcr = new VobSubOcr())
             {
                 formSubOcr.Initialize(mergedVobSubPacks, idx.Palette, Configuration.Settings.VobSubOcr, null); // TODO: language???
