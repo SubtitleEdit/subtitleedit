@@ -70,7 +70,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Tesseract
 
         public void CheckQueue()
         {
-            if (_jobQueue.Count == 0)
+            if (_abort || _jobQueue.Count == 0)
             {
                 return;
             }
