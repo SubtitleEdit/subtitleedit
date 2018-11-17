@@ -1487,8 +1487,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             if (_ocrMethodIndex == _ocrMethodTesseract4 && !_fromMenuItem)
             {
                 var nb = new NikseBitmap(returnBmp);
+                nb.AddMargin(2);
                 nb.MakeTwoColor(Configuration.Settings.Tools.OcrBinaryImageCompareRgbThreshold, Color.White, Color.Black);
-                nb.AddMargin(5);
                 returnBmp.Dispose();
                 return nb.GetBitmap();
             }
@@ -5639,6 +5639,16 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 && (textWithOutFixes.Length < 17 || bitmap.Height < 50))
             {
                 string psm = Tesseract3DoOcrViaExe(bitmap, _languageId, "7", _tesseractEngineMode); // 7 = Treat the image as a single text line.
+
+                // sometimes short texts are not recognized - this resize seems to help
+                if (psm == string.Empty && textWithOutFixes == string.Empty)
+                {
+                    using (var b = ResizeBitmap(bitmap, bitmap.Width * 2, (int)Math.Round(bitmap.Height * 2.5)))
+                    {
+                        psm = Tesseract3DoOcrViaExe(b, _languageId, string.Empty, _tesseractEngineMode);
+                    }
+                }
+
                 if (textWithOutFixes != psm)
                 {
                     if (string.IsNullOrWhiteSpace(textWithOutFixes))
