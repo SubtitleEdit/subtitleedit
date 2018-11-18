@@ -785,6 +785,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void SetWords(string s)
         {
             s = _spellCheckWordLists.ReplaceHtmlTagsWithBlanks(s);
+            s = _spellCheckWordLists.ReplaceAssTagsWithBlanks(s);
             s = _spellCheckWordLists.ReplaceKnownWordsOrNamesWithBlanks(s);
             _words = SpellCheckWordLists.Split(s);
         }
