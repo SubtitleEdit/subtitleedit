@@ -36,7 +36,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             int count = 0;
             for (int i = _startIndex; i < _splitterItems.Count - _extraCount; i++)
             {
+                if (i >= _matches.Count)
+                    break;
                 var m = _matches[i];
+                if (m.Extra?.Count > 0)
+                    break;
                 if (m.Text != Configuration.Settings.Language.VobSubOcr.NoMatch && (m.ImageSplitterItem?.NikseBitmap == null || !string.IsNullOrWhiteSpace(m.ImageSplitterItem.SpecialCharacter)))
                     break;
                 count++;

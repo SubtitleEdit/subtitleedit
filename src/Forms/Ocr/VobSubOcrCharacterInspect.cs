@@ -13,7 +13,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 {
     public sealed partial class VobSubOcrCharacterInspect : Form
     {
-
         public XmlDocument ImageCompareDocument { get; private set; }
         private List<VobSubOcr.CompareMatch> _matches;
         private List<Bitmap> _imageSources;
@@ -281,11 +280,14 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private void SetItalic(XmlNode node)
         {
+            if (node?.Attributes == null || node.OwnerDocument == null)
+                return;
+
             if (checkBoxItalic.Checked)
             {
                 if (node.Attributes["Italic"] == null)
                 {
-                    XmlAttribute italic = node.OwnerDocument.CreateAttribute("Italic");
+                    var italic = node.OwnerDocument.CreateAttribute("Italic");
                     italic.InnerText = "true";
                     node.Attributes.Append(italic);
                 }
@@ -312,6 +314,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 else
                     _binOcrDb.CompareImages.Remove(_selectedCompareBinaryOcrBitmap);
                 _selectedCompareBinaryOcrBitmap = null;
+                _binOcrDb.Save();
             }
             else
             {
@@ -326,8 +329,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             if (listBoxInspectItems.SelectedIndex < 0)
                 return;
 
-            if (listBoxInspectItems.Items[listBoxInspectItems.SelectedIndex].ToString().Replace(" (italic)", string.Empty)  == textBoxText.Text)
-            { 
+            if (listBoxInspectItems.Items[listBoxInspectItems.SelectedIndex].ToString().Replace(" (italic)", string.Empty) == textBoxText.Text)
+            {
                 // text not changed
                 textBoxText.SelectAll();
                 textBoxText.Focus();
@@ -342,8 +345,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 {
                     expandCount = _selectedMatch.Extra.Count;
                     var first = _selectedMatch.Extra[0];
-                    bob = new BinaryOcrBitmap(first.NikseBitmap, checkBoxItalic.Checked, _selectedMatch.Extra.Count, textBoxText.Text, first.X, first.Top);
-                    bob.ExpandedList = new List<BinaryOcrBitmap>();
+                    bob = new BinaryOcrBitmap(first.NikseBitmap, checkBoxItalic.Checked, _selectedMatch.Extra.Count, textBoxText.Text, first.X, first.Top) { ExpandedList = new List<BinaryOcrBitmap>() };
                     for (int i = 1; i < _selectedMatch.Extra.Count; i++)
                     {
                         var element = _selectedMatch.Extra[i];
@@ -482,7 +484,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
 
             var next = _matches[listBoxInspectItems.SelectedIndex + 1];
-            if (next.ExpandCount > 0)
+            if (next.ExpandCount > 0 || next.Extra?.Count > 0)
             {
                 e.Cancel = true;
                 return;
