@@ -70,6 +70,7 @@ namespace Nikse.SubtitleEdit.Logic
                             {
                                 videoPlayerContainer.SetSubtitleText(text, p, subtitle);
                             }
+                            TimeOutRefresh(subtitle, videoPlayerContainer);
                             return i;
                         }
                     }
@@ -81,19 +82,25 @@ namespace Nikse.SubtitleEdit.Logic
                 }
                 else
                 {
-                    if (DateTime.UtcNow.Ticks - _lastShowSubTicks > 10000 * 4000) // more than 4+ seconds ago
-                    {
-                        var newHash = subtitle.GetFastHashCode(string.Empty);
-                        if (newHash != _lastShowSubHash)
-                        {
-                            videoPlayerContainer.SetSubtitleText(string.Empty, null, subtitle);
-                            _lastShowSubHash = newHash;
-                        }
-                        _lastShowSubTicks = DateTime.UtcNow.Ticks;
-                    }
+                    TimeOutRefresh(subtitle, videoPlayerContainer);
                 }
             }
             return -1;
+        }
+
+        private static void TimeOutRefresh(Subtitle subtitle, VideoPlayerContainer videoPlayerContainer)
+        {
+            if (DateTime.UtcNow.Ticks - _lastShowSubTicks > 10000 * 2000) // more than 2+ seconds ago
+            {
+                var newHash = subtitle.GetFastHashCode(string.Empty);
+                if (newHash != _lastShowSubHash)
+                {
+                    videoPlayerContainer.SetSubtitleText(string.Empty, null, subtitle);
+                    _lastShowSubHash = newHash;
+                }
+
+                _lastShowSubTicks = DateTime.UtcNow.Ticks;
+            }
         }
 
         public static int ShowSubtitle(Subtitle subtitle, Subtitle original, VideoPlayerContainer videoPlayerContainer)
