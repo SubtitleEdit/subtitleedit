@@ -304,7 +304,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private readonly DateTime _windowStartTime = DateTime.Now;
         private int _linesOcred;
         private bool _okClicked;
-        private Dictionary<string, int> _unknownWordsDictionary = new Dictionary<string, int>();
+        private readonly Dictionary<string, int> _unknownWordsDictionary;
 
         // optimization vars
         private int _numericUpDownPixelsIsSpace = 6;
@@ -335,6 +335,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             UiUtil.FixFonts(this);
             SetDoubleBuffered(subtitleListView1);
 
+            _unknownWordsDictionary = new Dictionary<string, int>();
             var language = Configuration.Settings.Language.VobSubOcr;
             Text = language.Title;
             groupBoxOcrMethod.Text = language.OcrMethod;
@@ -3993,6 +3994,21 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private void ColorLineByNumberOfUnknownWords(int index, int wordsNotFound, string line)
         {
+            SetUnknownWordsColor(index, wordsNotFound, line);
+
+            var p = _subtitle.GetParagraphOrDefault(index);
+            if (p != null && _unknownWordsDictionary.ContainsKey(p.ID))
+            {
+                _unknownWordsDictionary[p.ID] = wordsNotFound;
+            }
+            else if (p != null)
+            {
+                _unknownWordsDictionary.Add(p.ID, wordsNotFound);
+            }
+        }
+
+        private void SetUnknownWordsColor(int index, int wordsNotFound, string line)
+        {
             if (wordsNotFound >= 3)
                 subtitleListView1.SetBackgroundColor(index, Color.Red);
             if (wordsNotFound == 2)
@@ -4005,16 +4021,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 subtitleListView1.SetBackgroundColor(index, Color.Orange);
             else
                 subtitleListView1.SetBackgroundColor(index, Color.LightGreen);
-
-            var p = _subtitle.GetParagraphOrDefault(index);
-            if (p != null && _unknownWordsDictionary.ContainsKey(p.ID))
-            {
-                _unknownWordsDictionary[p.ID] = wordsNotFound;
-            }
-            else if (p != null)
-            {
-                _unknownWordsDictionary.Add(p.ID, wordsNotFound);
-            }
         }
 
 
@@ -4745,14 +4751,14 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             int wordNonItalics = 0;
             bool isItalic = false;
             bool allItalic = true;
-
+            var seperators = new [] { "-", "—", ".", "'", "\"", " ", "!", "\r", "\n" };
 
             for (int i = 0; i < matches.Count; i++)
             {
                 string text = matches[i].Text;
                 if (text != null)
                 {
-                    if (text == "-" || text == "—" || text == "." || text == "'" || text == " " || text == Environment.NewLine)
+                    if (seperators.Contains(text))
                     {
                     }
                     else if (matches[i].Italic)
@@ -4775,7 +4781,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 string text = matches[i].Text;
                 if (text != null)
                 {
-                    if (text == "-" || text == "—" || text == "." || text == "'" || text == " " || text == Environment.NewLine)
+                    if (seperators.Contains(text))
                     {
                     }
                     else if (matches[i].Italic)
@@ -4792,7 +4798,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             bool convertAllToNonItalic = lettersNonItalics > 0;
             lettersNonItalics = 0;
 
-
             for (int i = 0; i < matches.Count; i++)
             {
                 string text = matches[i].Text;
@@ -4804,9 +4809,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     if (convertAllToNonItalic)
                         italic = false;
 
-                    if (text == " ")
+                    if (seperators.Contains(text))
                     {
-                        ItalicsWord(line, ref word, ref lettersItalics, ref lettersNonItalics, ref wordItalics, ref wordNonItalics, ref isItalic, " ");
+                        ItalicsWord(line, ref word, ref lettersItalics, ref lettersNonItalics, ref wordItalics, ref wordNonItalics, ref isItalic, text);
                     }
                     else if (text == Environment.NewLine)
                     {
@@ -4819,7 +4824,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         if (!convertAllToItalic && !convertAllToNonItalic)
                         {
                             bool isMixedCaseWithoutDashAndAlike = IsMixedCaseWithoutDashAndAlike(matches, i, out var italicOrNot);
-                            if ((text == "-" || text == "—" || text == "." || text == "'") && !isMixedCaseWithoutDashAndAlike)
+                            if (seperators.Contains(text) && !isMixedCaseWithoutDashAndAlike)
                             {
                                 italic = italicOrNot;
                             }
@@ -6195,16 +6200,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 if (checkBoxAutoFixCommonErrors.Checked)
                     line = _ocrFixEngine.FixOcrErrors(line, index, _lastLine, true, GetAutoGuessLevel());
 
-                if (badWords >= numberOfWords)
-                    subtitleListView1.SetBackgroundColor(index, Color.Red);
-                else if (badWords >= numberOfWords / 2)
-                    subtitleListView1.SetBackgroundColor(index, Color.Orange);
-                else if (badWords > 0 || line.Contains('_') || HasSingleLetters(line))
-                    subtitleListView1.SetBackgroundColor(index, Color.Yellow);
-                else if (string.IsNullOrWhiteSpace(HtmlUtil.RemoveOpenCloseTags(line, HtmlUtil.TagItalic)))
-                    subtitleListView1.SetBackgroundColor(index, Color.Orange);
-                else
-                    subtitleListView1.SetBackgroundColor(index, Color.LightGreen);
+                ColorLineByNumberOfUnknownWords(index, badWords, line);
             }
 
             if (textWithOutFixes.Trim() != line.Trim())
@@ -7909,7 +7905,13 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             else
                 subtitleListView1.SelectIndexAndEnsureVisible(subtitleListView1.Items.Count - 1, true);
 
-            _unknownWordsDictionary = new Dictionary<string, int>();
+            subtitleListView1.BeginUpdate();
+            foreach (var p in _subtitle.Paragraphs)
+            {
+                if (_unknownWordsDictionary.ContainsKey(p.ID))
+                    SetUnknownWordsColor(_subtitle.Paragraphs.IndexOf(p), _unknownWordsDictionary[p.ID], p.Text);
+            }
+            subtitleListView1.EndUpdate();
         }
 
         private void buttonUknownToNames_Click(object sender, EventArgs e)
