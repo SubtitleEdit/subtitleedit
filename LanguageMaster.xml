@@ -2336,6 +2336,7 @@ Keep changes?</KeepChangesMessage>
     <DiscardText>Do you want to discard changes made in current OCR session?</DiscardText>
     <MinLineSplitHeight>Min. line height (split)</MinLineSplitHeight>
     <FallbackToX>Fallback to {0}</FallbackToX>
+    <ImagePreProcessing>Image pre-processing...</ImagePreProcessing>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub - Manual image to text</Title>

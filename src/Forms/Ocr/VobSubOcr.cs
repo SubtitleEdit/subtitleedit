@@ -464,6 +464,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             checkBoxRightToLeft.Checked = Configuration.Settings.VobSubOcr.RightToLeft;
             toolStripMenuItemSetUnItalicFactor.Text = language.SetUnitalicFactor;
             deleteToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.Delete;
+            setForecolorThresholdToolStripMenuItem.Text = language.ImagePreProcessing;
 
             toolStripMenuItemExport.Text = Configuration.Settings.Language.Main.Menu.File.Export;
             vobSubToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.File.ExportVobSub;
