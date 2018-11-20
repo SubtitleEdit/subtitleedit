@@ -90,7 +90,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         private static void TimeOutRefresh(Subtitle subtitle, VideoPlayerContainer videoPlayerContainer)
         {
-            if (DateTime.UtcNow.Ticks - _lastShowSubTicks > 10000 * 2000) // more than 2+ seconds ago
+            if (DateTime.UtcNow.Ticks - _lastShowSubTicks > 10000 * 1000) // more than 1+ seconds ago
             {
                 var newHash = subtitle.GetFastHashCode(string.Empty);
                 if (newHash != _lastShowSubHash)
