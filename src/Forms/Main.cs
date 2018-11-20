@@ -1397,6 +1397,7 @@ namespace Nikse.SubtitleEdit.Forms
             normalToolStripMenuItem1.Text = _language.Menu.ContextMenu.Normal;
             boldToolStripMenuItem1.Text = _languageGeneral.Bold;
             italicToolStripMenuItem1.Text = _languageGeneral.Italic;
+            boxToolStripMenuItem.Text = _language.Menu.ContextMenu.Box;
             underlineToolStripMenuItem1.Text = _language.Menu.ContextMenu.Underline;
             colorToolStripMenuItem1.Text = _language.Menu.ContextMenu.Color;
             fontNameToolStripMenuItem.Text = _language.Menu.ContextMenu.FontName;
@@ -7036,7 +7037,7 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripMenuItemAssStyles.Visible = false;
                 setStylesForSelectedLinesToolStripMenuItem.Text = _language.Menu.ContextMenu.SamiSetStyle;
             }
-            else if ((formatType == typeof(WebVTT) && SubtitleListview1.SelectedItems.Count > 0))
+            else if (formatType == typeof(WebVTT) && SubtitleListview1.SelectedItems.Count > 0)
             {
                 setStylesForSelectedLinesToolStripMenuItem.Visible = false;
                 toolStripMenuItemAssStyles.Visible = false;
@@ -7078,6 +7079,25 @@ namespace Nikse.SubtitleEdit.Forms
             else
             {
                 setActorForSelectedLinesToolStripMenuItem.Visible = false;
+            }
+
+            if (formatType == typeof(Ebu))
+            {
+                Ebu.EbuGeneralSubtitleInformation header;
+                if (_subtitle != null && _subtitle.Header != null && (_subtitle.Header.Contains("STL2") || _subtitle.Header.Contains("STL3")))
+                {
+                    header = Ebu.ReadHeader(Encoding.UTF8.GetBytes(_subtitle.Header));
+                }
+                else
+                {
+                    header = new Ebu.EbuGeneralSubtitleInformation();
+                }
+                var open = header.DisplayStandardCode != "1" && header.DisplayStandardCode != "2";
+                boxToolStripMenuItem.Visible = open;
+            }
+            else
+            {
+                boxToolStripMenuItem.Visible = false;
             }
 
             toolStripMenuItemGoogleMicrosoftTranslateSelLine.Visible = false;
@@ -14002,7 +14022,7 @@ namespace Nikse.SubtitleEdit.Forms
                             p.StartTime.TotalMilliseconds += addMs;
                             p.EndTime.TotalMilliseconds += addMs;
                             _subtitle.Paragraphs.Insert(firstIndex + i + 1, p);
-                            selectIndices.Insert(0 ,firstIndex + i +1);
+                            selectIndices.Insert(0, firstIndex + i + 1);
                         }
                         SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
                         SubtitleListview1.BeginUpdate();
@@ -20022,7 +20042,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             var formatType = GetCurrentSubtitleFormat().GetType();
-            if ((formatType == typeof(WebVTT) && tb.SelectionLength > 0))
+            if (formatType == typeof(WebVTT) && tb.SelectionLength > 0)
             {
                 toolStripSeparatorWebVTT.Visible = true;
                 toolStripMenuItemWebVttVoice.Visible = true;
@@ -21756,7 +21776,7 @@ namespace Nikse.SubtitleEdit.Forms
                             {
                                 if (index + i < _subtitle.Paragraphs.Count)
                                 {
-                                    var original = Utilities.GetOriginalParagraph(index +i, _subtitle.Paragraphs[index + i], _subtitleAlternate.Paragraphs);
+                                    var original = Utilities.GetOriginalParagraph(index + i, _subtitle.Paragraphs[index + i], _subtitleAlternate.Paragraphs);
                                     if (original != null)
                                     {
                                         original.Text = tmp.Paragraphs[i].Text;
@@ -23017,6 +23037,11 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 form.ShowDialog(this);
             }
+        }
+
+        private void boxToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ListViewToggleTag("box");
         }
     }
 }

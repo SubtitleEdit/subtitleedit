@@ -3802,6 +3802,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Main/Menu/ContextMenu/Underline":
                     language.Main.Menu.ContextMenu.Underline = reader.Value;
                     break;
+                case "Main/Menu/ContextMenu/Box":
+                    language.Main.Menu.ContextMenu.Box = reader.Value;
+                    break;
                 case "Main/Menu/ContextMenu/Color":
                     language.Main.Menu.ContextMenu.Color = reader.Value;
                     break;
@@ -6306,6 +6309,9 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "VobSubOcr/MinLineSplitHeight":
                     language.VobSubOcr.MinLineSplitHeight = reader.Value;
+                    break;
+                case "VobSubOcr/FallbackToX":
+                    language.VobSubOcr.FallbackToX = reader.Value;
                     break;
                 case "VobSubOcrCharacter/Title":
                     language.VobSubOcrCharacter.Title = reader.Value;

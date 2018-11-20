@@ -365,6 +365,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 string italicsOff = encoding.GetString(new byte[] { 0x81 });
                 string underlineOn = encoding.GetString(new byte[] { 0x82 });
                 string underlineOff = encoding.GetString(new byte[] { 0x83 });
+                string boxingOn = encoding.GetString(new byte[] { 0x84 });
+                string boxingOff = encoding.GetString(new byte[] { 0x85 });
                 if (Utilities.CountTagInText(TextField, "<i>") == 1 && TextField.StartsWith("<i>") && TextField.EndsWith("</i>")) // italic on all lines
                     TextField = TextField.Replace(Environment.NewLine, Environment.NewLine + "<i>");
                 TextField = TextField.Replace("<i>", italicsOn);
@@ -375,6 +377,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 TextField = TextField.Replace("<U>", underlineOn);
                 TextField = TextField.Replace("</u>", underlineOff);
                 TextField = TextField.Replace("</U>", underlineOff);
+                TextField = TextField.Replace("<box>", boxingOn);
+                TextField = TextField.Replace("<BOX>", boxingOn);
+                TextField = TextField.Replace("</box>", boxingOff);
+                TextField = TextField.Replace("</BOX>", boxingOff);
                 if (header.CharacterCodeTableNumber == "00")
                 {
                     TextField = TextField.Replace("©", encoding.GetString(new byte[] { 0xd3 }));
@@ -683,7 +689,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 var text = p.Text.Trim(Utilities.NewLineChars);
                 if (text.StartsWith("{\\an7}", StringComparison.Ordinal) || text.StartsWith("{\\an8}", StringComparison.Ordinal) || text.StartsWith("{\\an9}", StringComparison.Ordinal))
                 {
-                    tti.VerticalPosition = (byte)(1 + Configuration.Settings.SubtitleSettings.EbuStlMarginTop); // top (vertical)
+                    tti.VerticalPosition = (byte)Configuration.Settings.SubtitleSettings.EbuStlMarginTop; // top (vertical)
+                    if (header.DisplayStandardCode == "1" || header.DisplayStandardCode == "2") // teletext
+                        tti.VerticalPosition++;
                 }
                 else if (text.StartsWith("{\\an4}", StringComparison.Ordinal) || text.StartsWith("{\\an5}", StringComparison.Ordinal) || text.StartsWith("{\\an6}", StringComparison.Ordinal))
                 {
@@ -1222,6 +1230,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             const byte italicsOff = 0x81;
             const byte underlineOn = 0x82;
             const byte underlineOff = 0x83;
+            const byte boxingOn = 0x84;
+            const byte boxingOff = 0x85;
 
             var list = new List<EbuTextTimingInformation>();
             int index = startOfTextAndTimingBlock;
@@ -1289,6 +1299,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 sb.Append("<u>");
                             else if (b == underlineOff && header.LanguageCode != LanguageCodeChinese)
                                 sb.Append("</u>");
+                            else if (b == boxingOn && header.LanguageCode != LanguageCodeChinese)
+                                sb.Append("<box>");
+                            else if (b == boxingOff && header.LanguageCode != LanguageCodeChinese)
+                                sb.Append("</box>");
                         }
                     }
                     else if (b >= 0x86 && b <= 0x89) // Both - Reserved for future use

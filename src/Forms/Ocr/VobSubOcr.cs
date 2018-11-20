@@ -6707,10 +6707,28 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private void ComboBoxTesseractLanguagesSelectedIndexChanged(object sender, EventArgs e)
         {
-            Configuration.Settings.VobSubOcr.TesseractLastLanguage = (comboBoxTesseractLanguages.SelectedItem as TesseractLanguage).Id;
+            var l = (comboBoxTesseractLanguages.SelectedItem as TesseractLanguage).Id;
+            Configuration.Settings.VobSubOcr.TesseractLastLanguage = l;
             _ocrFixEngine?.Dispose();
             _ocrFixEngine = null;
             LoadOcrFixEngine(null, null);
+            
+            if (_ocrMethodIndex == _ocrMethodTesseract4)
+            {
+                var ok = File.Exists(Path.Combine(Configuration.Tesseract302Directory, "tesseract.exe")) &&
+                         File.Exists(Path.Combine(Configuration.Tesseract302DataDirectory, l + ".traineddata"));
+                checkBoxTesseractFallback.Visible = ok;
+                if (!ok)
+                    checkBoxTesseractFallback.Checked = false;
+            }
+            else if (_ocrMethodIndex == _ocrMethodTesseract302)
+            {
+                var ok = File.Exists(Path.Combine(Configuration.TesseractDirectory, "tesseract.exe")) &&
+                         File.Exists(Path.Combine(Configuration.TesseractDataDirectory, l + ".traineddata"));
+                checkBoxTesseractFallback.Visible = ok;
+                if (!ok)
+                    checkBoxTesseractFallback.Checked = false;
+            }
         }
 
         private void LoadOcrFixEngine(string threeLetterIsoLanguageName, string hunspellName)
@@ -6800,8 +6818,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 Configuration.Settings.VobSubOcr.LastOcrMethod = "Tesseract4";
                 comboBoxTesseractEngineMode.Visible = true;
                 labelTesseractEngineMode.Visible = true;
-                checkBoxTesseractFallback.Text = "Fallback to Tesseract 3.02";
-                checkBoxTesseractFallback.Visible = File.Exists(Path.Combine(Configuration.Tesseract302Directory, "tesseract.exe"));
+                checkBoxTesseractFallback.Text = string.Format(Configuration.Settings.Language.VobSubOcr.FallbackToX, "Tesseract 3.02");
                 if (!File.Exists(Path.Combine(Configuration.TesseractDirectory, "tesseract.exe")))
                 {
                     if (MessageBox.Show("Download Tesseract 4.0.0", "Subtitle Edit", MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
@@ -6827,8 +6844,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 Configuration.Settings.VobSubOcr.LastOcrMethod = "Tesseract302";
                 comboBoxTesseractEngineMode.Visible = false;
                 labelTesseractEngineMode.Visible = false;
-                checkBoxTesseractFallback.Text = "Fallback to Tesseract 4";
-                checkBoxTesseractFallback.Visible = File.Exists(Path.Combine(Configuration.TesseractDirectory, "tesseract.exe"));
+                checkBoxTesseractFallback.Text = string.Format(Configuration.Settings.Language.VobSubOcr.FallbackToX, "Tesseract 4.00");
                 if (!File.Exists(Path.Combine(Configuration.Tesseract302Directory, "tesseract.exe")))
                 {
                     if (MessageBox.Show("Download Tesseract 3.02", "Subtitle Edit", MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
