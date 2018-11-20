@@ -1999,6 +1999,7 @@
           If new word(s) and longer than 5 chars and exists in spelling dictionary, it is (or they are) accepted -->
     <WordPart from="IVI" to="M" />
     <WordPart from="/" to="l" />
+    <WordPart from="|" to="I" />
     <WordPart from="vv" to="w" />
     <WordPart from="m" to="rn" />
     <WordPart from="l" to="i" />
@@ -2303,6 +2304,8 @@
     <LinePart from=" that' s " to=" that's " />
     <LinePart from="1 2th " to="12th " />
     <LinePart from="-| " to="- I " />
+    <LinePart from=" | " to=" I " />
+    <LinePart from=" |." to=" I." />
     <LinePart from="-1 am " to="- I had " />
     <LinePart from="-1 had " to="- I had " />
     <LinePart from="-1 think " to="- I think " />
@@ -2430,6 +2433,7 @@
     <Beginning from="O kay, " to="Okay, " />
     <Beginning from="l didn't" to="I didn't" />  
     <Beginning from="l don't" to="I don't" />  
+    <Beginning from="-1 " to="- I" />  
   </BeginLines>
   <EndLines>
     <Ending from=", sin" to=", sir." />
@@ -2461,5 +2465,11 @@
   <RegularExpressions>
     <RegEx find="([a-z]) Won't " replaceWith="$1 won't " />
     <RegEx find=" L([,\r\n :;!?]+)" replaceWith=" I$1" />
+    <RegEx find="^-1 (\p{L})" replaceWith="- I $1" />
+    <RegEx find="^-1t (\p{L})" replaceWith="- It $1" />
+    <RegEx find="^-_\.(\p{L})" replaceWith="- ...$1" />
+    <RegEx find="^_\.\.(\p{L})" replaceWith="...$1" />
+
+<!--    <RegEx find="(\p{L}{2,})&quot;s " replaceWith="$1's " /> -->
   </RegularExpressions>
 </OCRFixReplaceList>
