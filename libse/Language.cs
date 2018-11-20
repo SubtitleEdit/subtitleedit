@@ -1644,6 +1644,7 @@ namespace Nikse.SubtitleEdit.Core
                         MergeWithLineAfter = "Merge with line after",
                         Normal = "Normal (remove formatting)",
                         Underline = "Underline",
+                        Box = "Box",
                         Color = "Color...",
                         FontName = "Font name...",
                         Alignment = "Alignment...",
@@ -2665,6 +2666,7 @@ Keep changes?",
                 DiscardTitle = "Discard changes made in OCR?",
                 DiscardText = "Do you want to discard changes made in current OCR session?",
                 MinLineSplitHeight = "Min. line height (split)",
+                FallbackToX = "Fallback to {0}"
             };
 
             VobSubOcrCharacter = new LanguageStructure.VobSubOcrCharacter

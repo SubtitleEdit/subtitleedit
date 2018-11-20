@@ -1504,6 +1504,7 @@
                     public string MergeWithLineAfter { get; set; }
                     public string Normal { get; set; }
                     public string Underline { get; set; }
+                    public string Box { get; set; }
                     public string Color { get; set; }
                     public string FontName { get; set; }
                     public string Alignment { get; set; }
@@ -2541,6 +2542,7 @@
             public string DiscardTitle { get; set; }
             public string DiscardText { get; set; }
             public string MinLineSplitHeight { get; set; }
+            public string FallbackToX { get; set; }
         }
 
         public class VobSubOcrCharacter

@@ -370,6 +370,8 @@ namespace Nikse.SubtitleEdit.Core
             if (s.Contains("< "))
                 s = FixInvalidItalicTags(s);
 
+            s = s.Replace("<box>", string.Empty).Replace("</box>", string.Empty);
+
             return RemoveCommonHtmlTags(s);
         }
 
