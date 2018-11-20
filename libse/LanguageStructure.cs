@@ -2543,6 +2543,7 @@
             public string DiscardText { get; set; }
             public string MinLineSplitHeight { get; set; }
             public string FallbackToX { get; set; }
+            public string ImagePreProcessing { get; set; }            
         }
 
         public class VobSubOcrCharacter

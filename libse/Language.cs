@@ -2666,7 +2666,8 @@ Keep changes?",
                 DiscardTitle = "Discard changes made in OCR?",
                 DiscardText = "Do you want to discard changes made in current OCR session?",
                 MinLineSplitHeight = "Min. line height (split)",
-                FallbackToX = "Fallback to {0}"
+                FallbackToX = "Fallback to {0}",
+                ImagePreProcessing = "Image pre-processing..."
             };
 
             VobSubOcrCharacter = new LanguageStructure.VobSubOcrCharacter

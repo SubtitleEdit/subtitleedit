@@ -6313,6 +6313,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "VobSubOcr/FallbackToX":
                     language.VobSubOcr.FallbackToX = reader.Value;
                     break;
+                case "VobSubOcr/ImagePreProcessing":
+                    language.VobSubOcr.ImagePreProcessing = reader.Value;
+                    break;
                 case "VobSubOcrCharacter/Title":
                     language.VobSubOcrCharacter.Title = reader.Value;
                     break;
