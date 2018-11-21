@@ -19832,6 +19832,8 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
+            var oldParagraph = new Paragraph(p, false);
+
             //if (autoDuration)
             //{
             //    // TODO: auto duration
@@ -19861,6 +19863,8 @@ namespace Nikse.SubtitleEdit.Forms
             var durationInSeconds = (decimal)(p.Duration.TotalSeconds);
             if (durationInSeconds >= numericUpDownDuration.Minimum && durationInSeconds <= numericUpDownDuration.Maximum)
                 SetDurationInSeconds((double)durationInSeconds);
+
+            UpdateOriginalTimeCodes(oldParagraph);
 
             if (goToNext)
                 SubtitleListview1.SelectIndexAndEnsureVisible(index + 1, true);
