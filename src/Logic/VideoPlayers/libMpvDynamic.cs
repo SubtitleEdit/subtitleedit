@@ -424,11 +424,8 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 }
                 _mpvHandle = _mpvCreate.Invoke();
 
-#if DEBUG
-                var logFileName = Path.Combine(Configuration.DataDirectory, "mpv-log-" + Guid.NewGuid() + ".txt");
-                _mpvSetOptionString(_mpvHandle, GetUtf8Bytes("log-file"), GetUtf8Bytes(logFileName));
-#endif
-
+                //var logFileName = Path.Combine(Configuration.DataDirectory, "mpv-log-" + Guid.NewGuid() + ".txt");
+                //_mpvSetOptionString(_mpvHandle, GetUtf8Bytes("log-file"), GetUtf8Bytes(logFileName));
             }
             else if (!Directory.Exists(videoFileName))
             {

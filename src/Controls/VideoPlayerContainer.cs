@@ -358,7 +358,6 @@ namespace Nikse.SubtitleEdit.Controls
                     }
                 }
 
-
                 string text = subtitle.ToText(format);
                 if (text != _mpvTextOld || _mpvTextFileName == null || _retryCount > 0)
                 {
