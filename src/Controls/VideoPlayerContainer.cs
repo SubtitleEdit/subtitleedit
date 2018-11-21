@@ -342,7 +342,7 @@ namespace Nikse.SubtitleEdit.Controls
                     Configuration.Settings.SubtitleSettings.SsaFontSize = oldFontSize;
                     Configuration.Settings.SubtitleSettings.SsaFontBold = oldFontBold;
 
-                    if (oldSub.Header.Length > 20 && oldSub.Header.Substring(3, 3) == "STL")
+                    if (oldSub.Header != null && oldSub.Header.Length > 20 && oldSub.Header.Substring(3, 3) == "STL")
                     {
                         subtitle.Header = subtitle.Header.Replace("Style: Default,", "Style: Box,arial,20,&H00FFFFFF,&H0300FFFF,&H00000000,&H02000000,0,0,0,0,100,100,0,0,3,2,0,2,10,10,10,1" +
                                                                    Environment.NewLine + "Style: Default,");
