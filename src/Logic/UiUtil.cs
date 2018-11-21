@@ -70,7 +70,7 @@ namespace Nikse.SubtitleEdit.Logic
                             {
                                 videoPlayerContainer.SetSubtitleText(text, p, subtitle);
                             }
-                            TimeOutRefresh(subtitle, videoPlayerContainer);
+                            TimeOutRefresh(subtitle, videoPlayerContainer, p);
                             return i;
                         }
                     }
@@ -88,14 +88,14 @@ namespace Nikse.SubtitleEdit.Logic
             return -1;
         }
 
-        private static void TimeOutRefresh(Subtitle subtitle, VideoPlayerContainer videoPlayerContainer)
+        private static void TimeOutRefresh(Subtitle subtitle, VideoPlayerContainer videoPlayerContainer, Paragraph p = null)
         {
             if (DateTime.UtcNow.Ticks - _lastShowSubTicks > 10000 * 1000) // more than 1+ seconds ago
             {
                 var newHash = subtitle.GetFastHashCode(string.Empty);
                 if (newHash != _lastShowSubHash)
                 {
-                    videoPlayerContainer.SetSubtitleText(string.Empty, null, subtitle);
+                    videoPlayerContainer.SetSubtitleText(p == null ? string.Empty : p.Text, p, subtitle);
                     _lastShowSubHash = newHash;
                 }
 
