@@ -13806,8 +13806,8 @@ namespace Nikse.SubtitleEdit.Forms
                 var lines = p.Text.SplitToLines();
                 foreach (var line in lines)
                 {
-                    var trimmed = Utilities.RemoveSsaTags(line).TrimStart();
-                    if (trimmed.StartsWith('-') || trimmed.StartsWith("<i>-", StringComparison.Ordinal) || trimmed.StartsWith("<i> -", StringComparison.Ordinal))
+                    var trimmed = HtmlUtil.RemoveHtmlTags(line, true).TrimStart();
+                    if (trimmed.StartsWith('-'))
                     {
                         hasStartDash = true;
                         break;
@@ -13831,19 +13831,8 @@ namespace Nikse.SubtitleEdit.Forms
                 foreach (var line in lines)
                 {
                     var pre = string.Empty;
-                    var s = line;
-                    if (s.StartsWith("{\\") && s.IndexOf('}') > 0)
-                    {
-                        pre = s.Substring(0, s.IndexOf('}') + 1);
-                        s = s.Remove(0, pre.Length);
-                    }
-
-                    if (s.TrimStart().StartsWith('-') || s.TrimStart().StartsWith("<i>-", StringComparison.Ordinal) || s.TrimStart().StartsWith("<i> -", StringComparison.Ordinal))
-                        sb.AppendLine(pre + line);
-                    else if (s.TrimStart().StartsWith("<i>", StringComparison.Ordinal) && s.Trim().Length > 3)
-                        sb.AppendLine(pre + "<i>- " + s.Substring(3).TrimStart());
-                    else
-                        sb.AppendLine(pre + "- " + s);
+                    var s = SplitStartTags(line, ref pre);
+                    sb.AppendLine(pre + "- " + s);
                 }
                 var text = sb.ToString().Trim();
                 _subtitle.Paragraphs[index].Text = text;
@@ -13863,19 +13852,8 @@ namespace Nikse.SubtitleEdit.Forms
                 foreach (var line in lines)
                 {
                     var pre = string.Empty;
-                    var s = line;
-                    if (s.StartsWith("{\\") && s.IndexOf('}') > 0)
-                    {
-                        pre = s.Substring(0, s.IndexOf('}') + 1);
-                        s = s.Remove(0, pre.Length);
-                    }
-
-                    if (s.TrimStart().StartsWith('-'))
-                        sb.AppendLine(pre + s.TrimStart().TrimStart('-').TrimStart());
-                    else if (s.TrimStart().StartsWith("<i>-", StringComparison.Ordinal) || s.TrimStart().StartsWith("<i> -", StringComparison.Ordinal))
-                        sb.AppendLine(pre + "<i>" + s.TrimStart().Substring(3).TrimStart().TrimStart('-').TrimStart());
-                    else
-                        sb.AppendLine(pre + s);
+                    var s = SplitStartTags(line, ref pre);
+                    sb.AppendLine(pre + s.TrimStart('-').TrimStart());
                 }
                 string text = sb.ToString().Trim();
                 _subtitle.Paragraphs[index].Text = text;
@@ -13883,6 +13861,46 @@ namespace Nikse.SubtitleEdit.Forms
                 if (index == _subtitleListViewIndex)
                     textBoxListViewText.Text = text;
             }
+        }
+
+        private static string SplitStartTags(string line, ref string pre)
+        {
+            var s = line;
+            if (s.StartsWith("{\\") && s.IndexOf('}') > 0)
+            {
+                pre = s.Substring(0, s.IndexOf('}') + 1);
+                s = s.Remove(0, pre.Length);
+            }
+
+            bool updated = true;
+            while (updated)
+            {
+                updated = false;
+                if (s.StartsWith(' '))
+                {
+                    pre += ' ';
+                    s = s.Remove(0, 1);
+                    updated = true;
+                }
+                else if (s.StartsWith("<i>") || s.StartsWith("<b>") || s.StartsWith("<u>"))
+                {
+                    pre += s.Substring(0, 3);
+                    s = s.Remove(0, 3);
+                    updated = true;
+                }
+                else if (s.StartsWith("<font"))
+                {
+                    int endFont = s.IndexOf(">");
+                    if (endFont > 0)
+                    {
+                        pre += s.Substring(0, endFont + 1);
+                        s = s.Remove(0, endFont + 1);
+                        updated = true;
+                    }
+                }
+            }
+
+            return s;
         }
 
         private void SetTitle()
