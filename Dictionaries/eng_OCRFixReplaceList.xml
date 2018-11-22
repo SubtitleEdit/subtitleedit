@@ -1976,6 +1976,8 @@
     <Word from="bomberjust" to="bomber just" />
     <Word from="Ilovedit" to="I loved it" />
     <Word from="PIaza" to="Plaza" />
+    <Word from="youll" to="you'll" />
+    <Word from="Icould" to="I could" />
   </WholeWords>
   <PartialWordsAlways>
     <!-- Will be replaced always -->
@@ -2431,9 +2433,13 @@
     <Beginning from="He' s " to="He's " />
     <Beginning from="She' s " to="She's " />
     <Beginning from="O kay, " to="Okay, " />
-    <Beginning from="l didn't" to="I didn't" />  
-    <Beginning from="l don't" to="I don't" />  
-    <Beginning from="-1 " to="- I" />  
+    <Beginning from="l didn't" to="I didn't" />
+    <Beginning from="l don't" to="I don't" />
+    <Beginning from="-1 " to="- I" />
+    <Beginning from="I'II " to="I'll " />
+    <Beginning from="Do l " to="Do I " />
+    <Beginning from="-] " to="- I " />
+    <Beginning from="] " to="I " />
   </BeginLines>
   <EndLines>
     <Ending from=", sin" to=", sir." />
@@ -2469,7 +2475,6 @@
     <RegEx find="^-1t (\p{L})" replaceWith="- It $1" />
     <RegEx find="^-_\.(\p{L})" replaceWith="- ...$1" />
     <RegEx find="^_\.\.(\p{L})" replaceWith="...$1" />
-
-<!--    <RegEx find="(\p{L}{2,})&quot;s " replaceWith="$1's " /> -->
+    <!--    <RegEx find="(\p{L}{2,})&quot;s " replaceWith="$1's " /> -->
   </RegularExpressions>
 </OCRFixReplaceList>

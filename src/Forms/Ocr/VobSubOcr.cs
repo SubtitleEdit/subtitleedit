@@ -6971,9 +6971,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             DialogResult result = saveFileDialog1.ShowDialog(this);
             if (result == DialogResult.OK)
             {
-                _fromMenuItem = true;
-                Bitmap bmp = GetSubtitleBitmap(_selectedIndex);
-                _fromMenuItem = false;
+                var bmp = GetSubtitleBitmap(_selectedIndex);
                 if (bmp == null)
                 {
                     MessageBox.Show("No image!");
