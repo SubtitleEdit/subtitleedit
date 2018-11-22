@@ -13901,7 +13901,7 @@ namespace Nikse.SubtitleEdit.Forms
         private static string SplitStartTags(string line, ref string pre)
         {
             var s = line;
-            if (s.StartsWith("{\\") && s.IndexOf('}') > 0)
+            if (s.StartsWith("{\\", StringComparison.Ordinal) && s.IndexOf('}') > 0)
             {
                 pre = s.Substring(0, s.IndexOf('}') + 1);
                 s = s.Remove(0, pre.Length);
@@ -13917,15 +13917,17 @@ namespace Nikse.SubtitleEdit.Forms
                     s = s.Remove(0, 1);
                     updated = true;
                 }
-                else if (s.StartsWith("<i>") || s.StartsWith("<b>") || s.StartsWith("<u>"))
+                else if (s.StartsWith("<i>", StringComparison.OrdinalIgnoreCase) ||
+                         s.StartsWith("<b>", StringComparison.OrdinalIgnoreCase) ||
+                         s.StartsWith("<u>", StringComparison.OrdinalIgnoreCase))
                 {
                     pre += s.Substring(0, 3);
                     s = s.Remove(0, 3);
                     updated = true;
                 }
-                else if (s.StartsWith("<font"))
+                else if (s.StartsWith("<font", StringComparison.OrdinalIgnoreCase))
                 {
-                    int endFont = s.IndexOf(">");
+                    int endFont = s.IndexOf('>');
                     if (endFont > 0)
                     {
                         pre += s.Substring(0, endFont + 1);
@@ -20855,6 +20857,7 @@ namespace Nikse.SubtitleEdit.Forms
                 foreach (int i in indices)
                 {
                     var pre = string.Empty;
+                    var post = string.Empty;
                     int indexOfEndBracket = -1;
                     if (_subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
                     {
@@ -20892,16 +20895,45 @@ namespace Nikse.SubtitleEdit.Forms
                         pre = p.Text.Substring(0, indexOfEndBracket + 1);
                         p.Text = p.Text.Remove(0, indexOfEndBracket + 1);
                     }
+
+                    bool updated = true;
+                    while (updated)
+                    {
+                        updated = false;
+                        if (p.Text.StartsWith(' '))
+                        {
+                            pre += ' ';
+                            p.Text = p.Text.Remove(0, 1);
+                            updated = true;
+                        }
+                        else if (p.Text.StartsWith("<font", StringComparison.OrdinalIgnoreCase))
+                        {
+                            int endFont = p.Text.IndexOf(">");
+                            if (endFont > 0)
+                            {
+                                pre += p.Text.Substring(0, endFont + 1);
+                                p.Text = p.Text.Remove(0, endFont + 1);
+                                updated = true;
+                            }
+                            if (p.Text.EndsWith("</font>", StringComparison.OrdinalIgnoreCase))
+                            {
+                                var endTag = "</font>";
+                                post += endTag;
+                                p.Text = p.Text.Remove(p.Text.Length - endTag.Length, endTag.Length);
+                            }
+                        }
+                    }
+
                     if (_subtitle.Paragraphs[i].Text.Contains(tag))
                     {
-                        _subtitle.Paragraphs[i].Text = pre + _subtitle.Paragraphs[i].Text.Replace("♪", string.Empty).Replace(Environment.NewLine + " ", Environment.NewLine).Replace(" " + Environment.NewLine, Environment.NewLine).Trim();
+                        _subtitle.Paragraphs[i].Text = pre + _subtitle.Paragraphs[i].Text.Replace("♪", string.Empty).Replace(Environment.NewLine + " ", Environment.NewLine).Replace(" " + Environment.NewLine, Environment.NewLine).Trim() + post;
                     }
                     else
                     {
                         if (Configuration.Settings.Tools.MusicSymbolStyle.Equals("single", StringComparison.OrdinalIgnoreCase))
-                            p.Text = string.Format("{0}{1} {2}", pre, tag, p.Text.Replace(Environment.NewLine, Environment.NewLine + tag + " "));
+                            p.Text = string.Format("{0}{1} {2}{3}", pre, tag, p.Text.Replace(Environment.NewLine, Environment.NewLine + tag + " "), post);
                         else
-                            p.Text = string.Format("{0}{1} {2} {1}", pre, tag, p.Text.Replace(Environment.NewLine, " " + tag + Environment.NewLine + tag + " "));
+                            p.Text = string.Format("{0}{1} {2} {1}{3}", pre, tag, p.Text.Replace(Environment.NewLine, " " + tag + Environment.NewLine + tag + " "), post);
                     }
                     SubtitleListview1.SetText(i, _subtitle.Paragraphs[i].Text);
                 }
