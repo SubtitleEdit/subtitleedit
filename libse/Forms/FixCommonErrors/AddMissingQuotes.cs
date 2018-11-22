@@ -11,11 +11,13 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             int noOfFixes = 0;
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
-                Paragraph p = subtitle.Paragraphs[i];
+                var p = subtitle.Paragraphs[i];
+
+                p.Text = FixDifferentQuotes(p.Text); //TODO: extract to own rule
 
                 if (Utilities.CountTagInText(p.Text, '"') == 1)
                 {
-                    Paragraph next = subtitle.GetParagraphOrDefault(i + 1);
+                    var next = subtitle.GetParagraphOrDefault(i + 1);
                     if (next != null)
                     {
                         double betweenMilliseconds = next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds;
@@ -27,7 +29,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                             next = null; // seems to have valid quotes, so no spanning
                     }
 
-                    Paragraph prev = subtitle.GetParagraphOrDefault(i - 1);
+                    var prev = subtitle.GetParagraphOrDefault(i - 1);
                     if (prev != null)
                     {
                         double betweenMilliseconds = p.StartTime.TotalMilliseconds - prev.EndTime.TotalMilliseconds;
@@ -170,5 +172,20 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             callbacks.UpdateFixStatus(noOfFixes, fixAction, language.XMissingQuotesAdded);
         }
 
+        private string FixDifferentQuotes(string text)
+        {
+            if (text.Contains("„"))
+                return text;
+
+            if (Utilities.CountTagInText(text, "\"") == 1 && Utilities.CountTagInText(text, "”") == 1)
+            {
+                return text.Replace("”", "\"");
+            }
+            if (Utilities.CountTagInText(text, "\"") == 1 && Utilities.CountTagInText(text, "“") == 1)
+            {
+                return text.Replace("“", "\"");
+            }
+            return text;
+        }
     }
 }

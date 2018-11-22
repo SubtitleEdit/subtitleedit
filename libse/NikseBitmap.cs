@@ -1129,6 +1129,27 @@ namespace Nikse.SubtitleEdit.Core
             }
         }
 
+        public void MakeTwoColor(int minRgb, Color background, Color foreground)
+        {
+            var bufferBackground = new byte[4];
+            bufferBackground[0] = background.B; // B
+            bufferBackground[1] = background.G; // G
+            bufferBackground[2] = background.R; // R
+            bufferBackground[3] = 255; // A
+            var bufferForeground = new byte[4];
+            bufferForeground[0] = foreground.B; // B
+            bufferForeground[1] = foreground.G; // G
+            bufferForeground[2] = foreground.R; // R
+            bufferForeground[3] = 255; // A
+            for (int i = 0; i < _bitmapData.Length; i += 4)
+            {
+                if (_bitmapData[i + 3] < 1 || _bitmapData[i + 0] + _bitmapData[i + 1] + _bitmapData[i + 2] < minRgb)
+                    Buffer.BlockCopy(bufferBackground, 0, _bitmapData, i, 4);
+                else
+                    Buffer.BlockCopy(bufferForeground, 0, _bitmapData, i, 4);
+            }
+        }
+
         public void MakeVerticalLinePartTransparent(int xStart, int xEnd, int y)
         {
             if (xEnd > Width - 1)

@@ -44,6 +44,9 @@ namespace Nikse.SubtitleEdit.Logic
             return QuartsPlayer.GetVideoInfo(fileName);
         }
 
+        private static long _lastShowSubTicks = DateTime.UtcNow.Ticks;
+        private static string _lastShowSubHash;
+
         public static int ShowSubtitle(Subtitle subtitle, VideoPlayerContainer videoPlayerContainer)
         {
             if (videoPlayerContainer.VideoPlayer != null)
@@ -60,17 +63,44 @@ namespace Nikse.SubtitleEdit.Logic
                         if (!isInfo)
                         {
                             if (videoPlayerContainer.LastParagraph != p)
+                            {
                                 videoPlayerContainer.SetSubtitleText(text, p, subtitle);
+                            }
                             else if (videoPlayerContainer.SubtitleText != text)
+                            {
                                 videoPlayerContainer.SetSubtitleText(text, p, subtitle);
+                            }
+                            TimeOutRefresh(subtitle, videoPlayerContainer, p);
                             return i;
                         }
                     }
                 }
+
                 if (!string.IsNullOrEmpty(videoPlayerContainer.SubtitleText))
+                {
                     videoPlayerContainer.SetSubtitleText(string.Empty, null, subtitle);
+                }
+                else
+                {
+                    TimeOutRefresh(subtitle, videoPlayerContainer);
+                }
             }
             return -1;
+        }
+
+        private static void TimeOutRefresh(Subtitle subtitle, VideoPlayerContainer videoPlayerContainer, Paragraph p = null)
+        {
+            if (DateTime.UtcNow.Ticks - _lastShowSubTicks > 10000 * 1000) // more than 1+ seconds ago
+            {
+                var newHash = subtitle.GetFastHashCode(string.Empty);
+                if (newHash != _lastShowSubHash)
+                {
+                    videoPlayerContainer.SetSubtitleText(p == null ? string.Empty : p.Text, p, subtitle);
+                    _lastShowSubHash = newHash;
+                }
+
+                _lastShowSubTicks = DateTime.UtcNow.Ticks;
+            }
         }
 
         public static int ShowSubtitle(Subtitle subtitle, Subtitle original, VideoPlayerContainer videoPlayerContainer)

@@ -548,6 +548,12 @@
     <Compile Include="Forms\Ocr\GetTesseract302Dictionaries.Designer.cs">
       <DependentUpon>GetTesseract302Dictionaries.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Ocr\OcrPreprocessingT4.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Ocr\OcrPreprocessingT4.Designer.cs">
+      <DependentUpon>OcrPreprocessingT4.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Ocr\OcrPreprocessingSettings.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -955,6 +961,7 @@
     <Compile Include="Logic\Ocr\NOcrPoint.cs" />
     <Compile Include="Logic\Ocr\PreprocessingSettings.cs" />
     <Compile Include="Logic\Ocr\SpellCheckOcrTextResult.cs" />
+    <Compile Include="Logic\Ocr\Tesseract\TesseractMultiThreadRunner.cs" />
     <Compile Include="Logic\Ocr\Tesseract\TesseractThreadRunner.cs" />
     <Compile Include="Logic\Ocr\Tesseract\TesseractRunner.cs" />
     <Compile Include="Logic\Ocr\Tesseract\TesseractMultiRunner.cs" />
@@ -1242,6 +1249,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Ocr\GetTesseract302Dictionaries.resx">
       <DependentUpon>GetTesseract302Dictionaries.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Ocr\OcrPreprocessingT4.resx">
+      <DependentUpon>OcrPreprocessingT4.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Ocr\OcrPreprocessingSettings.resx">
       <DependentUpon>OcrPreprocessingSettings.cs</DependentUpon>

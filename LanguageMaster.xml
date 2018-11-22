@@ -1136,6 +1136,7 @@ Note: Do check free disk space.</WaveFileMalformed>
         <MergeWithLineAfter>Merge with line after</MergeWithLineAfter>
         <Normal>Normal (remove formatting)</Normal>
         <Underline>Underline</Underline>
+        <Box>Box</Box>
         <Color>Color...</Color>
         <FontName>Font name...</FontName>
         <Alignment>Alignment...</Alignment>
@@ -2334,6 +2335,8 @@ Keep changes?</KeepChangesMessage>
     <DiscardTitle>Discard changes made in OCR?</DiscardTitle>
     <DiscardText>Do you want to discard changes made in current OCR session?</DiscardText>
     <MinLineSplitHeight>Min. line height (split)</MinLineSplitHeight>
+    <FallbackToX>Fallback to {0}</FallbackToX>
+    <ImagePreProcessing>Image pre-processing...</ImagePreProcessing>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub - Manual image to text</Title>

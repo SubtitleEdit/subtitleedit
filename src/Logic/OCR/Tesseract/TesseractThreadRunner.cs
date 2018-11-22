@@ -42,7 +42,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Tesseract
                 return;
             }
 
-            var job = (ImageJob)j;
+            var job = (ImageJob)j;            
             job.Result = _tesseractRunner.Run(job.LanguageCode, job.PsmMode, job.EngineMode, job.FileName, job.Run302);
             lock (QueueLock)
             {
@@ -70,7 +70,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Tesseract
 
         public void CheckQueue()
         {
-            if (_jobQueue.Count == 0)
+            if (_abort || _jobQueue.Count == 0)
             {
                 return;
             }
@@ -82,7 +82,8 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Tesseract
                 if (job != null && job.Completed < checkTime)
                 {
                     _jobQueue.Dequeue();
-                    _callback?.Invoke(job.Index, job);
+                    if (!_abort)
+                        _callback?.Invoke(job.Index, job);
                 }
             }
         }

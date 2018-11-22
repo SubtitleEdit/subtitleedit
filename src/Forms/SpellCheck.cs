@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
@@ -50,8 +51,6 @@ namespace Nikse.SubtitleEdit.Forms
         private string _languageName;
         private Main _mainWindow;
         private string _currentDictionary;
-
-        private static readonly char[] ExpectedChars = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '%', '&', '@', '$', '*', '=', '£', '#', '_', '½', '^' };
 
         public class SuggestionParameter
         {
@@ -524,7 +523,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (Configuration.Settings.Tools.SpellCheckOneLetterWords)
                     minLength = 1;
 
-                if (_currentWord.Trim().Length >= minLength && !_currentWord.Contains(ExpectedChars))
+                if (_currentWord.Trim().Length >= minLength)
                 {
                     _prefix = string.Empty;
                     _postfix = string.Empty;
@@ -554,6 +553,10 @@ namespace Nikse.SubtitleEdit.Forms
                     else if (_skipOneList.Contains(key))
                     {
                         // "skip one" again (after change whole text)
+                    }
+                    else if (IsNumber(_currentWord))
+                    {
+                        _noOfSkippedWords++;
                     }
                     else if (_spellCheckWordLists.HasUserWord(_currentWord))
                     {
@@ -767,10 +770,22 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        private static readonly Regex RegexIsNumber = new Regex("^\\d+$", RegexOptions.Compiled);
+        private static readonly Regex RegexIsEpisodeNumber = new Regex("^\\d+x\\d+$", RegexOptions.Compiled); // e.g. 12x02
+        private static bool IsNumber(string s)
+        {
+            s = s.Trim('$', '£');
+            if (RegexIsNumber.IsMatch(s))
+                return true;
+            if (RegexIsEpisodeNumber.IsMatch(s))
+                return true;
+            return false;
+        }
 
         private void SetWords(string s)
         {
             s = _spellCheckWordLists.ReplaceHtmlTagsWithBlanks(s);
+            s = _spellCheckWordLists.ReplaceAssTagsWithBlanks(s);
             s = _spellCheckWordLists.ReplaceKnownWordsOrNamesWithBlanks(s);
             _words = SpellCheckWordLists.Split(s);
         }

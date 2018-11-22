@@ -45,8 +45,8 @@
             this.groupBoxCropping = new System.Windows.Forms.GroupBox();
             this.checkBoxCropTransparent = new System.Windows.Forms.CheckBox();
             this.groupBoxColors = new System.Windows.Forms.GroupBox();
-            this.checkBoxInvertColors = new System.Windows.Forms.CheckBox();
             this.checkBoxYellowToWhite = new System.Windows.Forms.CheckBox();
+            this.checkBoxInvertColors = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownThreshold)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSubtitleImage)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -73,7 +73,7 @@
             0,
             0});
             this.numericUpDownThreshold.Minimum = new decimal(new int[] {
-            50,
+            1,
             0,
             0,
             0});
@@ -240,6 +240,16 @@
             this.groupBoxColors.TabStop = false;
             this.groupBoxColors.Text = "Colors";
             // 
+            // checkBoxYellowToWhite
+            // 
+            this.checkBoxYellowToWhite.AutoSize = true;
+            this.checkBoxYellowToWhite.Location = new System.Drawing.Point(9, 42);
+            this.checkBoxYellowToWhite.Name = "checkBoxYellowToWhite";
+            this.checkBoxYellowToWhite.Size = new System.Drawing.Size(97, 17);
+            this.checkBoxYellowToWhite.TabIndex = 28;
+            this.checkBoxYellowToWhite.Text = "Yellow to white";
+            this.checkBoxYellowToWhite.UseVisualStyleBackColor = true;
+            // 
             // checkBoxInvertColors
             // 
             this.checkBoxInvertColors.AutoSize = true;
@@ -251,17 +261,7 @@
             this.checkBoxInvertColors.UseVisualStyleBackColor = true;
             this.checkBoxInvertColors.CheckedChanged += new System.EventHandler(this.checkBoxInvertColors_CheckedChanged);
             // 
-            // checkBoxYellowToWhite
-            // 
-            this.checkBoxYellowToWhite.AutoSize = true;
-            this.checkBoxYellowToWhite.Location = new System.Drawing.Point(9, 42);
-            this.checkBoxYellowToWhite.Name = "checkBoxYellowToWhite";
-            this.checkBoxYellowToWhite.Size = new System.Drawing.Size(97, 17);
-            this.checkBoxYellowToWhite.TabIndex = 28;
-            this.checkBoxYellowToWhite.Text = "Yellow to white";
-            this.checkBoxYellowToWhite.UseVisualStyleBackColor = true;
-            // 
-            // SetForeColorThreshold
+            // OcrPreprocessingSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -279,7 +279,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.MinimumSize = new System.Drawing.Size(790, 481);
-            this.Name = "SetForeColorThreshold";
+            this.Name = "OcrPreprocessingSettings";
             this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "OCR image preprocessing";

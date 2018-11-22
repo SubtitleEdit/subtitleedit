@@ -16,7 +16,9 @@
    * Make custom "Choose font" dialog - thx OmrSi
    * Update Bing translator from V2 to V3 API
    * Faster Tesseract OCR if CPU has many cores
-   * Try using word lists for uppercase i inside words - thx TeDDy
+   * Try using word lists for uppercase "i" inside words - thx TeDDy
+   * Improve unknown json importer - thx Thamy
+   * Improve paste in list view - thx OmrSi/darnn
 * FIXED:
    * Go back to Tesseract 3.02 (T4 available as in-program download)
    * Fix Bing translator sign-up url - thx sopor
@@ -32,7 +34,17 @@
    * Fix "Set end, next start + go to next" w org sub - thx OmrSi
    * Fix crash in Remove text for HI" - thx indeed-a-genius
    * Fix "total seconds" in "Export custom format" - thx David
-
+   * Fix mpv crash/hang after open 4+ videos
+   * Add custom fade up/down for DCinema smpte - thx felagund
+   * Fix reading last line with zero duration - thx darnn
+   * Fix for column paste - thx OmrSi
+   * Fix adding music symbols with tags - thx 
+   * Fix syntax coloring in "Fix common errors" - thx OmrSi
+   * Fix somtimes not updating total line length - thx OmrSi
+   * Fix text/image overlap in manual image to text OCR - thx amichaeltm
+   * Do not ignore words of combined letters/numbers - thx Boulder08
+   * Trying to fix mpv missing text refresh - thx darnn
+   * Fix crash in "add better multi match" - thx Boulder08
 
 3.5.7 (9th August 2018)
 * NEW:

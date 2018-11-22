@@ -179,6 +179,30 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
             return s;
         }
 
+        public string ReplaceAssTagsWithBlanks(string s)
+        {
+            int start = s.IndexOf("{\\", StringComparison.Ordinal);
+            int end = s.IndexOf('}');
+            if (start < 0 || end < 0 || end < start)
+            {
+                return s;
+            }
+
+            while (start >= 0)
+            {
+                end = s.IndexOf('}', start + 1);
+                if (end < start)
+                    break;
+                int l = end - start + 1;
+                s = s.Remove(start, l).Insert(start, string.Empty.PadLeft(l));
+                end++;
+                if (end >= s.Length)
+                    break;
+                start = s.IndexOf("{\\", end, StringComparison.Ordinal);
+            }
+            return s;
+        }
+
         public bool IsWordInUserPhrases(int index, List<SpellCheckWord> words)
         {
             string current = words[index].Text;

@@ -13,7 +13,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         {
             InitializeComponent();
             var wc = new WebClient { Proxy = Utilities.GetProxy() };
-            wc.DownloadDataAsync(new Uri("https://github.com/SubtitleEdit/support-files/raw/master/Tesseract4.tar.gz"));
+            wc.DownloadDataAsync(new Uri("https://github.com/SubtitleEdit/support-files/raw/master/Tesseract400.tar.gz"));
             wc.DownloadDataCompleted += wc_DownloadDataCompleted;
             wc.DownloadProgressChanged += (o, args) =>
             {
@@ -25,7 +25,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         {
             if (e.Error != null)
             {
-                MessageBox.Show(Configuration.Settings.Language.GetTesseractDictionaries.DownloadFailed);
+                MessageBox.Show(Configuration.Settings.Language.GetTesseractDictionaries.DownloadFailed + Environment.NewLine +
+                                Environment.NewLine +
+                                e.Error.Message + ": " + e.Error.StackTrace);
                 DialogResult = DialogResult.Cancel;
                 return;
             }

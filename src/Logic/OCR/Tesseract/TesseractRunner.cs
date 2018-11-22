@@ -135,7 +135,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Tesseract
                 lineStart = html.IndexOf("<span class='ocr_line'", lineStart + 1, StringComparison.InvariantCulture);
             }
             var result = sb.ToString().Replace("<em>", "<i>").Replace("</em>", "</i>");
-            result = result.Replace("<strong>", "<i>").Replace("</strong>", "</i>");
+            result = result.Replace("<strong>", string.Empty).Replace("</strong>", string.Empty);
             result = result.Replace("</i> <i>", " ");
             result = result.Replace("</i><i>", string.Empty);
 
