@@ -19883,13 +19883,13 @@ namespace Nikse.SubtitleEdit.Forms
                 SetDurationInSeconds((double)durationInSeconds);
 
             UpdateOriginalTimeCodes(oldParagraph);
+            RestartHistory();
 
             if (goToNext)
                 SubtitleListview1.SelectIndexAndEnsureVisible(index + 1, true);
 
             ShowStatus(string.Format(_language.VideoControls.AdjustedViaEndTime, p.StartTime.ToShortString()));
             audioVisualizer.Invalidate();
-            _makeHistoryPaused = false;
         }
 
         public void SetCurrentStartAutoDurationAndGotoNext(int index)
