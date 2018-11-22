@@ -375,7 +375,6 @@
 		<Word from="lazne" to="lažne" />
 		<Word from="lazni" to="lažni" />
 		<Word from="lazov" to="lažljivac" />
-		<Word from="ledja" to="leđa" />
 		<Word from="ledjima" to="leđima" />
 		<Word from="leprsa" to="leprša" />
 		<Word from="lezala" to="ležala" />
@@ -1208,6 +1207,7 @@
 		<RegEx find="([bB])elez" replaceWith="$1iljež" />
 		<RegEx find="\b([bBpP])ice(s|mo|te)\b" replaceWith="$1it će$2" />
 		<RegEx find="\b([bBpP])iti +c([ue]s?|emo|ete)\b" replaceWith="$1it ć$2" />
+		<RegEx find="edja" replaceWith="eđa" />
 		<RegEx find="eznadez" replaceWith="eznad" />
 		<RegEx find="([bB])ezanj" replaceWith="$1ježanj" />
 		<RegEx find="([bB])i?j?ez([ei]|i[ms]|imo|ite|ao|al[aeio]|ati)\b" replaceWith="$1jež$2" />
@@ -1470,7 +1470,6 @@
 		<RegEx find="pozoris" replaceWith="kazališ" />
 		<RegEx find="Pozoris" replaceWith="Kazališ" />
 		<RegEx find="ozuri" replaceWith="ožuri" />
-		<RegEx find="redjas" replaceWith="rijaš" />
 		<RegEx find="redlaz" replaceWith="redlaž" />
 		<RegEx find="(?&lt;![Šš])([pP])rica" replaceWith="$1riča" />
 		<RegEx find="rilicn" replaceWith="riličn" />
