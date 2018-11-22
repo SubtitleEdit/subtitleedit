@@ -6,6 +6,7 @@
    * Add new subtitle formats
    * Add some image pre-processing for OCR
    * Add "DVD Studio Pro" file properties - thx Daniel
+   * Add ebu stl boxing - thx Milenko
 * IMPROVED:
    * Update Bulgarian translation - thx KalinM
    * Update Finnish translation - thx Teijo S
@@ -45,6 +46,11 @@
    * Do not ignore words of combined letters/numbers - thx Boulder08
    * Trying to fix mpv missing text refresh - thx darnn
    * Fix crash in "add better multi match" - thx Boulder08
+   * Remove empty pics when importing mkv/vobsub - thx Roy
+   * Don't lose coloring after delete line in OCR - thx BxMxK
+   * Fix adjust via end position w original subtitle - thx OmrSi
+   * Fix toggle dialog dashes with font tags
+
 
 3.5.7 (9th August 2018)
 * NEW:
