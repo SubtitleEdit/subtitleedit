@@ -1978,6 +1978,9 @@
     <Word from="PIaza" to="Plaza" />
     <Word from="youll" to="you'll" />
     <Word from="Icould" to="I could" />
+    <Word from="Ispent" to="I spent" />
+    <Word from="Italked" to="I talked" />
+    <Word from="itis" to="it is" />
   </WholeWords>
   <PartialWordsAlways>
     <!-- Will be replaced always -->
@@ -2439,7 +2442,18 @@
     <Beginning from="I'II " to="I'll " />
     <Beginning from="Do l " to="Do I " />
     <Beginning from="-] " to="- I " />
+    <Beginning from="- ] " to="- I " />
     <Beginning from="] " to="I " />
+    <Beginning from="-| " to="- I " />
+    <Beginning from="- | " to="- I " />
+    <Beginning from="!/ know" to="I know" />
+    <Beginning from="!/ promise" to="I promise" />
+    <Beginning from="!/ think" to="I think" />
+    <Beginning from="!/ will" to="I will" />
+    <Beginning from="!/ can" to="I can" />
+    <Beginning from="!/ see" to="I see" />
+    <Beginning from="!/ do" to="I do" />
+    <Beginning from="!/ am" to="I am" />
   </BeginLines>
   <EndLines>
     <Ending from=", sin" to=", sir." />

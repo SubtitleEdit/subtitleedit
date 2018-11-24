@@ -1097,9 +1097,20 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                                     guesses.Add(w);
                             }
 
+                            if (!correct && autoFix && word.Length > 3 && char.IsUpper(word[0]) && !_nameList.Contains(word))
+                            {
+                                var rest = word.Substring(1);
+                                if (rest != rest.ToUpperInvariant())
+                                {
+                                    var newWord = word[0] + rest.ToLowerInvariant();
+                                    if (_nameList.Contains(newWord))
+                                        guesses.Add(newWord);
+                                }
+                            }
+
                             if (word.Length > 5 && autoGuess == AutoGuessLevel.Aggressive)
                             {
-                                guesses = (List<string>)_ocrFixReplaceList.CreateGuessesFromLetters(word);
+                                guesses.AddRange((List<string>)_ocrFixReplaceList.CreateGuessesFromLetters(word));
 
                                 if (word[0] == 'L')
                                     guesses.Add("I" + word.Substring(1));
