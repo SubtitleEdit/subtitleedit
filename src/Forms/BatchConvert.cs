@@ -1338,7 +1338,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 var mode = Configuration.Settings.Tools.BatchConvertFixRtlMode;
                 string rtl = "\u202B";
-                for (int i = 0; i < p.Subtitle.Paragraphs.Count - 1; i++)
+                for (int i = 0; i < p.Subtitle.Paragraphs.Count; i++)
                 {
                     var paragraph = p.Subtitle.Paragraphs[i];
                     if (mode == BatchConvertFixRtl.RemoveUnicode)
