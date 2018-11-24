@@ -197,6 +197,10 @@
             public string NotConverted { get; set; }
             public string Converted { get; set; }
             public string Settings { get; set; }
+            public string FixRtl { get; set; }
+            public string FixRtlAddUnicode { get; set; }
+            public string FixRtlRemoveUnicode { get; set; }
+            public string FixRtlReverseStartEnd { get; set; }
             public string SplitLongLines { get; set; }
             public string AutoBalance { get; set; }
             public string ScanFolder { get; set; }

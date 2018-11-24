@@ -496,6 +496,18 @@ namespace Nikse.SubtitleEdit.Core
                 case "BatchConvert/Settings":
                     language.BatchConvert.Settings = reader.Value;
                     break;
+                case "BatchConvert/FixRtl":
+                    language.BatchConvert.FixRtl = reader.Value;
+                    break;
+                case "BatchConvert/FixRtlAddUnicode":
+                    language.BatchConvert.FixRtlAddUnicode = reader.Value;
+                    break;
+                case "BatchConvert/FixRtlRemoveUnicode":
+                    language.BatchConvert.FixRtlRemoveUnicode = reader.Value;
+                    break;
+                case "BatchConvert/FixRtlReverseStartEnd":
+                    language.BatchConvert.FixRtlReverseStartEnd = reader.Value;
+                    break;
                 case "BatchConvert/SplitLongLines":
                     language.BatchConvert.SplitLongLines = reader.Value;
                     break;

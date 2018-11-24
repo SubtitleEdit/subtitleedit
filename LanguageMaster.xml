@@ -187,6 +187,10 @@ Note: Do check free disk space.</WaveFileMalformed>
     <NotConverted>Failed</NotConverted>
     <Converted>Converted</Converted>
     <Settings>Settings</Settings>
+    <FixRtl>Fix RTL</FixRtl>
+    <FixRtlAddUnicode>Fix RTL via Unicode tags</FixRtlAddUnicode>
+    <FixRtlRemoveUnicode>Remove RTL unicode tags</FixRtlRemoveUnicode>
+    <FixRtlReverseStartEnd>Reverse RTL start/end</FixRtlReverseStartEnd>
     <SplitLongLines>Split long lines</SplitLongLines>
     <AutoBalance>Auto balance lines</AutoBalance>
     <ScanFolder>Scan folder...</ScanFolder>

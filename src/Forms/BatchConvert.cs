@@ -26,6 +26,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             public bool FixCommonErrors { get; set; }
             public bool MultipleReplaceActive { get; set; }
+            public bool FixRtl { get; set; }
             public bool SplitLongLinesActive { get; set; }
             public bool AutoBalanceActive { get; set; }
             public bool SetMinDisplayTimeBetweenSubtitles { get; set; }
@@ -38,10 +39,11 @@ namespace Nikse.SubtitleEdit.Forms
             public string FileName { get; set; }
             public string ToFormat { get; set; }
             public SubtitleFormat SourceFormat { get; set; }
-            public ThreadDoWorkParameter(bool fixCommonErrors, bool multipleReplace, bool splitLongLinesActive, bool autoBalance, bool setMinDisplayTimeBetweenSubtitles, ListViewItem item, Subtitle subtitle, SubtitleFormat format, Encoding encoding, string language, string fileName, string toFormat, SubtitleFormat sourceFormat)
+            public ThreadDoWorkParameter(bool fixCommonErrors, bool multipleReplace, bool fixRtl, bool splitLongLinesActive, bool autoBalance, bool setMinDisplayTimeBetweenSubtitles, ListViewItem item, Subtitle subtitle, SubtitleFormat format, Encoding encoding, string language, string fileName, string toFormat, SubtitleFormat sourceFormat)
             {
                 FixCommonErrors = fixCommonErrors;
                 MultipleReplaceActive = multipleReplace;
+                FixRtl = fixRtl;
                 SplitLongLinesActive = splitLongLinesActive;
                 AutoBalanceActive = autoBalance;
                 SetMinDisplayTimeBetweenSubtitles = setMinDisplayTimeBetweenSubtitles;
@@ -187,6 +189,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxFixCasing.Checked = Configuration.Settings.Tools.BatchConvertFixCasing;
             checkBoxFixCommonErrors.Checked = Configuration.Settings.Tools.BatchConvertFixCommonErrors;
             checkBoxMultipleReplace.Checked = Configuration.Settings.Tools.BatchConvertMultipleReplace;
+            checkBoxFixRtl.Checked = Configuration.Settings.Tools.BatchConvertFixRtl;
             checkBoxSplitLongLines.Checked = Configuration.Settings.Tools.BatchConvertSplitLongLines;
             checkBoxAutoBalance.Checked = Configuration.Settings.Tools.BatchConvertAutoBalance;
             checkBoxRemoveFormatting.Checked = Configuration.Settings.Tools.BatchConvertRemoveFormatting;
@@ -200,6 +203,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxFixCommonErrors.Text = Configuration.Settings.Language.FixCommonErrors.Title;
             checkBoxMultipleReplace.Text = Configuration.Settings.Language.MultipleReplace.Title;
             checkBoxAutoBalance.Text = l.AutoBalance;
+            checkBoxFixRtl.Text = l.FixRtl;
             checkBoxSplitLongLines.Text = l.SplitLongLines;
             radioButtonShowEarlier.Text = Configuration.Settings.Language.ShowEarlierLater.ShowEarlier;
             radioButtonShowLater.Text = Configuration.Settings.Language.ShowEarlierLater.ShowLater;
@@ -1078,7 +1082,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 Application.DoEvents();
                                 System.Threading.Thread.Sleep(100);
                             }
-                            var parameter = new ThreadDoWorkParameter(checkBoxFixCommonErrors.Checked, checkBoxMultipleReplace.Checked, checkBoxSplitLongLines.Checked, checkBoxAutoBalance.Checked, checkBoxSetMinimumDisplayTimeBetweenSubs.Checked, item, sub, GetCurrentSubtitleFormat(), GetCurrentEncoding(), Configuration.Settings.Tools.BatchConvertLanguage, fileName, toFormat, format);
+                            var parameter = new ThreadDoWorkParameter(checkBoxFixCommonErrors.Checked, checkBoxMultipleReplace.Checked, checkBoxFixRtl.Checked, checkBoxSplitLongLines.Checked, checkBoxAutoBalance.Checked, checkBoxSetMinimumDisplayTimeBetweenSubs.Checked, item, sub, GetCurrentSubtitleFormat(), GetCurrentEncoding(), Configuration.Settings.Tools.BatchConvertLanguage, fileName, toFormat, format);
                             if (!worker1.IsBusy)
                                 worker1.RunWorkerAsync(parameter);
                             else if (!worker2.IsBusy)
@@ -1327,6 +1331,33 @@ namespace Nikse.SubtitleEdit.Forms
                     if (gapsBetween < minumumMillisecondsBetweenLines && current.Duration.TotalMilliseconds > minumumMillisecondsBetweenLines)
                     {
                         current.EndTime.TotalMilliseconds -= (minumumMillisecondsBetweenLines - gapsBetween);
+                    }
+                }
+            }
+            if (p.FixRtl)
+            {
+                var mode = Configuration.Settings.Tools.BatchConvertFixRtlMode;
+                string rtl = "\u202B";
+                for (int i = 0; i < p.Subtitle.Paragraphs.Count - 1; i++)
+                {
+                    var paragraph = p.Subtitle.Paragraphs[i];
+                    if (mode == BatchConvertFixRtl.RemoveUnicode)
+                    {
+                        paragraph.Text = paragraph.Text.Replace("\u200E", string.Empty);
+                        paragraph.Text = paragraph.Text.Replace("\u200F", string.Empty);
+                        paragraph.Text = paragraph.Text.Replace("\u202A", string.Empty);
+                        paragraph.Text = paragraph.Text.Replace("\u202B", string.Empty);
+                        paragraph.Text = paragraph.Text.Replace("\u202D", string.Empty);
+                        paragraph.Text = paragraph.Text.Replace("\u202E", string.Empty);
+                    }
+                    else if (mode == BatchConvertFixRtl.ReverseStartEnd)
+                    {
+                        paragraph.Text = Utilities.ReverseStartAndEndingForRightToLeft(paragraph.Text);
+                    }
+                    else  // fix with unicode char
+                    {
+                        paragraph.Text = paragraph.Text.Replace(rtl, string.Empty);
+                        paragraph.Text = rtl + paragraph.Text.Replace(Environment.NewLine, Environment.NewLine + rtl);
                     }
                 }
             }
@@ -1634,6 +1665,7 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.Tools.BatchConvertFixCasing = checkBoxFixCasing.Checked;
             Configuration.Settings.Tools.BatchConvertFixCommonErrors = checkBoxFixCommonErrors.Checked;
             Configuration.Settings.Tools.BatchConvertMultipleReplace = checkBoxMultipleReplace.Checked;
+            Configuration.Settings.Tools.BatchConvertFixRtl = checkBoxFixRtl.Checked;
             Configuration.Settings.Tools.BatchConvertSplitLongLines = checkBoxSplitLongLines.Checked;
             Configuration.Settings.Tools.BatchConvertAutoBalance = checkBoxAutoBalance.Checked;
             Configuration.Settings.Tools.BatchConvertRemoveFormatting = checkBoxRemoveFormatting.Checked;
@@ -1945,6 +1977,14 @@ namespace Nikse.SubtitleEdit.Forms
         private void buttonBridgeGapsSettings_Click(object sender, EventArgs e)
         {
             _bridgeGaps.ShowDialog(this);
+        }
+
+        private void buttonFixRtlSettings_Click(object sender, EventArgs e)
+        {
+            using (var form = new BatchConvertFixRtl())
+            {
+                form.ShowDialog(this);
+            }
         }
     }
 }

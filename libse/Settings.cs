@@ -125,6 +125,8 @@ namespace Nikse.SubtitleEdit.Core
         public bool BatchConvertRemoveTextForHI { get; set; }
         public bool BatchConvertFixCommonErrors { get; set; }
         public bool BatchConvertMultipleReplace { get; set; }
+        public bool BatchConvertFixRtl { get; set; }
+        public string BatchConvertFixRtlMode { get; set; }
         public bool BatchConvertSplitLongLines { get; set; }
         public bool BatchConvertAutoBalance { get; set; }
         public bool BatchConvertSetMinDisplayTimeBetweenSubtitles { get; set; }
@@ -2039,6 +2041,12 @@ $HorzAlign          =   Center
             subNode = node.SelectSingleNode("BatchConvertMultipleReplace");
             if (subNode != null)
                 settings.Tools.BatchConvertMultipleReplace = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("BatchConvertFixRtl");
+            if (subNode != null)
+                settings.Tools.BatchConvertFixRtl = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("BatchConvertFixRtlMode");
+            if (subNode != null)
+                settings.Tools.BatchConvertFixRtlMode = subNode.InnerText;
             subNode = node.SelectSingleNode("BatchConvertAutoBalance");
             if (subNode != null)
                 settings.Tools.BatchConvertAutoBalance = Convert.ToBoolean(subNode.InnerText);
@@ -3651,6 +3659,8 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("BatchConvertSplitLongLines", settings.Tools.BatchConvertSplitLongLines.ToString());
                 textWriter.WriteElementString("BatchConvertFixCommonErrors", settings.Tools.BatchConvertFixCommonErrors.ToString());
                 textWriter.WriteElementString("BatchConvertMultipleReplace", settings.Tools.BatchConvertMultipleReplace.ToString());
+                textWriter.WriteElementString("BatchConvertFixRtl", settings.Tools.BatchConvertFixRtl.ToString());
+                textWriter.WriteElementString("BatchConvertFixRtlMode", settings.Tools.BatchConvertFixRtlMode);
                 textWriter.WriteElementString("BatchConvertAutoBalance", settings.Tools.BatchConvertAutoBalance.ToString());
                 textWriter.WriteElementString("BatchConvertSetMinDisplayTimeBetweenSubtitles", settings.Tools.BatchConvertSetMinDisplayTimeBetweenSubtitles.ToString());
                 textWriter.WriteElementString("BatchConvertLanguage", settings.Tools.BatchConvertLanguage);
