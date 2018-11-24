@@ -183,6 +183,10 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <NotConverted>실패함</NotConverted>
     <Converted>변환됨</Converted>
     <Settings>설정</Settings>
+    <FixRtl>RTL 수정</FixRtl>
+    <FixRtlAddUnicode>유니코드 태그를 통해 RTL 수정</FixRtlAddUnicode>
+    <FixRtlRemoveUnicode>RTL 유니코드 태그 제거</FixRtlRemoveUnicode>
+    <FixRtlReverseStartEnd>RTL 시작/끝 반전</FixRtlReverseStartEnd>
     <SplitLongLines>긴 줄 분할</SplitLongLines>
     <AutoBalance>자동 줄맞춤</AutoBalance>
     <ScanFolder>폴더 찾아보기</ScanFolder>
@@ -1132,6 +1136,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
         <MergeWithLineAfter>다음 줄과 병합</MergeWithLineAfter>
         <Normal>기본 (서식 태그 제거)</Normal>
         <Underline>밑줄</Underline>
+        <Box>박스</Box>
         <Color>색상</Color>
         <FontName>글꼴</FontName>
         <Alignment>표시 위치</Alignment>
@@ -2329,6 +2334,8 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <DiscardTitle>OCR 변경사항 폐기</DiscardTitle>
     <DiscardText>현재 OCR 세션의 변경사항을 폐기합니까?</DiscardText>
     <MinLineSplitHeight>최소 줄 높이 (분할)</MinLineSplitHeight>
+    <FallbackToX>{0}으로 대체</FallbackToX>
+    <ImagePreProcessing>이미지 사전 처리중...</ImagePreProcessing>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub의 이미지 자막을 텍스트로...</Title>
