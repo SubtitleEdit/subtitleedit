@@ -98,6 +98,12 @@
     <Compile Include="Forms\AudioToText.Designer.cs">
       <DependentUpon>AudioToText.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\BatchConvertFixRtl.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\BatchConvertFixRtl.Designer.cs">
+      <DependentUpon>BatchConvertFixRtl.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Cavena890SaveOptions.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1025,6 +1031,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\AudioToText.resx">
       <DependentUpon>AudioToText.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\BatchConvertFixRtl.resx">
+      <DependentUpon>BatchConvertFixRtl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Cavena890SaveOptions.resx">
       <DependentUpon>Cavena890SaveOptions.cs</DependentUpon>
