@@ -1489,7 +1489,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             if (_ocrMethodIndex == _ocrMethodTesseract4 && !_fromMenuItem)
             {
                 var nb = new NikseBitmap(returnBmp);
-                nb.AddMargin(2);
+                nb.AddMargin(10);
                 nb.MakeTwoColor(Configuration.Settings.Tools.OcrBinaryImageCompareRgbThreshold, Color.White, Color.Black);
                 returnBmp.Dispose();
                 return nb.GetBitmap();
