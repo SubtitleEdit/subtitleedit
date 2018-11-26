@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
@@ -502,7 +501,7 @@ namespace Nikse.SubtitleEdit.Forms
         /// <returns>Translated to String</returns>
         public static string TranslateTextViaScreenScraping(string input, string languagePair, Encoding encoding, bool romanji)
         {
-            for (var c = 0; c < 3; c++)
+            for (var c = 0; c < 5; c++)
             {
                 string url = string.Format(GoogleTranslateUrl + "?hl=en&eotf=1&sl={0}&tl={1}&q={2}", languagePair.Substring(0, 2), languagePair.Substring(3), Utilities.UrlEncode(input));
                 var result = Utilities.DownloadString(url, encoding);
