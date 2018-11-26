@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
@@ -501,83 +502,91 @@ namespace Nikse.SubtitleEdit.Forms
         /// <returns>Translated to String</returns>
         public static string TranslateTextViaScreenScraping(string input, string languagePair, Encoding encoding, bool romanji)
         {
-            string url = string.Format(GoogleTranslateUrl + "?hl=en&eotf=1&sl={0}&tl={1}&q={2}", languagePair.Substring(0, 2), languagePair.Substring(3), Utilities.UrlEncode(input));
-            var result = Utilities.DownloadString(url, encoding);
-
-            var sb = new StringBuilder();
-            if (romanji)
+            for (var c = 0; c < 3; c++)
             {
-                int startIndex = result.IndexOf("<div id=res-translit", StringComparison.Ordinal);
-                if (startIndex > 0)
+                string url = string.Format(GoogleTranslateUrl + "?hl=en&eotf=1&sl={0}&tl={1}&q={2}", languagePair.Substring(0, 2), languagePair.Substring(3), Utilities.UrlEncode(input));
+                var result = Utilities.DownloadString(url, encoding);
+
+                var sb = new StringBuilder();
+                if (romanji)
                 {
-                    startIndex = result.IndexOf('>', startIndex);
+                    int startIndex = result.IndexOf("<div id=res-translit", StringComparison.Ordinal);
                     if (startIndex > 0)
                     {
-                        startIndex++;
-                        int endIndex = result.IndexOf("</div>", startIndex, StringComparison.Ordinal);
-                        string translatedText = result.Substring(startIndex, endIndex - startIndex);
-                        string test = WebUtility.HtmlDecode(translatedText);
-                        test = test.Replace("= =", SplitterString).Replace("  ", " ");
-                        test = test.Replace("_ _", NewlineString).Replace("  ", " ");
-                        sb.Append(test);
-                    }
-                }
-            }
-            else
-            {
-                int startIndex = result.IndexOf("<span id=result_box", StringComparison.Ordinal);
-                if (startIndex > 0)
-                {
-                    startIndex = result.IndexOf("<span title=", startIndex, StringComparison.Ordinal);
-                    while (startIndex > 0)
-                    {
                         startIndex = result.IndexOf('>', startIndex);
-                        while (startIndex > 0 && result.Substring(startIndex - 3, 4) == "<br>")
-                            startIndex = result.IndexOf('>', startIndex + 1);
                         if (startIndex > 0)
                         {
                             startIndex++;
-                            int endIndex = result.IndexOf("</span>", startIndex, StringComparison.Ordinal);
+                            int endIndex = result.IndexOf("</div>", startIndex, StringComparison.Ordinal);
                             string translatedText = result.Substring(startIndex, endIndex - startIndex);
                             string test = WebUtility.HtmlDecode(translatedText);
+                            test = test.Replace("= =", SplitterString).Replace("  ", " ");
+                            test = test.Replace("_ _", NewlineString).Replace("  ", " ");
                             sb.Append(test);
-                            startIndex = result.IndexOf("<span title=", startIndex, StringComparison.Ordinal);
                         }
                     }
                 }
+                else
+                {
+                    int startIndex = result.IndexOf("<span id=result_box", StringComparison.Ordinal);
+                    if (startIndex > 0)
+                    {
+                        startIndex = result.IndexOf("<span title=", startIndex, StringComparison.Ordinal);
+                        while (startIndex > 0)
+                        {
+                            startIndex = result.IndexOf('>', startIndex);
+                            while (startIndex > 0 && result.Substring(startIndex - 3, 4) == "<br>")
+                                startIndex = result.IndexOf('>', startIndex + 1);
+                            if (startIndex > 0)
+                            {
+                                startIndex++;
+                                int endIndex = result.IndexOf("</span>", startIndex, StringComparison.Ordinal);
+                                string translatedText = result.Substring(startIndex, endIndex - startIndex);
+                                string test = WebUtility.HtmlDecode(translatedText);
+                                sb.Append(test);
+                                startIndex = result.IndexOf("<span title=", startIndex, StringComparison.Ordinal);
+                            }
+                        }
+                    }
+                }
+
+                string res = sb.ToString();
+                res = res.Replace("<br><br><br>", "|");
+                res = res.Replace("\r\n", "\n");
+                res = res.Replace("\r", "\n");
+                res = res.Replace(NewlineString, Environment.NewLine);
+                res = res.Replace("<BR>", Environment.NewLine);
+                res = res.Replace("<BR />", Environment.NewLine);
+                res = res.Replace("<BR/>", Environment.NewLine);
+                res = res.Replace("< br />", Environment.NewLine);
+                res = res.Replace("< br / >", Environment.NewLine);
+                res = res.Replace("<br / >", Environment.NewLine);
+                res = res.Replace(" <br/>", Environment.NewLine);
+                res = res.Replace(" <br/>", Environment.NewLine);
+                res = res.Replace("<br/>", Environment.NewLine);
+                res = res.Replace("<br />", Environment.NewLine);
+                res = res.Replace("<br>", Environment.NewLine);
+                res = res.Replace("</ font>", "</font>");
+                res = res.Replace("</ font >", "</font>");
+                res = res.Replace("<font color = \"# ", "<font color=\"#");
+                res = res.Replace("<font color = ", "<font color=");
+                res = res.Replace("</ b >", "</b>");
+                res = res.Replace("</ b>", "</b>");
+                res = res.Replace("  ", " ").Trim();
+                res = res.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
+                res = res.Replace(Environment.NewLine + " ", Environment.NewLine);
+                res = res.Replace(Environment.NewLine + " ", Environment.NewLine);
+                res = res.Replace(" " + Environment.NewLine, Environment.NewLine);
+                res = res.Replace(" " + Environment.NewLine, Environment.NewLine).Trim();
+                int end = res.LastIndexOf("<p>", StringComparison.Ordinal);
+                if (end > 0)
+                    res = res.Substring(0, end);
+
+                if (!string.IsNullOrEmpty(res))
+                    return res;
             }
-            string res = sb.ToString();
-            res = res.Replace("<br><br><br>", "|");
-            res = res.Replace("\r\n", "\n");
-            res = res.Replace("\r", "\n");
-            res = res.Replace(NewlineString, Environment.NewLine);
-            res = res.Replace("<BR>", Environment.NewLine);
-            res = res.Replace("<BR />", Environment.NewLine);
-            res = res.Replace("<BR/>", Environment.NewLine);
-            res = res.Replace("< br />", Environment.NewLine);
-            res = res.Replace("< br / >", Environment.NewLine);
-            res = res.Replace("<br / >", Environment.NewLine);
-            res = res.Replace(" <br/>", Environment.NewLine);
-            res = res.Replace(" <br/>", Environment.NewLine);
-            res = res.Replace("<br/>", Environment.NewLine);
-            res = res.Replace("<br />", Environment.NewLine);
-            res = res.Replace("<br>", Environment.NewLine);
-            res = res.Replace("</ font>", "</font>");
-            res = res.Replace("</ font >", "</font>");
-            res = res.Replace("<font color = \"# ", "<font color=\"#");
-            res = res.Replace("<font color = ", "<font color=");
-            res = res.Replace("</ b >", "</b>");
-            res = res.Replace("</ b>", "</b>");
-            res = res.Replace("  ", " ").Trim();
-            res = res.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
-            res = res.Replace(Environment.NewLine + " ", Environment.NewLine);
-            res = res.Replace(Environment.NewLine + " ", Environment.NewLine);
-            res = res.Replace(" " + Environment.NewLine, Environment.NewLine);
-            res = res.Replace(" " + Environment.NewLine, Environment.NewLine).Trim();
-            int end = res.LastIndexOf("<p>", StringComparison.Ordinal);
-            if (end > 0)
-                res = res.Substring(0, end);
-            return res;
+
+            return string.Empty;
         }
 
         public void FillComboWithLanguages(ComboBox comboBox)
