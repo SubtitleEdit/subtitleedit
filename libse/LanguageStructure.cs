@@ -2049,6 +2049,7 @@
             public string Alt { get; set; }
             public string Shift { get; set; }
             public string Key { get; set; }
+            public string ListViewAndTextBox { get; set; }
             public string ListView { get; set; }
             public string TextBox { get; set; }
             public string UpdateShortcut { get; set; }
@@ -2083,6 +2084,15 @@
             public string ToggleDialogDashes { get; set; }
             public string ToggleMusicSymbols { get; set; }
             public string Alignment { get; set; }
+            public string AlignmentN1 { get; set; }
+            public string AlignmentN2 { get; set; }
+            public string AlignmentN3 { get; set; }
+            public string AlignmentN4 { get; set; }
+            public string AlignmentN5 { get; set; }
+            public string AlignmentN6 { get; set; }
+            public string AlignmentN7 { get; set; }
+            public string AlignmentN8 { get; set; }
+            public string AlignmentN9 { get; set; }
             public string CopyTextOnly { get; set; }
             public string CopyTextOnlyFromOriginalToCurrent { get; set; }
             public string AutoDurationSelectedLines { get; set; }

@@ -211,13 +211,22 @@ namespace Nikse.SubtitleEdit.Forms
         private Keys _mainAdjustAdjustEndXMsForward = Keys.None;
         private Keys _mainInsertAfter = Keys.None;
         private Keys _mainInsertBefore = Keys.None;
-        private Keys _mainTextBoxInsertAfter = Keys.None;
         private Keys _mainTextBoxAutoBreak = Keys.None;
         private Keys _mainTextBoxUnbreak = Keys.None;
         private Keys _mainMergeDialog = Keys.None;
         private Keys _mainToggleFocus = Keys.None;
         private Keys _mainListViewToggleDashes = Keys.None;
+        private Keys _mainListViewToggleMusicSymbols = Keys.None;
         private Keys _mainListViewAutoDuration = Keys.None;
+        private Keys _mainListViewAlignmentN1 = Keys.None;
+        private Keys _mainListViewAlignmentN2 = Keys.None;
+        private Keys _mainListViewAlignmentN3 = Keys.None;
+        private Keys _mainListViewAlignmentN4 = Keys.None;
+        private Keys _mainListViewAlignmentN5 = Keys.None;
+        private Keys _mainListViewAlignmentN6 = Keys.None;
+        private Keys _mainListViewAlignmentN7 = Keys.None;
+        private Keys _mainListViewAlignmentN8 = Keys.None;
+        private Keys _mainListViewAlignmentN9 = Keys.None;
         private Keys _mainListViewFocusWaveform = Keys.None;
         private Keys _mainListViewGoToNextError = Keys.None;
         private Keys _mainListViewCopyText = Keys.None;
@@ -8370,7 +8379,61 @@ namespace Nikse.SubtitleEdit.Forms
                     SplitSelectedLineBilingual();
                 }
             }
-            else if (e.KeyData == _mainTextBoxInsertAfter)
+            else if (e.KeyData == _mainListViewAlignmentN1)
+            {
+                SetAlignment("{\\an1}", false);
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyData == _mainListViewAlignmentN2)
+            {
+                SetAlignment("", false);
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyData == _mainListViewAlignmentN3)
+            {
+                SetAlignment("{\\an3}", false);
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyData == _mainListViewAlignmentN4)
+            {
+                SetAlignment("{\\an4}", false);
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyData == _mainListViewAlignmentN5)
+            {
+                SetAlignment("{\\an5}", false);
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyData == _mainListViewAlignmentN6)
+            {
+                SetAlignment("{\\an6}", false);
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyData == _mainListViewAlignmentN7)
+            {
+                SetAlignment("{\\an7}", false);
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyData == _mainListViewAlignmentN8)
+            {
+                SetAlignment("{\\an8}", false);
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyData == _mainListViewAlignmentN9)
+            {
+                SetAlignment("{\\an9}", false);
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyData == _mainListViewToggleMusicSymbols)
+            {
+                textBoxListViewText.Text = ToogleMusicSymbols("♪", textBoxListViewText.Text);
+            }
+            else if (e.KeyData == _mainInsertBefore)
+            {
+                InsertBefore();
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyData == _mainInsertAfter)
             {
                 InsertAfter();
                 e.SuppressKeyPress = true;
@@ -14003,6 +14066,51 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 MakeAutoDurationSelectedLines();
             }
+            else if (e.KeyData == _mainListViewAlignmentN1)
+            {
+                SetAlignment("{\\an1}", true);
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyData == _mainListViewAlignmentN2)
+            {
+                SetAlignment("", true);
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyData == _mainListViewAlignmentN3)
+            {
+                SetAlignment("{\\an3}", true);
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyData == _mainListViewAlignmentN4)
+            {
+                SetAlignment("{\\an4}", true);
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyData == _mainListViewAlignmentN5)
+            {
+                SetAlignment("{\\an5}", true);
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyData == _mainListViewAlignmentN6)
+            {
+                SetAlignment("{\\an6}", true);
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyData == _mainListViewAlignmentN7)
+            {
+                SetAlignment("{\\an7}", true);
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyData == _mainListViewAlignmentN8)
+            {
+                SetAlignment("{\\an8}", true);
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyData == _mainListViewAlignmentN9)
+            {
+                SetAlignment("{\\an9}", true);
+                e.SuppressKeyPress = true;
+            }
             else if (e.KeyData == _mainListViewFocusWaveform)
             {
                 if (audioVisualizer.CanFocus)
@@ -14162,6 +14270,88 @@ namespace Nikse.SubtitleEdit.Forms
             else if (e.Modifiers == Keys.None && e.KeyCode == Keys.Enter)
             {
                 SubtitleListview1_MouseDoubleClick(null, null);
+            }
+        }
+
+        private void SetAlignment(string tag, bool selectedLines)
+        {
+            if (selectedLines)
+            {
+                SubtitleListview1.SelectedIndexChanged -= SubtitleListview1_SelectedIndexChanged;
+                MakeHistoryForUndo(string.Format(_language.BeforeAddingTagX, tag));
+
+                var indices = new List<int>();
+                foreach (ListViewItem item in SubtitleListview1.SelectedItems)
+                    indices.Add(item.Index);
+
+                bool first = false;
+                SubtitleListview1.BeginUpdate();
+                foreach (int i in indices)
+                {
+                    if (first)
+                    {
+                        if (_subtitle.Paragraphs[i].Text.StartsWith(tag, StringComparison.Ordinal))
+                        {
+                            tag = string.Empty;
+                        }
+                        first = false;
+                    }
+
+                    if (_subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
+                    {
+                        var original = Utilities.GetOriginalParagraph(i, _subtitle.Paragraphs[i], _subtitleAlternate.Paragraphs);
+                        if (original != null)
+                        {
+                            SetAlignTag(original, tag);
+                            SubtitleListview1.SetAlternateText(i, original.Text);
+                        }
+                    }
+                    SetAlignTag(_subtitle.Paragraphs[i], tag);
+                    SubtitleListview1.SetText(i, _subtitle.Paragraphs[i].Text);
+                }
+                SubtitleListview1.EndUpdate();
+
+                ShowStatus(string.Format(_language.TagXAdded, tag));
+                ShowSource();
+                RefreshSelectedParagraph();
+                SubtitleListview1.SelectedIndexChanged += SubtitleListview1_SelectedIndexChanged;
+            }
+            else
+            {
+                var tb = GetFocusedTextBox();
+                var pos = tb.SelectionStart;
+                int oldLength = tb.Text.Length;
+                bool atEnd = pos == oldLength;
+                if (tb.Text.StartsWith(tag, StringComparison.Ordinal) && tb.Text.Length > 5 && tb.Text[5] == '}')
+                {
+                    tb.Text = tb.Text.Remove(0, 6);
+                    tag = string.Empty;
+                }
+                else if (tb.Text.StartsWith("{\\a", StringComparison.Ordinal) && tb.Text.Length > 5 && tb.Text[5] == '}')
+                {
+                    tb.Text = tb.Text.Remove(0, 6);
+                }
+                else if (tb.Text.StartsWith("{\\a", StringComparison.Ordinal) && tb.Text.Length > 4 && tb.Text[4] == '}')
+                {
+                    tb.Text = tb.Text.Remove(0, 5);
+                }                                
+                tb.Text = string.Format(@"{0}{1}", tag, tb.Text);
+                if (atEnd)
+                {
+                    tb.SelectionStart = tb.Text.Length;
+                }
+                else if (pos == 0)
+                {
+                    tb.SelectionStart = 0;
+                }
+                else if (oldLength == tb.Text.Length)
+                {
+                    tb.SelectionStart = pos;
+                }
+                else if (pos + 5 <= tb.Text.Length)
+                {
+                    tb.SelectionStart = pos + 5;
+                }
             }
         }
 
@@ -17239,12 +17429,26 @@ namespace Nikse.SubtitleEdit.Forms
             pointSyncViaOtherSubtitleToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainSynchronizationPointSyncViaFile);
             toolStripMenuItemChangeFrameRate2.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainSynchronizationChangeFrameRate);
             italicToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewItalic);
+            boldToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewBold);
+            boldToolStripMenuItem1.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewBold);
+            underlineToolStripMenuItem1.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewUnderline);
+            underlineToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewUnderline);
             _mainToolsAutoDuration = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainToolsAutoDuration);
             _mainToolsBeamer = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainToolsBeamer);
             _mainListViewToggleDashes = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewToggleDashes);
+            _mainListViewToggleMusicSymbols = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewToggleMusicSymbols);
             toolStripMenuItemSurroundWithMusicSymbols.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewToggleMusicSymbols);
             toolStripMenuItemAlignment.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewAlignment);
             _mainListViewAutoDuration = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewAutoDuration);
+            _mainListViewAlignmentN1 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewAlignmentN1);
+            _mainListViewAlignmentN2 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewAlignmentN2);
+            _mainListViewAlignmentN3 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewAlignmentN3);
+            _mainListViewAlignmentN4 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewAlignmentN4);
+            _mainListViewAlignmentN5 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewAlignmentN5);
+            _mainListViewAlignmentN6 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewAlignmentN6);
+            _mainListViewAlignmentN7 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewAlignmentN7);
+            _mainListViewAlignmentN8 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewAlignmentN8);
+            _mainListViewAlignmentN9 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewAlignmentN9);
             _mainListViewFocusWaveform = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewFocusWaveform);
             _mainListViewGoToNextError = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewGoToNextError);
             _mainEditReverseStartAndEndingForRTL = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainEditReverseStartAndEndingForRTL);
@@ -17293,7 +17497,6 @@ namespace Nikse.SubtitleEdit.Forms
             _mainAdjustAdjustEndXMsForward = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustEndXMsForward);
             _mainInsertAfter = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainInsertAfter);
             _mainInsertBefore = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainInsertBefore);
-            _mainTextBoxInsertAfter = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxInsertAfter);
             _mainTextBoxAutoBreak = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxAutoBreak);
             _mainTextBoxUnbreak = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxUnbreak);
             _mainMergeDialog = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainMergeDialog);
@@ -20856,85 +21059,16 @@ namespace Nikse.SubtitleEdit.Forms
                 SubtitleListview1.BeginUpdate();
                 foreach (int i in indices)
                 {
-                    var pre = string.Empty;
-                    var post = string.Empty;
-                    int indexOfEndBracket = -1;
                     if (_subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
                     {
                         var original = Utilities.GetOriginalParagraph(i, _subtitle.Paragraphs[i], _subtitleAlternate.Paragraphs);
                         if (original != null)
                         {
-                            pre = string.Empty;
-                            indexOfEndBracket = original.Text.IndexOf('}');
-                            if (original.Text.StartsWith("{\\", StringComparison.Ordinal) && indexOfEndBracket > 1)
-                            {
-                                pre = original.Text.Substring(0, indexOfEndBracket + 1);
-                                original.Text = original.Text.Remove(0, indexOfEndBracket + 1);
-                            }
-                            if (original.Text.Contains(tag))
-                            {
-                                original.Text = original.Text.Replace(tag, string.Empty).Trim();
-                                original.Text = pre + original.Text.Replace(Environment.NewLine + " ", Environment.NewLine).Replace(" " + Environment.NewLine, Environment.NewLine).Trim();
-                            }
-                            else
-                            {
-                                if (Configuration.Settings.Tools.MusicSymbolStyle.Equals("single", StringComparison.OrdinalIgnoreCase))
-                                    original.Text = string.Format("{0}{1} {2}", pre, tag, original.Text.Replace(Environment.NewLine, Environment.NewLine + tag + " "));
-                                else
-                                    original.Text = string.Format("{0}{1} {2} {1}", pre, tag, original.Text.Replace(Environment.NewLine, " " + tag + Environment.NewLine + tag + " "));
-                            }
+                            original.Text = ToogleMusicSymbols(tag, original.Text);
                             SubtitleListview1.SetAlternateText(i, original.Text);
                         }
                     }
-
-                    pre = string.Empty;
-                    var p = _subtitle.Paragraphs[i];
-                    indexOfEndBracket = p.Text.IndexOf('}');
-                    if (p.Text.StartsWith("{\\", StringComparison.Ordinal) && indexOfEndBracket > 1)
-                    {
-                        pre = p.Text.Substring(0, indexOfEndBracket + 1);
-                        p.Text = p.Text.Remove(0, indexOfEndBracket + 1);
-                    }
-
-                    bool updated = true;
-                    while (updated)
-                    {
-                        updated = false;
-                        if (p.Text.StartsWith(' '))
-                        {
-                            pre += ' ';
-                            p.Text = p.Text.Remove(0, 1);
-                            updated = true;
-                        }
-                        else if (p.Text.StartsWith("<font", StringComparison.OrdinalIgnoreCase))
-                        {
-                            int endFont = p.Text.IndexOf(">");
-                            if (endFont > 0)
-                            {
-                                pre += p.Text.Substring(0, endFont + 1);
-                                p.Text = p.Text.Remove(0, endFont + 1);
-                                updated = true;
-                            }
-                            if (p.Text.EndsWith("</font>", StringComparison.OrdinalIgnoreCase))
-                            {
-                                var endTag = "</font>";
-                                post += endTag;
-                                p.Text = p.Text.Remove(p.Text.Length - endTag.Length, endTag.Length);
-                            }
-                        }
-                    }
-
-                    if (_subtitle.Paragraphs[i].Text.Contains(tag))
-                    {
-                        _subtitle.Paragraphs[i].Text = pre + _subtitle.Paragraphs[i].Text.Replace("♪", string.Empty).Replace(Environment.NewLine + " ", Environment.NewLine).Replace(" " + Environment.NewLine, Environment.NewLine).Trim() + post;
-                    }
-                    else
-                    {
-                        if (Configuration.Settings.Tools.MusicSymbolStyle.Equals("single", StringComparison.OrdinalIgnoreCase))
-                            p.Text = string.Format("{0}{1} {2}{3}", pre, tag, p.Text.Replace(Environment.NewLine, Environment.NewLine + tag + " "), post);
-                        else
-                            p.Text = string.Format("{0}{1} {2} {1}{3}", pre, tag, p.Text.Replace(Environment.NewLine, " " + tag + Environment.NewLine + tag + " "), post);
-                    }
+                    _subtitle.Paragraphs[i].Text = ToogleMusicSymbols(tag, _subtitle.Paragraphs[i].Text);
                     SubtitleListview1.SetText(i, _subtitle.Paragraphs[i].Text);
                 }
                 SubtitleListview1.EndUpdate();
@@ -20944,6 +21078,60 @@ namespace Nikse.SubtitleEdit.Forms
                 RefreshSelectedParagraph();
                 SubtitleListview1.SelectedIndexChanged += SubtitleListview1_SelectedIndexChanged;
             }
+        }
+
+        private string ToogleMusicSymbols(string tag, string text)
+        {
+            string pre = string.Empty;
+            string post = string.Empty;
+            var indexOfEndBracket = text.IndexOf('}');
+            if (text.StartsWith("{\\", StringComparison.Ordinal) && indexOfEndBracket > 1)
+            {
+                pre = text.Substring(0, indexOfEndBracket + 1);
+                text = text.Remove(0, indexOfEndBracket + 1);
+            }
+
+            bool updated = true;
+            while (updated)
+            {
+                updated = false;
+                if (text.StartsWith(' '))
+                {
+                    pre += ' ';
+                    text = text.Remove(0, 1);
+                    updated = true;
+                }
+                else if (text.StartsWith("<font", StringComparison.OrdinalIgnoreCase))
+                {
+                    int endFont = text.IndexOf(">");
+                    if (endFont > 0)
+                    {
+                        pre += text.Substring(0, endFont + 1);
+                        text = text.Remove(0, endFont + 1);
+                        updated = true;
+                    }
+                    if (text.EndsWith("</font>", StringComparison.OrdinalIgnoreCase))
+                    {
+                        var endTag = "</font>";
+                        post += endTag;
+                        text = text.Remove(text.Length - endTag.Length, endTag.Length);
+                    }
+                }
+            }
+
+            if (text.Contains(tag))
+            {
+                text = pre + text.Replace("♪", string.Empty).Replace(Environment.NewLine + " ", Environment.NewLine).Replace(" " + Environment.NewLine, Environment.NewLine).Trim() + post;
+            }
+            else
+            {
+                if (Configuration.Settings.Tools.MusicSymbolStyle.Equals("single", StringComparison.OrdinalIgnoreCase))
+                    text = string.Format("{0}{1} {2}{3}", pre, tag, text.Replace(Environment.NewLine, Environment.NewLine + tag + " "), post);
+                else
+                    text = string.Format("{0}{1} {2} {1}{3}", pre, tag, text.Replace(Environment.NewLine, " " + tag + Environment.NewLine + tag + " "), post);
+            }
+
+            return text;
         }
 
         private void SuperscriptToolStripMenuItemClick(object sender, EventArgs e)
@@ -21444,34 +21632,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedItems.Count > 0)
                     {
-                        SubtitleListview1.SelectedIndexChanged -= SubtitleListview1_SelectedIndexChanged;
-                        MakeHistoryForUndo(string.Format(_language.BeforeAddingTagX, tag));
-
-                        var indices = new List<int>();
-                        foreach (ListViewItem item in SubtitleListview1.SelectedItems)
-                            indices.Add(item.Index);
-
-                        SubtitleListview1.BeginUpdate();
-                        foreach (int i in indices)
-                        {
-                            if (_subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
-                            {
-                                var original = Utilities.GetOriginalParagraph(i, _subtitle.Paragraphs[i], _subtitleAlternate.Paragraphs);
-                                if (original != null)
-                                {
-                                    SetAlignTag(original, tag);
-                                    SubtitleListview1.SetAlternateText(i, original.Text);
-                                }
-                            }
-                            SetAlignTag(_subtitle.Paragraphs[i], tag);
-                            SubtitleListview1.SetText(i, _subtitle.Paragraphs[i].Text);
-                        }
-                        SubtitleListview1.EndUpdate();
-
-                        ShowStatus(string.Format(_language.TagXAdded, tag));
-                        ShowSource();
-                        RefreshSelectedParagraph();
-                        SubtitleListview1.SelectedIndexChanged += SubtitleListview1_SelectedIndexChanged;
+                        SetAlignment(tag, true);
                     }
                 }
             }

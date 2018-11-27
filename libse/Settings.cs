@@ -1068,9 +1068,20 @@ $HorzAlign          =   Center
         public string MainSynchronizationPointSyncViaFile { get; set; }
         public string MainSynchronizationChangeFrameRate { get; set; }
         public string MainListViewItalic { get; set; }
+        public string MainListViewBold { get; set; }
+        public string MainListViewUnderline { get; set; }
         public string MainListViewToggleDashes { get; set; }
         public string MainListViewToggleMusicSymbols { get; set; }
         public string MainListViewAlignment { get; set; }
+        public string MainListViewAlignmentN1 { get; set; }
+        public string MainListViewAlignmentN2 { get; set; }
+        public string MainListViewAlignmentN3 { get; set; }
+        public string MainListViewAlignmentN4 { get; set; }
+        public string MainListViewAlignmentN5 { get; set; }
+        public string MainListViewAlignmentN6 { get; set; }
+        public string MainListViewAlignmentN7 { get; set; }
+        public string MainListViewAlignmentN8 { get; set; }
+        public string MainListViewAlignmentN9 { get; set; }
         public string MainListViewCopyText { get; set; }
         public string MainListViewCopyTextFromOriginalToCurrent { get; set; }
         public string MainListViewAutoDuration { get; set; }
@@ -1117,7 +1128,6 @@ $HorzAlign          =   Center
         public string MainAdjustEndXMsBack { get; set; }
         public string MainAdjustEndXMsForward { get; set; }
         public string MainInsertAfter { get; set; }
-        public string MainTextBoxInsertAfter { get; set; }
         public string MainTextBoxAutoBreak { get; set; }
         public string MainTextBoxUnbreak { get; set; }
         public string MainWaveformInsertAtCurrentPosition { get; set; }
@@ -1231,7 +1241,6 @@ $HorzAlign          =   Center
             MainInsertAfter = "Alt+Insert";
             MainWaveformInsertAtCurrentPosition = "Insert";
             MainInsertBefore = "Control+Shift+Insert";
-            MainTextBoxInsertAfter = "Alt+Insert";
             MainTextBoxAutoBreak = "Control+R";
             MainTextBoxUnbreak = string.Empty;
             MainMergeDialog = string.Empty;
@@ -3130,6 +3139,12 @@ $HorzAlign          =   Center
                 subNode = node.SelectSingleNode("MainListViewItalic");
                 if (subNode != null)
                     settings.Shortcuts.MainListViewItalic = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainListViewBold");
+                if (subNode != null)
+                    settings.Shortcuts.MainListViewBold = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainListViewUnderline");
+                if (subNode != null)
+                    settings.Shortcuts.MainListViewUnderline = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainListViewToggleDashes");
                 if (subNode != null)
                     settings.Shortcuts.MainListViewToggleDashes = subNode.InnerText;
@@ -3139,6 +3154,38 @@ $HorzAlign          =   Center
                 subNode = node.SelectSingleNode("MainListViewAlignment");
                 if (subNode != null)
                     settings.Shortcuts.MainListViewAlignment = subNode.InnerText;
+
+                subNode = node.SelectSingleNode("MainListViewAlignmentN1");
+                if (subNode != null)
+                    settings.Shortcuts.MainListViewAlignmentN1 = subNode.InnerText;
+
+                subNode = node.SelectSingleNode("MainListViewAlignmentN1");
+                if (subNode != null)
+                    settings.Shortcuts.MainListViewAlignmentN1 = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainListViewAlignmentN2");
+                if (subNode != null)
+                    settings.Shortcuts.MainListViewAlignmentN2 = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainListViewAlignmentN3");
+                if (subNode != null)
+                    settings.Shortcuts.MainListViewAlignmentN3 = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainListViewAlignmentN4");
+                if (subNode != null)
+                    settings.Shortcuts.MainListViewAlignmentN4 = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainListViewAlignmentN5");
+                if (subNode != null)
+                    settings.Shortcuts.MainListViewAlignmentN5 = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainListViewAlignmentN6");
+                if (subNode != null)
+                    settings.Shortcuts.MainListViewAlignmentN6 = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainListViewAlignmentN7");
+                if (subNode != null)
+                    settings.Shortcuts.MainListViewAlignmentN7 = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainListViewAlignmentN8");
+                if (subNode != null)
+                    settings.Shortcuts.MainListViewAlignmentN8 = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainListViewAlignmentN9");
+                if (subNode != null)
+                    settings.Shortcuts.MainListViewAlignmentN9 = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainListViewCopyText");
                 if (subNode != null)
                     settings.Shortcuts.MainListViewCopyText = subNode.InnerText;
@@ -3280,9 +3327,6 @@ $HorzAlign          =   Center
                 subNode = node.SelectSingleNode("MainInsertAfter");
                 if (subNode != null)
                     settings.Shortcuts.MainInsertAfter = subNode.InnerText;
-                subNode = node.SelectSingleNode("MainTextBoxInsertAfter");
-                if (subNode != null)
-                    settings.Shortcuts.MainTextBoxInsertAfter = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainTextBoxAutoBreak");
                 if (subNode != null)
                     settings.Shortcuts.MainTextBoxAutoBreak = subNode.InnerText;
@@ -4058,9 +4102,20 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("MainSynchronizationPointSyncViaFile", settings.Shortcuts.MainSynchronizationPointSyncViaFile);
                 textWriter.WriteElementString("MainSynchronizationChangeFrameRate", settings.Shortcuts.MainSynchronizationChangeFrameRate);
                 textWriter.WriteElementString("MainListViewItalic", settings.Shortcuts.MainListViewItalic);
+                textWriter.WriteElementString("MainListViewBold", settings.Shortcuts.MainListViewBold);
+                textWriter.WriteElementString("MainListViewUnderline", settings.Shortcuts.MainListViewUnderline);
                 textWriter.WriteElementString("MainListViewToggleDashes", settings.Shortcuts.MainListViewToggleDashes);
                 textWriter.WriteElementString("MainListViewToggleMusicSymbols", settings.Shortcuts.MainListViewToggleMusicSymbols);
                 textWriter.WriteElementString("MainListViewAlignment", settings.Shortcuts.MainListViewAlignment);
+                textWriter.WriteElementString("MainListViewAlignmentN1", settings.Shortcuts.MainListViewAlignmentN1);
+                textWriter.WriteElementString("MainListViewAlignmentN2", settings.Shortcuts.MainListViewAlignmentN2);
+                textWriter.WriteElementString("MainListViewAlignmentN3", settings.Shortcuts.MainListViewAlignmentN3);
+                textWriter.WriteElementString("MainListViewAlignmentN4", settings.Shortcuts.MainListViewAlignmentN4);
+                textWriter.WriteElementString("MainListViewAlignmentN5", settings.Shortcuts.MainListViewAlignmentN5);
+                textWriter.WriteElementString("MainListViewAlignmentN6", settings.Shortcuts.MainListViewAlignmentN6);
+                textWriter.WriteElementString("MainListViewAlignmentN7", settings.Shortcuts.MainListViewAlignmentN7);
+                textWriter.WriteElementString("MainListViewAlignmentN8", settings.Shortcuts.MainListViewAlignmentN8);
+                textWriter.WriteElementString("MainListViewAlignmentN9", settings.Shortcuts.MainListViewAlignmentN9);
                 textWriter.WriteElementString("MainListViewCopyText", settings.Shortcuts.MainListViewCopyText);
                 textWriter.WriteElementString("MainListViewCopyTextFromOriginalToCurrent", settings.Shortcuts.MainListViewCopyTextFromOriginalToCurrent);
                 textWriter.WriteElementString("MainListViewAutoDuration", settings.Shortcuts.MainListViewAutoDuration);
@@ -4108,7 +4163,6 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("MainAdjustEndXMsBack", settings.Shortcuts.MainAdjustEndXMsBack);
                 textWriter.WriteElementString("MainAdjustEndXMsForward", settings.Shortcuts.MainAdjustEndXMsForward);
                 textWriter.WriteElementString("MainInsertAfter", settings.Shortcuts.MainInsertAfter);
-                textWriter.WriteElementString("MainTextBoxInsertAfter", settings.Shortcuts.MainTextBoxInsertAfter);
                 textWriter.WriteElementString("MainTextBoxAutoBreak", settings.Shortcuts.MainTextBoxAutoBreak);
                 textWriter.WriteElementString("MainTextBoxUnbreak", settings.Shortcuts.MainTextBoxUnbreak);
                 textWriter.WriteElementString("MainWaveformInsertAtCurrentPosition", settings.Shortcuts.MainWaveformInsertAtCurrentPosition);

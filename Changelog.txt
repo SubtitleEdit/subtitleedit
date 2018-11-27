@@ -7,6 +7,8 @@
    * Add some image pre-processing for OCR
    * Add "DVD Studio Pro" file properties - thx Daniel
    * Add ebu stl boxing - thx Milenko
+   * Add "Fix RTL" to batch convert - thx OmrSi/MosDos96/ghost
+   * Add new shortcuts
 * IMPROVED:
    * Update Bulgarian translation - thx KalinM
    * Update Finnish translation - thx Teijo S
