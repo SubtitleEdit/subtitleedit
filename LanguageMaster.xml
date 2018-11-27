@@ -1881,7 +1881,8 @@ can edit in same subtitle file (collaboration)</Information>
     <Alt>Alt</Alt>
     <Shift>Shift</Shift>
     <Key>Key</Key>
-    <ListView>List View</ListView>
+    <ListViewAndTextBox>List view and text box</ListViewAndTextBox>
+    <ListView>List view</ListView>
     <TextBox>Text box</TextBox>
     <UpdateShortcut>Update</UpdateShortcut>
     <ToggleDockUndockOfVideoControls>Toggle dock/undock of video controls</ToggleDockUndockOfVideoControls>
@@ -1915,6 +1916,15 @@ can edit in same subtitle file (collaboration)</Information>
     <ToggleDialogDashes>Toggle dialog dashes</ToggleDialogDashes>
     <ToggleMusicSymbols>Toggle music symbols</ToggleMusicSymbols>
     <Alignment>Alignment (selected lines)</Alignment>
+    <AlignmentN1>Alignment bottom left - {\an1}</AlignmentN1>
+    <AlignmentN2>Alignment bottom center - {\an2}</AlignmentN2>
+    <AlignmentN3>Alignment bottom right - {\an3}</AlignmentN3>
+    <AlignmentN4>Alignment middle left - {\an4}</AlignmentN4>
+    <AlignmentN5>Alignment middle center - {\an5}</AlignmentN5>
+    <AlignmentN6>Alignment middle right - {\an6}</AlignmentN6>
+    <AlignmentN7>Alignment top left - {\an7}</AlignmentN7>
+    <AlignmentN8>Alignment top center - {\an8}</AlignmentN8>
+    <AlignmentN9>Alignment top right - {\an9}</AlignmentN9>
     <CopyTextOnly>Copy text only to clip board (selected lines)</CopyTextOnly>
     <CopyTextOnlyFromOriginalToCurrent>Copy text from original to current</CopyTextOnlyFromOriginalToCurrent>
     <AutoDurationSelectedLines>Auto-duration (selected lines)</AutoDurationSelectedLines>

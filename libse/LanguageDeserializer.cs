@@ -5080,6 +5080,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/Key":
                     language.Settings.Key = reader.Value;
                     break;
+                case "Settings/ListViewAndTextBox":
+                    language.Settings.ListViewAndTextBox = reader.Value;
+                    break;
                 case "Settings/ListView":
                     language.Settings.ListView = reader.Value;
                     break;
@@ -5181,6 +5184,33 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "Settings/Alignment":
                     language.Settings.Alignment = reader.Value;
+                    break;
+                case "Settings/AlignmentN1":
+                    language.Settings.AlignmentN1 = reader.Value;
+                    break;
+                case "Settings/AlignmentN2":
+                    language.Settings.AlignmentN2 = reader.Value;
+                    break;
+                case "Settings/AlignmentN3":
+                    language.Settings.AlignmentN3 = reader.Value;
+                    break;
+                case "Settings/AlignmentN4":
+                    language.Settings.AlignmentN4 = reader.Value;
+                    break;
+                case "Settings/AlignmentN5":
+                    language.Settings.AlignmentN5 = reader.Value;
+                    break;
+                case "Settings/AlignmentN6":
+                    language.Settings.AlignmentN6 = reader.Value;
+                    break;
+                case "Settings/AlignmentN7":
+                    language.Settings.AlignmentN7 = reader.Value;
+                    break;
+                case "Settings/AlignmentN8":
+                    language.Settings.AlignmentN8 = reader.Value;
+                    break;
+                case "Settings/AlignmentN9":
+                    language.Settings.AlignmentN9 = reader.Value;
                     break;
                 case "Settings/CopyTextOnly":
                     language.Settings.CopyTextOnly = reader.Value;
