@@ -132,7 +132,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             int frames = MillisecondsToFrames(time.TotalMilliseconds);
             int footage = frames / 16;
             int rest = (int)Math.Round(frames % 16.0 / 16.0 * Configuration.Settings.General.CurrentFrameRate);
-            return $"{footage}.{rest:0}";
+            return $"{footage}.{rest:00}";
         }
 
         private static TimeCode DecodeTimeCode(string[] parts)
