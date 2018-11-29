@@ -14284,7 +14284,7 @@ namespace Nikse.SubtitleEdit.Forms
                 foreach (ListViewItem item in SubtitleListview1.SelectedItems)
                     indices.Add(item.Index);
 
-                bool first = false;
+                bool first = true;
                 SubtitleListview1.BeginUpdate();
                 foreach (int i in indices)
                 {
@@ -17429,6 +17429,8 @@ namespace Nikse.SubtitleEdit.Forms
             pointSyncViaOtherSubtitleToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainSynchronizationPointSyncViaFile);
             toolStripMenuItemChangeFrameRate2.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainSynchronizationChangeFrameRate);
             italicToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewItalic);
+            normalToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainRemoveFormatting);
+            normalToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainRemoveFormatting);
             boldToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewBold);
             boldToolStripMenuItem1.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewBold);
             underlineToolStripMenuItem1.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewUnderline);
@@ -18546,6 +18548,12 @@ namespace Nikse.SubtitleEdit.Forms
         private void NormalToolStripMenuItem1Click(object sender, EventArgs e)
         {
             var tb = GetFocusedTextBox();
+
+            if (tb.SelectionLength == 0)
+            {
+                tb.Text = HtmlUtil.RemoveHtmlTags(tb.Text);
+                return;
+            }
 
             string text = tb.SelectedText;
             int selectionStart = tb.SelectionStart;

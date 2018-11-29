@@ -1082,6 +1082,7 @@ $HorzAlign          =   Center
         public string MainListViewAlignmentN7 { get; set; }
         public string MainListViewAlignmentN8 { get; set; }
         public string MainListViewAlignmentN9 { get; set; }
+        public string MainRemoveFormatting { get; set; }        
         public string MainListViewCopyText { get; set; }
         public string MainListViewCopyTextFromOriginalToCurrent { get; set; }
         public string MainListViewAutoDuration { get; set; }
@@ -3186,6 +3187,9 @@ $HorzAlign          =   Center
                 subNode = node.SelectSingleNode("MainListViewAlignmentN9");
                 if (subNode != null)
                     settings.Shortcuts.MainListViewAlignmentN9 = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainRemoveFormatting");
+                if (subNode != null)
+                    settings.Shortcuts.MainRemoveFormatting = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainListViewCopyText");
                 if (subNode != null)
                     settings.Shortcuts.MainListViewCopyText = subNode.InnerText;
@@ -4116,6 +4120,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("MainListViewAlignmentN7", settings.Shortcuts.MainListViewAlignmentN7);
                 textWriter.WriteElementString("MainListViewAlignmentN8", settings.Shortcuts.MainListViewAlignmentN8);
                 textWriter.WriteElementString("MainListViewAlignmentN9", settings.Shortcuts.MainListViewAlignmentN9);
+                textWriter.WriteElementString("MainRemoveFormatting", settings.Shortcuts.MainRemoveFormatting);
                 textWriter.WriteElementString("MainListViewCopyText", settings.Shortcuts.MainListViewCopyText);
                 textWriter.WriteElementString("MainListViewCopyTextFromOriginalToCurrent", settings.Shortcuts.MainListViewCopyTextFromOriginalToCurrent);
                 textWriter.WriteElementString("MainListViewAutoDuration", settings.Shortcuts.MainListViewAutoDuration);
