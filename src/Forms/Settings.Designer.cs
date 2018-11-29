@@ -186,6 +186,11 @@
             this.buttonWaveformSelectedColor = new System.Windows.Forms.Button();
             this.checkBoxWaveformShowGrid = new System.Windows.Forms.CheckBox();
             this.tabPageTools = new System.Windows.Forms.TabPage();
+            this.groupBoxGoogleTranslate = new System.Windows.Forms.GroupBox();
+            this.labelGoogleTranslateApiKey = new System.Windows.Forms.Label();
+            this.textBoxGoogleTransleApiKey = new System.Windows.Forms.TextBox();
+            this.linkLabelGoogleTranslateSignUp = new System.Windows.Forms.LinkLabel();
+            this.label3 = new System.Windows.Forms.Label();
             this.groupBoxBing = new System.Windows.Forms.GroupBox();
             this.labelClientSecret = new System.Windows.Forms.Label();
             this.textBoxBingClientSecret = new System.Windows.Forms.TextBox();
@@ -372,6 +377,7 @@
             this.groupBoxWaveformAppearence.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWaveformBorderHitMs)).BeginInit();
             this.tabPageTools.SuspendLayout();
+            this.groupBoxGoogleTranslate.SuspendLayout();
             this.groupBoxBing.SuspendLayout();
             this.groupBoxToolsMisc.SuspendLayout();
             this.groupBoxSpellCheck.SuspendLayout();
@@ -2456,6 +2462,7 @@
             // 
             // tabPageTools
             // 
+            this.tabPageTools.Controls.Add(this.groupBoxGoogleTranslate);
             this.tabPageTools.Controls.Add(this.groupBoxBing);
             this.tabPageTools.Controls.Add(this.groupBoxToolsMisc);
             this.tabPageTools.Controls.Add(this.groupBoxSpellCheck);
@@ -2469,6 +2476,56 @@
             this.tabPageTools.Text = "Tools";
             this.tabPageTools.UseVisualStyleBackColor = true;
             // 
+            // groupBoxGoogleTranslate
+            // 
+            this.groupBoxGoogleTranslate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxGoogleTranslate.Controls.Add(this.labelGoogleTranslateApiKey);
+            this.groupBoxGoogleTranslate.Controls.Add(this.textBoxGoogleTransleApiKey);
+            this.groupBoxGoogleTranslate.Controls.Add(this.linkLabelGoogleTranslateSignUp);
+            this.groupBoxGoogleTranslate.Controls.Add(this.label3);
+            this.groupBoxGoogleTranslate.Location = new System.Drawing.Point(422, 290);
+            this.groupBoxGoogleTranslate.Name = "groupBoxGoogleTranslate";
+            this.groupBoxGoogleTranslate.Size = new System.Drawing.Size(404, 78);
+            this.groupBoxGoogleTranslate.TabIndex = 31;
+            this.groupBoxGoogleTranslate.TabStop = false;
+            this.groupBoxGoogleTranslate.Text = "Google translate";
+            // 
+            // labelGoogleTranslateApiKey
+            // 
+            this.labelGoogleTranslateApiKey.AutoSize = true;
+            this.labelGoogleTranslateApiKey.Location = new System.Drawing.Point(13, 47);
+            this.labelGoogleTranslateApiKey.Name = "labelGoogleTranslateApiKey";
+            this.labelGoogleTranslateApiKey.Size = new System.Drawing.Size(44, 13);
+            this.labelGoogleTranslateApiKey.TabIndex = 30;
+            this.labelGoogleTranslateApiKey.Text = "API key";
+            // 
+            // textBoxGoogleTransleApiKey
+            // 
+            this.textBoxGoogleTransleApiKey.Location = new System.Drawing.Point(94, 47);
+            this.textBoxGoogleTransleApiKey.Name = "textBoxGoogleTransleApiKey";
+            this.textBoxGoogleTransleApiKey.Size = new System.Drawing.Size(304, 21);
+            this.textBoxGoogleTransleApiKey.TabIndex = 26;
+            // 
+            // linkLabelGoogleTranslateSignUp
+            // 
+            this.linkLabelGoogleTranslateSignUp.Location = new System.Drawing.Point(201, 15);
+            this.linkLabelGoogleTranslateSignUp.Name = "linkLabelGoogleTranslateSignUp";
+            this.linkLabelGoogleTranslateSignUp.Size = new System.Drawing.Size(183, 27);
+            this.linkLabelGoogleTranslateSignUp.TabIndex = 24;
+            this.linkLabelGoogleTranslateSignUp.TabStop = true;
+            this.linkLabelGoogleTranslateSignUp.Text = "How to sign up";
+            this.linkLabelGoogleTranslateSignUp.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.linkLabelGoogleTranslateSignUp.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelGoogleTranslateSignUp_LinkClicked);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(16, 106);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(0, 13);
+            this.label3.TabIndex = 25;
+            // 
             // groupBoxBing
             // 
             this.groupBoxBing.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -2477,9 +2534,9 @@
             this.groupBoxBing.Controls.Add(this.textBoxBingClientSecret);
             this.groupBoxBing.Controls.Add(this.linkLabelBingSubscribe);
             this.groupBoxBing.Controls.Add(this.label1);
-            this.groupBoxBing.Location = new System.Drawing.Point(421, 331);
+            this.groupBoxBing.Location = new System.Drawing.Point(421, 374);
             this.groupBoxBing.Name = "groupBoxBing";
-            this.groupBoxBing.Size = new System.Drawing.Size(404, 131);
+            this.groupBoxBing.Size = new System.Drawing.Size(404, 88);
             this.groupBoxBing.TabIndex = 6;
             this.groupBoxBing.TabStop = false;
             this.groupBoxBing.Text = "Bing translator";
@@ -2529,7 +2586,7 @@
             this.groupBoxToolsMisc.Controls.Add(this.checkBoxUseDoNotBreakAfterList);
             this.groupBoxToolsMisc.Location = new System.Drawing.Point(421, 130);
             this.groupBoxToolsMisc.Name = "groupBoxToolsMisc";
-            this.groupBoxToolsMisc.Size = new System.Drawing.Size(404, 195);
+            this.groupBoxToolsMisc.Size = new System.Drawing.Size(404, 154);
             this.groupBoxToolsMisc.TabIndex = 5;
             this.groupBoxToolsMisc.TabStop = false;
             this.groupBoxToolsMisc.Text = "Misc";
@@ -2540,19 +2597,21 @@
             this.comboBoxGoogleTranslateUrl.Items.AddRange(new object[] {
             "translate.google.com",
             "translate.google.cn"});
-            this.comboBoxGoogleTranslateUrl.Location = new System.Drawing.Point(15, 155);
+            this.comboBoxGoogleTranslateUrl.Location = new System.Drawing.Point(15, 122);
             this.comboBoxGoogleTranslateUrl.Name = "comboBoxGoogleTranslateUrl";
             this.comboBoxGoogleTranslateUrl.Size = new System.Drawing.Size(369, 21);
             this.comboBoxGoogleTranslateUrl.TabIndex = 34;
+            this.comboBoxGoogleTranslateUrl.Visible = false;
             // 
             // labelGoogleTranslateUrl
             // 
             this.labelGoogleTranslateUrl.AutoSize = true;
-            this.labelGoogleTranslateUrl.Location = new System.Drawing.Point(12, 138);
+            this.labelGoogleTranslateUrl.Location = new System.Drawing.Point(12, 105);
             this.labelGoogleTranslateUrl.Name = "labelGoogleTranslateUrl";
             this.labelGoogleTranslateUrl.Size = new System.Drawing.Size(101, 13);
             this.labelGoogleTranslateUrl.TabIndex = 33;
             this.labelGoogleTranslateUrl.Text = "Google translate url";
+            this.labelGoogleTranslateUrl.Visible = false;
             // 
             // checkBoxCpsIncludeWhiteSpace
             // 
@@ -2574,7 +2633,7 @@
             // 
             // buttonEditDoNotBreakAfterList
             // 
-            this.buttonEditDoNotBreakAfterList.Location = new System.Drawing.Point(34, 76);
+            this.buttonEditDoNotBreakAfterList.Location = new System.Drawing.Point(239, 49);
             this.buttonEditDoNotBreakAfterList.Name = "buttonEditDoNotBreakAfterList";
             this.buttonEditDoNotBreakAfterList.Size = new System.Drawing.Size(75, 23);
             this.buttonEditDoNotBreakAfterList.TabIndex = 23;
@@ -4230,6 +4289,8 @@
             this.groupBoxWaveformAppearence.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWaveformBorderHitMs)).EndInit();
             this.tabPageTools.ResumeLayout(false);
+            this.groupBoxGoogleTranslate.ResumeLayout(false);
+            this.groupBoxGoogleTranslate.PerformLayout();
             this.groupBoxBing.ResumeLayout(false);
             this.groupBoxBing.PerformLayout();
             this.groupBoxToolsMisc.ResumeLayout(false);
@@ -4626,5 +4687,10 @@
         private System.Windows.Forms.Button buttonShortcutsClear;
         private System.Windows.Forms.Label labelShortcutsSearch;
         private System.Windows.Forms.TextBox textBoxShortcutSearch;
+        private System.Windows.Forms.GroupBox groupBoxGoogleTranslate;
+        private System.Windows.Forms.Label labelGoogleTranslateApiKey;
+        private System.Windows.Forms.TextBox textBoxGoogleTransleApiKey;
+        private System.Windows.Forms.LinkLabel linkLabelGoogleTranslateSignUp;
+        private System.Windows.Forms.Label label3;
     }
 }
