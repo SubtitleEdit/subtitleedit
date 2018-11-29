@@ -690,6 +690,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             textBoxBingClientSecret.Text = Configuration.Settings.Tools.MicrosoftTranslatorApiKey;
             comboBoxGoogleTranslateUrl.Text = Configuration.Settings.Tools.GoogleTranslateUrl;
+            textBoxGoogleTransleApiKey.Text = toolsSettings.GoogleApiV2Key;
 
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
@@ -1352,6 +1353,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolsSettings.FixCommonErrorsSkipStepOne = checkBoxFceSkipStep1.Checked;
             toolsSettings.MicrosoftTranslatorApiKey = textBoxBingClientSecret.Text.Trim();
             toolsSettings.GoogleTranslateUrl = comboBoxGoogleTranslateUrl.Text.Trim();
+            toolsSettings.GoogleApiV2Key = textBoxGoogleTransleApiKey.Text.Trim();
 
             var wordListSettings = Configuration.Settings.WordLists;
             wordListSettings.UseOnlineNames = checkBoxNamesOnline.Checked;
@@ -2617,6 +2619,11 @@ namespace Nikse.SubtitleEdit.Forms
         private void buttonShortcutsClear_Click(object sender, EventArgs e)
         {
             textBoxShortcutSearch.Text = string.Empty;
+        }
+
+        private void linkLabelGoogleTranslateSignUp_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Process.Start("https://cloud.google.com/docs/authentication/api-keys");
         }
     }
 }

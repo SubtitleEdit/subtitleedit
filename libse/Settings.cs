@@ -91,6 +91,7 @@ namespace Nikse.SubtitleEdit.Core
         public string MicrosoftBingApiId { get; set; }
         public string MicrosoftTranslatorApiKey { get; set; }
         public string GoogleTranslateUrl { get; set; }
+        public string GoogleApiV2Key { get; set; }
         public string GoogleApiKey { get; set; }
         public bool UseGooleApiPaidService { get; set; }
         public string GoogleTranslateLastTargetLanguage { get; set; }
@@ -1955,6 +1956,9 @@ $HorzAlign          =   Center
             subNode = node.SelectSingleNode("GoogleApiKey");
             if (subNode != null)
                 settings.Tools.GoogleApiKey = subNode.InnerText;
+            subNode = node.SelectSingleNode("GoogleApiV2Key");
+            if (subNode != null)
+                settings.Tools.GoogleApiV2Key = subNode.InnerText;
             subNode = node.SelectSingleNode("UseGooleApiPaidService");
             if (subNode != null)
                 settings.Tools.UseGooleApiPaidService = Convert.ToBoolean(subNode.InnerText);
@@ -3674,6 +3678,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("MicrosoftTranslatorApiKey", settings.Tools.MicrosoftTranslatorApiKey);
                 textWriter.WriteElementString("GoogleTranslateUrl", settings.Tools.GoogleTranslateUrl);
                 textWriter.WriteElementString("GoogleApiKey", settings.Tools.GoogleApiKey);
+                textWriter.WriteElementString("GoogleApiV2Key", settings.Tools.GoogleApiV2Key);
                 textWriter.WriteElementString("UseGooleApiPaidService", settings.Tools.UseGooleApiPaidService.ToString());
                 textWriter.WriteElementString("GoogleTranslateLastTargetLanguage", settings.Tools.GoogleTranslateLastTargetLanguage);
                 textWriter.WriteElementString("TranslateAutoSplit", settings.Tools.TranslateAutoSplit.ToString());

@@ -23,7 +23,7 @@ namespace Nikse.SubtitleEdit.Forms
         private bool _googleTranslate = true;
         private MicrosoftTranslationService.SoapService _microsoftTranslationService;
         private bool _googleApiNotWorking;
-        private const string SplitterString = "\n\n\n";
+        private const string SplitterString = "+-+";
         private const string NewlineString = "\n";
         private ITranslator _translator;
 
@@ -53,8 +53,6 @@ namespace Nikse.SubtitleEdit.Forms
 
         private FormattingType[] _formattingTypes;
         private bool[] _autoSplit;
-
-        private Encoding _screenScrapingEncoding;
 
         private string _targetTwoLetterIsoLanguageName;
 
@@ -185,6 +183,14 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonTranslate_Click(object sender, EventArgs e)
         {
+            if (_googleTranslate && string.IsNullOrEmpty(Configuration.Settings.Tools.GoogleApiV2Key))
+            {
+                MessageBox.Show("Sorry, you need an API key from Google Could to use the latest Google Translate." + Environment.NewLine
+                                + Environment.NewLine +
+                                "Go to Options -> Settings -> Tools to enter your API key.");
+                return;
+            }
+
             if (buttonTranslate.Text == Configuration.Settings.Language.General.Cancel)
             {
                 buttonTranslate.Enabled = false;
@@ -211,7 +217,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonCancel.Enabled = false;
             _breakTranslation = false;
             buttonTranslate.Text = Configuration.Settings.Language.General.Cancel;
-            const int textMaxSize = 1000;
+            const int textMaxSize = 100;
             Cursor.Current = Cursors.WaitCursor;
             progressBar1.Maximum = _subtitle.Paragraphs.Count;
             progressBar1.Value = 0;
@@ -226,8 +232,9 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     Paragraph p = _subtitle.Paragraphs[i];
                     string text = SetFormattingTypeAndSplitting(i, p.Text, (comboBoxFrom.SelectedItem as ComboBoxItem).Value.StartsWith("zh"));
-                    text = string.Format("{1} {0}", text, SplitterString);
-                    if (Utilities.UrlEncode(sb + text).Length >= textMaxSize)
+
+                    var text2 = string.Format("{1} {0}", text, SplitterString);
+                    if (Utilities.UrlEncode(sb + text2).Length >= textMaxSize)
                     {
                         FillTranslatedText(DoTranslate(sb.ToString()), start, index - 1);
                         sb.Clear();
@@ -235,7 +242,10 @@ namespace Nikse.SubtitleEdit.Forms
                         Application.DoEvents();
                         start = index;
                     }
-                    sb.Append(text);
+                    if (sb.Length > 0)
+                        sb.Append(string.Format("{1} {0}", text, SplitterString));
+                    else
+                        sb.Append(text);
                     index++;
                     progressBar1.Value = index;
                     if (_breakTranslation)
@@ -365,50 +375,65 @@ namespace Nikse.SubtitleEdit.Forms
 
         private List<string> SplitToLines(string translatedText)
         {
-            if (!_googleTranslate)
+            //if (!_googleTranslate)
             {
                 translatedText = translatedText.Replace("+- +", "+-+");
                 translatedText = translatedText.Replace("+ -+", "+-+");
                 translatedText = translatedText.Replace("+ - +", "+-+");
                 translatedText = translatedText.Replace("+ +", "+-+");
-                translatedText = translatedText.Replace("+-+", "|");
+                translatedText = translatedText.Replace("+-+", "\0");
             }
-            return translatedText.Split('|').ToList();
+            return translatedText.Split('\0').ToList();
         }
 
         private string DoTranslate(string input)
         {
-            string languagePair = (comboBoxFrom.SelectedItem as ComboBoxItem).Value + "|" + (comboBoxTo.SelectedItem as ComboBoxItem).Value;
-            bool romanji = languagePair.EndsWith("|romanji", StringComparison.InvariantCulture);
-            if (romanji)
-                languagePair = (comboBoxFrom.SelectedItem as ComboBoxItem).Value + "|ja";
+            var sourceLanguage = ((ComboBoxItem)comboBoxFrom.SelectedItem).Value;
+            var targetLanguage = ((ComboBoxItem)comboBoxTo.SelectedItem).Value;
 
-            input = PreTranslate(input.TrimEnd('|').Trim(), (comboBoxFrom.SelectedItem as ComboBoxItem).Value);
+            string baseUrl = "https://translation.googleapis.com/language/translate/v2";
+            var format = "text";
+            string uri = $"{baseUrl}/?q={Utilities.UrlEncode(input)}&target={targetLanguage}&source={sourceLanguage}&format={format}&key={Configuration.Settings.Tools.GoogleApiV2Key}";
 
-            string result = null;
-            if (!_googleApiNotWorking)
+            var request = WebRequest.Create(uri);
+            request.Proxy = Utilities.GetProxy();
+            request.ContentType = "application/json";
+            request.ContentLength = 0;
+            request.Method = "POST";
+            var response = request.GetResponse();
+            var reader = new StreamReader(response.GetResponseStream(), Encoding.UTF8);
+            string content = reader.ReadToEnd();
+
+            var parser = new JsonParser();
+            var x = (Dictionary<string, object>)parser.Parse(content);
+            foreach (var k in x.Keys)
             {
-                try
+                if (x[k] is Dictionary<string, object> v)
                 {
-                    result = TranslateTextViaApi(input, languagePair);
-                }
-                catch
-                {
-                    _googleApiNotWorking = true;
-                    result = string.Empty;
+                    foreach (var innerKey in v.Keys)
+                    {
+                        if (v[innerKey] is List<object> l)
+                        {
+                            foreach (var o2 in l)
+                            {
+                                if (o2 is Dictionary<string, object> v2)
+                                {
+                                    foreach (var innerKey2 in v2.Keys)
+                                    {
+                                        if (v2[innerKey2] is string translatedText)
+                                        {
+                                            translatedText = Regex.Unescape(translatedText);
+                                            translatedText = string.Join(Environment.NewLine, translatedText.SplitToLines());
+                                            return PostTranslate(translatedText);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
-
-            // fallback to screen scraping
-            if (string.IsNullOrEmpty(result))
-            {
-                if (_screenScrapingEncoding == null)
-                    _screenScrapingEncoding = GetScreenScrapingEncoding(languagePair);
-                result = TranslateTextViaScreenScraping(input, languagePair, _screenScrapingEncoding, romanji);
-                _googleApiNotWorking = true;
-            }
-
-            return PostTranslate(result);
+            return string.Empty;
         }
 
         public static string TranslateTextViaApi(string input, string languagePair)
@@ -499,7 +524,7 @@ namespace Nikse.SubtitleEdit.Forms
         /// <param name="encoding">Encoding to use when downloading text</param>
         /// <param name="romanji">Get Romanjii text (made during Japanese) but in a separate div tag</param>
         /// <returns>Translated to String</returns>
-        public static string TranslateTextViaScreenScraping(string input, string languagePair, Encoding encoding, bool romanji)
+        public static string TranslateTextViaScreenScrapingOLD(string input, string languagePair, Encoding encoding, bool romanji)
         {
             for (var c = 0; c < 5; c++)
             {
@@ -587,6 +612,38 @@ namespace Nikse.SubtitleEdit.Forms
 
             return string.Empty;
         }
+
+        public static string TranslateTextViaScreenScraping(string input, string languagePair, Encoding encoding, bool romanji)
+        {
+            string url = "https://clients1.google.com/complete/search?q=" + Utilities.UrlEncode(input) + "&client=translate-web&ds=translate&hl=" + languagePair.Substring(0, 2) + "&requiredfields=tl%3A" + languagePair.Substring(3, 2) + "&callback=_callbacks____r1";
+            var result = Utilities.DownloadString(url, encoding);
+            // https://clients1.google.com/complete/search?q=Hvad%20sker%20der%20&client=translate-web&ds=translate&hl=en&requiredfields=tl%3Ada&callback=_callbacks____1bjp256wd7
+
+
+            int startIndex = result.IndexOf("\"", StringComparison.Ordinal);
+            if (startIndex > 0)
+            {
+                int endIndex = result.IndexOf("\"", startIndex + 1, StringComparison.Ordinal);
+                if (endIndex > 0)
+                {
+                    result = result.Substring(startIndex + 1, endIndex - startIndex - 1);
+                }
+            }
+
+            string res = result;
+            res = res.Replace("\\n\\n\\n", "|");
+            res = Regex.Unescape(res);
+            res = res.Replace("\\n", Environment.NewLine);
+            res = res.Replace(NewlineString, Environment.NewLine);
+            res = res.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
+            res = res.Replace(Environment.NewLine + " ", Environment.NewLine);
+            res = res.Replace(Environment.NewLine + " ", Environment.NewLine);
+            res = res.Replace(" " + Environment.NewLine, Environment.NewLine);
+            res = res.Replace(" " + Environment.NewLine, Environment.NewLine).Trim();
+
+            return res;
+        }
+
 
         public void FillComboWithLanguages(ComboBox comboBox)
         {
@@ -1084,7 +1141,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void comboBoxTo_SelectedIndexChanged(object sender, EventArgs e)
         {
-            _screenScrapingEncoding = null;
+           
         }
 
     }
