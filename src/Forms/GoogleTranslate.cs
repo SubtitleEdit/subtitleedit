@@ -233,7 +233,7 @@ namespace Nikse.SubtitleEdit.Forms
                     Paragraph p = _subtitle.Paragraphs[i];
                     string text = SetFormattingTypeAndSplitting(i, p.Text, (comboBoxFrom.SelectedItem as ComboBoxItem).Value.StartsWith("zh"));
 
-                    var text2 = string.Format("{1} {0}", text, SplitterString);
+                    var text2 = string.Format("{1} {0} ", text, SplitterString);
                     if (Utilities.UrlEncode(sb + text2).Length >= textMaxSize)
                     {
                         FillTranslatedText(DoTranslate(sb.ToString()), start, index - 1);
@@ -243,7 +243,7 @@ namespace Nikse.SubtitleEdit.Forms
                         start = index;
                     }
                     if (sb.Length > 0)
-                        sb.Append(string.Format("{1} {0}", text, SplitterString));
+                        sb.Append(string.Format("{1} {0} ", text, SplitterString));
                     else
                         sb.Append(text);
                     index++;
@@ -317,8 +317,10 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 index++;
             }
+            subtitleListViewTo.BeginUpdate();
             subtitleListViewTo.Fill(_translatedSubtitle);
             subtitleListViewTo.SelectIndexAndEnsureVisible(end);
+            subtitleListViewTo.EndUpdate();
         }
 
         private string CleanText(string s, int index)
@@ -375,7 +377,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private List<string> SplitToLines(string translatedText)
         {
-            //if (!_googleTranslate)
+            if (!_googleTranslate)
             {
                 translatedText = translatedText.Replace("+- +", "+-+");
                 translatedText = translatedText.Replace("+ -+", "+-+");
@@ -386,10 +388,82 @@ namespace Nikse.SubtitleEdit.Forms
             return translatedText.Split('\0').ToList();
         }
 
+        private string GoogleTranslateOld(string input, string source, string target)
+        {
+            string result;
+            using (var wc = new WebClient())
+            {
+                string url = $"https://translate.googleapis.com/translate_a/single?client=gtx&sl={source}&tl={target}&dt=t&q={Utilities.UrlEncode(input)}";
+                wc.Proxy = Utilities.GetProxy();
+                wc.Encoding = Encoding.UTF8;
+                wc.Headers.Add("user-agent", "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36");
+                result = wc.DownloadString(url).Trim();
+            }
+
+            var sbAll = new StringBuilder();
+            int count = 0;
+            int i = 1;
+            int level = result.StartsWith('[') ? 1 : 0;
+            while (i < result.Length - 1)
+            {
+                var sb = new StringBuilder();
+                var start = false;
+                for (; i < result.Length - 1; i++)
+                {
+                    var c = result[i];
+                    if (start)
+                    {
+                        if (c == '"' && result[i - 1] != '\\')
+                        {
+                            count++;
+                            if (count % 2 == 1 && level > 2) // even numbers are original text, level > 3 is translation
+                                sbAll.Append(" "  + sb);
+                            i++;
+                            break;
+                        }
+                        sb.Append(c);
+                    }
+                    else if (c == '"')
+                    {
+                        start = true;
+                    }
+                    else if (c == '[')
+                    {
+                        level++;
+                    }
+                    else if (c == ']')
+                    {
+                        level--;
+                    }
+                }
+            }
+
+            result = sbAll.ToString().Trim();
+            result = Regex.Unescape(result);
+            result = Json.DecodeJsonText(result);
+            
+            string res = result;
+            res = string.Join(Environment.NewLine, res.SplitToLines());
+            res = res.Replace(NewlineString, Environment.NewLine);
+            res = res.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
+            res = res.Replace(Environment.NewLine + " ", Environment.NewLine);
+            res = res.Replace(Environment.NewLine + " ", Environment.NewLine);
+            res = res.Replace(" " + Environment.NewLine, Environment.NewLine);
+            res = res.Replace(" " + Environment.NewLine, Environment.NewLine).Trim();
+
+            return res;
+        }
+
+
         private string DoTranslate(string input)
         {
             var sourceLanguage = ((ComboBoxItem)comboBoxFrom.SelectedItem).Value;
             var targetLanguage = ((ComboBoxItem)comboBoxTo.SelectedItem).Value;
+
+            if (string.IsNullOrEmpty(Configuration.Settings.Tools.GoogleApiV2Key))
+            {
+                return GoogleTranslateOld(input, sourceLanguage, targetLanguage);
+            }
 
             string baseUrl = "https://translation.googleapis.com/language/translate/v2";
             var format = "text";
@@ -438,7 +512,6 @@ namespace Nikse.SubtitleEdit.Forms
 
         public static string TranslateTextViaApi(string input, string languagePair)
         {
-            //string googleApiKey = "ABQIAAAA4j5cWwa3lDH0RkZceh7PjBTDmNAghl5kWSyuukQ0wtoJG8nFBxRPlalq-gAvbeCXMCkmrysqjXV1Gw";
             string googleApiKey = Configuration.Settings.Tools.GoogleApiKey;
 
             input = input.Replace(Environment.NewLine, NewlineString);
