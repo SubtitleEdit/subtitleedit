@@ -54,11 +54,7 @@ namespace Nikse.SubtitleEdit.Core.Translate
                     {
                         if (v[innerKey] is Dictionary<string, object> l)
                         {
-                            list.Add(new TranslationPair
-                            {
-                                Name = l["name"].ToString(),
-                                Code = innerKey
-                            });
+                            list.Add(new TranslationPair(l["name"].ToString(), innerKey));
                         }
                     }
                 }
@@ -76,7 +72,7 @@ namespace Nikse.SubtitleEdit.Core.Translate
             return GoToUrl;
         }
 
-        public List<string> Translate(string sourceLanguage, string targetLanguage, List<string> texts, StringBuilder log)
+        public List<string> Translate(string sourceLanguage, string targetLanguage, List<Paragraph> paragraphs, StringBuilder log)
         {
             var url = string.Format(TranslateUrl, sourceLanguage, targetLanguage);
             var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
@@ -88,7 +84,7 @@ namespace Nikse.SubtitleEdit.Core.Translate
             var jsonBuilder = new StringBuilder();
             jsonBuilder.Append("[");
             bool isFirst = true;
-            foreach (var text in texts)
+            foreach (var p in paragraphs)
             {
                 if (!isFirst)
                 {
@@ -98,7 +94,7 @@ namespace Nikse.SubtitleEdit.Core.Translate
                 {
                     isFirst = false;
                 }
-                jsonBuilder.Append("{ \"Text\":\"" + Json.EncodeJsonText(text) + "\"}");
+                jsonBuilder.Append("{ \"Text\":\"" + Json.EncodeJsonText(p.Text) + "\"}");
             }
             jsonBuilder.Append("]");
             string json = jsonBuilder.ToString();
@@ -125,7 +121,10 @@ namespace Nikse.SubtitleEdit.Core.Translate
                     foreach (var o in y)
                     {
                         var textDics = (Dictionary<string, object>)o;
-                        results.Add(textDics["text"].ToString());
+                        var res = (string)textDics["text"];
+                        res = TranslationHelper.PostTranslate(res, targetLanguage);
+                        res = res.Replace("< font color = ", "<font color=");
+                        results.Add(res);
                     }
                 }
             }

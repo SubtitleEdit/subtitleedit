@@ -549,10 +549,12 @@
     <Compile Include="TextDraw.cs" />
     <Compile Include="TextEncodingExtensions.cs" />
     <Compile Include="TimeCode.cs" />
+    <Compile Include="Translate\Formatting.cs" />
     <Compile Include="Translate\GoogleTranslator1.cs" />
     <Compile Include="Translate\GoogleTranslator2.cs" />
     <Compile Include="Translate\ITranslator.cs" />
     <Compile Include="Translate\MicrosoftTranslator.cs" />
+    <Compile Include="Translate\TranslationHelper.cs" />
     <Compile Include="Translate\TranslationPair.cs" />
     <Compile Include="TransportStream\AdaptationField.cs" />
     <Compile Include="TransportStream\ClutDefinitionSegment.cs" />

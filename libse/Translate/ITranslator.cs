@@ -8,6 +8,6 @@ namespace Nikse.SubtitleEdit.Core.Translate
         List<TranslationPair> GetTranslationPairs();
         string GetName();
         string GetUrl();
-        List<string> Translate(string sourceLanguage, string targetLanguage, List<string> texts, StringBuilder log);
+        List<string> Translate(string sourceLanguage, string targetLanguage, List<Paragraph> paragraphs, StringBuilder log);
     }
 }
