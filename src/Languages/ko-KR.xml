@@ -1877,6 +1877,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <Alt>Alt</Alt>
     <Shift>Shift</Shift>
     <Key>키</Key>
+    <ListViewAndTextBox>목록 보기 및 텍스트 상자</ListViewAndTextBox>
     <ListView>목록 보기</ListView>
     <TextBox>텍스트 상자</TextBox>
     <UpdateShortcut>업데이트</UpdateShortcut>
@@ -1911,6 +1912,15 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <ToggleDialogDashes>대화의 대시('-') 전환</ToggleDialogDashes>
     <ToggleMusicSymbols>음악 기호 전환</ToggleMusicSymbols>
     <Alignment>정렬 (선택한 줄)</Alignment>
+    <AlignmentN1>좌측 하단 정렬 - {\an1}</AlignmentN1>
+    <AlignmentN2>중앙 하단 정렬 - {\an2}</AlignmentN2>
+    <AlignmentN3>우측 중앙 정렬 - {\an3}</AlignmentN3>
+    <AlignmentN4>좌측 중앙 정렬 - {\an4}</AlignmentN4>
+    <AlignmentN5>중앙 중심 정렬 - {\an5}</AlignmentN5>
+    <AlignmentN6>우측 중앙 정렬 - {\an6}</AlignmentN6>
+    <AlignmentN7>좌측 상단 정렬 - {\an7}</AlignmentN7>
+    <AlignmentN8>중앙 상단 정렬 - {\an8}</AlignmentN8>
+    <AlignmentN9>우측 상단 정렬 - {\an9}</AlignmentN9>
     <CopyTextOnly>클립보드에 텍스트 복사 (선택한 줄)</CopyTextOnly>
     <CopyTextOnlyFromOriginalToCurrent>원본 텍스트를 현재 줄에 복사</CopyTextOnlyFromOriginalToCurrent>
     <AutoDurationSelectedLines>자동 표시시간 (선택한 줄)</AutoDurationSelectedLines>
