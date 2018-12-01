@@ -4,7 +4,6 @@ using System.IO;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
-using Nikse.SubtitleEdit.Core.SubtitleFormats;
 
 namespace Nikse.SubtitleEdit.Core.Translate
 {
@@ -13,9 +12,125 @@ namespace Nikse.SubtitleEdit.Core.Translate
     /// </summary>
     public class GoogleTranslator2 : ITranslator
     {
+        private readonly string _apiKey;
+
+        public GoogleTranslator2(string apiKey)
+        {
+            _apiKey = apiKey;
+        }
+
         public List<TranslationPair> GetTranslationPairs()
         {
-            throw new NotImplementedException();
+            return new List<TranslationPair>
+            {
+                new TranslationPair("AFRIKAANS", "af"),
+                new TranslationPair("ALBANIAN", "sq"),
+                new TranslationPair("AMHARIC", "am"),
+                new TranslationPair("ARABIC", "ar"),
+                new TranslationPair("ARMENIAN", "hy"),
+                new TranslationPair("AZERBAIJANI", "az"),
+                new TranslationPair("BASQUE", "eu"),
+                new TranslationPair("BELARUSIAN", "be"),
+                new TranslationPair("BENGALI", "bn"),
+                new TranslationPair("BOSNIAN", "bs"),
+                new TranslationPair("BULGARIAN", "bg"),
+                new TranslationPair("BURMESE", "my"),
+                new TranslationPair("CATALAN", "ca"),
+                new TranslationPair("CEBUANO", "ceb"),
+                new TranslationPair("CHICHEWA", "ny"),
+                new TranslationPair("CHINESE", "zh"),
+                new TranslationPair("CHINESE_SIMPLIFIED", "zh-CN"),
+                new TranslationPair("CHINESE_TRADITIONAL", "zh-TW"),
+                new TranslationPair("CORSICAN", "co"),
+                new TranslationPair("CROATIAN", "hr"),
+                new TranslationPair("CZECH", "cs"),
+                new TranslationPair("DANISH", "da"),
+                new TranslationPair("DUTCH", "nl"),
+                new TranslationPair("ENGLISH", "en"),
+                new TranslationPair("ESPERANTO", "eo"),
+                new TranslationPair("ESTONIAN", "et"),
+                new TranslationPair("FILIPINO", "tl"),
+                new TranslationPair("FINNISH", "fi"),
+                new TranslationPair("FRENCH", "fr"),
+                new TranslationPair("FRISIAN", "fy"),
+                new TranslationPair("GALICIAN", "gl"),
+                new TranslationPair("GEORGIAN", "ka"),
+                new TranslationPair("GERMAN", "de"),
+                new TranslationPair("GREEK", "el"),
+                new TranslationPair("GUJARATI", "gu"),
+                new TranslationPair("HAITIAN CREOLE", "ht"),
+                new TranslationPair("HAUSA", "ha"),
+                new TranslationPair("HAWAIIAN", "haw"),
+                new TranslationPair("HEBREW", "iw"),
+                new TranslationPair("HINDI", "hi"),
+                new TranslationPair("HMOUNG", "hmn"),
+                new TranslationPair("HUNGARIAN", "hu"),
+                new TranslationPair("ICELANDIC", "is"),
+                new TranslationPair("IGBO", "ig"),
+                new TranslationPair("INDONESIAN", "id"),
+                new TranslationPair("IRISH", "ga"),
+                new TranslationPair("ITALIAN", "it"),
+                new TranslationPair("JAPANESE", "ja"),
+                new TranslationPair("JAVANESE", "jw"),
+                new TranslationPair("KANNADA", "kn"),
+                new TranslationPair("KAZAKH", "kk"),
+                new TranslationPair("KHMER", "km"),
+                new TranslationPair("KOREAN", "ko"),
+                new TranslationPair("KURDISH", "ku"),
+                new TranslationPair("KYRGYZ", "ky"),
+                new TranslationPair("LAO", "lo"),
+                new TranslationPair("LATIN", "la"),
+                new TranslationPair("LATVIAN", "lv"),
+                new TranslationPair("LITHUANIAN", "lt"),
+                new TranslationPair("LUXEMBOURGISH", "lb"),
+                new TranslationPair("MACEDONIAN", "mk"),
+                new TranslationPair("MALAY", "ms"),
+                new TranslationPair("MALAGASY", "mg"),
+                new TranslationPair("MALAYALAM", "ml"),
+                new TranslationPair("MALTESE", "mt"),
+                new TranslationPair("MAORI", "mi"),
+                new TranslationPair("MARATHI", "mr"),
+                new TranslationPair("MONGOLIAN", "mn"),
+                new TranslationPair("MYANMAR", "my"),
+                new TranslationPair("NEPALI", "ne"),
+                new TranslationPair("NORWEGIAN", "no"),
+                new TranslationPair("PASHTO", "ps"),
+                new TranslationPair("PERSIAN", "fa"),
+                new TranslationPair("POLISH", "pl"),
+                new TranslationPair("PORTUGUESE", "pt"),
+                new TranslationPair("PUNJABI", "pa"),
+                new TranslationPair("ROMANIAN", "ro"),
+                new TranslationPair("ROMANJI", "romanji"),
+                new TranslationPair("RUSSIAN", "ru"),
+                new TranslationPair("SAMOAN", "sm"),
+                new TranslationPair("SCOTS GAELIC", "gd"),
+                new TranslationPair("SERBIAN", "sr"),
+                new TranslationPair("SESOTHO", "st"),
+                new TranslationPair("SHONA", "sn"),
+                new TranslationPair("SINDHI", "sd"),
+                new TranslationPair("SINHALA", "si"),
+                new TranslationPair("SLOVAK", "sk"),
+                new TranslationPair("SLOVENIAN", "sl"),
+                new TranslationPair("SOMALI", "so"),
+                new TranslationPair("SPANISH", "es"),
+                new TranslationPair("SUNDANESE", "su"),
+                new TranslationPair("SWAHILI", "sw"),
+                new TranslationPair("SWEDISH", "sv"),
+                new TranslationPair("TAJIK", "tg"),
+                new TranslationPair("TAMIL", "ta"),
+                new TranslationPair("TELUGU", "te"),
+                new TranslationPair("THAI", "th"),
+                new TranslationPair("TURKISH", "tr"),
+                new TranslationPair("UKRAINIAN", "uk"),
+                new TranslationPair("URDU", "ur"),
+                new TranslationPair("UZBEK", "uz"),
+                new TranslationPair("VIETNAMESE", "vi"),
+                new TranslationPair("WELSH", "cy"),
+                new TranslationPair("XHOSA", "xh"),
+                new TranslationPair("YIDDISH", "yi"),
+                new TranslationPair("YORUBA", "yo"),
+                new TranslationPair("ZULU", "zu"),
+            };
         }
 
         public string GetName()
@@ -28,70 +143,70 @@ namespace Nikse.SubtitleEdit.Core.Translate
             return "https://translate.google.com/";
         }
 
-        public List<string> Translate(string sourceLanguage, string targetLanguage, List<string> texts, StringBuilder log)
+        public List<string> Translate(string sourceLanguage, string targetLanguage, List<Paragraph> paragraphs, StringBuilder log)
         {
-            string result;
-            using (var wc = new WebClient())
+            var baseUrl = "https://translation.googleapis.com/language/translate/v2";
+            var format = "text";
+            var input = new StringBuilder();
+            var formattings = new Formatting[paragraphs.Count];
+            for (var index = 0; index < paragraphs.Count; index++)
             {
-                string url = $"https://translate.googleapis.com/translate_a/single?client=gtx&sl={sourceLanguage}&tl={targetLanguage}&dt=t&q={Utilities.UrlEncode("input")}";
-                wc.Proxy = Utilities.GetProxy();
-                wc.Encoding = Encoding.UTF8;
-                wc.Headers.Add("user-agent", "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36");
-                result = wc.DownloadString(url).Trim();
+                var p = paragraphs[index];
+                var f = new Formatting();
+                formattings[index] = f;
+                if (input.Length > 0)
+                    input.Append("&");
+                var text = f.SetTagsAndReturnTrimmed(TranslationHelper.PreTranslate(p.Text, sourceLanguage), sourceLanguage);
+                input.Append("q=" + Utilities.UrlEncode(text));
             }
 
-            var sbAll = new StringBuilder();
-            int count = 0;
-            int i = 1;
-            int level = result.StartsWith('[') ? 1 : 0;
-            while (i < result.Length - 1)
+            string uri = $"{baseUrl}/?{input}&target={targetLanguage}&source={sourceLanguage}&format={format}&key={_apiKey}";
+
+            var request = WebRequest.Create(uri);
+            request.Proxy = Utilities.GetProxy();
+            request.ContentType = "application/json";
+            request.ContentLength = 0;
+            request.Method = "POST";
+            var response = request.GetResponse();
+            var reader = new StreamReader(response.GetResponseStream(), Encoding.UTF8);
+            string content = reader.ReadToEnd();
+
+            var resultList = new List<string>();
+            var parser = new JsonParser();
+            var x = (Dictionary<string, object>)parser.Parse(content);
+            foreach (var k in x.Keys)
             {
-                var sb = new StringBuilder();
-                var start = false;
-                for (; i < result.Length - 1; i++)
+                if (x[k] is Dictionary<string, object> v)
                 {
-                    var c = result[i];
-                    if (start)
+                    foreach (var innerKey in v.Keys)
                     {
-                        if (c == '"' && result[i - 1] != '\\')
+                        if (v[innerKey] is List<object> l)
                         {
-                            count++;
-                            if (count % 2 == 1 && level > 2) // even numbers are original text, level > 3 is translation
-                                sbAll.Append(" " + sb);
-                            i++;
-                            break;
+                            foreach (var o2 in l)
+                            {
+                                if (o2 is Dictionary<string, object> v2)
+                                {
+                                    foreach (var innerKey2 in v2.Keys)
+                                    {
+                                        if (v2[innerKey2] is string translatedText)
+                                        {
+                                            translatedText = Regex.Unescape(translatedText);
+                                            translatedText = string.Join(Environment.NewLine, translatedText.SplitToLines());
+                                            translatedText = TranslationHelper.PostTranslate(translatedText, targetLanguage);
+                                            if (resultList.Count < formattings.Length)
+                                            {
+                                                translatedText = formattings[resultList.Count].ReAddFormatting(translatedText);
+                                            }
+                                            resultList.Add(translatedText);
+                                        }
+                                    }
+                                }
+                            }
                         }
-                        sb.Append(c);
-                    }
-                    else if (c == '"')
-                    {
-                        start = true;
-                    }
-                    else if (c == '[')
-                    {
-                        level++;
-                    }
-                    else if (c == ']')
-                    {
-                        level--;
                     }
                 }
             }
-
-            result = sbAll.ToString().Trim();
-            result = Regex.Unescape(result);
-            result = Json.DecodeJsonText(result);
-
-            string res = result;
-            res = string.Join(Environment.NewLine, res.SplitToLines());
-            res = res.Replace("NewlineString", Environment.NewLine);
-            res = res.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
-            res = res.Replace(Environment.NewLine + " ", Environment.NewLine);
-            res = res.Replace(Environment.NewLine + " ", Environment.NewLine);
-            res = res.Replace(" " + Environment.NewLine, Environment.NewLine);
-            res = res.Replace(" " + Environment.NewLine, Environment.NewLine).Trim();
-
-            return null;
+            return resultList;
         }
     }
 }

@@ -2,6 +2,7 @@
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Core.Translate;
@@ -112,24 +113,18 @@ namespace Nikse.SubtitleEdit.Forms
             Cursor = Cursors.WaitCursor;
             try
             {
-                string from = (comboBoxFrom.SelectedItem as GoogleTranslate.ComboBoxItem).Value;
-                string to = (comboBoxTo.SelectedItem as GoogleTranslate.ComboBoxItem).Value;
-                string languagePair = from + "|" + to;
-
+                string from = ((GoogleTranslate.ComboBoxItem)comboBoxFrom.SelectedItem).Value;
+                string to = ((GoogleTranslate.ComboBoxItem)comboBoxTo.SelectedItem).Value;
                 buttonGoogle.Text = string.Empty;
 
                 // google translate
-                bool romanji = languagePair.EndsWith("|romanji", StringComparison.InvariantCulture);
-                if (romanji)
-                    languagePair = from + "|ja";
-                var screenScrapingEncoding = GoogleTranslate.GetScreenScrapingEncoding(languagePair);
-                buttonGoogle.Text = GoogleTranslate.TranslateTextViaScreenScraping(textBoxSourceText.Text, languagePair, screenScrapingEncoding, romanji);
+                buttonGoogle.Text = new GoogleTranslator1().Translate(from, to, new List<Paragraph> { new Paragraph { Text = textBoxSourceText.Text } }, new StringBuilder()).FirstOrDefault();
 
                 // ms translator
                 if (!string.IsNullOrEmpty(Configuration.Settings.Tools.MicrosoftTranslatorApiKey))
                 {
                     var translator = new MicrosoftTranslator(Configuration.Settings.Tools.MicrosoftTranslatorApiKey);
-                    var result = translator.Translate(from, to, new List<string> { textBoxSourceText.Text }, new StringBuilder());
+                    var result = translator.Translate(from, to, new List<Paragraph> { new Paragraph { Text = textBoxSourceText.Text } }, new StringBuilder());
                     buttonMicrosoft.Text = result[0];
                 }
                 else
