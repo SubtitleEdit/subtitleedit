@@ -90,9 +90,9 @@ namespace Nikse.SubtitleEdit.Core
         public string Interjections { get; set; }
         public string MicrosoftBingApiId { get; set; }
         public string MicrosoftTranslatorApiKey { get; set; }
-        public string GoogleTranslateUrl { get; set; }
         public string GoogleApiV2Key { get; set; }
-        public string GoogleApiKey { get; set; }
+        public bool GoogleApiV2KeyInfoShow { get; set; }
+        public bool GoogleTranslateNoKeyWarningShow { get; set; }
         public bool UseGooleApiPaidService { get; set; }
         public string GoogleTranslateLastTargetLanguage { get; set; }
         public bool TranslateAutoSplit { get; set; }
@@ -235,8 +235,8 @@ namespace Nikse.SubtitleEdit.Core
             OcrTesseract4RgbThreshold = 200;
             Interjections = "Ah;Ahem;Ahh;Ahhh;Ahhhh;Eh;Ehh;Ehhh;Hm;Hmm;Hmmm;Huh;Mm;Mmm;Mmmm;Phew;Gah;Oh;Ohh;Ohhh;Ow;Oww;Owww;Ugh;Ughh;Uh;Uhh;Uhhh;Whew";
             MicrosoftBingApiId = "C2C2E9A508E6748F0494D68DFD92FAA1FF9B0BA4";
-            GoogleTranslateUrl = "translate.google.com";
-            GoogleApiKey = "ABQIAAAA4j5cWwa3lDH0RkZceh7PjBTDmNAghl5kWSyuukQ0wtoJG8nFBxRPlalq-gAvbeCXMCkmrysqjXV1Gw";
+            GoogleApiV2KeyInfoShow = true;
+            GoogleTranslateNoKeyWarningShow = true;
             UseGooleApiPaidService = false;
             GoogleTranslateLastTargetLanguage = "en";
             TranslateAutoSplit = true;
@@ -1083,7 +1083,7 @@ $HorzAlign          =   Center
         public string MainListViewAlignmentN7 { get; set; }
         public string MainListViewAlignmentN8 { get; set; }
         public string MainListViewAlignmentN9 { get; set; }
-        public string MainRemoveFormatting { get; set; }        
+        public string MainRemoveFormatting { get; set; }
         public string MainListViewCopyText { get; set; }
         public string MainListViewCopyTextFromOriginalToCurrent { get; set; }
         public string MainListViewAutoDuration { get; set; }
@@ -1950,15 +1950,15 @@ $HorzAlign          =   Center
             subNode = node.SelectSingleNode("MicrosoftTranslatorApiKey");
             if (subNode != null)
                 settings.Tools.MicrosoftTranslatorApiKey = subNode.InnerText;
-            subNode = node.SelectSingleNode("GoogleTranslateUrl");
-            if (subNode != null)
-                settings.Tools.GoogleTranslateUrl = subNode.InnerText;
-            subNode = node.SelectSingleNode("GoogleApiKey");
-            if (subNode != null)
-                settings.Tools.GoogleApiKey = subNode.InnerText;
             subNode = node.SelectSingleNode("GoogleApiV2Key");
             if (subNode != null)
                 settings.Tools.GoogleApiV2Key = subNode.InnerText;
+            subNode = node.SelectSingleNode("GoogleTranslateNoKeyWarningShow");
+            if (subNode != null)
+                settings.Tools.GoogleTranslateNoKeyWarningShow = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("GoogleApiV2KeyInfoShow");
+            if (subNode != null)
+                settings.Tools.GoogleApiV2KeyInfoShow = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("UseGooleApiPaidService");
             if (subNode != null)
                 settings.Tools.UseGooleApiPaidService = Convert.ToBoolean(subNode.InnerText);
@@ -3676,9 +3676,9 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("Interjections", settings.Tools.Interjections);
                 textWriter.WriteElementString("MicrosoftBingApiId", settings.Tools.MicrosoftBingApiId);
                 textWriter.WriteElementString("MicrosoftTranslatorApiKey", settings.Tools.MicrosoftTranslatorApiKey);
-                textWriter.WriteElementString("GoogleTranslateUrl", settings.Tools.GoogleTranslateUrl);
-                textWriter.WriteElementString("GoogleApiKey", settings.Tools.GoogleApiKey);
                 textWriter.WriteElementString("GoogleApiV2Key", settings.Tools.GoogleApiV2Key);
+                textWriter.WriteElementString("GoogleApiV2KeyInfoShow", settings.Tools.GoogleApiV2KeyInfoShow.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("GoogleTranslateNoKeyWarningShow", settings.Tools.GoogleTranslateNoKeyWarningShow.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("UseGooleApiPaidService", settings.Tools.UseGooleApiPaidService.ToString());
                 textWriter.WriteElementString("GoogleTranslateLastTargetLanguage", settings.Tools.GoogleTranslateLastTargetLanguage);
                 textWriter.WriteElementString("TranslateAutoSplit", settings.Tools.TranslateAutoSplit.ToString());

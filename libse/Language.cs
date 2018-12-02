@@ -889,6 +889,13 @@ namespace Nikse.SubtitleEdit.Core
                 PleaseWait = "Please wait... this may take a while",
                 PoweredByGoogleTranslate = "Powered by Google translate",
                 PoweredByMicrosoftTranslate = "Powered by Microsoft translate",
+                MsClientSecretNeeded = "Sorry, you need a Bing client secret from Microsoft to use the latest Bing Translate." + Environment.NewLine +
+                                       Environment.NewLine +
+                                       "Go to \"Options -> Settings -> Tools\" to enter your Bing client secret.",
+                GoogleApiKeyNeeded = "Sorry, you need an API key from Google to use the latest Google Translate." + Environment.NewLine +
+                                     Environment.NewLine +
+                                     "Go to \"Options -> Settings -> Tools\" to enter your Google translate API key.",
+                GoogleNoApiKeyWarning = "Trying to translate wihtout API key... (slow and limited data)"
             };
 
             GoogleOrMicrosoftTranslate = new LanguageStructure.GoogleOrMicrosoftTranslate
@@ -2304,7 +2311,6 @@ can edit in same subtitle file (collaboration)",
                 CpsIncludesSpace = "Chars/sec (CPS) includes spaces",
                 MicrosoftBingTranslator = "Microsoft Bing Translator",
                 HowToSignUp = "How to sign up",
-                GoogleTranslateUrl = "Google translate url",
                 MicrosoftTranslateApiKey = "Key",
                 FontNote = "Note: These font settings are for the Subtitle Edit UI only." + Environment.NewLine +
                            "Setting a font for a subtitle is normally done in the video player, but can also be done when using a subtitle format with built-in font information like " + Environment.NewLine +

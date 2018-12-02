@@ -30,22 +30,7 @@ namespace Nikse.SubtitleEdit.Forms
             ItalicTwoLines
         }
 
-        private static string GoogleTranslateUrl
-        {
-            get
-            {
-                var url = Configuration.Settings.Tools.GoogleTranslateUrl;
-                if (string.IsNullOrEmpty(url) || !url.Contains(".google.", StringComparison.OrdinalIgnoreCase))
-                {
-                    return "https://translate.google.com/";
-                }
-                if (!url.StartsWith("http", StringComparison.OrdinalIgnoreCase))
-                {
-                    url = "https://" + url;
-                }
-                return url.TrimEnd('/') + '/';
-            }
-        }
+        private static string GoogleTranslateUrl => new GoogleTranslator2(Configuration.Settings.Tools.GoogleApiV2Key).GetUrl();
 
         private FormattingType[] _formattingTypes;
         private bool[] _autoSplit;
@@ -86,6 +71,7 @@ namespace Nikse.SubtitleEdit.Forms
             linkLabelPoweredByGoogleTranslate.Text = Configuration.Settings.Language.GoogleTranslate.PoweredByGoogleTranslate;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+            labelApiKeyNotFound.Text = string.Empty;
 
             subtitleListViewFrom.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
             subtitleListViewTo.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
@@ -275,22 +261,37 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.Tools.GoogleTranslateLastTargetLanguage = _targetTwoLetterIsoLanguageName;
             var source = ((ComboBoxItem)comboBoxFrom.SelectedItem).Value;
 
+            var language = Configuration.Settings.Language.GoogleTranslate;
             if (_googleTranslate && string.IsNullOrEmpty(Configuration.Settings.Tools.GoogleApiV2Key))
             {
-                MessageBox.Show("Sorry, you need an API key from Google to use the latest Google Translate." + Environment.NewLine +
-                                 Environment.NewLine +
-                                 "Go to \"Options -> Settings -> Tools\" to enter your Google translate API key.");
+                if (Configuration.Settings.Tools.GoogleApiV2KeyInfoShow)
+                {
+                    using (var form = new DialogDoNotShowAgain("Subtitle Edit", language.GoogleApiKeyNeeded))
+                    {
+                        form.ShowDialog(this);
+                        Configuration.Settings.Tools.GoogleApiV2KeyInfoShow = !form.DoNoDisplayAgain;
+                    }
+                }
 
-                MessageBox.Show("Trying to translate wihtout API key... (slow and limited data)");
+                if (Configuration.Settings.Tools.GoogleTranslateNoKeyWarningShow)
+                {
+                    using (var form = new DialogDoNotShowAgain("Subtitle Edit", language.GoogleNoApiKeyWarning))
+                    {
+                        form.ShowDialog(this);
+                        Configuration.Settings.Tools.GoogleTranslateNoKeyWarningShow = !form.DoNoDisplayAgain;
+                    }
+                }
+
+                labelApiKeyNotFound.Left = linkLabelPoweredByGoogleTranslate.Left + linkLabelPoweredByGoogleTranslate.Width + 20;
+                labelApiKeyNotFound.Text = language.GoogleNoApiKeyWarning;
+
                 Translate(source, _targetTwoLetterIsoLanguageName, new GoogleTranslator1(), 1);
                 return;
             }
 
             if (!_googleTranslate && string.IsNullOrEmpty(Configuration.Settings.Tools.MicrosoftTranslatorApiKey))
             {
-                MessageBox.Show("Sorry, you need a Bing client secret from Microsoft to use the latest Bing Translate." + Environment.NewLine +
-                                Environment.NewLine +
-                                "Go to \"Options -> Settings -> Tools\" to enter your Bing client secret.");
+                MessageBox.Show(language.MsClientSecretNeeded);
                 return;
             }
 

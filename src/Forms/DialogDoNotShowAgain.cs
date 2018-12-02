@@ -6,7 +6,7 @@ using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public partial class DialogDoNotShowAgain : Form
+    public sealed partial class DialogDoNotShowAgain : Form
     {
         public bool DoNoDisplayAgain { get; set; }
 
