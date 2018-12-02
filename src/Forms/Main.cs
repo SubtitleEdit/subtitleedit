@@ -14287,7 +14287,11 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (first)
                     {
-                        if (_subtitle.Paragraphs[i].Text.StartsWith(tag, StringComparison.Ordinal))
+                        if (_subtitle.Paragraphs[i].Text.StartsWith(tag, StringComparison.Ordinal)) 
+                        {
+                            tag = string.Empty;
+                        }
+                        if (_subtitle.Paragraphs[i].Text.StartsWith(tag.Replace("}", "\\")))
                         {
                             tag = string.Empty;
                         }
@@ -21531,6 +21535,8 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (p.Text.StartsWith("{\\a", StringComparison.Ordinal) && p.Text.Length > 5 && p.Text[5] == '}')
                 p.Text = p.Text.Remove(0, 6);
+            else if (p.Text.StartsWith("{\\a", StringComparison.Ordinal) && p.Text.Length > 5 && p.Text[5] == '\\')
+                p.Text = p.Text.Remove(1, 4);
             else if (p.Text.StartsWith("{\\a", StringComparison.Ordinal) && p.Text.Length > 4 && p.Text[4] == '}')
                 p.Text = p.Text.Remove(0, 5);
             p.Text = string.Format(@"{0}{1}", tag, p.Text);
