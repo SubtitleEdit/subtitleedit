@@ -6657,7 +6657,13 @@ namespace Nikse.SubtitleEdit.Forms
                         int end = startIndex + oldWord.Length;
                         if (end <= p.Text.Length && end == p.Text.Length || ("«»“” ,.!?:;'()<>\"-—+/[]{}%&$£…\r\n؛،؟").Contains(p.Text[end]))
                         {
+                            var lengthBefore = p.Text.Length;
                             p.Text = p.Text.Remove(startIndex, oldWord.Length).Insert(startIndex, changeWord);
+                            var lengthAfter = p.Text.Length;
+                            if (lengthAfter > lengthBefore)
+                            {
+                                startIndex += (lengthAfter - lengthBefore);
+                            }
                         }
                     }
                     if (startIndex + 2 >= p.Text.Length)
