@@ -1,6 +1,6 @@
 ﻿namespace Nikse.SubtitleEdit.Forms
 {
-    partial class DialogDoNotShowAgain
+    sealed partial class DialogDoNotShowAgain
     {
         /// <summary>
         /// Required designer variable.
@@ -59,10 +59,11 @@
             // labelText
             // 
             this.labelText.AutoSize = true;
+            this.labelText.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelText.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.labelText.Location = new System.Drawing.Point(12, 24);
             this.labelText.Name = "labelText";
-            this.labelText.Size = new System.Drawing.Size(33, 13);
+            this.labelText.Size = new System.Drawing.Size(35, 15);
             this.labelText.TabIndex = 2;
             this.labelText.Text = "text...";
             // 

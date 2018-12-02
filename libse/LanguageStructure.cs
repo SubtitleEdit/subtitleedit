@@ -762,6 +762,9 @@
             public string PleaseWait { get; set; }
             public string PoweredByGoogleTranslate { get; set; }
             public string PoweredByMicrosoftTranslate { get; set; }
+            public string MsClientSecretNeeded { get; set; }
+            public string GoogleApiKeyNeeded { get; set; }
+            public string GoogleNoApiKeyWarning { get; set; }
         }
 
         public class GoogleOrMicrosoftTranslate
@@ -2183,7 +2186,6 @@
             public string UseDoNotBreakAfterList { get; set; }
             public string MicrosoftBingTranslator { get; set; }
             public string HowToSignUp { get; set; }
-            public string GoogleTranslateUrl { get; set; }
             public string MicrosoftTranslateApiKey { get; set; }
             public string FontNote { get; set; }
         }

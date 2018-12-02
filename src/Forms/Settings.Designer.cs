@@ -197,8 +197,6 @@
             this.linkLabelBingSubscribe = new System.Windows.Forms.LinkLabel();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBoxToolsMisc = new System.Windows.Forms.GroupBox();
-            this.comboBoxGoogleTranslateUrl = new System.Windows.Forms.ComboBox();
-            this.labelGoogleTranslateUrl = new System.Windows.Forms.Label();
             this.checkBoxCpsIncludeWhiteSpace = new System.Windows.Forms.CheckBox();
             this.labelUserBingApiId = new System.Windows.Forms.Label();
             this.buttonEditDoNotBreakAfterList = new System.Windows.Forms.Button();
@@ -2578,8 +2576,6 @@
             // 
             // groupBoxToolsMisc
             // 
-            this.groupBoxToolsMisc.Controls.Add(this.comboBoxGoogleTranslateUrl);
-            this.groupBoxToolsMisc.Controls.Add(this.labelGoogleTranslateUrl);
             this.groupBoxToolsMisc.Controls.Add(this.checkBoxCpsIncludeWhiteSpace);
             this.groupBoxToolsMisc.Controls.Add(this.labelUserBingApiId);
             this.groupBoxToolsMisc.Controls.Add(this.buttonEditDoNotBreakAfterList);
@@ -2590,28 +2586,6 @@
             this.groupBoxToolsMisc.TabIndex = 5;
             this.groupBoxToolsMisc.TabStop = false;
             this.groupBoxToolsMisc.Text = "Misc";
-            // 
-            // comboBoxGoogleTranslateUrl
-            // 
-            this.comboBoxGoogleTranslateUrl.FormattingEnabled = true;
-            this.comboBoxGoogleTranslateUrl.Items.AddRange(new object[] {
-            "translate.google.com",
-            "translate.google.cn"});
-            this.comboBoxGoogleTranslateUrl.Location = new System.Drawing.Point(15, 122);
-            this.comboBoxGoogleTranslateUrl.Name = "comboBoxGoogleTranslateUrl";
-            this.comboBoxGoogleTranslateUrl.Size = new System.Drawing.Size(369, 21);
-            this.comboBoxGoogleTranslateUrl.TabIndex = 34;
-            this.comboBoxGoogleTranslateUrl.Visible = false;
-            // 
-            // labelGoogleTranslateUrl
-            // 
-            this.labelGoogleTranslateUrl.AutoSize = true;
-            this.labelGoogleTranslateUrl.Location = new System.Drawing.Point(12, 105);
-            this.labelGoogleTranslateUrl.Name = "labelGoogleTranslateUrl";
-            this.labelGoogleTranslateUrl.Size = new System.Drawing.Size(101, 13);
-            this.labelGoogleTranslateUrl.TabIndex = 33;
-            this.labelGoogleTranslateUrl.Text = "Google translate url";
-            this.labelGoogleTranslateUrl.Visible = false;
             // 
             // checkBoxCpsIncludeWhiteSpace
             // 
@@ -4658,8 +4632,6 @@
         private System.Windows.Forms.CheckBox checkBoxVideoAutoOpen;
         private System.Windows.Forms.CheckBox checkBoxCpsIncludeWhiteSpace;
         private System.Windows.Forms.Button buttonClearShortcut;
-        private System.Windows.Forms.ComboBox comboBoxGoogleTranslateUrl;
-        private System.Windows.Forms.Label labelGoogleTranslateUrl;
         private System.Windows.Forms.CheckBox checkBoxAllowVolumeBoost;
         private System.Windows.Forms.TabPage tabPageFont;
         private System.Windows.Forms.GroupBox groupBoxFont;

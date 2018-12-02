@@ -551,7 +551,6 @@ namespace Nikse.SubtitleEdit.Forms
 
             groupBoxToolsMisc.Text = language.Miscellaneous;
             checkBoxUseDoNotBreakAfterList.Text = language.UseDoNotBreakAfterList;
-            labelGoogleTranslateUrl.Text = language.GoogleTranslateUrl;
             checkBoxCpsIncludeWhiteSpace.Text = language.CpsIncludesSpace;
             buttonEditDoNotBreakAfterList.Text = Configuration.Settings.Language.VobSubOcr.Edit;
 
@@ -689,7 +688,6 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxCpsIncludeWhiteSpace.Checked = !Configuration.Settings.General.CharactersPerSecondsIgnoreWhiteSpace;
 
             textBoxBingClientSecret.Text = Configuration.Settings.Tools.MicrosoftTranslatorApiKey;
-            comboBoxGoogleTranslateUrl.Text = Configuration.Settings.Tools.GoogleTranslateUrl;
             textBoxGoogleTransleApiKey.Text = toolsSettings.GoogleApiV2Key;
 
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
@@ -1352,7 +1350,6 @@ namespace Nikse.SubtitleEdit.Forms
             toolsSettings.FixShortDisplayTimesAllowMoveStartTime = checkBoxFixShortDisplayTimesAllowMoveStartTime.Checked;
             toolsSettings.FixCommonErrorsSkipStepOne = checkBoxFceSkipStep1.Checked;
             toolsSettings.MicrosoftTranslatorApiKey = textBoxBingClientSecret.Text.Trim();
-            toolsSettings.GoogleTranslateUrl = comboBoxGoogleTranslateUrl.Text.Trim();
             toolsSettings.GoogleApiV2Key = textBoxGoogleTransleApiKey.Text.Trim();
 
             var wordListSettings = Configuration.Settings.WordLists;

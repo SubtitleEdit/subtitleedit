@@ -1819,6 +1819,15 @@ namespace Nikse.SubtitleEdit.Core
                 case "GoogleTranslate/PoweredByMicrosoftTranslate":
                     language.GoogleTranslate.PoweredByMicrosoftTranslate = reader.Value;
                     break;
+                case "GoogleTranslate/MsClientSecretNeeded":
+                    language.GoogleTranslate.MsClientSecretNeeded = reader.Value;
+                    break;
+                case "GoogleTranslate/GoogleApiKeyNeeded":
+                    language.GoogleTranslate.GoogleApiKeyNeeded = reader.Value;
+                    break;
+                case "GoogleTranslate/GoogleNoApiKeyWarning":
+                    language.GoogleTranslate.GoogleNoApiKeyWarning = reader.Value;
+                    break;
                 case "GoogleOrMicrosoftTranslate/Title":
                     language.GoogleOrMicrosoftTranslate.Title = reader.Value;
                     break;
@@ -5478,9 +5487,6 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "Settings/HowToSignUp":
                     language.Settings.HowToSignUp = reader.Value;
-                    break;
-                case "Settings/GoogleTranslateUrl":
-                    language.Settings.GoogleTranslateUrl = reader.Value;
                     break;
                 case "Settings/MicrosoftTranslateApiKey":
                     language.Settings.MicrosoftTranslateApiKey = reader.Value;

@@ -690,6 +690,13 @@ Note: Do check free disk space.</WaveFileMalformed>
     <PleaseWait>Please wait... this may take a while</PleaseWait>
     <PoweredByGoogleTranslate>Powered by Google translate</PoweredByGoogleTranslate>
     <PoweredByMicrosoftTranslate>Powered by Microsoft translate</PoweredByMicrosoftTranslate>
+    <MsClientSecretNeeded>Sorry, you need a Bing client secret from Microsoft to use the latest Bing Translate.
+
+Go to "Options -&gt; Settings -&gt; Tools" to enter your Bing client secret.</MsClientSecretNeeded>
+    <GoogleApiKeyNeeded>Sorry, you need an API key from Google to use the latest Google Translate.
+
+Go to "Options -&gt; Settings -&gt; Tools" to enter your Google translate API key.</GoogleApiKeyNeeded>
+    <GoogleNoApiKeyWarning>Trying to translate wihtout API key... (slow and limited data)</GoogleNoApiKeyWarning>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
     <Title>Google vs Microsoft translate</Title>
@@ -2014,7 +2021,6 @@ can edit in same subtitle file (collaboration)</Information>
     <UseDoNotBreakAfterList>Use do-not-break-after list (for auto-br)</UseDoNotBreakAfterList>
     <MicrosoftBingTranslator>Microsoft Bing Translator</MicrosoftBingTranslator>
     <HowToSignUp>How to sign up</HowToSignUp>
-    <GoogleTranslateUrl>Google translate url</GoogleTranslateUrl>
     <MicrosoftTranslateApiKey>Key</MicrosoftTranslateApiKey>
     <FontNote>Note: These font settings are for the Subtitle Edit UI only.
 Setting a font for a subtitle is normally done in the video player, but can also be done when using a subtitle format with built-in font information like 
