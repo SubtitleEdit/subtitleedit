@@ -6114,11 +6114,32 @@ namespace Nikse.SubtitleEdit.Forms
                     foreach (int index in SubtitleListview1.SelectedIndices)
                         selectedLines.Paragraphs.Add(_subtitle.Paragraphs[index]);
                     title += " - " + _language.SelectedLines;
-                    googleTranslate.Initialize(selectedLines, title, useGoogle, GetCurrentEncoding());
+                    if (_subtitleAlternate != null)
+                    {
+                        var paragraphs = new List<Paragraph>();
+                        foreach (int index in SubtitleListview1.SelectedIndices)
+                        {
+                            var original = Utilities.GetOriginalParagraph(index, _subtitle.Paragraphs[index], _subtitleAlternate.Paragraphs);
+                            if (original != null)
+                                paragraphs.Add(original);
+                        }
+                        if (paragraphs.Count == selectedLines.Paragraphs.Count)
+                        {
+                            googleTranslate.Initialize(new Subtitle(paragraphs), selectedLines, title, useGoogle, GetCurrentEncoding());
+                        }
+                        else
+                        {
+                            googleTranslate.Initialize(selectedLines, null, title, useGoogle, GetCurrentEncoding());
+                        }
+                    }
+                    else
+                    {
+                        googleTranslate.Initialize(selectedLines, null, title, useGoogle, GetCurrentEncoding());
+                    }
                 }
                 else
                 {
-                    googleTranslate.Initialize(_subtitle, title, useGoogle, GetCurrentEncoding());
+                    googleTranslate.Initialize(_subtitle, null, title, useGoogle, GetCurrentEncoding());
                 }
                 if (googleTranslate.ShowDialog(this) == DialogResult.OK)
                 {

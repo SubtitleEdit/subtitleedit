@@ -133,7 +133,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         var subtitle = new Subtitle();
                         subtitle.Paragraphs.Add(new Paragraph(0, 0, textBoxSourceText.Text));
-                        gt.Initialize(subtitle, string.Empty, false, Encoding.UTF8);
+                        gt.Initialize(subtitle, null, string.Empty, false, Encoding.UTF8);
                         from = FixMsLocale(from);
                         to = FixMsLocale(to);
                         gt.DoMicrosoftTranslate(from, to);

@@ -86,7 +86,7 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.FixLargeFonts(this, buttonOK);
         }
 
-        internal void Initialize(Subtitle subtitle, string title, bool googleTranslate, Encoding encoding)
+        internal void Initialize(Subtitle subtitle, Subtitle target, string title, bool googleTranslate, Encoding encoding)
         {
             if (title != null)
                 Text = title;
@@ -101,11 +101,21 @@ namespace Nikse.SubtitleEdit.Forms
             labelPleaseWait.Visible = false;
             progressBar1.Visible = false;
             _subtitle = subtitle;
-            TranslatedSubtitle = new Subtitle(subtitle);
-            foreach (var paragraph in TranslatedSubtitle.Paragraphs)
+
+            if (target != null)
             {
-                paragraph.Text = string.Empty;
+                TranslatedSubtitle = new Subtitle(target);
+                subtitleListViewTo.Fill(TranslatedSubtitle);
             }
+            else
+            {
+                TranslatedSubtitle = new Subtitle(subtitle);
+                foreach (var paragraph in TranslatedSubtitle.Paragraphs)
+                {
+                    paragraph.Text = string.Empty;
+                }
+            }
+
 
             string defaultFromLanguage = LanguageAutoDetect.AutoDetectGoogleLanguage(encoding); // Guess language via encoding
             if (string.IsNullOrEmpty(defaultFromLanguage))
@@ -212,7 +222,16 @@ namespace Nikse.SubtitleEdit.Forms
             }
             catch (WebException webException)
             {
-                MessageBox.Show(webException.Source + ": " + webException.Message);
+                if (translator.GetType() == typeof(GoogleTranslator1))
+                {
+                    MessageBox.Show("Free API quota exceeded?" + Environment.NewLine +
+                                    Environment.NewLine +
+                                    webException.Source + ": " + webException.Message);
+                }
+                else
+                {
+                    MessageBox.Show(webException.Source + ": " + webException.Message);
+                }
             }
             finally
             {
@@ -285,7 +304,7 @@ namespace Nikse.SubtitleEdit.Forms
                 labelApiKeyNotFound.Left = linkLabelPoweredByGoogleTranslate.Left + linkLabelPoweredByGoogleTranslate.Width + 20;
                 labelApiKeyNotFound.Text = language.GoogleNoApiKeyWarning;
 
-                Translate(source, _targetTwoLetterIsoLanguageName, new GoogleTranslator1(), 1);
+                Translate(source, _targetTwoLetterIsoLanguageName, new GoogleTranslator1(), 1000);
                 return;
             }
 

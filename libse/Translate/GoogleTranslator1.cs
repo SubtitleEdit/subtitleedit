@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -146,6 +147,10 @@ namespace Nikse.SubtitleEdit.Core.Translate
                 var p = paragraphs[index];
                 var f = new Formatting();
                 formattings[index] = f;
+                if (input.Length > 0)
+                {
+                    input.Append(" <br/> ");
+                }
                 var text = f.SetTagsAndReturnTrimmed(TranslationHelper.PreTranslate(p.Text, sourceLanguage), sourceLanguage);
                 input.Append(text);
             }
@@ -199,18 +204,37 @@ namespace Nikse.SubtitleEdit.Core.Translate
 
             var res = sbAll.ToString().Trim();
             res = Regex.Unescape(res);
-            res = Json.DecodeJsonText(res);
-            res = string.Join(Environment.NewLine, res.SplitToLines());
-            res = res.Replace("NewlineString", Environment.NewLine);
-            res = res.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
-            res = res.Replace(Environment.NewLine + " ", Environment.NewLine);
-            res = res.Replace(Environment.NewLine + " ", Environment.NewLine);
-            res = res.Replace(" " + Environment.NewLine, Environment.NewLine);
-            res = res.Replace(" " + Environment.NewLine, Environment.NewLine).Trim();
-            res = TranslationHelper.PostTranslate(res, targetLanguage);
-            if (formattings.Length > 0)
-                res = formattings[0].ReAddFormatting(res);
-            return new List<string> { res };
+            List<string> lines = Split(res);
+            var resultList = new List<string>();
+            for (var index = 0; index < lines.Count; index++)
+            {
+                var line = lines[index];
+                var s = Json.DecodeJsonText(line);
+                s = string.Join(Environment.NewLine, s.SplitToLines());
+                s = TranslationHelper.PostTranslate(s, targetLanguage);
+                s = s.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
+                s = s.Replace(Environment.NewLine + " ", Environment.NewLine);
+                s = s.Replace(Environment.NewLine + " ", Environment.NewLine);
+                s = s.Replace(" " + Environment.NewLine, Environment.NewLine);
+                s = s.Replace(" " + Environment.NewLine, Environment.NewLine).Trim();
+                if (formattings.Length > index)
+                    s = formattings[index].ReAddFormatting(s);
+                resultList.Add(s);
+            }
+
+            return resultList;
+        }
+
+        private List<string> Split(string res)
+        {
+            res = res.Replace("<br/>", "\0");
+            res = res.Replace("< br/>", "\0");
+            res = res.Replace("<br />", "\0");
+            res = res.Replace("<br/ >", "\0");
+            res = res.Replace("< br />", "\0");
+            res = res.Replace("< br / >", "\0");
+            res = res.Replace("<br/ >", "\0");
+            return res.Split('\0').ToList();
         }
     }
 }
