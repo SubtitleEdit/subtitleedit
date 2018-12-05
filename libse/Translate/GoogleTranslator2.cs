@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 namespace Nikse.SubtitleEdit.Core.Translate
 {
     /// <summary>
-    /// Google translate via Google Cloud API - see https://cloud.google.com/translate/
+    /// Google translate via Google Cloud V2 API - see https://cloud.google.com/translate/
     /// </summary>
     public class GoogleTranslator2 : ITranslator
     {
