@@ -7536,6 +7536,11 @@ namespace Nikse.SubtitleEdit.Forms
                 MakeHistoryForUndo(historyText);
                 DeleteSelectedLines();
 
+                if (_subtitle.Paragraphs.Count == 0)
+                {
+                    textBoxListViewText.Enabled = false;
+                }
+
                 ShowStatus(statusText);
                 ShowSource();
             }
