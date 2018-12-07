@@ -113,6 +113,13 @@ namespace Nikse.SubtitleEdit.Core.Translate
                 resultList.Add(s);
             }
 
+            if (resultList.Count > paragraphs.Count)
+            {
+                var timmedList = resultList.Where(p => !string.IsNullOrEmpty(p)).ToList();
+                if (timmedList.Count == paragraphs.Count)
+                    return timmedList;
+            }
+
             return resultList;
         }
 

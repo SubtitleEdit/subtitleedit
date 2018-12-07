@@ -194,6 +194,7 @@
     <Compile Include="ImageSplitterItem.cs" />
     <Compile Include="Interfaces\IRtfTextConverter.cs" />
     <Compile Include="SubtitleFormats\JsonType14.cs" />
+    <Compile Include="SubtitleFormats\TimedText200604Ooyala.cs" />
     <Compile Include="SubtitleFormats\TranscriptiveJson.cs" />
     <Compile Include="SubtitleFormats\UnknownSubtitle88.cs" />
     <Compile Include="TinyJsonParser.cs" />
