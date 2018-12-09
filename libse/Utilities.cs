@@ -661,7 +661,7 @@ namespace Nikse.SubtitleEdit.Core
         {
             var lines = text.SplitToLines();
             if (lines.Count == 1)
-                return text;
+                return lines[0];
 
             var singleLine = string.Join(" ", lines);
             while (singleLine.Contains("  "))

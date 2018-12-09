@@ -50,6 +50,7 @@
             this.labelAutoSplitNumberOfLines = new System.Windows.Forms.Label();
             this.checkBoxAutoBreak = new System.Windows.Forms.CheckBox();
             this.checkBoxGenerateTimeCodes = new System.Windows.Forms.CheckBox();
+            this.buttonRefresh = new System.Windows.Forms.Button();
             this.groupBoxTimeCodes = new System.Windows.Forms.GroupBox();
             this.labelGapBetweenSubtitles = new System.Windows.Forms.Label();
             this.numericUpDownGapBetweenLines = new System.Windows.Forms.NumericUpDown();
@@ -57,7 +58,6 @@
             this.numericUpDownDurationFixed = new System.Windows.Forms.NumericUpDown();
             this.radioButtonDurationFixed = new System.Windows.Forms.RadioButton();
             this.radioButtonDurationAuto = new System.Windows.Forms.RadioButton();
-            this.buttonRefresh = new System.Windows.Forms.Button();
             this.checkBoxMergeShortLines = new System.Windows.Forms.CheckBox();
             this.checkBoxRemoveLinesWithoutLetters = new System.Windows.Forms.CheckBox();
             this.groupBoxSplitting = new System.Windows.Forms.GroupBox();
@@ -69,12 +69,12 @@
             this.radioButtonLineMode = new System.Windows.Forms.RadioButton();
             this.checkBoxRemoveEmptyLines = new System.Windows.Forms.CheckBox();
             this.groupBoxImportResult = new System.Windows.Forms.GroupBox();
-            this.SubtitleListview1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.contextMenuStripPreview = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.startNumberingFromToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
+            this.SubtitleListview1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.groupBoxImportText.SuspendLayout();
             this.contextMenuStripListView.SuspendLayout();
             this.groupBoxImportOptions.SuspendLayout();
@@ -96,7 +96,7 @@
             this.buttonOpenText.Location = new System.Drawing.Point(475, 19);
             this.buttonOpenText.Name = "buttonOpenText";
             this.buttonOpenText.Size = new System.Drawing.Size(143, 21);
-            this.buttonOpenText.TabIndex = 0;
+            this.buttonOpenText.TabIndex = 4;
             this.buttonOpenText.Text = "Open file...";
             this.buttonOpenText.UseVisualStyleBackColor = true;
             this.buttonOpenText.Click += new System.EventHandler(this.ButtonOpenTextClick);
@@ -123,7 +123,7 @@
             this.checkBoxMultipleFiles.Location = new System.Drawing.Point(271, 22);
             this.checkBoxMultipleFiles.Name = "checkBoxMultipleFiles";
             this.checkBoxMultipleFiles.Size = new System.Drawing.Size(198, 17);
-            this.checkBoxMultipleFiles.TabIndex = 5;
+            this.checkBoxMultipleFiles.TabIndex = 2;
             this.checkBoxMultipleFiles.Text = "Multiple files - one file is one subtitle";
             this.checkBoxMultipleFiles.UseVisualStyleBackColor = true;
             this.checkBoxMultipleFiles.CheckedChanged += new System.EventHandler(this.checkBoxMultipleFiles_CheckedChanged);
@@ -220,7 +220,7 @@
             this.groupBoxAutoSplitSettings.Location = new System.Drawing.Point(6, 91);
             this.groupBoxAutoSplitSettings.Name = "groupBoxAutoSplitSettings";
             this.groupBoxAutoSplitSettings.Size = new System.Drawing.Size(390, 153);
-            this.groupBoxAutoSplitSettings.TabIndex = 6;
+            this.groupBoxAutoSplitSettings.TabIndex = 1;
             this.groupBoxAutoSplitSettings.TabStop = false;
             this.groupBoxAutoSplitSettings.Text = "Auto split text settings";
             // 
@@ -232,7 +232,7 @@
             this.checkBoxAutoSplitAtEnd.Location = new System.Drawing.Point(6, 119);
             this.checkBoxAutoSplitAtEnd.Name = "checkBoxAutoSplitAtEnd";
             this.checkBoxAutoSplitAtEnd.Size = new System.Drawing.Size(109, 17);
-            this.checkBoxAutoSplitAtEnd.TabIndex = 41;
+            this.checkBoxAutoSplitAtEnd.TabIndex = 50;
             this.checkBoxAutoSplitAtEnd.Text = "Split at end chars";
             this.checkBoxAutoSplitAtEnd.UseVisualStyleBackColor = true;
             this.checkBoxAutoSplitAtEnd.CheckedChanged += new System.EventHandler(this.checkBoxAutoSplitAtEnd_CheckedChanged);
@@ -275,7 +275,7 @@
             this.textBoxAsEnd.MaxLength = 5;
             this.textBoxAsEnd.Name = "textBoxAsEnd";
             this.textBoxAsEnd.Size = new System.Drawing.Size(50, 21);
-            this.textBoxAsEnd.TabIndex = 16;
+            this.textBoxAsEnd.TabIndex = 51;
             this.textBoxAsEnd.TextChanged += new System.EventHandler(this.textBoxAsEnd1_TextChanged);
             this.textBoxAsEnd.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBoxAsEnd1_KeyPress);
             // 
@@ -359,12 +359,22 @@
             this.checkBoxGenerateTimeCodes.UseVisualStyleBackColor = true;
             this.checkBoxGenerateTimeCodes.CheckedChanged += new System.EventHandler(this.checkBoxGenerateTimeCodes_CheckedChanged);
             // 
+            // buttonRefresh
+            // 
+            this.buttonRefresh.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonRefresh.Location = new System.Drawing.Point(774, 735);
+            this.buttonRefresh.Name = "buttonRefresh";
+            this.buttonRefresh.Size = new System.Drawing.Size(102, 21);
+            this.buttonRefresh.TabIndex = 103;
+            this.buttonRefresh.Text = "Refresh";
+            this.buttonRefresh.UseVisualStyleBackColor = true;
+            this.buttonRefresh.Click += new System.EventHandler(this.ButtonRefreshClick);
+            // 
             // groupBoxTimeCodes
             // 
             this.groupBoxTimeCodes.Controls.Add(this.labelGapBetweenSubtitles);
             this.groupBoxTimeCodes.Controls.Add(this.numericUpDownGapBetweenLines);
             this.groupBoxTimeCodes.Controls.Add(this.groupBoxDuration);
-            this.groupBoxTimeCodes.Controls.Add(this.buttonRefresh);
             this.groupBoxTimeCodes.Enabled = false;
             this.groupBoxTimeCodes.Location = new System.Drawing.Point(6, 273);
             this.groupBoxTimeCodes.Name = "groupBoxTimeCodes";
@@ -453,17 +463,6 @@
             this.radioButtonDurationAuto.Text = "Auto";
             this.radioButtonDurationAuto.UseVisualStyleBackColor = true;
             this.radioButtonDurationAuto.CheckedChanged += new System.EventHandler(this.RadioButtonDurationAutoCheckedChanged);
-            // 
-            // buttonRefresh
-            // 
-            this.buttonRefresh.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonRefresh.Location = new System.Drawing.Point(282, 96);
-            this.buttonRefresh.Name = "buttonRefresh";
-            this.buttonRefresh.Size = new System.Drawing.Size(102, 21);
-            this.buttonRefresh.TabIndex = 6;
-            this.buttonRefresh.Text = "Refresh";
-            this.buttonRefresh.UseVisualStyleBackColor = true;
-            this.buttonRefresh.Click += new System.EventHandler(this.ButtonRefreshClick);
             // 
             // checkBoxMergeShortLines
             // 
@@ -602,6 +601,48 @@
             this.groupBoxImportResult.TabStop = false;
             this.groupBoxImportResult.Text = "Preview";
             // 
+            // contextMenuStripPreview
+            // 
+            this.contextMenuStripPreview.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.startNumberingFromToolStripMenuItem});
+            this.contextMenuStripPreview.Name = "contextMenuStripPreview";
+            this.contextMenuStripPreview.Size = new System.Drawing.Size(199, 26);
+            // 
+            // startNumberingFromToolStripMenuItem
+            // 
+            this.startNumberingFromToolStripMenuItem.Name = "startNumberingFromToolStripMenuItem";
+            this.startNumberingFromToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
+            this.startNumberingFromToolStripMenuItem.Text = "Start numbering from...";
+            this.startNumberingFromToolStripMenuItem.Click += new System.EventHandler(this.startNumberingFromToolStripMenuItem_Click);
+            // 
+            // openFileDialog1
+            // 
+            this.openFileDialog1.FileName = "openFileDialog1";
+            // 
+            // buttonCancel
+            // 
+            this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.buttonCancel.Location = new System.Drawing.Point(963, 735);
+            this.buttonCancel.Name = "buttonCancel";
+            this.buttonCancel.Size = new System.Drawing.Size(75, 21);
+            this.buttonCancel.TabIndex = 105;
+            this.buttonCancel.Text = "C&ancel";
+            this.buttonCancel.UseVisualStyleBackColor = true;
+            this.buttonCancel.Click += new System.EventHandler(this.ButtonCancelClick);
+            // 
+            // buttonOK
+            // 
+            this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.buttonOK.Location = new System.Drawing.Point(882, 735);
+            this.buttonOK.Name = "buttonOK";
+            this.buttonOK.Size = new System.Drawing.Size(75, 21);
+            this.buttonOK.TabIndex = 104;
+            this.buttonOK.Text = "&Next >";
+            this.buttonOK.UseVisualStyleBackColor = true;
+            this.buttonOK.Click += new System.EventHandler(this.ButtonOkClick);
+            // 
             // SubtitleListview1
             // 
             this.SubtitleListview1.AllowColumnReorder = true;
@@ -629,54 +670,13 @@
             this.SubtitleListview1.UseSyntaxColoring = true;
             this.SubtitleListview1.View = System.Windows.Forms.View.Details;
             // 
-            // contextMenuStripPreview
-            // 
-            this.contextMenuStripPreview.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.startNumberingFromToolStripMenuItem});
-            this.contextMenuStripPreview.Name = "contextMenuStripPreview";
-            this.contextMenuStripPreview.Size = new System.Drawing.Size(199, 26);
-            // 
-            // startNumberingFromToolStripMenuItem
-            // 
-            this.startNumberingFromToolStripMenuItem.Name = "startNumberingFromToolStripMenuItem";
-            this.startNumberingFromToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
-            this.startNumberingFromToolStripMenuItem.Text = "Start numbering from...";
-            this.startNumberingFromToolStripMenuItem.Click += new System.EventHandler(this.startNumberingFromToolStripMenuItem_Click);
-            // 
-            // openFileDialog1
-            // 
-            this.openFileDialog1.FileName = "openFileDialog1";
-            // 
-            // buttonCancel
-            // 
-            this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(963, 735);
-            this.buttonCancel.Name = "buttonCancel";
-            this.buttonCancel.Size = new System.Drawing.Size(75, 21);
-            this.buttonCancel.TabIndex = 4;
-            this.buttonCancel.Text = "C&ancel";
-            this.buttonCancel.UseVisualStyleBackColor = true;
-            this.buttonCancel.Click += new System.EventHandler(this.ButtonCancelClick);
-            // 
-            // buttonOK
-            // 
-            this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(882, 735);
-            this.buttonOK.Name = "buttonOK";
-            this.buttonOK.Size = new System.Drawing.Size(75, 21);
-            this.buttonOK.TabIndex = 3;
-            this.buttonOK.Text = "&Next >";
-            this.buttonOK.UseVisualStyleBackColor = true;
-            this.buttonOK.Click += new System.EventHandler(this.ButtonOkClick);
-            // 
             // ImportText
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1056, 772);
             this.Controls.Add(this.buttonCancel);
+            this.Controls.Add(this.buttonRefresh);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.groupBoxImportResult);
             this.Controls.Add(this.groupBoxImportOptions);
