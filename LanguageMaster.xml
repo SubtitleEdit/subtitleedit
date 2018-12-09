@@ -557,6 +557,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <RemovedEmptyLine>Remove empty line</RemovedEmptyLine>
     <RemovedEmptyLineAtTop>Remove empty line at top</RemovedEmptyLineAtTop>
     <RemovedEmptyLineAtBottom>Remove empty line at bottom</RemovedEmptyLineAtBottom>
+    <RemovedEmptyLineInMiddle>Remove empty line in middle</RemovedEmptyLineInMiddle>
     <RemovedEmptyLinesUnsedLineBreaks>Remove empty lines/unused line breaks</RemovedEmptyLinesUnsedLineBreaks>
     <EmptyLinesRemovedX>Empty lines removed: {0}</EmptyLinesRemovedX>
     <FixOverlappingDisplayTimes>Fix overlapping display times</FixOverlappingDisplayTimes>
@@ -743,6 +744,7 @@ Go to "Options -&gt; Settings -&gt; Tools" to enter your Google translate API ke
     <Splitting>Splitting</Splitting>
     <AutoSplitText>Auto split text</AutoSplitText>
     <OneLineIsOneSubtitle>One line is one subtitle</OneLineIsOneSubtitle>
+    <TwoLinesAreOneSubtitle>Two lines are one subtitle</TwoLinesAreOneSubtitle>
     <LineBreak>Line break</LineBreak>
     <SplitAtBlankLines>Split at blank lines</SplitAtBlankLines>
     <MergeShortLines>Merge short lines with continuation</MergeShortLines>
@@ -2014,6 +2016,8 @@ can edit in same subtitle file (collaboration)</Information>
     <MainTextBoxSelectionToUpper>Selection to uppercase</MainTextBoxSelectionToUpper>
     <MainTextBoxToggleAutoDuration>Toggle auto duration</MainTextBoxToggleAutoDuration>
     <MainTextBoxAutoBreak>Auto break text</MainTextBoxAutoBreak>
+    <MainTextBoxAutoBreakEarly1>Auto break text early after ",.?!:'" at</MainTextBoxAutoBreakEarly1>
+    <MainTextBoxAutoBreakEarly2>% of max. length</MainTextBoxAutoBreakEarly2>
     <MainTextBoxUnbreak>Unbreak text</MainTextBoxUnbreak>
     <MainFileSaveAll>Save all</MainFileSaveAll>
     <Miscellaneous>Misc.</Miscellaneous>

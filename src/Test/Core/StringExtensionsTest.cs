@@ -5,7 +5,7 @@ using System;
 namespace Test.Core
 {
     [TestClass]
-    public class UnitTest1
+    public class StringExtensionsTest
     {
 
         [TestMethod]

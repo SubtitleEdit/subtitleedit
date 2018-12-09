@@ -10,6 +10,8 @@ namespace Nikse.SubtitleEdit.Core.Translate
         public bool ItalicTwoLines { get; set; }
         public string StartTags { get; set; }
         public bool AutoBreak { get; set; }
+        public bool SquareBrackets { get; set; }
+        public bool SquareBracketsUppercase { get; set; }
 
         public string SetTagsAndReturnTrimmed(string text, string source)
         {
@@ -52,6 +54,18 @@ namespace Nikse.SubtitleEdit.Core.Translate
                 }
             }
 
+            // Square brackets
+            if (text.StartsWith("[", StringComparison.Ordinal) && text.EndsWith("]", StringComparison.Ordinal) &&
+                Utilities.GetNumberOfLines(text) == 1 && Utilities.CountTagInText(text, "[") == 1 &&
+                Utilities.GetNumberOfLines(text) == 1 && Utilities.CountTagInText(text, "]") == 1)
+            {
+                if (text == text.ToUpperInvariant())
+                    SquareBracketsUppercase = true;
+                else
+                    SquareBrackets = true;
+                text = text.Replace("[", string.Empty).Replace("]", string.Empty);
+            }
+
             return text.Trim();
         }
 
@@ -61,6 +75,16 @@ namespace Nikse.SubtitleEdit.Core.Translate
             if (AutoBreak)
             {
                 text = Utilities.AutoBreakLine(text);
+            }
+
+            // Square brackets
+            if (SquareBracketsUppercase)
+            {
+                text = "[" + text.ToUpperInvariant().Trim() + "]";
+            }
+            else if (SquareBrackets)
+            {
+                text = "[" + text.Trim() + "]";
             }
 
             // Italic tags

@@ -560,7 +560,35 @@ namespace Nikse.SubtitleEdit.Core
                 s = s.Replace(Environment.NewLine, "-");
             }
             if (splitPos < s.Length - 2)
-                s = s.Substring(0, splitPos) + Environment.NewLine + s.Substring(splitPos);
+            {
+                var firstLine = s.Substring(0, splitPos);
+                var firstSplit = firstLine + Environment.NewLine + s.Substring(splitPos);
+                var lastSpaceIndex = firstLine.LastIndexOf(' ');
+                if (lastSpaceIndex > 10)
+                {
+                    var secondFirstLine = s.Substring(0, lastSpaceIndex);
+                    var secondSplit = secondFirstLine + Environment.NewLine + s.Substring(lastSpaceIndex + 1);
+                    var firstLines = firstSplit.SplitToLines();
+                    var secondLines = secondSplit.SplitToLines();
+                    var firstLinesMax = Math.Max(firstLines[0].Length, firstLines[1].Length);
+                    var secondLinesMax = Math.Max(secondLines[0].Length, secondLines[1].Length);
+                    if (secondLinesMax <= maximumLength &&
+                        (secondLinesMax <= firstLinesMax || 
+                         firstLine.Substring(firstLine.Length - 3, 2) == ", " ||
+                         firstLine.Substring(firstLine.Length - 3, 2) == ". "))
+                    {
+                        s = secondSplit;
+                    }
+                    else
+                    {
+                        s = firstSplit;
+                    }
+                }
+                else
+                {
+                    s = firstSplit;
+                }
+            }
 
             s = ReInsertHtmlTags(s, htmlTags);
             var idx = s.IndexOf(Environment.NewLine + "</", StringComparison.Ordinal);

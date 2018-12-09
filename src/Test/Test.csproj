@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\LanguageAutoDetectTest.cs" />
+    <Compile Include="Core\PlainTextImporterTest.cs" />
     <Compile Include="Core\StringExtensionsTest.cs" />
     <Compile Include="Core\NikseBitmapTest.cs" />
     <Compile Include="Core\SubtitleTest.cs" />

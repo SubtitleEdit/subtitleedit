@@ -1438,6 +1438,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "FixCommonErrors/RemovedEmptyLineAtBottom":
                     language.FixCommonErrors.RemovedEmptyLineAtBottom = reader.Value;
                     break;
+                case "FixCommonErrors/RemovedEmptyLineInMiddle":
+                    language.FixCommonErrors.RemovedEmptyLineInMiddle = reader.Value;
+                    break;
                 case "FixCommonErrors/RemovedEmptyLinesUnsedLineBreaks":
                     language.FixCommonErrors.RemovedEmptyLinesUnsedLineBreaks = reader.Value;
                     break;
@@ -1935,6 +1938,9 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "ImportText/OneLineIsOneSubtitle":
                     language.ImportText.OneLineIsOneSubtitle = reader.Value;
+                    break;
+                case "ImportText/TwoLinesAreOneSubtitle":
+                    language.ImportText.TwoLinesAreOneSubtitle = reader.Value;
                     break;
                 case "ImportText/LineBreak":
                     language.ImportText.LineBreak = reader.Value;
@@ -5466,6 +5472,12 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "Settings/MainTextBoxAutoBreak":
                     language.Settings.MainTextBoxAutoBreak = reader.Value;
+                    break;
+                case "Settings/MainTextBoxAutoBreakEarly1":
+                    language.Settings.MainTextBoxAutoBreakEarly1 = reader.Value;
+                    break;
+                case "Settings/MainTextBoxAutoBreakEarly2":
+                    language.Settings.MainTextBoxAutoBreakEarly2 = reader.Value;
                     break;
                 case "Settings/MainTextBoxUnbreak":
                     language.Settings.MainTextBoxUnbreak = reader.Value;
