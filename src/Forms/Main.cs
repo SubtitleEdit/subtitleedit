@@ -9789,7 +9789,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void UpdateListSyntaxColoring()
         {
-            if (_loading || !IsSubtitleLoaded || _subtitleListViewIndex < 0 || _subtitleListViewIndex >= _subtitle.Paragraphs.Count)
+            if (_loading || _subtitle == null ||  _subtitleListViewIndex < 0 || _subtitleListViewIndex >= _subtitle.Paragraphs.Count)
                 return;
 
             SubtitleListview1.SyntaxColorLine(_subtitle.Paragraphs, _subtitleListViewIndex, _subtitle.Paragraphs[_subtitleListViewIndex]);
