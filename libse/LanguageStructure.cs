@@ -836,6 +836,7 @@
             public string TextFiles { get; set; }
             public string PreviewLinesModifiedX { get; set; }
             public string TimeCodes { get; set; }
+            public string SplitAtEndChars { get; set; }
         }
 
         public class Interjections
@@ -2181,8 +2182,6 @@
             public string MainTextBoxSelectionToUpper { get; set; }
             public string MainTextBoxToggleAutoDuration { get; set; }
             public string MainTextBoxAutoBreak { get; set; }
-            public string MainTextBoxAutoBreakEarly1 { get; set; }
-            public string MainTextBoxAutoBreakEarly2 { get; set; }
             public string MainTextBoxUnbreak { get; set; }
             public string MainFileSaveAll { get; set; }
             public string Miscellaneous { get; set; }

@@ -967,6 +967,7 @@ namespace Nikse.SubtitleEdit.Core
                 TextFiles = "Text files",
                 PreviewLinesModifiedX = "Preview - subtitles modified: {0}",
                 TimeCodes = "Time codes",
+                SplitAtEndChars = "Split at end chars"
             };
 
             Interjections = new LanguageStructure.Interjections
@@ -2306,8 +2307,6 @@ can edit in same subtitle file (collaboration)",
                 MainTextBoxSelectionToUpper = "Selection to uppercase",
                 MainTextBoxToggleAutoDuration = "Toggle auto duration",
                 MainTextBoxAutoBreak = "Auto break text",
-                MainTextBoxAutoBreakEarly1 = "Auto break text early after \",.?!:'\" at",
-                MainTextBoxAutoBreakEarly2 = "% of max. length",
                 MainTextBoxUnbreak = "Unbreak text",
                 MainFileSaveAll = "Save all",
                 Miscellaneous = "Misc.",

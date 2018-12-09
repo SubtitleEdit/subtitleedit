@@ -93,7 +93,13 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxAutoBreak.Checked = Configuration.Settings.Tools.ImportTextAutoBreak;
             textBoxAsEnd.Text = Configuration.Settings.Tools.ImportTextAutoBreakAtEndMarkerText.Replace(" ", string.Empty);
             checkBoxAutoSplitAtEnd.Checked = Configuration.Settings.Tools.ImportTextAutoBreakAtEnd;
+            checkBoxAutoSplitAtEnd.Text = Configuration.Settings.Language.ImportText.SplitAtEndChars;
+            textBoxAsEnd.Left = checkBoxAutoSplitAtEnd.Left + checkBoxAutoSplitAtEnd.Width;
+            checkBoxAutoSplitAtBlankLines.Text = Configuration.Settings.Language.ImportText.SplitAtBlankLines;
 
+            groupBoxAutoSplitSettings.Text = Configuration.Settings.Language.Settings.Title;
+            labelSubMaxLen.Text = Configuration.Settings.Language.Settings.MaximumLines;
+            numericUpDownSubtitleLineMaximumLength.Left = labelSubMaxLen.Left + labelSubMaxLen.Width + 3;
             numericUpDownSubtitleLineMaximumLength.Value = Configuration.Settings.General.SubtitleLineMaximumLength;
 
             if (Configuration.Settings.Tools.ImportTextAutoSplitNumberOfLines >= numericUpDownAutoSplitMaxLines.Minimum &&
@@ -211,15 +217,9 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 groupBoxAutoSplitSettings.Visible = true;
                 groupBoxAutoSplitSettings.BringToFront();
-
                 checkBoxMergeShortLines.Enabled = false;
                 checkBoxRemoveEmptyLines.Enabled = false;
-
                 checkBoxAutoBreak.Enabled = true;
-                checkBoxAutoBreak.Text = Configuration.Settings.Language.Settings.MainTextBoxAutoBreakEarly1;
-                //numericUpDownAutoBreakPercent.Left = checkBoxAutoBreak.Left + checkBoxAutoBreak.Width + 2;
-                //labelAutoBreakPercent2.Text = Configuration.Settings.Language.Settings.MainTextBoxAutoBreakEarly2;
-                //labelAutoBreakPercent2.Left = numericUpDownAutoBreakPercent.Left + numericUpDownAutoBreakPercent.Width + 2;
             }
 
             if (_refreshTimer.Enabled)

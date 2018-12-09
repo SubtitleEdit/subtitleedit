@@ -758,6 +758,7 @@ Go to "Options -&gt; Settings -&gt; Tools" to enter your Google translate API ke
     <TextFiles>Text files</TextFiles>
     <PreviewLinesModifiedX>Preview - subtitles modified: {0}</PreviewLinesModifiedX>
     <TimeCodes>Time codes</TimeCodes>
+    <SplitAtEndChars>Split at end chars</SplitAtEndChars>
   </ImportText>
   <Interjections>
     <Title>Interjections</Title>
@@ -2016,8 +2017,6 @@ can edit in same subtitle file (collaboration)</Information>
     <MainTextBoxSelectionToUpper>Selection to uppercase</MainTextBoxSelectionToUpper>
     <MainTextBoxToggleAutoDuration>Toggle auto duration</MainTextBoxToggleAutoDuration>
     <MainTextBoxAutoBreak>Auto break text</MainTextBoxAutoBreak>
-    <MainTextBoxAutoBreakEarly1>Auto break text early after ",.?!:'" at</MainTextBoxAutoBreakEarly1>
-    <MainTextBoxAutoBreakEarly2>% of max. length</MainTextBoxAutoBreakEarly2>
     <MainTextBoxUnbreak>Unbreak text</MainTextBoxUnbreak>
     <MainFileSaveAll>Save all</MainFileSaveAll>
     <Miscellaneous>Misc.</Miscellaneous>

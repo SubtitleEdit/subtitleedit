@@ -1981,6 +1981,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "ImportText/TimeCodes":
                     language.ImportText.TimeCodes = reader.Value;
                     break;
+                case "ImportText/SplitAtEndChars":
+                    language.ImportText.SplitAtEndChars = reader.Value;
+                    break;
                 case "Interjections/Title":
                     language.Interjections.Title = reader.Value;
                     break;
@@ -5472,12 +5475,6 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "Settings/MainTextBoxAutoBreak":
                     language.Settings.MainTextBoxAutoBreak = reader.Value;
-                    break;
-                case "Settings/MainTextBoxAutoBreakEarly1":
-                    language.Settings.MainTextBoxAutoBreakEarly1 = reader.Value;
-                    break;
-                case "Settings/MainTextBoxAutoBreakEarly2":
-                    language.Settings.MainTextBoxAutoBreakEarly2 = reader.Value;
                     break;
                 case "Settings/MainTextBoxUnbreak":
                     language.Settings.MainTextBoxUnbreak = reader.Value;
