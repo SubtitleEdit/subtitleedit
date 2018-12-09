@@ -6,12 +6,12 @@ namespace Nikse.SubtitleEdit.Core.Translate
 {
     public class Formatting
     {
-        public bool Italic { get; set; }
-        public bool ItalicTwoLines { get; set; }
-        public string StartTags { get; set; }
-        public bool AutoBreak { get; set; }
-        public bool SquareBrackets { get; set; }
-        public bool SquareBracketsUppercase { get; set; }
+        private bool Italic { get; set; }
+        private bool ItalicTwoLines { get; set; }
+        private string StartTags { get; set; }
+        private bool AutoBreak { get; set; }
+        private bool SquareBrackets { get; set; }
+        private bool SquareBracketsUppercase { get; set; }
 
         public string SetTagsAndReturnTrimmed(string text, string source)
         {
@@ -106,6 +106,22 @@ namespace Nikse.SubtitleEdit.Core.Translate
             text = StartTags + text;
 
             return text;
+        }
+
+
+        private int NumberOfLines { get; set; }
+
+        public string Unbreak(string text, string source)
+        {
+            NumberOfLines = source.SplitToLines().Count;
+            return Utilities.UnbreakLine(text);
+        }
+
+        public string Rebreak(string text)
+        {
+            if (NumberOfLines == 1)
+                return text;
+            return Utilities.AutoBreakLine(text);
         }
 
     }

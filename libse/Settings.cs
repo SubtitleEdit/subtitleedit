@@ -95,6 +95,7 @@ namespace Nikse.SubtitleEdit.Core
         public bool GoogleApiV2KeyInfoShow { get; set; }
         public bool GoogleTranslateNoKeyWarningShow { get; set; }
         public bool UseGooleApiPaidService { get; set; }
+        public int GoogleApiV1ChunkSize { get; set; }
         public string GoogleTranslateLastTargetLanguage { get; set; }
         public bool TranslateAutoSplit { get; set; }
         public bool ListViewSyntaxColorDurationSmall { get; set; }
@@ -244,6 +245,7 @@ namespace Nikse.SubtitleEdit.Core
             GoogleApiV2KeyInfoShow = true;
             GoogleTranslateNoKeyWarningShow = true;
             UseGooleApiPaidService = false;
+            GoogleApiV1ChunkSize = 1000;
             GoogleTranslateLastTargetLanguage = "en";
             TranslateAutoSplit = true;
             SpellCheckOneLetterWords = true;
@@ -1974,6 +1976,9 @@ $HorzAlign          =   Center
             subNode = node.SelectSingleNode("UseGooleApiPaidService");
             if (subNode != null)
                 settings.Tools.UseGooleApiPaidService = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("GoogleApiV1ChunkSize");
+            if (subNode != null)
+                settings.Tools.GoogleApiV1ChunkSize = Convert.ToInt32(subNode.InnerText);
             subNode = node.SelectSingleNode("GoogleTranslateLastTargetLanguage");
             if (subNode != null)
                 settings.Tools.GoogleTranslateLastTargetLanguage = subNode.InnerText;
@@ -3705,6 +3710,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("GoogleApiV2KeyInfoShow", settings.Tools.GoogleApiV2KeyInfoShow.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("GoogleTranslateNoKeyWarningShow", settings.Tools.GoogleTranslateNoKeyWarningShow.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("UseGooleApiPaidService", settings.Tools.UseGooleApiPaidService.ToString());
+                textWriter.WriteElementString("GoogleApiV1ChunkSize", settings.Tools.GoogleApiV1ChunkSize.ToString());                
                 textWriter.WriteElementString("GoogleTranslateLastTargetLanguage", settings.Tools.GoogleTranslateLastTargetLanguage);
                 textWriter.WriteElementString("TranslateAutoSplit", settings.Tools.TranslateAutoSplit.ToString());
                 textWriter.WriteElementString("ListViewSyntaxColorDurationSmall", settings.Tools.ListViewSyntaxColorDurationSmall.ToString());
