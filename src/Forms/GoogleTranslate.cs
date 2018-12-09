@@ -249,6 +249,12 @@ namespace Nikse.SubtitleEdit.Forms
                                     Environment.NewLine +
                                     webException.Source + ": " + webException.Message);
                 }
+                else if (translator.GetType() == typeof(GoogleTranslator2) && webException.Message.Contains("(400) Bad Request"))
+                {
+                    MessageBox.Show("API key invalid - perhaps billing is not enabled?" + Environment.NewLine +
+                                    Environment.NewLine +
+                                    webException.Source + ": " + webException.Message);
+                }
                 else
                 {
                     MessageBox.Show(webException.Source + ": " + webException.Message);
