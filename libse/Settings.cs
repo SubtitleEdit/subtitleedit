@@ -77,6 +77,7 @@ namespace Nikse.SubtitleEdit.Core
         public int VerifyPlaySeconds { get; set; }
         public int MergeLinesShorterThan { get; set; }
         public bool FixShortDisplayTimesAllowMoveStartTime { get; set; }
+        public bool RemoveEmptyLinesBetweenText { get; set; }
         public string MusicSymbol { get; set; }
         public string MusicSymbolReplace { get; set; }
         public string UnicodeSymbolsToInsert { get; set; }
@@ -187,10 +188,14 @@ namespace Nikse.SubtitleEdit.Core
         public string ImportTextLineBreak { get; set; }
         public bool ImportTextMergeShortLines { get; set; }
         public bool ImportTextRemoveEmptyLines { get; set; }
+        public bool ImportTextAutoSplitAtBlank { get; set; }
         public bool ImportTextRemoveLinesNoLetters { get; set; }
         public bool ImportTextGenerateTimeCodes { get; set; }
         public bool ImportTextAutoBreak { get; set; }
+        public bool ImportTextAutoBreakAtEnd { get; set; }        
         public decimal ImportTextGap { get; set; }
+        public decimal ImportTextAutoSplitNumberOfLines { get; set; }
+        public string ImportTextAutoBreakAtEndMarkerText { get; set; }
         public bool ImportTextDurationAuto { get; set; }
         public decimal ImportTextFixedDuration { get; set; }
         public string GenerateTimeCodePatterns { get; set; }
@@ -224,6 +229,7 @@ namespace Nikse.SubtitleEdit.Core
             VerifyPlaySeconds = 2;
             MergeLinesShorterThan = 33;
             FixShortDisplayTimesAllowMoveStartTime = false;
+            RemoveEmptyLinesBetweenText = true;
             MusicSymbol = "♪";
             MusicSymbolReplace = "â™ª,â™," + // ♪ + ♫ in UTF-8 opened as ANSI
                                  "<s M/>,<s m/>," + // music symbols by subtitle creator
@@ -299,11 +305,14 @@ namespace Nikse.SubtitleEdit.Core
             ExportTextNewLineAfterText = true;
             ExportTextNewLineBetweenSubtitles = true;
             ImportTextLineBreak = "|";
+            ImportTextAutoSplitNumberOfLines = 2;
+            ImportTextAutoSplitAtBlank = true;
+            ImportTextAutoBreakAtEndMarkerText = ".!?";
+            ImportTextAutoBreakAtEnd = true;
             MoveStartEndMs = 100;
             AdjustDurationSeconds = 0.1m;
             AdjustDurationPercent = 120;
         }
-
     }
 
     public class FcpExportSettings
@@ -1911,6 +1920,9 @@ $HorzAlign          =   Center
             subNode = node.SelectSingleNode("FixShortDisplayTimesAllowMoveStartTime");
             if (subNode != null)
                 settings.Tools.FixShortDisplayTimesAllowMoveStartTime = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("RemoveEmptyLinesBetweenText");
+            if (subNode != null)
+                settings.Tools.RemoveEmptyLinesBetweenText = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("MusicSymbol");
             if (subNode != null)
                 settings.Tools.MusicSymbol = subNode.InnerText;
@@ -2241,6 +2253,9 @@ $HorzAlign          =   Center
             subNode = node.SelectSingleNode("ImportTextRemoveEmptyLines");
             if (subNode != null)
                 settings.Tools.ImportTextRemoveEmptyLines = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("ImportTextAutoSplitAtBlank");
+            if (subNode != null)
+                settings.Tools.ImportTextAutoSplitAtBlank = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("ImportTextRemoveLinesNoLetters");
             if (subNode != null)
                 settings.Tools.ImportTextRemoveLinesNoLetters = Convert.ToBoolean(subNode.InnerText);
@@ -2250,9 +2265,18 @@ $HorzAlign          =   Center
             subNode = node.SelectSingleNode("ImportTextAutoBreak");
             if (subNode != null)
                 settings.Tools.ImportTextAutoBreak = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("ImportTextAutoBreakAtEnd");
+            if (subNode != null)
+                settings.Tools.ImportTextAutoBreakAtEnd = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("ImportTextGap");
             if (subNode != null)
                 settings.Tools.ImportTextGap = Convert.ToDecimal(subNode.InnerText);
+            subNode = node.SelectSingleNode("ImportTextAutoSplitNumberOfLines");
+            if (subNode != null)
+                settings.Tools.ImportTextAutoSplitNumberOfLines = Convert.ToInt32(subNode.InnerText);
+            subNode = node.SelectSingleNode("ImportTextAutoBreakAtEndMarkerText");
+            if (subNode != null)
+                settings.Tools.ImportTextAutoBreakAtEndMarkerText = subNode.InnerText;
             subNode = node.SelectSingleNode("ImportTextDurationAuto");
             if (subNode != null)
                 settings.Tools.ImportTextDurationAuto = Convert.ToBoolean(subNode.InnerText);
@@ -3663,6 +3687,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("VerifyPlaySeconds", settings.Tools.VerifyPlaySeconds.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("MergeLinesShorterThan", settings.Tools.MergeLinesShorterThan.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("FixShortDisplayTimesAllowMoveStartTime", settings.Tools.FixShortDisplayTimesAllowMoveStartTime.ToString());
+                textWriter.WriteElementString("RemoveEmptyLinesBetweenText", settings.Tools.RemoveEmptyLinesBetweenText.ToString());
                 textWriter.WriteElementString("MusicSymbol", settings.Tools.MusicSymbol);
                 textWriter.WriteElementString("MusicSymbolReplace", settings.Tools.MusicSymbolReplace);
                 textWriter.WriteElementString("UnicodeSymbolsToInsert", settings.Tools.UnicodeSymbolsToInsert);
@@ -3773,10 +3798,14 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("ImportTextLineBreak", settings.Tools.ImportTextLineBreak);
                 textWriter.WriteElementString("ImportTextMergeShortLines", settings.Tools.ImportTextMergeShortLines.ToString());
                 textWriter.WriteElementString("ImportTextRemoveEmptyLines", settings.Tools.ImportTextRemoveEmptyLines.ToString());
+                textWriter.WriteElementString("ImportTextAutoSplitAtBlank", settings.Tools.ImportTextAutoSplitAtBlank.ToString());
                 textWriter.WriteElementString("ImportTextRemoveLinesNoLetters", settings.Tools.ImportTextRemoveLinesNoLetters.ToString());
                 textWriter.WriteElementString("ImportTextGenerateTimeCodes", settings.Tools.ImportTextGenerateTimeCodes.ToString());
                 textWriter.WriteElementString("ImportTextAutoBreak", settings.Tools.ImportTextAutoBreak.ToString());
+                textWriter.WriteElementString("ImportTextAutoBreakAtEnd", settings.Tools.ImportTextAutoBreakAtEnd.ToString());
                 textWriter.WriteElementString("ImportTextGap", settings.Tools.ImportTextGap.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ImportTextAutoSplitNumberOfLines", settings.Tools.ImportTextAutoSplitNumberOfLines.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ImportTextAutoBreakAtEndMarkerText", settings.Tools.ImportTextAutoBreakAtEndMarkerText);
                 textWriter.WriteElementString("ImportTextDurationAuto", settings.Tools.ImportTextDurationAuto.ToString());
                 textWriter.WriteElementString("ImportTextFixedDuration", settings.Tools.ImportTextFixedDuration.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("GenerateTimeCodePatterns", settings.Tools.GenerateTimeCodePatterns);

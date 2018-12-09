@@ -11,6 +11,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             string fixAction0 = language.RemovedEmptyLine;
             string fixAction1 = language.RemovedEmptyLineAtTop;
             string fixAction2 = language.RemovedEmptyLineAtBottom;
+            string fixAction3 = language.RemovedEmptyLineInMiddle;
 
             if (subtitle.Paragraphs.Count == 0)
                 return;
@@ -98,6 +99,20 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         emptyLinesRemoved++;
                         callbacks.AddFixToListView(p, fixAction2, oldText, p.Text);
                     }
+
+                    if (Configuration.Settings.Tools.RemoveEmptyLinesBetweenText && 
+                        callbacks.AllowFix(p, fixAction2) && text.Contains(Environment.NewLine + Environment.NewLine))
+                    {
+                        int beforeLength = text.Length;
+                        while (text.Contains(Environment.NewLine + Environment.NewLine))
+                        {
+                            text = text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
+                        }
+                        p.Text = text;
+                        emptyLinesRemoved += (beforeLength - text.Length) / Environment.NewLine.Length;
+                        callbacks.AddFixToListView(p, fixAction3, oldText, p.Text);
+                    }
+
                 }
             }
 

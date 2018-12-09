@@ -13,6 +13,8 @@ namespace Nikse.SubtitleEdit.Core.Translate
     /// </summary>
     public class GoogleTranslator1 : ITranslator
     {
+        private const char SplitChar = '§';
+
         public List<TranslationPair> GetTranslationPairs()
         {
             return new GoogleTranslator2(string.Empty).GetTranslationPairs();
@@ -40,9 +42,9 @@ namespace Nikse.SubtitleEdit.Core.Translate
                 formattings[index] = f;
                 if (input.Length > 0)
                 {
-                    input.Append(" | ");
+                    input.Append(" " + SplitChar + " ");
                 }
-                var text = f.SetTagsAndReturnTrimmed(TranslationHelper.PreTranslate(p.Text.Replace("|", string.Empty) , sourceLanguage), sourceLanguage);
+                var text = f.SetTagsAndReturnTrimmed(TranslationHelper.PreTranslate(p.Text.Replace(SplitChar.ToString(), string.Empty), sourceLanguage), sourceLanguage);
                 input.Append(text);
             }
 
@@ -95,7 +97,7 @@ namespace Nikse.SubtitleEdit.Core.Translate
 
             var res = sbAll.ToString().Trim();
             res = Regex.Unescape(res);
-            List<string> lines = Split(res);
+            var lines = res.Split(SplitChar).ToList();
             var resultList = new List<string>();
             for (var index = 0; index < lines.Count; index++)
             {
@@ -120,12 +122,68 @@ namespace Nikse.SubtitleEdit.Core.Translate
                     return timmedList;
             }
 
+            if (resultList.Count < paragraphs.Count)
+            {
+                var splitList = SplitMergedLines(resultList, paragraphs);
+                if (splitList.Count == paragraphs.Count)
+                    return splitList;
+            }
+
             return resultList;
         }
 
-        private List<string> Split(string res)
+        private static List<string> SplitMergedLines(List<string> input, List<Paragraph> paragraphs)
         {
-            return res.Split('|').ToList();
+            var hits = 0;
+            var results = new List<string>();
+            for (var index = 0; index < input.Count; index++)
+            {
+                var line = input[index];
+                var text = paragraphs[index].Text;
+                var badPoints = 0;
+                if (text.StartsWith("[") && !line.StartsWith("["))
+                    badPoints++;
+                if (text.StartsWith("-") && !line.StartsWith("-"))
+                    badPoints++;
+                if (text.Length > 0 && char.IsUpper(text[0]) && line.Length > 0 && !char.IsUpper(line[0]))
+                    badPoints++;
+                if (text.EndsWith(".") && !line.EndsWith("."))
+                    badPoints++;
+                if (text.EndsWith("!") && !line.EndsWith("!"))
+                    badPoints++;
+                if (text.EndsWith("?") && !line.EndsWith("?"))
+                    badPoints++;
+                if (text.EndsWith(",") && !line.EndsWith(","))
+                    badPoints++;
+                if (text.EndsWith(":") && !line.EndsWith(":"))
+                    badPoints++;
+                var added = false;
+                if (badPoints > 0 && hits + input.Count < paragraphs.Count)
+                {
+                    var percent = line.Length * 100.0 / text.Length;
+                    if (percent > 150)
+                    {
+                        var temp = Utilities.AutoBreakLine(line).SplitToLines();
+                        if (temp.Count == 2)
+                        {
+                            hits++;
+                            results.Add(temp[0]);
+                            results.Add(temp[1]);
+                            added = true;
+                        }
+                    }
+                }
+                if (!added)
+                {
+                    results.Add(line);
+                }
+            }
+
+            if (results.Count == paragraphs.Count)
+                return results;
+
+            return input;
         }
+
     }
 }

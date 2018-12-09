@@ -147,7 +147,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         temp = temp.Substring(temp.Length - 5, 2).ToLower();
 
-                        if (temp != uiCultureTargetLanguage)
+                        if (temp != defaultFromLanguage)
                         {
                             uiCultureTargetLanguage = temp;
                             break;
@@ -155,6 +155,27 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
+            if (uiCultureTargetLanguage == defaultFromLanguage)
+            {
+                foreach (InputLanguage language in InputLanguage.InstalledInputLanguages)
+                {
+                    if (language.Culture.TwoLetterISOLanguageName != defaultFromLanguage)
+                    {
+                        uiCultureTargetLanguage = language.Culture.TwoLetterISOLanguageName;
+                        break;
+                    }
+                }
+            }
+
+            if (uiCultureTargetLanguage == defaultFromLanguage && defaultFromLanguage == "en")
+            {
+                uiCultureTargetLanguage = "es";
+            }
+            if (uiCultureTargetLanguage == defaultFromLanguage)
+            {
+                uiCultureTargetLanguage = "en";
+            }
+
             comboBoxTo.SelectedIndex = 0;
             foreach (ComboBoxItem item in comboBoxTo.Items)
             {

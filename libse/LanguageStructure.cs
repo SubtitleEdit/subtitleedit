@@ -623,6 +623,7 @@
             public string RemovedEmptyLine { get; set; }
             public string RemovedEmptyLineAtTop { get; set; }
             public string RemovedEmptyLineAtBottom { get; set; }
+            public string RemovedEmptyLineInMiddle { get; set; }
             public string RemovedEmptyLinesUnsedLineBreaks { get; set; }
             public string EmptyLinesRemovedX { get; set; }
             public string FixOverlappingDisplayTimes { get; set; }
@@ -821,6 +822,7 @@
             public string Splitting { get; set; }
             public string AutoSplitText { get; set; }
             public string OneLineIsOneSubtitle { get; set; }
+            public string TwoLinesAreOneSubtitle { get; set; }
             public string LineBreak { get; set; }
             public string SplitAtBlankLines { get; set; }
             public string MergeShortLines { get; set; }
@@ -2179,6 +2181,8 @@
             public string MainTextBoxSelectionToUpper { get; set; }
             public string MainTextBoxToggleAutoDuration { get; set; }
             public string MainTextBoxAutoBreak { get; set; }
+            public string MainTextBoxAutoBreakEarly1 { get; set; }
+            public string MainTextBoxAutoBreakEarly2 { get; set; }
             public string MainTextBoxUnbreak { get; set; }
             public string MainFileSaveAll { get; set; }
             public string Miscellaneous { get; set; }
