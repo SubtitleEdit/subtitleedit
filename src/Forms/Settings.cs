@@ -2620,7 +2620,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void linkLabelGoogleTranslateSignUp_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Process.Start("https://cloud.google.com/docs/authentication/api-keys");
+            Process.Start("https://www.google.com/search?q=google+cloud+get+api+key");
         }
     }
 }
