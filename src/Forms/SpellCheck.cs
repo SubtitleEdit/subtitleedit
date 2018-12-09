@@ -529,15 +529,26 @@ namespace Nikse.SubtitleEdit.Forms
                     _postfix = string.Empty;
                     if (_currentWord.Length > 1)
                     {
-                        if (_currentWord.StartsWith('\''))
+                        var trimChars = "'`*#";
+                        var charHit = true;
+                        while (charHit)
                         {
-                            _prefix = "'";
-                            _currentWord = _currentWord.Substring(1);
-                        }
-                        if (_currentWord.StartsWith('`'))
-                        {
-                            _prefix = "`";
-                            _currentWord = _currentWord.Substring(1);
+                            charHit = false;
+                            foreach (char c in trimChars)
+                            {
+                                if (_currentWord.StartsWith(c))
+                                {
+                                    _prefix += c;
+                                    _currentWord = _currentWord.Substring(1);
+                                    charHit = true;
+                                }
+                                if (_currentWord.EndsWith(c))
+                                {
+                                    _postfix = c + _postfix;
+                                    _currentWord = _currentWord.Remove(_currentWord.Length - 1);
+                                    charHit = true;
+                                }
+                            }
                         }
                     }
                     string key = _currentIndex + "-" + _wordsIndex + "-" + _currentWord;
@@ -774,7 +785,7 @@ namespace Nikse.SubtitleEdit.Forms
         private static readonly Regex RegexIsEpisodeNumber = new Regex("^\\d+x\\d+$", RegexOptions.Compiled); // e.g. 12x02
         private static bool IsNumber(string s)
         {
-            s = s.Trim('$', '£');
+            s = s.Trim('$', '£', '%', '*');
             if (RegexIsNumber.IsMatch(s))
                 return true;
             if (RegexIsEpisodeNumber.IsMatch(s))
