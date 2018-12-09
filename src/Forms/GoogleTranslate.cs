@@ -331,7 +331,7 @@ namespace Nikse.SubtitleEdit.Forms
                 labelApiKeyNotFound.Left = linkLabelPoweredByGoogleTranslate.Left + linkLabelPoweredByGoogleTranslate.Width + 20;
                 labelApiKeyNotFound.Text = language.GoogleNoApiKeyWarning;
 
-                Translate(source, _targetTwoLetterIsoLanguageName, new GoogleTranslator1(), 1000);
+                Translate(source, _targetTwoLetterIsoLanguageName, new GoogleTranslator1(), Configuration.Settings.Tools.GoogleApiV1ChunkSize);
                 return;
             }
 

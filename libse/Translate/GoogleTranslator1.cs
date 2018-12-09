@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
@@ -13,7 +14,7 @@ namespace Nikse.SubtitleEdit.Core.Translate
     /// </summary>
     public class GoogleTranslator1 : ITranslator
     {
-        private const char SplitChar = '§';
+        private const char SplitChar = '\n';
 
         public List<TranslationPair> GetTranslationPairs()
         {
@@ -45,6 +46,7 @@ namespace Nikse.SubtitleEdit.Core.Translate
                     input.Append(" " + SplitChar + " ");
                 }
                 var text = f.SetTagsAndReturnTrimmed(TranslationHelper.PreTranslate(p.Text.Replace(SplitChar.ToString(), string.Empty), sourceLanguage), sourceLanguage);
+                text = f.Unbreak(text, p.Text);
                 input.Append(text);
             }
 
@@ -97,7 +99,7 @@ namespace Nikse.SubtitleEdit.Core.Translate
 
             var res = sbAll.ToString().Trim();
             res = Regex.Unescape(res);
-            var lines = res.Split(SplitChar).ToList();
+            var lines = res.SplitToLines().ToList();
             var resultList = new List<string>();
             for (var index = 0; index < lines.Count; index++)
             {
@@ -111,7 +113,11 @@ namespace Nikse.SubtitleEdit.Core.Translate
                 s = s.Replace(" " + Environment.NewLine, Environment.NewLine);
                 s = s.Replace(" " + Environment.NewLine, Environment.NewLine).Trim();
                 if (formattings.Length > index)
+                {
                     s = formattings[index].ReAddFormatting(s);
+                    s = formattings[index].Rebreak(s);
+                }
+
                 resultList.Add(s);
             }
 
