@@ -12582,12 +12582,13 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (e.KeyData == _videoPlayPauseToggle)
             {
+                Text = DateTime.UtcNow.Ticks.ToString();
                 if (mediaPlayer.VideoPlayer != null)
                 {
                     _endSeconds = -1;
-                    mediaPlayer.TogglePlayPause();
                     e.SuppressKeyPress = true;
                     e.Handled = true;
+                    System.Threading.SynchronizationContext.Current.Post(TimeSpan.FromMilliseconds(1), () => mediaPlayer.TogglePlayPause());
                 }
             }
             else if (e.KeyData == _videoPause)
