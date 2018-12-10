@@ -218,7 +218,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     Paragraph p = _subtitle.Paragraphs[i];
                     sourceLength += Utilities.UrlEncode(p.Text).Length;
-                    if ((sourceLength >= maxTextSize || sourceParagraphs.Count > maximumRequestArrayLength) && sourceParagraphs.Count > 0)
+                    if ((sourceLength >= maxTextSize || sourceParagraphs.Count >= maximumRequestArrayLength) && sourceParagraphs.Count > 0)
                     {
                         var result = translator.Translate(source, target, sourceParagraphs, log);
                         FillTranslatedText(result, start, index - 1);
