@@ -8,7 +8,7 @@
    * Add "DVD Studio Pro" file properties - thx Daniel
    * Add ebu stl boxing - thx Milenko
    * Add "Fix RTL" to batch convert - thx OmrSi/MosDos96/ghost
-   * Add new shortcuts
+   * Add new shortcuts (mostly related to alignment)
 * IMPROVED:
    * Update Bulgarian translation - thx KalinM
    * Update Finnish translation - thx Teijo S
@@ -16,12 +16,16 @@
    * Update Catalan translation - thx Juansa
    * Update Hungarian translation - thx Zityi
    * Update Chinese translation - thx tinyboxvk
+   * Improve plain text import - thx uckthis/darnn/Leon
    * Make custom "Choose font" dialog - thx OmrSi
    * Update Bing translator from V2 to V3 API
    * Faster Tesseract OCR if CPU has many cores
    * Try using word lists for uppercase "i" inside words - thx TeDDy
    * Improve unknown json importer - thx Thamy
    * Improve paste in list view - thx OmrSi/darnn
+   * Add "Fix RTL" to batch convert - thx OmrSi/MosDos96/ghost
+   * Add support Google Cloud API key
+   * Allow translate selected lines in translate mode
 * FIXED:
    * Go back to Tesseract 3.02 (T4 available as in-program download)
    * Fix Bing translator sign-up url - thx sopor
@@ -52,6 +56,8 @@
    * Don't lose coloring after delete line in OCR - thx BxMxK
    * Fix adjust via end position w original subtitle - thx OmrSi
    * Fix toggle dialog dashes with font tags
+   * Fix freeze in spell check change all - thx Edwin
+   * Fix extra space when using "Toggle play/pause" - thx Luiz
 
 
 3.5.7 (9th August 2018)
