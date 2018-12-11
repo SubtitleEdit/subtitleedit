@@ -529,7 +529,7 @@ namespace Nikse.SubtitleEdit.Forms
                     _postfix = string.Empty;
                     if (_currentWord.Length > 1)
                     {
-                        var trimChars = "'`*#";
+                        var trimChars = "'`*#\u200E\u200F\u202A\u202B\u202D\u202E\u200B\uFEFF";
                         var charHit = true;
                         while (charHit)
                         {
