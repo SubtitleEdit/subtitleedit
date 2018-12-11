@@ -869,9 +869,9 @@ $HorzAlign          =   Center
         public VideoControlsSettings()
         {
             CustomSearchText1 = "The Free Dictionary";
-            CustomSearchUrl1 = "http://www.thefreedictionary.com/{0}";
+            CustomSearchUrl1 = "https://www.thefreedictionary.com/{0}";
             CustomSearchText2 = "Wikipedia";
-            CustomSearchUrl2 = "http://en.m.wikipedia.org/wiki?search={0}";
+            CustomSearchUrl2 = "https://en.wikipedia.org/wiki?search={0}";
 
             LastActiveTab = "Translate";
             WaveformDrawGrid = true;
