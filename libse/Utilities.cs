@@ -572,7 +572,7 @@ namespace Nikse.SubtitleEdit.Core
                     var secondLines = secondSplit.SplitToLines();
                     var firstLinesMax = Math.Max(firstLines[0].Length, firstLines[1].Length);
                     var secondLinesMax = Math.Max(secondLines[0].Length, secondLines[1].Length);
-                    if (secondLinesMax <= maximumLength &&
+                    if (secondLinesMax <= maximumLength && CanBreak(s, lastSpaceIndex, language) &&
                         (secondLinesMax <= firstLinesMax || 
                          firstLine.Substring(firstLine.Length - 3, 2) == ", " ||
                          firstLine.Substring(firstLine.Length - 3, 2) == ". "))
