@@ -7666,8 +7666,8 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (next != null)
             {
-                newParagraph.StartTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - 2000;
-                newParagraph.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - 1;
+                newParagraph.StartTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - (2000 + Configuration.Settings.General.MinimumMillisecondsBetweenLines);
+                newParagraph.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
 
                 if (next.StartTime.IsMaxTime)
                 {
@@ -7684,6 +7684,11 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 newParagraph.StartTime.TotalMilliseconds = 1000;
                 newParagraph.EndTime.TotalMilliseconds = 3000;
+                if (newParagraph.Duration.TotalMilliseconds < Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds)
+                {
+                    newParagraph.EndTime.TotalMilliseconds = newParagraph.StartTime.TotalMilliseconds + 
+                                                             Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds;
+                }
             }
             if (GetCurrentSubtitleFormat().IsFrameBased)
             {
@@ -7795,6 +7800,11 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 newParagraph.StartTime.TotalMilliseconds = 1000;
                 newParagraph.EndTime.TotalMilliseconds = 3000;
+                if (newParagraph.Duration.TotalMilliseconds < Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds)
+                {
+                    newParagraph.EndTime.TotalMilliseconds = newParagraph.StartTime.TotalMilliseconds +
+                                                             Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds;
+                }
             }
             if (GetCurrentSubtitleFormat().IsFrameBased)
             {
