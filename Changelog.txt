@@ -58,6 +58,7 @@
    * Fix toggle dialog dashes with font tags
    * Fix freeze in spell check change all - thx Edwin
    * Fix extra space when using "Toggle play/pause" - thx Luiz
+   * Fix "Go to next error" for last line - thx Leon/OmrSi
 
 
 3.5.7 (9th August 2018)
