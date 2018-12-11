@@ -12582,7 +12582,6 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (e.KeyData == _videoPlayPauseToggle)
             {
-                Text = DateTime.UtcNow.Ticks.ToString();
                 if (mediaPlayer.VideoPlayer != null)
                 {
                     _endSeconds = -1;
