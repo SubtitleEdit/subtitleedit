@@ -14393,7 +14393,7 @@ namespace Nikse.SubtitleEdit.Forms
             int idx = FirstSelectedIndex + 1;
             try
             {
-                for (int i = idx; i < _subtitle.Paragraphs.Count - 1; i++)
+                for (int i = idx; i < _subtitle.Paragraphs.Count; i++)
                 {
                     var item = SubtitleListview1.Items[i];
                     if (item.SubItems[SubtitleListview1.ColumnIndexDuration].BackColor == Configuration.Settings.Tools.ListViewSyntaxErrorColor ||
