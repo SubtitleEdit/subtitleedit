@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.5.7</Version>
-    <TranslatedBy>翻译: FeiXJ | Leon Cheung | larsenlouis</TranslatedBy>
+    <TranslatedBy>翻译: FeiXJ | Leon Cheung | larsenlouis | VK</TranslatedBy>
     <CultureName>zh-Hans</CultureName>
     <HelpFile>
     </HelpFile>
@@ -86,7 +86,7 @@
 
 C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
 
-访问 www.nikse.dk 以获得最新版本。
+访问 https://www.nikse.dk 以获得最新版本。
 
 非常欢迎您提出建议，
 邮件: mailto:nikse.dk@gmail.com</AboutText1>
@@ -370,9 +370,9 @@ Command line: {1} {2}
     <ColorRequiresTeletext>颜色需要电视文字广播</ColorRequiresTeletext>
     <CharacterCodeTable>字符表</CharacterCodeTable>
     <LanguageCode>语言代码</LanguageCode>
-    <OriginalProgramTitle>原始程序标题</OriginalProgramTitle>
+    <OriginalProgramTitle>原始影视标题</OriginalProgramTitle>
     <OriginalEpisodeTitle>原始剧集标题</OriginalEpisodeTitle>
-    <TranslatedProgramTitle>翻译程序标题</TranslatedProgramTitle>
+    <TranslatedProgramTitle>翻译影视标题</TranslatedProgramTitle>
     <TranslatedEpisodeTitle>翻译剧集标题</TranslatedEpisodeTitle>
     <TranslatorsName>译者名称</TranslatorsName>
     <SubtitleListReferenceCode>字幕列表参考代码</SubtitleListReferenceCode>
@@ -1995,13 +1995,15 @@ Command line: {1} {2}
     <HowToSignUp>如何注册</HowToSignUp>
     <GoogleTranslateUrl>Google 翻译网址</GoogleTranslateUrl>
     <MicrosoftTranslateApiKey>API密钥</MicrosoftTranslateApiKey>
-    <FontNote>注意：这些字体设置仅用于Subtitle Edit的用户界面。字幕字体通常在视频播放器中设置。但也可以通过包含内建字体信息的字幕来设置，例如“Advance Sub Station Alpha”格式，或通过expor</FontNote>
+    <FontNote>注意：这些字体设置仅用于Subtitle Edit的用户界面。
+字幕字体通常在视频播放器中设置，但也可以通过包含内建字体信息的字幕来设置。
+例如“Advance Sub Station Alpha”格式，或导出为图像字幕格式。</FontNote>
   </Settings>
   <SettingsMpv>
     <Title>mpv 设置</Title>
     <DownloadMpv>下载 mpv 库</DownloadMpv>
     <DownloadMpvFailed>无法下载 mpv - 请稍后重试!</DownloadMpvFailed>
-    <DownloadMpvOk>mpv 库下载完成,等待使用.</DownloadMpvOk>
+    <DownloadMpvOk>mpv 库下载完成，等待启用。</DownloadMpvOk>
   </SettingsMpv>
   <SettingsFfmpeg>
     <Title>下载FFmpeg</Title>
