@@ -157,7 +157,7 @@ namespace Nikse.SubtitleEdit.Core
             return AutoBreakLine(text, string.Empty); // no language
         }
 
-        private static bool CanBreak(string s, int index, string language)
+        internal static bool CanBreak(string s, int index, string language)
         {
             char nextChar;
             if (index >= 0 && index < s.Length)

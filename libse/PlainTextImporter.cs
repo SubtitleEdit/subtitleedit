@@ -217,11 +217,12 @@ namespace Nikse.SubtitleEdit.Core
         private List<string> SplitToFour(string text)
         {
             var lines = Utilities.AutoBreakLine(text.Trim(), _singleLineMaxLength, Configuration.Settings.Tools.MergeLinesShorterThan, _language).SplitToLines();
-            return new List<string>
+            var list = new List<string>();
+            foreach (var line in lines)
             {
-                Utilities.AutoBreakLine(lines[0], _singleLineMaxLength, Configuration.Settings.Tools.MergeLinesShorterThan, _language),
-                Utilities.AutoBreakLine(lines[1], _singleLineMaxLength, Configuration.Settings.Tools.MergeLinesShorterThan, _language)
-            };
+                list.Add(Utilities.AutoBreakLine(line, _singleLineMaxLength, Configuration.Settings.Tools.MergeLinesShorterThan, _language));
+            }
+            return list;
         }
 
         internal class SplitListItem
