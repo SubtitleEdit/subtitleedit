@@ -86,7 +86,7 @@ Pode distribui-lo, modificá-lo e usá-lo livremente.
 
 Código fonte em C# disponível em https://github.com/SubtitleEdit/subtitleedit
 
-Visite www.nikse.dk para verificar se existem actualizações.
+Visite https://www.nikse.dk para verificar se existem actualizações.
 
 Agradecem-se sugestões.
 
@@ -188,6 +188,10 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <NotConverted>Sem sucesso</NotConverted>
     <Converted>Convertido</Converted>
     <Settings>Configurações</Settings>
+	<FixRtl>Corrigir RTL</FixRtl>
+	<FixRtlAddUnicode>Corrigir RTL via etiquetas Unicode</FixRtlAddUnicode>
+	<FixRtlRemoveUnicode>Eliminar etiquetas Unicode RTL</FixRtlRemoveUnicode>
+	<FixRtlReverseStartEnd>Inverter RTL início/fim</FixRtlReverseStartEnd>
     <SplitLongLines>Dividir linhas longas</SplitLongLines>
     <AutoBalance>Igualar automaticamente as linhas</AutoBalance>
     <ScanFolder>Examinar pasta...</ScanFolder>
@@ -553,6 +557,7 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <RemovedEmptyLine>Remover linha em branco</RemovedEmptyLine>
     <RemovedEmptyLineAtTop>Remover linha inicial em branco</RemovedEmptyLineAtTop>
     <RemovedEmptyLineAtBottom>Remover linha final em branco</RemovedEmptyLineAtBottom>
+	<RemovedEmptyLineInMiddle>Remover linha do meio em branco</RemovedEmptyLineInMiddle>
     <RemovedEmptyLinesUnsedLineBreaks>Eliminar quebras de linha em branco/sem uso</RemovedEmptyLinesUnsedLineBreaks>
     <EmptyLinesRemovedX>Linhas em branco eliminadas: {0}</EmptyLinesRemovedX>
     <FixOverlappingDisplayTimes>Corrigir sobreposições de tempo</FixOverlappingDisplayTimes>
@@ -686,6 +691,13 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <PleaseWait>Por favor, aguarde... isto pode demorar.</PleaseWait>
     <PoweredByGoogleTranslate>Powered by Google translate</PoweredByGoogleTranslate>
     <PoweredByMicrosoftTranslate>Powered by Microsoft translate</PoweredByMicrosoftTranslate>
+    <MsClientSecretNeeded>Desculpe, precisa de uma chave da Microsoft para usar o Tradutor Bing mais recente.
+
+Vá a "Opções -&gt; Configurações -&gt; Ferramentas" para inserir a chave do Bing.</MsClientSecretNeeded>
+    <GoogleApiKeyNeeded>Desculpe, precisa de uma chave API do Google para usar o Tradutor do Google mais recente.
+
+Vá a "Opções -&gt; Configurações -&gt; Ferramentas" para inserir a chave API do Tradutor do Google.</GoogleApiKeyNeeded>
+    <GoogleNoApiKeyWarning>A tentar traduzir sem chave API... (tradução lenta e limitada)</GoogleNoApiKeyWarning>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
     <Title>Tradutor do Google vs Microsoft</Title>
@@ -732,6 +744,7 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <Splitting>Divisão</Splitting>
     <AutoSplitText>Auto-dividir texto</AutoSplitText>
     <OneLineIsOneSubtitle>Uma linha é uma legenda</OneLineIsOneSubtitle>
+	<TwoLinesAreOneSubtitle>Duas linhas numa</TwoLinesAreOneSubtitle>
     <LineBreak>Quebra de linha</LineBreak>
     <SplitAtBlankLines>Dividir nas linhas em branco</SplitAtBlankLines>
     <MergeShortLines>Combinar as linhas curtas continuadas</MergeShortLines>
@@ -745,6 +758,7 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <TextFiles>Ficheiros de texto</TextFiles>
     <PreviewLinesModifiedX>Pré-visualizar - legendas modificados: {0}</PreviewLinesModifiedX>
     <TimeCodes>Tempos</TimeCodes>
+	<SplitAtEndChars>Dividir nos últimos caracteres</SplitAtEndChars>
   </ImportText>
   <Interjections>
     <Title>Interjeições</Title>
@@ -918,6 +932,7 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
         <AdvancedSubStationAlphaProperties>Advanced Sub Station Alpha propriedades...</AdvancedSubStationAlphaProperties>
         <SubStationAlphaProperties>Sub Station Alpha propriedades...</SubStationAlphaProperties>
         <EbuProperties>EBU STL propriedades...</EbuProperties>
+		<DvdStuioProProperties>DVD Studio Pro propriedades...</DvdStuioProProperties>
         <PacProperties>PAC propriedades...</PacProperties>
         <OpenOriginal>Abrir legenda original (modo tradutor)...</OpenOriginal>
         <SaveOriginal>Guardar legenda original</SaveOriginal>
@@ -1135,6 +1150,7 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
         <MergeWithLineAfter>Combinar com a linha seguinte</MergeWithLineAfter>
         <Normal>Normal (remove a formatação)</Normal>
         <Underline>Sublinhado</Underline>
+		<Box>Caixa</Box>
         <Color>Cor</Color>
         <FontName>Tipo de letra</FontName>
         <Alignment>Alinhamento</Alignment>
@@ -1484,6 +1500,7 @@ Se editou este ficheiro no Subtitle Edit é possível que encontre a cópia de s
   <MatroskaSubtitleChooser>
     <Title>Seleccionar legenda através de um ficheiro Matroska (.mkv)</Title>
     <TitleMp4>Seleccionar legenda através de um ficheiro MP4</TitleMp4>
+	<PleaseChoose>Existe mais de uma legenda - por favor, escolha</PleaseChoose>
     <TrackXLanguageYTypeZ>Faixa {0} - idioma: {1} - tipo: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MeasurementConverter>
@@ -1860,7 +1877,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <EndSceneIndex>O parágrafo final da cena é</EndSceneIndex>
     <FirstPlusX>Primeiro + {0}</FirstPlusX>
     <LastMinusX>Último - {0}</LastMinusX>
-    <FixCommonerrors>Erros frequentes</FixCommonerrors>
+    <FixCommonerrors>Corrigir erros</FixCommonerrors>
     <RemoveTextForHi>Deficientes Auditivos</RemoveTextForHi>
     <MergeLinesShorterThan>Remover quebra em linha menor que...</MergeLinesShorterThan>
     <MusicSymbol>Símbolo musical</MusicSymbol>
@@ -1874,7 +1891,8 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <Alt>Alt</Alt>
     <Shift>Shift</Shift>
     <Key>Tecla</Key>
-    <ListView>Visualização de lista</ListView>
+    <ListViewAndTextBox>Exibição de lista e caixa de texto</ListViewAndTextBox>
+	<ListView>Exibição de lista</ListView>
     <TextBox>Caixa de texto</TextBox>
     <UpdateShortcut>Actualizar</UpdateShortcut>
     <ToggleDockUndockOfVideoControls>Alternar acoplar/desacoplar controlos de vídeo</ToggleDockUndockOfVideoControls>
@@ -1908,6 +1926,15 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <ToggleDialogDashes>Alternar hífens de diálogo</ToggleDialogDashes>
     <ToggleMusicSymbols>Alternar símbolos de música</ToggleMusicSymbols>
     <Alignment>Alinhamento (linhas seleccionadas)</Alignment>
+	<AlignmentN1>Alinhamento inferior esquerdo - {\an1}</AlignmentN1>
+	<AlignmentN2>Alinhamento inferior central - {\an2}</AlignmentN2>
+	<AlignmentN3>Alinhamento inferior direito - {\an3}</AlignmentN3>
+	<AlignmentN4>Alinhamento central esquerdo - {\an4}</AlignmentN4>
+	<AlignmentN5>Alinhamento central - {\an5}</AlignmentN5>
+	<AlignmentN6>Alinhamento central direito - {\an6}</AlignmentN6>
+	<AlignmentN7>Alinhamento superior esquerdo - {\an7}</AlignmentN7>
+	<AlignmentN8>Alinhamento superior central - {\an8}</AlignmentN8>
+	<AlignmentN9>Alinhamento superior direito - {\an9}</AlignmentN9>
     <CopyTextOnly>Copiar só o texto para a área de transferência (linhas seleccionadas)</CopyTextOnly>
     <CopyTextOnlyFromOriginalToCurrent>Copiar o texto do original para a actual</CopyTextOnlyFromOriginalToCurrent>
     <AutoDurationSelectedLines>Auto-duração (linhas seleccionadas)</AutoDurationSelectedLines>
@@ -1989,15 +2016,14 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <MainTextBoxSelectionToLower>Selecção para minúsculas</MainTextBoxSelectionToLower>
     <MainTextBoxSelectionToUpper>Selecção para maiúsculas</MainTextBoxSelectionToUpper>
     <MainTextBoxToggleAutoDuration>Alternar duração automática</MainTextBoxToggleAutoDuration>
-    <MainTextBoxAutoBreak>Quebra de texto automática</MainTextBoxAutoBreak>
-    <MainTextBoxUnbreak>Remover quebra de texto</MainTextBoxUnbreak>
+    <MainTextBoxAutoBreak>Quebra de linha automática</MainTextBoxAutoBreak>
+    <MainTextBoxUnbreak>Remover quebra de linha</MainTextBoxUnbreak>
     <MainFileSaveAll>Guardar tudo</MainFileSaveAll>
     <Miscellaneous>Diversos</Miscellaneous>
     <CpsIncludesSpace>Caracteres/seg (CPS) incluindo espaços</CpsIncludesSpace>
-    <UseDoNotBreakAfterList>Utilizar "não quebrar linha depois da lista" (para o ajuste-auto)</UseDoNotBreakAfterList>
+    <UseDoNotBreakAfterList>Utilizar "não quebrar linha depois da lista"</UseDoNotBreakAfterList>
     <MicrosoftBingTranslator>Tradutor Microsoft Bing</MicrosoftBingTranslator>
     <HowToSignUp>Como efectuar o registo</HowToSignUp>
-    <GoogleTranslateUrl>Endereço do tradutor do Google</GoogleTranslateUrl>
     <MicrosoftTranslateApiKey>Chave</MicrosoftTranslateApiKey>
     <FontNote>Nota: Estas configurações do tipo de letra são apenas para a Interface da edição de legendas.
 Definir um tipo de letra para uma legenda normalmente é feito no leitor de vídeo,
@@ -2333,6 +2359,8 @@ Manter as alterações?</KeepChangesMessage>
     <DiscardTitle>Rejeitar as alterações feitas no OCR?</DiscardTitle>
     <DiscardText>Deseja rejeitar as alterações feitas na sessão corrente de OCR?</DiscardText>
     <MinLineSplitHeight>Altura mínima da linha (dividida)</MinLineSplitHeight>
+	<FallbackToX>Voltar para {0}</FallbackToX>
+	<ImagePreProcessing>Pré-processamento de imagem...</ImagePreProcessing>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub - Imagem para texto manualmente</Title>
