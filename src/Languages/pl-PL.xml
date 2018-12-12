@@ -5,8 +5,7 @@
     <Version>3.5.7</Version>
     <TranslatedBy>Tłumaczenie Adam Malich (https://potplayerclub.pl)</TranslatedBy>
     <CultureName>pl-PL</CultureName>
-    <HelpFile>
-    </HelpFile>
+    <HelpFile></HelpFile>
     <Ok>&amp;OK</Ok>
     <Cancel>&amp;Anuluj</Cancel>
     <Apply>Zastosuj</Apply>
@@ -94,15 +93,15 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   </About>
   <AddToNames>
     <Title>Dodaj do listy nazw własnych</Title>
-    <Description>Dodaj do listy nazw własnych (z uwzględnieniem wielkości liter)</Description>
+    <Description>Dodaj do listy nazw własnych/nazwisk (uwzględniając wielkość liter)</Description>
   </AddToNames>
   <AddToOcrReplaceList>
     <Title>Dodaj do listy zamienników OCR</Title>
-    <Description>Dodaj pary do listy zamienników OCR (z uwzględnieniem wielkości liter)</Description>
+    <Description>Dodaj pary do listy zamienników OCR (uwzględniając wielkość liter)</Description>
   </AddToOcrReplaceList>
   <AddToUserDictionary>
     <Title>Dodaj do słownika użytkownika</Title>
-    <Description>Dodaj słowo do słownika użytkownika (bez uwzględniania wielkości liter)</Description>
+    <Description>Dodaj słowo do słownika użytkownika (nie uwzględniając wielkości liter)</Description>
   </AddToUserDictionary>
   <AddWaveform>
     <Title>Generuj dane wykresu falowego</Title>
@@ -117,7 +116,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ExtractingSeconds>Wyodrębnione audio: {0:0.0} sek.</ExtractingSeconds>
     <ExtractingMinutes>Wyodrębnione audio: {0:0.0} min.</ExtractingMinutes>
     <WaveFileNotFound>Nie można znaleźć wyodrębnionego pliku wave!
-Ta funkcja wymaga VLC media player 1.1.x lub nowszego ({0}-bit). Wiersz poleceń: {1} {2}</WaveFileNotFound>
+Ta funkcja wymaga VLC media player 1.1.x lub nowszego ({0}-bit).
+
+ Wiersz polecenia: {1} {2}</WaveFileNotFound>
     <WaveFileMalformed>{0} nie był w stanie wyodrębnić danych audio do pliku wave!
 
 Wiersz polecenia: {1} {2}
@@ -186,6 +187,10 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
     <NotConverted>Nie powiodło się</NotConverted>
     <Converted>Przekonwertowano</Converted>
     <Settings>Ustawienia</Settings>
+    <FixRtl>Naprawa RTL</FixRtl>
+    <FixRtlAddUnicode>Napraw RTL za pomocą tagów Unicode</FixRtlAddUnicode>
+    <FixRtlRemoveUnicode>Usuń tagi unicode RTL</FixRtlRemoveUnicode>
+    <FixRtlReverseStartEnd>Odwróć początek/koniec RTL</FixRtlReverseStartEnd>
     <SplitLongLines>Podziel długie linie</SplitLongLines>
     <AutoBalance>Automatycznie zrównoważ linie</AutoBalance>
     <ScanFolder>Skanuj folder...</ScanFolder>
@@ -552,6 +557,7 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
     <RemovedEmptyLine>Usuń puste linie</RemovedEmptyLine>
     <RemovedEmptyLineAtTop>Usuń puste linie na początku napisów</RemovedEmptyLineAtTop>
     <RemovedEmptyLineAtBottom>Usuń puste linie na końcu napisów</RemovedEmptyLineAtBottom>
+    <RemovedEmptyLineInMiddle>Usuń pustą linię ze środka</RemovedEmptyLineInMiddle>
     <RemovedEmptyLinesUnsedLineBreaks>Usuń puste linie/nieużywane podziały linii</RemovedEmptyLinesUnsedLineBreaks>
     <EmptyLinesRemovedX>Usunięto pustych linii: {0}</EmptyLinesRemovedX>
     <FixOverlappingDisplayTimes>Popraw częściowo nakładające się czasy wyświetlania</FixOverlappingDisplayTimes>
@@ -685,6 +691,13 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
     <PleaseWait>Proszę czekać... może to chwilę potrwać</PleaseWait>
     <PoweredByGoogleTranslate>Wspierane przez: Tłumacz Google</PoweredByGoogleTranslate>
     <PoweredByMicrosoftTranslate>Wspierane przez: Tłumacz Microsoft</PoweredByMicrosoftTranslate>
+    <MsClientSecretNeeded>Przepraszamy, do korzystania z najnowszego tłumaczenia Bing potrzebujesz sekretnego klienta Bing firmy Microsoft.
+
+Przejdź do "Opcje -&gt; Ustawienia -&gt; Narzędzia", aby wpisać swój sekretny klucz klienta Bing.</MsClientSecretNeeded>
+    <GoogleApiKeyNeeded>Przepraszamy, do korzystania z najnowszego tłumaczenia Google potrzebny jest klucz API firmy Google.
+
+Przejdź do "Opcje -&gt; Ustawienia -&gt; Narzędzia", aby wpisać swój klucz API tłumaczenia Google.</GoogleApiKeyNeeded>
+    <GoogleNoApiKeyWarning>Spróbuję przetłumaczyć bez klucza API... (powolne i z ograniczonymi danymi)</GoogleNoApiKeyWarning>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
     <Title>Tłumacz Google vs Tłumacz Microsoft</Title>
@@ -731,6 +744,7 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
     <Splitting>Dzielenie</Splitting>
     <AutoSplitText>Automatycznie dziel tekst</AutoSplitText>
     <OneLineIsOneSubtitle>Jedna linia - jeden napis</OneLineIsOneSubtitle>
+    <TwoLinesAreOneSubtitle>Dwie linie to jeden napis</TwoLinesAreOneSubtitle>
     <LineBreak>Linia podziału</LineBreak>
     <SplitAtBlankLines>Podziel na pustych liniach</SplitAtBlankLines>
     <MergeShortLines>Połącz krótkie linie z kontynuacją</MergeShortLines>
@@ -744,6 +758,7 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
     <TextFiles>Pliki tekstowe</TextFiles>
     <PreviewLinesModifiedX>Podgląd - zmodyfikowanych wierszy: {0}</PreviewLinesModifiedX>
     <TimeCodes>Kody czasowe</TimeCodes>
+    <SplitAtEndChars>Podziel na znakach końcowych</SplitAtEndChars>
   </ImportText>
   <Interjections>
     <Title>Przerywniki</Title>
@@ -917,6 +932,7 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
         <AdvancedSubStationAlphaProperties>Właściwości Advanced Sub Station Alpha...</AdvancedSubStationAlphaProperties>
         <SubStationAlphaProperties>Właściwości Sub Station Alpha...</SubStationAlphaProperties>
         <EbuProperties>Właściwości EBU STL...</EbuProperties>
+        <DvdStuioProProperties>Właściwości DVD Studio Pro...</DvdStuioProProperties>
         <PacProperties>Właściwości PAC...</PacProperties>
         <OpenOriginal>Otwórz oryginalne napisy (tryb tłumacza)...</OpenOriginal>
         <SaveOriginal>Zapisz oryginalne napisy</SaveOriginal>
@@ -1134,6 +1150,7 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
         <MergeWithLineAfter>Połącz z linią po</MergeWithLineAfter>
         <Normal>Normalny (usunięcie formatowania)</Normal>
         <Underline>Podkreślenie</Underline>
+        <Box>Box</Box>
         <Color>Kolor...</Color>
         <FontName>Czcionka...</FontName>
         <Alignment>Wyrównanie...</Alignment>
@@ -1736,7 +1753,7 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <DurationMinimumMilliseconds>Minimalny czas trwania, w ms</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>Maksymalny czas trwania, w ms</DurationMaximumMilliseconds>
     <MinimumGapMilliseconds>Min. odstęp między napisami, w ms</MinimumGapMilliseconds>
-    <MaximumLines>Maksymalna liczba linii</MaximumLines>
+    <MaximumLines>Maksymalna liczba znaków w linii</MaximumLines>
     <SubtitleFont>Czcionka napisów</SubtitleFont>
     <SubtitleFontSize>Rozmiar czcionki napisów</SubtitleFontSize>
     <SubtitleBold>Pogrubienie</SubtitleBold>
@@ -1874,6 +1891,7 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <Alt>Alt</Alt>
     <Shift>Shift</Shift>
     <Key>Klawisz</Key>
+    <ListViewAndTextBox>Widok listy i pole tekstowe</ListViewAndTextBox>
     <ListView>Widok listy</ListView>
     <TextBox>Pole tekstowe</TextBox>
     <UpdateShortcut>Aktualizuj</UpdateShortcut>
@@ -1908,6 +1926,15 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <ToggleDialogDashes>Przełącz myślniki dialogów</ToggleDialogDashes>
     <ToggleMusicSymbols>Przełącz symbole muzyczne</ToggleMusicSymbols>
     <Alignment>Wyrównanie (zaznaczone linie)</Alignment>
+    <AlignmentN1>Wyrównanie - u dołu po lewej - {\an1}</AlignmentN1>
+    <AlignmentN2>Wyrównanie - u dołu na środku - {\an2}</AlignmentN2>
+    <AlignmentN3>Wyrównanie - u dołu po prawej - {\an3}</AlignmentN3>
+    <AlignmentN4>Wyrównanie - środek po lewej - {\an4}</AlignmentN4>
+    <AlignmentN5>Wyrównanie - środek w centrum - {\an5}</AlignmentN5>
+    <AlignmentN6>Wyrównanie - środek po prawej - {\an6}</AlignmentN6>
+    <AlignmentN7>Wyrównanie - u góry po lewej - {\an7}</AlignmentN7>
+    <AlignmentN8>Wyrównanie - u góry na środku - {\an8}</AlignmentN8>
+    <AlignmentN9>Wyrównanie - u góry po prawej - {\an9}</AlignmentN9>
     <CopyTextOnly>Kopiuj tylko tekst do schowka (zaznaczone linie)</CopyTextOnly>
     <CopyTextOnlyFromOriginalToCurrent>Kopiuj tekst z oryginału do aktualnego</CopyTextOnlyFromOriginalToCurrent>
     <AutoDurationSelectedLines>Automatyczny czas trwania (zaznaczone linie)</AutoDurationSelectedLines>
@@ -1994,11 +2021,10 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <MainFileSaveAll>Zapisz wszystko</MainFileSaveAll>
     <Miscellaneous>Inne</Miscellaneous>
     <CpsIncludesSpace>Znaków/sekundę (ZNS) włączając spacje</CpsIncludesSpace>
-    <UseDoNotBreakAfterList>Użyj listy wykluczeń (dla automatycznego łamania linii)</UseDoNotBreakAfterList>
+    <UseDoNotBreakAfterList>Użyj listy wykluczeń (do auto łamania linii)</UseDoNotBreakAfterList>
     <MicrosoftBingTranslator>Tłumacz Microsoft Bing</MicrosoftBingTranslator>
     <HowToSignUp>Jak się zarejestrować</HowToSignUp>
-    <GoogleTranslateUrl>Tłumacz Google URL</GoogleTranslateUrl>
-    <MicrosoftTranslateApiKey>Klucz</MicrosoftTranslateApiKey>
+    <MicrosoftTranslateApiKey>Klucz API</MicrosoftTranslateApiKey>
     <FontNote>Uwaga: Te ustawienia czcionek dotyczą tylko interfejsu użytkownika Subtitle Edit.
 Ustawienie czcionki napisów zwykle wykonywane jest w odtwarzaczu wideo, ale można to również zrobić w przypadku używania formatu napisów 
 z wbudowanymi informacjami o czcionkach, takimi jak "Advanced Sub Station Alpha" lub poprzez eksport do formatów opartych na obrazie.</FontNote>
@@ -2332,6 +2358,8 @@ Utrzymać te zmiany?</KeepChangesMessage>
     <DiscardTitle>Odrzucić zmiany wprowadzone w OCR?</DiscardTitle>
     <DiscardText>Chcesz odrzucić zmiany wprowadzone w bieżącej sesji OCR?</DiscardText>
     <MinLineSplitHeight>Min. wysokość linii (podział)</MinLineSplitHeight>
+    <FallbackToX>Powrót do {0}</FallbackToX>
+    <ImagePreProcessing>Wstępne przetwarzanie obrazu...</ImagePreProcessing>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub - Ręcznie obrazy do tekstu</Title>
