@@ -149,7 +149,27 @@ namespace Nikse.SubtitleEdit.Forms
                 int length = rtb.Text.Length;
                 richTextBoxPreview.Text += text;
 
-                _colorList.Add(new EffectKaraoke.ColorEntry { Start = length, Length = text.Length, Color = string.IsNullOrWhiteSpace(color) ? Color.White : ColorTranslator.FromHtml(color) });
+                var c = Color.White;
+                if (!string.IsNullOrWhiteSpace(color))
+                {
+                    try
+                    {
+                        c = ColorTranslator.FromHtml(color);
+                    }
+                    catch
+                    {                        
+                        try
+                        {
+                            c = ColorTranslator.FromHtml("#" + color.Trim('#', ' ', '"', '\''));
+                        }
+                        catch
+                        {
+                            c = Color.White;
+                        }
+                    }
+                }
+
+                _colorList.Add(new EffectKaraoke.ColorEntry { Start = length, Length = text.Length, Color = c });
 
                 var fontStyle = new FontStyle();
                 if (underline)
