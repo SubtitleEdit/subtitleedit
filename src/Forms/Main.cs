@@ -7536,13 +7536,30 @@ namespace Nikse.SubtitleEdit.Forms
                 MakeHistoryForUndo(historyText);
                 DeleteSelectedLines();
 
-                if (_subtitle.Paragraphs.Count == 0)
-                {
-                    textBoxListViewText.Enabled = false;
-                }
+                ResetTextInfoIfEmpty();
 
                 ShowStatus(statusText);
                 ShowSource();
+            }
+        }
+
+        private void ResetTextInfoIfEmpty()
+        {
+            if (_subtitle.Paragraphs.Count == 0)
+            {
+                labelStartTimeWarning.Text = string.Empty;
+                labelDurationWarning.Text = string.Empty;
+                _subtitleListViewIndex = -1;
+                textBoxListViewText.Text = string.Empty;
+                textBoxListViewTextAlternate.Text = string.Empty;
+                textBoxListViewText.Enabled = false;
+                labelTextLineLengths.Text = string.Empty;
+                labelCharactersPerSecond.Text = string.Empty;
+                labelTextLineTotal.Text = string.Empty;
+                textBoxListViewText.Enabled = false;
+                labelSingleLine.Text = string.Empty;
+                timeUpDownStartTime.TimeCode = new TimeCode();
+                numericUpDownDuration.Value = 0;
             }
         }
 
@@ -7604,6 +7621,7 @@ namespace Nikse.SubtitleEdit.Forms
                     SubtitleListview1.SelectIndexAndEnsureVisible(SubtitleListview1.Items.Count - 1, true);
                 }
             }
+            ResetTextInfoIfEmpty();
         }
 
         private void ToolStripMenuItemInsertBeforeClick(object sender, EventArgs e)
