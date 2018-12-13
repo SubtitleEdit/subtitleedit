@@ -1,11 +1,11 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Language Name="Русский">
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.5.7</Version>
     <TranslatedBy>Перевод на русский: Leserg (mailto:leserg@ua.fm)
-Последующие правки и дополнения перевода: Elheym (http://forum.hqclub.net/)
-(https://teamhd.org/)</TranslatedBy>
+Последующие правки и дополнения перевода: Elheym (https://teamhd.org/)
+ (http://forum.hqclub.net/)</TranslatedBy>
     <CultureName>ru-RU</CultureName>
     <HelpFile>https://www.nikse.dk/Content/SubtitleEdit/Help/RU/</HelpFile>
     <Ok>OK</Ok>
@@ -193,6 +193,10 @@ https://github.com/SubtitleEdit/subtitleedit
     <NotConverted>Прервано</NotConverted>
     <Converted>Преобразовано</Converted>
     <Settings>Настройки</Settings>
+    <FixRtl>Исправить RTL</FixRtl>
+    <FixRtlAddUnicode>Исправить RTL с помощью Unicode тэгов</FixRtlAddUnicode>
+    <FixRtlRemoveUnicode>Удалить RTL unicode тэги</FixRtlRemoveUnicode>
+    <FixRtlReverseStartEnd>Обратить RTL начало/конец</FixRtlReverseStartEnd>
     <SplitLongLines>Разделение длинных строк</SplitLongLines>
     <AutoBalance>Автовыравнивание строк</AutoBalance>
     <ScanFolder>Сканировать...</ScanFolder>
@@ -560,6 +564,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <RemovedEmptyLine>Удалена пустая строка</RemovedEmptyLine>
     <RemovedEmptyLineAtTop>Удалена пустая строка сверху</RemovedEmptyLineAtTop>
     <RemovedEmptyLineAtBottom>Удалена пустая строка снизу</RemovedEmptyLineAtBottom>
+    <RemovedEmptyLineInMiddle>Удалена пустая строка по центру</RemovedEmptyLineInMiddle>
     <RemovedEmptyLinesUnsedLineBreaks>Удалить пустые строки/неиспользуемые разрывы строк</RemovedEmptyLinesUnsedLineBreaks>
     <EmptyLinesRemovedX>Удалено пустых строк: {0}</EmptyLinesRemovedX>
     <FixOverlappingDisplayTimes>Исправить временные наложения субтитров</FixOverlappingDisplayTimes>
@@ -693,6 +698,13 @@ https://github.com/SubtitleEdit/subtitleedit
     <PleaseWait>Пожалуйста, подождите...</PleaseWait>
     <PoweredByGoogleTranslate>Переводчик Google</PoweredByGoogleTranslate>
     <PoweredByMicrosoftTranslate>Переводчик Microsoft</PoweredByMicrosoftTranslate>
+    <MsClientSecretNeeded>Извините, вам нужен секретный ключ клиента Bing от Microsoft, чтобы использовать последнюю версию Bing Translate.
+
+Перейдите в «Параметры -&gt; Настройки -&gt; Инструменты», чтобы ввести свой секретный ключ клиенту Bing.</MsClientSecretNeeded>
+    <GoogleApiKeyNeeded>Извините, вам нужен ключ API от Google, чтобы использовать последний переводчик Google.
+
+Перейдите в «Параметры -&gt; Настройки -&gt; Инструменты», чтобы ввести свой ключ API Google translate.</GoogleApiKeyNeeded>
+    <GoogleNoApiKeyWarning>Попытка перевести без ключа API... (медленно и с ограничением данных)</GoogleNoApiKeyWarning>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
     <Title>Сравнительный перевод в Google и Microsoft</Title>
@@ -742,6 +754,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <Splitting>Разделение</Splitting>
     <AutoSplitText>Авторазделение текста</AutoSplitText>
     <OneLineIsOneSubtitle>Одна строка - один субтитр</OneLineIsOneSubtitle>
+    <TwoLinesAreOneSubtitle>Две строки - один субтитр</TwoLinesAreOneSubtitle>
     <LineBreak>Разрыв строки</LineBreak>
     <SplitAtBlankLines>Разделить на пустых строках</SplitAtBlankLines>
     <MergeShortLines>Объединить короткие строки с продолжением</MergeShortLines>
@@ -755,6 +768,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <TextFiles>Текстовые файлы</TextFiles>
     <PreviewLinesModifiedX>Предосмотр - изменено субтитров: {0}</PreviewLinesModifiedX>
     <TimeCodes>Временные коды</TimeCodes>
+    <SplitAtEndChars>Разделять на конечных символах</SplitAtEndChars>
   </ImportText>
   <Interjections>
     <Title>Междометия</Title>
@@ -928,6 +942,7 @@ https://github.com/SubtitleEdit/subtitleedit
         <AdvancedSubStationAlphaProperties>Дополнительные свойства Sub Station Alpha...</AdvancedSubStationAlphaProperties>
         <SubStationAlphaProperties>Свойства Sub Station Alpha...</SubStationAlphaProperties>
         <EbuProperties>EBU STL свойства...</EbuProperties>
+        <DvdStuioProProperties>Свойства DVD Studio Pro...</DvdStuioProProperties>
         <PacProperties>PAC свойства...</PacProperties>
         <OpenOriginal>Открыть исходные субтитры (режим перевода)...</OpenOriginal>
         <SaveOriginal>Сохранить исходные субтитры</SaveOriginal>
@@ -1145,6 +1160,7 @@ https://github.com/SubtitleEdit/subtitleedit
         <MergeWithLineAfter>Объединить со следующей строкой</MergeWithLineAfter>
         <Normal>Обычный</Normal>
         <Underline>Подчеркнутый</Underline>
+        <Box>Обводка</Box>
         <Color>Цвет шрифта...</Color>
         <FontName>Выбрать шрифт...</FontName>
         <Alignment>Выравнивание...</Alignment>
@@ -1891,6 +1907,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <Alt>Alt</Alt>
     <Shift>Shift</Shift>
     <Key>+ Клавиша:</Key>
+    <ListViewAndTextBox>Список просмотра и текстовое поле</ListViewAndTextBox>
     <ListView>Список просмотра</ListView>
     <TextBox>Текстовое поле</TextBox>
     <UpdateShortcut>Обновить</UpdateShortcut>
@@ -1924,7 +1941,16 @@ https://github.com/SubtitleEdit/subtitleedit
     <ToggleFocus>Переключить фокус между списком и полем ввода субтитра</ToggleFocus>
     <ToggleDialogDashes>Вкл./Откл. тире диалогов</ToggleDialogDashes>
     <ToggleMusicSymbols>Вкл./Откл. музыкальных символов</ToggleMusicSymbols>
-    <Alignment>Выравнивание (выделенные строки)</Alignment>
+    <Alignment>Выравнить (выделенные строки)</Alignment>
+    <AlignmentN1>Выравнить в левый низ - {\an1}</AlignmentN1>
+    <AlignmentN2>Выравнить по нижнему центру - {\an2}</AlignmentN2>
+    <AlignmentN3>Выравнить в правый низ - {\an3}</AlignmentN3>
+    <AlignmentN4>Выравнить слева по центру - {\an4}</AlignmentN4>
+    <AlignmentN5>Выравнить по центру - {\an5}</AlignmentN5>
+    <AlignmentN6>Выравнить справа по центру - {\an6}</AlignmentN6>
+    <AlignmentN7>Выравнить по левому верху - {\an7}</AlignmentN7>
+    <AlignmentN8>Выравнить по верхнему центру - {\an8}</AlignmentN8>
+    <AlignmentN9>Выравнить по правому верху - {\an9}</AlignmentN9>
     <CopyTextOnly>Копировать в буфер только текст (выделенные строки)</CopyTextOnly>
     <CopyTextOnlyFromOriginalToCurrent>Копировать исходный текст в текущий</CopyTextOnlyFromOriginalToCurrent>
     <AutoDurationSelectedLines>Автопродолжительность (выделенные строки)</AutoDurationSelectedLines>
@@ -2015,7 +2041,6 @@ https://github.com/SubtitleEdit/subtitleedit
     <UseDoNotBreakAfterList>Применить список исключений (для автопереноса)</UseDoNotBreakAfterList>
     <MicrosoftBingTranslator>Переводчик Microsoft Bing</MicrosoftBingTranslator>
     <HowToSignUp>Как зарегистрироваться</HowToSignUp>
-    <GoogleTranslateUrl>Источник для "Google translate"</GoogleTranslateUrl>
     <MicrosoftTranslateApiKey>Ключ</MicrosoftTranslateApiKey>
     <FontNote>Примечание: эти настройки шрифта предназначены только для Интерфейса Пользователя Subtitle Edit.
 Настройка шрифта для субтитров обычно выполняется в видеоплеере, но также может быть выполнена при использовании формата субтитров
@@ -2352,6 +2377,8 @@ https://github.com/SubtitleEdit/subtitleedit
     <DiscardTitle>Отмена изменений произведенных в OCR?</DiscardTitle>
     <DiscardText>Хотите отменить изменения, полученные в текущей сессии OCR?</DiscardText>
     <MinLineSplitHeight>Мин. высота линии (разделителя)</MinLineSplitHeight>
+    <FallbackToX>Откатить к {0}</FallbackToX>
+    <ImagePreProcessing>Предварительная обработка изображения(-й)...</ImagePreProcessing>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub - Ручной перевод изображения в текст</Title>
