@@ -1229,6 +1229,7 @@
 		<RegEx find="c([ae])sc" replaceWith="č$1šć" />
 		<RegEx find="cek" replaceWith="ček" />
 		<RegEx find="Ček" replaceWith="Ček" />
+		<RegEx find="ce[sš]c" replaceWith="češć" />
 		<RegEx find="[cC]etvrt" replaceWith="četvrt" />
 		<RegEx find="cetv" replaceWith="četv" />
 		<RegEx find="Cetv" replaceWith="Četv" />
@@ -1723,6 +1724,7 @@
 		<RegEx find="gusi" replaceWith="guši" />
 		<RegEx find="(?&lt;!\b[oO]zlo|\b[iI]sp(rip)?ov|i)jedjen" replaceWith="ijeđen" />
 		<RegEx find="hic(k|en)" replaceWith="hić$1" />
+		<RegEx find="hodj" replaceWith="hođ" />
 		<RegEx find="hva[cč]a" replaceWith="hvaća" />
 		<RegEx find="hva[cč]as" replaceWith="hvaćaš" />
 		<RegEx find="hva([lt])is" replaceWith="hva$1iš" />
