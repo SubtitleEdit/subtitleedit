@@ -523,7 +523,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (Configuration.Settings.Tools.SpellCheckOneLetterWords)
                     minLength = 1;
 
-                if (_currentWord.Trim().Length >= minLength)
+                if (_currentWord.RemoveControlCharacters().Trim().Length >= minLength)
                 {
                     _prefix = string.Empty;
                     _postfix = string.Empty;
@@ -552,7 +552,11 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                     }
                     string key = _currentIndex + "-" + _wordsIndex + "-" + _currentWord;
-                    if (_spellCheckWordLists.HasName(_currentWord))
+                    if (_currentWord.Length < minLength)
+                    {
+                        // ignore short/empty words
+                    }
+                    else if (_spellCheckWordLists.HasName(_currentWord))
                     {
                         _noOfNames++;
                     }

@@ -12,7 +12,7 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
     public class SpellCheckWordLists
     {
 
-        public static readonly string SplitChars = " -.,?!:;\"“”()[]{}|<>/+\r\n¿¡…—–♪♫„«»‹›؛،؟";
+        public static readonly string SplitChars = " -.,?!:;\"“”()[]{}|<>/+\r\n¿¡…—–♪♫„«»‹›؛،؟\u200E\u200F\u202A\u202B\u202D\u202E\u200B\uFEFF";
 
         private static readonly char[] PeriodAndDash = { '.', '-' };
         private static readonly char[] SplitChars2 = { ' ', '.', ',', '?', '!', ':', ';', '"', '“', '”', '(', ')', '[', ']', '{', '}', '|', '<', '>', '/', '+', '\r', '\n', '¿', '¡', '…', '—', '–', '♪', '♫', '„', '«', '»', '‹', '›', '؛', '،', '؟' };
@@ -143,11 +143,11 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
                 int start = s.IndexOf(name, StringComparison.Ordinal);
                 while (start >= 0)
                 {
-                    bool startOk = start == 0 || SplitChars.Contains(s[start - 1]);
+                    bool startOk = start == 0 || SplitChars.Contains(s[start - 1]) || char.IsControl(s[start - 1]);
                     if (startOk)
                     {
                         int end = start + name.Length;
-                        bool endOk = end >= s.Length || SplitChars.Contains(s[end]);
+                        bool endOk = end >= s.Length || SplitChars.Contains(s[end]) || char.IsControl(s[end]);
                         if (endOk)
                             s = s.Remove(start, name.Length).Insert(start, string.Empty.PadLeft(name.Length));
                     }
@@ -338,7 +338,7 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
             var sb = new StringBuilder();
             for (int i = 0; i < s.Length; i++)
             {
-                if (SplitChars.Contains(s[i]))
+                if (SplitChars.Contains(s[i]) || char.IsControl(s[i]))
                 {
                     if (sb.Length > 0)
                         list.Add(new SpellCheckWord { Text = sb.ToString(), Index = i - sb.Length });
