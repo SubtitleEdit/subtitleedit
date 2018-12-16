@@ -535,11 +535,11 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                         Application.DoEvents();
                         Application.DoEvents();
 
-                        if (_mpvHandle != IntPtr.Zero)
-                        {
-                            _mpvTerminateDestroy(_mpvHandle);
-                            _mpvHandle = IntPtr.Zero;
-                        }
+                        //if (_mpvHandle != IntPtr.Zero)
+                        //{
+                        //    _mpvTerminateDestroy(_mpvHandle);
+                        //    _mpvHandle = IntPtr.Zero;
+                        //}
                     }
                 }
             }
