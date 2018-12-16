@@ -29,7 +29,7 @@ namespace Nikse.SubtitleEdit.Core
         public List<string> ImportAutoSplit(IEnumerable<string> textLines)
         {
             var sb = new StringBuilder();
-            foreach (string line in textLines)
+            foreach (var line in textLines)
             {
                 var s = line.Replace("\0", string.Empty);
                 if (string.IsNullOrWhiteSpace(s) && _splitAtBlankLines)
@@ -72,7 +72,7 @@ namespace Nikse.SubtitleEdit.Core
                 }
                 else if (ch == ' ')
                 {
-                    if (untilLastSpace.Length + fromLastSpace.Length > maxLength)
+                    if (untilLastSpace.Length + fromLastSpace.Length > maxLength && !NextWordInDoNotBreakList(text, index))
                     {
                         var nextWord = AutoSplitAddLine(oneLineOnly, list, untilLastSpace.ToString(), text, index, hardSplitIndices);
                         untilLastSpace.Clear();
@@ -86,7 +86,8 @@ namespace Nikse.SubtitleEdit.Core
 
                     fromLastSpace.Clear();
                 }
-                else if (_endChars.Contains(ch) && index < text.Length - 2 && text[index + 1] == ' ')
+                else if (_endChars.Contains(ch) && index < text.Length - 2 && text[index + 1] == ' ' &&
+                          !CurrentWordInDoNotBreakList(text, index + 1))
                 {
                     fromLastSpace.Append(ch);
 
@@ -113,6 +114,64 @@ namespace Nikse.SubtitleEdit.Core
             return list;
         }
 
+        private bool CurrentWordInDoNotBreakList(string text, int index)
+        {
+            var s2 = " " + text.Substring(0, index).TrimEnd();
+            if (Configuration.Settings.Tools.UseNoLineBreakAfter)
+            {
+                foreach (NoBreakAfterItem ending in Utilities.NoBreakAfterList(_language))
+                {
+                    if (ending.IsMatch(s2))
+                        return true;
+                }
+            }
+            else
+            {
+                if (s2.EndsWith(" mr.", StringComparison.OrdinalIgnoreCase) ||
+                    s2.EndsWith(" dr.", StringComparison.OrdinalIgnoreCase))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private bool NextWordInDoNotBreakList(string text, int index)
+        {
+            for (var i = index + 1; i < text.Length || i > 50; i++)
+            {
+                var ch = text[index];
+                if (ch == '\0')
+                {
+                    return false;
+                }
+
+                if (ch == ' ')
+                {
+                    var s2 = text.Substring(0, i).TrimEnd();
+                    var x = CurrentWordInDoNotBreakList(s2, s2.Length - 1);
+                    if (Configuration.Settings.Tools.UseNoLineBreakAfter)
+                    {
+                        foreach (NoBreakAfterItem ending in Utilities.NoBreakAfterList(_language))
+                        {
+                            if (ending.IsMatch(s2))
+                                return true;
+                        }
+                    }
+                    else
+                    {
+                        if (s2.EndsWith(" mr.", StringComparison.OrdinalIgnoreCase) ||
+                            s2.EndsWith(" dr.", StringComparison.OrdinalIgnoreCase))
+                        {
+                            return true;
+                        }
+                    }
+                    return false;
+                }
+            }
+            return false;
+        }
+
         private string AutoSplitAddLine(bool oneLineOnly, List<string> list, string text, string allText, int allIndex, List<int> hardSplitIndices)
         {
             if (string.IsNullOrWhiteSpace(text))
@@ -132,7 +191,7 @@ namespace Nikse.SubtitleEdit.Core
             }
 
             var line = Utilities.AutoBreakLine(text.Trim(), _singleLineMaxLength, Configuration.Settings.Tools.MergeLinesShorterThan, _language);
-            if (ExceedsMax(line))
+            if (ExceedsMax(line) || CurrentWordInDoNotBreakList(line, line.Length))
             {
                 var lastWords = string.Empty;
                 for (int i = 0; i < 3; i++)
@@ -159,7 +218,7 @@ namespace Nikse.SubtitleEdit.Core
             {
                 if (list.Count > 0 &&
                     line.Length < _singleLineMaxLength / 2.5 &&
-                    !hardSplitIndices.Contains(list.Count-1) &&
+                    !hardSplitIndices.Contains(list.Count - 1) &&
                     CanLastWordBeMovedToNext(list[list.Count - 1], allText, allIndex))
                 {
                     var three = SplitToThree(Utilities.UnbreakLine(list[list.Count - 1] + " " + line));
@@ -189,7 +248,8 @@ namespace Nikse.SubtitleEdit.Core
 
         private bool CanLastWordBeMovedToNext(string line, string allText, int allIndex)
         {
-            if (allIndex == allText.Length || _endChars.Contains(line[line.Length - 1]))
+            if (allIndex == allText.Length || 
+                _endChars.Contains(line[line.Length - 1]) && !CurrentWordInDoNotBreakList(line, line.Length))
                 return false;
             return true;
         }
@@ -271,7 +331,20 @@ namespace Nikse.SubtitleEdit.Core
             }
 
             var avg = text.Length / 3.0;
-            var best = results.Where(p => p.Lines.Count == 3).OrderBy(p => p.DiffFromAverage(avg)).FirstOrDefault();
+            var best = results
+                .Where(p => p.Lines.Count == 3 &&
+                            !CurrentWordInDoNotBreakList(p.Lines[0], p.Lines[0].Length) &&
+                            !CurrentWordInDoNotBreakList(p.Lines[1], p.Lines[1].Length) &&
+                            !CurrentWordInDoNotBreakList(p.Lines[2], p.Lines[2].Length))
+                .OrderBy(p => p.DiffFromAverage(avg))
+                .FirstOrDefault();
+            if (best == null)
+            {
+                best = results.Where(p => p.Lines.Count == 3)
+                    .OrderBy(p => p.DiffFromAverage(avg))
+                    .FirstOrDefault();
+            }
+
             if (best == null)
                 return new List<string> { text };
             return best.Lines;
