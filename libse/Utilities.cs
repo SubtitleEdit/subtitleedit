@@ -194,7 +194,7 @@ namespace Nikse.SubtitleEdit.Core
 
         private static string _lastNoBreakAfterListLanguage;
         private static List<NoBreakAfterItem> _lastNoBreakAfterList = new List<NoBreakAfterItem>();
-        private static IEnumerable<NoBreakAfterItem> NoBreakAfterList(string languageName)
+        internal static IEnumerable<NoBreakAfterItem> NoBreakAfterList(string languageName)
         {
             if (string.IsNullOrEmpty(languageName))
                 return new List<NoBreakAfterItem>();
@@ -564,7 +564,7 @@ namespace Nikse.SubtitleEdit.Core
                 var firstLine = s.Substring(0, splitPos);
                 var firstSplit = firstLine + Environment.NewLine + s.Substring(splitPos);
                 var lastSpaceIndex = firstLine.LastIndexOf(' ');
-                if (lastSpaceIndex > 10)
+                if (lastSpaceIndex > 10 && !firstLine.EndsWith(".") && !firstLine.EndsWith("?") && !firstLine.EndsWith("!"))
                 {
                     var secondFirstLine = s.Substring(0, lastSpaceIndex);
                     var secondSplit = secondFirstLine + Environment.NewLine + s.Substring(lastSpaceIndex + 1);
@@ -648,10 +648,15 @@ namespace Nikse.SubtitleEdit.Core
                         six++;
                     }
                 }
-                if (htmlTags.ContainsKey(six))
+
+                for (int i = 1; i < 5; i++)
                 {
-                    sb.Append(htmlTags[six]);
+                    if (htmlTags.ContainsKey(six + i))
+                    {
+                        sb.Append(htmlTags[six +1]);
+                    }
                 }
+
                 return sb.ToString();
             }
             return s;
