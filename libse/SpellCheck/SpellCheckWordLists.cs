@@ -12,7 +12,7 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
     public class SpellCheckWordLists
     {
 
-        public static readonly string SplitChars = " -.,?!:;\"“”()[]{}|<>/+\r\n¿¡…—–♪♫„«»‹›؛،؟\u200E\u200F\u202A\u202B\u202D\u202E\u200B\uFEFF";
+        public static readonly string SplitChars = " -.,?!:;\"“”()[]{}|<>/+\r\n¿¡…—–♪♫„«»‹›؛،؟\u200E\u200F\u202A\u202B\u202C\u202D\u202E\u200B\uFEFF";
 
         private static readonly char[] PeriodAndDash = { '.', '-' };
         private static readonly char[] SplitChars2 = { ' ', '.', ',', '?', '!', ':', ';', '"', '“', '”', '(', ')', '[', ']', '{', '}', '|', '<', '>', '/', '+', '\r', '\n', '¿', '¡', '…', '—', '–', '♪', '♫', '„', '«', '»', '‹', '›', '؛', '،', '؟' };
