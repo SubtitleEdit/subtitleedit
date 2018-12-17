@@ -7704,7 +7704,7 @@ namespace Nikse.SubtitleEdit.Forms
                 newParagraph.EndTime.TotalMilliseconds = 3000;
                 if (newParagraph.Duration.TotalMilliseconds < Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds)
                 {
-                    newParagraph.EndTime.TotalMilliseconds = newParagraph.StartTime.TotalMilliseconds + 
+                    newParagraph.EndTime.TotalMilliseconds = newParagraph.StartTime.TotalMilliseconds +
                                                              Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds;
                 }
             }
@@ -8118,6 +8118,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (_subtitle.Paragraphs.Count == 0)
                 return;
+            SubtitleListview1.SuspendLayout();
             var temp = firstSelectedIndex;
             if (SubtitleListview1.SelectedItems.Count > 0)
                 firstSelectedIndex = SubtitleListview1.SelectedItems[0].Index;
@@ -8125,6 +8126,7 @@ namespace Nikse.SubtitleEdit.Forms
             var p = _subtitle.GetParagraphOrDefault(firstSelectedIndex);
             if (p != null)
                 SubtitleListview1.SelectIndexAndEnsureVisible(firstSelectedIndex, true);
+            SubtitleListview1.ResumeLayout();
         }
 
         private void NormalToolStripMenuItemClick(object sender, EventArgs e)
@@ -9817,7 +9819,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void UpdateListSyntaxColoring()
         {
-            if (_loading || _subtitle == null ||  _subtitleListViewIndex < 0 || _subtitleListViewIndex >= _subtitle.Paragraphs.Count)
+            if (_loading || _subtitle == null || _subtitleListViewIndex < 0 || _subtitleListViewIndex >= _subtitle.Paragraphs.Count)
                 return;
 
             SubtitleListview1.SyntaxColorLine(_subtitle.Paragraphs, _subtitleListViewIndex, _subtitle.Paragraphs[_subtitleListViewIndex]);
@@ -10269,7 +10271,10 @@ namespace Nikse.SubtitleEdit.Forms
                         if (p != null)
                         {
                             string tc = p.StartTime + " --> " + p.EndTime;
-                            int start = textBoxSource.Text.IndexOf(tc, StringComparison.Ordinal);
+                            int start = textBoxSource.Text.IndexOf(p.Number + Environment.NewLine + tc, StringComparison.Ordinal);
+                            if (start < 0)
+                                start = 0;
+                            start = textBoxSource.Text.IndexOf(tc, start, StringComparison.Ordinal);
                             if (start > 0)
                             {
                                 textBoxSource.SelectionStart = start + tc.Length + Environment.NewLine.Length;
@@ -10315,29 +10320,48 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (format.GetType() == typeof(SubRip))
                     {
-                        int pos = textBoxSource.SelectionStart;
-                        if (pos + 35 < textBoxSource.TextLength)
-                            pos += 35;
-                        string s = textBoxSource.Text.Substring(0, pos);
-                        int lastTimeCode = s.LastIndexOf(" --> ", StringComparison.Ordinal); // 00:02:26,407 --> 00:02:31,356
-                        if (lastTimeCode > 14 && lastTimeCode + 16 >= s.Length)
+                        var timeCodeRegEx = new Regex(@"^-?\d+:-?\d+:-?\d+[:,]-?\d+\s*-->\s*-?\d+:-?\d+:-?\d+[:,]-?\d+$");
+                        var lineNumber = textBoxSource.GetLineFromCharIndex(textBoxSource.SelectionStart);
+                        var lines = textBoxSource.Lines.ToList();
+                        var currentLine = lines[lineNumber];
+                        var nextLine = lineNumber + 1 < lines.Count ? lines[lineNumber + 1] : string.Empty;
+                        var startLine = 0;
+                        if (Utilities.IsInteger(currentLine) && timeCodeRegEx.IsMatch(nextLine))
                         {
-                            s = s.Substring(0, lastTimeCode - 5);
-                            lastTimeCode = s.LastIndexOf(" --> ", StringComparison.Ordinal);
+                            startLine = lineNumber;
+                        }
+                        else
+                        {
+                            for (int i = lineNumber; i > 0; i--)
+                            {
+                                if (timeCodeRegEx.IsMatch(lines[i]) && Utilities.IsInteger(lines[i - 1]))
+                                {
+                                    startLine = i - 1;
+                                    break;
+                                }
+                            }
                         }
 
-                        if (lastTimeCode > 14 && lastTimeCode + 16 < s.Length)
+                        var sb = new StringBuilder();
+                        for (int i = startLine; i < lines.Count; i++)
                         {
-                            string tc = s.Substring(lastTimeCode - 13, 30).Trim();
-                            int index = 0;
+                            sb.AppendLine(lines[i]);
+                        }
+
+                        var sub = new Subtitle();
+                        new SubRip().LoadSubtitle(sub, sb.ToString().SplitToLines().ToList(), null);
+                        if (sub.Paragraphs.Count > 0)
+                        {
                             foreach (var p in _subtitle.Paragraphs)
                             {
-                                if (tc == p.StartTime + " --> " + p.EndTime)
+                                if (sub.Paragraphs[0].Number == p.Number &&
+                                    sub.Paragraphs[0].StartTime.TotalMilliseconds == p.StartTime.TotalMilliseconds &&
+                                    sub.Paragraphs[0].EndTime.TotalMilliseconds == p.EndTime.TotalMilliseconds)
                                 {
+                                    var index = _subtitle.Paragraphs.IndexOf(p);
                                     SubtitleListview1.SelectIndexAndEnsureVisible(index, true);
                                     break;
                                 }
-                                index++;
                             }
                         }
                     }
@@ -14347,7 +14371,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (first)
                     {
-                        if (_subtitle.Paragraphs[i].Text.StartsWith(tag, StringComparison.Ordinal)) 
+                        if (_subtitle.Paragraphs[i].Text.StartsWith(tag, StringComparison.Ordinal))
                         {
                             tag = string.Empty;
                         }
@@ -14395,7 +14419,7 @@ namespace Nikse.SubtitleEdit.Forms
                 else if (tb.Text.StartsWith("{\\a", StringComparison.Ordinal) && tb.Text.Length > 4 && tb.Text[4] == '}')
                 {
                     tb.Text = tb.Text.Remove(0, 5);
-                }                                
+                }
                 tb.Text = string.Format(@"{0}{1}", tag, tb.Text);
                 if (atEnd)
                 {
