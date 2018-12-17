@@ -16,6 +16,9 @@
    * Update Catalan translation - thx Juansa
    * Update Hungarian translation - thx Zityi
    * Update Chinese translation - thx tinyboxvk
+   * Update Portuguese translation - thx moob
+   * Update Brazil translation - thx Igor
+   * Updated Russian translation - thx  Elheym
    * Improve plain text import - thx uckthis/darnn/Leon
    * Make custom "Choose font" dialog - thx OmrSi
    * Update Bing translator from V2 to V3 API
@@ -26,6 +29,7 @@
    * Add "Fix RTL" to batch convert - thx OmrSi/MosDos96/ghost
    * Add support Google Cloud API key
    * Allow translate selected lines in translate mode
+   * Don't count "new line" for total chars in Statistics - thx Andy
 * FIXED:
    * Go back to Tesseract 3.02 (T4 available as in-program download)
    * Fix Bing translator sign-up url - thx sopor
@@ -59,6 +63,7 @@
    * Fix freeze in spell check change all - thx Edwin
    * Fix extra space when using "Toggle play/pause" - thx Luiz
    * Fix "Go to next error" for last line - thx Leon/OmrSi
+   * Fix crash in "Typewriter effect" - thx tharindu
 
 
 3.5.7 (9th August 2018)
