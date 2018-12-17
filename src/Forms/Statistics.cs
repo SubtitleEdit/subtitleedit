@@ -110,7 +110,7 @@ https://github.com/SubtitleEdit/subtitleedit
             {
                 allText.Append(p.Text);
 
-                int len = p.Text.Replace("\r\n", "\n") .Length;
+                int len = p.Text.Replace(Environment.NewLine, string.Empty).Length;
                 minimumLineLength = Math.Min(minimumLineLength, len);
                 maximumLineLength = Math.Max(len, maximumLineLength);
                 totalLineLength += len;
@@ -127,10 +127,10 @@ https://github.com/SubtitleEdit/subtitleedit
 
                 foreach (string line in p.Text.SplitToLines())
                 {
-                    len = line.Length;
-                    minimumSingleLineLength = Math.Min(len, minimumSingleLineLength);
-                    maximumSingleLineLength = Math.Max(len, maximumSingleLineLength);
-                    totalSingleLineLength += len;
+                    var l = line.Length;
+                    minimumSingleLineLength = Math.Min(l, minimumSingleLineLength);
+                    maximumSingleLineLength = Math.Max(l, maximumSingleLineLength);
+                    totalSingleLineLength += l;
                     totalSingleLines++;
                 }
             }
@@ -141,7 +141,7 @@ https://github.com/SubtitleEdit/subtitleedit
 
             sb.AppendLine(string.Format(_l.NumberOfLinesX, _subtitle.Paragraphs.Count));
             sb.AppendLine(string.Format(_l.LengthInFormatXinCharactersY, _format.FriendlyName, sourceLength));
-            sb.AppendLine(string.Format(_l.NumberOfCharactersInTextOnly, allText.Replace("\r\n", "\n") .Length));
+            sb.AppendLine(string.Format(_l.NumberOfCharactersInTextOnly, allText.Replace("\r\n", "\n").Length));
             sb.AppendLine(string.Format(_l.TotalDuration, new TimeCode(totalDuration).ToDisplayString()));
             sb.AppendLine(string.Format(_l.TotalCharsPerSecond, HtmlUtil.RemoveHtmlTags(allText.ToString()).Length / (totalDuration / TimeCode.BaseUnit)));
             sb.AppendLine(string.Format(_l.TotalWords, _totalWords));
