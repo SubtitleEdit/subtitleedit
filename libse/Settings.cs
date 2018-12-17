@@ -241,11 +241,10 @@ namespace Nikse.SubtitleEdit.Core
             OcrBinaryImageCompareRgbThreshold = 270;
             OcrTesseract4RgbThreshold = 200;
             Interjections = "Ah;Ahem;Ahh;Ahhh;Ahhhh;Eh;Ehh;Ehhh;Hm;Hmm;Hmmm;Huh;Mm;Mmm;Mmmm;Phew;Gah;Oh;Ohh;Ohhh;Ow;Oww;Owww;Ugh;Ughh;Uh;Uhh;Uhhh;Whew";
-            MicrosoftBingApiId = "C2C2E9A508E6748F0494D68DFD92FAA1FF9B0BA4";
             GoogleApiV2KeyInfoShow = true;
             GoogleTranslateNoKeyWarningShow = true;
             UseGooleApiPaidService = false;
-            GoogleApiV1ChunkSize = 1000;
+            GoogleApiV1ChunkSize = 1500;
             GoogleTranslateLastTargetLanguage = "en";
             TranslateAutoSplit = true;
             SpellCheckOneLetterWords = true;
