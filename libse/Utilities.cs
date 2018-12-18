@@ -198,6 +198,11 @@ namespace Nikse.SubtitleEdit.Core
             return true;
         }
 
+        public static void ResetNoBreakAfterList()
+        {
+            _lastNoBreakAfterListLanguage = null;
+        }
+
         private static string _lastNoBreakAfterListLanguage;
         private static List<NoBreakAfterItem> _lastNoBreakAfterList = new List<NoBreakAfterItem>();
         internal static IEnumerable<NoBreakAfterItem> NoBreakAfterList(string languageName)
@@ -568,12 +573,12 @@ namespace Nikse.SubtitleEdit.Core
             if (splitPos < s.Length - 2)
             {
                 var firstLine = s.Substring(0, splitPos);
-                var firstSplit = firstLine + Environment.NewLine + s.Substring(splitPos);
+                var firstSplit = firstLine.TrimEnd() + Environment.NewLine + s.Substring(splitPos).TrimStart();
                 var lastSpaceIndex = firstLine.LastIndexOf(' ');
                 if (lastSpaceIndex > 10 && !firstLine.EndsWith(".") && !firstLine.EndsWith("?") && !firstLine.EndsWith("!"))
                 {
                     var secondFirstLine = s.Substring(0, lastSpaceIndex);
-                    var secondSplit = secondFirstLine + Environment.NewLine + s.Substring(lastSpaceIndex + 1);
+                    var secondSplit = secondFirstLine.TrimEnd() + Environment.NewLine + s.Substring(lastSpaceIndex + 1).TrimStart();
                     var firstLines = firstSplit.SplitToLines();
                     var secondLines = secondSplit.SplitToLines();
                     var firstLinesMax = Math.Max(firstLines[0].Length, firstLines[1].Length);

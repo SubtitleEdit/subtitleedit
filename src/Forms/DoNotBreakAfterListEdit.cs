@@ -182,6 +182,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             textBoxNoBreakAfter.Text = string.Empty;
+            Utilities.ResetNoBreakAfterList();
         }
 
         private void RadioButtonCheckedChanged(object sender, EventArgs e)
