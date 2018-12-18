@@ -8,25 +8,22 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
     {
         private static HashSet<int> LoadNetflixGlyphs()
         {
-            using (var ms = new MemoryStream(Properties.Resources.NetflixAllowedGlyphs_bin))
+            using (var ms = new MemoryStream(Properties.Resources.netflix_glyphs2_gz))
             {
                 using (var zip = new GZipStream(ms, CompressionMode.Decompress))
-                using (var br = new BinaryReader(zip))
+                using (var unzip = new StreamReader(zip))
                 {
-                    const int codepointSize = 4;
-                    long n = ms.Length / codepointSize;
-                    var glyphs = new int[n + 2];
-
-                    for (int i = 0; i < n; i++)
+                    var lines = unzip.ReadToEnd().SplitToLines();
+                    var list = new List<int>(lines.Count);
+                    foreach (var line in lines)
                     {
-                        glyphs[i] = br.ReadInt32();
+                        list.Add(int.Parse(line, System.Globalization.NumberStyles.HexNumber));
                     }
-
-                    // New line characters
-                    glyphs[n] = 13;
-                    glyphs[n + 1] = 10;
-
-                    return new HashSet<int>(glyphs);
+                    if (!list.Contains(10))
+                        list.Add(10);
+                    if (!list.Contains(13))
+                        list.Add(13);
+                    return new HashSet<int>(list);
                 }
             }
         }
