@@ -607,6 +607,8 @@
   <ItemGroup>
     <None Include="packages.config" />
     <None Include="Resources\NetflixAllowedGlyphs.bin.gz" />
+    <None Include="Resources\netflix_glyphs2_gz" />
+    <None Include="Resources\netflix_glyphs2_zip" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

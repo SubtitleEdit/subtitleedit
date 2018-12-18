@@ -19,7 +19,7 @@ namespace Nikse.SubtitleEdit.Core.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -63,9 +63,9 @@ namespace Nikse.SubtitleEdit.Core.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] NetflixAllowedGlyphs_bin {
+        internal static byte[] netflix_glyphs2_gz {
             get {
-                object obj = ResourceManager.GetObject("NetflixAllowedGlyphs_bin", resourceCulture);
+                object obj = ResourceManager.GetObject("netflix_glyphs2_gz", resourceCulture);
                 return ((byte[])(obj));
             }
         }
