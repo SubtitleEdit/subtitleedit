@@ -860,6 +860,8 @@
     <Word from="Ovjde" to="Ovdje" />
     <Word from="pakuje" to="pakira" />
     <Word from="Pakuje" to="Pakira" />
+    <Word from="pakuješ" to="pakiraš" />
+    <Word from="Pakuješ" to="Pakiraš" />
     <Word from="Pakuju" to="Pakiraju" />
     <Word from="pakuju" to="pakiraju" />
     <Word from="palatama" to="palačama" />
@@ -1677,6 +1679,7 @@
     <Word from="voza" to="vlaka" />
     <Word from="vozu" to="vlaku" />
     <Word from="vozom" to="vlakom" />
+    <Word from="vozova" to="vlakova" />
     <Word from="vozove" to="vlakove" />
     <Word from="vozovi" to="vlakovi" />
     <Word from="vozovima" to="vlakovima" />
@@ -2082,6 +2085,7 @@
     <LinePart from="biće ti žao" to="bit će ti žao" />
     <LinePart from="Biću ovdje" to="Bit ću ovdje" />
     <LinePart from="Biću uz" to="Bit ću uz" />
+    <LinePart from="Biću u" to="Bit ću u" />
     <LinePart from="bi ja" to="bih ja" />
     <LinePart from="bi la" to="bila" />
     <LinePart from="biti uredu" to="biti u redu" />
@@ -2916,6 +2920,7 @@
     <RegEx find="tester" replaceWith="pil" />
     <RegEx find="Tester" replaceWith="Pil" />
     <RegEx find="\b([tT])j?esn([aeiou])" replaceWith="$1ijesn$2" />
+    <RegEx find="tijevn" replaceWith="tjevn" />
     <RegEx find="točkov" replaceWith="kotač" />
     <RegEx find="\b([tT])okom(?!\s+ri?j?eke)" replaceWith="$1ijekom" />
     <RegEx find="oplot(?!n)" replaceWith="oplin" />
@@ -3276,6 +3281,7 @@
     <RegEx find="rijedel" replaceWith="rijedil" />
     <RegEx find="r([mv])isa" replaceWith="r$1ira" />
     <RegEx find="rj?evozn" replaceWith="rijevozn" />
+    <RegEx find="(?&lt;!r)ojd" replaceWith="ojed" />
     <RegEx find="ršč" replaceWith="ršć" />
     <RegEx find="rutuje" replaceWith="rutira" />
     <RegEx find="rviši" replaceWith="rviraj" />
