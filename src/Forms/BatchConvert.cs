@@ -1337,7 +1337,6 @@ namespace Nikse.SubtitleEdit.Forms
             if (p.FixRtl)
             {
                 var mode = Configuration.Settings.Tools.BatchConvertFixRtlMode;
-                string rtl = "\u202B";
                 for (int i = 0; i < p.Subtitle.Paragraphs.Count; i++)
                 {
                     var paragraph = p.Subtitle.Paragraphs[i];
@@ -1347,6 +1346,7 @@ namespace Nikse.SubtitleEdit.Forms
                         paragraph.Text = paragraph.Text.Replace("\u200F", string.Empty);
                         paragraph.Text = paragraph.Text.Replace("\u202A", string.Empty);
                         paragraph.Text = paragraph.Text.Replace("\u202B", string.Empty);
+                        paragraph.Text = paragraph.Text.Replace("\u202C", string.Empty);
                         paragraph.Text = paragraph.Text.Replace("\u202D", string.Empty);
                         paragraph.Text = paragraph.Text.Replace("\u202E", string.Empty);
                     }
@@ -1356,6 +1356,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else  // fix with unicode char
                     {
+                        string rtl = "\u202B";
                         paragraph.Text = paragraph.Text.Replace(rtl, string.Empty);
                         paragraph.Text = rtl + paragraph.Text.Replace(Environment.NewLine, Environment.NewLine + rtl);
                     }

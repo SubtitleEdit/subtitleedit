@@ -9422,6 +9422,7 @@ namespace Nikse.SubtitleEdit.Forms
                 splitPos = mediaPlayer.CurrentPosition;
             SetSplitTime(splitPos, p, newParagraph, idx, oldText);
             _subtitle.InsertParagraphInCorrectTimeOrder(newParagraph);
+            _subtitle.Renumber();
             _subtitleListViewIndex = -1;
             p.Text = text1;
             newParagraph.Text = text2;
