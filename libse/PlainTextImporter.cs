@@ -86,8 +86,9 @@ namespace Nikse.SubtitleEdit.Core
 
                     fromLastSpace.Clear();
                 }
-                else if (_endChars.Contains(ch) && index < text.Length - 2 && text[index + 1] == ' ' &&
-                          !CurrentWordInDoNotBreakList(text, index + 1))
+                else if (_endChars.Contains(ch) && index < text.Length - 2 &&
+                         (text[index + 1] == ' ' || _language == "zh") &&
+                         !CurrentWordInDoNotBreakList(text, index + 1))
                 {
                     fromLastSpace.Append(ch);
 
@@ -248,7 +249,7 @@ namespace Nikse.SubtitleEdit.Core
 
         private bool CanLastWordBeMovedToNext(string line, string allText, int allIndex)
         {
-            if (allIndex == allText.Length || 
+            if (allIndex == allText.Length ||
                 _endChars.Contains(line[line.Length - 1]) && !CurrentWordInDoNotBreakList(line, line.Length))
                 return false;
             return true;

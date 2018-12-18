@@ -99,12 +99,18 @@ namespace Nikse.SubtitleEdit.Core
 
         public static void SetSecurityProtocol()
         {
-            if (Environment.OSVersion.Version.Major < 6)
-                return; // don't try TLS 1.2 on WinXP as it does not exist and will crash
-
             // Github requires TLS 1.2
-            var tls12Protocol = (SslProtocols)0x00000C00; //TODO: Remove this when it's standard in .net framework - 4.5?
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls | (SecurityProtocolType)tls12Protocol;
+            try
+            {
+                var tls12Protocol = (SslProtocols)0x00000C00; //TODO: Remove this when it's standard in .net framework - 4.6+
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls | (SecurityProtocolType)tls12Protocol;
+            }
+            catch (Exception)
+            {
+                // This will crash on .net framework versions < 4.5!
+                // .NET 4.5 required for TLS 1.2 - TLS 1.2 is not default so use this: ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12
+                // NET 4.6 and above. You don’t need to do any additional work to support TLS 1.2, it’s supported by default.
+            }
         }
 
         public static WebProxy GetProxy()
@@ -573,7 +579,7 @@ namespace Nikse.SubtitleEdit.Core
                     var firstLinesMax = Math.Max(firstLines[0].Length, firstLines[1].Length);
                     var secondLinesMax = Math.Max(secondLines[0].Length, secondLines[1].Length);
                     if (secondLinesMax <= maximumLength && CanBreak(s, lastSpaceIndex, language) &&
-                        (secondLinesMax <= firstLinesMax || 
+                        (secondLinesMax <= firstLinesMax ||
                          firstLine.Substring(firstLine.Length - 3, 2) == ", " ||
                          firstLine.Substring(firstLine.Length - 3, 2) == ". "))
                     {
@@ -653,7 +659,7 @@ namespace Nikse.SubtitleEdit.Core
                 {
                     if (htmlTags.ContainsKey(six + i))
                     {
-                        sb.Append(htmlTags[six +1]);
+                        sb.Append(htmlTags[six + 1]);
                     }
                 }
 
