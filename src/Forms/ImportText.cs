@@ -98,7 +98,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxAutoSplitAtBlankLines.Text = Configuration.Settings.Language.ImportText.SplitAtBlankLines;
 
             groupBoxAutoSplitSettings.Text = Configuration.Settings.Language.Settings.Title;
-            labelSubMaxLen.Text = Configuration.Settings.Language.Settings.MaximumLines;
+            labelAutoSplitNumberOfLines.Text = Configuration.Settings.Language.Settings.MaximumLines;
             numericUpDownSubtitleLineMaximumLength.Left = labelSubMaxLen.Left + labelSubMaxLen.Width + 3;
             numericUpDownSubtitleLineMaximumLength.Value = Configuration.Settings.General.SubtitleLineMaximumLength;
 
