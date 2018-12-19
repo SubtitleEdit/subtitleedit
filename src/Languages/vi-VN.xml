@@ -1459,7 +1459,7 @@ có thể chỉnh sửa trong cùng một tập tin phụ đề (hợp tác vớ
     <ToggleFocus>Chuyển đổi tập trung giữa xem danh sách và hộp văn bản phụ đề</ToggleFocus>
     <ToggleDialogDashes>Dấu gạch ngang khi chuyển đổi đối thoại</ToggleDialogDashes>
     <Alignment>Liên kết (các dòng được chọn)</Alignment>
-    <CopyTextOnly>Sao chép văn bản hiển thị vào clip board (các dòng được chọn)</CopyTextOnly>
+    <CopyTextOnly>Sao chép văn bản hiển thị vào clipboard (các dòng được chọn)</CopyTextOnly>
     <AutoDurationSelectedLines>Tự động giới hạn (các dòng được chọn)</AutoDurationSelectedLines>
     <ReverseStartAndEndingForRTL>Xếp RTL bắt đầu/kết thúc</ReverseStartAndEndingForRTL>
     <VerticalZoom>Phóng theo chiều dọc</VerticalZoom>
