@@ -1,7 +1,7 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.IO;
 using System.Linq;
 using System.Threading;
 
@@ -53,7 +53,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Tesseract
         {
             var job = new TesseractThreadRunner.ImageJob
             {
-                FileName = Path.GetTempFileName() + ".png",
+                FileName = FileUtil.GetTempFileName(".png"),
                 Index = index,
                 Completed = DateTime.MaxValue,
                 Bitmap = bmp,

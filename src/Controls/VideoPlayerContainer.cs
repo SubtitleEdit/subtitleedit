@@ -365,7 +365,7 @@ namespace Nikse.SubtitleEdit.Controls
                     {
                         mpv.RemoveSubtitle();
                         DeleteTempMpvFileName();
-                        _mpvTextFileName = Path.GetTempFileName() + format.Extension;
+                        _mpvTextFileName = FileUtil.GetTempFileName(format.Extension);
                         File.WriteAllText(_mpvTextFileName, text);
                         mpv.LoadSubtitle(_mpvTextFileName);
                         _retryCount--;
