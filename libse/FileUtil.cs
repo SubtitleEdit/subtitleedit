@@ -475,5 +475,11 @@ namespace Nikse.SubtitleEdit.Core
 
             return info;
         }
+
+        public static string GetTempFileName (string extension)
+        {
+            return Path.GetTempPath() + Guid.NewGuid() + extension;
+        }
+
     }
 }

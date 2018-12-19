@@ -4755,7 +4755,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         vlc.Pause();
                         vlc.CurrentPosition = p.StartTime.TotalSeconds;
                         Application.DoEvents();
-                        var fileName = Path.GetTempFileName() + ".bmp";
+                        var fileName = FileUtil.GetTempFileName(".bmp");
                         vlc.TakeSnapshot(fileName, (uint)bmp.Width, (uint)bmp.Height);
                         Application.DoEvents();
                         Thread.Sleep(200);

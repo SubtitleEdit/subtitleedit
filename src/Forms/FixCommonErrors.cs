@@ -743,7 +743,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void GenerateDiff()
         {
-            string htmlFileName = Path.GetTempFileName() + ".html";
+            string htmlFileName = FileUtil.GetTempFileName(".html");
             var sb = new StringBuilder();
             sb.Append("<html><head><meta charset='utf-8'><title>Subtitle Edit - Fix common errors preview</title><style>body,p,td {font-size:90%; font-family:Tahoma;} td {border:1px solid black;padding:5px} table {border-collapse: collapse;}</style></head><body><table><tbody>");
             sb.AppendLine($"<tr><td style='font-weight:bold'>{_languageGeneral.LineNumber}</td><td style='font-weight:bold'>{_language.Function}</td><td style='font-weight:bold'>{_languageGeneral.Before}</td><td style='font-weight:bold'>{_languageGeneral.After}</td></tr>");

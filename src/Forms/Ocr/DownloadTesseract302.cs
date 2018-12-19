@@ -34,7 +34,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             if (!Directory.Exists(dictionaryFolder))
                 Directory.CreateDirectory(dictionaryFolder);
 
-            var tempFileName = Path.GetTempFileName() + ".tar";
+            var tempFileName = FileUtil.GetTempFileName(".tar");
             using (var ms = new MemoryStream(e.Result))
             using (var fs = new FileStream(tempFileName, FileMode.Create))
             using (var zip = new GZipStream(ms, CompressionMode.Decompress))
