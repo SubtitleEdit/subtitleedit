@@ -2,10 +2,10 @@
 <Language Name="català">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.5.7</Version>
+    <Version>3.5.8</Version>
     <TranslatedBy>Traduït per Juansa</TranslatedBy>
     <CultureName>ca-ES</CultureName>
-    <HelpFile></HelpFile>
+    <HelpFile />
     <Ok>D'ac&amp;ord</Ok>
     <Cancel>C&amp;ancel·la</Cancel>
     <Apply>Aplica</Apply>
