@@ -30,6 +30,7 @@
    * Add support Google Cloud API key
    * Allow translate selected lines in translate mode
    * Don't count "new line" for total chars in Statistics - thx Andy
+   * Update Netflix allowed glyphs - thx Justin
 * FIXED:
    * Go back to Tesseract 3.02 (T4 available as in-program download)
    * Fix Bing translator sign-up url - thx sopor
@@ -64,6 +65,7 @@
    * Fix extra space when using "Toggle play/pause" - thx Luiz
    * Fix "Go to next error" for last line - thx Leon/OmrSi
    * Fix crash in "Typewriter effect" - thx tharindu
+   * Avoid leaving files in temp folder - thx borifax
 
 
 3.5.7 (9th August 2018)
