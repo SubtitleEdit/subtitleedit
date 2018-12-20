@@ -2,11 +2,10 @@
 <Language Name="中文(简体)">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.5.7</Version>
+    <Version>3.5.8</Version>
     <TranslatedBy>翻译: FeiXJ | Leon Cheung | larsenlouis | VK</TranslatedBy>
     <CultureName>zh-Hans</CultureName>
-    <HelpFile>
-    </HelpFile>
+    <HelpFile />
     <Ok>确定(&amp;O)</Ok>
     <Cancel>取消(&amp;A)</Cancel>
     <Apply>应用</Apply>

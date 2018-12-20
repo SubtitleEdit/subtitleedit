@@ -2,11 +2,10 @@
 <Language Name="فارسي">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.5.7</Version>
+    <Version>3.5.8</Version>
     <TranslatedBy>ترجمه توسط:برنامه نویس جوان، نیما</TranslatedBy>
     <CultureName>fa-IR</CultureName>
-    <HelpFile>
-    </HelpFile>
+    <HelpFile />
     <Ok>تائید</Ok>
     <Cancel>لغو</Cancel>
     <Apply>اعمال</Apply>

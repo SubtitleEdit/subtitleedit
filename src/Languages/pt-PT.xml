@@ -2,7 +2,7 @@
 <Language Name="português (Portugal)">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.5.7</Version>
+    <Version>3.5.8</Version>
     <TranslatedBy>Traduzido para Português de Portugal, por moob
 Email: mailto:moob42341@gmail.com</TranslatedBy>
     <CultureName>pt-PT</CultureName>
@@ -188,10 +188,10 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <NotConverted>Sem sucesso</NotConverted>
     <Converted>Convertido</Converted>
     <Settings>Configurações</Settings>
-	<FixRtl>Corrigir RTL</FixRtl>
-	<FixRtlAddUnicode>Corrigir RTL via etiquetas Unicode</FixRtlAddUnicode>
-	<FixRtlRemoveUnicode>Eliminar etiquetas Unicode RTL</FixRtlRemoveUnicode>
-	<FixRtlReverseStartEnd>Inverter RTL início/fim</FixRtlReverseStartEnd>
+    <FixRtl>Corrigir RTL</FixRtl>
+    <FixRtlAddUnicode>Corrigir RTL via etiquetas Unicode</FixRtlAddUnicode>
+    <FixRtlRemoveUnicode>Eliminar etiquetas Unicode RTL</FixRtlRemoveUnicode>
+    <FixRtlReverseStartEnd>Inverter RTL início/fim</FixRtlReverseStartEnd>
     <SplitLongLines>Dividir linhas longas</SplitLongLines>
     <AutoBalance>Igualar automaticamente as linhas</AutoBalance>
     <ScanFolder>Examinar pasta...</ScanFolder>
@@ -557,7 +557,7 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <RemovedEmptyLine>Remover linha em branco</RemovedEmptyLine>
     <RemovedEmptyLineAtTop>Remover linha inicial em branco</RemovedEmptyLineAtTop>
     <RemovedEmptyLineAtBottom>Remover linha final em branco</RemovedEmptyLineAtBottom>
-	<RemovedEmptyLineInMiddle>Remover linha do meio em branco</RemovedEmptyLineInMiddle>
+    <RemovedEmptyLineInMiddle>Remover linha do meio em branco</RemovedEmptyLineInMiddle>
     <RemovedEmptyLinesUnsedLineBreaks>Eliminar quebras de linha em branco/sem uso</RemovedEmptyLinesUnsedLineBreaks>
     <EmptyLinesRemovedX>Linhas em branco eliminadas: {0}</EmptyLinesRemovedX>
     <FixOverlappingDisplayTimes>Corrigir sobreposições de tempo</FixOverlappingDisplayTimes>
@@ -744,7 +744,7 @@ Vá a "Opções -&gt; Configurações -&gt; Ferramentas" para inserir a chave AP
     <Splitting>Divisão</Splitting>
     <AutoSplitText>Auto-dividir texto</AutoSplitText>
     <OneLineIsOneSubtitle>Uma linha é uma legenda</OneLineIsOneSubtitle>
-	<TwoLinesAreOneSubtitle>Duas linhas numa</TwoLinesAreOneSubtitle>
+    <TwoLinesAreOneSubtitle>Duas linhas numa</TwoLinesAreOneSubtitle>
     <LineBreak>Quebra de linha</LineBreak>
     <SplitAtBlankLines>Dividir nas linhas em branco</SplitAtBlankLines>
     <MergeShortLines>Combinar as linhas curtas continuadas</MergeShortLines>
@@ -758,7 +758,7 @@ Vá a "Opções -&gt; Configurações -&gt; Ferramentas" para inserir a chave AP
     <TextFiles>Ficheiros de texto</TextFiles>
     <PreviewLinesModifiedX>Pré-visualizar - legendas modificados: {0}</PreviewLinesModifiedX>
     <TimeCodes>Tempos</TimeCodes>
-	<SplitAtEndChars>Dividir nos últimos caracteres</SplitAtEndChars>
+    <SplitAtEndChars>Dividir nos últimos caracteres</SplitAtEndChars>
   </ImportText>
   <Interjections>
     <Title>Interjeições</Title>
@@ -932,7 +932,7 @@ Vá a "Opções -&gt; Configurações -&gt; Ferramentas" para inserir a chave AP
         <AdvancedSubStationAlphaProperties>Advanced Sub Station Alpha propriedades...</AdvancedSubStationAlphaProperties>
         <SubStationAlphaProperties>Sub Station Alpha propriedades...</SubStationAlphaProperties>
         <EbuProperties>EBU STL propriedades...</EbuProperties>
-		<DvdStuioProProperties>DVD Studio Pro propriedades...</DvdStuioProProperties>
+        <DvdStuioProProperties>DVD Studio Pro propriedades...</DvdStuioProProperties>
         <PacProperties>PAC propriedades...</PacProperties>
         <OpenOriginal>Abrir legenda original (modo tradutor)...</OpenOriginal>
         <SaveOriginal>Guardar legenda original</SaveOriginal>
@@ -1150,7 +1150,7 @@ Vá a "Opções -&gt; Configurações -&gt; Ferramentas" para inserir a chave AP
         <MergeWithLineAfter>Combinar com a linha seguinte</MergeWithLineAfter>
         <Normal>Normal (remove a formatação)</Normal>
         <Underline>Sublinhado</Underline>
-		<Box>Caixa</Box>
+        <Box>Caixa</Box>
         <Color>Cor</Color>
         <FontName>Tipo de letra</FontName>
         <Alignment>Alinhamento</Alignment>
@@ -1500,7 +1500,7 @@ Se editou este ficheiro no Subtitle Edit é possível que encontre a cópia de s
   <MatroskaSubtitleChooser>
     <Title>Seleccionar legenda através de um ficheiro Matroska (.mkv)</Title>
     <TitleMp4>Seleccionar legenda através de um ficheiro MP4</TitleMp4>
-	<PleaseChoose>Existe mais de uma legenda - por favor, escolha</PleaseChoose>
+    <PleaseChoose>Existe mais de uma legenda - por favor, escolha</PleaseChoose>
     <TrackXLanguageYTypeZ>Faixa {0} - idioma: {1} - tipo: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MeasurementConverter>
@@ -1892,7 +1892,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <Shift>Shift</Shift>
     <Key>Tecla</Key>
     <ListViewAndTextBox>Exibição de lista e caixa de texto</ListViewAndTextBox>
-	<ListView>Exibição de lista</ListView>
+    <ListView>Exibição de lista</ListView>
     <TextBox>Caixa de texto</TextBox>
     <UpdateShortcut>Actualizar</UpdateShortcut>
     <ToggleDockUndockOfVideoControls>Alternar acoplar/desacoplar controlos de vídeo</ToggleDockUndockOfVideoControls>
@@ -1926,15 +1926,15 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <ToggleDialogDashes>Alternar hífens de diálogo</ToggleDialogDashes>
     <ToggleMusicSymbols>Alternar símbolos de música</ToggleMusicSymbols>
     <Alignment>Alinhamento (linhas seleccionadas)</Alignment>
-	<AlignmentN1>Alinhamento inferior esquerdo - {\an1}</AlignmentN1>
-	<AlignmentN2>Alinhamento inferior central - {\an2}</AlignmentN2>
-	<AlignmentN3>Alinhamento inferior direito - {\an3}</AlignmentN3>
-	<AlignmentN4>Alinhamento central esquerdo - {\an4}</AlignmentN4>
-	<AlignmentN5>Alinhamento central - {\an5}</AlignmentN5>
-	<AlignmentN6>Alinhamento central direito - {\an6}</AlignmentN6>
-	<AlignmentN7>Alinhamento superior esquerdo - {\an7}</AlignmentN7>
-	<AlignmentN8>Alinhamento superior central - {\an8}</AlignmentN8>
-	<AlignmentN9>Alinhamento superior direito - {\an9}</AlignmentN9>
+    <AlignmentN1>Alinhamento inferior esquerdo - {\an1}</AlignmentN1>
+    <AlignmentN2>Alinhamento inferior central - {\an2}</AlignmentN2>
+    <AlignmentN3>Alinhamento inferior direito - {\an3}</AlignmentN3>
+    <AlignmentN4>Alinhamento central esquerdo - {\an4}</AlignmentN4>
+    <AlignmentN5>Alinhamento central - {\an5}</AlignmentN5>
+    <AlignmentN6>Alinhamento central direito - {\an6}</AlignmentN6>
+    <AlignmentN7>Alinhamento superior esquerdo - {\an7}</AlignmentN7>
+    <AlignmentN8>Alinhamento superior central - {\an8}</AlignmentN8>
+    <AlignmentN9>Alinhamento superior direito - {\an9}</AlignmentN9>
     <CopyTextOnly>Copiar só o texto para a área de transferência (linhas seleccionadas)</CopyTextOnly>
     <CopyTextOnlyFromOriginalToCurrent>Copiar o texto do original para a actual</CopyTextOnlyFromOriginalToCurrent>
     <AutoDurationSelectedLines>Auto-duração (linhas seleccionadas)</AutoDurationSelectedLines>
@@ -2359,8 +2359,8 @@ Manter as alterações?</KeepChangesMessage>
     <DiscardTitle>Rejeitar as alterações feitas no OCR?</DiscardTitle>
     <DiscardText>Deseja rejeitar as alterações feitas na sessão corrente de OCR?</DiscardText>
     <MinLineSplitHeight>Altura mínima da linha (dividida)</MinLineSplitHeight>
-	<FallbackToX>Voltar para {0}</FallbackToX>
-	<ImagePreProcessing>Pré-processamento de imagem...</ImagePreProcessing>
+    <FallbackToX>Voltar para {0}</FallbackToX>
+    <ImagePreProcessing>Pré-processamento de imagem...</ImagePreProcessing>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub - Imagem para texto manualmente</Title>
