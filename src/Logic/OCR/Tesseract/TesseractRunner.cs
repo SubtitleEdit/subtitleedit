@@ -122,7 +122,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Tesseract
                     if (startText > 0)
                     {
                         startText++;
-                        var endText = html.IndexOf("</span>", startText + 1, StringComparison.InvariantCulture);
+                        var endText = html.IndexOf("</span>", startText, StringComparison.InvariantCulture);
                         if (endText > 0)
                         {
                             var text = html.Substring(startText, endText - startText);
