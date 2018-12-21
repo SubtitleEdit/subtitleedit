@@ -187,6 +187,10 @@ Megjegyzés: Ellenőrizze a szabad merevlemez területet.</WaveFileMalformed>
     <NotConverted>Sikertelen</NotConverted>
     <Converted>Konvertálva</Converted>
     <Settings>Beállítások</Settings>
+    <FixRtl>RTL írásmód javítása</FixRtl>
+    <FixRtlAddUnicode>RTL írásmód javítása Unicode címkék segítségével</FixRtlAddUnicode>
+    <FixRtlRemoveUnicode>RTL írásmód unicode címkéinek eltávolítása</FixRtlRemoveUnicode>
+    <FixRtlReverseStartEnd>RTL írásmód kezdés/befejezés megfordítása</FixRtlReverseStartEnd>
     <SplitLongLines>Hosszú sorok felosztása</SplitLongLines>
     <AutoBalance>Sorok automatikus kiegyenlítése</AutoBalance>
     <ScanFolder>Mappa vizsgálata...</ScanFolder>
@@ -553,6 +557,7 @@ Megjegyzés: Ellenőrizze a szabad merevlemez területet.</WaveFileMalformed>
     <RemovedEmptyLine>Üres sor eltávolítása</RemovedEmptyLine>
     <RemovedEmptyLineAtTop>Felül lévő üres sor eltávolítása</RemovedEmptyLineAtTop>
     <RemovedEmptyLineAtBottom>Alul lévő üres sor eltávolítása</RemovedEmptyLineAtBottom>
+    <RemovedEmptyLineInMiddle>Üres sor eltávolítása középről</RemovedEmptyLineInMiddle>
     <RemovedEmptyLinesUnsedLineBreaks>Eltávolított üres sorok/nem használt sortörések</RemovedEmptyLinesUnsedLineBreaks>
     <EmptyLinesRemovedX>Eltávolított üres sorok: {0}</EmptyLinesRemovedX>
     <FixOverlappingDisplayTimes>Átfedő megjelenítési idők javítása</FixOverlappingDisplayTimes>
@@ -686,6 +691,13 @@ Megjegyzés: Ellenőrizze a szabad merevlemez területet.</WaveFileMalformed>
     <PleaseWait>Kis türelmet... ez több időt vehet igénybe</PleaseWait>
     <PoweredByGoogleTranslate>Szolgáltató: Google translate</PoweredByGoogleTranslate>
     <PoweredByMicrosoftTranslate>Szolgáltató: Microsoft translate</PoweredByMicrosoftTranslate>
+    <MsClientSecretNeeded>Sajnáljuk,egy Bing klienskulcsra van szükség a Microsoft-tól a legfrissebb Bing fordító használatához
+
+Lépjen az "Opciók -&gt; Beállítások -&gt; Eszközök" lapra a Bing klienskulcsának megadásához.</MsClientSecretNeeded>
+    <GoogleApiKeyNeeded>Sajnáljuk,egy API-kulcsra van szükség a Google-tól a legfrissebb Google fordító használatához.
+
+Lépjen az "Opciók -&gt; Beállítások -&gt; Eszközök" lapra a Google fordító API-kulcsának megadásához.</GoogleApiKeyNeeded>
+    <GoogleNoApiKeyWarning>Próbálja meg lefordítani API kulcs nélkül... (lassú és korlátozott adatok)</GoogleNoApiKeyWarning>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
     <Title>Google kontra Microsoft fordítás</Title>
@@ -732,6 +744,7 @@ Megjegyzés: Ellenőrizze a szabad merevlemez területet.</WaveFileMalformed>
     <Splitting>Felosztás</Splitting>
     <AutoSplitText>Szöveg auto-vágása</AutoSplitText>
     <OneLineIsOneSubtitle>Egy sor egy felirat</OneLineIsOneSubtitle>
+    <TwoLinesAreOneSubtitle>Két sor egy felirat</TwoLinesAreOneSubtitle>
     <LineBreak>Sortörés</LineBreak>
     <SplitAtBlankLines>Üres sorok felosztása</SplitAtBlankLines>
     <MergeShortLines>Rövid sorok egyesítése a folytatólagosság miatt</MergeShortLines>
@@ -745,6 +758,7 @@ Megjegyzés: Ellenőrizze a szabad merevlemez területet.</WaveFileMalformed>
     <TextFiles>Szövegfájlok</TextFiles>
     <PreviewLinesModifiedX>Előnézet - módosított feliratok: {0}</PreviewLinesModifiedX>
     <TimeCodes>Időkódok</TimeCodes>
+    <SplitAtEndChars>Vágás a karakterek végén</SplitAtEndChars>
   </ImportText>
   <Interjections>
     <Title>Kifejezések</Title>
@@ -918,6 +932,7 @@ Megjegyzés: Ellenőrizze a szabad merevlemez területet.</WaveFileMalformed>
         <AdvancedSubStationAlphaProperties>Advanced Sub Station Alpha tulajdonságok...</AdvancedSubStationAlphaProperties>
         <SubStationAlphaProperties>Sub Station Alpha tulajdonságok...</SubStationAlphaProperties>
         <EbuProperties>EBU STL tulajdonságok...</EbuProperties>
+        <DvdStuioProProperties>DVD Studio Pro tulajdonságai...</DvdStuioProProperties>
         <PacProperties>PAC tulajdonságok...</PacProperties>
         <OpenOriginal>Eredeti felirat megnyitása (fordító mód)...</OpenOriginal>
         <SaveOriginal>Eredeti felirat mentése</SaveOriginal>
@@ -1009,7 +1024,7 @@ Megjegyzés: Ellenőrizze a szabad merevlemez területet.</WaveFileMalformed>
         <Style>Stílus</Style>
         <Ascending>Növekvő</Ascending>
         <Descending>Csökkenő</Descending>
-        <MakeNewEmptyTranslationFromCurrentSubtitle>Hozzon létre egy új üres fordítást a jelenlegi feliratból</MakeNewEmptyTranslationFromCurrentSubtitle>
+        <MakeNewEmptyTranslationFromCurrentSubtitle>Új üres fordítás létrehozása a jelenlegi feliratból</MakeNewEmptyTranslationFromCurrentSubtitle>
         <BatchConvert>Csoportos konvertálás...</BatchConvert>
         <GenerateTimeAsText>Idő létrehozása szövegként...</GenerateTimeAsText>
         <MeasurementConverter>Mértékegység átváltó...</MeasurementConverter>
@@ -1135,6 +1150,7 @@ Megjegyzés: Ellenőrizze a szabad merevlemez területet.</WaveFileMalformed>
         <MergeWithLineAfter>Összevonás a következő sorral</MergeWithLineAfter>
         <Normal>Normál (formázás eltávolítása)</Normal>
         <Underline>Aláhúzott</Underline>
+        <Box>Doboz</Box>
         <Color>Szín...</Color>
         <FontName>Betűtípus neve...</FontName>
         <Alignment>Igazítás...</Alignment>
@@ -1201,7 +1217,7 @@ Megjegyzés: Ellenőrizze a szabad merevlemez területet.</WaveFileMalformed>
       <SetstartTimeAndOffsetOfRest>Indítási és eltolási beállítások</SetstartTimeAndOffsetOfRest>
       <SearchTextOnline>Online szövegkeresés</SearchTextOnline>
       <GoogleTranslate>Google fordítás</GoogleTranslate>
-      <GoogleIt>Google it</GoogleIt>
+      <GoogleIt>Google</GoogleIt>
       <SecondsBackShort>&lt;&lt;</SecondsBackShort>
       <SecondsForwardShort>&gt;&gt;</SecondsForwardShort>
       <VideoPosition>Videó pozíció:</VideoPosition>
@@ -1875,6 +1891,7 @@ szerkesztheti ugyanazt a feliratfájlt</Information>
     <Alt>Alt</Alt>
     <Shift>Shift</Shift>
     <Key>Billentyű</Key>
+    <ListViewAndTextBox>Listanézet és szövegdoboz</ListViewAndTextBox>
     <ListView>Listanézet</ListView>
     <TextBox>Szövegdoboz</TextBox>
     <UpdateShortcut>Frissítés</UpdateShortcut>
@@ -1909,10 +1926,19 @@ szerkesztheti ugyanazt a feliratfájlt</Information>
     <ToggleDialogDashes>Párbeszéd gondolatjel váltó</ToggleDialogDashes>
     <ToggleMusicSymbols>Zenei szimbólumok váltása</ToggleMusicSymbols>
     <Alignment>Igazítás (kijelölt sorok)</Alignment>
-    <CopyTextOnly>Csak szöveg másolása a vágólapra (kijelölt sorok)</CopyTextOnly>
+    <AlignmentN1>Igazítás alul balra - {\an1}</AlignmentN1>
+    <AlignmentN2>Igazítás alul középre - {\an2}</AlignmentN2>
+    <AlignmentN3>Igazítás alul jobbra - {\an3}</AlignmentN3>
+    <AlignmentN4>Igazítás középen balra - {\an4}</AlignmentN4>
+    <AlignmentN5>Igazítás középen középre - {\an5}</AlignmentN5>
+    <AlignmentN6>Igazítás középen jobbra - {\an6}</AlignmentN6>
+    <AlignmentN7>Igazítás felül balra - {\an7}</AlignmentN7>
+    <AlignmentN8>Igazítás felül középre - {\an8}</AlignmentN8>
+    <AlignmentN9>Igazítás felül jobbra - {\an9}</AlignmentN9>
+    <CopyTextOnly>Szöveg másolása csak a vágólapra (kijelölt sorok)</CopyTextOnly>
     <CopyTextOnlyFromOriginalToCurrent>Szöveg másolása az eredetiből a jelenlegibe</CopyTextOnlyFromOriginalToCurrent>
     <AutoDurationSelectedLines>Automatikus időtartam (kijelölt sorok)</AutoDurationSelectedLines>
-    <ReverseStartAndEndingForRTL>Fordított RTL indítás/befejezés</ReverseStartAndEndingForRTL>
+    <ReverseStartAndEndingForRTL>RTL indítás/befejezés megfordítása</ReverseStartAndEndingForRTL>
     <VerticalZoom>Függőleges nagyítás</VerticalZoom>
     <VerticalZoomOut>Függőleges kicsinyítés</VerticalZoomOut>
     <WaveformSeekSilenceForward>Csend keresése előre</WaveformSeekSilenceForward>
@@ -1998,7 +2024,6 @@ szerkesztheti ugyanazt a feliratfájlt</Information>
     <UseDoNotBreakAfterList>A ne-tördelje-utána lista használata (auto-tördelésre)</UseDoNotBreakAfterList>
     <MicrosoftBingTranslator>Microsoft Bing Translator</MicrosoftBingTranslator>
     <HowToSignUp>Regisztráció módja</HowToSignUp>
-    <GoogleTranslateUrl>Google fordító url</GoogleTranslateUrl>
     <MicrosoftTranslateApiKey>Kulcs</MicrosoftTranslateApiKey>
     <FontNote>Megjegyzés: Ezek a betűtípus beállítások csak a Subtitle Edit felhasználói felületére vonatkoznak.
 A feliratozáshoz használt betűtípust általában a videólejátszóban választjuk ki, de ezt akkor is megtehetjük, ha olyan feliratformátumot használ, amely beépített betűinformációkkal rendelkezik, például az 
@@ -2333,6 +2358,8 @@ Megtartja a módosításokat?</KeepChangesMessage>
     <DiscardTitle>Elveti a változtatásokat az OCR-ben?</DiscardTitle>
     <DiscardText>Elveti a változtatásokat a jelenlegi OCR műveletnél?</DiscardText>
     <MinLineSplitHeight>Min. sormagasság (osztott)</MinLineSplitHeight>
+    <FallbackToX>Visszalépés erre: {0}</FallbackToX>
+    <ImagePreProcessing>Kép előfeldolgozás...</ImagePreProcessing>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub - Manuális kép a szöveghez</Title>
