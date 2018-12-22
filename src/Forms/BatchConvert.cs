@@ -724,10 +724,9 @@ namespace Nikse.SubtitleEdit.Forms
                     SubtitleFormat format = null;
                     var sub = new Subtitle();
                     var fi = new FileInfo(fileName);
-                    if (fi.Length < ConvertMaxFileSize)
+                    if (fi.Length < ConvertMaxFileSize && !FileUtil.IsBluRaySup(fileName) && !FileUtil.IsVobSub(fileName))
                     {
-                        Encoding encoding;
-                        format = sub.LoadSubtitle(fileName, out encoding, null);
+                        format = sub.LoadSubtitle(fileName, out _, null);
                         if (format == null)
                         {
                             var ebu = new Ebu();
