@@ -536,14 +536,14 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         }
 
         internal void InitializeBatch(string vobSubFileName, VobSubOcrSettings vobSubOcrSettings, bool forcedOnly)
-        {
+        {            
             Initialize(vobSubFileName, vobSubOcrSettings, null, true);
             checkBoxShowOnlyForced.Checked = forcedOnly;
             FormVobSubOcr_Shown(null, null);
             checkBoxPromptForUnknownWords.Checked = false;
 
             int max = GetSubtitleCount();
-            if (_ocrMethodIndex == _ocrMethodTesseract4 && _tesseractAsyncStrings == null)
+            if (_tesseractAsyncStrings == null)
             {
                 _tesseractAsyncStrings = new string[max];
                 _tesseractAsyncIndex = (int)numericUpDownStartNumber.Value + 5;
@@ -552,6 +552,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             subtitleListView1.SelectedIndexChanged -= SubtitleListView1SelectedIndexChanged;
             textBoxCurrentText.TextChanged -= TextBoxCurrentTextTextChanged;
 
+            _abort = false;
             for (int i = 0; i < max; i++)
             {
                 _selectedIndex = i;
