@@ -476,6 +476,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <Right>Right</Right>
     <Center>Center</Center>
     <CenterLeftJustify>Center, left justify</CenterLeftJustify>
+    <CenterTopJustify>Center, top justify</CenterTopJustify>
     <BottomMargin>Bottom margin</BottomMargin>
     <LeftRightMargin>Left/right margin</LeftRightMargin>
     <SaveBluRraySupAs>Choose Blu-ray sup file name</SaveBluRraySupAs>

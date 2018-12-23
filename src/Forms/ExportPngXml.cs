@@ -57,6 +57,7 @@ namespace Nikse.SubtitleEdit.Forms
             public bool AlignLeft { get; set; }
             public bool AlignRight { get; set; }
             public bool JustifyLeft { get; set; }
+            public bool JustifyTop { get; set; }
             public byte[] Buffer { get; set; }
             public int ScreenWidth { get; set; }
             public int ScreenHeight { get; set; }
@@ -354,6 +355,7 @@ namespace Nikse.SubtitleEdit.Forms
                 AlignLeft = comboBoxHAlign.SelectedIndex == 0,
                 AlignRight = comboBoxHAlign.SelectedIndex == 2,
                 JustifyLeft = comboBoxHAlign.SelectedIndex == 3, // center, left justify
+                JustifyTop = comboBoxHAlign.SelectedIndex == 4, // center, top justify
                 ScreenWidth = screenWidth,
                 ScreenHeight = screenHeight,
                 VideoResolution = comboBoxResolution.Text,
@@ -2001,6 +2003,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             mbp.AlignLeft = comboBoxHAlign.SelectedIndex == 0;
             mbp.AlignRight = comboBoxHAlign.SelectedIndex == 2;
             mbp.JustifyLeft = comboBoxHAlign.SelectedIndex == 3;
+            mbp.JustifyTop = comboBoxHAlign.SelectedIndex == 4;
             mbp.SimpleRendering = checkBoxSimpleRender.Checked;
             mbp.BorderWidth = _borderWidth;
             mbp.BorderColor = _borderColor;
@@ -2529,6 +2532,11 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     }
                     if (baseLinePadding < 0)
                         baseLinePadding = 0;
+                }
+
+                if (lines.Count == 1 && parameter.JustifyTop) // align top
+                {
+                    baseLinePadding += (int)Math.Round(TextDraw.MeasureTextHeight(font, "yjK)", parameter.SubtitleFontBold));
                 }
 
                 // TODO: Better baseline - test http://bobpowell.net/formattingtext.aspx
@@ -3414,6 +3422,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 comboBoxHAlign.Items.Add(Configuration.Settings.Language.ExportPngXml.Center);
                 comboBoxHAlign.Items.Add(Configuration.Settings.Language.ExportPngXml.Right);
                 comboBoxHAlign.Items.Add(Configuration.Settings.Language.ExportPngXml.CenterLeftJustify);
+                comboBoxHAlign.Items.Add(Configuration.Settings.Language.ExportPngXml.CenterTopJustify);
             }
 
             buttonShadowColor.Text = Configuration.Settings.Language.ExportPngXml.ShadowColor;

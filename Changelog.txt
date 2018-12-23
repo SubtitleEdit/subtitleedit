@@ -1,5 +1,15 @@
 ﻿Subtitle Edit Changelog
 
+3.5.9 (xth March 2019) BETA
+* NEW:
+   * Image export - option to have single lines top justified - thx joedmartin
+* IMPROVED:
+   * Update Hungarian translation - thx Zityi
+* FIXED:
+   * Fix OCR in batch convert - thx danstraughn
+   * Fixed crash parsing empty word in OCR via Tesseract - thx Barry
+   * Fix crash in OCR window when closing - thx spetragl
+
 
 3.5.8 (20th December 2018)
 * NEW:
