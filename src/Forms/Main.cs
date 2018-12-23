@@ -98,10 +98,10 @@ namespace Nikse.SubtitleEdit.Forms
         private long _lastWaveformMenuCloseTicks;
         private double? _audioWaveformRightClickSeconds;
         private Timer _timerDoSyntaxColoring = new Timer();
-        private Timer _timerAutoSave = new Timer();
+        private Timer _timerAutoBackup = new Timer();
         private Timer _timerClearStatus = new Timer();
-        private string _textAutoSave;
-        private string _textAutoSaveOriginal;
+        private string _textAutoBackup;
+        private string _textAutoBackupOriginal;
         private List<string> _statusLog = new List<string>();
         private bool _hideStatusLog = false;
         private StatusLog _statusLogForm;
@@ -1549,8 +1549,32 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        private void AutoSave(bool force = false)
+        {
+            if (!Configuration.Settings.General.AutoSave || DateTime.UtcNow.Ticks % 250 != 0 && !force)
+            {
+                return;
+            }
+
+            string currentSubtitleHash = _subtitle.GetFastHashCode(GetCurrentEncoding().BodyName);
+            if (_changeSubtitleToString != currentSubtitleHash && _lastDoNotPrompt != currentSubtitleHash && _subtitle?.Paragraphs.Count > 0)
+            {
+                if (string.IsNullOrEmpty(_fileName) || _converted)
+                {
+                    return;
+                }
+                SaveSubtitle(GetCurrentSubtitleFormat());
+            }
+
+            if (!string.IsNullOrEmpty(_subtitleAlternateFileName) && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
+            {
+                SaveOriginalSubtitle(GetCurrentSubtitleFormat());
+            }
+        }
+
         private bool ContinueNewOrExit()
         {
+            AutoSave(true);
             string currentSubtitleHash = _subtitle.GetFastHashCode(GetCurrentEncoding().BodyName);
             if (_changeSubtitleToString != currentSubtitleHash && _lastDoNotPrompt != currentSubtitleHash && _subtitle?.Paragraphs.Count > 0)
             {
@@ -4394,7 +4418,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             SetShortcuts();
 
-            _timerAutoSave.Stop();
+            _timerAutoBackup.Stop();
 
             CheckAndGetNewlyDownloadedMpvDlls();
 
@@ -4408,8 +4432,8 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (Configuration.Settings.General.AutoBackupSeconds > 0)
             {
-                _timerAutoSave.Interval = 1000 * Configuration.Settings.General.AutoBackupSeconds; // take backup every x second if changes were made
-                _timerAutoSave.Start();
+                _timerAutoBackup.Interval = 1000 * Configuration.Settings.General.AutoBackupSeconds; // take backup every x second if changes were made
+                _timerAutoBackup.Start();
             }
             SetTitle();
             if (Configuration.Settings.VideoControls.GenerateSpectrogram)
@@ -15863,6 +15887,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (!Text.EndsWith('*'))
                     Text = Text.TrimEnd() + "*";
+                AutoSave();
             }
             else
             {
@@ -17208,11 +17233,11 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripButtonToggleVideo.Checked = !Configuration.Settings.General.ShowVideoPlayer;
             toolStripButtonToggleVideo_Click(null, null);
 
-            _timerAutoSave.Tick += TimerAutoSaveTick;
+            _timerAutoBackup.Tick += TimerAutoBackupTick;
             if (Configuration.Settings.General.AutoBackupSeconds > 0)
             {
-                _timerAutoSave.Interval = 1000 * Configuration.Settings.General.AutoBackupSeconds; // take backup every x second if changes were made
-                _timerAutoSave.Start();
+                _timerAutoBackup.Interval = 1000 * Configuration.Settings.General.AutoBackupSeconds; // take backup every x second if changes were made
+                _timerAutoBackup.Start();
             }
 
             SetPositionFromXYString(Configuration.Settings.General.UndockedVideoPosition, "VideoPlayerUndocked");
@@ -17966,7 +17991,7 @@ namespace Nikse.SubtitleEdit.Forms
             return true;
         }
 
-        private void TimerAutoSaveTick(object sender, EventArgs e)
+        private void TimerAutoBackupTick(object sender, EventArgs e)
         {
             string currentText = string.Empty;
             if (_subtitle != null && _subtitle.Paragraphs.Count > 0)
@@ -17975,9 +18000,10 @@ namespace Nikse.SubtitleEdit.Forms
                 if (!saveFormat.IsTextBased)
                     saveFormat = new SubRip();
                 currentText = _subtitle.ToText(saveFormat);
-                if (_textAutoSave == null)
-                    _textAutoSave = _changeSubtitleToString;
-                if (!string.IsNullOrEmpty(_textAutoSave) && currentText.Trim() != _textAutoSave.Trim() && !string.IsNullOrWhiteSpace(currentText))
+                if (_textAutoBackup == null)
+                    _textAutoBackup = _changeSubtitleToString;
+                if (Configuration.Settings.General.AutoSave || 
+                    !string.IsNullOrEmpty(_textAutoBackup) && currentText.Trim() != _textAutoBackup.Trim() && !string.IsNullOrWhiteSpace(currentText))
                 {
                     if (!Directory.Exists(Configuration.AutoBackupDirectory))
                     {
@@ -17991,6 +18017,7 @@ namespace Nikse.SubtitleEdit.Forms
                             return;
                         }
                     }
+
                     string title = string.Empty;
                     if (!string.IsNullOrEmpty(_fileName))
                         title = "_" + Path.GetFileNameWithoutExtension(_fileName);
@@ -18000,7 +18027,8 @@ namespace Nikse.SubtitleEdit.Forms
                     RestoreAutoBackup.CleanAutoBackupFolder(Configuration.AutoBackupDirectory, Configuration.Settings.General.AutoBackupDeleteAfterMonths);
                 }
             }
-            _textAutoSave = currentText;
+
+            _textAutoBackup = currentText;
 
             if (_subtitleAlternateFileName != null && _subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0)
             {
@@ -18010,9 +18038,10 @@ namespace Nikse.SubtitleEdit.Forms
                 string currentTextAlternate = _subtitleAlternate.ToText(saveFormat);
                 if (_subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0)
                 {
-                    if (_textAutoSaveOriginal == null)
-                        _textAutoSaveOriginal = _changeAlternateSubtitleToString;
-                    if (!string.IsNullOrEmpty(_textAutoSaveOriginal) && currentTextAlternate.Trim() != _textAutoSaveOriginal.Trim() && !string.IsNullOrWhiteSpace(currentTextAlternate))
+                    if (_textAutoBackupOriginal == null)
+                        _textAutoBackupOriginal = _changeAlternateSubtitleToString;
+                    if (Configuration.Settings.General.AutoSave ||
+                        !string.IsNullOrEmpty(_textAutoBackupOriginal) && currentTextAlternate.Trim() != _textAutoBackupOriginal.Trim() && !string.IsNullOrWhiteSpace(currentTextAlternate))
                     {
                         if (!Directory.Exists(Configuration.AutoBackupDirectory))
                         {
@@ -18026,6 +18055,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 return;
                             }
                         }
+
                         string title = string.Empty;
                         if (!string.IsNullOrEmpty(_subtitleAlternateFileName))
                             title = "_" + Path.GetFileNameWithoutExtension(_subtitleAlternateFileName);
@@ -18033,7 +18063,8 @@ namespace Nikse.SubtitleEdit.Forms
                         File.WriteAllText(fileName, currentTextAlternate);
                     }
                 }
-                _textAutoSaveOriginal = currentTextAlternate;
+
+                _textAutoBackupOriginal = currentTextAlternate;
             }
         }
 

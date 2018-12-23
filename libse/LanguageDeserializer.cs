@@ -4804,6 +4804,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/CheckForUpdates":
                     language.Settings.CheckForUpdates = reader.Value;
                     break;
+                case "Settings/AutoSave":
+                    language.Settings.AutoSave = reader.Value;
+                    break;
                 case "Settings/AllowEditOfOriginalSubtitle":
                     language.Settings.AllowEditOfOriginalSubtitle = reader.Value;
                     break;
@@ -5655,6 +5658,9 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "SpellCheck/TreatINQuoteAsING":
                     language.SpellCheck.TreatINQuoteAsING = reader.Value;
+                    break;
+                case "SpellCheck/RememberUseAlwaysList":
+                    language.SpellCheck.RememberUseAlwaysList = reader.Value;
                     break;
                 case "SpellCheck/ImageText":
                     language.SpellCheck.ImageText = reader.Value;

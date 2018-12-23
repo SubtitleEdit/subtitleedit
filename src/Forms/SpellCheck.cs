@@ -415,7 +415,10 @@ namespace Nikse.SubtitleEdit.Forms
                 case SpellCheckAction.ChangeAll:
                     _noOfChangedWords++;
                     if (!_changeAllDictionary.ContainsKey(_currentWord))
+                    {
                         _changeAllDictionary.Add(_currentWord, ChangeWord);
+                        _spellCheckWordLists.UseAlwaysListAdd(_currentWord, ChangeWord);
+                    }
                     _mainWindow.CorrectWord(_prefix + ChangeWord + _postfix, _currentParagraph, _prefix + _currentWord + _postfix, ref _firstChange, -1);
                     break;
                 case SpellCheckAction.Skip:
@@ -927,9 +930,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void LoadDictionaries(string dictionaryFolder, string dictionary, string languageName)
         {
-            _changeAllDictionary = new Dictionary<string, string>();
             _skipAllList = new List<string>();
             _spellCheckWordLists = new SpellCheckWordLists(dictionaryFolder, languageName, this);
+            _changeAllDictionary = _spellCheckWordLists.GetUseAlwaysList();
             LoadHunspell(dictionary);
         }
 
@@ -1077,6 +1080,7 @@ namespace Nikse.SubtitleEdit.Forms
                     case SpellCheckAction.ChangeAll:
                         _subtitle = _mainWindow.UndoFromSpellCheck(undo.Subtitle);
                         _changeAllDictionary.Remove(undo.CurrentWord);
+                        _spellCheckWordLists.UseAlwaysListRemove(undo.CurrentWord);
                         break;
                     case SpellCheckAction.Skip:
                         break;

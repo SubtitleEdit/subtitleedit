@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Xml;
 using Nikse.SubtitleEdit.Core.Dictionaries;
@@ -24,21 +25,24 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
         private readonly HashSet<string> _wordsWithDashesOrPeriods = new HashSet<string>();
         private readonly HashSet<string> _userWordList = new HashSet<string>();
         private readonly HashSet<string> _userPhraseList = new HashSet<string>();
+        private readonly string _dictionaryFolder;
+        private HashSet<string> _skipAllList = new HashSet<string>();
+        private readonly Dictionary<string, string> _useAlwaysList = new Dictionary<string, string>();
         private readonly string _languageName;
         private readonly IDoSpell _doSpell;
 
         public SpellCheckWordLists(string dictionaryFolder, string languageName, IDoSpell doSpell)
         {
-            if (languageName == null)
-                throw new NullReferenceException(nameof(languageName));
-            if (doSpell == null)
-                throw new NullReferenceException(nameof(doSpell));
-
-            _languageName = languageName;
-            _doSpell = doSpell;
+            _dictionaryFolder = dictionaryFolder ?? throw new NullReferenceException(nameof(dictionaryFolder));
+            _languageName = languageName ?? throw new NullReferenceException(nameof(languageName));
+            _doSpell = doSpell ?? throw new NullReferenceException(nameof(doSpell));
             _nameList = new NameList(Configuration.DictionariesDirectory, languageName, Configuration.Settings.WordLists.UseOnlineNames, Configuration.Settings.WordLists.NamesUrl);
             _names = _nameList.GetNames();
             var namesMultiWordList = _nameList.GetMultiNames();
+            if (Configuration.Settings.Tools.RememberUseAlwaysList)
+            {
+                LoadUseAlwaysList();
+            }
 
             foreach (string namesItem in _names)
                 _namesListUppercase.Add(namesItem.ToUpper());
@@ -102,6 +106,94 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
             }
         }
 
+        public Dictionary<string, string> GetUseAlwaysList()
+        {
+            return new Dictionary<string, string>(_useAlwaysList);
+        }
+
+        private void LoadUseAlwaysList()
+        {
+            if (!Configuration.Settings.Tools.RememberUseAlwaysList)
+            {
+                return;
+            }
+
+            var fileName = GetUseAlwaysListFileName();
+            var xmlDoc = new XmlDocument();
+            if (File.Exists(fileName))
+            {
+                xmlDoc.Load(fileName);
+                var xmlNodeList = xmlDoc.DocumentElement?.SelectNodes("Pair");
+                if (xmlNodeList != null)
+                {
+                    foreach (XmlNode item in xmlNodeList)
+                    {
+                        if (item.Attributes?["from"] != null && item.Attributes["to"] != null)
+                        {
+                            var to = item.Attributes["to"].Value;
+                            var from = item.Attributes["from"].Value;
+                            if (!_useAlwaysList.ContainsKey(from))
+                            {
+                                _useAlwaysList.Add(from, to);
+                            }
+                        }
+                    }
+                }
+            }
+            else
+            {
+                xmlDoc.LoadXml("<UseAlways></UseAlways>");
+            }
+        }
+
+        private string GetUseAlwaysListFileName()
+        {
+            return Path.Combine(_dictionaryFolder, _languageName + "_UseAlways.xml");
+        }
+
+        public void UseAlwaysListAdd(string newKey, string newValue)
+        {
+            SaveUseAlwaysList(newKey, newValue);
+        }
+
+        public void UseAlwaysListRemove(string key)
+        {
+            SaveUseAlwaysList(null, null, key);
+        }
+
+        private void SaveUseAlwaysList(string newKey = null, string newValue = null, string oldKey = null)
+        {
+            if (!Configuration.Settings.Tools.RememberUseAlwaysList)
+            {
+                return;
+            }
+
+            var xmlDoc = new XmlDocument();
+            xmlDoc.LoadXml("<UseAlways></UseAlways>");
+
+            if (newKey != null && newValue != null && !_useAlwaysList.ContainsKey(newKey.Trim()))
+            {
+                _useAlwaysList.Add(newKey.Trim(), newValue.Trim());
+            }
+            if (oldKey != null && _useAlwaysList.ContainsKey(oldKey.Trim()))
+            {
+                _useAlwaysList.Remove(oldKey.Trim());
+            }
+            _skipAllList = new HashSet<string>(_skipAllList.OrderBy(p => p).ToList());
+
+            foreach (KeyValuePair<string, string> kvp in _useAlwaysList)
+            {
+                XmlNode node = xmlDoc.CreateElement("Pair");
+                var f = xmlDoc.CreateAttribute("from");
+                f.Value = kvp.Key;
+                var t = xmlDoc.CreateAttribute("to");
+                t.Value = kvp.Value;
+                node.Attributes.Append(f);
+                node.Attributes.Append(t);
+                xmlDoc.DocumentElement.AppendChild(node);
+            }
+            xmlDoc.Save(GetUseAlwaysListFileName());
+        }
 
         public void RemoveUserWord(string word)
         {
