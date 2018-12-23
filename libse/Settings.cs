@@ -84,6 +84,7 @@ namespace Nikse.SubtitleEdit.Core
         public bool SpellCheckAutoChangeNames { get; set; }
         public bool SpellCheckOneLetterWords { get; set; }
         public bool SpellCheckEnglishAllowInQuoteAsIng { get; set; }
+        public bool RememberUseAlwaysList { get; set; }        
         public bool SpellCheckShowCompletedMessage { get; set; }
         public bool OcrFixUseHardcodedRules { get; set; }
         public int OcrBinaryImageCompareRgbThreshold { get; set; }
@@ -717,6 +718,7 @@ $HorzAlign          =   Center
         public string LastSaveAsFormat { get; set; }
         public bool CheckForUpdates { get; set; }
         public DateTime LastCheckForUpdates { get; set; }
+        public bool AutoSave { get; set; }
         public bool ShowProgress { get; set; }
         public long CurrentVideoOffsetInMs { get; set; }
         public bool UseDarkTheme { get; set; }
@@ -1888,6 +1890,9 @@ $HorzAlign          =   Center
             subNode = node.SelectSingleNode("LastCheckForUpdates");
             if (subNode != null)
                 settings.General.LastCheckForUpdates = Convert.ToDateTime(subNode.InnerText.Trim());
+            subNode = node.SelectSingleNode("AutoSave");
+            if (subNode != null)
+                settings.General.AutoSave = Convert.ToBoolean(subNode.InnerText.Trim());
             subNode = node.SelectSingleNode("ShowProgress");
             if (subNode != null)
                 settings.General.ShowProgress = Convert.ToBoolean(subNode.InnerText.Trim());
@@ -1942,6 +1947,9 @@ $HorzAlign          =   Center
             subNode = node.SelectSingleNode("SpellCheckEnglishAllowInQuoteAsIng");
             if (subNode != null)
                 settings.Tools.SpellCheckEnglishAllowInQuoteAsIng = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("RememberUseAlwaysList");
+            if (subNode != null)
+                settings.Tools.RememberUseAlwaysList = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("SpellCheckShowCompletedMessage");
             if (subNode != null)
                 settings.Tools.SpellCheckShowCompletedMessage = Convert.ToBoolean(subNode.InnerText);
@@ -3678,6 +3686,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("LastSaveAsFormat", settings.General.LastSaveAsFormat);
                 textWriter.WriteElementString("CheckForUpdates", settings.General.CheckForUpdates.ToString());
                 textWriter.WriteElementString("LastCheckForUpdates", settings.General.LastCheckForUpdates.ToString("yyyy-MM-dd"));
+                textWriter.WriteElementString("AutoSave", settings.General.AutoSave.ToString());
                 textWriter.WriteElementString("ShowProgress", settings.General.ShowProgress.ToString());
                 textWriter.WriteElementString("UseDarkTheme", settings.General.UseDarkTheme.ToString());
                 textWriter.WriteElementString("ShowBetaStuff", settings.General.ShowBetaStuff.ToString());
@@ -3698,6 +3707,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("SpellCheckAutoChangeNames", settings.Tools.SpellCheckAutoChangeNames.ToString());
                 textWriter.WriteElementString("SpellCheckOneLetterWords", settings.Tools.SpellCheckOneLetterWords.ToString());
                 textWriter.WriteElementString("SpellCheckEnglishAllowInQuoteAsIng", settings.Tools.SpellCheckEnglishAllowInQuoteAsIng.ToString());
+                textWriter.WriteElementString("RememberUseAlwaysList", settings.Tools.RememberUseAlwaysList.ToString());
                 textWriter.WriteElementString("SpellCheckShowCompletedMessage", settings.Tools.SpellCheckShowCompletedMessage.ToString());
                 textWriter.WriteElementString("OcrFixUseHardcodedRules", settings.Tools.OcrFixUseHardcodedRules.ToString());
                 textWriter.WriteElementString("OcrBinaryImageCompareRgbThreshold", settings.Tools.OcrBinaryImageCompareRgbThreshold.ToString(CultureInfo.InvariantCulture));

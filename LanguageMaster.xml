@@ -1793,6 +1793,7 @@ can edit in same subtitle file (collaboration)</Information>
     <AutoBackupDeleteAfterThreeMonths>3 months</AutoBackupDeleteAfterThreeMonths>
     <AutoBackupDeleteAfterSixMonths>6 months</AutoBackupDeleteAfterSixMonths>
     <CheckForUpdates>Check for updates</CheckForUpdates>
+    <AutoSave>Auto save</AutoSave>
     <AllowEditOfOriginalSubtitle>Allow edit of original subtitle</AllowEditOfOriginalSubtitle>
     <PromptDeleteLines>Prompt for delete lines</PromptDeleteLines>
     <TimeCodeMode>Time code mode</TimeCodeMode>
@@ -2091,6 +2092,7 @@ Setting a font for a subtitle is normally done in the video player, but can also
     <AutoFixNames>Auto fix names where only casing differ</AutoFixNames>
     <CheckOneLetterWords>Prompt for unknown one letter words</CheckOneLetterWords>
     <TreatINQuoteAsING>Treat word ending " in' " as " ing " (English only)</TreatINQuoteAsING>
+    <RememberUseAlwaysList>Remember "Use always" list</RememberUseAlwaysList>
     <ImageText>Image text</ImageText>
     <SpellCheckCompleted>Spell check completed</SpellCheckCompleted>
     <SpellCheckAborted>Spell check aborted</SpellCheckAborted>

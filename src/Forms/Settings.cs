@@ -368,6 +368,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelAutoBackupDeleteAfter.Left = comboBoxAutoBackup.Left + comboBoxAutoBackup.Width + 5;
             comboBoxAutoBackupDeleteAfter.Left = labelAutoBackupDeleteAfter.Left + labelAutoBackupDeleteAfter.Width + 3;
             checkBoxCheckForUpdates.Text = language.CheckForUpdates;
+            checkBoxAutoSave.Text = language.AutoSave;
             checkBoxAllowEditOfOriginalSubtitle.Text = language.AllowEditOfOriginalSubtitle;
             checkBoxPromptDeleteLines.Text = language.PromptDeleteLines;
 
@@ -548,6 +549,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxSpellCheckAutoChangeNames.Text = Configuration.Settings.Language.SpellCheck.AutoFixNames;
             checkBoxSpellCheckOneLetterWords.Text = Configuration.Settings.Language.SpellCheck.CheckOneLetterWords;
             checkBoxTreatINQuoteAsING.Text = Configuration.Settings.Language.SpellCheck.TreatINQuoteAsING;
+            checkBoxUseAlwaysToFile.Text = Configuration.Settings.Language.SpellCheck.RememberUseAlwaysList;
 
             groupBoxToolsMisc.Text = language.Miscellaneous;
             checkBoxUseDoNotBreakAfterList.Text = language.UseDoNotBreakAfterList;
@@ -594,6 +596,7 @@ namespace Nikse.SubtitleEdit.Forms
                 comboBoxAutoBackupDeleteAfter.SelectedIndex = 2;
 
             checkBoxCheckForUpdates.Checked = gs.CheckForUpdates;
+            checkBoxAutoSave.Checked = gs.AutoSave;
 
             comboBoxSpellChecker.SelectedIndex = gs.SpellChecker.Contains("word", StringComparison.OrdinalIgnoreCase) ? 1 : 0;
 
@@ -684,6 +687,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxSpellCheckAutoChangeNames.Checked = toolsSettings.SpellCheckAutoChangeNames;
             checkBoxSpellCheckOneLetterWords.Checked = toolsSettings.SpellCheckOneLetterWords;
             checkBoxTreatINQuoteAsING.Checked = toolsSettings.SpellCheckEnglishAllowInQuoteAsIng;
+            checkBoxUseAlwaysToFile.Checked = toolsSettings.RememberUseAlwaysList;
             checkBoxUseDoNotBreakAfterList.Checked = toolsSettings.UseNoLineBreakAfter;
             checkBoxCpsIncludeWhiteSpace.Checked = !Configuration.Settings.General.CharactersPerSecondsIgnoreWhiteSpace;
 
@@ -1275,6 +1279,7 @@ namespace Nikse.SubtitleEdit.Forms
                 gs.AutoBackupDeleteAfterMonths = 1;
 
             gs.CheckForUpdates = checkBoxCheckForUpdates.Checked;
+            gs.AutoSave = checkBoxAutoSave.Checked;
 
             if (comboBoxTimeCodeMode.Visible)
                 gs.UseTimeFormatHHMMSSFF = comboBoxTimeCodeMode.SelectedIndex == 1;
@@ -1344,6 +1349,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolsSettings.SpellCheckAutoChangeNames = checkBoxSpellCheckAutoChangeNames.Checked;
             toolsSettings.SpellCheckOneLetterWords = checkBoxSpellCheckOneLetterWords.Checked;
             toolsSettings.SpellCheckEnglishAllowInQuoteAsIng = checkBoxTreatINQuoteAsING.Checked;
+            toolsSettings.RememberUseAlwaysList = checkBoxUseAlwaysToFile.Checked;
             toolsSettings.UseNoLineBreakAfter = checkBoxUseDoNotBreakAfterList.Checked;
             Configuration.Settings.General.CharactersPerSecondsIgnoreWhiteSpace = !checkBoxCpsIncludeWhiteSpace.Checked;
             toolsSettings.OcrFixUseHardcodedRules = checkBoxFixCommonOcrErrorsUsingHardcodedRules.Checked;

@@ -1957,6 +1957,7 @@
             public string AutoBackupDeleteAfterThreeMonths { get; set; }
             public string AutoBackupDeleteAfterSixMonths { get; set; }
             public string CheckForUpdates { get; set; }
+            public string AutoSave { get; set; }
             public string AllowEditOfOriginalSubtitle { get; set; }
             public string PromptDeleteLines { get; set; }
             public string TimeCodeMode { get; set; }
@@ -2266,6 +2267,7 @@
             public string AutoFixNames { get; set; }
             public string CheckOneLetterWords { get; set; }
             public string TreatINQuoteAsING { get; set; }
+            public string RememberUseAlwaysList { get; set; }
             public string ImageText { get; set; }
             public string SpellCheckCompleted { get; set; }
             public string SpellCheckAborted { get; set; }

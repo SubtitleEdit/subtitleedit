@@ -349,6 +349,8 @@
             this.colorDialogSSAStyle = new System.Windows.Forms.ColorDialog();
             this.labelStatus = new System.Windows.Forms.Label();
             this.openFileDialogFFmpeg = new System.Windows.Forms.OpenFileDialog();
+            this.checkBoxAutoSave = new System.Windows.Forms.CheckBox();
+            this.checkBoxUseAlwaysToFile = new System.Windows.Forms.CheckBox();
             this.tabControlSettings.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
@@ -490,6 +492,7 @@
             this.groupBoxMiscellaneous.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxMiscellaneous.Controls.Add(this.checkBoxAutoSave);
             this.groupBoxMiscellaneous.Controls.Add(this.comboBoxSaveAsFileNameFrom);
             this.groupBoxMiscellaneous.Controls.Add(this.labelSaveAsFileNameFrom);
             this.groupBoxMiscellaneous.Controls.Add(this.groupBoxGeneralRules);
@@ -828,10 +831,10 @@
             // checkBoxCheckForUpdates
             // 
             this.checkBoxCheckForUpdates.AutoSize = true;
-            this.checkBoxCheckForUpdates.Location = new System.Drawing.Point(441, 435);
+            this.checkBoxCheckForUpdates.Location = new System.Drawing.Point(11, 436);
             this.checkBoxCheckForUpdates.Name = "checkBoxCheckForUpdates";
             this.checkBoxCheckForUpdates.Size = new System.Drawing.Size(114, 17);
-            this.checkBoxCheckForUpdates.TabIndex = 28;
+            this.checkBoxCheckForUpdates.TabIndex = 7;
             this.checkBoxCheckForUpdates.Text = "Check for updates";
             this.checkBoxCheckForUpdates.UseVisualStyleBackColor = true;
             // 
@@ -2629,6 +2632,7 @@
             // 
             this.groupBoxSpellCheck.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxSpellCheck.Controls.Add(this.checkBoxUseAlwaysToFile);
             this.groupBoxSpellCheck.Controls.Add(this.checkBoxTreatINQuoteAsING);
             this.groupBoxSpellCheck.Controls.Add(this.checkBoxSpellCheckOneLetterWords);
             this.groupBoxSpellCheck.Controls.Add(this.checkBoxSpellCheckAutoChangeNames);
@@ -4207,6 +4211,26 @@
             // 
             this.openFileDialogFFmpeg.FileName = "openFileDialog1";
             // 
+            // checkBoxAutoSave
+            // 
+            this.checkBoxAutoSave.AutoSize = true;
+            this.checkBoxAutoSave.Location = new System.Drawing.Point(441, 436);
+            this.checkBoxAutoSave.Name = "checkBoxAutoSave";
+            this.checkBoxAutoSave.Size = new System.Drawing.Size(75, 17);
+            this.checkBoxAutoSave.TabIndex = 28;
+            this.checkBoxAutoSave.Text = "Auto save";
+            this.checkBoxAutoSave.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxUseAlwaysToFile
+            // 
+            this.checkBoxUseAlwaysToFile.AutoSize = true;
+            this.checkBoxUseAlwaysToFile.Location = new System.Drawing.Point(16, 86);
+            this.checkBoxUseAlwaysToFile.Name = "checkBoxUseAlwaysToFile";
+            this.checkBoxUseAlwaysToFile.Size = new System.Drawing.Size(192, 17);
+            this.checkBoxUseAlwaysToFile.TabIndex = 3;
+            this.checkBoxUseAlwaysToFile.Text = "Remember \"Use always\" / \"Skip all\"";
+            this.checkBoxUseAlwaysToFile.UseVisualStyleBackColor = true;
+            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -4664,5 +4688,7 @@
         private System.Windows.Forms.TextBox textBoxGoogleTransleApiKey;
         private System.Windows.Forms.LinkLabel linkLabelGoogleTranslateSignUp;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.CheckBox checkBoxAutoSave;
+        private System.Windows.Forms.CheckBox checkBoxUseAlwaysToFile;
     }
 }
