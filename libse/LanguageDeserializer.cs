@@ -4651,6 +4651,21 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/UnbreakNoSpace":
                     language.Settings.UnbreakNoSpace = reader.Value;
                     break;
+                case "Settings/ToggleBookmarks":
+                    language.Settings.ToggleBookmarks = reader.Value;
+                    break;
+                case "Settings/ToggleBookmarksWithText":
+                    language.Settings.ToggleBookmarksWithText = reader.Value;
+                    break;
+                case "Settings/ClearBookmarks":
+                    language.Settings.ClearBookmarks = reader.Value;
+                    break;
+                case "Settings/GoToBookmark":
+                    language.Settings.GoToBookmark = reader.Value;
+                    break;
+                case "Settings/GoToNextBookmark":
+                    language.Settings.GoToNextBookmark = reader.Value;
+                    break;
                 case "Settings/FontInUi":
                     language.Settings.FontInUi = reader.Value;
                     break;

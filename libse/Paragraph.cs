@@ -49,6 +49,8 @@ namespace Nikse.SubtitleEdit.Core
 
         public bool NewSection { get; set; }
 
+        public string Bookmark { get; set; }
+
         private string GenerateId()
         {
             return Guid.NewGuid().ToString();
@@ -92,6 +94,7 @@ namespace Nikse.SubtitleEdit.Core
             Language = paragraph.Language;
             Style = paragraph.Style;
             NewSection = paragraph.NewSection;
+            Bookmark = paragraph.Bookmark;
         }
 
         public Paragraph(int startFrame, int endFrame, string text)

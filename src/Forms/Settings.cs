@@ -799,6 +799,11 @@ namespace Nikse.SubtitleEdit.Forms
             AddNode(generalNode, language.GoToNextSubtitleAndFocusVideo, nameof(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitleAndFocusVideo));
             AddNode(generalNode, language.Help, nameof(Configuration.Settings.Shortcuts.GeneralHelp));
             AddNode(generalNode, language.UnbreakNoSpace, nameof(Configuration.Settings.Shortcuts.GeneralUnbrekNoSpace));
+            AddNode(generalNode, language.ToggleBookmarks, nameof(Configuration.Settings.Shortcuts.GeneralToggleBookmarks));
+            AddNode(generalNode, language.ToggleBookmarksWithText, nameof(Configuration.Settings.Shortcuts.GeneralToggleBookmarksWithText));
+            AddNode(generalNode, language.ClearBookmarks, nameof(Configuration.Settings.Shortcuts.GeneralClearBookmarks));
+            AddNode(generalNode, language.GoToBookmark, nameof(Configuration.Settings.Shortcuts.GeneralGoToBookmark));
+            AddNode(generalNode, language.GoToNextBookmark, nameof(Configuration.Settings.Shortcuts.GeneralGoToNextBookmark));
             if (generalNode.Nodes.Count > 0)
                 _shortcuts.Nodes.Add(generalNode);
 
@@ -827,6 +832,7 @@ namespace Nikse.SubtitleEdit.Forms
             AddNode(editNode, Configuration.Settings.Language.Main.Menu.Edit.FindNext, nameof(Configuration.Settings.Shortcuts.MainEditFindNext), true);
             AddNode(editNode, Configuration.Settings.Language.Main.Menu.Edit.Replace, nameof(Configuration.Settings.Shortcuts.MainEditReplace), true);
             AddNode(editNode, Configuration.Settings.Language.Main.Menu.Edit.MultipleReplace, nameof(Configuration.Settings.Shortcuts.MainEditMultipleReplace), true);
+            AddNode(editNode, Configuration.Settings.Language.Main.Menu.Edit.ModifySelection, nameof(Configuration.Settings.Shortcuts.MainEditModifySelection), true);
             AddNode(editNode, Configuration.Settings.Language.Main.Menu.Edit.GoToSubtitleNumber, nameof(Configuration.Settings.Shortcuts.MainEditGoToLineNumber), true);
             AddNode(editNode, Configuration.Settings.Language.VobSubOcr.RightToLeft, nameof(Configuration.Settings.Shortcuts.MainEditRightToLeft), true);
             AddNode(editNode, language.ReverseStartAndEndingForRTL, nameof(Configuration.Settings.Shortcuts.MainEditReverseStartAndEndingForRTL), true);

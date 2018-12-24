@@ -2,7 +2,11 @@
 
 3.5.9 (xth March 2019) BETA
 * NEW:
+   * Bookmarks
+   * Auto save option
+   * Spell check - keep "Use always" replace list option
    * Image export - option to have single lines top justified - thx joedmartin
+   * Add shortcut: Modify selection
 * IMPROVED:
    * Update Hungarian translation - thx Zityi
 * FIXED:

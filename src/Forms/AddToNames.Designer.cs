@@ -29,6 +29,7 @@
             // 
             // buttonOK
             // 
+            this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonOK.Location = new System.Drawing.Point(97, 129);
             this.buttonOK.Name = "buttonOK";
@@ -40,6 +41,7 @@
             // 
             // buttonCancel
             // 
+            this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonCancel.Location = new System.Drawing.Point(181, 129);

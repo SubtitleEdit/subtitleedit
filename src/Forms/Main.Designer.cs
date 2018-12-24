@@ -418,6 +418,7 @@
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.splitContainerListViewAndText = new System.Windows.Forms.SplitContainer();
             this.SubtitleListview1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
+            this.imageListBookmarks = new System.Windows.Forms.ImageList(this.components);
             this.groupBoxEdit = new System.Windows.Forms.GroupBox();
             this.labelSingleLine = new System.Windows.Forms.Label();
             this.labelAlternateSingleLine = new System.Windows.Forms.Label();
@@ -2402,7 +2403,7 @@
             this.changeCasingForSelectedLinesToolStripMenuItem,
             this.toolStripMenuItemSaveSelectedLines});
             this.contextMenuStripListview.Name = "contextMenuStripListview";
-            this.contextMenuStripListview.Size = new System.Drawing.Size(285, 892);
+            this.contextMenuStripListview.Size = new System.Drawing.Size(285, 870);
             this.contextMenuStripListview.Closed += new System.Windows.Forms.ToolStripDropDownClosedEventHandler(this.MenuClosed);
             this.contextMenuStripListview.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripListviewOpening);
             this.contextMenuStripListview.Opened += new System.EventHandler(this.MenuOpened);
@@ -4003,6 +4004,7 @@
             this.SubtitleListview1.Name = "SubtitleListview1";
             this.SubtitleListview1.OwnerDraw = true;
             this.SubtitleListview1.Size = new System.Drawing.Size(724, 91);
+            this.SubtitleListview1.StateImageList = this.imageListBookmarks;
             this.SubtitleListview1.SubtitleFontBold = false;
             this.SubtitleListview1.SubtitleFontName = "Tahoma";
             this.SubtitleListview1.SubtitleFontSize = 8;
@@ -4016,6 +4018,12 @@
             this.SubtitleListview1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.SubtitleListview1KeyDown);
             this.SubtitleListview1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.SubtitleListview1_MouseDoubleClick);
             this.SubtitleListview1.MouseEnter += new System.EventHandler(this.SubtitleListview1_MouseEnter);
+            // 
+            // imageListBookmarks
+            // 
+            this.imageListBookmarks.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageListBookmarks.ImageStream")));
+            this.imageListBookmarks.TransparentColor = System.Drawing.Color.Transparent;
+            this.imageListBookmarks.Images.SetKeyName(0, "bookmark.png");
             // 
             // groupBoxEdit
             // 
@@ -5191,5 +5199,6 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSplitViaWaveform;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemEbuProperties;
         private System.Windows.Forms.ToolStripMenuItem boxToolStripMenuItem;
+        private System.Windows.Forms.ImageList imageListBookmarks;
     }
 }

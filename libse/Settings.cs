@@ -84,7 +84,7 @@ namespace Nikse.SubtitleEdit.Core
         public bool SpellCheckAutoChangeNames { get; set; }
         public bool SpellCheckOneLetterWords { get; set; }
         public bool SpellCheckEnglishAllowInQuoteAsIng { get; set; }
-        public bool RememberUseAlwaysList { get; set; }        
+        public bool RememberUseAlwaysList { get; set; }
         public bool SpellCheckShowCompletedMessage { get; set; }
         public bool OcrFixUseHardcodedRules { get; set; }
         public int OcrBinaryImageCompareRgbThreshold { get; set; }
@@ -194,7 +194,7 @@ namespace Nikse.SubtitleEdit.Core
         public bool ImportTextRemoveLinesNoLetters { get; set; }
         public bool ImportTextGenerateTimeCodes { get; set; }
         public bool ImportTextAutoBreak { get; set; }
-        public bool ImportTextAutoBreakAtEnd { get; set; }        
+        public bool ImportTextAutoBreakAtEnd { get; set; }
         public decimal ImportTextGap { get; set; }
         public decimal ImportTextAutoSplitNumberOfLines { get; set; }
         public string ImportTextAutoBreakAtEndMarkerText { get; set; }
@@ -1008,6 +1008,11 @@ $HorzAlign          =   Center
         public string GeneralPlayFirstSelected { get; set; }
         public string GeneralHelp { get; set; }
         public string GeneralUnbrekNoSpace { get; set; }
+        public string GeneralToggleBookmarks { get; set; }
+        public string GeneralToggleBookmarksWithText { get; set; }
+        public string GeneralClearBookmarks { get; set; }
+        public string GeneralGoToBookmark { get; set; }
+        public string GeneralGoToNextBookmark { get; set; }
         public string MainFileNew { get; set; }
         public string MainFileOpen { get; set; }
         public string MainFileOpenKeepVideo { get; set; }
@@ -1027,7 +1032,7 @@ $HorzAlign          =   Center
         public string MainEditFind { get; set; }
         public string MainEditFindNext { get; set; }
         public string MainEditReplace { get; set; }
-        public string MainEditMultipleReplace { get; set; }
+        public string MainEditMultipleReplace { get; set; }       
         public string MainEditGoToLineNumber { get; set; }
         public string MainEditRightToLeft { get; set; }
         public string MainEditReverseStartAndEndingForRTL { get; set; }
@@ -2967,6 +2972,21 @@ $HorzAlign          =   Center
                 subNode = node.SelectSingleNode("GeneralUnbrekNoSpace");
                 if (subNode != null)
                     settings.Shortcuts.GeneralUnbrekNoSpace = subNode.InnerText;
+                subNode = node.SelectSingleNode("GeneralToggleBookmarks");
+                if (subNode != null)
+                    settings.Shortcuts.GeneralToggleBookmarks = subNode.InnerText;
+                subNode = node.SelectSingleNode("GeneralToggleBookmarksWithText");
+                if (subNode != null)
+                    settings.Shortcuts.GeneralToggleBookmarksWithText = subNode.InnerText;
+                subNode = node.SelectSingleNode("GeneralClearBookmarks");
+                if (subNode != null)
+                    settings.Shortcuts.GeneralClearBookmarks = subNode.InnerText;
+                subNode = node.SelectSingleNode("GeneralGoToBookmark");
+                if (subNode != null)
+                    settings.Shortcuts.GeneralGoToBookmark = subNode.InnerText;
+                subNode = node.SelectSingleNode("GeneralGoToNextBookmark");
+                if (subNode != null)
+                    settings.Shortcuts.GeneralGoToNextBookmark = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainFileNew");
                 if (subNode != null)
                     settings.Shortcuts.MainFileNew = subNode.InnerText;
@@ -3719,7 +3739,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("GoogleApiV2KeyInfoShow", settings.Tools.GoogleApiV2KeyInfoShow.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("GoogleTranslateNoKeyWarningShow", settings.Tools.GoogleTranslateNoKeyWarningShow.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("UseGooleApiPaidService", settings.Tools.UseGooleApiPaidService.ToString());
-                textWriter.WriteElementString("GoogleApiV1ChunkSize", settings.Tools.GoogleApiV1ChunkSize.ToString());                
+                textWriter.WriteElementString("GoogleApiV1ChunkSize", settings.Tools.GoogleApiV1ChunkSize.ToString());
                 textWriter.WriteElementString("GoogleTranslateLastTargetLanguage", settings.Tools.GoogleTranslateLastTargetLanguage);
                 textWriter.WriteElementString("TranslateAutoSplit", settings.Tools.TranslateAutoSplit.ToString());
                 textWriter.WriteElementString("ListViewSyntaxColorDurationSmall", settings.Tools.ListViewSyntaxColorDurationSmall.ToString());
@@ -4083,6 +4103,11 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("GeneralPlayFirstSelected", settings.Shortcuts.GeneralPlayFirstSelected);
                 textWriter.WriteElementString("GeneralHelp", settings.Shortcuts.GeneralHelp);
                 textWriter.WriteElementString("GeneralUnbrekNoSpace", settings.Shortcuts.GeneralUnbrekNoSpace);
+                textWriter.WriteElementString("GeneralToggleBookmarks", settings.Shortcuts.GeneralToggleBookmarks);
+                textWriter.WriteElementString("GeneralToggleBookmarksWithText", settings.Shortcuts.GeneralToggleBookmarksWithText);
+                textWriter.WriteElementString("GeneralClearBookmarks", settings.Shortcuts.GeneralClearBookmarks);
+                textWriter.WriteElementString("GeneralGoToBookmark", settings.Shortcuts.GeneralGoToBookmark);
+                textWriter.WriteElementString("GeneralGoToNextBookmark", settings.Shortcuts.GeneralGoToNextBookmark);
                 textWriter.WriteElementString("MainFileNew", settings.Shortcuts.MainFileNew);
                 textWriter.WriteElementString("MainFileOpen", settings.Shortcuts.MainFileOpen);
                 textWriter.WriteElementString("MainFileOpenKeepVideo", settings.Shortcuts.MainFileOpenKeepVideo);

@@ -365,6 +365,7 @@ namespace Nikse.SubtitleEdit.Controls
 
                 if (e.Item.Selected)
                 {
+
                     Rectangle rect = e.Bounds;
                     if (Configuration.Settings != null)
                     {
@@ -376,6 +377,14 @@ namespace Nikse.SubtitleEdit.Controls
                     {
                         e.Graphics.FillRectangle(Brushes.LightBlue, rect);
                     }
+
+                    int addX = 0;
+                    if (e.ColumnIndex == 0 && e.Item.StateImageIndex >= 0)
+                    {
+                        e.Graphics.DrawImage(StateImageList.Images[e.Item.StateImageIndex], new Rectangle(rect.X + 4, rect.Y + 2, 16, 16));
+                        addX = 18;
+                    }
+
                     if (Columns[e.ColumnIndex].TextAlign == HorizontalAlignment.Right)
                     {
                         var stringWidth = (int)e.Graphics.MeasureString(e.Item.SubItems[e.ColumnIndex].Text, _subtitleFont).Width;
@@ -383,7 +392,7 @@ namespace Nikse.SubtitleEdit.Controls
                     }
                     else
                     {
-                        TextRenderer.DrawText(e.Graphics, e.Item.SubItems[e.ColumnIndex].Text, _subtitleFont, new Point(e.Bounds.Left + 3, e.Bounds.Top + 2), e.Item.ForeColor, TextFormatFlags.NoPrefix);
+                        TextRenderer.DrawText(e.Graphics, e.Item.SubItems[e.ColumnIndex].Text, _subtitleFont, new Point(e.Bounds.Left + 3 + addX, e.Bounds.Top + 2), e.Item.ForeColor, TextFormatFlags.NoPrefix);
                     }
                 }
                 else
@@ -1183,7 +1192,7 @@ namespace Nikse.SubtitleEdit.Controls
                 if (ColumnIndexTextAlternate >= 0)
                 {
                     item.SubItems[ColumnIndexTextAlternate].BackColor = BackColor;
-                }               
+                }
 
                 if (ColumnIndexText >= item.SubItems.Count)
                     return;
@@ -1276,6 +1285,8 @@ namespace Nikse.SubtitleEdit.Controls
                         break;
                 }
             }
+
+            item.StateImageIndex = paragraph.Bookmark != null ? 0 : -1;
             item.Font = new Font(_subtitleFontName, SubtitleFontSize, GetFontStyle());
             Items.Add(item);
         }
@@ -1598,7 +1609,7 @@ namespace Nikse.SubtitleEdit.Controls
                     Items[index].SubItems[ColumnIndexWpm].BackColor = color;
                 if (ColumnIndexText >= 0)
                     Items[index].SubItems[ColumnIndexText].BackColor = color;
-                if (ColumnIndexTextAlternate>= 0)
+                if (ColumnIndexTextAlternate >= 0)
                     Items[index].SubItems[ColumnIndexTextAlternate].BackColor = color;
             }
         }
@@ -1661,5 +1672,13 @@ namespace Nikse.SubtitleEdit.Controls
         }
 
         private FontStyle GetFontStyle() => SubtitleFontBold ? FontStyle.Bold : FontStyle.Regular;
+
+        public void ShowState(int index, Paragraph paragraph)
+        {
+            if (IsValidIndex(index))
+            {
+                Items[index].StateImageIndex = paragraph.Bookmark != null ? 0 : -1;
+            }
+        }
     }
 }

@@ -743,10 +743,36 @@ namespace Nikse.SubtitleEdit.Controls
                 const int padding = 3;
                 double n = _zoomFactor * _wavePeaks.SampleRate;
 
+                // bookmark text
+                if (paragraph.Bookmark != null)
+                {
+                    using (var bookmarkTextBrush = new SolidBrush(Color.DodgerBlue))
+                    {
+                        var x = currentRegionLeft + padding;
+                        var y = Height / 2 - (int)graphics.MeasureString("xx", font).Height / 2;
+                        graphics.FillPolygon(bookmarkTextBrush, new PointF[]
+                        {
+                            new PointF(x, y),
+                            new PointF(x + 14, y),
+                            new PointF(x + 14, y + 24),
+                            new PointF(x + 7, y + 14),
+                            new PointF(x, y + 24),
+                            new PointF(x, y),
+                        });
+                        x += 16;
+                        // poor mans outline + text
+                        graphics.DrawString(paragraph.Bookmark, font, outlineBrush, new PointF(x, y - 1));
+                        graphics.DrawString(paragraph.Bookmark, font, outlineBrush, new PointF(x, y + 1));
+                        graphics.DrawString(paragraph.Bookmark, font, outlineBrush, new PointF(x - 1, y));
+                        graphics.DrawString(paragraph.Bookmark, font, outlineBrush, new PointF(x + 1, y));
+                        graphics.DrawString(paragraph.Bookmark, font, bookmarkTextBrush, new PointF(x, y));
+                    }
+                }
+
                 // paragraph text
                 if (n > 80)
                 {
-                    string text = HtmlUtil.RemoveHtmlTags(paragraph.Text, true); 
+                    string text = HtmlUtil.RemoveHtmlTags(paragraph.Text, true);
                     if (Configuration.Settings.VideoControls.WaveformUnwrapText)
                         text = text.Replace(Environment.NewLine, "  ");
                     DrawParagraphText(graphics, text, font, currentRegionWidth, padding, drawStringOutlined, currentRegionLeft);

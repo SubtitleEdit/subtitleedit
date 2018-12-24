@@ -1903,6 +1903,11 @@
             public string SettingsName { get; set; }
             public string Help { get; set; }
             public string UnbreakNoSpace { get; set; }
+            public string ToggleBookmarks { get; set; }
+            public string ToggleBookmarksWithText { get; set; }
+            public string ClearBookmarks { get; set; }
+            public string GoToBookmark { get; set; }
+            public string GoToNextBookmark { get; set; }
             public string FontInUi { get; set; }
             public string ShowFrameRate { get; set; }
             public string DefaultFrameRate { get; set; }
