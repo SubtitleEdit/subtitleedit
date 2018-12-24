@@ -86,6 +86,12 @@
     <Compile Include="Controls\AudioVisualizer.Designer.cs">
       <DependentUpon>AudioVisualizer.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\BookmarkAdd.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\BookmarkAdd.Designer.cs">
+      <DependentUpon>BookmarkAdd.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\AddWaveformBatch.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -103,6 +109,12 @@
     </Compile>
     <Compile Include="Forms\BatchConvertFixRtl.Designer.cs">
       <DependentUpon>BatchConvertFixRtl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\BookmarksGoTo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\BookmarksGoTo.Designer.cs">
+      <DependentUpon>BookmarksGoTo.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Cavena890SaveOptions.cs">
       <SubType>Form</SubType>
@@ -1027,6 +1039,9 @@
     <EmbeddedResource Include="Controls\AudioVisualizer.resx">
       <DependentUpon>AudioVisualizer.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\BookmarkAdd.resx">
+      <DependentUpon>BookmarkAdd.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\AddWaveformBatch.resx">
       <DependentUpon>AddWaveformBatch.cs</DependentUpon>
     </EmbeddedResource>
@@ -1035,6 +1050,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\BatchConvertFixRtl.resx">
       <DependentUpon>BatchConvertFixRtl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\BookmarksGoTo.resx">
+      <DependentUpon>BookmarksGoTo.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Cavena890SaveOptions.resx">
       <DependentUpon>Cavena890SaveOptions.cs</DependentUpon>

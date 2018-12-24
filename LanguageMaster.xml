@@ -1742,6 +1742,11 @@ can edit in same subtitle file (collaboration)</Information>
     <SettingsName>Settings</SettingsName>
     <Help>Help</Help>
     <UnbreakNoSpace>Unbreak without space (CJK)</UnbreakNoSpace>
+    <ToggleBookmarks>Toggle bookmarks</ToggleBookmarks>
+    <ToggleBookmarksWithText>Toggle bookmarks - add text</ToggleBookmarksWithText>
+    <ClearBookmarks>Clear bookmarks</ClearBookmarks>
+    <GoToBookmark>Go to bookmark</GoToBookmark>
+    <GoToNextBookmark>Go to next bookmark</GoToNextBookmark>
     <FontInUi>UI Font</FontInUi>
     <ShowFrameRate>Show frame rate in toolbar</ShowFrameRate>
     <DefaultFrameRate>Default frame rate</DefaultFrameRate>

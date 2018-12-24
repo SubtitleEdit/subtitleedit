@@ -176,6 +176,11 @@ namespace Nikse.SubtitleEdit.Forms
         private Keys _mainAdjustExtendCurrentSubtitle = Keys.None;
         private Keys _mainAutoCalcCurrentDuration = Keys.None;
         private Keys _mainUnbreakNoSpace = Keys.None;
+        private Keys _mainGeneralToggleBookmarks = Keys.None;
+        private Keys _mainGeneralToggleBookmarksWithText = Keys.None;
+        private Keys _mainGeneralClearBookmarks = Keys.None;
+        private Keys _mainGeneralGoToBookmark = Keys.None;
+        private Keys _mainGeneralGoToNextBookmark = Keys.None;
         private Keys _mainTextBoxSplitAtCursor = Keys.None;
         private Keys _mainTextBoxSplitAtCursorAndVideoPos = Keys.None;
         private Keys _mainTextBoxSplitSelectedLineBilingual = Keys.None;
@@ -4034,6 +4039,7 @@ namespace Nikse.SubtitleEdit.Forms
                 textBoxListViewText.RightToLeft = RightToLeft.No;
                 textBoxSource.RightToLeft = RightToLeft.No;
             }
+            SubtitleListview1.StateImageList = _subtitle != null && _subtitle.Paragraphs.Any(p => p.Bookmark != null) ? imageListBookmarks : null;
         }
 
         private void ResetShowEarlierOrLater()
@@ -12536,6 +12542,48 @@ namespace Nikse.SubtitleEdit.Forms
             else if (_mainUnbreakNoSpace == e.KeyData)
             {
                 Unbreak(true);
+                e.Handled = true;
+                e.SuppressKeyPress = true;
+            }
+            else if (_mainGeneralToggleBookmarks == e.KeyData)
+            {
+                ToggleBookmarks(false);
+                e.Handled = true;
+                e.SuppressKeyPress = true;
+            }
+            else if (_mainGeneralToggleBookmarksWithText == e.KeyData)
+            {
+                ToggleBookmarks(true);
+                e.Handled = true;
+                e.SuppressKeyPress = true;
+            }
+            else if (_mainGeneralClearBookmarks == e.KeyData)
+            {
+                ClearBookmarks();
+                e.Handled = true;
+                e.SuppressKeyPress = true;
+            }
+            else if (_mainGeneralGoToBookmark == e.KeyData)
+            {
+                e.Handled = true;
+                e.SuppressKeyPress = true;
+                using (var form = new BookmarksGoTo(_subtitle))
+                {
+                    if (form.ShowDialog(this) == DialogResult.OK)
+                    {
+                        SubtitleListview1.SelectIndexAndEnsureVisible(form.BookmarkIndex, true);
+                        if (mediaPlayer.VideoPlayer != null)
+                        {
+                            mediaPlayer.VideoPlayer.CurrentPosition = _subtitle.Paragraphs[form.BookmarkIndex].StartTime.TotalSeconds;
+                        }
+                    }
+                }
+            }
+            else if (_mainGeneralGoToNextBookmark == e.KeyData)
+            {
+                GoToNextBookmark();
+                e.Handled = true;
+                e.SuppressKeyPress = true;
             }
             else if (_mainGeneralFileSaveAll == e.KeyData)
             {
@@ -13464,6 +13512,85 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             // put new entries above tabs
+        }
+
+        private void GoToNextBookmark()
+        {
+            int idx = FirstSelectedIndex + 1;
+            try
+            {
+                for (int i = idx; i < _subtitle.Paragraphs.Count; i++)
+                {
+                    var p = _subtitle.Paragraphs[i];
+                    if (p.Bookmark != null)
+                    {
+                        SubtitleListview1.SelectIndexAndEnsureVisible(i, true);
+                        if (mediaPlayer.VideoPlayer != null)
+                        {
+                            mediaPlayer.VideoPlayer.CurrentPosition = _subtitle.Paragraphs[i].StartTime.TotalSeconds;
+                        }
+                        return;
+                    }
+                }
+            }
+            catch
+            {
+            }
+        }
+
+        private void ToggleBookmarks(bool setText)
+        {
+            bool first = true;
+            string newValue = null;
+            foreach (int index in SubtitleListview1.SelectedIndices)
+            {
+                var p = _subtitle.Paragraphs[index];
+                if (first)
+                {
+                    if (p.Bookmark == null)
+                    {
+                        if (setText)
+                        {
+                            using (var form = new BookmarkAdd())
+                            {
+                                var result = form.ShowDialog(this);
+                                if (result != DialogResult.OK)
+                                {
+                                    return;
+                                }
+                                newValue = form.Comment;
+                            }
+                        }
+                        else
+                        {
+                            newValue = string.Empty;
+                        }
+                    }
+                    else
+                    {
+                        newValue = null;
+                    }
+
+                    first = false;
+                    if (newValue == string.Empty)
+                    {
+                        SubtitleListview1.StateImageList = imageListBookmarks;
+                    }
+                }
+                p.Bookmark = newValue;
+                SubtitleListview1.ShowState(index, p);
+            }
+            SubtitleListview1.StateImageList = _subtitle != null && _subtitle.Paragraphs.Any(p => p.Bookmark != null) ? imageListBookmarks : null;
+        }
+
+        private void ClearBookmarks()
+        {
+            SubtitleListview1.StateImageList = null;
+            for (var index = 0; index < _subtitle.Paragraphs.Count; index++)
+            {
+                var paragraph = _subtitle.Paragraphs[index];
+                paragraph.Bookmark = null;
+            }
         }
 
         private void MoveWordUpDownInCurrent(bool down)
@@ -17527,6 +17654,11 @@ namespace Nikse.SubtitleEdit.Forms
             _mainAdjustExtendCurrentSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralExtendCurrentSubtitle);
             _mainAutoCalcCurrentDuration = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralAutoCalcCurrentDuration);
             _mainUnbreakNoSpace = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralUnbrekNoSpace);
+            _mainGeneralToggleBookmarks = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralToggleBookmarks);
+            _mainGeneralToggleBookmarksWithText = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralToggleBookmarksWithText);
+            _mainGeneralClearBookmarks = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralClearBookmarks);
+            _mainGeneralGoToBookmark = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToBookmark);
+            _mainGeneralGoToNextBookmark = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextBookmark);
             _mainVideoFullscreen = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoFullscreen);
             _mainVideoSlower = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoSlower);
             _mainVideoFaster = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoFaster);
@@ -18002,7 +18134,7 @@ namespace Nikse.SubtitleEdit.Forms
                 currentText = _subtitle.ToText(saveFormat);
                 if (_textAutoBackup == null)
                     _textAutoBackup = _changeSubtitleToString;
-                if (Configuration.Settings.General.AutoSave || 
+                if (Configuration.Settings.General.AutoSave ||
                     !string.IsNullOrEmpty(_textAutoBackup) && currentText.Trim() != _textAutoBackup.Trim() && !string.IsNullOrWhiteSpace(currentText))
                 {
                     if (!Directory.Exists(Configuration.AutoBackupDirectory))
