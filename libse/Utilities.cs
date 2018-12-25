@@ -1184,6 +1184,13 @@ namespace Nikse.SubtitleEdit.Core
                     s2 = s2.Remove(0, 3);
                 }
 
+                bool startsWithUnderline = false;
+                if (s2.StartsWith("<u>", StringComparison.Ordinal))
+                {
+                    startsWithUnderline = true;
+                    s2 = s2.Remove(0, 3);
+                }
+
                 var startFontTag = string.Empty;
                 if (s2.StartsWith("<font ", StringComparison.Ordinal) && s2.IndexOf('>') > 0)
                 {
@@ -1198,6 +1205,13 @@ namespace Nikse.SubtitleEdit.Core
                 {
                     endFontTag = "</font>";
                     s2 = s2.Remove(s2.Length - endFontTag.Length);
+                }
+
+                bool endsWithUnderline = false;
+                if (s2.EndsWith("</u>", StringComparison.Ordinal))
+                {
+                    endsWithUnderline = true;
+                    s2 = s2.Remove(s2.Length - 4, 4);
                 }
 
                 bool endsWithBold = false;
@@ -1234,11 +1248,15 @@ namespace Nikse.SubtitleEdit.Core
                     newLines.Append("<i>");
                 if (startsWithBold)
                     newLines.Append("<b>");
+                if (startsWithUnderline)
+                    newLines.Append("<u>");
                 newLines.Append(startFontTag);
                 newLines.Append(ReverseParenthesis(post.ToString()));
                 newLines.Append(s2.Substring(pre.Length, s2.Length - (pre.Length + post.Length)));
                 newLines.Append(ReverseParenthesis(ReverseString(pre.ToString())));
                 newLines.Append(endFontTag);
+                if (endsWithUnderline)
+                    newLines.Append("</u>");
                 if (endsWithBold)
                     newLines.Append("</b>");
                 if (endsWithItalic)
