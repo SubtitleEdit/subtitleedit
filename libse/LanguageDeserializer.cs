@@ -4654,7 +4654,7 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/ToggleBookmarks":
                     language.Settings.ToggleBookmarks = reader.Value;
                     break;
-                case "Settings/ToggleBookmarksWithText":
+                case "Settings/ToggleBookmarksWithComment":
                     language.Settings.ToggleBookmarksWithComment = reader.Value;
                     break;
                 case "Settings/ClearBookmarks":

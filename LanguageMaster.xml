@@ -1743,7 +1743,7 @@ can edit in same subtitle file (collaboration)</Information>
     <Help>Help</Help>
     <UnbreakNoSpace>Unbreak without space (CJK)</UnbreakNoSpace>
     <ToggleBookmarks>Toggle bookmarks</ToggleBookmarks>
-    <ToggleBookmarksWithText>Toggle bookmarks - add text</ToggleBookmarksWithText>
+    <ToggleBookmarksWithComment>Toggle bookmarks - add comment</ToggleBookmarksWithComment>
     <ClearBookmarks>Clear bookmarks</ClearBookmarks>
     <GoToBookmark>Go to bookmark</GoToBookmark>
     <GoToPreviousBookmark>Go to prevous bookmark</GoToPreviousBookmark>
