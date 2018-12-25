@@ -1012,6 +1012,7 @@ $HorzAlign          =   Center
         public string GeneralToggleBookmarksWithText { get; set; }
         public string GeneralClearBookmarks { get; set; }
         public string GeneralGoToBookmark { get; set; }
+        public string GeneralGoToPreviousBookmark { get; set; }
         public string GeneralGoToNextBookmark { get; set; }
         public string MainFileNew { get; set; }
         public string MainFileOpen { get; set; }
@@ -2984,6 +2985,9 @@ $HorzAlign          =   Center
                 subNode = node.SelectSingleNode("GeneralGoToBookmark");
                 if (subNode != null)
                     settings.Shortcuts.GeneralGoToBookmark = subNode.InnerText;
+                subNode = node.SelectSingleNode("GeneralGoToPreviousBookmark");
+                if (subNode != null)
+                    settings.Shortcuts.GeneralGoToPreviousBookmark = subNode.InnerText;
                 subNode = node.SelectSingleNode("GeneralGoToNextBookmark");
                 if (subNode != null)
                     settings.Shortcuts.GeneralGoToNextBookmark = subNode.InnerText;
@@ -4108,6 +4112,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("GeneralClearBookmarks", settings.Shortcuts.GeneralClearBookmarks);
                 textWriter.WriteElementString("GeneralGoToBookmark", settings.Shortcuts.GeneralGoToBookmark);
                 textWriter.WriteElementString("GeneralGoToNextBookmark", settings.Shortcuts.GeneralGoToNextBookmark);
+                textWriter.WriteElementString("GeneralGoToPreviousBookmark", settings.Shortcuts.GeneralGoToPreviousBookmark);
                 textWriter.WriteElementString("MainFileNew", settings.Shortcuts.MainFileNew);
                 textWriter.WriteElementString("MainFileOpen", settings.Shortcuts.MainFileOpen);
                 textWriter.WriteElementString("MainFileOpenKeepVideo", settings.Shortcuts.MainFileOpenKeepVideo);
