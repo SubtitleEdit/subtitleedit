@@ -4655,13 +4655,16 @@ namespace Nikse.SubtitleEdit.Core
                     language.Settings.ToggleBookmarks = reader.Value;
                     break;
                 case "Settings/ToggleBookmarksWithText":
-                    language.Settings.ToggleBookmarksWithText = reader.Value;
+                    language.Settings.ToggleBookmarksWithComment = reader.Value;
                     break;
                 case "Settings/ClearBookmarks":
                     language.Settings.ClearBookmarks = reader.Value;
                     break;
                 case "Settings/GoToBookmark":
                     language.Settings.GoToBookmark = reader.Value;
+                    break;
+                case "Settings/GoToPreviousBookmark":
+                    language.Settings.GoToPreviousBookmark = reader.Value;
                     break;
                 case "Settings/GoToNextBookmark":
                     language.Settings.GoToNextBookmark = reader.Value;

@@ -180,6 +180,7 @@ namespace Nikse.SubtitleEdit.Forms
         private Keys _mainGeneralToggleBookmarksWithText = Keys.None;
         private Keys _mainGeneralClearBookmarks = Keys.None;
         private Keys _mainGeneralGoToBookmark = Keys.None;
+        private Keys _mainGeneralGoToPreviousBookmark = Keys.None;
         private Keys _mainGeneralGoToNextBookmark = Keys.None;
         private Keys _mainTextBoxSplitAtCursor = Keys.None;
         private Keys _mainTextBoxSplitAtCursorAndVideoPos = Keys.None;
@@ -12579,6 +12580,12 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
+            else if (_mainGeneralGoToPreviousBookmark == e.KeyData)
+            {
+                GoToPrevoiusBookmark();
+                e.Handled = true;
+                e.SuppressKeyPress = true;
+            }
             else if (_mainGeneralGoToNextBookmark == e.KeyData)
             {
                 GoToNextBookmark();
@@ -13512,6 +13519,30 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             // put new entries above tabs
+        }
+
+        private void GoToPrevoiusBookmark()
+        {
+            int idx = FirstSelectedIndex - 1;
+            try
+            {
+                for (int i = idx; i >= 0; i--)
+                {
+                    var p = _subtitle.Paragraphs[i];
+                    if (p.Bookmark != null)
+                    {
+                        SubtitleListview1.SelectIndexAndEnsureVisible(i, true);
+                        if (mediaPlayer.VideoPlayer != null)
+                        {
+                            mediaPlayer.VideoPlayer.CurrentPosition = _subtitle.Paragraphs[i].StartTime.TotalSeconds;
+                        }
+                        return;
+                    }
+                }
+            }
+            catch
+            {
+            }
         }
 
         private void GoToNextBookmark()
@@ -17658,6 +17689,7 @@ namespace Nikse.SubtitleEdit.Forms
             _mainGeneralToggleBookmarksWithText = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralToggleBookmarksWithText);
             _mainGeneralClearBookmarks = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralClearBookmarks);
             _mainGeneralGoToBookmark = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToBookmark);
+            _mainGeneralGoToPreviousBookmark = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToPreviousBookmark);
             _mainGeneralGoToNextBookmark = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextBookmark);
             _mainVideoFullscreen = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoFullscreen);
             _mainVideoSlower = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoSlower);
