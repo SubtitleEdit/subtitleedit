@@ -89,7 +89,7 @@ $ColorIndex4    = 3
         private static string EncodeTimeCode(TimeCode time)
         {
             //00:01:54:19
-            int frames = MillisecondsToFrames(time.Milliseconds);
+            int frames = MillisecondsToFramesMaxFrameRate(time.Milliseconds);
             return $"{time.Hours:00}:{time.Minutes:00}:{time.Seconds:00}:{frames:00}";
         }
 
