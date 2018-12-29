@@ -23633,69 +23633,69 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
-            else if (e.Button == MouseButtons.Right)
+        }
+
+        private void pictureBoxBookmark_MouseEnter(object sender, EventArgs e)
+        {
+            if (_bookmarkContextMenu != null)
+                return;
+
+
+            _bookmarkContextMenu = new ContextMenu();
+
+            // edit bookmark
+            var menuItem = new MenuItem(Configuration.Settings.Language.Main.Menu.ContextMenu.EditBookmark);
+            menuItem.Click += (sender2, e2) =>
             {
-                if (_bookmarkContextMenu == null)
+                var p1 = _subtitle.GetParagraphOrDefault(_subtitleListViewIndex);
+                if (p1 != null)
                 {
-                    _bookmarkContextMenu = new ContextMenu();
-
-                    // edit bookmark
-                    var menuItem = new MenuItem(Configuration.Settings.Language.Main.Menu.ContextMenu.EditBookmark);
-                    menuItem.Click += (sender2, e2) =>
+                    using (var form = new BookmarkAdd(p1))
                     {
-                        var p1 = _subtitle.GetParagraphOrDefault(_subtitleListViewIndex);
-                        if (p1 != null)
+                        var result = form.ShowDialog(this);
+                        if (result == DialogResult.OK)
                         {
-                            using (var form = new BookmarkAdd(p1))
-                            {
-                                var result = form.ShowDialog(this);
-                                if (result == DialogResult.OK)
-                                {
-                                    p1.Bookmark = form.Comment;
-                                    SubtitleListview1.ShowState(_subtitleListViewIndex, p1);
-                                    ShowHideBookmark(p1);
-                                    SubtitleListview1.StateImageList = _subtitle != null && _subtitle.Paragraphs.Any(p => p.Bookmark != null) ? imageListBookmarks : null;
-                                }
-                            }
-                        }
-                    };
-                    _bookmarkContextMenu.MenuItems.Add(menuItem);
-
-                    // remove bookmark
-                    menuItem = new MenuItem(Configuration.Settings.Language.Main.Menu.ContextMenu.RemoveBookmark);
-                    menuItem.Click += (sender2, e2) =>
-                    {
-                        var p2 = _subtitle.GetParagraphOrDefault(_subtitleListViewIndex);
-                        if (p2 != null)
-                        {
-                            p2.Bookmark = null;
-                            SubtitleListview1.ShowState(_subtitleListViewIndex, p2);
-                            ShowHideBookmark(p2);
+                            p1.Bookmark = form.Comment;
+                            SubtitleListview1.ShowState(_subtitleListViewIndex, p1);
+                            ShowHideBookmark(p1);
                             SubtitleListview1.StateImageList = _subtitle != null && _subtitle.Paragraphs.Any(p => p.Bookmark != null) ? imageListBookmarks : null;
                         }
-                    };
-                    _bookmarkContextMenu.MenuItems.Add(menuItem);
-
-                    _bookmarkContextMenu.MenuItems.Add("-");
-
-                    // go to bookmark
-                    menuItem = new MenuItem(Configuration.Settings.Language.Settings.GoToBookmark);
-                    menuItem.Click += (sender2, e2) => { GoToBookmark(); };
-                    _bookmarkContextMenu.MenuItems.Add(menuItem);
-
-                    // clear all bookmarks
-                    menuItem = new MenuItem(Configuration.Settings.Language.Settings.ClearBookmarks);
-                    menuItem.Click += (sender2, e2) => { ClearBookmarks(); };
-                    _bookmarkContextMenu.MenuItems.Add(menuItem);
-
-                    pictureBoxBookmark.ContextMenu = _bookmarkContextMenu;
-                    _bookmarkContextMenu.Show(pictureBoxBookmark, new Point(pictureBoxBookmark.Width - 3, pictureBoxBookmark.Height - 3));
+                    }
                 }
-                else
+            };
+            _bookmarkContextMenu.MenuItems.Add(menuItem);
+
+            // remove bookmark
+            menuItem = new MenuItem(Configuration.Settings.Language.Main.Menu.ContextMenu.RemoveBookmark);
+            menuItem.Click += (sender2, e2) =>
+            {
+                var p2 = _subtitle.GetParagraphOrDefault(_subtitleListViewIndex);
+                if (p2 != null)
                 {
-                    _bookmarkContextMenu.Show(pictureBoxBookmark, new Point(Cursor.Position.X - 3, Cursor.Position.Y - 3));
+                    p2.Bookmark = null;
+                    SubtitleListview1.ShowState(_subtitleListViewIndex, p2);
+                    ShowHideBookmark(p2);
+                    SubtitleListview1.StateImageList = _subtitle != null && _subtitle.Paragraphs.Any(p => p.Bookmark != null) ? imageListBookmarks : null;
                 }
-            }
+            };
+            _bookmarkContextMenu.MenuItems.Add(menuItem);
+
+            _bookmarkContextMenu.MenuItems.Add("-");
+
+            // go to bookmark
+            menuItem = new MenuItem(Configuration.Settings.Language.Settings.GoToBookmark);
+            menuItem.Click += (sender2, e2) => { GoToBookmark(); };
+            _bookmarkContextMenu.MenuItems.Add(menuItem);
+
+            // clear all bookmarks
+            menuItem = new MenuItem(Configuration.Settings.Language.Settings.ClearBookmarks);
+            menuItem.Click += (sender2, e2) =>
+            {
+                ClearBookmarks();
+            };
+            _bookmarkContextMenu.MenuItems.Add(menuItem);
+
+            pictureBoxBookmark.ContextMenu = _bookmarkContextMenu;
         }
     }
 }
