@@ -1736,6 +1736,10 @@
     <None Include="Resources\pictureBoxReverse.Image.png" />
     <None Include="Resources\pictureBoxReverseMouseDown.Image.png" />
     <None Include="Resources\pictureBoxReverseMouseOver.Image.png" />
+    <None Include="Resources\bookmark.png" />
+    <None Include="Resources\bookmark1.png" />
+    <None Include="Resources\bookmark2.png" />
+    <None Include="Resources\bookmark21.png" />
     <Content Include="Resources\TesseractDictionaries.xml">
       <SubType>Designer</SubType>
     </Content>

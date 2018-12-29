@@ -3030,6 +3030,8 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (format != null)
                 {
+                    new BookmarkPersistance(_subtitle).LoadFromFirstLine();
+
                     if (Configuration.Settings.General.RemoveBlankLinesWhenOpening)
                     {
                         _subtitle.RemoveEmptyLines();
@@ -4041,6 +4043,8 @@ namespace Nikse.SubtitleEdit.Forms
                 textBoxSource.RightToLeft = RightToLeft.No;
             }
             SubtitleListview1.StateImageList = _subtitle != null && _subtitle.Paragraphs.Any(p => p.Bookmark != null) ? imageListBookmarks : null;
+            pictureBoxBookmark.Visible = false;
+            panelBookmark.Hide();
         }
 
         private void ResetShowEarlierOrLater()
@@ -10059,6 +10063,31 @@ namespace Nikse.SubtitleEdit.Forms
                 textBoxListViewText.Enabled = true;
 
             StartUpdateListSyntaxColoring();
+
+            ShowHideBookmark(p);
+        }
+
+        private void ShowHideBookmark(Paragraph p)
+        {
+            if (!string.IsNullOrWhiteSpace(p.Bookmark))
+            {
+                pictureBoxBookmark.Show();
+                using (var graphics = CreateGraphics())
+                {
+                    var textSize = graphics.MeasureString(p.Bookmark, Font);
+                    labelBookmark.Text = p.Bookmark;
+                    panelBookmark.Left = pictureBoxBookmark.Left;
+                    panelBookmark.Top = pictureBoxBookmark.Top + pictureBoxBookmark.Height + 9;
+                    panelBookmark.Width = (int)textSize.Width + 20;
+                    panelBookmark.Height = (int)textSize.Height + 20;
+                    panelBookmark.Show();
+                }
+            }
+            else if (panelBookmark.Visible)
+            {
+                panelBookmark.Hide();
+                pictureBoxBookmark.Hide();
+            }
         }
 
         private void MaskedTextBoxTextChanged(object sender, EventArgs e)
@@ -13610,6 +13639,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 p.Bookmark = newValue;
                 SubtitleListview1.ShowState(index, p);
+                ShowHideBookmark(p);
             }
             SubtitleListview1.StateImageList = _subtitle != null && _subtitle.Paragraphs.Any(p => p.Bookmark != null) ? imageListBookmarks : null;
         }
@@ -22571,6 +22601,9 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 sub.AddTimeToAllParagraphs(TimeSpan.FromMilliseconds(Configuration.Settings.General.CurrentVideoOffsetInMs));
             }
+
+            new BookmarkPersistance(sub).SaveToFirstLine();
+
             return sub;
         }
 
@@ -23549,6 +23582,22 @@ namespace Nikse.SubtitleEdit.Forms
         private void boxToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ListViewToggleTag("box");
+        }
+
+        private void pictureBoxBookmark_Click(object sender, EventArgs e)
+        {
+            if (panelBookmark.Visible)
+            {
+                panelBookmark.Hide();
+            }
+            else
+            {
+                var p = _subtitle.GetParagraphOrDefault(_subtitleListViewIndex);
+                if (p != null)
+                {
+                    ShowHideBookmark(p);
+                }
+            }
         }
     }
 }
