@@ -118,6 +118,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
+            Utilities.ResetNoBreakAfterList();
             int idx = comboBoxDictionaries.SelectedIndex;
             if (idx >= 0)
             {
@@ -182,7 +183,6 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             textBoxNoBreakAfter.Text = string.Empty;
-            Utilities.ResetNoBreakAfterList();
         }
 
         private void RadioButtonCheckedChanged(object sender, EventArgs e)
