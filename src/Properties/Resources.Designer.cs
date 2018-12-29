@@ -63,39 +63,9 @@ namespace Nikse.SubtitleEdit.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        public static System.Drawing.Bitmap bookmark {
+        public static System.Drawing.Bitmap bookmark22 {
             get {
-                object obj = ResourceManager.GetObject("bookmark", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap bookmark1 {
-            get {
-                object obj = ResourceManager.GetObject("bookmark1", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap bookmark2 {
-            get {
-                object obj = ResourceManager.GetObject("bookmark2", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap bookmark21 {
-            get {
-                object obj = ResourceManager.GetObject("bookmark21", resourceCulture);
+                object obj = ResourceManager.GetObject("bookmark22", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
