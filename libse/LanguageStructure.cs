@@ -81,6 +81,7 @@
             public string After { get; set; }
             public string Size { get; set; }
             public string Search { get; set; }
+            public string DeleteCurrentLine { get; set; }
         }
 
         public class About

@@ -112,6 +112,7 @@ namespace Nikse.SubtitleEdit.Forms
             groupBoxSuggestions.Text = Configuration.Settings.Language.SpellCheck.Suggestions;
             buttonAddToNames.Text = Configuration.Settings.Language.SpellCheck.AddToNamesAndIgnoreList;
             buttonGoogleIt.Text = Configuration.Settings.Language.Main.VideoControls.GoogleIt;
+            deleteToolStripMenuItem.Text = Configuration.Settings.Language.General.DeleteCurrentLine;
             UiUtil.FixLargeFonts(this, buttonAbort);
         }
 
@@ -1140,7 +1141,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (Configuration.Settings.General.PromptDeleteLines && MessageBox.Show(Configuration.Settings.Language.Main.DeleteOneLinePrompt, Configuration.Settings.Language.SpellCheck.Title, MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
+            if (!Configuration.Settings.General.PromptDeleteLines || MessageBox.Show(Configuration.Settings.Language.Main.DeleteOneLinePrompt, Configuration.Settings.Language.SpellCheck.Title, MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
             {
                 DoAction(SpellCheckAction.DeleteLine);
             }
