@@ -472,6 +472,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <Right>오른쪽</Right>
     <Center>가운데</Center>
     <CenterLeftJustify>가운데, 왼쪽 맞춤</CenterLeftJustify>
+    <CenterTopJustify>가운데, 상단 맞춤</CenterTopJustify>
     <BottomMargin>하단 여백</BottomMargin>
     <LeftRightMargin>좌/우 여백</LeftRightMargin>
     <SaveBluRraySupAs>블루레이 자막 (sup) 파일로 저장</SaveBluRraySupAs>
@@ -552,6 +553,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <RemovedEmptyLine>빈 줄 제거</RemovedEmptyLine>
     <RemovedEmptyLineAtTop>첫번째 빈 줄 제거</RemovedEmptyLineAtTop>
     <RemovedEmptyLineAtBottom>마지막 빈 줄 제거</RemovedEmptyLineAtBottom>
+    <RemovedEmptyLineInMiddle>가운데 빈 줄 제거</RemovedEmptyLineInMiddle>
     <RemovedEmptyLinesUnsedLineBreaks>빈 줄 및 불필요한 줄의 줄바꿈 제거</RemovedEmptyLinesUnsedLineBreaks>
     <EmptyLinesRemovedX>제거한 빈 줄: {0}</EmptyLinesRemovedX>
     <FixOverlappingDisplayTimes>중복된 표시시간 수정하기</FixOverlappingDisplayTimes>
@@ -685,6 +687,13 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <PleaseWait>번역 중... 잠시 기다려 주세요.</PleaseWait>
     <PoweredByGoogleTranslate>Google 번역기 실행</PoweredByGoogleTranslate>
     <PoweredByMicrosoftTranslate>Microsoft 번역기 실행</PoweredByMicrosoftTranslate>
+    <MsClientSecretNeeded>죄송합니다,  최신 Bing 번역기를 사용하려면 Microsoft의 Bing 클라이언트 암호가 필요합니다.
+
+Bing 클라이언트 암호를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구" 로 이동하십시오.</MsClientSecretNeeded>
+    <GoogleApiKeyNeeded>죄송합니다, 최신 Google 번역기를 사용하려면 Google의 API 키가 필요합니다.
+
+Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구" 로 이동하십시오.</GoogleApiKeyNeeded>
+    <GoogleNoApiKeyWarning>API 키 없이 번역하기... (느리고 데이터가 제한됨)</GoogleNoApiKeyWarning>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
     <Title>Google | Microsoft 번역기</Title>
@@ -732,6 +741,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <Splitting>줄 분할</Splitting>
     <AutoSplitText>자동으로</AutoSplitText>
     <OneLineIsOneSubtitle>하나의 줄을 하나의 자막으로</OneLineIsOneSubtitle>
+    <TwoLinesAreOneSubtitle>두 줄은 하나의 자막입니다.</TwoLinesAreOneSubtitle>
     <LineBreak>줄바꿈</LineBreak>
     <SplitAtBlankLines>빈 줄에서 분할</SplitAtBlankLines>
     <MergeShortLines>연속해서 짧은 줄 병합</MergeShortLines>
@@ -745,6 +755,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <TextFiles>텍스트 파일</TextFiles>
     <PreviewLinesModifiedX>미리 보기 - 자막 수정: {0}개</PreviewLinesModifiedX>
     <TimeCodes>타임코드</TimeCodes>
+    <SplitAtEndChars>끝 문자에서 분할</SplitAtEndChars>
   </ImportText>
   <Interjections>
     <Title>감탄사</Title>
@@ -1727,6 +1738,12 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <SettingsName>환경 설정</SettingsName>
     <Help>도움말</Help>
     <UnbreakNoSpace>공백없이 줄바꿈 제거 (CJK)</UnbreakNoSpace>
+    <ToggleBookmarks>책갈피 전환</ToggleBookmarks>
+    <ToggleBookmarksWithComment>책갈피 전환 - 설명 추가</ToggleBookmarksWithComment>
+    <ClearBookmarks>책갈피 지우기</ClearBookmarks>
+    <GoToBookmark>책갈피로 이동</GoToBookmark>
+    <GoToPreviousBookmark>이전 책갈피로 이동</GoToPreviousBookmark>
+    <GoToNextBookmark>다음 책갈피로 이동</GoToNextBookmark>
     <FontInUi>UI 글꼴</FontInUi>
     <ShowFrameRate>도구 모음에 프레임 속도 표시</ShowFrameRate>
     <DefaultFrameRate>기본 프레임 속도</DefaultFrameRate>
@@ -1778,6 +1795,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <AutoBackupDeleteAfterThreeMonths>3 개월</AutoBackupDeleteAfterThreeMonths>
     <AutoBackupDeleteAfterSixMonths>6 개월</AutoBackupDeleteAfterSixMonths>
     <CheckForUpdates>업데이트 확인</CheckForUpdates>
+    <AutoSave>자동 저장</AutoSave>
     <AllowEditOfOriginalSubtitle>원본 자막의 편집을 허용</AllowEditOfOriginalSubtitle>
     <PromptDeleteLines>줄 삭제시 알림</PromptDeleteLines>
     <TimeCodeMode>타임코드 모드</TimeCodeMode>
@@ -2008,9 +2026,8 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <Miscellaneous>기타</Miscellaneous>
     <CpsIncludesSpace>초당 문자수(CPS)에 공백도 포함</CpsIncludesSpace>
     <UseDoNotBreakAfterList>'뒤에 줄바꿈을 배제하는 목록' 사용 (자동 줄바꿈 用)</UseDoNotBreakAfterList>
-    <MicrosoftBingTranslator>Microsoft Bing 번역기</MicrosoftBingTranslator>
+    <MicrosoftBingTranslator>Microsoft Bing 번역</MicrosoftBingTranslator>
     <HowToSignUp>가입 방법</HowToSignUp>
-    <GoogleTranslateUrl>Google 번역 URL</GoogleTranslateUrl>
     <MicrosoftTranslateApiKey>키</MicrosoftTranslateApiKey>
     <FontNote>※ 참고 : 이 글꼴 설정은 오직 Subtitle Edit UI에만 적용됩니다.
 자막의 글꼴 설정은 일반적으로 비디오 플레이어에서 이루어지나, "Advanced Sub Station Alpha" 또는 이미지 기반 형식으로 내보내기 처럼 
@@ -2077,6 +2094,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <AutoFixNames>자동으로 이름의 대소문자 수정</AutoFixNames>
     <CheckOneLetterWords>알 수 없는 홑문자 단어 알림</CheckOneLetterWords>
     <TreatINQuoteAsING>단어 끝의 "in"→"ing"로 바꿈 (영어 전용)</TreatINQuoteAsING>
+    <RememberUseAlwaysList>"항상 사용" 목록 기억</RememberUseAlwaysList>
     <ImageText>이미지 텍스트</ImageText>
     <SpellCheckCompleted>맞춤법 검사 완료!</SpellCheckCompleted>
     <SpellCheckAborted>맞춤법 검사 중지!</SpellCheckAborted>
