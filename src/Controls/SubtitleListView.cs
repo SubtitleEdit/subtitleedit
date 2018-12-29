@@ -380,12 +380,12 @@ namespace Nikse.SubtitleEdit.Controls
 
                     int addX = 0;
 
-                    if (e.ColumnIndex == 0 && StateImageList.Images.Count > 0)
+                    if (e.ColumnIndex == 0 && StateImageList?.Images.Count > 0)
                     {
                         addX = 18;
                     }
 
-                    if (e.ColumnIndex == 0 && e.Item.StateImageIndex >= 0 && StateImageList.Images.Count > e.Item.StateImageIndex)
+                    if (e.ColumnIndex == 0 && e.Item.StateImageIndex >= 0 && StateImageList?.Images.Count > e.Item.StateImageIndex)
                     {
                         e.Graphics.DrawImage(StateImageList.Images[e.Item.StateImageIndex], new Rectangle(rect.X + 4, rect.Y + 2, 16, 16));
                     }

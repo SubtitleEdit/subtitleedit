@@ -386,6 +386,8 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
             if (!word.EndsWith('\''))
                 _namesListWithApostrophe.Add(word + "'");
 
+            _wordsWithDashesOrPeriods.Add(word);
+
             var namesList = new NameList(Configuration.DictionariesDirectory, _languageName, Configuration.Settings.WordLists.UseOnlineNames, Configuration.Settings.WordLists.NamesUrl);
             namesList.Add(word);
             return true;

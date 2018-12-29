@@ -14,6 +14,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             Abort,
             AddToUserDictionary,
             AddToNames,
+            AddToNamesOnly,
             AllwaysUseSuggestion,
             ChangeAndSave,
             ChangeOnce,
@@ -310,7 +311,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             if (!string.IsNullOrWhiteSpace(richTextBoxParagraph.SelectedText))
             {
                 Word = richTextBoxParagraph.SelectedText.Trim(); 
-                ActionResult = Action.AddToNames;
+                ActionResult = Action.AddToNamesOnly;
                 DialogResult = DialogResult.OK;
             }
         }
