@@ -280,6 +280,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "General/Search":
                     language.General.Search = reader.Value;
                     break;
+                case "General/DeleteCurrentLine":
+                    language.General.DeleteCurrentLine = reader.Value;
+                    break;
                 case "About/Title":
                     language.About.Title = reader.Value;
                     break;

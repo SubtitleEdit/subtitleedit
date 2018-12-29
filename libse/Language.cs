@@ -192,7 +192,8 @@ namespace Nikse.SubtitleEdit.Core
                 Before = "Before",
                 After = "After",
                 Size = "Size",
-                Search = "Search"
+                Search = "Search",
+                DeleteCurrentLine = "Delete current line"
             };
 
             About = new LanguageStructure.About
