@@ -1022,6 +1022,11 @@
     <Compile Include="Forms\SyncPointsSync.Designer.cs">
       <DependentUpon>SyncPointsSync.cs</DependentUpon>
     </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Web References\MicrosoftTranslationService\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -1469,18 +1474,13 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Main.resx">
       <DependentUpon>Main.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
-    </Compile>
     <EmbeddedResource Include="Forms\SyncPointsSync.resx">
       <DependentUpon>SyncPointsSync.cs</DependentUpon>
     </EmbeddedResource>
@@ -1736,10 +1736,7 @@
     <None Include="Resources\pictureBoxReverse.Image.png" />
     <None Include="Resources\pictureBoxReverseMouseDown.Image.png" />
     <None Include="Resources\pictureBoxReverseMouseOver.Image.png" />
-    <None Include="Resources\bookmark.png" />
-    <None Include="Resources\bookmark1.png" />
-    <None Include="Resources\bookmark2.png" />
-    <None Include="Resources\bookmark21.png" />
+    <None Include="Resources\bookmark22.png" />
     <Content Include="Resources\TesseractDictionaries.xml">
       <SubType>Designer</SubType>
     </Content>
