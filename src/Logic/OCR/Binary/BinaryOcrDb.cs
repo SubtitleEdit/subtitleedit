@@ -103,14 +103,12 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Binary
             CompareImagesExpanded = expandList;
         }
 
-        private static int MinYDiffPair = 9;
-        private static int MaxYDiffPair = 20;
-
+        private static int MaxCommaQuoteTopDiff = 15;
 
         public static bool AllowEqual(BinaryOcrBitmap match, BinaryOcrBitmap newBob)
         {
             if (match.Text != null && (match.Text == "," || match.Text == "'") &&
-                Math.Min(match.Y, newBob.Y) < MinYDiffPair && Math.Max(match.Y, newBob.Y) > MaxYDiffPair)
+                Math.Abs(match.Y - newBob.Y) > MaxCommaQuoteTopDiff)
             {
                 return false;
             }

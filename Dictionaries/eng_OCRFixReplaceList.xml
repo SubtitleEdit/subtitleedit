@@ -1981,6 +1981,96 @@
     <Word from="Ispent" to="I spent" />
     <Word from="Italked" to="I talked" />
     <Word from="itis" to="it is" />
+    <Word from="whyyou" to="why you" />
+    <Word from="thirtyyears" to="thirty years" />
+    <Word from="bejoined" to="be joined" />
+    <Word from="buryyour" to="bury your" />
+    <Word from="flatteryourself" to="flatter yourself" />
+    <Word from="byyourself" to="by yourself" />
+    <Word from="Wejust" to="We just" />
+    <Word from="scaryou" to="scar you" />
+    <Word from="payyou" to="pay you" />
+    <Word from="afteryou" to="after you" />
+    <Word from="headis" to="head is" />
+    <Word from="weakpoint" to="weak point" />
+    <Word from="neverrepayyou" to="never repay you" />
+    <Word from="thatyou've" to="that you've" />
+    <Word from="I'llneverforgetyou" to="I'll never forget you" />
+    <Word from="enjoyyourselves" to="enjoy yourselves" />
+    <Word from="doesn'tjust" to="doesn't just" />
+    <Word from="sayyou're" to="say you're" />
+    <Word from="you'vejust" to="you've just" />
+    <Word from=",em" to="'em" />
+    <Word from="don,t" to="don't" />
+    <Word from="Don,t" to="Don't" />
+    <Word from="here,s" to="here's" />
+    <Word from="Here,s" to="Here's" />
+    <Word from="how,d" to="how'd" />
+    <Word from="How,d" to="How'd" />
+    <Word from="i,d" to="I'd" />
+    <Word from="I,d" to="I'd" />
+    <Word from="i,ll" to="I'll" />
+    <Word from="I,ll" to="I'll" />
+    <Word from="i,m" to="I'm" />
+    <Word from="I,m" to="I'm" />
+    <Word from="i,ve" to="I've" />
+    <Word from="I,ve" to="I've" />
+    <Word from="isn,t" to="isn't" />
+    <Word from="Isn,t" to="Isn't" />
+    <Word from="it,ll" to="it'll" />
+    <Word from="It,ll" to="It'll" />
+    <Word from="it,s" to="it's" />
+    <Word from="It,s" to="It's" />    
+    <Word from="l,d" to="I'd" />
+    <Word from="L,d" to="I'd" />
+    <Word from="l,ll" to="I'll" />
+    <Word from="L,ll" to="I'll" />
+    <Word from="l,m" to="I'm" />
+    <Word from="L,m" to="I'm" />
+    <Word from="l,ve" to="I've" />
+    <Word from="L,ve" to="I've" />
+    <Word from="let,s" to="let's" />
+    <Word from="Let,s" to="Let's" />
+    <Word from="mustn,t" to="mustn't" />
+    <Word from="Mustn,t" to="Mustn't" />
+    <Word from="one,s" to="one's" />
+    <Word from="One,s" to="One's" />
+    <Word from="that,s" to="that's" />
+    <Word from="That,s" to="That's" />
+    <Word from="there,s" to="there's" />
+    <Word from="There,s" to="There's" />
+    <Word from="they,d" to="they'd" />
+    <Word from="They,d" to="They'd" />
+    <Word from="they,ll" to="they'll" />
+    <Word from="They,ll" to="They'll" />
+    <Word from="they,re" to="they're" />
+    <Word from="They,re" to="They're" />
+    <Word from="they,ve" to="they've" />
+    <Word from="They,ve" to="They've" />
+    <Word from="we,d" to="we'd" />
+    <Word from="We,d" to="We'd" />
+    <Word from="we,ll" to="we'll" />
+    <Word from="We,ll" to="We'll" />
+    <Word from="we,re" to="we're" />
+    <Word from="We,re" to="We're" />
+    <Word from="we,ve" to="we've" />
+    <Word from="We,ve" to="We've" />
+    <Word from="weren,t" to="weren't" />
+    <Word from="Weren,t" to="Weren't" />
+    <Word from="what,s" to="what's" />
+    <Word from="What,s" to="What's" />
+    <Word from="where,s" to="where's" />
+    <Word from="Where,s" to="Where's" />
+    <Word from="won,t" to="won't" />
+    <Word from="Won,t" to="Won't" />
+    <Word from="you,d" to="you'd" />
+    <Word from="You,d" to="You'd" />
+    <Word from="you,ll" to="you'll" />
+    <Word from="You,ll" to="You'll" />
+    <Word from="you,re" to="you're" />
+    <Word from="You,re" to="You're" />
+    <Word from="you,ve" to="you've" />
+    <Word from="You,ve" to="You've" />
   </WholeWords>
   <PartialWordsAlways>
     <!-- Will be replaced always -->
@@ -2454,6 +2544,7 @@
     <Beginning from="!/ see" to="I see" />
     <Beginning from="!/ do" to="I do" />
     <Beginning from="!/ am" to="I am" />
+    <Beginning from="J ust " to="Just " />
   </BeginLines>
   <EndLines>
     <Ending from=", sin" to=", sir." />

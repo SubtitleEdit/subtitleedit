@@ -589,6 +589,47 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             string lastWord = null;
             var sb = new StringBuilder();
             var word = new StringBuilder();
+            var separatorCharsNoComma = ExpectedChars.Replace(",", string.Empty);
+            for (int i = 0; i < text.Length; i++)
+            {
+                if (separatorCharsNoComma.Contains(text[i])) // fix e.g. "don,t"
+                {
+                    if (word.Length > 0)
+                    {
+                        string fixedWord;
+                        if (lastWord != null && lastWord.Contains("COLOR=", StringComparison.OrdinalIgnoreCase))
+                            fixedWord = word.ToString();
+                        else if (!word.ToString().Contains(','))
+                            fixedWord = word.ToString();
+                        else
+                            fixedWord = _ocrFixReplaceList.FixCommonWordErrorsQuick(word.ToString());
+                        sb.Append(fixedWord);
+                        lastWord = fixedWord;
+                        word.Clear();
+                    }
+                    sb.Append(text[i]);
+                }
+                else
+                {
+                    word.Append(text[i]);
+                }
+            }
+            if (word.Length > 0) // last word
+            {
+                string fixedWord;
+                if (lastWord != null && lastWord.Contains("COLOR=", StringComparison.OrdinalIgnoreCase))
+                    fixedWord = word.ToString();
+                else if (!word.ToString().Contains(','))
+                    fixedWord = word.ToString();
+                else
+                    fixedWord = _ocrFixReplaceList.FixCommonWordErrorsQuick(word.ToString());
+                sb.Append(fixedWord);
+            }
+
+            lastWord = null;
+            text = sb.ToString();
+            sb = new StringBuilder();
+            word = new StringBuilder();
             for (int i = 0; i < text.Length; i++)
             {
                 if (ExpectedChars.Contains(text[i])) // removed $
