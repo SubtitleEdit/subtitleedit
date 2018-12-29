@@ -1172,6 +1172,8 @@ Go to "Options -&gt; Settings -&gt; Tools" to enter your Google translate API ke
         <WebVTTRemoveVoices>Remove voices</WebVTTRemoveVoices>
         <NewActor>New actor...</NewActor>
         <RemoveActors>Remove actors</RemoveActors>
+        <EditBookmark>Edit bookmark</EditBookmark>
+        <RemoveBookmark>Remove bookmark</RemoveBookmark>
       </ContextMenu>
     </Menu>
     <Controls>

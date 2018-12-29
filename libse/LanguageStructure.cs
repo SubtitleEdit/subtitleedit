@@ -331,7 +331,7 @@
             public string XNumberOfDifferenceAndPercentLettersChanged { get; set; }
             public string ShowOnlyDifferences { get; set; }
             public string IgnoreLineBreaks { get; set; }
-            public string IgnoreFormatting { get; set; }            
+            public string IgnoreFormatting { get; set; }
             public string OnlyLookForDifferencesInText { get; set; }
             public string CannotCompareWithImageBasedSubtitles { get; set; }
         }
@@ -802,7 +802,7 @@
             public string Title { get; set; }
             public string OpenTextFile { get; set; }
             public string Generate { get; set; }
-            public string Import { get; set; }            
+            public string Import { get; set; }
             public string TextFiles { get; set; }
             public string TimeCodes { get; set; }
             public string Frames { get; set; }
@@ -1491,7 +1491,7 @@
                     public string Paste { get; set; }
                     public string Delete { get; set; }
                     public string SplitLineAtCursorPosition { get; set; }
-                    public string SplitLineAtCursorAndWaveformPosition { get; set; }                    
+                    public string SplitLineAtCursorAndWaveformPosition { get; set; }
                     public string AutoDurationCurrentLine { get; set; }
                     public string SelectAll { get; set; }
                     public string InsertFirstLine { get; set; }
@@ -1536,6 +1536,8 @@
                     public string WebVTTRemoveVoices { get; set; }
                     public string NewActor { get; set; }
                     public string RemoveActors { get; set; }
+                    public string EditBookmark { get; set; }
+                    public string RemoveBookmark { get; set; }
                 }
 
                 public FileMenu File { get; set; }
@@ -1929,7 +1931,7 @@
             public string SubtitleBold { get; set; }
             public string VideoAutoOpen { get; set; }
             public string AllowVolumeBoost { get; set; }
-            
+
             public string SubtitleCenter { get; set; }
             public string SubtitleFontColor { get; set; }
             public string SubtitleBackgroundColor { get; set; }
@@ -2572,7 +2574,7 @@
             public string DiscardText { get; set; }
             public string MinLineSplitHeight { get; set; }
             public string FallbackToX { get; set; }
-            public string ImagePreProcessing { get; set; }            
+            public string ImagePreProcessing { get; set; }
         }
 
         public class VobSubOcrCharacter
