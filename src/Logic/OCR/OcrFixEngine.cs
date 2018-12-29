@@ -1046,6 +1046,10 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 }
             }
 
+            int minLength = 2;
+            if (Configuration.Settings.Tools.SpellCheckOneLetterWords)
+                minLength = 1;
+
             string[] words = tempLine.Replace("</i>", string.Empty).Split(SplitChars, StringSplitOptions.RemoveEmptyEntries);
             for (int i = 0; i < words.Length; i++)
             {
@@ -1055,14 +1059,14 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 string wordNoItalics = HtmlUtil.RemoveOpenCloseTags(word, HtmlUtil.TagItalic);
                 if (!IsWordKnownOrNumber(wordNoItalics, line) && !localIgnoreWords.Contains(wordNoItalics))
                 {
-                    bool correct = DoSpell(word);
+                    bool correct = word.Length > minLength && DoSpell(word);
                     if (!correct)
-                        correct = DoSpell(word.Trim('\''));
+                        correct = word.Length > minLength + 1 && DoSpell(word.Trim('\''));
                     if (!correct && word.Length > 3 && !word.EndsWith("ss", StringComparison.Ordinal) && !string.IsNullOrEmpty(_threeLetterIsoLanguageName) &&
                         (_threeLetterIsoLanguageName == "eng" || _threeLetterIsoLanguageName == "dan" || _threeLetterIsoLanguageName == "swe" || _threeLetterIsoLanguageName == "nld"))
                         correct = DoSpell(word.TrimEnd('s'));
                     if (!correct)
-                        correct = DoSpell(wordNoItalics);
+                        correct = wordNoItalics.Length > minLength && DoSpell(wordNoItalics);
                     if (!correct && _userWordList.Contains(wordNoItalics))
                         correct = true;
 
@@ -1074,6 +1078,11 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                     {
                         correct = DoSpell(word + "g");
                     }
+
+                    if (_threeLetterIsoLanguageName == "eng" && (word.Equals("a", StringComparison.OrdinalIgnoreCase) || word == "I"))
+                        correct = true;
+                    else if (_threeLetterIsoLanguageName == "dan" && word.Equals("i", StringComparison.OrdinalIgnoreCase))
+                        correct = true;
 
                     if (!correct)
                     {
@@ -1308,6 +1317,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                         return result;
                     break;
                 case OcrSpellCheck.Action.AddToNames:
+                case OcrSpellCheck.Action.AddToNamesOnly:
                     result.Word = _spellCheck.Word;
                     result.Fixed = true;
                     try
@@ -1334,7 +1344,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                         _wordSkipList.Add(_spellCheck.Word);
                     }
                     result.Line = line;
-                    if (word == result.Word)
+                    if (word == result.Word || _spellCheck.ActionResult == OcrSpellCheck.Action.AddToNamesOnly)
                         return result;
                     break;
                 case OcrSpellCheck.Action.AllwaysUseSuggestion:
@@ -1486,18 +1496,22 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             if (_hunspell == null)
                 return 0;
 
+            int minLength = 2;
+            if (Configuration.Settings.Tools.SpellCheckOneLetterWords)
+                minLength = 1;
+
             int wordsNotFound = 0;
             var words = HtmlUtil.RemoveOpenCloseTags(line, HtmlUtil.TagItalic).Split((Environment.NewLine + " ¡¿,.!?:;()[]{}+-$£\"#&%…„“”«»").ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
             for (int i = 0; i < words.Length; i++)
             {
                 string word = words[i];
-                if (word.Length > 1)
+                if (word.Length >= minLength)
                 {
                     if (!IsWordKnownOrNumber(word, line))
                     {
-                        bool correct = _hunspell.Spell(word);
+                        bool correct = word.Length > 1 && _hunspell.Spell(word);
                         if (!correct)
-                            correct = _hunspell.Spell(word.Trim('\''));
+                            correct = word.Length > 2 && _hunspell.Spell(word.Trim('\''));
 
                         if (correct)
                             numberOfCorrectWords++;
@@ -1505,7 +1519,9 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                             wordsNotFound++;
                     }
                     else if (word.Length > 3)
+                    {
                         numberOfCorrectWords++;
+                    }
                 }
             }
             return wordsNotFound;

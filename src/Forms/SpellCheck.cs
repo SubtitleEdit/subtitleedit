@@ -374,7 +374,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (!string.IsNullOrWhiteSpace(richTextBoxParagraph.SelectedText))
             {
                 ChangeWord = richTextBoxParagraph.SelectedText.Trim();
-                DoAction(SpellCheckAction.AddToNames);
+                DoAction(SpellCheckAction.AddToNamesOnly);
             }
         }
 
@@ -450,6 +450,10 @@ namespace Nikse.SubtitleEdit.Forms
                         _changeAllDictionary.Add(_currentWord, ChangeWord);
                         _mainWindow.CorrectWord(_prefix + ChangeWord + _postfix, _currentParagraph, _prefix + _currentWord + _postfix, ref _firstChange, -1);
                     }
+                    break;
+                case SpellCheckAction.AddToNamesOnly:
+                    _spellCheckWordLists.AddName(ChangeWord);
+                    SetWords(_currentParagraph.Text);
                     break;
                 case SpellCheckAction.ChangeWholeText:
                     _mainWindow.ShowStatus(string.Format(Configuration.Settings.Language.Main.SpellCheckChangedXToY, _currentParagraph.Text.Replace(Environment.NewLine, " "), ChangeWholeText.Replace(Environment.NewLine, " ")));

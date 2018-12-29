@@ -11,6 +11,7 @@
         Abort,
         ChangeLanguage,
         AddToNames,
+        AddToNamesOnly,
         ChangeWholeText,
         DeleteLine
     }
