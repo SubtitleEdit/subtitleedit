@@ -3732,7 +3732,7 @@
             // ShowSubtitleTimer
             // 
             this.ShowSubtitleTimer.Enabled = true;
-            this.ShowSubtitleTimer.Interval = 16;
+            this.ShowSubtitleTimer.Interval = 17;
             this.ShowSubtitleTimer.Tick += new System.EventHandler(this.ShowSubtitleTimerTick);
             // 
             // timerAutoDuration
