@@ -3898,6 +3898,12 @@ namespace Nikse.SubtitleEdit.Core
                 case "Main/Menu/ContextMenu/RemoveActors":
                     language.Main.Menu.ContextMenu.RemoveActors = reader.Value;
                     break;
+                case "Main/Menu/ContextMenu/EditBookmark":
+                    language.Main.Menu.ContextMenu.EditBookmark = reader.Value;
+                    break;
+                case "Main/Menu/ContextMenu/RemoveBookmark":
+                    language.Main.Menu.ContextMenu.RemoveBookmark = reader.Value;
+                    break;
                 case "Main/Controls/SubtitleFormat":
                     language.Main.Controls.SubtitleFormat = reader.Value;
                     break;

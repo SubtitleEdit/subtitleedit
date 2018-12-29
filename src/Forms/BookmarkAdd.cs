@@ -6,7 +6,7 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class BookmarkAdd : Form
     {
-        public BookmarkAdd()
+        public BookmarkAdd(Paragraph p)
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
@@ -14,6 +14,7 @@ namespace Nikse.SubtitleEdit.Forms
          //   Text = Configuration.Settings.Language.AddToNames.Title;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
+            textBoxBookmarkComment.Text = p?.Bookmark;
         }
 
         public string Comment => textBoxBookmarkComment.Text;

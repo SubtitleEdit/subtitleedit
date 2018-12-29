@@ -272,6 +272,8 @@ namespace Nikse.SubtitleEdit.Forms
         private readonly Timer _dragAndDropTimer = new Timer(); // to prevent locking windows explorer
         private readonly Timer _dragAndDropVideoTimer = new Timer(); // to prevent locking windows explorer
         private long _labelNextTicks = -1;
+        private bool _showBookmarkLabel = true;
+        private ContextMenuStrip _bookmarkContextMenu;
 
         public bool IsMenuOpen { get; private set; }
 
@@ -10063,31 +10065,7 @@ namespace Nikse.SubtitleEdit.Forms
                 textBoxListViewText.Enabled = true;
 
             StartUpdateListSyntaxColoring();
-
             ShowHideBookmark(p);
-        }
-
-        private void ShowHideBookmark(Paragraph p)
-        {
-            if (!string.IsNullOrWhiteSpace(p.Bookmark))
-            {
-                pictureBoxBookmark.Show();
-                using (var graphics = CreateGraphics())
-                {
-                    var textSize = graphics.MeasureString(p.Bookmark, Font);
-                    labelBookmark.Text = p.Bookmark;
-                    panelBookmark.Left = pictureBoxBookmark.Left;
-                    panelBookmark.Top = pictureBoxBookmark.Top + pictureBoxBookmark.Height + 9;
-                    panelBookmark.Width = (int)textSize.Width + 20;
-                    panelBookmark.Height = (int)textSize.Height + 20;
-                    panelBookmark.Show();
-                }
-            }
-            else if (panelBookmark.Visible)
-            {
-                panelBookmark.Hide();
-                pictureBoxBookmark.Hide();
-            }
         }
 
         private void MaskedTextBoxTextChanged(object sender, EventArgs e)
@@ -12597,17 +12575,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 e.Handled = true;
                 e.SuppressKeyPress = true;
-                using (var form = new BookmarksGoTo(_subtitle))
-                {
-                    if (form.ShowDialog(this) == DialogResult.OK)
-                    {
-                        SubtitleListview1.SelectIndexAndEnsureVisible(form.BookmarkIndex, true);
-                        if (mediaPlayer.VideoPlayer != null)
-                        {
-                            mediaPlayer.VideoPlayer.CurrentPosition = _subtitle.Paragraphs[form.BookmarkIndex].StartTime.TotalSeconds;
-                        }
-                    }
-                }
+                GoToBookmark();
             }
             else if (_mainGeneralGoToPreviousBookmark == e.KeyData)
             {
@@ -13550,6 +13518,21 @@ namespace Nikse.SubtitleEdit.Forms
             // put new entries above tabs
         }
 
+        private void GoToBookmark()
+        {
+            using (var form = new BookmarksGoTo(_subtitle))
+            {
+                if (form.ShowDialog(this) == DialogResult.OK)
+                {
+                    SubtitleListview1.SelectIndexAndEnsureVisible(form.BookmarkIndex, true);
+                    if (mediaPlayer.VideoPlayer != null)
+                    {
+                        mediaPlayer.VideoPlayer.CurrentPosition = _subtitle.Paragraphs[form.BookmarkIndex].StartTime.TotalSeconds;
+                    }
+                }
+            }
+        }
+
         private void GoToPrevoiusBookmark()
         {
             int idx = FirstSelectedIndex - 1;
@@ -13611,7 +13594,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         if (setText)
                         {
-                            using (var form = new BookmarkAdd())
+                            using (var form = new BookmarkAdd(p))
                             {
                                 var result = form.ShowDialog(this);
                                 if (result != DialogResult.OK)
@@ -13646,12 +13629,19 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ClearBookmarks()
         {
-            SubtitleListview1.StateImageList = null;
             for (var index = 0; index < _subtitle.Paragraphs.Count; index++)
             {
                 var paragraph = _subtitle.Paragraphs[index];
-                paragraph.Bookmark = null;
+                if (paragraph.Bookmark != null)
+                {
+                    paragraph.Bookmark = null;
+                    SubtitleListview1.ShowState(index, paragraph);
+                }
             }
+
+            var p = _subtitle.GetParagraphOrDefault(_subtitleListViewIndex);
+            if (p != null)
+                ShowHideBookmark(p);
         }
 
         private void MoveWordUpDownInCurrent(bool down)
@@ -17418,6 +17408,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void Main_Shown(object sender, EventArgs e)
         {
+            imageListBookmarks.Images.Add(pictureBoxBookmark.Image);
             toolStripButtonToggleVideo.Checked = !Configuration.Settings.General.ShowVideoPlayer;
             toolStripButtonToggleVideo_Click(null, null);
 
@@ -22601,9 +22592,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 sub.AddTimeToAllParagraphs(TimeSpan.FromMilliseconds(Configuration.Settings.General.CurrentVideoOffsetInMs));
             }
-
             new BookmarkPersistance(sub).SaveToFirstLine();
-
             return sub;
         }
 
@@ -23586,17 +23575,124 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void pictureBoxBookmark_Click(object sender, EventArgs e)
         {
-            if (panelBookmark.Visible)
+
+        }
+
+        private void ShowHideBookmark(Paragraph p)
+        {
+            if (!string.IsNullOrWhiteSpace(p.Bookmark))
             {
+                pictureBoxBookmark.Show();
+                if (_showBookmarkLabel)
+                {
+                    panelBookmark.Show();
+                    using (var graphics = CreateGraphics())
+                    {
+                        var textSize = graphics.MeasureString(p.Bookmark, Font);
+                        labelBookmark.Text = p.Bookmark;
+                        panelBookmark.Left = pictureBoxBookmark.Left;
+                        panelBookmark.Top = pictureBoxBookmark.Top + pictureBoxBookmark.Height + 9;
+                        panelBookmark.Width = (int)textSize.Width + 20;
+                        panelBookmark.Height = (int)textSize.Height + 20;
+                        panelBookmark.Show();
+                    }
+                }
+                else
+                {
+                    panelBookmark.Hide();
+                }
+            }
+            else if (p.Bookmark != null)
+            {
+                pictureBoxBookmark.Show();
                 panelBookmark.Hide();
             }
-            else
+            else if (panelBookmark.Visible || pictureBoxBookmark.Visible)
             {
-                var p = _subtitle.GetParagraphOrDefault(_subtitleListViewIndex);
-                if (p != null)
+                panelBookmark.Hide();
+                pictureBoxBookmark.Hide();
+            }
+        }
+
+        private void pictureBoxBookmark_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                if (panelBookmark.Visible)
                 {
-                    ShowHideBookmark(p);
+                    panelBookmark.Hide();
+                    _showBookmarkLabel = false;
                 }
+                else
+                {
+                    _showBookmarkLabel = true;
+                    var p = _subtitle.GetParagraphOrDefault(_subtitleListViewIndex);
+                    if (p != null)
+                    {
+                        ShowHideBookmark(p);
+                    }
+                }
+            }
+            else if (e.Button == MouseButtons.Right)
+            {
+                if (_bookmarkContextMenu == null)
+                {
+                    _bookmarkContextMenu = new ContextMenuStrip();
+                    _bookmarkContextMenu.TopLevel = false;
+
+                    // edit bookmark
+                    var menuItem = new ToolStripMenuItem(Configuration.Settings.Language.Main.Menu.ContextMenu.EditBookmark);
+                    menuItem.Click += (sender2, e2) =>
+                    {
+                        var p1 = _subtitle.GetParagraphOrDefault(_subtitleListViewIndex);
+                        if (p1 != null)
+                        {
+                            using (var form = new BookmarkAdd(p1))
+                            {
+                                var result = form.ShowDialog(this);
+                                if (result == DialogResult.OK)
+                                {
+                                    p1.Bookmark = form.Comment;
+                                    SubtitleListview1.ShowState(_subtitleListViewIndex, p1);
+                                    ShowHideBookmark(p1);
+                                    SubtitleListview1.StateImageList = _subtitle != null && _subtitle.Paragraphs.Any(p => p.Bookmark != null) ? imageListBookmarks : null;
+                                }
+                            }
+                        }
+                    };
+                    _bookmarkContextMenu.Items.Add(menuItem);
+
+                    // remove bookmark
+                    menuItem = new ToolStripMenuItem(Configuration.Settings.Language.Main.Menu.ContextMenu.RemoveBookmark);
+                    menuItem.Click += (sender2, e2) =>
+                    {
+                        var p2 = _subtitle.GetParagraphOrDefault(_subtitleListViewIndex);
+                        if (p2 != null)
+                        {
+                            p2.Bookmark = null;
+                            SubtitleListview1.ShowState(_subtitleListViewIndex, p2);
+                            ShowHideBookmark(p2);
+                            SubtitleListview1.StateImageList = _subtitle != null && _subtitle.Paragraphs.Any(p => p.Bookmark != null) ? imageListBookmarks : null;
+                        }
+                    };
+                    _bookmarkContextMenu.Items.Add(menuItem);
+
+                    var tss = new ToolStripSeparator();
+                    _bookmarkContextMenu.Items.Add(tss);
+
+                    // go to bookmark
+                    menuItem = new ToolStripMenuItem(Configuration.Settings.Language.Settings.GoToBookmark);
+                    menuItem.Click += (sender2, e2) => { GoToBookmark(); };
+                    _bookmarkContextMenu.Items.Add(menuItem);
+
+                    // clear all bookmarks
+                    menuItem = new ToolStripMenuItem(Configuration.Settings.Language.Settings.ClearBookmarks);
+                    menuItem.Click += (sender2, e2) => { ClearBookmarks(); };
+                    _bookmarkContextMenu.Items.Add(menuItem);
+
+                    Controls.Add(_bookmarkContextMenu);
+                }
+                _bookmarkContextMenu.Show(Cursor.Position.X - 3, Cursor.Position.Y - 3);
             }
         }
     }

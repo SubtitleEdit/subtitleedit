@@ -746,27 +746,29 @@ namespace Nikse.SubtitleEdit.Controls
                 // bookmark text
                 if (paragraph.Bookmark != null)
                 {
-                    using (var bookmarkTextBrush = new SolidBrush(Color.White))
+                    var x = currentRegionLeft + padding;
+                    var y = Height / 2 + (int)graphics.MeasureString("xx", font).Height / 2 + 2;
+
+                    using (var bookmarkBackBrush = new SolidBrush(Color.FromArgb(255, 250, 205)))
                     {
-                        var x = currentRegionLeft + padding;
-                        var y = Height / 2 - (int)graphics.MeasureString("xx", font).Height / 2;
-                        graphics.FillPolygon(bookmarkTextBrush, new PointF[]
-                        {
-                            new PointF(x, y),
-                            new PointF(x + 14, y),
-                            new PointF(x + 14, y + 24),
-                            new PointF(x + 7, y + 14),
-                            new PointF(x, y + 24),
-                            new PointF(x, y),
-                        });
-                        x += 16;
-                        // poor mans outline + text
-                        graphics.DrawString(paragraph.Bookmark, font, outlineBrush, new PointF(x, y - 1));
-                        graphics.DrawString(paragraph.Bookmark, font, outlineBrush, new PointF(x, y + 1));
-                        graphics.DrawString(paragraph.Bookmark, font, outlineBrush, new PointF(x - 1, y));
-                        graphics.DrawString(paragraph.Bookmark, font, outlineBrush, new PointF(x + 1, y));
-                        graphics.DrawString(paragraph.Bookmark, font, bookmarkTextBrush, new PointF(x, y));
+                        var textSize = graphics.MeasureString(paragraph.Bookmark, font);
+                        if (textSize.Width < 1)
+                            textSize = new SizeF(-2, 18); // empty bookmark text
+                        graphics.FillRectangle(bookmarkBackBrush, x, y, textSize.Width + 20, textSize.Height + 10);
                     }
+
+                    x += 2;
+                    graphics.FillPolygon(textBrush, new[]
+                    {
+                        new Point(x, y + 2),
+                        new Point(x + 14, y + 2),
+                        new Point(x + 14, y + 22 + 2),
+                        new Point(x + 7, y + 14 + 2),
+                        new Point(x, y + 22 + 2),
+                        new Point(x, y + 2),
+                    });
+                    x += 16;
+                    graphics.DrawString(paragraph.Bookmark, font, textBrush, new PointF(x, y));
                 }
 
                 // paragraph text

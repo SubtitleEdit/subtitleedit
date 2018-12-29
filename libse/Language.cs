@@ -1679,7 +1679,9 @@ namespace Nikse.SubtitleEdit.Core
                         WebVTTSetNewVoice = "Set new voice...",
                         WebVTTRemoveVoices = "Remove voices",
                         NewActor = "New actor...",
-                        RemoveActors = "Remove actors"
+                        RemoveActors = "Remove actors",
+                        EditBookmark = "Edit bookmark",
+                        RemoveBookmark = "Remove bookmark",
                     }
                 },
 
@@ -2039,7 +2041,7 @@ can edit in same subtitle file (collaboration)",
                 ToggleBookmarksWithComment = "Toggle bookmarks - add comment",
                 ClearBookmarks = "Clear bookmarks",
                 GoToBookmark = "Go to bookmark",
-                GoToPreviousBookmark = "Go to prevous bookmark",
+                GoToPreviousBookmark = "Go to previous bookmark",
                 GoToNextBookmark = "Go to next bookmark",
                 FontInUi = "UI Font",
                 ShowFrameRate = "Show frame rate in toolbar",
