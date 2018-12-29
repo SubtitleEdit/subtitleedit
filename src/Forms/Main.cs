@@ -273,7 +273,7 @@ namespace Nikse.SubtitleEdit.Forms
         private readonly Timer _dragAndDropVideoTimer = new Timer(); // to prevent locking windows explorer
         private long _labelNextTicks = -1;
         private bool _showBookmarkLabel = true;
-        private ContextMenuStrip _bookmarkContextMenu;
+        private ContextMenu _bookmarkContextMenu;
 
         public bool IsMenuOpen { get; private set; }
 
@@ -23637,11 +23637,10 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (_bookmarkContextMenu == null)
                 {
-                    _bookmarkContextMenu = new ContextMenuStrip();
-                    _bookmarkContextMenu.TopLevel = false;
+                    _bookmarkContextMenu = new ContextMenu();
 
                     // edit bookmark
-                    var menuItem = new ToolStripMenuItem(Configuration.Settings.Language.Main.Menu.ContextMenu.EditBookmark);
+                    var menuItem = new MenuItem(Configuration.Settings.Language.Main.Menu.ContextMenu.EditBookmark);
                     menuItem.Click += (sender2, e2) =>
                     {
                         var p1 = _subtitle.GetParagraphOrDefault(_subtitleListViewIndex);
@@ -23660,10 +23659,10 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                         }
                     };
-                    _bookmarkContextMenu.Items.Add(menuItem);
+                    _bookmarkContextMenu.MenuItems.Add(menuItem);
 
                     // remove bookmark
-                    menuItem = new ToolStripMenuItem(Configuration.Settings.Language.Main.Menu.ContextMenu.RemoveBookmark);
+                    menuItem = new MenuItem(Configuration.Settings.Language.Main.Menu.ContextMenu.RemoveBookmark);
                     menuItem.Click += (sender2, e2) =>
                     {
                         var p2 = _subtitle.GetParagraphOrDefault(_subtitleListViewIndex);
@@ -23675,24 +23674,27 @@ namespace Nikse.SubtitleEdit.Forms
                             SubtitleListview1.StateImageList = _subtitle != null && _subtitle.Paragraphs.Any(p => p.Bookmark != null) ? imageListBookmarks : null;
                         }
                     };
-                    _bookmarkContextMenu.Items.Add(menuItem);
+                    _bookmarkContextMenu.MenuItems.Add(menuItem);
 
-                    var tss = new ToolStripSeparator();
-                    _bookmarkContextMenu.Items.Add(tss);
+                    _bookmarkContextMenu.MenuItems.Add("-");
 
                     // go to bookmark
-                    menuItem = new ToolStripMenuItem(Configuration.Settings.Language.Settings.GoToBookmark);
+                    menuItem = new MenuItem(Configuration.Settings.Language.Settings.GoToBookmark);
                     menuItem.Click += (sender2, e2) => { GoToBookmark(); };
-                    _bookmarkContextMenu.Items.Add(menuItem);
+                    _bookmarkContextMenu.MenuItems.Add(menuItem);
 
                     // clear all bookmarks
-                    menuItem = new ToolStripMenuItem(Configuration.Settings.Language.Settings.ClearBookmarks);
+                    menuItem = new MenuItem(Configuration.Settings.Language.Settings.ClearBookmarks);
                     menuItem.Click += (sender2, e2) => { ClearBookmarks(); };
-                    _bookmarkContextMenu.Items.Add(menuItem);
+                    _bookmarkContextMenu.MenuItems.Add(menuItem);
 
-                    Controls.Add(_bookmarkContextMenu);
+                    pictureBoxBookmark.ContextMenu = _bookmarkContextMenu;
+                    _bookmarkContextMenu.Show(pictureBoxBookmark, new Point(pictureBoxBookmark.Width - 3, pictureBoxBookmark.Height - 3));
                 }
-                _bookmarkContextMenu.Show(Cursor.Position.X - 3, Cursor.Position.Y - 3);
+                else
+                {
+                    _bookmarkContextMenu.Show(pictureBoxBookmark, new Point(Cursor.Position.X - 3, Cursor.Position.Y - 3));
+                }
             }
         }
     }
