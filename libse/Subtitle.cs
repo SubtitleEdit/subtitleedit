@@ -612,6 +612,8 @@ namespace Nikse.SubtitleEdit.Core
                 sb.Append((p.StartTime.TotalMilliseconds + Configuration.Settings.General.CurrentVideoOffsetInMs).GetHashCode());
                 sb.Append((p.EndTime.TotalMilliseconds + Configuration.Settings.General.CurrentVideoOffsetInMs).GetHashCode());
                 sb.Append(p.Text);
+                if (p.Bookmark != null)
+                    sb.Append("*" + p.Bookmark);
             }
             return sb.ToString().TrimEnd();
         }

@@ -1749,7 +1749,7 @@ can edit in same subtitle file (collaboration)</Information>
     <ToggleBookmarksWithComment>Toggle bookmarks - add comment</ToggleBookmarksWithComment>
     <ClearBookmarks>Clear bookmarks</ClearBookmarks>
     <GoToBookmark>Go to bookmark</GoToBookmark>
-    <GoToPreviousBookmark>Go to prevous bookmark</GoToPreviousBookmark>
+    <GoToPreviousBookmark>Go to previous bookmark</GoToPreviousBookmark>
     <GoToNextBookmark>Go to next bookmark</GoToNextBookmark>
     <FontInUi>UI Font</FontInUi>
     <ShowFrameRate>Show frame rate in toolbar</ShowFrameRate>
