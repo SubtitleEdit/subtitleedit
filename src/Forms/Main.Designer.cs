@@ -4094,6 +4094,7 @@
             this.pictureBoxBookmark.TabIndex = 41;
             this.pictureBoxBookmark.TabStop = false;
             this.pictureBoxBookmark.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pictureBoxBookmark_MouseClick);
+            this.pictureBoxBookmark.MouseEnter += new System.EventHandler(this.pictureBoxBookmark_MouseEnter);
             // 
             // labelSingleLine
             // 
