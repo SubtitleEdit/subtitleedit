@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.buttonAbort = new System.Windows.Forms.Button();
             this.labelWordNotFound = new System.Windows.Forms.Label();
             this.groupBoxSuggestions = new System.Windows.Forms.GroupBox();
@@ -55,12 +56,16 @@
             this.richTextBoxParagraph = new System.Windows.Forms.RichTextBox();
             this.buttonEditWholeText = new System.Windows.Forms.Button();
             this.buttonEditWord = new System.Windows.Forms.Button();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.addXToNamesnoiseListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.addXToUserDictionaryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBoxSuggestions.SuspendLayout();
             this.GroupBoxEditWord.SuspendLayout();
             this.groupBoxEditWholeText.SuspendLayout();
             this.groupBoxTextAsImage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxText)).BeginInit();
             this.groupBoxText.SuspendLayout();
+            this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // buttonAbort
@@ -79,7 +84,7 @@
             this.labelWordNotFound.AutoSize = true;
             this.labelWordNotFound.Location = new System.Drawing.Point(9, 112);
             this.labelWordNotFound.Name = "labelWordNotFound";
-            this.labelWordNotFound.Size = new System.Drawing.Size(0, 13);
+            this.labelWordNotFound.Size = new System.Drawing.Size(0, 17);
             this.labelWordNotFound.TabIndex = 23;
             // 
             // groupBoxSuggestions
@@ -123,9 +128,10 @@
             this.listBoxSuggestions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.listBoxSuggestions.FormattingEnabled = true;
+            this.listBoxSuggestions.ItemHeight = 17;
             this.listBoxSuggestions.Location = new System.Drawing.Point(6, 39);
             this.listBoxSuggestions.Name = "listBoxSuggestions";
-            this.listBoxSuggestions.Size = new System.Drawing.Size(372, 134);
+            this.listBoxSuggestions.Size = new System.Drawing.Size(372, 123);
             this.listBoxSuggestions.TabIndex = 2;
             // 
             // GroupBoxEditWord
@@ -201,7 +207,7 @@
             this.textBoxWord.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBoxWord.Location = new System.Drawing.Point(6, 19);
             this.textBoxWord.Name = "textBoxWord";
-            this.textBoxWord.Size = new System.Drawing.Size(290, 22);
+            this.textBoxWord.Size = new System.Drawing.Size(290, 26);
             this.textBoxWord.TabIndex = 0;
             this.textBoxWord.TextChanged += new System.EventHandler(this.textBoxWord_TextChanged);
             this.textBoxWord.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxWordKeyDown);
@@ -332,6 +338,7 @@
             // richTextBoxParagraph
             // 
             this.richTextBoxParagraph.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.richTextBoxParagraph.ContextMenuStrip = this.contextMenuStrip1;
             this.richTextBoxParagraph.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.richTextBoxParagraph.Location = new System.Drawing.Point(6, 12);
             this.richTextBoxParagraph.Name = "richTextBoxParagraph";
@@ -360,9 +367,33 @@
             this.buttonEditWord.UseVisualStyleBackColor = true;
             this.buttonEditWord.Click += new System.EventHandler(this.ButtonEditWordClick);
             // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.addXToNamesnoiseListToolStripMenuItem,
+            this.addXToUserDictionaryToolStripMenuItem});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(247, 80);
+            this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
+            // 
+            // addXToNamesnoiseListToolStripMenuItem
+            // 
+            this.addXToNamesnoiseListToolStripMenuItem.Name = "addXToNamesnoiseListToolStripMenuItem";
+            this.addXToNamesnoiseListToolStripMenuItem.Size = new System.Drawing.Size(246, 24);
+            this.addXToNamesnoiseListToolStripMenuItem.Text = "Add x to names/noise list";
+            this.addXToNamesnoiseListToolStripMenuItem.Click += new System.EventHandler(this.addXToNamesnoiseListToolStripMenuItem_Click);
+            // 
+            // addXToUserDictionaryToolStripMenuItem
+            // 
+            this.addXToUserDictionaryToolStripMenuItem.Name = "addXToUserDictionaryToolStripMenuItem";
+            this.addXToUserDictionaryToolStripMenuItem.Size = new System.Drawing.Size(246, 24);
+            this.addXToUserDictionaryToolStripMenuItem.Text = "Add x to user dictionary";
+            this.addXToUserDictionaryToolStripMenuItem.Click += new System.EventHandler(this.addXToUserDictionaryToolStripMenuItem_Click);
+            // 
             // OcrSpellCheck
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(720, 473);
             this.Controls.Add(this.groupBoxText);
@@ -388,6 +419,7 @@
             this.groupBoxTextAsImage.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxText)).EndInit();
             this.groupBoxText.ResumeLayout(false);
+            this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -422,5 +454,8 @@
         private System.Windows.Forms.Button buttonChangeAllWholeText;
         private System.Windows.Forms.Button buttonGoogleIt;
         private System.Windows.Forms.Button buttonEditImageDb;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem addXToNamesnoiseListToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem addXToUserDictionaryToolStripMenuItem;
     }
 }

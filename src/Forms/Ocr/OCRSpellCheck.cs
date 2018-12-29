@@ -304,5 +304,46 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             ActionResult = Action.InspectCompareMatches;
             DialogResult = DialogResult.OK;
         }
+
+        private void addXToNamesnoiseListToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrWhiteSpace(richTextBoxParagraph.SelectedText))
+            {
+                Word = richTextBoxParagraph.SelectedText.Trim(); 
+                ActionResult = Action.AddToNames;
+                DialogResult = DialogResult.OK;
+            }
+        }
+
+        private void addXToUserDictionaryToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrWhiteSpace(richTextBoxParagraph.SelectedText))
+            {
+                string s = richTextBoxParagraph.SelectedText.Trim();
+                Word = s;
+                if (s.Length == 0 || s.Contains(' '))
+                {
+                    MessageBox.Show(Configuration.Settings.Language.SpellCheck.SpacesNotAllowed);
+                    ActionResult = Action.SkipOnce;
+                    return;
+                }
+                ActionResult = Action.AddToUserDictionary;
+                DialogResult = DialogResult.OK;
+            }
+        }
+
+        private void contextMenuStrip1_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            bool showAddItems = false;
+            if (!string.IsNullOrWhiteSpace(richTextBoxParagraph.SelectedText))
+            {
+                string word = richTextBoxParagraph.SelectedText.Trim();
+                addXToNamesnoiseListToolStripMenuItem.Text = string.Format(Configuration.Settings.Language.SpellCheck.AddXToNames, word);
+                addXToUserDictionaryToolStripMenuItem.Text = string.Format(Configuration.Settings.Language.SpellCheck.AddXToUserDictionary, word);
+                showAddItems = true;
+            }
+            addXToNamesnoiseListToolStripMenuItem.Visible = showAddItems;
+            addXToUserDictionaryToolStripMenuItem.Visible = showAddItems;
+        }
     }
 }
