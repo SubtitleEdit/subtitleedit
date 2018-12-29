@@ -746,7 +746,7 @@ namespace Nikse.SubtitleEdit.Controls
                 // bookmark text
                 if (paragraph.Bookmark != null)
                 {
-                    using (var bookmarkTextBrush = new SolidBrush(Color.DodgerBlue))
+                    using (var bookmarkTextBrush = new SolidBrush(Color.White))
                     {
                         var x = currentRegionLeft + padding;
                         var y = Height / 2 - (int)graphics.MeasureString("xx", font).Height / 2;
