@@ -4277,7 +4277,7 @@ namespace Nikse.SubtitleEdit.Forms
                                              Configuration.Settings.General.SubtitleListViewFontBold.ToString() +
                                              Configuration.Settings.General.SubtitleListViewFontSize;
 
-                ;
+            ;
             bool oldUseTimeFormatHHMMSSFF = Configuration.Settings.General.UseTimeFormatHHMMSSFF;
 
             string oldSyntaxColoring = Configuration.Settings.Tools.ListViewSyntaxColorDurationSmall.ToString() +
@@ -13668,6 +13668,7 @@ namespace Nikse.SubtitleEdit.Forms
             var p = _subtitle.GetParagraphOrDefault(_subtitleListViewIndex);
             if (p != null)
                 ShowHideBookmark(p);
+            SetListViewStateImages();
             new BookmarkPersistance(_subtitle, _fileName).Save();
         }
 

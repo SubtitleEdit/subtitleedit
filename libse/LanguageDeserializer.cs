@@ -568,6 +568,15 @@ namespace Nikse.SubtitleEdit.Core
                 case "Beamer/Title":
                     language.Beamer.Title = reader.Value;
                     break;
+                case "Bookmarks/EditBookmark":
+                    language.Bookmarks.EditBookmark = reader.Value;
+                    break;
+                case "Bookmarks/AddBookmark":
+                    language.Bookmarks.AddBookmark = reader.Value;
+                    break;
+                case "Bookmarks/GoToBookmark":
+                    language.Bookmarks.GoToBookmark = reader.Value;
+                    break;
                 case "ChangeCasing/Title":
                     language.ChangeCasing.Title = reader.Value;
                     break;
