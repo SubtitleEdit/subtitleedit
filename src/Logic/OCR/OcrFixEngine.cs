@@ -1059,12 +1059,12 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 string wordNoItalics = HtmlUtil.RemoveOpenCloseTags(word, HtmlUtil.TagItalic);
                 if (!IsWordKnownOrNumber(wordNoItalics, line) && !localIgnoreWords.Contains(wordNoItalics))
                 {
-                    bool correct = word.Length > minLength && DoSpell(word);
+                    bool correct = wordNoItalics.Length > minLength && DoSpell(wordNoItalics);
                     if (!correct)
-                        correct = word.Length > minLength + 1 && DoSpell(word.Trim('\''));
-                    if (!correct && word.Length > 3 && !word.EndsWith("ss", StringComparison.Ordinal) && !string.IsNullOrEmpty(_threeLetterIsoLanguageName) &&
+                        correct = wordNoItalics.Length > minLength + 1 && DoSpell(wordNoItalics.Trim('\''));
+                    if (!correct && wordNoItalics.Length > 3 && !wordNoItalics.EndsWith("ss", StringComparison.Ordinal) && !string.IsNullOrEmpty(_threeLetterIsoLanguageName) &&
                         (_threeLetterIsoLanguageName == "eng" || _threeLetterIsoLanguageName == "dan" || _threeLetterIsoLanguageName == "swe" || _threeLetterIsoLanguageName == "nld"))
-                        correct = DoSpell(word.TrimEnd('s'));
+                        correct = DoSpell(wordNoItalics.TrimEnd('s'));
                     if (!correct)
                         correct = wordNoItalics.Length > minLength && DoSpell(wordNoItalics);
                     if (!correct && _userWordList.Contains(wordNoItalics))
@@ -1074,14 +1074,14 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                         correct = true; // already fixed
 
                     if (!correct && Configuration.Settings.Tools.SpellCheckEnglishAllowInQuoteAsIng && wordNotEndTrimmed.EndsWith('\'') &&
-                        SpellCheckDictionaryName.StartsWith("en_", StringComparison.Ordinal) && word.EndsWith("in", StringComparison.OrdinalIgnoreCase))
+                        SpellCheckDictionaryName.StartsWith("en_", StringComparison.Ordinal) && wordNoItalics.EndsWith("in", StringComparison.OrdinalIgnoreCase))
                     {
-                        correct = DoSpell(word + "g");
+                        correct = DoSpell(wordNoItalics + "g");
                     }
 
-                    if (_threeLetterIsoLanguageName == "eng" && (word.Equals("a", StringComparison.OrdinalIgnoreCase) || word == "I"))
+                    if (_threeLetterIsoLanguageName == "eng" && (wordNoItalics.Equals("a", StringComparison.OrdinalIgnoreCase) || wordNoItalics == "I"))
                         correct = true;
-                    else if (_threeLetterIsoLanguageName == "dan" && word.Equals("i", StringComparison.OrdinalIgnoreCase))
+                    else if (_threeLetterIsoLanguageName == "dan" && wordNoItalics.Equals("i", StringComparison.OrdinalIgnoreCase))
                         correct = true;
 
                     if (!correct)
