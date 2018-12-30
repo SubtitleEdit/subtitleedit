@@ -1,6 +1,6 @@
 ﻿namespace Nikse.SubtitleEdit.Forms
 {
-    partial class BookmarksGoTo
+    sealed partial class BookmarksGoTo
     {
         /// <summary>
         /// Required designer variable.

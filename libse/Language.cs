@@ -22,6 +22,7 @@ namespace Nikse.SubtitleEdit.Core
         public LanguageStructure.AutoBreakUnbreakLines AutoBreakUnbreakLines;
         public LanguageStructure.BatchConvert BatchConvert;
         public LanguageStructure.Beamer Beamer;
+        public LanguageStructure.Bookmarks Bookmarks;
         public LanguageStructure.ChangeCasing ChangeCasing;
         public LanguageStructure.ChangeCasingNames ChangeCasingNames;
         public LanguageStructure.ChangeFrameRate ChangeFrameRate;
@@ -353,6 +354,13 @@ namespace Nikse.SubtitleEdit.Core
             Beamer = new LanguageStructure.Beamer
             {
                 Title = "Beamer",
+            };
+
+            Bookmarks = new LanguageStructure.Bookmarks
+            {
+                GoToBookmark = "Go to bookmark",
+                EditBookmark = "Edit bookmark",
+                AddBookmark = "Add bookmark"
             };
 
             ChangeCasing = new LanguageStructure.ChangeCasing
