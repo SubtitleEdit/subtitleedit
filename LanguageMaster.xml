@@ -214,6 +214,11 @@ Note: Do check free disk space.</WaveFileMalformed>
   <Beamer>
     <Title>Beamer</Title>
   </Beamer>
+  <Bookmarks>
+    <EditBookmark>Edit bookmark</EditBookmark>
+    <AddBookmark>Add bookmark</AddBookmark>
+    <GoToBookmark>Go to bookmark</GoToBookmark>
+  </Bookmarks>
   <ChangeCasing>
     <Title>Change casing</Title>
     <ChangeCasingTo>Change casing to</ChangeCasingTo>
