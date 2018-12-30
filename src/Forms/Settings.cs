@@ -938,6 +938,7 @@ namespace Nikse.SubtitleEdit.Forms
             AddNode(listViewNode, language.ListViewColumnTextDown, nameof(Configuration.Settings.Shortcuts.MainListViewColumnTextDown), true);
             AddNode(listViewNode, language.ListViewFocusWaveform, nameof(Configuration.Settings.Shortcuts.MainListViewFocusWaveform));
             AddNode(listViewNode, language.ListViewGoToNextError, nameof(Configuration.Settings.Shortcuts.MainListViewGoToNextError));
+            AddNode(listViewNode, language.ListViewAutoBalance2PlusLines, nameof(Configuration.Settings.Shortcuts.MainListViewAutoBalance2PlusLines));
             if (listViewNode.Nodes.Count > 0)
                 _shortcuts.Nodes.Add(listViewNode);
 
