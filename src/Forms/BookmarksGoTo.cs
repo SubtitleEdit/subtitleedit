@@ -5,7 +5,7 @@ using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public partial class BookmarksGoTo : Form
+    public sealed partial class BookmarksGoTo : Form
     {
         private readonly Subtitle _subtitle;
 
@@ -14,7 +14,7 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.PreInitialize(this);
             InitializeComponent();
             UiUtil.FixFonts(this);
-            //   Text = Configuration.Settings.Language.AddToNames.Title;
+            Text = Configuration.Settings.Language.Bookmarks.GoToBookmark;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
 
             _subtitle = subtitle;

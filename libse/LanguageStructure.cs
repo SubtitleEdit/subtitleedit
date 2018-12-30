@@ -227,6 +227,13 @@
             public string Title { get; set; }
         }
 
+        public class Bookmarks
+        {
+            public string EditBookmark { get; set; }
+            public string AddBookmark { get; set; }
+            public string GoToBookmark { get; set; }
+        }
+
         public class ChangeCasing
         {
             public string Title { get; set; }
