@@ -4045,7 +4045,7 @@ namespace Nikse.SubtitleEdit.Forms
                 textBoxListViewText.RightToLeft = RightToLeft.No;
                 textBoxSource.RightToLeft = RightToLeft.No;
             }
-            SubtitleListview1.StateImageList = _subtitle != null && _subtitle.Paragraphs.Any(p => p.Bookmark != null) ? imageListBookmarks : null;
+            SetListViewStateImages();
             pictureBoxBookmark.Visible = false;
             panelBookmark.Hide();
         }
@@ -4273,7 +4273,11 @@ namespace Nikse.SubtitleEdit.Forms
                                              Configuration.Settings.General.CenterSubtitleInTextBox +
                                              Configuration.Settings.General.SubtitleFontSize +
                                              Configuration.Settings.General.SubtitleFontColor.ToArgb() +
-                                             Configuration.Settings.General.SubtitleBackgroundColor.ToArgb();
+                                             Configuration.Settings.General.SubtitleBackgroundColor.ToArgb() +
+                                             Configuration.Settings.General.SubtitleListViewFontBold.ToString() +
+                                             Configuration.Settings.General.SubtitleListViewFontSize;
+
+                ;
             bool oldUseTimeFormatHHMMSSFF = Configuration.Settings.General.UseTimeFormatHHMMSSFF;
 
             string oldSyntaxColoring = Configuration.Settings.Tools.ListViewSyntaxColorDurationSmall.ToString() +
@@ -4340,7 +4344,9 @@ namespace Nikse.SubtitleEdit.Forms
                 Configuration.Settings.General.CenterSubtitleInTextBox +
                 Configuration.Settings.General.SubtitleFontSize +
                 Configuration.Settings.General.SubtitleFontColor.ToArgb() +
-                Configuration.Settings.General.SubtitleBackgroundColor.ToArgb() ||
+                Configuration.Settings.General.SubtitleBackgroundColor.ToArgb() +
+                Configuration.Settings.General.SubtitleListViewFontBold.ToString() +
+                Configuration.Settings.General.SubtitleListViewFontSize ||
                 oldSyntaxColoring != newSyntaxColoring ||
                 oldShowColumnEndTime != Configuration.Settings.Tools.ListViewShowColumnEndTime ||
                 oldShowcolumnDuration != Configuration.Settings.Tools.ListViewShowColumnDuration ||
@@ -7598,6 +7604,7 @@ namespace Nikse.SubtitleEdit.Forms
                 labelSingleLine.Text = string.Empty;
                 timeUpDownStartTime.TimeCode = new TimeCode();
                 numericUpDownDuration.Value = 0;
+                ShowHideBookmark(new Paragraph());
             }
         }
 
@@ -7660,6 +7667,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             ResetTextInfoIfEmpty();
+            SetListViewStateImages();
         }
 
         private void ToolStripMenuItemInsertBeforeClick(object sender, EventArgs e)
@@ -8007,6 +8015,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SubtitleListview1_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (SubtitleListview1.SelectedIndices.Count == 0)
+            {
+                _listViewTextUndoIndex = -1;
+                return;
+            }
+
             if (!_makeHistoryPaused)
             {
                 if (_listViewTextUndoLast != null && _listViewTextUndoIndex >= 0 && _subtitle.Paragraphs.Count > _listViewTextUndoIndex &&
@@ -13617,17 +13631,26 @@ namespace Nikse.SubtitleEdit.Forms
                     }
 
                     first = false;
-                    if (newValue == string.Empty)
-                    {
-                        SubtitleListview1.StateImageList = imageListBookmarks;
-                    }
                 }
                 p.Bookmark = newValue;
                 SubtitleListview1.ShowState(index, p);
                 ShowHideBookmark(p);
             }
-            SubtitleListview1.StateImageList = _subtitle != null && _subtitle.Paragraphs.Any(p => p.Bookmark != null) ? imageListBookmarks : null;
+            SetListViewStateImages();
             new BookmarkPersistance(_subtitle, _fileName).Save();
+        }
+
+        private void SetListViewStateImages()
+        {
+            SubtitleListview1.StateImageList = _subtitle != null && _subtitle.Paragraphs.Any(p => p.Bookmark != null) ? imageListBookmarks : null;
+            if (SubtitleListview1.StateImageList == null)
+            {
+                SubtitleListview1.Columns[SubtitleListview1.ColumnIndexNumber].Text = Configuration.Settings.Language.General.NumberSymbol;
+            }
+            else
+            {
+                SubtitleListview1.Columns[SubtitleListview1.ColumnIndexNumber].Text = "    " + Configuration.Settings.Language.General.NumberSymbol;
+            }
         }
 
         private void ClearBookmarks()
@@ -17413,6 +17436,8 @@ namespace Nikse.SubtitleEdit.Forms
         private void Main_Shown(object sender, EventArgs e)
         {
             imageListBookmarks.Images.Add(pictureBoxBookmark.Image);
+            SetListViewStateImages();
+
             toolStripButtonToggleVideo.Checked = !Configuration.Settings.General.ShowVideoPlayer;
             toolStripButtonToggleVideo_Click(null, null);
 
@@ -23657,7 +23682,7 @@ namespace Nikse.SubtitleEdit.Forms
                             p1.Bookmark = form.Comment;
                             SubtitleListview1.ShowState(_subtitleListViewIndex, p1);
                             ShowHideBookmark(p1);
-                            SubtitleListview1.StateImageList = _subtitle != null && _subtitle.Paragraphs.Any(p => p.Bookmark != null) ? imageListBookmarks : null;
+                            SetListViewStateImages();
                             new BookmarkPersistance(_subtitle, _fileName).Save();
                         }
                     }
@@ -23675,7 +23700,7 @@ namespace Nikse.SubtitleEdit.Forms
                     p2.Bookmark = null;
                     SubtitleListview1.ShowState(_subtitleListViewIndex, p2);
                     ShowHideBookmark(p2);
-                    SubtitleListview1.StateImageList = _subtitle != null && _subtitle.Paragraphs.Any(p => p.Bookmark != null) ? imageListBookmarks : null;
+                    SetListViewStateImages();
                     new BookmarkPersistance(_subtitle, _fileName).Save();
                 }
             };
