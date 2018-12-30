@@ -1113,6 +1113,7 @@ $HorzAlign          =   Center
         public string MainListViewColumnTextDown { get; set; }
         public string MainListViewFocusWaveform { get; set; }
         public string MainListViewGoToNextError { get; set; }
+        public string MainListViewAutoBalance2PlusLines { get; set; }
         public string MainTextBoxItalic { get; set; }
         public string MainTextBoxSplitAtCursor { get; set; }
         public string MainTextBoxSplitAtCursorAndVideoPos { get; set; }
@@ -3287,6 +3288,9 @@ $HorzAlign          =   Center
                 subNode = node.SelectSingleNode("MainListViewGoToNextError");
                 if (subNode != null)
                     settings.Shortcuts.MainListViewGoToNextError = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainListViewAutoBalance2PlusLines");
+                if (subNode != null)
+                    settings.Shortcuts.MainListViewAutoBalance2PlusLines = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainEditReverseStartAndEndingForRTL");
                 if (subNode != null)
                     settings.Shortcuts.MainEditReverseStartAndEndingForRTL = subNode.InnerText;
@@ -4211,6 +4215,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("MainListViewColumnTextDown", settings.Shortcuts.MainListViewColumnTextDown);
                 textWriter.WriteElementString("MainListViewFocusWaveform", settings.Shortcuts.MainListViewFocusWaveform);
                 textWriter.WriteElementString("MainListViewGoToNextError", settings.Shortcuts.MainListViewGoToNextError);
+                textWriter.WriteElementString("MainListViewAutoBalance2PlusLines", settings.Shortcuts.MainListViewAutoBalance2PlusLines);
                 textWriter.WriteElementString("MainEditReverseStartAndEndingForRTL", settings.Shortcuts.MainEditReverseStartAndEndingForRTL);
                 textWriter.WriteElementString("MainTextBoxItalic", settings.Shortcuts.MainTextBoxItalic);
                 textWriter.WriteElementString("MainTextBoxSplitAtCursor", settings.Shortcuts.MainTextBoxSplitAtCursor);

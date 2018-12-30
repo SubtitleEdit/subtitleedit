@@ -2019,6 +2019,7 @@ can edit in same subtitle file (collaboration)</Information>
     <ListViewColumnTextDown>Column, text down</ListViewColumnTextDown>
     <ListViewFocusWaveform>Focus waveform/spectrogram</ListViewFocusWaveform>
     <ListViewGoToNextError>Go to next error</ListViewGoToNextError>
+    <ListViewAutoBalance2PlusLines>Auto balance selected lines (even 2+ lines)</ListViewAutoBalance2PlusLines>
     <ShowBeamer>Start subtitle fullscreen beamer</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Move last word to next subtitle</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Fetch first word from next subtitle</MainTextBoxMoveFirstWordFromNextUp>

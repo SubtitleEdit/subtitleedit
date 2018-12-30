@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
+using System.IO;
 using System.Text;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 
@@ -8,22 +8,49 @@ namespace Nikse.SubtitleEdit.Core
     public class BookmarkPersistance
     {
         private readonly Subtitle _subtitle;
+        private readonly string _fileName;
 
-        public BookmarkPersistance(Subtitle subtitle)
+        public BookmarkPersistance(Subtitle subtitle, string fileName)
         {
             _subtitle = subtitle;
+            _fileName = fileName;
         }
 
-        public void SaveToFirstLine()
+        private string GetBookmarksFileName()
         {
+            return _fileName + ".bookmarks";
+        }
+
+        public bool Save()
+        {
+            if (_fileName == null)
+                return false;
+
+            var fileName = GetBookmarksFileName();
             var b = SerializeBookmarks();
             if (b != null)
             {
-                var first = _subtitle.Paragraphs.FirstOrDefault(p => p.StartTime.TotalMilliseconds == 0 && p.EndTime.TotalMilliseconds == 0 && p.Text.Contains("\"bookmarks\""));
-                if (first != null)
-                    _subtitle.Paragraphs.Remove(first);
-                _subtitle.Paragraphs.Insert(0, new Paragraph(b, 0, 0));
+                try
+                {
+                    File.WriteAllText(fileName, b, Encoding.UTF8);
+                }
+                catch
+                {
+                    return false;
+                }
             }
+            else if (File.Exists(fileName))
+            {
+                try
+                {
+                    File.Delete(fileName);
+                }
+                catch
+                {
+                    return false;
+                }
+            }
+            return true;
         }
 
         private string SerializeBookmarks()
@@ -53,27 +80,40 @@ namespace Nikse.SubtitleEdit.Core
             return null;
         }
 
-        public void LoadFromFirstLine()
+        public bool Load()
         {
-            var first = _subtitle.Paragraphs.FirstOrDefault(p => p.StartTime.TotalMilliseconds == 0 && p.EndTime.TotalMilliseconds == 0 && p.Text.Contains("\"bookmarks\""));
-            if (first == null)
-                return;
+            if (_fileName == null)
+                return false;
 
-            var dic = DeserializeBookmarks(first.Text);
-            _subtitle.Paragraphs.Remove(first);
-            foreach (var kvp in dic)
+            var fileName = GetBookmarksFileName();
+            if (File.Exists(fileName))
             {
-                var p = _subtitle.GetParagraphOrDefault(kvp.Key);
-                if (p != null)
+                try
                 {
-                    p.Bookmark = kvp.Value;
+                    var dic = DeserializeBookmarks(File.ReadAllText(fileName, Encoding.UTF8));
+                    foreach (var kvp in dic)
+                    {
+                        var p = _subtitle.GetParagraphOrDefault(kvp.Key);
+                        if (p != null)
+                        {
+                            p.Bookmark = kvp.Value;
+                        }
+                    }
+
+                }
+                catch
+                {
+                    return false;
                 }
             }
+
+            return true;
         }
 
         private Dictionary<int, string> DeserializeBookmarks(string s)
         {
             var dic = new Dictionary<int, string>();
+            s = s.Trim();
             var bookmarks = Json.ReadObjectArray(s.Substring(s.IndexOf('[')).TrimEnd('}'));
             if (bookmarks == null || bookmarks.Count == 0)
             {
@@ -84,8 +124,7 @@ namespace Nikse.SubtitleEdit.Core
             {
                 var idx = Json.ReadTag(bm, "idx");
                 var txt = Json.ReadTag(bm, "txt");
-                int number;
-                if (int.TryParse(idx, out number))
+                if (int.TryParse(idx, out var number))
                 {
                     dic.Add(number, txt);
                 }

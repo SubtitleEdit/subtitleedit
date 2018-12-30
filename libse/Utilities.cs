@@ -244,13 +244,13 @@ namespace Nikse.SubtitleEdit.Core
 
         public static string AutoBreakLineMoreThanTwoLines(string text, int maximumLineLength, string language)
         {
-            if (text == null || text.Length < 3)
+            if (text == null || text.Length < 3 || !text.Contains(" "))
                 return text;
 
-            string s = AutoBreakLine(text, 0, 0, language);
+            string s = AutoBreakLine(text, 0, Configuration.Settings.Tools.MergeLinesShorterThan, language);
 
             var arr = s.SplitToLines();
-            if ((arr.Count < 2 && arr[0].Length <= maximumLineLength) || (arr[0].Length <= maximumLineLength && arr[1].Length <= maximumLineLength))
+            if (arr.Count < 2 && arr[0].Length <= maximumLineLength || arr[0].Length <= maximumLineLength && arr[1].Length <= maximumLineLength)
                 return s;
 
             s = RemoveLineBreaks(s);
@@ -350,7 +350,7 @@ namespace Nikse.SubtitleEdit.Core
 
         public static string AutoBreakLine(string text, int maximumLength, int mergeLinesShorterThan, string language)
         {
-            if (text == null || text.Length < 3)
+            if (text == null || text.Length < 3 || !text.Contains(" "))
                 return text;
 
             // do not autobreak dialogs or music symbol

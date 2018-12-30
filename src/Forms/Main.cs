@@ -235,6 +235,7 @@ namespace Nikse.SubtitleEdit.Forms
         private Keys _mainListViewAlignmentN9 = Keys.None;
         private Keys _mainListViewFocusWaveform = Keys.None;
         private Keys _mainListViewGoToNextError = Keys.None;
+        private Keys _mainListViewAutoBalance2PlusLines = Keys.None;
         private Keys _mainListViewCopyText = Keys.None;
         private Keys _mainEditReverseStartAndEndingForRTL = Keys.None;
         private Keys _waveformVerticalZoom = Keys.None;
@@ -3032,7 +3033,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (format != null)
                 {
-                    new BookmarkPersistance(_subtitle).LoadFromFirstLine();
+                    new BookmarkPersistance(_subtitle, fileName).Load();
 
                     if (Configuration.Settings.General.RemoveBlankLinesWhenOpening)
                     {
@@ -12367,10 +12368,11 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 _cancelWordSpellCheck = true;
             }
-            else if (inListView && (Keys.Shift | Keys.Control) == e.Modifiers && e.KeyCode == Keys.B)
+            else if (inListView && e.KeyData == _mainListViewAutoBalance2PlusLines)
             {
                 AutoBalanceLinesAndAllow2PlusLines();
                 e.SuppressKeyPress = true;
+                e.Handled = true;
             }
             else if (audioVisualizer.Visible && e.KeyData == _waveformVerticalZoom)
             {
@@ -12382,17 +12384,17 @@ namespace Nikse.SubtitleEdit.Forms
                 audioVisualizer.VerticalZoomFactor /= 1.1;
                 e.SuppressKeyPress = true;
             }
-            if (audioVisualizer.Visible && e.KeyData == _waveformZoomIn)
+            else if (audioVisualizer.Visible && e.KeyData == _waveformZoomIn)
             {
                 audioVisualizer.ZoomIn();
                 e.SuppressKeyPress = true;
             }
-            if (audioVisualizer.Visible && e.KeyData == _waveformZoomOut)
+            else if (audioVisualizer.Visible && e.KeyData == _waveformZoomOut)
             {
                 audioVisualizer.ZoomOut();
                 e.SuppressKeyPress = true;
             }
-            if (audioVisualizer.Visible && e.KeyData == _waveformSplit)
+            else if (audioVisualizer.Visible && e.KeyData == _waveformSplit)
             {
                 if (mediaPlayer.IsPaused)
                 {
@@ -13625,6 +13627,7 @@ namespace Nikse.SubtitleEdit.Forms
                 ShowHideBookmark(p);
             }
             SubtitleListview1.StateImageList = _subtitle != null && _subtitle.Paragraphs.Any(p => p.Bookmark != null) ? imageListBookmarks : null;
+            new BookmarkPersistance(_subtitle, _fileName).Save();
         }
 
         private void ClearBookmarks()
@@ -13642,6 +13645,7 @@ namespace Nikse.SubtitleEdit.Forms
             var p = _subtitle.GetParagraphOrDefault(_subtitleListViewIndex);
             if (p != null)
                 ShowHideBookmark(p);
+            new BookmarkPersistance(_subtitle, _fileName).Save();
         }
 
         private void MoveWordUpDownInCurrent(bool down)
@@ -17750,6 +17754,7 @@ namespace Nikse.SubtitleEdit.Forms
             _mainListViewAlignmentN9 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewAlignmentN9);
             _mainListViewFocusWaveform = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewFocusWaveform);
             _mainListViewGoToNextError = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewGoToNextError);
+            _mainListViewAutoBalance2PlusLines = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewAutoBalance2PlusLines);
             _mainEditReverseStartAndEndingForRTL = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainEditReverseStartAndEndingForRTL);
             _mainListViewCopyText = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewCopyText);
             copyOriginalTextToCurrentToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewCopyTextFromOriginalToCurrent);
@@ -22592,7 +22597,6 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 sub.AddTimeToAllParagraphs(TimeSpan.FromMilliseconds(Configuration.Settings.General.CurrentVideoOffsetInMs));
             }
-            new BookmarkPersistance(sub).SaveToFirstLine();
             return sub;
         }
 
@@ -23573,11 +23577,6 @@ namespace Nikse.SubtitleEdit.Forms
             ListViewToggleTag("box");
         }
 
-        private void pictureBoxBookmark_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void ShowHideBookmark(Paragraph p)
         {
             if (!string.IsNullOrWhiteSpace(p.Bookmark))
@@ -23659,6 +23658,7 @@ namespace Nikse.SubtitleEdit.Forms
                             SubtitleListview1.ShowState(_subtitleListViewIndex, p1);
                             ShowHideBookmark(p1);
                             SubtitleListview1.StateImageList = _subtitle != null && _subtitle.Paragraphs.Any(p => p.Bookmark != null) ? imageListBookmarks : null;
+                            new BookmarkPersistance(_subtitle, _fileName).Save();
                         }
                     }
                 }
@@ -23676,6 +23676,7 @@ namespace Nikse.SubtitleEdit.Forms
                     SubtitleListview1.ShowState(_subtitleListViewIndex, p2);
                     ShowHideBookmark(p2);
                     SubtitleListview1.StateImageList = _subtitle != null && _subtitle.Paragraphs.Any(p => p.Bookmark != null) ? imageListBookmarks : null;
+                    new BookmarkPersistance(_subtitle, _fileName).Save();
                 }
             };
             _bookmarkContextMenu.MenuItems.Add(menuItem);
