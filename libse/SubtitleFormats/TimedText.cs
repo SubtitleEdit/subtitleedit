@@ -244,11 +244,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         foreach (XmlAttribute attr in node.Attributes)
                         {
                             if (attr.Name.EndsWith("begin", StringComparison.Ordinal))
+                            {
                                 start = attr.InnerText;
+                            }
                             else if (attr.Name.EndsWith("end", StringComparison.Ordinal))
+                            {
                                 end = attr.InnerText;
-                            else if (attr.Name.EndsWith("duration", StringComparison.Ordinal))
+                            }
+                            else if (attr.Name.EndsWith("duration", StringComparison.Ordinal) ||
+                                     attr.Name.EndsWith("dur", StringComparison.Ordinal))
+                            {
                                 dur = attr.InnerText;
+                            }
                         }
                     }
                     string text = pText.ToString();
