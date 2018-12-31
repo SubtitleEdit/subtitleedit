@@ -126,7 +126,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             }
         }
 
-        internal class CompareMatch
+        public class CompareMatch
         {
             public string Text { get; set; }
             public bool Italic { get; set; }
@@ -536,7 +536,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         }
 
         internal void InitializeBatch(string vobSubFileName, VobSubOcrSettings vobSubOcrSettings, bool forcedOnly)
-        {            
+        {
             Initialize(vobSubFileName, vobSubOcrSettings, null, true);
             checkBoxShowOnlyForced.Checked = forcedOnly;
             FormVobSubOcr_Shown(null, null);
@@ -4178,7 +4178,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 }
             }
 
-            string line = GetStringWithItalicTags(matches);
+            string line = MatchesToItalicStringConverter.GetStringWithItalicTags(matches);
 
             if (checkBoxAutoFixCommonErrors.Checked && _ocrFixEngine != null)
                 line = _ocrFixEngine.FixOcrErrorsViaHardcodedRules(line, _lastLine, null); // TODO: Add abbreviations list
@@ -4212,7 +4212,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         }
                         j++;
                     }
-                    var tempLine = GetStringWithItalicTags(matches);
+                    var tempLine = MatchesToItalicStringConverter.GetStringWithItalicTags(matches);
                     var oldAutoGuessesUsed = new List<string>(_ocrFixEngine.AutoGuessesUsed);
                     var oldUnknownWordsFound = new List<string>(_ocrFixEngine.UnknownWordsFound);
                     _ocrFixEngine.AutoGuessesUsed.Clear();
@@ -4465,7 +4465,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         expandSelectionList = new List<ImageSplitterItem>();
                     }
                 }
-                line = GetStringWithItalicTags(matches);
+                line = MatchesToItalicStringConverter.GetStringWithItalicTags(matches);
             }
 
             line = FixNocrHardcodedStuff(line);
@@ -4741,223 +4741,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             return new ImageSplitterItem(minimumX, minimumY, nbmp);
         }
 
-        private static string GetStringWithItalicTags(List<CompareMatch> matches)
-        {
-            var paragraph = new StringBuilder();
-            var line = new StringBuilder();
-            var word = new StringBuilder();
-            int lettersItalics = 0;
-            int lettersNonItalics = 0;
-            int lineLettersNonItalics = 0;
-            int wordItalics = 0;
-            int wordNonItalics = 0;
-            bool isItalic = false;
-            bool allItalic = true;
-            var seperators = new [] { "-", "—", ".", "'", "\"", " ", "!", "\r", "\n" };
-
-            for (int i = 0; i < matches.Count; i++)
-            {
-                string text = matches[i].Text;
-                if (text != null)
-                {
-                    if (seperators.Contains(text))
-                    {
-                    }
-                    else if (matches[i].Italic)
-                    {
-                        lettersItalics++;
-                    }
-                    else
-                    {
-                        lettersItalics = 0;
-                        break;
-                    }
-                }
-            }
-            bool convertAllToItalic = lettersItalics > 0;
-            lettersItalics = 0;
-
-
-            for (int i = 0; i < matches.Count; i++)
-            {
-                string text = matches[i].Text;
-                if (text != null)
-                {
-                    if (seperators.Contains(text))
-                    {
-                    }
-                    else if (matches[i].Italic)
-                    {
-                        lettersNonItalics = 0;
-                        break;
-                    }
-                    else
-                    {
-                        lettersNonItalics++;
-                    }
-                }
-            }
-            bool convertAllToNonItalic = lettersNonItalics > 0;
-            lettersNonItalics = 0;
-
-            for (int i = 0; i < matches.Count; i++)
-            {
-                string text = matches[i].Text;
-                if (text != null)
-                {
-                    bool italic = matches[i].Italic;
-                    if (convertAllToItalic)
-                        italic = true;
-                    if (convertAllToNonItalic)
-                        italic = false;
-
-                    if (seperators.Contains(text))
-                    {
-                        ItalicsWord(line, ref word, ref lettersItalics, ref lettersNonItalics, ref wordItalics, ref wordNonItalics, ref isItalic, text);
-                    }
-                    else if (text == Environment.NewLine)
-                    {
-                        ItalicsWord(line, ref word, ref lettersItalics, ref lettersNonItalics, ref wordItalics, ref wordNonItalics, ref isItalic, "");
-                        ItalianLine(paragraph, ref line, ref allItalic, ref wordItalics, ref wordNonItalics, ref isItalic, Environment.NewLine, lineLettersNonItalics);
-                        lineLettersNonItalics = 0;
-                    }
-                    else
-                    {
-                        if (!convertAllToItalic && !convertAllToNonItalic)
-                        {
-                            bool isMixedCaseWithoutDashAndAlike = IsMixedCaseWithoutDashAndAlike(matches, i, out var italicOrNot);
-                            if (seperators.Contains(text) && !isMixedCaseWithoutDashAndAlike)
-                            {
-                                italic = italicOrNot;
-                            }
-                        }
-
-                        if (italic)
-                        {
-                            word.Append(text);
-                            lettersItalics += text.Length;
-                        }
-                        else
-                        {
-                            word.Append(text);
-                            lettersNonItalics += text.Length;
-                            lineLettersNonItalics += text.Length;
-                        }
-                    }
-                }
-            }
-
-            if (word.Length > 0)
-                ItalicsWord(line, ref word, ref lettersItalics, ref lettersNonItalics, ref wordItalics, ref wordNonItalics, ref isItalic, "");
-            if (line.Length > 0)
-                ItalianLine(paragraph, ref line, ref allItalic, ref wordItalics, ref wordNonItalics, ref isItalic, "", lineLettersNonItalics);
-
-            if (allItalic && matches.Count > 0)
-            {
-                var temp = HtmlUtil.RemoveOpenCloseTags(paragraph.ToString(), HtmlUtil.TagItalic);
-                paragraph.Clear();
-                paragraph.Append("<i>");
-                paragraph.Append(temp);
-                paragraph.Append("</i>");
-            }
-
-            return paragraph.ToString();
-        }
-
-        private static bool IsMixedCaseWithoutDashAndAlike(List<CompareMatch> matches, int startIndex, out bool italicOrNot)
-        {
-            while (startIndex > 0 && (matches[startIndex - 1].Text == " " || matches[startIndex - 1].Text == Environment.NewLine))
-            {
-                startIndex--;
-            }
-
-            int italicCount = 0;
-            int nonItalicCount = 0;
-            for (int i = startIndex; i < matches.Count; i++)
-            {
-                var m = matches[i];
-                if (m.Text != null)
-                {
-                    if (m.Text == "-" || m.Text == "—" || m.Text == "." || m.Text == "'")
-                    {
-                    }
-                    else if (m.Italic)
-                    {
-                        italicCount++;
-                    }
-                    else
-                    {
-                        nonItalicCount++;
-                    }
-                    if (m.Text == " " || m.Text == Environment.NewLine)
-                        break;
-                }
-            }
-            italicOrNot = italicCount > 0;
-            return italicCount > 0 && nonItalicCount > 0;
-        }
-
-        private static void ItalianLine(StringBuilder paragraph, ref StringBuilder line, ref bool allItalic, ref int wordItalics, ref int wordNonItalics, ref bool isItalic, string appendString, int lineLettersNonItalics)
-        {
-            if (isItalic)
-            {
-                line.Append("</i>");
-                isItalic = false;
-            }
-
-            if (wordItalics > 0
-                && (wordNonItalics == 0 || wordNonItalics < 2 && lineLettersNonItalics < 3 && line.ToString().TrimStart().StartsWith('-')))
-            {
-                paragraph.Append("<i>");
-                paragraph.Append(HtmlUtil.RemoveOpenCloseTags(line.ToString(), HtmlUtil.TagItalic));
-                paragraph.Append("</i>");
-                paragraph.Append(appendString);
-            }
-            else
-            {
-                allItalic = false;
-
-                if (wordItalics > 0)
-                {
-                    string temp = line.ToString().Replace(" </i>", "</i> ");
-                    line.Clear();
-                    line.Append(temp);
-                }
-
-                paragraph.Append(line);
-                paragraph.Append(appendString);
-            }
-            line.Clear();
-            wordItalics = 0;
-            wordNonItalics = 0;
-        }
-
-        private static void ItalicsWord(StringBuilder line, ref StringBuilder word, ref int lettersItalics, ref int lettersNonItalics, ref int wordItalics, ref int wordNonItalics, ref bool isItalic, string appendString)
-        {
-            if (lettersItalics >= lettersNonItalics && lettersItalics > 0)
-            {
-                if (!isItalic)
-                    line.Append("<i>");
-                line.Append(word + appendString);
-                wordItalics++;
-                isItalic = true;
-            }
-            else
-            {
-                if (isItalic)
-                {
-                    line.Append("</i>");
-                    isItalic = false;
-                }
-                line.Append(word);
-                line.Append(appendString);
-                wordNonItalics++;
-            }
-            word.Clear();
-            lettersItalics = 0;
-            lettersNonItalics = 0;
-        }
-
         public Subtitle SubtitleFromOcr => _subtitle;
 
         private void FormVobSubOcr_Shown(object sender, EventArgs e)
@@ -5173,7 +4956,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 }
                 index++;
             }
-            p.Result = GetStringWithItalicTags(matches);
+            p.Result = MatchesToItalicStringConverter.GetStringWithItalicTags(matches);
         }
 
         private void NOcrThreadRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -5525,7 +5308,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private void mainOcrTimer_Tick(object sender, EventArgs e)
         {
-            _mainOcrTimer.Stop();            
+            _mainOcrTimer.Stop();
             bool done = _ocrMethodIndex == _ocrMethodTesseract4 || _ocrMethodIndex == _ocrMethodTesseract302 ?
                 MainLoopTesseract(_mainOcrTimerMax, _mainOcrIndex) :
                 MainLoop(_mainOcrTimerMax, _mainOcrIndex);
@@ -6714,7 +6497,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             _ocrFixEngine?.Dispose();
             _ocrFixEngine = null;
             LoadOcrFixEngine(null, null);
-            
+
             if (_ocrMethodIndex == _ocrMethodTesseract4)
             {
                 var ok = File.Exists(Path.Combine(Configuration.Tesseract302Directory, "tesseract.exe")) &&
@@ -8092,7 +7875,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             if (_ocrMethodIndex == _ocrMethodTesseract4)
             {
-                using (var form = new OcrPreprocessingT4(bmp, _ocrMethodIndex == _ocrMethodBinaryImageCompare, new PreprocessingSettings {  BinaryImageCompareThresshold = Configuration.Settings.Tools.OcrTesseract4RgbThreshold }))
+                using (var form = new OcrPreprocessingT4(bmp, _ocrMethodIndex == _ocrMethodBinaryImageCompare, new PreprocessingSettings { BinaryImageCompareThresshold = Configuration.Settings.Tools.OcrTesseract4RgbThreshold }))
                 {
                     if (form.ShowDialog(this) == DialogResult.OK)
                     {

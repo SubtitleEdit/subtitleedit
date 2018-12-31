@@ -969,6 +969,7 @@
     </Compile>
     <Compile Include="Logic\Ocr\Binary\BinaryOcrBitmap.cs" />
     <Compile Include="Logic\Ocr\Binary\BinaryOcrDb.cs" />
+    <Compile Include="Logic\Ocr\MatchesToItalicStringConverter.cs" />
     <Compile Include="Logic\Ocr\ModiLanguage.cs" />
     <Compile Include="Logic\Ocr\NOcrDb.cs" />
     <Compile Include="Logic\Ocr\OcrAlphabet.cs" />

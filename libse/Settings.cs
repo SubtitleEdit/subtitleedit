@@ -1033,7 +1033,7 @@ $HorzAlign          =   Center
         public string MainEditFind { get; set; }
         public string MainEditFindNext { get; set; }
         public string MainEditReplace { get; set; }
-        public string MainEditMultipleReplace { get; set; }       
+        public string MainEditMultipleReplace { get; set; }
         public string MainEditGoToLineNumber { get; set; }
         public string MainEditRightToLeft { get; set; }
         public string MainEditReverseStartAndEndingForRTL { get; set; }
@@ -1417,9 +1417,10 @@ $HorzAlign          =   Center
                     if (settings.General.AutoConvertToUtf8)
                         settings.General.DefaultEncoding = Encoding.UTF8.WebName;
                 }
-                catch
+                catch (Exception exception)
                 {
                     settings = new Settings();
+                    SeLogger.Error(exception, "Failed to load " + settingsFileName);
                 }
 
                 if (!string.IsNullOrEmpty(settings.General.ListViewLineSeparatorString))

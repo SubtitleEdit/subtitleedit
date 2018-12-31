@@ -439,12 +439,13 @@ namespace Nikse.SubtitleEdit.Forms
                 Pac.GetPacEncodingImplementation = new UiGetPacEncoding();
                 RichTextToPlainText.NativeRtfTextConverter = new RtfTextConverterRichTextBox();
 
-                toolStripComboBoxFrameRate.Items.Add((23.976).ToString());
-                toolStripComboBoxFrameRate.Items.Add((24.0).ToString());
-                toolStripComboBoxFrameRate.Items.Add((25.0).ToString());
-                toolStripComboBoxFrameRate.Items.Add((29.97).ToString());
-                toolStripComboBoxFrameRate.Items.Add((30).ToString());
+                toolStripComboBoxFrameRate.Items.Add(23.976.ToString());
+                toolStripComboBoxFrameRate.Items.Add(24.0.ToString());
+                toolStripComboBoxFrameRate.Items.Add(25.0.ToString());
+                toolStripComboBoxFrameRate.Items.Add(29.97.ToString());
+                toolStripComboBoxFrameRate.Items.Add(30.ToString());
                 toolStripComboBoxFrameRate.Text = Configuration.Settings.General.DefaultFrameRate.ToString();
+                pictureBoxBookmark.Visible = false;
 
                 UpdateRecentFilesUI();
                 InitializeToolbar();
@@ -637,6 +638,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 Cursor = Cursors.Default;
                 MessageBox.Show(exception.Message + Environment.NewLine + exception.StackTrace);
+                SeLogger.Error(exception, "Main constructor");
             }
         }
 
