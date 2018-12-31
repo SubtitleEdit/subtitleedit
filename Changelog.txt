@@ -2,17 +2,23 @@
 
 3.5.9 (xth March 2019) BETA
 * NEW:
-   * Bookmarks
+   * Bookmarks - thx OmrSi/marb99
    * Auto save option
    * Spell check - keep "Use always" replace list option
    * Image export - option to have single lines top justified - thx joedmartin
    * Add shortcut: Modify selection
 * IMPROVED:
    * Update Hungarian translation - thx Zityi
+   * Update Korean translation - thx domddol
 * FIXED:
    * Fix OCR in batch convert - thx danstraughn
    * Fixed crash parsing empty word in OCR via Tesseract - thx Barry
    * Fix crash in OCR window when closing - thx spetragl
+   * Improve Binary OCR of comma / apostrophe - thx Tuukka
+   * Fix reading ttml 2016-10 draft with "dur" tags - thx bbpqman
+   * Improve quote/italic detection in binary OCR - thx Miggu
+   * Add context menu to OCR spell check
+   * Fix underline with "Reverse start/end" - thx OmrSi
 
 
 3.5.8 (20th December 2018)
