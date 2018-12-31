@@ -121,5 +121,31 @@ namespace Test.Logic.Ocr
             Assert.AreEqual("Hi Angi-<i>san!</i>", result);
         }
 
+        [TestMethod]
+        public void TestPartInItalicWithDash()
+        {
+            var matches = new List<VobSubOcr.CompareMatch>
+            {
+                new VobSubOcr.CompareMatch("I", false, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("w", false, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("a", false, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("m", false, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("o", false, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("t", false, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("o", false, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("-", false, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("s", true, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("e", true, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("n", true, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("s", true, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("a", true, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("i", true, 0, Guid.NewGuid().ToString()),
+                new VobSubOcr.CompareMatch("!", true, 0, Guid.NewGuid().ToString()),
+            };
+
+            string result = MatchesToItalicStringConverter.GetStringWithItalicTags(matches);
+            Assert.AreEqual("Iwamoto-<i>sensai!</i>", result);
+        }
+
     }
 }
