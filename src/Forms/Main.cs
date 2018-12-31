@@ -3035,7 +3035,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (format != null)
                 {
-                    new BookmarkPersistance(_subtitle, fileName).Load();
+                    new BookmarkPersistence(_subtitle, fileName).Load();
 
                     if (Configuration.Settings.General.RemoveBlankLinesWhenOpening)
                     {
@@ -3826,6 +3826,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, _videoFileName, _subtitleAlternateFileName, Configuration.Settings.General.CurrentVideoOffsetInMs);
                 Configuration.Settings.Save();
+                new BookmarkPersistence(_subtitle, _fileName).Save();
                 _fileDateTime = File.GetLastWriteTime(_fileName);
                 ShowStatus(string.Format(_language.SavedSubtitleX, _fileName));
                 if (format.GetType() == typeof(NetflixTimedText))
@@ -6502,6 +6503,7 @@ namespace Nikse.SubtitleEdit.Forms
                 timerTextUndo.Start();
                 timerAlternateTextUndo.Start();
                 SetTitle();
+                SetListViewStateImages();
             }
         }
 
@@ -13603,6 +13605,10 @@ namespace Nikse.SubtitleEdit.Forms
         {
             bool first = true;
             string newValue = null;
+            if (setText)
+                MakeHistoryForUndo(string.Format(_language.BeforeX, Configuration.Settings.Language.Settings.ToggleBookmarksWithComment));
+            else
+                MakeHistoryForUndo(string.Format(_language.BeforeX, Configuration.Settings.Language.Settings.ToggleBookmarks));
             foreach (int index in SubtitleListview1.SelectedIndices)
             {
                 var p = _subtitle.Paragraphs[index];
@@ -13639,7 +13645,7 @@ namespace Nikse.SubtitleEdit.Forms
                 ShowHideBookmark(p);
             }
             SetListViewStateImages();
-            new BookmarkPersistance(_subtitle, _fileName).Save();
+            new BookmarkPersistence(_subtitle, _fileName).Save();
         }
 
         private void SetListViewStateImages()
@@ -13657,6 +13663,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ClearBookmarks()
         {
+            MakeHistoryForUndo(string.Format(_language.BeforeX, Configuration.Settings.Language.Settings.ClearBookmarks));
             for (var index = 0; index < _subtitle.Paragraphs.Count; index++)
             {
                 var paragraph = _subtitle.Paragraphs[index];
@@ -13671,7 +13678,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (p != null)
                 ShowHideBookmark(p);
             SetListViewStateImages();
-            new BookmarkPersistance(_subtitle, _fileName).Save();
+            new BookmarkPersistence(_subtitle, _fileName).Save();
         }
 
         private void MoveWordUpDownInCurrent(bool down)
@@ -23682,11 +23689,12 @@ namespace Nikse.SubtitleEdit.Forms
                         var result = form.ShowDialog(this);
                         if (result == DialogResult.OK)
                         {
+                            MakeHistoryForUndo(string.Format(_language.BeforeX, Configuration.Settings.Language.Main.Menu.ContextMenu.EditBookmark));
                             p1.Bookmark = form.Comment;
                             SubtitleListview1.ShowState(_subtitleListViewIndex, p1);
                             ShowHideBookmark(p1);
                             SetListViewStateImages();
-                            new BookmarkPersistance(_subtitle, _fileName).Save();
+                            new BookmarkPersistence(_subtitle, _fileName).Save();
                         }
                     }
                 }
@@ -23700,11 +23708,12 @@ namespace Nikse.SubtitleEdit.Forms
                 var p2 = _subtitle.GetParagraphOrDefault(_subtitleListViewIndex);
                 if (p2 != null)
                 {
+                    MakeHistoryForUndo(string.Format(_language.BeforeX, Configuration.Settings.Language.Main.Menu.ContextMenu.RemoveBookmark));
                     p2.Bookmark = null;
                     SubtitleListview1.ShowState(_subtitleListViewIndex, p2);
                     ShowHideBookmark(p2);
                     SetListViewStateImages();
-                    new BookmarkPersistance(_subtitle, _fileName).Save();
+                    new BookmarkPersistence(_subtitle, _fileName).Save();
                 }
             };
             _bookmarkContextMenu.MenuItems.Add(menuItem);

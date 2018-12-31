@@ -5,12 +5,12 @@ using Nikse.SubtitleEdit.Core.SubtitleFormats;
 
 namespace Nikse.SubtitleEdit.Core
 {
-    public class BookmarkPersistance
+    public class BookmarkPersistence
     {
         private readonly Subtitle _subtitle;
         private readonly string _fileName;
 
-        public BookmarkPersistance(Subtitle subtitle, string fileName)
+        public BookmarkPersistence(Subtitle subtitle, string fileName)
         {
             _subtitle = subtitle;
             _fileName = fileName;
@@ -18,7 +18,7 @@ namespace Nikse.SubtitleEdit.Core
 
         private string GetBookmarksFileName()
         {
-            return _fileName + ".bookmarks";
+            return _fileName + ".SE.bookmarks";
         }
 
         public bool Save()

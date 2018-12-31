@@ -57,7 +57,7 @@
     <Compile Include="BluRaySup\PaletteInfo.cs" />
     <Compile Include="BluRaySup\ToolBox.cs" />
     <Compile Include="BmpReader.cs" />
-    <Compile Include="BookmarkPersistance.cs" />
+    <Compile Include="BookmarkPersistence.cs" />
     <Compile Include="CharUtils.cs" />
     <Compile Include="Configuration.cs" />
     <Compile Include="ContainerFormats\AviRiffData.cs" />
