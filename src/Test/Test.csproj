@@ -61,6 +61,7 @@
     <Compile Include="Logic\Dictionaries\NamesListTest.cs" />
     <Compile Include="Logic\Dictionaries\OcrFixReplaceListTest.cs" />
     <Compile Include="Logic\Mp4\Mp4Test.cs" />
+    <Compile Include="Logic\Ocr\MatchesToItalicStringConverterTest.cs" />
     <Compile Include="Logic\TarFileTest.cs" />
     <Compile Include="Logic\TransportStream\TransportStreamTest.cs" />
     <Compile Include="Logic\ParagraphTest.cs" />
