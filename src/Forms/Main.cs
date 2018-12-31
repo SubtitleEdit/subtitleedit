@@ -3154,7 +3154,7 @@ namespace Nikse.SubtitleEdit.Forms
                     _changeSubtitleToString = _subtitle.GetFastHashCode(GetCurrentEncoding().BodyName);
                     _converted = false;
                     ResetHistory();
-
+                    SetListViewStateImages();
                     SetUndockedWindowsTitle();
 
                     if (justConverted)
