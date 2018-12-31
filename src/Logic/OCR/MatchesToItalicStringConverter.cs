@@ -47,7 +47,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             for (int i = 0; i < matches.Count; i++)
             {
                 string text = matches[i].Text;
-                if (text != null && !matches[i].Italic && !Seperators.Contains(text))
+                if (text != null && !Seperators.Contains(text))
                 {
                     count++;
                 }
@@ -144,7 +144,38 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             result = result.Replace("</i> \"<i>", " \"");
             result = result.Replace("<i>-</i>", "-");
             result = result.Replace("<i>.</i>", ".");
+            if (result.Contains("'</i>") || result.Contains("\"</i>"))
+            {
+                result = result.Replace(" '<i>'", " <i>''");
+            }
+            else if (result.Contains("</i>'") || result.Contains("</i>\""))
+            {
+                result = result.Replace(" '<i>'", " ''<i>");
+            }
+            if (result.StartsWith("'<i>'", StringComparison.Ordinal))
+            {
+                if (result.Contains("'</i>") || result.Contains("\"</i>"))
+                {
+                    result = "<i>''" + result.Remove(0, 5);
+                }
+                else if (result.Contains("</i>'") || result.Contains("</i>\""))
+                {
+                    result = "''<i>" + result.Remove(0, 5);
+                }
+            }
+            if (result.EndsWith("'</i>'", StringComparison.Ordinal))
+            {
+                if (result.Contains("<i>'") || result.Contains("<i>\""))
+                {
+                    result = result.Substring(0, result.Length - 6) + "''</i>";
+                }
+                else if (result.Contains("'<i>") || result.Contains("\"<i>"))
+                {
+                    result = result.Substring(0, result.Length - 6) + "</i>''";
+                }
+            }
             result = result.Replace("  ", " ");
+
             return result;
         }
 
