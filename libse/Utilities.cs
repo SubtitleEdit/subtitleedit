@@ -242,33 +242,34 @@ namespace Nikse.SubtitleEdit.Core
             return _lastNoBreakAfterList;
         }
 
-        public static string AutoBreakLineMoreThanTwoLines(string text, int maximumLineLength, string language)
+        public static string AutoBreakLineMoreThanTwoLines(string text, int maximumLength, int mergeLinesShorterThan, string language)
         {
-            if (text == null || text.Length < 3 || !text.Contains(" "))
+            if (text == null || text.Length < 3 || !(text.Contains(" ") || text.Contains("\n")))
                 return text;
 
-            string s = AutoBreakLine(text, 0, Configuration.Settings.Tools.MergeLinesShorterThan, language);
+            string s = AutoBreakLinePrivate(text, maximumLength, mergeLinesShorterThan, language);
 
-            var arr = s.SplitToLines();
-            if (arr.Count < 2 && arr[0].Length <= maximumLineLength || arr[0].Length <= maximumLineLength && arr[1].Length <= maximumLineLength)
+            var arr = HtmlUtil.RemoveHtmlTags(s, true).SplitToLines();
+            if (arr.Count == 1 && arr[0].Length <= maximumLength ||
+                arr.Count == 2 && arr[0].Length <= maximumLength && arr[1].Length <= maximumLength)
                 return s;
 
-            s = RemoveLineBreaks(s);
-
+            s = RemoveLineBreaks(text);
             var htmlTags = new Dictionary<int, string>();
             var sb = new StringBuilder(s.Length);
             int six = 0;
             while (six < s.Length)
             {
                 var letter = s[six];
-                var tagFound = letter == '<' && (s.Substring(six).StartsWith("<font", StringComparison.OrdinalIgnoreCase)
-                                                 || s.Substring(six).StartsWith("</font", StringComparison.OrdinalIgnoreCase)
-                                                 || s.Substring(six).StartsWith("<u", StringComparison.OrdinalIgnoreCase)
-                                                 || s.Substring(six).StartsWith("</u", StringComparison.OrdinalIgnoreCase)
-                                                 || s.Substring(six).StartsWith("<b", StringComparison.OrdinalIgnoreCase)
-                                                 || s.Substring(six).StartsWith("</b", StringComparison.OrdinalIgnoreCase)
-                                                 || s.Substring(six).StartsWith("<i", StringComparison.OrdinalIgnoreCase)
-                                                 || s.Substring(six).StartsWith("</i", StringComparison.OrdinalIgnoreCase));
+                var tagFound = letter == '<' &&
+                               (s.Substring(six).StartsWith("<font", StringComparison.OrdinalIgnoreCase)
+                                || s.Substring(six).StartsWith("</font", StringComparison.OrdinalIgnoreCase)
+                                || s.Substring(six).StartsWith("<u", StringComparison.OrdinalIgnoreCase)
+                                || s.Substring(six).StartsWith("</u", StringComparison.OrdinalIgnoreCase)
+                                || s.Substring(six).StartsWith("<b", StringComparison.OrdinalIgnoreCase)
+                                || s.Substring(six).StartsWith("</b", StringComparison.OrdinalIgnoreCase)
+                                || s.Substring(six).StartsWith("<i", StringComparison.OrdinalIgnoreCase)
+                                || s.Substring(six).StartsWith("</i", StringComparison.OrdinalIgnoreCase));
                 int endIndex = -1;
                 if (tagFound)
                     endIndex = s.IndexOf('>', six + 1);
@@ -290,17 +291,39 @@ namespace Nikse.SubtitleEdit.Core
             }
             s = sb.ToString();
 
+            // check 3 lines
+            var pti = new PlainTextImporter(false, false, 1, ".?!", maximumLength, language);
+            var three = pti.SplitToThree(sb.ToString());
+            if (three.Count == 3 &&
+                three[0].Length < maximumLength &&
+                three[1].Length < maximumLength &&
+                three[2].Length < maximumLength)
+            {
+                return ReInsertHtmlTagsAndCleanUp(string.Join(" " + Environment.NewLine, three), htmlTags);
+            }
+
+            // check 4 lines
+            var four = pti.SplitToFour(sb.ToString());
+            if (four.Count == 4 &&
+                four[0].Length < maximumLength &&
+                four[1].Length < maximumLength &&
+                four[2].Length < maximumLength &&
+                four[3].Length < maximumLength)
+            {
+                return ReInsertHtmlTagsAndCleanUp(string.Join(" " + Environment.NewLine, four), htmlTags);
+            }
+
             var words = s.Split(' ');
             for (int numberOfLines = 3; numberOfLines < 9999; numberOfLines++)
             {
                 int average = s.Length / numberOfLines + 1;
-                for (int len = average; len < maximumLineLength; len++)
+                for (int len = average; len < maximumLength; len++)
                 {
                     List<int> list = SplitToX(words, numberOfLines, len);
                     bool allOk = true;
                     foreach (var lineLength in list)
                     {
-                        if (lineLength > maximumLineLength)
+                        if (lineLength > maximumLength)
                             allOk = false;
                     }
                     if (allOk)
@@ -311,19 +334,24 @@ namespace Nikse.SubtitleEdit.Core
                             index += item;
                             htmlTags.Add(index, Environment.NewLine);
                         }
-                        s = ReInsertHtmlTags(s, htmlTags);
-                        s = s.Replace(" " + Environment.NewLine, Environment.NewLine);
-                        s = s.Replace(Environment.NewLine + " ", Environment.NewLine);
-                        s = s.Replace(Environment.NewLine + "</i>", "</i>" + Environment.NewLine);
-                        s = s.Replace(Environment.NewLine + "</b>", "</b>" + Environment.NewLine);
-                        s = s.Replace(Environment.NewLine + "</u>", "</u>" + Environment.NewLine);
-                        s = s.Replace(Environment.NewLine + "</font>", "</font>" + Environment.NewLine);
-                        return s.TrimEnd();
+                        return ReInsertHtmlTagsAndCleanUp(s, htmlTags);
                     }
                 }
             }
 
             return text;
+        }
+
+        private static string ReInsertHtmlTagsAndCleanUp(string s, Dictionary<int, string> htmlTags)
+        {
+            s = ReInsertHtmlTags(s, htmlTags);
+            s = s.Replace(" " + Environment.NewLine, Environment.NewLine);
+            s = s.Replace(Environment.NewLine + " ", Environment.NewLine);
+            s = s.Replace(Environment.NewLine + "</i>", "</i>" + Environment.NewLine);
+            s = s.Replace(Environment.NewLine + "</b>", "</b>" + Environment.NewLine);
+            s = s.Replace(Environment.NewLine + "</u>", "</u>" + Environment.NewLine);
+            s = s.Replace(Environment.NewLine + "</font>", "</font>" + Environment.NewLine);
+            return s.TrimEnd();
         }
 
         private static List<int> SplitToX(string[] words, int count, int average)
@@ -350,7 +378,17 @@ namespace Nikse.SubtitleEdit.Core
 
         public static string AutoBreakLine(string text, int maximumLength, int mergeLinesShorterThan, string language)
         {
-            if (text == null || text.Length < 3 || !text.Contains(" "))
+            if (Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX <= 2)
+            {
+                return AutoBreakLinePrivate(text, maximumLength, mergeLinesShorterThan, language);
+            }
+
+            return AutoBreakLineMoreThanTwoLines(text, maximumLength, mergeLinesShorterThan, language);
+        }
+
+        public static string AutoBreakLinePrivate(string text, int maximumLength, int mergeLinesShorterThan, string language)
+        {
+            if (text == null || text.Length < 3 || !(text.Contains(" ") || text.Contains("\n")))
                 return text;
 
             // do not autobreak dialogs or music symbol
@@ -507,7 +545,47 @@ namespace Nikse.SubtitleEdit.Core
                             }
                             break;
                         }
-                        if (expectedChars2.Contains(s[mid - j]) && !IsPartOfNumber(s, mid - j) && CanBreak(s, mid - j, language))
+                        if (expectedChars2.Contains(s[mid - j]) && !IsPartOfNumber(s, mid - j) && CanBreak(s, mid - j + 1, language))
+                        {
+                            splitPos = mid - j;
+                            splitPos++;
+                            break;
+                        }
+                    }
+                }
+            }            
+
+            if (splitPos > maximumLength) // too long first line
+            {
+                if (splitPos != maximumLength + 1 || s[maximumLength] != ' ') // allow for maxlength+1 char to be space (does not count)
+                    splitPos = -1;
+            }
+            else if (splitPos >= 0 && s.Length - splitPos > maximumLength) // too long second line
+            {
+                splitPos = -1;
+            }
+
+            // prefer comma
+            if (splitPos < 0)
+            {
+                const string expectedChars1 = ".!?0123456789";
+                const string expectedChars2 = ",";
+                for (int j = 0; j < 15; j++)
+                {
+                    if (mid + j + 1 < s.Length && mid + j > 0)
+                    {
+                        if (expectedChars2.Contains(s[mid + j]) && !IsPartOfNumber(s, mid + j) && CanBreak(s, mid + j + 1, language))
+                        {
+                            splitPos = mid + j + 1;
+                            if (expectedChars1.Contains(s[splitPos]))
+                            { // do not break double/tripple end lines like "!!!" or "..."
+                                splitPos++;
+                                if (expectedChars1.Contains(s[mid + j + 1]))
+                                    splitPos++;
+                            }
+                            break;
+                        }
+                        if (expectedChars2.Contains(s[mid - j]) && !IsPartOfNumber(s, mid - j) && CanBreak(s, mid - j + 1, language))
                         {
                             splitPos = mid - j;
                             splitPos++;
@@ -529,14 +607,15 @@ namespace Nikse.SubtitleEdit.Core
 
             if (splitPos < 0)
             {
-                const string expectedChars1 = ".!?, ";
+                const string expectedChars1 = ".!?…, ";
                 const string expectedChars2 = " .!?";
                 const string expectedChars3 = ".!?";
                 for (int j = 0; j < 25; j++)
                 {
                     if (mid + j + 1 < s.Length && mid + j > 0)
                     {
-                        if (expectedChars1.Contains(s[mid + j]) && !IsPartOfNumber(s, mid + j) && s.Length > mid + j + 2 && CanBreak(s, mid + j, language))
+                        var add1 = (Environment.NewLine + " ").Contains(s[mid + j]) ? 0 : 1;
+                        if (expectedChars1.Contains(s[mid + j]) && !IsPartOfNumber(s, mid + j) && s.Length > mid + j + 2 && CanBreak(s, mid + j + add1, language))
                         {
                             splitPos = mid + j;
                             if (expectedChars2.Contains(s[mid + j + 1]))
@@ -547,7 +626,8 @@ namespace Nikse.SubtitleEdit.Core
                             }
                             break;
                         }
-                        if (expectedChars1.Contains(s[mid - j]) && !IsPartOfNumber(s, mid - j) && s.Length > mid + j + 2 && CanBreak(s, mid - j, language))
+                        var add2 = (Environment.NewLine + " ").Contains(s[mid - j]) ? 0 : 1;
+                        if (expectedChars1.Contains(s[mid - j]) && !IsPartOfNumber(s, mid - j) && s.Length > mid + j + 2 && CanBreak(s, mid - j + add2, language))
                         {
                             splitPos = mid - j;
                             if (expectedChars3.Contains(s[splitPos]))
@@ -573,20 +653,30 @@ namespace Nikse.SubtitleEdit.Core
             if (splitPos < s.Length - 2)
             {
                 var firstLine = s.Substring(0, splitPos);
-                var firstSplit = firstLine.TrimEnd() + Environment.NewLine + s.Substring(splitPos).TrimStart();
+                var firstSplit = firstLine.TrimEnd() + " " + Environment.NewLine + s.Substring(splitPos).TrimStart();
                 var lastSpaceIndex = firstLine.LastIndexOf(' ');
                 if (lastSpaceIndex > 10 && !firstLine.EndsWith(".") && !firstLine.EndsWith("?") && !firstLine.EndsWith("!"))
                 {
                     var secondFirstLine = s.Substring(0, lastSpaceIndex);
-                    var secondSplit = secondFirstLine.TrimEnd() + Environment.NewLine + s.Substring(lastSpaceIndex + 1).TrimStart();
+                    var secondSplit = secondFirstLine.TrimEnd() + " " + Environment.NewLine + s.Substring(lastSpaceIndex + 1).TrimStart();
                     var firstLines = firstSplit.SplitToLines();
                     var secondLines = secondSplit.SplitToLines();
-                    var firstLinesMax = Math.Max(firstLines[0].Length, firstLines[1].Length);
-                    var secondLinesMax = Math.Max(secondLines[0].Length, secondLines[1].Length);
+                    var firstLinesMax = Math.Max(firstLines[0].Trim().Length, firstLines[1].Trim().Length);
+                    var secondLinesMax = Math.Max(secondLines[0].Trim().Length, secondLines[1].Trim().Length);
                     if (secondLinesMax <= maximumLength && CanBreak(s, lastSpaceIndex, language) &&
-                        (secondLinesMax <= firstLinesMax ||
-                         firstLine.Substring(firstLine.Length - 3, 2) == ", " ||
-                         firstLine.Substring(firstLine.Length - 3, 2) == ". "))
+                        secondLinesMax <= firstLinesMax)
+                    {
+                        s = secondSplit;
+                    }
+                    else if (secondLinesMax <= maximumLength && CanBreak(s, lastSpaceIndex, language) &&
+                             !firstLine.EndsWith(".") && !firstLine.EndsWith("!") && !firstLine.EndsWith("?") &&
+                             (secondFirstLine.EndsWith(".") || secondFirstLine.EndsWith("!") || secondFirstLine.EndsWith("?")))
+                    {
+                        s = secondSplit;
+                    }
+                    else if (secondLinesMax <= maximumLength && CanBreak(s, lastSpaceIndex, language) &&
+                             !firstLine.EndsWith(".") && !firstLine.EndsWith("!") && !firstLine.EndsWith("?") && !firstLine.EndsWith(",") &&
+                             secondFirstLine.EndsWith(","))
                     {
                         s = secondSplit;
                     }
@@ -660,11 +750,11 @@ namespace Nikse.SubtitleEdit.Core
                     }
                 }
 
-                for (int i = 1; i < 5; i++)
+                for (int i = 0; i < 15; i++)
                 {
                     if (htmlTags.ContainsKey(six + i))
                     {
-                        sb.Append(htmlTags[six + 1]);
+                        sb.Append(htmlTags[six + i]);
                     }
                 }
 

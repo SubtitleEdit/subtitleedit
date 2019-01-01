@@ -3943,6 +3943,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Main/VideoControls/Translate":
                     language.Main.VideoControls.Translate = reader.Value;
                     break;
+                case "Main/VideoControls/CreateAndAdjust":
+                    language.Main.VideoControls.CreateAndAdjust = reader.Value;
+                    break;
                 case "Main/VideoControls/Create":
                     language.Main.VideoControls.Create = reader.Value;
                     break;
@@ -5490,9 +5493,6 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "Settings/ListViewGoToNextError":
                     language.Settings.ListViewGoToNextError = reader.Value;
-                    break;
-                case "Settings/ListViewAutoBalance2PlusLines":
-                    language.Settings.ListViewAutoBalance2PlusLines = reader.Value;
                     break;
                 case "Settings/ShowBeamer":
                     language.Settings.ShowBeamer = reader.Value;

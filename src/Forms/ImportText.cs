@@ -555,8 +555,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             Paragraph p = null;
-            string threeliner;
-            if (CanMakeThreeLiner(out threeliner, sb.ToString()))
+            if (CanMakeThreeLiner(out var threeliner, sb.ToString()))
             {
                 var parts = threeliner.SplitToLines();
                 _subtitle.Paragraphs.Add(new Paragraph { Text = parts[0] + Environment.NewLine + parts[1] });
@@ -564,7 +563,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            foreach (string text in Utilities.AutoBreakLineMoreThanTwoLines(sb.ToString(), Configuration.Settings.General.SubtitleLineMaximumLength, string.Empty).SplitToLines())
+            foreach (string text in Utilities.AutoBreakLineMoreThanTwoLines(sb.ToString(), Configuration.Settings.General.SubtitleLineMaximumLength, Configuration.Settings.Tools.MergeLinesShorterThan, "en").SplitToLines())
             {
                 if (p == null)
                 {

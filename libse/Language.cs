@@ -1709,6 +1709,7 @@ namespace Nikse.SubtitleEdit.Core
                 VideoControls = new LanguageStructure.Main.MainVideoControls
                 {
                     Translate = "Translate",
+                    CreateAndAdjust = "Create/adjust",
                     Create = "Create",
                     Adjust = "Adjust",
                     SelectCurrentElementWhilePlaying = "Select current subtitle while playing",
@@ -2317,7 +2318,6 @@ can edit in same subtitle file (collaboration)",
                 ListViewColumnTextDown = "Column, text down",
                 ListViewFocusWaveform = "Focus waveform/spectrogram",
                 ListViewGoToNextError = "Go to next error",
-                ListViewAutoBalance2PlusLines = "Auto balance selected lines (even 2+ lines)",
                 ShowBeamer = "Start subtitle fullscreen beamer",
                 MainTextBoxMoveLastWordDown = "Move last word to next subtitle",
                 MainTextBoxMoveFirstWordFromNextUp = "Fetch first word from next subtitle",

@@ -1577,6 +1577,7 @@
             public class MainVideoControls
             {
                 public string Translate { get; set; }
+                public string CreateAndAdjust { get; set; }
                 public string Create { get; set; }
                 public string Adjust { get; set; }
                 public string SelectCurrentElementWhilePlaying { get; set; }
@@ -2191,7 +2192,6 @@
             public string ListViewColumnTextDown { get; set; }
             public string ListViewFocusWaveform { get; set; }
             public string ListViewGoToNextError { get; set; }
-            public string ListViewAutoBalance2PlusLines { get; set; }            
             public string ShowBeamer { get; set; }
             public string MainTextBoxMoveLastWordDown { get; set; }
             public string MainTextBoxMoveFirstWordFromNextUp { get; set; }

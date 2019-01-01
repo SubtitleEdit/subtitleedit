@@ -275,13 +275,13 @@ namespace Nikse.SubtitleEdit.Core
             return new List<string> { text };
         }
 
-        private List<string> SplitToFour(string text)
+        public List<string> SplitToFour(string text)
         {
-            var lines = Utilities.AutoBreakLine(text.Trim(), _singleLineMaxLength, Configuration.Settings.Tools.MergeLinesShorterThan, _language).SplitToLines();
+            var lines = Utilities.AutoBreakLinePrivate(text.Trim(), _singleLineMaxLength, Configuration.Settings.Tools.MergeLinesShorterThan, _language).SplitToLines();
             var list = new List<string>();
             foreach (var line in lines)
             {
-                list.Add(Utilities.AutoBreakLine(line, _singleLineMaxLength, Configuration.Settings.Tools.MergeLinesShorterThan, _language));
+                list.Add(Utilities.AutoBreakLinePrivate(line, _singleLineMaxLength, Configuration.Settings.Tools.MergeLinesShorterThan, _language));
             }
             return list;
         }
@@ -301,7 +301,7 @@ namespace Nikse.SubtitleEdit.Core
             }
         }
 
-        private List<string> SplitToThree(string text)
+        public List<string> SplitToThree(string text)
         {
             text = text.Trim();
             var results = new List<SplitListItem>();
