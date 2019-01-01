@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
@@ -1174,19 +1175,13 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.GetLineLengths(labelSingleLine, text);
 
             string s = text.Replace(Environment.NewLine, " ");
+            labelTextLineTotal.ForeColor = Color.Black;
             buttonSplitLine.Visible = false;
-            if (s.Length < Configuration.Settings.General.SubtitleLineMaximumLength * 1.9)
+            var abl = Utilities.AutoBreakLine(s, _autoDetectGoogleLanguage).SplitToLines();
+            if (abl.Count > Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX || abl.Any(li => li.Length > Configuration.Settings.General.SubtitleLineMaximumLength))
             {
-                labelTextLineTotal.ForeColor = Color.Black;
-            }
-            else if (s.Length < Configuration.Settings.General.SubtitleLineMaximumLength * 2.1)
-            {
-                labelTextLineTotal.ForeColor = Color.Orange;
-            }
-            else
-            {
-                labelTextLineTotal.ForeColor = Color.Red;
                 buttonSplitLine.Visible = true;
+                labelTextLineTotal.ForeColor = Color.Red;
             }
             labelTextLineTotal.Text = string.Format(_languageGeneral.TotalLengthX, s.Length);
         }
@@ -1540,6 +1535,18 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         currentParagraph.Text = Utilities.AutoBreakLine(lines[0], Language);
                         newParagraph.Text = Utilities.AutoBreakLine(lines[1], Language);
+                    }
+                    else if (lines.Count > 2)
+                    {
+                        var half = lines.Count / 2;
+                        var sb1 = new StringBuilder();
+                        for (int i = 0; i < half; i++)
+                            sb1.AppendLine(lines[i]);
+                        currentParagraph.Text = Utilities.AutoBreakLine(sb1.ToString(), _autoDetectGoogleLanguage);
+                        sb1 = new StringBuilder();
+                        for (int i = half; i < lines.Count; i++)
+                            sb1.AppendLine(lines[i]);
+                        newParagraph.Text = Utilities.AutoBreakLine(sb1.ToString(), _autoDetectGoogleLanguage);
                     }
                 }
 

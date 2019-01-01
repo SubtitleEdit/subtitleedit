@@ -133,6 +133,131 @@ namespace Test.Logic
         }
 
         [TestMethod]
+        public void AutoBreakOneWordOnEachLine()
+        {
+            string s1 = "How" + Environment.NewLine + "are" + Environment.NewLine + "you?";
+            string s2 = Utilities.AutoBreakLine(s1);
+            Assert.AreEqual("How are you?", s2);
+        }
+
+        [TestMethod]
+        public void AutoBreakLineHtmlTags1()
+        {
+            const string s1 = "JENNI: <i>When<i> I lose Nicole, I feel like I lose <i>my</i> child.";
+            string s2 = Utilities.AutoBreakLine(s1);
+            Assert.AreEqual("JENNI: <i>When<i> I lose Nicole," + Environment.NewLine + "I feel like I lose <i>my</i> child.", s2);
+        }
+
+        [TestMethod]
+        public void AutoBreakPreferPeriod()
+        {
+            var old = Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX;
+            Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX = 3;
+            const string s1 = "Sorry. Sorry, I was miles away. Got to get everything ready for today.";
+            string s2 = Utilities.AutoBreakLine(s1);
+            Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX = old;
+            Assert.AreEqual("Sorry. Sorry, I was miles away." + Environment.NewLine + "Got to get everything ready for today.", s2);
+        }
+
+        [TestMethod]
+        public void AutoBreakPreferPeriod2()
+        {
+            const string s1 = "That's alright. I get it all the time.";
+            string s2 = Utilities.AutoBreakLine(s1);
+            Assert.AreEqual("That's alright." + Environment.NewLine + "I get it all the time.", s2);
+        }
+
+        [TestMethod]
+        public void AutoBreakPreferPeriod3()
+        {
+            const string s1 = "That's alright... I get it all the time.";
+            string s2 = Utilities.AutoBreakLine(s1);
+            Assert.AreEqual("That's alright..." + Environment.NewLine + "I get it all the time.", s2);
+        }
+
+        [TestMethod]
+        public void AutoBreakPreferExclamation()
+        {
+            const string s1 = "That's alright!!! I get it all the time.";
+            string s2 = Utilities.AutoBreakLine(s1);
+            Assert.AreEqual("That's alright!!!" + Environment.NewLine + "I get it all the time.", s2);
+        }
+
+        [TestMethod]
+        public void AutoBreakPreferPeriodAndItalic()
+        {
+            var old = Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX;
+            Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX = 3;
+            const string s1 = "Sorry. Sorry, I was miles away. Got to get everything ready for <i>today</i>.";
+            string s2 = Utilities.AutoBreakLine(s1);
+            Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX = old;
+            Assert.AreEqual("Sorry. Sorry, I was miles away." + Environment.NewLine + "Got to get everything ready for <i>today</i>.", s2);
+        }
+        
+        [TestMethod]
+        public void AutoBreakPreferComma()
+        {
+            const string s1 = "Ha Ha Ha Ha Ha Ha Ha Ha Ha, Ha Ha Ha Ha Ha Ha Ha Ha Ha Ha Ha.";
+            string s2 = Utilities.AutoBreakLine(s1);
+            Assert.AreEqual("Ha Ha Ha Ha Ha Ha Ha Ha Ha," + Environment.NewLine + "Ha Ha Ha Ha Ha Ha Ha Ha Ha Ha Ha.", s2);
+        }
+
+        [TestMethod]
+        public void AutoBreakLine3Lines1ButOnlyTwo()
+        {
+            var old = Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX;
+            Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX = 3;
+            const string s1 = "Follow him. Day and night wherever he goes and goes and goes and goes and goes <b>again<b>!";
+            string s2 = Utilities.AutoBreakLine(s1);
+            Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX = old;
+            Assert.AreEqual("Follow him. Day and night wherever he goes" + Environment.NewLine + "and goes and goes and goes and goes <b>again<b>!", s2);
+        }
+
+        [TestMethod]
+        public void AutoBreakLine3Lines1ButOnlyTwoWithSpaces()
+        {
+            var old = Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX;
+            Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX = 3;
+            const string s1 = "Follow him.    Day and night wherever he goes and goes and goes and goes and goes <b>again<b>!";
+            string s2 = Utilities.AutoBreakLine(s1);
+            Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX = old;
+            Assert.AreEqual("Follow him. Day and night wherever he goes" + Environment.NewLine + "and goes and goes and goes and goes <b>again<b>!", s2);
+        }
+
+        [TestMethod]
+        public void AutoBreakLine3Lines1()
+        {
+            var old = Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX;
+            Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX = 3;
+            const string s1 = "Follow him. Day and night wherever he goes and goes and goes and goes and goes and he goes and goes and goes and he goes <b>again<b>!!";
+            string s2 = Utilities.AutoBreakLine(s1);
+            Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX = old;
+            Assert.AreEqual("Follow him. Day and night wherever he goes" + Environment.NewLine + "and goes and goes and goes and goes and he" + Environment.NewLine + "goes and goes and goes and he goes <b>again<b>!!", s2);
+        }
+
+        [TestMethod]
+        public void AutoBreakLine3Lines2()
+        {
+            var old = Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX;
+            Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX = 3;
+            const string s1 = "la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la";
+            string s2 = Utilities.AutoBreakLine(s1);
+            Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX = old;
+            Assert.AreEqual("la la la la la la la la la la la la la la" + Environment.NewLine + "la la la la la la la la la la la la la la" + Environment.NewLine + "la la la la la la la la la la la la la la", s2);
+        }
+
+        [TestMethod]
+        public void AutoBreakLine3Lines3()
+        {
+            var old = Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX;
+            Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX = 3;
+            const string s1 = "<i>la</i> la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la la <i>la</i>";
+            string s2 = Utilities.AutoBreakLine(s1);
+            Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX = old;
+            Assert.AreEqual("<i>la</i> la la la la la la la la la la la la la" + Environment.NewLine + "la la la la la la la la la la la la la la" + Environment.NewLine + "la la la la la la la la la la la la la <i>la</i>", s2);
+        }
+
+        [TestMethod]
         public void UnBreakLine1()
         {
             string s = Utilities.UnbreakLine("Hallo!" + Environment.NewLine + "Hallo!");
