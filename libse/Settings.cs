@@ -1138,9 +1138,7 @@ $HorzAlign          =   Center
         public string MainAdjustSetStartAutoDurationAndGoToNext { get; set; }
         public string MainAdjustSetEndNextStartAndGoToNext { get; set; }
         public string MainAdjustStartDownEndUpAndGoToNext { get; set; }
-        public string MainAdjustSetStart { get; set; }
         public string MainAdjustSetStartKeepDuration { get; set; }
-        public string MainAdjustSetEnd { get; set; }
         public string MainAdjustSelected100MsForward { get; set; }
         public string MainAdjustSelected100MsBack { get; set; }
         public string MainAdjustStartXMsBack { get; set; }
@@ -1253,9 +1251,7 @@ $HorzAlign          =   Center
             MainAdjustSetStartAutoDurationAndGoToNext = string.Empty;
             MainAdjustSetEndNextStartAndGoToNext = string.Empty;
             MainAdjustStartDownEndUpAndGoToNext = string.Empty;
-            MainAdjustSetStart = string.Empty;
             MainAdjustSetStartKeepDuration = string.Empty;
-            MainAdjustSetEnd = string.Empty;
             MainAdjustSelected100MsForward = string.Empty;
             MainAdjustSelected100MsBack = string.Empty;
             MainInsertAfter = "Alt+Insert";
@@ -3366,15 +3362,9 @@ $HorzAlign          =   Center
                 subNode = node.SelectSingleNode("MainAdjustStartDownEndUpAndGoToNext");
                 if (subNode != null)
                     settings.Shortcuts.MainAdjustStartDownEndUpAndGoToNext = subNode.InnerText;
-                subNode = node.SelectSingleNode("MainAdjustSetStart");
-                if (subNode != null)
-                    settings.Shortcuts.MainAdjustSetStart = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainAdjustSetStartKeepDuration");
                 if (subNode != null)
                     settings.Shortcuts.MainAdjustSetStartKeepDuration = subNode.InnerText;
-                subNode = node.SelectSingleNode("MainAdjustSetEnd");
-                if (subNode != null)
-                    settings.Shortcuts.MainAdjustSetEnd = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainAdjustSelected100MsForward");
                 if (subNode != null)
                     settings.Shortcuts.MainAdjustSelected100MsForward = subNode.InnerText;
@@ -4238,9 +4228,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("MainAdjustSetStartAutoDurationAndGoToNext", settings.Shortcuts.MainAdjustSetStartAutoDurationAndGoToNext);
                 textWriter.WriteElementString("MainAdjustSetEndNextStartAndGoToNext", settings.Shortcuts.MainAdjustSetEndNextStartAndGoToNext);
                 textWriter.WriteElementString("MainAdjustStartDownEndUpAndGoToNext", settings.Shortcuts.MainAdjustStartDownEndUpAndGoToNext);
-                textWriter.WriteElementString("MainAdjustSetStart", settings.Shortcuts.MainAdjustSetStart);
                 textWriter.WriteElementString("MainAdjustSetStartKeepDuration", settings.Shortcuts.MainAdjustSetStartKeepDuration);
-                textWriter.WriteElementString("MainAdjustSetEnd", settings.Shortcuts.MainAdjustSetEnd);
                 textWriter.WriteElementString("MainAdjustSelected100MsForward", settings.Shortcuts.MainAdjustSelected100MsForward);
                 textWriter.WriteElementString("MainAdjustSelected100MsBack", settings.Shortcuts.MainAdjustSelected100MsBack);
                 textWriter.WriteElementString("MainAdjustStartXMsBack", settings.Shortcuts.MainAdjustStartXMsBack);

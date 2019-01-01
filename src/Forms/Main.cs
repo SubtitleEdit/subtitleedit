@@ -206,9 +206,7 @@ namespace Nikse.SubtitleEdit.Forms
         private Keys _mainAdjustSetStartAutoDurationAndGoToNext = Keys.None;
         private Keys _mainAdjustSetEndNextStartAndGoToNext = Keys.None;
         private Keys _mainAdjustStartDownEndUpAndGoToNext = Keys.None;
-        private Keys _mainAdjustSetStart = Keys.None;
         private Keys _mainAdjustSetStartKeepDuration = Keys.None;
-        private Keys _mainAdjustSetEnd = Keys.None;
         private Keys _mainAdjustSelected100MsForward = Keys.None;
         private Keys _mainAdjustSelected100MsBack = Keys.None;
         private Keys _mainAdjustAdjustStartXMsBack = Keys.None;
@@ -13315,241 +13313,220 @@ namespace Nikse.SubtitleEdit.Forms
                 e.SuppressKeyPress = true;
             }
 
-            // TABS - MUST BE LAST            
-            else if (tabControlButtons.SelectedTab == tabPageAdjust || tabControlButtons.SelectedTab == tabPageCreate)
+
+            //TABS: Create / adjust / translate
+
+            // create
+            else if (tabControlButtons.SelectedTab == tabPageCreate && e.Modifiers == Keys.Control && e.KeyCode == Keys.F9)
             {
-                // create
-                if (tabControlButtons.SelectedTab == tabPageCreate && e.Modifiers == Keys.Control && e.KeyCode == Keys.F9)
-                {
-                    InsertNewTextAtVideoPosition();
-                    e.SuppressKeyPress = true;
-                }
-                else if (tabControlButtons.SelectedTab == tabPageCreate && ((e.Modifiers == Keys.Shift && e.KeyCode == Keys.F9) || _mainCreateInsertSubAtVideoPos == e.KeyData))
-                {
-                    var p = InsertNewTextAtVideoPosition();
-                    p.Text = string.Empty;
-                    SubtitleListview1.SetText(_subtitle.GetIndex(p), p.Text);
-                    textBoxListViewText.Text = p.Text;
-                    e.SuppressKeyPress = true;
-                }
-                else if (tabControlButtons.SelectedTab == tabPageCreate && e.Modifiers == Keys.Alt && e.KeyCode == Keys.F9)
-                {
-                    StopAutoDuration();
-                    ButtonSetEndClick(null, null);
-                    e.SuppressKeyPress = true;
-                }
-                else if (tabControlButtons.SelectedTab == tabPageCreate && e.Modifiers == Keys.None && e.KeyCode == Keys.F9)
-                {
-                    ButtonInsertNewTextClick(null, null);
-                    e.SuppressKeyPress = true;
-                }
-                else if (tabControlButtons.SelectedTab == tabPageCreate && e.Modifiers == Keys.None && e.KeyCode == Keys.F10)
-                {
-                    buttonBeforeText_Click(null, null);
-                    e.SuppressKeyPress = true;
-                }
-                else if (tabControlButtons.SelectedTab == tabPageCreate && ((e.Modifiers == Keys.None && e.KeyCode == Keys.F11) || _mainCreateSetStart == e.KeyData))
-                {
-                    buttonSetStartTime_Click(null, null);
-                    e.SuppressKeyPress = true;
-                }
-                else if (tabControlButtons.SelectedTab == tabPageCreate && ((e.Modifiers == Keys.None && e.KeyCode == Keys.F12) || _mainCreateSetEnd == e.KeyData))
-                {
-                    StopAutoDuration();
-                    ButtonSetEndClick(null, null);
-                    e.SuppressKeyPress = true;
-                }
-                else if (_mainCreateSetEndAddNewAndGoToNew == e.KeyData)
-                {
-                    StopAutoDuration();
-                    e.SuppressKeyPress = true;
+                InsertNewTextAtVideoPosition();
+                e.SuppressKeyPress = true;
+            }
+            else if (tabControlButtons.SelectedTab == tabPageCreate && (e.Modifiers == Keys.Shift && e.KeyCode == Keys.F9) || _mainCreateInsertSubAtVideoPos == e.KeyData)
+            {
+                var p = InsertNewTextAtVideoPosition();
+                p.Text = string.Empty;
+                SubtitleListview1.SetText(_subtitle.GetIndex(p), p.Text);
+                textBoxListViewText.Text = p.Text;
+                e.SuppressKeyPress = true;
+            }
+            else if (tabControlButtons.SelectedTab == tabPageCreate && e.Modifiers == Keys.Alt && e.KeyCode == Keys.F9)
+            {
+                StopAutoDuration();
+                ButtonSetEndClick(null, null);
+                e.SuppressKeyPress = true;
+            }
+            else if (tabControlButtons.SelectedTab == tabPageCreate && e.Modifiers == Keys.None && e.KeyCode == Keys.F9)
+            {
+                ButtonInsertNewTextClick(null, null);
+                e.SuppressKeyPress = true;
+            }
+            else if (tabControlButtons.SelectedTab == tabPageCreate && e.Modifiers == Keys.None && e.KeyCode == Keys.F10)
+            {
+                buttonBeforeText_Click(null, null);
+                e.SuppressKeyPress = true;
+            }
+            else if (e.Modifiers == Keys.None && e.KeyCode == Keys.F11 || _mainCreateSetStart == e.KeyData)
+            {
+                buttonSetStartTime_Click(null, null);
+                e.SuppressKeyPress = true;
+            }
+            else if (e.Modifiers == Keys.None && e.KeyCode == Keys.F12 || _mainCreateSetEnd == e.KeyData)
+            {
+                StopAutoDuration();
+                ButtonSetEndClick(null, null);
+                e.SuppressKeyPress = true;
+            }
+            else if (_mainCreateSetEndAddNewAndGoToNew == e.KeyData)
+            {
+                StopAutoDuration();
+                e.SuppressKeyPress = true;
 
-                    if (SubtitleListview1.SelectedItems.Count == 1)
+                if (SubtitleListview1.SelectedItems.Count == 1)
+                {
+                    double videoPosition = mediaPlayer.CurrentPosition;
+                    if (!mediaPlayer.IsPaused)
+                        videoPosition -= Configuration.Settings.General.SetStartEndHumanDelay / TimeCode.BaseUnit;
+                    int index = SubtitleListview1.SelectedItems[0].Index;
+                    MakeHistoryForUndoOnlyIfNotResent(string.Format(_language.VideoControls.BeforeChangingTimeInWaveformX, "#" + _subtitle.Paragraphs[index].Number + " " + _subtitle.Paragraphs[index].Text));
+
+                    var p = _subtitle.Paragraphs[index];
+                    p.EndTime = TimeCode.FromSeconds(videoPosition);
+                    if (p.Duration.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines > Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds)
                     {
-                        double videoPosition = mediaPlayer.CurrentPosition;
-                        if (!mediaPlayer.IsPaused)
-                            videoPosition -= Configuration.Settings.General.SetStartEndHumanDelay / TimeCode.BaseUnit;
-                        int index = SubtitleListview1.SelectedItems[0].Index;
-                        MakeHistoryForUndoOnlyIfNotResent(string.Format(_language.VideoControls.BeforeChangingTimeInWaveformX, "#" + _subtitle.Paragraphs[index].Number + " " + _subtitle.Paragraphs[index].Text));
-
-                        var p = _subtitle.Paragraphs[index];
-                        p.EndTime = TimeCode.FromSeconds(videoPosition);
-                        if (p.Duration.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines > Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds)
+                        var newEndTime = new TimeCode(p.EndTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines);
+                        double charactersPerSecond = Utilities.GetCharactersPerSecond(new Paragraph(p) { EndTime = newEndTime });
+                        if (charactersPerSecond <= Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
                         {
-                            var newEndTime = new TimeCode(p.EndTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines);
-                            double charactersPerSecond = Utilities.GetCharactersPerSecond(new Paragraph(p) { EndTime = newEndTime });
-                            if (charactersPerSecond <= Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
-                            {
-                                p.EndTime = newEndTime;
-                            }
+                            p.EndTime = newEndTime;
                         }
-                        SubtitleListview1.SetStartTimeAndDuration(index, _subtitle.Paragraphs[index], _subtitle.GetParagraphOrDefault(index + 1), _subtitle.GetParagraphOrDefault(index - 1));
-                        SetDurationInSeconds(_subtitle.Paragraphs[index].Duration.TotalSeconds);
-                        ButtonInsertNewTextClick(null, null);
                     }
-                }
-                else if (_mainCreateStartDownEndUp == e.KeyData)
-                {
-                    if (_mainCreateStartDownEndUpParagraph == null)
-                        _mainCreateStartDownEndUpParagraph = InsertNewTextAtVideoPosition();
-                    e.SuppressKeyPress = true;
-                }
-                else if (_mainAdjustSelected100MsForward == e.KeyData)
-                {
-                    ShowEarlierOrLater(100, SelectionChoice.SelectionOnly);
-                    e.SuppressKeyPress = true;
-                }
-                else if (_mainAdjustSelected100MsBack == e.KeyData)
-                {
-                    ShowEarlierOrLater(-100, SelectionChoice.SelectionOnly);
-                    e.SuppressKeyPress = true;
-                }
-
-
-                // adjust
-                else if (_mainAdjustSelected100MsForward == e.KeyData)
-                {
-                    ShowEarlierOrLater(100, SelectionChoice.SelectionOnly);
-                    e.SuppressKeyPress = true;
-                }
-                else if (_mainAdjustSelected100MsBack == e.KeyData)
-                {
-                    ShowEarlierOrLater(-100, SelectionChoice.SelectionOnly);
-                    e.SuppressKeyPress = true;
-                }
-                else if (_mainAdjustAdjustStartXMsBack == e.KeyData)
-                {
-                    MoveStartCurrent(-Configuration.Settings.Tools.MoveStartEndMs);
-                    e.SuppressKeyPress = true;
-                }
-                else if (_mainAdjustAdjustStartXMsForward == e.KeyData)
-                {
-                    MoveStartCurrent(Configuration.Settings.Tools.MoveStartEndMs);
-                    e.SuppressKeyPress = true;
-                }
-                else if (_mainAdjustAdjustEndXMsBack == e.KeyData)
-                {
-                    MoveEndCurrent(-Configuration.Settings.Tools.MoveStartEndMs);
-                    e.SuppressKeyPress = true;
-                }
-                else if (_mainAdjustAdjustEndXMsForward == e.KeyData)
-                {
-                    MoveEndCurrent(Configuration.Settings.Tools.MoveStartEndMs);
-                    e.SuppressKeyPress = true;
-                }
-                else if (mediaPlayer.VideoPlayer != null)
-                {
-                    if (_mainAdjustSetStartAndOffsetTheRest == e.KeyData)
-                    {
-                        ButtonSetStartAndOffsetRestClick(null, null);
-                        e.SuppressKeyPress = true;
-                    }
-                    else if (_mainAdjustSetEndAndOffsetTheRest == e.KeyData)
-                    {
-                        SetEndAndOffsetTheRest(false);
-                        e.SuppressKeyPress = true;
-                    }
-                    else if (_mainAdjustSetEndAndOffsetTheRestAndGoToNext == e.KeyData)
-                    {
-                        SetEndAndOffsetTheRest(true);
-                        e.SuppressKeyPress = true;
-                    }
-                    else if (_mainAdjustSetEndAndGotoNext == e.KeyData)
-                    {
-                        ShowNextSubtitleLabel();
-                        ButtonSetEndAndGoToNextClick(null, null);
-                        e.SuppressKeyPress = true;
-                    }
-                    else if (tabControlButtons.SelectedTab == tabPageAdjust && e.Modifiers == Keys.None && e.KeyCode == Keys.F9)
-                    {
-                        ButtonSetStartAndOffsetRestClick(null, null);
-                        e.SuppressKeyPress = true;
-                    }
-                    else if (tabControlButtons.SelectedTab == tabPageAdjust && e.Modifiers == Keys.None && e.KeyCode == Keys.F10)
-                    {
-                        ShowNextSubtitleLabel();
-                        ButtonSetEndAndGoToNextClick(null, null);
-                        e.SuppressKeyPress = true;
-                    }
-                    else if (tabControlButtons.SelectedTab == tabPageAdjust && ((e.Modifiers == Keys.None && e.KeyCode == Keys.F11) || _mainAdjustSetStart == e.KeyData))
-                    {
-                        buttonSetStartTime_Click(null, null);
-                        e.SuppressKeyPress = true;
-                    }
-                    else if (_mainAdjustSetStartKeepDuration == e.KeyData)
-                    {
-                        SetStartTime(true);
-                        e.SuppressKeyPress = true;
-                    }
-                    else if (tabControlButtons.SelectedTab == tabPageAdjust && (e.Modifiers == Keys.None && e.KeyCode == Keys.F11))
-                    {
-                        SetStartTime(false);
-                        e.SuppressKeyPress = true;
-                    }
-                    else if (tabControlButtons.SelectedTab == tabPageAdjust && ((e.Modifiers == Keys.None && e.KeyCode == Keys.F12) || _mainAdjustSetEnd == e.KeyData))
-                    {
-                        StopAutoDuration();
-                        ButtonSetEndClick(null, null);
-                        e.SuppressKeyPress = true;
-                    }
-                    else if (_mainAdjustInsertViaEndAutoStart == e.KeyData)
-                    {
-                        SetCurrentViaEndPositionAndGotoNext(FirstSelectedIndex, false);
-                        e.SuppressKeyPress = true;
-                    }
-                    else if (_mainAdjustInsertViaEndAutoStartAndGoToNext == e.KeyData)
-                    {
-                        ShowNextSubtitleLabel();
-                        SetCurrentViaEndPositionAndGotoNext(FirstSelectedIndex, true);
-                        e.SuppressKeyPress = true;
-                    }
-                    else if (_mainAdjustSetStartAutoDurationAndGoToNext == e.KeyData)
-                    {
-                        SetCurrentStartAutoDurationAndGotoNext(FirstSelectedIndex);
-                        e.SuppressKeyPress = true;
-                    }
-                    else if (_mainAdjustSetEndNextStartAndGoToNext == e.KeyData)
-                    {
-                        ShowNextSubtitleLabel();
-                        SetCurrentEndNextStartAndGoToNext(FirstSelectedIndex);
-                        e.SuppressKeyPress = true;
-                    }
-                    else if (_mainAdjustStartDownEndUpAndGoToNext == e.KeyData && _mainAdjustStartDownEndUpAndGoToNextParagraph == null)
-                    {
-                        ShowNextSubtitleLabel();
-                        _mainAdjustStartDownEndUpAndGoToNextParagraph = _subtitle.GetParagraphOrDefault(FirstSelectedIndex);
-                        SetStartTime(true);
-                        e.SuppressKeyPress = true;
-                    }
+                    SubtitleListview1.SetStartTimeAndDuration(index, _subtitle.Paragraphs[index], _subtitle.GetParagraphOrDefault(index + 1), _subtitle.GetParagraphOrDefault(index - 1));
+                    SetDurationInSeconds(_subtitle.Paragraphs[index].Duration.TotalSeconds);
+                    ButtonInsertNewTextClick(null, null);
                 }
             }
-            else if (tabControlButtons.SelectedTab == tabPageTranslate)
+            else if (_mainCreateStartDownEndUp == e.KeyData)
             {
-                if (_mainTranslateCustomSearch1 == e.KeyData)
-                {
-                    e.SuppressKeyPress = true;
-                    RunCustomSearch(Configuration.Settings.VideoControls.CustomSearchUrl1);
-                }
-                else if (_mainTranslateCustomSearch2 == e.KeyData)
-                {
-                    e.SuppressKeyPress = true;
-                    RunCustomSearch(Configuration.Settings.VideoControls.CustomSearchUrl2);
-                }
-                else if (_mainTranslateCustomSearch3 == e.KeyData)
-                {
-                    e.SuppressKeyPress = true;
-                    RunCustomSearch(Configuration.Settings.VideoControls.CustomSearchUrl3);
-                }
-                else if (_mainTranslateCustomSearch4 == e.KeyData)
-                {
-                    e.SuppressKeyPress = true;
-                    RunCustomSearch(Configuration.Settings.VideoControls.CustomSearchUrl4);
-                }
-                else if (_mainTranslateCustomSearch5 == e.KeyData)
-                {
-                    e.SuppressKeyPress = true;
-                    RunCustomSearch(Configuration.Settings.VideoControls.CustomSearchUrl5);
-                }
+                if (_mainCreateStartDownEndUpParagraph == null)
+                    _mainCreateStartDownEndUpParagraph = InsertNewTextAtVideoPosition();
+                e.SuppressKeyPress = true;
+            }
+            else if (_mainAdjustSelected100MsForward == e.KeyData)
+            {
+                ShowEarlierOrLater(100, SelectionChoice.SelectionOnly);
+                e.SuppressKeyPress = true;
+            }
+            else if (_mainAdjustSelected100MsBack == e.KeyData)
+            {
+                ShowEarlierOrLater(-100, SelectionChoice.SelectionOnly);
+                e.SuppressKeyPress = true;
+            }
+
+
+            // adjust
+            else if (_mainAdjustSelected100MsForward == e.KeyData)
+            {
+                ShowEarlierOrLater(100, SelectionChoice.SelectionOnly);
+                e.SuppressKeyPress = true;
+            }
+            else if (_mainAdjustSelected100MsBack == e.KeyData)
+            {
+                ShowEarlierOrLater(-100, SelectionChoice.SelectionOnly);
+                e.SuppressKeyPress = true;
+            }
+            else if (_mainAdjustAdjustStartXMsBack == e.KeyData)
+            {
+                MoveStartCurrent(-Configuration.Settings.Tools.MoveStartEndMs);
+                e.SuppressKeyPress = true;
+            }
+            else if (_mainAdjustAdjustStartXMsForward == e.KeyData)
+            {
+                MoveStartCurrent(Configuration.Settings.Tools.MoveStartEndMs);
+                e.SuppressKeyPress = true;
+            }
+            else if (_mainAdjustAdjustEndXMsBack == e.KeyData)
+            {
+                MoveEndCurrent(-Configuration.Settings.Tools.MoveStartEndMs);
+                e.SuppressKeyPress = true;
+            }
+            else if (_mainAdjustAdjustEndXMsForward == e.KeyData)
+            {
+                MoveEndCurrent(Configuration.Settings.Tools.MoveStartEndMs);
+                e.SuppressKeyPress = true;
+            }
+            else if (mediaPlayer.VideoPlayer != null && _mainAdjustSetStartAndOffsetTheRest == e.KeyData)
+            {
+                ButtonSetStartAndOffsetRestClick(null, null);
+                e.SuppressKeyPress = true;
+            }
+            else if (mediaPlayer.VideoPlayer != null && _mainAdjustSetEndAndOffsetTheRest == e.KeyData)
+            {
+                SetEndAndOffsetTheRest(false);
+                e.SuppressKeyPress = true;
+            }
+            else if (mediaPlayer.VideoPlayer != null && _mainAdjustSetEndAndOffsetTheRestAndGoToNext == e.KeyData)
+            {
+                SetEndAndOffsetTheRest(true);
+                e.SuppressKeyPress = true;
+            }
+            else if (mediaPlayer.VideoPlayer != null && _mainAdjustSetEndAndGotoNext == e.KeyData)
+            {
+                ShowNextSubtitleLabel();
+                ButtonSetEndAndGoToNextClick(null, null);
+                e.SuppressKeyPress = true;
+            }
+            else if (mediaPlayer.VideoPlayer != null && tabControlButtons.SelectedTab == tabPageAdjust && e.Modifiers == Keys.None && e.KeyCode == Keys.F9)
+            {
+                ButtonSetStartAndOffsetRestClick(null, null);
+                e.SuppressKeyPress = true;
+            }
+            else if (mediaPlayer.VideoPlayer != null && tabControlButtons.SelectedTab == tabPageAdjust && e.Modifiers == Keys.None && e.KeyCode == Keys.F10)
+            {
+                ShowNextSubtitleLabel();
+                ButtonSetEndAndGoToNextClick(null, null);
+                e.SuppressKeyPress = true;
+            }
+            else if (mediaPlayer.VideoPlayer != null && _mainAdjustSetStartKeepDuration == e.KeyData)
+            {
+                SetStartTime(true);
+                e.SuppressKeyPress = true;
+            }
+            else if (mediaPlayer.VideoPlayer != null && _mainAdjustInsertViaEndAutoStart == e.KeyData)
+            {
+                SetCurrentViaEndPositionAndGotoNext(FirstSelectedIndex, false);
+                e.SuppressKeyPress = true;
+            }
+            else if (mediaPlayer.VideoPlayer != null && _mainAdjustInsertViaEndAutoStartAndGoToNext == e.KeyData)
+            {
+                ShowNextSubtitleLabel();
+                SetCurrentViaEndPositionAndGotoNext(FirstSelectedIndex, true);
+                e.SuppressKeyPress = true;
+            }
+            else if (mediaPlayer.VideoPlayer != null && _mainAdjustSetStartAutoDurationAndGoToNext == e.KeyData)
+            {
+                SetCurrentStartAutoDurationAndGotoNext(FirstSelectedIndex);
+                e.SuppressKeyPress = true;
+            }
+            else if (mediaPlayer.VideoPlayer != null && _mainAdjustSetEndNextStartAndGoToNext == e.KeyData)
+            {
+                ShowNextSubtitleLabel();
+                SetCurrentEndNextStartAndGoToNext(FirstSelectedIndex);
+                e.SuppressKeyPress = true;
+            }
+            else if (mediaPlayer.VideoPlayer != null && _mainAdjustStartDownEndUpAndGoToNext == e.KeyData && _mainAdjustStartDownEndUpAndGoToNextParagraph == null)
+            {
+                ShowNextSubtitleLabel();
+                _mainAdjustStartDownEndUpAndGoToNextParagraph = _subtitle.GetParagraphOrDefault(FirstSelectedIndex);
+                SetStartTime(true);
+                e.SuppressKeyPress = true;
+            }
+
+            // translate
+            else if (_mainTranslateCustomSearch1 == e.KeyData)
+            {
+                e.SuppressKeyPress = true;
+                RunCustomSearch(Configuration.Settings.VideoControls.CustomSearchUrl1);
+            }
+            else if (_mainTranslateCustomSearch2 == e.KeyData)
+            {
+                e.SuppressKeyPress = true;
+                RunCustomSearch(Configuration.Settings.VideoControls.CustomSearchUrl2);
+            }
+            else if (_mainTranslateCustomSearch3 == e.KeyData)
+            {
+                e.SuppressKeyPress = true;
+                RunCustomSearch(Configuration.Settings.VideoControls.CustomSearchUrl3);
+            }
+            else if (_mainTranslateCustomSearch4 == e.KeyData)
+            {
+                e.SuppressKeyPress = true;
+                RunCustomSearch(Configuration.Settings.VideoControls.CustomSearchUrl4);
+            }
+            else if (_mainTranslateCustomSearch5 == e.KeyData)
+            {
+                e.SuppressKeyPress = true;
+                RunCustomSearch(Configuration.Settings.VideoControls.CustomSearchUrl5);
             }
             // put new entries above tabs
         }
@@ -17801,9 +17778,7 @@ namespace Nikse.SubtitleEdit.Forms
             _mainAdjustSetStartAutoDurationAndGoToNext = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetStartAutoDurationAndGoToNext);
             _mainAdjustSetEndNextStartAndGoToNext = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetEndNextStartAndGoToNext);
             _mainAdjustStartDownEndUpAndGoToNext = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustStartDownEndUpAndGoToNext);
-            _mainAdjustSetStart = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetStart);
             _mainAdjustSetStartKeepDuration = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetStartKeepDuration);
-            _mainAdjustSetEnd = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetEnd);
             _mainAdjustSelected100MsForward = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSelected100MsForward);
             _mainAdjustSelected100MsBack = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSelected100MsBack);
             _mainAdjustAdjustStartXMsBack = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustStartXMsBack);

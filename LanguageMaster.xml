@@ -1931,7 +1931,7 @@ can edit in same subtitle file (collaboration)</Information>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Set end, offset the rest and go to next</AdjustSetEndAndOffsetTheRestAndGoToNext>
     <AdjustExtendCurrentSubtitle>Extend current line to next subtitle or max duration</AdjustExtendCurrentSubtitle>
     <RecalculateDurationOfCurrentSubtitle>Re-calculate duration of current subtitle</RecalculateDurationOfCurrentSubtitle>
-    <MainCreateStartDownEndUp>Create new at key-down, set end time at key-up</MainCreateStartDownEndUp>
+    <MainCreateStartDownEndUp>Insert new subtitle at key-down, set end time at key-up</MainCreateStartDownEndUp>
     <MergeDialog>Merge dialog (insert dashes)</MergeDialog>
     <GoToNext>Go to next line</GoToNext>
     <GoToPrevious>Go to previous line</GoToPrevious>
