@@ -77,6 +77,7 @@
     <After>이후</After>
     <Size>크기</Size>
     <Search>검색</Search>
+    <DeleteCurrentLine>현재 줄 삭제</DeleteCurrentLine>
   </General>
   <About>
     <Title>* Subtitle Edit 정보</Title>
@@ -209,6 +210,11 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
   <Beamer>
     <Title>프로젝터</Title>
   </Beamer>
+  <Bookmarks>
+    <EditBookmark>책갈피 편집</EditBookmark>
+    <AddBookmark>책갈피 추가</AddBookmark>
+    <GoToBookmark>책갈피로 이동</GoToBookmark>
+  </Bookmarks>
   <ChangeCasing>
     <Title>* 대/소문자 바꾸기</Title>
     <ChangeCasingTo>대/소문자 변경 기준</ChangeCasingTo>
@@ -1167,6 +1173,8 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
         <WebVTTRemoveVoices>음성 제거</WebVTTRemoveVoices>
         <NewActor>새 배우...</NewActor>
         <RemoveActors>배우 제거</RemoveActors>
+        <EditBookmark>책갈피 편집</EditBookmark>
+        <RemoveBookmark>책갈피 제거</RemoveBookmark>
       </ContextMenu>
     </Menu>
     <Controls>
@@ -1182,6 +1190,7 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
     </Controls>
     <VideoControls>
       <Translate>번역</Translate>
+      <CreateAndAdjust>작성/조정</CreateAndAdjust>
       <Create>작성</Create>
       <Adjust>조정</Adjust>
       <SelectCurrentElementWhilePlaying>현재 재생되고 있는 자막 라인을 표시</SelectCurrentElementWhilePlaying>
@@ -1918,7 +1927,7 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
     <AdjustSetEndAndOffsetTheRestAndGoToNext>끝 설정, 나머지 보충하고 다음으로 이동</AdjustSetEndAndOffsetTheRestAndGoToNext>
     <AdjustExtendCurrentSubtitle>현재 줄을 다음 자막으로 확장하거나 표시시간 최대화</AdjustExtendCurrentSubtitle>
     <RecalculateDurationOfCurrentSubtitle>현재 자막의 표시시간 다시 계산</RecalculateDurationOfCurrentSubtitle>
-    <MainCreateStartDownEndUp>'↓'키로 새로 만들기, '↑'키로 종료 시간 설정</MainCreateStartDownEndUp>
+    <MainCreateStartDownEndUp>'↓'키로 새로운 자막 삽입, '↑'키로 종료 시간 설정</MainCreateStartDownEndUp>
     <MergeDialog>대화 병합 (대시 삽입)</MergeDialog>
     <GoToNext>다음 줄로 이동</GoToNext>
     <GoToPrevious>이전 줄로 이동</GoToPrevious>
