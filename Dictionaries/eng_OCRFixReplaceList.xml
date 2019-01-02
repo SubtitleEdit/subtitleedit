@@ -2129,14 +2129,6 @@
     <LinePart from=" haven 'z'." to=" haven't." />
     <LinePart from=" I ha ve " to=" I have " />
     <LinePart from=" I']I " to=" I'll " />
-    <LinePart from=" L am" to=" I am" />
-    <LinePart from=" L can" to=" I can" />
-    <LinePart from=" L don't " to=" I don't " />
-    <LinePart from=" L hate " to=" I hate " />
-    <LinePart from=" L have " to=" I have " />
-    <LinePart from=" L like " to=" I like " />
-    <LinePart from=" L will" to=" I will" />
-    <LinePart from=" L would" to=" I would" />
     <LinePart from=" L'll " to=" I'll " />
     <LinePart from=" L've " to=" I've " />
     <LinePart from=" m y family" to=" my family" />
@@ -2401,7 +2393,7 @@
     <LinePart from="-| " to="- I " />
     <LinePart from=" | " to=" I " />
     <LinePart from=" |." to=" I." />
-    <LinePart from="-1 am " to="- I had " />
+    <LinePart from="-1 am " to="- I am " />
     <LinePart from="-1 had " to="- I had " />
     <LinePart from="-1 think " to="- I think " />
     <LinePart from="-1 tried " to="- I tried " />
@@ -2435,7 +2427,6 @@
     <Beginning from="l don't" to="I don't" />
     <Beginning from="L " to="I " />
     <Beginning from="-L " to="-I " />
-    <Beginning from="- L " to="- I " />
     <Beginning from="-l " to="-I " />
     <Beginning from="- l " to="- I " />
     <Beginning from="G0" to="Go" />
