@@ -5536,6 +5536,12 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/UseDoNotBreakAfterList":
                     language.Settings.UseDoNotBreakAfterList = reader.Value;
                     break;
+                case "Settings/GoogleTranslate":
+                    language.Settings.GoogleTranslate = reader.Value;
+                    break;
+                case "Settings/GoogleTranslateApiKey":
+                    language.Settings.GoogleTranslateApiKey = reader.Value;
+                    break;
                 case "Settings/MicrosoftBingTranslator":
                     language.Settings.MicrosoftBingTranslator = reader.Value;
                     break;

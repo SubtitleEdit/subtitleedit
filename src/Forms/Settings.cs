@@ -556,6 +556,14 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxCpsIncludeWhiteSpace.Text = language.CpsIncludesSpace;
             buttonEditDoNotBreakAfterList.Text = Configuration.Settings.Language.VobSubOcr.Edit;
 
+            groupBoxGoogleTranslate.Text = language.GoogleTranslate;
+            labelGoogleTranslateApiKey.Text = language.GoogleTranslateApiKey;
+            linkLabelGoogleTranslateSignUp.Text = language.HowToSignUp; 
+
+            groupBoxBing.Text = language.MicrosoftBingTranslator;
+            labelClientSecret.Text = language.MicrosoftTranslateApiKey;
+            linkLabelBingSubscribe.Text = language.HowToSignUp;
+
             comboBoxListViewDoubleClickEvent.Items.Clear();
             comboBoxListViewDoubleClickEvent.Items.Add(language.MainListViewNothing);
             comboBoxListViewDoubleClickEvent.Items.Add(language.MainListViewVideoGoToPositionAndPause);
@@ -569,10 +577,6 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxSaveAsFileNameFrom.Items.Clear();
             comboBoxSaveAsFileNameFrom.Items.Add(language.VideoFileName);
             comboBoxSaveAsFileNameFrom.Items.Add(language.ExistingFileName);
-
-            groupBoxBing.Text = language.MicrosoftBingTranslator;
-            linkLabelBingSubscribe.Text = language.HowToSignUp;
-            labelClientSecret.Text = language.MicrosoftTranslateApiKey;
 
             if (gs.ListViewDoubleClickAction >= 0 && gs.ListViewDoubleClickAction < comboBoxListViewDoubleClickEvent.Items.Count)
                 comboBoxListViewDoubleClickEvent.SelectedIndex = gs.ListViewDoubleClickAction;
