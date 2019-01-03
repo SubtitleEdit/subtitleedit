@@ -13654,6 +13654,14 @@ namespace Nikse.SubtitleEdit.Forms
         {
             var oldStaeImageList = SubtitleListview1.StateImageList;
             SubtitleListview1.StateImageList = _subtitle != null && _subtitle.Paragraphs.Any(p => p.Bookmark != null) ? imageListBookmarks : null;
+            if (SubtitleListview1.StateImageList == null)
+            {
+                SubtitleListview1.Columns[SubtitleListview1.ColumnIndexNumber].Text = Configuration.Settings.Language.General.NumberSymbol;
+            }
+            else
+            {
+                SubtitleListview1.Columns[SubtitleListview1.ColumnIndexNumber].Text = "    " + Configuration.Settings.Language.General.NumberSymbol;
+            }
             if (oldStaeImageList == SubtitleListview1.StateImageList)
             {
                 return;
@@ -13662,12 +13670,10 @@ namespace Nikse.SubtitleEdit.Forms
             if (SubtitleListview1.StateImageList == null)
             {
                 SubtitleListview1.Columns[SubtitleListview1.ColumnIndexNumber].Width = Configuration.Settings.General.ListViewNumberWidth - 18;
-                SubtitleListview1.Columns[SubtitleListview1.ColumnIndexNumber].Text = Configuration.Settings.Language.General.NumberSymbol;
             }
             else
             {
                 SubtitleListview1.Columns[SubtitleListview1.ColumnIndexNumber].Width = Configuration.Settings.General.ListViewNumberWidth + 18;
-                SubtitleListview1.Columns[SubtitleListview1.ColumnIndexNumber].Text = "    " + Configuration.Settings.Language.General.NumberSymbol;
             }
             SubtitleListview1.SubtitleListViewLastColumnFill(null, null);
         }
