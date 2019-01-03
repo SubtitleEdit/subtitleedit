@@ -78,6 +78,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             int number = 0;
             var verticalAlign = "$VertAlign=Bottom";
             var horizontalAlign = "$HorzAlign=Center";
+            bool italicOn = false;
+            bool boldOn = false;
+            bool underlineOn = false;
+
             foreach (string line in lines)
             {
                 if (!string.IsNullOrWhiteSpace(line) && line[0] != '$')
@@ -94,6 +98,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             p.Number = number;
                             p.Text = threePart[2].TrimEnd().Replace(" | ", Environment.NewLine).Replace("|", Environment.NewLine);
                             p.Text = DecodeStyles(p.Text);
+                            if (italicOn && !p.Text.Contains("<i>"))
+                            {
+                                p.Text = "<i>" + p.Text + "</i>";
+                            }
+                            if (boldOn && !p.Text.Contains("<b>"))
+                            {
+                                p.Text = "<b>" + p.Text + "</b>";
+                            }
+                            if (underlineOn && !p.Text.Contains("<u>"))
+                            {
+                                p.Text = "<u>" + p.Text + "</u>";
+                            }
                             p.Text = GetAlignment(verticalAlign, horizontalAlign) + p.Text;
                             subtitle.Paragraphs.Add(p);
                         }
@@ -110,6 +126,30 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 else if (line != null && line.TrimStart().StartsWith("$HorzAlign", StringComparison.OrdinalIgnoreCase))
                 {
                     horizontalAlign = line.RemoveChar(' ').RemoveChar('\t');
+                }
+                else if (line.Replace(" ", string.Empty).Equals("$Italic=True", StringComparison.OrdinalIgnoreCase))
+                {
+                    italicOn = true;
+                }
+                else if (line.Replace(" ", string.Empty).Trim().Equals("$Italic=False", StringComparison.OrdinalIgnoreCase))
+                {
+                    italicOn = false;
+                }
+                else if (line.Replace(" ", string.Empty).Equals("$Bold=True", StringComparison.OrdinalIgnoreCase))
+                {
+                    boldOn = true;
+                }
+                else if (line.Replace(" ", string.Empty).Trim().Equals("$Bold=False", StringComparison.OrdinalIgnoreCase))
+                {
+                    boldOn = false;
+                }
+                else if (line.Replace(" ", string.Empty).Equals("$Underlined=True", StringComparison.OrdinalIgnoreCase))
+                {
+                    underlineOn = true;
+                }
+                else if (line.Replace(" ", string.Empty).Trim().Equals("$Underlined=False", StringComparison.OrdinalIgnoreCase))
+                {
+                    underlineOn = false;
                 }
             }
         }
@@ -187,6 +227,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             text = Utilities.RemoveSsaTags(text);
             text = text.Replace("<I>", "<i>").Replace("</I>", "</i>");
             bool allItalic = text.StartsWith("<i>", StringComparison.Ordinal) && text.EndsWith("</i>", StringComparison.Ordinal) && Utilities.CountTagInText(text, "<i>") == 1;
+            bool allBold = text.StartsWith("<b>", StringComparison.Ordinal) && text.EndsWith("</b>", StringComparison.Ordinal) && Utilities.CountTagInText(text, "<b>") == 1;
+            bool allUnderline = text.StartsWith("<u>", StringComparison.Ordinal) && text.EndsWith("</u>", StringComparison.Ordinal) && Utilities.CountTagInText(text, "<u>") == 1;
+            bool allUnderlineBoldItalic = text.StartsWith("<u><b><i>", StringComparison.Ordinal) && text.EndsWith("</i></b></u>", StringComparison.Ordinal) && Utilities.CountTagInText(text, "<u>") == 1;
+            bool allBoldItalic = text.StartsWith("<b><i>", StringComparison.Ordinal) && text.EndsWith("</i></b>", StringComparison.Ordinal) && Utilities.CountTagInText(text, "<i>") == 1 && Utilities.CountTagInText(text, "<b>") == 1;
 
             text = text.Replace("<i>", "^I");
             text = text.Replace("<I>", "^I");
@@ -198,8 +242,21 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             text = text.Replace("</b>", "^B");
             text = text.Replace("</B>", "^B");
 
-            if (allItalic)
+            text = text.Replace("<u>", "^U");
+            text = text.Replace("<U>", "^U");
+            text = text.Replace("</u>", "^U");
+            text = text.Replace("</U>", "^U");
+
+            if (allUnderlineBoldItalic)
+                return text.Replace(Environment.NewLine, "^U^B^I|^I^B^U");
+            else if (allBoldItalic)
+                return text.Replace(Environment.NewLine, "^U^B^I|^I^B^U");
+            else if (allItalic)
                 return text.Replace(Environment.NewLine, "^I|^I");
+            else if (allBold)
+                return text.Replace(Environment.NewLine, "^B|^B");
+            else if (allUnderline)
+                return text.Replace(Environment.NewLine, "^U|^U");
             return text.Replace(Environment.NewLine, "|");
         }
 
