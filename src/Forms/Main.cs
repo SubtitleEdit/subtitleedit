@@ -10209,6 +10209,15 @@ namespace Nikse.SubtitleEdit.Forms
                 if (Configuration.Settings.General.ShowRecentFiles && !string.IsNullOrEmpty(_fileName))
                     Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, _videoFileName, _subtitleAlternateFileName, Configuration.Settings.General.CurrentVideoOffsetInMs);
 
+                if (SubtitleListview1.StateImageList?.Images.Count > 0)
+                {
+                    Configuration.Settings.General.ListViewNumberWidth = SubtitleListview1.Columns[SubtitleListview1.ColumnIndexNumber].Width - 18;
+                }
+                else
+                {
+                    Configuration.Settings.General.ListViewNumberWidth = SubtitleListview1.Columns[SubtitleListview1.ColumnIndexNumber].Width;
+                }
+
                 SaveUndockedPositions();
                 SaveListViewWidths();
                 Configuration.Settings.Save();
@@ -13643,16 +13652,24 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SetListViewStateImages()
         {
+            var oldStaeImageList = SubtitleListview1.StateImageList;
             SubtitleListview1.StateImageList = _subtitle != null && _subtitle.Paragraphs.Any(p => p.Bookmark != null) ? imageListBookmarks : null;
+            if (oldStaeImageList == SubtitleListview1.StateImageList)
+            {
+                return;
+            }
+
             if (SubtitleListview1.StateImageList == null)
             {
+                SubtitleListview1.Columns[SubtitleListview1.ColumnIndexNumber].Width = Configuration.Settings.General.ListViewNumberWidth - 18;
                 SubtitleListview1.Columns[SubtitleListview1.ColumnIndexNumber].Text = Configuration.Settings.Language.General.NumberSymbol;
             }
             else
             {
+                SubtitleListview1.Columns[SubtitleListview1.ColumnIndexNumber].Width = Configuration.Settings.General.ListViewNumberWidth + 18;
                 SubtitleListview1.Columns[SubtitleListview1.ColumnIndexNumber].Text = "    " + Configuration.Settings.Language.General.NumberSymbol;
             }
-            SubtitleListview1.AutoSizeAllColumns(this);
+            SubtitleListview1.SubtitleListViewLastColumnFill(null, null);
         }
 
         private void ClearBookmarks()

@@ -173,7 +173,7 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 int idx = GetColumnIndex(SubtitleColumn.Number);
                 if (idx >= 0)
-                    AutoSizeNumberColumn(idx);
+                    Columns[idx].Width = Configuration.Settings.General.ListViewNumberWidth;
 
                 idx = GetColumnIndex(SubtitleColumn.Start);
                 if (idx >= 0)
@@ -577,10 +577,10 @@ namespace Nikse.SubtitleEdit.Controls
             var numberIdx = GetColumnIndex(SubtitleColumn.Number);
             if (numberIdx >= 0)
             {
-                AutoSizeNumberColumn(numberIdx);
-                //if (_settings != null && _settings.General.ListViewColumnsRememberSize && _settings.General.ListViewNumberWidth > 1)
-                //    Columns[numberIdx].Width = _settings.General.ListViewNumberWidth;
-                //else
+                if (_settings != null && _settings.General.ListViewColumnsRememberSize && _settings.General.ListViewNumberWidth > 1)
+                    Columns[numberIdx].Width = _settings.General.ListViewNumberWidth;
+                else
+                    Columns[numberIdx].Width = 50;
             }
 
             var startIdx = GetColumnIndex(SubtitleColumn.Start);
@@ -653,12 +653,6 @@ namespace Nikse.SubtitleEdit.Controls
             Columns[ColumnIndexText].Width = lengthAvailable;
             Columns[ColumnIndexText].Width = lengthAvailable;
             SubtitleListViewLastColumnFill(this, null);
-        }
-
-        private void AutoSizeNumberColumn(int numberIdx)
-        {
-            int add = StateImageList?.Images.Count > 0 ? 18 : 0;
-            Columns[numberIdx].Width = 50 + add;
         }
 
         public void ShowEndColumn(string title)
@@ -1035,7 +1029,7 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        private void SubtitleListViewLastColumnFill(object sender, EventArgs e)
+        public void SubtitleListViewLastColumnFill(object sender, EventArgs e)
         {
             int width = 0;
             for (int i = 0; i < Columns.Count - 1; i++)
