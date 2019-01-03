@@ -2206,6 +2206,8 @@
             public string Miscellaneous { get; set; }
             public string CpsIncludesSpace { get; set; }
             public string UseDoNotBreakAfterList { get; set; }
+            public string GoogleTranslate { get; set; }
+            public string GoogleTranslateApiKey { get; set; }
             public string MicrosoftBingTranslator { get; set; }
             public string HowToSignUp { get; set; }
             public string MicrosoftTranslateApiKey { get; set; }
