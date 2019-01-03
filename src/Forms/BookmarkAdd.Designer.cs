@@ -79,6 +79,7 @@
             this.KeyPreview = true;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
+            this.MinimumSize = new System.Drawing.Size(503, 157);
             this.Name = "BookmarkAdd";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;

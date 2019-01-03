@@ -16,13 +16,18 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.FixFonts(this);
             Text = Configuration.Settings.Language.Bookmarks.GoToBookmark;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+            columnHeaderNumber.Text = Configuration.Settings.Language.General.NumberSymbol;
+            columnHeaderStartTime.Text = Configuration.Settings.Language.General.StartTime;
+            columnHeaderText.Text = Configuration.Settings.Language.General.Text;
 
             _subtitle = subtitle;
             foreach (var p in subtitle.Paragraphs)
             {
                 if (p.Bookmark != null)
                 {
-                    ListViewItem item = new ListViewItem(p.Number + ": " + p.StartTime.ToShortDisplayString() + " - " + p.Bookmark.Replace(Environment.NewLine, " ")) { Tag = p };
+                    ListViewItem item = new ListViewItem("#" + p.Number) { Tag = p };
+                    item.SubItems.Add(p.StartTime.ToShortDisplayString());
+                    item.SubItems.Add(p.Bookmark.Replace(Environment.NewLine, "  "));
                     listViewBookmarks.Items.Add(item);
                 }
             }

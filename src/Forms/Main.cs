@@ -23655,23 +23655,7 @@ namespace Nikse.SubtitleEdit.Forms
             var menuItem = new MenuItem(Configuration.Settings.Language.Main.Menu.ContextMenu.EditBookmark);
             menuItem.Click += (sender2, e2) =>
             {
-                var p1 = _subtitle.GetParagraphOrDefault(_subtitleListViewIndex);
-                if (p1 != null)
-                {
-                    using (var form = new BookmarkAdd(p1))
-                    {
-                        var result = form.ShowDialog(this);
-                        if (result == DialogResult.OK)
-                        {
-                            MakeHistoryForUndo(string.Format(_language.BeforeX, Configuration.Settings.Language.Main.Menu.ContextMenu.EditBookmark));
-                            p1.Bookmark = form.Comment;
-                            SubtitleListview1.ShowState(_subtitleListViewIndex, p1);
-                            ShowHideBookmark(p1);
-                            SetListViewStateImages();
-                            new BookmarkPersistence(_subtitle, _fileName).Save();
-                        }
-                    }
-                }
+                labelBookmark_DoubleClick(null, null);
             };
             _bookmarkContextMenu.MenuItems.Add(menuItem);
 
@@ -23708,6 +23692,27 @@ namespace Nikse.SubtitleEdit.Forms
             _bookmarkContextMenu.MenuItems.Add(menuItem);
 
             pictureBoxBookmark.ContextMenu = _bookmarkContextMenu;
+        }
+
+        private void labelBookmark_DoubleClick(object sender, EventArgs e)
+        {
+            var p1 = _subtitle.GetParagraphOrDefault(_subtitleListViewIndex);
+            if (p1 != null)
+            {
+                using (var form = new BookmarkAdd(p1))
+                {
+                    var result = form.ShowDialog(this);
+                    if (result == DialogResult.OK)
+                    {
+                        MakeHistoryForUndo(string.Format(_language.BeforeX, Configuration.Settings.Language.Main.Menu.ContextMenu.EditBookmark));
+                        p1.Bookmark = form.Comment;
+                        SubtitleListview1.ShowState(_subtitleListViewIndex, p1);
+                        ShowHideBookmark(p1);
+                        SetListViewStateImages();
+                        new BookmarkPersistence(_subtitle, _fileName).Save();
+                    }
+                }
+            }
         }
     }
 }
