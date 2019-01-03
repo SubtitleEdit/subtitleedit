@@ -1,6 +1,6 @@
 ﻿Subtitle Edit Changelog
 
-3.5.9 (xth March 2019) BETA
+3.5.9 (xth January 2019) BETA
 * NEW:
    * Bookmarks - thx OmrSi/marb99
    * Auto save option
@@ -13,6 +13,7 @@
    * Create/adjust/translate shorcuts now global - thx OmrSi/uckthis
    * Auto break adheres to "Max number of lines" setting
 * FIXED:
+   * Fix missing/bad html tags after "Auto br" - thx iromafia111
    * Fix crash in OCR window when closing - thx spetragl
    * Fix OCR in batch convert - thx danstraughn
    * Fixed crash parsing empty word in OCR via Tesseract - thx Barry
@@ -22,6 +23,7 @@
    * Fix reading ttml 2016-10 draft with "dur" tags - thx bbpqman
    * Fix underline with "Reverse start/end" - thx OmrSi
    * Fix possible crash in load of settings - thx eugenesvk
+   * Fix/improve eng_OCRFixReplaceList.xml - thx Ding-adong
 
 
 3.5.8 (20th December 2018)
