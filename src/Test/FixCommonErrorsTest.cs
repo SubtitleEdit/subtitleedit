@@ -1363,10 +1363,10 @@ namespace Test
             var prev = new Paragraph("Bye", 0, 1000);
             var p = new Paragraph("bye.", 1200, 5000);
             var s = new Subtitle();
-            s.Paragraphs.Add((prev));
-            s.Paragraphs.Add((p));
+            s.Paragraphs.Add(prev);
+            s.Paragraphs.Add(p);
             new FixStartWithUppercaseLetterAfterParagraph().Fix(s, new EmptyFixCallback());
-            Assert.AreEqual(p.Text, "bye.");
+            Assert.AreEqual("bye.", p.Text);
         }
 
         [TestMethod]
@@ -1375,10 +1375,10 @@ namespace Test
             var prev = new Paragraph("Bye -", 0, 1000);
             var p = new Paragraph("- moss!", 1200, 5000);
             var s = new Subtitle();
-            s.Paragraphs.Add((prev));
-            s.Paragraphs.Add((p));
+            s.Paragraphs.Add(prev);
+            s.Paragraphs.Add(p);
             new FixStartWithUppercaseLetterAfterParagraph().Fix(s, new EmptyFixCallback());
-            Assert.AreEqual(p.Text, "- moss!");
+            Assert.AreEqual("- moss!", p.Text);
         }
 
         [TestMethod]
@@ -1387,10 +1387,34 @@ namespace Test
             var prev = new Paragraph("Bye -", 0, 1000);
             var p = new Paragraph("- moss!" + Environment.NewLine + " - Bye.", 1200, 5000);
             var s = new Subtitle();
-            s.Paragraphs.Add((prev));
-            s.Paragraphs.Add((p));
+            s.Paragraphs.Add(prev);
+            s.Paragraphs.Add(p);
             new FixStartWithUppercaseLetterAfterParagraph().Fix(s, new EmptyFixCallback());
-            Assert.AreEqual(p.Text, "- moss!" + Environment.NewLine + " - Bye.");
+            Assert.AreEqual("- moss!" + Environment.NewLine + " - Bye.", p.Text);
+        }
+
+        [TestMethod]
+        public void StartWithUppercaseAfterParagraphDashAfterPeriod()
+        {
+            var prev = new Paragraph("Bye.", 0, 1000);
+            var p = new Paragraph("Bye." + Environment.NewLine + "- bye.", 1200, 5000);
+            var s = new Subtitle();
+            s.Paragraphs.Add(prev);
+            s.Paragraphs.Add(p);
+            new FixStartWithUppercaseLetterAfterParagraph().Fix(s, new EmptyFixCallback());
+            Assert.AreEqual("Bye." + Environment.NewLine + "- Bye.", p.Text);
+        }
+
+        [TestMethod]
+        public void StartWithUppercaseAfterParagraphDashAfterPeriod2()
+        {
+            var prev = new Paragraph("Bye.", 0, 1000);
+            var p = new Paragraph("Bye." + Environment.NewLine + "<i>- bye.</i>", 1200, 5000);
+            var s = new Subtitle();
+            s.Paragraphs.Add(prev);
+            s.Paragraphs.Add(p);
+            new FixStartWithUppercaseLetterAfterParagraph().Fix(s, new EmptyFixCallback());
+            Assert.AreEqual("Bye." + Environment.NewLine + "<i>- Bye.</i>", p.Text);
         }
 
         #endregion Start with uppercase after paragraph
@@ -2115,6 +2139,26 @@ namespace Test
             s.Paragraphs.Add(p);
             new FixStartWithUppercaseLetterAfterPeriodInsideParagraph().Fix(s, new EmptyFixCallback());
             Assert.AreEqual(ExpectedOuput, p.Text);
+        }
+
+        [TestMethod]
+        public void FixStartWithUppercaseLetterAfterPeriodInsideParagraphTest6()
+        {
+            var s = new Subtitle();
+            var p = new Paragraph("And I was... i was just tired.", 1200, 5000);
+            s.Paragraphs.Add(p);
+            new FixStartWithUppercaseLetterAfterPeriodInsideParagraph().Fix(s, new EmptyFixCallback());
+            Assert.AreEqual("And I was... I was just tired.", p.Text);
+        }
+
+        [TestMethod]
+        public void FixStartWithUppercaseLetterAfterPeriodInsideParagraphTest7()
+        {
+            var s = new Subtitle();
+            var p = new Paragraph("And I was... he was just tired.", 1200, 5000);
+            s.Paragraphs.Add(p);
+            new FixStartWithUppercaseLetterAfterPeriodInsideParagraph().Fix(s, new EmptyFixCallback());
+            Assert.AreEqual("And I was... he was just tired.", p.Text);
         }
 
         #endregion
