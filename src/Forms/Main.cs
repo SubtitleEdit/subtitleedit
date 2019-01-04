@@ -14464,7 +14464,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (e.KeyCode == Keys.V && e.Modifiers == Keys.Control) //Ctrl+V = Paste from clipboard
             {
-                if (Clipboard.ContainsText())
+                if (_subtitle != null && _subtitle.Paragraphs.Count > 0 && Clipboard.ContainsText())
                 {
                     var text = Clipboard.GetText();
                     var tmp = new Subtitle();
