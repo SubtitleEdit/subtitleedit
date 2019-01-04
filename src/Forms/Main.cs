@@ -23295,6 +23295,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             bool showTools = IsNetflixGlyphCheckAvailable();
             netflixQualityCheckToolStripMenuItem.Visible = showTools;
+            netflixQualityCheckToolStripMenuItem.Text = _language.Menu.Tools.NetflixQualityCheck;
             toolStripButtonNetflixQualityCheck.Visible = showTools && Configuration.Settings.General.ShowToolbarNetflixGlyphCheck;
         }
 

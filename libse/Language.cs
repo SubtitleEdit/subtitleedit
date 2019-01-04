@@ -1510,6 +1510,7 @@ namespace Nikse.SubtitleEdit.Core
                         MergeSameTimeCodes = "Merge lines with same time codes...",
                         SplitLongLines = "Split long lines...",
                         MinimumDisplayTimeBetweenParagraphs = "Minimum display time between subtitles...",
+                        NetflixQualityCheck = "Netflix quality check...",
                         SortBy = "Sort by",
                         Number = "Number",
                         StartTime = "Start time",
