@@ -65,6 +65,11 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 DialogResult = DialogResult.Cancel;
             }
+            else if (e.KeyCode == UiUtil.HelpKeys)
+            {
+                Utilities.ShowHelp("#bookmarks");
+                e.SuppressKeyPress = true;
+            }
         }
     }
 }
