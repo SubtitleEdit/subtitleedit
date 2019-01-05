@@ -14559,7 +14559,7 @@ namespace Nikse.SubtitleEdit.Forms
                             RestartHistory();
                         }
                     }
-                    else if (list.Count >= 1 && list.Count < 4)
+                    else if (list.Count >= 1 && list.Count < 4 && !text.Trim().Contains(Environment.NewLine + Environment.NewLine))
                     {
                         // less than 4 lines of text, just insert into first selected
                         textBoxListViewText.Text = text.Trim();
@@ -14568,6 +14568,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         MakeHistoryForUndo(_language.BeforeInsertLine);
                         _makeHistoryPaused = true;
+                        SubtitleListview1.BeginUpdate();
                         foreach (var line in list)
                         {
                             if (!string.IsNullOrWhiteSpace(line))
@@ -14576,6 +14577,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 textBoxListViewText.Text = Utilities.AutoBreakLine(line);
                             }
                         }
+                        SubtitleListview1.EndUpdate();
                         RestartHistory();
                     }
                     UpdateListViewTextInfo(labelTextLineLengths, labelSingleLine, labelTextLineTotal, labelCharactersPerSecond, _subtitle.Paragraphs[_subtitleListViewIndex], textBoxListViewText);
