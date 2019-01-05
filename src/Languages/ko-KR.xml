@@ -1014,6 +1014,7 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
         <SplitLongLines>긴 줄 분할하기</SplitLongLines>
         <MinimumDisplayTimeBetweenParagraphs>자막 사이의 최소 간격 설정...</MinimumDisplayTimeBetweenParagraphs>
         <SortBy>정렬 기준</SortBy>
+        <NetflixQualityCheck>Netflix 품질 검사...</NetflixQualityCheck>
         <Number>번호 순</Number>
         <StartTime>시작 시간</StartTime>
         <EndTime>종료 시간</EndTime>
@@ -2035,6 +2036,8 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
     <Miscellaneous>기타</Miscellaneous>
     <CpsIncludesSpace>초당 문자수(CPS)에 공백도 포함</CpsIncludesSpace>
     <UseDoNotBreakAfterList>'뒤에 줄바꿈을 배제하는 목록' 사용 (자동 줄바꿈 用)</UseDoNotBreakAfterList>
+    <GoogleTranslate>Google 번역</GoogleTranslate>
+    <GoogleTranslateApiKey>API 키</GoogleTranslateApiKey>
     <MicrosoftBingTranslator>Microsoft Bing 번역</MicrosoftBingTranslator>
     <HowToSignUp>가입 방법</HowToSignUp>
     <MicrosoftTranslateApiKey>키</MicrosoftTranslateApiKey>
