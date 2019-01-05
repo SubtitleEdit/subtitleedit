@@ -78,6 +78,7 @@ Email: mailto:moob42341@gmail.com</TranslatedBy>
     <After>Depois</After>
     <Size>Tamanho</Size>
     <Search>Procurar</Search>
+	<DeleteCurrentLine>Eliminar a linha actual</DeleteCurrentLine>
   </General>
   <About>
     <Title>Acerca do Subtitle Edit</Title>
@@ -143,7 +144,7 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <Recalculate>Recalcular</Recalculate>
     <AddSeconds>Adicionar segundos</AddSeconds>
     <SetAsPercent>Definir a percentagem de duração</SetAsPercent>
-    <Note>Nota: A duração não pode sobrepor o tempo de início do próximo texto</Note>
+    <Note>Nota: A duração não pode sobrepor o tempo de início do texto seguinte</Note>
     <Fixed>Corrigido</Fixed>
     <Milliseconds>Milissegundos</Milliseconds>
   </AdjustDisplayDuration>
@@ -214,6 +215,11 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
   <Beamer>
     <Title>Vídeo projector</Title>
   </Beamer>
+  <Bookmarks>
+	<EditBookmark>Editar marcador</EditBookmark>
+	<AddBookmark>Adicionar marcador</AddBookmark>
+	<GoToBookmark>Ir para o marcador</GoToBookmark>
+  </Bookmarks>
   <ChangeCasing>
     <Title>Inverter Maiúsculas/Minúsculas</Title>
     <ChangeCasingTo>Inverter maiúsculas para</ChangeCasingTo>
@@ -330,7 +336,7 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
   <DurationsBridgeGaps>
     <Title>Unir pequenos intervalos entre durações</Title>
     <GapsBridgedX>Número de pequenos intervalos unidos: {0}</GapsBridgedX>
-    <GapToNext>Ir para o próximo intervalo em segundos</GapToNext>
+    <GapToNext>Intervalo até ao seguinte em segundos</GapToNext>
     <BridgeGapsSmallerThanXPart1>Colmatar os intervalos menores do que</BridgeGapsSmallerThanXPart1>
     <BridgeGapsSmallerThanXPart2>milissegundos</BridgeGapsSmallerThanXPart2>
     <MinMillisecondsBetweenLines>Min. milissegundos entre as linhas</MinMillisecondsBetweenLines>
@@ -477,6 +483,7 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <Right>Direita</Right>
     <Center>Centro</Center>
     <CenterLeftJustify>Centro, justificado à esquerda</CenterLeftJustify>
+	<CenterTopJustify>Centro, superior justificado</CenterTopJustify>
     <BottomMargin>Margem inferior</BottomMargin>
     <LeftRightMargin>Margem esq./dto.</LeftRightMargin>
     <SaveBluRraySupAs>Escolha o nome do ficheiro Blu-ray sup</SaveBluRraySupAs>
@@ -1011,6 +1018,7 @@ Vá a "Opções -&gt; Configurações -&gt; Ferramentas" para inserir a chave AP
         <SplitLongLines>Dividir as linhas longas...</SplitLongLines>
         <MinimumDisplayTimeBetweenParagraphs>Duração mínima entre linhas...</MinimumDisplayTimeBetweenParagraphs>
         <SortBy>Ordenar por</SortBy>
+		<NetflixQualityCheck>Controlo de qualidade Netflix...</NetflixQualityCheck>
         <Number>Ordem numérica</Number>
         <StartTime>Tempo inicial</StartTime>
         <EndTime>Tempo final</EndTime>
@@ -1101,7 +1109,7 @@ Vá a "Opções -&gt; Configurações -&gt; Ferramentas" para inserir a chave AP
         <RemoveTextForHi>Eliminar texto para Deficientes Auditivos</RemoveTextForHi>
         <VisualSync>Sincronia visual</VisualSync>
         <SpellCheck>Verificação ortográfica</SpellCheck>
-        <NetflixQualityCheck>Verificação de qualidade da legenda Netflix</NetflixQualityCheck>
+        <NetflixQualityCheck>Controlo de qualidade Netflix</NetflixQualityCheck>
         <Settings>Configurações</Settings>
         <Help>Ajuda</Help>
         <ShowHideWaveform>Mostrar/ocultar forma de onda</ShowHideWaveform>
@@ -1132,7 +1140,7 @@ Vá a "Opções -&gt; Configurações -&gt; Ferramentas" para inserir a chave AP
         <InsertBefore>Inserir antes</InsertBefore>
         <InsertAfter>Inserir depois</InsertAfter>
         <InsertSubtitleAfter>Inserir legenda após esta linha</InsertSubtitleAfter>
-        <CopyToClipboard>Copiar como texto para a área de transferência</CopyToClipboard>
+        <CopyToClipboard>Copiar linha(s)</CopyToClipboard>
         <Column>Coluna</Column>
         <ColumnDeleteText>Eliminar texto</ColumnDeleteText>
         <ColumnDeleteTextAndShiftCellsUp>Eliminar texto e deslocar células para cima</ColumnDeleteTextAndShiftCellsUp>
@@ -1170,6 +1178,8 @@ Vá a "Opções -&gt; Configurações -&gt; Ferramentas" para inserir a chave AP
         <WebVTTRemoveVoices>Remover vozes</WebVTTRemoveVoices>
         <NewActor>Novo actor...</NewActor>
         <RemoveActors>Remover actores</RemoveActors>
+		<EditBookmark>Editar marcador</EditBookmark>
+		<RemoveBookmark>Eliminar marcador</RemoveBookmark>
       </ContextMenu>
     </Menu>
     <Controls>
@@ -1185,6 +1195,7 @@ Vá a "Opções -&gt; Configurações -&gt; Ferramentas" para inserir a chave AP
     </Controls>
     <VideoControls>
       <Translate>Traduzir</Translate>
+	  <CreateAndAdjust>Criar/ajustar</CreateAndAdjust>
       <Create>Criar</Create>
       <Adjust>Ajustar</Adjust>
       <SelectCurrentElementWhilePlaying>Selecção da linha durante a reprodução</SelectCurrentElementWhilePlaying>
@@ -1507,7 +1518,7 @@ Se editou este ficheiro no Subtitle Edit é possível que encontre a cópia de s
     <Title>Conversão de unidades</Title>
     <ConvertFrom>Converter de</ConvertFrom>
     <ConvertTo>Converter para</ConvertTo>
-    <CopyToClipboard>Copiar para a Área de Transferência</CopyToClipboard>
+    <CopyToClipboard>Copiar</CopyToClipboard>
     <Celsius>Celsius</Celsius>
     <Fahrenheit>Fahrenheit</Fahrenheit>
     <Miles>Milhas</Miles>
@@ -1736,11 +1747,17 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <Find>Localizar</Find>
     <Replace>Substituir</Replace>
     <VisualSync>Sincronia visual</VisualSync>
-    <SpellCheck>Ortografia</SpellCheck>
-    <NetflixQualityCheck>Verificação de qualidade Netflix</NetflixQualityCheck>
+    <SpellCheck>Verificação ortográfica</SpellCheck>
+    <NetflixQualityCheck>Controlo de qualidade Netflix</NetflixQualityCheck>
     <SettingsName>Configurações</SettingsName>
     <Help>Ajuda</Help>
     <UnbreakNoSpace>Remover quebra sem espaço em branco (CJK)</UnbreakNoSpace>
+	<ToggleBookmarks>Alterar marcadores</ToggleBookmarks>
+	<ToggleBookmarksWithComment>Alterar marcadores - adicionar comentário</ToggleBookmarksWithComment>
+	<ClearBookmarks>Eliminar marcadores</ClearBookmarks>
+	<GoToBookmark>Ir para o marcador</GoToBookmark>
+	<GoToPreviousBookmark>Ir para o marcador anterior</GoToPreviousBookmark>
+	<GoToNextBookmark>Ir para o marcador seguinte</GoToNextBookmark>
     <FontInUi>Tipo de letra da Interface</FontInUi>
     <ShowFrameRate>Mostrar taxa de fotogramas na barra de ferramentas</ShowFrameRate>
     <DefaultFrameRate>Taxa de fotogramas padrão</DefaultFrameRate>
@@ -1792,6 +1809,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <AutoBackupDeleteAfterThreeMonths>3 meses</AutoBackupDeleteAfterThreeMonths>
     <AutoBackupDeleteAfterSixMonths>6 meses</AutoBackupDeleteAfterSixMonths>
     <CheckForUpdates>Verificar se há actualizações</CheckForUpdates>
+	<AutoSave>Guardar automaticamente</AutoSave>
     <AllowEditOfOriginalSubtitle>Permitir a edição da legenda original</AllowEditOfOriginalSubtitle>
     <PromptDeleteLines>Confirmar eliminação de linhas</PromptDeleteLines>
     <TimeCodeMode>Modo de tempos</TimeCodeMode>
@@ -1914,7 +1932,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Definir o fim, compensar o resto e ir para a próxima</AdjustSetEndAndOffsetTheRestAndGoToNext>
     <AdjustExtendCurrentSubtitle>Alongar o tempo da linha actual até à próxima linha ou até à duração máxima</AdjustExtendCurrentSubtitle>
     <RecalculateDurationOfCurrentSubtitle>Recalcular a duração da linha actual</RecalculateDurationOfCurrentSubtitle>
-    <MainCreateStartDownEndUp>Criar novo na tecla "Page Down", definir tempo final na tecla "Page Up"</MainCreateStartDownEndUp>
+    <MainCreateStartDownEndUp>Inserir nova linha com tecla "Page Down", definir tempo final com tecla "Page Up"</MainCreateStartDownEndUp>
     <MergeDialog>Combinar os diálogos (inserir hífens)</MergeDialog>
     <GoToNext>Ir para a linha seguinte</GoToNext>
     <GoToPrevious>Ir para a linha anterior</GoToPrevious>
@@ -1935,7 +1953,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <AlignmentN7>Alinhamento superior esquerdo - {\an7}</AlignmentN7>
     <AlignmentN8>Alinhamento superior central - {\an8}</AlignmentN8>
     <AlignmentN9>Alinhamento superior direito - {\an9}</AlignmentN9>
-    <CopyTextOnly>Copiar só o texto para a área de transferência (linhas seleccionadas)</CopyTextOnly>
+    <CopyTextOnly>Copiar apenas o texto (linhas seleccionadas)</CopyTextOnly>
     <CopyTextOnlyFromOriginalToCurrent>Copiar o texto do original para a actual</CopyTextOnlyFromOriginalToCurrent>
     <AutoDurationSelectedLines>Auto-duração (linhas seleccionadas)</AutoDurationSelectedLines>
     <ReverseStartAndEndingForRTL>Inverter RTL início/fim</ReverseStartAndEndingForRTL>
@@ -2007,7 +2025,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <ListViewColumnTextUp>Coluna, texto para cima</ListViewColumnTextUp>
     <ListViewColumnTextDown>Coluna, texto para baixo</ListViewColumnTextDown>
     <ListViewFocusWaveform>Destacar a forma de onda/espectrograma</ListViewFocusWaveform>
-    <ListViewGoToNextError>Ir para o próximo erro</ListViewGoToNextError>
+    <ListViewGoToNextError>Ir para o erro seguinte</ListViewGoToNextError>
     <ShowBeamer>Iniciar a legenda em ecrã inteiro</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Mover a última palavra até à próxima linha da legenda</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Buscar a primeira palavra da próxima linha da legenda</MainTextBoxMoveFirstWordFromNextUp>
@@ -2022,6 +2040,8 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <Miscellaneous>Diversos</Miscellaneous>
     <CpsIncludesSpace>Caracteres/seg (CPS) incluindo espaços</CpsIncludesSpace>
     <UseDoNotBreakAfterList>Utilizar "não quebrar linha depois da lista"</UseDoNotBreakAfterList>
+	<GoogleTranslate>Tradutor Google</GoogleTranslate>
+	<GoogleTranslateApiKey>Chave API</GoogleTranslateApiKey>
     <MicrosoftBingTranslator>Tradutor Microsoft Bing</MicrosoftBingTranslator>
     <HowToSignUp>Como efectuar o registo</HowToSignUp>
     <MicrosoftTranslateApiKey>Chave</MicrosoftTranslateApiKey>
@@ -2091,6 +2111,7 @@ como "Advanced Sub Station Alpha" ou por via de exportação para formatos basea
     <AutoFixNames>Corrigir automaticamente formato de nomes</AutoFixNames>
     <CheckOneLetterWords>Solicitar uma letra para uma palavra desconhecida</CheckOneLetterWords>
     <TreatINQuoteAsING>Considerar a palavra final " in' " como " ing " (apenas em Inglês)</TreatINQuoteAsING>
+	<RememberUseAlwaysList>Lembrar "Usar sempre" a lista</RememberUseAlwaysList>
     <ImageText>Imagem de texto</ImageText>
     <SpellCheckCompleted>Verificação ortográfica terminada</SpellCheckCompleted>
     <SpellCheckAborted>Verificação ortográfica cancelada</SpellCheckAborted>
@@ -2101,8 +2122,8 @@ como "Advanced Sub Station Alpha" ou por via de exportação para formatos basea
     <GlyphCheckReport>Caracter inválido {0} encontrado na coluna {1}</GlyphCheckReport>
     <WhiteSpaceCheckReport>Foi encontrado um espaço em branco inválido na coluna {0}.</WhiteSpaceCheckReport>
     <ReportPrompt>Ver o relatório completo aqui: {0}.</ReportPrompt>
-    <FoundXIssues>Verificação de qualidade encontrou {0} problemas.</FoundXIssues>
-    <CheckOk>Verificação de qualidade Netflix OK :)</CheckOk>
+    <FoundXIssues>Controlo de qualidade encontrou {0} problemas.</FoundXIssues>
+    <CheckOk>Controlo de qualidade Netflix OK :)</CheckOk>
   </NetflixQualityCheck>
   <Split>
     <Title>Divisão</Title>
