@@ -553,7 +553,7 @@ namespace Nikse.SubtitleEdit.Core
                         }
                     }
                 }
-            }            
+            }
 
             if (splitPos > maximumLength) // too long first line
             {
@@ -566,43 +566,46 @@ namespace Nikse.SubtitleEdit.Core
             }
 
             // prefer comma
-            if (splitPos < 0)
+            if (Configuration.Settings.Tools.AutoBreakCommaBreakEarly)
             {
-                const string expectedChars1 = ".!?0123456789";
-                const string expectedChars2 = ",";
-                for (int j = 0; j < 15; j++)
+                if (splitPos < 0)
                 {
-                    if (mid + j + 1 < s.Length && mid + j > 0)
+                    const string expectedChars1 = ".!?0123456789";
+                    const string expectedChars2 = ",";
+                    for (int j = 0; j < 15; j++)
                     {
-                        if (expectedChars2.Contains(s[mid + j]) && !IsPartOfNumber(s, mid + j) && CanBreak(s, mid + j + 1, language))
+                        if (mid + j + 1 < s.Length && mid + j > 0)
                         {
-                            splitPos = mid + j + 1;
-                            if (expectedChars1.Contains(s[splitPos]))
-                            { // do not break double/tripple end lines like "!!!" or "..."
-                                splitPos++;
-                                if (expectedChars1.Contains(s[mid + j + 1]))
+                            if (expectedChars2.Contains(s[mid + j]) && !IsPartOfNumber(s, mid + j) && CanBreak(s, mid + j + 1, language))
+                            {
+                                splitPos = mid + j + 1;
+                                if (expectedChars1.Contains(s[splitPos]))
+                                { // do not break double/tripple end lines like "!!!" or "..."
                                     splitPos++;
+                                    if (expectedChars1.Contains(s[mid + j + 1]))
+                                        splitPos++;
+                                }
+                                break;
                             }
-                            break;
-                        }
-                        if (expectedChars2.Contains(s[mid - j]) && !IsPartOfNumber(s, mid - j) && CanBreak(s, mid - j + 1, language))
-                        {
-                            splitPos = mid - j;
-                            splitPos++;
-                            break;
+                            if (expectedChars2.Contains(s[mid - j]) && !IsPartOfNumber(s, mid - j) && CanBreak(s, mid - j + 1, language))
+                            {
+                                splitPos = mid - j;
+                                splitPos++;
+                                break;
+                            }
                         }
                     }
                 }
-            }
 
-            if (splitPos > maximumLength) // too long first line
-            {
-                if (splitPos != maximumLength + 1 || s[maximumLength] != ' ') // allow for maxlength+1 char to be space (does not count)
+                if (splitPos > maximumLength) // too long first line
+                {
+                    if (splitPos != maximumLength + 1 || s[maximumLength] != ' ') // allow for maxlength+1 char to be space (does not count)
+                        splitPos = -1;
+                }
+                else if (splitPos >= 0 && s.Length - splitPos > maximumLength) // too long second line
+                {
                     splitPos = -1;
-            }
-            else if (splitPos >= 0 && s.Length - splitPos > maximumLength) // too long second line
-            {
-                splitPos = -1;
+                }
             }
 
             if (splitPos < 0)

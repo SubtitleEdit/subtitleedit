@@ -223,6 +223,7 @@ namespace Nikse.SubtitleEdit.Core
         public decimal AdjustDurationSeconds { get; set; }
         public int AdjustDurationPercent { get; set; }
         public string AdjustDurationLast { get; set; }
+        public bool AutoBreakCommaBreakEarly { get; set; }
 
         public ToolsSettings()
         {
@@ -314,6 +315,7 @@ namespace Nikse.SubtitleEdit.Core
             MoveStartEndMs = 100;
             AdjustDurationSeconds = 0.1m;
             AdjustDurationPercent = 120;
+            AutoBreakCommaBreakEarly = true;
         }
     }
 
@@ -2365,6 +2367,9 @@ $HorzAlign          =   Center
             subNode = node.SelectSingleNode("AdjustDurationLast");
             if (subNode != null)
                 settings.Tools.AdjustDurationLast = subNode.InnerText;
+            subNode = node.SelectSingleNode("AutoBreakCommaBreakEarly");
+            if (subNode != null)
+                settings.Tools.AutoBreakCommaBreakEarly = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("FindHistory");
             if (subNode != null)
             {
@@ -3859,7 +3864,8 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("AdjustDurationSeconds", settings.Tools.AdjustDurationSeconds.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AdjustDurationPercent", settings.Tools.AdjustDurationPercent.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AdjustDurationLast", settings.Tools.AdjustDurationLast);
-
+                textWriter.WriteElementString("AutoBreakCommaBreakEarly", settings.Tools.AutoBreakCommaBreakEarly.ToString());
+                
                 if (settings.Tools.FindHistory != null && settings.Tools.FindHistory.Count > 0)
                 {
                     const int maximumFindHistoryItems = 10;
