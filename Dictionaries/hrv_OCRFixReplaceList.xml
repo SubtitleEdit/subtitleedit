@@ -2002,7 +2002,9 @@
     <Word from="Rejmonda" to="Raymonda" />
     <Word from="Rejčel" to="Rachel" />
     <Word from="Rič" to="Rich" />
+    <Word from="Rid" to="Reed" />
     <Word from="Rouz" to="Rose" />
+    <Word from="Sejdi" to="Sadie" />
     <Word from="Sejmur" to="Seymour" />
     <Word from="Sejnt" to="Saint" />
     <Word from="Sendi" to="Sandy" />
@@ -3496,13 +3498,11 @@
     <RegEx find="ulicer" replaceWith="ulitzer" />
     <RegEx find="Rajan" replaceWith="Ryan" />
     <RegEx find="Rič" replaceWith="Rich" />
-    <RegEx find="Rid" replaceWith="Reed" />
     <RegEx find="odže" replaceWith="oge" />
     <RegEx find="Ojler" replaceWith="Euler" />
     <RegEx find="rols rojs" replaceWith="Rolls-Royce" />
     <RegEx find="Sajmon" replaceWith="Simon" />
     <RegEx find="S[ae]mjuel" replaceWith="Samuel" />
-    <Word from="Sejdi" to="Sadie" />
     <RegEx find="Sijetl" replaceWith="Seattle" />
     <RegEx find="Sinsinati" replaceWith="Cincinnati" />
     <RegEx find="Sten" replaceWith="Stan" />
