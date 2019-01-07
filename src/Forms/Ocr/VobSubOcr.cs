@@ -4045,10 +4045,19 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             minLineHeight = Math.Max(minLineHeight, 6);
             if (_binOcrLastLowercaseHeight == -1 && _nocrLastLowercaseHeight == -1)
             { // try to guess lowercase height
-                var letters = NikseBitmapImageSplitter.SplitBitmapToLettersNew(parentBitmap, _numericUpDownPixelsIsSpace, checkBoxRightToLeft.Checked, Configuration.Settings.VobSubOcr.TopToBottom, minLineHeight, _ocrCount > 20 ? _ocrHeight : -1);
-                var actualLetters = letters.Where(p => p.NikseBitmap != null).ToList();
-                if (actualLetters.Any())
-                    minLineHeight = (int)Math.Round(actualLetters.Average(p => p.NikseBitmap.Height) * 0.5);
+                if (_bluRaySubtitles != null)
+                {
+                    minLineHeight = 25;
+                    if (LanguageString == "ar")
+                        minLineHeight = 30;
+                }
+                else
+                {
+                    var letters = NikseBitmapImageSplitter.SplitBitmapToLettersNew(parentBitmap, _numericUpDownPixelsIsSpace, checkBoxRightToLeft.Checked, Configuration.Settings.VobSubOcr.TopToBottom, 20, _ocrCount > 20 ? _ocrHeight : -1);
+                    var actualLetters = letters.Where(p => p.NikseBitmap != null).ToList();
+                    if (actualLetters.Any())
+                        minLineHeight = (int)Math.Round(actualLetters.Average(p => p.NikseBitmap.Height) * 0.6);
+                }
             }
             if (minLineHeight < 5)
                 minLineHeight = _nocrLastLowercaseHeight;
