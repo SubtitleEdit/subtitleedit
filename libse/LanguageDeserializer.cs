@@ -3880,8 +3880,8 @@ namespace Nikse.SubtitleEdit.Core
                 case "Main/Menu/ContextMenu/GoogleAndMicrosoftTranslateSelectedLine":
                     language.Main.Menu.ContextMenu.GoogleAndMicrosoftTranslateSelectedLine = reader.Value;
                     break;
-                case "Main/Menu/ContextMenu/GoogleTranslateSelectedLines":
-                    language.Main.Menu.ContextMenu.GoogleTranslateSelectedLines = reader.Value;
+                case "Main/Menu/ContextMenu/TranslateSelectedLines":
+                    language.Main.Menu.ContextMenu.TranslateSelectedLines = reader.Value;
                     break;
                 case "Main/Menu/ContextMenu/AdjustDisplayDurationForSelectedLines":
                     language.Main.Menu.ContextMenu.AdjustDisplayDurationForSelectedLines = reader.Value;

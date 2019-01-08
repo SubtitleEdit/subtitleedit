@@ -1396,7 +1396,9 @@ namespace Nikse.SubtitleEdit.Forms
             showSelectedLinesEarlierlaterToolStripMenuItem.Text = _language.Menu.ContextMenu.ShowSelectedLinesEarlierLater;
             visualSyncSelectedLinesToolStripMenuItem.Text = _language.Menu.ContextMenu.VisualSyncSelectedLines;
             toolStripMenuItemGoogleMicrosoftTranslateSelLine.Text = _language.Menu.ContextMenu.GoogleAndMicrosoftTranslateSelectedLine;
-            googleTranslateSelectedLinesToolStripMenuItem.Text = _language.Menu.ContextMenu.GoogleTranslateSelectedLines;
+            googleTranslateToolStripMenuItem.Text = _language.Menu.AutoTranslate.TranslatePoweredByGoogle;
+            microsoftBingTranslateToolStripMenuItem.Text = _language.Menu.AutoTranslate.TranslatePoweredByMicrosoft;
+            toolStripMenuItemTranslateSelected.Text = _language.Menu.ContextMenu.TranslateSelectedLines;
             adjustDisplayTimeForSelectedLinesToolStripMenuItem.Text = _language.Menu.ContextMenu.AdjustDisplayDurationForSelectedLines;
             fixCommonErrorsInSelectedLinesToolStripMenuItem.Text = _language.Menu.ContextMenu.FixCommonErrorsInSelectedLines;
             changeCasingForSelectedLinesToolStripMenuItem.Text = _language.Menu.ContextMenu.ChangeCasingForSelectedLines;
@@ -6229,7 +6231,6 @@ namespace Nikse.SubtitleEdit.Forms
                     _converted = true;
                     SetTitle();
                     SetEncoding(Encoding.UTF8);
-                    SubtitleListview1.SelectIndexAndEnsureVisible(_subtitleListViewIndex, true);
                     if (!isAlternateVisible)
                     {
                         toolStripMenuItemShowOriginalInPreview.Checked = false;
@@ -7200,11 +7201,8 @@ namespace Nikse.SubtitleEdit.Forms
                 typeEffectToolStripMenuItem.Visible = noNetWorkSession;
                 karokeeEffectToolStripMenuItem.Visible = noNetWorkSession;
                 toolStripSeparatorAdvancedFunctions.Visible = noNetWorkSession;
-                //fixCommonErrorsInSelectedLinesToolStripMenuItem.Visible = true;
                 adjustDisplayTimeForSelectedLinesToolStripMenuItem.Visible = true;
-                //showSelectedLinesEarlierlaterToolStripMenuItem.Visible = true;
                 visualSyncSelectedLinesToolStripMenuItem.Visible = true;
-                //googleTranslateSelectedLinesToolStripMenuItem.Visible = true;
                 toolStripMenuItemGoogleMicrosoftTranslateSelLine.Visible = false;
                 toolStripMenuItemUnbreakLines.Visible = true;
                 toolStripMenuItemAutoBreakLines.Visible = true;
@@ -12299,11 +12297,6 @@ namespace Nikse.SubtitleEdit.Forms
             ShowVisualSync(true);
         }
 
-        private void GoogleTranslateSelectedLinesToolStripMenuItemClick(object sender, EventArgs e)
-        {
-            TranslateViaGoogle(true, true);
-        }
-
         private void SaveSubtitleListviewIndices()
         {
             _selectedIndices = new List<int>();
@@ -14589,7 +14582,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         UpdateListViewTextInfo(labelTextLineLengths, labelSingleLine, labelTextLineTotal, labelCharactersPerSecond, _subtitle.Paragraphs[_subtitleListViewIndex], textBoxListViewText);
                     }
-                    else 
+                    else
                     {
                         SubtitleListview1.SelectIndexAndEnsureVisible(0);
                     }
@@ -17986,6 +17979,12 @@ namespace Nikse.SubtitleEdit.Forms
                 if (x.Name.StartsWith("Plugin", StringComparison.OrdinalIgnoreCase))
                     toolStripMenuItemAutoTranslate.DropDownItems.Remove(x);
             }
+            for (int k = toolStripMenuItemTranslateSelected.DropDownItems.Count - 1; k > 0; k--)
+            {
+                ToolStripItem x = toolStripMenuItemTranslateSelected.DropDownItems[k];
+                if (x.Name.StartsWith("Plugin", StringComparison.OrdinalIgnoreCase))
+                    toolStripMenuItemTranslateSelected.DropDownItems.Remove(x);
+            }
 
             foreach (var pluginFileName in pluginFiles)
             {
@@ -18032,6 +18031,17 @@ namespace Nikse.SubtitleEdit.Forms
                             AddSeparator(translatePluginCount, toolStripMenuItemAutoTranslate);
                             item.Click += PluginClickTranslate;
                             toolStripMenuItemAutoTranslate.DropDownItems.Add(item);
+
+                            // selected lines
+                            item = new ToolStripMenuItem();
+                            item.Name = "PluginTSL" + toolsPluginCount;
+                            item.Text = text;
+                            item.Tag = pluginFileName;
+                            UiUtil.FixFonts(item);
+                            AddSeparator(translatePluginCount, toolStripMenuItemTranslateSelected);
+                            item.Click += PluginClickTranslateSelectedLines;
+                            toolStripMenuItemTranslateSelected.DropDownItems.Add(item);
+
                             translatePluginCount++;
                         }
                         else if (actionType.Equals("SpellCheck", StringComparison.OrdinalIgnoreCase))
@@ -18090,6 +18100,12 @@ namespace Nikse.SubtitleEdit.Forms
         {
             CallPlugin(sender, false, true);
         }
+
+        private void PluginClickTranslateSelectedLines(object sender, EventArgs e)
+        {
+            CallPluginTranslateSelectedLines(sender);
+        }
+
 
         private void CallPlugin(object sender, bool allowChangeFormat, bool translate)
         {
@@ -18198,6 +18214,97 @@ namespace Nikse.SubtitleEdit.Forms
                     else
                     {
                         MessageBox.Show(_language.UnableToReadPluginResult);
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(exception.Message + Environment.NewLine + exception.StackTrace);
+                if (exception.InnerException != null)
+                {
+                    MessageBox.Show(exception.InnerException.Message + Environment.NewLine + exception.InnerException.StackTrace);
+                }
+            }
+        }
+
+        private void CallPluginTranslateSelectedLines(object sender)
+        {
+            try
+            {
+                var item = (ToolStripItem)sender;
+                string name, description, text, shortcut, actionType;
+                decimal version;
+                MethodInfo mi;
+                var pluginObject = GetPropertiesAndDoAction(item.Tag.ToString(), out name, out text, out version, out description, out actionType, out shortcut, out mi);
+                if (mi == null)
+                {
+                    return;
+                }
+
+                SaveSubtitleListviewIndices();
+                var selectedLines = new Subtitle { WasLoadedWithFrameNumbers = _subtitle.WasLoadedWithFrameNumbers };
+                foreach (int index in SubtitleListview1.SelectedIndices)
+                {
+                    var p = _subtitle.Paragraphs[index];
+                    if (_subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0)
+                    {
+                        var original = Utilities.GetOriginalParagraph(index, p, _subtitleAlternate.Paragraphs);
+                        if (original != null)
+                        {
+                            p = original;
+                        }
+                        else
+                        {
+                            p = new Paragraph(string.Empty, p.StartTime.TotalMilliseconds, p.EndTime.TotalMilliseconds);
+                        }
+                    }
+                    selectedLines.Paragraphs.Add(p);
+                }
+
+                string rawText = null;
+                SubtitleFormat format = GetCurrentSubtitleFormat();
+                if (format != null)
+                {
+                    if (format.IsFrameBased)
+                        selectedLines.CalculateTimeCodesFromFrameNumbers(CurrentFrameRate);
+                    else
+                        selectedLines.CalculateFrameNumbersFromTimeCodes(CurrentFrameRate);
+                    rawText = selectedLines.ToText(format);
+                }
+
+                string pluginResult = (string)mi.Invoke(pluginObject,
+                    new object[]
+                    {
+                        this,
+                        selectedLines.ToText(new SubRip()),
+                        Configuration.Settings.General.CurrentFrameRate,
+                        Configuration.Settings.General.ListViewLineSeparatorString,
+                        _fileName,
+                        _videoFileName,
+                        rawText
+                    });
+
+                if (!string.IsNullOrEmpty(pluginResult) && pluginResult.Length > 10 && text != pluginResult)
+                {
+                    var lines = new List<string>(pluginResult.SplitToLines());
+                    MakeHistoryForUndo(string.Format(_language.BeforeRunningPluginXVersionY, name, version));
+                    var s = new Subtitle();
+                    var f = new SubRip();
+                    if (f.IsMine(lines, null))
+                    {
+                        f.LoadSubtitle(s, lines, null);
+
+                        // we only update selected lines
+                        int i = 0;
+                        foreach (int index in SubtitleListview1.SelectedIndices)
+                        {
+                            _subtitle.Paragraphs[index] = s.Paragraphs[i];
+                            i++;
+                        }
+                        ShowSource();
+                        SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+                        RestoreSubtitleListviewIndices();
+                        ShowStatus(string.Format(_language.PluginXExecuted, name));
                     }
                 }
             }
@@ -23753,6 +23860,16 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
+        }
+
+        private void googleTranslateToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            TranslateViaGoogle(true, true);
+        }
+
+        private void microsoftBingTranslateToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            TranslateViaGoogle(true, false);
         }
     }
 }
