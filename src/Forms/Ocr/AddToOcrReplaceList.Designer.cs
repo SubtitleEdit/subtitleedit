@@ -43,7 +43,7 @@
             this.comboBoxDictionaries.FormattingEnabled = true;
             this.comboBoxDictionaries.Location = new System.Drawing.Point(15, 85);
             this.comboBoxDictionaries.Name = "comboBoxDictionaries";
-            this.comboBoxDictionaries.Size = new System.Drawing.Size(191, 21);
+            this.comboBoxDictionaries.Size = new System.Drawing.Size(282, 21);
             this.comboBoxDictionaries.TabIndex = 20;
             // 
             // labelLanguage
@@ -57,8 +57,9 @@
             // 
             // buttonOK
             // 
+            this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(50, 127);
+            this.buttonOK.Location = new System.Drawing.Point(141, 127);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 21);
             this.buttonOK.TabIndex = 21;
@@ -68,9 +69,10 @@
             // 
             // buttonCancel
             // 
+            this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(131, 127);
+            this.buttonCancel.Location = new System.Drawing.Point(222, 127);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 21);
             this.buttonCancel.TabIndex = 22;
@@ -89,23 +91,23 @@
             // 
             // textBoxOcrFixValue
             // 
-            this.textBoxOcrFixValue.Location = new System.Drawing.Point(113, 29);
+            this.textBoxOcrFixValue.Location = new System.Drawing.Point(141, 29);
             this.textBoxOcrFixValue.Name = "textBoxOcrFixValue";
-            this.textBoxOcrFixValue.Size = new System.Drawing.Size(93, 20);
+            this.textBoxOcrFixValue.Size = new System.Drawing.Size(120, 20);
             this.textBoxOcrFixValue.TabIndex = 47;
             // 
             // textBoxOcrFixKey
             // 
             this.textBoxOcrFixKey.Location = new System.Drawing.Point(15, 29);
             this.textBoxOcrFixKey.Name = "textBoxOcrFixKey";
-            this.textBoxOcrFixKey.Size = new System.Drawing.Size(93, 20);
+            this.textBoxOcrFixKey.Size = new System.Drawing.Size(120, 20);
             this.textBoxOcrFixKey.TabIndex = 46;
             // 
             // AddToOcrReplaceList
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(231, 159);
+            this.ClientSize = new System.Drawing.Size(309, 159);
             this.Controls.Add(this.textBoxOcrFixValue);
             this.Controls.Add(this.textBoxOcrFixKey);
             this.Controls.Add(this.comboBoxDictionaries);
