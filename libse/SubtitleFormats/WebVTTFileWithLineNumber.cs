@@ -137,6 +137,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 subtitle.Paragraphs.Add(p);
             }
 
+            foreach (var paragraph in subtitle.Paragraphs)
+            {
+                paragraph.Text = WebVTT.ColorWebVttToHtml(paragraph.Text);
+            }
+
             subtitle.Renumber();
         }
 
