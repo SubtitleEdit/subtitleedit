@@ -1050,44 +1050,43 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             if (Configuration.Settings.Tools.SpellCheckOneLetterWords)
                 minLength = 1;
 
-            string[] words = tempLine.Replace("</i>", string.Empty).Split(SplitChars, StringSplitOptions.RemoveEmptyEntries);
+            string[] words = tempLine.Replace("<i>", string.Empty).Replace("</i>", string.Empty).Split(SplitChars, StringSplitOptions.RemoveEmptyEntries);
             for (int i = 0; i < words.Length; i++)
             {
                 string word = words[i].TrimStart('\'');
                 string wordNotEndTrimmed = word;
                 word = word.TrimEnd('\'');
-                string wordNoItalics = HtmlUtil.RemoveOpenCloseTags(word, HtmlUtil.TagItalic);
-                if (!IsWordKnownOrNumber(wordNoItalics, line) && !localIgnoreWords.Contains(wordNoItalics))
+                if (!IsWordKnownOrNumber(word, line) && !localIgnoreWords.Contains(word))
                 {
-                    bool correct = wordNoItalics.Length > minLength && DoSpell(wordNoItalics);
+                    bool correct = word.Length > minLength && DoSpell(word);
                     if (!correct)
-                        correct = wordNoItalics.Length > minLength + 1 && DoSpell(wordNoItalics.Trim('\''));
-                    if (!correct && wordNoItalics.Length > 3 && !wordNoItalics.EndsWith("ss", StringComparison.Ordinal) && !string.IsNullOrEmpty(_threeLetterIsoLanguageName) &&
+                        correct = word.Length > minLength + 1 && DoSpell(word.Trim('\''));
+                    if (!correct && word.Length > 3 && !word.EndsWith("ss", StringComparison.Ordinal) && !string.IsNullOrEmpty(_threeLetterIsoLanguageName) &&
                         (_threeLetterIsoLanguageName == "eng" || _threeLetterIsoLanguageName == "dan" || _threeLetterIsoLanguageName == "swe" || _threeLetterIsoLanguageName == "nld"))
-                        correct = DoSpell(wordNoItalics.TrimEnd('s'));
+                        correct = DoSpell(word.TrimEnd('s'));
                     if (!correct)
-                        correct = wordNoItalics.Length > minLength && DoSpell(wordNoItalics);
-                    if (!correct && _userWordList.Contains(wordNoItalics))
+                        correct = word.Length > minLength && DoSpell(word);
+                    if (!correct && _userWordList.Contains(word))
                         correct = true;
 
                     if (!correct && !line.Contains(word))
                         correct = true; // already fixed
 
                     if (!correct && Configuration.Settings.Tools.SpellCheckEnglishAllowInQuoteAsIng && wordNotEndTrimmed.EndsWith('\'') &&
-                        SpellCheckDictionaryName.StartsWith("en_", StringComparison.Ordinal) && wordNoItalics.EndsWith("in", StringComparison.OrdinalIgnoreCase))
+                        SpellCheckDictionaryName.StartsWith("en_", StringComparison.Ordinal) && word.EndsWith("in", StringComparison.OrdinalIgnoreCase))
                     {
-                        correct = DoSpell(wordNoItalics + "g");
+                        correct = DoSpell(word + "g");
                     }
 
-                    if (_threeLetterIsoLanguageName == "eng" && (wordNoItalics.Equals("a", StringComparison.OrdinalIgnoreCase) || wordNoItalics == "I"))
+                    if (_threeLetterIsoLanguageName == "eng" && (word.Equals("a", StringComparison.OrdinalIgnoreCase) || word == "I"))
                         correct = true;
-                    else if (_threeLetterIsoLanguageName == "dan" && wordNoItalics.Equals("i", StringComparison.OrdinalIgnoreCase))
+                    else if (_threeLetterIsoLanguageName == "dan" && word.Equals("i", StringComparison.OrdinalIgnoreCase))
                         correct = true;
 
                     if (!correct)
                     {
                         //look for match via dash'ed word, e.g. sci-fi
-                        string dashedWord = GetDashedWordBefore(wordNoItalics, line, words, i);
+                        string dashedWord = GetDashedWordBefore(word, line, words, i);
                         if (!string.IsNullOrEmpty(dashedWord))
                         {
                             correct = IsWordKnownOrNumber(dashedWord, line);
@@ -1096,7 +1095,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                         }
                         if (!correct)
                         {
-                            dashedWord = GetDashedWordAfter(wordNoItalics, line, words, i);
+                            dashedWord = GetDashedWordAfter(word, line, words, i);
                             if (!string.IsNullOrEmpty(dashedWord))
                             {
                                 correct = IsWordKnownOrNumber(dashedWord, line);
