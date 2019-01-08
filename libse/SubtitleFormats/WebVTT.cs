@@ -311,6 +311,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override void RemoveNativeFormatting(Subtitle subtitle, SubtitleFormat newFormat)
         {
+            var regexRemoveCTags = new Regex(@"\</?c([a-zA-Z\._]+)\>", RegexOptions.Compiled);
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 if (p.Text.Contains('<'))
@@ -320,7 +321,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     text = RemoveTag("rt", text);
                     text = RemoveTag("ruby", text);
                     text = RemoveTag("span", text);
-                    text = RemoveTag("c", text);
+                    text = regexRemoveCTags.Replace(text, string.Empty).Trim();
                     p.Text = text;
                 }
             }
@@ -328,7 +329,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static readonly Regex RegexWebVttColor = new Regex(@"<c.[a-z]*>", RegexOptions.Compiled);
 
-        private static string ColorWebVttToHtml(string text)
+        internal static string ColorWebVttToHtml(string text)
         {
             text = text.Replace("</c>", "</font>");
             var match = RegexWebVttColor.Match(text);
