@@ -1250,10 +1250,10 @@ Nota: comprobar el espacio libre en disco.</WaveFileMalformed>
     <FindContinue>La busqueda no ha dado resultados.
 ¿Quiere reintentarlo desde el inicio del documento?</FindContinue>
     <FindContinueTitle>¿Continuar buscando?</FindContinueTitle>
-    <ReplaceContinueNotFound>El elemento de búsqueda no fue encontrada.
-¿Te gustaría que empezar desde el principio del documento y continuar la búsqueda y reemplazar?</ReplaceContinueNotFound>
-    <ReplaceXContinue>El elemento de búsqueda se sustituyó {0} hora (s).
-¿Te gustaría que empezar desde el principio del documento y continuar la búsqueda y reemplazar?</ReplaceXContinue>
+    <ReplaceContinueNotFound>El elemento de búsqueda no fue encontrado.
+¿Te gustaría empezar desde el principio del documento y continuar la búsqueda y reemplazar?</ReplaceContinueNotFound>
+    <ReplaceXContinue>El elemento de búsqueda se sustituyó {0} veces.
+¿Te gustaría empezar desde el principio del documento y continuar la búsqueda y reemplazar?</ReplaceXContinue>
     <ReplaceContinueTitle>¿«Reemplazar»?</ReplaceContinueTitle>
     <SearchingForXFromLineY>La búsqueda de «{0}» de número de línea {1}...</SearchingForXFromLineY>
     <XFoundAtLineNumberY>'{0}' encontrado en línea número {1}</XFoundAtLineNumberY>
