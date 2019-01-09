@@ -31,6 +31,7 @@ namespace Nikse.SubtitleEdit.Forms
         private List<string> _updateAllListUrls;
         private bool _updatingAllPlugins;
         private int _updatingAllPluginsCount;
+        private bool _fetchingData;
 
         private static string GetPluginXmlFileUrl()
         {
@@ -71,6 +72,11 @@ namespace Nikse.SubtitleEdit.Forms
             buttonSearchClear.Text = Configuration.Settings.Language.DvdSubRip.Clear;
 
             buttonUpdateAll.Visible = false;
+            DownloadPluginMetadataInfos();
+        }
+
+        private void DownloadPluginMetadataInfos()
+        {
             try
             {
                 labelPleaseWait.Text = Configuration.Settings.Language.General.PleaseWait;
@@ -85,6 +91,7 @@ namespace Nikse.SubtitleEdit.Forms
                 };
                 wc.Headers.Add("Accept-Encoding", "");
                 wc.DownloadStringCompleted += wc_DownloadStringCompleted;
+                _fetchingData = true;
                 wc.DownloadStringAsync(new Uri(url));
             }
             catch (Exception exception)
@@ -96,6 +103,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void wc_DownloadStringCompleted(object sender, DownloadStringCompletedEventArgs e)
         {
+            _fetchingData = false;
             labelPleaseWait.Text = string.Empty;
             if (e.Error != null)
             {
@@ -181,6 +189,11 @@ namespace Nikse.SubtitleEdit.Forms
         {
             bool search = textBoxSearch.Text.Length > 1;
             string searchText = textBoxSearch.Text;
+            listViewGetPlugins.BeginUpdate();
+            if (listViewGetPlugins.Items.Count > 0)
+            {
+                listViewGetPlugins.Items.Clear();
+            }
             foreach (var plugin in _downloadList)
             {
                 var item = new ListViewItem(plugin.Name) { Tag = plugin };
@@ -207,6 +220,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
+            listViewGetPlugins.EndUpdate();
         }
 
         private void ShowInstalledPlugins()
@@ -391,6 +405,10 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 Utilities.ShowHelp("#plugins");
                 e.SuppressKeyPress = true;
+            }
+            else if (e.KeyCode == Keys.F5 && !_fetchingData)
+            {
+                DownloadPluginMetadataInfos();
             }
         }
 
