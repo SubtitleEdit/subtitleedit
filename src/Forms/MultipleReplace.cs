@@ -27,9 +27,27 @@ namespace Nikse.SubtitleEdit.Forms
         private readonly Dictionary<string, Regex> _compiledRegExList = new Dictionary<string, Regex>();
         private Subtitle _subtitle;
         private Subtitle _original;
-        public List<int> DeleteIndices { get; private set; }
         public Subtitle FixedSubtitle { get; private set; }
         public int FixCount { get; private set; }
+
+        public List<int> DeleteIndices
+        {
+            get
+            {
+                var resultList = new List<int>();
+                foreach (ListViewItem item in listViewFixes.Items)
+                {
+                    if (item.Checked && item.SubItems[3].Text == string.Empty)
+                    {
+                        var index = _subtitle.GetIndex(item.Tag as Paragraph);
+                        if (_deleteIndices.Contains(index))
+                            resultList.Add(index);
+                    }
+                }
+                return resultList;
+            }
+        }
+        private List<int> _deleteIndices;
 
         private MultipleSearchAndReplaceGroup _currentGroup;
 
@@ -207,7 +225,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             Cursor = Cursors.WaitCursor;
             FixedSubtitle = new Subtitle(_subtitle);
-            DeleteIndices = new List<int>();
+            _deleteIndices = new List<int>();
             int fixedLines = 0;
             listViewFixes.BeginUpdate();
             listViewFixes.Items.Clear();
@@ -286,7 +304,7 @@ namespace Nikse.SubtitleEdit.Forms
                     FixedSubtitle.Paragraphs[index].Text = newText;
                     if (!string.IsNullOrWhiteSpace(p.Text) && (string.IsNullOrWhiteSpace(newText) || string.IsNullOrWhiteSpace(HtmlUtil.RemoveHtmlTags(newText, true))))
                     {
-                        DeleteIndices.Add(index);
+                        _deleteIndices.Add(index);
                     }
                 }
             }
@@ -295,7 +313,7 @@ namespace Nikse.SubtitleEdit.Forms
             listViewFixes.EndUpdate();
             groupBoxLinesFound.Text = string.Format(Configuration.Settings.Language.MultipleReplace.LinesFoundX, fixedLines);
             Cursor = Cursors.Default;
-            DeleteIndices.Reverse();
+            _deleteIndices.Reverse();
         }
 
         private void AddToRulesListView(MultipleSearchAndReplaceSetting rule)
