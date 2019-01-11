@@ -282,7 +282,7 @@ namespace Nikse.SubtitleEdit.Core
             ExportLeftRightMarginPercent = 5;
             ExportLeftRightMarginPixels = 15;
             ExportHorizontalAlignment = 1; // 1=center (0=left, 2=right)
-            ExportVobSubSimpleRendering = true;
+            ExportVobSubSimpleRendering = false;
             ExportVobAntiAliasingWithTransparency = true;
             ExportBluRayBottomMarginPercent = 5;
             ExportBluRayBottomMarginPixels = 20;
