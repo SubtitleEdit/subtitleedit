@@ -14486,7 +14486,7 @@ namespace Nikse.SubtitleEdit.Forms
                             p.EndTime.TotalMilliseconds += addMs;
                             _subtitle.Paragraphs.Insert(firstIndex + i + 1, p);
                             selectIndices.Insert(0, firstIndex + i + 1);
-                            if (_subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
+                            if (_subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle && SubtitleListview1.IsAlternateTextColumnVisible)
                             {
                                 var original = Utilities.GetOriginalParagraph(firstIndex + i + 1, p, _subtitleAlternate.Paragraphs);
                                 if (original == null)
@@ -14511,7 +14511,7 @@ namespace Nikse.SubtitleEdit.Forms
                         foreach (var p in tmp.Paragraphs)
                         {
                             _subtitle.Paragraphs.Add(p);
-                            if (_subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
+                            if (_subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle && SubtitleListview1.IsAlternateTextColumnVisible)
                             {
                                 var original = Utilities.GetOriginalParagraph(_subtitle.Paragraphs.Count - 1, p, _subtitleAlternate.Paragraphs);
                                 if (original == null)
@@ -14538,7 +14538,7 @@ namespace Nikse.SubtitleEdit.Forms
                             {
                                 _subtitle.Paragraphs.Insert(firstIndex, p);
                                 selectedIndices.Add(firstIndex);
-                                if (_subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
+                                if (_subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle && SubtitleListview1.IsAlternateTextColumnVisible)
                                 {
                                     var original = Utilities.GetOriginalParagraph(firstIndex, p, _subtitleAlternate.Paragraphs);
                                     if (original == null)
@@ -14671,7 +14671,7 @@ namespace Nikse.SubtitleEdit.Forms
                         first = false;
                     }
 
-                    if (_subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
+                    if (_subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle && SubtitleListview1.IsAlternateTextColumnVisible)
                     {
                         var original = Utilities.GetOriginalParagraph(i, _subtitle.Paragraphs[i], _subtitleAlternate.Paragraphs);
                         if (original != null)
@@ -14923,7 +14923,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void ToolStripMenuItemCompareClick(object sender, EventArgs e)
         {
             var compareForm = new Compare();
-            if (_subtitleAlternate != null && _subtitleAlternateFileName != null)
+            if (_subtitleAlternate != null && _subtitleAlternateFileName != null && SubtitleListview1.IsAlternateTextColumnVisible)
                 compareForm.Initialize(_subtitle, _fileName, _subtitleAlternate, _subtitleAlternateFileName);
             else
                 compareForm.Initialize(_subtitle, _fileName, _languageGeneral.CurrentSubtitle);
@@ -15611,7 +15611,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     Paragraph original = null;
                     if (existing != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle &&
-                        _subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0)
+                        _subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0 && SubtitleListview1.IsAlternateTextColumnVisible)
                     {
                         original = Utilities.GetOriginalParagraph(i, existing, _subtitleAlternate.Paragraphs);
                     }
