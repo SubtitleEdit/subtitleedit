@@ -3455,6 +3455,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             if ((_exportType == ExportFormats.BluraySup || _exportType == ExportFormats.Dost) && !string.IsNullOrEmpty(Configuration.Settings.Tools.ExportBluRayVideoResolution))
                 SetResolution(Configuration.Settings.Tools.ExportBluRayVideoResolution);
 
+            string languageCode = LanguageAutoDetect.AutoDetectGoogleLanguageOrNull(subtitle);
             if (exportType == ExportFormats.VobSub)
             {
                 comboBoxBorderWidth.SelectedIndex = 6;
@@ -3465,7 +3466,6 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 labelLanguage.Visible = true;
                 comboBoxLanguage.Visible = true;
                 comboBoxLanguage.Items.Clear();
-                string languageCode = LanguageAutoDetect.AutoDetectGoogleLanguageOrNull(subtitle);
                 if (languageCode == null)
                     languageCode = Configuration.Settings.Tools.ExportVobSubLanguage;
                 int index = -1;
@@ -3719,8 +3719,12 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             panelShadowColor.Visible = shadowVisible;
             labelShadowTransparency.Visible = shadowVisible;
             numericUpDownShadowTransparency.Visible = shadowVisible;
+
+
             if (checkBoxSimpleRender.Enabled)
-                checkBoxSimpleRender.Checked = Configuration.Settings.Tools.ExportVobSubSimpleRendering;
+            {
+                checkBoxSimpleRender.Checked = Configuration.Settings.Tools.ExportVobSubSimpleRendering || languageCode == "ar";
+            }
 
             if (exportType == ExportFormats.BluraySup || exportType == ExportFormats.VobSub || exportType == ExportFormats.BdnXml)
             {
@@ -4075,6 +4079,9 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
         private void comboBoxSubtitleFontSize_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (_isLoading)
+                return;
+
             if (_formatName != AdvancedSubStationAlpha.NameOfFormat && _formatName != SubStationAlpha.NameOfFormat &&
                 comboBoxSubtitleFontSize.Enabled)
             {
