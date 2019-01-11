@@ -77,6 +77,7 @@
     <After>Efter</After>
     <Size>Størrelse</Size>
     <Search>Søg</Search>
+    <DeleteCurrentLine>Slet aktuelle linje</DeleteCurrentLine>
   </General>
   <About>
     <Title>Om Subtitle Edit</Title>
@@ -210,6 +211,11 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
   <Beamer>
     <Title>Undertekst fremviser</Title>
   </Beamer>
+  <Bookmarks>
+    <EditBookmark>Rediger bogmærke</EditBookmark>
+    <AddBookmark>Tilføj bogmærke</AddBookmark>
+    <GoToBookmark>Gå til bogmærke</GoToBookmark>
+  </Bookmarks>
   <ChangeCasing>
     <Title>Skift mellem STORE/små/Normal</Title>
     <ChangeCasingTo>Skift til</ChangeCasingTo>
@@ -473,6 +479,7 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <Right>Højre</Right>
     <Center>Centrer</Center>
     <CenterLeftJustify>Center, venstrestillet</CenterLeftJustify>
+    <CenterTopJustify>center, top</CenterTopJustify>
     <BottomMargin>Bundmargen</BottomMargin>
     <LeftRightMargin>Venstre/højre margen</LeftRightMargin>
     <SaveBluRraySupAs>Vælg Blu-ray sup filnavn</SaveBluRraySupAs>
@@ -1008,6 +1015,7 @@ Go to "Indstillinger -&gt; Indstillinger -&gt; Værktøj" for at indtaste din Go
         <SplitLongLines>Split lange linjer...</SplitLongLines>
         <MinimumDisplayTimeBetweenParagraphs>Minimum visningstid mellem tekster...</MinimumDisplayTimeBetweenParagraphs>
         <SortBy>Sorter efter</SortBy>
+        <NetflixQualityCheck>Netflix kvalitetskontrol...</NetflixQualityCheck>
         <Number>Number</Number>
         <StartTime>Starttidspunkt</StartTime>
         <EndTime>Sluttidspunkt</EndTime>
@@ -1158,7 +1166,7 @@ Go to "Indstillinger -&gt; Indstillinger -&gt; Værktøj" for at indtaste din Go
         <ShowSelectedLinesEarlierLater>Vis valgte linjer tidligere/senere...</ShowSelectedLinesEarlierLater>
         <VisualSyncSelectedLines>Visual sync markerede linjer...</VisualSyncSelectedLines>
         <GoogleAndMicrosoftTranslateSelectedLine>Google/Microsoft oversæt original linje</GoogleAndMicrosoftTranslateSelectedLine>
-        <GoogleTranslateSelectedLines>Google oversæt markerede linjer...</GoogleTranslateSelectedLines>
+        <TranslateSelectedLines>Oversæt valgte linjer...</TranslateSelectedLines>
         <AdjustDisplayDurationForSelectedLines>Juster visningstider for valgte linjer...</AdjustDisplayDurationForSelectedLines>
         <FixCommonErrorsInSelectedLines>Ret almindelige fejl i valgte linjer...</FixCommonErrorsInSelectedLines>
         <ChangeCasingForSelectedLines>Skift casing (små/store/normal) for valgte linjer...</ChangeCasingForSelectedLines>
@@ -1167,6 +1175,8 @@ Go to "Indstillinger -&gt; Indstillinger -&gt; Værktøj" for at indtaste din Go
         <WebVTTRemoveVoices>Fjern stemmer</WebVTTRemoveVoices>
         <NewActor>Ny taler</NewActor>
         <RemoveActors>Fjern talere</RemoveActors>
+        <EditBookmark>Rediger bogmærke</EditBookmark>
+        <RemoveBookmark>Fjern bogmærke</RemoveBookmark>
       </ContextMenu>
     </Menu>
     <Controls>
@@ -1182,6 +1192,7 @@ Go to "Indstillinger -&gt; Indstillinger -&gt; Værktøj" for at indtaste din Go
     </Controls>
     <VideoControls>
       <Translate>Oversæt</Translate>
+      <CreateAndAdjust>Opret/juster</CreateAndAdjust>
       <Create>Opret</Create>
       <Adjust>Juster</Adjust>
       <SelectCurrentElementWhilePlaying>Vælg aktuel undertekst, mens video spiller</SelectCurrentElementWhilePlaying>
@@ -1736,6 +1747,12 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <SettingsName>Indstillinger</SettingsName>
     <Help>Hjælp</Help>
     <UnbreakNoSpace>Fjern lineskift uden mellemrum (CJK)</UnbreakNoSpace>
+    <ToggleBookmarks>Tilføj/fjern bogmærker</ToggleBookmarks>
+    <ToggleBookmarksWithComment>Tilføj/fjern bogmærker medj kommentar</ToggleBookmarksWithComment>
+    <ClearBookmarks>Ryd bogmærker</ClearBookmarks>
+    <GoToBookmark>Gå til bogmærke</GoToBookmark>
+    <GoToPreviousBookmark>Gå til tidligere bogmærke</GoToPreviousBookmark>
+    <GoToNextBookmark>Gå til næste bogmærke</GoToNextBookmark>
     <FontInUi>UI-skrifttype</FontInUi>
     <ShowFrameRate>Vis frame rate i værktøjslinjen</ShowFrameRate>
     <DefaultFrameRate>Standard frame rate</DefaultFrameRate>
@@ -1787,6 +1804,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <AutoBackupDeleteAfterThreeMonths>3 måneder</AutoBackupDeleteAfterThreeMonths>
     <AutoBackupDeleteAfterSixMonths>6 måneder</AutoBackupDeleteAfterSixMonths>
     <CheckForUpdates>Tjek for opdateringer</CheckForUpdates>
+    <AutoSave>Automatisk gem</AutoSave>
     <AllowEditOfOriginalSubtitle>Tillad redigering af originale undertekst</AllowEditOfOriginalSubtitle>
     <PromptDeleteLines>Spørg om slet af linjer</PromptDeleteLines>
     <TimeCodeMode>Tidskode indstillinger</TimeCodeMode>
@@ -2018,6 +2036,8 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <Miscellaneous>Diverse</Miscellaneous>
     <CpsIncludesSpace>Tegn/sek (CPS) inkluderer mellemrum</CpsIncludesSpace>
     <UseDoNotBreakAfterList>Benyt skift-ikke-efter-liste (for auto-ombrydning)</UseDoNotBreakAfterList>
+    <GoogleTranslate>Google Oversæt</GoogleTranslate>
+    <GoogleTranslateApiKey>API-nøgle</GoogleTranslateApiKey>
     <MicrosoftBingTranslator>Microsoft Bing Translator</MicrosoftBingTranslator>
     <HowToSignUp>Sådan tilmelder du dig</HowToSignUp>
     <MicrosoftTranslateApiKey>Nøgle</MicrosoftTranslateApiKey>
@@ -2086,6 +2106,7 @@ Indstilling af en skrifttype til en undertekst udføres normalt i videospiller, 
     <AutoFixNames>Auto fix navne, hvor kun små/store bogstaver udgør forskellen</AutoFixNames>
     <CheckOneLetterWords>Spørg ved enkeltbogstaver</CheckOneLetterWords>
     <TreatINQuoteAsING>Accepter ord der slutter med i' som ing (kun på engelsk)</TreatINQuoteAsING>
+    <RememberUseAlwaysList>Husk "Brug altid" listen</RememberUseAlwaysList>
     <ImageText>Billede tekst</ImageText>
     <SpellCheckCompleted>Stavekontrol færdig</SpellCheckCompleted>
     <SpellCheckAborted>Stavekontrol afbrudt</SpellCheckAborted>
