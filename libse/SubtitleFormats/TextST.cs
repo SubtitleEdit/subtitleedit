@@ -321,7 +321,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 stream.WriteByte(userStyle.LineSpaceDelta, userStyle.LineSpaceIncDec);
             }
 
-            private void AddRegionStyle(Stream stream, RegionStyle regionStyle)
+            private static void AddRegionStyle(Stream stream, RegionStyle regionStyle)
             {
                 stream.WriteByte((byte)regionStyle.RegionStyleId);
                 stream.WriteWord(regionStyle.RegionHorizontalPosition);
@@ -1140,7 +1140,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             subtitle.Renumber();
         }
 
-        private bool DetectFormat(Stream ms)
+        private static bool DetectFormat(Stream ms)
         {
             if (ms.Length > 192 + 192 + 5)
             {

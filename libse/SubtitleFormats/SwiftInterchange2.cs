@@ -23,7 +23,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return base.IsMine(lines, fileName);
         }
 
-        private string GetOriginatingSwift(Subtitle subtitle)
+        private static string GetOriginatingSwift(Subtitle subtitle)
         {
             string lang = "English (USA)";
             string languageCode = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle);

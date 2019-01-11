@@ -311,7 +311,7 @@ namespace Nikse.SubtitleEdit.Controls
         }
 
         private Subtitle _subtitlePrev;
-        private static string _mpvTextOld = string.Empty;
+        private string _mpvTextOld = string.Empty;
         private string _mpvTextFileName;
         private int _retryCount = 3;
         private void RefreshMpv(LibMpvDynamic mpv, Subtitle subtitle)
