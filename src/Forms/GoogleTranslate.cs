@@ -137,7 +137,9 @@ namespace Nikse.SubtitleEdit.Forms
 
             var installedLanguages = new List<InputLanguage>();
             foreach (InputLanguage language in InputLanguage.InstalledInputLanguages)
+            {
                 installedLanguages.Add(language);
+            }
 
             FillComboWithLanguages(comboBoxTo);
             i = 0;
