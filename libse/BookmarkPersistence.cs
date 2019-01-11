@@ -110,7 +110,7 @@ namespace Nikse.SubtitleEdit.Core
             return true;
         }
 
-        private Dictionary<int, string> DeserializeBookmarks(string s)
+        private static Dictionary<int, string> DeserializeBookmarks(string s)
         {
             var dic = new Dictionary<int, string>();
             s = s.Trim();
