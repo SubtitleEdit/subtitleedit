@@ -642,7 +642,7 @@ namespace Nikse.SubtitleEdit.Controls
             }
 
             int lengthAvailable = Width - w;
-            if (ColumnIndexTextAlternate >= 0)
+            if (ColumnIndexTextAlternate >= 0 && Columns.Count > ColumnIndexTextAlternate)
             {
                 lengthAvailable = lengthAvailable / 2;
                 Columns[ColumnIndexTextAlternate].Width = lengthAvailable;
@@ -1023,8 +1023,8 @@ namespace Nikse.SubtitleEdit.Controls
             if (idx >= 0)
             {
                 SubtitleColumns.RemoveAt(idx);
-                Columns.RemoveAt(idx);
                 UpdateColumnIndexes();
+                Columns.RemoveAt(idx);
                 AutoSizeAllColumns(null);
             }
         }
@@ -1194,7 +1194,7 @@ namespace Nikse.SubtitleEdit.Controls
                     }
                 }
 
-                if (ColumnIndexTextAlternate >= 0)
+                if (ColumnIndexTextAlternate >= 0 && item.SubItems.Count >= ColumnIndexTextAlternate)
                 {
                     item.SubItems[ColumnIndexTextAlternate].BackColor = BackColor;
                 }
