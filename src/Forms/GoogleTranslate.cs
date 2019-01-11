@@ -135,6 +135,10 @@ namespace Nikse.SubtitleEdit.Forms
                 i++;
             }
 
+            var installedLanguages = new List<InputLanguage>();
+            foreach (InputLanguage language in InputLanguage.InstalledInputLanguages)
+                installedLanguages.Add(language);
+
             FillComboWithLanguages(comboBoxTo);
             i = 0;
             string uiCultureTargetLanguage = Configuration.Settings.Tools.GoogleTranslateLastTargetLanguage;
@@ -146,8 +150,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (temp.Length > 4)
                     {
                         temp = temp.Substring(temp.Length - 5, 2).ToLower();
-
-                        if (temp != defaultFromLanguage)
+                        if (temp != defaultFromLanguage && installedLanguages.Any(p => p.Culture.TwoLetterISOLanguageName.Contains(temp)))
                         {
                             uiCultureTargetLanguage = temp;
                             break;
@@ -157,7 +160,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             if (uiCultureTargetLanguage == defaultFromLanguage)
             {
-                foreach (InputLanguage language in InputLanguage.InstalledInputLanguages)
+                foreach (InputLanguage language in installedLanguages)
                 {
                     if (language.Culture.TwoLetterISOLanguageName != defaultFromLanguage)
                     {
