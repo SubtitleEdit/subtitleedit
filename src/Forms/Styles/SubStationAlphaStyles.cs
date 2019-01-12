@@ -315,11 +315,8 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             int count = 0;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                if (string.IsNullOrEmpty(p.Extra) && ssaStyle.Name.TrimStart('*') == "Default")
-                {
-                    count++;
-                }
-                else if (p.Extra != null && ssaStyle.Name.TrimStart('*').Equals(p.Extra.TrimStart('*'), StringComparison.OrdinalIgnoreCase))
+                if (string.IsNullOrEmpty(p.Extra) && ssaStyle.Name.TrimStart('*') == "Default" ||
+                    p.Extra != null && ssaStyle.Name.TrimStart('*').Equals(p.Extra.TrimStart('*'), StringComparison.OrdinalIgnoreCase))
                 {
                     count++;
                 }
