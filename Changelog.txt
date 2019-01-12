@@ -11,6 +11,7 @@
    * Update Hungarian translation - thx Zityi
    * Update Korean translation - thx domddol
    * Update Portuguese translation - thx moob
+   * Update a few wrong translations (Spanish) - thx Ovidio
    * Create/adjust/translate shorcuts now global - thx OmrSi/uckthis
    * Auto break adheres to "Max number of lines" setting
    * Translate selected lines is now possible for BT + plugins
@@ -30,6 +31,7 @@
    * Fix minor issues regarding pasting in list view - thx OmrSi
    * Fix a few minor issues in "Fix common errors" - thx darnn
    * Improve DVD Studio Pro tag reading - thx Shas2509
+   * Fix bug in "Multiple replace" with delete empty lines - thx OmrSi
 
 
 3.5.8 (20th December 2018)
