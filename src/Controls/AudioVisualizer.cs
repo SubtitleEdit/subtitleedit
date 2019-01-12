@@ -102,6 +102,7 @@ namespace Nikse.SubtitleEdit.Controls
         public event EventHandler OnPause;
         public event EventHandler OnZoomedChanged;
         public event EventHandler InsertAtVideoPosition;
+        public event EventHandler PasteAtVideoPosition;
 
         private double _wholeParagraphMinMilliseconds;
         private double _wholeParagraphMaxMilliseconds = double.MaxValue;
@@ -1669,6 +1670,14 @@ namespace Nikse.SubtitleEdit.Controls
                 if (InsertAtVideoPosition != null)
                 {
                     InsertAtVideoPosition.Invoke(this, null);
+                    e.SuppressKeyPress = true;
+                }
+            }
+            else if (e.KeyCode == Keys.V && e.Modifiers == Keys.Control) //Ctrl+v = Paste from clipboard
+            {
+                if (PasteAtVideoPosition != null)
+                {
+                    PasteAtVideoPosition.Invoke(this, null);
                     e.SuppressKeyPress = true;
                 }
             }
