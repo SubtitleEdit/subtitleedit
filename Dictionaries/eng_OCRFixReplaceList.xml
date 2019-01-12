@@ -2399,12 +2399,6 @@
     <LinePart from="-1 tried " to="- I tried " />
     <LinePart from="-1 was " to="- I was " />
     <LinePart from=". i " to=". I " />
-    <LinePart from=" Ill need " to=" I'll need " />
-    <LinePart from=" Ill deal " to=" I'll deal " />
-    <LinePart from=" Ill remember" to=" I'll remember " />
-    <LinePart from=" Ill do " to=" I'll do " />
-    <LinePart from=" Ill show" to=" I'll show " />
-    <LinePart from=" Ill prove " to=" I'll prove " />
   </PartialLines>
   <PartialLinesAlways>
     <LinePart from="forbest act" to="for best act" />
@@ -2479,12 +2473,6 @@
     <Beginning from="...ls " to="...Is " />
     <Beginning from="- ls " to="- Is " />
     <Beginning from="...l " to="...I " />
-    <Beginning from="Ill need " to="I'll need " />
-    <Beginning from="Ill deal " to="I'll deal " />
-    <Beginning from="Ill remember" to="I'll remember "/>
-    <Beginning from="Ill do " to="I'll do " />
-    <Beginning from="Ill show" to="I'll show " />
-    <Beginning from="Ill prove " to="I'll prove " />
     <Beginning from="L hope " to="I hope " />
     <Beginning from="|’E'$ " to="It's " />
     <Beginning from="The y're " to="They're " />
