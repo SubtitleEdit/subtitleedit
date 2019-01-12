@@ -569,7 +569,7 @@ namespace Nikse.SubtitleEdit.Core
             }
         }
 
-        public void InsertParagraphInCorrectTimeOrder(Paragraph newParagraph)
+        public int InsertParagraphInCorrectTimeOrder(Paragraph newParagraph)
         {
             for (int i = 0; i < Paragraphs.Count; i++)
             {
@@ -577,10 +577,11 @@ namespace Nikse.SubtitleEdit.Core
                 if (newParagraph.StartTime.TotalMilliseconds < p.StartTime.TotalMilliseconds)
                 {
                     Paragraphs.Insert(i, newParagraph);
-                    return;
+                    return i;
                 }
             }
             Paragraphs.Add(newParagraph);
+            return Paragraphs.Count - 1;
         }
 
         public Paragraph GetFirstParagrapOrDefaultByTime(double milliseconds)

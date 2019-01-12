@@ -668,7 +668,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (tmp.Paragraphs[0].StartTime.TotalMilliseconds > videoPositionInMilliseconds)
                     {
                         var c = tmp.Paragraphs[0].StartTime.TotalMilliseconds - videoPositionInMilliseconds;
-                        tmp.AddTimeToAllParagraphs(TimeSpan.FromMilliseconds(c));
+                        tmp.AddTimeToAllParagraphs(TimeSpan.FromMilliseconds(-c));
                     }
                     else
                     {
@@ -692,7 +692,33 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (tmp.Paragraphs.Count > 0)
                 {
-                    PasteInsertSubtitle(tmp);
+                    MakeHistoryForUndo(_language.BeforeInsertLine);
+                    var selectIndices = new List<int>();
+                    for (int i = 0; i < tmp.Paragraphs.Count; i++)
+                    {
+                        var p = tmp.Paragraphs[i];
+                        var idx = _subtitle.InsertParagraphInCorrectTimeOrder(p);
+                        selectIndices.Add(idx);
+                        if (_subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle && SubtitleListview1.IsAlternateTextColumnVisible)
+                        {
+                            var original = Utilities.GetOriginalParagraph(idx + i + 1, p, _subtitleAlternate.Paragraphs);
+                            if (original == null)
+                            {
+                                _subtitleAlternate.InsertParagraphInCorrectTimeOrder(new Paragraph(string.Empty, p.StartTime.TotalMilliseconds, p.EndTime.TotalMilliseconds));
+                            }
+                        }
+                        _subtitle.Renumber();
+                    }
+
+                    SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+                    SubtitleListview1.BeginUpdate();
+                    SubtitleListview1.SelectIndexAndEnsureVisible(selectIndices[0], true);
+                    foreach (var selectIndex in selectIndices)
+                    {
+                        SubtitleListview1.Items[selectIndex].Selected = true;
+                    }
+                    SubtitleListview1.EndUpdate();
+
                     if (_subtitleListViewIndex >= 0)
                     {
                         UpdateListViewTextInfo(labelTextLineLengths, labelSingleLine, labelTextLineTotal, labelCharactersPerSecond, _subtitle.Paragraphs[_subtitleListViewIndex], textBoxListViewText);
@@ -719,7 +745,6 @@ namespace Nikse.SubtitleEdit.Forms
             { // inserting between two subtitle... with overlapping codes
                 addMs = lastParagraph.EndTime.TotalMilliseconds - tmp.Paragraphs[0].StartTime.TotalMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines;
             }
-
             var selectIndices = new List<int>();
             for (int i = 0; i < tmp.Paragraphs.Count; i++)
             {
