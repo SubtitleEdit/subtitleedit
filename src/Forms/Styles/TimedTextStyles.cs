@@ -32,7 +32,9 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 var xnsmgr = new XmlNamespaceManager(_xml.NameTable);
                 xnsmgr.AddNamespace("ttml", "http://www.w3.org/ns/ttml");
                 if (_xml.DocumentElement.SelectSingleNode("ttml:head", xnsmgr) == null)
+                {
                     _xml.LoadXml(new TimedText10().ToText(new Subtitle(), "tt")); // load default xml
+                }
             }
             catch
             {
@@ -47,7 +49,9 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                     var xnsmgr = new XmlNamespaceManager(_xml.NameTable);
                     xnsmgr.AddNamespace("ttml", "http://www.w3.org/ns/ttml");
                     if (_xml.DocumentElement.SelectSingleNode("ttml:head", xnsmgr) == null)
+                    {
                         _xml.LoadXml(new TimedText10().ToText(new Subtitle(), "tt")); // load default xml
+                    }
                 }
                 catch
                 {
@@ -59,26 +63,21 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             _xmlHead = _xml.DocumentElement.SelectSingleNode("ttml:head", _nsmgr);
 
             foreach (FontFamily ff in FontFamily.Families)
+            {
                 comboBoxFontName.Items.Add(char.ToLower(ff.Name[0]) + ff.Name.Substring(1));
+            }
 
             InitializeListView();
         }
 
-        public override string Header
-        {
-            get
-            {
-                return _xml.OuterXml;
-            }
-        }
+        public override string Header => _xml.OuterXml;
 
         protected override void GeneratePreviewReal()
         {
             if (listViewStyles.SelectedItems.Count != 1)
                 return;
 
-            if (pictureBoxPreview.Image != null)
-                pictureBoxPreview.Image.Dispose();
+            pictureBoxPreview.Image?.Dispose();
             var bmp = new Bitmap(pictureBoxPreview.Width, pictureBoxPreview.Height);
 
             using (Graphics g = Graphics.FromImage(bmp))
@@ -93,12 +92,16 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                         if (y % (rectangleSize * 2) == 0)
                         {
                             if (x % (rectangleSize * 2) == 0)
+                            {
                                 c = Color.LightGray;
+                            }
                         }
                         else
                         {
                             if (x % (rectangleSize * 2) != 0)
+                            {
                                 c = Color.LightGray;
+                            }
                         }
                         g.FillRectangle(new SolidBrush(c), x, y, rectangleSize, rectangleSize);
                     }
@@ -117,7 +120,9 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                     else if (textBoxFontSize.Text.EndsWith('%'))
                     {
                         if (int.TryParse(textBoxFontSize.Text.TrimEnd('%'), out fontSizeInt))
+                        {
                             fontSize *= fontSizeInt / 100.0f;
+                        }
                     }
                     font = new Font(comboBoxFontName.Text, fontSize);
                 }
@@ -181,11 +186,15 @@ namespace Nikse.SubtitleEdit.Forms.Styles
         {
             XmlNode head = _xml.DocumentElement.SelectSingleNode("ttml:head", _nsmgr);
             if (head == null)
+            {
                 return;
+            }
 
             XmlNode styling = head.SelectSingleNode("ttml:styling", _nsmgr);
             if (styling == null)
+            {
                 return;
+            }
 
             foreach (XmlNode node in styling.SelectNodes("ttml:style", _nsmgr))
             {
@@ -249,28 +258,32 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             }
             catch
             {
+                // ignored
             }
+
             subItem.BackColor = c;
             item.SubItems.Add(subItem);
 
             int count = 0;
             foreach (var p in Subtitle.Paragraphs)
             {
-                if (string.IsNullOrEmpty(p.Extra) && name.Trim() == "Default")
+                if (string.IsNullOrEmpty(p.Extra) && name.Trim() == "Default" ||
+                    p.Extra != null && name.Trim().Equals(p.Extra.TrimStart(), StringComparison.OrdinalIgnoreCase))
+                {
                     count++;
-                else if (p.Extra != null && name.Trim().Equals(p.Extra.TrimStart(), StringComparison.OrdinalIgnoreCase))
-                    count++;
+                }
             }
             subItem = new ListViewItem.ListViewSubItem(item, count.ToString());
             item.SubItems.Add(subItem);
-
             listViewStyles.Items.Add(item);
         }
 
         private void TimedTextStyles_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)
+            {
                 DialogResult = DialogResult.Cancel;
+            }
         }
 
         private void listViewStyles_SelectedIndexChanged(object sender, EventArgs e)
@@ -292,30 +305,45 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             {
                 string name = "default";
                 if (node.Attributes["xml:id"] != null)
+                {
                     name = node.Attributes["xml:id"].Value;
+                }
                 else if (node.Attributes["id"] != null)
+                {
                     name = node.Attributes["id"].Value;
+                }
+
                 if (name == styleName)
                 {
                     string fontFamily = "Arial";
                     if (node.Attributes["tts:fontFamily"] != null)
+                    {
                         fontFamily = node.Attributes["tts:fontFamily"].Value;
+                    }
 
                     string fontWeight = "normal";
                     if (node.Attributes["tts:fontWeight"] != null)
+                    {
                         fontWeight = node.Attributes["tts:fontWeight"].Value;
+                    }
 
                     string fontStyle = "normal";
                     if (node.Attributes["tts:fontStyle"] != null)
+                    {
                         fontStyle = node.Attributes["tts:fontStyle"].Value;
+                    }
 
                     string fontColor = "white";
                     if (node.Attributes["tts:color"] != null)
+                    {
                         fontColor = node.Attributes["tts:color"].Value;
+                    }
 
                     string fontSize = "100%";
                     if (node.Attributes["tts:fontSize"] != null)
+                    {
                         fontSize = node.Attributes["tts:fontSize"].InnerText;
+                    }
 
                     textBoxStyleName.Text = name;
                     comboBoxFontName.Text = fontFamily;
@@ -325,14 +353,20 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                     // normal | italic | oblique
                     comboBoxFontStyle.SelectedIndex = 0;
                     if (fontStyle.Equals("italic", StringComparison.OrdinalIgnoreCase))
+                    {
                         comboBoxFontStyle.SelectedIndex = 1;
+                    }
                     if (fontStyle.Equals("oblique", StringComparison.OrdinalIgnoreCase))
+                    {
                         comboBoxFontStyle.SelectedIndex = 2;
+                    }
 
                     // normal | bold
                     comboBoxFontWeight.SelectedIndex = 0;
                     if (fontWeight.Equals("bold", StringComparison.OrdinalIgnoreCase))
+                    {
                         comboBoxFontWeight.SelectedIndex = 1;
+                    }
 
                     Color color = Color.White;
                     try
@@ -389,7 +423,9 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 listViewStyles.Items.RemoveAt(listViewStyles.SelectedItems[0].Index);
 
                 if (index >= listViewStyles.Items.Count)
+                {
                     index--;
+                }
                 listViewStyles.Items[index].Selected = true;
             }
         }
@@ -418,7 +454,9 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             foreach (ListViewItem item in listViewStyles.Items)
             {
                 if (item.Text == name)
+                {
                     return true;
+                }
             }
             return false;
         }
@@ -446,7 +484,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
         private void UpdateHeaderXml(string id, string tag, string value)
         {
             XmlNodeList styles = _xml.DocumentElement.SelectNodes("//ttml:head//ttml:styling/ttml:style", _nsmgr);
-            
+
             foreach (XmlNode style in styles)
             {
                 XmlAttribute idAttr = style.Attributes["xml:id"];
