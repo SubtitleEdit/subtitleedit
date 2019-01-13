@@ -12,24 +12,23 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class Beamer : Form
     {
-        private Subtitle _subtitle;
+        private readonly Subtitle _subtitle;
         private int _index;
         private bool _fullscreen;
-        private Color _subtitleColor = Color.White;
-        private string _subtitleFontName = "Verdana";
-        private float _subtitleFontSize = 75.0f;
-        private Color _borderColor = Color.Black;
-        private float _borderWidth = 2.0f;
-        private bool _isLoading = true;
+        private Color _subtitleColor;
+        private string _subtitleFontName;
+        private float _subtitleFontSize;
+        private Color _borderColor;
+        private float _borderWidth;
+        private readonly bool _isLoading;
         private int _marginLeft;
         private int _marginBottom = 25;
         private int _showIndex = -2;
         private double _millisecondsFactor = 1.0;
-        private Main _main;
+        private readonly Main _main;
         private bool _noTimerAction;
         private long _videoStartTick;
-        //Keys _mainGeneralGoToNextSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitle);
-        private Keys _mainGeneralGoToPrevSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToPrevSubtitle);
+        private readonly Keys _mainGeneralGoToPrevSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToPrevSubtitle);
 
         public Beamer(Main main, Subtitle subtitle, int index)
         {
@@ -39,6 +38,12 @@ namespace Nikse.SubtitleEdit.Forms
             _main = main;
             _subtitle = subtitle;
             _index = index;
+            _isLoading = true;
+            _subtitleColor = Color.White;
+            _subtitleFontName = "Verdana";
+            _subtitleFontSize = 75.0f;
+            _borderColor = Color.Black;
+            _borderWidth = 2.0f;
 
             LanguageStructure.Beamer language = Configuration.Settings.Language.Beamer;
             Text = language.Title;
@@ -52,7 +57,9 @@ namespace Nikse.SubtitleEdit.Forms
             _subtitleFontName = Configuration.Settings.SubtitleBeaming.FontName;
             _subtitleFontSize = Configuration.Settings.SubtitleBeaming.FontSize;
             if (_subtitleFontSize > 100 || _subtitleFontSize < 10)
+            {
                 _subtitleFontSize = 60;
+            }
             _subtitleColor = Configuration.Settings.SubtitleBeaming.FontColor;
             _borderColor = Configuration.Settings.SubtitleBeaming.BorderColor;
             _borderWidth = Configuration.Settings.SubtitleBeaming.BorderWidth;
@@ -61,9 +68,13 @@ namespace Nikse.SubtitleEdit.Forms
             panelBorderColor.BackColor = _borderColor;
 
             if (Configuration.Settings.SubtitleBeaming.BorderWidth > 0 && Configuration.Settings.SubtitleBeaming.BorderWidth < 5)
+            {
                 comboBoxBorderWidth.SelectedIndex = (int)_borderWidth;
+            }
             else
+            {
                 comboBoxBorderWidth.SelectedIndex = 2;
+            }
 
             comboBoxHAlign.SelectedIndexChanged -= ComboBoxHAlignSelectedIndexChanged;
             comboBoxHAlign.SelectedIndex = 1;
@@ -74,11 +85,12 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 comboBoxSubtitleFont.Items.Add(x.Name);
                 if (x.Name.Equals(_subtitleFontName, StringComparison.OrdinalIgnoreCase))
+                {
                     comboBoxSubtitleFont.SelectedIndex = comboBoxSubtitleFont.Items.Count - 1;
+                }
             }
             comboBoxSubtitleFont.SelectedIndexChanged += ComboBoxSubtitleFontSizeSelectedIndexChanged;
 
-            // Index 0 = Value: 10; Index 90 = Value: 100;
             comboBoxSubtitleFontSize.SelectedIndex = (_subtitleFontSize >= 10 && _subtitleFontSize <= 100) ? (int)(_subtitleFontSize - 10) : 40;
             _isLoading = false;
             ShowCurrent();
@@ -174,7 +186,9 @@ namespace Nikse.SubtitleEdit.Forms
         private void SetupImageParameters()
         {
             if (_isLoading)
+            {
                 return;
+            }
 
             _subtitleColor = panelColor.BackColor;
             _borderColor = panelBorderColor.BackColor;
@@ -221,9 +235,13 @@ namespace Nikse.SubtitleEdit.Forms
             int sizeX = (int)(textSize.Width * 0.8) + 40;
             int sizeY = (int)(textSize.Height * 0.8) + 30;
             if (sizeX < 1)
+            {
                 sizeX = 1;
+            }
             if (sizeY < 1)
+            {
                 sizeY = 1;
+            }
             bmp = new Bitmap(sizeX, sizeY);
             g = Graphics.FromImage(bmp);
 
@@ -231,18 +249,25 @@ namespace Nikse.SubtitleEdit.Forms
             foreach (var line in HtmlUtil.RemoveOpenCloseTags(text, HtmlUtil.TagItalic, HtmlUtil.TagFont).SplitToLines())
             {
                 if (subtitleAlignLeft)
+                {
                     lefts.Add(5);
+                }
                 else
+                {
                     lefts.Add((float)(bmp.Width - g.MeasureString(line, font).Width * 0.8 + 15) / 2);
+                }
             }
 
             g.TextRenderingHint = TextRenderingHint.AntiAliasGridFit;
             g.SmoothingMode = SmoothingMode.AntiAlias;
             g.CompositingQuality = CompositingQuality.HighQuality;
 
-            var sf = new StringFormat();
-            sf.Alignment = StringAlignment.Near;
-            sf.LineAlignment = StringAlignment.Near;// draw the text to a path
+            var sf = new StringFormat
+            {
+                Alignment = StringAlignment.Near,
+                LineAlignment = StringAlignment.Near
+            };
+            // draw the text to a path
             var path = new GraphicsPath();
 
             // display italic
@@ -251,7 +276,9 @@ namespace Nikse.SubtitleEdit.Forms
             bool isItalic = false;
             float left = 5;
             if (lefts.Count > 0)
+            {
                 left = lefts[0];
+            }
             float top = 5;
             bool newLine = false;
             int lineNumber = 0;
@@ -267,7 +294,9 @@ namespace Nikse.SubtitleEdit.Forms
                     float addLeft = 0;
                     int oldPathPointIndex = path.PointCount;
                     if (oldPathPointIndex < 0)
+                    {
                         oldPathPointIndex = 0;
+                    }
 
                     if (sb.Length > 0)
                     {
@@ -279,11 +308,15 @@ namespace Nikse.SubtitleEdit.Forms
                         for (int k = oldPathPointIndex; k < list.Length; k++)
                         {
                             if (list[k].X > addLeft)
+                            {
                                 addLeft = list[k].X;
+                            }
                         }
                     }
-                    if (addLeft == 0)
+                    if (Math.Abs(addLeft) < 0.001)
+                    {
                         addLeft = left + 2;
+                    }
                     left = addLeft;
 
                     if (_borderWidth > 0)
@@ -344,7 +377,9 @@ namespace Nikse.SubtitleEdit.Forms
                         float addLeft = 0;
                         int oldPathPointIndex = path.PointCount - 1;
                         if (oldPathPointIndex < 0)
+                        {
                             oldPathPointIndex = 0;
+                        }
                         if (sb.Length > 0)
                         {
                             TextDraw.DrawText(font, sf, path, sb, isItalic, subtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
@@ -355,20 +390,28 @@ namespace Nikse.SubtitleEdit.Forms
                             for (int k = oldPathPointIndex; k < list.Length; k++)
                             {
                                 if (list[k].X > addLeft)
+                                {
                                     addLeft = list[k].X;
+                                }
                             }
                         }
-                        if (addLeft == 0)
+                        if (Math.Abs(addLeft) < 0.001)
+                        {
                             addLeft = left + 2;
+                        }
                         left = addLeft;
 
                         if (_borderWidth > 0)
+                        {
                             g.DrawPath(new Pen(_borderColor, _borderWidth), path);
+                        }
                         g.FillPath(new SolidBrush(c), path);
                         path.Reset();
                         sb.Clear();
                         if (colorStack.Count > 0)
+                        {
                             c = colorStack.Pop();
+                        }
                     }
                     i += 6;
                 }
@@ -397,7 +440,6 @@ namespace Nikse.SubtitleEdit.Forms
                 else if (text.Substring(i).StartsWith(Environment.NewLine, StringComparison.Ordinal))
                 {
                     TextDraw.DrawText(font, sf, path, sb, isItalic, subtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
-
                     top += lineHeight;
                     newLine = true;
                     i += Environment.NewLine.Length - 1;
@@ -415,11 +457,15 @@ namespace Nikse.SubtitleEdit.Forms
                 i++;
             }
             if (sb.Length > 0)
+            {
                 TextDraw.DrawText(font, sf, path, sb, isItalic, subtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
+            }
             sf.Dispose();
 
             if (_borderWidth > 0)
+            {
                 g.DrawPath(new Pen(_borderColor, _borderWidth), path);
+            }
             g.FillPath(new SolidBrush(c), path);
             g.Dispose();
             var nbmp = new NikseBitmap(bmp);
@@ -430,7 +476,9 @@ namespace Nikse.SubtitleEdit.Forms
         private void Timer1Tick(object sender, EventArgs e)
         {
             if (_noTimerAction)
+            {
                 return;
+            }
 
             double positionInMilliseconds = (DateTime.Now.Ticks - _videoStartTick) / 10000.0D; // 10,000 ticks = 1 millisecond
             positionInMilliseconds *= _millisecondsFactor;
@@ -445,8 +493,9 @@ namespace Nikse.SubtitleEdit.Forms
                 index++;
             }
             if (index == _subtitle.Paragraphs.Count)
+            {
                 index = -1;
-
+            }
             if (index == -1)
             {
                 pictureBox1.Image = null;
@@ -508,32 +557,44 @@ namespace Nikse.SubtitleEdit.Forms
                 else if (e.KeyCode == Keys.Space || (e.KeyCode == Keys.Down && e.Modifiers == Keys.Alt) || _mainGeneralGoToPrevSubtitle == e.KeyData)
                 {
                     if (_index < _subtitle.Paragraphs.Count - 1)
+                    {
                         _index++;
+                    }
                     ShowCurrent();
                     e.Handled = true;
                 }
                 else if (_mainGeneralGoToPrevSubtitle == e.KeyData || (e.KeyCode == Keys.Up && e.Modifiers == Keys.Alt))
                 {
                     if (_index > 0)
+                    {
                         _index--;
+                    }
                     ShowCurrent();
                     e.Handled = true;
                 }
                 else if (e.Modifiers == Keys.None && e.KeyCode == Keys.PageDown)
                 {
                     if (_index < _subtitle.Paragraphs.Count - 21)
+                    {
                         _index += 20;
+                    }
                     else
+                    {
                         _index = _subtitle.Paragraphs.Count - 1;
+                    }
                     ShowCurrent();
                     e.Handled = true;
                 }
                 else if (e.Modifiers == Keys.None && e.KeyCode == Keys.PageUp)
                 {
                     if (_index > 20)
+                    {
                         _index -= 20;
+                    }
                     else
+                    {
                         _index = 0;
+                    }
                     ShowCurrent();
                     e.Handled = true;
                 }
@@ -565,14 +626,17 @@ namespace Nikse.SubtitleEdit.Forms
                 timer1.Enabled = false;
                 System.Threading.Thread.Sleep(100);
                 if (_index < _subtitle.Paragraphs.Count - 1)
+                {
                     _index++;
-
+                }
                 _videoStartTick = DateTime.Now.Ticks - ((long)(_subtitle.Paragraphs[_index].StartTime.TotalMilliseconds) * 10000); //10,000 ticks = 1 millisecond
 
                 ShowCurrent();
                 _noTimerAction = false;
                 if (timer1Enabled || _fullscreen)
+                {
                     timer1.Start();
+                }
 
                 e.Handled = true;
             }
@@ -582,7 +646,9 @@ namespace Nikse.SubtitleEdit.Forms
                 timer1.Enabled = false;
                 System.Threading.Thread.Sleep(100);
                 if (_index > 0)
+                {
                     _index--;
+                }
                 _videoStartTick = DateTime.Now.Ticks - ((long)(_subtitle.Paragraphs[_index].StartTime.TotalMilliseconds) * 10000); //10,000 ticks = 1 millisecond
                 ShowCurrent();
                 if (timer1Enabled)
@@ -591,18 +657,26 @@ namespace Nikse.SubtitleEdit.Forms
             else if (e.Modifiers == Keys.None && e.KeyCode == Keys.PageDown)
             {
                 if (_index < _subtitle.Paragraphs.Count - 21)
+                {
                     _index += 20;
+                }
                 else
+                {
                     _index = _subtitle.Paragraphs.Count - 1;
+                }
                 ShowCurrent();
                 e.Handled = true;
             }
             else if (e.Modifiers == Keys.None && e.KeyCode == Keys.PageUp)
             {
                 if (_index > 20)
+                {
                     _index -= 20;
+                }
                 else
+                {
                     _index = 0;
+                }
                 ShowCurrent();
                 e.Handled = true;
             }
@@ -669,6 +743,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void BeamerFormClosing(object sender, FormClosingEventArgs e)
         {
             Cursor.Show();
+
             // Save user-configurations.
             Configuration.Settings.SubtitleBeaming.FontName = _subtitleFontName;
             Configuration.Settings.SubtitleBeaming.FontSize = (int)_subtitleFontSize;
