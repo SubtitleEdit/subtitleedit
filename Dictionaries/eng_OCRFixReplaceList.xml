@@ -318,6 +318,7 @@
     <Word from="didrft" to="didn't" />
     <Word from="didrl't" to="didn't" />
     <Word from="didyou" to="did you" />
+    <Word from="discusting" to="disgusting" />
     <Word from="divorcing_" to="divorcing." />
     <Word from="dld" to="did" />
     <Word from="dldn't" to="didn't" />
@@ -1162,6 +1163,7 @@
     <Word from="scund" to="sound" />
     <Word from="S'EOp" to="Stop" />
     <Word from="seperate" to="separate" />
+    <Word from="seperated" to="separated" />
     <Word from="severa/parents" to="several parents" />
     <Word from="sfill" to="still" />
     <Word from="Sﬂence" to="Silence" />
