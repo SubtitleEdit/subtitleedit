@@ -101,7 +101,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     }
 
                     if (Configuration.Settings.Tools.RemoveEmptyLinesBetweenText && 
-                        callbacks.AllowFix(p, fixAction2) && text.Contains(Environment.NewLine + Environment.NewLine))
+                        callbacks.AllowFix(p, fixAction3) && text.Contains(Environment.NewLine + Environment.NewLine))
                     {
                         int beforeLength = text.Length;
                         while (text.Contains(Environment.NewLine + Environment.NewLine))
