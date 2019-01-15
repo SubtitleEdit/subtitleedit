@@ -535,7 +535,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                     else if (ss.CurrentDCinemaEditRate == "25")
                     {
-                        Configuration.Settings.General.CurrentFrameRate = 24;
+                        Configuration.Settings.General.CurrentFrameRate = 25;
                     }
 
                     if (BatchSourceFrameRate.HasValue)
