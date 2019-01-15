@@ -778,6 +778,7 @@
     <Word from="oblast" to="područje" />
     <Word from="oblastima" to="područjima" />
     <Word from="oblasti" to="područj*" />
+    <Word from="obo" to="ovo" />
     <Word from="obolelu" to="oboljelu" />
     <Word from="obožavalac" to="obožavatelj" />
     <Word from="obuči" to="obući" />
@@ -799,6 +800,7 @@
     <Word from="Odjeljenje" to="Odjel" />
     <Word from="odeljenjem" to="odjelom" />
     <Word from="odma" to="odmah" />
+    <Word from="odna" to="onda" />
     <Word from="Odneću" to="Odnijet ću" />
     <Word from="odneću" to="odnijet ću" />
     <Word from="odneće" to="odnijet će" />
@@ -868,6 +870,7 @@
     <Word from="pakuješ" to="pakiraš" />
     <Word from="Pakuju" to="Pakiraju" />
     <Word from="pakuju" to="pakiraju" />
+    <Word from="palata" to="palača" />
     <Word from="palatama" to="palačama" />
     <Word from="palate" to="palače" />
     <Word from="palatu" to="palaču" />
@@ -1321,6 +1324,7 @@
     <Word from="sočivo" to="leća" />
     <Word from="sočivom" to="lećom" />
     <Word from="sočivu" to="leći" />
+    <Word from="sopstvenim" to="vlastitim" />
     <Word from="Spakuj" to="Spakiraj" />
     <Word from="Spakujte" to="Spakirajte" />
     <Word from="spakujte" to="spakirajte" />
@@ -1434,6 +1438,7 @@
     <Word from="Suvim" to="Suhim" />
     <Word from="suvu" to="suhu" />
     <Word from="Suvu" to="Suhu" />
+    <Word from="Svestan" to="Svjestan" />
     <Word from="svestan" to="svjestan" />
     <Word from="svjest" to="svijest" />
     <Word from="Svjest" to="Svijest" />
@@ -2107,6 +2112,7 @@
     <LinePart from="će da dođe" to="će doći" />
     <LinePart from="će da bude" to="će biti" />
     <LinePart from="Da li će" to="Hoće li" />
+    <LinePart from="Da li ćeš" to="Hoćeš li" />
     <LinePart from="Da li ćemo" to="Hoćemo li" />
     <LinePart from="Da li ću" to="Hoću li" />
     <LinePart from="da li ću" to="hoću li" />
@@ -2147,6 +2153,8 @@
     <LinePart from="Jeli se" to="Je li se" />
     <LinePart from="Jeli sve" to="Je li sve" />
     <LinePart from="Jeli ti" to="Je li ti" />
+    <LinePart from="ko će" to="tko će" />
+    <LinePart from="ko god" to="tko god" />
     <LinePart from="ko je" to="tko je" />
     <LinePart from="ko si" to="tko si" />
     <LinePart from="ko mu je" to="tko mu je" />
