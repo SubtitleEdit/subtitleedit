@@ -3645,6 +3645,15 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             {
                 numericUpDownLineSpacing.Value = Configuration.Settings.Tools.ExportLastLineHeight;
             }
+            else
+            {
+                var lineHeight = (int)Math.Round(GetFontHeight() * 0.64f);
+                if (lineHeight >= numericUpDownLineSpacing.Minimum &&
+                    lineHeight <= numericUpDownLineSpacing.Maximum)
+                {
+                    numericUpDownLineSpacing.Value = lineHeight;
+                }
+            }
 
             if (Configuration.Settings.Tools.ExportLastBorderWidth >= 0 && Configuration.Settings.Tools.ExportLastBorderWidth < comboBoxBorderWidth.Items.Count)
             {
@@ -3749,6 +3758,24 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             }
         }
 
+        private float GetFontHeight()
+        {
+            var mbp = new MakeBitmapParameter
+            {
+                SubtitleFontName = _subtitleFontName,
+                SubtitleFontSize = float.Parse(comboBoxSubtitleFontSize.SelectedItem.ToString()),
+                SubtitleFontBold = _subtitleFontBold
+            };
+            var fontSize = (float)TextDraw.GetFontSize(mbp.SubtitleFontSize);
+            using (var font = SetFont(mbp, fontSize))
+            using (var bmp = new Bitmap(100, 100))
+            using (var g = Graphics.FromImage(bmp))
+            {
+                var textSize = g.MeasureString("Hj!", font);
+                return textSize.Height;
+            }
+        }
+
         private void CalculateHeights(Subtitle subtitle)
         {
             foreach (var paragraph in subtitle.Paragraphs)
@@ -3757,7 +3784,6 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 if (!string.IsNullOrEmpty(paragraph.Extra) && !_lineHeights.ContainsKey(styleName))
                 {
                     var style = AdvancedSubStationAlpha.GetSsaStyle(paragraph.Extra, subtitle.Header);
-
                     using (var bmp = new Bitmap(100, 100))
                     {
                         using (var g = Graphics.FromImage(bmp))
@@ -4085,27 +4111,11 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             if (_formatName != AdvancedSubStationAlpha.NameOfFormat && _formatName != SubStationAlpha.NameOfFormat &&
                 comboBoxSubtitleFontSize.Enabled)
             {
-                using (var bmp = new Bitmap(100, 100))
+                var lineHeight = (int)Math.Round(GetFontHeight() * 0.64f);
+                if (lineHeight >= numericUpDownLineSpacing.Minimum &&
+                    lineHeight <= numericUpDownLineSpacing.Maximum)
                 {
-                    using (var g = Graphics.FromImage(bmp))
-                    {
-                        var mbp = new MakeBitmapParameter
-                        {
-                            SubtitleFontName = _subtitleFontName,
-                            SubtitleFontSize = float.Parse(comboBoxSubtitleFontSize.SelectedItem.ToString()),
-                            SubtitleFontBold = checkBoxBold.Checked
-                        };
-
-                        var fontSize = (float)TextDraw.GetFontSize(mbp.SubtitleFontSize);
-                        Font font = SetFont(mbp, fontSize);
-                        SizeF textSize = g.MeasureString("Hj!", font);
-                        int lineHeight = (int)Math.Round(textSize.Height * 0.64f);
-                        if (lineHeight >= numericUpDownLineSpacing.Minimum &&
-                            lineHeight <= numericUpDownLineSpacing.Maximum)
-                        {
-                            numericUpDownLineSpacing.Value = lineHeight;
-                        }
-                    }
+                    numericUpDownLineSpacing.Value = lineHeight;
                 }
             }
             subtitleListView1_SelectedIndexChanged(null, null);
@@ -4394,23 +4404,12 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 return;
             }
 
-            using (var bmp = new Bitmap(100, 100))
-            using (var g = Graphics.FromImage(bmp))
+            var lineHeight = (int)Math.Round(GetFontHeight() * 0.64f);
+            if (lineHeight >= numericUpDownLineSpacing.Minimum &&
+                lineHeight <= numericUpDownLineSpacing.Maximum)
             {
-                var mbp = new MakeBitmapParameter
-                {
-                    SubtitleFontName = _subtitleFontName,
-                    SubtitleFontSize = float.Parse(comboBoxSubtitleFontSize.SelectedItem.ToString()),
-                    SubtitleFontBold = _subtitleFontBold
-                };
-                var fontSize = (float)TextDraw.GetFontSize(mbp.SubtitleFontSize);
-                Font font = SetFont(mbp, fontSize);
-
-                SizeF textSize = g.MeasureString("Hj!", font);
-                int lineHeight = (int)Math.Round(textSize.Height * 0.64f);
                 numericUpDownLineSpacing.ValueChanged -= numericUpDownLineSpacing_ValueChanged;
-                if (lineHeight >= numericUpDownLineSpacing.Minimum && lineHeight <= numericUpDownLineSpacing.Maximum && lineHeight != numericUpDownLineSpacing.Value)
-                    numericUpDownLineSpacing.Value = lineHeight;
+                numericUpDownLineSpacing.Value = lineHeight;
                 numericUpDownLineSpacing.ValueChanged += numericUpDownLineSpacing_ValueChanged;
             }
             subtitleListView1_SelectedIndexChanged(null, null);

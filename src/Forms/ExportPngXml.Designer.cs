@@ -37,7 +37,6 @@
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.groupBoxImageSettings = new System.Windows.Forms.GroupBox();
-            this.checkBoxFcpFullPathUrl = new System.Windows.Forms.CheckBox();
             this.labelResize = new System.Windows.Forms.Label();
             this.comboBoxResizePercentage = new System.Windows.Forms.ComboBox();
             this.comboBoxBottomMarginUnit = new System.Windows.Forms.ComboBox();
@@ -45,7 +44,6 @@
             this.labelLineHeightStyle = new System.Windows.Forms.Label();
             this.panelFullFrameBackground = new System.Windows.Forms.Panel();
             this.comboBoxLeftRightMargin = new System.Windows.Forms.ComboBox();
-            this.labelLeftRightMargin = new System.Windows.Forms.Label();
             this.checkBoxFullFrameImage = new System.Windows.Forms.CheckBox();
             this.checkBoxTransAntiAliase = new System.Windows.Forms.CheckBox();
             this.labelLineHeight = new System.Windows.Forms.Label();
@@ -86,6 +84,8 @@
             this.panelColor = new System.Windows.Forms.Panel();
             this.buttonColor = new System.Windows.Forms.Button();
             this.checkBoxSkipEmptyFrameAtStart = new System.Windows.Forms.CheckBox();
+            this.checkBoxFcpFullPathUrl = new System.Windows.Forms.CheckBox();
+            this.labelLeftRightMargin = new System.Windows.Forms.Label();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.groupBoxExportImage = new System.Windows.Forms.GroupBox();
             this.linkLabelPreview = new System.Windows.Forms.LinkLabel();
@@ -232,16 +232,6 @@
             this.groupBoxImageSettings.TabStop = false;
             this.groupBoxImageSettings.Text = "Image settings";
             // 
-            // checkBoxFcpFullPathUrl
-            // 
-            this.checkBoxFcpFullPathUrl.AutoSize = true;
-            this.checkBoxFcpFullPathUrl.Location = new System.Drawing.Point(6, 161);
-            this.checkBoxFcpFullPathUrl.Name = "checkBoxFcpFullPathUrl";
-            this.checkBoxFcpFullPathUrl.Size = new System.Drawing.Size(182, 17);
-            this.checkBoxFcpFullPathUrl.TabIndex = 62;
-            this.checkBoxFcpFullPathUrl.Text = "Use full image path url in FCP xml";
-            this.checkBoxFcpFullPathUrl.UseVisualStyleBackColor = true;
-            // 
             // labelResize
             // 
             this.labelResize.AutoSize = true;
@@ -319,15 +309,6 @@
             this.comboBoxLeftRightMargin.TabIndex = 16;
             this.comboBoxLeftRightMargin.SelectedIndexChanged += new System.EventHandler(this.comboBoxLeftRightMargin_SelectedIndexChanged);
             // 
-            // labelLeftRightMargin
-            // 
-            this.labelLeftRightMargin.AutoSize = true;
-            this.labelLeftRightMargin.Location = new System.Drawing.Point(6, 161);
-            this.labelLeftRightMargin.Name = "labelLeftRightMargin";
-            this.labelLeftRightMargin.Size = new System.Drawing.Size(84, 13);
-            this.labelLeftRightMargin.TabIndex = 56;
-            this.labelLeftRightMargin.Text = "Left/right margin";
-            // 
             // checkBoxFullFrameImage
             // 
             this.checkBoxFullFrameImage.AutoSize = true;
@@ -355,7 +336,7 @@
             this.labelLineHeight.Location = new System.Drawing.Point(686, 132);
             this.labelLineHeight.Name = "labelLineHeight";
             this.labelLineHeight.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.labelLineHeight.Size = new System.Drawing.Size(110, 13);
+            this.labelLineHeight.Size = new System.Drawing.Size(110, 16);
             this.labelLineHeight.TabIndex = 54;
             this.labelLineHeight.Text = "Line height";
             this.labelLineHeight.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -927,6 +908,25 @@
             this.checkBoxSkipEmptyFrameAtStart.TabIndex = 15;
             this.checkBoxSkipEmptyFrameAtStart.Text = "Skip empty frames at start";
             this.checkBoxSkipEmptyFrameAtStart.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxFcpFullPathUrl
+            // 
+            this.checkBoxFcpFullPathUrl.AutoSize = true;
+            this.checkBoxFcpFullPathUrl.Location = new System.Drawing.Point(6, 161);
+            this.checkBoxFcpFullPathUrl.Name = "checkBoxFcpFullPathUrl";
+            this.checkBoxFcpFullPathUrl.Size = new System.Drawing.Size(182, 17);
+            this.checkBoxFcpFullPathUrl.TabIndex = 62;
+            this.checkBoxFcpFullPathUrl.Text = "Use full image path url in FCP xml";
+            this.checkBoxFcpFullPathUrl.UseVisualStyleBackColor = true;
+            // 
+            // labelLeftRightMargin
+            // 
+            this.labelLeftRightMargin.AutoSize = true;
+            this.labelLeftRightMargin.Location = new System.Drawing.Point(6, 161);
+            this.labelLeftRightMargin.Name = "labelLeftRightMargin";
+            this.labelLeftRightMargin.Size = new System.Drawing.Size(84, 13);
+            this.labelLeftRightMargin.TabIndex = 56;
+            this.labelLeftRightMargin.Text = "Left/right margin";
             // 
             // groupBoxExportImage
             // 
