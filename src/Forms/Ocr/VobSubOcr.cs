@@ -718,6 +718,16 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         internal void InitializeBatch(List<BluRaySupParser.PcsData> subtitles, VobSubOcrSettings vobSubOcrSettings, string fileName, bool forcedOnly, string language = null)
         {
             Initialize(subtitles, vobSubOcrSettings, fileName);
+            _ocrMethodIndex = Configuration.Settings.VobSubOcr.LastOcrMethod == "Tesseract4" ? _ocrMethodTesseract4 : _ocrMethodTesseract302;
+            if (string.IsNullOrEmpty(language))
+            {
+                language = Configuration.Settings.VobSubOcr.TesseractLastLanguage;
+            }
+            if (string.IsNullOrEmpty(language))
+            {
+                language = "en";
+            }
+            InitializeTesseract(language);
             SetTesseractLanguageFromLanguageString(language);
             checkBoxShowOnlyForced.Checked = forcedOnly;
             DoBatch();
