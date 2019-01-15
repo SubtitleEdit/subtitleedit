@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -101,7 +102,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 string line = lines[index];
                 string next = string.Empty;
-                if (index < lines.Count -1)
+                if (index < lines.Count - 1)
                     next = lines[index + 1];
                 var s = line;
                 bool isTimeCode = line.Contains("-->");
@@ -146,7 +147,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     subtitle.Header = "WEBVTT";
                 }
-                else if (p != null && hadEmptyLine && Utilities.IsInteger(line) && 
+                else if (p != null && hadEmptyLine && Utilities.IsInteger(line) &&
                          (RegexTimeCodesMiddle.IsMatch(next) ||
                           RegexTimeCodesShort.IsMatch(next) ||
                           RegexTimeCodes.IsMatch(next)))
@@ -172,7 +173,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 subtitle.Paragraphs.Add(p);
             }
 
-            if (subtitle.Paragraphs.Count > 5 && 
+            if (subtitle.Paragraphs.Count > 5 &&
                 numbers >= subtitle.Paragraphs.Count - 1 &&
                 lines[0] == "WEBVTT FILE")
             {
@@ -184,6 +185,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             foreach (var paragraph in subtitle.Paragraphs)
             {
                 paragraph.Text = ColorWebVttToHtml(paragraph.Text);
+                paragraph.Text = System.Net.WebUtility.HtmlDecode(paragraph.Text);
             }
 
             subtitle.Renumber();
@@ -203,8 +205,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             if (!string.IsNullOrEmpty(pos) && pos.EndsWith('%'))
             {
-                double number;
-                if (double.TryParse(pos.TrimEnd('%'), out number))
+                if (double.TryParse(pos.TrimEnd('%'), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var number))
                 {
                     if (number < 25)
                     {
@@ -219,11 +220,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             if (!string.IsNullOrEmpty(line) && line.EndsWith('%'))
             {
-
                 if (line.EndsWith('%'))
                 {
-                    double number;
-                    if (double.TryParse(line.TrimEnd('%'), out number))
+                    if (double.TryParse(line.TrimEnd('%'), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var number))
                     {
                         if (number < 25)
                         {
@@ -237,8 +236,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
                 else
                 {
-                    double number;
-                    if (double.TryParse(line.TrimEnd('%'), out number))
+                    if (double.TryParse(line.TrimEnd('%'), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var number))
                     {
                         if (number < 7)
                         {
@@ -264,7 +262,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
                 return "{\\an1}";
             }
-            else if (hAlignRight)
+
+            if (hAlignRight)
             {
                 if (vAlignTop)
                 {
@@ -276,11 +275,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
                 return "{\\an3}";
             }
-            else if (vAlignTop)
+
+            if (vAlignTop)
             {
                 return "{\\an8}";
             }
-            else if (vAlignMiddle)
+
+            if (vAlignMiddle)
             {
                 return "{\\an5}";
             }
