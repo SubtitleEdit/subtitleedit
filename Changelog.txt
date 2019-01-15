@@ -32,6 +32,7 @@
    * Fix a few minor issues in "Fix common errors" - thx darnn
    * Improve DVD Studio Pro tag reading - thx Shas2509
    * Fix bug in "Multiple replace" with delete empty lines - thx OmrSi
+   * Fix bug regarding VTT position - thx devilcoelhodog
 
 
 3.5.8 (20th December 2018)
