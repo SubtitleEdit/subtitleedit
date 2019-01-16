@@ -16330,9 +16330,7 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             if (!timerAutoDuration.Enabled && !mediaPlayer.IsPaused && (mediaPlayer.CurrentPosition > 0.2 || index > 0))
                             {
-                                SubtitleListview1.BeginUpdate();
-                                SubtitleListview1.SelectIndexAndEnsureVisible(index, true);
-                                SubtitleListview1.EndUpdate();
+                                SubtitleListview1.SelectIndexAndEnsureVisibleFaster(index);
                             }
                         }
                     }
@@ -16345,10 +16343,9 @@ namespace Nikse.SubtitleEdit.Forms
                     Text = Text.TrimEnd() + "*";
                 AutoSave();
             }
-            else
+            else if (Text.EndsWith('*'))
             {
-                if (Text.EndsWith('*'))
-                    Text = Text.TrimEnd('*').TrimEnd();
+                Text = Text.TrimEnd('*').TrimEnd();
             }
             ShowSubtitleTimer.Start();
         }
