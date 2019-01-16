@@ -1302,13 +1302,53 @@ namespace Nikse.SubtitleEdit.Controls
                 Items[i].Selected = false;
         }
 
+        public void SelectIndexAndEnsureVisibleFaster(int index)
+        {
+            var topItem = TopItem;
+            if (!IsValidIndex(index) || topItem == null)
+            {
+                return;
+            }
+
+            BeginUpdate();
+            var selectedIndices = new List<int>(SelectedIndices.Count);
+            foreach (int selectedIndex in SelectedIndices)
+            {
+                selectedIndices.Add(selectedIndex);
+            }
+            foreach (int selectedIndex in selectedIndices)
+            {
+                Items[selectedIndex].Selected = false;
+            }
+
+            var selectedItem = Items[index];
+            selectedItem.Selected = true;
+            selectedItem.Focused = true;
+
+            var topIndex = topItem.Index;
+            int bottomIndex = topIndex + (Height - 30) / GetItemRect(0).Height;
+            if (index < topIndex || index > bottomIndex)
+            {
+                var nextScrollToIndex = index + (bottomIndex - topIndex) / 2;
+                if (nextScrollToIndex < Items.Count && nextScrollToIndex > 1)
+                {
+                    Items[nextScrollToIndex].EnsureVisible();
+                }
+                else
+                {
+                    selectedItem.EnsureVisible();
+                }
+            }
+            EndUpdate();
+        }
+
         public void SelectIndexAndEnsureVisible(int index, bool focus)
         {
             if (!IsValidIndex(index) || TopItem == null)
                 return;
 
-            int bottomIndex = TopItem.Index + ((Height - 25) / 16);
-            int itemsBeforeAfterCount = ((bottomIndex - TopItem.Index) / 2) - 1;
+            int bottomIndex = TopItem.Index + (Height - 25) / 16;
+            int itemsBeforeAfterCount = (bottomIndex - TopItem.Index) / 2 - 1;
             if (itemsBeforeAfterCount < 0)
                 itemsBeforeAfterCount = 1;
 
