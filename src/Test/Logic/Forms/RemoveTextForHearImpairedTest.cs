@@ -229,7 +229,7 @@ namespace Test.Logic.Forms
             target.Settings.ColonSeparateLine = false;
             const string text = "Be quiet. (SHUSHING) It's okay.";
             const string expected = "Be quiet. It's okay.";
-            string actual = target.RemoveHearImpairedtagsInsideLine(text);
+            string actual = target.RemoveHearingImpairedTagsInsideLine(text);
             Assert.AreEqual(expected, actual);
         }
 

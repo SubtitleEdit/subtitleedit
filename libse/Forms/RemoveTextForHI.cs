@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.Forms
@@ -24,7 +23,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
             _interjectionRemoveContext = new InterjectionRemoveContext();
         }
 
-        public string RemoveHearImpairedtagsInsideLine(string newText)
+        public string RemoveHearingImpairedTagsInsideLine(string newText)
         {
             const string endChars = ".?!";
             for (int i = 6; i < newText.Length; i++)
@@ -638,7 +637,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
             text = text.Replace("  ", " ").Trim();
             text = RemoveColon(text);
             text = RemoveLineIfAllUppercase(text);
-            text = RemoveHearImpairedtagsInsideLine(text);
+            text = RemoveHearingImpairedTagsInsideLine(text);
             if (Settings.RemoveInterjections)
             {
                 if (_interjections == null)
@@ -1004,7 +1003,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
         private bool StartsAndEndsWithHearImpairedTags(string text, char startTag, char endTag)
         {
-            if (text.StartsWith(startTag) && (text.EndsWith(endTag) || text.EndsWith(endTag + ":")))
+            if (text.Length > 1 && text.StartsWith(startTag) && (text.EndsWith(endTag) || text.EndsWith(endTag + ":")))
             {
                 var lastIndex = text.LastIndexOf(endTag);
                 var s = text.Substring(1, lastIndex - 1);
