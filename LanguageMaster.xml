@@ -33,6 +33,7 @@
     <Number>Number</Number>
     <Text>Text</Text>
     <HourMinutesSecondsMilliseconds>Hour:min:sec:ms</HourMinutesSecondsMilliseconds>
+    <HourMinutesSecondsFrames>Hour:min:sec:frames</HourMinutesSecondsFrames>
     <Bold>Bold</Bold>
     <Italic>Italic</Italic>
     <Underline>Underline</Underline>

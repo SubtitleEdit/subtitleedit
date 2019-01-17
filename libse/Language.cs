@@ -150,6 +150,7 @@ namespace Nikse.SubtitleEdit.Core
                 Number = "Number",
                 Text = "Text",
                 HourMinutesSecondsMilliseconds = "Hour:min:sec:ms",
+                HourMinutesSecondsFrames = "Hour:min:sec:frames",
                 Bold = "Bold",
                 Italic = "Italic",
                 Underline = "Underline",

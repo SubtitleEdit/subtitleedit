@@ -37,6 +37,7 @@
             public string Number { get; set; }
             public string Text { get; set; }
             public string HourMinutesSecondsMilliseconds { get; set; }
+            public string HourMinutesSecondsFrames { get; set; }
             public string Bold { get; set; }
             public string Italic { get; set; }
             public string Underline { get; set; }

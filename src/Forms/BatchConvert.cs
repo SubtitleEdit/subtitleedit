@@ -120,7 +120,7 @@ namespace Nikse.SubtitleEdit.Forms
             groupBoxSpeed.Text = Configuration.Settings.Language.ChangeSpeedInPercent.TitleShort;
             labelFromFrameRate.Text = Configuration.Settings.Language.ChangeFrameRate.FromFrameRate;
             labelToFrameRate.Text = Configuration.Settings.Language.ChangeFrameRate.ToFrameRate;
-            labelHourMinSecMilliSecond.Text = Configuration.Settings.Language.General.HourMinutesSecondsMilliseconds;
+            labelHourMinSecMilliSecond.Text = Configuration.Settings.General.UseTimeFormatHHMMSSFF ? Configuration.Settings.Language.General.HourMinutesSecondsFrames : Configuration.Settings.Language.General.HourMinutesSecondsMilliseconds;
 
             comboBoxFrameRateFrom.Left = labelFromFrameRate.Left + labelFromFrameRate.Width + 3;
             comboBoxFrameRateTo.Left = labelToFrameRate.Left + labelToFrameRate.Width + 3;
