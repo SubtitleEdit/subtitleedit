@@ -20,9 +20,8 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.FixFonts(this);
             ResetTotalAdjustment();
             timeUpDownAdjust.MaskedTextBox.Text = "000000000";
-
             Text = Configuration.Settings.Language.ShowEarlierLater.Title;
-            labelHourMinSecMilliSecond.Text = Configuration.Settings.Language.General.HourMinutesSecondsMilliseconds;
+            labelHourMinSecMilliSecond.Text = Configuration.Settings.General.UseTimeFormatHHMMSSFF ? Configuration.Settings.Language.General.HourMinutesSecondsFrames : Configuration.Settings.Language.General.HourMinutesSecondsMilliseconds;
             buttonShowEarlier.Text = Configuration.Settings.Language.ShowEarlierLater.ShowEarlier;
             buttonShowLater.Text = Configuration.Settings.Language.ShowEarlierLater.ShowLater;
             radioButtonAllLines.Text = Configuration.Settings.Language.ShowEarlierLater.AllLines;

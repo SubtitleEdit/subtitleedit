@@ -28,7 +28,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonSplit.Text = Configuration.Settings.Language.SplitSubtitle.Split;
             buttonDone.Text = Configuration.Settings.Language.SplitSubtitle.Done;
             buttonAdvanced.Text = Configuration.Settings.Language.General.Advanced;
-            labelHourMinSecMilliSecond.Text = Configuration.Settings.Language.General.HourMinutesSecondsMilliseconds;
+            labelHourMinSecMilliSecond.Text = Configuration.Settings.General.UseTimeFormatHHMMSSFF ? Configuration.Settings.Language.General.HourMinutesSecondsFrames : Configuration.Settings.Language.General.HourMinutesSecondsMilliseconds;
             buttonGetFrameRate.Left = splitTimeUpDownAdjust.Left + splitTimeUpDownAdjust.Width;
 
             label2.Top = label1.Bottom;
