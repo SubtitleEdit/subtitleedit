@@ -2401,6 +2401,8 @@
     <LinePart from="-1 tried " to="- I tried " />
     <LinePart from="-1 was " to="- I was " />
     <LinePart from=". i " to=". I " />
+    <LinePart from="haven 't " to="haven't " />
+    <LinePart from="Aren 't " to="Aren't " />
   </PartialLines>
   <PartialLinesAlways>
     <LinePart from="forbest act" to="for best act" />
