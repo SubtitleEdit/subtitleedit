@@ -8310,15 +8310,27 @@ namespace Nikse.SubtitleEdit.Forms
             if (paragraph.Duration.TotalSeconds > 0)
             {
                 double charactersPerSecond = Utilities.GetCharactersPerSecond(paragraph);
-                if (charactersPerSecond > Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
+                if (charactersPerSecond > Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds &&
+                    !Configuration.Settings.Tools.ListViewSyntaxColorDurationBig)
+                {
                     charsPerSecond.ForeColor = Color.Red;
+                }
                 else
+                {
                     charsPerSecond.ForeColor = Color.Black;
+                }
                 charsPerSecond.Text = string.Format(_language.CharactersPerSecond, charactersPerSecond);
             }
             else
             {
-                charsPerSecond.ForeColor = Color.Red;
+                if (Configuration.Settings.Tools.ListViewSyntaxColorDurationBig)
+                {
+                    charsPerSecond.ForeColor = Color.Black;
+                }
+                else
+                {
+                    charsPerSecond.ForeColor = Color.Red;
+                }
                 charsPerSecond.Text = string.Format(_language.CharactersPerSecond, _languageGeneral.NotAvailable);
             }
         }
