@@ -764,16 +764,26 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
         private void VideoEndTimerTick(object sender, EventArgs e)
         {
-            const int ended = 6;
-            int state = _libvlc_media_player_get_state(_mediaPlayer);
-            if (state != ended)
-                return;
+            lock (DisposeLock)
+            {
+                if (_mediaPlayer == IntPtr.Zero)
+                {
+                    return;
+                }
 
-            // hack to make sure VLC is in ready state
-            Stop();
-            Play();
-            Pause();
-            OnVideoEnded?.Invoke(_mediaPlayer, new EventArgs());
+                const int ended = 6;
+                int state = _libvlc_media_player_get_state(_mediaPlayer);
+                if (state != ended)
+                {
+                    return;
+                }
+
+                // hack to make sure VLC is in ready state
+                Stop();
+                Play();
+                Pause();
+                OnVideoEnded?.Invoke(_mediaPlayer, new EventArgs());
+            }
         }
 
         public override void DisposeVideoPlayer()
@@ -838,11 +848,13 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             {
                 if (_videoLoadedTimer != null)
                 {
+                    _videoLoadedTimer.Stop();
                     _videoLoadedTimer.Dispose();
                     _videoLoadedTimer = null;
                 }
                 if (_videoEndTimer != null)
                 {
+                    _videoEndTimer.Stop();
                     _videoEndTimer.Dispose();
                     _videoEndTimer = null;
                 }
@@ -851,6 +863,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                     _mouseTimer.Dispose();
                     _mouseTimer = null;
                 }
+                Application.DoEvents();
             }
             ReleaseUnmangedResources();
         }
