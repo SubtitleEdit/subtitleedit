@@ -343,6 +343,7 @@ namespace Nikse.SubtitleEdit.Logic
                             {
                                 if (matroska.IsValid)
                                 {
+                                    var mkvFileNames = new List<string>();
                                     var tracks = matroska.GetTracks(true);
                                     if (tracks.Count > 0)
                                     {
@@ -360,9 +361,14 @@ namespace Nikse.SubtitleEdit.Logic
                                             {
                                                 var ss = matroska.GetSubtitle(track.TrackNumber, null);
                                                 format = Utilities.LoadMatroskaTextSubtitle(track, matroska, ss, sub);
-                                                string newFileName = fileName;
-                                                if (tracks.Count > 1)
-                                                    newFileName = fileName.Insert(fileName.Length - 4, "." + track.TrackNumber + "." + track.Language.RemoveChar('?').RemoveChar('!').RemoveChar('*').RemoveChar(',').RemoveChar('/').Trim());
+
+                                                var lang = track.Language.RemoveChar('?').RemoveChar('!').RemoveChar('*').RemoveChar(',').RemoveChar('/').Trim();
+                                                var newFileName = fileName.Substring(0, fileName.LastIndexOf('.')) + "." + lang + ".mkv";
+                                                if (mkvFileNames.Contains(fileName))
+                                                {
+                                                    newFileName = fileName.Substring(0, fileName.LastIndexOf('.')) + ".#" + track.TrackNumber + "." + lang + ".mkv";
+                                                }
+                                                mkvFileNames.Add(fileName);
 
                                                 if (format.GetType() == typeof(AdvancedSubStationAlpha) || format.GetType() == typeof(SubStationAlpha))
                                                 {
