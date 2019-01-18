@@ -988,7 +988,7 @@ namespace Nikse.SubtitleEdit.Forms
                                         {
                                             if (trackId == track.TrackNumber.ToString(CultureInfo.InvariantCulture))
                                             {
-                                                bluRaySubtitles = LoadBluRaySupFromMatroska(track, matroska);
+                                                bluRaySubtitles = LoadBluRaySupFromMatroska(track, matroska, Handle);
                                                 if (bluRaySubtitles.Count > 0)
                                                 {
                                                     item.SubItems[3].Text = Configuration.Settings.Language.BatchConvert.Ocr;
@@ -1163,7 +1163,7 @@ namespace Nikse.SubtitleEdit.Forms
             textBoxFilter.Enabled = true;
         }
 
-        private List<VobSubMergedPack> LoadVobSubFromMatroska(MatroskaTrackInfo matroskaSubtitleInfo, MatroskaFile matroska, out Idx idx)
+        internal static List<VobSubMergedPack> LoadVobSubFromMatroska(MatroskaTrackInfo matroskaSubtitleInfo, MatroskaFile matroska, out Idx idx)
         {
             var mergedVobSubPacks = new List<VobSubMergedPack>();
             if (matroskaSubtitleInfo.ContentEncodingType == 1)
@@ -1187,7 +1187,7 @@ namespace Nikse.SubtitleEdit.Forms
             return mergedVobSubPacks;
         }
 
-        private List<BluRaySupParser.PcsData> LoadBluRaySupFromMatroska(MatroskaTrackInfo track, MatroskaFile matroska)
+        internal static List<BluRaySupParser.PcsData> LoadBluRaySupFromMatroska(MatroskaTrackInfo track, MatroskaFile matroska, IntPtr handle)
         {
             if (track.ContentEncodingType == 1)
             {
@@ -1195,7 +1195,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             var sub = matroska.GetSubtitle(track.TrackNumber, null);
-            TaskbarList.SetProgressState(Handle, TaskbarButtonProgressFlags.NoProgress);
+            TaskbarList.SetProgressState(handle, TaskbarButtonProgressFlags.NoProgress);
             var subtitles = new List<BluRaySupParser.PcsData>();
             var log = new StringBuilder();
             var clusterStream = new MemoryStream();
@@ -1240,7 +1240,7 @@ namespace Nikse.SubtitleEdit.Forms
             return subtitles;
         }
 
-        private bool ContainsBluRayStartSegment(byte[] buffer)
+        private static bool ContainsBluRayStartSegment(byte[] buffer)
         {
             const int epochStart = 0x80;
             var position = 0;

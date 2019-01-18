@@ -349,20 +349,55 @@ namespace Nikse.SubtitleEdit.Logic
                                     {
                                         foreach (var track in tracks)
                                         {
+                                            var lang = track.Language.RemoveChar('?').RemoveChar('!').RemoveChar('*').RemoveChar(',').RemoveChar('/').Trim();
                                             if (track.CodecId.Equals("S_VOBSUB", StringComparison.OrdinalIgnoreCase))
                                             {
-                                                _stdOutWriter.WriteLine($"{fileName}: {targetFormat} - Cannot convert from VobSub image based format!");
+                                                var vobSubs = BatchConvert.LoadVobSubFromMatroska(track, matroska, out var idx);
+                                                if (vobSubs.Count > 0)
+                                                {
+                                                    using (var vobSubOcr = new VobSubOcr())
+                                                    {
+                                                        vobSubOcr.FileName = Path.GetFileName(fileName);
+                                                        vobSubOcr.InitializeBatch(vobSubs, idx.Palette, Configuration.Settings.VobSubOcr, fileName, false, lang);
+                                                        sub = vobSubOcr.SubtitleFromOcr;
+                                                    }
+                                                }
+                                                var newFileName = fileName.Substring(0, fileName.LastIndexOf('.')) + "." + lang + ".mkv";
+                                                if (mkvFileNames.Contains(fileName))
+                                                {
+                                                    newFileName = fileName.Substring(0, fileName.LastIndexOf('.')) + ".#" + track.TrackNumber + "." + lang + ".mkv";
+                                                }
+                                                mkvFileNames.Add(fileName);
+                                                BatchConvertSave(targetFormat, offset, targetEncoding, outputFolder, count, ref converted, ref errors, formats, newFileName, sub, format, overwrite, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions, resolution, true);
+                                                done = true;
                                             }
                                             else if (track.CodecId.Equals("S_HDMV/PGS", StringComparison.OrdinalIgnoreCase))
                                             {
-                                                _stdOutWriter.WriteLine($"{fileName}: {targetFormat} - Cannot convert from Blu-ray image based format!");
+                                                var bluRaySubtitles = BatchConvert.LoadBluRaySupFromMatroska(track, matroska, IntPtr.Zero);
+                                                if (bluRaySubtitles.Count > 0)
+                                                {
+                                                    _stdOutWriter?.WriteLine("Using OCR to extract subtitles");
+                                                    using (var vobSubOcr = new VobSubOcr())
+                                                    {
+                                                        vobSubOcr.FileName = Path.GetFileName(fileName);
+                                                        vobSubOcr.InitializeBatch(bluRaySubtitles, Configuration.Settings.VobSubOcr, fileName, false, lang);
+                                                        sub = vobSubOcr.SubtitleFromOcr;
+                                                    }
+                                                }
+                                                var newFileName = fileName.Substring(0, fileName.LastIndexOf('.')) + "." + lang + ".mkv";
+                                                if (mkvFileNames.Contains(fileName))
+                                                {
+                                                    newFileName = fileName.Substring(0, fileName.LastIndexOf('.')) + ".#" + track.TrackNumber + "." + lang + ".mkv";
+                                                }
+                                                mkvFileNames.Add(fileName);
+                                                BatchConvertSave(targetFormat, offset, targetEncoding, outputFolder, count, ref converted, ref errors, formats, newFileName, sub, format, overwrite, pacCodePage, targetFrameRate, multipleReplaceImportFiles, actions, resolution, true);
+                                                done = true;
                                             }
                                             else
                                             {
                                                 var ss = matroska.GetSubtitle(track.TrackNumber, null);
                                                 format = Utilities.LoadMatroskaTextSubtitle(track, matroska, ss, sub);
 
-                                                var lang = track.Language.RemoveChar('?').RemoveChar('!').RemoveChar('*').RemoveChar(',').RemoveChar('/').Trim();
                                                 var newFileName = fileName.Substring(0, fileName.LastIndexOf('.')) + "." + lang + ".mkv";
                                                 if (mkvFileNames.Contains(fileName))
                                                 {
@@ -420,8 +455,7 @@ namespace Nikse.SubtitleEdit.Logic
 
                         if (!done && fileInfo.Length < 10 * 1024 * 1024) // max 10 mb
                         {
-                            Encoding encoding;
-                            format = sub.LoadSubtitle(fileName, out encoding, null, true, frameRate);
+                            format = sub.LoadSubtitle(fileName, out _, null, true, frameRate);
 
                             if (format == null || format.GetType() == typeof(Ebu))
                             {
@@ -650,7 +684,8 @@ namespace Nikse.SubtitleEdit.Logic
                 if (exception.Message.Length > 0)
                 {
                     _stdOutWriter.WriteLine();
-                    _stdOutWriter.WriteLine("ERROR: " + exception.Message);
+                    _stdOutWriter.WriteLine("ERROR: " + exception.Message + Environment.NewLine +
+                                            exception.StackTrace);
                 }
                 else
                 {
@@ -772,8 +807,7 @@ namespace Nikse.SubtitleEdit.Logic
                 if (fps.Length > 1)
                 {
                     fps = fps.Replace(',', '.').Replace(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, ".");
-                    double d;
-                    if (double.TryParse(fps, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out d) && d >= minimumFrameRate && d <= maximumFrameRate)
+                    if (double.TryParse(fps, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var d) && d >= minimumFrameRate && d <= maximumFrameRate)
                     {
                         return d;
                     }
@@ -794,8 +828,7 @@ namespace Nikse.SubtitleEdit.Logic
                 var arr = res.Split(',', 'x');
                 if (arr.Length == 2)
                 {
-                    int w, h;
-                    if (int.TryParse(arr[0], out w) && int.TryParse(arr[1], out h))
+                    if (int.TryParse(arr[0], out var w) && int.TryParse(arr[1], out var h))
                     {
                         return new Point(w, h);
                     }
@@ -1001,7 +1034,7 @@ namespace Nikse.SubtitleEdit.Logic
                                     file.Write(sub.ToText(sf));
                                 } // save and close it
                             }
-                            else if (Equals(targetEncoding, Encoding.UTF8) && (format.GetType() == typeof(TmpegEncAW5) || format.GetType() == typeof(TmpegEncXml)))
+                            else if (Equals(targetEncoding, Encoding.UTF8) && format != null && (format.GetType() == typeof(TmpegEncAW5) || format.GetType() == typeof(TmpegEncXml)))
                             {
                                 var outputEnc = new UTF8Encoding(false); // create encoding with no BOM
                                 using (var file = new StreamWriter(outputFileName, false, outputEnc)) // open file with encoding
@@ -1016,12 +1049,13 @@ namespace Nikse.SubtitleEdit.Logic
                         }
                         catch (Exception ex)
                         {
-                            _stdOutWriter?.WriteLine(ex.Message);
+                            _stdOutWriter?.WriteLine(ex.Message + Environment.NewLine +
+                                                     ex.StackTrace);
                             errors++;
                             return false;
                         }
 
-                        if (format.GetType() == typeof(Sami) || format.GetType() == typeof(SamiModern))
+                        if (format != null && (format.GetType() == typeof(Sami) || format.GetType() == typeof(SamiModern)))
                         {
                             foreach (string className in Sami.GetStylesFromHeader(sub.Header))
                             {
@@ -1492,9 +1526,15 @@ namespace Nikse.SubtitleEdit.Logic
         {
             string outputFileName = Path.ChangeExtension(fileName, extension);
             if (!string.IsNullOrEmpty(outputFolder))
+            {
                 outputFileName = Path.Combine(outputFolder, Path.GetFileName(outputFileName));
+            }
+
             if (!overwrite && File.Exists(outputFileName))
+            {
                 outputFileName = Path.ChangeExtension(outputFileName, Guid.NewGuid() + extension);
+            }
+
             return outputFileName;
         }
 

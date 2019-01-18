@@ -6258,6 +6258,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         comboBoxTesseractLanguages.SelectedIndex = i;
                         break;
                     }
+                    if (chosenLanguage != null && chosenLanguage == (comboBoxTesseractLanguages.Items[i] as TesseractLanguage).Id)
+                    {
+                        comboBoxTesseractLanguages.SelectedIndex = i;
+                        break;
+                    }
                     if ((comboBoxTesseractLanguages.Items[i] as TesseractLanguage).Id == Configuration.Settings.VobSubOcr.TesseractLastLanguage)
                     {
                         comboBoxTesseractLanguages.SelectedIndex = i;
