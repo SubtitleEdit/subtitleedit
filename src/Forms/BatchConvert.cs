@@ -16,6 +16,7 @@ using System.Text;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Core.VobSub;
 using Nikse.SubtitleEdit.Forms.Ocr;
+using Idx = Nikse.SubtitleEdit.Core.VobSub.Idx;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -289,6 +290,9 @@ namespace Nikse.SubtitleEdit.Forms
                 var isMkv = false;
                 var mkvPgs = new List<string>();
                 var mkvVobSub = new List<string>();
+                var mkvSrt = new List<string>();
+                var mkvSsa = new List<string>();
+                var mkvAss = new List<string>();
                 int mkvCount = 0;
 
                 SubtitleFormat format = null;
@@ -297,8 +301,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (!FileUtil.IsBluRaySup(fileName) && !FileUtil.IsVobSub(fileName))
                     {
-                        Encoding encoding;
-                        format = sub.LoadSubtitle(fileName, out encoding, null);
+                        format = sub.LoadSubtitle(fileName, out _, null);
 
                         if (format == null)
                         {
@@ -529,18 +532,22 @@ namespace Nikse.SubtitleEdit.Forms
                                     {
                                         mkvPgs.Add((track.Language ?? "undefined") + " #" + track.TrackNumber);
                                     }
-                                    else if (track.CodecId.Equals("S_TEXT/UTF8", StringComparison.OrdinalIgnoreCase) || track.CodecId.Equals("S_TEXT/SSA", StringComparison.OrdinalIgnoreCase) || track.CodecId.Equals("S_TEXT/ASS", StringComparison.OrdinalIgnoreCase))
+                                    else if (track.CodecId.Equals("S_TEXT/UTF8", StringComparison.OrdinalIgnoreCase))
                                     {
-                                        mkvCount++;
+                                        mkvSrt.Add((track.Language ?? "undefined") + " #" + track.TrackNumber);
+                                    }
+                                    else if (track.CodecId.Equals("S_TEXT/SSA", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        mkvSsa.Add((track.Language ?? "undefined") + " #" + track.TrackNumber);
+                                    }
+                                    else if (track.CodecId.Equals("S_TEXT/ASS", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        mkvAss.Add((track.Language ?? "undefined") + " #" + track.TrackNumber);
                                     }
                                 }
                             }
                         }
-                        if (mkvCount > 0)
-                        {
-                            item.SubItems.Add("Matroska - " + mkvCount);
-                        }
-                        else
+                        if (mkvVobSub.Count + mkvPgs.Count + mkvSrt.Count + mkvSsa.Count + mkvAss.Count <= 0)
                         {
                             item.SubItems.Add(Configuration.Settings.Language.UnknownSubtitle.Title);
                         }
@@ -575,6 +582,30 @@ namespace Nikse.SubtitleEdit.Forms
                         item.SubItems.Add(Utilities.FormatBytesToDisplayFileSize(fi.Length));
                         listViewInputFiles.Items.Add(item);
                         item.SubItems.Add("Matroska/VobSub - " + lang);
+                        item.SubItems.Add("-");
+                    }
+                    foreach (var lang in mkvSrt)
+                    {
+                        item = new ListViewItem(fileName);
+                        item.SubItems.Add(Utilities.FormatBytesToDisplayFileSize(fi.Length));
+                        listViewInputFiles.Items.Add(item);
+                        item.SubItems.Add("Matroska/SRT - " + lang);
+                        item.SubItems.Add("-");
+                    }
+                    foreach (var lang in mkvSsa)
+                    {
+                        item = new ListViewItem(fileName);
+                        item.SubItems.Add(Utilities.FormatBytesToDisplayFileSize(fi.Length));
+                        listViewInputFiles.Items.Add(item);
+                        item.SubItems.Add("Matroska/SSA - " + lang);
+                        item.SubItems.Add("-");
+                    }
+                    foreach (var lang in mkvAss)
+                    {
+                        item = new ListViewItem(fileName);
+                        item.SubItems.Add(Utilities.FormatBytesToDisplayFileSize(fi.Length));
+                        listViewInputFiles.Items.Add(item);
+                        item.SubItems.Add("Matroska/ASS - " + lang);
                         item.SubItems.Add("-");
                     }
                 }
@@ -713,6 +744,7 @@ namespace Nikse.SubtitleEdit.Forms
             foreach (ListViewItem item in listViewInputFiles.Items)
                 item.SubItems[3].Text = "-";
             listViewInputFiles.EndUpdate();
+            var mkvFileNames = new List<string>();
             Refresh();
             int index = 0;
             while (index < listViewInputFiles.Items.Count && _abort == false)
@@ -845,7 +877,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 format = elr;
                             }
                         }
-                        List<string> lines = new List<string>();
+                        var lines = new List<string>();
                         if (format == null)
                         {
                             lines = File.ReadAllText(fileName).SplitToLines();
@@ -937,8 +969,7 @@ namespace Nikse.SubtitleEdit.Forms
                                         {
                                             if (trackId == track.TrackNumber.ToString(CultureInfo.InvariantCulture))
                                             {
-                                                Core.VobSub.Idx idx;
-                                                var vobSubs = LoadVobSubFromMatroska(track, matroska, out idx);
+                                                var vobSubs = LoadVobSubFromMatroska(track, matroska, out var idx);
                                                 if (vobSubs.Count > 0)
                                                 {
                                                     item.SubItems[3].Text = Configuration.Settings.Language.BatchConvert.Ocr;
@@ -974,9 +1005,18 @@ namespace Nikse.SubtitleEdit.Forms
                                         }
                                         else if (track.CodecId.Equals("S_TEXT/UTF8", StringComparison.OrdinalIgnoreCase) || track.CodecId.Equals("S_TEXT/SSA", StringComparison.OrdinalIgnoreCase) || track.CodecId.Equals("S_TEXT/ASS", StringComparison.OrdinalIgnoreCase))
                                         {
-                                            var mkvSub = matroska.GetSubtitle(track.TrackNumber, null);
-                                            Utilities.LoadMatroskaTextSubtitle(track, matroska, mkvSub, sub);
-                                            break;
+                                            if (trackId == track.TrackNumber.ToString(CultureInfo.InvariantCulture))
+                                            {
+                                                var mkvSub = matroska.GetSubtitle(track.TrackNumber, null);
+                                                Utilities.LoadMatroskaTextSubtitle(track, matroska, mkvSub, sub);
+                                                fileName = fileName.Substring(0, fileName.LastIndexOf('.')) + "." + track.Language + ".mkv";
+                                                if (mkvFileNames.Contains(fileName))
+                                                {
+                                                    fileName = fileName.Substring(0, fileName.LastIndexOf('.')) + ".#" + trackId + "." + track.Language + ".mkv";
+                                                }
+                                                mkvFileNames.Add(fileName);
+                                                break;
+                                            }
                                         }
                                     }
                                 }
@@ -1062,10 +1102,9 @@ namespace Nikse.SubtitleEdit.Forms
                                 _changeCasingNames.Initialize(sub);
                                 _changeCasingNames.FixCasing();
                             }
-                            double fromFrameRate;
-                            double toFrameRate;
-                            if (double.TryParse(comboBoxFrameRateFrom.Text.Replace(',', '.').Replace(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, "."), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out fromFrameRate) &&
-                            double.TryParse(comboBoxFrameRateTo.Text.Replace(',', '.').Replace(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, "."), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out toFrameRate))
+
+                            if (double.TryParse(comboBoxFrameRateFrom.Text.Replace(',', '.').Replace(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, "."), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var fromFrameRate) &&
+                            double.TryParse(comboBoxFrameRateTo.Text.Replace(',', '.').Replace(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, "."), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var toFrameRate))
                             {
                                 sub.ChangeFrameRate(fromFrameRate, toFrameRate);
                             }
@@ -1124,9 +1163,9 @@ namespace Nikse.SubtitleEdit.Forms
             textBoxFilter.Enabled = true;
         }
 
-        private List<VobSubMergedPack> LoadVobSubFromMatroska(MatroskaTrackInfo matroskaSubtitleInfo, MatroskaFile matroska, out Core.VobSub.Idx idx)
+        private List<VobSubMergedPack> LoadVobSubFromMatroska(MatroskaTrackInfo matroskaSubtitleInfo, MatroskaFile matroska, out Idx idx)
         {
-            List<VobSubMergedPack> mergedVobSubPacks = new List<VobSubMergedPack>();
+            var mergedVobSubPacks = new List<VobSubMergedPack>();
             if (matroskaSubtitleInfo.ContentEncodingType == 1)
             {
                 idx = null;
@@ -1134,7 +1173,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             var sub = matroska.GetSubtitle(matroskaSubtitleInfo.TrackNumber, null);
-            idx = new Core.VobSub.Idx(matroskaSubtitleInfo.GetCodecPrivate().SplitToLines());
+            idx = new Idx(matroskaSubtitleInfo.GetCodecPrivate().SplitToLines());
             foreach (var p in sub)
             {
                 mergedVobSubPacks.Add(new VobSubMergedPack(p.GetData(matroskaSubtitleInfo), TimeSpan.FromMilliseconds(p.Start), 32, null));
@@ -1405,7 +1444,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 catch (Exception exception)
                 {
-                    p.Error = string.Format("Save: {0}", exception.InnerException?.Message ?? exception.Message);
+                    p.Error = $"Save: {exception.InnerException?.Message ?? exception.Message}";
                     p.Item.SubItems[3].Text = p.Error;
                 }
 
@@ -1764,9 +1803,8 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             if (fi.Length < ConvertMaxFileSize)
                             {
-                                Encoding encoding;
                                 var sub = new Subtitle();
-                                var format = sub.LoadSubtitle(fileName, out encoding, null);
+                                var format = sub.LoadSubtitle(fileName, out _, null);
                                 if (format == null)
                                 {
                                     var ebu = new Ebu();
