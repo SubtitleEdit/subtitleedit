@@ -1019,11 +1019,19 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
         private bool SaveToList(string fromWord, string toWord, XmlDocument userDoc, string replaceListName, string elementName, Dictionary<string, string> dictionary, Dictionary<string, string> userDictionary)
         {
             if (dictionary == null)
+            {
                 throw new ArgumentNullException(nameof(dictionary));
+            }
+
             if (userDictionary == null)
+            {
                 throw new ArgumentNullException(nameof(userDictionary));
+            }
+
             if (userDictionary.ContainsKey(fromWord))
+            {
                 return false;
+            }
 
             userDictionary.Add(fromWord, toWord);
             XmlNode wholeWordsNode = userDoc.DocumentElement?.SelectSingleNode(replaceListName);

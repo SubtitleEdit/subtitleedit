@@ -40,7 +40,10 @@ NOTE=
         {
             double start = 0;
             if (last != null)
+            {
                 start = last.EndTime.TotalSeconds;
+            }
+
             return $"{timeCode.TotalSeconds - start:0.0#}";
         }
 

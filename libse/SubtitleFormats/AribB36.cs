@@ -133,7 +133,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 string trimmed = EraseTiming.Trim();
                 if (trimmed == "F" || trimmed == "0" || trimmed.Length == 0)
+                {
                     return new TimeCode();
+                }
 
                 return GetTime(EraseTiming, SpecifiedTimingUnit);
             }
@@ -355,7 +357,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     string fileExt = Path.GetExtension(fileName).ToUpperInvariant();
                     if (fileExt != Extension && !AlternateExtensions.Contains(fileExt))
+                    {
                         return false;
+                    }
 
                     return base.IsMine(lines, fileName);
                 }
@@ -375,11 +379,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         int RoundUp(int number, int multiple)
         {
             if (multiple == 0)
+            {
                 return number;
+            }
 
             int remainder = number % multiple;
             if (remainder == 0)
+            {
                 return number;
+            }
 
             return number + multiple - remainder;
         }
@@ -394,7 +402,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             int index = startPosition;
             string label = Encoding.ASCII.GetString(buffer, 0, 8);
             if (label != "DCAPTION" && label != "BCAPTION" && label != "MCAPTION")
+            {
                 return;
+            }
 
             var programManagementInformation = new ProgramManagement(buffer, 256 + 4);
             while (index + 255 < buffer.Length)

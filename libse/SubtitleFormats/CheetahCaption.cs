@@ -54,7 +54,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 fs.Write(buffer, 0, buffer.Length);
 
                 for (int i = 0; i < 118; i++)
+                {
                     fs.WriteByte(0);
+                }
 
                 var dictionaryLatinCode = DicCodeLatin.ToLookup(pair => pair.Value, pair => pair.Key);
 
@@ -129,7 +131,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     text = HtmlUtil.RemoveHtmlTags(text);
                     int j = 0;
                     if (italic)
+                    {
                         textBytes.Add(0xd0);
+                    }
 
                     var encoding = Encoding.GetEncoding(1252);
                     while (j < text.Length)
@@ -142,7 +146,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             textBytes.Add(0);
                             textBytes.Add(0);
                             if (italic)
+                            {
                                 textBytes.Add(0xd0);
+                            }
                         }
                         else
                         {
@@ -166,9 +172,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         fs.WriteByte((byte)(length));
 
                         if (p.Text.Trim().Contains(Environment.NewLine))
+                        {
                             fs.WriteByte(0x62); // two lines?
+                        }
                         else
+                        {
                             fs.WriteByte(0x61); // one line?
+                        }
 
                         WriteTime(fs, p.StartTime);
                         WriteTime(fs, p.EndTime);
@@ -181,9 +191,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         fs.WriteByte((byte)(length));
 
                         if (p.Text.Trim().Contains(Environment.NewLine))
+                        {
                             fs.WriteByte(0x42); // two lines?
+                        }
                         else
+                        {
                             fs.WriteByte(0x41); // one line?
+                        }
+
                         WriteTime(fs, p.StartTime);
                         fs.WriteByte(2);
                         fs.WriteByte(1);
@@ -193,10 +208,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
 
                     foreach (byte b in textBytes) // text
+                    {
                         fs.WriteByte(b);
+                    }
 
                     while (end > fs.Position)
+                    {
                         fs.WriteByte(0);
+                    }
                 }
             }
         }
@@ -224,7 +243,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             if (buffer[i + 0] == 0xEA &&
                                 buffer[i + 1] == 0x22 &&
                                 buffer[i + 2] <= 3)
+                            {
                                 return true;
+                            }
                         }
                     }
                 }
@@ -267,7 +288,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     p.StartTime = DecodeTimestamp(buffer, i + 2);
 
                     if (last != null && last.EndTime.TotalMilliseconds > p.StartTime.TotalMilliseconds)
+                    {
                         last.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                    }
 
                     p.EndTime = DecodeTimestamp(buffer, i + 6);
 
@@ -281,10 +304,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         if (buffer[index] == 0)
                         {
                             if (italics)
+                            {
                                 sb.Append("</i>");
+                            }
+
                             italics = false;
                             if (!sb.ToString().EndsWith(Environment.NewLine, StringComparison.Ordinal))
+                            {
                                 sb.AppendLine();
+                            }
                         }
                         else if (DicCodeLatin.ContainsKey(buffer[index]))
                         {
@@ -305,7 +333,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         j++;
                     }
                     if (italics)
+                    {
                         sb.Append("</i>");
+                    }
+
                     p.Text = sb.ToString().Trim();
                     p.Text = p.Text.Replace("</i>" + Environment.NewLine + "<i>", Environment.NewLine);
 
@@ -313,11 +344,16 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     last = p;
                 }
                 if (length == 0)
+                {
                     length++;
+                }
+
                 i += length;
             }
             if (last != null && last.Duration.TotalMilliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
+            {
                 last.EndTime.TotalMilliseconds = last.StartTime.TotalMilliseconds + Utilities.GetOptimalDisplayMilliseconds(last.Text);
+            }
 
             subtitle.Renumber();
         }

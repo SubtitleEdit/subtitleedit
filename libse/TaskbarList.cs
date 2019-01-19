@@ -17,19 +17,25 @@ namespace Nikse.SubtitleEdit.Core
         public static void MarkFullscreenWindow(IntPtr hwnd, bool fullScreen)
         {
             if (Supported && hwnd != IntPtr.Zero)
+            {
                 Taskbar.MarkFullscreenWindow(hwnd, fullScreen ? 1 : 0);
+            }
         }
 
         public static void SetProgressState(IntPtr hwnd, TaskbarButtonProgressFlags state)
         {
             if (Supported && hwnd != IntPtr.Zero)
+            {
                 Taskbar.SetProgressState(hwnd, state);
+            }
         }
 
         public static void SetProgressValue(IntPtr hwnd, double value, double max)
         {
             if (Supported && hwnd != IntPtr.Zero)
+            {
                 Taskbar.SetProgressValue(hwnd, (ulong)value, (ulong)max);
+            }
         }
 
         [ClassInterface(ClassInterfaceType.None),

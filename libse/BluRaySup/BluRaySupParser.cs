@@ -114,7 +114,9 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             public static Bitmap DecodeImage(PcsObject pcs, IList<OdsData> data, List<PaletteInfo> palettes)
             {
                 if (pcs == null || data == null || data.Count == 0)
+                {
                     return new Bitmap(1, 1);
+                }
 
                 int w = data[0].Size.Width;
                 int h = data[0].Size.Height;
@@ -139,7 +141,10 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                             // next line
                             ofs = (ofs / w) * w;
                             if (xpos < w)
+                            {
                                 ofs += w;
+                            }
+
                             xpos = 0;
                         }
                         else
@@ -153,7 +158,10 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                                     size = ((b - 0x40) << 8) + (buf[index++] & 0xff);
                                     var c = Color.FromArgb(pal.GetArgb(0));
                                     for (int i = 0; i < size; i++)
+                                    {
                                         PutPixel(bm, ofs++, c);
+                                    }
+
                                     xpos += size;
                                 }
                             }
@@ -166,7 +174,10 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                                     b = buf[index++] & 0xff;
                                     var c = Color.FromArgb(pal.GetArgb(b));
                                     for (int i = 0; i < size; i++)
+                                    {
                                         PutPixel(bm, ofs++, c);
+                                    }
+
                                     xpos += size;
                                 }
                             }
@@ -179,7 +190,10 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                                     b = buf[index++] & 0xff;
                                     var c = Color.FromArgb(pal.GetArgb(b));
                                     for (int i = 0; i < size; i++)
+                                    {
                                         PutPixel(bm, ofs++, c);
+                                    }
+
                                     xpos += size;
                                 }
                             }
@@ -188,7 +202,10 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                                 // 00 xx -> xx times 0
                                 var c = Color.FromArgb(pal.GetArgb(0));
                                 for (int i = 0; i < b; i++)
+                                {
                                     PutPixel(bm, ofs++, c);
+                                }
+
                                 xpos += b;
                             }
                         }
@@ -209,7 +226,9 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                 int x = index % bmp.Width;
                 int y = index / bmp.Width;
                 if (x < bmp.Width && y < bmp.Height)
+                {
                     bmp.SetPixel(x, y, Color.FromArgb(palette.GetArgb(color)));
+                }
             }
 
             private static void PutPixel(FastBitmap bmp, int index, Color color)
@@ -219,7 +238,9 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                     int x = index % bmp.Width;
                     int y = index / bmp.Width;
                     if (x < bmp.Width && y < bmp.Height)
+                    {
                         bmp.SetPixel(x, y, color);
+                    }
                 }
             }
         }
@@ -249,7 +270,9 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                     foreach (var obj in PcsObjects)
                     {
                         if (obj.IsForced)
+                        {
                             return true;
+                        }
                     }
                     return false;
                 }
@@ -258,7 +281,9 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             public Bitmap GetBitmap()
             {
                 if (PcsObjects.Count == 1)
+                {
                     return SupDecoder.DecodeImage(PcsObjects[0], BitmapObjects[0], PaletteInfos);
+                }
 
                 var r = Rectangle.Empty;
                 for (int ioIndex = 0; ioIndex < PcsObjects.Count; ioIndex++)
@@ -444,13 +469,19 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
         private static bool CompletePcs(PcsData pcs, Dictionary<int, List<OdsData>> bitmapObjects, Dictionary<int, List<PaletteInfo>> palettes)
         {
             if (pcs?.PcsObjects == null || palettes == null)
+            {
                 return false;
+            }
 
             if (pcs.PcsObjects.Count == 0)
+            {
                 return true;
+            }
 
             if (!palettes.ContainsKey(pcs.PaletteId))
+            {
                 return false;
+            }
 
             pcs.PaletteInfos = new List<PaletteInfo>(palettes[pcs.PaletteId]);
             pcs.BitmapObjects = new List<List<OdsData>>();
@@ -458,7 +489,10 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             {
                 int objId = pcs.PcsObjects[index].ObjectId;
                 if (!bitmapObjects.ContainsKey(objId))
+                {
                     return false;
+                }
+
                 pcs.BitmapObjects.Add(bitmapObjects[objId]);
             }
             return true;
@@ -479,7 +513,9 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             var p = new PaletteInfo { PaletteSize = (segment.Size - 2) / 5 };
 
             if (p.PaletteSize <= 0)
+            {
                 return new PdsData { Message = "Empty palette" };
+            }
 
             p.PaletteBuffer = new byte[p.PaletteSize * 5];
             Buffer.BlockCopy(buffer, 2, p.PaletteBuffer, 0, p.PaletteSize * 5); // save palette buffer in palette object
@@ -726,11 +762,16 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             if (latestPcs != null)
             {
                 if (CompletePcs(latestPcs, bitmapObjects, palettes.Count > 0 ? palettes : lastPalettes))
+                {
                     pcsList.Add(latestPcs);
+                }
             }
 
             for (int pcsIndex = 1; pcsIndex < pcsList.Count; pcsIndex++)
+            {
                 pcsList[pcsIndex - 1].EndTime = pcsList[pcsIndex].StartTime;
+            }
+
             pcsList.RemoveAll(pcs => pcs.PcsObjects.Count == 0);
 
             foreach (var pcs in pcsList)
@@ -741,7 +782,10 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                     {
                         int bufSize = 0;
                         foreach (var ods in odsList)
+                        {
                             bufSize += ods.Fragment.ImagePacketSize;
+                        }
+
                         byte[] buf = new byte[bufSize];
                         int offset = 0;
                         foreach (var ods in odsList)
@@ -752,7 +796,9 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                         odsList[0].Fragment.ImageBuffer = buf;
                         odsList[0].Fragment.ImagePacketSize = bufSize;
                         while (odsList.Count > 1)
+                        {
                             odsList.RemoveAt(1);
+                        }
                     }
                 }
             }
@@ -789,16 +835,26 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
         private static bool ByteArraysEqual(byte[] b1, byte[] b2)
         {
             if (b1 == b2)
+            {
                 return true;
+            }
+
             if (b1 == null || b2 == null)
+            {
                 return false;
+            }
+
             if (b1.Length != b2.Length)
+            {
                 return false;
+            }
 
             for (int i = 0; i < b1.Length; i++)
             {
                 if (b1[i] != b2[i])
+                {
                     return false;
+                }
             }
             return true;
         }
@@ -823,14 +879,20 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
         public static int BigEndianInt16(byte[] buffer, int index)
         {
             if (buffer.Length < 2)
+            {
                 return 0;
+            }
+
             return buffer[index + 1] | (buffer[index] << 8);
         }
 
         private static uint BigEndianInt32(byte[] buffer, int index)
         {
             if (buffer.Length < 4)
+            {
                 return 0;
+            }
+
             return (uint)(buffer[index + 3] + (buffer[index + 2] << 8) + (buffer[index + 1] << 0x10) + (buffer[index + 0] << 0x18));
         }
 

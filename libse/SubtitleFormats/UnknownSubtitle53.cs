@@ -45,7 +45,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 if (RegexTimeCodes.Match(s).Success)
                 {
                     if (!string.IsNullOrEmpty(p?.Text))
+                    {
                         subtitle.Paragraphs.Add(p);
+                    }
+
                     p = new Paragraph();
 
                     try
@@ -55,9 +58,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         string text = s.Substring(11).Trim();
                         p.Text = text;
                         if (text.Length > 1 && Utilities.IsInteger(text.Substring(0, 2)))
+                        {
                             _errorCount++;
+                        }
+
                         if (text.Contains("<<Graphic>>"))
+                        {
                             _errorCount++;
+                        }
                     }
                     catch
                     {
@@ -74,7 +82,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
             }
             if (!string.IsNullOrEmpty(p?.Text))
+            {
                 subtitle.Paragraphs.Add(p);
+            }
 
             int index = 1;
             foreach (Paragraph paragraph in subtitle.Paragraphs)

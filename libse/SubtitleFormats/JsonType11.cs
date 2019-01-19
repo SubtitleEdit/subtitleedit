@@ -17,7 +17,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 if (count > 0)
+                {
                     sb.Append(',');
+                }
+
                 sb.Append("{\"milliseconds\":");
                 sb.Append(Json.EncodeJsonText(p.StartTime.TotalMilliseconds.ToString(System.Globalization.CultureInfo.InvariantCulture)));
                 sb.Append(",\"line\":\"");
@@ -34,10 +37,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             _errorCount = 0;
             var sb = new StringBuilder();
             foreach (string s in lines)
+            {
                 sb.Append(s);
+            }
+
             string allText = sb.ToString().Trim();
             if (!(allText.StartsWith("[", StringComparison.Ordinal) && allText.Contains("milliseconds", StringComparison.Ordinal)))
+            {
                 return;
+            }
 
             foreach (string line in allText.Split('{', '}', '[', ']'))
             {

@@ -53,7 +53,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 if (line.Length == 0)
                 {
                     if (p != null)
+                    {
                         p.Text = text.ToString().Trim();
+                    }
                 }
                 else if (RegexTimeCode.IsMatch(line))
                 {
@@ -80,11 +82,16 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     text.AppendLine(line);
                     if (text.Length > 5000)
+                    {
                         return;
+                    }
                 }
             }
             if (p != null)
+            {
                 p.Text = text.ToString().Trim();
+            }
+
             subtitle.Renumber();
         }
 

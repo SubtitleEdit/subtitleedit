@@ -9,10 +9,14 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
         private bool IsAbbreviation(string text, int index, IFixCallbacks callbacks)
         {
             if (text[index] != '.')
+            {
                 return false;
+            }
 
             if (index - 3 > 0 && char.IsLetterOrDigit(text[index - 1]) && text[index - 2] == '.') // e.g: O.R.
+            {
                 return true;
+            }
 
             var word = string.Empty;
             int i = index - 1;
@@ -68,7 +72,9 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
                         start += 3;
                         if (start < text.Length)
+                        {
                             start = text.IndexOfAny(ExpectedChars, start);
+                        }
                     }
                     text = st.CombineWithPrePost(text);
                     if (oldText != text)

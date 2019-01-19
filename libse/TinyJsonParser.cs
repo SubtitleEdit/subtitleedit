@@ -63,9 +63,13 @@ namespace Nikse.SubtitleEdit.Core
         public void WriteLine(string message, params object[] arguments)
         {
             if (arguments != null && arguments.Length > 0)
+            {
                 Writer.WriteLine(message, arguments);
+            }
             else
+            {
                 Writer.WriteLine(message);
+            }
         }
     }
 #pragma warning restore 1591
@@ -116,7 +120,9 @@ namespace Nikse.SubtitleEdit.Core
             SkipWhitespace();
 
             if (Pos != InputLength)
+            {
                 throw BuildParserException("extra characters at end");
+            }
 
             return o;
         }
@@ -305,8 +311,15 @@ namespace Nikse.SubtitleEdit.Core
         private void ExpectDigits(ref int pos)
         {
             int start = pos;
-            while (pos < InputLength && char.IsDigit(Input[pos])) pos++;
-            if (start == pos) throw BuildParserException("not a number");
+            while (pos < InputLength && char.IsDigit(Input[pos]))
+            {
+                pos++;
+            }
+
+            if (start == pos)
+            {
+                throw BuildParserException("not a number");
+            }
         }
 
         private string String()
@@ -366,11 +379,16 @@ namespace Nikse.SubtitleEdit.Core
                         case 'u':
                             currentPos += 4;
                             if (currentPos >= InputLength)
+                            {
                                 throw BuildParserException("unterminated unicode escape in string");
+                            }
                             else
                             {
                                 if (!int.TryParse(Input.Substring(currentPos - 3, 4), NumberStyles.AllowHexSpecifier, NumberFormatInfo.InvariantInfo, out var u))
+                                {
                                     throw BuildParserException("not a well-formed unicode escape sequence in string");
+                                }
+
                                 sb.Append((char)u);
                             }
                             break;
@@ -435,7 +453,11 @@ namespace Nikse.SubtitleEdit.Core
                 {
                     list.Add(obj);
                     SkipWhitespace();
-                    if (IsNext(']')) break;
+                    if (IsNext(']'))
+                    {
+                        break;
+                    }
+
                     Expect(',');
                 }
             }
@@ -473,7 +495,11 @@ namespace Nikse.SubtitleEdit.Core
                 }
 
                 SkipWhitespace();
-                if (IsNext('}')) break;
+                if (IsNext('}'))
+                {
+                    break;
+                }
+
                 Expect(',');
             }
             while (kvp != null);
@@ -503,7 +529,11 @@ namespace Nikse.SubtitleEdit.Core
         private void SkipWhitespace()
         {
             int n = Pos;
-            while (IsWhiteSpace(n)) n++;
+            while (IsWhiteSpace(n))
+            {
+                n++;
+            }
+
             if (n != Pos)
             {
                 AdvanceInput(n - Pos);
@@ -512,7 +542,11 @@ namespace Nikse.SubtitleEdit.Core
 
         private bool IsWhiteSpace(int n)
         {
-            if (n >= InputLength) return false;
+            if (n >= InputLength)
+            {
+                return false;
+            }
+
             char c = Input[n];
             return c == ' ' || c == '\t' || c == '\r' || c == '\n';
         }

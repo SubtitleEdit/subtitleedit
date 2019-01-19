@@ -93,7 +93,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 lastTimeCode = subtitle.Paragraphs[subtitle.Paragraphs.Count - 1].StartTime;
             }
             if (string.IsNullOrWhiteSpace(title))
+            {
                 title = "Unknown";
+            }
+
             xml.LoadXml(xmpTemplate.Replace('\'', '"'));
             var globalFileInfoNode = xml.DocumentElement.SelectSingleNode("FileHeader/GlobalFileInfo");
             globalFileInfoNode.Attributes["ProgrammeName"].InnerText = title;
@@ -179,9 +182,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         foreach (XmlNode paragraphNode in node.SelectSingleNode("ThreadedObject/Content/SubtitleText/Paragraph").ChildNodes)
                         {
                             if (paragraphNode.Name == "Text")
+                            {
                                 sb.Append(" " + paragraphNode.InnerText);
+                            }
                             else if (paragraphNode.Name == "HardReturn")
+                            {
                                 sb.AppendLine();
+                            }
                         }
                         var p = new Paragraph(timeCodeIn, timeCodeOut, sb.ToString().Replace("  ", " ").Trim());
                         subtitle.Paragraphs.Add(p);

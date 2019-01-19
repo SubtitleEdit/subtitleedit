@@ -130,7 +130,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                 XmlNode use2997DropFrame = xml.DocumentElement.SelectSingleNode("TrackList/Track/FcpProperty");
                 if (use2997DropFrame != null && use2997DropFrame.Attributes["Use2997DropFrame"] != null && use2997DropFrame.Attributes["Use2997DropFrame"].InnerText == "1")
+                {
                     Configuration.Settings.General.CurrentFrameRate = 29.97;
+                }
 
                 foreach (XmlNode node in xml.SelectNodes("//StItem"))
                 {
@@ -142,7 +144,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         XmlNodeList list = node.SelectNodes("StTextList/StText");
 
                         if (list.Count == 3 && RegexTimeCodes.IsMatch(list[2].InnerText))
+                        {
                             p.StartTime.TotalMilliseconds = TimeCode.ParseHHMMSSFFToMilliseconds(list[2].InnerText);
+                        }
 
                         if (list.Count > 1)
                         {
@@ -175,7 +179,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 i++;
                 var next = subtitle.GetParagraphOrDefault(i);
                 if (next != null)
+                {
                     p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds;
+                }
             }
             subtitle.RemoveEmptyLines();
         }

@@ -19,9 +19,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var sb = new StringBuilder();
             sb.AppendLine("TITLE: " + title);
             if (Configuration.Settings.General.CurrentFrameRate % 1.0 > 0.01)
+            {
                 sb.AppendLine("FCM: NON-DROP FRAME");
+            }
             else
+            {
                 sb.AppendLine("FCM: DROP FRAME");
+            }
+
             sb.AppendLine();
             const string writeFormat = "{0:000000}  {1}       {2}     {3}        {4} {5} {6} {7}";
             for (int index = 0; index < subtitle.Paragraphs.Count; index++)
@@ -80,7 +85,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         {
                             isTimeCode = true;
                             if (lastParagraph != null && Math.Abs(lastParagraph.StartTime.TotalMilliseconds + 1) > 0.001)
+                            {
                                 subtitle.Paragraphs.Add(lastParagraph);
+                            }
 
                             var arr = line.Split(splitChar, StringSplitOptions.RemoveEmptyEntries);
                             try
@@ -109,7 +116,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         success = true;
                     }
                     if (!success && count > 9)
+                    {
                         _errorCount++;
+                    }
                 }
                 count++;
             }

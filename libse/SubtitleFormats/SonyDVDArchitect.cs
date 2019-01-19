@@ -46,7 +46,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                 Match match = null;
                 if (line.Length > 26 && line[2] == ':')
+                {
                     match = Regex.Match(line);
+                }
 
                 if (match != null && match.Success)
                 {
@@ -82,7 +84,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     success = true;
                 }
                 if (!success)
+                {
                     _errorCount++;
+                }
             }
             subtitle.Renumber();
         }

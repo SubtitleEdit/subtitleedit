@@ -26,7 +26,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             int milliseconds = (int)Math.Round(((TimeCode.BaseUnit / Configuration.Settings.General.CurrentFrameRate) * frames));
             if (milliseconds > 999)
+            {
                 milliseconds = 999;
+            }
 
             return new TimeCode(hour, minutes, seconds, milliseconds);
         }
@@ -59,11 +61,17 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                 XmlAttribute align = xml.CreateAttribute("Align");
                 if (p.Text.StartsWith("{\\an1}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an4}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an7}", StringComparison.Ordinal))
+                {
                     align.InnerText = "Left";
+                }
                 else if (p.Text.StartsWith("{\\an3}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an6}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an9}", StringComparison.Ordinal))
+                {
                     align.InnerText = "Right";
+                }
                 else
+                {
                     align.InnerText = "Center";
+                }
 
                 paragraph.Attributes.Append(align);
 
@@ -86,7 +94,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             string allText = sb.ToString();
             if (!allText.Contains("<CaptionAssistant>") || !allText.Contains("<CaptionData>"))
+            {
                 return;
+            }
 
             var xml = new XmlDocument { XmlResolver = null };
             try
@@ -118,9 +128,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         {
                             string align = node.Attributes.GetNamedItem("Align").InnerText.Trim();
                             if (align.Equals("left", StringComparison.OrdinalIgnoreCase))
+                            {
                                 text = "{\\an1}" + text;
+                            }
                             else if (align.Equals("right", StringComparison.OrdinalIgnoreCase))
+                            {
                                 text = "{\\an3}" + text;
+                            }
                         }
 
                         string start = node.Attributes.GetNamedItem("PositionIn").InnerText;

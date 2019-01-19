@@ -20,9 +20,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             var sb = new StringBuilder();
             foreach (string line in lines)
+            {
                 sb.AppendLine(line);
+            }
+
             if (sb.ToString().Contains("#INPOINT OUTPOINT PATH"))
+            {
                 return false; // Pinnacle Impression
+            }
 
             LoadSubtitle(subtitle, lines, fileName);
 
@@ -30,13 +35,19 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 if (p.Text.Contains(Environment.NewLine))
+                {
                     containsNewLine = true;
+                }
             }
             if (sb.ToString().Contains("//") && !containsNewLine)
+            {
                 return false; // "DVD Subtitle System" format
+            }
 
             if (_maxMsDiv10 > 90 && !containsNewLine)
+            {
                 return false; // "DVD Subtitle System" format (frame rate should not go higher than 90...)
+            }
 
             return subtitle.Paragraphs.Count > _errorCount;
         }
@@ -99,9 +110,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 else if (p != null)
                 {
                     if (string.IsNullOrEmpty(p.Text))
+                    {
                         p.Text = line;
+                    }
                     else
+                    {
                         p.Text += Environment.NewLine + line;
+                    }
                 }
                 else
                 {
@@ -121,7 +136,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             int frames = int.Parse(parts[3]);
 
             if (frames > _maxMsDiv10)
+            {
                 _maxMsDiv10 = frames;
+            }
 
             return new TimeCode(int.Parse(hour), int.Parse(minutes), int.Parse(seconds), FramesToMillisecondsMax999(frames));
         }

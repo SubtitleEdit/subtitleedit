@@ -11,7 +11,10 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
             get
             {
                 if (_startMilliseconds < OffsetMilliseconds)
+                {
                     return 0;
+                }
+
                 return _startMilliseconds - OffsetMilliseconds;
             }
             set
@@ -27,7 +30,10 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
             get
             {
                 if (_endMilliseconds < OffsetMilliseconds)
+                {
                     return 0;
+                }
+
                 return _endMilliseconds - OffsetMilliseconds;
             }
             set
@@ -83,10 +89,15 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
         public Bitmap GetActiveImage()
         {
             if (_bdSup != null)
+            {
                 return _bdSup.GetBitmap();
+            }
 
             if (ActiveImageIndex.HasValue && ActiveImageIndex >= 0 && ActiveImageIndex < Pes.ObjectDataList.Count)
+            {
                 return (Bitmap)Pes.GetImage(Pes.ObjectDataList[ActiveImageIndex.Value]).Clone();
+            }
+
             return Pes.GetImageFull();
         }
 
@@ -95,9 +106,13 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
             get
             {
                 if (Pes != null)
+                {
                     return Pes.ObjectDataList.Count;
+                }
                 else
+                {
                     return _bdSup.BitmapObjects.Count;
+                }
             }
         }
 

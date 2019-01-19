@@ -19,7 +19,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             string xmlAsString = sb.ToString().RemoveControlCharactersButWhiteSpace().Trim();
 
             if (xmlAsString.Contains("xmlns:tts=\"http://www.w3.org/2006/04"))
+            {
                 return false;
+            }
 
             if (xmlAsString.Contains("=\"http://www.w3.org/ns/ttml#parameter") && (xmlAsString.Contains(".png") || xmlAsString.Contains(".jpg") || xmlAsString.Contains(".bmp")))
             {
@@ -32,7 +34,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     nsmgr.AddNamespace("tt", xml.DocumentElement.NamespaceURI);
                     XmlNode body = xml.DocumentElement.SelectSingleNode("//tt:body", nsmgr);
                     if (body == null)
+                    {
                         body = xml.DocumentElement.SelectSingleNode("//tt:body", nsmgr);
+                    }
+
                     int numberOfParagraphs = body.ChildNodes.Count;
                     return numberOfParagraphs > 0;
                 }
@@ -64,7 +69,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             XmlNode body = xml.DocumentElement.SelectSingleNode("//tt:body", nsmgr);
             if (body == null)
+            {
                 body = xml.DocumentElement.SelectSingleNode("//tt:body", nsmgr);
+            }
 
             bool couldBeFrames = true;
             bool couldBeMillisecondsWithMissingLastDigit = true;
@@ -79,7 +86,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         {
                             var src = innerNode.Attributes["src"];
                             if (src != null)
+                            {
                                 pText.Append(src.InnerText);
+                            }
+
                             break;
                         }
                     }
@@ -90,15 +100,23 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     foreach (XmlAttribute attr in node.Attributes)
                     {
                         if (attr.Name.EndsWith("begin", StringComparison.Ordinal))
+                        {
                             start = attr.InnerText;
+                        }
                         else if (attr.Name.EndsWith("end", StringComparison.Ordinal))
+                        {
                             end = attr.InnerText;
+                        }
                         else if (attr.Name.EndsWith("duration", StringComparison.Ordinal))
+                        {
                             dur = attr.InnerText;
+                        }
                     }
 
                     if (start == null)
+                    {
                         continue;
+                    }
 
                     string text = pText.ToString();
                     text = text.Replace(Environment.NewLine + "</i>", "</i>" + Environment.NewLine);
@@ -128,13 +146,23 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             if (!couldBeFrames)
                             {
                                 if (end.Length == 11 && end[8] == '.') // 00:05:36.92
+                                {
                                     end += "0";
+                                }
                                 else if (end.Length == 10 && end[8] == '.') // 00:05:36.9
+                                {
                                     end += "00";
+                                }
+
                                 if (start.Length == 11 && start[8] == '.') // 00:05:36.92
+                                {
                                     start += "0";
+                                }
                                 else if (start.Length == 10 && start[8] == '.') // 00:05:36.9
+                                {
                                     start += "00";
+                                }
+
                                 couldBeMillisecondsWithMissingLastDigit = false;
                             }
 
@@ -188,7 +216,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 foreach (Paragraph p in subtitle.Paragraphs)
                 {
                     if (p.StartTime.Milliseconds > 30 || p.EndTime.Milliseconds > 30)
+                    {
                         all30OrBelow = false;
+                    }
                 }
                 if (all30OrBelow)
                 {

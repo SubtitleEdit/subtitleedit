@@ -32,7 +32,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             //00:03:15:22 (last is frame)
             int sec = time.Seconds;
             if (time.Milliseconds >= 500)
+            {
                 sec++;
+            }
+
             return $"{time.Hours:00}:{time.Minutes:00}:{sec:00}:";
         }
 
@@ -81,12 +84,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 Paragraph current = subtitle.Paragraphs[i];
                 Paragraph next = subtitle.GetParagraphOrDefault(i + 1);
                 if (next != null)
+                {
                     current.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                }
                 else
+                {
                     current.EndTime.TotalMilliseconds = current.StartTime.TotalMilliseconds + Utilities.GetOptimalDisplayMilliseconds(current.Text);
+                }
 
                 if (current.Duration.TotalMilliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
+                {
                     current.EndTime.TotalMilliseconds = current.StartTime.TotalMilliseconds + Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds;
+                }
             }
 
             subtitle.Renumber();

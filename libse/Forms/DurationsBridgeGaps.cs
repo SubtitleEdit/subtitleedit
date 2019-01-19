@@ -35,9 +35,14 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 {
                     string info;
                     if (!string.IsNullOrEmpty(before))
+                    {
                         info = $"{before} => {msToNext / TimeCode.BaseUnit:0.000}";
+                    }
                     else
+                    {
                         info = $"{msToNext / TimeCode.BaseUnit:0.000}";
+                    }
+
                     dic?.Add(cur.ID, info);
                 }
             }

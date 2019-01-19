@@ -43,7 +43,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 ý                                       Kraj info blocka.");
             sb.AppendLine();
             if (!subtitle.WasLoadedWithFrameNumbers)
+            {
                 subtitle.CalculateFrameNumbersFromTimeCodes(Configuration.Settings.General.CurrentFrameRate);
+            }
+
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 var text = HtmlUtil.RemoveOpenCloseTags(p.Text, HtmlUtil.TagFont);
@@ -64,7 +67,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 if (RegexTimeCode.IsMatch(s))
                 {
                     if (paragraph != null)
+                    {
                         subtitle.Paragraphs.Add(paragraph);
+                    }
+
                     paragraph = new Paragraph();
                     string[] parts = line.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                     if (parts.Length == 5)
@@ -96,7 +102,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
             }
             if (paragraph != null)
+            {
                 subtitle.Paragraphs.Add(paragraph);
+            }
+
             subtitle.Renumber();
         }
 

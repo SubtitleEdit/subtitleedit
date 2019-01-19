@@ -44,7 +44,10 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                 rcso.ObjectVerticalPosition = ((buffer[index + i + 10] & Helper.B00001111) << 8) + buffer[index + i + 11];
                 i += 2;
                 if (rcso.ObjectType == 1 || rcso.ObjectType == 2)
+                {
                     i += 2;
+                }
+
                 Objects.Add(rcso);
             }
         }

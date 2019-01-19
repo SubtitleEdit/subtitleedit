@@ -68,7 +68,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             lines.ForEach(line => sb.AppendLine(line));
 
             if (!sb.ToString().Contains("<TextStream"))
+            {
                 return;
+            }
 
             var xml = new XmlDocument { XmlResolver = null };
             try
@@ -78,7 +80,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 foreach (XmlNode node in xml.DocumentElement.SelectNodes("TextSample"))
                 {
                     if (last != null && last.EndTime.TotalMilliseconds < 1)
+                    {
                         last.EndTime = GetTimeCode(node.Attributes["sampleTime"].Value);
+                    }
 
                     var p = new Paragraph();
                     p.Text = node.InnerText;
@@ -87,7 +91,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     {
                         var text = node.Attributes["text"];
                         if (text != null)
+                        {
                             p.Text = text.Value;
+                        }
                     }
                     if (!string.IsNullOrEmpty(p.Text))
                     {

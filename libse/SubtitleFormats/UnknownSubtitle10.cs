@@ -19,7 +19,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 if (i > 0)
+                {
                     sb.Append(',');
+                }
+
                 sb.Append('{');
                 sb.AppendFormat("\"content\":\"{0}\",\"start_time\":{1},\"end_time\":{2}", p.Text.Replace(Environment.NewLine, " <br> "), ((long)(Math.Round(p.StartTime.TotalMilliseconds))).ToString(CultureInfo.InvariantCulture), ((long)(Math.Round(p.EndTime.TotalMilliseconds))).ToString(CultureInfo.InvariantCulture));
                 sb.Append('}');
@@ -33,10 +36,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             var temp = new StringBuilder();
             foreach (string l in lines)
+            {
                 temp.Append(l);
+            }
+
             string all = temp.ToString();
             if (!all.Contains("{\"content\":\""))
+            {
                 return;
+            }
 
             var arr = all.Replace("\n", string.Empty).Replace("{\"content\":\"", "\n").Split('\n');
 
@@ -54,7 +62,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     int indexEndText = indexStartTime;
                     if (indexStartTime > indexEndTime)
+                    {
                         indexEndText = indexEndTime;
+                    }
+
                     string text = line.Substring(0, indexEndText - 1).Trim().TrimEnd('\"');
                     text = text.Replace("<br>", Environment.NewLine).Replace("<BR>", Environment.NewLine);
                     text = text.Replace("<br/>", Environment.NewLine).Replace("<BR/>", Environment.NewLine);
@@ -89,12 +100,17 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         private static double GetMilliseconds(string start)
         {
             while (start.Length > 1 && !start.StartsWith(':'))
+            {
                 start = start.Remove(0, 1);
+            }
+
             start = start.Trim().Trim(':').Trim('"').Trim();
 
             int i = 0;
             while (i < start.Length && char.IsDigit(start[i]))
+            {
                 i++;
+            }
 
             return int.Parse(start.Substring(0, i));
         }

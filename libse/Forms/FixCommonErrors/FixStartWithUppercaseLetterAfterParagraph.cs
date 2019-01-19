@@ -80,11 +80,16 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
                 string prevText = " .";
                 if (prev != null)
+                {
                     prevText = HtmlUtil.RemoveHtmlTags(prev.Text);
+                }
 
                 bool isPrevEndOfLine = Helper.IsPreviousTextEndOfParagraph(prevText);
                 if (prevText == " .")
+                {
                     isPrevEndOfLine = true;
+                }
+
                 if ((!text.StartsWith("www.", StringComparison.Ordinal) && !text.StartsWith("http:", StringComparison.Ordinal) && !text.StartsWith("https:", StringComparison.Ordinal)) &&
                     (char.IsLower(firstLetter) || Helper.IsTurkishLittleI(firstLetter, encoding, language)) &&
                     !char.IsDigit(firstLetter) &&
@@ -98,11 +103,17 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     if (!isMatchInKnowAbbreviations)
                     {
                         if (Helper.IsTurkishLittleI(firstLetter, encoding, language))
+                        {
                             p.Text = pre + Helper.GetTurkishUppercaseLetter(firstLetter, encoding) + text.Substring(1);
+                        }
                         else if (IsEnglishCandidateForLowercaseLtoUppercaseI(language, text)) // l > I
+                        {
                             p.Text = pre + "I" + text.Substring(1);
+                        }
                         else
+                        {
                             p.Text = pre + char.ToUpper(firstLetter) + text.Substring(1);
+                        }
                     }
                 }
             }
@@ -171,11 +182,18 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         if (!isMatchInKnowAbbreviations)
                         {
                             if (Helper.IsTurkishLittleI(firstLetter, encoding, language))
+                            {
                                 text = pre + Helper.GetTurkishUppercaseLetter(firstLetter, encoding) + text.Substring(1);
+                            }
                             else if (IsEnglishCandidateForLowercaseLtoUppercaseI(language, text)) // l > I
+                            {
                                 text = pre + "I" + text.Substring(1);
+                            }
                             else
+                            {
                                 text = pre + char.ToUpper(firstLetter) + text.Substring(1);
+                            }
+
                             p.Text = arr[0] + Environment.NewLine + text;
                         }
                     }
@@ -198,7 +216,10 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
                         prevText = " .";
                         if (prev != null && p.StartTime.TotalMilliseconds - 10000 < prev.EndTime.TotalMilliseconds)
+                        {
                             prevText = HtmlUtil.RemoveHtmlTags(prev.Text);
+                        }
+
                         bool isPrevLineEndOfLine = Helper.IsPreviousTextEndOfParagraph(prevText);
                         if (isPrevLineEndOfLine && arr[0].StartsWith("<i>- ", StringComparison.Ordinal) && arr[0].Length > 6)
                         {

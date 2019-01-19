@@ -226,9 +226,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                 XmlAttribute layoutIndex = xml.CreateAttribute("layoutindex");
                 if (p.Text.TrimStart().StartsWith("<i>", StringComparison.OrdinalIgnoreCase) && p.Text.TrimEnd().EndsWith("</i>", StringComparison.OrdinalIgnoreCase))
+                {
                     layoutIndex.InnerText = "4";
+                }
                 else
+                {
                     layoutIndex.InnerText = "0";
+                }
 
                 paragraph.Attributes.Append(layoutIndex);
 
@@ -274,9 +278,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 XmlNode fontItalic = node.SelectSingleNode("FontItalic");
                 if (fontItalic != null && fontItalic.InnerText == "1")
+                {
                     italicStyles.Add(true);
+                }
                 else
+                {
                     italicStyles.Add(false);
+                }
             }
 
             foreach (XmlNode node in xml.DocumentElement.SelectNodes("Subtitle/SubtitleItem"))
@@ -327,12 +335,16 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     if (mustHaveLineBreakAsEnd)
                     {
                         if (!pText.ToString().EndsWith("\\n", StringComparison.Ordinal))
+                        {
                             _errorCount++;
+                        }
                     }
                     else
                     {
                         if (pText.ToString().EndsWith("\\n", StringComparison.Ordinal))
+                        {
                             _errorCount++;
+                        }
                     }
 
                     var p = new Paragraph(startCode, endCode, pText.ToString().Trim().Replace("<Text>", string.Empty).Replace("</Text>", string.Empty).Replace("\\n", Environment.NewLine).TrimEnd());
@@ -342,7 +354,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         if (int.TryParse(node.Attributes["layoutindex"].InnerText, out idx))
                         {
                             if (idx >= 0 && idx < italicStyles.Count && italicStyles[idx])
+                            {
                                 p.Text = "<i>" + p.Text + "</i>";
+                            }
                         }
                     }
                     subtitle.Paragraphs.Add(p);

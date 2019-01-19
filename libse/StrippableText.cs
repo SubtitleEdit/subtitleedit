@@ -128,14 +128,18 @@ namespace Nikse.SubtitleEdit.Core
                                    Environment.NewLine.EndsWith(lower[start - 1]);
 
                     if (startOk && string.CompareOrdinal(name, "Don") == 0 && lower.Substring(start).StartsWith("don't", StringComparison.Ordinal))
+                    {
                         startOk = false;
+                    }
 
                     if (startOk)
                     {
                         int end = start + name.Length;
                         bool endOk = end <= lower.Length;
                         if (endOk)
+                        {
                             endOk = end == lower.Length || (@" ,.!?:;')]- <”""" + Environment.NewLine).Contains(lower[end]);
+                        }
 
                         if (endOk && StrippedText.Length >= start + name.Length)
                         {
@@ -147,9 +151,13 @@ namespace Nikse.SubtitleEdit.Core
                         }
                     }
                     if (start + 3 > lower.Length)
+                    {
                         start = lower.Length + 1;
+                    }
                     else
+                    {
                         start = lower.IndexOf(name, start + 3, StringComparison.OrdinalIgnoreCase);
+                    }
                 }
             }
 
@@ -248,7 +256,10 @@ namespace Nikse.SubtitleEdit.Core
                                         if (ks.StartsWith(id, StringComparison.Ordinal))
                                         {
                                             if (!string.IsNullOrEmpty(originalNames[k]))
+                                            {
                                                 originalNames[k] = char.ToUpper(originalNames[k][0]) + originalNames[k].Remove(0, 1);
+                                            }
+
                                             break;
                                         }
                                     }
@@ -266,7 +277,9 @@ namespace Nikse.SubtitleEdit.Core
                             { // I [Motor roaring] love you!
                                 string temp = sb.ToString(0, idx - 1).Trim();
                                 if (temp.Length > 0 && !char.IsLetterOrDigit(temp[temp.Length - 1]))
+                                {
                                     lastWasBreak = true;
+                                }
                             }
                             else if (s == ']' && idx == -1 && Pre.Contains('['))
                             { // [ Motor roaring ] Hallo!
@@ -319,7 +332,10 @@ namespace Nikse.SubtitleEdit.Core
         private bool IsInMiddleOfUrl(int idx, string s)
         {
             if (idx < s.Length - 1 && (char.IsWhiteSpace(s[idx]) || char.IsPunctuation(s[idx])))
+            {
                 return false;
+            }
+
             return s.StartsWith("www.", StringComparison.OrdinalIgnoreCase) || s.StartsWith("http", StringComparison.OrdinalIgnoreCase);
         }
 

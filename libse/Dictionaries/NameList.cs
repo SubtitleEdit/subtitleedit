@@ -41,9 +41,14 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             foreach (var name in _blackList)
             {
                 if (_namesList.Contains(name))
+                {
                     _namesList.Remove(name);
+                }
+
                 if (_namesMultiList.Contains(name))
+                {
                     _namesMultiList.Remove(name);
+                }
             }
         }
 
@@ -205,16 +210,24 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             if (name.Contains(' '))
             {
                 if (!_namesMultiList.Contains(name))
+                {
                     _namesMultiList.Add(name);
+                }
                 else
+                {
                     return false;
+                }
             }
             else
             {
                 if (!_namesList.Contains(name))
+                {
                     _namesList.Add(name);
+                }
                 else
+                {
                     return false;
+                }
             }
 
             // <two-letter-iso-code>_names.xml, e.g "en_names.xml"
@@ -243,7 +256,9 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
         public bool IsInNamesMultiWordList(string text, string word)
         {
             if (string.IsNullOrEmpty(text))
+            {
                 return false;
+            }
 
             text = text.Replace(Environment.NewLine, " ");
             text = text.FixExtraSpaces();
@@ -257,7 +272,9 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                 if (text.Contains(multiWordName))
                 {
                     if (multiWordName.StartsWith(word + " ", StringComparison.Ordinal) || multiWordName.EndsWith(" " + word, StringComparison.Ordinal) || multiWordName.Contains(" " + word + " "))
+                    {
                         return true;
+                    }
                 }
             }
             return false;
@@ -266,12 +283,16 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
         public bool ContainsCaseInsensitive(string name)
         {
             if (string.IsNullOrEmpty(name))
+            {
                 return false;
+            }
 
             foreach (var n in name.Contains(' ') ? _namesMultiList : _namesList)
             {
                 if (name.Equals(n, StringComparison.OrdinalIgnoreCase))
+                {
                     return true;
+                }
             }
             return false;
         }

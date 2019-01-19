@@ -56,7 +56,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             string xmlString = sb.ToString();
             if (!xmlString.Contains("<Paragraph>") || !xmlString.Contains("<Text>"))
+            {
                 return;
+            }
 
             var xml = new XmlDocument { XmlResolver = null };
             try

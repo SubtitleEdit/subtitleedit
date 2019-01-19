@@ -17,7 +17,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override bool IsMine(List<string> lines, string fileName)
         {
             if (lines.Count > 0 && lines[0] != null && lines[0].StartsWith("{\\rtf1"))
+            {
                 return false;
+            }
 
             _fileName = fileName;
             return base.IsMine(lines, fileName);
@@ -136,14 +138,19 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 if (line.StartsWith("# SUBTITLE", StringComparison.Ordinal))
                 {
                     if (p != null)
+                    {
                         subtitle.Paragraphs.Add(p);
+                    }
+
                     p = new Paragraph();
                 }
                 else if (p != null && line.StartsWith("# TIMEIN", StringComparison.Ordinal))
                 {
                     string timeCode = line.Remove(0, 8).Trim();
                     if (timeCode != "--:--:--:--" && !GetTimeCode(p.StartTime, timeCode))
+                    {
                         _errorCount++;
+                    }
                 }
                 else if (p != null && line.StartsWith("# DURATION", StringComparison.Ordinal))
                 {
@@ -168,7 +175,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     string timeCode = line.Remove(0, 9).Trim();
                     if (timeCode != "--:--:--:--" && !GetTimeCode(p.EndTime, timeCode))
+                    {
                         _errorCount++;
+                    }
                 }
                 else if (p != null && !line.StartsWith('#'))
                 {
@@ -181,7 +190,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
             }
             if (p != null)
+            {
                 subtitle.Paragraphs.Add(p);
+            }
+
             subtitle.RemoveEmptyLines();
             subtitle.Renumber();
 

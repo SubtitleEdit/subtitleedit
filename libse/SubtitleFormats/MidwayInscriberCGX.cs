@@ -38,9 +38,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             var sb = new StringBuilder();
             foreach (string line in lines)
+            {
                 sb.Append(line);
+            }
+
             if (!sb.ToString().Contains("> <"))
+            {
                 return;
+            }
 
             //Var vi bedre end japanerne
             //eller bare mere heldige? <12:03:29:03> <12:03:35:06>
@@ -75,7 +80,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                 }
                 if (sb.Length > 1000)
+                {
                     return;
+                }
             }
             subtitle.Renumber();
         }

@@ -14,7 +14,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override bool IsMine(List<string> lines, string fileName)
         {
             if (fileName != null && !fileName.EndsWith(Extension, StringComparison.OrdinalIgnoreCase))
+            {
                 return false;
+            }
 
             return base.IsMine(lines, fileName);
         }
@@ -40,20 +42,29 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             _errorCount = 0;
             var sb = new StringBuilder();
             foreach (string line in lines)
+            {
                 sb.AppendLine(line);
+            }
 
             string xml = sb.ToString();
             if (!xml.Contains("<transcript") || !xml.Contains("<content"))
+            {
                 return;
+            }
 
             var doc = new XmlDocument { XmlResolver = null };
             doc.LoadXml(xml);
             var content = doc.DocumentElement.SelectSingleNode("content");
             if (content == null)
+            {
                 return;
+            }
+
             var contentAttribute = content.Attributes["content"];
             if (contentAttribute == null)
+            {
                 return;
+            }
 
             string text = contentAttribute.Value;
             LoadF4TextSubtitle(subtitle, text);

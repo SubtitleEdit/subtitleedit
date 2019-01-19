@@ -17,11 +17,19 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             var sb = new StringBuilder();
             foreach (string line in lines)
+            {
                 sb.AppendLine(line);
+            }
+
             if (!sb.ToString().Contains(Environment.NewLine + "NO\tINTIME"))
+            {
                 return false;
+            }
+
             if (!sb.ToString().Contains("$FORMAT"))
+            {
                 return false;
+            }
 
             return base.IsMine(lines, fileName);
         }
@@ -68,7 +76,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     {
                         double f = frameRate / TimeCode.BaseUnit;
                         if (f > 10 && f < 500)
+                        {
                             Configuration.Settings.General.CurrentFrameRate = f;
+                        }
 
                         if (BatchSourceFrameRate.HasValue)
                         {

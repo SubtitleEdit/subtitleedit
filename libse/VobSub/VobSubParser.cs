@@ -43,7 +43,9 @@ namespace Nikse.SubtitleEdit.Core.VobSub
                 ms.Seek(position, SeekOrigin.Begin);
                 ms.Read(buffer, 0, 0x0800);
                 if (IsSubtitlePack(buffer))
+                {
                     VobSubPacks.Add(new VobSubPack(buffer, null));
+                }
 
                 position += 0x800;
             }
@@ -76,13 +78,19 @@ namespace Nikse.SubtitleEdit.Core.VobSub
                                     VobSubPacks.Add(vsp);
 
                                     if (IsPrivateStream1(buffer, 0))
+                                    {
                                         position += vsp.PacketizedElementaryStream.Length + 6;
+                                    }
                                     else
+                                    {
                                         position += 0x800;
+                                    }
 
                                     int currentSubPictureStreamId = 0;    
                                     if(vsp.PacketizedElementaryStream.SubPictureStreamId != null)
+                                    {
                                         currentSubPictureStreamId = vsp.PacketizedElementaryStream.SubPictureStreamId.Value;
+                                    }
 
                                     while (vsp.PacketizedElementaryStream != null &&
                                            vsp.PacketizedElementaryStream.SubPictureStreamId.HasValue &&
@@ -98,9 +106,13 @@ namespace Nikse.SubtitleEdit.Core.VobSub
                                             VobSubPacks.Add(vsp);
 
                                             if (IsPrivateStream1(buffer, 0))
+                                            {
                                                 position += vsp.PacketizedElementaryStream.Length + 6;
+                                            }
                                             else
+                                            {
                                                 position += 0x800;
+                                            }
                                         }
                                         else
                                         {
@@ -133,7 +145,9 @@ namespace Nikse.SubtitleEdit.Core.VobSub
 
             float ticksPerMillisecond = 90.000F;
             if (!IsPal)
+            {
                 ticksPerMillisecond = 90.090F * (23.976F / 24F);
+            }
 
             // get unique streamIds
             var uniqueStreamIds = new List<int>();
@@ -142,7 +156,9 @@ namespace Nikse.SubtitleEdit.Core.VobSub
                 if (p.PacketizedElementaryStream != null &&
                     p.PacketizedElementaryStream.SubPictureStreamId.HasValue &&
                     !uniqueStreamIds.Contains(p.PacketizedElementaryStream.SubPictureStreamId.Value))
+                {
                     uniqueStreamIds.Add(p.PacketizedElementaryStream.SubPictureStreamId.Value);
+                }
             }
 
             IdxParagraph lastIdxParagraph = null;
@@ -158,7 +174,10 @@ namespace Nikse.SubtitleEdit.Core.VobSub
                             if (lastIdxParagraph == null || p.IdxLine.FilePosition != lastIdxParagraph.FilePosition)
                             {
                                 if (ms.Length > 0)
+                                {
                                     list.Add(new VobSubMergedPack(ms.ToArray(), pts, streamId, lastIdxParagraph));
+                                }
+
                                 ms.Close();
                                 ms = new MemoryStream();
                                 pts = TimeSpan.FromMilliseconds(Convert.ToDouble(p.PacketizedElementaryStream.PresentationTimestamp / ticksPerMillisecond)); //90000F * 1000)); (PAL)
@@ -183,9 +202,13 @@ namespace Nikse.SubtitleEdit.Core.VobSub
             {
                 VobSubMergedPack pack = list[i];
                 if (pack.SubPicture == null || pack.SubPicture.ImageDisplayArea.Width <= 3 || pack.SubPicture.ImageDisplayArea.Height <= 2)
+                {
                     list.RemoveAt(i);
+                }
                 else if (pack.EndTime.TotalSeconds - pack.StartTime.TotalSeconds < 0.1 && pack.SubPicture.ImageDisplayArea.Width <= 10 && pack.SubPicture.ImageDisplayArea.Height <= 10)
+                {
                     list.RemoveAt(i);
+                }
             }
 
             // Fix subs with no duration (completely normal) or negative duration or duration > 10 seconds
@@ -193,7 +216,9 @@ namespace Nikse.SubtitleEdit.Core.VobSub
             {
                 VobSubMergedPack pack = list[i];
                 if (pack.SubPicture.Delay.TotalMilliseconds > 0)
+                {
                     pack.EndTime = pack.StartTime.Add(pack.SubPicture.Delay);
+                }
 
                 if (pack.EndTime < pack.StartTime || pack.EndTime.TotalMilliseconds - pack.StartTime.TotalMilliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
                 {
@@ -249,7 +274,9 @@ namespace Nikse.SubtitleEdit.Core.VobSub
                 int pesHeaderDataLength = buffer[Mpeg2Header.Length + 8];
                 int streamId = buffer[Mpeg2Header.Length + 8 + 1 + pesHeaderDataLength];
                 if (streamId >= 0x20 && streamId <= 0x3f) // Subtitle IDs allowed (or x3f to x40?)
+                {
                     return true;
+                }
             }
             return false;
         }

@@ -50,7 +50,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             string allText = sb.ToString();
             if (!allText.Contains("<Cue") && allText.Contains("value="))
+            {
                 return;
+            }
 
             var xml = new XmlDocument { XmlResolver = null };
             try
@@ -70,7 +72,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     string start = node.Attributes["value"].InnerText;
                     if (!string.IsNullOrEmpty(start))
+                    {
                         start = start.Replace(",", ".");
+                    }
+
                     string text = node.InnerText;
 
                     subtitle.Paragraphs.Add(new Paragraph(text, Convert.ToDouble(start, CultureInfo.InvariantCulture), 0));
@@ -89,7 +94,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     Paragraph next = subtitle.Paragraphs[i + 1];
                     if (p.EndTime.TotalMilliseconds > next.StartTime.TotalMilliseconds)
+                    {
                         p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                    }
                 }
             }
             subtitle.Renumber();

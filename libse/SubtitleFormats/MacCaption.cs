@@ -108,7 +108,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         if (text == "942c 942c" || text == "942c")
                         {
                             if (p != null)
+                            {
                                 p.EndTime = new TimeCode(startTime.TotalMilliseconds);
+                            }
                         }
                         else
                         {
@@ -123,13 +125,20 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 p = subtitle.GetParagraphOrDefault(i);
                 Paragraph next = subtitle.GetParagraphOrDefault(i + 1);
                 if (p != null && next != null && Math.Abs(p.EndTime.TotalMilliseconds - p.StartTime.TotalMilliseconds) < 0.001)
+                {
                     p.EndTime = new TimeCode(next.StartTime.TotalMilliseconds);
+                }
+
                 if (next != null && string.IsNullOrEmpty(next.Text))
+                {
                     subtitle.Paragraphs.Remove(next);
+                }
             }
             p = subtitle.GetParagraphOrDefault(0);
             if (p != null && string.IsNullOrEmpty(p.Text))
+            {
                 subtitle.Paragraphs.Remove(p);
+            }
 
             subtitle.Renumber();
         }
@@ -192,7 +201,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 string sub = s.Substring(i);
                 if (sub.Length >= 2)
+                {
                     list.Add(sub.Substring(0, 2));
+                }
             }
             return list;
         }

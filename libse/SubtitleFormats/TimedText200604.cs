@@ -20,10 +20,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             string xmlAsString = sb.ToString().Replace("http://www.w3.org/2006/04/ttaf1#styling\"xml:lang", "http://www.w3.org/2006/04/ttaf1#styling\" xml:lang").Trim();
 
             if (xmlAsString.Contains("http://www.w3.org/2006/10"))
+            {
                 return false;
+            }
 
             if (!UseCDataForParagraphText && xmlAsString.Contains("<![CDATA["))
+            {
                 return false;
+            }
 
             if (xmlAsString.Contains("http://www.w3.org/") &&
                 xmlAsString.Contains("/ttaf1"))
@@ -39,11 +43,19 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     XmlNode div;
                     var body = xml.DocumentElement.SelectSingleNode("//ttaf1:body", nsmgr);
                     if (body == null)
+                    {
                         div = xml.DocumentElement;
+                    }
                     else
+                    {
                         div = xml.DocumentElement.SelectSingleNode("//ttaf1:body", nsmgr).SelectSingleNode("ttaf1:div", nsmgr);
+                    }
+
                     if (div == null)
+                    {
                         div = xml.DocumentElement.SelectSingleNode("//ttaf1:body", nsmgr).FirstChild;
+                    }
+
                     int numberOfParagraphs = div.ChildNodes.Count;
                     return numberOfParagraphs > 0;
                 }
@@ -87,7 +99,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             XmlNode div = xml.DocumentElement.SelectSingleNode("//ttaf1:body", nsmgr).SelectSingleNode("ttaf1:div", nsmgr);
             if (div == null)
+            {
                 div = xml.DocumentElement.SelectSingleNode("//ttaf1:body", nsmgr).FirstChild;
+            }
+
             int no = 0;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
@@ -188,7 +203,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                     pText.Append(innerNode.InnerText);
                                 }
                                 if (italic)
+                                {
                                     pText.Append("</i>");
+                                }
+
                                 break;
                             default:
                                 pText.Append(innerNode.InnerText);
@@ -223,7 +241,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 p.Text = Utilities.RemoveUnneededSpaces(p.Text, null).Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
                 if (p.StartTime.Milliseconds >= 100 || p.EndTime.Milliseconds >= 100)
+                {
                     allBelow100 = false;
+                }
             }
             if (allBelow100)
             {

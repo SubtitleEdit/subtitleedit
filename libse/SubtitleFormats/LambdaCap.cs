@@ -32,9 +32,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             var sb = new StringBuilder();
             foreach (string line in lines)
+            {
                 sb.AppendLine(line);
+            }
+
             if (sb.ToString().StartsWith("{{\\rtf1", StringComparison.Ordinal))
+            {
                 return false;
+            }
 
             return base.IsMine(lines, fileName);
         }
@@ -103,7 +108,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 l = HtmlUtil.RemoveHtmlTags(l, true);
                 lineBuilder.Append(l);
                 if (isWholeLineItalic || isLineItalic)
+                {
                     lineBuilder.Append(" ＠斜３");
+                }
 
                 if (horizontalAlignLeft)
                 {
@@ -196,7 +203,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 else
                 {
                     if (ch != '\t')
+                    {
                         sb.Append(ch);
+                    }
                 }
                 i++;
             }
@@ -278,9 +287,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 else if (p != null)
                 {
                     if (string.IsNullOrEmpty(p.Text))
+                    {
                         p.Text = DecodeStyle(line);
+                    }
                     else
+                    {
                         p.Text = p.Text + Environment.NewLine + DecodeStyle(line);
+                    }
                 }
             }
             subtitle.Renumber();

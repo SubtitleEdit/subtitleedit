@@ -19,7 +19,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 if (fi.Length >= 3000 && fi.Length < 1024000) // not too small or too big
                 {
                     if (!fileName.EndsWith(Extension, StringComparison.OrdinalIgnoreCase))
+                    {
                         return false;
+                    }
 
                     return base.IsMine(lines, fileName);
                 }
@@ -200,7 +202,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             stream.WriteByte((byte)(bytes.Length + 1)); // text length
 
             for (int i = 0; i < 55; i++) // 55 bytes zero padding
+            {
                 stream.WriteByte(0);
+            }
 
             stream.WriteByte(7);
             stream.Write(bytes, 0, bytes.Length);

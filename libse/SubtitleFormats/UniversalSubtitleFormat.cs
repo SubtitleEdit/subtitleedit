@@ -114,7 +114,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             string xmlString = sb.ToString();
             if (!xmlString.Contains("<USFSubtitles") || !xmlString.Contains("<subtitles>"))
+            {
                 return;
+            }
 
             var xml = new XmlDocument { XmlResolver = null };
             try

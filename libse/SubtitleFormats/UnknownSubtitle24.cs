@@ -14,7 +14,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override bool IsMine(List<string> lines, string fileName)
         {
             if (fileName != null && !fileName.EndsWith(Extension, StringComparison.OrdinalIgnoreCase))
+            {
                 return false;
+            }
 
             return base.IsMine(lines, fileName);
         }
@@ -29,11 +31,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             _errorCount = 0;
             var sb = new StringBuilder();
             foreach (string line in lines)
+            {
                 sb.AppendLine(line);
+            }
 
             string rtf = sb.ToString().Trim();
             if (!rtf.StartsWith("{\\rtf", StringComparison.Ordinal))
+            {
                 return;
+            }
 
             lines = rtf.FromRtf().SplitToLines();
             base.LoadSubtitle(subtitle, lines, fileName);

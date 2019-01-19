@@ -13,7 +13,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override bool IsMine(List<string> lines, string fileName)
         {
             if (new SamiModern().IsMine(lines, fileName))
+            {
                 return false;
+            }
 
             var text = GetSamiFromAvDicPlayerText(lines);
             var subtitle = new Subtitle();

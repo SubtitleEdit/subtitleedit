@@ -26,7 +26,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override bool IsMine(List<string> lines, string fileName)
         {
             if (new UnknownSubtitle88().IsMine(lines, fileName))
+            {
                 return false;
+            }
 
             return base.IsMine(lines, fileName);
         }
@@ -56,9 +58,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 else if (p != null)
                 {
                     if (string.IsNullOrEmpty(p.Text))
+                    {
                         p.Text = s;
+                    }
                     else
+                    {
                         p.Text = p.Text + Environment.NewLine + s;
+                    }
 
                     if (p.Text.Length > 800)
                     {

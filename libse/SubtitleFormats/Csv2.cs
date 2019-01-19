@@ -33,9 +33,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 else if (!string.IsNullOrWhiteSpace(line))
                 {
                     if (continuation)
+                    {
                         continuation = false;
+                    }
                     else
+                    {
                         failed++;
+                    }
                 }
             }
             return fine > failed;
@@ -70,6 +74,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     string[] parts = line.Substring(0, m.Length).Split(Separator.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                     if (parts.Length == 3)
+                    {
                         try
                         {
                             var start = DecodeTimeCode(parts[1]);
@@ -84,13 +89,17 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         {
                             _errorCount++;
                         }
+                    }
                 }
                 else if (!string.IsNullOrWhiteSpace(line))
                 {
                     if (continuation)
                     {
                         if (p != null && p.Text.Length < 300)
+                        {
                             p.Text = (p.Text + Environment.NewLine + line.TrimEnd('"')).Trim();
+                        }
+
                         continuation = !line.TrimEnd().EndsWith('"');
                     }
                     else

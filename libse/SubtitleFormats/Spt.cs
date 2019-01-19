@@ -20,7 +20,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             // header
             fs.WriteByte(1);
             for (int i = 1; i < 23; i++)
+            {
                 fs.WriteByte(0);
+            }
+
             fs.WriteByte(0x60);
 
             // paragraphs
@@ -32,7 +35,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             // footer
             fs.WriteByte(0xff);
             for (int i = 0; i < 11; i++)
+            {
                 fs.WriteByte(0);
+            }
+
             fs.WriteByte(0x11);
             byte[] footerBuffer = Encoding.ASCII.GetBytes("dummy end of file");
             fs.Write(footerBuffer, 0, footerBuffer.Length);
@@ -47,7 +53,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             string text = p.Text;
             if (Utilities.GetNumberOfLines(text) > 2)
+            {
                 text = Utilities.AutoBreakLine(p.Text);
+            }
 
             var lines = text.SplitToLines();
             int textLengthFirstLine = 0;
@@ -56,7 +64,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 textLengthFirstLine = lines[0].Length;
                 if (lines.Count > 1)
+                {
                     textLengthSecondLine = lines[1].Length;
+                }
             }
         }
 
@@ -79,7 +89,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         if (buffer[00] > 10 &&
                             buffer[01] == 0 &&
                             fileName.EndsWith(".spt", StringComparison.OrdinalIgnoreCase))
+                        {
                             return true;
+                        }
                     }
                 }
                 catch
@@ -105,7 +117,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 Paragraph p = GetSptParagraph(ref index, buffer);
                 if (p != null)
+                {
                     subtitle.Paragraphs.Add(p);
+                }
             }
             subtitle.Renumber();
         }
@@ -137,7 +151,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 p.Text = Encoding.Default.GetString(buffer, index + 16 + 20 + 16, textLengthFirstLine);
 
                 if (textLengthSecondLine > 0)
+                {
                     p.Text += Environment.NewLine + Encoding.Default.GetString(buffer, index + 16 + 20 + 16 + textLengthFirstLine, textLengthSecondLine);
+                }
 
                 index += (16 + 20 + 16 + textLengthFirstLine + textLengthSecondLine);
                 return p;
@@ -159,7 +175,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             int milliseconds = (int)Math.Round(1000.0 / Configuration.Settings.General.CurrentFrameRate * frames);
             if (milliseconds > 999)
+            {
                 milliseconds = 999;
+            }
 
             return new TimeCode(hour, minute, second, milliseconds);
         }

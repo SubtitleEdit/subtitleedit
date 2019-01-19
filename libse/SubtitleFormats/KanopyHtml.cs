@@ -25,7 +25,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 var start = $"{p.StartTime.Minutes:00}:{p.StartTime.Seconds:00}";
                 if (p.StartTime.Hours > 0)
+                {
                     start = $"{p.StartTime.Hours:00}:{start}";
+                }
+
                 sb.AppendLine($"      <a href='#' begin=\"{p.StartTime.TotalSeconds:0.000}\" end=\"{p.EndTime.TotalSeconds:0.000}\"><span class='ts'>{start}</span> {p.Text.Replace(Environment.NewLine, " <br />")}</a>");
             }
             sb.AppendLine("</div>");
@@ -38,10 +41,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             var temp = new StringBuilder();
             foreach (string l in lines)
+            {
                 temp.Append(l);
+            }
+
             string all = temp.ToString();
             if (!all.Contains(" begin=") || !all.Contains(" end=") || all.Contains("http://www.w3.org/ns/ttml") || all.Contains("http://www.w3.org/20"))
+            {
                 return;
+            }
 
             _errorCount = 0;
             subtitle.Paragraphs.Clear();
@@ -58,7 +66,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     while (index < line.Length && @"0123456789""'.".Contains(line[index]))
                     {
                         if ("0123456789.".Contains(line[index]))
+                        {
                             startTime += line[index];
+                        }
+
                         index++;
                     }
 
@@ -67,7 +78,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     while (index < line.Length && @"0123456789""'.".Contains(line[index]))
                     {
                         if ("0123456789.".Contains(line[index]))
+                        {
                             end += line[index];
+                        }
+
                         index++;
                     }
 
@@ -78,7 +92,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         text = line.Substring(index + 7).Trim().Replace("</p>", string.Empty);
                         index = text.IndexOf("</", StringComparison.Ordinal);
                         if (index > 0)
+                        {
                             text = text.Substring(0, index);
+                        }
+
                         text = text.Replace("<br />", Environment.NewLine);
                     }
 
@@ -86,7 +103,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     double endSeconds;
                     if (text.Length > 0 && double.TryParse(startTime, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out startSeconds) &&
                                            double.TryParse(end, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out endSeconds))
+                    {
                         subtitle.Paragraphs.Add(new Paragraph(text, startSeconds * TimeCode.BaseUnit, endSeconds * TimeCode.BaseUnit));
+                    }
                 }
             }
             subtitle.Renumber();

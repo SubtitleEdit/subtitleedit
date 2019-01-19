@@ -68,9 +68,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 else if (p != null)
                 {
                     if (string.IsNullOrEmpty(p.Text))
+                    {
                         p.Text = line;
+                    }
                     else
+                    {
                         p.Text = p.Text + Environment.NewLine + line;
+                    }
                 }
             }
 

@@ -114,7 +114,9 @@ namespace Nikse.SubtitleEdit.Core.AudioToText.PocketSphinx
                 }
             }
             if (!lastMerged)
+            {
                 mergedSubtitle.Paragraphs.Add(new Paragraph(subtitle.GetParagraphOrDefault(subtitle.Paragraphs.Count - 1)));
+            }
 
             return mergedSubtitle;
         }
@@ -147,10 +149,15 @@ namespace Nikse.SubtitleEdit.Core.AudioToText.PocketSphinx
         private static string GetEndTag(string text)
         {
             if (string.IsNullOrEmpty(text))
+            {
                 return string.Empty;
+            }
+
             text = text.Trim();
             if (!text.EndsWith('>'))
+            {
                 return string.Empty;
+            }
 
             string endTag = string.Empty;
             int start = text.LastIndexOf("</", StringComparison.Ordinal);
@@ -164,10 +171,15 @@ namespace Nikse.SubtitleEdit.Core.AudioToText.PocketSphinx
         private static string GetStartTag(string text)
         {
             if (string.IsNullOrEmpty(text))
+            {
                 return string.Empty;
+            }
+
             text = text.Trim();
             if (!text.StartsWith('<'))
+            {
                 return string.Empty;
+            }
 
             string startTag = string.Empty;
             int end = text.IndexOf('>');

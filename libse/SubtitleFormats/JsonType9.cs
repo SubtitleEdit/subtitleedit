@@ -22,7 +22,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 Paragraph p = subtitle.Paragraphs[index];
                 index++;
                 if (count > 0)
+                {
                     sb.Append(',');
+                }
+
                 sb.Append("{\"index\":");
                 sb.Append(index);
                 sb.Append(",\"start\":\"");
@@ -51,10 +54,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             _errorCount = 0;
             var sb = new StringBuilder();
             foreach (string s in lines)
+            {
                 sb.Append(s);
+            }
+
             var allText = sb.ToString().Trim();
             if (!allText.StartsWith("[", StringComparison.Ordinal) || !allText.Contains("\"start\""))
+            {
                 return;
+            }
 
             foreach (var line in Json.ReadObjectArray(allText))
             {

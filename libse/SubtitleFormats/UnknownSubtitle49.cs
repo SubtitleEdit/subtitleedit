@@ -43,7 +43,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 var text = HtmlUtil.RemoveOpenCloseTags(p.Text, HtmlUtil.TagFont);
                 if (!text.Contains(Environment.NewLine))
+                {
                     text = Environment.NewLine + text;
+                }
+
                 sb.AppendLine(string.Format(paragraphWriteFormat, EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), text, Environment.NewLine));
             }
             return sb.ToString().Trim();
@@ -65,9 +68,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 else if (paragraph != null && expecting == ExpectingLine.Text && (RegexTimeCode.IsMatch(line) || RegexTimeCode2.IsMatch(line)))
                 {
                     if (string.IsNullOrEmpty(paragraph.Text))
+                    {
                         _errorCount++;
+                    }
+
                     if (paragraph.StartTime.TotalMilliseconds < 0.1)
+                    {
                         _errorCount++;
+                    }
+
                     subtitle.Paragraphs.Add(paragraph);
                     paragraph = new Paragraph();
                     expecting = ExpectingLine.TimeStart;
@@ -127,7 +136,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
             }
             if (paragraph != null && !string.IsNullOrEmpty(paragraph.Text))
+            {
                 subtitle.Paragraphs.Add(paragraph);
+            }
+
             subtitle.Renumber();
         }
 

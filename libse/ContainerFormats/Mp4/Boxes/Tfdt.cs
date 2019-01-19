@@ -14,12 +14,16 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
         {
             var bufferSize = size - 8;
             if (bufferSize <= 0)
+            {
                 return;
+            }
 
             Buffer = new byte[bufferSize];
             int bytesRead = fs.Read(Buffer, 0, Buffer.Length);
             if (bytesRead < Buffer.Length)
+            {
                 return;
+            }
 
             var version = Buffer[0];
             //var flags = GetUInt(0) & 0xffffff;

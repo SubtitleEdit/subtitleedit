@@ -43,7 +43,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 Paragraph p = ReadParagraph(buffer, index);
                 if (p != null)
+                {
                     subtitle.Paragraphs.Add(p);
+                }
+
                 index += 128;
             }
         }
@@ -85,9 +88,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                 Paragraph p;
                 if (_timeCodeQueue.Count > 0)
+                {
                     p = _timeCodeQueue.Dequeue();
+                }
                 else
+                {
                     p = new Paragraph();
+                }
+
                 p.Number = buffer[index + 3] * 256 + buffer[index + 4]; // Subtitle number
                 p.Text = sb.ToString();
                 //if (p.Number == 0 && p.Text.StartsWith("LANG:", StringComparison.Ordinal) && p.Text.Length > 8)
@@ -125,12 +133,16 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             if (buffer[start] == 0x1f && buffer[start + 1] == 0x57 && buffer[start + 2] == 0x31 && buffer[start + 3] == 0x36) // W16
             {
                 if (end - start > 4)
+                {
                     text = Encoding.GetEncoding(950).GetString(buffer, start + 4, end - start - 4);
+                }
             }
             else
             {
                 if (end - start > 0)
+                {
                     text = _codePage.GetString(buffer, start, end - start);
+                }
             }
             if (text.Length > 4 && text[0] == 0x1f && text[1] == 'R' && text[4] == '.' && CharUtils.IsDigit(text[2]) && CharUtils.IsDigit(text[3]))
             {
@@ -187,7 +199,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 if (text[i] == 01 && i < text.Length - 4 && text[i + 1] == 0x1D && text[i + 2] == 07)
                 {
                     if (post != string.Empty)
+                    {
                         sb.Append("</font>");
+                    }
+
                     sb.Append("<font color=\"Red\">");
                     post = "<font>";
                     i += 2;
@@ -195,7 +210,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 else if (text[i] == 01 && i < text.Length - 4 && text[i + 1] == 06)
                 {
                     if (post != string.Empty)
+                    {
                         sb.Append("</font>");
+                    }
+
                     sb.Append("<font color=\"Cyan\">");
                     post = "<font>";
                     i++;
@@ -203,28 +221,40 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 else if (text[i] == 2)
                 {
                     if (post != string.Empty)
+                    {
                         sb.Append("</font>");
+                    }
+
                     sb.Append("<font color=\"Green\">");
                     post = "<font>";
                 }
                 else if (text[i] == 3)
                 {
                     if (post != string.Empty)
+                    {
                         sb.Append("</font>");
+                    }
+
                     sb.Append("<font color=\"Yellow\">");
                     post = "<font>";
                 }
                 else if (text[i] == 6)
                 {
                     if (post != string.Empty)
+                    {
                         sb.Append("</font>");
+                    }
+
                     sb.Append("<font color=\"Cyan\">");
                     post = "<font>";
                 }
                 else if (text[i] == 7)
                 {
                     if (post != string.Empty)
+                    {
                         sb.Append("</font>");
+                    }
+
                     sb.Append("<font color=\"Red\">");
                     post = "<font>";
                 }
@@ -237,7 +267,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             text = sb + post;
             if (string.IsNullOrWhiteSpace(HtmlUtil.RemoveHtmlTags(text)))
+            {
                 return string.Empty;
+            }
+
             return text;
         }
 

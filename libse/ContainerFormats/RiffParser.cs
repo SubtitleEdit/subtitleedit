@@ -276,7 +276,10 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats
             {
                 // Calculated padded size - padded to WORD boundary
                 int paddedSize = size;
-                if (0 != (size & 1)) ++paddedSize;
+                if (0 != (size & 1))
+                {
+                    ++paddedSize;
+                }
 
                 if (null == chunk)
                 {

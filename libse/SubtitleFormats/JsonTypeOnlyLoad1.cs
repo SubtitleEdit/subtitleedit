@@ -21,13 +21,21 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             var sb = new StringBuilder();
             foreach (string s in lines)
+            {
                 sb.Append(s);
+            }
+
             if (!sb.ToString().Contains("\"words\":"))
+            {
                 return;
+            }
 
             var temp = sb.ToString();
             while (temp.Contains("  "))
+            {
                 temp = temp.Replace("  ", " ");
+            }
+
             temp = temp.Replace("}, {", "},{");
             temp = temp.Replace("} , {", "},{");
             temp = temp.Replace("} ,{", "},{");

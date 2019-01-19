@@ -26,7 +26,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                if (index != 0) sb.AppendLine();
+                if (index != 0)
+                {
+                    sb.AppendLine();
+                }
+
                 index++;
 
                 sb.AppendLine(HtmlUtil.RemoveHtmlTags(p.Text));
@@ -66,7 +70,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             else
                             {
                                 if (p.EndTime.TotalMilliseconds < 0.01)
+                                {
                                     _errorCount++;
+                                }
+
                                 p.EndTime = DecodeTimeCodeFramesFourParts(parts);
                             }
                         }
@@ -80,9 +87,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 else if (string.IsNullOrWhiteSpace(line))
                 {
                     if (Math.Abs(p.StartTime.TotalMilliseconds) < 0.001 && Math.Abs(p.EndTime.TotalMilliseconds) < 0.001)
+                    {
                         _errorCount++;
+                    }
                     else
+                    {
                         subtitle.Paragraphs.Add(p);
+                    }
+
                     p = new Paragraph();
                 }
                 else
@@ -97,16 +109,22 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
             }
             if (p.EndTime.TotalMilliseconds > 0)
+            {
                 subtitle.Paragraphs.Add(p);
+            }
 
             bool allNullEndTime = true;
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
                 if (Math.Abs(subtitle.Paragraphs[i].EndTime.TotalMilliseconds) > 0.001)
+                {
                     allNullEndTime = false;
+                }
             }
             if (allNullEndTime)
+            {
                 subtitle.Paragraphs.Clear();
+            }
 
             subtitle.RemoveEmptyLines();
             subtitle.Renumber();

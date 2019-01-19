@@ -32,7 +32,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     var boxLength = GetUInt(buffer, i);
                     if (boxLength > 500 || i + 4 + boxLength > buffer.Length)
+                    {
                         break;
+                    }
 
                     if (boxLength > 10 && buffer[i + 4] == 0x73 && buffer[i + 4 + 1] == 0x74 && buffer[i + 4 + 2] == 0x79 && buffer[i + 4 + 3] == 0x6C && buffer[i + 4 + 4] == 0) // styl + 0
                     {

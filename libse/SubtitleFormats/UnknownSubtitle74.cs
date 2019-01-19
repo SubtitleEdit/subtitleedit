@@ -37,7 +37,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             int seconds = p.StartTime.Seconds;
             if (p.StartTime.Milliseconds >= 500)
+            {
                 seconds++;
+            }
+
             return $"{p.StartTime.Hours:00}:{p.StartTime.Minutes:00}:{seconds:00}";
         }
 
@@ -52,7 +55,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 string line = lines[i].TrimEnd();
                 string next = string.Empty;
                 if (i + 1 < lines.Count)
+                {
                     next = lines[i + 1];
+                }
 
                 if (line.Length == 8 && line[2] == ':' && RegexTimeCodes.IsMatch(line) && !RegexTimeCodes.IsMatch(next))
                 {
@@ -91,7 +96,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             foreach (Paragraph p in subtitle.Paragraphs)
+            {
                 p.Text = p.Text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
+            }
 
             int index = 0;
             foreach (Paragraph p in subtitle.Paragraphs)
@@ -99,9 +106,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 index++;
                 Paragraph nextParagraph = subtitle.GetParagraphOrDefault(index);
                 if (nextParagraph != null)
+                {
                     p.EndTime.TotalMilliseconds = nextParagraph.StartTime.TotalMilliseconds - 1;
+                }
                 else
+                {
                     p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + 2500;
+                }
+
                 p.Text = p.Text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
             }
 

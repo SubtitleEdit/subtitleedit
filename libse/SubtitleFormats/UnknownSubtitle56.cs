@@ -69,9 +69,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 else if (string.IsNullOrWhiteSpace(line))
                 {
                     if (Math.Abs(p.StartTime.TotalMilliseconds) < 0.01 && Math.Abs(p.EndTime.TotalMilliseconds) < 0.01)
+                    {
                         _errorCount++;
+                    }
                     else
+                    {
                         subtitle.Paragraphs.Add(p);
+                    }
+
                     p = new Paragraph();
                 }
                 else if (!expectStartTime)
@@ -83,14 +88,20 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         return;
                     }
                     while (p.Text.Contains(Environment.NewLine + " "))
+                    {
                         p.Text = p.Text.Replace(Environment.NewLine + " ", Environment.NewLine);
+                    }
                 }
             }
             if (p.EndTime.TotalMilliseconds > 0)
+            {
                 subtitle.Paragraphs.Add(p);
+            }
 
             foreach (Paragraph temp in subtitle.Paragraphs)
+            {
                 temp.Text = temp.Text.Replace("<", "@ITALIC_START").Replace(">", "</i>").Replace("@ITALIC_START", "<i>");
+            }
 
             subtitle.RemoveEmptyLines();
             subtitle.Renumber();

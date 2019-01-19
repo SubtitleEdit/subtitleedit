@@ -36,10 +36,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             var temp = new StringBuilder();
             foreach (string l in lines)
+            {
                 temp.Append(l);
+            }
+
             string all = temp.ToString();
             if (!all.Contains("class=\"caption\""))
+            {
                 return;
+            }
 
             _errorCount = 0;
             subtitle.Paragraphs.Clear();
@@ -56,7 +61,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     while (index < line.Length && @"0123456789""'.,".Contains(line[index]))
                     {
                         if (@"0123456789,.".Contains(line[index]))
+                        {
                             startTime += line[index];
+                        }
+
                         index++;
                     }
 
@@ -65,7 +73,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     while (index < line.Length && @"0123456789""'.,".Contains(line[index]))
                     {
                         if (@"0123456789,.".Contains(line[index]))
+                        {
                             duration += line[index];
+                        }
+
                         index++;
                     }
 
@@ -76,14 +87,19 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         text = line.Substring(index + 1).Trim();
                         index = text.IndexOf("</", StringComparison.Ordinal);
                         if (index > 0)
+                        {
                             text = text.Substring(0, index);
+                        }
+
                         text = text.Replace("<br />", Environment.NewLine);
                     }
 
                     long startMilliseconds;
                     long durationMilliseconds;
                     if (text.Length > 0 && long.TryParse(startTime, out startMilliseconds) && long.TryParse(duration, out durationMilliseconds))
+                    {
                         subtitle.Paragraphs.Add(new Paragraph(text, startMilliseconds, startMilliseconds + durationMilliseconds));
+                    }
                 }
             }
             subtitle.Renumber();

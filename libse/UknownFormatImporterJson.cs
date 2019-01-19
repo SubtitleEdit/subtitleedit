@@ -15,10 +15,15 @@ namespace Nikse.SubtitleEdit.Core
 
             var sb = new StringBuilder();
             foreach (string s in lines)
+            {
                 sb.Append(s);
+            }
+
             var allText = sb.ToString().Trim();
             if (!allText.Contains("{", StringComparison.Ordinal))
+            {
                 return new Subtitle();
+            }
 
             var subtitle1 = new Subtitle();
             try
@@ -29,7 +34,9 @@ namespace Nikse.SubtitleEdit.Core
                     count++;
                     ReadParagraph(line, subtitle1);
                     if (count > 20 && subtitle1.Paragraphs.Count == 0)
+                    {
                         break;
+                    }
                 }
             }
             catch (Exception)
@@ -46,7 +53,9 @@ namespace Nikse.SubtitleEdit.Core
                     count++;
                     ReadParagraph(line, subtitle2);
                     if (count > 20 && subtitle2.Paragraphs.Count == 0)
+                    {
                         break;
+                    }
                 }
             }
             catch (Exception)
@@ -63,7 +72,9 @@ namespace Nikse.SubtitleEdit.Core
                     count++;
                     ReadParagraph(line, subtitle3);
                     if (count > 20 && subtitle3.Paragraphs.Count == 0)
+                    {
                         break;
+                    }
                 }
             }
             catch (Exception)
@@ -88,7 +99,9 @@ namespace Nikse.SubtitleEdit.Core
         private Subtitle FixTimeCodeMsOrSeconds(Subtitle subtitle)
         {
             if (subtitle == null || subtitle.Paragraphs.Count < 5)
+            {
                 return subtitle;
+            }
 
             double totalDuration = 0;
             int msFound = 0;
@@ -134,7 +147,9 @@ namespace Nikse.SubtitleEdit.Core
             }
 
             if (!s.EndsWith('}'))
+            {
                 s += '}';
+            }
 
             var start = ReadStartTag(s);
             var end = ReadEndTag(s);
@@ -225,24 +240,40 @@ namespace Nikse.SubtitleEdit.Core
         {
             var idx = s.IndexOf("\"text", StringComparison.OrdinalIgnoreCase);
             if (idx < 0)
+            {
                 idx = s.IndexOf("\"content", StringComparison.OrdinalIgnoreCase);
+            }
+
             if (idx < 0)
+            {
                 return null;
+            }
 
             s = s.Substring(idx);
             idx = s.IndexOf(']');
             if (idx > 0)
+            {
                 s = s.Substring(0, idx + 1);
+            }
 
             var text = Json.ReadTag(s, "text");
             if (text == null)
+            {
                 text = Json.ReadTag(s, "content");
+            }
+
             var textLines = Json.ReadArray(s, "text");
             if (textLines == null || textLines.Count == 0)
+            {
                 textLines = Json.ReadArray(s, "content");
+            }
+
             bool isArray = s.Contains("[");
             if (isArray && textLines.Any(p => p == "end_time" || p == "endTime" || p == "end" || p == "endMs" || p == "endMilliseconds" || p == "end_ms" || p == "to" || p == "to_ms" || p == "from" || p == "from_ms"))
+            {
                 isArray = false;
+            }
+
             if (!isArray && !string.IsNullOrEmpty(text))
             {
                 return text.Replace("&#039;", "'");
@@ -262,7 +293,9 @@ namespace Nikse.SubtitleEdit.Core
             {
                 var res = Json.ReadTag(s, tag);
                 if (!string.IsNullOrEmpty(res))
+                {
                     return res;
+                }
             }
             return null;
         }

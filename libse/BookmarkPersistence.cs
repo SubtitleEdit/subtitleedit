@@ -24,7 +24,9 @@ namespace Nikse.SubtitleEdit.Core
         public bool Save()
         {
             if (_fileName == null)
+            {
                 return false;
+            }
 
             var fileName = GetBookmarksFileName();
             var b = SerializeBookmarks();
@@ -83,7 +85,9 @@ namespace Nikse.SubtitleEdit.Core
         public bool Load()
         {
             if (_fileName == null)
+            {
                 return false;
+            }
 
             var fileName = GetBookmarksFileName();
             if (File.Exists(fileName))

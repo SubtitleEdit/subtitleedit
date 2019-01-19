@@ -668,7 +668,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             // header
             stream.WriteByte(1);
             for (int i = 1; i < 23; i++)
+            {
                 stream.WriteByte(0);
+            }
+
             stream.WriteByte(0x60);
 
             // paragraphs
@@ -682,7 +685,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             // footer
             stream.WriteByte(0xff);
             for (int i = 0; i < 11; i++)
+            {
                 stream.WriteByte(0);
+            }
+
             stream.WriteByte(0x11);
             stream.WriteByte(0);
             byte[] footerBuffer = Encoding.ASCII.GetBytes("dummy end of file");
@@ -696,12 +702,17 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             WriteTimeCode(fs, p.EndTime);
 
             if (CodePage == -1)
+            {
                 GetCodePage(null, 0, 0);
+            }
 
             byte alignment = 2; // center
             byte verticalAlignment = 0x0a; // bottom
             if (!p.Text.Contains(Environment.NewLine))
+            {
                 verticalAlignment = 0x0b;
+            }
+
             string text = p.Text;
             if (text.StartsWith("{\\an1}", StringComparison.Ordinal) || text.StartsWith("{\\an4}", StringComparison.Ordinal) || text.StartsWith("{\\an7}", StringComparison.Ordinal))
             {
@@ -720,34 +731,59 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 verticalAlignment = 5; // center
             }
             if (text.Length >= 6 && text[0] == '{' && text[5] == '}')
+            {
                 text = text.Remove(0, 6);
+            }
+
             text = MakePacItalicsAndRemoveOtherTags(text);
 
             Encoding encoding = GetEncoding(CodePage);
             byte[] textBuffer;
 
             if (CodePage == CodePageArabic)
+            {
                 textBuffer = GetArabicBytes(Utilities.FixEnglishTextInRightToLeftLanguage(text, "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"), alignment);
+            }
             else if (CodePage == CodePageHebrew)
+            {
                 textBuffer = GetHebrewBytes(Utilities.FixEnglishTextInRightToLeftLanguage(text, "0123456789abcdefghijklmnopqrstuvwxyz"), alignment);
+            }
             else if (CodePage == CodePageLatin)
+            {
                 textBuffer = GetLatinBytes(encoding, text, alignment);
+            }
             else if (CodePage == CodePageCyrillic)
+            {
                 textBuffer = GetCyrillicBytes(text, alignment);
+            }
             else if (CodePage == CodePageGreek)
+            {
                 textBuffer = GetGreekBytes(text, alignment);
+            }
             else if (CodePage == CodePageChineseTraditional)
+            {
                 textBuffer = GetW16Bytes(text, alignment, EncodingChineseTraditional);
+            }
             else if (CodePage == CodePageChineseSimplified)
+            {
                 textBuffer = GetW16Bytes(text, alignment, EncodingChineseSimplified);
+            }
             else if (CodePage == CodePageKorean)
+            {
                 textBuffer = GetW16Bytes(text, alignment, EncodingKorean);
+            }
             else if (CodePage == CodePageJapanese)
+            {
                 textBuffer = GetW16Bytes(text, alignment, EncodingJapanese);
+            }
             else if (CodePage == CodePageThai)
+            {
                 textBuffer = encoding.GetBytes(text.Replace('ต', '€'));
+            }
             else
+            {
                 textBuffer = encoding.GetBytes(text);
+            }
 
             // write text length
             var length = (UInt16)(textBuffer.Length + 4);
@@ -774,13 +810,17 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             text = HtmlUtil.RemoveOpenCloseTags(text, HtmlUtil.TagFont, HtmlUtil.TagUnderline).Trim();
             if (!text.Contains("<i>", StringComparison.OrdinalIgnoreCase))
+            {
                 return text;
+            }
 
             text = text.Replace("<I>", "<i>");
             text = text.Replace("</I>", "</i>");
 
             if (Utilities.CountTagInText(text, "<i>") == 1 && text.StartsWith("<i>", StringComparison.Ordinal) && text.EndsWith("</i>", StringComparison.Ordinal))
+            {
                 return "<" + HtmlUtil.RemoveHtmlTags(text).Replace(Environment.NewLine, Environment.NewLine + "<");
+            }
 
             var sb = new StringBuilder();
             var parts = text.SplitToLines();
@@ -872,7 +912,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             //buffer[22] == 0 &&
                             (buffer[23] >= 0x60 && buffer[23] <= 0x70) &&
                             fileName.EndsWith(".pac", StringComparison.OrdinalIgnoreCase))
+                        {
                             return true;
+                        }
                     }
                 }
                 catch
@@ -905,7 +947,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 Paragraph p = GetPacParagraph(ref index, buffer);
                 if (p != null)
+                {
                     subtitle.Paragraphs.Add(p);
+                }
             }
             subtitle.Renumber();
         }
@@ -920,12 +964,19 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 index++;
                 if (index + 20 >= buffer.Length)
+                {
                     return null;
+                }
 
                 if (buffer[index] == 0xFE && (buffer[index - 15] == 0x60 || buffer[index - 15] == 0x61))
+                {
                     break;
+                }
+
                 if (buffer[index] == 0xFE && (buffer[index - 12] == 0x60 || buffer[index - 12] == 0x61))
+                {
                     break;
+                }
             }
 
             int feIndex = index;
@@ -951,19 +1002,26 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
             int textLength = buffer[timeStartIndex + 9] + buffer[timeStartIndex + 10] * 256;
             if (textLength > 500)
+            {
                 return null; // probably not correct index
+            }
+
             int maxIndex = timeStartIndex + 10 + textLength;
 
             byte verticalAlignment = buffer[timeStartIndex + 11];
 
             if (CodePage == -1)
+            {
                 GetCodePage(buffer, index, endDelimiter);
+            }
 
             var sb = new StringBuilder();
             index = feIndex + 3;
             bool w16 = buffer[index] == 0x1f && Encoding.ASCII.GetString(buffer, index + 1, 3) == "W16";
             if (w16)
+            {
                 index += 5;
+            }
 
             while (index < buffer.Length && index <= maxIndex) // buffer[index] != endDelimiter)
             {
@@ -980,7 +1038,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         sb.AppendLine();
                         w16 = buffer[index + 3] == 0x1f && Encoding.ASCII.GetString(buffer, index + 4, 3) == "W16";
                         if (w16)
+                        {
                             index += 5;
+                        }
+
                         index += 2;
                     }
                     else
@@ -1021,54 +1082,89 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     index += 2;
                 }
                 else if (CodePage == CodePageLatin)
+                {
                     sb.Append(GetLatinString(GetEncoding(CodePage), buffer, ref index));
+                }
                 else if (CodePage == CodePageArabic)
+                {
                     sb.Append(GetArabicString(buffer, ref index));
+                }
                 else if (CodePage == CodePageHebrew)
+                {
                     sb.Append(GetHebrewString(buffer, ref index));
+                }
                 else if (CodePage == CodePageCyrillic)
+                {
                     sb.Append(GetCyrillicString(buffer, ref index));
+                }
                 else if (CodePage == CodePageGreek)
+                {
                     sb.Append(GetGreekString(buffer, ref index));
+                }
                 else if (CodePage == CodePageThai)
+                {
                     sb.Append(GetEncoding(CodePage).GetString(buffer, index, 1).Replace("€", "ต"));
+                }
                 else
+                {
                     sb.Append(GetEncoding(CodePage).GetString(buffer, index, 1));
+                }
+
                 index++;
             }
             if (index + 20 >= buffer.Length)
+            {
                 return null;
+            }
 
             p.Text = sb.ToString();
             p.Text = p.Text.Replace("\0", string.Empty);
             p.Text = FixItalics(p.Text);
             if (CodePage == CodePageArabic)
+            {
                 p.Text = Utilities.FixEnglishTextInRightToLeftLanguage(p.Text, "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ");
+            }
 
             if (verticalAlignment < 5)
             {
                 if (alignment == 1) // left
+                {
                     p.Text = "{\\an7}" + p.Text;
+                }
                 else if (alignment == 0) // right
+                {
                     p.Text = "{\\an9}" + p.Text;
+                }
                 else
+                {
                     p.Text = "{\\an8}" + p.Text;
+                }
             }
             else if (verticalAlignment < 9)
             {
                 if (alignment == 1) // left
+                {
                     p.Text = "{\\an4}" + p.Text;
+                }
                 else if (alignment == 0) // right
+                {
                     p.Text = "{\\an6}" + p.Text;
+                }
                 else
+                {
                     p.Text = "{\\an5}" + p.Text;
+                }
             }
             else
             {
                 if (alignment == 1) // left
+                {
                     p.Text = "{\\an1}" + p.Text;
+                }
                 else if (alignment == 0) // right
+                {
                     p.Text = "{\\an3}" + p.Text;
+                }
             }
             p.Text = p.Text.RemoveControlCharactersButWhiteSpace();
             return p;
@@ -1081,7 +1177,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             int index = text.IndexOf('<');
             if (index < 0)
+            {
                 return text;
+            }
 
             while (index >= 0 && index < text.Length - 1)
             {
@@ -1178,7 +1276,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             if (BatchMode)
             {
                 if (CodePage == -1)
+                {
                     CodePage = AutoDetectEncoding(_fileName);
+                }
+
                 return;
             }
 
@@ -1192,7 +1293,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     if (buffer[index] == 0xFF)
                     {
                         if (textIndex < textSample.Length - 1)
+                        {
                             textSample[textIndex++] = 32; // ASCII 32 SP (Space)
+                        }
+
                         index++;
                     }
                     else if (buffer[index] == 0xFE)
@@ -1208,13 +1312,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     else
                     {
                         if (textIndex < textSample.Length - 1)
+                        {
                             textSample[textIndex++] = buffer[index];
+                        }
+
                         index++;
                     }
                 }
                 previewBuffer = new byte[textIndex];
                 for (int i = 0; i < textIndex; i++)
+                {
                     previewBuffer[i] = textSample[i];
+                }
             }
 
             if (GetPacEncodingImplementation != null)
@@ -1270,7 +1379,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         {
                             byte v = values[k];
                             if (k > 0)
+                            {
                                 extra++;
+                            }
+
                             buffer[i + extra] = v;
                         }
                     }
@@ -1280,7 +1392,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             var result = new byte[i + extra];
             for (int j = 0; j < i + extra; j++)
+            {
                 result[j] = buffer[j];
+            }
+
             return result;
         }
 
@@ -1330,7 +1445,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         letter = text.Substring(i, 2);
                         character = Find(codes, letter);
                         if (character != null)
+                        {
                             doubleCharacter = true;
+                        }
                     }
                     if (character == null)
                     {
@@ -1368,19 +1485,27 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         {
                             byte v = values[k];
                             if (k > 0)
+                            {
                                 extra++;
+                            }
+
                             buffer[i + extra] = v;
                         }
                     }
                     if (doubleCharacter)
+                    {
                         i++;
+                    }
                 }
                 i++;
             }
 
             var result = new byte[i + extra];
             for (int j = 0; j < i + extra; j++)
+            {
                 result[j] = buffer[j];
+            }
+
             return result;
         }
 
@@ -1428,7 +1553,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             foreach (char ch in line)
             {
                 if (!latin.Contains(ch))
+                {
                     return false;
+                }
             }
             return true;
         }
@@ -1457,12 +1584,17 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static SpecialCharacter? GetNextArabicCharacter(byte[] buffer, ref int index)
         {
-            if (index >= buffer.Length) return null;
+            if (index >= buffer.Length)
+            {
+                return null;
+            }
 
             byte b = buffer[index];
             SpecialCharacter? arabicCharacter = null;
             if (ArabicCodes.ContainsKey(b))
+            {
                 arabicCharacter = ArabicCodes[b];
+            }
 
             if (arabicCharacter != null && buffer.Length > index + 1)
             {
@@ -1475,7 +1607,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             if (arabicCharacter == null && b >= 0x20 && b < 0x70)
+            {
                 return new SpecialCharacter(Encoding.ASCII.GetString(buffer, index, 1));
+            }
 
             return arabicCharacter;
         }
@@ -1484,10 +1618,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             byte b = buffer[index];
             if (b >= 0x20 && b < 0x70 && b != 44)
+            {
                 return Encoding.ASCII.GetString(buffer, index, 1);
+            }
 
             if (HebrewCodes.ContainsKey(b))
+            {
                 return HebrewCodes[b].Character;
+            }
 
             return string.Empty;//string.Format("({0})", b);
         }
@@ -1497,7 +1635,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             byte b = buffer[index];
 
             if (LatinCodes.ContainsKey(b))
+            {
                 return LatinCodes[b].Character;
+            }
 
             if (buffer.Length > index + 1)
             {
@@ -1510,7 +1650,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             if (b > 13)
+            {
                 return encoding.GetString(buffer, index, 1);
+            }
+
             return string.Empty;
         }
 
@@ -1519,10 +1662,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             byte b = buffer[index];
 
             if (b >= 0x30 && b <= 0x39) // decimal digits
+            {
                 return Encoding.ASCII.GetString(buffer, index, 1);
+            }
 
             if (CyrillicCodes.ContainsKey(b))
+            {
                 return CyrillicCodes[b].Character;
+            }
 
             if (buffer.Length > index + 1)
             {
@@ -1542,10 +1689,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             byte b = buffer[index];
 
             if (b >= 0x30 && b <= 0x39) // decimal digits
+            {
                 return Encoding.ASCII.GetString(buffer, index, 1);
+            }
 
             if (GreekCodes.ContainsKey(b))
+            {
                 return GreekCodes[b].Character;
+            }
 
             if (buffer.Length > index + 1)
             {
@@ -1564,10 +1715,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             byte b = buffer[index];
 
             if (b >= 0x30 && b <= 0x39) // decimal digits
+            {
                 return Encoding.ASCII.GetString(buffer, index, 1);
+            }
 
             if (KoreanCodes.ContainsKey(b))
+            {
                 return KoreanCodes[b].Character;
+            }
 
             if (buffer.Length > index + 1)
             {

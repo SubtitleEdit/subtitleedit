@@ -27,9 +27,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                 XmlAttribute layoutIndex = xml.CreateAttribute("layoutindex");
                 if (p.Text.TrimStart().StartsWith("<i>", StringComparison.Ordinal) && p.Text.TrimEnd().EndsWith("</i>", StringComparison.Ordinal))
+                {
                     layoutIndex.InnerText = "4";
+                }
                 else
+                {
                     layoutIndex.InnerText = "0";
+                }
 
                 paragraph.Attributes.Append(layoutIndex);
 

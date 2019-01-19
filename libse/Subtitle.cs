@@ -55,7 +55,9 @@ namespace Nikse.SubtitleEdit.Core
             : this()
         {
             if (subtitle == null)
+            {
                 return;
+            }
 
             foreach (Paragraph p in subtitle.Paragraphs)
             {
@@ -82,7 +84,9 @@ namespace Nikse.SubtitleEdit.Core
         public Paragraph GetParagraphOrDefault(int index)
         {
             if (_paragraphs == null || _paragraphs.Count <= index || index < 0)
+            {
                 return null;
+            }
 
             return _paragraphs[index];
         }
@@ -175,13 +179,18 @@ namespace Nikse.SubtitleEdit.Core
                     OriginalFormat = subtitleFormat;
                     WasLoadedWithFrameNumbers = OriginalFormat.IsFrameBased;
                     if (WasLoadedWithFrameNumbers)
+                    {
                         CalculateTimeCodesFromFrameNumbers(Configuration.Settings.General.CurrentFrameRate);
+                    }
+
                     return subtitleFormat;
                 }
             }
 
             if (useThisEncoding == null)
+            {
                 return LoadSubtitle(fileName, out encoding, Encoding.Unicode);
+            }
 
             return null;
         }
@@ -190,7 +199,9 @@ namespace Nikse.SubtitleEdit.Core
         {
             // don't fill memory with history - use a max rollback points
             if (_history.Count > MaximumHistoryItems)
+            {
                 _history.RemoveAt(0);
+            }
 
             _history.Add(new HistoryItem(_history.Count, this, description, FileName, fileModified, subtitleFormat.FriendlyName, original, originalSubtitleFileName, lineNumber, linePosition, linePositionAlternate));
         }
@@ -201,7 +212,9 @@ namespace Nikse.SubtitleEdit.Core
         {
             _paragraphs.Clear();
             foreach (Paragraph p in _history[index].Subtitle.Paragraphs)
+            {
                 _paragraphs.Add(new Paragraph(p));
+            }
 
             subtitleFormatFriendlyName = _history[index].SubtitleFormatFriendlyName;
             FileName = _history[index].FileName;
@@ -241,7 +254,9 @@ namespace Nikse.SubtitleEdit.Core
         public bool CalculateTimeCodesFromFrameNumbers(double frameRate)
         {
             if (OriginalFormat == null || OriginalFormat.IsTimeBased)
+            {
                 return false;
+            }
 
             foreach (Paragraph p in Paragraphs)
             {
@@ -258,7 +273,9 @@ namespace Nikse.SubtitleEdit.Core
         public bool CalculateFrameNumbersFromTimeCodes(double frameRate)
         {
             if (OriginalFormat == null || OriginalFormat.IsFrameBased)
+            {
                 return false;
+            }
 
             foreach (Paragraph p in Paragraphs)
             {
@@ -273,7 +290,9 @@ namespace Nikse.SubtitleEdit.Core
         public void CalculateFrameNumbersFromTimeCodesNoCheck(double frameRate)
         {
             foreach (Paragraph p in Paragraphs)
+            {
                 p.CalculateFrameNumbersFromTimeCodes(frameRate);
+            }
 
             FixEqualOrJustOverlappingFrameNumbers();
         }
@@ -285,7 +304,9 @@ namespace Nikse.SubtitleEdit.Core
                 Paragraph p = Paragraphs[i];
                 Paragraph next = GetParagraphOrDefault(i + 1);
                 if (next != null && (p.EndFrame == next.StartFrame || p.EndFrame == next.StartFrame + 1))
+                {
                     p.EndFrame = next.StartFrame - 1;
+                }
             }
         }
 
@@ -309,14 +330,21 @@ namespace Nikse.SubtitleEdit.Core
                 {
                     double nextStartMilliseconds = double.MaxValue;
                     if (i + 1 < _paragraphs.Count)
+                    {
                         nextStartMilliseconds = _paragraphs[i + 1].StartTime.TotalMilliseconds;
+                    }
 
                     double newEndMilliseconds = _paragraphs[i].EndTime.TotalMilliseconds;
                     newEndMilliseconds = _paragraphs[i].StartTime.TotalMilliseconds + (((newEndMilliseconds - _paragraphs[i].StartTime.TotalMilliseconds) * percent) / 100.0);
                     if (newEndMilliseconds > nextStartMilliseconds)
+                    {
                         newEndMilliseconds = nextStartMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                    }
+
                     if (percent > 100 && newEndMilliseconds > _paragraphs[i].EndTime.TotalMilliseconds || percent < 100)
+                    {
                         _paragraphs[i].EndTime.TotalMilliseconds = newEndMilliseconds;
+                    }
                 }
             }
         }
@@ -329,18 +357,26 @@ namespace Nikse.SubtitleEdit.Core
                 {
                     double nextStartMilliseconds = double.MaxValue;
                     if (i + 1 < _paragraphs.Count)
+                    {
                         nextStartMilliseconds = _paragraphs[i + 1].StartTime.TotalMilliseconds;
+                    }
 
                     double newEndMilliseconds = _paragraphs[i].EndTime.TotalMilliseconds + (seconds * TimeCode.BaseUnit);
                     if (newEndMilliseconds > nextStartMilliseconds)
+                    {
                         newEndMilliseconds = nextStartMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                    }
 
                     if (seconds < 0)
                     {
                         if (_paragraphs[i].StartTime.TotalMilliseconds + 100 > newEndMilliseconds)
+                        {
                             _paragraphs[i].EndTime.TotalMilliseconds = _paragraphs[i].StartTime.TotalMilliseconds + 100;
+                        }
                         else
+                        {
                             _paragraphs[i].EndTime.TotalMilliseconds = newEndMilliseconds;
+                        }
                     }
                     else if (newEndMilliseconds > _paragraphs[i].EndTime.TotalMilliseconds)
                     {
@@ -365,7 +401,9 @@ namespace Nikse.SubtitleEdit.Core
         {
             Paragraph p = GetParagraphOrDefault(index);
             if (p == null)
+            {
                 return;
+            }
 
             double duration = Utilities.GetOptimalDisplayMilliseconds(p.Text, optimalCharactersPerSeconds);
             p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + duration;
@@ -380,7 +418,9 @@ namespace Nikse.SubtitleEdit.Core
             {
                 p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
                 if (p.Duration.TotalMilliseconds <= 0)
+                {
                     p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + 1;
+                }
             }
         }
 
@@ -393,7 +433,9 @@ namespace Nikse.SubtitleEdit.Core
                 {
                     Paragraph p = GetParagraphOrDefault(i);
                     if (p == null)
+                    {
                         continue;
+                    }
 
                     p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + fixedDurationMilliseconds;
 
@@ -402,7 +444,9 @@ namespace Nikse.SubtitleEdit.Core
                     {
                         p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
                         if (p.Duration.TotalMilliseconds <= 0)
+                        {
                             p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + 1;
+                        }
                     }
                 }
             }
@@ -419,27 +463,45 @@ namespace Nikse.SubtitleEdit.Core
         public int GetIndex(Paragraph p)
         {
             if (p == null)
+            {
                 return -1;
+            }
 
             int index = _paragraphs.IndexOf(p);
             if (index >= 0)
+            {
                 return index;
+            }
 
             for (int i = 0; i < _paragraphs.Count; i++)
             {
                 if (p.ID == _paragraphs[i].ID)
+                {
                     return i;
+                }
+
                 if (i < _paragraphs.Count - 1 && p.ID == _paragraphs[i + 1].ID)
+                {
                     return i + 1;
+                }
+
                 if (Math.Abs(p.StartTime.TotalMilliseconds - _paragraphs[i].StartTime.TotalMilliseconds) < 0.1 &&
                     Math.Abs(p.EndTime.TotalMilliseconds - _paragraphs[i].EndTime.TotalMilliseconds) < 0.1)
+                {
                     return i;
+                }
+
                 if (p.Number == _paragraphs[i].Number && (Math.Abs(p.StartTime.TotalMilliseconds - _paragraphs[i].StartTime.TotalMilliseconds) < 0.1 ||
                     Math.Abs(p.EndTime.TotalMilliseconds - _paragraphs[i].EndTime.TotalMilliseconds) < 0.1))
+                {
                     return i;
+                }
+
                 if (p.Text == _paragraphs[i].Text && (Math.Abs(p.StartTime.TotalMilliseconds - _paragraphs[i].StartTime.TotalMilliseconds) < 0.1 ||
                     Math.Abs(p.EndTime.TotalMilliseconds - _paragraphs[i].EndTime.TotalMilliseconds) < 0.1))
+                {
                     return i;
+                }
             }
             return -1;
         }
@@ -468,7 +530,9 @@ namespace Nikse.SubtitleEdit.Core
                 if (Math.Abs(p.StartTime.TotalMilliseconds - item.StartTime.TotalMilliseconds) < 0.1 &&
                     Math.Abs(p.EndTime.TotalMilliseconds - item.EndTime.TotalMilliseconds) < 0.1 &&
                     p.Text == item.Text)
+                {
                     return item;
+                }
             }
             return null;
         }
@@ -483,10 +547,14 @@ namespace Nikse.SubtitleEdit.Core
                 {
                     Paragraph p = _paragraphs[i];
                     if (string.IsNullOrWhiteSpace(p.Text.RemoveControlCharacters()))
+                    {
                         _paragraphs.RemoveAt(i);
+                    }
                 }
                 if (count != _paragraphs.Count)
+                {
                     Renumber(firstNumber);
+                }
             }
             return count - _paragraphs.Count;
         }
@@ -605,7 +673,10 @@ namespace Nikse.SubtitleEdit.Core
             var sb = new StringBuilder(Paragraphs.Count * 50);
             sb.Append(pre);
             if (Header != null)
+            {
                 sb.Append(Header.Trim());
+            }
+
             for (int i = 0; i < Paragraphs.Count; i++)
             {
                 var p = Paragraphs[i];

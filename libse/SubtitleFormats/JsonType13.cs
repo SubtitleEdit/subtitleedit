@@ -19,7 +19,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var duration = "0";
             var last = subtitle.Paragraphs.LastOrDefault();
             if (last != null)
+            {
                 duration = (last.StartTime.TotalSeconds + last.Duration.TotalSeconds).ToString(CultureInfo.InvariantCulture);
+            }
+
             var createdAt = "";
             var id = "0";
             var sb = new StringBuilder();
@@ -38,7 +41,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 if (count > 0)
+                {
                     sb.AppendLine(", ");
+                }
+
                 sb.AppendLine("  {");
                 sb.AppendLine("    \"duration\": \"" + p.Duration.TotalSeconds.ToString(CultureInfo.InvariantCulture) + "\",");
                 sb.AppendLine("    \"confidence\": null,");
@@ -61,16 +67,22 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             var sb = new StringBuilder();
             foreach (string s in lines)
+            {
                 sb.AppendLine(s);
+            }
 
             string allText = sb.ToString();
             var indxOfSpeakers = allText.IndexOf("speakers", StringComparison.Ordinal);
             if (indxOfSpeakers < 0)
+            {
                 return;
+            }
 
             var idx = allText.IndexOf('[', indxOfSpeakers);
             if (idx == -1)
+            {
                 return;
+            }
 
             allText = allText.Substring(idx);
             allText = allText.Substring(0, allText.LastIndexOf(']') + 1);
@@ -99,7 +111,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         }
                     }
                     if (!skip)
+                    {
                         subtitle.Paragraphs.Add(p);
+                    }
                 }
             }
             subtitle.Renumber();

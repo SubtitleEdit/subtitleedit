@@ -59,7 +59,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 string line = lines[i].TrimEnd();
                 string next = string.Empty;
                 if (i + 1 < lines.Count)
+                {
                     next = lines[i + 1];
+                }
 
                 // A new line is missing between two paragraphs (buggy srt file)
                 if (_expecting == ExpectingLine.Text && i + 1 < lines.Count &&
@@ -72,10 +74,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 ReadLine(subtitle, line, next);
             }
             if (_paragraph != null && !string.IsNullOrWhiteSpace(_paragraph.Text))
+            {
                 subtitle.Paragraphs.Add(_paragraph);
+            }
 
             foreach (Paragraph p in subtitle.Paragraphs)
+            {
                 p.Text = p.Text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
+            }
 
             subtitle.Renumber();
         }
@@ -99,13 +105,19 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     if (!string.IsNullOrWhiteSpace(line))
                     {
                         if (_paragraph.Text.Length > 0)
+                        {
                             _paragraph.Text += Environment.NewLine;
+                        }
+
                         _paragraph.Text += RemoveBadChars(line).TrimEnd();
                     }
                     else if (IsText(next))
                     {
                         if (_paragraph.Text.Length > 0)
+                        {
                             _paragraph.Text += Environment.NewLine;
+                        }
+
                         _paragraph.Text += RemoveBadChars(line).TrimEnd();
                     }
                     else
@@ -121,7 +133,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         private static bool IsText(string text)
         {
             if (string.IsNullOrWhiteSpace(text) || Utilities.IsInteger(text) || RegexTimeCodes.IsMatch(text))
+            {
                 return false;
+            }
 
             return true;
         }

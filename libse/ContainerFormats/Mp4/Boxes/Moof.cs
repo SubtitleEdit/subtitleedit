@@ -15,10 +15,14 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
             while (fs.Position < (long)maximumLength)
             {
                 if (!InitializeSizeAndName(fs))
+                {
                     return;
+                }
 
                 if (Name == "traf")
+                {
                     Traf = new Traf(fs, Position);
+                }
 
                 fs.Seek((long)Position, SeekOrigin.Begin);
             }

@@ -16,14 +16,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override bool IsMine(List<string> lines, string fileName)
         {
             if (lines != null && lines.Count > 0 && lines[0].StartsWith("{\\rtf", StringComparison.Ordinal))
+            {
                 return false;
+            }
 
             var subtitle = new Subtitle();
             LoadSubtitle(subtitle, lines, fileName);
             bool isMine = subtitle.Paragraphs.Count > _errorCount;
 
             if (isMine && new UnknownSubtitle80().IsMine(lines, fileName))
+            {
                 return false;
+            }
 
             return isMine;
         }
@@ -85,7 +89,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 string text = string.Empty;
                                 int indexOfEndTime = line.IndexOf(']');
                                 if (indexOfEndTime > 0 && indexOfEndTime + 1 < line.Length)
+                                {
                                     text = line.Substring(indexOfEndTime + 1);
+                                }
+
                                 p = new Paragraph(DecodeTimeCodeFramesFourParts(parts), DecodeTimeCodeFramesFourParts(parts), text);
                             }
                             catch
@@ -101,7 +108,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             string text = string.Empty;
                             int indexOfEndTime = line.IndexOf(']');
                             if (indexOfEndTime > 0 && indexOfEndTime + 1 < line.Length)
+                            {
                                 text = line.Substring(indexOfEndTime + 1);
+                            }
+
                             p = new Paragraph(DecodeTimeCodeFramesFourParts(parts), DecodeTimeCodeFramesFourParts(parts), text);
                         }
                     }
@@ -113,9 +123,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 else if (p != null)
                 {
                     if (string.IsNullOrEmpty(p.Text))
+                    {
                         p.Text = line;
+                    }
                     else
+                    {
                         p.Text = p.Text + Environment.NewLine + line;
+                    }
                 }
                 else
                 {

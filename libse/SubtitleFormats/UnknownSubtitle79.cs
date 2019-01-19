@@ -43,9 +43,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 text = Utilities.RemoveSsaTags(text);
                 string formatting = "N";
                 if (text.StartsWith("<i>", StringComparison.Ordinal))
+                {
                     formatting = "I";
+                }
                 else if (text.StartsWith("<b>", StringComparison.Ordinal))
+                {
                     formatting = "B";
+                }
+
                 text = HtmlUtil.RemoveHtmlTags(text);
 
                 sb.AppendLine(string.Format(paragraphWriteFormat, verticalAlignment, formatting, EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), Environment.NewLine, text));
@@ -97,7 +102,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     _errorCount++;
                     if (_errorCount > 10)
+                    {
                         return;
+                    }
                 }
             }
             AddParagraph(subtitle, paragraph, formatting, verticalAglinment);

@@ -26,7 +26,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             foreach (var p in subtitle.Paragraphs)
             {
                 if (count > 0)
+                {
                     sb.Append(',');
+                }
+
                 sb.Append("{\"start\":");
                 sb.Append(p.StartTime.TotalMilliseconds.ToString(System.Globalization.CultureInfo.InvariantCulture));
                 sb.Append(",\"end\":");
@@ -55,10 +58,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             var sb = new StringBuilder();
             foreach (string s in lines)
+            {
                 sb.Append(s);
+            }
+
             string allLines = sb.ToString();
             if (!allLines.Contains("\"subtitles\":", StringComparison.Ordinal))
+            {
                 return;
+            }
 
             foreach (string line in sb.ToString().Replace("},{", Environment.NewLine).SplitToLines())
             {
@@ -76,7 +84,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     {
                         var p = new Paragraph(Json.DecodeJsonText(text), startMilliseconds, endMilliseconds);
                         if (!string.IsNullOrEmpty(extra))
+                        {
                             p.Extra = extra;
+                        }
+
                         subtitle.Paragraphs.Add(p);
                     }
                     else

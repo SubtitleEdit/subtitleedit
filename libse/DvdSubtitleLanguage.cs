@@ -161,14 +161,20 @@ namespace Nikse.SubtitleEdit.Core
         private static string ConvertDvdToIso(string dvdCode)
         {
             if (!DvdToIso.TryGetValue(dvdCode, out var isoCode))
+            {
                 isoCode = dvdCode;
+            }
+
             return isoCode;
         }
 
         private static string ConvertIsoToDvd(string isoCode)
         {
             if (!IsoToDvd.TryGetValue(isoCode, out var dvdCode))
+            {
                 dvdCode = isoCode;
+            }
+
             return dvdCode;
         }
 

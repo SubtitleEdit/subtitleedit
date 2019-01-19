@@ -69,9 +69,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 string text = p.Text.Replace("♪", "|");
                 if (text.StartsWith("<i>", StringComparison.Ordinal))
+                {
                     text = ",b" + Environment.NewLine + text;
+                }
+
                 if (text.StartsWith("{\\an8}", StringComparison.Ordinal))
+                {
                     text = ",12" + Environment.NewLine + text;
+                }
+
                 text = HtmlUtil.RemoveHtmlTags(text, true);
                 sb.AppendLine(string.Format(paragraphWriteFormat, text, Environment.NewLine, EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime)));
             }
@@ -102,7 +108,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         {
                             TimeCode start = DecodeTimeCodeFrames(timeParts[0].Substring(0, 11), splitChars);
                             if (p != null && Math.Abs(p.EndTime.TotalMilliseconds) < 0.001)
+                            {
                                 p.EndTime.TotalMilliseconds = start.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                            }
+
                             TimeCode end = new TimeCode();
                             p = MakeTextParagraph(text, start, end);
                             subtitle.Paragraphs.Add(p);
@@ -119,7 +128,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         {
                             TimeCode start = DecodeTimeCodeFrames(timeParts[0].Substring(0, 11), splitChars);
                             if (p != null && Math.Abs(p.EndTime.TotalMilliseconds) < 0.001)
+                            {
                                 p.EndTime.TotalMilliseconds = start.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                            }
+
                             TimeCode end = DecodeTimeCodeFrames(timeParts[1].Substring(0, 11), splitChars);
                             p = MakeTextParagraph(text, start, end);
                             subtitle.Paragraphs.Add(p);
@@ -135,7 +147,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     text.AppendLine(line.Trim().Replace("|", "♪"));
                     if (text.Length > 5000)
+                    {
                         return;
+                    }
                 }
                 else
                 {
@@ -150,11 +164,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             var p = new Paragraph(start, end, text.ToString().Trim());
             if (p.Text.StartsWith(",b" + Environment.NewLine, StringComparison.Ordinal))
+            {
                 p.Text = "<i>" + p.Text.Remove(0, 2).Trim() + "</i>";
+            }
             else if (p.Text.StartsWith(",1" + Environment.NewLine, StringComparison.Ordinal))
+            {
                 p.Text = "{\\an8}" + p.Text.Remove(0, 2).Trim();
+            }
             else if (p.Text.StartsWith(",12" + Environment.NewLine, StringComparison.Ordinal))
+            {
                 p.Text = "{\\an8}" + p.Text.Remove(0, 3).Trim();
+            }
+
             return p;
         }
 

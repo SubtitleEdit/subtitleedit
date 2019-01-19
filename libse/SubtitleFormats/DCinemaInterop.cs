@@ -87,7 +87,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 languageEnglishName = ci.EnglishName;
                 int indexOfStartP = languageEnglishName.IndexOf('(');
                 if (indexOfStartP > 1)
+                {
                     languageEnglishName = languageEnglishName.Remove(indexOfStartP).Trim();
+                }
             }
             catch
             {
@@ -114,13 +116,19 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var ss = Configuration.Settings.SubtitleSettings;
             string loadedFontId = "Font1";
             if (!string.IsNullOrEmpty(ss.CurrentDCinemaFontId))
+            {
                 loadedFontId = ss.CurrentDCinemaFontId;
+            }
 
             if (string.IsNullOrEmpty(ss.CurrentDCinemaMovieTitle))
+            {
                 ss.CurrentDCinemaMovieTitle = title;
+            }
 
             if (ss.CurrentDCinemaFontSize == 0 || string.IsNullOrEmpty(ss.CurrentDCinemaFontEffect))
+            {
                 Configuration.Settings.SubtitleSettings.InitializeDCinameSettings(true);
+            }
 
             xml.DocumentElement.SelectSingleNode("MovieTitle").InnerText = ss.CurrentDCinemaMovieTitle;
             xml.DocumentElement.SelectSingleNode("SubtitleID").InnerText = ss.CurrentDCinemaSubtitleId.Replace("urn:uuid:", string.Empty);
@@ -213,20 +221,34 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                         var vAlign = xml.CreateAttribute("VAlign");
                         if (alignVTop)
+                        {
                             vAlign.InnerText = "top";
+                        }
                         else if (alignVCenter)
+                        {
                             vAlign.InnerText = "center";
+                        }
                         else
+                        {
                             vAlign.InnerText = "bottom";
+                        }
+
                         textNode.Attributes.Append(vAlign);
 
                         var hAlign = xml.CreateAttribute("HAlign");
                         if (alignLeft)
+                        {
                             hAlign.InnerText = "left";
+                        }
                         else if (alignRight)
+                        {
                             hAlign.InnerText = "right";
+                        }
                         else
+                        {
                             hAlign.InnerText = "center";
+                        }
+
                         textNode.Attributes.Append(hAlign);
 
                         var direction = xml.CreateAttribute("Direction");
@@ -295,7 +317,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 string c = line.Substring(i + 12, endOfFont - (i + 12));
                                 c = c.Trim('"').Trim('\'').Trim();
                                 if (c.StartsWith('#'))
+                                {
                                     c = c.TrimStart('#').ToUpper().PadLeft(8, 'F');
+                                }
+
                                 fontColors.Push(c);
                                 fontNo++;
                                 i = endOfFont;
@@ -427,9 +452,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                         subNode.AppendChild(textNode);
                         if (alignVTop)
+                        {
                             vPos += vPosFactor;
+                        }
                         else
+                        {
                             vPos -= vPosFactor;
+                        }
                     }
 
                     mainListFont.AppendChild(subNode);
@@ -440,9 +469,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             while (s.Contains("</Font>  ") || s.Contains("  <Font ") || s.Contains(Environment.NewLine + "<Font ") || s.Contains("</Font>" + Environment.NewLine))
             {
                 while (s.Contains("  Font"))
+                {
                     s = s.Replace("  <Font ", " <Font ");
+                }
+
                 while (s.Contains("\tFont"))
+                {
                     s = s.Replace("\t<Font ", " <Font ");
+                }
 
                 s = s.Replace("</Font>  ", "</Font> ");
                 s = s.Replace("  <Font ", " <Font ");
@@ -468,7 +502,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var xml = new XmlDocument { XmlResolver = null };
             xml.LoadXml(sb.ToString().Trim());
             if (xml.DocumentElement == null)
+            {
                 return;
+            }
 
             var ss = Configuration.Settings.SubtitleSettings;
             try
@@ -476,37 +512,61 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 ss.InitializeDCinameSettings(false);
                 XmlNode node = xml.DocumentElement.SelectSingleNode("SubtitleID");
                 if (node != null)
+                {
                     ss.CurrentDCinemaSubtitleId = node.InnerText;
+                }
 
                 node = xml.DocumentElement.SelectSingleNode("ReelNumber");
                 if (node != null)
+                {
                     ss.CurrentDCinemaReelNumber = node.InnerText;
+                }
 
                 node = xml.DocumentElement.SelectSingleNode("Language");
                 if (node != null)
+                {
                     ss.CurrentDCinemaLanguage = node.InnerText;
+                }
 
                 node = xml.DocumentElement.SelectSingleNode("MovieTitle");
                 if (node != null)
+                {
                     ss.CurrentDCinemaMovieTitle = node.InnerText;
+                }
 
                 node = xml.DocumentElement.SelectSingleNode("LoadFont");
                 if (node?.Attributes?["URI"] != null)
+                {
                     ss.CurrentDCinemaFontUri = node.Attributes["URI"].InnerText;
+                }
 
                 node = xml.DocumentElement.SelectSingleNode("Font");
                 if (node != null)
                 {
                     if (node.Attributes?["ID"] != null)
+                    {
                         ss.CurrentDCinemaFontId = node.Attributes["ID"].InnerText;
+                    }
+
                     if (node.Attributes?["Size"] != null)
+                    {
                         ss.CurrentDCinemaFontSize = Convert.ToInt32(node.Attributes["Size"].InnerText);
+                    }
+
                     if (node.Attributes?["Color"] != null)
+                    {
                         ss.CurrentDCinemaFontColor = System.Drawing.ColorTranslator.FromHtml("#" + node.Attributes["Color"].InnerText);
+                    }
+
                     if (node.Attributes?["Effect"] != null)
+                    {
                         ss.CurrentDCinemaFontEffect = node.Attributes["Effect"].InnerText;
+                    }
+
                     if (node.Attributes?["EffectColor"] != null)
+                    {
                         ss.CurrentDCinemaFontEffectColor = System.Drawing.ColorTranslator.FromHtml("#" + node.Attributes["EffectColor"].InnerText);
+                    }
                 }
             }
             catch (Exception exception)
@@ -531,7 +591,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 string vPosition = innerNode.Attributes["VPosition"].InnerText;
                                 var vAlignmentNode = innerNode.Attributes["VAlign"];
                                 if (vAlignmentNode != null)
+                                {
                                     vAlignment = vAlignmentNode.InnerText;
+                                }
+
                                 if (vPosition != lastVPosition)
                                 {
                                     if (pText.Length > 0 && lastVPosition.Length > 0)
@@ -552,18 +615,26 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             {
                                 string hAlign = innerNode.Attributes["HAlign"].InnerText;
                                 if (hAlign == "left")
+                                {
                                     alignLeft = true;
+                                }
                                 else if (hAlign == "right")
+                                {
                                     alignRight = true;
+                                }
                             }
 
                             if (innerNode.Attributes["VAlign"] != null)
                             {
                                 string hAlign = innerNode.Attributes["VAlign"].InnerText;
                                 if (hAlign == "top")
+                                {
                                     alignVTop = true;
+                                }
                                 else if (hAlign == "center")
+                                {
                                     alignVCenter = true;
+                                }
                             }
 
                             if (alignLeft || alignRight || alignVCenter || alignVTop)
@@ -574,27 +645,43 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                     if (alignVTop)
                                     {
                                         if (alignLeft)
+                                        {
                                             pre = "{\\an7}";
+                                        }
                                         else if (alignRight)
+                                        {
                                             pre = "{\\an9}";
+                                        }
                                         else
+                                        {
                                             pre = "{\\an8}";
+                                        }
                                     }
                                     else if (alignVCenter)
                                     {
                                         if (alignLeft)
+                                        {
                                             pre = "{\\an4}";
+                                        }
                                         else if (alignRight)
+                                        {
                                             pre = "{\\an6}";
+                                        }
                                         else
+                                        {
                                             pre = "{\\an5}";
+                                        }
                                     }
                                     else
                                     {
                                         if (alignLeft)
+                                        {
                                             pre = "{\\an1}";
+                                        }
                                         else if (alignRight)
+                                        {
                                             pre = "{\\an3}";
+                                        }
                                     }
 
                                     string temp = pre + pText;
@@ -615,16 +702,24 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                         innerInnerNode.Attributes["Italic"].InnerText.Equals("yes", StringComparison.OrdinalIgnoreCase))
                                     {
                                         if (innerInnerNode.Attributes["Color"] != null)
+                                        {
                                             pText.Append("<i><font color=\"" + GetColorStringFromDCinema(innerInnerNode.Attributes["Color"].Value) + "\">" + innerInnerNode.InnerText + "</font><i>");
+                                        }
                                         else
+                                        {
                                             pText.Append("<i>" + innerInnerNode.InnerText + "</i>");
+                                        }
                                     }
                                     else if (innerInnerNode.Name == "Font" && innerInnerNode.Attributes["Color"] != null)
                                     {
                                         if (innerInnerNode.Attributes["Italic"] != null && innerInnerNode.Attributes["Italic"].InnerText.Equals("yes", StringComparison.OrdinalIgnoreCase))
+                                        {
                                             pText.Append("<i><font color=\"" + GetColorStringFromDCinema(innerInnerNode.Attributes["Color"].Value) + "\">" + innerInnerNode.InnerText + "</font><i>");
+                                        }
                                         else
+                                        {
                                             pText.Append("<font color=\"" + GetColorStringFromDCinema(innerInnerNode.Attributes["Color"].Value) + "\">" + innerInnerNode.InnerText + "</font>");
+                                        }
                                     }
                                     else
                                     {
@@ -671,9 +766,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         !text.Contains("<i>"))
                     {
                         if (text.StartsWith("{\\an", StringComparison.Ordinal) && text.Length > 6)
+                        {
                             text = text.Insert(6, "<i>") + "</i>";
+                        }
                         else
+                        {
                             text = "<i>" + text + "</i>";
+                        }
                     }
 
                     subtitle.Paragraphs.Add(new Paragraph(GetTimeCode(start), GetTimeCode(end), text));
@@ -686,7 +785,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             if (subtitle.Paragraphs.Count > 0)
+            {
                 subtitle.Header = xml.OuterXml; // save id/language/font for later use
+            }
 
             subtitle.Renumber();
         }
@@ -715,9 +816,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             int milliseconds = int.Parse(parts[3]) * 4; // 000 to 249
             if (s.Contains('.'))
+            {
                 milliseconds = int.Parse(parts[3].PadRight(3, '0'));
+            }
+
             if (milliseconds > 999)
+            {
                 milliseconds = 999;
+            }
 
             return new TimeCode(int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), milliseconds);
         }

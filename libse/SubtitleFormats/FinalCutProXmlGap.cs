@@ -16,9 +16,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override string ToText(Subtitle subtitle, string title)
         {
             if (Configuration.Settings.General.CurrentFrameRate > 26)
+            {
                 FrameRate = 30;
+            }
             else
+            {
                 FrameRate = 25;
+            }
 
             string xmlStructure =
                 "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"no\"?>" + Environment.NewLine +

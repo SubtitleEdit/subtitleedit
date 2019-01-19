@@ -17,12 +17,18 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
             while (fs.Position < (long)maximumLength)
             {
                 if (!InitializeSizeAndName(fs))
+                {
                     return;
+                }
 
                 if (Name == "mdia")
+                {
                     Mdia = new Mdia(fs, Position);
+                }
                 else if (Name == "tkhd")
+                {
                     Tkhd = new Tkhd(fs);
+                }
 
                 fs.Seek((long)Position, SeekOrigin.Begin);
             }

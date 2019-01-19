@@ -88,7 +88,9 @@ namespace Nikse.SubtitleEdit.Core.VobSub
                 int delayBeforeExecute = Helper.GetEndianWord(_data, displayControlSequenceTableAddress + _pixelDataAddressOffset);
                 commandIndex = displayControlSequenceTableAddress + 4 + _pixelDataAddressOffset;
                 if (commandIndex >= _data.Length)
+                {
                     break; // invalid index
+                }
 
                 int command = _data[commandIndex];
                 int numberOfCommands = 0;
@@ -181,18 +183,27 @@ namespace Nikse.SubtitleEdit.Core.VobSub
                             break;
                     }
                     if (commandIndex >= _data.Length) // in case of bad files...
+                    {
                         break;
+                    }
+
                     command = _data[commandIndex];
                 }
 
                 lastDisplayControlSequenceTableAddress = displayControlSequenceTableAddress;
                 if (_pixelDataAddressOffset == -4)
+                {
                     displayControlSequenceTableAddress = Helper.GetEndianWord(_data, commandIndex + 3);
+                }
                 else
+                {
                     displayControlSequenceTableAddress = Helper.GetEndianWord(_data, displayControlSequenceTableAddress + 2);
+                }
             }
             if (createBitmap && !bitmapGenerated) // StopDisplay not needed (delay will be zero - should be just before start of next subtitle)
+            {
                 bmp = GenerateBitmap(ImageDisplayArea, imageTopFieldDataAddress, imageBottomFieldDataAddress, fourColors);
+            }
 
             return bmp;
         }
@@ -200,7 +211,9 @@ namespace Nikse.SubtitleEdit.Core.VobSub
         private static void SetColor(List<Color> fourColors, int fourColorIndex, int clutIndex, List<Color> colorLookUpTable)
         {
             if (clutIndex >= 0 && clutIndex < colorLookUpTable.Count && fourColorIndex >= 0)
+            {
                 fourColors[fourColorIndex] = colorLookUpTable[clutIndex];
+            }
         }
 
         private static void SetTransparency(List<Color> fourColors, int fourColorIndex, int alpha)
@@ -208,13 +221,17 @@ namespace Nikse.SubtitleEdit.Core.VobSub
             // alpha: 0x0 = transparent, 0xF = opaque (in C# 0 is fully transparent, and 255 is fully opaque so we have to multiply by 17)
 
             if (fourColorIndex >= 0)
+            {
                 fourColors[fourColorIndex] = Color.FromArgb(alpha * 17, fourColors[fourColorIndex].R, fourColors[fourColorIndex].G, fourColors[fourColorIndex].B);
+            }
         }
 
         private Bitmap GenerateBitmap(Rectangle imageDisplayArea, int imageTopFieldDataAddress, int imageBottomFieldDataAddress, List<Color> fourColors)
         {
             if (imageDisplayArea.Width <= 0 || imageDisplayArea.Height <= 0)
+            {
                 return new Bitmap(1, 1);
+            }
 
             var bmp = new Bitmap(imageDisplayArea.Width + 1, imageDisplayArea.Height + 1);
             if (fourColors[0] != Color.Transparent)
@@ -249,17 +266,25 @@ namespace Nikse.SubtitleEdit.Core.VobSub
                     {
                         c = bmp.GetPixelNext();
                         if (c.A != 0 && c.ToArgb() != backgroundArgb)
+                        {
                             break;
+                        }
                     }
                 }
                 if (IsBackgroundColor(c, backgroundArgb))
+                {
                     y++;
+                }
             }
             int minY = y;
             if (minY > 3)
+            {
                 minY -= 3;
+            }
             else
+            {
                 minY = 0;
+            }
 
             // Crop left
             x = 0;
@@ -270,16 +295,24 @@ namespace Nikse.SubtitleEdit.Core.VobSub
                 {
                     c = bmp.GetPixel(x, y);
                     if (!IsBackgroundColor(c, backgroundArgb))
+                    {
                         break;
+                    }
                 }
                 if (IsBackgroundColor(c, backgroundArgb))
+                {
                     x++;
+                }
             }
             int minX = x;
             if (minX > 3)
+            {
                 minX -= 3;
+            }
             else
+            {
                 minX -= 0;
+            }
 
             // Crop bottom
             y = bmp.Height - 1;
@@ -293,15 +326,21 @@ namespace Nikse.SubtitleEdit.Core.VobSub
                     {
                         c = bmp.GetPixelNext();
                         if (!IsBackgroundColor(c, backgroundArgb))
+                        {
                             break;
+                        }
                     }
                 }
                 if (IsBackgroundColor(c, backgroundArgb))
+                {
                     y--;
+                }
             }
             int maxY = y + 7;
             if (maxY >= bmp.Height)
+            {
                 maxY = bmp.Height - 1;
+            }
 
             // Crop right
             x = bmp.Width - 1;
@@ -312,14 +351,20 @@ namespace Nikse.SubtitleEdit.Core.VobSub
                 {
                     c = bmp.GetPixel(x, y);
                     if (!IsBackgroundColor(c, backgroundArgb))
+                    {
                         break;
+                    }
                 }
                 if (IsBackgroundColor(c, backgroundArgb))
+                {
                     x--;
+                }
             }
             int maxX = x + 7;
             if (maxX >= bmp.Width)
+            {
                 maxX = bmp.Width - 1;
+            }
 
             bmp.UnlockImage();
             Bitmap bmpImage = bmp.GetBitmap();
@@ -350,7 +395,9 @@ namespace Nikse.SubtitleEdit.Core.VobSub
                 bool restOfLine;
                 index += DecodeRle(dataAddress + index, data, out color, out runLength, ref onlyHalf, out restOfLine);
                 if (restOfLine)
+                {
                     runLength = bmp.Width - x;
+                }
 
                 Color c = fourColors[color]; // set color via the four colors
                 for (int i = 0; i < runLength; i++, x++)
@@ -358,7 +405,9 @@ namespace Nikse.SubtitleEdit.Core.VobSub
                     if (x >= bmp.Width - 1)
                     {
                         if (y < bmp.Height && x < bmp.Width && c != fourColors[0])
+                        {
                             bmp.SetPixel(x, y, c);
+                        }
 
                         if (onlyHalf)
                         {
@@ -370,7 +419,9 @@ namespace Nikse.SubtitleEdit.Core.VobSub
                         break;
                     }
                     if (y < bmp.Height && c.ToArgb() != colorZeroValue)
+                    {
                         bmp.SetPixel(x, y, c);
+                    }
                 }
             }
         }

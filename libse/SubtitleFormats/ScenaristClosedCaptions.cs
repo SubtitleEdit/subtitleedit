@@ -461,19 +461,25 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             // fix attempt 1
             var lines = text.Trim().SplitToLines();
             if (IsAllOkay(lines))
+            {
                 return text;
+            }
 
             // fix attempt 2
             text = Utilities.AutoBreakLine(text, 1, 4, language);
             lines = text.Trim().SplitToLines();
             if (IsAllOkay(lines))
+            {
                 return text;
+            }
 
             // fix attempt 3
             text = AutoBreakLineMax4Lines(text, 32);
             lines = text.Trim().SplitToLines();
             if (IsAllOkay(lines))
+            {
                 return text;
+            }
 
             var sb = new StringBuilder();
             int count = 0;
@@ -482,9 +488,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 if (count < 4)
                 {
                     if (line.Length > 32)
+                    {
                         sb.AppendLine(line.Substring(0, 32));
+                    }
                     else
+                    {
                         sb.AppendLine(line);
+                    }
                 }
                 count++;
             }
@@ -494,11 +504,16 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         private static bool IsAllOkay(List<string> lines)
         {
             if (lines.Count > 4)
+            {
                 return false;
+            }
+
             for (int i = 0; i < lines.Count; i++)
             {
                 if (lines[i].Length > 32)
+                {
                     return false;
+                }
             }
             return true;
         }
@@ -509,7 +524,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             while (end > 0)
             {
                 if (s[end] == ' ')
+                {
                     return end;
+                }
+
                 end--;
             }
             return -1;
@@ -526,25 +544,40 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 sb.AppendLine(s.Substring(0, i));
                 s = s.Remove(0, i).Trim();
                 if (s.Length <= maxLength)
+                {
                     i = s.Length;
+                }
                 else
+                {
                     i = GetLastIndexOfSpace(s, maxLength);
+                }
+
                 if (i > 0)
                 {
                     sb.AppendLine(s.Substring(0, i));
                     s = s.Remove(0, i).Trim();
                     if (s.Length <= maxLength)
+                    {
                         i = s.Length;
+                    }
                     else
+                    {
                         i = GetLastIndexOfSpace(s, maxLength);
+                    }
+
                     if (i > 0)
                     {
                         sb.AppendLine(s.Substring(0, i));
                         s = s.Remove(0, i).Trim();
                         if (s.Length <= maxLength)
+                        {
                             i = s.Length;
+                        }
                         else
+                        {
                             i = GetLastIndexOfSpace(s, maxLength);
+                        }
+
                         if (i > 0)
                         {
                             sb.AppendLine(s.Substring(0, i));
@@ -597,7 +630,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 text = line.Trim();
                 if (count > 0)
+                {
                     sb.Append(' ');
+                }
+
                 sb.Append(GetCenterCodes(text, count, lines.Count));
                 count++;
                 int i = 0;
@@ -643,9 +679,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         newCode = "";
                     }
                     else if (codeFromLetter == null)
+                    {
                         newCode = GetCodeFromLetter(" ");
+                    }
                     else
+                    {
                         newCode = codeFromLetter;
+                    }
 
                     if (code.Length == 2 && newCode.Length == 4)
                     {
@@ -656,7 +696,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     {
                         sb.Append(code + " ");
                         if (code.StartsWith('9') || code.StartsWith('8')) // control codes must be double
+                        {
                             sb.Append(code + " ");
+                        }
+
                         code = string.Empty;
                     }
 
@@ -681,14 +724,20 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             code += "80";
                             sb.Append(code + " ");
                             if (code.StartsWith('9') || code.StartsWith('8')) // control codes must be double
+                            {
                                 sb.Append(code + " ");
+                            }
+
                             code = string.Empty;
                         }
                         else if (code.Length == 4)
                         {
                             sb.Append(code + " ");
                             if (code.StartsWith('9') || code.StartsWith('8')) // control codes must be double
+                            {
                                 sb.Append(code + " ");
+                            }
+
                             code = string.Empty;
                         }
                         sb.Append(newCode.TrimEnd() + " ");
@@ -697,9 +746,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     i++;
                 }
                 if (code.Length == 2)
+                {
                     code += "80";
+                }
+
                 if (code.Length == 4)
+                {
                     sb.Append(code);
+                }
             }
 
             return sb.ToString().Trim();
@@ -709,7 +763,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             var code = LetterDictionary.FirstOrDefault(x => x.Value == letter);
             if (code.Equals(new KeyValuePair<string, string>()))
+            {
                 return null;
+            }
+
             return code.Key;
         }
 
@@ -717,7 +774,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             var letter = LetterDictionary.FirstOrDefault(x => x.Key == hexCode.ToLowerInvariant());
             if (letter.Equals(new KeyValuePair<string, string>()))
+            {
                 return null;
+            }
+
             return letter.Value;
         }
 
@@ -763,11 +823,20 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             string code = rowCode + columnCodes[row];
 
             if (columnRest == 1)
+            {
                 return code + " " + code + " 97a1 97a1 ";
+            }
+
             if (columnRest == 2)
+            {
                 return code + " " + code + " 97a2 97a2 ";
+            }
+
             if (columnRest == 3)
+            {
                 return code + " " + code + " 9723 9723 ";
+            }
+
             return code + " " + code + " ";
         }
 
@@ -775,7 +844,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             TimeSpan ts = TimeSpan.FromMilliseconds(totalMilliseconds);
             if (DropFrame)
+            {
                 return $"{ts.Hours:00}:{ts.Minutes:00}:{ts.Seconds:00};{MillisecondsToFramesMaxFrameRate(ts.Milliseconds):00}";
+            }
+
             return $"{ts.Hours:00}:{ts.Minutes:00}:{ts.Seconds:00}:{MillisecondsToFramesMaxFrameRate(ts.Milliseconds):00}";
         }
 
@@ -1548,13 +1620,20 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 p = subtitle.GetParagraphOrDefault(i);
                 Paragraph next = subtitle.GetParagraphOrDefault(i + 1);
                 if (p != null && next != null && Math.Abs(p.EndTime.TotalMilliseconds - p.StartTime.TotalMilliseconds) < 0.001)
+                {
                     p.EndTime = new TimeCode(next.StartTime.TotalMilliseconds);
+                }
+
                 if (next != null && string.IsNullOrEmpty(next.Text))
+                {
                     subtitle.Paragraphs.Remove(next);
+                }
             }
             p = subtitle.GetParagraphOrDefault(0);
             if (p != null && string.IsNullOrEmpty(p.Text))
+            {
                 subtitle.Paragraphs.Remove(p);
+            }
 
             subtitle.Renumber();
         }
@@ -1611,16 +1690,24 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         if (part[0] == '9' || part[0] == '8')
                         {
                             if (k + 1 < parts.Length && parts[k + 1] == part)
+                            {
                                 k++;
+                            }
                         }
 
                         var cp = GetColorAndPosition(part);
                         if (cp != null)
                         {
                             if (!string.IsNullOrWhiteSpace(sb.ToString()) && cp.Y > 0 && y >= 0 && cp.Y > y && !sb.ToString().EndsWith(Environment.NewLine, StringComparison.Ordinal))
+                            {
                                 sb.AppendLine();
+                            }
+
                             if (cp.Y > 0)
+                            {
                                 y = cp.Y;
+                            }
+
                             if ((cp.Style & FontStyle.Italic) == FontStyle.Italic && !italicOn)
                             {
                                 sb.Append("<i>");
@@ -1639,7 +1726,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 case "9440":
                                 case "94e0":
                                     if (!sb.ToString().EndsWith(Environment.NewLine, StringComparison.Ordinal))
+                                    {
                                         sb.AppendLine();
+                                    }
+
                                     break;
                                 case "2c75":
                                 case "2cf2":
@@ -1709,7 +1799,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 else if (part.Length > 0)
                 {
                     if (!first)
+                    {
                         errorCount++;
+                    }
                 }
                 first = false;
                 k++;
@@ -1717,7 +1809,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             string res = sb.ToString().Replace("<i></i>", string.Empty).Replace("</i><i>", string.Empty);
             res = res.Replace("  ", " ").Replace("  ", " ").Replace(Environment.NewLine + " ", Environment.NewLine).Trim();
             if (res.Contains("<i>") && !res.Contains("</i>"))
+            {
                 res += "</i>";
+            }
+
             return HtmlUtil.FixInvalidItalicTags(res);
         }
 

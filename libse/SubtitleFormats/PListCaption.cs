@@ -92,7 +92,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     keyNode = xml.CreateElement("key");
                     keyNode.InnerText = "text";
                     if (textNo > 1)
+                    {
                         keyNode.InnerText = keyNode.InnerText + textNo;
+                    }
+
                     paragraph.AppendChild(keyNode);
 
                     valueNode = xml.CreateElement("string");
@@ -144,7 +147,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                     p.Text = pText.ToString().Trim();
                     if (p.StartTime.TotalSeconds >= 0 && p.EndTime.TotalMilliseconds > 0 && !string.IsNullOrEmpty(p.Text))
+                    {
                         subtitle.Paragraphs.Add(p);
+                    }
                 }
                 catch (Exception ex)
                 {

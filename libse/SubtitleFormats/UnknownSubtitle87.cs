@@ -62,11 +62,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                 string next = string.Empty;
                 if (i + 1 < lines.Count)
+                {
                     next = lines[i + 1];
+                }
 
                 string nextNext = string.Empty;
                 if (i + 2 < lines.Count)
+                {
                     nextNext = lines[i + 2];
+                }
 
                 // A new line is missing between two paragraphs (buggy srt file)
                 if (_expecting == ExpectingLine.Text && i + 1 < lines.Count &&
@@ -82,7 +86,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 ReadLine(subtitle, line, next, nextNext);
             }
             if (_paragraph != null && _paragraph.EndTime.TotalMilliseconds > _paragraph.StartTime.TotalMilliseconds)
+            {
                 subtitle.Paragraphs.Add(_paragraph);
+            }
 
             subtitle.Renumber();
         }
@@ -118,9 +124,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         {
                             var rest = line.Remove(0, match.Length).Trim();
                             if (rest.StartsWith("0 "))
+                            {
                                 rest = rest.Remove(0, 2);
+                            }
+
                             if (rest.Length > 0 && rest != "0" && rest != ":")
+                            {
                                 _paragraph.Text = rest;
+                            }
                         }
                         _expecting = ExpectingLine.Text;
                     }
@@ -134,7 +145,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     if (!string.IsNullOrWhiteSpace(line) || IsText(next))
                     {
                         if (_paragraph.Text.Length > 0)
+                        {
                             _paragraph.Text += Environment.NewLine;
+                        }
+
                         _paragraph.Text += RemoveBadChars(line).TrimEnd().Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
                     }
                     else if (string.IsNullOrEmpty(line) && string.IsNullOrEmpty(_paragraph.Text))
@@ -189,11 +203,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                     paragraph.StartTime = new TimeCode(startHours, startMinutes, startSeconds, startMilliseconds);
                     if (parts[0].StartsWith('-') && paragraph.StartTime.TotalMilliseconds > 0)
+                    {
                         paragraph.StartTime.TotalMilliseconds = paragraph.StartTime.TotalMilliseconds * -1;
+                    }
 
                     paragraph.EndTime = new TimeCode(endHours, endMinutes, endSeconds, endMilliseconds);
                     if (parts[4].StartsWith('-') && paragraph.EndTime.TotalMilliseconds > 0)
+                    {
                         paragraph.EndTime.TotalMilliseconds = paragraph.EndTime.TotalMilliseconds * -1;
+                    }
 
                     return true;
                 }

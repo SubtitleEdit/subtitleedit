@@ -74,8 +74,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     p2.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
                 }
                 if (subtitle.Paragraphs.Count > 0)
+                {
                     subtitle.Paragraphs[subtitle.Paragraphs.Count - 1].EndTime.TotalMilliseconds = subtitle.Paragraphs[subtitle.Paragraphs.Count - 1].StartTime.TotalMilliseconds +
                          Utilities.GetOptimalDisplayMilliseconds(subtitle.Paragraphs[subtitle.Paragraphs.Count - 1].Text);
+                }
             }
             subtitle.RemoveEmptyLines();
             subtitle.Renumber();
@@ -89,11 +91,17 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             for (int i = 0; i < s.Length; i++)
             {
                 if (s[i] == '{')
+                {
                     tagOn = true;
+                }
                 else if (s[i] == '}')
+                {
                     tagOn = false;
+                }
                 else if (!tagOn)
+                {
                     sb.Append(s[i]);
+                }
             }
             return sb.ToString().Trim();
         }

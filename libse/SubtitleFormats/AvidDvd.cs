@@ -25,10 +25,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             if (fileName != null)
             {
                 if (fileName.EndsWith(".dost", StringComparison.OrdinalIgnoreCase))
+                {
                     return false;
+                }
 
                 if (fileName.EndsWith(".sst", StringComparison.OrdinalIgnoreCase) && new SonicScenaristBitmaps().IsMine(lines, fileName))
+                {
                     return false;
+                }
             }
 
             return base.IsMine(lines, fileName);
@@ -49,7 +53,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 Paragraph p = subtitle.Paragraphs[i];
                 string text = p.Text;
                 if (text.StartsWith('{') && text.Length > 6 && text[6] == '}')
+                {
                     text = text.Remove(0, 6);
+                }
+
                 if (text.StartsWith("<i>", StringComparison.Ordinal) && text.EndsWith("</i>", StringComparison.Ordinal))
                 {
                     if (!italic)
@@ -99,9 +106,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                             if (string.IsNullOrWhiteSpace(text.Replace("0", string.Empty).Replace("1", string.Empty).Replace("2", string.Empty).Replace("3", string.Empty).Replace("4", string.Empty).Replace("5", string.Empty).
                                 Replace("6", string.Empty).Replace("7", string.Empty).Replace("8", string.Empty).Replace("9", string.Empty).RemoveChar('.').RemoveChar(':').RemoveChar(',')))
+                            {
                                 _errorCount++;
+                            }
+
                             if (italic)
+                            {
                                 text = "<i>" + text + "</i>";
+                            }
+
                             sb.AppendLine(text);
                             char[] splitChars = { ',', '.', ':' };
                             p = new Paragraph(DecodeTimeCodeFrames(arr[1], splitChars), DecodeTimeCodeFrames(arr[2], splitChars), string.Empty);

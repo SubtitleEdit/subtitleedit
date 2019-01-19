@@ -230,16 +230,22 @@ namespace Nikse.SubtitleEdit.Core.VobSub
 
                     // First Write header
                     for (int x = 0; x < headerSize; x++)
+                    {
                         mwsub.WriteByte(subHeader[x]);
+                    }
 
                     // Write Image Data
                     for (int x = 0; x < toWrite; x++)
+                    {
                         mwsub.WriteByte(imageBuffer[bufferIndex++]);
+                    }
 
                     // Pad remaining space
                     long paddingSize = 0x800 - headerSize - toWrite;
                     for (int x = 0; x < paddingSize; x++)
+                    {
                         mwsub.WriteByte(0xff);
+                    }
 
                     toWrite = 0;
                 }
@@ -254,11 +260,15 @@ namespace Nikse.SubtitleEdit.Core.VobSub
 
                     // First Write header
                     for (int x = 0; x < headerSize; x++)
+                    {
                         mwsub.WriteByte(subHeader[x]);
+                    }
 
                     // Write Image Data
                     for (int x = 0; x < blockSize; x++)
+                    {
                         mwsub.WriteByte(imageBuffer[bufferIndex++]);
+                    }
 
                     toWrite -= blockSize;
                 }

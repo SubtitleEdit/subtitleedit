@@ -32,7 +32,10 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                             var old = st.StrippedText;
                             st.StrippedText = st.StrippedText.Substring(0, match.Index + 1) + "l";
                             if (match.Index + 2 < old.Length)
+                            {
                                 st.StrippedText += old.Substring(match.Index + 2);
+                            }
+
                             p.Text = st.MergedString;
 
                             st = new StrippableText(p.Text);
@@ -108,9 +111,15 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                                     var before = '\0';
                                     var after = '\0';
                                     if (match.Index > 0)
+                                    {
                                         before = st.StrippedText[match.Index - 1];
+                                    }
+
                                     if (match.Index < st.StrippedText.Length - 2)
+                                    {
                                         after = st.StrippedText[match.Index + 1];
+                                    }
+
                                     if (before != '\0' && char.IsUpper(before) && after != '\0' && char.IsLower(after) &&
                                         !Utilities.LowercaseVowels.Contains(char.ToLower(before)) && !Utilities.LowercaseVowels.Contains(after))
                                     {
@@ -127,7 +136,9 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                                         var ok = true;
 
                                         if (match.Index >= 2 && st.StrippedText.Substring(match.Index - 2, 2) == "Mc")
+                                        {
                                             ok = false;
+                                        }
 
                                         if (ok)
                                         {

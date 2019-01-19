@@ -17,9 +17,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             for (int i = index; i < index + TextLength; i++)
             {
                 if (buffer[i] == 0x8f || buffer[i] == 0)
+                {
                     buffer[i] = 32;
+                }
                 else if (buffer[i] == 0x8a)
+                {
                     buffer[i] = 0xa;
+                }
             }
             p.Text = Encoding.GetEncoding(1252).GetString(buffer, index, TextLength).Trim();
             p.Text = p.Text.Replace("\n", Environment.NewLine);
@@ -87,17 +91,25 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 byte[] buffer = { 0x38, 0x35, 0x30, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0x30, 0x30, 0x30, 0x39 };
                 fs.Write(buffer, 0, buffer.Length);
                 for (int i = 0; i < 0xde; i++)
+                {
                     fs.WriteByte(0);
+                }
+
                 string numberOfLines = subtitle.Paragraphs.Count.ToString("D5");
 
                 buffer = Encoding.ASCII.GetBytes(numberOfLines + numberOfLines + "001");
                 fs.Write(buffer, 0, buffer.Length);
                 for (int i = 0; i < 0x15; i++)
+                {
                     fs.WriteByte(0);
+                }
+
                 buffer = Encoding.ASCII.GetBytes("11");
                 fs.Write(buffer, 0, buffer.Length);
                 while (fs.Length < 1024)
+                {
                     fs.WriteByte(0);
+                }
 
                 int subtitleNumber = 0;
                 foreach (Paragraph p in subtitle.Paragraphs)

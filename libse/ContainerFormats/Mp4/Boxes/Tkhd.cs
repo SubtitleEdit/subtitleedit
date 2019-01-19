@@ -17,12 +17,16 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
             Buffer = new byte[84];
             int bytesRead = fs.Read(Buffer, 0, Buffer.Length);
             if (bytesRead < Buffer.Length)
+            {
                 return;
+            }
 
             int version = Buffer[0];
             int addToIndex64Bit = 0;
             if (version == 1)
+            {
                 addToIndex64Bit = 8;
+            }
 
             TrackId = GetUInt(12 + addToIndex64Bit);
             if (version == 1)

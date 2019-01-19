@@ -21,7 +21,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 if (count > 0)
+                {
                     sb.Append(',');
+                }
+
                 sb.Append("{\"st\":");
                 sb.Append(p.StartTime.TotalMilliseconds.ToString(System.Globalization.CultureInfo.InvariantCulture));
                 sb.Append(",\"et\":");
@@ -41,9 +44,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             var sb = new StringBuilder();
             foreach (string s in lines)
+            {
                 sb.Append(s);
+            }
+
             if (!sb.ToString().TrimStart().StartsWith("[{\"", StringComparison.Ordinal))
+            {
                 return;
+            }
 
             foreach (string line in sb.ToString().Replace("},{", Environment.NewLine).SplitToLines())
             {

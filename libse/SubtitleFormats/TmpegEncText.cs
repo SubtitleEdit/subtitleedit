@@ -41,10 +41,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             var temp = new StringBuilder();
             foreach (string l in lines)
+            {
                 temp.Append(l);
+            }
+
             string all = temp.ToString();
             if (!all.Contains("[ItemData]"))
+            {
                 return;
+            }
 
             _errorCount = 0;
             subtitle.Paragraphs.Clear();

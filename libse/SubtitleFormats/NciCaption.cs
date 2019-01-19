@@ -68,7 +68,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             int milliseconds = (int)Math.Round(TimeCode.BaseUnit / Configuration.Settings.General.CurrentFrameRate * frames);
             if (milliseconds > 999)
+            {
                 milliseconds = 999;
+            }
 
             return new TimeCode(hour, minutes, seconds, milliseconds);
         }
@@ -178,7 +180,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             {
                                 //System.Windows.Forms.MessageBox.Show("Problem at with a length of " + length.ToString() + " at file position " + (i + 2) + " which gives remainer: " + (length % 14));
                                 if (length % 14 == 8)
+                                {
                                     count++;
+                                }
                             }
                             for (int k = 0; k < count; k++)
                             {
@@ -225,7 +229,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 Paragraph p = subtitle.GetParagraphOrDefault(i);
                 Paragraph next = subtitle.GetParagraphOrDefault(i + 1);
                 if (next != null && Math.Abs(p.EndTime.TotalMilliseconds) < 0.01)
+                {
                     p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - 1;
+                }
             }
 
             for (i = 0; i < subtitle.Paragraphs.Count; i++)
@@ -233,13 +239,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 Paragraph p = subtitle.GetParagraphOrDefault(i);
                 Paragraph next = subtitle.GetParagraphOrDefault(i + 1);
                 if (p.Duration.TotalMilliseconds <= 0 && next != null)
+                {
                     p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - 1;
+                }
             }
 
             subtitle.RemoveEmptyLines();
             Paragraph last = subtitle.GetParagraphOrDefault(subtitle.Paragraphs.Count - 1);
             if (last != null)
+            {
                 last.EndTime.TotalMilliseconds = last.StartTime.TotalMilliseconds + Utilities.GetOptimalDisplayMilliseconds(last.Text);
+            }
+
             subtitle.Renumber();
         }
 

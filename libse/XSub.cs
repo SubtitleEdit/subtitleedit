@@ -41,7 +41,10 @@ namespace Nikse.SubtitleEdit.Core
             for (; ; )
             {
                 if (nibbleOffset >= nibbleEnd)
+                {
                     return -1;
+                }
+
                 var v = GetNibble(buf, nibbleOffset++);
                 if (v < 0x4)
                 {
@@ -62,7 +65,9 @@ namespace Nikse.SubtitleEdit.Core
 
                 var len = v >> 2;
                 if (len > w - x)
+                {
                     len = w - x;
+                }
 
                 var color = v & 0x03;
                 if (color > 0)
@@ -76,7 +81,10 @@ namespace Nikse.SubtitleEdit.Core
                 {
                     y++;
                     if (y >= h)
+                    {
                         break;
+                    }
+
                     x = 0;
                     nibbleOffset += (nibbleOffset & 1);
                 }

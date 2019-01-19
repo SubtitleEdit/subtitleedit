@@ -109,12 +109,17 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             int len = input.Length;
             // 10 = length of int.MaxValue (2147483647); +1 if starts with '/'
             if (len == 0 || len > 11 || input[0] != '/')
+            {
                 return false;
+            }
+
             int halfLen = len / 2;
             for (int i = 1; i <= halfLen; i++) // /10.0 (Do not parse double)
             {
                 if (!(CharUtils.IsDigit(input[i]) && CharUtils.IsDigit(input[len - i])))
+                {
                     return false;
+                }
             }
             return true;
         }

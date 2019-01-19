@@ -76,9 +76,15 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                     index = CalculateSize(buffer, index, ref dataType, start, ref x, ref y, length, ref runLength, ref width);
                 }
                 if (width > 2000)
+                {
                     width = 2000;
+                }
+
                 if (y > 500)
+                {
                     y = 500;
+                }
+
                 Image = new Bitmap(width, y + 1);
                 _fastImage = new FastBitmap(Image);
                 _fastImage.LockImage();
@@ -240,7 +246,10 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                 index++;
             }
             if (x > width)
+            {
                 width = x;
+            }
+
             return index;
         }
 
@@ -262,7 +271,10 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
             for (int k = 0; k < runLength; k++)
             {
                 if (y < _fastImage.Height && x < _fastImage.Width)
+                {
                     _fastImage.SetPixel(x, y, c);
+                }
+
                 x++;
             }
         }
@@ -290,9 +302,13 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                 if (nextByte >> 7 == 0)
                 {
                     if (nextByte != 0)
+                    {
                         runLength = nextByte & Helper.B01111111; // 1-127
+                    }
                     else
+                    {
                         return false;
+                    }
                 }
                 else
                 {
@@ -462,7 +478,10 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                     else
                     {
                         if (bitIndex != 0)
+                        {
                             index++;
+                        }
+
                         return false; // end of 2-bit/pixel code string
                     }
                 }

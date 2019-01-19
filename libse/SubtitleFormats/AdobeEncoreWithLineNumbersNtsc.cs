@@ -17,9 +17,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             var sb = new StringBuilder();
             foreach (string line in lines)
+            {
                 sb.AppendLine(line);
+            }
+
             if (sb.ToString().Contains("#INPOINT OUTPOINT PATH"))
+            {
                 return false; // Pinnacle Impression
+            }
 
             return base.IsMine(lines, fileName);
         }
@@ -75,9 +80,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 else if (p != null)
                 {
                     if (string.IsNullOrEmpty(p.Text))
+                    {
                         p.Text = line;
+                    }
                     else
+                    {
                         p.Text = p.Text + Environment.NewLine + line;
+                    }
                 }
             }
 

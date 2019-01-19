@@ -24,7 +24,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     string tag = @"&#" + i + @";";
                     if (s.Contains(tag))
+                    {
                         s = s.Replace(tag, Convert.ToChar(i).ToString());
+                    }
                 }
             }
             return s;
@@ -56,7 +58,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         sb.Append(line[i]);
                     }
                     if (sb.Length > 0)
+                    {
                         sb.AppendLine();
+                    }
+
                     for (int i = pos2 + 7; i < line.Length && line[i] != '\''; i++)
                     {
                         sb.Append(line[i]);
@@ -72,15 +77,22 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 Paragraph p = subtitle.GetParagraphOrDefault(i - 1);
                 Paragraph next = subtitle.GetParagraphOrDefault(i);
                 if (p != null && next != null)
+                {
                     p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds;
+                }
+
                 if (!string.IsNullOrEmpty(next.Text))
+                {
                     p.EndTime.TotalMilliseconds--;
+                }
             }
             for (int i = subtitle.Paragraphs.Count - 1; i >= 0; i--)
             {
                 Paragraph p = subtitle.GetParagraphOrDefault(i);
                 if (p != null && string.IsNullOrEmpty(p.Text))
+                {
                     subtitle.Paragraphs.RemoveAt(i);
+                }
             }
             subtitle.Renumber();
         }

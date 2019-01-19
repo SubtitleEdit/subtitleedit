@@ -19,7 +19,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             string xmlAsString = sb.ToString().RemoveControlCharactersButWhiteSpace().Trim();
 
             if (xmlAsString.Contains("xmlns:tts=\"http://www.w3.org/2006/04"))
+            {
                 return false;
+            }
 
             if (xmlAsString.Contains("http://www.w3.org/") &&
                 xmlAsString.Contains("/ttaf1"))
@@ -33,7 +35,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     nsmgr.AddNamespace("ttaf1", xml.DocumentElement.NamespaceURI);
                     var div = xml.DocumentElement.SelectSingleNode("//ttaf1:body", nsmgr).SelectSingleNode("ttaf1:div", nsmgr);
                     if (div == null)
+                    {
                         div = xml.DocumentElement.SelectSingleNode("//ttaf1:body", nsmgr).FirstChild;
+                    }
+
                     int numberOfParagraphs = div.ChildNodes.Count;
                     return numberOfParagraphs > 0;
                 }
@@ -49,7 +54,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         private static string ConvertToTimeString(TimeCode time)
         {
             if (Configuration.Settings.SubtitleSettings.TimedText10TimeCodeFormatSource == "hh:mm:ss.ms-two-digits")
+            {
                 return $"{time.Hours:00}:{time.Minutes:00}:{time.Seconds:00}.{(int)Math.Round(time.Milliseconds / 10.0):0}";
+            }
+
             return $"{time.Hours:00}:{time.Minutes:00}:{time.Seconds:00}.{time.Milliseconds:000}";
         }
 
@@ -84,7 +92,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             XmlNode div = xml.DocumentElement.SelectSingleNode("//ttaf1:body", nsmgr).SelectSingleNode("ttaf1:div", nsmgr);
             if (div == null)
+            {
                 div = xml.DocumentElement.SelectSingleNode("//ttaf1:body", nsmgr).FirstChild;
+            }
 
             int no = 0;
             foreach (Paragraph p in subtitle.Paragraphs)
@@ -132,7 +142,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             var div = xml.DocumentElement.SelectSingleNode("//ttaf1:body", nsmgr).SelectSingleNode("ttaf1:div", nsmgr);
             if (div == null)
+            {
                 div = xml.DocumentElement.SelectSingleNode("//ttaf1:body", nsmgr).FirstChild;
+            }
 
             var styleDic = new Dictionary<string, string>();
             foreach (XmlNode node in xml.DocumentElement.SelectNodes("//ttaf1:style", nsmgr))
@@ -209,7 +221,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                     pText.Append(innerNode.InnerText);
                                 }
                                 if (italic)
+                                {
                                     pText.Append("</i>");
+                                }
+
                                 if (font)
                                 {
                                     if (pText.EndsWith(' '))

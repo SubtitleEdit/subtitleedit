@@ -29,12 +29,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 int seconds = p.StartTime.Seconds;
                 if (p.StartTime.Milliseconds >= 500)
+                {
                     seconds++;
+                }
+
                 string startTime = string.Format(format, p.StartTime.Minutes + p.StartTime.Hours * 60, seconds);
 
                 seconds = p.EndTime.Seconds;
                 if (p.EndTime.Milliseconds >= 500)
+                {
                     seconds++;
+                }
+
                 string timeOut = string.Format(format, p.EndTime.Minutes + p.EndTime.Hours * 60, seconds);
 
                 sb.AppendLine(string.Format(paragraphWriteFormat, startTime, timeOut, p.Text));
@@ -56,7 +62,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 if (line.Length > 11 && (match = RegexTimeCodes.Match(line)).Success)
                 {
                     if (p != null)
+                    {
                         p.Text = (p.Text + Environment.NewLine + sb).Trim();
+                    }
+
                     var parts = line.Substring(0, match.Length).Split(splitChars, StringSplitOptions.RemoveEmptyEntries);
                     try
                     {
@@ -80,10 +89,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     sb.AppendLine(line);
                 }
                 if (_errorCount > 20)
+                {
                     return;
+                }
             }
             if (p != null)
+            {
                 p.Text = (p.Text + Environment.NewLine + sb).Trim();
+            }
 
             subtitle.Renumber();
         }

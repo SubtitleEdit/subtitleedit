@@ -154,9 +154,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             string[] arr = s.Split(':');
             if (arr.Length == 2)
+            {
                 return new TimeCode(0, int.Parse(arr[0]), int.Parse(arr[1]), 0);
+            }
+
             if (arr.Length == 3)
+            {
                 return new TimeCode(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]), 0);
+            }
 
             return new TimeCode(0, 0, int.Parse(s), 0);
         }

@@ -80,9 +80,13 @@ LICENSE=
                     else
                     {
                         if (text.Length == 0)
+                        {
                             text = line;
+                        }
                         else
+                        {
                             text += Environment.NewLine + line;
+                        }
                     }
                 }
                 else
@@ -100,7 +104,10 @@ LICENSE=
                                 int seconds = int.Parse(arr[2]);
                                 int milliseconds = int.Parse(arr[3]);
                                 if (arr[3].Length == 2)
+                                {
                                     milliseconds *= 10;
+                                }
+
                                 start = new TimeCode(hours, minutes, seconds, milliseconds);
                             }
                         }

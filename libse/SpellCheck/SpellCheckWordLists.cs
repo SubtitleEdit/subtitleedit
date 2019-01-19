@@ -45,7 +45,9 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
             }
 
             foreach (string namesItem in _names)
+            {
                 _namesListUppercase.Add(namesItem.ToUpper());
+            }
 
             if (languageName.StartsWith("en_", StringComparison.OrdinalIgnoreCase))
             {
@@ -76,9 +78,13 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
                         {
                             string word = node.InnerText.Trim().ToLower();
                             if (word.Contains(' '))
+                            {
                                 _userPhraseList.Add(word);
+                            }
                             else
+                            {
                                 _userWordList.Add(word);
+                            }
                         }
                     }
                 }
@@ -87,22 +93,30 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
             foreach (var word in namesMultiWordList)
             {
                 if (word.Contains(PeriodAndDash))
+                {
                     _wordsWithDashesOrPeriods.Add(word);
+                }
             }
             foreach (string name in _names)
             {
                 if (name.Contains(PeriodAndDash))
+                {
                     _wordsWithDashesOrPeriods.Add(name);
+                }
             }
             foreach (string word in _userWordList)
             {
                 if (word.Contains(PeriodAndDash))
+                {
                     _wordsWithDashesOrPeriods.Add(word);
+                }
             }
             foreach (var phrase in _userPhraseList)
             {
                 if (phrase.Contains(PeriodAndDash))
+                {
                     _wordsWithDashesOrPeriods.Add(phrase);
+                }
             }
         }
 
@@ -205,7 +219,9 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
         public void RemoveName(string word)
         {
             if (word == null || word.Length <= 1 || !_names.Contains(word))
+            {
                 return;
+            }
 
             _names.Remove(word);
             _namesListUppercase.Remove(word.ToUpper());
@@ -220,7 +236,9 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
                 _namesListUppercase.Remove(word.ToUpper() + "'S");
             }
             if (!word.EndsWith('\''))
+            {
                 _namesListWithApostrophe.Remove(word + "'");
+            }
 
             _nameList.Remove(word);
         }
@@ -241,13 +259,19 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
                         int end = start + name.Length;
                         bool endOk = end >= s.Length || SplitChars.Contains(s[end]) || char.IsControl(s[end]);
                         if (endOk)
+                        {
                             s = s.Remove(start, name.Length).Insert(start, string.Empty.PadLeft(name.Length));
+                        }
                     }
 
                     if (start + 1 < s.Length)
+                    {
                         start = s.IndexOf(name, start + 1, StringComparison.Ordinal);
+                    }
                     else
+                    {
                         start = -1;
+                    }
                 }
             }
             return s;
@@ -260,12 +284,18 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
             {
                 int end = s.IndexOf('>', start + 1);
                 if (end < start)
+                {
                     break;
+                }
+
                 int l = end - start + 1;
                 s = s.Remove(start, l).Insert(start, string.Empty.PadLeft(l));
                 end++;
                 if (end >= s.Length)
+                {
                     break;
+                }
+
                 start = s.IndexOf('<', end);
             }
             return s;
@@ -284,12 +314,18 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
             {
                 end = s.IndexOf('}', start + 1);
                 if (end < start)
+                {
                     break;
+                }
+
                 int l = end - start + 1;
                 s = s.Remove(start, l).Insert(start, string.Empty.PadLeft(l));
                 end++;
                 if (end >= s.Length)
+                {
                     break;
+                }
+
                 start = s.IndexOf("{\\", end, StringComparison.Ordinal);
             }
             return s;
@@ -300,16 +336,27 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
             string current = words[index].Text;
             string prev = "-";
             if (index > 0)
+            {
                 prev = words[index - 1].Text;
+            }
+
             string next = "-";
             if (index < words.Count - 1)
+            {
                 next = words[index + 1].Text;
+            }
+
             foreach (string userPhrase in _userPhraseList)
             {
                 if (userPhrase == current + " " + next)
+                {
                     return true;
+                }
+
                 if (userPhrase == prev + " " + current)
+                {
                     return true;
+                }
             }
             return false;
         }
@@ -323,7 +370,9 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
             foreach (string w in wordsWithDash)
             {
                 if (w.Contains('-') && _doSpell.DoSpell(w) && !_wordsWithDashesOrPeriods.Contains(w))
+                {
                     _wordsWithDashesOrPeriods.Add(w);
+                }
             }
 
             if (text.Contains(PeriodAndDash))
@@ -343,7 +392,10 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
                             bool startOk = indexStart == 0 || (@" (['""" + "\r\n").Contains(text[indexStart - 1]);
                             bool endOk = endIndexPlus == text.Length;
                             if (!endOk && endIndexPlus < text.Length && @",!?:;. ])<'""".Contains(text[endIndexPlus]))
+                            {
                                 endOk = true;
+                            }
+
                             if (startOk && endOk)
                             {
                                 i++;
@@ -369,7 +421,9 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
         public bool AddName(string word)
         {
             if (string.IsNullOrEmpty(word) || _names.Contains(word))
+            {
                 return false;
+            }
 
             _names.Add(word);
             _namesListUppercase.Add(word.ToUpper());
@@ -384,7 +438,9 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
                 _namesListUppercase.Add(word.ToUpper() + "'S");
             }
             if (!word.EndsWith('\''))
+            {
                 _namesListWithApostrophe.Add(word + "'");
+            }
 
             _wordsWithDashesOrPeriods.Add(word);
 
@@ -396,16 +452,25 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
         public bool AddUserWord(string word)
         {
             if (word == null)
+            {
                 return false;
+            }
 
             word = word.Trim().ToLower();
             if (word.Length == 0 || _userWordList.Contains(word))
+            {
                 return false;
+            }
 
             if (word.Contains(' '))
+            {
                 _userPhraseList.Add(word);
+            }
             else
+            {
                 _userWordList.Add(word);
+            }
+
             Utilities.AddToUserDictionary(word, _languageName);
             return true;
         }
@@ -435,7 +500,10 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
                 if (SplitChars.Contains(s[i]) || char.IsControl(s[i]))
                 {
                     if (sb.Length > 0)
+                    {
                         list.Add(new SpellCheckWord { Text = sb.ToString(), Index = i - sb.Length });
+                    }
+
                     sb.Clear();
                 }
                 else
@@ -444,7 +512,10 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
                 }
             }
             if (sb.Length > 0)
+            {
                 list.Add(new SpellCheckWord { Text = sb.ToString(), Index = s.Length - sb.Length });
+            }
+
             return list;
         }
 

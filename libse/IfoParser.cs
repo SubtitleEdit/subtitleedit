@@ -175,9 +175,13 @@ namespace Nikse.SubtitleEdit.Core
             _vtsVobs.VideoStream.Standard = _arrayOfStandard[BinToInt(MidStr(data, 2, 2))];
             _vtsVobs.VideoStream.Aspect = _arrayOfAspect[BinToInt(MidStr(data, 4, 2))];
             if (_vtsVobs.VideoStream.Standard == "PAL")
+            {
                 _vtsVobs.VideoStream.Resolution = _arrayOfPalResolution[BinToInt(MidStr(data, 13, 2))];
+            }
             else if (_vtsVobs.VideoStream.Standard == "NTSC")
+            {
                 _vtsVobs.VideoStream.Resolution = _arrayOfNtscResolution[BinToInt(MidStr(data, 13, 2))];
+            }
 
             //retrieve audio info
             _fs.Position = 0x202; //useless but here for readability
@@ -193,7 +197,10 @@ namespace Nikse.SubtitleEdit.Core
                 audioStream.LanguageCode = new string(new[] { Convert.ToChar(buffer[0]), Convert.ToChar(buffer[1]) });
                 var language = DvdSubtitleLanguage.GetLanguageOrNull(audioStream.LanguageCode);
                 if (language != null)
+                {
                     audioStream.Language = language.NativeName;
+                }
+
                 _fs.Seek(1, SeekOrigin.Current);
                 audioStream.Extension = _arrayOfAudioExtension[_fs.ReadByte()];
                 _fs.Seek(2, SeekOrigin.Current);
@@ -244,7 +251,10 @@ namespace Nikse.SubtitleEdit.Core
         {
             string result = Convert.ToString(value, 2);
             while (result.Length < digits)
+            {
                 result = "0" + result;
+            }
+
             return result;
         }
 
@@ -336,9 +346,14 @@ namespace Nikse.SubtitleEdit.Core
                     int time = 0;
                     int max;
                     if (k == programChain.NumberOfPgc - 1)
+                    {
                         max = programChain.NumberOfCells;
+                    }
                     else
+                    {
                         max = programChain.PgcEntryCells[k + 1] - 1;
+                    }
+
                     for (int j = programChain.PgcEntryCells[k]; j <= max; j++)
                     {
                         _fs.Seek(4, SeekOrigin.Current);
@@ -355,9 +370,14 @@ namespace Nikse.SubtitleEdit.Core
                         time += timeArray[l - 1];
                     }
                     if (k == 0)
+                    {
                         programChain.PgcStartTimes.Add(MsToTime(0));
+                    }
+
                     if (k > 0)
+                    {
                         programChain.PgcStartTimes.Add(MsToTime(time));
+                    }
                 }
                 _vtsPgci.ProgramChains.Add(programChain);
             }
@@ -525,9 +545,14 @@ namespace Nikse.SubtitleEdit.Core
             result = result + StrToInt(IntToHex(BinToInt(MidStr(temp, 8, 8)), 2)) * 60000;
             result = result + StrToInt(IntToHex(BinToInt(MidStr(temp, 16, 8)), 2)) * 1000;
             if (temp.Substring(24, 2) == "11")
+            {
                 fps = 30;
+            }
             else
+            {
                 fps = 25;
+            }
+
             result += (int)Math.Round((TimeCode.BaseUnit / fps) * StrToFloat(IntToHex(BinToInt(MidStr(temp, 26, 6)), 3)));
             return result;
         }
@@ -564,7 +589,10 @@ namespace Nikse.SubtitleEdit.Core
             int s = StrToInt(IntToHex(BinToInt(timeBytes.Substring(16, 8)), 2));
             int fps = 25;
             if (timeBytes.Substring(24, 2) == "11")
+            {
                 fps = 30;
+            }
+
             int milliseconds = (int)Math.Round((TimeCode.BaseUnit / fps) * StrToFloat(IntToHex(BinToInt(timeBytes.Substring(26, 6)), 3)));
             var ts = new TimeSpan(0, h, m, s, milliseconds);
             return MsToTime(ts.TotalMilliseconds);

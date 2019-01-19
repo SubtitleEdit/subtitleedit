@@ -45,12 +45,17 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                 }
                 if (allStartWithNumber)
+                {
                     return false;
+                }
             }
             if (subtitle.Paragraphs.Count > _errorCount)
             {
                 if (new UnknownSubtitle33().IsMine(lines, fileName) || new UnknownSubtitle36().IsMine(lines, fileName) || new TMPlayer().IsMine(lines, fileName))
+                {
                     return false;
+                }
+
                 return true;
             }
             return false;
@@ -60,9 +65,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             var sb = new StringBuilder();
             if (!string.IsNullOrEmpty(subtitle.Header) && (subtitle.Header.Contains("[ar:") || subtitle.Header.Contains("[ti:") || subtitle.Header.Contains("[by:") || subtitle.Header.Contains("[id:")))
+            {
                 sb.AppendLine(subtitle.Header.Trim());
+            }
             else if (!string.IsNullOrEmpty(title))
+            {
                 sb.AppendLine("[ti:" + title.Replace("[", string.Empty).Replace("]", string.Empty) + "]");
+            }
 
             const string timeCodeFormat = "[{0:00}:{1:00}.{2:00}]{3}";
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
@@ -120,32 +129,44 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 else if (line.StartsWith("[ar:", StringComparison.Ordinal)) // [ar:Lyrics artist]
                 {
                     if (subtitle.Paragraphs.Count < 1)
+                    {
                         header.AppendLine(line);
+                    }
                 }
                 else if (line.StartsWith("[id:", StringComparison.Ordinal)) // [ar:Lyrics artist]
                 {
                     if (subtitle.Paragraphs.Count < 1)
+                    {
                         header.AppendLine(line);
+                    }
                 }
                 else if (line.StartsWith("[al:", StringComparison.Ordinal)) // [al:Album where the song is from]
                 {
                     if (subtitle.Paragraphs.Count < 1)
+                    {
                         header.AppendLine(line);
+                    }
                 }
                 else if (line.StartsWith("[ti:", StringComparison.Ordinal)) // [ti:Lyrics (song) title]
                 {
                     if (subtitle.Paragraphs.Count < 1)
+                    {
                         header.AppendLine(line);
+                    }
                 }
                 else if (line.StartsWith("[au:", StringComparison.Ordinal)) // [au:Creator of the Songtext]
                 {
                     if (subtitle.Paragraphs.Count < 1)
+                    {
                         header.AppendLine(line);
+                    }
                 }
                 else if (line.StartsWith("[length:", StringComparison.Ordinal)) // [length:How long the song is]
                 {
                     if (subtitle.Paragraphs.Count < 1)
+                    {
                         header.AppendLine(line);
+                    }
                 }
                 else if (line.StartsWith("[offset:", StringComparison.Ordinal)) // [length:How long the song is]
                 {
@@ -159,12 +180,17 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 else if (line.StartsWith("[by:", StringComparison.Ordinal)) // [by:Creator of the LRC file]
                 {
                     if (subtitle.Paragraphs.Count < 1)
+                    {
                         header.AppendLine(line);
+                    }
                 }
                 else if (!string.IsNullOrWhiteSpace(line))
                 {
                     if (subtitle.Paragraphs.Count < 1)
+                    {
                         header.AppendLine(line);
+                    }
+
                     _errorCount++;
                 }
                 else if (subtitle.Paragraphs.Count < 1)
@@ -245,7 +271,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         private static string GetTextAfterTimeCodes(string s)
         {
             while (RegexTimeCodes.IsMatch(s))
+            {
                 s = s.Remove(0, 10).Trim();
+            }
+
             return s;
         }
 

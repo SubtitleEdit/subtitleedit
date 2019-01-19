@@ -123,7 +123,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var sb = new StringBuilder();
             lines.ForEach(line => sb.AppendLine(line));
             if (!sb.ToString().Contains("</annotations>") || !sb.ToString().Contains("</TEXT>"))
+            {
                 return;
+            }
+
             var xml = new XmlDocument { XmlResolver = null };
             try
             {
@@ -146,14 +149,20 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 XmlNodeList regions = node.SelectNodes("segment/movingRegion/anchoredRegion");
 
                                 if (regions.Count != 2)
+                                {
                                     regions = node.SelectNodes("segment/movingRegion/rectRegion");
+                                }
 
                                 if (textNode != null && regions.Count == 2)
                                 {
                                     if (stylesWithCount.ContainsKey(style))
+                                    {
                                         stylesWithCount[style]++;
+                                    }
                                     else
+                                    {
                                         stylesWithCount.Add(style, 1);
+                                    }
                                 }
                             }
                         }
@@ -170,7 +179,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     {
                         styles.Clear();
                         foreach (var k in stylesWithCount.Keys)
+                        {
                             styles.Add(k);
+                        }
                     }
                 }
                 else
@@ -189,7 +200,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             XmlNodeList regions = node.SelectNodes("segment/movingRegion/anchoredRegion");
 
                             if (regions.Count != 2)
+                            {
                                 regions = node.SelectNodes("segment/movingRegion/rectRegion");
+                            }
 
                             if (textNode != null && regions.Count == 2)
                             {
@@ -224,7 +237,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             string[] arr = time.Split(new[] { '.', ':' }, StringSplitOptions.RemoveEmptyEntries);
             if (arr.Length == 3)
+            {
                 return new TimeCode(0, int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]));
+            }
+
             return new TimeCode(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]), int.Parse(arr[3]));
         }
 

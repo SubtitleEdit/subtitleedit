@@ -30,7 +30,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 var lines = HtmlUtil.RemoveHtmlTags(p.Text).SplitToLines();
                 sb.AppendLine(EncodeTimeCode(p.StartTime) + "\t" + lines[0]);
                 for (int i = 1; i < lines.Count; i++)
+                {
                     sb.AppendLine("\t" + lines[i]);
+                }
             }
 
             return sb.ToString().Trim();
@@ -52,7 +54,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 if (RegexTimeCodes.Match(s).Success || RegexTimeCodes2.IsMatch(s))
                 {
                     if (RegexTimeCodes2.IsMatch(s))
+                    {
                         _errorCount++;
+                    }
+
                     try
                     {
                         p = new Paragraph();
@@ -74,7 +79,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             text = text.Substring(0, text.Length - 8).Trim();
                             p.Text = text;
                             if (text.Length > 1 && Utilities.IsInteger(text.Substring(0, 2)))
+                            {
                                 _errorCount++;
+                            }
+
                             subtitle.Paragraphs.Add(p);
                         }
                     }
@@ -99,7 +107,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             string text = s.Remove(0, 8).Trim();
                             p.Text = text;
                             if (text.Length > 1 && Utilities.IsInteger(text.Substring(0, 2)))
+                            {
                                 _errorCount++;
+                            }
+
                             subtitle.Paragraphs.Add(p);
                         }
                     }
@@ -123,7 +134,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             string text = s.Substring(0, s.Length - 8).Trim();
                             p.Text = p.Text + Environment.NewLine + text;
                             if (text.Length > 1 && Utilities.IsInteger(text.Substring(0, 2)))
+                            {
                                 _errorCount++;
+                            }
+
                             p = null;
                         }
                     }
@@ -144,16 +158,23 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 else if (s.Length > 0 && !Utilities.IsInteger(s))
                 {
                     if (p != null && !p.Text.Contains(Environment.NewLine))
+                    {
                         p.Text = p.Text + Environment.NewLine + s.Trim();
+                    }
                     else
+                    {
                         _errorCount++;
+                    }
                 }
             }
 
             foreach (Paragraph p2 in subtitle.Paragraphs)
             {
                 if (p2.Duration.TotalMilliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
+                {
                     p2.EndTime.TotalMilliseconds = p2.StartTime.TotalMilliseconds + Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds;
+                }
+
                 p2.Text = Utilities.AutoBreakLine(p2.Text);
             }
 

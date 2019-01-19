@@ -27,10 +27,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             var sb = new StringBuilder();
             foreach (string line in lines)
+            {
                 sb.AppendLine(line);
+            }
+
             string s = sb.ToString();
             if (!s.Contains("[HEADER]") || !s.Contains("[BODY]"))
+            {
                 return false;
+            }
 
             return base.IsMine(lines, fileName);
         }
@@ -83,7 +88,10 @@ DIGITAL_CINEMA=YES
                 if (RegexNumber.IsMatch(line))
                 {
                     if (paragraph != null)
+                    {
                         subtitle.Paragraphs.Add(paragraph);
+                    }
+
                     paragraph = new Paragraph();
                     expecting = ExpectingLine.TimeStart;
                 }
@@ -134,7 +142,10 @@ DIGITAL_CINEMA=YES
                             {
                                 s = "<i>" + s.Remove(0, 3);
                                 if (s.EndsWith("[/i]", StringComparison.OrdinalIgnoreCase))
+                                {
                                     s = s.Remove(s.Length - 4, 4);
+                                }
+
                                 s += "</i>";
                             }
                             s = s.Replace("[I]", "<i>");

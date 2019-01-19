@@ -20,7 +20,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override bool IsMine(List<string> lines, string fileName)
         {
             if (fileName != null && !fileName.EndsWith(Extension, StringComparison.OrdinalIgnoreCase))
+            {
                 return false;
+            }
 
             return base.IsMine(lines, fileName);
         }
@@ -56,10 +58,16 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             _errorCount = 0;
             var sb = new StringBuilder();
             foreach (string line in lines)
+            {
                 sb.AppendLine(line);
+            }
+
             string text = sb.ToString();
             if (text.Contains("{\\rtf") || text.Contains("<transcript>"))
+            {
                 return;
+            }
+
             LoadF4TextSubtitle(subtitle, text);
         }
 
@@ -111,7 +119,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             if (currentText.Length > 0 && subtitle.Paragraphs.Count > 0 && currentText.Length < 1000)
             {
                 if (p == null)
+                {
                     p = new Paragraph();
+                }
 
                 p.Text = currentText.ToString().Trim().Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
                 p.Text = p.Text.Trim('\n', '\r').Trim();
@@ -133,7 +143,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                 int milliseconds = (int) Math.Round(millisecond * 100.0);
                 if (milliseconds > 999)
+                {
                     milliseconds = 999;
+                }
 
                 tc = new TimeCode(hour, minutes, seconds, milliseconds);
             }

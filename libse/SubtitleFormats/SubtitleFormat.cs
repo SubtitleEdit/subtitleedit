@@ -20,7 +20,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             get
             {
                 if (_allSubtitleFormats != null)
+                {
                     return _allSubtitleFormats;
+                }
 
                 _allSubtitleFormats = new List<SubtitleFormat>
                 {
@@ -294,7 +296,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                         object pluginObject = Activator.CreateInstance(exportedType);
                                         var po = pluginObject as SubtitleFormat;
                                         if (po != null)
+                                        {
                                             _allSubtitleFormats.Insert(1, po);
+                                        }
                                     }
                                     catch
                                     {
@@ -364,7 +368,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             int frames = (int)Math.Round(milliseconds / (TimeCode.BaseUnit / Configuration.Settings.General.CurrentFrameRate));
             if (frames >= Configuration.Settings.General.CurrentFrameRate)
+            {
                 frames = (int)(Configuration.Settings.General.CurrentFrameRate - 0.01);
+            }
+
             return frames;
         }
 
@@ -406,9 +413,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         protected TimeCode DecodeTimeCodeFramesTwoParts(string[] tokens)
         {
             if (tokens == null)
+            {
                 return new TimeCode();
+            }
+
             if (tokens.Length != 2)
+            {
                 throw new InvalidOperationException();
+            }
             // 00:00
             return new TimeCode(0, 0, int.Parse(tokens[0]), FramesToMillisecondsMax999(int.Parse(tokens[1])));
         }
@@ -416,9 +428,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         protected TimeCode DecodeTimeCodeFramesThreeParts(string[] tokens)
         {
             if (tokens == null)
+            {
                 return new TimeCode();
+            }
+
             if (tokens.Length != 3)
+            {
                 throw new InvalidOperationException();
+            }
             // 00:00:00
             return new TimeCode(0, int.Parse(tokens[0]), int.Parse(tokens[1]), FramesToMillisecondsMax999(int.Parse(tokens[2])));
         }
@@ -426,9 +443,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         protected TimeCode DecodeTimeCodeFramesFourParts(string[] tokens)
         {
             if (tokens == null)
+            {
                 return new TimeCode();
+            }
+
             if (tokens.Length != 4)
+            {
                 throw new InvalidOperationException();
+            }
             // 00:00:00:00
             return new TimeCode(int.Parse(tokens[0]), int.Parse(tokens[1]), int.Parse(tokens[2]), FramesToMillisecondsMax999(int.Parse(tokens[3])));
         }

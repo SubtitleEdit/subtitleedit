@@ -33,9 +33,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 sb.AppendLine(EncodeTimeCode(p.StartTime));
                 sb.AppendLine(EncodeTimeCode(p.EndTime));
                 if (!string.IsNullOrEmpty(p.Actor))
+                {
                     sb.AppendLine(p.Actor.ToUpper());
+                }
                 else
+                {
                     sb.AppendLine("UNKNOWN ACTOR");
+                }
+
                 sb.AppendLine(HtmlUtil.RemoveHtmlTags(p.Text));
                 sb.AppendLine();
             }
@@ -64,7 +69,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     {
                         subtitle.Paragraphs.Add(p);
                         if (string.IsNullOrEmpty(p.Text))
+                        {
                             _errorCount++;
+                        }
                     }
 
                     p = new Paragraph();
@@ -88,9 +95,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 else if (!string.IsNullOrWhiteSpace(line) && expectActor)
                 {
                     if (line == line.ToUpper())
+                    {
                         p.Actor = line;
+                    }
                     else
+                    {
                         _errorCount++;
+                    }
+
                     expectActor = false;
                 }
                 else if (!string.IsNullOrWhiteSpace(line) && !expectActor && !expectStartTime)
@@ -104,21 +116,29 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
             }
             if (p.StartTime.TotalMilliseconds > 0)
+            {
                 subtitle.Paragraphs.Add(p);
+            }
 
             bool allNullEndTime = true;
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
                 p = subtitle.Paragraphs[i];
                 if (p.EndTime.TotalMilliseconds != 0)
+                {
                     allNullEndTime = false;
+                }
 
                 p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + Utilities.GetOptimalDisplayMilliseconds(p.Text);
                 if (i < subtitle.Paragraphs.Count - 2 && p.EndTime.TotalMilliseconds >= subtitle.Paragraphs[i + 1].StartTime.TotalMilliseconds)
+                {
                     p.EndTime.TotalMilliseconds = subtitle.Paragraphs[i + 1].StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                }
             }
             if (!allNullEndTime)
+            {
                 subtitle.Paragraphs.Clear();
+            }
 
             subtitle.RemoveEmptyLines();
             subtitle.Renumber();

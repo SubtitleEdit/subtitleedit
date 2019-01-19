@@ -49,7 +49,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             string allText = sb.ToString();
             if (!allText.Contains("<text") || !allText.Contains("start="))
+            {
                 return;
+            }
 
             var xml = new XmlDocument { XmlResolver = null };
             try
@@ -69,10 +71,16 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     string start = node.Attributes["start"].InnerText;
                     if (!string.IsNullOrEmpty(start))
+                    {
                         start = start.Replace(',', '.');
+                    }
+
                     string end = node.Attributes["dur"].InnerText;
                     if (!string.IsNullOrEmpty(end))
+                    {
                         end = end.Replace(',', '.');
+                    }
+
                     string text = node.InnerText;
 
                     subtitle.Paragraphs.Add(new Paragraph(text, Convert.ToDouble(start, System.Globalization.CultureInfo.InvariantCulture) * TimeCode.BaseUnit, TimeCode.BaseUnit * (Convert.ToDouble(start, System.Globalization.CultureInfo.InvariantCulture) + Convert.ToDouble(end, System.Globalization.CultureInfo.InvariantCulture))));

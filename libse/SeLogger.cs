@@ -11,7 +11,9 @@ namespace Nikse.SubtitleEdit.Core
         public static void Error(Exception exception, string message = null)
         {
             if (exception == null)
+            {
                 return;
+            }
 
             try
             {
@@ -21,7 +23,10 @@ namespace Nikse.SubtitleEdit.Core
                     writer.WriteLine("-----------------------------------------------------------------------------");
                     writer.WriteLine("Date: " + DateTime.Now.ToString(CultureInfo.InvariantCulture));
                     if (!string.IsNullOrWhiteSpace(message))
+                    {
                         writer.WriteLine("Message: " + message);
+                    }
+
                     writer.WriteLine();
 
                     // write exception + all inner exceptions

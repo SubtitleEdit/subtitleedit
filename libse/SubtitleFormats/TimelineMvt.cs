@@ -133,7 +133,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             //TODO: figure out how to get time code from these 7 bytes!
             if (bytes == null || bytes.Length < timeCodeIndex + 8)
+            {
                 return 0;
+            }
+
             Console.WriteLine(bytes[timeCodeIndex + 0].ToString("X2") + " " +
                               bytes[timeCodeIndex + 1].ToString("X2") + " " +
                               bytes[timeCodeIndex + 2].ToString("X2") + " " +
@@ -147,9 +150,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         private Encoding GetEncodingFromLanguage(string language)
         {
             if (language == "Russian")
+            {
                 return Encoding.GetEncoding(1251);
+            }
+
             if (language == "Estonian" || language == "Latvian" || language == "Lithuanian")
+            {
                 return Encoding.GetEncoding(1257);
+            }
+
             return Encoding.GetEncoding(1252);
         }
 

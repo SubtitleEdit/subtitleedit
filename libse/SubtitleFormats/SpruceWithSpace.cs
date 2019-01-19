@@ -67,13 +67,22 @@ $TapeOffset         =   FALSE
                                        p.Text.StartsWith("{\\an5}", StringComparison.Ordinal) ||
                                        p.Text.StartsWith("{\\an6}", StringComparison.Ordinal);
             if (verticalTopAlign)
+            {
                 verticalAlign = "$VertAlign     = Top";
+            }
             else if (verticalCenterAlign)
+            {
                 verticalAlign = "$VertAlign     = Center";
+            }
             else
+            {
                 verticalAlign = "$VertAlign     = Bottom";
+            }
+
             if (lastVerticalAlign != verticalAlign)
+            {
                 sb.AppendLine(verticalAlign);
+            }
 
             bool horizontalLeftAlign = p.Text.StartsWith("{\\an1}", StringComparison.Ordinal) ||
                                        p.Text.StartsWith("{\\an4}", StringComparison.Ordinal) ||
@@ -82,11 +91,18 @@ $TapeOffset         =   FALSE
                                         p.Text.StartsWith("{\\an6}", StringComparison.Ordinal) ||
                                         p.Text.StartsWith("{\\an9}", StringComparison.Ordinal);
             if (horizontalLeftAlign)
+            {
                 horizontalAlign = "$HorzAlign     = Left";
+            }
             else if (horizontalRightAlign)
+            {
                 horizontalAlign = "$HorzAlign     = Right";
+            }
             else
+            {
                 horizontalAlign = "$HorzAlign     = Center";
+            }
+
             sb.AppendLine(horizontalAlign);
 
             lastVerticalAlign = verticalAlign;
@@ -160,11 +176,20 @@ $TapeOffset         =   FALSE
         { // TODO: Improve end tags
             text = text.Replace("|", Environment.NewLine);
             if (text.Contains("^B"))
+            {
                 text = text.Replace("^B", "<b>") + "</b>";
+            }
+
             if (text.Contains("^I"))
+            {
                 text = text.Replace("^I", "<i>") + "</i>";
+            }
+
             if (text.Contains("^U"))
+            {
                 text = text.Replace("^U", "<u>") + "</u>";
+            }
+
             return text;
         }
     }

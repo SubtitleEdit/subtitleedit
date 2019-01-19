@@ -61,7 +61,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 if (count > 0)
+                {
                     sb.Append(',');
+                }
+
                 sb.Append("{\"start\":");
                 sb.Append(p.StartTime.TotalSeconds.ToString(System.Globalization.CultureInfo.InvariantCulture));
                 sb.Append(",\"end\":");
@@ -81,9 +84,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             var sb = new StringBuilder();
             foreach (string s in lines)
+            {
                 sb.Append(s);
+            }
+
             if (!sb.ToString().TrimStart().StartsWith("[{\"", StringComparison.Ordinal))
+            {
                 return;
+            }
 
             foreach (string line in sb.ToString().Replace("},{", Environment.NewLine).SplitToLines())
             {
@@ -121,7 +129,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     var tag = "\\u" + i.ToString("x4");
                     if (s.Contains(tag))
+                    {
                         s = s.Replace(tag, Convert.ToChar(i).ToString());
+                    }
                 }
             }
             return s;
@@ -133,7 +143,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             var startIndex = s.IndexOfAny(new[] { "\"" + tag + "\"", "'" + tag + "'" }, StringComparison.Ordinal);
             if (startIndex < 0)
+            {
                 return null;
+            }
+
             var res = s.Substring(startIndex + 3 + tag.Length).Trim().TrimStart(':').TrimStart();
             if (res.StartsWith('"'))
             { // text
@@ -146,22 +159,39 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
                 int endAlternate = res.IndexOf("\",", StringComparison.Ordinal);
                 if (endIndex < 0)
+                {
                     endIndex = endAlternate;
+                }
                 else if (endAlternate > 0 && endAlternate < endIndex)
+                {
                     endIndex = endAlternate;
+                }
+
                 if (endIndex < 0 && res.EndsWith("\"", StringComparison.Ordinal))
+                {
                     endIndex = res.Length - 1;
+                }
+
                 if (endIndex < 0)
+                {
                     return null;
+                }
+
                 if (res.Length > 1)
+                {
                     return res.Substring(1, endIndex - 1).Replace("@__1", "\\\"");
+                }
+
                 return string.Empty;
             }
             else
             { // number
                 var endIndex = res.IndexOfAny(CommaAndEndCurlyBracket);
                 if (endIndex < 0)
+                {
                     return null;
+                }
+
                 return res.Substring(0, endIndex);
             }
         }
@@ -172,7 +202,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             var startIndex = s.IndexOfAny(new[] { "\"" + tag + "\"", "'" + tag + "'" }, StringComparison.Ordinal);
             if (startIndex < 0)
+            {
                 return list;
+            }
 
             startIndex += tag.Length + 2;
             string res = s.Substring(startIndex).TrimStart().TrimStart(':').TrimStart(); //.TrimStart('[').TrimStart();
@@ -195,7 +227,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     nextTag = res.IndexOf('"', oldStart + 1);
 
                     while (nextTag > 0 && nextTag + 1 < res.Length && res[nextTag - 1] == '\\')
+                    {
                         nextTag = res.IndexOf('"', nextTag + 1);
+                    }
 
                     if (nextTag > 0)
                     {
@@ -265,7 +299,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             string newValue = res.Substring(oldStart, nextTag - oldStart);
                             list.Add(newValue);
                             if (res[nextTag] == ']')
+                            {
                                 tagLevel--;
+                            }
+
                             oldStart = nextTag + 1;
                         }
                     }
@@ -308,7 +345,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                 }
                 if (sb.Length > 0)
+                {
                     list.Add(sb.ToString());
+                }
             }
             return list;
         }
@@ -356,7 +395,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                 }
                 if (sb.Length > 0)
+                {
                     list.Add(sb.ToString().Trim());
+                }
             }
             return list;
         }

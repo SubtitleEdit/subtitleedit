@@ -28,7 +28,9 @@ namespace Nikse.SubtitleEdit.Core.VobSub
                 {
                     IdxParagraph p = GetTimeCodeAndFilePosition(line);
                     if (p != null)
+                    {
                         IdxParagraphs.Add(p);
+                    }
                 }
                 else if (line.StartsWith("palette:", StringComparison.OrdinalIgnoreCase) && line.Length > 10)
                 {
@@ -52,7 +54,9 @@ namespace Nikse.SubtitleEdit.Core.VobSub
                         {
                             int index;
                             if (int.TryParse(parts[3], out index))
+                            {
                                 languageIndex = index;
+                            }
                         }
                         // Use U+200E (LEFT-TO-RIGHT MARK) to support right-to-left scripts
                         Languages.Add(string.Format("{0} \x200E(0x{1:x})", languageName, languageIndex + 32));

@@ -60,7 +60,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     _errorCount++;
                     if (_errorCount > 10)
+                    {
                         return;
+                    }
                 }
             }
             subtitle.RemoveEmptyLines();

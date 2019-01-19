@@ -138,7 +138,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         }
                     }
                     if (p.StartTime.TotalSeconds >= 0 && p.EndTime.TotalMilliseconds > 0 && !string.IsNullOrEmpty(p.Text))
+                    {
                         subtitle.Paragraphs.Add(p);
+                    }
                 }
                 catch (Exception ex)
                 {

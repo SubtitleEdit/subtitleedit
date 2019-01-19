@@ -54,7 +54,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             string xmlAsText = sb.ToString();
 
             if (!xmlAsText.Contains("<caraoke"))
+            {
                 return;
+            }
 
             xmlAsText = xmlAsText.Replace("< /", "</");
 

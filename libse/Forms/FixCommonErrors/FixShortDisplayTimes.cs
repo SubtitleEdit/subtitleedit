@@ -42,7 +42,10 @@
                         {
                             string oldCurrent = p.ToString();
                             if (next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines > p.EndTime.TotalMilliseconds)
+                            {
                                 p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                            }
+
                             p.StartTime.TotalMilliseconds = p.EndTime.TotalMilliseconds - Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds;
                             noOfShortDisplayTimes++;
                             callbacks.AddFixToListView(p, fixAction, oldCurrent, p.ToString());
@@ -167,7 +170,10 @@
             {
                 string oldCurrent = p.ToString();
                 if (next != null && next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines > p.EndTime.TotalMilliseconds)
+                {
                     p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                }
+
                 p.StartTime.TotalMilliseconds = p.EndTime.TotalMilliseconds - temp.Duration.TotalMilliseconds;
                 noOfShortDisplayTimes++;
                 _callbacks.AddFixToListView(p, fixAction, oldCurrent, p.ToString());

@@ -53,7 +53,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 if (line.Contains(':') && RegexTimeCodes.IsMatch(line))
                 {
                     if (paragraph != null && string.IsNullOrEmpty(paragraph.Text))
+                    {
                         _errorCount++;
+                    }
 
                     paragraph = new Paragraph();
                     if (TryReadTimeCodesLine(line, paragraph))
@@ -101,7 +103,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 int startMilliseconds = int.Parse(parts[3]);
 
                 if (parts[3].Length == 2)
+                {
                     _errorCount++;
+                }
 
                 paragraph.StartTime = new TimeCode(startHours, startMinutes, startSeconds, startMilliseconds);
                 return true;

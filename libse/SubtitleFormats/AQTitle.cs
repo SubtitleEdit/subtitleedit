@@ -39,9 +39,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 string text = Utilities.RemoveSsaTags(p.Text);
                 int noOfLines = Utilities.GetNumberOfLines(text);
                 if (noOfLines > 2)
+                {
                     text = Utilities.AutoBreakLine(text);
+                }
                 else if (noOfLines == 1)
+                {
                     text += Environment.NewLine;
+                }
 
                 sb.AppendLine(string.Format(paragraphWriteFormat, EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), text, Environment.NewLine));
             }
@@ -94,9 +98,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         {
                             string text = line.Replace("|", Environment.NewLine);
                             if (string.IsNullOrEmpty(paragraph.Text))
+                            {
                                 paragraph.Text = text.Trim();
+                            }
                             else
+                            {
                                 paragraph.Text += Environment.NewLine + text;
+                            }
+
                             if (paragraph.Text.Length > 2000)
                             {
                                 _errorCount += 100;

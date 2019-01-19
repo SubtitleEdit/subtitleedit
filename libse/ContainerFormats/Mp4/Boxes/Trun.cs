@@ -15,12 +15,16 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
         {
             Samples = new List<TimeSegment>();
             if (maximumLength <= 4)
+            {
                 return;
+            }
 
             Buffer = new byte[maximumLength - 4];
             var readCount = fs.Read(Buffer, 0, Buffer.Length);
             if (readCount < (int)maximumLength - 4)
+            {
                 return;
+            }
 
             var versionAndFlags = GetUInt(0);
             var version = versionAndFlags >> 24;
@@ -44,7 +48,9 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
             {
                 var sample = new TimeSegment();
                 if (pos > Buffer.Length - 4)
+                {
                     return;
+                }
 
                 // read "sample duration" if present
                 if ((flags & 0x000100) > 0)
@@ -53,7 +59,9 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                     pos += 4;
                 }
                 if (pos > Buffer.Length - 4)
+                {
                     return;
+                }
 
                 // skip "sample_size" if present
                 if ((flags & 0x000200) > 0)
@@ -61,7 +69,9 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                     pos += 4;
                 }
                 if (pos > Buffer.Length - 4)
+                {
                     return;
+                }
 
                 // skip "sample_flags" if present
                 if ((flags & 0x000400) > 0)
@@ -69,7 +79,9 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                     pos += 4;
                 }
                 if (pos > Buffer.Length - 4)
+                {
                     return;
+                }
 
                 // read "sample_time_offset" if present
                 if ((flags & 0x000800) > 0)

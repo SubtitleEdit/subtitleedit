@@ -31,34 +31,53 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
                             int index = match.Index;
                             if (index + match.Value.Length >= text.Length)
+                            {
                                 text = text.Substring(0, index) + temp;
+                            }
                             else
+                            {
                                 text = text.Substring(0, index) + temp + text.Substring(index + match.Value.Length);
+                            }
+
                             match = match.NextMatch();
                         }
                     }
                 }
 
                 if (RegexUtils.DanishLetterI.RegExIDag.IsMatch(text))
+                {
                     text = RegexUtils.DanishLetterI.RegExIDag.Replace(text, "i dag");
+                }
 
                 if (RegexUtils.DanishLetterI.RegExIGaar.IsMatch(text))
+                {
                     text = RegexUtils.DanishLetterI.RegExIGaar.Replace(text, "i går");
+                }
 
                 if (RegexUtils.DanishLetterI.RegExIMorgen.IsMatch(text))
+                {
                     text = RegexUtils.DanishLetterI.RegExIMorgen.Replace(text, "i morgen");
+                }
 
                 if (RegexUtils.DanishLetterI.RegExIAlt.IsMatch(text))
+                {
                     text = RegexUtils.DanishLetterI.RegExIAlt.Replace(text, "i alt");
+                }
 
                 if (RegexUtils.DanishLetterI.RegExIGang.IsMatch(text))
+                {
                     text = RegexUtils.DanishLetterI.RegExIGang.Replace(text, "i gang");
+                }
 
                 if (RegexUtils.DanishLetterI.RegExIStand.IsMatch(text))
+                {
                     text = RegexUtils.DanishLetterI.RegExIStand.Replace(text, "i stand");
+                }
 
                 if (RegexUtils.DanishLetterI.RegExIOevrigt.IsMatch(text))
+                {
                     text = RegexUtils.DanishLetterI.RegExIOevrigt.Replace(text, "i øvrigt");
+                }
 
                 if (text != oldText && callbacks.AllowFix(p, fixAction))
                 {

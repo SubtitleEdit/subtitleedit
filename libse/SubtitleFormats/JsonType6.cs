@@ -67,11 +67,16 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             var sb = new StringBuilder();
             foreach (string s in lines)
+            {
                 sb.Append(s);
+            }
 
             string allText = sb.ToString();
             if (!allText.Contains("\"words\"") && !allText.Contains("'words'"))
+            {
                 return;
+            }
+
             var words = Json.ReadArray(allText, "words");
 
             foreach (string word in words)
@@ -82,15 +87,24 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     string milliseconds = elements[0].Trim('"').Trim();
                     string text = elements[1].Trim();
                     if (text.StartsWith('"'))
+                    {
                         text = text.Remove(0, 1);
+                    }
+
                     if (text.EndsWith('"'))
+                    {
                         text = text.Remove(text.Length - 1, 1);
+                    }
 
                     long number;
                     if (long.TryParse(milliseconds, out number))
+                    {
                         subtitle.Paragraphs.Add(new Paragraph(text, number, number));
+                    }
                     else
+                    {
                         _errorCount++;
+                    }
                 }
             }
 
@@ -98,7 +112,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var sub = new Subtitle();
             double startMilliseconds = 0;
             if (subtitle.Paragraphs.Count > 0)
+            {
                 startMilliseconds = subtitle.Paragraphs[0].StartTime.TotalMilliseconds;
+            }
+
             for (int i = 0; i < subtitle.Paragraphs.Count - 1; i++)
             {
                 Paragraph p = subtitle.Paragraphs[i];
@@ -139,8 +156,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 else // just add word to current sub
                 {
                     if (sb.Length == 0)
+                    {
                         startMilliseconds = p.StartTime.TotalMilliseconds;
-                    
+                    }
+
                     sb.Append(' ');
                     sb.Append(p.Text);
                     

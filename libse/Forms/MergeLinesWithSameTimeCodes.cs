@@ -34,14 +34,22 @@ namespace Nikse.SubtitleEdit.Core.Forms
                             p.Text = p.Text + Environment.NewLine + next.Text;
                         }
                         if (reBreak)
+                        {
                             p.Text = Utilities.AutoBreakLine(p.Text, language);
+                        }
+
                         lastMerged = true;
                         removed.Add(i);
                         numberOfMerges++;
                         if (!mergedIndexes.Contains(i))
+                        {
                             mergedIndexes.Add(i);
+                        }
+
                         if (!mergedIndexes.Contains(i - 1))
+                        {
                             mergedIndexes.Add(i - 1);
+                        }
 
                         if (!("," + lineNumbers).Contains("," + p.Number + ","))
                         {
@@ -75,7 +83,9 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 info.Paragraphs.Add(new Paragraph(p) { Extra = lineNumbers.ToString() });
             }
             if (!lastMerged)
+            {
                 mergedSubtitle.Paragraphs.Add(new Paragraph(subtitle.GetParagraphOrDefault(subtitle.Paragraphs.Count - 1)));
+            }
 
             mergedSubtitle.Renumber();
             return mergedSubtitle;
@@ -84,7 +94,9 @@ namespace Nikse.SubtitleEdit.Core.Forms
         private static bool QualifiesForMerge(Paragraph p, Paragraph next, int maxMsBetween)
         {
             if (p == null || next == null)
+            {
                 return false;
+            }
 
             return Math.Abs(next.StartTime.TotalMilliseconds - p.StartTime.TotalMilliseconds) <= maxMsBetween &&
                    Math.Abs(next.EndTime.TotalMilliseconds - p.EndTime.TotalMilliseconds) <= maxMsBetween;
@@ -93,7 +105,10 @@ namespace Nikse.SubtitleEdit.Core.Forms
         private static bool IsFixAllowed(Paragraph p, Dictionary<int, bool> isFixAllowedList)
         {
             if (isFixAllowedList.ContainsKey(p.Number))
+            {
                 return isFixAllowedList[p.Number];
+            }
+
             return true;
         }
     }

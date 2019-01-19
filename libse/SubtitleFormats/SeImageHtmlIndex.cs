@@ -18,7 +18,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override bool IsMine(List<string> lines, string fileName)
         {
             if (fileName != null && !fileName.EndsWith(Extension, StringComparison.OrdinalIgnoreCase))
+            {
                 return false;
+            }
 
             return base.IsMine(lines, fileName);
         }
@@ -69,10 +71,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             int seconds = int.Parse(parts[parts.Length - 2]);
             int minutes = 0;
             if (parts.Length > 2)
+            {
                 minutes = int.Parse(parts[parts.Length - 3]);
+            }
+
             int hour = 0;
             if (parts.Length > 3)
+            {
                 hour = int.Parse(parts[parts.Length - 4]);
+            }
 
             return new TimeCode(hour, minutes, seconds, milliseconds);
         }

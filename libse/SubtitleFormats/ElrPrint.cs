@@ -17,10 +17,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             var sb = new StringBuilder();
             foreach (string line in lines)
+            {
                 sb.AppendLine(line);
+            }
+
             string s = sb.ToString();
             if (s.Contains("#PE2"))
+            {
                 return false;
+            }
 
             return base.IsMine(lines, fileName);
         }
@@ -52,7 +57,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 s = $"{ts.Seconds:00}:{MillisecondsToFramesMaxFrameRate(ts.Milliseconds):00}";
             }
             if (p.Duration.TotalMilliseconds >= 0)
+            {
                 return s;
+            }
+
             return "-" + s.RemoveChar('-');
         }
 

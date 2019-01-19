@@ -24,10 +24,16 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             foreach (string line in lines)
             {
                 if (line.StartsWith("$FontName", StringComparison.Ordinal) || line.StartsWith("$ColorIndex1", StringComparison.Ordinal))
+                {
                     return false;
+                }
+
                 Match m = null;
                 if (line.Length > 8 && line[2] == ':')
+                {
                     m = CsvLine.Match(line);
+                }
+
                 if (m != null && m.Success)
                 {
                     fine++;
@@ -37,13 +43,19 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 else if (!string.IsNullOrWhiteSpace(line))
                 {
                     if (continuation)
+                    {
                         continuation = false;
+                    }
                     else
+                    {
                         failed++;
+                    }
                 }
             }
             if (failed > 20)
+            {
                 return false;
+            }
 
             return fine > failed;
         }
@@ -65,7 +77,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 string line2 = string.Empty;
                 line1 = arr[0];
                 if (arr.Count > 1)
+                {
                     line2 = arr[1];
+                }
+
                 line1 = line1.Replace("\"", "\"\"");
                 line2 = line2.Replace("\"", "\"\"");
                 sb.AppendLine(string.Format(format, Separator, EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), line1, line2));
@@ -89,6 +104,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     string[] parts = line.Substring(0, m.Length).Split(Separator.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                     if (parts.Length == 2)
+                    {
                         try
                         {
                             var start = DecodeTimeCodeFrames(parts[0], splitChars);
@@ -101,6 +117,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         {
                             _errorCount++;
                         }
+                    }
                 }
                 else if (!string.IsNullOrWhiteSpace(line))
                 {
@@ -113,16 +130,24 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         private static string ReadText(string csv)
         {
             if (string.IsNullOrEmpty(csv))
+            {
                 return string.Empty;
+            }
 
             csv = csv.Replace("\"\"", "\"");
 
             var sb = new StringBuilder();
             csv = csv.Trim();
             if (csv.StartsWith('"'))
+            {
                 csv = csv.Remove(0, 1);
+            }
+
             if (csv.EndsWith('"'))
+            {
                 csv = csv.Remove(csv.Length - 1, 1);
+            }
+
             bool isBreak = false;
             for (int i = 0; i < csv.Length; i++)
             {

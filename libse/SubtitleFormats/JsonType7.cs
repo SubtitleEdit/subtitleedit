@@ -19,7 +19,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 Paragraph p = subtitle.Paragraphs[i];
                 sb.Append(p.StartTime.TotalMilliseconds);
                 if (i < subtitle.Paragraphs.Count - 1)
+                {
                     sb.Append(',');
+                }
             }
             sb.AppendLine("],");
 
@@ -29,7 +31,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 Paragraph p = subtitle.Paragraphs[i];
                 sb.Append(p.EndTime.TotalMilliseconds);
                 if (i < subtitle.Paragraphs.Count - 1)
+                {
                     sb.Append(',');
+                }
             }
             sb.AppendLine("],");
 
@@ -41,7 +45,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 sb.Append(Json.EncodeJsonText(Utilities.UnbreakLine(p.Text)));
                 sb.Append('"');
                 if (i < subtitle.Paragraphs.Count - 1)
+                {
                     sb.Append(',');
+                }
             }
             sb.Append("]");
             sb.Append('}');
@@ -54,11 +60,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             var sb = new StringBuilder();
             foreach (string s in lines)
+            {
                 sb.Append(s);
+            }
 
             string allText = sb.ToString();
             if (!allText.Contains("\"text\""))
+            {
                 return;
+            }
 
             var startTimes = Json.ReadArray(allText, "start");
             var endTimes = Json.ReadArray(allText, "end");

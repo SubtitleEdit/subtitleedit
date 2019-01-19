@@ -47,7 +47,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     {
                         string text = line.Remove(0, 23).Trim();
                         if (!text.Contains(Environment.NewLine))
+                        {
                             text = text.Replace("//", Environment.NewLine);
+                        }
+
                         p = new Paragraph(DecodeTimeCodeFrames(temp.Substring(0, 11), splitChars), DecodeTimeCodeFrames(temp.Substring(12, 11), splitChars), text);
                         subtitle.Paragraphs.Add(p);
                     }
@@ -58,7 +61,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 else if (p != null)
                 {
                     if (p.Text.Length < 200)
+                    {
                         p.Text = (p.Text + Environment.NewLine + line).Trim();
+                    }
                 }
             }
 

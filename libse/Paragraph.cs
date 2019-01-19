@@ -118,7 +118,9 @@ namespace Nikse.SubtitleEdit.Core
         public void Adjust(double factor, double adjustmentInSeconds)
         {
             if (StartTime.IsMaxTime)
+            {
                 return;
+            }
 
             StartTime.TotalMilliseconds = StartTime.TotalMilliseconds * factor + (adjustmentInSeconds * TimeCode.BaseUnit);
             EndTime.TotalMilliseconds = EndTime.TotalMilliseconds * factor + (adjustmentInSeconds * TimeCode.BaseUnit);
@@ -154,7 +156,10 @@ namespace Nikse.SubtitleEdit.Core
             get
             {
                 if (string.IsNullOrEmpty(Text))
+                {
                     return 0;
+                }
+
                 return (60.0 / Duration.TotalSeconds) * Text.CountWords();
             }
         }

@@ -44,7 +44,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     subtitle.Paragraphs.Add(p);
                     text = text.Trim().Trim(trimChars).Trim();
                     if (text.Length > 0 && char.IsDigit(text[0]))
+                    {
                         _errorCount++;
+                    }
                 }
                 else
                 {

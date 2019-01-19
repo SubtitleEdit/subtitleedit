@@ -17,7 +17,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             var sb = new StringBuilder();
             foreach (string line in lines)
+            {
                 sb.AppendLine(line);
+            }
+
             if (sb.ToString().Contains("#INPOINT OUTPOINT PATH"))
             {
                 return base.IsMine(lines, fileName);
@@ -80,9 +83,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 else if (!string.IsNullOrWhiteSpace(line) && p != null)
                 {
                     if (string.IsNullOrEmpty(p.Text))
+                    {
                         p.Text = line;
+                    }
                     else
+                    {
                         p.Text = p.Text + Environment.NewLine + line;
+                    }
                 }
             }
 
@@ -99,7 +106,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             int milliseconds = (int)Math.Round(1000.0 / 30.0 * int.Parse(frames));
             if (milliseconds > 999)
+            {
                 milliseconds = 999;
+            }
 
             return new TimeCode(int.Parse(hour), int.Parse(minutes), int.Parse(seconds), milliseconds);
         }

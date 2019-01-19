@@ -10,24 +10,35 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             string closeB = openB == "(" ? ")" : "]";
 
             if (text.Contains(" " + closeB))
+            {
                 openB = openB + " ";
+            }
+
             do
             {
                 if (text.Length > 1 && text.StartsWith('-'))
                 {
                     pre += "- ";
                     if (text[1] == ' ')
+                    {
                         text = text.Substring(2);
+                    }
                     else
+                    {
                         text = text.Substring(1);
+                    }
                 }
                 if (text.Length > 3 && text.StartsWith("<i>", StringComparison.OrdinalIgnoreCase))
                 {
                     pre += "<i>";
                     if (text[3] == ' ')
+                    {
                         text = text.Substring(4);
+                    }
                     else
+                    {
                         text = text.Substring(3);
+                    }
                 }
                 if (text.Length > 1 && (text[0] == ' ' || text[0] == '.'))
                 {

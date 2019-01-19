@@ -71,7 +71,9 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 {
                     int indexOfSpace = s.IndexOf(' ');
                     if (indexOfSpace > 0)
+                    {
                         return s.Substring(0, indexOfSpace).Trim();
+                    }
                 }
             }
             return null;
@@ -85,12 +87,16 @@ namespace Nikse.SubtitleEdit.Core.Forms
             {
                 string s = line.Trim();
                 if (s.Length == 0 && releaseOn)
+                {
                     return sb.ToString();
+                }
 
                 if (!releaseOn)
                 {
                     if (!s.Contains('x') && !s.Contains('*') && s.Contains('(') && s.Contains(')') && VersionNumberRegex.IsMatch(s))
+                    {
                         releaseOn = true;
+                    }
                 }
 
                 if (releaseOn)
@@ -114,7 +120,10 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 index += count;
             }
             if (index > 0)
+            {
                 _successCount++;
+            }
+
             return Encoding.UTF8.GetString(buffer, 0, index);
         }
 

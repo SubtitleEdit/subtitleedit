@@ -41,7 +41,10 @@ namespace Nikse.SubtitleEdit.Core
             foreach (var oldRecentFile in Files)
             {
                 if (!fileName.Equals(oldRecentFile.FileName, StringComparison.OrdinalIgnoreCase) && index < MaxRecentFiles)
+                {
                     newList.Add(new RecentFileEntry { FileName = oldRecentFile.FileName, FirstVisibleIndex = oldRecentFile.FirstVisibleIndex, FirstSelectedIndex = oldRecentFile.FirstSelectedIndex, VideoFileName = oldRecentFile.VideoFileName, OriginalFileName = oldRecentFile.OriginalFileName, VideoOffsetInMs = oldRecentFile.VideoOffsetInMs });
+                }
+
                 index++;
             }
             Files = newList;
@@ -53,16 +56,23 @@ namespace Nikse.SubtitleEdit.Core
             foreach (var oldRecentFile in Files)
             {
                 if (fileName.Equals(oldRecentFile.FileName, StringComparison.OrdinalIgnoreCase))
+                {
                     newList.Add(new RecentFileEntry { FileName = oldRecentFile.FileName, FirstVisibleIndex = oldRecentFile.FirstVisibleIndex, FirstSelectedIndex = oldRecentFile.FirstSelectedIndex, VideoFileName = oldRecentFile.VideoFileName, OriginalFileName = oldRecentFile.OriginalFileName, VideoOffsetInMs = oldRecentFile.VideoOffsetInMs });
+                }
             }
             if (newList.Count == 0)
+            {
                 newList.Add(new RecentFileEntry { FileName = fileName, FirstVisibleIndex = -1, FirstSelectedIndex = -1, VideoFileName = videoFileName, OriginalFileName = originalFileName });
+            }
 
             int index = 0;
             foreach (var oldRecentFile in Files)
             {
                 if (!fileName.Equals(oldRecentFile.FileName, StringComparison.OrdinalIgnoreCase) && index < MaxRecentFiles)
+                {
                     newList.Add(new RecentFileEntry { FileName = oldRecentFile.FileName, FirstVisibleIndex = oldRecentFile.FirstVisibleIndex, FirstSelectedIndex = oldRecentFile.FirstSelectedIndex, VideoFileName = oldRecentFile.VideoFileName, OriginalFileName = oldRecentFile.OriginalFileName, VideoOffsetInMs = oldRecentFile.VideoOffsetInMs });
+                }
+
                 index++;
             }
             Files = newList;
@@ -750,7 +760,9 @@ $HorzAlign          =   Center
             CurrentFrameRate = DefaultFrameRate;
             SubtitleFontName = "Tahoma";
             if (Environment.OSVersion.Version.Major < 6) // 6 == Vista/Win2008Server/Win7
+            {
                 SubtitleFontName = "Times New Roman";
+            }
 
             SubtitleFontSize = 10;
             SubtitleListViewFontSize = 10;
@@ -1412,7 +1424,9 @@ $HorzAlign          =   Center
                     settings = CustomDeserialize(settingsFileName); //  15 msecs
 
                     if (settings.General.AutoConvertToUtf8)
+                    {
                         settings.General.DefaultEncoding = Encoding.UTF8.WebName;
+                    }
                 }
                 catch (Exception exception)
                 {
@@ -1421,10 +1435,14 @@ $HorzAlign          =   Center
                 }
 
                 if (!string.IsNullOrEmpty(settings.General.ListViewLineSeparatorString))
+                {
                     settings.General.ListViewLineSeparatorString = settings.General.ListViewLineSeparatorString.Replace("\n", string.Empty).Replace("\r", string.Empty);
+                }
 
                 if (string.IsNullOrWhiteSpace(settings.General.ListViewLineSeparatorString))
+                {
                     settings.General.ListViewLineSeparatorString = "<br />";
+                }
 
                 if (settings.Shortcuts.GeneralToggleTranslationMode == "Control+U" && settings.Shortcuts.MainTextBoxSelectionToLower == "Control+U")
                 {
@@ -1487,16 +1505,27 @@ $HorzAlign          =   Center
             {
                 XmlNode xnode = nodeCompare.SelectSingleNode("ShowOnlyDifferences");
                 if (xnode != null)
+                {
                     settings.Compare.ShowOnlyDifferences = Convert.ToBoolean(xnode.InnerText);
+                }
+
                 xnode = nodeCompare.SelectSingleNode("OnlyLookForDifferenceInText");
                 if (xnode != null)
+                {
                     settings.Compare.OnlyLookForDifferenceInText = Convert.ToBoolean(xnode.InnerText);
+                }
+
                 xnode = nodeCompare.SelectSingleNode("IgnoreLineBreaks");
                 if (xnode != null)
+                {
                     settings.Compare.IgnoreLineBreaks = Convert.ToBoolean(xnode.InnerText);
+                }
+
                 xnode = nodeCompare.SelectSingleNode("IgnoreFormatting");
                 if (xnode != null)
+                {
                     settings.Compare.IgnoreFormatting = Convert.ToBoolean(xnode.InnerText);
+                }
             }
 
             // Recent files
@@ -1505,23 +1534,33 @@ $HorzAlign          =   Center
             {
                 string firstVisibleIndex = "-1";
                 if (listNode.Attributes["FirstVisibleIndex"] != null)
+                {
                     firstVisibleIndex = listNode.Attributes["FirstVisibleIndex"].Value;
+                }
 
                 string firstSelectedIndex = "-1";
                 if (listNode.Attributes["FirstSelectedIndex"] != null)
+                {
                     firstSelectedIndex = listNode.Attributes["FirstSelectedIndex"].Value;
+                }
 
                 string videoFileName = null;
                 if (listNode.Attributes["VideoFileName"] != null)
+                {
                     videoFileName = listNode.Attributes["VideoFileName"].Value;
+                }
 
                 string originalFileName = null;
                 if (listNode.Attributes["OriginalFileName"] != null)
+                {
                     originalFileName = listNode.Attributes["OriginalFileName"].Value;
+                }
 
                 long videoOffset = 0;
                 if (listNode.Attributes["VideoOffset"] != null)
+                {
                     long.TryParse(listNode.Attributes["VideoOffset"].Value, out videoOffset);
+                }
 
                 settings.RecentFiles.Files.Add(new RecentFileEntry { FileName = listNode.InnerText, FirstVisibleIndex = int.Parse(firstVisibleIndex, CultureInfo.InvariantCulture), FirstSelectedIndex = int.Parse(firstSelectedIndex, CultureInfo.InvariantCulture), VideoFileName = videoFileName, OriginalFileName = originalFileName, VideoOffsetInMs = videoOffset });
             }
@@ -1530,846 +1569,1679 @@ $HorzAlign          =   Center
             node = doc.DocumentElement.SelectSingleNode("General");
             XmlNode subNode = node.SelectSingleNode("ShowToolbarNew");
             if (subNode != null)
+            {
                 settings.General.ShowToolbarNew = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("ShowToolbarOpen");
             if (subNode != null)
+            {
                 settings.General.ShowToolbarOpen = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("ShowToolbarSave");
             if (subNode != null)
+            {
                 settings.General.ShowToolbarSave = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("ShowToolbarSaveAs");
             if (subNode != null)
+            {
                 settings.General.ShowToolbarSaveAs = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("ShowToolbarFind");
             if (subNode != null)
+            {
                 settings.General.ShowToolbarFind = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("ShowToolbarReplace");
             if (subNode != null)
+            {
                 settings.General.ShowToolbarReplace = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("ShowToolbarFixCommonErrors");
             if (subNode != null)
+            {
                 settings.General.ShowToolbarFixCommonErrors = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("ShowToolbarRemoveTextForHi");
             if (subNode != null)
+            {
                 settings.General.ShowToolbarRemoveTextForHi = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("ShowToolbarVisualSync");
             if (subNode != null)
+            {
                 settings.General.ShowToolbarVisualSync = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("ShowToolbarSpellCheck");
             if (subNode != null)
+            {
                 settings.General.ShowToolbarSpellCheck = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("ShowToolbarNetflixGlyphCheck");
             if (subNode != null)
+            {
                 settings.General.ShowToolbarNetflixGlyphCheck = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("ShowToolbarSettings");
             if (subNode != null)
+            {
                 settings.General.ShowToolbarSettings = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("ShowToolbarHelp");
             if (subNode != null)
+            {
                 settings.General.ShowToolbarHelp = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("ShowFrameRate");
             if (subNode != null)
+            {
                 settings.General.ShowFrameRate = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("ShowVideoPlayer");
             if (subNode != null)
+            {
                 settings.General.ShowVideoPlayer = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("ShowAudioVisualizer");
             if (subNode != null)
+            {
                 settings.General.ShowAudioVisualizer = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("ShowWaveform");
             if (subNode != null)
+            {
                 settings.General.ShowWaveform = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("ShowSpectrogram");
             if (subNode != null)
+            {
                 settings.General.ShowSpectrogram = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("DefaultFrameRate");
             if (subNode != null)
             {
                 settings.General.DefaultFrameRate = Convert.ToDouble(subNode.InnerText, CultureInfo.InvariantCulture);
                 if (settings.General.DefaultFrameRate > 23975)
+                {
                     settings.General.DefaultFrameRate = 23.976;
+                }
+
                 settings.General.CurrentFrameRate = settings.General.DefaultFrameRate;
             }
             subNode = node.SelectSingleNode("DefaultSubtitleFormat");
             if (subNode != null)
+            {
                 settings.General.DefaultSubtitleFormat = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("DefaultEncoding");
             if (subNode != null)
+            {
                 settings.General.DefaultEncoding = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("AutoConvertToUtf8");
             if (subNode != null)
+            {
                 settings.General.AutoConvertToUtf8 = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("WriteUtf8Bom");
             if (subNode != null)
+            {
                 settings.General.WriteUtf8Bom = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("AutoGuessAnsiEncoding");
             if (subNode != null)
+            {
                 settings.General.AutoGuessAnsiEncoding = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("SystemSubtitleFontNameOverride");
             if (subNode != null)
+            {
                 settings.General.SystemSubtitleFontNameOverride = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("SystemSubtitleFontSizeOverride");
             if (!string.IsNullOrEmpty(subNode?.InnerText))
+            {
                 settings.General.SystemSubtitleFontSizeOverride = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("_subtitleFontName");
             if (subNode != null)
+            {
                 settings.General.SubtitleFontName = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("SubtitleFontSize");
             if (subNode != null)
+            {
                 settings.General.SubtitleFontSize = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("SubtitleListViewFontSize");
             if (subNode != null)
+            {
                 settings.General.SubtitleListViewFontSize = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("SubtitleFontBold");
             if (subNode != null)
+            {
                 settings.General.SubtitleFontBold = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("SubtitleListViewFontBold");
             if (subNode != null)
+            {
                 settings.General.SubtitleListViewFontBold = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("SubtitleFontColor");
             if (subNode != null)
+            {
                 settings.General.SubtitleFontColor = Color.FromArgb(Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture));
+            }
+
             subNode = node.SelectSingleNode("SubtitleBackgroundColor");
             if (subNode != null)
+            {
                 settings.General.SubtitleBackgroundColor = Color.FromArgb(Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture));
+            }
+
             subNode = node.SelectSingleNode("CenterSubtitleInTextBox");
             if (subNode != null)
+            {
                 settings.General.CenterSubtitleInTextBox = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("ShowRecentFiles");
             if (subNode != null)
+            {
                 settings.General.ShowRecentFiles = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("RememberSelectedLine");
             if (subNode != null)
+            {
                 settings.General.RememberSelectedLine = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("StartLoadLastFile");
             if (subNode != null)
+            {
                 settings.General.StartLoadLastFile = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("StartRememberPositionAndSize");
             if (subNode != null)
+            {
                 settings.General.StartRememberPositionAndSize = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("StartPosition");
             if (subNode != null)
+            {
                 settings.General.StartPosition = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("StartSize");
             if (subNode != null)
+            {
                 settings.General.StartSize = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("SplitContainerMainSplitterDistance");
             if (subNode != null)
+            {
                 settings.General.SplitContainerMainSplitterDistance = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("SplitContainer1SplitterDistance");
             if (subNode != null)
+            {
                 settings.General.SplitContainer1SplitterDistance = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("SplitContainerListViewAndTextSplitterDistance");
             if (subNode != null)
+            {
                 settings.General.SplitContainerListViewAndTextSplitterDistance = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("StartInSourceView");
             if (subNode != null)
+            {
                 settings.General.StartInSourceView = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("RemoveBlankLinesWhenOpening");
             if (subNode != null)
+            {
                 settings.General.RemoveBlankLinesWhenOpening = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("RemoveBadCharsWhenOpening");
             if (subNode != null)
+            {
                 settings.General.RemoveBadCharsWhenOpening = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("SubtitleLineMaximumLength");
             if (subNode != null)
+            {
                 settings.General.SubtitleLineMaximumLength = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("SubtitleMinimumDisplayMilliseconds");
             if (subNode != null)
+            {
                 settings.General.SubtitleMinimumDisplayMilliseconds = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("SubtitleMaximumDisplayMilliseconds");
             if (subNode != null)
+            {
                 settings.General.SubtitleMaximumDisplayMilliseconds = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("MinimumMillisecondsBetweenLines");
             if (subNode != null)
+            {
                 settings.General.MinimumMillisecondsBetweenLines = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("SetStartEndHumanDelay");
             if (subNode != null)
+            {
                 settings.General.SetStartEndHumanDelay = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("AutoWrapLineWhileTyping");
             if (subNode != null)
+            {
                 settings.General.AutoWrapLineWhileTyping = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("SubtitleMaximumCharactersPerSeconds");
             if (subNode != null)
+            {
                 settings.General.SubtitleMaximumCharactersPerSeconds = Convert.ToDouble(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("SubtitleOptimalCharactersPerSeconds");
             if (subNode != null)
+            {
                 settings.General.SubtitleOptimalCharactersPerSeconds = Convert.ToDouble(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("CharactersPerSecondsIgnoreWhiteSpace");
             if (subNode != null)
+            {
                 settings.General.CharactersPerSecondsIgnoreWhiteSpace = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("SubtitleMaximumWordsPerMinute");
             if (subNode != null)
+            {
                 settings.General.SubtitleMaximumWordsPerMinute = Convert.ToDouble(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("SpellCheckLanguage");
             if (subNode != null)
+            {
                 settings.General.SpellCheckLanguage = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("VideoPlayer");
             if (subNode != null)
+            {
                 settings.General.VideoPlayer = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("VideoPlayerDefaultVolume");
             if (subNode != null)
+            {
                 settings.General.VideoPlayerDefaultVolume = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("VideoPlayerPreviewFontSize");
             if (subNode != null)
+            {
                 settings.General.VideoPlayerPreviewFontSize = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("VideoPlayerPreviewFontBold");
             if (subNode != null)
+            {
                 settings.General.VideoPlayerPreviewFontBold = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("VideoPlayerShowStopButton");
             if (subNode != null)
+            {
                 settings.General.VideoPlayerShowStopButton = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("VideoPlayerShowMuteButton");
             if (subNode != null)
+            {
                 settings.General.VideoPlayerShowMuteButton = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("VideoPlayerShowFullscreenButton");
             if (subNode != null)
+            {
                 settings.General.VideoPlayerShowFullscreenButton = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("Language");
             if (subNode != null)
+            {
                 settings.General.Language = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("ListViewLineSeparatorString");
             if (subNode != null)
+            {
                 settings.General.ListViewLineSeparatorString = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("ListViewDoubleClickAction");
             if (subNode != null)
+            {
                 settings.General.ListViewDoubleClickAction = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("SaveAsUseFileNameFrom");
             if (subNode != null)
+            {
                 settings.General.SaveAsUseFileNameFrom = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("UppercaseLetters");
             if (subNode != null)
+            {
                 settings.General.UppercaseLetters = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("DefaultAdjustMilliseconds");
             if (subNode != null)
+            {
                 settings.General.DefaultAdjustMilliseconds = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("AutoRepeatOn");
             if (subNode != null)
+            {
                 settings.General.AutoRepeatOn = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("AutoRepeatCount");
             if (subNode != null)
+            {
                 settings.General.AutoRepeatCount = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("SyncListViewWithVideoWhilePlaying");
             if (subNode != null)
+            {
                 settings.General.SyncListViewWithVideoWhilePlaying = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("AutoContinueDelay");
             if (subNode != null)
+            {
                 settings.General.AutoContinueDelay = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("AutoContinueOn");
             if (subNode != null)
+            {
                 settings.General.AutoContinueOn = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("AutoBackupSeconds");
             if (subNode != null)
+            {
                 settings.General.AutoBackupSeconds = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("AutoBackupDeleteAfterMonths");
             if (subNode != null)
+            {
                 settings.General.AutoBackupDeleteAfterMonths = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("SpellChecker");
             if (subNode != null)
+            {
                 settings.General.SpellChecker = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("AllowEditOfOriginalSubtitle");
             if (subNode != null)
+            {
                 settings.General.AllowEditOfOriginalSubtitle = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("PromptDeleteLines");
             if (subNode != null)
+            {
                 settings.General.PromptDeleteLines = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("Undocked");
             if (subNode != null)
+            {
                 settings.General.Undocked = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("UndockedVideoPosition");
             if (subNode != null)
+            {
                 settings.General.UndockedVideoPosition = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("UndockedWaveformPosition");
             if (subNode != null)
+            {
                 settings.General.UndockedWaveformPosition = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("UndockedVideoControlsPosition");
             if (subNode != null)
+            {
                 settings.General.UndockedVideoControlsPosition = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("WaveformCenter");
             if (subNode != null)
+            {
                 settings.General.WaveformCenter = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("WaveformUpdateIntervalMs");
             if (subNode != null)
+            {
                 settings.General.WaveformUpdateIntervalMs = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("SmallDelayMilliseconds");
             if (subNode != null)
+            {
                 settings.General.SmallDelayMilliseconds = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("LargeDelayMilliseconds");
             if (subNode != null)
+            {
                 settings.General.LargeDelayMilliseconds = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("ShowOriginalAsPreviewIfAvailable");
             if (subNode != null)
+            {
                 settings.General.ShowOriginalAsPreviewIfAvailable = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("LastPacCodePage");
             if (subNode != null)
+            {
                 settings.General.LastPacCodePage = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("OpenSubtitleExtraExtensions");
             if (subNode != null)
+            {
                 settings.General.OpenSubtitleExtraExtensions = subNode.InnerText.Trim();
+            }
+
             subNode = node.SelectSingleNode("ListViewColumnsRememberSize");
             if (subNode != null)
+            {
                 settings.General.ListViewColumnsRememberSize = Convert.ToBoolean(subNode.InnerText.Trim());
+            }
+
             subNode = node.SelectSingleNode("ListViewNumberWidth");
             if (subNode != null)
+            {
                 settings.General.ListViewNumberWidth = Convert.ToInt32(subNode.InnerText.Trim(), CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("ListViewStartWidth");
             if (subNode != null)
+            {
                 settings.General.ListViewStartWidth = Convert.ToInt32(subNode.InnerText.Trim(), CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("ListViewEndWidth");
             if (subNode != null)
+            {
                 settings.General.ListViewEndWidth = Convert.ToInt32(subNode.InnerText.Trim(), CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("ListViewDurationWidth");
             if (subNode != null)
+            {
                 settings.General.ListViewDurationWidth = Convert.ToInt32(subNode.InnerText.Trim(), CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("ListViewCpsWidth");
             if (subNode != null)
+            {
                 settings.General.ListViewCpsWidth = Convert.ToInt32(subNode.InnerText.Trim(), CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("ListViewWpmWidth");
             if (subNode != null)
+            {
                 settings.General.ListViewWpmWidth = Convert.ToInt32(subNode.InnerText.Trim(), CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("ListViewGapWidth");
             if (subNode != null)
+            {
                 settings.General.ListViewGapWidth = Convert.ToInt32(subNode.InnerText.Trim(), CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("ListViewActorWidth");
             if (subNode != null)
+            {
                 settings.General.ListViewActorWidth = Convert.ToInt32(subNode.InnerText.Trim(), CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("ListViewRegionWidth");
             if (subNode != null)
+            {
                 settings.General.ListViewRegionWidth = Convert.ToInt32(subNode.InnerText.Trim(), CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("ListViewTextWidth");
             if (subNode != null)
+            {
                 settings.General.ListViewTextWidth = Convert.ToInt32(subNode.InnerText.Trim(), CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("VlcWaveTranscodeSettings");
             if (subNode != null)
+            {
                 settings.General.VlcWaveTranscodeSettings = subNode.InnerText.Trim();
+            }
+
             subNode = node.SelectSingleNode("VlcLocation");
             if (subNode != null)
+            {
                 settings.General.VlcLocation = subNode.InnerText.Trim();
+            }
+
             subNode = node.SelectSingleNode("VlcLocationRelative");
             if (subNode != null)
+            {
                 settings.General.VlcLocationRelative = subNode.InnerText.Trim();
+            }
+
             subNode = node.SelectSingleNode("MpvVideoOutput");
             if (subNode != null)
+            {
                 settings.General.MpvVideoOutput = subNode.InnerText.Trim();
+            }
+
             subNode = node.SelectSingleNode("MpvHandlesPreviewText");
             if (subNode != null)
+            {
                 settings.General.MpvHandlesPreviewText = Convert.ToBoolean(subNode.InnerText.Trim());
+            }
+
             subNode = node.SelectSingleNode("MpcHcLocation");
             if (subNode != null)
+            {
                 settings.General.MpcHcLocation = subNode.InnerText.Trim();
+            }
+
             subNode = node.SelectSingleNode("UseFFmpegForWaveExtraction");
             if (subNode != null)
+            {
                 settings.General.UseFFmpegForWaveExtraction = Convert.ToBoolean(subNode.InnerText.Trim());
+            }
+
             subNode = node.SelectSingleNode("FFmpegLocation");
             if (subNode != null)
+            {
                 settings.General.FFmpegLocation = subNode.InnerText.Trim();
+            }
+
             subNode = node.SelectSingleNode("FFmpegSceneThreshold");
             if (subNode != null)
+            {
                 settings.General.FFmpegSceneThreshold = subNode.InnerText.Trim();
+            }
+
             subNode = node.SelectSingleNode("UseTimeFormatHHMMSSFF");
             if (subNode != null)
+            {
                 settings.General.UseTimeFormatHHMMSSFF = Convert.ToBoolean(subNode.InnerText.Trim());
+            }
+
             subNode = node.SelectSingleNode("ClearStatusBarAfterSeconds");
             if (subNode != null)
+            {
                 settings.General.ClearStatusBarAfterSeconds = Convert.ToInt32(subNode.InnerText.Trim(), CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("Company");
             if (subNode != null)
+            {
                 settings.General.Company = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("DisableVideoAutoLoading");
             if (subNode != null)
+            {
                 settings.General.DisableVideoAutoLoading = Convert.ToBoolean(subNode.InnerText.Trim());
+            }
+
             subNode = node.SelectSingleNode("AllowVolumeBoost");
             if (subNode != null)
+            {
                 settings.General.AllowVolumeBoost = Convert.ToBoolean(subNode.InnerText.Trim());
+            }
+
             subNode = node.SelectSingleNode("RightToLeftMode");
             if (subNode != null)
+            {
                 settings.General.RightToLeftMode = Convert.ToBoolean(subNode.InnerText.Trim());
+            }
+
             subNode = node.SelectSingleNode("LastSaveAsFormat");
             if (subNode != null)
+            {
                 settings.General.LastSaveAsFormat = subNode.InnerText.Trim();
+            }
+
             subNode = node.SelectSingleNode("CheckForUpdates");
             if (subNode != null)
+            {
                 settings.General.CheckForUpdates = Convert.ToBoolean(subNode.InnerText.Trim());
+            }
+
             subNode = node.SelectSingleNode("LastCheckForUpdates");
             if (subNode != null)
+            {
                 settings.General.LastCheckForUpdates = Convert.ToDateTime(subNode.InnerText.Trim());
+            }
+
             subNode = node.SelectSingleNode("AutoSave");
             if (subNode != null)
+            {
                 settings.General.AutoSave = Convert.ToBoolean(subNode.InnerText.Trim());
+            }
+
             subNode = node.SelectSingleNode("ShowProgress");
             if (subNode != null)
+            {
                 settings.General.ShowProgress = Convert.ToBoolean(subNode.InnerText.Trim());
+            }
+
             subNode = node.SelectSingleNode("UseDarkTheme");
             if (subNode != null)
+            {
                 settings.General.UseDarkTheme = Convert.ToBoolean(subNode.InnerText.Trim());
+            }
+
             subNode = node.SelectSingleNode("ShowBetaStuff");
             if (subNode != null)
+            {
                 settings.General.ShowBetaStuff = Convert.ToBoolean(subNode.InnerText.Trim());
+            }
+
             subNode = node.SelectSingleNode("NewEmptyDefaultMs");
             if (subNode != null)
+            {
                 settings.General.NewEmptyDefaultMs = Convert.ToInt32(subNode.InnerText.Trim(), CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("MoveVideo100Or500MsPlaySmallSample");
             if (subNode != null)
+            {
                 settings.General.MoveVideo100Or500MsPlaySmallSample = Convert.ToBoolean(subNode.InnerText.Trim());
+            }
 
             // Tools
             node = doc.DocumentElement.SelectSingleNode("Tools");
             subNode = node.SelectSingleNode("StartSceneIndex");
             if (subNode != null)
+            {
                 settings.Tools.StartSceneIndex = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("EndSceneIndex");
             if (subNode != null)
+            {
                 settings.Tools.EndSceneIndex = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("VerifyPlaySeconds");
             if (subNode != null)
+            {
                 settings.Tools.VerifyPlaySeconds = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("MergeLinesShorterThan");
             if (subNode != null)
+            {
                 settings.Tools.MergeLinesShorterThan = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("FixShortDisplayTimesAllowMoveStartTime");
             if (subNode != null)
+            {
                 settings.Tools.FixShortDisplayTimesAllowMoveStartTime = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("RemoveEmptyLinesBetweenText");
             if (subNode != null)
+            {
                 settings.Tools.RemoveEmptyLinesBetweenText = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("MusicSymbol");
             if (subNode != null)
+            {
                 settings.Tools.MusicSymbol = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("MusicSymbolReplace");
             if (subNode != null)
+            {
                 settings.Tools.MusicSymbolReplace = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("UnicodeSymbolsToInsert");
             if (subNode != null)
+            {
                 settings.Tools.UnicodeSymbolsToInsert = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("SpellCheckAutoChangeNames");
             if (subNode != null)
+            {
                 settings.Tools.SpellCheckAutoChangeNames = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("SpellCheckOneLetterWords");
             if (subNode != null)
+            {
                 settings.Tools.SpellCheckOneLetterWords = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("SpellCheckEnglishAllowInQuoteAsIng");
             if (subNode != null)
+            {
                 settings.Tools.SpellCheckEnglishAllowInQuoteAsIng = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("RememberUseAlwaysList");
             if (subNode != null)
+            {
                 settings.Tools.RememberUseAlwaysList = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("SpellCheckShowCompletedMessage");
             if (subNode != null)
+            {
                 settings.Tools.SpellCheckShowCompletedMessage = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("OcrFixUseHardcodedRules");
             if (subNode != null)
+            {
                 settings.Tools.OcrFixUseHardcodedRules = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("OcrBinaryImageCompareRgbThreshold");
             if (subNode != null)
+            {
                 settings.Tools.OcrBinaryImageCompareRgbThreshold = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("OcrTesseract4RgbThreshold");
             if (subNode != null)
+            {
                 settings.Tools.OcrTesseract4RgbThreshold = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("Interjections");
             if (subNode != null)
+            {
                 settings.Tools.Interjections = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("MicrosoftBingApiId");
             if (subNode != null)
+            {
                 settings.Tools.MicrosoftBingApiId = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("MicrosoftTranslatorApiKey");
             if (subNode != null)
+            {
                 settings.Tools.MicrosoftTranslatorApiKey = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("GoogleApiV2Key");
             if (subNode != null)
+            {
                 settings.Tools.GoogleApiV2Key = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("GoogleTranslateNoKeyWarningShow");
             if (subNode != null)
+            {
                 settings.Tools.GoogleTranslateNoKeyWarningShow = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("GoogleApiV2KeyInfoShow");
             if (subNode != null)
+            {
                 settings.Tools.GoogleApiV2KeyInfoShow = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("UseGooleApiPaidService");
             if (subNode != null)
+            {
                 settings.Tools.UseGooleApiPaidService = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("GoogleApiV1ChunkSize");
             if (subNode != null)
+            {
                 settings.Tools.GoogleApiV1ChunkSize = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("GoogleTranslateLastTargetLanguage");
             if (subNode != null)
+            {
                 settings.Tools.GoogleTranslateLastTargetLanguage = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("TranslateAutoSplit");
             if (subNode != null)
+            {
                 settings.Tools.TranslateAutoSplit = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("ListViewSyntaxColorDurationSmall");
             if (subNode != null)
+            {
                 settings.Tools.ListViewSyntaxColorDurationSmall = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("ListViewSyntaxColorDurationBig");
             if (subNode != null)
+            {
                 settings.Tools.ListViewSyntaxColorDurationBig = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("ListViewSyntaxColorLongLines");
             if (subNode != null)
+            {
                 settings.Tools.ListViewSyntaxColorLongLines = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("ListViewSyntaxMoreThanXLines");
             if (subNode != null)
+            {
                 settings.Tools.ListViewSyntaxMoreThanXLines = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("ListViewSyntaxMoreThanXLinesX");
             if (subNode != null)
+            {
                 settings.Tools.ListViewSyntaxMoreThanXLinesX = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("ListViewSyntaxColorOverlap");
             if (subNode != null)
+            {
                 settings.Tools.ListViewSyntaxColorOverlap = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("ListViewSyntaxErrorColor");
             if (subNode != null)
+            {
                 settings.Tools.ListViewSyntaxErrorColor = Color.FromArgb(int.Parse(subNode.InnerText, CultureInfo.InvariantCulture));
+            }
+
             subNode = node.SelectSingleNode("ListViewUnfocusedSelectedColor");
             if (subNode != null)
+            {
                 settings.Tools.ListViewUnfocusedSelectedColor = Color.FromArgb(int.Parse(subNode.InnerText, CultureInfo.InvariantCulture));
+            }
+
             subNode = node.SelectSingleNode("ListViewShowColumnEndTime");
             if (subNode != null)
+            {
                 settings.Tools.ListViewShowColumnEndTime = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("ListViewShowColumnDuration");
             if (subNode != null)
+            {
                 settings.Tools.ListViewShowColumnDuration = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("ListViewShowColumnCharsPerSec");
             if (subNode != null)
+            {
                 settings.Tools.ListViewShowColumnCharsPerSec = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("ListViewShowColumnWordsPerMin");
             if (subNode != null)
+            {
                 settings.Tools.ListViewShowColumnWordsPerMin = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("ListViewShowColumnGap");
             if (subNode != null)
+            {
                 settings.Tools.ListViewShowColumnGap = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("ListViewShowColumnActor");
             if (subNode != null)
+            {
                 settings.Tools.ListViewShowColumnActor = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("ListViewShowColumnRegion");
             if (subNode != null)
+            {
                 settings.Tools.ListViewShowColumnRegion = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("SplitAdvanced");
             if (subNode != null)
+            {
                 settings.Tools.SplitAdvanced = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("SplitOutputFolder");
             if (subNode != null)
+            {
                 settings.Tools.SplitOutputFolder = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("SplitNumberOfParts");
             if (subNode != null)
+            {
                 settings.Tools.SplitNumberOfParts = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("SplitVia");
             if (subNode != null)
+            {
                 settings.Tools.SplitVia = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("NewEmptyTranslationText");
             if (subNode != null)
+            {
                 settings.Tools.NewEmptyTranslationText = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("BatchConvertOutputFolder");
             if (subNode != null)
+            {
                 settings.Tools.BatchConvertOutputFolder = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("BatchConvertOverwriteExisting");
             if (subNode != null)
+            {
                 settings.Tools.BatchConvertOverwriteExisting = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("BatchConvertOverwriteOriginal");
             if (subNode != null)
+            {
                 settings.Tools.BatchConvertOverwriteOriginal = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("BatchConvertRemoveFormatting");
             if (subNode != null)
+            {
                 settings.Tools.BatchConvertRemoveFormatting = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("BatchConvertBridgeGaps");
             if (subNode != null)
+            {
                 settings.Tools.BatchConvertBridgeGaps = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("BatchConvertFixCasing");
             if (subNode != null)
+            {
                 settings.Tools.BatchConvertFixCasing = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("BatchConvertRemoveTextForHI");
             if (subNode != null)
+            {
                 settings.Tools.BatchConvertRemoveTextForHI = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("BatchConvertFixCommonErrors");
             if (subNode != null)
+            {
                 settings.Tools.BatchConvertFixCommonErrors = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("BatchConvertMultipleReplace");
             if (subNode != null)
+            {
                 settings.Tools.BatchConvertMultipleReplace = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("BatchConvertFixRtl");
             if (subNode != null)
+            {
                 settings.Tools.BatchConvertFixRtl = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("BatchConvertFixRtlMode");
             if (subNode != null)
+            {
                 settings.Tools.BatchConvertFixRtlMode = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("BatchConvertAutoBalance");
             if (subNode != null)
+            {
                 settings.Tools.BatchConvertAutoBalance = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("BatchConvertSplitLongLines");
             if (subNode != null)
+            {
                 settings.Tools.BatchConvertSplitLongLines = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("BatchConvertSetMinDisplayTimeBetweenSubtitles");
             if (subNode != null)
+            {
                 settings.Tools.BatchConvertSetMinDisplayTimeBetweenSubtitles = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("BatchConvertLanguage");
             if (subNode != null)
+            {
                 settings.Tools.BatchConvertLanguage = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("BatchConvertFormat");
             if (subNode != null)
+            {
                 settings.Tools.BatchConvertFormat = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("BatchConvertAssStyles");
             if (subNode != null)
+            {
                 settings.Tools.BatchConvertAssStyles = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("BatchConvertSsaStyles");
             if (subNode != null)
+            {
                 settings.Tools.BatchConvertSsaStyles = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("BatchConvertUseStyleFromSource");
             if (subNode != null)
+            {
                 settings.Tools.BatchConvertUseStyleFromSource = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("BatchConvertExportCustomTextTemplate");
             if (subNode != null)
+            {
                 settings.Tools.BatchConvertExportCustomTextTemplate = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("ModifySelectionRule");
             if (subNode != null)
+            {
                 settings.Tools.ModifySelectionRule = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("ModifySelectionText");
             if (subNode != null)
+            {
                 settings.Tools.ModifySelectionText = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("ModifySelectionCaseSensitive");
             if (subNode != null)
+            {
                 settings.Tools.ModifySelectionCaseSensitive = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("ExportVobSubFontName");
             if (subNode != null)
+            {
                 settings.Tools.ExportVobSubFontName = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("ExportVobSubFontSize");
             if (subNode != null)
+            {
                 settings.Tools.ExportVobSubFontSize = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("ExportVobSubVideoResolution");
             if (subNode != null)
+            {
                 settings.Tools.ExportVobSubVideoResolution = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("ExportVobSubSimpleRendering");
             if (subNode != null)
+            {
                 settings.Tools.ExportVobSubSimpleRendering = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("ExportVobAntiAliasingWithTransparency");
             if (subNode != null)
+            {
                 settings.Tools.ExportVobAntiAliasingWithTransparency = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("ExportVobSubLanguage");
             if (subNode != null)
+            {
                 settings.Tools.ExportVobSubLanguage = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("ExportBluRayFontName");
             if (subNode != null)
+            {
                 settings.Tools.ExportBluRayFontName = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("ExportBluRayFontSize");
             if (subNode != null)
+            {
                 settings.Tools.ExportBluRayFontSize = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("ExportFcpFontName");
             if (subNode != null)
+            {
                 settings.Tools.ExportFcpFontName = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("ExportFontNameOther");
             if (subNode != null)
+            {
                 settings.Tools.ExportFontNameOther = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("ExportFcpFontSize");
             if (subNode != null)
+            {
                 settings.Tools.ExportFcpFontSize = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("ExportFcpImageType");
             if (subNode != null)
+            {
                 settings.Tools.ExportFcpImageType = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("ExportFcpPalNtsc");
             if (subNode != null)
+            {
                 settings.Tools.ExportFcpPalNtsc = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("ExportBdnXmlImageType");
             if (subNode != null)
+            {
                 settings.Tools.ExportBdnXmlImageType = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("ExportLastFontSize");
             if (subNode != null)
+            {
                 settings.Tools.ExportLastFontSize = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("ExportLastLineHeight");
             if (subNode != null)
+            {
                 settings.Tools.ExportLastLineHeight = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("ExportLastBorderWidth");
             if (subNode != null)
+            {
                 settings.Tools.ExportLastBorderWidth = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("ExportLastFontBold");
             if (subNode != null)
+            {
                 settings.Tools.ExportLastFontBold = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("ExportBluRayVideoResolution");
             if (subNode != null)
+            {
                 settings.Tools.ExportBluRayVideoResolution = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("ExportFcpVideoResolution");
             if (subNode != null)
+            {
                 settings.Tools.ExportFcpVideoResolution = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("ExportFontColor");
             if (subNode != null)
+            {
                 settings.Tools.ExportFontColor = Color.FromArgb(int.Parse(subNode.InnerText, CultureInfo.InvariantCulture));
+            }
+
             subNode = node.SelectSingleNode("ExportBorderColor");
             if (subNode != null)
+            {
                 settings.Tools.ExportBorderColor = Color.FromArgb(int.Parse(subNode.InnerText, CultureInfo.InvariantCulture));
+            }
+
             subNode = node.SelectSingleNode("ExportShadowColor");
             if (subNode != null)
+            {
                 settings.Tools.ExportShadowColor = Color.FromArgb(int.Parse(subNode.InnerText, CultureInfo.InvariantCulture));
+            }
+
             subNode = node.SelectSingleNode("ExportBoxBorderSize");
             if (subNode != null)
+            {
                 settings.Tools.ExportBoxBorderSize = int.Parse(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("ExportBottomMarginUnit");
             if (subNode != null)
+            {
                 settings.Tools.ExportBottomMarginUnit = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("ExportBottomMarginPercent");
             if (subNode != null)
+            {
                 settings.Tools.ExportBottomMarginPercent = int.Parse(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("ExportBottomMarginPixels");
             if (subNode != null)
+            {
                 settings.Tools.ExportBottomMarginPercent = int.Parse(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("ExportLeftRightMarginUnit");
             if (subNode != null)
+            {
                 settings.Tools.ExportLeftRightMarginUnit = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("ExportLeftRightMarginPercent");
             if (subNode != null)
+            {
                 settings.Tools.ExportLeftRightMarginPercent = int.Parse(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("ExportLeftRightMarginPixels");
             if (subNode != null)
+            {
                 settings.Tools.ExportLeftRightMarginPixels = int.Parse(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("ExportHorizontalAlignment");
             if (subNode != null)
+            {
                 settings.Tools.ExportHorizontalAlignment = int.Parse(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("ExportBluRayBottomMarginPercent");
             if (subNode != null)
+            {
                 settings.Tools.ExportBluRayBottomMarginPercent = int.Parse(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("ExportBluRayBottomMarginPixels");
             if (subNode != null)
+            {
                 settings.Tools.ExportBluRayBottomMarginPixels = int.Parse(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("ExportBluRayShadow");
             if (subNode != null)
+            {
                 settings.Tools.ExportBluRayShadow = int.Parse(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("Export3DType");
             if (subNode != null)
+            {
                 settings.Tools.Export3DType = int.Parse(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("Export3DDepth");
             if (subNode != null)
+            {
                 settings.Tools.Export3DDepth = int.Parse(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("ExportLastShadowTransparency");
             if (subNode != null)
+            {
                 settings.Tools.ExportLastShadowTransparency = int.Parse(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("ExportLastFrameRate");
             if (subNode != null)
+            {
                 settings.Tools.ExportLastFrameRate = double.Parse(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("ExportFullFrame");
             if (subNode != null)
+            {
                 settings.Tools.ExportFullFrame = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("ExportFcpFullPathUrl");
             if (subNode != null)
+            {
                 settings.Tools.ExportFcpFullPathUrl = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("ExportPenLineJoin");
             if (subNode != null)
+            {
                 settings.Tools.ExportPenLineJoin = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("FixCommonErrorsFixOverlapAllowEqualEndStart");
             if (subNode != null)
+            {
                 settings.Tools.FixCommonErrorsFixOverlapAllowEqualEndStart = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("FixCommonErrorsSkipStepOne");
             if (subNode != null)
+            {
                 settings.Tools.FixCommonErrorsSkipStepOne = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("ImportTextSplitting");
             if (subNode != null)
+            {
                 settings.Tools.ImportTextSplitting = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("ImportTextMergeShortLines");
             if (subNode != null)
+            {
                 settings.Tools.ImportTextMergeShortLines = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("ImportTextLineBreak");
             if (subNode != null)
+            {
                 settings.Tools.ImportTextLineBreak = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("ImportTextMergeShortLines");
             if (subNode != null)
+            {
                 settings.Tools.ImportTextMergeShortLines = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("ImportTextRemoveEmptyLines");
             if (subNode != null)
+            {
                 settings.Tools.ImportTextRemoveEmptyLines = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("ImportTextAutoSplitAtBlank");
             if (subNode != null)
+            {
                 settings.Tools.ImportTextAutoSplitAtBlank = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("ImportTextRemoveLinesNoLetters");
             if (subNode != null)
+            {
                 settings.Tools.ImportTextRemoveLinesNoLetters = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("ImportTextGenerateTimeCodes");
             if (subNode != null)
+            {
                 settings.Tools.ImportTextGenerateTimeCodes = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("ImportTextAutoBreak");
             if (subNode != null)
+            {
                 settings.Tools.ImportTextAutoBreak = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("ImportTextAutoBreakAtEnd");
             if (subNode != null)
+            {
                 settings.Tools.ImportTextAutoBreakAtEnd = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("ImportTextGap");
             if (subNode != null)
+            {
                 settings.Tools.ImportTextGap = Convert.ToDecimal(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("ImportTextAutoSplitNumberOfLines");
             if (subNode != null)
+            {
                 settings.Tools.ImportTextAutoSplitNumberOfLines = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("ImportTextAutoBreakAtEndMarkerText");
             if (subNode != null)
+            {
                 settings.Tools.ImportTextAutoBreakAtEndMarkerText = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("ImportTextDurationAuto");
             if (subNode != null)
+            {
                 settings.Tools.ImportTextDurationAuto = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("ImportTextFixedDuration");
             if (subNode != null)
+            {
                 settings.Tools.ImportTextFixedDuration = Convert.ToDecimal(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("GenerateTimeCodePatterns");
             if (subNode != null)
+            {
                 settings.Tools.GenerateTimeCodePatterns = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("GenerateTimeCodePatterns");
             if (subNode != null)
+            {
                 settings.Tools.GenerateTimeCodePatterns = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("MusicSymbolStyle");
             if (subNode != null)
+            {
                 settings.Tools.MusicSymbolStyle = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("BridgeGapMilliseconds");
             if (subNode != null)
+            {
                 settings.Tools.BridgeGapMilliseconds = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("ExportCustomTemplates");
             if (subNode != null)
+            {
                 settings.Tools.ExportCustomTemplates = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("ChangeCasingChoice");
             if (subNode != null)
+            {
                 settings.Tools.ChangeCasingChoice = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("UseNoLineBreakAfter");
             if (subNode != null)
+            {
                 settings.Tools.UseNoLineBreakAfter = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("NoLineBreakAfterEnglish");
             if (subNode != null)
+            {
                 settings.Tools.NoLineBreakAfterEnglish = subNode.InnerText.Replace("  ", " ");
+            }
+
             subNode = node.SelectSingleNode("ExportTextFormatText");
             if (subNode != null)
+            {
                 settings.Tools.ExportTextFormatText = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("ExportTextRemoveStyling");
             if (subNode != null)
+            {
                 settings.Tools.ExportTextRemoveStyling = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("ExportTextShowLineNumbers");
             if (subNode != null)
+            {
                 settings.Tools.ExportTextShowLineNumbers = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("ExportTextShowLineNumbersNewLine");
             if (subNode != null)
+            {
                 settings.Tools.ExportTextShowLineNumbersNewLine = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("ExportTextShowTimeCodes");
             if (subNode != null)
+            {
                 settings.Tools.ExportTextShowTimeCodes = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("ExportTextShowTimeCodesNewLine");
             if (subNode != null)
+            {
                 settings.Tools.ExportTextShowTimeCodesNewLine = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("ExportTextNewLineAfterText");
             if (subNode != null)
+            {
                 settings.Tools.ExportTextNewLineAfterText = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("ExportTextNewLineBetweenSubtitles");
             if (subNode != null)
+            {
                 settings.Tools.ExportTextNewLineBetweenSubtitles = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("ExportTextTimeCodeFormat");
             if (subNode != null)
+            {
                 settings.Tools.ExportTextTimeCodeFormat = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("ExportTextTimeCodeSeparator");
             if (subNode != null)
+            {
                 settings.Tools.ExportTextTimeCodeSeparator = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("VideoOffsetKeepTimeCodes");
             if (subNode != null)
+            {
                 settings.Tools.VideoOffsetKeepTimeCodes = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("MoveStartEndMs");
             if (subNode != null)
+            {
                 settings.Tools.MoveStartEndMs = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("AdjustDurationSeconds");
             if (subNode != null)
+            {
                 settings.Tools.AdjustDurationSeconds = Convert.ToDecimal(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("AdjustDurationPercent");
             if (subNode != null)
+            {
                 settings.Tools.AdjustDurationPercent = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("AdjustDurationLast");
             if (subNode != null)
+            {
                 settings.Tools.AdjustDurationLast = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("AutoBreakCommaBreakEarly");
             if (subNode != null)
+            {
                 settings.Tools.AutoBreakCommaBreakEarly = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("FindHistory");
             if (subNode != null)
             {
@@ -2388,115 +3260,216 @@ $HorzAlign          =   Center
             {
                 subNode = node.SelectSingleNode("SsaFontName");
                 if (subNode != null)
+                {
                     settings.SubtitleSettings.SsaFontName = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("SsaFontSize");
                 if (subNode != null)
+                {
                     settings.SubtitleSettings.SsaFontSize = Convert.ToDouble(subNode.InnerText, CultureInfo.InvariantCulture);
+                }
+
                 subNode = node.SelectSingleNode("SsaFontColorArgb");
                 if (subNode != null)
+                {
                     settings.SubtitleSettings.SsaFontColorArgb = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+                }
+
                 subNode = node.SelectSingleNode("SsaFontBold");
                 if (subNode != null)
+                {
                     settings.SubtitleSettings.SsaFontBold = Convert.ToBoolean(subNode.InnerText);
+                }
+
                 subNode = node.SelectSingleNode("SsaOutline");
                 if (subNode != null)
+                {
                     settings.SubtitleSettings.SsaOutline = Convert.ToDecimal(subNode.InnerText);
+                }
+
                 subNode = node.SelectSingleNode("SsaShadow");
                 if (subNode != null)
+                {
                     settings.SubtitleSettings.SsaShadow = Convert.ToDecimal(subNode.InnerText);
+                }
+
                 subNode = node.SelectSingleNode("SsaOpaqueBox");
                 if (subNode != null)
+                {
                     settings.SubtitleSettings.SsaOpaqueBox = Convert.ToBoolean(subNode.InnerText);
+                }
+
                 subNode = node.SelectSingleNode("SsaMarginLeft");
                 if (subNode != null)
+                {
                     settings.SubtitleSettings.SsaMarginLeft = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+                }
+
                 subNode = node.SelectSingleNode("SsaMarginRight");
                 if (subNode != null)
+                {
                     settings.SubtitleSettings.SsaMarginRight = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+                }
+
                 subNode = node.SelectSingleNode("SsaMarginTopBottom");
                 if (subNode != null)
+                {
                     settings.SubtitleSettings.SsaMarginTopBottom = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+                }
+
                 subNode = node.SelectSingleNode("DCinemaFontFile");
                 if (subNode != null)
+                {
                     settings.SubtitleSettings.DCinemaFontFile = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("DCinemaFontSize");
                 if (subNode != null)
+                {
                     settings.SubtitleSettings.DCinemaFontSize = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+                }
+
                 subNode = node.SelectSingleNode("DCinemaBottomMargin");
                 if (subNode != null)
+                {
                     settings.SubtitleSettings.DCinemaBottomMargin = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+                }
+
                 subNode = node.SelectSingleNode("DCinemaZPosition");
                 if (subNode != null)
+                {
                     settings.SubtitleSettings.DCinemaZPosition = Convert.ToDouble(subNode.InnerText, CultureInfo.InvariantCulture);
+                }
+
                 subNode = node.SelectSingleNode("DCinemaFadeUpTime");
                 if (subNode != null)
+                {
                     settings.SubtitleSettings.DCinemaFadeUpTime = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+                }
+
                 subNode = node.SelectSingleNode("DCinemaFadeDownTime");
                 if (subNode != null)
+                {
                     settings.SubtitleSettings.DCinemaFadeDownTime = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+                }
+
                 subNode = node.SelectSingleNode("SamiDisplayTwoClassesAsTwoSubtitles");
                 if (subNode != null)
+                {
                     settings.SubtitleSettings.SamiDisplayTwoClassesAsTwoSubtitles = Convert.ToBoolean(subNode.InnerText);
+                }
+
                 subNode = node.SelectSingleNode("SamiHtmlEncodeMode");
                 if (subNode != null)
+                {
                     settings.SubtitleSettings.SamiHtmlEncodeMode = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+                }
+
                 subNode = node.SelectSingleNode("TimedText10TimeCodeFormat");
                 if (subNode != null)
+                {
                     settings.SubtitleSettings.TimedText10TimeCodeFormat = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("TimedText10ShowStyleAndLanguage");
                 if (subNode != null)
+                {
                     settings.SubtitleSettings.TimedText10ShowStyleAndLanguage = Convert.ToBoolean(subNode.InnerText);
+                }
+
                 subNode = node.SelectSingleNode("FcpFontSize");
                 if (subNode != null)
+                {
                     settings.SubtitleSettings.FcpFontSize = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+                }
+
                 subNode = node.SelectSingleNode("FcpFontName");
                 if (subNode != null)
+                {
                     settings.SubtitleSettings.FcpFontName = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("EbuStlTeletextUseBox");
                 if (subNode != null)
+                {
                     settings.SubtitleSettings.EbuStlTeletextUseBox = Convert.ToBoolean(subNode.InnerText);
+                }
+
                 subNode = node.SelectSingleNode("EbuStlTeletextUseDoubleHeight");
                 if (subNode != null)
+                {
                     settings.SubtitleSettings.EbuStlTeletextUseDoubleHeight = Convert.ToBoolean(subNode.InnerText);
+                }
+
                 subNode = node.SelectSingleNode("EbuStlMarginTop");
                 if (subNode != null)
+                {
                     settings.SubtitleSettings.EbuStlMarginTop = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+                }
+
                 subNode = node.SelectSingleNode("EbuStlMarginBottom");
                 if (subNode != null)
+                {
                     settings.SubtitleSettings.EbuStlMarginBottom = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+                }
+
                 subNode = node.SelectSingleNode("EbuStlNewLineRows");
                 if (subNode != null)
+                {
                     settings.SubtitleSettings.EbuStlNewLineRows = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+                }
 
                 subNode = node.SelectSingleNode("DvdStudioProHeader");
                 if (subNode != null)
+                {
                     settings.SubtitleSettings.DvdStudioProHeader = subNode.InnerText.TrimEnd() + Environment.NewLine;
+                }
 
                 subNode = node.SelectSingleNode("CheetahCaptionAlwayWriteEndTime");
                 if (subNode != null)
+                {
                     settings.SubtitleSettings.CheetahCaptionAlwayWriteEndTime = Convert.ToBoolean(subNode.InnerText);
+                }
+
                 subNode = node.SelectSingleNode("NuendoCharacterListFile");
                 if (subNode != null)
+                {
                     settings.SubtitleSettings.NuendoCharacterListFile = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("Cavena890StartOfMessage");
                 if (subNode != null)
+                {
                     settings.SubtitleSettings.Cavena890StartOfMessage = subNode.InnerText;
+                }
             }
 
             // Proxy
             node = doc.DocumentElement.SelectSingleNode("Proxy");
             subNode = node.SelectSingleNode("ProxyAddress");
             if (subNode != null)
+            {
                 settings.Proxy.ProxyAddress = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("UserName");
             if (subNode != null)
+            {
                 settings.Proxy.UserName = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("Password");
             if (subNode != null)
+            {
                 settings.Proxy.Password = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("Domain");
             if (subNode != null)
+            {
                 settings.Proxy.Domain = subNode.InnerText;
+            }
 
             // Fxp xml export settings
             node = doc.DocumentElement.SelectSingleNode("FcpExportSettings");
@@ -2504,256 +3477,495 @@ $HorzAlign          =   Center
             {
                 subNode = node.SelectSingleNode("FontName");
                 if (subNode != null)
+                {
                     settings.FcpExportSettings.FontName = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("FontSize");
                 if (subNode != null)
+                {
                     settings.FcpExportSettings.FontSize = int.Parse(subNode.InnerText, CultureInfo.InvariantCulture);
+                }
+
                 subNode = node.SelectSingleNode("Alignment");
                 if (subNode != null)
+                {
                     settings.FcpExportSettings.Alignment = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("Baseline");
                 if (subNode != null)
+                {
                     settings.FcpExportSettings.Baseline = int.Parse(subNode.InnerText, CultureInfo.InvariantCulture);
+                }
+
                 subNode = node.SelectSingleNode("Color");
                 if (subNode != null)
+                {
                     settings.FcpExportSettings.Color = Color.FromArgb(int.Parse(subNode.InnerText, CultureInfo.InvariantCulture));
+                }
             }
 
             // Word List
             node = doc.DocumentElement.SelectSingleNode("WordLists");
             subNode = node.SelectSingleNode("LastLanguage");
             if (subNode != null)
+            {
                 settings.WordLists.LastLanguage = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("Names");
             if (subNode != null)
+            {
                 settings.WordLists.NamesUrl = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("UseOnlineNames");
             if (subNode != null)
+            {
                 settings.WordLists.UseOnlineNames = Convert.ToBoolean(subNode.InnerText);
+            }
 
             // Fix Common Errors
             node = doc.DocumentElement.SelectSingleNode("CommonErrors");
             subNode = node.SelectSingleNode("StartPosition");
             if (subNode != null)
+            {
                 settings.CommonErrors.StartPosition = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("StartSize");
             if (subNode != null)
+            {
                 settings.CommonErrors.StartSize = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("EmptyLinesTicked");
             if (subNode != null)
+            {
                 settings.CommonErrors.EmptyLinesTicked = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("OverlappingDisplayTimeTicked");
             if (subNode != null)
+            {
                 settings.CommonErrors.OverlappingDisplayTimeTicked = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("TooShortDisplayTimeTicked");
             if (subNode != null)
+            {
                 settings.CommonErrors.TooShortDisplayTimeTicked = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("TooLongDisplayTimeTicked");
             if (subNode != null)
+            {
                 settings.CommonErrors.TooLongDisplayTimeTicked = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("InvalidItalicTagsTicked");
             if (subNode != null)
+            {
                 settings.CommonErrors.InvalidItalicTagsTicked = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("BreakLongLinesTicked");
             if (subNode != null)
+            {
                 settings.CommonErrors.BreakLongLinesTicked = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("MergeShortLinesTicked");
             if (subNode != null)
+            {
                 settings.CommonErrors.MergeShortLinesTicked = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("MergeShortLinesAllTicked");
             if (subNode != null)
+            {
                 settings.CommonErrors.MergeShortLinesAllTicked = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("UnneededSpacesTicked");
             if (subNode != null)
+            {
                 settings.CommonErrors.UnneededSpacesTicked = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("UnneededPeriodsTicked");
             if (subNode != null)
+            {
                 settings.CommonErrors.UnneededPeriodsTicked = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("MissingSpacesTicked");
             if (subNode != null)
+            {
                 settings.CommonErrors.MissingSpacesTicked = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("AddMissingQuotesTicked");
             if (subNode != null)
+            {
                 settings.CommonErrors.AddMissingQuotesTicked = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("Fix3PlusLinesTicked");
             if (subNode != null)
+            {
                 settings.CommonErrors.Fix3PlusLinesTicked = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("FixHyphensTicked");
             if (subNode != null)
+            {
                 settings.CommonErrors.FixHyphensTicked = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("FixHyphensAddTicked");
             if (subNode != null)
+            {
                 settings.CommonErrors.FixHyphensAddTicked = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("UppercaseIInsideLowercaseWordTicked");
             if (subNode != null)
+            {
                 settings.CommonErrors.UppercaseIInsideLowercaseWordTicked = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("DoubleApostropheToQuoteTicked");
             if (subNode != null)
+            {
                 settings.CommonErrors.DoubleApostropheToQuoteTicked = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("AddPeriodAfterParagraphTicked");
             if (subNode != null)
+            {
                 settings.CommonErrors.AddPeriodAfterParagraphTicked = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("StartWithUppercaseLetterAfterParagraphTicked");
             if (subNode != null)
+            {
                 settings.CommonErrors.StartWithUppercaseLetterAfterParagraphTicked = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("StartWithUppercaseLetterAfterPeriodInsideParagraphTicked");
             if (subNode != null)
+            {
                 settings.CommonErrors.StartWithUppercaseLetterAfterPeriodInsideParagraphTicked = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("StartWithUppercaseLetterAfterColonTicked");
             if (subNode != null)
+            {
                 settings.CommonErrors.StartWithUppercaseLetterAfterColonTicked = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("AloneLowercaseIToUppercaseIEnglishTicked");
             if (subNode != null)
+            {
                 settings.CommonErrors.AloneLowercaseIToUppercaseIEnglishTicked = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("FixOcrErrorsViaReplaceListTicked");
             if (subNode != null)
+            {
                 settings.CommonErrors.FixOcrErrorsViaReplaceListTicked = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("RemoveSpaceBetweenNumberTicked");
             if (subNode != null)
+            {
                 settings.CommonErrors.RemoveSpaceBetweenNumberTicked = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("FixDialogsOnOneLineTicked");
             if (subNode != null)
+            {
                 settings.CommonErrors.FixDialogsOnOneLineTicked = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("TurkishAnsiTicked");
             if (subNode != null)
+            {
                 settings.CommonErrors.TurkishAnsiTicked = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("DanishLetterITicked");
             if (subNode != null)
+            {
                 settings.CommonErrors.DanishLetterITicked = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("SpanishInvertedQuestionAndExclamationMarksTicked");
             if (subNode != null)
+            {
                 settings.CommonErrors.SpanishInvertedQuestionAndExclamationMarksTicked = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("FixDoubleDashTicked");
             if (subNode != null)
+            {
                 settings.CommonErrors.FixDoubleDashTicked = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("FixDoubleGreaterThanTicked");
             if (subNode != null)
+            {
                 settings.CommonErrors.FixDoubleGreaterThanTicked = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("FixEllipsesStartTicked");
             if (subNode != null)
+            {
                 settings.CommonErrors.FixEllipsesStartTicked = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("FixMissingOpenBracketTicked");
             if (subNode != null)
+            {
                 settings.CommonErrors.FixMissingOpenBracketTicked = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("FixMusicNotationTicked");
             if (subNode != null)
+            {
                 settings.CommonErrors.FixMusicNotationTicked = Convert.ToBoolean(subNode.InnerText);
+            }
 
             // Video Controls
             node = doc.DocumentElement.SelectSingleNode("VideoControls");
             subNode = node.SelectSingleNode("CustomSearchText1");
             if (subNode != null)
+            {
                 settings.VideoControls.CustomSearchText1 = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("CustomSearchText2");
             if (subNode != null)
+            {
                 settings.VideoControls.CustomSearchText2 = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("CustomSearchText3");
             if (subNode != null)
+            {
                 settings.VideoControls.CustomSearchText3 = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("CustomSearchText4");
             if (subNode != null)
+            {
                 settings.VideoControls.CustomSearchText4 = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("CustomSearchText5");
             if (subNode != null)
+            {
                 settings.VideoControls.CustomSearchText5 = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("CustomSearchUrl1");
             if (subNode != null)
+            {
                 settings.VideoControls.CustomSearchUrl1 = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("CustomSearchUrl1");
             if (subNode != null)
+            {
                 settings.VideoControls.CustomSearchUrl1 = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("CustomSearchUrl2");
             if (subNode != null)
+            {
                 settings.VideoControls.CustomSearchUrl2 = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("CustomSearchUrl3");
             if (subNode != null)
+            {
                 settings.VideoControls.CustomSearchUrl3 = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("CustomSearchUrl4");
             if (subNode != null)
+            {
                 settings.VideoControls.CustomSearchUrl4 = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("CustomSearchUrl5");
             if (subNode != null)
+            {
                 settings.VideoControls.CustomSearchUrl5 = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("LastActiveTab");
             if (subNode != null)
+            {
                 settings.VideoControls.LastActiveTab = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("WaveformDrawGrid");
             if (subNode != null)
+            {
                 settings.VideoControls.WaveformDrawGrid = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("WaveformDrawCps");
             if (subNode != null)
+            {
                 settings.VideoControls.WaveformDrawCps = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("WaveformDrawWpm");
             if (subNode != null)
+            {
                 settings.VideoControls.WaveformDrawWpm = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("WaveformAllowOverlap");
             if (subNode != null)
+            {
                 settings.VideoControls.WaveformAllowOverlap = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("WaveformFocusOnMouseEnter");
             if (subNode != null)
+            {
                 settings.VideoControls.WaveformFocusOnMouseEnter = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("WaveformListViewFocusOnMouseEnter");
             if (subNode != null)
+            {
                 settings.VideoControls.WaveformListViewFocusOnMouseEnter = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("WaveformSetVideoPositionOnMoveStartEnd");
             if (subNode != null)
+            {
                 settings.VideoControls.WaveformSetVideoPositionOnMoveStartEnd = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("WaveformBorderHitMs");
             if (subNode != null)
+            {
                 settings.VideoControls.WaveformBorderHitMs = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("WaveformGridColor");
             if (subNode != null)
+            {
                 settings.VideoControls.WaveformGridColor = Color.FromArgb(int.Parse(subNode.InnerText, CultureInfo.InvariantCulture));
+            }
+
             subNode = node.SelectSingleNode("WaveformColor");
             if (subNode != null)
+            {
                 settings.VideoControls.WaveformColor = Color.FromArgb(int.Parse(subNode.InnerText, CultureInfo.InvariantCulture));
+            }
+
             subNode = node.SelectSingleNode("WaveformSelectedColor");
             if (subNode != null)
+            {
                 settings.VideoControls.WaveformSelectedColor = Color.FromArgb(int.Parse(subNode.InnerText, CultureInfo.InvariantCulture));
+            }
+
             subNode = node.SelectSingleNode("WaveformBackgroundColor");
             if (subNode != null)
+            {
                 settings.VideoControls.WaveformBackgroundColor = Color.FromArgb(int.Parse(subNode.InnerText, CultureInfo.InvariantCulture));
+            }
+
             subNode = node.SelectSingleNode("WaveformTextColor");
             if (subNode != null)
+            {
                 settings.VideoControls.WaveformTextColor = Color.FromArgb(int.Parse(subNode.InnerText, CultureInfo.InvariantCulture));
+            }
+
             subNode = node.SelectSingleNode("WaveformTextSize");
             if (subNode != null)
+            {
                 settings.VideoControls.WaveformTextSize = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("WaveformTextBold");
             if (subNode != null)
+            {
                 settings.VideoControls.WaveformTextBold = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("WaveformDoubleClickOnNonParagraphAction");
             if (subNode != null)
+            {
                 settings.VideoControls.WaveformDoubleClickOnNonParagraphAction = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("WaveformRightClickOnNonParagraphAction");
             if (subNode != null)
+            {
                 settings.VideoControls.WaveformRightClickOnNonParagraphAction = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("WaveformMouseWheelScrollUpIsForward");
             if (subNode != null)
+            {
                 settings.VideoControls.WaveformMouseWheelScrollUpIsForward = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("GenerateSpectrogram");
             if (subNode != null)
+            {
                 settings.VideoControls.GenerateSpectrogram = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("SpectrogramAppearance");
             if (subNode != null)
+            {
                 settings.VideoControls.SpectrogramAppearance = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("WaveformMinimumSampleRate");
             if (subNode == null) // TODO: Remove in 3.5
+            {
                 subNode = node.SelectSingleNode("WaveformMininumSampleRate");
+            }
+
             if (subNode != null)
+            {
                 settings.VideoControls.WaveformMinimumSampleRate = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("WaveformSeeksSilenceDurationSeconds");
             if (subNode != null)
+            {
                 settings.VideoControls.WaveformSeeksSilenceDurationSeconds = Convert.ToDouble(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("WaveformSeeksSilenceMaxVolume");
             if (subNode != null)
+            {
                 settings.VideoControls.WaveformSeeksSilenceMaxVolume = Convert.ToDouble(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("WaveformUnwrapText");
             if (subNode != null)
+            {
                 settings.VideoControls.WaveformUnwrapText = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("WaveformHideWpmCpsLabels");
             if (subNode != null)
+            {
                 settings.VideoControls.WaveformHideWpmCpsLabels = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
 
             // Network
             node = doc.DocumentElement.SelectSingleNode("NetworkSettings");
@@ -2761,107 +3973,204 @@ $HorzAlign          =   Center
             {
                 subNode = node.SelectSingleNode("SessionKey");
                 if (subNode != null)
+                {
                     settings.NetworkSettings.SessionKey = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("UserName");
                 if (subNode != null)
+                {
                     settings.NetworkSettings.UserName = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("WebServiceUrl");
                 if (subNode != null)
+                {
                     settings.NetworkSettings.WebServiceUrl = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("PollIntervalSeconds");
                 if (subNode != null)
+                {
                     settings.NetworkSettings.PollIntervalSeconds = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+                }
+
                 subNode = node.SelectSingleNode("NewMessageSound");
                 if (subNode != null)
+                {
                     settings.NetworkSettings.NewMessageSound = subNode.InnerText;
+                }
             }
 
             // VobSub Ocr
             node = doc.DocumentElement.SelectSingleNode("VobSubOcr");
             subNode = node.SelectSingleNode("XOrMorePixelsMakesSpace");
             if (subNode != null)
+            {
                 settings.VobSubOcr.XOrMorePixelsMakesSpace = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("AllowDifferenceInPercent");
             if (subNode != null)
+            {
                 settings.VobSubOcr.AllowDifferenceInPercent = Convert.ToDouble(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("BlurayAllowDifferenceInPercent");
             if (subNode != null)
+            {
                 settings.VobSubOcr.BlurayAllowDifferenceInPercent = Convert.ToDouble(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("LastImageCompareFolder");
             if (subNode != null)
+            {
                 settings.VobSubOcr.LastImageCompareFolder = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("LastModiLanguageId");
             if (subNode != null)
+            {
                 settings.VobSubOcr.LastModiLanguageId = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("LastOcrMethod");
             if (subNode != null)
+            {
                 settings.VobSubOcr.LastOcrMethod = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("TesseractLastLanguage");
             if (subNode != null)
+            {
                 settings.VobSubOcr.TesseractLastLanguage = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("UseTesseractFallback");
             if (subNode != null)
+            {
                 settings.VobSubOcr.UseTesseractFallback = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("UseItalicsInTesseract");
             if (subNode != null)
+            {
                 settings.VobSubOcr.UseItalicsInTesseract = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("TesseractEngineMode");
             if (subNode != null)
+            {
                 settings.VobSubOcr.TesseractEngineMode = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("UseMusicSymbolsInTesseract");
             if (subNode != null)
+            {
                 settings.VobSubOcr.UseMusicSymbolsInTesseract = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("RightToLeft");
             if (subNode != null)
+            {
                 settings.VobSubOcr.RightToLeft = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("TopToBottom");
             if (subNode != null)
+            {
                 settings.VobSubOcr.TopToBottom = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("DefaultMillisecondsForUnknownDurations");
             if (subNode != null)
+            {
                 settings.VobSubOcr.DefaultMillisecondsForUnknownDurations = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("PromptForUnknownWords");
             if (subNode != null)
+            {
                 settings.VobSubOcr.PromptForUnknownWords = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("GuessUnknownWords");
             if (subNode != null)
+            {
                 settings.VobSubOcr.GuessUnknownWords = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("AutoBreakSubtitleIfMoreThanTwoLines");
             if (subNode != null)
+            {
                 settings.VobSubOcr.AutoBreakSubtitleIfMoreThanTwoLines = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("ItalicFactor");
             if (subNode != null)
+            {
                 settings.VobSubOcr.ItalicFactor = Convert.ToDouble(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("LineOcrDraw");
             if (subNode != null)
+            {
                 settings.VobSubOcr.LineOcrDraw = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("LineOcrAdvancedItalic");
             if (subNode != null)
+            {
                 settings.VobSubOcr.LineOcrAdvancedItalic = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = node.SelectSingleNode("LineOcrLastLanguages");
             if (subNode != null)
+            {
                 settings.VobSubOcr.LineOcrLastLanguages = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("LineOcrLastSpellCheck");
             if (subNode != null)
+            {
                 settings.VobSubOcr.LineOcrLastSpellCheck = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("LineOcrXOrMorePixelsMakesSpace");
             if (subNode != null)
+            {
                 settings.VobSubOcr.LineOcrXOrMorePixelsMakesSpace = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("LineOcrMinLineHeight");
             if (subNode != null)
+            {
                 settings.VobSubOcr.LineOcrMinLineHeight = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("LineOcrMaxLineHeight");
             if (subNode != null)
+            {
                 settings.VobSubOcr.LineOcrMaxLineHeight = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("LastBinaryImageCompareDb");
             if (subNode != null)
+            {
                 settings.VobSubOcr.LastBinaryImageCompareDb = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("LastBinaryImageSpellCheck");
             if (subNode != null)
+            {
                 settings.VobSubOcr.LastBinaryImageSpellCheck = subNode.InnerText;
+            }
+
             subNode = node.SelectSingleNode("LastTesseractSpellCheck");
             if (subNode != null)
+            {
                 settings.VobSubOcr.LastTesseractSpellCheck = subNode.InnerText;
+            }
 
             foreach (XmlNode groupNode in doc.DocumentElement.SelectNodes("MultipleSearchAndReplaceGroups/Group"))
             {
@@ -2869,10 +4178,16 @@ $HorzAlign          =   Center
                 group.Rules = new List<MultipleSearchAndReplaceSetting>();
                 subNode = groupNode.SelectSingleNode("Name");
                 if (subNode != null)
+                {
                     group.Name = subNode.InnerText;
+                }
+
                 subNode = groupNode.SelectSingleNode("Enabled");
                 if (subNode != null)
+                {
                     group.Enabled = Convert.ToBoolean(subNode.InnerText);
+                }
+
                 settings.MultipleSearchAndReplaceGroups.Add(group);
 
                 foreach (XmlNode listNode in groupNode.SelectNodes("Rule"))
@@ -2880,19 +4195,34 @@ $HorzAlign          =   Center
                     var item = new MultipleSearchAndReplaceSetting();
                     subNode = listNode.SelectSingleNode("Enabled");
                     if (subNode != null)
+                    {
                         item.Enabled = Convert.ToBoolean(subNode.InnerText);
+                    }
+
                     subNode = listNode.SelectSingleNode("FindWhat");
                     if (subNode != null)
+                    {
                         item.FindWhat = subNode.InnerText;
+                    }
+
                     subNode = listNode.SelectSingleNode("ReplaceWith");
                     if (subNode != null)
+                    {
                         item.ReplaceWith = subNode.InnerText;
+                    }
+
                     subNode = listNode.SelectSingleNode("SearchType");
                     if (subNode != null)
+                    {
                         item.SearchType = subNode.InnerText;
+                    }
+
                     subNode = listNode.SelectSingleNode("Description");
                     if (subNode != null)
+                    {
                         item.Description = subNode.InnerText;
+                    }
+
                     group.Rules.Add(item);
                 }
             }
@@ -2903,570 +4233,1131 @@ $HorzAlign          =   Center
             {
                 subNode = node.SelectSingleNode("GeneralGoToFirstSelectedLine");
                 if (subNode != null)
+                {
                     settings.Shortcuts.GeneralGoToFirstSelectedLine = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("GeneralGoToNextEmptyLine");
                 if (subNode != null)
+                {
                     settings.Shortcuts.GeneralGoToNextEmptyLine = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("GeneralMergeSelectedLines");
                 if (subNode != null)
+                {
                     settings.Shortcuts.GeneralMergeSelectedLines = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("GeneralMergeSelectedLinesAndUnbreak");
                 if (subNode != null)
+                {
                     settings.Shortcuts.GeneralMergeSelectedLinesAndUnbreak = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("GeneralMergeSelectedLinesAndAutoBreak");
                 if (subNode != null)
+                {
                     settings.Shortcuts.GeneralMergeSelectedLinesAndAutoBreak = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("GeneralMergeSelectedLinesAndUnbreakCjk");
                 if (subNode != null)
+                {
                     settings.Shortcuts.GeneralMergeSelectedLinesAndUnbreakCjk = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("GeneralMergeSelectedLinesOnlyFirstText");
                 if (subNode != null)
+                {
                     settings.Shortcuts.GeneralMergeSelectedLinesOnlyFirstText = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("GeneralMergeSelectedLinesBilingual");
                 if (subNode != null)
+                {
                     settings.Shortcuts.GeneralMergeSelectedLinesBilingual = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("GeneralMergeWithNext");
                 if (subNode != null)
+                {
                     settings.Shortcuts.GeneralMergeWithNext = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("GeneralMergeWithPrevious");
                 if (subNode != null)
+                {
                     settings.Shortcuts.GeneralMergeWithPrevious = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("GeneralToggleTranslationMode");
                 if (subNode != null)
+                {
                     settings.Shortcuts.GeneralToggleTranslationMode = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("GeneralSwitchOriginalAndTranslation");
                 if (subNode != null)
+                {
                     settings.Shortcuts.GeneralSwitchOriginalAndTranslation = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("GeneralMergeOriginalAndTranslation");
                 if (subNode != null)
+                {
                     settings.Shortcuts.GeneralMergeOriginalAndTranslation = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("GeneralGoToNextSubtitle");
                 if (subNode != null)
+                {
                     settings.Shortcuts.GeneralGoToNextSubtitle = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("GeneralGoToPrevSubtitle");
                 if (subNode != null)
+                {
                     settings.Shortcuts.GeneralGoToPrevSubtitle = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("GeneralGoToEndOfCurrentSubtitle");
                 if (subNode != null)
+                {
                     settings.Shortcuts.GeneralGoToEndOfCurrentSubtitle = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("GeneralGoToStartOfCurrentSubtitle");
                 if (subNode != null)
+                {
                     settings.Shortcuts.GeneralGoToStartOfCurrentSubtitle = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("GeneralGoToNextSubtitleAndFocusVideo");
                 if (subNode != null)
+                {
                     settings.Shortcuts.GeneralGoToNextSubtitleAndFocusVideo = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("GeneralGoToPreviousSubtitleAndFocusVideo");
                 if (subNode != null)
+                {
                     settings.Shortcuts.GeneralGoToPreviousSubtitleAndFocusVideo = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("GeneralExtendCurrentSubtitle");
                 if (subNode != null)
+                {
                     settings.Shortcuts.GeneralExtendCurrentSubtitle = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("GeneralAutoCalcCurrentDuration");
                 if (subNode != null)
+                {
                     settings.Shortcuts.GeneralAutoCalcCurrentDuration = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("GeneralPlayFirstSelected");
                 if (subNode != null)
+                {
                     settings.Shortcuts.GeneralPlayFirstSelected = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("GeneralHelp");
                 if (subNode != null)
+                {
                     settings.Shortcuts.GeneralHelp = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("GeneralUnbrekNoSpace");
                 if (subNode != null)
+                {
                     settings.Shortcuts.GeneralUnbrekNoSpace = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("GeneralToggleBookmarks");
                 if (subNode != null)
+                {
                     settings.Shortcuts.GeneralToggleBookmarks = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("GeneralToggleBookmarksWithText");
                 if (subNode != null)
+                {
                     settings.Shortcuts.GeneralToggleBookmarksWithText = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("GeneralClearBookmarks");
                 if (subNode != null)
+                {
                     settings.Shortcuts.GeneralClearBookmarks = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("GeneralGoToBookmark");
                 if (subNode != null)
+                {
                     settings.Shortcuts.GeneralGoToBookmark = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("GeneralGoToPreviousBookmark");
                 if (subNode != null)
+                {
                     settings.Shortcuts.GeneralGoToPreviousBookmark = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("GeneralGoToNextBookmark");
                 if (subNode != null)
+                {
                     settings.Shortcuts.GeneralGoToNextBookmark = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainFileNew");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainFileNew = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainFileOpen");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainFileOpen = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainFileOpenKeepVideo");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainFileOpenKeepVideo = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainFileSave");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainFileSave = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainFileSaveOriginal");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainFileSaveOriginal = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainFileSaveOriginalAs");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainFileSaveOriginalAs = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainFileSaveAs");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainFileSaveAs = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainFileSaveAll");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainFileSaveAll = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainFileCloseOriginal");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainFileCloseOriginal = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainFileOpenOriginal");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainFileOpenOriginal = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainFileImportPlainText");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainFileImportPlainText = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainFileImportTimeCodes");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainFileImportTimeCodes = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainFileExportEbu");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainFileExportEbu = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainFileExportPlainText");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainFileExportPlainText = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainEditUndo");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainEditUndo = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainEditRedo");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainEditRedo = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainEditFind");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainEditFind = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainEditFindNext");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainEditFindNext = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainEditReplace");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainEditReplace = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainEditMultipleReplace");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainEditMultipleReplace = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainEditGoToLineNumber");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainEditGoToLineNumber = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainEditRightToLeft");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainEditRightToLeft = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainToolsFixCommonErrors");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainToolsFixCommonErrors = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainToolsFixCommonErrorsPreview");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainToolsFixCommonErrorsPreview = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainToolsMergeShortLines");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainToolsMergeShortLines = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainToolsMakeEmptyFromCurrent");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainToolsMakeEmptyFromCurrent = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainToolsSplitLongLines");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainToolsSplitLongLines = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainToolsDurationsBridgeGap");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainToolsDurationsBridgeGap = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainToolsMinimumDisplayTimeBetweenParagraphs");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainToolsMinimumDisplayTimeBetweenParagraphs = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainToolsRenumber");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainToolsRenumber = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainToolsRemoveTextForHI");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainToolsRemoveTextForHI = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainToolsChangeCasing");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainToolsChangeCasing = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainToolsAutoDuration");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainToolsAutoDuration = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainToolsBatchConvert");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainToolsBatchConvert = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainToolsBeamer");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainToolsBeamer = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainToolsToggleTranslationOriginalInPreviews");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainEditToggleTranslationOriginalInPreviews = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainEditInverseSelection");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainEditInverseSelection = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainEditModifySelection");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainEditModifySelection = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainVideoOpen");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainVideoOpen = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainVideoClose");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainVideoClose = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainVideoPause");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainVideoPause = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainVideoPlayFromJustBefore");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainVideoPlayFromJustBefore = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainVideoPlayPauseToggle");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainVideoPlayPauseToggle = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainVideoShowHideVideo");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainVideoShowHideVideo = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainVideoToggleVideoControls");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainVideoToggleVideoControls = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainVideo1FrameLeft");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainVideo1FrameLeft = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainVideo1FrameRight");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainVideo1FrameRight = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainVideo1FrameLeftWithPlay");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainVideo1FrameLeftWithPlay = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainVideo1FrameRightWithPlay");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainVideo1FrameRightWithPlay = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainVideo100MsLeft");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainVideo100MsLeft = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainVideo100MsRight");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainVideo100MsRight = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainVideo500MsLeft");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainVideo500MsLeft = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainVideo500MsRight");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainVideo500MsRight = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainVideo1000MsLeft");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainVideo1000MsLeft = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainVideo1000MsRight");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainVideo1000MsRight = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainVideo5000MsLeft");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainVideo5000MsLeft = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainVideo5000MsRight");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainVideo5000MsRight = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainVideoGoToPrevSubtitle");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainVideoGoToPrevSubtitle = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainVideoGoToNextSubtitle");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainVideoGoToNextSubtitle = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainVideoFullscreen");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainVideoFullscreen = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainVideoSlower");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainVideoSlower = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainVideoFaster");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainVideoFaster = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainSpellCheck");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainSpellCheck = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainSpellCheckFindDoubleWords");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainSpellCheckFindDoubleWords = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainSpellCheckAddWordToNames");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainSpellCheckAddWordToNames = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainSynchronizationAdjustTimes");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainSynchronizationAdjustTimes = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainSynchronizationVisualSync");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainSynchronizationVisualSync = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainSynchronizationPointSync");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainSynchronizationPointSync = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainSynchronizationPointSyncViaFile");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainSynchronizationPointSyncViaFile = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainSynchronizationChangeFrameRate");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainSynchronizationChangeFrameRate = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainListViewItalic");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainListViewItalic = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainListViewBold");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainListViewBold = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainListViewUnderline");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainListViewUnderline = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainListViewToggleDashes");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainListViewToggleDashes = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainListViewToggleMusicSymbols");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainListViewToggleMusicSymbols = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainListViewAlignment");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainListViewAlignment = subNode.InnerText;
+                }
 
                 subNode = node.SelectSingleNode("MainListViewAlignmentN1");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainListViewAlignmentN1 = subNode.InnerText;
+                }
 
                 subNode = node.SelectSingleNode("MainListViewAlignmentN1");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainListViewAlignmentN1 = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainListViewAlignmentN2");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainListViewAlignmentN2 = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainListViewAlignmentN3");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainListViewAlignmentN3 = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainListViewAlignmentN4");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainListViewAlignmentN4 = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainListViewAlignmentN5");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainListViewAlignmentN5 = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainListViewAlignmentN6");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainListViewAlignmentN6 = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainListViewAlignmentN7");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainListViewAlignmentN7 = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainListViewAlignmentN8");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainListViewAlignmentN8 = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainListViewAlignmentN9");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainListViewAlignmentN9 = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainRemoveFormatting");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainRemoveFormatting = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainListViewCopyText");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainListViewCopyText = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainListViewCopyTextFromOriginalToCurrent");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainListViewCopyTextFromOriginalToCurrent = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainListViewAutoDuration");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainListViewAutoDuration = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainListViewColumnDeleteText");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainListViewColumnDeleteText = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainListViewColumnDeleteTextAndShiftUp");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainListViewColumnDeleteTextAndShiftUp = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainListViewColumnInsertText");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainListViewColumnInsertText = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainListViewColumnPaste");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainListViewColumnPaste = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainListViewColumnTextUp");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainListViewColumnTextUp = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainListViewColumnTextDown");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainListViewColumnTextDown = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainListViewFocusWaveform");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainListViewFocusWaveform = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainListViewGoToNextError");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainListViewGoToNextError = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainEditReverseStartAndEndingForRTL");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainEditReverseStartAndEndingForRTL = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainTextBoxItalic");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainTextBoxItalic = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainTextBoxSplitAtCursor");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainTextBoxSplitAtCursor = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainTextBoxSplitAtCursorAndVideoPos");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainTextBoxSplitAtCursorAndVideoPos = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainTextBoxSplitSelectedLineBilingual");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainTextBoxSplitSelectedLineBilingual = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainTextBoxMoveLastWordDown");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainTextBoxMoveLastWordDown = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainTextBoxMoveFirstWordFromNextUp");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainTextBoxMoveFirstWordFromNextUp = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainTextBoxMoveLastWordDownCurrent");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainTextBoxMoveLastWordDownCurrent = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainTextBoxMoveFirstWordUpCurrent");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainTextBoxMoveFirstWordUpCurrent = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainTextBoxSelectionToLower");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainTextBoxSelectionToLower = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainTextBoxSelectionToUpper");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainTextBoxSelectionToUpper = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainTextBoxToggleAutoDuration");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainTextBoxToggleAutoDuration = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainCreateInsertSubAtVideoPos");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainCreateInsertSubAtVideoPos = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainCreateSetStart");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainCreateSetStart = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainCreateSetEnd");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainCreateSetEnd = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainCreateSetEndAddNewAndGoToNew");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainCreateSetEndAddNewAndGoToNew = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainCreateStartDownEndUp");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainCreateStartDownEndUp = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainAdjustSetStartAndOffsetTheRest");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainAdjustSetStartAndOffsetTheRest = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainAdjustSetEndAndOffsetTheRest");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainAdjustSetEndAndOffsetTheRest = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainAdjustSetEndAndOffsetTheRestAndGoToNext");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainAdjustSetEndAndOffsetTheRestAndGoToNext = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainAdjustSetEndAndGotoNext");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainAdjustSetEndAndGotoNext = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainAdjustViaEndAutoStart");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainAdjustViaEndAutoStart = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainAdjustViaEndAutoStartAndGoToNext");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainAdjustViaEndAutoStartAndGoToNext = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainAdjustSetStartAutoDurationAndGoToNext");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainAdjustSetStartAutoDurationAndGoToNext = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainAdjustSetEndNextStartAndGoToNext");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainAdjustSetEndNextStartAndGoToNext = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainAdjustStartDownEndUpAndGoToNext");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainAdjustStartDownEndUpAndGoToNext = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainAdjustSetStartKeepDuration");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainAdjustSetStartKeepDuration = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainAdjustSelected100MsForward");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainAdjustSelected100MsForward = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainAdjustSelected100MsBack");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainAdjustSelected100MsBack = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainAdjustStartXMsBack");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainAdjustStartXMsBack = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainAdjustStartXMsForward");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainAdjustStartXMsForward = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainAdjustEndXMsBack");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainAdjustEndXMsBack = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainAdjustEndXMsForward");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainAdjustEndXMsForward = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainInsertAfter");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainInsertAfter = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainTextBoxAutoBreak");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainTextBoxAutoBreak = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainTextBoxUnbreak");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainTextBoxUnbreak = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainWaveformInsertAtCurrentPosition");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainWaveformInsertAtCurrentPosition = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainInsertBefore");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainInsertBefore = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainMergeDialog");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainMergeDialog = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainToggleFocus");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainToggleFocus = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("WaveformVerticalZoom");
                 if (subNode != null)
+                {
                     settings.Shortcuts.WaveformVerticalZoom = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("WaveformVerticalZoomOut");
                 if (subNode != null)
+                {
                     settings.Shortcuts.WaveformVerticalZoomOut = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("WaveformZoomIn");
                 if (subNode != null)
+                {
                     settings.Shortcuts.WaveformZoomIn = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("WaveformZoomOut");
                 if (subNode != null)
+                {
                     settings.Shortcuts.WaveformZoomOut = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("WaveformSplit");
                 if (subNode != null)
+                {
                     settings.Shortcuts.WaveformSplit = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("WaveformPlaySelection");
                 if (subNode != null)
+                {
                     settings.Shortcuts.WaveformPlaySelection = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("WaveformPlaySelectionEnd");
                 if (subNode != null)
+                {
                     settings.Shortcuts.WaveformPlaySelectionEnd = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("WaveformSearchSilenceForward");
                 if (subNode != null)
+                {
                     settings.Shortcuts.WaveformSearchSilenceForward = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("WaveformSearchSilenceBack");
                 if (subNode != null)
+                {
                     settings.Shortcuts.WaveformSearchSilenceBack = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("WaveformAddTextHere");
                 if (subNode != null)
+                {
                     settings.Shortcuts.WaveformAddTextHere = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("WaveformAddTextHereFromClipboard");
                 if (subNode != null)
+                {
                     settings.Shortcuts.WaveformAddTextHereFromClipboard = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("WaveformFocusListView");
                 if (subNode != null)
+                {
                     settings.Shortcuts.WaveformFocusListView = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("WaveformGoToPreviousSceneChange");
                 if (subNode != null)
+                {
                     settings.Shortcuts.WaveformGoToPreviousSceneChange = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("WaveformGoToNextSceneChange");
                 if (subNode != null)
+                {
                     settings.Shortcuts.WaveformGoToNextSceneChange = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("WaveformToggleSceneChange");
                 if (subNode != null)
+                {
                     settings.Shortcuts.WaveformToggleSceneChange = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainTranslateCustomSearch1");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainTranslateCustomSearch1 = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainTranslateCustomSearch2");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainTranslateCustomSearch2 = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainTranslateCustomSearch3");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainTranslateCustomSearch3 = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainTranslateCustomSearch4");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainTranslateCustomSearch4 = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainTranslateCustomSearch5");
                 if (subNode != null)
+                {
                     settings.Shortcuts.MainTranslateCustomSearch5 = subNode.InnerText;
+                }
             }
 
             // Remove text for Hearing Impaired
@@ -3475,52 +5366,99 @@ $HorzAlign          =   Center
             {
                 subNode = node.SelectSingleNode("RemoveTextBetweenBrackets");
                 if (subNode != null)
+                {
                     settings.RemoveTextForHearingImpaired.RemoveTextBetweenBrackets = Convert.ToBoolean(subNode.InnerText);
+                }
+
                 subNode = node.SelectSingleNode("RemoveTextBetweenParentheses");
                 if (subNode != null)
+                {
                     settings.RemoveTextForHearingImpaired.RemoveTextBetweenParentheses = Convert.ToBoolean(subNode.InnerText);
+                }
+
                 subNode = node.SelectSingleNode("RemoveTextBetweenCurlyBrackets");
                 if (subNode != null)
+                {
                     settings.RemoveTextForHearingImpaired.RemoveTextBetweenCurlyBrackets = Convert.ToBoolean(subNode.InnerText);
+                }
+
                 subNode = node.SelectSingleNode("RemoveTextBetweenQuestionMarks");
                 if (subNode != null)
+                {
                     settings.RemoveTextForHearingImpaired.RemoveTextBetweenQuestionMarks = Convert.ToBoolean(subNode.InnerText);
+                }
+
                 subNode = node.SelectSingleNode("RemoveTextBetweenCustom");
                 if (subNode != null)
+                {
                     settings.RemoveTextForHearingImpaired.RemoveTextBetweenCustom = Convert.ToBoolean(subNode.InnerText);
+                }
+
                 subNode = node.SelectSingleNode("RemoveTextBetweenCustomBefore");
                 if (subNode != null)
+                {
                     settings.RemoveTextForHearingImpaired.RemoveTextBetweenCustomBefore = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("RemoveTextBetweenCustomAfter");
                 if (subNode != null)
+                {
                     settings.RemoveTextForHearingImpaired.RemoveTextBetweenCustomAfter = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("RemoveTextBetweenOnlySeperateLines");
                 if (subNode != null)
+                {
                     settings.RemoveTextForHearingImpaired.RemoveTextBetweenOnlySeperateLines = Convert.ToBoolean(subNode.InnerText);
+                }
+
                 subNode = node.SelectSingleNode("RemoveTextBeforeColon");
                 if (subNode != null)
+                {
                     settings.RemoveTextForHearingImpaired.RemoveTextBeforeColon = Convert.ToBoolean(subNode.InnerText);
+                }
+
                 subNode = node.SelectSingleNode("RemoveTextBeforeColonOnlyIfUppercase");
                 if (subNode != null)
+                {
                     settings.RemoveTextForHearingImpaired.RemoveTextBeforeColonOnlyIfUppercase = Convert.ToBoolean(subNode.InnerText);
+                }
+
                 subNode = node.SelectSingleNode("RemoveTextBeforeColonOnlyOnSeparateLine");
                 if (subNode != null)
+                {
                     settings.RemoveTextForHearingImpaired.RemoveTextBeforeColonOnlyOnSeparateLine = Convert.ToBoolean(subNode.InnerText);
+                }
+
                 subNode = node.SelectSingleNode("RemoveIfAllUppercase");
                 if (subNode != null)
+                {
                     settings.RemoveTextForHearingImpaired.RemoveIfAllUppercase = Convert.ToBoolean(subNode.InnerText);
+                }
+
                 subNode = node.SelectSingleNode("RemoveInterjections");
                 if (subNode != null)
+                {
                     settings.RemoveTextForHearingImpaired.RemoveInterjections = Convert.ToBoolean(subNode.InnerText);
+                }
+
                 subNode = node.SelectSingleNode("RemoveInterjectionsOnlyOnSeparateLine");
                 if (subNode != null)
+                {
                     settings.RemoveTextForHearingImpaired.RemoveInterjectionsOnlyOnSeparateLine = Convert.ToBoolean(subNode.InnerText);
+                }
+
                 subNode = node.SelectSingleNode("RemoveIfContains");
                 if (subNode != null)
+                {
                     settings.RemoveTextForHearingImpaired.RemoveIfContains = Convert.ToBoolean(subNode.InnerText);
+                }
+
                 subNode = node.SelectSingleNode("RemoveIfContainsText");
                 if (subNode != null)
+                {
                     settings.RemoveTextForHearingImpaired.RemoveIfContainsText = subNode.InnerText;
+                }
             }
 
             // Subtitle Beaming
@@ -3529,19 +5467,33 @@ $HorzAlign          =   Center
             {
                 subNode = node.SelectSingleNode("FontName");
                 if (subNode != null)
+                {
                     settings.SubtitleBeaming.FontName = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("FontColor");
                 if (subNode != null)
+                {
                     settings.SubtitleBeaming.FontColor = Color.FromArgb(Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture));
+                }
+
                 subNode = node.SelectSingleNode("FontSize");
                 if (subNode != null)
+                {
                     settings.SubtitleBeaming.FontSize = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+                }
+
                 subNode = node.SelectSingleNode("BorderColor");
                 if (subNode != null)
+                {
                     settings.SubtitleBeaming.BorderColor = Color.FromArgb(Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture));
+                }
+
                 subNode = node.SelectSingleNode("BorderWidth");
                 if (subNode != null)
+                {
                     settings.SubtitleBeaming.BorderWidth = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+                }
             }
 
             return settings;
@@ -3570,13 +5522,22 @@ $HorzAlign          =   Center
                 {
                     textWriter.WriteStartElement("FileName");
                     if (item.OriginalFileName != null)
+                    {
                         textWriter.WriteAttributeString("OriginalFileName", item.OriginalFileName);
+                    }
+
                     if (item.VideoFileName != null)
+                    {
                         textWriter.WriteAttributeString("VideoFileName", item.VideoFileName);
+                    }
+
                     textWriter.WriteAttributeString("FirstVisibleIndex", item.FirstVisibleIndex.ToString(CultureInfo.InvariantCulture));
                     textWriter.WriteAttributeString("FirstSelectedIndex", item.FirstSelectedIndex.ToString(CultureInfo.InvariantCulture));
                     if (item.VideoOffsetInMs > 0)
+                    {
                         textWriter.WriteAttributeString("VideoOffset", item.VideoOffsetInMs.ToString(CultureInfo.InvariantCulture));
+                    }
+
                     textWriter.WriteString(item.FileName);
                     textWriter.WriteEndElement();
                 }
@@ -3872,7 +5833,10 @@ $HorzAlign          =   Center
                     textWriter.WriteStartElement("FindHistory", string.Empty);
                     int maxIndex = settings.Tools.FindHistory.Count;
                     if (maxIndex > maximumFindHistoryItems)
+                    {
                         maxIndex = maximumFindHistoryItems;
+                    }
+
                     for (int index = 0; index < maxIndex; index++)
                     {
                         var text = settings.Tools.FindHistory[index];

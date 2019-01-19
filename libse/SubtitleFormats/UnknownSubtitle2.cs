@@ -56,7 +56,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 ReadLine(subtitle, line);
             }
             if (!string.IsNullOrWhiteSpace(_paragraph.Text))
+            {
                 subtitle.Paragraphs.Add(_paragraph);
+            }
 
             subtitle.Renumber();
         }
@@ -119,9 +121,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 int startMilliseconds = int.Parse(parts[3]);
 
                 if (start)
+                {
                     paragraph.StartTime = new TimeCode(startHours, startMinutes, startSeconds, startMilliseconds);
+                }
                 else
+                {
                     paragraph.EndTime = new TimeCode(startHours, startMinutes, startSeconds, startMilliseconds);
+                }
+
                 return true;
             }
             catch

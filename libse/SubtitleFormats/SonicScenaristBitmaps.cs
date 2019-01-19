@@ -17,7 +17,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             var extension = System.IO.Path.GetExtension(fileName);
             if (extension != null && extension.ToLowerInvariant() != ".sst")
+            {
                 return false;
+            }
 
             return base.IsMine(lines, fileName);
         }
@@ -64,7 +66,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     {
                         sb.Clear();
                         for (int i = 3; i < parts.Length; i++)
+                        {
                             sb.Append(parts[i] + " ");
+                        }
+
                         string text = sb.ToString().Trim();
                         p = new Paragraph(DecodeTimeCodeFramesFourParts(parts[1].Split(SplitCharColon)), DecodeTimeCodeFramesFourParts(parts[2].Split(SplitCharColon)), text);
                         subtitle.Paragraphs.Add(p);

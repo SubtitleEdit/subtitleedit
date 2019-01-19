@@ -63,7 +63,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     sb.AppendLine(line);
                     if (sb.Length > 5000)
+                    {
                         return;
+                    }
                 }
                 else
                 {

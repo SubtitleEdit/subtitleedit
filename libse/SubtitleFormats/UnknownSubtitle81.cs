@@ -146,7 +146,10 @@ WB,GDMX,1:33,4x3
                 }
             }
             if (italicOn)
+            {
                 sb.Append("</i>");
+            }
+
             return sb.ToString().Replace("@+", string.Empty).Replace("@/", string.Empty).Replace("@|", string.Empty).Replace(" </i>", "</i> ");
         }
 

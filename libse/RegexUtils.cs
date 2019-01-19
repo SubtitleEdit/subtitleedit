@@ -200,11 +200,17 @@ namespace Nikse.SubtitleEdit.Core
         {
             var start = pattern.IndexOf("(?<", StringComparison.Ordinal);
             if (start < 0)
+            {
                 return null;
+            }
+
             start += 3;
             var end = pattern.IndexOf('>', start);
             if (end <= start)
+            {
                 return null;
+            }
+
             return pattern.Substring(start, end - start);
         }
 
@@ -215,7 +221,9 @@ namespace Nikse.SubtitleEdit.Core
         public static string FixNewLine(string pattern)
         {
             if (string.IsNullOrEmpty(pattern))
+            {
                 return pattern;
+            }
 
             return pattern.Replace("\\r\\n", Environment.NewLine).Replace("\\n", Environment.NewLine);
         }

@@ -21,7 +21,9 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
             while (fs.Position < max)
             {
                 if (!InitializeSizeAndName(fs))
+                {
                     return;
+                }
 
                 if (Name == "payl")
                 {

@@ -84,7 +84,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             string xmlString = sb.ToString();
             if (!xmlString.Contains("<captionate>") || !xmlString.Contains("</caption>"))
+            {
                 return;
+            }
 
             var xml = new XmlDocument { XmlResolver = null };
             try
@@ -107,7 +109,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         string start = node.Attributes["time"].InnerText;
                         double startMilliseconds = double.Parse(start);
                         if (p != null)
+                        {
                             p.EndTime.TotalMilliseconds = startMilliseconds - 1;
+                        }
+
                         if (node.SelectSingleNode("tracks/track0") != null)
                         {
                             string text = node.SelectSingleNode("tracks/track0").InnerText;
@@ -115,7 +120,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             text = text.Replace("<br>", Environment.NewLine).Replace("<br />", Environment.NewLine).Replace("<BR>", Environment.NewLine);
                             p = new Paragraph(text, startMilliseconds, startMilliseconds + 3000);
                             if (!string.IsNullOrWhiteSpace(text))
+                            {
                                 subtitle.Paragraphs.Add(p);
+                            }
                         }
                     }
                 }

@@ -170,7 +170,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 doc.LoadXml(sb.ToString());
                 if (doc.DocumentElement == null || doc.DocumentElement.Name != "xmldict" || doc.DocumentElement.SelectSingleNode("string") == null)
+                {
                     return;
+                }
             }
             catch (Exception)
             {
@@ -193,7 +195,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
             }
             if (text == null)
+            {
                 return;
+            }
 
             subtitle.Paragraphs.Clear();
             Paragraph paragraph = null;
@@ -249,13 +253,25 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             s = HtmlUtil.RemoveOpenCloseTags(s, HtmlUtil.TagBold, HtmlUtil.TagUnderline, HtmlUtil.TagFont);
             if (s.StartsWith("{\\an3}", StringComparison.Ordinal) || s.StartsWith("{\\an6}", StringComparison.Ordinal))
+            {
                 s = "/STYLE RIGHT" + Environment.NewLine + s.Remove(0, 6).Trim();
+            }
+
             if (s.StartsWith("{\\an1}", StringComparison.Ordinal) || s.StartsWith("{\\an4}", StringComparison.Ordinal))
+            {
                 s = "/STYLE LEFT" + Environment.NewLine + s.Remove(0, 6).Trim();
+            }
+
             if (s.StartsWith("{\\an7}", StringComparison.Ordinal) || s.StartsWith("{\\an8}", StringComparison.Ordinal) || s.StartsWith("{\\an9}", StringComparison.Ordinal))
+            {
                 s = "/STYLE VERTICAL(-25)" + Environment.NewLine + s.Remove(0, 6).Trim();
+            }
+
             if (s.StartsWith("{\\an2}", StringComparison.Ordinal) || s.StartsWith("{\\an5}", StringComparison.Ordinal))
+            {
                 s = s.Remove(0, 6).Trim();
+            }
+
             return s;
         }
 
@@ -264,43 +280,100 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var s = sb.ToString().Trim();
             s = s.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine).Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
             if (s.StartsWith("/STYLE RIGHT" + Environment.NewLine, StringComparison.Ordinal))
+            {
                 s = "{\\an3}" + s.Remove(0, 12).Trim();
+            }
+
             if (s.StartsWith("/STYLE LEFT" + Environment.NewLine, StringComparison.Ordinal))
+            {
                 s = "{\\an1}" + s.Remove(0, 11).Trim();
+            }
+
             if (s.StartsWith("/STYLE TOP" + Environment.NewLine, StringComparison.Ordinal))
+            {
                 s = "{\\an8}" + s.Remove(0, 10).Trim();
+            }
+
             if (s.StartsWith("/STYLE VERTICAL(-25)" + Environment.NewLine, StringComparison.Ordinal))
+            {
                 s = "{\\an8}" + s.Remove(0, 20).Trim();
+            }
+
             if (s.StartsWith("/STYLE VERTICAL(-24)" + Environment.NewLine, StringComparison.Ordinal))
+            {
                 s = "{\\an8}" + s.Remove(0, 20).Trim();
+            }
+
             if (s.StartsWith("/STYLE VERTICAL(-23)" + Environment.NewLine, StringComparison.Ordinal))
+            {
                 s = "{\\an8}" + s.Remove(0, 20).Trim();
+            }
+
             if (s.StartsWith("/STYLE VERTICAL(-22)" + Environment.NewLine, StringComparison.Ordinal))
+            {
                 s = "{\\an8}" + s.Remove(0, 20).Trim();
+            }
+
             if (s.StartsWith("/STYLE VERTICAL(-21)" + Environment.NewLine, StringComparison.Ordinal))
+            {
                 s = "{\\an8}" + s.Remove(0, 20).Trim();
+            }
+
             if (s.StartsWith("/STYLE VERTICAL(-20)" + Environment.NewLine, StringComparison.Ordinal))
+            {
                 s = "{\\an8}" + s.Remove(0, 20).Trim();
+            }
+
             if (s.StartsWith("/STYLE VERTICAL(-19)" + Environment.NewLine, StringComparison.Ordinal))
+            {
                 s = "{\\an8}" + s.Remove(0, 20).Trim();
+            }
+
             if (s.StartsWith("/STYLE VERTICAL(-18)" + Environment.NewLine, StringComparison.Ordinal))
+            {
                 s = "{\\an5}" + s.Remove(0, 20).Trim();
+            }
+
             if (s.StartsWith("/STYLE VERTICAL(-17)" + Environment.NewLine, StringComparison.Ordinal))
+            {
                 s = "{\\an5}" + s.Remove(0, 20).Trim();
+            }
+
             if (s.StartsWith("/STYLE VERTICAL(-16)" + Environment.NewLine, StringComparison.Ordinal))
+            {
                 s = "{\\an5}" + s.Remove(0, 20).Trim();
+            }
+
             if (s.StartsWith("/STYLE VERTICAL(-15)" + Environment.NewLine, StringComparison.Ordinal))
+            {
                 s = "{\\an5}" + s.Remove(0, 20).Trim();
+            }
+
             if (s.StartsWith("/STYLE VERTICAL(-14)" + Environment.NewLine, StringComparison.Ordinal))
+            {
                 s = "{\\an5}" + s.Remove(0, 20).Trim();
+            }
+
             if (s.StartsWith("/STYLE VERTICAL(-13)" + Environment.NewLine, StringComparison.Ordinal))
+            {
                 s = "{\\an5}" + s.Remove(0, 20).Trim();
+            }
+
             if (s.StartsWith("/STYLE VERTICAL(-12)" + Environment.NewLine, StringComparison.Ordinal))
+            {
                 s = "{\\an5}" + s.Remove(0, 20).Trim();
+            }
+
             if (s.StartsWith("/STYLE VERTICAL(-11)" + Environment.NewLine, StringComparison.Ordinal))
+            {
                 s = "{\\an5}" + s.Remove(0, 20).Trim();
+            }
+
             if (s.StartsWith("/STYLE VERTICAL(-10)" + Environment.NewLine, StringComparison.Ordinal))
+            {
                 s = "{\\an5}" + s.Remove(0, 20).Trim();
+            }
+
             s = HtmlUtil.FixInvalidItalicTags(s);
             return s;
         }
