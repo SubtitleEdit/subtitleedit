@@ -51,7 +51,10 @@ namespace Nikse.SubtitleEdit.Forms
         private void FixLargeFonts()
         {
             if (labelNote.Right + 5 > Width)
+            {
                 Width = labelNote.Right + 5;
+            }
+
             UiUtil.FixLargeFonts(this, buttonOK);
         }
 
@@ -102,13 +105,17 @@ namespace Nikse.SubtitleEdit.Forms
         public bool AllowFix(Paragraph p)
         {
             if (_onlyListFixes)
+            {
                 return true;
+            }
 
             string ln = p.Number.ToString();
             foreach (ListViewItem item in listViewFixes.Items)
             {
                 if (item.SubItems[1].Text == ln)
+                {
                     return item.Checked;
+                }
             }
             return false;
         }
@@ -179,7 +186,9 @@ namespace Nikse.SubtitleEdit.Forms
         private void ApplyDurationLimits_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)
+            {
                 DialogResult = DialogResult.Cancel;
+            }
         }
 
         private void numericUpDownDurationMin_ValueChanged(object sender, EventArgs e)

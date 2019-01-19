@@ -1,6 +1,6 @@
 ﻿namespace Nikse.SubtitleEdit.Forms
 {
-    partial class ChooseStyle
+    sealed partial class ChooseStyle
     {
         /// <summary>
         /// Required designer variable.

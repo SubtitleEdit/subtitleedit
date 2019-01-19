@@ -41,7 +41,9 @@ namespace Nikse.SubtitleEdit.Forms
 
                 int length = (int)file.Length;
                 if (length > 100000)
+                {
                     length = 100000;
+                }
 
                 file.Position = 0;
                 _fileBuffer = new byte[length];
@@ -55,14 +57,18 @@ namespace Nikse.SubtitleEdit.Forms
 
             var encoding = LanguageAutoDetect.DetectAnsiEncoding(_fileBuffer);
             if (_fileBuffer.Length > 10 && _fileBuffer[0] == 0xef && _fileBuffer[1] == 0xbb && _fileBuffer[2] == 0xbf)
+            {
                 encoding = Encoding.UTF8;
+            }
 
             foreach (var enc in Configuration.AvailableEncodings)
             {
                 var item = new ListViewItem(new[] { enc.CodePage.ToString(), enc.WebName, enc.EncodingName });
                 listView1.Items.Add(item);
                 if (enc.CodePage == encoding.CodePage)
+                {
                     item.Selected = true;
+                }
             }
 
             listView1.ListViewItemSorter = new ListViewSorter { ColumnNumber = 0, IsNumber = true };
@@ -71,7 +77,9 @@ namespace Nikse.SubtitleEdit.Forms
         private void FormChooseEncoding_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)
+            {
                 DialogResult = DialogResult.Cancel;
+            }
         }
 
         internal Encoding GetEncoding()
@@ -82,7 +90,9 @@ namespace Nikse.SubtitleEdit.Forms
         private void ButtonOkClick(object sender, EventArgs e)
         {
             if (listView1.SelectedItems.Count == 0)
+            {
                 MessageBox.Show(Configuration.Settings.Language.ChooseEncoding.PleaseSelectAnEncoding);
+            }
             else
             {
                 _encoding = Encoding.GetEncoding(int.Parse(listView1.SelectedItems[0].Text));
@@ -108,7 +118,9 @@ namespace Nikse.SubtitleEdit.Forms
         private void ChooseEncoding_Load(object sender, EventArgs e)
         {
             if (listView1.SelectedItems.Count >= 1)
+            {
                 listView1.EnsureVisible(listView1.SelectedItems[0].Index);
+            }
         }
 
         private void listView1_ColumnClick(object sender, ColumnClickEventArgs e)

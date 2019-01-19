@@ -1,7 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Logic;
 using System;
-using System.Drawing;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
@@ -37,7 +36,9 @@ namespace Nikse.SubtitleEdit.Forms
         private void FormChangeFrameRate_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)
+            {
                 DialogResult = DialogResult.Cancel;
+            }
         }
 
         public void Initialize(string fromFrameRate)
@@ -53,7 +54,7 @@ namespace Nikse.SubtitleEdit.Forms
             openFileDialog1.FileName = string.Empty;
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                VideoInfo info = UiUtil.GetVideoInfo(openFileDialog1.FileName);
+                var info = UiUtil.GetVideoInfo(openFileDialog1.FileName);
                 if (info != null && info.Success)
                 {
                     return info.FramesPerSecond.ToString();
@@ -91,21 +92,8 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        public double OldFrameRate
-        {
-            get
-            {
-                return double.Parse(comboBoxFrameRateFrom.Text);
-            }
-        }
+        public double OldFrameRate => double.Parse(comboBoxFrameRateFrom.Text);
 
-        public double NewFrameRate
-        {
-            get
-            {
-                return double.Parse(comboBoxFrameRateTo.Text);
-            }
-        }
-
+        public double NewFrameRate => double.Parse(comboBoxFrameRateTo.Text);
     }
 }

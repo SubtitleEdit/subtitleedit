@@ -1,7 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Logic;
 using System;
-using System.Drawing;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
@@ -37,9 +36,13 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.FixLargeFonts(this, buttonOK);
 
             if (numberOfSelectedLines > 1)
+            {
                 radioButtonSelectedLinesOnly.Checked = true;
+            }
             else
+            {
                 radioButtonAllLines.Checked = true;
+            }
         }
 
         private void ChangeSpeedInPercent_KeyDown(object sender, KeyEventArgs e)
@@ -69,7 +72,9 @@ namespace Nikse.SubtitleEdit.Forms
                 if (next != null)
                 {
                     if (p.EndTime.TotalMilliseconds >= next.StartTime.TotalMilliseconds)
+                    {
                         p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - 1;
+                    }
                 }
             }
             return subtitle;

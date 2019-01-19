@@ -17,10 +17,14 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 listBoxTracks.Items.Add(track);
                 if (listBoxTracks.Items.Count == defaultTrack)
+                {
                     listBoxTracks.SelectedIndex = listBoxTracks.Items.Count - 1;
+                }
             }
             if (listBoxTracks.SelectedIndex == -1 && listBoxTracks.Items.Count > 0)
+            {
                 listBoxTracks.SelectedIndex = 0;
+            }
 
             Text = Configuration.Settings.Language.ChooseAudioTrack.Title;
             labelDescr.Text = Configuration.Settings.Language.ChooseAudioTrack.Title;
@@ -32,7 +36,9 @@ namespace Nikse.SubtitleEdit.Forms
         private void ChooseAudioTrack_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)
+            {
                 DialogResult = DialogResult.Cancel;
+            }
         }
 
         private void buttonOK_Click(object sender, EventArgs e)

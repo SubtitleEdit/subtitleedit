@@ -320,7 +320,10 @@ namespace Nikse.SubtitleEdit.Forms
                     left = addLeft;
 
                     if (_borderWidth > 0)
+                    {
                         g.DrawPath(new Pen(_borderColor, _borderWidth), path);
+                    }
+
                     g.FillPath(new SolidBrush(c), path);
                     path.Reset();
                     path = new GraphicsPath();
@@ -652,7 +655,9 @@ namespace Nikse.SubtitleEdit.Forms
                 _videoStartTick = DateTime.Now.Ticks - ((long)(_subtitle.Paragraphs[_index].StartTime.TotalMilliseconds) * 10000); //10,000 ticks = 1 millisecond
                 ShowCurrent();
                 if (timer1Enabled)
+                {
                     timer1.Start();
+                }
             }
             else if (e.Modifiers == Keys.None && e.KeyCode == Keys.PageDown)
             {

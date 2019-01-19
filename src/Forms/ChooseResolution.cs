@@ -5,7 +5,7 @@ using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public partial class ChooseResolution : Form
+    public sealed partial class ChooseResolution : Form
     {
         public int VideoWidth { get; set; }
         public int VideoHeight { get; set; }
@@ -53,7 +53,9 @@ namespace Nikse.SubtitleEdit.Forms
         private void ChooseResolution_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)
+            {
                 DialogResult = DialogResult.Cancel;
+            }
         }
 
     }

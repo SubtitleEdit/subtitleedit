@@ -170,7 +170,11 @@ namespace Nikse.SubtitleEdit.Forms
             // If you have the left mouse button down,
             // then update the selectedPoint value and
             // force a repaint of the color wheel.
-            if (e.Button != MouseButtons.Left) return;
+            if (e.Button != MouseButtons.Left)
+            {
+                return;
+            }
+
             changeType = ChangeStyle.MouseMove;
             selectedPoint = new Point(e.X, e.Y);
             Invalidate();
@@ -189,9 +193,13 @@ namespace Nikse.SubtitleEdit.Forms
             RefreshText(lblGreen, argb.Green);
             RefreshText(lblAlpha2, argb.Alpha);
             if (_showAlpha)
+            {
                 tbHexCode.Text = string.Format("{0:X2}{1:X2}{2:X2}{3:X2}", argb.Alpha, argb.Red, argb.Green, argb.Blue);
+            }
             else
+            {
                 tbHexCode.Text = string.Format("{0:X2}{1:X2}{2:X2}", argb.Red, argb.Green, argb.Blue);
+            }
         }
 
         private void SetHSVLabels(ColorHandler.HSV HSV)
@@ -747,7 +755,9 @@ namespace Nikse.SubtitleEdit.Forms
         private void ColorChooser_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)
+            {
                 DialogResult = DialogResult.Cancel;
+            }
         }
 
         protected override void Dispose(bool disposing)

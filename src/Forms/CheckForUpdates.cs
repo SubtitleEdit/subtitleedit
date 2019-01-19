@@ -9,9 +9,9 @@ namespace Nikse.SubtitleEdit.Forms
     public partial class CheckForUpdates : Form
     {
         private CheckForUpdatesHelper _updatesHelper;
-        private double _seconds = 0;
-        private bool _performCheckOnShown = true;
-        private Main _mainForm;
+        private double _seconds;
+        private readonly bool _performCheckOnShown = true;
+        private readonly Main _mainForm;
 
         public CheckForUpdates(Main mainForm)
         {

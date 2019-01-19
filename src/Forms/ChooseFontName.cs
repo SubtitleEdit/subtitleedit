@@ -47,7 +47,9 @@ namespace Nikse.SubtitleEdit.Forms
         private void listView1_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (listBox1.SelectedItems.Count == 0)
+            {
                 return;
+            }
 
             buttonOK.Enabled = true;
             FontName = listBox1.Items[listBox1.SelectedIndex].ToString();
@@ -67,7 +69,9 @@ namespace Nikse.SubtitleEdit.Forms
         private void textBoxSearch_TextChanged(object sender, EventArgs e)
         {
             if (_fontNames == null)
+            {
                 return;
+            }
 
             listBox1.BeginUpdate();
             listBox1.Items.Clear();
@@ -96,7 +100,9 @@ namespace Nikse.SubtitleEdit.Forms
         private void ChooseFontName_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)
+            {
                 DialogResult = DialogResult.Cancel;
+            }
         }
     }
 }

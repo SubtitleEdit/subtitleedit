@@ -17,10 +17,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private string _language;
 
-        public Dictionary<string, string> FixedText
-        {
-            get { return _fixedText; }
-        }
+        public Dictionary<string, string> FixedText => _fixedText;
 
         public AutoBreakUnbreakLines()
         {
@@ -47,7 +44,9 @@ namespace Nikse.SubtitleEdit.Forms
             _paragraphs = new List<Paragraph>();
 
             foreach (Paragraph p in subtitle.Paragraphs)
+            {
                 _paragraphs.Add(p);
+            }
 
             if (autoBalance)
             {
@@ -55,13 +54,19 @@ namespace Nikse.SubtitleEdit.Forms
                 const int start = 10;
                 const int max = 60;
                 for (int i = start; i <= max; i++)
+                {
                     comboBoxConditions.Items.Add(i.ToString(CultureInfo.InvariantCulture));
+                }
 
                 int index = Configuration.Settings.Tools.MergeLinesShorterThan - (start + 1);
                 if (index > 0 && index < max)
+                {
                     comboBoxConditions.SelectedIndex = index;
+                }
                 else
+                {
                     comboBoxConditions.SelectedIndex = 30;
+                }
 
                 AutoBalance();
             }
@@ -69,7 +74,10 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 labelCondition.Text = Configuration.Settings.Language.AutoBreakUnbreakLines.OnlyUnbreakLinesLongerThan;
                 for (int i = 5; i < 51; i++)
+                {
                     comboBoxConditions.Items.Add(i.ToString(CultureInfo.InvariantCulture));
+                }
+
                 comboBoxConditions.SelectedIndex = 5;
 
                 Unbreak();
@@ -90,7 +98,10 @@ namespace Nikse.SubtitleEdit.Forms
             get
             {
                 if (Configuration.Settings.Tools.MergeLinesShorterThan > MinimumLength)
+                {
                     return MinimumLength - 1;
+                }
+
                 return Configuration.Settings.Tools.MergeLinesShorterThan;
             }
         }
@@ -152,7 +163,9 @@ namespace Nikse.SubtitleEdit.Forms
         private void AutoBreakUnbreakLinesKeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)
+            {
                 DialogResult = DialogResult.Cancel;
+            }
         }
 
         private void AddToListView(Paragraph p, string newText)
@@ -180,24 +193,36 @@ namespace Nikse.SubtitleEdit.Forms
         private void ComboBoxConditionsSelectedIndexChanged(object sender, EventArgs e)
         {
             if (_modeAutoBalance)
+            {
                 AutoBalance();
+            }
             else
+            {
                 Unbreak();
+            }
         }
 
         private void listViewFixes_ItemChecked(object sender, ItemCheckedEventArgs e)
         {
             if (e.Item == null)
+            {
                 return;
+            }
 
             var p = e.Item.Tag as Paragraph;
             if (p == null)
+            {
                 return;
+            }
 
             if (e.Item.Checked)
+            {
                 _notAllowedFixes.Remove(p.ID);
+            }
             else
+            {
                 _notAllowedFixes.Add(p.ID);
+            }
         }
 
         private void listViewFixes_Resize(object sender, EventArgs e)
