@@ -32,7 +32,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             string dictionaryFolder = Configuration.Tesseract302Directory;
             if (!Directory.Exists(dictionaryFolder))
+            {
                 Directory.CreateDirectory(dictionaryFolder);
+            }
 
             var tempFileName = FileUtil.GetTempFileName(".tar");
             using (var ms = new MemoryStream(e.Result))

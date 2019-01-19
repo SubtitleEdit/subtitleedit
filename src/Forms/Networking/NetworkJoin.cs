@@ -1,12 +1,12 @@
-﻿using Nikse.SubtitleEdit.Core;
-using Nikse.SubtitleEdit.Logic;
-using System;
+﻿using System;
 using System.Net;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Logic;
 
-namespace Nikse.SubtitleEdit.Forms
+namespace Nikse.SubtitleEdit.Forms.Networking
 {
-    public partial class NetworkJoin : Form
+    public sealed partial class NetworkJoin : Form
     {
 
         private Logic.Networking.NikseWebServiceSession _networkSession;
@@ -35,12 +35,16 @@ namespace Nikse.SubtitleEdit.Forms
 
             textBoxSessionKey.Text = Configuration.Settings.NetworkSettings.SessionKey;
             if (textBoxSessionKey.Text.Trim().Length < 2)
+            {
                 textBoxSessionKey.Text = Guid.NewGuid().ToString().RemoveChar('-');
+            }
 
             comboBoxWebServiceUrl.Text = Configuration.Settings.NetworkSettings.WebServiceUrl;
             textBoxUserName.Text = Configuration.Settings.NetworkSettings.UserName;
             if (textBoxUserName.Text.Trim().Length < 2)
+            {
                 textBoxUserName.Text = Dns.GetHostName();
+            }
         }
 
         private void buttonJoin_Click(object sender, EventArgs e)
@@ -68,11 +72,17 @@ namespace Nikse.SubtitleEdit.Forms
                 else
                 {
                     if (message == "Session not found!")
+                    {
                         MessageBox.Show(string.Format(Configuration.Settings.Language.Main.XNotFound, textBoxSessionKey.Text));
+                    }
                     else if (message == "Username already in use!")
+                    {
                         MessageBox.Show(string.Format(Configuration.Settings.Language.General.UserNameAlreadyInUse, textBoxSessionKey.Text));
+                    }
                     else
+                    {
                         MessageBox.Show(message);
+                    }
                 }
             }
             catch (Exception exception)

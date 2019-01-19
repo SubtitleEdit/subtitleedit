@@ -1,6 +1,6 @@
 ﻿namespace Nikse.SubtitleEdit.Forms.Styles
 {
-    partial class SubStationAlphaStylesExport
+    sealed partial class SubStationAlphaStylesExport
     {
         /// <summary>
         /// Required designer variable.

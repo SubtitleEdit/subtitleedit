@@ -30,15 +30,18 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             _header = subtitle.Header;
             _isSubStationAlpha = format.Name == SubStationAlpha.NameOfFormat;
             if (_header == null || !_header.Contains("style:", StringComparison.OrdinalIgnoreCase))
+            {
                 ResetHeader();
+            }
 
             comboBoxFontName.Items.Clear();
             foreach (var x in FontFamily.Families)
+            {
                 comboBoxFontName.Items.Add(x.Name);
+            }
 
             var l = Configuration.Settings.Language.SubStationAlphaStyles;
             Text = l.Title;
-            // groupBoxStyles.Text = l.Styles;
             groupBoxProperties.Text = l.Properties;
             groupBoxFont.Text = l.Font;
             labelFontName.Text = l.FontName;
@@ -96,9 +99,13 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             comboBoxFontName.Left = labelFontName.Left + labelFontName.Width + 10;
             numericUpDownFontSize.Left = labelFontSize.Left + labelFontSize.Width + 10;
             if (comboBoxFontName.Left > numericUpDownFontSize.Left)
+            {
                 numericUpDownFontSize.Left = comboBoxFontName.Left;
+            }
             else
+            {
                 comboBoxFontName.Left = numericUpDownFontSize.Left;
+            }
 
             numericUpDownOutline.Left = radioButtonOutline.Left + radioButtonOutline.Width + 5;
             labelShadow.Left = numericUpDownOutline.Left + numericUpDownOutline.Width + 5;
@@ -137,9 +144,14 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                         {
                             string f = format[i].Trim().ToLower();
                             if (f == "name")
+                            {
                                 nameIndex = i;
+                            }
+
                             if (f == propertyName)
+                            {
                                 propertyIndex = i;
+                            }
                         }
                     }
                     sb.AppendLine(line);
@@ -154,7 +166,9 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                         {
                             string f = format[i].Trim();
                             if (i == nameIndex)
+                            {
                                 correctLine = f.Equals(styleName, StringComparison.OrdinalIgnoreCase);
+                            }
                         }
                         if (correctLine)
                         {
@@ -164,11 +178,18 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                             {
                                 string f = format[i].Trim();
                                 if (i == propertyIndex)
+                                {
                                     sb.Append(propertyValue);
+                                }
                                 else
+                                {
                                     sb.Append(f);
+                                }
+
                                 if (i < format.Length - 1)
+                                {
                                     sb.Append(',');
+                                }
                             }
                             sb.AppendLine();
                         }
@@ -194,9 +215,14 @@ namespace Nikse.SubtitleEdit.Forms.Styles
         {
             SubtitleFormat format;
             if (_isSubStationAlpha)
+            {
                 format = new SubStationAlpha();
+            }
             else
+            {
                 format = new AdvancedSubStationAlpha();
+            }
+
             var sub = new Subtitle();
             string text = format.ToText(sub, string.Empty);
             var lines = text.SplitToLines();
@@ -217,7 +243,9 @@ namespace Nikse.SubtitleEdit.Forms.Styles
         private void SubStationAlphaStylesBatchConvert_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)
+            {
                 DialogResult = DialogResult.Cancel;
+            }
         }
 
         private void buttonReset_Click(object sender, EventArgs e)
@@ -252,7 +280,10 @@ namespace Nikse.SubtitleEdit.Forms.Styles
         private string GetSsaColorString(Color c)
         {
             if (_isSubStationAlpha)
+            {
                 return Color.FromArgb(0, c.B, c.G, c.R).ToArgb().ToString(CultureInfo.InvariantCulture);
+            }
+
             return AdvancedSubStationAlpha.GetSsaColorString(c);
         }
 
@@ -382,7 +413,10 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 string name = CurrentStyleName;
                 var item = comboBoxFontName.SelectedItem;
                 if (item != null)
+                {
                     SetSsaStyle(name, "fontname", item.ToString());
+                }
+
                 GeneratePreviewAndUpdateRawHeader();
             }
         }
@@ -403,9 +437,14 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             {
                 string name = CurrentStyleName;
                 if (checkBoxFontBold.Checked)
+                {
                     SetSsaStyle(name, "bold", "-1");
+                }
                 else
+                {
                     SetSsaStyle(name, "bold", "0");
+                }
+
                 GeneratePreviewAndUpdateRawHeader();
             }
         }
@@ -416,9 +455,14 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             {
                 string name = CurrentStyleName;
                 if (checkBoxFontItalic.Checked)
+                {
                     SetSsaStyle(name, "italic", "-1");
+                }
                 else
+                {
                     SetSsaStyle(name, "italic", "0");
+                }
+
                 GeneratePreviewAndUpdateRawHeader();
             }
         }
@@ -429,9 +473,14 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             {
                 string name = CurrentStyleName;
                 if (checkBoxFontUnderline.Checked)
+                {
                     SetSsaStyle(name, "underline", "-1");
+                }
                 else
+                {
                     SetSsaStyle(name, "underline", "0");
+                }
+
                 GeneratePreviewAndUpdateRawHeader();
             }
         }
@@ -442,9 +491,14 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             {
                 string name = CurrentStyleName;
                 if (_isSubStationAlpha)
+                {
                     SetSsaStyle(name, "alignment", "5");
+                }
                 else
+                {
                     SetSsaStyle(name, "alignment", "7");
+                }
+
                 GeneratePreviewAndUpdateRawHeader();
             }
         }
@@ -455,9 +509,14 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             {
                 string name = CurrentStyleName;
                 if (_isSubStationAlpha)
+                {
                     SetSsaStyle(name, "alignment", "6");
+                }
                 else
+                {
                     SetSsaStyle(name, "alignment", "8");
+                }
+
                 GeneratePreviewAndUpdateRawHeader();
             }
         }
@@ -468,9 +527,14 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             {
                 string name = CurrentStyleName;
                 if (_isSubStationAlpha)
+                {
                     SetSsaStyle(name, "alignment", "7");
+                }
                 else
+                {
                     SetSsaStyle(name, "alignment", "9");
+                }
+
                 GeneratePreviewAndUpdateRawHeader();
             }
         }
@@ -481,9 +545,14 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             {
                 string name = CurrentStyleName;
                 if (_isSubStationAlpha)
+                {
                     SetSsaStyle(name, "alignment", "9");
+                }
                 else
+                {
                     SetSsaStyle(name, "alignment", "4");
+                }
+
                 GeneratePreviewAndUpdateRawHeader();
             }
         }
@@ -494,9 +563,14 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             {
                 string name = CurrentStyleName;
                 if (_isSubStationAlpha)
+                {
                     SetSsaStyle(name, "alignment", "10");
+                }
                 else
+                {
                     SetSsaStyle(name, "alignment", "5");
+                }
+
                 GeneratePreviewAndUpdateRawHeader();
             }
         }
@@ -507,9 +581,14 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             {
                 string name = CurrentStyleName;
                 if (_isSubStationAlpha)
+                {
                     SetSsaStyle(name, "alignment", "11");
+                }
                 else
+                {
                     SetSsaStyle(name, "alignment", "6");
+                }
+
                 GeneratePreviewAndUpdateRawHeader();
             }
         }
@@ -629,15 +708,21 @@ namespace Nikse.SubtitleEdit.Forms.Styles
         private void UpdateRawHeader()
         {
             if (_header == null)
+            {
                 textBoxRawHeader.Text = string.Empty;
+            }
             else
+            {
                 textBoxRawHeader.Text = _header.Replace("[Events]", string.Empty).TrimEnd();
+            }
         }
 
         private void UpdatePropertiesTag(string tag, string text, bool remove)
         {
             if (_header == null)
+            {
                 return;
+            }
 
             bool scriptInfoOn = false;
             var sb = new StringBuilder();
@@ -665,7 +750,10 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 if (s.StartsWith(tag.ToLower() + ":"))
                 {
                     if (!remove)
+                    {
                         sb.AppendLine(line.Substring(0, tag.Length) + ": " + text);
+                    }
+
                     found = true;
                 }
                 else
@@ -685,9 +773,14 @@ namespace Nikse.SubtitleEdit.Forms.Styles
         private void comboBoxCollision_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (comboBoxCollision.SelectedIndex == 0)
+            {
                 UpdatePropertiesTag("collisions", "Normal", false); // normal
+            }
             else
+            {
                 UpdatePropertiesTag("collisions", "Reverse", false); // reverse
+            }
+
             UpdateRawHeader();
         }
 
@@ -705,9 +798,13 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             if (!_isSubStationAlpha)
             {
                 if (checkBoxScaleBorderAndShadow.Checked)
+                {
                     UpdatePropertiesTag("ScaledBorderAndShadow", "Yes", false);
+                }
                 else
+                {
                     UpdatePropertiesTag("ScaledBorderAndShadow", "No", false);
+                }
             }
             UpdateRawHeader();
         }
@@ -743,19 +840,25 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                     if (s.StartsWith("collisions:"))
                     {
                         if (s.Remove(0, 11).Trim() == "reverse")
+                        {
                             comboBoxCollision.SelectedIndex = 1;
+                        }
                     }
                     else if (s.StartsWith("playresx:"))
                     {
                         int number;
                         if (int.TryParse(s.Remove(0, 9).Trim(), out number))
+                        {
                             numericUpDownVideoWidth.Value = number;
+                        }
                     }
                     else if (s.StartsWith("playresy:"))
                     {
                         int number;
                         if (int.TryParse(s.Remove(0, 9).Trim(), out number))
+                        {
                             numericUpDownVideoHeight.Value = number;
+                        }
                     }
                     else if (s.StartsWith("scaledborderandshadow:"))
                     {
@@ -784,27 +887,44 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             checkBoxFontUnderline.Checked = style.Underline;
 
             if (style.FontSize > 0 && style.FontSize <= numericUpDownFontSize.Maximum)
+            {
                 numericUpDownFontSize.Value = style.FontSize;
+            }
             else
+            {
                 numericUpDownFontSize.Value = 20;
+            }
 
             panelPrimaryColor.BackColor = style.Primary;
             panelSecondaryColor.BackColor = style.Secondary;
             if (_isSubStationAlpha)
+            {
                 panelOutlineColor.BackColor = style.Tertiary;
+            }
             else
+            {
                 panelOutlineColor.BackColor = style.Outline;
+            }
+
             panelBackColor.BackColor = style.Background;
 
             if (style.OutlineWidth >= 0 && style.OutlineWidth <= numericUpDownOutline.Maximum)
+            {
                 numericUpDownOutline.Value = style.OutlineWidth;
+            }
             else
+            {
                 numericUpDownOutline.Value = 2;
+            }
 
             if (style.ShadowWidth >= 0 && style.ShadowWidth <= numericUpDownShadowWidth.Maximum)
+            {
                 numericUpDownShadowWidth.Value = style.ShadowWidth;
+            }
             else
+            {
                 numericUpDownShadowWidth.Value = 1;
+            }
 
             if (_isSubStationAlpha)
             {
@@ -874,19 +994,31 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             }
 
             if (style.MarginLeft >= 0 && style.MarginLeft <= numericUpDownMarginLeft.Maximum)
+            {
                 numericUpDownMarginLeft.Value = style.MarginLeft;
+            }
             else
+            {
                 numericUpDownMarginLeft.Value = 10;
+            }
 
             if (style.MarginRight >= 0 && style.MarginRight <= numericUpDownMarginRight.Maximum)
+            {
                 numericUpDownMarginRight.Value = style.MarginRight;
+            }
             else
+            {
                 numericUpDownMarginRight.Value = 10;
+            }
 
             if (style.MarginVertical >= 0 && style.MarginVertical <= numericUpDownMarginVertical.Maximum)
+            {
                 numericUpDownMarginVertical.Value = style.MarginVertical;
+            }
             else
+            {
                 numericUpDownMarginVertical.Value = 10;
+            }
 
             if (style.BorderStyle == "3")
             {
@@ -900,8 +1032,8 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
         protected override void GeneratePreviewReal()
         {
-            if (pictureBoxPreview.Image != null)
-                pictureBoxPreview.Image.Dispose();
+            pictureBoxPreview.Image?.Dispose();
+
             var bmp = new Bitmap(pictureBoxPreview.Width, pictureBoxPreview.Height);
 
             using (Graphics g = Graphics.FromImage(bmp))
@@ -916,12 +1048,16 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                         if (y % (rectangleSize * 2) == 0)
                         {
                             if (x % (rectangleSize * 2) == 0)
+                            {
                                 c = Color.LightGray;
+                            }
                         }
                         else
                         {
                             if (x % (rectangleSize * 2) != 0)
+                            {
                                 c = Color.LightGray;
+                            }
                         }
                         g.FillRectangle(new SolidBrush(c), x, y, rectangleSize, rectangleSize);
                     }
@@ -951,22 +1087,37 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
                 float left;
                 if (radioButtonTopLeft.Checked || radioButtonMiddleLeft.Checked || radioButtonBottomLeft.Checked)
+                {
                     left = (float)numericUpDownMarginLeft.Value;
+                }
                 else if (radioButtonTopRight.Checked || radioButtonMiddleRight.Checked || radioButtonBottomRight.Checked)
+                {
                     left = bmp.Width - (measuredWidth + ((float)numericUpDownMarginRight.Value));
+                }
                 else
+                {
                     left = ((float)(bmp.Width - measuredWidth * 0.8 + 15) / 2);
+                }
 
                 float top;
                 if (radioButtonTopLeft.Checked || radioButtonTopCenter.Checked || radioButtonTopRight.Checked)
+                {
                     top = (float)numericUpDownMarginVertical.Value;
+                }
                 else if (radioButtonMiddleLeft.Checked || radioButtonMiddleCenter.Checked || radioButtonMiddleRight.Checked)
+                {
                     top = (bmp.Height - measuredHeight) / 2;
+                }
                 else
+                {
                     top = bmp.Height - measuredHeight - ((int)numericUpDownMarginVertical.Value);
+                }
+
                 top -= (int)numericUpDownShadowWidth.Value;
                 if (radioButtonTopCenter.Checked || radioButtonMiddleCenter.Checked || radioButtonBottomCenter.Checked)
+                {
                     left -= (int)(numericUpDownShadowWidth.Value / 2);
+                }
 
                 const int leftMargin = 0;
                 int pathPointsStart = -1;
@@ -974,9 +1125,13 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 if (radioButtonOpaqueBox.Checked)
                 {
                     if (_isSubStationAlpha)
+                    {
                         g.FillRectangle(new SolidBrush(panelBackColor.BackColor), left, top, measuredWidth + 3, measuredHeight + 3);
+                    }
                     else
+                    {
                         g.FillRectangle(new SolidBrush(panelOutlineColor.BackColor), left, top, measuredWidth + 3, measuredHeight + 3);
+                    }
                 }
 
                 TextDraw.DrawText(font, sf, path, sb, checkBoxFontItalic.Checked, checkBoxFontBold.Checked, checkBoxFontUnderline.Checked, left, top, ref newLine, leftMargin, ref pathPointsStart);
@@ -994,16 +1149,22 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                         shadowPath.Transform(translateMatrix);
 
                         using (var p1 = new Pen(Color.FromArgb(250, panelBackColor.BackColor), outline))
+                        {
                             g.DrawPath(p1, shadowPath);
+                        }
                     }
                 }
 
                 if (outline > 0 && radioButtonOutline.Checked)
                 {
                     if (_isSubStationAlpha)
+                    {
                         g.DrawPath(new Pen(panelBackColor.BackColor, outline), path);
+                    }
                     else
+                    {
                         g.DrawPath(new Pen(panelOutlineColor.BackColor, outline), path);
+                    }
                 }
                 g.FillPath(new SolidBrush(panelPrimaryColor.BackColor), path);
             }

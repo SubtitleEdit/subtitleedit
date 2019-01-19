@@ -29,14 +29,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         public bool IsBinaryImageCompare
         {
-            get
-            {
-                return buttonEditImageDb.Visible;
-            }
-            set
-            {
-                buttonEditImageDb.Visible = value;
-            }
+            get => buttonEditImageDb.Visible;
+            set => buttonEditImageDb.Visible = value;
         }
         public Action ActionResult { get; private set; }
         public string Word { get; private set; }
@@ -98,9 +92,14 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             textBoxWholeText.Text = line;
             listBoxSuggestions.Items.Clear();
             foreach (string suggestion in suggestions)
+            {
                 listBoxSuggestions.Items.Add(suggestion);
+            }
+
             if (listBoxSuggestions.Items.Count > 0)
+            {
                 listBoxSuggestions.SelectedIndex = 0;
+            }
 
             HighLightWord(richTextBoxParagraph, word);
             ButtonEditWordClick(null, null);
@@ -117,12 +116,18 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     {
                         bool startOk = i == 0;
                         if (!startOk)
+                        {
                             startOk = expectedWordBoundaryChars.Contains(richTextBoxParagraph.Text[i - 1]);
+                        }
+
                         if (startOk)
                         {
                             bool endOk = (i + word.Length == richTextBoxParagraph.Text.Length);
                             if (!endOk)
+                            {
                                 endOk = expectedWordBoundaryChars.Contains(richTextBoxParagraph.Text[i + word.Length]);
+                            }
+
                             if (endOk)
                             {
                                 richTextBoxParagraph.SelectionStart = i + 1;
@@ -288,7 +293,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         {
             string text = textBoxWord.Text;
             if (!string.IsNullOrWhiteSpace(text))
+            {
                 System.Diagnostics.Process.Start("https://www.google.com/search?q=" + Utilities.UrlEncode(text));
+            }
         }
 
         private void OcrSpellCheck_KeyDown(object sender, KeyEventArgs e)

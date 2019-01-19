@@ -7,7 +7,7 @@ using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms.Ocr
 {
-    public partial class AddToOcrReplaceList : Form
+    public sealed partial class AddToOcrReplaceList : Form
     {
         private string _threeLetterIsoLanguageName;
 
@@ -29,7 +29,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             string key = textBoxOcrFixKey.Text.RemoveControlCharacters().Trim();
             string value = textBoxOcrFixValue.Text.RemoveControlCharacters().Trim();
             if (key.Length == 0 || value.Length == 0 || key == value)
+            {
                 return;
+            }
 
             var languageString = LanguageString;
             if (languageString == null)
@@ -61,7 +63,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private void AddToOcrReplaceList_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)
+            {
                 DialogResult = DialogResult.Cancel;
+            }
         }
 
         public string NewSource { get; set; }
@@ -70,14 +74,18 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         internal void Initialize(string languageId, string hunspellName, string source)
         {
             if (!string.IsNullOrEmpty(source))
+            {
                 textBoxOcrFixKey.Text = source;
+            }
 
             comboBoxDictionaries.Items.Clear();
             foreach (string name in Utilities.GetDictionaryLanguages())
             {
                 comboBoxDictionaries.Items.Add(name);
                 if (hunspellName != null && name.Equals(hunspellName, StringComparison.OrdinalIgnoreCase))
+                {
                     comboBoxDictionaries.SelectedIndex = comboBoxDictionaries.Items.Count - 1;
+                }
             }
             _threeLetterIsoLanguageName = languageId;
         }

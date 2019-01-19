@@ -102,7 +102,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private void listView1_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (listView1.SelectedItems.Count < 1)
+            {
                 return;
+            }
 
             var item = listView1.SelectedItems[0];
             var bob = (BinaryOcrBitmap)item.Tag;
@@ -119,6 +121,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 }
                 catch (Exception)
                 {
+                    // ignored
                 }
             }
 
@@ -134,10 +137,14 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             listView1.ItemChecked -= listView1_ItemChecked;
 
             foreach (ListViewItem item in listView1.Items)
+            {
                 item.Checked = true;
+            }
 
             foreach (ListViewData d in _data)
+            {
                 d.Checked = true;
+            }
 
             UpdateSelectCount();
 
@@ -149,10 +156,14 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             listView1.ItemChecked -= listView1_ItemChecked;
 
             foreach (ListViewItem item in listView1.Items)
+            {
                 item.Checked = !item.Checked;
+            }
 
             foreach (ListViewData d in _data)
+            {
                 d.Checked = !d.Checked;
+            }
 
             UpdateSelectCount();
 
@@ -167,7 +178,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private void listView1_ItemChecked(object sender, ItemCheckedEventArgs e)
         {
             if (e.Item == null)
+            {
                 return;
+            }
 
             var idx = e.Item.Index;
             _data[idx].Checked = listView1.Items[idx].Checked;
@@ -184,7 +197,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                     _selectCount++;
                 }
             }
-            buttonImport.Text = string.Format("Import {0:#,##0}", _selectCount);
+            buttonImport.Text = $"Import {_selectCount:#,##0}";
         }
 
         private void buttonImport_Click(object sender, EventArgs e)

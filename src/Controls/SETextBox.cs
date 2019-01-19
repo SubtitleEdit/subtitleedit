@@ -97,9 +97,13 @@ namespace Nikse.SubtitleEdit.Controls
 
             string newText;
             if (e.Data.GetDataPresent(DataFormats.UnicodeText))
+            {
                 newText = (string)e.Data.GetData(DataFormats.UnicodeText);
+            }
             else
+            {
                 newText = (string)e.Data.GetData(DataFormats.Text);
+            }
 
             if (string.IsNullOrWhiteSpace(Text))
             {
@@ -117,13 +121,18 @@ namespace Nikse.SubtitleEdit.Controls
                     {
                         SelectionLength = 0;
                         if (justAppend)
+                        {
                             index++;
+                        }
+
                         SelectionStart = index;
                         return; // too fast - nobody can drag'n'drop this fast
                     }
 
                     if (index >= _dragStartFrom && index <= _dragStartFrom + _dragText.Length)
+                    {
                         return; // don't drop same text at same position
+                    }
 
                     if (_dragRemoveOld)
                     {
@@ -140,20 +149,29 @@ namespace Nikse.SubtitleEdit.Controls
                         {
                             Text = Text.Remove(_dragStartFrom, 1);
                             if (_dragStartFrom < index)
+                            {
                                 index--;
+                            }
                         }
                         else if (_dragStartFrom > 0 && Text.Length > _dragStartFrom + 1 && Text[_dragStartFrom] == ' ' && expectedChars.Contains(Text[_dragStartFrom + 1]))
                         {
                             Text = Text.Remove(_dragStartFrom, 1);
                             if (_dragStartFrom < index)
+                            {
                                 index--;
+                            }
                         }
 
                         // fix index
                         if (index > _dragStartFrom)
+                        {
                             index -= _dragText.Length;
+                        }
+
                         if (index < 0)
+                        {
                             index = 0;
+                        }
                     }
                 }
                 if (justAppend)
@@ -184,7 +202,9 @@ namespace Nikse.SubtitleEdit.Controls
                 {
                     bool lastWord = expectedChars.Contains(Text[endIndex]);
                     if (!lastWord)
+                    {
                         Text = Text.Insert(endIndex, " ");
+                    }
                 }
                 else if (endIndex < Text.Length && newText.EndsWith(' ') && Text[endIndex] == ' ')
                 {

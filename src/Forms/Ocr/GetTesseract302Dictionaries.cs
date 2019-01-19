@@ -14,9 +14,8 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
     public sealed partial class GetTesseract302Dictionaries : Form
     {
         private List<string> _dictionaryDownloadLinks = new List<string>();
-        private List<string> _descriptions = new List<string>();
-        private string _xmlName = null;
-        private string _dictionaryFileName = null;
+        private string _xmlName;
+        private string _dictionaryFileName;
         internal string ChosenLanguage { get; private set; }
 
         public GetTesseract302Dictionaries()
@@ -39,7 +38,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private void LoadDictionaryList(string xmlRessourceName)
         {
             _dictionaryDownloadLinks = new List<string>();
-            _descriptions = new List<string>();
             _xmlName = xmlRessourceName;
             System.Reflection.Assembly asm = System.Reflection.Assembly.GetExecutingAssembly();
             Stream strm = asm.GetManifestResourceStream(_xmlName);
@@ -67,18 +65,12 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 {
                     string englishName = node.SelectSingleNode("EnglishName").InnerText;
                     string downloadLink = node.SelectSingleNode("DownloadLink").InnerText;
-
-                    string description = string.Empty;
-                    if (node.SelectSingleNode("Description") != null)
-                        description = node.SelectSingleNode("Description").InnerText;
-
                     if (!string.IsNullOrEmpty(downloadLink))
                     {
                         string name = englishName;
 
                         comboBoxDictionaries.Items.Add(name);
                         _dictionaryDownloadLinks.Add(downloadLink);
-                        _descriptions.Add(description);
                     }
                     comboBoxDictionaries.SelectedIndex = 0;
                 }
@@ -90,7 +82,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private void FixLargeFonts()
         {
             if (labelDescription1.Left + labelDescription1.Width + 5 > Width)
+            {
                 Width = labelDescription1.Left + labelDescription1.Width + 5;
+            }
+
             UiUtil.FixLargeFonts(this, buttonOK);
         }
 
@@ -148,7 +143,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             string dictionaryFolder = Configuration.Tesseract302DataDirectory;
             if (!Directory.Exists(dictionaryFolder))
+            {
                 Directory.CreateDirectory(dictionaryFolder);
+            }
 
             int index = comboBoxDictionaries.SelectedIndex;
 
@@ -194,7 +191,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             string dictionaryFolder = Configuration.Tesseract302DataDirectory;
             if (!Directory.Exists(dictionaryFolder))
+            {
                 Directory.CreateDirectory(dictionaryFolder);
+            }
 
             int index = comboBoxDictionaries.SelectedIndex;
 
@@ -221,7 +220,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         {
             string dictionaryFolder = Configuration.Tesseract302DataDirectory;
             if (!Directory.Exists(dictionaryFolder))
+            {
                 Directory.CreateDirectory(dictionaryFolder);
+            }
 
             System.Diagnostics.Process.Start(dictionaryFolder);
         }

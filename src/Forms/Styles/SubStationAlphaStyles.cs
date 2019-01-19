@@ -896,7 +896,9 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                     listViewStyles.SelectedItems[0].Text = textBoxStyleName.Text;
                     bool found = SetSsaStyle(_oldSsaName, "name", textBoxStyleName.Text);
                     if (!found)
+                    {
                         SetSsaStyle(_oldSsaName, "name", textBoxStyleName.Text, false);
+                    }
 
                     _oldSsaName = textBoxStyleName.Text;
                 }

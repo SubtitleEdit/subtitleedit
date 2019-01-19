@@ -43,29 +43,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             UiUtil.FixLargeFonts(this, buttonCancel);
         }
 
-        public string ManualRecognizedCharacters
-        {
-            get
-            {
-                return textBoxCharacters.Text;
-            }
-        }
+        public string ManualRecognizedCharacters => textBoxCharacters.Text;
 
-        public bool IsItalic
-        {
-            get
-            {
-                return checkBoxItalic.Checked;
-            }
-        }
+        public bool IsItalic => checkBoxItalic.Checked;
 
-        public Point FormPosition
-        {
-            get
-            {
-                return new Point(Left, Top);
-            }
-        }
+        public Point FormPosition => new Point(Left, Top);
 
         public bool ExpandSelection { get; private set; }
 
@@ -108,9 +90,14 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 var last = _additions[_additions.Count - 1];
                 buttonLastEdit.Visible = true;
                 if (last.Italic)
+                {
                     buttonLastEdit.Font = new Font(buttonLastEdit.Font.FontFamily, buttonLastEdit.Font.Size, FontStyle.Italic);
+                }
                 else
+                {
                     buttonLastEdit.Font = new Font(buttonLastEdit.Font.FontFamily, buttonLastEdit.Font.Size);
+                }
+
                 pictureBoxLastEdit.Visible = true;
                 pictureBoxLastEdit.Image = last.Image.GetBitmap();
                 buttonLastEdit.Text = string.Format(Configuration.Settings.Language.VobSubOcrCharacter.EditLastX, last.Text);
@@ -147,9 +134,13 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private void TextBoxCharactersKeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
+            {
                 DialogResult = DialogResult.OK;
+            }
             else if (e.KeyCode == Keys.Escape)
+            {
                 DialogResult = DialogResult.Cancel;
+            }
         }
 
         private void CheckBoxItalicCheckedChanged(object sender, EventArgs e)
@@ -211,15 +202,18 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private void InsertLanguageCharacter(object sender, EventArgs e)
         {
-            var toolStripMenuItem = sender as ToolStripMenuItem;
-            if (toolStripMenuItem != null)
+            if (sender is ToolStripMenuItem toolStripMenuItem)
+            {
                 textBoxCharacters.Text = textBoxCharacters.Text.Insert(textBoxCharacters.SelectionStart, toolStripMenuItem.Text);
+            }
         }
 
         private void textBoxCharacters_TextChanged(object sender, EventArgs e)
         {
             if (checkBoxAutoSubmitOfFirstChar.Checked && textBoxCharacters.Text.Length > 0)
+            {
                 DialogResult = DialogResult.OK;
+            }
         }
 
         private void VobSubOcrCharacter_Shown(object sender, EventArgs e)

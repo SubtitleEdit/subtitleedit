@@ -29,6 +29,7 @@ using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Forms.Networking;
 
 namespace Nikse.SubtitleEdit.Forms
 {

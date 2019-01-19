@@ -9,13 +9,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 {
     public partial class OcrPreprocessingT4 : Form
     {
-        private readonly bool _isBinaryImageCompare;
         private readonly NikseBitmap _source;
         public PreprocessingSettings PreprocessingSettings { get; }
 
-        public OcrPreprocessingT4(Bitmap bitmap, bool isBinaryImageCompare, PreprocessingSettings preprocessingSettings)
+        public OcrPreprocessingT4(Bitmap bitmap, PreprocessingSettings preprocessingSettings)
         {
-            _isBinaryImageCompare = isBinaryImageCompare;
             InitializeComponent();
             _source = new NikseBitmap(bitmap);
             pictureBoxSubtitleImage.Image = bitmap;
@@ -67,11 +65,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 DialogResult = DialogResult.Cancel;
             }
-        }
-
-        private void checkBoxCropTransparent_CheckedChanged(object sender, EventArgs e)
-        {
-            RefreshImage();
         }
     }
 }

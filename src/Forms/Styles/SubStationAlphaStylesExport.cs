@@ -8,12 +8,12 @@ using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms.Styles
 {
-    public partial class SubStationAlphaStylesExport : Form
+    public sealed partial class SubStationAlphaStylesExport : Form
     {
-        private string _header;
-        private bool _isSubStationAlpha;
-        private SubtitleFormat _format;
-        private List<string> _styles;
+        private readonly string _header;
+        private readonly bool _isSubStationAlpha;
+        private readonly SubtitleFormat _format;
+        private readonly List<string> _styles;
         public List<string> ExportedStyles { get; set; }
 
         public SubStationAlphaStylesExport(string header, bool isSubStationAlpha, SubtitleFormat format)
@@ -43,7 +43,9 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             foreach (ListViewItem item in listViewExportStyles.Items)
             {
                 if (item.Checked)
+                {
                     ExportedStyles.Add(item.Text);
+                }
             }
             if (ExportedStyles.Count == 0)
             {
@@ -117,9 +119,14 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                             {
                                 var toLower = line.Trim().ToLowerInvariant();
                                 while (toLower.Contains(": "))
+                                {
                                     toLower = toLower.Replace(": ", ":");
+                                }
+
                                 while (toLower.Contains(" :"))
+                                {
                                     toLower = toLower.Replace(" :", ":");
+                                }
 
                                 if (stylesOn && toLower.StartsWith("style:" + styleName.Trim() + ",", StringComparison.OrdinalIgnoreCase))
                                 {
@@ -142,12 +149,19 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                             {
                                 var toLower = line.Trim().ToLowerInvariant();
                                 while (toLower.Contains(": "))
+                                {
                                     toLower = toLower.Replace(": ", ":");
+                                }
+
                                 while (toLower.Contains(" :"))
+                                {
                                     toLower = toLower.Replace(" :", ":");
+                                }
 
                                 if (toLower.StartsWith("style:" + styleName.ToLowerInvariant().Trim(), StringComparison.Ordinal))
+                                {
                                     sb.AppendLine(line);
+                                }
                             }
                         }
                         else

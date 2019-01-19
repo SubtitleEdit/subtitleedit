@@ -77,7 +77,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             var nOcrD = new NOcrDb(textBoxNOcrDb.Text);
             var lines = new List<string>();
             foreach (string line in File.ReadAllLines(textBoxInputFile.Text))
+            {
                 lines.Add(line);
+            }
+
             var format = new SubRip();
             var sub = new Subtitle();
             format.LoadSubtitle(sub, lines, textBoxInputFile.Text);
@@ -101,7 +104,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                                 {
                                     TrainLetter(ref numberOfCharactersLeaned, ref numberOfCharactersSkipped, nOcrD, charactersLearned, s, false);
                                     if (checkBoxBold.Checked)
+                                    {
                                         TrainLetter(ref numberOfCharactersLeaned, ref numberOfCharactersSkipped, nOcrD, charactersLearned, s, true);
+                                    }
                                 }
                             }
                         }
@@ -158,7 +163,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 var fontStyle = FontStyle.Regular;
                 if (subtitleFontBold)
+                {
                     fontStyle = FontStyle.Bold;
+                }
+
                 font = new Font(_subtitleFontName, _subtitleFontSize, fontStyle);
             }
             catch (Exception exception)
@@ -178,9 +186,15 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             int sizeX = (int)(textSize.Width * 0.8) + 40;
             int sizeY = (int)(textSize.Height * 0.8) + 30;
             if (sizeX < 1)
+            {
                 sizeX = 1;
+            }
+
             if (sizeY < 1)
+            {
                 sizeY = 1;
+            }
+
             bmp = new Bitmap(sizeX, sizeY);
             g = Graphics.FromImage(bmp);
 
@@ -231,7 +245,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 i++;
             }
             if (sb.Length > 0)
+            {
                 TextDraw.DrawText(font, sf, path, sb, false, subtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
+            }
+
             sf.Dispose();
 
             g.DrawPath(new Pen(_borderColor, BorderWidth), path);

@@ -116,8 +116,8 @@ namespace Nikse.SubtitleEdit.Core
 
         public static DvdSubtitleLanguage GetLanguageOrNull(string code)
         {
-            code = ConvertIsoToDvd(code.ToLowerInvariant());
-            return CompliantLanguagesByCode.GetValueOrNull(code);
+            var dvdCode = ConvertIsoToDvd(code.ToLowerInvariant());
+            return CompliantLanguagesByCode.GetValueOrNull(dvdCode);
         }
 
         private static string GetNonCompliantLocalLanguageName(string code)
