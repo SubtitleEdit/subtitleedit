@@ -1,6 +1,6 @@
 ﻿namespace Nikse.SubtitleEdit.Forms
 {
-    partial class ColumnPaste
+    sealed partial class ColumnPaste
     {
         /// <summary>
         /// Required designer variable.

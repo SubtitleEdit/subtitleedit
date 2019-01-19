@@ -4,17 +4,16 @@ using Nikse.SubtitleEdit.Forms.Styles;
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public partial class ChooseStyle : Form
+    public sealed partial class ChooseStyle : Form
     {
         public List<string> SelectedStyleNames { get; set; }
 
-        private Subtitle _subtitle;
-        private bool _isSubStationAlpha;
+        private readonly Subtitle _subtitle;
+        private readonly bool _isSubStationAlpha;
 
         public ChooseStyle(Subtitle subtitle, bool isSubStationAlpha)
         {
@@ -43,7 +42,9 @@ namespace Nikse.SubtitleEdit.Forms
         private void ChooseStyle_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)
+            {
                 DialogResult = DialogResult.Cancel;
+            }
         }
 
         private void buttonOK_Click(object sender, EventArgs e)
@@ -51,7 +52,9 @@ namespace Nikse.SubtitleEdit.Forms
             foreach (ListViewItem item in listViewStyles.Items)
             {
                 if (item.Checked)
+                {
                     SelectedStyleNames.Add(item.Text);
+                }
             }
             DialogResult = DialogResult.OK;
         }
@@ -71,7 +74,9 @@ namespace Nikse.SubtitleEdit.Forms
                 SubStationAlphaStyles.AddStyle(listViewStyles, ssaStyle, _subtitle, _isSubStationAlpha);
             }
             if (listViewStyles.Items.Count > 0)
+            {
                 listViewStyles.Items[0].Selected = true;
+            }
         }
 
     }

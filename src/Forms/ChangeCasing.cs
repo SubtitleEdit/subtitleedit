@@ -27,11 +27,17 @@ namespace Nikse.SubtitleEdit.Forms
             FixLargeFonts();
 
             if (Configuration.Settings.Tools.ChangeCasingChoice == "NamesOnly")
+            {
                 radioButtonFixOnlyNames.Checked = true;
+            }
             else if (Configuration.Settings.Tools.ChangeCasingChoice == "Uppercase")
+            {
                 radioButtonUppercase.Checked = true;
+            }
             else if (Configuration.Settings.Tools.ChangeCasingChoice == "Lowercase")
+            {
                 radioButtonLowercase.Checked = true;
+            }
         }
 
         public int LinesChanged { get; private set; }
@@ -41,7 +47,10 @@ namespace Nikse.SubtitleEdit.Forms
         private void FixLargeFonts()
         {
             if (radioButtonNormal.Left + radioButtonNormal.Width + 40 > Width)
+            {
                 Width = radioButtonNormal.Left + radioButtonNormal.Width + 40;
+            }
+
             UiUtil.FixLargeFonts(this, buttonOK);
         }
 
@@ -61,19 +70,30 @@ namespace Nikse.SubtitleEdit.Forms
         private void FormChangeCasing_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)
+            {
                 DialogResult = DialogResult.Cancel;
+            }
         }
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
             if (radioButtonNormal.Checked)
+            {
                 Configuration.Settings.Tools.ChangeCasingChoice = "Normal";
+            }
             else if (radioButtonFixOnlyNames.Checked)
+            {
                 Configuration.Settings.Tools.ChangeCasingChoice = "NamesOnly";
+            }
             else if (radioButtonUppercase.Checked)
+            {
                 Configuration.Settings.Tools.ChangeCasingChoice = "Uppercase";
+            }
             else if (radioButtonLowercase.Checked)
+            {
                 Configuration.Settings.Tools.ChangeCasingChoice = "Lowercase";
+            }
+
             DialogResult = DialogResult.OK;
         }
 

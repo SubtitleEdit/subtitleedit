@@ -18,9 +18,15 @@ namespace Nikse.SubtitleEdit.Forms
             get
             {
                 if (radioButtonPercent.Checked)
+                {
                     return numericUpDownPercent.Value.ToString(CultureInfo.InvariantCulture);
+                }
+
                 if (radioButtonAutoRecalculate.Checked)
+                {
                     return $"{radioButtonAutoRecalculate.Text}, {labelMaxCharsPerSecond.Text}: {numericUpDownMaxCharsSec.Value}";
+                }
+
                 return numericUpDownSeconds.Value.ToString(CultureInfo.InvariantCulture);
             }
         }
@@ -49,11 +55,15 @@ namespace Nikse.SubtitleEdit.Forms
 
             decimal adjustSeconds = Configuration.Settings.Tools.AdjustDurationSeconds;
             if (adjustSeconds >= numericUpDownSeconds.Minimum && adjustSeconds <= numericUpDownSeconds.Maximum)
+            {
                 numericUpDownSeconds.Value = adjustSeconds;
+            }
 
             int adjustPercent = Configuration.Settings.Tools.AdjustDurationPercent;
             if (adjustPercent >= numericUpDownPercent.Minimum && adjustPercent <= numericUpDownPercent.Maximum)
+            {
                 numericUpDownPercent.Value = adjustPercent;
+            }
 
             numericUpDownOptimalCharsSec.Value = (decimal)Configuration.Settings.General.SubtitleOptimalCharactersPerSeconds;
             numericUpDownMaxCharsSec.Value = (decimal)Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds;
@@ -95,14 +105,19 @@ namespace Nikse.SubtitleEdit.Forms
         private void FixLargeFonts()
         {
             if (labelNote.Left + labelNote.Width + 5 > Width)
+            {
                 Width = labelNote.Left + labelNote.Width + 5;
+            }
+
             UiUtil.FixLargeFonts(this, buttonOK);
         }
 
         private void FormAdjustDisplayTime_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)
+            {
                 DialogResult = DialogResult.Cancel;
+            }
         }
 
         private void RadioButtonPercentCheckedChanged(object sender, EventArgs e)
@@ -152,7 +167,10 @@ namespace Nikse.SubtitleEdit.Forms
         public void HideRecalculate()
         {
             if (radioButtonAutoRecalculate.Checked)
+            {
                 radioButtonSeconds.Checked = true;
+            }
+
             radioButtonAutoRecalculate.Visible = false;
             labelMaxCharsPerSecond.Visible = false;
             numericUpDownMaxCharsSec.Visible = false;

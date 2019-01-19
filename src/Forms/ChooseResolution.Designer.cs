@@ -1,6 +1,6 @@
 ﻿namespace Nikse.SubtitleEdit.Forms
 {
-    partial class ChooseResolution
+    sealed partial class ChooseResolution
     {
         /// <summary>
         /// Required designer variable.

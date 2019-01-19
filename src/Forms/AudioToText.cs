@@ -46,7 +46,9 @@ namespace Nikse.SubtitleEdit.Forms
                 encoderName = "FFmpeg";
                 string audioParameter = string.Empty;
                 if (audioTrackNumber > 0)
+                {
                     audioParameter = $"-map 0:a:{audioTrackNumber}";
+                }
 
                 const string fFmpegWaveTranscodeSettings = "-i \"{0}\" -acodec pcm_s16le -ac 1 -ar 16000 {2} \"{1}\"";
                 //-i indicates the input
@@ -131,9 +133,14 @@ namespace Nikse.SubtitleEdit.Forms
                                 {
                                     var audioTrackNames = new List<string>();
                                     if (track.CodecId != null && track.Language != null)
+                                    {
                                         audioTrackNames.Add("#" + track.TrackNumber + ": " + track.CodecId.Replace("\0", string.Empty) + " - " + track.Language.Replace("\0", string.Empty));
+                                    }
                                     else
+                                    {
                                         audioTrackNames.Add("#" + track.TrackNumber);
+                                    }
+
                                     mkvAudioTrackNumbers.Add(mkvAudioTrackNumbers.Count, track.TrackNumber);
                                 }
                             }
@@ -182,7 +189,9 @@ namespace Nikse.SubtitleEdit.Forms
                 process.OutputDataReceived += (sender, e) =>
                 {
                     if (_abort)
+                    {
                         return;
+                    }
 
                     if (e.Data == null)
                     {
@@ -202,7 +211,10 @@ namespace Nikse.SubtitleEdit.Forms
                 process.ErrorDataReceived += (sender, e) =>
                 {
                     if (_abort)
+                    {
                         return;
+                    }
+
                     if (e.Data == null)
                     {
                         errorWaitHandle.Set();
@@ -356,7 +368,10 @@ namespace Nikse.SubtitleEdit.Forms
             var positionInSeconds = e.ProgressPercentage;
             var percentage = (int)Math.Round(positionInSeconds * 100.0 / (_videoInfo.TotalMilliseconds / 1000.0));
             if (percentage > 100)
+            {
                 percentage = 100;
+            }
+
             if (progressBar1.Style == ProgressBarStyle.Marquee)
             {
                 progressBar1.Style = ProgressBarStyle.Blocks;

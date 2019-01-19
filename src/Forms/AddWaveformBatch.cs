@@ -55,7 +55,9 @@ namespace Nikse.SubtitleEdit.Forms
         private void RemoveSelectedFiles()
         {
             if (_converting)
+            {
                 return;
+            }
 
             for (int i = listViewInputFiles.SelectedIndices.Count - 1; i >= 0; i--)
             {
@@ -94,7 +96,9 @@ namespace Nikse.SubtitleEdit.Forms
                 foreach (ListViewItem lvi in listViewInputFiles.Items)
                 {
                     if (lvi.Text.Equals(fileName, StringComparison.OrdinalIgnoreCase))
+                    {
                         return;
+                    }
                 }
 
                 var fi = new FileInfo(fileName);
@@ -157,11 +161,14 @@ namespace Nikse.SubtitleEdit.Forms
                         progressBar1.Refresh();
                         Application.DoEvents();
                         if (_abort)
+                        {
                             return;
+                        }
                     }
                 }
                 catch
                 {
+                    // ignored
                 }
             }
             if (checkBoxScanFolderRecursive.Checked)
@@ -169,9 +176,14 @@ namespace Nikse.SubtitleEdit.Forms
                 foreach (string directory in Directory.GetDirectories(path))
                 {
                     if (directory != "." && directory != "..")
+                    {
                         SearchFolder(directory);
+                    }
+
                     if (_abort)
+                    {
                         return;
+                    }
                 }
             }
         }
@@ -208,7 +220,10 @@ namespace Nikse.SubtitleEdit.Forms
             _abort = false;
             listViewInputFiles.BeginUpdate();
             foreach (ListViewItem item in listViewInputFiles.Items)
+            {
                 item.SubItems[3].Text = "-";
+            }
+
             listViewInputFiles.EndUpdate();
             Refresh();
             int index = 0;
@@ -228,8 +243,7 @@ namespace Nikse.SubtitleEdit.Forms
                     Process process;
                     try
                     {
-                        string encoderName;
-                        process = AddWaveform.GetCommandLineProcess(fileName, -1, targetFile, Configuration.Settings.General.VlcWaveTranscodeSettings, out encoderName);
+                        process = AddWaveform.GetCommandLineProcess(fileName, -1, targetFile, Configuration.Settings.General.VlcWaveTranscodeSettings, out var encoderName);
                         labelInfo.Text = encoderName;
                     }
                     catch (DllNotFoundException)
@@ -268,9 +282,14 @@ namespace Nikse.SubtitleEdit.Forms
                                     if (track.IsAudio)
                                     {
                                         if (track.CodecId != null && track.Language != null)
+                                        {
                                             audioTrackNames.Add("#" + track.TrackNumber + ": " + track.CodecId.Replace("\0", string.Empty) + " - " + track.Language.Replace("\0", string.Empty));
+                                        }
                                         else
+                                        {
                                             audioTrackNames.Add("#" + track.TrackNumber);
+                                        }
+
                                         mkvAudioTrackNumbers.Add(mkvAudioTrackNumbers.Count, track.TrackNumber);
                                     }
                                 }
@@ -286,10 +305,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         finally
                         {
-                            if (matroska != null)
-                            {
-                                matroska.Dispose();
-                            }
+                            matroska?.Dispose();
                         }
                     }
 
@@ -344,7 +360,10 @@ namespace Nikse.SubtitleEdit.Forms
         private void IncrementAndShowProgress()
         {
             if (progressBar1.Value < progressBar1.Maximum)
+            {
                 progressBar1.Value++;
+            }
+
             TaskbarList.SetProgressValue(Owner.Handle, progressBar1.Value, progressBar1.Maximum);
             labelProgress.Text = progressBar1.Value + " / " + progressBar1.Maximum;
         }
@@ -352,13 +371,18 @@ namespace Nikse.SubtitleEdit.Forms
         private void AddWaveformBatch_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)
+            {
                 _abort = true;
+            }
         }
 
         private void contextMenuStripFiles_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
             if (listViewInputFiles.Items.Count == 0)
+            {
                 e.Cancel = true;
+            }
+
             removeToolStripMenuItem.Visible = listViewInputFiles.SelectedItems.Count > 0;
         }
 
@@ -371,7 +395,9 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             if (e.Data.GetDataPresent(DataFormats.FileDrop, false))
+            {
                 e.Effect = DragDropEffects.All;
+            }
         }
 
         private void listViewInputFiles_DragDrop(object sender, DragEventArgs e)

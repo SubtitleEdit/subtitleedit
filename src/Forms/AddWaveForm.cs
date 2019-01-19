@@ -42,7 +42,10 @@ namespace Nikse.SubtitleEdit.Forms
             _peakWaveFileName = peakWaveFileName;
             _audioTrackNumber = audioTrackNumber;
             if (_audioTrackNumber < 0)
+            {
                 _audioTrackNumber = 0;
+            }
+
             Text = Configuration.Settings.Language.AddWaveform.Title;
             buttonRipWave.Text = Configuration.Settings.Language.AddWaveform.GenerateWaveformData;
             labelPleaseWait.Text = Configuration.Settings.Language.AddWaveform.PleaseWait;
@@ -88,7 +91,9 @@ namespace Nikse.SubtitleEdit.Forms
                 encoderName = "FFmpeg";
                 string audioParameter = string.Empty;
                 if (audioTrackNumber > 0)
+                {
                     audioParameter = string.Format("-map 0:a:{0}", audioTrackNumber);
+                }
 
                 const string fFmpegWaveTranscodeSettings = "-i \"{0}\" -vn -ar 24000 -ac 2 -ab 128 -vol 448 -f wav {2} \"{1}\"";
                 //-i indicates the input
@@ -154,16 +159,23 @@ namespace Nikse.SubtitleEdit.Forms
             }
             catch
             {
+                // ignored
             }
+
             while (!process.HasExited)
             {
                 Application.DoEvents();
                 System.Threading.Thread.Sleep(100);
                 seconds += 0.1;
                 if (seconds < 60)
+                {
                     labelProgress.Text = string.Format(Configuration.Settings.Language.AddWaveform.ExtractingSeconds, seconds);
+                }
                 else
+                {
                     labelProgress.Text = string.Format(Configuration.Settings.Language.AddWaveform.ExtractingMinutes, (int)(seconds / 60), (int)(seconds % 60));
+                }
+
                 Refresh();
                 if (_cancel)
                 {
@@ -196,6 +208,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     catch
                     {
+                        // ignored
                     }
                 }
             }
@@ -280,9 +293,14 @@ namespace Nikse.SubtitleEdit.Forms
                                 {
                                     numberOfAudioTracks++;
                                     if (track.CodecId != null && track.Language != null)
+                                    {
                                         audioTrackNames.Add("#" + track.TrackNumber + ": " + track.CodecId.Replace("\0", string.Empty) + " - " + track.Language.Replace("\0", string.Empty));
+                                    }
                                     else
+                                    {
                                         audioTrackNames.Add("#" + track.TrackNumber);
+                                    }
+
                                     mkvAudioTrackNumbers.Add(mkvAudioTrackNumbers.Count, track.TrackNumber);
                                 }
                             }
@@ -290,10 +308,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     finally
                     {
-                        if (matroska != null)
-                        {
-                            matroska.Dispose();
-                        }
+                        matroska?.Dispose();
                     }
                 }
                 else if (labelVideoFileName.Text.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase) || labelVideoFileName.Text.EndsWith(".m4v", StringComparison.OrdinalIgnoreCase))
@@ -307,16 +322,23 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             i++;
                             if (track.Name != null && track.Mdia != null && track.Mdia.Mdhd != null && track.Mdia.Mdhd.LanguageString != null)
+                            {
                                 audioTrackNames.Add(i + ":  " + track.Name + " - " + track.Mdia.Mdhd.LanguageString);
+                            }
                             else if (track.Name != null)
+                            {
                                 audioTrackNames.Add(i + ":  " + track.Name);
+                            }
                             else
+                            {
                                 audioTrackNames.Add(i.ToString(CultureInfo.InvariantCulture));
+                            }
                         }
                         numberOfAudioTracks = tracks.Count;
                     }
                     catch
                     {
+                        // ignored
                     }
                 }
 
@@ -355,10 +377,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     finally
                     {
-                        if (matroska != null)
-                        {
-                            matroska.Dispose();
-                        }
+                        matroska?.Dispose();
                     }
                 }
 
@@ -373,7 +392,9 @@ namespace Nikse.SubtitleEdit.Forms
         private void AddWaveform_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)
+            {
                 DialogResult = DialogResult.Cancel;
+            }
             else if (e.KeyCode == UiUtil.HelpKeys)
             {
                 Utilities.ShowHelp("#waveform");

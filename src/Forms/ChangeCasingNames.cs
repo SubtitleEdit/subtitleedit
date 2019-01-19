@@ -54,7 +54,9 @@ namespace Nikse.SubtitleEdit.Forms
         private void ChangeCasingNames_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)
+            {
                 DialogResult = DialogResult.Cancel;
+            }
         }
 
         private void AddToListViewNames(string name)
@@ -70,7 +72,9 @@ namespace Nikse.SubtitleEdit.Forms
 
             _language = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle);
             if (string.IsNullOrEmpty(_language))
+            {
                 _language = "en_US";
+            }
 
             _nameList = new NameList(Configuration.DictionariesDirectory, _language, Configuration.Settings.WordLists.UseOnlineNames, Configuration.Settings.WordLists.NamesUrl);
             _nameListInclMulti = _nameList.GetAllNames(); // Will contains both one word names and multi names
@@ -103,7 +107,9 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
                 if (text != p.Text)
+                {
                     AddToPreviewListView(p, text);
+                }
             }
             listViewFixes.EndUpdate();
             groupBoxLinesFound.Text = string.Format(Configuration.Settings.Language.ChangeCasingNames.LinesFoundX, listViewFixes.Items.Count);
@@ -150,7 +156,9 @@ namespace Nikse.SubtitleEdit.Forms
                             int end = startIndex + name.Length;
                             bool endOk = end <= text.Length;
                             if (endOk)
+                            {
                                 endOk = end == text.Length || ExpectedEndChars.Contains(text[end]);
+                            }
 
                             if (endOk && text.Substring(startIndex, name.Length) != name) // do not add names where casing already is correct
                             {
@@ -179,7 +187,9 @@ namespace Nikse.SubtitleEdit.Forms
         {
             labelXLinesSelected.Text = string.Empty;
             if (listViewNames.SelectedItems.Count != 1)
+            {
                 return;
+            }
 
             string name = listViewNames.SelectedItems[0].SubItems[1].Text;
             listViewFixes.BeginUpdate();
@@ -204,7 +214,9 @@ namespace Nikse.SubtitleEdit.Forms
                             int end = start + name.Length;
                             bool endOk = end <= lower.Length;
                             if (endOk)
+                            {
                                 endOk = end == lower.Length || ExpectedEndChars.Contains(lower[end]);
+                            }
 
                             item.Selected = endOk;
                         }
@@ -215,7 +227,9 @@ namespace Nikse.SubtitleEdit.Forms
             listViewFixes.EndUpdate();
 
             if (listViewFixes.SelectedItems.Count > 0)
+            {
                 listViewFixes.EnsureVisible(listViewFixes.SelectedItems[0].Index);
+            }
         }
 
         private void ListViewNamesItemChecked(object sender, ItemCheckedEventArgs e)
@@ -237,7 +251,9 @@ namespace Nikse.SubtitleEdit.Forms
                     LinesChanged++;
                     var p = item.Tag as Paragraph;
                     if (p != null)
+                    {
                         p.Text = UiUtil.GetStringFromListViewText(item.SubItems[3].Text);
+                    }
                 }
             }
         }
@@ -250,9 +266,13 @@ namespace Nikse.SubtitleEdit.Forms
         private void listViewFixes_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (listViewFixes.SelectedItems.Count > 1)
+            {
                 labelXLinesSelected.Text = string.Format(Configuration.Settings.Language.Main.XLinesSelected, listViewFixes.SelectedItems.Count);
+            }
             else
+            {
                 labelXLinesSelected.Text = string.Empty;
+            }
         }
 
         private void buttonSelectAll_Click(object sender, EventArgs e)
@@ -272,9 +292,13 @@ namespace Nikse.SubtitleEdit.Forms
             foreach (ListViewItem item in listViewNames.Items)
             {
                 if (selectAll)
+                {
                     item.Checked = true;
+                }
                 else
+                {
                     item.Checked = !item.Checked;
+                }
             }
             listViewNames.EndUpdate();
             listViewNames.ItemChecked += ListViewNamesItemChecked;

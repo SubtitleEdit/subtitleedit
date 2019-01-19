@@ -6,7 +6,7 @@ using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public partial class AlignmentPicker : Form
+    public sealed partial class AlignmentPicker : Form
     {
         public ContentAlignment Alignment { get; private set; }
 
@@ -94,7 +94,9 @@ namespace Nikse.SubtitleEdit.Forms
         private void AlignmentPicker_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)
+            {
                 DialogResult = DialogResult.Cancel;
+            }
         }
 
         private void AlignmentPicker_Shown(object sender, EventArgs e)

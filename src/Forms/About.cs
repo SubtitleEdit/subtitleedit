@@ -26,15 +26,18 @@ namespace Nikse.SubtitleEdit.Forms
             string[] versionInfo = Utilities.AssemblyVersion.Split('.');
             string revisionNumber = "0";
             if (versionInfo.Length >= 4)
+            {
                 revisionNumber = versionInfo[3];
+            }
+
             if (revisionNumber == "0")
             {
-                labelProduct.Text = String.Format("{0} {1}.{2}.{3}, ", _languageGeneral.Title, versionInfo[0], versionInfo[1], versionInfo[2]);
+                labelProduct.Text = $"{_languageGeneral.Title} {versionInfo[0]}.{versionInfo[1]}.{versionInfo[2]}, ";
                 revisionNumber = Utilities.AssemblyDescription.Substring(0, 7);
             }
             else
             {
-                labelProduct.Text = String.Format("{0} {1}.{2}.{3}, build", _languageGeneral.Title, versionInfo[0], versionInfo[1], versionInfo[2]);
+                labelProduct.Text = $"{_languageGeneral.Title} {versionInfo[0]}.{versionInfo[1]}.{versionInfo[2]}, build";
             }
             linkLabelGitBuildHash.Left = labelProduct.Left + labelProduct.Width - 5;
             linkLabelGitBuildHash.Text = revisionNumber;
@@ -72,7 +75,9 @@ namespace Nikse.SubtitleEdit.Forms
         private void About_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)
+            {
                 DialogResult = DialogResult.Cancel;
+            }
             else if (e.KeyCode == UiUtil.HelpKeys)
             {
                 Utilities.ShowHelp(null);

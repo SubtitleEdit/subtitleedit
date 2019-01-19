@@ -14,30 +14,20 @@ namespace Nikse.SubtitleEdit.Forms
     {
         private class TranslationInfo : IEquatable<TranslationInfo>
         {
-            private readonly string _cultureName;
+            public string CultureName { get; }
 
-            public string CultureName
-            {
-                get { return _cultureName; }
-            }
-
-            private readonly string _displayName;
-
-            public string DisplayName
-            {
-                get { return _displayName; }
-            }
+            public string DisplayName { get; }
 
             public TranslationInfo(string cultureName, string displayName)
             {
-                _cultureName = cultureName;
+                CultureName = cultureName;
                 try
                 {
-                    _displayName = displayName.CapitalizeFirstLetter(CultureInfo.GetCultureInfo(cultureName));
+                    DisplayName = displayName.CapitalizeFirstLetter(CultureInfo.GetCultureInfo(cultureName));
                 }
                 catch
                 {
-                    _displayName = displayName.CapitalizeFirstLetter(CultureInfo.InvariantCulture);
+                    DisplayName = displayName.CapitalizeFirstLetter(CultureInfo.InvariantCulture);
                 }
             }
 
@@ -112,11 +102,14 @@ namespace Nikse.SubtitleEdit.Forms
                             var cultureName = document.DocumentElement.SelectSingleNode("General/CultureName").InnerText.Trim();
                             var displayName = document.DocumentElement.Attributes["Name"].Value.Trim();
                             if (!string.IsNullOrEmpty(cultureName) && !string.IsNullOrEmpty(displayName))
+                            {
                                 translations.Add(new TranslationInfo(cultureName, displayName));
+                            }
                         }
                     }
                     catch
                     {
+                        // ignored
                     }
                 }
             }
@@ -126,7 +119,9 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 int i = comboBoxLanguages.Items.Add(translation);
                 if (translation.Equals(CurrentTranslation) || (index < 0 && translation.Equals(DefaultTranslation)))
+                {
                     index = i;
+                }
             }
             comboBoxLanguages.SelectedIndex = index;
             comboBoxLanguages.AutoCompleteSource = AutoCompleteSource.ListItems;

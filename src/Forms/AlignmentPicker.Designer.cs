@@ -1,6 +1,6 @@
 ﻿namespace Nikse.SubtitleEdit.Forms
 {
-    partial class AlignmentPicker
+    sealed partial class AlignmentPicker
     {
         /// <summary>
         /// Required designer variable.

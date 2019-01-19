@@ -28,7 +28,10 @@ namespace Nikse.SubtitleEdit.Forms
         private void FixLargeFonts()
         {
             if (labelDescription.Left + labelDescription.Width + 5 > Width)
+            {
                 Width = labelDescription.Left + labelDescription.Width + 5;
+            }
+
             UiUtil.FixLargeFonts(this, buttonOK);
         }
 
@@ -40,7 +43,9 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 textBoxAddName.Text = text.Trim().TrimEnd('.', '!', '?');
                 if (textBoxAddName.Text.Length > 1)
+                {
                     textBoxAddName.Text = char.ToUpper(textBoxAddName.Text[0]) + textBoxAddName.Text.Substring(1);
+                }
             }
 
             comboBoxDictionaries.Items.Clear();
@@ -67,7 +72,9 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 textBoxAddName.Text = text.Trim().TrimEnd('.', '!', '?');
                 if (textBoxAddName.Text.Length > 1)
+                {
                     textBoxAddName.Text = char.ToUpper(textBoxAddName.Text[0]) + textBoxAddName.Text.Substring(1);
+                }
             }
 
             comboBoxDictionaries.Items.Clear();
@@ -75,7 +82,9 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 comboBoxDictionaries.Items.Add(name);
                 if (hunspellName != null && name.Equals(hunspellName, StringComparison.OrdinalIgnoreCase))
+                {
                     comboBoxDictionaries.SelectedIndex = comboBoxDictionaries.Items.Count - 1;
+                }
             }
         }
 
