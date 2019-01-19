@@ -118,7 +118,6 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                                 }
                             }
                         }
-                        //prev.EndTime.TotalMilliseconds--;
                     }
                     else if (prevOptimalDisplayTime <= (p.StartTime.TotalMilliseconds - prev.StartTime.TotalMilliseconds))
                     {

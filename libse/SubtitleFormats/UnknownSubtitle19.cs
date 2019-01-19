@@ -33,7 +33,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var xml = new XmlDocument();
             xml.LoadXml(xmlStructure);
 
-            //  int count = 1;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 XmlNode paragraph = xml.CreateElement("Clip");
@@ -46,16 +45,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 attr.InnerText = ToTimeCode(p.EndTime);
                 paragraph.Attributes.Append(attr);
 
-                //attr = xml.CreateAttribute("fileName");
-                //attr.InnerText = "ee_disc1_subtitle_1/Subtitle_" + count + ".png";
-                //paragraph.Attributes.Append(attr);
-
                 attr = xml.CreateAttribute("text");
                 attr.InnerText = HtmlUtil.RemoveHtmlTags(p.Text);
                 paragraph.Attributes.Append(attr);
 
                 xml.DocumentElement.AppendChild(paragraph);
-                //    count++;
             }
 
             return ToUtf8XmlString(xml);

@@ -13,7 +13,6 @@ namespace Nikse.SubtitleEdit.Forms.Styles
         private readonly string _header;
         private readonly bool _isSubStationAlpha;
         private readonly SubtitleFormat _format;
-        private readonly List<string> _styles;
         public List<string> ExportedStyles { get; set; }
 
         public SubStationAlphaStylesExport(string header, bool isSubStationAlpha, SubtitleFormat format)
@@ -23,10 +22,10 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             _header = header;
             _isSubStationAlpha = isSubStationAlpha;
             _format = format;
-            _styles = AdvancedSubStationAlpha.GetStylesFromHeader(_header);
+            var styles = AdvancedSubStationAlpha.GetStylesFromHeader(_header);
 
             listViewExportStyles.Columns[0].Width = listViewExportStyles.Width - 20;
-            foreach (var style in _styles)
+            foreach (var style in styles)
             {
                 listViewExportStyles.Items.Add(new ListViewItem(style) { Checked = true });
             }
@@ -69,18 +68,17 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             {
                 if (File.Exists(saveFileDialogStyle.FileName))
                 {
-                    Encoding encoding = null;
                     var s = new Subtitle();
-                    var format = s.LoadSubtitle(saveFileDialogStyle.FileName, out encoding, null);
+                    var format = s.LoadSubtitle(saveFileDialogStyle.FileName, out _, null);
                     if (format == null)
                     {
                         MessageBox.Show("Not subtitle format: " + _format.Name);
                         return;
                     }
-                    else if (format.Name != _format.Name)
+
+                    if (format.Name != _format.Name)
                     {
                         MessageBox.Show(string.Format("Cannot save {1} style in {0} file!", format.Name, _format.Name));
-                        return;
                     }
                     else
                     {
@@ -112,7 +110,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                                     {
                                         sb.AppendLine(style.ToRawAss(styleFormat));
                                     }
-                                }                                
+                                }
                             }
                             sb.AppendLine(line);
                             foreach (var styleName in ExportedStyles)

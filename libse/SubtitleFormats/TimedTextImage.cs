@@ -191,7 +191,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             couldBeFrames = false;
                         }
 
-                        if (couldBeMillisecondsWithMissingLastDigit && (dur.Length != 11 || start == null || start.Length != 11 || dur.Substring(8, 1) != "." | start.Substring(8, 1) != "."))
+                        if (couldBeMillisecondsWithMissingLastDigit &&
+                            (dur.Length != 11 ||
+                             start == null ||
+                             start.Length != 11 ||
+                             dur.Substring(8, 1) != "." ||
+                             start.Substring(8, 1) != "."))
                         {
                             couldBeMillisecondsWithMissingLastDigit = false;
                         }

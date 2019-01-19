@@ -53,7 +53,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
             {
                 bool added = false;
                 var p = subtitle.GetParagraphOrDefault(i);
-                if (p != null && p.Text != null)
+                if (p?.Text != null)
                 {
                     if (QualifiesForSplit(p.Text, singleLineMaxCharacters, totalLineMaxCharacters))
                     {
@@ -118,14 +118,12 @@ namespace Nikse.SubtitleEdit.Core.Forms
                                             const string post = "</i>";
                                             newParagraph1.Text = newParagraph1.Text.Remove(newParagraph1.Text.Length - post.Length);
                                         }
-                                        //newParagraph1.Text += comboBoxLineContinuationEnd.Text.TrimEnd() + post;
 
                                         if (newParagraph2.Text.StartsWith("<i>", StringComparison.Ordinal))
                                         {
                                             const string pre = "<i>";
                                             newParagraph2.Text = newParagraph2.Text.Remove(0, pre.Length);
                                         }
-                                        //newParagraph2.Text = pre + comboBoxLineContinuationBegin.Text + newParagraph2.Text;
                                     }
 
                                     var indexOfItalicOpen1 = newParagraph1.Text.IndexOf("<i>", StringComparison.Ordinal);

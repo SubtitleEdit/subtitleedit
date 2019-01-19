@@ -5,7 +5,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.MaterialExchangeFormat
 {
     public class MxfParser
     {
-        public string FileName { get; private set; }
+        public string FileName { get; }
         public bool IsValid { get; private set; }
 
         private readonly List<string> _subtitleList = new List<string>();
@@ -43,19 +43,8 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.MaterialExchangeFormat
                 {
                     stream.Seek(next, SeekOrigin.Begin);
                     var klv = new KlvPacket(stream);
-
-                    //Console.WriteLine();
-                    //Console.WriteLine("Key: " + klv.DisplayKey);
-                    //Console.WriteLine("Type: " + klv.IdentifyerType);
-                    //Console.WriteLine("Total size: " + klv.TotalSize);
-                    //Console.WriteLine("Data position: " + klv.DataPosition);
-                    //if (klv.IdentifyerType == KeyIdentifier.PartitionPack)
-                    //    Console.WriteLine("Partition status: " + klv.PartionStatus);
-
                     next += klv.TotalSize;
-
-                    if (klv.IdentifierType == KeyIdentifier.EssenceElement &&
-                        klv.DataSize < 500000)
+                    if (klv.IdentifierType == KeyIdentifier.EssenceElement && klv.DataSize < 500000)
                     {
                         stream.Seek(klv.DataPosition, SeekOrigin.Begin);
                         var buffer = new byte[klv.DataSize];

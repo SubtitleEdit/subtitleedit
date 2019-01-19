@@ -1029,7 +1029,6 @@ namespace Nikse.SubtitleEdit.Forms
             AddNode(listViewAndTextBoxNode, Configuration.Settings.Language.General.Italic, nameof(Configuration.Settings.Shortcuts.MainListViewItalic), true);
             AddNode(listViewAndTextBoxNode, Configuration.Settings.Language.General.Bold, nameof(Configuration.Settings.Shortcuts.MainListViewBold), true);
             AddNode(listViewAndTextBoxNode, Configuration.Settings.Language.General.Underline, nameof(Configuration.Settings.Shortcuts.MainListViewUnderline), true);
-            //AddNode(listViewAndTextBoxNode, language.ToggleDialogDashes, nameof(Configuration.Settings.Shortcuts.MainListViewToggleDashes));
             AddNode(listViewAndTextBoxNode, language.ToggleMusicSymbols, nameof(Configuration.Settings.Shortcuts.MainListViewToggleMusicSymbols), true);
             AddNode(listViewAndTextBoxNode, language.AlignmentN1, nameof(Configuration.Settings.Shortcuts.MainListViewAlignmentN1));
             AddNode(listViewAndTextBoxNode, language.AlignmentN2, nameof(Configuration.Settings.Shortcuts.MainListViewAlignmentN2));
