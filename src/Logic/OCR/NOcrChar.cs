@@ -12,18 +12,12 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
         public int Height { get; set; }
         public int MarginTop { get; set; }
         public bool Italic { get; set; }
-        public List<NOcrPoint> LinesForeground { get; private set; }
-        public List<NOcrPoint> LinesBackground { get; private set; }
+        public List<NOcrPoint> LinesForeground { get; }
+        public List<NOcrPoint> LinesBackground { get; }
         public int ExpandCount { get; set; }
-        public bool LoadedOk { get; private set; }
+        public bool LoadedOk { get; }
 
-        public Double WidthPercent
-        {
-            get
-            {
-                return Height * 100.0 / Width;
-            }
-        }
+        public double WidthPercent => Height * 100.0 / Width;
 
         public NOcrChar()
         {
@@ -42,9 +36,14 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             MarginTop = old.MarginTop;
             Italic = old.Italic;
             foreach (NOcrPoint p in old.LinesForeground)
+            {
                 LinesForeground.Add(new NOcrPoint(new Point(p.Start.X, p.Start.Y), new Point(p.End.X, p.End.Y)));
+            }
+
             foreach (NOcrPoint p in old.LinesBackground)
+            {
                 LinesBackground.Add(new NOcrPoint(new Point(p.Start.X, p.Start.Y), new Point(p.End.X, p.End.Y)));
+            }
         }
 
         public NOcrChar(string text)
@@ -58,13 +57,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             return Text;
         }
 
-        public bool IsSensitive
-        {
-            get
-            {
-                return Text == "." || Text == "," || Text == "'" || Text == "-" || Text == ":" || Text == "\"";
-            }
-        }
+        public bool IsSensitive => Text == "." || Text == "," || Text == "'" || Text == "-" || Text == ":" || Text == "\"";
 
         public NOcrChar(Stream stream)
         {

@@ -124,9 +124,14 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             }
 
             if (word.Length > 0)
+            {
                 ItalicsWord(line, ref word, ref lettersItalics, ref lettersNonItalics, ref wordItalics, ref wordNonItalics, ref isItalic, "");
+            }
+
             if (line.Length > 0)
+            {
                 ItalianLine(paragraph, ref line, ref allItalic, ref wordItalics, ref wordNonItalics, ref isItalic, "", lineLettersNonItalics);
+            }
 
             if (allItalic && matches.Count > 0)
             {
@@ -205,7 +210,9 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                         nonItalicCount++;
                     }
                     if (m.Text == " " || m.Text == Environment.NewLine)
+                    {
                         break;
+                    }
                 }
             }
             italicOrNot = italicCount > 0;
@@ -252,7 +259,10 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             if (lettersItalics >= lettersNonItalics && lettersItalics > 0)
             {
                 if (!isItalic)
+                {
                     line.Append("<i>");
+                }
+
                 line.Append(word + appendString);
                 wordItalics++;
                 isItalic = true;

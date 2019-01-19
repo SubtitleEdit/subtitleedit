@@ -16,7 +16,9 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
         protected override void WndProc(ref Message m)
         {
             if (m.Msg == NativeMethods.WindowsMessageCopyData && OnCopyData != null)
+            {
                 OnCopyData.Invoke(m, new EventArgs());
+            }
             base.WndProc(ref m);
         }
 

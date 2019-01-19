@@ -32,47 +32,34 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
         private Timer _hideMpcTimer = new Timer();
         private int _hideMpcTimerCount;
 
-        public override string PlayerName
-        {
-            get { return "MPC-HC"; }
-        }
+        public override string PlayerName => "MPC-HC";
 
         private int _volume = 75;
 
         public override int Volume
         {
-            get
-            {
-                return _volume;
-            }
+            get => _volume;
             set
             {
                 // MPC-HC moves from 0-100 in steps of 5
                 for (int i = 0; i < 100; i += 5)
+                {
                     SendMpcMessage(MpcHcCommand.DecreaseVolume);
+                }
+
                 for (_volume = 0; _volume < value; _volume += 5)
+                {
                     SendMpcMessage(MpcHcCommand.IncreaseVolume);
+                }
             }
         }
 
-        public override double Duration
-        {
-            get
-            {
-                return _durationInSeconds;
-            }
-        }
+        public override double Duration => _durationInSeconds;
 
         public override double CurrentPosition
         {
-            get
-            {
-                return _positionInSeconds;
-            }
-            set
-            {
-                SendMpcMessage(MpcHcCommand.SetPosition, string.Format(CultureInfo.InvariantCulture, "{0:0.000}", value));
-            }
+            get => _positionInSeconds;
+            set => SendMpcMessage(MpcHcCommand.SetPosition, string.Format(CultureInfo.InvariantCulture, "{0:0.000}", value));
         }
 
         public override void Play()
@@ -92,20 +79,16 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
             SendMpcMessage(MpcHcCommand.Stop);
         }
 
-        public override bool IsPaused
-        {
-            get { return _playMode == ModePause; }
-        }
+        public override bool IsPaused => _playMode == ModePause;
 
-        public override bool IsPlaying
-        {
-            get { return _playMode == ModePlay; }
-        }
+        public override bool IsPlaying => _playMode == ModePlay;
 
         public override void Initialize(Control ownerControl, string videoFileName, EventHandler onVideoLoaded, EventHandler onVideoEnded)
         {
             if (ownerControl == null)
+            {
                 return;
+            }
 
             VideoFileName = videoFileName;
             OnVideoLoaded = onVideoLoaded;
@@ -120,12 +103,14 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
             _videoPanelHandle = ownerControl.Handle;
             _messageHandlerHandle = _form.Handle;
             _videoFileName = videoFileName;
-            _startInfo = new ProcessStartInfo();
-            _startInfo.FileName = GetMpcHcFileName();
-            _startInfo.Arguments = "/new /minimized /slave " + _messageHandlerHandle;
+            _startInfo = new ProcessStartInfo
+            {
+                FileName = GetMpcHcFileName(),
+                Arguments = "/new /minimized /slave " + _messageHandlerHandle
+            };
             _process = Process.Start(_startInfo);
-            if (_process != null)
-                _process.WaitForInputIdle();
+            _process?.WaitForInputIdle();
+
             _positionTimer = new Timer { Interval = 100 };
             _positionTimer.Tick += PositionTimerTick;
         }
@@ -143,7 +128,9 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
             var param = Marshal.PtrToStringAuto(cds.lpData);
             var multiParam = new string[0];
             if (param != null)
+            {
                 multiParam = param.Split('|');
+            }
 
             switch (command)
             {
@@ -173,16 +160,19 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
                         _loaded = 2;
 
                         _durationInSeconds = 5000;
-                        double d;
-                        if (multiParam.Length >= 5 && double.TryParse(multiParam[4].Replace(",", ".").Trim(), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out d))
+                        if (multiParam.Length >= 5 && double.TryParse(multiParam[4].Replace(",", ".").Trim(), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var d))
+                        {
                             _durationInSeconds = d;
+                        }
                         else if (multiParam.Length >= 1 && double.TryParse(multiParam[multiParam.Length - 1].Replace(",", ".").Trim(), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out d))
+                        {
                             _durationInSeconds = d;
+                        }
 
                         Pause();
                         Resize(_initialWidth, _initialHeight);
-                        if (OnVideoLoaded != null)
-                            OnVideoLoaded.Invoke(this, new EventArgs());
+                        OnVideoLoaded?.Invoke(this, new EventArgs());
+
                         SendMpcMessage(MpcHcCommand.SetSubtitleTrack, "-1");
 
                         // be sure to hide MPC
@@ -203,15 +193,16 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
                     }
                     break;
                 case MpcHcCommand.NotifyEndOfStream:
-                    if (OnVideoEnded != null)
-                        OnVideoEnded.Invoke(this, new EventArgs());
+                    OnVideoEnded?.Invoke(this, new EventArgs());
+
                     break;
                 case MpcHcCommand.CurrentPosition:
                     if (!string.IsNullOrWhiteSpace(param))
                     {
-                        double d;
-                        if (double.TryParse(param.Replace(",", "."), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out d))
+                        if (double.TryParse(param.Replace(",", "."), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var d))
+                        {
                             _positionInSeconds = d;
+                        }
                     }
                     break;
             }
@@ -242,8 +233,11 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
             var className = new StringBuilder(256);
             int returnCode = NativeMethods.GetClassName(hWnd, className, className.Capacity); // Get the window class name
             if (returnCode != 0)
+            {
                 return className.ToString().EndsWith(":b:0000000000010003:0000000000000006:0000000000000000") || // MPC-HC 64-bit video class???
                        className.ToString().EndsWith(":b:00010003:00000006:00000000");                           // MPC-HC 32-bit video class???
+            }
+
             return false;
         }
 
@@ -267,7 +261,9 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
         public override void Resize(int width, int height)
         {
             if (_process == null || _videoHandle == IntPtr.Zero)
+            {
                 return;
+            }
 
             NativeMethods.ShowWindow(_process.MainWindowHandle, NativeMethods.ShowWindowCommands.ShowNoActivate);
             NativeMethods.SetWindowPos(_videoHandle, (IntPtr)NativeMethods.SpecialWindowHandles.HWND_TOP, 0, 0, width, height, NativeMethods.SetWindowPosFlags.SWP_NOREPOSITION);
@@ -282,21 +278,31 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
             {
                 path = Path.Combine(Configuration.BaseDirectory, @"MPC-HC\mpc-hc64.exe");
                 if (File.Exists(path))
+                {
                     return path;
+                }
 
                 if (!string.IsNullOrEmpty(Configuration.Settings.General.MpcHcLocation))
                 {
                     path = Configuration.Settings.General.MpcHcLocation;
                     if (path != null && (File.Exists(path) && path.EndsWith("mpc-hc64.exe", StringComparison.OrdinalIgnoreCase)))
+                    {
                         return path;
+                    }
+
                     if (Directory.Exists(Configuration.Settings.General.MpcHcLocation))
                     {
                         path = Path.Combine(Configuration.Settings.General.MpcHcLocation, "mpc-hc64.exe");
                         if (File.Exists(path))
+                        {
                             return path;
+                        }
+
                         path = Path.Combine(Configuration.Settings.General.MpcHcLocation, @"MPC-HC\mpc-hc64.exe");
                         if (File.Exists(path))
+                        {
                             return path;
+                        }
                     }
                 }
 
@@ -305,52 +311,76 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
                 {
                     path = Path.Combine(path, "mpc-hc64.exe");
                     if (File.Exists(path))
+                    {
                         return path;
+                    }
                 }
 
                 path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), @"MPC-HC\mpc-hc64.exe");
                 if (File.Exists(path))
+                {
                     return path;
+                }
 
                 path = @"C:\Program Files\MPC-HC\mpc-hc64.exe";
                 if (File.Exists(path))
+                {
                     return path;
+                }
 
                 path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), @"K-Lite Codec Pack\MPC-HC\mpc-hc64.exe");
                 if (File.Exists(path))
+                {
                     return path;
+                }
 
                 path = @"C:\Program Files (x86)\K-Lite Codec Pack\MPC-HC64\mpc-hc64.exe";
                 if (File.Exists(path))
+                {
                     return path;
+                }
 
                 path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), @"K-Lite Codec Pack\MPC-HC64\mpc-hc64.exe");
                 if (File.Exists(path))
+                {
                     return path;
+                }
 
                 path = @"C:\Program Files (x86)\MPC-HC\mpc-hc64.exe";
                 if (File.Exists(path))
+                {
                     return path;
+                }
             }
             else
             {
                 path = Path.Combine(Configuration.BaseDirectory, @"MPC-HC\mpc-hc.exe");
                 if (File.Exists(path))
+                {
                     return path;
+                }
 
                 if (!string.IsNullOrEmpty(Configuration.Settings.General.MpcHcLocation))
                 {
                     path = Configuration.Settings.General.MpcHcLocation;
                     if (path != null && File.Exists(path) && path.EndsWith("mpc-hc.exe", StringComparison.OrdinalIgnoreCase))
+                    {
                         return path;
+                    }
+
                     if (Directory.Exists(Configuration.Settings.General.MpcHcLocation))
                     {
                         path = Path.Combine(Configuration.Settings.General.MpcHcLocation, @"mpc-hc.exe");
                         if (File.Exists(path))
+                        {
                             return path;
+                        }
+
                         path = Path.Combine(Configuration.Settings.General.MpcHcLocation, @"MPC-HC\mpc-hc.exe");
                         if (File.Exists(path))
+                        {
                             return path;
+                        }
                     }
                 }
 
@@ -359,33 +389,40 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
                 {
                     path = Path.Combine(path, "mpc-hc.exe");
                     if (File.Exists(path))
+                    {
                         return path;
+                    }
                 }
 
                 path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), @"MPC-HC\mpc-hc.exe");
                 if (File.Exists(path))
+                {
                     return path;
+                }
 
                 path = @"C:\Program Files (x86)\MPC-HC\mpc-hc.exe";
                 if (File.Exists(path))
+                {
                     return path;
+                }
 
                 path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), @"K-Lite Codec Pack\MPC-HC\mpc-hc.exe");
                 if (File.Exists(path))
+                {
                     return path;
+                }
 
                 path = @"C:\Program Files\MPC-HC\mpc-hc.exe";
                 if (File.Exists(path))
+                {
                     return path;
+                }
             }
 
             return null;
         }
 
-        public static bool IsInstalled
-        {
-            get { return true; }
-        }
+        public static bool IsInstalled => true;
 
         public override void DisposeVideoPlayer()
         {
@@ -476,7 +513,9 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
         private void SendMpcMessage(uint command, string parameter)
         {
             if (_mpcHandle == IntPtr.Zero || _messageHandlerHandle == IntPtr.Zero)
+            {
                 return;
+            }
 
             parameter += (char)0;
             NativeMethods.CopyDataStruct cds;

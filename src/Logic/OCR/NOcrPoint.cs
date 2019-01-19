@@ -75,7 +75,9 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 }
                 double factor = (double)(y2 - y1) / (x2 - x1);
                 for (int i = x1; i <= x2; i++)
+                {
                     list.Add(new Point(i, (int)Math.Round(y1 + factor * (i - x1))));
+                }
             }
             else
             {
@@ -88,7 +90,9 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 }
                 double factor = (double)(x2 - x1) / (y2 - y1);
                 for (int i = y1; i <= y2; i++)
+                {
                     list.Add(new Point((int)Math.Round(x1 + factor * (i - y1)), i));
+                }
             }
             return list;
         }

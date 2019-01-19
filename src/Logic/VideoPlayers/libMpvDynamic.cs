@@ -139,7 +139,9 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         private void DoMpvCommand(params string[] args)
         {
             if (_mpvHandle == IntPtr.Zero)
+            {
                 return;
+            }
 
             var mainPtr = AllocateUtf8IntPtrArrayWithSentinel(args, out var byteArrayPointers);
             _mpvCommand(_mpvHandle, mainPtr);
@@ -155,10 +157,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         private int _volume = 75;
         public override int Volume
         {
-            get
-            {
-                return _volume;
-            }
+            get => _volume;
             set
             {
                 var v = Configuration.Settings.General.AllowVolumeBoost ? (int)Math.Round(value * 1.5) : value;
@@ -172,7 +171,9 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             get
             {
                 if (_mpvHandle == IntPtr.Zero)
+                {
                     return 0;
+                }
 
                 int mpvFormatDouble = 5;
                 double d = 0;
@@ -186,12 +187,17 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             get
             {
                 if (_mpvHandle == IntPtr.Zero)
+                {
                     return 0;
+                }
 
                 if (_pausePosition != null)
                 {
                     if (_pausePosition < 0)
+                    {
                         return 0;
+                    }
+
                     return _pausePosition.Value;
                 }
 
@@ -203,10 +209,14 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             set
             {
                 if (_mpvHandle == IntPtr.Zero)
+                {
                     return;
+                }
 
                 if (IsPaused && value <= Duration)
+                {
                     _pausePosition = value;
+                }
 
                 DoMpvCommand("seek", value.ToString(CultureInfo.InvariantCulture), "absolute");
             }
@@ -215,10 +225,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         private double _playRate = 1.0;
         public override double PlayRate
         {
-            get
-            {
-                return _playRate;
-            }
+            get => _playRate;
             set
             {
                 DoMpvCommand("set", "speed", value.ToString(CultureInfo.InvariantCulture));
@@ -229,7 +236,9 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         public void GetNextFrame()
         {
             if (_mpvHandle == IntPtr.Zero)
+            {
                 return;
+            }
 
             DoMpvCommand("frame-step");
             _pausePosition = null;
@@ -238,7 +247,9 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         public void GetPreviousFrame()
         {
             if (_mpvHandle == IntPtr.Zero)
+            {
                 return;
+            }
 
             DoMpvCommand("frame-back-step");
             _pausePosition = null;
@@ -249,7 +260,9 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             _pausePosition = null;
 
             if (_mpvHandle == IntPtr.Zero)
+            {
                 return;
+            }
 
             var bytes = GetUtf8Bytes("no");
             _mpvSetProperty(_mpvHandle, GetUtf8Bytes("pause"), MpvFormatString, ref bytes);
@@ -258,7 +271,9 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         public override void Pause()
         {
             if (_mpvHandle == IntPtr.Zero)
+            {
                 return;
+            }
 
             var bytes = GetUtf8Bytes("yes");
             _mpvSetProperty(_mpvHandle, GetUtf8Bytes("pause"), MpvFormatString, ref bytes);
@@ -276,7 +291,9 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             get
             {
                 if (_mpvHandle == IntPtr.Zero)
+                {
                     return true;
+                }
 
                 var lpBuffer = IntPtr.Zero;
                 _mpvGetPropertyString(_mpvHandle, GetUtf8Bytes("pause"), MpvFormatString, ref lpBuffer);
@@ -286,10 +303,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             }
         }
 
-        public override bool IsPlaying
-        {
-            get { return !IsPaused; }
-        }
+        public override bool IsPlaying => !IsPaused;
 
         private List<string> _audioTrackIds;
         public int AudioTrackCount
@@ -348,7 +362,9 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             get
             {
                 if (_mpvHandle == IntPtr.Zero)
+                {
                     return string.Empty;
+                }
 
                 var version = _mpvClientApiVersion();
                 var high = version >> 16;
@@ -401,11 +417,15 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         public static string GetMpvPath(string fileName)
         {
             if (Configuration.IsRunningOnLinux() || Configuration.IsRunningOnMac())
+            {
                 return null;
+            }
 
             var path = Path.Combine(Configuration.DataDirectory, fileName);
             if (File.Exists(path))
+            {
                 return path;
+            }
 
             return null;
         }
@@ -416,7 +436,10 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             if (File.Exists(dllFile))
             {
                 if (_libMpvDll == IntPtr.Zero)
+                {
                     _libMpvDll = NativeMethods.LoadLibrary(dllFile);
+                }
+
                 LoadLibVlcDynamic();
                 if (!IsAllMethodsLoaded())
                 {
@@ -442,13 +465,19 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
                 string videoOutput = "direct3d";
                 if (!string.IsNullOrWhiteSpace(Configuration.Settings.General.MpvVideoOutput))
+                {
                     videoOutput = Configuration.Settings.General.MpvVideoOutput;
+                }
+
                 _mpvSetOptionString(_mpvHandle, GetUtf8Bytes("vo"), GetUtf8Bytes(videoOutput)); // use "direct3d" or "opengl"
                 _mpvSetOptionString(_mpvHandle, GetUtf8Bytes("keep-open"), GetUtf8Bytes("always")); // don't auto close video
                 _mpvSetOptionString(_mpvHandle, GetUtf8Bytes("no-sub"), GetUtf8Bytes("")); // don't load subtitles
                 if (videoFileName.StartsWith("http://", StringComparison.OrdinalIgnoreCase) ||
                     videoFileName.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
+                {
                     _mpvSetOptionString(_mpvHandle, GetUtf8Bytes("ytdl"), GetUtf8Bytes("yes"));
+                }
+
                 DoMpvCommand("loadfile", videoFileName);
 
                 _videoLoadedTimer = new Timer { Interval = 50 };

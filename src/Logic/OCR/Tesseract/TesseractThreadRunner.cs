@@ -83,7 +83,9 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Tesseract
                 {
                     _jobQueue.Dequeue();
                     if (!_abort)
+                    {
                         _callback?.Invoke(job.Index, job);
+                    }
                 }
             }
         }

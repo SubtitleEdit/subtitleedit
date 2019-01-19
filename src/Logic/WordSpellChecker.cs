@@ -26,9 +26,9 @@ namespace Nikse.SubtitleEdit.Logic
 
         private object _wordApplication;
         private object _wordDocument;
-        private Type _wordApplicationType;
+        private readonly Type _wordApplicationType;
         private Type _wordDocumentType;
-        private IntPtr _mainHandle;
+        private readonly IntPtr _mainHandle;
         private int _languageId = 1033; // English
 
         public WordSpellChecker(Main main, string languageId)

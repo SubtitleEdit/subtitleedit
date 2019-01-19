@@ -122,7 +122,10 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Tesseract
                 var result = new List<string>();
                 string resultFileName = outputFileName + ".html";
                 if (!File.Exists(outputFileName))
+                {
                     resultFileName = outputFileName + ".hocr";
+                }
+
                 filesToDelete.Add(resultFileName);
                 try
                 {
@@ -161,7 +164,10 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Tesseract
                     var wordStart = html.IndexOf("<span class='ocrx_word'", lineStart, StringComparison.InvariantCulture);
                     int wordMax = html.IndexOf("<span class='ocr_line'", lineStart + 1, StringComparison.InvariantCulture);
                     if (wordMax <= 0)
+                    {
                         wordMax = html.Length;
+                    }
+
                     while (wordStart > 0 && wordStart <= wordMax)
                     {
                         var startText = html.IndexOf('>', wordStart + 1);

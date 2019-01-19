@@ -20,8 +20,8 @@ namespace Nikse.SubtitleEdit.Logic
                                       .Where(c => c.GetType() == type);
         }
 
-        static Color BackColor = Color.FromArgb(52, 52, 45);
-        static Color ForeColor = Color.FromArgb(150, 150, 150);
+        static readonly Color BackColor = Color.FromArgb(52, 52, 45);
+        static readonly Color ForeColor = Color.FromArgb(150, 150, 150);
 
         private static void TabControl1_DrawItem(object sender, DrawItemEventArgs e)
         {
@@ -209,7 +209,9 @@ namespace Nikse.SubtitleEdit.Logic
             lv.ForeColor = ForeColor;
             e.DrawDefault = false;
             using (var b = new SolidBrush(BackColor))
+            {
                 e.Graphics.FillRectangle(b, e.Bounds);
+            }
 
             var strFormat = new StringFormat();
             switch (e.Header.TextAlign)
@@ -223,7 +225,9 @@ namespace Nikse.SubtitleEdit.Logic
             }
 
             using (var fc = new SolidBrush(ForeColor))
+            {
                 e.Graphics.DrawString(e.Header.Text, e.Font, fc, e.Bounds, strFormat);
+            }
         }
 
         private class MyRenderer : ToolStripProfessionalRenderer
@@ -239,7 +243,9 @@ namespace Nikse.SubtitleEdit.Logic
             protected override void OnRenderToolStripBackground(ToolStripRenderEventArgs e)
             {
                 using (SolidBrush brush = new SolidBrush(BackColor))
+                {
                     e.Graphics.FillRectangle(brush, e.ConnectedArea);
+                }
             }
         }
 

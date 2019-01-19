@@ -25,7 +25,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         private int _sourceWidth;
         private int _sourceHeight;
 
-        public override string PlayerName { get { return "DirectShow"; } }
+        public override string PlayerName => "DirectShow";
 
         /// <summary>
         /// In DirectX -10000 is silent and 0 is full volume.
@@ -37,7 +37,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             {
                 try
                 {
-                    return ((_quartzFilgraphManager as IBasicAudio).Volume / 35) + 100;
+                    return ((IBasicAudio)_quartzFilgraphManager).Volume / 35 + 100;
                 }
                 catch
                 {
@@ -49,12 +49,17 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 try
                 {
                     if (value == 0)
-                        (_quartzFilgraphManager as IBasicAudio).Volume = -10000;
+                    {
+                        ((IBasicAudio)_quartzFilgraphManager).Volume = -10000;
+                    }
                     else
-                        (_quartzFilgraphManager as IBasicAudio).Volume = (value - 100) * 35;
+                    {
+                        ((IBasicAudio)_quartzFilgraphManager).Volume = (value - 100) * 35;
+                    }
                 }
                 catch
                 {
+                    // ignored
                 }
             }
         }
@@ -90,17 +95,21 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             set
             {
                 if (value >= 0 && value <= Duration)
+                {
                     _mediaPosition.CurrentPosition = value;
+                }
             }
         }
 
         public override double PlayRate
         {
-            get { return _mediaPosition.Rate; }
+            get => _mediaPosition.Rate;
             set
             {
                 if (value >= 0 && value <= 2.0)
+                {
                     _mediaPosition.Rate = value;
+                }
             }
         }
 
@@ -122,21 +131,9 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             _isPaused = true;
         }
 
-        public override bool IsPaused
-        {
-            get
-            {
-                return _isPaused;
-            }
-        }
+        public override bool IsPaused => _isPaused;
 
-        public override bool IsPlaying
-        {
-            get
-            {
-                return !IsPaused;
-            }
-        }
+        public override bool IsPlaying => !IsPaused;
 
         public override void Initialize(Control ownerControl, string videoFileName, EventHandler onVideoLoaded, EventHandler onVideoEnded)
         {
@@ -163,7 +160,9 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             //Play();
 
             if (!isAudio)
-                (_quartzFilgraphManager as IBasicVideo).GetVideoSize(out _sourceWidth, out _sourceHeight);
+            {
+                ((IBasicVideo)_quartzFilgraphManager).GetVideoSize(out _sourceWidth, out _sourceHeight);
+            }
 
             _owner.Resize += OwnerControlResize;
             _mediaPosition = (IMediaPosition)_quartzFilgraphManager;
@@ -181,7 +180,9 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             _videoEndTimer.Start();
 
             if (!isAudio)
+            {
                 _quartzVideo.MessageDrain = (int)ownerControl.Handle;
+            }
         }
 
         public static VideoInfo GetVideoInfo(string videoFileName)
@@ -192,15 +193,16 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             {
                 var quartzFilgraphManager = new FilgraphManager();
                 quartzFilgraphManager.RenderFile(videoFileName);
-                int width;
-                int height;
-                (quartzFilgraphManager as IBasicVideo).GetVideoSize(out width, out height);
+                ((IBasicVideo)quartzFilgraphManager).GetVideoSize(out var width, out var height);
 
                 info.Width = width;
                 info.Height = height;
-                var basicVideo2 = (quartzFilgraphManager as IBasicVideo2);
+                var basicVideo2 = (IBasicVideo2)quartzFilgraphManager;
                 if (basicVideo2.AvgTimePerFrame > 0)
+                {
                     info.FramesPerSecond = 1 / basicVideo2.AvgTimePerFrame;
+                }
+
                 info.Success = true;
                 var iMediaPosition = (quartzFilgraphManager as IMediaPosition);
                 info.TotalMilliseconds = iMediaPosition.Duration * 1000;
@@ -237,6 +239,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 }
                 catch
                 {
+                    // ignored
                 }
             }
             _videoEndTimer = null;
@@ -248,14 +251,18 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             {
                 _isPaused = true;
                 if (OnVideoEnded != null && _quartzFilgraphManager != null)
+                {
                     OnVideoEnded.Invoke(_quartzFilgraphManager, new EventArgs());
+                }
             }
         }
 
         private void OwnerControlResize(object sender, EventArgs e)
         {
             if (_quartzVideo == null)
+            {
                 return;
+            }
 
             try
             {
@@ -298,10 +305,13 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             try
             {
                 if (_quartzVideo != null)
+                {
                     _quartzVideo.Owner = -1;
+                }
             }
             catch
             {
+                // ignored
             }
 
             if (_quartzFilgraphManager != null)

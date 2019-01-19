@@ -59,7 +59,7 @@ namespace Nikse.SubtitleEdit.Logic.ColorChooser
         // degrees and radians. There are 2*PI radians in a
         // full circle, and 360 degrees. This constant allows
         // you to convert back and forth.
-        private const double DEGREES_PER_RADIAN = 180.0 / Math.PI;
+        private const double DegreesPerRadian = 180.0 / Math.PI;
 
         // COLOR_COUNT represents the number of distinct colors
         // used to create the circular gradient. Its value
@@ -70,37 +70,37 @@ namespace Nikse.SubtitleEdit.Logic.ColorChooser
         // attempting to generate the image. The color wheel
         // contains 6 sections, and each section displays
         // 256 colors. Seems like a reasonable compromise.
-        private const int COLOR_COUNT = 6 * 256;
-        private readonly int brightnessMax;
-        private readonly int brightnessMin;
+        private const int ColorCount = 6 * 256;
+        private readonly int _brightnessMax;
+        private readonly int _brightnessMin;
 
-        private readonly Rectangle brightnessRectangle;
-        private readonly Region brightnessRegion;
-        private readonly double brightnessScaling;
-        private readonly int brightnessX;
-        private readonly Region colorRegion;
-        private readonly int radius;
-        private readonly Rectangle selectedColorRectangle;
+        private readonly Rectangle _brightnessRectangle;
+        private readonly Region _brightnessRegion;
+        private readonly double _brightnessScaling;
+        private readonly int _brightnessX;
+        private readonly Region _colorRegion;
+        private readonly int _radius;
+        private readonly Rectangle _selectedColorRectangle;
         public ColorChangedEventHandler ColorChanged;
 
         // selectedColor is the actual value selected
         // by the user. fullColor is the same color,
         // with its brightness set to 255.
-        private ColorHandler.HSV HSV;
-        private ColorHandler.ARGB argb;
+        private ColorHandler.HSV _hsv;
+        private ColorHandler.ARGB _argb;
 
         // Locations for the two "pointers" on the form.
 
-        private int brightness = byte.MaxValue;
-        private Point brightnessPoint;
-        private Point centerPoint;
-        private Bitmap colorImage;
-        private Point colorPoint;
-        private Rectangle colorRectangle;
-        private MouseState currentState = MouseState.MouseUp;
-        private Color fullColor;
-        private Graphics g;
-        private Color selectedColor = Color.White;
+        private int _brightness = byte.MaxValue;
+        private Point _brightnessPoint;
+        private Point _centerPoint;
+        private Bitmap _colorImage;
+        private Point _colorPoint;
+        private Rectangle _colorRectangle;
+        private MouseState _currentState = MouseState.MouseUp;
+        private Color _fullColor;
+        private Graphics _g;
+        private Color _selectedColor = Color.White;
 
         public ColorWheel(Rectangle colorRectangle, Rectangle brightnessRectangle, Rectangle selectedColorRectangle)
         {
@@ -111,32 +111,32 @@ namespace Nikse.SubtitleEdit.Logic.ColorChooser
             using (var path = new GraphicsPath())
             {
                 // Store away locations for later use.
-                this.colorRectangle = colorRectangle;
-                this.brightnessRectangle = brightnessRectangle;
-                this.selectedColorRectangle = selectedColorRectangle;
+                _colorRectangle = colorRectangle;
+                _brightnessRectangle = brightnessRectangle;
+                _selectedColorRectangle = selectedColorRectangle;
 
                 // Calculate the center of the circle.
                 // Start with the location, then offset
                 // the point by the radius.
                 // Use the smaller of the width and height of
                 // the colorRectangle value.
-                radius = Math.Min(colorRectangle.Width, colorRectangle.Height) / 2;
-                centerPoint = colorRectangle.Location;
-                centerPoint.Offset(radius, radius);
+                _radius = Math.Min(colorRectangle.Width, colorRectangle.Height) / 2;
+                _centerPoint = colorRectangle.Location;
+                _centerPoint.Offset(_radius, _radius);
 
                 // Start the pointer in the center.
-                colorPoint = centerPoint;
+                _colorPoint = _centerPoint;
 
                 // Create a region corresponding to the color circle.
                 // Code uses this later to determine if a specified
                 // point is within the region, using the IsVisible
                 // method.
                 path.AddEllipse(colorRectangle);
-                colorRegion = new Region(path);
+                _colorRegion = new Region(path);
 
                 // set { the range for the brightness selector.
-                brightnessMin = this.brightnessRectangle.Top;
-                brightnessMax = this.brightnessRectangle.Bottom;
+                _brightnessMin = _brightnessRectangle.Top;
+                _brightnessMax = _brightnessRectangle.Bottom;
 
                 // Create a region corresponding to the
                 // brightness rectangle, with a little extra
@@ -148,31 +148,28 @@ namespace Nikse.SubtitleEdit.Logic.ColorChooser
                 // rectangle. Later code uses this to
                 // determine if a specified point is within
                 // the region, using the IsVisible method.
-                brightnessRegion = new Region(path);
+                _brightnessRegion = new Region(path);
 
                 // Set the location for the brightness indicator "marker".
                 // Also calculate the scaling factor, scaling the height
                 // to be between 0 and 255.
-                brightnessX = brightnessRectangle.Left + brightnessRectangle.Width;
-                brightnessScaling = (double)255 / (brightnessMax - brightnessMin);
+                _brightnessX = brightnessRectangle.Left + brightnessRectangle.Width;
+                _brightnessScaling = (double)255 / (_brightnessMax - _brightnessMin);
 
                 // Calculate the location of the brightness
                 // pointer. Assume it's at the highest position.
-                brightnessPoint = new Point(brightnessX, brightnessMax);
+                _brightnessPoint = new Point(_brightnessX, _brightnessMax);
 
                 // Create the bitmap that contains the circular gradient.
                 CreateGradient();
             }
         }
 
-        public Color Color
-        {
-            get { return selectedColor; }
-        }
+        public Color Color => _selectedColor;
 
-        protected void OnColorChanged(ColorHandler.ARGB argb, ColorHandler.HSV HSV)
+        protected void OnColorChanged(ColorHandler.ARGB argb, ColorHandler.HSV hsv)
         {
-            var e = new ColorChangedEventArgs(argb, HSV);
+            var e = new ColorChangedEventArgs(argb, hsv);
             ColorChanged(this, e);
         }
 
@@ -180,24 +177,24 @@ namespace Nikse.SubtitleEdit.Logic.ColorChooser
         {
             // Indicate that the user has
             // released the mouse.
-            currentState = MouseState.MouseUp;
+            _currentState = MouseState.MouseUp;
         }
 
-        public void Draw(Graphics g, ColorHandler.HSV HSV)
+        public void Draw(Graphics g, ColorHandler.HSV hsv)
         {
             // Given HSV values, update the screen.
-            this.g = g;
-            this.HSV = HSV;
-            CalcCoordsAndUpdate(this.HSV);
+            _g = g;
+            _hsv = hsv;
+            CalcCoordsAndUpdate(_hsv);
             UpdateDisplay();
         }
 
         public void Draw(Graphics g, ColorHandler.ARGB argb)
         {
             // Given RGB values, calculate HSV and then update the screen.
-            this.g = g;
-            HSV = ColorHandler.RGBtoHSV(argb);
-            CalcCoordsAndUpdate(HSV);
+            _g = g;
+            _hsv = ColorHandler.RGBtoHSV(argb);
+            CalcCoordsAndUpdate(_hsv);
             UpdateDisplay();
         }
 
@@ -211,59 +208,59 @@ namespace Nikse.SubtitleEdit.Logic.ColorChooser
                 // Keep track of the previous color pointer point,
                 // so you can put the mouse there in case the
                 // user has clicked outside the circle.
-                Point newColorPoint = colorPoint;
-                Point newBrightnessPoint = brightnessPoint;
+                Point newColorPoint = _colorPoint;
+                Point newBrightnessPoint = _brightnessPoint;
 
                 // Store this away for later use.
-                this.g = g;
+                _g = g;
 
-                if (currentState == MouseState.MouseUp)
+                if (_currentState == MouseState.MouseUp)
                 {
                     if (!mousePoint.IsEmpty)
                     {
-                        if (colorRegion.IsVisible(mousePoint))
+                        if (_colorRegion.IsVisible(mousePoint))
                         {
                             // Is the mouse point within the color circle?
                             // If so, you just clicked on the color wheel.
-                            currentState = MouseState.ClickOnColor;
+                            _currentState = MouseState.ClickOnColor;
                         }
-                        else if (brightnessRegion.IsVisible(mousePoint))
+                        else if (_brightnessRegion.IsVisible(mousePoint))
                         {
                             // Is the mouse point within the brightness area?
                             // You clicked on the brightness area.
-                            currentState = MouseState.ClickOnBrightness;
+                            _currentState = MouseState.ClickOnBrightness;
                         }
                         else
                         {
                             // Clicked outside the color and the brightness
                             // regions. In that case, just put the
                             // pointers back where they were.
-                            currentState = MouseState.ClickOutsideRegion;
+                            _currentState = MouseState.ClickOutsideRegion;
                         }
                     }
                 }
 
-                switch (currentState)
+                switch (_currentState)
                 {
                     case MouseState.ClickOnBrightness:
                     case MouseState.DragInBrightness:
                         // Calculate new color information
                         // based on the brightness, which may have changed.
                         Point newPoint = mousePoint;
-                        if (newPoint.Y < brightnessMin)
+                        if (newPoint.Y < _brightnessMin)
                         {
-                            newPoint.Y = brightnessMin;
+                            newPoint.Y = _brightnessMin;
                         }
-                        else if (newPoint.Y > brightnessMax)
+                        else if (newPoint.Y > _brightnessMax)
                         {
-                            newPoint.Y = brightnessMax;
+                            newPoint.Y = _brightnessMax;
                         }
-                        newBrightnessPoint = new Point(brightnessX, newPoint.Y);
-                        brightness = (int)((brightnessMax - newPoint.Y) * brightnessScaling);
-                        HSV.Value = brightness;
-                        brightness = byte.MaxValue;
-                        argb = ColorHandler.HSVtoRGB(HSV);
-                        brightness = (argb.Red + argb.Green + argb.Blue) / 3;
+                        newBrightnessPoint = new Point(_brightnessX, newPoint.Y);
+                        _brightness = (int)((_brightnessMax - newPoint.Y) * _brightnessScaling);
+                        _hsv.Value = _brightness;
+                        _brightness = byte.MaxValue;
+                        _argb = ColorHandler.HSVtoRGB(_hsv);
+                        _brightness = (_argb.Red + _argb.Green + _argb.Blue) / 3;
                         break;
 
                     case MouseState.ClickOnColor:
@@ -275,16 +272,15 @@ namespace Nikse.SubtitleEdit.Logic.ColorChooser
                         // Calculate x and y distance from the center,
                         // and then calculate the angle corresponding to the
                         // new location.
-                        Point delta = new Point(
-                            mousePoint.X - centerPoint.X, mousePoint.Y - centerPoint.Y);
+                        Point delta = new Point(mousePoint.X - _centerPoint.X, mousePoint.Y - _centerPoint.Y);
                         int degrees = CalcDegrees(delta);
 
                         // Calculate distance from the center to the new point
                         // as a fraction of the radius. Use your old friend,
                         // the Pythagorean theorem, to calculate this value.
-                        double distance = Math.Sqrt(delta.X * delta.X + delta.Y * delta.Y) / radius;
+                        double distance = Math.Sqrt(delta.X * delta.X + delta.Y * delta.Y) / _radius;
 
-                        if (currentState == MouseState.DragInColor)
+                        if (_currentState == MouseState.DragInColor)
                         {
                             if (distance > 1)
                             {
@@ -294,49 +290,49 @@ namespace Nikse.SubtitleEdit.Logic.ColorChooser
                                 // In that case, move the point to the edge of the
                                 // circle at the correct angle.
                                 distance = 1;
-                                newColorPoint = GetPoint(degrees, radius, centerPoint);
+                                newColorPoint = GetPoint(degrees, _radius, _centerPoint);
                             }
                         }
 
                         // Calculate the new HSV and RGB values.
-                        HSV.Hue = (degrees * 255 / 360);
-                        HSV.Saturation = (int)(distance * 255);
-                        brightness = byte.MaxValue;
-                        HSV.Value = brightness;
-                        argb = ColorHandler.HSVtoRGB(HSV);
-                        if (argb.Red < 0 || argb.Red > byte.MaxValue || argb.Green < 0 || argb.Green > byte.MaxValue || argb.Blue < 0 || argb.Blue > byte.MaxValue)
+                        _hsv.Hue = (degrees * 255 / 360);
+                        _hsv.Saturation = (int)(distance * 255);
+                        _brightness = byte.MaxValue;
+                        _hsv.Value = _brightness;
+                        _argb = ColorHandler.HSVtoRGB(_hsv);
+                        if (_argb.Red < 0 || _argb.Red > byte.MaxValue || _argb.Green < 0 || _argb.Green > byte.MaxValue || _argb.Blue < 0 || _argb.Blue > byte.MaxValue)
                         {
                             UpdateDisplay();
                             return;
                         }
-                        brightness = (argb.Red + argb.Green + argb.Blue) / 3;
-                        fullColor = ColorHandler.HSVtoColor(HSV.Alpha, HSV.Hue, HSV.Saturation, 255);
+                        _brightness = (_argb.Red + _argb.Green + _argb.Blue) / 3;
+                        _fullColor = ColorHandler.HSVtoColor(_hsv.Alpha, _hsv.Hue, _hsv.Saturation, 255);
                         break;
                 }
-                selectedColor = ColorHandler.HSVtoColor(HSV);
+                _selectedColor = ColorHandler.HSVtoColor(_hsv);
 
                 // Raise an event back to the parent form,
                 // so the form can update any UI it's using
                 // to display selected color values.
-                OnColorChanged(argb, HSV);
+                OnColorChanged(_argb, _hsv);
 
                 // On the way out, set the new state.
-                switch (currentState)
+                switch (_currentState)
                 {
                     case MouseState.ClickOnBrightness:
-                        currentState = MouseState.DragInBrightness;
+                        _currentState = MouseState.DragInBrightness;
                         break;
                     case MouseState.ClickOnColor:
-                        currentState = MouseState.DragInColor;
+                        _currentState = MouseState.DragInColor;
                         break;
                     case MouseState.ClickOutsideRegion:
-                        currentState = MouseState.DragOutsideRegion;
+                        _currentState = MouseState.DragOutsideRegion;
                         break;
                 }
 
                 // Store away the current points for next time.
-                colorPoint = newColorPoint;
-                brightnessPoint = newBrightnessPoint;
+                _colorPoint = newColorPoint;
+                _brightnessPoint = newBrightnessPoint;
 
                 // Draw the gradients and points.
                 UpdateDisplay();
@@ -353,8 +349,7 @@ namespace Nikse.SubtitleEdit.Logic.ColorChooser
             // scaling used in the brightness bar, then add the value
             // to the bottom of the bar. return the correct point at which
             // to display the brightness pointer.
-            return new Point(brightnessX,
-                (int)(brightnessMax - brightness / brightnessScaling));
+            return new Point(_brightnessX, (int)(_brightnessMax - brightness / _brightnessScaling));
         }
 
         private void UpdateDisplay()
@@ -363,28 +358,28 @@ namespace Nikse.SubtitleEdit.Logic.ColorChooser
             // pointers correctly based on colors and
             // brightness.
 
-            using (Brush selectedBrush = new SolidBrush(selectedColor))
+            using (Brush selectedBrush = new SolidBrush(_selectedColor))
             {
                 // Draw the saved color wheel image.
-                g.DrawImage(colorImage, colorRectangle);
+                _g.DrawImage(_colorImage, _colorRectangle);
 
                 // Draw the "selected color" rectangle.
                 using (TextureBrush textureBrush = new TextureBrush(Resources.TransparentBackground))
                 {
-                    g.FillRectangle(textureBrush, selectedColorRectangle);
+                    _g.FillRectangle(textureBrush, _selectedColorRectangle);
                 }
 
-                g.FillRectangle(selectedBrush, selectedColorRectangle);
-                g.DrawRectangle(Pens.Black, selectedColorRectangle);
+                _g.FillRectangle(selectedBrush, _selectedColorRectangle);
+                _g.DrawRectangle(Pens.Black, _selectedColorRectangle);
                 // Draw the "brightness" rectangle.
-                DrawLinearGradient(fullColor);
+                DrawLinearGradient(_fullColor);
                 // Draw the two pointers.
-                DrawColorPointer(colorPoint);
-                DrawBrightnessPointer(brightnessPoint);
+                DrawColorPointer(_colorPoint);
+                DrawBrightnessPointer(_brightnessPoint);
             }
         }
 
-        private void CalcCoordsAndUpdate(ColorHandler.HSV HSV)
+        private void CalcCoordsAndUpdate(ColorHandler.HSV hsv)
         {
             // Convert color to real-world coordinates and then calculate
             // the various points. HSV.Hue represents the degrees (0 to 360),
@@ -397,35 +392,31 @@ namespace Nikse.SubtitleEdit.Logic.ColorChooser
             // the center (HSV.Saturation), and the center,
             // calculate the point corresponding to
             // the selected color, on the color wheel.
-            colorPoint = GetPoint((double)HSV.Hue / 255 * 360,
-                (double)HSV.Saturation / 255 * radius,
-                centerPoint);
+            _colorPoint = GetPoint((double)hsv.Hue / 255 * 360, (double)hsv.Saturation / 255 * _radius, _centerPoint);
 
             // Given the brightness (HSV.value), calculate the
             // point corresponding to the brightness indicator.
-            brightnessPoint = CalcBrightnessPoint(HSV.Value);
+            _brightnessPoint = CalcBrightnessPoint(hsv.Value);
 
             // Store information about the selected color.
-            brightness = HSV.Value;
-            selectedColor = ColorHandler.HSVtoColor(HSV);
-            argb = ColorHandler.HSVtoRGB(HSV);
+            _brightness = hsv.Value;
+            _selectedColor = ColorHandler.HSVtoColor(hsv);
+            _argb = ColorHandler.HSVtoRGB(hsv);
 
             // The full color is the same as HSV, except that the
             // brightness is set to full (255). This is the top-most
             // color in the brightness gradient.
-            fullColor = ColorHandler.HSVtoColor(HSV.Alpha, HSV.Hue, HSV.Saturation, 255);
+            _fullColor = ColorHandler.HSVtoColor(hsv.Alpha, hsv.Hue, hsv.Saturation, 255);
         }
 
-        private void DrawLinearGradient(Color TopColor)
+        private void DrawLinearGradient(Color topColor)
         {
             // Given the top color, draw a linear gradient
             // ranging from black to the top color. Use the
             // brightness rectangle as the area to fill.
-            using (var lgb =
-                new LinearGradientBrush(brightnessRectangle, TopColor,
-                    Color.Black, LinearGradientMode.Vertical))
+            using (var lgb = new LinearGradientBrush(_brightnessRectangle, topColor, Color.Black, LinearGradientMode.Vertical))
             {
-                g.FillRectangle(lgb, brightnessRectangle);
+                _g.FillRectangle(lgb, _brightnessRectangle);
             }
         }
 
@@ -440,14 +431,7 @@ namespace Nikse.SubtitleEdit.Logic.ColorChooser
                 // corresponding angle. Note that the orientation of the
                 // y-coordinate is backwards. That is, A positive Y value
                 // indicates a point BELOW the x-axis.
-                if (pt.Y > 0)
-                {
-                    degrees = 270;
-                }
-                else
-                {
-                    degrees = 90;
-                }
+                degrees = pt.Y > 0 ? 270 : 90;
             }
             else
             {
@@ -458,7 +442,7 @@ namespace Nikse.SubtitleEdit.Logic.ColorChooser
                 // the form has a lower y-value, in this coordinate
                 // system. So everything's off by a factor of -1 when
                 // performing the ratio calculations.
-                degrees = (int)(-Math.Atan((double)pt.Y / pt.X) * DEGREES_PER_RADIAN);
+                degrees = (int)(-Math.Atan((double)pt.Y / pt.X) * DegreesPerRadian);
 
                 // If the x-coordinate of the selected point
                 // is to the left of the center of the circle, you
@@ -481,15 +465,14 @@ namespace Nikse.SubtitleEdit.Logic.ColorChooser
             // Create a new PathGradientBrush, supplying
             // an array of points created by calling
             // the GetPoints method.
-            using (var pgb =
-                new PathGradientBrush(GetPoints(radius, new Point(radius, radius))))
+            using (var pgb = new PathGradientBrush(GetPoints(_radius, new Point(_radius, _radius))))
             {
                 // Set the various properties. Note the SurroundColors
                 // property, which contains an array of points,
                 // in a one-to-one relationship with the points
                 // that created the gradient.
                 pgb.CenterColor = Color.White;
-                pgb.CenterPoint = new PointF(radius, radius);
+                pgb.CenterPoint = new PointF(_radius, _radius);
                 pgb.SurroundColors = GetColors();
 
                 // Create a new bitmap containing
@@ -497,15 +480,10 @@ namespace Nikse.SubtitleEdit.Logic.ColorChooser
                 // code only needs to do all this
                 // work once. Later code uses the bitmap
                 // rather than recreating the gradient.
-                colorImage = new Bitmap(
-                    colorRectangle.Width, colorRectangle.Height,
-                    PixelFormat.Format32bppArgb);
-
-                using (Graphics newGraphics =
-                    Graphics.FromImage(colorImage))
+                _colorImage = new Bitmap(_colorRectangle.Width, _colorRectangle.Height, PixelFormat.Format32bppArgb);
+                using (Graphics newGraphics = Graphics.FromImage(_colorImage))
                 {
-                    newGraphics.FillEllipse(pgb, 0, 0,
-                        colorRectangle.Width, colorRectangle.Height);
+                    newGraphics.FillEllipse(pgb, 0, 0, _colorRectangle.Width, _colorRectangle.Height);
                 }
             }
         }
@@ -519,11 +497,12 @@ namespace Nikse.SubtitleEdit.Logic.ColorChooser
             // particularly well-suited for this,
             // because the only value that changes
             // as you create colors is the Hue.
-            var Colors = new Color[COLOR_COUNT];
-
-            for (int i = 0; i <= COLOR_COUNT - 1; i++)
-                Colors[i] = ColorHandler.HSVtoColor(255, (int)((double)(i * 255) / COLOR_COUNT), 255, 255);
-            return Colors;
+            var colors = new Color[ColorCount];
+            for (int i = 0; i <= ColorCount - 1; i++)
+            {
+                colors[i] = ColorHandler.HSVtoColor(255, (int)((double)(i * 255) / ColorCount), 255, 255);
+            }
+            return colors;
         }
 
         private static Point[] GetPoints(double radius, Point centerPoint)
@@ -531,11 +510,12 @@ namespace Nikse.SubtitleEdit.Logic.ColorChooser
             // Generate the array of points that describe
             // the locations of the COLOR_COUNT colors to be
             // displayed on the color wheel.
-            var Points = new Point[COLOR_COUNT];
-
-            for (int i = 0; i <= COLOR_COUNT - 1; i++)
-                Points[i] = GetPoint((double)(i * 360) / COLOR_COUNT, radius, centerPoint);
-            return Points;
+            var points = new Point[ColorCount];
+            for (int i = 0; i <= ColorCount - 1; i++)
+            {
+                points[i] = GetPoint((double)(i * 360) / ColorCount, radius, centerPoint);
+            }
+            return points;
         }
 
         private static Point GetPoint(double degrees, double radius, Point centerPoint)
@@ -543,8 +523,7 @@ namespace Nikse.SubtitleEdit.Logic.ColorChooser
             // Given the center of a circle and its radius, along
             // with the angle corresponding to the point, find the coordinates.
             // In other words, convert from polar to rectangular coordinates.
-            double radians = degrees / DEGREES_PER_RADIAN;
-
+            double radians = degrees / DegreesPerRadian;
             return new Point((int)(centerPoint.X + Math.Floor(radius * Math.Cos(radians))),
                 (int)(centerPoint.Y - Math.Floor(radius * Math.Sin(radians))));
         }
@@ -555,9 +534,8 @@ namespace Nikse.SubtitleEdit.Logic.ColorChooser
             // The constant SIZE represents half
             // the width -- the square will be twice
             // this value in width and height.
-            const int SIZE = 3;
-            g.DrawRectangle(Pens.Black,
-                pt.X - SIZE, pt.Y - SIZE, SIZE * 2, SIZE * 2);
+            const int size = 3;
+            _g.DrawRectangle(Pens.Black, pt.X - size, pt.Y - size, size * 2, size * 2);
         }
 
         private void DrawBrightnessPointer(Point pt)
@@ -565,14 +543,14 @@ namespace Nikse.SubtitleEdit.Logic.ColorChooser
             // Draw a triangle for the
             // brightness indicator that "points"
             // at the provided point.
-            const int HEIGHT = 10;
-            const int WIDTH = 7;
+            const int height = 10;
+            const int width = 7;
 
-            var Points = new Point[3];
-            Points[0] = pt;
-            Points[1] = new Point(pt.X + WIDTH, pt.Y + HEIGHT / 2);
-            Points[2] = new Point(pt.X + WIDTH, pt.Y - HEIGHT / 2);
-            g.FillPolygon(Brushes.Black, Points);
+            var points = new Point[3];
+            points[0] = pt;
+            points[1] = new Point(pt.X + width, pt.Y + height / 2);
+            points[2] = new Point(pt.X + width, pt.Y - height / 2);
+            _g.FillPolygon(Brushes.Black, points);
         }
 
         protected virtual void Dispose(bool disposing)
@@ -580,14 +558,10 @@ namespace Nikse.SubtitleEdit.Logic.ColorChooser
             if (disposing)
             {
                 // Dispose of graphic resources
-                if (colorImage != null)
-                    colorImage.Dispose();
-                if (colorRegion != null)
-                    colorRegion.Dispose();
-                if (brightnessRegion != null)
-                    brightnessRegion.Dispose();
-                if (g != null)
-                    g.Dispose();
+                _colorImage?.Dispose();
+                _colorRegion?.Dispose();
+                _brightnessRegion?.Dispose();
+                _g?.Dispose();
             }
         }
 

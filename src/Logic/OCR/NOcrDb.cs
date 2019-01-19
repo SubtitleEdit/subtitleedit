@@ -9,7 +9,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 {
     public class NOcrDb
     {
-        public string FileName { get; private set; }
+        public string FileName { get; }
         public List<NOcrChar> OcrCharacters = new List<NOcrChar>();
         public List<NOcrChar> OcrCharactersExpanded = new List<NOcrChar>();
 
@@ -24,9 +24,14 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             using (Stream gz = new GZipStream(File.OpenWrite(FileName), CompressionMode.Compress))
             {
                 foreach (var ocrChar in OcrCharacters)
+                {
                     ocrChar.Save(gz);
+                }
+
                 foreach (var ocrChar in OcrCharactersExpanded)
+                {
                     ocrChar.Save(gz);
+                }
             }
         }
 
@@ -51,9 +56,13 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                     if (ocrChar.LoadedOk)
                     {
                         if (ocrChar.ExpandCount > 0)
+                        {
                             listExpanded.Add(ocrChar);
+                        }
                         else
+                        {
                             list.Add(ocrChar);
+                        }
                     }
                     else
                     {
@@ -73,14 +82,18 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
         public void Add(NOcrChar ocrChar)
         {
             if (ocrChar.ExpandCount > 0)
+            {
                 OcrCharactersExpanded.Insert(0, ocrChar);
+            }
             else
+            {
                 OcrCharacters.Insert(0, ocrChar);
+            }
         }
 
         public NOcrChar GetMatch(NikseBitmap nbmp)
         {
-            const int NocrMinColor = 300;
+            const int nocrMinColor = 300;
             const int topMargin = 1;
             double widthPercent = nbmp.Height * 100.0 / nbmp.Width;
 
@@ -99,16 +112,16 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                             if (point.X >= 0 && point.Y >= 0 && point.X < nbmp.Width && point.Y < nbmp.Height)
                             {
                                 Color c = nbmp.GetPixel(point.X, point.Y);
-                                if (c.A > 150 && c.R + c.G + c.B > NocrMinColor)
-                                {
-                                }
-                                else
+                                if (c.A <= 150 || c.R + c.G + c.B <= nocrMinColor)
                                 {
                                     Point p = new Point(point.X - 1, point.Y);
                                     if (p.X < 0)
+                                    {
                                         p.X = 1;
+                                    }
+
                                     c = nbmp.GetPixel(p.X, p.Y);
-                                    if (nbmp.Width > 20 && c.A > 150 && c.R + c.G + c.B > NocrMinColor)
+                                    if (nbmp.Width > 20 && c.A > 150 && c.R + c.G + c.B > nocrMinColor)
                                     {
                                     }
                                     else
@@ -130,13 +143,16 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                             if (point.X >= 0 && point.Y >= 0 && point.X < nbmp.Width && point.Y < nbmp.Height)
                             {
                                 Color c = nbmp.GetPixel(point.X, point.Y);
-                                if (c.A > 150 && c.R + c.G + c.B > NocrMinColor)
+                                if (c.A > 150 && c.R + c.G + c.B > nocrMinColor)
                                 {
                                     Point p = new Point(point.X, point.Y);
                                     if (oc.Width > 19 && point.X > 0)
+                                    {
                                         p.X = p.X - 1;
+                                    }
+
                                     c = nbmp.GetPixel(p.X, p.Y);
-                                    if (c.A > 150 && c.R + c.G + c.B > NocrMinColor)
+                                    if (c.A > 150 && c.R + c.G + c.B > nocrMinColor)
                                     {
                                         ok = false;
                                         break;
@@ -147,7 +163,9 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                         index++;
                     }
                     if (ok)
+                    {
                         return oc;
+                    }
                 }
             }
             return null;

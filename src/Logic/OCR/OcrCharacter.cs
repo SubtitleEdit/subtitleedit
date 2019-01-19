@@ -4,7 +4,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 {
     public class OcrCharacter
     {
-        public string Text { get; private set; }
+        public string Text { get; }
         public List<OcrImage> OcrImages { get; set; }
 
         public OcrCharacter(string text)

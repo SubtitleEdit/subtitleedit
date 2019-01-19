@@ -9,7 +9,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             OcrCharacters = new List<OcrCharacter>();
         }
 
-        public List<OcrCharacter> OcrCharacters { get; private set; }
+        public List<OcrCharacter> OcrCharacters { get; }
 
         public int CalculateMaximumSize()
         {
@@ -20,7 +20,9 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 {
                     int size = img.Bmp.Width * img.Bmp.Height;
                     if (size > max)
+                    {
                         max = size;
+                    }
                 }
             }
             return max;
@@ -31,7 +33,9 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             foreach (var ocrCharacter in OcrCharacters)
             {
                 if (ocrCharacter.Text == text)
+                {
                     return ocrCharacter;
+                }
             }
 
             if (addIfNotExists)

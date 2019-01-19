@@ -223,27 +223,49 @@ namespace Nikse.SubtitleEdit.Logic
                     if (pcp.Length > 0)
                     {
                         if (pcp.Equals("Latin", StringComparison.OrdinalIgnoreCase))
+                        {
                             pacCodePage = Pac.CodePageLatin;
+                        }
                         else if (pcp.Equals("Greek", StringComparison.OrdinalIgnoreCase))
+                        {
                             pacCodePage = Pac.CodePageGreek;
+                        }
                         else if (pcp.Equals("Czech", StringComparison.OrdinalIgnoreCase))
+                        {
                             pacCodePage = Pac.CodePageLatinCzech;
+                        }
                         else if (pcp.Equals("Arabic", StringComparison.OrdinalIgnoreCase))
+                        {
                             pacCodePage = Pac.CodePageArabic;
+                        }
                         else if (pcp.Equals("Hebrew", StringComparison.OrdinalIgnoreCase))
+                        {
                             pacCodePage = Pac.CodePageHebrew;
+                        }
                         else if (pcp.Equals("Thai", StringComparison.OrdinalIgnoreCase))
+                        {
                             pacCodePage = Pac.CodePageThai;
+                        }
                         else if (pcp.Equals("Cyrillic", StringComparison.OrdinalIgnoreCase))
+                        {
                             pacCodePage = Pac.CodePageCyrillic;
+                        }
                         else if (pcp.Equals("CHT", StringComparison.OrdinalIgnoreCase) || pcp.RemoveChar(' ').Equals("TraditionalChinese", StringComparison.OrdinalIgnoreCase))
+                        {
                             pacCodePage = Pac.CodePageChineseTraditional;
+                        }
                         else if (pcp.Equals("CHS", StringComparison.OrdinalIgnoreCase) || pcp.RemoveChar(' ').Equals("SimplifiedChinese", StringComparison.OrdinalIgnoreCase))
+                        {
                             pacCodePage = Pac.CodePageChineseSimplified;
+                        }
                         else if (pcp.Equals("Korean", StringComparison.OrdinalIgnoreCase))
+                        {
                             pacCodePage = Pac.CodePageKorean;
+                        }
                         else if (pcp.Equals("Japanese", StringComparison.OrdinalIgnoreCase))
+                        {
                             pacCodePage = Pac.CodePageJapanese;
+                        }
                         else if (!int.TryParse(pcp, out pacCodePage) || !Pac.IsValidCodePage(pacCodePage))
                         {
                             throw new Exception("The /pac-codepage value '" + pcp + "' is invalid.");
@@ -262,7 +284,9 @@ namespace Nikse.SubtitleEdit.Logic
                             {
                                 var fileName = fn.Trim();
                                 if (fileName.Length > 0)
+                                {
                                     multipleReplaceImportFiles.Add(fileName);
+                                }
                             }
                         }
                         else
@@ -318,9 +342,13 @@ namespace Nikse.SubtitleEdit.Logic
                     foreach (var argument in args)
                     {
                         if (argument.StartsWith('/') || argument.StartsWith('-'))
+                        {
                             _stdOutWriter.WriteLine("ERROR: Unknown or multiply defined option '" + argument + "'.");
+                        }
                         else
+                        {
                             _stdOutWriter.WriteLine("ERROR: Unexpected argument '" + argument + "'.");
+                        }
                     }
                     throw new Exception(string.Empty);
                 }
@@ -663,9 +691,13 @@ namespace Nikse.SubtitleEdit.Logic
                         if (!done && format == null)
                         {
                             if (fileInfo.Length < 1024 * 1024) // max 1 mb
+                            {
                                 _stdOutWriter.WriteLine($"{fileName}: {targetFormat} - input file format unknown!");
+                            }
                             else
+                            {
                                 _stdOutWriter.WriteLine($"{fileName}: {targetFormat} - input file too large!");
+                            }
                         }
                         else if (!done)
                         {
@@ -704,9 +736,13 @@ namespace Nikse.SubtitleEdit.Logic
 
             DetachedConsole(currentFolder);
             if (count == converted && errors == 0)
+            {
                 Environment.Exit(0);
+            }
             else
+            {
                 Environment.Exit(1);
+            }
         }
 
         private static SubtitleFormat GetTargetformat(string targetFormat, List<SubtitleFormat> formats)
@@ -821,7 +857,9 @@ namespace Nikse.SubtitleEdit.Logic
         {
             var res = GetArgument(commandLineArguments, "resolution:");
             if (!string.IsNullOrEmpty(res))
+            {
                 GetArgument(commandLineArguments, "res:");
+            }
 
             if (!string.IsNullOrEmpty(res))
             {
@@ -894,9 +932,13 @@ namespace Nikse.SubtitleEdit.Logic
                 {
                     commandLineArguments.RemoveAt(i);
                     if (prefixWithSlash[prefixWithSlash.Length - 1] == ':')
+                    {
                         return argument.Substring(prefixWithSlash.Length);
+                    }
                     else
+                    {
                         return argument.Substring(1).ToLower();
+                    }
                 }
             }
             return defaultValue;
@@ -970,7 +1012,10 @@ namespace Nikse.SubtitleEdit.Logic
                             {
                                 var language = Configuration.Settings.Tools.BatchConvertLanguage;
                                 if (string.IsNullOrEmpty(language) || autoDetectLanguage)
+                                {
                                     language = LanguageAutoDetect.AutoDetectGoogleLanguage(sub);
+                                }
+
                                 fce.RunBatch(sub, format, targetEncoding, language);
                                 sub = fce.FixedSubtitle;
                             }
@@ -1015,9 +1060,13 @@ namespace Nikse.SubtitleEdit.Logic
                         outputFileName = FormatOutputFileNameForBatchConvert(fileName, sf.Extension, outputFolder, overwrite);
                         _stdOutWriter?.Write($"{count}: {Path.GetFileName(fileName)} -> {outputFileName}...");
                         if (sf.IsFrameBased && !sub.WasLoadedWithFrameNumbers)
+                        {
                             sub.CalculateFrameNumbersFromTimeCodesNoCheck(Configuration.Settings.General.CurrentFrameRate);
+                        }
                         else if (sf.IsTimeBased && sub.WasLoadedWithFrameNumbers)
+                        {
                             sub.CalculateTimeCodesFromFrameNumbers(Configuration.Settings.General.CurrentFrameRate);
+                        }
 
                         if (sf.GetType() == typeof(WebVTT) || sf.GetType() == typeof(WebVTTFileWithLineNumber))
                         {
@@ -1063,15 +1112,22 @@ namespace Nikse.SubtitleEdit.Logic
                                 foreach (Paragraph p in sub.Paragraphs)
                                 {
                                     if (p.Extra != null && p.Extra.Trim().Equals(className.Trim(), StringComparison.OrdinalIgnoreCase))
+                                    {
                                         newSub.Paragraphs.Add(p);
+                                    }
                                 }
                                 if (newSub.Paragraphs.Count > 0 && newSub.Paragraphs.Count < sub.Paragraphs.Count)
                                 {
                                     string s = fileName;
                                     if (s.LastIndexOf('.') > 0)
+                                    {
                                         s = s.Insert(s.LastIndexOf('.'), "." + className);
+                                    }
                                     else
+                                    {
                                         s += "." + className + format.Extension;
+                                    }
+
                                     outputFileName = FormatOutputFileNameForBatchConvert(s, sf.Extension, outputFolder, overwrite);
                                     File.WriteAllText(outputFileName, newSub.ToText(sf), targetEncoding);
                                 }
@@ -1490,7 +1546,10 @@ namespace Nikse.SubtitleEdit.Logic
                                         targetFormatFound = true;
                                         string title = string.Empty;
                                         if (!string.IsNullOrEmpty(fileName))
+                                        {
                                             title = Path.GetFileNameWithoutExtension(fileName);
+                                        }
+
                                         outputFileName = FormatOutputFileNameForBatchConvert(fileName, ".txt", outputFolder, overwrite);
                                         _stdOutWriter?.Write($"{count}: {Path.GetFileName(fileName)} -> {outputFileName}...");
                                         File.WriteAllText(outputFileName, ExportCustomText.GenerateCustomText(sub, null, title, template), targetEncoding);

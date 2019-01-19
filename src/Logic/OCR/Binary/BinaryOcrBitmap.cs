@@ -27,7 +27,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Binary
         public int X { get; set; }
         public int Y { get; set; }
         public int NumberOfColoredPixels { get; private set; }
-        public UInt32 Hash { get; private set; }
+        public uint Hash { get; private set; }
         private byte[] _colors;
         public bool Italic { get; set; }
         public int ExpandCount { get; set; }
@@ -40,7 +40,10 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Binary
         public override string ToString()
         {
             if (Italic)
+            {
                 return Text + " (" + Width + "x" + Height + ", italic)";
+            }
+
             return Text + " (" + Width + "x" + Height + ")";
         }
 
@@ -127,19 +130,25 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Binary
             for (int i = 0; i < _colors.Length; i++)
             {
                 if (_colors[i] > 0)
+                {
                     NumberOfColoredPixels++;
+                }
             }
         }
 
         public bool AreColorsEqual(BinaryOcrBitmap other)
         {
             if (_colors.Length != other._colors.Length)
+            {
                 return false;
+            }
 
             for (int i = 0; i < _colors.Length; i++)
             {
                 if (_colors[i] != other._colors[i])
+                {
                     return false;
+                }
             }
 
             return true;
@@ -157,7 +166,10 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Binary
 
             byte flags = (byte)(ExpandCount & Helper.B01111111);
             if (Italic)
+            {
                 flags = (byte)(flags + Helper.B10000000);
+            }
+
             stream.WriteByte(flags);
 
             WriteInt32(stream, Hash);
@@ -212,17 +224,25 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Binary
         public void SetPixel(int x, int y, Color c)
         {
             if (c.A < 100)
+            {
                 _colors[Width * y + x] = 0;
+            }
             else
+            {
                 _colors[Width * y + x] = 1;
+            }
         }
 
         public void SetPixelViaAlpha(int x, int y, int alpha)
         {
             if (alpha < 100)
+            {
                 _colors[Width * y + x] = 0;
+            }
             else
+            {
                 _colors[Width * y + x] = 1;
+            }
         }
 
         /// <summary>
@@ -242,7 +262,10 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Binary
                 {
                     Color c = Color.Transparent;
                     if (GetPixel(x, y) > 0)
+                    {
                         c = Color.White;
+                    }
+
                     newRectangle.SetPixel(rectx, recty, c);
                     rectx++;
                 }
@@ -268,13 +291,25 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Binary
                 foreach (BinaryOcrBitmap bob in ExpandedList)
                 {
                     if (bob.X < minX)
+                    {
                         minX = bob.X;
+                    }
+
                     if (bob.Y < minY)
+                    {
                         minY = bob.Y;
+                    }
+
                     if (bob.X + bob.Width > maxX)
+                    {
                         maxX = bob.X + bob.Width;
+                    }
+
                     if (bob.Y + bob.Height > maxY)
+                    {
                         maxY = bob.Y + bob.Height;
+                    }
+
                     list.Add(bob);
                 }
                 var nbmp = new BinaryOcrBitmap(maxX - minX, maxY - minY);
@@ -286,7 +321,9 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Binary
                         {
                             int c = bob.GetPixel(x, y);
                             if (c > 0)
+                            {
                                 nbmp.SetPixel(bob.X - minX + x, bob.Y - minY + y, 1);
+                            }
                         }
                     }
                 }
@@ -302,7 +339,10 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Binary
                     {
                         Color c = Color.Transparent;
                         if (GetPixel(x, y) > 0)
+                        {
                             c = color;
+                        }
+
                         nbmp.SetPixel(x, y, c);
                     }
                 }
@@ -314,16 +354,24 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Binary
         public bool IsPeriod()
         {
             if (ExpandCount > 0 || Y < 20)
+            {
                 return false;
+            }
 
             if (Width == 4 && Height == 5 && NumberOfColoredPixels == 20)
+            {
                 return true;
+            }
 
             if (Width == 5 && Height == 6 && NumberOfColoredPixels >= 28)
+            {
                 return true;
+            }
 
             if (Width == 6 && Height == 7 && NumberOfColoredPixels >= 40)
+            {
                 return true;
+            }
 
             if (Width < Height || Width < 5 || Width > 10 || Height < 3 || Height > 9)
             {
@@ -336,16 +384,24 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Binary
         public bool IsPeriodAtTop(int lowercaseHeight)
         {
             if (ExpandCount > 0 || Y > lowercaseHeight * 0.7)
+            {
                 return false;
+            }
 
             if (Width == 4 && Height == 5 && NumberOfColoredPixels == 20)
+            {
                 return true;
+            }
 
             if (Width == 5 && Height == 6 && NumberOfColoredPixels >= 28)
+            {
                 return true;
+            }
 
             if (Width == 6 && Height == 7 && NumberOfColoredPixels >= 40)
+            {
                 return true;
+            }
 
             if (Width < Height || Width < 5 || Width > 10 || Height < 3 || Height > 9)
             {
@@ -421,17 +477,24 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Binary
                 }
             }
             if (transparentHorLines[0] || transparentHorLines[1])
+            {
                 return false;
+            }
+
             for (int i = 0; i < Height / 2; i++)
             {
                 if (transparentHorLines[Height - i - 1])
+                {
                     return false;
+                }
             }
             var top = Height / 7;
             for (int i = 0; i < 6; i++)
             {
                 if (transparentHorLines[top + i])
+                {
                     return true;
+                }
             }
 
             return false;
@@ -464,13 +527,17 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Binary
 
             // top should be filled
             if (transparentHorLines[0] || transparentHorLines[1])
+            {
                 return false;
+            }
 
             // bottom half should be filled
             for (int i = 0; i < Height / 2; i++)
             {
                 if (transparentHorLines[Height - i - 1])
+                {
                     return false;
+                }
             }
 
             var top = Height / 7;
@@ -537,9 +604,14 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Binary
                 }
             }
             if (transparentHorLines[0] || transparentHorLines[1] || transparentHorLines[2])
+            {
                 return false;
+            }
+
             if (transparentHorLines[Height - 1] || transparentHorLines[Height - 2] || transparentHorLines[Height - 3])
+            {
                 return false;
+            }
 
             int startY = Height / 4;
             int endY = startY * 3;
@@ -548,7 +620,9 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Binary
             for (int y = startY; y < endY; y++)
             {
                 if (!transparentHorLines[y])
+                {
                     return false;
+                }
             }
 
             return true;
@@ -582,7 +656,9 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Binary
             for (int i = 0; i < transparentHorLines.Length; i++)
             {
                 if (transparentHorLines[i])
+                {
                     return false;
+                }
             }
 
             var transparentVerLines = new bool[Width];
@@ -601,7 +677,9 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Binary
             for (int i = 0; i < transparentVerLines.Length; i++)
             {
                 if (transparentVerLines[i])
+                {
                     return false;
+                }
             }
 
             return true;
@@ -633,17 +711,24 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Binary
                 }
             }
             if (transparentHorLines[Height - 1] || transparentHorLines[Height - 2])
+            {
                 return false;
+            }
+
             for (int i = 0; i < Height / 2; i++)
             {
                 if (transparentHorLines[i])
+                {
                     return false;
+                }
             }
             var bottom = Height - Height / 7;
             for (int i = 0; i < 6; i++)
             {
                 if (transparentHorLines[bottom - i])
+                {
                     return true;
+                }
             }
 
             return false;
@@ -672,7 +757,9 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Binary
             for (int i = 0; i < transparentHorLines.Length; i++)
             {
                 if (transparentHorLines[i])
+                {
                     return false;
+                }
             }
 
             return true;
@@ -686,13 +773,24 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Binary
             }
 
             if (GetPixel(1, 1) != 0)
+            {
                 return false;
+            }
+
             if (GetPixel(1, Height - 1) != 0)
+            {
                 return false;
+            }
+
             if (GetPixel(Width - 1, 0) != 0)
+            {
                 return false;
+            }
+
             if (GetPixel(Width - 2, Height - 2) != 0)
+            {
                 return false;
+            }
 
             var transparentHorLines = new bool[Height];
             for (int y = 0; y < Height; y++)
@@ -710,7 +808,9 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Binary
             for (int i = 0; i < transparentHorLines.Length; i++)
             {
                 if (transparentHorLines[i])
+                {
                     return false;
+                }
             }
 
             var transparentVerLines = new bool[Width];
@@ -729,7 +829,9 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Binary
             for (int i = 0; i < transparentVerLines.Length; i++)
             {
                 if (transparentVerLines[i])
+                {
                     return false;
+                }
             }
 
             int halfWidth = Width / 2 - 1;
@@ -738,7 +840,9 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Binary
             for (int x = halfWidth; x < Width; x++)
             {
                 if (GetPixel(x, halfHeight) != 0 || GetPixel(x, halfHeightM1) != 0)
+                {
                     return false;
+                }
             }
 
             return true;
@@ -752,13 +856,24 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Binary
             }
 
             if (GetPixel(1, 1) != 0)
+            {
                 return false;
+            }
+
             if (GetPixel(1, Height - 1) != 0)
+            {
                 return false;
+            }
+
             if (GetPixel(Width - 1, 0) != 0)
+            {
                 return false;
+            }
+
             if (GetPixel(Width - 2, Height - 2) != 0)
+            {
                 return false;
+            }
 
             var transparentHorLines = new bool[Height];
             for (int y = 0; y < Height; y++)
@@ -776,7 +891,9 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Binary
             for (int i = 0; i < transparentHorLines.Length; i++)
             {
                 if (transparentHorLines[i])
+                {
                     return false;
+                }
             }
 
             var transparentVerLines = new bool[Width];
@@ -795,7 +912,9 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Binary
             for (int i = 0; i < transparentVerLines.Length; i++)
             {
                 if (transparentVerLines[i])
+                {
                     return false;
+                }
             }
 
             int halfWidth = Width / 2 - 1;
@@ -806,7 +925,9 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Binary
                 if (GetPixel(x, halfHeight - 1) != 0 ||
                     GetPixel(x, halfHeight + 0) != 0 ||
                     GetPixel(x, halfHeight + 1) != 0)
+                {
                     return false;
+                }
             }
 
             return true;

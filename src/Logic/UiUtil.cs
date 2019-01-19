@@ -310,9 +310,13 @@ namespace Nikse.SubtitleEdit.Logic
                 {
                     int lastSpace = textBox.Text.LastIndexOf(' ');
                     if (lastSpace > 0)
+                    {
                         newText = textBox.Text.Remove(lastSpace, 1).Insert(lastSpace, Environment.NewLine);
+                    }
                     else
+                    {
                         newText = textBox.Text;
+                    }
                 }
 
                 int autobreakIndex = newText.IndexOf(Environment.NewLine, StringComparison.Ordinal);
@@ -348,7 +352,9 @@ namespace Nikse.SubtitleEdit.Logic
                 {
                     string k = val.ToString().ToLower();
                     if (!AllKeys.ContainsKey(k))
+                    {
                         AllKeys.Add(k, val);
+                    }
                 }
                 if (!AllKeys.ContainsKey("pagedown"))
                 {
@@ -388,7 +394,7 @@ namespace Nikse.SubtitleEdit.Logic
                 }
                 return _helpKeys;
             }
-            set { _helpKeys = value; }
+            set => _helpKeys = value;
         }
 
         public static void SetButtonHeight(Control control, int newHeight, int level)
@@ -754,7 +760,10 @@ namespace Nikse.SubtitleEdit.Logic
                     if (deleteFrom < 0)
                     {
                         if (BreakChars.Contains(text[textIndex]))
+                        {
                             deleteFrom = -2;
+                        }
+
                         while (index > 0)
                         {
                             index--;

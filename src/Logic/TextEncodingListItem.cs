@@ -8,21 +8,9 @@ namespace Nikse.SubtitleEdit.Logic
         private readonly Encoding _encoding;
         private readonly string _displayName;
 
-        public Encoding Encoding
-        {
-            get
-            {
-                return _encoding;
-            }
-        }
+        public Encoding Encoding => _encoding;
 
-        public string DisplayName
-        {
-            get
-            {
-                return _displayName;
-            }
-        }
+        public string DisplayName => _displayName;
 
         public TextEncodingListItem(Encoding encoding)
         {
