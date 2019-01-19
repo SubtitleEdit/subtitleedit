@@ -29,13 +29,7 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.FixLargeFonts(this, buttonRollback);
         }
 
-        public int SelectedIndex
-        {
-            get
-            {
-                return _selectedIndex;
-            }
-        }
+        public int SelectedIndex => _selectedIndex;
 
         public void Initialize(Subtitle subtitle, int undoIndex)
         {
@@ -48,7 +42,9 @@ namespace Nikse.SubtitleEdit.Forms
             }
             ListViewHistorySelectedIndexChanged(null, null);
             if (listViewHistory.Items.Count > 0 && _undoIndex >= 0 && _undoIndex < listViewHistory.Items.Count)
+            {
                 listViewHistory.Items[_undoIndex].Selected = true;
+            }
         }
 
         private void AddHistoryItemToListView(HistoryItem hi, int index)
@@ -72,7 +68,9 @@ namespace Nikse.SubtitleEdit.Forms
         private void FormShowHistory_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)
+            {
                 DialogResult = DialogResult.Cancel;
+            }
         }
 
         private void ButtonOkClick(object sender, EventArgs e)

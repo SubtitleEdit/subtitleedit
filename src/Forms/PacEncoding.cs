@@ -24,7 +24,9 @@ namespace Nikse.SubtitleEdit.Forms
             Text = System.IO.Path.GetFileName(fileName);
             _previewBuffer = previewBuffer;
             if (CodePageIndex >= 0 && CodePageIndex < comboBoxCodePage.Items.Count)
+            {
                 comboBoxCodePage.SelectedIndex = CodePageIndex;
+            }
 
             if (previewBuffer == null)
             {
@@ -38,7 +40,9 @@ namespace Nikse.SubtitleEdit.Forms
         private void PacEncoding_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)
+            {
                 DialogResult = DialogResult.Cancel;
+            }
         }
 
         private void comboBoxCodePage_SelectedIndexChanged(object sender, EventArgs e)
@@ -61,26 +65,44 @@ namespace Nikse.SubtitleEdit.Forms
                             index += 2;
                         }
                         else if (_previewBuffer[index] == 0xFF)
+                        {
                             sb.Append(' ');
+                        }
                         else if (CodePageIndex == Pac.CodePageLatin)
+                        {
                             sb.Append(Pac.GetLatinString(encoding, _previewBuffer, ref index));
+                        }
                         else if (CodePageIndex == Pac.CodePageArabic)
+                        {
                             sb.Append(Pac.GetArabicString(_previewBuffer, ref index));
+                        }
                         else if (CodePageIndex == Pac.CodePageHebrew)
+                        {
                             sb.Append(Pac.GetHebrewString(_previewBuffer, ref index));
+                        }
                         else if (CodePageIndex == Pac.CodePageCyrillic)
+                        {
                             sb.Append(Pac.GetCyrillicString(_previewBuffer, ref index));
+                        }
                         else if (CodePageIndex == Pac.CodePageGreek)
+                        {
                             sb.Append(Pac.GetGreekString(_previewBuffer, ref index));
+                        }
                         else
+                        {
                             sb.Append(encoding.GetString(_previewBuffer, index, 1));
+                        }
 
                         index++;
                     }
                     if (CodePageIndex == Pac.CodePageArabic)
+                    {
                         textBoxPreview.Text = Utilities.FixEnglishTextInRightToLeftLanguage(sb.ToString(), PreviewChars);
+                    }
                     else
+                    {
                         textBoxPreview.Text = sb.ToString();
+                    }
                 }
             }
         }

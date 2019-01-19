@@ -23,13 +23,7 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.FixLargeFonts(this, buttonOK);
         }
 
-        public int SelectedIndex
-        {
-            get
-            {
-                return listBox1.SelectedIndex;
-            }
-        }
+        public int SelectedIndex => listBox1.SelectedIndex;
 
         internal void Initialize(List<MatroskaTrackInfo> subtitleInfoList)
         {
@@ -50,7 +44,10 @@ namespace Nikse.SubtitleEdit.Forms
                 i++;
                 string handler = (track.Mdia.HandlerType + " " + track.Mdia.HandlerName).Trim();
                 if (handler.Length > 1)
+                {
                     handler = " - " + handler;
+                }
+
                 string s = $"{i}: {track.Mdia.Mdhd.Iso639ThreeLetterCode} - {track.Mdia.Mdhd.LanguageString}{handler}";
                 listBox1.Items.Add(s);
             }
@@ -60,7 +57,9 @@ namespace Nikse.SubtitleEdit.Forms
         private void FormMatroskaSubtitleChooser_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)
+            {
                 DialogResult = DialogResult.Cancel;
+            }
         }
 
         private void ButtonOkClick(object sender, EventArgs e)

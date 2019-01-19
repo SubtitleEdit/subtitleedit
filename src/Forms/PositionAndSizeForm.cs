@@ -5,17 +5,11 @@ using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public /* abstract */ class PositionAndSizeForm : Form
+    public class PositionAndSizeForm : Form
     {
         private static readonly Dictionary<string, Rectangle> _positionsAndSizes = new Dictionary<string, Rectangle>();
 
-        public bool IsPositionAndSizeSaved
-        {
-            get
-            {
-                return _positionsAndSizes.ContainsKey(Name);
-            }
-        }
+        public bool IsPositionAndSizeSaved => _positionsAndSizes.ContainsKey(Name);
 
         public static void SetPositionAndSize(string name, Rectangle bounds)
         {
@@ -31,8 +25,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         protected override void OnLoad(EventArgs e)
         {
-            Rectangle ps;
-            if (_positionsAndSizes.TryGetValue(Name, out ps))
+            if (_positionsAndSizes.TryGetValue(Name, out var ps))
             {
                 StartPosition = FormStartPosition.Manual;
                 Bounds = ps;

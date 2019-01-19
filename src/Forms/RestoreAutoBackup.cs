@@ -40,7 +40,9 @@ namespace Nikse.SubtitleEdit.Forms
         private void RestoreAutoBackup_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)
+            {
                 DialogResult = DialogResult.Cancel;
+            }
         }
 
         private void RestoreAutoBackup_Shown(object sender, EventArgs e)
@@ -53,12 +55,16 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     var path = Path.GetFileName(fileName);
                     if (path != null && RegexFileNamePattern.IsMatch(path))
+                    {
                         AddBackupToListView(fileName);
+                    }
                 }
                 listViewBackups.Sorting = SortOrder.Descending;
                 listViewBackups.Sort();
                 if (_files.Length > 0)
+                {
                     return;
+                }
             }
             linkLabelOpenContainingFolder.Visible = false;
             labelStatus.Left = linkLabelOpenContainingFolder.Left;
@@ -69,7 +75,9 @@ namespace Nikse.SubtitleEdit.Forms
         {
             var path = Path.GetFileName(fileName);
             if (path == null)
+            {
                 return;
+            }
 
             string displayDate = path.Substring(0, 19).Replace('_', ' ');
             displayDate = displayDate.Remove(13, 1).Insert(13, ":");
@@ -77,11 +85,15 @@ namespace Nikse.SubtitleEdit.Forms
 
             string displayName = path.Remove(0, 20);
             if (displayName == "srt")
+            {
                 displayName = "Untitled.srt";
+            }
 
-            var item = new ListViewItem(displayDate);
-            item.UseItemStyleForSubItems = false;
-            item.Tag = fileName;
+            var item = new ListViewItem(displayDate)
+            {
+                UseItemStyleForSubItems = false,
+                Tag = fileName
+            };
             item.SubItems.Add(Path.GetFileNameWithoutExtension(displayName));
             item.SubItems.Add(Path.GetExtension(fileName));
 
@@ -105,7 +117,10 @@ namespace Nikse.SubtitleEdit.Forms
         private void buttonOK_Click(object sender, EventArgs e)
         {
             if (listViewBackups.SelectedItems.Count == 1)
+            {
                 SetAutoBackupFileName();
+            }
+
             DialogResult = DialogResult.OK;
         }
 
@@ -162,12 +177,14 @@ namespace Nikse.SubtitleEdit.Forms
                     try
                     {
                         var name = Path.GetFileName(fileName);
-                        if (name != null && RegexFileNamePattern.IsMatch(name) && Convert.ToDateTime(name.Substring(0, 10), CultureInfo.InvariantCulture) < targetDate)
+                        if (RegexFileNamePattern.IsMatch(name) && Convert.ToDateTime(name.Substring(0, 10), CultureInfo.InvariantCulture) < targetDate)
                         {
                             File.Delete(fileName);
                             filesDeleted++;
                             if (filesDeleted > maxCount)
+                            {
                                 return;
+                            }
                         }
                     }
                     catch (Exception)

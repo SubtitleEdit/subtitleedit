@@ -117,7 +117,10 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     int value = Convert.ToInt32(numericUpDownPixelsBottom.Value);
                     if (value > bmp.Height)
+                    {
                         value = bmp.Height - 2;
+                    }
+
                     e.Graphics.DrawRectangle(p, 0, bmp.Height - value, bmp.Width - 1, bmp.Height - (bmp.Height - value) - 1);
                 }
             }
@@ -290,13 +293,21 @@ namespace Nikse.SubtitleEdit.Forms
                     try
                     {
                         if (saveFileDialog1.FilterIndex == 0)
+                        {
                             bmp.Save(saveFileDialog1.FileName, System.Drawing.Imaging.ImageFormat.Png);
+                        }
                         else if (saveFileDialog1.FilterIndex == 1)
+                        {
                             bmp.Save(saveFileDialog1.FileName);
+                        }
                         else if (saveFileDialog1.FilterIndex == 2)
+                        {
                             bmp.Save(saveFileDialog1.FileName, System.Drawing.Imaging.ImageFormat.Gif);
+                        }
                         else
+                        {
                             bmp.Save(saveFileDialog1.FileName, System.Drawing.Imaging.ImageFormat.Tiff);
+                        }
                     }
                     catch (Exception exception)
                     {

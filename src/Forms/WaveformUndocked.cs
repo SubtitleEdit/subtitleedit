@@ -7,16 +7,10 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public partial class WaveformUndocked : PositionAndSizeForm
     {
-        private Main _mainForm = null;
-        private Keys _redockKeys;
+        private readonly Main _mainForm;
+        private readonly Keys _redockKeys;
 
-        public Panel PanelContainer
-        {
-            get
-            {
-                return panelContainer;
-            }
-        }
+        public Panel PanelContainer => panelContainer;
 
         public WaveformUndocked(Main mainForm)
         {
@@ -24,7 +18,7 @@ namespace Nikse.SubtitleEdit.Forms
             InitializeComponent();
             UiUtil.FixFonts(this);
             _mainForm = mainForm;
-            this.Icon = (Icon)mainForm.Icon.Clone();
+            Icon = (Icon)mainForm.Icon.Clone();
             _redockKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoToggleVideoControls);
         }
 
@@ -48,9 +42,13 @@ namespace Nikse.SubtitleEdit.Forms
         private void WaveformUndocked_KeyDown(object sender, KeyEventArgs e)
         {
             if (_redockKeys == e.KeyData)
+            {
                 _mainForm.RedockVideoControlsToolStripMenuItemClick(null, null);
+            }
             else
+            {
                 _mainForm.MainKeyDown(sender, e);
+            }
         }
     }
 }

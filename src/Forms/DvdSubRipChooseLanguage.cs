@@ -13,8 +13,8 @@ namespace Nikse.SubtitleEdit.Forms
     {
         private class SubListBoxItem
         {
-            public string Name { get; set; }
-            public VobSubMergedPack SubPack { get; set; }
+            public string Name { get; }
+            public VobSubMergedPack SubPack { get; }
             public override string ToString()
             {
                 return Name;
@@ -57,7 +57,9 @@ namespace Nikse.SubtitleEdit.Forms
             foreach (var pack in mergedVobSubPacks)
             {
                 if (!uniqueLanguageStreamIds.Contains(pack.StreamId))
+                {
                     uniqueLanguageStreamIds.Add(pack.StreamId);
+                }
             }
 
             comboBoxLanguages.Items.Clear();
@@ -67,7 +69,10 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     comboBoxLanguages.Items.Add(languageName);
                     if (languageName == selectedLanguage)
+                    {
                         comboBoxLanguages.SelectedIndex = comboBoxLanguages.Items.Count - 1;
+                    }
+
                     uniqueLanguageStreamIds.Remove(GetLanguageIdFromString(languageName));
                 }
             }
@@ -79,7 +84,9 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             if (comboBoxLanguages.Items.Count > 0 && comboBoxLanguages.SelectedIndex < 0)
+            {
                 comboBoxLanguages.SelectedIndex = 0;
+            }
 
             _languages = languages;
         }
@@ -106,7 +113,10 @@ namespace Nikse.SubtitleEdit.Forms
 
                 var temp = new Bitmap((int)width, (int)height);
                 using (var g = Graphics.FromImage(temp))
+                {
                     g.DrawImage(bmp, 0, 0, (int)width, (int)height);
+                }
+
                 bmp = temp;
             }
             pictureBoxImage.Image = bmp;
@@ -129,12 +139,14 @@ namespace Nikse.SubtitleEdit.Forms
                 var x = _mergedVobSubPacks[i];
                 if (x.StreamId == chosenStreamId)
                 {
-                    string s = string.Format("#{0:000}: Stream-id=0X{1:X} - {2} --> {3}", i, x.StreamId, ShowInSrtFormat(x.StartTime), ShowInSrtFormat(x.EndTime));
+                    string s = $"#{i:000}: Stream-id=0X{x.StreamId:X} - {ShowInSrtFormat(x.StartTime)} --> {ShowInSrtFormat(x.EndTime)}";
                     listBox1.Items.Add(new SubListBoxItem(s, x));
                 }
             }
             if (listBox1.Items.Count > 0)
+            {
                 listBox1.SelectedIndex = 0;
+            }
         }
 
         private void ButtonOkClick(object sender, EventArgs e)
@@ -145,9 +157,13 @@ namespace Nikse.SubtitleEdit.Forms
         internal void SelectActive()
         {
             if (_languages != null && comboBoxLanguages.SelectedIndex >= 0 && comboBoxLanguages.SelectedIndex < _languages.Count)
+            {
                 SelectedLanguageString = _languages[comboBoxLanguages.SelectedIndex];
+            }
             else
+            {
                 SelectedLanguageString = null;
+            }
 
             SelectedVobSubMergedPacks = new List<VobSubMergedPack>();
             foreach (var x in listBox1.Items)
@@ -174,9 +190,13 @@ namespace Nikse.SubtitleEdit.Forms
         private void buttonSaveAs_Click(object sender, EventArgs e)
         {
             if (_languages != null && comboBoxLanguages.SelectedIndex >= 0 && comboBoxLanguages.SelectedIndex < _languages.Count)
+            {
                 SelectedLanguageString = _languages[comboBoxLanguages.SelectedIndex];
+            }
             else
+            {
                 SelectedLanguageString = null;
+            }
 
             var subs = new List<VobSubMergedPack>();
             foreach (var x in listBox1.Items)

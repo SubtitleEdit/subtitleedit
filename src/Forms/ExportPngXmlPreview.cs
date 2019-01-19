@@ -38,7 +38,7 @@ namespace Nikse.SubtitleEdit.Forms
             pictureBox2.Height = 1;
             pictureBox2.Top = bmp.Height - 2;
 
-            Text = string.Format("{0} {1}x{2}", Configuration.Settings.Language.General.Preview, bmp.Width, bmp.Height);
+            Text = $"{Configuration.Settings.Language.General.Preview} {bmp.Width}x{bmp.Height}";
 
             MouseWheel += MouseWheelHandler;
         }
@@ -52,11 +52,17 @@ namespace Nikse.SubtitleEdit.Forms
         {
             double newZoomFactor = _zoomFactor += delta;
             if (newZoomFactor < 25)
+            {
                 _zoomFactor = 25;
+            }
             else if (newZoomFactor > 500)
+            {
                 _zoomFactor = 500;
+            }
             else
+            {
                 _zoomFactor = newZoomFactor;
+            }
 
             if (_zoomFactor > 99 && _zoomFactor < 101)
             {

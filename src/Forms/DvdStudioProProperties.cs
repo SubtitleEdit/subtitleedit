@@ -21,7 +21,9 @@ namespace Nikse.SubtitleEdit.Forms
         private void DvdStudioProProperties_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)
+            {
                 DialogResult = DialogResult.Cancel;
+            }
         }
     }
 }

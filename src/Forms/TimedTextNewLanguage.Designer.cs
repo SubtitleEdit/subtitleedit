@@ -1,6 +1,6 @@
 ﻿namespace Nikse.SubtitleEdit.Forms
 {
-    partial class TimedTextNewLanguage
+    sealed partial class TimedTextNewLanguage
     {
         /// <summary>
         /// Required designer variable.

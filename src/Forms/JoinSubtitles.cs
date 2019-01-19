@@ -53,13 +53,17 @@ namespace Nikse.SubtitleEdit.Forms
         private void JoinSubtitles_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)
+            {
                 DialogResult = DialogResult.Cancel;
+            }
         }
 
         private void listViewParts_DragEnter(object sender, DragEventArgs e)
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop, false))
+            {
                 e.Effect = DragDropEffects.All;
+            }
         }
 
         private void listViewParts_DragDrop(object sender, DragEventArgs e)
@@ -77,7 +81,9 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
                 if (!alreadyInList)
+                {
                     _fileNamesToJoin.Add(fileName);
+                }
             }
             SortAndLoad();
         }
@@ -128,23 +134,36 @@ namespace Nikse.SubtitleEdit.Forms
                     if (format == null)
                     {
                         for (int j = k; j < _fileNamesToJoin.Count; j++)
+                        {
                             _fileNamesToJoin.RemoveAt(j);
+                        }
+
                         MessageBox.Show("Unkown subtitle format: " + fileName);
                         return;
                     }
                     if (sub.Header != null)
+                    {
                         header = sub.Header;
+                    }
 
                     if (lastFormat == null || lastFormat.FriendlyName == format.FriendlyName)
+                    {
                         lastFormat = format;
+                    }
                     else
+                    {
                         lastFormat = new SubRip(); // default subtitle format
+                    }
+
                     subtitles.Add(sub);
                 }
                 catch (Exception exception)
                 {
                     for (int j = k; j < _fileNamesToJoin.Count; j++)
+                    {
                         _fileNamesToJoin.RemoveAt(j);
+                    }
+
                     MessageBox.Show(exception.Message);
                     return;
                 }
@@ -195,7 +214,10 @@ namespace Nikse.SubtitleEdit.Forms
 
             JoinedSubtitle = new Subtitle();
             if (JoinedFormat != null && JoinedFormat.FriendlyName != SubRip.NameOfFormat)
+            {
                 JoinedSubtitle.Header = header;
+            }
+
             foreach (var sub in subtitles)
             {
                 foreach (var p in sub.Paragraphs)
@@ -232,10 +254,14 @@ namespace Nikse.SubtitleEdit.Forms
                             foreach (string existingFileName in _fileNamesToJoin)
                             {
                                 if (existingFileName.Equals(fileName, StringComparison.OrdinalIgnoreCase))
+                                {
                                     alreadyInList = true;
+                                }
                             }
                             if (!alreadyInList)
+                            {
                                 _fileNamesToJoin.Add(fileName);
+                            }
                         }
                         else
                         {
@@ -255,15 +281,24 @@ namespace Nikse.SubtitleEdit.Forms
         {
             var indices = new List<int>();
             foreach (int index in listViewParts.SelectedIndices)
+            {
                 indices.Add(index);
+            }
+
             indices.Reverse();
             foreach (int index in indices)
+            {
                 _fileNamesToJoin.RemoveAt(index);
+            }
 
             if (_fileNamesToJoin.Count == 0)
+            {
                 buttonClear_Click(null, null);
+            }
             else
+            {
                 SortAndLoad();
+            }
         }
 
         private void buttonClear_Click(object sender, EventArgs e)

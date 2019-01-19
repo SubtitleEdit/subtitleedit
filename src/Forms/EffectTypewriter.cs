@@ -33,7 +33,9 @@ namespace Nikse.SubtitleEdit.Forms
         private void FormEffectTypewriter_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)
+            {
                 DialogResult = DialogResult.Cancel;
+            }
         }
 
         internal void Initialize(Paragraph paragraph)
@@ -77,22 +79,36 @@ namespace Nikse.SubtitleEdit.Forms
                     if (i + 1 < text.Length && text[i + 1] == '/')
                     {
                         if (tag == "</i>" && italic > 0)
+                        {
                             italic--;
+                        }
                         else if (tag == "</b>" && bold > 0)
+                        {
                             bold--;
+                        }
                         else if (tag == "<u>" && underline > 0)
+                        {
                             underline--;
+                        }
                         else if (tag == "</font>")
+                        {
                             currentColor = fontColors.Count > 0 ? fontColors.Pop() : string.Empty;
+                        }
                     }
                     else
                     {
                         if (tag == "<i>")
+                        {
                             italic++;
+                        }
                         else if (tag == "<b>")
+                        {
                             bold++;
+                        }
                         else if (tag == "<u>")
+                        {
                             underline++;
+                        }
                         else if (tag.StartsWith("<font ", StringComparison.Ordinal))
                         {
                             const string colorTag = " color=";
@@ -102,14 +118,20 @@ namespace Nikse.SubtitleEdit.Forms
                                 var start = tag.IndexOf(colorTag, StringComparison.Ordinal);
                                 int j = start + colorTag.Length;
                                 if (@"""'".Contains(tag[j]))
+                                {
                                     j++;
+                                }
+
                                 while (j < tag.Length && (@"#" + Utilities.LowercaseLettersWithNumbers).Contains(tag[j]))
                                 {
                                     tempColor += tag[j];
                                     j++;
                                 }
                                 if (!string.IsNullOrEmpty(currentColor))
+                                {
                                     fontColors.Push(currentColor);
+                                }
+
                                 currentColor = tempColor;
                             }
                         }
@@ -123,7 +145,9 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             if (sb.Length > 0)
+            {
                 AddTextToRichTextBox(rtb, bold > 0, italic > 0, underline > 0, currentColor, sb.ToString());
+            }
 
             foreach (var fontEntry in _fontList)
             {
@@ -173,11 +197,20 @@ namespace Nikse.SubtitleEdit.Forms
 
                 var fontStyle = new FontStyle();
                 if (underline)
+                {
                     fontStyle |= FontStyle.Underline;
+                }
+
                 if (italic)
+                {
                     fontStyle |= FontStyle.Italic;
+                }
+
                 if (bold)
+                {
                     fontStyle |= FontStyle.Bold;
+                }
+
                 _fontList.Add(new EffectKaraoke.FontEntry { Start = length, Length = text.Length, Font = new Font(rtb.Font.FontFamily, rtb.Font.Size, fontStyle) });
             }
         }
@@ -189,7 +222,9 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 sb.Append(text[i]);
                 if (text[i] == '>')
+                {
                     return sb.ToString();
+                }
             }
             return sb.ToString();
         }

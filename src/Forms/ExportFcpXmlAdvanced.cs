@@ -33,12 +33,12 @@ namespace Nikse.SubtitleEdit.Forms
     // <!ATTLIST text-style lineSpacing CDATA #IMPLIED>
     // <!ATTLIST text-style tabStops CDATA #IMPLIED>
     /// </summary>
-    public partial class ExportFcpXmlAdvanced : Form
+    public sealed partial class ExportFcpXmlAdvanced : Form
     {
 
-        private string _fontName = "Arial";
-        private Subtitle _subtitle;
-        private string _videoFileName;
+        private readonly string _fontName = "Arial";
+        private readonly Subtitle _subtitle;
+        private readonly string _videoFileName;
 
         public ExportFcpXmlAdvanced(Subtitle subtitle, string videoFileName)
         {
@@ -66,18 +66,20 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     comboBoxFontName.Items.Add(x.Name);
                     if (x.Name.Equals(_fontName, StringComparison.OrdinalIgnoreCase))
+                    {
                         comboBoxFontName.SelectedIndex = comboBoxFontName.Items.Count - 1;
+                    }
                 }
             }
 
-            comboBoxFrameRate.Items.Add((23.976).ToString(CultureInfo.CurrentCulture));
-            comboBoxFrameRate.Items.Add((24.0).ToString(CultureInfo.CurrentCulture));
-            comboBoxFrameRate.Items.Add((25.0).ToString(CultureInfo.CurrentCulture));
-            comboBoxFrameRate.Items.Add((29.97).ToString(CultureInfo.CurrentCulture));
-            comboBoxFrameRate.Items.Add((30.00).ToString(CultureInfo.CurrentCulture));
-            comboBoxFrameRate.Items.Add((50.00).ToString(CultureInfo.CurrentCulture));
-            comboBoxFrameRate.Items.Add((59.94).ToString(CultureInfo.CurrentCulture));
-            comboBoxFrameRate.Items.Add((60.00).ToString(CultureInfo.CurrentCulture));
+            comboBoxFrameRate.Items.Add(23.976.ToString(CultureInfo.CurrentCulture));
+            comboBoxFrameRate.Items.Add(24.0.ToString(CultureInfo.CurrentCulture));
+            comboBoxFrameRate.Items.Add(25.0.ToString(CultureInfo.CurrentCulture));
+            comboBoxFrameRate.Items.Add(29.97.ToString(CultureInfo.CurrentCulture));
+            comboBoxFrameRate.Items.Add(30.00.ToString(CultureInfo.CurrentCulture));
+            comboBoxFrameRate.Items.Add(50.00.ToString(CultureInfo.CurrentCulture));
+            comboBoxFrameRate.Items.Add(59.94.ToString(CultureInfo.CurrentCulture));
+            comboBoxFrameRate.Items.Add(60.00.ToString(CultureInfo.CurrentCulture));
 
             comboBoxResolution.Items.Clear();
             comboBoxResolution.Items.Add("NTSC-601");
@@ -171,7 +173,9 @@ namespace Nikse.SubtitleEdit.Forms
                 var oldFrameRate = Configuration.Settings.General.CurrentFrameRate;
                 double d;
                 if (double.TryParse(comboBoxFrameRate.SelectedItem.ToString(), out d))
+                {
                     Configuration.Settings.General.CurrentFrameRate = d;
+                }
 
                 var format = new FinalCutProXml15();
                 format.DefaultStyle.FontName = comboBoxFontName.SelectedItem.ToString();
@@ -194,8 +198,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonColor_Click(object sender, EventArgs e)
         {
-            bool showAlpha = true;
-            using (var colorChooser = new ColorChooser { Color = panelColor.BackColor, ShowAlpha = showAlpha })
+            using (var colorChooser = new ColorChooser { Color = panelColor.BackColor, ShowAlpha = true })
             {
                 if (colorChooser.ShowDialog() == DialogResult.OK)
                 {
@@ -214,7 +217,9 @@ namespace Nikse.SubtitleEdit.Forms
             width = 1920;
             height = 1080;
             if (comboBoxResolution.SelectedIndex < 0)
+            {
                 return;
+            }
 
             string text = comboBoxResolution.Text.Trim();
             if (text == "NTSC-601")
@@ -288,7 +293,10 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             if (text.Contains('('))
+            {
                 text = text.Remove(0, text.IndexOf('(')).Trim();
+            }
+
             text = text.TrimStart('(').TrimEnd(')').Trim();
             string[] arr = text.Split('x');
             width = int.Parse(arr[0]);
@@ -310,7 +318,9 @@ namespace Nikse.SubtitleEdit.Forms
         private void SetResolution(string xAndY)
         {
             if (string.IsNullOrEmpty(xAndY))
+            {
                 return;
+            }
 
             xAndY = xAndY.ToLower();
 

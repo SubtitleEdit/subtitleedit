@@ -3,7 +3,6 @@ using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
@@ -18,10 +17,7 @@ namespace Nikse.SubtitleEdit.Forms
         private string _language;
         private Dictionary<int, bool> _isFixAllowedList = new Dictionary<int, bool>();
 
-        public Subtitle MergedSubtitle
-        {
-            get { return _mergedSubtitle; }
-        }
+        public Subtitle MergedSubtitle => _mergedSubtitle;
 
         public MergeTextWithSameTimeCodes()
         {
@@ -38,7 +34,9 @@ namespace Nikse.SubtitleEdit.Forms
         public void Initialize(Subtitle subtitle)
         {
             if (subtitle.Paragraphs.Count > 0)
+            {
                 subtitle.Renumber(subtitle.Paragraphs[0].Number);
+            }
 
             Text = Configuration.Settings.Language.MergeTextWithSameTimeCodes.Title;
             labelMaxDifferenceMS.Text = Configuration.Settings.Language.MergeTextWithSameTimeCodes.MaxDifferenceMilliseconds;
@@ -81,22 +79,25 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 int key = Convert.ToInt32(number);
                 if (!_isFixAllowedList.ContainsKey(key))
+                {
                     _isFixAllowedList.Add(key, true);
+                }
             }
         }
 
         private void GeneratePreview()
         {
             if (_subtitle == null)
+            {
                 return;
+            }
 
             var mergedIndexes = new List<int>();
 
             NumberOfMerges = 0;
             SubtitleListview1.Items.Clear();
             SubtitleListview1.BeginUpdate();
-            int count;
-            _mergedSubtitle = MergeLinesWithSameTimeCodes(_subtitle, mergedIndexes, out count, true, checkBoxAutoBreakOn.Checked, (int)numericUpDownMaxMillisecondsBetweenLines.Value, _language);
+            _mergedSubtitle = MergeLinesWithSameTimeCodes(_subtitle, mergedIndexes, out var count, true, checkBoxAutoBreakOn.Checked, (int)numericUpDownMaxMillisecondsBetweenLines.Value, _language);
             NumberOfMerges = count;
 
             SubtitleListview1.Fill(_subtitle);
@@ -111,13 +112,17 @@ namespace Nikse.SubtitleEdit.Forms
         private void listViewFixes_ItemChecked(object sender, ItemCheckedEventArgs e)
         {
             if (_loading)
+            {
                 return;
+            }
 
             foreach (string number in e.Item.SubItems[1].Text.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
             {
                 int no = Convert.ToInt32(number);
                 if (_isFixAllowedList.ContainsKey(no))
+                {
                     _isFixAllowedList[no] = e.Item.Checked;
+                }
             }
 
             var mergedIndexes = new List<int>();
@@ -126,8 +131,7 @@ namespace Nikse.SubtitleEdit.Forms
             Cursor = Cursors.WaitCursor;
             SubtitleListview1.Items.Clear();
             SubtitleListview1.BeginUpdate();
-            int count;
-            _mergedSubtitle = MergeLinesWithSameTimeCodes(_subtitle, mergedIndexes, out count, false, checkBoxAutoBreakOn.Checked, (int)numericUpDownMaxMillisecondsBetweenLines.Value, _language);
+            _mergedSubtitle = MergeLinesWithSameTimeCodes(_subtitle, mergedIndexes, out var count, false, checkBoxAutoBreakOn.Checked, (int)numericUpDownMaxMillisecondsBetweenLines.Value, _language);
             NumberOfMerges = count;
             SubtitleListview1.Fill(_subtitle);
             foreach (var index in mergedIndexes)
@@ -144,7 +148,10 @@ namespace Nikse.SubtitleEdit.Forms
             listViewFixes.BeginUpdate();
             var removed = new List<int>();
             if (!_loading)
+            {
                 listViewFixes.ItemChecked -= listViewFixes_ItemChecked;
+            }
+
             if (clearFixes)
             {
                 listViewFixes.Items.Clear();
@@ -158,14 +165,19 @@ namespace Nikse.SubtitleEdit.Forms
             }
             listViewFixes.EndUpdate();
             if (!_loading)
+            {
                 listViewFixes.ItemChecked += listViewFixes_ItemChecked;
+            }
+
             return mergedSub;
         }
 
         private void MergeTextWithSameTimeCodes_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)
+            {
                 DialogResult = DialogResult.Cancel;
+            }
         }
 
         private void buttonOK_Click(object sender, EventArgs e)
@@ -188,7 +200,10 @@ namespace Nikse.SubtitleEdit.Forms
             GeneratePreview();
             listViewFixes.Focus();
             if (listViewFixes.Items.Count > 0)
+            {
                 listViewFixes.Items[0].Selected = true;
+            }
+
             _loading = false;
             listViewFixes.ItemChecked += listViewFixes_ItemChecked;
         }

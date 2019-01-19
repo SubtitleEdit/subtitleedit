@@ -9,11 +9,11 @@ using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public partial class ExtractDateTimeInfo : PositionAndSizeForm
+    public sealed partial class ExtractDateTimeInfo : PositionAndSizeForm
     {
         public Subtitle DateTimeSubtitle { get; private set; }
         public string VideoFileName { get; private set; }
-        private List<string> _formats = new List<string>();
+        private readonly List<string> _formats = new List<string>();
 
         public ExtractDateTimeInfo()
         {
@@ -32,7 +32,9 @@ namespace Nikse.SubtitleEdit.Forms
                 comboBoxDateTimeFormats.Items.Add(format);
             }
             if (_formats.Count > 0)
+            {
                 comboBoxDateTimeFormats.SelectedIndex = 0;
+            }
 
             var l = Configuration.Settings.Language.ExtractDateTimeInfo;
             Text = l.Title;

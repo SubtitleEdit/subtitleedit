@@ -16,10 +16,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         public int NumberOfSplits { get; private set; }
 
-        public Subtitle SplittedSubtitle
-        {
-            get { return _splittedSubtitle; }
-        }
+        public Subtitle SplittedSubtitle => _splittedSubtitle;
 
         public SplitLongLines()
         {
@@ -32,13 +29,17 @@ namespace Nikse.SubtitleEdit.Forms
         private void SplitLongLines_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)
+            {
                 DialogResult = DialogResult.Cancel;
+            }
         }
 
         public void Initialize(Subtitle subtitle)
         {
             if (subtitle.Paragraphs.Count > 0)
+            {
                 subtitle.Renumber(subtitle.Paragraphs[0].Number);
+            }
 
             Text = Configuration.Settings.Language.SplitLongLines.Title;
             labelSingleLineMaxLength.Text = Configuration.Settings.Language.SplitLongLines.SingleLineMaximumLength;
@@ -75,7 +76,9 @@ namespace Nikse.SubtitleEdit.Forms
         private void GeneratePreview(bool clearFixes)
         {
             if (_subtitle == null)
+            {
                 return;
+            }
 
             var splittedIndexes = new List<int>();
             var autoBreakedIndexes = new List<int>();
@@ -83,17 +86,20 @@ namespace Nikse.SubtitleEdit.Forms
             NumberOfSplits = 0;
             SubtitleListview1.Items.Clear();
             SubtitleListview1.BeginUpdate();
-            int count;
-            _splittedSubtitle = SplitLongLinesInSubtitle(_subtitle, splittedIndexes, autoBreakedIndexes, out count, (int)numericUpDownLineMaxCharacters.Value, (int)numericUpDownSingleLineMaxCharacters.Value, clearFixes);
+            _splittedSubtitle = SplitLongLinesInSubtitle(_subtitle, splittedIndexes, autoBreakedIndexes, out var count, (int)numericUpDownLineMaxCharacters.Value, (int)numericUpDownSingleLineMaxCharacters.Value, clearFixes);
             NumberOfSplits = count;
 
             SubtitleListview1.Fill(_splittedSubtitle);
 
             foreach (var index in splittedIndexes)
+            {
                 SubtitleListview1.SetBackgroundColor(index, Color.Green);
+            }
 
             foreach (var index in autoBreakedIndexes)
+            {
                 SubtitleListview1.SetBackgroundColor(index, Color.LightGreen);
+            }
 
             SubtitleListview1.EndUpdate();
             groupBoxLinesFound.Text = string.Format(Configuration.Settings.Language.SplitLongLines.NumberOfSplits, NumberOfSplits);
@@ -137,7 +143,9 @@ namespace Nikse.SubtitleEdit.Forms
             foreach (ListViewItem item in listViewFixes.Items)
             {
                 if ((item.Tag as Paragraph) == p)
+                {
                     return item.Checked;
+                }
             }
             return true;
         }
@@ -146,7 +154,10 @@ namespace Nikse.SubtitleEdit.Forms
         {
             listViewFixes.ItemChecked -= listViewFixes_ItemChecked;
             if (clearFixes)
+            {
                 listViewFixes.Items.Clear();
+            }
+
             numberOfSplits = 0;
             string language = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle);
             var splittedSubtitle = new Subtitle();
@@ -155,7 +166,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 bool added = false;
                 var p = subtitle.Paragraphs[i];
-                if (p != null && p.Text != null)
+                if (p?.Text != null)
                 {
                     if (SplitLongLinesHelper.QualifiesForSplit(p.Text, singleLineMaxCharacters, totalLineMaxCharacters) && IsFixAllowed(p))
                     {
@@ -178,14 +189,19 @@ namespace Nikse.SubtitleEdit.Forms
 
                             var arr = dialogText.SplitToLines();
                             if (arr.Count == 2 && (arr[0].StartsWith('-') || arr[0].StartsWith("<i>-", StringComparison.Ordinal)) && (arr[1].StartsWith('-') || arr[1].StartsWith("<i>-", StringComparison.Ordinal)))
+                            {
                                 isDialog = true;
+                            }
                         }
 
                         if (!isDialog && !SplitLongLinesHelper.QualifiesForSplit(Utilities.AutoBreakLine(p.Text, language), singleLineMaxCharacters, totalLineMaxCharacters))
                         {
                             var newParagraph = new Paragraph(p) { Text = Utilities.AutoBreakLine(p.Text, language) };
                             if (clearFixes)
+                            {
                                 AddToListView(p, (splittedSubtitle.Paragraphs.Count + 1).ToString(CultureInfo.InvariantCulture), oldText);
+                            }
+
                             autoBreakedIndexes.Add(splittedSubtitle.Paragraphs.Count);
                             splittedSubtitle.Paragraphs.Add(newParagraph);
                             added = true;
@@ -195,7 +211,10 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             string text = Utilities.AutoBreakLine(p.Text, language);
                             if (isDialog)
+                            {
                                 text = dialogText;
+                            }
+
                             if (isDialog || text.Contains(Environment.NewLine))
                             {
                                 var arr = text.SplitToLines();
@@ -204,7 +223,9 @@ namespace Nikse.SubtitleEdit.Forms
                                     int spacing1 = Configuration.Settings.General.MinimumMillisecondsBetweenLines / 2;
                                     int spacing2 = Configuration.Settings.General.MinimumMillisecondsBetweenLines / 2;
                                     if (Configuration.Settings.General.MinimumMillisecondsBetweenLines % 2 == 1)
+                                    {
                                         spacing2++;
+                                    }
 
                                     var newParagraph1 = new Paragraph(p);
                                     var newParagraph2 = new Paragraph(p);
@@ -215,9 +236,15 @@ namespace Nikse.SubtitleEdit.Forms
                                     {
                                         var startFactor = (double)HtmlUtil.RemoveHtmlTags(newParagraph1.Text).Length / oldText.Length;
                                         if (startFactor < 0.25)
+                                        {
                                             startFactor = 0.25;
+                                        }
+
                                         if (startFactor > 0.75)
+                                        {
                                             startFactor = 0.75;
+                                        }
+
                                         middle = p.StartTime.TotalMilliseconds + (p.Duration.TotalMilliseconds * startFactor);
                                     }
 
@@ -226,7 +253,10 @@ namespace Nikse.SubtitleEdit.Forms
                                     newParagraph2.StartTime.TotalMilliseconds = newParagraph1.EndTime.TotalMilliseconds + spacing2;
 
                                     if (clearFixes)
+                                    {
                                         AddToListView(p, (splittedSubtitle.Paragraphs.Count + 1).ToString(CultureInfo.InvariantCulture), oldText);
+                                    }
+
                                     splittedIndexes.Add(splittedSubtitle.Paragraphs.Count);
                                     splittedIndexes.Add(splittedSubtitle.Paragraphs.Count + 1);
 
@@ -242,7 +272,10 @@ namespace Nikse.SubtitleEdit.Forms
                                         {
                                             newParagraph1.Text = newParagraph1.Text.Remove(3, 1).Trim();
                                             if (newParagraph1.Text.StartsWith("<i> ", StringComparison.Ordinal))
+                                            {
                                                 newParagraph1.Text = newParagraph1.Text.Remove(3, 1).Trim();
+                                            }
+
                                             newParagraph2.Text = newParagraph2.Text.Remove(0, 1).Trim();
                                         }
                                     }
@@ -257,9 +290,13 @@ namespace Nikse.SubtitleEdit.Forms
                                             newParagraph1.Text = newParagraph1.Text.Remove(newParagraph1.Text.Length - post.Length);
                                         }
                                         if (endsWithComma)
+                                        {
                                             newParagraph1.Text += post;
+                                        }
                                         else
+                                        {
                                             newParagraph1.Text += comboBoxLineContinuationEnd.Text.TrimEnd() + post;
+                                        }
 
                                         string pre = string.Empty;
                                         if (newParagraph2.Text.StartsWith("<i>", StringComparison.Ordinal))
@@ -268,9 +305,13 @@ namespace Nikse.SubtitleEdit.Forms
                                             newParagraph2.Text = newParagraph2.Text.Remove(0, pre.Length);
                                         }
                                         if (endsWithComma)
+                                        {
                                             newParagraph2.Text = pre + newParagraph2.Text;
+                                        }
                                         else
+                                        {
                                             newParagraph2.Text = pre + comboBoxLineContinuationBegin.Text + newParagraph2.Text;
+                                        }
                                     }
 
                                     var italicStart1 = newParagraph1.Text.IndexOf("<i>", StringComparison.Ordinal);
@@ -323,7 +364,9 @@ namespace Nikse.SubtitleEdit.Forms
             GeneratePreview(true);
             listViewFixes.Focus();
             if (listViewFixes.Items.Count > 0)
+            {
                 listViewFixes.Items[0].Selected = true;
+            }
         }
 
         private void buttonOK_Click(object sender, EventArgs e)
@@ -351,10 +394,9 @@ namespace Nikse.SubtitleEdit.Forms
         private void ContinuationBeginEndChanged(object sender, EventArgs e)
         {
             Cursor = Cursors.WaitCursor;
-            int index = -1;
             if (listViewFixes.SelectedItems.Count > 0)
             {
-                index = listViewFixes.SelectedItems[0].Index;
+                var index = listViewFixes.SelectedItems[0].Index;
                 listViewFixes.Items[index].Selected = true;
             }
             GeneratePreview(true);

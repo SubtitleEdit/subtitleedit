@@ -34,7 +34,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
-                    labelStatus.Text = string.Format("{0} characters found", count);
+                    labelStatus.Text = $"{count} characters found";
                 }
             }
         }
@@ -42,7 +42,9 @@ namespace Nikse.SubtitleEdit.Forms
         private void Csv2Properties_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)
+            {
                 DialogResult = DialogResult.Cancel;
+            }
         }
 
         private void buttonCancel_Click(object sender, EventArgs e)
@@ -72,7 +74,9 @@ namespace Nikse.SubtitleEdit.Forms
                         if (!string.IsNullOrWhiteSpace(text) && !characters.Contains(text))
                         {
                             if (parts.Length > 1)
+                            {
                                 text += " [" + Utilities.FixQuotes(parts[1]) + "]";
+                            }
 
                             if (lineNumber != 0 || (!text.StartsWith("character [", StringComparison.OrdinalIgnoreCase) && !text.Equals("character", StringComparison.OrdinalIgnoreCase)))
                             {
@@ -82,6 +86,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     catch
                     {
+                        // ignored
                     }
                 }
                 lineNumber++;

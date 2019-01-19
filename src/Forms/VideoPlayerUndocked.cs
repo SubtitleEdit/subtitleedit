@@ -114,7 +114,10 @@ namespace Nikse.SubtitleEdit.Forms
         private void VideoPlayerUndocked_MouseMove(object sender, MouseEventArgs e)
         {
             if (timer1.Enabled)
+            {
                 timer1.Stop();
+            }
+
             _videoPlayerContainer.ShowControls();
             timer1.Start();
         }
@@ -153,7 +156,9 @@ namespace Nikse.SubtitleEdit.Forms
             _videoPlayerContainer.ShowFullscreenButton = Configuration.Settings.General.VideoPlayerShowFullscreenButton;
             _videoPlayerContainer.ShowNonFullScreenControls();
             if (RedockOnFullscreenEnd)
+            {
                 Close();
+            }
         }
 
         private void VideoPlayerUndocked_Shown(object sender, EventArgs e)

@@ -32,9 +32,13 @@ namespace Nikse.SubtitleEdit.Forms
         private void Interjections_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)
+            {
                 DialogResult = DialogResult.Cancel;
+            }
             else if (e.KeyCode == UiUtil.HelpKeys)
+            {
                 Utilities.ShowHelp("#remove_text_for_hi");
+            }
         }
 
         public void Initialize(string semiColonSeperatedList)
@@ -78,7 +82,10 @@ namespace Nikse.SubtitleEdit.Forms
                         listBoxInterjections.SelectedIndex = i;
                         int top = i - 5;
                         if (top < 0)
+                        {
                             top = 0;
+                        }
+
                         listBoxInterjections.TopIndex = top;
                         break;
                     }
@@ -113,9 +120,14 @@ namespace Nikse.SubtitleEdit.Forms
                     _interjections.Remove(text);
                     listBoxInterjections.Items.RemoveAt(index);
                     if (index < listBoxInterjections.Items.Count)
+                    {
                         listBoxInterjections.SelectedIndex = index;
+                    }
                     else if (listBoxInterjections.Items.Count > 0)
+                    {
                         listBoxInterjections.SelectedIndex = index - 1;
+                    }
+
                     listBoxInterjections.Focus();
 
                     return;
@@ -132,7 +144,9 @@ namespace Nikse.SubtitleEdit.Forms
         private void textBoxInterjection_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
+            {
                 buttonAdd_Click(null, null);
+            }
         }
 
         private void textBoxInterjection_TextChanged(object sender, EventArgs e)

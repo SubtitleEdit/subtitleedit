@@ -9,8 +9,8 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public partial class NetflixQCResult : Form
     {
-        private string Message { get; set; }
-        private List<string> FilesToLocate { get; set; }
+        private string Message { get; }
+        private List<string> FilesToLocate { get; }
 
         public NetflixQCResult(string message, List<string> filesToLocate)
         {
@@ -93,7 +93,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void OpenFileLocation(string filePath)
         {
-            Process.Start("explorer.exe", string.Format(@"/select,""{0}"" ", filePath));
+            Process.Start("explorer.exe", $@"/select,""{filePath}"" ");
         }
     }
 }

@@ -174,15 +174,21 @@ https://github.com/SubtitleEdit/subtitleedit
         private void Statistics_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)
+            {
                 DialogResult = DialogResult.Cancel;
+            }
             else if (e.KeyData == (Keys.Control | Keys.C))
+            {
                 Clipboard.SetText(string.Format(WriteFormat, _general, _mostUsedWords, _mostUsedLines), TextDataFormat.UnicodeText);
+            }
         }
 
         private void MostUsedWordsAdd(Dictionary<string, int> hashtable, string text)
         {
             if (text.Contains("< "))
+            {
                 text = HtmlUtil.FixInvalidItalicTags(text);
+            }
 
             text = StripHtmlTags(text);
 
@@ -201,7 +207,9 @@ https://github.com/SubtitleEdit/subtitleedit
                 idx = text.IndexOf("<font", idx, StringComparison.OrdinalIgnoreCase);
             }
             if (!error)
+            {
                 text = text.Replace("</font>", ".");
+            }
 
             foreach (string word in text.Split(ExpectedChars, StringSplitOptions.RemoveEmptyEntries))
             {
@@ -247,7 +255,9 @@ https://github.com/SubtitleEdit/subtitleedit
             text = text.Replace("\"", string.Empty);
 
             if (text.Length < 8)
+            {
                 return text;
+            }
 
             text = text.Replace("<i>", string.Empty);
             text = text.Replace("</i>", ".");
@@ -305,7 +315,9 @@ https://github.com/SubtitleEdit/subtitleedit
             var hashtable = new Dictionary<string, int>();
 
             foreach (Paragraph p in _subtitle.Paragraphs)
+            {
                 MostUsedLinesAdd(hashtable, p.Text.Replace(Environment.NewLine, " ").Replace("  ", " "));
+            }
 
             var sortedTable = new SortedDictionary<string, string>(new StingOrdinalComparer());
             foreach (KeyValuePair<string, int> item in hashtable)

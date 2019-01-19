@@ -7,7 +7,7 @@ using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public partial class TimedTextNewLanguage : Form
+    public sealed partial class TimedTextNewLanguage : Form
     {
         public class LanguageComboBoxItem
         {

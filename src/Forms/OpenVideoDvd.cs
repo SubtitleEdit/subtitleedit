@@ -41,7 +41,10 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 string s = comboBoxDrive.Items[comboBoxDrive.SelectedIndex].ToString();
                 if (s.Contains(' '))
+                {
                     s = s.Substring(0, s.IndexOf(' '));
+                }
+
                 DvdPath = s;
             }
             else
@@ -90,16 +93,23 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             if (comboBoxDrive.Items.Count > 0)
+            {
                 comboBoxDrive.SelectedIndex = 0;
+            }
             else
+            {
                 radioButtonFolder.Checked = true;
+            }
+
             PanelDrive.Enabled = true;
         }
 
         private void OpenVideoDvd_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)
+            {
                 DialogResult = DialogResult.Cancel;
+            }
         }
 
     }

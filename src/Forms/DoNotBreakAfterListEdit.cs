@@ -43,16 +43,21 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 catch
                 {
+                    // ignored
                 }
             }
             if (comboBoxDictionaries.Items.Count > 0)
+            {
                 comboBoxDictionaries.SelectedIndex = 0;
+            }
         }
 
         private void DoNotBreakAfterListEdit_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)
+            {
                 DialogResult = DialogResult.Cancel;
+            }
         }
 
         private void comboBoxDictionaries_SelectedIndexChanged(object sender, EventArgs e)
@@ -89,7 +94,9 @@ namespace Nikse.SubtitleEdit.Forms
             foreach (var item in noBreakAfterList)
             {
                 if (item.Text != null)
+                {
                     listBoxNoBreakAfter.Items.Add(item);
+                }
             }
         }
 
@@ -98,9 +105,15 @@ namespace Nikse.SubtitleEdit.Forms
             int first = 0;
             var list = new List<int>();
             foreach (int i in listBoxNoBreakAfter.SelectedIndices)
+            {
                 list.Add(i);
+            }
+
             if (list.Count > 0)
+            {
                 first = list[0];
+            }
+
             list.Sort();
             for (int i = list.Count - 1; i >= 0; i--)
             {
@@ -108,7 +121,10 @@ namespace Nikse.SubtitleEdit.Forms
             }
             ShowBreakAfterList(_noBreakAfterList);
             if (first >= _noBreakAfterList.Count)
+            {
                 first = _noBreakAfterList.Count - 1;
+            }
+
             if (first >= 0)
             {
                 listBoxNoBreakAfter.SelectedIndex = first;
@@ -144,7 +160,9 @@ namespace Nikse.SubtitleEdit.Forms
         private void buttonAddNames_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(textBoxNoBreakAfter.Text))
+            {
                 return;
+            }
 
             NoBreakAfterItem item;
             if (radioButtonText.Checked)
@@ -188,9 +206,13 @@ namespace Nikse.SubtitleEdit.Forms
         private void RadioButtonCheckedChanged(object sender, EventArgs e)
         {
             if (sender == radioButtonRegEx)
+            {
                 textBoxNoBreakAfter.ContextMenu = FindReplaceDialogHelper.GetRegExContextMenu(textBoxNoBreakAfter);
+            }
             else
+            {
                 textBoxNoBreakAfter.ContextMenuStrip = null;
+            }
         }
 
         private void listBoxNames_SelectedIndexChanged(object sender, EventArgs e)
@@ -209,7 +231,9 @@ namespace Nikse.SubtitleEdit.Forms
         private void textBoxNoBreakAfter_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
+            {
                 buttonAddNames_Click(sender, e);
+            }
         }
 
     }
