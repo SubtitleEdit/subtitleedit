@@ -65,12 +65,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 clip.Attributes.Append(attr);
 
                 attr = xml.CreateAttribute("duration");
-                //attr.Value = "9529520/2400000s";
                 attr.Value = Convert.ToInt64(p.Duration.TotalSeconds * 2400000) + "/2400000s";
                 clip.Attributes.Append(attr);
 
                 attr = xml.CreateAttribute("start");
-                //attr.Value = "1201200/2400000s";
                 attr.Value = Convert.ToInt64(p.StartTime.TotalSeconds * 2400000) + "/2400000s";
                 clip.Attributes.Append(attr);
 

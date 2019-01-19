@@ -1265,7 +1265,6 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                             nbmp.ReplaceTransparentWith(panelFullFrameBackground.BackColor);
                             using (var bmp = nbmp.GetBitmap())
                             {
-                                // param.Bitmap.Save(fileName, ImageFormat);
                                 imagesSavedCount++;
 
                                 //RACE001.TIF 00;00;02;02 00;00;03;15 000 000 720 480
@@ -2413,7 +2412,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                             try
                             {
                                 fontStack.Push(font); // save old cfont
-                                var p = new MakeBitmapParameter() { SubtitleFontName = fontFace, SubtitleFontSize = fontSize };
+                                var p = new MakeBitmapParameter { SubtitleFontName = fontFace, SubtitleFontSize = fontSize };
                                 font = SetFont(p, p.SubtitleFontSize);
                             }
                             catch
@@ -2755,7 +2754,6 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 else
                 {
                     baseLinePadding = (int)Math.Round(TextDraw.MeasureTextHeight(font, "yjK)", parameter.SubtitleFontBold) - TextDraw.MeasureTextHeight(font, "ac", parameter.SubtitleFontBold));
-                    //  baseLinePadding += 2;
                     PaddingDictionary.Add(paddingKey, baseLinePadding);
                 }
 
@@ -3110,7 +3108,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                         try
                                         {
                                             fontStack.Push(font); // save old cfont
-                                            var p = new MakeBitmapParameter() { SubtitleFontName = fontFace, SubtitleFontSize = fontSize };
+                                            var p = new MakeBitmapParameter { SubtitleFontName = fontFace, SubtitleFontSize = fontSize };
                                             font = SetFont(p, p.SubtitleFontSize);
                                         }
                                         catch
