@@ -204,14 +204,6 @@ namespace Nikse.SubtitleEdit.Controls
             _pictureBoxProgressBar.Width = 0;
 
             PanelPlayer.MouseDown += PanelPlayerMouseDown;
-
-            PanelPlayer.Resize += (sender, args) =>
-            {
-                if (VideoPlayer is LibMpvDynamic && Configuration.Settings.General.MpvHandlesPreviewText)
-                {
-                    _subtitleText = string.Empty; // refresh font size
-                }
-            };
         }
 
         public void EnableMouseWheelStep()
@@ -348,7 +340,7 @@ namespace Nikse.SubtitleEdit.Controls
                     Configuration.Settings.SubtitleSettings.SsaFontBold = Configuration.Settings.General.VideoPlayerPreviewFontBold;
                     subtitle.Header = AdvancedSubStationAlpha.DefaultHeader;
                     Configuration.Settings.SubtitleSettings.SsaFontSize = oldFontSize;
-                    Configuration.Settings.SubtitleSettings.SsaFontBold = oldFontBold;                 
+                    Configuration.Settings.SubtitleSettings.SsaFontBold = oldFontBold;
 
                     if (oldSub.Header != null && oldSub.Header.Length > 20 && oldSub.Header.Substring(3, 3) == "STL")
                     {
@@ -367,19 +359,6 @@ namespace Nikse.SubtitleEdit.Controls
                 }
 
                 string text = subtitle.ToText(format);
-
-                // try to calculate the actual preview video size in order to keep font size
-                var width = PanelPlayer.Width * 0.7;
-                var height = PanelPlayer.Height * 0.7;
-                if (PanelPlayer.Width * 0.6 < PanelPlayer.Height)
-                    height = width * 0.6;
-                else if (PanelPlayer.Height * 1.6 > PanelPlayer.Width)
-                    width = height * 1.6;
-                text = text.Replace("[V4+ Styles]",
-                           "PlayResX: " + (int)width + Environment.NewLine +
-                           "PlayResY: " + (int)height + Environment.NewLine +
-                           Environment.NewLine +
-                           "[V4+ Styles]");
 
                 if (text != _mpvTextOld || _mpvTextFileName == null || _retryCount > 0)
                 {
