@@ -60,7 +60,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 if (line.EndsWith('.') && Utilities.IsInteger(line.TrimEnd('.')))
                 {
                     if (!string.IsNullOrEmpty(paragraph?.Text))
+                    {
                         subtitle.Paragraphs.Add(paragraph);
+                    }
+
                     paragraph = new Paragraph();
                     expecting = ExpectingLine.TimeStart;
                 }
@@ -122,7 +125,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
             }
             if (!string.IsNullOrEmpty(paragraph?.Text))
+            {
                 subtitle.Paragraphs.Add(paragraph);
+            }
 
             subtitle.Renumber();
         }

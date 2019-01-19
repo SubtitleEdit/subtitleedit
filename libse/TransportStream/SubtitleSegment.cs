@@ -25,7 +25,9 @@
         public SubtitleSegment(byte[] buffer, int index)
         {
             if (buffer == null || buffer.Length < 7)
+            {
                 return;
+            }
 
             SyncByte = buffer[index];
             SegmentType = buffer[index + 1];
@@ -33,10 +35,14 @@
             SegmentLength = Helper.GetEndianWord(buffer, index + 4);
 
             if (buffer.Length - 6 < SegmentLength)
+            {
                 return;
+            }
 
             if (index + 6 + SegmentLength > buffer.Length)
+            {
                 return;
+            }
 
             IsValid = true;
 

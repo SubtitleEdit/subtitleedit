@@ -58,7 +58,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             p.Text = DvdStudioPro.DecodeStyles(p.Text);
                             p.Text = DvdStudioPro.GetAlignment(verticalAlign, horizontalAlign) + p.Text;
                             if (p.Text.Trim().StartsWith("<<Graphic>>"))
+                            {
                                 p.Text = p.Text.Trim().Remove(0, "<<Graphic>>".Length).Trim();
+                            }
+
                             subtitle.Paragraphs.Add(p);
                         }
                     }

@@ -39,7 +39,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 fs.Write(buffer, 0, buffer.Length);
 
                 while (fs.Length < 512)
+                {
                     fs.WriteByte(0);
+                }
 
                 var footer = new byte[] { 0xF1, 0x0B, 0x00, 0x00, 0x00, 0x1B, 0x18, 0x14, 0x20, 0x14, 0x2E, 0x14, 0x2F, 0x00 }; // footer
 
@@ -69,7 +71,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         {
                             y += 0x20;
                             if (line.Length > 0)
+                            {
                                 sb.Append(line);
+                            }
+
                             line.Clear();
                             skipCount = Environment.NewLine.Length - 1;
                             sb.Append('\u0014');
@@ -95,7 +100,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         }
                     }
                     if (line.Length > 0)
+                    {
                         sb.Append(line);
+                    }
+
                     text = sb.ToString();
 
                     // codes?
@@ -230,7 +238,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                 p.StartTime = DecodeTimestamp(buffer, i + 3);
                 if (last != null && Math.Abs(last.EndTime.TotalMilliseconds) < 0.001)
+                {
                     last.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds - 1;
+                }
 
                 if (length > 22)
                 {
@@ -255,7 +265,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 //if (font)
                                 //    sb.Append("</font>");
                                 if (italics)
+                                {
                                     sb.Append("</i>");
+                                }
+
                                 sb.AppendLine();
                                 //font = false;
                                 italics = false;
@@ -431,7 +444,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     //if (font)
                     //    p.Text += "</font>";
                     if (italics)
+                    {
                         p.Text += "</i>";
+                    }
+
                     p.Text = p.Text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
                     p.Text = p.Text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
                     p.Text = p.Text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
@@ -448,9 +464,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             if (last != null)
             {
                 if (Math.Abs(last.EndTime.TotalMilliseconds) < 0.001)
+                {
                     last.EndTime.TotalMilliseconds = last.StartTime.TotalMilliseconds + 2500;
+                }
+
                 if (last.Duration.TotalMilliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
+                {
                     last.EndTime.TotalMilliseconds = last.StartTime.TotalMilliseconds + Utilities.GetOptimalDisplayMilliseconds(last.Text);
+                }
             }
 
             subtitle.Renumber();

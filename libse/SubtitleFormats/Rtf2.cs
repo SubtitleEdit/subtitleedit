@@ -52,11 +52,15 @@ TimeCode Format: " + Configuration.Settings.General.CurrentFrameRate + @" frames
             _errorCount = 0;
             var sb = new StringBuilder();
             foreach (string line in lines)
+            {
                 sb.AppendLine(line);
+            }
 
             string rtf = sb.ToString().Trim();
             if (!rtf.StartsWith("{\\rtf", StringComparison.Ordinal))
+            {
                 return;
+            }
 
             lines = rtf.FromRtf().SplitToLines();
             _errorCount = 0;
@@ -70,7 +74,10 @@ TimeCode Format: " + Configuration.Settings.General.CurrentFrameRate + @" frames
                     try
                     {
                         if (p != null)
+                        {
                             subtitle.Paragraphs.Add(p);
+                        }
+
                         string[] arr = s.Split(' ');
                         p = new Paragraph(DecodeTimeCodeFrames(arr[1], splitChars), DecodeTimeCodeFrames(arr[2], splitChars), string.Empty);
                     }
@@ -90,7 +97,9 @@ TimeCode Format: " + Configuration.Settings.General.CurrentFrameRate + @" frames
                 }
             }
             if (p != null)
+            {
                 subtitle.Paragraphs.Add(p);
+            }
 
             if (subtitle.Paragraphs.Count > 0)
             {

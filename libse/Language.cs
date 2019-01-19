@@ -2837,21 +2837,39 @@ Keep changes?",
 
             // Use alternative, if translated (Forms/Main.cs)
             if (language.Main.Menu.Tools.Number == english.Main.Menu.Tools.Number && language.General.Number != english.General.Number)
+            {
                 language.Main.Menu.Tools.Number = language.General.Number;
+            }
+
             if (language.Main.Menu.Tools.EndTime == english.Main.Menu.Tools.EndTime && language.General.EndTime != english.General.EndTime)
+            {
                 language.Main.Menu.Tools.EndTime = language.General.EndTime;
+            }
+
             if (language.Main.Menu.Tools.Duration == english.Main.Menu.Tools.Duration && language.General.Duration != english.General.Duration)
+            {
                 language.Main.Menu.Tools.Duration = language.General.Duration;
+            }
+
             if (language.Main.Menu.Tools.StartTime == english.Main.Menu.Tools.StartTime && language.General.StartTime != english.General.StartTime)
+            {
                 language.Main.Menu.Tools.StartTime = language.General.StartTime;
+            }
+
             if (language.Main.BeforeMergeLinesWithSameText == english.Main.BeforeMergeLinesWithSameText && language.Main.BeforeMergeShortLines != english.Main.BeforeMergeShortLines)
+            {
                 language.Main.BeforeMergeLinesWithSameText = language.Main.BeforeMergeShortLines;
+            }
             // Use alternative, if translated (Forms/Settings.cs)
             if (language.Settings.AdjustSetEndTimeAndGoToNext == english.Settings.AdjustSetEndTimeAndGoToNext && language.Main.VideoControls.SetEndTimeAndGoToNext != english.Main.VideoControls.SetEndTimeAndGoToNext)
+            {
                 language.Settings.AdjustSetEndTimeAndGoToNext = language.Main.VideoControls.SetEndTimeAndGoToNext;
+            }
             // Translated alternative without format item (../Forms/PluginsGet.cs)
             if (language.PluginsGet.UpdateAllX == english.PluginsGet.UpdateAllX && language.PluginsGet.UpdateAll != english.PluginsGet.UpdateAll)
+            {
                 language.PluginsGet.UpdateAllX = null;
+            }
 
             return language;
         }

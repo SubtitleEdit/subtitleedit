@@ -50,7 +50,10 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
         public static string GetString(byte[] buffer, int index, int count)
         {
             if (count <= 0)
+            {
                 return string.Empty;
+            }
+
             return Encoding.UTF8.GetString(buffer, index, count);
         }
 
@@ -59,7 +62,10 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
             Buffer = new byte[8];
             var bytesRead = fs.Read(Buffer, 0, Buffer.Length);
             if (bytesRead < Buffer.Length)
+            {
                 return false;
+            }
+
             Size = GetUInt(0);
             Name = GetString(4, 4);
 
@@ -71,7 +77,10 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
             {
                 bytesRead = fs.Read(Buffer, 0, Buffer.Length);
                 if (bytesRead < Buffer.Length)
+                {
                     return false;
+                }
+
                 Size = GetUInt64(0) - 8;
             }
             Position = (ulong)fs.Position + Size - 8;

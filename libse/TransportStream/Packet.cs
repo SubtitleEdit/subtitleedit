@@ -82,7 +82,9 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
             get
             {
                 if (Payload == null || Payload.Length < 4)
+                {
                     return false;
+                }
 
                 return Payload[0] == 0 &&
                        Payload[1] == 0 &&
@@ -96,7 +98,9 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
             get
             {
                 if (Payload == null || Payload.Length < 4)
+                {
                     return false;
+                }
 
                 return Payload[0] == 0 &&
                        Payload[1] == 0 &&
@@ -111,7 +115,9 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
         public Packet(byte[] packetBuffer)
         {
             if (packetBuffer == null || packetBuffer.Length < 30)
+            {
                 return;
+            }
 
             TransportErrorIndicator = 1 == packetBuffer[1] >> 7; // Set by demodulator if can't correct errors in the stream, to tell the demultiplexer that the packet has an uncorrectable error
             PayloadUnitStartIndicator = 1 == ((packetBuffer[1] & 64) >> 6); // and with 01000000 to get second byte - 1 means start of PES data or PSI otherwise zero
@@ -123,13 +129,17 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
             AdaptionFieldLength = AdaptationFieldControl > 1 ? (0xFF & packetBuffer[4]) + 1 : 0;
 
             if (AdaptationFieldControl == Helper.B00000010 || AdaptationFieldControl == Helper.B00000011)
+            {
                 AdaptationField = new AdaptationField(packetBuffer);
+            }
 
             if (AdaptationFieldControl == Helper.B00000001 || AdaptationFieldControl == Helper.B00000011) // Payload exists -  binary '01' || '11'
             {
                 int payloadStart = 4;
                 if (AdaptationField != null)
+                {
                     payloadStart += (1 + AdaptationField.Length);
+                }
 
                 if (PacketId == ProgramAssociationTablePacketId) // PAT = Program Association Table: lists all programs available in the transport stream.
                 {
@@ -139,7 +149,10 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                 // Save payload
                 int payloadLength = packetBuffer.Length - payloadStart;
                 if (payloadLength < 0)
+                {
                     return;
+                }
+
                 Payload = new byte[payloadLength];
                 Buffer.BlockCopy(packetBuffer, payloadStart, Payload, 0, Payload.Length);
             }

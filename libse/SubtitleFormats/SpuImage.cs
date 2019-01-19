@@ -25,7 +25,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             lines.ForEach(line => sb.AppendLine(line));
             string xmlString = sb.ToString();
             if (!xmlString.Contains("<subpictures") || !xmlString.Contains("<spu "))
+            {
                 return;
+            }
 
             var xml = new XmlDocument { XmlResolver = null };
             try

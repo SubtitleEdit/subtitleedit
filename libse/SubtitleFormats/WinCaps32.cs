@@ -75,7 +75,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                     p.Text = Utilities.AutoBreakLine(sb.ToString().TrimEnd());
                     if (p.Text.Length > 0)
+                    {
                         subtitle.Paragraphs.Add(p);
+                    }
+
                     i = nextPosition;
                 }
                 else

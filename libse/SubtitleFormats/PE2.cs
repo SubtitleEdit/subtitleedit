@@ -25,10 +25,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             var sb = new StringBuilder();
             foreach (string line in lines)
+            {
                 sb.AppendLine(line);
+            }
+
             string s = sb.ToString();
             if (!s.Contains("#PE2"))
+            {
                 return false;
+            }
 
             return base.IsMine(lines, fileName);
         }
@@ -76,13 +81,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             if (paragraph != null)
                             {
                                 if (paragraph.EndTime.TotalMilliseconds < 0.001)
+                                {
                                     paragraph.EndTime.TotalMilliseconds = tc.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                                }
+
                                 subtitle.Paragraphs.Add(paragraph);
                             }
                             paragraph = new Paragraph { StartTime = tc };
                             expecting = ExpectingLine.Text;
                             if (line.Length > 12)
+                            {
                                 paragraph.Text = line.Substring(12).Trim().Replace("//", Environment.NewLine);
+                            }
                         }
                         catch
                         {
@@ -99,7 +109,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         paragraph.EndTime = tc;
                         subtitle.Paragraphs.Add(paragraph);
                         if (paragraph.StartTime.TotalMilliseconds < 0.001)
+                        {
                             _errorCount++;
+                        }
+
                         paragraph = null;
                         expecting = ExpectingLine.TimeStart;
                     }

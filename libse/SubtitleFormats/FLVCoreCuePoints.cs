@@ -82,7 +82,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             string allText = sb.ToString();
             if (!allText.Contains("<FLVCoreCuePoints") && allText.Contains("<CuePoint"))
+            {
                 return;
+            }
 
             var xml = new XmlDocument { XmlResolver = null };
             try
@@ -127,7 +129,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     Paragraph next = subtitle.Paragraphs[i + 1];
                     if (p.EndTime.TotalMilliseconds > next.StartTime.TotalMilliseconds)
+                    {
                         p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                    }
                 }
             }
 

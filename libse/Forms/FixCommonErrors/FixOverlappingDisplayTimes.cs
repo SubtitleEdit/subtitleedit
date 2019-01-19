@@ -82,7 +82,9 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 double currentOptimalDisplayTime = Utilities.GetOptimalDisplayMilliseconds(p.Text);
                 bool canBeEqual = callbacks != null && (callbacks.Format != null && callbacks.Format.GetType() == typeof(AdvancedSubStationAlpha) || callbacks.Format.GetType() == typeof(SubStationAlpha));
                 if (!canBeEqual)
+                {
                     canBeEqual = Configuration.Settings.Tools.FixCommonErrorsFixOverlapAllowEqualEndStart;
+                }
 
                 double diff = prev.EndTime.TotalMilliseconds - p.StartTime.TotalMilliseconds;
                 if (!prev.StartTime.IsMaxTime && !p.StartTime.IsMaxTime && diff >= 0 && !(canBeEqual && Math.Abs(diff) < 0.001))
@@ -97,11 +99,18 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                             {
                                 bool okEqual = true;
                                 if (prev.Duration.TotalMilliseconds > Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds)
+                                {
                                     prev.EndTime.TotalMilliseconds--;
+                                }
                                 else if (p.Duration.TotalMilliseconds > Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds)
+                                {
                                     p.StartTime.TotalMilliseconds++;
+                                }
                                 else
+                                {
                                     okEqual = false;
+                                }
+
                                 if (okEqual)
                                 {
                                     noOfOverlappingDisplayTimesFixed++;
@@ -117,7 +126,10 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         {
                             prev.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds - 1;
                             if (canBeEqual)
+                            {
                                 prev.EndTime.TotalMilliseconds++;
+                            }
+
                             noOfOverlappingDisplayTimesFixed++;
                             callbacks.AddFixToListView(target, fixAction, oldPrevious, prev.ToString());
                         }
@@ -139,7 +151,10 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         {
                             p.StartTime.TotalMilliseconds = prev.EndTime.TotalMilliseconds + 1;
                             if (canBeEqual)
+                            {
                                 p.StartTime.TotalMilliseconds = prev.EndTime.TotalMilliseconds;
+                            }
+
                             noOfOverlappingDisplayTimesFixed++;
                             callbacks.AddFixToListView(p, fixAction, oldCurrent, p.ToString());
                         }
@@ -161,7 +176,10 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         {
                             prev.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds - 1;
                             if (canBeEqual)
+                            {
                                 prev.EndTime.TotalMilliseconds++;
+                            }
+
                             noOfOverlappingDisplayTimesFixed++;
                             callbacks.AddFixToListView(target, fixAction, oldPrevious, prev.ToString());
                         }
@@ -172,7 +190,10 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         {
                             p.StartTime.TotalMilliseconds = prev.EndTime.TotalMilliseconds + 1;
                             if (canBeEqual)
+                            {
                                 p.StartTime.TotalMilliseconds = prev.EndTime.TotalMilliseconds;
+                            }
+
                             noOfOverlappingDisplayTimesFixed++;
                             callbacks.AddFixToListView(p, fixAction, oldCurrent, p.ToString());
                         }
@@ -184,7 +205,10 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                             prev.EndTime.TotalMilliseconds -= 2;
                             p.StartTime.TotalMilliseconds = prev.EndTime.TotalMilliseconds + 1;
                             if (canBeEqual)
+                            {
                                 p.StartTime.TotalMilliseconds = prev.EndTime.TotalMilliseconds;
+                            }
+
                             noOfOverlappingDisplayTimesFixed++;
                             callbacks.AddFixToListView(p, fixAction, oldCurrent, p.ToString());
                         }
@@ -198,11 +222,15 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
                             string stripped = HtmlUtil.RemoveHtmlTags(prev.Text).TrimStart();
                             if (!stripped.StartsWith("- ", StringComparison.Ordinal))
+                            {
                                 prev.Text = "- " + prev.Text.TrimStart();
+                            }
 
                             stripped = HtmlUtil.RemoveHtmlTags(p.Text).TrimStart();
                             if (!stripped.StartsWith("- ", StringComparison.Ordinal))
+                            {
                                 p.Text = "- " + p.Text.TrimStart();
+                            }
 
                             prev.Text = prev.Text.Trim() + Environment.NewLine + p.Text;
                             p.Text = string.Empty;

@@ -233,7 +233,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 {
                                     bool isTimeCode = child.InnerText.Length == 11 && child.InnerText.RemoveChar(':').Length == 8;
                                     if (!isTimeCode)
+                                    {
                                         sb.Append(child.InnerText);
+                                    }
                                 }
                                 else if (child.Name == "w:br")
                                 {
@@ -260,7 +262,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             for (int i = 0; i < subtitle.Paragraphs.Count - 1; i++)
             {
                 if (Math.Abs(subtitle.Paragraphs[i].EndTime.TotalMilliseconds - subtitle.Paragraphs[i + 1].StartTime.TotalMilliseconds) < 0.01)
+                {
                     subtitle.Paragraphs[i].EndTime.TotalMilliseconds = subtitle.Paragraphs[i + 1].StartTime.TotalMilliseconds - 1;
+                }
             }
             subtitle.Renumber();
         }

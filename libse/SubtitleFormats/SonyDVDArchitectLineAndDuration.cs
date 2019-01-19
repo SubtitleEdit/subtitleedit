@@ -21,7 +21,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             sb.AppendLine("Date: " + DateTime.Now.ToString("dd-MM-yyyy").Replace("-", ".")); //  25.08.2011
             double milliseconds = 0;
             if (subtitle.Paragraphs.Count > 0)
+            {
                 milliseconds = subtitle.Paragraphs[subtitle.Paragraphs.Count - 1].EndTime.TotalMilliseconds;
+            }
+
             var tc = new TimeCode(milliseconds);
             sb.AppendLine(string.Format("Duration: {0:00}:{1:00}:{2:00}:{3:00}", tc.Hours, tc.Minutes, tc.Seconds, MillisecondsToFramesMaxFrameRate(tc.Milliseconds))); // 01:20:49:12
             sb.AppendLine("Program start: 00:00:00:00");
@@ -71,7 +74,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         {
                             isTimeCode = true;
                             if (lastParagraph != null)
+                            {
                                 subtitle.Paragraphs.Add(lastParagraph);
+                            }
 
                             var arr = line.Split('\t');
                             TimeCode start = DecodeTimeCodeFrames(arr[1], SplitCharColon);
@@ -86,12 +91,17 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         success = true;
                     }
                     if (!success && count > 9)
+                    {
                         _errorCount++;
+                    }
                 }
                 count++;
             }
             if (lastParagraph != null)
+            {
                 subtitle.Paragraphs.Add(lastParagraph);
+            }
+
             subtitle.Renumber();
         }
 

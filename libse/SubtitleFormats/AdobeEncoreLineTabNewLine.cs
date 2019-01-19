@@ -17,11 +17,19 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             var sb = new StringBuilder();
             foreach (string line in lines)
+            {
                 sb.AppendLine(line);
+            }
+
             if (sb.ToString().Contains(Environment.NewLine + "SP_NUMBER\tSTART\tEND\tFILE_NAME"))
+            {
                 return false; // SON
+            }
+
             if (sb.ToString().Contains(Environment.NewLine + "SP_NUMBER     START        END       FILE_NAME"))
+            {
                 return false; // SON
+            }
 
             return base.IsMine(lines, fileName);
         }
@@ -83,7 +91,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             {
                                 string text = s.Remove(0, RegexTimeCodes.Match(s).Length - 1).Trim();
                                 if (!text.Contains(Environment.NewLine))
+                                {
                                     text = text.Replace("//", Environment.NewLine);
+                                }
+
                                 if (text.Contains("@Italic@"))
                                 {
                                     bool italicOn = false;
@@ -92,7 +103,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                         var index = text.IndexOf("@Italic@", StringComparison.Ordinal);
                                         string italicTag = "<i>";
                                         if (italicOn)
+                                        {
                                             italicTag = "</i>";
+                                        }
+
                                         text = text.Remove(index, "@Italic@".Length).Insert(index, italicTag);
                                         italicOn = !italicOn;
                                     }
@@ -116,7 +130,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 else if (line.StartsWith("\t\t\t\t", StringComparison.Ordinal) && p != null)
                 {
                     if (p.Text.Length < 200)
+                    {
                         p.Text = (p.Text + Environment.NewLine + line.Trim()).Trim();
+                    }
                 }
                 else if (!string.IsNullOrWhiteSpace(line) && p != null)
                 {

@@ -95,7 +95,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 Paragraph p = GetParagraph(ref index, buffer);
                 if (p != null)
+                {
                     subtitle.Paragraphs.Add(p);
+                }
             }
             subtitle.Renumber();
         }
@@ -136,7 +138,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         for (int j = index + 16; j < index + 16 + textLength; j++)
                         {
                             if (buffer[j] < 32 && buffer[j] != 0xd)
+                            {
                                 buffer[j] = 0;
+                            }
                         }
                         string text = Encoding.GetEncoding(1250).GetString(buffer, index + 16, textLength); // encoding?
                         text = text.Replace("\0", string.Empty);

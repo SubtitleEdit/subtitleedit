@@ -99,9 +99,13 @@ namespace Nikse.SubtitleEdit.Core
                 for (int j = 0; j < 8; j++)
                 {
                     if ((c & 1) != 0)
+                    {
                         c = 3988292384 ^ (c >> 1);
+                    }
                     else
+                    {
                         c >>= 1;
+                    }
                 }
                 CrcTable[i] = c;
             }
@@ -130,7 +134,9 @@ namespace Nikse.SubtitleEdit.Core
             zip.ZipFileStream = stream;
 
             if (zip.ReadFileInfo())
+            {
                 return zip;
+            }
 
             throw new System.IO.InvalidDataException();
         }
@@ -156,7 +162,9 @@ namespace Nikse.SubtitleEdit.Core
         public List<ZipFileEntry> ReadCentralDir()
         {
             if (this.CentralDirImage == null)
+            {
                 throw new InvalidOperationException("Central directory currently does not exist");
+            }
 
             List<ZipFileEntry> result = new List<ZipFileEntry>();
 
@@ -164,7 +172,9 @@ namespace Nikse.SubtitleEdit.Core
             {
                 uint signature = BitConverter.ToUInt32(CentralDirImage, pointer);
                 if (signature != 0x02014b50)
+                {
                     break;
+                }
 
                 bool encodeUTF8 = (BitConverter.ToUInt16(CentralDirImage, pointer + 8) & 0x0800) != 0;
                 ushort method = BitConverter.ToUInt16(CentralDirImage, pointer + 10);
@@ -191,7 +201,9 @@ namespace Nikse.SubtitleEdit.Core
                 zfe.Crc32 = crc32;
                 zfe.ModifyTime = DosTimeToDateTime(modifyTime);
                 if (commentSize > 0)
+                {
                     zfe.Comment = encoder.GetString(CentralDirImage, pointer + 46 + filenameSize + extraSize, commentSize);
+                }
 
                 result.Add(zfe);
                 pointer += (46 + filenameSize + extraSize + commentSize);
@@ -212,11 +224,15 @@ namespace Nikse.SubtitleEdit.Core
             // Make sure the parent directory exist
             string path = System.IO.Path.GetDirectoryName(filename);
             if (!Directory.Exists(path))
+            {
                 Directory.CreateDirectory(path);
+            }
 
             // Check it is directory. If so, do nothing
             if (Directory.Exists(filename))
+            {
                 return true;
+            }
 
             bool result = false;
             using (Stream output = new FileStream(filename, FileMode.Create, FileAccess.Write))
@@ -238,23 +254,33 @@ namespace Nikse.SubtitleEdit.Core
         public bool ExtractFile(ZipFileEntry zfe, Stream stream)
         {
             if (!stream.CanWrite)
+            {
                 throw new InvalidOperationException("Stream cannot be written");
+            }
 
             // check signature
             byte[] signature = new byte[4];
             this.ZipFileStream.Seek(zfe.HeaderOffset, SeekOrigin.Begin);
             this.ZipFileStream.Read(signature, 0, 4);
             if (BitConverter.ToUInt32(signature, 0) != 0x04034b50)
+            {
                 return false;
+            }
 
             // Select input stream for inflating or just reading
             Stream inStream;
             if (zfe.Method == Compression.Store)
+            {
                 inStream = this.ZipFileStream;
+            }
             else if (zfe.Method == Compression.Deflate)
+            {
                 inStream = new DeflateStream(this.ZipFileStream, CompressionMode.Decompress, true);
+            }
             else
+            {
                 return false;
+            }
 
             // Buffered copy
             byte[] buffer = new byte[16384];
@@ -269,7 +295,10 @@ namespace Nikse.SubtitleEdit.Core
             stream.Flush();
 
             if (zfe.Method == Compression.Deflate)
+            {
                 inStream.Dispose();
+            }
+
             return true;
         }
 
@@ -376,7 +405,9 @@ namespace Nikse.SubtitleEdit.Core
         private bool ReadFileInfo()
         {
             if (this.ZipFileStream.Length < 22)
+            {
                 return false;
+            }
 
             try
             {
@@ -397,7 +428,9 @@ namespace Nikse.SubtitleEdit.Core
 
                         // check if comment field is the very last data in file
                         if (this.ZipFileStream.Position + commentSize != this.ZipFileStream.Length)
+                        {
                             return false;
+                        }
 
                         // Copy entire central directory to a memory buffer
                         this.CentralDirImage = new byte[centralSize];

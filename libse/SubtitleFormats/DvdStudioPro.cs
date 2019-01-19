@@ -44,13 +44,22 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                        p.Text.StartsWith("{\\an5}", StringComparison.Ordinal) ||
                                        p.Text.StartsWith("{\\an6}", StringComparison.Ordinal);
             if (verticalTopAlign)
+            {
                 verticalAlign = "$VertAlign = Top";
+            }
             else if (verticalCenterAlign)
+            {
                 verticalAlign = "$VertAlign = Center";
+            }
             else
+            {
                 verticalAlign = "$VertAlign = Bottom";
+            }
+
             if (lastVerticalAlign != verticalAlign)
+            {
                 sb.AppendLine(verticalAlign);
+            }
 
             bool horizontalLeftAlign = p.Text.StartsWith("{\\an1}", StringComparison.Ordinal) ||
                                        p.Text.StartsWith("{\\an4}", StringComparison.Ordinal) ||
@@ -59,13 +68,22 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                         p.Text.StartsWith("{\\an6}", StringComparison.Ordinal) ||
                                         p.Text.StartsWith("{\\an9}", StringComparison.Ordinal);
             if (horizontalLeftAlign)
+            {
                 horizontalAlign = "$HorzAlign = Left";
+            }
             else if (horizontalRightAlign)
+            {
                 horizontalAlign = "$HorzAlign = Right";
+            }
             else
+            {
                 horizontalAlign = "$HorzAlign = Center";
+            }
+
             if (lastHorizontalAlign != horizontalAlign)
+            {
                 sb.AppendLine(horizontalAlign);
+            }
 
             lastVerticalAlign = verticalAlign;
             lastHorizontalAlign = horizontalAlign;
@@ -159,25 +177,43 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             if (verticalAlign.Equals("$VertAlign=Top", StringComparison.OrdinalIgnoreCase))
             {
                 if (horizontalAlign.Equals("$HorzAlign=Left", StringComparison.OrdinalIgnoreCase))
+                {
                     return "{\\an7}";
+                }
+
                 if (horizontalAlign.Equals("$HorzAlign=Right", StringComparison.OrdinalIgnoreCase))
+                {
                     return "{\\an9}";
+                }
+
                 return "{\\an8}";
             }
 
             if (verticalAlign.Equals("$VertAlign=Center", StringComparison.OrdinalIgnoreCase))
             {
                 if (horizontalAlign.Equals("$HorzAlign=Left", StringComparison.OrdinalIgnoreCase))
+                {
                     return "{\\an4}";
+                }
+
                 if (horizontalAlign.Equals("$HorzAlign=Right", StringComparison.OrdinalIgnoreCase))
+                {
                     return "{\\an6}";
+                }
+
                 return "{\\an5}";
             }
 
             if (horizontalAlign.Equals("$HorzAlign=Left", StringComparison.OrdinalIgnoreCase))
+            {
                 return "{\\an1}";
+            }
+
             if (horizontalAlign.Equals("$HorzAlign=Right", StringComparison.OrdinalIgnoreCase))
+            {
                 return "{\\an3}";
+            }
+
             return string.Empty;
         }
 
@@ -242,15 +278,26 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             text = text.Replace("</U>", "^U");
 
             if (allUnderlineBoldItalic)
+            {
                 return text.Replace(Environment.NewLine, "^U^B^I|^I^B^U");
+            }
             else if (allBoldItalic)
+            {
                 return text.Replace(Environment.NewLine, "^U^B^I|^I^B^U");
+            }
             else if (allItalic)
+            {
                 return text.Replace(Environment.NewLine, "^I|^I");
+            }
             else if (allBold)
+            {
                 return text.Replace(Environment.NewLine, "^B|^B");
+            }
             else if (allUnderline)
+            {
                 return text.Replace(Environment.NewLine, "^U|^U");
+            }
+
             return text.Replace(Environment.NewLine, "|");
         }
 

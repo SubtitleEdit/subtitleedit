@@ -46,8 +46,13 @@ namespace Nikse.SubtitleEdit.Core
             { // WinXp Fix
                 var newBitmap = new Bitmap(_workingBitmap.Width, _workingBitmap.Height, PixelFormat.Format32bppArgb);
                 for (int y = 0; y < _workingBitmap.Height; y++)
+                {
                     for (int x = 0; x < _workingBitmap.Width; x++)
+                    {
                         newBitmap.SetPixel(x, y, _workingBitmap.GetPixel(x, y));
+                    }
+                }
+
                 _workingBitmap = newBitmap;
             }
 
@@ -60,7 +65,10 @@ namespace Nikse.SubtitleEdit.Core
             var bounds = new Rectangle(Point.Empty, _workingBitmap.Size);
 
             _width = bounds.Width * sizeof(PixelData);
-            if (_width % 4 != 0) _width = 4 * (_width / 4 + 1);
+            if (_width % 4 != 0)
+            {
+                _width = 4 * (_width / 4 + 1);
+            }
 
             //Lock Image
             _bitmapData = _workingBitmap.LockBits(bounds, ImageLockMode.ReadWrite, PixelFormat.Format32bppArgb);

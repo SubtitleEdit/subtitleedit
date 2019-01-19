@@ -53,13 +53,17 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 if (match.Success && s.Length == 11)
                 {
                     if (!expectStartTime)
+                    {
                         _errorCount++;
+                    }
 
                     if (p.StartTime.TotalMilliseconds > 0)
                     {
                         subtitle.Paragraphs.Add(p);
                         if (string.IsNullOrEmpty(p.Text))
+                        {
                             _errorCount++;
+                        }
                     }
 
                     p = new Paragraph();
@@ -98,21 +102,29 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
             }
             if (p.StartTime.TotalMilliseconds > 0)
+            {
                 subtitle.Paragraphs.Add(p);
+            }
 
             bool allNullEndTime = true;
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
                 p = subtitle.Paragraphs[i];
                 if (p.EndTime.TotalMilliseconds != 0)
+                {
                     allNullEndTime = false;
+                }
 
                 p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + Utilities.GetOptimalDisplayMilliseconds(p.Text);
                 if (i < subtitle.Paragraphs.Count - 2 && p.EndTime.TotalMilliseconds >= subtitle.Paragraphs[i + 1].StartTime.TotalMilliseconds)
+                {
                     p.EndTime.TotalMilliseconds = subtitle.Paragraphs[i + 1].StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                }
             }
             if (!allNullEndTime)
+            {
                 subtitle.Paragraphs.Clear();
+            }
 
             subtitle.RemoveEmptyLines();
             subtitle.Renumber();

@@ -36,7 +36,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                 string style = string.Empty;
                 if (!string.IsNullOrEmpty(p.Extra) && subtitle.Header == "WEBVTT")
+                {
                     style = p.Extra;
+                }
+
                 sb.AppendLine(string.Format(paragraphWriteFormat, start, end, positionInfo, FormatText(p), style, Environment.NewLine));
             }
             return sb.ToString().Trim();
@@ -85,7 +88,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             string text = Utilities.RemoveSsaTags(p.Text);
             while (text.Contains(Environment.NewLine + Environment.NewLine))
+            {
                 text = text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
+            }
 
             text = ColorHtmlToWebVtt(text);
             return text;
@@ -103,7 +108,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 string line = lines[index];
                 string next = string.Empty;
                 if (index < lines.Count - 1)
+                {
                     next = lines[index + 1];
+                }
+
                 var s = line;
                 bool isTimeCode = line.Contains("-->");
                 if (isTimeCode && RegexTimeCodesMiddle.IsMatch(s))
@@ -158,11 +166,19 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     string text = positionInfo + line.Trim();
                     if (string.IsNullOrEmpty(text))
+                    {
                         hadEmptyLine = true;
+                    }
+
                     if (string.IsNullOrEmpty(p.Text))
+                    {
                         p.Text = text + Environment.NewLine;
+                    }
                     else
+                    {
                         p.Text += text + Environment.NewLine;
+                    }
+
                     positionInfo = string.Empty;
                 }
             }
@@ -385,13 +401,19 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         {
                             string voice = s.Substring(startIndex + 2, endIndex - startIndex - 2).Trim();
                             if (!list.Contains(voice))
+                            {
                                 list.Add(voice);
+                            }
                         }
 
                         if (startIndex == s.Length - 1)
+                        {
                             startIndex = -1;
+                        }
                         else
+                        {
                             startIndex = s.IndexOf("<v ", startIndex + 1, StringComparison.Ordinal);
+                        }
                     }
                 }
             }

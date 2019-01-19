@@ -26,7 +26,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 if (line.StartsWith("timestamp: ", StringComparison.Ordinal))
                 {
                     if (++subtitleCount > 10)
+                    {
                         return true;
+                    }
                 }
             }
             return false;
@@ -58,12 +60,17 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
 
                 foreach (int key in removeList)
+                {
                     tempNonTimeCodes.Remove(key);
+                }
 
                 sb.AppendLine(string.Format(paragraphWriteFormat, p.StartTime, p.Text));
             }
             foreach (DictionaryEntry de in tempNonTimeCodes)
+            {
                 sb.AppendLine(de.Value.ToString());
+            }
+
             return sb.ToString().Trim();
         }
 
@@ -79,21 +86,31 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     Paragraph p = GetParagraph(line.Split(splitChars, StringSplitOptions.RemoveEmptyEntries));
                     if (p != null)
+                    {
                         subtitle.Paragraphs.Add(p);
+                    }
                     else
+                    {
                         _errorCount++;
+                    }
                 }
                 else
                 {
                     int place;
                     if (subtitle.Paragraphs.Count == 0 ||
                         !int.TryParse(subtitle.Paragraphs[subtitle.Paragraphs.Count - 1].Text, out place))
+                    {
                         place = -1;
+                    }
 
                     if (NonTimeCodes.ContainsKey(place))
+                    {
                         NonTimeCodes[place] += Environment.NewLine + line;
+                    }
                     else
+                    {
                         NonTimeCodes.Add(place, line);
+                    }
                 }
             }
         }

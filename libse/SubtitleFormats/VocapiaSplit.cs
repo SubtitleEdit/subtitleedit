@@ -32,7 +32,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     header.LoadXml(subtitle.Header);
                     var speakerListNode = header.DocumentElement.SelectSingleNode("SpeakerList");
                     if (speakerListNode != null)
+                    {
                         xml.DocumentElement.SelectSingleNode("SpeakerList").InnerXml = speakerListNode.InnerXml;
+                    }
                 }
                 catch
                 {
@@ -81,7 +83,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             string xmlString = sb.ToString();
             if (!xmlString.Contains("<SpeechSegment"))
+            {
                 return;
+            }
 
             var xml = new XmlDocument { XmlResolver = null };
             try
@@ -120,7 +124,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
             subtitle.Renumber();
             if (subtitle.Paragraphs.Count > 0)
+            {
                 subtitle.Header = xmlString;
+            }
         }
 
         private static double ParseTimeCode(string s)
@@ -141,7 +147,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 if (!string.IsNullOrEmpty(p.Actor))
                 {
                     if (list.IndexOf(p.Actor) < 0)
+                    {
                         list.Add(p.Actor);
+                    }
                 }
             }
             return list;

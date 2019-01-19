@@ -20,7 +20,10 @@ namespace Nikse.SubtitleEdit.Core
             _removeLinesWithoutLetters = removeLinesWithoutLetters;
             _numberOfLines = numberOfLines;
             if (endChars == null)
+            {
                 endChars = string.Empty;
+            }
+
             _endChars = endChars;
             _singleLineMaxLength = singleLineMaxLength;
             _language = language;
@@ -39,7 +42,9 @@ namespace Nikse.SubtitleEdit.Core
                 else if (!ContainsLetters(s.Trim()))
                 {
                     if (!_removeLinesWithoutLetters)
+                    {
                         sb.AppendLine(s);
+                    }
                 }
                 else
                 {
@@ -123,7 +128,9 @@ namespace Nikse.SubtitleEdit.Core
                 foreach (NoBreakAfterItem ending in Utilities.NoBreakAfterList(_language))
                 {
                     if (ending.IsMatch(s2))
+                    {
                         return true;
+                    }
                 }
             }
             else
@@ -156,7 +163,9 @@ namespace Nikse.SubtitleEdit.Core
                         foreach (NoBreakAfterItem ending in Utilities.NoBreakAfterList(_language))
                         {
                             if (ending.IsMatch(s2))
+                            {
                                 return true;
+                            }
                         }
                     }
                     else
@@ -242,7 +251,9 @@ namespace Nikse.SubtitleEdit.Core
             foreach (var s in line.SplitToLines())
             {
                 if (s.Length > _singleLineMaxLength)
+                {
                     return true;
+                }
             }
             return false;
         }
@@ -251,7 +262,10 @@ namespace Nikse.SubtitleEdit.Core
         {
             if (allIndex == allText.Length ||
                 _endChars.Contains(line[line.Length - 1]) && !CurrentWordInDoNotBreakList(line, line.Length))
+            {
                 return false;
+            }
+
             return true;
         }
 
@@ -327,7 +341,10 @@ namespace Nikse.SubtitleEdit.Core
                 var lastLine = text.Substring(start);
                 list.Add(lastLine.Trim());
                 if (list.Count > 3)
+                {
                     break;
+                }
+
                 results.Add(new SplitListItem { Lines = list });
             }
 
@@ -347,7 +364,10 @@ namespace Nikse.SubtitleEdit.Core
             }
 
             if (best == null)
+            {
                 return new List<string> { text };
+            }
+
             return best.Lines;
         }
 
@@ -364,7 +384,9 @@ namespace Nikse.SubtitleEdit.Core
             foreach (char ch in line)
             {
                 if (!expectedChars.Contains(ch))
+                {
                     return true;
+                }
             }
             return false;
         }

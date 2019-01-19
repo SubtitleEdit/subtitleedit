@@ -19,7 +19,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 sb.AppendLine($"{index + 1:0000} : {EncodeTimeCode(p.StartTime)},{EncodeTimeCode(p.EndTime)},10");
                 sb.AppendLine("80 80 80");
                 foreach (string line in p.Text.SplitToLines())
+                {
                     sb.AppendLine("C1Y00 " + line.Trim());
+                }
+
                 sb.AppendLine();
                 index++;
             }
@@ -76,7 +79,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
             }
             if (p != null && !string.IsNullOrEmpty(p.Text))
+            {
                 subtitle.Paragraphs.Add(p);
+            }
 
             subtitle.Renumber();
         }

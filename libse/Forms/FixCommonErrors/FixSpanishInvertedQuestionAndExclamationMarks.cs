@@ -25,9 +25,14 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                                          last.Text.EndsWith(':') || last.Text.EndsWith(')') || last.Text.EndsWith(']');
                 string trimmedStart = p.Text.TrimStart('-', ' ');
                 if (last != null && last.Text.EndsWith("...", StringComparison.Ordinal) && trimmedStart.Length > 0 && char.IsLower(trimmedStart[0]))
+                {
                     wasLastLineClosed = false;
+                }
+
                 if (!wasLastLineClosed && last.Text == last.Text.ToUpper())
+                {
                     wasLastLineClosed = true;
+                }
 
                 string oldText = p.Text;
 
@@ -63,7 +68,10 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     if (!wasLastLineClosed && ((p.Text.IndexOf('!') > 0 && p.Text.IndexOf('!') < markIndex) ||
                                                (p.Text.IndexOf('?') > 0 && p.Text.IndexOf('?') < markIndex) ||
                                                (p.Text.IndexOf('.') > 0 && p.Text.IndexOf('.') < markIndex)))
+                    {
                         wasLastLineClosed = true;
+                    }
+
                     while (markIndex > 0 && startIndex < p.Text.Length)
                     {
                         int inverseMarkIndex = p.Text.IndexOf(inverseMark, startIndex, StringComparison.Ordinal);
@@ -74,7 +82,9 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                                 int j = markIndex - 1;
 
                                 while (j > startIndex && (p.Text[j] == '.' || p.Text[j] == '!' || p.Text[j] == '?'))
+                                {
                                     j--;
+                                }
 
                                 while (j > startIndex &&
                                        (p.Text[j] != '.' || IsSpanishAbbreviation(p.Text, j, callbacks)) &&
@@ -83,7 +93,9 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                                        !(j > 3 && p.Text.Substring(j - 3, 3) == Environment.NewLine + "-") &&
                                        !(j > 4 && p.Text.Substring(j - 4, 4) == Environment.NewLine + " -") &&
                                        !(j > 6 && p.Text.Substring(j - 6, 6) == Environment.NewLine + "<i>-"))
+                                {
                                     j--;
+                                }
 
                                 if (@".!?".Contains(p.Text[j]))
                                 {
@@ -106,7 +118,10 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                                     if (part.StartsWith('(') && speakerEnd > 0 && speakerEnd < part.IndexOf(mark))
                                     {
                                         while (Environment.NewLine.Contains(part[speakerEnd + 1]))
+                                        {
                                             speakerEnd++;
+                                        }
+
                                         speaker = part.Substring(0, speakerEnd + 1);
                                         part = part.Substring(speakerEnd + 1);
                                     }
@@ -114,7 +129,10 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                                     if (part.StartsWith('[') && speakerEnd > 0 && speakerEnd < part.IndexOf(mark))
                                     {
                                         while (Environment.NewLine.Contains(part[speakerEnd + 1]))
+                                        {
                                             speakerEnd++;
+                                        }
+
                                         speaker = part.Substring(0, speakerEnd + 1);
                                         part = part.Substring(speakerEnd + 1);
                                     }
@@ -152,7 +170,9 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                             string lastOldtext = last.Text;
                             int idx = last.Text.Length - 2;
                             while (idx > 0 && (last.Text.Substring(idx, 2) != ". ") && (last.Text.Substring(idx, 2) != "! ") && (last.Text.Substring(idx, 2) != "? "))
+                            {
                                 idx--;
+                            }
 
                             last.Text = last.Text.Insert(idx, inverseMark);
                             fixCount++;
@@ -161,9 +181,14 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
                         startIndex = markIndex + 2;
                         if (startIndex < p.Text.Length)
+                        {
                             markIndex = p.Text.IndexOf(mark, startIndex);
+                        }
                         else
+                        {
                             markIndex = -1;
+                        }
+
                         wasLastLineClosed = true;
                     }
                 }
@@ -183,9 +208,14 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 {
                     p.Text = p.Text.Insert(idx, mark.ToString(CultureInfo.InvariantCulture));
                     if (p.Text.Contains("¡¿") && p.Text.Contains("!?"))
+                    {
                         p.Text = p.Text.Replace("!?", "?!");
+                    }
+
                     if (p.Text.Contains("¿¡") && p.Text.Contains("?!"))
+                    {
                         p.Text = p.Text.Replace("?!", "!?");
+                    }
                 }
             }
         }
@@ -193,13 +223,19 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
         private bool IsSpanishAbbreviation(string text, int index, IFixCallbacks callbacks)
         {
             if (text[index] != '.')
+            {
                 return false;
+            }
 
             if (index + 3 < text.Length && text[index + 2] == '.') //  X
+            {
                 return true;                                    // O.R.
+            }
 
             if (index - 3 > 0 && text[index - 1] != '.' && text[index - 2] == '.') //    X
+            {
                 return true;                          // O.R.
+            }
 
             string word = string.Empty;
             int i = index - 1;
@@ -219,7 +255,9 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 word.Equals("sra", StringComparison.OrdinalIgnoreCase) ||
                 word.Equals("ud", StringComparison.OrdinalIgnoreCase) ||
                 word.Equals("uds", StringComparison.OrdinalIgnoreCase))
+            {
                 return true;
+            }
 
             HashSet<string> abbreviations = callbacks.GetAbbreviations();
             return abbreviations.Contains(word + ".");

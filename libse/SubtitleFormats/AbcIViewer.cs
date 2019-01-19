@@ -59,7 +59,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             string xmlString = sb.ToString();
             if (!xmlString.Contains("<reel"))
+            {
                 return;
+            }
 
             var xml = new XmlDocument { XmlResolver = null };
             try

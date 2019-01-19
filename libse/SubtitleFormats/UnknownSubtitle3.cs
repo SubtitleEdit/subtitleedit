@@ -26,7 +26,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 if (!subtitle.WasLoadedWithFrameNumbers)
+                {
                     p.CalculateFrameNumbersFromTimeCodes(Configuration.Settings.General.CurrentFrameRate);
+                }
+
                 sb.AppendLine(string.Format(paragraphWriteFormat, p.StartFrame, p.EndFrame, p.Text.Replace(Environment.NewLine, "\\~")));
             }
             return sb.ToString().Trim();

@@ -61,7 +61,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             p.Text = text.Replace(" | ", Environment.NewLine).Replace("|", Environment.NewLine);
                             p.Text = DvdStudioPro.DecodeStyles(p.Text);
                             if (p.Text.Trim().StartsWith("<<Graphic>>"))
+                            {
                                 _errorCount++;
+                            }
+
                             if (italicOn && !p.Text.Contains("<i>"))
                             {
                                 p.Text = "<i>" + p.Text + "</i>";

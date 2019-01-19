@@ -64,7 +64,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             lines.ForEach(line => sb.AppendLine(line));
             string xmlString = sb.ToString();
             if (!xmlString.Contains("<titles") || !xmlString.Contains("<text1>"))
+            {
                 return;
+            }
 
             var xml = new XmlDocument { XmlResolver = null };
             try
@@ -89,7 +91,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     {
                         XmlNode textNode = node.SelectSingleNode("text" + i);
                         if (textNode != null)
+                        {
                             text = (text + Environment.NewLine + textNode.InnerText).Trim();
+                        }
                     }
                     subtitle.Paragraphs.Add(new Paragraph(text, ParseTimeCode(start), ParseTimeCode(end)));
                 }

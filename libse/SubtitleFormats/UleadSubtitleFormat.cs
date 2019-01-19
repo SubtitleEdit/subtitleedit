@@ -89,9 +89,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 else if (p != null)
                 {
                     if (string.IsNullOrEmpty(p.Text))
+                    {
                         p.Text = line.TrimEnd();
+                    }
                     else
+                    {
                         p.Text = p.Text + Environment.NewLine + line.TrimEnd();
+                    }
                 }
                 else
                 {
@@ -112,7 +116,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             int milliseconds = (int)Math.Round(1000.0 / 25.0 * frames);
             if (milliseconds > 999)
+            {
                 milliseconds = 999;
+            }
 
             return new TimeCode(hour, minutes, seconds, milliseconds);
         }

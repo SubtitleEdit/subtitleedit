@@ -17,9 +17,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             var sb = new StringBuilder();
             foreach (string l in lines)
+            {
                 sb.AppendLine(l);
+            }
+
             if (Name == "SAMI" && sb.ToString().Contains("</SYNC>"))
+            {
                 return false;
+            }
 
             return base.IsMine(lines, fileName);
         }
@@ -147,20 +152,31 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
 
                 if (Name == new SamiModern().Name)
+                {
                     text = text.Replace(Environment.NewLine, "<br />");
+                }
                 else
+                {
                     text = text.Replace(Environment.NewLine, "<br>");
+                }
 
                 string currentClass = languageTag;
                 if (useExtra && !string.IsNullOrEmpty(p.Extra))
+                {
                     currentClass = p.Extra;
+                }
 
                 var startMs = (long)(Math.Round(p.StartTime.TotalMilliseconds));
                 var endMs = (long)(Math.Round(p.EndTime.TotalMilliseconds));
                 if (next != null && Math.Abs(((long)Math.Round(next.StartTime.TotalMilliseconds)) - endMs) < 1)
+                {
                     sb.AppendLine(string.Format(paragraphWriteFormatOpen, startMs, text, currentClass));
+                }
                 else
+                {
                     sb.AppendLine(string.Format(paragraphWriteFormat, startMs, endMs, text, currentClass));
+                }
+
                 count++;
             }
             sb.AppendLine("</BODY>");
@@ -218,11 +234,16 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             _errorCount = 0;
             var sb = new StringBuilder();
             foreach (string l in lines)
+            {
                 sb.AppendLine(l.Replace("<SYNC Start= \"", "<SYNC Start=\"").Replace("<SYNC Start = \"", "<SYNC Start=\"").Replace("<SYNC Start =\"", "<SYNC Start=\"").Replace("<SYNC  Start=\"", "<SYNC Start=\""));
+            }
+
             string allInput = sb.ToString();
             string allInputLower = allInput.ToLower();
             if (!allInputLower.Contains("<sync "))
+            {
                 return;
+            }
 
             int styleStart = allInputLower.IndexOf("<style", StringComparison.Ordinal);
             if (styleStart > 0)
@@ -254,25 +275,39 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 while (index < allInput.Length && expectedChars.Contains(allInput[index]))
                 {
                     if (allInput[index] != '"' && allInput[index] != '\'')
+                    {
                         millisecAsString += allInput[index];
+                    }
+
                     index++;
                 }
 
                 while (index < allInput.Length && allInput[index] != '>')
+                {
                     index++;
+                }
+
                 if (index < allInput.Length && allInput[index] == '>')
+                {
                     index++;
+                }
 
                 int syncEndPos = allInputLower.IndexOf(syncTag, index, StringComparison.Ordinal);
                 int syncEndPosEnc = allInputLower.IndexOf(syncTagEnc, index, StringComparison.Ordinal);
                 if (syncStartPosEnc >= 0 && syncStartPosEnc < syncStartPos || syncEndPos == -1)
+                {
                     syncEndPos = syncEndPosEnc;
+                }
 
                 string text;
                 if (syncEndPos >= 0)
+                {
                     text = allInput.Substring(index, syncEndPos - index);
+                }
                 else
+                {
                     text = allInput.Substring(index);
+                }
 
                 string textToLower = text.ToLower();
                 if (textToLower.Contains(" class="))
@@ -292,7 +327,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     int sourceIndex = text.IndexOf("ID=\"Source\"", StringComparison.Ordinal);
                     if (sourceIndex < 0)
+                    {
                         sourceIndex = text.IndexOf("ID=Source", StringComparison.Ordinal);
+                    }
+
                     int st = sourceIndex - 1;
                     while (st > 0 && text.Substring(st, 2).ToUpper() != "<P")
                     {
@@ -316,31 +354,48 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 text = Regex.Replace(text, @"<br {0,2}/?>", Environment.NewLine, RegexOptions.IgnoreCase);
 
                 while (text.Contains("  "))
+                {
                     text = text.Replace("  ", " ");
+                }
+
                 text = text.Replace("</BODY>", string.Empty).Replace("</SAMI>", string.Empty).TrimEnd();
                 text = text.Replace("</body>", string.Empty).Replace("</sami>", string.Empty).TrimEnd();
 
                 int endSyncPos = text.ToUpper().IndexOf("</SYNC>", StringComparison.OrdinalIgnoreCase);
                 if (text.IndexOf('>') > 0 && (text.IndexOf('>') < endSyncPos || endSyncPos == -1))
+                {
                     text = text.Remove(0, text.IndexOf('>') + 1);
+                }
+
                 text = text.TrimEnd();
 
                 if (text.EndsWith("</sync>", StringComparison.OrdinalIgnoreCase))
+                {
                     text = text.Substring(0, text.Length - 7).TrimEnd();
+                }
 
                 if (text.EndsWith("</p>", StringComparison.Ordinal) || text.EndsWith("</P>", StringComparison.OrdinalIgnoreCase))
+                {
                     text = text.Substring(0, text.Length - 4).TrimEnd();
+                }
 
                 text = RemoveDiv(text).Trim();
                 text = text.Replace("&nbsp;", " ").Replace("&NBSP;", " ");
                 text = text.Replace("</p>", string.Empty).Replace("</sync>", string.Empty).Replace("</body>", string.Empty);
                 if (string.IsNullOrWhiteSpace(text))
+                {
                     text = string.Empty;
+                }
 
                 if (text.Contains("<font color=") && !text.Contains("</font>"))
+                {
                     text += "</font>";
+                }
+
                 if (text.StartsWith("<FONT COLOR=", StringComparison.Ordinal) && !text.Contains("</font>") && !text.Contains("</FONT>"))
+                {
                     text += "</FONT>";
+                }
 
                 if (text.Contains('<') && text.Contains('>'))
                 {
@@ -398,7 +453,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 p.Text = cleanText;
                 long l;
                 if (long.TryParse(millisecAsString, out l))
+                {
                     p.StartTime = new TimeCode(l);
+                }
 
                 if (syncEndPos <= 0)
                 {
@@ -427,7 +484,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             if (subtitle.Paragraphs.Count > 0 &&
                 (subtitle.Paragraphs[subtitle.Paragraphs.Count - 1].Text.ToUpper().Trim() == "</BODY>" ||
                 subtitle.Paragraphs[subtitle.Paragraphs.Count - 1].Text.ToUpper().Trim() == "<BODY>"))
+            {
                 subtitle.Paragraphs.RemoveAt(subtitle.Paragraphs.Count - 1);
+            }
 
             foreach (Paragraph p2 in subtitle.Paragraphs)
             {
@@ -439,7 +498,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             int indexOfDiv = text.IndexOf("<div ", StringComparison.Ordinal);
             if (indexOfDiv < 0)
+            {
                 indexOfDiv = text.IndexOf("<div>", StringComparison.Ordinal);
+            }
+
             int maxLoop = 10;
             while (indexOfDiv > 0 && maxLoop >= 0)
             {
@@ -451,7 +513,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                     indexOfDiv = text.IndexOf("<div ", StringComparison.Ordinal);
                     if (indexOfDiv < 0)
+                    {
                         indexOfDiv = text.IndexOf("<div>", StringComparison.Ordinal);
+                    }
                 }
                 maxLoop--;
             }

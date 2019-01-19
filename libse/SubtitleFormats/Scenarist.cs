@@ -55,7 +55,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     {
                         string text = line.Remove(0, RegexTimeCodes.Match(line).Length - 1).Trim();
                         if (!text.Contains(Environment.NewLine))
+                        {
                             text = text.Replace("\t", Environment.NewLine);
+                        }
+
                         p = new Paragraph(DecodeTimeCodeFramesFourParts(startParts), DecodeTimeCodeFramesFourParts(endParts), text);
                         subtitle.Paragraphs.Add(p);
                     }

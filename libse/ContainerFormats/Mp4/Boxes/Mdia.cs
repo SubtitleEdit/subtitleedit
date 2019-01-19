@@ -29,13 +29,18 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
             while (fs.Position < (long)maximumLength)
             {
                 if (!InitializeSizeAndName(fs))
+                {
                     return;
+                }
 
                 if (Name == "minf" && IsTextSubtitle || IsVobSubSubtitle || IsClosedCaption || IsVideo)
                 {
                     ulong timeScale = 90000;
                     if (Mdhd != null)
+                    {
                         timeScale = Mdhd.TimeScale;
+                    }
+
                     Minf = new Minf(fs, Position, timeScale, HandlerType, this);
                 }
                 else if (Name == "hdlr")
@@ -44,7 +49,9 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                     fs.Read(Buffer, 0, Buffer.Length);
                     HandlerType = GetString(8, 4);
                     if (Size > 25)
+                    {
                         HandlerName = GetString(24, Buffer.Length - (24 + 5)); // TODO: How to find this?
+                    }
                 }
                 else if (Name == "mdhd")
                 {

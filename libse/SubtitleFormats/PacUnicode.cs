@@ -48,7 +48,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             buffer[19] == 0 &&
                             buffer[20] == 0 &&
                             fileName.EndsWith(".fpc", StringComparison.OrdinalIgnoreCase))
+                        {
                             return true;
+                        }
                     }
                 }
                 catch
@@ -75,7 +77,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 Paragraph p = GetPacParagraph(ref index, buffer);
                 if (p != null)
+                {
                     subtitle.Paragraphs.Add(p);
+                }
             }
             if (subtitle.Paragraphs.Count > 2 && subtitle.Paragraphs[0].StartTime.TotalMilliseconds < 0.001 && subtitle.Paragraphs[1].StartTime.TotalMilliseconds < 0.001)
             {
@@ -95,10 +99,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 index++;
                 if (index + 20 >= buffer.Length)
+                {
                     return null;
+                }
 
                 if (buffer[index] == 0xFE && buffer[index - 1] == 0x80)
+                {
                     con = false;
+                }
             }
 
             int feIndex = index;
@@ -112,7 +120,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             int textLength = buffer[timeStartIndex + 9] + buffer[timeStartIndex + 10] * 256;
             if (textLength > 500)
+            {
                 return null; // probably not correct index
+            }
+
             int maxIndex = timeStartIndex + 10 + textLength;
 
             var sb = new StringBuilder();
@@ -152,7 +163,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             index += textLength;
             if (index + 20 >= buffer.Length)
+            {
                 return null;
+            }
 
             p.Text = p.Text.Replace(Environment.NewLine + " ", Environment.NewLine);
             p.Text = p.Text.Replace(Environment.NewLine + " ", Environment.NewLine);
@@ -162,27 +175,43 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             if (verticalAlignment < 5)
             {
                 if (alignment == 1) // left
+                {
                     p.Text = "{\\an7}" + p.Text;
+                }
                 else if (alignment == 0) // right
+                {
                     p.Text = "{\\an9}" + p.Text;
+                }
                 else
+                {
                     p.Text = "{\\an8}" + p.Text;
+                }
             }
             else if (verticalAlignment < 9)
             {
                 if (alignment == 1) // left
+                {
                     p.Text = "{\\an4}" + p.Text;
+                }
                 else if (alignment == 0) // right
+                {
                     p.Text = "{\\an6}" + p.Text;
+                }
                 else
+                {
                     p.Text = "{\\an5}" + p.Text;
+                }
             }
             else
             {
                 if (alignment == 1) // left
+                {
                     p.Text = "{\\an1}" + p.Text;
+                }
                 else if (alignment == 0) // right
+                {
                     p.Text = "{\\an3}" + p.Text;
+                }
             }
             // Remove all control-characters if any in p.Text.
             p.Text = p.Text.RemoveControlCharactersButWhiteSpace();
@@ -196,7 +225,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 // header
                 fs.WriteByte(1);
                 for (int i = 1; i < 24; i++)
+                {
                     fs.WriteByte(0);
+                }
 
                 // paragraphs
                 var sub = new Subtitle(subtitle);
@@ -212,7 +243,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 // footer
                 fs.WriteByte(0xff);
                 for (int i = 0; i < 11; i++)
+                {
                     fs.WriteByte(0);
+                }
+
                 fs.WriteByte(0x11);
                 fs.WriteByte(0);
                 byte[] footerBuffer = Encoding.ASCII.GetBytes("dummy end of file.");
@@ -228,7 +262,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             byte alignment = 2; // center
             byte verticalAlignment = 0x0a; // bottom
             if (!p.Text.Contains(Environment.NewLine))
+            {
                 verticalAlignment = 0x0b;
+            }
+
             string text = p.Text;
             if (text.StartsWith("{\\an1}", StringComparison.Ordinal) || text.StartsWith("{\\an4}", StringComparison.Ordinal) || text.StartsWith("{\\an7}", StringComparison.Ordinal))
             {
@@ -247,7 +284,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 verticalAlignment = 5; // center
             }
             if (text.Length >= 6 && text[0] == '{' && text[5] == '}')
+            {
                 text = text.Remove(0, 6);
+            }
+
             text = Pac.MakePacItalicsAndRemoveOtherTags(text);
 
             byte[] textBuffer = GetUf8Bytes(text, alignment);

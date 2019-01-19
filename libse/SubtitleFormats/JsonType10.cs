@@ -17,7 +17,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 if (count > 0)
+                {
                     sb.Append(',');
+                }
+
                 sb.Append("{\"startTime\":");
                 sb.Append(p.StartTime.TotalSeconds.ToString(System.Globalization.CultureInfo.InvariantCulture));
                 sb.Append(",\"endTime\":");
@@ -40,10 +43,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             _errorCount = 0;
             var sb = new StringBuilder();
             foreach (string s in lines)
+            {
                 sb.Append(s);
+            }
+
             string allText = sb.ToString().Trim();
             if (!(allText.StartsWith("{", StringComparison.Ordinal) && allText.Contains("\"vostf\"", StringComparison.Ordinal)))
+            {
                 return;
+            }
 
             foreach (string line in allText.Split('{', '}', '[', ']'))
             {

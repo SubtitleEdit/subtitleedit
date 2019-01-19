@@ -18,10 +18,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override bool IsMine(List<string> lines, string fileName)
         {
             if (fileName != null && !fileName.EndsWith(Extension, StringComparison.OrdinalIgnoreCase))
+            {
                 return false;
+            }
 
             if (new NetflixTimedText().IsMine(lines, fileName))
+            {
                 return false;
+            }
 
             return base.IsMine(lines, fileName);
         }
@@ -60,10 +64,16 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             
                             string fontStyle = "normal";
                             if (ssaStyle.Italic)
+                            {
                                 fontStyle = "italic";
+                            }
+
                             string fontWeight = "normal";
                             if (ssaStyle.Bold)
+                            {
                                 fontWeight = "bold";
+                            }
+
                             AddStyleToXml(x, styleHead, xnsmgr, ssaStyle.Name, ssaStyle.FontName, fontWeight, fontStyle, Utilities.ColorToHex(ssaStyle.Primary), ssaStyle.FontSize.ToString());
                             convertedFromSubStationAlpha = true;
                             
@@ -125,14 +135,22 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     xml.LoadXml(subtitle.Header);
                     XmlNode divNode = xml.DocumentElement.SelectSingleNode("//ttml:body", nsmgr).SelectSingleNode("ttml:div", nsmgr);
                     if (divNode == null)
+                    {
                         divNode = xml.DocumentElement.SelectSingleNode("//ttml:body", nsmgr).FirstChild;
+                    }
+
                     if (divNode != null)
                     {
                         var lst = new List<XmlNode>();
                         foreach (XmlNode child in divNode.ChildNodes)
+                        {
                             lst.Add(child);
+                        }
+
                         foreach (XmlNode child in lst)
+                        {
                             divNode.RemoveChild(child);
+                        }
                     }
                     else
                     {
@@ -148,11 +166,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             XmlNode body = xml.DocumentElement.SelectSingleNode("ttml:body", nsmgr);
             string defaultStyle = Guid.NewGuid().ToString();
             if (body.Attributes["style"] != null)
+            {
                 defaultStyle = body.Attributes["style"].InnerText;
+            }
 
             XmlNode div = xml.DocumentElement.SelectSingleNode("//ttml:body", nsmgr).SelectSingleNode("ttml:div", nsmgr);
             if (div == null)
+            {
                 div = xml.DocumentElement.SelectSingleNode("//ttml:body", nsmgr).FirstChild;
+            }
 
             bool hasBottomRegion = false;
             bool hasTopRegion = false;
@@ -160,13 +182,23 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 string id = null;
                 if (node.Attributes["xml:id"] != null)
+                {
                     id = node.Attributes["xml:id"].Value;
+                }
                 else if (node.Attributes["id"] != null)
+                {
                     id = node.Attributes["id"].Value;
+                }
+
                 if (id != null && id == "bottom")
+                {
                     hasBottomRegion = true;
+                }
+
                 if (id != null && id == "top")
+                {
                     hasTopRegion = true;
+                }
             }
 
             var headerStyles = GetStylesFromHeader(subtitle.Header);
@@ -190,7 +222,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     paragraph.Attributes.Append(regionP);
                 }
                 if (text.StartsWith("{\\an", StringComparison.Ordinal) && text.Length > 6 && text[5] == '}')
+                {
                     text = text.Remove(0, 6);
+                }
 
                 if (convertedFromSubStationAlpha)
                 {
@@ -292,9 +326,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             }
                             paragraph.AppendChild(currentStyle);
                             if (line.Substring(i).StartsWith("</font>", StringComparison.Ordinal))
+                            {
                                 skipCount = 6;
+                            }
                             else
+                            {
                                 skipCount = 3;
+                            }
+
                             italicOn = false;
                         }
                         else
@@ -326,7 +365,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
             string xmlString = ToUtf8XmlString(xml).Replace(" xmlns=\"\"", string.Empty).Replace(" xmlns:tts=\"http://www.w3.org/ns/10/ttml#style\">", ">").Replace("<br />", "<br/>");
             if (subtitle.Header == null)
+            {
                 subtitle.Header = xmlString;
+            }
+
             return xmlString;
         }
 

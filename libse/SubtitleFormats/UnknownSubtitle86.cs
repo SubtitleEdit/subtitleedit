@@ -59,7 +59,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                 }
                 if (!success)
+                {
                     _errorCount++;
+                }
             }
 
             int index = 0;
@@ -67,9 +69,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 var next = subtitle.GetParagraphOrDefault(index + 1);
                 if (next != null && next.StartTime.TotalMilliseconds <= p.EndTime.TotalMilliseconds)
+                {
                     p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                }
+
                 if (p.Duration.TotalMilliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
+                {
                     p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds;
+                }
+
                 index++;
                 p.Number = index;
             }

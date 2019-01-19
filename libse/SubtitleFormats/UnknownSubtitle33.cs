@@ -78,7 +78,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 if (s.Length > 4 && s[2] == ':' && RegexTimeCodes.Match(s).Success)
                 {
                     if (p != null && !string.IsNullOrEmpty(p.Text))
+                    {
                         subtitle.Paragraphs.Add(p);
+                    }
+
                     p = new Paragraph();
 
                     try
@@ -115,7 +118,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
             }
             if (p != null && !string.IsNullOrEmpty(p.Text))
+            {
                 subtitle.Paragraphs.Add(p);
+            }
 
             int index = 1;
             foreach (Paragraph paragraph in subtitle.Paragraphs)

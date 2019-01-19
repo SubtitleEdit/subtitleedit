@@ -163,7 +163,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         string ms = timeMS.InnerText;
                         long milliseconds;
                         if (long.TryParse(ms, out milliseconds))
+                        {
                             p.StartTime = new TimeCode(milliseconds);
+                        }
                     }
                     p.EndTime = new TimeCode(p.StartTime.TotalMilliseconds + Utilities.GetOptimalDisplayMilliseconds(p.Text));
 

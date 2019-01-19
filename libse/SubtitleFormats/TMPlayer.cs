@@ -30,12 +30,17 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                 }
                 if (allStartWithNumber)
+                {
                     return false;
+                }
             }
             if (subtitle.Paragraphs.Count > _errorCount)
             {
                 if (new UnknownSubtitle33().IsMine(lines, fileName) || new UnknownSubtitle36().IsMine(lines, fileName))
+                {
                     return false;
+                }
+
                 return true;
             }
             return false;
@@ -66,7 +71,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     {
                         string s = line;
                         if (line.Length > 9 && line[8] == ' ')
+                        {
                             s = line.Substring(0, 8) + ":" + line.Substring(9);
+                        }
+
                         string[] parts = s.Split(':');
                         if (parts.Length > 3)
                         {
@@ -77,9 +85,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             for (int i = 3; i < parts.Length; i++)
                             {
                                 if (text.Length == 0)
+                                {
                                     text = parts[i];
+                                }
                                 else
+                                {
                                     text += ":" + parts[i];
+                                }
                             }
                             text = text.Replace("|", Environment.NewLine);
                             var start = new TimeCode(hours, minutes, seconds, 0);
@@ -97,7 +109,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                 }
                 if (!success)
+                {
                     _errorCount++;
+                }
             }
 
             int index = 0;
@@ -105,7 +119,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 Paragraph next = subtitle.GetParagraphOrDefault(index + 1);
                 if (next != null && next.StartTime.TotalMilliseconds <= p.EndTime.TotalMilliseconds)
+                {
                     p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - 1;
+                }
 
                 index++;
                 p.Number = index;

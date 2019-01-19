@@ -17,7 +17,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override bool IsMine(List<string> lines, string fileName)
         {
             if (lines.Count > 0 && lines[0] != null && lines[0].StartsWith("{\\rtf1", StringComparison.Ordinal))
+            {
                 return false;
+            }
 
             return base.IsMine(lines, fileName);
         }
@@ -51,7 +53,10 @@ LINE_LEN: 43.2
 SW_VER: 2.25
 FILE_INFO_END";
             if (subtitle.Header != null && subtitle.Header.Contains("FILE_INFO_BEGIN"))
+            {
                 header = subtitle.Header;
+            }
+
             sb.AppendLine(header);
             int number = 1;
             foreach (Paragraph p in subtitle.Paragraphs)
@@ -91,7 +96,10 @@ FILE_INFO_END";
                     {
                         started = true;
                         if (p != null)
+                        {
                             p.Text = text.ToString().Trim();
+                        }
+
                         text.Clear();
                         string start = line.Substring(7, 11);
                         string end = line.Substring(19, 11);
@@ -117,7 +125,10 @@ FILE_INFO_END";
                 }
             }
             if (p != null)
+            {
                 p.Text = text.ToString().Trim();
+            }
+
             subtitle.Header = header.ToString();
             subtitle.RemoveEmptyLines();
             subtitle.Renumber();

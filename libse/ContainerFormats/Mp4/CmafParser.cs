@@ -44,7 +44,9 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
             {
                 moreBytes = InitializeSizeAndName(fs);
                 if (Size < 8)
+                {
                     return;
+                }
 
                 if (Name == "moov" && Moov == null)
                 {
@@ -69,10 +71,15 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
 
                 count++;
                 if (count > 10000)
+                {
                     break;
+                }
 
                 if (Position > (ulong)fs.Length)
+                {
                     break;
+                }
+
                 fs.Seek((long)Position, SeekOrigin.Begin);
             }
             fs.Close();
@@ -80,10 +87,14 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
             ulong timePeriodStart = 0; // ???
             ulong timeScale = 0;
             if (Moov?.Tracks[0].Mdia.Mdhd.TimeScale > 0)
+            {
                 timeScale = Moov.Tracks[0].Mdia.Mdhd.TimeScale;
+            }
 
             if (Moov?.Mvhd?.TimeScale > 0)
+            {
                 timeScale = Moov.Mvhd.TimeScale;
+            }
 
             int max = Math.Min(samples.Count, payloads.Count);
 

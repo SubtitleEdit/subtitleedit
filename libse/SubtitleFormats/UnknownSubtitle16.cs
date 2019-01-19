@@ -21,12 +21,16 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             _errorCount = 0;
 
             if (lines.Count == 0 || !lines[0].TrimStart().StartsWith("{\\rtf1"))
+            {
                 return;
+            }
 
             // load as text via RichTextBox
             var text = new StringBuilder();
             foreach (string s in lines)
+            {
                 text.AppendLine(s);
+            }
 
             var lines2 = text.ToString().FromRtf().SplitToLines();
             var u52 = new UnknownSubtitle52();

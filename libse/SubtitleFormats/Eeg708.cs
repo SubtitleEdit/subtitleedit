@@ -50,7 +50,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             string allText = sb.ToString();
             if (!allText.Contains("<EEG708Captions") || !allText.Contains("<Caption"))
+            {
                 return;
+            }
 
             var xml = new XmlDocument { XmlResolver = null };
             try
@@ -70,7 +72,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     string start = node.Attributes["timecode"].InnerText;
                     if (lastParagraph != null)
+                    {
                         lastParagraph.EndTime = DecodeTimeCodeFramesFourParts(start.Split(':'));
+                    }
+
                     XmlNode text = node.SelectSingleNode("Text");
                     if (text != null)
                     {

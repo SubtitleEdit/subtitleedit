@@ -52,7 +52,10 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats
             {
                 double rate = 0.0;
                 if (_frameRate > 0.0)
+                {
                     rate = 1000000.0 / _frameRate;
+                }
+
                 return rate;
             }
         }
@@ -266,7 +269,10 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats
                 StringBuilder sb = new StringBuilder(unpaddedLength);
                 for (int i = 0; i < unpaddedLength; ++i)
                 {
-                    if (0 != ba[i]) sb.Append((char)ba[i]);
+                    if (0 != ba[i])
+                    {
+                        sb.Append((char)ba[i]);
+                    }
                 }
 
                 _isft = sb.ToString();
@@ -297,7 +303,10 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats
             {
                 while (length > 0)
                 {
-                    if (false == rp.ReadElement(ref length, pac, pal)) break;
+                    if (false == rp.ReadElement(ref length, pac, pal))
+                    {
+                        break;
+                    }
                 }
             }
             else
@@ -317,7 +326,10 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats
 
             while (length > 0)
             {
-                if (false == Parser.ReadElement(ref length, pdc, pal)) break;
+                if (false == Parser.ReadElement(ref length, pdc, pal))
+                {
+                    break;
+                }
             }
         }
 
@@ -326,7 +338,9 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats
             byte[] bytes = { buffer[index + 0], buffer[index + 1], buffer[index + 2], buffer[index + 3] };
 
             if (!BitConverter.IsLittleEndian)
+            {
                 Array.Reverse(bytes);
+            }
 
             return BitConverter.ToInt32(bytes, 0);
         }
@@ -336,7 +350,9 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats
             byte[] bytes = { buffer[index + 0], buffer[index + 1] };
 
             if (!BitConverter.IsLittleEndian)
+            {
                 Array.Reverse(bytes);
+            }
 
             return BitConverter.ToInt16(bytes, 0);
         }
@@ -451,7 +467,10 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats
 
             while (length > 0)
             {
-                if (false == Parser.ReadElement(ref length, pdc, pal)) break;
+                if (false == Parser.ReadElement(ref length, pdc, pal))
+                {
+                    break;
+                }
             }
         }
 

@@ -75,7 +75,10 @@ namespace Nikse.SubtitleEdit.Core.Translate
                         {
                             count++;
                             if (count % 2 == 1 && level > 2) // even numbers are original text, level > 3 is translation
+                            {
                                 sbAll.Append(" " + sb);
+                            }
+
                             i++;
                             break;
                         }
@@ -124,14 +127,18 @@ namespace Nikse.SubtitleEdit.Core.Translate
             {
                 var timmedList = resultList.Where(p => !string.IsNullOrEmpty(p)).ToList();
                 if (timmedList.Count == paragraphs.Count)
+                {
                     return timmedList;
+                }
             }
 
             if (resultList.Count < paragraphs.Count)
             {
                 var splitList = SplitMergedLines(resultList, paragraphs);
                 if (splitList.Count == paragraphs.Count)
+                {
                     return splitList;
+                }
             }
 
             return resultList;
@@ -147,21 +154,45 @@ namespace Nikse.SubtitleEdit.Core.Translate
                 var text = paragraphs[index].Text;
                 var badPoints = 0;
                 if (text.StartsWith("[") && !line.StartsWith("["))
+                {
                     badPoints++;
+                }
+
                 if (text.StartsWith("-") && !line.StartsWith("-"))
+                {
                     badPoints++;
+                }
+
                 if (text.Length > 0 && char.IsUpper(text[0]) && line.Length > 0 && !char.IsUpper(line[0]))
+                {
                     badPoints++;
+                }
+
                 if (text.EndsWith(".") && !line.EndsWith("."))
+                {
                     badPoints++;
+                }
+
                 if (text.EndsWith("!") && !line.EndsWith("!"))
+                {
                     badPoints++;
+                }
+
                 if (text.EndsWith("?") && !line.EndsWith("?"))
+                {
                     badPoints++;
+                }
+
                 if (text.EndsWith(",") && !line.EndsWith(","))
+                {
                     badPoints++;
+                }
+
                 if (text.EndsWith(":") && !line.EndsWith(":"))
+                {
                     badPoints++;
+                }
+
                 var added = false;
                 if (badPoints > 0 && hits + input.Count < paragraphs.Count)
                 {
@@ -185,7 +216,9 @@ namespace Nikse.SubtitleEdit.Core.Translate
             }
 
             if (results.Count == paragraphs.Count)
+            {
                 return results;
+            }
 
             return input;
         }

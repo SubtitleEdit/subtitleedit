@@ -25,7 +25,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override bool IsMine(List<string> lines, string fileName)
         {
             if (lines == null || lines.Count > 2 && !string.IsNullOrEmpty(lines[0]) && lines[0].Contains("{QTtext}"))
+            {
                 return false;
+            }
 
             return base.IsMine(lines, fileName);
         }
@@ -68,7 +70,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 ReadLine(subtitle, line);
                 if (_text.Length > 1000)
+                {
                     return;
+                }
             }
             if (_text != null && _text.ToString().TrimStart().Length > 0)
             {
@@ -132,16 +136,27 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                     int endHours = 0;
                     if (parts[5] != "--")
+                    {
                         endHours = int.Parse(parts[5]);
+                    }
+
                     int endMinutes = 0;
                     if (parts[6] != "--")
+                    {
                         endMinutes = int.Parse(parts[6]);
+                    }
+
                     int endSeconds = 0;
                     if (parts[7] != "--")
+                    {
                         endSeconds = int.Parse(parts[7]);
+                    }
+
                     int endMilliseconds = 0;
                     if (parts[8] != "--")
+                    {
                         endMilliseconds = FramesToMillisecondsMax999(int.Parse(parts[8]));
+                    }
 
                     paragraph.StartTime = new TimeCode(startHours, startMinutes, startSeconds, startMilliseconds);
                     paragraph.EndTime = new TimeCode(endHours, endMinutes, endSeconds, endMilliseconds);

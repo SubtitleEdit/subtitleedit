@@ -29,7 +29,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             //00:50
             int seconds = time.Seconds;
             if (time.Milliseconds >= 500)
+            {
                 seconds++;
+            }
+
             return $"{time.Hours * 60 + time.Minutes}:{time.Seconds:00}";
         }
 
@@ -61,11 +64,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 else if (p != null)
                 {
                     if (string.IsNullOrEmpty(p.Text))
+                    {
                         p.Text = line;
+                    }
                     else
+                    {
                         p.Text = p.Text.TrimEnd() + Environment.NewLine + line;
+                    }
+
                     if (p.Text.Length > 500)
+                    {
                         return;
+                    }
                 }
             }
             subtitle.Renumber();

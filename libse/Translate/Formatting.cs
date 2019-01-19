@@ -60,9 +60,14 @@ namespace Nikse.SubtitleEdit.Core.Translate
                 Utilities.GetNumberOfLines(text) == 1 && Utilities.CountTagInText(text, "]") == 1)
             {
                 if (text == text.ToUpperInvariant())
+                {
                     SquareBracketsUppercase = true;
+                }
                 else
+                {
                     SquareBrackets = true;
+                }
+
                 text = text.Replace("[", string.Empty).Replace("]", string.Empty);
             }
 
@@ -120,7 +125,10 @@ namespace Nikse.SubtitleEdit.Core.Translate
         public string Rebreak(string text)
         {
             if (NumberOfLines == 1)
+            {
                 return text;
+            }
+
             return Utilities.AutoBreakLine(text);
         }
 

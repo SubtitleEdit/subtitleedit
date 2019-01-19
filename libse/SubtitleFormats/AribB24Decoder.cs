@@ -16,7 +16,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             int end = index + length;
             if (end > buffer.Length)
+            {
                 end = buffer.Length;
+            }
 
             var sb = new StringBuilder();
             int pos = index;

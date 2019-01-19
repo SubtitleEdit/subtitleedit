@@ -22,7 +22,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 string id = Guid.NewGuid().ToString().RemoveChar('-').Substring(0, 24);
                 if (count > 0)
+                {
                     sb.Append(',');
+                }
+
                 sb.Append("{\"hitType\":\"tag\",\"subTrack\":null,\"tags\":[],\"track\":\"Closed Captioning\",\"startTime\":");
                 sb.Append(p.StartTime.TotalSeconds.ToString(System.Globalization.CultureInfo.InvariantCulture));
                 sb.Append(",\"guid\":\"" + guid + "\",\"segmentTypeId\":\"" + segmentTypeId + "\",\"endTime\":");
@@ -43,10 +46,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             var sb = new StringBuilder();
             foreach (string s in lines)
+            {
                 sb.Append(s);
+            }
+
             int startIndex = sb.ToString().IndexOf("[{\"hitType", StringComparison.Ordinal);
             if (startIndex < 0)
+            {
                 return;
+            }
 
             string text = sb.ToString().Substring(startIndex);
             foreach (string line in text.Replace("},{", Environment.NewLine).SplitToLines())

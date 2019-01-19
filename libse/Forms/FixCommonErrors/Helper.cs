@@ -255,7 +255,9 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
         public static bool IsPreviousTextEndOfParagraph(string prevText)
         {
             if (string.IsNullOrEmpty(prevText) || prevText.Length < 3)
+            {
                 return true;
+            }
 
             prevText = prevText.Replace("♪", string.Empty).Replace("♫", string.Empty).Trim();
             bool isPrevEndOfLine = prevText.Length > 1 &&
@@ -461,7 +463,10 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                                 bool addSecondLine = idx < newLineIdx;
 
                                 if (addSecondLine && idx > 0 && char.IsLetter(text[idx - 1]))
+                                {
                                     addSecondLine = false;
+                                }
+
                                 if (addSecondLine)
                                 {
                                     // add dash in second line.

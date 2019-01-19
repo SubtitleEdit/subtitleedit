@@ -17,9 +17,15 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
         private static int BoundByteRange(int i)
         {
             if (i < byte.MinValue)
+            {
                 return byte.MinValue;
+            }
+
             if (i > byte.MaxValue)
+            {
                 return byte.MaxValue;
+            }
+
             return i;
         }
 
@@ -50,7 +56,9 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
             b = BoundByteRange(b);
 
             if (y < 0.1) // full transparency
+            {
                 t = 0;
+            }
 
             return Color.FromArgb(t, r, g, b);
         }

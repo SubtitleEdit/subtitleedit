@@ -14,7 +14,9 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             string fixAction3 = language.RemovedEmptyLineInMiddle;
 
             if (subtitle.Paragraphs.Count == 0)
+            {
                 return;
+            }
 
             int emptyLinesRemoved = 0;
 
@@ -51,7 +53,9 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         {
                             var closeIdx = text.IndexOf('>');
                             if (closeIdx <= 2)
+                            {
                                 break;
+                            }
 
                             pre += text.Substring(0, closeIdx + 1);
                             text = text.Remove(0, closeIdx + 1);
@@ -77,9 +81,14 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     if (callbacks.AllowFix(p, fixAction1) && text.StartsWith(Environment.NewLine, StringComparison.Ordinal))
                     {
                         if (pre.Length > 0)
+                        {
                             text = pre + text.TrimStart(Utilities.NewLineChars);
+                        }
                         else
+                        {
                             text = text.TrimStart(Utilities.NewLineChars);
+                        }
+
                         p.Text = text;
                         emptyLinesRemoved++;
                         callbacks.AddFixToListView(p, fixAction1, oldText, p.Text);
@@ -92,9 +101,14 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     if (callbacks.AllowFix(p, fixAction2) && text.EndsWith(Environment.NewLine, StringComparison.Ordinal))
                     {
                         if (post.Length > 0)
+                        {
                             text = text.TrimEnd(Utilities.NewLineChars) + post;
+                        }
                         else
+                        {
                             text = text.TrimEnd(Utilities.NewLineChars);
+                        }
+
                         p.Text = text;
                         emptyLinesRemoved++;
                         callbacks.AddFixToListView(p, fixAction2, oldText, p.Text);

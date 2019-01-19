@@ -34,7 +34,9 @@ namespace Nikse.SubtitleEdit.Core
                 Files.Add(th);
                 pos += TarHeader.HeaderSize + th.FileSizeInBytes;
                 if (pos % TarHeader.HeaderSize > 0)
+                {
                     pos += 512 - (pos % TarHeader.HeaderSize);
+                }
             }
         }
 

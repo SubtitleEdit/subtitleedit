@@ -46,35 +46,53 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     var prev = '\0';
                     var next = '\0';
                     if (match.Index > 0)
+                    {
                         prev = s[match.Index - 1];
+                    }
+
                     if (match.Index + 1 < s.Length)
+                    {
                         next = s[match.Index + 1];
+                    }
 
                     string wholePrev = string.Empty;
                     if (match.Index > 1)
+                    {
                         wholePrev = s.Substring(0, match.Index - 1);
+                    }
 
                     if (prev != '>' && next != '>' && next != '}' && !wholePrev.TrimEnd().EndsWith("...", StringComparison.Ordinal))
                     {
                         bool fix = true;
 
                         if (prev == '.' || prev == '\'')
+                        {
                             fix = false;
+                        }
 
                         if (prev == ' ' && next == '.')
+                        {
                             fix = false;
+                        }
 
                         if (prev == '-' && match.Index > 2)
+                        {
                             fix = false;
+                        }
 
                         if (fix && next == '-' && match.Index < s.Length - 5 && s[match.Index + 2] == 'l' && !(Environment.NewLine + @" <>!.?:;,").Contains(s[match.Index + 3]))
+                        {
                             fix = false;
+                        }
 
                         if (fix)
                         {
                             string temp = s.Substring(0, match.Index) + "I";
                             if (match.Index + 1 < oldText.Length)
+                            {
                                 temp += s.Substring(match.Index + 1);
+                            }
+
                             s = temp;
                         }
                     }

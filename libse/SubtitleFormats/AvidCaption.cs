@@ -41,7 +41,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 var frames = MillisecondsToFramesMaxFrameRate(time.Milliseconds);
                 if (frames == 2 || frames == 7 || frames == 12 || frames == 17 || frames == 22 || frames == 27)
+                {
                     frames--;
+                }
+
                 return $"{time.Hours:00}:{time.Minutes:00}:{time.Seconds:00}:{frames:00}";
             }
             else
@@ -93,15 +96,24 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 else if (tline.Length > 0 && p != null)
                 {
                     if (string.IsNullOrEmpty(p.Text))
+                    {
                         p.Text = line;
+                    }
                     else
+                    {
                         p.Text = p.Text.TrimEnd() + Environment.NewLine + line;
+                    }
                 }
             }
             if (!beginFound)
+            {
                 _errorCount++;
+            }
+
             if (!endFound)
+            {
                 _errorCount++;
+            }
 
             subtitle.Renumber();
         }

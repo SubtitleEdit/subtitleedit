@@ -17,7 +17,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 if (count > 0)
+                {
                     sb.Append(',');
+                }
+
                 sb.Append("{\"duration\":");
                 sb.Append(p.Duration.TotalMilliseconds.ToString(System.Globalization.CultureInfo.InvariantCulture));
                 sb.Append(",\"content\":\"");
@@ -38,11 +41,16 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             var sb = new StringBuilder();
             foreach (string s in lines)
+            {
                 sb.Append(s);
+            }
+
             var text = sb.ToString();
             int startIndex = text.IndexOf("[{\"", StringComparison.Ordinal);
             if (startIndex < 0 || text.Contains("\"captions\"", StringComparison.Ordinal))
+            {
                 return;
+            }
 
             text = text.Substring(startIndex);
             foreach (string line in text.Replace("},{", Environment.NewLine).SplitToLines())

@@ -42,7 +42,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override bool IsMine(List<string> lines, string fileName)
         {
             if (fileName == null || !fileName.EndsWith(Extension, StringComparison.OrdinalIgnoreCase))
+            {
                 return false;
+            }
 
             return base.IsMine(lines, fileName);
         }
@@ -68,7 +70,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 if (line.EndsWith('.') && Utilities.IsInteger(line.TrimEnd('.')))
                 {
                     if (paragraph != null && !string.IsNullOrEmpty(paragraph.Text))
+                    {
                         subtitle.Paragraphs.Add(paragraph);
+                    }
+
                     paragraph = new Paragraph();
                     expecting = ExpectingLine.TimeStart;
                 }
@@ -120,7 +125,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                             // italic text
                             if (s.StartsWith('#'))
+                            {
                                 s = "<i>" + s.Remove(0, 1) + "</i>";
+                            }
 
                             paragraph.Text = (paragraph.Text + Environment.NewLine + s).Trim();
                             if (paragraph.Text.Length > 2000)
@@ -132,23 +139,35 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             if (paragraph.Text.Contains(Environment.NewLine))
                             {
                                 if (secondLineCode == 0)
+                                {
                                     secondLineCode = bytes[0];
+                                }
+
                                 if (secondLineCode != bytes[0])
+                                {
                                     _errorCount++;
+                                }
                             }
                             else
                             {
                                 if (firstLineCode == 0)
+                                {
                                     firstLineCode = bytes[0];
+                                }
+
                                 if (firstLineCode != bytes[0])
+                                {
                                     _errorCount++;
+                                }
                             }
                         }
                     }
                 }
             }
             if (paragraph != null && !string.IsNullOrEmpty(paragraph.Text))
+            {
                 subtitle.Paragraphs.Add(paragraph);
+            }
 
             subtitle.Renumber();
         }
@@ -180,10 +199,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         private Encoding GetEncodingFromLanguage(byte language)
         {
             if (language == 179) // Russian
+            {
                 return Encoding.GetEncoding(1251);
+            }
 
             if (language == 177) // Baltic
+            {
                 return Encoding.GetEncoding(1257);
+            }
 
             return Encoding.GetEncoding(1252);
         }

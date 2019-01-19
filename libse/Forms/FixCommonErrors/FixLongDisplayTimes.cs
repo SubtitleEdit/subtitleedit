@@ -12,7 +12,10 @@
                 Paragraph p = subtitle.Paragraphs[i];
                 double maxDisplayTime = Utilities.GetOptimalDisplayMilliseconds(p.Text) * 8.0;
                 if (maxDisplayTime > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
+                {
                     maxDisplayTime = Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds;
+                }
+
                 double displayTime = p.Duration.TotalMilliseconds;
 
                 bool allowFix = callbacks.AllowFix(p, fixAction);

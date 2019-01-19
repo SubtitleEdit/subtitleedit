@@ -82,7 +82,10 @@ $ColorIndex4    = 3
             text = text.Replace("</u>", Underline);
             text = HtmlUtil.RemoveHtmlTags(text, true);
             if (allItalic)
+            {
                 return text.Replace(Environment.NewLine, "|^I");
+            }
+
             return text.Replace(Environment.NewLine, "|");
         }
 
@@ -102,7 +105,9 @@ $ColorIndex4    = 3
             // Copy reference of static compiled regex (RegexTimeCodes1).
             Regex timeCodeRegex = RegexTimeCodes1;
             if (fileName != null && fileName.EndsWith(".stl", StringComparison.OrdinalIgnoreCase)) // allow empty text if extension is ".stl"...
+            {
                 timeCodeRegex = RegexTimeCodes2;
+            }
 
             var verticalAlign = "$VertAlign=Bottom";
             var horizontalAlign = "$HorzAlign=Center";

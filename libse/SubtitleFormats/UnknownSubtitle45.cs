@@ -18,7 +18,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override bool IsMine(List<string> lines, string fileName)
         {
             if (fileName != null && !fileName.EndsWith(Extension, StringComparison.OrdinalIgnoreCase))
+            {
                 return false;
+            }
 
             return base.IsMine(lines, fileName);
         }
@@ -57,11 +59,15 @@ ST 0 EB 3.10
             _errorCount = 0;
             var sb = new StringBuilder();
             foreach (string line in lines)
+            {
                 sb.AppendLine(line);
+            }
 
             string rtf = sb.ToString().Trim();
             if (!rtf.StartsWith("{\\rtf", StringComparison.Ordinal))
+            {
                 return;
+            }
 
             var arr = rtf.FromRtf().SplitToLines();
             Paragraph p = null;
@@ -93,11 +99,17 @@ ST 0 EB 3.10
                 else if (!string.IsNullOrWhiteSpace(line) && p != null)
                 {
                     if (p.Text.Length > 2000)
+                    {
                         return; // wrong format
+                    }
                     else if (string.IsNullOrEmpty(p.Text))
+                    {
                         p.Text = line;
+                    }
                     else
+                    {
                         p.Text = p.Text + Environment.NewLine + line;
+                    }
                 }
             }
             subtitle.Renumber();

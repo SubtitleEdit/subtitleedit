@@ -31,7 +31,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 string style = "N";
                 if (p.Text.StartsWith("<i>", StringComparison.Ordinal) && p.Text.EndsWith("</i>", StringComparison.Ordinal))
+                {
                     style = "I";
+                }
+
                 sb.AppendLine($"SUB[0 {style} {EncodeTimeCode(p.StartTime)}>{EncodeTimeCode(p.EndTime)}]{Environment.NewLine}{HtmlUtil.RemoveHtmlTags(p.Text)}");
                 sb.AppendLine();
             }
@@ -60,7 +63,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 if (lineTrimmed.Length >= 32 && RegexTimeCodes.IsMatch(lineTrimmed))
                 {
                     if (p != null && italic)
+                    {
                         p.Text = "<i>" + p.Text.Trim() + "</i>";
+                    }
 
                     italic = lineTrimmed[6] == 'I';
                     string start = lineTrimmed.Substring(8, 11);
@@ -82,13 +87,20 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 else if (p != null && (lineTrimmed.Length > 0 && !lineTrimmed.StartsWith('@')))
                 {
                     if (string.IsNullOrEmpty(p.Text))
+                    {
                         p.Text = lineTrimmed;
+                    }
                     else
+                    {
                         p.Text = p.Text.TrimEnd() + Environment.NewLine + lineTrimmed;
+                    }
                 }
             }
             if (p != null && italic)
+            {
                 p.Text = "<i>" + p.Text.Trim() + "</i>";
+            }
+
             subtitle.Renumber();
         }
 

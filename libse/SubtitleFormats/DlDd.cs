@@ -53,7 +53,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     var paragraph = subtitle.Paragraphs[index];
                     var next = subtitle.GetParagraphOrDefault(index + 1);
                     if (next.StartTime.TotalMilliseconds <= paragraph.EndTime.TotalMilliseconds)
+                    {
                         paragraph.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - 1;
+                    }
                 }
                 subtitle.Renumber();
             }

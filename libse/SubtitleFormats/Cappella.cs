@@ -81,7 +81,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             lines.ForEach(line => sb.AppendLine(line));
             string xmlString = sb.ToString();
             if (!xmlString.Contains("<detx") || !xmlString.Contains("<lipsync "))
+            {
                 return;
+            }
 
             var xml = new XmlDocument { XmlResolver = null };
             try

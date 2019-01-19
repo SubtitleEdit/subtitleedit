@@ -59,7 +59,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             var xmlString = sb.ToString();
             if (!xmlString.Contains("<Subtitles>") || !xmlString.Contains("<Text>") || !xmlString.Contains("<Duration>"))
+            {
                 return;
+            }
 
             var xml = new XmlDocument { XmlResolver = null };
             try

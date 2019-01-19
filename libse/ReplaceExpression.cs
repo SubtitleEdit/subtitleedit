@@ -19,9 +19,13 @@
             FindWhat = findWhat;
             ReplaceWith = replaceWith;
             if (string.CompareOrdinal(searchType, SearchTypeRegularExpression) == 0)
+            {
                 SearchType = SearchRegEx;
+            }
             else if (string.CompareOrdinal(searchType, SearchTypeCaseSensitive) == 0)
+            {
                 SearchType = SearchCaseSensitive;
+            }
         }
     }
 }

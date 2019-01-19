@@ -76,7 +76,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var sb = new StringBuilder();
             lines.ForEach(line => sb.AppendLine(line));
             if (!sb.ToString().Contains("<Trans"))
+            {
                 return;
+            }
+
             var xml = new XmlDocument { XmlResolver = null };
             try
             {

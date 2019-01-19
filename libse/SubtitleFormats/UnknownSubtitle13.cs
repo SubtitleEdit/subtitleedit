@@ -56,7 +56,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             string allText = sb.ToString();
             if (!allText.Contains("<subtitle>") || !allText.Contains("timeIn="))
+            {
                 return;
+            }
 
             var xml = new XmlDocument { XmlResolver = null };
             try
@@ -78,11 +80,19 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     string end = node.Attributes["timeOut"].InnerText;
                     string text = node.InnerText;
                     if (text.StartsWith("![CDATA[", StringComparison.Ordinal))
+                    {
                         text = text.Remove(0, 8);
+                    }
+
                     if (text.StartsWith("<![CDATA[", StringComparison.Ordinal))
+                    {
                         text = text.Remove(0, 9);
+                    }
+
                     if (text.EndsWith("]]", StringComparison.Ordinal))
+                    {
                         text = text.Remove(text.Length - 2, 2);
+                    }
 
                     subtitle.Paragraphs.Add(new Paragraph(DecodeTimeCode(start), DecodeTimeCode(end), text));
                 }

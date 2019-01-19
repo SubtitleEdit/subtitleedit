@@ -23,7 +23,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             var sbv = new YouTubeSbv();
             if (sbv.IsMine(lines, fileName) && !string.Join(string.Empty, lines.ToArray()).Contains("[br]"))
+            {
                 return false;
+            }
 
             return base.IsMine(lines, fileName);
         }

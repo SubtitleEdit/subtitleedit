@@ -16,26 +16,50 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public static string GetFrameRateAsString()
         {
             if (Configuration.Settings.General.CurrentFrameRate < 24)
+            {
                 return "24"; // ntsc 23.976
+            }
+
             if (Configuration.Settings.General.CurrentFrameRate < 25)
+            {
                 return "24";
+            }
+
             if (Configuration.Settings.General.CurrentFrameRate < 29)
+            {
                 return "25";
+            }
+
             if (Configuration.Settings.General.CurrentFrameRate < 30)
+            {
                 return "30"; // ntsc 29.97
+            }
+
             if (Configuration.Settings.General.CurrentFrameRate < 40)
-                return "30";            
+            {
+                return "30";
+            }
+
             if (Configuration.Settings.General.CurrentFrameRate < 60)
+            {
                 return "60"; // ntsc 59.94
+            }
+
             return "60";
         }
 
         public static string GetNtsc()
         {
             if (Configuration.Settings.General.CurrentFrameRate < 24)
+            {
                 return "TRUE"; // ntsc 23.976
+            }
+
             if (Configuration.Settings.General.CurrentFrameRate < 25)
+            {
                 return "FALSE";
+            }
+
             return "TRUE";
         }
 
@@ -43,7 +67,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             int duration = 0;
             if (subtitle.Paragraphs.Count > 0)
+            {
                 duration = (int)Math.Round(subtitle.Paragraphs[subtitle.Paragraphs.Count - 1].EndTime.TotalSeconds * Configuration.Settings.General.CurrentFrameRate);
+            }
+
             string seString = "Subtitle Edit at " + DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToShortTimeString();
             string xmlStructure =
                 "<?xml version=\"1.0\" encoding=\"utf-8\" ?>" + Environment.NewLine +
@@ -56,7 +83,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             const string xmlTrackStructure = "<generatoritem id=\"Text\"><name>Text</name><duration>3000</duration><rate><ntsc>FALSE</ntsc><timebase>25</timebase></rate><in>1375</in><out>1486</out><start>1504</start><end>1615</end><anamorphic>FALSE</anamorphic><alphatype>black</alphatype><logginginfo><scene/><shottake/><lognote/><good>FALSE</good></logginginfo><labels><label2/></labels><comments><mastercomment1/><mastercomment2/><mastercomment3/><mastercomment4/></comments><effect><name>Text</name><effectid>Text</effectid><effectcategory>Text</effectcategory><effecttype>generator</effecttype><mediatype>video</mediatype><parameter><parameterid>str</parameterid><name>Text</name><value><i>A finales de los años sesenta, una joven pareja, Guy y Rosemary,</i> </value></parameter><parameter><parameterid>fontname</parameterid><name>Font</name><value>Lucida Grande</value></parameter><parameter><parameterid>fontsize</parameterid><name>Size</name><valuemin>0</valuemin><valuemax>1000</valuemax><value>[FONTSIZE]</value></parameter><parameter><parameterid>fontstyle</parameterid><name>Style</name><valuemin>1</valuemin><valuemax>4</valuemax><valuelist><valueentry><name>Plain</name><value>1</value></valueentry><valueentry><name>Bold</name><value>2</value></valueentry><valueentry><name>Italic</name><value>3</value></valueentry><valueentry><name>Bold/Italic</name><value>4</value></valueentry></valuelist><value>1</value></parameter><parameter><parameterid>fontalign</parameterid><name>Alignment</name><valuemin>1</valuemin><valuemax>3</valuemax><valuelist><valueentry><name>Left</name><value>1</value></valueentry><valueentry><name>Center</name><value>2</value></valueentry><valueentry><name>Right</name><value>3</value></valueentry></valuelist><value>2</value></parameter><parameter><parameterid>fontcolor</parameterid><name>Font Color</name><value><alpha>255</alpha><red>255</red><green>255</green><blue>255</blue></value></parameter><parameter><parameterid>origin</parameterid><name>Origin</name><value><horiz>0</horiz><vert>0</vert></value></parameter><parameter><parameterid>fonttrack</parameterid><name>Tracking</name><valuemin>-200</valuemin><valuemax>200</valuemax><value>1</value></parameter><parameter><parameterid>leading</parameterid><name>Leading</name><valuemin>-100</valuemin><valuemax>100</valuemax><value>0</value></parameter><parameter><parameterid>aspect</parameterid><name>Aspect</name><valuemin>0.1</valuemin><valuemax>5</valuemax><value>1</value></parameter><parameter><parameterid>autokern</parameterid><name>Auto Kerning</name><value>TRUE</value></parameter><parameter><parameterid>subpixel</parameterid><name>Use Subpixel</name><value>TRUE</value></parameter></effect><filter><effect><name>Basic Motion</name><effectid>basic</effectid><effectcategory>motion</effectcategory><effecttype>motion</effecttype><mediatype>video</mediatype><parameter><parameterid>scale</parameterid><name>Scale</name><valuemin>0</valuemin><valuemax>1000</valuemax><value>100</value></parameter><parameter><parameterid>rotation</parameterid><name>Rotation</name><valuemin>-8640</valuemin><valuemax>8640</valuemax><value>0</value></parameter><parameter><parameterid>center</parameterid><name>Center</name><value><horiz>0.00470958</horiz><vert>0.396648</vert></value></parameter><parameter><parameterid>centerOffset</parameterid><name>Anchor Point</name><value><horiz>0</horiz><vert>0</vert></value></parameter></effect></filter><sourcetrack><mediatype>video</mediatype></sourcetrack><itemhistory><uuid>3506ED18-CB4D-41B8-A760-4D42356E4F32</uuid><uuid>1E6E96FD-94F6-4975-BDFE-7B360E909111</uuid></itemhistory></generatoritem>";
 
             if (string.IsNullOrEmpty(title))
+            {
                 title = "Subtitle Edit subtitle";
+            }
 
             var xml = new XmlDocument();
             xml.LoadXml(xmlStructure);
@@ -71,7 +100,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     header.LoadXml(subtitle.Header);
                     var node = header.DocumentElement.SelectSingleNode("sequence/uuid");
                     if (node != null)
+                    {
                         xml.DocumentElement.SelectSingleNode("sequence/uuid").InnerText = node.InnerText;
+                    }
                 }
                 catch
                 {
@@ -88,9 +119,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 string fontStyle = "1"; //1==plain
                 var s = HtmlUtil.RemoveOpenCloseTags(p.Text, HtmlUtil.TagFont).Trim();
                 if ((s.StartsWith("<i><b>") && s.EndsWith("</b></i>")) || (s.StartsWith("<b><i>") && s.EndsWith("</i></b>")))
+                {
                     fontStyle = "4"; //4==bold/italic
+                }
                 else if (s.StartsWith("<i>") && s.EndsWith("</i>"))
+                {
                     fontStyle = "3"; //3==italic
+                }
+
                 generatorItem.InnerXml = xmlTrackStructure.Replace("[NUMBER]", number.ToString()).Replace("[FONTSTYLE]", fontStyle).Replace("[FONTSIZE]", Configuration.Settings.SubtitleSettings.FcpFontSize.ToString(CultureInfo.InvariantCulture));
 
                 double frameRate = Configuration.Settings.General.CurrentFrameRate;
@@ -129,7 +165,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 var header = new XmlDocument { XmlResolver = null };
                 header.LoadXml(sb.ToString());
                 if (header.SelectSingleNode("sequence/media/video/track") != null)
+                {
                     header.RemoveChild(header.SelectSingleNode("sequence/media/video/track"));
+                }
+
                 subtitle.Header = header.OuterXml;
 
                 if (xml.DocumentElement.SelectSingleNode("sequence/rate") != null && xml.DocumentElement.SelectSingleNode("sequence/rate/timebase") != null)
@@ -153,24 +192,32 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             XmlNode rate = generatorItemNode.SelectSingleNode("rate");
                             XmlNode timebase = rate?.SelectSingleNode("timebase");
                             if (timebase != null)
+                            {
                                 frameRate = double.Parse(timebase.InnerText);
+                            }
 
                             double startFrame = 0;
                             double endFrame = 0;
                             XmlNode startNode = generatorItemNode.SelectSingleNode("start");
                             if (startNode != null)
+                            {
                                 startFrame = double.Parse(startNode.InnerText);
+                            }
 
                             XmlNode endNode = generatorItemNode.SelectSingleNode("end");
                             if (endNode != null)
+                            {
                                 endFrame = double.Parse(endNode.InnerText);
+                            }
 
                             string text = string.Empty;
                             foreach (XmlNode parameterNode in generatorItemNode.SelectNodes("effect/parameter[parameterid='str']"))
                             {
                                 XmlNode valueNode = parameterNode.SelectSingleNode("value");
                                 if (valueNode != null)
+                                {
                                     text += valueNode.InnerText;
+                                }
                             }
 
                             bool italic = false;
@@ -228,11 +275,20 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             if (text.Length > 0)
                             {
                                 if (!text.Contains(Environment.NewLine))
+                                {
                                     text = text.Replace("\r", Environment.NewLine);
+                                }
+
                                 if (bold)
+                                {
                                     text = "<b>" + text + "</b>";
+                                }
+
                                 if (italic)
+                                {
                                     text = "<i>" + text + "</i>";
+                                }
+
                                 subtitle.Paragraphs.Add(new Paragraph(text, Convert.ToDouble((startFrame / frameRate) * 1000), Convert.ToDouble((endFrame / frameRate) * 1000)));
                             }
                         }

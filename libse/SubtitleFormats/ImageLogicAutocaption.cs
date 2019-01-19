@@ -48,11 +48,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             _errorCount = 0;
             var sb = new StringBuilder();
             foreach (string line in lines)
+            {
                 sb.AppendLine(line);
+            }
 
             string rtf = sb.ToString().Trim();
             if (!rtf.StartsWith("{\\rtf", StringComparison.Ordinal))
+            {
                 return;
+            }
 
             lines = rtf.FromRtf().SplitToLines();
             _errorCount = 0;
@@ -66,12 +70,19 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     try
                     {
                         if (p != null)
+                        {
                             subtitle.Paragraphs.Add(p);
+                        }
+
                         string[] arr = s.Split('\t');
                         if (arr.Length > 2)
+                        {
                             p = new Paragraph(DecodeTimeCodeFrames(arr[1], splitChars), new TimeCode(), arr[2].Trim());
+                        }
                         else
+                        {
                             p = new Paragraph(DecodeTimeCodeFrames(arr[1], splitChars), new TimeCode(), string.Empty);
+                        }
                     }
                     catch
                     {
@@ -82,7 +93,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 else if (s.StartsWith("\t\t", StringComparison.Ordinal))
                 {
                     if (p != null)
+                    {
                         p.Text = p.Text + Environment.NewLine + s.Trim();
+                    }
                 }
                 else if (!string.IsNullOrWhiteSpace(s))
                 {
@@ -90,7 +103,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
             }
             if (p != null)
+            {
                 subtitle.Paragraphs.Add(p);
+            }
 
             for (int j = 0; j < subtitle.Paragraphs.Count - 1; j++)
             {

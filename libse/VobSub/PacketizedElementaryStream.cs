@@ -59,7 +59,9 @@ namespace Nikse.SubtitleEdit.Core.VobSub
             {
                 int id = buffer[index + 9 + HeaderDataLength];
                 if (id >= 0x20 && id <= 0x40) // x3f 0r x40 ?
+                {
                     SubPictureStreamId = id;
+                }
             }
 
             int tempIndex = index + 9;
@@ -97,7 +99,9 @@ namespace Nikse.SubtitleEdit.Core.VobSub
             {
                 dataSize = buffer.Length - dataIndex;
                 if (dataSize < 0)
+                {
                     return;
+                }
             }
 
             _dataBuffer = new byte[dataSize];

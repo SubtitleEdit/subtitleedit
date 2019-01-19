@@ -249,9 +249,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                     if (colorEnd > 0 || colorEnd == -1)
                                     {
                                         if (colorEnd == -1)
+                                        {
                                             s = f.Substring(colorStart);
+                                        }
                                         else
+                                        {
                                             s = f.Substring(colorStart, colorEnd - colorStart);
+                                        }
+
                                         s = s.Remove(0, " color=".Length);
                                         s = s.Trim('"');
                                         s = s.Trim('\'');
@@ -331,7 +336,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             if (sb.Length > 0)
             {
                 if (styleTextPairs.ContainsKey(styles.Count - 1))
+                {
                     styles.Add(styles[styles.Count - 1]);
+                }
 
                 styleTextPairs.Add(styles.Count - 1, sb.ToString());
                 sb.Clear();
@@ -425,7 +432,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             lines.ForEach(line => sb.AppendLine(line));
             string x = sb.ToString();
             if (!x.Contains("<fcpxml version=\"" + FcpXmlVersion + "\">"))
+            {
                 return;
+            }
 
             var xml = new XmlDocument();
             try
@@ -451,9 +460,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             var p = new Paragraph();
                             p.Text = text.Trim();
                             if (node.ParentNode.InnerXml.Contains("bold=\"1\""))
+                            {
                                 p.Text = "<b>" + p.Text + "</b>";
+                            }
+
                             if (node.ParentNode.InnerXml.Contains("italic=\"1\""))
+                            {
                                 p.Text = "<i>" + p.Text + "</i>";
+                            }
+
                             p.StartTime = DecodeTime(node.ParentNode.Attributes["offset"]);
                             p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + DecodeTime(node.ParentNode.Attributes["duration"]).TotalMilliseconds;
                             bool add = true;
@@ -461,10 +476,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             {
                                 var prev = subtitle.Paragraphs[subtitle.Paragraphs.Count - 1];
                                 if (prev.Text == p.Text && prev.StartTime.TotalMilliseconds == p.StartTime.TotalMilliseconds)
+                                {
                                     add = false;
+                                }
                             }
                             if (add)
+                            {
                                 subtitle.Paragraphs.Add(p);
+                            }
                         }
                         catch
                         {

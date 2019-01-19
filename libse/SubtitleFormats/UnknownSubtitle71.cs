@@ -25,7 +25,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         private static string AddSpaces(string text)
         {
             if (string.IsNullOrEmpty(text))
+            {
                 return " ";
+            }
 
             var sb = new StringBuilder(@" ");
             for (int i = 0; i < text.Length; i++)
@@ -39,19 +41,25 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         private static string RemoveSpaces(string text)
         {
             if (string.IsNullOrEmpty(text))
+            {
                 return string.Empty;
+            }
 
             text = text.Trim();
             for (int i = 0; i < text.Length; i++)
             {
                 if (i % 2 == 1 && text[i] != ' ')
+                {
                     return text;
+                }
             }
             var sb = new StringBuilder();
             for (int i = 0; i < text.Length; i++)
             {
                 if (i % 2 == 0)
+                {
                     sb.Append(text[i]);
+                }
             }
             return sb.ToString();
         }
@@ -94,7 +102,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     _errorCount++;
                     if (paragraph != null)
+                    {
                         subtitle.Paragraphs.Add(paragraph);
+                    }
+
                     paragraph = new Paragraph();
                     expecting = ExpectingLine.TimeStart;
                 }
@@ -102,7 +113,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 if (line.TrimEnd().EndsWith('.') && Utilities.IsInteger(RemoveSpaces(line.Trim().TrimEnd('.').Trim())))
                 {
                     if (paragraph != null)
+                    {
                         subtitle.Paragraphs.Add(paragraph);
+                    }
+
                     paragraph = new Paragraph();
                     expecting = ExpectingLine.TimeStart;
                 }
@@ -151,7 +165,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     {
                         _errorCount++;
                         if (paragraph != null)
+                        {
                             subtitle.Paragraphs.Add(paragraph);
+                        }
+
                         paragraph = new Paragraph();
                         expecting = ExpectingLine.Number;
                     }
@@ -175,7 +192,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
             }
             if (paragraph != null && !string.IsNullOrEmpty(paragraph.Text))
+            {
                 subtitle.Paragraphs.Add(paragraph);
+            }
+
             subtitle.Renumber();
         }
 

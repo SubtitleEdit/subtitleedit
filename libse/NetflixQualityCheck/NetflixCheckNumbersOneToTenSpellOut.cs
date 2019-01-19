@@ -32,9 +32,15 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
                         }
                     }
                     if (ok && m.Index > 0 && ":.".Contains(newText[m.Index - 1].ToString()))
+                    {
                         ok = false;
+                    }
+
                     if (ok)
+                    {
                         newText = newText.Remove(m.Index, 1).Insert(m.Index, NetflixHelper.ConvertNumberToString(m.Value.Substring(0, 1), false, controller.Language));
+                    }
+
                     m = NumberOneToNine.Match(newText, m.Index + 1);
                 }
 
@@ -43,9 +49,15 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
                 {
                     bool ok = newText.Length <= m.Index + 2 || newText.Length > m.Index + 2 && newText[m.Index + 2] != ':';
                     if (ok && m.Index > 0 && ":.".Contains(newText[m.Index - 1].ToString()))
+                    {
                         ok = false;
+                    }
+
                     if (ok)
+                    {
                         newText = newText.Remove(m.Index, 2).Insert(m.Index, "ten");
+                    }
+
                     m = NumberTen.Match(newText, m.Index + 1);
                 }
 

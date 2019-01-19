@@ -33,7 +33,9 @@ namespace Nikse.SubtitleEdit.Core.AudioToText.PocketSphinx
             foreach (var line in _lines)
             {
                 if (string.IsNullOrWhiteSpace(line))
+                {
                     continue;
+                }
 
                 if (!textOn && !line.StartsWith('<') && !line.StartsWith('['))
                 {

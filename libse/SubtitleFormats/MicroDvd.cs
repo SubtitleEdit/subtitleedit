@@ -30,9 +30,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     {
                         string s = RemoveIllegalSpacesAndFixEmptyCodes(line);
                         if (RegexMicroDvdLine.IsMatch(s))
+                        {
                             trimmedLines.Add(s);
+                        }
                         else
+                        {
                             errors++;
+                        }
                     }
                     else
                     {
@@ -94,7 +98,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 foreach (string line in parts)
                 {
                     if (count > 0)
+                    {
                         lineSb.Append('|');
+                    }
 
                     bool alreadyItalic = italicOn;
                     bool alreadyBold = boldOn;
@@ -118,7 +124,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             boldOn = false;
                             underlineOn = false;
                             if (pre.ToString() != "{y:i}")
+                            {
                                 pre.Append("{y:i}"); // italic single line
+                            }
+
                             s = s.Remove(0, 3);
                         }
                         else if (alreadyBold && i == 0)
@@ -134,7 +143,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             boldOn = true;
                             underlineOn = false;
                             if (pre.ToString() != "{y:b}")
+                            {
                                 pre.Append("{y:b}"); // bold single line
+                            }
+
                             s = s.Remove(0, 3);
                         }
                         else if (alreadyUnderline && i == 0)
@@ -150,7 +162,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             boldOn = false;
                             underlineOn = true;
                             if (pre.ToString() != "{y:u}")
+                            {
                                 pre.Append("{y:u}"); // underline single line
+                            }
+
                             s = s.Remove(0, 3);
                         }
 
@@ -174,9 +189,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                         if (color.Length == 6)
                                         {
                                             if (s.Contains(Environment.NewLine) && s.Contains("</font>" + Environment.NewLine))
+                                            {
                                                 pre.Append("{c:$" + color.Substring(4, 2) + color.Substring(2, 2) + color.Substring(0, 2) + "}");
+                                            }
                                             else
+                                            {
                                                 pre.Append("{C:$" + color.Substring(4, 2) + color.Substring(2, 2) + color.Substring(0, 2) + "}");
+                                            }
                                         }
                                     }
                                 }
@@ -193,9 +212,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                         if (fontName.Length > 0)
                                         {
                                             if (s.Contains(Environment.NewLine) && s.Contains("</font>" + Environment.NewLine))
+                                            {
                                                 pre.Append("{f:" + fontName + "}");
+                                            }
                                             else
+                                            {
                                                 pre.Append("{F:" + fontName + "}");
+                                            }
                                         }
                                     }
                                 }
@@ -212,9 +235,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                         if (fontSize.Length > 0)
                                         {
                                             if (s.Contains(Environment.NewLine) && s.Contains("</font>" + Environment.NewLine))
+                                            {
                                                 pre.Append("{s:" + fontSize + "}");
+                                            }
                                             else
+                                            {
                                                 pre.Append("{S:" + fontSize + "}");
+                                            }
                                         }
                                     }
                                 }
@@ -224,13 +251,19 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
 
                     if (s.Contains("</i>"))
+                    {
                         italicOn = false;
+                    }
 
                     if (s.Contains("</b>"))
+                    {
                         boldOn = false;
+                    }
 
                     if (s.Contains("</u>"))
+                    {
                         underlineOn = false;
+                    }
 
                     lineSb.Append(HtmlUtil.RemoveHtmlTags(pre + line));
                     count++;
@@ -238,30 +271,56 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 string text = lineSb.ToString();
                 int noOfLines = Utilities.CountTagInText(text, '|') + 1;
                 if (Utilities.CountTagInText(text, "{y:i}") == noOfLines && text.StartsWith("{y:i}", StringComparison.Ordinal))
+                {
                     text = "{Y:i}" + text.Replace("{y:i}", string.Empty);
+                }
                 else if (Utilities.CountTagInText(text, "{y:b}") == noOfLines && text.StartsWith("{y:b}", StringComparison.Ordinal))
+                {
                     text = "{Y:b}" + text.Replace("{y:b}", string.Empty);
+                }
                 else if (Utilities.CountTagInText(text, "{y:u}") == noOfLines && text.StartsWith("{y:u}", StringComparison.Ordinal))
+                {
                     text = "{Y:u}" + text.Replace("{y:u}", string.Empty);
+                }
                 else if (Utilities.CountTagInText(text, "{y:u}{y:i}") == noOfLines && text.StartsWith("{y:u}{y:i}", StringComparison.Ordinal))
+                {
                     text = "{Y:u}{Y:i}" + text.Replace("{y:u}", string.Empty).Replace("{y:i}", string.Empty);
+                }
                 else if (Utilities.CountTagInText(text, "{y:i}{y:u}") == noOfLines && text.StartsWith("{y:i}{y:u}", StringComparison.Ordinal))
+                {
                     text = "{Y:i}{Y:u}" + text.Replace("{y:i}", string.Empty).Replace("{y:u}", string.Empty);
+                }
                 else if (Utilities.CountTagInText(text, "{y:i}{y:b}") == noOfLines && text.StartsWith("{y:i}{y:b}", StringComparison.Ordinal))
+                {
                     text = "{Y:i}{Y:b}" + text.Replace("{y:i}", string.Empty).Replace("{y:b}", string.Empty);
+                }
                 else if (Utilities.CountTagInText(text, "{y:b}{y:i}") == noOfLines && text.StartsWith("{y:b}{y:i}", StringComparison.Ordinal))
+                {
                     text = "{Y:b}{Y:i}" + text.Replace("{y:i}", string.Empty).Replace("{y:b}", string.Empty);
+                }
                 else if (Utilities.CountTagInText(text, "{y:b}{y:u}") == noOfLines && text.StartsWith("{y:b}{y:u}", StringComparison.Ordinal))
+                {
                     text = "{Y:b}{Y:u}" + text.Replace("{y:b}", string.Empty).Replace("{y:u}", string.Empty);
+                }
                 else if (Utilities.CountTagInText(text, "{y:u}{y:b}") == noOfLines && text.StartsWith("{y:u}{y:b}", StringComparison.Ordinal))
+                {
                     text = "{Y:u}{Y:b}" + text.Replace("{y:u}", string.Empty).Replace("{y:b}", string.Empty);
+                }
 
                 if (Utilities.CountTagInText(text, "{y:i}") == 1 && noOfLines == 1)
+                {
                     text = text.Replace("{y:i}", "{Y:i}");
+                }
+
                 if (Utilities.CountTagInText(text, "{y:b}") == 1 && noOfLines == 1)
+                {
                     text = text.Replace("{y:b}", "{Y:b}");
+                }
+
                 if (Utilities.CountTagInText(text, "{y:u}") == 1 && noOfLines == 1)
+                {
                     text = text.Replace("{y:u}", "{Y:u}");
+                }
 
                 sb.AppendLine(HtmlUtil.RemoveHtmlTags(text));
             }
@@ -303,7 +362,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             foreach (string s2 in parts)
                             {
                                 if (count > 0)
+                                {
                                     lineSb.AppendLine();
+                                }
 
                                 s = s2.Trim();
                                 pre.Clear();
@@ -512,14 +573,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     {
                         _errorCount++;
                         if (_errors.Length < 2000)
+                        {
                             _errors.AppendLine(string.Format(Configuration.Settings.Language.Main.LineNumberXErrorReadingFromSourceLineY, _lineNumber, line));
+                        }
                     }
                 }
                 else
                 {
                     _errorCount++;
                     if (_errors.Length < 2000)
+                    {
                         _errors.AppendLine(string.Format(Configuration.Settings.Language.Main.LineNumberXErrorReadingFromSourceLineY, _lineNumber, line));
+                    }
                 }
             }
 
@@ -549,7 +614,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             while (i < line.Length && tagCount < 4)
             {
                 if (line[i] == '{' || line[i] == '}')
+                {
                     tagCount++;
+                }
+
                 i++;
             }
             return i;

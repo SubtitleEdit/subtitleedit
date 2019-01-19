@@ -59,7 +59,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     text.AppendLine(line.Trim());
                     if (text.Length > 5000)
+                    {
                         return;
+                    }
                 }
                 else
                 {

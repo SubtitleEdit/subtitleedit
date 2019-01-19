@@ -19,15 +19,21 @@ namespace Nikse.SubtitleEdit.Core
         {
             var subtitle = ImportTimeCodesOnSameSeperateLine(lines);
             if (subtitle.Paragraphs.Count < 2)
+            {
                 subtitle = ImportTimeCodesAndTextOnSameLineOnlySpaceAsSeparator(lines);
+            }
 
             var subTcAndTextOnSameLine = ImportTimeCodesAndTextOnSameLine(lines);
             if (subTcAndTextOnSameLine.Paragraphs.Count > subtitle.Paragraphs.Count)
+            {
                 subtitle = subTcAndTextOnSameLine;
+            }
 
             var subTcOnAloneLines = ImportTimeCodesOnAloneLines(lines);
             if (subTcOnAloneLines.Paragraphs.Count > subtitle.Paragraphs.Count)
+            {
                 subtitle = subTcOnAloneLines;
+            }
 
             bool isJson = IsJson(lines);
 
@@ -65,7 +71,9 @@ namespace Nikse.SubtitleEdit.Core
             {
                 var jsonSubtitle = new UknownFormatImporterJson().AutoGuessImport(lines);
                 if (jsonSubtitle != null && jsonSubtitle.Paragraphs.Count > 2)
+                {
                     subtitle = jsonSubtitle;
+                }
             }
 
             if (subtitle.Paragraphs.Count == 0 && lines.Count == 1 && lines[0].Contains(" --> "))
@@ -176,19 +184,27 @@ namespace Nikse.SubtitleEdit.Core
                     }
 
                     if (matches[0].Index < 9)
+                    {
                         line = line.Remove(0, matches[0].Index);
+                    }
+
                     line = line.Replace(matches[0].ToString(), string.Empty);
                     line = line.Replace(matches[1].ToString(), string.Empty);
                     line = line.Trim();
                     if (line.StartsWith("}{}", StringComparison.Ordinal) || line.StartsWith("][]", StringComparison.Ordinal))
+                    {
                         line = line.Remove(0, 3);
+                    }
+
                     line = line.Trim();
                 }
                 if (p != null && line.Length > 1)
                 {
                     sb.AppendLine(line.Trim());
                     if (sb.Length > 200)
+                    {
                         return new Subtitle();
+                    }
                 }
             }
             if (p != null)
@@ -213,7 +229,9 @@ namespace Nikse.SubtitleEdit.Core
                 foreach (char c in lineWithPerhapsOnlyNumbers)
                 {
                     if (!char.IsDigit(c))
+                    {
                         allNumbers = false;
+                    }
                 }
                 if (allNumbers && lineWithPerhapsOnlyNumbers.Length > 2)
                 {
@@ -297,7 +315,10 @@ namespace Nikse.SubtitleEdit.Core
                 {
                     line = line.Trim();
                     if (line.StartsWith("}{}", StringComparison.Ordinal) || line.StartsWith("][]", StringComparison.Ordinal))
+                    {
                         line = line.Remove(0, 3);
+                    }
+
                     sb.AppendLine(line.Trim());
                 }
             }
@@ -356,7 +377,10 @@ namespace Nikse.SubtitleEdit.Core
                 {
                     line = line.Trim();
                     if (line.StartsWith("}{}", StringComparison.Ordinal) || line.StartsWith("][]", StringComparison.Ordinal))
+                    {
                         line = line.Remove(0, 3);
+                    }
+
                     sb.AppendLine(line.Trim());
                 }
             }
@@ -385,7 +409,10 @@ namespace Nikse.SubtitleEdit.Core
                 string line = lines[idx];
                 var matches = regexTimeCodes1.Matches(line);
                 if (matches.Count == 0)
+                {
                     matches = regexTimeCodes2.Matches(line);
+                }
+
                 if (matches.Count == 2)
                 {
                     var start = matches[0].Value.Split(ExpectedSplitChars, StringSplitOptions.RemoveEmptyEntries);
@@ -393,7 +420,10 @@ namespace Nikse.SubtitleEdit.Core
                     if (int.TryParse(start[0], out i))
                     {
                         if (count == -1 && i < 2)
+                        {
                             count = i;
+                        }
+
                         if (count != i)
                         {
                             isFirstLineNumber = false;
@@ -403,7 +433,9 @@ namespace Nikse.SubtitleEdit.Core
                     }
                 }
                 if (count > 2)
+                {
                     isFirstLineNumber = true;
+                }
             }
 
             for (int idx = 0; idx < lines.Count; idx++)
@@ -420,7 +452,10 @@ namespace Nikse.SubtitleEdit.Core
 
                 var matches = regexTimeCodes1.Matches(line);
                 if (matches.Count == 0)
+                {
                     matches = regexTimeCodes2.Matches(line);
+                }
+
                 if (matches.Count == 2)
                 {
                     string[] start = matches[0].ToString().Split(ExpectedSplitChars, StringSplitOptions.RemoveEmptyEntries);
@@ -438,17 +473,24 @@ namespace Nikse.SubtitleEdit.Core
                         p.EndTime = DecodeTime(end);
                     }
                     if (matches[0].Index < 9)
+                    {
                         line = line.Remove(0, matches[0].Index);
+                    }
 
                     line = line.Replace(matches[0].ToString(), string.Empty);
                     line = line.Replace(matches[1].ToString(), string.Empty);
                     line = line.Trim();
                     if (line.StartsWith("}{}", StringComparison.Ordinal) || line.StartsWith("][]", StringComparison.Ordinal))
+                    {
                         line = line.Remove(0, 3);
+                    }
+
                     line = line.Trim();
                 }
                 if (p != null && line.Length > 1)
+                {
                     sb.AppendLine(line.Trim());
+                }
             }
             if (p != null)
             {
@@ -473,7 +515,9 @@ namespace Nikse.SubtitleEdit.Core
                     prefix = newPrefix.ToString();
                 }
                 if (prefix.Length > 3 && prefix[1] == ':' && prefix[2] == '\\')
+                {
                     prefix = string.Empty;
+                }
 
                 if (prefix.Length > 0)
                 {
@@ -481,7 +525,9 @@ namespace Nikse.SubtitleEdit.Core
                     {
                         string text = paragraph.Text.Trim();
                         if (text.StartsWith(prefix, StringComparison.Ordinal))
+                        {
                             paragraph.Text = text.Remove(0, prefix.Length);
+                        }
                     }
                 }
             }
@@ -504,7 +550,10 @@ namespace Nikse.SubtitleEdit.Core
 
                 var matches = regexTimeCodes1.Matches(line);
                 if (matches.Count == 0)
+                {
                     matches = regexTimeCodes2.Matches(line);
+                }
+
                 if (matches.Count == 2)
                 {
                     string[] start = matches[0].ToString().Split(splitChar, StringSplitOptions.RemoveEmptyEntries);
@@ -522,16 +571,24 @@ namespace Nikse.SubtitleEdit.Core
                         p.EndTime = DecodeTime(end);
                     }
                     if (matches[0].Index < 9)
+                    {
                         line = line.Remove(0, matches[0].Index);
+                    }
+
                     line = line.Replace(matches[0].ToString(), string.Empty);
                     line = line.Replace(matches[1].ToString(), string.Empty);
                     line = line.Trim();
                     if (line.StartsWith("}{}", StringComparison.Ordinal) || line.StartsWith("][]", StringComparison.Ordinal))
+                    {
                         line = line.Remove(0, 3);
+                    }
+
                     line = line.Trim();
                 }
                 if (p != null && line.Length > 1)
+                {
                     sb.AppendLine(line.Trim());
+                }
             }
             if (p != null)
             {
@@ -613,7 +670,10 @@ namespace Nikse.SubtitleEdit.Core
                 {
                     line = line.Trim();
                     if (line.StartsWith("}{}", StringComparison.Ordinal) || line.StartsWith("][]", StringComparison.Ordinal))
+                    {
                         line = line.Remove(0, 3);
+                    }
+
                     sb.AppendLine(line.Trim());
                 }
             }
@@ -628,7 +688,10 @@ namespace Nikse.SubtitleEdit.Core
             {
                 double d = a.Duration.TotalSeconds;
                 if (d > 10)
+                {
                     d = 8;
+                }
+
                 averateDuration += d;
             }
             averateDuration = averateDuration / subtitle.Paragraphs.Count;
@@ -666,7 +729,9 @@ namespace Nikse.SubtitleEdit.Core
                 foreach (char c in lineWithPerhapsOnlyNumbers)
                 {
                     if (!char.IsDigit(c))
+                    {
                         allNumbers = false;
+                    }
                 }
                 if (allNumbers && lineWithPerhapsOnlyNumbers.Length > 5)
                 {
@@ -678,9 +743,14 @@ namespace Nikse.SubtitleEdit.Core
                         if ((start.Length == 3 || start.Length == 4) && (end.Length == 3 || end.Length == 4))
                         {
                             if (start.Length == 3)
+                            {
                                 start = (arr[0].Trim() + ".000").Split(ExpectedSplitChars, StringSplitOptions.RemoveEmptyEntries);
+                            }
+
                             if (end.Length == 3)
+                            {
                                 end = (arr[1].Trim() + ".000").Split(ExpectedSplitChars, StringSplitOptions.RemoveEmptyEntries);
+                            }
 
                             if (p != null)
                             {
@@ -700,11 +770,19 @@ namespace Nikse.SubtitleEdit.Core
                         string[] duration = arr[2].Trim().Split(ExpectedSplitChars, StringSplitOptions.RemoveEmptyEntries);
 
                         if (start.Length == 3)
+                        {
                             start = (arr[0].Trim() + ".000").Split(ExpectedSplitChars, StringSplitOptions.RemoveEmptyEntries);
+                        }
+
                         if (end.Length == 3)
+                        {
                             end = (arr[1].Trim() + ".000").Split(ExpectedSplitChars, StringSplitOptions.RemoveEmptyEntries);
+                        }
+
                         if (duration.Length == 3)
+                        {
                             duration = (arr[2].Trim() + ".000").Split(ExpectedSplitChars, StringSplitOptions.RemoveEmptyEntries);
+                        }
 
                         if (start.Length < 3)
                         {
@@ -730,7 +808,10 @@ namespace Nikse.SubtitleEdit.Core
                 {
                     line = line.Trim();
                     if (line.StartsWith("}{}", StringComparison.Ordinal) || line.StartsWith("][]", StringComparison.Ordinal))
+                    {
                         line = line.Remove(0, 3);
+                    }
+
                     sb.AppendLine(line.Trim());
                 }
             }
@@ -770,7 +851,10 @@ namespace Nikse.SubtitleEdit.Core
                 }
 
                 if (frames.Length < 3)
+                {
                     return new TimeCode(int.Parse(hour), int.Parse(minutes), int.Parse(seconds), SubtitleFormat.FramesToMillisecondsMax999(int.Parse(frames)));
+                }
+
                 return new TimeCode(int.Parse(hour), int.Parse(minutes), int.Parse(seconds), int.Parse(frames));
             }
             catch
@@ -795,7 +879,10 @@ namespace Nikse.SubtitleEdit.Core
                     if (macth.Success)
                     {
                         if (p != null)
+                        {
                             p.Text = Utilities.AutoBreakLine(sb.ToString().Trim());
+                        }
+
                         sb.Clear();
                         var arr = macth.Value.Split(' ');
                         if (arr.Length == 4)
@@ -815,7 +902,10 @@ namespace Nikse.SubtitleEdit.Core
                 i++;
             }
             if (p != null && string.IsNullOrEmpty(p.Text))
+            {
                 p.Text = Utilities.AutoBreakLine(sb.ToString().Trim());
+            }
+
             subtitle.Renumber();
             return subtitle;
         }

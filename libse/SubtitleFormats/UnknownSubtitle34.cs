@@ -30,7 +30,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 var lines = HtmlUtil.RemoveHtmlTags(p.Text).SplitToLines();
                 sb.AppendLine(EncodeTimeCode(p.StartTime) + "\t" + lines[0]);
                 for (int i = 1; i < lines.Count; i++)
+                {
                     sb.AppendLine("\t" + lines[i]);
+                }
             }
 
             return sb.ToString().Trim();
@@ -52,7 +54,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 if (RegexTimeCodes.Match(s).Success && !UnknownSubtitle59.RegexTimeCodes.IsMatch(s))
                 {
                     if (p != null && !string.IsNullOrEmpty(p.Text))
+                    {
                         subtitle.Paragraphs.Add(p);
+                    }
+
                     p = new Paragraph();
 
                     try
@@ -67,7 +72,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             string text = s.Remove(0, 8).Trim();
                             p.Text = text;
                             if (text.Length > 1 && Utilities.IsInteger(text.Substring(0, 2)))
+                            {
                                 _errorCount++;
+                            }
                         }
                     }
                     catch
@@ -90,7 +97,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
             }
             if (p != null && !string.IsNullOrEmpty(p.Text))
+            {
                 subtitle.Paragraphs.Add(p);
+            }
 
             int index = 1;
             foreach (Paragraph paragraph in subtitle.Paragraphs)

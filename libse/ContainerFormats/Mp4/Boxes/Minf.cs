@@ -16,10 +16,14 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
             while (fs.Position < (long)maximumLength)
             {
                 if (!InitializeSizeAndName(fs))
+                {
                     return;
+                }
 
                 if (Name == "stbl")
+                {
                     Stbl = new Stbl(fs, Position, timeScale, handlerType, mdia);
+                }
 
                 fs.Seek((long)Position, SeekOrigin.Begin);
             }

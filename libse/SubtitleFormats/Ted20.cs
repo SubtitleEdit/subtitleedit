@@ -96,7 +96,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 var paragraph = subtitle.Paragraphs[index];
                 if (index < texts.Count)
+                {
                     paragraph.Text = texts[index];
+                }
+
                 var next = subtitle.GetParagraphOrDefault(index + 1);
                 if (paragraph.Duration.TotalSeconds > 100)
                 {

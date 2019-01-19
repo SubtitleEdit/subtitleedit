@@ -22,7 +22,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 string speaker = p.Actor;
                 if (string.IsNullOrEmpty(speaker))
+                {
                     speaker = "UNKNOWN";
+                }
+
                 sb.AppendLine(speaker.TrimEnd().ToUpperInvariant() + ":");
                 sb.AppendLine(EncodeTimeCode(p.StartTime));
                 sb.AppendLine(HtmlUtil.RemoveHtmlTags(p.Text));
@@ -56,7 +59,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     p = new Paragraph(DecodeTimeCode(s), new TimeCode(), string.Empty) { Actor = speaker };
                     subtitle.Paragraphs.Add(p);
                     if (string.IsNullOrEmpty(speaker) || Utilities.RemoveNonNumbers(speaker).Length == speaker.Length)
+                    {
                         _errorCount++;
+                    }
+
                     speaker = string.Empty;
                     isNew = true;
                 }
@@ -67,9 +73,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 else if (p != null && isNew)
                 {
                     if (string.IsNullOrEmpty(p.Text))
+                    {
                         p.Text = s;
+                    }
                     else
+                    {
                         p.Text = p.Text + Environment.NewLine + s;
+                    }
 
                     if (p.Text.Length > 800)
                     {

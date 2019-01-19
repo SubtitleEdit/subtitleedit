@@ -32,7 +32,10 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             {
                 string s = $"{buffer[i]:X}";
                 if (s.Length < 2)
+                {
                     sb.Append('0');
+                }
+
                 sb.Append(s);
             }
             return "0x" + sb;
@@ -45,7 +48,10 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
         {
             string s = $"{number:X}";
             if (s.Length < digits)
+            {
                 s = s.PadLeft(digits, '0');
+            }
+
             return "0x" + s;
         }
 

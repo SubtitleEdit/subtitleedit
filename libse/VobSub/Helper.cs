@@ -286,7 +286,10 @@ namespace Nikse.SubtitleEdit.Core.VobSub
         {
             UInt32 result = 0;
             for (int i = 0; i < count; i++)
+            {
                 result = (result << 8) + buffer[index + i];
+            }
+
             return result;
         }
 
@@ -299,7 +302,10 @@ namespace Nikse.SubtitleEdit.Core.VobSub
         public static int GetEndianWord(byte[] buffer, int index)
         {
             if (index + 1 < buffer.Length)
+            {
                 return (buffer[index] << 8) | buffer[index + 1];
+            }
+
             return 0;
         }
 
@@ -312,7 +318,10 @@ namespace Nikse.SubtitleEdit.Core.VobSub
         {
             var sb = new StringBuilder();
             for (int i = 0; i < count; i++)
+            {
                 sb.Append(Convert.ToString(buffer[index + i], 2).PadLeft(8, '0'));
+            }
+
             return sb.ToString();
         }
 

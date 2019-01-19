@@ -9,13 +9,17 @@ namespace Nikse.SubtitleEdit.Core.Forms
         {
             string s = HtmlUtil.RemoveHtmlTags(text.Trim(), true);
             if (s.Length > totalLineMaxCharacters)
+            {
                 return true;
+            }
 
             var arr = s.SplitToLines();
             foreach (string line in arr)
             {
                 if (line.Length > singleLineMaxCharacters)
+                {
                     return true;
+                }
             }
 
             var tempText = Utilities.UnbreakLine(text);
@@ -29,7 +33,9 @@ namespace Nikse.SubtitleEdit.Core.Forms
                     foreach (string line in dialogText.SplitToLines())
                     {
                         if (line.Length > singleLineMaxCharacters)
+                        {
                             return true;
+                        }
                     }
                 }
             }
@@ -70,7 +76,9 @@ namespace Nikse.SubtitleEdit.Core.Forms
                                     int spacing1 = minMsBtwnLnBy2;
                                     int spacing2 = minMsBtwnLnBy2;
                                     if (Configuration.Settings.General.MinimumMillisecondsBetweenLines % 2 == 1)
+                                    {
                                         spacing2++;
+                                    }
 
                                     double duration = p.Duration.TotalMilliseconds / 2.0;
                                     var newParagraph1 = new Paragraph(p);
@@ -96,7 +104,10 @@ namespace Nikse.SubtitleEdit.Core.Forms
                                         {
                                             newParagraph1.Text = newParagraph1.Text.Remove(3, 1).Trim();
                                             if (newParagraph1.Text.StartsWith("<i> ", StringComparison.Ordinal))
+                                            {
                                                 newParagraph1.Text = newParagraph1.Text.Remove(3, 1).Trim();
+                                            }
+
                                             newParagraph2.Text = newParagraph2.Text.Remove(0, 1).Trim();
                                         }
                                     }
@@ -134,7 +145,9 @@ namespace Nikse.SubtitleEdit.Core.Forms
                     }
                 }
                 if (!added)
+                {
                     splittedSubtitle.Paragraphs.Add(new Paragraph(p));
+                }
             }
             splittedSubtitle.Renumber();
             return splittedSubtitle;

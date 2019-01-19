@@ -48,7 +48,9 @@ SRPSKI
                 firstLine = lines[0];
                 
                 if (lines.Count > 1)
+                {
                     secondLine = lines[1];
+                }
 
                 sb.AppendLine(string.Format(" {0}          {1} " + Environment.NewLine +
                                             "1    0    0    0    0    0" + Environment.NewLine +
@@ -71,7 +73,9 @@ SRPSKI
                 if (RegexTimeCodes.IsMatch(s))
                 {
                     if (!string.IsNullOrEmpty(paragraph.Text))
+                    {
                         subtitle.Paragraphs.Add(paragraph);
+                    }
 
                     paragraph = new Paragraph();
                     string[] parts = s.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
@@ -100,15 +104,22 @@ SRPSKI
                         if (s.Length > 0)
                         {
                             if (!string.IsNullOrEmpty(paragraph.Text))
+                            {
                                 paragraph.Text += Environment.NewLine + s;
+                            }
                             else
+                            {
                                 paragraph.Text = s;
+                            }
                         }
                     }
                 }
             }
             if (!string.IsNullOrEmpty(paragraph.Text))
+            {
                 subtitle.Paragraphs.Add(paragraph);
+            }
+
             subtitle.Renumber();
         }
     }

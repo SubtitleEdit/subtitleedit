@@ -62,7 +62,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
 
                 if (sb.Length > 1000)
+                {
                     return;
+                }
             }
             subtitle.Renumber();
         }

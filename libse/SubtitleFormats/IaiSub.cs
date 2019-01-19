@@ -32,7 +32,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             buffer[06] == 0x42 &&
                             buffer[07] == 0x54 &&
                             fileName.EndsWith(Extension, StringComparison.OrdinalIgnoreCase))
+                        {
                             return true;
+                        }
                     }
                 }
                 catch
@@ -59,7 +61,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 Paragraph p = GetParagraph(ref index, buffer);
                 if (p != null)
+                {
                     subtitle.Paragraphs.Add(p);
+                }
             }
             subtitle.RecalculateDisplayTimes(25, null, Configuration.Settings.General.SubtitleOptimalCharactersPerSeconds);
             subtitle.Renumber();
@@ -83,17 +87,27 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 index++;
             }
             if (paragraphFound1)
+            {
                 index += 7;
+            }
             else
+            {
                 index += 9;
+            }
 
             if (index + 5 >= buffer.Length)
+            {
                 return null;
+            }
+
             var startTime = DecodeTimeCode(buffer, index);
 
             index += 4;
             if (index + 5 >= buffer.Length)
+            {
                 return null;
+            }
+
             var endTime = DecodeTimeCode(buffer, index);
 
             var text = new StringBuilder();
@@ -105,12 +119,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                   index < max)
             {
                 if (index + 5 >= buffer.Length)
+                {
                     return null;
+                }
+
                 int length = buffer[index];
                 if (index + length > buffer.Length)
                 {
                     if (text.ToString().Trim().Length > 0)
+                    {
                         return new Paragraph(startTime, endTime, text.ToString().Trim());
+                    }
+
                     return null;
                 }
                 for (int i = 7; i < length; i++)

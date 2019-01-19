@@ -25,7 +25,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             var asc = new TimeLineFootageAscii();
             if (fileName != null && asc.IsMine(null, fileName))
+            {
                 return false;
+            }
 
             return base.IsMine(lines, fileName);
         }
@@ -52,7 +54,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 count++;
                 string text = HtmlUtil.RemoveHtmlTags(p.Text);
                 if (p.Text.StartsWith("<i>", StringComparison.Ordinal) && p.Text.EndsWith("</i>", StringComparison.Ordinal))
+                {
                     text = "#" + text;
+                }
+
                 sb.AppendLine(string.Format(paragraphWriteFormat, EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), text, Environment.NewLine, count));
             }
             return sb.ToString().Trim();
@@ -71,7 +76,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 if (line.EndsWith('.') && Utilities.IsInteger(line.TrimEnd('.')))
                 {
                     if (!string.IsNullOrEmpty(paragraph?.Text))
+                    {
                         subtitle.Paragraphs.Add(paragraph);
+                    }
+
                     paragraph = new Paragraph();
                     expecting = ExpectingLine.TimeStart;
                 }
@@ -119,7 +127,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         {
                             string s = line.Trim();
                             if (s.StartsWith('#'))
+                            {
                                 s = "<i>" + s.Remove(0, 1) + "</i>";
+                            }
+
                             paragraph.Text = (paragraph.Text + Environment.NewLine + s).Trim();
                             paragraph.Text = paragraph.Text.Replace("</i>" + Environment.NewLine + "<i>", Environment.NewLine);
                             if (paragraph.Text.Length > 2000)
@@ -132,7 +143,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
             }
             if (paragraph != null && !string.IsNullOrEmpty(paragraph.Text))
+            {
                 subtitle.Paragraphs.Add(paragraph);
+            }
 
             subtitle.Renumber();
         }

@@ -59,7 +59,9 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
             {
                 int id = buffer[index + 9 + HeaderDataLength];
                 if (id >= 0x20 && id <= 0x40) // x3f 0r x40 ?
+                {
                     SubPictureStreamId = id;
+                }
             }
 
             int tempIndex = index + 9;
@@ -85,7 +87,9 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
             {
                 dataSize = buffer.Length - dataIndex;
                 if (dataSize < 0)
+                {
                     return;
+                }
             }
 
             DataBuffer = new byte[dataSize + 1];

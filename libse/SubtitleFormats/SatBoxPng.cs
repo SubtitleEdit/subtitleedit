@@ -26,7 +26,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             subtitle.Paragraphs.Clear();
             _errorCount = 0;
             if (string.IsNullOrEmpty(fileName))
+            {
                 return;
+            }
+
             string path = Path.GetDirectoryName(fileName);
             foreach (string line in lines)
             {
@@ -45,7 +48,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         {
                             int indexOfSlash = text.LastIndexOf("/", StringComparison.Ordinal);
                             if (indexOfSlash >= 0 && File.Exists(Path.Combine(path, text.Remove(0, indexOfSlash + 1))))
+                            {
                                 text = Path.Combine(path, text.Remove(0, indexOfSlash + 1));
+                            }
                         }
                         p = new Paragraph(DecodeTimeCode(start), DecodeTimeCode(end), text);
                         subtitle.Paragraphs.Add(p);

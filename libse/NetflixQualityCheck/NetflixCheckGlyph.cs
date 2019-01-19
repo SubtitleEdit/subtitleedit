@@ -20,9 +20,15 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
                         list.Add(int.Parse(line, System.Globalization.NumberStyles.HexNumber));
                     }
                     if (!list.Contains(10))
+                    {
                         list.Add(10);
+                    }
+
                     if (!list.Contains(13))
+                    {
                         list.Add(13);
+                    }
+
                     return new HashSet<int>(list);
                 }
             }

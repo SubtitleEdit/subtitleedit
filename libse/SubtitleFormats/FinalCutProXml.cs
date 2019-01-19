@@ -16,26 +16,50 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public static string GetFrameRateAsString()
         {
             if (Configuration.Settings.General.CurrentFrameRate < 24)
+            {
                 return "24"; // ntsc 23.976
+            }
+
             if (Configuration.Settings.General.CurrentFrameRate < 25)
+            {
                 return "24";
+            }
+
             if (Configuration.Settings.General.CurrentFrameRate < 29)
-                return "25";            
+            {
+                return "25";
+            }
+
             if (Configuration.Settings.General.CurrentFrameRate < 30)
+            {
                 return "30"; // ntsc 29.97
+            }
+
             if (Configuration.Settings.General.CurrentFrameRate < 40)
-                return "30";            
+            {
+                return "30";
+            }
+
             if (Configuration.Settings.General.CurrentFrameRate < 60)
+            {
                 return "60"; // ntsc 59.94
+            }
+
             return "60";
         }
 
         public static string GetNtsc()
         {
             if (Configuration.Settings.General.CurrentFrameRate < 24)
+            {
                 return "TRUE"; // ntsc 23.976
+            }
+
             if (Configuration.Settings.General.CurrentFrameRate < 25)
+            {
                 return "FALSE";
+            }
+
             return "TRUE";
         }
 
@@ -43,7 +67,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             int duration = 0;
             if (subtitle.Paragraphs.Count > 0)
+            {
                 duration = (int)Math.Round(subtitle.Paragraphs[subtitle.Paragraphs.Count - 1].EndTime.TotalSeconds * Configuration.Settings.General.CurrentFrameRate);
+            }
 
             string xmlStructure =
                 "<?xml version=\"1.0\" encoding=\"utf-8\" ?>" + Environment.NewLine +
@@ -352,7 +378,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
           </generatoritem>";
 
             if (string.IsNullOrEmpty(title))
+            {
                 title = "Subtitle Edit subtitle";
+            }
 
             var xml = new XmlDocument();
             xml.LoadXml(xmlStructure);
@@ -367,7 +395,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     header.LoadXml(subtitle.Header);
                     var node = header.DocumentElement.SelectSingleNode("sequence/uuid");
                     if (node != null)
+                    {
                         xml.DocumentElement.SelectSingleNode("sequence/uuid").InnerText = node.InnerText;
+                    }
                 }
                 catch
                 {
@@ -384,9 +414,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 string fontStyle = "1"; //1==plain
                 var s = HtmlUtil.RemoveOpenCloseTags(p.Text, HtmlUtil.TagFont).Trim();
                 if ((s.StartsWith("<i><b>") && s.EndsWith("</b></i>")) || (s.StartsWith("<b><i>") && s.EndsWith("</i></b>")))
+                {
                     fontStyle = "4"; //4==bold/italic
+                }
                 else if (s.StartsWith("<i>") && s.EndsWith("</i>"))
+                {
                     fontStyle = "3"; //3==italic
+                }
+
                 generatorItem.InnerXml = xmlTrackStructure.Replace("[NUMBER]", number.ToString()).Replace("[FONTSTYLE]", fontStyle).
                     Replace("[FONTSIZE]", Configuration.Settings.SubtitleSettings.FcpFontSize.ToString(CultureInfo.InvariantCulture)).
                     Replace("[FONTNAME]", Configuration.Settings.SubtitleSettings.FcpFontName).
@@ -427,7 +462,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 var header = new XmlDocument { XmlResolver = null };
                 header.LoadXml(sb.ToString());
                 if (header.SelectSingleNode("sequence/media/video/track") != null)
+                {
                     header.RemoveChild(header.SelectSingleNode("sequence/media/video/track"));
+                }
+
                 subtitle.Header = header.OuterXml;
 
                 if (xml.DocumentElement.SelectSingleNode("sequence/rate") != null && xml.DocumentElement.SelectSingleNode("sequence/rate/timebase") != null)
@@ -453,25 +491,33 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             {
                                 XmlNode timebase = rate.SelectSingleNode("timebase");
                                 if (timebase != null)
+                                {
                                     frameRate = double.Parse(timebase.InnerText);
+                                }
                             }
 
                             double startFrame = 0;
                             double endFrame = 0;
                             XmlNode startNode = generatorItemNode.SelectSingleNode("start");
                             if (startNode != null)
+                            {
                                 startFrame = double.Parse(startNode.InnerText);
+                            }
 
                             XmlNode endNode = generatorItemNode.SelectSingleNode("end");
                             if (endNode != null)
+                            {
                                 endFrame = double.Parse(endNode.InnerText);
+                            }
 
                             string text = string.Empty;
                             foreach (XmlNode parameterNode in generatorItemNode.SelectNodes("effect/parameter[parameterid='str']"))
                             {
                                 XmlNode valueNode = parameterNode.SelectSingleNode("value");
                                 if (valueNode != null)
+                                {
                                     text += valueNode.InnerText;
+                                }
                             }
                             if (text.Length == 0)
                             {
@@ -479,7 +525,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 {
                                     XmlNode valueNode = parameterNode.SelectSingleNode("value");
                                     if (valueNode != null)
+                                    {
                                         text += valueNode.InnerText;
+                                    }
                                 }
                             }
                             if (text.Length == 0)
@@ -488,7 +536,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 {
                                     XmlNode valueNode = parameterNode.SelectSingleNode("value");
                                     if (valueNode != null)
+                                    {
                                         text += valueNode.InnerText;
+                                    }
                                 }
                             }
                             if (text.Length == 0)
@@ -497,7 +547,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 {
                                     XmlNode valueNode = parameterNode.SelectSingleNode("value");
                                     if (valueNode != null)
+                                    {
                                         text += valueNode.InnerText;
+                                    }
                                 }
                             }
                             if (text.Length == 0)
@@ -506,7 +558,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 {
                                     XmlNode valueNode = parameterNode.SelectSingleNode("value");
                                     if (valueNode != null)
+                                    {
                                         text += valueNode.InnerText;
+                                    }
                                 }
                             }
 
@@ -565,11 +619,20 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             if (text.Length > 0)
                             {
                                 if (!text.Contains(Environment.NewLine))
+                                {
                                     text = text.Replace("\r", Environment.NewLine);
+                                }
+
                                 if (bold)
+                                {
                                     text = "<b>" + text + "</b>";
+                                }
+
                                 if (italic)
+                                {
                                     text = "<i>" + text + "</i>";
+                                }
+
                                 subtitle.Paragraphs.Add(new Paragraph(text, Convert.ToDouble((startFrame / frameRate) * 1000), Convert.ToDouble((endFrame / frameRate) * 1000)));
                             }
                         }

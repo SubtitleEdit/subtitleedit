@@ -16,9 +16,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override string ToText(Subtitle subtitle, string title)
         {
             if (Configuration.Settings.General.CurrentFrameRate > 26)
+            {
                 FrameRate = 30;
+            }
             else
+            {
                 FrameRate = 25;
+            }
 
             string xmlStructure =
                 "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>" + Environment.NewLine +
@@ -96,7 +100,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             lines.ForEach(line => sb.AppendLine(line));
             string x = sb.ToString();
             if (!x.Contains("<fcpxml version=\"1.4\">") && !x.Contains("<fcpxml version=\"1.5\">"))
+            {
                 return;
+            }
 
             var xml = new XmlDocument { XmlResolver = null };
             try
@@ -136,10 +142,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             {
                                 var prev = subtitle.Paragraphs[subtitle.Paragraphs.Count - 1];
                                 if (prev.Text == p.Text && Math.Abs(prev.StartTime.TotalMilliseconds - p.StartTime.TotalMilliseconds) < 0.01)
+                                {
                                     add = false;
+                                }
                             }
                             if (add)
+                            {
                                 subtitle.Paragraphs.Add(p);
+                            }
                         }
                         catch
                         {

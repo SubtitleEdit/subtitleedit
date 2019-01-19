@@ -45,7 +45,9 @@ ATTENTION : Pas plus de 40 caractères PAR LIGNE
                 sb.AppendLine(string.Format(writeFormat, index, EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), GetMaxCharsForDuration(p.Duration.TotalSeconds) + "c", Environment.NewLine, text));
                 sb.AppendLine();
                 if (!text.Contains(Environment.NewLine))
+                {
                     sb.AppendLine();
+                }
             }
             return sb.ToString();
         }
@@ -93,9 +95,13 @@ ATTENTION : Pas plus de 40 caractères PAR LIGNE
                 else if (p != null)
                 {
                     if (string.IsNullOrEmpty(p.Text))
+                    {
                         p.Text = line;
+                    }
                     else
+                    {
                         p.Text = p.Text + Environment.NewLine + line;
+                    }
                 }
                 else
                 {

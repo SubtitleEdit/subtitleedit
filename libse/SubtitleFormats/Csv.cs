@@ -21,9 +21,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             foreach (string line in lines)
             {
                 if (CsvLine.IsMatch(line))
+                {
                     fine++;
+                }
                 else
+                {
                     failed++;
+                }
             }
             return fine > failed;
         }
@@ -51,6 +55,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     string[] parts = line.Split(Separator.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                     if (parts.Length == 4)
+                    {
                         try
                         {
                             int start = Convert.ToInt32(Utilities.FixQuotes(parts[1]));
@@ -64,13 +69,17 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         {
                             _errorCount++;
                         }
+                    }
                 }
                 else
                 {
                     if (continuation)
                     {
                         if (p.Text.Length < 300)
+                        {
                             p.Text = (p.Text + Environment.NewLine + line.TrimEnd('"')).Trim();
+                        }
+
                         continuation = !line.TrimEnd().EndsWith('"');
                     }
                     else

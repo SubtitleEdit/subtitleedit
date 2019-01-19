@@ -23,9 +23,15 @@ namespace Nikse.SubtitleEdit.Core
         {
             // Make sure that both *line and *Text are not null.
             if (string.IsNullOrEmpty(line) || string.IsNullOrEmpty(Text))
+            {
                 return false;
+            }
+
             if (Regex != null)
+            {
                 return Regex.IsMatch(line);
+            }
+
             return line.EndsWith(Text, StringComparison.Ordinal);
         }
 
@@ -37,11 +43,19 @@ namespace Nikse.SubtitleEdit.Core
         public int CompareTo(NoBreakAfterItem obj)
         {
             if (obj == null)
+            {
                 return -1;
+            }
+
             if (obj.Text == null && Text == null)
+            {
                 return 0;
+            }
             else if (obj.Text == null)
+            {
                 return -1;
+            }
+
             return string.Compare(Text, obj.Text, StringComparison.Ordinal);
         }
     }

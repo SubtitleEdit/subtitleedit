@@ -146,11 +146,19 @@ namespace Nikse.SubtitleEdit.Core
             if (IsRunningOnLinux() || IsRunningOnMac())
             {
                 if (Directory.Exists("/usr/share/tesseract-ocr/tessdata"))
+                {
                     return "/usr/share/tesseract-ocr/tessdata";
+                }
+
                 if (Directory.Exists("/usr/share/tesseract/tessdata"))
+                {
                     return "/usr/share/tesseract/tessdata";
+                }
+
                 if (Directory.Exists("/usr/share/tessdata"))
+                {
                     return "/usr/share/tessdata";
+                }
             }
             return Path.Combine(TesseractDirectory, "tessdata");
         }
@@ -160,11 +168,19 @@ namespace Nikse.SubtitleEdit.Core
             if (IsRunningOnLinux() || IsRunningOnMac())
             {
                 if (Directory.Exists("/usr/share/tesseract-ocr/tessdata"))
+                {
                     return "/usr/share/tesseract-ocr/tessdata";
+                }
+
                 if (Directory.Exists("/usr/share/tesseract/tessdata"))
+                {
                     return "/usr/share/tesseract/tessdata";
+                }
+
                 if (Directory.Exists("/usr/share/tessdata"))
+                {
                     return "/usr/share/tessdata";
+                }
             }
             return Path.Combine(Tesseract302Directory, "tessdata");
         }

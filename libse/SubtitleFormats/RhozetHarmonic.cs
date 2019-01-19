@@ -98,7 +98,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             string s = "<?xml version=\"1.0\"?>" + Environment.NewLine + ToUtf8XmlString(xml, true).Replace("\"", "__@____").Replace("'", "&apos;").Replace("__@____", "'").Replace(" />", "/>");
             while (s.Contains(Environment.NewLine + " "))
+            {
                 s = s.Replace(Environment.NewLine + " ", Environment.NewLine);
+            }
+
             return s;
         }
 
@@ -111,7 +114,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             string allText = sb.ToString();
             if (!allText.Contains("<TitlerData") || !allText.Contains("<Data"))
+            {
                 return;
+            }
 
             var xml = new XmlDocument { XmlResolver = null };
             try

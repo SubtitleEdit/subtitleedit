@@ -23,7 +23,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 sb.Append(line);
                 if (CsvLine.IsMatch(line))
+                {
                     fine++;
+                }
             }
             return fine > 0 && sb.ToString().Contains(Header);
         }
@@ -52,6 +54,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     string[] parts = line.Split(',');
                     if (parts.Length == 4)
+                    {
                         try
                         {
                             var actor = Utilities.FixQuotes(parts[0]);
@@ -60,7 +63,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             string text = Utilities.FixQuotes(parts[3]);
                             p = new Paragraph(start, end, text);
                             if (!string.IsNullOrEmpty(actor))
+                            {
                                 p.Actor = actor;
+                            }
+
                             subtitle.Paragraphs.Add(p);
                             continuation = parts[3].StartsWith('"') && !parts[3].EndsWith('"');
                         }
@@ -68,13 +74,17 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         {
                             _errorCount++;
                         }
+                    }
                 }
                 else
                 {
                     if (continuation)
                     {
                         if (p.Text.Length < 300)
+                        {
                             p.Text = (p.Text + Environment.NewLine + line.TrimEnd('"')).Trim();
+                        }
+
                         continuation = !line.TrimEnd().EndsWith('"');
                     }
                     else

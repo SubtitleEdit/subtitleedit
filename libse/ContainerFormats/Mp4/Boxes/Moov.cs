@@ -18,12 +18,18 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
             while (fs.Position < (long)maximumLength)
             {
                 if (!InitializeSizeAndName(fs))
+                {
                     return;
+                }
 
                 if (Name == "trak")
+                {
                     Tracks.Add(new Trak(fs, Position));
+                }
                 else if (Name == "mvhd")
+                {
                     Mvhd = new Mvhd(fs);
+                }
 
                 fs.Seek((long)Position, SeekOrigin.Begin);
             }

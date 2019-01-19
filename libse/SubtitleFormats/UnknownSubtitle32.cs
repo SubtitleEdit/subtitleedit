@@ -46,11 +46,19 @@ Sony,Sony DVD/UMD,1:85,16x9
                 text = text.Replace("</i>", "#");
                 text = HtmlUtil.RemoveHtmlTags(text);
                 if (text.StartsWith("{\\an8}"))
+                {
                     text = text.Remove(0, 6) + "@+";
+                }
+
                 if (text.StartsWith("{\\an5}"))
+                {
                     text = text.Remove(0, 6) + "@|";
+                }
+
                 if (text.StartsWith("{\\an") && text.Length > 6 && text[5] == '}')
+                {
                     text = text.Remove(0, 6);
+                }
 
                 text = text.Replace(Environment.NewLine, Environment.NewLine.PadRight(Environment.NewLine.Length + 8, ' '));
                 text = text.PadLeft(text.Length + 8, ' ');
@@ -74,7 +82,9 @@ Sony,Sony DVD/UMD,1:85,16x9
                 {
                     s = s.Replace("*", string.Empty);
                     if (paragraph != null && !string.IsNullOrEmpty(paragraph.Text))
+                    {
                         subtitle.Paragraphs.Add(paragraph);
+                    }
 
                     string[] parts = s.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                     paragraph = new Paragraph();
@@ -95,9 +105,14 @@ Sony,Sony DVD/UMD,1:85,16x9
                     {
                         int index = s.IndexOf('#');
                         if (italicOn)
+                        {
                             s = s.Remove(index, 1).Insert(index, "</i>");
+                        }
                         else
+                        {
                             s = s.Remove(index, 1).Insert(index, "<i>");
+                        }
+
                         italicOn = !italicOn;
                     }
 
@@ -113,16 +128,22 @@ Sony,Sony DVD/UMD,1:85,16x9
                 }
             }
             if (paragraph != null && !string.IsNullOrEmpty(paragraph.Text))
+            {
                 subtitle.Paragraphs.Add(paragraph);
+            }
 
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 //@+: reposition top
                 //@|: reposition middle
                 if (p.Text.Contains("@+"))
+                {
                     p.Text = "{\\an8}" + p.Text.Replace("@+", string.Empty).Replace("@|", string.Empty);
+                }
                 else if (p.Text.Contains("@|"))
+                {
                     p.Text = "{\\an5}" + p.Text.Replace("@+", string.Empty).Replace("@|", string.Empty);
+                }
             }
 
             subtitle.Renumber();

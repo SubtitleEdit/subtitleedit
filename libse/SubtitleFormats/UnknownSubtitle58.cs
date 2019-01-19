@@ -36,11 +36,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             _errorCount = 0;
             var sb = new StringBuilder();
             foreach (string line in lines)
+            {
                 sb.AppendLine(line);
+            }
 
             string rtf = sb.ToString().Trim();
             if (!rtf.StartsWith("{\\rtf", StringComparison.Ordinal))
+            {
                 return;
+            }
 
             var arr = rtf.FromRtf().SplitToLines();
             var p = new Paragraph();
@@ -49,7 +53,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 string s = line.Trim();
                 if (s.StartsWith('[') && s.EndsWith('>') && s.Length > 13 && s[12] == ']')
+                {
                     s = s.Substring(0, 13);
+                }
 
                 var match = RegexTimeCodes.Match(s);
                 if (match.Success)
@@ -89,11 +95,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         return;
                     }
                     while (p.Text.Contains(Environment.NewLine + " "))
+                    {
                         p.Text = p.Text.Replace(Environment.NewLine + " ", Environment.NewLine);
+                    }
                 }
             }
             if (!string.IsNullOrEmpty(p.Text))
+            {
                 subtitle.Paragraphs.Add(p);
+            }
 
             subtitle.RemoveEmptyLines();
             subtitle.Renumber();

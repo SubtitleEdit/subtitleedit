@@ -25,7 +25,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override bool IsMine(List<string> lines, string fileName)
         {
             if (lines == null || lines.Count > 2 && !string.IsNullOrEmpty(lines[0]) && lines[0].Contains("{QTtext}"))
+            {
                 return false;
+            }
 
             return base.IsMine(lines, fileName);
         }
@@ -70,7 +72,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 ReadLine(subtitle, line);
                 if (_text.Length > 1000)
+                {
                     return;
+                }
             }
             if (_text != null && _text.ToString().TrimStart().Length > 0)
             {
@@ -134,30 +138,51 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                     int durationSeconds = 0;
                     if (parts[4] != "-")
+                    {
                         durationSeconds = int.Parse(parts[4]);
+                    }
+
                     int durationMilliseconds = 0;
                     if (parts[5] != "--")
+                    {
                         durationMilliseconds = FramesToMillisecondsMax999(int.Parse(parts[5]));
+                    }
 
                     int endHours = 0;
                     if (parts[6] != "--")
+                    {
                         endHours = int.Parse(parts[6]);
+                    }
+
                     int endMinutes = 0;
                     if (parts[7] != "--")
+                    {
                         endMinutes = int.Parse(parts[7]);
+                    }
+
                     int endSeconds = 0;
                     if (parts[8] != "--")
+                    {
                         endSeconds = int.Parse(parts[8]);
+                    }
+
                     int endMilliseconds = 0;
                     if (parts[9] != "--")
+                    {
                         endMilliseconds = FramesToMillisecondsMax999(int.Parse(parts[9]));
+                    }
 
                     paragraph.StartTime = new TimeCode(startHours, startMinutes, startSeconds, startMilliseconds);
 
                     if (durationSeconds > 0 || durationMilliseconds > 0)
+                    {
                         paragraph.EndTime.TotalMilliseconds = paragraph.StartTime.TotalMilliseconds + (durationSeconds * 1000 + durationMilliseconds);
+                    }
                     else
+                    {
                         paragraph.EndTime = new TimeCode(endHours, endMinutes, endSeconds, endMilliseconds);
+                    }
+
                     return true;
                 }
                 catch

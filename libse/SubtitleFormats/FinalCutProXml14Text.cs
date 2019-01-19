@@ -17,9 +17,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override string ToText(Subtitle subtitle, string title)
         {
             if (Configuration.Settings.General.CurrentFrameRate > 26)
+            {
                 FrameRate = 30;
+            }
             else
+            {
                 FrameRate = 25;
+            }
 
             string xmlStructure =
                 "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>" + Environment.NewLine +
@@ -75,19 +79,31 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                 XmlNode generatorNode = video.SelectSingleNode("title");
                 if (IsNearleWholeNumber(p.StartTime.TotalSeconds))
+                {
                     generatorNode.Attributes["offset"].Value = Convert.ToInt64(p.StartTime.TotalSeconds) + "s";
+                }
                 else
+                {
                     generatorNode.Attributes["offset"].Value = FinalCutProXml15.GetFrameTime(p.StartTime);
+                }
 
                 if (IsNearleWholeNumber(p.Duration.TotalSeconds))
+                {
                     generatorNode.Attributes["duration"].Value = Convert.ToInt64(p.Duration.TotalSeconds) + "s";
+                }
                 else
+                {
                     generatorNode.Attributes["duration"].Value = FinalCutProXml15.GetFrameTime(p.Duration);
+                }
 
                 if (IsNearleWholeNumber(p.StartTime.TotalSeconds))
+                {
                     generatorNode.Attributes["start"].Value = Convert.ToInt64(p.StartTime.TotalSeconds) + "s";
+                }
                 else
+                {
                     generatorNode.Attributes["start"].Value = FinalCutProXml15.GetFrameTime(p.StartTime);
+                }
 
                 XmlNode param = video.SelectSingleNode("title/text/text-style");
                 param.InnerText = HtmlUtil.RemoveHtmlTags(p.Text);
@@ -117,7 +133,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             lines.ForEach(line => sb.AppendLine(line));
             string x = sb.ToString();
             if (!x.Contains("<fcpxml version=\"1.4\">"))
+            {
                 return;
+            }
 
             var xml = new XmlDocument();
             try
@@ -145,10 +163,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             {
                                 var prev = subtitle.Paragraphs[subtitle.Paragraphs.Count - 1];
                                 if (prev.Text == p.Text && prev.StartTime.TotalMilliseconds == p.StartTime.TotalMilliseconds)
+                                {
                                     add = false;
+                                }
                             }
                             if (add)
+                            {
                                 subtitle.Paragraphs.Add(p);
+                            }
                         }
                         catch
                         {

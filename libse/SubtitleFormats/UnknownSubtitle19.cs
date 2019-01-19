@@ -70,7 +70,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             string allText = sb.ToString();
             if (!allText.Contains("</Subtitle>") || !allText.Contains("<Clip "))
+            {
                 return;
+            }
 
             var xml = new XmlDocument { XmlResolver = null };
             try

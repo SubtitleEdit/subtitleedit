@@ -253,9 +253,13 @@ namespace Nikse.SubtitleEdit.Core
             foreach (char character in backslashed.ToString())
             {
                 if (character <= 0x7f)
+                {
                     sb.Append(character);
+                }
                 else
+                {
                     sb.Append("\\u" + Convert.ToUInt32(character) + "?");
+                }
             }
 
             return @"{\rtf1\ansi\ansicpg1252\deff0{\fonttbl\f0\fswiss Helvetica;}\f0\pard " + sb + @"\par" + Environment.NewLine + "}";

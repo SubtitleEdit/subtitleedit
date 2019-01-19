@@ -24,9 +24,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     string s = RemoveIllegalSpacesAndFixEmptyCodes(line);
                     if (RegexMPlayer2Line.IsMatch(s))
+                    {
                         trimmedLines.Add(line);
+                    }
                     else
+                    {
                         errors++;
+                    }
                 }
                 else
                 {
@@ -79,7 +83,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 foreach (string line in parts)
                 {
                     if (count > 0)
+                    {
                         sb.Append('|');
+                    }
 
                     if (line.StartsWith("<i>", StringComparison.Ordinal) || italicOn)
                     {
@@ -88,7 +94,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
 
                     if (line.Contains("</i>"))
+                    {
                         italicOn = false;
+                    }
+
                     sb.Append(HtmlUtil.RemoveHtmlTags(line));
                     count++;
                 }
@@ -114,11 +123,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         {
                             string text = s.Substring(textIndex);
                             if (text.StartsWith('/') && (Utilities.CountTagInText(text, '|') == 0 || text.Contains("|/")))
+                            {
                                 text = "<i>" + text.TrimStart('/').Replace("|/", Environment.NewLine) + "</i>";
+                            }
                             else if (text.StartsWith('/') && text.Contains('|') && !text.Contains("|/"))
+                            {
                                 text = "<i>" + text.TrimStart('/').Replace("|", "</i>" + Environment.NewLine);
+                            }
                             else if (text.Contains("|/"))
+                            {
                                 text = text.Replace("|/", Environment.NewLine + "<i>") + "</i>";
+                            }
+
                             text = text.Replace("|", Environment.NewLine);
                             string temp = s.Substring(0, textIndex - 1);
                             string[] frames = temp.Replace("][", ":").Replace("[", string.Empty).Replace("]", string.Empty).Split(':');
@@ -127,9 +143,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             double endSeconds = double.Parse(frames[1]) / 10;
 
                             if (Math.Abs(startSeconds) < 0.01 && subtitle.Paragraphs.Count > 0)
+                            {
                                 startSeconds = (subtitle.Paragraphs[subtitle.Paragraphs.Count - 1].EndTime.TotalMilliseconds / 1000) + 0.1;
+                            }
+
                             if (Math.Abs(endSeconds) < 0.01)
+                            {
                                 endSeconds = startSeconds;
+                            }
 
                             subtitle.Paragraphs.Add(new Paragraph(text, startSeconds * 1000, endSeconds * 1000));
                         }

@@ -63,7 +63,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             string xmlString = sb.ToString();
             if (!xmlString.Contains("<BDN"))
+            {
                 return;
+            }
 
             var xml = new XmlDocument { XmlResolver = null };
             try
@@ -84,10 +86,16 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     string end = node.Attributes["OutTC"].InnerText;
                     var textBuilder = new StringBuilder();
                     foreach (XmlNode graphic in node.SelectNodes("Graphic"))
+                    {
                         textBuilder.AppendLine(graphic.InnerText);
+                    }
+
                     var p = new Paragraph(textBuilder.ToString().Trim(), DecodeTimeCodeFrames(start, splitChars).TotalMilliseconds, DecodeTimeCodeFrames(end, splitChars).TotalMilliseconds);
                     if (node.Attributes["Forced"] != null && node.Attributes["Forced"].Value.Equals("true", StringComparison.OrdinalIgnoreCase))
+                    {
                         p.Forced = true;
+                    }
+
                     subtitle.Paragraphs.Add(p);
                 }
                 catch (Exception ex)

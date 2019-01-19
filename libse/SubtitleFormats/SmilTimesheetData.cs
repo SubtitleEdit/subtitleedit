@@ -18,9 +18,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             var sb = new StringBuilder();
             foreach (string l in lines)
+            {
                 sb.AppendLine(l);
+            }
+
             if (!sb.ToString().Contains(" data-begin"))
+            {
                 return false;
+            }
 
             return base.IsMine(lines, fileName);
         }
@@ -53,9 +58,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 Paragraph next = subtitle.GetParagraphOrDefault(count);
                 string text = p.Text;
                 if (next != null && Math.Abs(next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds) < 100)
+                {
                     sb.AppendLine(string.Format(paragraphWriteFormatOpen, EncodeTime(p.StartTime), text));
+                }
                 else
+                {
                     sb.AppendLine(string.Format(paragraphWriteFormat, EncodeTime(p.StartTime), EncodeTime(p.EndTime), text));
+                }
+
                 count++;
             }
             sb.AppendLine("\t</div>");
@@ -68,16 +78,25 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             //3:15:22
             if (time.Hours > 0)
+            {
                 return $"{time.Hours:00}:{time.Minutes:00}:{time.Seconds:00}.{time.Milliseconds / 10:00}";
+            }
+
             if (time.Minutes > 9)
+            {
                 return $"{time.Minutes:00}:{time.Seconds:00}.{time.Milliseconds / 10:00}";
+            }
+
             return $"{time.Minutes}:{time.Seconds:00}.{time.Milliseconds / 10:00}";
         }
 
         private static TimeCode DecodeTimeCode(string[] s)
         {
             if (s.Length == 3)
+            {
                 return new TimeCode(0, int.Parse(s[0]), int.Parse(s[1]), int.Parse(s[2]) * 10);
+            }
+
             return new TimeCode(int.Parse(s[0]), int.Parse(s[1]), int.Parse(s[2]), int.Parse(s[3]) * 10);
         }
 
@@ -86,7 +105,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             _errorCount = 0;
             var sb = new StringBuilder();
             foreach (string l in lines)
+            {
                 sb.AppendLine(l);
+            }
+
             string allInput = sb.ToString();
             string allInputLower = allInput.ToLower();
             const string syncTag = "<p ";
@@ -112,11 +134,19 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         text = text.Replace("<br />", Environment.NewLine);
                         text = text.Replace("\t", " ");
                         while (text.Contains("  "))
+                        {
                             text = text.Replace("  ", " ");
+                        }
+
                         while (text.Contains(Environment.NewLine + " "))
+                        {
                             text = text.Replace(Environment.NewLine + " ", Environment.NewLine);
+                        }
+
                         while (text.Contains(Environment.NewLine + Environment.NewLine))
+                        {
                             text = text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
+                        }
 
                         string begin = s.Substring(indexOfBegin + " data-begin=".Length);
                         tcBegin.Clear();
@@ -194,7 +224,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             foreach (Paragraph p2 in subtitle.Paragraphs)
+            {
                 p2.Text = WebUtility.HtmlDecode(p2.Text);
+            }
 
             subtitle.Renumber();
         }

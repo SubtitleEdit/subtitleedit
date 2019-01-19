@@ -17,7 +17,9 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
             Buffer = new byte[20];
             int bytesRead = fs.Read(Buffer, 0, Buffer.Length);
             if (bytesRead < Buffer.Length)
+            {
                 return;
+            }
 
             CreationTime = GetUInt(4);
             ModificationTime = GetUInt(8);

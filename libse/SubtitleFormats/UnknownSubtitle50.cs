@@ -41,7 +41,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 string text = p.Text;
                 if (Utilities.GetNumberOfLines(text) > 2)
+                {
                     text = Utilities.AutoBreakLine(text);
+                }
+
                 text = HtmlUtil.RemoveHtmlTags(text, true);
                 if (p.Text.Contains("<i>"))
                 {
@@ -61,7 +64,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
 
                 if (!text.Contains(Environment.NewLine))
+                {
                     text = Environment.NewLine + text;
+                }
+
                 sb.AppendLine(string.Format(paragraphWriteFormat, FormatTime(p.StartTime), FormatTime(p.EndTime), text));
             }
             sb.AppendLine();
@@ -109,7 +115,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     else
                     {
                         if (line.StartsWith("||"))
+                        {
                             line = "<i>" + line.Replace("||", string.Empty) + "</i>";
+                        }
+
                         p.Text = line.Trim();
                         expecting = ExpectingLine.Text2;
                     }
@@ -124,14 +133,19 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     else
                     {
                         if (line.StartsWith("||", StringComparison.Ordinal))
+                        {
                             line = "<i>" + line.Replace("||", string.Empty) + "</i>";
+                        }
+
                         p.Text = (p.Text + Environment.NewLine + line).Trim();
                         expecting = ExpectingLine.TimeCodes;
                     }
                 }
             }
             if (!string.IsNullOrWhiteSpace(p.Text))
+            {
                 subtitle.Paragraphs.Add(p);
+            }
 
             subtitle.Renumber();
         }

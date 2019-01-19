@@ -18,7 +18,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             foreach (var p in subtitle.Paragraphs)
             {
                 if (count > 0)
+                {
                     sb.Append(", ");
+                }
+
                 sb.Append("{ \"t\":\"");
                 sb.Append(Json.EncodeJsonText(p.Text.Replace(Environment.NewLine, "\\n")));
                 sb.Append("\", \"s\":");
@@ -37,10 +40,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             _errorCount = 0;
             var sb = new StringBuilder();
             foreach (string s in lines)
+            {
                 sb.Append(s);
+            }
+
             string allText = sb.ToString().Trim();
             if (!(allText.StartsWith("{", StringComparison.Ordinal) || allText.Contains("captionGroups", StringComparison.Ordinal)))
+            {
                 return;
+            }
 
             var parser = new JsonParser();
             Dictionary<string, object> dictionary;
@@ -55,10 +63,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             foreach (var k in dictionary.Keys)
             {
-                if (k != "captionGroups" || !(dictionary[k] is List<object> captionGroups)) continue;
+                if (k != "captionGroups" || !(dictionary[k] is List<object> captionGroups))
+                {
+                    continue;
+                }
+
                 foreach (var item in captionGroups)
                 {
-                    if (!(item is Dictionary<string, object> line)) continue;
+                    if (!(item is Dictionary<string, object> line))
+                    {
+                        continue;
+                    }
+
                     var text = string.Empty;
                     var start = -1d;
                     var end = -1d;

@@ -155,7 +155,10 @@ namespace Nikse.SubtitleEdit.Core.Translate
                 var f = new Formatting();
                 formattings[index] = f;
                 if (input.Length > 0)
+                {
                     input.Append("&");
+                }
+
                 var text = f.SetTagsAndReturnTrimmed(TranslationHelper.PreTranslate(p.Text, sourceLanguage), sourceLanguage);
                 input.Append("q=" + Utilities.UrlEncode(text));
             }

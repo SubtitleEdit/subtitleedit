@@ -72,9 +72,14 @@ namespace Nikse.SubtitleEdit.Core
             const string post = " <!?.:;,♪♫)]";
 
             if (text.StartsWith("I-i ", StringComparison.Ordinal))
+            {
                 text = text.Remove(0, 3).Insert(0, "I-I");
+            }
+
             if (text.StartsWith("I-if ", StringComparison.Ordinal))
+            {
                 text = text.Remove(0, 4).Insert(0, "I-If ");
+            }
 
             for (var indexOfI = text.IndexOf('i'); indexOfI >= 0; indexOfI = text.IndexOf('i', indexOfI + 1))
             {
@@ -172,7 +177,9 @@ namespace Nikse.SubtitleEdit.Core
             if (FixNormal)
             {
                 if (FixNormalOnlyAllUppercase && text != text.ToUpper(subtitleCulture))
+                {
                     return text;
+                }
 
                 if (text.Length > 1)
                 {
@@ -195,7 +202,10 @@ namespace Nikse.SubtitleEdit.Core
                 text = text.ToLower(subtitleCulture);
             }
             if (original != text)
+            {
                 NoOfLinesChanged++;
+            }
+
             return text;
         }
 

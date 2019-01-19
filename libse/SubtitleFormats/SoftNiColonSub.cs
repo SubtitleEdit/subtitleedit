@@ -44,7 +44,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     // Append line break in every line except the first one
                     if (count > 0)
+                    {
                         lineSb.Append(Environment.NewLine);
+                    }
 
                     var tempLine = line;
 
@@ -82,7 +84,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                 // Add top-position SoftNI marker "}" at the beginning of first line.
                 if (positionTop)
+                {
                     text = "}" + text;
+                }
 
                 sb.AppendLine($"{text}{Environment.NewLine}{p.StartTime.ToHHMMSSPeriodFF().Replace(".", ":")}\\{p.EndTime.ToHHMMSSPeriodFF().Replace(".", ":")}");
             }
@@ -166,11 +170,16 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 {
                                     // Append line break in every line except the first one
                                     if (count > 0)
+                                    {
                                         lineSb.Append(Environment.NewLine);
+                                    }
+
                                     var tempLine = subtitleLine;
                                     // Close italics in every line (if next line is in italics, SoftNI will use "[" at the beginning)
                                     if (Utilities.CountTagInText(tempLine, "<i>") > Utilities.CountTagInText(tempLine, "</i>"))
+                                    {
                                         tempLine = tempLine + "</i>";
+                                    }
 
                                     lineSb.Append(tempLine);
                                     count++;
@@ -182,11 +191,16 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                                 // Subtitle appears at the top (add tag)
                                 if (positionTop)
+                                {
                                     text = "{\\an8}" + text;
+                                }
 
                                 p.Text = text;
                                 if (text.Length > 0)
+                                {
                                     subtitle.Paragraphs.Add(p);
+                                }
+
                                 sb.Clear();
                             }
                             catch (Exception exception)

@@ -44,12 +44,16 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             //00:03:15 (last is SECONDS)
             ts = new TimeCode(ts.TotalMilliseconds);
             if (ts.Milliseconds >= 500)
+            {
                 ts.TotalMilliseconds += TimeCode.BaseUnit;
+            }
 
             var s = string.Format("{0:00}:{1:00}:{2:00}", ts.Hours, ts.Minutes, ts.Seconds);
 
             if (ts.TotalMilliseconds >= 0)
+            {
                 return s;
+            }
 
             return "-" + s.RemoveChar('-');
         }
@@ -72,10 +76,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     if (!string.IsNullOrEmpty(line))
                     {
                         if (long.TryParse(line, out long l))
+                        {
                             expecting = ExpectingLine.TimeAndText;
+                        }
                         else
+                        {
                             _errorCount++;
-
+                        }
                     }
                 }
                 else if (expecting == ExpectingLine.TimeAndText)
@@ -118,7 +125,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     {
                         p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
                         if (p.Duration.TotalMilliseconds < 0)
+                        {
                             _errorCount++;
+                        }
                     }
                     else if (next.StartTime.TotalMilliseconds - p.StartTime.TotalMilliseconds < Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
                     {

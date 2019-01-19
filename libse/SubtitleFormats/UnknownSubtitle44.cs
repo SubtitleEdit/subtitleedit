@@ -28,7 +28,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 var text = new StringBuilder();
                 text.Append(HtmlUtil.RemoveHtmlTags(p.Text.Replace(Environment.NewLine, " ")));
                 while (text.Length < 34)
+                {
                     text.Append(' ');
+                }
+
                 sb.AppendFormat("{0}{1}", text, EncodeTimeCode(p.StartTime));
                 if (index % 50 == 1)
                 {
@@ -41,7 +44,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     text.Clear();
                     while (text.Length < 34)
+                    {
                         text.Append(' ');
+                    }
+
                     sb.AppendLine($"{text}{EncodeTimeCode(p.EndTime)}");
                 }
             }
@@ -102,12 +108,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 Paragraph current = subtitle.Paragraphs[i];
                 Paragraph next = subtitle.GetParagraphOrDefault(i + 1);
                 if (next != null)
+                {
                     current.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                }
                 else
+                {
                     current.EndTime.TotalMilliseconds = current.StartTime.TotalMilliseconds + Utilities.GetOptimalDisplayMilliseconds(current.Text);
+                }
 
                 if (current.Duration.TotalMilliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
+                {
                     current.EndTime.TotalMilliseconds = current.StartTime.TotalMilliseconds + Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds;
+                }
             }
             subtitle.RemoveEmptyLines();
             subtitle.Renumber();

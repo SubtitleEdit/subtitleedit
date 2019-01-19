@@ -38,7 +38,9 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
         public DvbSubPes(byte[] buffer, int index)
         {
             if (buffer.Length < index + 9)
+            {
                 return;
+            }
 
             StartCode = Helper.GetEndian(buffer, index + 0, 3);
             StreamId = buffer[index + 3];
@@ -60,13 +62,17 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
             HeaderDataLength = buffer[index + 8];
 
             if (buffer.Length <= index + 9 + HeaderDataLength)
+            {
                 return;
+            }
 
             if (StreamId == 0xBD) // 10111101 binary = 189 decimal = 0xBD hex -> private_stream_1
             {
                 int id = buffer[index + 9 + HeaderDataLength];
                 if (id >= 0x20 && id <= 0x40) // x3f 0r x40 ?
+                {
                     SubPictureStreamId = id;
+                }
             }
             if (index + 9 + 4 < buffer.Length)
             {
@@ -95,7 +101,9 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
             {
                 dataSize = buffer.Length - dataIndex;
                 if (dataSize < 0)
+                {
                     return;
+                }
             }
 
             _dataBuffer = new byte[dataSize + 1];
@@ -108,13 +116,19 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
             Length = index + 1;
 
             if (index + 9 >= buffer.Length)
+            {
                 return;
+            }
 
             if (buffer[0 + index] != 0x20)
+            {
                 return;
+            }
 
             if (buffer[1 + index] != 0)
+            {
                 return;
+            }
 
             SubtitleSegments = new List<SubtitleSegment>();
             ClutDefinitions = new List<ClutDefinitionSegment>();
@@ -130,9 +144,13 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                 SubtitleSegments.Add(ss);
                 index += 6 + ss.SegmentLength;
                 if (index + 6 < buffer.Length)
+                {
                     ss = new SubtitleSegment(buffer, index);
+                }
                 else
+                {
                     ss.SyncByte = Helper.B11111111;
+                }
             }
             Length = index;
             int size = index - start;
@@ -164,9 +182,13 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
 
                 index += 6 + ss.SegmentLength;
                 if (index + 6 < _dataBuffer.Length)
+                {
                     ss = new SubtitleSegment(_dataBuffer, index);
+                }
                 else
+                {
                     ss.SyncByte = Helper.B11111111;
+                }
             }
         }
 
@@ -177,7 +199,9 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
             get
             {
                 if (_dataBuffer == null || _dataBuffer.Length < 2)
+                {
                     return 0;
+                }
 
                 return _dataBuffer[0];
             }
@@ -188,7 +212,9 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
             get
             {
                 if (_dataBuffer == null || _dataBuffer.Length < 2)
+                {
                     return 0;
+                }
 
                 return _dataBuffer[1];
             }
@@ -203,7 +229,9 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
         public void ParseSegments()
         {
             if (SubtitleSegments != null)
+            {
                 return;
+            }
 
             SubtitleSegments = new List<SubtitleSegment>();
             ClutDefinitions = new List<ClutDefinitionSegment>();
@@ -235,9 +263,13 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
 
                 index += 6 + ss.SegmentLength;
                 if (index + 6 < _dataBuffer.Length)
+                {
                     ss = new SubtitleSegment(_dataBuffer, index);
+                }
                 else
+                {
                     ss.SyncByte = Helper.B11111111;
+                }
             }
         }
 
@@ -252,14 +284,18 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                         foreach (ClutDefinitionSegment cds in ClutDefinitions)
                         {
                             if (cds.ClutId == rcs.RegionClutId)
+                            {
                                 return cds;
+                            }
                         }
                     }
                 }
             }
 
             if (ClutDefinitions.Count > 0)
+            {
                 return ClutDefinitions[0];
+            }
 
             return null; // TODO: Return default clut
         }
@@ -267,7 +303,9 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
         public Point GetImagePosition(ObjectDataSegment ods)
         {
             if (SubtitleSegments == null)
+            {
                 ParseSegments();
+            }
 
             var p = new Point(0, 0);
 
@@ -301,10 +339,14 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
         public Bitmap GetImage(ObjectDataSegment ods)
         {
             if (SubtitleSegments == null)
+            {
                 ParseSegments();
+            }
 
             if (ods.Image != null)
+            {
                 return ods.Image;
+            }
 
             ClutDefinitionSegment cds = GetClutDefinitionSegment(ods);
             ods.DecodeImage(_dataBuffer, ods.BufferIndex, cds);
@@ -314,7 +356,9 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
         public Bitmap GetImageFull()
         {
             if (SubtitleSegments == null)
+            {
                 ParseSegments();
+            }
 
             int width = 720;
             int height = 576;
@@ -348,10 +392,14 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
         public static string GetStreamIdDescription(int streamId)
         {
             if (0xC0 <= streamId && streamId < 0xE0)
+            {
                 return "ISO/IEC 13818-3 or ISO/IEC 11172-3 or ISO/IEC 13818-7 or ISO/IEC 14496-3 audio stream number " + (streamId & 0x1F).ToString("X4");
+            }
 
             if (0xE0 <= streamId && streamId < 0xF0)
+            {
                 return "ITU-T Rec. H.262 | ISO/IEC 13818-2 or ISO/IEC 11172-2 or ISO/IEC 14496-2 video stream number " + (streamId & 0x0F).ToString("X4");
+            }
 
             switch (streamId)
             {
@@ -382,7 +430,10 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
         public ulong PresentationTimestampToMilliseconds()
         {
             if (PresentationTimestamp.HasValue)
+            {
                 return (ulong)Math.Round(PresentationTimestamp.Value / 90.0);
+            }
+
             return 0;
         }
 

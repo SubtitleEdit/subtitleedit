@@ -67,7 +67,10 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
             get
             {
                 if (Moov?.Mvhd != null && Moov.Mvhd.TimeScale > 0)
+                {
                     return TimeSpan.FromSeconds((double)Moov.Mvhd.Duration / Moov.Mvhd.TimeScale);
+                }
+
                 return new TimeSpan();
             }
         }
@@ -77,7 +80,10 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
             get
             {
                 if (Moov?.Mvhd != null && Moov.Mvhd.TimeScale > 0)
+                {
                     return new DateTime(1904, 1, 1, 0, 0, 0, DateTimeKind.Utc).Add(TimeSpan.FromSeconds(Moov.Mvhd.CreationTime));
+                }
+
                 return DateTime.Now;
             }
         }
@@ -96,7 +102,9 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
                         if (trak?.Mdia != null && trak.Tkhd != null)
                         {
                             if (trak.Mdia.IsVideo)
+                            {
                                 return new System.Drawing.Point((int)trak.Tkhd.Width, (int)trak.Tkhd.Height);
+                            }
                         }
                     }
                 }
@@ -130,17 +138,26 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
             {
                 moreBytes = InitializeSizeAndName(fs);
                 if (Size < 8)
+                {
                     return;
+                }
 
                 if (Name == "moov" && Moov == null)
+                {
                     Moov = new Moov(fs, Position); // only scan first "moov" element
+                }
 
                 count++;
                 if (count > 100)
+                {
                     break;
+                }
 
                 if (Position > (ulong)fs.Length)
+                {
                     break;
+                }
+
                 fs.Seek((long)Position, SeekOrigin.Begin);
             }
             fs.Close();
@@ -177,7 +194,9 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
                 {
                     moreBytes = InitializeSizeAndName(fs);
                     if (Size < 8)
+                    {
                         return list;
+                    }
 
                     if (Name == "mdat")
                     {
@@ -192,7 +211,10 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
                     }
 
                     if (Position > (ulong)fs.Length)
+                    {
                         break;
+                    }
+
                     fs.Seek((long)Position, SeekOrigin.Begin);
                 }
                 fs.Close();
