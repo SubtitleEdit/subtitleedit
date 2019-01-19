@@ -1,6 +1,6 @@
 ﻿namespace Nikse.SubtitleEdit.Forms
 {
-    partial class ExtractDateTimeInfo
+    sealed partial class ExtractDateTimeInfo
     {
         /// <summary>
         /// Required designer variable.

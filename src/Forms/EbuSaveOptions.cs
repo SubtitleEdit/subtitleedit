@@ -88,7 +88,9 @@ namespace Nikse.SubtitleEdit.Forms
             _subtitle = subtitle;
 
             if (_subtitle == null)
+            {
                 tabControl1.TabPages.Remove(tabPageErrors);
+            }
 
             FillFromHeader(header);
             if (!string.IsNullOrEmpty(fileName))
@@ -103,7 +105,10 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 string title = Path.GetFileNameWithoutExtension(fileName);
                 if (title.Length > 32)
+                {
                     title = title.Substring(0, 32).Trim();
+                }
+
                 textBoxOriginalProgramTitle.Text = title;
             }
 
@@ -122,7 +127,9 @@ namespace Nikse.SubtitleEdit.Forms
         private void CheckErrors(Subtitle subtitle)
         {
             if (subtitle == null)
+            {
                 return;
+            }
 
             textBoxErrors.Text = string.Empty;
             var sb = new StringBuilder();
@@ -189,13 +196,21 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             if (header.DisplayStandardCode == "0")
+            {
                 comboBoxDisplayStandardCode.SelectedIndex = 0;
+            }
             else if (header.DisplayStandardCode == "1")
+            {
                 comboBoxDisplayStandardCode.SelectedIndex = 1;
+            }
             else if (header.DisplayStandardCode == "2")
+            {
                 comboBoxDisplayStandardCode.SelectedIndex = 2;
+            }
             else
+            {
                 comboBoxDisplayStandardCode.SelectedIndex = 3;
+            }
 
             comboBoxCharacterCodeTable.SelectedIndex = int.Parse(header.CharacterCodeTableNumber);
             textBoxLanguageCode.Text = header.LanguageCode;
@@ -209,7 +224,10 @@ namespace Nikse.SubtitleEdit.Forms
 
             comboBoxTimeCodeStatus.SelectedIndex = 1;
             if (header.TimeCodeStatus == "0")
+            {
                 comboBoxTimeCodeStatus.SelectedIndex = 0; // 1 == intended for use, 0 == not intended for use
+            }
+
             try
             {
                 // HHMMSSFF
@@ -226,25 +244,42 @@ namespace Nikse.SubtitleEdit.Forms
 
             int number;
             if (int.TryParse(header.RevisionNumber, out number))
+            {
                 numericUpDownRevisionNumber.Value = number;
+            }
             else
+            {
                 numericUpDownRevisionNumber.Value = 1;
+            }
 
             if (int.TryParse(header.MaximumNumberOfDisplayableCharactersInAnyTextRow, out number))
+            {
                 numericUpDownMaxCharacters.Value = number;
+            }
 
             numericUpDownMaxRows.Value = 23;
             if (int.TryParse(header.MaximumNumberOfDisplayableRows, out number))
+            {
                 numericUpDownMaxRows.Value = number;
+            }
 
             if (int.TryParse(header.DiskSequenceNumber, out number))
+            {
                 numericUpDownDiskSequenceNumber.Value = number;
+            }
             else
+            {
                 numericUpDownDiskSequenceNumber.Value = 1;
+            }
+
             if (int.TryParse(header.TotalNumberOfDisks, out number))
+            {
                 numericUpDownTotalNumberOfDiscs.Value = number;
+            }
             else
+            {
                 numericUpDownTotalNumberOfDiscs.Value = 1;
+            }
         }
 
         private void buttonOK_Click(object sender, EventArgs e)
@@ -256,15 +291,25 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             if (comboBoxDiscFormatCode.SelectedIndex == 0)
+            {
                 _header.DiskFormatCode = "STL23.01";
+            }
             else if (comboBoxDiscFormatCode.SelectedIndex == 1)
+            {
                 _header.DiskFormatCode = "STL24.01";
+            }
             else if (comboBoxDiscFormatCode.SelectedIndex == 2)
+            {
                 _header.DiskFormatCode = "STL25.01";
+            }
             else if (comboBoxDiscFormatCode.SelectedIndex == 3)
+            {
                 _header.DiskFormatCode = "STL29.01";
+            }
             else
+            {
                 _header.DiskFormatCode = "STL30.01";
+            }
 
             double d;
             if (double.TryParse(comboBoxFrameRate.Text.Replace(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, "."), out d) && d > 20 && d < 200)
@@ -273,18 +318,29 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             if (comboBoxDisplayStandardCode.SelectedIndex == 0)
+            {
                 _header.DisplayStandardCode = "0";
+            }
             else if (comboBoxDisplayStandardCode.SelectedIndex == 1)
+            {
                 _header.DisplayStandardCode = "1";
+            }
             else if (comboBoxDisplayStandardCode.SelectedIndex == 2)
+            {
                 _header.DisplayStandardCode = "2";
+            }
             else
+            {
                 _header.DisplayStandardCode = " ";
+            }
 
             _header.CharacterCodeTableNumber = "0" + comboBoxCharacterCodeTable.SelectedIndex;
             _header.LanguageCode = textBoxLanguageCode.Text;
             if (_header.LanguageCode.Length != 2)
+            {
                 _header.LanguageCode = "0A";
+            }
+
             _header.OriginalProgrammeTitle = textBoxOriginalProgramTitle.Text.PadRight(32, ' ');
             _header.OriginalEpisodeTitle = textBoxOriginalEpisodeTitle.Text.PadRight(32, ' ');
             _header.TranslatedProgrammeTitle = textBoxTranslatedProgramTitle.Text.PadRight(32, ' ');
@@ -293,7 +349,10 @@ namespace Nikse.SubtitleEdit.Forms
             _header.SubtitleListReferenceCode = textBoxSubtitleListReferenceCode.Text.PadRight(16, ' ');
             _header.CountryOfOrigin = textBoxCountryOfOrigin.Text;
             if (_header.CountryOfOrigin.Length != 3)
+            {
                 _header.CountryOfOrigin = "USA";
+            }
+
             _header.TimeCodeStatus = comboBoxTimeCodeStatus.SelectedIndex.ToString(CultureInfo.InvariantCulture);
             _header.TimeCodeStartOfProgramme = timeUpDownStartTime.TimeCode.ToHHMMSSFF().RemoveChar(':');
 
@@ -344,7 +403,9 @@ namespace Nikse.SubtitleEdit.Forms
                 if (ebu.JustificationCodes.Count > 2 && ebu.JustificationCodes[1] == ebu.JustificationCodes[2])
                 {
                     if (ebu.JustificationCodes[1] >= 0 && ebu.JustificationCodes[1] < 4)
+                    {
                         comboBoxJustificationCode.SelectedIndex = ebu.JustificationCodes[1];
+                    }
                 }
             }
         }

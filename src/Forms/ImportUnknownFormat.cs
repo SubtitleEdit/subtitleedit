@@ -38,7 +38,10 @@ namespace Nikse.SubtitleEdit.Forms
         private void GeneratePreview()
         {
             if (_refreshTimer.Enabled)
+            {
                 _refreshTimer.Stop();
+            }
+
             _refreshTimer.Start();
         }
 
@@ -50,7 +53,9 @@ namespace Nikse.SubtitleEdit.Forms
             groupBoxImportResult.Text = string.Format(Configuration.Settings.Language.ImportText.PreviewLinesModifiedX, ImportedSubitle.Paragraphs.Count);
             SubtitleListview1.Fill(ImportedSubitle);
             if (ImportedSubitle.Paragraphs.Count > 0)
+            {
                 SubtitleListview1.SelectIndexAndEnsureVisible(0);
+            }
         }
 
         private void RefreshTimerTick(object sender, EventArgs e)

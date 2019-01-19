@@ -41,7 +41,9 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         var index = _subtitle.GetIndex(item.Tag as Paragraph);
                         if (_deleteIndices.Contains(index))
+                        {
                             resultList.Add(index);
+                        }
                     }
                 }
                 return resultList;
@@ -163,9 +165,13 @@ namespace Nikse.SubtitleEdit.Forms
                 foreach (var fileName in importFileNames)
                 {
                     if (fileName.Equals("."))
+                    {
                         Configuration.Settings.MultipleSearchAndReplaceGroups.AddRange(savedList);
+                    }
                     else
+                    {
                         ImportRulesFile(fileName);
+                    }
                 }
                 RunFromBatch(subtitle);
             }
@@ -178,9 +184,13 @@ namespace Nikse.SubtitleEdit.Forms
         private void MultipleReplace_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)
+            {
                 buttonCancel_Click(null, null);
+            }
             else if (e.KeyCode == UiUtil.HelpKeys)
+            {
                 Utilities.ShowHelp("#multiple_replace");
+            }
         }
 
         private void RadioButtonCheckedChanged(object sender, EventArgs e)
@@ -191,14 +201,18 @@ namespace Nikse.SubtitleEdit.Forms
         private void ButtonAddClick(object sender, EventArgs e)
         {
             if (_currentGroup == null)
+            {
                 return;
+            }
 
             string findText = textBoxFind.Text.RemoveControlCharacters();
             if (findText.Length > 0)
             {
                 string searchType = ReplaceExpression.SearchTypeNormal;
                 if (radioButtonCaseSensitive.Checked)
+                {
                     searchType = ReplaceExpression.SearchTypeCaseSensitive;
+                }
                 else if (radioButtonRegEx.Checked)
                 {
                     searchType = ReplaceExpression.SearchTypeRegularExpression;
@@ -338,18 +352,30 @@ namespace Nikse.SubtitleEdit.Forms
         private static string LocalSearchTypeToEnglish(string searchType)
         {
             if (searchType == Configuration.Settings.Language.MultipleReplace.RegularExpression)
+            {
                 return ReplaceExpression.SearchTypeRegularExpression;
+            }
+
             if (searchType == Configuration.Settings.Language.MultipleReplace.CaseSensitive)
+            {
                 return ReplaceExpression.SearchTypeCaseSensitive;
+            }
+
             return ReplaceExpression.SearchTypeNormal;
         }
 
         private static string EnglishSearchTypeToLocal(string searchType)
         {
             if (searchType == ReplaceExpression.SearchTypeRegularExpression)
+            {
                 return Configuration.Settings.Language.MultipleReplace.RegularExpression;
+            }
+
             if (searchType == ReplaceExpression.SearchTypeCaseSensitive)
+            {
                 return Configuration.Settings.Language.MultipleReplace.CaseSensitive;
+            }
+
             return Configuration.Settings.Language.MultipleReplace.Normal;
         }
 
@@ -368,14 +394,18 @@ namespace Nikse.SubtitleEdit.Forms
                 var p = _original.Paragraphs[index];
                 var f = FixedSubtitle.GetParagraphOrDefault(index);
                 if (f != null && f.Text != p.Text)
+                {
                     FixCount++;
+                }
             }
         }
 
         private void SaveReplaceList(bool saveToDisk)
         {
             if (saveToDisk)
+            {
                 Configuration.Settings.Save();
+            }
         }
 
         private void ResetUncheckLines()
@@ -393,7 +423,9 @@ namespace Nikse.SubtitleEdit.Forms
         private void DeleteToolStripMenuItemClick(object sender, EventArgs e)
         {
             if (listViewRules.Items.Count < 1 || listViewRules.SelectedItems.Count < 1 || _currentGroup == null)
+            {
                 return;
+            }
 
             for (int i = listViewRules.Items.Count - 1; i >= 0; i--)
             {
@@ -432,21 +464,32 @@ namespace Nikse.SubtitleEdit.Forms
             else if (listViewRules.SelectedItems.Count == 1)
             {
                 if (e.KeyCode == Keys.Up && e.Control && !e.Alt && !e.Shift)
+                {
                     moveUpToolStripMenuItem_Click(sender, e);
+                }
+
                 if (e.KeyCode == Keys.Down && e.Control && !e.Alt && !e.Shift)
+                {
                     moveDownToolStripMenuItem_Click(sender, e);
+                }
 
                 if (e.KeyData == (Keys.Control | Keys.Home))
+                {
                     moveTopToolStripMenuItem_Click(sender, e);
+                }
                 else if (e.KeyData == (Keys.Control | Keys.End))
+                {
                     moveBottomToolStripMenuItem_Click(sender, e);
+                }
             }
         }
 
         private void ButtonUpdateClick(object sender, EventArgs e)
         {
             if (listViewRules.SelectedItems.Count != 1 || _currentGroup == null)
+            {
                 return;
+            }
 
             string findText = textBoxFind.Text.RemoveControlCharacters();
             textBoxFind.Text = findText;
@@ -497,11 +540,18 @@ namespace Nikse.SubtitleEdit.Forms
                 textBoxReplace.Text = listViewRules.SelectedItems[0].SubItems[2].Text;
                 string searchType = LocalSearchTypeToEnglish(listViewRules.SelectedItems[0].SubItems[3].Text);
                 if (searchType == ReplaceExpression.SearchTypeRegularExpression)
+                {
                     radioButtonRegEx.Checked = true;
+                }
                 else if (searchType == ReplaceExpression.SearchTypeCaseSensitive)
+                {
                     radioButtonCaseSensitive.Checked = true;
+                }
                 else
+                {
                     radioButtonNormal.Checked = true;
+                }
+
                 textBoxDescription.Text = listViewRules.SelectedItems[0].SubItems[4].Text;
             }
             else
@@ -513,19 +563,25 @@ namespace Nikse.SubtitleEdit.Forms
         private void TextBoxReplaceKeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
+            {
                 ButtonAddClick(null, null);
+            }
         }
 
         private void buttonReplacesSelectAll_Click(object sender, EventArgs e)
         {
             foreach (ListViewItem item in listViewFixes.Items)
+            {
                 item.Checked = true;
+            }
         }
 
         private void buttonReplacesInverseSelection_Click(object sender, EventArgs e)
         {
             foreach (ListViewItem item in listViewFixes.Items)
+            {
                 item.Checked = !item.Checked;
+            }
         }
 
         private void contextMenuStrip1_Opening(object sender, System.ComponentModel.CancelEventArgs e)
@@ -582,7 +638,9 @@ namespace Nikse.SubtitleEdit.Forms
         {
             int index = listViewRules.SelectedIndices[0];
             if (index == 0)
+            {
                 return;
+            }
 
             SwapRules(index, index - 1);
         }
@@ -590,7 +648,9 @@ namespace Nikse.SubtitleEdit.Forms
         private void SwapRules(int index, int index2)
         {
             if (_currentGroup == null)
+            {
                 return;
+            }
 
             listViewRules.ItemChecked -= ListViewRulesItemChecked;
 
@@ -628,7 +688,9 @@ namespace Nikse.SubtitleEdit.Forms
         {
             int index = listViewRules.SelectedIndices[0];
             if (index == listViewRules.Items.Count - 1)
+            {
                 return;
+            }
 
             SwapRules(index, index + 1);
         }
@@ -637,10 +699,14 @@ namespace Nikse.SubtitleEdit.Forms
         {
             int index = listViewRules.SelectedIndices[0];
             if (index == 0)
+            {
                 return;
+            }
 
             if (_currentGroup == null)
+            {
                 return;
+            }
 
             var temp = _currentGroup.Rules[index];
             _currentGroup.Rules.Remove(temp);
@@ -654,7 +720,9 @@ namespace Nikse.SubtitleEdit.Forms
             int index = listViewRules.SelectedIndices[0];
             int bottomIndex = listViewRules.Items.Count - 1;
             if (index == bottomIndex)
+            {
                 return;
+            }
 
             var temp = _currentGroup.Rules[index];
             _currentGroup.Rules.Remove(temp);
@@ -669,14 +737,18 @@ namespace Nikse.SubtitleEdit.Forms
         private void ImportRulesFile(string fileName)
         {
             if (_currentGroup == null)
+            {
                 return;
+            }
 
             var doc = new XmlDocument { XmlResolver = null };
             doc.Load(fileName);
 
             var replaceNodes = doc.DocumentElement?.SelectNodes("//MultipleSearchAndReplaceItem");
             if (replaceNodes == null)
+            {
                 return;
+            }
 
             foreach (XmlNode listNode in replaceNodes)
             {
@@ -699,7 +771,10 @@ namespace Nikse.SubtitleEdit.Forms
                     var group = new MultipleSearchAndReplaceGroup();
                     var nameNode = groupNode.SelectSingleNode(GroupName);
                     if (nameNode != null)
+                    {
                         group.Name = nameNode.InnerText;
+                    }
+
                     group.Rules = new List<MultipleSearchAndReplaceSetting>();
                     list.Add(group);
 
@@ -745,22 +820,40 @@ namespace Nikse.SubtitleEdit.Forms
             var item = new MultipleSearchAndReplaceSetting();
             var subNode = listNode.SelectSingleNode(RuleEnabled);
             if (subNode != null)
+            {
                 item.Enabled = Convert.ToBoolean(subNode.InnerText);
+            }
+
             subNode = listNode.SelectSingleNode(FindWhat);
             if (subNode != null)
+            {
                 item.FindWhat = subNode.InnerText;
+            }
+
             subNode = listNode.SelectSingleNode(ReplaceWith);
             if (subNode != null)
+            {
                 item.ReplaceWith = subNode.InnerText;
+            }
+
             subNode = listNode.SelectSingleNode(SearchType);
             if (subNode != null)
+            {
                 item.SearchType = subNode.InnerText;
+            }
+
             subNode = listNode.SelectSingleNode(SearchType);
             if (subNode != null)
+            {
                 item.SearchType = subNode.InnerText;
+            }
+
             subNode = listNode.SelectSingleNode(Description);
             if (subNode != null)
+            {
                 item.Description = subNode.InnerText;
+            }
+
             return item;
         }
 
@@ -818,11 +911,15 @@ namespace Nikse.SubtitleEdit.Forms
         private void listViewGroups_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (listViewGroups.SelectedItems.Count < 1)
+            {
                 return;
+            }
 
             _currentGroup = listViewGroups.SelectedItems[0].Tag as MultipleSearchAndReplaceGroup;
             if (_currentGroup == null)
+            {
                 return;
+            }
 
             listViewRules.ItemChecked -= ListViewRulesItemChecked;
             listViewGroups.ItemChecked -= listViewGroups_ItemChecked;
@@ -852,7 +949,9 @@ namespace Nikse.SubtitleEdit.Forms
         {
             var group = e.Item.Tag as MultipleSearchAndReplaceGroup;
             if (group == null)
+            {
                 return;
+            }
 
             group.Enabled = e.Item.Checked;
             GeneratePreview();
@@ -860,9 +959,10 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ListViewRulesItemChecked(object sender, ItemCheckedEventArgs e)
         {
-            var rule = e.Item.Tag as MultipleSearchAndReplaceSetting;
-            if (rule == null)
+            if (!(e.Item.Tag is MultipleSearchAndReplaceSetting rule))
+            {
                 return;
+            }
 
             rule.Enabled = e.Item.Checked;
             GeneratePreview();
@@ -871,7 +971,9 @@ namespace Nikse.SubtitleEdit.Forms
         private void toolStripMenuItem2_Click(object sender, EventArgs e)
         {
             if (_currentGroup == null)
+            {
                 return;
+            }
 
             _currentGroup.Rules.Clear();
             listViewRules.Items.Clear();
@@ -881,7 +983,9 @@ namespace Nikse.SubtitleEdit.Forms
         private void toolStripMenuItem4_Click(object sender, EventArgs e)
         {
             if (_currentGroup == null || _currentGroup.Rules.Count == 0)
+            {
                 return;
+            }
 
             saveFileDialog1.Title = Configuration.Settings.Language.MultipleReplace.ExportRulesTitle;
             saveFileDialog1.Filter = Configuration.Settings.Language.MultipleReplace.Rules + TemplateFilterExtension;
@@ -914,7 +1018,9 @@ namespace Nikse.SubtitleEdit.Forms
         private void toolStripMenuItem3_Click(object sender, EventArgs e)
         {
             if (_currentGroup == null)
+            {
                 return;
+            }
 
             openFileDialog1.Title = Configuration.Settings.Language.MultipleReplace.ImportRulesTitle;
             openFileDialog1.Filter = Configuration.Settings.Language.MultipleReplace.Rules + TemplateFilterExtension;
@@ -936,7 +1042,9 @@ namespace Nikse.SubtitleEdit.Forms
         private void ToolStripMenuItemRenameClick(object sender, EventArgs e)
         {
             if (_currentGroup == null)
+            {
                 return;
+            }
 
             using (var form = new MultipleReplaceNewGroup(_currentGroup.Name))
             {
@@ -951,14 +1059,19 @@ namespace Nikse.SubtitleEdit.Forms
         private void deleteToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             if (_currentGroup == null)
+            {
                 return;
+            }
 
             var idx = Configuration.Settings.MultipleSearchAndReplaceGroups.IndexOf(_currentGroup);
             Configuration.Settings.MultipleSearchAndReplaceGroups.RemoveAt(idx);
             if (Configuration.Settings.MultipleSearchAndReplaceGroups.Count > 0)
             {
                 if (idx >= Configuration.Settings.MultipleSearchAndReplaceGroups.Count)
+                {
                     idx--;
+                }
+
                 _currentGroup = Configuration.Settings.MultipleSearchAndReplaceGroups[idx];
             }
             else
@@ -1002,11 +1115,15 @@ namespace Nikse.SubtitleEdit.Forms
         private void moveUpToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             if (listViewGroups.Items.Count < 2 || listViewGroups.SelectedItems.Count == 0)
+            {
                 return;
+            }
 
             int index = listViewGroups.SelectedIndices[0];
             if (index == 0)
+            {
                 return;
+            }
 
             SwapGroups(index, index - 1);
         }
@@ -1014,11 +1131,15 @@ namespace Nikse.SubtitleEdit.Forms
         private void moveDownToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             if (listViewGroups.Items.Count < 2 || listViewGroups.SelectedItems.Count == 0)
+            {
                 return;
+            }
 
             int index = listViewGroups.SelectedIndices[0];
             if (index == listViewGroups.Items.Count - 1)
+            {
                 return;
+            }
 
             SwapGroups(index, index + 1);
         }
@@ -1031,11 +1152,15 @@ namespace Nikse.SubtitleEdit.Forms
         private void moveToTopToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (listViewGroups.Items.Count < 2 || listViewGroups.SelectedItems.Count == 0)
+            {
                 return;
+            }
 
             int index = listViewGroups.SelectedIndices[0];
             if (index == 0)
+            {
                 return;
+            }
 
             var temp = Configuration.Settings.MultipleSearchAndReplaceGroups[index];
             Configuration.Settings.MultipleSearchAndReplaceGroups.Remove(temp);
@@ -1047,12 +1172,16 @@ namespace Nikse.SubtitleEdit.Forms
         private void moveToBottomToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (listViewGroups.Items.Count < 2 || listViewGroups.SelectedItems.Count == 0)
+            {
                 return;
+            }
 
             int index = listViewGroups.SelectedIndices[0];
             int bottomIndex = listViewGroups.Items.Count - 1;
             if (index == bottomIndex)
+            {
                 return;
+            }
 
             var temp = Configuration.Settings.MultipleSearchAndReplaceGroups[index];
             Configuration.Settings.MultipleSearchAndReplaceGroups.Remove(temp);

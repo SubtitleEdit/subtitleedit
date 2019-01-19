@@ -45,7 +45,10 @@ namespace Nikse.SubtitleEdit.Forms
             public ComboBoxItem(string text, string value)
             {
                 if (text.Length > 1)
+                {
                     text = char.ToUpper(text[0]) + text.Substring(1).ToLower();
+                }
+
                 Text = text;
 
                 Value = value;
@@ -89,7 +92,9 @@ namespace Nikse.SubtitleEdit.Forms
         internal void Initialize(Subtitle subtitle, Subtitle target, string title, bool googleTranslate, Encoding encoding)
         {
             if (title != null)
+            {
                 Text = title;
+            }
 
             _googleTranslate = googleTranslate;
             if (!_googleTranslate)
@@ -119,9 +124,14 @@ namespace Nikse.SubtitleEdit.Forms
 
             string defaultFromLanguage = LanguageAutoDetect.AutoDetectGoogleLanguage(encoding); // Guess language via encoding
             if (string.IsNullOrEmpty(defaultFromLanguage))
+            {
                 defaultFromLanguage = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle); // Guess language based on subtitle contents
+            }
+
             if (defaultFromLanguage == "he")
+            {
                 defaultFromLanguage = "iw";
+            }
 
             FillComboWithLanguages(comboBoxFrom);
             int i = 0;
@@ -237,7 +247,9 @@ namespace Nikse.SubtitleEdit.Forms
                     index++;
                     progressBar1.Value = index;
                     if (_breakTranslation)
+                    {
                         break;
+                    }
                 }
 
                 if (sourceParagraphs.Count > 0)
@@ -413,10 +425,16 @@ namespace Nikse.SubtitleEdit.Forms
             string cleanText = s.Replace("</p>", string.Empty).Trim();
             int indexOfP = cleanText.IndexOf(SplitterString.Trim(), StringComparison.Ordinal);
             if (indexOfP >= 0 && indexOfP < 4)
+            {
                 cleanText = cleanText.Remove(0, indexOfP);
+            }
+
             cleanText = cleanText.Replace(SplitterString, string.Empty).Trim();
             if (cleanText.Contains('\n') && !cleanText.Contains('\r'))
+            {
                 cleanText = cleanText.Replace("\n", Environment.NewLine);
+            }
+
             cleanText = cleanText.Replace(" ...", "...");
             cleanText = cleanText.Replace("<br/>", Environment.NewLine);
             cleanText = cleanText.Replace("<br />", Environment.NewLine);
@@ -433,9 +451,15 @@ namespace Nikse.SubtitleEdit.Forms
             cleanText = cleanText.Replace("</I>", "</i>");
             cleanText = cleanText.Replace("< i >", "<i>");
             if (cleanText.StartsWith("<i> ", StringComparison.Ordinal))
+            {
                 cleanText = cleanText.Remove(3, 1);
+            }
+
             if (cleanText.EndsWith(" </i>", StringComparison.Ordinal))
+            {
                 cleanText = cleanText.Remove(cleanText.Length - 5, 1);
+            }
+
             cleanText = cleanText.Replace(Environment.NewLine + "<i> ", Environment.NewLine + "<i>");
             cleanText = cleanText.Replace(" </i>" + Environment.NewLine, "</i>" + Environment.NewLine);
 
@@ -602,7 +626,9 @@ namespace Nikse.SubtitleEdit.Forms
                     index++;
                     progressBar1.Value = index;
                     if (_breakTranslation)
+                    {
                         break;
+                    }
                 }
                 if (sb.Length > 0 && !overQuota)
                 {
@@ -636,7 +662,9 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     listViewOther.SelectIndexAndEnsureVisible(index, false);
                     if (first >= 0)
+                    {
                         listViewOther.TopItem = listViewOther.Items[first];
+                    }
                 }
             }
         }
@@ -667,7 +695,9 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         var lang = "." + LanguageAutoDetect.AutoDetectGoogleLanguage(oldSubtitle);
                         if (lang.Length == 3 && s.EndsWith(lang, StringComparison.OrdinalIgnoreCase))
+                        {
                             s = s.Remove(s.Length - 3);
+                        }
                     }
                     return s + "." + _targetTwoLetterIsoLanguageName.ToLower() + subtitleFormat.Extension;
                 }

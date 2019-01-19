@@ -18,14 +18,21 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.FixFonts(this);
             labelPleaseWait.Text = string.Empty;
             if (Configuration.IsRunningOnLinux() && Configuration.Settings.General.MpvVideoOutput == "direct3d")
+            {
                 comboBoxVideoOutput.Text = "vaapi";
+            }
             else
+            {
                 comboBoxVideoOutput.Text = Configuration.Settings.General.MpvVideoOutput;
+            }
+
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             Text = Configuration.Settings.Language.SettingsMpv.Title;
             if (!Configuration.IsRunningOnLinux())
+            {
                 buttonDownload.Text = Configuration.Settings.Language.SettingsMpv.DownloadMpv;
+            }
 
             if (Configuration.IsRunningOnLinux())
             {
@@ -62,7 +69,10 @@ namespace Nikse.SubtitleEdit.Forms
                         string fileName = Path.GetFileName(entry.FilenameInZip);
                         string path = Path.Combine(dictionaryFolder, fileName);
                         if (File.Exists(path))
+                        {
                             path = Path.Combine(dictionaryFolder, fileName + ".new-mpv");
+                        }
+
                         zip.ExtractFile(entry, path);
                     }
                 }
@@ -72,9 +82,14 @@ namespace Nikse.SubtitleEdit.Forms
             labelPleaseWait.Text = string.Empty;
             buttonOK.Enabled = true;
             if (!Configuration.IsRunningOnLinux())
+            {
                 buttonDownload.Enabled = true;
+            }
             else
+            {
                 buttonDownload.Enabled = false;
+            }
+
             MessageBox.Show(Configuration.Settings.Language.SettingsMpv.DownloadMpvOk);
         }
 
@@ -111,7 +126,10 @@ namespace Nikse.SubtitleEdit.Forms
         private void buttonOK_Click(object sender, EventArgs e)
         {
             if (!string.IsNullOrWhiteSpace(comboBoxVideoOutput.Text))
+            {
                 Configuration.Settings.General.MpvVideoOutput = comboBoxVideoOutput.Text;
+            }
+
             DialogResult = DialogResult.OK;
         }
 

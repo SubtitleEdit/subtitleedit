@@ -5,7 +5,7 @@ using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public partial class WaveformGenerateTimeCodes : Form
+    public sealed partial class WaveformGenerateTimeCodes : Form
     {
         public bool StartFromVideoPosition { get; set; }
         public bool DeleteAll { get; set; }

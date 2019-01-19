@@ -20,7 +20,9 @@ namespace Nikse.SubtitleEdit.Forms
         private void DownloadFfmpeg_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)
+            {
                 DialogResult = DialogResult.Cancel;
+            }
         }
 
         private void buttonOK_Click(object sender, EventArgs e)
@@ -72,7 +74,9 @@ namespace Nikse.SubtitleEdit.Forms
 
             string folder = Path.Combine(Configuration.DataDirectory, "ffmpeg");
             if (!Directory.Exists(folder))
+            {
                 Directory.CreateDirectory(folder);
+            }
 
             using (var ms = new MemoryStream(e.Result))
             using (ZipExtractor zip = ZipExtractor.Open(ms))
@@ -85,7 +89,10 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         string path = Path.Combine(folder, fileName);
                         if (fileName.EndsWith("ffmpeg.exe", StringComparison.OrdinalIgnoreCase))
+                        {
                             FFmpegPath = path;
+                        }
+
                         zip.ExtractFile(entry, path);
                     }
                 }

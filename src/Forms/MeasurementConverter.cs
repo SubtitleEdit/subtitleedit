@@ -6,15 +6,15 @@ using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public partial class MeasurementConverter : Form
+    public sealed partial class MeasurementConverter : Form
     {
-        private readonly Color _defaultBackColor = Color.White;
+        private readonly Color _defaultBackColor;
         public MeasurementConverter()
         {
             UiUtil.PreInitialize(this);
             InitializeComponent();
             UiUtil.FixFonts(this);
-
+            _defaultBackColor = Color.White;
             var l = Configuration.Settings.Language.MeasurementConverter;
             Text = l.Title;
             labelConvertFrom.Text = l.ConvertFrom;
@@ -113,13 +113,16 @@ namespace Nikse.SubtitleEdit.Forms
                 comboBoxTo.Items.Add(l.Pounds);
             }
             if (comboBoxTo.Items.Count > 0)
+            {
                 comboBoxTo.SelectedIndex = 0;
+            }
+
             textBoxInput_TextChanged(null, null);
         }
 
         private void ShowResult(double d)
         {
-            textBoxResult.Text = string.Format("{0:0.##}", d);
+            textBoxResult.Text = $"{d:0.##}";
         }
 
         private void comboBoxTo_SelectedIndexChanged(object sender, EventArgs e)
@@ -129,22 +132,25 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
-            this.Close();
+            Close();
         }
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             if (textBoxResult.Text.Length > 0)
+            {
                 Clipboard.SetText(textBoxResult.Text);
+            }
         }
 
         private void textBoxInput_TextChanged(object sender, EventArgs e)
         {
             if (comboBoxFrom.SelectedIndex == -1 || comboBoxTo.SelectedIndex == -1)
+            {
                 return;
+            }
 
-            double d;
-            if (!double.TryParse(textBoxInput.Text, out d))
+            if (!double.TryParse(textBoxInput.Text, out var d))
             {
                 textBoxInput.BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
                 return;
@@ -318,10 +324,14 @@ namespace Nikse.SubtitleEdit.Forms
         private void textBoxInput_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (Char.IsDigit(e.KeyChar))
+            {
                 return;
+            }
 
             if (e.KeyChar == Convert.ToChar(Keys.Back) || (e.KeyChar == '.') || (e.KeyChar == ',') || (e.KeyChar == '-'))
+            {
                 return;
+            }
 
             e.Handled = true;
         }

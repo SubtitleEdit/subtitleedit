@@ -5,7 +5,7 @@ using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public partial class TextPrompt : Form
+    public sealed partial class TextPrompt : Form
     {
         public string InputText { get; set; }
 

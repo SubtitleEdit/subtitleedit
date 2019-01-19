@@ -32,7 +32,9 @@ namespace Nikse.SubtitleEdit.Forms
 
                 int length = (int)file.Length;
                 if (length > 100000)
+                {
                     length = 100000;
+                }
 
                 file.Position = 0;
                 var fileBuffer = new byte[length];
@@ -53,7 +55,9 @@ namespace Nikse.SubtitleEdit.Forms
         private void FormUnknownSubtitle_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)
+            {
                 DialogResult = DialogResult.Cancel;
+            }
         }
 
         private void buttonImportPlainText_Click(object sender, System.EventArgs e)

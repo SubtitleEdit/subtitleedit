@@ -47,7 +47,9 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 var item = (GoogleTranslate.ComboBoxItem)comboBox.Items[i];
                 if (item.Value != FixMsLocale(item.Value))
+                {
                     comboBox.Items.RemoveAt(i);
+                }
             }
         }
 
@@ -150,7 +152,10 @@ namespace Nikse.SubtitleEdit.Forms
         private static string FixMsLocale(string from)
         {
             if ("ar bg zh-CHS zh-CHT cs da nl en et fi fr de el ht he hu id it ja ko lv lt no pl pt ro ru sk sl es sv th tr uk vi".Contains(from))
+            {
                 return from;
+            }
+
             return "en";
         }
 
@@ -174,7 +179,9 @@ namespace Nikse.SubtitleEdit.Forms
         private void GoogleOrMicrosoftTranslate_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)
+            {
                 DialogResult = DialogResult.Cancel;
+            }
         }
 
     }

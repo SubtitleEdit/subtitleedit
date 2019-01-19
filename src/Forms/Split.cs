@@ -58,12 +58,20 @@ namespace Nikse.SubtitleEdit.Forms
             ShowBasic = false;
             _subtitle = subtitle;
             if (string.IsNullOrEmpty(fileName))
+            {
                 textBoxFileName.Text = Configuration.Settings.Language.SplitSubtitle.Untitled;
+            }
             else
+            {
                 textBoxFileName.Text = fileName;
+            }
+
             _fileName = fileName;
             foreach (Paragraph p in _subtitle.Paragraphs)
+            {
                 _totalNumberOfCharacters += HtmlUtil.RemoveHtmlTags(p.Text, true).Length;
+            }
+
             labelLines.Text = string.Format(Configuration.Settings.Language.Split.NumberOfLinesX, _subtitle.Paragraphs.Count);
             labelCharacters.Text = string.Format(Configuration.Settings.Language.Split.NumberOfCharactersX, _totalNumberOfCharacters);
 
@@ -77,38 +85,58 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             if (Configuration.Settings.Tools.SplitVia.Trim().Equals("lines", StringComparison.OrdinalIgnoreCase))
+            {
                 RadioButtonLines.Checked = true;
+            }
             else
+            {
                 radioButtonCharacters.Checked = true;
+            }
 
             UiUtil.InitializeSubtitleFormatComboBox(comboBoxSubtitleFormats, format.FriendlyName);
 
             UiUtil.InitializeTextEncodingComboBox(comboBoxEncoding);
 
             if (numericUpDownParts.Maximum > _subtitle.Paragraphs.Count)
+            {
                 numericUpDownParts.Maximum = (int)Math.Round(_subtitle.Paragraphs.Count / 2.0);
+            }
 
             if (!string.IsNullOrEmpty(_fileName))
+            {
                 textBoxOutputFolder.Text = Path.GetDirectoryName(_fileName);
+            }
             else if (string.IsNullOrEmpty(Configuration.Settings.Tools.SplitOutputFolder) || !Directory.Exists(Configuration.Settings.Tools.SplitOutputFolder))
+            {
                 textBoxOutputFolder.Text = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            }
             else
+            {
                 textBoxOutputFolder.Text = Configuration.Settings.Tools.SplitOutputFolder;
+            }
         }
 
         private void CalculateParts()
         {
             if (_loading)
+            {
                 return;
+            }
 
             _loading = true;
             _parts = new List<Subtitle>();
             if (string.IsNullOrEmpty(textBoxOutputFolder.Text) || !Directory.Exists(textBoxOutputFolder.Text))
+            {
                 textBoxOutputFolder.Text = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            }
+
             var format = Utilities.GetSubtitleFormatByFriendlyName(comboBoxSubtitleFormats.SelectedItem.ToString());
             string fileNameNoExt = Path.GetFileNameWithoutExtension(textBoxFileName.Text);
             if (string.IsNullOrWhiteSpace(fileNameNoExt))
+            {
                 fileNameNoExt = Configuration.Settings.Language.SplitSubtitle.Untitled;
+            }
+
             listViewParts.Items.Clear();
             int startNumber = 0;
             if (RadioButtonLines.Checked)
@@ -118,10 +146,11 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     int noOfLines = partSize;
                     if (i == numericUpDownParts.Value - 1)
+                    {
                         noOfLines = (int)(_subtitle.Paragraphs.Count - ((numericUpDownParts.Value - 1) * partSize));
+                    }
 
-                    var temp = new Subtitle();
-                    temp.Header = _subtitle.Header;
+                    var temp = new Subtitle { Header = _subtitle.Header };
                     int size = 0;
                     for (int number = 0; number < noOfLines; number++)
                     {
@@ -143,8 +172,7 @@ namespace Nikse.SubtitleEdit.Forms
                 int partSize = (int)(_totalNumberOfCharacters / numericUpDownParts.Value);
                 int nextLimit = partSize;
                 int currentSize = 0;
-                Subtitle temp = new Subtitle();
-                temp.Header = _subtitle.Header;
+                Subtitle temp = new Subtitle { Header = _subtitle.Header };
                 for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
                 {
                     Paragraph p = _subtitle.Paragraphs[i];
@@ -157,8 +185,7 @@ namespace Nikse.SubtitleEdit.Forms
                         lvi.SubItems.Add(fileNameNoExt + ".Part" + _parts.Count + format.Extension);
                         listViewParts.Items.Add(lvi);
                         currentSize = size;
-                        temp = new Subtitle();
-                        temp.Header = _subtitle.Header;
+                        temp = new Subtitle { Header = _subtitle.Header };
                         temp.Paragraphs.Add(new Paragraph(p));
                     }
                     else
@@ -188,7 +215,9 @@ namespace Nikse.SubtitleEdit.Forms
             var format = Utilities.GetSubtitleFormatByFriendlyName(comboBoxSubtitleFormats.SelectedItem.ToString());
             string fileNameNoExt = Path.GetFileNameWithoutExtension(textBoxFileName.Text);
             if (string.IsNullOrWhiteSpace(fileNameNoExt))
+            {
                 fileNameNoExt = Configuration.Settings.Language.SplitSubtitle.Untitled;
+            }
 
             int number = 1;
             try
@@ -200,7 +229,10 @@ namespace Nikse.SubtitleEdit.Forms
                     if (File.Exists(fileName) && !overwrite)
                     {
                         if (MessageBox.Show(Configuration.Settings.Language.SplitSubtitle.OverwriteExistingFiles, "", MessageBoxButtons.YesNo) == DialogResult.No)
+                        {
                             return;
+                        }
+
                         overwrite = true;
                     }
                     File.WriteAllText(fileName, allText, GetCurrentEncoding());
@@ -216,9 +248,14 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.Tools.SplitNumberOfParts = (int)numericUpDownParts.Value;
             Configuration.Settings.Tools.SplitOutputFolder = textBoxOutputFolder.Text;
             if (RadioButtonLines.Checked)
+            {
                 Configuration.Settings.Tools.SplitVia = "Lines";
+            }
             else
+            {
                 Configuration.Settings.Tools.SplitVia = "Characters";
+            }
+
             DialogResult = DialogResult.OK;
         }
 
@@ -279,7 +316,9 @@ namespace Nikse.SubtitleEdit.Forms
         private void Split_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)
+            {
                 DialogResult = DialogResult.Cancel;
+            }
         }
 
         private void textBoxFileName_TextChanged(object sender, EventArgs e)
@@ -295,9 +334,13 @@ namespace Nikse.SubtitleEdit.Forms
         private void buttonOpenOutputFolder_Click(object sender, EventArgs e)
         {
             if (Directory.Exists(textBoxOutputFolder.Text))
+            {
                 System.Diagnostics.Process.Start(textBoxOutputFolder.Text);
+            }
             else
+            {
                 MessageBox.Show(string.Format(Configuration.Settings.Language.SplitSubtitle.FolderNotFoundX, textBoxOutputFolder.Text));
+            }
         }
 
     }

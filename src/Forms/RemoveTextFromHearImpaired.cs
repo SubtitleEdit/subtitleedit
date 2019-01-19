@@ -102,7 +102,10 @@ namespace Nikse.SubtitleEdit.Forms
         private void GeneratePreview()
         {
             if (Subtitle == null)
+            {
                 return;
+            }
+
             Cursor.Current = Cursors.WaitCursor;
             _removeTextForHiLib.Settings = GetSettings(Subtitle);
             _removeTextForHiLib.Warnings = new List<int>();
@@ -144,9 +147,13 @@ namespace Nikse.SubtitleEdit.Forms
         private void FormRemoveTextForHearImpaired_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)
+            {
                 DialogResult = DialogResult.Cancel;
+            }
             else if (e.KeyCode == UiUtil.HelpKeys)
+            {
                 Utilities.ShowHelp("#remove_text_for_hi");
+            }
         }
 
         private void ButtonOkClick(object sender, EventArgs e)
@@ -181,7 +188,10 @@ namespace Nikse.SubtitleEdit.Forms
         private void ApplyChanges()
         {
             if (Subtitle == null)
+            {
                 return;
+            }
+
             int fixes = RemoveTextFromHearImpaired();
             Subtitle.Renumber();
             if (_mainForm != null && fixes > 0)
@@ -318,7 +328,10 @@ namespace Nikse.SubtitleEdit.Forms
         private void DoSelection(bool selectAll)
         {
             if (listViewFixes.Items.Count == 0)
+            {
                 return;
+            }
+
             foreach (ListViewItem item in listViewFixes.Items)
             {
                 item.Checked = selectAll || !item.Checked;
@@ -327,19 +340,24 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void listViewFixes_ItemChecked(object sender, ItemCheckedEventArgs e)
         {
-            var p = e.Item.Tag as Paragraph;
-            if (p == null)
+            if (!(e.Item.Tag is Paragraph p))
+            {
                 return;
+            }
 
             if (e.Item.Checked)
             {
                 if (_unchecked.Contains(p))
+                {
                     _unchecked.Add(p);
+                }
             }
             else
             {
                 if (!_unchecked.Contains(p))
+                {
                     _unchecked.Remove(p);
+                }
             }
         }
 

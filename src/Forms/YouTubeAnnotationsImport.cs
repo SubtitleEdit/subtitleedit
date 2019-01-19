@@ -16,7 +16,6 @@ namespace Nikse.SubtitleEdit.Forms
             Text = "YouTube Annotations";
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
-            //listViewFixes.Columns[0].Text = Configuration.Settings.Language.General.Apply;
             listViewFixes.Columns[1].Text = string.Empty; // style // TODO: Add better text + help text
             UiUtil.FixLargeFonts(this, buttonOK);
 
@@ -38,7 +37,9 @@ namespace Nikse.SubtitleEdit.Forms
                 foreach (ListViewItem item in listViewFixes.Items)
                 {
                     if (item.Checked)
+                    {
                         styles.Add(item.SubItems[1].Text);
+                    }
                 }
                 return styles;
             }
@@ -47,7 +48,9 @@ namespace Nikse.SubtitleEdit.Forms
         private void YouTubeAnnotationsImport_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)
+            {
                 DialogResult = DialogResult.Cancel;
+            }
         }
     }
 }

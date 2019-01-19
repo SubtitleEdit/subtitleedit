@@ -61,7 +61,9 @@ namespace Nikse.SubtitleEdit.Forms
             foreach (ListViewItem item in listViewExportStyles.Items)
             {
                 if (item.Checked)
+                {
                     ChosenGroups.Add(item.Text);
+                }
             }
             DialogResult = DialogResult.OK;
         }
@@ -72,7 +74,9 @@ namespace Nikse.SubtitleEdit.Forms
             foreach (ListViewItem item in listViewExportStyles.Items)
             {
                 if (item.Checked)
+                {
                     ChosenGroups.Add(item.Text);
+                }
             }
 
             if (ChosenGroups.Count == 0)

@@ -30,7 +30,9 @@ namespace Nikse.SubtitleEdit.Forms
             _subtitle = subtitle;
 
             if (Width < radioButtonRegEx.Right + 5)
+            {
                 Width = radioButtonRegEx.Right + 5;
+            }
 
             UiUtil.FixLargeFonts(this, buttonCancel);
         }
@@ -41,11 +43,18 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 var result = new ReplaceType();
                 if (radioButtonNormal.Checked)
+                {
                     result.FindType = FindType.Normal;
+                }
                 else if (radioButtonCaseSensitive.Checked)
+                {
                     result.FindType = FindType.CaseSensitive;
+                }
                 else
+                {
                     result.FindType = FindType.RegEx;
+                }
+
                 result.WholeWord = checkBoxWholeWord.Checked;
                 return result;
             }
@@ -71,7 +80,10 @@ namespace Nikse.SubtitleEdit.Forms
             get
             {
                 if (Configuration.Settings.Tools.FindHistory.Count == 0)
+                {
                     return textBoxFind.Text;
+                }
+
                 return comboBoxFind.Text;
             }
         }
@@ -123,13 +135,17 @@ namespace Nikse.SubtitleEdit.Forms
         private void TextBoxFind_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
+            {
                 ButtonFind_Click(null, null);
+            }
         }
 
         private void ComboBoxFind_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
+            {
                 ButtonFind_Click(null, null);
+            }
         }
 
         private void RadioButton_CheckedChanged(object sender, EventArgs e)

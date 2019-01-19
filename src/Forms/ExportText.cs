@@ -77,11 +77,18 @@ namespace Nikse.SubtitleEdit.Forms
         private void LoadSettings()
         {
             if (Configuration.Settings.Tools.ExportTextFormatText == "None")
+            {
                 radioButtonFormatNone.Checked = true;
+            }
             else if (Configuration.Settings.Tools.ExportTextFormatText == "Unbreak")
+            {
                 radioButtonFormatUnbreak.Checked = true;
+            }
             else
+            {
                 radioButtonFormatMergeAll.Checked = true;
+            }
+
             checkBoxRemoveStyling.Checked = Configuration.Settings.Tools.ExportTextRemoveStyling;
             checkBoxShowLineNumbers.Checked = Configuration.Settings.Tools.ExportTextShowLineNumbers;
             checkBoxAddNewlineAfterLineNumber.Checked = Configuration.Settings.Tools.ExportTextShowLineNumbersNewLine;
@@ -118,7 +125,9 @@ namespace Nikse.SubtitleEdit.Forms
         private void GeneratePreview()
         {
             if (_loading)
+            {
                 return;
+            }
 
             groupBoxTimeCodeFormat.Enabled = checkBoxShowTimeCodes.Checked;
             checkBoxAddAfterText.Enabled = !radioButtonFormatMergeAll.Checked;
@@ -155,23 +164,37 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     sb.Append(p.Number);
                     if (exportOptions.AddNewlineAfterLineNumber)
+                    {
                         sb.AppendLine();
+                    }
                     else
+                    {
                         sb.Append(' ');
+                    }
                 }
                 if (exportOptions.ShowTimecodes)
                 {
                     if (exportOptions.TimeCodeSrt)
+                    {
                         sb.Append(p.StartTime + exportOptions.TimeCodeSeparator + p.EndTime);
+                    }
                     else if (exportOptions.TimeCodeHHMMSSFF)
+                    {
                         sb.Append(p.StartTime.ToHHMMSSFF() + exportOptions.TimeCodeSeparator + p.EndTime.ToHHMMSSFF());
+                    }
                     else
+                    {
                         sb.Append(p.StartTime.TotalMilliseconds + exportOptions.TimeCodeSeparator + p.EndTime.TotalMilliseconds);
+                    }
 
                     if (exportOptions.AddNewlineAfterTimeCodes)
+                    {
                         sb.AppendLine();
+                    }
                     else
+                    {
                         sb.Append(' ');
+                    }
                 }
                 string s = p.Text;
                 if (exportOptions.RemoveStyling)
@@ -187,11 +210,19 @@ namespace Nikse.SubtitleEdit.Forms
                     sb.Append(s);
                 }
                 if (exportOptions.AddNewAfterText)
+                {
                     sb.AppendLine();
+                }
+
                 if (exportOptions.AddNewAfterText2)
+                {
                     sb.AppendLine();
+                }
+
                 if (!exportOptions.AddNewAfterText && !exportOptions.AddNewAfterText2)
+                {
                     sb.Append(' ');
+                }
             }
             string text = sb.ToString().Trim();
             if (exportOptions.FormatMergeAll)
@@ -213,7 +244,10 @@ namespace Nikse.SubtitleEdit.Forms
             saveFileDialog1.Title = Configuration.Settings.Language.Main.ExportPlainTextAs;
             saveFileDialog1.Filter = Configuration.Settings.Language.Main.TextFiles + "|*.txt";
             if (!string.IsNullOrEmpty(_fileName))
+            {
                 saveFileDialog1.FileName = Path.GetFileNameWithoutExtension(_fileName);
+            }
+
             if (saveFileDialog1.ShowDialog(this) == DialogResult.OK)
             {
                 File.WriteAllText(saveFileDialog1.FileName, textBoxText.Text, GetCurrentEncoding());
@@ -242,11 +276,18 @@ namespace Nikse.SubtitleEdit.Forms
         private void ExportText_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (radioButtonFormatNone.Checked)
+            {
                 Configuration.Settings.Tools.ExportTextFormatText = "None";
+            }
             else if (radioButtonFormatUnbreak.Checked)
+            {
                 Configuration.Settings.Tools.ExportTextFormatText = "Unbreak";
+            }
             else
+            {
                 Configuration.Settings.Tools.ExportTextFormatText = "MergeAll";
+            }
+
             Configuration.Settings.Tools.ExportTextRemoveStyling = checkBoxRemoveStyling.Checked;
             Configuration.Settings.Tools.ExportTextShowLineNumbers = checkBoxShowLineNumbers.Checked;
             Configuration.Settings.Tools.ExportTextShowLineNumbersNewLine = checkBoxAddNewlineAfterLineNumber.Checked;

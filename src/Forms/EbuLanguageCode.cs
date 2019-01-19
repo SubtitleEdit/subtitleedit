@@ -80,7 +80,10 @@ namespace Nikse.SubtitleEdit.Forms
         {
             var item = Languages.FirstOrDefault(p => p.Code == code);
             if (item == null)
+            {
                 return string.Empty;
+            }
+
             return item.Language;
         }
 
@@ -96,7 +99,10 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 listBoxLanguages.Items.Add(language);
                 if (languageCode.Equals(language.Code, StringComparison.Ordinal))
+                {
                     listBoxLanguages.SelectedIndex = i;
+                }
+
                 i++;
             }
 
@@ -111,11 +117,15 @@ namespace Nikse.SubtitleEdit.Forms
         {
             var selectedIndex = listBoxLanguages.SelectedIndex;
             if (selectedIndex < 0)
+            {
                 return;
+            }
 
             var item = listBoxLanguages.Items[selectedIndex] as LanguageItem;
             if (item == null)
+            {
                 return;
+            }
 
             LanguageCode = item.Code;
         }
@@ -133,7 +143,9 @@ namespace Nikse.SubtitleEdit.Forms
         private void EbuLanguageCode_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)
+            {
                 DialogResult = DialogResult.Cancel;
+            }
         }
     }
 }

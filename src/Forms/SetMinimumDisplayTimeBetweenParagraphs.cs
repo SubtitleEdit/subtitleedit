@@ -12,7 +12,6 @@ namespace Nikse.SubtitleEdit.Forms
     {
 
         private Subtitle _subtitle;
-        private Subtitle _fixedSubtitle;
         public int FixCount { get; private set; }
 
         public SetMinimumDisplayTimeBetweenParagraphs()
@@ -32,42 +31,54 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.FixLargeFonts(this, buttonOK);
 
             groupBoxFrameInfo.Text = Configuration.Settings.Language.SetMinimumDisplayTimeBetweenParagraphs.FrameInfo;
-            comboBoxFrameRate.Items.Add((23.976).ToString());
-            comboBoxFrameRate.Items.Add((24.0).ToString());
-            comboBoxFrameRate.Items.Add((25.0).ToString());
-            comboBoxFrameRate.Items.Add((29.97).ToString());
-            comboBoxFrameRate.Items.Add((30.0).ToString());
-            comboBoxFrameRate.Items.Add((59.94).ToString());
-            comboBoxFrameRate.Items.Add((60).ToString());
+            comboBoxFrameRate.Items.Add(23.976.ToString(CultureInfo.CurrentCulture));
+            comboBoxFrameRate.Items.Add(24.0.ToString(CultureInfo.CurrentCulture));
+            comboBoxFrameRate.Items.Add(25.0.ToString(CultureInfo.CurrentCulture));
+            comboBoxFrameRate.Items.Add(29.97.ToString(CultureInfo.CurrentCulture));
+            comboBoxFrameRate.Items.Add(30.0.ToString(CultureInfo.CurrentCulture));
+            comboBoxFrameRate.Items.Add(59.94.ToString(CultureInfo.CurrentCulture));
+            comboBoxFrameRate.Items.Add(60.ToString(CultureInfo.CurrentCulture));
             if (Math.Abs(Configuration.Settings.General.CurrentFrameRate - 23.976) < 0.1)
+            {
                 comboBoxFrameRate.SelectedIndex = 0;
+            }
             else if (Math.Abs(Configuration.Settings.General.CurrentFrameRate - 24) < 0.1)
+            {
                 comboBoxFrameRate.SelectedIndex = 1;
+            }
             else if (Math.Abs(Configuration.Settings.General.CurrentFrameRate - 25) < 0.1)
+            {
                 comboBoxFrameRate.SelectedIndex = 2;
+            }
             else if (Math.Abs(Configuration.Settings.General.CurrentFrameRate - 29.97) < 0.01)
+            {
                 comboBoxFrameRate.SelectedIndex = 3;
+            }
             else if (Math.Abs(Configuration.Settings.General.CurrentFrameRate - 30) < 0.1)
+            {
                 comboBoxFrameRate.SelectedIndex = 4;
+            }
             else if (Math.Abs(Configuration.Settings.General.CurrentFrameRate - 59.94) < 0.1)
+            {
                 comboBoxFrameRate.SelectedIndex = 5;
+            }
             else if (Math.Abs(Configuration.Settings.General.CurrentFrameRate - 60) < 0.1)
+            {
                 comboBoxFrameRate.SelectedIndex = 6;
+            }
             else
+            {
                 comboBoxFrameRate.SelectedIndex = 3;
+            }
         }
 
-        public override sealed string Text
+        public sealed override string Text
         {
-            get { return base.Text; }
-            set { base.Text = value; }
+            get => base.Text;
+            set => base.Text = value;
         }
 
-        public Subtitle FixedSubtitle
-        {
-            get { return _fixedSubtitle; }
-            private set { _fixedSubtitle = value; }
-        }
+        public Subtitle FixedSubtitle { get; private set; }
 
         public void Initialize(Subtitle subtitle)
         {
@@ -81,7 +92,9 @@ namespace Nikse.SubtitleEdit.Forms
         {
             var fixes = new List<int>();
             if (_subtitle == null)
+            {
                 return;
+            }
 
             FixedSubtitle = new Subtitle(_subtitle);
             var onlyFixedSubtitle = new Subtitle();
@@ -109,7 +122,9 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 SubtitleListview1.Fill(FixedSubtitle);
                 foreach (int index in fixes)
+                {
                     SubtitleListview1.SetBackgroundColor(index, Color.Silver);
+                }
             }
             SubtitleListview1.EndUpdate();
             FixCount = fixes.Count;
@@ -155,8 +170,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void comboBoxFrameRate_SelectedIndexChanged(object sender, EventArgs e)
         {
-            double frameRate;
-            if (!double.TryParse(comboBoxFrameRate.Text.Trim().Replace(',', '.').Replace(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, "."), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out frameRate))
+            if (!double.TryParse(comboBoxFrameRate.Text.Trim().Replace(',', '.').Replace(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, "."), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var frameRate))
             {
                 frameRate = 25.0;
             }

@@ -33,7 +33,9 @@ namespace Nikse.SubtitleEdit.Forms
         private void SeekSilence_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)
+            {
                 DialogResult = DialogResult.Cancel;
+            }
         }
 
         private void buttonOK_Click(object sender, EventArgs e)

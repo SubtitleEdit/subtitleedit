@@ -2,7 +2,6 @@
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic;
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Text;
@@ -50,9 +49,14 @@ namespace Nikse.SubtitleEdit.Forms
                 var lines = subtitle.ToText(ssa).SplitToLines();
                 string title = "Untitled";
                 if (!string.IsNullOrEmpty(subtitleFileName))
+                {
                     title = Path.GetFileNameWithoutExtension(subtitleFileName);
+                }
                 else if (!string.IsNullOrEmpty(videoFileName))
+                {
                     title = Path.GetFileNameWithoutExtension(videoFileName);
+                }
+
                 ssa.LoadSubtitle(sub, lines, title);
                 header = sub.Header;
             }
@@ -97,19 +101,23 @@ namespace Nikse.SubtitleEdit.Forms
                     else if (s.StartsWith("collisions:", StringComparison.Ordinal))
                     {
                         if (s.Remove(0, 11).Trim() == "reverse")
+                        {
                             comboBoxCollision.SelectedIndex = 1;
+                        }
                     }
                     else if (s.StartsWith("playresx:", StringComparison.Ordinal))
                     {
-                        int number;
-                        if (int.TryParse(s.Remove(0, 9).Trim(), out number))
+                        if (int.TryParse(s.Remove(0, 9).Trim(), out var number))
+                        {
                             numericUpDownVideoWidth.Value = number;
+                        }
                     }
                     else if (s.StartsWith("playresy:", StringComparison.Ordinal))
                     {
-                        int number;
-                        if (int.TryParse(s.Remove(0, 9).Trim(), out number))
+                        if (int.TryParse(s.Remove(0, 9).Trim(), out var number))
+                        {
                             numericUpDownVideoHeight.Value = number;
+                        }
                     }
                     else if (s.StartsWith("scaledborderandshadow:", StringComparison.Ordinal))
                     {
@@ -160,9 +168,14 @@ namespace Nikse.SubtitleEdit.Forms
         {
             SubtitleFormat format;
             if (_isSubStationAlpha)
+            {
                 format = new SubStationAlpha();
+            }
             else
+            {
                 format = new AdvancedSubStationAlpha();
+            }
+
             var sub = new Subtitle();
             string text = format.ToText(sub, string.Empty);
             var lines = text.SplitToLines();
@@ -173,11 +186,16 @@ namespace Nikse.SubtitleEdit.Forms
         private void buttonOK_Click(object sender, EventArgs e)
         {
             if (_subtitle.Header == null || !_subtitle.Header.Contains("[script info]", StringComparison.OrdinalIgnoreCase))
+            {
                 _subtitle.Header = GetDefaultHeader();
+            }
 
             string title = textBoxTitle.Text;
             if (string.IsNullOrWhiteSpace(title))
+            {
                 title = "untitled";
+            }
+
             UpdateTag("Title", title, false);
             UpdateTag("Original Script", textBoxOriginalScript.Text, string.IsNullOrWhiteSpace(textBoxOriginalScript.Text));
             UpdateTag("Original Translation", textBoxTranslation.Text, string.IsNullOrWhiteSpace(textBoxTranslation.Text));
@@ -189,17 +207,25 @@ namespace Nikse.SubtitleEdit.Forms
             UpdateTag("PlayResX", numericUpDownVideoWidth.Value.ToString(CultureInfo.InvariantCulture), numericUpDownVideoWidth.Value == 0);
             UpdateTag("PlayResY", numericUpDownVideoHeight.Value.ToString(CultureInfo.InvariantCulture), numericUpDownVideoHeight.Value == 0);
             if (comboBoxCollision.SelectedIndex == 0)
+            {
                 UpdateTag("collisions", "Normal", false); // normal
+            }
             else
+            {
                 UpdateTag("collisions", "Reverse", false); // reverse
+            }
 
             if (!_isSubStationAlpha)
             {
                 UpdateTag("WrapStyle", comboBoxWrapStyle.SelectedIndex.ToString(CultureInfo.InvariantCulture), false);
                 if (checkBoxScaleBorderAndShadow.Checked)
+                {
                     UpdateTag("ScaledBorderAndShadow", "Yes", false);
+                }
                 else
+                {
                     UpdateTag("ScaledBorderAndShadow", "No", false);
+                }
             }
 
             DialogResult = DialogResult.OK;
@@ -233,7 +259,10 @@ namespace Nikse.SubtitleEdit.Forms
                 if (s.StartsWith(tag.ToLower() + ":", StringComparison.Ordinal))
                 {
                     if (!remove)
+                    {
                         sb.AppendLine(line.Substring(0, tag.Length) + ": " + text);
+                    }
+
                     found = true;
                 }
                 else
@@ -247,7 +276,9 @@ namespace Nikse.SubtitleEdit.Forms
         private void SubStationAlphaProperties_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)
+            {
                 DialogResult = DialogResult.Cancel;
+            }
         }
 
         private void buttonGetResolutionFromVideo_Click(object sender, EventArgs e)

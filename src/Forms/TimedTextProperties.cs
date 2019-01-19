@@ -44,11 +44,15 @@ namespace Nikse.SubtitleEdit.Forms
 
             XmlNode node = _xml.DocumentElement.SelectSingleNode("ttml:head/ttml:metadata/ttml:title", _nsmgr);
             if (node != null)
+            {
                 textBoxTitle.Text = node.InnerText;
+            }
 
             node = _xml.DocumentElement.SelectSingleNode("ttml:head/ttml:metadata/ttml:desc", _nsmgr);
             if (node != null)
+            {
                 textBoxDescription.Text = node.InnerText;
+            }
 
             foreach (CultureInfo ci in CultureInfo.GetCultures(CultureTypes.SpecificCultures))
             {
@@ -56,11 +60,15 @@ namespace Nikse.SubtitleEdit.Forms
             }
             XmlAttribute attr = _xml.DocumentElement.Attributes["xml:lang"];
             if (attr != null)
+            {
                 comboBoxLanguage.Text = attr.InnerText;
+            }
 
             attr = _xml.DocumentElement.Attributes["ttp:timeBase"];
             if (attr != null)
+            {
                 comboBoxTimeBase.Text = attr.InnerText;
+            }
 
             comboBoxFrameRate.Items.Add("23.976");
             comboBoxFrameRate.Items.Add("24.0");
@@ -69,29 +77,39 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxFrameRate.Items.Add("30.0");
             attr = _xml.DocumentElement.Attributes["ttp:frameRate"];
             if (attr != null)
+            {
                 comboBoxFrameRate.Text = attr.InnerText;
+            }
 
             attr = _xml.DocumentElement.Attributes["ttp:frameRateMultiplier"];
             if (attr != null)
+            {
                 comboBoxFrameRateMultiplier.Text = attr.InnerText;
+            }
 
             attr = _xml.DocumentElement.Attributes["ttp:dropMode"];
             if (attr != null)
+            {
                 comboBoxDropMode.Text = attr.InnerText;
+            }
 
             foreach (string style in TimedText10.GetStylesFromHeader(_subtitle.Header))
             {
                 comboBoxDefaultStyle.Items.Add(style);
                 node = _xml.DocumentElement.SelectSingleNode("ttml:body", _nsmgr);
                 if (node != null && node.Attributes["style"] != null && style == node.Attributes["style"].Value)
+                {
                     comboBoxDefaultStyle.SelectedIndex = comboBoxDefaultStyle.Items.Count - 1;
+                }
             }
             foreach (string region in TimedText10.GetRegionsFromHeader(_subtitle.Header))
             {
                 comboBoxDefaultRegion.Items.Add(region);
                 node = _xml.DocumentElement.SelectSingleNode("ttml:body", _nsmgr);
                 if (node != null && node.Attributes["region"] != null && region == node.Attributes["region"].Value)
+                {
                     comboBoxDefaultRegion.SelectedIndex = comboBoxDefaultRegion.Items.Count - 1;
+                }
             }
 
             var timeCodeFormat = Configuration.Settings.SubtitleSettings.TimedText10TimeCodeFormat.Trim().ToLowerInvariant();
@@ -178,7 +196,9 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 attr.Value = comboBoxLanguage.Text;
                 if (attr.Value.Length == 0)
+                {
                     _xml.DocumentElement.Attributes.Remove(attr);
+                }
             }
             else if (comboBoxLanguage.Text.Length > 0)
             {
@@ -192,7 +212,9 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 attr.InnerText = comboBoxTimeBase.Text;
                 if (attr.Value.Length == 0)
+                {
                     _xml.DocumentElement.Attributes.Remove(attr);
+                }
             }
             else if (comboBoxTimeBase.Text.Length > 0)
             {
@@ -206,7 +228,9 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 attr.InnerText = comboBoxFrameRate.Text;
                 if (attr.Value.Length == 0)
+                {
                     _xml.DocumentElement.Attributes.Remove(attr);
+                }
             }
             else if (comboBoxFrameRate.Text.Length > 0)
             {
@@ -220,7 +244,9 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 attr.InnerText = comboBoxFrameRateMultiplier.Text;
                 if (attr.Value.Length == 0)
+                {
                     _xml.DocumentElement.Attributes.Remove(attr);
+                }
             }
             else if (comboBoxFrameRateMultiplier.Text.Length > 0)
             {
@@ -234,7 +260,9 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 attr.InnerText = comboBoxDropMode.Text;
                 if (attr.Value.Length == 0)
+                {
                     _xml.DocumentElement.Attributes.Remove(attr);
+                }
             }
             else if (comboBoxDropMode.Text.Length > 0)
             {

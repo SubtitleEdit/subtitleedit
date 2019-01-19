@@ -36,7 +36,10 @@ namespace Nikse.SubtitleEdit.Forms
         private static string GetPluginXmlFileUrl()
         {
             if (Environment.Version.Major < 4)
+            {
                 return "https://raw.github.com/SubtitleEdit/plugins/master/Plugins2.xml"; // .net 2-3.5
+            }
+
             return "https://raw.github.com/SubtitleEdit/plugins/master/Plugins4.xml"; // .net 4-?
         }
 
@@ -148,9 +151,14 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 buttonUpdateAll.BackColor = Color.LightGreen;
                 if (Configuration.Settings.Language.PluginsGet.UpdateAllX != null)
+                {
                     buttonUpdateAll.Text = string.Format(Configuration.Settings.Language.PluginsGet.UpdateAllX, _updateAllListUrls.Count);
+                }
                 else
+                {
                     buttonUpdateAll.Text = Configuration.Settings.Language.PluginsGet.UpdateAll;
+                }
+
                 buttonUpdateAll.Visible = true;
             }
         }
@@ -205,7 +213,9 @@ namespace Nikse.SubtitleEdit.Forms
                     plugin.Name.Contains(searchText, StringComparison.OrdinalIgnoreCase) ||
                     plugin.Description.Contains(searchText, StringComparison.OrdinalIgnoreCase) ||
                     plugin.Version.Contains(searchText, StringComparison.OrdinalIgnoreCase))
+                {
                     listViewGetPlugins.Items.Add(item);
+                }
 
                 foreach (ListViewItem installed in listViewInstalledPlugins.Items)
                 {
@@ -227,22 +237,20 @@ namespace Nikse.SubtitleEdit.Forms
         {
             string path = Configuration.PluginsDirectory;
             if (!Directory.Exists(path))
+            {
                 return;
+            }
 
             listViewInstalledPlugins.BeginUpdate();
             listViewInstalledPlugins.Items.Clear();
             foreach (string pluginFileName in Directory.GetFiles(path, "*.DLL"))
             {
-                string name, description, text, shortcut, actionType;
-                decimal version;
-                System.Reflection.MethodInfo mi;
-                Main.GetPropertiesAndDoAction(pluginFileName, out name, out text, out version, out description, out actionType, out shortcut, out mi);
+                Main.GetPropertiesAndDoAction(pluginFileName, out var name, out _, out var version, out var description, out var actionType, out _, out var mi);
                 if (!string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(actionType) && mi != null)
                 {
                     try
                     {
-                        var item = new ListViewItem(name.Trim('.'));
-                        item.Tag = pluginFileName;
+                        var item = new ListViewItem(name.Trim('.')) { Tag = pluginFileName };
                         item.SubItems.Add(description);
                         item.SubItems.Add(version.ToString());
                         item.SubItems.Add(actionType);
@@ -260,7 +268,9 @@ namespace Nikse.SubtitleEdit.Forms
         private void buttonDownload_Click(object sender, EventArgs e)
         {
             if (listViewGetPlugins.SelectedItems.Count == 0)
+            {
                 return;
+            }
 
             try
             {
@@ -271,7 +281,6 @@ namespace Nikse.SubtitleEdit.Forms
 
                 var plugin = (PluginInfoItem)listViewGetPlugins.SelectedItems[0].Tag;
 
-                int index = listViewGetPlugins.SelectedItems[0].Index;
                 string url = plugin.Url;
                 _downloadedPluginName = plugin.Name;
 
@@ -415,7 +424,9 @@ namespace Nikse.SubtitleEdit.Forms
         private void buttonRemove_Click(object sender, EventArgs e)
         {
             if (listViewInstalledPlugins.SelectedItems.Count < 1)
+            {
                 return;
+            }
 
             string fileName = listViewInstalledPlugins.SelectedItems[0].Tag.ToString();
             int index = listViewInstalledPlugins.SelectedItems[0].Index;
@@ -433,7 +444,10 @@ namespace Nikse.SubtitleEdit.Forms
             }
             listViewInstalledPlugins.Items.RemoveAt(index);
             if (index >= listViewInstalledPlugins.Items.Count)
+            {
                 index--;
+            }
+
             if (index >= 0)
             {
                 listViewInstalledPlugins.Items[index].Selected = true;

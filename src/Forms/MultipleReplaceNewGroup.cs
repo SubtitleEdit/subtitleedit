@@ -15,7 +15,7 @@ namespace Nikse.SubtitleEdit.Forms
             textBox1.Text = name;
             GroupName = name;
             label1.Text = Configuration.Settings.Language.MultipleReplace.GroupName;
-            if (name == String.Empty)
+            if (name == string.Empty)
             {
                 Text = Configuration.Settings.Language.MultipleReplace.NewGroup;
             }
@@ -35,7 +35,9 @@ namespace Nikse.SubtitleEdit.Forms
         private void MultipleReplaceNewGroup_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)
+            {
                 DialogResult = DialogResult.Cancel;
+            }
         }
 
         private void buttonOK_Click(object sender, EventArgs e)
@@ -47,7 +49,9 @@ namespace Nikse.SubtitleEdit.Forms
         private void textBox1_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
+            {
                 buttonOK_Click(sender, null);
+            }
         }
 
         private void MultipleReplaceNewGroup_Load(object sender, EventArgs e)

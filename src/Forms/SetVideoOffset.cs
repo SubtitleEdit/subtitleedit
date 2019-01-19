@@ -15,10 +15,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         public TimeCode VideoOffset
         {
-            get
-            {
-                return _videoOffset;
-            }
+            get => _videoOffset;
             set
             {
                 _videoOffset.TotalMilliseconds = value.TotalMilliseconds;

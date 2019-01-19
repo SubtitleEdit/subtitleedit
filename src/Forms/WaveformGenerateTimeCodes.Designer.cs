@@ -1,6 +1,6 @@
 ﻿namespace Nikse.SubtitleEdit.Forms
 {
-    partial class WaveformGenerateTimeCodes
+    sealed partial class WaveformGenerateTimeCodes
     {
         /// <summary>
         /// Required designer variable.

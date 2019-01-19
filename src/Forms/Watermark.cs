@@ -65,9 +65,12 @@ namespace Nikse.SubtitleEdit.Forms
         private static string ReadWaterMark(string input)
         {
             if (!input.Contains(ZeroWidthSpace))
+            {
                 return string.Empty;
+            }
+
             int i = 0;
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             bool letterOn = false;
             int letter = 0;
             while (i < input.Length)
@@ -76,7 +79,10 @@ namespace Nikse.SubtitleEdit.Forms
                 if (c == ZeroWidthSpace)
                 {
                     if (letter > 0)
-                        sb.Append(Encoding.ASCII.GetString(new byte[] { (byte)letter }));
+                    {
+                        sb.Append(Encoding.ASCII.GetString(new[] { (byte)letter }));
+                    }
+
                     letterOn = true;
                     letter = 0;
                 }
@@ -87,7 +93,10 @@ namespace Nikse.SubtitleEdit.Forms
                 else
                 {
                     if (letter > 0)
-                        sb.Append(Encoding.ASCII.GetString(new byte[] { (byte)letter }));
+                    {
+                        sb.Append(Encoding.ASCII.GetString(new[] { (byte)letter }));
+                    }
+
                     letterOn = false;
                     letter = 0;
                 }
@@ -112,15 +121,21 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     sb.Append(ZeroWidthSpace);
                     for (int i = 0; i < b; i++)
+                    {
                         sb.Append(ZeroWidthNoBreakSpace);
+                    }
                 }
                 Paragraph p = subtitle.GetParagraphOrDefault(_firstSelectedIndex);
                 if (p != null)
                 {
                     if (p.Text.Length > 1)
+                    {
                         p.Text = p.Text.Insert(p.Text.Length / 2, sb.ToString());
+                    }
                     else
+                    {
                         p.Text = sb + p.Text;
+                    }
                 }
             }
             else
@@ -131,9 +146,15 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     int number = r.Next(subtitle.Paragraphs.Count - 1);
                     if (indices.Contains(number))
+                    {
                         number = r.Next(subtitle.Paragraphs.Count - 1);
+                    }
+
                     if (indices.Contains(number))
+                    {
                         number = r.Next(subtitle.Paragraphs.Count - 1);
+                    }
+
                     indices.Add(number);
                 }
 
@@ -145,11 +166,19 @@ namespace Nikse.SubtitleEdit.Forms
                     Paragraph p = subtitle.Paragraphs[indices[j]];
                     sb.Append(ZeroWidthSpace);
                     for (int i = 0; i < b; i++)
+                    {
                         sb.Append(ZeroWidthNoBreakSpace);
+                    }
+
                     if (p.Text.Length > 1)
+                    {
                         p.Text = p.Text.Insert(p.Text.Length / 2, sb.ToString());
+                    }
                     else
+                    {
                         p.Text = sb + p.Text;
+                    }
+
                     j++;
                 }
             }
@@ -163,9 +192,13 @@ namespace Nikse.SubtitleEdit.Forms
         internal void AddOrRemove(Subtitle subtitle)
         {
             if (groupBoxGenerate.Enabled)
+            {
                 AddWaterMark(subtitle, textBoxWatermark.Text);
+            }
             else
+            {
                 RemoveWaterMark(subtitle);
+            }
         }
 
         private static void RemoveWaterMark(Subtitle subtitle)
@@ -173,7 +206,9 @@ namespace Nikse.SubtitleEdit.Forms
             var zws = ZeroWidthSpace.ToString(CultureInfo.InvariantCulture);
             var zwnbs = ZeroWidthNoBreakSpace.ToString(CultureInfo.InvariantCulture);
             foreach (Paragraph p in subtitle.Paragraphs)
+            {
                 p.Text = p.Text.Replace(zws, string.Empty).Replace(zwnbs, string.Empty);
+            }
         }
 
         private void buttonGenerate_Click(object sender, EventArgs e)
@@ -189,7 +224,9 @@ namespace Nikse.SubtitleEdit.Forms
         private void Watermark_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)
+            {
                 DialogResult = DialogResult.Cancel;
+            }
         }
     }
 }

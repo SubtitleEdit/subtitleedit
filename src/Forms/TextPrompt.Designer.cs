@@ -1,6 +1,6 @@
 ﻿namespace Nikse.SubtitleEdit.Forms
 {
-    partial class TextPrompt
+    sealed partial class TextPrompt
     {
         /// <summary>
         /// Required designer variable.

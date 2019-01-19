@@ -18,16 +18,8 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.FixLargeFonts(this, buttonCancel);
         }
 
-        public static bool Is64BitOS
-        {
-            get { return false; }
-            //get { return (Environment.GetEnvironmentVariable("ProgramFiles(x86)") != null); }
-        }
-
         public void Initialize(string fileName, VideoInfo videoInfo, Exception exception)
         {
-            bool isWindowsXpOrVista = Environment.OSVersion.Version.Major < 7;
-
             var sb = new StringBuilder();
             sb.AppendLine("There seems to be missing a codec (or file is not a valid video/audio file)!");
             sb.AppendLine();
@@ -46,9 +38,9 @@ namespace Nikse.SubtitleEdit.Forms
                 sb.AppendLine();
             }
 
-            if (videoInfo != null && !string.IsNullOrEmpty(videoInfo.VideoCodec))
+            if (!string.IsNullOrEmpty(videoInfo?.VideoCodec))
             {
-                sb.AppendLine(string.Format("The file {0} is encoded with {1}!", Path.GetFileName(fileName), videoInfo.VideoCodec.Replace('\0', ' ')));
+                sb.AppendLine($"The file {Path.GetFileName(fileName)} is encoded with {videoInfo.VideoCodec.Replace('\0', ' ')}!");
                 sb.AppendLine("");
             }
 
@@ -77,7 +69,9 @@ namespace Nikse.SubtitleEdit.Forms
         private void VideoError_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)
+            {
                 DialogResult = DialogResult.Cancel;
+            }
         }
 
         private void richTextBoxMessage_LinkClicked(object sender, LinkClickedEventArgs e)

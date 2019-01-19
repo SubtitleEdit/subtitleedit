@@ -42,10 +42,7 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.FixLargeFonts(this, buttonSetSyncPoint);
         }
 
-        public TimeSpan SynchronizationPoint
-        {
-            get { return timeUpDownLine.TimeCode.TimeSpan; }
-        }
+        public TimeSpan SynchronizationPoint => timeUpDownLine.TimeCode.TimeSpan;
 
         public void Initialize(Subtitle subtitle, string subtitleFileName, int index, string videoFileName, int audioTrackNumber)
         {
@@ -62,10 +59,14 @@ namespace Nikse.SubtitleEdit.Forms
             timeUpDownLine.TimeCode = subtitle.Paragraphs[index].StartTime;
 
             if (!string.IsNullOrEmpty(videoFileName) && File.Exists(videoFileName))
+            {
                 OpenVideo(videoFileName);
+            }
             else if (!string.IsNullOrEmpty(subtitleFileName))
+            {
                 TryToFindAndOpenVideoFile(Path.GetDirectoryName(subtitleFileName) + Path.DirectorySeparatorChar +
                                           Path.GetFileNameWithoutExtension(subtitleFileName));
+            }
         }
 
         private void TryToFindAndOpenVideoFile(string fileNameNoExtension)
@@ -76,7 +77,9 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 movieFileName = fileNameNoExtension + extension;
                 if (File.Exists(movieFileName))
+                {
                     break;
+                }
             }
 
             if (movieFileName != null && File.Exists(movieFileName))
@@ -98,7 +101,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (File.Exists(_subtitleFileName))
             {
                 var videoFileExt = Utilities.GetVideoFileFilter(false);
-                foreach (var file in (Directory.GetFiles(Path.GetDirectoryName(_subtitleFileName))))
+                foreach (var file in Directory.GetFiles(Path.GetDirectoryName(_subtitleFileName)))
                 {
                     if (file.EndsWith(".nfo", StringComparison.OrdinalIgnoreCase)
                         || file.EndsWith(".srt", StringComparison.OrdinalIgnoreCase)
@@ -127,7 +130,9 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 var fi = new FileInfo(fileName);
                 if (fi.Length < 1000)
+                {
                     return;
+                }
 
                 labelVideoFileName.Text = fileName;
                 VideoFileName = fileName;
@@ -281,17 +286,12 @@ namespace Nikse.SubtitleEdit.Forms
         private void GetTime_FormClosing(object sender, FormClosingEventArgs e)
         {
             timer1.Stop();
-
-            if (videoPlayerContainer1 != null)
-                videoPlayerContainer1.Pause();
+            videoPlayerContainer1?.Pause();
         }
 
         private void GetTime_FormClosed(object sender, FormClosedEventArgs e)
         {
-            if (videoPlayerContainer1.VideoPlayer != null) // && videoPlayerContainer1.VideoPlayer.GetType() == typeof(QuartsPlayer))
-            {
-                videoPlayerContainer1.VideoPlayer.DisposeVideoPlayer();
-            }
+            videoPlayerContainer1.VideoPlayer?.DisposeVideoPlayer();
         }
 
         private void GoBackSeconds(double seconds, VideoPlayer mediaPlayer)
@@ -299,9 +299,13 @@ namespace Nikse.SubtitleEdit.Forms
             if (mediaPlayer != null)
             {
                 if (mediaPlayer.CurrentPosition > seconds)
+                {
                     mediaPlayer.CurrentPosition -= seconds;
+                }
                 else
+                {
                     mediaPlayer.CurrentPosition = 0;
+                }
 
                 videoPlayerContainer1.RefreshProgressBar();
             }
@@ -363,7 +367,9 @@ namespace Nikse.SubtitleEdit.Forms
                 findSubtitle.Initialize(_subtitle.Paragraphs, string.Empty);
                 findSubtitle.ShowDialog();
                 if (findSubtitle.SelectedIndex >= 0)
+                {
                     subtitleListView1.SelectIndexAndEnsureVisible(findSubtitle.SelectedIndex);
+                }
             }
         }
 

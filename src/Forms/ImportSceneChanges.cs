@@ -30,7 +30,10 @@ namespace Nikse.SubtitleEdit.Forms
             InitializeComponent();
             UiUtil.FixFonts(this);
             if (videoInfo != null && videoInfo.FramesPerSecond > 1)
+            {
                 _frameRate = videoInfo.FramesPerSecond;
+            }
+
             _videoFileName = videoFileName;
 
             Text = Configuration.Settings.Language.ImportSceneChanges.Title;
@@ -52,8 +55,7 @@ namespace Nikse.SubtitleEdit.Forms
             numericUpDownThreshold.Enabled = !string.IsNullOrWhiteSpace(Configuration.Settings.General.FFmpegLocation) && File.Exists(Configuration.Settings.General.FFmpegLocation);
             var isFfmpegAvailable = !string.IsNullOrEmpty(Configuration.Settings.General.FFmpegLocation) && File.Exists(Configuration.Settings.General.FFmpegLocation);
             buttonDownloadFfmpeg.Visible = !isFfmpegAvailable;
-            decimal thresshold;
-            if (decimal.TryParse(Configuration.Settings.General.FFmpegSceneThreshold, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out thresshold) &&
+            if (decimal.TryParse(Configuration.Settings.General.FFmpegSceneThreshold, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var thresshold) &&
                 thresshold >= numericUpDownThreshold.Minimum &&
                 thresshold <= numericUpDownThreshold.Maximum)
             {
@@ -65,8 +67,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         public sealed override string Text
         {
-            get { return base.Text; }
-            set { base.Text = value; }
+            get => base.Text;
+            set => base.Text = value;
         }
 
         private void buttonOpenText_Click(object sender, EventArgs e)
@@ -97,16 +99,24 @@ namespace Nikse.SubtitleEdit.Forms
                 var encoding = LanguageAutoDetect.GetEncodingFromFile(fileName);
                 string s = File.ReadAllText(fileName, encoding).Trim();
                 if (s.Contains('.'))
+                {
                     radioButtonSeconds.Checked = true;
+                }
+
                 if (s.Contains('.') && s.Contains(':'))
+                {
                     radioButtonHHMMSSMS.Checked = true;
+                }
+
                 if (!s.Contains(Environment.NewLine) && s.Contains(';'))
                 {
                     var sb = new StringBuilder();
                     foreach (string line in s.Split(';'))
                     {
                         if (!string.IsNullOrWhiteSpace(line))
+                        {
                             sb.AppendLine(line.Trim());
+                        }
                     }
                     textBoxIImport.Text = sb.ToString();
                 }
@@ -138,7 +148,10 @@ namespace Nikse.SubtitleEdit.Forms
                         if (timeParts?.Length == 4)
                         {
                             if (timeParts[3].Length > 3)
+                            {
                                 timeParts[3] = timeParts[3].Substring(0, 3);
+                            }
+
                             var ts = new TimeSpan(0, Convert.ToInt32(timeParts[0]), Convert.ToInt32(timeParts[1]), Convert.ToInt32(timeParts[2]), Convert.ToInt32(timeParts[3]));
                             sb.AppendLine(new TimeCode(ts).ToShortStringHHMMSSFF());
                         }
@@ -298,7 +311,9 @@ namespace Nikse.SubtitleEdit.Forms
             UpdateImportTextBox();
             buttonOK.Enabled = true;
             if (!_pause)
+            {
                 buttonOK_Click(sender, e);
+            }
         }
 
         private void UpdateImportTextBox()

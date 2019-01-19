@@ -372,7 +372,10 @@ namespace Nikse.SubtitleEdit.Forms
         {
             var numericUpDown = sender as NumericUpDown;
             if (numericUpDown != null)
+            {
                 return (int)numericUpDown.Value;
+            }
+
             return 0;
         }
 
@@ -675,7 +678,9 @@ namespace Nikse.SubtitleEdit.Forms
                 foreach (var region in presentationSegment.Regions)
                 {
                     if (region.Content.Contains(content))
+                    {
                         return region.Content;
+                    }
                 }
             }
             return null;

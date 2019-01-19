@@ -1,6 +1,6 @@
 ﻿namespace Nikse.SubtitleEdit.Forms
 {
-    partial class MeasurementConverter
+    sealed partial class MeasurementConverter
     {
         /// <summary>
         /// Required designer variable.

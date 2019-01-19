@@ -43,7 +43,9 @@ namespace Nikse.SubtitleEdit.Forms
         private void TransportStreamSubtitleChooser_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)
+            {
                 DialogResult = DialogResult.Cancel;
+            }
         }
 
         internal void Initialize(TransportStreamParser tsParser, string fileName)
@@ -59,19 +61,15 @@ namespace Nikse.SubtitleEdit.Forms
             listBoxTracks.SelectedIndex = 0;
         }
 
-        public int SelectedIndex
-        {
-            get
-            {
-                return listBoxTracks.SelectedIndex;
-            }
-        }
+        public int SelectedIndex => listBoxTracks.SelectedIndex;
 
         private void listBoxTracks_SelectedIndexChanged(object sender, EventArgs e)
         {
             int idx = listBoxTracks.SelectedIndex;
             if (idx < 0)
+            {
                 return;
+            }
 
             listBoxSubtitles.Items.Clear();
             int pid = _tsParser.SubtitlePacketIds[idx];
@@ -85,14 +83,18 @@ namespace Nikse.SubtitleEdit.Forms
                 listBoxSubtitles.Items.Add(string.Format(Configuration.Settings.Language.TransportStreamSubtitleChooser.SubLine, i, start, end, sub.NumberOfImages));
             }
             if (list.Count > 0)
+            {
                 listBoxSubtitles.SelectedIndex = 0;
+            }
         }
 
         private void listBoxSubtitles_SelectedIndexChanged(object sender, EventArgs e)
         {
             int idx = listBoxSubtitles.SelectedIndex;
             if (idx < 0)
+            {
                 return;
+            }
 
             int pid = _tsParser.SubtitlePacketIds[listBoxTracks.SelectedIndex];
             var list = _tsParser.GetDvbSubtitles(pid);
@@ -104,33 +106,16 @@ namespace Nikse.SubtitleEdit.Forms
             dvbBmp.Dispose();
             var oldImage = pictureBox1.Image;
             pictureBox1.Image = nDvbBmp.GetBitmap();
-            if (oldImage != null)
-                oldImage.Dispose();
-        }
-
-        private void buttonSaveAs_Click(object sender, EventArgs e)
-        {
-            var subtitles = GetSelectedSubtitles();
-            if (subtitles == null)
-                return;
-
-            using (var formSubOcr = new VobSubOcr())
-            {
-                formSubOcr.Initialize(subtitles, Configuration.Settings.VobSubOcr, _fileName);
-                var subtitle = formSubOcr.ReadyVobSubRip();
-                using (var exportBdnXmlPng = new ExportPngXml())
-                {
-                    exportBdnXmlPng.InitializeFromVobSubOcr(subtitle, new Core.SubtitleFormats.SubRip(), ExportPngXml.ExportFormats.BluraySup, _fileName, formSubOcr, null);
-                    exportBdnXmlPng.ShowDialog(this);
-                }
-            }
+            oldImage?.Dispose();
         }
 
         private List<TransportStreamSubtitle> GetSelectedSubtitles()
         {
             int idx = listBoxSubtitles.SelectedIndex;
             if (idx < 0)
+            {
                 return null;
+            }
 
             int pid = _tsParser.SubtitlePacketIds[listBoxTracks.SelectedIndex];
             return _tsParser.GetDvbSubtitles(pid);
@@ -160,7 +145,9 @@ namespace Nikse.SubtitleEdit.Forms
         {
             var subtitles = GetSelectedSubtitles();
             if (subtitles == null)
+            {
                 return;
+            }
 
             using (var formSubOcr = new VobSubOcr())
             {
@@ -178,7 +165,9 @@ namespace Nikse.SubtitleEdit.Forms
         {
             var subtitles = GetSelectedSubtitles();
             if (subtitles == null)
+            {
                 return;
+            }
 
             using (var formSubOcr = new VobSubOcr())
             {
