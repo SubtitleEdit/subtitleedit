@@ -37,8 +37,8 @@ namespace Nikse.SubtitleEdit.Logic
 
         public byte JustificationCode
         {
-            get { return _justificationCode; }
-            set { _justificationCode = value; }
+            get => _justificationCode;
+            set => _justificationCode = value;
         }
 
     }

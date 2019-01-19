@@ -15,53 +15,31 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         private Control _ownerControl;
         private Form _parentForm;
 
-        public override string PlayerName
-        {
-            get { return "VLC Lib Mono"; }
-        }
+        public override string PlayerName => "VLC Lib Mono";
 
         public override int Volume
         {
-            get
-            {
-                return NativeMethods.libvlc_audio_get_volume(_mediaPlayer);
-            }
-            set
-            {
-                NativeMethods.libvlc_audio_set_volume(_mediaPlayer, value);
-            }
+            get => NativeMethods.libvlc_audio_get_volume(_mediaPlayer);
+            set => NativeMethods.libvlc_audio_set_volume(_mediaPlayer, value);
         }
 
-        public override double Duration
-        {
-            get
-            {
-                return NativeMethods.libvlc_media_player_get_length(_mediaPlayer) / TimeCode.BaseUnit;
-            }
-        }
+        public override double Duration => NativeMethods.libvlc_media_player_get_length(_mediaPlayer) / TimeCode.BaseUnit;
 
         public override double CurrentPosition
         {
-            get
-            {
-                return NativeMethods.libvlc_media_player_get_time(_mediaPlayer) / TimeCode.BaseUnit;
-            }
-            set
-            {
-                NativeMethods.libvlc_media_player_set_time(_mediaPlayer, (long)(value * TimeCode.BaseUnit));
-            }
+            get => NativeMethods.libvlc_media_player_get_time(_mediaPlayer) / TimeCode.BaseUnit;
+            set => NativeMethods.libvlc_media_player_set_time(_mediaPlayer, (long)(value * TimeCode.BaseUnit));
         }
 
         public override double PlayRate
         {
-            get
-            {
-                return NativeMethods.libvlc_media_player_get_rate(_mediaPlayer);
-            }
+            get => NativeMethods.libvlc_media_player_get_rate(_mediaPlayer);
             set
             {
                 if (value >= 0 && value <= 2.0)
+                {
                     NativeMethods.libvlc_media_player_set_rate(_mediaPlayer, (float)value);
+                }
             }
         }
 
@@ -73,7 +51,9 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         public override void Pause()
         {
             if (!IsPaused)
+            {
                 NativeMethods.libvlc_media_player_pause(_mediaPlayer);
+            }
         }
 
         public override void Stop()
@@ -85,9 +65,9 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         {
             get
             {
-                const int Paused = 4;
+                const int paused = 4;
                 int state = NativeMethods.libvlc_media_player_get_state(_mediaPlayer);
-                return state == Paused;
+                return state == paused;
             }
         }
 
@@ -95,40 +75,32 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         {
             get
             {
-                const int Playing = 3;
+                const int playing = 3;
                 int state = NativeMethods.libvlc_media_player_get_state(_mediaPlayer);
-                return state == Playing;
+                return state == playing;
             }
         }
 
-        public int AudioTrackCount
-        {
-            get
-            {
-                return NativeMethods.libvlc_audio_get_track_count(_mediaPlayer) - 1;
-            }
-        }
+        public int AudioTrackCount => NativeMethods.libvlc_audio_get_track_count(_mediaPlayer) - 1;
 
         public int AudioTrackNumber
         {
-            get
-            {
-                return NativeMethods.libvlc_audio_get_track(_mediaPlayer) - 1;
-            }
-            set
-            {
-                NativeMethods.libvlc_audio_set_track(_mediaPlayer, value + 1);
-            }
+            get => NativeMethods.libvlc_audio_get_track(_mediaPlayer) - 1;
+            set => NativeMethods.libvlc_audio_set_track(_mediaPlayer, value + 1);
         }
 
         public LibVlcMono MakeSecondMediaPlayer(Control ownerControl, string videoFileName, EventHandler onVideoLoaded, EventHandler onVideoEnded)
         {
-            LibVlcMono newVlc = new LibVlcMono();
-            newVlc._libVlc = this._libVlc;
-            newVlc._libVlcDLL = this._libVlcDLL;
-            newVlc._ownerControl = ownerControl;
+            LibVlcMono newVlc = new LibVlcMono
+            {
+                _libVlc = _libVlc,
+                _libVlcDLL = _libVlcDLL,
+                _ownerControl = ownerControl
+            };
             if (ownerControl != null)
+            {
                 newVlc._parentForm = ownerControl.FindForm();
+            }
 
             newVlc.OnVideoLoaded = onVideoLoaded;
             newVlc.OnVideoEnded = onVideoEnded;
@@ -170,15 +142,16 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             NativeMethods.libvlc_media_player_pause(_mediaPlayer);
             _videoLoadedTimer.Stop();
 
-            if (OnVideoLoaded != null)
-                OnVideoLoaded.Invoke(_mediaPlayer, new EventArgs());
+            OnVideoLoaded?.Invoke(_mediaPlayer, new EventArgs());
         }
 
         public override void Initialize(Control ownerControl, string videoFileName, EventHandler onVideoLoaded, EventHandler onVideoEnded)
         {
             _ownerControl = ownerControl;
             if (ownerControl != null)
+            {
                 _parentForm = ownerControl.FindForm();
+            }
 
             OnVideoLoaded = onVideoLoaded;
             OnVideoEnded = onVideoEnded;
@@ -226,12 +199,8 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
         public override void DisposeVideoPlayer()
         {
-            if (_videoLoadedTimer != null)
-                _videoLoadedTimer.Stop();
-
-            if (_videoEndTimer != null)
-                _videoEndTimer.Stop();
-
+            _videoLoadedTimer?.Stop();
+            _videoEndTimer?.Stop();
             System.Threading.ThreadPool.QueueUserWorkItem(DisposeVLC, this);
         }
 
@@ -268,6 +237,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             }
             catch
             {
+                // ignored
             }
         }
 

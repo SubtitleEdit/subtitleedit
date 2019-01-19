@@ -9,8 +9,8 @@ namespace Nikse.SubtitleEdit.Logic
     public class FindReplaceDialogHelper
     {
         private const string SeparatorChars = " #><-\"„”“[]'‘`´¶(){}♪,.!?:;¿¡.…—،؟\r\n\u2028";
-        private readonly string _findText = string.Empty;
-        private readonly string _replaceText = string.Empty;
+        private readonly string _findText;
+        private readonly string _replaceText;
         private Regex _regEx;
         private int _findTextLength;
 
@@ -22,32 +22,15 @@ namespace Nikse.SubtitleEdit.Logic
         public bool MatchInOriginal { get; set; }
         public bool InProgress { get; set; }
 
-        public int FindTextLength
-        {
-            get
-            {
-                return _findTextLength;
-            }
-        }
+        public int FindTextLength => _findTextLength;
 
-        public string FindText
-        {
-            get
-            {
-                return _findText;
-            }
-        }
+        public string FindText => _findText;
 
-        public string ReplaceText
-        {
-            get
-            {
-                return _replaceText;
-            }
-        }
+        public string ReplaceText => _replaceText;
 
         public FindReplaceDialogHelper(ReplaceType findType, string findText, Regex regEx, string replaceText, int startLineIndex)
         {
+            _replaceText = string.Empty;
             FindReplaceType = findType;
             _findText = findText;
 
@@ -76,7 +59,9 @@ namespace Nikse.SubtitleEdit.Logic
         private int FindPositionInText(string text, int startIndex)
         {
             if (startIndex >= text.Length && !(FindReplaceType.FindType == FindType.RegEx && startIndex == 0))
+            {
                 return -1;
+            }
 
             if (FindReplaceType.FindType == FindType.CaseSensitive || FindReplaceType.FindType == FindType.Normal)
             {
@@ -89,7 +74,9 @@ namespace Nikse.SubtitleEdit.Logic
                         var startOk = idx == 0 || SeparatorChars.Contains(text[idx - 1]);
                         var endOk = idx + _findText.Length == text.Length || SeparatorChars.Contains(text[idx + _findText.Length]);
                         if (startOk && endOk)
+                        {
                             return idx;
+                        }
                     }
                     else
                     {
@@ -120,15 +107,21 @@ namespace Nikse.SubtitleEdit.Logic
             Success = false;
             int index = 0;
             if (position < 0)
+            {
                 position = 0;
+            }
+
             bool first = true;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 if (index >= startIndex)
                 {
                     if (!first)
+                    {
                         position = 0;
-                    int pos = 0;
+                    }
+
+                    int pos;
                     if (!MatchInOriginal)
                     {
                         pos = FindPositionInText(p.Text, position);
@@ -143,7 +136,9 @@ namespace Nikse.SubtitleEdit.Logic
                         position = 0;
                     }
                     if (index < subtitle.Paragraphs.Count - 1)
+                    {
                         MatchInOriginal = false;
+                    }
 
                     if (originalSubtitle != null && allowEditOfOriginalSubtitle)
                     {
@@ -185,7 +180,9 @@ namespace Nikse.SubtitleEdit.Logic
                         if (o != null)
                         {
                             if (!first)
+                            {
                                 position = o.Text.Length - 1;
+                            }
 
                             for (var j = 0; j <= position; j++)
                             {
@@ -211,7 +208,9 @@ namespace Nikse.SubtitleEdit.Logic
 
                 MatchInOriginal = false;
                 if (!first)
+                {
                     position = p.Text.Length - 1;
+                }
 
                 for (var j = 0; j <= position; j++)
                 {
@@ -424,7 +423,9 @@ namespace Nikse.SubtitleEdit.Logic
                     var startOk = (idx == 0) || (SeparatorChars.Contains(text[idx - 1]));
                     var endOk = (idx + pattern.Length == text.Length) || (SeparatorChars.Contains(text[idx + pattern.Length]));
                     if (startOk && endOk)
+                    {
                         count++;
+                    }
                 }
                 else
                 {

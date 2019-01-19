@@ -35,7 +35,9 @@ namespace Nikse.SubtitleEdit.Logic.SpellCheck
             if (disposing)
             {
                 if (_hunspell != null && !_hunspell.IsDisposed)
+                {
                     _hunspell.Dispose();
+                }
                 _hunspell = null;
             }
         }

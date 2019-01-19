@@ -10,15 +10,21 @@ namespace Nikse.SubtitleEdit.Logic
         public static bool IsColorClose(Color a, Color b, int tolerance)
         {
             if (a.A < 120 && b.A < 120)
+            {
                 return true; // transparent
+            }
 
             var alphaDiff = Math.Abs(a.A - b.A);
             if (alphaDiff > 50)
+            {
                 return false; // different alpha levels
+            }
 
             if (a.A > 250 && a.R > 90 && a.G > 90 && a.B > 90 &&
                 b.A > 250 && b.R > 90 && b.G > 90 && b.B > 90)
+            {
                 return true; // dark, non transparent
+            }
 
             int diff = (a.R + a.G + a.B) - (b.R + b.G + b.B);
             return diff < tolerance && diff > -tolerance;
@@ -27,11 +33,15 @@ namespace Nikse.SubtitleEdit.Logic
         public static bool IsColorClose(byte aa, byte ar, byte ag, byte ab, Color b, int tolerance)
         {
             if (aa < 120 && b.A < 120)
+            {
                 return true; // transparent
+            }
 
             if (aa > 250 && ar > 90 && ag > 90 && ab > 90 &&
                 b.A > 250 && b.R > 90 && b.G > 90 && b.B > 90)
+            {
                 return true; // dark, non transparent
+            }
 
             int diff = (ar + ag + ab) - (b.R + b.G + b.B);
             return diff < tolerance && diff > -tolerance;
@@ -42,7 +52,10 @@ namespace Nikse.SubtitleEdit.Logic
             int startTop = 0;
             int maxTop = bmp.Height - 2;
             if (maxTop > bmp.Height)
+            {
                 maxTop = bmp.Height;
+            }
+
             for (int y = 0; y < maxTop; y++)
             {
                 bool allTransparent = true;
@@ -56,7 +69,10 @@ namespace Nikse.SubtitleEdit.Logic
                     }
                 }
                 if (!allTransparent)
+                {
                     break;
+                }
+
                 startTop++;
             }
             //if (startTop > 9)
@@ -78,10 +94,15 @@ namespace Nikse.SubtitleEdit.Logic
                 }
                 h = y;
                 if (bottomCroppingDone)
+                {
                     break;
+                }
             }
             if (h - startTop + 1 <= 0)
+            {
                 return new NikseBitmap(0, 0);
+            }
+
             return bmp.CopyRectangle(new Rectangle(0, startTop, bmp.Width, h - startTop + 1));
         }
 
@@ -90,7 +111,9 @@ namespace Nikse.SubtitleEdit.Logic
             int startTop = 0;
             int maxTop = bmp.Height - 2;
             if (maxTop > bmp.Height)
+            {
                 maxTop = bmp.Height;
+            }
 
             for (int y = 0; y < maxTop; y++)
             {
@@ -110,11 +133,17 @@ namespace Nikse.SubtitleEdit.Logic
                     }
                 }
                 if (!allTransparent)
+                {
                     break;
+                }
+
                 startTop++;
             }
             if (startTop > 9)
+            {
                 startTop -= 5; // if top space > 9, then allways leave blank 5 pixels on top (so . is not confused with ').
+            }
+
             topCropping = startTop;
 
             for (int y = bmp.Height - 1; y > 3; y--)
@@ -135,7 +164,9 @@ namespace Nikse.SubtitleEdit.Logic
                     }
                 }
                 if (allTransparent == false)
+                {
                     return bmp.CopyRectangle(new Rectangle(0, startTop, bmp.Width - 1, y - startTop + 1));
+                }
             }
             return bmp;
         }
@@ -191,7 +222,10 @@ namespace Nikse.SubtitleEdit.Logic
                 if (size == bmp.Height)
                 {
                     if (size > 100)
+                    {
                         return SplitVerticalTransparentOrBlack(bmp);
+                    }
+
                     parts.Add(new ImageSplitterItem(0, startY, bmp));
                 }
                 else
@@ -310,7 +344,10 @@ namespace Nikse.SubtitleEdit.Logic
                 if (size == bmp.Height)
                 {
                     if (size > 100)
+                    {
                         return SplitVerticalTransparentOrBlack(bmp);
+                    }
+
                     parts.Add(new ImageSplitterItem(0, startY, bmp));
                 }
                 else
@@ -415,7 +452,10 @@ namespace Nikse.SubtitleEdit.Logic
                 if (size == bmp.Height)
                 {
                     if (size > 100)
+                    {
                         return SplitVerticalTransparentOrBlack(bmp);
+                    }
+
                     parts.Add(new ImageSplitterItem(0, startY, bmp));
                 }
                 else
@@ -439,11 +479,16 @@ namespace Nikse.SubtitleEdit.Logic
                 for (int x = 0; x < bmp1.Width; x++)
                 {
                     if (!IsColorClose(bmp1.GetPixel(x, y), bmp2.GetPixel(x, y), 20))
+                    {
                         different++;
+                    }
                 }
             }
             if (different > maxDiff)
+            {
                 return different + 10;
+            }
+
             return different;
         }
 
@@ -463,12 +508,11 @@ namespace Nikse.SubtitleEdit.Logic
 
                 // check if line is transparent and cursive
                 bool cursiveOk = false;
-                int tempY;
                 if (allTransparent == false &&
                     size > 5 &&
                     y > 3 &&
                     x < bmp.Width - 2 &&
-                    !IsVerticalLineTransparent(bmp, out tempY, x + 1))
+                    !IsVerticalLineTransparent(bmp, out _, x + 1))
                 {
                     //Add space?
                     if (lastEndX > 0 && lastEndX + xOrMorePixelsMakesSpace < startX)
@@ -477,7 +521,9 @@ namespace Nikse.SubtitleEdit.Logic
                         for (int j = lastEndX; j < startX; j++)
                         {
                             if (IsVerticalLineTransparentAlphaOnly(bmp, j))
+                            {
                                 cleanCount++;
+                            }
                         }
                         if (cleanCount > 0 && !spaceJustAdded)
                         {
@@ -506,7 +552,9 @@ namespace Nikse.SubtitleEdit.Logic
                         foreach (Point p in cursivePoints)
                         {
                             for (int fixY = p.Y; fixY < bmp.Height; fixY++)
+                            {
                                 b1.SetPixel(p.X - startX, fixY, Color.Transparent);
+                            }
                         }
 
                         RemoveBlackBarRight(b1);
@@ -538,7 +586,9 @@ namespace Nikse.SubtitleEdit.Logic
                                     for (int j = lastEndX; j < startX; j++)
                                     {
                                         if (IsVerticalLineTransparentAlphaOnly(bmp, j))
+                                        {
                                             cleanCount++;
+                                        }
                                     }
                                     if (cleanCount > 2 && !spaceJustAdded)
                                     {
@@ -547,7 +597,10 @@ namespace Nikse.SubtitleEdit.Logic
                                 }
 
                                 if (startX > 0)
+                                {
                                     startX--;
+                                }
+
                                 lastEndX = x;
                                 int end = x + 1 - startX;
                                 NikseBitmap part = bmp.CopyRectangle(new Rectangle(startX, 0, end, bmp.Height));
@@ -574,10 +627,15 @@ namespace Nikse.SubtitleEdit.Logic
             if (size > 0)
             {
                 if (lastEndX > 0 && lastEndX + xOrMorePixelsMakesSpace < startX && !spaceJustAdded)
+                {
                     parts.Add(new ImageSplitterItem(" "));
+                }
 
                 if (startX > 0)
+                {
                     startX--;
+                }
+
                 lastEndX = bmp.Width - 1;
                 int end = lastEndX + 1 - startX;
                 NikseBitmap part = bmp.CopyRectangle(new Rectangle(startX, 0, end, bmp.Height - 1));
@@ -598,7 +656,9 @@ namespace Nikse.SubtitleEdit.Logic
                 if (c[0] == 0 || IsColorClose(c[0], c[1], c[2], c[3], Color.Black, 280))
                 {
                     if (bmp.GetAlpha(xRemoveBlackBar - 1, yRemoveBlackBar) == 0)
+                    {
                         bmp.SetPixel(xRemoveBlackBar, yRemoveBlackBar, Color.Transparent);
+                    }
                 }
             }
         }
@@ -624,9 +684,13 @@ namespace Nikse.SubtitleEdit.Logic
                     {
                         cursivePoints.Add(new Point(newX, newY));
                         if (newX > 1)
+                        {
                             newX--;
+                        }
                         else
+                        {
                             cursiveOk = false;
+                        }
 
                         newY++;
                     }
@@ -637,7 +701,9 @@ namespace Nikse.SubtitleEdit.Logic
                 }
 
                 if (newX < x - size)
+                {
                     cursiveOk = false;
+                }
             }
             return cursiveOk;
         }
@@ -676,14 +742,19 @@ namespace Nikse.SubtitleEdit.Logic
             List<ImageSplitterItem> verticalBitmaps = SplitVertical(bmp, xOrMorePixelsMakesSpace);
 
             if (!topToBottom)
+            {
                 verticalBitmaps.Reverse();
+            }
 
             // split into letters
             int lineCount = 0;
             foreach (ImageSplitterItem b in verticalBitmaps)
             {
                 if (lineCount > 0)
+                {
                     list.Add(new ImageSplitterItem(Environment.NewLine));
+                }
+
                 var line = new List<ImageSplitterItem>();
                 foreach (ImageSplitterItem item in SplitHorizontal(b, xOrMorePixelsMakesSpace))
                 {
@@ -691,7 +762,10 @@ namespace Nikse.SubtitleEdit.Logic
                     line.Add(item);
                 }
                 if (rightToLeft)
+                {
                     line.Reverse();
+                }
+
                 list.AddRange(line);
                 lineCount++;
             }
@@ -707,14 +781,19 @@ namespace Nikse.SubtitleEdit.Logic
             List<ImageSplitterItem> verticalBitmaps = SplitVertical(bmp, minLineHeight, averageLineHeight);
 
             if (!topToBottom)
+            {
                 verticalBitmaps.Reverse();
+            }
 
             // split into letters
             for (int index = 0; index < verticalBitmaps.Count; index++)
             {
                 var b = verticalBitmaps[index];
                 if (index > 0)
+                {
                     list.Add(new ImageSplitterItem(Environment.NewLine));
+                }
+
                 var line = new List<ImageSplitterItem>();
                 foreach (var item in SplitHorizontalNew(b, xOrMorePixelsMakesSpace))
                 {
@@ -723,7 +802,10 @@ namespace Nikse.SubtitleEdit.Logic
                     line.Add(item);
                 }
                 if (rightToLeft)
+                {
                     line.Reverse();
+                }
+
                 list.AddRange(line);
             }
             return list;
@@ -780,14 +862,22 @@ namespace Nikse.SubtitleEdit.Logic
 
                     var couldBeSpace = false;
                     if (spacePixels >= xOrMorePixelsMakesSpace && parts.Count > 0)
+                    {
                         parts.Add(new ImageSplitterItem(" ") { Y = addY + lineSplitterItem.Y });
+                    }
                     else if (xOrMorePixelsMakesSpace > 9 && spacePixels >= xOrMorePixelsMakesSpace - 2 && parts.Count > 0)
+                    {
                         couldBeSpace = true;
+                    }
                     else if (xOrMorePixelsMakesSpace > 3 && spacePixels >= xOrMorePixelsMakesSpace - 1 && parts.Count > 0)
+                    {
                         couldBeSpace = true;
+                    }
 
                     if (b1.Width > 0 && b1.Height > 0)
+                    {
                         parts.Add(new ImageSplitterItem(startX + lineSplitterItem.X, addY + lineSplitterItem.Y, b1, couldBeSpace)); //y is what?
+                    }
 
                     // remove pixels before next letter;
                     const int begin = 0;
@@ -815,7 +905,9 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 var p = points[index];
                 if (p.X < x)
+                {
                     x = p.X;
+                }
             }
             return x;
         }
@@ -826,7 +918,9 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 var p = points[index];
                 if (p.X > x)
+                {
                     x = p.X;
+                }
             }
             return x;
         }
@@ -848,7 +942,9 @@ namespace Nikse.SubtitleEdit.Logic
                 {
                     clean = false;
                     if (x == 0)
+                    {
                         return null;
+                    }
 
                     if (x < bmp.Width - 1 && y < bmp.Height - 1 && bmp.GetAlpha(x + 1, y) == 0 && bmp.GetAlpha(x + 1, y + 1) == 0)
                     {
@@ -892,7 +988,9 @@ namespace Nikse.SubtitleEdit.Logic
                         y--;
                         left = true;
                         while (points.Count > 0 && points[points.Count - 1].Y > y)
+                        {
                             points.RemoveAt(points.Count - 1);
+                        }
                     }
                     else if (y > 5 && bmp.GetAlpha(x - 1, y - 2) == 0)
                     {
@@ -900,7 +998,9 @@ namespace Nikse.SubtitleEdit.Logic
                         y -= 2;
                         left = true;
                         while (points.Count > 0 && points[points.Count - 1].Y > y)
+                        {
                             points.RemoveAt(points.Count - 1);
+                        }
                     }
                     else
                     {
@@ -908,13 +1008,19 @@ namespace Nikse.SubtitleEdit.Logic
                     }
 
                     if (left)
+                    {
                         leftCount++;
+                    }
 
                     if (right)
+                    {
                         rightCount++;
+                    }
 
                     if (leftCount > maxSlide || rightCount > maxSlide)
+                    {
                         return null;
+                    }
                 }
                 else
                 {
@@ -929,14 +1035,19 @@ namespace Nikse.SubtitleEdit.Logic
         {
             var list = new List<ImageSplitterItem>();
             if (!topToBottom)
+            {
                 verticalBitmaps.Reverse();
+            }
 
             // split into letters
             int lineCount = 0;
             foreach (ImageSplitterItem b in verticalBitmaps)
             {
                 if (lineCount > 0)
+                {
                     list.Add(new ImageSplitterItem(Environment.NewLine));
+                }
+
                 var line = new List<ImageSplitterItem>();
                 foreach (ImageSplitterItem item in SplitHorizontal(b, xOrMorePixelsMakesSpace))
                 {
@@ -944,7 +1055,10 @@ namespace Nikse.SubtitleEdit.Logic
                     line.Add(item);
                 }
                 if (rightToLeft)
+                {
                     line.Reverse();
+                }
+
                 list.AddRange(line);
                 lineCount++;
             }
@@ -962,10 +1076,14 @@ namespace Nikse.SubtitleEdit.Logic
                 for (int y = 1; y < bmp1.Height; y++)
                 {
                     if (!IsColorClose(bmp1.GetPixel(x, y), bmp2.GetPixel(x, y), 20))
+                    {
                         different++;
+                    }
                 }
                 if (different > maxDiff)
+                {
                     return different + 10;
+                }
             }
             return different;
         }
@@ -980,10 +1098,14 @@ namespace Nikse.SubtitleEdit.Logic
                 for (int y = 1; y < bmp1.Height; y++)
                 {
                     if (!IsColorClose(bmp1.GetPixel(x, y), bmp2.GetPixel(x, y), 20))
+                    {
                         different++;
+                    }
                 }
                 if (different > maxDiff)
+                {
                     return different + 10;
+                }
             }
             return different;
         }
@@ -1000,12 +1122,17 @@ namespace Nikse.SubtitleEdit.Logic
                 for (int x = 0; x < bmp1.Width; x++)
                 {
                     if (bmp1.GetPixel(pixel) > 0 && bmp2.GetAlpha(alpha) < 100)
+                    {
                         different++;
+                    }
+
                     pixel++;
                     alpha += 4;
                 }
                 if (different > maxDiff)
+                {
                     return different + 10;
+                }
             }
             return different;
         }
@@ -1022,12 +1149,17 @@ namespace Nikse.SubtitleEdit.Logic
                 for (int x = 1; x < bmp1.Width; x++)
                 {
                     if (bmp1.GetAlpha(alpha) < 100 && bmp2.GetPixel(pixel) > 0)
+                    {
                         different++;
+                    }
+
                     pixel++;
                     alpha += 4;
                 }
                 if (different > maxDiff)
+                {
                     return different + 10;
+                }
             }
             return different;
         }

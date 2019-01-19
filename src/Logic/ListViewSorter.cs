@@ -10,7 +10,9 @@ namespace Nikse.SubtitleEdit.Logic
             var lvi1 = o1 as ListViewItem;
             var lvi2 = o2 as ListViewItem;
             if (lvi1 == null || lvi2 == null)
+            {
                 return 0;
+            }
 
             if (Descending)
             {

@@ -7,7 +7,7 @@ namespace Nikse.SubtitleEdit.Logic.SpellCheck
     public class MacHunspell : Hunspell
     {
 
-        private IntPtr _hunspellHandle = IntPtr.Zero;
+        private IntPtr _hunspellHandle;
 
         public MacHunspell(string affDirectory, string dicDictory)
         {
@@ -31,7 +31,9 @@ namespace Nikse.SubtitleEdit.Logic.SpellCheck
                 IntPtr addressCharArray = Marshal.ReadIntPtr(addressStringArray, i * IntPtr.Size);
                 string suggestion = Marshal.PtrToStringAuto(addressCharArray);
                 if (string.IsNullOrEmpty(suggestion))
+                {
                     results.Add(suggestion);
+                }
             }
             NativeMethods.Hunspell_free_list(_hunspellHandle, pointerToAddressStringArray, resultCount);
             Marshal.FreeHGlobal(pointerToAddressStringArray);

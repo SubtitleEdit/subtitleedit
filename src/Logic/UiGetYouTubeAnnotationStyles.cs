@@ -14,15 +14,18 @@ namespace Nikse.SubtitleEdit.Logic
                 return new List<string>();
             }
 
-            using (var import = new YouTubeAnnotationsImport(stylesWithCount))
+            using (YouTubeAnnotationsImport import = new YouTubeAnnotationsImport(stylesWithCount))
             {
                 if (import.ShowDialog() == DialogResult.OK)
                 {
                     return import.SelectedStyles;
                 }
-                var styles = new List<string>();
-                foreach (var k in stylesWithCount.Keys)
+                List<string> styles = new List<string>();
+                foreach (string k in stylesWithCount.Keys)
+                {
                     styles.Add(k);
+                }
+
                 return styles;
             }
         }
