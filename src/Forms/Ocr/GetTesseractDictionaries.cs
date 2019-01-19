@@ -53,7 +53,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private void FixLargeFonts()
         {
             if (labelDescription1.Left + labelDescription1.Width + 5 > Width)
+            {
                 Width = labelDescription1.Left + labelDescription1.Width + 5;
+            }
+
             UiUtil.FixLargeFonts(this, buttonOK);
         }
 
@@ -111,7 +114,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             string dictionaryFolder = Configuration.TesseractDataDirectory;
             if (!Directory.Exists(dictionaryFolder))
+            {
                 Directory.CreateDirectory(dictionaryFolder);
+            }
 
             int index = comboBoxDictionaries.SelectedIndex;
 
@@ -157,7 +162,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             string dictionaryFolder = Configuration.TesseractDataDirectory;
             if (!Directory.Exists(dictionaryFolder))
+            {
                 Directory.CreateDirectory(dictionaryFolder);
+            }
 
             int index = comboBoxDictionaries.SelectedIndex;
 
@@ -184,7 +191,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         {
             string dictionaryFolder = Configuration.TesseractDataDirectory;
             if (!Directory.Exists(dictionaryFolder))
+            {
                 Directory.CreateDirectory(dictionaryFolder);
+            }
 
             System.Diagnostics.Process.Start(dictionaryFolder);
         }

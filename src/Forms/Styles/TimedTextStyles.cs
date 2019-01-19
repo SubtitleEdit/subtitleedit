@@ -75,7 +75,9 @@ namespace Nikse.SubtitleEdit.Forms.Styles
         protected override void GeneratePreviewReal()
         {
             if (listViewStyles.SelectedItems.Count != 1)
+            {
                 return;
+            }
 
             pictureBoxPreview.Image?.Dispose();
             var bmp = new Bitmap(pictureBoxPreview.Width, pictureBoxPreview.Height);
@@ -112,8 +114,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 try
                 {
                     var fontSize = 20.0f;
-                    int fontSizeInt;
-                    if (int.TryParse(textBoxFontSize.Text.Replace("px", string.Empty), out fontSizeInt))
+                    if (int.TryParse(textBoxFontSize.Text.Replace("px", string.Empty), out var fontSizeInt))
                     {
                         fontSize = fontSizeInt;
                     }
@@ -200,34 +201,50 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             {
                 string name = "default";
                 if (node.Attributes["xml:id"] != null)
+                {
                     name = node.Attributes["xml:id"].Value;
+                }
                 else if (node.Attributes["id"] != null)
+                {
                     name = node.Attributes["id"].Value;
+                }
 
                 string fontFamily = "Arial";
                 if (node.Attributes["tts:fontFamily"] != null)
+                {
                     fontFamily = node.Attributes["tts:fontFamily"].Value;
+                }
 
                 string fontWeight = "normal";
                 if (node.Attributes["tts:fontWeight"] != null)
+                {
                     fontWeight = node.Attributes["tts:fontWeight"].Value;
+                }
 
                 string fontStyle = "normal";
                 if (node.Attributes["tts:fontStyle"] != null)
+                {
                     fontStyle = node.Attributes["tts:fontStyle"].Value;
+                }
 
                 string fontColor = "white";
                 if (node.Attributes["tts:color"] != null)
+                {
                     fontColor = node.Attributes["tts:color"].Value;
+                }
 
                 string fontSize = "100%";
                 if (node.Attributes["tts:fontSize"] != null)
+                {
                     fontSize = node.Attributes["tts:fontSize"].Value;
+                }
 
                 AddStyle(name, fontFamily, fontColor, fontSize);
             }
             if (listViewStyles.Items.Count > 0)
+            {
                 listViewStyles.Items[0].Selected = true;
+            }
         }
 
         private void AddStyle(string name, string fontFamily, string color, string fontSize)

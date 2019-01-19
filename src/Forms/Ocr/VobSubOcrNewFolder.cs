@@ -9,7 +9,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
     public sealed partial class VobSubOcrNewFolder : Form
     {
         public string FolderName { get; set; }
-        private bool _vobSub = false;
+        private readonly bool _vobSub;
         public VobSubOcrNewFolder(bool vobsub)
         {
             UiUtil.PreInitialize(this);
@@ -28,7 +28,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private void FormVobSubOcrNewFolder_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)
+            {
                 DialogResult = DialogResult.Cancel;
+            }
         }
 
         private void ButtonOkClick(object sender, EventArgs e)
@@ -73,7 +75,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private void TextBoxFolderKeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
+            {
                 ButtonOkClick(null, null);
+            }
         }
     }
 }

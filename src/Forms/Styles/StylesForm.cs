@@ -6,7 +6,6 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 {
     public /* abstract */ class StylesForm : Form
     {
-        private readonly Subtitle _subtitle;
         private readonly Timer _previewTimer = new Timer();
 
         private StylesForm()
@@ -16,24 +15,15 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
         protected StylesForm(Subtitle subtitle)
         {
-            _subtitle = subtitle;
+            Subtitle = subtitle;
 
             _previewTimer.Interval = 200;
             _previewTimer.Tick += PreviewTimerTick;
         }
 
-        public virtual string Header
-        {
-            get
-            {
-                throw new NotImplementedException("This property getter has to be overridden.");
-            }
-        }
+        public virtual string Header => throw new NotImplementedException("This property getter has to be overridden.");
 
-        protected Subtitle Subtitle
-        {
-            get { return _subtitle; }
-        }
+        protected Subtitle Subtitle { get; }
 
         protected void GeneratePreview()
         {

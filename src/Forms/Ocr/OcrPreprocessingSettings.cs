@@ -75,11 +75,18 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 n.ReplaceYellowWithWhite();
             }
             if (panelColorToWhite.BackColor != Color.Transparent)
+            {
                 n.ReplaceColor(panelColorToWhite.BackColor.A, panelColorToWhite.BackColor.R, panelColorToWhite.BackColor.G, panelColorToWhite.BackColor.B, 255, 255, 255, 255);
+            }
             if (panelColorToRemove.BackColor != Color.Transparent)
+            {
                 n.ReplaceColor(panelColorToRemove.BackColor.A, panelColorToRemove.BackColor.R, panelColorToRemove.BackColor.G, panelColorToRemove.BackColor.B, Color.Transparent.A, Color.Transparent.R, Color.Transparent.G, Color.Transparent.B);
+            }
             if (_isBinaryImageCompare)
+            {
                 n.MakeTwoColor((int)numericUpDownThreshold.Value);
+            }
+
             pictureBox1.Image = n.GetBitmap();
         }
 
@@ -95,9 +102,11 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private void pictureBoxSubtitleImage_Click(object sender, EventArgs e)
         {
-            var bmp = pictureBoxSubtitleImage.Image as Bitmap;
-            if (bmp == null)
+            if (!(pictureBoxSubtitleImage.Image is Bitmap))
+            {
                 return;
+            }
+
             Text = MousePosition.X + ":" + MousePosition.Y;
         }
 

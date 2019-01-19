@@ -1,19 +1,16 @@
-﻿using Nikse.SubtitleEdit.Core;
+﻿using System;
+using System.Windows.Forms;
+using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Networking;
-using System;
-using System.Windows.Forms;
 
-namespace Nikse.SubtitleEdit.Forms
+namespace Nikse.SubtitleEdit.Forms.Networking
 {
     public sealed partial class NetworkChat : Form
     {
         private Logic.Networking.NikseWebServiceSession _networkSession;
 
-        protected override bool ShowWithoutActivation
-        {
-            get { return true; }
-        }
+        protected override bool ShowWithoutActivation => true;
 
         public NetworkChat()
         {
@@ -95,9 +92,14 @@ namespace Nikse.SubtitleEdit.Forms
             item.Tag = user;
             item.ForeColor = Utilities.GetColorFromUserName(user.UserName);
             if (DateTime.Now.Month == 12 && DateTime.Now.Day >= 23 && DateTime.Now.Day <= 25)
+            {
                 item.ImageIndex = 7;
+            }
             else
+            {
                 item.ImageIndex = Utilities.GetNumber0To7FromUserName(user.UserName);
+            }
+
             item.SubItems.Add(new ListViewItem.ListViewSubItem(item, user.Ip));
             listViewUsers.Items.Add(item);
         }
@@ -113,7 +115,9 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             if (removeItem != null)
+            {
                 listViewUsers.Items.Remove(removeItem);
+            }
         }
     }
 }

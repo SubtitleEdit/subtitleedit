@@ -1,9 +1,9 @@
-﻿using Nikse.SubtitleEdit.Core;
-using Nikse.SubtitleEdit.Logic;
-using System;
+﻿using System;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Logic;
 
-namespace Nikse.SubtitleEdit.Forms
+namespace Nikse.SubtitleEdit.Forms.Networking
 {
     public sealed partial class NetworkLogAndInfo : Form
     {
@@ -21,12 +21,12 @@ namespace Nikse.SubtitleEdit.Forms
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
         }
 
-        internal void Initialize(Logic.Networking.NikseWebServiceSession _networkSession)
+        internal void Initialize(Logic.Networking.NikseWebServiceSession networkSession)
         {
-            textBoxSessionKey.Text = _networkSession.SessionId;
-            textBoxUserName.Text = _networkSession.CurrentUser.UserName;
-            textBoxWebServiceUrl.Text = _networkSession.WebServiceUrl;
-            textBoxLog.Text = _networkSession.GetLog();
+            textBoxSessionKey.Text = networkSession.SessionId;
+            textBoxUserName.Text = networkSession.CurrentUser.UserName;
+            textBoxWebServiceUrl.Text = networkSession.WebServiceUrl;
+            textBoxLog.Text = networkSession.GetLog();
         }
 
         private void buttonOK_Click(object sender, EventArgs e)
@@ -37,7 +37,9 @@ namespace Nikse.SubtitleEdit.Forms
         private void NetworkLogAndInfo_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)
+            {
                 DialogResult = DialogResult.Cancel;
+            }
         }
     }
 }

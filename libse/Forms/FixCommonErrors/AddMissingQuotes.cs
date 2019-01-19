@@ -37,15 +37,14 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     if (prev != null)
                     {
                         double betweenMilliseconds = p.StartTime.TotalMilliseconds - prev.EndTime.TotalMilliseconds;
-                        if (betweenMilliseconds > 1500)
+                        if (betweenMilliseconds > 1500 || // cannot be quote spanning several lines of more than 1.5 seconds between lines!
+
+                            // seems to have valid quotes, so no spanning
+                            prev.Text.Replace("<i>", string.Empty).TrimStart().TrimStart('-').TrimStart().StartsWith('"') &&
+                            prev.Text.Replace("</i>", string.Empty).TrimEnd().EndsWith('"') &&
+                            Utilities.CountTagInText(prev.Text, '"') == 2)
                         {
-                            prev = null; // cannot be quote spanning several lines of more than 1.5 seconds between lines!
-                        }
-                        else if (prev.Text.Replace("<i>", string.Empty).TrimStart().TrimStart('-').TrimStart().StartsWith('"') &&
-                                 prev.Text.Replace("</i>", string.Empty).TrimEnd().EndsWith('"') &&
-                                 Utilities.CountTagInText(prev.Text, '"') == 2)
-                        {
-                            prev = null; // seems to have valid quotes, so no spanning
+                            prev = null; 
                         }
                     }
 

@@ -51,44 +51,69 @@ namespace Nikse.SubtitleEdit.Forms.DCinema
                 if (int.TryParse(ss.CurrentDCinemaReelNumber, out number))
                 {
                     if (numericUpDownReelNumber.Minimum <= number && numericUpDownReelNumber.Maximum >= number)
+                    {
                         numericUpDownReelNumber.Value = number;
+                    }
                 }
                 comboBoxLanguage.Text = ss.CurrentDCinemaLanguage;
                 textBoxFontID.Text = ss.CurrentDCinemaFontId;
                 textBoxFontUri.Text = ss.CurrentDCinemaFontUri;
                 panelFontColor.BackColor = ss.CurrentDCinemaFontColor;
                 if (ss.CurrentDCinemaFontEffect == "border")
+                {
                     comboBoxFontEffect.SelectedIndex = 1;
+                }
                 else if (ss.CurrentDCinemaFontEffect == "shadow")
+                {
                     comboBoxFontEffect.SelectedIndex = 2;
+                }
                 else
+                {
                     comboBoxFontEffect.SelectedIndex = 0;
+                }
+
                 panelFontEffectColor.BackColor = ss.CurrentDCinemaFontEffectColor;
                 numericUpDownFontSize.Value = ss.CurrentDCinemaFontSize;
                 if (numericUpDownTopBottomMargin.Minimum <= ss.DCinemaBottomMargin &&
                    numericUpDownTopBottomMargin.Maximum >= ss.DCinemaBottomMargin)
+                {
                     numericUpDownTopBottomMargin.Value = ss.DCinemaBottomMargin;
+                }
                 else
+                {
                     numericUpDownTopBottomMargin.Value = 8;
+                }
 
                 if (numericUpDownFadeUp.Minimum <= ss.DCinemaFadeUpTime &&
                    numericUpDownFadeUp.Maximum >= ss.DCinemaFadeUpTime)
+                {
                     numericUpDownFadeUp.Value = ss.DCinemaFadeUpTime;
+                }
                 else
+                {
                     numericUpDownFadeUp.Value = 0;
+                }
 
                 if (numericUpDownFadeDown.Minimum <= ss.DCinemaFadeDownTime &&
                    numericUpDownFadeDown.Maximum >= ss.DCinemaFadeDownTime)
+                {
                     numericUpDownFadeDown.Value = ss.DCinemaFadeDownTime;
+                }
                 else
+                {
                     numericUpDownFadeDown.Value = 0;
+                }
 
                 decimal zPosition = (decimal)ss.DCinemaZPosition;
                 if (numericUpDownZPosition.Minimum <= zPosition &&
                    numericUpDownZPosition.Maximum >= zPosition)
+                {
                     numericUpDownZPosition.Value = zPosition;
+                }
                 else
+                {
                     numericUpDownZPosition.Value = 0;
+                }
             }
             UiUtil.FixLargeFonts(this, buttonCancel);
         }
@@ -128,11 +153,18 @@ namespace Nikse.SubtitleEdit.Forms.DCinema
             ss.CurrentDCinemaFontUri = textBoxFontUri.Text;
             ss.CurrentDCinemaFontColor = panelFontColor.BackColor;
             if (comboBoxFontEffect.SelectedIndex == 1)
+            {
                 ss.CurrentDCinemaFontEffect = "border";
+            }
             else if (comboBoxFontEffect.SelectedIndex == 2)
+            {
                 ss.CurrentDCinemaFontEffect = "shadow";
+            }
             else
+            {
                 ss.CurrentDCinemaFontEffect = string.Empty;
+            }
+
             ss.CurrentDCinemaFontEffectColor = panelFontEffectColor.BackColor;
             ss.CurrentDCinemaFontSize = (int)numericUpDownFontSize.Value;
             ss.DCinemaBottomMargin = (int)numericUpDownTopBottomMargin.Value;

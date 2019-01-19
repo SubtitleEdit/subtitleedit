@@ -1,7 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Logic;
 using System;
-using System.Drawing;
 using System.Globalization;
 using System.Windows.Forms;
 
@@ -61,37 +60,59 @@ namespace Nikse.SubtitleEdit.Forms.DCinema
 
                 timeUpDownStartTime.ForceHHMMSSFF();
                 if (string.IsNullOrEmpty(ss.CurrentDCinemaStartTime))
+                {
                     ss.CurrentDCinemaStartTime = "00:00:00:00";
+                }
+
                 timeUpDownStartTime.MaskedTextBox.Text = ss.CurrentDCinemaStartTime;
 
                 textBoxFontUri.Text = ss.CurrentDCinemaFontUri;
                 textBoxIssueDate.Text = ss.CurrentDCinemaIssueDate;
                 panelFontColor.BackColor = ss.CurrentDCinemaFontColor;
                 if (ss.CurrentDCinemaFontEffect == "border")
+                {
                     comboBoxFontEffect.SelectedIndex = 1;
+                }
                 else if (ss.CurrentDCinemaFontEffect == "shadow")
+                {
                     comboBoxFontEffect.SelectedIndex = 2;
+                }
                 else
+                {
                     comboBoxFontEffect.SelectedIndex = 0;
+                }
+
                 panelFontEffectColor.BackColor = ss.CurrentDCinemaFontEffectColor;
                 numericUpDownFontSize.Value = ss.CurrentDCinemaFontSize;
                 if (numericUpDownTopBottomMargin.Minimum <= ss.DCinemaBottomMargin &&
                     numericUpDownTopBottomMargin.Maximum >= ss.DCinemaBottomMargin)
+                {
                     numericUpDownTopBottomMargin.Value = ss.DCinemaBottomMargin;
+                }
                 else
+                {
                     numericUpDownTopBottomMargin.Value = 8;
+                }
 
                 if (numericUpDownFadeUp.Minimum <= ss.DCinemaFadeUpTime &&
                     numericUpDownFadeUp.Maximum >= ss.DCinemaFadeUpTime)
+                {
                     numericUpDownFadeUp.Value = ss.DCinemaFadeUpTime;
+                }
                 else
+                {
                     numericUpDownFadeUp.Value = 0;
+                }
 
                 if (numericUpDownFadeDown.Minimum <= ss.DCinemaFadeDownTime &&
                     numericUpDownFadeDown.Maximum >= ss.DCinemaFadeDownTime)
+                {
                     numericUpDownFadeDown.Value = ss.DCinemaFadeDownTime;
+                }
                 else
+                {
                     numericUpDownFadeDown.Value = 0;
+                }
             }
             UiUtil.FixLargeFonts(this, buttonCancel);
         }
@@ -134,19 +155,31 @@ namespace Nikse.SubtitleEdit.Forms.DCinema
             ss.CurrentDCinemaTimeCodeRate = comboBoxTimeCodeRate.Text;
             ss.CurrentDCinemaStartTime = timeUpDownStartTime.TimeCode.ToHHMMSSFF();
             if (comboBoxLanguage.SelectedItem != null)
+            {
                 ss.CurrentDCinemaLanguage = comboBoxLanguage.SelectedItem.ToString();
+            }
             else
+            {
                 ss.CurrentDCinemaLanguage = string.Empty;
+            }
+
             ss.CurrentDCinemaIssueDate = textBoxIssueDate.Text;
             ss.CurrentDCinemaFontId = textBoxFontID.Text;
             ss.CurrentDCinemaFontUri = textBoxFontUri.Text;
             ss.CurrentDCinemaFontColor = panelFontColor.BackColor;
             if (comboBoxFontEffect.SelectedIndex == 1)
+            {
                 ss.CurrentDCinemaFontEffect = "border";
+            }
             else if (comboBoxFontEffect.SelectedIndex == 2)
+            {
                 ss.CurrentDCinemaFontEffect = "shadow";
+            }
             else
+            {
                 ss.CurrentDCinemaFontEffect = string.Empty;
+            }
+
             ss.CurrentDCinemaFontEffectColor = panelFontEffectColor.BackColor;
             ss.CurrentDCinemaFontSize = (int)numericUpDownFontSize.Value;
             ss.DCinemaBottomMargin = (int)numericUpDownTopBottomMargin.Value;

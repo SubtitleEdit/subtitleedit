@@ -29,7 +29,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private void VobSubNOcrCharacterInspect_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)
+            {
                 DialogResult = DialogResult.Cancel;
+            }
         }
 
         internal void Initialize(Bitmap bitmap, int pixelsIsSpace, bool rightToLeft, NOcrDb nOcrDb, VobSubOcr vobSubOcr)
@@ -45,7 +47,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
             const int minLineHeight = 6;
             _imageList = NikseBitmapImageSplitter.SplitBitmapToLettersNew(nbmp, pixelsIsSpace, rightToLeft, Configuration.Settings.VobSubOcr.TopToBottom, minLineHeight);
-            // _imageList = NikseBitmapImageSplitter.SplitBitmapToLetters(nbmp, pixelsIsSpace, rightToLeft, Configuration.Settings.VobSubOcr.TopToBottom);
 
             int index = 0;
             while (index < _imageList.Count)
@@ -84,7 +85,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private void listBoxInspectItems_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (listBoxInspectItems.SelectedIndex < 0)
+            {
                 return;
+            }
 
             var img = _imageList[listBoxInspectItems.SelectedIndex];
             if (img.NikseBitmap != null)
@@ -150,7 +153,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         private void pictureBoxCharacter_Paint(object sender, PaintEventArgs e)
         {
             if (_nocrChar == null)
+            {
                 return;
+            }
 
             var foreground = new Pen(new SolidBrush(Color.Green));
             var background = new Pen(new SolidBrush(Color.Red));
@@ -169,16 +174,12 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
 
         private void SizePictureBox()
         {
-            if (pictureBoxCharacter.Image != null)
+            if (pictureBoxCharacter.Image is Bitmap bmp)
             {
-                var bmp = pictureBoxCharacter.Image as Bitmap;
-                if (bmp != null)
-                {
-                    pictureBoxCharacter.SizeMode = PictureBoxSizeMode.StretchImage;
-                    pictureBoxCharacter.Width = (int)Math.Round(bmp.Width * _zoomFactor);
-                    pictureBoxCharacter.Height = (int)Math.Round(bmp.Height * _zoomFactor);
-                    pictureBoxCharacter.Invalidate();
-                }
+                pictureBoxCharacter.SizeMode = PictureBoxSizeMode.StretchImage;
+                pictureBoxCharacter.Width = (int)Math.Round(bmp.Width * _zoomFactor);
+                pictureBoxCharacter.Height = (int)Math.Round(bmp.Height * _zoomFactor);
+                pictureBoxCharacter.Invalidate();
             }
         }
 
@@ -225,12 +226,16 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
         {
             var expandSelectionList = new List<ImageSplitterItem>();
             if (listBoxInspectItems.SelectedIndex < 0)
+            {
                 return;
+            }
 
             int index = listBoxInspectItems.SelectedIndex;
             var img = _imageList[index];
             if (img.NikseBitmap == null)
+            {
                 return;
+            }
 
             using (var vobSubOcrNOcrCharacter = new VobSubOcrNOcrCharacter())
             {
@@ -268,7 +273,9 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         shrinkSelection = true;
                         index--;
                         if (expandSelectionList.Count > 0)
+                        {
                             expandSelectionList.RemoveAt(expandSelectionList.Count - 1);
+                        }
                     }
                     else if (result == DialogResult.OK && vobSubOcrNOcrCharacter.ExpandSelection)
                     {
@@ -280,7 +287,10 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 if (result == DialogResult.OK)
                 {
                     if (expandSelectionList.Count > 1)
+                    {
                         vobSubOcrNOcrCharacter.NOcrChar.ExpandCount = expandSelectionList.Count;
+                    }
+
                     _nocrChars.Add(vobSubOcrNOcrCharacter.NOcrChar);
                     _vobSubOcr.SaveNOcrWithCurrentLanguage();
                     DialogResult = DialogResult.OK;

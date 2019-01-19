@@ -1,6 +1,6 @@
-﻿namespace Nikse.SubtitleEdit.Forms
+﻿namespace Nikse.SubtitleEdit.Forms.Networking
 {
-    partial class NetworkJoin
+    sealed partial class NetworkJoin
     {
         /// <summary>
         /// Required designer variable.

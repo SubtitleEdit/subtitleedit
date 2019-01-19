@@ -1,6 +1,6 @@
 ﻿namespace Nikse.SubtitleEdit.Forms.Ocr
 {
-    partial class AddToOcrReplaceList
+    sealed partial class AddToOcrReplaceList
     {
         /// <summary>
         /// Required designer variable.
