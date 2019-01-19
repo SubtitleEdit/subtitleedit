@@ -20,8 +20,7 @@ namespace Nikse.SubtitleEdit.Core
 
             public DvdSubtitleLanguage GetValueOrNull(string code)
             {
-                DvdSubtitleLanguage language;
-                Dictionary.TryGetValue(code, out language);
+                Dictionary.TryGetValue(code, out var language);
                 return language;
             }
 
@@ -31,16 +30,15 @@ namespace Nikse.SubtitleEdit.Core
             }
         }
 
-        private static readonly Dictionary<string, string> _isoToDvd = new Dictionary<string, string>
+        private static readonly Dictionary<string, string> IsoToDvd = new Dictionary<string, string>
         {
             { "yi", "ji" }, { "jv", "jw" }, { "id", "in" }, { "he", "iw" } // { "bs", "sh" }, { "nb", "no" }, { "nn", "no" } ???
         };
-        private static readonly Dictionary<string, string> _dvdToIso = new Dictionary<string, string>
+        private static readonly Dictionary<string, string> DvdToIso = new Dictionary<string, string>
         {
             { "ji", "yi" }, { "jw", "jv" }, { "in", "id" }, { "iw", "he" }
         };
-        private static readonly string[] _compliantDescriptions = new[]
-        {   // DVD code + native name
+        private static readonly string[] CompliantDescriptions = {   // DVD code + native name
             "aa:Qafár af", "ab:аҧсуа бызшәа", "af:Afrikaans", "am:አማርኛ", "ar:العربية", "as:অসমীয়া", "ay:Aymar aru", "az:azərbaycan dili", "ba:башҡорт теле", "be:беларуская",
             "bg:български", "bh:भोजपुरी", "bi:Bislama", "bn:বাংলা", "bo:བོད་སྐད་", "br:brezhoneg", "ca:català", "co:corsu", "cs:čeština", "cy:Cymraeg", "da:dansk", "de:Deutsch", "dz:རྫོང་ཁ",
             "el:Ελληνικά", "en:English", "eo:esperanto", "es:español", "et:eesti", "eu:euskara", "fa:فارسی", "fi:suomi", "fj:Vosa Vakaviti", "fo:føroyskt", "fr:français",
@@ -56,11 +54,11 @@ namespace Nikse.SubtitleEdit.Core
         };
         private static LanguagesByCode _compliantLanguagesByCode;
 
-        public string Code { get; private set; }
-        public string LocalName { get; private set; }
-        public string NativeName { get; private set; }
+        public string Code { get; }
+        public string LocalName { get; }
+        public string NativeName { get; }
 
-        private DvdSubtitleLanguage(string code, string localName, string nativeName)
+        public DvdSubtitleLanguage(string code, string localName, string nativeName)
         {
             Code = code;
             LocalName = localName;
@@ -73,7 +71,7 @@ namespace Nikse.SubtitleEdit.Core
             var code = description.Remove(2);
             Code = code;
             var names = Configuration.Settings.Language.LanguageNames;
-            LocalName = (string)names.GetType().GetProperty(DvdToIso(code) + "Name").GetValue(names, null);
+            LocalName = (string)names.GetType().GetProperty(ConvertDvdToIso(code) + "Name")?.GetValue(names, null);
         }
 
         public override string ToString()
@@ -81,21 +79,9 @@ namespace Nikse.SubtitleEdit.Core
             return LocalName;
         }
 
-        public static DvdSubtitleLanguage English
-        {
-            get
-            {
-                return CompliantLanguagesByCode["en"];
-            }
-        }
+        public static DvdSubtitleLanguage English => CompliantLanguagesByCode["en"];
 
-        public static IEnumerable<DvdSubtitleLanguage> CompliantLanguages
-        {
-            get
-            {
-                return CompliantLanguagesByCode;
-            }
-        }
+        public static IEnumerable<DvdSubtitleLanguage> CompliantLanguages => CompliantLanguagesByCode;
 
         private static LanguagesByCode CompliantLanguagesByCode
         {
@@ -103,8 +89,8 @@ namespace Nikse.SubtitleEdit.Core
             {
                 if (_compliantLanguagesByCode == null)
                 {
-                    var cl = _compliantDescriptions.Select(s => new DvdSubtitleLanguage(s)).OrderBy(dsl => dsl.LocalName, StringComparer.CurrentCultureIgnoreCase).ThenBy(dsl => dsl.LocalName, StringComparer.Ordinal);
-                    var ns = new DvdSubtitleLanguage[] { new DvdSubtitleLanguage("  ", Configuration.Settings.Language.LanguageNames.NotSpecified, "Not Specified") };
+                    var cl = CompliantDescriptions.Select(s => new DvdSubtitleLanguage(s)).OrderBy(dsl => dsl.LocalName, StringComparer.CurrentCultureIgnoreCase).ThenBy(dsl => dsl.LocalName, StringComparer.Ordinal);
+                    var ns = new[] { new DvdSubtitleLanguage("  ", Configuration.Settings.Language.LanguageNames.NotSpecified, "Not Specified") };
                     _compliantLanguagesByCode = new LanguagesByCode(ns.Concat(cl));
                 }
                 return _compliantLanguagesByCode;
@@ -130,7 +116,7 @@ namespace Nikse.SubtitleEdit.Core
 
         public static DvdSubtitleLanguage GetLanguageOrNull(string code)
         {
-            code = IsoToDvd(code.ToLowerInvariant());
+            code = ConvertIsoToDvd(code.ToLowerInvariant());
             return CompliantLanguagesByCode.GetValueOrNull(code);
         }
 
@@ -149,7 +135,9 @@ namespace Nikse.SubtitleEdit.Core
                 }
                 catch
                 {
+                    // ignored
                 }
+
                 return codeCulture.EnglishName; // SE culture != UI culture
             }
             catch
@@ -170,18 +158,16 @@ namespace Nikse.SubtitleEdit.Core
             }
         }
 
-        private static string DvdToIso(string dvdCode)
+        private static string ConvertDvdToIso(string dvdCode)
         {
-            string isoCode;
-            if (!_dvdToIso.TryGetValue(dvdCode, out isoCode))
+            if (!DvdToIso.TryGetValue(dvdCode, out var isoCode))
                 isoCode = dvdCode;
             return isoCode;
         }
 
-        private static string IsoToDvd(string isoCode)
+        private static string ConvertIsoToDvd(string isoCode)
         {
-            string dvdCode;
-            if (!_isoToDvd.TryGetValue(isoCode, out dvdCode))
+            if (!IsoToDvd.TryGetValue(isoCode, out var dvdCode))
                 dvdCode = isoCode;
             return dvdCode;
         }

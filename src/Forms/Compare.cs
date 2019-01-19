@@ -131,6 +131,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (cavena890.IsMine(null, openFileDialog1.FileName))
                     {
                         cavena890.LoadSubtitle(_subtitle1, null, openFileDialog1.FileName);
+                        format = cavena890;
                     }
                 }
                 if (format == null)
@@ -139,6 +140,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (spt.IsMine(null, openFileDialog1.FileName))
                     {
                         spt.LoadSubtitle(_subtitle1, null, openFileDialog1.FileName);
+                        format = spt;
                     }
                 }
                 if (format == null)
@@ -147,6 +149,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (cheetahCaption.IsMine(null, openFileDialog1.FileName))
                     {
                         cheetahCaption.LoadSubtitle(_subtitle1, null, openFileDialog1.FileName);
+                        format = cheetahCaption;
                     }
                 }
                 if (format == null)
@@ -155,6 +158,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (chk.IsMine(null, openFileDialog1.FileName))
                     {
                         chk.LoadSubtitle(_subtitle1, null, openFileDialog1.FileName);
+                        format = chk;
                     }
                 }
                 if (format == null)
@@ -163,6 +167,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (asc.IsMine(null, openFileDialog1.FileName))
                     {
                         asc.LoadSubtitle(_subtitle1, null, openFileDialog1.FileName);
+                        format = asc;
                     }
                 }
                 if (format == null)
@@ -1039,7 +1044,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (saveFile.ShowDialog() == DialogResult.OK)
                 {
                     string fileName = saveFile.FileName;
-                    var sb = new StringBuilder();                        
+                    var sb = new StringBuilder();
                     sb.AppendLine("<!DOCTYPE html>");
                     sb.AppendLine("<html>");
                     sb.AppendLine("  <head>");

@@ -66,7 +66,7 @@ namespace Nikse.SubtitleEdit.Logic.ColorChooser
             var s = (double)HSV.Saturation / 255;
             var v = (double)HSV.Value / 255;
 
-            if (s == 0)
+            if (Math.Abs(s) < 0.01)
             {
                 // If s is 0, all colors are the same.
                 // This is some flavor of gray.
@@ -159,7 +159,7 @@ namespace Nikse.SubtitleEdit.Logic.ColorChooser
             var v = max;
 
             double delta = max - min;
-            if (max == 0 || delta == 0)
+            if (Math.Abs(max) < 0.01 || Math.Abs(delta) < 0.01)
             {
                 // R, G, and B must be 0, or all the same.
                 // In this case, S is 0, and H is undefined.
@@ -170,12 +170,12 @@ namespace Nikse.SubtitleEdit.Logic.ColorChooser
             else
             {
                 s = delta / max;
-                if (r == max)
+                if (Math.Abs(r - max) < 0.01)
                 {
                     // Between Yellow and Magenta
                     h = (g - b) / delta;
                 }
-                else if (g == max)
+                else if (Math.Abs(g - max) < 0.01)
                 {
                     // Between Cyan and Yellow
                     h = 2 + (b - r) / delta;

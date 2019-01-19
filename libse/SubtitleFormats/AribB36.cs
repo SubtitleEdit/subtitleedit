@@ -466,13 +466,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             subtitle.Renumber();
         }
 
-        public override List<string> AlternateExtensions
-        {
-            get
-            {
-                return new List<string>() { ".2HD", ".1SD", ".2SD" }; // 1HD = first HD subtitle, 2SD = second SD subtitle
-            }
-        }
-
+        // 1HD = first HD subtitle, 2SD = second SD subtitle
+        public override List<string> AlternateExtensions => new List<string> { ".2HD", ".1SD", ".2SD" };
     }
 }

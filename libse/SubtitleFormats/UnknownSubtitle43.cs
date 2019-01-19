@@ -104,7 +104,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             case "span":
                                 ReadSpan(pText, innerNode);
                                 break;
-
                             default:
                                 pText.Append(innerNode.InnerText);
                                 break;

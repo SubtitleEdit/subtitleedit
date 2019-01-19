@@ -286,14 +286,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     var pText = new StringBuilder();
                     foreach (XmlNode innerNode in node.SelectSingleNode("Text").ChildNodes)
                     {
-                        switch (innerNode.Name)
+                        if (innerNode.Name == "br")
                         {
-                            case "br":
-                                pText.AppendLine();
-                                break;
-                            default:
-                                pText.Append(innerNode.InnerText.Trim());
-                                break;
+                            pText.AppendLine();
+                        }
+                        else
+                        {
+                            pText.Append(innerNode.InnerText.Trim());
                         }
                     }
 

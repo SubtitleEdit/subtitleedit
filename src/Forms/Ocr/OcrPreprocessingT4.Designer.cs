@@ -78,7 +78,7 @@
             // 
             // pictureBoxSubtitleImage
             // 
-            this.pictureBoxSubtitleImage.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.pictureBoxSubtitleImage.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.pictureBoxSubtitleImage.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pictureBoxSubtitleImage.Location = new System.Drawing.Point(12, 247);
@@ -86,7 +86,6 @@
             this.pictureBoxSubtitleImage.Size = new System.Drawing.Size(804, 135);
             this.pictureBoxSubtitleImage.TabIndex = 14;
             this.pictureBoxSubtitleImage.TabStop = false;
-            this.pictureBoxSubtitleImage.Click += new System.EventHandler(this.pictureBoxSubtitleImage_Click);
             // 
             // buttonCancel
             // 
@@ -114,8 +113,8 @@
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.pictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pictureBox1.Location = new System.Drawing.Point(12, 412);
@@ -144,7 +143,7 @@
             // 
             // groupBoxBinaryImageCompareThresshold
             // 
-            this.groupBoxBinaryImageCompareThresshold.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.groupBoxBinaryImageCompareThresshold.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxBinaryImageCompareThresshold.Controls.Add(this.numericUpDownThreshold);
             this.groupBoxBinaryImageCompareThresshold.Controls.Add(this.labelDescription);

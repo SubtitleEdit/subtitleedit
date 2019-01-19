@@ -60,7 +60,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     text = DecodeText(text.TrimEnd('\\').Trim());
                     if (!string.IsNullOrEmpty(text))
                     {
-                        subtitle.Paragraphs.Add(new Paragraph()
+                        subtitle.Paragraphs.Add(new Paragraph
                         {
                             StartTime = DecodeTime(match.Groups[1].Value, timeSplitChar),
                             EndTime = DecodeTime(match.Groups[2].Value, timeSplitChar),

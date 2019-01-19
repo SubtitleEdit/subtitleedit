@@ -301,12 +301,9 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        public SpectrogramData Spectrogram
+        public void SetSpectrogram(SpectrogramData spectrogramData)
         {
-            set
-            {
-                InitializeSpectrogram(value);
-            }
+            InitializeSpectrogram(spectrogramData);
         }
 
         public void ClearSelection()

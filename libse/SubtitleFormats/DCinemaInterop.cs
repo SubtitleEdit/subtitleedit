@@ -524,120 +524,118 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     string lastVPosition = string.Empty;
                     foreach (XmlNode innerNode in node.ChildNodes)
                     {
-                        switch (innerNode.Name)
+                        if (innerNode.Name == "Text")
                         {
-                            case "Text":
-                                if (innerNode.Attributes["VPosition"] != null)
+                            if (innerNode.Attributes["VPosition"] != null)
+                            {
+                                string vPosition = innerNode.Attributes["VPosition"].InnerText;
+                                var vAlignmentNode = innerNode.Attributes["VAlign"];
+                                if (vAlignmentNode != null)
+                                    vAlignment = vAlignmentNode.InnerText;
+                                if (vPosition != lastVPosition)
                                 {
-                                    string vPosition = innerNode.Attributes["VPosition"].InnerText;
-                                    var vAlignmentNode = innerNode.Attributes["VAlign"];
-                                    if (vAlignmentNode != null)
-                                        vAlignment = vAlignmentNode.InnerText;
-                                    if (vPosition != lastVPosition)
+                                    if (pText.Length > 0 && lastVPosition.Length > 0)
                                     {
-                                        if (pText.Length > 0 && lastVPosition.Length > 0)
-                                        {
-                                            textLines.Add(new SubtitleLine(pText.ToString(), lastVPosition, vAlignment));
-                                            pText.Clear();
-                                        }
-
-                                        lastVPosition = vPosition;
-                                    }
-                                }
-
-                                bool alignLeft = false;
-                                bool alignRight = false;
-                                bool alignVTop = false;
-                                bool alignVCenter = false;
-                                if (innerNode.Attributes["HAlign"] != null)
-                                {
-                                    string hAlign = innerNode.Attributes["HAlign"].InnerText;
-                                    if (hAlign == "left")
-                                        alignLeft = true;
-                                    else if (hAlign == "right")
-                                        alignRight = true;
-                                }
-
-                                if (innerNode.Attributes["VAlign"] != null)
-                                {
-                                    string hAlign = innerNode.Attributes["VAlign"].InnerText;
-                                    if (hAlign == "top")
-                                        alignVTop = true;
-                                    else if (hAlign == "center")
-                                        alignVCenter = true;
-                                }
-
-                                if (alignLeft || alignRight || alignVCenter || alignVTop)
-                                {
-                                    if (!pText.ToString().StartsWith("{\\an", StringComparison.Ordinal))
-                                    {
-                                        string pre = string.Empty;
-                                        if (alignVTop)
-                                        {
-                                            if (alignLeft)
-                                                pre = "{\\an7}";
-                                            else if (alignRight)
-                                                pre = "{\\an9}";
-                                            else
-                                                pre = "{\\an8}";
-                                        }
-                                        else if (alignVCenter)
-                                        {
-                                            if (alignLeft)
-                                                pre = "{\\an4}";
-                                            else if (alignRight)
-                                                pre = "{\\an6}";
-                                            else
-                                                pre = "{\\an5}";
-                                        }
-                                        else
-                                        {
-                                            if (alignLeft)
-                                                pre = "{\\an1}";
-                                            else if (alignRight)
-                                                pre = "{\\an3}";
-                                        }
-
-                                        string temp = pre + pText;
+                                        textLines.Add(new SubtitleLine(pText.ToString(), lastVPosition, vAlignment));
                                         pText.Clear();
-                                        pText.Append(temp);
                                     }
-                                }
 
-                                if (innerNode.ChildNodes.Count == 0)
-                                {
-                                    pText.Append(innerNode.InnerText);
+                                    lastVPosition = vPosition;
                                 }
-                                else
+                            }
+
+                            bool alignLeft = false;
+                            bool alignRight = false;
+                            bool alignVTop = false;
+                            bool alignVCenter = false;
+                            if (innerNode.Attributes["HAlign"] != null)
+                            {
+                                string hAlign = innerNode.Attributes["HAlign"].InnerText;
+                                if (hAlign == "left")
+                                    alignLeft = true;
+                                else if (hAlign == "right")
+                                    alignRight = true;
+                            }
+
+                            if (innerNode.Attributes["VAlign"] != null)
+                            {
+                                string hAlign = innerNode.Attributes["VAlign"].InnerText;
+                                if (hAlign == "top")
+                                    alignVTop = true;
+                                else if (hAlign == "center")
+                                    alignVCenter = true;
+                            }
+
+                            if (alignLeft || alignRight || alignVCenter || alignVTop)
+                            {
+                                if (!pText.ToString().StartsWith("{\\an", StringComparison.Ordinal))
                                 {
-                                    foreach (XmlNode innerInnerNode in innerNode)
+                                    string pre = string.Empty;
+                                    if (alignVTop)
                                     {
-                                        if (innerInnerNode.Name == "Font" && innerInnerNode.Attributes["Italic"] != null &&
-                                            innerInnerNode.Attributes["Italic"].InnerText.Equals("yes", StringComparison.OrdinalIgnoreCase))
-                                        {
-                                            if (innerInnerNode.Attributes["Color"] != null)
-                                                pText.Append("<i><font color=\"" + GetColorStringFromDCinema(innerInnerNode.Attributes["Color"].Value) + "\">" + innerInnerNode.InnerText + "</font><i>");
-                                            else
-                                                pText.Append("<i>" + innerInnerNode.InnerText + "</i>");
-                                        }
-                                        else if (innerInnerNode.Name == "Font" && innerInnerNode.Attributes["Color"] != null)
-                                        {
-                                            if (innerInnerNode.Attributes["Italic"] != null && innerInnerNode.Attributes["Italic"].InnerText.Equals("yes", StringComparison.OrdinalIgnoreCase))
-                                                pText.Append("<i><font color=\"" + GetColorStringFromDCinema(innerInnerNode.Attributes["Color"].Value) + "\">" + innerInnerNode.InnerText + "</font><i>");
-                                            else
-                                                pText.Append("<font color=\"" + GetColorStringFromDCinema(innerInnerNode.Attributes["Color"].Value) + "\">" + innerInnerNode.InnerText + "</font>");
-                                        }
+                                        if (alignLeft)
+                                            pre = "{\\an7}";
+                                        else if (alignRight)
+                                            pre = "{\\an9}";
                                         else
-                                        {
-                                            pText.Append(innerInnerNode.InnerText);
-                                        }
+                                            pre = "{\\an8}";
+                                    }
+                                    else if (alignVCenter)
+                                    {
+                                        if (alignLeft)
+                                            pre = "{\\an4}";
+                                        else if (alignRight)
+                                            pre = "{\\an6}";
+                                        else
+                                            pre = "{\\an5}";
+                                    }
+                                    else
+                                    {
+                                        if (alignLeft)
+                                            pre = "{\\an1}";
+                                        else if (alignRight)
+                                            pre = "{\\an3}";
+                                    }
+
+                                    string temp = pre + pText;
+                                    pText.Clear();
+                                    pText.Append(temp);
+                                }
+                            }
+
+                            if (innerNode.ChildNodes.Count == 0)
+                            {
+                                pText.Append(innerNode.InnerText);
+                            }
+                            else
+                            {
+                                foreach (XmlNode innerInnerNode in innerNode)
+                                {
+                                    if (innerInnerNode.Name == "Font" && innerInnerNode.Attributes["Italic"] != null &&
+                                        innerInnerNode.Attributes["Italic"].InnerText.Equals("yes", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (innerInnerNode.Attributes["Color"] != null)
+                                            pText.Append("<i><font color=\"" + GetColorStringFromDCinema(innerInnerNode.Attributes["Color"].Value) + "\">" + innerInnerNode.InnerText + "</font><i>");
+                                        else
+                                            pText.Append("<i>" + innerInnerNode.InnerText + "</i>");
+                                    }
+                                    else if (innerInnerNode.Name == "Font" && innerInnerNode.Attributes["Color"] != null)
+                                    {
+                                        if (innerInnerNode.Attributes["Italic"] != null && innerInnerNode.Attributes["Italic"].InnerText.Equals("yes", StringComparison.OrdinalIgnoreCase))
+                                            pText.Append("<i><font color=\"" + GetColorStringFromDCinema(innerInnerNode.Attributes["Color"].Value) + "\">" + innerInnerNode.InnerText + "</font><i>");
+                                        else
+                                            pText.Append("<font color=\"" + GetColorStringFromDCinema(innerInnerNode.Attributes["Color"].Value) + "\">" + innerInnerNode.InnerText + "</font>");
+                                    }
+                                    else
+                                    {
+                                        pText.Append(innerInnerNode.InnerText);
                                     }
                                 }
-
-                                break;
-                            default:
-                                pText.Append(innerNode.InnerText);
-                                break;
+                            }
+                        }
+                        else
+                        {
+                            pText.Append(innerNode.InnerText);
                         }
                     }
 

@@ -456,7 +456,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             subtitle.Renumber();
         }
 
-        public override List<string> AlternateExtensions => new List<string>() { ".uld" }; // Ultech drop frame
+        public override List<string> AlternateExtensions => new List<string> { ".uld" }; // Ultech drop frame
 
     }
 }
