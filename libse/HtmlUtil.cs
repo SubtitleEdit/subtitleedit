@@ -546,7 +546,6 @@ namespace Nikse.SubtitleEdit.Core
             text = text.Replace("< i >", beginTag);
             text = text.Replace("< i>", beginTag);
             text = text.Replace("<i >", beginTag);
-            text = text.Replace("<I>", beginTag);
             text = text.Replace("< I >", beginTag);
             text = text.Replace("< I>", beginTag);
             text = text.Replace("<I >", beginTag);
