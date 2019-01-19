@@ -21,23 +21,23 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
     public class BluRaySupPalette
     {
         /** Number of palette entries */
-        private int size;
+        private readonly int _size;
         /** Byte buffer for RED info */
-        private byte[] r;
+        private readonly byte[] _r;
         /** Byte buffer for GREEN info */
-        private byte[] g;
+        private readonly byte[] _g;
         /** Byte buffer for BLUE info */
-        private byte[] b;
+        private readonly byte[] _b;
         /** Byte buffer for alpha info */
-        private byte[] a;
+        private readonly byte[] _a;
         /** Byte buffer for Y (luminance) info */
-        private byte[] y;
+        private readonly byte[] _y;
         /** Byte buffer for Cb (chrominance blue) info */
-        private byte[] cb;
+        private readonly byte[] _cb;
         /** Byte buffer for Cr (chrominance red) info */
-        private byte[] cr;
+        private readonly byte[] _cr;
         /** Use BT.601 color model instead of BT.709 */
-        private bool useBT601;
+        private readonly bool _useBt601;
 
         /**
          * Convert YCBCr color info to RGB
@@ -48,7 +48,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
          */
         public static int[] YCbCr2Rgb(int y, int cb, int cr, bool useBt601)
         {
-            int[] rgb = new int[3];
+            var rgb = new int[3];
             double r, g, b;
 
             y -= 16;
@@ -76,9 +76,13 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             for (int i = 0; i < 3; i++)
             {
                 if (rgb[i] < 0)
+                {
                     rgb[i] = 0;
+                }
                 else if (rgb[i] > 255)
+                {
                     rgb[i] = 255;
+                }
             }
             return rgb;
         }
@@ -92,7 +96,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
          */
         private static int[] Rgb2YCbCr(int r, int g, int b, bool useBt601)
         {
-            int[] yCbCr = new int[3];
+            var yCbCr = new int[3];
             double y, cb, cr;
 
             if (useBt601)
@@ -115,18 +119,24 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             for (int i = 0; i < 3; i++)
             {
                 if (yCbCr[i] < 16)
+                {
                     yCbCr[i] = 16;
+                }
                 else
                 {
                     if (i == 0)
                     {
                         if (yCbCr[i] > 235)
+                        {
                             yCbCr[i] = 235;
+                        }
                     }
                     else
                     {
                         if (yCbCr[i] > 240)
+                        {
                             yCbCr[i] = 240;
+                        }
                     }
                 }
             }
@@ -140,27 +150,27 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
          */
         public BluRaySupPalette(int palSize, bool use601)
         {
-            size = palSize;
-            useBT601 = use601;
-            r = new byte[size];
-            g = new byte[size];
-            b = new byte[size];
-            a = new byte[size];
-            y = new byte[size];
-            cb = new byte[size];
-            cr = new byte[size];
+            _size = palSize;
+            _useBt601 = use601;
+            _r = new byte[_size];
+            _g = new byte[_size];
+            _b = new byte[_size];
+            _a = new byte[_size];
+            _y = new byte[_size];
+            _cb = new byte[_size];
+            _cr = new byte[_size];
 
             // set at least all alpha values to invisible
-            int[] yCbCr = Rgb2YCbCr(0, 0, 0, useBT601);
+            var yCbCr = Rgb2YCbCr(0, 0, 0, _useBt601);
             for (int i = 0; i < palSize; i++)
             {
-                a[i] = 0;
-                r[i] = 0;
-                g[i] = 0;
-                b[i] = 0;
-                y[i] = (byte)yCbCr[0];
-                cb[i] = (byte)yCbCr[1];
-                cr[i] = (byte)yCbCr[2];
+                _a[i] = 0;
+                _r[i] = 0;
+                _g[i] = 0;
+                _b[i] = 0;
+                _y[i] = (byte)yCbCr[0];
+                _cb[i] = (byte)yCbCr[1];
+                _cr[i] = (byte)yCbCr[2];
             }
         }
 
@@ -183,39 +193,27 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
          */
         public BluRaySupPalette(byte[] red, byte[] green, byte[] blue, byte[] alpha, bool use601)
         {
-            size = red.Length;
-            useBT601 = use601;
-            r = new byte[size];
-            g = new byte[size];
-            b = new byte[size];
-            a = new byte[size];
-            y = new byte[size];
-            cb = new byte[size];
-            cr = new byte[size];
+            _size = red.Length;
+            _useBt601 = use601;
+            _r = new byte[_size];
+            _g = new byte[_size];
+            _b = new byte[_size];
+            _a = new byte[_size];
+            _y = new byte[_size];
+            _cb = new byte[_size];
+            _cr = new byte[_size];
 
-            for (int i = 0; i < size; i++)
+            for (int i = 0; i < _size; i++)
             {
-                a[i] = alpha[i];
-                r[i] = red[i];
-                g[i] = green[i];
-                b[i] = blue[i];
-                var yCbCr = Rgb2YCbCr(r[i] & 0xff, g[i] & 0xff, b[i] & 0xff, useBT601);
-                y[i] = (byte)yCbCr[0];
-                cb[i] = (byte)yCbCr[1];
-                cr[i] = (byte)yCbCr[2];
+                _a[i] = alpha[i];
+                _r[i] = red[i];
+                _g[i] = green[i];
+                _b[i] = blue[i];
+                var yCbCr = Rgb2YCbCr(_r[i] & 0xff, _g[i] & 0xff, _b[i] & 0xff, _useBt601);
+                _y[i] = (byte)yCbCr[0];
+                _cb[i] = (byte)yCbCr[1];
+                _cr[i] = (byte)yCbCr[2];
             }
-        }
-
-        /**
-         * Ctor - construct palette from red, green blue and alpha buffers
-         * @param red   Byte buffer containing the red components
-         * @param green Byte buffer containing the green components
-         * @param blue  Byte buffer containing the blue components
-         * @param alpha Byte buffer containing the alpha components
-         */
-        public BluRaySupPalette(byte[] red, byte[] green, byte[] blue, byte[] alpha)
-            : this(red, green, blue, alpha, false)
-        {
         }
 
         /**
@@ -224,25 +222,25 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
          */
         public BluRaySupPalette(BluRaySupPalette p)
         {
-            size = p.GetSize();
-            useBT601 = p.UsesBt601();
-            r = new byte[size];
-            g = new byte[size];
-            b = new byte[size];
-            a = new byte[size];
-            y = new byte[size];
-            cb = new byte[size];
-            cr = new byte[size];
+            _size = p.GetSize();
+            _useBt601 = p.UsesBt601();
+            _r = new byte[_size];
+            _g = new byte[_size];
+            _b = new byte[_size];
+            _a = new byte[_size];
+            _y = new byte[_size];
+            _cb = new byte[_size];
+            _cr = new byte[_size];
 
-            for (int i = 0; i < size; i++)
+            for (int i = 0; i < _size; i++)
             {
-                a[i] = p.a[i];
-                r[i] = p.r[i];
-                g[i] = p.g[i];
-                b[i] = p.b[i];
-                y[i] = p.y[i];
-                cb[i] = p.cb[i];
-                cr[i] = p.cr[i];
+                _a[i] = p._a[i];
+                _r[i] = p._r[i];
+                _g[i] = p._g[i];
+                _b[i] = p._b[i];
+                _y[i] = p._y[i];
+                _cb[i] = p._cb[i];
+                _cr[i] = p._cr[i];
             }
         }
 
@@ -268,7 +266,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
          */
         public int GetArgb(int index)
         {
-            return ((a[index] & 0xff) << 24) | ((r[index] & 0xff) << 16) | ((g[index] & 0xff) << 8) | (b[index] & 0xff);
+            return ((_a[index] & 0xff) << 24) | ((_r[index] & 0xff) << 16) | ((_g[index] & 0xff) << 8) | (_b[index] & 0xff);
         }
 
         internal void SetColor(int index, System.Drawing.Color color)
@@ -286,14 +284,14 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
          */
         public void SetRgb(int index, int red, int green, int blue)
         {
-            r[index] = (byte)red;
-            g[index] = (byte)green;
-            b[index] = (byte)blue;
+            _r[index] = (byte)red;
+            _g[index] = (byte)green;
+            _b[index] = (byte)blue;
             // create yCbCr
-            int[] yCbCr = Rgb2YCbCr(red, green, blue, useBT601);
-            y[index] = (byte)yCbCr[0];
-            cb[index] = (byte)yCbCr[1];
-            cr[index] = (byte)yCbCr[2];
+            var yCbCr = Rgb2YCbCr(red, green, blue, _useBt601);
+            _y[index] = (byte)yCbCr[0];
+            _cb[index] = (byte)yCbCr[1];
+            _cr[index] = (byte)yCbCr[2];
         }
 
         /**
@@ -305,14 +303,14 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
          */
         public void SetYCbCr(int index, int yn, int cbn, int crn)
         {
-            y[index] = (byte)yn;
-            cb[index] = (byte)cbn;
-            cr[index] = (byte)crn;
+            _y[index] = (byte)yn;
+            _cb[index] = (byte)cbn;
+            _cr[index] = (byte)crn;
             // create RGB
-            int[] rgb = YCbCr2Rgb(yn, cbn, crn, useBT601);
-            r[index] = (byte)rgb[0];
-            g[index] = (byte)rgb[1];
-            b[index] = (byte)rgb[2];
+            var rgb = YCbCr2Rgb(yn, cbn, crn, _useBt601);
+            _r[index] = (byte)rgb[0];
+            _g[index] = (byte)rgb[1];
+            _b[index] = (byte)rgb[2];
         }
 
         /**
@@ -322,7 +320,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
          */
         public void SetAlpha(int index, int alpha)
         {
-            a[index] = (byte)alpha;
+            _a[index] = (byte)alpha;
         }
 
         /**
@@ -332,7 +330,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
          */
         public int GetAlpha(int index)
         {
-            return a[index] & 0xff;
+            return _a[index] & 0xff;
         }
 
         /**
@@ -341,7 +339,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
          */
         public byte[] GetAlpha()
         {
-            return a;
+            return _a;
         }
 
         /**
@@ -351,10 +349,10 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
          */
         public int[] GetRgb(int index)
         {
-            int[] rgb = new int[3];
-            rgb[0] = r[index] & 0xff;
-            rgb[1] = g[index] & 0xff;
-            rgb[2] = b[index] & 0xff;
+            var rgb = new int[3];
+            rgb[0] = _r[index] & 0xff;
+            rgb[1] = _g[index] & 0xff;
+            rgb[2] = _b[index] & 0xff;
             return rgb;
         }
 
@@ -365,10 +363,10 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
          */
         public int[] GetYCbCr(int index)
         {
-            int[] yCbCr = new int[3];
-            yCbCr[0] = y[index] & 0xff;
-            yCbCr[1] = cb[index] & 0xff;
-            yCbCr[2] = cr[index] & 0xff;
+            var yCbCr = new int[3];
+            yCbCr[0] = _y[index] & 0xff;
+            yCbCr[1] = _cb[index] & 0xff;
+            yCbCr[2] = _cr[index] & 0xff;
             return yCbCr;
         }
 
@@ -378,7 +376,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
          */
         public byte[] GetR()
         {
-            return r;
+            return _r;
         }
 
         /**
@@ -387,7 +385,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
          */
         public byte[] GetG()
         {
-            return g;
+            return _g;
         }
 
         /**
@@ -396,7 +394,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
          */
         public byte[] GetB()
         {
-            return b;
+            return _b;
         }
 
         /**
@@ -405,7 +403,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
          */
         public byte[] GetY()
         {
-            return y;
+            return _y;
         }
 
         /**
@@ -414,7 +412,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
          */
         public byte[] GetCb()
         {
-            return cb;
+            return _cb;
         }
 
         /**
@@ -423,7 +421,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
          */
         public byte[] GetCr()
         {
-            return cr;
+            return _cr;
         }
 
         /**
@@ -432,7 +430,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
          */
         public int GetSize()
         {
-            return size;
+            return _size;
         }
 
         /**
@@ -444,14 +442,16 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             // find (most) transparent index in palette
             int transpIdx = 0;
             int minAlpha = 0x100;
-            for (int i = 0; i < size; i++)
+            for (int i = 0; i < _size; i++)
             {
-                if ((a[i] & 0xff) < minAlpha)
+                if ((_a[i] & 0xff) < minAlpha)
                 {
-                    minAlpha = a[i] & 0xff;
+                    minAlpha = _a[i] & 0xff;
                     transpIdx = i;
                     if (minAlpha == 0)
+                    {
                         break;
+                    }
                 }
             }
             return transpIdx;
@@ -463,7 +463,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
          */
         public bool UsesBt601()
         {
-            return useBT601;
+            return _useBt601;
         }
 
     }

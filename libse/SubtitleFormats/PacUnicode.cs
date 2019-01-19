@@ -200,7 +200,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                 // paragraphs
                 var sub = new Subtitle(subtitle);
-                sub.Paragraphs.Insert(0, new Paragraph() { Text = "-" });
+                sub.Paragraphs.Insert(0, new Paragraph { Text = "-" });
 
                 int number = 0;
                 foreach (Paragraph p in sub.Paragraphs)

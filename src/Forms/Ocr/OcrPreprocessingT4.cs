@@ -61,13 +61,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             DialogResult = DialogResult.Cancel;
         }
 
-        private void pictureBoxSubtitleImage_Click(object sender, EventArgs e)
-        {
-            var bmp = pictureBoxSubtitleImage.Image as Bitmap;
-            if (bmp == null)
-                return;
-        }
-
         private void SetForeColorThreshold_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)

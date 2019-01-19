@@ -194,7 +194,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             _mplayer.StandardInput.WriteLine("pausing_keep_force get_property time_pos");
             _mplayer.StandardInput.WriteLine("pausing_keep_force get_property pause");
 
-            if (!_ended && OnVideoEnded != null && _lengthInSeconds.TotalSeconds == Duration)
+            if (!_ended && OnVideoEnded != null && Math.Abs(_lengthInSeconds.TotalSeconds - Duration) < 0.01)
             {
                 //  _ended = true;
                 //  OnVideoEnded.Invoke(this, null);

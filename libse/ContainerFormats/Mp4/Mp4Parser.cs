@@ -181,7 +181,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4
 
                     if (Name == "mdat")
                     {
-                        var before = (long)fs.Position;
+                        var before = fs.Position;
                         var readLength = ((long)Position) - before;
                         if (readLength > 10)
                         {

@@ -122,19 +122,24 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     var pText = new StringBuilder();
                     foreach (XmlNode innerNode in node.ChildNodes)
                     {
-                        switch (innerNode.Name)
+                        if (innerNode.Name == "key")
                         {
-                            case "key":
-                                lastKey = innerNode.InnerText;
-                                break;
-                            default:
-                                if (lastKey == "in")
-                                    p.StartTime.TotalSeconds = double.Parse(innerNode.InnerText);
-                                else if (lastKey == "out")
-                                    p.EndTime.TotalSeconds = double.Parse(innerNode.InnerText);
-                                else if (lastKey.StartsWith("text"))
-                                    pText.AppendLine(innerNode.InnerText);
-                                break;
+                            lastKey = innerNode.InnerText;
+                        }
+                        else
+                        {
+                            if (lastKey == "in")
+                            {
+                                p.StartTime.TotalSeconds = double.Parse(innerNode.InnerText);
+                            }
+                            else if (lastKey == "out")
+                            {
+                                p.EndTime.TotalSeconds = double.Parse(innerNode.InnerText);
+                            }
+                            else if (lastKey.StartsWith("text"))
+                            {
+                                pText.AppendLine(innerNode.InnerText);
+                            }
                         }
                     }
                     p.Text = pText.ToString().Trim();

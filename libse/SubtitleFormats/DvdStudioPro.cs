@@ -197,19 +197,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     if (text.Substring(i).StartsWith("^I", StringComparison.Ordinal))
                     {
-                        if (!italicOn)
-                            sb.Append("<i>");
-                        else
-                            sb.Append("</i>");
+                        sb.Append(!italicOn ? "<i>" : "</i>");
                         italicOn = !italicOn;
                         skipNext = true;
                     }
                     else if (text.Substring(i).StartsWith("^B", StringComparison.Ordinal))
                     {
-                        if (!boldOn)
-                            sb.Append("<b>");
-                        else
-                            sb.Append("</b>");
+                        sb.Append(!boldOn ? "<b>" : "</b>");
                         boldOn = !boldOn;
                         skipNext = true;
                     }

@@ -3338,7 +3338,7 @@ namespace Nikse.SubtitleEdit.Forms
                         _videoAudioTrackNumber = -1;
                         labelVideoInfo.Text = _languageGeneral.NoVideoLoaded;
                         audioVisualizer.WavePeaks = null;
-                        audioVisualizer.Spectrogram = null;
+                        audioVisualizer.SetSpectrogram(null);
                         audioVisualizer.SceneChanges = new List<double>();
                     }
 
@@ -3462,7 +3462,7 @@ namespace Nikse.SubtitleEdit.Forms
                         _videoAudioTrackNumber = -1;
                         labelVideoInfo.Text = _languageGeneral.NoVideoLoaded;
                         audioVisualizer.WavePeaks = null;
-                        audioVisualizer.Spectrogram = null;
+                        audioVisualizer.SetSpectrogram(null);
                         audioVisualizer.SceneChanges = new List<double>();
 
                         Configuration.Settings.RecentFiles.Add(fileName, FirstVisibleIndex, FirstSelectedIndex, _videoFileName, _subtitleAlternateFileName, Configuration.Settings.General.CurrentVideoOffsetInMs);
@@ -4225,7 +4225,7 @@ namespace Nikse.SubtitleEdit.Forms
                 _videoAudioTrackNumber = -1;
                 labelVideoInfo.Text = _languageGeneral.NoVideoLoaded;
                 audioVisualizer.WavePeaks = null;
-                audioVisualizer.Spectrogram = null;
+                audioVisualizer.SetSpectrogram(null);
                 audioVisualizer.SceneChanges = new List<double>();
                 if (mediaPlayer.VideoPlayer != null)
                 {
@@ -16163,7 +16163,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (File.Exists(peakWaveFileName))
                 {
                     audioVisualizer.WavePeaks = WavePeakData.FromDisk(peakWaveFileName);
-                    audioVisualizer.Spectrogram = SpectrogramData.FromDisk(spectrogramFolder);
+                    audioVisualizer.SetSpectrogram(SpectrogramData.FromDisk(spectrogramFolder));
                     audioVisualizer.SceneChanges = SceneChangeHelper.FromDisk(_videoFileName);
                     toolStripComboBoxWaveform_SelectedIndexChanged(null, null);
                     SetWaveformPosition(0, 0, 0);
@@ -16995,7 +16995,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (audioVisualizer.WavePeaks != null)
                 {
                     audioVisualizer.WavePeaks = null;
-                    audioVisualizer.Spectrogram = null;
+                    audioVisualizer.SetSpectrogram(null);
                     audioVisualizer.SceneChanges = new List<double>();
                 }
                 openFileDialog1.InitialDirectory = Path.GetDirectoryName(openFileDialog1.FileName);
@@ -17664,19 +17664,12 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (index + 1 < _subtitle.Paragraphs.Count)
                 {
-                    SubtitleListview1.Items[index].Selected = false;
-                    SubtitleListview1.Items[index + 1].Selected = true;
-                    if (!_subtitle.Paragraphs[index + 1].StartTime.IsMaxTime)
-                        _subtitle.Paragraphs[index + 1].StartTime = TimeCode.FromSeconds(videoPosition + 0.001);
-
                     if (IsFramesRelevant && CurrentFrameRate > 0)
                     {
                         _subtitle.CalculateFrameNumbersFromTimeCodesNoCheck(CurrentFrameRate);
                         if (tabControlSubtitle.SelectedIndex == TabControlSourceView)
                             ShowSource();
                     }
-                    if (!_subtitle.Paragraphs[index + 1].StartTime.IsMaxTime)
-                        SubtitleListview1.SetStartTimeAndDuration(index + 1, _subtitle.Paragraphs[index + 1], _subtitle.GetParagraphOrDefault(index + 1), _subtitle.GetParagraphOrDefault(index - 1));
                     SubtitleListview1.SelectIndexAndEnsureVisible(index + 1, true);
                 }
                 _makeHistoryPaused = false;
@@ -18776,7 +18769,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (addWaveform.ShowDialog() == DialogResult.OK)
                     {
                         audioVisualizer.WavePeaks = addWaveform.Peaks;
-                        audioVisualizer.Spectrogram = addWaveform.Spectrogram;
+                        audioVisualizer.SetSpectrogram(addWaveform.Spectrogram);
                         timerWaveform.Start();
                     }
                 }
@@ -19149,7 +19142,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (addWaveform.ShowDialog() == DialogResult.OK)
                 {
                     audioVisualizer.WavePeaks = addWaveform.Peaks;
-                    audioVisualizer.Spectrogram = addWaveform.Spectrogram;
+                    audioVisualizer.SetSpectrogram(addWaveform.Spectrogram);
                     timerWaveform.Start();
                 }
             }
@@ -20394,7 +20387,7 @@ namespace Nikse.SubtitleEdit.Forms
             _videoAudioTrackNumber = -1;
             labelVideoInfo.Text = _languageGeneral.NoVideoLoaded;
             audioVisualizer.WavePeaks = null;
-            audioVisualizer.Spectrogram = null;
+            audioVisualizer.SetSpectrogram(null);
             audioVisualizer.SceneChanges = new List<double>();
             mediaPlayer.CurrentPosition = 0;
         }
@@ -23838,7 +23831,7 @@ namespace Nikse.SubtitleEdit.Forms
                         if (audioVisualizer.WavePeaks != null)
                         {
                             audioVisualizer.WavePeaks = null;
-                            audioVisualizer.Spectrogram = null;
+                            audioVisualizer.SetSpectrogram(null);
                             audioVisualizer.SceneChanges = new List<double>();
                         }
                         if (!panelVideoPlayer.Visible)

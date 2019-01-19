@@ -126,9 +126,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             double startSeconds = double.Parse(frames[0]) / 10;
                             double endSeconds = double.Parse(frames[1]) / 10;
 
-                            if (startSeconds == 0 && subtitle.Paragraphs.Count > 0)
+                            if (Math.Abs(startSeconds) < 0.01 && subtitle.Paragraphs.Count > 0)
                                 startSeconds = (subtitle.Paragraphs[subtitle.Paragraphs.Count - 1].EndTime.TotalMilliseconds / 1000) + 0.1;
-                            if (endSeconds == 0)
+                            if (Math.Abs(endSeconds) < 0.01)
                                 endSeconds = startSeconds;
 
                             subtitle.Paragraphs.Add(new Paragraph(text, startSeconds * 1000, endSeconds * 1000));

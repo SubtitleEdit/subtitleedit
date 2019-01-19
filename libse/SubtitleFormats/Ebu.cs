@@ -303,10 +303,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         {
                             sbTwoChar.Append(ReplaceSpecialCharactersWithTwoByteEncoding(ch, encoding.GetString(new byte[] { 0xc6 }), "ĂĞŬăğŭ", "AGUagu"));
                         }
-                        else if ("ĂĞŬăğŭ".Contains(ch))
-                        {
-                            sbTwoChar.Append(ReplaceSpecialCharactersWithTwoByteEncoding(ch, encoding.GetString(new byte[] { 0xc6 }), "ĂĞŬăğŭ", "AGUagu"));
-                        }
                         else if ("ĊĖĠİŻċėġıż".Contains(ch))
                         {
                             sbTwoChar.Append(ReplaceSpecialCharactersWithTwoByteEncoding(ch, encoding.GetString(new byte[] { 0xc7 }), "ĊĖĠİŻċėġıż", "CEGIZcegiz"));

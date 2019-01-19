@@ -197,7 +197,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                 }
 
-                var styles = new List<FcpXmlStyle>() { DefaultStyle };
+                var styles = new List<FcpXmlStyle> { DefaultStyle };
                 var text = Utilities.RemoveSsaTags(p.Text).Trim();
                 var italicIndexesBefore = new Stack<int>();
                 var boldIndexesBefore = new Stack<int>();

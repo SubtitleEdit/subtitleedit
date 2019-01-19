@@ -1046,7 +1046,11 @@ namespace Nikse.SubtitleEdit.Core
                 // Less optimized but readable version of the above
                 public static int Map(double magnitude, double decibelRange, int indexMax)
                 {
-                    if (magnitude == 0) return 0;
+                    if (Math.Abs(magnitude) < 0.01)
+                    {
+                        return 0;
+                    }
+
                     double decibelLevel = 20.0 * Math.Log10(magnitude);
                     return decibelLevel >= -decibelRange ? (int)(indexMax * (decibelLevel + decibelRange) / decibelRange) : 0;
                 }
