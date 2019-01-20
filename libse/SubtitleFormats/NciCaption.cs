@@ -15,10 +15,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public static void Save(string fileName)
         {
-            using (var fs = new FileStream(fileName, FileMode.Create, FileAccess.Write))
-            {
-                //...
-            }
         }
 
         public override bool IsMine(List<string> lines, string fileName)
@@ -137,7 +133,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 buffer[7] == 0x32)
             {
                 i = 396;
-                int start = i;
                 int number = 0;
                 while (i < buffer.Length - 66)
                 {
@@ -178,7 +173,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             }
                             else
                             {
-                                //System.Windows.Forms.MessageBox.Show("Problem at with a length of " + length.ToString() + " at file position " + (i + 2) + " which gives remainer: " + (length % 14));
                                 if (length % 14 == 8)
                                 {
                                     count++;

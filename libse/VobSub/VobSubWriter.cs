@@ -124,7 +124,6 @@ namespace Nikse.SubtitleEdit.Core.VobSub
             // Control Sequence Table
             // Write delay - subtitle duration
             WriteEndianWord(Convert.ToInt32(p.Duration.TotalMilliseconds * 90.0) >> 10, ms);
-            //            WriteEndianWord(Convert.ToInt32(p.Duration.TotalMilliseconds * 90.0 - 1023) >> 10, ms);
 
             // next display control sequence table address (use current is last)
             WriteEndianWord(startDisplayControlSequenceTableAddress + 24, ms); // start of display control sequence table address

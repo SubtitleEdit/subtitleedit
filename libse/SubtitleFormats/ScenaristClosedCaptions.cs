@@ -36,7 +36,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         private const string TimeCodeRegEx = @"^\d+:\d\d:\d\d[:,]\d\d\t";
         private static readonly Regex Regex = new Regex(TimeCodeRegEx, RegexOptions.Compiled);
         protected virtual Regex RegexTimeCodes => Regex;
-        protected bool DropFrame = false;
+        protected bool DropFrame;
 
         public static List<KeyValuePair<string, string>> LetterDictionary = new List<KeyValuePair<string, string>>
         {

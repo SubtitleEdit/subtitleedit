@@ -111,7 +111,6 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             var bytes = new List<byte>();
             for (int y = 0; y < bm.Height; y++)
             {
-                //eol = false;
                 int x;
                 int len;
                 for (x = 0; x < bm.Width; x += len)
@@ -185,7 +184,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                         }
                     }
                 }
-                if (/*!eol &&*/ x == bm.Width)
+                if (x == bm.Width)
                 {
                     bytes.Add(0); // rle id
                     bytes.Add(0);
@@ -562,7 +561,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             }
 
             packetHeader[10] = 0x15;                                            // ID
-            timestamp = 0; //dts + imageDecodeTime;
+            timestamp = 0; 
             ToolBox.SetDWord(packetHeader, 2, timestamp);                       // PTS
             ToolBox.SetDWord(packetHeader, 6, dts);                             // DTS
             ToolBox.SetWord(packetHeader, 11, headerOdsFirst.Length + bufSize); // size
@@ -627,7 +626,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             // write PCS end
             packetHeader[10] = 0x16;                                            // ID
             ToolBox.SetDWord(packetHeader, 2, pic.EndTimeForWrite);             // PTS
-            dts = pic.EndTimeForWrite - 90; //dts = pic.StartTimeForWrite - 1;
+            dts = pic.EndTimeForWrite - 90; 
             ToolBox.SetDWord(packetHeader, 6, dts);                             // DTS
             ToolBox.SetWord(packetHeader, 11, headerPcsEnd.Length);             // size
             for (int i = 0; i < packetHeader.Length; i++)

@@ -615,7 +615,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 if (ok && IsMatchPointForeGround(op, !tempVeryPrecise, nbmp, nOcrChar))
                 {
                     nOcrChar.LinesForeground.Add(op);
-                    //AddHistoryItem(nOcrChar);
                     hits++;
                 }
                 count++;
@@ -675,7 +674,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 if (ok && IsMatchPointBackGround(op, !tempVeryPrecise, nbmp, nOcrChar))
                 {
                     nOcrChar.LinesBackground.Add(op);
-                    //AddHistoryItem(nOcrChar);
                     hits++;
                 }
                 count++;

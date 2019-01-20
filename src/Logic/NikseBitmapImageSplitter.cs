@@ -75,8 +75,6 @@ namespace Nikse.SubtitleEdit.Logic
 
                 startTop++;
             }
-            //if (startTop > 9)
-            //startTop -= 5; // if top space > 9, then allways leave blank 5 pixels on top (so . is not confused with ').
             topCropping = startTop;
 
             int h = bmp.Height;
@@ -204,9 +202,7 @@ namespace Nikse.SubtitleEdit.Logic
                         if (size > 2)
                         {
                             NikseBitmap part = bmp.CopyRectangle(new Rectangle(0, startY, bmp.Width, size + 1));
-                            //                            part.Save("c:\\line_0_to_width.bmp");
                             parts.Add(new ImageSplitterItem(0, startY, part));
-                            //                            bmp.Save("c:\\original.bmp");
                         }
                         size = 0;
                         startY = y;
@@ -264,9 +260,7 @@ namespace Nikse.SubtitleEdit.Logic
                         if (size > 8)
                         {
                             NikseBitmap part = bmp.CopyRectangle(new Rectangle(0, startY, bmp.Width, size + 1));
-                            //                            part.Save("c:\\line_0_to_width.bmp");
                             parts.Add(new ImageSplitterItem(0, startY, part));
-                            //                            bmp.Save("c:\\original.bmp");
                         }
                         size = 0;
                         startY = y;

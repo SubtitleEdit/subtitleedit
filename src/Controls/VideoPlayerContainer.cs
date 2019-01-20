@@ -727,7 +727,7 @@ namespace Nikse.SubtitleEdit.Controls
             Cursor.Hide();
         }
 
-        private int _cursorStatus = 0;
+        private int _cursorStatus;
 
         public void ShowCursor()
         {

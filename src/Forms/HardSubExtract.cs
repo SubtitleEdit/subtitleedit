@@ -20,7 +20,7 @@ namespace Nikse.SubtitleEdit.Forms
         //private System.Windows.Forms.Timer timer1;
         private const int lineChecksWidth = 50;
         private const int lineChecksHeight = 25;
-        public string OcrFileName = null;
+        public string OcrFileName;
 
         public HardSubExtract(string videoFileName)
         {

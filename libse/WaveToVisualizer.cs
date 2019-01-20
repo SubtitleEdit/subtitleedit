@@ -812,7 +812,6 @@ namespace Nikse.SubtitleEdit.Core
                 if (endPaddingSampleCount > 0)
                 {
                     Array.Clear(chunkSamples, chunkSampleOffset, endPaddingSampleCount);
-                    chunkSampleOffset += endPaddingSampleCount;
                 }
 
                 // generate spectrogram for this chunk
@@ -820,10 +819,7 @@ namespace Nikse.SubtitleEdit.Core
                 images.Add(bmp);
 
                 // wait for previous image to finish saving
-                if (saveImageTask != null)
-                {
-                    saveImageTask.Wait();
-                }
+                saveImageTask?.Wait();
 
                 // save image
                 string imagePath = Path.Combine(spectrogramDirectory, iChunk + ".gif");
@@ -834,10 +830,7 @@ namespace Nikse.SubtitleEdit.Core
             }
 
             // wait for last image to finish saving
-            if (saveImageTask != null)
-            {
-                saveImageTask.Wait();
-            }
+            saveImageTask?.Wait();
 
             var doc = new XmlDocument();
             var culture = CultureInfo.InvariantCulture;
