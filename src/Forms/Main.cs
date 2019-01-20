@@ -8930,7 +8930,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 double charactersPerSecond = Utilities.GetCharactersPerSecond(paragraph);
                 if (charactersPerSecond > Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds &&
-                    !Configuration.Settings.Tools.ListViewSyntaxColorDurationBig)
+                    Configuration.Settings.Tools.ListViewSyntaxColorDurationSmall)
                 {
                     charsPerSecond.ForeColor = Color.Red;
                 }
@@ -8942,7 +8942,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else
             {
-                if (Configuration.Settings.Tools.ListViewSyntaxColorDurationBig)
+                if (Configuration.Settings.Tools.ListViewSyntaxColorDurationSmall)
                 {
                     charsPerSecond.ForeColor = Color.Black;
                 }
