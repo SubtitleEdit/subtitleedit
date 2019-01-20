@@ -352,7 +352,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         internal static string ColorWebVttToHtml(string text)
         {
-            var match = RegexWebVttColor.Match(text);
+            var res = text;
+            var match = RegexWebVttColor.Match(res);
             while (match.Success)
             {
                 var fontString = "<font color=\"" + match.Value.Substring(3, match.Value.Length - 4) + "\">";
@@ -361,11 +362,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 var endIndex = text.IndexOf("</c>", match.Index, StringComparison.OrdinalIgnoreCase);
                 if (endIndex >= 0)
                 {
-                    text = text.Remove(endIndex, 4).Insert(endIndex, "</font>");
+                    res = res.Remove(endIndex, 4).Insert(endIndex, "</font>");
                 }
-                match = RegexWebVttColor.Match(text);
+                match = RegexWebVttColor.Match(res);
             }
-            return text;
+            return res;
         }
 
         private static readonly Regex RegexHtmlColor = new Regex("<font color=\"[a-z]*\">", RegexOptions.Compiled);
@@ -373,30 +374,30 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static string ColorHtmlToWebVtt(string text)
         {
-            text = text.Replace("</font>", "</c>");
-            var match = RegexHtmlColor.Match(text);
+            var res = text.Replace("</font>", "</c>");
+            var match = RegexHtmlColor.Match(res);
             while (match.Success)
             {
                 var fontString = "<c." + match.Value.Substring(13, match.Value.Length - 15) + ">";
                 fontString = fontString.Trim('"').Trim('\'');
-                text = text.Remove(match.Index, match.Length).Insert(match.Index, fontString);
-                match = RegexHtmlColor.Match(text);
+                res = res.Remove(match.Index, match.Length).Insert(match.Index, fontString);
+                match = RegexHtmlColor.Match(res);
             }
-            match = RegexHtmlColor2.Match(text);
+            match = RegexHtmlColor2.Match(res);
             while (match.Success)
             {
                 var fontString = "<c." + match.Value.Substring(12, match.Value.Length - 13) + ">";
                 fontString = fontString.Trim('"').Trim('\'');
-                text = text.Remove(match.Index, match.Length).Insert(match.Index, fontString);
-                match = RegexHtmlColor2.Match(text);
+                res = res.Remove(match.Index, match.Length).Insert(match.Index, fontString);
+                match = RegexHtmlColor2.Match(res);
             }
-            return text;
+            return res;
         }
 
         public static List<string> GetVoices(Subtitle subtitle)
         {
             var list = new List<string>();
-            if (subtitle != null && subtitle.Paragraphs != null)
+            if (subtitle?.Paragraphs != null)
             {
                 foreach (Paragraph p in subtitle.Paragraphs)
                 {
@@ -430,17 +431,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public static string RemoveTag(string tag, string text)
         {
-            int indexOfTag = text.IndexOf("<" + tag + " ", StringComparison.Ordinal);
+            var res = text;
+            int indexOfTag = res.IndexOf("<" + tag + " ", StringComparison.Ordinal);
             if (indexOfTag >= 0)
             {
-                int indexOfEnd = text.IndexOf('>', indexOfTag);
+                int indexOfEnd = res.IndexOf('>', indexOfTag);
                 if (indexOfEnd > 0)
                 {
-                    text = text.Remove(indexOfTag, indexOfEnd - indexOfTag + 1);
-                    text = text.Replace("</" + tag + ">", string.Empty);
+                    res = res.Remove(indexOfTag, indexOfEnd - indexOfTag + 1);
+                    res = res.Replace("</" + tag + ">", string.Empty);
                 }
             }
-            return text;
+            return res;
         }
 
         internal static TimeCode GetTimeCodeFromString(string time)
@@ -452,6 +454,5 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 int.Parse(timeCode[2]),
                                 int.Parse(timeCode[3]));
         }
-
     }
 }
