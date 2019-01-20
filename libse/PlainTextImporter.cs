@@ -19,12 +19,7 @@ namespace Nikse.SubtitleEdit.Core
             _splitAtBlankLines = splitAtBlankLines;
             _removeLinesWithoutLetters = removeLinesWithoutLetters;
             _numberOfLines = numberOfLines;
-            if (endChars == null)
-            {
-                endChars = string.Empty;
-            }
-
-            _endChars = endChars;
+            _endChars = endChars ?? string.Empty;
             _singleLineMaxLength = singleLineMaxLength;
             _language = language;
         }
@@ -182,13 +177,14 @@ namespace Nikse.SubtitleEdit.Core
             return false;
         }
 
-        private string AutoSplitAddLine(bool oneLineOnly, List<string> list, string text, string allText, int allIndex, List<int> hardSplitIndices)
+        private string AutoSplitAddLine(bool oneLineOnly, List<string> list, string input, string allText, int allIndex, List<int> hardSplitIndices)
         {
-            if (string.IsNullOrWhiteSpace(text))
+            if (string.IsNullOrWhiteSpace(input))
             {
                 return string.Empty;
             }
 
+            var text = input;
             while (text.Contains("  "))
             {
                 text = text.Replace("  ", " ");
@@ -269,9 +265,9 @@ namespace Nikse.SubtitleEdit.Core
             return true;
         }
 
-        private List<string> SplitToThreeOrFourLines(string text)
+        private List<string> SplitToThreeOrFourLines(string input)
         {
-            text = Utilities.UnbreakLine(text);
+            var text = Utilities.UnbreakLine(input);
             var three = SplitToThree(text);
             var four = SplitToFour(text);
             if (three.Count == 3)
@@ -315,9 +311,9 @@ namespace Nikse.SubtitleEdit.Core
             }
         }
 
-        public List<string> SplitToThree(string text)
+        public List<string> SplitToThree(string input)
         {
-            text = text.Trim();
+            var text = input.Trim();
             var results = new List<SplitListItem>();
             for (int maxLength = _singleLineMaxLength; maxLength > 5; maxLength--)
             {

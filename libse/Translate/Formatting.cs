@@ -13,9 +13,9 @@ namespace Nikse.SubtitleEdit.Core.Translate
         private bool SquareBrackets { get; set; }
         private bool SquareBracketsUppercase { get; set; }
 
-        public string SetTagsAndReturnTrimmed(string text, string source)
+        public string SetTagsAndReturnTrimmed(string input, string source)
         {
-            text = text.Trim();
+            var text = input.Trim();
 
             // SSA/ASS tags
             if (text.StartsWith("{\\"))
@@ -74,8 +74,10 @@ namespace Nikse.SubtitleEdit.Core.Translate
             return text.Trim();
         }
 
-        public string ReAddFormatting(string text)
+        public string ReAddFormatting(string input)
         {
+            var text = input.Trim();
+
             // Auto-break line
             if (AutoBreak)
             {

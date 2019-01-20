@@ -322,54 +322,49 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            xAndY = xAndY.ToLower();
+            var xy = xAndY.ToLowerInvariant();
 
-            switch (xAndY)
+            switch (xy)
             {
                 case "720x480":
-                    xAndY = "NTSC-601";
+                    xy = "NTSC-601";
                     break;
                 case "720x576":
-                    xAndY = "PAL-601";
+                    xy = "PAL-601";
                     break;
                 case "640x480":
-                    xAndY = "square";
+                    xy = "square";
                     break;
                 case "1280x720":
-                    xAndY = "DVCPROHD-720P";
+                    xy = "DVCPROHD-720P";
                     break;
                 case "960x720":
-                    xAndY = "HD-(960x720)";
+                    xy = "HD-(960x720)";
                     break;
                 case "1920x1080":
-                    xAndY = "FullHD 1920x1080";
+                    xy = "FullHD 1920x1080";
                     break;
                 case "1280x1080":
-                    xAndY = "HD-(1280x1080)";
+                    xy = "HD-(1280x1080)";
                     break;
                 case "1440x1080":
-                    xAndY = "HD-(1440x1080)";
+                    xy = "HD-(1440x1080)";
                     break;
             }
 
-            if (Regex.IsMatch(xAndY, @"\d+x\d+", RegexOptions.IgnoreCase))
+            if (Regex.IsMatch(xy, @"\d+x\d+", RegexOptions.IgnoreCase))
             {
                 for (int i = 0; i < comboBoxResolution.Items.Count; i++)
                 {
-                    if (comboBoxResolution.Items[i].ToString().Contains(xAndY))
+                    if (comboBoxResolution.Items[i].ToString().Contains(xy))
                     {
                         comboBoxResolution.SelectedIndex = i;
                         return;
                     }
                 }
-                comboBoxResolution.Items[comboBoxResolution.Items.Count - 1] = xAndY;
+                comboBoxResolution.Items[comboBoxResolution.Items.Count - 1] = xy;
                 comboBoxResolution.SelectedIndex = comboBoxResolution.Items.Count - 1;
             }
-        }
-
-        private void ExportFcpXmlAdvanced_Load(object sender, EventArgs e)
-        {
-
         }
 
         private void ExportFcpXmlAdvanced_Shown(object sender, EventArgs e)

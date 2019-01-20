@@ -4,8 +4,9 @@ namespace Nikse.SubtitleEdit.Core.Translate
 {
     public static class TranslationHelper
     {
-        public static string PostTranslate(string s, string target)
+        public static string PostTranslate(string input, string target)
         {
+            var s = input;
             if (target == "da")
             {
                 s = s.Replace("Jeg ved.", "Jeg ved det.");
@@ -29,19 +30,18 @@ namespace Nikse.SubtitleEdit.Core.Translate
             return s;
         }
 
-        public static string PreTranslate(string s, string source)
+        public static string PreTranslate(string input, string source)
         {
+            var s = input;
             if (source == "en")
             {
                 s = Regex.Replace(s, @"\bI'm ", "I am ");
                 s = Regex.Replace(s, @"\bI've ", "I have ");
                 s = Regex.Replace(s, @"\bI'll ", "I will ");
-                //                s = Regex.Replace(s, @"\bI'd ", "I would ");  // had or would???
                 s = Regex.Replace(s, @"\b(I|i)t's ", "$1t is ");
                 s = Regex.Replace(s, @"\b(Y|y)ou're ", "$1ou are ");
                 s = Regex.Replace(s, @"\b(Y|y)ou've ", "$1ou have ");
                 s = Regex.Replace(s, @"\b(Y|y)ou'll ", "$1ou will ");
-                //                s = Regex.Replace(s, @"\b(Y|y)ou'd ", "$1ou would "); // had or would???
                 s = Regex.Replace(s, @"\b(H|h)e's ", "$1e is ");
                 s = Regex.Replace(s, @"\b(S|s)he's ", "$1he is ");
                 s = Regex.Replace(s, @"\b(W|w)e're ", "$1e are ");
@@ -55,7 +55,7 @@ namespace Nikse.SubtitleEdit.Core.Translate
                 s = Regex.Replace(s, @"\b(W|w)hat's ", "$1hat is ");
                 s = Regex.Replace(s, @"\b(W|w)here's ", "$1here is ");
                 s = Regex.Replace(s, @"\b(W|w)ho's ", "$1ho is ");
-                s = Regex.Replace(s, @"\B'(C|c)ause ", "$1ecause "); // \b (word boundry) does not workig with '
+                s = Regex.Replace(s, @"\B'(C|c)ause ", "$1ecause "); // \b (word boundry) does not work with '
             }
             return s;
         }

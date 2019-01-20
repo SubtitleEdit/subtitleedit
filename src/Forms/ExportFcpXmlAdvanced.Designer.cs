@@ -536,7 +536,6 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "ExportFcpXmlAdvanced";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ExportFcpXmlAdvanced_FormClosing);
-            this.Load += new System.EventHandler(this.ExportFcpXmlAdvanced_Load);
             this.Shown += new System.EventHandler(this.ExportFcpXmlAdvanced_Shown);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ExportFcpXmlAdvanced_KeyDown);
             this.groupBoxImageSettings.ResumeLayout(false);
