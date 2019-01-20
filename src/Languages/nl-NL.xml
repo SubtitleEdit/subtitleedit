@@ -444,7 +444,7 @@ Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
     <BorderStyle>Randstĳl</BorderStyle>
     <BorderStyleOneBox>Eén kader</BorderStyleOneBox>
     <BorderStyleBoxForEachLine>Kader voor elke regel</BorderStyleBoxForEachLine>
-    <BorderStyleNormalWidthX>Normaal, breedte={0}</BorderStyleNormalWidthX>
+    <BorderStyleNormalWidthX>Norm, breedte={0}</BorderStyleNormalWidthX>
     <ShadowColor>Schaduwkleur</ShadowColor>
     <ShadowWidth>Schaduwbreedte</ShadowWidth>
     <Transparency>Alpha</Transparency>
