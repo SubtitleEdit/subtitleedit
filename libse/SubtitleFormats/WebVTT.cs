@@ -328,7 +328,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override void RemoveNativeFormatting(Subtitle subtitle, SubtitleFormat newFormat)
         {
-            var regexRemoveCTags = new Regex(@"\</?c([a-zA-Z\._]+)\>", RegexOptions.Compiled);
+            var regexRemoveCTags = new Regex(@"\</?c([a-zA-Z\._\d]*)\>", RegexOptions.Compiled);
+            var regexRemoveTimeCodes = new Regex(@"\<\d+:\d+:\d+.\d+\>", RegexOptions.Compiled); // <00:00:10.049>
+            var regexTagsPlusWhiteSpace = new Regex(@"(\{\\an\d\})[\s\r\n]+", RegexOptions.Compiled); // <00:00:10.049>
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 if (p.Text.Contains('<'))
@@ -339,6 +341,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     text = RemoveTag("ruby", text);
                     text = RemoveTag("span", text);
                     text = regexRemoveCTags.Replace(text, string.Empty).Trim();
+                    text = regexRemoveTimeCodes.Replace(text, string.Empty).Trim();
+                    text = regexTagsPlusWhiteSpace.Replace(text, "$1");
                     p.Text = text;
                 }
             }
@@ -348,13 +352,17 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         internal static string ColorWebVttToHtml(string text)
         {
-            text = text.Replace("</c>", "</font>");
             var match = RegexWebVttColor.Match(text);
             while (match.Success)
             {
                 var fontString = "<font color=\"" + match.Value.Substring(3, match.Value.Length - 4) + "\">";
                 fontString = fontString.Trim('"').Trim('\'');
                 text = text.Remove(match.Index, match.Length).Insert(match.Index, fontString);
+                var endIndex = text.IndexOf("</c>", match.Index, StringComparison.OrdinalIgnoreCase);
+                if (endIndex >= 0)
+                {
+                    text = text.Remove(endIndex, 4).Insert(endIndex, "</font>");
+                }
                 match = RegexWebVttColor.Match(text);
             }
             return text;
