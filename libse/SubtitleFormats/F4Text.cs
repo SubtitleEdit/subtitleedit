@@ -11,7 +11,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     /// </summary>
     public class F4Text : SubtitleFormat
     {
-        private static readonly Regex regexTimeCodes = new Regex(@"^\d\d:\d\d:\d\d-\d$", RegexOptions.Compiled);
+        private static readonly Regex RegexTimeCodes = new Regex(@"^\d\d:\d\d:\d\d-\d$", RegexOptions.Compiled);
 
         public override string Extension => ".txt";
 
@@ -30,15 +30,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public static string ToF4Text(Subtitle subtitle)
         {
             var sb = new StringBuilder();
-            //double lastEndTimeMilliseconds = -1;
             const string writeFormat = "{0}{1}";
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                // if (p.StartTime.TotalMilliseconds == lastEndTimeMilliseconds)
                 sb.AppendFormat(writeFormat, HtmlUtil.RemoveHtmlTags(p.Text, true), EncodeTimeCode(p.EndTime));
-                //else
-                //    sb.Append(string.Format("{0}{1}{2}", EncodeTimeCode(p.StartTime), HtmlUtil.RemoveHtmlTags(p.Text), EncodeTimeCode(p.EndTime)));
-                //lastEndTimeMilliseconds = p.EndTime.TotalMilliseconds;
             }
             return sb.ToString().Trim();
         }
@@ -79,7 +74,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var currentText = new StringBuilder();
             foreach (string line in arr)
             {
-                if (regexTimeCodes.IsMatch(line))
+                if (RegexTimeCodes.IsMatch(line))
                 {
                     if (p == null)
                     {
@@ -110,8 +105,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     if (p == null && subtitle.Paragraphs.Count > 0)
                     {
-                        p = new Paragraph();
-                        p.StartTime.TotalMilliseconds = subtitle.Paragraphs[subtitle.Paragraphs.Count - 1].EndTime.TotalMilliseconds;
+                        p = new Paragraph { StartTime = { TotalMilliseconds = subtitle.Paragraphs[subtitle.Paragraphs.Count - 1].EndTime.TotalMilliseconds } };
                     }
                     currentText.AppendLine(line.Trim());
                 }

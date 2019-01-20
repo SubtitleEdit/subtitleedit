@@ -11,8 +11,6 @@ namespace Nikse.SubtitleEdit.Core.VobSub
 
         public readonly UInt32 StartCode;
         public readonly byte PackIndentifier;
-        //public readonly UInt64 SystemClockReferenceQuotient;
-        //public readonly UInt64 SystemClockReferenceRemainder;
         public readonly UInt64 ProgramMuxRate;
         public readonly int PackStuffingLength;
 
@@ -20,15 +18,7 @@ namespace Nikse.SubtitleEdit.Core.VobSub
         {
             StartCode = Helper.GetEndian(buffer, 0, 3);
             PackIndentifier = buffer[3];
-
-            //string b4To9AsBinary = Helper.GetBinaryString(buffer, 4, 6);
-            //b4To9AsBinary = b4To9AsBinary.Substring(2,3) + b4To9AsBinary.Substring(6,15) + b4To9AsBinary.Substring(22,15);
-            //SystemClockReferenceQuotient = Helper.GetUInt32FromBinaryString(b4To9AsBinary);
-
-            //SystemClockReferenceRemainder = (ulong)(((buffer[8] & Helper.B00000011) << 8) + buffer[9])
-
             ProgramMuxRate = Helper.GetEndian(buffer, 10, 3) >> 2;
-
             PackStuffingLength = buffer[13] & Helper.B00000111;
         }
 

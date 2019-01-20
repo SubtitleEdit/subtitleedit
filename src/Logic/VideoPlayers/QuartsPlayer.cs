@@ -220,13 +220,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
         private void VideoLoaderDoWork(object sender, DoWorkEventArgs e)
         {
-            //int i = 0;
-            //while (CurrentPosition < 1 && i < 100)
-            //{
             Application.DoEvents();
-            //    System.Threading.Thread.Sleep(5);
-            //    i++;
-            //}
         }
 
         private void VideoLoaderRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)

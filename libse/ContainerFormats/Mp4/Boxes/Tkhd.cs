@@ -41,8 +41,6 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
 
             Width = (uint)GetWord(76 + addToIndex64Bit); // skip decimals
             Height = (uint)GetWord(80 + addToIndex64Bit); // skip decimals
-            //System.Windows.Forms.MessageBox.Show("Width: " + GetWord(76 + addToIndex64Bit).ToString() + "." + GetWord(78 + addToIndex64Bit).ToString());
-            //System.Windows.Forms.MessageBox.Show("Height: " + GetWord(80 + addToIndex64Bit).ToString() + "." + GetWord(82 + addToIndex64Bit).ToString());
         }
     }
 }

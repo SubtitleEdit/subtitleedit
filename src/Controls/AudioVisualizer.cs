@@ -1503,12 +1503,6 @@ namespace Nikse.SubtitleEdit.Controls
                                 }
                                 else
                                 {
-                                    //SHOW DEBUG MSG                     SolidBrush tBrush = new SolidBrush(Color.Turquoise);
-                                    //var g = this.CreateGraphics();
-                                    //g.DrawString("AllowMovePrevOrNext: " + AllowMovePrevOrNext.ToString() + ", GapStart: " + _gapAtStart.ToString(), Font, tBrush, new PointF(100, 100));
-                                    //tBrush.Dispose();
-                                    //g.Dispose();
-
                                     OnTimeChanged?.Invoke(this, new ParagraphEventArgs(seconds, _mouseDownParagraph, _oldParagraph, _mouseDownParagraphType, AllowMovePrevOrNext));
                                     Refresh();
                                     return;

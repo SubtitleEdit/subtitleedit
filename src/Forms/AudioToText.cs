@@ -172,7 +172,6 @@ namespace Nikse.SubtitleEdit.Forms
             var output = new StringBuilder();
             var path = Path.Combine(Configuration.DataDirectory, "pocketsphinx");
             var fileName = Path.Combine(path, "bin", "Release", "Win32", "pocketsphinx_continuous.exe");
-            //            var fileName = Path.Combine(path, "bin", "Release", "x64", "pocketsphinx_continuous.exe");
             var hmm = Path.Combine(path, "model", "en-us", "en-us");
             var lm = Path.Combine(path, "model", "en-us", "en-us.lm.bin");
             var dict = Path.Combine(path, "model", "en-us", "cmudict-en-us.dict");

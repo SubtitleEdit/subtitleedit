@@ -74,7 +74,6 @@ namespace Nikse.SubtitleEdit.Logic
             if (iterations < 1)
             {
                 // note: no need to restore the colors set are constants
-                //_isConfigUpdated = false;
                 return;
             }
 
@@ -146,7 +145,6 @@ namespace Nikse.SubtitleEdit.Logic
 
                     c.BackColor = BackColor;
                     c.ForeColor = ForeColor;
-                    //c.Paint += C_Paint;
                 }
             }
             FixControl(ctrl);

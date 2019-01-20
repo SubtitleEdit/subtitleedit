@@ -1205,7 +1205,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                 }
             }
-            // text = text.Replace("<i>", " <i>");
             text = text.Replace("</i>", "</i> ");
             text = text.Replace("  ", " ");
             return text.Replace(" " + Environment.NewLine, Environment.NewLine).Trim();
@@ -1627,7 +1626,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 return HebrewCodes[b].Character;
             }
 
-            return string.Empty;//string.Format("({0})", b);
+            return string.Empty;
         }
 
         public static string GetLatinString(Encoding encoding, byte[] buffer, ref int index)
@@ -1681,7 +1680,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
             }
 
-            return string.Empty;//string.Format("({0})", b);
+            return string.Empty;
         }
 
         public static string GetGreekString(byte[] buffer, ref int index)
@@ -1734,7 +1733,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
             }
 
-            return string.Empty;//string.Format("({0})", b);
+            return string.Empty;
         }
 
         internal static TimeCode GetTimeCode(int timeCodeIndex, byte[] buffer)

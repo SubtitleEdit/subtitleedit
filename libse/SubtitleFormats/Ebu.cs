@@ -310,7 +310,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         else if (ch == 'ı' && TextField.Substring(index).StartsWith("ı̂")) // extended unicode char - rewritten as simple 'î' - looks the same as "î" but it's not...)
                         {
                             sbTwoChar.Append(encoding.GetString(new byte[] { 0xc3, 0x69 })); // Ãi - simple î
-                                                                                             //                          sbTwoChar.Append(encoding.GetString(new byte[] { 0xc3, 0xf5 }));
                             skipNext = true;
                         }
                         else if ("ÀÈÌÒÙàèìòù".Contains(ch))

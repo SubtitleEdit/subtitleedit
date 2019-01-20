@@ -2854,7 +2854,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 {
                     if (!oc.IsSensitive)
                     {
-                        if (Math.Abs(oc.WidthPercent - widthPercent) < 40 && nbmp.Height > 11) // && oc.Height > 12 && oc.Width > 16 && nbmp.Width > 16 && nbmp.Height > 12 && Math.Abs(oc.MarginTop - topMargin) < 15)
+                        if (Math.Abs(oc.WidthPercent - widthPercent) < 40 && nbmp.Height > 11)
                         {
                             bool ok = true;
                             foreach (NOcrPoint op in oc.LinesForeground)

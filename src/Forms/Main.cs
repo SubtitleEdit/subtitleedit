@@ -91,7 +91,7 @@ namespace Nikse.SubtitleEdit.Forms
         private int _repeatCount = -1;
         private double _endSeconds = -1;
         private double _endSecondsNewPosition = -1;
-        private long _endSecondsNewPositionTicks = 0;
+        private long _endSecondsNewPositionTicks;
         private const double EndDelay = 0.05;
         private int _autoContinueDelayCount = -1;
         private long _lastTextKeyDownTicks;
@@ -104,7 +104,7 @@ namespace Nikse.SubtitleEdit.Forms
         private string _textAutoBackup;
         private string _textAutoBackupOriginal;
         private List<string> _statusLog = new List<string>();
-        private bool _hideStatusLog = false;
+        private bool _hideStatusLog;
         private StatusLog _statusLogForm;
         private bool _makeHistoryPaused;
         private bool _saveAsCalled;

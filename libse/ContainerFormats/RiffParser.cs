@@ -163,8 +163,6 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats
                 _shortName = fi.Name;
                 _fileSize = fi.Length;
 
-                //Console.WriteLine(ShortName + " is a valid file.");
-
                 // Read the RIFF header
                 _stream = new FileStream(_fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
                 int fourCc;
@@ -187,9 +185,6 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats
                 }
 
                 // Good header. Check size
-                //Console.WriteLine(ShortName + " has a valid type \"" + riff + "\"");
-                //Console.WriteLine(ShortName + " has a specific type of \"" + FromFourCC(fileType) + "\"");
-
                 _dataSize = datasize;
                 if (_fileSize < _dataSize + TwoDWordSize)
                 {
