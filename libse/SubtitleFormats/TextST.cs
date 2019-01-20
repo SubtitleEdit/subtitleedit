@@ -70,7 +70,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
     public class TextST : SubtitleFormat
     {
-
         public class Palette
         {
             public int PaletteEntryId { get; set; }
@@ -732,8 +731,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
             }
 
-            public DialogPresentationSegment(byte[] buffer, int idx)
+            public DialogPresentationSegment(byte[] buffer, int index)
             {
+                int idx = index;
                 StartPts = buffer[idx + 13];
                 StartPts += (ulong)buffer[idx + 12] << 8;
                 StartPts += (ulong)buffer[idx + 11] << 16;
@@ -919,15 +919,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
             }
 
-            public ulong StartPtsMilliseconds
-            {
-                get { return (ulong)Math.Round((StartPts) / 90.0); }
-            }
+            public ulong StartPtsMilliseconds => (ulong)Math.Round((StartPts) / 90.0);
 
-            public ulong EndPtsMilliseconds
-            {
-                get { return (ulong)Math.Round((EndPts) / 90.0); }
-            }
+            public ulong EndPtsMilliseconds => (ulong)Math.Round((EndPts) / 90.0);
 
             public void WriteToStream(Stream stream)
             {

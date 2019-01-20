@@ -114,10 +114,10 @@ namespace Nikse.SubtitleEdit.Core
             return true;
         }
 
-        private static Dictionary<int, string> DeserializeBookmarks(string s)
+        private static Dictionary<int, string> DeserializeBookmarks(string input)
         {
             var dic = new Dictionary<int, string>();
-            s = s.Trim();
+            var s = input.Trim();
             var bookmarks = Json.ReadObjectArray(s.Substring(s.IndexOf('[')).TrimEnd('}'));
             if (bookmarks == null || bookmarks.Count == 0)
             {

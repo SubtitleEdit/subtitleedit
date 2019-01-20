@@ -326,8 +326,9 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             return list;
         }
 
-        public string FixCommonWordErrors(string word)
+        public string FixCommonWordErrors(string input)
         {
+            var word = input;
             if (Configuration.Settings.Tools.OcrFixUseHardcodedRules)
             {
                 // common Latin ligatures from legacy encodings;
@@ -556,8 +557,9 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             return preWordPost;
         }
 
-        public static string FixLowerCaseLInsideUpperCaseWord(string word)
+        public static string FixLowerCaseLInsideUpperCaseWord(string input)
         {
+            var word = input;
             if (word.Length > 3 && word.RemoveChar('l').ToUpper() == word.RemoveChar('l'))
             {
                 if (!word.Contains('<') && !word.Contains('>') && !word.Contains('\''))
@@ -568,8 +570,9 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             return word;
         }
 
-        public static string FixIor1InsideLowerCaseWord(string word)
+        public static string FixIor1InsideLowerCaseWord(string input)
         {
+            var word = input;
             if (StartsAndEndsWithNumber.IsMatch(word))
             {
                 return word;
@@ -614,8 +617,9 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             return word;
         }
 
-        public static string Fix0InsideLowerCaseWord(string word)
+        public static string Fix0InsideLowerCaseWord(string input)
         {
+            var word = input;
             if (StartsAndEndsWithNumber.IsMatch(word))
             {
                 return word;
@@ -674,8 +678,10 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             return word;
         }
 
-        public string FixCommonWordErrorsQuick(string word)
+        public string FixCommonWordErrorsQuick(string input)
         {
+            var word = input;
+
             //always replace list
             foreach (string letter in _partialWordReplaceListAlways.Keys)
             {

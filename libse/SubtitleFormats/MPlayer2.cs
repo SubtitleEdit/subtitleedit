@@ -43,27 +43,28 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static string RemoveIllegalSpacesAndFixEmptyCodes(string line)
         {
-            int index = line.IndexOf(']');
-            if (index >= 0 && index < line.Length)
+            var s = line;
+            int index = s.IndexOf(']');
+            if (index >= 0 && index < s.Length)
             {
-                index = line.IndexOf(']', index + 1);
-                if (index >= 0 && index + 1 < line.Length)
+                index = s.IndexOf(']', index + 1);
+                if (index >= 0 && index + 1 < s.Length)
                 {
-                    var indexOfBrackets = line.IndexOf("[]", StringComparison.Ordinal);
+                    var indexOfBrackets = s.IndexOf("[]", StringComparison.Ordinal);
                     if (indexOfBrackets >= 0 && indexOfBrackets < index)
                     {
-                        line = line.Insert(indexOfBrackets + 1, "0"); // set empty time codes to zero
+                        s = s.Insert(indexOfBrackets + 1, "0"); // set empty time codes to zero
                         index++;
                     }
 
-                    while (line.Contains(' ') && line.IndexOf(' ') < index)
+                    while (s.Contains(' ') && s.IndexOf(' ') < index)
                     {
-                        line = line.Remove(line.IndexOf(' '), 1);
+                        s = s.Remove(s.IndexOf(' '), 1);
                         index--;
                     }
                 }
             }
-            return line;
+            return s;
         }
 
         public override string ToText(Subtitle subtitle, string title)
