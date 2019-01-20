@@ -358,8 +358,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 var fontString = "<font color=\"" + match.Value.Substring(3, match.Value.Length - 4) + "\">";
                 fontString = fontString.Trim('"').Trim('\'');
-                text = text.Remove(match.Index, match.Length).Insert(match.Index, fontString);
-                var endIndex = text.IndexOf("</c>", match.Index, StringComparison.OrdinalIgnoreCase);
+                res = res.Remove(match.Index, match.Length).Insert(match.Index, fontString);
+                var endIndex = res.IndexOf("</c>", match.Index, StringComparison.OrdinalIgnoreCase);
                 if (endIndex >= 0)
                 {
                     res = res.Remove(endIndex, 4).Insert(endIndex, "</font>");
