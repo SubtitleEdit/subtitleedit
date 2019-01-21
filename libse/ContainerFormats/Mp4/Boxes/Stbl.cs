@@ -181,7 +181,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                         var sb = new StringBuilder();
                         for (int j = 8; j < data.Length - 3; j++)
                         {
-                            string h = data[j].ToString("X2").ToLower();
+                            string h = data[j].ToString("X2").ToLowerInvariant();
                             if (h.Length < 2)
                             {
                                 h = "0" + h;

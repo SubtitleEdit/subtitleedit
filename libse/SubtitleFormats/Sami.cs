@@ -34,7 +34,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var language = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle);
             var ci = CultureInfo.GetCultureInfo(language);
             language = CultureInfo.CreateSpecificCulture(ci.Name).Name;
-            string languageTag = $"{language.Replace("-", string.Empty).ToUpper()}CC";
+            string languageTag = $"{language.Replace("-", string.Empty).ToUpperInvariant()}CC";
             string languageName = ci.EnglishName;
             string languageStyle = $".{languageTag} [ name: {languageName}; lang: {language.Replace("_", "-")} ; SAMIType: CC ; ]";
             languageStyle = languageStyle.Replace("[", "{").Replace("]", "}");
@@ -225,7 +225,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             string language = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle);
             var ci = CultureInfo.GetCultureInfo(language);
             language = CultureInfo.CreateSpecificCulture(ci.Name).Name;
-            string languageTag = $"{language.Replace("-", string.Empty).ToUpper()}CC";
+            string languageTag = $"{language.Replace("-", string.Empty).ToUpperInvariant()}CC";
             return new List<string> { languageTag };
         }
 
@@ -239,7 +239,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             string allInput = sb.ToString();
-            string allInputLower = allInput.ToLower();
+            string allInputLower = allInput.ToLowerInvariant();
             if (!allInputLower.Contains("<sync "))
             {
                 return;
@@ -309,7 +309,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     text = allInput.Substring(index);
                 }
 
-                string textToLower = text.ToLower();
+                string textToLower = text.ToLowerInvariant();
                 if (textToLower.Contains(" class="))
                 {
                     var className = new StringBuilder();
@@ -332,7 +332,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
 
                     int st = sourceIndex - 1;
-                    while (st > 0 && text.Substring(st, 2).ToUpper() != "<P")
+                    while (st > 0 && text.Substring(st, 2).ToUpperInvariant() != "<P")
                     {
                         st--;
                     }
@@ -341,7 +341,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         text = text.Substring(0, st) + text.Substring(sourceIndex);
                     }
                     int et = st;
-                    while (et < text.Length - 5 && text.Substring(et, 3).ToUpper() != "<P>" && text.Substring(et, 4).ToUpper() != "</P>")
+                    while (et < text.Length - 5 && text.Substring(et, 3).ToUpperInvariant() != "<P>" && text.Substring(et, 4).ToUpper() != "</P>")
                     {
                         et++;
                     }
@@ -361,7 +361,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 text = text.Replace("</BODY>", string.Empty).Replace("</SAMI>", string.Empty).TrimEnd();
                 text = text.Replace("</body>", string.Empty).Replace("</sami>", string.Empty).TrimEnd();
 
-                int endSyncPos = text.ToUpper().IndexOf("</SYNC>", StringComparison.OrdinalIgnoreCase);
+                int endSyncPos = text.ToUpperInvariant().IndexOf("</SYNC>", StringComparison.OrdinalIgnoreCase);
                 if (text.IndexOf('>') > 0 && (text.IndexOf('>') < endSyncPos || endSyncPos == -1))
                 {
                     text = text.Remove(0, text.IndexOf('>') + 1);
@@ -482,8 +482,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             subtitle.Renumber();
 
             if (subtitle.Paragraphs.Count > 0 &&
-                (subtitle.Paragraphs[subtitle.Paragraphs.Count - 1].Text.ToUpper().Trim() == "</BODY>" ||
-                subtitle.Paragraphs[subtitle.Paragraphs.Count - 1].Text.ToUpper().Trim() == "<BODY>"))
+                (subtitle.Paragraphs[subtitle.Paragraphs.Count - 1].Text.ToUpperInvariant().Trim() == "</BODY>" ||
+                subtitle.Paragraphs[subtitle.Paragraphs.Count - 1].Text.ToUpperInvariant().Trim() == "<BODY>"))
             {
                 subtitle.Paragraphs.RemoveAt(subtitle.Paragraphs.Count - 1);
             }

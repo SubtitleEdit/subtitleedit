@@ -578,7 +578,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             private static string GetNearestEbuColorCode(string color, Encoding encoding)
             {
-                color = color.ToLower();
+                color = color.ToLowerInvariant();
                 if (color == "black" || color == "000000")
                 {
                     return encoding.GetString(new byte[] { 0x00 }); // black

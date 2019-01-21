@@ -72,7 +72,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 DateTime start;
                 double durationInSeconds;
-                string ext = Path.GetExtension(VideoFileName).ToLower();
+                string ext = Path.GetExtension(VideoFileName).ToLowerInvariant();
                 if (ext == ".mp4" || ext == ".m4v" || ext == ".3gp")
                 {
                     MP4Parser mp4Parser = new MP4Parser(VideoFileName);

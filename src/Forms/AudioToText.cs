@@ -118,7 +118,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 // check for delay in matroska files
                 var mkvAudioTrackNumbers = new Dictionary<int, int>();
-                if (_videoFileName.ToLower().EndsWith(".mkv", StringComparison.OrdinalIgnoreCase))
+                if (_videoFileName.ToLowerInvariant().EndsWith(".mkv", StringComparison.OrdinalIgnoreCase))
                 {
                     MatroskaFile matroska = null;
                     try

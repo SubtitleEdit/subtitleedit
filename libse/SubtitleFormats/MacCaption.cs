@@ -53,7 +53,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 //
 ///////////////////////////////////////////////////////////////////////////////////");
             sb.AppendLine();
-            sb.AppendLine("UUID=" + Guid.NewGuid().ToString().ToUpper());// UUID=9F6112F4-D9D0-4AAF-AA95-854710D3B57A
+            sb.AppendLine("UUID=" + Guid.NewGuid().ToString().ToUpperInvariant());// UUID=9F6112F4-D9D0-4AAF-AA95-854710D3B57A
             sb.AppendLine("Creation Program=Subtitle Edit");
             sb.AppendLine("Creation Date=" + DateTime.Now.ToLongDateString());
             sb.AppendLine("Creation Time=" + DateTime.Now.ToShortTimeString());

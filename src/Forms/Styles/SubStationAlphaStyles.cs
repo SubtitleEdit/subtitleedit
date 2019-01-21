@@ -367,15 +367,15 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             var sb = new StringBuilder();
             foreach (var line in _header.Split(Utilities.NewLineChars, StringSplitOptions.None))
             {
-                string s = line.Trim().ToLower();
+                string s = line.Trim().ToLowerInvariant();
                 if (s.StartsWith("format:", StringComparison.Ordinal))
                 {
                     if (line.Length > 10)
                     {
-                        var format = line.ToLower().Substring(8).Split(',');
+                        var format = line.ToLowerInvariant().Substring(8).Split(',');
                         for (int i = 0; i < format.Length; i++)
                         {
-                            string f = format[i].Trim().ToLower();
+                            string f = format[i].Trim().ToLowerInvariant();
                             if (f == "name")
                             {
                                 nameIndex = i;
@@ -847,8 +847,8 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             var sb = new StringBuilder();
             foreach (var line in _header.Split(new[] { Environment.NewLine }, StringSplitOptions.None))
             {
-                var lineIsStyle = line.ToLower().RemoveChar(' ').StartsWith("style:" + name.ToLower().RemoveChar(' ') + ",", StringComparison.Ordinal) &&
-                                  line.ToLower().Contains(name.ToLower());
+                var lineIsStyle = line.ToLowerInvariant().RemoveChar(' ').StartsWith("style:" + name.ToLowerInvariant().RemoveChar(' ') + ",", StringComparison.Ordinal) &&
+                                  line.ToLowerInvariant().Contains(name.ToLowerInvariant());
                 if (!lineIsStyle)
                 {
                     sb.AppendLine(line);

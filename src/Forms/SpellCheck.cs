@@ -445,10 +445,10 @@ namespace Nikse.SubtitleEdit.Forms
                     break;
                 case SpellCheckAction.SkipAll:
                     _noOfSkippedWords++;
-                    _skipAllList.Add(ChangeWord.ToUpper());
+                    _skipAllList.Add(ChangeWord.ToUpperInvariant());
                     if (ChangeWord.EndsWith('\'') || ChangeWord.StartsWith('\''))
                     {
-                        _skipAllList.Add(ChangeWord.ToUpper().Trim('\''));
+                        _skipAllList.Add(ChangeWord.ToUpperInvariant().Trim('\''));
                     }
 
                     break;
@@ -599,8 +599,8 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         _noOfNames++;
                     }
-                    else if (_skipAllList.Contains(_currentWord.ToUpper())
-                        || (_currentWord.StartsWith('\'') || _currentWord.EndsWith('\'')) && _skipAllList.Contains(_currentWord.Trim('\'').ToUpper()))
+                    else if (_skipAllList.Contains(_currentWord.ToUpperInvariant())
+                        || (_currentWord.StartsWith('\'') || _currentWord.EndsWith('\'')) && _skipAllList.Contains(_currentWord.Trim('\'').ToUpperInvariant()))
                     {
                         _noOfSkippedWords++;
                     }
@@ -745,7 +745,7 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                             else
                             {
-                                if (_currentWord.ToUpper() != "LT'S" && _currentWord.ToUpper() != "SOX'S" && !_currentWord.ToUpper().StartsWith("HTTP", StringComparison.Ordinal)) // TODO: Get fixed nhunspell
+                                if (_currentWord.ToUpperInvariant() != "LT'S" && _currentWord.ToUpperInvariant() != "SOX'S" && !_currentWord.ToUpperInvariant().StartsWith("HTTP", StringComparison.Ordinal)) // TODO: Get fixed nhunspell
                                 {
                                     suggestions = DoSuggest(_currentWord); // TODO: 0.9.6 fails on "Lt'S"
                                 }
@@ -784,9 +784,9 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                             if (AutoFixNames && _currentWord.Length > 1)
                             {
-                                if (_currentWord.Length > 3 && suggestions.Contains(_currentWord.ToUpper()))
+                                if (_currentWord.Length > 3 && suggestions.Contains(_currentWord.ToUpperInvariant()))
                                 { // does not work well with two letter words like "da" and "de" which get auto-corrected to "DA" and "DE"
-                                    ChangeWord = _currentWord.ToUpper();
+                                    ChangeWord = _currentWord.ToUpperInvariant();
                                     DoAction(SpellCheckAction.ChangeAll);
                                     return;
                                 }
@@ -1166,10 +1166,10 @@ namespace Nikse.SubtitleEdit.Forms
                     case SpellCheckAction.Skip:
                         break;
                     case SpellCheckAction.SkipAll:
-                        _skipAllList.Remove(undo.UndoWord.ToUpper());
+                        _skipAllList.Remove(undo.UndoWord.ToUpperInvariant());
                         if (undo.UndoWord.EndsWith('\'') || undo.UndoWord.StartsWith('\''))
                         {
-                            _skipAllList.Remove(undo.UndoWord.ToUpper().Trim('\''));
+                            _skipAllList.Remove(undo.UndoWord.ToUpperInvariant().Trim('\''));
                         }
 
                         break;

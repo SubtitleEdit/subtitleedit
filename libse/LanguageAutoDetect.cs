@@ -560,7 +560,7 @@ namespace Nikse.SubtitleEdit.Core
                 }
 
                 int count;
-                switch (shortName.Replace("-", "_").ToLower())
+                switch (shortName.Replace("-", "_").ToLowerInvariant())
                 {
                     case "da_dk":
                         count = GetCount(text, AutoDetectWordsDanish);
@@ -1076,7 +1076,7 @@ namespace Nikse.SubtitleEdit.Core
                         { // keep utf-8 encoding if it's default
                             encoding = Encoding.UTF8;
                         }
-                        else if (couldBeUtf8 && fileName.EndsWith(".xml", StringComparison.OrdinalIgnoreCase) && Encoding.Default.GetString(buffer).ToLower().Replace('\'', '"').Contains("encoding=\"utf-8\""))
+                        else if (couldBeUtf8 && fileName.EndsWith(".xml", StringComparison.OrdinalIgnoreCase) && Encoding.Default.GetString(buffer).ToLowerInvariant().Replace('\'', '"').Contains("encoding=\"utf-8\""))
                         { // keep utf-8 encoding for xml files with utf-8 in header (without any utf-8 encoded characters, but with only allowed utf-8 characters)
                             encoding = Encoding.UTF8;
                         }

@@ -494,7 +494,7 @@ $HorzAlign          =   Center
             }
             else
             {
-                string hex = Guid.NewGuid().ToString().RemoveChar('-').ToLower();
+                string hex = Guid.NewGuid().ToString().RemoveChar('-').ToLowerInvariant();
                 hex = hex.Insert(8, "-").Insert(13, "-").Insert(18, "-").Insert(23, "-");
                 CurrentDCinemaSubtitleId = hex;
                 CurrentDCinemaLanguage = "English";

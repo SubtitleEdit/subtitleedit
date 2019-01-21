@@ -481,7 +481,7 @@ namespace Nikse.SubtitleEdit.Core
                 return false;
             }
 
-            var allLower = text.ToLower();
+            var allLower = text.ToLowerInvariant();
             if (allLower.StartsWith("http://", StringComparison.Ordinal) || allLower.StartsWith("https://", StringComparison.Ordinal) ||
                 allLower.StartsWith("www.", StringComparison.Ordinal) || allLower.EndsWith(".org", StringComparison.Ordinal) ||
                 allLower.EndsWith(".com", StringComparison.Ordinal) || allLower.EndsWith(".net", StringComparison.Ordinal))
@@ -853,8 +853,8 @@ namespace Nikse.SubtitleEdit.Core
             {
                 text = text.Replace("<" + tag + ">", string.Empty);
                 text = text.Replace("</" + tag + ">", string.Empty);
-                text = text.Replace("<" + tag.ToUpper() + ">", string.Empty);
-                text = text.Replace("</" + tag.ToUpper() + ">", string.Empty);
+                text = text.Replace("<" + tag.ToUpperInvariant() + ">", string.Empty);
+                text = text.Replace("</" + tag.ToUpperInvariant() + ">", string.Empty);
             }
             else
             {

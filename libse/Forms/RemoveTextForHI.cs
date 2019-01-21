@@ -98,7 +98,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
             // House 7x01 line 52: and she would like you to do three things:
             // Okay or remove???
             string noTagText = HtmlUtil.RemoveHtmlTags(text);
-            if (noTagText.Length > 10 && noTagText.IndexOf(':') == noTagText.Length - 1 && noTagText != noTagText.ToUpper())
+            if (noTagText.Length > 10 && noTagText.IndexOf(':') == noTagText.Length - 1 && noTagText != noTagText.ToUpperInvariant())
             {
                 return preAssTag + text;
             }
@@ -130,7 +130,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 {
                     var pre = line.Substring(0, indexOfColon);
                     var noTagPre = HtmlUtil.RemoveHtmlTags(pre, true);
-                    if (Settings.RemoveTextBeforeColonOnlyUppercase && noTagPre != noTagPre.ToUpper())
+                    if (Settings.RemoveTextBeforeColonOnlyUppercase && noTagPre != noTagPre.ToUpperInvariant())
                     {
                         bool remove = true;
                         newText = RemovePartialBeforeColon(line, indexOfColon, newText, count, ref removedInFirstLine, ref removedInSecondLine, ref remove);
@@ -146,7 +146,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                                 if (indexOf > 0 && indexOf < indexOfColon)
                                 {
                                     var toRemove = s.Substring(indexOf + 1, indexOfColon - indexOf).Trim();
-                                    if (toRemove.Length > 1 && toRemove == toRemove.ToUpper())
+                                    if (toRemove.Length > 1 && toRemove == toRemove.ToUpperInvariant())
                                     {
                                         s = s.Remove(indexOf + 1, indexOfColon - indexOf);
                                         s = s.Insert(indexOf + 1, " -");
@@ -171,7 +171,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                         {
                             if (count == 1 && newText.Length > 1 && removedInFirstLine &&
                                 !".?!".Contains(newTextNoHtml[newTextNoHtml.Length - 1]) && newText.LineEndsWithHtmlTag(true) &&
-                                line != line.ToUpper())
+                                line != line.ToUpperInvariant())
                             {
                                 newText += Environment.NewLine;
                                 if (pre.Contains("<i>") && line.Contains("</i>") && !line.Contains("<i>"))
@@ -201,7 +201,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                             }
                             else if (count == 1 && newTextNoHtml.Length > 1 && indexOfColon > 15 && line.Substring(0, indexOfColon).Contains(' ') &&
                                      !".?!".Contains(newTextNoHtml[newTextNoHtml.Length - 1]) && newText.LineEndsWithHtmlTag(true) &&
-                                     line != line.ToUpper())
+                                     line != line.ToUpperInvariant())
                             {
                                 newText += Environment.NewLine;
                                 if (pre.Contains("<i>") && line.Contains("</i>") && !line.Contains("<i>"))
@@ -419,7 +419,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                                     int colonIndex = s2.IndexOf(':');
                                     string start = s2.Substring(0, colonIndex);
 
-                                    if (!Settings.RemoveTextBeforeColonOnlyUppercase || start == start.ToUpper())
+                                    if (!Settings.RemoveTextBeforeColonOnlyUppercase || start == start.ToUpperInvariant())
                                     {
                                         int endIndex = start.LastIndexOfAny(endChars);
                                         if (colonIndex > 0 && colonIndex < s2.Length - 1)
@@ -1032,7 +1032,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
         private bool IsHIDescription(string text)
         {
-            text = text.Trim(' ', '(', ')', '[', ']', '?', '{', '}').ToLower();
+            text = text.Trim(' ', '(', ')', '[', ']', '?', '{', '}').ToLowerInvariant();
             if (text.Trim().Replace("mr. ", string.Empty).Replace("mrs. ", string.Empty).Replace("dr. ", string.Empty).Contains(' '))
             {
                 AddWarning();
@@ -1047,8 +1047,8 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
         private static string GetRemovedString(string oldText, string newText)
         {
-            oldText = oldText.ToLower();
-            newText = newText.ToLower();
+            oldText = oldText.ToLowerInvariant();
+            newText = newText.ToLowerInvariant();
 
             int start = oldText.IndexOf(newText, StringComparison.Ordinal);
             string result;
@@ -1280,7 +1280,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
             foreach (var line in text.SplitToLines())
             {
                 var lineNoHtml = HtmlUtil.RemoveHtmlTags(line, true);
-                if (lineNoHtml == lineNoHtml.ToUpper() && lineNoHtml != lineNoHtml.ToLower())
+                if (lineNoHtml == lineNoHtml.ToUpperInvariant() && lineNoHtml != lineNoHtml.ToLowerInvariant())
                 {
                     var temp = lineNoHtml.TrimEnd(endTrimChars).Trim().Trim(trimChars);
                     if (temp.Length == 1 || temp == "YES" || temp == "NO" || temp == "WHY" || temp == "HI" || temp == "OK")
@@ -1307,8 +1307,8 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 }
 
                 interjectionList.Add(s);
-                interjectionList.Add(s.ToUpper());
-                interjectionList.Add(s.ToLower());
+                interjectionList.Add(s.ToUpperInvariant());
+                interjectionList.Add(s.ToLowerInvariant());
                 interjectionList.Add(s.CapitalizeFirstLetter());
             }
 

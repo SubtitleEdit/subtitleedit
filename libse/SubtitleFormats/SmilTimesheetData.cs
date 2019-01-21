@@ -110,7 +110,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             string allInput = sb.ToString();
-            string allInputLower = allInput.ToLower();
+            string allInputLower = allInput.ToLowerInvariant();
             const string syncTag = "<p ";
             var syncStartPos = allInputLower.IndexOf(syncTag, StringComparison.Ordinal);
             int index = syncStartPos + syncTag.Length;

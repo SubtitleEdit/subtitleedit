@@ -367,7 +367,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else if (text.Substring(i).StartsWith("</font>", StringComparison.OrdinalIgnoreCase))
                 {
-                    if (text.Substring(i).ToLower().Replace("</font>", string.Empty).Length > 0)
+                    if (text.Substring(i).ToLowerInvariant().Replace("</font>", string.Empty).Length > 0)
                     {
                         if (lastText.EndsWith(' ') && !sb.StartsWith(' '))
                         {

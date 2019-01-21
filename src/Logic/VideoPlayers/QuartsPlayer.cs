@@ -139,7 +139,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         {
             const int wsChild = 0x40000000;
 
-            string ext = System.IO.Path.GetExtension(videoFileName).ToLower();
+            string ext = System.IO.Path.GetExtension(videoFileName).ToLowerInvariant();
             bool isAudio = ext == ".mp3" || ext == ".wav" || ext == ".wma" || ext == ".ogg" || ext == ".mpa" || ext == ".m4a" || ext == ".ape" || ext == ".aiff" || ext == ".flac" || ext == ".aac" || ext == ".ac3" || ext == ".mka";
 
             OnVideoLoaded = onVideoLoaded;

@@ -73,7 +73,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                             if (fix)
                             {
                                 newText = newText.Replace(ms, Configuration.Settings.Tools.MusicSymbol);
-                                newText = newText.Replace(ms.ToUpper(), Configuration.Settings.Tools.MusicSymbol);
+                                newText = newText.Replace(ms.ToUpperInvariant(), Configuration.Settings.Tools.MusicSymbol);
                             }
                         }
                     }

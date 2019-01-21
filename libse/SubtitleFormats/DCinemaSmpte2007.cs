@@ -165,10 +165,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             xml.DocumentElement.SelectSingleNode("dcst:LoadFont", nsmgr).Attributes["ID"].Value = loadedFontId;
             xml.DocumentElement.SelectSingleNode("dcst:SubtitleList/dcst:Font", nsmgr).Attributes["Size"].Value = fontSize.ToString();
-            xml.DocumentElement.SelectSingleNode("dcst:SubtitleList/dcst:Font", nsmgr).Attributes["Color"].Value = "FF" + Utilities.ColorToHex(ss.CurrentDCinemaFontColor).TrimStart('#').ToUpper();
+            xml.DocumentElement.SelectSingleNode("dcst:SubtitleList/dcst:Font", nsmgr).Attributes["Color"].Value = "FF" + Utilities.ColorToHex(ss.CurrentDCinemaFontColor).TrimStart('#').ToUpperInvariant();
             xml.DocumentElement.SelectSingleNode("dcst:SubtitleList/dcst:Font", nsmgr).Attributes["ID"].Value = loadedFontId;
             xml.DocumentElement.SelectSingleNode("dcst:SubtitleList/dcst:Font", nsmgr).Attributes["Effect"].Value = ss.CurrentDCinemaFontEffect;
-            xml.DocumentElement.SelectSingleNode("dcst:SubtitleList/dcst:Font", nsmgr).Attributes["EffectColor"].Value = "FF" + Utilities.ColorToHex(ss.CurrentDCinemaFontEffectColor).TrimStart('#').ToUpper();
+            xml.DocumentElement.SelectSingleNode("dcst:SubtitleList/dcst:Font", nsmgr).Attributes["EffectColor"].Value = "FF" + Utilities.ColorToHex(ss.CurrentDCinemaFontEffectColor).TrimStart('#').ToUpperInvariant();
 
             XmlNode mainListFont = xml.DocumentElement.SelectSingleNode("dcst:SubtitleList/dcst:Font", nsmgr);
             int no = 0;
@@ -331,7 +331,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 c = c.Trim('"').Trim('\'').Trim();
                                 if (c.StartsWith('#'))
                                 {
-                                    c = c.TrimStart('#').ToUpper().PadLeft(8, 'F');
+                                    c = c.TrimStart('#').ToUpperInvariant().PadLeft(8, 'F');
                                 }
 
                                 fontColors.Push(c);
@@ -795,7 +795,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static string GetColorStringFromDCinema(string p)
         {
-            string s = p.ToLower().Trim();
+            string s = p.ToLowerInvariant().Trim();
             if (s.Replace("#", string.Empty).
                 Replace("0", string.Empty).
                 Replace("1", string.Empty).

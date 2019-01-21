@@ -100,7 +100,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             hex = hex.Insert(8, "-").Insert(13, "-").Insert(18, "-").Insert(23, "-");
 
             string xmlStructure = "<DCSubtitle Version=\"1.0\">" + Environment.NewLine +
-                                    "    <SubtitleID>" + hex.ToLower() + "</SubtitleID>" + Environment.NewLine +
+                                    "    <SubtitleID>" + hex.ToLowerInvariant() + "</SubtitleID>" + Environment.NewLine +
                                     "    <MovieTitle></MovieTitle>" + Environment.NewLine +
                                     "    <ReelNumber>1</ReelNumber>" + Environment.NewLine +
                                     "    <Language>" + languageEnglishName + "</Language>" + Environment.NewLine +
@@ -138,9 +138,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             xml.DocumentElement.SelectSingleNode("LoadFont").Attributes["Id"].InnerText = loadedFontId;
             int fontSize = ss.CurrentDCinemaFontSize;
             xml.DocumentElement.SelectSingleNode("Font").Attributes["Id"].InnerText = loadedFontId;
-            xml.DocumentElement.SelectSingleNode("Font").Attributes["Color"].InnerText = "FF" + Utilities.ColorToHex(ss.CurrentDCinemaFontColor).TrimStart('#').ToUpper();
+            xml.DocumentElement.SelectSingleNode("Font").Attributes["Color"].InnerText = "FF" + Utilities.ColorToHex(ss.CurrentDCinemaFontColor).TrimStart('#').ToUpperInvariant();
             xml.DocumentElement.SelectSingleNode("Font").Attributes["Effect"].InnerText = ss.CurrentDCinemaFontEffect;
-            xml.DocumentElement.SelectSingleNode("Font").Attributes["EffectColor"].InnerText = "FF" + Utilities.ColorToHex(ss.CurrentDCinemaFontEffectColor).TrimStart('#').ToUpper();
+            xml.DocumentElement.SelectSingleNode("Font").Attributes["EffectColor"].InnerText = "FF" + Utilities.ColorToHex(ss.CurrentDCinemaFontEffectColor).TrimStart('#').ToUpperInvariant();
             xml.DocumentElement.SelectSingleNode("Font").Attributes["Size"].InnerText = ss.CurrentDCinemaFontSize.ToString();
 
             var mainListFont = xml.DocumentElement.SelectSingleNode("Font");
@@ -318,7 +318,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 c = c.Trim('"').Trim('\'').Trim();
                                 if (c.StartsWith('#'))
                                 {
-                                    c = c.TrimStart('#').ToUpper().PadLeft(8, 'F');
+                                    c = c.TrimStart('#').ToUpperInvariant().PadLeft(8, 'F');
                                 }
 
                                 fontColors.Push(c);

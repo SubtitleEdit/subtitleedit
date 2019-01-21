@@ -58,7 +58,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 actor = actor.Replace("( CONT’D )", string.Empty).Trim();
                                 actor = actor.Replace("(CONT'D)", string.Empty).Trim();
                                 actor = actor.Replace("(CONT’D)", string.Empty).Trim();
-                                actor = actor.ToUpper();
+                                actor = actor.ToUpperInvariant();
                             }
                             else if (paragraphType != null && lowercaseChosencategories.Contains(paragraphType.InnerText.ToLowerInvariant()))
                             {

@@ -1183,7 +1183,7 @@ namespace Nikse.SubtitleEdit.Core
                 userWordDictionary.Load(userWordListXmlFileName);
                 foreach (XmlNode node in userWordDictionary.DocumentElement.SelectNodes("word"))
                 {
-                    string s = node.InnerText.ToLower();
+                    string s = node.InnerText.ToLowerInvariant();
                     if (!userWordList.Contains(s))
                     {
                         userWordList.Add(s);
@@ -1206,7 +1206,7 @@ namespace Nikse.SubtitleEdit.Core
                 {
                     foreach (XmlNode node in nodes)
                     {
-                        string s = node.InnerText.ToLower();
+                        string s = node.InnerText.ToLowerInvariant();
                         if (!userWordList.Contains(s))
                         {
                             userWordList.Add(s);
@@ -1217,8 +1217,8 @@ namespace Nikse.SubtitleEdit.Core
             return userWordListXmlFileName;
         }
 
-        public static readonly string UppercaseLetters = Configuration.Settings.General.UppercaseLetters.ToUpper();
-        public static readonly string LowercaseLetters = Configuration.Settings.General.UppercaseLetters.ToLower();
+        public static readonly string UppercaseLetters = Configuration.Settings.General.UppercaseLetters.ToUpperInvariant();
+        public static readonly string LowercaseLetters = Configuration.Settings.General.UppercaseLetters.ToLowerInvariant();
         public static readonly string LowercaseLettersWithNumbers = LowercaseLetters + "0123456789";
         public static readonly string AllLetters = UppercaseLetters + LowercaseLetters;
         public static readonly string AllLettersAndNumbers = UppercaseLetters + LowercaseLettersWithNumbers;
@@ -2284,7 +2284,7 @@ namespace Nikse.SubtitleEdit.Core
                 var endIdx = text.IndexOf('>', idx + 6);
                 if (endIdx > idx && endIdx < text.Length - 8)
                 {
-                    var color = text.Substring(idx, (endIdx - idx) + 1).ToLower();
+                    var color = text.Substring(idx, (endIdx - idx) + 1).ToLowerInvariant();
                     text = RemoveSpaceBeforeAfterTag(text, color);
                 }
             }

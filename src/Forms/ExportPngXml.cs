@@ -737,7 +737,7 @@ namespace Nikse.SubtitleEdit.Forms
                     var empty = new Bitmap(width, height);
                     imagesSavedCount++;
                     string numberString = $"{imagesSavedCount:00000}";
-                    string fileName = Path.Combine(folderBrowserDialog1.SelectedPath, numberString + "." + comboBoxImageFormat.Text.ToLower());
+                    string fileName = Path.Combine(folderBrowserDialog1.SelectedPath, numberString + "." + comboBoxImageFormat.Text.ToLowerInvariant());
                     SaveImage(empty, fileName, ImageFormat);
 
                     MessageBox.Show(string.Format(Configuration.Settings.Language.ExportPngXml.XImagesSavedInY, imagesSavedCount, folderBrowserDialog1.SelectedPath));
@@ -1085,7 +1085,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 return;
             }
 
-            xAndY = xAndY.ToLower();
+            xAndY = xAndY.ToLowerInvariant();
 
             if (_exportType == ExportFormats.Fcp)
             {
@@ -1257,7 +1257,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     if (!param.Saved)
                     {
                         string numberString = $"IMAGE{i:000}";
-                        string fileName = Path.Combine(folderBrowserDialog1.SelectedPath, numberString + "." + comboBoxImageFormat.Text.ToLower());
+                        string fileName = Path.Combine(folderBrowserDialog1.SelectedPath, numberString + "." + comboBoxImageFormat.Text.ToLowerInvariant());
 
                         if (checkBoxFullFrameImage.Visible && checkBoxFullFrameImage.Checked)
                         {
@@ -1365,7 +1365,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     if (!param.Saved)
                     {
                         string numberString = $"IMAGE{i:000}";
-                        string fileName = Path.Combine(folderBrowserDialog1.SelectedPath, numberString + "." + comboBoxImageFormat.Text.ToLower());
+                        string fileName = Path.Combine(folderBrowserDialog1.SelectedPath, numberString + "." + comboBoxImageFormat.Text.ToLowerInvariant());
                         SaveImage(param.Bitmap, fileName, ImageFormat);
 
                         imagesSavedCount++;
@@ -1386,7 +1386,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     if (!param.Saved)
                     {
                         string numberString = $"IMAGE{i:000}";
-                        string fileName = Path.Combine(folderBrowserDialog1.SelectedPath, numberString + "." + comboBoxImageFormat.Text.ToLower());
+                        string fileName = Path.Combine(folderBrowserDialog1.SelectedPath, numberString + "." + comboBoxImageFormat.Text.ToLowerInvariant());
 
                         foreach (var encoder in ImageCodecInfo.GetImageEncoders())
                         {
@@ -1448,7 +1448,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                             for (int k = lastFrame + 1; k < startFrame; k++)
                             {
                                 string numberString = $"{k:00000}";
-                                string fileName = Path.Combine(folderBrowserDialog1.SelectedPath, numberString + "." + comboBoxImageFormat.Text.ToLower());
+                                string fileName = Path.Combine(folderBrowserDialog1.SelectedPath, numberString + "." + comboBoxImageFormat.Text.ToLowerInvariant());
                                 empty.Save(fileName, imageFormat);
                                 imagesSavedCount++;
                             }
@@ -1469,7 +1469,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         for (int k = startFrame; k <= endFrame; k++)
                         {
                             string numberString = $"{k:00000}";
-                            string fileName = Path.Combine(folderBrowserDialog1.SelectedPath, numberString + "." + comboBoxImageFormat.Text.ToLower());
+                            string fileName = Path.Combine(folderBrowserDialog1.SelectedPath, numberString + "." + comboBoxImageFormat.Text.ToLowerInvariant());
                             fullSize.Save(fileName, imageFormat);
                             imagesSavedCount++;
                         }
@@ -1591,7 +1591,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
         internal int WriteFcpParagraph(StringBuilder sb, int imagesSavedCount, MakeBitmapParameter param, int i, string fileName)
         {
             string numberString = string.Format(Path.GetFileNameWithoutExtension(Path.GetFileName(fileName)) + "{0:0000}", i).RemoveChar(' ');
-            var fileNameShort = numberString + "." + comboBoxImageFormat.Text.ToLower();
+            var fileNameShort = numberString + "." + comboBoxImageFormat.Text.ToLowerInvariant();
             var targetImageFileName = Path.Combine(Path.GetDirectoryName(fileName), fileNameShort);
             string fileNameNoPath = Path.GetFileName(fileNameShort);
             string fileNameNoExt = Path.GetFileNameWithoutExtension(fileNameNoPath);
@@ -1795,7 +1795,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             //  <Graphic Width="696" Height="111" X="612" Y="930">subtitle_exp_0001.png</Graphic>
             //</Event>
             sb.AppendLine("<Event InTC=\"" + ToHHMMSSFF(param.P.StartTime) + "\" OutTC=\"" +
-                          ToHHMMSSFF(param.P.EndTime) + "\" Forced=\"" + param.Forced.ToString().ToLower() + "\">");
+                          ToHHMMSSFF(param.P.EndTime) + "\" Forced=\"" + param.Forced.ToString().ToLowerInvariant() + "\">");
 
             int x = (width - param.Bitmap.Width) / 2;
             int y = height - (param.Bitmap.Height + param.BottomMargin);
@@ -2425,7 +2425,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 }
                 else if (text.Substring(i).StartsWith("</font>", StringComparison.OrdinalIgnoreCase))
                 {
-                    if (text.Substring(i).ToLower().Replace("</font>", string.Empty).Length > 0)
+                    if (text.Substring(i).ToLowerInvariant().Replace("</font>", string.Empty).Length > 0)
                     {
                         if (lastText.EndsWith(' ') && !sb.StartsWith(' '))
                         {
@@ -3123,7 +3123,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                             }
                             else if (text.Substring(i).StartsWith("</font>", StringComparison.OrdinalIgnoreCase))
                             {
-                                if (text.Substring(i).ToLower().Replace("</font>", string.Empty).Length > 0)
+                                if (text.Substring(i).ToLowerInvariant().Replace("</font>", string.Empty).Length > 0)
                                 {
                                     if (lastText.EndsWith(' ') && !sb.StartsWith(' '))
                                     {
