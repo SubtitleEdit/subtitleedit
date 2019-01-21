@@ -30,6 +30,12 @@
     <Description>Belarusian dictionary(spelling, hyphenation) - classic orthography</Description>
   </Dictionary>
   <Dictionary>
+    <EnglishName>Bosnian</EnglishName>
+    <NativeName>Bosanski</NativeName>
+    <DownloadLink>https://extensions.libreoffice.org/extensions/spellchecking-dictionary-for-bosnian-language/1.0/@@download/file/dict-bs.oxt</DownloadLink>
+    <Description>Spellchecking dictionary for Bosnian language - 1.0 (Jan 24, 2013)</Description>
+  </Dictionary>
+  <Dictionary>
     <EnglishName>Breton</EnglishName>
     <NativeName>Brezhoneg</NativeName>
     <DownloadLink>https://extensions.libreoffice.org/extensions/an-drouizig-breton-spellchecker/0.8/@@download/file/dict-br_0.8.oxt</DownloadLink>
