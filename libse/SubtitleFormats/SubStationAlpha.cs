@@ -397,7 +397,7 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                 }
                 else if (eventsStarted && !string.IsNullOrWhiteSpace(line))
                 {
-                    string s = line.Trim().ToLower();
+                    string s = line.Trim().ToLowerInvariant();
                     if (line.Length > 10 && s.StartsWith("format:", StringComparison.Ordinal))
                     {
                         var format = s.Substring(8).Split(',');

@@ -1025,7 +1025,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             // try to match language from vob to Tesseract language
             if (comboBoxTesseractLanguages.SelectedIndex >= 0 && comboBoxTesseractLanguages.Items.Count > 1 && languageString != null)
             {
-                languageString = languageString.ToLower();
+                languageString = languageString.ToLowerInvariant();
                 for (int i = 0; i < comboBoxTesseractLanguages.Items.Count; i++)
                 {
                     var tl = comboBoxTesseractLanguages.Items[i] as TesseractLanguage;
@@ -3108,14 +3108,14 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 if (_nocrLastLowercaseHeight > 3 && targetItem.NikseBitmap.Height - _nocrLastLowercaseHeight < 2)
                 {
-                    result.Text = result.Text.ToLower();
+                    result.Text = result.Text.ToLowerInvariant();
                 }
             }
             else if (result.Text == "v" || result.Text == "w" || result.Text == "u" || result.Text == "s" || result.Text == "z" || result.Text == "o" || result.Text == "x" || result.Text == "ø" || result.Text == "c")
             {
                 if (_nocrLastUppercaseHeight > 3 && _nocrLastUppercaseHeight - targetItem.NikseBitmap.Height < 2)
                 {
-                    result.Text = result.Text.ToUpper();
+                    result.Text = result.Text.ToUpperInvariant();
                 }
             }
 
@@ -3171,14 +3171,14 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 if (_nocrLastLowercaseHeight > 3 && targetItem.NikseBitmap.Height - _nocrLastLowercaseHeight < 2)
                 {
-                    result.Text = result.Text.ToLower();
+                    result.Text = result.Text.ToLowerInvariant();
                 }
             }
             else if (result.Text == "v" || result.Text == "w" || result.Text == "u" || result.Text == "s" || result.Text == "z" || result.Text == "o" || result.Text == "x" || result.Text == "ø" || result.Text == "c")
             {
                 if (_nocrLastUppercaseHeight > 3 && _nocrLastUppercaseHeight - targetItem.NikseBitmap.Height < 2)
                 {
-                    result.Text = result.Text.ToUpper();
+                    result.Text = result.Text.ToUpperInvariant();
                 }
             }
 
@@ -3229,14 +3229,14 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             {
                 if (p.NOcrLastLowercaseHeight > 3 && targetItem.NikseBitmap.Height - p.NOcrLastLowercaseHeight < 2)
                 {
-                    result.Text = result.Text.ToLower();
+                    result.Text = result.Text.ToLowerInvariant();
                 }
             }
             else if (result.Text == "v" || result.Text == "w" || result.Text == "u" || result.Text == "s" || result.Text == "z" || result.Text == "o" || result.Text == "x" || result.Text == "ø" || result.Text == "c")
             {
                 if (p.NOcrLastUppercaseHeight > 3 && p.NOcrLastUppercaseHeight - targetItem.NikseBitmap.Height < 2)
                 {
-                    result.Text = result.Text.ToUpper();
+                    result.Text = result.Text.ToUpperInvariant();
                 }
             }
 
@@ -3460,14 +3460,14 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         {
                             if (_binOcrLastLowercaseHeight > 3 && h - _binOcrLastLowercaseHeight < 2)
                             {
-                                text = text.ToLower();
+                                text = text.ToLowerInvariant();
                             }
                         }
                         else if (text == "v" || text == "w" || text == "u" || text == "s" || text == "z" || text == "o" || text == "x" || text == "ø" || text == "c")
                         {
                             if (_binOcrLastUppercaseHeight > 3 && _binOcrLastUppercaseHeight - h < 2)
                             {
-                                text = text.ToUpper();
+                                text = text.ToUpperInvariant();
                             }
                         }
                     }
@@ -8738,7 +8738,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                 string text = listBoxUnknownWords.SelectedItems[0].ToString();
                 if (text.Contains(':'))
                 {
-                    text = text.Substring(text.IndexOf(':') + 1).Trim().ToLower();
+                    text = text.Substring(text.IndexOf(':') + 1).Trim().ToLowerInvariant();
                     using (var form = new AddToUserDic())
                     {
                         form.Initialize(comboBoxDictionaries.Text, text);

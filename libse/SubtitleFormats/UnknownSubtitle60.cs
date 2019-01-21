@@ -34,7 +34,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 sb.AppendLine(EncodeTimeCode(p.EndTime));
                 if (!string.IsNullOrEmpty(p.Actor))
                 {
-                    sb.AppendLine(p.Actor.ToUpper());
+                    sb.AppendLine(p.Actor.ToUpperInvariant());
                 }
                 else
                 {
@@ -94,7 +94,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
                 else if (!string.IsNullOrWhiteSpace(line) && expectActor)
                 {
-                    if (line == line.ToUpper())
+                    if (line == line.ToUpperInvariant())
                     {
                         p.Actor = line;
                     }

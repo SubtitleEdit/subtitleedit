@@ -1428,7 +1428,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 if (p.Language != null)
                 {
-                    string l = p.Language.ToLower().Trim();
+                    string l = p.Language.ToLowerInvariant().Trim();
                     if (!list.Contains(l))
                     {
                         list.Add(l);

@@ -255,8 +255,8 @@ namespace Nikse.SubtitleEdit.Forms
                     scriptInfoOn = false;
                 }
 
-                string s = line.ToLower();
-                if (s.StartsWith(tag.ToLower() + ":", StringComparison.Ordinal))
+                string s = line.ToLowerInvariant();
+                if (s.StartsWith(tag.ToLowerInvariant() + ":", StringComparison.Ordinal))
                 {
                     if (!remove)
                     {

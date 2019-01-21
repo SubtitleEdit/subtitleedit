@@ -7835,9 +7835,9 @@ namespace Nikse.SubtitleEdit.Forms
                     var moreLanguages = new List<CultureInfo>();
                     foreach (CultureInfo x in CultureInfo.GetCultures(CultureTypes.NeutralCultures))
                     {
-                        var twoLetterLower = x.TwoLetterISOLanguageName.ToLower();
+                        var twoLetterLower = x.TwoLetterISOLanguageName.ToLowerInvariant();
                         if (!languages.Contains(twoLetterLower) &&
-                            !languages.Contains(x.ThreeLetterISOLanguageName.ToLower()) &&
+                            !languages.Contains(x.ThreeLetterISOLanguageName.ToLowerInvariant()) &&
                             twoLetterLower != "iv")
                         {
                             moreLanguages.Add(x);
@@ -9483,7 +9483,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 int start = textBoxListViewText.SelectionStart;
                 int length = textBoxListViewText.SelectionLength;
-                textBoxListViewText.SelectedText = textBoxListViewText.SelectedText.ToLower();
+                textBoxListViewText.SelectedText = textBoxListViewText.SelectedText.ToLowerInvariant();
                 textBoxListViewText.SelectionStart = start;
                 textBoxListViewText.SelectionLength = length;
                 e.SuppressKeyPress = true;
@@ -9492,7 +9492,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 int start = textBoxListViewText.SelectionStart;
                 int length = textBoxListViewText.SelectionLength;
-                textBoxListViewText.SelectedText = textBoxListViewText.SelectedText.ToUpper();
+                textBoxListViewText.SelectedText = textBoxListViewText.SelectedText.ToUpperInvariant();
                 textBoxListViewText.SelectionStart = start;
                 textBoxListViewText.SelectionLength = length;
                 e.SuppressKeyPress = true;
@@ -22241,7 +22241,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     int start = textBoxListViewTextAlternate.SelectionStart;
                     int length = textBoxListViewTextAlternate.SelectionLength;
-                    textBoxListViewTextAlternate.SelectedText = textBoxListViewTextAlternate.SelectedText.ToLower();
+                    textBoxListViewTextAlternate.SelectedText = textBoxListViewTextAlternate.SelectedText.ToLowerInvariant();
                     textBoxListViewTextAlternate.SelectionStart = start;
                     textBoxListViewTextAlternate.SelectionLength = length;
                     e.SuppressKeyPress = true;
@@ -22253,7 +22253,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     int start = textBoxListViewTextAlternate.SelectionStart;
                     int length = textBoxListViewTextAlternate.SelectionLength;
-                    textBoxListViewTextAlternate.SelectedText = textBoxListViewTextAlternate.SelectedText.ToUpper();
+                    textBoxListViewTextAlternate.SelectedText = textBoxListViewTextAlternate.SelectedText.ToUpperInvariant();
                     textBoxListViewTextAlternate.SelectionStart = start;
                     textBoxListViewTextAlternate.SelectionLength = length;
                     e.SuppressKeyPress = true;

@@ -937,7 +937,7 @@ namespace Nikse.SubtitleEdit.Logic
                     }
                     else
                     {
-                        return argument.Substring(1).ToLower();
+                        return argument.Substring(1).ToLowerInvariant();
                     }
                 }
             }

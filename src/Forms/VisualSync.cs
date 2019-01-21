@@ -597,7 +597,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             using (var findSubtitle = new FindSubtitleLine())
             {
-                findSubtitle.Initialize(_paragraphs, " " + "(" + _language.StartScene.ToLower() + ")");
+                findSubtitle.Initialize(_paragraphs, " " + "(" + _language.StartScene.ToLowerInvariant() + ")");
                 findSubtitle.ShowDialog();
                 if (findSubtitle.SelectedIndex >= 0)
                 {
@@ -610,7 +610,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             using (var findSubtitle = new FindSubtitleLine())
             {
-                findSubtitle.Initialize(_paragraphs, " " + "(" + _language.EndScene.ToLower() + ")");
+                findSubtitle.Initialize(_paragraphs, " " + "(" + _language.EndScene.ToLowerInvariant() + ")");
                 findSubtitle.ShowDialog();
                 if (findSubtitle.SelectedIndex >= 0)
                 {

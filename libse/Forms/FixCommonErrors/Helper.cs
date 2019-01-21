@@ -562,7 +562,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     !s.Contains(Environment.NewLine + "-") &&
                     !(s.StartsWith('[') && s.Contains("]" + Environment.NewLine, StringComparison.Ordinal)) &&
                     !(s.StartsWith('(') && s.Contains(")" + Environment.NewLine, StringComparison.Ordinal)) &&
-                    s != s.ToUpper())
+                    s != s.ToUpperInvariant())
                 {
                     return Utilities.UnbreakLine(text);
                 }

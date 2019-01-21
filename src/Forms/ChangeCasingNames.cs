@@ -96,9 +96,9 @@ namespace Nikse.SubtitleEdit.Forms
                     string name = item.SubItems[1].Text;
 
                     string textNoTags = HtmlUtil.RemoveHtmlTags(text, true);
-                    if (textNoTags != textNoTags.ToUpper())
+                    if (textNoTags != textNoTags.ToUpperInvariant())
                     {
-                        if (item.Checked && text != null && text.Contains(name, StringComparison.OrdinalIgnoreCase) && name.Length > 1 && name != name.ToLower())
+                        if (item.Checked && text != null && text.Contains(name, StringComparison.OrdinalIgnoreCase) && name.Length > 1 && name != name.ToLowerInvariant())
                         {
                             var st = new StrippableText(text);
                             st.FixCasing(new List<string> { name }, true, false, false, string.Empty);
@@ -140,15 +140,15 @@ namespace Nikse.SubtitleEdit.Forms
         private void FindAllNames()
         {
             string text = HtmlUtil.RemoveHtmlTags(_subtitle.GetAllTexts());
-            string textToLower = text.ToLower();
+            string textToLower = text.ToLowerInvariant();
             listViewNames.BeginUpdate();
             foreach (string name in _nameListInclMulti)
             {
-                int startIndex = textToLower.IndexOf(name.ToLower(), StringComparison.Ordinal);
+                int startIndex = textToLower.IndexOf(name.ToLowerInvariant(), StringComparison.Ordinal);
                 if (startIndex >= 0)
                 {
                     while (startIndex >= 0 && startIndex < text.Length &&
-                           textToLower.Substring(startIndex).Contains(name.ToLower()) && name.Length > 1 && name != name.ToLower())
+                           textToLower.Substring(startIndex).Contains(name.ToLowerInvariant()) && name.Length > 1 && name != name.ToLower())
                     {
                         bool startOk = startIndex == 0 || "([ --'>\r\n¿¡\"”“„".Contains(text[startIndex - 1]);
                         if (startOk)
@@ -175,7 +175,7 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                         }
 
-                        startIndex = textToLower.IndexOf(name.ToLower(), startIndex + 2, StringComparison.Ordinal);
+                        startIndex = textToLower.IndexOf(name.ToLowerInvariant(), startIndex + 2, StringComparison.Ordinal);
                     }
                 }
             }
@@ -200,10 +200,10 @@ namespace Nikse.SubtitleEdit.Forms
 
                 string text = UiUtil.GetStringFromListViewText(item.SubItems[2].Text);
 
-                string lower = text.ToLower();
-                if (lower.Contains(name.ToLower()) && name.Length > 1 && name != name.ToLower())
+                string lower = text.ToLowerInvariant();
+                if (lower.Contains(name.ToLowerInvariant()) && name.Length > 1 && name != name.ToLowerInvariant())
                 {
-                    int start = lower.IndexOf(name.ToLower(), StringComparison.Ordinal);
+                    int start = lower.IndexOf(name.ToLowerInvariant(), StringComparison.Ordinal);
                     if (start >= 0)
                     {
                         bool startOk = start == 0 || lower[start - 1] == ' ' || lower[start - 1] == '-' || lower[start - 1] == '"' ||

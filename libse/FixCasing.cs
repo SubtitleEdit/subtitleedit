@@ -160,7 +160,7 @@ namespace Nikse.SubtitleEdit.Core
                             var words = text.Substring(idx).Split(' ', '\r', '\n', ',', '"', '?', '!', '.', '\'');
                             if (words.Length > 0 && !notChangeWords.Contains(words[0]))
                             {
-                                var upper = text[idx].ToString().ToUpper();
+                                var upper = text[idx].ToString().ToUpperInvariant();
                                 text = text.Remove(idx, 1).Insert(idx, upper);
                             }
                         }

@@ -116,7 +116,7 @@ namespace Nikse.SubtitleEdit.Core
                 Post = Post.Remove(0, 1);
             }
 
-            string lower = StrippedText.ToLower();
+            string lower = StrippedText.ToLowerInvariant();
             int idName = 0;
             foreach (string name in nameList)
             {
@@ -147,7 +147,7 @@ namespace Nikse.SubtitleEdit.Core
                             originalNames.Add(originalName);
                             StrippedText = StrippedText.Remove(start, name.Length);
                             StrippedText = StrippedText.Insert(start, GetAndInsertNextId(replaceIds, replaceNames, name, idName++));
-                            lower = StrippedText.ToLower();
+                            lower = StrippedText.ToLowerInvariant();
                         }
                     }
                     if (start + 3 > lower.Length)

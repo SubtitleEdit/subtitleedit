@@ -1984,7 +1984,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             string language = GetCurrentWordListLanguage();
-            string text = textBoxUserWord.Text.RemoveControlCharacters().Trim().ToLower();
+            string text = textBoxUserWord.Text.RemoveControlCharacters().Trim().ToLowerInvariant();
             if (!string.IsNullOrEmpty(language) && text.Length > 0 && !_userWordList.Contains(text))
             {
                 Utilities.AddToUserDictionary(text, language);
@@ -2505,7 +2505,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 string shortcut = GetShortcut(e.Node.Text);
 
-                string[] parts = shortcut.ToLower().Split(new[] { '+' }, StringSplitOptions.RemoveEmptyEntries);
+                string[] parts = shortcut.ToLowerInvariant().Split(new[] { '+' }, StringSplitOptions.RemoveEmptyEntries);
                 foreach (string k in parts)
                 {
                     if (k.Equals("CONTROL", StringComparison.OrdinalIgnoreCase))

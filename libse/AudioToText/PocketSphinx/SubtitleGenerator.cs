@@ -134,7 +134,7 @@ namespace Nikse.SubtitleEdit.Core.AudioToText.PocketSphinx
             {
                 string text = paragraph.Text;
                 string textNoTags = HtmlUtil.RemoveHtmlTags(text, true);
-                if (textNoTags != textNoTags.ToUpper())
+                if (textNoTags != textNoTags.ToUpperInvariant())
                 {
                     if (!string.IsNullOrEmpty(text))
                     {

@@ -243,7 +243,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                                     }
                                 }
 
-                                if (temp.Length > 0 && s[0].ToString(CultureInfo.InvariantCulture) != s[0].ToString(CultureInfo.InvariantCulture).ToLower())
+                                if (temp.Length > 0 && s[0].ToString(CultureInfo.InvariantCulture) != s[0].ToString(CultureInfo.InvariantCulture).ToLowerInvariant())
                                 {
                                     temp = char.ToUpper(temp[0]) + temp.Substring(1);
                                     doRepeat = true;

@@ -91,7 +91,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             xml.LoadXml(xmlStructure);
             xml.DocumentElement.SelectSingleNode("sequence").Attributes["id"].Value = title;
             xml.DocumentElement.SelectSingleNode("sequence/name").InnerText = title;
-            xml.DocumentElement.SelectSingleNode("sequence/uuid").InnerText = Guid.NewGuid().ToString().ToUpper();
+            xml.DocumentElement.SelectSingleNode("sequence/uuid").InnerText = Guid.NewGuid().ToString().ToUpperInvariant();
             if (!string.IsNullOrEmpty(subtitle.Header))
             {
                 var header = new XmlDocument();
@@ -237,7 +237,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                             var styleNameNode = valueEntries[no].SelectSingleNode("name");
                                             if (styleNameNode != null)
                                             {
-                                                string styleName = styleNameNode.InnerText.ToLower().Trim();
+                                                string styleName = styleNameNode.InnerText.ToLowerInvariant().Trim();
                                                 italic = styleName == "italic" || styleName == "bold/italic";
                                                 bold = styleName == "bold" || styleName == "bold/italic";
                                             }
@@ -262,7 +262,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                                 var styleNameNode = valueEntries[no].SelectSingleNode("name");
                                                 if (styleNameNode != null)
                                                 {
-                                                    string styleName = styleNameNode.InnerText.ToLower().Trim();
+                                                    string styleName = styleNameNode.InnerText.ToLowerInvariant().Trim();
                                                     italic = styleName == "italic" || styleName == "bold/italic";
                                                     bold = styleName == "bold" || styleName == "bold/italic";
                                                 }

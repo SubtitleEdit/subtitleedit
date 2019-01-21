@@ -46,7 +46,7 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
 
             foreach (string namesItem in _names)
             {
-                _namesListUppercase.Add(namesItem.ToUpper());
+                _namesListUppercase.Add(namesItem.ToUpperInvariant());
             }
 
             if (languageName.StartsWith("en_", StringComparison.OrdinalIgnoreCase))
@@ -76,7 +76,7 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
                     {
                         foreach (XmlNode node in xmlNodeList)
                         {
-                            string word = node.InnerText.Trim().ToLower();
+                            string word = node.InnerText.Trim().ToLowerInvariant();
                             if (word.Contains(' '))
                             {
                                 _userPhraseList.Add(word);
@@ -224,11 +224,11 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
             }
 
             _names.Remove(word);
-            _namesListUppercase.Remove(word.ToUpper());
+            _namesListUppercase.Remove(word.ToUpperInvariant());
             if (_languageName.StartsWith("en_", StringComparison.Ordinal) && !word.EndsWith('s'))
             {
                 _names.Remove(word + "s");
-                _namesListUppercase.Remove(word.ToUpper() + "S");
+                _namesListUppercase.Remove(word.ToUpperInvariant() + "S");
             }
             if (!word.EndsWith('s'))
             {
@@ -426,16 +426,16 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
             }
 
             _names.Add(word);
-            _namesListUppercase.Add(word.ToUpper());
+            _namesListUppercase.Add(word.ToUpperInvariant());
             if (_languageName.StartsWith("en_", StringComparison.Ordinal) && !word.EndsWith('s'))
             {
                 _names.Add(word + "s");
-                _namesListUppercase.Add(word.ToUpper() + "S");
+                _namesListUppercase.Add(word.ToUpperInvariant() + "S");
             }
             if (!word.EndsWith('s'))
             {
                 _namesListWithApostrophe.Add(word + "'s");
-                _namesListUppercase.Add(word.ToUpper() + "'S");
+                _namesListUppercase.Add(word.ToUpperInvariant() + "'S");
             }
             if (!word.EndsWith('\''))
             {
@@ -456,7 +456,7 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
                 return false;
             }
 
-            word = word.Trim().ToLower();
+            word = word.Trim().ToLowerInvariant();
             if (word.Length == 0 || _userWordList.Contains(word))
             {
                 return false;
@@ -487,7 +487,7 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
 
         public bool HasUserWord(string word)
         {
-            string s = word.ToLower();
+            string s = word.ToLowerInvariant();
             return _userWordList.Contains(s) || (s.StartsWith('\'') || s.EndsWith('\'')) && _userWordList.Contains(s.Trim('\''));
         }
 

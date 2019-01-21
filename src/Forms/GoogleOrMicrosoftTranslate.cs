@@ -63,7 +63,7 @@ namespace Nikse.SubtitleEdit.Forms
                     string temp = s.Replace("[", string.Empty).Replace("]", string.Empty);
                     if (temp.Length > 4)
                     {
-                        temp = temp.Substring(temp.Length - 5, 2).ToLower();
+                        temp = temp.Substring(temp.Length - 5, 2).ToLowerInvariant();
 
                         if (temp != defaultToLanguage)
                         {

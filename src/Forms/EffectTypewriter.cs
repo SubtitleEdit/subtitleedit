@@ -75,7 +75,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     AddTextToRichTextBox(rtb, bold > 0, italic > 0, underline > 0, currentColor, sb.ToString());
                     sb.Clear();
-                    string tag = GetTag(text.Substring(i).ToLower());
+                    string tag = GetTag(text.Substring(i).ToLowerInvariant());
                     if (i + 1 < text.Length && text[i + 1] == '/')
                     {
                         if (tag == "</i>" && italic > 0)

@@ -146,7 +146,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 try
                 {
-                    string ext = Path.GetExtension(fileName).ToLower();
+                    string ext = Path.GetExtension(fileName).ToLowerInvariant();
                     if (Utilities.VideoFileExtensions.Contains(ext))
                     {
                         var fi = new FileInfo(fileName);
@@ -268,44 +268,40 @@ namespace Nikse.SubtitleEdit.Forms
                     // check for delay in matroska files
                     var audioTrackNames = new List<string>();
                     var mkvAudioTrackNumbers = new Dictionary<int, int>();
-                    if (fileName.ToLower().EndsWith(".mkv", StringComparison.OrdinalIgnoreCase))
+                    if (fileName.ToLowerInvariant().EndsWith(".mkv", StringComparison.OrdinalIgnoreCase))
                     {
-                        MatroskaFile matroska = null;
                         try
                         {
-                            matroska = new MatroskaFile(fileName);
-
-                            if (matroska.IsValid)
+                            using (MatroskaFile matroska = new MatroskaFile(fileName))
                             {
-                                foreach (var track in matroska.GetTracks())
+                                if (matroska.IsValid)
                                 {
-                                    if (track.IsAudio)
+                                    foreach (var track in matroska.GetTracks())
                                     {
-                                        if (track.CodecId != null && track.Language != null)
+                                        if (track.IsAudio)
                                         {
-                                            audioTrackNames.Add("#" + track.TrackNumber + ": " + track.CodecId.Replace("\0", string.Empty) + " - " + track.Language.Replace("\0", string.Empty));
-                                        }
-                                        else
-                                        {
-                                            audioTrackNames.Add("#" + track.TrackNumber);
-                                        }
+                                            if (track.CodecId != null && track.Language != null)
+                                            {
+                                                audioTrackNames.Add("#" + track.TrackNumber + ": " + track.CodecId.Replace("\0", string.Empty) + " - " + track.Language.Replace("\0", string.Empty));
+                                            }
+                                            else
+                                            {
+                                                audioTrackNames.Add("#" + track.TrackNumber);
+                                            }
 
-                                        mkvAudioTrackNumbers.Add(mkvAudioTrackNumbers.Count, track.TrackNumber);
+                                            mkvAudioTrackNumbers.Add(mkvAudioTrackNumbers.Count, track.TrackNumber);
+                                        }
                                     }
-                                }
-                                if (mkvAudioTrackNumbers.Count > 0)
-                                {
-                                    _delayInMilliseconds = (int)matroska.GetTrackStartTime(mkvAudioTrackNumbers[0]);
+                                    if (mkvAudioTrackNumbers.Count > 0)
+                                    {
+                                        _delayInMilliseconds = (int)matroska.GetTrackStartTime(mkvAudioTrackNumbers[0]);
+                                    }
                                 }
                             }
                         }
                         catch
                         {
                             _delayInMilliseconds = 0;
-                        }
-                        finally
-                        {
-                            matroska?.Dispose();
                         }
                     }
 

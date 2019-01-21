@@ -29,7 +29,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     wasLastLineClosed = false;
                 }
 
-                if (!wasLastLineClosed && last.Text == last.Text.ToUpper())
+                if (!wasLastLineClosed && last.Text == last.Text.ToUpperInvariant())
                 {
                     wasLastLineClosed = true;
                 }

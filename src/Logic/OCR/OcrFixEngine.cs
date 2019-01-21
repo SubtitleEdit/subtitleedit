@@ -238,7 +238,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             bool isEnglish = threeLetterIsoLanguageName.Equals("eng", StringComparison.OrdinalIgnoreCase);
             foreach (string name in _nameList)
             {
-                _nameListUppercase.Add(name.ToUpper());
+                _nameListUppercase.Add(name.ToUpperInvariant());
                 if (isEnglish)
                 {
                     if (!name.EndsWith('s'))
@@ -1407,7 +1407,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                                 }
 
                                 string wordWithCasingChanged = GetWordWithDominatedCasing(word);
-                                if (DoSpell(word.ToLower()))
+                                if (DoSpell(word.ToLowerInvariant()))
                                 {
                                     guesses.Insert(0, wordWithCasingChanged);
                                 }
@@ -1484,7 +1484,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                             }
                             else
                             {
-                                if (word.ToUpper() != "LT'S" && word.ToUpper() != "SOX'S") // TODO: Get fixed nhunspell
+                                if (word.ToUpperInvariant() != "LT'S" && word.ToUpperInvariant() != "SOX'S") // TODO: Get fixed nhunspell
                                 {
                                     suggestions = DoSuggest(word); // 0.9.6 fails on "Lt'S"
                                 }
@@ -1560,10 +1560,10 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             }
             if (uppercase > lowercase)
             {
-                return word.ToUpper();
+                return word.ToUpperInvariant();
             }
 
-            return word.ToLower();
+            return word.ToLowerInvariant();
         }
 
         /// <summary>
@@ -1584,8 +1584,8 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 case OcrSpellCheck.Action.AddToUserDictionary:
                     if (_userWordListXmlFileName != null)
                     {
-                        Utilities.AddToUserDictionary(_spellCheck.Word.Trim().ToLower(), _fiveLetterWordListLanguageName);
-                        _userWordList.Add(_spellCheck.Word.Trim().ToLower());
+                        Utilities.AddToUserDictionary(_spellCheck.Word.Trim().ToLowerInvariant(), _fiveLetterWordListLanguageName);
+                        _userWordList.Add(_spellCheck.Word.Trim().ToLowerInvariant());
                     }
                     result.Word = _spellCheck.Word;
                     result.Fixed = true;
@@ -1611,7 +1611,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                         else
                         {
                             _nameList.Add(s);
-                            _nameListUppercase.Add(s.ToUpper());
+                            _nameListUppercase.Add(s.ToUpperInvariant());
                             if (_fiveLetterWordListLanguageName.StartsWith("en", StringComparison.Ordinal))
                             {
                                 if (!s.EndsWith('s'))
@@ -1677,7 +1677,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                     break;
                 case OcrSpellCheck.Action.SkipAll:
                     _wordSkipList.Add(_spellCheck.Word);
-                    _wordSkipList.Add(_spellCheck.Word.ToUpper());
+                    _wordSkipList.Add(_spellCheck.Word.ToUpperInvariant());
                     if (_spellCheck.Word.Length > 1)
                     {
                         _wordSkipList.Add(char.ToUpper(_spellCheck.Word[0]) + _spellCheck.Word.Substring(1));
@@ -1734,15 +1734,15 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                             if (ar[0].Length > 3 && ar[1].Length > 3)
                             {
                                 string a = ar[0];
-                                if (a == a.ToUpper())
+                                if (a == a.ToUpperInvariant())
                                 {
-                                    a = a[0] + a.Substring(1).ToLower();
+                                    a = a[0] + a.Substring(1).ToLowerInvariant();
                                 }
 
                                 string b = ar[0];
-                                if (b == b.ToUpper())
+                                if (b == b.ToUpperInvariant())
                                 {
-                                    b = b[0] + b.Substring(1).ToLower();
+                                    b = b[0] + b.Substring(1).ToLowerInvariant();
                                 }
 
                                 if ((DoSpell(a) || IsWordKnownOrNumber(a, word)) &&
@@ -1781,12 +1781,12 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 return true;
             }
 
-            if (_userWordList.Contains(word.ToLower()))
+            if (_userWordList.Contains(word.ToLowerInvariant()))
             {
                 return true;
             }
 
-            if (_userWordList.Contains(word.Trim('\'').ToLower()))
+            if (_userWordList.Contains(word.Trim('\'').ToLowerInvariant()))
             {
                 return true;
             }

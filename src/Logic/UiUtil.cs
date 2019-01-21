@@ -350,7 +350,7 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 foreach (Keys val in Enum.GetValues(typeof(Keys)))
                 {
-                    string k = val.ToString().ToLower();
+                    string k = val.ToString().ToLowerInvariant();
                     if (!AllKeys.ContainsKey(k))
                     {
                         AllKeys.Add(k, val);
@@ -372,7 +372,7 @@ namespace Nikse.SubtitleEdit.Logic
                 }
             }
 
-            string[] parts = keysInString.ToLower().Split(new[] { '+' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] parts = keysInString.ToLowerInvariant().Split(new[] { '+' }, StringSplitOptions.RemoveEmptyEntries);
             var resultKeys = Keys.None;
             foreach (string k in parts)
             {

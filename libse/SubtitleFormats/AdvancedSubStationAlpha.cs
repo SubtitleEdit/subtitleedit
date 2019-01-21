@@ -873,7 +873,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
 
                             // switch to rrggbb from bbggrr
                             color = "#" + color.Remove(color.Length - 6) + color.Substring(color.Length - 2, 2) + color.Substring(color.Length - 4, 2) + color.Substring(color.Length - 6, 2);
-                            color = color.ToLower();
+                            color = color.ToLowerInvariant();
 
                             text = text.Remove(start, end - start + 1);
                             if (italic)
@@ -918,7 +918,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
 
                             // switch to rrggbb from bbggrr
                             color = "#" + color.Remove(color.Length - 6) + color.Substring(color.Length - 2, 2) + color.Substring(color.Length - 4, 2) + color.Substring(color.Length - 6, 2);
-                            color = color.ToLower();
+                            color = color.ToLowerInvariant();
 
                             text = text.Remove(start, end - start + 1);
                             if (italic)
@@ -1074,7 +1074,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                         color = color.PadLeft(6, '0');
                         // switch to rrggbb from bbggrr
                         color = "#" + color.Remove(color.Length - 6) + color.Substring(color.Length - 2, 2) + color.Substring(color.Length - 4, 2) + color.Substring(color.Length - 6, 2);
-                        color = color.ToLower();
+                        color = color.ToLowerInvariant();
 
                         extraTags += " color=\"" + color + "\"";
                     }
@@ -1198,7 +1198,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                 }
                 else if (eventsStarted)
                 {
-                    string s = line.Trim().ToLower();
+                    string s = line.Trim().ToLowerInvariant();
                     if (line.Length > 10 && s.StartsWith("format:", StringComparison.Ordinal))
                     {
                         indexLayer = -1;
@@ -1624,12 +1624,12 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
 
             foreach (string line in header.SplitToLines())
             {
-                string s = line.Trim().ToLower();
+                string s = line.Trim().ToLowerInvariant();
                 if (s.StartsWith("format:", StringComparison.Ordinal))
                 {
                     if (line.Length > 10)
                     {
-                        var format = line.Substring(8).ToLower().Split(',');
+                        var format = line.Substring(8).ToLowerInvariant().Split(',');
                         styleCount = format.Length;
                         for (int i = 0; i < format.Length; i++)
                         {
@@ -1722,7 +1722,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                             Color dummyColor = Color.FromArgb(9, 14, 16, 26);
                             for (int i = 0; i < format.Length; i++)
                             {
-                                string f = format[i].Trim().ToLower();
+                                string f = format[i].Trim().ToLowerInvariant();
                                 if (i == nameIndex)
                                 {
                                     if (f.Length == 0)
@@ -1938,15 +1938,15 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
 
             foreach (string line in header.SplitToLines())
             {
-                string s = line.Trim().ToLower();
+                string s = line.Trim().ToLowerInvariant();
                 if (s.StartsWith("format:", StringComparison.Ordinal))
                 {
                     if (line.Length > 10)
                     {
-                        var format = line.ToLower().Substring(8).Split(',');
+                        var format = line.ToLowerInvariant().Substring(8).Split(',');
                         for (int i = 0; i < format.Length; i++)
                         {
-                            string f = format[i].Trim().ToLower();
+                            string f = format[i].Trim().ToLowerInvariant();
                             if (f == "name")
                             {
                                 nameIndex = i;
@@ -2030,7 +2030,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                         var format = line.Substring(6).Split(',');
                         for (int i = 0; i < format.Length; i++)
                         {
-                            string f = format[i].Trim().ToLower();
+                            string f = format[i].Trim().ToLowerInvariant();
                             if (i == nameIndex)
                             {
                                 style.Name = format[i].Trim();

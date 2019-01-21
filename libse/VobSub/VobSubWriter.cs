@@ -140,7 +140,7 @@ namespace Nikse.SubtitleEdit.Core.VobSub
         public void WriteParagraph(Paragraph p, Bitmap bmp, ContentAlignment alignment, Point? overridePosition = null) // inspired by code from SubtitleCreator
         {
             // timestamp: 00:00:33:900, filepos: 000000000
-            _idx.AppendLine($"timestamp: {p.StartTime.Hours:00}:{p.StartTime.Minutes:00}:{p.StartTime.Seconds:00}:{p.StartTime.Milliseconds:000}, filepos: {_subFile.Position.ToString("X").PadLeft(9, '0').ToLower()}");
+            _idx.AppendLine($"timestamp: {p.StartTime.Hours:00}:{p.StartTime.Minutes:00}:{p.StartTime.Seconds:00}:{p.StartTime.Milliseconds:000}, filepos: {_subFile.Position.ToString("X").PadLeft(9, '0').ToLowerInvariant()}");
 
             var nbmp = new NikseBitmap(bmp);
             _emphasis2 = nbmp.ConverToFourColors(_background, _pattern, _emphasis1, _useInnerAntialiasing);
@@ -429,7 +429,7 @@ id: " + _languageNameShort + @", index: 0
 
         private static string ToHexColor(Color c)
         {
-            return (c.R.ToString("X2") + c.G.ToString("X2") + c.B.ToString("X2")).ToLower();
+            return (c.R.ToString("X2") + c.G.ToString("X2") + c.B.ToString("X2")).ToLowerInvariant();
         }
 
         private void ReleaseManagedResources()

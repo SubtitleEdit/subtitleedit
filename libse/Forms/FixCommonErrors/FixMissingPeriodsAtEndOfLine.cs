@@ -71,7 +71,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     !ExpectedString1.Contains(tempNoHtml[tempNoHtml.Length - 1]))
                 {
                     string tempTrimmed = tempNoHtml.TrimEnd().TrimEnd('\'', '"', '“', '”').TrimEnd();
-                    if (tempTrimmed.Length > 0 && !ExpectedString2.Contains(tempTrimmed[tempTrimmed.Length - 1]) && p.Text != p.Text.ToUpper())
+                    if (tempTrimmed.Length > 0 && !ExpectedString2.Contains(tempTrimmed[tempTrimmed.Length - 1]) && p.Text != p.Text.ToUpperInvariant())
                     {
                         //don't end the sentence if the next word is an I word as they're always capped.
                         bool isNextCloseAndStartsWithI = isNextClose && (nextText.StartsWith("I ", StringComparison.Ordinal) ||
@@ -117,10 +117,10 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 }
                 else if (next != null && !string.IsNullOrEmpty(p.Text) && Utilities.AllLettersAndNumbers.Contains(p.Text[p.Text.Length - 1]))
                 {
-                    if (p.Text != p.Text.ToUpper())
+                    if (p.Text != p.Text.ToUpperInvariant())
                     {
                         var st = new StrippableText(next.Text);
-                        if (st.StrippedText.Length > 0 && st.StrippedText != st.StrippedText.ToUpper() &&
+                        if (st.StrippedText.Length > 0 && st.StrippedText != st.StrippedText.ToUpperInvariant() &&
                             char.IsUpper(st.StrippedText[0]))
                         {
                             if (callbacks.AllowFix(p, fixAction))

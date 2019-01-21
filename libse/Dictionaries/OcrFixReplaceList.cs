@@ -560,7 +560,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
         public static string FixLowerCaseLInsideUpperCaseWord(string input)
         {
             var word = input;
-            if (word.Length > 3 && word.RemoveChar('l').ToUpper() == word.RemoveChar('l'))
+            if (word.Length > 3 && word.RemoveChar('l').ToUpperInvariant() == word.RemoveChar('l'))
             {
                 if (!word.Contains('<') && !word.Contains('>') && !word.Contains('\''))
                 {
