@@ -643,6 +643,7 @@
     <Word from="maloprije" to="malo prije" />
     <Word from="manifestuje" to="manifestira" />
     <Word from="manifestuju" to="manifestiraju" />
+    <Word from="maram" to="moram"/>
     <Word from="marta" to="ožujka" />
     <Word from="martu" to="ožujku"/>
     <Word from="martom" to="ožujkom" />
@@ -741,7 +742,12 @@
     <Word from="Nemora" to="Ne mora" />
     <Word from="nene" to="njene" />
     <Word from="nešo" to="nešto" />
+    <Word from="neutešan" to="neutješan" />
+    <Word from="neutešna" to="neutješna" />
     <Word from="nevesta" to="nevjesta" />
+    <Word from="neveste" to="nevjeste" />
+    <Word from="nevesti" to="nevjesti" />
+    <Word from="nevestu" to="nevjestu" />
     <Word from="nevreme" to="nevrijeme" />
     <Word from="nezi" to="njezi" />
     <Word from="niasm" to="nisam" />
@@ -839,6 +845,7 @@
     <Word from="ortakluku" to="partnerstvu" />
     <Word from="osjećanja" to="osjećaje" />
     <Word from="osmeh" to="osmijeh" />
+    <Word from="osmeha" to="osmjeha" />
     <Word from="osmehe" to="osmijehe" />
     <Word from="osmehne" to="osmjehne" />
     <Word from="osmehnu" to="osmjehnu" />
@@ -1094,6 +1101,7 @@
     <Word from="procentu" to="postotku" />
     <Word from="Procentu" to="Postotku" />
     <Word from="procentima" to="postocima" />
+    <Word from="prodata" to="prodana" />
     <Word from="prodato" to="prodano" />
     <Word from="prohte" to="prohtije" />
     <Word from="projekat" to="projekt" />
@@ -1471,6 +1479,7 @@
     <Word from="Talasi" to="Valovi" />
     <Word from="talasima" to="valovima" />
     <Word from="Talasima" to="Valovima" />
+    <Word from="teba" to="treba" />
     <Word from="tečnost" to="tekućina" />
     <Word from="tečnosti" to="tekućine" />
     <Word from="tečnošću" to="tekućinom" />
@@ -1633,6 +1642,7 @@
     <Word from="vaspitala" to="odgojila" />
     <Word from="vaspitavan" to="odgajan" />
     <Word from="vaspitavanju" to="odgoju" />
+    <Word from="vaške" to="uši" />
     <Word from="vašljivi" to="ušljivi" />
     <Word from="važi" to="vrijedi" />
     <Word from="večan" to="vječan" />
