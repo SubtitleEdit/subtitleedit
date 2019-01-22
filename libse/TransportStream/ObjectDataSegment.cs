@@ -24,13 +24,13 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
         public Bitmap Image { get; set; }
         private FastBitmap _fastImage;
 
-        public const int PixelDecoding2Bit = 0x10;
-        public const int PixelDecoding4Bit = 0x11;
-        public const int PixelDecoding8Bit = 0x12;
-        public const int MapTable2To4Bit = 0x20;
-        public const int MapTable2To8Bit = 0x21;
-        public const int MapTable4To8Bit = 0x22;
-        public const int EndOfObjectLineCode = 0xf0;
+        public static int PixelDecoding2Bit => 0x10;
+        public static int PixelDecoding4Bit => 0x11;
+        public static int PixelDecoding8Bit => 0x12;
+        public static int MapTable2To4Bit => 0x20;
+        public static int MapTable2To8Bit => 0x21;
+        public static int MapTable4To8Bit => 0x22;
+        public static int EndOfObjectLineCode => 0xf0;
 
         public int BufferIndex { get; private set; }
 
@@ -198,11 +198,10 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
 
         private static int CalculateSize(byte[] buffer, int index, ref int dataType, int start, ref int x, ref int y, int length, ref int runLength, ref int width)
         {
-            int pixelCode;
             if (dataType == PixelDecoding2Bit)
             {
                 int bitIndex = 0;
-                while (index < start + length - 1 && TwoBitPixelDecoding(buffer, ref index, ref bitIndex, out pixelCode, out runLength))
+                while (index < start + length - 1 && TwoBitPixelDecoding(buffer, ref index, ref bitIndex, out _, out runLength))
                 {
                     x += runLength;
                 }
@@ -210,14 +209,14 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
             else if (dataType == PixelDecoding4Bit)
             {
                 bool startHalf = false;
-                while (index < start + length - 1 && FourBitPixelDecoding(buffer, ref index, ref startHalf, out pixelCode, out runLength))
+                while (index < start + length - 1 && FourBitPixelDecoding(buffer, ref index, ref startHalf, out _, out runLength))
                 {
                     x += runLength;
                 }
             }
             else if (dataType == PixelDecoding8Bit)
             {
-                while (index < start + length - 1 && EightBitPixelDecoding(buffer, ref index, out pixelCode, out runLength))
+                while (index < start + length - 1 && EightBitPixelDecoding(buffer, ref index, out _, out runLength))
                 {
                     x += runLength;
                 }
@@ -343,7 +342,7 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
             int first = Next4Bits(buffer, ref index, ref startHalf);
             if (first != 0)
             {
-                pixelCode = first; // Next4Bits(buffer, ref index, ref startHalf);
+                pixelCode = first;
                 runLength = 1;
             }
             else
