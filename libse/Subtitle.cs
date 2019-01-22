@@ -20,7 +20,7 @@ namespace Nikse.SubtitleEdit.Core
 
         public string FileName { get; set; }
 
-        public const int MaximumHistoryItems = 100;
+        public static int MaximumHistoryItems => 100;
 
         public SubtitleFormat OriginalFormat { get; private set; }
 

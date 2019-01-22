@@ -8,33 +8,33 @@ namespace Nikse.SubtitleEdit.Core
 {
     public class IfoParser : IDisposable
     {
-        public struct AudioStream
+        public class AudioStream
         {
-            public int LanguageTypeSpecified;
-            public string Language;
-            public string LanguageCode;
-            public string CodingMode;
-            public int Channels;
-            public string Extension;
+            public int LanguageTypeSpecified { get; set; }
+            public string Language { get; set; }
+            public string LanguageCode { get; set; }
+            public string CodingMode { get; set; }
+            public int Channels { get; set; }
+            public string Extension { get; set; }
         };
 
-        public struct VideoStream
+        public class VideoStream
         {
-            public string Aspect;
-            public string Standard;
-            public string CodingMode;
-            public string Resolution;
+            public string Aspect { get; set; }
+            public string Standard { get; set; }
+            public string CodingMode { get; set; }
+            public string Resolution { get; set; }
         }
 
         public class VtsVobs
         {
-            public int NumberOfAudioStreams;
-            public int NumberOfSubtitles;
-            public VideoStream VideoStream;
-            public List<AudioStream> AudioStreams;
-            public List<string> Subtitles;
-            public List<string> SubtitleIDs;
-            public List<string> SubtitleTypes;
+            public int NumberOfAudioStreams { get; set; }
+            public int NumberOfSubtitles { get; set; }
+            public VideoStream VideoStream { get; set; }
+            public List<AudioStream> AudioStreams { get; set; }
+            public List<string> Subtitles { get; set; }
+            public List<string> SubtitleIDs { get; set; }
+            public List<string> SubtitleTypes { get; set; }
 
             public List<string> GetAllLanguages()
             {
@@ -85,15 +85,15 @@ namespace Nikse.SubtitleEdit.Core
 
         public class ProgramChain
         {
-            public int NumberOfPgc;
-            public int NumberOfCells;
-            public string PlaybackTime;
-            public List<byte> PgcEntryCells;
-            public List<string> PgcPlaybackTimes;
-            public List<string> PgcStartTimes;
-            public List<char> AudioStreamsAvailable;
-            public List<byte[]> SubtitlesAvailable;
-            public List<Color> ColorLookupTable;
+            public int NumberOfPgc { get; set; }
+            public int NumberOfCells { get; set; }
+            public string PlaybackTime { get; set; }
+            public List<byte> PgcEntryCells { get; set; }
+            public List<string> PgcPlaybackTimes { get; set; }
+            public List<string> PgcStartTimes { get; set; }
+            public List<char> AudioStreamsAvailable { get; set; }
+            public List<byte[]> SubtitlesAvailable { get; set; }
+            public List<Color> ColorLookupTable { get; set; }
 
             public ProgramChain()
             {
@@ -131,8 +131,8 @@ namespace Nikse.SubtitleEdit.Core
         private readonly List<string> _arrayOfNtscResolution = new List<string> { "720x480", "704x480", "352x480", "352x240" };
         private readonly List<string> _arrayOfPalResolution = new List<string> { "720x576", "704x576", "352x576", "352x288" };
 
-        public VtsPgci VideoTitleSetProgramChainTable { get { return _vtsPgci; } }
-        public VtsVobs VideoTitleSetVobs { get { return _vtsVobs; } }
+        public VtsPgci VideoTitleSetProgramChainTable => _vtsPgci;
+        public VtsVobs VideoTitleSetVobs => _vtsVobs;
         public string ErrorMessage { get; private set; }
 
         private readonly VtsVobs _vtsVobs = new VtsVobs();
@@ -465,7 +465,7 @@ namespace Nikse.SubtitleEdit.Core
                     if (programChain.HasNoSpecificSubs)
                     {
                         // only one unspezified subpicture stream exists
-                        _vtsVobs.SubtitleIDs.Add(string.Format("0x{0:x2}", subStream++));
+                        _vtsVobs.SubtitleIDs.Add($"0x{subStream++:x2}");
                         _vtsVobs.SubtitleTypes.Add("unspecific");
                     }
                     else
@@ -495,7 +495,7 @@ namespace Nikse.SubtitleEdit.Core
                         string subType = string.Empty;
                         if (programChain.Has43Subs)
                         {
-                            sub = string.Format("0x{0:x2}", subStream + pos43Subs);
+                            sub = $"0x{subStream + pos43Subs:x2}";
                             subType = "4:3";
                         }
                         if (programChain.HasWideSubs)
@@ -505,7 +505,7 @@ namespace Nikse.SubtitleEdit.Core
                                 sub += ", ";
                                 subType += ", ";
                             }
-                            sub += string.Format("0x{0:x2}", subStream + posWideSubs);
+                            sub += $"0x{subStream + posWideSubs:x2}";
                             subType += "wide";
                         }
                         if (programChain.HasLetterSubs)
@@ -515,7 +515,7 @@ namespace Nikse.SubtitleEdit.Core
                                 sub += ", ";
                                 subType += ", ";
                             }
-                            sub += string.Format("0x{0:x2}", subStream + posLetterSubs);
+                            sub += $"0x{subStream + posLetterSubs:x2}";
                             subType += "letterboxed";
                         }
                         if (programChain.HasPanSubs)
@@ -525,7 +525,7 @@ namespace Nikse.SubtitleEdit.Core
                                 sub += ", ";
                                 subType += ", ";
                             }
-                            sub += string.Format("0x{0:x2}", subStream + posPanSubs);
+                            sub += $"0x{subStream + posPanSubs:x2}";
                             subType += "pan&scan";
                         }
 
@@ -577,7 +577,7 @@ namespace Nikse.SubtitleEdit.Core
         private static string MsToTime(double milliseconds)
         {
             var ts = TimeSpan.FromMilliseconds(milliseconds);
-            string s = string.Format("{0:#0}:{1:00}:{2:00}.{3:000}", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds);
+            string s = $"{ts.Hours:#0}:{ts.Minutes:00}:{ts.Seconds:00}.{ts.Milliseconds:000}";
             return s;
         }
 

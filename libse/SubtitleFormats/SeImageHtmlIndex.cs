@@ -45,9 +45,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             var s = line.Replace("&gt;", ">").Substring(0, idx);
                             s = s.Remove(0, s.IndexOf(':') + 1);
                             var arr = s.Split(new[] { '-', '>' }, StringSplitOptions.RemoveEmptyEntries);
-                            var p = new Paragraph();
-                            p.StartTime = DecodeTimeCode(arr[0]);
-                            p.EndTime = DecodeTimeCode(arr[1]);
+                            var p = new Paragraph { StartTime = DecodeTimeCode(arr[0]), EndTime = DecodeTimeCode(arr[1]) };
                             int start = line.IndexOf("<img src=", StringComparison.Ordinal) + 9;
                             int end = line.IndexOf(".png", StringComparison.Ordinal) + 4;
                             p.Text = line.Substring(start, end - start).Trim('"', '\'');
@@ -64,7 +62,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             subtitle.Renumber();
         }
 
-        private TimeCode DecodeTimeCode(string timeCode)
+        private static TimeCode DecodeTimeCode(string timeCode)
         {
             var parts = timeCode.Split(new[] { ':', '-', '>', ',', '.' }, StringSplitOptions.RemoveEmptyEntries);
             int milliseconds = int.Parse(parts[parts.Length - 1]);
