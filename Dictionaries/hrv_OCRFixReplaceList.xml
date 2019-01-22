@@ -3201,6 +3201,7 @@
     <RegEx find="fi(sa|še)" replaceWith="fira" />
     <RegEx find="fiskov" replaceWith="fiscir" />
     <RegEx find="frov" replaceWith="frir" />
+    <RegEx find="glda" replaceWith="gleda" />
     <RegEx find="grišć" replaceWith="grist ć" />
     <RegEx find="(?&lt;!e)grš" replaceWith="greš" />
     <RegEx find="grutova" replaceWith="grutira" />
