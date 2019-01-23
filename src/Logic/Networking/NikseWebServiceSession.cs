@@ -18,19 +18,19 @@ namespace Nikse.SubtitleEdit.Logic.Networking
         public event EventHandler OnUpdateUserLogEntries;
 
         private System.Windows.Forms.Timer _timerWebService;
-        public List<UpdateLogEntry> UpdateLog = new List<UpdateLogEntry>();
-        public List<ChatEntry> ChatLog = new List<ChatEntry>();
+        public List<UpdateLogEntry> UpdateLog { get; } = new List<UpdateLogEntry>();
+        public List<ChatEntry> ChatLog { get; } = new List<ChatEntry>();
         private SeNetworkService.SeService _seWs;
         private DateTime _seWsLastUpdate = DateTime.Now.AddYears(-1);
         public SeNetworkService.SeUser CurrentUser { get; set; }
-        public Subtitle LastSubtitle;
-        public Subtitle Subtitle;
-        public Subtitle OriginalSubtitle;
-        public string SessionId;
-        public string UserName;
-        public string FileName;
-        public List<SeNetworkService.SeUser> Users;
-        public StringBuilder Log;
+        public Subtitle LastSubtitle { get; set; }
+        public Subtitle Subtitle { get; private set; }
+        public Subtitle OriginalSubtitle { get; private set; }
+        public string SessionId { get; private set; }
+        private string _userName;
+        private string _fileName;
+        public List<SeNetworkService.SeUser> Users { get; private set; }
+        public StringBuilder Log { get; }
 
         public string WebServiceUrl => _seWs.Url;
 
@@ -54,8 +54,8 @@ namespace Nikse.SubtitleEdit.Logic.Networking
         public void StartServer(string webServiceUrl, string sessionKey, string userName, string fileName, out string message)
         {
             SessionId = sessionKey;
-            UserName = userName;
-            FileName = fileName;
+            _userName = userName;
+            _fileName = fileName;
             var list = new List<SeNetworkService.SeSequence>();
             foreach (Paragraph p in Subtitle.Paragraphs)
             {
@@ -86,7 +86,7 @@ namespace Nikse.SubtitleEdit.Logic.Networking
                 Url = webServiceUrl,
                 Proxy = Utilities.GetProxy()
             };
-            SeNetworkService.SeUser user = _seWs.Start(sessionKey, userName, list.ToArray(), originalSubtitle.ToArray(), fileName, out message);
+            var user = _seWs.Start(sessionKey, userName, list.ToArray(), originalSubtitle.ToArray(), fileName, out message);
             CurrentUser = user;
             Users = new List<SeNetworkService.SeUser> { user };
             if (message == "OK")
@@ -117,7 +117,7 @@ namespace Nikse.SubtitleEdit.Logic.Networking
                 Subtitle.Paragraphs.Add(new Paragraph(WebUtility.HtmlDecode(sequence.Text).Replace("<br />", Environment.NewLine), sequence.StartMilliseconds, sequence.EndMilliseconds));
             }
 
-            FileName = tempFileName;
+            _fileName = tempFileName;
 
             OriginalSubtitle = new Subtitle();
             var sequences = _seWs.GetOriginalSubtitle(sessionKey);
@@ -175,7 +175,7 @@ namespace Nikse.SubtitleEdit.Logic.Networking
         {
             Subtitle.Paragraphs.Clear();
             var sequences = _seWs.GetSubtitle(SessionId, out var tempFileName, out var updateTime);
-            FileName = tempFileName;
+            _fileName = tempFileName;
             _seWsLastUpdate = updateTime;
             if (sequences != null)
             {
@@ -192,10 +192,10 @@ namespace Nikse.SubtitleEdit.Logic.Networking
             if (_seWs != null)
             {
                 Subtitle = new Subtitle();
-                var sequences = _seWs.GetSubtitle(SessionId, out FileName, out _seWsLastUpdate);
+                var sequences = _seWs.GetSubtitle(SessionId, out _fileName, out _seWsLastUpdate);
                 foreach (var sequence in sequences)
                 {
-                    Paragraph p = new Paragraph(WebUtility.HtmlDecode(sequence.Text).Replace("<br />", Environment.NewLine), sequence.StartMilliseconds, sequence.EndMilliseconds);
+                    var p = new Paragraph(WebUtility.HtmlDecode(sequence.Text).Replace("<br />", Environment.NewLine), sequence.StartMilliseconds, sequence.EndMilliseconds);
                     Subtitle.Paragraphs.Add(p);
                 }
                 Subtitle.Renumber();
@@ -237,8 +237,8 @@ namespace Nikse.SubtitleEdit.Logic.Networking
             {
                 for (int i = 0; i < Subtitle.Paragraphs.Count; i++)
                 {
-                    Paragraph last = LastSubtitle.GetParagraphOrDefault(i);
-                    Paragraph current = Subtitle.GetParagraphOrDefault(i);
+                    var last = LastSubtitle.GetParagraphOrDefault(i);
+                    var current = Subtitle.GetParagraphOrDefault(i);
                     if (last != null && current != null)
                     {
                         if (Math.Abs(last.StartTime.TotalMilliseconds - current.StartTime.TotalMilliseconds) > 0.01 ||
@@ -339,7 +339,7 @@ namespace Nikse.SubtitleEdit.Logic.Networking
                 try
                 {
                     System.Threading.Thread.Sleep(200);
-                    StartServer(_seWs.Url, SessionId, UserName, FileName, out message);
+                    StartServer(_seWs.Url, SessionId, _userName, _fileName, out message);
                     retries = maxRetries;
                 }
                 catch
@@ -366,7 +366,7 @@ namespace Nikse.SubtitleEdit.Logic.Networking
                 try
                 {
                     System.Threading.Thread.Sleep(200);
-                    if (Join(_seWs.Url, UserName, SessionId, out message))
+                    if (Join(_seWs.Url, _userName, SessionId, out message))
                     {
                         message = "Reload";
                     }

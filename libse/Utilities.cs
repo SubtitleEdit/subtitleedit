@@ -58,8 +58,7 @@ namespace Nikse.SubtitleEdit.Core
 
         public static bool IsInteger(string s)
         {
-            int i;
-            return int.TryParse(s, out i);
+            return int.TryParse(s, out _);
         }
 
         public static SubtitleFormat GetSubtitleFormatByFriendlyName(string friendlyName)
@@ -78,20 +77,20 @@ namespace Nikse.SubtitleEdit.Core
         {
             if (fileSize <= 1024)
             {
-                return string.Format("{0} bytes", fileSize);
+                return $"{fileSize} bytes";
             }
 
             if (fileSize <= 1024 * 1024)
             {
-                return string.Format("{0} kb", fileSize / 1024);
+                return $"{fileSize / 1024} kb";
             }
 
             if (fileSize <= 1024 * 1024 * 1024)
             {
-                return string.Format("{0:0.0} mb", (float)fileSize / (1024 * 1024));
+                return $"{(float)fileSize / (1024 * 1024):0.0} mb";
             }
 
-            return string.Format("{0:0.0} gb", (float)fileSize / (1024 * 1024 * 1024));
+            return $"{(float)fileSize / (1024 * 1024 * 1024):0.0} gb";
         }
 
         /// <summary>
@@ -1063,7 +1062,6 @@ namespace Nikse.SubtitleEdit.Core
                 string assemblyName = assembly.GetName().Name;
                 if (Attribute.IsDefined(assembly, typeof(AssemblyDescriptionAttribute)))
                 {
-                    Console.WriteLine(assemblyName);
                     var descriptionAttribute = (AssemblyDescriptionAttribute)Attribute.GetCustomAttribute(assembly, typeof(AssemblyDescriptionAttribute));
                     if (descriptionAttribute != null)
                     {

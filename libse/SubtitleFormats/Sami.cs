@@ -341,7 +341,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         text = text.Substring(0, st) + text.Substring(sourceIndex);
                     }
                     int et = st;
-                    while (et < text.Length - 5 && text.Substring(et, 3).ToUpperInvariant() != "<P>" && text.Substring(et, 4).ToUpper() != "</P>")
+                    while (et < text.Length - 5 && text.Substring(et, 3).ToUpperInvariant() != "<P>" && text.Substring(et, 4).ToUpperInvariant() != "</P>")
                     {
                         et++;
                     }

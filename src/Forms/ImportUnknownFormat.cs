@@ -3,15 +3,13 @@ using Nikse.SubtitleEdit.Logic;
 using System;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
 {
     public partial class ImportUnknownFormat : Form
     {
-
-        public Subtitle ImportedSubitle;
+        public Subtitle ImportedSubitle { get; private set; }
         private readonly Timer _refreshTimer = new Timer();
 
         public ImportUnknownFormat(string fileName)
@@ -47,8 +45,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void GeneratePreviewReal()
         {
-            var uknownFormatImporter = new UknownFormatImporter();
-            uknownFormatImporter.UseFrames = radioButtonTimeCodeFrames.Checked;
+            var uknownFormatImporter = new UknownFormatImporter { UseFrames = radioButtonTimeCodeFrames.Checked };
             ImportedSubitle = uknownFormatImporter.AutoGuessImport(textBoxText.Lines.ToList());
             groupBoxImportResult.Text = string.Format(Configuration.Settings.Language.ImportText.PreviewLinesModifiedX, ImportedSubitle.Paragraphs.Count);
             SubtitleListview1.Fill(ImportedSubitle);
@@ -69,7 +66,7 @@ namespace Nikse.SubtitleEdit.Forms
             try
             {
                 SubtitleListview1.Items.Clear();
-                Encoding encoding = LanguageAutoDetect.GetEncodingFromFile(fileName);
+                var encoding = LanguageAutoDetect.GetEncodingFromFile(fileName);
                 textBoxText.Text = File.ReadAllText(fileName, encoding);
 
                 // check for RTF file

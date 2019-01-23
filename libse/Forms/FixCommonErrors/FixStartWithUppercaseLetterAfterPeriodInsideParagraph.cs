@@ -122,7 +122,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 return Helper.GetTurkishUppercaseLetter(text[0], callbacks.Encoding) + text.Substring(1);
             }
 
-            text = char.ToUpper(text[0]) + text.Substring(1); // text.CapitalizeFirstLetter();
+            text = char.ToUpper(text[0]) + text.Substring(1);
             return text;
         }
 
