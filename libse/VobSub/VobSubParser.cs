@@ -9,8 +9,8 @@ namespace Nikse.SubtitleEdit.Core.VobSub
     {
         public bool IsPal { get; private set; }
         public List<VobSubPack> VobSubPacks { get; private set; }
-        public List<Color> IdxPalette = new List<Color>();
-        public List<string> IdxLanguages = new List<string>();
+        public List<Color> IdxPalette { get; private set; } = new List<Color>();
+        public List<string> IdxLanguages { get; private set; } = new List<string>();
 
         private const int PacketizedElementaryStreamMaximumLength = 2028;
 
