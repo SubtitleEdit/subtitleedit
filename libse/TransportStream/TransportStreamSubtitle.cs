@@ -17,10 +17,7 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
 
                 return _startMilliseconds - OffsetMilliseconds;
             }
-            set
-            {
-                _startMilliseconds = value + OffsetMilliseconds;
-            }
+            set => _startMilliseconds = value + OffsetMilliseconds;
         }
 
         private ulong _endMilliseconds;
@@ -36,32 +33,17 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
 
                 return _endMilliseconds - OffsetMilliseconds;
             }
-            set
-            {
-                _endMilliseconds = value + OffsetMilliseconds;
-            }
+            set => _endMilliseconds = value + OffsetMilliseconds;
         }
 
         public ulong OffsetMilliseconds { get; set; }
         public DvbSubPes Pes { get; set; }
-        private BluRaySup.BluRaySupParser.PcsData _bdSup;
+        private readonly BluRaySup.BluRaySupParser.PcsData _bdSup;
         public int? ActiveImageIndex { get; set; }
 
-        public bool IsBluRaySup
-        {
-            get
-            {
-                return _bdSup != null;
-            }
-        }
+        public bool IsBluRaySup => _bdSup != null;
 
-        public bool IsDvbSub
-        {
-            get
-            {
-                return Pes != null;
-            }
-        }
+        public bool IsDvbSub => Pes != null;
 
         public TransportStreamSubtitle(BluRaySup.BluRaySupParser.PcsData bdSup, ulong startMilliseconds, ulong endMilliseconds)
         {
@@ -109,10 +91,8 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                 {
                     return Pes.ObjectDataList.Count;
                 }
-                else
-                {
-                    return _bdSup.BitmapObjects.Count;
-                }
+
+                return _bdSup.BitmapObjects.Count;
             }
         }
 

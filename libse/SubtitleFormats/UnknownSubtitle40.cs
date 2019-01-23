@@ -26,13 +26,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static string EncodeTimeCode(TimeCode time)
         {
-            //00:50
-            int seconds = time.Seconds;
-            if (time.Milliseconds >= 500)
-            {
-                seconds++;
-            }
-
             return $"{time.Hours * 60 + time.Minutes}:{time.Seconds:00}";
         }
 

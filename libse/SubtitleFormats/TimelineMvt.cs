@@ -38,7 +38,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 return;
             }
             string title = Encoding.UTF8.GetString(bytes, 9, index - 9);
-            Console.WriteLine(title);
 
             // language1
             index += 2;
@@ -52,7 +51,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 return;
             }
             string language1 = Encoding.UTF8.GetString(bytes, start, index - start);
-            Console.WriteLine(language1);
 
             // language2
             index += 2;
@@ -66,7 +64,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 return;
             }
             string language2 = Encoding.UTF8.GetString(bytes, start, index - start);
-            Console.WriteLine(language2);
 
             Encoding encoding1 = GetEncodingFromLanguage(language1);
             Encoding encoding2 = GetEncodingFromLanguage(language2);
@@ -136,14 +133,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 return 0;
             }
-
-            Console.WriteLine(bytes[timeCodeIndex + 0].ToString("X2") + " " +
-                              bytes[timeCodeIndex + 1].ToString("X2") + " " +
-                              bytes[timeCodeIndex + 2].ToString("X2") + " " +
-                              bytes[timeCodeIndex + 3].ToString("X2") + " " +
-                              bytes[timeCodeIndex + 4].ToString("X2") + " " +
-                              bytes[timeCodeIndex + 5].ToString("X2") + " " +
-                              bytes[timeCodeIndex + 6].ToString("X2"));
             return ((bytes[timeCodeIndex + 5] << 24) + (bytes[timeCodeIndex + 4] << 16) + (bytes[timeCodeIndex + 3] << 8) + (bytes[timeCodeIndex + 2])) / 1800.0;
         }
 

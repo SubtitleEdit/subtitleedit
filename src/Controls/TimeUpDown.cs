@@ -182,25 +182,21 @@ namespace Nikse.SubtitleEdit.Controls
 
                     if (times.Length == 4)
                     {
-                        int hours;
-                        int.TryParse(times[0], out hours);
+                        int.TryParse(times[0], out var hours);
 
-                        int minutes;
-                        int.TryParse(times[1], out minutes);
+                        int.TryParse(times[1], out var minutes);
                         if (minutes > 59)
                         {
                             minutes = 59;
                         }
 
-                        int seconds;
-                        int.TryParse(times[2], out seconds);
+                        int.TryParse(times[2], out var seconds);
                         if (seconds > 59)
                         {
                             seconds = 59;
                         }
 
-                        int milliSeconds;
-                        int.TryParse(times[3].PadRight(3, '0'), out milliSeconds);
+                        int.TryParse(times[3].PadRight(3, '0'), out var milliSeconds);
                         var tc = new TimeCode(hours, minutes, seconds, milliSeconds);
 
                         if (UseVideoOffset)
@@ -227,17 +223,13 @@ namespace Nikse.SubtitleEdit.Controls
 
                     if (times.Length == 4)
                     {
-                        int hours;
-                        int.TryParse(times[0], out hours);
+                        int.TryParse(times[0], out var hours);
 
-                        int minutes;
-                        int.TryParse(times[1], out minutes);
+                        int.TryParse(times[1], out var minutes);
 
-                        int seconds;
-                        int.TryParse(times[2], out seconds);
+                        int.TryParse(times[2], out var seconds);
 
-                        int milliSeconds;
-                        if (int.TryParse(times[3], out milliSeconds))
+                        if (int.TryParse(times[3], out var milliSeconds))
                         {
                             milliSeconds = Core.SubtitleFormats.SubtitleFormat.FramesToMillisecondsMax999(milliSeconds);
                         }
@@ -323,9 +315,9 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        private string GetMask(double val) => val >= 0 ? "00:00:00.000" : "-00:00:00.000";
+        private static string GetMask(double val) => val >= 0 ? "00:00:00.000" : "-00:00:00.000";
 
-        private string GetMaskFrames(double val) => val >= 0 ? "00:00:00:00" : "-00:00:00:00";
+        private static string GetMaskFrames(double val) => val >= 0 ? "00:00:00:00" : "-00:00:00:00";
 
         private void maskedTextBox1_MouseDown(object sender, MouseEventArgs e)
         {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -233,7 +234,7 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
             if (!word.EndsWith('s'))
             {
                 _namesListWithApostrophe.Remove(word + "'s");
-                _namesListUppercase.Remove(word.ToUpper() + "'S");
+                _namesListUppercase.Remove(word.ToUpperInvariant() + "'S");
             }
             if (!word.EndsWith('\''))
             {

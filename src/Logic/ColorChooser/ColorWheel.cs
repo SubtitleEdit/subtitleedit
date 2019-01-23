@@ -93,10 +93,10 @@ namespace Nikse.SubtitleEdit.Logic.ColorChooser
 
         private int _brightness = byte.MaxValue;
         private Point _brightnessPoint;
-        private Point _centerPoint;
+        private readonly Point _centerPoint;
         private Bitmap _colorImage;
         private Point _colorPoint;
-        private Rectangle _colorRectangle;
+        private readonly Rectangle _colorRectangle;
         private MouseState _currentState = MouseState.MouseUp;
         private Color _fullColor;
         private Graphics _g;
