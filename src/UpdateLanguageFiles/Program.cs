@@ -46,7 +46,10 @@ namespace UpdateLanguageFiles
                 var languageAsXml = language.GetCurrentLanguageAsXml();
                 var oldLanguageAsXml = string.Empty;
                 if (File.Exists(args[0]))
+                {
                     oldLanguageAsXml = File.ReadAllText(args[0]);
+                }
+
                 if (oldLanguageAsXml != languageAsXml)
                 {
                     language.Save(args[0]);
@@ -57,7 +60,10 @@ namespace UpdateLanguageFiles
                 var languageDeserializerContent = Nikse.SubtitleEdit.Logic.LanguageDeserializerGenerator.GenerateCSharpXmlDeserializerForLanguage();
                 var oldLanguageDeserializerContent = string.Empty;
                 if (File.Exists(args[1]))
+                {
                     oldLanguageDeserializerContent = File.ReadAllText(args[1]);
+                }
+
                 if (oldLanguageDeserializerContent != languageDeserializerContent)
                 {
                     File.WriteAllText(args[1], languageDeserializerContent, Encoding.UTF8);
@@ -89,15 +95,29 @@ namespace UpdateLanguageFiles
         {
             var templateFileName = Path.Combine("src", "Properties", "AssemblyInfo.cs.template");
             if (!File.Exists(templateFileName))
+            {
                 templateFileName = Path.Combine("..", templateFileName);
+            }
+
             if (!File.Exists(templateFileName))
+            {
                 templateFileName = Path.Combine("..", templateFileName);
+            }
+
             if (!File.Exists(templateFileName))
+            {
                 templateFileName = Path.Combine("..", templateFileName);
+            }
+
             if (!File.Exists(templateFileName))
+            {
                 templateFileName = Path.Combine("..", templateFileName);
+            }
+
             if (!File.Exists(templateFileName))
+            {
                 templateFileName = Path.Combine("..", templateFileName);
+            }
 
             if (File.Exists(templateFileName))
             {
