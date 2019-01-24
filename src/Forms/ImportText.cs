@@ -162,7 +162,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else
             {
-                openFileDialog1.Filter = Configuration.Settings.Language.ImportText.TextFiles + "|*.txt;*.tx3g;*.astx;*" + new FinalDraftTemplate2().Extension + "|Adobe Story|*.astx|Final Draft Template|*" + new FinalDraftTemplate2().Extension + "|" + Configuration.Settings.Language.General.AllFiles + "|*.*";
+                openFileDialog1.Filter = Configuration.Settings.Language.ImportText.TextFiles + "|*.txt;*.rtf;*.tx3g;*.astx;*" + new FinalDraftTemplate2().Extension + "|Adobe Story|*.astx|Final Draft Template|*" + new FinalDraftTemplate2().Extension + "|" + Configuration.Settings.Language.General.AllFiles + "|*.*";
             }
 
             openFileDialog1.FileName = string.Empty;
@@ -212,6 +212,10 @@ namespace Nikse.SubtitleEdit.Forms
             else if (ext == ".tx3g" && new Tx3GTextOnly().IsMine(null, fileName))
             {
                 LoadTx3G(fileName);
+            }
+            else if (ext == ".rtf" && FileUtil.IsRtf(fileName))
+            {
+                LoadRtf(fileName);
             }
             else
             {
@@ -666,7 +670,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void ImportAutoSplit(IEnumerable<string> textLines)
+        private void ImportAutoSplit(string[] textLines)
         {
             var sub = new Subtitle();
             foreach (var line in textLines)
@@ -815,6 +819,26 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxMergeShortLines.Checked = false;
             GeneratePreview();
         }
+
+        private void LoadRtf(string fileName)
+        {
+            const int bomHeaderLength = 3;
+            var encoding = FileUtil.HasUtf8Bom(fileName) ? Encoding.UTF8 : Encoding.ASCII;
+            var bytes = FileUtil.ReadAllBytesShared(fileName);
+            var rtf = encoding.GetString(bytes);
+            if (Equals(encoding, Encoding.UTF8))
+            {
+                rtf = encoding.GetString(bytes, bomHeaderLength, bytes.Length - bomHeaderLength);
+            }
+            using (var rtb = new RichTextBox { Rtf = rtf })
+            {
+                textBoxText.Text = string.Join(Environment.NewLine, rtb.Text.SplitToLines());
+            }
+            SetVideoFileName(fileName);
+            Text = Configuration.Settings.Language.ImportText.Title + " - " + fileName;
+            GeneratePreview();
+        }
+
 
         private void LoadAdobeStory(string fileName)
         {
@@ -1124,22 +1148,7 @@ namespace Nikse.SubtitleEdit.Forms
             GeneratePreview();
         }
 
-        private void numericUpDownAsEnd1_ValueChanged(object sender, EventArgs e)
-        {
-            GeneratePreview();
-        }
-
-        private void numericUpDownAsEnd2_ValueChanged(object sender, EventArgs e)
-        {
-            GeneratePreview();
-        }
-
         private void textBoxAsEnd1_TextChanged(object sender, EventArgs e)
-        {
-            GeneratePreview();
-        }
-
-        private void textBoxAsEnd2_TextChanged(object sender, EventArgs e)
         {
             GeneratePreview();
         }

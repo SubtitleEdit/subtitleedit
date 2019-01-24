@@ -319,6 +319,23 @@ namespace Nikse.SubtitleEdit.Core
             return false;
         }
 
+        public static bool IsRtf(string fileName)
+        {
+            using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            {
+                var buffer = new byte[10];
+                if (fs.Read(buffer, 0, buffer.Length) != buffer.Length)
+                {
+                    return false;
+                }
+
+                var text = Encoding.ASCII.GetString(buffer);
+                var textUtf8 = Encoding.ASCII.GetString(buffer, 3, 7); 
+                return text.Trim().StartsWith("{\\rtf1\\", StringComparison.Ordinal) ||
+                       textUtf8.Trim().StartsWith("{\\rtf1\\", StringComparison.Ordinal);
+            }
+        }
+
         public static bool HasUtf8Bom(string fileName)
         {
             using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
@@ -362,7 +379,7 @@ namespace Nikse.SubtitleEdit.Core
                 return false;
             }
 
-            return ((File.GetAttributes(path) & FileAttributes.Directory) != FileAttributes.Directory);
+            return (File.GetAttributes(path) & FileAttributes.Directory) != FileAttributes.Directory;
         }
 
         public static bool IsDirectory(string path)
@@ -372,7 +389,7 @@ namespace Nikse.SubtitleEdit.Core
                 return false;
             }
 
-            return ((File.GetAttributes(path) & FileAttributes.Directory) == FileAttributes.Directory);
+            return (File.GetAttributes(path) & FileAttributes.Directory) == FileAttributes.Directory;
         }
 
         public static bool IsPlainText(string fileName)
