@@ -329,7 +329,7 @@ namespace Nikse.SubtitleEdit.Core
             ReplaceNames2Fix(replaceIds, changeNameCases ? replaceNames : originalNames);
         }
 
-        private bool IsInMiddleOfUrl(int idx, string s)
+        private static bool IsInMiddleOfUrl(int idx, string s)
         {
             if (idx < s.Length - 1 && (char.IsWhiteSpace(s[idx]) || char.IsPunctuation(s[idx])))
             {

@@ -861,7 +861,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return true;
         }
 
-        private string AutoDetectLanguageCode(Subtitle subtitle)
+        private static string AutoDetectLanguageCode(Subtitle subtitle)
         {
             if (subtitle == null || subtitle.Paragraphs.Count == 0)
             {
@@ -1528,7 +1528,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return list;
         }
 
-        private string GetColorOrTag(byte b)
+        private static string GetColorOrTag(byte b)
         {
             switch (b)
             {

@@ -411,7 +411,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public virtual bool IsTextBased => true;
 
-        protected TimeCode DecodeTimeCodeFramesTwoParts(string[] tokens)
+        protected static TimeCode DecodeTimeCodeFramesTwoParts(string[] tokens)
         {
             if (tokens == null)
             {
@@ -422,11 +422,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 throw new InvalidOperationException();
             }
-            // 00:00
+
             return new TimeCode(0, 0, int.Parse(tokens[0]), FramesToMillisecondsMax999(int.Parse(tokens[1])));
         }
 
-        protected TimeCode DecodeTimeCodeFramesThreeParts(string[] tokens)
+        protected static TimeCode DecodeTimeCodeFramesThreeParts(string[] tokens)
         {
             if (tokens == null)
             {
@@ -437,11 +437,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 throw new InvalidOperationException();
             }
-            // 00:00:00
+
             return new TimeCode(0, int.Parse(tokens[0]), int.Parse(tokens[1]), FramesToMillisecondsMax999(int.Parse(tokens[2])));
         }
 
-        protected TimeCode DecodeTimeCodeFramesFourParts(string[] tokens)
+        protected static TimeCode DecodeTimeCodeFramesFourParts(string[] tokens)
         {
             if (tokens == null)
             {
@@ -452,11 +452,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 throw new InvalidOperationException();
             }
-            // 00:00:00:00
+
             return new TimeCode(int.Parse(tokens[0]), int.Parse(tokens[1]), int.Parse(tokens[2]), FramesToMillisecondsMax999(int.Parse(tokens[3])));
         }
 
-        protected TimeCode DecodeTimeCodeMsFourParts(string[] tokens)
+        protected static TimeCode DecodeTimeCodeMsFourParts(string[] tokens)
         {
             if (tokens == null)
             {
@@ -467,11 +467,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 throw new InvalidOperationException();
             }
-            // 00:00:00.000
+
             return new TimeCode(int.Parse(tokens[0]), int.Parse(tokens[1]), int.Parse(tokens[2]), int.Parse(tokens[3]));
         }
 
-        protected TimeCode DecodeTimeCodeFrames(string timestamp, char[] splitChars)
+        protected static TimeCode DecodeTimeCodeFrames(string timestamp, char[] splitChars)
         {
             return DecodeTimeCodeFramesFourParts(timestamp.Split(splitChars, StringSplitOptions.RemoveEmptyEntries));
         }
