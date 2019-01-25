@@ -126,7 +126,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             subtitle.Renumber();
         }
 
-        private double GetTimeCode(byte[] bytes, int timeCodeIndex)
+        private static double GetTimeCode(byte[] bytes, int timeCodeIndex)
         {
             //TODO: figure out how to get time code from these 7 bytes!
             if (bytes == null || bytes.Length < timeCodeIndex + 8)
@@ -136,7 +136,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return ((bytes[timeCodeIndex + 5] << 24) + (bytes[timeCodeIndex + 4] << 16) + (bytes[timeCodeIndex + 3] << 8) + (bytes[timeCodeIndex + 2])) / 1800.0;
         }
 
-        private Encoding GetEncodingFromLanguage(string language)
+        private static Encoding GetEncodingFromLanguage(string language)
         {
             if (language == "Russian")
             {

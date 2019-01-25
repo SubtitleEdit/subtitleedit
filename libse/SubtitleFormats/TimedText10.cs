@@ -932,7 +932,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
         }
 
-        private string TryGetAttribute(XmlNode node, string attr, string @namespace)
+        private static string TryGetAttribute(XmlNode node, string attr, string @namespace)
         {
             if (node.Attributes[attr, @namespace] != null)
             {
@@ -946,7 +946,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return string.Empty;
         }
 
-        private string LookupForAttribute(string attr, XmlNode node, XmlNamespaceManager nsmgr)
+        private static string LookupForAttribute(string attr, XmlNode node, XmlNamespaceManager nsmgr)
         {
             XmlNode currentNode = node;
 

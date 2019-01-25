@@ -166,7 +166,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
         }
 
-        private void WriteParagraph(Stream stream, Paragraph paragraph, int number)
+        private static void WriteParagraph(Stream stream, Paragraph paragraph, int number)
         {
             // subtitle number
             stream.WriteByte((byte)(number & 0xff));
@@ -187,7 +187,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             WriteText(stream, paragraph.Text);
         }
 
-        private void WriteFrames(Stream stream, TimeCode timeCode)
+        private static void WriteFrames(Stream stream, TimeCode timeCode)
         {
             var frames = (uint)Math.Round((double)MillisecondsToFrames(timeCode.TotalMilliseconds));
             stream.WriteByte((byte)(frames & 0xff));
@@ -195,7 +195,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             stream.WriteByte((byte)((frames >> 16) & 0xff));
         }
 
-        private void WriteText(Stream stream, string text)
+        private static void WriteText(Stream stream, string text)
         {
             var bytes = MakeBytes(text);
 

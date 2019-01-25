@@ -3582,7 +3582,7 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             return null;
         }
 
-        private double GetPixelDifPercentage(BinaryOcrBitmap expanded, BinaryOcrBitmap bobNext, NikseBitmap nbmpNext, double maxDiff)
+        private static double GetPixelDifPercentage(BinaryOcrBitmap expanded, BinaryOcrBitmap bobNext, NikseBitmap nbmpNext, double maxDiff)
         {
             var difColoredPercentage = (Math.Abs(expanded.NumberOfColoredPixels - bobNext.NumberOfColoredPixels)) * 100.0 / (bobNext.Width * bobNext.Height);
             if (difColoredPercentage > 1 && expanded.Width < 3 || bobNext.Width < 3)

@@ -172,7 +172,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             subtitle.Renumber();
         }
 
-        private IEnumerable<byte[]> SplitBytesToLines(byte[] bytes)
+        internal static IEnumerable<byte[]> SplitBytesToLines(byte[] bytes)
         {
             var list = new List<byte[]>();
             int start = 0;

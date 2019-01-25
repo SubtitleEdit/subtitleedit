@@ -63,7 +63,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             byte secondLineCode = 0;
 
             subtitle.Paragraphs.Clear();
-            IEnumerable<byte[]> byteLines = SplitBytesToLines(File.ReadAllBytes(fileName));
+            IEnumerable<byte[]> byteLines = TimeLineAscii.SplitBytesToLines(File.ReadAllBytes(fileName));
             foreach (byte[] bytes in byteLines)
             {
                 var line = Encoding.ASCII.GetString(bytes);
@@ -170,30 +170,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             subtitle.Renumber();
-        }
-
-        private IEnumerable<byte[]> SplitBytesToLines(byte[] bytes)
-        {
-            var list = new List<byte[]>();
-            int start = 0;
-            int index = 0;
-            while (index < bytes.Length)
-            {
-                if (bytes[index] == 13)
-                {
-                    int length = index - start;
-                    var lineBytes = new byte[length];
-                    Array.Copy(bytes, start, lineBytes, 0, length);
-                    list.Add(lineBytes);
-                    index += 2;
-                    start = index;
-                }
-                else
-                {
-                    index++;
-                }
-            }
-            return list;
         }
 
         private static TimeCode DecodeTimeCode(string[] parts)
