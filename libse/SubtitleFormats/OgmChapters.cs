@@ -50,7 +50,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             string[] startParts = start.Split(new[] { ':', '.', ',' }, StringSplitOptions.RemoveEmptyEntries);
                             if (startParts.Length == 4)
                             {
-                                p = new Paragraph { StartTime = DecodeTimeCodeFramesFourParts(startParts) };
+                                p = new Paragraph { StartTime = DecodeTimeCodeMsFourParts(startParts) };
                                 p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + 4000;
                                 subtitle.Paragraphs.Add(p);
                             }
