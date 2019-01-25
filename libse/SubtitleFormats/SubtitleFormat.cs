@@ -456,6 +456,21 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return new TimeCode(int.Parse(tokens[0]), int.Parse(tokens[1]), int.Parse(tokens[2]), FramesToMillisecondsMax999(int.Parse(tokens[3])));
         }
 
+        protected TimeCode DecodeTimeCodeMsFourParts(string[] tokens)
+        {
+            if (tokens == null)
+            {
+                return new TimeCode();
+            }
+
+            if (tokens.Length != 4)
+            {
+                throw new InvalidOperationException();
+            }
+            // 00:00:00.000
+            return new TimeCode(int.Parse(tokens[0]), int.Parse(tokens[1]), int.Parse(tokens[2]), int.Parse(tokens[3]));
+        }
+
         protected TimeCode DecodeTimeCodeFrames(string timestamp, char[] splitChars)
         {
             return DecodeTimeCodeFramesFourParts(timestamp.Split(splitChars, StringSplitOptions.RemoveEmptyEntries));
