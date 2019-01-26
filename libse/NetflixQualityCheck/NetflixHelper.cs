@@ -4,9 +4,9 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
 {
     internal static class NetflixHelper
     {
-        internal static string ConvertNumberToString(string value, bool startWithUppercase, string language)
+        internal static string ConvertNumberToString(string input, bool startWithUppercase, string language)
         {
-            value = value.Trim();
+            var value = input.Trim();
             if (language == "en")
             {
                 if (value.Equals("0", StringComparison.Ordinal))
