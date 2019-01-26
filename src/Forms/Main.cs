@@ -8008,7 +8008,7 @@ namespace Nikse.SubtitleEdit.Forms
                     toolStripMenuItemUnbreakLines.Visible = false;
                     toolStripMenuItemAutoBreakLines.Visible = false;
                     toolStripSeparatorBreakLines.Visible = false;
-                    if (_subtitleAlternate != null && noNetWorkSession)
+                    if (_subtitleAlternate != null && noNetWorkSession &&  !string.IsNullOrEmpty(Configuration.Settings.Tools.MicrosoftBingApiId))
                     {
                         toolStripMenuItemGoogleMicrosoftTranslateSelLine.Visible = true;
                     }
@@ -8071,6 +8071,8 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             toolStripMenuItemPasteSpecial.Visible = Clipboard.ContainsText();
+            toolStripMenuItemSurroundWithMusicSymbols.Text = Configuration.Settings.Tools.MusicSymbol;
+            toolStripMenuItemSurroundWithMusicSymbols.Visible = !string.IsNullOrEmpty(Configuration.Settings.Tools.MusicSymbol);
         }
 
         private void tsi_Click(object sender, EventArgs e)
@@ -23580,7 +23582,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ToolStripMenuItemSurroundWithMusicSymbolsClick(object sender, EventArgs e)
         {
-            const string tag = "♪";
+            string tag = Configuration.Settings.Tools.MusicSymbol;
+            if (string.IsNullOrWhiteSpace(tag))
+            {
+                return;
+            }
+
             if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedItems.Count > 0)
             {
                 SubtitleListview1.SelectedIndexChanged -= SubtitleListview1_SelectedIndexChanged;
@@ -23657,7 +23664,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (text.Contains(tag))
             {
-                text = pre + text.Replace("♪", string.Empty).Replace(Environment.NewLine + " ", Environment.NewLine).Replace(" " + Environment.NewLine, Environment.NewLine).Trim() + post;
+                text = pre + text.Replace(tag, string.Empty).Replace(Environment.NewLine + " ", Environment.NewLine).Replace(" " + Environment.NewLine, Environment.NewLine).Trim() + post;
             }
             else
             {
