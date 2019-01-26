@@ -11,11 +11,13 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Xml;
+using Nikse.SubtitleEdit.Core.Interfaces;
+using Nikse.SubtitleEdit.Core.SpellCheck;
 using Nikse.SubtitleEdit.Forms.Ocr;
 
 namespace Nikse.SubtitleEdit.Logic.Ocr
 {
-    public class OcrFixEngine : IDisposable
+    public class OcrFixEngine : IDisposable, IDoSpell
     {
         public enum AutoGuessLevel
         {
@@ -37,6 +39,8 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
         private HashSet<string> _userWordList = new HashSet<string>();
         private HashSet<string> _wordSkipList = new HashSet<string>();
         private Hunspell _hunspell;
+        private Dictionary<string, string> _changeAllDictionary;
+        private SpellCheckWordLists _spellCheckWordLists;
         private OcrSpellCheck _spellCheck;
         private readonly Form _parentForm;
         private string _spellCheckDictionaryName;
@@ -305,6 +309,17 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             {
                 IsDictionaryLoaded = false;
             }
+
+            // load spell check "change all" list
+            if (_hunspell != null)
+            {
+                var languageName = Path.GetFileName(_spellCheckDictionaryName);
+                if (!string.IsNullOrEmpty(languageName))
+                {
+                    _spellCheckWordLists = new SpellCheckWordLists(Utilities.DictionaryFolder, languageName, this);
+                    _changeAllDictionary = _spellCheckWordLists.GetUseAlwaysList();
+                }
+            }
         }
 
         public string SpellCheckDictionaryName
@@ -467,7 +482,8 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                             bool doFixWord = !(word.Length == 1 && sb.Length > 1 && sb.EndsWith('-'));
                             if (doFixWord)
                             {
-                                fixedWord = _ocrFixReplaceList.FixCommonWordErrors(word.ToString());
+                                fixedWord = FixWordViaReplaceList(word.ToString());
+                                fixedWord = _ocrFixReplaceList.FixCommonWordErrors(fixedWord);
 
                                 // Try using wordlists for uppercase i inside words, e.g. "NIkolaj" to "Nikolaj"
                                 if (fixedWord.Contains('I'))
@@ -538,6 +554,15 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 text = Utilities.RemoveSpaceBetweenNumbers(text);
             }
             return text;
+        }
+
+        private string FixWordViaReplaceList(string word)
+        {
+            if (_changeAllDictionary != null && _changeAllDictionary.ContainsKey(word))
+            {
+                return _changeAllDictionary[word];
+            }
+            return word;
         }
 
         internal static string FixFrenchLApostrophe(string input, string tag, string lastLine)
@@ -1448,7 +1473,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                                     {
                                         if (log)
                                         {
-                                            AutoGuessesUsed.Add($"#{index + 1}: {word} -> {guess} in line via '{"OCRFixReplaceList.xml"}': {line.Replace(Environment.NewLine, " ")}");
+                                            AutoGuessesUsed.Add($"#{index + 1}: {word} -> {guess} in line via \'OCRFixReplaceList.xml\': {line.Replace(Environment.NewLine, " ")}");
                                         }
 
                                         line = replacedLine;
@@ -1630,6 +1655,10 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                     try
                     {
                         _ocrFixReplaceList.AddWordOrPartial(word, _spellCheck.Word);
+                        if (!word.Contains(' '))
+                        {
+                            _spellCheckWordLists?.UseAlwaysListAdd(word, _spellCheck.Word);
+                        }
                     }
                     catch (Exception exception)
                     {
