@@ -15,7 +15,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public static void Save(string fileName, Subtitle subtitle)
         {
-            FileStream fs = new FileStream(fileName, FileMode.Create, FileAccess.Write);
+            var fs = new FileStream(fileName, FileMode.Create, FileAccess.Write);
 
             // header
             fs.WriteByte(1);
@@ -144,23 +144,25 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             try
             {
-                var p = new Paragraph();
-                p.StartTime = GetTimeCode(Encoding.Default.GetString(buffer, index, 8));
-                p.EndTime = GetTimeCode(Encoding.Default.GetString(buffer, index + 8, 8));
+                var p = new Paragraph
+                {
+                    StartTime = GetTimeCode(Encoding.Default.GetString(buffer, index, 8)),
+                    EndTime = GetTimeCode(Encoding.Default.GetString(buffer, index + 8, 8)),
+                    Text = Encoding.Default.GetString(buffer, index + 16 + 20 + 16, textLengthFirstLine)
+                };
 
-                p.Text = Encoding.Default.GetString(buffer, index + 16 + 20 + 16, textLengthFirstLine);
 
                 if (textLengthSecondLine > 0)
                 {
                     p.Text += Environment.NewLine + Encoding.Default.GetString(buffer, index + 16 + 20 + 16 + textLengthFirstLine, textLengthSecondLine);
                 }
 
-                index += (16 + 20 + 16 + textLengthFirstLine + textLengthSecondLine);
+                index += 16 + 20 + 16 + textLengthFirstLine + textLengthSecondLine;
                 return p;
             }
             catch
             {
-                index += (16 + 20 + 16 + textLengthFirstLine + textLengthSecondLine);
+                index += 16 + 20 + 16 + textLengthFirstLine + textLengthSecondLine;
                 _errorCount++;
                 return null;
             }

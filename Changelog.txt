@@ -7,6 +7,8 @@
    * Spell check - keep "Use always" replace list option
    * Image export - option to have single lines top justified - thx joedmartin
    * Add shortcut: Modify selection
+   * Add format "OGM chapters" - thx Franc
+   * Add format "sptx" (read) - thx Peter
 * IMPROVED:
    * Update Hungarian translation - thx Zityi
    * Update Korean translation - thx domddol
@@ -16,6 +18,7 @@
    * Auto break adheres to "Max number of lines" setting
    * Translate selected lines is now possible for BT + plugins
    * Make "select current sub while playing" smoother in waveform
+   * Support .rtf files in "Import plain text" - thx Tilen
 * FIXED:
    * Fix missing/bad html tags after "Auto br" - thx iromafia111
    * Fix crash in OCR window when closing - thx spetragl

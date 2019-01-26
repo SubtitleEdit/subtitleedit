@@ -2546,6 +2546,20 @@ namespace Nikse.SubtitleEdit.Forms
                         format = GetCurrentSubtitleFormat();
                     }
                 }
+                if (format == null)
+                {
+                    var sptx = new Sptx();
+                    if (sptx.IsMine(null, fileName))
+                    {
+                        sptx.LoadSubtitle(_subtitle, null, fileName);
+                        _oldSubtitleFormat = sptx;
+                        SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
+                        SetEncoding(Configuration.Settings.General.DefaultEncoding);
+                        encoding = GetCurrentEncoding();
+                        justConverted = true;
+                        format = GetCurrentSubtitleFormat();
+                    }
+                }
 
                 if (format == null && ext == ".wsb")
                 {
@@ -17230,6 +17244,15 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     spt.LoadSubtitle(_subtitleAlternate, null, fileName);
                     format = spt;
+                }
+            }
+            if (format == null)
+            {
+                var sptx = new Sptx();
+                if (sptx.IsMine(null, fileName))
+                {
+                    sptx.LoadSubtitle(_subtitleAlternate, null, fileName);
+                    format = sptx;
                 }
             }
             if (format == null)
