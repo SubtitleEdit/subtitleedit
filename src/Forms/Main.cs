@@ -1863,9 +1863,11 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        private long _lastAutoSave;
         private void AutoSave(bool force = false)
         {
-            if (!Configuration.Settings.General.AutoSave || DateTime.UtcNow.Ticks % 250 != 0 && !force)
+            if (!Configuration.Settings.General.AutoSave ||
+                DateTime.UtcNow.Ticks - _lastAutoSave < 10000 * 3000 && !force) // only check for auto save evety 3 seconds
             {
                 return;
             }
@@ -1884,6 +1886,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 SaveOriginalSubtitle(GetCurrentSubtitleFormat());
             }
+
+            _lastAutoSave = DateTime.UtcNow.Ticks;
         }
 
         private bool ContinueNewOrExit()
@@ -2279,1433 +2283,1450 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void OpenSubtitle(string fileName, Encoding encoding, string videoFileName, string originalFileName)
         {
-            if (File.Exists(fileName))
+            if (!File.Exists(fileName))
             {
-                bool videoFileLoaded = false;
-                var file = new FileInfo(fileName);
-                var ext = file.Extension.ToLowerInvariant();
+                MessageBox.Show(string.Format(_language.FileNotFound, fileName));
+                return;
+            }
 
-                // save last first visible index + first selected index from listview
-                if (!string.IsNullOrEmpty(_fileName))
+            _lastAutoSave = DateTime.UtcNow.Ticks;
+            bool videoFileLoaded = false;
+            var file = new FileInfo(fileName);
+            var ext = file.Extension.ToLowerInvariant();
+
+            // save last first visible index + first selected index from listview
+            if (!string.IsNullOrEmpty(_fileName))
+            {
+                Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, _videoFileName, originalFileName, Configuration.Settings.General.CurrentVideoOffsetInMs);
+            }
+
+            Configuration.Settings.General.CurrentVideoOffsetInMs = 0;
+
+            openFileDialog1.InitialDirectory = file.DirectoryName;
+
+
+            if (ext == ".idx")
+            {
+                var subFileName = fileName.Substring(0, fileName.Length - 3) + "sub";
+                if (File.Exists(subFileName) && FileUtil.IsVobSub(subFileName))
                 {
-                    Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, _videoFileName, originalFileName, Configuration.Settings.General.CurrentVideoOffsetInMs);
+                    ext = ".sub";
+                    fileName = subFileName;
                 }
-
-                Configuration.Settings.General.CurrentVideoOffsetInMs = 0;
-
-                openFileDialog1.InitialDirectory = file.DirectoryName;
-
-
-                if (ext == ".idx")
-                {
-                    var subFileName = fileName.Substring(0, fileName.Length - 3) + "sub";
-                    if (File.Exists(subFileName) && FileUtil.IsVobSub(subFileName))
-                    {
-                        ext = ".sub";
-                        fileName = subFileName;
-                    }
-                }
-                if (ext == ".sub" && IsVobSubFile(fileName, false))
-                {
-                    ImportAndOcrVobSubSubtitleNew(fileName, _loading);
-                    return;
-                }
-
-                if (ext == ".sup")
-                {
-                    if (FileUtil.IsBluRaySup(fileName))
-                    {
-                        ImportAndOcrBluRaySup(fileName, _loading);
-                        return;
-                    }
-                    if (FileUtil.IsSpDvdSup(fileName))
-                    {
-                        ImportAndOcrSpDvdSup(fileName, _loading);
-                        return;
-                    }
-                }
-
-                if (ext == ".mkv" || ext == ".mks")
-                {
-                    ImportSubtitleFromMatroskaFile(fileName);
-                    return;
-                }
-
-                if (ext == ".divx" || ext == ".avi")
-                {
-                    if (ImportSubtitleFromDivX(fileName))
-                    {
-                        return;
-                    }
-                }
-
-                if ((ext == ".ts" || ext == ".rec" || ext == ".mpeg" || ext == ".mpg") && file.Length > 10000 && FileUtil.IsTransportStream(fileName))
-                {
-                    ImportSubtitleFromTransportStream(fileName);
-                    return;
-                }
-
-                if (((ext == ".m2ts" || ext == ".ts") && file.Length > 10000 && FileUtil.IsM2TransportStream(fileName)) ||
-                    (ext == ".textst" && FileUtil.IsMpeg2PrivateStream2(fileName)))
-                {
-                    bool isTextSt = false;
-                    if (file.Length < 2000000)
-                    {
-                        var textSt = new TextST();
-                        isTextSt = textSt.IsMine(null, fileName);
-                    }
-
-                    if (!isTextSt)
-                    {
-                        ImportSubtitleFromTransportStream(fileName);
-                        return;
-                    }
-                }
-
-                if ((ext == ".mp4" || ext == ".m4v" || ext == ".3gp") && file.Length > 10000)
-                {
-                    if (!new IsmtDfxp().IsMine(null, fileName))
-                    {
-                        if (ImportSubtitleFromMp4(fileName) && !Configuration.Settings.General.DisableVideoAutoLoading)
-                        {
-                            OpenVideo(fileName);
-                        }
-
-                        return;
-                    }
-                }
-
-                if (ext == ".mxf" && FileUtil.IsMaterialExchangeFormat(fileName))
-                {
-                    var parser = new MxfParser(fileName);
-                    if (parser.IsValid)
-                    {
-                        var subtitles = parser.GetSubtitles();
-                        if (subtitles.Count > 0)
-                        {
-                            SetEncoding(Configuration.Settings.General.DefaultEncoding);
-                            var list = new List<string>(subtitles[0].SplitToLines());
-                            _subtitle = new Subtitle();
-                            var mxfFormat = _subtitle.ReloadLoadSubtitle(list, null, null);
-                            SetCurrentFormat(mxfFormat);
-                            _fileName = Path.GetFileNameWithoutExtension(fileName);
-                            SetTitle();
-                            ShowStatus(string.Format(_language.LoadedSubtitleX, _fileName));
-                            _sourceViewChange = false;
-                            _changeSubtitleToString = _subtitle.GetFastHashCode(GetCurrentEncoding().BodyName);
-                            ResetHistory();
-                            SetUndockedWindowsTitle();
-                            _converted = true;
-                            ShowStatus(string.Format(_language.LoadedSubtitleX, _fileName) + " - " + string.Format(_language.ConvertedToX, mxfFormat.FriendlyName));
-
-                            ShowSource();
-                            SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
-                            _subtitleListViewIndex = -1;
-                            SubtitleListview1.FirstVisibleIndex = -1;
-                            SubtitleListview1.SelectIndexAndEnsureVisible(0, true);
-
-                            return;
-                        }
-                        MessageBox.Show("No subtitles found!");
-                        return;
-                    }
-                }
-
-                if (file.Length > Subtitle.MaxFileSize)
-                {
-                    // retry Blu-ray sup (file with wrong extension)
-                    if (FileUtil.IsBluRaySup(fileName))
-                    {
-                        ImportAndOcrBluRaySup(fileName, _loading);
-                        return;
-                    }
-
-                    // retry vobsub (file with wrong extension)
-                    if (IsVobSubFile(fileName, false))
-                    {
-                        ImportAndOcrVobSubSubtitleNew(fileName, _loading);
-                        return;
-                    }
-
-                    var text = string.Format(_language.FileXIsLargerThan10MB + Environment.NewLine + Environment.NewLine + _language.ContinueAnyway, fileName);
-                    if (MessageBox.Show(this, text, Title, MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
-                    {
-                        return;
-                    }
-                }
-
-                var tempSubtitle = new Subtitle(_subtitle, false);
-                if (_subtitle.HistoryItems.Count > 0 || _subtitle.Paragraphs.Count > 0)
-                {
-                    MakeHistoryForUndo(string.Format(_language.BeforeLoadOf, Path.GetFileName(fileName)));
-                }
-
-                string subtitleHash = _subtitle.GetFastHashCode(GetCurrentEncoding().BodyName);
-                bool hasChanged = (_changeSubtitleToString != subtitleHash) && (_lastDoNotPrompt != subtitleHash);
-
-                SubtitleFormat format = _subtitle.LoadSubtitle(fileName, out encoding, encoding);
-                if (format == null)
-                {
-                    _subtitle = tempSubtitle;
-                }
-
-                if (!hasChanged)
-                {
-                    _changeSubtitleToString = _subtitle.GetFastHashCode(GetCurrentEncoding().BodyName);
-                }
-
-                ShowHideTextBasedFeatures(format);
-
-                bool justConverted = false;
-                if (format == null)
-                {
-                    var ebu = new Ebu();
-                    if (ebu.IsMine(null, fileName))
-                    {
-                        ebu.LoadSubtitle(_subtitle, null, fileName);
-                        _oldSubtitleFormat = ebu;
-                        SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
-                        SetEncoding(Configuration.Settings.General.DefaultEncoding);
-                        encoding = GetCurrentEncoding();
-                        justConverted = true;
-                        format = GetCurrentSubtitleFormat();
-                    }
-                }
-
-                if (format == null)
-                {
-                    var pac = new Pac();
-                    if (pac.IsMine(null, fileName))
-                    {
-                        pac.LoadSubtitle(_subtitle, null, fileName);
-                        _oldSubtitleFormat = pac;
-                        SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
-                        SetEncoding(Configuration.Settings.General.DefaultEncoding);
-                        encoding = GetCurrentEncoding();
-                        justConverted = true;
-                        format = GetCurrentSubtitleFormat();
-                    }
-                }
-
-                if (ext == ".m2ts" || ext == ".textst")
-                {
-                    var textST = new TextST();
-                    if (textST.IsMine(null, fileName))
-                    {
-                        textST.LoadSubtitle(_subtitle, null, fileName);
-                        _oldSubtitleFormat = textST;
-                        SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
-                        SetEncoding(Configuration.Settings.General.DefaultEncoding);
-                        encoding = GetCurrentEncoding();
-                        justConverted = true;
-                        format = GetCurrentSubtitleFormat();
-                    }
-                }
-
-                if (format == null)
-                {
-                    var pns = new Pns();
-                    if (pns.IsMine(null, fileName))
-                    {
-                        pns.LoadSubtitle(_subtitle, null, fileName);
-                        _oldSubtitleFormat = pns;
-                        SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
-                        SetEncoding(Configuration.Settings.General.DefaultEncoding);
-                        encoding = GetCurrentEncoding();
-                        justConverted = true;
-                        format = GetCurrentSubtitleFormat();
-                    }
-                }
-
-                if (format == null)
-                {
-                    var cavena890 = new Cavena890();
-                    if (cavena890.IsMine(null, fileName))
-                    {
-                        cavena890.LoadSubtitle(_subtitle, null, fileName);
-                        _oldSubtitleFormat = cavena890;
-                        SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
-                        SetEncoding(Configuration.Settings.General.DefaultEncoding);
-                        encoding = GetCurrentEncoding();
-                        justConverted = true;
-                        format = GetCurrentSubtitleFormat();
-                    }
-                }
-
-                if (format == null)
-                {
-                    var spt = new Spt();
-                    if (spt.IsMine(null, fileName))
-                    {
-                        spt.LoadSubtitle(_subtitle, null, fileName);
-                        _oldSubtitleFormat = spt;
-                        SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
-                        SetEncoding(Configuration.Settings.General.DefaultEncoding);
-                        encoding = GetCurrentEncoding();
-                        justConverted = true;
-                        format = GetCurrentSubtitleFormat();
-                    }
-                }
-                if (format == null)
-                {
-                    var sptx = new Sptx();
-                    if (sptx.IsMine(null, fileName))
-                    {
-                        sptx.LoadSubtitle(_subtitle, null, fileName);
-                        _oldSubtitleFormat = sptx;
-                        SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
-                        SetEncoding(Configuration.Settings.General.DefaultEncoding);
-                        encoding = GetCurrentEncoding();
-                        justConverted = true;
-                        format = GetCurrentSubtitleFormat();
-                    }
-                }
-
-                if (format == null && ext == ".wsb")
-                {
-                    var wsb = new Wsb();
-                    var list = new List<string>(File.ReadAllLines(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName)));
-                    if (wsb.IsMine(list, fileName))
-                    {
-                        wsb.LoadSubtitle(_subtitle, list, fileName);
-                        _oldSubtitleFormat = wsb;
-                        SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
-                        SetEncoding(Configuration.Settings.General.DefaultEncoding);
-                        encoding = GetCurrentEncoding();
-                        justConverted = true;
-                        format = GetCurrentSubtitleFormat();
-                    }
-                }
-
-                if (format == null)
-                {
-                    var cheetahCaption = new CheetahCaption();
-                    if (cheetahCaption.IsMine(null, fileName))
-                    {
-                        cheetahCaption.LoadSubtitle(_subtitle, null, fileName);
-                        _oldSubtitleFormat = cheetahCaption;
-                        SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
-                        SetEncoding(Configuration.Settings.General.DefaultEncoding);
-                        encoding = GetCurrentEncoding();
-                        justConverted = true;
-                        format = GetCurrentSubtitleFormat();
-                    }
-                }
-
-                if (format == null)
-                {
-                    var cheetahCaption = new CheetahCaptionOld();
-                    if (cheetahCaption.IsMine(null, fileName))
-                    {
-                        cheetahCaption.LoadSubtitle(_subtitle, null, fileName);
-                        _oldSubtitleFormat = cheetahCaption;
-                        SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
-                        SetEncoding(Configuration.Settings.General.DefaultEncoding);
-                        encoding = GetCurrentEncoding();
-                        justConverted = true;
-                        format = GetCurrentSubtitleFormat();
-                    }
-                }
-
-                if (format == null)
-                {
-                    var capMakerPlus = new CapMakerPlus();
-                    if (capMakerPlus.IsMine(null, fileName))
-                    {
-                        capMakerPlus.LoadSubtitle(_subtitle, null, fileName);
-                        _oldSubtitleFormat = capMakerPlus;
-                        SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
-                        SetEncoding(Configuration.Settings.General.DefaultEncoding);
-                        encoding = GetCurrentEncoding();
-                        justConverted = true;
-                        format = GetCurrentSubtitleFormat();
-                    }
-                }
-
-                if (format == null)
-                {
-                    var captionsInc = new CaptionsInc();
-                    if (captionsInc.IsMine(null, fileName))
-                    {
-                        captionsInc.LoadSubtitle(_subtitle, null, fileName);
-                        _oldSubtitleFormat = captionsInc;
-                        SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
-                        SetEncoding(Configuration.Settings.General.DefaultEncoding);
-                        encoding = GetCurrentEncoding();
-                        justConverted = true;
-                        format = GetCurrentSubtitleFormat();
-                    }
-                }
-
-                if (format == null)
-                {
-                    var ultech130 = new Ultech130();
-                    if (ultech130.IsMine(null, fileName))
-                    {
-                        ultech130.LoadSubtitle(_subtitle, null, fileName);
-                        _oldSubtitleFormat = ultech130;
-                        SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
-                        SetEncoding(Configuration.Settings.General.DefaultEncoding);
-                        encoding = GetCurrentEncoding();
-                        justConverted = true;
-                        format = GetCurrentSubtitleFormat();
-                    }
-                }
-
-                if (format == null)
-                {
-                    var nciCaption = new NciCaption();
-                    if (nciCaption.IsMine(null, fileName))
-                    {
-                        nciCaption.LoadSubtitle(_subtitle, null, fileName);
-                        _oldSubtitleFormat = nciCaption;
-                        SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
-                        SetEncoding(Configuration.Settings.General.DefaultEncoding);
-                        encoding = GetCurrentEncoding();
-                        justConverted = true;
-                        format = GetCurrentSubtitleFormat();
-                    }
-                }
-
-                if (format == null)
-                {
-                    var tsb4 = new TSB4();
-                    if (tsb4.IsMine(null, fileName))
-                    {
-                        tsb4.LoadSubtitle(_subtitle, null, fileName);
-                        _oldSubtitleFormat = tsb4;
-                        SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
-                        SetEncoding(Configuration.Settings.General.DefaultEncoding);
-                        encoding = GetCurrentEncoding();
-                        justConverted = true;
-                        format = GetCurrentSubtitleFormat();
-                    }
-                }
-
-                if (format == null)
-                {
-                    var avidStl = new AvidStl();
-                    if (avidStl.IsMine(null, fileName))
-                    {
-                        avidStl.LoadSubtitle(_subtitle, null, fileName);
-                        _oldSubtitleFormat = avidStl;
-                        SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
-                        SetEncoding(Configuration.Settings.General.DefaultEncoding);
-                        encoding = GetCurrentEncoding();
-                        justConverted = true;
-                        format = GetCurrentSubtitleFormat();
-                    }
-                }
-
-                if (format == null)
-                {
-                    var chk = new Chk();
-                    if (chk.IsMine(null, fileName))
-                    {
-                        chk.LoadSubtitle(_subtitle, null, fileName);
-                        _oldSubtitleFormat = chk;
-                        SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
-                        SetEncoding(Configuration.Settings.General.DefaultEncoding);
-                        encoding = GetCurrentEncoding();
-                        justConverted = true;
-                        format = GetCurrentSubtitleFormat();
-                    }
-                }
-
-                if (format == null)
-                {
-                    var ayato = new Ayato();
-                    if (ayato.IsMine(null, fileName))
-                    {
-                        ayato.LoadSubtitle(_subtitle, null, fileName);
-                        _oldSubtitleFormat = ayato;
-                        SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
-                        SetEncoding(Configuration.Settings.General.DefaultEncoding);
-                        encoding = GetCurrentEncoding();
-                        justConverted = true;
-                        format = GetCurrentSubtitleFormat();
-                    }
-                }
-
-                if (format == null)
-                {
-                    var pacUnicode = new PacUnicode();
-                    if (pacUnicode.IsMine(null, fileName))
-                    {
-                        pacUnicode.LoadSubtitle(_subtitle, null, fileName);
-                        _oldSubtitleFormat = pacUnicode;
-                        SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
-                        SetEncoding(Configuration.Settings.General.DefaultEncoding);
-                        encoding = GetCurrentEncoding();
-                        justConverted = true;
-                        format = GetCurrentSubtitleFormat();
-                    }
-                }
-
-                if (format == null)
-                {
-                    var iai = new IaiSub();
-                    if (iai.IsMine(null, fileName))
-                    {
-                        iai.LoadSubtitle(_subtitle, null, fileName);
-                        _oldSubtitleFormat = iai;
-                        SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
-                        SetEncoding(Configuration.Settings.General.DefaultEncoding);
-                        encoding = GetCurrentEncoding();
-                        justConverted = true;
-                        format = GetCurrentSubtitleFormat();
-                    }
-                }
-
-                if (format == null)
-                {
-                    var f = new DlDd();
-                    var list = new List<string>(File.ReadAllLines(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName)));
-                    if (f.IsMine(list, fileName))
-                    {
-                        f.LoadSubtitle(_subtitle, list, fileName);
-                        _oldSubtitleFormat = f;
-                        SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
-                        SetEncoding(Configuration.Settings.General.DefaultEncoding);
-                        encoding = GetCurrentEncoding();
-                        justConverted = true;
-                        format = GetCurrentSubtitleFormat();
-                    }
-                }
-
-                if (format == null)
-                {
-                    var f = new Ted20();
-                    if (f.IsMine(null, fileName))
-                    {
-                        f.LoadSubtitle(_subtitle, null, fileName);
-                        _oldSubtitleFormat = f;
-                        SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
-                        SetEncoding(Configuration.Settings.General.DefaultEncoding);
-                        encoding = GetCurrentEncoding();
-                        justConverted = true;
-                        format = GetCurrentSubtitleFormat();
-                    }
-                }
-
-                if (format == null)
-                {
-                    var f = new TimeCodesOnly1();
-                    var list = new List<string>(File.ReadAllLines(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName)));
-                    if (f.IsMine(list, fileName))
-                    {
-                        f.LoadSubtitle(_subtitle, list, fileName);
-                        _oldSubtitleFormat = f;
-                        SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
-                        SetEncoding(Configuration.Settings.General.DefaultEncoding);
-                        encoding = GetCurrentEncoding();
-                        justConverted = true;
-                        format = GetCurrentSubtitleFormat();
-                    }
-                }
-
-                if (format == null)
-                {
-                    var f = new TimeCodesOnly2();
-                    var list = new List<string>(File.ReadAllLines(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName)));
-                    if (f.IsMine(list, fileName))
-                    {
-                        f.LoadSubtitle(_subtitle, list, fileName);
-                        _oldSubtitleFormat = f;
-                        SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
-                        SetEncoding(Configuration.Settings.General.DefaultEncoding);
-                        encoding = GetCurrentEncoding();
-                        justConverted = true;
-                        format = GetCurrentSubtitleFormat();
-                    }
-                }
-
-                if (format == null)
-                {
-                    var f = new JsonTypeOnlyLoad1();
-                    var list = new List<string>(File.ReadAllLines(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName)));
-                    if (f.IsMine(list, fileName))
-                    {
-                        f.LoadSubtitle(_subtitle, list, fileName);
-                        _oldSubtitleFormat = f;
-                        SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
-                        SetEncoding(Configuration.Settings.General.DefaultEncoding);
-                        encoding = GetCurrentEncoding();
-                        justConverted = true;
-                        format = GetCurrentSubtitleFormat();
-                    }
-                }
-
-                if (format == null)
-                {
-                    var f = new TranscriptiveJson();
-                    var list = new List<string>(File.ReadAllLines(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName)));
-                    if (f.IsMine(list, fileName))
-                    {
-                        f.LoadSubtitle(_subtitle, list, fileName);
-                        _oldSubtitleFormat = f;
-                        SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
-                        SetEncoding(Configuration.Settings.General.DefaultEncoding);
-                        encoding = GetCurrentEncoding();
-                        justConverted = true;
-                        format = GetCurrentSubtitleFormat();
-                    }
-                }
-
-                if (format == null)
-                {
-                    try
-                    {
-                        var bdnXml = new BdnXml();
-                        var list = new List<string>(File.ReadAllLines(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName)));
-                        if (bdnXml.IsMine(list, fileName))
-                        {
-                            if (ContinueNewOrExit())
-                            {
-                                ImportAndOcrBdnXml(fileName, bdnXml, list);
-                            }
-                            return;
-                        }
-                    }
-                    catch
-                    {
-                        // ignore
-                    }
-                }
-
-                if (format == null)
-                {
-                    try
-                    {
-                        var fcpImage = new FinalCutProImage();
-                        var list = new List<string>(File.ReadAllLines(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName)));
-                        if (fcpImage.IsMine(list, fileName))
-                        {
-                            if (ContinueNewOrExit())
-                            {
-                                ImportAndOcrDost(fileName, fcpImage, list);
-                            }
-                            return;
-                        }
-                    }
-                    catch
-                    {
-                        // ignore
-                    }
-                }
-
-                if (format == null)
-                {
-                    try
-                    {
-                        var f = new DvdStudioProSpaceGraphic();
-                        var list = new List<string>(File.ReadAllLines(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName)));
-                        if (f.IsMine(list, fileName))
-                        {
-                            if (ContinueNewOrExit())
-                            {
-                                ImportAndOcrDost(fileName, f, list);
-                            }
-                            return;
-                        }
-                    }
-                    catch
-                    {
-                        // ignore
-                    }
-                }
-
-                if (format == null)
-                {
-                    try
-                    {
-                        var imageFormat = new SpuImage();
-                        var list = new List<string>(File.ReadAllLines(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName)));
-                        if (imageFormat.IsMine(list, fileName))
-                        {
-                            if (ContinueNewOrExit())
-                            {
-                                ImportAndOcrDost(fileName, imageFormat, list);
-                            }
-                            return;
-                        }
-                    }
-                    catch
-                    {
-                        format = null;
-                    }
-                }
-
-                if (format == null)
-                {
-                    var elr = new ELRStudioClosedCaption();
-                    if (elr.IsMine(null, fileName))
-                    {
-                        elr.LoadSubtitle(_subtitle, null, fileName);
-                        _oldSubtitleFormat = elr;
-                        SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
-                        SetEncoding(Configuration.Settings.General.DefaultEncoding);
-                        encoding = GetCurrentEncoding();
-                        justConverted = true;
-                        format = GetCurrentSubtitleFormat();
-                    }
-                }
-
-                if (format == null)
-                {
-                    var asc = new TimeLineAscii();
-                    if (asc.IsMine(null, fileName))
-                    {
-                        asc.LoadSubtitle(_subtitle, null, fileName);
-                        _oldSubtitleFormat = asc;
-                        SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
-                        SetEncoding(Configuration.Settings.General.DefaultEncoding);
-                        encoding = GetCurrentEncoding();
-                        justConverted = true;
-                        format = GetCurrentSubtitleFormat();
-                    }
-                }
-
-                if (format == null)
-                {
-                    var asc = new TimeLineFootageAscii();
-                    if (asc.IsMine(null, fileName))
-                    {
-                        asc.LoadSubtitle(_subtitle, null, fileName);
-                        _oldSubtitleFormat = asc;
-                        SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
-                        SetEncoding(Configuration.Settings.General.DefaultEncoding);
-                        encoding = GetCurrentEncoding();
-                        justConverted = true;
-                        format = GetCurrentSubtitleFormat();
-                    }
-                }
-
-                if (format == null)
-                {
-                    var mtv = new TimeLineMvt();
-                    if (mtv.IsMine(null, fileName))
-                    {
-                        mtv.LoadSubtitle(_subtitle, null, fileName);
-                        _oldSubtitleFormat = mtv;
-                        SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
-                        SetEncoding(Configuration.Settings.General.DefaultEncoding);
-                        encoding = GetCurrentEncoding();
-                        justConverted = true;
-                        format = GetCurrentSubtitleFormat();
-                    }
-                }
-
-                if (format == null)
-                {
-                    var arib = new AribB36();
-                    if (arib.IsMine(null, fileName))
-                    {
-                        arib.LoadSubtitle(_subtitle, null, fileName);
-                        _oldSubtitleFormat = arib;
-                        SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
-                        SetEncoding(Configuration.Settings.General.DefaultEncoding);
-                        encoding = GetCurrentEncoding();
-                        justConverted = true;
-                        format = GetCurrentSubtitleFormat();
-                    }
-                }
-
-                if (ext == ".dost")
-                {
-                    try
-                    {
-                        var dost = new Dost();
-                        var list = new List<string>(File.ReadAllLines(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName)));
-                        if (dost.IsMine(list, fileName))
-                        {
-                            if (ContinueNewOrExit())
-                            {
-                                ImportAndOcrDost(fileName, dost, list);
-                            }
-
-                            return;
-                        }
-                    }
-                    catch
-                    {
-                        format = null;
-                    }
-                }
-
-                if (format == null)
-                {
-                    try
-                    {
-                        var timedtextImage = new TimedTextImage();
-                        var list = new List<string>(File.ReadAllLines(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName)));
-                        if (timedtextImage.IsMine(list, fileName))
-                        {
-                            if (ContinueNewOrExit())
-                            {
-                                ImportAndOcrDost(fileName, timedtextImage, list);
-                            }
-
-                            return;
-                        }
-                    }
-                    catch
-                    {
-                        format = null;
-                    }
-                }
-
-                if (format == null)
-                {
-                    try
-                    {
-                        var seImageHtmlIndex = new SeImageHtmlIndex();
-                        var list = new List<string>(File.ReadAllLines(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName)));
-                        if (seImageHtmlIndex.IsMine(list, fileName))
-                        {
-                            if (ContinueNewOrExit())
-                            {
-                                ImportAndOcrDost(fileName, seImageHtmlIndex, list);
-                            }
-
-                            return;
-                        }
-                    }
-                    catch
-                    {
-                        format = null;
-                    }
-                }
-
-                if (format == null)
-                {
-                    try
-                    {
-                        var cmaf = new Cmaft();
-                        if (cmaf.IsMine(null, fileName))
-                        {
-                            cmaf.LoadSubtitle(_subtitle, null, fileName);
-                            SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
-                            SetEncoding(Configuration.Settings.General.DefaultEncoding);
-                            encoding = GetCurrentEncoding();
-                            justConverted = true;
-                            format = GetCurrentSubtitleFormat();
-                        }
-                    }
-                    catch
-                    {
-                        // ignore
-                    }
-                }
-
-                if (format == null || format.Name == Scenarist.NameOfFormat)
-                {
-                    try
-                    {
-                        var son = new Son();
-                        var list = new List<string>(File.ReadAllLines(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName)));
-                        if (son.IsMine(list, fileName))
-                        {
-                            if (ContinueNewOrExit())
-                            {
-                                ImportAndOcrSon(fileName, son, list);
-                            }
-
-                            return;
-                        }
-                    }
-                    catch
-                    {
-                        format = null;
-                    }
-                }
-
-                if (format == null || format.Name == SubRip.NameOfFormat)
-                {
-                    if (_subtitle.Paragraphs.Count > 1)
-                    {
-                        int imageCount = 0;
-                        foreach (var p in _subtitle.Paragraphs)
-                        {
-                            string s = p.Text.ToLowerInvariant();
-                            if (s.EndsWith(".bmp", StringComparison.Ordinal) || s.EndsWith(".png", StringComparison.Ordinal) || s.EndsWith(".jpg", StringComparison.Ordinal) || s.EndsWith(".tif", StringComparison.Ordinal))
-                            {
-                                imageCount++;
-                            }
-                        }
-                        if (imageCount > 2 && imageCount >= _subtitle.Paragraphs.Count - 2)
-                        {
-                            if (ContinueNewOrExit())
-                            {
-                                ImportAndOcrSrt(_subtitle);
-                            }
-
-                            return;
-                        }
-                    }
-                }
-
-                if (format == null)
-                {
-                    try
-                    {
-                        var satBoxPng = new SatBoxPng();
-                        var list = new List<string>(File.ReadAllLines(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName)));
-                        if (satBoxPng.IsMine(list, fileName))
-                        {
-                            var subtitle = new Subtitle();
-                            satBoxPng.LoadSubtitle(subtitle, list, fileName);
-                            if (ContinueNewOrExit())
-                            {
-                                ImportAndOcrSrt(subtitle);
-                            }
-
-                            return;
-                        }
-                    }
-                    catch
-                    {
-                        format = null;
-                    }
-                }
-
-                if (format == null || format.Name == Scenarist.NameOfFormat)
-                {
-                    try
-                    {
-                        var sst = new SonicScenaristBitmaps();
-                        var list = new List<string>(File.ReadAllLines(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName)));
-                        if (sst.IsMine(list, fileName))
-                        {
-                            if (ContinueNewOrExit())
-                            {
-                                ImportAndOcrSst(fileName, sst, list);
-                            }
-
-                            return;
-                        }
-                    }
-                    catch
-                    {
-                        format = null;
-                    }
-                }
-
-                if (format == null)
-                {
-                    try
-                    {
-                        var htmlSamiArray = new HtmlSamiArray();
-                        var list = new List<string>(File.ReadAllLines(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName)));
-                        if (htmlSamiArray.IsMine(list, fileName))
-                        {
-                            htmlSamiArray.LoadSubtitle(_subtitle, list, fileName);
-                            _oldSubtitleFormat = htmlSamiArray;
-                            SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
-                            SetEncoding(Configuration.Settings.General.DefaultEncoding);
-                            encoding = GetCurrentEncoding();
-                            justConverted = true;
-                            format = GetCurrentSubtitleFormat();
-                        }
-                    }
-                    catch
-                    {
-                        format = null;
-                    }
-                }
-
-                if (format == null)
-                {
-                    var f = new WinCaps32();
-                    if (f.IsMine(null, fileName))
-                    {
-                        f.LoadSubtitle(_subtitle, null, fileName);
-                        _oldSubtitleFormat = f;
-                        SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
-                        SetEncoding(Configuration.Settings.General.DefaultEncoding);
-                        encoding = GetCurrentEncoding();
-                        justConverted = true;
-                        format = GetCurrentSubtitleFormat();
-                    }
-                }
-
-                if (format == null)
-                {
-                    var f = new IsmtDfxp();
-                    if (f.IsMine(null, fileName))
-                    {
-                        f.LoadSubtitle(_subtitle, null, fileName);
-                        _oldSubtitleFormat = f;
-                        SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
-                        SetEncoding(Configuration.Settings.General.DefaultEncoding);
-                        encoding = GetCurrentEncoding();
-                        justConverted = true;
-                        format = GetCurrentSubtitleFormat();
-                    }
-                }
-
-                // retry vobsub (file with wrong extension)
-                if (format == null && file.Length > 500 && IsVobSubFile(fileName, false))
-                {
-                    ImportAndOcrVobSubSubtitleNew(fileName, _loading);
-                    return;
-                }
-
-                // retry Blu-ray (file with wrong extension)
-                if (format == null && file.Length > 500 && FileUtil.IsBluRaySup(fileName))
+            }
+
+            if (ext == ".sub" && IsVobSubFile(fileName, false))
+            {
+                ImportAndOcrVobSubSubtitleNew(fileName, _loading);
+                return;
+            }
+
+            if (ext == ".sup")
+            {
+                if (FileUtil.IsBluRaySup(fileName))
                 {
                     ImportAndOcrBluRaySup(fileName, _loading);
                     return;
                 }
 
-                // retry SP DVD (file with wrong extension)
-                if (format == null && file.Length > 500 && FileUtil.IsSpDvdSup(fileName))
+                if (FileUtil.IsSpDvdSup(fileName))
                 {
                     ImportAndOcrSpDvdSup(fileName, _loading);
                     return;
                 }
+            }
 
-                // retry Matroska (file with wrong extension)
-                if (format == null && !string.IsNullOrWhiteSpace(fileName))
+            if (ext == ".mkv" || ext == ".mks")
+            {
+                ImportSubtitleFromMatroskaFile(fileName);
+                return;
+            }
+
+            if (ext == ".divx" || ext == ".avi")
+            {
+                if (ImportSubtitleFromDivX(fileName))
                 {
-                    using (var matroska = new MatroskaFile(fileName))
+                    return;
+                }
+            }
+
+            if ((ext == ".ts" || ext == ".rec" || ext == ".mpeg" || ext == ".mpg") && file.Length > 10000 && FileUtil.IsTransportStream(fileName))
+            {
+                ImportSubtitleFromTransportStream(fileName);
+                return;
+            }
+
+            if (((ext == ".m2ts" || ext == ".ts") && file.Length > 10000 && FileUtil.IsM2TransportStream(fileName)) ||
+                (ext == ".textst" && FileUtil.IsMpeg2PrivateStream2(fileName)))
+            {
+                bool isTextSt = false;
+                if (file.Length < 2000000)
+                {
+                    var textSt = new TextST();
+                    isTextSt = textSt.IsMine(null, fileName);
+                }
+
+                if (!isTextSt)
+                {
+                    ImportSubtitleFromTransportStream(fileName);
+                    return;
+                }
+            }
+
+            if ((ext == ".mp4" || ext == ".m4v" || ext == ".3gp") && file.Length > 10000)
+            {
+                if (!new IsmtDfxp().IsMine(null, fileName))
+                {
+                    if (ImportSubtitleFromMp4(fileName) && !Configuration.Settings.General.DisableVideoAutoLoading)
                     {
-                        if (matroska.IsValid)
+                        OpenVideo(fileName);
+                    }
+
+                    return;
+                }
+            }
+
+            if (ext == ".mxf" && FileUtil.IsMaterialExchangeFormat(fileName))
+            {
+                var parser = new MxfParser(fileName);
+                if (parser.IsValid)
+                {
+                    var subtitles = parser.GetSubtitles();
+                    if (subtitles.Count > 0)
+                    {
+                        SetEncoding(Configuration.Settings.General.DefaultEncoding);
+                        var list = new List<string>(subtitles[0].SplitToLines());
+                        _subtitle = new Subtitle();
+                        var mxfFormat = _subtitle.ReloadLoadSubtitle(list, null, null);
+                        SetCurrentFormat(mxfFormat);
+                        _fileName = Path.GetFileNameWithoutExtension(fileName);
+                        SetTitle();
+                        ShowStatus(string.Format(_language.LoadedSubtitleX, _fileName));
+                        _sourceViewChange = false;
+                        _changeSubtitleToString = _subtitle.GetFastHashCode(GetCurrentEncoding().BodyName);
+                        ResetHistory();
+                        SetUndockedWindowsTitle();
+                        _converted = true;
+                        ShowStatus(string.Format(_language.LoadedSubtitleX, _fileName) + " - " + string.Format(_language.ConvertedToX, mxfFormat.FriendlyName));
+
+                        ShowSource();
+                        SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+                        _subtitleListViewIndex = -1;
+                        SubtitleListview1.FirstVisibleIndex = -1;
+                        SubtitleListview1.SelectIndexAndEnsureVisible(0, true);
+
+                        return;
+                    }
+
+                    MessageBox.Show("No subtitles found!");
+                    return;
+                }
+            }
+
+            if (file.Length > Subtitle.MaxFileSize)
+            {
+                // retry Blu-ray sup (file with wrong extension)
+                if (FileUtil.IsBluRaySup(fileName))
+                {
+                    ImportAndOcrBluRaySup(fileName, _loading);
+                    return;
+                }
+
+                // retry vobsub (file with wrong extension)
+                if (IsVobSubFile(fileName, false))
+                {
+                    ImportAndOcrVobSubSubtitleNew(fileName, _loading);
+                    return;
+                }
+
+                var text = string.Format(_language.FileXIsLargerThan10MB + Environment.NewLine + Environment.NewLine + _language.ContinueAnyway, fileName);
+                if (MessageBox.Show(this, text, Title, MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
+                {
+                    return;
+                }
+            }
+
+            var tempSubtitle = new Subtitle(_subtitle, false);
+            if (_subtitle.HistoryItems.Count > 0 || _subtitle.Paragraphs.Count > 0)
+            {
+                MakeHistoryForUndo(string.Format(_language.BeforeLoadOf, Path.GetFileName(fileName)));
+            }
+
+            string subtitleHash = _subtitle.GetFastHashCode(GetCurrentEncoding().BodyName);
+            bool hasChanged = (_changeSubtitleToString != subtitleHash) && (_lastDoNotPrompt != subtitleHash);
+
+            SubtitleFormat format = _subtitle.LoadSubtitle(fileName, out encoding, encoding);
+            if (format == null)
+            {
+                _subtitle = tempSubtitle;
+            }
+
+            if (!hasChanged)
+            {
+                _changeSubtitleToString = _subtitle.GetFastHashCode(GetCurrentEncoding().BodyName);
+            }
+
+            ShowHideTextBasedFeatures(format);
+
+            bool justConverted = false;
+            if (format == null)
+            {
+                var ebu = new Ebu();
+                if (ebu.IsMine(null, fileName))
+                {
+                    ebu.LoadSubtitle(_subtitle, null, fileName);
+                    _oldSubtitleFormat = ebu;
+                    SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
+                    SetEncoding(Configuration.Settings.General.DefaultEncoding);
+                    encoding = GetCurrentEncoding();
+                    justConverted = true;
+                    format = GetCurrentSubtitleFormat();
+                }
+            }
+
+            if (format == null)
+            {
+                var pac = new Pac();
+                if (pac.IsMine(null, fileName))
+                {
+                    pac.LoadSubtitle(_subtitle, null, fileName);
+                    _oldSubtitleFormat = pac;
+                    SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
+                    SetEncoding(Configuration.Settings.General.DefaultEncoding);
+                    encoding = GetCurrentEncoding();
+                    justConverted = true;
+                    format = GetCurrentSubtitleFormat();
+                }
+            }
+
+            if (ext == ".m2ts" || ext == ".textst")
+            {
+                var textST = new TextST();
+                if (textST.IsMine(null, fileName))
+                {
+                    textST.LoadSubtitle(_subtitle, null, fileName);
+                    _oldSubtitleFormat = textST;
+                    SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
+                    SetEncoding(Configuration.Settings.General.DefaultEncoding);
+                    encoding = GetCurrentEncoding();
+                    justConverted = true;
+                    format = GetCurrentSubtitleFormat();
+                }
+            }
+
+            if (format == null)
+            {
+                var pns = new Pns();
+                if (pns.IsMine(null, fileName))
+                {
+                    pns.LoadSubtitle(_subtitle, null, fileName);
+                    _oldSubtitleFormat = pns;
+                    SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
+                    SetEncoding(Configuration.Settings.General.DefaultEncoding);
+                    encoding = GetCurrentEncoding();
+                    justConverted = true;
+                    format = GetCurrentSubtitleFormat();
+                }
+            }
+
+            if (format == null)
+            {
+                var cavena890 = new Cavena890();
+                if (cavena890.IsMine(null, fileName))
+                {
+                    cavena890.LoadSubtitle(_subtitle, null, fileName);
+                    _oldSubtitleFormat = cavena890;
+                    SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
+                    SetEncoding(Configuration.Settings.General.DefaultEncoding);
+                    encoding = GetCurrentEncoding();
+                    justConverted = true;
+                    format = GetCurrentSubtitleFormat();
+                }
+            }
+
+            if (format == null)
+            {
+                var spt = new Spt();
+                if (spt.IsMine(null, fileName))
+                {
+                    spt.LoadSubtitle(_subtitle, null, fileName);
+                    _oldSubtitleFormat = spt;
+                    SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
+                    SetEncoding(Configuration.Settings.General.DefaultEncoding);
+                    encoding = GetCurrentEncoding();
+                    justConverted = true;
+                    format = GetCurrentSubtitleFormat();
+                }
+            }
+
+            if (format == null)
+            {
+                var sptx = new Sptx();
+                if (sptx.IsMine(null, fileName))
+                {
+                    sptx.LoadSubtitle(_subtitle, null, fileName);
+                    _oldSubtitleFormat = sptx;
+                    SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
+                    SetEncoding(Configuration.Settings.General.DefaultEncoding);
+                    encoding = GetCurrentEncoding();
+                    justConverted = true;
+                    format = GetCurrentSubtitleFormat();
+                }
+            }
+
+            if (format == null && ext == ".wsb")
+            {
+                var wsb = new Wsb();
+                var list = new List<string>(File.ReadAllLines(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName)));
+                if (wsb.IsMine(list, fileName))
+                {
+                    wsb.LoadSubtitle(_subtitle, list, fileName);
+                    _oldSubtitleFormat = wsb;
+                    SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
+                    SetEncoding(Configuration.Settings.General.DefaultEncoding);
+                    encoding = GetCurrentEncoding();
+                    justConverted = true;
+                    format = GetCurrentSubtitleFormat();
+                }
+            }
+
+            if (format == null)
+            {
+                var cheetahCaption = new CheetahCaption();
+                if (cheetahCaption.IsMine(null, fileName))
+                {
+                    cheetahCaption.LoadSubtitle(_subtitle, null, fileName);
+                    _oldSubtitleFormat = cheetahCaption;
+                    SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
+                    SetEncoding(Configuration.Settings.General.DefaultEncoding);
+                    encoding = GetCurrentEncoding();
+                    justConverted = true;
+                    format = GetCurrentSubtitleFormat();
+                }
+            }
+
+            if (format == null)
+            {
+                var cheetahCaption = new CheetahCaptionOld();
+                if (cheetahCaption.IsMine(null, fileName))
+                {
+                    cheetahCaption.LoadSubtitle(_subtitle, null, fileName);
+                    _oldSubtitleFormat = cheetahCaption;
+                    SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
+                    SetEncoding(Configuration.Settings.General.DefaultEncoding);
+                    encoding = GetCurrentEncoding();
+                    justConverted = true;
+                    format = GetCurrentSubtitleFormat();
+                }
+            }
+
+            if (format == null)
+            {
+                var capMakerPlus = new CapMakerPlus();
+                if (capMakerPlus.IsMine(null, fileName))
+                {
+                    capMakerPlus.LoadSubtitle(_subtitle, null, fileName);
+                    _oldSubtitleFormat = capMakerPlus;
+                    SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
+                    SetEncoding(Configuration.Settings.General.DefaultEncoding);
+                    encoding = GetCurrentEncoding();
+                    justConverted = true;
+                    format = GetCurrentSubtitleFormat();
+                }
+            }
+
+            if (format == null)
+            {
+                var captionsInc = new CaptionsInc();
+                if (captionsInc.IsMine(null, fileName))
+                {
+                    captionsInc.LoadSubtitle(_subtitle, null, fileName);
+                    _oldSubtitleFormat = captionsInc;
+                    SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
+                    SetEncoding(Configuration.Settings.General.DefaultEncoding);
+                    encoding = GetCurrentEncoding();
+                    justConverted = true;
+                    format = GetCurrentSubtitleFormat();
+                }
+            }
+
+            if (format == null)
+            {
+                var ultech130 = new Ultech130();
+                if (ultech130.IsMine(null, fileName))
+                {
+                    ultech130.LoadSubtitle(_subtitle, null, fileName);
+                    _oldSubtitleFormat = ultech130;
+                    SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
+                    SetEncoding(Configuration.Settings.General.DefaultEncoding);
+                    encoding = GetCurrentEncoding();
+                    justConverted = true;
+                    format = GetCurrentSubtitleFormat();
+                }
+            }
+
+            if (format == null)
+            {
+                var nciCaption = new NciCaption();
+                if (nciCaption.IsMine(null, fileName))
+                {
+                    nciCaption.LoadSubtitle(_subtitle, null, fileName);
+                    _oldSubtitleFormat = nciCaption;
+                    SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
+                    SetEncoding(Configuration.Settings.General.DefaultEncoding);
+                    encoding = GetCurrentEncoding();
+                    justConverted = true;
+                    format = GetCurrentSubtitleFormat();
+                }
+            }
+
+            if (format == null)
+            {
+                var tsb4 = new TSB4();
+                if (tsb4.IsMine(null, fileName))
+                {
+                    tsb4.LoadSubtitle(_subtitle, null, fileName);
+                    _oldSubtitleFormat = tsb4;
+                    SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
+                    SetEncoding(Configuration.Settings.General.DefaultEncoding);
+                    encoding = GetCurrentEncoding();
+                    justConverted = true;
+                    format = GetCurrentSubtitleFormat();
+                }
+            }
+
+            if (format == null)
+            {
+                var avidStl = new AvidStl();
+                if (avidStl.IsMine(null, fileName))
+                {
+                    avidStl.LoadSubtitle(_subtitle, null, fileName);
+                    _oldSubtitleFormat = avidStl;
+                    SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
+                    SetEncoding(Configuration.Settings.General.DefaultEncoding);
+                    encoding = GetCurrentEncoding();
+                    justConverted = true;
+                    format = GetCurrentSubtitleFormat();
+                }
+            }
+
+            if (format == null)
+            {
+                var chk = new Chk();
+                if (chk.IsMine(null, fileName))
+                {
+                    chk.LoadSubtitle(_subtitle, null, fileName);
+                    _oldSubtitleFormat = chk;
+                    SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
+                    SetEncoding(Configuration.Settings.General.DefaultEncoding);
+                    encoding = GetCurrentEncoding();
+                    justConverted = true;
+                    format = GetCurrentSubtitleFormat();
+                }
+            }
+
+            if (format == null)
+            {
+                var ayato = new Ayato();
+                if (ayato.IsMine(null, fileName))
+                {
+                    ayato.LoadSubtitle(_subtitle, null, fileName);
+                    _oldSubtitleFormat = ayato;
+                    SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
+                    SetEncoding(Configuration.Settings.General.DefaultEncoding);
+                    encoding = GetCurrentEncoding();
+                    justConverted = true;
+                    format = GetCurrentSubtitleFormat();
+                }
+            }
+
+            if (format == null)
+            {
+                var pacUnicode = new PacUnicode();
+                if (pacUnicode.IsMine(null, fileName))
+                {
+                    pacUnicode.LoadSubtitle(_subtitle, null, fileName);
+                    _oldSubtitleFormat = pacUnicode;
+                    SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
+                    SetEncoding(Configuration.Settings.General.DefaultEncoding);
+                    encoding = GetCurrentEncoding();
+                    justConverted = true;
+                    format = GetCurrentSubtitleFormat();
+                }
+            }
+
+            if (format == null)
+            {
+                var iai = new IaiSub();
+                if (iai.IsMine(null, fileName))
+                {
+                    iai.LoadSubtitle(_subtitle, null, fileName);
+                    _oldSubtitleFormat = iai;
+                    SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
+                    SetEncoding(Configuration.Settings.General.DefaultEncoding);
+                    encoding = GetCurrentEncoding();
+                    justConverted = true;
+                    format = GetCurrentSubtitleFormat();
+                }
+            }
+
+            if (format == null)
+            {
+                var f = new DlDd();
+                var list = new List<string>(File.ReadAllLines(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName)));
+                if (f.IsMine(list, fileName))
+                {
+                    f.LoadSubtitle(_subtitle, list, fileName);
+                    _oldSubtitleFormat = f;
+                    SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
+                    SetEncoding(Configuration.Settings.General.DefaultEncoding);
+                    encoding = GetCurrentEncoding();
+                    justConverted = true;
+                    format = GetCurrentSubtitleFormat();
+                }
+            }
+
+            if (format == null)
+            {
+                var f = new Ted20();
+                if (f.IsMine(null, fileName))
+                {
+                    f.LoadSubtitle(_subtitle, null, fileName);
+                    _oldSubtitleFormat = f;
+                    SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
+                    SetEncoding(Configuration.Settings.General.DefaultEncoding);
+                    encoding = GetCurrentEncoding();
+                    justConverted = true;
+                    format = GetCurrentSubtitleFormat();
+                }
+            }
+
+            if (format == null)
+            {
+                var f = new TimeCodesOnly1();
+                var list = new List<string>(File.ReadAllLines(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName)));
+                if (f.IsMine(list, fileName))
+                {
+                    f.LoadSubtitle(_subtitle, list, fileName);
+                    _oldSubtitleFormat = f;
+                    SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
+                    SetEncoding(Configuration.Settings.General.DefaultEncoding);
+                    encoding = GetCurrentEncoding();
+                    justConverted = true;
+                    format = GetCurrentSubtitleFormat();
+                }
+            }
+
+            if (format == null)
+            {
+                var f = new TimeCodesOnly2();
+                var list = new List<string>(File.ReadAllLines(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName)));
+                if (f.IsMine(list, fileName))
+                {
+                    f.LoadSubtitle(_subtitle, list, fileName);
+                    _oldSubtitleFormat = f;
+                    SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
+                    SetEncoding(Configuration.Settings.General.DefaultEncoding);
+                    encoding = GetCurrentEncoding();
+                    justConverted = true;
+                    format = GetCurrentSubtitleFormat();
+                }
+            }
+
+            if (format == null)
+            {
+                var f = new JsonTypeOnlyLoad1();
+                var list = new List<string>(File.ReadAllLines(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName)));
+                if (f.IsMine(list, fileName))
+                {
+                    f.LoadSubtitle(_subtitle, list, fileName);
+                    _oldSubtitleFormat = f;
+                    SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
+                    SetEncoding(Configuration.Settings.General.DefaultEncoding);
+                    encoding = GetCurrentEncoding();
+                    justConverted = true;
+                    format = GetCurrentSubtitleFormat();
+                }
+            }
+
+            if (format == null)
+            {
+                var f = new TranscriptiveJson();
+                var list = new List<string>(File.ReadAllLines(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName)));
+                if (f.IsMine(list, fileName))
+                {
+                    f.LoadSubtitle(_subtitle, list, fileName);
+                    _oldSubtitleFormat = f;
+                    SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
+                    SetEncoding(Configuration.Settings.General.DefaultEncoding);
+                    encoding = GetCurrentEncoding();
+                    justConverted = true;
+                    format = GetCurrentSubtitleFormat();
+                }
+            }
+
+            if (format == null)
+            {
+                try
+                {
+                    var bdnXml = new BdnXml();
+                    var list = new List<string>(File.ReadAllLines(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName)));
+                    if (bdnXml.IsMine(list, fileName))
+                    {
+                        if (ContinueNewOrExit())
                         {
-                            var subtitleList = matroska.GetTracks(true);
-                            if (subtitleList.Count > 0)
-                            {
-                                ImportSubtitleFromMatroskaFile(fileName);
-                                return;
-                            }
+                            ImportAndOcrBdnXml(fileName, bdnXml, list);
+                        }
+
+                        return;
+                    }
+                }
+                catch
+                {
+                    // ignore
+                }
+            }
+
+            if (format == null)
+            {
+                try
+                {
+                    var fcpImage = new FinalCutProImage();
+                    var list = new List<string>(File.ReadAllLines(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName)));
+                    if (fcpImage.IsMine(list, fileName))
+                    {
+                        if (ContinueNewOrExit())
+                        {
+                            ImportAndOcrDost(fileName, fcpImage, list);
+                        }
+
+                        return;
+                    }
+                }
+                catch
+                {
+                    // ignore
+                }
+            }
+
+            if (format == null)
+            {
+                try
+                {
+                    var f = new DvdStudioProSpaceGraphic();
+                    var list = new List<string>(File.ReadAllLines(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName)));
+                    if (f.IsMine(list, fileName))
+                    {
+                        if (ContinueNewOrExit())
+                        {
+                            ImportAndOcrDost(fileName, f, list);
+                        }
+
+                        return;
+                    }
+                }
+                catch
+                {
+                    // ignore
+                }
+            }
+
+            if (format == null)
+            {
+                try
+                {
+                    var imageFormat = new SpuImage();
+                    var list = new List<string>(File.ReadAllLines(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName)));
+                    if (imageFormat.IsMine(list, fileName))
+                    {
+                        if (ContinueNewOrExit())
+                        {
+                            ImportAndOcrDost(fileName, imageFormat, list);
+                        }
+
+                        return;
+                    }
+                }
+                catch
+                {
+                    format = null;
+                }
+            }
+
+            if (format == null)
+            {
+                var elr = new ELRStudioClosedCaption();
+                if (elr.IsMine(null, fileName))
+                {
+                    elr.LoadSubtitle(_subtitle, null, fileName);
+                    _oldSubtitleFormat = elr;
+                    SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
+                    SetEncoding(Configuration.Settings.General.DefaultEncoding);
+                    encoding = GetCurrentEncoding();
+                    justConverted = true;
+                    format = GetCurrentSubtitleFormat();
+                }
+            }
+
+            if (format == null)
+            {
+                var asc = new TimeLineAscii();
+                if (asc.IsMine(null, fileName))
+                {
+                    asc.LoadSubtitle(_subtitle, null, fileName);
+                    _oldSubtitleFormat = asc;
+                    SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
+                    SetEncoding(Configuration.Settings.General.DefaultEncoding);
+                    encoding = GetCurrentEncoding();
+                    justConverted = true;
+                    format = GetCurrentSubtitleFormat();
+                }
+            }
+
+            if (format == null)
+            {
+                var asc = new TimeLineFootageAscii();
+                if (asc.IsMine(null, fileName))
+                {
+                    asc.LoadSubtitle(_subtitle, null, fileName);
+                    _oldSubtitleFormat = asc;
+                    SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
+                    SetEncoding(Configuration.Settings.General.DefaultEncoding);
+                    encoding = GetCurrentEncoding();
+                    justConverted = true;
+                    format = GetCurrentSubtitleFormat();
+                }
+            }
+
+            if (format == null)
+            {
+                var mtv = new TimeLineMvt();
+                if (mtv.IsMine(null, fileName))
+                {
+                    mtv.LoadSubtitle(_subtitle, null, fileName);
+                    _oldSubtitleFormat = mtv;
+                    SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
+                    SetEncoding(Configuration.Settings.General.DefaultEncoding);
+                    encoding = GetCurrentEncoding();
+                    justConverted = true;
+                    format = GetCurrentSubtitleFormat();
+                }
+            }
+
+            if (format == null)
+            {
+                var arib = new AribB36();
+                if (arib.IsMine(null, fileName))
+                {
+                    arib.LoadSubtitle(_subtitle, null, fileName);
+                    _oldSubtitleFormat = arib;
+                    SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
+                    SetEncoding(Configuration.Settings.General.DefaultEncoding);
+                    encoding = GetCurrentEncoding();
+                    justConverted = true;
+                    format = GetCurrentSubtitleFormat();
+                }
+            }
+
+            if (ext == ".dost")
+            {
+                try
+                {
+                    var dost = new Dost();
+                    var list = new List<string>(File.ReadAllLines(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName)));
+                    if (dost.IsMine(list, fileName))
+                    {
+                        if (ContinueNewOrExit())
+                        {
+                            ImportAndOcrDost(fileName, dost, list);
+                        }
+
+                        return;
+                    }
+                }
+                catch
+                {
+                    format = null;
+                }
+            }
+
+            if (format == null)
+            {
+                try
+                {
+                    var timedtextImage = new TimedTextImage();
+                    var list = new List<string>(File.ReadAllLines(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName)));
+                    if (timedtextImage.IsMine(list, fileName))
+                    {
+                        if (ContinueNewOrExit())
+                        {
+                            ImportAndOcrDost(fileName, timedtextImage, list);
+                        }
+
+                        return;
+                    }
+                }
+                catch
+                {
+                    format = null;
+                }
+            }
+
+            if (format == null)
+            {
+                try
+                {
+                    var seImageHtmlIndex = new SeImageHtmlIndex();
+                    var list = new List<string>(File.ReadAllLines(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName)));
+                    if (seImageHtmlIndex.IsMine(list, fileName))
+                    {
+                        if (ContinueNewOrExit())
+                        {
+                            ImportAndOcrDost(fileName, seImageHtmlIndex, list);
+                        }
+
+                        return;
+                    }
+                }
+                catch
+                {
+                    format = null;
+                }
+            }
+
+            if (format == null)
+            {
+                try
+                {
+                    var cmaf = new Cmaft();
+                    if (cmaf.IsMine(null, fileName))
+                    {
+                        cmaf.LoadSubtitle(_subtitle, null, fileName);
+                        SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
+                        SetEncoding(Configuration.Settings.General.DefaultEncoding);
+                        encoding = GetCurrentEncoding();
+                        justConverted = true;
+                        format = GetCurrentSubtitleFormat();
+                    }
+                }
+                catch
+                {
+                    // ignore
+                }
+            }
+
+            if (format == null || format.Name == Scenarist.NameOfFormat)
+            {
+                try
+                {
+                    var son = new Son();
+                    var list = new List<string>(File.ReadAllLines(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName)));
+                    if (son.IsMine(list, fileName))
+                    {
+                        if (ContinueNewOrExit())
+                        {
+                            ImportAndOcrSon(fileName, son, list);
+                        }
+
+                        return;
+                    }
+                }
+                catch
+                {
+                    format = null;
+                }
+            }
+
+            if (format == null || format.Name == SubRip.NameOfFormat)
+            {
+                if (_subtitle.Paragraphs.Count > 1)
+                {
+                    int imageCount = 0;
+                    foreach (var p in _subtitle.Paragraphs)
+                    {
+                        string s = p.Text.ToLowerInvariant();
+                        if (s.EndsWith(".bmp", StringComparison.Ordinal) || s.EndsWith(".png", StringComparison.Ordinal) || s.EndsWith(".jpg", StringComparison.Ordinal) || s.EndsWith(".tif", StringComparison.Ordinal))
+                        {
+                            imageCount++;
+                        }
+                    }
+
+                    if (imageCount > 2 && imageCount >= _subtitle.Paragraphs.Count - 2)
+                    {
+                        if (ContinueNewOrExit())
+                        {
+                            ImportAndOcrSrt(_subtitle);
+                        }
+
+                        return;
+                    }
+                }
+            }
+
+            if (format == null)
+            {
+                try
+                {
+                    var satBoxPng = new SatBoxPng();
+                    var list = new List<string>(File.ReadAllLines(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName)));
+                    if (satBoxPng.IsMine(list, fileName))
+                    {
+                        var subtitle = new Subtitle();
+                        satBoxPng.LoadSubtitle(subtitle, list, fileName);
+                        if (ContinueNewOrExit())
+                        {
+                            ImportAndOcrSrt(subtitle);
+                        }
+
+                        return;
+                    }
+                }
+                catch
+                {
+                    format = null;
+                }
+            }
+
+            if (format == null || format.Name == Scenarist.NameOfFormat)
+            {
+                try
+                {
+                    var sst = new SonicScenaristBitmaps();
+                    var list = new List<string>(File.ReadAllLines(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName)));
+                    if (sst.IsMine(list, fileName))
+                    {
+                        if (ContinueNewOrExit())
+                        {
+                            ImportAndOcrSst(fileName, sst, list);
+                        }
+
+                        return;
+                    }
+                }
+                catch
+                {
+                    format = null;
+                }
+            }
+
+            if (format == null)
+            {
+                try
+                {
+                    var htmlSamiArray = new HtmlSamiArray();
+                    var list = new List<string>(File.ReadAllLines(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName)));
+                    if (htmlSamiArray.IsMine(list, fileName))
+                    {
+                        htmlSamiArray.LoadSubtitle(_subtitle, list, fileName);
+                        _oldSubtitleFormat = htmlSamiArray;
+                        SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
+                        SetEncoding(Configuration.Settings.General.DefaultEncoding);
+                        encoding = GetCurrentEncoding();
+                        justConverted = true;
+                        format = GetCurrentSubtitleFormat();
+                    }
+                }
+                catch
+                {
+                    format = null;
+                }
+            }
+
+            if (format == null)
+            {
+                var f = new WinCaps32();
+                if (f.IsMine(null, fileName))
+                {
+                    f.LoadSubtitle(_subtitle, null, fileName);
+                    _oldSubtitleFormat = f;
+                    SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
+                    SetEncoding(Configuration.Settings.General.DefaultEncoding);
+                    encoding = GetCurrentEncoding();
+                    justConverted = true;
+                    format = GetCurrentSubtitleFormat();
+                }
+            }
+
+            if (format == null)
+            {
+                var f = new IsmtDfxp();
+                if (f.IsMine(null, fileName))
+                {
+                    f.LoadSubtitle(_subtitle, null, fileName);
+                    _oldSubtitleFormat = f;
+                    SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
+                    SetEncoding(Configuration.Settings.General.DefaultEncoding);
+                    encoding = GetCurrentEncoding();
+                    justConverted = true;
+                    format = GetCurrentSubtitleFormat();
+                }
+            }
+
+            // retry vobsub (file with wrong extension)
+            if (format == null && file.Length > 500 && IsVobSubFile(fileName, false))
+            {
+                ImportAndOcrVobSubSubtitleNew(fileName, _loading);
+                return;
+            }
+
+            // retry Blu-ray (file with wrong extension)
+            if (format == null && file.Length > 500 && FileUtil.IsBluRaySup(fileName))
+            {
+                ImportAndOcrBluRaySup(fileName, _loading);
+                return;
+            }
+
+            // retry SP DVD (file with wrong extension)
+            if (format == null && file.Length > 500 && FileUtil.IsSpDvdSup(fileName))
+            {
+                ImportAndOcrSpDvdSup(fileName, _loading);
+                return;
+            }
+
+            // retry Matroska (file with wrong extension)
+            if (format == null && !string.IsNullOrWhiteSpace(fileName))
+            {
+                using (var matroska = new MatroskaFile(fileName))
+                {
+                    if (matroska.IsValid)
+                    {
+                        var subtitleList = matroska.GetTracks(true);
+                        if (subtitleList.Count > 0)
+                        {
+                            ImportSubtitleFromMatroskaFile(fileName);
+                            return;
+                        }
+                    }
+                }
+            }
+
+            // check for idx file
+            if (format == null && file.Length > 100 && ext == ".idx")
+            {
+                MessageBox.Show(_language.ErrorLoadIdx);
+                return;
+            }
+
+            // check for .rar file
+            if (format == null && file.Length > 100 && FileUtil.IsRar(fileName))
+            {
+                MessageBox.Show(_language.ErrorLoadRar);
+                return;
+            }
+
+            // check for .zip file
+            if (format == null && file.Length > 100 && FileUtil.IsZip(fileName))
+            {
+                MessageBox.Show(_language.ErrorLoadZip);
+                return;
+            }
+
+            // check for .7z file
+            if (format == null && file.Length > 100 && FileUtil.Is7Zip(fileName))
+            {
+                MessageBox.Show(_language.ErrorLoad7Zip);
+                return;
+            }
+
+            // check for .png file
+            if (format == null && file.Length > 100 && FileUtil.IsPng(fileName))
+            {
+                MessageBox.Show(_language.ErrorLoadPng);
+                return;
+            }
+
+            // check for .jpg file
+            if (format == null && file.Length > 100 && FileUtil.IsJpg(fileName))
+            {
+                MessageBox.Show(_language.ErrorLoadJpg);
+                return;
+            }
+
+            // check for .srr file
+            if (format == null && file.Length > 100 && ext == ".srr" && FileUtil.IsSrr(fileName))
+            {
+                MessageBox.Show(_language.ErrorLoadSrr);
+                return;
+            }
+
+            // check for Torrent file
+            if (format == null && file.Length > 50 && FileUtil.IsTorrentFile(fileName))
+            {
+                MessageBox.Show(_language.ErrorLoadTorrent);
+                return;
+            }
+
+            // check for all binary zeroes (I've heard about this a few times... perhaps related to crashes?)
+            if (format == null && file.Length > 50 && FileUtil.IsSubtitleFileAllBinaryZeroes(fileName))
+            {
+                MessageBox.Show(_language.ErrorLoadBinaryZeroes);
+                return;
+            }
+
+            if (format == null && file.Length < 100 * 1000000 && TransportStreamParser.IsDvbSup(fileName))
+            {
+                ImportSubtitleFromDvbSupFile(fileName);
+                return;
+            }
+
+            if (format == null && file.Length < 1000000)
+            {
+                // check for valid timed text
+                if (ext == ".xml" || ext == ".dfxp")
+                {
+                    var sb = new StringBuilder();
+                    foreach (var line in File.ReadAllLines(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName)))
+                    {
+                        sb.AppendLine(line);
+                    }
+
+                    var xmlAsString = sb.ToString().Trim();
+
+                    if (xmlAsString.Contains("http://www.w3.org/ns/ttml") && xmlAsString.Contains("<?xml version=") ||
+                        xmlAsString.Contains("http://www.w3.org/") && xmlAsString.Contains("/ttaf1"))
+                    {
+                        var xml = new System.Xml.XmlDocument();
+                        try
+                        {
+                            xml.LoadXml(xmlAsString);
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show("Timed text is not valid (xml is not well-formed): " + ex.Message);
+                            return;
                         }
                     }
                 }
 
-                // check for idx file
-                if (format == null && file.Length > 100 && ext == ".idx")
+                // Try to use a generic subtitle format parser (guessing subtitle format)
+                try
                 {
-                    MessageBox.Show(_language.ErrorLoadIdx);
-                    return;
-                }
+                    var enc = LanguageAutoDetect.GetEncodingFromFile(fileName);
+                    var s = File.ReadAllText(fileName, enc);
 
-                // check for .rar file
-                if (format == null && file.Length > 100 && FileUtil.IsRar(fileName))
-                {
-                    MessageBox.Show(_language.ErrorLoadRar);
-                    return;
-                }
-
-                // check for .zip file
-                if (format == null && file.Length > 100 && FileUtil.IsZip(fileName))
-                {
-                    MessageBox.Show(_language.ErrorLoadZip);
-                    return;
-                }
-
-                // check for .7z file
-                if (format == null && file.Length > 100 && FileUtil.Is7Zip(fileName))
-                {
-                    MessageBox.Show(_language.ErrorLoad7Zip);
-                    return;
-                }
-
-                // check for .png file
-                if (format == null && file.Length > 100 && FileUtil.IsPng(fileName))
-                {
-                    MessageBox.Show(_language.ErrorLoadPng);
-                    return;
-                }
-
-                // check for .jpg file
-                if (format == null && file.Length > 100 && FileUtil.IsJpg(fileName))
-                {
-                    MessageBox.Show(_language.ErrorLoadJpg);
-                    return;
-                }
-
-                // check for .srr file
-                if (format == null && file.Length > 100 && ext == ".srr" && FileUtil.IsSrr(fileName))
-                {
-                    MessageBox.Show(_language.ErrorLoadSrr);
-                    return;
-                }
-
-                // check for Torrent file
-                if (format == null && file.Length > 50 && FileUtil.IsTorrentFile(fileName))
-                {
-                    MessageBox.Show(_language.ErrorLoadTorrent);
-                    return;
-                }
-
-                // check for all binary zeroes (I've heard about this a few times... perhaps related to crashes?)
-                if (format == null && file.Length > 50 && FileUtil.IsSubtitleFileAllBinaryZeroes(fileName))
-                {
-                    MessageBox.Show(_language.ErrorLoadBinaryZeroes);
-                    return;
-                }
-
-                if (format == null && file.Length < 100 * 1000000 && TransportStreamParser.IsDvbSup(fileName))
-                {
-                    ImportSubtitleFromDvbSupFile(fileName);
-                    return;
-                }
-
-                if (format == null && file.Length < 1000000)
-                {
-                    // check for valid timed text
-                    if (ext == ".xml" || ext == ".dfxp")
+                    // check for RTF file
+                    if (ext == ".rtf" && s.TrimStart().StartsWith("{\\rtf", StringComparison.Ordinal))
                     {
-                        var sb = new StringBuilder();
-                        foreach (var line in File.ReadAllLines(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName)))
+                        using (var rtb = new RichTextBox { Rtf = s })
                         {
-                            sb.AppendLine(line);
-                        }
-
-                        var xmlAsString = sb.ToString().Trim();
-
-                        if (xmlAsString.Contains("http://www.w3.org/ns/ttml") && xmlAsString.Contains("<?xml version=") ||
-                            xmlAsString.Contains("http://www.w3.org/") && xmlAsString.Contains("/ttaf1"))
-                        {
-                            var xml = new System.Xml.XmlDocument();
-                            try
-                            {
-                                xml.LoadXml(xmlAsString);
-                            }
-                            catch (Exception ex)
-                            {
-                                MessageBox.Show("Timed text is not valid (xml is not well-formed): " + ex.Message);
-                                return;
-                            }
+                            s = rtb.Text;
                         }
                     }
 
-                    // Try to use a generic subtitle format parser (guessing subtitle format)
-                    try
+                    var uknownFormatImporter = new UknownFormatImporter { UseFrames = true };
+                    var genericParseSubtitle = uknownFormatImporter.AutoGuessImport(s.SplitToLines());
+                    if (genericParseSubtitle.Paragraphs.Count > 1)
                     {
-                        var enc = LanguageAutoDetect.GetEncodingFromFile(fileName);
-                        var s = File.ReadAllText(fileName, enc);
-
-                        // check for RTF file
-                        if (ext == ".rtf" && s.TrimStart().StartsWith("{\\rtf", StringComparison.Ordinal))
-                        {
-                            using (var rtb = new RichTextBox { Rtf = s })
-                            {
-                                s = rtb.Text;
-                            }
-                        }
-                        var uknownFormatImporter = new UknownFormatImporter { UseFrames = true };
-                        var genericParseSubtitle = uknownFormatImporter.AutoGuessImport(s.SplitToLines());
-                        if (genericParseSubtitle.Paragraphs.Count > 1)
-                        {
-                            _subtitle = genericParseSubtitle;
-                            SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
-                            SetEncoding(Configuration.Settings.General.DefaultEncoding);
-                            encoding = GetCurrentEncoding();
-                            justConverted = true;
-                            format = GetCurrentSubtitleFormat();
-                            ShowStatus("Guessed subtitle format via generic subtitle parser!");
-                        }
-                    }
-                    catch
-                    {
+                        _subtitle = genericParseSubtitle;
+                        SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
+                        SetEncoding(Configuration.Settings.General.DefaultEncoding);
+                        encoding = GetCurrentEncoding();
+                        justConverted = true;
+                        format = GetCurrentSubtitleFormat();
+                        ShowStatus("Guessed subtitle format via generic subtitle parser!");
                     }
                 }
+                catch
+                {
+                }
+            }
 
-                if (format == null && (FileUtil.IsPlainText(fileName) || new Tx3GTextOnly().IsMine(null, fileName)))
+            if (format == null && (FileUtil.IsPlainText(fileName) || new Tx3GTextOnly().IsMine(null, fileName)))
+            {
+                ImportPlainText(fileName);
+                return;
+            }
+
+            if (format == null)
+            {
+                var fd = new FinalDraftTemplate2();
+                var list = new List<string>(File.ReadAllLines(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName)));
+                if (fd.IsMine(list, fileName))
                 {
                     ImportPlainText(fileName);
                     return;
                 }
+            }
 
-                if (format == null)
-                {
-                    var fd = new FinalDraftTemplate2();
-                    var list = new List<string>(File.ReadAllLines(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName)));
-                    if (fd.IsMine(list, fileName))
-                    {
-                        ImportPlainText(fileName);
-                        return;
-                    }
-                }
+            _fileDateTime = File.GetLastWriteTime(fileName);
 
-                _fileDateTime = File.GetLastWriteTime(fileName);
-
-                if (format != null && format.IsFrameBased)
-                {
-                    _subtitle.CalculateTimeCodesFromFrameNumbers(CurrentFrameRate);
-                }
-                else
-                {
-                    _subtitle.CalculateFrameNumbersFromTimeCodes(CurrentFrameRate);
-                }
-
-                if (format != null)
-                {
-                    new BookmarkPersistence(_subtitle, fileName).Load();
-
-                    if (Configuration.Settings.General.RemoveBlankLinesWhenOpening)
-                    {
-                        _subtitle.RemoveEmptyLines();
-                    }
-
-                    if (Configuration.Settings.General.RemoveBadCharsWhenOpening)
-                    {
-                        foreach (var p in _subtitle.Paragraphs)
-                        {
-                            // Replace U+0456 (CYRILLIC SMALL LETTER BYELORUSSIAN-UKRAINIAN I) by U+0069 (LATIN SMALL LETTER I)
-                            p.Text = p.Text.Replace("<і>", "<i>").Replace("</і>", "</i>");
-
-                            // remove control characters (e.g. binary zero)
-                            p.Text = p.Text.RemoveControlCharactersButWhiteSpace();
-                        }
-                    }
-
-                    _subtitleListViewIndex = -1;
-                    Configuration.Settings.General.CurrentVideoOffsetInMs = 0;
-
-                    var oldSaveFormat = Configuration.Settings.General.LastSaveAsFormat;
-                    SetCurrentFormat(format);
-                    Configuration.Settings.General.LastSaveAsFormat = oldSaveFormat;
-
-                    _subtitleAlternateFileName = null;
-                    if (LoadAlternateSubtitleFile(originalFileName))
-                    {
-                        _subtitleAlternateFileName = originalFileName;
-                    }
-
-                    // Seungki begin
-                    _splitDualSami = false;
-                    if (Configuration.Settings.SubtitleSettings.SamiDisplayTwoClassesAsTwoSubtitles && format.GetType() == typeof(Sami) && Sami.GetStylesFromHeader(_subtitle.Header).Count == 2)
-                    {
-                        var classes = Sami.GetStylesFromHeader(_subtitle.Header);
-                        var s1 = new Subtitle(_subtitle);
-                        var s2 = new Subtitle(_subtitle);
-                        s1.Paragraphs.Clear();
-                        s2.Paragraphs.Clear();
-                        foreach (var p in _subtitle.Paragraphs)
-                        {
-                            if (p.Extra != null && p.Extra.Equals(classes[0], StringComparison.OrdinalIgnoreCase))
-                            {
-                                s1.Paragraphs.Add(p);
-                            }
-                            else
-                            {
-                                s2.Paragraphs.Add(p);
-                            }
-                        }
-                        if (s1.Paragraphs.Count == 0 || s2.Paragraphs.Count == 0)
-                        {
-                            return;
-                        }
-
-                        _subtitle = s1;
-                        _subtitleAlternate = s2;
-                        _subtitleAlternateFileName = _fileName;
-                        SubtitleListview1.HideColumn(SubtitleListView.SubtitleColumn.Extra);
-                        SubtitleListview1.ShowAlternateTextColumn(classes[1]);
-                        _splitDualSami = true;
-                    }
-                    // Seungki end
-
-                    textBoxSource.Text = _subtitle.ToText(format);
-                    SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
-                    if (SubtitleListview1.Items.Count > 0)
-                    {
-                        SubtitleListview1.Items[0].Selected = true;
-                        SubtitleListview1.Items[0].Focused = true;
-                    }
-                    _findHelper = null;
-                    _spellCheckForm = null;
-
-                    if (_resetVideo && ModifierKeys != Keys.Shift)
-                    {
-                        _videoFileName = null;
-                        _videoInfo = null;
-                        _videoAudioTrackNumber = -1;
-                        labelVideoInfo.Text = _languageGeneral.NoVideoLoaded;
-                        audioVisualizer.WavePeaks = null;
-                        audioVisualizer.SetSpectrogram(null);
-                        audioVisualizer.SceneChanges = new List<double>();
-                    }
-
-                    if (Configuration.Settings.General.ShowVideoPlayer || Configuration.Settings.General.ShowAudioVisualizer)
-                    {
-                        if (!Configuration.Settings.General.DisableVideoAutoLoading)
-                        {
-                            if (!string.IsNullOrEmpty(videoFileName) && File.Exists(videoFileName))
-                            {
-                                OpenVideo(videoFileName);
-                            }
-                            else if (!string.IsNullOrEmpty(fileName) && (toolStripButtonToggleVideo.Checked || toolStripButtonToggleWaveform.Checked))
-                            {
-                                TryToFindAndOpenVideoFile(Path.Combine(Path.GetDirectoryName(fileName), Path.GetFileNameWithoutExtension(fileName)));
-                            }
-                            if (_videoFileName == null)
-                            {
-                                CloseVideoToolStripMenuItemClick(this, null);
-                            }
-                        }
-                    }
-                    videoFileLoaded = _videoFileName != null;
-
-                    if (Configuration.Settings.RecentFiles.Files.Count > 0 &&
-                        Configuration.Settings.RecentFiles.Files[0].FileName == fileName)
-                    {
-                    }
-                    else
-                    {
-                        Configuration.Settings.RecentFiles.Add(fileName, _videoFileName, _subtitleAlternateFileName);
-                        Configuration.Settings.Save();
-                        UpdateRecentFilesUI();
-                    }
-                    _fileName = fileName;
-                    SetTitle();
-                    ShowStatus(string.Format(_language.LoadedSubtitleX, _fileName));
-                    _sourceViewChange = false;
-                    if (Configuration.Settings.General.AutoConvertToUtf8)
-                    {
-                        encoding = Encoding.UTF8;
-                    }
-
-                    SetEncoding(encoding);
-                    _changeSubtitleToString = _subtitle.GetFastHashCode(GetCurrentEncoding().BodyName);
-                    _converted = false;
-                    ResetHistory();
-                    SetListViewStateImages();
-                    SetUndockedWindowsTitle();
-
-                    if (justConverted)
-                    {
-                        _converted = true;
-                        ShowStatus(string.Format(_language.LoadedSubtitleX, _fileName) + " - " + string.Format(_language.ConvertedToX, format.FriendlyName));
-                    }
-
-                    var formatType = format.GetType();
-                    if (formatType == typeof(SubStationAlpha))
-                    {
-                        string errors = AdvancedSubStationAlpha.CheckForErrors(_subtitle.Header);
-                        if (!string.IsNullOrEmpty(errors))
-                        {
-                            MessageBox.Show(this, errors, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        }
-
-                        errors = (format as SubStationAlpha).Errors;
-                        if (!string.IsNullOrEmpty(errors))
-                        {
-                            MessageBox.Show(this, errors, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        }
-                    }
-                    else if (formatType == typeof(AdvancedSubStationAlpha))
-                    {
-                        string errors = AdvancedSubStationAlpha.CheckForErrors(_subtitle.Header);
-                        if (!string.IsNullOrEmpty(errors))
-                        {
-                            MessageBox.Show(this, errors, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        }
-
-                        errors = (format as AdvancedSubStationAlpha).Errors;
-                        if (!string.IsNullOrEmpty(errors))
-                        {
-                            MessageBox.Show(this, errors, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        }
-                    }
-                    else if (formatType == typeof(SubRip))
-                    {
-                        string errors = (format as SubRip).Errors;
-                        if (!string.IsNullOrEmpty(errors))
-                        {
-                            MessageBox.Show(this, errors, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        }
-                    }
-                    else if (formatType == typeof(MicroDvd))
-                    {
-                        string errors = (format as MicroDvd).Errors;
-                        if (!string.IsNullOrEmpty(errors))
-                        {
-                            MessageBox.Show(this, errors, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        }
-                    }
-                    else if (formatType == typeof(DCinemaSmpte2007))
-                    {
-                        format.ToText(_subtitle, string.Empty);
-                        string errors = (format as DCinemaSmpte2007).Errors;
-                        if (!string.IsNullOrEmpty(errors))
-                        {
-                            MessageBox.Show(errors, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        }
-                    }
-                    else if (formatType == typeof(DCinemaSmpte2010))
-                    {
-                        format.ToText(_subtitle, string.Empty);
-                        string errors = (format as DCinemaSmpte2010).Errors;
-                        if (!string.IsNullOrEmpty(errors))
-                        {
-                            MessageBox.Show(errors, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        }
-                    }
-                    else if (formatType == typeof(CsvNuendo))
-                    {
-                        if (_subtitle.Paragraphs.Any(p => !string.IsNullOrEmpty(p.Actor)))
-                        {
-                            bool wasVisible = SubtitleListview1.ColumnIndexActor >= 0;
-                            SubtitleListview1.ShowActorColumn(Configuration.Settings.Language.General.Character);
-                            if (!wasVisible)
-                            {
-                                SaveSubtitleListviewIndices();
-                                SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
-                                RestoreSubtitleListviewIndices();
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    if (file.Length < 50)
-                    {
-                        _findHelper = null;
-                        _spellCheckForm = null;
-                        _videoFileName = null;
-                        _videoInfo = null;
-                        _videoAudioTrackNumber = -1;
-                        labelVideoInfo.Text = _languageGeneral.NoVideoLoaded;
-                        audioVisualizer.WavePeaks = null;
-                        audioVisualizer.SetSpectrogram(null);
-                        audioVisualizer.SceneChanges = new List<double>();
-
-                        Configuration.Settings.RecentFiles.Add(fileName, FirstVisibleIndex, FirstSelectedIndex, _videoFileName, _subtitleAlternateFileName, Configuration.Settings.General.CurrentVideoOffsetInMs);
-                        Configuration.Settings.Save();
-                        UpdateRecentFilesUI();
-                        _fileName = fileName;
-                        SetTitle();
-                        ShowStatus(string.Format(_language.LoadedEmptyOrShort, _fileName));
-                        _sourceViewChange = false;
-                        _converted = false;
-
-                        MessageBox.Show(_language.FileIsEmptyOrShort);
-                    }
-                    else
-                    {
-                        if (ShowUnknownSubtitle(fileName, true))
-                        {
-                            ImportPlainText(fileName);
-                        }
-                        return;
-                    }
-                }
-
-                if (!videoFileLoaded && mediaPlayer.VideoPlayer != null)
-                {
-                    mediaPlayer.PauseAndDisposePlayer();
-                    timer1.Stop();
-                }
-                ResetShowEarlierOrLater();
-                FixRightToLeftDependingOnLanguage();
+            if (format != null && format.IsFrameBased)
+            {
+                _subtitle.CalculateTimeCodesFromFrameNumbers(CurrentFrameRate);
             }
             else
             {
-                MessageBox.Show(string.Format(_language.FileNotFound, fileName));
+                _subtitle.CalculateFrameNumbersFromTimeCodes(CurrentFrameRate);
             }
+
+            if (format != null)
+            {
+                new BookmarkPersistence(_subtitle, fileName).Load();
+
+                if (Configuration.Settings.General.RemoveBlankLinesWhenOpening)
+                {
+                    _subtitle.RemoveEmptyLines();
+                }
+
+                if (Configuration.Settings.General.RemoveBadCharsWhenOpening)
+                {
+                    foreach (var p in _subtitle.Paragraphs)
+                    {
+                        // Replace U+0456 (CYRILLIC SMALL LETTER BYELORUSSIAN-UKRAINIAN I) by U+0069 (LATIN SMALL LETTER I)
+                        p.Text = p.Text.Replace("<і>", "<i>").Replace("</і>", "</i>");
+
+                        // remove control characters (e.g. binary zero)
+                        p.Text = p.Text.RemoveControlCharactersButWhiteSpace();
+                    }
+                }
+
+                _subtitleListViewIndex = -1;
+                Configuration.Settings.General.CurrentVideoOffsetInMs = 0;
+
+                var oldSaveFormat = Configuration.Settings.General.LastSaveAsFormat;
+                SetCurrentFormat(format);
+                Configuration.Settings.General.LastSaveAsFormat = oldSaveFormat;
+
+                _subtitleAlternateFileName = null;
+                if (LoadAlternateSubtitleFile(originalFileName))
+                {
+                    _subtitleAlternateFileName = originalFileName;
+                }
+
+                // Seungki begin
+                _splitDualSami = false;
+                if (Configuration.Settings.SubtitleSettings.SamiDisplayTwoClassesAsTwoSubtitles && format.GetType() == typeof(Sami) && Sami.GetStylesFromHeader(_subtitle.Header).Count == 2)
+                {
+                    var classes = Sami.GetStylesFromHeader(_subtitle.Header);
+                    var s1 = new Subtitle(_subtitle);
+                    var s2 = new Subtitle(_subtitle);
+                    s1.Paragraphs.Clear();
+                    s2.Paragraphs.Clear();
+                    foreach (var p in _subtitle.Paragraphs)
+                    {
+                        if (p.Extra != null && p.Extra.Equals(classes[0], StringComparison.OrdinalIgnoreCase))
+                        {
+                            s1.Paragraphs.Add(p);
+                        }
+                        else
+                        {
+                            s2.Paragraphs.Add(p);
+                        }
+                    }
+
+                    if (s1.Paragraphs.Count == 0 || s2.Paragraphs.Count == 0)
+                    {
+                        return;
+                    }
+
+                    _subtitle = s1;
+                    _subtitleAlternate = s2;
+                    _subtitleAlternateFileName = _fileName;
+                    SubtitleListview1.HideColumn(SubtitleListView.SubtitleColumn.Extra);
+                    SubtitleListview1.ShowAlternateTextColumn(classes[1]);
+                    _splitDualSami = true;
+                }
+                // Seungki end
+
+                textBoxSource.Text = _subtitle.ToText(format);
+                SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+                if (SubtitleListview1.Items.Count > 0)
+                {
+                    SubtitleListview1.Items[0].Selected = true;
+                    SubtitleListview1.Items[0].Focused = true;
+                }
+
+                _findHelper = null;
+                _spellCheckForm = null;
+
+                if (_resetVideo && ModifierKeys != Keys.Shift)
+                {
+                    _videoFileName = null;
+                    _videoInfo = null;
+                    _videoAudioTrackNumber = -1;
+                    labelVideoInfo.Text = _languageGeneral.NoVideoLoaded;
+                    audioVisualizer.WavePeaks = null;
+                    audioVisualizer.SetSpectrogram(null);
+                    audioVisualizer.SceneChanges = new List<double>();
+                }
+
+                if (Configuration.Settings.General.ShowVideoPlayer || Configuration.Settings.General.ShowAudioVisualizer)
+                {
+                    if (!Configuration.Settings.General.DisableVideoAutoLoading)
+                    {
+                        if (!string.IsNullOrEmpty(videoFileName) && File.Exists(videoFileName))
+                        {
+                            OpenVideo(videoFileName);
+                        }
+                        else if (!string.IsNullOrEmpty(fileName) && (toolStripButtonToggleVideo.Checked || toolStripButtonToggleWaveform.Checked))
+                        {
+                            TryToFindAndOpenVideoFile(Path.Combine(Path.GetDirectoryName(fileName), Path.GetFileNameWithoutExtension(fileName)));
+                        }
+
+                        if (_videoFileName == null)
+                        {
+                            CloseVideoToolStripMenuItemClick(this, null);
+                        }
+                    }
+                }
+
+                videoFileLoaded = _videoFileName != null;
+
+                if (Configuration.Settings.RecentFiles.Files.Count > 0 &&
+                    Configuration.Settings.RecentFiles.Files[0].FileName == fileName)
+                {
+                }
+                else
+                {
+                    Configuration.Settings.RecentFiles.Add(fileName, _videoFileName, _subtitleAlternateFileName);
+                    Configuration.Settings.Save();
+                    UpdateRecentFilesUI();
+                }
+
+                _fileName = fileName;
+                SetTitle();
+                ShowStatus(string.Format(_language.LoadedSubtitleX, _fileName));
+                _sourceViewChange = false;
+                if (Configuration.Settings.General.AutoConvertToUtf8)
+                {
+                    encoding = Encoding.UTF8;
+                }
+
+                SetEncoding(encoding);
+                _changeSubtitleToString = _subtitle.GetFastHashCode(GetCurrentEncoding().BodyName);
+                _converted = false;
+                ResetHistory();
+                SetListViewStateImages();
+                SetUndockedWindowsTitle();
+
+                if (justConverted)
+                {
+                    _converted = true;
+                    ShowStatus(string.Format(_language.LoadedSubtitleX, _fileName) + " - " + string.Format(_language.ConvertedToX, format.FriendlyName));
+                }
+
+                var formatType = format.GetType();
+                if (formatType == typeof(SubStationAlpha))
+                {
+                    string errors = AdvancedSubStationAlpha.CheckForErrors(_subtitle.Header);
+                    if (!string.IsNullOrEmpty(errors))
+                    {
+                        MessageBox.Show(this, errors, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+
+                    errors = (format as SubStationAlpha).Errors;
+                    if (!string.IsNullOrEmpty(errors))
+                    {
+                        MessageBox.Show(this, errors, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                }
+                else if (formatType == typeof(AdvancedSubStationAlpha))
+                {
+                    string errors = AdvancedSubStationAlpha.CheckForErrors(_subtitle.Header);
+                    if (!string.IsNullOrEmpty(errors))
+                    {
+                        MessageBox.Show(this, errors, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+
+                    errors = (format as AdvancedSubStationAlpha).Errors;
+                    if (!string.IsNullOrEmpty(errors))
+                    {
+                        MessageBox.Show(this, errors, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                }
+                else if (formatType == typeof(SubRip))
+                {
+                    string errors = (format as SubRip).Errors;
+                    if (!string.IsNullOrEmpty(errors))
+                    {
+                        MessageBox.Show(this, errors, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                }
+                else if (formatType == typeof(MicroDvd))
+                {
+                    string errors = (format as MicroDvd).Errors;
+                    if (!string.IsNullOrEmpty(errors))
+                    {
+                        MessageBox.Show(this, errors, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                }
+                else if (formatType == typeof(DCinemaSmpte2007))
+                {
+                    format.ToText(_subtitle, string.Empty);
+                    string errors = (format as DCinemaSmpte2007).Errors;
+                    if (!string.IsNullOrEmpty(errors))
+                    {
+                        MessageBox.Show(errors, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                }
+                else if (formatType == typeof(DCinemaSmpte2010))
+                {
+                    format.ToText(_subtitle, string.Empty);
+                    string errors = (format as DCinemaSmpte2010).Errors;
+                    if (!string.IsNullOrEmpty(errors))
+                    {
+                        MessageBox.Show(errors, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                }
+                else if (formatType == typeof(CsvNuendo))
+                {
+                    if (_subtitle.Paragraphs.Any(p => !string.IsNullOrEmpty(p.Actor)))
+                    {
+                        bool wasVisible = SubtitleListview1.ColumnIndexActor >= 0;
+                        SubtitleListview1.ShowActorColumn(Configuration.Settings.Language.General.Character);
+                        if (!wasVisible)
+                        {
+                            SaveSubtitleListviewIndices();
+                            SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+                            RestoreSubtitleListviewIndices();
+                        }
+                    }
+                }
+            }
+            else
+            {
+                if (file.Length < 50)
+                {
+                    _findHelper = null;
+                    _spellCheckForm = null;
+                    _videoFileName = null;
+                    _videoInfo = null;
+                    _videoAudioTrackNumber = -1;
+                    labelVideoInfo.Text = _languageGeneral.NoVideoLoaded;
+                    audioVisualizer.WavePeaks = null;
+                    audioVisualizer.SetSpectrogram(null);
+                    audioVisualizer.SceneChanges = new List<double>();
+
+                    Configuration.Settings.RecentFiles.Add(fileName, FirstVisibleIndex, FirstSelectedIndex, _videoFileName, _subtitleAlternateFileName, Configuration.Settings.General.CurrentVideoOffsetInMs);
+                    Configuration.Settings.Save();
+                    UpdateRecentFilesUI();
+                    _fileName = fileName;
+                    SetTitle();
+                    ShowStatus(string.Format(_language.LoadedEmptyOrShort, _fileName));
+                    _sourceViewChange = false;
+                    _converted = false;
+
+                    MessageBox.Show(_language.FileIsEmptyOrShort);
+                }
+                else
+                {
+                    if (ShowUnknownSubtitle(fileName, true))
+                    {
+                        ImportPlainText(fileName);
+                    }
+
+                    return;
+                }
+            }
+
+            if (!videoFileLoaded && mediaPlayer.VideoPlayer != null)
+            {
+                mediaPlayer.PauseAndDisposePlayer();
+                timer1.Stop();
+            }
+
+            ResetShowEarlierOrLater();
+            FixRightToLeftDependingOnLanguage();
         }
 
         private void ShowHideTextBasedFeatures(SubtitleFormat format)
@@ -8008,7 +8029,7 @@ namespace Nikse.SubtitleEdit.Forms
                     toolStripMenuItemUnbreakLines.Visible = false;
                     toolStripMenuItemAutoBreakLines.Visible = false;
                     toolStripSeparatorBreakLines.Visible = false;
-                    if (_subtitleAlternate != null && noNetWorkSession &&  !string.IsNullOrEmpty(Configuration.Settings.Tools.MicrosoftBingApiId))
+                    if (_subtitleAlternate != null && noNetWorkSession && !string.IsNullOrEmpty(Configuration.Settings.Tools.MicrosoftBingApiId))
                     {
                         toolStripMenuItemGoogleMicrosoftTranslateSelLine.Visible = true;
                     }
