@@ -30,11 +30,10 @@ namespace Nikse.SubtitleEdit.Forms
         public Subtitle FixedSubtitle { get; private set; }
         public int FixCount { get; private set; }
 
-        public List<int> DeleteIndices
+        public IEnumerable<int> DeleteIndices
         {
             get
             {
-                var resultList = new List<int>();
                 foreach (ListViewItem item in listViewFixes.Items)
                 {
                     if (item.Checked && item.SubItems[3].Text == string.Empty)
@@ -42,14 +41,14 @@ namespace Nikse.SubtitleEdit.Forms
                         var index = _subtitle.GetIndex(item.Tag as Paragraph);
                         if (_deleteIndices.Contains(index))
                         {
-                            resultList.Add(index);
+                            yield return index;
                         }
                     }
                 }
-                return resultList;
             }
         }
-        private List<int> _deleteIndices;
+
+        private HashSet<int> _deleteIndices;
 
         private MultipleSearchAndReplaceGroup _currentGroup;
 
@@ -239,7 +238,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             Cursor = Cursors.WaitCursor;
             FixedSubtitle = new Subtitle(_subtitle);
-            _deleteIndices = new List<int>();
+            _deleteIndices = new HashSet<int>();
             int fixedLines = 0;
             listViewFixes.BeginUpdate();
             listViewFixes.Items.Clear();
@@ -327,7 +326,6 @@ namespace Nikse.SubtitleEdit.Forms
             listViewFixes.EndUpdate();
             groupBoxLinesFound.Text = string.Format(Configuration.Settings.Language.MultipleReplace.LinesFoundX, fixedLines);
             Cursor = Cursors.Default;
-            _deleteIndices.Reverse();
         }
 
         private void AddToRulesListView(MultipleSearchAndReplaceSetting rule)
