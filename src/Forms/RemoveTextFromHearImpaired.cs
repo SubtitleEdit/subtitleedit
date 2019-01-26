@@ -85,6 +85,8 @@ namespace Nikse.SubtitleEdit.Forms
                 groupBoxInterjections.Width += adjustWidth;
                 groupBoxTextBeforeColon.Left += adjustWidth;
                 groupBoxInterjections.Left += adjustWidth * 2;
+                groupBoxRemoveConditions.Left = groupBoxTextBeforeColon.Left;
+                groupBoxRemoveConditions.Width = groupBoxTextBeforeColon.Width;
             }
             MinimumSize = new Size(groupBoxInterjections.Right + groupBoxTextBetween.Location.X * 2, Height);
         }

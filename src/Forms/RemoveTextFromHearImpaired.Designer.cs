@@ -42,12 +42,9 @@
             this.toolStripMenuItemInvertSel = new System.Windows.Forms.ToolStripMenuItem();
             this.checkBoxRemoveTextBeforeColon = new System.Windows.Forms.CheckBox();
             this.checkBoxInterjectionOnlySeparateLine = new System.Windows.Forms.CheckBox();
-            this.checkBoxRemoveIfAllUppercase = new System.Windows.Forms.CheckBox();
             this.checkBoxColonSeparateLine = new System.Windows.Forms.CheckBox();
             this.buttonEditInterjections = new System.Windows.Forms.Button();
             this.checkBoxRemoveInterjections = new System.Windows.Forms.CheckBox();
-            this.comboBoxRemoveIfTextContains = new System.Windows.Forms.ComboBox();
-            this.checkBoxRemoveWhereContains = new System.Windows.Forms.CheckBox();
             this.comboBoxCustomEnd = new System.Windows.Forms.ComboBox();
             this.comboBoxCustomStart = new System.Windows.Forms.ComboBox();
             this.checkBoxRemoveTextBeforeColonOnlyUppercase = new System.Windows.Forms.CheckBox();
@@ -62,11 +59,16 @@
             this.groupBoxTextBetween = new System.Windows.Forms.GroupBox();
             this.groupBoxTextBeforeColon = new System.Windows.Forms.GroupBox();
             this.groupBoxInterjections = new System.Windows.Forms.GroupBox();
+            this.checkBoxRemoveIfAllUppercase = new System.Windows.Forms.CheckBox();
+            this.checkBoxRemoveWhereContains = new System.Windows.Forms.CheckBox();
+            this.comboBoxRemoveIfTextContains = new System.Windows.Forms.ComboBox();
+            this.groupBoxRemoveConditions = new System.Windows.Forms.GroupBox();
             this.groupBoxLinesFound.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.groupBoxTextBetween.SuspendLayout();
             this.groupBoxTextBeforeColon.SuspendLayout();
             this.groupBoxInterjections.SuspendLayout();
+            this.groupBoxRemoveConditions.SuspendLayout();
             this.SuspendLayout();
             // 
             // buttonOK
@@ -117,6 +119,7 @@
             this.columnHeaderAfter});
             this.listViewFixes.ContextMenuStrip = this.contextMenuStrip1;
             this.listViewFixes.FullRowSelect = true;
+            this.listViewFixes.HideSelection = false;
             this.listViewFixes.Location = new System.Drawing.Point(6, 17);
             this.listViewFixes.Name = "listViewFixes";
             this.listViewFixes.Size = new System.Drawing.Size(929, 273);
@@ -172,7 +175,7 @@
             this.checkBoxRemoveTextBeforeColon.AutoSize = true;
             this.checkBoxRemoveTextBeforeColon.Checked = true;
             this.checkBoxRemoveTextBeforeColon.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxRemoveTextBeforeColon.Location = new System.Drawing.Point(14, 39);
+            this.checkBoxRemoveTextBeforeColon.Location = new System.Drawing.Point(14, 29);
             this.checkBoxRemoveTextBeforeColon.Name = "checkBoxRemoveTextBeforeColon";
             this.checkBoxRemoveTextBeforeColon.Size = new System.Drawing.Size(175, 17);
             this.checkBoxRemoveTextBeforeColon.TabIndex = 10;
@@ -191,23 +194,10 @@
             this.checkBoxInterjectionOnlySeparateLine.UseVisualStyleBackColor = true;
             this.checkBoxInterjectionOnlySeparateLine.CheckedChanged += new System.EventHandler(this.checkBoxInterjectionOnlySeparateLine_CheckedChanged);
             // 
-            // checkBoxRemoveIfAllUppercase
-            // 
-            this.checkBoxRemoveIfAllUppercase.AutoSize = true;
-            this.checkBoxRemoveIfAllUppercase.Checked = true;
-            this.checkBoxRemoveIfAllUppercase.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxRemoveIfAllUppercase.Location = new System.Drawing.Point(14, 115);
-            this.checkBoxRemoveIfAllUppercase.Name = "checkBoxRemoveIfAllUppercase";
-            this.checkBoxRemoveIfAllUppercase.Size = new System.Drawing.Size(142, 17);
-            this.checkBoxRemoveIfAllUppercase.TabIndex = 13;
-            this.checkBoxRemoveIfAllUppercase.Text = "Remove uppercase lines";
-            this.checkBoxRemoveIfAllUppercase.UseVisualStyleBackColor = true;
-            this.checkBoxRemoveIfAllUppercase.CheckedChanged += new System.EventHandler(this.checkBoxRemoveIfAllUppercase_CheckedChanged);
-            // 
             // checkBoxColonSeparateLine
             // 
             this.checkBoxColonSeparateLine.AutoSize = true;
-            this.checkBoxColonSeparateLine.Location = new System.Drawing.Point(34, 81);
+            this.checkBoxColonSeparateLine.Location = new System.Drawing.Point(34, 71);
             this.checkBoxColonSeparateLine.Name = "checkBoxColonSeparateLine";
             this.checkBoxColonSeparateLine.Size = new System.Drawing.Size(137, 17);
             this.checkBoxColonSeparateLine.TabIndex = 12;
@@ -235,33 +225,6 @@
             this.checkBoxRemoveInterjections.Text = "Remove interjections ";
             this.checkBoxRemoveInterjections.UseVisualStyleBackColor = true;
             this.checkBoxRemoveInterjections.CheckedChanged += new System.EventHandler(this.checkBoxRemoveInterjections_CheckedChanged);
-            // 
-            // comboBoxRemoveIfTextContains
-            // 
-            this.comboBoxRemoveIfTextContains.FormattingEnabled = true;
-            this.comboBoxRemoveIfTextContains.Items.AddRange(new object[] {
-            "¶",
-            "♪",
-            "♫",
-            "♪,♫"});
-            this.comboBoxRemoveIfTextContains.Location = new System.Drawing.Point(200, 144);
-            this.comboBoxRemoveIfTextContains.MaxLength = 10;
-            this.comboBoxRemoveIfTextContains.Name = "comboBoxRemoveIfTextContains";
-            this.comboBoxRemoveIfTextContains.Size = new System.Drawing.Size(100, 21);
-            this.comboBoxRemoveIfTextContains.TabIndex = 15;
-            this.comboBoxRemoveIfTextContains.Text = "¶";
-            this.comboBoxRemoveIfTextContains.TextChanged += new System.EventHandler(this.CheckBoxRemoveTextBetweenCheckedChanged);
-            // 
-            // checkBoxRemoveWhereContains
-            // 
-            this.checkBoxRemoveWhereContains.AutoSize = true;
-            this.checkBoxRemoveWhereContains.Location = new System.Drawing.Point(14, 148);
-            this.checkBoxRemoveWhereContains.Name = "checkBoxRemoveWhereContains";
-            this.checkBoxRemoveWhereContains.Size = new System.Drawing.Size(153, 17);
-            this.checkBoxRemoveWhereContains.TabIndex = 14;
-            this.checkBoxRemoveWhereContains.Text = "Remove text if it contains:";
-            this.checkBoxRemoveWhereContains.UseVisualStyleBackColor = true;
-            this.checkBoxRemoveWhereContains.CheckedChanged += new System.EventHandler(this.CheckBoxRemoveTextBetweenCheckedChanged);
             // 
             // comboBoxCustomEnd
             // 
@@ -296,7 +259,7 @@
             // checkBoxRemoveTextBeforeColonOnlyUppercase
             // 
             this.checkBoxRemoveTextBeforeColonOnlyUppercase.AutoSize = true;
-            this.checkBoxRemoveTextBeforeColonOnlyUppercase.Location = new System.Drawing.Point(34, 60);
+            this.checkBoxRemoveTextBeforeColonOnlyUppercase.Location = new System.Drawing.Point(34, 50);
             this.checkBoxRemoveTextBeforeColonOnlyUppercase.Name = "checkBoxRemoveTextBeforeColonOnlyUppercase";
             this.checkBoxRemoveTextBeforeColonOnlyUppercase.Size = new System.Drawing.Size(151, 17);
             this.checkBoxRemoveTextBeforeColonOnlyUppercase.TabIndex = 11;
@@ -420,14 +383,11 @@
             // groupBoxTextBeforeColon
             // 
             this.groupBoxTextBeforeColon.Controls.Add(this.checkBoxRemoveTextBeforeColon);
-            this.groupBoxTextBeforeColon.Controls.Add(this.checkBoxRemoveIfAllUppercase);
             this.groupBoxTextBeforeColon.Controls.Add(this.checkBoxRemoveTextBeforeColonOnlyUppercase);
             this.groupBoxTextBeforeColon.Controls.Add(this.checkBoxColonSeparateLine);
-            this.groupBoxTextBeforeColon.Controls.Add(this.checkBoxRemoveWhereContains);
-            this.groupBoxTextBeforeColon.Controls.Add(this.comboBoxRemoveIfTextContains);
             this.groupBoxTextBeforeColon.Location = new System.Drawing.Point(332, 12);
             this.groupBoxTextBeforeColon.Name = "groupBoxTextBeforeColon";
-            this.groupBoxTextBeforeColon.Size = new System.Drawing.Size(314, 204);
+            this.groupBoxTextBeforeColon.Size = new System.Drawing.Size(314, 117);
             this.groupBoxTextBeforeColon.TabIndex = 5;
             this.groupBoxTextBeforeColon.TabStop = false;
             this.groupBoxTextBeforeColon.Text = "Remove text before colon";
@@ -444,11 +404,61 @@
             this.groupBoxInterjections.TabStop = false;
             this.groupBoxInterjections.Text = "Remove interjections";
             // 
+            // checkBoxRemoveIfAllUppercase
+            // 
+            this.checkBoxRemoveIfAllUppercase.AutoSize = true;
+            this.checkBoxRemoveIfAllUppercase.Checked = true;
+            this.checkBoxRemoveIfAllUppercase.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxRemoveIfAllUppercase.Location = new System.Drawing.Point(14, 25);
+            this.checkBoxRemoveIfAllUppercase.Name = "checkBoxRemoveIfAllUppercase";
+            this.checkBoxRemoveIfAllUppercase.Size = new System.Drawing.Size(142, 17);
+            this.checkBoxRemoveIfAllUppercase.TabIndex = 16;
+            this.checkBoxRemoveIfAllUppercase.Text = "Remove uppercase lines";
+            this.checkBoxRemoveIfAllUppercase.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxRemoveWhereContains
+            // 
+            this.checkBoxRemoveWhereContains.AutoSize = true;
+            this.checkBoxRemoveWhereContains.Location = new System.Drawing.Point(14, 48);
+            this.checkBoxRemoveWhereContains.Name = "checkBoxRemoveWhereContains";
+            this.checkBoxRemoveWhereContains.Size = new System.Drawing.Size(153, 17);
+            this.checkBoxRemoveWhereContains.TabIndex = 17;
+            this.checkBoxRemoveWhereContains.Text = "Remove text if it contains:";
+            this.checkBoxRemoveWhereContains.UseVisualStyleBackColor = true;
+            // 
+            // comboBoxRemoveIfTextContains
+            // 
+            this.comboBoxRemoveIfTextContains.FormattingEnabled = true;
+            this.comboBoxRemoveIfTextContains.Items.AddRange(new object[] {
+            "¶",
+            "♪",
+            "♫",
+            "♪,♫"});
+            this.comboBoxRemoveIfTextContains.Location = new System.Drawing.Point(200, 44);
+            this.comboBoxRemoveIfTextContains.MaxLength = 10;
+            this.comboBoxRemoveIfTextContains.Name = "comboBoxRemoveIfTextContains";
+            this.comboBoxRemoveIfTextContains.Size = new System.Drawing.Size(100, 21);
+            this.comboBoxRemoveIfTextContains.TabIndex = 18;
+            this.comboBoxRemoveIfTextContains.Text = "¶";
+            // 
+            // groupBoxRemoveConditions
+            // 
+            this.groupBoxRemoveConditions.Controls.Add(this.checkBoxRemoveIfAllUppercase);
+            this.groupBoxRemoveConditions.Controls.Add(this.checkBoxRemoveWhereContains);
+            this.groupBoxRemoveConditions.Controls.Add(this.comboBoxRemoveIfTextContains);
+            this.groupBoxRemoveConditions.Location = new System.Drawing.Point(332, 132);
+            this.groupBoxRemoveConditions.Name = "groupBoxRemoveConditions";
+            this.groupBoxRemoveConditions.Size = new System.Drawing.Size(314, 84);
+            this.groupBoxRemoveConditions.TabIndex = 10;
+            this.groupBoxRemoveConditions.TabStop = false;
+            this.groupBoxRemoveConditions.Text = "Remove conditions:";
+            // 
             // FormRemoveTextForHearImpaired
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(965, 550);
+            this.Controls.Add(this.groupBoxRemoveConditions);
             this.Controls.Add(this.groupBoxTextBeforeColon);
             this.Controls.Add(this.groupBoxInterjections);
             this.Controls.Add(this.groupBoxTextBetween);
@@ -476,6 +486,8 @@
             this.groupBoxTextBeforeColon.PerformLayout();
             this.groupBoxInterjections.ResumeLayout(false);
             this.groupBoxInterjections.PerformLayout();
+            this.groupBoxRemoveConditions.ResumeLayout(false);
+            this.groupBoxRemoveConditions.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -501,12 +513,9 @@
         private System.Windows.Forms.CheckBox checkBoxOnlyIfInSeparateLine;
         private System.Windows.Forms.ComboBox comboBoxCustomStart;
         private System.Windows.Forms.ComboBox comboBoxCustomEnd;
-        private System.Windows.Forms.ComboBox comboBoxRemoveIfTextContains;
-        private System.Windows.Forms.CheckBox checkBoxRemoveWhereContains;
         private System.Windows.Forms.CheckBox checkBoxRemoveInterjections;
         private System.Windows.Forms.Button buttonEditInterjections;
         private System.Windows.Forms.CheckBox checkBoxColonSeparateLine;
-        private System.Windows.Forms.CheckBox checkBoxRemoveIfAllUppercase;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSelAll;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemInvertSel;
@@ -515,5 +524,9 @@
         private System.Windows.Forms.GroupBox groupBoxTextBetween;
         private System.Windows.Forms.GroupBox groupBoxTextBeforeColon;
         private System.Windows.Forms.GroupBox groupBoxInterjections;
+        private System.Windows.Forms.CheckBox checkBoxRemoveIfAllUppercase;
+        private System.Windows.Forms.CheckBox checkBoxRemoveWhereContains;
+        private System.Windows.Forms.ComboBox comboBoxRemoveIfTextContains;
+        private System.Windows.Forms.GroupBox groupBoxRemoveConditions;
     }
 }
