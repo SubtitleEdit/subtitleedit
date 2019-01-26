@@ -863,6 +863,7 @@ namespace Nikse.SubtitleEdit.Logic
             AddExtension(sb, new Pac().Extension);
             AddExtension(sb, new Cavena890().Extension);
             AddExtension(sb, new Spt().Extension);
+            AddExtension(sb, new Sptx().Extension);
             AddExtension(sb, new Wsb().Extension);
             AddExtension(sb, new CheetahCaption().Extension);
             AddExtension(sb, ".chk");
