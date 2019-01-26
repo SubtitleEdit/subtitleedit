@@ -386,8 +386,9 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             return list;
         }
 
-        public string FixOcrErrors(string text, int index, string lastLine, bool logSuggestions, AutoGuessLevel autoGuess)
+        public string FixOcrErrors(string input, int index, string lastLine, bool logSuggestions, AutoGuessLevel autoGuess)
         {
+            var text = input;
             while (text.Contains(Environment.NewLine + " "))
             {
                 text = text.Replace(Environment.NewLine + " ", Environment.NewLine);
@@ -539,8 +540,9 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             return text;
         }
 
-        internal static string FixFrenchLApostrophe(string text, string tag, string lastLine)
+        internal static string FixFrenchLApostrophe(string input, string tag, string lastLine)
         {
+            var text = input;
             bool endingBeforeThis = string.IsNullOrEmpty(lastLine) || lastLine.EndsWith('.') || lastLine.EndsWith('!') || lastLine.EndsWith('?') ||
                                     lastLine.EndsWith(".</i>", StringComparison.Ordinal) || lastLine.EndsWith("!</i>", StringComparison.Ordinal) || lastLine.EndsWith("?</i>", StringComparison.Ordinal) ||
                                     lastLine.EndsWith(".</font>", StringComparison.Ordinal) || lastLine.EndsWith("!</font>", StringComparison.Ordinal) || lastLine.EndsWith("?</font>", StringComparison.Ordinal);
@@ -742,28 +744,29 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
         private string FixCommonOcrLineErrors(string input, string lastLine)
         {
-            input = FixOcrErrorViaLineReplaceList(input);
-            input = FixOcrErrorsViaHardcodedRules(input, lastLine, _abbreviationList);
-            input = FixOcrErrorViaLineReplaceList(input);
+            var text = input;
+            text = FixOcrErrorViaLineReplaceList(text);
+            text = FixOcrErrorsViaHardcodedRules(text, lastLine, _abbreviationList);
+            text = FixOcrErrorViaLineReplaceList(text);
 
             if (Configuration.Settings.Tools.OcrFixUseHardcodedRules)
             {
-                if (input.StartsWith('~'))
+                if (text.StartsWith('~'))
                 {
-                    input = ("- " + input.Remove(0, 1)).Replace("  ", " ");
+                    text = ("- " + text.Remove(0, 1)).Replace("  ", " ");
                 }
 
-                input = input.Replace(Environment.NewLine + "~", Environment.NewLine + "- ").Replace("  ", " ");
+                text = text.Replace(Environment.NewLine + "~", Environment.NewLine + "- ").Replace("  ", " ");
 
-                if (input.Length < 10 && input.Length > 4 && !input.Contains(Environment.NewLine) && input.StartsWith("II", StringComparison.Ordinal) && input.EndsWith("II", StringComparison.Ordinal))
+                if (text.Length < 10 && text.Length > 4 && !text.Contains(Environment.NewLine) && text.StartsWith("II", StringComparison.Ordinal) && text.EndsWith("II", StringComparison.Ordinal))
                 {
-                    input = "\"" + input.Substring(2, input.Length - 4) + "\"";
+                    text = "\"" + text.Substring(2, text.Length - 4) + "\"";
                 }
 
                 // e.g. "selectionsu." -> "selections..."
-                if (input.EndsWith("u.", StringComparison.Ordinal) && _hunspell != null)
+                if (text.EndsWith("u.", StringComparison.Ordinal) && _hunspell != null)
                 {
-                    string[] words = input.Split(new[] { ' ', '.' }, StringSplitOptions.RemoveEmptyEntries);
+                    string[] words = text.Split(new[] { ' ', '.' }, StringSplitOptions.RemoveEmptyEntries);
                     if (words.Length > 0)
                     {
                         string lastWord = words[words.Length - 1].Trim();
@@ -772,19 +775,19 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                             !IsWordOrWordsCorrect(lastWord) &&
                             IsWordOrWordsCorrect(lastWord.Substring(0, lastWord.Length - 1)))
                         {
-                            input = input.Substring(0, input.Length - 2) + "...";
+                            text = text.Substring(0, text.Length - 2) + "...";
                         }
                     }
                 }
 
                 // music notes
-                if (input.StartsWith(".'", StringComparison.Ordinal) && input.EndsWith(".'", StringComparison.Ordinal))
+                if (text.StartsWith(".'", StringComparison.Ordinal) && text.EndsWith(".'", StringComparison.Ordinal))
                 {
-                    input = input.Replace(".'", Configuration.Settings.Tools.MusicSymbol);
+                    text = text.Replace(".'", Configuration.Settings.Tools.MusicSymbol);
                 }
             }
 
-            return input;
+            return text;
         }
 
         private string FixLowercaseIToUppercaseI(string input, string lastLine)
@@ -846,216 +849,217 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
         public string FixOcrErrorsViaHardcodedRules(string input, string lastLine, HashSet<string> abbreviationList)
         {
+            var text = input;
             if (!Configuration.Settings.Tools.OcrFixUseHardcodedRules)
             {
-                return input;
+                return text;
             }
 
-            input = input.Replace(",...", "...");
+            text = text.Replace(",...", "...");
 
-            if (input.StartsWith("..", StringComparison.Ordinal) && !input.StartsWith("...", StringComparison.Ordinal))
+            if (text.StartsWith("..", StringComparison.Ordinal) && !text.StartsWith("...", StringComparison.Ordinal))
             {
-                input = "." + input;
+                text = "." + text;
             }
 
             string pre = string.Empty;
-            if (input.StartsWith("- ", StringComparison.Ordinal))
+            if (text.StartsWith("- ", StringComparison.Ordinal))
             {
                 pre = "- ";
-                input = input.Remove(0, 2);
+                text = text.Remove(0, 2);
             }
-            else if (input.StartsWith('-'))
+            else if (text.StartsWith('-'))
             {
                 pre = "-";
-                input = input.Remove(0, 1);
+                text = text.Remove(0, 1);
             }
 
-            bool hasDotDot = input.Contains("..") || input.Contains(". .");
+            bool hasDotDot = text.Contains("..") || text.Contains(". .");
             if (hasDotDot)
             {
-                if (input.Length > 5 && input.StartsWith("..", StringComparison.Ordinal) && Utilities.AllLettersAndNumbers.Contains(input[2]))
+                if (text.Length > 5 && text.StartsWith("..", StringComparison.Ordinal) && Utilities.AllLettersAndNumbers.Contains(text[2]))
                 {
-                    input = "..." + input.Remove(0, 2);
+                    text = "..." + text.Remove(0, 2);
                 }
 
-                if (input.Length > 7 && input.StartsWith("<i>..", StringComparison.Ordinal) && Utilities.AllLettersAndNumbers.Contains(input[5]))
+                if (text.Length > 7 && text.StartsWith("<i>..", StringComparison.Ordinal) && Utilities.AllLettersAndNumbers.Contains(text[5]))
                 {
-                    input = "<i>..." + input.Remove(0, 5);
+                    text = "<i>..." + text.Remove(0, 5);
                 }
 
-                if (input.Length > 5 && input.StartsWith(".. ", StringComparison.Ordinal) && Utilities.AllLettersAndNumbers.Contains(input[3]))
+                if (text.Length > 5 && text.StartsWith(".. ", StringComparison.Ordinal) && Utilities.AllLettersAndNumbers.Contains(text[3]))
                 {
-                    input = "..." + input.Remove(0, 3);
+                    text = "..." + text.Remove(0, 3);
                 }
 
-                if (input.Length > 7 && input.StartsWith("<i>.. ", StringComparison.Ordinal) && Utilities.AllLettersAndNumbers.Contains(input[6]))
+                if (text.Length > 7 && text.StartsWith("<i>.. ", StringComparison.Ordinal) && Utilities.AllLettersAndNumbers.Contains(text[6]))
                 {
-                    input = "<i>..." + input.Remove(0, 6);
+                    text = "<i>..." + text.Remove(0, 6);
                 }
 
-                if (input.Contains(Environment.NewLine + ".. "))
+                if (text.Contains(Environment.NewLine + ".. "))
                 {
-                    input = input.Replace(Environment.NewLine + ".. ", Environment.NewLine + "...");
+                    text = text.Replace(Environment.NewLine + ".. ", Environment.NewLine + "...");
                 }
 
-                if (input.Contains(Environment.NewLine + "<i>.. "))
+                if (text.Contains(Environment.NewLine + "<i>.. "))
                 {
-                    input = input.Replace(Environment.NewLine + "<i>.. ", Environment.NewLine + "<i>...");
+                    text = text.Replace(Environment.NewLine + "<i>.. ", Environment.NewLine + "<i>...");
                 }
 
-                if (input.StartsWith(". ..", StringComparison.Ordinal))
+                if (text.StartsWith(". ..", StringComparison.Ordinal))
                 {
-                    input = "..." + input.Remove(0, 4);
+                    text = "..." + text.Remove(0, 4);
                 }
 
-                if (input.StartsWith(".. .", StringComparison.Ordinal))
+                if (text.StartsWith(".. .", StringComparison.Ordinal))
                 {
-                    input = "..." + input.Remove(0, 4);
+                    text = "..." + text.Remove(0, 4);
                 }
 
-                if (input.StartsWith(". . .", StringComparison.Ordinal))
+                if (text.StartsWith(". . .", StringComparison.Ordinal))
                 {
-                    input = "..." + input.Remove(0, 5);
+                    text = "..." + text.Remove(0, 5);
                 }
 
-                if (input.StartsWith("... ", StringComparison.Ordinal))
+                if (text.StartsWith("... ", StringComparison.Ordinal))
                 {
-                    input = input.Remove(3, 1);
+                    text = text.Remove(3, 1);
                 }
             }
 
-            input = pre + input;
+            text = pre + text;
 
             if (hasDotDot)
             {
-                if (input.StartsWith("<i>. ..", StringComparison.Ordinal))
+                if (text.StartsWith("<i>. ..", StringComparison.Ordinal))
                 {
-                    input = "<i>..." + input.Remove(0, 7);
+                    text = "<i>..." + text.Remove(0, 7);
                 }
 
-                if (input.StartsWith("<i>.. .", StringComparison.Ordinal))
+                if (text.StartsWith("<i>.. .", StringComparison.Ordinal))
                 {
-                    input = "<i>..." + input.Remove(0, 7);
+                    text = "<i>..." + text.Remove(0, 7);
                 }
 
-                if (input.StartsWith("<i>. . .", StringComparison.Ordinal))
+                if (text.StartsWith("<i>. . .", StringComparison.Ordinal))
                 {
-                    input = "<i>..." + input.Remove(0, 8);
+                    text = "<i>..." + text.Remove(0, 8);
                 }
 
-                if (input.StartsWith("<i>... ", StringComparison.Ordinal))
+                if (text.StartsWith("<i>... ", StringComparison.Ordinal))
                 {
-                    input = input.Remove(6, 1);
+                    text = text.Remove(6, 1);
                 }
 
-                if (input.StartsWith(". . <i>.", StringComparison.Ordinal))
+                if (text.StartsWith(". . <i>.", StringComparison.Ordinal))
                 {
-                    input = "<i>..." + input.Remove(0, 8);
+                    text = "<i>..." + text.Remove(0, 8);
                 }
 
-                if (input.StartsWith("...<i>", StringComparison.Ordinal) && (input.IndexOf("</i>", StringComparison.Ordinal) > input.IndexOf(' ')))
+                if (text.StartsWith("...<i>", StringComparison.Ordinal) && (text.IndexOf("</i>", StringComparison.Ordinal) > text.IndexOf(' ')))
                 {
-                    input = "<i>..." + input.Remove(0, 6);
+                    text = "<i>..." + text.Remove(0, 6);
                 }
 
-                if (input.EndsWith(". ..", StringComparison.Ordinal))
+                if (text.EndsWith(". ..", StringComparison.Ordinal))
                 {
-                    input = input.Remove(input.Length - 4, 4) + "...";
+                    text = text.Remove(text.Length - 4, 4) + "...";
                 }
 
-                if (input.EndsWith(".. .", StringComparison.Ordinal))
+                if (text.EndsWith(".. .", StringComparison.Ordinal))
                 {
-                    input = input.Remove(input.Length - 4, 4) + "...";
+                    text = text.Remove(text.Length - 4, 4) + "...";
                 }
 
-                if (input.EndsWith(". . .", StringComparison.Ordinal))
+                if (text.EndsWith(". . .", StringComparison.Ordinal))
                 {
-                    input = input.Remove(input.Length - 5, 5) + "...";
+                    text = text.Remove(text.Length - 5, 5) + "...";
                 }
 
-                if (input.EndsWith(". ...", StringComparison.Ordinal))
+                if (text.EndsWith(". ...", StringComparison.Ordinal))
                 {
-                    input = input.Remove(input.Length - 5, 5) + "...";
+                    text = text.Remove(text.Length - 5, 5) + "...";
                 }
 
-                if (input.EndsWith(". ..</i>", StringComparison.Ordinal))
+                if (text.EndsWith(". ..</i>", StringComparison.Ordinal))
                 {
-                    input = input.Remove(input.Length - 8, 8) + "...</i>";
+                    text = text.Remove(text.Length - 8, 8) + "...</i>";
                 }
 
-                if (input.EndsWith(".. .</i>", StringComparison.Ordinal))
+                if (text.EndsWith(".. .</i>", StringComparison.Ordinal))
                 {
-                    input = input.Remove(input.Length - 8, 8) + "...</i>";
+                    text = text.Remove(text.Length - 8, 8) + "...</i>";
                 }
 
-                if (input.EndsWith(". . .</i>", StringComparison.Ordinal))
+                if (text.EndsWith(". . .</i>", StringComparison.Ordinal))
                 {
-                    input = input.Remove(input.Length - 9, 9) + "...</i>";
+                    text = text.Remove(text.Length - 9, 9) + "...</i>";
                 }
 
-                if (input.EndsWith(". ...</i>", StringComparison.Ordinal))
+                if (text.EndsWith(". ...</i>", StringComparison.Ordinal))
                 {
-                    input = input.Remove(input.Length - 9, 9) + "...</i>";
+                    text = text.Remove(text.Length - 9, 9) + "...</i>";
                 }
 
-                if (input.EndsWith(".</i> . .", StringComparison.Ordinal))
+                if (text.EndsWith(".</i> . .", StringComparison.Ordinal))
                 {
-                    input = input.Remove(input.Length - 9, 9) + "...</i>";
+                    text = text.Remove(text.Length - 9, 9) + "...</i>";
                 }
 
-                if (input.EndsWith(".</i>..", StringComparison.Ordinal))
+                if (text.EndsWith(".</i>..", StringComparison.Ordinal))
                 {
-                    input = input.Remove(input.Length - 7, 7) + "...</i>";
+                    text = text.Remove(text.Length - 7, 7) + "...</i>";
                 }
 
-                input = input.Replace(".</i> . ." + Environment.NewLine, "...</i>" + Environment.NewLine);
+                text = text.Replace(".</i> . ." + Environment.NewLine, "...</i>" + Environment.NewLine);
 
-                input = input.Replace(".. ?", "..?");
-                input = input.Replace("..?", "...?");
-                input = input.Replace("....?", "...?");
+                text = text.Replace(".. ?", "..?");
+                text = text.Replace("..?", "...?");
+                text = text.Replace("....?", "...?");
 
-                input = input.Replace(".. !", "..!");
-                input = input.Replace("..!", "...!");
-                input = input.Replace("....!", "...!");
+                text = text.Replace(".. !", "..!");
+                text = text.Replace("..!", "...!");
+                text = text.Replace("....!", "...!");
 
-                input = input.Replace("... ?", "...?");
-                input = input.Replace("... !", "...!");
+                text = text.Replace("... ?", "...?");
+                text = text.Replace("... !", "...!");
 
-                input = input.Replace("....", "...");
-                input = input.Replace("....", "...");
+                text = text.Replace("....", "...");
+                text = text.Replace("....", "...");
 
-                if (input.StartsWith("- ...", StringComparison.Ordinal) && lastLine != null && lastLine.EndsWith("...", StringComparison.Ordinal) && !(input.Contains(Environment.NewLine + "-")))
+                if (text.StartsWith("- ...", StringComparison.Ordinal) && lastLine != null && lastLine.EndsWith("...", StringComparison.Ordinal) && !(text.Contains(Environment.NewLine + "-")))
                 {
-                    input = input.Remove(0, 2);
+                    text = text.Remove(0, 2);
                 }
 
-                if (input.StartsWith("-...", StringComparison.Ordinal) && lastLine != null && lastLine.EndsWith("...", StringComparison.Ordinal) && !(input.Contains(Environment.NewLine + "-")))
+                if (text.StartsWith("-...", StringComparison.Ordinal) && lastLine != null && lastLine.EndsWith("...", StringComparison.Ordinal) && !(text.Contains(Environment.NewLine + "-")))
                 {
-                    input = input.Remove(0, 1);
+                    text = text.Remove(0, 1);
                 }
             }
 
-            if (input.Length > 2 && input[0] == '-' && char.IsUpper(input[1]))
+            if (text.Length > 2 && text[0] == '-' && char.IsUpper(text[1]))
             {
-                input = input.Insert(1, " ");
+                text = text.Insert(1, " ");
             }
 
-            if (input.Length > 5 && input.StartsWith("<i>-", StringComparison.Ordinal) && char.IsUpper(input[4]))
+            if (text.Length > 5 && text.StartsWith("<i>-", StringComparison.Ordinal) && char.IsUpper(text[4]))
             {
-                input = input.Insert(4, " ");
+                text = text.Insert(4, " ");
             }
 
             int nlLen = Environment.NewLine.Length;
-            int idx = input.IndexOf(Environment.NewLine + "-", StringComparison.Ordinal);
-            if (idx > 0 && idx + nlLen + 1 < input.Length && char.IsUpper(input[idx + nlLen + 1]))
+            int idx = text.IndexOf(Environment.NewLine + "-", StringComparison.Ordinal);
+            if (idx > 0 && idx + nlLen + 1 < text.Length && char.IsUpper(text[idx + nlLen + 1]))
             {
-                input = input.Insert(idx + Environment.NewLine.Length + 1, " ");
+                text = text.Insert(idx + Environment.NewLine.Length + 1, " ");
             }
 
-            idx = input.IndexOf(Environment.NewLine + "<i>-", StringComparison.Ordinal);
-            if (idx > 0 && idx + nlLen + 4 < input.Length && char.IsUpper(input[idx + nlLen + 4]))
+            idx = text.IndexOf(Environment.NewLine + "<i>-", StringComparison.Ordinal);
+            if (idx > 0 && idx + nlLen + 4 < text.Length && char.IsUpper(text[idx + nlLen + 4]))
             {
-                input = input.Insert(idx + nlLen + 4, " ");
+                text = text.Insert(idx + nlLen + 4, " ");
             }
 
             if (string.IsNullOrEmpty(lastLine) ||
@@ -1066,7 +1070,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 lastLine.EndsWith('♪'))
             {
                 lastLine = HtmlUtil.RemoveHtmlTags(lastLine);
-                var st = new StrippableText(input);
+                var st = new StrippableText(text);
                 if (lastLine == null || (!lastLine.EndsWith("...", StringComparison.Ordinal) && !EndsWithAbbreviation(lastLine, abbreviationList)))
                 {
                     if (st.StrippedText.Length > 0 && !char.IsUpper(st.StrippedText[0]) && !st.Pre.EndsWith('[') && !st.Pre.EndsWith('(') &&
@@ -1098,7 +1102,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                                 st.StrippedText = "I-I" + st.StrippedText.Remove(0, 3);
                             }
                             st.StrippedText = uppercaseLetter + st.StrippedText.Substring(1);
-                            input = st.Pre + st.StrippedText + st.Post;
+                            text = st.Pre + st.StrippedText + st.Post;
                         }
                     }
                 }
@@ -1106,50 +1110,50 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
             // lines ending with ". should often end at ... (of no other quotes exists near by)
             if ((lastLine == null || !lastLine.Contains('"')) &&
-                input.EndsWith("\".", StringComparison.Ordinal) && input.IndexOf('"') == input.LastIndexOf('"') && input.Length > 3)
+                text.EndsWith("\".", StringComparison.Ordinal) && text.IndexOf('"') == text.LastIndexOf('"') && text.Length > 3)
             {
-                var lastChar = input[input.Length - 3];
+                var lastChar = text[text.Length - 3];
                 if (!char.IsDigit(lastChar))
                 {
-                    int position = input.Length - 2;
-                    input = input.Remove(position).Insert(position, "...");
+                    int position = text.Length - 2;
+                    text = text.Remove(position).Insert(position, "...");
                 }
             }
 
             // change '<number><space>1' to '<number>1'
-            if (input.Contains('1'))
+            if (text.Contains('1'))
             {
-                var match = RegexNumber1.Match(input);
+                var match = RegexNumber1.Match(text);
                 while (match.Success)
                 {
-                    input = input.Remove(match.Index, 1);
-                    match = RegexNumber1.Match(input, match.Index);
+                    text = text.Remove(match.Index, 1);
+                    match = RegexNumber1.Match(text, match.Index);
                 }
             }
 
             // change '' to "
-            input = input.Replace("''", "\"");
+            text = text.Replace("''", "\"");
 
             // change 'sequeI of' to 'sequel of'
-            if (input.Contains('I'))
+            if (text.Contains('I'))
             {
-                var match = RegexUppercaseI.Match(input);
+                var match = RegexUppercaseI.Match(text);
                 while (match.Success)
                 {
-                    bool doFix = !(match.Index >= 1 && input.Substring(match.Index - 1).StartsWith("Mc", StringComparison.Ordinal));
-                    if (match.Index >= 2 && input.Substring(match.Index - 2).StartsWith("Mac", StringComparison.Ordinal))
+                    bool doFix = !(match.Index >= 1 && text.Substring(match.Index - 1).StartsWith("Mc", StringComparison.Ordinal));
+                    if (match.Index >= 2 && text.Substring(match.Index - 2).StartsWith("Mac", StringComparison.Ordinal))
                     {
                         doFix = false;
                     }
 
                     if (doFix)
                     {
-                        input = input.Substring(0, match.Index + 1) + "l" + input.Substring(match.Index + 2);
+                        text = text.Substring(0, match.Index + 1) + "l" + text.Substring(match.Index + 2);
                     }
 
-                    if (match.Index + 1 < input.Length)
+                    if (match.Index + 1 < text.Length)
                     {
-                        match = RegexUppercaseI.Match(input, match.Index + 1);
+                        match = RegexUppercaseI.Match(text, match.Index + 1);
                     }
                     else
                     {
@@ -1159,31 +1163,31 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             }
 
             // change 'NlCE' to 'NICE'
-            if (input.Contains('l'))
+            if (text.Contains('l'))
             {
-                var match = RegexLowercaseL.Match(input);
+                var match = RegexLowercaseL.Match(text);
                 while (match.Success)
                 {
-                    input = input.Substring(0, match.Index + 1) + "I" + input.Substring(match.Index + 2);
-                    match = RegexLowercaseL.Match(input);
+                    text = text.Substring(0, match.Index + 1) + "I" + text.Substring(match.Index + 2);
+                    match = RegexLowercaseL.Match(text);
                 }
             }
 
-            if (input.EndsWith(". \"</i>", StringComparison.Ordinal))
+            if (text.EndsWith(". \"</i>", StringComparison.Ordinal))
             {
-                input = input.Remove(input.Length - 6, 1);
+                text = text.Remove(text.Length - 6, 1);
             }
 
-            if (input.Contains(". \"</i>" + Environment.NewLine, StringComparison.Ordinal))
+            if (text.Contains(". \"</i>" + Environment.NewLine, StringComparison.Ordinal))
             {
-                idx = input.IndexOf(". \"</i>" + Environment.NewLine, StringComparison.Ordinal);
+                idx = text.IndexOf(". \"</i>" + Environment.NewLine, StringComparison.Ordinal);
                 if (idx > 0)
                 {
-                    input = input.Remove(idx + 1, 1);
+                    text = text.Remove(idx + 1, 1);
                 }
             }
 
-            return input;
+            return text;
         }
 
         public string FixOcrErrorViaLineReplaceList(string input)
@@ -1214,20 +1218,6 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             }
 
             string tempLine = line;
-            //foreach (string name in _nameList)
-            //{
-            //    int start = tempLine.IndexOf(name);
-            //    if (start >= 0)
-            //    {
-            //        if (start == 0 || (Environment.NewLine + " ¡¿,.!?:;()[]{}+-$£\"”“#&%…—").Contains(tempLine[start - 1].ToString()))
-            //        {
-            //            int end = start + name.Length;
-            //            if (end >= tempLine.Length || (Environment.NewLine + " ¡¿,.!?:;()[]{}+-$£\"”“#&%…—").Contains(tempLine[end].ToString()))
-            //                tempLine = tempLine.Remove(start, name.Length);
-            //        }
-            //    }
-            //}
-
             const string p = " ¡¿,.!?:;()[]{}+-$£\"„”“#&%…—♪\r\n";
             foreach (string name in _nameMultiWordList)
             {

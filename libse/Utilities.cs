@@ -809,9 +809,9 @@ namespace Nikse.SubtitleEdit.Core
             return s.TrimEnd();
         }
 
-        public static string RemoveLineBreaks(string s)
+        public static string RemoveLineBreaks(string input)
         {
-            s = HtmlUtil.FixUpperTags(s);
+            var s = HtmlUtil.FixUpperTags(input);
             s = s.Replace(Environment.NewLine + "</i>", "</i>" + Environment.NewLine);
             s = s.Replace(Environment.NewLine + "</b>", "</b>" + Environment.NewLine);
             s = s.Replace(Environment.NewLine + "</u>", "</u>" + Environment.NewLine);
@@ -892,8 +892,9 @@ namespace Nikse.SubtitleEdit.Core
             return singleLine;
         }
 
-        public static string RemoveSsaTags(string s)
+        public static string RemoveSsaTags(string input)
         {
+            var s = input;
             int k = s.IndexOf("{\\", StringComparison.Ordinal);
             while (k >= 0)
             {
@@ -1002,7 +1003,7 @@ namespace Nikse.SubtitleEdit.Core
 
         public static string ColorToHex(Color c)
         {
-            return string.Format("#{0:x2}{1:x2}{2:x2}", c.R, c.G, c.B);
+            return $"#{c.R:x2}{c.G:x2}{c.B:x2}";
         }
 
         public static int GetMaxLineLength(string text)
@@ -1046,20 +1047,13 @@ namespace Nikse.SubtitleEdit.Core
             System.Diagnostics.Process.Start(helpFile + parameter);
         }
 
-        public static string AssemblyVersion
-        {
-            get
-            {
-                return Assembly.GetEntryAssembly().GetName().Version.ToString();
-            }
-        }
+        public static string AssemblyVersion => Assembly.GetEntryAssembly().GetName().Version.ToString();
 
         public static string AssemblyDescription
         {
             get
             {
                 var assembly = Assembly.GetEntryAssembly();
-                string assemblyName = assembly.GetName().Name;
                 if (Attribute.IsDefined(assembly, typeof(AssemblyDescriptionAttribute)))
                 {
                     var descriptionAttribute = (AssemblyDescriptionAttribute)Attribute.GetCustomAttribute(assembly, typeof(AssemblyDescriptionAttribute));
@@ -1279,13 +1273,7 @@ namespace Nikse.SubtitleEdit.Core
             return (int)(number % 8);
         }
 
-        public static string LowercaseVowels
-        {
-            get
-            {
-                return "aeiouyæøåéóáôèòæøåäöïɤəɛʊʉɨ";
-            }
-        }
+        public static string LowercaseVowels => "aeiouyæøåéóáôèòæøåäöïɤəɛʊʉɨ";
 
         public static int CountTagInText(string text, string tag)
         {
@@ -2647,12 +2635,8 @@ namespace Nikse.SubtitleEdit.Core
                             arr = arr[1].Split(splitChars);
                             if (arr.Length == 4)
                             {
-                                int hour;
-                                int min;
-                                int sec;
-                                int ms;
-                                if (int.TryParse(arr[0], out hour) && int.TryParse(arr[1], out min) &&
-                                    int.TryParse(arr[2], out sec) && int.TryParse(arr[3], out ms))
+                                if (int.TryParse(arr[0], out var hour) && int.TryParse(arr[1], out var min) &&
+                                    int.TryParse(arr[2], out var sec) && int.TryParse(arr[3], out var ms))
                                 {
                                     comments.Paragraphs.Add(new Paragraph(new TimeCode(hour, min, sec, ms * 10), new TimeCode(), line));
                                 }

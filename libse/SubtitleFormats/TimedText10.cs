@@ -19,10 +19,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string Name => NameOfFormat;
 
-        public static string TtmlNamespace = "http://www.w3.org/ns/ttml";
-        public static string TtmlParameterNamespace = "http://www.w3.org/ns/ttml#parameter";
-        public static string TtmlStylingNamespace = "http://www.w3.org/ns/ttml#styling";
-        public static string TtmlMetadataNamespace = "http://www.w3.org/ns/ttml#metadata";
+        public static string TtmlNamespace => "http://www.w3.org/ns/ttml";
+        public static string TtmlParameterNamespace => "http://www.w3.org/ns/ttml#parameter";
+        public static string TtmlStylingNamespace => "http://www.w3.org/ns/ttml#styling";
+        public static string TtmlMetadataNamespace => "http://www.w3.org/ns/ttml#metadata";
 
         public override bool IsMine(List<string> lines, string fileName)
         {
@@ -704,8 +704,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var frameRateAttr = xml.DocumentElement.Attributes["ttp:frameRate"];
             if (frameRateAttr != null)
             {
-                double fr;
-                if (double.TryParse(frameRateAttr.Value, out fr))
+                if (double.TryParse(frameRateAttr.Value, out var fr))
                 {
                     if (fr > 20 && fr < 100)
                     {
@@ -776,44 +775,37 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     ReadParagraph(pText, node, styles, xml);
 
                     // Timecodes
-                    TimeCode begin, end;
-                    ExtractTimeCodes(node, subtitle, out begin, out end);
+                    ExtractTimeCodes(node, subtitle, out var begin, out var end);
 
                     // Style
                     var p = new Paragraph(begin, end, pText.ToString()) { Style = LookupForAttribute("style", node, nsmgr) };
 
                     // Lang
-                    string lang = LookupForAttribute("xml:lang", node, nsmgr);
-                    if (lang == null)
-                    {
-                        lang = LookupForAttribute("lang", node, nsmgr);
-                    }
+                    string lang = LookupForAttribute("xml:lang", node, nsmgr) ?? LookupForAttribute("lang", node, nsmgr);
                     if (lang != null)
                     {
                         p.Language = lang;
                     }
 
                     // Region
-                    string regionP = LookupForAttribute("xml:region", node, nsmgr);
-                    if (regionP == null)
-                    {
-                        regionP = LookupForAttribute("region", node, nsmgr);
-                    }
+                    string regionP = LookupForAttribute("xml:region", node, nsmgr) ?? LookupForAttribute("region", node, nsmgr);
                     if (regionP != null)
                     {
                         p.Region = regionP;
                     }
 
                     // Saving attibutes
-                    List<string> effectsToSave = new List<string>();
-                    effectsToSave.Add("xml:space");
-                    effectsToSave.Add("tts:fontSize");
-                    effectsToSave.Add("tts:fontFamily");
-                    effectsToSave.Add("tts:backgroundColor");
-                    effectsToSave.Add("tts:color");
-                    effectsToSave.Add("tts:origin");
-                    effectsToSave.Add("tts:extent");
-                    effectsToSave.Add("tts:textAlign");
+                    var effectsToSave = new List<string>
+                    {
+                        "xml:space",
+                        "tts:fontSize",
+                        "tts:fontFamily",
+                        "tts:backgroundColor",
+                        "tts:color",
+                        "tts:origin",
+                        "tts:extent",
+                        "tts:textAlign"
+                    };
 
                     foreach (string effect in effectsToSave)
                     {
@@ -998,7 +990,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static string GetEffect(Paragraph paragraph, string tag)
         {
-            if (paragraph == null || paragraph.Effect == null)
+            if (paragraph?.Effect == null)
             {
                 return string.Empty;
             }
@@ -1047,7 +1039,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 lang = "-";
             }
 
-            return string.Format("{0} / {1}", style, lang);
+            return $"{style} / {lang}";
         }
 
         private static void ReadParagraph(StringBuilder pText, XmlNode node, List<string> styles, XmlDocument xml)
@@ -1210,8 +1202,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
         }
 
-        public static TimeCode GetTimeCode(string s, bool frames)
+        public static TimeCode GetTimeCode(string input, bool frames)
         {
+            var s = input;
             if (s.EndsWith("ms", StringComparison.Ordinal))
             {
                 Configuration.Settings.SubtitleSettings.TimedText10TimeCodeFormatSource = "milliseconds";
@@ -1358,7 +1351,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
             catch
             {
+                // ignored
             }
+
             return list;
         }
 

@@ -9,7 +9,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     {
         public override string Extension => ".sptx";
 
-        public const string NameOfFormat = "sptx";
+        public static string NameOfFormat => "sptx";
 
         public override string Name => NameOfFormat;
 

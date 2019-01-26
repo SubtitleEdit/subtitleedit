@@ -66,20 +66,20 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                     case ("afa"): return "Afro-Asiatic (Other)";
                     case ("aka"): return "Akan";
                     case ("akk"): return "Akkadian";
-                    case ("alb"): return "Albanian";
+                    case ("alb"):
                     case ("sqi"): return "Albanian";
                     case ("ale"): return "Aleut";
                     case ("alg"): return "Algonquian languages";
                     case ("tut"): return "Altaic (Other)";
                     case ("amh"): return "Amharic";
                     case ("apa"): return "Apache languages";
-                    case ("ara"): return "Arabic";
                     case ("arc"): return "Aramaic";
+                    case ("ara"):
                     case ("arg"): return "Arabic";
                     case ("arp"): return "Arapaho";
                     case ("arn"): return "Araucanian";
                     case ("arw"): return "Arawak";
-                    case ("arm"): return "Armenian";
+                    case ("arm"):
                     case ("hye"): return "Armenian";
                     case ("art"): return "Artificial (Other)";
                     case ("asm"): return "Assamese";
@@ -99,7 +99,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                     case ("bnt"): return "Bantu (Other)";
                     case ("bas"): return "Basa";
                     case ("bak"): return "Bashkir";
-                    case ("baq"): return "Basque";
+                    case ("baq"):
                     case ("eus"): return "Basque";
                     case ("bej"): return "Beja";
                     case ("bem"): return "Bemba";
@@ -115,7 +115,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                     case ("bug"): return "Buginese";
                     case ("bul"): return "Bulgarian";
                     case ("bua"): return "Buriat";
-                    case ("bur"): return "Burmese";
+                    case ("bur"):
                     case ("mya"): return "Burmese";
                     case ("bel"): return "Byelorussian";
                     case ("cad"): return "Caddo";
@@ -131,7 +131,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                     case ("chr"): return "Cherokee";
                     case ("chy"): return "Cheyenne";
                     case ("chb"): return "Chibcha";
-                    case ("chi"): return "Chinese";
+                    case ("chi"):
                     case ("zho"): return "Chinese";
                     case ("chn"): return "Chinook jargon";
                     case ("cho"): return "Choctaw";
@@ -148,7 +148,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                     case ("cpp"): return "Creoles and Pidgins, Portuguese-based (Other)";
                     case ("cus"): return "Cushitic (Other)";
                     case ("   "): return "Croatian";
-                    case ("ces"): return "Czech";
+                    case ("ces"):
                     case ("cze"): return "Czech";
                     case ("dak"): return "Dakota";
                     case ("dan"): return "Danish";
@@ -158,7 +158,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                     case ("doi"): return "Dogri";
                     case ("dra"): return "Dravidian (Other)";
                     case ("dua"): return "Duala";
-                    case ("dut"): return "Dutch";
+                    case ("dut"):
                     case ("nla"): return "Dutch";
                     case ("dum"): return "Dutch, Middle (ca. 1050-1350)";
                     case ("dyu"): return "Dyula";
@@ -182,22 +182,22 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                     case ("fin"): return "Finnish";
                     case ("fiu"): return "Finno-Ugrian (Other)";
                     case ("fon"): return "Fon";
-                    case ("fra"): return "French";
+                    case ("fra"):
                     case ("fre"): return "French";
                     case ("frm"): return "French, Middle (ca. 1400-1600)";
                     case ("fro"): return "French, Old (842- ca. 1400)";
                     case ("fry"): return "Frisian";
                     case ("ful"): return "Fulah";
                     case ("gaa"): return "Ga";
-                    case ("gae"): return "Gaelic (Scots)";
+                    case ("gae"):
                     case ("gdh"): return "Gaelic (Scots)";
                     case ("glg"): return "Gallegan";
                     case ("lug"): return "Ganda";
                     case ("gay"): return "Gayo";
                     case ("gez"): return "Geez";
-                    case ("geo"): return "Georgian";
+                    case ("geo"):
                     case ("kat"): return "Georgian";
-                    case ("deu"): return "German";
+                    case ("deu"):
                     case ("ger"): return "German";
                     case ("gmh"): return "German, Middle High (ca. 1050-1500)";
                     case ("goh"): return "German, Old High (ca. 750-1050)";
@@ -207,7 +207,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                     case ("got"): return "Gothic";
                     case ("grb"): return "Grebo";
                     case ("grc"): return "Greek, Ancient (to 1453)";
-                    case ("ell"): return "Greek, Modern (1453-)";
+                    case ("ell"):
                     case ("gre"): return "Greek, Modern (1453-)";
                     case ("kal"): return "Greenlandic";
                     case ("grn"): return "Guarani";
@@ -236,14 +236,14 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                     case ("iku"): return "Inuktitut";
                     case ("ipk"): return "Inupiak";
                     case ("ira"): return "Iranian (Other)";
-                    case ("gai"): return "Irish";
+                    case ("gai"):
                     case ("iri"): return "Irish";
                     case ("sga"): return "Irish, Old (to 900)";
                     case ("mga"): return "Irish, Middle (900 - 1200)";
                     case ("iro"): return "Iroquoian languages";
                     case ("ita"): return "Italian";
                     case ("jpn"): return "Japanese";
-                    case ("jav"): return "Javanese";
+                    case ("jav"):
                     case ("jaw"): return "Javanese";
                     case ("jrb"): return "Judeo-Arabic";
                     case ("jpr"): return "Judeo-Persian";
@@ -298,7 +298,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                     case ("mai"): return "Maithili";
                     case ("mak"): return "Makasar";
                     case ("mlg"): return "Malagasy";
-                    case ("may"): return "Malay";
+                    case ("may"):
                     case ("msa"): return "Malay";
                     case ("mal"): return "Malayalam";
                     case ("mlt"): return "Maltese";
@@ -306,7 +306,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                     case ("mni"): return "Manipuri";
                     case ("mno"): return "Manobo languages";
                     case ("max"): return "Manx";
-                    case ("mao"): return "Maori";
+                    case ("mao"):
                     case ("mri"): return "Maori";
                     case ("mar"): return "Marathi";
                     case ("chm"): return "Mari";
@@ -361,7 +361,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                     case ("pan"): return "Panjabi";
                     case ("pap"): return "Papiamento";
                     case ("paa"): return "Papuan-Australian (Other)";
-                    case ("fas"): return "Persian";
+                    case ("fas"):
                     case ("per"): return "Persian";
                     case ("peo"): return "Persian, Old (ca 600 - 400 B.C.)";
                     case ("phn"): return "Phoenician";
@@ -376,7 +376,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                     case ("raj"): return "Rajasthani";
                     case ("rar"): return "Rarotongan";
                     case ("roa"): return "Romance (Other)";
-                    case ("ron"): return "Romanian";
+                    case ("ron"):
                     case ("rum"): return "Romanian";
                     case ("rom"): return "Romany";
                     case ("run"): return "Rundi";
@@ -414,7 +414,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                     case ("nso"): return "Sotho, Northern";
                     case ("sot"): return "Sotho, Southern";
                     case ("sai"): return "South American Indian (Other)";
-                    case ("esl"): return "Spanish";
+                    case ("esl"):
                     case ("spa"): return "Spanish";
                     case ("suk"): return "Sukuma";
                     case ("sux"): return "Sumerian";
@@ -434,7 +434,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                     case ("tel"): return "Telugu";
                     case ("ter"): return "Tereno";
                     case ("tha"): return "Thai";
-                    case ("bod"): return "Tibetan";
+                    case ("bod"):
                     case ("tib"): return "Tibetan";
                     case ("tig"): return "Tigre";
                     case ("tir"): return "Tigrinya";
@@ -469,7 +469,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes
                     case ("wal"): return "Walamo";
                     case ("war"): return "Waray";
                     case ("was"): return "Washo";
-                    case ("cym"): return "Welsh";
+                    case ("cym"):
                     case ("wel"): return "Welsh";
                     case ("wol"): return "Wolof";
                     case ("xho"): return "Xhosa";

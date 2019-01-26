@@ -10,12 +10,12 @@ namespace Nikse.SubtitleEdit.Core
     /// </summary>
     public static class HtmlUtil
     {
-        public const string TagItalic = "i";
-        public const string TagBold = "b";
-        public const string TagUnderline = "u";
-        public const string TagParagraph = "p";
-        public const string TagFont = "font";
-        public const string TagCyrillicI = "\u0456"; // Cyrillic Small Letter Byelorussian-Ukrainian i (http://graphemica.com/%D1%96)
+        public static string TagItalic => "i";
+        public static string TagBold => "b";
+        public static string TagUnderline => "u";
+        public static string TagParagraph => "p";
+        public static string TagFont => "font";
+        public static string TagCyrillicI => "\u0456"; // Cyrillic Small Letter Byelorussian-Ukrainian i (http://graphemica.com/%D1%96)
 
         private static readonly Regex TagOpenRegex = new Regex(@"<\s*(?:/\s*)?(\w+)[^>]*>", RegexOptions.Compiled);
 
@@ -325,7 +325,6 @@ namespace Nikse.SubtitleEdit.Core
                         {
                             encoded.Append(ch);
                         }
-
                         break;
                 }
             }
@@ -367,13 +366,14 @@ namespace Nikse.SubtitleEdit.Core
             return encoded.ToString();
         }
 
-        public static string RemoveHtmlTags(string s, bool alsoSsaTags = false)
+        public static string RemoveHtmlTags(string input, bool alsoSsaTags = false)
         {
-            if (s == null || s.Length < 3)
+            if (input == null || input.Length < 3)
             {
-                return s;
+                return input;
             }
 
+            var s = input;
             if (alsoSsaTags)
             {
                 s = Utilities.RemoveSsaTags(s);
@@ -390,7 +390,6 @@ namespace Nikse.SubtitleEdit.Core
             }
 
             s = s.Replace("<box>", string.Empty).Replace("</box>", string.Empty);
-
             return RemoveCommonHtmlTags(s);
         }
 
@@ -515,13 +514,14 @@ namespace Nikse.SubtitleEdit.Core
 
         private static readonly string[] UppercaseTags = { "<I>", "<U>", "<B>", "<FONT", "</I>", "</U>", "</B>", "</FONT>" };
 
-        public static string FixUpperTags(string text)
+        public static string FixUpperTags(string input)
         {
-            if (string.IsNullOrEmpty(text) || !text.Contains('<'))
+            if (string.IsNullOrEmpty(input) || !input.Contains('<'))
             {
-                return text;
+                return input;
             }
 
+            var text = input;
             var idx = text.IndexOfAny(UppercaseTags, StringComparison.Ordinal);
             while (idx >= 0)
             {
@@ -538,8 +538,10 @@ namespace Nikse.SubtitleEdit.Core
             return text;
         }
 
-        public static string FixInvalidItalicTags(string text)
+        public static string FixInvalidItalicTags(string input)
         {
+            var text = input;
+
             const string beginTag = "<i>";
             const string endTag = "</i>";
 

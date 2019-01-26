@@ -543,8 +543,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                             fontSize = node.Attributes["tts:fontSize"].Value.Replace("px", string.Empty).Replace("em", string.Empty);
                         }
 
-                        int fSize;
-                        if (!int.TryParse(fontSize, out fSize))
+                        if (!int.TryParse(fontSize, out var fSize))
                         {
                             fSize = 20;
                         }
@@ -753,9 +752,9 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
             return fontTag;
         }
 
-        public static string GetFormattedText(string text)
+        public static string GetFormattedText(string input)
         {
-            text = text.Replace("\\N", Environment.NewLine).Replace("\\n", Environment.NewLine);
+            var text = input.Replace("\\N", Environment.NewLine).Replace("\\n", Environment.NewLine);
 
             var tooComplex = ContainsUnsupportedTags(text);
 
@@ -772,8 +771,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                         {
                             string fontName = text.Substring(start + 4, end - (start + 4));
                             string extraTags = string.Empty;
-                            string unknownTags;
-                            CheckAndAddSubTags(ref fontName, ref extraTags, out unknownTags, out italic);
+                            CheckAndAddSubTags(ref fontName, ref extraTags, out var unknownTags, out italic);
                             text = text.Remove(start, end - start + 1);
                             if (italic)
                             {
@@ -817,8 +815,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                         {
                             string fontSize = text.Substring(start + 4, end - (start + 4));
                             string extraTags = string.Empty;
-                            string unknownTags;
-                            CheckAndAddSubTags(ref fontSize, ref extraTags, out unknownTags, out italic);
+                            CheckAndAddSubTags(ref fontSize, ref extraTags, out var unknownTags, out italic);
                             if (Utilities.IsInteger(fontSize))
                             {
                                 text = text.Remove(start, end - start + 1);
@@ -865,8 +862,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                         {
                             string color = text.Substring(start + 4, end - (start + 4));
                             string extraTags = string.Empty;
-                            string unknownTags;
-                            CheckAndAddSubTags(ref color, ref extraTags, out unknownTags, out italic);
+                            CheckAndAddSubTags(ref color, ref extraTags, out var unknownTags, out italic);
 
                             color = color.RemoveChar('&').TrimStart('H');
                             color = color.PadLeft(6, '0');
@@ -910,8 +906,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                         {
                             string color = text.Substring(start + 5, end - (start + 5));
                             string extraTags = string.Empty;
-                            string unknownTags;
-                            CheckAndAddSubTags(ref color, ref extraTags, out unknownTags, out italic);
+                            CheckAndAddSubTags(ref color, ref extraTags, out var unknownTags, out italic);
 
                             color = color.RemoveChar('&').TrimStart('H');
                             color = color.PadLeft(6, '0');
@@ -1558,8 +1553,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
             }
             if (s.StartsWith('h') && s.Length == 9)
             {
-                int alpha;
-                if (int.TryParse(s.Substring(1, 2), NumberStyles.HexNumber, null, out alpha))
+                if (int.TryParse(s.Substring(1, 2), NumberStyles.HexNumber, null, out var alpha))
                 {
                     alpha = 255 - alpha; // ASS stores alpha in reverse (0=full itentity and 255=fully transparent)
                 }
@@ -1579,10 +1573,10 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                     return defaultColor;
                 }
             }
-            int number;
-            if (int.TryParse(f, out number))
+
+            if (int.TryParse(f, out var number))
             {
-                Color temp = Color.FromArgb(number);
+                var temp = Color.FromArgb(number);
                 return Color.FromArgb(255, temp.B, temp.G, temp.R);
             }
             return defaultColor;
@@ -2041,8 +2035,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                             }
                             else if (i == fontsizeIndex)
                             {
-                                int number;
-                                if (int.TryParse(f, out number))
+                                if (int.TryParse(f, out var number))
                                 {
                                     style.FontSize = number;
                                 }
@@ -2081,16 +2074,14 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                             }
                             else if (i == outlineIndex)
                             {
-                                decimal number;
-                                if (decimal.TryParse(f, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out number))
+                                if (decimal.TryParse(f, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var number))
                                 {
                                     style.OutlineWidth = number;
                                 }
                             }
                             else if (i == shadowIndex)
                             {
-                                decimal number;
-                                if (decimal.TryParse(f, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out number))
+                                if (decimal.TryParse(f, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var number))
                                 {
                                     style.ShadowWidth = number;
                                 }
@@ -2101,24 +2092,21 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                             }
                             else if (i == marginLIndex)
                             {
-                                int number;
-                                if (int.TryParse(f, out number))
+                                if (int.TryParse(f, out var number))
                                 {
                                     style.MarginLeft = number;
                                 }
                             }
                             else if (i == marginRIndex)
                             {
-                                int number;
-                                if (int.TryParse(f, out number))
+                                if (int.TryParse(f, out var number))
                                 {
                                     style.MarginRight = number;
                                 }
                             }
                             else if (i == marginVIndex)
                             {
-                                int number;
-                                if (int.TryParse(f, out number))
+                                if (int.TryParse(f, out var number))
                                 {
                                     style.MarginVertical = number;
                                 }

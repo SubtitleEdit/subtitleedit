@@ -110,33 +110,33 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public string DecodeFormatting(string text)
         {
-            text = text.Replace("|", Environment.NewLine);
-            text = text.Replace("[br]", Environment.NewLine);
-            text = text.Replace("<br>", Environment.NewLine);
-            text = text.Replace("<br/>", Environment.NewLine);
-            text = text.Replace("<br />", Environment.NewLine);
-            text = text.Replace("{\\i1}", "<i>");
-            text = text.Replace("{\\i0}", "</i>");
-            text = text.Replace("{\\i}", "</i>");
-            text = text.Replace("{\\b1}", "<b>'");
-            text = text.Replace("{\\b0}", "</b>");
-            text = text.Replace("{\\b}", "</b>");
-            text = text.Replace("{\\u1}", "<u>");
-            text = text.Replace("{\\u0}", "</u>");
-            text = text.Replace("{\\u}", "</u>");
-            return text;
+            var s = text.Replace("|", Environment.NewLine);
+            s = s.Replace("[br]", Environment.NewLine);
+            s = s.Replace("<br>", Environment.NewLine);
+            s = s.Replace("<br/>", Environment.NewLine);
+            s = s.Replace("<br />", Environment.NewLine);
+            s = s.Replace("{\\i1}", "<i>");
+            s = s.Replace("{\\i0}", "</i>");
+            s = s.Replace("{\\i}", "</i>");
+            s = s.Replace("{\\b1}", "<b>'");
+            s = s.Replace("{\\b0}", "</b>");
+            s = s.Replace("{\\b}", "</b>");
+            s = s.Replace("{\\u1}", "<u>");
+            s = s.Replace("{\\u0}", "</u>");
+            s = s.Replace("{\\u}", "</u>");
+            return s;
         }
 
         public string EncodeFormatting(string text)
         {
-            text = text.Replace(Environment.NewLine, "|");
-            text = text.Replace("<i>", "{\\i1}");
-            text = text.Replace("</i>", "{\\i0}");
-            text = text.Replace("<b>", "{\\b1}");
-            text = text.Replace("</b>", "{\\b0}");
-            text = text.Replace("<u>", "{\\u1}");
-            text = text.Replace("</u>", "{\\u0}");
-            return text;
+            var s = text.Replace(Environment.NewLine, "|");
+            s = s.Replace("<i>", "{\\i1}");
+            s = s.Replace("</i>", "{\\i0}");
+            s = s.Replace("<b>", "{\\b1}");
+            s = s.Replace("</b>", "{\\b0}");
+            s = s.Replace("<u>", "{\\u1}");
+            s = s.Replace("</u>", "{\\u0}");
+            return s;
         }
 
     }
