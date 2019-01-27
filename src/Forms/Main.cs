@@ -1667,6 +1667,7 @@ namespace Nikse.SubtitleEdit.Forms
             moveTextUpToolStripMenuItem.Text = _language.Menu.ContextMenu.ColumnTextUp;
             moveTextDownToolStripMenuItem.Text = _language.Menu.ContextMenu.ColumnTextDown;
             copyOriginalTextToCurrentToolStripMenuItem.Text = _language.Menu.ContextMenu.ColumnCopyOriginalTextToCurrent;
+            toolStripMenuItemBookmark.Text = Configuration.Settings.Language.Settings.ToggleBookmarksWithComment;
 
             splitLineToolStripMenuItem.Text = _language.Menu.ContextMenu.Split;
             toolStripMenuItemMergeLines.Text = _language.Menu.ContextMenu.MergeSelectedLines;
@@ -15039,14 +15040,18 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            if (SubtitleListview1.StateImageList == null)
+            if (!_loading)
             {
-                SubtitleListview1.Columns[SubtitleListview1.ColumnIndexNumber].Width = Configuration.Settings.General.ListViewNumberWidth - 18;
+                if (SubtitleListview1.StateImageList == null)
+                {
+                    SubtitleListview1.Columns[SubtitleListview1.ColumnIndexNumber].Width = Configuration.Settings.General.ListViewNumberWidth - 18;
+                }
+                else
+                {
+                    SubtitleListview1.Columns[SubtitleListview1.ColumnIndexNumber].Width = Configuration.Settings.General.ListViewNumberWidth + 18;
+                }
             }
-            else
-            {
-                SubtitleListview1.Columns[SubtitleListview1.ColumnIndexNumber].Width = Configuration.Settings.General.ListViewNumberWidth + 18;
-            }
+
             SubtitleListview1.SubtitleListViewLastColumnFill(null, null);
         }
 
@@ -16023,7 +16028,7 @@ namespace Nikse.SubtitleEdit.Forms
                             if (!string.IsNullOrWhiteSpace(line))
                             {
                                 InsertAfter();
-                                textBoxListViewText.Text = Utilities.AutoBreakLine(line);
+                                textBoxListViewText.Text = line.Trim().Length > Configuration.Settings.General.SubtitleLineMaximumLength ? Utilities.AutoBreakLine(line) : line.Trim();
                             }
                         }
                         SubtitleListview1.EndUpdate();
@@ -26176,6 +26181,11 @@ namespace Nikse.SubtitleEdit.Forms
         private void microsoftBingTranslateToolStripMenuItem_Click(object sender, EventArgs e)
         {
             TranslateViaGoogle(true, false);
+        }
+
+        private void toolStripMenuItemBookmark_Click(object sender, EventArgs e)
+        {
+            ToggleBookmarks(true);
         }
     }
 }

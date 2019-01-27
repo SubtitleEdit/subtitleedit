@@ -193,7 +193,7 @@ namespace Test.Logic
             Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX = old;
             Assert.AreEqual("Sorry. Sorry, I was miles away." + Environment.NewLine + "Got to get everything ready for <i>today</i>.", s2);
         }
-        
+
         [TestMethod]
         public void AutoBreakPreferComma()
         {
@@ -656,71 +656,79 @@ namespace Test.Logic
         [TestMethod]
         public void ReverseNumbers1()
         {
-            Assert.AreEqual(Utilities.ReverseNumbers("Hallo 009"), "Hallo 900");
+            Assert.AreEqual("Hallo 900", Utilities.ReverseNumbers("Hallo 009"));
         }
 
         [TestMethod]
         public void ReverseNumbers2()
         {
-            Assert.AreEqual(Utilities.ReverseNumbers("Hallo 009 001 Bye"), "Hallo 900 100 Bye");
+            Assert.AreEqual("Hallo 900 100 Bye", Utilities.ReverseNumbers("Hallo 009 001 Bye"));
         }
 
         [TestMethod]
         public void ReverseStartAndEndingForRightToLeft1()
         {
-            Assert.AreEqual(Utilities.ReverseStartAndEndingForRightToLeft("-I have a big head."), ".I have a big head-");
+            Assert.AreEqual(".I have a big head-", Utilities.ReverseStartAndEndingForRightToLeft("-I have a big head."));
         }
 
         [TestMethod]
         public void ReverseStartAndEndingForRightToLeft2()
         {
-            Assert.AreEqual(Utilities.ReverseStartAndEndingForRightToLeft("~So do I?"), "?So do I~");
+            Assert.AreEqual("?So do I~", Utilities.ReverseStartAndEndingForRightToLeft("~So do I?"));
         }
 
         [TestMethod]
         public void ReverseStartAndEndingForRightToLeft3()
         {
-            Assert.AreEqual(Utilities.ReverseStartAndEndingForRightToLeft("+I do too!"), "!I do too+");
+            Assert.AreEqual("!I do too+", Utilities.ReverseStartAndEndingForRightToLeft("+I do too!"));
         }
 
         [TestMethod]
         public void ReverseStartAndEndingForRightToLeft4()
         {
-            Assert.AreEqual(Utilities.ReverseStartAndEndingForRightToLeft("(Mom)" + Environment.NewLine + "What are you doing here?"), "(Mom)" + Environment.NewLine + "?What are you doing here");
+            var result = Utilities.ReverseStartAndEndingForRightToLeft("(Mom)" + Environment.NewLine + "What are you doing here?");
+            Assert.AreEqual("(Mom)" + Environment.NewLine + "?What are you doing here", result);
         }
 
         [TestMethod]
         public void ReverseStartAndEndingForRightToLeft5()
         {
-            Assert.AreEqual(Utilities.ReverseStartAndEndingForRightToLeft("{\\an8}+I do too!"), "{\\an8}!I do too+");
+            Assert.AreEqual("{\\an8}!I do too+", Utilities.ReverseStartAndEndingForRightToLeft("{\\an8}+I do too!"));
         }
 
         [TestMethod]
         public void ReverseStartAndEndingForRightToLeft6()
         {
-            Assert.AreEqual(Utilities.ReverseStartAndEndingForRightToLeft("-I have a big head." + Environment.NewLine + "~So do I?" + Environment.NewLine + "+I do too!"),
-                ".I have a big head-" + Environment.NewLine + "?So do I~" + Environment.NewLine + "!I do too+");
+            var result = Utilities.ReverseStartAndEndingForRightToLeft("-I have a big head." + Environment.NewLine + "~So do I?" + Environment.NewLine + "+I do too!");
+            Assert.AreEqual(".I have a big head-" + Environment.NewLine + "?So do I~" + Environment.NewLine + "!I do too+", result);
         }
 
         [TestMethod]
         public void ReverseStartAndEndingForRightToLeft7HtmlTags()
         {
-            Assert.AreEqual(Utilities.ReverseStartAndEndingForRightToLeft("<i>-I have a big head.</i>" + Environment.NewLine + "<font color='red'>~So do I?</font>" + Environment.NewLine + "+I do too!"),
-                "<i>.I have a big head-</i>" + Environment.NewLine + "<font color='red'>?So do I~</font>" + Environment.NewLine + "!I do too+");
+            var result = Utilities.ReverseStartAndEndingForRightToLeft("<i>-I have a big head.</i>" + Environment.NewLine + "<font color='red'>~So do I?</font>" + Environment.NewLine + "+I do too!");
+            Assert.AreEqual("<i>.I have a big head-</i>" + Environment.NewLine + "<font color='red'>?So do I~</font>" + Environment.NewLine + "!I do too+", result);
         }
 
         [TestMethod]
         public void ReverseStartAndEndingForRightToLeft8BoldTag()
         {
-            Assert.AreEqual(Utilities.ReverseStartAndEndingForRightToLeft("<b>-I have a big head.</b>" + Environment.NewLine + "<font color='red'>~So do I?</font>" + Environment.NewLine + "+I do too!"),
-                "<b>.I have a big head-</b>" + Environment.NewLine + "<font color='red'>?So do I~</font>" + Environment.NewLine + "!I do too+");
+            var result = Utilities.ReverseStartAndEndingForRightToLeft("<b>-I have a big head.</b>" + Environment.NewLine + "<font color='red'>~So do I?</font>" + Environment.NewLine + "+I do too!");
+            Assert.AreEqual("<b>.I have a big head-</b>" + Environment.NewLine + "<font color='red'>?So do I~</font>" + Environment.NewLine + "!I do too+", result);
         }
 
         [TestMethod]
         public void ReverseStartAndEndingForRightToLeft9Alignment()
         {
-            Assert.AreEqual(Utilities.ReverseStartAndEndingForRightToLeft("{\an8}Hello" + Environment.NewLine + "Hi."),
-                "{\an8}Hello" + Environment.NewLine + ".Hi");
+            var result = Utilities.ReverseStartAndEndingForRightToLeft("{\an8}Hello" + Environment.NewLine + "Hi.");
+            Assert.AreEqual("{\an8}Hello" + Environment.NewLine + ".Hi", result);
+        }
+
+        [TestMethod]
+        public void ReverseStartAndEndingForRightWithQuotes()
+        {
+            var result = Utilities.ReverseStartAndEndingForRightToLeft("\"<font color=\"#000000\">مرحباً</font>\"");
+            Assert.AreEqual("\"<font color=\"#000000\">مرحباً</font>\"", result);
         }
 
     }
