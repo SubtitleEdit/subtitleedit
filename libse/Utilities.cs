@@ -1416,74 +1416,58 @@ namespace Nikse.SubtitleEdit.Core
             {
                 string s2 = line;
 
-                bool startsWithAssTag = false;
-                string assTag = string.Empty;
+                string preTags = string.Empty;
                 while (s2.StartsWith("{\\", StringComparison.Ordinal) && s2.IndexOf('}') > 0)
                 {
-                    startsWithAssTag = true;
                     int end = s2.IndexOf('}') + 1;
-                    assTag += s2.Substring(0, end);
+                    preTags += s2.Substring(0, end);
                     s2 = s2.Remove(0, end);
                 }
-
-                bool startsWithItalic = false;
-                if (s2.StartsWith("<i>", StringComparison.Ordinal))
+                for (int k = 0; k < 10; k++)
                 {
-                    startsWithItalic = true;
-                    s2 = s2.Remove(0, 3);
+                    if (s2.StartsWith("<i>", StringComparison.Ordinal) ||
+                        s2.StartsWith("<b>", StringComparison.Ordinal) ||
+                        s2.StartsWith("<u>", StringComparison.Ordinal))
+                    {
+                        preTags += s2.Substring(0, 3);
+                        s2 = s2.Remove(0, 3);
+                    }
+                    if (s2.StartsWith("\"", StringComparison.Ordinal) ||
+                        s2.StartsWith("'", StringComparison.Ordinal))
+                    {
+                        preTags += s2.Substring(0, 1);
+                        s2 = s2.Remove(0, 1);
+                    }
+                    if (s2.StartsWith("<font ", StringComparison.Ordinal) && s2.IndexOf('>') > 0)
+                    {
+                        int idx = s2.IndexOf('>');
+                        idx++;
+                        preTags += s2.Substring(0, idx);
+                        s2 = s2.Remove(0, idx);
+                    }
                 }
 
-                bool startsWithBold = false;
-                if (s2.StartsWith("<b>", StringComparison.Ordinal))
+                string postTags = string.Empty;
+                for (int k = 0; k < 10; k++)
                 {
-                    startsWithBold = true;
-                    s2 = s2.Remove(0, 3);
+                    if (s2.EndsWith("</i>", StringComparison.Ordinal) ||
+                        s2.EndsWith("</b>", StringComparison.Ordinal) ||
+                        s2.EndsWith("</u>", StringComparison.Ordinal))
+                    {
+                        postTags = s2.Substring(s2.Length-4) + postTags;
+                        s2 = s2.Remove(s2.Length-4);
+                    }
+                    if (s2.EndsWith("\"", StringComparison.Ordinal) || s2.EndsWith("'", StringComparison.Ordinal))
+                    {
+                        postTags = s2.Substring(s2.Length - 1) + postTags;
+                        s2 = s2.Remove(s2.Length - 1);
+                    }
+                    if (s2.EndsWith("</font>", StringComparison.Ordinal))
+                    {
+                        postTags = s2.Substring(s2.Length - 7) + postTags;
+                        s2 = s2.Remove(s2.Length - 7);
+                    }
                 }
-
-                bool startsWithUnderline = false;
-                if (s2.StartsWith("<u>", StringComparison.Ordinal))
-                {
-                    startsWithUnderline = true;
-                    s2 = s2.Remove(0, 3);
-                }
-
-                var startFontTag = string.Empty;
-                if (s2.StartsWith("<font ", StringComparison.Ordinal) && s2.IndexOf('>') > 0)
-                {
-                    int idx = s2.IndexOf('>');
-                    idx++;
-                    startFontTag = s2.Substring(0, idx);
-                    s2 = s2.Remove(0, idx);
-                }
-
-                var endFontTag = string.Empty;
-                if (s2.EndsWith("</font>", StringComparison.Ordinal))
-                {
-                    endFontTag = "</font>";
-                    s2 = s2.Remove(s2.Length - endFontTag.Length);
-                }
-
-                bool endsWithUnderline = false;
-                if (s2.EndsWith("</u>", StringComparison.Ordinal))
-                {
-                    endsWithUnderline = true;
-                    s2 = s2.Remove(s2.Length - 4, 4);
-                }
-
-                bool endsWithBold = false;
-                if (s2.EndsWith("</b>", StringComparison.Ordinal))
-                {
-                    endsWithBold = true;
-                    s2 = s2.Remove(s2.Length - 4, 4);
-                }
-
-                bool endsWithItalic = false;
-                if (s2.EndsWith("</i>", StringComparison.Ordinal))
-                {
-                    endsWithItalic = true;
-                    s2 = s2.Remove(s2.Length - 4, 4);
-                }
-
                 pre.Clear();
                 post.Clear();
                 int i = 0;
@@ -1498,46 +1482,11 @@ namespace Nikse.SubtitleEdit.Core
                     post.Append(s2[j]);
                     j--;
                 }
-                if (startsWithAssTag)
-                {
-                    newLines.Append(assTag);
-                }
-
-                if (startsWithItalic)
-                {
-                    newLines.Append("<i>");
-                }
-
-                if (startsWithBold)
-                {
-                    newLines.Append("<b>");
-                }
-
-                if (startsWithUnderline)
-                {
-                    newLines.Append("<u>");
-                }
-
-                newLines.Append(startFontTag);
+                newLines.Append(preTags);
                 newLines.Append(ReverseParenthesis(post.ToString()));
                 newLines.Append(s2.Substring(pre.Length, s2.Length - (pre.Length + post.Length)));
                 newLines.Append(ReverseParenthesis(ReverseString(pre.ToString())));
-                newLines.Append(endFontTag);
-                if (endsWithUnderline)
-                {
-                    newLines.Append("</u>");
-                }
-
-                if (endsWithBold)
-                {
-                    newLines.Append("</b>");
-                }
-
-                if (endsWithItalic)
-                {
-                    newLines.Append("</i>");
-                }
-
+                newLines.Append(postTags);
                 newLines.AppendLine();
             }
             return newLines.ToString().Trim();
