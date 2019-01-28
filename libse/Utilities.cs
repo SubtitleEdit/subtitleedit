@@ -396,9 +396,9 @@ namespace Nikse.SubtitleEdit.Core
             return text;
         }
 
-        private static string ReInsertHtmlTagsAndCleanUp(string s, Dictionary<int, string> htmlTags)
+        private static string ReInsertHtmlTagsAndCleanUp(string input, Dictionary<int, string> htmlTags)
         {
-            s = ReInsertHtmlTags(s, htmlTags);
+            var s = ReInsertHtmlTags(input, htmlTags);
             s = s.Replace(" " + Environment.NewLine, Environment.NewLine);
             s = s.Replace(Environment.NewLine + " ", Environment.NewLine);
             s = s.Replace(Environment.NewLine + "</i>", "</i>" + Environment.NewLine);
@@ -2032,17 +2032,17 @@ namespace Nikse.SubtitleEdit.Core
         /// <summary>
         /// Remove unneeded spaces
         /// </summary>
-        /// <param name="text">text string to remove unneeded spaces from</param>
+        /// <param name="input">text string to remove unneeded spaces from</param>
         /// <param name="language">two letter language id string</param>
         /// <returns>text with unneeded spaces removed</returns>
-        public static string RemoveUnneededSpaces(string text, string language)
+        public static string RemoveUnneededSpaces(string input, string language)
         {
             const char zeroWidthSpace = '\u200B';
             const char zeroWidthNoBreakSpace = '\uFEFF';
             const char noBreakSpace = '\u00A0';
             const char operatingSystemCommand = '\u009D';
 
-            text = text.Trim();
+            var text = input.Trim();
             int len = text.Length;
             int count = 0;
             char[] textChars = new char[len];
@@ -2256,19 +2256,36 @@ namespace Nikse.SubtitleEdit.Core
                         }
                         else if (before.Length > 0)
                         {
-                            if ((language == "en" && (after.Equals("and", StringComparison.OrdinalIgnoreCase) || after.Equals("or", StringComparison.OrdinalIgnoreCase))) ||
-                                (language == "es" && (after.Equals("y", StringComparison.OrdinalIgnoreCase) || after.Equals("o", StringComparison.OrdinalIgnoreCase))) ||
-                                (language == "da" && (after.Equals("og", StringComparison.OrdinalIgnoreCase) || after.Equals("eller", StringComparison.OrdinalIgnoreCase))) ||
-                                (language == "de" && (after.Equals("und", StringComparison.OrdinalIgnoreCase) || after.Equals("oder", StringComparison.OrdinalIgnoreCase))) ||
-                                (language == "fi" && (after.Equals("ja", StringComparison.OrdinalIgnoreCase) || after.Equals("tai", StringComparison.OrdinalIgnoreCase))) ||
-                                (language == "fr" && (after.Equals("et", StringComparison.OrdinalIgnoreCase) || after.Equals("ou", StringComparison.OrdinalIgnoreCase))) ||
-                                (language == "it" && (after.Equals("e", StringComparison.OrdinalIgnoreCase) || after.Equals("o", StringComparison.OrdinalIgnoreCase))) ||
-                                (language == "nl" && (after.Equals("en", StringComparison.OrdinalIgnoreCase) || after.Equals("of", StringComparison.OrdinalIgnoreCase))) ||
-                                (language == "pl" && (after.Equals("i", StringComparison.OrdinalIgnoreCase) || after.Equals("czy", StringComparison.OrdinalIgnoreCase))) ||
-                                (language == "pt" && (after.Equals("e", StringComparison.OrdinalIgnoreCase) || after.Equals("ou", StringComparison.OrdinalIgnoreCase))))
-                            {
-                            }
-                            else
+                            if ((language != "en" ||
+                                 !after.Equals("and", StringComparison.OrdinalIgnoreCase) &&
+                                 !after.Equals("or", StringComparison.OrdinalIgnoreCase)) &&
+                                (language != "es" ||
+                                 !after.Equals("y", StringComparison.OrdinalIgnoreCase) &&
+                                 !after.Equals("o", StringComparison.OrdinalIgnoreCase)) &&
+                                (language != "da" ||
+                                 !after.Equals("og", StringComparison.OrdinalIgnoreCase) &&
+                                 !after.Equals("eller", StringComparison.OrdinalIgnoreCase)) &&
+                                (language != "de" ||
+                                 !after.Equals("und", StringComparison.OrdinalIgnoreCase) &&
+                                 !after.Equals("oder", StringComparison.OrdinalIgnoreCase)) &&
+                                (language != "fi" ||
+                                 !after.Equals("ja", StringComparison.OrdinalIgnoreCase) &&
+                                 !after.Equals("tai", StringComparison.OrdinalIgnoreCase)) &&
+                                (language != "fr" ||
+                                 !after.Equals("et", StringComparison.OrdinalIgnoreCase) &&
+                                 !after.Equals("ou", StringComparison.OrdinalIgnoreCase)) &&
+                                (language != "it" ||
+                                 !after.Equals("e", StringComparison.OrdinalIgnoreCase) &&
+                                 !after.Equals("o", StringComparison.OrdinalIgnoreCase)) &&
+                                (language != "nl" ||
+                                 !after.Equals("en", StringComparison.OrdinalIgnoreCase) &&
+                                 !after.Equals("of", StringComparison.OrdinalIgnoreCase)) &&
+                                (language != "pl" ||
+                                 !after.Equals("i", StringComparison.OrdinalIgnoreCase) &&
+                                 !after.Equals("czy", StringComparison.OrdinalIgnoreCase)) &&
+                                (language != "pt" ||
+                                 !after.Equals("e", StringComparison.OrdinalIgnoreCase) &&
+                                 !after.Equals("ou", StringComparison.OrdinalIgnoreCase)))
                             {
                                 text = text.Remove(idx + 1, 1);
                             }

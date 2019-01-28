@@ -252,9 +252,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return sb.ToString();
         }
 
-        internal static string EncodeStyles(string text)
+        internal static string EncodeStyles(string input)
         {
-            text = Utilities.RemoveSsaTags(text);
+            var text = Utilities.RemoveSsaTags(input);
             text = text.Replace("<I>", "<i>").Replace("</I>", "</i>");
             bool allItalic = text.StartsWith("<i>", StringComparison.Ordinal) && text.EndsWith("</i>", StringComparison.Ordinal) && Utilities.CountTagInText(text, "<i>") == 1;
             bool allBold = text.StartsWith("<b>", StringComparison.Ordinal) && text.EndsWith("</b>", StringComparison.Ordinal) && Utilities.CountTagInText(text, "<b>") == 1;
@@ -281,19 +281,23 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 return text.Replace(Environment.NewLine, "^U^B^I|^I^B^U");
             }
-            else if (allBoldItalic)
+
+            if (allBoldItalic)
             {
                 return text.Replace(Environment.NewLine, "^U^B^I|^I^B^U");
             }
-            else if (allItalic)
+
+            if (allItalic)
             {
                 return text.Replace(Environment.NewLine, "^I|^I");
             }
-            else if (allBold)
+
+            if (allBold)
             {
                 return text.Replace(Environment.NewLine, "^B|^B");
             }
-            else if (allUnderline)
+
+            if (allUnderline)
             {
                 return text.Replace(Environment.NewLine, "^U|^U");
             }
@@ -305,7 +309,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             try
             {
-                string[] timeParts = timeString.Split(':', ';');
+                var timeParts = timeString.Split(':', ';');
                 timeCode.Hours = int.Parse(timeParts[0]);
                 timeCode.Minutes = int.Parse(timeParts[1]);
                 timeCode.Seconds = int.Parse(timeParts[2]);

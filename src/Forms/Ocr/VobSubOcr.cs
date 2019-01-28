@@ -6500,15 +6500,15 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
             return line;
         }
 
-        private static string FixItalics(string s)
+        private static string FixItalics(string input)
         {
-            int italicStartCount = Utilities.CountTagInText(s, "<i>");
+            int italicStartCount = Utilities.CountTagInText(input, "<i>");
             if (italicStartCount == 0)
             {
-                return s;
+                return input;
             }
 
-            s = s.Replace(Environment.NewLine + " ", Environment.NewLine);
+            var s = input.Replace(Environment.NewLine + " ", Environment.NewLine);
             s = s.Replace(Environment.NewLine + " ", Environment.NewLine);
             s = s.Replace(" " + Environment.NewLine, Environment.NewLine);
             s = s.Replace(" " + Environment.NewLine, Environment.NewLine);
