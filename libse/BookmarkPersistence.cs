@@ -127,7 +127,7 @@ namespace Nikse.SubtitleEdit.Core
             foreach (var bm in bookmarks)
             {
                 var idx = Json.ReadTag(bm, "idx");
-                var txt = Json.ReadTag(bm, "txt");
+                var txt = Json.DecodeJsonText(Json.ReadTag(bm, "txt"));
                 if (int.TryParse(idx, out var number))
                 {
                     dic.Add(number, txt);
