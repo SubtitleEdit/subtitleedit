@@ -56,7 +56,9 @@ namespace Nikse.SubtitleEdit.Forms
         private void CheckForUpdates_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)
+            {
                 DialogResult = DialogResult.Cancel;
+            }
         }
 
         private void CheckForUpdates_Shown(object sender, EventArgs e)
@@ -110,9 +112,13 @@ namespace Nikse.SubtitleEdit.Forms
             _seconds += timerCheckForUpdates.Interval / TimeCode.BaseUnit;
 
             if (buttonDownloadAndInstall.Visible)
+            {
                 buttonDownloadAndInstall.Focus();
+            }
             else if (buttonOK.Visible)
+            {
                 buttonOK.Focus();
+            }
         }
 
         private void SetLargeSize()

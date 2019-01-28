@@ -8,14 +8,19 @@ namespace UpdateAssemblyInfo
 
         public bool RunCommandAndGetOutput(string command, string arguments, string workingFolder)
         {
-            var p = new Process();
-            p.StartInfo.FileName = command;
-            p.StartInfo.Arguments = arguments;
-            p.StartInfo.WorkingDirectory = workingFolder;
-            p.StartInfo.UseShellExecute = false;
-            p.StartInfo.RedirectStandardInput = true;
-            p.StartInfo.RedirectStandardOutput = true;
-            p.StartInfo.CreateNoWindow = true;
+            var p = new Process
+            {
+                StartInfo =
+                {
+                    FileName = command,
+                    Arguments = arguments,
+                    WorkingDirectory = workingFolder,
+                    UseShellExecute = false,
+                    RedirectStandardInput = true,
+                    RedirectStandardOutput = true,
+                    CreateNoWindow = true
+                }
+            };
             p.OutputDataReceived += OutputDataReceived;
 
             try
@@ -36,8 +41,10 @@ namespace UpdateAssemblyInfo
 
         private void OutputDataReceived(object sender, DataReceivedEventArgs e)
         {
-            if (e != null && e.Data != null)
+            if (e?.Data != null)
+            {
                 Result = e.Data;
+            }
         }
     }
 }
