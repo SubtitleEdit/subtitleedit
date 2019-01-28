@@ -400,7 +400,7 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
                             if (startOk && endOk)
                             {
                                 i++;
-                                string id = string.Format("_@{0}_", i);
+                                string id = $"_@{i}_";
                                 replaceIds.Add(id);
                                 replaceNames.Add(wordWithDashesOrPeriods);
                                 text = text.Remove(indexStart, wordWithDashesOrPeriods.Length).Insert(indexStart, id);

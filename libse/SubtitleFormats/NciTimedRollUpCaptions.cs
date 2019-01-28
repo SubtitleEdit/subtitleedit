@@ -129,9 +129,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             subtitle.Renumber();
         }
 
-        private static string FixText(string text)
+        private static string FixText(string input)
         {
-            text = text.Replace("\u0011P", Environment.NewLine);
+            var text = input.Replace("\u0011P", Environment.NewLine);
             text = text.Replace("\u00117", "♪");
 
             text = text.Replace("\u0012\u0029", string.Empty);

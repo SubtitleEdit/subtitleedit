@@ -66,11 +66,12 @@ namespace Nikse.SubtitleEdit.Core
             }
         }
 
-        private static string FixEnglishAloneILowerToUpper(string text)
+        private static string FixEnglishAloneILowerToUpper(string input)
         {
             const string pre = " >¡¿♪♫([";
             const string post = " <!?.:;,♪♫)]";
 
+            var text = input;
             if (text.StartsWith("I-i ", StringComparison.Ordinal))
             {
                 text = text.Remove(0, 3).Insert(0, "I-I");
@@ -142,8 +143,9 @@ namespace Nikse.SubtitleEdit.Core
             return text;
         }
 
-        private string FixCasingAfterTitles(string text)
+        private string FixCasingAfterTitles(string input)
         {
+            var text = input;
             var titles = new[] { "Mrs.", "Miss.", "Mr.", "Ms.", "Dr." };
             var notChangeWords = new[] { "does", "has", "will", "is", "and", "for", "but", "or", "of" };
             for (int i = 0; i < text.Length - 4; i++)
@@ -171,9 +173,9 @@ namespace Nikse.SubtitleEdit.Core
             return text;
         }
 
-        private string Fix(string text, string lastLine, List<string> nameList, CultureInfo subtitleCulture, double millisecondsFromLast)
+        private string Fix(string original, string lastLine, List<string> nameList, CultureInfo subtitleCulture, double millisecondsFromLast)
         {
-            string original = text;
+            var text = original;
             if (FixNormal)
             {
                 if (FixNormalOnlyAllUppercase && text != text.ToUpper(subtitleCulture))
