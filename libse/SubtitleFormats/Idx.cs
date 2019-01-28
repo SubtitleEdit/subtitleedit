@@ -12,7 +12,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         // timestamp: 00:00:01:401, filepos: 000000000
         private static readonly Regex RegexTimeCodes = new Regex(@"^timestamp: \d+:\d+:\d+:\d+, filepos: [\dabcdefABCDEF]+$", RegexOptions.Compiled);
 
-        public Hashtable NonTimeCodes = new Hashtable();
+        private readonly Hashtable _nonTimeCodes = new Hashtable();
 
         public override string Extension => ".idx";
 
@@ -41,9 +41,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             const string paragraphWriteFormat = "timestamp: {0}, filepos: {1}";
 
             var tempNonTimeCodes = new Hashtable();
-            foreach (DictionaryEntry de in (subtitle.OriginalFormat as Idx).NonTimeCodes)
+            if (subtitle.OriginalFormat != null)
             {
-                tempNonTimeCodes.Add(de.Key, de.Value);
+                foreach (DictionaryEntry de in ((Idx)subtitle.OriginalFormat)._nonTimeCodes)
+                {
+                    tempNonTimeCodes.Add(de.Key, de.Value);
+                }
             }
 
             var sb = new StringBuilder();
@@ -96,20 +99,19 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
                 else
                 {
-                    int place;
                     if (subtitle.Paragraphs.Count == 0 ||
-                        !int.TryParse(subtitle.Paragraphs[subtitle.Paragraphs.Count - 1].Text, out place))
+                        !int.TryParse(subtitle.Paragraphs[subtitle.Paragraphs.Count - 1].Text, out var place))
                     {
                         place = -1;
                     }
 
-                    if (NonTimeCodes.ContainsKey(place))
+                    if (_nonTimeCodes.ContainsKey(place))
                     {
-                        NonTimeCodes[place] += Environment.NewLine + line;
+                        _nonTimeCodes[place] += Environment.NewLine + line;
                     }
                     else
                     {
-                        NonTimeCodes.Add(place, line);
+                        _nonTimeCodes.Add(place, line);
                     }
                 }
             }
@@ -120,14 +122,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             // timestamp: 00:00:01:401, filepos: 000000000
             if (parts.Length == 7)
             {
-                int hours;
-                int minutes;
-                int seconds;
-                int milliseconds;
-                if (int.TryParse(parts[1], out hours) &&
-                    int.TryParse(parts[2], out minutes) &&
-                    int.TryParse(parts[3], out seconds) &&
-                    int.TryParse(parts[4], out milliseconds))
+                if (int.TryParse(parts[1], out var hours) &&
+                    int.TryParse(parts[2], out var minutes) &&
+                    int.TryParse(parts[3], out var seconds) &&
+                    int.TryParse(parts[4], out var milliseconds))
                 {
                     return new Paragraph
                     {

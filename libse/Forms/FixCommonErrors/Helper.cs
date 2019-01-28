@@ -47,8 +47,9 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             return letter;
         }
 
-        public static string FixEllipsesStartHelper(string text)
+        public static string FixEllipsesStartHelper(string input)
         {
+            var text = input;
             if (string.IsNullOrEmpty(text) || text.Trim().Length < 4 || !(text.Contains("..", StringComparison.Ordinal) || text.Contains(". .", StringComparison.Ordinal)))
             {
                 return text;

@@ -5,7 +5,7 @@ namespace Nikse.SubtitleEdit.Core
 {
     public class NoBreakAfterItem : IComparable<NoBreakAfterItem>
     {
-        public readonly Regex Regex;
+        public Regex Regex { get; }
         public readonly string Text;
 
         public NoBreakAfterItem(Regex regex, string text)

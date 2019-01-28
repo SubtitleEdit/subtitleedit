@@ -22,11 +22,7 @@ namespace Nikse.SubtitleEdit.Forms
             set => numericUpDownMinMsBetweenLines.Value = value;
         }
 
-        public bool PreviousSubtitleTakesAllTime
-        {
-            get => radioButtonProlongEndTime.Checked;
-            set => radioButtonProlongEndTime.Checked = value;
-        }
+        public bool PreviousSubtitleTakesAllTime => radioButtonProlongEndTime.Checked;
 
         public DurationsBridgeGaps(Subtitle subtitle)
         {

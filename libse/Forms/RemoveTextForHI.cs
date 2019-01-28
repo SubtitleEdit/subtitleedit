@@ -8,8 +8,8 @@ namespace Nikse.SubtitleEdit.Core.Forms
     {
         public RemoveTextForHISettings Settings { get; set; }
 
-        public List<int> Warnings;
-        public int WarningIndex;
+        public List<int> Warnings { get; set; }
+        public int WarningIndex { get; set; }
 
         // interjection
         private readonly InterjectionRemoveContext _interjectionRemoveContext;
@@ -648,9 +648,9 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
         private static readonly char[] TrimStartNoiseChar = { '-', ' ' };
 
-        public string RemoveTextFromHearImpaired(string text)
+        public string RemoveTextFromHearImpaired(string input)
         {
-            if (StartsAndEndsWithHearImpairedTags(HtmlUtil.RemoveHtmlTags(text, true).TrimStart(TrimStartNoiseChar)))
+            if (StartsAndEndsWithHearImpairedTags(HtmlUtil.RemoveHtmlTags(input, true).TrimStart(TrimStartNoiseChar)))
             {
                 return string.Empty;
             }
@@ -659,15 +659,14 @@ namespace Nikse.SubtitleEdit.Core.Forms
             {
                 foreach (var removeIfTextContain in Settings.RemoveIfTextContains)
                 {
-                    if (text.Contains(removeIfTextContain))
+                    if (input.Contains(removeIfTextContain))
                     {
                         return string.Empty;
                     }
                 }
             }
 
-            string oldText = text;
-            text = RemoveColon(text);
+            var text = RemoveColon(input);
             string pre = " >-\"'‘`´♪¿¡.…—";
             string post = " -\"'`´♪.!?:…—";
             if (Settings.RemoveTextBetweenCustomTags)
@@ -852,12 +851,12 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 text = st.Pre + text + st.Post;
             }
 
-            if (oldText.TrimStart().StartsWith("- ", StringComparison.Ordinal) &&
+            if (input.TrimStart().StartsWith("- ", StringComparison.Ordinal) &&
                 text != null && !text.Contains(Environment.NewLine) &&
-                (oldText.Contains(Environment.NewLine + "- ") ||
-                 oldText.Contains(Environment.NewLine + " - ") ||
-                 oldText.Contains(Environment.NewLine + "<i>- ") ||
-                 oldText.Contains(Environment.NewLine + "<i> - ")))
+                (input.Contains(Environment.NewLine + "- ") ||
+                 input.Contains(Environment.NewLine + " - ") ||
+                 input.Contains(Environment.NewLine + "<i>- ") ||
+                 input.Contains(Environment.NewLine + "<i> - ")))
             {
                 if (text.StartsWith("<i>-", StringComparison.Ordinal))
                 {
@@ -868,35 +867,35 @@ namespace Nikse.SubtitleEdit.Core.Forms
                     text = text.TrimStart().TrimStart('-').TrimStart();
                 }
             }
-            if (oldText.TrimStart().StartsWith('-') && !oldText.TrimStart().StartsWith("--", StringComparison.Ordinal) &&
+            if (input.TrimStart().StartsWith('-') && !input.TrimStart().StartsWith("--", StringComparison.Ordinal) &&
                 text != null && !text.Contains(Environment.NewLine) &&
-                (oldText.Contains(Environment.NewLine + "-") && !oldText.Contains(Environment.NewLine + "--") ||
-                 oldText.Contains(Environment.NewLine + " - ") ||
-                 oldText.Contains(Environment.NewLine + "<i>- ") ||
-                 oldText.Contains(Environment.NewLine + "<i> - ")))
+                (input.Contains(Environment.NewLine + "-") && !input.Contains(Environment.NewLine + "--") ||
+                 input.Contains(Environment.NewLine + " - ") ||
+                 input.Contains(Environment.NewLine + "<i>- ") ||
+                 input.Contains(Environment.NewLine + "<i> - ")))
             {
                 text = text.TrimStart().TrimStart('-').TrimStart();
             }
 
-            if (oldText.TrimStart().StartsWith("<i>- ", StringComparison.Ordinal) &&
+            if (input.TrimStart().StartsWith("<i>- ", StringComparison.Ordinal) &&
                 text != null && text.StartsWith("<i>- ", StringComparison.Ordinal) && !text.Contains(Environment.NewLine) &&
-                (oldText.Contains(Environment.NewLine + "- ") ||
-                 oldText.Contains(Environment.NewLine + " - ") ||
-                 oldText.Contains(Environment.NewLine + "<i>- ") ||
-                 oldText.Contains(Environment.NewLine + "<i> - ")))
+                (input.Contains(Environment.NewLine + "- ") ||
+                 input.Contains(Environment.NewLine + " - ") ||
+                 input.Contains(Environment.NewLine + "<i>- ") ||
+                 input.Contains(Environment.NewLine + "<i> - ")))
             {
                 text = text.Remove(3, 2);
             }
 
             if (text != null && !text.Contains(Environment.NewLine) &&
-                (oldText.Contains(':') && !text.Contains(':') ||
-                 oldText.Contains('[') && !text.Contains('[') ||
-                 oldText.Contains('(') && !text.Contains('(') ||
-                 oldText.Contains('{') && !text.Contains('{')) &&
-                (oldText.Contains(Environment.NewLine + "- ") ||
-                 oldText.Contains(Environment.NewLine + " - ") ||
-                 oldText.Contains(Environment.NewLine + "<i>- ") ||
-                 oldText.Contains(Environment.NewLine + "<i> - ")))
+                (input.Contains(':') && !text.Contains(':') ||
+                 input.Contains('[') && !text.Contains('[') ||
+                 input.Contains('(') && !text.Contains('(') ||
+                 input.Contains('{') && !text.Contains('{')) &&
+                (input.Contains(Environment.NewLine + "- ") ||
+                 input.Contains(Environment.NewLine + " - ") ||
+                 input.Contains(Environment.NewLine + "<i>- ") ||
+                 input.Contains(Environment.NewLine + "<i> - ")))
             {
                 text = text.TrimStart().TrimStart('-').TrimStart();
             }
@@ -925,7 +924,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 text = "<i>" + text.Remove(0, removeText.Length).TrimStart(' ');
             }
 
-            if (oldText != text)
+            if (input != text)
             {
                 // insert spaces before "-"
                 text = text.Replace(Environment.NewLine + "- <i>", Environment.NewLine + "<i>- ");

@@ -24,10 +24,10 @@ namespace UpdateResourceScript
     {
         private class VersionInfoResource
         {
-            public string StringFileInfo { get; private set; }
-            public string ProductVersion { get; private set; }
-            public string FileVersion { get; private set; }
-            public string FileFlags { get; private set; }
+            public string StringFileInfo { get; }
+            public string ProductVersion { get; }
+            public string FileVersion { get; }
+            public string FileFlags { get; }
 
             public VersionInfoResource(string assemblyFileName)
             {
@@ -76,13 +76,6 @@ namespace UpdateResourceScript
         }
 
         private const string WorkInProgress = "Updating win32 resource script...";
-
-        private static void WriteWarning(string message)
-        {
-            Console.WriteLine();
-            Console.WriteLine("WARNING: " + message);
-            Console.Write(WorkInProgress);
-        }
 
         private static int Main(string[] args)
         {

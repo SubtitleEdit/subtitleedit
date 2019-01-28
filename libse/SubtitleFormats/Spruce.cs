@@ -70,9 +70,9 @@ $ColorIndex4    = 3
             return sb.ToString();
         }
 
-        private static string EncodeText(string text)
+        private static string EncodeText(string input)
         {
-            text = HtmlUtil.FixUpperTags(text);
+            var text = HtmlUtil.FixUpperTags(input);
             bool allItalic = text.StartsWith("<i>", StringComparison.Ordinal) && text.EndsWith("</i>", StringComparison.Ordinal) && Utilities.CountTagInText(text, "<i>") == 1;
             text = text.Replace("<b>", Bold);
             text = text.Replace("</b>", Bold);
