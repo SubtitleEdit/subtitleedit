@@ -78,6 +78,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                 if (ok)
                 {
+                    var allItalic = buffer[index + 16 + 4] == 1;
                     var length1 = buffer[index + 16 + 20];
                     var length2 = buffer[index + 16 + 26];
                     var length = length1;
@@ -99,6 +100,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             EndTime = GetTimeCode(Encoding.UTF8.GetString(buffer, index + 8, 8)),
                             Text = FixItalics(text)
                         };
+                        if (allItalic)
+                        {
+                            p.Text = "<i>" + p.Text.Trim() + "</i>";
+                        }
+
                         index += 16;
                         return p;
                     }
