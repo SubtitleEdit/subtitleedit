@@ -1170,7 +1170,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 catch (Exception exception)
                 {
-                    Console.WriteLine(exception);
+                    System.Diagnostics.Debug.WriteLine(exception);
                     IncrementAndShowProgress();
                 }
                 index++;

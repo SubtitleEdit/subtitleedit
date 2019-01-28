@@ -33,7 +33,10 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 string title = Path.GetFileNameWithoutExtension(subtitleFileName) ?? string.Empty;
                 if (title.Length > 28)
+                {
                     title = title.Substring(0, 28);
+                }
+
                 textBoxTranslatedTitle.Text = title;
             }
 

@@ -226,8 +226,6 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats
                 return false;
             }
 
-            //Console.WriteLine(_stream.Position.ToString() + ", " + bytesleft.ToString());
-
             // We have enough bytes, read
             int fourCc;
             int size;

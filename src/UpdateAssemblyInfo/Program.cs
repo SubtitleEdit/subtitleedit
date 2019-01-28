@@ -48,13 +48,7 @@ namespace UpdateAssemblyInfo
                 }
             }
 
-            public string ShortVersion
-            {
-                get
-                {
-                    return string.Format(CultureInfo.InvariantCulture, "{0:D}.{1:D}.{2:D}", Major, Minor, Maintenance);
-                }
-            }
+            public string ShortVersion => string.Format(CultureInfo.InvariantCulture, "{0:D}.{1:D}.{2:D}", Major, Minor, Maintenance);
 
             public VersionInfo()
             {
@@ -65,9 +59,15 @@ namespace UpdateAssemblyInfo
             {
                 var match = LongGitTagRegex.Match(version);
                 if (!match.Success)
+                {
                     match = LongVersionRegex.Match(version);
+                }
+
                 if (!match.Success)
+                {
                     match = ShortGitTagRegex.Match(version);
+                }
+
                 if (!match.Success || string.IsNullOrWhiteSpace(guid))
                 {
                     Build = UnknownBuild;
@@ -79,9 +79,15 @@ namespace UpdateAssemblyInfo
                     RevisionGuid = guid.Trim().ToLowerInvariant();
                 }
                 if (!match.Success)
+                {
                     match = ShortVersionRegex.Match(version);
+                }
+
                 if (!match.Success)
+                {
                     throw new ArgumentException("Invalid version identifier: '" + version + "'");
+                }
+
                 Major = int.Parse(match.Groups["major"].Value, NumberStyles.None, CultureInfo.InvariantCulture);
                 Minor = int.Parse(match.Groups["minor"].Value, NumberStyles.None, CultureInfo.InvariantCulture);
                 Maintenance = string.IsNullOrEmpty(match.Groups["maintenance"].Value) ? 0 : int.Parse(match.Groups["maintenance"].Value, NumberStyles.None, CultureInfo.InvariantCulture);
@@ -94,9 +100,14 @@ namespace UpdateAssemblyInfo
                 {
                     cmp = Major.CompareTo(vi.Major);
                     if (cmp == 0)
+                    {
                         cmp = Minor.CompareTo(vi.Minor);
+                    }
+
                     if (cmp == 0)
+                    {
                         cmp = Maintenance.CompareTo(vi.Maintenance);
+                    }
                 }
                 return cmp;
             }
@@ -152,7 +163,10 @@ namespace UpdateAssemblyInfo
                 translation.Load(fileName);
                 var node = translation.DocumentElement.SelectSingleNode("General/Version") as XmlElement;
                 if (node != null && node.InnerText.Trim() == oldVersion.ShortVersion)
+                {
                     node.InnerText = newVersion.ShortVersion;
+                }
+
                 translation.Save(fileName);
             }
         }
@@ -327,7 +341,9 @@ namespace UpdateAssemblyInfo
                 {
                     var path = Path.Combine(p, "git.exe");
                     if (File.Exists(path))
+                    {
                         return path;
+                    }
                 }
             }
 
@@ -338,7 +354,9 @@ namespace UpdateAssemblyInfo
             {
                 var path = Path.Combine(envProgramFiles, gitPath);
                 if (File.Exists(path))
+                {
                     return path;
+                }
             }
 
             envProgramFiles = Environment.GetEnvironmentVariable("ProgramFiles(x86)");
@@ -346,7 +364,9 @@ namespace UpdateAssemblyInfo
             {
                 var path = Path.Combine(envProgramFiles, gitPath);
                 if (File.Exists(path))
+                {
                     return path;
+                }
             }
 
             var envSystemDrive = Environment.GetEnvironmentVariable("SystemDrive");
@@ -358,15 +378,21 @@ namespace UpdateAssemblyInfo
             {
                 var path = Path.Combine(envSystemDrive, "Program Files", gitPath);
                 if (File.Exists(path))
+                {
                     return path;
+                }
 
                 path = Path.Combine(envSystemDrive, "Program Files (x86)", gitPath);
                 if (File.Exists(path))
+                {
                     return path;
+                }
 
                 path = Path.Combine(envSystemDrive, gitPath);
                 if (File.Exists(path))
+                {
                     return path;
+                }
             }
 
             try
@@ -376,15 +402,21 @@ namespace UpdateAssemblyInfo
                 {
                     var path = Path.Combine(cRoot, "Program Files", gitPath);
                     if (File.Exists(path))
+                    {
                         return path;
+                    }
 
                     path = Path.Combine(cRoot, "Program Files (x86)", gitPath);
                     if (File.Exists(path))
+                    {
                         return path;
+                    }
 
                     path = Path.Combine(cRoot, gitPath);
                     if (File.Exists(path))
+                    {
                         return path;
+                    }
                 }
             }
             catch (Exception exception)

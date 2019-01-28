@@ -33,7 +33,9 @@ namespace UpdateResourceScript
             {
                 var fileInfo = FileVersionInfo.GetVersionInfo(assemblyFileName);
                 if (fileInfo.OriginalFilename == null)
+                {
                     throw new Exception("File '" + assemblyFileName + "' is not an assembly file");
+                }
 
                 // Fixed-info properties
                 FileVersion = string.Format(CultureInfo.InvariantCulture, "{0:D}, {1:D}, {2:D}, {3:D}", fileInfo.FileMajorPart, fileInfo.FileMinorPart, fileInfo.FileBuildPart, fileInfo.FilePrivatePart);
@@ -51,11 +53,19 @@ namespace UpdateResourceScript
                 // Optional string-information-block values
                 block.Append("\nVALUE \"InternalName\", TargetAssemblyFileName"); // Consistent with VS behaviour (differs from MSDN)
                 if (fileInfo.LegalTrademarks != null)
+                {
                     block.Append("LegalTrademarks", fileInfo.LegalTrademarks);
+                }
+
                 if (fileInfo.LegalCopyright != null)
+                {
                     block.Append("LegalCopyright", fileInfo.LegalCopyright);
+                }
+
                 if (fileInfo.Comments != null)
+                {
                     block.Append("Comments", fileInfo.Comments);
+                }
                 // Flagged string-information-block values
                 if (fileInfo.IsSpecialBuild && fileInfo.SpecialBuild != null)
                 {
@@ -70,7 +80,10 @@ namespace UpdateResourceScript
                 StringFileInfo = block.Replace("\n", Environment.NewLine + new String(' ', 3 * 4 /* Indentation */)).ToString();
 
                 if (fileInfo.IsPreRelease)
+                {
                     flags.Add("VS_FF_PRERELEASE");
+                }
+
                 FileFlags = (flags.Count > 0) ? "(" + string.Join("|", flags) + ")" : "0L";
             }
         }
