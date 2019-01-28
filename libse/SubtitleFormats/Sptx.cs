@@ -78,8 +78,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                 if (ok)
                 {
-                    var length1 = buffer[index + 16 +20];
-                    var length2 = buffer[index + 16 +26];
+                    var length1 = buffer[index + 16 + 20];
+                    var length2 = buffer[index + 16 + 26];
                     var length = length1;
                     if (length == 0 || length > 200 && length2 < 200)
                     {
@@ -97,7 +97,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         {
                             StartTime = GetTimeCode(Encoding.UTF8.GetString(buffer, index, 8)),
                             EndTime = GetTimeCode(Encoding.UTF8.GetString(buffer, index + 8, 8)),
-                            Text = text
+                            Text = FixItalics(text)
                         };
                         index += 16;
                         return p;
@@ -109,7 +109,35 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return null;
         }
 
-        private static TimeCode GetTimeCode(string timeCode)
+        internal static string FixItalics(string text)
+        {
+            if (text.Contains('<') && text.Contains('>'))
+            {
+                var sb = new StringBuilder();
+                foreach (var ch in text)
+                {
+                    if (ch == '<')
+                    {
+                        sb.Append(" <i>");
+                    }
+                    else if (ch == '>')
+                    {
+                        sb.Append("</i> ");
+                    }
+                    else
+                    {
+                        sb.Append(ch);
+                    }
+                }
+                return sb.ToString()
+                         .Replace("  ", " ")
+                         .Replace(Environment.NewLine + " ", Environment.NewLine)
+                         .Replace(" " + Environment.NewLine, Environment.NewLine).Trim();
+            }
+            return text;
+        }
+
+        internal static TimeCode GetTimeCode(string timeCode)
         {
             int hour = int.Parse(timeCode.Substring(0, 2));
             int minute = int.Parse(timeCode.Substring(2, 2));

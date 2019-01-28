@@ -1416,11 +1416,11 @@ namespace Nikse.SubtitleEdit.Core
             {
                 string s2 = line;
 
-                string preTags = string.Empty;
+                var preTags = new StringBuilder();
                 while (s2.StartsWith("{\\", StringComparison.Ordinal) && s2.IndexOf('}') > 0)
                 {
                     int end = s2.IndexOf('}') + 1;
-                    preTags += s2.Substring(0, end);
+                    preTags.Append(s2.Substring(0, end));
                     s2 = s2.Remove(0, end);
                 }
                 for (int k = 0; k < 10; k++)
@@ -1429,20 +1429,20 @@ namespace Nikse.SubtitleEdit.Core
                         s2.StartsWith("<b>", StringComparison.Ordinal) ||
                         s2.StartsWith("<u>", StringComparison.Ordinal))
                     {
-                        preTags += s2.Substring(0, 3);
+                        preTags.Append(s2.Substring(0, 3));
                         s2 = s2.Remove(0, 3);
                     }
                     if (s2.StartsWith("\"", StringComparison.Ordinal) ||
                         s2.StartsWith("'", StringComparison.Ordinal))
                     {
-                        preTags += s2.Substring(0, 1);
+                        preTags.Append(s2.Substring(0, 1));
                         s2 = s2.Remove(0, 1);
                     }
                     if (s2.StartsWith("<font ", StringComparison.Ordinal) && s2.IndexOf('>') > 0)
                     {
                         int idx = s2.IndexOf('>');
                         idx++;
-                        preTags += s2.Substring(0, idx);
+                        preTags.Append(s2.Substring(0, idx));
                         s2 = s2.Remove(0, idx);
                     }
                 }
@@ -1454,8 +1454,8 @@ namespace Nikse.SubtitleEdit.Core
                         s2.EndsWith("</b>", StringComparison.Ordinal) ||
                         s2.EndsWith("</u>", StringComparison.Ordinal))
                     {
-                        postTags = s2.Substring(s2.Length-4) + postTags;
-                        s2 = s2.Remove(s2.Length-4);
+                        postTags = s2.Substring(s2.Length - 4) + postTags;
+                        s2 = s2.Remove(s2.Length - 4);
                     }
                     if (s2.EndsWith("\"", StringComparison.Ordinal) || s2.EndsWith("'", StringComparison.Ordinal))
                     {
