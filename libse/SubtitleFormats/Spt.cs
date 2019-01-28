@@ -134,6 +134,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             int textLengthFirstLine = buffer[index + 16 + 20];
             int textLengthSecondLine = buffer[index + 16 + 20 + 4];
+            var allItalic = buffer[index + 16 + 4] == 1;
 
             if (textLengthFirstLine == 0 && textLengthSecondLine == 0)
             {
@@ -154,6 +155,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 if (textLengthSecondLine > 0)
                 {
                     p.Text += Environment.NewLine + Encoding.Default.GetString(buffer, index + 16 + 20 + 16 + textLengthFirstLine, textLengthSecondLine);
+                }
+
+                if (allItalic)
+                {
+                    p.Text = "<i>" + p.Text.Trim() + "</i>";
                 }
 
                 index += 16 + 20 + 16 + textLengthFirstLine + textLengthSecondLine;
