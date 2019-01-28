@@ -88,7 +88,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                         if (buffer[00] > 10 &&
                             buffer[01] == 0 &&
-                            fileName.EndsWith(".spt", StringComparison.OrdinalIgnoreCase))
+                            fileName.EndsWith(Extension, StringComparison.OrdinalIgnoreCase))
                         {
                             return true;
                         }
@@ -137,7 +137,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             if (textLengthFirstLine == 0 && textLengthSecondLine == 0)
             {
-                index += (16 + 20 + 16);
+                index += 16 + 20 + 16;
                 _errorCount++;
                 return null;
             }
@@ -146,11 +146,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 var p = new Paragraph
                 {
-                    StartTime = GetTimeCode(Encoding.Default.GetString(buffer, index, 8)),
-                    EndTime = GetTimeCode(Encoding.Default.GetString(buffer, index + 8, 8)),
-                    Text = Encoding.Default.GetString(buffer, index + 16 + 20 + 16, textLengthFirstLine)
+                    StartTime = Sptx.GetTimeCode(Encoding.Default.GetString(buffer, index, 8)),
+                    EndTime = Sptx.GetTimeCode(Encoding.Default.GetString(buffer, index + 8, 8)),
+                    Text = Sptx.FixItalics(Encoding.Default.GetString(buffer, index + 16 + 20 + 16, textLengthFirstLine))
                 };
-
 
                 if (textLengthSecondLine > 0)
                 {
@@ -167,22 +166,5 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 return null;
             }
         }
-
-        private static TimeCode GetTimeCode(string timeCode)
-        {
-            int hour = int.Parse(timeCode.Substring(0, 2));
-            int minute = int.Parse(timeCode.Substring(2, 2));
-            int second = int.Parse(timeCode.Substring(4, 2));
-            int frames = int.Parse(timeCode.Substring(6, 2));
-
-            int milliseconds = (int)Math.Round(1000.0 / Configuration.Settings.General.CurrentFrameRate * frames);
-            if (milliseconds > 999)
-            {
-                milliseconds = 999;
-            }
-
-            return new TimeCode(hour, minute, second, milliseconds);
-        }
-
     }
 }
