@@ -18,9 +18,10 @@ namespace Nikse.SubtitleEdit.Core
         {
         }
 
-        public StrippableText(string text, string stripStartCharacters, string stripEndCharacters)
+        public StrippableText(string input, string stripStartCharacters, string stripEndCharacters)
         {
-            OriginalText = text;
+            OriginalText = input;
+            var text = input;
 
             Pre = string.Empty;
             if (text.Length > 0 && ("<{" + stripStartCharacters).Contains(text[0]))

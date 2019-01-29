@@ -1509,7 +1509,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                 endIndex1 = Math.Min(endIndex1, endIndex2);
                 if (endIndex1 > 0)
                 {
-                    s = s.Remove(indexOfTag, endIndex1 - indexOfTag);
+                    return s.Remove(indexOfTag, endIndex1 - indexOfTag);
                 }
             }
             return s;
@@ -1865,8 +1865,9 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
         /// Add new style to ASS header
         /// </summary>
         /// <returns>Header with new style</returns>
-        public static string AddSsaStyle(SsaStyle style, string header)
+        public static string AddSsaStyle(SsaStyle style, string inputHeader)
         {
+            var header = inputHeader;
             if (string.IsNullOrEmpty(header))
             {
                 header = DefaultHeader;

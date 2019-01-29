@@ -213,7 +213,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                 string s = l;
                 foreach (string from in _beginLineReplaceList.Keys)
                 {
-                    if (s.Contains(from))
+                    if (s.FastIndexOf(from) >= 0)
                     {
                         string with = _beginLineReplaceList[from];
                         if (s.StartsWith(from, StringComparison.Ordinal))

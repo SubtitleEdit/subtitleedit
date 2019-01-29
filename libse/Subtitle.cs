@@ -407,7 +407,8 @@ namespace Nikse.SubtitleEdit.Core
 
             double duration = Utilities.GetOptimalDisplayMilliseconds(p.Text, optimalCharactersPerSeconds);
             p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + duration;
-            while (Utilities.GetCharactersPerSecond(p) > maxCharactersPerSecond)
+            var numberOfCharacters = p.Text.CountCharacters(Configuration.Settings.General.CharactersPerSecondsIgnoreWhiteSpace);
+            while (Utilities.GetCharactersPerSecond(p, numberOfCharacters) > maxCharactersPerSecond)
             {
                 duration++;
                 p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + duration;
@@ -424,7 +425,7 @@ namespace Nikse.SubtitleEdit.Core
             }
         }
 
-        
+
         public void SetFixedDuration(List<int> selectedIndexes, double fixedDurationMilliseconds)
         {
             for (int i = 0; i < _paragraphs.Count; i++)
