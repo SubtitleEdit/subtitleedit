@@ -63,7 +63,8 @@
                 if (!skip && charactersPerSecond > Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
                 {
                     var temp = new Paragraph(p);
-                    while (Utilities.GetCharactersPerSecond(temp) > Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
+                    var numberOfCharacters = temp.Text.CountCharacters(Configuration.Settings.General.CharactersPerSecondsIgnoreWhiteSpace);
+                    while (Utilities.GetCharactersPerSecond(temp, numberOfCharacters) > Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
                     {
                         temp.EndTime.TotalMilliseconds++;
                     }

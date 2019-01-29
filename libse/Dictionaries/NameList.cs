@@ -269,7 +269,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             }
             foreach (string multiWordName in _namesMultiList)
             {
-                if (text.Contains(multiWordName))
+                if (text.FastIndexOf(multiWordName) >= 0)
                 {
                     if (multiWordName.StartsWith(word + " ", StringComparison.Ordinal) || multiWordName.EndsWith(" " + word, StringComparison.Ordinal) || multiWordName.Contains(" " + word + " "))
                     {

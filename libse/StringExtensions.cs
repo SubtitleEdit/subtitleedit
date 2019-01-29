@@ -164,19 +164,15 @@ namespace Nikse.SubtitleEdit.Core
         // http://www.codeproject.com/Articles/43726/Optimizing-string-operations-in-C
         public static int FastIndexOf(this string source, string pattern)
         {
-            if (pattern == null)
+            if (string.IsNullOrEmpty(pattern))
             {
-                throw new ArgumentNullException();
+                return -1;
             }
 
-            if (pattern.Length == 0)
-            {
-                return 0;
-            }
-
+            char c0 = pattern[0];
             if (pattern.Length == 1)
             {
-                return source.IndexOf(pattern[0]);
+                return source.IndexOf(c0);
             }
 
             int limit = source.Length - pattern.Length + 1;
@@ -184,9 +180,9 @@ namespace Nikse.SubtitleEdit.Core
             {
                 return -1;
             }
-            // Store the first 2 characters of "pattern"
-            char c0 = pattern[0];
+
             char c1 = pattern[1];
+
             // Find the first occurrence of the first character
             int first = source.IndexOf(c0, 0, limit);
             while (first != -1)
@@ -199,8 +195,8 @@ namespace Nikse.SubtitleEdit.Core
                     continue;
                 }
                 // Check the rest of "pattern" (starting with the 3rd character)
-                bool found = true;
-                for (var j = 2; j < pattern.Length; j++)
+                var found = true;
+                for (int j = 2; j < pattern.Length; j++)
                 {
                     if (source[first + j] != pattern[j])
                     {
@@ -404,8 +400,8 @@ namespace Nikse.SubtitleEdit.Core
             char normalSpace = removeNormalSpace ? ' ' : zeroWidthSpace;
             bool ssaTagOn = false;
             bool htmlTagOn = false;
-
-            for (int i = 0; i < value.Length; i++)
+            var max = value.Length;
+            for (int i = 0; i < max; i++)
             {
                 char ch = value[i];
                 if (ssaTagOn)
