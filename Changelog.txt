@@ -1,6 +1,6 @@
 ﻿Subtitle Edit Changelog
 
-3.5.9 (xth January 2019) BETA
+3.5.9 (xth February 2019) BETA
 * NEW:
    * Bookmarks - thx OmrSi/marb99
    * Auto save option
@@ -13,20 +13,23 @@
    * Update Hungarian translation - thx Zityi
    * Update Korean translation - thx domddol
    * Update Portuguese translation - thx moob
+   * Update French translation - thx JM GBT
    * Update a few wrong translations (Spanish) - thx Ovidio
    * Create/adjust/translate shorcuts now global - thx OmrSi/uckthis
    * Auto break adheres to "Max number of lines" setting
    * Translate selected lines is now possible for BT + plugins
    * Make "select current sub while playing" smoother in waveform
    * Support .rtf files in "Import plain text" - thx Tilen
+   * Improve Binary OCR of comma / apostrophe - thx Tuukka
+   * Improve quote/italic detection in binary OCR - thx Miggu
+   * Add context menu to OCR spell check
+   * Improve DVD Studio Pro tag reading - thx Shas2509
+   * "Toggle music tags" uses "music symbol" from tool settings
 * FIXED:
    * Fix missing/bad html tags after "Auto br" - thx iromafia111
    * Fix crash in OCR window when closing - thx spetragl
    * Fix OCR in batch convert - thx danstraughn
-   * Fixed crash parsing empty word in OCR via Tesseract - thx Barry
-   * Improve Binary OCR of comma / apostrophe - thx Tuukka
-   * Improve quote/italic detection in binary OCR - thx Miggu
-   * Add context menu to OCR spell check
+   * Fix crash parsing empty word in OCR via Tesseract - thx Barry
    * Fix reading ttml 2016-10 draft with "dur" tags - thx bbpqman
    * Fix underline with "Reverse start/end" - thx OmrSi
    * Fix possible crash in load of settings - thx eugenesvk
@@ -34,7 +37,6 @@
    * Fix minor tag issue in vtt - thx Arjan
    * Fix minor issues regarding pasting in list view - thx OmrSi
    * Fix a few minor issues in "Fix common errors" - thx darnn
-   * Improve DVD Studio Pro tag reading - thx Shas2509
    * Fix bug in "Multiple replace" with delete empty lines - thx OmrSi
    * Fix bug regarding VTT position - thx devilcoelhodog
    * Fix crash in "Remove text for HI" - thx Rouzax
