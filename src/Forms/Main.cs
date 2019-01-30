@@ -1467,6 +1467,7 @@ namespace Nikse.SubtitleEdit.Forms
             saveToolStripMenuItem.Text = _language.Menu.File.Save;
             saveAsToolStripMenuItem.Text = _language.Menu.File.SaveAs;
             toolStripMenuItemRestoreAutoBackup.Text = _language.Menu.File.RestoreAutoBackup;
+            toolStripMenuItemTTProperties.Text = _language.Menu.File.TimedTextProperties;
             openOriginalToolStripMenuItem.Text = _language.Menu.File.OpenOriginal;
             saveOriginalToolStripMenuItem.Text = _language.Menu.File.SaveOriginal;
             saveOriginalAstoolStripMenuItem.Text = _language.SaveOriginalSubtitleAs;
@@ -1571,9 +1572,11 @@ namespace Nikse.SubtitleEdit.Forms
 
             toolStripMenuItemVideo.Text = _language.Menu.Video.Title;
             openVideoToolStripMenuItem.Text = _language.Menu.Video.OpenVideo;
+            toolStripMenuItemOpenVideoFromUrl.Text = _language.Menu.Video.OpenVideoFromUrl;
             toolStripMenuItemOpenDvd.Text = _language.Menu.Video.OpenDvd;
             toolStripMenuItemSetAudioTrack.Text = _language.Menu.Video.ChooseAudioTrack;
             closeVideoToolStripMenuItem.Text = _language.Menu.Video.CloseVideo;
+            generateTextFromCurrentVideoToolStripMenuItem.Text = _language.Menu.Video.GenerateTextFromVideo;
 
             smpteTimeModedropFrameToolStripMenuItem.Text = _language.Menu.Video.SmptTimeMode;
             toolStripMenuItemImportSceneChanges.Text = _language.Menu.Video.GenerateImportSceneChanges;
@@ -1713,6 +1716,8 @@ namespace Nikse.SubtitleEdit.Forms
             fontNameToolStripMenuItem.Text = _language.Menu.ContextMenu.FontName;
             toolStripMenuItemInsertUnicodeSymbol.Text = _language.Menu.Edit.InsertUnicodeSymbol;
             toolStripMenuItemInsertUnicodeControlCharacters.Text = _language.Menu.Edit.InsertUnicodeControlCharacters;
+            superscriptToolStripMenuItem.Text = _language.Menu.ContextMenu.Superscript;
+            subscriptToolStripMenuItem.Text = _language.Menu.ContextMenu.Subscript;
             leftToolStripMenuItem.Text = _language.Menu.Edit.InsertUnicodeControlCharactersLRM;
             righttoleftMarkToolStripMenuItem.Text = _language.Menu.Edit.InsertUnicodeControlCharactersRLM;
             startOfLefttorightEmbeddingLREToolStripMenuItem.Text = _language.Menu.Edit.InsertUnicodeControlCharactersLRE;

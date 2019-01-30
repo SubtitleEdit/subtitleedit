@@ -901,9 +901,9 @@ namespace Nikse.SubtitleEdit.Core
                 PleaseWait = "Please wait... this may take a while",
                 PoweredByGoogleTranslate = "Powered by Google translate",
                 PoweredByMicrosoftTranslate = "Powered by Microsoft translate",
-                MsClientSecretNeeded = "Sorry, you need a Bing client secret from Microsoft to use the latest Bing Translate." + Environment.NewLine +
+                MsClientSecretNeeded = "Sorry, you need a Cognitive Services 'Translator Text' key from Microsoft to use the latest Microsoft Translator." + Environment.NewLine +
                                        Environment.NewLine +
-                                       "Go to \"Options -> Settings -> Tools\" to enter your Bing client secret.",
+                                       "Go to \"Options -> Settings -> Tools\" to enter your key.",
                 GoogleApiKeyNeeded = "Sorry, you need an API key from Google to use the latest Google Translate." + Environment.NewLine +
                                      Environment.NewLine +
                                      "Go to \"Options -> Settings -> Tools\" to enter your Google translate API key.",
@@ -1430,6 +1430,7 @@ namespace Nikse.SubtitleEdit.Core
                         SubStationAlphaProperties = "Sub Station Alpha properties...",
                         EbuProperties = "EBU STL properties...",
                         DvdStuioProProperties = "DVD Studio Pro properties...",
+                        TimedTextProperties = "Timed Text properties...",
                         PacProperties = "PAC properties...",
                         OpenOriginal = "Open original subtitle (translator mode)...",
                         SaveOriginal = "Save original subtitle",
@@ -1539,11 +1540,13 @@ namespace Nikse.SubtitleEdit.Core
                     {
                         Title = "Video",
                         OpenVideo = "Open video file...",
+                        OpenVideoFromUrl = "Open video from url...",
                         OpenDvd = "Open DVD...",
                         ChooseAudioTrack = "Choose audio track",
                         CloseVideo = "Close video file",
                         SetVideoOffset = "Set video offset...",
                         SmptTimeMode = "SMPTE timing (drop frame)",
+                        GenerateTextFromVideo = "Generate text from video...",
                         GenerateImportSceneChanges = "Generate/import scene changes...",
                         RemoveSceneChanges = "Remove scene changes",
                         WaveformBatchGenerate = "Batch generate waveforms...",
@@ -1673,6 +1676,8 @@ namespace Nikse.SubtitleEdit.Core
                         Box = "Box",
                         Color = "Color...",
                         FontName = "Font name...",
+                        Superscript = "Superscript",
+                        Subscript = "Subscript",
                         Alignment = "Alignment...",
                         AutoBalanceSelectedLines = "Auto balance selected lines...",
                         RemoveLineBreaksFromSelectedLines = "Remove line-breaks from selected lines...",
@@ -2336,7 +2341,7 @@ can edit in same subtitle file (collaboration)",
                 GoogleTranslate = "Google Translate",
                 GoogleTranslateApiKey = "API key",
                 CpsIncludesSpace = "Chars/sec (CPS) includes spaces",
-                MicrosoftBingTranslator = "Microsoft Bing Translator",
+                MicrosoftBingTranslator = "Microsoft Translator",
                 HowToSignUp = "How to sign up",
                 MicrosoftTranslateApiKey = "Key",
                 FontNote = "Note: These font settings are for the Subtitle Edit UI only." + Environment.NewLine +

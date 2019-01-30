@@ -210,6 +210,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonBridgeGapsSettings.Text = l.Settings;
             buttonFixCommonErrorSettings.Text = l.Settings;
             buttonMultipleReplaceSettings.Text = l.Settings;
+            buttonFixRtlSettings.Text = l.Settings;
             checkBoxFixCommonErrors.Text = Configuration.Settings.Language.FixCommonErrors.Title;
             checkBoxMultipleReplace.Text = Configuration.Settings.Language.MultipleReplace.Title;
             checkBoxAutoBalance.Text = l.AutoBalance;

@@ -278,6 +278,7 @@
             this.copyOriginalTextToCurrentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.moveTextUpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.moveTextDownToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemBookmark = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
             this.splitLineToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemMergeLines = new System.Windows.Forms.ToolStripMenuItem();
@@ -487,7 +488,6 @@
             this.imageListPlayRate = new System.Windows.Forms.ImageList(this.components);
             this.timerTextUndo = new System.Windows.Forms.Timer(this.components);
             this.timerAlternateTextUndo = new System.Windows.Forms.Timer(this.components);
-            this.toolStripMenuItemBookmark = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -2412,7 +2412,7 @@
             this.changeCasingForSelectedLinesToolStripMenuItem,
             this.toolStripMenuItemSaveSelectedLines});
             this.contextMenuStripListview.Name = "contextMenuStripListview";
-            this.contextMenuStripListview.Size = new System.Drawing.Size(285, 914);
+            this.contextMenuStripListview.Size = new System.Drawing.Size(285, 892);
             this.contextMenuStripListview.Closed += new System.Windows.Forms.ToolStripDropDownClosedEventHandler(this.MenuClosed);
             this.contextMenuStripListview.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripListviewOpening);
             this.contextMenuStripListview.Opened += new System.EventHandler(this.MenuOpened);
@@ -2568,6 +2568,13 @@
             this.moveTextDownToolStripMenuItem.Size = new System.Drawing.Size(313, 22);
             this.moveTextDownToolStripMenuItem.Text = "Move text down";
             this.moveTextDownToolStripMenuItem.Click += new System.EventHandler(this.moveTextDownToolStripMenuItem_Click);
+            // 
+            // toolStripMenuItemBookmark
+            // 
+            this.toolStripMenuItemBookmark.Name = "toolStripMenuItemBookmark";
+            this.toolStripMenuItemBookmark.Size = new System.Drawing.Size(284, 22);
+            this.toolStripMenuItemBookmark.Text = "Bookmark...";
+            this.toolStripMenuItemBookmark.Click += new System.EventHandler(this.toolStripMenuItemBookmark_Click);
             // 
             // toolStripSeparator7
             // 
@@ -4267,7 +4274,7 @@
             this.superscriptToolStripMenuItem,
             this.subscriptToolStripMenuItem});
             this.contextMenuStripTextBoxListView.Name = "contextMenuStripTextBoxListView";
-            this.contextMenuStripTextBoxListView.Size = new System.Drawing.Size(273, 424);
+            this.contextMenuStripTextBoxListView.Size = new System.Drawing.Size(273, 446);
             this.contextMenuStripTextBoxListView.Closed += new System.Windows.Forms.ToolStripDropDownClosedEventHandler(this.MenuClosed);
             this.contextMenuStripTextBoxListView.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripTextBoxListViewOpening);
             this.contextMenuStripTextBoxListView.Opened += new System.EventHandler(this.MenuOpened);
@@ -4735,13 +4742,6 @@
             // 
             this.timerAlternateTextUndo.Interval = 700;
             this.timerAlternateTextUndo.Tick += new System.EventHandler(this.TimerAlternateTextUndoTick);
-            // 
-            // toolStripMenuItemBookmark
-            // 
-            this.toolStripMenuItemBookmark.Name = "toolStripMenuItemBookmark";
-            this.toolStripMenuItemBookmark.Size = new System.Drawing.Size(284, 22);
-            this.toolStripMenuItemBookmark.Text = "Bookmark...";
-            this.toolStripMenuItemBookmark.Click += new System.EventHandler(this.toolStripMenuItemBookmark_Click);
             // 
             // Main
             // 
