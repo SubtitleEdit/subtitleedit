@@ -86,9 +86,7 @@ Line1.
 00:00:08,000 --> 00:00:09,920
 Line 2.";
             target.LoadSubtitle(subtitle, GetSrtLines(text), null);
-            string actual = subtitle.Paragraphs.Count.ToString(CultureInfo.InvariantCulture);
-            const string expected = "2";
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(2, subtitle.Paragraphs.Count);
         }
 
         [TestMethod]
@@ -147,6 +145,57 @@ Line 3";
             var outSubtitle = new Subtitle();
             target.LoadSubtitle(outSubtitle, text.SplitToLines(), null);
             Assert.IsTrue(outSubtitle.Paragraphs[0].Text == subText);
+        }
+
+        [TestMethod]
+        public void SrtDifficultLines1()
+        {
+            var target = new SubRip();
+            var subtitle = new Subtitle();
+            const string text = @"303
+00:16:22,417 --> 00:16:24,417
+sky bots?
+
+304
+00:16:24,417 --> 00:16:27,042
+how do you think i did
+
+
+all the stuff
+for the show?
+
+305
+00:16:27,042 --> 00:16:29,417
+you think i went myself?";
+            target.LoadSubtitle(subtitle, GetSrtLines(text), null);
+            Assert.AreEqual(3, subtitle.Paragraphs.Count);
+            const string expected = @"how do you think i did
+
+
+all the stuff
+for the show?";
+            Assert.AreEqual(expected, subtitle.Paragraphs[1].Text);
+        }
+
+        [TestMethod]
+        public void SrtDifficultLines2()
+        {
+            var target = new SubRip();
+            var subtitle = new Subtitle();
+            const string text = @"1
+01:38:18,534 --> 01:38:20,067
+ 
+6530
+
+2
+01:39:17,534 --> 01:39:19,400
+ppp
+";
+            target.LoadSubtitle(subtitle, GetSrtLines(text), null);
+            Assert.AreEqual(2, subtitle.Paragraphs.Count);
+            const string expected = @" 
+6530";
+            Assert.AreEqual(expected.Trim(), subtitle.Paragraphs[0].Text.Trim());
         }
 
         #endregion SubRip (.srt)
@@ -1202,7 +1251,7 @@ VÄLKOMMEN TILL TEXAS
             var subtitle = new Subtitle();
             format.LoadSubtitle(subtitle, new List<string>(DvdStudioGraphicsAsString.SplitToLines()), null);
             Assert.AreEqual("file.0001.tif", subtitle.Paragraphs[0].Text);
-            Assert.AreEqual("file.0007.tif", subtitle.Paragraphs[subtitle.Paragraphs.Count-1].Text);
+            Assert.AreEqual("file.0007.tif", subtitle.Paragraphs[subtitle.Paragraphs.Count - 1].Text);
         }
 
         [TestMethod]

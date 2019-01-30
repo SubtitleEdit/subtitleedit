@@ -88,12 +88,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     nextNext = lines[i + 2];
                 }
 
-                // A new line is missing between two paragraphs (buggy srt file)
-                if (_expecting == ExpectingLine.Text && i + 1 < lines.Count &&
-                    _paragraph != null && !string.IsNullOrEmpty(_paragraph.Text) && Utilities.IsInteger(line) &&
-                    RegexTimeCodes.IsMatch(lines[i + 1]))
+                string nextNextNext = string.Empty;
+                if (i + 3 < lines.Count)
                 {
-                    ReadLine(subtitle, string.Empty, string.Empty, string.Empty);
+                    nextNextNext = lines[i + 3];
+                }
+
+                // A new line is missing between two paragraphs or no line numbe (buggy srt file)
+                if (_expecting == ExpectingLine.Text && i + 1 < lines.Count &&
+                    _paragraph != null && !string.IsNullOrEmpty(_paragraph.Text) &&
+                   (Utilities.IsInteger(line) && RegexTimeCodes.IsMatch(next) || RegexTimeCodes.IsMatch(line)))
+                {
+                    ReadLine(subtitle, string.Empty, string.Empty, string.Empty, string.Empty);
                 }
                 if (_expecting == ExpectingLine.Number && RegexTimeCodes.IsMatch(line))
                 {
@@ -101,7 +107,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     doRenum = true;
                 }
 
-                ReadLine(subtitle, line, next, nextNext);
+                ReadLine(subtitle, line, next, nextNext, nextNextNext);
             }
             if (_paragraph != null && _paragraph.ToString() != new Paragraph().ToString())
             {
@@ -125,7 +131,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             Errors = _errors.ToString();
         }
 
-        private void ReadLine(Subtitle subtitle, string line, string next, string nextNext)
+        private void ReadLine(Subtitle subtitle, string line, string next, string nextNext, string nextNextNext)
         {
             switch (_expecting)
             {
@@ -171,7 +177,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                     break;
                 case ExpectingLine.Text:
-                    if (!string.IsNullOrWhiteSpace(line) || IsText(next))
+                    if (!string.IsNullOrWhiteSpace(line) || IsText(next) || IsText(nextNext) || nextNextNext == GetLastNumber(_paragraph))
                     {
                         if (_isWsrt && !string.IsNullOrEmpty(line))
                         {
@@ -209,6 +215,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                     break;
             }
+        }
+
+        private string GetLastNumber(Paragraph p)
+        {
+            if (p == null)
+            {
+                return "1";
+            }
+            return (p.Number + 1).ToString(CultureInfo.InvariantCulture);
         }
 
         private static bool IsText(string text)
