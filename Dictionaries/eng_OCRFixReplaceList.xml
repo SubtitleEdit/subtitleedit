@@ -33,20 +33,6 @@
     <Word from="\Nhat's" to="What's" />
     <Word from="\Nhere's" to="Where's" />
     <Word from="|'mjust" to="I'm just" />
-    <Word from="¤ff" to="off" />
-    <Word from="¤Id" to="old" />
-    <Word from="¤Ids" to="olds" />
-    <Word from="¤n" to="on" />
-    <Word from="¤ne" to="one" />
-    <Word from="¤nly" to="only" />
-    <Word from="¤pen" to="open" />
-    <Word from="¤r" to="or" />
-    <Word from="¤rder" to="order" />
-    <Word from="¤ther" to="other" />
-    <Word from="¤ur" to="our" />
-    <Word from="¤ut" to="out" />
-    <Word from="¤ver" to="over" />
-    <Word from="¤wn" to="own" />
     <Word from="€V€I'y" to="every" />
     <Word from="0'clock" to="o'clock" />
     <Word from="0f" to="of" />
@@ -523,14 +509,6 @@
     <Word from="hurtyou" to="hurt you" />
     <Word from="I/erilj/" to="verify" />
     <Word from="I/fe" to="life" />
-    <Word from="I\/I" to="M" />
-    <Word from="I\/Ian" to="Man" />
-    <Word from="I\/Iathies" to="Mathies" />
-    <Word from="I\/Ie" to="Me" />
-    <Word from="I\/Iommy" to="Mommy" />
-    <Word from="I\/Ir" to="Mr" />
-    <Word from="I\/Ir." to="Mr." />
-    <Word from="I\/ly" to="My" />
     <Word from="I3EEPING" to="BEEPING" />
     <Word from="I3LARING" to="BLARING" />
     <Word from="Iacings" to="lacings" />
@@ -769,16 +747,6 @@
     <Word from="korean" to="Korean" />
     <Word from="L/ght" to="Light" />
     <Word from="L/kes" to="Likes" />
-    <Word from="L\/Ianuela" to="Manuela" />
-    <Word from="L\/Ianuelal" to="Manuela!" />
-    <Word from="l\/Iauzard" to="Mauzard" />
-    <Word from="l\/Iélanie" to="Mélanie" />
-    <Word from="L\/Iélanie" to="Mélanie" />
-    <Word from="l\/Iom" to="Mom" />
-    <Word from="l\/Iommy" to="Mommy" />
-    <Word from="l\/Ir" to="Mr" />
-    <Word from="l\/Ir." to="Mr." />
-    <Word from="l\/Is" to="Ms" />
     <Word from="l\/ly" to="My" />
     <Word from="l_AuGHING" to="LAUGHING" />
     <Word from="l‘m" to="I'm" />
@@ -1334,8 +1302,8 @@
     <Word from="tv\/o" to="two" />
     <Word from="tvvelve" to="twelve" />
     <Word from="Tvvelve" to="Twelve" />
-    <Word from="tvventy" to="tvventy" />
-    <Word from="Tvventy" to="Tvventy" />
+    <Word from="tvventy" to="twenty" />
+    <Word from="Tvventy" to="Twenty" />
     <Word from="tvvo" to="two" />
     <Word from="Tvvo" to="Two" />
     <Word from="twc" to="two" />
@@ -2253,7 +2221,6 @@
     <LinePart from="uf me" to="of me" />
     <LinePart from="uf our" to="of our" />
     <LinePart from="wa y" to="way" />
-    <LinePart from="Wal-I\/Iart" to="Wal-Mart" />
     <LinePart from="wasn '1' " to="wasn't " />
     <LinePart from="Wasn '1' " to="Wasn't " />
     <LinePart from="wasn '1‘ " to="wasn't " />
