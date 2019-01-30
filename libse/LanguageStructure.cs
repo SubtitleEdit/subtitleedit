@@ -1291,6 +1291,7 @@
                     public string SubStationAlphaProperties { get; set; }
                     public string EbuProperties { get; set; }
                     public string DvdStuioProProperties { get; set; }
+                    public string TimedTextProperties { get; set; }                    
                     public string PacProperties { get; set; }
                     public string OpenOriginal { get; set; }
                     public string SaveOriginal { get; set; }
@@ -1397,11 +1398,13 @@
                 {
                     public string Title { get; set; }
                     public string OpenVideo { get; set; }
+                    public string OpenVideoFromUrl { get; set; }
                     public string OpenDvd { get; set; }
                     public string ChooseAudioTrack { get; set; }
                     public string CloseVideo { get; set; }
                     public string SetVideoOffset { get; set; }
                     public string SmptTimeMode { get; set; }
+                    public string GenerateTextFromVideo { get; set; }                    
                     public string GenerateImportSceneChanges { get; set; }
                     public string RemoveSceneChanges { get; set; }
                     public string WaveformBatchGenerate { get; set; }
@@ -1527,6 +1530,8 @@
                     public string Box { get; set; }
                     public string Color { get; set; }
                     public string FontName { get; set; }
+                    public string Superscript { get; set; }
+                    public string Subscript { get; set; }
                     public string Alignment { get; set; }
                     public string AutoBalanceSelectedLines { get; set; }
                     public string RemoveLineBreaksFromSelectedLines { get; set; }

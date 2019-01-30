@@ -3268,6 +3268,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Main/Menu/File/DvdStuioProProperties":
                     language.Main.Menu.File.DvdStuioProProperties = reader.Value;
                     break;
+                case "Main/Menu/File/TimedTextProperties":
+                    language.Main.Menu.File.TimedTextProperties = reader.Value;
+                    break;
                 case "Main/Menu/File/PacProperties":
                     language.Main.Menu.File.PacProperties = reader.Value;
                     break;
@@ -3559,6 +3562,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Main/Menu/Video/OpenVideo":
                     language.Main.Menu.Video.OpenVideo = reader.Value;
                     break;
+                case "Main/Menu/Video/OpenVideoFromUrl":
+                    language.Main.Menu.Video.OpenVideoFromUrl = reader.Value;
+                    break;
                 case "Main/Menu/Video/OpenDvd":
                     language.Main.Menu.Video.OpenDvd = reader.Value;
                     break;
@@ -3573,6 +3579,9 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "Main/Menu/Video/SmptTimeMode":
                     language.Main.Menu.Video.SmptTimeMode = reader.Value;
+                    break;
+                case "Main/Menu/Video/GenerateTextFromVideo":
+                    language.Main.Menu.Video.GenerateTextFromVideo = reader.Value;
                     break;
                 case "Main/Menu/Video/GenerateImportSceneChanges":
                     language.Main.Menu.Video.GenerateImportSceneChanges = reader.Value;
@@ -3864,6 +3873,12 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "Main/Menu/ContextMenu/FontName":
                     language.Main.Menu.ContextMenu.FontName = reader.Value;
+                    break;
+                case "Main/Menu/ContextMenu/Superscript":
+                    language.Main.Menu.ContextMenu.Superscript = reader.Value;
+                    break;
+                case "Main/Menu/ContextMenu/Subscript":
+                    language.Main.Menu.ContextMenu.Subscript = reader.Value;
                     break;
                 case "Main/Menu/ContextMenu/Alignment":
                     language.Main.Menu.ContextMenu.Alignment = reader.Value;

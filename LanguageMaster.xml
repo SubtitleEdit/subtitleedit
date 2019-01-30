@@ -699,9 +699,9 @@ Note: Do check free disk space.</WaveFileMalformed>
     <PleaseWait>Please wait... this may take a while</PleaseWait>
     <PoweredByGoogleTranslate>Powered by Google translate</PoweredByGoogleTranslate>
     <PoweredByMicrosoftTranslate>Powered by Microsoft translate</PoweredByMicrosoftTranslate>
-    <MsClientSecretNeeded>Sorry, you need a Bing client secret from Microsoft to use the latest Bing Translate.
+    <MsClientSecretNeeded>Sorry, you need a Cognitive Services 'Translator Text' key from Microsoft to use the latest Microsoft Translator.
 
-Go to "Options -&gt; Settings -&gt; Tools" to enter your Bing client secret.</MsClientSecretNeeded>
+Go to "Options -&gt; Settings -&gt; Tools" to enter your key.</MsClientSecretNeeded>
     <GoogleApiKeyNeeded>Sorry, you need an API key from Google to use the latest Google Translate.
 
 Go to "Options -&gt; Settings -&gt; Tools" to enter your Google translate API key.</GoogleApiKeyNeeded>
@@ -941,6 +941,7 @@ Go to "Options -&gt; Settings -&gt; Tools" to enter your Google translate API ke
         <SubStationAlphaProperties>Sub Station Alpha properties...</SubStationAlphaProperties>
         <EbuProperties>EBU STL properties...</EbuProperties>
         <DvdStuioProProperties>DVD Studio Pro properties...</DvdStuioProProperties>
+        <TimedTextProperties>Timed Text properties...</TimedTextProperties>
         <PacProperties>PAC properties...</PacProperties>
         <OpenOriginal>Open original subtitle (translator mode)...</OpenOriginal>
         <SaveOriginal>Save original subtitle</SaveOriginal>
@@ -1044,11 +1045,13 @@ Go to "Options -&gt; Settings -&gt; Tools" to enter your Google translate API ke
       <Video>
         <Title>Video</Title>
         <OpenVideo>Open video file...</OpenVideo>
+        <OpenVideoFromUrl>Open video from url...</OpenVideoFromUrl>
         <OpenDvd>Open DVD...</OpenDvd>
         <ChooseAudioTrack>Choose audio track</ChooseAudioTrack>
         <CloseVideo>Close video file</CloseVideo>
         <SetVideoOffset>Set video offset...</SetVideoOffset>
         <SmptTimeMode>SMPTE timing (drop frame)</SmptTimeMode>
+        <GenerateTextFromVideo>Generate text from video...</GenerateTextFromVideo>
         <GenerateImportSceneChanges>Generate/import scene changes...</GenerateImportSceneChanges>
         <RemoveSceneChanges>Remove scene changes</RemoveSceneChanges>
         <WaveformBatchGenerate>Batch generate waveforms...</WaveformBatchGenerate>
@@ -1162,6 +1165,8 @@ Go to "Options -&gt; Settings -&gt; Tools" to enter your Google translate API ke
         <Box>Box</Box>
         <Color>Color...</Color>
         <FontName>Font name...</FontName>
+        <Superscript>Superscript</Superscript>
+        <Subscript>Subscript</Subscript>
         <Alignment>Alignment...</Alignment>
         <AutoBalanceSelectedLines>Auto balance selected lines...</AutoBalanceSelectedLines>
         <RemoveLineBreaksFromSelectedLines>Remove line-breaks from selected lines...</RemoveLineBreaksFromSelectedLines>
@@ -2043,7 +2048,7 @@ can edit in same subtitle file (collaboration)</Information>
     <UseDoNotBreakAfterList>Use do-not-break-after list (for auto-br)</UseDoNotBreakAfterList>
     <GoogleTranslate>Google Translate</GoogleTranslate>
     <GoogleTranslateApiKey>API key</GoogleTranslateApiKey>
-    <MicrosoftBingTranslator>Microsoft Bing Translator</MicrosoftBingTranslator>
+    <MicrosoftBingTranslator>Microsoft Translator</MicrosoftBingTranslator>
     <HowToSignUp>How to sign up</HowToSignUp>
     <MicrosoftTranslateApiKey>Key</MicrosoftTranslateApiKey>
     <FontNote>Note: These font settings are for the Subtitle Edit UI only.
