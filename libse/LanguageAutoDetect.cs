@@ -130,7 +130,7 @@ namespace Nikse.SubtitleEdit.Core
         private static readonly string[] AutoDetectWordsVietnamese = { "không", "[Tt]ôi", "anh", "đó", "ông", "tôi", "phải", "người", "được", "Cậu", "chúng", "chuyện", "muốn", "những", "nhiều" };
         private static readonly string[] AutoDetectWordsHungarian = { "hogy", "lesz", "tudom", "vagy", "mondtam", "még" };
         private static readonly string[] AutoDetectWordsTurkish = { "için", "Tamam", "Hayır", "benim", "daha", "deðil", "önce", "lazým", "çalýþýyor", "burada", "efendim" };
-        private static readonly string[] AutoDetectWordsCroatianAndSerbian = { "sam", "ali", "nije", "samo", "ovo", "kako", "dobro", "sve", "tako", "će", "mogu", "ću", "zašto", "nešto", "za" };
+        private static readonly string[] AutoDetectWordsCroatianAndSerbian = { "sam", "ali", "nije", "Nije", "samo", "ovo", "kako", "dobro", "Dobro", "sve", "tako", "će", "mogu", "ću", "zašto", "nešto", "za", "misliš", "možeš", "možemo", "ništa", "znaš", "ćemo", "znam" };
 
         private static readonly string[] AutoDetectWordsCroatian =
         {
@@ -152,7 +152,7 @@ namespace Nikse.SubtitleEdit.Core
             "uopšte", "decu", "napred", "porodicu", "zaista", "mestu", "lepa", "takođe", "reč", "telo"
         };
 
-        private static readonly string[] AutoDetectWordsSerbianCyrillic = 
+        private static readonly string[] AutoDetectWordsSerbianCyrillic =
         {
             "сам", "али", "није", "само", "ово", "како", "добро", "све", "тако", "ће", "могу", "ћу",
             "зашто", "нешто", "за", "шта", "овде", "бити", "чини", "учениче", "побегне", "остати"
