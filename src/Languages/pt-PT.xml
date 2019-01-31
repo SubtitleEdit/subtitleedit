@@ -34,6 +34,7 @@ Email: mailto:moob42341@gmail.com</TranslatedBy>
     <Number>Número</Number>
     <Text>Texto</Text>
     <HourMinutesSecondsMilliseconds>Hora:min:seg:ms</HourMinutesSecondsMilliseconds>
+	<HourMinutesSecondsFrames>Hora:min:seg:fotogramas</HourMinutesSecondsFrames>
     <Bold>Negrito</Bold>
     <Italic>Itálico</Italic>
     <Underline>Sublinhado</Underline>
@@ -698,9 +699,9 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <PleaseWait>Por favor, aguarde... isto pode demorar.</PleaseWait>
     <PoweredByGoogleTranslate>Powered by Google translate</PoweredByGoogleTranslate>
     <PoweredByMicrosoftTranslate>Powered by Microsoft translate</PoweredByMicrosoftTranslate>
-    <MsClientSecretNeeded>Desculpe, precisa de uma chave da Microsoft para usar o Tradutor Bing mais recente.
+    <MsClientSecretNeeded>Desculpe, precisa de uma chave de 'Tradutor de texto' dos Serviços Cognitivos da Microsoft para usar o mais recente tradutor da Microsoft.
 
-Vá a "Opções -&gt; Configurações -&gt; Ferramentas" para inserir a chave do Bing.</MsClientSecretNeeded>
+Vá a "Opções -&gt; Configurações -&gt; Ferramentas" para inserir a chave.</MsClientSecretNeeded>
     <GoogleApiKeyNeeded>Desculpe, precisa de uma chave API do Google para usar o Tradutor do Google mais recente.
 
 Vá a "Opções -&gt; Configurações -&gt; Ferramentas" para inserir a chave API do Tradutor do Google.</GoogleApiKeyNeeded>
@@ -940,6 +941,7 @@ Vá a "Opções -&gt; Configurações -&gt; Ferramentas" para inserir a chave AP
         <SubStationAlphaProperties>Sub Station Alpha propriedades...</SubStationAlphaProperties>
         <EbuProperties>EBU STL propriedades...</EbuProperties>
         <DvdStuioProProperties>DVD Studio Pro propriedades...</DvdStuioProProperties>
+		<TimedTextProperties>Propriedades de Timed Text...</TimedTextProperties>
         <PacProperties>PAC propriedades...</PacProperties>
         <OpenOriginal>Abrir legenda original (modo tradutor)...</OpenOriginal>
         <SaveOriginal>Guardar legenda original</SaveOriginal>
@@ -1043,11 +1045,13 @@ Vá a "Opções -&gt; Configurações -&gt; Ferramentas" para inserir a chave AP
       <Video>
         <Title>Vídeo</Title>
         <OpenVideo>Abrir ficheiro de vídeo...</OpenVideo>
+		<OpenVideoFromUrl>Abrir vídeo a partir de um endereço...</OpenVideoFromUrl>
         <OpenDvd>Abrir DVD...</OpenDvd>
         <ChooseAudioTrack>Seleccione a faixa de áudio</ChooseAudioTrack>
         <CloseVideo>Fechar ficheiro de vídeo</CloseVideo>
         <SetVideoOffset>Definir o deslocamento do vídeo...</SetVideoOffset>
         <SmptTimeMode>SMPTE temporização (drop frame)</SmptTimeMode>
+		<GenerateTextFromVideo>Gerar texto a partir do vídeo...</GenerateTextFromVideo>
         <GenerateImportSceneChanges>Gerar/Importar mudanças de cena...</GenerateImportSceneChanges>
         <RemoveSceneChanges>Remover mudanças de cena</RemoveSceneChanges>
         <WaveformBatchGenerate>Gerar formas de onda em série...</WaveformBatchGenerate>
@@ -1124,7 +1128,7 @@ Vá a "Opções -&gt; Configurações -&gt; Ferramentas" para inserir a chave AP
         <AdvancedSubStationAlphaStyles>Estilos Advanced Sub Station Alpha...</AdvancedSubStationAlphaStyles>
         <TimedTextSetRegion>Timed Text - Definir região</TimedTextSetRegion>
         <TimedTextSetStyle>Timed Text - Definir estilo</TimedTextSetStyle>
-        <TimedTextStyles>Estilos Timed Text...</TimedTextStyles>
+        <TimedTextStyles>Estilos do Timed Text...</TimedTextStyles>
         <TimedTextSetLanguage>Timed Text - Definir o idioma</TimedTextSetLanguage>
         <SamiSetStyle>Sami - Definir classe</SamiSetStyle>
         <NuendoSetStyle>Nuendo - Definir caractere</NuendoSetStyle>
@@ -1161,6 +1165,8 @@ Vá a "Opções -&gt; Configurações -&gt; Ferramentas" para inserir a chave AP
         <Box>Caixa</Box>
         <Color>Cor</Color>
         <FontName>Tipo de letra</FontName>
+		<Superscript>Superscript</Superscript>
+		<Subscript>Subscript</Subscript>
         <Alignment>Alinhamento</Alignment>
         <AutoBalanceSelectedLines>Auto-ajustar linhas seleccionadas</AutoBalanceSelectedLines>
         <RemoveLineBreaksFromSelectedLines>Remover quebras de linha das linhas seleccionadas</RemoveLineBreaksFromSelectedLines>
@@ -1169,7 +1175,7 @@ Vá a "Opções -&gt; Configurações -&gt; Ferramentas" para inserir a chave AP
         <ShowSelectedLinesEarlierLater>Mostrar linhas seleccionadas antes/depois</ShowSelectedLinesEarlierLater>
         <VisualSyncSelectedLines>Sincronia visual das linhas seleccionadas</VisualSyncSelectedLines>
         <GoogleAndMicrosoftTranslateSelectedLine>Google/Microsoft traduzir linha original</GoogleAndMicrosoftTranslateSelectedLine>
-        <GoogleTranslateSelectedLines>Traduzir pelo Google as linhas seleccionadas</GoogleTranslateSelectedLines>
+        <TranslateSelectedLines>Traduzir linhas seleccionadas...</TranslateSelectedLines>
         <AdjustDisplayDurationForSelectedLines>Ajustar duração das linhas seleccionadas</AdjustDisplayDurationForSelectedLines>
         <FixCommonErrorsInSelectedLines>Corrigir erros frequentes nas linhas seleccionadas</FixCommonErrorsInSelectedLines>
         <ChangeCasingForSelectedLines>Alterar Maiúsculas/Minúsculas nas linhas seleccionadas</ChangeCasingForSelectedLines>
@@ -1752,8 +1758,8 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <SettingsName>Configurações</SettingsName>
     <Help>Ajuda</Help>
     <UnbreakNoSpace>Remover quebra sem espaço em branco (CJK)</UnbreakNoSpace>
-	<ToggleBookmarks>Alterar marcadores</ToggleBookmarks>
-	<ToggleBookmarksWithComment>Alterar marcadores - adicionar comentário</ToggleBookmarksWithComment>
+	<ToggleBookmarks>Alternar marcadores</ToggleBookmarks>
+	<ToggleBookmarksWithComment>Alternar marcadores - adicionar comentário</ToggleBookmarksWithComment>
 	<ClearBookmarks>Eliminar marcadores</ClearBookmarks>
 	<GoToBookmark>Ir para o marcador</GoToBookmark>
 	<GoToPreviousBookmark>Ir para o marcador anterior</GoToPreviousBookmark>
@@ -2042,7 +2048,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <UseDoNotBreakAfterList>Utilizar "não quebrar linha depois da lista"</UseDoNotBreakAfterList>
 	<GoogleTranslate>Tradutor Google</GoogleTranslate>
 	<GoogleTranslateApiKey>Chave API</GoogleTranslateApiKey>
-    <MicrosoftBingTranslator>Tradutor Microsoft Bing</MicrosoftBingTranslator>
+    <MicrosoftBingTranslator>Tradutor Microsoft</MicrosoftBingTranslator>
     <HowToSignUp>Como efectuar o registo</HowToSignUp>
     <MicrosoftTranslateApiKey>Chave</MicrosoftTranslateApiKey>
     <FontNote>Nota: Estas configurações do tipo de letra são apenas para a Interface da edição de legendas.
