@@ -4222,7 +4222,7 @@ namespace Nikse.SubtitleEdit.Forms
                 // Seungki end
 
                 var currentEncoding = GetCurrentEncoding();
-                bool isUnicode = currentEncoding == Encoding.Unicode || currentEncoding == Encoding.UTF32 || currentEncoding == Encoding.GetEncoding(12001) || currentEncoding == Encoding.UTF7 || currentEncoding == Encoding.UTF8;
+                bool isUnicode = currentEncoding.Equals(Encoding.Unicode) || currentEncoding.Equals(Encoding.UTF32) || currentEncoding.Equals(Encoding.GetEncoding(12001)) || currentEncoding.Equals(Encoding.UTF7) || currentEncoding.Equals(Encoding.UTF8);
                 if (!isUnicode && (allText.Contains(new[] { '♪', '♫', '♥', '—', '―', '…' }))) // ANSI & music/unicode symbols
                 {
                     if (MessageBox.Show(string.Format(_language.UnicodeMusicSymbolsAnsiWarning), Title, MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
@@ -4392,7 +4392,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 string allText = subAlt.ToText(format);
                 var currentEncoding = GetCurrentEncoding();
-                bool isUnicode = currentEncoding != null && (currentEncoding == Encoding.Unicode || currentEncoding == Encoding.UTF32 || currentEncoding == Encoding.UTF7 || currentEncoding == Encoding.UTF8);
+                bool isUnicode = currentEncoding != null && (currentEncoding.Equals(Encoding.Unicode) || currentEncoding.Equals(Encoding.UTF32) || currentEncoding.Equals(Encoding.UTF7) || currentEncoding.Equals(Encoding.UTF8));
                 if (!isUnicode && (allText.Contains(new[] { '♪', '♫', '♥', '—', '―', '…' }))) // ANSI & music/unicode symbols
                 {
                     if (MessageBox.Show(string.Format(_language.UnicodeMusicSymbolsAnsiWarning), Title, MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
@@ -4421,40 +4421,38 @@ namespace Nikse.SubtitleEdit.Forms
         public string NormalizeUnicode(string text)
         {
             const char defHyphen = '-'; // - Hyphen-minus (\u002D) (Basic Latin)
-            const char defColon = ':'; // : Colon (\u003A) (Basic Latin)
+            const char defColon = ':';  // : Colon (\u003A) (Basic Latin)
 
             // Hyphens
-            text = text.Replace('\u2043', defHyphen); // ⁃ Hyphen bullet (\u2043)
-            text = text.Replace('\u2010', defHyphen); // ‐ Hyphen (\u2010)
-            text = text.Replace('\u2012', defHyphen); // ‒ Figure dash (\u2012)
-            text = text.Replace('\u2013', defHyphen); // – En dash (\u2013)
-            text = text.Replace('\u2014', defHyphen); // — Em dash (\u2014)
-            text = text.Replace('\u2015', defHyphen); // ― Horizontal bar (\u2015)
+            return text.Replace('\u2043', defHyphen) // ⁃ Hyphen bullet (\u2043)
+             .Replace('\u2010', defHyphen)  // ‐ Hyphen (\u2010)
+             .Replace('\u2012', defHyphen)  // ‒ Figure dash (\u2012)
+             .Replace('\u2013', defHyphen)  // – En dash (\u2013)
+             .Replace('\u2014', defHyphen)  // — Em dash (\u2014)
+             .Replace('\u2015', defHyphen)  // ― Horizontal bar (\u2015)
 
-            // Colons:
-            text = text.Replace('\u02F8', defColon); // ˸ Modifier Letter Raised Colon (\u02F8)
-            text = text.Replace('\uFF1A', defColon); // ： Fullwidth Colon (\uFF1A)
-            text = text.Replace('\uFE13', defColon); // ︓ Presentation Form for Vertical Colon (\uFE13)
+             // Colons:
+             .Replace('\u02F8', defColon) // ˸ Modifier Letter Raised Colon (\u02F8)
+             .Replace('\uFF1A', defColon) // ： Fullwidth Colon (\uFF1A)
+             .Replace('\uFE13', defColon) // ︓ Presentation Form for Vertical Colon (\uFE13)
 
-            // Others
-            text = text.Replace("…", "...");
-            text = text.Replace('♪', '#');
-            text = text.Replace('♫', '#');
-            text = text.Replace("⇒", "=>");
+             // Others
+             .Replace("…", "...")
+             .Replace('♪', '#')
+             .Replace('♫', '#')
+             .Replace("⇒", "=>")
 
-            // Spaces
-            text = text.Replace('\u00A0', ' '); // No-Break Space
-            text = text.Replace("\u200B", string.Empty); // Zero Width Space
-            text = text.Replace("\uFEFF", string.Empty); // Zero Width No-Break Space
+             // Spaces
+             .Replace('\u00A0', ' ') // No-Break Space
+             .Replace("\u200B", string.Empty) // Zero Width Space
+             .Replace("\uFEFF", string.Empty) // Zero Width No-Break Space
 
-            // Intellectual property
-            text = text.Replace("\u00A9", "(Copyright)"); // © copyright
-            text = text.Replace("\u2117", "(Sound-recording Copyright)"); // ℗ sound-recording copyright
-            text = text.Replace("\u00AE", "(Registered Trademark)"); // ® registered trademark
-            text = text.Replace("\u2120", "(Service Mark)"); // ℠ service mark
-            text = text.Replace("\u2122", "(Trademark)"); // ™ trademark
-
-            return text;
+             // Intellectual property
+             .Replace("\u00A9", "(Copyright)") // © copyright
+             .Replace("\u2117", "(Sound-recording Copyright)") // ℗ sound-recording copyright
+             .Replace("\u00AE", "(Registered Trademark)") // ® registered trademark
+             .Replace("\u2120", "(Service Mark)") // ℠ service mark
+             .Replace("\u2122", "(Trademark)"); // ™ trademark
         }
 
         private void NewToolStripMenuItemClick(object sender, EventArgs e)

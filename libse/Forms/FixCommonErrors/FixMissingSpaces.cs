@@ -353,8 +353,10 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             callbacks.UpdateFixStatus(missingSpaces, language.FixMissingSpaces, string.Format(language.XMissingSpacesAdded, missingSpaces));
         }
 
-        private static string FixMissingSpaceBeforeAfterMusicQuotes(string text, char musicSymbol)
+        private static string FixMissingSpaceBeforeAfterMusicQuotes(string input, char musicSymbol)
         {
+            var text = input;
+
             // start
             if (text.Length > 2 && text.StartsWith(musicSymbol) && !" \r\n#♪♫".Contains(text[1]))
             {

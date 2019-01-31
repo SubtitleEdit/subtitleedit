@@ -108,10 +108,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         p.Text += Environment.NewLine + line.Substring(5).Trim();
                     }
                 }
-                else if (line.Length < 10 && RegexSomeCodes.IsMatch(line))
-                {
-                }
-                else if (string.IsNullOrWhiteSpace(line))
+                else if (string.IsNullOrWhiteSpace(line) || line.Length < 10 && RegexSomeCodes.IsMatch(line))
                 {
                     // skip these lines
                 }
@@ -137,13 +134,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                 }
             }
-            if (p != null && !string.IsNullOrEmpty(p.Text))
+            if (!string.IsNullOrEmpty(p?.Text))
             {
                 subtitle.Paragraphs.Add(p);
             }
 
             subtitle.Renumber();
         }
-
     }
 }
