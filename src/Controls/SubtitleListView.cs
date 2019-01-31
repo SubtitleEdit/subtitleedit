@@ -1306,15 +1306,8 @@ namespace Nikse.SubtitleEdit.Controls
                     }
                     else
                     {
-                        if (Items[i - 1].SubItems[ColumnIndexEnd].BackColor != BackColor)
-                        {
-                            Items[i - 1].SubItems[ColumnIndexEnd].BackColor = BackColor;
-                        }
-
-                        if (item.SubItems[ColumnIndexStart].BackColor != BackColor)
-                        {
-                            item.SubItems[ColumnIndexStart].BackColor = BackColor;
-                        }
+                        Items[i - 1].SubItems[ColumnIndexEnd].BackColor = BackColor;
+                        item.SubItems[ColumnIndexStart].BackColor = BackColor;
                     }
                 }
 
@@ -1348,7 +1341,7 @@ namespace Nikse.SubtitleEdit.Controls
                         {
                             item.SubItems[ColumnIndexText].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
                         }
-                        else if (item.SubItems[ColumnIndexText].BackColor != BackColor)
+                        else
                         {
                             item.SubItems[ColumnIndexText].BackColor = BackColor;
                         }

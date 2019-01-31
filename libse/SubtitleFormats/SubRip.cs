@@ -94,10 +94,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     nextNextNext = lines[i + 3];
                 }
 
-                // A new line is missing between two paragraphs or no line numbe (buggy srt file)
-                if (_expecting == ExpectingLine.Text && i + 1 < lines.Count &&
-                    _paragraph != null && !string.IsNullOrEmpty(_paragraph.Text) &&
-                   (Utilities.IsInteger(line) && RegexTimeCodes.IsMatch(next) || RegexTimeCodes.IsMatch(line)))
+                // A new line is missing between two paragraphs or no line number (buggy file)
+                if (_expecting == ExpectingLine.Text && i + 1 < lines.Count && !string.IsNullOrEmpty(_paragraph?.Text) &&
+                    (Utilities.IsInteger(line) && RegexTimeCodes.IsMatch(next) || RegexTimeCodes.IsMatch(line)))
                 {
                     ReadLine(subtitle, string.Empty, string.Empty, string.Empty, string.Empty);
                 }
@@ -136,8 +135,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             switch (_expecting)
             {
                 case ExpectingLine.Number:
-                    int number;
-                    if (int.TryParse(line, out number))
+                    if (int.TryParse(line, out var number))
                     {
                         _paragraph.Number = number;
                         _expecting = ExpectingLine.TimeCodes;
@@ -217,7 +215,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
         }
 
-        private string GetLastNumber(Paragraph p)
+        private static string GetLastNumber(Paragraph p)
         {
             if (p == null)
             {
@@ -236,21 +234,20 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return line.Replace('\0', ' ');
         }
 
-        private bool TryReadTimeCodesLine(string line, Paragraph paragraph)
+        private bool TryReadTimeCodesLine(string input, Paragraph paragraph)
         {
-            line = line.Replace('،', ',');
-            line = line.Replace('', ',');
-            line = line.Replace('¡', ',');
-
             const string defaultSeparator = " --> ";
             // Fix some badly formatted separator sequences - anything can happen if you manually edit ;)
-            line = line.Replace(" -> ", defaultSeparator); // I've seen this
-            line = line.Replace(" - > ", defaultSeparator);
-            line = line.Replace(" ->> ", defaultSeparator);
-            line = line.Replace(" -- > ", defaultSeparator);
-            line = line.Replace(" - -> ", defaultSeparator);
-            line = line.Replace(" -->> ", defaultSeparator);
-            line = line.Replace(" ---> ", defaultSeparator);
+            var line = input.Replace('،', ',')
+                .Replace('', ',')
+                .Replace('¡', ',')
+                .Replace(" -> ", defaultSeparator)
+                .Replace(" - > ", defaultSeparator)
+                .Replace(" ->> ", defaultSeparator)
+                .Replace(" -- > ", defaultSeparator)
+                .Replace(" - -> ", defaultSeparator)
+                .Replace(" -->> ", defaultSeparator)
+                .Replace(" ---> ", defaultSeparator);
 
             // Removed stuff after timecodes - like subtitle position
             //  - example of position info: 00:02:26,407 --> 00:02:31,356  X1:100 X2:100 Y1:100 Y2:100
@@ -315,12 +312,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return false;
         }
 
-        public override List<string> AlternateExtensions
-        {
-            get
-            {
-                return new List<string> { ".wsrt" };
-            }
-        }
+        public override List<string> AlternateExtensions => new List<string> { ".wsrt" };
     }
 }
