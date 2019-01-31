@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -70,22 +69,19 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
             {
                 var userWordDictionary = new XmlDocument();
                 userWordDictionary.Load(dictionaryFolder + languageName + "_user.xml");
-                if (userWordDictionary.DocumentElement != null)
+                var xmlNodeList = userWordDictionary.DocumentElement?.SelectNodes("word");
+                if (xmlNodeList != null)
                 {
-                    var xmlNodeList = userWordDictionary.DocumentElement.SelectNodes("word");
-                    if (xmlNodeList != null)
+                    foreach (XmlNode node in xmlNodeList)
                     {
-                        foreach (XmlNode node in xmlNodeList)
+                        string word = node.InnerText.Trim().ToLowerInvariant();
+                        if (word.Contains(' '))
                         {
-                            string word = node.InnerText.Trim().ToLowerInvariant();
-                            if (word.Contains(' '))
-                            {
-                                _userPhraseList.Add(word);
-                            }
-                            else
-                            {
-                                _userWordList.Add(word);
-                            }
+                            _userPhraseList.Add(word);
+                        }
+                        else
+                        {
+                            _userWordList.Add(word);
                         }
                     }
                 }
@@ -203,9 +199,12 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
                 f.Value = kvp.Key;
                 var t = xmlDoc.CreateAttribute("to");
                 t.Value = kvp.Value;
-                node.Attributes.Append(f);
-                node.Attributes.Append(t);
-                xmlDoc.DocumentElement.AppendChild(node);
+                if (node.Attributes != null)
+                {
+                    node.Attributes.Append(f);
+                    node.Attributes.Append(t);
+                }
+                xmlDoc.DocumentElement?.AppendChild(node);
             }
             xmlDoc.Save(GetUseAlwaysListFileName());
         }
