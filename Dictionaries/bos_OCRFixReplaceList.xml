@@ -410,8 +410,6 @@
 		<Word from="lici" to="liči" />
 		<Word from="licim" to="ličim" />
 		<Word from="licis" to="ličiš" />
-		<Word from="licnost" to="ličnost" />
-		<Word from="licnosti" to="ličnosti" />
 		<Word from="lijecniku" to="liječniku" />
 		<Word from="ljubis" to="ljubiš" />
 		<Word from="lomaca" to="lomača" />
@@ -869,7 +867,11 @@
 		<Word from="Sledece" to="Sljedeće" />
 		<Word from="sledeci" to="sljedeći" />
 		<Word from="Sledeci" to="Sljedeći" />
+		<Word from="slicna" to="slična" />
 		<Word from="slicno" to="slično" />
+		<Word from="slicnoj" to="sličnoj" />
+		<Word from="slicnu" to="sličnu" />
+		<Word from="slicnost" to="sličnost" />
 		<Word from="sljedeci" to="sljedeći" />
 		<Word from="Sljedeci" to="Sljedeći" />
 		<Word from="slozila" to="složila" />
@@ -1410,8 +1412,8 @@
 		<RegEx find="([lL])eps" replaceWith="$1jepš" />
 		<RegEx find="[lL]isce" replaceWith="lišće" />
 		<RegEx find="([lL])ogic(?!i)" replaceWith="$1ogič" />
-		<RegEx find="\blicn" replaceWith="osobn" />
-		<RegEx find="\bLicn" replaceWith="Osobn" />
+		<RegEx find="\blicn" replaceWith="ličn" />
+		<RegEx find="\bLicn" replaceWith="Ličn" />
 		<RegEx find="\b([lL])os([aeiu]|o[mj]|e[mg])" replaceWith="$1oš$2" />
 		<RegEx find="udack([aeiou]|om)\b" replaceWith="uđa$1" />
 		<RegEx find="mack" replaceWith="mačk" />
