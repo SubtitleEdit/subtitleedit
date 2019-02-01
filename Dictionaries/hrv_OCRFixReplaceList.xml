@@ -3274,6 +3274,7 @@
     <RegEx find="m([io]t?)rić" replaceWith="m$1rit ć" />
     <RegEx find="mi?j?enić" replaceWith="mijenit ć" />
     <RegEx find="mjenim" replaceWith="mijenim" />
+    <RegEx find="mpra" replaceWith="mora" />
     <RegEx find="mtić" replaceWith="mtit ć" />
     <RegEx find="napredi" replaceWith="naprijedi" />
         <RegEx find="([^\s]+)nesl" replaceWith="$1nijel" />
