@@ -155,7 +155,7 @@ namespace Nikse.SubtitleEdit.Core
         private static readonly string[] AutoDetectWordsSerbianCyrillic =
         {
             "сам", "али", "није", "само", "ово", "како", "добро", "све", "тако", "ће", "могу", "ћу",
-            "зашто", "нешто", "за", "шта", "овде", "бити", "чини", "учениче", "побегне", "остати"
+            "зашто", "нешто", "за", "шта", "овде", "бити", "чини", "учениче", "побегне", "остати", "Један", "Назад", "Молим"
         };
 
         private static readonly string[] AutoDetectWordsIndonesian = { "yang", "tahu", "bisa", "akan", "tahun", "tapi", "dengan", "untuk", "rumah", "dalam", "sudah", "bertemu" };
@@ -950,6 +950,11 @@ namespace Nikse.SubtitleEdit.Core
                     return russianEncoding;
                 }
 
+                if (GetCount(russianEncoding.GetString(buffer), AutoDetectWordsSerbianCyrillic) > buffer.Length / 1500) 
+                {
+                    return russianEncoding;
+                }
+
                 if (GetCount(russianEncoding.GetString(buffer), "Какво", "тук", "може", "Как", "Ваше", "какво") > 5) // Bulgarian
                 {
                     return russianEncoding;
@@ -1090,6 +1095,11 @@ namespace Nikse.SubtitleEdit.Core
 
                             Encoding russianEncoding = Encoding.GetEncoding(1251); // Cyrillic
                             if (GetCount(russianEncoding.GetString(buffer), "что", "быть", "весь", "этот", "один", "такой") > 5) // Russian
+                            {
+                                return russianEncoding;
+                            }
+
+                            if (GetCount(russianEncoding.GetString(buffer), AutoDetectWordsSerbianCyrillic) > buffer.Length / 1500)
                             {
                                 return russianEncoding;
                             }
