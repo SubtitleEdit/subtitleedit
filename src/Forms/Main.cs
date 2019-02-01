@@ -19698,54 +19698,12 @@ namespace Nikse.SubtitleEdit.Forms
             int translatePluginCount = 0;
             int spellCheckPluginCount = 0;
 
-            for (int k = fileToolStripMenuItem.DropDownItems.Count - 1; k > 0; k--)
-            {
-                ToolStripItem x = fileToolStripMenuItem.DropDownItems[k];
-                if (x.Name.StartsWith("Plugin", StringComparison.OrdinalIgnoreCase))
-                {
-                    fileToolStripMenuItem.DropDownItems.Remove(x);
-                }
-            }
-            for (int k = toolsToolStripMenuItem.DropDownItems.Count - 1; k > 0; k--)
-            {
-                ToolStripItem x = toolsToolStripMenuItem.DropDownItems[k];
-                if (x.Name.StartsWith("Plugin", StringComparison.OrdinalIgnoreCase))
-                {
-                    toolsToolStripMenuItem.DropDownItems.Remove(x);
-                }
-            }
-            for (int k = toolStripMenuItemSpellCheckMain.DropDownItems.Count - 1; k > 0; k--)
-            {
-                ToolStripItem x = toolStripMenuItemSpellCheckMain.DropDownItems[k];
-                if (x.Name.StartsWith("Plugin", StringComparison.OrdinalIgnoreCase))
-                {
-                    toolStripMenuItemSpellCheckMain.DropDownItems.Remove(x);
-                }
-            }
-            for (int k = toolStripMenuItemSynchronization.DropDownItems.Count - 1; k > 0; k--)
-            {
-                ToolStripItem x = toolStripMenuItemSynchronization.DropDownItems[k];
-                if (x.Name.StartsWith("Plugin", StringComparison.OrdinalIgnoreCase))
-                {
-                    toolStripMenuItemSynchronization.DropDownItems.Remove(x);
-                }
-            }
-            for (int k = toolStripMenuItemAutoTranslate.DropDownItems.Count - 1; k > 0; k--)
-            {
-                ToolStripItem x = toolStripMenuItemAutoTranslate.DropDownItems[k];
-                if (x.Name.StartsWith("Plugin", StringComparison.OrdinalIgnoreCase))
-                {
-                    toolStripMenuItemAutoTranslate.DropDownItems.Remove(x);
-                }
-            }
-            for (int k = toolStripMenuItemTranslateSelected.DropDownItems.Count - 1; k > 0; k--)
-            {
-                ToolStripItem x = toolStripMenuItemTranslateSelected.DropDownItems[k];
-                if (x.Name.StartsWith("Plugin", StringComparison.OrdinalIgnoreCase))
-                {
-                    toolStripMenuItemTranslateSelected.DropDownItems.Remove(x);
-                }
-            }
+            UiUtil.CleanUpMenuItemPlugin(fileToolStripMenuItem);
+            UiUtil.CleanUpMenuItemPlugin(toolsToolStripMenuItem);
+            UiUtil.CleanUpMenuItemPlugin(toolStripMenuItemSpellCheckMain);
+            UiUtil.CleanUpMenuItemPlugin(toolStripMenuItemSynchronization);
+            UiUtil.CleanUpMenuItemPlugin(toolStripMenuItemAutoTranslate);
+            UiUtil.CleanUpMenuItemPlugin(toolStripMenuItemTranslateSelected);
 
             foreach (var pluginFileName in pluginFiles)
             {

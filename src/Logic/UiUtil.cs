@@ -950,5 +950,21 @@ namespace Nikse.SubtitleEdit.Logic
             lv.EndUpdate();
         }
 
+        internal static void CleanUpMenuItemPlugin(ToolStripMenuItem tsmi)
+        {
+            if (tsmi == null)
+            {
+                return;
+            }
+            for (int k = tsmi.DropDownItems.Count - 1; k > 0; k--)
+            {
+                ToolStripItem x = tsmi.DropDownItems[k];
+                if (x.Name.StartsWith("Plugin", StringComparison.OrdinalIgnoreCase))
+                {
+                    tsmi.DropDownItems.Remove(x);
+                }
+            }
+        }
+
     }
 }
