@@ -16,7 +16,6 @@
   <name>Abraim</name>
   <name>Abrão</name>
   <name>Absalão</name>
-  <name>Cabo Verde</name>
   <name>Abssilão</name>
   <name>Ácil</name>
   <name>Acilino</name>
@@ -96,7 +95,6 @@
   <name>Agostinho</name>
   <name>Águas</name>
   <name>Águeda</name>
-  <name>Guiné-Bissau</name>
   <name>Aguiar</name>
   <name>Aguinaldo</name>
   <name>Aiala</name>
@@ -711,6 +709,7 @@
   <name>Brúnel</name>
   <name>Brunilde</name>
   <name>Buanami</name>
+  <name>Cabo Verde</name>
   <name>Cácia</name>
   <name>Cacilda</name>
   <name>Cadia</name>
@@ -2094,6 +2093,7 @@
   <name>Idriss</name>
   <name>Idrisse</name>
   <name>Iecatarina</name>
+  <name>Iémen</name>
   <name>Ieva</name>
   <name>Igelcemina</name>
   <name>Iglantina</name>
@@ -3021,6 +3021,7 @@
   <name>Marolo</name>
   <name>Márolo</name>
   <name>Marquesa</name>
+  <name>Marrocos</name>
   <name>Marta</name>
   <name>Martim</name>
   <name>Martina</name>
@@ -3182,6 +3183,7 @@
   <name>Moira</name>
   <name>Moisés</name>
   <name>Monalisa</name>
+  <name>Mongólia</name>
   <name>Mónia</name>
   <name>Mónica</name>
   <name>Moniz</name>
@@ -3204,6 +3206,7 @@
   <name>Muriele</name>
   <name>Murilo</name>
   <name>Musa</name>
+  <name>Myanmar</name>
   <name>Myléne</name>
   <name>Myriam</name>
   <name>Naama</name>
@@ -3370,6 +3373,7 @@
   <name>Niara</name>
   <name>Nibénia</name>
   <name>Nicandra</name>
+  <name>Nicarágua</name>
   <name>Nicásio</name>
   <name>Nice</name>
   <name>Niceia</name>
@@ -3519,6 +3523,7 @@
   <name>Olivério</name>
   <name>Olívia</name>
   <name>Olmo</name>
+  <name>Omã</name>
   <name>Omara</name>
   <name>Omer</name>
   <name>Onara</name>
@@ -4341,6 +4346,7 @@
   <name>Utánio</name>
   <name>Utânio</name>
   <name>Uter</name>
+  <name>Uzbequistão</name>
   <name>Uziel</name>
   <name>Vagner</name>
   <name>Vaísa</name>
@@ -4591,7 +4597,4 @@
   <name>Zurita</name>
   <name>Zuzela</name>
   <name>Zuzidine</name>
-  <blacklist>
-    <name></name>
-  </blacklist>
 </names>
