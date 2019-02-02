@@ -19612,10 +19612,10 @@ namespace Nikse.SubtitleEdit.Forms
             actionType = null;
             shortcut = null;
             mi = null;
-            System.Reflection.Assembly assembly;
+            Assembly assembly;
             try
             {
-                assembly = System.Reflection.Assembly.Load(File.ReadAllBytes(pluginFileName));
+                assembly = Assembly.Load(File.ReadAllBytes(pluginFileName));
             }
             catch
             {
@@ -19639,7 +19639,7 @@ namespace Nikse.SubtitleEdit.Forms
                     return null;
                 }
 
-                System.Reflection.PropertyInfo pi = t.GetProperty("Name");
+                PropertyInfo pi = t.GetProperty("Name");
                 if (pi != null)
                 {
                     name = (string)pi.GetValue(pluginObject, null);
