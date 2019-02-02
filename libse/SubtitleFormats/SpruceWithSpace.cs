@@ -110,16 +110,15 @@ $TapeOffset         =   FALSE
             return sb;
         }
 
-        private static string EncodeText(string text)
+        private static string EncodeText(string input)
         {
-            text = text.Replace("<b>", "^B");
-            text = text.Replace("</b>", string.Empty);
-            text = text.Replace("<i>", "^I");
-            text = text.Replace("</i>", string.Empty);
-            text = text.Replace("<u>", "^U");
-            text = text.Replace("</u>", string.Empty);
-            text = HtmlUtil.RemoveHtmlTags(text, true);
-            return text.Replace(Environment.NewLine, "|");
+            var text = input.Replace("<b>", "^B")
+                            .Replace("</b>", string.Empty)
+                            .Replace("<i>", "^I")
+                            .Replace("</i>", string.Empty)
+                            .Replace("<u>", "^U")
+                            .Replace("</u>", string.Empty);
+            return HtmlUtil.RemoveHtmlTags(text, true).Replace(Environment.NewLine, "|");
         }
 
         private static string EncodeTimeCode(TimeCode time)

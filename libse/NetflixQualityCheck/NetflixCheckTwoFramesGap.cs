@@ -15,9 +15,7 @@
                 double twoFramesGap = 1000.0 / controller.FrameRate * 2.0;
                 if (next != null && p.EndTime.TotalMilliseconds + twoFramesGap > next.StartTime.TotalMilliseconds)
                 {
-                    var fixedParagraph = new Paragraph(p, false);
-                    fixedParagraph.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - twoFramesGap;
-                    //TODO: check for min time/speed?
+                    var fixedParagraph = new Paragraph(p, false) { EndTime = { TotalMilliseconds = next.StartTime.TotalMilliseconds - twoFramesGap } };
                     string comment = "Mininum two frames gap";
                     controller.AddRecord(p, fixedParagraph, comment);
                 }
