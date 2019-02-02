@@ -950,7 +950,7 @@ namespace Nikse.SubtitleEdit.Core
                     return russianEncoding;
                 }
 
-                if (GetCount(russianEncoding.GetString(buffer), AutoDetectWordsSerbianCyrillic) > buffer.Length / 1500) 
+                if (GetCount(russianEncoding.GetString(buffer), AutoDetectWordsSerbianCyrillic) > buffer.Length / 1500)
                 {
                     return russianEncoding;
                 }
@@ -1007,6 +1007,18 @@ namespace Nikse.SubtitleEdit.Core
                 if (GetCount(hewbrewEncoding.GetString(buffer), AutoDetectWordsHebrew) > 5)
                 {
                     return hewbrewEncoding;
+                }
+
+                var romanianEncoding = Encoding.GetEncoding(1250); // Romanian
+                if (GetCount(romanianEncoding.GetString(buffer), "să", "şi", "văzut", "regulă", "găsit", "viaţă") > 99)
+                {
+                    return romanianEncoding;
+                }
+
+                var koreanEncoding = Encoding.GetEncoding(949); // Korean
+                if (GetCount(koreanEncoding.GetString(buffer), "그리고", "아니야", "하지만", "말이야", "그들은", "우리가") > 5)
+                {
+                    return koreanEncoding;
                 }
 
                 return EncodingTools.DetectInputCodepage(buffer);
@@ -1087,68 +1099,6 @@ namespace Nikse.SubtitleEdit.Core
                         }
                         else if (Configuration.Settings.General.AutoGuessAnsiEncoding)
                         {
-                            Encoding greekEncoding = Encoding.GetEncoding(1253); // Greek
-                            if (GetCount(greekEncoding.GetString(buffer), AutoDetectWordsGreek) > 5)
-                            {
-                                return greekEncoding;
-                            }
-
-                            Encoding russianEncoding = Encoding.GetEncoding(1251); // Cyrillic
-                            if (GetCount(russianEncoding.GetString(buffer), "что", "быть", "весь", "этот", "один", "такой") > 5) // Russian
-                            {
-                                return russianEncoding;
-                            }
-
-                            if (GetCount(russianEncoding.GetString(buffer), AutoDetectWordsSerbianCyrillic) > buffer.Length / 1500)
-                            {
-                                return russianEncoding;
-                            }
-
-                            if (GetCount(russianEncoding.GetString(buffer), "Какво", "тук", "може", "Как", "Ваше", "какво") > 5) // Bulgarian
-                            {
-                                return russianEncoding;
-                            }
-
-                            russianEncoding = Encoding.GetEncoding(28595); // Russian
-                            if (GetCount(russianEncoding.GetString(buffer), "что", "быть", "весь", "этот", "один", "такой") > 5)
-                            {
-                                return russianEncoding;
-                            }
-
-                            Encoding thaiEncoding = Encoding.GetEncoding(874); // Thai
-                            if (GetCount(thaiEncoding.GetString(buffer), "โอ", "โรเบิร์ต", "วิตตอเรีย", "ดร", "คุณตำรวจ", "ราเชล", "ไม่", "เลดดิส", "พระเจ้า", "เท็ดดี้", "หัวหน้า", "แอนดรูว์") > 5)
-                            {
-                                return thaiEncoding;
-                            }
-
-                            Encoding arabicEncoding = Encoding.GetEncoding(1256); // Arabic
-                            Encoding hewbrewEncoding = Encoding.GetEncoding(28598); // Hebrew
-                            if (GetCount(arabicEncoding.GetString(buffer), AutoDetectWordsArabic) > 5)
-                            {
-                                if (GetCount(hewbrewEncoding.GetString(buffer), AutoDetectWordsHebrew) > 10)
-                                {
-                                    return hewbrewEncoding;
-                                }
-
-                                return arabicEncoding;
-                            }
-                            if (GetCount(hewbrewEncoding.GetString(buffer), AutoDetectWordsHebrew) > 5)
-                            {
-                                return hewbrewEncoding;
-                            }
-
-                            Encoding romanianEncoding = Encoding.GetEncoding(1250); // Romanian
-                            if (GetCount(romanianEncoding.GetString(buffer), "să", "şi", "văzut", "regulă", "găsit", "viaţă") > 99)
-                            {
-                                return romanianEncoding;
-                            }
-
-                            Encoding koreanEncoding = Encoding.GetEncoding(949); // Korean
-                            if (GetCount(koreanEncoding.GetString(buffer), "그리고", "아니야", "하지만", "말이야", "그들은", "우리가") > 5)
-                            {
-                                return koreanEncoding;
-                            }
-
                             return DetectAnsiEncoding(buffer);
                         }
                     }
