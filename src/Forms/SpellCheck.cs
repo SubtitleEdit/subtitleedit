@@ -724,7 +724,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
 
                         if (!correct && Configuration.Settings.Tools.SpellCheckEnglishAllowInQuoteAsIng &&
-                            _languageName.StartsWith("en_", StringComparison.Ordinal) && _currentWord.EndsWith("in'", StringComparison.OrdinalIgnoreCase))
+                            _languageName.StartsWith("en_", StringComparison.Ordinal) && _words[_wordsIndex].Text.EndsWith("in'", StringComparison.OrdinalIgnoreCase))
                         {
                             correct = DoSpell(_currentWord.TrimEnd('\'') + "g");
                         }
