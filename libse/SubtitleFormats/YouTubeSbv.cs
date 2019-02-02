@@ -145,11 +145,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return line.Replace('\0', ' ');
         }
 
-        private static bool TryReadTimeCodesLine(string line, Paragraph paragraph)
+        private static bool TryReadTimeCodesLine(string inputLine, Paragraph paragraph)
         {
-            line = line.Replace('.', ':');
-            line = line.Replace('،', ',');
-            line = line.Replace('¡', ':');
+            var line = inputLine.Replace('.', ':').Replace('،', ',').Replace('¡', ':');
 
             if (RegexTimeCodes.IsMatch(line))
             {

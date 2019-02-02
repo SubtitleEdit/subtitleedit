@@ -591,9 +591,9 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                     }
                     string key = _currentIndex + "-" + _wordsIndex + "-" + _currentWord;
-                    if (_currentWord.Length < minLength)
+                    if (_currentWord.Length < minLength || _currentWord == "&")
                     {
-                        // ignore short/empty words
+                        // ignore short/empty words and special chars
                     }
                     else if (_spellCheckWordLists.HasName(_currentWord))
                     {

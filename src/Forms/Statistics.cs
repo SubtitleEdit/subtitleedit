@@ -183,8 +183,9 @@ https://github.com/SubtitleEdit/subtitleedit
             }
         }
 
-        private void MostUsedWordsAdd(Dictionary<string, int> hashtable, string text)
+        private void MostUsedWordsAdd(Dictionary<string, int> hashtable, string input)
         {
+            var text = input;
             if (text.Contains("< "))
             {
                 text = HtmlUtil.FixInvalidItalicTags(text);
@@ -225,15 +226,15 @@ https://github.com/SubtitleEdit/subtitleedit
             }
         }
 
-        private static void MostUsedLinesAdd(Dictionary<string, int> hashtable, string text)
+        private static void MostUsedLinesAdd(Dictionary<string, int> hashtable, string input)
         {
-            text = StripHtmlTags(text);
-            text = text.Replace('!', '.');
-            text = text.Replace('?', '.');
-            text = text.Replace("...", ".");
-            text = text.Replace("..", ".");
-            text = text.Replace('-', ' ');
-            text = text.FixExtraSpaces();
+            var text = StripHtmlTags(input)
+                .Replace('!', '.')
+                .Replace('?', '.')
+                .Replace("...", ".")
+                .Replace("..", ".")
+                .Replace('-', ' ')
+                .FixExtraSpaces();
 
             foreach (string line in text.Split('.'))
             {
@@ -249,10 +250,9 @@ https://github.com/SubtitleEdit/subtitleedit
             }
         }
 
-        private static string StripHtmlTags(string text)
+        private static string StripHtmlTags(string input)
         {
-            text = text.Trim('\'');
-            text = text.Replace("\"", string.Empty);
+            var text = input.Trim('\'').Replace("\"", string.Empty);
 
             if (text.Length < 8)
             {

@@ -848,8 +848,9 @@ namespace Nikse.SubtitleEdit.Core
             return text;
         }
 
-        public static string ToggleTag(string text, string tag)
+        public static string ToggleTag(string input, string tag)
         {
+            var text = input;
             if (text.IndexOf("<" + tag + ">", StringComparison.OrdinalIgnoreCase) >= 0 ||
                 text.IndexOf("</" + tag + ">", StringComparison.OrdinalIgnoreCase) >= 0)
             {

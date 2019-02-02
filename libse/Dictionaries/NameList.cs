@@ -253,14 +253,14 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             return true;
         }
 
-        public bool IsInNamesMultiWordList(string text, string word)
+        public bool IsInNamesMultiWordList(string input, string word)
         {
-            if (string.IsNullOrEmpty(text))
+            if (string.IsNullOrEmpty(input))
             {
                 return false;
             }
 
-            text = text.Replace(Environment.NewLine, " ");
+           var  text = input.Replace(Environment.NewLine, " ");
             text = text.FixExtraSpaces();
 
             if (_namesMultiList.Contains(word))

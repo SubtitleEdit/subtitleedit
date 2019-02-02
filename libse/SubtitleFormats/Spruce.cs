@@ -158,9 +158,9 @@ $ColorIndex4    = 3
             return new TimeCode(int.Parse(hour), int.Parse(minutes), int.Parse(seconds), milliseconds);
         }
 
-        private static string DecodeText(string text)
+        private static string DecodeText(string input)
         {
-            text = text.Replace("|", Environment.NewLine);
+            var text = input.Replace("|", Environment.NewLine);
 
             //^IBrillstein^I
             if (text.Contains(Bold))
@@ -179,10 +179,10 @@ $ColorIndex4    = 3
             return text;
         }
 
-        private static string DecoderTextExtension(string text, string spruceTag, string htmlOpenTag)
+        private static string DecoderTextExtension(string input, string spruceTag, string htmlOpenTag)
         {
             var htmlCloseTag = htmlOpenTag.Insert(1, "/");
-
+            var text = input;
             var idx = text.IndexOf(spruceTag, StringComparison.Ordinal);
             var c = Utilities.CountTagInText(text, spruceTag);
             if (c == 1)
