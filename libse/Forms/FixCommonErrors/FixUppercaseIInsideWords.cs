@@ -10,8 +10,9 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
         {
-            var language = Configuration.Settings.Language.FixCommonErrors;
-            string fixAction = language.FixUppercaseIInsideLowercaseWord;
+            var l = Configuration.Settings.Language.FixCommonErrors;
+            string fixAction = l.FixUppercaseIInsideLowercaseWord;
+            var language = callbacks.Language;
             int uppercaseIsInsideLowercaseWords = 0;
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
@@ -106,6 +107,12 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                                 else if (match.Index > 1 && "\"'<>()[]{}-—,.‘’¡¿„“()[]♪@".Contains(st.StrippedText[match.Index - 1]))
                                 {
                                 }
+                                else if (language == "en" && word.EndsWith('s') &&
+                                         p.Text.Length > match.Index + 1 &&
+                                         word.TrimEnd('s') == word.TrimEnd('s').ToUpperInvariant())
+                                {
+                                    // skip words like "MRIs" where the last 's' indicates plural
+                                }
                                 else
                                 {
                                     var before = '\0';
@@ -155,7 +162,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     match = match.NextMatch();
                 }
             }
-            callbacks.UpdateFixStatus(uppercaseIsInsideLowercaseWords, language.FixUppercaseIInsindeLowercaseWords, language.XUppercaseIsFoundInsideLowercaseWords);
+            callbacks.UpdateFixStatus(uppercaseIsInsideLowercaseWords, l.FixUppercaseIInsindeLowercaseWords, l.XUppercaseIsFoundInsideLowercaseWords);
         }
 
         private static string GetWholeWord(string text, int index)
