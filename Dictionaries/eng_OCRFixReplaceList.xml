@@ -2536,7 +2536,6 @@
     <Line from="ISIGHS]" to="[SIGHS]" />
   </WholeLines>
   <RegularExpressions>
-    <RegEx find="[bB]eyonce" replaceWith="Beyoncé" />
     <RegEx find="([a-z]) Won't " replaceWith="$1 won't " />
     <RegEx find=" L([,\r\n :;!?]+)" replaceWith=" I$1" />
     <RegEx find="^-1 (\p{L})" replaceWith="- I $1" />
