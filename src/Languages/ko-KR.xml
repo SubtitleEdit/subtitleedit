@@ -694,9 +694,9 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <PleaseWait>번역 중... 잠시 기다려 주세요.</PleaseWait>
     <PoweredByGoogleTranslate>Google 번역기 실행</PoweredByGoogleTranslate>
     <PoweredByMicrosoftTranslate>Microsoft 번역기 실행</PoweredByMicrosoftTranslate>
-    <MsClientSecretNeeded>죄송합니다,  최신 Bing 번역기를 사용하려면 Microsoft의 Bing 클라이언트 암호가 필요합니다.
+    <MsClientSecretNeeded>죄송합니다,  최신 Microsoft 번역기를 사용하려면, Microsoft에서 인지 가능한 'Translator Text' 키 필요합니다.
 
-Bing 클라이언트 암호를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구" 로 이동하십시오.</MsClientSecretNeeded>
+키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구" 로 이동하십시오.</MsClientSecretNeeded>
     <GoogleApiKeyNeeded>죄송합니다, 최신 Google 번역기를 사용하려면 Google의 API 키가 필요합니다.
 
 Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구" 로 이동하십시오.</GoogleApiKeyNeeded>
@@ -937,6 +937,7 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
         <SubStationAlphaProperties>Sub Station Alpha(.ssa)의 속성...</SubStationAlphaProperties>
         <EbuProperties>EBU STL 속성...</EbuProperties>
         <DvdStuioProProperties>DVD Studio Pro 속성...</DvdStuioProProperties>
+        <TimedTextProperties>시간 제한 텍스트 속성...</TimedTextProperties>
         <PacProperties>PAC 속성...</PacProperties>
         <OpenOriginal>원본 자막 열기 (번역 모드)</OpenOriginal>
         <SaveOriginal>원본 자막 저장...</SaveOriginal>
@@ -1040,11 +1041,13 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
       <Video>
         <Title>비디오</Title>
         <OpenVideo>비디오 파일 열기</OpenVideo>
+        <OpenVideoFromUrl>URL에서 비디오 열기</OpenVideoFromUrl>
         <OpenDvd>DVD 열기...</OpenDvd>
         <ChooseAudioTrack>오디오 트랙 선택하기</ChooseAudioTrack>
         <CloseVideo>비디오 파일 닫기</CloseVideo>
         <SetVideoOffset>비디오 오프셋 설정...</SetVideoOffset>
         <SmptTimeMode>SMPTE 타이밍 (드롭 프레임)</SmptTimeMode>
+        <GenerateTextFromVideo>비디오에서 텍스트 생성...</GenerateTextFromVideo>
         <GenerateImportSceneChanges>장면 전환 생성/가져오기...</GenerateImportSceneChanges>
         <RemoveSceneChanges>장면 전환 제거</RemoveSceneChanges>
         <WaveformBatchGenerate>파형 일괄 생성...</WaveformBatchGenerate>
@@ -1158,6 +1161,8 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
         <Box>박스</Box>
         <Color>색상</Color>
         <FontName>글꼴</FontName>
+        <Superscript>위 첨자 </Superscript>
+        <Subscript>아래 첨자 </Subscript>
         <Alignment>표시 위치</Alignment>
         <AutoBalanceSelectedLines>줄 자동 조정...</AutoBalanceSelectedLines>
         <RemoveLineBreaksFromSelectedLines>줄바꿈 제거...</RemoveLineBreaksFromSelectedLines>
@@ -2039,7 +2044,7 @@ Google 번역 API 키를 입력하려면 "옵션 -&gt; 환경설정 -&gt; 도구
     <UseDoNotBreakAfterList>'뒤에 줄바꿈을 배제하는 목록' 사용 (자동 줄바꿈 用)</UseDoNotBreakAfterList>
     <GoogleTranslate>Google 번역</GoogleTranslate>
     <GoogleTranslateApiKey>API 키</GoogleTranslateApiKey>
-    <MicrosoftBingTranslator>Microsoft Bing 번역</MicrosoftBingTranslator>
+    <MicrosoftBingTranslator>Microsoft 번역</MicrosoftBingTranslator>
     <HowToSignUp>가입 방법</HowToSignUp>
     <MicrosoftTranslateApiKey>키</MicrosoftTranslateApiKey>
     <FontNote>※ 참고 : 이 글꼴 설정은 오직 Subtitle Edit UI에만 적용됩니다.
