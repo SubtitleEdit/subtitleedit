@@ -735,7 +735,6 @@ namespace Nikse.SubtitleEdit.Forms
                     }
 
                     SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
-                    SubtitleListview1.BeginUpdate();
                     SubtitleListview1.SelectIndexAndEnsureVisible(selectIndices[0], true);
                     foreach (var selectIndex in selectIndices)
                     {
