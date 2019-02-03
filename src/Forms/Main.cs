@@ -740,7 +740,6 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         SubtitleListview1.Items[selectIndex].Selected = true;
                     }
-                    SubtitleListview1.EndUpdate();
 
                     if (_subtitleListViewIndex >= 0)
                     {
