@@ -10,6 +10,8 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class RestoreAutoBackup : PositionAndSizeForm
     {
+        private static readonly object _locker = new object();
+
         //2011-12-13_20-19-18_title
         private static readonly Regex RegexFileNamePattern = new Regex(@"^\d\d\d\d-\d\d-\d\d_\d\d-\d\d-\d\d", RegexOptions.Compiled);
         private string[] _files;
@@ -166,30 +168,26 @@ namespace Nikse.SubtitleEdit.Forms
 
         public static void CleanAutoBackupFolder(string autoBackupFolder, int autoBackupDeleteAfterMonths)
         {
-            const int maxCount = 100; // to avoid locking computer
-            if (Directory.Exists(autoBackupFolder))
+            lock (_locker) // only allow one thread
             {
-                var targetDate = DateTime.Now.AddMonths(-autoBackupDeleteAfterMonths);
-                var files = Directory.GetFiles(autoBackupFolder, "*.*");
-                int filesDeleted = 0;
-                foreach (string fileName in files)
+                if (Directory.Exists(autoBackupFolder))
                 {
-                    try
+                    var targetDate = DateTime.Now.AddMonths(-autoBackupDeleteAfterMonths);
+                    var files = Directory.GetFiles(autoBackupFolder, "*.*");
+                    foreach (string fileName in files)
                     {
-                        var name = Path.GetFileName(fileName);
-                        if (RegexFileNamePattern.IsMatch(name) && Convert.ToDateTime(name.Substring(0, 10), CultureInfo.InvariantCulture) < targetDate)
+                        try
                         {
-                            File.Delete(fileName);
-                            filesDeleted++;
-                            if (filesDeleted > maxCount)
+                            var name = Path.GetFileName(fileName);
+                            if (RegexFileNamePattern.IsMatch(name) && Convert.ToDateTime(name.Substring(0, 10), CultureInfo.InvariantCulture) <= targetDate)
                             {
-                                return;
+                                File.Delete(fileName);
                             }
                         }
-                    }
-                    catch (Exception)
-                    {
-                        // ignore
+                        catch
+                        {
+                            // ignore
+                        }
                     }
                 }
             }
