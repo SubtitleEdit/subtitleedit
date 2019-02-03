@@ -5,7 +5,7 @@
     <Version>3.5.8</Version>
     <TranslatedBy>Tłumaczenie Adam Malich (https://potplayerclub.pl)</TranslatedBy>
     <CultureName>pl-PL</CultureName>
-    <HelpFile />
+    <HelpFile></HelpFile>
     <Ok>&amp;OK</Ok>
     <Cancel>&amp;Anuluj</Cancel>
     <Apply>Zastosuj</Apply>
@@ -33,6 +33,7 @@
     <Number>Numer</Number>
     <Text>Tekst</Text>
     <HourMinutesSecondsMilliseconds>godz:min:sek:ms</HourMinutesSecondsMilliseconds>
+    <HourMinutesSecondsFrames>godz:min:sek:klatki</HourMinutesSecondsFrames>
     <Bold>Pogrubienie</Bold>
     <Italic>Kursywa</Italic>
     <Underline>Podkreślenie</Underline>
@@ -77,6 +78,7 @@
     <After>Po</After>
     <Size>Rozmiar</Size>
     <Search>Szukaj</Search>
+    <DeleteCurrentLine>Usuń aktualną linię</DeleteCurrentLine>
   </General>
   <About>
     <Title>O Subtitle Edit</Title>
@@ -213,6 +215,11 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
   <Beamer>
     <Title>Projektor</Title>
   </Beamer>
+  <Bookmarks>
+    <EditBookmark>Edytuj zakładkę</EditBookmark>
+    <AddBookmark>Dodaj zakładkę</AddBookmark>
+    <GoToBookmark>Przejdź do zakładki</GoToBookmark>
+  </Bookmarks>
   <ChangeCasing>
     <Title>Zmiana pisowni</Title>
     <ChangeCasingTo>Zmień pisownię wg</ChangeCasingTo>
@@ -476,6 +483,7 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
     <Right>Do prawej</Right>
     <Center>Do środka</Center>
     <CenterLeftJustify>Środek, wyrównanie do lewej</CenterLeftJustify>
+    <CenterTopJustify>Środek, wyrównanie do góry</CenterTopJustify>
     <BottomMargin>Dolny margines</BottomMargin>
     <LeftRightMargin>Lewy/prawy margines</LeftRightMargin>
     <SaveBluRraySupAs>Wybierz nazwę pliku Blu-ray sup</SaveBluRraySupAs>
@@ -933,6 +941,7 @@ Przejdź do "Opcje -&gt; Ustawienia -&gt; Narzędzia", aby wpisać swój klucz A
         <SubStationAlphaProperties>Właściwości Sub Station Alpha...</SubStationAlphaProperties>
         <EbuProperties>Właściwości EBU STL...</EbuProperties>
         <DvdStuioProProperties>Właściwości DVD Studio Pro...</DvdStuioProProperties>
+        <TimedTextProperties>Właściwości czasowe tekstu...</TimedTextProperties>
         <PacProperties>Właściwości PAC...</PacProperties>
         <OpenOriginal>Otwórz oryginalne napisy (tryb tłumacza)...</OpenOriginal>
         <SaveOriginal>Zapisz oryginalne napisy</SaveOriginal>
@@ -1011,6 +1020,7 @@ Przejdź do "Opcje -&gt; Ustawienia -&gt; Narzędzia", aby wpisać swój klucz A
         <SplitLongLines>Podziel długie linie...</SplitLongLines>
         <MinimumDisplayTimeBetweenParagraphs>Odstęp czasowy między liniami napisów...</MinimumDisplayTimeBetweenParagraphs>
         <SortBy>Sortuj wg</SortBy>
+        <NetflixQualityCheck>Kontrola jakości Netflix...</NetflixQualityCheck>
         <Number>Numer</Number>
         <StartTime>Czas rozpoczęcia</StartTime>
         <EndTime>Czas zakończenia</EndTime>
@@ -1035,11 +1045,13 @@ Przejdź do "Opcje -&gt; Ustawienia -&gt; Narzędzia", aby wpisać swój klucz A
       <Video>
         <Title>Wideo</Title>
         <OpenVideo>Otwórz plik wideo...</OpenVideo>
+        <OpenVideoFromUrl>Otwórz wideo z adresu URL...</OpenVideoFromUrl>
         <OpenDvd>Otwórz DVD...</OpenDvd>
         <ChooseAudioTrack>Wybierz ścieżkę audio</ChooseAudioTrack>
         <CloseVideo>Zamknij plik wideo</CloseVideo>
         <SetVideoOffset>Ustaw przesunięcie wideo...</SetVideoOffset>
         <SmptTimeMode>Timing SMPTE (opuść klatkę)</SmptTimeMode>
+        <GenerateTextFromVideo>Generuj tekst z wideo...</GenerateTextFromVideo>
         <GenerateImportSceneChanges>Generuj/Importuj zmiany scen</GenerateImportSceneChanges>
         <RemoveSceneChanges>Usuń zmiany scen</RemoveSceneChanges>
         <WaveformBatchGenerate>Zbiorcze generowanie wykresów falowych...</WaveformBatchGenerate>
@@ -1153,6 +1165,8 @@ Przejdź do "Opcje -&gt; Ustawienia -&gt; Narzędzia", aby wpisać swój klucz A
         <Box>Box</Box>
         <Color>Kolor...</Color>
         <FontName>Czcionka...</FontName>
+        <Superscript>Indeks górny</Superscript>
+        <Subscript>Indeks dolny</Subscript>
         <Alignment>Wyrównanie...</Alignment>
         <AutoBalanceSelectedLines>Automatycznie zrównoważ zaznaczone linie...</AutoBalanceSelectedLines>
         <RemoveLineBreaksFromSelectedLines>Usuń łamanie linii z zaznaczonych linii...</RemoveLineBreaksFromSelectedLines>
@@ -1161,7 +1175,7 @@ Przejdź do "Opcje -&gt; Ustawienia -&gt; Narzędzia", aby wpisać swój klucz A
         <ShowSelectedLinesEarlierLater>Pokaż zaznaczone linie wcześniej/później...</ShowSelectedLinesEarlierLater>
         <VisualSyncSelectedLines>Synchronizacja wizualna zaznaczonych linii...</VisualSyncSelectedLines>
         <GoogleAndMicrosoftTranslateSelectedLine>Przetłumacz w Google/Microsoft oryginalną linię</GoogleAndMicrosoftTranslateSelectedLine>
-        <GoogleTranslateSelectedLines>Tłumacz w Google zaznaczone linie...</GoogleTranslateSelectedLines>
+        <TranslateSelectedLines>Przetłumacz wybrane linie...</TranslateSelectedLines>
         <AdjustDisplayDurationForSelectedLines>Dostosuj czas wyświetlania dla zaznaczonych linii...</AdjustDisplayDurationForSelectedLines>
         <FixCommonErrorsInSelectedLines>Popraw najczęstsze błędy w zaznaczonych liniach...</FixCommonErrorsInSelectedLines>
         <ChangeCasingForSelectedLines>Zmień pisownię dla zaznaczonych linii...</ChangeCasingForSelectedLines>
@@ -1170,6 +1184,8 @@ Przejdź do "Opcje -&gt; Ustawienia -&gt; Narzędzia", aby wpisać swój klucz A
         <WebVTTRemoveVoices>Usuń głosy</WebVTTRemoveVoices>
         <NewActor>Nowy aktor...</NewActor>
         <RemoveActors>Usuń aktorów</RemoveActors>
+        <EditBookmark>Edytuj zakładkę</EditBookmark>
+        <RemoveBookmark>Usuń zakładkę</RemoveBookmark>
       </ContextMenu>
     </Menu>
     <Controls>
@@ -1185,6 +1201,7 @@ Przejdź do "Opcje -&gt; Ustawienia -&gt; Narzędzia", aby wpisać swój klucz A
     </Controls>
     <VideoControls>
       <Translate>Tłumacz</Translate>
+      <CreateAndAdjust>Utwórz/Dostosuj</CreateAndAdjust>
       <Create>Utwórz</Create>
       <Adjust>Dostosuj</Adjust>
       <SelectCurrentElementWhilePlaying>Zaznacz aktualną linię napisów podczas odtwarzania</SelectCurrentElementWhilePlaying>
@@ -1741,6 +1758,12 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <SettingsName>Ustawienia</SettingsName>
     <Help>Pomoc</Help>
     <UnbreakNoSpace>Cofnij łamanie bez spacji (CJK)</UnbreakNoSpace>
+    <ToggleBookmarks>Przełączanie zakładek</ToggleBookmarks>
+    <ToggleBookmarksWithComment>Przełączanie zakładek - dodaj komentarz</ToggleBookmarksWithComment>
+    <ClearBookmarks>Czyść zakładki</ClearBookmarks>
+    <GoToBookmark>Przejdź do zakładki</GoToBookmark>
+    <GoToPreviousBookmark>Przejdź do poprzedniej zakładki</GoToPreviousBookmark>
+    <GoToNextBookmark>Przejdź do następnej zakładki</GoToNextBookmark>
     <FontInUi>Czcionka interfejsu użytkownika</FontInUi>
     <ShowFrameRate>Pokaż ilość klatek/sekundę na Pasku narzędzi</ShowFrameRate>
     <DefaultFrameRate>Domyślna ilość klatek/sekundę</DefaultFrameRate>
@@ -1753,7 +1776,7 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <DurationMinimumMilliseconds>Minimalny czas trwania, w ms</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>Maksymalny czas trwania, w ms</DurationMaximumMilliseconds>
     <MinimumGapMilliseconds>Min. odstęp między napisami, w ms</MinimumGapMilliseconds>
-    <MaximumLines>Maksymalna liczba znaków w linii</MaximumLines>
+    <MaximumLines>Maksymalna liczba linii</MaximumLines>
     <SubtitleFont>Czcionka napisów</SubtitleFont>
     <SubtitleFontSize>Rozmiar czcionki napisów</SubtitleFontSize>
     <SubtitleBold>Pogrubienie</SubtitleBold>
@@ -1792,6 +1815,7 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <AutoBackupDeleteAfterThreeMonths>3 miesiące</AutoBackupDeleteAfterThreeMonths>
     <AutoBackupDeleteAfterSixMonths>6 miesięcy</AutoBackupDeleteAfterSixMonths>
     <CheckForUpdates>Sprawdzaj aktualizacje</CheckForUpdates>
+    <AutoSave>Automatyczny zapis</AutoSave>
     <AllowEditOfOriginalSubtitle>Zezwalaj na edycję oryginalnych napisów</AllowEditOfOriginalSubtitle>
     <PromptDeleteLines>Pytaj podczas usuwania linii</PromptDeleteLines>
     <TimeCodeMode>Tryb kodów czasowych</TimeCodeMode>
@@ -2022,6 +2046,8 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <Miscellaneous>Inne</Miscellaneous>
     <CpsIncludesSpace>Znaków/sekundę (ZNS) włączając spacje</CpsIncludesSpace>
     <UseDoNotBreakAfterList>Użyj listy wykluczeń (do auto łamania linii)</UseDoNotBreakAfterList>
+    <GoogleTranslate>Tłumacz Google</GoogleTranslate>
+    <GoogleTranslateApiKey>Klucz API</GoogleTranslateApiKey>
     <MicrosoftBingTranslator>Tłumacz Microsoft Bing</MicrosoftBingTranslator>
     <HowToSignUp>Jak się zarejestrować</HowToSignUp>
     <MicrosoftTranslateApiKey>Klucz API</MicrosoftTranslateApiKey>
@@ -2090,6 +2116,7 @@ z wbudowanymi informacjami o czcionkach, takimi jak "Advanced Sub Station Alpha"
     <AutoFixNames>Popraw pisownię nazw własnych, tylko gdy różnią się budową</AutoFixNames>
     <CheckOneLetterWords>Pytaj o nieznaną pojedynczą literę słowa</CheckOneLetterWords>
     <TreatINQuoteAsING>Traktuj słowo kończące się " in' " jako " ing " (tylko angielski)</TreatINQuoteAsING>
+    <RememberUseAlwaysList>Zapamiętaj listę "Zawsze używaj"</RememberUseAlwaysList>
     <ImageText>Obraz tekstu</ImageText>
     <SpellCheckCompleted>Ukończono sprawdzanie pisowni.</SpellCheckCompleted>
     <SpellCheckAborted>Przerwano sprawdzanie pisowni.</SpellCheckAborted>
