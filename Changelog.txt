@@ -14,10 +14,11 @@
    * Update Korean translation - thx domddol
    * Update Portuguese translation - thx moob
    * Update French translation - thx JM GBT
+   * Update Polish translation - thx admas
    * Update a few wrong translations (Spanish) - thx Ovidio
-   * Create/adjust/translate shorcuts now global - thx OmrSi/uckthis
+   * Create/adjust/translate shortcuts now global - thx OmrSi/uckthis
    * Auto break adheres to "Max number of lines" setting
-   * Translate selected lines is now possible for BT + plugins
+   * Translate selected lines for MS translator + plugins
    * Make "select current sub while playing" smoother in waveform
    * Support .rtf files in "Import plain text" - thx Tilen
    * Improve Binary OCR of comma / apostrophe - thx Tuukka
@@ -25,6 +26,8 @@
    * Add context menu to OCR spell check
    * Improve DVD Studio Pro tag reading - thx Shas2509
    * "Toggle music tags" uses "music symbol" from tool settings
+   * Improve language auto-detect - thx Xy
+   * Improve parsing of badly formatted srt files - thx Darnn
 * FIXED:
    * Fix missing/bad html tags after "Auto br" - thx iromafia111
    * Fix crash in OCR window when closing - thx spetragl
@@ -41,6 +44,7 @@
    * Fix bug regarding VTT position - thx devilcoelhodog
    * Fix crash in "Remove text for HI" - thx Rouzax
    * Fix wrong label in "frame mode" (ms -> frames) - thx Dominik
+   * Fix some missing translations - thx Jamakmake
 
 
 3.5.8 (20th December 2018)
