@@ -20127,7 +20127,12 @@ namespace Nikse.SubtitleEdit.Forms
                     string fileName = string.Format("{0}{1:0000}-{2:00}-{3:00}_{4:00}-{5:00}-{6:00}{7}{8}", Configuration.AutoBackupDirectory, DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second, title, saveFormat.Extension);
                     File.WriteAllText(fileName, currentText);
 
-                    RestoreAutoBackup.CleanAutoBackupFolder(Configuration.AutoBackupDirectory, Configuration.Settings.General.AutoBackupDeleteAfterMonths);
+                    // let the cleanup proccess be handled by a worker thread
+                    System.Threading.Tasks.Task.Factory.StartNew(() =>
+                    {
+                        RestoreAutoBackup.CleanAutoBackupFolder(Configuration.AutoBackupDirectory, Configuration.Settings.General.AutoBackupDeleteAfterMonths);
+                    });
+
                 }
             }
 
