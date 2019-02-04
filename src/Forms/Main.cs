@@ -731,17 +731,15 @@ namespace Nikse.SubtitleEdit.Forms
                                 _subtitleAlternate.InsertParagraphInCorrectTimeOrder(new Paragraph(string.Empty, p.StartTime.TotalMilliseconds, p.EndTime.TotalMilliseconds));
                             }
                         }
-                        _subtitle.Renumber();
                     }
+                    _subtitle.Renumber();
 
                     SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
-                    SubtitleListview1.BeginUpdate();
                     SubtitleListview1.SelectIndexAndEnsureVisible(selectIndices[0], true);
                     foreach (var selectIndex in selectIndices)
                     {
                         SubtitleListview1.Items[selectIndex].Selected = true;
                     }
-                    SubtitleListview1.EndUpdate();
 
                     if (_subtitleListViewIndex >= 0)
                     {
@@ -751,148 +749,6 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         SubtitleListview1.SelectIndexAndEnsureVisible(0);
                     }
-                }
-            }
-        }
-
-        private void PasteInsertSubtitle(Subtitle tmp)
-        {
-            MakeHistoryForUndo(_language.BeforeInsertLine);
-            int firstIndex = FirstSelectedIndex;
-            var lastParagraph = _subtitle.Paragraphs[firstIndex];
-            double addMs = 0;
-            if (lastParagraph.EndTime.TotalMilliseconds > tmp.Paragraphs[0].StartTime.TotalMilliseconds)
-            { // add time to pasted subtitles to prevent overlap, but only if necessary
-                addMs = lastParagraph.EndTime.TotalMilliseconds - tmp.Paragraphs[0].StartTime.TotalMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines;
-            }
-            else if (firstIndex <= _subtitle.Paragraphs.Count - 2 && _subtitle.Paragraphs[firstIndex + 1].StartTime.TotalMilliseconds < tmp.Paragraphs[0].StartTime.TotalMilliseconds)
-            { // inserting between two subtitle... with overlapping codes
-                addMs = lastParagraph.EndTime.TotalMilliseconds - tmp.Paragraphs[0].StartTime.TotalMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines;
-            }
-            var selectIndices = new List<int>();
-            for (int i = 0; i < tmp.Paragraphs.Count; i++)
-            {
-                var p = tmp.Paragraphs[i];
-                p.StartTime.TotalMilliseconds += addMs;
-                p.EndTime.TotalMilliseconds += addMs;
-                _subtitle.Paragraphs.Insert(firstIndex + i + 1, p);
-                selectIndices.Insert(0, firstIndex + i + 1);
-                if (_subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle && SubtitleListview1.IsAlternateTextColumnVisible)
-                {
-                    var original = Utilities.GetOriginalParagraph(firstIndex + i + 1, p, _subtitleAlternate.Paragraphs);
-                    if (original == null)
-                    {
-                        _subtitleAlternate.InsertParagraphInCorrectTimeOrder(new Paragraph(string.Empty, p.StartTime.TotalMilliseconds, p.EndTime.TotalMilliseconds));
-                    }
-                }
-
-                _subtitle.Renumber();
-            }
-
-            SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
-            SubtitleListview1.BeginUpdate();
-            SubtitleListview1.SelectIndexAndEnsureVisible(firstIndex + 1, true);
-            foreach (var selectIndex in selectIndices)
-            {
-                SubtitleListview1.Items[selectIndex].Selected = true;
-            }
-
-            SubtitleListview1.EndUpdate();
-        }
-
-        private void PastFromClipboard()
-        {
-            if (Clipboard.ContainsText())
-            {
-                var text = Clipboard.GetText();
-                var tmp = new Subtitle();
-                var format = new SubRip();
-                var list = new List<string>(text.SplitToLines());
-                format.LoadSubtitle(tmp, list, null);
-                if (SubtitleListview1.SelectedItems.Count == 1 && tmp.Paragraphs.Count > 0)
-                {
-                    PasteInsertSubtitle(tmp);
-                }
-                else if (SubtitleListview1.Items.Count == 0 && tmp.Paragraphs.Count > 0)
-                { // insert into empty subtitle
-                    MakeHistoryForUndo(_language.BeforeInsertLine);
-                    foreach (var p in tmp.Paragraphs)
-                    {
-                        _subtitle.Paragraphs.Add(p);
-                        if (_subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle && SubtitleListview1.IsAlternateTextColumnVisible)
-                        {
-                            var original = Utilities.GetOriginalParagraph(_subtitle.Paragraphs.Count - 1, p, _subtitleAlternate.Paragraphs);
-                            if (original == null)
-                            {
-                                _subtitleAlternate.InsertParagraphInCorrectTimeOrder(new Paragraph(string.Empty, p.StartTime.TotalMilliseconds, p.EndTime.TotalMilliseconds));
-                            }
-                        }
-                    }
-                    SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
-                    SubtitleListview1.SelectIndexAndEnsureVisible(0, true);
-                }
-                else if (SubtitleListview1.Items.Count > 1 && tmp.Paragraphs.Count > 0)
-                {
-                    // multiple lines selected - first delete, then insert
-                    int firstIndex = FirstSelectedIndex;
-                    if (firstIndex >= 0)
-                    {
-                        MakeHistoryForUndo(_language.BeforeInsertLine);
-                        _makeHistoryPaused = true;
-
-                        DeleteSelectedLines();
-                        var selectedIndices = new List<int>();
-                        foreach (var p in tmp.Paragraphs)
-                        {
-                            _subtitle.Paragraphs.Insert(firstIndex, p);
-                            selectedIndices.Add(firstIndex);
-                            if (_subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle && SubtitleListview1.IsAlternateTextColumnVisible)
-                            {
-                                var original = Utilities.GetOriginalParagraph(firstIndex, p, _subtitleAlternate.Paragraphs);
-                                if (original == null)
-                                {
-                                    _subtitleAlternate.InsertParagraphInCorrectTimeOrder(new Paragraph(string.Empty, p.StartTime.TotalMilliseconds, p.EndTime.TotalMilliseconds));
-                                }
-                            }
-                            firstIndex++;
-                        }
-                        SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
-                        SubtitleListview1.SelectIndexAndEnsureVisible(selectedIndices[0], true);
-                        foreach (var idx in selectedIndices)
-                        {
-                            SubtitleListview1.Items[idx].Selected = true;
-                        }
-                        RestartHistory();
-                    }
-                }
-                else if (SubtitleListview1.Items.Count > 0 && list.Count >= 1 && list.Count < 4 && !text.Trim().Contains(Environment.NewLine + Environment.NewLine))
-                {
-                    // less than 4 lines of text, just insert into first selected
-                    textBoxListViewText.Text = text.Trim();
-                }
-                else if (list.Count >= 1 && list.Count < 2000)
-                {
-                    MakeHistoryForUndo(_language.BeforeInsertLine);
-                    _makeHistoryPaused = true;
-                    SubtitleListview1.BeginUpdate();
-                    foreach (var line in list)
-                    {
-                        if (!string.IsNullOrWhiteSpace(line))
-                        {
-                            InsertAfter();
-                            textBoxListViewText.Text = Utilities.AutoBreakLine(line);
-                        }
-                    }
-                    SubtitleListview1.EndUpdate();
-                    RestartHistory();
-                }
-                if (_subtitleListViewIndex >= 0)
-                {
-                    UpdateListViewTextInfo(labelTextLineLengths, labelSingleLine, labelTextLineTotal, labelCharactersPerSecond, _subtitle.Paragraphs[_subtitleListViewIndex], textBoxListViewText);
-                }
-                else
-                {
-                    SubtitleListview1.SelectIndexAndEnsureVisible(0);
                 }
             }
         }
@@ -25989,11 +25845,6 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
-        }
-
-        private void toolStripMenuItemSplitAtWaveTextBoxPos_Click(object sender, EventArgs e)
-        {
-            toolStripMenuItemSplitViaWaveform_Click(sender, e);
         }
 
         private void toolStripMenuDvdStudioProperties_Click(object sender, EventArgs e)
