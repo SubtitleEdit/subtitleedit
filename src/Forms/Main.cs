@@ -178,7 +178,6 @@ namespace Nikse.SubtitleEdit.Forms
         private Keys _mainAutoCalcCurrentDuration = Keys.None;
         private Keys _mainUnbreakNoSpace = Keys.None;
         private Keys _mainGeneralToggleBookmarks = Keys.None;
-        private Keys _mainGeneralToggleBookmarksWithText = Keys.None;
         private Keys _mainGeneralClearBookmarks = Keys.None;
         private Keys _mainGeneralGoToBookmark = Keys.None;
         private Keys _mainGeneralGoToPreviousBookmark = Keys.None;
@@ -13780,12 +13779,6 @@ namespace Nikse.SubtitleEdit.Forms
                 e.Handled = true;
                 e.SuppressKeyPress = true;
             }
-            else if (_mainGeneralToggleBookmarksWithText == e.KeyData)
-            {
-                ToggleBookmarks(true);
-                e.Handled = true;
-                e.SuppressKeyPress = true;
-            }
             else if (_mainGeneralClearBookmarks == e.KeyData)
             {
                 ClearBookmarks();
@@ -19340,7 +19333,7 @@ namespace Nikse.SubtitleEdit.Forms
             _mainAutoCalcCurrentDuration = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralAutoCalcCurrentDuration);
             _mainUnbreakNoSpace = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralUnbrekNoSpace);
             _mainGeneralToggleBookmarks = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralToggleBookmarks);
-            _mainGeneralToggleBookmarksWithText = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralToggleBookmarksWithText);
+            toolStripMenuItemBookmark.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralToggleBookmarksWithText);
             _mainGeneralClearBookmarks = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralClearBookmarks);
             _mainGeneralGoToBookmark = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToBookmark);
             _mainGeneralGoToPreviousBookmark = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToPreviousBookmark);
