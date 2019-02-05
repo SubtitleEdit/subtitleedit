@@ -2856,4 +2856,20 @@
   <name>Åsne</name>
   <name>Åsnes</name>
   <name>Åsta</name>
+  <blacklist>
+    <name>Ane</name>
+    <name>Ben</name>
+    <name>Bo</name>
+    <name>Dag</name>
+    <name>Fet</name>
+    <name>Fred</name>
+    <name>Gro</name>
+    <name>Hem</name>
+    <name>Jo</name>
+    <name>Per</name>
+    <name>Rune</name>
+    <name>Saga</name>
+    <name>Tom</name>
+    <name>Ål</name>
+  </blacklist>
 </names>
