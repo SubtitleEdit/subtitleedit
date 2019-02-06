@@ -939,6 +939,7 @@ $HorzAlign          =   Center
         public int LineOcrMaxLineHeight { get; set; }
         public string LastBinaryImageCompareDb { get; set; }
         public string LastBinaryImageSpellCheck { get; set; }
+        public bool BinaryAutoDetectBestDb { get; set; }
         public string LastTesseractSpellCheck { get; set; }
 
         public VobSubOcrSettings()
@@ -960,6 +961,7 @@ $HorzAlign          =   Center
             GuessUnknownWords = true;
             AutoBreakSubtitleIfMoreThanTwoLines = true;
             ItalicFactor = 0.2;
+            BinaryAutoDetectBestDb = true;
         }
     }
 
@@ -1161,6 +1163,7 @@ $HorzAlign          =   Center
         public string MainAdjustEndXMsForward { get; set; }
         public string MainInsertAfter { get; set; }
         public string MainTextBoxAutoBreak { get; set; }
+        public string MainTextBoxBreakAtPosition { get; set; }        
         public string MainTextBoxUnbreak { get; set; }
         public string MainWaveformInsertAtCurrentPosition { get; set; }
         public string MainInsertBefore { get; set; }
@@ -4167,6 +4170,12 @@ $HorzAlign          =   Center
                 settings.VobSubOcr.LastBinaryImageSpellCheck = subNode.InnerText;
             }
 
+            subNode = node.SelectSingleNode("BinaryAutoDetectBestDb");
+            if (subNode != null)
+            {
+                settings.VobSubOcr.BinaryAutoDetectBestDb = Convert.ToBoolean(subNode.InnerText, CultureInfo.InvariantCulture);
+            }
+
             subNode = node.SelectSingleNode("LastTesseractSpellCheck");
             if (subNode != null)
             {
@@ -5210,6 +5219,12 @@ $HorzAlign          =   Center
                     settings.Shortcuts.MainTextBoxAutoBreak = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("MainTextBoxBreakAtPosition");
+                if (subNode != null)
+                {
+                    settings.Shortcuts.MainTextBoxBreakAtPosition = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainTextBoxUnbreak");
                 if (subNode != null)
                 {
@@ -6015,6 +6030,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("LineOcrMaxLineHeight", settings.VobSubOcr.LineOcrMaxLineHeight.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("LastBinaryImageCompareDb", settings.VobSubOcr.LastBinaryImageCompareDb);
                 textWriter.WriteElementString("LastBinaryImageSpellCheck", settings.VobSubOcr.LastBinaryImageSpellCheck);
+                textWriter.WriteElementString("BinaryAutoDetectBestDb", settings.VobSubOcr.BinaryAutoDetectBestDb.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("LastTesseractSpellCheck", settings.VobSubOcr.LastTesseractSpellCheck);
 
                 textWriter.WriteEndElement();
@@ -6206,6 +6222,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("MainAdjustEndXMsForward", settings.Shortcuts.MainAdjustEndXMsForward);
                 textWriter.WriteElementString("MainInsertAfter", settings.Shortcuts.MainInsertAfter);
                 textWriter.WriteElementString("MainTextBoxAutoBreak", settings.Shortcuts.MainTextBoxAutoBreak);
+                textWriter.WriteElementString("MainTextBoxBreakAtPosition", settings.Shortcuts.MainTextBoxBreakAtPosition);
                 textWriter.WriteElementString("MainTextBoxUnbreak", settings.Shortcuts.MainTextBoxUnbreak);
                 textWriter.WriteElementString("MainWaveformInsertAtCurrentPosition", settings.Shortcuts.MainWaveformInsertAtCurrentPosition);
                 textWriter.WriteElementString("MainInsertBefore", settings.Shortcuts.MainInsertBefore);
