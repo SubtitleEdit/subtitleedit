@@ -9788,14 +9788,14 @@ namespace Nikse.SubtitleEdit.Forms
                         a = a.Remove(3, 1).Replace("  ", " ");
                         b = b.Remove(3, 1).Replace("  ", " ");
                     }
-                    else if (a.StartsWith('-') && (aTrimmed.EndsWith('.') || aTrimmed.EndsWith('!') || aTrimmed.EndsWith('?')) &&
+                    else if (a.StartsWith('-') && (aTrimmed.EndsWith('.') || aTrimmed.EndsWith('!') || aTrimmed.EndsWith('?') || aTrimmed.EndsWith('؟')) &&
                         b.StartsWith("<i>-", StringComparison.Ordinal) && (bTrimmed.EndsWith(".</i>", StringComparison.Ordinal) || bTrimmed.EndsWith("!</i>", StringComparison.Ordinal) || bTrimmed.EndsWith("?</i>", StringComparison.Ordinal)))
                     {
                         a = a.TrimStart('-').TrimStart();
                         b = b.Remove(3, 1).Replace("  ", " ").Trim();
                     }
                     else if (a.StartsWith("<i>-", StringComparison.Ordinal) && (aTrimmed.EndsWith(".</i>", StringComparison.Ordinal) || aTrimmed.EndsWith("!</i>", StringComparison.Ordinal) || aTrimmed.EndsWith("?</i>", StringComparison.Ordinal)) &&
-                        b.StartsWith('-') && (bTrimmed.EndsWith('.') || bTrimmed.EndsWith('!') || bTrimmed.EndsWith('?')))
+                        b.StartsWith('-') && (bTrimmed.EndsWith('.') || bTrimmed.EndsWith('!') || bTrimmed.EndsWith('?') || bTrimmed.EndsWith('؟')))
                     {
                         a = a.Remove(3, 1).Replace("  ", " ").Trim();
                         b = b.TrimStart('-').TrimStart();
@@ -9812,7 +9812,7 @@ namespace Nikse.SubtitleEdit.Forms
                         l0 = lines[0].Trim().TrimEnd('"', '\'').TrimEnd();
                     }
 
-                    if (lines.Count == 2 && (l0.EndsWith('.') || l0.EndsWith('!') || l0.EndsWith('?')))
+                    if (lines.Count == 2 && (l0.EndsWith('.') || l0.EndsWith('!') || l0.EndsWith('?') || l0.EndsWith('؟')))
                     {
                         currentParagraph.Text = Utilities.AutoBreakLine(lines[0], language);
                         newParagraph.Text = Utilities.AutoBreakLine(lines[1], language);
@@ -9840,7 +9840,7 @@ namespace Nikse.SubtitleEdit.Forms
                             currentParagraph.Text = currentParagraph.Text.Remove(3, 1);
                             newParagraph.Text = newParagraph.Text.Remove(3, 1);
                         }
-                        else if (lines[0].StartsWith('-') && (lines[0].EndsWith('.') || lines[0].EndsWith('!') || lines[0].EndsWith('?')) &&
+                        else if (lines[0].StartsWith('-') && (lines[0].EndsWith('.') || lines[0].EndsWith('!') || lines[0].EndsWith('?') || lines[0].EndsWith('؟')) &&
                                  lines[1].StartsWith("<i>-", StringComparison.Ordinal) && (lines[1].EndsWith(".</i>", StringComparison.Ordinal) || lines[1].EndsWith("!</i>", StringComparison.Ordinal) || lines[1].EndsWith("?</i>", StringComparison.Ordinal)))
                         {
                             currentParagraph.Text = lines[0].TrimStart('-').TrimStart();
@@ -9866,14 +9866,14 @@ namespace Nikse.SubtitleEdit.Forms
                                 newParagraph.Text = newParagraph.Text.Remove(3, 1);
                             }
                         }
-                        else if (lines[0].StartsWith('-') && (lines[0].EndsWith('.') || lines[0].EndsWith('!') || lines[0].EndsWith('?')) &&
-                                                lines[1].StartsWith("<i>-", StringComparison.Ordinal) && (lines[1].EndsWith(".</i>", StringComparison.Ordinal) || lines[1].EndsWith("!</i>", StringComparison.Ordinal) || lines[1].EndsWith("?</i>", StringComparison.Ordinal)))
+                        else if (lines[0].StartsWith('-') && (lines[0].EndsWith('.') || lines[0].EndsWith('!') || lines[0].EndsWith('?') || lines[0].EndsWith('؟')) &&
+                                 lines[1].StartsWith("<i>-", StringComparison.Ordinal) && (lines[1].EndsWith(".</i>", StringComparison.Ordinal) || lines[1].EndsWith("!</i>", StringComparison.Ordinal) || lines[1].EndsWith("?</i>", StringComparison.Ordinal)))
                         {
                             currentParagraph.Text = lines[0].TrimStart('-').TrimStart();
                             newParagraph.Text = lines[1].Remove(3, 1).Replace("  ", " ").Trim();
                         }
                         else if (lines[0].StartsWith("<i>-", StringComparison.Ordinal) && (lines[0].EndsWith(".</i>", StringComparison.Ordinal) || lines[0].EndsWith("!</i>", StringComparison.Ordinal) || lines[0].EndsWith("?</i>", StringComparison.Ordinal)) &&
-                            lines[1].StartsWith('-') && (lines[1].EndsWith('.') || lines[1].EndsWith('!') || lines[1].EndsWith('?')))
+                            lines[1].StartsWith('-') && (lines[1].EndsWith('.') || lines[1].EndsWith('!') || lines[1].EndsWith('?') || lines[1].EndsWith('؟')))
                         {
                             currentParagraph.Text = lines[0].Remove(3, 1).Replace("  ", " ").Trim();
                             newParagraph.Text = lines[1].TrimStart('-').TrimStart();
@@ -10039,7 +10039,7 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                             lines.Clear();
                         }
-                        else if (lines.Count == 2 && (lines[0].EndsWith('.') || lines[0].EndsWith('!') || lines[0].EndsWith('?')))
+                        else if (lines.Count == 2 && (lines[0].EndsWith('.') || lines[0].EndsWith('!') || lines[0].EndsWith('?') || lines[0].EndsWith('؟')))
                         {
                             string a = lines[0].Trim();
                             string b = lines[1].Trim();
@@ -10055,8 +10055,8 @@ namespace Nikse.SubtitleEdit.Forms
                                 a = a + "</b>";
                                 b = "<b>" + b;
                             }
-                            if (a.StartsWith('-') && (a.EndsWith('.') || a.EndsWith('!') || a.EndsWith('?')) &&
-                                b.StartsWith('-') && (b.EndsWith('.') || b.EndsWith('!') || b.EndsWith('?')))
+                            if (a.StartsWith('-') && (a.EndsWith('.') || a.EndsWith('!') || a.EndsWith('?') || a.EndsWith('؟')) &&
+                                b.StartsWith('-') && (b.EndsWith('.') || b.EndsWith('!') || b.EndsWith('?') || b.EndsWith('؟')))
                             {
                                 a = a.TrimStart('-').TrimStart();
                                 b = b.TrimStart('-').TrimStart();
@@ -10110,8 +10110,8 @@ namespace Nikse.SubtitleEdit.Forms
                                 a = a + "</b>";
                                 b = "<b>" + b;
                             }
-                            if (a.StartsWith('-') && (a.EndsWith('.') || a.EndsWith('!') || a.EndsWith('?')) &&
-                                b.StartsWith('-') && (b.EndsWith('.') || b.EndsWith('!') || b.EndsWith('?')))
+                            if (a.StartsWith('-') && (a.EndsWith('.') || a.EndsWith('!') || a.EndsWith('?') || a.EndsWith('؟')) &&
+                                b.StartsWith('-') && (b.EndsWith('.') || b.EndsWith('!') || b.EndsWith('?') || b.EndsWith('؟')))
                             {
                                 a = a.TrimStart('-').TrimStart();
                                 b = b.TrimStart('-').TrimStart();
