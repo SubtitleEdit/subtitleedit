@@ -30,6 +30,7 @@
    * Improve language auto-detect - thx Xy
    * Improve parsing of badly formatted srt files - thx Darnn
    * Update names list - thx ivandrofly
+   * Binary OCR auto detect best DB - thx Mr. Rage
 * FIXED:
    * Fix missing/bad html tags after "Auto br" - thx iromafia111
    * Fix crash in OCR window when closing - thx spetragl

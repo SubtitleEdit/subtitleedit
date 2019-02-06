@@ -216,6 +216,7 @@ namespace Nikse.SubtitleEdit.Forms
         private Keys _mainInsertAfter = Keys.None;
         private Keys _mainInsertBefore = Keys.None;
         private Keys _mainTextBoxAutoBreak = Keys.None;
+        private Keys _mainTextBoxBreakAtCursorPosition = Keys.None;
         private Keys _mainTextBoxUnbreak = Keys.None;
         private Keys _mainMergeDialog = Keys.None;
         private Keys _mainToggleFocus = Keys.None;
@@ -19421,6 +19422,7 @@ namespace Nikse.SubtitleEdit.Forms
             _mainInsertAfter = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainInsertAfter);
             _mainInsertBefore = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainInsertBefore);
             _mainTextBoxAutoBreak = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxAutoBreak);
+            _mainTextBoxBreakAtCursorPosition = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxBreakAtPosition);
             _mainTextBoxUnbreak = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxUnbreak);
             _mainMergeDialog = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainMergeDialog);
             _mainToggleFocus = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainToggleFocus);
@@ -22058,8 +22060,6 @@ namespace Nikse.SubtitleEdit.Forms
 
             int numberOfLines = Utilities.GetNumberOfLines(textBoxListViewTextAlternate.Text);
 
-            //Utilities.CheckAutoWrap(textBoxListViewTextAlternate, e, numberOfNewLines);
-
             if (e.Modifiers == Keys.None && e.KeyCode == Keys.Enter && numberOfLines > Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX)
             {
                 e.SuppressKeyPress = true;
@@ -22070,7 +22070,14 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     textBoxListViewTextAlternate.Text = Utilities.AutoBreakLine(textBoxListViewTextAlternate.Text);
                 }
-
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyData == _mainTextBoxBreakAtCursorPosition)
+            {
+                if (textBoxListViewTextAlternate.Text.Length > 0)
+                {
+                    //TODO: fix
+                }
                 e.SuppressKeyPress = true;
             }
             else if (e.KeyData == _mainTextBoxUnbreak)

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
+using Nikse.SubtitleEdit.Core;
 
 namespace Nikse.SubtitleEdit.Logic.Ocr.Binary
 {
@@ -236,6 +238,17 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Binary
                 }
             }
             return index;
+        }
+
+        public static List<string> GetDatabases()
+        {
+            var list = new List<string>();
+            foreach (string dir in Directory.GetFiles(Configuration.OcrDirectory.TrimEnd(Path.DirectorySeparatorChar), "*.db"))
+            {
+                string s = Path.GetFileNameWithoutExtension(dir);
+                list.Add(s);
+            }
+            return list.OrderBy(p=>p).ToList();
         }
 
     }
