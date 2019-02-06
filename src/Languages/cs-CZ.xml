@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Language Name="Čeština">
   <General>
     <Title>Subtitle Edit</Title>
@@ -33,6 +33,7 @@
     <Number>Číslo</Number>
     <Text>Text</Text>
     <HourMinutesSecondsMilliseconds>Hod:min:s:ms</HourMinutesSecondsMilliseconds>
+    <HourMinutesSecondsFrames>Hod:min:s:snímky</HourMinutesSecondsFrames>
     <Bold>Tučné</Bold>
     <Italic>Kurzíva</Italic>
     <Underline>Podtržené</Underline>
@@ -77,6 +78,7 @@
     <After>Po</After>
     <Size>Velikost</Size>
     <Search>Hledat</Search>
+    <DeleteCurrentLine>Odstranit aktuální řádek</DeleteCurrentLine>
   </General>
   <About>
     <Title>O aplikaci Subtitle Edit</Title>
@@ -187,6 +189,10 @@ Poznámka: Zkontrolujte volné místo na disku.</WaveFileMalformed>
     <NotConverted>Nezdařilo se</NotConverted>
     <Converted>Převedeno</Converted>
     <Settings>Nastavení</Settings>
+    <FixRtl>Opravit zprava do leva</FixRtl>
+    <FixRtlAddUnicode>Opravit zprava do leva pomocí značek Unicode</FixRtlAddUnicode>
+    <FixRtlRemoveUnicode>Odebrat značky Unicode pro zprava do leva</FixRtlRemoveUnicode>
+    <FixRtlReverseStartEnd>Obrátit začátek a konec zprava do leva</FixRtlReverseStartEnd>
     <SplitLongLines>Rozdělit dlouhé řádky</SplitLongLines>
     <AutoBalance>Automaticky vyvážit řádky</AutoBalance>
     <ScanFolder>Prohledat složku...</ScanFolder>
@@ -209,6 +215,11 @@ Poznámka: Zkontrolujte volné místo na disku.</WaveFileMalformed>
   <Beamer>
     <Title>Beamer</Title>
   </Beamer>
+  <Bookmarks>
+    <EditBookmark>Upravit záložku</EditBookmark>
+    <AddBookmark>Přidat záložku</AddBookmark>
+    <GoToBookmark>Přejít na záložku</GoToBookmark>
+  </Bookmarks>
   <ChangeCasing>
     <Title>Změnit velikost písmen</Title>
     <ChangeCasingTo>Změnit velikost písmen na</ChangeCasingTo>
@@ -472,6 +483,7 @@ Poznámka: Zkontrolujte volné místo na disku.</WaveFileMalformed>
     <Right>Vpravo</Right>
     <Center>Na střed</Center>
     <CenterLeftJustify>Na střed, do bloku vlevo</CenterLeftJustify>
+    <CenterTopJustify>Na střed, do bloku nahoru</CenterTopJustify>
     <BottomMargin>Dolní okraj</BottomMargin>
     <LeftRightMargin>Levý a pravý okraj</LeftRightMargin>
     <SaveBluRraySupAs>Zvolte název souboru Blu-ray sup</SaveBluRraySupAs>
@@ -553,6 +565,7 @@ Poznámka: Zkontrolujte volné místo na disku.</WaveFileMalformed>
     <RemovedEmptyLine>Odebrat prázdný řádek</RemovedEmptyLine>
     <RemovedEmptyLineAtTop>Odebrat prázdný řádek na začátku</RemovedEmptyLineAtTop>
     <RemovedEmptyLineAtBottom>Odebrat prázdný řádek na konci</RemovedEmptyLineAtBottom>
+    <RemovedEmptyLineInMiddle>Odebrat prázdný řádek uprostřed</RemovedEmptyLineInMiddle>
     <RemovedEmptyLinesUnsedLineBreaks>Odebrat prázdné řádky nebo nevyužitá zalomení řádků</RemovedEmptyLinesUnsedLineBreaks>
     <EmptyLinesRemovedX>Odebráno prázdných řádků: {0}</EmptyLinesRemovedX>
     <FixOverlappingDisplayTimes>Opravit překrývání časů zobrazení</FixOverlappingDisplayTimes>
@@ -686,6 +699,13 @@ Poznámka: Zkontrolujte volné místo na disku.</WaveFileMalformed>
     <PleaseWait>Čekejte... chvíli to může trvat</PleaseWait>
     <PoweredByGoogleTranslate>Používá technologii Překladače Google</PoweredByGoogleTranslate>
     <PoweredByMicrosoftTranslate>Používá technologii Překladače Microsoft</PoweredByMicrosoftTranslate>
+    <MsClientSecretNeeded>Bohužel, pro používání nejnovějšího překladače Microsoft potřebujete od Microsoftu klíč Cognitive Services 'Translator Text'.
+
+Přejděte na "Volby -&gt; Nastavení -&gt; Nástroje" pro zadání vašeho klíče.</MsClientSecretNeeded>
+    <GoogleApiKeyNeeded>Bohužel, pro používání nejnovějšího překladače Google potřebujete od Google klíč API.
+
+Přejděte na "Volby -&gt; Nastavení -&gt; Nástroje" pro zadání vašeho klíče API pro překladač Google.</GoogleApiKeyNeeded>
+    <GoogleNoApiKeyWarning>Pokus o překlad bez klíče API... (pomalé a omezená data)</GoogleNoApiKeyWarning>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
     <Title>Překladač Google vs. Microsoft</Title>
@@ -732,6 +752,7 @@ Poznámka: Zkontrolujte volné místo na disku.</WaveFileMalformed>
     <Splitting>Rozdělení</Splitting>
     <AutoSplitText>Automaticky rozdělit text</AutoSplitText>
     <OneLineIsOneSubtitle>Jeden řádek je jeden titulek</OneLineIsOneSubtitle>
+    <TwoLinesAreOneSubtitle>Dva řádky jsou jeden titulek</TwoLinesAreOneSubtitle>
     <LineBreak>Konec řádku</LineBreak>
     <SplitAtBlankLines>Rozdělit na prázdných řádcích</SplitAtBlankLines>
     <MergeShortLines>Sloučit krátké řádky s pokračováním</MergeShortLines>
@@ -745,6 +766,7 @@ Poznámka: Zkontrolujte volné místo na disku.</WaveFileMalformed>
     <TextFiles>Textové soubory</TextFiles>
     <PreviewLinesModifiedX>Náhled - změněno titulků: {0}</PreviewLinesModifiedX>
     <TimeCodes>Časové kódy</TimeCodes>
+    <SplitAtEndChars>Rozdělit na znacích konce</SplitAtEndChars>
   </ImportText>
   <Interjections>
     <Title>Citoslovce</Title>
@@ -919,6 +941,7 @@ Poznámka: Zkontrolujte volné místo na disku.</WaveFileMalformed>
         <SubStationAlphaProperties>Vlastnosti Sub Station Alpha...</SubStationAlphaProperties>
         <EbuProperties>Vlastnosti EBU STL...</EbuProperties>
         <DvdStuioProProperties>Vlastnosti DVD Studio Pro...</DvdStuioProProperties>
+        <TimedTextProperties>Vlastnosti časovaného textu...</TimedTextProperties>
         <PacProperties>Vlastnosti PAC...</PacProperties>
         <OpenOriginal>Otevřít původní titulky (překladatelský režim)...</OpenOriginal>
         <SaveOriginal>Uložit původní titulky</SaveOriginal>
@@ -997,6 +1020,7 @@ Poznámka: Zkontrolujte volné místo na disku.</WaveFileMalformed>
         <SplitLongLines>Rozdělit dlouhé řádky...</SplitLongLines>
         <MinimumDisplayTimeBetweenParagraphs>Minimální čas zobrazení mezi titulky...</MinimumDisplayTimeBetweenParagraphs>
         <SortBy>Seřadit podle</SortBy>
+        <NetflixQualityCheck>Kontrola kvality Netflix...</NetflixQualityCheck>
         <Number>Čísla</Number>
         <StartTime>Začátku</StartTime>
         <EndTime>Konce</EndTime>
@@ -1021,11 +1045,13 @@ Poznámka: Zkontrolujte volné místo na disku.</WaveFileMalformed>
       <Video>
         <Title>Video</Title>
         <OpenVideo>Otevřít soubor videa...</OpenVideo>
+        <OpenVideoFromUrl>Otevřít video z adresy url...</OpenVideoFromUrl>
         <OpenDvd>Otevřít DVD...</OpenDvd>
         <ChooseAudioTrack>Zvolit zvukovou stopu</ChooseAudioTrack>
         <CloseVideo>Zavřít soubor videa</CloseVideo>
         <SetVideoOffset>Nastavit posun videa...</SetVideoOffset>
         <SmptTimeMode>Časování SMPTE (drop frame)</SmptTimeMode>
+        <GenerateTextFromVideo>Generovat text z videa...</GenerateTextFromVideo>
         <GenerateImportSceneChanges>Generovat nebo importovat změny scén...</GenerateImportSceneChanges>
         <RemoveSceneChanges>Odebrat změny scén</RemoveSceneChanges>
         <WaveformBatchGenerate>Dávkově generovat křivky...</WaveformBatchGenerate>
@@ -1139,6 +1165,8 @@ Poznámka: Zkontrolujte volné místo na disku.</WaveFileMalformed>
         <Box>Pole</Box>
         <Color>Barva...</Color>
         <FontName>Název písma...</FontName>
+        <Superscript>Horní index</Superscript>
+        <Subscript>Dolní index</Subscript>
         <Alignment>Zarovnání...</Alignment>
         <AutoBalanceSelectedLines>Automaticky vyvážit vybrané řádky...</AutoBalanceSelectedLines>
         <RemoveLineBreaksFromSelectedLines>Odebrat zalomení z vybraných řádků...</RemoveLineBreaksFromSelectedLines>
@@ -1147,7 +1175,7 @@ Poznámka: Zkontrolujte volné místo na disku.</WaveFileMalformed>
         <ShowSelectedLinesEarlierLater>Zobrazit vybrané řádky dříve nebo později...</ShowSelectedLinesEarlierLater>
         <VisualSyncSelectedLines>Vizuální synchronizace vybraných řádků...</VisualSyncSelectedLines>
         <GoogleAndMicrosoftTranslateSelectedLine>Přeložit Googlem nebo Microsoftem vybrané řádky...</GoogleAndMicrosoftTranslateSelectedLine>
-        <GoogleTranslateSelectedLines>Přeložit Googlem vybrané řádky...</GoogleTranslateSelectedLines>
+        <GoogleTranslateSelectedLines>Přeložit vybrané řádky...</GoogleTranslateSelectedLines>
         <AdjustDisplayDurationForSelectedLines>Nastavit trvání pro vybrané řádky...</AdjustDisplayDurationForSelectedLines>
         <FixCommonErrorsInSelectedLines>Opravit běžné chyby ve vybraných řádcích...</FixCommonErrorsInSelectedLines>
         <ChangeCasingForSelectedLines>Změnit velikost písmen pro vybrané řádky...</ChangeCasingForSelectedLines>
@@ -1156,6 +1184,8 @@ Poznámka: Zkontrolujte volné místo na disku.</WaveFileMalformed>
         <WebVTTRemoveVoices>Odebrat hlasy</WebVTTRemoveVoices>
         <NewActor>Nový herec...</NewActor>
         <RemoveActors>Odebrat herce</RemoveActors>
+        <EditBookmark>Upravit záložku</EditBookmark>
+        <RemoveBookmark>Odebrat záložku</RemoveBookmark>
       </ContextMenu>
     </Menu>
     <Controls>
@@ -1171,6 +1201,7 @@ Poznámka: Zkontrolujte volné místo na disku.</WaveFileMalformed>
     </Controls>
     <VideoControls>
       <Translate>Přeložit</Translate>
+      <CreateAndAdjust>Vytvořit/Upravit</CreateAndAdjust>
       <Create>Vytvořit</Create>
       <Adjust>Upravit</Adjust>
       <SelectCurrentElementWhilePlaying>Vybrat aktuální titulek během přehrávání</SelectCurrentElementWhilePlaying>
@@ -1727,6 +1758,12 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <SettingsName>Nastavení</SettingsName>
     <Help>Nápověda</Help>
     <UnbreakNoSpace>Zrušit zalomení bez mezery (CJK)</UnbreakNoSpace>
+    <ToggleBookmarks>Přepnout záložky</ToggleBookmarks>
+    <ToggleBookmarksWithComment>Přepnout záložky - přidat komentář</ToggleBookmarksWithComment>
+    <ClearBookmarks>Vymazat záložky</ClearBookmarks>
+    <GoToBookmark>Přejít na záložku</GoToBookmark>
+    <GoToPreviousBookmark>Přejít na předchozí záložku</GoToPreviousBookmark>
+    <GoToNextBookmark>Přejít na další záložku</GoToNextBookmark>
     <FontInUi>Písmo v uživatelském rozhraní</FontInUi>
     <ShowFrameRate>Zobrazit snímkovou frekvenci v panelu nástrojů</ShowFrameRate>
     <DefaultFrameRate>Výchozí snímková frekvence</DefaultFrameRate>
@@ -1778,6 +1815,7 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <AutoBackupDeleteAfterThreeMonths>3 měsíce</AutoBackupDeleteAfterThreeMonths>
     <AutoBackupDeleteAfterSixMonths>6 měsíců</AutoBackupDeleteAfterSixMonths>
     <CheckForUpdates>Kontrolovat aktualizace</CheckForUpdates>
+    <AutoSave>Automatické uložení</AutoSave>
     <AllowEditOfOriginalSubtitle>Povolit úpravu původních titulků</AllowEditOfOriginalSubtitle>
     <PromptDeleteLines>Dotázat se na odstranění řádků</PromptDeleteLines>
     <TimeCodeMode>Režim časového kódu</TimeCodeMode>
@@ -1877,6 +1915,7 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <Alt>Alt</Alt>
     <Shift>Shift</Shift>
     <Key>Klávesa</Key>
+    <ListViewAndTextBox>Zobrazení seznamu a textové pole</ListViewAndTextBox>
     <ListView>Zobrazení seznamu</ListView>
     <TextBox>Textové pole</TextBox>
     <UpdateShortcut>Aktualizovat</UpdateShortcut>
@@ -1899,7 +1938,7 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Nastavit konec, posunout zbytek a přejít na další</AdjustSetEndAndOffsetTheRestAndGoToNext>
     <AdjustExtendCurrentSubtitle>Rozšířit aktuální řádek do dalšího titulku nebo max. trvání</AdjustExtendCurrentSubtitle>
     <RecalculateDurationOfCurrentSubtitle>Přepočítat trvání aktuálního titulku</RecalculateDurationOfCurrentSubtitle>
-    <MainCreateStartDownEndUp>Vytvořit nový šipkou dolů, nastavit čas konce šipkou nahoru</MainCreateStartDownEndUp>
+    <MainCreateStartDownEndUp>Vložit nový titulek šipkou dolů, nastavit čas konce šipkou nahoru</MainCreateStartDownEndUp>
     <MergeDialog>Sloučit dialog (vložit pomlčky)</MergeDialog>
     <GoToNext>Přejít na další řádek</GoToNext>
     <GoToPrevious>Přejít na předchozí řádek</GoToPrevious>
@@ -1911,6 +1950,15 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <ToggleDialogDashes>Přepnout dialogové pomlčky</ToggleDialogDashes>
     <ToggleMusicSymbols>Přepnout hudební symboly</ToggleMusicSymbols>
     <Alignment>Zarovnání (vybrané řádky)</Alignment>
+    <AlignmentN1>Zarovnání dolů vlevo - {\an1}</AlignmentN1>
+    <AlignmentN2>Zarovnání dolů na střed - {\an2}</AlignmentN2>
+    <AlignmentN3>Zarovnání dolů vpravo - {\an3}</AlignmentN3>
+    <AlignmentN4>Zarovnání doprostřed vlevo - {\an4}</AlignmentN4>
+    <AlignmentN5>Zarovnání doprostřed na střed - {\an5}</AlignmentN5>
+    <AlignmentN6>Zarovnání doprostřed vpravo - {\an6}</AlignmentN6>
+    <AlignmentN7>Zarovnání nahoru vlevo - {\an7}</AlignmentN7>
+    <AlignmentN8>Zarovnání nahoru na střed - {\an8}</AlignmentN8>
+    <AlignmentN9>Zarovnání nahoru vpravo - {\an9}</AlignmentN9>
     <CopyTextOnly>Kopírovat text pouze do schránky (vybrané řádky)</CopyTextOnly>
     <CopyTextOnlyFromOriginalToCurrent>Kopírovat text z původního do aktuálního</CopyTextOnlyFromOriginalToCurrent>
     <AutoDurationSelectedLines>Automatické trvání (vybrané řádky)</AutoDurationSelectedLines>
@@ -1998,9 +2046,10 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <Miscellaneous>Různé</Miscellaneous>
     <CpsIncludesSpace>Znaky/s (CPS) včetně mezer</CpsIncludesSpace>
     <UseDoNotBreakAfterList>Používat seznam nezalamování po (pro automatické zalamování)</UseDoNotBreakAfterList>
-    <MicrosoftBingTranslator>Microsoft Bing Translator</MicrosoftBingTranslator>
+    <GoogleTranslate>Překladač Google</GoogleTranslate>
+    <GoogleTranslateApiKey>Klíč API</GoogleTranslateApiKey>
+    <MicrosoftBingTranslator>Překladač Microsoft</MicrosoftBingTranslator>
     <HowToSignUp>Jak se zaregistrovat</HowToSignUp>
-    <GoogleTranslateUrl>URL Překladače Google</GoogleTranslateUrl>
     <MicrosoftTranslateApiKey>Klíč</MicrosoftTranslateApiKey>
     <FontNote>Poznámka: Tato nastavení písma jsou pouze pro uživatelské rozhraní Subtitle Edit.
 Nastavení písma pro titulky se normálně provádí v přehrávači videa, ale lze je také provést při použití formátu titulků s vestavěnými informacemi o písmu,
@@ -2067,6 +2116,7 @@ jako je „Advanced Sub Station Alpha“ nebo prostřednictvím exportu do form�
     <AutoFixNames>Automaticky opravit jména pokud se liší pouze velikost písmen</AutoFixNames>
     <CheckOneLetterWords>Ptát se na neznámá jednopísmenná slova</CheckOneLetterWords>
     <TreatINQuoteAsING>Zacházet se slovy končícími na „in'“ jako s „ing“ (pouze angličtina)</TreatINQuoteAsING>
+    <RememberUseAlwaysList>Zapamatovat seznam „Použít vždy“</RememberUseAlwaysList>
     <ImageText>Obrázek textu</ImageText>
     <SpellCheckCompleted>Kontrola pravopisu dokončena</SpellCheckCompleted>
     <SpellCheckAborted>Kontrola pravopisu přerušena</SpellCheckAborted>
