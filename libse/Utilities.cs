@@ -2774,5 +2774,33 @@ namespace Nikse.SubtitleEdit.Core
             return fileName;
         }
 
+        public static string ReSplit(string text, int selectionStart)
+        {
+            if (string.IsNullOrWhiteSpace(text) || !text.Contains(" ") || selectionStart == 0)
+            {
+                return text;
+            }
+
+            var sb = new StringBuilder();
+            var isFixed = false;
+            for (int i = 0; i < text.Length; i++)
+            {
+                var ch = text[i];
+
+                if (!isFixed && ch == ' ' && (i > 0 && i + 1 == selectionStart || i >= selectionStart && ch == ' '))
+                {
+                    sb.Append(Environment.NewLine);
+                    isFixed = true;
+                }
+
+                sb.Append(ch == '\r' || ch == '\n' ? ' ' : ch);
+            }
+
+            if (!isFixed)
+            {
+                return text;
+            }
+            return sb.ToString().Replace("  ", " ").Replace(Environment.NewLine + " ", Environment.NewLine);
+        }
     }
 }

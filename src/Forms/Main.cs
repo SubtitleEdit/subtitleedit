@@ -217,6 +217,7 @@ namespace Nikse.SubtitleEdit.Forms
         private Keys _mainInsertBefore = Keys.None;
         private Keys _mainTextBoxAutoBreak = Keys.None;
         private Keys _mainTextBoxBreakAtCursorPosition = Keys.None;
+        private Keys _mainTextBoxBreakAtCursorPositionAndGoToNext = Keys.None;
         private Keys _mainTextBoxUnbreak = Keys.None;
         private Keys _mainMergeDialog = Keys.None;
         private Keys _mainToggleFocus = Keys.None;
@@ -9255,8 +9256,6 @@ namespace Nikse.SubtitleEdit.Forms
 
             int numberOfLines = Utilities.GetNumberOfLines(textBoxListViewText.Text);
 
-            //Utilities.CheckAutoWrap(textBoxListViewText, e, numberOfNewLines);
-
             if (e.Modifiers == Keys.None && e.KeyCode == Keys.Enter && numberOfLines > Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX)
             {
                 e.SuppressKeyPress = true;
@@ -9264,6 +9263,22 @@ namespace Nikse.SubtitleEdit.Forms
             else if (e.KeyData == _mainTextBoxAutoBreak)
             {
                 ButtonAutoBreakClick(null, null);
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyData == _mainTextBoxBreakAtCursorPosition)
+            {
+                textBoxListViewText.Text = Utilities.ReSplit(textBoxListViewText.Text, textBoxListViewText.SelectionStart);
+                var lines = textBoxListViewText.Text.SplitToLines();
+                if (lines.Count > 0)
+                {
+                    textBoxListViewText.SelectionStart = lines[0].Length;
+                }
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyData == _mainTextBoxBreakAtCursorPositionAndGoToNext)
+            {
+                textBoxListViewText.Text = Utilities.ReSplit(textBoxListViewText.Text, textBoxListViewText.SelectionStart);
+                ButtonNextClick(null, null);
                 e.SuppressKeyPress = true;
             }
             else if (e.KeyData == _mainTextBoxUnbreak)
@@ -19423,6 +19438,7 @@ namespace Nikse.SubtitleEdit.Forms
             _mainInsertBefore = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainInsertBefore);
             _mainTextBoxAutoBreak = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxAutoBreak);
             _mainTextBoxBreakAtCursorPosition = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxBreakAtPosition);
+            _mainTextBoxBreakAtCursorPositionAndGoToNext = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxBreakAtPositionAndGoToNext);
             _mainTextBoxUnbreak = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxUnbreak);
             _mainMergeDialog = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainMergeDialog);
             _mainToggleFocus = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainToggleFocus);
@@ -22072,12 +22088,22 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 e.SuppressKeyPress = true;
             }
+
             else if (e.KeyData == _mainTextBoxBreakAtCursorPosition)
             {
-                if (textBoxListViewTextAlternate.Text.Length > 0)
+                textBoxListViewTextAlternate.Text = Utilities.ReSplit(textBoxListViewTextAlternate.Text, textBoxListViewTextAlternate.SelectionStart);
+                var lines = textBoxListViewTextAlternate.Text.SplitToLines();
+                if (lines.Count > 0)
                 {
-                    //TODO: fix
+                    textBoxListViewTextAlternate.SelectionStart = lines[0].Length;
                 }
+                e.SuppressKeyPress = true;
+            }
+
+            else if (e.KeyData == _mainTextBoxBreakAtCursorPosition)
+            {
+                textBoxListViewText.Text = Utilities.ReSplit(textBoxListViewText.Text, textBoxListViewText.SelectionStart);
+                ButtonNextClick(null, null);
                 e.SuppressKeyPress = true;
             }
             else if (e.KeyData == _mainTextBoxUnbreak)

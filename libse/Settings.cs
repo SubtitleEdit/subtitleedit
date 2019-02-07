@@ -1163,7 +1163,8 @@ $HorzAlign          =   Center
         public string MainAdjustEndXMsForward { get; set; }
         public string MainInsertAfter { get; set; }
         public string MainTextBoxAutoBreak { get; set; }
-        public string MainTextBoxBreakAtPosition { get; set; }        
+        public string MainTextBoxBreakAtPosition { get; set; }
+        public string MainTextBoxBreakAtPositionAndGoToNext { get; set; }
         public string MainTextBoxUnbreak { get; set; }
         public string MainWaveformInsertAtCurrentPosition { get; set; }
         public string MainInsertBefore { get; set; }
@@ -5225,6 +5226,12 @@ $HorzAlign          =   Center
                     settings.Shortcuts.MainTextBoxBreakAtPosition = subNode.InnerText;
                 }
 
+                subNode = node.SelectSingleNode("MainTextBoxBreakAtPositionAndGoToNext");
+                if (subNode != null)
+                {
+                    settings.Shortcuts.MainTextBoxBreakAtPositionAndGoToNext = subNode.InnerText;
+                }
+
                 subNode = node.SelectSingleNode("MainTextBoxUnbreak");
                 if (subNode != null)
                 {
@@ -6223,6 +6230,7 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("MainInsertAfter", settings.Shortcuts.MainInsertAfter);
                 textWriter.WriteElementString("MainTextBoxAutoBreak", settings.Shortcuts.MainTextBoxAutoBreak);
                 textWriter.WriteElementString("MainTextBoxBreakAtPosition", settings.Shortcuts.MainTextBoxBreakAtPosition);
+                textWriter.WriteElementString("MainTextBoxBreakAtPositionAndGoToNext", settings.Shortcuts.MainTextBoxBreakAtPositionAndGoToNext);
                 textWriter.WriteElementString("MainTextBoxUnbreak", settings.Shortcuts.MainTextBoxUnbreak);
                 textWriter.WriteElementString("MainWaveformInsertAtCurrentPosition", settings.Shortcuts.MainWaveformInsertAtCurrentPosition);
                 textWriter.WriteElementString("MainInsertBefore", settings.Shortcuts.MainInsertBefore);
