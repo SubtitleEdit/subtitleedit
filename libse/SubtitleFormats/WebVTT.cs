@@ -234,8 +234,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
             }
 
-            if (!string.IsNullOrEmpty(line) && line.EndsWith('%'))
+            if (!string.IsNullOrEmpty(line))
             {
+                line = line.Trim();
                 if (line.EndsWith('%'))
                 {
                     if (double.TryParse(line.TrimEnd('%'), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var number))
@@ -252,13 +253,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
                 else
                 {
-                    if (double.TryParse(line.TrimEnd('%'), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var number))
+                    if (double.TryParse(line, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var number))
                     {
-                        if (number < 7)
+                        if (number >= 0 && number <= 7)
                         {
-                            vAlignTop = true;
+                            vAlignTop = true; // Positive numbers indicate top down
                         }
-                        else if (number < 11)
+                        else if (number > 7 && number < 11)
                         {
                             vAlignMiddle = true;
                         }
