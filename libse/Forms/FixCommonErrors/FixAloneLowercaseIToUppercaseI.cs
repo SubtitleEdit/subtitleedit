@@ -29,13 +29,13 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             callbacks.UpdateFixStatus(iFixes, language.FixLowercaseIToUppercaseI, language.XIsChangedToUppercase);
         }
 
-        public static string FixAloneLowercaseIToUppercaseLine(Regex re, string oldText, string s, char target)
+        public static string FixAloneLowercaseIToUppercaseLine(Regex re, string oldText, string input, char target)
         {
             //html tags
-            s = s.Replace(">" + target + "</", ">I</");
-            s = s.Replace(">" + target + " ", ">I ");
-            s = s.Replace(">" + target + "\u200B" + Environment.NewLine, ">I" + Environment.NewLine); // Zero Width Space
-            s = s.Replace(">" + target + "\uFEFF" + Environment.NewLine, ">I" + Environment.NewLine); // Zero Width No-Break Space
+            var s = input.Replace(">" + target + "</", ">I</")
+                         .Replace(">" + target + " ", ">I ")
+                         .Replace(">" + target + "\u200B" + Environment.NewLine, ">I" + Environment.NewLine) // Zero Width Space
+                         .Replace(">" + target + "\uFEFF" + Environment.NewLine, ">I" + Environment.NewLine); // Zero Width No-Break Space
 
             // reg-ex
             Match match = re.Match(s);
@@ -63,12 +63,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
                     if (prev != '>' && next != '>' && next != '}' && !wholePrev.TrimEnd().EndsWith("...", StringComparison.Ordinal))
                     {
-                        bool fix = true;
-
-                        if (prev == '.' || prev == '\'')
-                        {
-                            fix = false;
-                        }
+                        bool fix = prev != '.' && prev != '\'';
 
                         if (prev == ' ' && next == '.')
                         {
