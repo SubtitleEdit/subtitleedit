@@ -2776,31 +2776,40 @@ namespace Nikse.SubtitleEdit.Core
 
         public static string ReSplit(string text, int selectionStart)
         {
-            if (string.IsNullOrWhiteSpace(text) || !text.Contains(" ") || selectionStart == 0)
+            if (string.IsNullOrWhiteSpace(text) || selectionStart == 0)
             {
                 return text;
             }
 
-            var sb = new StringBuilder();
+            // last white-space index
+            int wsIdx = text.LastIndexOf(' ');
+            // can't split if there is no word pre/after split-index
+            if (wsIdx <= 0 || selectionStart > wsIdx)
+            {
+                return text;
+            }
+
+            int len = text.Length;
+            var sb = new StringBuilder(len + 1);
             var isFixed = false;
-            for (int i = 0; i < text.Length; i++)
+            for (int i = 0; i < len; i++)
             {
                 var ch = text[i];
-
-                if (!isFixed && ch == ' ' && (i > 0 && i + 1 == selectionStart || i >= selectionStart && ch == ' '))
+                if (!isFixed && ch == ' ' && (i > 0 && i + 1 == selectionStart || i >= selectionStart))
                 {
                     sb.Append(Environment.NewLine);
                     isFixed = true;
                 }
 
-                sb.Append(ch == '\r' || ch == '\n' ? ' ' : ch);
+                int sbLen = sb.Length;
+                // avoid appending recursive white-spaces
+                if (sbLen == 0 || sb[sbLen - 1] != ' ' || !(ch == '\r' || ch == '\n'))
+                {
+                    sb.Append(ch == '\r' || ch == '\n' ? ' ' : ch);
+                }
             }
 
-            if (!isFixed)
-            {
-                return text;
-            }
-            return sb.ToString().Replace("  ", " ").Replace(Environment.NewLine + " ", Environment.NewLine);
+            return isFixed ? sb.ToString() : text;
         }
     }
 }
