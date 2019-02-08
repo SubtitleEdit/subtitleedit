@@ -33,18 +33,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return false;
         }
 
-        internal const string Layout = @"<?xml version='1.0' encoding='UTF-8'?>
+        internal static string Layout = @"<?xml version='1.0' encoding='UTF-8'?>
 <TMPGEncVMESubtitleTextFormat>
     <Layout>
         <LayoutItem index='0'>
             <Name>
                 <![CDATA[Picture bottom layout]]>
             </Name>
-            <Position>23</Position>
+            <Position>[Position]</Position>
             <FontName>
-                <![CDATA[Tahoma]]>
+                <![CDATA[[FontName]]]>
             </FontName>
-            <FontHeight>0.069</FontHeight>
+            <FontHeight>[FontHeight]</FontHeight>
             <FontColor>17588159451135</FontColor>
             <FontBold>0</FontBold>
             <FontItalic>0</FontItalic>
@@ -73,11 +73,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             <Name>
                 <![CDATA[Picture top layout]]>
             </Name>
-            <Position>23</Position>
+            <Position>[Position]</Position>
             <FontName>
-                <![CDATA[Tahoma]]>
+                <![CDATA[[FontName]]]>
             </FontName>
-            <FontHeight>0.069</FontHeight>
+            <FontHeight>[FontHeight]</FontHeight>
             <FontColor>17588159451135</FontColor>
             <FontBold>0</FontBold>
             <FontItalic>0</FontItalic>
@@ -106,11 +106,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             <Name>
                 <![CDATA[Picture left layout]]>
             </Name>
-            <Position>23</Position>
+            <Position>[Position]</Position>
             <FontName>
-                <![CDATA[Tahoma]]>
+                <![CDATA[[FontName]]]>
             </FontName>
-            <FontHeight>0.069</FontHeight>
+            <FontHeight>[FontHeight]</FontHeight>
             <FontColor>17588159451135</FontColor>
             <FontBold>0</FontBold>
             <FontItalic>0</FontItalic>
@@ -139,11 +139,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             <Name>
                 <![CDATA[Picture right layout]]>
             </Name>
-            <Position>23</Position>
+            <Position>[Position]</Position>
             <FontName>
-                <![CDATA[Tahoma]]>
+                <![CDATA[[FontName]]]>
             </FontName>
-            <FontHeight>0.069</FontHeight>
+            <FontHeight>[FontHeight]</FontHeight>
             <FontColor>17588159451135</FontColor>
             <FontBold>0</FontBold>
             <FontItalic>0</FontItalic>
@@ -172,11 +172,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             <Name>
                 <![CDATA[Picture bottom layout]]>
             </Name>
-            <Position>23</Position>
+            <Position>[Position]</Position>
             <FontName>
-                <![CDATA[Tahoma]]>
+                <![CDATA[[FontName]]]>
             </FontName>
-            <FontHeight>0.069</FontHeight>
+            <FontHeight>[FontHeight]</FontHeight>
             <FontColor>17588159451135</FontColor>
             <FontBold>0</FontBold>
             <FontItalic>1</FontItalic>
@@ -205,7 +205,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     <Subtitle>
         @
     </Subtitle>
-</TMPGEncVMESubtitleTextFormat>";
+</TMPGEncVMESubtitleTextFormat>"
+            .Replace("[FontName]", Configuration.Settings.SubtitleSettings.TmpegEncXmlFontName)
+            .Replace("[FontHeight]", Configuration.Settings.SubtitleSettings.TmpegEncXmlFontHeight)
+            .Replace("[Position]", Configuration.Settings.SubtitleSettings.TmpegEncXmlPosition);
+
 
         public override string ToText(Subtitle subtitle, string title)
         {
