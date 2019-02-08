@@ -2431,6 +2431,7 @@
     <RegEx find="čas([au]|om|ov[aei]|ovima)\b" replaceWith="sat$1" />
     <RegEx find="Čas([au]|om|ov[aei]|ovima)\b" replaceWith="Sat$1" />
     <RegEx find="([čČ])eka[čć]" replaceWith="$1ekat ć" />
+    <RegEx find="([aeiou])čijo(?![mj])" replaceWith="$1čio" />
     <RegEx find="([čČ])ovi?j?e([kč])" replaceWith="$1ovje$2" />
     <RegEx find="ćopa" replaceWith="šepa" />
     <RegEx find="ćuti" replaceWith="šuti" />
@@ -2815,6 +2816,7 @@
     <RegEx find="(?&lt;![mn])o(d?)se([kć])(?!s)" replaceWith="o$1sje$2" />
     <RegEx find="odu?hvat" replaceWith="othvat" />
     <RegEx find="(?&lt;!r)oent" replaceWith="oant" />
+    <RegEx find="overn" replaceWith="ovjern" />
     <RegEx find="ovren" replaceWith="ovoren" />
     <RegEx find="([pP])ogrj?eši(?!v)" replaceWith="$1ogriješi" />
     <RegEx find="([pP])olen" replaceWith="$1elud" />
