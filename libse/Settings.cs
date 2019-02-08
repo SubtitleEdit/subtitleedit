@@ -3441,19 +3441,19 @@ $HorzAlign          =   Center
                 subNode = node.SelectSingleNode("TmpegEncXmlFontName");
                 if (subNode != null)
                 {
-                    settings.SubtitleSettings.TmpegEncXmlFontName = subNode.InnerText.TrimEnd() + Environment.NewLine;
+                    settings.SubtitleSettings.TmpegEncXmlFontName = subNode.InnerText.TrimEnd();
                 }
 
                 subNode = node.SelectSingleNode("TmpegEncXmlFontHeight");
                 if (subNode != null)
                 {
-                    settings.SubtitleSettings.TmpegEncXmlFontHeight = subNode.InnerText.TrimEnd() + Environment.NewLine;
+                    settings.SubtitleSettings.TmpegEncXmlFontHeight = subNode.InnerText.TrimEnd();
                 }
 
                 subNode = node.SelectSingleNode("TmpegEncXmlPosition");
                 if (subNode != null)
                 {
-                    settings.SubtitleSettings.TmpegEncXmlPosition = subNode.InnerText.TrimEnd() + Environment.NewLine;
+                    settings.SubtitleSettings.TmpegEncXmlPosition = subNode.InnerText.TrimEnd();
                 }
 
                 subNode = node.SelectSingleNode("CheetahCaptionAlwayWriteEndTime");
@@ -5924,9 +5924,9 @@ $HorzAlign          =   Center
                 textWriter.WriteElementString("EbuStlMarginBottom", settings.SubtitleSettings.EbuStlMarginBottom.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("EbuStlNewLineRows", settings.SubtitleSettings.EbuStlNewLineRows.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("DvdStudioProHeader", settings.SubtitleSettings.DvdStudioProHeader.TrimEnd() + Environment.NewLine);
-                textWriter.WriteElementString("TmpegEncXmlFontName", settings.SubtitleSettings.TmpegEncXmlFontName.TrimEnd() + Environment.NewLine);
-                textWriter.WriteElementString("TmpegEncXmlFontHeight", settings.SubtitleSettings.TmpegEncXmlFontHeight.TrimEnd() + Environment.NewLine);
-                textWriter.WriteElementString("TmpegEncXmlPosition", settings.SubtitleSettings.TmpegEncXmlPosition.TrimEnd() + Environment.NewLine);
+                textWriter.WriteElementString("TmpegEncXmlFontName", settings.SubtitleSettings.TmpegEncXmlFontName.TrimEnd());
+                textWriter.WriteElementString("TmpegEncXmlFontHeight", settings.SubtitleSettings.TmpegEncXmlFontHeight.TrimEnd());
+                textWriter.WriteElementString("TmpegEncXmlPosition", settings.SubtitleSettings.TmpegEncXmlPosition.TrimEnd());
                 textWriter.WriteElementString("CheetahCaptionAlwayWriteEndTime", settings.SubtitleSettings.CheetahCaptionAlwayWriteEndTime.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("NuendoCharacterListFile", settings.SubtitleSettings.NuendoCharacterListFile);
                 textWriter.WriteEndElement();
