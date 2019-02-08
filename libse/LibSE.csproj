@@ -52,7 +52,6 @@
     <Compile Include="BluRaySup\BluRaySupParser.cs" />
     <Compile Include="BluRaySup\BluRaySupPicture.cs" />
     <Compile Include="BluRaySup\Core.cs" />
-    <Compile Include="BluRaySup\ImageObject.cs" />
     <Compile Include="BluRaySup\ImageObjectFragment.cs" />
     <Compile Include="BluRaySup\PaletteInfo.cs" />
     <Compile Include="BluRaySup\ToolBox.cs" />

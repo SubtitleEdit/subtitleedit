@@ -61,16 +61,6 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
         public int CompositionNumber { get; set; }
 
         /// <summary>
-        /// objectID used in decoded object
-        /// </summary>
-        public int ObjectId { get; set; }
-
-        /// <summary>
-        /// list of ODS packets containing image info
-        /// </summary>
-        public List<ImageObject> ImageObjects;
-
-        /// <summary>
         /// width of subtitle window (might be larger than image)
         /// </summary>
         public int WindowWidth { get; set; }
@@ -98,7 +88,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
         /// <summary>
         /// List of (list of) palette info - there are up to 8 palettes per epoch, each can be updated several times
         /// </summary>
-        public List<List<PaletteInfo>> Palettes;
+        public List<List<PaletteInfo>> Palettes { get; set; }
 
         /// <summary>
         /// Create RLE buffer from bitmap
@@ -535,7 +525,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             packetHeader[10] = 0x14;                                            // ID
             ToolBox.SetDWord(packetHeader, 2, dts);                             // PTS (=DTS of PCS/WDS)
             ToolBox.SetDWord(packetHeader, 6, 0);                               // DTS (0)
-            ToolBox.SetWord(packetHeader, 11, 2 + palSize * 5);               // size
+            ToolBox.SetWord(packetHeader, 11, 2 + palSize * 5);                 // size
             for (int i = 0; i < packetHeader.Length; i++)
             {
                 buf[index++] = packetHeader[i];
@@ -561,7 +551,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             }
 
             packetHeader[10] = 0x15;                                            // ID
-            timestamp = 0; 
+            timestamp = 0;
             ToolBox.SetDWord(packetHeader, 2, timestamp);                       // PTS
             ToolBox.SetDWord(packetHeader, 6, dts);                             // DTS
             ToolBox.SetWord(packetHeader, 11, headerOdsFirst.Length + bufSize); // size
@@ -626,7 +616,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             // write PCS end
             packetHeader[10] = 0x16;                                            // ID
             ToolBox.SetDWord(packetHeader, 2, pic.EndTimeForWrite);             // PTS
-            dts = pic.EndTimeForWrite - 90; 
+            dts = pic.EndTimeForWrite - 90;
             ToolBox.SetDWord(packetHeader, 6, dts);                             // DTS
             ToolBox.SetWord(packetHeader, 11, headerPcsEnd.Length);             // size
             for (int i = 0; i < packetHeader.Length; i++)
