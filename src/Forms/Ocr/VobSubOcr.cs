@@ -5632,7 +5632,6 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                         Bitmap oneColorBitmap = nbmp.GetBitmap();
                         string oneColorText = Tesseract3DoOcrViaExe(oneColorBitmap, _languageId, "6", _tesseractEngineMode); // 6 = Assume a single uniform block of text.
                         oneColorBitmap.Dispose();
-                        nbmp = null;
 
                         if (oneColorText.Length > 1 &&
                             !oneColorText.Contains("CD") &&
@@ -5646,16 +5645,14 @@ namespace Nikse.SubtitleEdit.Forms.Ocr
                             Utilities.CountTagInText(oneColorText, '(') < 2 && Utilities.CountTagInText(oneColorText, ')') < 2 &&
                             Utilities.GetNumberOfLines(oneColorText) < 4)
                         {
-                            int modiCorrectWords;
-                            int modiWordsNotFound = _ocrFixEngine.CountUnknownWordsViaDictionary(oneColorText, out modiCorrectWords);
+                            int modiWordsNotFound = _ocrFixEngine.CountUnknownWordsViaDictionary(oneColorText, out var modiCorrectWords);
                             string modiTextOcrFixed = oneColorText;
                             if (checkBoxAutoFixCommonErrors.Checked)
                             {
                                 modiTextOcrFixed = _ocrFixEngine.FixOcrErrors(oneColorText, index, _lastLine, false, GetAutoGuessLevel());
                             }
 
-                            int modiOcrCorrectedCorrectWords;
-                            int modiOcrCorrectedWordsNotFound = _ocrFixEngine.CountUnknownWordsViaDictionary(modiTextOcrFixed, out modiOcrCorrectedCorrectWords);
+                            int modiOcrCorrectedWordsNotFound = _ocrFixEngine.CountUnknownWordsViaDictionary(modiTextOcrFixed, out var modiOcrCorrectedCorrectWords);
                             if (modiOcrCorrectedWordsNotFound <= modiWordsNotFound)
                             {
                                 oneColorText = modiTextOcrFixed;

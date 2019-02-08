@@ -1009,8 +1009,7 @@ namespace Nikse.SubtitleEdit.Core
         public static int GetMaxLineLength(string text)
         {
             int maxLength = 0;
-            text = HtmlUtil.RemoveHtmlTags(text, true);
-            foreach (string line in text.SplitToLines())
+            foreach (string line in HtmlUtil.RemoveHtmlTags(text, true).SplitToLines())
             {
                 if (line.Length > maxLength)
                 {
@@ -2382,9 +2381,9 @@ namespace Nikse.SubtitleEdit.Core
             return text;
         }
 
-        public static string RemoveSpaceBeforeAfterTag(string text, string openTag)
+        public static string RemoveSpaceBeforeAfterTag(string input, string openTag)
         {
-            text = HtmlUtil.FixUpperTags(text);
+            var text = HtmlUtil.FixUpperTags(input);
             var closeTag = string.Empty;
             switch (openTag)
             {

@@ -39,7 +39,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             temp = temp.Replace("}, {", "},{");
             temp = temp.Replace("} , {", "},{");
             temp = temp.Replace("} ,{", "},{");
-            temp = temp.Substring(temp.IndexOf("\"words\":") + 10);
+            temp = temp.Substring(temp.IndexOf("\"words\":", StringComparison.Ordinal) + 10);
             Paragraph p = null;
 
             foreach (string line in temp.Replace("},{", Environment.NewLine).SplitToLines())
@@ -50,10 +50,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 string text = Json.ReadTag(s, "name");
                 if (start != null && duration != null && text != null)
                 {
-                    double startSeconds;
-                    double durationSeconds;
-                    if (double.TryParse(start, System.Globalization.NumberStyles.AllowDecimalPoint, System.Globalization.CultureInfo.InvariantCulture, out startSeconds) &&
-                        double.TryParse(duration, System.Globalization.NumberStyles.AllowDecimalPoint, System.Globalization.CultureInfo.InvariantCulture, out durationSeconds))
+                    if (double.TryParse(start, System.Globalization.NumberStyles.AllowDecimalPoint, System.Globalization.CultureInfo.InvariantCulture, out var startSeconds) &&
+                        double.TryParse(duration, System.Globalization.NumberStyles.AllowDecimalPoint, System.Globalization.CultureInfo.InvariantCulture, out var durationSeconds))
                     {
                         if ((text == "." || text == "!" || text == "?" || text == ":") && p != null)
                         {

@@ -145,8 +145,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 string s = comboBoxFrameRate.SelectedItem.ToString();
                 s = s.Replace(",", ".").Replace(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, ".").Trim();
-                double d;
-                if (double.TryParse(s, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out d))
+                if (double.TryParse(s, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var d))
                 {
                     return d;
                 }
@@ -551,9 +550,7 @@ namespace Nikse.SubtitleEdit.Forms
                 _exportType == ExportFormats.EdlClipName && saveFileDialog1.ShowDialog(this) == DialogResult.OK ||
                 _exportType == ExportFormats.Edl && saveFileDialog1.ShowDialog(this) == DialogResult.OK)
             {
-                int width;
-                int height;
-                GetResolution(out width, out height);
+                GetResolution(out var width, out var height);
 
                 FileStream binarySubtitleFile = null;
                 VobSubWriter vobSubWriter = null;
@@ -1078,14 +1075,14 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             }
         }
 
-        private void SetResolution(string xAndY)
+        private void SetResolution(string inputXAndY)
         {
-            if (string.IsNullOrEmpty(xAndY))
+            if (string.IsNullOrEmpty(inputXAndY))
             {
                 return;
             }
 
-            xAndY = xAndY.ToLowerInvariant();
+            var xAndY = inputXAndY.ToLowerInvariant();
 
             if (_exportType == ExportFormats.Fcp)
             {
@@ -1109,9 +1106,6 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     case "1920x1080":
                         xAndY = "FullHD 1920x1080";
                         break;
-                    //case "1920x1080":
-                    //    xAndY = "DVCPROHD-1080i60";
-                    //    break;
                     case "1280x1080":
                         xAndY = "HD-(1280x1080)";
                         break;
@@ -2057,12 +2051,6 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         }
                     }
                 }
-                else if (_format.GetType() == typeof(TimedText10))
-                {
-                    if (!string.IsNullOrEmpty(p.Extra))
-                    {
-                    }
-                }
             }
 
             _subtitleColor = panelColor.BackColor;
@@ -2081,27 +2069,23 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             {
                 return 0;
             }
-            else
+
+            if (float.TryParse(comboBoxBorderWidth.SelectedItem.ToString(), out var f))
             {
-                float f;
-                if (float.TryParse(comboBoxBorderWidth.SelectedItem.ToString(), out f))
-                {
-                    return f;
-                }
-
-                if (float.TryParse(Utilities.RemoveNonNumbers(comboBoxBorderWidth.SelectedItem.ToString()), out f))
-                {
-                    return f;
-                }
-
-                return 0;
+                return f;
             }
+
+            if (float.TryParse(Utilities.RemoveNonNumbers(comboBoxBorderWidth.SelectedItem.ToString()), out f))
+            {
+                return f;
+            }
+
+            return 0;
         }
 
         private float GetShadowWidth()
         {
-            float f;
-            if (float.TryParse(comboBoxShadowWidth.SelectedItem.ToString(), out f))
+            if (float.TryParse(comboBoxShadowWidth.SelectedItem.ToString(), out var f))
             {
                 return f;
             }
@@ -2402,8 +2386,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                             if (arr.Length > 0)
                             {
                                 string temp = arr[0].Trim('\'').Trim('"').Trim('\'');
-                                float f;
-                                if (float.TryParse(temp, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out f))
+                                if (float.TryParse(temp, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var f))
                                 {
                                     fontSize = f;
                                 }
@@ -3098,8 +3081,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                         if (arr.Length > 0)
                                         {
                                             string temp = arr[0].Trim('\'').Trim('"').Trim('\'');
-                                            float f;
-                                            if (float.TryParse(temp, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out f))
+                                            if (float.TryParse(temp, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var f))
                                             {
                                                 fontSize = f;
                                             }
@@ -4238,8 +4220,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
         {
             for (int i = 0; i < comboBoxFrameRate.Items.Count; i++)
             {
-                double d;
-                if (double.TryParse(comboBoxFrameRate.Items[i].ToString().Replace(',', '.').Replace(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, "."), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out d))
+                if (double.TryParse(comboBoxFrameRate.Items[i].ToString().Replace(',', '.').Replace(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, "."), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var d))
                 {
                     if (Math.Abs(lastFrameRate - d) < 0.01)
                     {
