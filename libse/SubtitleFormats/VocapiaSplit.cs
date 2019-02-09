@@ -108,6 +108,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     text = text.Replace("<s/>", Environment.NewLine);
                     text = text.Replace("  ", " ");
                     var p = new Paragraph(text, ParseTimeCode(start), ParseTimeCode(end));
+                    p.Number = subtitle.Paragraphs.Count + 1;
                     var spkIdAttr = node.Attributes["spkid"];
                     if (spkIdAttr != null)
                     {
@@ -122,38 +123,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     _errorCount++;
                 }
             }
-            subtitle.Renumber();
             if (subtitle.Paragraphs.Count > 0)
             {
                 subtitle.Header = xmlString;
             }
         }
 
-        private static double ParseTimeCode(string s)
-        {
-            return Convert.ToDouble(s) * TimeCode.BaseUnit;
-        }
+        private static double ParseTimeCode(string s) => Convert.ToDouble(s) * TimeCode.BaseUnit;
 
-        public override bool HasStyleSupport
-        {
-            get { return true; }
-        }
-
-        public static List<string> GetStylesFromHeader(Subtitle subtitle)
-        {
-            var list = new List<string>();
-            foreach (Paragraph p in subtitle.Paragraphs)
-            {
-                if (!string.IsNullOrEmpty(p.Actor))
-                {
-                    if (list.IndexOf(p.Actor) < 0)
-                    {
-                        list.Add(p.Actor);
-                    }
-                }
-            }
-            return list;
-        }
+        public override bool HasStyleSupport => true;
 
     }
 }
