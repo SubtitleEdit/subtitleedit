@@ -1183,6 +1183,42 @@ Hi, I'm Keith Lemon.
             Assert.IsTrue(webVtt.Contains("<c.yellow>AUDIENCE: Aww!</c>"));
         }
 
+        public void WebVttFontColorHex()
+        {
+            var target = new WebVTT();
+            var subtitle = new Subtitle();
+            string raw = @"WEBVTT
+
+00:00:54.440 --> 00:00:58.920 align:middle line:-4
+Hi, I'm Keith Lemon.
+
+00:00:58.960 --> 00:01:03.280 align:middle line:-3
+<c.color008000>AUDIENCE: Aww!</c>";
+            target.LoadSubtitle(subtitle, raw.SplitToLines(), null);
+
+            Assert.AreEqual("<font color=\"#r008000\">AUDIENCE: Aww!</font>", subtitle.Paragraphs[1].Text);
+        }
+
+        [TestMethod]
+        public void WebVttFontColorHex2()
+        {
+            var target = new WebVTT();
+            var subtitle = new Subtitle();
+            string raw = @"
+WEBVTT
+
+00:00:54.440 --> 00:00:58.920
+<font color='#008000'>Text1</c>
+
+00:00:58.960 --> 00:01:03.280 align:middle line:-3
+<font color='#FF0000'>Text2</c>".Replace("'", "\"");
+            target.LoadSubtitle(subtitle, raw.SplitToLines(), null);
+            var webVtt = subtitle.ToText(target);
+
+            Assert.IsTrue(webVtt.Contains("<c.color008000>Text1</c>"));
+            Assert.IsTrue(webVtt.Contains("<c.red>Text2</c>"));
+        }
+
         [TestMethod]
         public void WebVttSpaceBeforeTimeCode()
         {
@@ -1229,7 +1265,27 @@ VÄLKOMMEN TILL TEXAS
             Assert.AreEqual(expected, actual);
         }
 
+        [TestMethod]
+        public void WebVttFontColor2()
+        {
+            var target = new WebVTT();
+            var subtitle = new Subtitle();
+            string raw = @"WEBVTT
 
+        00:02:00.000 --> 00:02:05.000
+        <c.yellow.bg_blue>This is yellow text</c>
+
+        00:04:00.000 --> 00:04:05.000
+        <c.yellow.bg_blue.magenta.bg_black>This is magenta text</c>
+
+        00:08:00.000 --> 00:09:05.000
+        <c.color008000>This is hex colored</c>";
+            target.LoadSubtitle(subtitle, raw.SplitToLines(), null);
+            target.RemoveNativeFormatting(subtitle, new SubRip());
+            Assert.AreEqual("<font color=\"yellow\">This is yellow text</font>", subtitle.Paragraphs[0].Text);
+            Assert.AreEqual("<font color=\"magenta\">This is magenta text</font>", subtitle.Paragraphs[1].Text);
+            Assert.AreEqual("<font color=\"#008000\">This is hex colored</font>", subtitle.Paragraphs[2].Text);
+        }
 
         #endregion
 

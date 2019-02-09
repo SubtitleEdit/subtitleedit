@@ -61,6 +61,19 @@ namespace Nikse.SubtitleEdit.Core
             return int.TryParse(s, out _);
         }
 
+        public static bool IsHex(string s)
+        {
+            foreach (var ch in s)
+            {
+                if (!CharUtils.IsHexadecimal(ch))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
         public static SubtitleFormat GetSubtitleFormatByFriendlyName(string friendlyName)
         {
             foreach (SubtitleFormat format in SubtitleFormat.AllSubtitleFormats)

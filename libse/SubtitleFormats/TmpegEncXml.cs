@@ -354,8 +354,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     var p = new Paragraph(startCode, endCode, pText.ToString().Trim().Replace("<Text>", string.Empty).Replace("</Text>", string.Empty).Replace("\\n", Environment.NewLine).TrimEnd());
                     if (node.Attributes["layoutindex"] != null)
                     {
-                        int idx;
-                        if (int.TryParse(node.Attributes["layoutindex"].InnerText, out idx))
+                        if (int.TryParse(node.Attributes["layoutindex"].InnerText, out var idx))
                         {
                             if (idx >= 0 && idx < italicStyles.Count && italicStyles[idx])
                             {
