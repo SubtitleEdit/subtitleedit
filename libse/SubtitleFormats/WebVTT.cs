@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Globalization;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -329,14 +331,37 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override void RemoveNativeFormatting(Subtitle subtitle, SubtitleFormat newFormat)
         {
+            var regexWebVttColorMulti = new Regex(@"<c.[a-z0-9_\.]*>", RegexOptions.Compiled);
             var regexRemoveCTags = new Regex(@"\</?c([a-zA-Z\._\d]*)\>", RegexOptions.Compiled);
             var regexRemoveTimeCodes = new Regex(@"\<\d+:\d+:\d+.\d+\>", RegexOptions.Compiled); // <00:00:10.049>
             var regexTagsPlusWhiteSpace = new Regex(@"(\{\\an\d\})[\s\r\n]+", RegexOptions.Compiled); // <00:00:10.049>
+
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 if (p.Text.Contains('<'))
                 {
                     string text = p.Text;
+
+                    var match = regexWebVttColorMulti.Match(text);
+                    while (match.Success)
+                    {
+                        var tag = match.Value.Substring(3, match.Value.Length - 4);
+                        tag = FindBestColorTagOrDefault(tag);
+                        if (tag == null)
+                        {
+                            break;
+                        }
+                        var fontString = "<font color=\"" + tag + "\">";
+                        fontString = fontString.Trim('"').Trim('\'');
+                        text = text.Remove(match.Index, match.Length).Insert(match.Index, fontString);
+                        var endIndex = text.IndexOf("</c>", match.Index, StringComparison.OrdinalIgnoreCase);
+                        if (endIndex >= 0)
+                        {
+                            text = text.Remove(endIndex, 4).Insert(endIndex, "</font>");
+                        }
+                        match = RegexWebVttColor.Match(text);
+                    }
+
                     text = RemoveTag("v", text);
                     text = RemoveTag("rt", text);
                     text = RemoveTag("ruby", text);
@@ -349,15 +374,47 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
         }
 
+        private string FindBestColorTagOrDefault(string tag)
+        {
+            var knownColors = new List<string> { "white", "lime", "cyan", "red", "yellow", "magenta", "blue", "black" };
+            var tags = tag.Split('.').ToList();
+            tags.Reverse();
+            foreach (var s in tags)
+            {
+                var l = s.ToLowerInvariant();
+                if (knownColors.Contains(l))
+                {
+                    return l;
+                }
+
+                if (l.StartsWith("color") && l.Length > 6 && Utilities.IsHex(l.Remove(0, 5))) // e.g. color008000
+                {
+                    return "#" + l.Remove(0, 5);
+                }
+            }
+            return null;
+        }
+
         private static readonly Regex RegexWebVttColor = new Regex(@"<c.[a-z]*>", RegexOptions.Compiled);
+        private static readonly Regex RegexWebVttColorHex = new Regex(@"<c.[a-z]*\d+>", RegexOptions.Compiled);
 
         internal static string ColorWebVttToHtml(string text)
         {
-            var res = text;
-            var match = RegexWebVttColor.Match(res);
+            var res = RunColorRegEx(text, RegexWebVttColor);
+            res = RunColorRegEx(res, RegexWebVttColorHex);
+            return res;
+        }
+
+        private static string RunColorRegEx(string input, Regex regex)
+        {
+            var res = input;
+            var match = regex.Match(res);
             while (match.Success)
             {
                 var fontString = "<font color=\"" + match.Value.Substring(3, match.Value.Length - 4) + "\">";
+                if (match.Value.StartsWith("<c.color", StringComparison.Ordinal))
+                    fontString = "<font color=\"#" + match.Value.Substring(3 + 5, match.Value.Length - 4 - 5) + "\">";
+
                 fontString = fontString.Trim('"').Trim('\'');
                 res = res.Remove(match.Index, match.Length).Insert(match.Index, fontString);
                 var endIndex = res.IndexOf("</c>", match.Index, StringComparison.OrdinalIgnoreCase);
@@ -365,13 +422,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     res = res.Remove(endIndex, 4).Insert(endIndex, "</font>");
                 }
-                match = RegexWebVttColor.Match(res);
+                match = regex.Match(res);
             }
             return res;
         }
 
         private static readonly Regex RegexHtmlColor = new Regex("<font color=\"[a-z]*\">", RegexOptions.Compiled);
         private static readonly Regex RegexHtmlColor2 = new Regex("<font color=[a-z]*>", RegexOptions.Compiled);
+        private static readonly Regex RegexHtmlColor3 = new Regex("<font color=\"#[ABCDEFabcdef\\d]*\">", RegexOptions.Compiled);
 
         private static string ColorHtmlToWebVtt(string text)
         {
@@ -384,6 +442,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 res = res.Remove(match.Index, match.Length).Insert(match.Index, fontString);
                 match = RegexHtmlColor.Match(res);
             }
+
             match = RegexHtmlColor2.Match(res);
             while (match.Success)
             {
@@ -392,7 +451,73 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 res = res.Remove(match.Index, match.Length).Insert(match.Index, fontString);
                 match = RegexHtmlColor2.Match(res);
             }
+
+            match = RegexHtmlColor3.Match(res);
+            while (match.Success)
+            {
+                var tag = match.Value.Substring(14, match.Value.Length - 16);
+                var fontString = "<c.color" + tag + ">";
+                var closeColor = GetCloseColor(tag);
+                if (closeColor != null)
+                {
+                    fontString = "<c." + closeColor + ">";
+                }
+                fontString = fontString.Trim('"').Trim('\'');
+                res = res.Remove(match.Index, match.Length).Insert(match.Index, fontString);
+                match = RegexHtmlColor3.Match(res);
+            }
             return res;
+        }
+
+        private static string GetCloseColor(string tag)
+        {
+            var dictionary = new Dictionary<string, Color>
+            {
+                {
+                    "white", Color.FromArgb(255, 255, 255)
+                },
+                {
+                    "lime", Color.FromArgb(0, 255, 0)
+                },
+                {
+                    "cyan", Color.FromArgb(0,255,255)
+                },
+                {
+                    "red", Color.FromArgb(255,0,0)
+                },
+                {
+                    "yellow", Color.FromArgb(255,255,0)
+                },
+                {
+                    "magenta", Color.FromArgb(255,0,255)
+                },
+                {
+                    "blue", Color.FromArgb(0,0,255)
+                },
+                {
+                    "black", Color.FromArgb(0,0,0)
+                },
+            };
+
+            try
+            {
+                var c = ColorTranslator.FromHtml("#" + tag.Trim('#'));
+                int maxDiff = 25;
+                foreach (var kvp in dictionary)
+                {
+                    if (Math.Abs(kvp.Value.R - c.R) <= maxDiff &&
+                        Math.Abs(kvp.Value.G - c.G) <= maxDiff &&
+                        Math.Abs(kvp.Value.B - c.B) <= maxDiff)
+                    {
+                        return kvp.Key;
+                    }
+                }
+            }
+            catch
+            {
+                return null;
+            }
+            return null;
         }
 
         public static List<string> GetVoices(Subtitle subtitle)
