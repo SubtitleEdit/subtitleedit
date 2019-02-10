@@ -438,6 +438,8 @@ namespace Nikse.SubtitleEdit.Forms
             cleanText = cleanText.Replace(" ...", "...");
             cleanText = cleanText.Replace("<br/>", Environment.NewLine);
             cleanText = cleanText.Replace("<br />", Environment.NewLine);
+            cleanText = cleanText.Replace("< br/>", Environment.NewLine);
+            cleanText = cleanText.Replace("<br/ >", Environment.NewLine);
             cleanText = cleanText.Replace("<br / >", Environment.NewLine);
             cleanText = cleanText.Replace("< br />", Environment.NewLine);
             cleanText = cleanText.Replace("< br / >", Environment.NewLine);
