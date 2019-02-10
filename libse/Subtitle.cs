@@ -2,7 +2,6 @@
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -677,7 +676,7 @@ namespace Nikse.SubtitleEdit.Core
                 if (pre != null)
                 {
                     hash = hash * 23 + pre.GetHashCode();
-                }                
+                }
                 if (Header != null)
                 {
                     hash = hash * 23 + Header.Trim().GetHashCode();
