@@ -18,6 +18,34 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         private static readonly Regex RegexTimeCodesMiddle = new Regex(@"^-?\d+:-?\d+\.-?\d+\s*-->\s*-?\d+:-?\d+:-?\d+\.-?\d+", RegexOptions.Compiled);
         private static readonly Regex RegexTimeCodesShort = new Regex(@"^-?\d+:-?\d+\.-?\d+\s*-->\s*-?\d+:-?\d+\.-?\d+", RegexOptions.Compiled);
 
+        private static readonly Dictionary<string, Color> DefaultColorClasses = new Dictionary<string, Color>
+        {
+            {
+                "white", Color.FromArgb(255, 255, 255)
+            },
+            {
+                "lime", Color.FromArgb(0, 255, 0)
+            },
+            {
+                "cyan", Color.FromArgb(0,255,255)
+            },
+            {
+                "red", Color.FromArgb(255,0,0)
+            },
+            {
+                "yellow", Color.FromArgb(255,255,0)
+            },
+            {
+                "magenta", Color.FromArgb(255,0,255)
+            },
+            {
+                "blue", Color.FromArgb(0,0,255)
+            },
+            {
+                "black", Color.FromArgb(0,0,0)
+            },
+        };
+
         public override string Extension => ".vtt";
 
         public override string Name => "WebVTT";
@@ -375,14 +403,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         }
 
         private string FindBestColorTagOrDefault(string tag)
-        {
-            var knownColors = new List<string> { "white", "lime", "cyan", "red", "yellow", "magenta", "blue", "black" };
+        {            
             var tags = tag.Split('.').ToList();
             tags.Reverse();
             foreach (var s in tags)
             {
                 var l = s.ToLowerInvariant();
-                if (knownColors.Contains(l))
+                if (DefaultColorClasses.Keys.Contains(l))
                 {
                     return l;
                 }
@@ -471,39 +498,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static string GetCloseColor(string tag)
         {
-            var dictionary = new Dictionary<string, Color>
-            {
-                {
-                    "white", Color.FromArgb(255, 255, 255)
-                },
-                {
-                    "lime", Color.FromArgb(0, 255, 0)
-                },
-                {
-                    "cyan", Color.FromArgb(0,255,255)
-                },
-                {
-                    "red", Color.FromArgb(255,0,0)
-                },
-                {
-                    "yellow", Color.FromArgb(255,255,0)
-                },
-                {
-                    "magenta", Color.FromArgb(255,0,255)
-                },
-                {
-                    "blue", Color.FromArgb(0,0,255)
-                },
-                {
-                    "black", Color.FromArgb(0,0,0)
-                },
-            };
-
             try
             {
                 var c = ColorTranslator.FromHtml("#" + tag.Trim('#'));
                 int maxDiff = 25;
-                foreach (var kvp in dictionary)
+                foreach (var kvp in DefaultColorClasses)
                 {
                     if (Math.Abs(kvp.Value.R - c.R) <= maxDiff &&
                         Math.Abs(kvp.Value.G - c.G) <= maxDiff &&
