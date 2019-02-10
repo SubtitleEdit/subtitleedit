@@ -53,45 +53,47 @@ namespace Nikse.SubtitleEdit.Logic
         }
 
         private static long _lastShowSubTicks = DateTime.UtcNow.Ticks;
-        private static string _lastShowSubHash;
+        private static int _lastShowSubHash;
 
         public static int ShowSubtitle(Subtitle subtitle, VideoPlayerContainer videoPlayerContainer)
         {
-            if (videoPlayerContainer.VideoPlayer != null)
+            if (videoPlayerContainer.VideoPlayer == null)
             {
-                double positionInMilliseconds = (videoPlayerContainer.CurrentPosition * TimeCode.BaseUnit) + 5;
-                for (int i = 0; i < subtitle.Paragraphs.Count; i++)
+                return -1;
+            }
+
+            double positionInMilliseconds = videoPlayerContainer.CurrentPosition * TimeCode.BaseUnit + 5;
+            var max = subtitle.Paragraphs.Count;
+            for (int i = 0; i < max; i++)
+            {
+                var p = subtitle.Paragraphs[i];
+                if (p.StartTime.TotalMilliseconds <= positionInMilliseconds && p.EndTime.TotalMilliseconds > positionInMilliseconds)
                 {
-                    var p = subtitle.Paragraphs[i];
-                    if (p.StartTime.TotalMilliseconds <= positionInMilliseconds &&
-                        p.EndTime.TotalMilliseconds > positionInMilliseconds)
+                    string text = p.Text.Replace("|", Environment.NewLine);
+                    bool isInfo = p == subtitle.Paragraphs[0] && (Math.Abs(p.StartTime.TotalMilliseconds) < 0.01 && Math.Abs(p.Duration.TotalMilliseconds) < 0.01 || Math.Abs(p.StartTime.TotalMilliseconds - Pac.PacNullTime.TotalMilliseconds) < 0.01);
+                    if (!isInfo)
                     {
-                        string text = p.Text.Replace("|", Environment.NewLine);
-                        bool isInfo = p == subtitle.Paragraphs[0] && (Math.Abs(p.StartTime.TotalMilliseconds) < 0.01 && Math.Abs(p.Duration.TotalMilliseconds) < 0.01 || Math.Abs(p.StartTime.TotalMilliseconds - Pac.PacNullTime.TotalMilliseconds) < 0.01);
-                        if (!isInfo)
+                        if (videoPlayerContainer.LastParagraph != p)
                         {
-                            if (videoPlayerContainer.LastParagraph != p)
-                            {
-                                videoPlayerContainer.SetSubtitleText(text, p, subtitle);
-                            }
-                            else if (videoPlayerContainer.SubtitleText != text)
-                            {
-                                videoPlayerContainer.SetSubtitleText(text, p, subtitle);
-                            }
-                            TimeOutRefresh(subtitle, videoPlayerContainer, p);
-                            return i;
+                            videoPlayerContainer.SetSubtitleText(text, p, subtitle);
                         }
+                        else if (videoPlayerContainer.SubtitleText != text)
+                        {
+                            videoPlayerContainer.SetSubtitleText(text, p, subtitle);
+                        }
+                        TimeOutRefresh(subtitle, videoPlayerContainer, p);
+                        return i;
                     }
                 }
+            }
 
-                if (!string.IsNullOrEmpty(videoPlayerContainer.SubtitleText))
-                {
-                    videoPlayerContainer.SetSubtitleText(string.Empty, null, subtitle);
-                }
-                else
-                {
-                    TimeOutRefresh(subtitle, videoPlayerContainer);
-                }
+            if (!string.IsNullOrEmpty(videoPlayerContainer.SubtitleText))
+            {
+                videoPlayerContainer.SetSubtitleText(string.Empty, null, subtitle);
+            }
+            else
+            {
+                TimeOutRefresh(subtitle, videoPlayerContainer);
             }
             return -1;
         }
@@ -113,32 +115,33 @@ namespace Nikse.SubtitleEdit.Logic
 
         public static int ShowSubtitle(Subtitle subtitle, Subtitle original, VideoPlayerContainer videoPlayerContainer)
         {
-            if (videoPlayerContainer.VideoPlayer != null)
+            if (videoPlayerContainer.VideoPlayer == null)
             {
-                double positionInMilliseconds = (videoPlayerContainer.VideoPlayer.CurrentPosition * TimeCode.BaseUnit) + 15;
-                for (int i = 0; i < subtitle.Paragraphs.Count; i++)
+                return -1;
+            }
+
+            double positionInMilliseconds = (videoPlayerContainer.VideoPlayer.CurrentPosition * TimeCode.BaseUnit) + 15;
+            var max = subtitle.Paragraphs.Count;
+            for (int i = 0; i < max; i++)
+            {
+                var p = subtitle.Paragraphs[i];
+                if (p.StartTime.TotalMilliseconds <= positionInMilliseconds && p.EndTime.TotalMilliseconds > positionInMilliseconds)
                 {
-                    var p = subtitle.Paragraphs[i];
-                    if (p.StartTime.TotalMilliseconds <= positionInMilliseconds &&
-                        p.EndTime.TotalMilliseconds > positionInMilliseconds)
+                    var op = Utilities.GetOriginalParagraph(0, p, original.Paragraphs);
+                    string text = p.Text.Replace("|", Environment.NewLine);
+                    if (op != null)
                     {
-                        var op = Utilities.GetOriginalParagraph(0, p, original.Paragraphs);
+                        text = text + Environment.NewLine + Environment.NewLine + op.Text.Replace("|", Environment.NewLine);
+                    }
 
-                        string text = p.Text.Replace("|", Environment.NewLine);
-                        if (op != null)
+                    bool isInfo = p == subtitle.Paragraphs[0] && Math.Abs(p.StartTime.TotalMilliseconds) < 0.01 && positionInMilliseconds > 3000;
+                    if (!isInfo)
+                    {
+                        if (videoPlayerContainer.LastParagraph != p || videoPlayerContainer.SubtitleText != text)
                         {
-                            text = text + Environment.NewLine + Environment.NewLine + op.Text.Replace("|", Environment.NewLine);
+                            videoPlayerContainer.SetSubtitleText(text, p, subtitle);
                         }
-
-                        bool isInfo = p == subtitle.Paragraphs[0] && Math.Abs(p.StartTime.TotalMilliseconds) < 0.01 && positionInMilliseconds > 3000;
-                        if (!isInfo)
-                        {
-                            if (videoPlayerContainer.LastParagraph != p || videoPlayerContainer.SubtitleText != text)
-                            {
-                                videoPlayerContainer.SetSubtitleText(text, p, subtitle);
-                            }
-                            return i;
-                        }
+                        return i;
                     }
                 }
             }
@@ -700,16 +703,19 @@ namespace Nikse.SubtitleEdit.Logic
                 comboBox.SelectedItem = selectedItem;
             }
             comboBox.EndUpdate();
-            Configuration.Settings.General.DefaultEncoding = (comboBox.SelectedItem as TextEncodingListItem).Encoding.WebName;
+            if (comboBox.SelectedItem is TextEncodingListItem textEncodingListItem)
+            {
+                Configuration.Settings.General.DefaultEncoding = textEncodingListItem.Encoding.WebName;
+            }
             comboBox.AutoCompleteSource = AutoCompleteSource.ListItems;
             comboBox.AutoCompleteMode = AutoCompleteMode.Append;
         }
 
         public static Encoding GetTextEncodingComboBoxCurrentEncoding(ComboBox comboBox)
         {
-            if (comboBox.SelectedIndex > 0)
+            if (comboBox.SelectedIndex > 0 && comboBox.SelectedItem is TextEncodingListItem textEncodingListItem)
             {
-                return (comboBox.SelectedItem as TextEncodingListItem).Encoding;
+                return textEncodingListItem.Encoding;
             }
             return Encoding.UTF8;
         }

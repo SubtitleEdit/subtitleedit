@@ -666,27 +666,33 @@ namespace Nikse.SubtitleEdit.Core
         }
 
         /// <summary>
-        /// Fast hash code for subtitle - includes pre (encoding atm) + number + start + end + text.
+        /// Fast hash code for subtitle - includes pre (encoding atm) + header + number + start + end + text.
         /// </summary>
         /// <returns>Hash value that can be used for quick compare</returns>
-        public string GetFastHashCode(string pre)
+        public int GetFastHashCode(string pre)
         {
-            var sb = new StringBuilder(Paragraphs.Count * 50);
-            sb.Append(pre);
-            if (Header != null)
+            unchecked // Overflow is fine, just wrap
             {
-                sb.Append(Header.Trim());
+                int hash = 17;
+                if (pre != null)
+                {
+                    hash = hash * 23 + pre.GetHashCode();
+                }                
+                if (Header != null)
+                {
+                    hash = hash * 23 + Header.Trim().GetHashCode();
+                }
+                var max = Paragraphs.Count;
+                for (int i = 0; i < max; i++)
+                {
+                    var p = Paragraphs[i];
+                    hash = hash * 23 + p.Number.GetHashCode();
+                    hash = hash * 23 + p.StartTime.TotalMilliseconds.GetHashCode();
+                    hash = hash * 23 + p.EndTime.TotalMilliseconds.GetHashCode();
+                    hash = hash * 23 + p.Text.GetHashCode();
+                }
+                return hash;
             }
-
-            for (int i = 0; i < Paragraphs.Count; i++)
-            {
-                var p = Paragraphs[i];
-                sb.Append(p.Number.ToString(CultureInfo.InvariantCulture));
-                sb.Append((p.StartTime.TotalMilliseconds + Configuration.Settings.General.CurrentVideoOffsetInMs).GetHashCode());
-                sb.Append((p.EndTime.TotalMilliseconds + Configuration.Settings.General.CurrentVideoOffsetInMs).GetHashCode());
-                sb.Append(p.Text);
-            }
-            return sb.ToString().TrimEnd();
         }
 
         /// <summary>
