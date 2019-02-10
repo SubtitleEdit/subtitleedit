@@ -2,7 +2,7 @@
 <Language Name="português (Portugal)">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.5.8</Version>
+    <Version>3.5.9</Version>
     <TranslatedBy>Traduzido para Português de Portugal, por moob
 Email: mailto:moob42341@gmail.com</TranslatedBy>
     <CultureName>pt-PT</CultureName>
@@ -34,7 +34,7 @@ Email: mailto:moob42341@gmail.com</TranslatedBy>
     <Number>Número</Number>
     <Text>Texto</Text>
     <HourMinutesSecondsMilliseconds>Hora:min:seg:ms</HourMinutesSecondsMilliseconds>
-	<HourMinutesSecondsFrames>Hora:min:seg:fotogramas</HourMinutesSecondsFrames>
+    <HourMinutesSecondsFrames>Hora:min:seg:fotogramas</HourMinutesSecondsFrames>
     <Bold>Negrito</Bold>
     <Italic>Itálico</Italic>
     <Underline>Sublinhado</Underline>
@@ -79,7 +79,7 @@ Email: mailto:moob42341@gmail.com</TranslatedBy>
     <After>Depois</After>
     <Size>Tamanho</Size>
     <Search>Procurar</Search>
-	<DeleteCurrentLine>Eliminar a linha actual</DeleteCurrentLine>
+    <DeleteCurrentLine>Eliminar a linha actual</DeleteCurrentLine>
   </General>
   <About>
     <Title>Acerca do Subtitle Edit</Title>
@@ -217,9 +217,9 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <Title>Vídeo projector</Title>
   </Beamer>
   <Bookmarks>
-	<EditBookmark>Editar marcador</EditBookmark>
-	<AddBookmark>Adicionar marcador</AddBookmark>
-	<GoToBookmark>Ir para o marcador</GoToBookmark>
+    <EditBookmark>Editar marcador</EditBookmark>
+    <AddBookmark>Adicionar marcador</AddBookmark>
+    <GoToBookmark>Ir para o marcador</GoToBookmark>
   </Bookmarks>
   <ChangeCasing>
     <Title>Inverter Maiúsculas/Minúsculas</Title>
@@ -484,7 +484,7 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <Right>Direita</Right>
     <Center>Centro</Center>
     <CenterLeftJustify>Centro, justificado à esquerda</CenterLeftJustify>
-	<CenterTopJustify>Centro, superior justificado</CenterTopJustify>
+    <CenterTopJustify>Centro, superior justificado</CenterTopJustify>
     <BottomMargin>Margem inferior</BottomMargin>
     <LeftRightMargin>Margem esq./dto.</LeftRightMargin>
     <SaveBluRraySupAs>Escolha o nome do ficheiro Blu-ray sup</SaveBluRraySupAs>
@@ -941,7 +941,7 @@ Vá a "Opções -&gt; Configurações -&gt; Ferramentas" para inserir a chave AP
         <SubStationAlphaProperties>Sub Station Alpha propriedades...</SubStationAlphaProperties>
         <EbuProperties>EBU STL propriedades...</EbuProperties>
         <DvdStuioProProperties>DVD Studio Pro propriedades...</DvdStuioProProperties>
-		<TimedTextProperties>Propriedades de Timed Text...</TimedTextProperties>
+        <TimedTextProperties>Propriedades de Timed Text...</TimedTextProperties>
         <PacProperties>PAC propriedades...</PacProperties>
         <OpenOriginal>Abrir legenda original (modo tradutor)...</OpenOriginal>
         <SaveOriginal>Guardar legenda original</SaveOriginal>
@@ -1020,7 +1020,7 @@ Vá a "Opções -&gt; Configurações -&gt; Ferramentas" para inserir a chave AP
         <SplitLongLines>Dividir as linhas longas...</SplitLongLines>
         <MinimumDisplayTimeBetweenParagraphs>Duração mínima entre linhas...</MinimumDisplayTimeBetweenParagraphs>
         <SortBy>Ordenar por</SortBy>
-		<NetflixQualityCheck>Controlo de qualidade Netflix...</NetflixQualityCheck>
+        <NetflixQualityCheck>Controlo de qualidade Netflix...</NetflixQualityCheck>
         <Number>Ordem numérica</Number>
         <StartTime>Tempo inicial</StartTime>
         <EndTime>Tempo final</EndTime>
@@ -1045,13 +1045,13 @@ Vá a "Opções -&gt; Configurações -&gt; Ferramentas" para inserir a chave AP
       <Video>
         <Title>Vídeo</Title>
         <OpenVideo>Abrir ficheiro de vídeo...</OpenVideo>
-		<OpenVideoFromUrl>Abrir vídeo a partir de um endereço...</OpenVideoFromUrl>
+        <OpenVideoFromUrl>Abrir vídeo a partir de um endereço...</OpenVideoFromUrl>
         <OpenDvd>Abrir DVD...</OpenDvd>
         <ChooseAudioTrack>Seleccione a faixa de áudio</ChooseAudioTrack>
         <CloseVideo>Fechar ficheiro de vídeo</CloseVideo>
         <SetVideoOffset>Definir o deslocamento do vídeo...</SetVideoOffset>
         <SmptTimeMode>SMPTE temporização (drop frame)</SmptTimeMode>
-		<GenerateTextFromVideo>Gerar texto a partir do vídeo...</GenerateTextFromVideo>
+        <GenerateTextFromVideo>Gerar texto a partir do vídeo...</GenerateTextFromVideo>
         <GenerateImportSceneChanges>Gerar/Importar mudanças de cena...</GenerateImportSceneChanges>
         <RemoveSceneChanges>Remover mudanças de cena</RemoveSceneChanges>
         <WaveformBatchGenerate>Gerar formas de onda em série...</WaveformBatchGenerate>
@@ -1165,8 +1165,8 @@ Vá a "Opções -&gt; Configurações -&gt; Ferramentas" para inserir a chave AP
         <Box>Caixa</Box>
         <Color>Cor</Color>
         <FontName>Tipo de letra</FontName>
-		<Superscript>Superscript</Superscript>
-		<Subscript>Subscript</Subscript>
+        <Superscript>Superscript</Superscript>
+        <Subscript>Subscript</Subscript>
         <Alignment>Alinhamento</Alignment>
         <AutoBalanceSelectedLines>Auto-ajustar linhas seleccionadas</AutoBalanceSelectedLines>
         <RemoveLineBreaksFromSelectedLines>Remover quebras de linha das linhas seleccionadas</RemoveLineBreaksFromSelectedLines>
@@ -1184,8 +1184,8 @@ Vá a "Opções -&gt; Configurações -&gt; Ferramentas" para inserir a chave AP
         <WebVTTRemoveVoices>Remover vozes</WebVTTRemoveVoices>
         <NewActor>Novo actor...</NewActor>
         <RemoveActors>Remover actores</RemoveActors>
-		<EditBookmark>Editar marcador</EditBookmark>
-		<RemoveBookmark>Eliminar marcador</RemoveBookmark>
+        <EditBookmark>Editar marcador</EditBookmark>
+        <RemoveBookmark>Eliminar marcador</RemoveBookmark>
       </ContextMenu>
     </Menu>
     <Controls>
@@ -1201,7 +1201,7 @@ Vá a "Opções -&gt; Configurações -&gt; Ferramentas" para inserir a chave AP
     </Controls>
     <VideoControls>
       <Translate>Traduzir</Translate>
-	  <CreateAndAdjust>Criar/ajustar</CreateAndAdjust>
+      <CreateAndAdjust>Criar/ajustar</CreateAndAdjust>
       <Create>Criar</Create>
       <Adjust>Ajustar</Adjust>
       <SelectCurrentElementWhilePlaying>Selecção da linha durante a reprodução</SelectCurrentElementWhilePlaying>
@@ -1758,12 +1758,12 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <SettingsName>Configurações</SettingsName>
     <Help>Ajuda</Help>
     <UnbreakNoSpace>Remover quebra sem espaço em branco (CJK)</UnbreakNoSpace>
-	<ToggleBookmarks>Alternar marcadores</ToggleBookmarks>
-	<ToggleBookmarksWithComment>Alternar marcadores - adicionar comentário</ToggleBookmarksWithComment>
-	<ClearBookmarks>Eliminar marcadores</ClearBookmarks>
-	<GoToBookmark>Ir para o marcador</GoToBookmark>
-	<GoToPreviousBookmark>Ir para o marcador anterior</GoToPreviousBookmark>
-	<GoToNextBookmark>Ir para o marcador seguinte</GoToNextBookmark>
+    <ToggleBookmarks>Alternar marcadores</ToggleBookmarks>
+    <ToggleBookmarksWithComment>Alternar marcadores - adicionar comentário</ToggleBookmarksWithComment>
+    <ClearBookmarks>Eliminar marcadores</ClearBookmarks>
+    <GoToBookmark>Ir para o marcador</GoToBookmark>
+    <GoToPreviousBookmark>Ir para o marcador anterior</GoToPreviousBookmark>
+    <GoToNextBookmark>Ir para o marcador seguinte</GoToNextBookmark>
     <FontInUi>Tipo de letra da Interface</FontInUi>
     <ShowFrameRate>Mostrar taxa de fotogramas na barra de ferramentas</ShowFrameRate>
     <DefaultFrameRate>Taxa de fotogramas padrão</DefaultFrameRate>
@@ -1815,7 +1815,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <AutoBackupDeleteAfterThreeMonths>3 meses</AutoBackupDeleteAfterThreeMonths>
     <AutoBackupDeleteAfterSixMonths>6 meses</AutoBackupDeleteAfterSixMonths>
     <CheckForUpdates>Verificar se há actualizações</CheckForUpdates>
-	<AutoSave>Guardar automaticamente</AutoSave>
+    <AutoSave>Guardar automaticamente</AutoSave>
     <AllowEditOfOriginalSubtitle>Permitir a edição da legenda original</AllowEditOfOriginalSubtitle>
     <PromptDeleteLines>Confirmar eliminação de linhas</PromptDeleteLines>
     <TimeCodeMode>Modo de tempos</TimeCodeMode>
@@ -2046,8 +2046,8 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <Miscellaneous>Diversos</Miscellaneous>
     <CpsIncludesSpace>Caracteres/seg (CPS) incluindo espaços</CpsIncludesSpace>
     <UseDoNotBreakAfterList>Utilizar "não quebrar linha depois da lista"</UseDoNotBreakAfterList>
-	<GoogleTranslate>Tradutor Google</GoogleTranslate>
-	<GoogleTranslateApiKey>Chave API</GoogleTranslateApiKey>
+    <GoogleTranslate>Tradutor Google</GoogleTranslate>
+    <GoogleTranslateApiKey>Chave API</GoogleTranslateApiKey>
     <MicrosoftBingTranslator>Tradutor Microsoft</MicrosoftBingTranslator>
     <HowToSignUp>Como efectuar o registo</HowToSignUp>
     <MicrosoftTranslateApiKey>Chave</MicrosoftTranslateApiKey>
@@ -2117,7 +2117,7 @@ como "Advanced Sub Station Alpha" ou por via de exportação para formatos basea
     <AutoFixNames>Corrigir automaticamente formato de nomes</AutoFixNames>
     <CheckOneLetterWords>Solicitar uma letra para uma palavra desconhecida</CheckOneLetterWords>
     <TreatINQuoteAsING>Considerar a palavra final " in' " como " ing " (apenas em Inglês)</TreatINQuoteAsING>
-	<RememberUseAlwaysList>Lembrar "Usar sempre" a lista</RememberUseAlwaysList>
+    <RememberUseAlwaysList>Lembrar "Usar sempre" a lista</RememberUseAlwaysList>
     <ImageText>Imagem de texto</ImageText>
     <SpellCheckCompleted>Verificação ortográfica terminada</SpellCheckCompleted>
     <SpellCheckAborted>Verificação ortográfica cancelada</SpellCheckAborted>

@@ -1,6 +1,6 @@
 ﻿Subtitle Edit Changelog
 
-3.5.9 (xth February 2019) BETA
+3.5.9 (10th February 2019)
 * NEW:
    * Bookmarks - thx OmrSi/marb99
    * Auto save option
