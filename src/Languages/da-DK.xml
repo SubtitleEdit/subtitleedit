@@ -33,6 +33,7 @@
     <Number>Antal</Number>
     <Text>Tekst</Text>
     <HourMinutesSecondsMilliseconds>Timer:min:sek:msek</HourMinutesSecondsMilliseconds>
+    <HourMinutesSecondsFrames>Time: min: sek: frames</HourMinutesSecondsFrames>
     <Bold>Fed</Bold>
     <Italic>Kursiv</Italic>
     <Underline>Understreg</Underline>
@@ -937,6 +938,7 @@ Go to "Indstillinger -&gt; Indstillinger -&gt; Værktøj" for at indtaste din Go
         <SubStationAlphaProperties>Sub Station Alpha egenskaber...</SubStationAlphaProperties>
         <EbuProperties>EBU egenskaber...</EbuProperties>
         <DvdStuioProProperties>DVD Studio Pro egenskaber...</DvdStuioProProperties>
+        <TimedTextProperties>Timed Text egenskaber...</TimedTextProperties>
         <PacProperties>PAC egenskaber...</PacProperties>
         <OpenOriginal>Åbn original undertekst (oversætter mode)...</OpenOriginal>
         <SaveOriginal>Gem original</SaveOriginal>
@@ -1040,11 +1042,13 @@ Go to "Indstillinger -&gt; Indstillinger -&gt; Værktøj" for at indtaste din Go
       <Video>
         <Title>Video</Title>
         <OpenVideo>Åbn video fil...</OpenVideo>
+        <OpenVideoFromUrl>Åbn video fra url...</OpenVideoFromUrl>
         <OpenDvd>Åbn DVD...</OpenDvd>
         <ChooseAudioTrack>Vælg lydspor</ChooseAudioTrack>
         <CloseVideo>Luk videofil</CloseVideo>
         <SetVideoOffset>Indstil video offset...</SetVideoOffset>
         <SmptTimeMode>SMPTE timing (drop frame)</SmptTimeMode>
+        <GenerateTextFromVideo>Generer tekst fra video...</GenerateTextFromVideo>
         <GenerateImportSceneChanges>Generer/importer sceneændringer...</GenerateImportSceneChanges>
         <RemoveSceneChanges>Fjern sceneskift</RemoveSceneChanges>
         <WaveformBatchGenerate>Batch generer bølgeformer...</WaveformBatchGenerate>
@@ -1158,6 +1162,8 @@ Go to "Indstillinger -&gt; Indstillinger -&gt; Værktøj" for at indtaste din Go
         <Box>Boks</Box>
         <Color>Farve...</Color>
         <FontName>Font navn...</FontName>
+        <Superscript>Superscript</Superscript>
+        <Subscript>Subscript</Subscript>
         <Alignment>Justering...</Alignment>
         <AutoBalanceSelectedLines>Auto balancer markerede linjer...</AutoBalanceSelectedLines>
         <RemoveLineBreaksFromSelectedLines>Fjern line-skift fra valgte linjer...</RemoveLineBreaksFromSelectedLines>
