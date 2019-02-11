@@ -725,11 +725,17 @@ namespace Test.Logic
         }
 
         [TestMethod]
-        public void ReverseStartAndEndingForRightWithQuotes()
+        public void ReverseStartAndEndingForRightToLeftWithQuotes()
         {
             var result = Utilities.ReverseStartAndEndingForRightToLeft("\"<font color=\"#000000\">مرحباً</font>\"");
             Assert.AreEqual("\"<font color=\"#000000\">مرحباً</font>\"", result);
         }
 
+        [TestMethod]
+        public void ReverseStartAndEndingForRightToLeftQuotes2()
+        {
+            var result = Utilities.ReverseStartAndEndingForRightToLeft("\"Hey." + Environment.NewLine + "Hey.\"");
+            Assert.AreEqual(".Hey\"" + Environment.NewLine + "\".Hey", result);
+        }
     }
 }
