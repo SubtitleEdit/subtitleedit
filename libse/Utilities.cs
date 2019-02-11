@@ -1436,11 +1436,12 @@ namespace Nikse.SubtitleEdit.Core
             var pre = new StringBuilder();
             var post = new StringBuilder();
             var lines = s.SplitToLines();
+            var preTags = new StringBuilder();
+
             foreach (var line in lines)
             {
                 string s2 = line;
-
-                var preTags = new StringBuilder();
+                preTags.Clear();
                 while (s2.StartsWith("{\\", StringComparison.Ordinal) && s2.IndexOf('}') > 0)
                 {
                     int end = s2.IndexOf('}') + 1;
