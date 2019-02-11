@@ -1442,15 +1442,20 @@ namespace Nikse.SubtitleEdit.Core
             {
                 string s2 = line;
                 preTags.Clear();
-                while (s2.StartsWith("{\\", StringComparison.Ordinal) && s2.IndexOf('}') > 0)
+                while (s2.StartsWith("{\\", StringComparison.Ordinal))
                 {
-                    int end = s2.IndexOf('}') + 1;
-                    preTags.Append(s2.Substring(0, end));
-                    s2 = s2.Remove(0, end);
+                    int end = s2.IndexOf('}');
+                    if (end < 0)
+                    {
+                        break;
+                    }
+                    preTags.Append(s2.Substring(0, end + 1));
+                    s2 = s2.Substring(end + 1);
                 }
                 string postTags = string.Empty;
                 for (int k = 0; k < 10; k++)
                 {
+                    int len = s2.Length;
                     if (s2.StartsWith("<i>", StringComparison.Ordinal) ||
                         s2.StartsWith("<b>", StringComparison.Ordinal) ||
                         s2.StartsWith("<u>", StringComparison.Ordinal))
@@ -1458,12 +1463,15 @@ namespace Nikse.SubtitleEdit.Core
                         preTags.Append(s2.Substring(0, 3));
                         s2 = s2.Remove(0, 3);
                     }
-                    if (s2.StartsWith("<font ", StringComparison.Ordinal) && s2.IndexOf('>') > 0)
+                    if (s2.StartsWith("<font ", StringComparison.Ordinal))
                     {
                         int idx = s2.IndexOf('>');
-                        idx++;
-                        preTags.Append(s2.Substring(0, idx));
-                        s2 = s2.Remove(0, idx);
+                        if (idx < 0)
+                        {
+                            break;
+                        }
+                        preTags.Append(s2.Substring(0, idx + 1));
+                        s2 = s2.Substring(idx + 1);
                     }
 
                     if (s2.EndsWith("</i>", StringComparison.Ordinal) ||
@@ -1477,6 +1485,11 @@ namespace Nikse.SubtitleEdit.Core
                     {
                         postTags = s2.Substring(s2.Length - 7) + postTags;
                         s2 = s2.Remove(s2.Length - 7);
+                    }
+                    // no changes happened exit the loop
+                    if (s2.Length == len)
+                    {
+                        break;
                     }
                 }
 
