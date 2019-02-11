@@ -1496,7 +1496,7 @@ namespace Nikse.SubtitleEdit.Core
                 pre.Clear();
                 post.Clear();
                 int i = 0;
-                while (i < s2.Length && PrePostStringsToReverse.Contains(s2[i]) && s2[i] != '{' &&
+                while (i < s2.Length && PrePostStringsToReverse.Contains(s2[i]) &&
                        !s2.Substring(i).StartsWith("<i>", StringComparison.OrdinalIgnoreCase) &&
                        !s2.Substring(i).StartsWith("<b>", StringComparison.OrdinalIgnoreCase) &&
                        !s2.Substring(i).StartsWith("<font ", StringComparison.OrdinalIgnoreCase))
@@ -1505,7 +1505,7 @@ namespace Nikse.SubtitleEdit.Core
                     i++;
                 }
                 int j = s2.Length - 1;
-                while (j > i && PrePostStringsToReverse.Contains(s2[j]) && s2[j] != '}' &&
+                while (j > i && PrePostStringsToReverse.Contains(s2[j]) &&
                        !s2.Substring(0, j + 1).EndsWith("</i>", StringComparison.OrdinalIgnoreCase) &&
                        !s2.Substring(0, j + 1).EndsWith("</b>", StringComparison.OrdinalIgnoreCase) &&
                        !s2.Substring(0, j + 1).EndsWith("</font>", StringComparison.OrdinalIgnoreCase))
