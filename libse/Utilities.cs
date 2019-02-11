@@ -1447,6 +1447,7 @@ namespace Nikse.SubtitleEdit.Core
                     preTags.Append(s2.Substring(0, end));
                     s2 = s2.Remove(0, end);
                 }
+                string postTags = string.Empty;
                 for (int k = 0; k < 10; k++)
                 {
                     if (s2.StartsWith("<i>", StringComparison.Ordinal) ||
@@ -1456,12 +1457,6 @@ namespace Nikse.SubtitleEdit.Core
                         preTags.Append(s2.Substring(0, 3));
                         s2 = s2.Remove(0, 3);
                     }
-                    if (s2.StartsWith("\"", StringComparison.Ordinal) ||
-                        s2.StartsWith("'", StringComparison.Ordinal))
-                    {
-                        preTags.Append(s2.Substring(0, 1));
-                        s2 = s2.Remove(0, 1);
-                    }
                     if (s2.StartsWith("<font ", StringComparison.Ordinal) && s2.IndexOf('>') > 0)
                     {
                         int idx = s2.IndexOf('>');
@@ -1469,11 +1464,7 @@ namespace Nikse.SubtitleEdit.Core
                         preTags.Append(s2.Substring(0, idx));
                         s2 = s2.Remove(0, idx);
                     }
-                }
 
-                string postTags = string.Empty;
-                for (int k = 0; k < 10; k++)
-                {
                     if (s2.EndsWith("</i>", StringComparison.Ordinal) ||
                         s2.EndsWith("</b>", StringComparison.Ordinal) ||
                         s2.EndsWith("</u>", StringComparison.Ordinal))
@@ -1481,27 +1472,29 @@ namespace Nikse.SubtitleEdit.Core
                         postTags = s2.Substring(s2.Length - 4) + postTags;
                         s2 = s2.Remove(s2.Length - 4);
                     }
-                    if (s2.EndsWith("\"", StringComparison.Ordinal) || s2.EndsWith("'", StringComparison.Ordinal))
-                    {
-                        postTags = s2.Substring(s2.Length - 1) + postTags;
-                        s2 = s2.Remove(s2.Length - 1);
-                    }
                     if (s2.EndsWith("</font>", StringComparison.Ordinal))
                     {
                         postTags = s2.Substring(s2.Length - 7) + postTags;
                         s2 = s2.Remove(s2.Length - 7);
                     }
                 }
+
                 pre.Clear();
                 post.Clear();
                 int i = 0;
-                while (i < s2.Length && PrePostStringsToReverse.Contains(s2[i]) && s2[i] != '{')
+                while (i < s2.Length && PrePostStringsToReverse.Contains(s2[i]) && s2[i] != '{' &&
+                       !s2.Substring(i).StartsWith("<i>", StringComparison.OrdinalIgnoreCase) &&
+                       !s2.Substring(i).StartsWith("<b>", StringComparison.OrdinalIgnoreCase) &&
+                       !s2.Substring(i).StartsWith("<font ", StringComparison.OrdinalIgnoreCase))
                 {
                     pre.Append(s2[i]);
                     i++;
                 }
                 int j = s2.Length - 1;
-                while (j > i && PrePostStringsToReverse.Contains(s2[j]) && s2[j] != '}')
+                while (j > i && PrePostStringsToReverse.Contains(s2[j]) && s2[j] != '}' &&
+                       !s2.Substring(0, j + 1).EndsWith("</i>", StringComparison.OrdinalIgnoreCase) &&
+                       !s2.Substring(0, j + 1).EndsWith("</b>", StringComparison.OrdinalIgnoreCase) &&
+                       !s2.Substring(0, j + 1).EndsWith("</font>", StringComparison.OrdinalIgnoreCase))
                 {
                     post.Append(s2[j]);
                     j--;
