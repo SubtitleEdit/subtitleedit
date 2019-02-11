@@ -1496,23 +1496,28 @@ namespace Nikse.SubtitleEdit.Core
                 pre.Clear();
                 post.Clear();
                 int i = 0;
-                while (i < s2.Length && PrePostStringsToReverse.Contains(s2[i]) &&
-                       !s2.Substring(i).StartsWith("<i>", StringComparison.OrdinalIgnoreCase) &&
-                       !s2.Substring(i).StartsWith("<b>", StringComparison.OrdinalIgnoreCase) &&
-                       !s2.Substring(i).StartsWith("<font ", StringComparison.OrdinalIgnoreCase))
+
+                while (i < s2.Length && PrePostStringsToReverse.Contains(s2[i]))
                 {
-                    pre.Append(s2[i]);
-                    i++;
+                    string textFromIdx = s2.Substring(i);
+                    if (textFromIdx.LineStartsWithHtmlTag(true, true))
+                    {
+                        break;
+                    }
+                    pre.Append(s2[i++]);
                 }
+
                 int j = s2.Length - 1;
-                while (j > i && PrePostStringsToReverse.Contains(s2[j]) &&
-                       !s2.Substring(0, j + 1).EndsWith("</i>", StringComparison.OrdinalIgnoreCase) &&
-                       !s2.Substring(0, j + 1).EndsWith("</b>", StringComparison.OrdinalIgnoreCase) &&
-                       !s2.Substring(0, j + 1).EndsWith("</font>", StringComparison.OrdinalIgnoreCase))
+                while (j > i && PrePostStringsToReverse.Contains(s2[j]))
                 {
-                    post.Append(s2[j]);
-                    j--;
+                    string textBetweenIdx = s.Substring(i, j - i + 1);
+                    if (textBetweenIdx.LineEndsWithHtmlTag(true, true))
+                    {
+                        break;
+                    }
+                    post.Append(s2[j--]);
                 }
+
                 newLines.Append(preTags);
                 newLines.Append(ReverseParenthesis(post.ToString()));
                 newLines.Append(s2.Substring(pre.Length, s2.Length - (pre.Length + post.Length)));
