@@ -1456,36 +1456,23 @@ namespace Nikse.SubtitleEdit.Core
                 for (int k = 0; k < 10; k++)
                 {
                     int len = s2.Length;
-                    if (s2.StartsWith("<i>", StringComparison.Ordinal) ||
-                        s2.StartsWith("<b>", StringComparison.Ordinal) ||
-                        s2.StartsWith("<u>", StringComparison.Ordinal))
+
+                    // open tags
+                    if (s2.LineStartsWithHtmlTag(true, true))
                     {
-                        preTags.Append(s2.Substring(0, 3));
-                        s2 = s2.Remove(0, 3);
-                    }
-                    if (s2.StartsWith("<font ", StringComparison.Ordinal))
-                    {
-                        int idx = s2.IndexOf('>');
-                        if (idx < 0)
-                        {
-                            break;
-                        }
-                        preTags.Append(s2.Substring(0, idx + 1));
-                        s2 = s2.Substring(idx + 1);
+                        int closeIdx = s2.IndexOf('>');
+                        preTags.Append(s2.Substring(0, closeIdx + 1));
+                        s2 = s2.Substring(closeIdx + 1);
                     }
 
-                    if (s2.EndsWith("</i>", StringComparison.Ordinal) ||
-                        s2.EndsWith("</b>", StringComparison.Ordinal) ||
-                        s2.EndsWith("</u>", StringComparison.Ordinal))
+                    // close tags
+                    if (s2.LineEndsWithHtmlTag(true, true))
                     {
-                        postTags = s2.Substring(s2.Length - 4) + postTags;
-                        s2 = s2.Remove(s2.Length - 4);
+                        int startIdx = s2.LastIndexOf('<');
+                        postTags = s2.Substring(startIdx) + postTags;
+                        s2 = s2.Substring(0, startIdx);
                     }
-                    if (s2.EndsWith("</font>", StringComparison.Ordinal))
-                    {
-                        postTags = s2.Substring(s2.Length - 7) + postTags;
-                        s2 = s2.Remove(s2.Length - 7);
-                    }
+
                     // no changes happened exit the loop
                     if (s2.Length == len)
                     {
