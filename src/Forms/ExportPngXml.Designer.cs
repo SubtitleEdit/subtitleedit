@@ -686,6 +686,7 @@
             // comboBoxSubtitleFont
             // 
             this.comboBoxSubtitleFont.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxSubtitleFont.DropDownWidth = 210;
             this.comboBoxSubtitleFont.FormattingEnabled = true;
             this.comboBoxSubtitleFont.Location = new System.Drawing.Point(110, 24);
             this.comboBoxSubtitleFont.Name = "comboBoxSubtitleFont";
