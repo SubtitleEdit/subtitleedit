@@ -7,39 +7,37 @@ namespace Nikse.SubtitleEdit.Core.Forms
     {
         public static bool QualifiesForSplit(string text, int singleLineMaxCharacters, int totalLineMaxCharacters)
         {
-            string s = HtmlUtil.RemoveHtmlTags(text.Trim(), true);
-            if (s.Length > totalLineMaxCharacters)
+            string noTagText = HtmlUtil.RemoveHtmlTags(text.Trim(), true);
+            if (noTagText.Length > totalLineMaxCharacters)
             {
                 return true;
             }
 
-            var arr = s.SplitToLines();
-            foreach (string line in arr)
+            foreach (string noTagLine in noTagText.SplitToLines())
             {
-                if (line.Length > singleLineMaxCharacters)
+                if (noTagLine.Length > singleLineMaxCharacters)
                 {
                     return true;
                 }
             }
 
-            var tempText = Utilities.UnbreakLine(s);
-            if (Utilities.CountTagInText(tempText, '-') == 2 && (text.StartsWith('-') || text.StartsWith("<i>-", StringComparison.OrdinalIgnoreCase)))
+            if (!noTagText.StartsWith('-') || Utilities.CountTagInText(text, "- ") < 2)
             {
-                var idx = tempText.IndexOfAny(new[] { ". -", "! -", "? -" }, StringComparison.Ordinal);
-                if (idx > 1)
-                {
-                    idx++;
-                    string dialogText = tempText.Remove(idx, 1).Insert(idx, Environment.NewLine);
-                    foreach (string line in dialogText.SplitToLines())
-                    {
-                        if (line.Length > singleLineMaxCharacters)
-                        {
-                            return true;
-                        }
-                    }
-                }
+                return false;
             }
-            return false;
+
+            string singleLineNoTag = Utilities.UnbreakLine(noTagText);
+
+            string[] patterns = { ". -", "! -", "? -", "] -", ") -" };
+            int patternIdx = singleLineNoTag.IndexOfAny(patterns, StringComparison.OrdinalIgnoreCase);
+            if (patternIdx < 0)
+            {
+                return false;
+            }
+
+            int maxLineLen = Math.Max(patternIdx + 1, singleLineNoTag.Length - (patternIdx + 2));
+
+            return maxLineLen > singleLineMaxCharacters;
         }
 
         public static Subtitle SplitLongLinesInSubtitle(Subtitle subtitle, int totalLineMaxCharacters, int singleLineMaxCharacters)
