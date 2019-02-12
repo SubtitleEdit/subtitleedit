@@ -22,7 +22,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 }
             }
 
-            var tempText = Utilities.UnbreakLine(text);
+            var tempText = Utilities.UnbreakLine(s);
             if (Utilities.CountTagInText(tempText, '-') == 2 && (text.StartsWith('-') || text.StartsWith("<i>-")))
             {
                 var idx = tempText.IndexOfAny(new[] { ". -", "! -", "? -" }, StringComparison.Ordinal);
