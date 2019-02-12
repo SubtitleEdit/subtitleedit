@@ -37,11 +37,15 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                          .Replace(">" + target + "\u200B" + Environment.NewLine, ">I" + Environment.NewLine) // Zero Width Space
                          .Replace(">" + target + "\uFEFF" + Environment.NewLine, ">I" + Environment.NewLine); // Zero Width No-Break Space
 
+            s = s.Replace(" i-i ", " I-I ");
+            s = s.Replace(" i-i-i ", " I-I-I ");
+
             // reg-ex
             Match match = re.Match(s);
             while (match.Success)
             {
-                if (s[match.Index] == target && !s.Substring(match.Index).StartsWith("i.e.", StringComparison.Ordinal))
+                if (s[match.Index] == target && !s.Substring(match.Index).StartsWith("i.e.", StringComparison.Ordinal) &&
+                    !s.Substring(match.Index).StartsWith("i-", StringComparison.Ordinal))
                 {
                     var prev = '\0';
                     var next = '\0';
