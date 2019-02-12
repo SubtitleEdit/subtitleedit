@@ -1185,7 +1185,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void AddNode(TreeNode parentNode, string text, ShortcutHelper shortcut)
         {
-            if (textBoxShortcutSearch.Left < 2 || text.Contains(textBoxShortcutSearch.Text, StringComparison.OrdinalIgnoreCase))
+            var normalizeAmpersand = text.Replace("&&", "@_____@").Replace("&", string.Empty).Replace("@_____@", "&");
+            if (textBoxShortcutSearch.Left < 2 || normalizeAmpersand.Contains(textBoxShortcutSearch.Text, StringComparison.OrdinalIgnoreCase))
             {
                 parentNode.Nodes.Add(new TreeNode(text) { Tag = shortcut });
             }
