@@ -104,7 +104,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             {
                 foreach (XmlNode item in node.ChildNodes)
                 {
-                    if (item.Attributes != null && HasValidAttributes(item, false))
+                    if (HasValidAttributes(item, false))
                     {
                         string to = item.Attributes["to"].Value;
                         string from = item.Attributes["from"].Value;
@@ -132,7 +132,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             {
                 foreach (XmlNode item in node.ChildNodes)
                 {
-                    if (item.Attributes != null && HasValidAttributes(item, true))
+                    if (HasValidAttributes(item, true))
                     {
                         string to = item.Attributes["replaceWith"].Value;
                         string from = item.Attributes["find"].Value;

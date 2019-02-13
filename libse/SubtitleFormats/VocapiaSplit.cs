@@ -38,6 +38,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
                 catch
                 {
+                    // ignored
                 }
             }
 
@@ -134,26 +135,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return Convert.ToDouble(s) * TimeCode.BaseUnit;
         }
 
-        public override bool HasStyleSupport
-        {
-            get { return true; }
-        }
-
-        public static List<string> GetStylesFromHeader(Subtitle subtitle)
-        {
-            var list = new List<string>();
-            foreach (Paragraph p in subtitle.Paragraphs)
-            {
-                if (!string.IsNullOrEmpty(p.Actor))
-                {
-                    if (list.IndexOf(p.Actor) < 0)
-                    {
-                        list.Add(p.Actor);
-                    }
-                }
-            }
-            return list;
-        }
-
+        public override bool HasStyleSupport => true;
     }
 }
