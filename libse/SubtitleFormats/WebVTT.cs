@@ -185,7 +185,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     subtitle.Header = "WEBVTT";
                 }
-                else if (p != null && hadEmptyLine && Utilities.IsInteger(line) &&
+                else if (p != null && hadEmptyLine && Utilities.IsInteger(line.RemoveChar('-')) &&
                          (RegexTimeCodesMiddle.IsMatch(next) ||
                           RegexTimeCodesShort.IsMatch(next) ||
                           RegexTimeCodes.IsMatch(next)))
