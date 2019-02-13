@@ -46,21 +46,24 @@ namespace Nikse.SubtitleEdit.Core
         }
 
         /// <summary>
-        /// Copy constructor (only paragraphs)
+        /// Copies headers and paragraphs.
         /// </summary>
         /// <param name="subtitle">Subtitle to copy</param>
         /// <param name="generateNewId">Generate new ID (guid) for paragraphs</param>
-        public Subtitle(Subtitle subtitle, bool generateNewId = true)
+        /// <param name="copyParagraphs">True if paragraphs must be copied, otherwise false</param>
+        public Subtitle(Subtitle subtitle, bool generateNewId = true, bool copyParagraphs = true)
             : this()
         {
             if (subtitle == null)
             {
                 return;
             }
-
-            foreach (Paragraph p in subtitle.Paragraphs)
+            if (copyParagraphs)
             {
-                _paragraphs.Add(new Paragraph(p, generateNewId));
+                foreach (Paragraph p in subtitle.Paragraphs)
+                {
+                    _paragraphs.Add(new Paragraph(p, generateNewId));
+                }
             }
             WasLoadedWithFrameNumbers = subtitle.WasLoadedWithFrameNumbers;
             Header = subtitle.Header;
@@ -710,5 +713,6 @@ namespace Nikse.SubtitleEdit.Core
             }
             return sb.ToString();
         }
+
     }
 }

@@ -42,8 +42,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
         public static Subtitle SplitLongLinesInSubtitle(Subtitle subtitle, int totalLineMaxCharacters, int singleLineMaxCharacters)
         {
-            var splittedSubtitle = new Subtitle(subtitle);
-            splittedSubtitle.Paragraphs.Clear();
+            var splittedSubtitle = new Subtitle(subtitle, true, false);
             string language = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle);
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
