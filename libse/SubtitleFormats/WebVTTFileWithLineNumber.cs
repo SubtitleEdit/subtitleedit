@@ -60,7 +60,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             Paragraph p = null;
             string positionInfo = string.Empty;
             bool hadEmptyLine = false;
-            int numbers = 0;
             for (var index = 0; index < lines.Count; index++)
             {
                 string line = lines[index];
@@ -112,12 +111,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     subtitle.Header = "WEBVTT FILE";
                 }
-                else if (p != null && hadEmptyLine && Utilities.IsInteger(line) &&
+                else if (p != null && hadEmptyLine && Utilities.IsInteger(line.RemoveChar('-')) &&
                          (RegexTimeCodesMiddle.IsMatch(next) ||
                           RegexTimeCodesShort.IsMatch(next) ||
                           RegexTimeCodes.IsMatch(next)))
                 {
-                    numbers++;
+                    // line number
                 }
                 else if (p != null)
                 {
