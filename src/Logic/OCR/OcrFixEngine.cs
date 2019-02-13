@@ -1253,7 +1253,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
             string tempLine = line;
             const string p = " ¡¿,.!?:;()[]{}+-$£\"„”“#&%…—♪\r\n";
-            foreach (string name in _nameMultiWordList.ToList().Concat(_nameListWithPeriods))
+            foreach (string name in _nameMultiWordList.Concat(_nameListWithPeriods))
             {
                 int start = tempLine.FastIndexOf(name);
                 if (start == 0 || (start > 0 && p.Contains(tempLine[start - 1])))
