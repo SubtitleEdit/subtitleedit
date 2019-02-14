@@ -43,104 +43,112 @@ namespace Nikse.SubtitleEdit.Core.Forms
         public static Subtitle SplitLongLinesInSubtitle(Subtitle subtitle, int totalLineMaxCharacters, int singleLineMaxCharacters)
         {
             var splittedSubtitle = new Subtitle(subtitle);
-            splittedSubtitle.Paragraphs.Clear();
             string language = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle);
-            for (int i = 0; i < subtitle.Paragraphs.Count; i++)
+
+            // calculate gaps
+            var halfMinGaps = Configuration.Settings.General.MinimumMillisecondsBetweenLines / 2.0;
+            var halfMinGapsMood = halfMinGaps + Configuration.Settings.General.MinimumMillisecondsBetweenLines % 2;
+
+            const int FirstLine = 0;
+            const int SecondLine = 1;
+
+            for (int i = splittedSubtitle.Paragraphs.Count - 1; i >= 0; i--)
             {
-                bool added = false;
-                var p = subtitle.GetParagraphOrDefault(i);
-                if (p?.Text != null)
+                var oldParagraph = splittedSubtitle.Paragraphs[i];
+
+                // don't split into two paragraph if it can be balanced
+                var text = Utilities.AutoBreakLine(oldParagraph.Text, language);
+                if (!QualifiesForSplit(text, singleLineMaxCharacters, totalLineMaxCharacters))
                 {
-                    if (QualifiesForSplit(p.Text, singleLineMaxCharacters, totalLineMaxCharacters))
-                    {
-                        var text = Utilities.AutoBreakLine(p.Text, language);
-                        if (!QualifiesForSplit(text, singleLineMaxCharacters, totalLineMaxCharacters))
-                        {
-                            var newParagraph = new Paragraph(p) { Text = text };
-                            splittedSubtitle.Paragraphs.Add(newParagraph);
-                            added = true;
-                        }
-                        else
-                        {
-                            if (text.Contains(Environment.NewLine))
-                            {
-                                var arr = text.SplitToLines();
-                                if (arr.Count == 2)
-                                {
-                                    var minMsBtwnLnBy2 = Configuration.Settings.General.MinimumMillisecondsBetweenLines / 2;
-                                    int spacing1 = minMsBtwnLnBy2;
-                                    int spacing2 = minMsBtwnLnBy2;
-                                    if (Configuration.Settings.General.MinimumMillisecondsBetweenLines % 2 == 1)
-                                    {
-                                        spacing2++;
-                                    }
-
-                                    double duration = p.Duration.TotalMilliseconds / 2.0;
-                                    var newParagraph1 = new Paragraph(p);
-                                    var newParagraph2 = new Paragraph(p);
-                                    newParagraph1.Text = Utilities.AutoBreakLine(arr[0], language);
-                                    newParagraph1.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + duration - spacing1;
-                                    newParagraph2.Text = Utilities.AutoBreakLine(arr[1], language);
-                                    newParagraph2.StartTime.TotalMilliseconds = newParagraph1.EndTime.TotalMilliseconds + spacing2;
-
-                                    string p1 = HtmlUtil.RemoveHtmlTags(newParagraph1.Text);
-                                    var len = p1.Length - 1;
-                                    if (p1.Length > 0 && (p1[len] == '.' || p1[len] == '!' || p1[len] == '?' || p1[len] == ':' || p1[len] == ')' || p1[len] == ']' || p1[len] == '♪'))
-                                    {
-                                        if (newParagraph1.Text.StartsWith('-') && newParagraph2.Text.StartsWith('-'))
-                                        {
-                                            newParagraph1.Text = newParagraph1.Text.Remove(0, 1).Trim();
-                                            newParagraph2.Text = newParagraph2.Text.Remove(0, 1).Trim();
-                                        }
-                                        else if (newParagraph1.Text.StartsWith("<i>-", StringComparison.Ordinal) && newParagraph2.Text.StartsWith('-'))
-                                        {
-                                            newParagraph1.Text = newParagraph1.Text.Remove(3, 1).Trim();
-                                            if (newParagraph1.Text.StartsWith("<i> ", StringComparison.Ordinal))
-                                            {
-                                                newParagraph1.Text = newParagraph1.Text.Remove(3, 1).Trim();
-                                            }
-
-                                            newParagraph2.Text = newParagraph2.Text.Remove(0, 1).Trim();
-                                        }
-                                    }
-                                    else
-                                    {
-                                        if (newParagraph1.Text.EndsWith("</i>", StringComparison.Ordinal))
-                                        {
-                                            const string post = "</i>";
-                                            newParagraph1.Text = newParagraph1.Text.Remove(newParagraph1.Text.Length - post.Length);
-                                        }
-
-                                        if (newParagraph2.Text.StartsWith("<i>", StringComparison.Ordinal))
-                                        {
-                                            const string pre = "<i>";
-                                            newParagraph2.Text = newParagraph2.Text.Remove(0, pre.Length);
-                                        }
-                                    }
-
-                                    var indexOfItalicOpen1 = newParagraph1.Text.IndexOf("<i>", StringComparison.Ordinal);
-                                    if (indexOfItalicOpen1 >= 0 && indexOfItalicOpen1 < 10 && newParagraph1.Text.IndexOf("</i>", StringComparison.Ordinal) < 0 &&
-                                        newParagraph2.Text.Contains("</i>") && newParagraph2.Text.IndexOf("<i>", StringComparison.Ordinal) < 0)
-                                    {
-                                        newParagraph1.Text += "</i>";
-                                        newParagraph2.Text = "<i>" + newParagraph2.Text;
-                                    }
-
-                                    splittedSubtitle.Paragraphs.Add(newParagraph1);
-                                    splittedSubtitle.Paragraphs.Add(newParagraph2);
-                                    added = true;
-                                }
-                            }
-                        }
-                    }
+                    oldParagraph.Text = text;
+                    continue;
                 }
-                if (!added)
+
+                // continue if paragraph doesn't contain exactly two lines
+                var lines = text.SplitToLines();
+                if (lines.Count != 2)
                 {
-                    splittedSubtitle.Paragraphs.Add(new Paragraph(p));
+                    continue; // ignore 3+ lines
                 }
+
+                // calculate milliseconds per char
+                string noTagText = HtmlUtil.RemoveHtmlTags(oldParagraph.Text, true);
+                double millisecondsPerChar = oldParagraph.Duration.TotalMilliseconds / (noTagText.Length - Environment.NewLine.Length);
+
+                oldParagraph.Text = Utilities.AutoBreakLine(lines[FirstLine], language);
+
+                // use optimal time to adjust duration
+                oldParagraph.EndTime.TotalMilliseconds = oldParagraph.StartTime.TotalMilliseconds + millisecondsPerChar * oldParagraph.Text.Length - halfMinGaps;
+
+                // build second paragraph
+                var newParagraph = new Paragraph(oldParagraph);
+                newParagraph.Text = Utilities.AutoBreakLine(lines[SecondLine], language);
+                newParagraph.StartTime.TotalMilliseconds = oldParagraph.EndTime.TotalMilliseconds + halfMinGapsMood;
+
+                // only remove dash (of dialog) if first line is fully closed
+                if (IsTextClosed(oldParagraph.Text))
+                {
+                    RemoveInvalidDash(oldParagraph, newParagraph);
+                }
+
+                // handle invalid tags
+                if (oldParagraph.Text.Contains('<'))
+                {
+                    oldParagraph.Text = HtmlUtil.FixInvalidItalicTags(oldParagraph.Text);
+                }
+                if (newParagraph.Text.Contains('<'))
+                {
+                    newParagraph.Text = HtmlUtil.FixInvalidItalicTags(newParagraph.Text);
+                }
+
+                // insert new paragraph after the current/old one
+                splittedSubtitle.Paragraphs.Insert(i + 1, newParagraph);
             }
+
             splittedSubtitle.Renumber();
             return splittedSubtitle;
+        }
+
+
+        private static void RemoveInvalidDash(Paragraph p1, Paragraph p2)
+        {
+            // return if not dialog
+            if ((StartsWithDash(p1.Text) && StartsWithDash(p2.Text)) == false)
+            {
+                return;
+            }
+            const char Dash = '-';
+            // update first text
+            int dashIdx = p1.Text.IndexOf(Dash);
+            p1.Text = p1.Text.Substring(0, dashIdx) + p1.Text.Substring(dashIdx + 1).TrimStart();
+            // update second text
+            dashIdx = p2.Text.IndexOf(Dash);
+            p2.Text = p2.Text.Substring(0, dashIdx) + p2.Text.Substring(dashIdx + 1).TrimStart();
+        }
+
+        private static bool StartsWithDash(string text)
+        {
+            if (!text.LineStartsWithHtmlTag(true, true))
+            {
+                return false;
+            }
+            int closeIdx = text.IndexOf('>');
+            if (closeIdx + 1 == text.Length) // found in last position
+            {
+                return false;
+            }
+            return text[closeIdx + 1] == '-';
+        }
+
+        private static bool IsTextClosed(string text)
+        {
+            if (string.IsNullOrEmpty(text) || text.Length == 0)
+            {
+                return false;
+            }
+            string textNoTags = HtmlUtil.RemoveHtmlTags(text);
+            char lastChar = textNoTags[textNoTags.Length];
+            return lastChar == '.' || lastChar == '!' || lastChar == '?' || lastChar == ':' || lastChar == ')' || lastChar == ']' || lastChar == '♪';
         }
 
     }
