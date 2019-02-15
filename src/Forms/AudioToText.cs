@@ -248,19 +248,24 @@ namespace Nikse.SubtitleEdit.Forms
         private static int GetLastTimeStampInSeconds(string text)
         {
             var lines = text.SplitToLines();
-            lines.Reverse();
-            foreach (var line in lines)
+
+            for (int i = lines.Count - 1; i >= 0; i--)
             {
-                if (!line.StartsWith('<') && !line.StartsWith('['))
+                string line = lines[i];
+                if (line.StartsWith('<') || line.StartsWith('['))
                 {
-                    var parts = line.Split();
-                    if (parts.Length == 4)
-                    {
-                        if (double.TryParse(parts[1], out _) && double.TryParse(parts[2], out var end))
-                        {
-                            return (int)Math.Round(end);
-                        }
-                    }
+                    continue;
+                }
+
+                var words = line.Split();
+                if (words.Length != 4)
+                {
+                    continue;
+                }
+
+                if (double.TryParse(words[1], out _) && double.TryParse(words[2], out var end))
+                {
+                    return (int)Math.Round(end);
                 }
             }
 
