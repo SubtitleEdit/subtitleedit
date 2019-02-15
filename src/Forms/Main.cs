@@ -19763,7 +19763,23 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         _subtitleAlternate = new Subtitle(_subtitle);
                         _subtitleAlternateFileName = _fileName;
-                        _fileName = null;
+
+                        var language = LanguageAutoDetect.AutoDetectGoogleLanguageOrNull(s);
+                        if (s.Paragraphs.Count > 10 && language != null && !string.IsNullOrEmpty(_fileName))
+                        {
+                            _fileName = Path.GetFileNameWithoutExtension(_fileName);
+                            var oldLang = "." + LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitleAlternate);
+                            if (oldLang.Length == 3 && _fileName.EndsWith(oldLang, StringComparison.OrdinalIgnoreCase))
+                            {
+                                _fileName = _fileName.Remove(_fileName.Length - 3);
+                            }
+                            _fileName += "." + language;
+                        }
+                        else
+                        {
+                            _fileName = null;
+                        }
+
                         _subtitle.Paragraphs.Clear();
                         foreach (var p in s.Paragraphs)
                         {
