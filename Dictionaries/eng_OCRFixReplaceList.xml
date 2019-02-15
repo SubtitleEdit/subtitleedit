@@ -201,7 +201,7 @@
     <Word from="can*t" to="can't" />
     <Word from="can'i" to="can't" />
     <Word from="can'I" to="can't" />
-    <Word from="canlgetyou" to="canI get you" />
+    <Word from="canlgetyou" to="can I get you" />
     <Word from="cannotchange" to="cannot change" />
     <Word from="cannut" to="cannot" />
     <Word from="can'T" to="can't" />
@@ -404,7 +404,6 @@
     <Word from="forthe" to="for the" />
     <Word from="Foryears" to="For years" />
     <Word from="foryou" to="for you" />
-    <Word from="Foudeen" to="Fouteen" />
     <Word from="Fouﬂeen" to="Fourteen" />
     <Word from="FourSeasons" to="Four Seasons" />
     <Word from="fr/ends" to="friends" />
@@ -1347,7 +1346,6 @@
     <Word from="vi/ay" to="way" />
     <Word from="visitjails" to="visit jails" />
     <Word from="Viva/di's" to="Vivaldi's" />
-    <Word from="vlll" to="vill" />
     <Word from="Voilá" to="Voilà" />
     <Word from="Voilé" to="Voilà" />
     <Word from="vvasjust" to="was just" />
@@ -2243,7 +2241,6 @@
     <Word from="Goodjob" to="Good job" />
     <Word from="google" to="Google" />
     <Word from="gothere" to="go there" />
-    <Word from="gotta" to="got to" />
     <Word from="grafier" to="grafter" />
     <Word from="granddad" to="grandad" />
     <Word from="Granddad" to="Grandad" />
@@ -2342,9 +2339,9 @@
     <Word from="lasagna" to="lasagne" />
     <Word from="leastpeople" to="least people" />
     <Word from="lfl" to="if I" />
-    <Word from="lfthafs" to="lf that's" />
-    <Word from="lfthis" to="lf this" />
-    <Word from="lfwe're" to="lf we're" />
+    <Word from="lfthafs" to="if that's" />
+    <Word from="lfthis" to="if this" />
+    <Word from="lfwe're" to="if we're" />
     <Word from="lifeform" to="life form" />
     <Word from="lightspeed" to="light speed" />
     <Word from="limón" to="lemon" />
@@ -2489,7 +2486,6 @@
     <Word from="shouldthinkthey're" to="should think they're" />
     <Word from="skeleton in the closet" to="skeleton in the cupboard" />
     <Word from="slipthrough" to="slip through" />
-    <Word from="smackeroonyos" to="smackeroonios" />
     <Word from="smanish" to="smartish" />
     <Word from="smith/es" to="smithies" />
     <Word from="someplace" to="some place" />
@@ -2508,7 +2504,6 @@
     <Word from="sufferthe" to="suffer the" />
     <Word from="swifier" to="swifter" />
     <Word from="t0" to="to" />
-    <Word from="tabnur" to="taboor" />
     <Word from="takeJuma" to="take Juma" />
     <Word from="takethe" to="take the" />
     <Word from="tatking" to="talking" />

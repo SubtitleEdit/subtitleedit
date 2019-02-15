@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
@@ -34,6 +35,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
         private HashSet<string> _nameList = new HashSet<string>();
         private HashSet<string> _nameListUppercase = new HashSet<string>();
         private HashSet<string> _nameListWithApostrophe = new HashSet<string>();
+        private List<string> _nameListWithPeriods = new List<string>();
         private HashSet<string> _nameMultiWordList = new HashSet<string>(); // case sensitive phrases
         private HashSet<string> _abbreviationList;
         private HashSet<string> _userWordList = new HashSet<string>();
@@ -237,6 +239,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             _nameMultiWordList = _nameListObj.GetMultiNames();
             _nameListUppercase = new HashSet<string>();
             _nameListWithApostrophe = new HashSet<string>();
+            _nameListWithPeriods = new List<string>();
             _abbreviationList = new HashSet<string>();
 
             bool isEnglish = threeLetterIsoLanguageName.Equals("eng", StringComparison.OrdinalIgnoreCase);
@@ -254,10 +257,16 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                         _nameListWithApostrophe.Add(name + "'");
                     }
                 }
+
                 // Abbreviations.
                 if (name.EndsWith('.'))
                 {
                     _abbreviationList.Add(name);
+                }
+
+                if (name.Contains("."))
+                {
+                    _nameListWithPeriods.Add(name);
                 }
             }
             if (isEnglish)
@@ -1244,7 +1253,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
             string tempLine = line;
             const string p = " ¡¿,.!?:;()[]{}+-$£\"„”“#&%…—♪\r\n";
-            foreach (string name in _nameMultiWordList)
+            foreach (string name in _nameMultiWordList.Concat(_nameListWithPeriods))
             {
                 int start = tempLine.FastIndexOf(name);
                 if (start == 0 || (start > 0 && p.Contains(tempLine[start - 1])))

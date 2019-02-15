@@ -454,9 +454,12 @@ namespace Nikse.SubtitleEdit.Core
 
         public void Renumber(int startNumber = 1)
         {
-            foreach (Paragraph p in _paragraphs)
+            var index = startNumber;
+            int l = _paragraphs.Count;
+            while (index < l)
             {
-                p.Number = startNumber++;
+                var p = _paragraphs[index++];
+                p.Number = index;
             }
         }
 

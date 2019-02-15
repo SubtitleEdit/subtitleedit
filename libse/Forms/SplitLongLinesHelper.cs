@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace Nikse.SubtitleEdit.Core.Forms
 {
@@ -13,7 +12,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 return true;
             }
 
-            foreach (string noTagLine in noTagText.SplitToLines())
+            foreach (var line in s.SplitToLines())
             {
                 if (noTagLine.Length > singleLineMaxCharacters)
                 {
@@ -42,8 +41,6 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
         public static Subtitle SplitLongLinesInSubtitle(Subtitle subtitle, int totalLineMaxCharacters, int singleLineMaxCharacters)
         {
-            var splittedIndexes = new List<int>();
-            var autoBreakedIndexes = new List<int>();
             var splittedSubtitle = new Subtitle(subtitle);
             splittedSubtitle.Paragraphs.Clear();
             string language = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle);
@@ -59,7 +56,6 @@ namespace Nikse.SubtitleEdit.Core.Forms
                         if (!QualifiesForSplit(text, singleLineMaxCharacters, totalLineMaxCharacters))
                         {
                             var newParagraph = new Paragraph(p) { Text = text };
-                            autoBreakedIndexes.Add(splittedSubtitle.Paragraphs.Count);
                             splittedSubtitle.Paragraphs.Add(newParagraph);
                             added = true;
                         }
@@ -85,9 +81,6 @@ namespace Nikse.SubtitleEdit.Core.Forms
                                     newParagraph1.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + duration - spacing1;
                                     newParagraph2.Text = Utilities.AutoBreakLine(arr[1], language);
                                     newParagraph2.StartTime.TotalMilliseconds = newParagraph1.EndTime.TotalMilliseconds + spacing2;
-
-                                    splittedIndexes.Add(splittedSubtitle.Paragraphs.Count);
-                                    splittedIndexes.Add(splittedSubtitle.Paragraphs.Count + 1);
 
                                     string p1 = HtmlUtil.RemoveHtmlTags(newParagraph1.Text);
                                     var len = p1.Length - 1;
