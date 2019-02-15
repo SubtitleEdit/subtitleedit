@@ -12,7 +12,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 return true;
             }
 
-            foreach (var line in s.SplitToLines())
+            foreach (var noTagLine in noTagText.SplitToLines())
             {
                 if (noTagLine.Length > singleLineMaxCharacters)
                 {
@@ -26,16 +26,13 @@ namespace Nikse.SubtitleEdit.Core.Forms
             }
 
             string singleLineNoTag = Utilities.UnbreakLine(noTagText);
-
-            string[] patterns = { ". -", "! -", "? -", "] -", ") -" };
-            int patternIdx = singleLineNoTag.IndexOfAny(patterns, StringComparison.OrdinalIgnoreCase);
-            if (patternIdx < 0)
+            int lineSplitIdx = singleLineNoTag.IndexOfAny(new[] { ". -", "! -", "? -", "] -", ") -" }, StringComparison.OrdinalIgnoreCase);
+            if (lineSplitIdx < 0)
             {
                 return false;
             }
 
-            int maxLineLen = Math.Max(patternIdx + 1, singleLineNoTag.Length - (patternIdx + 2));
-
+            int maxLineLen = Math.Max(lineSplitIdx + 1, singleLineNoTag.Length - (lineSplitIdx + 2));
             return maxLineLen > singleLineMaxCharacters;
         }
 
