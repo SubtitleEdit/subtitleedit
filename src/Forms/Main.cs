@@ -19765,7 +19765,7 @@ namespace Nikse.SubtitleEdit.Forms
                         _subtitleAlternateFileName = _fileName;
 
                         var language = LanguageAutoDetect.AutoDetectGoogleLanguageOrNull(s);
-                        if (s.Paragraphs.Count > 10 && language != null && !string.IsNullOrEmpty(_fileName))
+                        if (language != null && !string.IsNullOrEmpty(_fileName))
                         {
                             _fileName = Path.GetFileNameWithoutExtension(_fileName);
                             var oldLang = "." + LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitleAlternate);
