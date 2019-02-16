@@ -30,19 +30,19 @@ namespace Nikse.SubtitleEdit.Forms
                 revisionNumber = versionInfo[3];
             }
 
-            if (revisionNumber == "0")
+            if (revisionNumber == "0" || revisionNumber == "1") // don't append build number for rev 0 - and also 1 in case first build goes wrong
             {
-                labelProduct.Text = $"{_languageGeneral.Title} {versionInfo[0]}.{versionInfo[1]}.{versionInfo[2]}, ";
-                revisionNumber = Utilities.AssemblyDescription.Substring(0, 7);
+                labelProduct.Text = $"{_languageGeneral.Title} {versionInfo[0]}.{versionInfo[1]}.{versionInfo[2]}";
+                linkLabelGitBuildHash.Hide();
             }
             else
             {
-                labelProduct.Text = $"{_languageGeneral.Title} {versionInfo[0]}.{versionInfo[1]}.{versionInfo[2]}, build";
+                labelProduct.Text = $"{_languageGeneral.Title} {versionInfo[0]}.{versionInfo[1]}.{versionInfo[2]} NEXT, beta";
+                linkLabelGitBuildHash.Left = labelProduct.Left + labelProduct.Width - 5;
+                linkLabelGitBuildHash.Text = revisionNumber;
+                tooltip.SetToolTip(linkLabelGitBuildHash, GetGitHubHashLink());
+                linkLabelGitBuildHash.Font = labelProduct.Font;
             }
-            linkLabelGitBuildHash.Left = labelProduct.Left + labelProduct.Width - 5;
-            linkLabelGitBuildHash.Text = revisionNumber;
-            tooltip.SetToolTip(linkLabelGitBuildHash, GetGitHubHashLink());
-            linkLabelGitBuildHash.Font = labelProduct.Font;
 
             string aboutText = _language.AboutText1.TrimEnd() + Environment.NewLine +
                                Environment.NewLine +
