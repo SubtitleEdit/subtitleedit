@@ -85,7 +85,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 newParagraph.Text = Utilities.AutoBreakLine(lines[SecondLine], language);
                 newParagraph.StartTime.TotalMilliseconds = oldParagraph.EndTime.TotalMilliseconds + halfMinGapsMood;
 
-                // only remove dash (of dialog) if first line is fully closed
+                // only remove dash (if dialog) if first line is fully closed
                 if (IsTextClosed(oldParagraph.Text))
                 {
                     RemoveInvalidDash(oldParagraph, newParagraph);
@@ -108,7 +108,6 @@ namespace Nikse.SubtitleEdit.Core.Forms
             splittedSubtitle.Renumber();
             return splittedSubtitle;
         }
-
 
         private static void RemoveInvalidDash(Paragraph p1, Paragraph p2)
         {
@@ -147,7 +146,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 return false;
             }
             string textNoTags = HtmlUtil.RemoveHtmlTags(text);
-            char lastChar = textNoTags[textNoTags.Length];
+            char lastChar = textNoTags[textNoTags.Length - 1];
             return lastChar == '.' || lastChar == '!' || lastChar == '?' || lastChar == ':' || lastChar == ')' || lastChar == ']' || lastChar == '♪';
         }
 
