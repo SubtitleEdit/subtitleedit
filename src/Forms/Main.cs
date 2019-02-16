@@ -19773,7 +19773,7 @@ namespace Nikse.SubtitleEdit.Forms
                             {
                                 _fileName = _fileName.Remove(_fileName.Length - 3);
                             }
-                            _fileName += "." + language;
+                            _fileName += "." + language + GetCurrentSubtitleFormat().Extension;
                         }
                         else
                         {
