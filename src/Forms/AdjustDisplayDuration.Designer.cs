@@ -46,6 +46,7 @@
             this.labelOptimalCharsSec = new System.Windows.Forms.Label();
             this.numericUpDownFixedMilliseconds = new System.Windows.Forms.NumericUpDown();
             this.labelMillisecondsFixed = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
             this.groupBoxAdjustVia.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxCharsSec)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSeconds)).BeginInit();
@@ -309,11 +310,21 @@
             this.labelMillisecondsFixed.TabIndex = 12;
             this.labelMillisecondsFixed.Text = "Milliseconds";
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(264, 93);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(18, 13);
+            this.label1.TabIndex = 22;
+            this.label1.Text = "%";
+            // 
             // AdjustDisplayDuration
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(624, 247);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.numericUpDownFixedMilliseconds);
             this.Controls.Add(this.labelMillisecondsFixed);
             this.Controls.Add(this.numericUpDownOptimalCharsSec);
@@ -370,5 +381,6 @@
         private System.Windows.Forms.RadioButton radioButtonFixed;
         private System.Windows.Forms.NumericUpDown numericUpDownFixedMilliseconds;
         private System.Windows.Forms.Label labelMillisecondsFixed;
+        private System.Windows.Forms.Label label1;
     }
 }
