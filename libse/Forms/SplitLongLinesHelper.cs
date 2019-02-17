@@ -72,18 +72,17 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 }
 
                 // calculate milliseconds per char
-                string noTagText = HtmlUtil.RemoveHtmlTags(oldParagraph.Text, true);
-                double millisecondsPerChar = oldParagraph.Duration.TotalMilliseconds / (noTagText.Length - Environment.NewLine.Length);
+                double millisecondsPerChar = oldParagraph.Duration.TotalMilliseconds / (HtmlUtil.RemoveHtmlTags(text, true).Length - Environment.NewLine.Length);
 
-                oldParagraph.Text = Utilities.AutoBreakLine(lines[FirstLine], language);
+                oldParagraph.Text = lines[FirstLine];
 
                 // use optimal time to adjust duration
                 oldParagraph.EndTime.TotalMilliseconds = oldParagraph.StartTime.TotalMilliseconds + millisecondsPerChar * oldParagraph.Text.Length - halfMinGaps;
 
                 // build second paragraph
-                var newParagraph = new Paragraph(oldParagraph);
-                newParagraph.Text = Utilities.AutoBreakLine(lines[SecondLine], language);
+                var newParagraph = new Paragraph(oldParagraph) { Text = lines[SecondLine] };
                 newParagraph.StartTime.TotalMilliseconds = oldParagraph.EndTime.TotalMilliseconds + halfMinGapsMood;
+                newParagraph.EndTime.TotalMilliseconds = newParagraph.StartTime.TotalMilliseconds + millisecondsPerChar * newParagraph.Text.Length;
 
                 // only remove dash (if dialog) if first line is fully closed
                 if (IsTextClosed(oldParagraph.Text))
@@ -100,6 +99,9 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 {
                     newParagraph.Text = HtmlUtil.FixInvalidItalicTags(newParagraph.Text);
                 }
+
+                oldParagraph.Text = Utilities.AutoBreakLine(oldParagraph.Text, language);
+                newParagraph.Text = Utilities.AutoBreakLine(newParagraph.Text, language);
 
                 // insert new paragraph after the current/old one
                 splittedSubtitle.Paragraphs.Insert(i + 1, newParagraph);
@@ -129,7 +131,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
         {
             if (!text.LineStartsWithHtmlTag(true, true))
             {
-                return false;
+                return text.StartsWith('-');
             }
             int closeIdx = text.IndexOf('>');
             if (closeIdx + 1 == text.Length) // found in last position

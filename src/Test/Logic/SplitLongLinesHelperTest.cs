@@ -1,10 +1,7 @@
-﻿using System;
-using System.Text;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Core.Forms;
+using System;
 
 namespace Test.Logic
 {
@@ -38,16 +35,12 @@ namespace Test.Logic
             for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
             {
                 var p = _subtitle.Paragraphs[i];
-                if (i == 0)
-                {
-                    p.EndTime.TotalMilliseconds = Utilities.GetOptimalDisplayMilliseconds(p.Text);
-                }
-                else
+                if (i > 0)
                 {
                     p.StartTime.TotalMilliseconds = _subtitle.Paragraphs[i - 1].EndTime.TotalMilliseconds +
                         Configuration.Settings.General.MinimumMillisecondsBetweenLines;
-                    p.EndTime.TotalMilliseconds = Utilities.GetOptimalDisplayMilliseconds(p.Text);
                 }
+                p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + Utilities.GetOptimalDisplayMilliseconds(p.Text);
             }
         }
 
@@ -63,12 +56,36 @@ namespace Test.Logic
             Assert.AreNotEqual(_subtitle.Paragraphs.Count, procSubtitle.Paragraphs.Count);
 
             // too long (dialog)
-            Assert.AreNotEqual("Sometimes, all you need to do is completely make an ass?", procSubtitle.Paragraphs[3].Text);
-            Assert.AreNotEqual("Of yourself and laugh it off to realise that life isn’t so bad after all.", procSubtitle.Paragraphs[4].Text);
+            Assert.AreEqual(Utilities.AutoBreakLine("Sometimes, all you need to do is completely make an ass?", "en"), procSubtitle.Paragraphs[3].Text);
+            Assert.AreEqual(Utilities.AutoBreakLine("Of yourself and laugh it off to realise that life isn’t so bad after all.", "en"), procSubtitle.Paragraphs[4].Text);
 
             // too long
-            Assert.AreNotEqual("Sometimes, all you need to do is completely make an ass?", procSubtitle.Paragraphs[5].Text);
-            Assert.AreNotEqual("Of yourself and laugh it off to realise that life isn’t so bad after all.", procSubtitle.Paragraphs[5].Text);
+            Assert.AreEqual("Sometimes, all you need to do is\r\ncompletely make an ass of yourself", procSubtitle.Paragraphs[5].Text);
+            Assert.AreEqual("and laugh it off to realise that\r\nlife isn’t so bad after all.", procSubtitle.Paragraphs[6].Text);
+
+            // timing test
+            if (procSubtitle.Paragraphs[5].Duration.TotalMilliseconds > procSubtitle.Paragraphs[6].Duration.TotalMilliseconds)
+            {
+                Assert.IsTrue(procSubtitle.Paragraphs[5].Text.Length > procSubtitle.Paragraphs[6].Text.Length);
+            }
+            if (procSubtitle.Paragraphs[5].Duration.TotalMilliseconds < procSubtitle.Paragraphs[6].Duration.TotalMilliseconds)
+            {
+                Assert.IsTrue(procSubtitle.Paragraphs[5].Text.Length < procSubtitle.Paragraphs[6].Text.Length);
+            }
         }
+
+        [TestMethod]
+        public void MillisecondsPerCharTest()
+        {
+            string text = Utilities.AutoBreakLine("The waves were crashing on the\r\nshore; it was a lovely sight.");
+            double optimalDuration = Utilities.GetOptimalDisplayMilliseconds(text);
+            double displayCharLen = (HtmlUtil.RemoveHtmlTags(text, true).Length - ((Utilities.GetNumberOfLines(text) - 1) * Environment.NewLine.Length));
+            double msPerChar = optimalDuration / displayCharLen;
+
+            const double tolerance = .0001;
+            double diff = Math.Abs(optimalDuration - (displayCharLen * msPerChar));
+            Assert.IsTrue(diff < tolerance);
+        }
+
     }
 }
