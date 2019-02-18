@@ -42,38 +42,38 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     bool lastWasColon = false;
                     for (int j = 0; j < text.Length; j++)
                     {
-                        var s = text[j];
-                        if (s == ':' || s == ';')
+                        char ch = text[j];
+                        if (ch == ':' || ch == ';')
                         {
                             lastWasColon = true;
                         }
                         else if (lastWasColon)
                         {
                             // skip whitespace index
-                            if (j + 2 < text.Length && text[j] == ' ')
+                            if (j + 2 < text.Length && ch == ' ')
                             {
-                                s = text[++j];
+                                ch = text[++j];
                             }
 
-                            var startFromJ = text.Substring(j);
-                            if (startFromJ.Length > 3 && startFromJ[0] == '<' && startFromJ[2] == '>' && (startFromJ[1] == 'i' || startFromJ[1] == 'b' || startFromJ[1] == 'u'))
+                            var textFromJ = text.Substring(j);
+                            if (textFromJ.Length > 3 && textFromJ[0] == '<' && textFromJ[2] == '>' && (textFromJ[1] == 'i' || textFromJ[1] == 'b' || textFromJ[1] == 'u'))
                             {
                                 skipCount = 2;
                             }
-                            else if (startFromJ.StartsWith("<font ", StringComparison.OrdinalIgnoreCase) && text.Substring(j).Contains('>'))
+                            else if (textFromJ.StartsWith("<font ", StringComparison.OrdinalIgnoreCase) && text.Substring(j).Contains('>'))
                             {
-                                skipCount = (j + startFromJ.IndexOf('>', 6)) - j;
+                                skipCount = (j + textFromJ.IndexOf('>', 6)) - j;
                             }
-                            else if (Helper.IsTurkishLittleI(s, callbacks.Encoding, callbacks.Language))
+                            else if (Helper.IsTurkishLittleI(ch, callbacks.Encoding, callbacks.Language))
                             {
-                                text = text.Remove(j, 1).Insert(j, Helper.GetTurkishUppercaseLetter(s, callbacks.Encoding).ToString(CultureInfo.InvariantCulture));
+                                text = text.Remove(j, 1).Insert(j, Helper.GetTurkishUppercaseLetter(ch, callbacks.Encoding).ToString(CultureInfo.InvariantCulture));
                                 lastWasColon = false;
                             }
-                            else if (char.IsLower(s))
+                            else if (char.IsLower(ch))
                             {
                                 // iPhone
                                 bool change = true;
-                                if (s == 'i' && text.Length > j + 1)
+                                if (ch == 'i' && text.Length > j + 1)
                                 {
                                     if (text[j + 1] == char.ToUpper(text[j + 1]))
                                     {
@@ -82,14 +82,14 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                                 }
                                 if (change)
                                 {
-                                    string textFromIdx = text.Substring(j).CapitalizeFirstLetter();
+                                    textFromJ = textFromJ.CapitalizeFirstLetter();
                                     text = text.Remove(j);
-                                    text = text.Insert(j, textFromIdx);
+                                    text = text.Insert(j, textFromJ);
                                 }
 
                                 lastWasColon = false;
                             }
-                            else if (!(" " + Environment.NewLine).Contains(s))
+                            else if (!(" " + Environment.NewLine).Contains(ch))
                             {
                                 lastWasColon = false;
                             }
