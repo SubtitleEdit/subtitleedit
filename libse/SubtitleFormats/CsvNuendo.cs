@@ -58,27 +58,24 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 if (CsvLine.IsMatch(line))
                 {
                     string[] parts = line.Split(',');
-                    if (parts.Length == 4)
+                    try
                     {
-                        try
+                        var actor = Utilities.FixQuotes(parts[0]);
+                        var start = DecodeTime(parts[1]);
+                        var end = DecodeTime(parts[2]);
+                        string text = Utilities.FixQuotes(parts[3]);
+                        p = new Paragraph(start, end, text);
+                        if (!string.IsNullOrEmpty(actor))
                         {
-                            var actor = Utilities.FixQuotes(parts[0]);
-                            var start = DecodeTime(parts[1]);
-                            var end = DecodeTime(parts[2]);
-                            string text = Utilities.FixQuotes(parts[3]);
-                            p = new Paragraph(start, end, text);
-                            if (!string.IsNullOrEmpty(actor))
-                            {
-                                p.Actor = actor;
-                            }
+                            p.Actor = actor;
+                        }
 
-                            subtitle.Paragraphs.Add(p);
-                            continuation = parts[3].StartsWith('"') && !parts[3].EndsWith('"');
-                        }
-                        catch
-                        {
-                            _errorCount++;
-                        }
+                        subtitle.Paragraphs.Add(p);
+                        continuation = parts[3].StartsWith('"') && !parts[3].EndsWith('"');
+                    }
+                    catch
+                    {
+                        _errorCount++;
                     }
                 }
                 else
