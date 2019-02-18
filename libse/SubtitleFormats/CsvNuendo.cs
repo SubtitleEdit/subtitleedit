@@ -7,9 +7,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class CsvNuendo : SubtitleFormat
     {
-        private static readonly Regex CsvLine = new Regex("^.*,[+\\d+:]+,[+\\d+:]+,\".+", RegexOptions.Compiled);
+        private static readonly Regex RegexCsvLine = new Regex(@"^.+?,(?:[\d,:]+),(.+)?", RegexOptions.Compiled | RegexOptions.Singleline);
         private const string LineFormat = "{1}{0}{2}{0}{3}{0}{4}";
         private static string Header = string.Format(LineFormat, ",", "\"Character\"", "\"Timecode In\"", "\"Timecode Out\"", "\"Dialogue\"");
+
+        private readonly char[] _slitChar = { ':' };
 
         public override string Extension => ".csv";
 
@@ -19,7 +21,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             if (lines.Count > 0)
             {
-                if (lines[0].Contains(Header))
+                if (IsValidHeader(lines[0]))
                 {
                     return true;
                 }
@@ -27,7 +29,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             int matchCount = 0;
             for (int i = 0; i < lines.Count; i++)
             {
-                if (CsvLine.IsMatch(lines[i]))
+                if (RegexCsvLine.IsMatch(lines[i]))
                 {
                     matchCount++;
                 }
@@ -41,9 +43,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             sb.AppendLine(Header);
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                string text = string.IsNullOrEmpty(p.Text) ? string.Empty : "\"" + p.Text.Replace("\"", "\"\"").Replace(Environment.NewLine, "\n") + "\"";
-                string actor = string.IsNullOrEmpty(p.Actor) ? string.Empty : "\"" + p.Actor.Replace(",", " ").Replace("\"", string.Empty) + "\"";
-                sb.AppendLine(string.Format(LineFormat, ",", actor, p.StartTime.ToHHMMSSFF(), p.EndTime.ToHHMMSSFF(), text));
+                string text = '"' + p.Text + '"';
+                sb.AppendLine(string.Format(LineFormat, ',', p.Actor, p.StartTime.ToHHMMSSFF(),
+                    p.EndTime.ToHHMMSSFF(), NormalizeQuotation(text)));
             }
             return sb.ToString().Trim();
         }
@@ -58,19 +60,24 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             const int Actor = 0;
             const int StartTime = 1;
             const int EndTime = 2;
-            const int Text = 3;
 
             foreach (string line in lines)
             {
-                if (CsvLine.IsMatch(line))
+                Match match = RegexCsvLine.Match(line);
+                if (match.Success)
                 {
-                    string[] tokens = line.Split(',');
+                    // tokens: actor, start-time, end-time
+                    string[] tokens = line.Substring(0, match.Groups[1].Index).Split(',');
                     try
                     {
                         var actor = Utilities.FixQuotes(tokens[Actor]);
+
                         var start = DecodeTime(tokens[StartTime]);
                         var end = DecodeTime(tokens[EndTime]);
-                        string text = Utilities.FixQuotes(tokens[Text]);
+
+                        string matchText = match.Groups[1].Value;
+                        string text = Utilities.FixQuotes(matchText);
+
                         p = new Paragraph(start, end, text);
                         if (!string.IsNullOrEmpty(actor))
                         {
@@ -78,7 +85,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         }
 
                         subtitle.Paragraphs.Add(p);
-                        continuation = tokens[Text].StartsWith('"') && !tokens[Text].EndsWith('"');
+                        continuation = matchText.StartsWith('"') && !matchText.EndsWith('"');
                     }
                     catch
                     {
@@ -91,10 +98,21 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     {
                         if (p.Text.Length < 300)
                         {
-                            p.Text = (p.Text + Environment.NewLine + line.TrimEnd('"')).Trim();
-                        }
+                            string tempLine = line.Trim();
 
-                        continuation = !line.TrimEnd().EndsWith('"');
+                            // only treat one quote to be the pattern, recursive quotes are treated as inside text quotes
+                            if (tempLine.EndsWith('"'))
+                            {
+                                // allow parsing text with quote => <"John "Foobar""> => <John "Foobar">
+                                tempLine = tempLine.Substring(0, tempLine.Length - 1).TrimEnd();
+                                continuation = false;
+                            }
+                            p.Text = (p.Text + Environment.NewLine + tempLine).TrimStart();
+                        }
+                        else
+                        {
+                            continuation = false;
+                        }
                     }
                     else
                     {
@@ -102,12 +120,63 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                 }
             }
+
+            // header
+            _errorCount--;
             subtitle.Renumber();
         }
 
-        private TimeCode DecodeTime(string s)
+        private TimeCode DecodeTime(string timeStamp) => DecodeTimeCodeFramesFourParts(timeStamp.Split(_slitChar));
+
+        protected virtual bool IsValidHeader(string header)
         {
-            return DecodeTimeCodeFramesFourParts(s.Split(new char[] { ':' }));
+            // https://github.com/SubtitleEdit/subtitleedit/issues/3379
+            string[] tokens = header.RemoveChar('"').Split(',');
+            if (tokens.Length != 4)
+            {
+                return false;
+            }
+            return tokens[0].Equals("Character", StringComparison.OrdinalIgnoreCase) &&
+                tokens[1].Equals("Timecode In", StringComparison.OrdinalIgnoreCase) &&
+                tokens[2].Equals("Timecode Out", StringComparison.OrdinalIgnoreCase) &&
+                tokens[3].Equals("Dialogue", StringComparison.OrdinalIgnoreCase);
+        }
+
+        protected static string NormalizeQuotation(string input)
+        {
+            char[] chars = new char[input.Length];
+            int idxTrack = 0;
+            for (int i = 0; i < input.Length; i++)
+            {
+                char ch = input[i];
+                switch (ch)
+                {
+                    case '”':
+                    case '“':
+                    case '‟':
+                    case '❝':
+                    case '＂':
+                    case '〝':
+                    case '〞':
+                        chars[idxTrack++] = '"';
+                        break;
+
+                    case '‘':
+                    case '’':
+                        chars[idxTrack++] = '"';
+                        // skip next char if it complements captured char
+                        if (i + 1 < input.Length && (input[i + 1] == '‘' || input[i + 1] == '’'))
+                        {
+                            i++;
+                        }
+                        break;
+
+                    default:
+                        chars[idxTrack++] = ch;
+                        break;
+                }
+            }
+            return new string(chars, 0, idxTrack);
         }
     }
 }
