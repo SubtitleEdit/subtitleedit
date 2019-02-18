@@ -24,9 +24,9 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     if (lastText.EndsWith(':') || lastText.EndsWith(';'))
                     {
                         var st = new StrippableText(p.Text);
-                        if (st.StrippedText.Length > 0 && st.StrippedText[0] != char.ToUpper(st.StrippedText[0]))
+                        if (ShouldCapitalize(st.StrippedText))
                         {
-                            p.Text = st.Pre + char.ToUpper(st.StrippedText[0]) + st.StrippedText.Substring(1) + st.Post;
+                            p.Text = st.CombineWithPrePost(st.StrippedText.CapitalizeFirstLetter());
                         }
                     }
                 }
@@ -76,7 +76,9 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                                 }
                                 if (change)
                                 {
-                                    p.Text = p.Text.Remove(j, 1).Insert(j, char.ToUpper(s).ToString(CultureInfo.InvariantCulture));
+                                    string textFromIdx = p.Text.Substring(j).CapitalizeFirstLetter();
+                                    p.Text = p.Text.Remove(j);
+                                    p.Text = p.Text.Insert(j, textFromIdx);
                                 }
 
                                 lastWasColon = false;
@@ -106,5 +108,27 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             callbacks.UpdateFixStatus(noOfFixes, language.StartWithUppercaseLetterAfterColon, noOfFixes.ToString(CultureInfo.InvariantCulture));
         }
 
+        protected static bool ShouldCapitalize(string input)
+        {
+            if (string.IsNullOrEmpty(input))
+            {
+                return false;
+            }
+
+            char firstChar = input[0];
+            // not a letter or already uppercase
+            if (char.IsLetter(firstChar) == false || char.IsUpper(firstChar))
+            {
+                return false;
+            }
+
+            // ignore: iPhone, iPad...
+            if (input.Length > 1 && input[0] == 'i' && char.IsUpper(input[1]))
+            {
+                return false;
+            }
+
+            return true;
+        }
     }
 }
